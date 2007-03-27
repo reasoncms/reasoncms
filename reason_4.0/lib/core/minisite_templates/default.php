@@ -591,12 +591,15 @@ class MinisiteTemplate
 	}
 	function show_body_tableless() // {{{
 	{
-		echo '<div id="wrapper"';
 		if (!empty($this->textonly))
 		{
-			echo ' class="textOnlyView"';
+			$class = 'textOnlyView';
 		}
-		echo '>'."\n";
+		else
+		{
+			$class = 'fullGraphicsView';
+		}
+		echo '<div id="wrapper" class="'.$class.'">'."\n";
 		echo '<div id="bannerAndMeat">'."\n";
 		$this->show_banner();
 		$this->show_meat();
