@@ -1,0 +1,20 @@
+The setting file is a file which is automatically prepended to the beginning of all reason pages (You can see this in the .htaccess file in the admin directory).  The purpose of this file is to set up some global constants before any reason script is run.  These constants should be used whenever possible in order to assure site stability.  For example, the constant REASON_INC is defined to be reason3.  The purpose of this constant is to define the reason directory so that when including files, the page knows where to look.  Back during reason2, we often just said "include( 'reason2/…' )".  This caused many problems when we moved from reason2 to reason3 since the directory changed.  However, in many cases we said "include( REASON_INC . '…' )".  In these cases, we only had to change the one line in the settings code, making the switchover much easier.  The following is a description of some of the other constants defined in this file, which should be used whenever possible.
+
+INCLUDE_PATH - This is the location of the include path on the web server.
+
+PHOTOSTOCK - This is the hard location of all the photos in reason.  
+
+WEB_PHOTOSTOCK - This is the web address for the photos in reason.  This differs from PHOTOSTOCK because it is to be displayed in webpages where PHOTOSTOCK is the entire hard drive path of the directory.
+
+REASON_PATH - The hard address of reason.
+
+WEB_TEMP - A temporary directory on webapps or webdev.
+
+CM_VAR_PREFIX - This deals with the two levels of editing in reason.  When we switch from the first level to the second level, all we have to save all of the first level variables.  Rather than hard coding a prefix into all of them, we simple define a constant here, in case we ever need to change it.
+
+ASSET_PATH - The hard address of all the assets in reason.  These assets are kept here, but are mapped to a different, virtual address.
+
+WEB_ASSET_PATH - The web address of all the assets in reason.  The difference between this and ASSET_PATH is the same as the difference between PHOTOSTOCK and WEB_PHOTOSTOCK.
+
+REASON_DB - The database which contains all of reason (as of 6/6/2003, this should be cmsdev on webdev and cms2 on webapps).
+

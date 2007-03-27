@@ -1,0 +1,41 @@
+div#divTimer {
+	padding: 1em;
+	position: absolute;
+	z-index: 102;
+	top: 0px;
+	left: 40%;
+	background-color: #FFFFFF;
+	border: 1px solid #000000;
+}
+div#divtimer div {
+	background-color: #E9EEF8;
+	border: 1px dashed #8AA3D0;
+	padding: 2em;
+	text-align: center;
+}
+div#divPopup {
+	padding: 1em;
+	position: absolute;
+	z-index: 102;
+	background-color: #FFFFFF;
+	border: 1px solid #000000;
+}
+div#divPopup div {
+	background-color: #E9EEF8;
+	border: 1px dashed #8AA3D0;
+	padding: 2em;
+	text-align: center;
+}
+div#divPopup a {
+	font-size: 200%;
+}
+div#popupOverlay {
+	position: absolute;
+	z-index: 100;
+	/*top: 0px;
+	left: 0px;*/
+	background-color: #000000;
+	filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	opacity: 0.6;
+}

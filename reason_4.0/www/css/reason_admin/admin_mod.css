@@ -1,0 +1,215 @@
+.sites {
+	background-color: #8AA3D0;
+	padding: 10px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #385790;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #385790;
+}
+.leftNav {
+	padding: 20px;
+	background-color: #E9EEF8;
+	border-right-width: 1px;
+	border-right-style: dashed;
+	border-right-color: #8AA3D0;
+	border-bottom-width: 1px;
+	border-bottom-style: dashed;
+	border-bottom-color: #8AA3D0;
+}
+.managerNav {
+	background-color: #FEEFB5;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	margin-left: 15px;
+}
+.managerList {
+	margin-right: 15px;
+	margin-left: 15px;
+}
+.leftList {
+	margin: 0px;
+	padding: 0px 0px 0px 10px;
+	list-style-type: none;
+}
+.nav {
+	text-decoration: none;
+}
+.viewFilter {
+	background-color: #8AA3D0;
+}
+.viewInfo {
+	background-color: #D9E2F4;
+}
+.roundedTop { background: url(../../ui_images/reason_admin/ne.gif) no-repeat top right }
+.roundedBottom { background: url(../../ui_images/reason_admin/se.gif) no-repeat bottom right }
+img.roundedCorner {width: 10px; height: 10px; border: none; display: block; }
+.addLink {
+	background-color: #EFC87B;
+}
+.oldBrowserAlert {
+	display: none;
+}
+.publicSiteLink {
+	font-weight: bold;
+	color: #fff;
+	text-decoration: underline;
+	padding: 4px;
+	margin-left: 15px;
+}
+
+div#previewRels ul {
+	list-style: none;
+	margin:0px;
+	padding:0px;
+}
+div#previewRels ul li {
+	margin: 10px 0px 15px 0px;
+}
+div#previewRels ul ul {
+	list-style-type:disc;
+	margin: 5px 0px 5px 20px;
+}
+div#previewRels ul ul li {
+	margin: 5px;
+}
+div#previewRels ul h4 {
+	margin: 5px 0px 5px 0px;
+}
+div#previewRels h3 {
+	border-bottom: 1px dotted #8AA3D0;
+	padding: 0px 0px 6px 0px;
+	margin: 35px 0px 0px 0px;
+}
+div#preview table, table#adminLayoutTable {
+	width:100%;
+}
+div#preview table td.col1 {
+	width:15%;
+}
+div#preview table td.col2 {
+	width:.5em;
+}
+div#themeSelection ul {
+	padding:0px;
+	margin:0px;
+	list-style-type:none;
+	background-color:#dddddd;
+}
+div#themeSelection li {
+	padding:1em;
+	border-top:1px solid #ffffff;
+	background-image: url(../../ui_images/reason_admin/sw.gif);
+	background-repeat: no-repeat;
+	background-position: bottom left;
+}
+div#themeSelection li:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+* html div#themeSelection li {
+	height: 1%;
+}
+div#themeSelection div.image {
+	float:right;
+	border:1px solid #333333;
+}
+div#themeSelection h4 {
+	margin-bottom:0px;
+	padding:.5em 1em;
+	background-color:#666666;
+	color:#eeeeee;
+	background-image: url(../../ui_images/reason_admin/ne.gif);
+	background-repeat: no-repeat;
+	background-position: top right;
+	font-weight:normal;
+	font-style:italic;
+}
+ul.leftList li.masterAdmin {
+	border-bottom:1px solid #748FC2;
+	border-top:1px solid #748FC2;
+	padding-bottom:.5em;
+	padding-top:.5em;
+	margin-bottom:.6em;
+}
+div#guide h4 {
+	margin:0;
+}
+div#guide h4 span.count {
+	font-weight:normal;
+	color:#666;
+}
+div#guide li {
+	margin-top:.8em;
+	margin-bottom:.8em;
+}
+div#guide li.minisite_page {
+	border-bottom:1px dotted #999;
+	padding-bottom:.5em;
+}
+div#guide div.recent, div#guide div.recent ul li a, div#guide h4 span.count {
+	font-size:90%;
+}
+div#guide div.recent ul, div#guide div.recent ul li {
+	display:inline;
+	margin:0;
+	padding:0;
+}
+div#guide div.recent ul li {
+	border-left:1px dotted #666;
+	padding-left:.5em;
+}
+div#guide div.recent ul li.item1 {
+	border-left:none;
+	padding-left:0;
+}
+div#guide div.recent a.more {
+	font-style:italic;
+}
+div#siteIntro div#siteDesc, div#siteIntro div#whatsNew {
+	float:right;
+	width:42%;
+	padding:1em;
+	margin:0 0 1em 1em;
+	background-color:#E9EEF8;
+}
+div.otherSiteRelation {
+	margin: .5em;
+	padding:.75em;
+	border:1px solid #dcdcdc;
+	background-color:#f9f9f9;
+	color:#666;
+	float:right;
+	width:30%;
+}
+div.otherSiteRelation ul {
+	margin:.5em 0 0 0;
+	padding-left:1.5em;
+}
+div.otherSiteRelation ul li, div.otherSiteRelation strong {
+	font-size:97%;
+}
+p.otherActionItems {
+	margin-bottom:0;
+}
+p.testGroup {
+	float:right;
+	padding:.5em;
+	margin:0;
+	border:1px solid #aaa;
+}
+div.importBlock {
+	margin-top:.67em;
+	padding-top:.67em;
+	border-top:1px solid #fff;
+}
+div#allRels #connectionsRow h4, div#allRels #connectionsRow dl {
+	margin:.5em 0;
+}
+div#allRels #connectionsRow dt {
+	font-style:italic;
+}

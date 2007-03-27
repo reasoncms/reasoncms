@@ -1,0 +1,149 @@
+@import url("modules_mod.css");
+
+/* General hiding */
+.hide {
+	display:block;
+	position:absolute;
+	left:-9999px;
+	width:1000px;
+}
+
+/* Navigation & Policy Modules are in modules_mod.css */
+
+a.navLink {
+	color: #000099;
+}
+
+/* Images Module */
+
+.imageChunk {
+	margin-bottom: 17px;
+	text-align: center;
+}
+
+/* Faculty Module */
+
+.facStaffHead {
+	margin-top: 35px;
+	margin-bottom: 5px;
+}
+.facStaff {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	padding-top: 15px;
+	clear: both;
+}
+.facStaffName {
+	font-weight: bold;
+}
+.facStaffLeave {
+	font-style: italic;
+}
+.facStaffInfo {
+	margin-left: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.facStaffContent {
+	margin-top: 10px;
+}
+.facStaffImage {
+	display: table;
+	margin-bottom: 15px;
+}
+div.facStaffName span.degrees {
+	font-weight: normal;
+}
+
+/* Search Module */
+
+.seachForm {
+	margin: 0px;
+	padding: 0px;
+}
+.searchSubmitLink {
+	font-weight: bold;
+}
+
+/* Edit Module */
+
+.editLink {
+}
+.editDiv {
+	font-weight: bold;
+	margin:1em 0;
+}
+
+/* Blurb Module */
+
+.blurb {
+	margin-top: 15px;
+}
+
+/* News Module */
+
+.newsItemName {
+	font-weight: bold;	
+}
+.newsImages {
+	margin: 10px;
+}
+div.newsItemDesc li {
+	margin: 0px;
+	padding: 0px;
+}
+div.newsItemDesc ul, div.newsItemDesc ol {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+div#news div.author {
+	font-style: italic;
+	color: #666666;
+}
+
+/* AV Module */
+
+.avName {
+	font-weight: bold;	
+}
+.avFiles {
+	margin: 0px;
+	padding: 0px;
+	
+}.avFile {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+}
+
+/* Pullquotes (basic) */
+
+p.pullQuoteRight { 
+	font-weight: bold;
+	font-style: italic;
+	background-color: #E9EEF8;
+}
+
+/* Minutes Module */
+
+ul.minutesInfo li.keywords {
+	display: none;
+}
+/* Events Module */
+div#calendar div.eventDetails div.images {
+	float: right;
+	margin: 0px 10px 10px 10px;
+	padding: 10px;
+	text-align:center;
+}
+div#calendar div.eventDetails div.images div.tnDesc {
+	margin: 3px 0px 8px 0px;
+}
+div#projects li.overdue {
+	color:#990000;
+}
+
+/* Publications module */
+form tr#tarbabypreRow, form tr#tarbabyRow, form tr#noturlRow, form tr#antlionRow  {
+	display:none;
+}

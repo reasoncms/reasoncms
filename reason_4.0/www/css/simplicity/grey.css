@@ -1,0 +1,29 @@
+@import url("blue.css");
+body {
+	background-color:#dedede;
+}
+div#wrapper {
+	border:1px solid #b5b5b5;
+}
+div#banner {
+	border-bottom:1px solid #b5b5b5;
+	background-color:#f2f2f2;
+}
+div#banner h1 a {
+	text-decoration:none;
+	font-weight:normal;
+	color:#8f8f9e;
+}
+h2.pageTitle {
+	color:#686873;
+}
+a.searchSubmitLink {
+	background-color:#dedede;
+	border:1px solid #b5b5b5;
+	color:#686873;
+}
+a.searchSubmitLink:hover {
+	background-color:#686873;
+	color:#fff;
+	border-color:#686873;
+}

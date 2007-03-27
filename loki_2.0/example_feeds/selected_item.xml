@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+
+<title>Carleton College Athletics Images</title>
+<description>Images from Athletics</description>
+<link>http://webdev.acs.carleton.edu/athletics/</link>
+<generator>Reason</generator>
+<copyright>Carleton College, 2005</copyright>
+
+<item>
+	<type_feed>http://localhost/~nate/loki/types_feed.xml</type_feed>
+	<link_feed>http://localhost/~nate/loki/pages_feed.xml</link_feed>
+</item>
+
+</channel>
+</rss>

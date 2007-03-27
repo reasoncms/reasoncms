@@ -1,0 +1,1 @@
+<?php	include_once('reason_header.php');	reason_include('errors/404.php');?>

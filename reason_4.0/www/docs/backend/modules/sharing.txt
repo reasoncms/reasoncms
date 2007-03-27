@@ -1,0 +1,25 @@
+The Sharing Module
+
+The Sharing Module is very similar to the Associator Module, so understanding one makes understanding the other quite simple.  In fact, the Sharing Module is an extension of the Associator Module.  The list is divided into two parts.  At the top is a list of all borrowed items.  This will show all borrowed items regardless of how many are borrowed.  After this, you see the filters and paging, and then the list of all unborrowed entities.  All paging, filtering, and sorting are applied to the unborrowed item, although only sorting is applied to the top items.  
+
+The lister used to display the items is an extension of the basic lister which is found in custom_listers/associator.php.  This lister uses all the basic columns from the default lister (id, name, last_modified), but adds one more column, the site column, which tells us which site owns the entity.  It selects entities that are shared by some other site that don't have the no_share flag set.  There are two admin functions preview and borrow/don't borrow.  The preview link simply sends you to the preview page, while the borrow/don't borrow link sends you to the doBorrow page.  The only difference between the borrow and don't borrow link is that the don't borrow link passes a variable called unborrow onto the doBorrow module.  
+
+Also, if the borrow page sees that you are on the second level of editing, it will create a link back to the first level, which should be some sort of associator page.  
+
+
+The doBorrow Module
+
+The basic task of the borrow module is fairly simple.  It checks to see if you are attempting to borrow or unborrow and item (checks the borrow flag if the admin_page->request variables), then does its stuff and sends you back to the sharing page.  
+
+If we are unborrowing an item, then all we need to do is delete the borrowed relationship.  If we are borrowing an item, then we need to check and see if we're on the first or second level.  Regardless of which level we're on, we need to set up a borrow relationship for that entity.  If we're on the second level, we not only need to set up the borrowed relationship, but we also need to set up a relationship based on the first level variables.  What we need to do in this case is check for the first level id and rel_id.  Then we add a new relationship from the first level id to the second level id of type rel_id.  
+
+
+The no_share flag
+
+no_share is a field in entity table that shows up in the content manager if a site is currently sharing a type.  The idea is that even though a site may be sharing a specific type of entity, it may want to keep some of them private to that site.  If a site ever checks the no_share flag, the content manager checks the database for any other sites that may be borrowing that entity.  If it find any, it deletes those relationships.  
+
+
+Sites unsharing types
+
+A site may share a type for a while and then decide it no longer wants to share that type.  In theory, this should unborrow all entities of that type, however, this isn't being done in practice right now.  Doing this would require some sort of custom associator, which is not currently in place.  Right now, the custom associator field is set if there shouldn't be a link to that association page.  Another way to do this is to set the custom associator field for sites, then make the association a multiple select menu in the site editor.  The site editor could then handle removing any sort of relationships.  
+

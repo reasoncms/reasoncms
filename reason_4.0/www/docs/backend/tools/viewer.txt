@@ -1,0 +1,41 @@
+The Viewer Class
+
+Generally, once we have selected a bunch of entities from the database, we want a nice way to display them.  Furthermore, we may only want to select a few at a time and have several pages that we can go through so we don't end up with a page that's 300 columns long.  The viewer class provides a way to browse through a list of items while easily being able to change the look and style of these items.  It has been extensively used on the backend as well as on the front-end for displaying lists of entities.
+
+
+Overloading the Viewer Class:
+
+The basics of the viewer class are all set up, so it is possible to completely make a new lister which looks exactly as you want it just by overloading a few variables and functions.  
+
+var $num_per_page - the number of entities shown per page.
+
+var $rows_per_sorting - the number of rows between sorting.  If show_all_items() is overloaded, it should account for this variable.
+
+var $order_by - the default field for the order of the list.
+
+var $dir - the default direction of sorting, should be either ASC or DESC 
+
+show_no_results() - what to do if there are no results for your query.
+
+show_sorting() - this is generally the header of the list.  In this function you should generally use table headers and create links to the other functions.  For instance, if you look at a content lister in the reason backend, above each column is the name of that field and clicking on that link will sort the items by that field.  In front end usage, you may want to set this up as an empty function.
+
+show_paging() - this function should be used to create links to the other pages (i.e. items 41-80).  If everything is being shown on one page, this function can be left empty.
+
+show_all_items() - this function should tell the page what to do with all the results that it finds.  You don't need to worry about not having any items here because if the result set is empty, this function never gets called.  This function usually won't need to be overloaded.  
+
+show_item( $item ) - here, $item is of the entity class type.  This function is the most important to overload when using the viewer class.  Obviously, this could do something as simple as printing out the name of the entity or could create an elaborately styled up table row which is utilizes many of the entity's fields.  
+
+
+You should be able to overload a class almost entirely by just overloading the above functions.  However, if you need to do more, you can overload some of the other functions as well.  If you need to do some sort of data manipulation before the query takes place, you should overload the alter_values() function.  However, you should always be aware what the parent class is doing in this function.  If you're attempting to overload an already customized class, make sure that you know what it's doing.  In these cases, it may often be useful to call parent::alter_values().  You can also use alter columns() and alter_filters().  For more complex listers, the load_values() function may also be overloaded.
+
+
+The internal workings of the viewer.  
+
+The viewer is a fairly straight forward class to use.  In order to get a good idea what is going on, you should look carefully at the init() function.  The init function just sets up a few variables and calls a bunch of functions.  
+
+The first thing the init function does is try to set up variables such as site_id, type_id etc.  These will be used later.  Next, it tries to grab viewer stuff from the database.  If no viewer_id is given, the three functions viewer_columns(), viewer_searchable_fields(), and viewer_default_sort() won't do anything.  Otherwise, these functions will grab the appropriate date from the DB in each function.  Next the functions alter_columns() and alter_filters() are called.  These funcitons are not overloaded anywhere as of the time this is written (4/18/2003), but they are there for use in case you need them.  After this the entity selector is set up ( $this->es ).  The alter_values() function is then called and may provide changes to the es.  The function grab_globals() is called next, which will set up anymore variables in the class that it can based on the page's $_REQUEST variables.  grab_sort() then adds the appropriate sorting to the entity selector and grab_filters() grabs all the appropriate filters from the $_REQUEST variables and set them up in the entity selector.  After this, the function set_column_order is called, which just checks for the viewer_id from the DB and if there's a default order for the columns, it sets it up here.  Finally, the load_values() function is called.  This function checks all the page bounds and such to make sure they're legit and then runs the entity selector, putting the values into the class variable $values.  
+
+The above may be a bit verbose so here's a quick summary of init.  Set up variables from request, set up variables from DB.  Set up entity selector.  Run entity selector and put values in $values.
+
+The other function that is generally called in the page is do_display().  This funciton is pretty simple.  If there are values in the class that have been returned from the query, it calls the display() function, otherwise it calls show_no_results().
+

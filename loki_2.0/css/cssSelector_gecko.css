@@ -1,0 +1,3 @@
+.callOut { background: #FFFFCC; margin: 1em; padding: 1em; border: 1px dashed #FFCC00; }
+/* restore the default Mozilla p styles */
+.callOut p { padding: 0em; margin: 1em 0; }

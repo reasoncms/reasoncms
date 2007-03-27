@@ -1,0 +1,251 @@
+<?php
+	reason_include_once('classes/admin/modules/default.php');
+	reason_include_once( 'function_libraries/images.php' );
+	class FinishModule extends DefaultModule // {{{
+	{
+		function FinishModule( &$page ) // {{{
+		{
+			$this->admin_page =& $page;
+		} // }}}		
+		function init() // {{{
+		{
+			//these next few lines check the entity to make sure it has everything it needs
+			$this->load_content_manager();
+			$this->check_entity_values(); 
+			$this->get_required_relationships();
+			if( !empty( $this->req_rels ) )
+				$this->check_required_relationships();
+				
+			
+			//Run any finish actions specified in the content manager
+			if(!empty($this->disco_item))
+				$this->disco_item->run_custom_finish_actions();
+
+			/* the new finish stuff */
+			// new_entity stuff
+			// figure out if the entity is new and store that so we can change the data in the database but still know what's going on
+			$temp = new entity( $this->admin_page->id,false );
+			if( $temp->get_value( 'new' ) )
+				$this->new_entity = true;
+			else
+				$this->new_entity = false;
+			
+			// Don't set entity live if user is of the contribute only role
+			if( !user_is_a( $this->admin_page->user_id, id_of( 'contribute_only_role' ) ) )
+			{
+				// Leave the state of pages alone so that people can hide them if they want to, but otherwise set the object live
+				if( $this->admin_page->type_id != id_of( 'minisite_page' ) )
+				{
+					$q = 'UPDATE entity set state = "Live" where id = ' . $this->admin_page->id;
+					db_query( $q , 'Error finishing' );
+				}
+			}
+			// regardless, set the entity to no longer be "new"
+			$q = 'UPDATE entity set new = 0 where id = ' . $this->admin_page->id;
+			db_query( $q , 'Error finishing' );
+
+			$original = new entity( $this->admin_page->id,false );
+			$original->get_values();
+
+			// get archive relationship id
+			$q = 'SELECT id FROM allowable_relationship WHERE name LIKE "%archive%" AND relationship_a = '.$this->admin_page->type_id.' AND relationship_b = '.$this->admin_page->type_id;
+			$r = db_query( $q, 'Unable to get archive relationship.' );
+			$row = mysql_fetch_array( $r, MYSQL_ASSOC );
+			mysql_free_result( $r );
+			$this->rel_id = $row['id'];
+
+			// get archives
+			$es = new entity_selector( $this->admin_page->site_id );
+			$es->add_type( $this->admin_page->type_id );
+			$es->add_right_relationship( $this->admin_page->id, $this->rel_id );
+			$es->add_relation('last_modified = "'.$original->get_value( 'last_modified' ).'"');
+			$es->set_num(1);
+			$similar_archived = $es->run_one('','Archived');
+
+			// if the entity has in fact been changed, actually create the relationship
+			if(empty($similar_archived))
+			{
+				$archived_id = duplicate_entity( $original, false, true, array( 'state' => 'Archived' ) );
+				create_relationship( $this->admin_page->id, $archived_id, $this->rel_id);
+			}
+
+			// DETERMINE WHERE TO GO
+
+			if( !empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) )
+			{
+				// associate this new entity with the original entity if this is new
+				/* changed new_entity stuff
+				if( !empty( $this->admin_page->request[ 'new_entity' ] ) ) */
+				if( $this->new_entity )
+				{
+					$q = 'SELECT * from allowable_relationship where id = '.$this->admin_page->request[ CM_VAR_PREFIX.'rel_id' ];
+					$r = db_query( $q,'Error selecting relationship info in FinishModule::init()' );
+					$row = mysql_fetch_array( $r , MYSQL_ASSOC );
+					if( $row[ 'connections' ] == 'one_to_many' )
+						$this->delete_existing_relationships();
+					create_relationship( $this->admin_page->request[ CM_VAR_PREFIX.'id' ], $this->admin_page->request[ 'id' ], $this->admin_page->request[ CM_VAR_PREFIX.'rel_id' ] );
+				}
+				$old_vars = array();	
+				foreach( $this->admin_page->request AS $key => $val )
+					if( substr( $key, 0, strlen( CM_VAR_PREFIX ) ) == CM_VAR_PREFIX )
+					{
+						$old_vars[ substr( $key, strlen( CM_VAR_PREFIX ) ) ] = $val;
+						$old_vars[ $key ] = '';
+					}
+				foreach( $this->admin_page->default_args AS $arg )
+					if( !isset( $old_vars[ $arg ] ) )
+						$old_vars[ $arg ] = '';
+				$link = $this->admin_page->make_link( $old_vars );
+			}
+			else if( !empty( $this->admin_page->request[ 'next_entity' ] ) )
+			{
+				$link = $this->admin_page->make_link( array('cur_module'=>'Editor', 'id' => $this->admin_page->request['next_entity']) );
+			}
+			else if( isset($_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ]) )
+			{
+				$link = $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ];
+			}
+			else
+			{
+				$link = $this->admin_page->make_link( array( 'id' => '',/*'new_entity' => '',*/'site_id' => $this->admin_page->site_id , 'type_id' => $this->admin_page->type_id , 'cur_module' => 'Lister' ) );
+			}
+
+			// before redirecting, check to see if there are any finish actions associated with this type.
+			// the entity_type variable is declared earlier in the check_entity_values method.
+
+			if( $this->entity_type->get_value( 'finish_actions' ) )
+			{
+				$finish_actions_filename = $this->entity_type->get_value( 'finish_actions' );
+			}
+			else
+			{
+				$finish_actions_filename = 'default.php';
+			}
+			reason_include_once ('finish_actions/'.$finish_actions_filename );
+			$finish_action_class_name = $GLOBALS['_finish_action_classes'][$finish_actions_filename];
+			$fac = new $finish_action_class_name();
+			$vars = array( 'site_id'=>$this->admin_page->site_id,
+							'type_id'=>$this->admin_page->type_id,
+							'id'=>$this->admin_page->id,
+							'user_id'=>$this->admin_page->user_id,
+						);
+			$fac->init($vars);
+			$fac->run();
+			
+			header( 'Location: '.unhtmlentities( $link ) );
+			die();
+		} // }}}
+		function load_content_manager()  // {{{
+		{
+			/*
+			 * load_content_manager(): finds the appropriate content manager for the entity
+			 * 	and does everything up to the error checks
+			 * 
+			 */
+			reason_include_once( 'content_managers/default.php3' );
+			$content_handler = $GLOBALS[ '_content_manager_class_names' ][ 'default.php3' ];
+			$type = new entity( $this->admin_page->type_id );
+
+			// set up a data member that init can get to after this method is called
+			$this->entity_type = $type;
+			if ( $type->get_value( 'custom_content_handler' ) )
+			{
+				$include_file = $type->get_value( 'custom_content_handler' );
+				if( !preg_match( '/(php|php3)$/' , $include_file ) )
+					$include_file .= '.php3';
+				$include_path = 'content_managers/'.$include_file;
+				reason_include_once( $include_path );
+				$content_handler = $GLOBALS[ '_content_manager_class_names' ][ $include_file ];
+			}
+			$this->disco_item = new $content_handler;
+			$this->disco_item->admin_page =& $this->admin_page;
+
+			$this->disco_item->prep_for_run( $this->admin_page->site_id, $this->admin_page->type_id, $this->admin_page->id, $this->admin_page->user_id );
+			$this->disco_item->init();
+
+			$this->disco_item->on_every_time();
+
+			$this->disco_item->pre_error_check_actions();
+		} // }}}
+		function delete_existing_relationships() // {{{
+		{
+			$q = 'DELETE FROM relationship WHERE entity_a = ' . $this->admin_page->request[ CM_VAR_PREFIX.'id'] . 
+				 ' AND type = ' . $this->admin_page->request[ CM_VAR_PREFIX.'rel_id'];
+			$r = db_query( $q , 'Error deleting existing relationships in FinishModule::delete_existing_relationships()' );
+			mysql_free_result( $r );
+		} // }}}
+		function get_required_relationships() // {{{
+		{
+			//getquery
+			$d = new DBSelector;
+
+			$d->add_table('ar','allowable_relationship' );
+		
+			$d->add_table( 'allowable_relationship' );
+			$d->add_table( 'relationship' );
+			$d->add_table( 'entity' );
+			
+			$d->add_relation( 'allowable_relationship.name = "site_to_type"' );
+			$d->add_relation( 'allowable_relationship.id = relationship.type' );
+			$d->add_relation( 'relationship.entity_a = '.$this->admin_page->site_id );
+			$d->add_relation( 'relationship.entity_b = ar.relationship_b' );
+			$d->add_relation( 'entity.id = ar.relationship_b' );
+			
+			$d->add_field( 'entity' , 'id' , 'e_id' );
+			$d->add_field( 'entity' , 'name' , 'e_name' );
+			$d->add_field('ar','*');
+
+			$d->add_relation( 'ar.relationship_a = ' . $this->admin_page->type_id );
+			$d->add_relation( 'ar.name != "owns"');
+			$d->add_relation( '(ar.custom_associator IS NULL OR ar.custom_associator = "")');
+			$d->add_relation( 'ar.required = "yes"' );
+			$r = db_query( $d->get_query() , 'Error selecting relationships' );
+
+			$return_me = array();
+			while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
+				$return_me[ $row[ 'id' ] ] = $row;
+
+			mysql_free_result( $r );
+
+			$this->req_rels = $return_me;
+		} // }}}
+		function check_required_relationships() // {{{
+		{
+			foreach( $this->req_rels AS $rel )
+			{
+				$d = new DBSelector;
+				
+				$d->add_table( 'r' , 'relationship' );
+				$d->add_table( 'ar' , 'allowable_relationship' );
+				
+				$d->add_relation( 'r.type = ar.id' );
+				$d->add_relation( 'ar.id = ' . $rel[ 'id' ] );
+				$d->add_relation( 'r.entity_a = ' . $this->admin_page->id );
+
+				$r = db_query( $d->get_query() , "Can't do query in FinishModule::check_required_relationships()" );
+				if( !( $row = mysql_fetch_array( $r ) ) )
+				{
+					mysql_free_result( $r );
+					$link = $this->admin_page->make_link( array( 'cur_module' => 'Associator' , 'rel_id' => $rel[ 'id' ] , 'error_message' => 1 ) );
+					header( 'Location: ' . unhtmlentities( $link ) );
+					die( '' );
+				}
+				mysql_free_result( $r );
+			}
+		} // }}}
+		function check_entity_values() // {{{
+		{
+			
+			$this->disco_item->_run_all_error_checks();
+			if( $this->disco_item->_has_errors() )
+			{
+				$link = $this->admin_page->make_link( array( 'cur_module' => 'Editor' , 'submitted' => true ) );
+				header( 'Location: ' . unhtmlentities( $link ) );
+				die( '' );
+			}
+		} // }}}
+		function run() // {{{
+		{
+		} // }}}
+	} // }}}
+?>

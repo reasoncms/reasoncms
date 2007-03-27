@@ -1,0 +1,15 @@
+
+.listrow1 {
+	background-color: #E9EEF8;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #FFFBDA; */
+	/* background-color: #EAEFE0; */
+}
+.highlightRow {
+	background-color: #CFDEEB;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #FAEEBF; */
+	/* background-color: #D6DEC6; */
+}

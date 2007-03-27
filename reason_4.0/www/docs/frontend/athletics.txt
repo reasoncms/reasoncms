@@ -1,0 +1,59 @@
+If you're reading this because you have to do some work on the athletics site, I feel sorry for you.  If you're reading this just for fun, you're kinda weird.  The athletics site is a beast of a site, and it is most of the reason that Reason exists in the first place.  The whole purpose of making reason is to create a flexible model for putting data into a database so that different sites could share the same types of items.  Thus, the News site would be able to take athletics news items and put them on its site without the people in charge of either site having to interact and without having to duplicate data in the database.  
+
+Here we go…
+
+The athletics site is incredibly complicated, so undoubtedly, some parts of it will get omitted.  The athletics site uses 12 different types, all which are in one place or another.  The first thing we see when we get into the athletics code is an array called $sports which not surprisingly contains all the sports.  
+
+After this, the season is set up.  If a variable season is passed into the page, it is passed as the first year in the academic year.  For example, for the 2002-2003 swimming season, we would pass $season = 2002.  Also, for the 2003 baseball season, we would pass $season = 2002 since the 2003 baseball season falls in the 2002-2003 academic year.  If no season is passed, it uses the current season.  The season starts on July 1st, so if today is June 14th, 2003 the current season would be 2002-2003, but if it's July 14th, 2003, we would use the 2003-2004 season.
+
+Next we determine the sport name, which is pretty simple to figure out.
+
+Next comes module loading.  The modules are the main parts of the athletics site.  Without them all we'd have would be the top of the page and the right sidebar.  These will all be described in detail later, but for now we'll just talk about how to set them up.  Right now there are nine acceptable modules.  If the module name that is passed is not in the list, the module is set to news.  The file modules/{module name}.php3 is then included.  In this file, there should be two or three things that are set up.  First, there is the showBody() function.  This is the function that defines what's on the main part of the page.  The second, is a variable called $column.  If this variable is set to true, the page will set up a third column on the right side of the page.  The third thing is the function showSidebar().  This function doesn't need to be defined if $column is set to false.
+
+Then we set up display values.  All this does is set up an array $col which sets the widths of the different columns.  
+
+Finally, we are done with all the initialization stuff.  The rest of the file actually just runs the stuff.  The function names should be self explanatory, although the function athleticsHeader() does the left sidebar in addition to the actual header stuff at the top of the page.
+
+The Functions
+
+There are a few basic functions which control the main flow of the program.  As mentioned above, the functions showBody() and showSidebar() are defined separately in each module, but there are other functions which are defined more generally.
+
+athleticsHeader()
+
+This is the most complicated of the functions.  It would probably be better if it were divided into multiple functions, but oh well (You can blame Dave for this).  Viewing this file in vim will make it easier to figure out the places in where all these things are done.  The first part of this is the section called Carleton bar.  This sets up the title of the page, stylesheets, and javascript as well as doing the basic "Carleton Navigation".  Next comes the athletics header section.  This sets up the bluebar at the top with the Knights Logo, sport selector, search function, etc.  This part is also pretty easy to figure out, and is mostly html.  Next comes the sport header.  This part sets up another table row with the display name of the sport if we are on a sport page.  Finally we have the navigation and opening of body section.  This part is extremely long and may be somewhat difficult to understand (again, blame dave…it's his damn code).  The beginning part is fairly simple html, and the end of this section sets up the beginning of the main part of the page.  In the middle, we have two more main sections.  One section does the left nav if we are on a sport page, the next does the left nav for the main page.  
+
+First, if we are on a sport page, we trying to get all the sport subpages on the side.  First, we make a link to all the custom modules (defined in variable $custom_mods).  Currently, these are news, schedule and roster pages which are defined for all sports.  Then, we make links to all the other custom pages a sport may have.  We select these from the Database using a DBSelector (this part was written before the dayz of the entity selector).  It then makes links to all these pages as well which are of module type "content".  
+
+If we are on the main page, we have a more complex sidebar.  The first part is similar to the above page.  Here we make links to the news, all_events, and broadcast page.  Then we grab all the custom pages (using an entity selector this time) and make links to them as well.  After this, if we are on the main news page, we add one more thing.  We put in a horizontal rule (using the horizontalRule() function) and then make a list of all upcoming events.  We grab the next seven events and display then one at a time.  If we did this now, we would use the viewer class for these things.  
+
+athleticsFooter()
+
+The athleticsFooter() function is fairly simple.  All it does is put the end of the web page together.  
+
+There are other functions defined as well, and hopefully their names should be descriptive enough to figure out what they are supposed to do.
+
+Modules
+
+The modules are the heart and soul of the athletics pages.  Each module controls the majority of the pages.  There are a total of 8 modules (9 if you count the about module).  Below is a description of each module, how you get to it and what it does.  
+
+The About Module - not really an important module to understand.  Just something we kind of threw in as an easter egg.  If you click on the empty space on the list of sports, you'll get there.
+
+The All Events Module - accessible from the main page via the all upcoming events link.  This has no side bar and simply lists out all of the upcoming events that are currently in the database.  Each td is specifically formatted based on the information available about the upcoming event.  
+
+The Broadcast Module - accessible from the main page via the broadcasts link.  This module has a simple sidebar which just gives information on how to get real player.  
+The are two possible pages you can see here.  The first is the main one, the second is a list of all upcoming broadcasts.  
+The main section is divided into 3 parts.  At the top, there is a list of today's broadcasts.  After that is a list of the next 3 upcoming broadcasts, plus a link to a list of all upcoming broadcasts (the second part described above).  After that there is a list of all the broadcast archives.  Here we not have a link to the broadcast, but the event name links to the event page as well.  
+
+The Content Module - accessible by clicking on the link to any news item which is not associated with an athletics event, or by click a link for an extra sport page.  This is another simple module.  The main section just displays the content of an entity, and if there are any images associated with that entity, they appear in the right sidebar.  
+
+The Event Module - accessible by click on the link to any news item which is associated with an athletics event.  This one is really hacked together.  When reason was originally created, box scores were a part of athletics event, so some of the logic is really pieced together.  The main section of the page displays basic information about the event.  If it is associated with any news items, box scores, or images, those will show up on the side.  By default, the event module will display the first news item it's associated with.  Originally, it was meant to display box scores as well, but those are now shown in a pop-up window.  The sidebar shows links to any other information about the event, which may include other news items or box scores.  Any images associated with the event will show up here, as well as any images associated with the news items. 
+
+The News Module - this is the main page and also the main pages for all of the sports.  It is also accessible through the links on the left sidebar.  Yet another very confusing module.  Since this module not only has to take care of the main page, but also all the main pages for each of the sports as well, it is a busy module.  Both the main page and sports main pages make a list of the most recent news events, with links to earlier events at the bottom.  The sports page also has a season selector at the bottom, which allows you to select news items from earlier seasons as well.  The sidebar includes sidebar features for both the main and sport news pages.  On the sports pages, it also lists any upcoming events as well as external links that are associated with the sport.  
+
+The Player Module - accessible by clicking on a players name on a roster page.  This is a fairly simple module.  There is no sidebar.  If the player has an image, it displays that.  Also, loops through the defined columns and lists stuff out, ignoring columns that are defined in the $no_show array.
+
+The Roster Module - accessible by clicking on the roster link on any sport page.  This page has no sidebar and much of the logic is similar to the player page.  There is a list of items things we don't show about the player (in the variable $no_show).  We loop through and make a list of each of the players and display info for anything that we find.  If the players has an image associated with them or they have content, a link is made to that persons players page.  If the sport is coed, it iterates twice.  
+
+The Schedule Module - accessible by clicking on the schedule/results link on any sports page.  Works similarly to the roster module in that it dynamically figures out which columns to show, omitting some chosen ones.  Also, if an event has a result, no time is shown for that event.  There is a season selector at the bottom that allows you to go back to previous seasons.  
+
+

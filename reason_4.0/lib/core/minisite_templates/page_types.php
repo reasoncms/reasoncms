@@ -1,0 +1,806 @@
+<?php
+	include_once('reason_header.php');
+	/* NOTE: This is a very fragile file.  
+	If there is a parse error in this file, all of Reason will go down.
+	So tread lightly, and test changes on webdev before moving them here. */
+	
+	$GLOBALS['_reason_page_types'] = array(
+		'default' => array(
+			'pre_bluebar' => 'textonly_toggle_top',
+			'main' => 'content',
+			'main_head' => 'page_title',
+			'edit_link' => 'login_link',
+			'pre_banner' => 'announcements',
+			'banner_xtra' => 'search',
+			'pre_sidebar' => 'assets',
+			'sidebar' => 'image_sidebar',
+			'navigation' => 'navigation',
+			'footer' => 'maintained',
+			'sub_nav' => 'blurb',
+			'sub_nav_2' => 'textonly_toggle',
+			'post_foot' => '',
+		),
+		'a_to_z' => array(
+			'banner_xtra' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'main_head' => '',
+			'main_post' => 'atoz',
+			'post_foot' => 'textonly_toggle',
+			'sidebar' => 'blurb',
+		),	
+		'all_related_policies' => array(
+			'main_post' => 'policy_related_all',
+		),
+		'assets' => array(
+			'pre_sidebar' => '',
+			'main_post' => 'assets',
+		),
+		'assets_with_author_and_date' => array(
+			'pre_sidebar' => '',
+			'main_post' => array(
+				'module'=>'assets',
+				'show_fields'=> array('name','file_size','file_type','description','datetime','author'),
+				'order'=>'dated.datetime DESC, chunk.author ASC',
+				),
+		),
+		'audio_video' => array(
+			'main_post' => 'av',
+		),
+		'audio_video_with_filters' => array(
+			'main_post' => array(
+				'module'=>'av_with_filters',
+			),
+		),
+		'audio_video_chronological' => array(
+			'main_post' => array(
+				'module'=>'av',
+				'sort_direction'=>'ASC'
+			),
+		),
+		'audio_video_on_current_site' => array(
+			'main_post' => array(
+				'module'=>'av',
+				'limit_to_current_page'=>false,
+			),
+		),
+		'audio_video_on_current_site_with_filters' => array(
+			'main_post' => array(
+				'module'=>'av_with_filters',
+				'limit_to_current_page'=>false,
+			),
+		),
+		'audio_video_sidebar' => array(
+			'pre_sidebar' => 'image_sidebar',
+			'sidebar' => 'av',
+		),
+		'blog' => array(
+			'main_head' => 'blog_title',
+			'main'=>'blog_description',
+			'main_post' => 'blog',
+			'sidebar'=>'',
+			'pre_sidebar' => '',
+		),
+		'blog_with_events_sidebar' => array(
+			'main_head' => 'blog_title',
+			'main'=>'blog_description',
+			'main_post' => 'blog',
+			'sidebar'=>'events_mini',
+			'pre_sidebar' => '',
+		),
+		'blog_with_events_sidebar_and_content' => array(
+			'main_head' => 'blog_title',
+			'main_post' => 'blog',
+			'sidebar'=>'events_mini',
+			'pre_sidebar' => '',
+		),
+		'blurb' => array(
+			'main_post' => 'blurb',
+			'sub_nav' => '',
+		),
+		'blurb_first_under_nav_rest_below_content' => array(
+			'sub_nav' => array(
+				'module'=>'blurb',
+				'num_to_display' => 1,
+			),
+			'main_post' => 'blurb',
+		),
+		'blurb_no_nav' => array(
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+			'main_post'=>'blurb',
+		),
+		'blurb_under_nav_and_below_content' => array(
+			'main_post' => 'blurb',
+		),
+		'blurb_with_children' => array(
+			'main' => 'blurb',
+			'main_post' => 'children',
+			'sub_nav' => '',
+		),
+		'blurb_with_siblings' => array(
+			'main' => 'blurb',
+			'main_post' => 'siblings',
+			'sub_nav' => '',
+		),
+		'blurb_with_siblings_sidebar' => array(
+			'main_post' => 'blurb',
+			'sidebar' => 'siblings',
+			'sub_nav' => '',
+		),
+		'blurbs_with_events_and_news_sidebar_by_page_categories' => array(
+			'pre_sidebar'=> array(
+				'module'=>'events_mini',
+				'limit_to_page_categories'=>true,
+			),
+			'sidebar'=>'news_via_categories',
+			'main_post'=>'blurb',
+			'sub_nav'=>'',
+		),
+		'child_sites' => array(
+			'main_post' => 'child_sites',
+		),
+		'child_sites_with_top_pages' => array(
+			'main_post' => 'child_sites_top_pages',
+		),
+		'child_sites_with_top_pages_nonav' => array(
+			'main_post' => 'child_sites_top_pages',
+			'banner_xtra' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+		),
+		'children_and_grandchildren' => array(
+			'main_post' => array(
+				'module' => 'children_and_grandchildren',
+				'max_depth' => 2
+			),
+		),
+		'children_and_grandchildren_full_names' => array(
+			'main_post' => array(
+				'module' => 'children_and_grandchildren',
+				'max_depth' => 2,
+				'use_link_name' => false,
+			),
+		),
+		'children_and_grandchildren_full_names_h3' => array(
+			'main_post' => array(
+				'module' => 'children_and_grandchildren',
+				'max_depth' => 2,
+				'use_link_name' => false,
+				'depth_to_tag_map' => array(1=>'h3',2=>'h4',),
+			),
+		),
+		'children_and_grandchildren_full_names_sidebar_blurbs_no_title' => array(
+			'main_post' => array(
+				'module' => 'children_and_grandchildren',
+				'max_depth' => 2,
+				'use_link_name' => false,
+				'depth_to_tag_map' => array(1=>'h3',2=>'h4',),
+			),
+			'pre_sidebar' => 'image_sidebar',
+			'sidebar' => 'blurb',
+			'sub_nav' => 'assets',
+			'main_head' => '',
+		),
+		'children_and_grandchildren_full_names_sidebar_blurbs_no_title_random_news_subnav' => array(
+			'main_post' => array(
+				'module' => 'children_and_grandchildren',
+				'max_depth' => 2,
+				'use_link_name' => false,
+				'depth_to_tag_map' => array(1=>'h3',2=>'h4',),
+			),
+			'pre_sidebar' => 'image_sidebar',
+			'sidebar' => 'blurb',
+			'sub_nav' => 'news2_mini_random',
+			'main_head' => '',
+		),
+		'children_and_siblings' => array(
+			'main_post' => 'children',
+			'sidebar'=>'siblings',
+		),
+		'children_and_sidebar_blurbs' => array(
+			'main_post' => 'children',
+			'sidebar' => 'blurb',
+			'sub_nav' => '',
+		),
+		'children_before_content' => array(
+			'main_post' => 'content',
+			'main'=>'children',
+		),
+		'children_before_content_sidebar_blurbs' => array(
+			'main_post' => 'content',
+			'main'=>'children',
+			'sidebar'=>'blurb',
+			'sub_nav'=>'',
+		),
+		'children_no_nav' => array(
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+			'main_post'=>'children',
+		),
+		'custom_form' => array(
+			'main_post' => 'custom_form'
+		),
+		'databases' => array(
+			'main' => '',
+			'main_post' => 'databases',
+			'pre_sidebar' => 'content',
+			'sidebar' => 'databases_recently_added',
+			'banner_xtra' => '',
+		),
+		'databases_by_category' => array(
+			'main' => '',
+			'main_post' => 'databases_by_category',
+			'pre_sidebar' => 'content',
+			'sidebar' => 'databases_recently_added',
+			'banner_xtra' => '',
+		),
+		'department_listing' => array(
+			'banner_xtra' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'main_head' => '',
+			'main_post' => 'department_list',
+			'post_foot' => 'textonly_toggle',
+			'sidebar' => 'blurb',
+		),
+		'event_registration' => array(
+			'main_post' => 'event_registration',
+			'sidebar' => '',
+		),
+		'event_signup' => array(
+			'main_post' => 'event_signup',
+			'sidebar' => '',
+		),
+		'event_slot_registration' => array(
+			'main_post' => 'event_slot_registration',
+			'sidebar' => '',
+		),
+		'events' => array(
+			'main_post' => 'events',
+			'sidebar' => '',
+		),	
+		'events_and_images_sidebar_show_children' => array(
+			'sidebar' => 'events_mini',
+			'main_post' => 'children',
+			'pre_sidebar' => 'image_sidebar',
+		),
+		'events_and_news_sidebar_by_page_categories' => array(
+			'pre_sidebar'=> array(
+				'module'=>'events_mini',
+				'limit_to_page_categories'=>true,
+			),
+			'sidebar'=>'news_via_categories',
+		),
+		'events_and_news_sidebar_show_children' => array(
+			'pre_sidebar' => 'events_mini',
+			'sidebar' => 'news_mini',
+			'main_post' => 'children',
+		),
+		'news_and_events_sidebar_show_children' => array(
+			'sidebar' => 'events_mini',
+			'pre_sidebar' => 'news_mini',
+			'main_post' => 'children',
+		),
+		'news_and_events_sidebar_show_children_no_title' => array(
+			'sidebar' => 'events_mini',
+			'pre_sidebar' => 'news_mini',
+			'main_post' => 'children',
+			'main_head' => '',
+		),
+		'events_and_news_sidebar' => array(
+			'pre_sidebar' => array(
+				'module' => 'events_mini',
+				'view' => 'monthly',
+			),
+			'sidebar' => 'news_mini',
+		),
+		'events_and_news_sidebar_weekly' => array(
+			'pre_sidebar' => array(
+				'module' => 'events_mini',
+				'view' => 'weekly',
+			),
+			'sidebar' => 'news_mini',
+		),
+		'events_archive' => array(
+			'main_post' => 'events_archive',
+			'sidebar' => '',
+		),
+		'events_archive_nav_below' => array(
+			'main' => 'events_archive',
+			'main_post'=>'navigation',
+			'sidebar' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+		),
+		'events_nonav' => array(
+			'main_post' => 'events',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'sidebar' => '',
+			'post_foot' => 'textonly_toggle',
+		),
+		'events_sidebar' => array(
+			'sidebar' => 'events_mini',
+		),	
+		'events_sidebar_by_page_categories' => array(
+			'sidebar'=> array(
+				'module'=>'events_mini',
+				'limit_to_page_categories'=>true,
+			),
+		),
+		'events_sidebar_show_children' => array(
+			'sidebar' => 'events_mini',
+			'main_post' => 'children',
+		),
+		'events_sidebar_show_children_random_images_in_subnav' => array(
+			'sidebar' => 'events_mini',
+			'main_post' => 'children',
+			'sub_nav' => array('module' => 'image_sidebar', 'num_to_display' => 2, 'rand_flag' => true),
+		),
+		'events_sidebar_more_show_children' => array(
+			'sidebar' => 'events_mini_more',
+			'main_post' => 'children',
+		),
+		'events_instancewide' => array(
+			'main_post' => 'events_instancewide',
+			'sidebar' => '',
+		),
+		'events_verbose' => array(
+			'main_post' => 'events_verbose',
+			'sidebar' => '',
+		),	
+		'events_verbose_nonav' => array(
+			'main_post' => 'events_verbose',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'sidebar' => '',
+			'post_foot' => 'textonly_toggle',
+		),	
+		'faculty' => array(
+			'main_post' => 'faculty',
+		),
+		'faculty_and_children' => array(
+			'main_post' => 'faculty',
+			'sidebar' => 'children',
+		),
+		'faculty_first' => array(
+			'main' => 'faculty',
+			'main_post' => 'content',
+		),
+		'faculty_no_nav' => array(
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+			'main_post' => 'faculty',
+			'sidebar' => 'blurb',
+		),
+		'faculty_with_sidebar_blurbs' => array(
+			'main_post' => 'faculty',
+			'sidebar' => 'blurb',
+			'sub_nav' => '',
+		),
+		'faculty_sidebar_children' => array(
+			'main_post' => 'faculty',
+			'sidebar' => 'children',
+		),
+		'faqs' => array(
+			'main_post' => 'faqs',
+		),
+		'feedback' => array(
+			'main_post' => 'feedback',
+		),
+		'feedbackNoNavNoSearch' => array(
+			'banner_xtra' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => '',
+			'main' => 'content',
+			'main_post' => 'feedback',
+		),
+		'form' => array(
+			'main' => 'form_content',
+			'main_post' => 'form'
+		),
+		'form_force_login' => array(
+			'main' => 'form_content',
+			'main_post' => array(
+				'module'=>'form',
+				'force_login'=>true,
+				),
+		),
+		'formNoNavNoSearch' => array(
+			'banner_xtra' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+			'main' => 'form_content',
+			'main_post' => 'form'
+		),
+		'gallery' => array(
+			'main_post' => 'gallery',
+			'sidebar' => '',
+		),
+		'gallery_entire_site' => array(
+			'main_post' => 'gallery_entire_site',
+		),
+		'gallery_entire_site_no_nav' => array(
+			'main_post' => 'gallery_entire_site',
+			'navigation' => '',
+		),
+		'gallery_entire_site_no_nav_no_title' => array(
+			'main_post' => 'gallery_entire_site',
+			'navigation' => '',
+			'main_head' => '',
+			'banner_xtra' => '',
+		),
+		'gallery_first_nav_below' => array(
+			'main' => 'gallery',
+			'main_post'=>'navigation',
+			'sidebar' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+		),
+		'gallery_no_nav' => array(
+			'main_post' => 'gallery',
+			'sidebar' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+		),
+		'gallery_single_page' => array(
+			'main_post' => 'gallery_single_page',
+			'sidebar' => '',
+		),
+		'gallery_vote' => array(
+			'main_post' => 'gallery_vote',
+			'sidebar' => '',
+		),
+		'GoModule' => array( 
+			'sub_nav_2' => '',
+			'banner_xtra' => '',
+			'sidebar' => '',
+			'pre_sidebar' => '',
+			'navigation' => '',
+			'main_post' => 'go',
+			'post_foot' => 'textonly_toggle',
+		),
+		'image_left_no_nav' => array(
+			'navigation' => 'image_sidebar',
+			'sub_nav_2' => '',
+			'sidebar' => '',
+			'post_foot' => 'textonly_toggle',
+		),
+		'image_slideshow' => array(
+			'main_post' => 'image_slideshow',
+			'sidebar' => '',
+		),
+		'image_slideshow_manual' => array(
+			'main_post' => array('module'=>'image_slideshow','slideshow_type'=>'manual'),
+			'sidebar' => '',
+		),
+		'images_full_size' => array(
+			'main_post' => 'images',
+			'sidebar' => '',
+		),
+		'images_full_size_before_content' => array(
+			'main' => 'images',
+			'main_post' => 'content',
+			'sidebar' => '',
+		),
+		'jobs' => array(
+			'main_post' => 'jobs',
+			'sub_nav' => '',
+			'sidebar'=>'blurb',
+		),
+		'live_sites' => array(
+			'main_post' => 'live_sites',
+		),
+		'minutes' => array(
+			'main_post' => 'minutes',
+		),
+		'nav_below_content' => array(
+			'banner_xtra' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'main_post'=>'navigation',
+			'post_foot' => 'textonly_toggle',
+		),
+		'news' => array(
+			'main_post' => 'news',
+		),
+		'news_all' => array(
+			'main_post' => 'news_all',
+		),
+		'news_by_category' => array(
+			'main_post' => 'news_by_category',
+		),
+		'news_mini' => array(
+			'main_post' => 'news_mini',
+		),
+		'news_NoNav_sidebarBlurb' => array(
+			'main_post' => 'news',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'sidebar' => 'blurb',
+			'post_foot' => 'textonly_toggle',
+		),
+		'news_one_at_a_time' => array(
+			'main_post'=>'news_one_at_a_time',
+		),
+		'news_proofing_multipage' => array(
+			'main_post'=>'news_proofing_multipage',
+		),
+		'news_sidebar' => array(
+			'sidebar' => 'news_mini',
+		),
+		'news_random' => array(
+			'main_post' => 'news_rand',
+		),
+		'news_proofing' => array(
+			'main_post' => 'news_proofing',
+		),
+		'news_via_categories' => array(
+			'sidebar' => 'news_via_categories',
+		),
+		'news_via_categories_with_children' => array(
+			'sidebar' => 'news_via_categories',
+			'main_post'=>'children',
+		),
+		'news_via_categories_with_siblings' => array(
+			'sidebar' => 'news_via_categories',
+			'main_post'=>'siblings',
+		),
+		'news_with_sidebar_blurbs' => array(
+			'main_post' => 'news',
+			'sidebar' => 'blurb',
+			'sub_nav' => '',
+		 ),
+		'newsNoNavigation' => array(
+			'main_post' => 'news',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+		),
+		'newsNoNavigation_footer_blurb' => array(
+			'main_post' => 'news',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+			'edit_link' => 'blurb',
+		),
+		'no_sub_nav' => array(
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+		),
+		'no_title' => array(
+			'main_head' => '',
+		),
+		'noNavNoSearch' => array(
+			'banner_xtra' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+		),
+		'noNavNoSearch_news_sidebar' => array(
+			'banner_xtra' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+			'pre_sidebar' => 'news_mini',
+			'sidebar' => 'assets',
+		),
+		'policy' => array(
+			'main_post' => 'policy',
+		),
+		'projects' => array(
+			'main_post' => 'projects',
+		),
+		'random_blurb_and_sidebar_image' => array(
+			'sub_nav' => array('module' => 'blurb', 'num_to_display' => 1, 'rand_flag' => true),
+			'sidebar' => array('module' => 'image_sidebar', 'num_to_display' => 3, 'caption_flag' => false, 'rand_flag' => true)
+		),
+		'random_news_sub_nav' => array(
+			'sub_nav'=>'news2_mini_random',
+		),
+		'related_policies' => array(
+			'main_post' => 'policy_related',
+		),
+		'related_policies_and_children' => array(
+			'main_post' => 'policy_related',
+			'sidebar' => 'children',
+		),
+		'related_policies_and_siblings' => array(
+			'main_post' => 'policy_related',
+			'sidebar' => 'siblings',
+		),
+		'resource' => array(
+			'main_post' => 'resource',
+		),
+		'show_children' => array(
+			'main_post' => 'children',
+		),
+		'show_children_and_news_sidebar' => array(
+			'main_post' => 'children',
+			'sidebar' => 'news_mini',
+		),
+		'show_children_no_title' => array(
+			'main_head' => '',
+			'main_post' => 'children',
+		),
+		'show_children_with_az_list' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_az_links' => true,
+			),
+		),
+		'siblings_and_children' => array(
+			'main_post' => 'siblings',
+			'sidebar'=>'children',
+		),
+		'sidebar_children' => array(
+			'sidebar' => 'children',
+		),
+		'show_siblings' => array(
+			'main_post' => 'siblings',
+		),
+		'siblings_no_nav' => array(
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+			'main_post'=>'siblings',
+		),
+		'sidebar_blurb' => array(
+			'sub_nav' => '',
+			'sidebar' => 'blurb',
+		),
+		'sidebar_blurb_no_title' => array(
+			'sub_nav' => '',
+			'sidebar' => 'blurb',
+			'main_head' => '',
+		),
+		'sidebar_blurb_and_children_no_title' => array(
+			'sub_nav' => '',
+			'sidebar' => 'blurb',
+			'main_head' => '',
+			'main_post' => 'children',
+		),
+		'sidebar_blurb_and_children_with_images' => array(
+			'sub_nav' => '',
+			'pre_sidebar' => 'image_sidebar',
+			'sidebar' => 'blurb',
+			'main_post' => 'children',
+		),
+		'sidebar_images_alpha_by_keywords' => array(
+			'sidebar' => array(
+				'module'=>'image_sidebar',
+				'order_by'=>'keywords ASC',
+			),
+		),
+		'sidebar_images_alpha_by_name' => array(
+			'sidebar' => array(
+				'module'=>'image_sidebar',
+				'order_by'=>'name ASC',
+			),
+		),
+		'sidebar_images_chronological' => array(
+			'sidebar' => array(
+				'module'=>'image_sidebar',
+				'order_by'=>'datetime ASC',
+			),
+		),
+		'sidebar_images_reverse_chronological' => array(
+			'sidebar' => array(
+				'module'=>'image_sidebar',
+				'order_by'=>'datetime DESC',
+			),
+		),
+		'site_map' => array(
+			'banner_xtra' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'main_head' => '',
+			'main_post' => array(
+				'module' => 'sitemap',
+				'site_types_unique_names' => array(
+					'Gateways'=>array('gateway_site_type'),
+					'Departments and Concentrations'=>array('department_site_type',
+													'concentration_site_type'),
+					'Offices'=>array('office_site_type'),
+					'Other Sites'=>array('other_site_type'))),
+			'post_foot' => 'textonly_toggle',
+			'sidebar' => 'blurb',
+		),
+		'standalone_login_page' => array(
+			'main_post' => 'login',
+		),
+		'standalone_login_page_stripped' => array(
+			'main_head' => '',
+			'edit_link' => '',
+			'banner_xtra' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'post_foot' => 'textonly_toggle',
+			'main_post' => 'login',
+		),
+		'tasks' => array(
+			'main_post' => 'tasks',
+		),
+		'one_blurb_subnav_others_sidebar' => array(
+			'sub_nav' => array('module' => 'blurb', 'num_to_display' => 1),
+			'sidebar' => 'blurb',
+		),
+		'children_with_one_blurb_subnav_others_sidebar' => array(
+			'main_post' => 'children',
+			'sub_nav' => array('module' => 'blurb', 'num_to_display' => 1),
+			'sidebar' => 'blurb',
+			'pre_sidebar' => 'image_sidebar',
+		),
+		'editor_demo' => array(
+			'main_post'=>'editor_demo',
+		),
+		'publication' => array(
+			'main_post'=>'publication',
+			'main_head' => 'publication/title',
+			'main'=>'publication/description',
+			'sidebar'=>'',
+			'pre_sidebar' => '',
+		),
+		'show_children_and_random_images' => array(
+			'main_post' => 'children',
+			'sidebar' => array('module' => 'image_sidebar', 'num_to_display' => 4, 'caption_flag' => true, 'rand_flag' => true),
+		),
+		'feed_display_full' => array(
+                       'main_post' => 'magpie/magpie_feed_display',
+					   'pre_sidebar' => 'magpie/magpie_feed_search',
+                       'sidebar' => 'magpie/magpie_feed_nav',
+        ),
+		'feed_display_sidebar' => array(
+                       'sidebar' => array(
+					   		'module'=>'magpie/magpie_feed_display',
+							'num_per_page'=>999,
+							'desc_char_limit'=>25,
+						),
+        ),
+		'feed_display_sidebar_with_search' => array(
+					   'pre_sidebar' => 'magpie/magpie_feed_search',
+                       'sidebar' => 'magpie/magpie_feed_display',
+        ),
+	);
+	
+	if (reason_file_exists('minisite_templates/page_types_local.php'))
+	{
+		reason_include_once('minisite_templates/page_types_local.php');
+		if(!empty($GLOBALS['_reason_page_types_local']))
+		{
+			$GLOBALS['_reason_page_types'] = array_merge($GLOBALS['_reason_page_types'],$GLOBALS['_reason_page_types_local']);
+		}
+	}
+?>

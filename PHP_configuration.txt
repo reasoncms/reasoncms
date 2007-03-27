@@ -1,0 +1,50 @@
+
+PHP Configuration
+
+	Your PHP install must support MySQL connections, but it's likely that the version packaged 
+with your Linux distribution will be fine. Below are the configuration details we use in production:
+
+We custom build PHP with the following options enabled:
+
+  --with-openssl                                                          
+  --with-zlib                                                             
+  --enable-calendar                                                       
+  --with-curl                                                             
+  --with-mysql=shared											                                
+  --enable-sigchild                                                       
+  --with-readline                                                         
+  --enable-sockets                                                        
+  --enable-force-cgi-redirect                                             
+  --disable-debug                                                         
+  --disable-rpath                                                         
+  --with-bz2                                                              
+  --with-freetype-dir=/usr                                                
+  --with-jpeg-dir=/usr                                                    
+  --with-png-dir=/usr                                                     
+  --with-gd=shared                                                        
+  --enable-gd-native-ttf                                                  
+  --with-gettext                                                          
+  --with-ncurses=shared                                                   
+  --with-gmp                                                              
+  --with-iconv                                                            
+  --with-pspell                                                           
+  --with-dom                                                              
+  --with-dom-xslt=/usr                                                    
+  --with-dom-exslt=/usr                                                   
+  --with-xmlrpc=shared                                                    
+  --with-layout=GNU                                                       
+  --enable-bcmath                                                         
+  --enable-exif                                                           
+  --enable-ftp                                                            
+  --enable-magic-quotes                                                   
+  --enable-safe-mode                                                      
+  --enable-sysvsem                                                        
+  --enable-sysvshm                                                        
+  --enable-wddx                                                           
+  --enable-memory-limit                                                   
+  --enable-shmop                                                          
+  --enable-dbx                                                            
+  --enable-dio                                                            
+  --enable-mbstring=all                                                   
+  --with-mime-magic=/usr/share/file/magic.mime                            
+

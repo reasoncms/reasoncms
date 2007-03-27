@@ -1,0 +1,58 @@
+#registrant_data h4 {
+	padding-top: .5em;
+	margin-top: 0px;
+}
+
+#registrant_data th {
+	text-align: left;
+}
+
+#registrant_data td {
+	padding: .3em;
+}
+#registrant_data table td {
+	vertical-align: top;
+}
+
+#registrant_data a:link {
+	font-weight: bold;
+}
+#registrant_data tr.odd td {
+	background-color:#E3EDFF;
+}
+#registrant_data tr.even td {
+	background-color:#F0F5FF;
+}
+div#slotInfo {
+	margin:1em 0;
+	background-color:#E4EDF7;
+	border:1px solid #7398BB;
+}
+div#slotInfo h3 {
+	background-color:#92B2D6;
+	color:#FFFFFF;
+	margin-top:0;
+	padding:.33em;
+	border-bottom:1px solid #7398BB;
+}
+div#slotInfo ul {
+	margin:1.5em;
+	padding:0;
+	list-style:none;
+}
+div#slotInfo ul h4 {
+	margin-bottom:.33em;
+	padding-bottom:.25em;
+	border-bottom:1px dotted #92B2D6;
+}
+div#slotInfo ul ul, div#slotInfo div.admin ul {
+	margin:0 0 0 2.5em;
+	list-style-type:disc;
+}
+div#slotInfo ul ul li, div#slotInfo div.admin ul li {
+	margin-top:.33em;
+	margin-bottom:.33em;
+}
+div#slotInfo div.formResponse, div#slotInfo div.admin {
+	margin:1em;
+}

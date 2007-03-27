@@ -1,0 +1,6 @@
+Welcome To Reason Documentation
+
+This site is dedicated to trying to document all the work done in creating Reason over the 2002-2003 school year.  Most of the stuff you're going to read is about code written by Brendon Stanton or Dave Hendler.  However, we should give credit to Matt Ryan, Brian Koranda and Nate Fillmore as well for their hard work.  
+
+If you are new to Reason you should first make sure that you are familiar with the database structure of reason.  Once you feel like you understand that alright, there are a few sections that you sections that you should check out before you start coding.  Most of these can be found in the tools section in the backend directory.  First, you should look at the settings page.  This page isn't too complicated, but it tells you some things you should know before you start coding.  After that, you should look at the pages on the entity class, the entity_selector class, and the viewer class, probably in that order.  These three classes were createdin order to make creating reason pages much simpler.  When you read these files for the first time, don't worry so much about the nuts and bolts of how they work, just try and take a look at some of the examples and try writing some basic code using these classes.  Doing so will make writing reason pages much, much simpler.  
+

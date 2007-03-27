@@ -1,0 +1,42 @@
+The editor module is one of the simplest modules.  The majority of the complexity of this module lies in the Disco class.  
+
+The basics of the EditorModule class are very straight forward.  The class just sets up a few variables in the init() function, then in the run function the class, if the type has a custom content handler, it includes that file, then makes a new content manager of either the default type, or the type that is defined as the variable $content_handler in the include file.  The content handler is the set up and run.
+
+If the user is trying to create a new entity ( $this->admin_page->id is empty ), then the first thing reason does is create a new entity of that type and redirect you to that page.  This is done so that people may choose to associate items with their new entity before they actually fill out the entity.  If a person then "forgets" to finish filling out the entity, the Finish Module will alert them that they have errors and will send them back to the edit page.  
+
+During the run part of the module, we need to find out which content handler to use.  We always include the default module.  If there is a value in the types 'custom_content_handler',  this file is also included.  All files of this type must be in the directory REASON_INC/content_managers.  
+
+The DiscoReason2 Class
+
+The default content manager for reason used to be based on the disco_db class.  However, with the addition of fields as a type in reason, it was decided that it was best to bypass this class and use the database to figure out what to do with the fields.  This decision allows us to now add and subtract fields in the DB through reason as well as allowing us to specify a plasmature type in the DB as well.  
+
+The load_by_type() function is now much more elaborate as there is more logic in determining the characteristics of an element.  First, the class has to grab all the fields from the entity table (since these fields are not stored in the database) and add all fields as elements to the form.  After this, the function then grabs all the entity tables that the type is associated with.  For each of these, it grabs all the fields that are associated with that table and adds them to the form.  If there is a plasmature type specified for that field the form sets up the element as that type, otherwise, it tries to get its type by calling the function plasmature_type_from_db_type().  This function returns an array, the first element being the plasmature type and the second being any optional arguments that the plasmature type will take in the constructor.  At the end, this function then just changes a few basic types so that the user cant see them.  
+
+The process() function is overloaded here too.  This function updates the entity and archives it if it's new.  Also, if the user sets the no_share flag to true, this function will remove this entity from all sites that are currently borrowing it.  Also, the alter_no_share() function determines whether or not the no_share flag should even be set as an element on the page based on whether or not the current site shares the current type.  This function is called at the top of the show_form() function.  
+
+Overloading Content Managers
+
+Sometimes, we want additional functionality for our content managers.  This is one of the biggest assets of reason is the ability to do this without having to worry about creating the form and interacting with the database every time.  One of the simplest examples is the athletics_page type.  Here is what it looks like:
+
+    $content_handler = "athletics_page_manager";
+
+    class athletics_page_manager extends ContentManager 
+    {
+    
+        function alter_data() {
+            $this -> change_element_type ("content", "loki");
+            }
+        
+    }
+
+You see first that we need to set up the $content_handler variable.  This tells the editor module what class to use when making the disco item.  This specific class only has one purpose, to change the element type of the field "content" to "loki".  Most superficial changes that are made to the editor module can be done this way.  Other functions that are useful to use this way are:
+
+$this->add_required( 'content' );  //make the field content required
+$this->set_display_name( 'content' , 'I am content' ); //doesn't change the name of the field in the form, but changes the display name
+$this->set_comments( 'content' , 'I am a comment' ); //adds a comment next to the field
+$this->set_value( 'content' , 'WEE' ); //changes the value of the field content to "WEE"
+
+If you want to do overloading that is more complicated than that, it is useful to look at the definitions of the functions pre_show_form(), post_show_form(), finish(), where_to(), on_first_time(), on_every_time(), and run_error_checks().  These functions can be used to do different things at different times of the forms existence.  
+
+
+

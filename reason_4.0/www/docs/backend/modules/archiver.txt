@@ -1,0 +1,52 @@
+The Archiver Module
+
+Location of the code: REASON_INC/classes/admin/modules/archive.php
+
+The Archive module is accessed from editing any item that has been edited more
+than once.  From the editor, there is a link to the History of the item, with
+the number of edits that item has had.  Within the Archiver, there are
+basically two things that can be done: compare any version of the item with any
+other and make any version current.  Currently, comparison of items is fairly
+primitive, essentially just checking if two fields are equal.  But it's still
+useful.  Making an older version current will archive the current version of
+the item and make a copy of the chosen older version to be current.
+
+Now, to the code...
+
+First off, there is a good chunk of the code in the archive module that is not
+being used. There were some major changes in the design of the module that
+made several of the functions unnescessary.  As all other backend modules,
+there is an init() and a run() method.  init() simply grabs all archived
+entities and creates the $history private variable which contains all
+versions, including the current, keyed by id.  run() is also fairly simple.
+Basically, it looks for a variable called 'archive_page' in the REQUEST and
+calls the function of name 'show_'.$archive_page.  So, the default is
+'compare' which will call the function 'show_compare'.  And, really,
+show_compare and show_confirm_reinstate are the only methods ever really
+called in this way.
+
+show_compare() is very simple - it just gets entity a and entity b and passes
+them off to the diff_entities() method which is the workhorse of the Archive
+Module.
+
+diff_entities() is pretty long, but it's really not that complicated.  Most of
+the code is spent determining if we are showing just one entity or if we are
+actually comparing two versions.  The fields are traversed and the values for
+each entity are shown. At the end, there is some logic to figure out if the
+item being shown should have a link to make it current.  Obviously, we only
+want to show that option if the entity is not already the current one.
+
+show_confirm_reinstate() is simply a screen to confirm or cancel reinstatement
+of an older entity.  Hitting confirm will make the Archive module call the
+show_reinstate() method.
+
+show_reinstate() is also very simple.  It simply used the update_entity
+function with the values of the archived entity.  This automatically archived
+the current version and makes the older version current.  Pretty sweet.
+
+Most of the other methods are either not used or pretty simple.  For example,
+the get_archive_name() method simply determines how to show the name of the
+entity - whether it is current or not.  The rest are remnants of the older
+module.
+
+Sweet.

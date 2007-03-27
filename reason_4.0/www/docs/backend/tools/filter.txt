@@ -1,0 +1,26 @@
+The Filter Class
+
+The filter class is fairly simple extension of Disco.  Its main purpose is to interact with the lister class in order to help people sort through a list of entities to help find the one they want.  The filter class doesn't actually do any of the filtering itself, but sets up request variables and reloads the page, allowing the viewer to take care of the actual filtering.
+
+In order to use the filter class, it is important to know how the variables work.  Any variable that is a search variable is indicated by the prefix search_.  For instance, to search by name, you would set up a variable called search_name.  When the viewer looks through the request variables, it would find this variable and realize it's a search variable, and make sure the mysql query string is set up properly.   
+
+The second thing to know about variable naming are the naming conventions for different searches.  By default, the viewer uses a "LIKE" comparison for doing its searches.  So if you're searching for an entity named "Greek House", the viewer will add the relation 'entity.name LIKE "%Greek House%"'.  However, if you were to search for an id this way, you may not get the result you want.  Searching for 'entity.id LIKE "%5%"' will give you any entity that has a 5 in it.  What we would probably like here is something more like 'entity.id = 5', which gives us only the entity with id 5.  For this reason, if we want to search exactly for id, we pass the page another variable called "search_exact_id" and set its value to true.  The following prefixes can be used in a similar manner.
+
+search_exact_ -- get only entities with the exact filter value.
+search_less_than_ -- get only entities with value less than the filter value.
+search_less_than_equal -- get only entities with value less than or equal to the filter value.
+search_greater_than_ -- get only entities with value greater than the filter value.
+search_greater_than_equal -- get only entities with value greater than or equal to the filter value.
+
+To see how these variables are used in the viewer class, look in the function grab_filters().
+
+
+The Basics:
+
+Right now, the filters being used in the reason backend are fairly standard.  Each one has an id search (which is an exact search), and a name search (which is a like search).  All filter pages have at least those two.  These are set up at the top of the grab_fields() function.  After this, the grab fields function sets up some other variables.  If it is passed a viewer, then it grabs the appropriate fields from the database.  For each one that it finds, it puts it into a field.  Right now, this is done in two different ways.  If the field is an enum type in the database, it calls the add enum element function, which sets up the field as an option menu and requires an exact match.  Otherwise it adds it as text box.  After that, it loops through the page's request variables and adds all the ones that aren't search variables as hidden elements to the form.  This assures that all the required information will still be available after the submit.
+
+
+Extensibility: 
+
+If you look at the way the filter class is set up right now, you can see that it is capable of doing much more than it currently does.  Right now, the filter class is only using like matches and exact matches.  All the other prefixes mentioned above aren't even being used currently, even though the viewer class is set up to use them.  One thing that could be nice is some sort of date search for date time elements in reason.  This could take advantage of searching for things before or after a given date for instance.  In general, there are specific database types that could fit nicely into this mold.   
+

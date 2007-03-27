@@ -1,0 +1,61 @@
+Disco and Plasmature
+
+Disco and Plasmature are the generic tools for form and input management.
+Disco handles the form (high-level display, form-level errors, and
+submission), while Plasmature handles individual fields.  Really, Plasmature
+isn't a single entity - it's really an generic interface with specific
+implementaions.  Let's talk about Disco first.
+
+Disco and its Ilk
+
+The basic Disco class manages fields, errors, and submission.  From a user's
+standpoint, Disco first shows a form and allows input, catches submissions and
+checks for errors, loops back on itself while maintaining state if there are
+errors, and finally processes the data once errors are dealt with.
+
+There are several extensions of Disco that are used within Reason.  DiscoDB
+is an extension that automatically loads fields and values from tables and
+then automatically saves those values back to the table.  However, DiscoDB
+isn't really used anymore within Reason.  Now, most Disco-based forms are
+using a different variant, namely, DiscoReason.  More about that later.
+
+Disco's main function is run() which handles everything from initialization,
+to paramater grabbing, to submission.  run() contains calls to other virtual
+methods which are easily overloadable.  
+
+init() - sets everything up.  For extending Disco, this probably does not need
+to be touched.
+			
+on_first_time() - runs any code that should be executed only on the initial
+load of Disco.  Any code in here will not be run if a form has been submitted.
+
+on_every_time() - runs code that should be executed every iteration of the
+Disco loop.
+
+_grab_messages() - a private method to grab all variables sent through POST
+
+pre_error_check_actions() - runs code after on_every_time and on_first_time,
+but before error checks have happened.  This is to catch actions like Cancel,
+where we do not want to do any error checks, we cimply want to get out of the
+form.
+
+_run_all_error_checks() - private method which calls the error checking
+methods.
+
+process() - method to handle processing of data.  Usually used for stuffing
+information into database or otherwise saving information.
+
+finish() - another finishing method.  Often times, finish will do additional
+actions if process is being used by something else.
+
+handle_transition() - determine where to redirect once the form is complete.
+
+post_error_check_actions() - runs code after error checks have happened.
+Useful if there are specific actions that depend on the result of error
+checks.
+
+pre_show_form() - Handles pre-form display issues
+
+show_form() - shows the form.
+
+post_show_form() - Post-form display issues

@@ -1,0 +1,57 @@
+table.athleticsRoster
+{
+	text-align: left;
+	padding: 0px;
+	margin-top: 5px;
+	background-color: #F4F6FB;
+}
+table.athleticsRoster th
+{
+	padding: 5px;
+	margin: 0px;
+}
+
+table.athleticsRoster td
+{
+	padding: 5px;
+	margin: 0px;
+	border: none;
+	border-width: none;
+}
+.rosterHead {
+	background-color: #F4F6FB;
+}
+.rosterRow1 {
+	background-color: #DCE4F1;
+}
+.rosterRow2 {
+	background-color: #F4F6FB;
+}
+.rosterTD {
+}
+
+#athleticsPlayerInfo .playerImage
+{
+	float: left;
+}
+
+#athleticsPlayerInfo .playerImage img
+{
+	margin: 0px 0px 5px 0px;
+	border: 1px solid #000;
+}
+
+#athleticsPlayerInfo .playerInfo
+{
+}
+
+#athleticsPlayerInfo .playerInfoWithImage
+{
+	margin-left: 150px;
+}
+
+#athleticsPlayerInfo .returnLink
+{
+	padding-top: 20px;
+	clear: both;
+}

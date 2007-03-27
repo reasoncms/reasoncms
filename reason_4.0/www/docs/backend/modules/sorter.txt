@@ -1,0 +1,28 @@
+The Sorter Module
+
+The sorter module is a module that is used exclusively used for types that are associated with the sortable table.  The basic widget that we use to do the sorting is based on javascript code found at http://javascript.internet.com/forms/list-organizer.html.  We had to modify the code slightly to fit our purposes and so that it worked in Safari 
+Browsers.  The code works by using a select menu to reorder the items.  On submitting the form, a new variable is written which contains the ids of the items to be sorted seperated by spaces.  The items are then given sort order 1, 2, 3, … etc.  
+
+The SorterModule uses a class which can be extended to list out the entities.  If a type has a value for custom_sorter, the class will automatically include that file and use that custom sorter.  The variable $sorter should be set up in that file so that the SorterModule knows what to use.  
+
+If the variable $this->admin_page->request[ 'default_sort' ] is set on the sort page (The main link in the lister includes this), then the sorter creates a list of links.  These links should be a link to the same page that don't have default_sort set, and often give some sort of additional restriction (for example, the page type restricts on page parent).  If there is only one link-which is the case with the main sorter-the page automatically redirects to that page.  Otherwise, a list of options is given to the user.  
+
+On the actually sorting page, after we get past the links, the sorter calls a function called update_es( $es ).  This is where the entity selector should be updated if restrictions are to be set.  For example:
+
+class other_sorter extends sorter( $es )
+{
+function update_es( $es ) // {{{
+{
+            	$es->add_left_relationship_field( 'parent' , 'entity' , 'id' , 'parent_id' );
+            	$es->add_left_relationship_field( 'parent' , 'entity' , 'name' , 'parent_name' );
+            	if( !empty( $this->admin_page->request[ 'parent_id' ] ) )
+            	{
+                		$es->add_relation( 'entity.id != ' . $this->admin_page->request[ 'parent_id' ] );
+                		$es->add_relation( '__entity__.id = ' . $this->admin_page->request[ 'parent_id' ] );
+            	}
+            return $es;
+        } // }}}
+}
+
+This is the function from the page sorter.  This basically says that if a parent_id is set, then we make sure to only use children of this parent.  Otherwise, we grab everything.
+

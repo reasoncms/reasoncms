@@ -1,0 +1,59 @@
+The Entity Class
+
+The entity class is a class designed to make dealing with entities more managable.  The concept behind this class is that each entity in the database has the same basic characteristics, so we can put all this together in one class.  We are also then easily able to not only get all the values of an entity this way, but we have an easy way to get to its relationships as well.  
+
+The entity class also attempts to make code as efficient as possible, but minimizing the number of queries to the database.  This is done in two ways. 
+
+ The first way is when getting the basic values of an entity.  When initialized, the entitiy doesn't do anything but set the value of the "private" variable $_id to the value that it's given.  It won't do a query to the database for other values until it's asked for one of them (See get values function).   After that, it caches the values so it doesn't check for them again (Unless $_cache is set to false).  The basic logic for a function such as get_values looks like this:
+
+if this is first time checking for values
+	Query database and put values into $this->_values
+
+return $this->_values;
+
+Thus, the entity class will query the database for these values once and only once.  This brings up another important point.  Often times a entity object just needs to serve as a place holder.  You may not need to know anything about the entity other than the id.  For this reason, it is more efficient to use the id() function whenever you need to get the id of an entity.  Also, this way makes it essential that you use the get_value() function whenever you need info about an entity.  For example, to get the name of and entity $e, say $e->get_value( 'name' ) NOT $e->_values[ 'name' ].  The second one may work but it will be unreliable if the entity's values have not yet been initialized.  
+
+The second way the entity class attempts to save on database queries is through the handling of relationships.  This is done in the same way as above.  The entity doesn't ever get any relationships from the database until the first time it is asked for them.  At this point, it grabs all relationship info.  For an example of how this works, you can look at the code in classes/entity.php3.
+
+
+Entity Class Functions
+
+Below is a basic description of some of the functions that the entity class uses.  These are all public functions which may come in useful while programming.
+
+id() - returns the id of the given entity.  Uses no database queries.
+
+get_values() - returns an associative array of all database values of the given entity.  The name of the field is the index. For each value.
+
+get_value( $col ) - returns a single value of the entity, where $col is the name of a field.  returns false if $col isn't a field of the given entity.
+
+get_characteristics() - returns and array of the fields of a given entity.
+
+get_display_name() - if the type has a custom display name handler, uses that to return a name.  Otherwise, returns the name of the entity.
+
+has_right_relation_of_type( $e ) - returns true if the entity has a right relationship of type $e, where $e is a name or id from the allowable_relationship table.
+
+has_left_relation_of_type( $e ) - returns true if the entity has a left relationship of type $e, where $e is a name or id from the allowable_relationship table.
+
+has_relation_of_type( $e ) - returns true if the entity has a right or left relationship of type $e, where $e is a name or id from the allowable_relationship table.
+
+has_right_relation_with_entity( $e , $type = false ) - if type is specified, returns true if the given entity has a right relationship of type $type with entity $e.  If type is not specified, returns true if the given entity has any type of right relationship with $e.
+
+has_left_relation_with_entity( $e , $type = false ) - if type is specified, returns true if the given entity has a left relationship of type $type with entity $e.  If type is not specified, returns true if the given entity has any type of left relationship with $e.
+
+has_relation_with_entity( $e , $type = false ) - if type is specified, returns true if the given entity has a right or left relationship of type $type with entity $e.  If type is not specified, returns true if the given entity has any type of right or left relationship with $e.
+
+get_right_relationship( $rel_name ) - returns an array of all entities with which the given entity has a right relationship of type $rel_name, where $rel_name is an id or name from the allowable_relationship table.
+
+get_left_relationship( $rel_name ) - returns an array of all entities with which the given entity has a left relationship of type $rel_name, where $rel_name is an id or name from the allowable_relationship table.
+
+get_relationship( $rel_name ) - returns an array of all entities with which the given entity has a right or left relationship of type $rel_name, where $rel_name is an id or name from the allowable_relationship table.
+
+get_right_relationships() - returns an array of arrays which the first index is the name or id of a given allowable right relationship of the type of the given entity, and the second is an array of entities.  
+
+get_left_relationships() - returns an array of arrays which the first index is the name or id of a given allowable left relationship of the type of the given entity, and the second is an array of entities.  
+
+get_right_relationships() - returns an array of arrays which the first index is the name or id of a given all allowable relationship of the type of the given entity, and the second is an array of entities.  
+
+Disco and Plasmature
+
+

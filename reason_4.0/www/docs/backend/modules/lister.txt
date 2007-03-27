@@ -1,0 +1,14 @@
+The lister module is one of the most important modules in reason.  It utilizes the viewer class to create a list of all entities of a given type that belong to a given site.  In addition to displaying all the entities, the Lister Module is also responsible for handling other tasks such as the filter box and listing the different views.  
+
+The basics of the listers
+
+In the init() function, the lister class attempts to grab all the info about the page and the modules that it will need to do the whole thing.  This function is based on earlier code that was written and is not broken up as much as it should be.  At some point, this should probably be rewritten.  In a nut shell, here's what happens.  First, the function checks to see if the state is live.  If it is, then it attempts to grab info about the appropriate view from the database (check the get_views() function).  After this it just inits the content viewer and filter.
+
+The run() Function
+
+The run() function is straight forward.  It calls list_header(), then does the viewer display and shows the viewers paging at the end.  The most complicated part of this is the list_header() function.  This function takes care of all the things you see at the top of the page, before the lister is run.  This function calls show_filters(), show_add(), show_other(), show_view_box(), and show_sorting().  These functions are pretty much self-explanitory as to what they do.  show_add() shows the link to make a new entity of that type (if you're not already in the second level), show_sorting() makes a link to the sorting page for types that are linked to the sortable table, and show_other shows links to the other states of an entity.  All of these functions use their own logic to determine if anything should be displayed.  For instance, show_view_box() won't show anything if there are less than two views.  
+
+The set_session_vars() Function
+	
+One more important function notice is the set_session_vars() function.  This is not a particularly difficult function to understand, but it is important to know about it.  It is called at the beginning of the init function and all it does is setup a session variable if we are in the live state that maintains the current state of the list.  There are similar functions in the sharing and associator modules that do the same thing.
+

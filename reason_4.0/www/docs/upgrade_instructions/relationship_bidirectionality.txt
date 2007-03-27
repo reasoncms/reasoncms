@@ -1,0 +1,45 @@
+Until Oct. 2005, Reason only supported editing of relationships from the A entity.  Relationship bidirectionality allows editing of relationships from both the A and the B entities. The changes needed to support this added feature primarily include updating the allowable relationship table, the relationship table, core pieces of the backend relationship management, and front end updates to make sure that items associated B to A (where A is borrowed) do not accidentally show up on the wrong sites.
+
+This upgrade only provdes the bidirectionality infrastructure and support for making the news_to_image relationship bifdirectional. You will need to update front-end modules and any other affected code as additional allowable relationships are made bidirectional.
+
+Instructions for upgrading to bidirectionality follow:
+
+Go to web root.
+
+Update and run:
+admin/scripts/one_time_scripts/add_directionality_fields.php
+
+Update in this order:
+admin/edit_alrel.php3
+global_stock/php/reason3/admin_actions.php3
+global_stock/php/reason3/classes/admin/admin_disco.php
+global_stock/php/reason3/classes/admin/modules/associator.php
+global_stock/php/reason3/classes/admin/modules/doBorrow.php
+global_stock/php/reason3/content_listers/associate.php
+global_stock/php/reason3/classes/admin/admin_page.php
+
+Make sure things arent't horribly broken
+
+Update in this order:
+global_stock/php/reason3/classes/entity_selector.php3
+global_stock/php/reason3/classes/entity.php3
+global_stock/php/reason3/content_previewers/default.php
+
+Check again
+
+Update:
+global_stock/php/reason3/minisite_templates/modules/news.php
+global_stock/php/reason3/minisite_templates/modules/image_sidebar.php
+global_stock/php/reason3/minisite_templates/modules/images.php
+news/functions/functions.php
+news/index.php
+news/classes/feature_viewer.php
+news/classes/news_viewer.php
+news/classes/classes/news_viewer.php
+
+These don't really have to do with bidirectionality, but they have been fixed up.
+global_stock/php/reason3/content_managers/associator.php3
+global_stock/php/reason3/content_managers/parent_child.php3
+global_stock/php/reason3/content_managers/many_to_one.php3
+
+Now test it out

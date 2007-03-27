@@ -1,0 +1,3 @@
+<Files *.js>
+ForceType application/x-httpd-php
+</Files>

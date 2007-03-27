@@ -1,0 +1,100 @@
+Reason Database Structure
+
+Reason uses MySQL, a relational database, to store all of its data.  The tables have been structured to facilitate code reuse and data normalization as much as possible.  Because of this, there are some unique features.
+
+The basic elements of Reason are the entity, the relationship, and the allowable_relationship (sometimes referred to as relationship types).  Entities also have types.  All entities have a globally unique ID within the system which results in no ID conflicts between different data types.
+
+Entity Types are worth discussing here.  Essentially, all entities have a type such as Image, Page, or News.  These types are derived from the base type - the one entity in the system whose type is itself.  Entities are grouped by these types.  So, the Image type is really a placeholder for other entities to attach.
+
+The tables:
+
+entity
+	id - the globally unique ID
+	name - a short identifier for the entity
+	type - the id of the type
+	last_edited_by - an id of the user who last edited this item
+	last_modified - a timestamp of the last edit
+	unique_name - a string to uniquely identify this entity - this is easier to use within code than an ID.  Also, when working with dev and production environments, IDs do not translate across the gap where unique_names do.  Not all entities have a unique name - in fact, most entities leave this field blank.
+	state - the state of an entity.  Currently, possible states are live, pending, deleted, and archived.  More on states elsewhere.
+	creation_date - date entity was created
+	no_share - field used for sharing features, discussed elsewhere
+
+The entity table holds the basic information for any piece of data within the system.  Every item has the previous fields available, regardless of type.  Types introduce additional fields that entites use for additional information.  I'll get to the concept of entity tables a little later.
+
+The Allowable Relationship table holds information about which types can have relationships between entities.  For example, a News type would probably have an association with an Image type so news and images could be related.  The allowable relationship table records the types that are related as well as some other information about the relationship.  Relationships can be many-to-many or one-to-many.  Relationships can also be required meaning that an entity is not considered complete until at least one relationship has been made.  Allowable relationships and relationships are often characterized as having "sides."  This is important because two alrels or rels that have the same information but have switched sides are DISTINCT.  Direction matters.  So, types in an alrel will be referred to as left and right, as will relationships.  Sides correspond in both tables.
+
+The actual relationships within the system are stored in the relationship table.  Here, specific entities are related to each other.  So, a particular record will specificy that a specific image is associated with a specific news item.  This is distinct from the allowable_relationship table, where possible relationships are defined.  The type field in the relationship table refers directly to the alrel table.  A relationship has a left and a right side which correspond to the types in the alrel.  So, if there exists an alrel of News on the left and Image on the right, the actual relationship will have a News Item on the left and an Image item on the right.
+
+allowable_relationship:
+	id - a unique id for reference - this id is NOT globally unique
+	relationship_a - the id of the left type - this is a TYPE id, that is, an entity whose type is the Base Type
+	relationship_b - the id of the right type
+	description - a short description.  basically seen by developers
+	name - the name of the relationship - this is an important field.  alrels are often referenced by their name.  Stick to all lowercase letters with underscores separating words.  The general form of an alrel name is left_type_to_right_type, for examples, news_to_image.  There are several exceptions which will be discussed elsewhere.
+	connections - enum to specify one-to-many or many-to-many
+	custom_associater - sort of a hack field.  generally, a name is placed here.  The basic meaning of the field is to tell a Content Manager if it needs to handle this particular relationship or not.
+	display_name - This field is used to show the name of the relationship to a user.
+	required - whether this is a required relationship or not.
+
+relationship:
+	id - unique relationship id - again, unique only to the relationships
+	entity_a - the id of the left entity from the entity table
+	entity_b - the id of the right entity
+	type - the id of the alrel from the allowable_relationship table
+
+Entity Tables
+
+All other tables in the Reason database are alternatively called "entity tables" and "content tables."  For specific data related to a type that is not in the entity table, Reason uses somewhat concept-normalized tables to hold this extra information.  Examples will best clarify.  A news item is composed of fields like title, date, content, author, description, keywords, and perhaps some others.  But we can easily see that other types of data will want to use fields like keywords, dates, and others.  So we have grouped fields together in bigger units.  These unit are entity tables.  There currently exist such tables as meta, which has fields for keywords and description.  There is a chunk table which has an author and content.  These entity tables are then related to the type of information through the relationship table and are speficially related to an entity through the entity's ID.  Every entity table has an id field which has a one-to-one relationship with the entity table.  
+
+Given this level of flexibility, we have sacrificed independence of the code
+and data.  In a RDBMS, as far as we know, it is impossible to use the results
+of one query as the name of a table for another.  So, even though we store the
+names of tables within the database, it is impossible for us to use this in a
+query.  The downside of this is that to get information from entity tables, we
+have to use 2 queries and have code in between to feed the second query.  
+
+Most entity table management now happens within the Reason Master Admin.  In
+fact, most management of the database happens there.  It is rare that one
+needs to delve into the databaes unless doing major work on Reason.  
+
+Thankfully, we have fast machines and code to automatically create these
+queries for us.  Look at the entity_selector for more information.  It takes
+most of the concepts here and implements them in code.
+
+Entity Table Examples
+
+meta
+	id - relates to entity table in a 1-to-1 relationship
+	keywords - keywords for a given entity
+	description - a short description
+
+chunk
+	id
+	author - author of the content
+	content - big text field for content
+
+Some Example Queries
+
+
+- To get all information about the Base Type
+
+SELECT * FROM entity WHERE id = type;
+
+- To get all types in the system
+Here, we get the base type and then get all entities that have the type of the base type
+
+SELECT e.* FROM entity AS e, entity AS type WHERE type.id = type.type AND e.type = type.id
+
+- To get all entities of a specific type, without information from entity tables
+
+SELECT * FROM entity WHERE type = $type_id
+
+- To get all entities associated with a given entity A
+
+SELECT e.* FROM entity AS e, relationship AS r WHERE r.entity_a = $A[id] AND r.entity_b = e.id
+
+- To get all existing relationships of a given allowable relationship with
+  information about each entity
+
+SELECT a.*, b.* FROM entity AS a, entity AS b, relationship AS r WHERE r.type
+= $alrel_id AND a.id = r.entity_a AND b.id = r.entity_b

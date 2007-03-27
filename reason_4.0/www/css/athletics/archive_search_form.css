@@ -1,0 +1,26 @@
+#filtering
+{
+	float: right;
+	width: 250px;
+	padding: 10px;
+}
+
+#filtering h3
+{
+	background-color: #414fa3;
+	color: white;
+	text-align: center;
+	padding: 5px;
+	margin: 0px;
+}
+
+#filtering h4
+{
+	margin: 0px;
+	font-size: inherit;
+}
+
+#filtering #archive_search_form
+{
+	border: 1px solid black;
+}

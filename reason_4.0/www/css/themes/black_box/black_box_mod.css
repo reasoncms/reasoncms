@@ -1,0 +1,109 @@
+html, body {
+	margin:0;
+	padding:0;
+	background-color:#fff;
+	font-family:"Lucida Grande", Verdana, Helvetica, Arial, Sans-Serif;
+}
+h1.siteName {
+}
+.hideFromModern {
+	display: none;
+}
+.content {
+	margin-left: 17px;
+}
+.subNav {
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #748FC2;
+}
+table.layoutTable {
+	width: 100%;
+}
+* html table.layoutTable {
+	width: 95%;
+}
+td.navigationTD {
+	width:15em;
+}
+
+.bannerTable {
+	background-color: #ffffff;
+}
+a.siteLink, a.siteLink:visited {
+	color:#E04434; /* Red */
+}
+h3 {
+	color:#FF9942;
+}
+.navigation {
+	/* background-color:#C3E053; /* Green */
+	background-color:#E04434; /* Red */
+	margin: 0px;
+	padding: 15px;
+
+}
+.layout {
+	margin: 0px;
+	padding-top: 0px;
+}
+.navListItem a, .navListItem a:visited {
+	color:#fff;
+	text-decoration: none;
+}
+h2.pageTitle {
+	color:#C3E053;
+}
+h4 {
+	color:#81a200;
+}
+h2.pageTitle {
+	background-color:#222;
+	padding:.5em;
+}
+.contentPost {
+	border: #DEA099;
+
+}
+ul.childrenList {
+	border-top: none;
+}
+ul.siblingList{
+	margin-top: 30px;
+	border-top-color: #784648;
+}
+a, a:visited {
+	color:#1A53E1;
+}
+a:hover, a.siteLink:hover {
+	color:#BBD342;
+}
+.navListItem a:hover {
+	color:#FFE565;
+}
+.navList {
+	margin-top: 8px;
+	padding-top: 3px;
+	border-top-width: 1px;
+	border-top-style: dotted;
+	border-top-color: #ffffff;
+}
+#footer {
+	background-color: #FFE565;
+	padding-bottom: 100px;
+}
+#breadcrumbs {
+	background-color: #FFE565;
+	padding:.3em .5em;
+}
+#breadcrumbs a:hover {
+	color:#E04434;
+}
+.textOnlyLink a {
+	background-color: #ffffff;
+	border: none;
+}
+.textOnlyLink {
+	margin: 0px;
+	border: none;
+}

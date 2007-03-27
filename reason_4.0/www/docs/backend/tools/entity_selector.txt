@@ -1,0 +1,174 @@
+The Entity Selector
+
+The entity selector is a class that extends the DBSelector class.  Its purpose is to take advantage of the DBSelector to help build up difficult queries used to grab data from the database.  Although the entity selector allows the selection of multiple types, this has not been used yet in practice.  Most uses of this class have been to just select one type.
+
+Basic Usage examples:
+
+Example #1 - Selecting multiple types
+
+/*1*/  $es = new entity_selector( 62 );  //62 is the site id
+/*2*/  $es->add_type( 88 );  
+/*3*/  $es->add_type( 234 ); //88 and 234 are type ids
+/*4*/
+/*5*/  $results_array = $es->run();
+
+The above code is an example of how the entity selector can be used to select multiple types.  In line 1 of the code, we are initializing the entity selector to only select items from the site with id 62 (the athletics site).  If we had given the constructor no parameters (i.e. /*1*/  $es = new entity_selector(); ) it would have selected items from all sites.   Lines 2 and three set up the types to be 88 and 234 (news and athletics players).  Then line 5 does both queries and selects all news and athletics players that are owned or borrowed by the athletics site.  The variable $results_array now looks something like this:
+
+array( 
+	88 => array( all news items ),
+	234 => array( all athletics players )
+)
+
+where the arrays are arrays of entities (see entity class documentation).  This is a good time to bring up the use of the id_of() function.  In general, we want to avoid using specific ids in code, for that reason there is a field in the entity table called the unique_name.  The unique_name is not really unique, since most entities have no unique name at all, but it is something we've created for the use of backend code.  If something has a unique name, the id_of() function will return the id of that entity.  This not only eliminates the use of specific ids in code, but makes reading the code much clearer (at the expense of some speed).  The following code serves the same purpose as the above code.  
+
+/*1*/  $es = new entity_selector( id_of( 'athletics' ) );
+/*2*/  $es->add_type( id_of( 'news' ) );  
+/*3*/  $es->add_type( id_of( 'player' ) );
+/*4*/
+/*5*/  $results_array = $es->run();
+
+You can see how much more intuitive the above code is compared to the first version.  
+
+Example #2 - Select a single type 
+
+/*1*/  $es = new entity_selector( id_of( 'athletics' ) );
+/*2*/  $es->add_type( id_of( 'news' ) );  
+/*3*/
+/*4*/  $results_array = $es->run();
+
+Normally, we don't need to select multiple types at one time.  You can see the above example is very similar to the one above, and the result will look like this:
+
+array( 
+	88 => array( all news items )
+)
+
+This result set is fine, but slightly redundant.  The outside array is completely unnecessary since it contains only one item and the key is a value that we already know.  The result set we really want would get rid of this extra array.  For this we use the run_one() function of the entity selector.  The run_one() function takes one parameter which is the type id that you want to select.  Thus, the preceding code could be rewritten as:
+
+/*1*/  $es = new entity_selector( id_of( 'athletics' ) );
+/*2*/
+/*3*/  $results_array = $es->run_one( id_of( 'news' ) );
+
+Now our results array is as desired.  It looks like:
+
+array( all news items )
+
+Also, it is important to note that if you have already added a type to the entity selector, you don't need to pass a parameter.  It will use the type it was given.  So to get the same set you could also write:
+
+/*1*/  $es = new entity_selector( id_of( 'athletics' ) );
+/*2*/  $es->add_type( id_of( 'news' ) );  
+/*3*/
+/*4*/  $results_array = $es->run_one();
+
+Just as one final note on this example, if you add more than one type, the entity selector will use the first type, so the following code would also yield the same result:
+
+/*1*/  $es = new entity_selector( id_of( 'athletics' ) );
+/*2*/  $es->add_type( id_of( 'news' ) );  
+/*3*/  $es->add_type( id_of( 'player' ) );
+/*4*/
+/*5*/  $results_array = $es->run_one();
+
+You may note that this code looks very similar to the code in example #1.  The only difference is that the last line is using run_one() instead of run().  This is a HUGE difference as this code will completely ignore the second type and return an array of news entities.  In general, you should only add one type to an entity_selector if you are planning to use run_one(), this will avoid much confusion.
+
+Example #3 - Using the sharing options
+
+With Reason 3.5 came the introduction of the concept of sharing.  In example #1, you saw that passing the site id of athletics caused the entity selector to select only entities that the site owned or borrowed.  However, in some cases, you may only want to select the owned entities, or perhaps just the borrowed ones. This can be done using the set sharing function.  
+
+/*1*/  $es = new entity_selector( id_of( 'athletics' ) );
+/*2*/  $es->add_type( id_of( 'news' ) );  
+/*3*/  $es->set_sharing( 'owns' ); //only get owned items
+/*4*/
+/*5*/  $results_array = $es->run_one();
+
+By using the set_sharing() function, we tell the entity selector only to grab the entities that the current site actually owns, and not to bother grabbing the borrowed ones.  Replacing 'owns' with 'borrows' in the above code will do the same thing, but only grab the borrowed ones.  Also, note that replacing line 3 with 
+
+/*3*/  $es->set_sharing( 'owns, borrows' ); 
+	OR
+/*3*/  $es->set_sharing( array( 'owns' , 'borrows' ) ); 
+
+would select things that are owned or borrowed, but would be slightly redundant since that is the default.
+
+Example #4 - Adding relations and other things
+
+Since the entity selector is just an extension of the DBSelector, it is still possible to do things the way we do with a DBSelector.  For example
+
+/*1*/  $es = new entity_selector( id_of( 'athletics' ) );
+/*2*/  $es->add_type( id_of( 'news' ) );  
+/*3*/  $es->add_relation( 'entity.id < 2000' );
+/*4*/  $es->set_num( 4 );
+/*5*/
+/*6*/  $results_array = $es->run_one();
+
+This works exactly the way a DBSelector would when adding relations and other things.  In addition to the default relations and things that the entity_selector gives to us, this ensures that the entity's id is less than 2000 and that we get at most 4 results.
+
+
+Swallowing and Merging:
+
+Occansionally, you may have two queries that you are similar that you want to combine into one query.  This can happen if you're trying to develop a complicated query but realize that it's basically a combination of two simpler queries.  The entity_selector allows you to do this using two different techniques called swallowing and merging.
+
+I will start with swallowing since it's a bit simpler.  The basic idea for swallowing is that we take another entity_selector (or db_selector) and swallow it whole.  We take all tables, fields, relations, and types from the original and add them to the current object.  Then we take the start, number, and order from the new one (if they exist) and use them to replace the old ones.  Thus, our entity_selector will look much like the old one, but will have more things added to it, and may have some of its original data trampled.
+
+The second idea is merging.  Merging is a more complex idea, but is much nicer than swallowing since it attempts to modify the data in a more meaningful way.  What merging does is takes the second query, checks the tables against the first query, and then attempts to link the two.  A brief example may help to clarify.  
+
+Say es1 is using tables entity and chunk, is selecting entity.name, and has relation entity.id = chunk.id.  Another entity selector es2 is using tables entity and meta, is selecting entity.last_modified and has the relation entity.id = meta.id.  Then we want to merge es2 with es1.  If we were using the swallowing method, the entity selector would see that entity was already a table and not bother to add a new one.  Thus, we would end up with three tables-entity, chunk, and meta-and would have the relations and fields of both.  However, if we want to do this using the merge method, it would notice that both entity selectors have the table entity and would rename the second so that there would be no conflict.  After the merge, the new entity selector would look something like this:
+
+Tables:
+	entity as entity,
+	chunk as chunk,
+	entity as entity2,
+	meta as meta
+
+Fields:
+	entity.name,
+	entity2.last_modified
+
+Relations:
+	entity.id = chunk.id,
+	entity2.id = meta.id,
+	entity.id = entity2.id
+
+You notice that everywhere entity appeared in the second es has now been replace by an alias, entity2.  You will also notice the last relation "entity.id = entity2.id".  This relation did you exist in either entity selector before the merge took place.  This is a new relation that merge puts in (if possible) to make sure the two separate queries are linked together.  If this were not put in, the result set we would see would essentially be the cartesian product of the original two queries.  If the entity selector doesn't find an entity table in each es, this last relation will not be put it.  
+
+
+How the entity selector works:
+
+The nuts and bolts of the entity selector may seem confusing at first.  It is written this way so that it is able to support multiple types at the same time.  I will run through the basics of run(), run_one(), and get_one_query() here.
+
+The basics of run are pretty simple.  You have two optional parameters.  The first is called status, which refers to the state of the entity.  By default, it is set to select live entities, but when changed, can select entities of any state.  If you want to select all entities regardless of state, pass the variable the value 'All'.  The second is an error message, which will show up if the DB query crashes.  All this funciton does is set up an array, then loops through the list of types and calls run_one() for each type, putting the results of each one into the array as it goes and then returns the array at the end.  
+
+The run_one() function takes three parameters, the first being the type id, and the other two being status and error message as described above.  If run_one() doesn't receive a type, it uses type[0].  This function also sets up an array, and then uses the db_query() and get_one_query() functions.  It loops through the mysql result set, creating a new entity with each one.  Then, for each entity it sets the "private" variable $_values in entity to the results of each row.  This is sort of cheating, but it is done for a good reason.  It is much easier to just initialize the values of each entity now, while we have them.  If we don't do this here, we'll have to do a separate query later for each entity that we've selected, which can significantly slow down the page.  This should be the ONLY TIME the values for an entity are every set up outside of the class.  After run_one() is done running through the loop, it returns the array containing all the entities.
+
+Finally, the get_one_query() funciton.  This is the sort of bizarre part of entity selector.  Get one query creates a new entity selector inside of the entity class.  It then proceeds to swallow a DBSelector made by the function get_entities_by_type_object(), which is defined in the util.php3 page.  After this, it swallows the current entity selector!  This assures that we will grab the correct type of entity, and will apply all restrictions to it that have been set up in the current entity selector without changing the current ES at all.  After the new ES does its swallowing, it uses the get_query() function which is defined in the DBSelector class to get the new query, and then returns it.  
+
+
+Entity Selector Functions:
+
+entity_selector( $site_id ) - the constructor function, it $site_id is false, then selects entities from all sites, otherwise, selects entities from the site id that is given.
+
+set_sharing( $args ) - sets entity selecter to select only owned, borrowed or all entities.
+
+swallow( $es ) - swallows a given entity selector or DBSelector (described above)
+
+merge( $es ) - merges a given entity selector or DBSelector (described above)
+
+add_type( $id ) - adds a type to the entity selector.
+
+add_left_relationship( $entity_id , $relationship_type ) - if relationship_type is set, makes sure any selected entities have a left relationship of that type with that type with the entity with the given entity id.  Otherwise, makes sure any entities selected have any type of left relationship with the given entity id.
+
+add_right_relationship( $entity_id , $relationship_type ) - if relationship_type is set, makes sure any selected entities have a right relationship of that type with that type with the entity with the given entity id.  Otherwise, makes sure any entities selected have any type of right relationship with the given entity id.
+
+get_one_query( $type ) - returns one query as a string.  If type is not set, uses type[0].
+
+get_queries() - returns an array of all queries.
+
+get_one_count( $type ) returns the number of results the query will select.  If type is not set, will use type[0].
+
+get_counts() - returns an array of all results for all types.
+
+get_min( $field, $type ) - returns the entity with the min value of that field.  Field should be of the form table.field.  If type is left empty, this will use type[0].
+
+get_max( $field, $type ) - returns the entity with the max value of that field.  Field should be of the form table.field.  If type is left empty, this will use type[0].
+
+add_left_relationship_field( $rel_name , $table , $field , $alias ) - adds a left relationship of type $rel_name and also selects a field of the entity ($table.$field as $alias ).  All four parameters are required.
+
+add_right_relationship_field( $rel_name , $table , $field , $alias ) - adds a right relationship of type $rel_name and also selects a field of the entity ($table.$field as $alias).  All four parameters are required.
+

@@ -1,0 +1,24 @@
+The Generic Minisite module isn't a module that actually does anything, but is a module that-similarly to Disco-is meant for overloading.  The idea for this module came when we made the resource module.  Originally, the resource module just grabbed all the resource entities from a site.  If there was more than one, it listed them out, creating links to each of them.  If there was only one of if an id was selected, it showed the appropriate entity.  This concept seemed like the kind of situation that might come up again, so I decided to make a generic version of it.  Now, the resource module is not its own module anymore, but rather an extension of the generic module.  
+
+How It Works
+
+If you tried to make a generic module into an actual module for a page, it would crash the page.  The reason for this is that there is no type set up, it won't know what to grab.  The Generic Module is set up to help you deal with this problem by displaying an error telling you exactly what to do if you mess it up.  
+
+Ok, onto the basics.  The init function first calls the parent init function which sets up all the variables.  It then sets up the entity selector and type using the functions set_type() and alter_es().  Finally it runs the entity selector and puts the values into the class variable $items.  
+
+The run() function is basically divided into two parts.  If there is only one (or none) of the given item which the site owns, it will grab that one and show it.  Of course if there are none, it won't show anything.  If there are more than one, we take on two different cases.  First, we check for a request variable called 'item_id', if one is present, we show that one.  Otherwise we show a list of all available items.  If the item_id given is not one of the selected items, the module will esentially do nothing.  
+
+Overloadable Functions
+
+set_type() - this MUST be overloaded.  If the type is not set up here, the module WILL NOT WORK.  Basically, the overloaded function will just need one line and will look something like:  $this->type = id_of( 'something' ).
+
+alter_es() - this is a function that can be overloaded if you want to make specific changes to the entity selector which is stored in the class variable $es.
+
+show_list_item( $item ) - this function defines what to do with a given item in the list when the entities of the given type are listed out.  
+
+show_item_content( $item ) - this function defines what to do when a specific entity is selected for display.  The default just echos the content.  
+
+show_back() - probably doesn't need to be overloaded, but just in case, it is here.  If there are more than one of the given type, then this creates the back link to the list. 
+
+list_items() - another function that probably doesn't need to be overloaded.  Loops through all the entities and calls show_list_item() on each of them and surrounds the whole thing with a div tag.  
+

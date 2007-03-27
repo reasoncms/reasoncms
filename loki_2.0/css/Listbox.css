@@ -1,0 +1,69 @@
+.listbox .items_chunk {
+	width:99%;
+	/*max-height:275px;*/
+	height:auto;
+	margin-bottom:0px;
+	margin-left:auto;
+	margin-right:auto;
+	padding:0px;
+	clear:both;
+	/* border:none;
+	background-color:#E3E3E3; */
+	font-size:88%;
+	overflow:scroll;
+	background-color:#EEEEEE;
+	border:1px solid #A1A1A1;
+}
+/* .listbox .items_chunk span.items {
+	border-top:2px solid #FFFFFF;
+	border-left:2px solid #FFFFFF;
+} */
+.listbox .page_chunk {
+	float:right;
+	padding:.5em 0px 0px 0px;
+	text-align:right;
+	margin-bottom:1em;
+	margin:0px 0px 1em 0px;
+}
+.listbox .filter_chunk {
+	float:left;
+	padding:.5em 0px 0px 0px;
+	text-align:left;
+	margin:0px 0px 1em 0px;
+}
+.listbox .items_chunk .item_chunk {
+	/* These are necessary if we use anchors */
+	display:block;
+	color:black;
+	text-decoration:none;
+
+	margin:0px;
+	border:1px solid #EEEEEE;
+	/*border:1px listbox .items_chunksolid white;*/
+	overflow:hidden;
+	vertical-align:middle;	
+}
+.listbox .items_chunk .hover /*, .listbox .items_chunk :hover*/ /* for js-free testing */{
+	/* background-color:#FFFFFF; */
+	/* background-color:#FFFFCC; */
+	background-color:#d1d1d1;
+	border:1px dotted #999;
+}
+.listbox .items_chunk .item_chunk img {
+	border-top:1px solid #FFFFFF;
+	border-left:1px solid #FFFFFF;
+	border-right:1px solid #666666;
+	border-bottom:1px solid #666666;
+}
+.listbox .items_chunk .selected /*, .listbox .items_chunk .selected:hover*/ {
+	/* background-color:#FFFFCC; */
+	background-color:#555;
+	border:1px solid #000;
+	color:#fff;
+}
+.listbox .items_chunk .selected img {
+	border-right:1px solid #aaa;
+	border-bottom:1px solid #aaa;
+	border-left:1px solid #333;
+	border-top:1px solid #333;
+}

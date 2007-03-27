@@ -1,0 +1,7 @@
+div#galleryVote td.words {
+	width:15%;
+}
+div#galleryVote form div#image_choice_container td {
+	vertical-align:middle;
+	padding:.5em 0;
+}

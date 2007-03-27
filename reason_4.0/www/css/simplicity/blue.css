@@ -1,0 +1,49 @@
+@import url("../tableless_layouts/three_column_1.css");
+* {
+	font-family:Georgia;
+}
+pre {
+	font-family:monospace;
+}
+body {
+	background-color:#CDD5DE;
+}
+div.hide, p.hide {
+	display:block;
+	position:absolute;
+	left:-9999px;
+	width:1000px;
+}
+div#breadcrumbs {
+	margin:.5em auto;
+	width:85%;
+	font-size:85%;
+	color:#333;
+}
+div#wrapper {
+	border:1px solid #888BB4;
+	margin:.5em auto 7em auto;
+	background-color:#fff;
+	width:85%;
+	padding:0;
+}
+div#bannerAndMeat {
+	margin:0;
+}
+div#banner {
+	border-bottom:1px solid #888BB4;
+	padding:1em 1em .67em 1em;
+	background-color:#E2EBF2;
+	margin:0;
+}
+div#banner h1 a {
+	text-decoration:none;
+	font-weight:normal;
+	color:#660000;
+}
+div#banner h1 a:hover {
+	text-decoration:underline;
+}
+div#minisiteNavigation {
+	margin:1em;
+}

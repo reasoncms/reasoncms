@@ -1,0 +1,26 @@
+.listrow1 {
+	background-color: #FFFBDA;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #FFFBDA; */
+	/* background-color: #EAEFE0; */
+}
+.listrow2 {
+	background-color: #FFFFFF;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #FAEEBF; */
+	/* background-color: #D6DEC6; */
+}
+.listHead {
+	background-color: #FAEEBF;
+	background-image: url(../../ui_images/1px_white.gif);
+	background-repeat: repeat-x;
+	/* background-color: #FAEEBF; */
+	/* background-color: #D6DEC6; */
+}
+.viewFilter {
+	background-color: #FAEEBF;
+	margin-right: 15px;
+	margin-bottom: 15px;
+}

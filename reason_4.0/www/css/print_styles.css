@@ -1,0 +1,22 @@
+body {
+	margin: 0px;
+	padding: 0px;
+}
+.searchForm, .fullGraphicsLink, .navigation, .editDiv {
+	display: none;
+}
+#footer, .maintained, .content, .sidebar {
+	margin: 0px;
+	padding: 0px;
+}
+.layout {
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+.layout a:link:after, .layout a:visited:after, #footer a:link:after, #footer a:visited:after {
+   content: " (" attr(href) ") ";
+   font-size: 90%;
+}
+.layout a[href^="/"]:after, .layout a[href^="/"]:visited:after, #footer a[href^="/"]:after, #footer a[href^="/"]:visited:after {
+   content: " (http://webapps.acs.carleton.edu" attr(href) ") ";
+}
