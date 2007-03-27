@@ -38,7 +38,7 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 	
 	if ($the_type > 0)
 	{
-		if (reason_update_entity( $the_type, id_of('user_netID'), array('name' => 'Blog / Publication', 'unique_name' => 'publication_type', 'plural_name' => 'Blogs / Publications'), false))
+		if (reason_update_entity( $the_type, get_user_id($user_netID), array('name' => 'Blog / Publication', 'unique_name' => 'publication_type', 'plural_name' => 'Blogs / Publications'), false))
 		{
 			echo '<p>updated blog/publication type with correct unique_name, plural_name, and name, but more work is needed</p>';
 			echo_form();
