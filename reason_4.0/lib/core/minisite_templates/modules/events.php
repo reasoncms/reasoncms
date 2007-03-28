@@ -395,7 +395,7 @@ class EventsModule extends DefaultMinisiteModule
 	
 	function rerun_calendar()
 	{
-		trigger_error('get_max_date called');
+		//trigger_error('get_max_date called');
 		$init_array = $this->make_reason_calendar_init_array($this->calendar->get_max_date(),'','all' );
 		$this->calendar = new reasonCalendar($init_array);
 		$this->calendar->run();
@@ -415,7 +415,7 @@ class EventsModule extends DefaultMinisiteModule
 		$min_date = $this->calendar->get_min_date();
 		if($this->calendar->get_view() == 'all' && empty($categories) && empty( $audiences ) && empty($this->request['search']) )
 		{
-			trigger_error('get_max_date called');
+			//trigger_error('get_max_date called');
 			$max_date = $this->calendar->get_max_date();
 			if(empty($max_date))
 			{
