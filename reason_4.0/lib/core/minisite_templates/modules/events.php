@@ -162,7 +162,9 @@ class EventsModule extends DefaultMinisiteModule
 			$day = str_pad($day,2,'0',STR_PAD_LEFT);
 			$month = str_pad($month,2,'0',STR_PAD_LEFT);
 			$full_date = $year.'-'.$month.'-'.$day;
-			$link = unhtmlentities($this->construct_link(array('start_date'=>$full_date)));
+			$query_string = unhtmlentities($this->construct_link(array('start_date'=>$full_date)));
+			$url_array = parse_url(get_current_url());
+			$link = $url_array['scheme'].'://'.$url_array['host'].$url_array['path'].$query_string;
 			header('Location: '.$link);
 			die();
 		}
