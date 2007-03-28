@@ -74,6 +74,7 @@ if ($field_exists) //just created or already present
 	else
 	{
 		$output[] = 'All entities have created_by ids set';
+		$output[] = '<a href="index.php">Continue Reason beta 3 to beta 4 upgrades</a>';
 	}
 }
 
