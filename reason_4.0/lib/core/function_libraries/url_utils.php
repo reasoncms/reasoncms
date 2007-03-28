@@ -216,6 +216,83 @@ function make_link( $new_request_vars = array(''), $base_path = '', $type = '', 
     else return trim($baseurl);
 } // }}}
 
+function construct_link ( $new_request_vars = array(''), $preserve_request_vars = array(''), $base_path = '' )
+{
+	if (empty($preserve_request_vars))
+	{
+		return make_link( $new_request_vars, $base_path, '', true, false );
+	}
+	else
+	{
+		$url = get_current_url();
+		$preserve_array = '';
+		$parts = parse_url($url);
+		if (!empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
+		foreach ($preserve_request_vars as $key)
+		{
+			if (isset($cur_request_vars[$key]))
+			{
+				$preserve_array[$key] = $cur_request_vars[$key];
+			}
+		}
+		$params = (isset($preserve_array)) ? array_merge( $preserve_array, $new_request_vars ) : $new_request_vars;
+		return make_link( $params, $base_path, '', true, false );
+	}
+}
+
+function construct_relative_link ( $new_request_vars = array(''), $preserve_request_vars = array(''), $base_path = '', $convert_entities = true )
+{
+	if (empty($preserve_request_vars))
+	{
+		return make_link( $new_request_vars, $base_path, 'relative', true, false );
+	}
+	else
+	{
+		$url = get_current_url();
+		$preserve_array = '';
+		$parts = parse_url($url);
+		if (!empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
+		foreach ($preserve_request_vars as $key)
+		{
+			if (isset($cur_request_vars[$key]))
+			{
+				$preserve_array[$key] = $cur_request_vars[$key];
+			}
+		}
+		$params = (isset($preserve_array)) ? array_merge( $preserve_array, $new_request_vars ) : $new_request_vars;
+		return make_link( $params, $base_path, 'relative', true, false );
+	}
+}
+
+function make_redirect ( $new_request_vars, $base_path = '' )
+{
+	return make_link ($new_request_vars, $base_path, '', false, true);
+}
+
+function construct_redirect( $new_request_vars = array(''), $preserve_request_var = array(''), $base_path = '' )
+{
+	if (empty($preserve_request_vars))
+	{
+		return make_link( $new_request_vars, $base_path, '', false, false );
+	}
+	else
+	{
+		$url = get_current_url();
+		$preserve_array = '';
+		$parts = parse_url($url);
+		if (!empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
+		foreach ($preserve_request_vars as $key)
+		{
+			if (isset($cur_request_vars[$key]))
+			{
+				$preserve_array[$key] = $cur_request_vars[$key];
+			}
+		}
+		$params = (isset($preserve_array)) ? array_merge( $preserve_array, $new_request_vars ) : $new_request_vars;
+		return make_link( $params, $base_path, '', false, false );
+	}
+}
+
 /**
  *	Get the URL of a page
  *
