@@ -303,7 +303,28 @@ class reasonCalendar
 			{
 				$search_chunks[] = $field.' LIKE "%'.$prepped.'%"';
 			}
-			//echo implode(' OR ',$search_chunks);
+			
+			// Not sure how to do this... the idea is to select categories that match the search term and additionally select 
+			// events based on the categories... but I don't think there is a way at this point to wrap that all up in a single entity selector.
+			//The basic problem is that add_left_relationship and add_left_relationship_field AND themselves to the end of the 
+			// query rather than being able to be placed as needed in the WHERE statement.
+			// If solved, we could do the same with site names.
+			// -- mr
+			
+			/* if(!empty($this->site))
+				$es = new entity_selector($this->site->id());
+			else
+				$es = new entity_selector();
+			$es->add_type(id_of('category_type'));
+			$es->add_relation('entity.name LIKE "%'.$prepped.'%"');
+			$matching_cats = $es->run_one();
+			if(!empty($matching_cats))
+			{
+				//relationship2.entity_a = entity.id AND relationship2.entity_b IN (31532,32730,182628,199561,199636,201151) AND allowable_relationship2.id = relationship2.type AND allowable_relationship2.id = 193
+				$this->es->add_left_relationship(array_keys($matching_cats), relationship_id_of('event_to_event_category'));
+			}
+			echo $this->es->get_one_query(); */
+			
 			$this->es->add_relation('('.implode(' OR ',$search_chunks).')');
 		}
 		
@@ -650,7 +671,7 @@ class reasonCalendar
 	 */
 	function get_max_date()
 	{
-		trigger_error('get_max_date() called');
+		//trigger_error('get_max_date() called');
 		if(empty($this->max_event))
 		{
 			//trigger_error('max date query run');
