@@ -46,6 +46,7 @@
 * @todo Modify the class so that spanning elements can have labels and indicators that they are required. 
 * @todo Add requirement indicators for normal elements that have $use_label set to false
 * @todo Add capability to position the display name to the top, to the left, or to the right.
+* @todo Rewrite box class system and disco integration to allow for tableless forms - improved handling of spanned elements
 */
 	class Box // {{{
 	{
@@ -69,6 +70,11 @@
 		* @todo Add a way to indicate that an element is required if $use_label is false.
 		*/
 		function row_open( $label, $required = false, $error = false, $key = false, $use_label = true ) // {{{
+		{
+			$this->box_item_open( $label, $required, $error, $key, $use_label );
+		} // }}}
+		
+		function box_item_open( $label, $required, $error, $key, $use_label )
 		{
 			$id = str_replace("_", "", $key);
 			
@@ -95,16 +101,21 @@
 			}
 			$markup .= '</td>'."\n";
 			$markup .= '<td align="left">'."\n";
-			echo $markup;
-		} // }}}
+			echo $markup;		
+		}
 		
 		/**
 		* Closes a row of the form table.
 		*/
 		function row_close() // {{{
 		{
-			echo '</td>'."\n".'</tr>'."\n"."\n";
+			$this->box_item_close();
 		} // }}}
+		
+		function box_item_close()
+		{
+			echo '</td>'."\n".'</tr>'."\n"."\n";
+		}
 		
 		/**
 		* Opens, closes, and displays the content of a normal row in the the form table.
@@ -116,12 +127,13 @@
 		* @param boolean $error Whether or not this element has an error (optional - default false)
 		* @param string $key The id of this row (optional)
 		* @param boolean $use_label Whether or not the label should be displayed (optional - default true)
+		* @deprecated this is no longer used as far as I can tell
 		*/
 		function row( $label, $content, $required = false, $error = false, $key = false, $use_label = true) // {{{
 		{
-			$this->row_open( $label, $required, $error, $key, $use_label);
+			$this->box_item_open( $label, $required, $error, $key, $use_label);
 			echo $content;
-			$this->row_close();
+			$this->box_item_close();
 		} // }}}
 
 		/**
@@ -133,6 +145,11 @@
 		* @todo Add the ability to label a spanning element and to indicate when it is required.
 		*/
 		function row_text_span( $content, $colspan = 2, $error = false,  $key = false ) // {{{
+		{
+			$this->box_item_text_span( $content, $colspan, $error,  $key );
+		} // }}}
+		
+		function box_item_text_span( $content, $colspan, $error,  $key ) // {{{
 		{
 			if (!empty($key))
 				$id = str_replace("_", "", $key);
@@ -182,77 +199,7 @@
 			}
 			$markup .= '</table>'."\n";
 			echo $markup;
-		} // }}}
-		// form functions
-/*
-		function get_text( $name, $value, $size = 40) // {{{
-		{
-			return '<input type="text" name="'.$name.'" size="'.$size.'" value="'.$value.'" class="hilite" />';
-		} // }}}
-		function make_text( $name, $value, $size = 40 ) // {{{
-		{
-			echo $this->get_text( $name, $value, $size );
-		} // }}}
-		function get_textarea( $name, $value, $cols = 70, $rows = 4 ) // {{{
-		{
-			return '<textarea cols="'.$cols.'" rows="'.$rows.'" name="'.$name.'" class="hilite">'.$value.'</textarea>';
-		} // }}}
-		function make_textarea( $name, $value, $cols = 70, $rows = 4 ) // {{{
-		{
-			echo $this->get_textarea( $name, $value, $cols, $rows );
-		} // }}}
-		function get_select( $name, $values = '', $value = '' ) // {{{
-		{
-			if ( !empty( $values ) )
-			{
-				$s = '<select name="'.$name.'">';
-				reset( $values );
-				while( list( $key, $val ) = each ( $values ) )
-				{
-					$s .= '<option value="'.$key.'"';
-					if ( $value == $key ) $s .= ' selected="selected"';
-					$s .= '>'.$val.'</option>';
-				}
-				$s .= '</select>';
-				return $s;
-			}
-		} // }}}
-		function make_select( $name, $values, $value ) // {{{
-		{
-			echo $this->get_select( $name, $values, $value );
-		} // }}}
-		function get_radio( $name, $values, $value ) // {{{
-		{
-			if ( !empty( $values ) )
-			{
-				reset( $values );
-				while( list( $key, $val ) = each ( $values ) )
-				{
-					$s .= '<input type="radio" name="'.$name.'" value="'.$key.'"';
-					if ( $value == $key ) $s .= ' checked="checked"';
-					$s .= '>'.$val.'<br />';
-				}
-				return $s;
-			}
-		
-		} // }}}
-		function make_radio( $name, $values, $value ) // {{{
-		{
-			echo $this->get_radio( $name, $values, $value );
-		} // }}}
-		// checkboxes
-		// select_multiple
-		// bri-editor
-		// date
-		function get_date( $name, $value ) // {{{
-		{
-			return "<script>writeDay(0,'$name','$value')</script>";
-		} // }}}
-		function make_date( $name, $value ) // {{{
-		{
-			echo $this->get_date( $name, $value );
-		} // }}}
-		*/
-	} // }}}
+		}
+	}
 
 ?>
