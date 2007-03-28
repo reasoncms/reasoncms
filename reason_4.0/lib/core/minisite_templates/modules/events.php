@@ -290,16 +290,7 @@ class EventsModule extends DefaultMinisiteModule
 			//$this->show_options_bar();
 			$this->show_navigation();
 			//$this->show_calendar_grid();
-			
-			if(!empty($this->request['search']) || !empty($this->request['category']) ||  !empty($this->request['audience']) )
-			{
-				echo '<div class="focus">'."\n";
-				if(!empty($this->request['category']) ||  !empty($this->request['audience']) || !empty($this->request['search']))
-				{
-					$this->show_focus_description();
-				}
-				echo '</div>'."\n";
-			}
+			$this->show_focus();
 			$this->display_list_title();
 			if($this->calendar->get_view() == 'daily' || $this->calendar->get_view() == 'weekly')
 				$this->show_months = false;
@@ -333,6 +324,19 @@ class EventsModule extends DefaultMinisiteModule
 		// $this->show_options_bar();
 		$this->show_feed_link();
 		echo '</div>'."\n";
+	}
+	
+	function show_focus()
+	{
+		if(!empty($this->request['search']) || !empty($this->request['category']) ||  !empty($this->request['audience']) )
+		{
+			echo '<div class="focus">'."\n";
+			if(!empty($this->request['category']) ||  !empty($this->request['audience']) || !empty($this->request['search']))
+			{
+				$this->show_focus_description();
+			}
+			echo '</div>'."\n";
+		}	
 	}
 	
 	function show_focus_description()
