@@ -513,11 +513,13 @@
 		} // }}}
 		function show_related_stories( $e ) // {{{
 		{
-			$rel = new entity_selector( $this->parent->site_id );
-			$rel->add_right_relationship( $this->request[ 'story_id' ] , relationship_id_of( 'news_to_news' ) );
-			$rel->add_relation( 'status.status = "published"' );
-			$related = $rel->run_one( id_of( 'news' ) );
-			
+			// -- news_to_news does not exist and I think this is unused ... nwhite
+			//$rel = new entity_selector( $this->parent->site_id );
+			//$rel->add_right_relationship( $this->request[ 'story_id' ] , relationship_id_of( 'news_to_news' ) );
+			//$rel->add_relation( 'status.status = "published"' );
+			//$related = $rel->run_one( id_of( 'news' ) );
+			$related = '';
+
 			if (!empty($related))
 			{
 				$num_rel = count($related);
