@@ -672,8 +672,6 @@ class PublicationModule extends Generic3Module
 					$es->add_type( id_of('issue_type') );
 					$es->add_left_relationship( $this->publication->id(), relationship_id_of('issue_to_publication') );
 					$temp = $es->run_one();
-					pray ($temp);
-					die;
 					$this->issues = current($temp);
 				}
 			}
@@ -750,10 +748,13 @@ class PublicationModule extends Generic3Module
 		*/
 		function has_sections()
 		{
-			$sections = $this->get_sections();
-			if(!empty($sections))
+			if($this->publication->get_value('has_sections') == "yes")
 			{
-				return true;
+				$sections = $this->get_sections();
+				if(!empty($sections))
+				{
+					return true;
+				}
 			}
 			return false;
 		}
