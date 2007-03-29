@@ -47,3 +47,22 @@ div#athleticsScheduleResults div.containsSidebar div.eventSidebar {
 	width: 32%;
 	clear: right;
 }
+
+div#athleticsScheduleResults div.images
+{
+	text-align: center;
+	padding-top: 15px;
+}
+
+div#athleticsScheduleResults div.images div.tnDesc{
+	padding-top: 1px;
+	padding-bottom: 15px;
+}
+
+div#athleticsScheduleResults div.images h4
+{
+	width: 0px;
+	position: absolute;
+	left: -1500px;
+	overflow: hidden;
+}
