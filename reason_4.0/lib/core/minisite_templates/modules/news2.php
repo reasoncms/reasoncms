@@ -294,18 +294,19 @@ class news_assets extends submodule
 		return $title."\n".$content;
 	}
 }
-class news_related extends submodule
+class news_related extends submodule // ummm there is not even a news_to_news relationship
 {
 	var $related = array();
 	var $params = array( 'title'=>'Related News Items', 'title_tag'=>'h4' );
 	function init($request, $news_item)
 	{
-		$es = new entity_selector();
-		$es->description = 'Selecting related news for news item';
-		$es->add_type( id_of('news') );
-		$es->add_right_relationship( $news_item->id() , relationship_id_of( 'news_to_news' ) );
-		$es->add_relation( 'status.status = "published"' );
-		$this->related = $es->run_one();
+		// uncomment if news_to_news relationship is created
+		//$es = new entity_selector();
+		//$es->description = 'Selecting related news for news item';
+		//$es->add_type( id_of('news') );
+		//$es->add_right_relationship( $news_item->id() , relationship_id_of( 'news_to_news' ) );
+		//$es->add_relation( 'status.status = "published"' );
+		//$this->related = $es->run_one();
 	}
 	function has_content()
 	{
