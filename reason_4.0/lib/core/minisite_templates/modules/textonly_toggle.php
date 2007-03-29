@@ -30,22 +30,8 @@
 		}
 		function generate_link()
 		{
-			$link = '?';
-			foreach ($_GET as $var=>$str)
-			{
-				if ( !empty( $this->parent->textonly ) && $var == 'textonly' && !empty($str) )
-					continue;
-				if ( $var == 'page_id' || $var == 'site_id' )
-					continue;
-				if( !empty($str) && is_string($str) )
-				{
-					$str = urlencode($str);
-				}
-				$link .= $var . '=' . $str . '&amp;';
-			}
-			if ( empty( $this->parent->textonly ) )
-				$link .= 'textonly=1';
-			return $link;
+			if ( empty( $this->parent->textonly )) return make_link(array('textonly' => 1));
+			else return make_link(array('textonly' => ''));
 		}
 	}
 ?>
