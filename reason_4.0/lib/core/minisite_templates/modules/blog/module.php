@@ -250,7 +250,7 @@
 			$es = new entity_selector( $this->site_id );
 			$es->description = 'Getting groups for this blog';
 			$es->add_type( id_of('group_type') );
-			$es->add_right_relationship( $this->blog->id(), relationship_id_of('blog_to_authorized_posting_group') );
+			$es->add_right_relationship( $this->blog->id(), relationship_id_of('publication_to_authorized_posting_group') );
 			return $es->run_one();
 		}
 	
@@ -456,7 +456,7 @@
 			$es = new entity_selector( $this->parent->site_id );
 			$es->description = 'Getting groups for this blog';
 			$es->add_type( id_of('group_type') );
-			$es->add_right_relationship( $this->blog->id(), relationship_id_of('blog_to_authorized_commenting_group') );
+			$es->add_right_relationship( $this->blog->id(), relationship_id_of('publication_to_authorized_commenting_group') );
 			$es->set_num(1);
 			$groups = $es->run_one();
 			if(!empty($groups))
@@ -471,7 +471,7 @@
 		}
 		function alter_relationship_checker_es($es)
 		{
-			$es->add_left_relationship( $this->blog->id(), relationship_id_of('news_to_blog') );
+			$es->add_left_relationship( $this->blog->id(), relationship_id_of('news_to_publication') );
 			return $es;
 		}
 	}
