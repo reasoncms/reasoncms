@@ -12,6 +12,7 @@
 
 	include_once( 'reason_header.php' );
 	include_once( CARL_UTIL_INC . 'db/db_selector.php' );
+	reason_include_once('function_libraries/url_utils.php');
 	
 	//////////////////////////////////////////////////
 	// REASON API
