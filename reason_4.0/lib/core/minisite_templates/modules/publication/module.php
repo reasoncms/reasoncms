@@ -68,7 +68,7 @@ class PublicationModule extends Generic3Module
 	var $sections = array();				// $section_id => $section_entity
 	var $no_section_key = 'no_section';		//key to be used in the items_by_section array when there are no sections.
 	var $group_by_section = true;			//whether or not items should be grouped by section when displayed
-	var $show_module_title = true;
+	var $show_module_title = false; // page title module generally handles this
 	
 	var $class_vars_pass_to_submodules = array('publication');	//needed by the item markup generator
 
@@ -935,9 +935,13 @@ class PublicationModule extends Generic3Module
 		function get_comment_group_helper()
 		{
 			$group = $this->get_comment_group();
-			$comment_group_helper = new group_helper();
-			$comment_group_helper->set_group_by_entity($group);
-			return $comment_group_helper;
+			if (!empty($group))
+			{
+				$comment_group_helper = new group_helper();
+				$comment_group_helper->set_group_by_entity($group);
+				return $comment_group_helper;
+			}
+			return false;
 		}
 		
 		/**
@@ -960,8 +964,8 @@ class PublicationModule extends Generic3Module
 			}
 			else
 			{
-				trigger_error('No comment group assigned to publication id '.$this->publication->id());
-				return false;
+				trigger_error('No comment group assigned to publication id '.$this->publication->id().' - will return nobody group');
+				return new entity(id_of('nobody_group'));
 			}
 		}
 		
@@ -994,8 +998,8 @@ class PublicationModule extends Generic3Module
 			}
 			else
 			{
-				trigger_error('No posting group assigned to publication id '.$this->publication->id());
-				return false;
+				trigger_error('No posting group assigned to publication id '.$this->publication->id().' - will return nobody group');
+				return new entity(id_of('nobody_group'));
 			}
 		}
 		
@@ -1010,7 +1014,6 @@ class PublicationModule extends Generic3Module
 			$group = $this->get_post_group();
 			$post_group_helper = new group_helper();
 			$post_group_helper->set_group_by_entity($group);
-			
 			return $post_group_helper;
 		}
 
