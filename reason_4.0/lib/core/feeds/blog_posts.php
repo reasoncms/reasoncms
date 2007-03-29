@@ -10,7 +10,7 @@ class blogPostsFeed extends pageTreeFeed
 {
 	var $query_string = 'story_id';
 	var $blog; // entity
-	var $modules = array('blog');
+	var $modules = array('publication');
 	
 	function grab_blog()
 	{
@@ -22,7 +22,7 @@ class blogPostsFeed extends pageTreeFeed
 			}
 			else
 			{
-				trigger_error('No blog id set on blog feed');
+				trigger_error('No publication id set on publication feed');
 			}
 		}
 	}
@@ -72,7 +72,7 @@ class blogPostsFeed extends pageTreeFeed
 		$this->feed->es->add_relation( 'status.status != "pending"' );
 		$this->feed->es->add_relation( 'dated.datetime <= NOW()' );
 		
-		$this->feed->es->add_left_relationship( $this->blog->id() , relationship_id_of( 'news_to_blog' ) );
+		$this->feed->es->add_left_relationship( $this->blog->id() , relationship_id_of( 'news_to_publication' ) );
 	}
 }
 
@@ -86,7 +86,7 @@ function get_blog_page_link( $site, $tree, $page_types, $blog ) // {{{
 		$relations[] = 'page_node.custom_page = "'.$page_type.'"';
 	}
 	$es->add_relation( '('.implode(' or ', $relations).')' );
-	$es->add_left_relationship( $blog->id(), relationship_id_of('page_to_blog') );
+	$es->add_left_relationship( $blog->id(), relationship_id_of('page_to_publication') );
 	$es->set_num( 1 );
 	$pages = $es->run_one();
 	
