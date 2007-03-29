@@ -761,7 +761,7 @@ div#calendar .focus ul li {
 div#calendar .focus ul li.first {
 	border-top:none;
 }
-div#calendar .focus .otherActions, div#calendar .focus .clear  {
+div#calendar .focus .otherActions, div#calendar .focus .clear, div#calendar .search .otherActions  {
 	font-size:88%;
 }
 div.eventDetails div.eventContent {
