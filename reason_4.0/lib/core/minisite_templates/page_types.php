@@ -75,23 +75,23 @@
 			'pre_sidebar' => 'image_sidebar',
 			'sidebar' => 'av',
 		),
-		'blog' => array(
-			'main_head' => 'blog_title',
-			'main'=>'blog_description',
-			'main_post' => 'blog',
+		'publication' => array(
+			'main_post'=>'publication',
+			'main_head' => 'publication/title',
+			'main'=>'publication/description',
 			'sidebar'=>'',
 			'pre_sidebar' => '',
 		),
-		'blog_with_events_sidebar' => array(
-			'main_head' => 'blog_title',
-			'main'=>'blog_description',
-			'main_post' => 'blog',
+		'publication_with_events_sidebar' => array(
+			'main_head' => 'publication/title',
+			'main'=>'publication/description',
+			'main_post' => 'publication',
 			'sidebar'=>'events_mini',
 			'pre_sidebar' => '',
 		),
-		'blog_with_events_sidebar_and_content' => array(
-			'main_head' => 'blog_title',
-			'main_post' => 'blog',
+		'publication_with_events_sidebar_and_content' => array(
+			'main_head' => 'publication/title',
+			'main_post' => 'publication',
 			'sidebar'=>'events_mini',
 			'pre_sidebar' => '',
 		),
