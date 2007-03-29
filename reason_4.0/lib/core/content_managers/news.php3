@@ -1,8 +1,6 @@
 <?php
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'news_handler';
 	
-#	reason_include_once( 'classes/publication_helper.php' );
-
 	class news_handler extends ContentManager 
 	{
 		var $publications; //pub_id=>pub_entity
@@ -12,11 +10,7 @@
 /////
 // ALTER_DATA & HELPER METHODS
 ////
-		function alter_data() { // {{{
-		
-			if (id_of('tonian_site') != $this -> get_value('site_id'))
-				$this -> add_required ('description');
-				
+		function alter_data() { // {{{	
 			if ( $this->is_new_entity() ) 
 				$this -> add_required ('status');
 				
@@ -292,151 +286,18 @@
 			else
 			{
 				$this -> add_required ('commenting_state');
-				$this -> set_display_name ('commenting_state', 'commenting');
+				$this -> set_display_name ('commenting_state', 'Allow comments');
+				$this->change_element_type('commenting_state', 'select_no_sort', array('options'=>array('on'=>'Yes', 'off'=>'No'), 'add_null_value_to_top' => false));
+				$this->add_comments('commenting_state', form_comment('This setting will only apply if this news/post item is used on a publication that supports comments, such as a blog.'));
 			}
 			if ( !$this -> get_value('commenting_state') )
 			{
-				$this -> set_value( 'commenting_state', 'on' );
+				$this -> set_value( 'commenting_state', 'off' );
 			}
 		}
 
-#		ew.  this is huge and gross.  any way to pare it down?
-		function make_site_specific_changes()
+	    function make_site_specific_changes()
 		{
-			if (id_of('athletics') == $this -> get_value('site_id')) {
-					$this -> add_required ('content');
-					$this -> change_element_type ('news_type', 'hidden');
-					$this -> change_element_type ('status', 'hidden');
-					$this->change_element_type( 'show_on_front_page', 'hidden');
-					$this->change_element_type( 'show_hide', 'hidden');
-					$this -> remove_element ('publish_start_date');
-					$this -> remove_element ('publish_end_date');
-					$this -> set_comments ('release_title', form_comment('The full title; this is what appears at the top of the press release'));
-					if (!$this -> get_value('news_type')) $this -> set_value('news_type', 'athletics');
-					if (!$this -> get_value('status')) $this -> set_value('status', 'published');
-					if (!$this -> get_value('name')) 
-					{
-						$this->set_value( 'contact_name' , 'Eric Sieger' );
-						$this->set_value( 'contact_email' , 'sportsinfo@acs.carleton.edu' );
-						$this->set_value( 'contact_title' , 'Sports Information Director' );
-						$this->set_value( 'contact_phone' , '507.646.4185' );
-					}
-				} elseif (id_of('media_relations') == $this -> get_value('site_id')) {
-					$this->change_element_type( 'contact_name', 'hidden');
-					$this->change_element_type( 'contact_email', 'hidden');
-					$this->change_element_type( 'contact_title', 'hidden');
-					$this->change_element_type( 'contact_phone', 'hidden');
-					$this->change_element_type( 'show_on_front_page', 'hidden');
-					$this->change_element_type( 'location', 'hidden');
-					$this -> set_comments ('release_title', form_comment('The full title; this is what appears at the top of the press release'));
-					if (!$this -> get_value('status')) $this -> set_value('status', 'pending');
-					$this -> set_comments ('publish_start_date', form_comment('The date that this news item will appear on the front page.  You can ignore this for non-press-release news items.'));
-					$this -> set_comments ('publish_end_date', form_comment('The date that this news item will cease to on the front page.  You can ignore this for non-press-release news items.'));
-					$this -> remove_element ('news_to_sport');
-					$this->change_element_type( 'news_type', 'select', array('options'=>array('Press Release'=>'Press Release', 'Features'=>'Features', 'In The News'=>'In The News', 'Kudos'=>'Kudos')));
-				} elseif (id_of('carletonian_site') == $this -> get_value('site_id')) {
-					$this->change_element_type( 'contact_name', 'hidden');
-					$this->change_element_type( 'contact_email', 'hidden');
-					$this->change_element_type( 'contact_title', 'hidden');
-					$this->change_element_type( 'contact_phone', 'hidden');
-					$this->change_element_type( 'location', 'hidden');
-					$this->change_element_type( 'publish_start_date', 'hidden');
-					$this->change_element_type( 'publish_end_date', 'hidden');
-					$this->change_element_type( 'release_number', 'hidden');
-					//$this->change_element_type( 'url_fragment', 'text');
-					//$this -> add_required ('url_fragment');
-					$this -> add_required ('content');
-					$this -> add_required ('show_on_front_page');
-					$this -> set_display_name ('news_type', 'Section');
-					$this -> set_comments ('release_title', form_comment('The headline'));
-					if (!$this -> get_value('status')) $this -> set_value('status', 'published');
-					if (!$this -> get_value('show_on_front_page')) $this -> set_value('show_on_front_page', 'No');
-					$this->change_element_type( 'news_type', 'select', array('options'=>array('Press Release'=>'News', 'Op-Ed'=>'Op-Ed', 'Athletics'=>'Sports')));
-					if (!$this -> get_value('news_type')) $this -> set_value('news_type', 'Press Release');
-				}
-				elseif (id_of('tonian_site') == $this -> get_value('site_id'))
-				{
-					if (!$this -> get_value('news_type')) $this -> set_value('news_type', 'Press Release');
-					$this -> change_element_type ('news_type', 'hidden');
-					$this->change_element_type( 'contact_name', 'hidden');
-					$this->change_element_type( 'contact_email', 'hidden');
-					$this->change_element_type( 'contact_title', 'hidden');
-					$this->change_element_type( 'contact_phone', 'hidden');
-					$this->change_element_type( 'show_on_front_page', 'hidden');
-					$this->change_element_type( 'publish_start_date', 'hidden');
-					$this->change_element_type( 'publish_end_date', 'hidden');
-					$this->change_element_type( 'release_number', 'hidden');
-					$this->change_element_type( 'release_number', 'hidden');
-					$this->change_element_type( 'location', 'hidden');
-					$this->change_element_type( 'show_hide', 'hidden');
-					
-					$this->change_element_type('names', 'textarea');
-					$this->change_element_type('subtitle', 'text');
-					$this->change_element_type('author_description', 'text');
-	
-					$this->add_required ('content');
-	
-					$this->set_comments('name', form_comment('This isn\'t used anywhere on the frontend, but it\'s used on the backend for lists and such. Usually, I imagine that you\'ll want to set this the same as the title.'));
-					$this->set_comments('release_title', form_comment('This is displayed as the item\'s title on the frontend.'));
-					$this->set_comments('subtitle', form_comment('This is displayed as the item\'s subtitle on the frontend.'));
-					$this->set_comments('author', form_comment('The author of the story.'));
-					$this->set_comments('author_description', form_comment('A short description of the writer (e.g., "Staff Writer").'));
-					$this->set_comments('datetime', form_comment('This date isn\'t displayed anywhere on the frontend, but it is used to sort the items. Kind of silly, I know; but it works.'));
-					$this->set_comments('description', form_comment('A brief summary of the news item. This appears in most lists of news items on the frontend.'));
-					$this->set_comments('content', form_comment('The content of the news item.'));
-					$this->set_comments('keywords', form_comment('These are used on the frontend to generate a list of related items. Keywords may be either single words or phrases, but should be separated by commas (e.g., "football, Chris Brann, Hamline"). Keywords should be in decreasing order of importance. Keywords less than three characters long will be ignored.'));
-					$this->set_comments('names', form_comment('A list of names referred to in the story. On the frontend, the user can use these to search for stories. Same format and rules as for keywords.'));
-					$this->set_comments('status', form_comment('"Published" items will be shown; "pending" items will be hidden.'));
-				}
-				elseif (id_of('inside_carleton') == $this -> get_value('site_id'))
-				{
-					$this->change_element_type( 'contact_name', 'hidden');
-					$this->change_element_type( 'contact_email', 'hidden');
-					$this->change_element_type( 'contact_title', 'hidden');
-					$this->change_element_type( 'contact_phone', 'hidden');
-					$this->change_element_type( 'location', 'hidden');
-					$this->change_element_type( 'publish_start_date', 'hidden');
-					$this->change_element_type( 'publish_end_date', 'hidden');
-					$this->change_element_type( 'release_number', 'hidden');
-					$this->change_element_type( 'author', 'hidden');
-					$this->change_element_type( 'show_on_front_page', 'hidden');
-					$this -> add_required ('content');
-				}
-				elseif (id_of('dean_of_the_college_office') == $this -> get_value('site_id'))
-				{
-					
-					$this->change_element_type( 'news_type', 'select', array('options'=>array('Press Release'=>'General News', 'Kudos'=>'Congratulations', 'Grants'=>'Grants and Fellowships', 'Conferences'=>'Conferences and Workshops')));
-					if (!$this -> get_value('news_type')) $this -> set_value('news_type', 'Press Release');
-					$this->change_element_type( 'contact_name', 'hidden');
-					$this->change_element_type( 'contact_email', 'hidden');
-					$this->change_element_type( 'contact_title', 'hidden');
-					$this->change_element_type( 'contact_phone', 'hidden');
-					$this->change_element_type( 'show_on_front_page', 'hidden');
-					$this->change_element_type( 'publish_start_date', 'hidden');
-					$this->change_element_type( 'publish_end_date', 'hidden');
-					$this->change_element_type( 'release_number', 'hidden');
-					$this->change_element_type( 'release_number', 'hidden');
-					$this->change_element_type( 'location', 'hidden');
-					$this->change_element_type( 'show_hide', 'hidden');
-					$this -> set_comments ('status', form_comment('"Published" items will appear on your site; "pending" items will be hidden.'));
-				}
-				else
-				{
-					if (!$this -> get_value('news_type')) $this -> set_value('news_type', 'Press Release');
-					$this -> change_element_type ('news_type', 'hidden');
-					$this->change_element_type( 'contact_name', 'hidden');
-					$this->change_element_type( 'contact_email', 'hidden');
-					$this->change_element_type( 'contact_title', 'hidden');
-					$this->change_element_type( 'contact_phone', 'hidden');
-					$this->change_element_type( 'show_on_front_page', 'hidden');
-					$this->change_element_type( 'publish_start_date', 'hidden');
-					$this->change_element_type( 'publish_end_date', 'hidden');
-					$this->change_element_type( 'release_number', 'hidden');
-					$this->change_element_type( 'release_number', 'hidden');
-					$this->change_element_type( 'location', 'hidden');
-					$this->change_element_type( 'show_hide', 'hidden');
-					$this -> set_comments ('status', form_comment('"Published" items will appear on your site; "pending" items will be hidden.'));
-				}
 		}
 
 //////
@@ -518,7 +379,15 @@
 					$this->delete_all_section_associations_for_this_publication($pub_id);
 					$this->make_new_association('news_to_news_section', $this->get_value($pub_id.'-sections'));
 				}
+				if($this->get_value($pub_id))
+				{
+					$this->extra_associations($pub_entity);
+				}
 			}
+		}
+		
+		function extra_associations(&$pub_entity)
+		{
 		}
 	
 		function handle_deletions()
@@ -536,11 +405,15 @@
 					$this->delete_all_issue_associations_for_this_publication($pub_id);
 					//delete all associations with this publication's news sections
 					$this->delete_all_section_associations_for_this_publication($pub_id);
+					$this->extra_deletions($pub_entity);
 				}				
-				
 				//issue & section associations for associated publications cannot be deleted, only replaced, so this is taken care of in handle_new_associations
 			}
-			
+		}
+		
+		// hook for extra deletion actions for local extensions
+		function extra_deletions(&$pub_entity)
+		{
 		}
 
 		function delete_instance_of_relationship($entity_a_id, $entity_b_id, $reln_unique_name)
