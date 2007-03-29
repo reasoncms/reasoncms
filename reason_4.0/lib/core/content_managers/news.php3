@@ -45,8 +45,6 @@
 # Make this un-hidden again when we have actually IMPLEMENTED comment notification
 			$this->change_element_type('enable_comment_notification', 'hidden');
 			
-			$this->add_element('pubs_heading','comment',array('text'=>'<h3>Publications</h3>'));
-			$this->add_element('pubs_last_hr','hr');
 			
 			//make more sophisticated changes to the content manager
 			$this->alter_commenting_state_field();
@@ -133,6 +131,11 @@
 			$es->add_type(id_of('publication_type'));
 			$es->set_order('entity.name ASC');
 			$this->publications = current($es->run());
+			
+			if (empty($this->publications)) return false;
+			
+			$this->add_element('pubs_heading','comment',array('text'=>'<h3>Publications</h3>'));
+			$this->add_element('pubs_last_hr','hr');
 			
 			foreach($this->publications as $pub_id=>$pub)
 			{
