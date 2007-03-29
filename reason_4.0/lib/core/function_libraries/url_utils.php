@@ -305,11 +305,11 @@ function construct_redirect( $new_request_vars = array(''), $preserve_request_va
  *	@param boolean $secure Uses https if true. This parameter only has an effect if $as_uri is true.
  */
 
-function get_page_link( $site, $tree, $page_types, $as_uri = false, $secure = false ) // {{{
+function get_page_link( &$site, &$tree, $page_types, $as_uri = false, $secure = false ) // {{{
 {
-	if(empty($site) || empty($tree) || empty($page_types))
+	if(empty($site) || empty($page_types))
 	{
-		trigger_error('site, tree, and page types must all be passed to get_page_link',EMERGENCY);
+		trigger_error('site and page types must all be passed to get_page_link',EMERGENCY);
 	}
 	$relations = array();
 	$es = new entity_selector($site->id());
@@ -325,7 +325,10 @@ function get_page_link( $site, $tree, $page_types, $as_uri = false, $secure = fa
 	if (!empty($pages))
 	{
 		$page = current($pages);
-		$ret = $tree->get_full_url($page->id(), $as_uri, $secure);
+		if(!empty($tree))
+			$ret = $tree->get_full_url($page->id(), $as_uri, $secure);
+		else
+			$ret = build_URL( $page->id() );
 	}
 	else
 	{
