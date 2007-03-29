@@ -75,7 +75,7 @@
 				$es = new entity_selector( $this->site->_id );
 				$es->description = 'Getting groups for this blog';
 				$es->add_type( id_of('group_type') );
-				$es->add_right_relationship( $blog->id(), relationship_id_of('blog_to_authorized_commenting_group') );
+				$es->add_right_relationship( $blog->id(), relationship_id_of('publication_to_authorized_commenting_group') );
 				$es->set_num(1);
 				$groups = $es->run_one();
 				if(!empty($groups))
