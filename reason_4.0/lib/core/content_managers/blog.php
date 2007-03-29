@@ -5,7 +5,6 @@
 	{
 		function alter_data()
 		{
-			//$this->change_element_type('commenting_state', 'hidden');
 			$this->change_element_type('enable_front_end_posting', 'hidden');
 			$this->change_element_type( 'keywords','hidden' );
 
@@ -42,6 +41,7 @@
 			$this->change_element_type( 'enable_comment_notification', 'hidden' );
 			
 			// right now publication options are limited to blog, and has_issues and has_sections are disabled
+			if (!$this->get_value( 'publication_type' )) $this->set_value( 'publication_type', 'blog' );
 			$this->change_element_type( 'publication_type', 'solidtext' );
 			$this->change_element_type( 'has_issues', 'hidden' ); // related issues do not change the display of a blog
 			$this->change_element_type( 'has_sections', 'hidden' ); // sections will work if attached to blogs - this flag is not followed reliably
