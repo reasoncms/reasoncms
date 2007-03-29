@@ -55,6 +55,11 @@
 		
 		function on_every_time()
 		{
+			// nwhite make a nice link that only clears add item and return text that identifies publication type
+			$pub_type = ($pt = $this->publication->get_value('publication_type')) ? strtolower($pt) : 'publication';
+			$link = make_link(array('add_item' => ''));
+			$this->change_element_type('dont_post', 'comment', array('text' => '<a href="'.$link.'">Return to '.$pub_type.' without posting</a>'));
+
 			if(!empty($this->user_netID))
 			{
 				$this->set_value('author', $this->user_netID);
@@ -64,6 +69,8 @@
 			$this->do_sections();
 			$this->set_order($this->get_order_array());
 		}
+
+		
 		function get_order_array()
 		{
 			return array('dont_post','issue','section','title','author','post_content','description','categories');
@@ -257,7 +264,8 @@
 		}
 		function where_to() // {{{
 		{
-			return '?';
+			//return '?'; // where_to should always return a fully qualified URL - safari appends to the current query string was redirected to '?'
+			return make_redirect(array('add_item' => ''));
 		} // }}}
 		
 		function get_issues()
