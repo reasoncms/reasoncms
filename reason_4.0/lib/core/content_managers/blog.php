@@ -35,9 +35,29 @@
 				$this->set_value('hold_comments_for_review', 'no');
 			}		
 
+			// hide things that do not appear fully implemented
+			$this->change_element_type( 'pagination_state', 'hidden' );
+			$this->change_element_type( 'commenting_state', 'hidden' );
+			$this->change_element_type( 'hold_posts_for_review', 'hidden' );
+			$this->change_element_type( 'enable_comment_notification', 'hidden' );
+			
+			// right now publication options are limited to blog, and has_issues and has_sections are disabled
+			$this->change_element_type( 'publication_type', 'solidtext' );
+			$this->change_element_type( 'has_issues', 'hidden' ); // related issues do not change the display of a blog
+			$this->change_element_type( 'has_sections', 'hidden' ); // sections will work if attached to blogs - this flag is not followed reliably
+			
+			$this->set_order(array('name', 'publication_type', 'unique_name', 'posts_per_page', 
+								   'blog_feed_string', 'description', 'date_format', 'allow_front_end_posting', 
+								   'allow_comments', 'hold_comments_for_review'));
+								   
+			$this->change_element_type( 'date_format', 'select_no_sort', array('options' => array('F j, Y \a\t g:i a' => date('F j, Y \a\t g:i a'),
+																								  'n/d/y \a\t g:i a' => date('n/d/y \a\t g:i a'),
+																								  'l, F j, Y' => date('l, F j, Y'),
+																								  'F j, Y' => date('F j, Y'),
+																								  'n/d/y' => date('n/d/y'), 
+																								  'n.d.y' => date('n.d.y'))));
 		}
 
-	
 		function alter_display_names()
 		{
 			$this->set_display_name('name','Publication Name');
@@ -48,6 +68,8 @@
 		{
 			$this->set_comments('hold_comments_for_review',form_comment('Choose "yes" to moderate comments; choose "no" to allow comments to be unmoderated. In either case, you will be able to delete comments after they are made.'));
 			$this->add_comments('blog_feed_string',form_comment('The URL snippet that this blog / publication will use for its RSS feed.'));
+			$this->set_comments('date_format',form_comment('Posts on this publication will use the date format that you select to show the date (and/or) time of publication.'));
+			
 
 			if( $this->is_new_entity() || user_is_a( $this->admin_page->user_id, id_of( 'admin_role' ) ) )
 			{
