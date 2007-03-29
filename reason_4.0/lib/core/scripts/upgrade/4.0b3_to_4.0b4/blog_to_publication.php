@@ -30,6 +30,13 @@ if (!isset ($_POST['verify']))
 		echo '<li>news_section_to_blog => news_section_to_publication</li>';
 		echo '<li>blog_to_featured_post => publication_to_featured_post</li>';
 		echo '</ul>';
+		echo '<h3>Changes blog pages to use publications page types</h3>';
+		echo '<ul>';
+		foreach(get_blog_to_publication_page_type_map() as $old=>$new)
+		{
+			echo '<li>'.$old.' => '.$new.'</li>';
+		}
+		echo '</ul>';
 }
 
 if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
@@ -77,7 +84,31 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 																		   	'description_reverse_direction' => 'Blogs / Publications use this group to determine commenting permissions'));
 	relationship_find_and_update('issue_type', 'publication_type', 'issue_to_blog', array('name' => 'issue_to_publication', 'description' => 'Issue to Publication'));
 	relationship_find_and_update('news_section_type', 'publication_type', 'news_section_to_blog', array('name' => 'news_section_to_publication', 'description' => 'News Section to Publication'));
-	relationship_find_and_update('publication_type', 'news', 'blog_to_featured_post', array('name' => 'publication_to_featured_post', 'description' => 'Publication to Featured Post'));	
+	relationship_find_and_update('publication_type', 'news', 'blog_to_featured_post', array('name' => 'publication_to_featured_post', 'description' => 'Publication to Featured Post'));
+	
+	$qs = array();
+	$total_affected = 0;
+	echo '<h3>Updating page types</h3>';
+	foreach(get_blog_to_publication_page_type_map() as $old=>$new)
+	{
+		$q = 'UPDATE page_node SET custom_page = "'.addslashes($new).'" WHERE page_node.custom_page = "'.addslashes($old).'"';
+		if($r = db_query($q, 'Problem changing '.$old.' page types to '.$new.' page types'))
+		{
+			$num_updated = mysql_affected_rows();
+			$total_affected += $num_updated;
+			echo '<p>'.$old.' => '.$new.': '.$num_updated.' pages updated</p>';
+		}
+	}
+	if($total_affected)
+	{
+		echo '<p>'.$total_affected.' pages changed in total.</p>';
+	}
+	else
+	{
+		echo '<p>No pages changed.  This script has probably already been run.</p>';
+	}
+	echo '<p><a href="index.php">Continue beta 3 to beta 4 upgrade</a></p>';
+	
 	}
 else
 {
@@ -116,6 +147,11 @@ function echo_form()
 	echo '<form name="doit" method="post" src="'.get_current_url().'" />';
 	echo '<p><input type="submit" name="verify" value="Run" /></p>';
 	echo '</form>';
+}
+
+function get_blog_to_publication_page_type_map()
+{
+	return array('blog'=>'publication','blog_with_events_sidebar'=>'publication_with_events_sidebar','blog_with_events_sidebar_and_content'=>'publication_with_events_sidebar_and_content');
 }
 
 ?>
