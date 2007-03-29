@@ -15,7 +15,7 @@ echo '<h2>Reason Publication Setup</h2>';
 if (!isset ($_POST['verify']))
 {
         echo '<p>This script adds the commenting settings entity table to the publication / blog type and removes the issued newsletters option ';
-        echo 'from the list of publication types.</p>';
+        echo 'from the list of publication types, and checks to make sure that all blogs have publication type blog.</p>';
 }
 
 if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
@@ -56,7 +56,19 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
         else
         {
         	echo '<p>the blog entity table does not have issued newsletters as an option.</p>';
-        	die;
+        }
+        
+        $es = new entity_selector();
+        $es->add_type(id_of('publication_type'));
+        $result = $es->run_one();
+        foreach($result as $k=>$v)
+        {
+        	$pub_type = $v->get_value('publication_type');
+        	if (empty($pub_type))
+        	{
+        		echo '<p>updated pub id ' . $k . ' with name ' . $v->get_value('name') . ' to have publication_type of blog</p>';
+        		reason_update_entity($k, get_user_id($user_netID), array('publication_type' => 'blog'), false);
+        	}
         }
 	}
 	else
