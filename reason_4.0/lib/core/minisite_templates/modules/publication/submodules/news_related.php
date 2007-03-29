@@ -1,12 +1,14 @@
 <?
 include_once( 'submodule.php');
 
+// hmmm seems there is not relationship called news_to_news - i'm effectively disabling this for now by skipping the init
 class news_related extends submodule
 {
 	var $related = array();
 	var $params = array( 'title'=>'Related News Items', 'title_tag'=>'h4' );
 	function init($request, $news_item)
 	{
+		return false;
 		$es = new entity_selector();
 		$es->description = 'Selecting related news for news item';
 		$es->add_type( id_of('news') );
