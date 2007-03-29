@@ -1,6 +1,6 @@
 <?php
-
 	reason_include_once( 'minisite_templates/modules/default.php' );
+	reason_include_once( 'function_libraries/url_utils.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'TextOnlyToggleModule';
 
