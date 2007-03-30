@@ -31,5 +31,20 @@ class EventsArchiveModule extends EventsModule
 		$this->calendar = new reasonCalendar($init_array);
 		$this->calendar->run();
 	}
+	function show_navigation()
+	{
+	}
+	function show_focus()
+	{
+	}
+	function get_today_link()
+	{
+	}
+	function get_archive_toggler()
+	{
+	}
+	function show_date_picker()
+	{
+	}
 }
 ?>
