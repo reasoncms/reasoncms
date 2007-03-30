@@ -1148,7 +1148,10 @@
 				echo '<link rel="stylesheet" type="text/css" href="'.UNIVERSAL_CSS_PATH.'" />'."\n";
 			}
 			echo '<link rel="stylesheet" type="text/css" href="'.REASON_ADMIN_CSS_DIRECTORY.'admin.css" />'."\n";
-			echo '<script language="JavaScript" type="text/javaScript" src="'.WEB_JAVASCRIPT_PATH.'modified_form.js"></script>'."\n";
+			if ($this->cur_module != 'Sorting')
+			{
+				echo '<script language="JavaScript" type="text/javaScript" src="'.WEB_JAVASCRIPT_PATH.'modified_form.js"></script>'."\n";
+			}
 			if( !empty( $this->style_sheet[ $this->cur_module ] ) )
 				echo '<link rel="stylesheet" type="text/css" href="'.REASON_ADMIN_CSS_DIRECTORY.$this->style_sheet[ $this->cur_module ].'" />' . "\n";
 			if( !empty( $this->script[ $this->cur_module ] ) )
