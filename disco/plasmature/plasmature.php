@@ -441,8 +441,6 @@
 				if(is_string($key))
 					$var_name = $key;
 				
-				if(!$this->is_class_var($var_name))
-					trigger_error($var_name.' is not a class variable of plasmature type '.$this->type, WARNING);
 				$this->$var_name = $var_value;
 				return true;
 			}
