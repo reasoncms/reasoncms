@@ -52,7 +52,6 @@
 			$this->lokify();
 			
 			
-			$this->make_site_specific_changes();
 			$this->make_publication_related_fields();
 			$this->set_values_for_publication_related_fields();
 
@@ -104,7 +103,7 @@
 							'pubs_heading',);
 							
 			$this -> set_order (array_merge($order, $publication_elements));		
-						
+			$this->make_site_specific_changes();			
 		} // }}}
 		
 		function lokify()
