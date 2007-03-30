@@ -132,15 +132,17 @@
 			$myname = reason_check_authentication();
 			if (!empty($myname))
 			{
-
+				$popup_alert = 'no';
 				$es = new entity_selector();
 				$es->add_type(id_of('user'));
 				$es->add_relation('entity.name = "'.$myname.'"');
 				$es->set_num(1);
-				$user = current($es->run_one());
-				$popup_alert = $user->get_value('user_popup_alert_pref');
-				
-				if (!$popup_alert) $popup_alert = 'no';
+				$users = $es->run_one();
+				if(!empty($users))
+				{
+					$user = current($es->run_one());
+					$popup_alert = $user->get_value('user_popup_alert_pref');
+				}
 				
 				$this->set('_user_popup_alert_pref' , $popup_alert);
 			}
