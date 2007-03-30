@@ -1154,6 +1154,8 @@ class PublicationModule extends Generic3Module
 				$es->add_type( id_of('news') );
 				$es->set_env('site', $this->site_id);
 				$es->add_right_relationship( $this->publication->id(), relationship_id_of('publication_to_featured_post') );
+				$es->add_rel_sort_field($this->publication->id(), relationship_id_of('publication_to_featured_post') );
+				$es->set_order('rel_sort_order ASC');
 				$temp = $es->run();
 				$featured_items[$this->publication->id()] = current($temp);
 			}
