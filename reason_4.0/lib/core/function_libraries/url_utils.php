@@ -159,7 +159,6 @@ function get_minisite_page_link($site_id, $page_id, $query_string = '', $secure=
 	elseif (isset($viewer[$site_id])) $pages = $viewer[$site_id];
 	else
 	{
-		echo 'get_minisite_page_link drawing nav for site id ' . $site_id . '<br />';
 		//$s = get_microtime();
 		$pages = new MinisiteNavigation();
 		$site = new entity($site_id);
