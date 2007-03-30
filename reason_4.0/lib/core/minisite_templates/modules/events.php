@@ -31,6 +31,7 @@ class EventsModule extends DefaultMinisiteModule
 	var $options_bar;
 	var $today; // A mysql-formatted date
 	var $tomorrow; // A mysql-formatted date
+	var $yesterday; // A mysql-formatted date
 	var $event; // An event entity
 	var $events_page_url; // this is left empty, to be filled by child classes
 	var $list_time_format = 'g:i a';
