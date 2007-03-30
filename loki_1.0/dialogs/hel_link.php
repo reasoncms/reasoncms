@@ -219,7 +219,7 @@ function refresh_named_anchors_contd(all_anchors, selected_named_anchor) // call
 
 <?php
 #					echo '<menuitem value="'.$url.'" label="'.htmlspecialchars($page[ 'name' ]).'"/>'."\n";
-	function build_url( &$pages, $page_id )
+	function loki_1_build_reason_url( &$pages, $page_id )
 	{
 		if( isset( $pages[ $page_id ][ 'real_url' ] ) )
 		{
@@ -232,7 +232,7 @@ function refresh_named_anchors_contd(all_anchors, selected_named_anchor) // call
 		}
 		else
 		{
-			return build_url( $pages, $pages[ $page_id ][ 'parent' ] ).'/'.$pages[ $page_id ][ 'url_fragment' ];
+			return loki_1_build_reason_url( $pages, $pages[ $page_id ][ 'parent' ] ).'/'.$pages[ $page_id ][ 'url_fragment' ];
 		}
 	}
 
@@ -285,7 +285,7 @@ function refresh_named_anchors_contd(all_anchors, selected_named_anchor) // call
 
 		// get all nice urls for all page_node pages
 		foreach( $page_values AS $page_id => $page )
-			$page_values[ $page_id ][ 'real_url' ] = build_url( $page_values, $page_id );
+			$page_values[ $page_id ][ 'real_url' ] = loki_1_build_reason_url( $page_values, $page_id );
 
 		$url_array = array();	//[page_id][page_url]
 		foreach( $page_values AS $page )
