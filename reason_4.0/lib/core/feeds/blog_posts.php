@@ -10,7 +10,7 @@ class blogPostsFeed extends pageTreeFeed
 {
 	var $query_string = 'story_id';
 	var $blog; // entity
-	var $modules = array('publication');
+	var $modules = array('publication','athletics/athletics_publication');
 	
 	function grab_blog()
 	{
