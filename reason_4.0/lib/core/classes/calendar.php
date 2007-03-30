@@ -286,7 +286,7 @@ class reasonCalendar
 		$this->es->set_order('dated.datetime ASC');
 		if(!empty($this->simple_search))
 		{
-			$simple_search_text_fields = array('entity.name','meta.description','meta.keywords','chunk.content','chunk.author');
+			$simple_search_text_fields = array('entity.name','meta.description','meta.keywords','chunk.content','chunk.author','location.location','event.sponsor','event.contact_organization');
 			$simple_search_date_fields = array('dated.datetime','event.dates');
 			$time = strtotime($this->simple_search);
 			$search_chunks = array();
