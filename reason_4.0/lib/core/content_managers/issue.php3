@@ -17,10 +17,9 @@
 			$this->remove_element('number');
 			$this->remove_element('description');
 			
-			
 			$this->add_relationship_element('publication', id_of('publication_type'), 
 relationship_id_of('issue_to_publication'),'right','select');
-			$this->add_required('publication');
+			//$this->add_required('publication');
 			
 			$this -> set_order (array ('publication','name','number','datetime','show_hide'));
 		} // }}}
