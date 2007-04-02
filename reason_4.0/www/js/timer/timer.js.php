@@ -25,9 +25,9 @@ window.onresize = function() {
 }
 
 var timeout; // seconds until time to logout (or at least try it)
-
+/* This comment block hides any php error output from js
 <?php
-$sess = get_reason_session();
+$sess =& get_reason_session();
 $popup_alert = 'false';
 if (DEFAULT_TO_POPUP_ALERT) $popup_alert = 'true';
 if($sess->exists())
@@ -37,9 +37,9 @@ if($sess->exists())
 		$sess->start();
 	}
 	if ($sess->get( '_user_popup_alert_pref' ) == 'yes') $popup_alert = 'true';
-	if ($sess->get( '_user_popup_alert_pref' ) == 'no') $popup_alert = 'false';
+	elseif ($sess->get( '_user_popup_alert_pref' ) == 'no') $popup_alert = 'false';
 }
-?>
+?>*/
 var popup_alert = <?php echo $popup_alert; ?>; // popup alert to warn of impending logout
 
 var has_killed_session = false;
