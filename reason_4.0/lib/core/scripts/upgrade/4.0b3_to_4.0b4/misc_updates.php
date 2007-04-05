@@ -67,6 +67,7 @@ if ( !isset ($_POST['verify']))
 		}
 		echo '</ul>';
 		echo '</li>';
+		echo '<li>Adds a Editor user role and assoiates every user who does not have a role to the new role</li>';
 		echo '</ul>';
 		echo_form();
 }
@@ -90,7 +91,7 @@ function echo_form()
 
 function run_updates($test_mode = true)
 {
-	$updates = array('update_theme_content_manager','add_new_themes','change_event_last_occurence_to_date','add_indexes_b3_to_b4');
+	$updates = array('update_theme_content_manager','add_new_themes','change_event_last_occurence_to_date','add_indexes_b3_to_b4','add_editor_user_role');
 	if($test_mode)
 	{
 		echo '<h2>Testing</h2>';
@@ -276,6 +277,69 @@ function add_indexes_b3_to_b4($test_mode = true)
 			}
 		}
 	}
+	echo '</ul>';
+}
+
+function add_editor_user_role($test_mode = true)
+{
+	echo '<h3>Adding editor user role</h3>';
+	$editor_user_role_id = id_of('editor_user_role');
+	echo '<ul>';
+	if(!empty($editor_user_role_id))
+	{
+		echo '<li>Editor user role already exists; no need to create it</li>';
+	}
+	else
+	{
+		if($test_mode)
+		{
+			echo '<li>Would have created editor user role</li>';
+		}
+		else
+		{
+			$editor_user_role_id = reason_create_entity(id_of('master_admin'), id_of('user_role'), $GLOBALS['__cur_user_id_hack__'], 'Editor', array('new'=>'0','unique_name'=>'editor_user_role'));
+			if($editor_user_role_id)
+				echo '<li>Created editor user role (ID: '.$editor_user_role_id.')</li>';
+			else
+			{
+				echo '<li>Unable to create editor user role! Aborting this step.</li></ul>';
+				return false;
+			}
+		}
+	}
+	// get users with their user roles
+	$es = new entity_selector();
+	$es->add_type(id_of('user'));
+	$es->add_left_relationship_field( 'user_to_user_role' , 'entity' , 'id' , 'user_role_id', true );
+	$users = $es->run_one();
+	if($test_mode)
+		echo '<li>Would have added editor user role to these users currently without a role:';
+	else
+		echo '<li>Adding editor user role to users currently without a role:';
+	echo '<ol>';
+	$count = 0;
+	foreach($users as $user)
+	{
+		if(!$user->get_value('user_role_id'))
+		{
+			$count++;
+			if($test_mode)
+			{
+				echo '<li>'.$user->get_value('name').'</li>';
+			}
+			else
+			{
+				if( create_relationship( $user->id(), $editor_user_role_id, relationship_id_of('user_to_user_role') ) )
+					echo '<li>'.$user->get_value('name').'</li>';
+				else
+					echo '<li><strong>Eeep!</strong> Problem assigning editor user role to '.$user->get_value('name').'</li>';
+			}
+		}
+	}
+	echo '</ol>';
+	if(!$count)
+		echo '<strong>No users needed to be updated; all users have roles.</strong>';
+	echo '</li>';
 	echo '</ul>';
 }
 
