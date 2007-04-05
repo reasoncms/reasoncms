@@ -270,6 +270,21 @@ class directory_service {
 	} //}}}
 	
 	/**
+	* Find out what directory services ae available
+	* @access public
+	* @abstract
+	* @return array
+	*/
+	function get_available_services()
+	{
+		include(SETTINGS_INC.'dir_service_config.php');
+		if (is_array($available_services))
+			return $available_services;
+		else
+			return array();
+	}
+	
+	/**
 	* Determine if a search filter is valid
 	* @access public
 	* @param string $filter Search filter to validate
