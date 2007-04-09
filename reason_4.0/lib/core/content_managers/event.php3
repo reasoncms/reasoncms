@@ -334,21 +334,26 @@ relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.na
 		function get_days_monthly() // {{{
 		{
 			$ucur = $this->ustart;
-			
 			while( $ucur <= $this->uend )
 			{
 				$this->dates[] = date( 'Y',$ucur ).'-'.date( 'm',$ucur ).'-'.date( 'd',$ucur );
-				//echo '$ucur='.$ucur.'<br />';
-				//die();
 				$ucur = strtotime( '+'.$this->frequency.' months',$ucur );
 				if( $this->get_value( 'monthly_repeat' ) == 'semantic' )
 				{
 					$cur_day = 1+7*($this->get_value( 'week_of_month' ) - 1);
-					$ucur = get_unix_timestamp( date( 'Y',$ucur ).'-'.date( 'm',$ucur ).'-'.$cur_day );
-					$foo = 0;
-					while( date( 'l',$ucur ) != $this->get_value( 'month_day_of_week' ) )
+					$ucur_var = date( 'Y',$ucur ).'-'.date( 'm',$ucur ).'-'.str_pad( $cur_day,2,'0',STR_PAD_LEFT );
+					$ucur = get_unix_timestamp( $ucur_var);
+					if($ucur)
 					{
-						$ucur = strtotime( '+1 day',$ucur );
+						while( date( 'l',$ucur ) != $this->get_value( 'month_day_of_week' ) )
+						{
+							$ucur = strtotime( '+1 day',$ucur );
+						}
+					}
+					else
+					{
+						trigger_error('Not able to find appropriate repeat date for '.$ucur_var);
+						break;
 					}
 				}
 			}
