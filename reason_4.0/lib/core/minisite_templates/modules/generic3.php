@@ -851,8 +851,18 @@
 			{
 				if(empty( $this->request[ $this->query_string_frag.'_id' ] ) )
 				{
-					$temp = $this->es->get_max( 'last_modified' );
-					return $temp->get_value( 'last_modified' );
+					/*$temp = $this->es->get_max( 'last_modified' );
+					return $temp->get_value( 'last_modified' );*/
+					$max_last_mod = 0;
+					foreach(array_keys($this->items) as $key)
+					{
+						if($this->items[$key]->get_value('last_modified') > $max_last_mod)
+							$max_last_mod = $this->items[$key]->get_value('last_modified');
+					}
+					if(!empty($max_last_mod))
+					{
+						return $max_last_mod;
+					}
 				}
 				else
 				{
