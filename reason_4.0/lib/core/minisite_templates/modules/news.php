@@ -240,6 +240,8 @@
 		var $is_issued = false;
 		var $feed_url;
 		var $add_breadcrumbs = true;
+		var $queried_for_issues = false;
+		var $issues = array();
 
 		function init( $args ) // {{{
 		{
@@ -592,7 +594,7 @@
 		} // }}} */
 		function get_issues() // {{{
 		{
-			if(empty($this->issues))
+			if(!$this->queried_for_issues)
 			{
 				$es = new entity_selector( $this->parent->site_id );
 				$es->add_type( id_of( 'issue_type' ) );
@@ -600,13 +602,14 @@
 				if($total_issue_count > 0)
 				{
 					$this->is_issued = true;
+					if($this->limit_to_shown_issues)
+					{
+						$es->add_relation( 'show_hide.show_hide = "show"' );
+					}
+					$es->set_order( 'dated.datetime DESC' );
+					$this->issues = $es->run_one();
 				}
-				if($this->limit_to_shown_issues)
-				{
-					$es->add_relation( 'show_hide.show_hide = "show"' );
-				}
-				$es->set_order( 'dated.datetime DESC' );
-				$this->issues = $es->run_one();
+				$this->queried_for_issues = true;
 			}
 			return $this->issues;
 		} // }}}
