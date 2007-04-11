@@ -15,6 +15,17 @@
 		{
 			$this->show_all_items();
 		} // }}}
+		
+		function alter_values() // {{{
+		{
+			$this->es->set_order( 'dated.datetime DESC' );
+			$this->es->add_relation( 'status.status = "published"' );
+			if(!empty($this->section))
+				$this->es->add_left_relationship( $this->section->id(), relationship_id_of( 'news_to_news_section'));
+			$this->es->set_sharing(array('owns','borrows'));
+			//$this->num = $this->es->get_one_count();
+			//$this->num_pages = ceil( $this->num / $this->num_per_page );
+		} // }}}
 	}
 	class mini_news_viewer extends issue_news_viewer
 	{
