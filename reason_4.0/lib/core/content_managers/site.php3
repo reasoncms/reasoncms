@@ -184,8 +184,14 @@
 
 				// add the logged in user to the site
 				create_relationship( $site_id, $this->admin_page->user_id, relationship_id_of( 'site_to_user' ) );
-				if( get_user_id( $this->get_value( 'site_maintainer' ) ) )
-					create_relationship( $site_id, get_user_id( $this->get_value( 'site_maintainer' ) ) , relationship_id_of( 'site_to_user' ) );
+				if($this->get_value( 'primary_maintainer' ))
+				{
+					$primary_maintainer_user_id = get_user_id( $this->get_value( 'primary_maintainer' ) );
+					if( !empty($primary_maintainer_user_id) && $primary_maintainer_user_id != $this->admin_page->user_id )
+					{
+						create_relationship( $site_id, $primary_maintainer_user_id , relationship_id_of( 'site_to_user' ) );
+					}
+				}
 				
 				// add the page,image, and blurb modules
 				create_relationship( $site_id, id_of('minisite_page'), relationship_id_of('site_to_type'));
