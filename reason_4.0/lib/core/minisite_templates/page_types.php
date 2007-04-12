@@ -493,6 +493,11 @@
 			'main_post' => 'image_slideshow',
 			'sidebar' => '',
 		),
+		'image_slideshow_before_content' => array(
+			'main' => 'image_slideshow',
+			'main_post' => 'content',
+			'sidebar' => '',
+		),
 		'image_slideshow_manual' => array(
 			'main_post' => array('module'=>'image_slideshow','slideshow_type'=>'manual'),
 			'sidebar' => '',
