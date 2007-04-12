@@ -195,6 +195,11 @@ class user
 	 */
 	function create_user($user_netID)
 	{
+		if (empty($user_netID))
+		{
+			trigger_error('create_user called but user_netID was not provided - the user was not created');
+			return false;
+		}
 		if ($this->get_user($user_netID) == false)
 		{
 			if ($causal_agent_entity = $this->get_user($this->causal_agent))
