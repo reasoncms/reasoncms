@@ -497,16 +497,22 @@ class ds_reason extends ds_default {
 	* @param string $password Password
 	* @return boolean
 	*/
-	function authenticate($username, $password) {
-		$es = new entity_selector();
-		$es->add_relation('entity.name = "'.addslashes($username).'"');
-		$es->add_relation('user.user_password_hash = "'.sha1($password).'"');
-		$es->add_relation($this->get_basic_limitation());
-		$es->set_num(1);
-		$users = $es->run_one(id_of('user'));
-		if(!empty($users))
+	function authenticate($username, $password)
+	{
+		settype($username, 'string');
+		settype($password, 'string');
+		if(!empty($username) && !empty($password))
 		{
-			return true;
+			$es = new entity_selector();
+			$es->add_relation('entity.name = "'.addslashes($username).'"');
+			$es->add_relation('user.user_password_hash = "'.sha1($password).'"');
+			$es->add_relation($this->get_basic_limitation());
+			$es->set_num(1);
+			$users = $es->run_one(id_of('user'));
+			if(!empty($users))
+			{
+				return true;
+			}
 		}
 		return false;
 	}
