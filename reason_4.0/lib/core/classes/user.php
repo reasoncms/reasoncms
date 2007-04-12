@@ -204,7 +204,7 @@ class user
 		{
 			if ($causal_agent_entity = $this->get_user($this->causal_agent))
 			{
-				$eid = create_entity(id_of('master_admin'), id_of('user'), $causal_agent_entity->id(), $user_netID);
+				$eid = reason_create_entity(id_of('master_admin'), id_of('user'), $causal_agent_entity->id(), $user_netID, array('new'=>0));
 				$e = new entity($eid);
 				return $e;
 			}
