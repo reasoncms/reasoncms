@@ -10,14 +10,18 @@
 	
 	class multiple_root_tree_viewer extends tree_viewer
 	{
-		
+		var $roots = array();
 		function root_node() // {{{
 		{
-			$roots = array();
-			foreach( $this->values AS $value )
-				if($value->id() == $value->get_value( 'parent_id' ) )
-					$roots[] = $value->id();
-			return $roots;
+			if(empty($this->roots))
+			{
+				foreach( $this->values AS $value )
+				{
+					if($value->id() == $value->get_value( 'parent_id' ) )
+						$this->roots[] = $value->id();
+				}
+			}
+			return $this->roots;
 		} // }}}
 		function parent( $id ) // {{{
 		{
@@ -66,7 +70,7 @@
 		function show_all_items() // {{{
 		{
 				?>
-				<table cellpadding="8" border="0" cellspacing="0" bgcolor="#ffffff">
+				<table cellpadding="8" border="0" cellspacing="0">
 				<?php
 				$roots = $this->root_node();
 				$this->show_sorting();
@@ -84,13 +88,13 @@
 				$class = 'highlightRow';
 			else 
 				$class = 'listRow2';
-			echo '<tr><td class="'.$class.'">' . $row->id() . '</td>';
+			echo '<tr class="'.$class.'"><td>' . $row->id() . '</td>';
 			
 			$open_link = $this->open;
 			if( !is_array( $options ) )
 				$options = array();
 			$options[ 'class' ] = $class;
-			echo '<td class="'.$class.'">';
+			echo '<td>';
 
 			echo '&nbsp;';
 			if( $this->children( $row->id() ) )
