@@ -108,7 +108,7 @@ function get_relationships_to_update($left_side_entity_type, $right_side_entity_
 			$es2 = new entity_selector($site_id);
 			$es2->add_type(id_of($right_side_entity_type));
 			$es2->set_sharing( 'owns,borrows' );
-			$es2->add_right_relationship( $entity->id() , id_of($relationship_type));
+			$es2->add_right_relationship( $entity->id() , relationship_id_of($relationship_type));
 			if (!empty($site_id)) $es2->add_field( 'ar' , 'name' , 'sharing' );
 			$es2->add_field( 'relationship', 'id', 'rel_id' );
 			if (!empty($ordering)) $es2->set_order( $ordering );
