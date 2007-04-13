@@ -23,7 +23,7 @@
 			}
 			if ($this->root_node_id != $this->cur_page_id)
 			{
-				$this->parent_links[$this->root_node_id] = $this->gen_parent_link($this->root_node_id);
+				$this->parent_links[$this->root_node_id] = $this->gen_parent_link($this->root_node_id, true);
 			}
 			
 			$this->parent_links = array_reverse($this->parent_links, true);
@@ -48,19 +48,25 @@
 			$parent_id = $this->values[$this->cur_page_id]->get_value('parent_id');
 			$node_info = $this->check_node($this->cur_page_id, $parent_id);
 			$this->start_depth = count($this->gen_parent_links($this->parent($this->cur_page_id)));
-			
 			if ($node_info['has_siblings'] && !$node_info['has_children'])
 			{
 				$this->display_parent_of_open_branch = true;
 				if (!$this->check_parent_links($parent_id)) $this->start_depth++;
-				//if ($this->root_node_id != $parent_id) $this->start_depth++;
+			}
+			elseif (!$node_info['has_siblings'] && !$node_info['has_children']) //case of no siblings/children
+			{
+				if ($node_info['is_root']) $this->display_parent_of_open_branch = true;
+				else 
+				{
+					$this->display_parent_of_open_branch = true;
+					if (!$this->check_parent_links($parent_id)) $this->start_depth++;
+				}
 			}
 			else
 			{
 				$this->display_parent_of_open_branch = true;
 				$this->start_depth++;
 			}
-			
 			$this->make_parent_links();
 			echo '<ul class="navListTop">';
 			$this->make_tree( $this->root_node_id , $this->root_node_id , 0);
@@ -89,14 +95,19 @@
 			}
 		}
 
-		function gen_parent_link($page_id)
+		function gen_parent_link($page_id, $root_node = false)
 		{
+			// We are going to have the parent link always be the site name plus the string home
+			if ($root_node)
+			{
+				$link_name = $this->site_info->get_value('name') . ' Home';
+			}
+			else
+			{
 			$link_name = ($this->values[$page_id]->get_value('link_name')) ? 
-						 $this->values[$page_id]->get_value('link_name') : 
-						 $this->values[$page_id]->get_value('name');
-						 
-			// can we add the string home for consistency if it is actually the home link?
-			
+				 		  $this->values[$page_id]->get_value('link_name') : 
+						  $this->values[$page_id]->get_value('name');
+			}
 			$str = '<p class="'.$this->parent_link_class.'">';
 			$str .= '<a href="' . $this->get_full_url($page_id) . '">'.$link_name.'</a>';
 			$str .= '</p>';
