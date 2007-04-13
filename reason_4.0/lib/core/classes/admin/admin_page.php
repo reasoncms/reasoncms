@@ -1161,6 +1161,7 @@
 				echo '<link rel="stylesheet" type="text/css" href="'.REASON_HTTP_BASE_PATH.'css/timer.css'.'" />'. "\n";
 				echo '<script language="JavaScript" type="text/javaScript" src="'.WEB_JAVASCRIPT_PATH.'timer/timer.js.php"></script>'."\n";
 			}
+			echo '<script language="JavaScript" type="text/javaScript" src="'.WEB_JAVASCRIPT_PATH.'collapse.js"></script>'."\n";
 			
 		?>
 		<script language="JavaScript" type="text/JavaScript">
