@@ -468,7 +468,7 @@ function init()
 {
   add_checks();
   original_state = load_forms();
-  setTimeout(iframes = load_iframes, 1);
+  setTimeout(iframes = load_iframes, 500);
 //  iframes = load_iframes();
 
 /*  if (window.ActiveXObject)
