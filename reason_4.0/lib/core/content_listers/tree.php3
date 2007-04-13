@@ -148,7 +148,11 @@
 				$class = 'highlightRow';
 			else 
 				$class = 'listRow2';
-			echo '<tr class="'.$class.'"><td>' . $row->id() . '</td>';
+			if($row->id() != $this->root_node())
+			{
+				$class .= ' childOf'.$this->parent( $row->id() );
+			}
+			echo '<tr class="'.$class.'" id="'.$row->id().'row"><td>' . $row->id() . '</td>';
 			
 			$open_link = $this->open;
 			echo '<td>';
@@ -159,7 +163,7 @@
 			elseif( $this->children( $row->id() ) )
 			{
 				$remove_filter = $this->set_no_filters();
-				if( $this->is_open( $row->id() ) )
+				/* if( $this->is_open( $row->id() ) )
 				{
 					$open_link = preg_replace( '/,'.$row->id().',/', '' , $open_link );
 					if( substr( $open_link , ( strlen( $open_link ) - 1 ) , 1 ) == ',' )
@@ -172,7 +176,8 @@
 					if( substr( $open_link,(strlen( $open_link )-1),1 ) == ',' )
 						$open_link .= '0';
 					echo '<a href="'.$this->admin_page->make_link( array_merge( array( 'open' => $open_link ),$remove_filter ) ).'">'.'<img src="'.REASON_HTTP_BASE_PATH.'ui_images/item_closed.gif" width="13" height="13" border="0" alt="closed item. click to open." />'.'</a>';
-				}
+				} */
+				echo '<a class="openToggler" title="Show/Hide Children">'.'<img src="'.REASON_HTTP_BASE_PATH.'ui_images/item_closed.gif" width="13" height="13" border="0" alt="Click to toggle visibility of child items." />'.'</a>';
 			}
 			echo '</td>';
 		} // }}}
@@ -213,26 +218,25 @@
 				}
 				else
 				{
+					$wrapper_count = 0;
 					if( $name == 'name' )
 					{
 						$display = '';
 						for( $i = 0; $i < $options[ 'depth' ]; $i++ )
-							$display .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+							$wrapper_count++;
+						$display .= '<div class="treeItemWrapDepth'.$wrapper_count.'">';
 						$display .=  '<strong>' . $row->get_value( 'name' ) . '</strong>';
 						if( count( $this->children( $row->id() ) ) > 1 )
 						{
 							$display .= '<br />';
-							for( $i = 0; $i < $options[ 'depth' ]; $i++ )
-								$display .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 							$display .= '<a href="'.$this->admin_page->make_link( array( 'cur_module' => 'Sorting','parent_id' => $row->id() ) ).'" class="smallText">Sort children</a>';
 						}
+						$display .= '</div>';
 					}
 					else
 						$display = $row->get_value( $name );	
 				}
 				echo '<td';
-				if( $name == 'name' )
-					echo ' nowrap="nowrap"';
 				echo '>'.$display.'</td>';
 			}
 		} // }}} 
