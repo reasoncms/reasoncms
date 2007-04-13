@@ -213,3 +213,54 @@ div#allRels #connectionsRow h4, div#allRels #connectionsRow dl {
 div#allRels #connectionsRow dt {
 	font-style:italic;
 }
+a.openToggler {
+	cursor:pointer;
+}
+div.treeItemWrapDepth1 {
+	margin-left:2.5em;
+}
+div.treeItemWrapDepth2 {
+	margin-left:5em;
+}
+div.treeItemWrapDepth3 {
+	margin-left:7.5em;
+}
+div.treeItemWrapDepth4 {
+	margin-left:10em;
+}
+div.treeItemWrapDepth5 {
+	margin-left:12.5em;
+}
+div.treeItemWrapDepth6 {
+	margin-left:15em;
+}
+div.treeItemWrapDepth7 {
+	margin-left:17.5em;
+}
+div.treeItemWrapDepth8 {
+	margin-left:20em;
+}
+div.treeItemWrapDepth9 {
+	margin-left:22em;
+}
+div.treeItemWrapDepth10 {
+	margin-left:24em;
+}
+div.treeItemWrapDepth11 {
+	margin-left:26em;
+}
+div.treeItemWrapDepth12 {
+	margin-left:28em;
+}
+div.treeItemWrapDepth13 {
+	margin-left:29em;
+}
+div.treeItemWrapDepth14 {
+	margin-left:30em;
+}
+div.treeItemWrapDepth15 {
+	margin-left:31em;
+}
+div.treeItemWrapDepth16 {
+	margin-left:32em;
+}
