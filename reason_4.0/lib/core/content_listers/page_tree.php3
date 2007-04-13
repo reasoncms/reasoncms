@@ -10,6 +10,10 @@
 	
 	class page_tree_viewer extends tree_viewer
 	{
+		function is_open( $id )  // {{{
+		{
+			return true;
+		} // }}}
 		function show_admin_live( $row , $options) // {{{
 		{
 			echo '<td align="left"><strong>';
