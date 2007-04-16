@@ -231,7 +231,7 @@ Database Configuration
 automatically create the necessary tables the first time a form is created.
 
 	The database connections used by Reason are defined in an XML file.  The location of
-this file is specified by the DB_CREDENTIALS_FILEPATH constant in the reason_package/paths.php 
+this file is specified by the DB_CREDENTIALS_FILEPATH constant in the reason_package/settings/package_settings.php 
 file.  The location should not be web accessible as it will contain the account
 credentials for your database. It's also sensible to make it readable only be
 the account your web server runs under.
@@ -279,8 +279,6 @@ INCLUDE_PATH - location of the reason_package directory
 WEB_PATH - file system path of the web root directory
 HTTP_HOST_NAME - host-name (or IP) which hits WEB_PATH directory
 PHP_CLI - file system path of the php binary to be used for command line operations
-HTTP_CREDENTIALS_FILEPATH - file system location of file which defines credentials to access
-                            areas of the webserver protected by http authentication
 DB_CREDENTIALS FILEPATH - file system location of .xml file which defines database connections
 TIDY_EXE - location of the tidy binary
 
@@ -288,6 +286,10 @@ Paths to Imagemagick functions are not currently specified in the reason paths.p
 make sure imagemagick is available at the command line without specifying a path. If need be,
 add the path to /etc/profile or otherwise make it available to the apache user.
 
+If reason sites are going to be placed behind areas that require http authentication, then the 
+HTTP_CREDENTIALS_FILEPATH constant must be defined. The constant should reference a file outside the web tree
+which defines $http_authentication_username and $http_authentication_password. These variables are
+used by curl to access areas behind http authentication.
 
 *** reason_package/settings/reason_settings.php ***
 
