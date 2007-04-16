@@ -46,19 +46,27 @@
 		} // }}}
 		function children( $id ) // {{{
 		{
-			if(!isset($this->children[$id]))
+			$ret = array();
+			if(empty($this->children))
 			{
-				$this->children[$id] = array();
 				$root = $this->root_node();
 				foreach( $this->values as $item )
 				{
-					if(( $item->get_value( 'parent_id' ) == $id ) AND ($item->id() != $root) )
+					if($item->id() != $root )
 					{
-						$this->children[$id][] = $item->id();
+						if(!isset($this->children[$item->get_value('parent_id')]))
+						{
+							$this->children[$item->get_value('parent_id')] = array();
+						}
+						$this->children[$item->get_value('parent_id')][] = $item->id();
 					}
 				}
 			}
-			return $this->children[$id];
+			if(isset($this->children[$id]))
+			{
+				$ret = $this->children[$id];
+			}
+			return $ret;
 		} // }}}
 
 		function alter_values() // {{{
