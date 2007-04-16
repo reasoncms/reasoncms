@@ -18,6 +18,7 @@
 		var $order_by = 'sortable.sort_order';
 		var $filter_es_name = 'filter_es';
 		var $root_id = false;
+		var $children = array();
 		
 		function root_node() // {{{
 		{
@@ -45,12 +46,19 @@
 		} // }}}
 		function children( $id ) // {{{
 		{
-			$children = array();
-			$root = $this->root_node();
-			foreach( $this->values as $item )
-				if(( $item->get_value( 'parent_id' ) == $id ) AND ($item->id() != $root) )
-					$children[] = $item->id();
-			return $children;
+			if(!isset($this->children[$id]))
+			{
+				$this->children[$id] = array();
+				$root = $this->root_node();
+				foreach( $this->values as $item )
+				{
+					if(( $item->get_value( 'parent_id' ) == $id ) AND ($item->id() != $root) )
+					{
+						$this->children[$id][] = $item->id();
+					}
+				}
+			}
+			return $this->children[$id];
 		} // }}}
 
 		function alter_values() // {{{
@@ -144,15 +152,20 @@
 
 		function show_item_pre( $row , &$options) // {{{
 		{
+			$classes = array();
 			if( !empty($options[ 'color' ]) ) 
-				$class = 'highlightRow';
+				$classes[] = 'highlightRow';
 			else 
-				$class = 'listRow2';
+				$classes[] = 'listRow2';
 			if($row->id() != $this->root_node())
 			{
-				$class .= ' childOf'.$this->parent( $row->id() );
+				$classes[] = 'childOf'.$this->parent( $row->id() );
 			}
-			echo '<tr class="'.$class.'" id="'.$row->id().'row"><td>' . $row->id() . '</td>';
+			foreach($this->children( $row->id() ) as $child_id)
+			{
+				$classes[] = 'parentOf'.$child_id;
+			}
+			echo '<tr class="'.implode(' ',$classes).'" id="'.$row->id().'row"><td>' . $row->id() . '</td>';
 			
 			$open_link = $this->open;
 			echo '<td>';
