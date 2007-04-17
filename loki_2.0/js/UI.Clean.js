@@ -94,7 +94,7 @@ UI.Clean.clean = function(root, settings)
 		}
 		node.parentNode.replaceChild(new_node, node);
 
-		// XXX todo: take all attributes from old node -> new node
+		// TODO: take all attributes from old node -> new node
 	}
 
 	/**
@@ -135,11 +135,10 @@ UI.Clean.clean = function(root, settings)
 				catch(e) { /*mb('error in has_attributes: [node, e.message]: ', [node, e.message]);*/ }
 			}
 		}
-
-		if ( had_attrs.length > 0 )
-			return had_attrs;
- 		else
-			return false;
+		
+		return ( had_attrs.length > 0 )
+			? had_attrs
+			: false;
 	}
 
 	/**
@@ -308,6 +307,7 @@ UI.Clean.clean = function(root, settings)
 			test : function(node) { return has_tagname(node, ['TABLE', 'IMG']); },
 			action : function(node) { remove_attributes(node, ['height', 'width']); }
 		},
+		/*
 		{
 			description : 'Strip https and http in img.src',
 			test : function(node) { return has_tagname(node, ['IMG']); },
@@ -326,6 +326,19 @@ UI.Clean.clean = function(root, settings)
 					node.setAttribute('href', Util.URI.strip_https_and_http(node.getAttribute('href')));
 			}
 		},
+		*/
+		{
+			description: 'Remove protocol from links on the current server',
+			test: function(node) { return has_tagname(node, ['A']); },
+			action: function(node)
+			{
+				var href = node.getAttribute('href');
+				if (href != null) {
+					node.setAttribute('href',
+						UI.Clean.cleanURI(href));
+				}
+			}
+		},
 		{
 			description : 'Convert curly quotes and such to normal ones',
 			test : function(node) { return node.nodeType == Util.Node.TEXT_NODE; },
@@ -339,6 +352,7 @@ UI.Clean.clean = function(root, settings)
 				node.data = text;
 			}
 		}
+		// TODO: deal with this?
 		// In content pasted from Word, there may be 
 		// ...<thead><tr><td>1</td></tr></thead>...
 		// instead of
@@ -399,6 +413,16 @@ UI.Clean.clean = function(root, settings)
 		//throw(e); // XXX tmp, for testing
 	}
 };
+
+UI.Clean.cleanURI = function(uri)
+{
+	var local = Util.URI.extract_domain(uri) ==
+		Util.URI.extract_domain(window.location);
+		
+	return (local)
+		? Util.URI.strip_https_and_http(uri)
+		: uri;
+}
 
 UI.Clean.cleanHtml = function(html, settings)
 {
