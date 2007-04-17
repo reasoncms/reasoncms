@@ -433,24 +433,33 @@
 			'main_post' => 'form'
 		),
 		'gallery' => array(
-			'main_post' => 'gallery',
+			'main_post' => 'gallery2',
 			'sidebar' => '',
 		),
 		'gallery_entire_site' => array(
-			'main_post' => 'gallery_entire_site',
+			'main_post' => array(
+				'module' => 'gallery2',
+				'entire_site' => true,
+				),
 		),
 		'gallery_entire_site_no_nav' => array(
-			'main_post' => 'gallery_entire_site',
+			'main_post' => array(
+				'module' => 'gallery2',
+				'entire_site' => true,
+				),
 			'navigation' => '',
 		),
 		'gallery_entire_site_no_nav_no_title' => array(
-			'main_post' => 'gallery_entire_site',
+			'main_post' => array(
+				'module' => 'gallery2',
+				'entire_site' => true,
+				),
 			'navigation' => '',
 			'main_head' => '',
 			'banner_xtra' => '',
 		),
 		'gallery_first_nav_below' => array(
-			'main' => 'gallery',
+			'main' => 'gallery2',
 			'main_post'=>'navigation',
 			'sidebar' => '',
 			'navigation' => '',
@@ -459,7 +468,7 @@
 			'post_foot' => 'textonly_toggle',
 		),
 		'gallery_no_nav' => array(
-			'main_post' => 'gallery',
+			'main_post' => 'gallery2',
 			'sidebar' => '',
 			'navigation' => '',
 			'sub_nav_2' => '',
@@ -467,7 +476,10 @@
 			'post_foot' => 'textonly_toggle',
 		),
 		'gallery_single_page' => array(
-			'main_post' => 'gallery_single_page',
+			'main_post' => array(
+				'module' => 'gallery2',
+				'use_pagination' => false,
+				),
 			'sidebar' => '',
 		),
 		'gallery_vote' => array(
