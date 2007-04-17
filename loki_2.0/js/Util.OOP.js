@@ -32,8 +32,8 @@ Util.OOP.inherits = function(child, parent)
 };
 
 /**
- * Modified from <http://www.crockford.com/javascript/inheritance.html>.
- * Not sure this works.
+ * Sets up inheritance from parent to child, but only copies over the elements
+ * in the parent's prototype provided as arguments after the parent class.
  */
 Util.OOP.swiss = function (child, parent)
 {
