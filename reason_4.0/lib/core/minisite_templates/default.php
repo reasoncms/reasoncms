@@ -1009,14 +1009,14 @@ class MinisiteTemplate
 			$this->head_items[] = $item;
 		}
 	}
-	function add_stylesheet( $url, $media = '' )
+	function add_stylesheet( $url, $media = '', $add_to_top = false )
 	{
 		$attrs = array('rel'=>'stylesheet','type'=>'text/css','href'=>$url);
 		if(!empty($media))
 		{
 			$attrs['media'] = $media;
 		}
-		$this->add_head_item('link',$attrs);
+		$this->add_head_item('link',$attrs, '', $add_to_top);
 	}
 	
 	/* this function assembles the head items from the data provided by the modules and handles some basic checking */
