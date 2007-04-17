@@ -52,6 +52,7 @@ class Loki2
 	var $_feeds = array();
 	var $_default_site_regexp = '';
 	var $_default_type_regexp = '';
+	var $_sanitize_unsecured = false;
 
 	/**
 	 * Constructor
@@ -113,6 +114,17 @@ class Loki2
 	{
 		$this->_default_type_regexp = $regexp;
 	}
+	
+	/**
+	 * Sets whether or not Loki will sanitize embedded content the transmission
+	 * of which is not SSL-secured by not displaying it in the editor.
+	 * @param bool $value true to perform the sanitization, false if otherwise
+	 * @return void
+	 */
+	function sanitize_unsecured($value)
+	{
+		$this->_sanitize_unsecured = (bool) $value;
+	}
 
 	/**
 	 * Prints the html which needs to be placed within a form.
@@ -162,6 +174,7 @@ class Loki2
 					use_https : <?php echo $this->_asset_protocol == 'https://' ? 'true' : 'false'; ?>,
 					use_reason_integration : false,
                     use_xhtml : true,
+					sanitize_unsecured : <?php echo (($this->_sanitize_unsecured) ? 'true' : 'false') ?>,
 					options : options
 				};
 
