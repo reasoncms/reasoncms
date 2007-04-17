@@ -55,6 +55,13 @@
 		var $es; //entity selector
 		
 		/**
+		 * A copy of the entity selector before user
+		 * input such as filters are applied
+		 * @var object an entity_selector
+		 */
+		var $pre_user_input_es;  //entity selector
+		
+		/**
 		 * The header used above entire module
 		 * Module does not have a title if this string is empty
 		 * @var string
@@ -102,6 +109,10 @@
 		var $search_fields = array('entity.name');
 		var $default_links = array();
 		var $search_field_size = 20;
+		
+		// Power search (psearch) settings
+		var $allowable_psearch_fields = array();
+		
 		// Pagination settings
 		var $use_pagination = false;
 		var $num_per_page = 10;
@@ -142,7 +153,9 @@
 		var $ok_ids = array();
 		var $not_ok_ids = array();
 		
-		//calls on parent::init, set_type(), alter_es(), do_filtering(), do_pagination() add_crumb(), 
+		var $current_item_id;
+		
+		//calls on parent::init, set_type(), alter_es(), apply_user_input_to_es(), do_filtering(), do_pagination() add_crumb(), 
 		function init( $args ) // {{{
 		{
 			$error = 'Your class needs to have a type id.  Please overload the set_type() function and '.
@@ -152,6 +165,9 @@
 			if( empty( $this->type ) )
 				trigger_error( $error , E_USER_ERROR );
 				
+			if(!empty($this->request[ $this->query_string_frag.'_id' ]))
+				$this->current_item_id = $this->request[ $this->query_string_frag.'_id' ];
+			
 			$this->additional_init_actions();
 			$this->pre_es_additional_init_actions();
 					
@@ -168,6 +184,8 @@
 				$this->es->add_type( $this->type );
 				$this->es->set_env('site_id',$this->parent->site_id);
 				$this->alter_es();
+				$this->pre_user_input_es = carl_clone($this->es);
+				$this->apply_user_input_to_es();
 				if($this->use_filters)
 					$this->do_filtering();
 				if($this->use_pagination)
@@ -176,9 +194,9 @@
 				$this->items = $this->es->run_one();
 				$this->alter_items($this->items);
 				
-				if( count( $this->items ) > 1 )
+				if( !empty( $this->items ) && !empty( $this->current_item_id ) && !empty($this->items[$this->current_item_id]) )
 				{
-					if( !empty( $this->request[ $this->query_string_frag.'_id' ] ) ) $this->add_crumb();
+					$this->add_crumb();
 				}
 				if(
 					$this->make_current_page_link_in_nav_when_on_item
@@ -211,18 +229,27 @@
 		
 		function add_crumb()
 		{
-			foreach( $this->items AS $item )
+			if( !empty( $this->items ) && !empty( $this->current_item_id ) && !empty($this->items[$this->current_item_id]) )
 			{
-				if( $item->id() == $this->request[ $this->query_string_frag.'_id' ] ) 
-				{
-					$this->parent->add_crumb( $item->get_value( 'name' ) );
-				}
+				$this->parent->add_crumb( $this->get_crumb_text($this->items[$this->current_item_id]) );
 			}
+		}
+		function get_crumb_text(&$item)
+		{
+			return strip_tags( $item->get_value( 'name' ) );
 		}
 
 		function get_cleanup_rules()
 		{
 			$this->cleanup_rules[$this->query_string_frag . '_id'] = array('function' => 'turn_into_int');
+			if ($this->use_filters)
+			{
+				foreach($this->allowable_psearch_fields as $key_frag => $rule_data)
+				{
+					$this->cleanup_rules['search_' . $key_frag] = $rule_data['cleanup_rule'];
+				}
+			}
+			
 			return $this->cleanup_rules;
 		}
 		function has_content()
@@ -264,9 +291,9 @@
 				
 				echo '</div>'."\n"; // close the persistent items
 				
-				if(!empty( $this->request[ $this->query_string_frag.'_id' ] ) )
+				if(!empty( $this->current_item_id ) )
 				{
-					$this->_show_item( $this->request[ $this->query_string_frag.'_id' ] );
+					$this->_show_item( $this->current_item_id );
 					if($this->show_list_with_details && count($this->items) > 1)
 						$this->list_items();
 					else
@@ -277,12 +304,16 @@
 				{
 					if($this->jump_to_item_if_only_one_result && $this->total_count == 1)
 					{
+						reset($this->items);
 						$item = current($this->items);
-						$url_parts = parse_url(get_current_url());
-						$location = $url_parts['scheme'].'://'.$url_parts['host'].$url_parts['path'].$this->construct_link($item);
-						$location = html_entity_decode( $location );
-						header('Location: '.$location);
-						die();
+						if(is_object($item))
+						{
+							$url_parts = parse_url(get_current_url());
+							$location = $url_parts['scheme'].'://'.$url_parts['host'].$url_parts['path'].$this->construct_link($item);
+							$location = html_entity_decode( $location );
+							header('Location: '.$location);
+							die();
+						}
 					}
 					$this->list_items();
 				}
@@ -382,7 +413,7 @@
 		function list_items() // {{{
 		{
 			echo '<div class="moduleNav">'."\n";
-			if(!empty( $this->request[ $this->query_string_frag.'_id' ] ) && !empty($this->other_items))
+			if(!empty( $this->current_item_id ) && !empty($this->other_items))
 			{
 				echo '<h3>';
 				if($this->use_filters && (!empty($this->filters) || !empty($this->request['search'])))
@@ -476,6 +507,11 @@
 		{
 		} // }}}
 		
+		//called on by init()
+		function apply_user_input_to_es() // {{{
+		{
+		} // }}}
+		
 		//Called on by list_items()
 		//Calls on show_list_item_name(), show_list_item_desc(), show_list_item_pre()
 		function show_list_item( $item ) // {{{
@@ -484,7 +520,7 @@
 			$this->show_list_item_pre( $item );
 			$this->show_list_item_date( $item );
 			echo '<strong>';
-			if(empty($this->request[ $this->query_string_frag.'_id' ]) || $this->request[ $this->query_string_frag.'_id' ] != $item->id() )
+			if(empty($this->current_item_id) || $this->current_item_id != $item->id() )
 			{
 				echo '<a href="' . $this->construct_link($item) . '">';
 				$this->show_list_item_name( $item );
@@ -493,7 +529,7 @@
 			else
 				$this->show_list_item_name( $item );
 			echo '</strong>';
-			//if(empty($this->request[ $this->query_string_frag.'_id' ]))
+			//if(empty($this->current_item_id))
 			$this->show_list_item_desc( $item );
 			echo '</li>'."\n";
 			$this->item_counter++;
@@ -607,6 +643,14 @@
 				//echo '('.implode(' OR ', $search_array).')';
 				$this->es->add_relation('('.implode(' OR ', $search_array).')');
 			}
+			foreach($this->allowable_psearch_fields as $psearch_frag => $psearch_data)
+			{
+				if (!empty($this->request['search_' . $psearch_frag]))
+				{
+					$psearch_string = str_replace('*','%',addslashes($this->request['search_' . $psearch_frag]));
+					$this->es->add_relation('(' . $psearch_data['field'] . ' LIKE "' . $psearch_string . '")');
+				}
+			}
 		}
 		
 		//Called on by init()
@@ -622,7 +666,7 @@
 		//Called on by list_items
 		function show_pagination($class = '')
 		{
-			if($this->use_pagination && ( $this->show_list_with_details || empty( $this->request[ $this->query_string_frag.'_id' ] ) ) )
+			if($this->use_pagination && ( $this->show_list_with_details || empty( $this->current_item_id ) ) )
 			{
 				if(empty($this->total_pages))
 					$this->total_pages = ceil( $this->total_count / $this->num_per_page );
@@ -743,8 +787,16 @@
 				{
 					$fd->set_search_value($this->request['search']);
 				}
+				foreach($this->allowable_psearch_fields as $psearch_frag => $psearch_data)
+				{
+					if (!empty($this->request['search_' . $psearch_frag]))
+					{
+						$fd->set_power_search_value($psearch_frag, $this->request['search_' . $psearch_frag]);
+					}
+				}
 				$fd->set_default_links($this->default_links);
 				$fd->set_filter_entities($this->filter_entities);
+				$fd->set_module_ref($this);
 				$ret = array();
 				$ret['search'] = $fd->get_search_interface();
 				$ret['filter'] = $fd->get_filter_interface();
@@ -849,7 +901,7 @@
 			//not all child classes have to have items to have content, so we need to check both.
 			if( $this->report_last_modified_date && $this->has_content() && !empty($this->items) )
 			{
-				if(empty( $this->request[ $this->query_string_frag.'_id' ] ) )
+				if(empty( $this->current_item_id ) )
 				{
 					/*$temp = $this->es->get_max( 'last_modified' );
 					return $temp->get_value( 'last_modified' );*/
@@ -866,7 +918,7 @@
 				}
 				else
 				{
-					$id = $this->request[ $this->query_string_frag.'_id' ];
+					$id = $this->current_item_id;
 					if(!empty($this->items[$id]))
 					{
 						$entity =  $this->items[$id];
