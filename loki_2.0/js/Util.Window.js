@@ -15,7 +15,7 @@ Util.Window = function()
 	this.body;
 };
 Util.Window.FORCE_SYNC = true;
-Util.Window.DONT_FORC_SYNC = false;
+Util.Window.DONT_FORCE_SYNC = false;
 
 /**
  * Opens a window.
@@ -172,7 +172,8 @@ Util.Window.alert = function(alertandum)
 	}
 	else
 	{
-		alert(alertandum.firstChild.firstChild.firstChild.nodeValue);
+		// FIXME: leftover debugging crud
+		// alert(alertandum.firstChild.firstChild.firstChild.nodeValue);
 		doc_chunk.appendChild(
 			Util.Document.import_node(alert_window.document, alertandum, true)
 		);
