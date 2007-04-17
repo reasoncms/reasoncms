@@ -11,7 +11,8 @@ UI.Image_Dialog = function()
 
 	this._dialog_window_width = 625;
 	this._dialog_window_height = 600;
-	this._tn_regexp =  new RegExp('_tn\.', '');
+	this._tn_regexp =  new RegExp('_tn\.', ''); // matches the "thumbnail" portion
+												// of a URI
 
 	this.init = function(params)
 	{
