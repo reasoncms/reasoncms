@@ -778,6 +778,10 @@ class Gallery2Module extends Generic3Module
 		else
 			return true;
 	}
+	function get_crumb_text(&$item)
+	{
+		return strip_tags( $item->get_value('description') );
+	}
 }
 
 ?>
