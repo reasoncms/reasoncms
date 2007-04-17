@@ -30,6 +30,7 @@ UI.Loki = function(textarea, settings)
 	var _masseuses = Array();
 	var _menugroups = Array();
 	var _keybindings = Array();
+	var _editor_domain;
 
 	var self = this;
 
@@ -281,6 +282,18 @@ UI.Loki = function(textarea, settings)
 							'error prevented Loki from initializing: <<' + e.message + '>>.'));
 		}
 	};
+	
+	/**
+	 * Returns the domain under which this editor instance exists.
+	 */
+	this.editor_domain = function()
+	{
+		if (null == self._editor_domain) {
+			self._editor_domain = Util.URI.extract_domain(window.location);
+		}
+		
+		return self._editor_domain;
+	};
 
 	/**
 	 *
@@ -400,6 +413,7 @@ UI.Loki = function(textarea, settings)
 	 */
 	var _create_iframe = function()
 	{
+		// EN: why wrap it in a table?
 		_iframe_wrapper = _owner_document.createElement('TABLE');
 		var tbody = _owner_document.createElement('TBODY');
 		var tr = _owner_document.createElement('TR');
@@ -725,7 +739,7 @@ UI.Loki = function(textarea, settings)
 		// ... before any add_event_listener masseuses
 		if ( _settings.options.test('anchor') ) add_masseuse(UI.Anchor_Masseuse);
 		if ( _settings.options.test('olist') || _settings.options.test('ulist') ) add_masseuse(UI.UL_OL_Masseuse);
-		//if ( _settings.options.test('image') ) add_masseuse(UI.Image_Masseuse);
+		if ( _settings.options.test('image') ) add_masseuse(UI.Image_Masseuse);
 		add_masseuse(UI.Italic_Masseuse);
 		add_masseuse(UI.Bold_Masseuse);
 	};
