@@ -33,6 +33,12 @@ define('IMAGEMAGICK_PATH', '/usr/bin/'); // Define the path to imagemagick files
 
 define('UNIVERSAL_CSS_PATH', ''); // if you have css that you want included on all pages, enter its url here
 
+/**
+ * HTTPS_AVAILABLE
+ * Boolean; lets the package know if this server is configured to serve up pages under https or not
+ */
+define( 'HTTPS_AVAILABLE', true );
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // You shouldn't have to alter any of the constants below in a default install for reason to function
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
