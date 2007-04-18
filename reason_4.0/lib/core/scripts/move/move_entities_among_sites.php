@@ -8,7 +8,7 @@ class DiscoMoveEntities extends Disco
 {
 	function where_to()
 	{
-		return ( 'https://' . REASON_HOST . REASON_HTTP_BASE_PATH. 'scripts/move/move_entities_among_sites_2.php' .
+		return ( securest_available_protocol() .'://' . REASON_HOST . REASON_HTTP_BASE_PATH. 'scripts/move/move_entities_among_sites_2.php' .
 				 '?site_id=' . urlencode($this->get_value('site_id')) .
 				 '&type_id=' . urlencode($this->get_value('type_id')) );
 	}
@@ -25,10 +25,7 @@ if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '')
 echo '</head><body>';
 
 reason_include_once( 'function_libraries/user_functions.php' );
-if(!on_secure_page())
-{ 
-	force_secure();
-}
+force_secure_if_available();
 $current_user = check_authentication();
 $user_id = get_user_id($current_user);
 if (empty( $user_id ) )

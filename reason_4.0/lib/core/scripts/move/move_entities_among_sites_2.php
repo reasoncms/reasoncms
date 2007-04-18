@@ -5,10 +5,7 @@ include_once( DISCO_INC .'disco_db.php');
 reason_include_once( 'classes/entity_selector.php');
 
 reason_include_once( 'function_libraries/user_functions.php' );
-if(!on_secure_page())
-{ 
-	force_secure();
-}
+force_secure_if_available();
 $current_user = check_authentication();
 $user_id = get_user_id($current_user);
 if (empty( $user_id ) )
@@ -22,7 +19,7 @@ if ( !empty($_REQUEST['site_id']) && !empty($_REQUEST['type_id'])  )
 }
 else
 {
-	header('Location: https://' . REASON_HOST . REASON_HTTP_BASE_PATH  . 'scripts/move/move_entities_among_sites.php');
+	header('Location: ' . securest_available_protocol() . '://' . REASON_HOST . REASON_HTTP_BASE_PATH  . 'scripts/move/move_entities_among_sites.php');
 }
 
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
@@ -62,7 +59,7 @@ $entity_bs = $es->run_one();
 if ( count($entity_bs) < 1 )
 {
 	die('<p>Sorry, but it doesn&apos;t look as though the site you selected owns any entities of the type you selected. ' .
-		'Please <a href="https://' . REASON_HOST . REASON_HTTP_BASE_PATH . 'scripts/move/move_entities_among_sites.php">' .
+		'Please <a href="' . securest_available_protocol() . '://' . REASON_HOST . REASON_HTTP_BASE_PATH . 'scripts/move/move_entities_among_sites.php">' .
 		'try again</a>.</p>');
 }
 

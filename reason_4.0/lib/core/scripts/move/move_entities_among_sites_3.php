@@ -7,10 +7,7 @@ reason_include_once( 'classes/entity_selector.php');
 reason_include_once( 'classes/entity_selector.php');
 
 reason_include_once( 'function_libraries/user_functions.php' );
-if(!on_secure_page())
-{ 
-	force_secure();
-}
+force_secure_if_available();
 $current_user = check_authentication();
 $current_user_id = get_user_id($current_user);
 if (empty( $current_user_id ) )
@@ -26,7 +23,7 @@ if ( !empty($_REQUEST['new_site_ids']) && !empty($_REQUEST['old_site_id']) &&
 }
 else
 {
-	header('Location: https://' . REASON_HOST . REASON_HTTP_BASE_PATH  . 'scripts/move/move_entities_among_sites.php');
+	header('Location: ' . securest_available_protocol() . '://' . REASON_HOST . REASON_HTTP_BASE_PATH  . 'scripts/move/move_entities_among_sites.php');
 	die();
 }
 
@@ -51,9 +48,9 @@ echo '</head><body>';
 
 echo '<h1>Move Entities Among Sites</h1>';
 echo ( '<p>Successfully moved entities! Now, you may ' .
-	   '<a href="https://' . REASON_HOST . REASON_HTTP_BASE_PATH . 'scripts/move/move_entities_among_sites.php">' .
+	   '<a href="' . securest_available_protocol() . '://' . REASON_HOST . REASON_HTTP_BASE_PATH . 'scripts/move/move_entities_among_sites.php">' .
 	   'move other entities among sites</a> ' .
-	   'or <a href="https://' . REASON_WEB_ADMIN_PATH  . '">return to Reason admin</a>.</p>' );
+	   'or <a href="' . securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH  . '">return to Reason admin</a>.</p>' );
 
 echo ( '<p><strong>N.B.:</strong> This script has merely updated the entity_as
 		in the relationship table where the type has an id
