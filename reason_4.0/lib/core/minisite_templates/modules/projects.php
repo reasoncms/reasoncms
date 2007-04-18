@@ -253,7 +253,7 @@ AND bug.bug_state != "Cancelled"');
 		} // }}}
 		function get_edit_project_link($item_id)
 		{
-			return '<p><a href="https://'.REASON_WEB_ADMIN_PATH.'?site_id='.$this->parent->site_id.'&type_id='.id_of( 'project' ).'&id='.$item_id.'">Edit this project</a></p>'."\n";
+			return '<p><a href="' . securest_available_protocol() . '://'.REASON_WEB_ADMIN_PATH.'?site_id='.$this->parent->site_id.'&type_id='.id_of( 'project' ).'&id='.$item_id.'">Edit this project</a></p>'."\n";
 		}
 		function list_items()
 		{
