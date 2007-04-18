@@ -26,9 +26,14 @@
 		} // }}}
 		function run() // {{{
 		{
-			echo "\n".'<!-- Please do not change/update this without consulting with BK first -->'."\n";
-			echo '<div class="oldBrowserAlert">Notice: Reason works with all browsers.  However, it will look and feel quite a lot nicer if you can use it with a modern, standards-based browser such as Internet Explorer 5/6, Mozilla 1.x, Netscape 7, Safari, or Opera.</div>'."\n";
-			
+			echo '<div class="oldBrowserAlert">Notice: Reason works with all browsers.  However, it will look and feel quite a lot nicer if you can use it with a modern, standards-based browser such as Internet Explorer 6+, Mozilla 1.5+, Firefox, Netscape 7, Safari, or Opera.</div>'."\n";
+			if(!HTTPS_AVAILABLE && user_is_a($this->admin_page->user_id, id_of('admin_role')))
+			{
+				echo '<div id="securityWarning">'."\n";
+				echo '<h3>Security Notice</h3>'."\n";
+				echo '<p>This instance of Reason is running <strong>without</strong> https/ssl. This means that credentials and other potentially sensitive information are being sent in the clear. To run Reason with greater security -- and to make this notice go away -- 1) make sure your server is set up to run https and 2) change the setting HTTPS_AVAILABLE to true in settings/package_settings.php.</p>'."\n";
+				echo '</div>'."\n";
+			}
 			$intro_id = id_of('whats_new_in_reason_blurb');
 			if(!empty($intro_id))
 			{
