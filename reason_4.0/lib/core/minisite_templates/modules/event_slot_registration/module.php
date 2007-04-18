@@ -322,12 +322,7 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		$this->session =& get_reason_session();
 		if($this->session->exists())
 		{
-			if(!on_secure_page())
-			{
-				$url = get_current_url( 'https' );
-				header('Location: '.$url);
-				exit();
-			}
+			force_secure_if_available();
 			if( !$this->session->has_started() )
 			{
 				$this->session->start();
