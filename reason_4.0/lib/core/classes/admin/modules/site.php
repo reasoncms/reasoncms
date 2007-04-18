@@ -48,10 +48,18 @@
 			$es = new entity_selector();
 			$es->add_type(id_of('type'));
 			$es->add_right_relationship($e->id(),relationship_id_of('site_to_type'));
+			$es->limit_tables();
+			$es->limit_fields();
+			$non_editable_es = carl_clone($es);
+			$non_editable_es->add_right_relationship($e->id(),relationship_id_of('site_cannot_edit_type'));
+			$noneditable_types = $non_editable_es->run_one();
+			if(!empty($noneditable_types))
+			{
+				$es->add_relation('entity.id NOT IN ('.implode(',',array_keys($noneditable_types)).')');
+			}
 			$es->set_order('entity.name ASC');
 			$types = $es->run_one();
-			$es->add_right_relationship($e->id(),relationship_id_of('site_cannot_edit_type'));
-			$noneditable_types = $es->run_one();
+			
 			if(array_key_exists(id_of('minisite_page'),$types))
 			{
 				$page_type_array[id_of('minisite_page')] = $types[id_of('minisite_page')];
@@ -61,16 +69,14 @@
 			echo '<ul>'."\n";
 			foreach($types as $type)
 			{
-				if(!array_key_exists($type->id(),$noneditable_types))
-				{
 					$es = new entity_selector($e->id());
 					$es->set_sharing('owns');
-					$es->set_num(3);
 					$es->add_type($type->id());
+					$es->limit_tables();
+					$es->limit_fields();
 					$es->set_order('entity.last_modified DESC');
 					$ents = $es->run_one();
-					$ents_count = $es->get_one_count();
-					
+					$ents_count = count($ents);
 					$name = $type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' );
 					
 					echo '<li class="'.$type->get_value('unique_name').'">';
@@ -83,19 +89,15 @@
 						$i = 1;
 						foreach($ents as $ent_id=>$ent)
 						{
+							if ($i > 3) break;
 							echo '<li class="item'.$i.'"><a href="'.$this->admin_page->make_link( array( 'type_id' => $type->id(),'id'=>$ent_id,'cur_module'=>'Editor' ) ).'">'.strip_tags($ent->get_display_name()).'</a></li>'."\n";
 							$i++;
 						}
 						echo '</ul>'."\n";
-						/* if($ents_count > 3)
-						{
-							echo '<a href="'.$this->admin_page->make_link( array( 'type_id' => $type->id(),'cur_module'=>'Lister' ) ).'" class="more">more…</a>';
-						} */
 						echo '</div>'."\n";
 						
 					}
 					echo '</li>'."\n";
-				}
 			}
 			echo '</ul>'."\n";
 			echo '</div>'."\n";
