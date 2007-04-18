@@ -43,7 +43,7 @@
 	echo '<h1>Batch Import Images Into Reason</h1>';
 	
 	echo '<p>This tool has beeen moved. In Reason there is a link titled "Batch Import Images" under every "Add Image" link.</p>'."\n";
-	echo '<p><a href="https://'.REASON_WEB_ADMIN_PATH.'">Go to Reason</a></p>'."\n";
+	echo '<p><a href="' . securest_available_protocol() . '://'.REASON_WEB_ADMIN_PATH.'">Go to Reason</a></p>'."\n";
 	
 	echo '</body>'."\n".'</html>';
 
