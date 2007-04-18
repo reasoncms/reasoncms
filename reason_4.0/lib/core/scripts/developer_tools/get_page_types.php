@@ -11,10 +11,7 @@ reason_include_once( 'classes/entity_selector.php' );
 connectDB( REASON_DB );
 
 reason_include_once( 'function_libraries/user_functions.php' );
-if(!on_secure_page())
-{ 
-	force_secure();
-}
+force_secure_if_available();
 $current_user = check_authentication();
 if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
 {

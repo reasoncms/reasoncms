@@ -8,10 +8,7 @@ include_once( 'reason_header.php' );
 reason_include_once( 'classes/entity_selector.php' );
 
 reason_include_once( 'function_libraries/user_functions.php' );
-if(!on_secure_page())
-{ 
-	force_secure();
-}
+force_secure_if_available();
 $current_user = check_authentication();
 if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
 {
@@ -77,7 +74,7 @@ while ($row=mysql_fetch_assoc($r))
 	$e2 = new entity($row['type']);
 	$site_name = $e1->get_value('name');
 	$type_name = $e2->get_value('name');
-	$thelink = '<a href="https://'.REASON_WEB_ADMIN_PATH.'?site_id='.$row['site'].'&type_id='.$row['type'].'&user_id='.$row['user'].'">'.$type_name.'</a>';
+	$thelink = '<a href="' . securest_available_protocol() . '://'.REASON_WEB_ADMIN_PATH.'?site_id='.$row['site'].'&type_id='.$row['type'].'&user_id='.$row['user'].'">'.$type_name.'</a>';
 	$string[$type_name][] = $site_name;
 	$link[$type_name][] = $thelink;
 	unset($all_types[$type_name]);
