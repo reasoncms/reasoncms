@@ -29,12 +29,8 @@
 				
 		function init( $args )
 		{
-			if( !on_secure_page() ) //force to secure page
-            {
-            	header( 'Location: '.get_current_url( 'https' ) );
-            	exit;
-            }
- 			parent::init($args);
+ 			force_secure_if_available();
+			parent::init($args);
  			$es = new entity_selector();
  			$es->description = 'Selecting form to display on a minisite page.';
  			$es->add_type( id_of('form') );
@@ -264,12 +260,7 @@
 			$this->session =& get_reason_session();
 			if($this->session->exists())
 			{
-				if(!on_secure_page())
-				{
-					$url = get_current_url( 'https' );
-					header('Location: '.$url);
-					exit();
-				}
+				force_secure_if_available();
 				if( !$this->session->has_started() )
 				{
 					$this->session->start();
