@@ -9,10 +9,7 @@
 	//reason_include_once('classes/ReportGenerator.php');
 	$db = connectDB(REASON_DB);
 	
-	if(!on_secure_page())
-	{ 
-		force_secure();
-	}
+	force_secure_if_available();
 	$current_user = check_authentication();
 	
 	if ( !empty($current_user) )
