@@ -19,9 +19,9 @@
 		
 		function init() // {{{
 		{
- 			if( $this->params['force_secure'] && !on_secure_page() )
+ 			if( $this->params['force_secure'] && HTTPS_AVAILABLE && !on_secure_page() )
                 	{
-                        	header('Location: '.get_current_url( 'https' ) );
+                        	header('Location: '.get_current_url( securest_available_protocol() ) );
                         	exit(0);
                 	}
 		}
