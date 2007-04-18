@@ -145,7 +145,7 @@
 			else
 			{
 				$parts = parse_url( get_current_url() );
-				$url = 'https://'.$parts['host'].$parts['path'];
+				$url = securest_available_protocol() . '://'.$parts['host'].$parts['path'];
 			}
 			header( 'Location: '.$url );
 			die();
