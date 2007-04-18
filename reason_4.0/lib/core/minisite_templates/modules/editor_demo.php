@@ -18,7 +18,7 @@
 			if(!on_secure_page())
 			{
 				reason_include_once('function_libraries/user_functions.php');
-				force_secure();
+				force_secure_if_available();
 			}
 		}
 		
