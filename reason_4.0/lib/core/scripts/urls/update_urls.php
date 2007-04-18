@@ -3,10 +3,7 @@
 	reason_include_once( 'classes/url_manager.php' );
 
 	reason_include_once( 'function_libraries/user_functions.php' );
-	if(!on_secure_page())
-	{ 
-		force_secure();
-	}
+	force_secure_if_available();
 	$current_user = check_authentication();
 	if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
 	{
@@ -102,7 +99,7 @@
 			if( $mode == 'check' )
 			{
 				if( !empty( $to_run ) )
-					echo '<strong>Commands to run:</strong><br />'.join( array_unique( $to_run ), '<br />' );
+					echo '<p><strong>Commands to run:</strong></p><p>'.join( array_unique( $to_run ), '; ' ).'</p>';
 				else
 					echo '<strong>Everything is up to date.  Nothing to do.</strong><br />';
 			}
