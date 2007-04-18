@@ -10,10 +10,7 @@ reason_include_once('function_libraries/user_functions.php');
 $effective = false;
 
 // make sure user is authenticated, is a member of master admin, AND has the admin role.
-if(!on_secure_page())
-{ 
-		force_secure();
-}
+force_secure_if_available();
 
 $authenticated_user_netid = check_authentication();
 
