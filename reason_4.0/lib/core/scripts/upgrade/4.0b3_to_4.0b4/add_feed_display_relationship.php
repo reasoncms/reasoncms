@@ -18,7 +18,7 @@ reason_include_once('function_libraries/admin_actions.php');
 <body>
 <?php
 
-force_secure();
+force_secure_if_available();
 
 $user_netID = reason_require_authentication();
 

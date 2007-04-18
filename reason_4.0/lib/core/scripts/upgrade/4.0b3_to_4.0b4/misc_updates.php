@@ -22,7 +22,7 @@ ini_set('mysql_connect_timeout', 1200);
 <body>
 <?php
 
-force_secure();
+force_secure_if_available();
 
 $GLOBALS['__cur_username__hack__'] = reason_require_authentication();
 $usr = new user();

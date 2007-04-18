@@ -7,7 +7,7 @@ reason_include_once('classes/field_to_entity_table_class.php');
 reason_include_once('function_libraries/relationship_finder.php');
 reason_include_once('classes/amputee_fixer.php');
 
-force_secure();
+force_secure_if_available();
 
 $user_netID = check_authentication();
 

@@ -20,7 +20,7 @@ ini_set('mysql_connect_timeout', 1200);
 $output = '';
 $field_exists = false;
 $root_user_id = get_user_id('root');
-force_secure();
+force_secure_if_available();
 
 $user_netID = check_authentication();
 
