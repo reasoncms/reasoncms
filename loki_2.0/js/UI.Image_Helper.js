@@ -14,7 +14,7 @@ UI.Image_Helper = function()
 	this.init = function(loki)
 	{
 		this._loki = loki;
-		//this._image_masseuse = (new UI.Image_Masseuse()).init(this._loki);
+		this._image_masseuse = (new UI.Image_Masseuse()).init(this._loki);
 		return this;
 	};
 
@@ -31,11 +31,13 @@ UI.Image_Helper = function()
 			var anchor_helper = (new UI.Anchor_Helper).init(this._loki);
 			if ( anchor_helper.get_selected_item() == null )
 			{
+				var real_image =
+					self._image_masseuse.get_real_elem(selected_image);
 				selected_item =
 				{
-					uri : selected_image.getAttribute('src'),
-					alt : selected_image.getAttribute('alt'),
-					align : selected_image.getAttribute('align')
+					uri : real_image.getAttribute('src'),
+					alt : real_image.getAttribute('alt'),
+					align : real_image.getAttribute('align')
 				}; 
 			}
 		}
@@ -63,7 +65,10 @@ UI.Image_Helper = function()
 	{
 		// Create the image
 		var image = self._loki.document.createElement('IMG');
-		image.setAttribute('src', image_info.uri);
+		var clean_src = UI.Clean.cleanURI(image_info.uri);
+		image.setAttribute('src', clean_src);
+		if (clean_src != image_info.uri)
+			image.setAttribute('loki:src', image_info.uri);
 		image.setAttribute('alt', image_info.alt);
 
 		if ( image_info.align != '' )
@@ -90,7 +95,7 @@ UI.Image_Helper = function()
 		*/
 
 		// Massage the image
-		//image = self._image_masseuse.get_fake_elem(image);
+		image = self._image_masseuse.get_fake_elem(image);
 
 		// Insert the image
 		self._loki.window.focus();	
