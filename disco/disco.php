@@ -1212,6 +1212,16 @@
 			}
 			return $element_names;
 		} // }}}
+		
+		function get_values()
+		{
+			$ret = array();
+			foreach($this->get_element_names() as $name)
+			{
+				$ret[$name] = $this->get_value($name);
+			}
+			return($ret);
+		}
 	
 		/**
 	    * Adds a comment to the existing comments of an element or element group.
