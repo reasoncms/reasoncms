@@ -17,7 +17,9 @@
 	class Session_PHP extends Session
 	{
 		// boolean to determine if we are on a secure page or not
-		var $secure = false;
+		var $secure_if_available = false;
+		// flag passed to session to choose secure (1) /unsecure (0) sessions
+		var $secure_session_flag = 1;
 		// this is a debug tool.  when a session is started, this is pointed at the $_SESSION array.  This basically
 		// allows me to see if the session has loaded properly when prp()ing the session object.  DO NOT USE THIS.
 		// again, DO NOT USE THIS FOR ANYTHING.
@@ -61,6 +63,8 @@
 				if( !defined( $err['name'] ) )
 					define( $err['name'], $err_num );
 			}
+
+			$this->secure_session_flag = (HTTPS_AVAILABLE) ? 1 : 0;
 		} // }}}
 		function has_started() // {{{
 		{
@@ -68,10 +72,10 @@
 		} // }}}
 		function start() // {{{
 		{
-			$this->secure = on_secure_page();
-			if( !$this->secure )
+			$this->secure_if_available = (!HTTPS_AVAILABLE || on_secure_page());
+			if( !$this->secure_if_available )
 			{
-				trigger_error( 'Unable to start session on an insecure page' );
+				trigger_error( 'Unable to start session on an insecure page when https is available' );
 				$this->error_num = ERR_SESS_INSECURE;
 				return false;
 			}
@@ -90,7 +94,7 @@
 						setcookie( $this->sess_name.'_EXISTS', 'true', 0, '/', $_SERVER['HTTP_HOST'], 0 );
 					}
 					session_name( $this->sess_name );
-					session_set_cookie_params(0, '/', $_SERVER['HTTP_HOST'], 1 );
+					session_set_cookie_params(0, '/', $_SERVER['HTTP_HOST'], $this->secure_session_flag );
 					session_start();
 					
 					$this->__session_ref =& $_SESSION;
@@ -166,16 +170,16 @@
 		} // }}}
 		function destroy() // {{{
 		{
-			if( $this->secure )
+			if( $this->secure_if_available )
 			{
 				setcookie( $this->sess_name.'_EXISTS', '', 0, '/', $_SERVER['HTTP_HOST'], 0 );
 				$_SESSION = array();
 				session_destroy();
-				setcookie( $this->sess_name, '', 0, '/', $_SERVER['HTTP_HOST'], 1);
+				setcookie( $this->sess_name, '', 0, '/', $_SERVER['HTTP_HOST'], $this->secure_session_flag );
 			}
 			else
 			{
-				trigger_error( 'Unable to destroy a session on an insecure page.', WARNING );
+				trigger_error( 'Unable to destroy a session on an insecure page when https is available.', WARNING );
 			}
 		} // }}}
 		function exists() // {{{
@@ -185,18 +189,18 @@
 		} // }}}
 		function _store( $var, $val ) // {{{
 		{
-			if( $this->secure )
+			if( $this->secure_if_available )
 			{
 				$_SESSION[ $var ] = $val;
 			}
 			else
 			{
-				trigger_error( 'Trying to store a session variable on an insecure page.  Variable NOT stored', WARNING );
+				trigger_error( 'Trying to store a session variable on an insecure page when https is available.  Variable NOT stored', WARNING );
 			}
 		} // }}}
 		function _retrieve( $var ) // {{{
 		{
-			if( $this->secure )
+			if( $this->secure_if_available )
 			{
 				if( !empty( $_SESSION[ $var ] ) )
 					return $_SESSION[ $var ];
@@ -205,7 +209,7 @@
 			}
 			else
 			{
-				trigger_error( 'Trying to get a session variable on an insecure page.  Unable to retrieve', WARNING );
+				trigger_error( 'Trying to get a session variable on an insecure page when https is available.  Unable to retrieve', WARNING );
 			}
 		} // }}}
 	}
