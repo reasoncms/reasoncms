@@ -34,7 +34,7 @@
 		var $close_window = false;
 		var $dest_page = '';
 		//var $redir_link_text = '';
-		var $on_secure_page = false;
+		var $on_secure_page_if_available = false;
 		var $current_url = '';
 		
 		function set_test_cookie()
@@ -58,7 +58,7 @@
 		function init( $args = array() )
 		{
 			$this->current_url = get_current_url();
-			$this->on_secure_page = on_secure_page();
+			$this->on_secure_page_if_available = (!HTTPS_AVAILABLE || on_secure_page());
 			// this should catch when there is no dest page being passed in.  there is the possibility that a dest_page
 			// var on the GET line can override this.
 			if( empty( $this->request[ 'dest_page' ] ) )
@@ -154,7 +154,7 @@
 							if( !empty( $this->dest_page ) )
 							{
 								$parts = parse_url( $this->dest_page );
-								header( 'Location: https://'.$parts['host'].$parts['path'].(!empty($parts['query']) ? '?'.$parts['query'] : '' ) );
+								header( 'Location: ' . securest_available_protocol() . '://'.$parts['host'].$parts['path'].(!empty($parts['query']) ? '?'.$parts['query'] : '' ) );
 								exit;
 							}
 							if (!empty($this->request['popup']))
@@ -214,9 +214,9 @@
 			if( !$this->logged_in )
 			{
 				
-				if( !$this->on_secure_page )
+				if( !$this->on_secure_page_if_available )
 				{
-					$url = get_current_url( 'https' );
+					$url = get_current_url( securest_available_protocol() );
 					if( $this->params['login_mode'] == 'standalone' )
 					{
 						header('Location: '.$url);
