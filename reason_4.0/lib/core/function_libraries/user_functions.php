@@ -116,6 +116,14 @@ function force_secure()
 		exit();
 	}
 }
+/**
+ * redirects the current url to force a secure session -- but only if the server supports https
+ */
+function force_secure_if_available()
+{
+	if(HTTPS_AVAILABLE)
+		force_secure();
+}
 
 /**
  * Returns the current user's netID, or false if the user does not have an active reason session.
