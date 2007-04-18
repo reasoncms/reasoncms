@@ -51,7 +51,7 @@
 					echo '<p id="footerLoginLink">';
 					if( $this->sess->exists() )
 					{
-						if( !empty( $_SERVER['HTTPS'] ) AND strtolower( $_SERVER['HTTPS'] ) == 'on' )
+						if( !HTTPS_AVAILABLE OR (!empty( $_SERVER['HTTPS'] ) AND strtolower( $_SERVER['HTTPS'] ) == 'on' ))
 						{
 							echo 'Logged in as '.$this->username.'. ';
 							echo '<a href="'.REASON_LOGIN_URL.'?logout=1">Logout</a>';
@@ -60,7 +60,7 @@
 						else
 						{
 							$parts = parse_url( get_current_url() );
-							$url = 'https://'.$parts['host'].$parts['path'].(!empty($parts['query']) ? '?'.$parts['query'] : '' );
+							$url = securest_available_protocol() . '://'.$parts['host'].$parts['path'].(!empty($parts['query']) ? '?'.$parts['query'] : '' );
 							echo 'You are logged in but on an insecure page.  To edit, please go to <a href="'.$url.'">the secure page</a>';
 						}
 					}
