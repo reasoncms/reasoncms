@@ -21,11 +21,8 @@
 	//)
 
 	// checks for both http and cookie based authentication - nwhite
-	if(!on_secure_page())
-        { 
-                force_secure();
-        }
-        $current_user = check_authentication();
+        force_secure_if_available();
+	$current_user = check_authentication();
 	if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
 	{
 		die('<h1>Sorry.</h1><p>You do not have permission to edit allowable relationships.</p><p>Only Reason users who have the Administrator role may do that.</p></body></html>');
@@ -62,7 +59,7 @@
 	$types = $es->run_one();
 
 	echo '<h1>Allowable Relationships</h1>'."\n";
-	echo '<p><a href="https://'.REASON_WEB_ADMIN_PATH.'">Reason Admin</a> | <a href="edit_alrel.php?id=new">Add New Allowable Relationship</a></p>'."\n";
+	echo '<p><a href="' . securest_available_protocol() . '://'.REASON_WEB_ADMIN_PATH.'">Reason Admin</a> | <a href="edit_alrel.php?id=new">Add New Allowable Relationship</a></p>'."\n";
 	echo '<table cellpadding="5" cellspacing="0">'."\n";
 	echo '<tr>';
 	foreach($orderables as $key=>$value)

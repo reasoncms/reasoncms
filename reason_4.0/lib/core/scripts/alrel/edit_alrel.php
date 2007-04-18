@@ -27,11 +27,8 @@
 	echo '<link rel="stylesheet" type="text/css" href="'.REASON_ADMIN_CSS_DIRECTORY.'admin.css" /></head><body><div id="allRels">'."\n";
 
         // checks for both http and cookie based authentication - nwhite
-        if(!on_secure_page())
-        {
-                force_secure();
-        }
-        $current_user = check_authentication();
+        force_secure_if_available();
+	$current_user = check_authentication();
         if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
 	{
 		die('<h1>Sorry.</h1><p>You do not have permission to edit allowable relationships.</p><p>Only Reason users who have the Administrator role may do that.</p></div></body></html>');
@@ -45,7 +42,7 @@
 		);
 		function finish()
 		{
-			return 'https://'.HTTP_HOST_NAME.REASON_HTTP_BASE_PATH.'scripts/alrel/alrel_manager.php';
+			return securest_available_protocol() .'://'.HTTP_HOST_NAME.REASON_HTTP_BASE_PATH.'scripts/alrel/alrel_manager.php';
 		}
 		function dir_validation()
 		{
