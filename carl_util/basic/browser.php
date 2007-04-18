@@ -27,7 +27,7 @@
 	function show_cookie_capability( $no_cookie_msg = '', $cookie_msg = '')
 	{
 		if( empty( $no_cookie_msg ) )
-			$no_cookie_msg = 'Cookies are no currently enable in your browser.';
+			$no_cookie_msg = 'Cookies are not currently enabled in your browser.';
 		?>
 		<script language="JavaScript">
 		<!--
