@@ -122,7 +122,7 @@ class ReasonAssetAccess
 			}
 			else
 			{
-				force_secure();
+				force_secure_if_available();
 				$this->username = reason_require_authentication('login_to_access_file');
 				if(!empty($this->username))
 				{
