@@ -9,7 +9,7 @@
 <?php
 include ('reason_header.php');
 reason_include_once('function_libraries/user_functions.php');
-force_secure();
+force_secure_if_available();
 $user_netID = check_authentication();
 
 $directory = dirname($_SERVER['SCRIPT_FILENAME']);
