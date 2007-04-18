@@ -111,27 +111,19 @@ class MinisiteTemplate
 			$this->sess =& get_reason_session();
 			if( $this->sess->exists() )
 			{
-				$secure_page = on_secure_page();
 				// if a session exists and we're on a secure page and this site has site users, pop over to the secure
 				// site so we have access to the secure session information
-				if( !$secure_page )
+				force_secure_if_available();
+				$this->sess->start();
+				if( !empty( $this->pages->request[ 'editing' ] ) )
 				{
-					header( 'Location: '.get_current_url( 'https' ) );
-					exit;
-				}
-				if( $secure_page )
-				{
-					$this->sess->start();
-					if( !empty( $this->pages->request[ 'editing' ] ) )
+					if( $this->pages->request[ 'editing' ] == 'off' )
 					{
-						if( $this->pages->request[ 'editing' ] == 'off' )
-						{
-							$this->sess->set( 'editing', 'off' );
-						}
-						else
-						{
-							$this->sess->set( 'editing', 'on' );
-						}
+						$this->sess->set( 'editing', 'off' );
+					}
+					else
+					{
+						$this->sess->set( 'editing', 'on' );
 					}
 				}
 				
