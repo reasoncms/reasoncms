@@ -858,7 +858,7 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 					$message .= 'URL:'."\n".$this->get_value('url')."\n\n";
 					$message .= 'Metadata:'."\n".$this->get_value('url').'.txt'."\n\n";
 					$message .= 'Preview:'."\n";
-					$message .= 'https://'.REASON_WEB_ADMIN_PATH.'?site_id='.$this->get_value( 'site_id' ).'&type_id='.id_of('av_file').'&id='.$this->get_value('id').'&cur_module=Preview';
+					$message .= securest_available_protocol() . '://'.REASON_WEB_ADMIN_PATH.'?site_id='.$this->get_value( 'site_id' ).'&type_id='.id_of('av_file').'&id='.$this->get_value('id').'&cur_module=Preview';
 					mail(MEDIA_NOTIFICATION_EMAIL_ADDRESSES,'[Reason] Media file imported on '.REASON_HOST,$message);
 				}
 				else
