@@ -256,7 +256,7 @@
 					{
 						if($secure)
 						{
-							$link = 'https://'.REASON_HOST.$link;
+							$link = securest_available_protocol() . '://'.REASON_HOST.$link;
 						}
 						else
 						{
