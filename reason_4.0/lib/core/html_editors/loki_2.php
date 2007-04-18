@@ -41,11 +41,11 @@ $GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_2
 //		$paths['finder_feed'] = 'https://'.REASON_HOST.'/feeds/finder';
 
 		$id_of_site_type = id_of('site');
-		$paths['site_feed'] = 'https://'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.$id_of_site_type.'&site_id='.id_of('master_admin').'&feed=editor_sites';
-		$paths['finder_feed'] = 'https://'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.$id_of_site_type.'&feed=editor_feed_finder';
+		$paths['site_feed'] = FEED_GENERATOR_STUB_PATH.'?type_id='.$id_of_site_type.'&site_id='.id_of('master_admin').'&feed=editor_sites';
+		$paths['finder_feed'] = FEED_GENERATOR_STUB_PATH.'?type_id='.$id_of_site_type.'&feed=editor_feed_finder';
 		if(!empty($site_id))
 		{
-			$paths['image_feed'] = 'https://'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('image').'&feed=images&site_id='.$site_id;
+			$paths['image_feed'] = FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('image').'&feed=images&site_id='.$site_id;
 			$paths['default_site_regexp'] = Loki2::js_regexp_quote('//'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('type').'&site_id='.$site_id);
 		}
 		else
