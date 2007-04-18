@@ -337,7 +337,7 @@ function get_page_link( &$site, &$tree, $page_types, $as_uri = false, $secure = 
 	{
 		if($secure)
 		{
-			$ret = 'https://'.REASON_HOST.$ret;
+			$ret = securest_available_protocol() . '://'.REASON_HOST.$ret;
 		}
 		else
 		{
