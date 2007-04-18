@@ -20,11 +20,7 @@ $fields = array (
 				);
 				
 // make sure user is authenticated, is a member of master admin, AND has the admin role.
-if(!on_secure_page())
-{ 
-		force_secure();
-}
-
+force_secure_if_available();
 $authenticated_user_netid = check_authentication();
 auth_site_to_user( id_of('master_admin'), $authenticated_user_netid );
 $user_id = get_user_id( $authenticated_user_netid );
