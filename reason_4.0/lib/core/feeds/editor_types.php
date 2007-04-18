@@ -54,7 +54,7 @@ class editorTypeRSS extends ReasonRSS
 	{
 		$type = new entity($id);
 		
-		return 'https://'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.$id.'&site_id='.$this->restricted_site_id.'&feed=editor_links_for_'.$type->get_value('unique_name');
+		return securest_available_protocol() . '://'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.$id.'&site_id='.$this->restricted_site_id.'&feed=editor_links_for_'.$type->get_value('unique_name');
 	}
 }
 
