@@ -29,7 +29,7 @@ class editorSiteRSS extends ReasonRSS
 {
 	function make_link_to_site_feed( $id )
 	{
-		return 'https://'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('type').'&site_id='.$id.'&feed=editor_types';
+		return securest_available_protocol() . '://'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('type').'&site_id='.$id.'&feed=editor_types';
 	}
 }
 
