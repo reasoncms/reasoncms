@@ -108,7 +108,7 @@ function created_admin_HTML($password)
 	echo '<h3>Admin User Created</h3>';
 	echo '<p>The reason user <strong>admin</strong> has been created with password <strong>'.$password.'</strong></p>';
 	echo '<p>Write down the password! This script will not create another unless the original is deleted.</p>';
-	echo '<p>You should now be able to login to the <a href="https://'.REASON_WEB_ADMIN_PATH.'">reason administrative interface</a>.</p>';
+	echo '<p>You should now be able to login to the <a href="'.securest_available_protocol().'://'.REASON_WEB_ADMIN_PATH.'">reason administrative interface</a>.</p>';
 }
 
 function perform_checks()
