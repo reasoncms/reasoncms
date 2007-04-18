@@ -422,5 +422,11 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 			return $object;
 		}
 	}
+	
+	function securest_available_protocol()
+	{
+		if( HTTPS_AVAILABLE ) return 'https';
+		return 'http';
+	}
 }
 ?>
