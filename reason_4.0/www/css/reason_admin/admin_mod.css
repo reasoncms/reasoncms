@@ -264,3 +264,18 @@ div.treeItemWrapDepth15 {
 div.treeItemWrapDepth16 {
 	margin-left:32em;
 }
+form tr.error td {
+	background-color:#FFC;
+}
+form tr.error td.words {
+	font-weight:bold;
+	color:#900;
+}
+#securityWarning {
+	background-color:#fcf;
+	padding:1em;
+	border:1px solid #c9c;
+}
+#securityWarning h3, #securityWarning p {
+	margin:0;
+}
