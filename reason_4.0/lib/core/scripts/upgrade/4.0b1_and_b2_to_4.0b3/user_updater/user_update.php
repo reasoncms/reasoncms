@@ -6,7 +6,7 @@ reason_include_once('function_libraries/user_functions.php');
 reason_include_once('function_libraries/admin_actions.php');
 //reason_include_once('function_libraries/course_utilities.php');
 
-force_secure();
+force_secure_if_available();
 $user_netID = check_authentication();
 $user_id = get_user_id($user_netID);
 

@@ -12,10 +12,7 @@ reason_include_once( 'function_libraries/user_functions.php' );
 
 echo '<html><head><title>Fix Templates</title></head><body>'."\n";
 
-if(!on_secure_page())
-{ 
-	force_secure();
-}
+force_secure_if_available();
 $current_user = check_authentication();
 $user_id = get_user_id ($current_user);
 if (!user_is_a( $user_id, id_of('admin_role') ) )

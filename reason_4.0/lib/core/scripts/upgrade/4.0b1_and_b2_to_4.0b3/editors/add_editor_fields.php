@@ -13,7 +13,7 @@ reason_include_once('classes/entity_selector.php');
 reason_include_once('function_libraries/user_functions.php');
 reason_include_once('function_libraries/admin_actions.php');
 
-if(!on_secure_page()) force_secure();
+force_secure_if_available();
 $username = check_authentication();
 $user_id = get_user_id( $username );
 
