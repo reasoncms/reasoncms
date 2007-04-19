@@ -100,9 +100,11 @@ class MinisiteTemplate
 				$cache->set($this->pages);
 			}
 		}
-		else // if pages came from cache refresh the request variables
+		else // if pages came from cache refresh the request variables and set site_info and order_by
 		{
 			$this->pages->grab_request();
+			$this->pages->site_info =& $this->site_info;
+			$this->pages->order_by = 'sortable.sort_order'; // in case it was changed in the request
 		}
 		
 		$this->textonly = '';
@@ -124,8 +126,8 @@ class MinisiteTemplate
 
 			$this->pages->force_open( $this->page_id );
 
-			$this->cur_page = $this->pages->values[ $this->page_id ];
-
+			$this->cur_page = new entity($this->page_id);
+			
 			$this->title = $this->cur_page->get_value('name');
 
 			$this->get_meta_information();
