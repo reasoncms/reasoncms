@@ -81,7 +81,7 @@
 		{
 			if( $this->chosen_action != 'cancel' )
 			{
-				if( strtolower($this->del_entity_state) == strtolower('Deleted') )
+				if( !empty($this->del_entity_state) && strtolower($this->del_entity_state) == 'deleted' )
 					$link = unhtmlentities($this->admin_page->make_link( array( 'cur_module' => 'Lister' , 'id' => '', 'state' => 'deleted') ) );
 				else if( isset( $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] ) )
 					$link = unhtmlentities( $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] );	
