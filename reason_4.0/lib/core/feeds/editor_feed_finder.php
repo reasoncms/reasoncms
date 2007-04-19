@@ -47,7 +47,7 @@ class editorFeedFinder extends defaultFeed
 		{
 			echo '<item>'."\n";
 			echo '<title>site_feed</title>'."\n";
-			echo '<link>https://'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('type').'&amp;site_id='.$site_id.'&amp;feed=editor_types</link>'."\n";
+			echo '<link>' . securest_available_protocol() . '://'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('type').'&amp;site_id='.$site_id.'&amp;feed=editor_types</link>'."\n";
 			echo '</item>'."\n";
 			echo '<item>'."\n";
 			echo '<title>type_feed</title>'."\n";
