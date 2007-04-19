@@ -58,6 +58,7 @@ class MinisiteTemplate
 	var $sections = array('content'=>'show_main_content','related'=>'show_sidebar','navigation'=>'show_navbar');
 	//var $doctype = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
 	var $doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
+	var $use_navigation_cache = false;
 	
 	function initialize( $site_id, $page_id = '' ) // {{{
 	{
@@ -77,11 +78,32 @@ class MinisiteTemplate
 		
 		$this->get_css_files();
 		
-		$this->pages = new $this->nav_class;
-		// small kludge - just give the tree view access to the site info.  used in the show_item function to show the root node of the navigation
-		$this->pages->site_info =& $this->site_info;
-		$this->pages->order_by = 'sortable.sort_order';
-		$this->pages->init( $this->site_id, id_of('minisite_page') );
+		if ($this->use_navigation_cache)
+		{
+			$cache = new ReasonObjectCache($this->site_id . $this->nav_class, 900); // lifetime of 15 minutes
+			$max_last_modified = filemtime(WEB_PATH.trim_slashes($this->site_info->get_value('base_url')).'/.htaccess');
+			if ($max_last_modified) $cache->set_max_last_modified($max_last_modified);
+			$this->pages =& $cache->fetch();
+		}
+		// lets check the persistent cache
+		
+		if (empty($this->pages))
+		{
+			// lets setup $this->pages and place in the persistent cache
+			$this->pages = new $this->nav_class;
+			// small kludge - just give the tree view access to the site info.  used in the show_item function to show the root node of the navigation
+			$this->pages->site_info =& $this->site_info;
+			$this->pages->order_by = 'sortable.sort_order';
+			$this->pages->init( $this->site_id, id_of('minisite_page') );
+			if ($this->use_navigation_cache) 
+			{
+				$cache->set($this->pages);
+			}
+		}
+		else // if pages came from cache refresh the request variables
+		{
+			$this->pages->grab_request();
+		}
 		
 		$this->textonly = '';
 		if (!empty($this->pages->request['textonly']))
