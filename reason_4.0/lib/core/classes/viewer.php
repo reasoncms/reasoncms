@@ -242,26 +242,47 @@
 			} // }}}
 			
 			/**
-			 * Gets all the appropriate globals and stores them into the class
+			 * Gets all the appropriate request variables and localizes a few - replaces old grab_globals which had serious security problems
+			 * @author Nathan White
 			 */
 			 
-			// SECURITY RISK - class variables extended from viewer.php3 that are defined as 0 or null will be set to
-			// any post or get variables named the same as the class variable - no filtering or other checking is done.
-			function grab_globals() // {{{
+			function grab_request() // {{{
 			{
-				$this->request = isset( $this->page->request ) ? $this->page->request : array_diff( conditional_stripslashes($_REQUEST), conditional_stripslashes($_COOKIE) );
-				foreach( $this->request AS $name => $value )
-				{
-					if( (isset( $this->$name ) ) AND ( $name != 'es' ) AND (empty( $this->$name )  || $name == 'dir' || $name == 'order_by' ) )
-					{
-						$this->$name = $value;
-					}
-				}
-				if( !$this->page )
-					$this->page = 1;
-				if( !$this->state )
-					$this->state = 'Live';
-			} // }}}
+				$request = array_diff( conditional_stripslashes($_REQUEST), conditional_stripslashes($_COOKIE) );
+				$columns = (isset($this->columns)) ? array_keys($this->columns) : array('');
+				$cleanup_rules = array('state' => array('function' => 'check_against_array', 'extra_args' => array('live', 'Live', 'pending', 'Pending', 'deleted', 'Deleted')),
+									   'dir' => array('function' => 'check_against_array', 'extra_args' => array('desc', 'DESC', 'asc', 'ASC')),
+									   'order_by' => array('function' => 'check_against_array', 'extra_args' => $columns),
+									   'site_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   'page_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   'type_id'=> array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   'rel_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   'id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   'open' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   '__old_site_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   '__old_type_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   '__old_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   '__old_rel_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   '__old_cur_module' => array('function' => 'turn_into_string'),
+									   '__old_user_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   'page' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   'cur_module' => array('function' => 'turn_into_string'),
+									   'textonly' => array('function' => 'turn_into_int'),
+									   'new_entity' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)));
+				
+				// apply the cleanup rules
+				$this->request = clean_vars($request, $cleanup_rules);
+				
+				// special case a few need localization ...
+				if (isset($this->request['state'])) $this->state = $this->request['state'] = strtolower($this->request['state']);
+				if (isset($this->request['dir'])) $this->dir = $this->request['dir'] = strtoupper($this->request['dir']);
+				if (isset($this->request['order_by'])) $this->order_by = $this->request['order_by'];
+				if (isset($this->request['page'])) $this->page = $this->request['page'];
+				
+				// setup some defaults
+				if (!$this->page) $this->page = 1;
+				if (!$this->state) $this->state = 'Live';
+			}
 			/**
 			 * Scans the global request variables for search variables and adds the
 			 * appropriate relations to the entity_selector
@@ -413,7 +434,7 @@
 				$this->es->add_type( $this->type_id );
 				$this->es->set_sharing( 'owns' );
 				$this->alter_values();
-				$this->grab_globals();
+				$this->grab_request();
 				$this->grab_sort();
 				$this->grab_filters();
 				$this->set_column_order();
