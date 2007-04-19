@@ -94,6 +94,12 @@
 	);
 
 	
+	$GLOBALS[ '_ERRORS_SO_FAR' ] = array();
+	
+	function carl_util_get_error_list()
+	{
+		return $GLOBALS[ '_ERRORS_SO_FAR' ];
+	}
 	
 	// make a flat array of IP addresses to easily check
 	$GLOBALS[ '_DEVELOPER_IPS' ] = array();
@@ -157,6 +163,11 @@
 	function carlUtilErrorHandler( $errno, $errstr, $errfile, $errline, $context )
 	{
 		// developer actions
+		if(carl_util_log_errors())
+		{
+			$GLOBALS[ '_ERRORS_SO_FAR' ][] = array('number'=>$errno,'string'=>$errstr,'file'=>$errfile,'line'=>$errline);
+		}
+		
 		if( is_developer() AND empty($_REQUEST['nodebug']) AND carl_util_output_errors())
 		{
 			// handle error_reporting the correct way.  If this type of error
