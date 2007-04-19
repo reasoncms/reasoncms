@@ -259,6 +259,8 @@
 									   'rel_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   'id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   'open' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   'lister' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   'user_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   '__old_site_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   '__old_type_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   '__old_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
