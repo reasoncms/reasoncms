@@ -432,25 +432,30 @@
 		
 		function delete_all_issue_associations_for_this_publication($publication_id)
 		{
-			foreach($this->issues[$publication_id] as $issue_id=>$issue_entity)
+			if(!empty($this->issues[$publication_id]))
 			{
-				if($this->entity->has_left_relation_with_entity($issue_entity, 'news_to_issue'))
+				foreach($this->issues[$publication_id] as $issue_id=>$issue_entity)
 				{
-					$this->delete_instance_of_relationship($this->entity->id(), $issue_id, 'news_to_issue');
+					if($this->entity->has_left_relation_with_entity($issue_entity, 'news_to_issue'))
+					{
+						$this->delete_instance_of_relationship($this->entity->id(), $issue_id, 'news_to_issue');
+					}
 				}
 			}
 		}
 		
 		function delete_all_section_associations_for_this_publication($publication_id)
 		{
-			foreach($this->sections[$publication_id] as $section_id=>$section_entity)
+			if(!empty($this->sections[$publication_id]))
 			{
-				if($this->entity->has_left_relation_with_entity($section_entity, 'news_to_news_section'))
+				foreach($this->sections[$publication_id] as $section_id=>$section_entity)
 				{
-					$this->delete_instance_of_relationship($this->entity->id(), $section_id, 'news_to_news_section');
+					if($this->entity->has_left_relation_with_entity($section_entity, 'news_to_news_section'))
+					{
+						$this->delete_instance_of_relationship($this->entity->id(), $section_id, 'news_to_news_section');
+					}
 				}
 			}
 		}
-
 	}
 ?>
