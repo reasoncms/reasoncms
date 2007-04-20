@@ -271,5 +271,21 @@
 				return $link;
 			}
 		}
+		
+		/**
+		 * Should include only those items needed by the minisite navigation builder
+		 */
+		function grab_request() // {{{
+		{
+			$request = array_diff( conditional_stripslashes($_REQUEST), conditional_stripslashes($_COOKIE) );
+			$columns = (isset($this->columns)) ? array_keys($this->columns) : array('');
+			$cleanup_rules = array('site_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+								   'page_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+								   'textonly' => array('function' => 'turn_into_int'),
+								   'editing' => array('function' => 'check_against_array', 'extra_args' => array('off', 'on')));
+			
+			// apply the cleanup rules
+			$this->request = clean_vars($request, $cleanup_rules);
+		}
 	}
 ?>
