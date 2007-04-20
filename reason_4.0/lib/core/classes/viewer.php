@@ -242,6 +242,14 @@
 			} // }}}
 			
 			/**
+ 			 * @deprecated
+			 */
+			function grab_globals()
+			{
+				trigger_error('deprecated viewer function grab_globals called, should now use grab_request', WARNING );
+				$this->grab_request();
+			}
+			/**
 			 * Gets all the appropriate request variables and localizes a few - replaces old grab_globals which had serious security problems
 			 * @author Nathan White
 			 */
@@ -258,7 +266,7 @@
 									   'type_id'=> array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   'rel_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   'id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
-									   'open' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   'open' => array('function' => 'check_against_regexp', 'extra_args' => array('/^[0-9,]*$/')),
 									   'lister' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   'user_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   '__old_site_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
@@ -275,11 +283,12 @@
 				// apply the cleanup rules
 				$this->request = clean_vars($request, $cleanup_rules);
 				
-				// special case a few need localization ...
+				// special case a few that unfortunately need localization ... 
 				if (isset($this->request['state'])) $this->state = $this->request['state'] = strtolower($this->request['state']);
 				if (isset($this->request['dir'])) $this->dir = $this->request['dir'] = strtoupper($this->request['dir']);
 				if (isset($this->request['order_by'])) $this->order_by = $this->request['order_by'];
 				if (isset($this->request['page'])) $this->page = $this->request['page'];
+				if (isset($this->request['open'])) $this->open = $this->request['open'];
 				
 				// setup some defaults
 				if (!$this->page) $this->page = 1;
