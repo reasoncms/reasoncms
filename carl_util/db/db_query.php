@@ -73,13 +73,20 @@ function db_query( $query, $error_message = '', $die_on_error = true )
 			{
 				global $PHP_SELF;
 				if( empty( $error_message ) )
-					$error_message = 'Something bad happened.';
-				echo '<strong>'.$error_message.'</strong><br />';
-				$body = 'Query: "'.str_replace("\n",' ',$query).'"<br />';
+					$error_message = 'Bad db query.';
+				$body = $error_message.'<br />';
+				$body .= 'Query: "'.str_replace("\n",' ',$query).'"<br />';
 				$body .= 'Error: "'.mysql_error().'" (errno: "'.mysql_errno().'")';
-				trigger_error(str_replace("\n",'',nl2br($body)));
+				$errorlevel = MEDIUM;
 				if( $die_on_error )
+				{
+					$errorlevel = EMERGENCY;
+				}
+				trigger_error(str_replace("\n",'',nl2br($body)), $errorlevel);
+				if( $die_on_error ) // trigger_error should have died appropriately and forwarded to OSHI page, but it can't hurt to make sure...
+				{
 					die();
+				}
 				return false;
 			}
 			break;
