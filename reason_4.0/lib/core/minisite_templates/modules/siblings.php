@@ -9,25 +9,31 @@
 
 	class SiblingModule extends DefaultMinisiteModule
 	{
+		var $siblings = array();
 		function init ( $args = array() )	 // {{{
 		{
 			parent::init( $args );
 			
+			$root_id = $this->parent->pages->root_node();
+			$this_page_id = $this->cur_page->id();
 			// check to see if this is a home page -- don't even query for siblings
-			if($this->parent->cur_page->get_value( 'parent_id' ) == $this->parent->cur_page->id())
+			if($root_id != $this_page_id)
 			{
-				$this->siblings = array();
-			}
-			else
-			{
-				$es = new entity_selector();
-				$es->description = 'Selecting siblings of the page';
-	
-				// find all the siblings of this page
-				$es->add_type( id_of('minisite_page') );
-				$es->add_left_relationship( $this->parent->cur_page->get_value( 'parent_id' ), relationship_id_of( 'minisite_page_parent' ));
-				$es->set_order('sortable.sort_order ASC' );
-				$this->siblings = $es->run_one();
+				$parent_id = $this->parent->pages->parent( $this->cur_page->id() );
+				if(!empty($parent_id))
+				{
+					$sibling_ids = $this->parent->pages->children( $parent_id );
+					if(!empty($sibling_ids))
+					{
+						foreach($sibling_ids as $sibling_id)
+						{
+							if($sibling_id != $root_id)
+							{
+								$this->siblings[$sibling_id] = new entity($sibling_id);
+							}
+						}
+					}
+				}
 			}
 			
 		} // }}}
@@ -46,11 +52,6 @@
 
 			foreach ( $this->siblings AS $sibling )
 			{
-				// for when the page is one level below the root: since we have grabbed all the pages whose
-				// parent is this page's parent, and the root is in fact its own parent, we must check that
-				// we don't display it
-				if( $this->parent->pages->root_node() == $sibling->_id )
-					continue;
 
 				/* If the page has a link name, use that; otherwise, use its name */
 				$page_name = $sibling->get_value( 'link_name' ) ? $sibling->get_value( 'link_name' ) : $sibling->get_value('name');
