@@ -251,6 +251,7 @@
 			}
 			/**
 			 * Gets all the appropriate request variables and localizes a few - replaces old grab_globals which had serious security problems
+			 * @todo remove almost all the logic in this class that is currently specific to the reason backend...
 			 * @author Nathan White
 			 */
 			 
@@ -280,6 +281,8 @@
 									   'textonly' => array('function' => 'turn_into_int'),
 									   'new_entity' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)));
 				
+				$this->append_filters($cleanup_rules);
+				
 				// apply the cleanup rules
 				$this->request = clean_vars($request, $cleanup_rules);
 				
@@ -294,6 +297,26 @@
 				if (!$this->page) $this->page = 1;
 				if (!$this->state) $this->state = 'Live';
 			}
+			
+			/**
+			 * This adds cleanup_rules for the exact_id and like filters used by the filter class
+			 */
+			function append_filters(&$cleanup_rules)
+			{
+				foreach ($this->filters as $k=>$v)
+				{
+					if ($v)
+					{
+						$cleanup_rules['search_'.$k] = array('function' => 'turn_into_string');
+					}
+				}
+				$cleanup_rules['search_exact_id'] = array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true));
+				
+				// adds filters for sharing_filter.php, which should not be done here but this all is going to undergo a major revamp soon
+				$cleanup_rules['search_exact_site'] = array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true));
+				$cleanup_rules['search_site'] = array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true));
+			}
+			
 			/**
 			 * Scans the global request variables for search variables and adds the
 			 * appropriate relations to the entity_selector
