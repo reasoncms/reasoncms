@@ -303,11 +303,14 @@
 			 */
 			function append_filters(&$cleanup_rules)
 			{
-				foreach ($this->filters as $k=>$v)
+				if (!empty($this->filters))
 				{
-					if ($v)
+					foreach ($this->filters as $k=>$v)
 					{
-						$cleanup_rules['search_'.$k] = array('function' => 'turn_into_string');
+						if ($v)
+						{
+							$cleanup_rules['search_'.$k] = array('function' => 'turn_into_string');
+						}
 					}
 				}
 				$cleanup_rules['search_exact_id'] = array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true));
