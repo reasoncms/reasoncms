@@ -19,6 +19,12 @@
 						   );
 		var $default_ns_to_class = 'decimal';
 		var $li_class = 'stuff';
+
+		function grab_request()
+		{
+
+		}
+
 		function show_all_items() // {{{
 		{
 			$root = $this->cur_page_root();
@@ -127,6 +133,7 @@
 				$this->pages->site_info = $this->site_info;
 			$this->pages->order_by = 'sortable.sort_order ASC';
 			$this->pages->init( $this->parent->site_id, id_of('policy_type') );
+
 			if( !empty( $this->request[ 'policy_id' ] ) )
 			{
 				if(array_key_exists($this->request[ 'policy_id' ], $this->values))
