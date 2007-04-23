@@ -295,7 +295,6 @@ class GalleryVoteModule extends GalleryModule
 				foreach($votes as $id=>$num)
 				{
 					echo '<tr><td style="width:25%">';
-					echo 'id: '.$id.'...';
 					show_image($id);
 					echo '</td><td>';
 					if($num == 0 || $max == 0)
