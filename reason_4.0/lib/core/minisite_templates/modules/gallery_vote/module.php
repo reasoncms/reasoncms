@@ -12,21 +12,42 @@ class GalleryVoteModule extends GalleryModule
 	var $csv_auth; // CSV authentication connection
 	var $csv_data; // CSV data connection
 	var $rows = 2000; // effectively disables pagination
+	var $modes = array('gallery', 'vote', 'results');
+	var $modes_to_nice_names = array('gallery'=>'View Photos', 'vote'=>'Vote', 'results'=>'View Results');
+	var $mode_checkers = array('vote'=>'voting_is_available', 'results'=>'results_are_viewable');
+	var $mode_requires_login_checkers = array('vote'=>'voting_requires_login','results'=>'results_require_login');
     
 	function get_cleanup_rules()
 	{
 		$cr = parent::get_cleanup_rules();
-		$cr['mode'] = array('function' => 'check_against_array', 'extra_args' => array('gallery', 'vote') );
+		$cr['mode'] = array('function' => 'check_against_array', 'extra_args' => $this->modes );
 		return $cr;
 	}
 			
 	function init( $args )
 	{
  		if (empty($this->request['mode'])) $this->request['mode'] = 'gallery'; // default mode is gallery
+		
+		if(!$this->get_authentication() && $this->mode_requires_login($this->request['mode']))
+		{
+			header('Location: '.REASON_LOGIN_URL.'?dest_page='.urlencode(get_current_url()));
+			die();
+		}
  		
  		$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/image_gallery/gallery_vote.css');
+		
+		//path to CSV data
+		if (!defined('REASON_CSV_DIR'))
+		{
+			trigger_error('REASON_CSV_DIR path is not defined in settings.php');
+		}
+		else
+		{
+			//establish csv connection
+			$this->csv_connect(REASON_CSV_DIR . 'gallery_vote/');
+		}
   		
-  		if ($this->request['mode'] == 'vote')
+  		if ($this->request['mode'] == 'vote' || $this->request['mode'] == 'results')
   		{
   			$es = new entity_selector();
 			$es->description = 'Selecting images for the gallery';
@@ -36,17 +57,6 @@ class GalleryVoteModule extends GalleryModule
 			
   			//attempt to populate csv_netID
   			$this->get_authentication();
-  		
-  			//path to CSV data
-       		if (!defined('REASON_CSV_DIR'))
-        	{
-        		trigger_error('REASON_CSV_DIR path is not defined in settings.php');
-        	}
-        	else
-			{
-				//establish csv connection
-				$this->csv_connect(REASON_CSV_DIR . 'gallery_vote/');
-			}
         }
         else parent::init($args);
 	}
@@ -78,46 +88,13 @@ class GalleryVoteModule extends GalleryModule
 	{
 		echo '<div id="galleryVote">';
 		echo $this->get_nav();
-		if ($this->request['mode'] == 'vote' && defined('REASON_CSV_DIR')) 
+		if ($this->request['mode'] == 'vote' )
 		{
-			$csv_netIDs = array_map(create_function('$array', 'return "$array[0]";'), $this->csv_auth->csv_to_array());
-			if (empty($this->user_netID))
-			{
-				echo '<h3>Login Required</h3>';
-				echo '<p>This page requires you to login using a valid '.SHORT_ORGANIZATION_NAME.' netID.</p>';
-				
-			}
-			elseif (in_array($this->user_netID, $csv_netIDs))
-			{
-				echo '<h3>Sorry</h3><p>You may only vote once and have already voted.</p>';
-			}
-			else
-			{
-				$ballot = new GalleryVoteForm($this->images);		
-				$ballot->init();
-				$ballot->run();
-				if ($ballot->submitted) 
-				{
-					$result = $this->save_vote($ballot, $csv_netIDs);
-				
-					switch ($result) {
-					case 'saved':
-						echo '<h3>Success</h3><p>Your vote has been recorded - thank you for participating.</p>';
-						break;
-					case 'already_voted':
-						echo '<h3>Error</h3><p>Your vote cannot be saved because you have already voted.</p>';
-						break;
-					case 'error':
-						echo '<h3>Error</h3><p>There was an error saving your vote - the Web Services group has been notified. Please try again later.</p>';
-						break;
-					}
-				}
-			}
+			$this->run_vote_view();
 		}
-		elseif( $this->request['mode'] == 'vote' && !defined('REASON_CSV_DIR') )
+		elseif( $this->request['mode'] == 'results')
 		{
-			echo '<h3>Sorry; Voting is not available.</h3><p>The administrator of this web server needs to turn it on -- please contact the administrator of the web site and tell them the information below:</p>
-			<p>Image voting needs to have the Reason setting REASON_CSV_DIR defined in order to work. Please go into the Reason settings file and specify the directory for the csv data.</p>';
+			$this->run_results_view();
 		}
 		else
 		{
@@ -191,48 +168,61 @@ class GalleryVoteModule extends GalleryModule
 			return false;
 		}
 	}
+	function mode_is_available($mode)
+	{
+		if(isset($this->mode_checkers[$mode]))
+		{
+			$function = $this->mode_checkers[$mode];
+			return $this->$function();
+		}
+		return true;
+	}
+	function mode_requires_login($mode)
+	{
+		if(isset($this->mode_requires_login_checkers[$mode]))
+		{
+			$function = $this->mode_requires_login_checkers[$mode];
+			return $this->$function();
+		}
+		return false;
+	}
+	function voting_is_available()
+	{
+		if($this->cur_user_has_voted())
+			return false;
+		return true;
+	}
+	function voting_requires_login()
+	{
+		return true;
+	}
+	function results_require_login()
+	{
+		return true;
+	}
 	
 	function get_nav()
 	{
 		$sess_auth = $this->get_authentication_from_session();
 		$auth = $this->get_authentication();
-		$ret = '<div id="galleryVoteNav"><p>';
-		$parts = parse_url(get_current_url());
-		$url = $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . '?';
-		if ((!empty($sess_auth) || !empty($sess)) && ($this->request['mode'] == 'gallery')) // logged in, gallery mode
+		$ret = '<div id="galleryVoteNav">';
+		
+		$nav_parts = array();
+		foreach($this->modes as $mode)
 		{
-			if (isset($parts['query'])) $url .= $parts['query'] . '&mode=vote';
-			else $url .= 'mode=vote';
-			$ret .= '<a href="'.$url.'">Vote</a>';
-			$ret .= ' | ' . $this->get_login_logout_link($sess_auth, $auth);
+			if($this->request['mode'] == $mode)
+			{
+				$nav_parts[] = '<strong>'.$this->modes_to_nice_names[$mode].'</strong>';
+			}
+			elseif($this->mode_is_available($mode))
+			{
+				$nav_parts[] = '<a href="'.make_link(array('mode'=>$mode)).'">'.$this->modes_to_nice_names[$mode].'</a>';
+			}
 		}
-		elseif ((!empty($sess_auth) || !empty($sess)) && ($this->request['mode'] == 'vote')) // logged in, vote mode
-		{
-			$parts['query'] = (isset($parts['query'])) ? str_replace('&mode=vote', '', $parts['query']) : '';
-			$parts['query'] = (isset($parts['query'])) ? str_replace('mode=vote&', '', $parts['query']) : '';
-			$parts['query'] = (isset($parts['query'])) ? str_replace('mode=vote', '', $parts['query']) : '';
-			$url .= rtrim ($parts['query'], '&');
-			$ret .= '<a href="'.$url.'">Return to Gallery</a>';
-			$ret .= ' | ' . $this->get_login_logout_link($sess_auth, $auth);
-		}
-		elseif ($this->request['mode'] == 'vote') // not logged in - vote module
-		{
-			$parts['query'] = (isset($parts['query'])) ? str_replace('&mode=vote', '', $parts['query']) : '';
-			$parts['query'] = (isset($parts['query'])) ? str_replace('mode=vote&', '', $parts['query']) : '';
-			$parts['query'] = (isset($parts['query'])) ? str_replace('mode=vote', '', $parts['query']) : '';
-			$url .= rtrim($parts['query'], '&');
-			$ret .= '<a href="'.$url.'">View Gallery</a> | ';
-			$ret .= '<a href="'.REASON_LOGIN_URL.'">Log In</a>';
-			$ret .= ' | You must be logged in to vote';
-		}
-		else
-		{
-			if (isset($parts['query'])) $url .= rtrim($parts['query'], '&') . '&mode=vote';
-			else $url .= 'mode=vote';
-			$ret .= '<a href="'.REASON_LOGIN_URL.'?dest_page='.urlencode($url).'">Vote</a>';
-			$ret .= ' | You must be logged in to vote';
-		}
-		$ret .= '</p></div>';
+		$ret .= implode(' | ',$nav_parts);
+		$ret .= ' | ' . $this->get_login_logout_link($sess_auth, $auth);
+		$ret .= '</div>'."\n";
+		
 		return $ret;
 	}
 	
@@ -243,12 +233,14 @@ class GalleryVoteModule extends GalleryModule
 		$ret = '<span class="loginlogout">';
 		if(!empty($sess_auth))
 		{
-			$parts = parse_url(get_current_url());
-			$url = $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . '?';
-			$parts['query'] = (isset($parts['query'])) ? str_replace('&mode=vote', '', $parts['query']) : '';
-			$parts['query'] = (isset($parts['query'])) ? str_replace('mode=vote&', '', $parts['query']) : '';
-			$parts['query'] = (isset($parts['query'])) ? str_replace('mode=vote', '', $parts['query']) : '';
-			$url .= rtrim ($parts['query'], '&');
+			if($this->mode_requires_login($this->request['mode']))
+			{
+				$url = make_link( array('mode'=>''), '', '', false );
+			}
+			else
+			{
+				$url = get_current_url();
+			}
 			$ret .= '<a href="'.REASON_LOGIN_URL.'?logout=true&dest_page='.urlencode($url).'">Log Out</a> (Currently Logged In: '.$sess_auth.')';
 		}
 		elseif(!empty($auth))
@@ -262,6 +254,153 @@ class GalleryVoteModule extends GalleryModule
 		$ret .= '</span>'."\n";
 		//return '<p>'.$ret.'</p>';
 		return $ret;
+	}
+	
+	function run_results_view()
+	{
+		echo '<div id="galleryVote">';
+		echo '<h3>Results</h3>'."\n";
+		$netid = $this->get_authentication();
+		if(empty($netid))
+		{
+			echo '<p>You must be logged in to view results</p>'."\n";
+		}
+		else
+		{
+			if($this->user_can_view_results($netid))
+			{
+				$votes = array();
+				$num_votes = 0;
+				foreach($this->csv_data->csv_to_array() as $row)
+				{
+					$num_votes++;
+					if(!isset($votes[$row[0]]))
+						$votes[$row[0]] = 1;
+					else
+						$votes[$row[0]]++;
+					
+					if(isset($this->images[$row[0]]))
+						unset($this->images[$row[0]]);
+				}
+				foreach($this->images as $id=>$item)
+				{
+					$votes[$id] = 0;
+				}
+				arsort($votes);
+				echo '<p><strong>Total votes:</strong> '.$num_votes.'</p>'."\n";
+				echo '<table style="width:100%">'."\n";
+				echo '<tr><th>Image</th><th>Votes</th></tr>'."\n";
+				reset($votes);
+				$max = current($votes);
+				foreach($votes as $id=>$num)
+				{
+					echo '<tr><td style="width:25%">';
+					echo 'id: '.$id.'...';
+					show_image($id);
+					echo '</td><td>';
+					if($num == 0 || $max == 0)
+					{
+						echo '<strong>0</strong>';
+					}
+					else
+					{
+						echo '<div style="padding:.5em 0;float:left;background-color:#008;color:#fff;text-align:right;width:' . round($num/$max*100, 2) . '%;"><strong style="padding-right:.5em;">'.$num.'</strong></div>';
+					}
+					echo '</td></tr>'."\n";
+				}
+				echo '</table>'."\n";
+			}
+			else
+			{
+				echo '<p>You must do not have permission to view the results</p>'."\n";
+			}
+		}
+		echo '</div>'."\n";
+	}
+	function run_vote_view()
+	{
+		if (defined('REASON_CSV_DIR')) 
+		{
+			$csv_netIDs = array_map(create_function('$array', 'return "$array[0]";'), $this->csv_auth->csv_to_array());
+			if (empty($this->user_netID) && $this->voting_requires_login())
+			{
+				echo '<h3>Login Required</h3>';
+				echo '<p>This page requires you to login using a valid '.SHORT_ORGANIZATION_NAME.' netID.</p>';
+				
+			}
+			elseif ($this->cur_user_has_voted())
+			{
+				echo '<h3>Sorry</h3><p>You may only vote once and have already voted.</p>';
+			}
+			else
+			{
+				$ballot = new GalleryVoteForm($this->images);		
+				$ballot->init();
+				$ballot->run();
+				if ($ballot->submitted) 
+				{
+					$result = $this->save_vote($ballot, $csv_netIDs);
+				
+					switch ($result) {
+					case 'saved':
+						echo '<h3>Success</h3><p>Your vote has been recorded - thank you for participating.</p>';
+						break;
+					case 'already_voted':
+						echo '<h3>Error</h3><p>Your vote cannot be saved because you have already voted.</p>';
+						break;
+					case 'error':
+						echo '<h3>Error</h3><p>There was an error saving your vote - the Web Services group has been notified. Please try again later.</p>';
+						break;
+					}
+				}
+			}
+		}
+		else
+		{
+			trigger_error('REASON_CSV_DIR must be defined for image voting to work');
+			echo '<h3>Sorry; Voting is not available.</h3><p>The administrator of this web server needs to turn it on -- please contact the administrator of the web site and tell them the information below:</p>
+			<p>Image voting needs to have the Reason setting REASON_CSV_DIR defined in order to work. Please go into the Reason settings file and specify the directory for the csv data.</p>';
+		}
+	}
+	function cur_user_has_voted()
+	{
+		if(!empty($this->user_netID))
+		{
+			$auth_log = $this->csv_auth->csv_to_array();
+			foreach($auth_log as $row)
+			{
+				if($row[0] == $this->user_netID)
+					return true;
+			}
+		}
+		return false;
+	}
+	function results_are_viewable()
+	{
+		if($this->user_can_view_results($this->get_authentication()))
+		{
+			return true;
+		}
+	}
+	function user_can_view_results($netid)
+	{
+		$user_reason_id = get_user_id( $netid );
+		if(!empty($user_reason_id))
+		{
+			$es = new entity_selector();
+			$es->add_type(id_of('site'));
+			$es->add_left_relationship($user_reason_id, relationship_id_of('site_to_user'));
+			$es->set_num(1);
+			$es->limit_tables();
+			$es->limit_fields();
+			$es->add_relation('entity.id = "'.$this->site_id.'"');
+			$sites = $es->run_one();
+			if(!empty($sites))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }	
 	
