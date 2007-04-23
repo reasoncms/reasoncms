@@ -10,7 +10,7 @@ reason_include_once('function_libraries/url_utils.php');
 $fields = array (	
 				'custom_content_handler' => 'content_managers', 
 				'custom_content_lister' => 'content_listers', 
-				'custom_deleter' => 'content_managers',
+				'custom_deleter' => 'content_deleters',
 				'display_name_handler' => 'display_name_handlers',
 				'custom_previewer' => 'content_previewers', 
 				'custom_sorter' => 'content_sorters', 
