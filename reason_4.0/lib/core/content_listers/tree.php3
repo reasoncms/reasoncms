@@ -346,5 +346,35 @@
 			else
 				$this->show_no_results();
 		} // }}}
+		
+		
+		function get_depth_of_item($id)
+		{
+			$parent_id = $this->parent($id);
+			$root = $this->root_node();
+			if($id == $root)
+				return 0;
+			elseif($parent_id == $root)
+				return 1;
+			
+			$depth = 1;
+			while($parent_id != $root)
+			{
+				if($depth > 60 )
+				{
+					trigger_error('get_depth_of_item() for id '.$id.' failed -- reached maximum depth of 60');
+					return NULL;
+				}
+				elseif(empty($parent_id))
+				{
+					trigger_error('get_depth_of_item() for id '.$id.' failed -- break in parent tree');
+					return NULL;
+				}
+				$depth++;
+				$parent_id = $this->parent($parent_id);
+			}
+			return $depth;
+			
+		}
 	}
 ?>
