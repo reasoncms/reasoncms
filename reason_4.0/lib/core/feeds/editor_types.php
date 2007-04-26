@@ -10,12 +10,9 @@ class editorTypeFeed extends defaultFeed
 {
 	var $site_with_access_to_types;
 	
-	// As we add new feeds for the editor we will add their types here
-	var $types_with_editor_feeds = array('minisite_page','news','event_type','asset');
-	
 	var $feed_class = 'editorTypeRSS';
 	
-	/* I'm having the fudge the owner class, since the site in question doesn't *own* the types -- the Master Admin does. A bit hacky. */
+	/* I'm having to fudge the owner class, since the site in question doesn't *own* the types -- the Master Admin does. A bit hacky. */
 	function create_feed()
 	{
 		$this->feed = new $this->feed_class( id_of('master_admin'), $this->type->id() );
@@ -32,16 +29,15 @@ class editorTypeFeed extends defaultFeed
 		//$this->feed->es->add_relation( 'site.site_state = "Live"' );
 		$this->feed->es->set_order( 'name ASC' );
 		
-		$restricted_to = 'entity.unique_name = "'.implode('" OR entity.unique_name = "',$this->types_with_editor_feeds).'"';
-		$this->feed->es->add_relation('('.$restricted_to.')');
-		if(!empty($this->site))
+		if(!empty($GLOBALS['_reason_types_with_editor_link_feeds']) && !empty($this->site))
 		{
+			$this->feed->es->add_relation('entity.unique_name IN ("'.implode('","',$GLOBALS['_reason_types_with_editor_link_feeds']).'")');
 			$this->feed->es->add_right_relationship($this->site->id(),relationship_id_of('site_to_type'));
 			$this->feed->restricted_site_id = $this->site->id();
 		}
-		else
+		else // make sure nothing is returned
 		{
-			$this->feed->es->add_relation('1 = 2'); // make sure nothing is returned if there is no site provided
+			$this->feed->es->add_relation('1 = 2');
 		}
 		$this->feed->es->set_num( 10000 );
 	}
