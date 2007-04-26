@@ -299,7 +299,7 @@ function construct_redirect( $new_request_vars = array(''), $preserve_request_va
  *
  *	@param entity $site The site to look in
  *	@param page_tree $tree the page tree object for the site; this must be already initialized
- *	@param array $page_types The page types that are acceptable
+ *	@param mixed $page_types The array of page types or string indicating single page type that is/are acceptable
  *	@param boolean $as_uri Returns a fully qualified URI if true; otherwise returns a URL relative to web root
  *	@param boolean $secure Uses https if true. This parameter only has an effect if $as_uri is true.
  */
@@ -309,6 +309,14 @@ function get_page_link( &$site, &$tree, $page_types, $as_uri = false, $secure = 
 	if(empty($site) || empty($page_types))
 	{
 		trigger_error('site and page types must all be passed to get_page_link',EMERGENCY);
+	}
+	elseif(is_string($page_types))
+	{
+		$page_types = array($page_types);
+	}
+	elseif(!is_array($page_types))
+	{
+		trigger_error('$page_types must be an array or string',EMERGENCY);
 	}
 	$relations = array();
 	$es = new entity_selector($site->id());
