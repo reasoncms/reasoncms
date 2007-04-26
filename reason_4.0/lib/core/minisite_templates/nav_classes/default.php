@@ -78,12 +78,14 @@
 			}
 		} // }}}
 		
-		function get_item_class($item, $open)
+		function get_item_class($id, $open)
 		{
 			if($open)
 				$class = 'open';
 			else
 				$class = 'closed';
+			if($this->cur_page_id == $id)
+				$class .= ' current';
 			return $class;
 		}
 		
@@ -111,10 +113,14 @@
 		function show_item( &$item , $options = false) // {{{
 		{
 			$page_name = $item->get_value( 'link_name' ) ? $item->get_value( 'link_name' ) : $item->get_value('name');
+			$class_attr = '';
 			// Show home instead of site name again
 			// notice, this overrides the link_name if set above
 			if( $item->id() == $this->root_node() )
+			{
 				$page_name = '<span>'.$this->site_info->get_value('name').' Home</span>';
+				$class_attr = ' class="home"';
+			}
 			$page_name = strip_tags($page_name,'<span><strong><em>');
 			if( $this->cur_page_id != $item->id() || $this->link_to_current_page )
 			{
@@ -139,7 +145,7 @@
 					$append = '';
 				}
 				
-				$link = '<a href="'.$link.'">'.$prepend.$page_name.$append.'</a>';
+				$link = '<a href="'.$link.'"'.$class_attr.'>'.$prepend.$page_name.$append.'</a>';
 
 				echo $link;
 			}
