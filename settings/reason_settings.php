@@ -685,4 +685,11 @@
 	
 	// This is for the session_cookie class, which is not fully implemented.
 	//define('REASON_COOKIE_DOMAIN','.domain_name.domain');
+	
+	/**
+	 * Record the types that have feeds for the editor link 
+	 *
+	 * If you add a new feed for the Loki link dialog box, register it here so it can show up
+	 */
+	$GLOBALS['_reason_types_with_editor_link_feeds'] = array('minisite_page','news','event_type','asset');
 ?>
