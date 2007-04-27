@@ -148,23 +148,6 @@
 		{
 			return false;
 		} // }}}
-
-		/**
-		 * @author Eric Naeseth
-		 */
-		function get_content_classes()
-		{
-			return null;
-		}
-
-		/**
-		 * @author Eric Naeseth
-		 */
-		function get_content_id()
-		{
-			return null;
-		}
-
 	}
 
 ?>
