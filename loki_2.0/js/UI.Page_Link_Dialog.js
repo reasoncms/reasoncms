@@ -563,11 +563,14 @@ UI.Page_Link_Dialog = function()
 			var items = reader.get_cur_items();
 			for ( var i = 0; i < items.length; i++ )
 			{
-				//var is_selected = ( items[i].isSelected == 'true' );
-				//var is_selected = self._compare_uris(items[i].link, self._initially_selected_nameless_uri);
-				var item_uri = Util.URI.strip_https_and_http(items[i].link);
-				var is_selected = ( item_uri == self._initially_selected_nameless_uri );
-				self._links_select.add_option(items[i].title, item_uri, is_selected);
+				if(items[i].link)
+				{
+					//var is_selected = ( items[i].isSelected == 'true' );
+					//var is_selected = self._compare_uris(items[i].link, self._initially_selected_nameless_uri);
+					var item_uri = Util.URI.strip_https_and_http(items[i].link);
+					var is_selected = ( item_uri == self._initially_selected_nameless_uri );
+					self._links_select.add_option(items[i].title, item_uri, is_selected);
+				}
 			}
 
 			self._links_select.end_loading();
