@@ -135,6 +135,7 @@ class FieldToEntityTable
 			if ($this->test_mode) $this->report[] = 'The field ' . $k . ' would be created and added to the entity table ' . $this->entity_table_name;
 			else 
 			{
+				$v['new'] = 0;
 				$id = reason_create_entity( $this->ma_site_id, $this->field_id, $this->user_id, $k, $v );
 				
 				// Relate the new field entity to the entity table
