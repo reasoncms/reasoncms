@@ -681,7 +681,7 @@
 						$user_id = $username;
 					else
 						$user_id = get_user_id($username);
-					$id = reason_create_entity(id_of('master_admin'), id_of('content_table'), $user_id, $table_name);
+					$id = reason_create_entity(id_of('master_admin'), id_of('content_table'), $user_id, $table_name, array('new' => 0));
 					create_relationship( $type_id, $id, relationship_id_of('type_to_table'));
 					trigger_error( 'The table ' . $table_name . ' was created and added to the type ' . $type_unique_name);
 					return $id;
@@ -897,6 +897,39 @@
 			trigger_error('Template '.$template_name.' already exists in db; unable to be added');
 			return false;
 		}
+	}
+	
+	/**
+	 * Examines the allowable relationships table, removes allowable relationships that reference a type that does not exist
+	 *
+	 * @return boolean success or failure
+	 * @author Nathan White
+	 */
+	function remove_allowable_relationships_with_missing_types()
+	{
+		$to_delete = array();
+		$es = new entity_selector();
+		$es->limit_tables();
+		$es->limit_fields(array('id', 'name'));
+		$es->add_type(id_of('type'));
+		$valid_types = $es->run_one('', 'All'); // look at all entities of all state
+		$valid_type_ids = implode(',', array_keys($valid_types));
+		
+		$q = 'SELECT id from allowable_relationship WHERE ((relationship_a NOT IN ('.$valid_type_ids.')) OR
+														   (relationship_b NOT IN ('.$valid_type_ids.')))';
+		$results = db_query($q);
+		while ($result = mysql_fetch_assoc($results))
+		{
+			$to_delete[$result['id']] = $result['id'];
+		}
+		if (!empty($to_delete))
+		{
+			$ids_to_delete = implode(',', array_keys($to_delete));
+			$q = 'DELETE from allowable_relationship WHERE id IN ('.$ids_to_delete.')';
+			db_query($q);
+			return true;
+		}
+		return false;
 	}
 
 ?>
