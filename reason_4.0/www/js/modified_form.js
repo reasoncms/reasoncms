@@ -2,22 +2,25 @@
  * Javascript to load in the state of all forms when the page is loaded,
  * and when a link is clicked, it checks all forms against these
  * and prompts the user to save them if desired
+ * @author Henry gross
+ * @modified May 7, 2007
  */
 
 var original_state;
 var iframes;
 var req;
+var IGNORE_CLASS = "class to ignore";
 
 /**
  * Add eventlisteners to the links to have then check the states of the fields
  */
 function add_checks()
 {
-  var inputs;
-  inputs = document.getElementsByTagName("a");
-  for (var i=0; i<inputs.length; i++)
-    if (inputs[i].getAttribute("href") != "")
-      inputs[i].onclick=check;
+  var links;
+  links = document.getElementsByTagName("a");
+  for (var i=0; i<links.length; i++)
+    if (links[i].getAttribute("href") != "" && !links[i].className.match(IGNORE_CLASS))
+      links[i].onclick=check;
 }
 
 /**
@@ -298,7 +301,17 @@ Form.prototype.equals = function(other_form)
   this.eq = true;
   for (var i = 0; i < this.fields.length && this.eq; i++)
   {
-    if (!this.fields[i].equals(other_form.fields[i]))
+    var found = false;
+    for (var j = 0; j < other_form.fields.length && !found; j++)
+    {
+      if (this.fields[i].name == other_form.fields[j].name)
+      {
+        found = true;
+        if (!this.fields[i].equals(other_form.fields[j]))
+          this.eq = false;
+      }
+    }
+    if (!found)
       this.eq = false;
   }
   return this.eq;
@@ -373,7 +386,7 @@ function load_forms()
 /**
  * Go through all of the iframes on the page
  * and create an array of all of their innerHTMLs indexed on their id
- * @return an array containing all of the iframes on the page
+ * array is then stored to global iframes variable
  */
 function load_iframes()
 {
@@ -382,7 +395,6 @@ function load_iframes()
   var index;
   wysiwyg = document.getElementsByTagName("iframe");
   arr = new Array();
-  index = 0;
 
   for (var i = 0; i < wysiwyg.length; i++)
   {
@@ -394,14 +406,9 @@ function load_iframes()
     obj = new Array();
     obj["element"] = wysiwyg[i];
     obj["html"] = html;
-    if (frame_doc.designMode.toLowerCase() == "on")
-    {
-      arr[index] = obj;
-      index++;
-    }
+    arr.push(obj);
   }
   iframes = arr;
-  return arr;
 }
 
 /**
@@ -447,7 +454,8 @@ function check()
     old_html = iframes[iframe]["html"]
     new_html = elem_doc.getElementsByTagName("body")[0].innerHTML;
    
-    if (!answered && old_html != new_html)
+    if (!answered && elem_doc.designMode.toLowerCase() == "on" &&
+      old_html != new_html)
     {
       confirm_change = confirm(confirm_message);
       if (!confirm_change)
@@ -469,7 +477,6 @@ function init()
   add_checks();
   original_state = load_forms();
   setTimeout(iframes = load_iframes, 500);
-//  iframes = load_iframes();
 
 /*  if (window.ActiveXObject)
   {
