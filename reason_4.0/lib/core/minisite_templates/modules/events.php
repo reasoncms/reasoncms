@@ -47,6 +47,8 @@ class EventsModule extends DefaultMinisiteModule
 							'limit_to_page_categories'=>false,
 						);
 	
+	var $views_no_index = array('daily','weekly','monthly');
+	
 	//////////////////////////////////////
 	// General Functions
 	//////////////////////////////////////
@@ -637,7 +639,10 @@ class EventsModule extends DefaultMinisiteModule
 			$ret .= '<li>';
 			if($view != $this->calendar->get_view())
 			{
-				$opener = '<a href="'.$this->construct_link(array('view'=>$view,'end_date'=>'')).'">';
+				$link_params = array('view'=>$view,'end_date'=>'');
+				if(in_array($view,$this->views_no_index))
+					$link_params['no_search'] = 1;
+				$opener = '<a href="'.$this->construct_link($link_params).'">';
 				$closer = '</a>';
 			}
 			else
@@ -860,7 +865,10 @@ class EventsModule extends DefaultMinisiteModule
 				if($this->calendar->contains_any_events_before($this->calendar->get_start_date()) )
 				{
 					$this->next_and_previous_links = '<a class="previous" href="';
-					$this->next_and_previous_links .= $this->construct_link(array('start_date'=>$prev_start,'view'=>$this->calendar->get_view()));
+					$link_params = array('start_date'=>$prev_start,'view'=>$this->calendar->get_view());
+					if(in_array($this->calendar->get_view(),$this->views_no_index))
+						$link_params['no_search'] = 1;
+					$this->next_and_previous_links .= $this->construct_link($link_params);
 					if(date('M', $prev_u) == 'May') // All months but may need a period after them
 						$punctuation = '';
 					else
@@ -873,7 +881,10 @@ class EventsModule extends DefaultMinisiteModule
 			if($show_links && $this->calendar->contains_any_events_after($next_start) )
 			{
 				$this->next_and_previous_links .= ' &nbsp; <a class="next" href="';
-				$this->next_and_previous_links .= $this->construct_link(array('start_date'=>$next_start,'view'=>$this->calendar->get_view()));
+				$link_params = array('start_date'=>$next_start,'view'=>$this->calendar->get_view());
+				if(in_array($this->calendar->get_view(),$this->views_no_index))
+						$link_params['no_search'] = 1;
+				$this->next_and_previous_links .= $this->construct_link($link_params);
 				if(date('M', $next_u) == 'May') // All months but may need a period after them
 					$punctuation = '';
 				else
@@ -978,13 +989,13 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$prev_u = get_unix_timestamp($date_parts[0].'-'.str_pad($date_parts[1]-1, 2, "0", STR_PAD_LEFT).'-'.$date_parts[2]);
 			$prev_date = carl_date('Y-m-d',$prev_u);
-			$grid->set_previous_month_query_string($this->construct_link(array('nav_date'=>$prev_date ) ) );
+			$grid->set_previous_month_query_string($this->construct_link(array('nav_date'=>$prev_date,'no_search'=>'1' ) ) );
 		}
 		if($this->calendar->contains_any_events_after($date_parts[0].'-'.$date_parts[1].'-31'))
 		{
 			$next_u = get_unix_timestamp($date_parts[0].'-'.str_pad($date_parts[1]+1, 2, "0", STR_PAD_LEFT).'-'.$date_parts[2]);
 			$next_date = carl_date('Y-m-d',$next_u);
-			$grid->set_next_month_query_string($this->construct_link(array('nav_date'=>$next_date ) ) );
+			$grid->set_next_month_query_string($this->construct_link(array('nav_date'=>$next_date,'no_search'=>'1' ) ) );
 		}
 		
 		$nav_month = substr($nav_date,0,7);
@@ -1043,7 +1054,7 @@ class EventsModule extends DefaultMinisiteModule
 			foreach($week as $day)
 			{
 				$date = $year.'-'.$month.'-'.str_pad($day,2,'0',STR_PAD_LEFT);
-				$links[$day] =  $this->construct_link(array('start_date'=>$date,'view'=>$pass_view_val));
+				$links[$day] =  $this->construct_link(array('start_date'=>$date,'view'=>$pass_view_val,'no_search'=>'1'));
 			}
 		}
 		return $links;
@@ -1587,7 +1598,7 @@ class EventsModule extends DefaultMinisiteModule
 			$links = array();
             foreach( $cats AS $cat )
             {
-				$links[] = '<a href="'.$this->construct_link(array('category'=>$cat->id()), false).'">'.$cat->get_value('name').'</a>';
+				$links[] = '<a href="'.$this->construct_link(array('category'=>$cat->id(),'no_search'=>'1'), false).'">'.$cat->get_value('name').'</a>';
             }
 			echo implode(', ',$links);
 			echo '</p>'."\n";
@@ -1610,7 +1621,7 @@ class EventsModule extends DefaultMinisiteModule
 			$links = array();
             foreach( $auds AS $aud )
             {
-                $links[] = '<a href="'.$this->construct_link(array('audience'=>$aud->id()), false).'">'.$aud->get_value('name').'</a>';
+                $links[] = '<a href="'.$this->construct_link(array('audience'=>$aud->id(),'no_search'=>'1'), false).'">'.$aud->get_value('name').'</a>';
             }
 			echo implode(', ',$links);
 			echo '</p>'."\n";
@@ -1629,7 +1640,7 @@ class EventsModule extends DefaultMinisiteModule
 			foreach($keys as $key)
 			{
 				$key = trim(strip_tags($key));
-				$parts[] = '<a href="'.$this->construct_link(array('search'=>urlencode($key)),false).'">'.$key.'</a>';
+				$parts[] = '<a href="'.$this->construct_link(array('search'=>urlencode($key),'no_search'=>'1'),false).'">'.$key.'</a>';
 			}
 			echo implode(', ',$parts);
 			echo '</p>';
