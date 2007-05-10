@@ -321,7 +321,8 @@
 		 * Optimize entity selector
 		 *
 		 * currently the only meaningful options are 1) "straight_join," which can speed up
-		 * some queries that select entities across multiple sites, and 2) "" (empty string,)
+		 * some queries that select entities across multiple sites, 2) 'distinct', which adds
+		 * the distinct keyword before the entity.id, and 3) "" (empty string,)
 		 * which removes a previously set optimization.
 		 *
 		 * @param string to indicate type of optimization
@@ -332,6 +333,10 @@
  			if (strtolower($type) == 'straight_join')
  			{
  				$this->optimize = 'STRAIGHT_JOIN';
+ 			}
+ 			if (strtolower($type) == 'distinct')
+ 			{
+ 				$this->optimize = 'DISTINCT';
  			}
  			elseif($type == '')
  			{
@@ -1115,11 +1120,14 @@
 		 * @param string $table the table where the field is
 		 * @param string $field the name of the field to be selected
 		 * @param string $alias that alias for the field
+		 * @param mixed $limit_results true return only row for which the related value is defined
+		 * 							   false to return all results even if the value does not exist
+		 *							   string or array to limit results to the values passed
 		 * @return void
 		 */
-		function add_left_relationship_field( $rel_name , $table , $field , $alias, $allow_null = false ) // {{{
+		function add_left_relationship_field( $rel_name , $table , $field , $alias, $limit_results = true ) // {{{
 		{
-			if ($allow_null)
+			if ($limit_results === false)
 			{
 				$cur_es = $this;
 				$this->union = true;
@@ -1172,12 +1180,17 @@
 			{
 				$this->add_relation( '(' . $r . '.site=0 OR ' . $r . '.site=' . $this->_env['site'] . ')' );
 			}
-			if ($allow_null)
+			if ($limit_results === false)
 			{	
 				$this->union_fields[end($this->fields)] = '0 as ' . $alias;
 				$this->diff['fields'][] = array_diff_assoc($this->fields, $cur_es->fields);
 				$this->diff['tables'][] = array_diff_assoc($this->tables, $cur_es->tables);
 				$this->diff['relations'][] = array_diff_assoc($this->relations, $cur_es->relations);
+			}
+			elseif (is_string($limit_results) || is_array($limit_results))
+			{
+				$limit_values = (is_string($limit_results)) ? array($limit_results) : $limit_results;
+				$this->add_relation($t . '.' . $field . ' IN ('.implode(',', $limit_values).')');
 			}
 			return array( $alias => array( 'table' => $t , 'field' => $field ) );
 		} // }}}
@@ -1191,12 +1204,15 @@
 		 * @param string $table the table where the field is
 		 * @param string $field the name of the field to be selected
 		 * @param string $alias that alias for the field
+		 * @param mixed $limit_results true return only row for which the related value is defined
+		 * 							   false to return all results even if the value does not exist
+		 *							   string or array to limit results to the values passed
 		 * @return void
 		 */
-		function add_right_relationship_field( $rel_name , $table , $field , $alias, $allow_null = false ) // {{{
+		function add_right_relationship_field( $rel_name , $table , $field , $alias, $limit_results = true ) // {{{
 		//works if entity has one left relationship of give type, otherwise gives multiples
 		{
-			if ($allow_null)
+			if ($limit_results === false)
 			{
 				$cur_es = $this;
 				$this->union = true;
@@ -1249,12 +1265,17 @@
 			{
 				$this->add_relation( '(' . $r . '.site=0 OR ' . $r . '.site=' . $this->_env['site'] . ')' );
 			}
-			if ($allow_null)
+			if ($limit_results === false)
 			{	
 				$this->union_fields[end($this->fields)] = '0 as ' . $alias;
 				$this->diff['fields'][] = array_diff_assoc($this->fields, $cur_es->fields);
 				$this->diff['tables'][] = array_diff_assoc($this->tables, $cur_es->tables);
 				$this->diff['relations'][] = array_diff_assoc($this->relations, $cur_es->relations);
+			}
+			elseif (is_string($limit_results) || is_array($limit_results))
+			{
+				$limit_values = (is_string($limit_results)) ? array($limit_results) : $limit_results;
+				$this->add_relation($t . '.' . $field . ' IN ('.implode(',', $limit_values).')');
 			}
 			return array( $alias => array( 'table' => $t , 'field' => $field ) );
 		} // }}}
