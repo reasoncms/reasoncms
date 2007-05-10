@@ -310,7 +310,7 @@ function add_editor_user_role($test_mode = true)
 	// get users with their user roles
 	$es = new entity_selector();
 	$es->add_type(id_of('user'));
-	$es->add_left_relationship_field( 'user_to_user_role' , 'entity' , 'id' , 'user_role_id', true );
+	$es->add_left_relationship_field( 'user_to_user_role' , 'entity' , 'id' , 'user_role_id', false );
 	$users = $es->run_one();
 	if($test_mode)
 		echo '<li>Would have added editor user role to these users currently without a role:';
