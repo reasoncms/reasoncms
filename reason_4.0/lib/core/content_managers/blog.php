@@ -150,6 +150,14 @@
 					$this->associate_with_nobody_group('publication_to_authorized_commenting_group');
 				}
 			}
+			// make sure the group type is available to the site if commenting or front-end posting are available
+			if($this->get_value('allow_front_end_posting')||$this->get_value('allow_comments'))
+			{
+				if(!$this->site_has_type(id_of('group_type')))
+				{
+					$this->add_type_to_site(id_of('group_type'));
+				}
+			}
 			
 			if($this->get_value('has_issues') == 'yes' && !$this->site_has_type(id_of('issue_type')))
 			{
