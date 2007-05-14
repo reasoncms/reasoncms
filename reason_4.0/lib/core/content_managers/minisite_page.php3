@@ -8,6 +8,7 @@
 		var $allow_creation_of_root_node = true;
 		var $multiple_root_nodes_allowed = false;
 		var $root_node_description_text = '-- Home Page --';
+		var $parent_sort_order = 'sortable.sort_order ASC';
 		function alter_data() // {{{
 		{
 			parent::alter_data();
@@ -215,7 +216,7 @@
 			// (except for actual parent of page for backwards compatibility)
 			foreach( $list as $id=>$name )
 			{
-				if($id != $parent_id)
+				if($id != $parent_id && !empty($id))
 				{
 					$e = new entity($id);
 					if($e->get_value('url'))
@@ -233,7 +234,7 @@
 				if( !$this->has_error( 'url_fragment' ) )
 					if( !eregi( "^[0-9a-z_]*$" , $this->get_value('url_fragment') ) )
 						$this->set_error( 'url_fragment', 'URLs may only contain letters, numbers, and underscores' );
-				if( !$this->has_error( 'url_fragment' ) )
+				if( !$this->has_error( 'url_fragment' ) && !$this->has_error('parent_id') )
 				{
 					// get siblings.  make sure name is unique among siblings
 					$es = new entity_selector( $this->get_value('site_id') );
