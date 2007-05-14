@@ -39,7 +39,7 @@
 			$this->end_depth = $prev_end_depth;
 			
 		}
-		function make_tree( &$item , &$root , $depth ) // {{{
+		function make_tree( &$item , &$root , $depth, $counter = 0 ) // {{{
 		{
 			$display_item = false;
 			if($depth >= $this->end_depth)
@@ -65,18 +65,19 @@
 			if( $display_item )
 			{
 				$open = $this->is_open( $item );
-				$class = $this->get_item_class($item, $open, $depth);
+				$class = $this->get_item_class($item, $open, $depth, $counter);
 				echo '<li class="navListItem '.$class.'">';
 				$this->show_item( $this->values[ $item  ] );
 				if( $open AND !empty( $children ))
 				{
 					echo '<ul class="navList">';
-					reset( $children );
-					while( list( , $child) = each( $children ) )
+					$child_counter = 1;
+					foreach($children as $child_id )
 					{
-						$c = $this->values[ $child ];
+						$c = $this->values[ $child_id ];
 						if( $c->get_value( 'nav_display' ) == 'Yes' )
-							$this->make_tree( $child , $root, $depth +1);
+							$this->make_tree( $child_id , $root, $depth +1,$child_counter);
+						$child_counter++;
 					}
 					echo '</ul>';
 				}
@@ -86,25 +87,31 @@
 			{
 				if( $this->is_open( $item ) AND !empty( $children ) )
 				{
-					reset( $children );
-					while( list( , $child) = each( $children ) )
+					foreach($children as $child_id )
 					{
-						$c = $this->values[ $child ];
+						$c = $this->values[ $child_id ];
 						if( $c->get_value( 'nav_display' ) == 'Yes' )
-							$this->make_tree( $child , $root, $depth +1);
+							$this->make_tree( $child_id , $root, $depth +1);
 					}
 				}
 			}
 		} // }}}
 		
-		function get_item_class($id, $open)
+		function get_item_class($id, $open, $depth = 0, $counter = 0)
 		{
 			if($open)
+			{
 				$class = 'open';
+				if($this->cur_page_id == $id)
+					$class .= ' current';
+				elseif($this->values[ $this->cur_page_id ]->get_value( 'parent_id' ) == $id AND
+						$this->values[ $this->cur_page_id ]->get_value( 'nav_display' ) == 'No')
+					$class .= ' pseudoCurrent';
+			}
 			else
 				$class = 'closed';
-			if($this->cur_page_id == $id)
-				$class .= ' current';
+			if($counter)
+				$class .= ' item'.$counter;
 			return $class;
 		}
 		
@@ -183,7 +190,7 @@
 				echo $link;
 			}
 			else
-				echo '<strong>'.$page_name.'</strong>';
+				echo '<strong'.$class_attr.'>'.$page_name.'</strong>';
 		} //  }}}
 		function modify_base_url($base_url) // {{{
 		// for extending
