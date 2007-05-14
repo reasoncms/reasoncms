@@ -660,6 +660,12 @@ class MinisiteTemplate
 		echo '<h1><a href="'.$this->site_info->get_value('base_url').'"><span>'.$this->site_info->get_value('name').'</span></a></h1>'."\n";
 		$this->show_banner_xtra();
 		echo '</div>'."\n";
+		if($this->has_content('post_banner'))
+		{
+			echo '<div id="postBanner">'."\n";
+			$this->run_section('post_banner');
+			echo '</div>'."\n";
+		}
 	} // }}}
 	function show_banner_tabled() // {{{
 	{
@@ -724,6 +730,12 @@ class MinisiteTemplate
 		if (empty($this->textonly))
 		{
 			echo '</td>'."\n".'</tr>'."\n".'</table>'."\n";
+		}
+		if($this->has_content('post_banner'))
+		{
+			echo '<div id="postBanner">'."\n";
+			$this->run_section('post_banner');
+			echo '</div>'."\n";
 		}
 		echo '</div>'."\n";
 	} // }}}
