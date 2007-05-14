@@ -76,8 +76,10 @@
 					{
 						$c = $this->values[ $child_id ];
 						if( $c->get_value( 'nav_display' ) == 'Yes' )
+						{
 							$this->make_tree( $child_id , $root, $depth +1,$child_counter);
-						$child_counter++;
+							$child_counter++;
+						}
 					}
 					echo '</ul>';
 				}
