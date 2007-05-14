@@ -146,7 +146,7 @@ function check_URL_history( $request_uri )
 			}
 			
 			//header( 'http/1.1 301 Moved Permanently' );
-			header( 'Location: ' . $URL );
+			header( 'Location: ' . $URL, true, 301 );
 			die();
 		}        
 	}
@@ -174,7 +174,7 @@ function check_URL_history( $request_uri )
 			}
 			
 			//header( 'http/1.1 301 Moved Permanently' );
-			header( 'Location: ' . $URL );
+			header( 'Location: ' . $URL, true, 301 );
 			die();
 		}     
 	}
