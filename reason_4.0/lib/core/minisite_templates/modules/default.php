@@ -148,6 +148,23 @@
 		{
 			return false;
 		} // }}}
+		/**
+		 * Provides (x)HTML documentation of the module
+		 * @return mixed null if no documentation available, string if available
+		 */
+		function get_documentation()
+		{
+			return '';
+		}
+		
+		/**
+		 * Provides sample module output
+		 * @return mixed null if no sample output available, string if available
+		 */
+		function get_sample_output()
+		{
+			return '';
+		}
 	}
 
 ?>
