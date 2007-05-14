@@ -19,6 +19,7 @@ reason_include_once( 'minisite_templates/page_types.php' );
 reason_include_once( 'classes/entity_selector.php');
 
 //xdebug_start_profiling();
+//$s = get_microtime();
 $current_user = reason_require_authentication();
 if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
 {
@@ -168,10 +169,13 @@ else
 			$tmp_pages = array_merge( array_keys( $module_pages ), $tmp_pages );
 		}
 		echo "<td>$page_total</td>\n";
-		while (empty($url))
+		$count = count($tmp_pages);
+		while (empty($url) && ($count > 0))
 		{
-			$page_id = $tmp_pages[ rand( 0, count( $tmp_pages ) - 1 ) ];
-			$url = build_URL($page_id);
+			$key = rand( 0, $count - 1 );
+			$url = build_URL($tmp_pages[$key]);
+			unset ($tmp_pages[$key]);
+			$count = count($tmp_pages);
 		}
 		if (!$detail_mode)
 		{
@@ -197,6 +201,6 @@ function show_filter($limit = '')
 	echo '<p><input type="submit" name="submit" value="Search"></p>';
 }
 
-
+//echo 'time taken - ' . (get_microtime() - $s) . ' seconds';
 //xdebug_dump_function_profile(4);
 ?>
