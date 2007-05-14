@@ -28,6 +28,7 @@ the instance has been upgraded to 4.0b4 files</p>
 <li><a href="upgrade_db.php">Initial DB Upgrade to support publications</a></li>
 <li><a href="blog_to_publication.php">DB Conversion of blog references to publication</a></li>
 <li><a href="blog_to_publication2.php">A few extras that need doing ...</a></li>
+<li><a href="blog_to_publication3.php">Creates publication to related publication relationship</a></li>
 </ol>
 </body>
 </html>
