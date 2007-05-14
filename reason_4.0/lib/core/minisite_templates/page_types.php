@@ -12,6 +12,7 @@
 			'edit_link' => 'login_link',
 			'pre_banner' => 'announcements',
 			'banner_xtra' => 'search',
+			'post_banner' => 'navigation_top',
 			'pre_sidebar' => 'assets',
 			'sidebar' => 'image_sidebar',
 			'navigation' => 'navigation',
