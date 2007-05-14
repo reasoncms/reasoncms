@@ -21,13 +21,32 @@
 	
 		// Zero shows the root; 1 shows top-level; etc.
 		var $start_depth = 0;
+		var $end_depth = 99;
 		var $display_parent_of_open_branch = false;
 		var $link_to_current_page = false;
-
+		
+		function show_all_items_given_depths($start = 0,$end = 99)
+		{
+			$prev_start_depth = $this->start_depth;
+			$prev_end_depth = $this->end_depth;
+			
+			$this->start_depth = $start;
+			$this->end_depth = $end;
+			
+			$this->show_all_items();
+			
+			$this->start_depth = $prev_start_depth;
+			$this->end_depth = $prev_end_depth;
+			
+		}
 		function make_tree( &$item , &$root , $depth ) // {{{
 		{
 			$display_item = false;
-			if($this->should_show_children($item))
+			if($depth >= $this->end_depth)
+			{
+				$children = array();
+			}
+			elseif($this->should_show_children($item))
 			{
 				$children = $this->children( $item );
 			}
@@ -96,6 +115,20 @@
 			$this->make_tree( $root , $root , 0);
 			echo '</ul>'."\n";
 		} // }}}
+		function main_nav_has_content()
+		{
+			return true;
+		}
+		function top_nav_has_content()
+		{
+			return false;
+		}
+		function show_top_nav()
+		{
+			// to be overloaded
+			// sample code:
+			// $this->show_all_items_given_depths(0,1);
+		}
 		function should_show_children($id)
 		{
 			return true;
