@@ -6,6 +6,10 @@
 	
 	class NavigationModule extends DefaultMinisiteModule
 	{
+		function has_content()
+		{
+			return $this->parent->pages->main_nav_has_content();
+		}
 		function run()
 		{
 			echo '<div id="minisiteNavigation">';
