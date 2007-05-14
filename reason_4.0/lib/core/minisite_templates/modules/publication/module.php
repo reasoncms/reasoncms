@@ -17,6 +17,7 @@ reason_include_once( 'minisite_templates/modules/publication/submodules/blog_pos
 *
 * @author Meg Gibbs
 * @author Matt Ryan
+* @author Nathan White
 *
 * @todo Move any remaining markup in the publication module that could possibly be removed to the appropriate markup generator
 * @todo Add functionality to email author of posts when comments are made, owner of blog when posts are made, etc.
@@ -70,13 +71,22 @@ class PublicationModule extends Generic3Module
 	var $group_by_section = true;			//whether or not items should be grouped by section when displayed
 	var $show_module_title = false; // page title module generally handles this
 	
+	// related mode variables - page type configurable
+	var $related_mode = false;      // in related_mode, related publication items are aggregated
+	var $related_order = ''; 		// allows for keywords for custom order and special considerations for related items
+	var $related_title; // page type can provide specific title or keyword which will be used instead of the default
+	var $limit_by_page_categories = false; // by default page to category relationship is ignored - can be enabled in page type
+	
+	var $related_publications;
+	var $related_categories;
+	
 	var $class_vars_pass_to_submodules = array('publication');	//needed by the item markup generator
 
 	var $show_login_link = true;
 	var $show_featured_items = true;
 		
 	/** 
-	* Stores the class names and file names of the markup generator classes used by the module.  
+	* Stores the default class names and file names of the markup generator classes used by the module.  
 	* Format:  $markup_generator_type => array($classname, $filename)
 	* @var array
 	*/		
@@ -97,7 +107,14 @@ class PublicationModule extends Generic3Module
 										                          //'settings' => array()
 										                          ),
 								   	   );
-									   
+								   	   
+	var $related_markup_generator_info = array( 'list_item' => array ('classname' => 'RelatedListItemMarkupGenerator', 
+										                  'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item.php',
+										         ),
+												'list' => array ('classname' => 'RelatedListMarkupGenerator', 
+										                 'filename' => 'minisite_templates/modules/publication/publication_list_markup_generators/related_list.php',
+										                 ),
+								   	   			);								   
 
 	/** 
 	* Maps the names of variables needed by the markup generator classes to the name of the method that generates them.
@@ -133,10 +150,12 @@ class PublicationModule extends Generic3Module
 	* @var array
 	*/
 	var $item_specific_variables_to_pass = array (	 'item_comment_count' => 'count_comments', 
-													 'link_to_full_item' => 'get_link_to_full_item', 
+													 'link_to_full_item' => 'get_link_to_full_item',
+													 'link_to_related_item' => 'get_link_to_related_item',
 													 'permalink' => 'construct_permalink',
 													 'teaser_image' => 'get_teaser_image',
-													 'section_links' => 'get_links_to_sections_for_this_item',					
+													 'section_links' => 'get_links_to_sections_for_this_item',
+													 'item_number' => 'get_item_number',
 												);
 											   
 
@@ -153,7 +172,8 @@ class PublicationModule extends Generic3Module
 	function init( $args ) 
 	{
 		$this->set_defaults_from_parameters($this->params);
-		if (!empty($this->publication)) parent::init( $args );
+		if ($this->related_mode) $this->init_related( $args );
+		elseif (!empty($this->publication)) parent::init( $args );
 		else
 		{
 			//make sure that there's a publication associated with this page before we do anything else.  
@@ -163,7 +183,6 @@ class PublicationModule extends Generic3Module
 			$pub_es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('page_to_publication') );
 			$pub_es->set_num( 1 );
 			$publications = $pub_es->run_one();
-			
 			if(!empty($publications))
 			{
 				//defining variables and such should usually go in the additional_init_actions(), so we only define the publication here
@@ -174,6 +193,68 @@ class PublicationModule extends Generic3Module
 			{
 				trigger_error('No publications are associated with this publication page');
 			}
+		}
+	}
+	
+	/**
+	 * Init when publication is in related_mode
+	 * @author Nathan White
+	 */
+	function init_related( $args )
+	{
+		// init defaults
+		$this->use_filters = false;
+		$this->show_login_link = false;
+		$this->use_pagination = false;
+		$this->style_string = 'relatedPub';
+		if (empty($this->max_num_items)) $this->max_num_items = $this->num_per_page;
+		
+		$pub_es = new entity_selector( $this->parent->site_id );
+		$pub_es->description = 'Selecting publications for this page';
+		$pub_es->add_type( id_of('publication_type') );
+		$pub_es->enable_multivalue_results();
+		$pub_es->limit_tables();
+		$pub_es->limit_fields();
+		$pub_es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('page_to_related_publication') );
+		$pub_es->add_right_relationship_field('page_to_publication', 'entity', 'id', 'page_id');
+		$publications = $pub_es->run_one();
+		if (empty($publications))
+		{
+			$s = get_microtime();
+			$pub_es = new entity_selector( $this->parent->site_id );
+			$pub_es->description = 'Selecting publications for this page';
+			$pub_es->add_type( id_of('publication_type') );
+			$pub_es->enable_multivalue_results();
+			$pub_es->limit_tables();
+			$pub_es->limit_fields();
+			$pub_es->add_right_relationship_field('page_to_publication', 'entity', 'id', 'page_id');	
+			$publications = $pub_es->run_one();
+		}	
+			
+		if (!empty($publications))
+		{
+			$this->related_publications = $publications;
+			
+			if ($this->limit_by_page_categories)
+			{
+				// grab categories in which to limit related news items
+				$cat_es = new entity_selector( $this->parent->site_id );
+				$cat_es->description = 'Selecting categories for this page';
+				$cat_es->add_type( id_of('category_type'));
+				$cat_es->limit_tables();
+				$cat_es->limit_fields();
+				$cat_es->add_right_relationship($this->parent->cur_page->id(), relationship_id_of('page_to_category') );
+				$categories = $cat_es->run_one();
+				if (!empty($categories))
+				{
+					$this->related_categories = $categories;
+				}
+			}
+			parent::init( $args );
+		}
+		else
+		{
+			trigger_error('No publication are placed on a page on this site');
 		}
 	}
 
@@ -199,13 +280,14 @@ class PublicationModule extends Generic3Module
 	function handle_params( $params )
 	{
 		// all params that could be provided in page_types
-		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'show_login_link', 'show_module_title');
-		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info) + 
-				  	   	 	array('item_specific_variables_to_pass' => $this->item_specific_variables_to_pass) + 
+		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'show_login_link', 
+		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
+		      					  'limit_by_page_categories');
+		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info) +
+							array('item_specific_variables_to_pass' => $this->item_specific_variables_to_pass) + 
 				       	 	array('variables_to_pass' => $this->variables_to_pass);
 		
 		$params_to_add = array_diff_assoc_recursive($params, $markup_params + $potential_params);
-		
 		if (!empty($params_to_add))
 		{
 			foreach ($params_to_add as $k=>$v)
@@ -221,6 +303,10 @@ class PublicationModule extends Generic3Module
 	 */
 	function set_defaults_from_parameters($param_array, $key = '')
 	{
+		if (!empty($this->params['related_mode']) && $this->params['related_mode'] == true)
+		{
+			$this->markup_generator_info = $this->related_markup_generator_info;
+		}
 		foreach ($param_array as $k=>$v)
 		{
 			if (isset($this->$k))
@@ -237,61 +323,81 @@ class PublicationModule extends Generic3Module
 	//extended generic3 hook
 	function pre_es_additional_init_actions() 
 	{
-		$this->module_title = ($this->show_module_title) ? $this->publication->get_value('name') : '';
-		
-		// allow parameter override
-		if (!empty($this->params['num_per_page']))
+		if ($this->related_mode) $this->related_pre_es_additional_init_actions();
+		else
 		{
-			$this->num_per_page = $this->params['num_per_page'];
-		}
-		elseif($this->publication->get_value('posts_per_page'))
-		{
-			$this->num_per_page = $this->publication->get_value('posts_per_page');
-		}
-		
-		$date_format = $this->publication->get_value('date_format');
-		if(!empty($date_format))
-			$this->date_format = $this->publication->get_value('date_format');
+			$this->module_title = ($this->show_module_title) ? $this->publication->get_value('name') : '';
+			
+			// allow parameter override
+			if (!empty($this->params['num_per_page']))
+			{
+				$this->num_per_page = $this->params['num_per_page'];
+			}
+			elseif($this->publication->get_value('posts_per_page'))
+			{
+				$this->num_per_page = $this->publication->get_value('posts_per_page');
+			}
+			
+			$date_format = $this->publication->get_value('date_format');
+			if(!empty($date_format))
+				$this->date_format = $this->publication->get_value('date_format');
+					
+			$publication_type = $this->publication->get_value('publication_type');
+			$publication_descriptor = 'publication';
+			$news_item_descriptor = 'news items';
+			if($publication_type == 'Blog')
+			{
+				$publication_descriptor = 'blog';
+				$news_item_descriptor = 'posts';
+			}
+			elseif($publication_type == 'Newsletter')
+			{
+				$publication_descriptor = 'newsletter';
+				$news_item_descriptor = 'articles';
+			}
+			
+			if($this->has_issues())
+			{
+				$publication_descriptor = 'issue';
 				
-		$publication_type = $this->publication->get_value('publication_type');
-		$publication_descriptor = 'publication';
-		$news_item_descriptor = 'news items';
-		if($publication_type == 'Blog')
-		{
-			$publication_descriptor = 'blog';
-			$news_item_descriptor = 'posts';
-		}
-		elseif($publication_type == 'Newsletter')
-		{
-			$publication_descriptor = 'newsletter';
-			$news_item_descriptor = 'articles';
-		}
+				if(!empty($this->request['issue_id']))
+				{
+					$this->issue_id = $this->request['issue_id'];
+				}
+				elseif(empty($this->request['section_id']))
+				{
+					$most_recent_issue = $this->get_most_recent_issue();
+					$this->issue_id = $most_recent_issue->id();
+				}
+			}
 		
-		if($this->has_issues())
-		{
-			$publication_descriptor = 'issue';
+			$this->no_items_text = 'This '.$publication_descriptor.' does not have any '.$news_item_descriptor.'.';
+				
+			$this->back_link_text = $this->back_link_text.$this->publication->get_value('name');
+			$this->add_feed_link_to_head();	
 			
-			if(!empty($this->request['issue_id']))
+			if($this->make_current_page_link_in_nav_when_on_item 
+				&&	(!empty($this->request[$this->query_string_frag.'_id']) || !empty($this->request['section_id']) || !empty($this->request['issue_id']) ) )
 			{
-				$this->issue_id = $this->request['issue_id'];
-			}
-			elseif(empty($this->request['section_id']))
-			{
-				$most_recent_issue = $this->get_most_recent_issue();
-				$this->issue_id = $most_recent_issue->id();
+				$this->parent->pages->make_current_page_a_link();
 			}
 		}
+	}
 	
-		$this->no_items_text = 'This '.$publication_descriptor.' does not have any '.$news_item_descriptor.'.';
-			
-		$this->back_link_text = $this->back_link_text.$this->publication->get_value('name');
-		$this->add_feed_link_to_head();	
-		
-		if($this->make_current_page_link_in_nav_when_on_item 
-			&&	(!empty($this->request[$this->query_string_frag.'_id']) || !empty($this->request['section_id']) || !empty($this->request['issue_id']) ) )
+	/**
+	 * pre_es_additional_init_actions when module is in related mode
+	 * @author Nathan White
+	 */
+	function related_pre_es_additional_init_actions()
+	{
+		if (!empty($this->related_title))
 		{
-			$this->parent->pages->make_current_page_a_link();
+			//if ($this->related_title = 'keywords')  // rules can be defined to handle title keywords
+			//elseif
+			//else 
+			$this->module_title = $this->related_title;
 		}
+		else $this->module_title = 'Related posts';
 	}
 	
 	//overloaded from generic3 so that pagination is turned off if we're grouping items by section
@@ -332,17 +438,21 @@ class PublicationModule extends Generic3Module
 	//overloaded generic3 hook ... we've added the news_to_blog relation to the es,  issue_id & section_id relations when appropriate
 	function alter_es() // {{{
 	{
-		$this->es->set_order( 'dated.datetime DESC' );
+		if ($this->related_mode) $this->related_alter_es();
+		else
+		{
+			$this->es->set_order( 'dated.datetime DESC' );
+			$this->es->add_left_relationship( $this->publication->id(), relationship_id_of('news_to_publication') );
+			if(!empty($this->issue_id))
+			{
+				$this->es->add_left_relationship( $this->issue_id, relationship_id_of('news_to_issue') );
+			}
+			if(!empty($this->request['section_id']))
+			{
+				$this->es->add_left_relationship( $this->request['section_id'], relationship_id_of('news_to_news_section') );
+			}
+		}
 		$this->es->add_relation( 'status.status = "published"' );	
-		$this->es->add_left_relationship( $this->publication->id(), relationship_id_of('news_to_publication') );
-		if(!empty($this->issue_id))
-		{
-			$this->es->add_left_relationship( $this->issue_id, relationship_id_of('news_to_issue') );
-		}
-		if(!empty($this->request['section_id']))
-		{
-			$this->es->add_left_relationship( $this->request['section_id'], relationship_id_of('news_to_news_section') );
-		}
 		$this->further_alter_es();
 		if(!empty($this->max_num_items))
 		{
@@ -350,18 +460,98 @@ class PublicationModule extends Generic3Module
 		}
 	} // }}}
 	
+	function related_alter_es()
+	{
+		$this->es->set_env('site', $this->site_id);
+		$this->es->optimize('distinct');
+		$this->es->add_left_relationship( array_keys($this->related_publications), relationship_id_of('news_to_publication') );
+		// add category limitations
+		if (!empty($this->related_categories)) // if no categories do not limit;
+		{
+			$this->es->add_left_relationship( array_keys($this->related_categories), relationship_id_of('news_to_category'));
+		}
+		$this->related_order_and_limit($this->es, array('status'));
+	}
+
+	/**
+	 * applies the ordering scheme specified in the related_order keyword - currently only random and the default dated.datetime DESC
+	 * ordering are supported.
+	 * @param object $es by reference, the entity selector for which we will specify order and limits
+	 * @param array $table_limit_array optional array of tables which should be included in the limit_tables array
+	 * @param array $field_limit_array optional array of fields which should be included in the limit_fields array
+	 * @return void
+	 * @author Nathan White
+	 */
+	function related_order_and_limit(&$es, $table_limit_array = '', $field_limit_array = '')
+	{
+		if ($this->related_order == 'random')
+		{
+			$order_string = 'rand()';
+		}
+		else
+		{
+			$table_limit_array[] = 'dated';
+			$order_string = 'dated.datetime DESC';
+		}
+		$es->limit_tables($table_limit_array);
+		$es->limit_fields($field_limit_array);
+		$es->set_order($order_string);
+	}
+	
 	function further_alter_es()
 	{
+	}
+	
+	function post_es_additional_init_actions()
+	{
+		if ($this->related_mode) $this->related_post_es_additional_init_actions();
+	}
+	
+	/**
+	 * take the set of items selected, and replaces it with a set that includes the multivalue publication and category ids that
+	 * match the limitations of the page
+	 * @author Nathan White
+	 */
+	function related_post_es_additional_init_actions()
+	{
+		if ($this->items)
+		{
+			$es = new entity_selector();
+			$es->add_type($this->type);
+			$es->enable_multivalue_results();
+			$es->add_relation('entity.id IN ('.implode(",", array_keys($this->items)).')');
+			$es->add_left_relationship_field('news_to_publication', 'entity', 'id', 'publication_id', array_keys($this->related_publications));
+			if ($this->related_categories)
+			{
+				$es->add_left_relationship_field('news_to_category', 'entity', 'id', 'cat_id', array_keys($this->related_categories));
+			}
+			$this->related_order_and_limit($es);
+			$this->items = $es->run_one();
+		}
 	}
 
 	//overloaded generic3 function	
 	function has_content() // {{{
 	{
-		if(empty($this->publication))
+		if ($this->related_mode) return $this->has_content_related();
+		elseif(empty($this->publication))
 			return false;
 		else
 			return true;
 	} // }}}
+	
+	/**
+	 * has content function for module when running in related mode
+	 * @author Nathan White
+	 */
+	function has_content_related()
+	{
+		if (empty($this->items)) return false;
+		else 
+		{
+			return true;
+		}
+	}
 
 ////////
 // DISPLAY INDIVIDUAL ITEM METHODS
@@ -431,10 +621,10 @@ class PublicationModule extends Generic3Module
 	{
 		reason_include_once( $this->markup_generator_info[$type]['filename'] );
 		$markup_generator = new $this->markup_generator_info[$type]['classname']();
-		if (!empty($this->markup_generator_info[$type]['settings']))
-		{
-			$markup_generator->set_passed_variables($this->markup_generator_info[$type]['settings']);
-		}
+		$markup_generator_settings = (!empty($this->markup_generator_info[$type]['settings'])) 
+								     ? $this->markup_generator_info[$type]['settings'] 
+								     : '';
+		if (!empty($markup_generator_settings)) $markup_generator->set_passed_variables($markup_generator_settings);
 		$markup_generator->set_passed_variables($this->get_values_to_pass($markup_generator, $item));
 		return $markup_generator;
 	}
@@ -447,7 +637,6 @@ class PublicationModule extends Generic3Module
 	*/
 	function get_values_to_pass($markup_generator, $item)
 	{
-		//pray ($markup_generator);
 		$values_to_pass = array();
 		foreach($markup_generator->get_variables_needed() as $var_name)
 		{
@@ -478,7 +667,6 @@ class PublicationModule extends Generic3Module
 		return $values_to_pass;
 	}
 	
-	
 //////////
 ///  METHODS TO ADD NEW ITEMS
 //////////
@@ -490,9 +678,9 @@ class PublicationModule extends Generic3Module
 		*/	
 		function get_add_item_link()
 		{
+			if ($this->related_mode) return false;
 			if(empty($this->user_netID))
 			{
-				//$this->user_netID = $this->get_authentication();
 				$this->user_netID = reason_check_authentication();
 			}
 			
@@ -532,6 +720,7 @@ class PublicationModule extends Generic3Module
 		*/
 		function make_add_item_link()
 		{
+			if ($this->related_mode) return false;
 			$link = array('add_item=true');
 			if(!empty($this->textonly))
 			{
@@ -625,7 +814,7 @@ class PublicationModule extends Generic3Module
 		*/	
 		function build_post_form($net_id)
 		{
-			$form = new BlogPostSubmissionForm($this->site_id, $this->publication, $net_id);
+			$form = new BlogPostSubmissionForm($this->parent->site_id, $this->publication, $net_id);
 			if(!empty($this->issue_id))
 				$form->set_issue_id($this->issue_id);
 			if(!empty($this->request['section_id']))
@@ -667,7 +856,7 @@ class PublicationModule extends Generic3Module
 			{
 				if($this->publication->get_value('has_issues') == "yes")
 				{
-					$es = new entity_selector( $this->site_id );
+					$es = new entity_selector( $this->parent->site_id );
 					$es->description = 'Selecting issues for this publication';
 					$es->add_type( id_of('issue_type') );
 					$es->add_left_relationship( $this->publication->id(), relationship_id_of('issue_to_publication') );
@@ -748,7 +937,7 @@ class PublicationModule extends Generic3Module
 		*/
 		function has_sections()
 		{
-			if($this->publication->get_value('has_sections') == "yes")
+			if(!$this->related_mode && $this->publication->get_value('has_sections') == "yes")
 			{
 				$sections = $this->get_sections();
 				if(!empty($sections))
@@ -768,7 +957,7 @@ class PublicationModule extends Generic3Module
 		{
 			if(empty($this->sections))
 			{
-				$es = new entity_selector( $this->site_id );
+				$es = new entity_selector( $this->parent->site_id );
 				$es->description = 'Selecting news sections for this publication';
 				$es->add_type( id_of('news_section_type'));
 				$es->add_left_relationship( $this->publication->id(), relationship_id_of('news_section_to_publication') );
@@ -952,7 +1141,7 @@ class PublicationModule extends Generic3Module
 		*/
 		function get_comment_group()
 		{
-			$es = new entity_selector( $this->site_id );
+			$es = new entity_selector( $this->parent->site_id );
 			$es->description = 'Getting groups for this publication';
 			$es->add_type( id_of('group_type') );
 			$es->add_right_relationship( $this->publication->id(), relationship_id_of('publication_to_authorized_commenting_group') );
@@ -970,7 +1159,6 @@ class PublicationModule extends Generic3Module
 			}
 		}
 		
-		
 		function get_comment_moderation_state()
 		{
 			if($this->publication->get_value('hold_comments_for_review') == 'yes')
@@ -987,7 +1175,7 @@ class PublicationModule extends Generic3Module
 		*/
 		function get_post_group()
 		{
-			$es = new entity_selector( $this->site_id );
+			$es = new entity_selector( $this->parent->site_id );
 			$es->description = 'Getting groups for this publication';
 			$es->add_type( id_of('group_type') );
 			$es->add_right_relationship( $this->publication->id(), relationship_id_of('publication_to_authorized_posting_group') );
@@ -1023,6 +1211,7 @@ class PublicationModule extends Generic3Module
 ////////////
 		function get_feed_url()
 		{
+			if ($this->related_mode) return false; // hmmm not sure what to do when publication is in related mode for feed_url
 			if(empty($this->feed_url))
 			{
 				$blog_type = new entity(id_of('publication_type'));
@@ -1145,21 +1334,30 @@ class PublicationModule extends Generic3Module
 		*/
 		function get_featured_items()
 		{
-			if ($this->show_featured_items == false) return array();
-			static $featured_items;
-			if (!isset($featured_items[$this->publication->id()]))
-			{
-				$es = new entity_selector( $this->site_id );
-				$es->description = 'Selecting featured news items for this publication';
-				$es->add_type( id_of('news') );
-				$es->set_env('site', $this->site_id);
-				$es->add_right_relationship( $this->publication->id(), relationship_id_of('publication_to_featured_post') );
-				$es->add_rel_sort_field($this->publication->id(), relationship_id_of('publication_to_featured_post') );
-				$es->set_order('rel_sort_order ASC');
-				$temp = $es->run();
-				$featured_items[$this->publication->id()] = current($temp);
+			if ($this->related_mode) return $this->get_related_featured_items();
+			else
+				{
+				if ($this->show_featured_items == false) return array();
+				static $featured_items;
+				if (!isset($featured_items[$this->publication->id()]))
+				{
+					$es = new entity_selector( $this->parent->site_id );
+					$es->description = 'Selecting featured news items for this publication';
+					$es->add_type( id_of('news') );
+					$es->set_env('site', $this->site_id);
+					$es->add_right_relationship( $this->publication->id(), relationship_id_of('publication_to_featured_post') );
+					$es->add_rel_sort_field($this->publication->id(), relationship_id_of('publication_to_featured_post') );
+					$es->set_order('rel_sort_order ASC');
+					$temp = $es->run();
+					$featured_items[$this->publication->id()] = current($temp);
+				}
+				return $featured_items[$this->publication->id()];
 			}
-			return $featured_items[$this->publication->id()];
+		}
+		
+		function get_related_featured_items()
+		{
+			return array();
 		}
 		
 		/**
@@ -1253,6 +1451,12 @@ class PublicationModule extends Generic3Module
 		// THIS STUFF SHOULD ALL BE IN MARKUP GENERATORS
 		
 		//overloaded from generic3
+		function show_style_string()
+		{
+			echo '<div id="'.$this->style_string.'" class="publication">'."\n";
+		}
+		
+		//overloaded from generic3
 		function show_back_link()
 		{
 			echo '<div class="back">';
@@ -1324,6 +1528,20 @@ class PublicationModule extends Generic3Module
 			$item_keys = array_keys($this->items);
 			$item_order_by_key = array_flip($item_keys);
 			return (in_array($item->id(), $item_keys)) ? $item_order_by_key[$item->id()] : false;
+		}
+	
+		function get_link_to_related_item(&$item)
+		{
+			$pub_id_field = $item->get_value('publication_id');
+			$pub_id = (is_array($pub_id_field)) ? array_shift($pub_id_field) : $pub_id_field;
+			$page_id_field = $this->related_publications[$pub_id]->get_value('page_id');
+			$page_id = (is_array($page_id_field)) ? array_shift($page_id_field) : $page_id_field;
+			if ($page_id)
+			{
+				$url = build_URL($page_id);
+				$link = construct_link(array( $this->query_string_frag.'_id' => $item->id()), array('textonly'), $url);
+			}
+			return $link;
 		}
 	}
 ?>
