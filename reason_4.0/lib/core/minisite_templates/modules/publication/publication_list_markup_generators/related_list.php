@@ -1,89 +1,104 @@
 <?php
-//reason_include_once( 'minisite_templates/modules/publication/list_item_markup_generators/default.php' );
 reason_include_once( 'minisite_templates/modules/publication/markup_generator.php' );
-
+	
 /**
- * Generates markup for list items in a related news list.  
- *
- * @author Nathan White
- *
- */
-
-class RelatedListItemMarkupGenerator extends PublicationMarkupGenerator
+*  Generates the markup to display a list of related items from other publications
+*
+*  @author Nathan White
+*/
+class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 {
-	//variables needed to be passed from the publication module
-	var $variables_needed = array( 	'use_dates_in_list', 
-									'date_format', 
-									'item',
-									'link_to_related_item',
-									'teaser_image',
-									);
+	//yep, we're overloading a private variable from the abstract class  
+	//Any children of this should extend get_variables_needed instead of overloading this array.  
+	var $variables_needed = array(  'list_item_markup_strings',		//array item_id => markup for list item
+									'items_by_section', 
+									'no_section_key', 
+									'back_link',
+									'date_format',
+									'featured_item_markup_strings',
+									); 	
 
-	function RelatedListItemMarkupGenerator ()
+	function RelatedListMarkupGenerator ()
 	{
 	}
-	
-	function run ()
+
+	function run()
 	{	
-		$this->markup_string .= '<li>';
-		$this->markup_string .= $this->get_date_markup();
-		$this->markup_string .= $this->get_title_markup();
-		$this->markup_string .= $this->get_teaser_image_markup();
-		$this->markup_string .= $this->get_description_markup();
-		$this->markup_string .= '</li>';
+		$this->markup_string .= $this->get_list_markup();
+		$this->markup_string .= $this->get_post_list_markup();
 	}
 	
+	function get_post_list_markup()
+	{
+		$markup_string = '';
+		return $markup_string;
+	}
+
 /////
-// show_list_item methods
+//  List item methods
 /////
 	
-	function get_date_markup()
+	function get_list_markup() // related list does not use sections
 	{
-		$item = $this->passed_vars['item'];
-		if($item->get_value( 'datetime') && $this->passed_vars['use_dates_in_list'] )
+		$markup_string = '';
+		$list = $this->passed_vars['items_by_section'][$this->passed_vars['no_section_key']];
+		$markup_string .= $this->get_list_markup_for_these_items(array_keys($list))."\n";
+		return $markup_string;
+	}
+	
+	
+	/**
+	* Returns markup for $item_ids in unordered link format - exclude anything passed in the featured_item_markup_strings array
+	* Helper function to {@link get_list_markup}.
+	* @param array $item_ids Array of ids of news item entities.
+	* @return string Markup for the given items.
+	*/	
+	function get_list_markup_for_these_items ($item_ids)
+	{
+		$markup_string = '';
+		if(!empty($this->passed_vars['list_item_markup_strings']) && !empty($item_ids))
 		{
-			$datetime = prettify_mysql_datetime( $item->get_value( 'datetime' ), $this->passed_vars['date_format'] );
-			return  '<div class="date">'.$datetime.'</div>'."\n";
+			$markup_string .= '<ul class="posts">'."\n";
+			foreach($item_ids as $item_id)
+			{
+				if(!empty($this->passed_vars['list_item_markup_strings'][$item_id]) && !array_key_exists($item_id, $this->passed_vars['featured_item_markup_strings']))
+					$markup_string .= $this->passed_vars['list_item_markup_strings'][$item_id]."\n";
+			}
+			$markup_string .= '</ul>'."\n";
 		}
-	}
-	
-	function get_title_markup()
-	{
-		$markup_string = '';
-		$item = $this->passed_vars['item'];
-		$link_to_related_item = $this->passed_vars['link_to_related_item'];
-				
-		$markup_string .=  '<h4>';
-		if(isset($link_to_related_item) &&  !empty($link_to_related_item))
-			$markup_string .=  '<a href="' .$link_to_related_item. '">'.$item->get_value('release_title').'</a>';
-		else
-			$markup_string .= $item->get_value('release_title');
-		$markup_string .=  '</h4>'."\n";
 		return $markup_string;
 	}
-
-	function get_description_markup()
-	{
-		$item = $this->passed_vars['item'];
-		if($item->get_value('description'))
-			return '<div class="desc">'.$item->get_value('description').'</div>'."\n";
-	}
 	
-	function get_teaser_image_markup() // {{{
+//////
+// Featured item methods
+//////
+	
+	function get_featured_items_markup()
 	{
 		$markup_string = '';
-		$image = $this->passed_vars['teaser_image'];
-		if (!empty($image))
+		$featured_items = $this->passed_vars['featured_item_markup_strings'];
+
+		if(!empty($featured_items))
 		{
-			$markup_string .= '<div class="teaserImage">';
-			ob_start();	
-			show_image( reset($image), false, false, true, '' , '', true,'' );
-			$markup_string .= ob_get_contents();
-			ob_end_clean();
-			$markup_string .= '</div>';
-		} 
+			$feature_header_string = '';
+			
+			if(count($featured_items) > 1)
+			{
+				if (!empty($feature_header_string)) $feature_header_string .= 's';
+			}
+			
+			$markup_string = '<div id="featuredItems">'."\n";
+			if (!empty($feature_header_string)) $markup_string .= '<h3> '.$feature_header_string.' </h3>'."\n";
+			
+			$markup_string .= '<ul>'."\n";
+			foreach($this->passed_vars['featured_item_markup_strings'] as $list_item_string)
+			{
+				$markup_string .= '<li>'.$list_item_string.'</li>'."\n";
+			}
+			$markup_string .= '</ul>'."\n";
+			$markup_string .= '</div>'."\n";
+		}
 		return $markup_string;
 	}
-
 }
 ?>
