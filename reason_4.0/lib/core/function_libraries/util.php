@@ -129,6 +129,35 @@
 		return $cache[$type_id];
 	}
 	
+	/**
+	 * Finds the id of the parent allowable relationship for a given type
+	 *
+	 * Note that this function caches results, so it can be called multiple times with little performance impact
+	 *
+	 * @param integer $type_id the id of the type
+	 * @return mixed The alrel id if a parent relationship exists; otherwise false
+	 * @author Matt Ryan (mryan@acs.carleton.edu)
+	 */
+	function get_parent_allowable_relationship_id($type_id)
+	{
+		static $cache = array();
+		if(!isset($cache[$type_id]))
+		{
+			$q = 'SELECT `id` FROM allowable_relationship WHERE name LIKE "%parent%" AND relationship_a = "'. $type_id . '" AND relationship_b = "' . $type_id.'" LIMIT 0,1';
+			$r = db_query( $q , 'Error selecting allowable relationship in get_parent_allowable_relationship_id()' );
+			$row = mysql_fetch_array( $r , MYSQL_ASSOC );
+			if(!empty($row[ 'id']))
+			{
+				$cache[$type_id] = $row[ 'id'];
+			}
+			else
+			{
+				$cache[$type_id] = false;
+			}
+		}
+		return $cache[$type_id]; 
+	}
+	
 	// big fat warning: this object will not retrieve the 'entity' table.  that is assumed.  use this function at your own risk.
 	// REMEMBER TO ADD THE ENTITY TABLE TO THE LIST OF TABLES THIS WILL PRODUCE
 	function get_entity_tables_by_type_object( $type ) // {{{
@@ -826,12 +855,21 @@
 	 */
 	function mysql_datetime_to_unix($dt)
 	{
-		$year = substr( $dt, 0, 4 );
-		$month = substr( $dt, 5, 2 );
-		$day = substr( $dt, 8, 2 );
-		$hour = substr( $dt, 11, 2);
-		$minute = substr( $dt, 14, 2);
-		$second = substr( $dt, 17, 2);
+		$year = $month = $day = $hour = $minute = $second = '';
+		// y/m/d: if zero, subsequent values must be empty
+		if($year = substr( $dt, 0, 4 ))
+		{
+			if($month = substr( $dt, 5, 2 ))
+			{
+				if($day = substr( $dt, 8, 2 ))
+				{
+					// h/m/s: can be zero with subsequent items being nonzero integers
+					$hour = substr( $dt, 11, 2);
+					$minute = substr( $dt, 14, 2);
+					$second = substr( $dt, 17, 2);
+				}
+			}
+		}
 
 		// check for all 0s (an empty date)
 		return ((int) $year && (int) $month && (int) $day)
