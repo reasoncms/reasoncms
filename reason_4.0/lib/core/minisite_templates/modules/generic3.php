@@ -267,7 +267,7 @@
 		//calls upon show_filtering(), _show_item(), list_items(), show_back_link(), construct_link()
 		function run() // {{{
 		{
-			echo '<div id="'.$this->style_string.'">'."\n";
+			$this->show_style_string();
 			if(!empty($this->module_title))
 				echo '<h'.$this->module_title_level.'>'.$this->module_title.'</h'.$this->module_title_level.'>'."\n";
 
@@ -321,6 +321,11 @@
 			echo '</div>'."\n";
 		} // }}}
 
+		function show_style_string()
+		{
+			echo '<div id="'.$this->style_string.'">'."\n";
+		}
+		
 		//called on by run
 		function add_item()// {{{
 		{	
