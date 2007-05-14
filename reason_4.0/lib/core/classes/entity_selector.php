@@ -1192,7 +1192,7 @@
 				$limit_values = (is_string($limit_results)) ? array($limit_results) : $limit_results;
 				$this->add_relation($t . '.' . $field . ' IN ('.implode(',', $limit_values).')');
 			}
-			return array( $alias => array( 'table' => $t , 'field' => $field ) );
+			return array( $alias => array( 'table_orig' => $table, 'table' => $t , 'field' => $field ) );
 		} // }}}
 		/**
 		 * Adds a new field to the entity which is actually not a field of entity, but rather a field of 
@@ -1277,7 +1277,7 @@
 				$limit_values = (is_string($limit_results)) ? array($limit_results) : $limit_results;
 				$this->add_relation($t . '.' . $field . ' IN ('.implode(',', $limit_values).')');
 			}
-			return array( $alias => array( 'table' => $t , 'field' => $field ) );
+			return array( $alias => array( 'table_orig' => $table, 'table' => $t , 'field' => $field ) );
 		} // }}}
 
 		/**
@@ -1315,7 +1315,7 @@
 		function limit_tables($include = 'entity')
 		{
 			if (is_array($include)) $include_array = $include;
-			else $include_array[] = $include;
+			else $include_array[] = empty($include) ? 'entity' : $include;
 			$this->table_mod_action = 'include';
 			foreach ($include_array as $include_table)
 			{
