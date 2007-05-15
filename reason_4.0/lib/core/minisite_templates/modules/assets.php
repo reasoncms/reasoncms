@@ -77,5 +77,9 @@
 				return false;
 
 		}
+		function get_documentation()
+		{
+			return'<p>Displays assets (e.g. pdfs and other documents) attached to this page.</p>';
+		}
 	}
 ?>
