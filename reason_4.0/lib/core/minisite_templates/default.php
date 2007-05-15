@@ -59,6 +59,7 @@ class MinisiteTemplate
 	//var $doctype = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
 	var $doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
 	var $use_navigation_cache = false;
+	var $mode = 'default'; // possible values: 'default','documentation','samples'
 	
 	function initialize( $site_id, $page_id = '' ) // {{{
 	{
@@ -443,7 +444,11 @@ class MinisiteTemplate
 		if( $module )
 		{
 			echo "\n\n";
-			if( $this->editing AND $module->can_edit() )
+			if($this->in_documentation_mode())
+			{
+				$this->run_documentation($sec);
+			}
+			elseif( $this->editing AND $module->can_edit() )
 			{
 				$module->run_editable();
 			}
@@ -454,11 +459,31 @@ class MinisiteTemplate
 			echo "\n\n";
 		}
 	} // }}}
+	function run_documentation($sec)
+	{
+		$module =& $this->_get_module( $sec );
+		if( $module )
+		{
+			$doc =  $module->get_documentation();
+			if($doc !== false)
+			{
+				$module_name = $this->section_to_module[$sec];
+				echo '<div class="documentation">'."\n";
+				echo '<h4>'.prettify_string($module_name).'</h4>'."\n";
+				echo $doc;
+				echo '</div>'."\n";
+			}
+		}
+	}
 	function has_content( $sec ) // {{{
 	{
 		$module =& $this->_get_module( $sec );
 		if( $module )
+		{
+			if($this->in_documentation_mode())
+				return true;
 			return $module->has_content();
+		}
 		else
 			return false;
 	} // }}}
@@ -1138,6 +1163,12 @@ class MinisiteTemplate
 	function do_org_foot()
 	{
 		// Just here as a shell for branding
+	}
+	function in_documentation_mode()
+	{
+		if($this->mode == 'documentation')
+			return true;
+		return false;
 	}
 }
 ?>
