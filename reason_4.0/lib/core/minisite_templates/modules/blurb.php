@@ -73,13 +73,38 @@
 		{
 			if(!empty($this->blurbs))
 			{
-				$temp = $this->es->get_max( 'last_modified' );
-				if(!empty($temp))
+				$max = '0000-00-00 00:00:00';
+				foreach(array_keys($this->blurbs) as $key)
 				{
-					return $temp->get_value( 'last_modified' );
+					if($this->blurbs[$key]->get_value('last_modified') > $max)
+						$max = $this->blurbs[$key]->get_value('last_modified');
 				}
+				if($max != '0000-00-00 00:00:00')
+					return $max;
 			}
 			return false;
 		} // }}}
+		
+		/**
+		 * Provides (x)HTML documentation of the module
+		 * @return mixed null if no documentation available, string if available
+		 */
+		function get_documentation()
+		{
+			if(!empty($this->params['num_to_display']))
+				$num = $this->params['num_to_display'];
+			else
+				$num = 'all';
+			
+			$ret = '<p>Displays '.$num.' blurbs attached to this page';
+			if($this->params['rand_flag'])
+			{
+				$ret .= ', selected at random';
+			}
+			if($this->params['exclude_shown_blurbs'])
+				$ret .= ' (excluding any that have been shown elsewhere on the same page)';
+			$ret .= '</p>';
+			return $ret;
+		}
 	}
 ?>
