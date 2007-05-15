@@ -16,6 +16,10 @@
 			$this->parent->pages->do_display();
 			echo '</div>';
 		}
+		function get_documentation()
+		{
+			return '<p>Displays the main site navigation</p>';
+		}
 	}
 
 ?>
