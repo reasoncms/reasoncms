@@ -30,5 +30,16 @@
 			echo REASON_SEARCH_FORM_HIDDEN_FIELDS."\n";
 			echo '</form>';
 		}
+		function get_documentation()
+		{
+			if($this->has_content())
+			{
+				return '<p>Presents a box for searching this site</p>';
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 ?>
