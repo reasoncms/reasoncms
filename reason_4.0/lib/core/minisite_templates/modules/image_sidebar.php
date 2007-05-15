@@ -72,5 +72,28 @@
 			else
 				return false;
 		} // }}}
+		
+		function get_documentation()
+		{
+			if(!empty($this->params['num_to_display']))
+				$num = $this->params['num_to_display'];
+			else
+				$num = 'all';
+			if($num == 1)
+				$plural = '';
+			else
+				$plural = 's';
+			if($this->params['caption_flag'])
+				$caption_text = 'without caption';
+			else
+				$caption_text = 'with caption';
+			$ret = '<p>Displays '.$num.' image'.$plural.', '.$caption_text.$plural;
+			if($this->params['order_by'])
+				$ret .= ', using this order: '.$this->params['order_by'];
+			if($this->params['rand_flag'])
+				$ret .= ' (chosen at random)';
+			$ret .= '</p>';
+			return $ret;
+		}
 	}
 ?>
