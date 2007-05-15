@@ -113,6 +113,10 @@
 			
 			return false;
 		} // }}}
+		function get_documentation()
+		{
+			return '<p>Provies a link to log in and log out of Reason. If you are logged in and have access to administer this site, this module provides a link to edit the current page.</p>';
+		}
 	}
 
 ?>
