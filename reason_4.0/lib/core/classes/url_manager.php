@@ -15,6 +15,7 @@
 
 	include_once( 'reason_header.php' );
 	reason_include_once( 'classes/entity_selector.php' );
+	include_once(CARL_UTIL_INC.'basic/filesystem.php');
 
 	class url_manager
 	{
@@ -30,6 +31,12 @@
 		// Should include the local variables $http_authentication_username and $http_authentication_password
 		var $http_credentials_settings_file = HTTP_CREDENTIALS_FILEPATH;
 		
+		var $web_base_url;
+		var $full_base_url;
+		
+		var $test_web_base_url;
+		var $test_full_base_url;
+		
 		function url_manager( $site_id, $debug = false, $do_global_rewrites = false ) // {{{
 		{
 			$this->debug = $debug;
@@ -41,6 +48,22 @@
 			// set up the directory that is the root of the web tree.
 			$this->web_root = '/'.trim_slashes( !empty( $_SERVER[ '_' ] ) ? WEB_PATH : $_SERVER[ 'DOCUMENT_ROOT' ] ).'/';
 			
+			$this->test_full_base_url = REASON_INC.'www/tmp/rewrites/';
+			if(!is_dir($this->test_full_base_url))
+			{
+				 if(!mkdir_recursive($this->test_full_base_url))
+				 {
+				 	trigger_error( 'Unable to create the rewriting testing directory at '.$this->test_full_base_url.' .  Please create a directory at that location in order for Reason minisites to work.', HIGH );
+				 }
+			}
+			if(!is_writable($this->test_full_base_url))
+			{
+				trigger_error( 'Directory at '.$this->test_full_base_url.' is not writable.  Please make that dir writable in order for Reason minisites to work.', HIGH );
+			}
+			$this->test_web_base_url = WEB_TEMP.'rewrites/';
+			
+			$this->refresh_localhost_limiter_rule();
+			
 			if(!empty($site_id))
 			{
 				$this->init_site($site_id);
@@ -50,6 +73,22 @@
 				$this->init_global();
 			}
 		} // }}}
+		function refresh_localhost_limiter_rule()
+		{
+			if(!empty($_SERVER['SERVER_ADDR']))
+			{
+				$hta = 'Order deny,allow'."\n";
+				$hta .= 'deny from all'."\n";
+				$hta .= 'allow from '.$_SERVER['SERVER_ADDR']."\n";
+				
+				$hta_path = $this->test_full_base_url.'.htaccess';
+				$fh = fopen($hta_path,'w');
+				flock($fh, LOCK_EX);
+				fwrite($fh, $hta);
+				flock($fh, LOCK_UN);
+				fclose($fh);
+			}
+		}
 		function init_site($site_id)
 		{
 			$this->site_id = $site_id;
@@ -91,9 +130,14 @@ mapping.', HIGH );
 				// this site's htaccess file
 				$this->orig_file = $this->full_base_url.'/.htaccess';
 				// temp directory and file to write new one into
-				$this->test_dir_name = 'test_'.substr(md5(uniqid('')),0,10);
-				$this->test_dir_web = $this->web_base_url.$this->test_dir_name;
-				$this->test_dir = $this->full_base_url.'/'.$this->test_dir_name;
+				$this->test_dir_name = 'test_';
+				if(!empty($this->site_id))
+				{
+					$this->test_dir_name .= 'site_'.$this->site_id.'_';
+				}
+				$this->test_dir_name .= substr(md5(uniqid('')),0,10);
+				$this->test_dir_web = $this->test_web_base_url.$this->test_dir_name;
+				$this->test_dir = $this->test_full_base_url.$this->test_dir_name;
 				// htaccess in the test directory
 				$this->test_file = $this->test_dir.'/.htaccess';
 
@@ -212,13 +256,13 @@ mapping.', HIGH );
 						if( !file_exists( $working_dir ) )
 							$ret[] = 'mkdir '.$working_dir;
 					}
-					$ret[] = 'sudo chown '.REASON_SITE_DIRECTORY_OWNER.'.'.REASON_SITE_DIRECTORY_OWNER.' '.$working_dir.'<br />';
-					$ret[] = 'sudo chmod 775 '.$working_dir.'<br />';
+					$ret[] = 'sudo chown '.REASON_SITE_DIRECTORY_OWNER.'.'.REASON_SITE_DIRECTORY_OWNER.' '.$working_dir;
+					$ret[] = 'sudo chmod 775 '.$working_dir;
 				}
 				else if( !$this->_base_url_writable() )
 				{
-					$ret[] = 'sudo chown '.REASON_SITE_DIRECTORY_OWNER.'.'.REASON_SITE_DIRECTORY_OWNER.' '.$this->full_base_url.'<br />';
-					$ret[] = 'sudo chmod 775 '.$this->full_base_url.'<br />';
+					$ret[] = 'sudo chown '.REASON_SITE_DIRECTORY_OWNER.'.'.REASON_SITE_DIRECTORY_OWNER.' '.$this->full_base_url;
+					$ret[] = 'sudo chmod 775 '.$this->full_base_url;
 				}
 			}
 			else
@@ -229,27 +273,28 @@ mapping.', HIGH );
 		{
 			if( filesize( $this->test_file ) > 0 )
 			{
-				// this next line of code could replace the line above in case
-				// it is needed.  Currently, I am just checking to see that the file has
-				// a non-zero size.  A further check could see if the new file is at least
-				// half the size of the original.  This may catch some things.  Don't
-				// really know if it is necessary.  Anyway, the error code above
-				// should catch most bad filesystem problems before we get here.
-				//if( filesize( $new_path ) > (filesize( $orig_path ) / 2) )
-				
 				// here, we test to see if the .htaccess file is actually valid.
-				// To do this, I copy the new file to a test directory, then hit
+				// To do this, we copy the new file to a test directory, then hit
 				// a file in that directory and see if the file loads or if there
 				// is an Internal Server Error of type 500.  If we have a server
 				// error, that means the file is not valid and someone needs to 
 				// look at it.
 				
 				// Should include the variables $http_authentication_username and $http_authentication_password
-				include($this->http_credentials_settings_file);
+				$credentials_supplied = false;
+				if(!empty($this->http_credentials_settings_file) && file_exists($this->http_credentials_settings_file))
+				{
+					include($this->http_credentials_settings_file);
+					if(!empty($http_authentication_username) && !empty($http_authentication_password))
+					{
+						$credentials_supplied = true;
+					}
+				}
 				$tmp_valid_file = '/tmp/'.uniqid( 'htvalid' );
 				// create a quick test file to see if it shows up
-				$tmp_test_index = $this->test_dir_name.'/index.html';
-				$fp = fopen( $this->full_base_url.'/'.$tmp_test_index, 'w' ) OR trigger_error( 'Unable to create test index file', HIGH );
+				$test_file_name = 'testfile.txt';
+				$tmp_test_file = $this->test_dir_name.'/'.$test_file_name;
+				$fp = fopen( $this->test_full_base_url.'/'.$tmp_test_file, 'w' ) OR trigger_error( 'Unable to create test index file', HIGH );
 				fputs( $fp,'test successful' ) OR trigger_error( 'Unable to write to test index file', HIGH );
 				fclose( $fp ) OR trigger_error( 'Unable to close test index file', HIGH );
 				// use curl to grab the test index page
@@ -259,7 +304,11 @@ mapping.', HIGH );
 				// ... -k allows curl to function without a valid certificate on a secure connection
 
 				if( !REASON_HOST_HAS_VALID_SSL_CERTIFICATE ) $curl_cmd .= ' -k ';
-				$curl_cmd .= ' -u'.$http_authentication_username.':'.$http_authentication_password.' https://'.REASON_HOST.$this->web_base_url.$tmp_test_index.' > '.$tmp_valid_file;
+				if($credentials_supplied)
+				{
+					$curl_cmd .= ' -u'.$http_authentication_username.':'.$http_authentication_password.' ';
+				}
+				$curl_cmd .= securest_available_protocol().'://'.REASON_HOST.$this->test_web_base_url.$tmp_test_file.' > '.$tmp_valid_file;
 
 				exec( $curl_cmd, $curl_output, $curl_return_var );
 
@@ -267,7 +316,7 @@ mapping.', HIGH );
 					trigger_error( 'Unable to even try to validate .htaccess file - curl failed - '.$curl_return_var."\n\n$curl_output", HIGH );
 
 				// compare the test index page with the downloaded one
-				$diff_cmd = 'diff --brief '.$this->test_dir.'/index.html '.$tmp_valid_file;
+				$diff_cmd = 'diff --brief '.$this->test_dir.'/'.$test_file_name.' '.$tmp_valid_file;
 
 				exec( $diff_cmd, $diff_result, $diff_return_var );
 
@@ -297,8 +346,8 @@ mapping.', HIGH );
 				if( !chmod( $this->orig_file, 0666 ) )
 					trigger_error( 'Unable to chmod htaccess file', WARNING );
 				// remove test temp index file
-				if( !unlink( $this->full_base_url.'/'.$tmp_test_index ) )
-					trigger_error( 'Unable to remove temporary index file.', WARNING );
+				if( !unlink( $this->test_full_base_url.$tmp_test_file ) )
+					trigger_error( 'Unable to remove temporary test file.', WARNING );
 			}
 			else
 				trigger_error('New rewrite .htaccess file has size 0.  Aborting rewrite updates.', HIGH);
