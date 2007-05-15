@@ -258,11 +258,25 @@ ul.childrenList {
 }
 .childrenList li {
 	list-style-type: none;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
+}
+.childrenList li:after {
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:left;
+    height:0px;
+}
+* html .childrenList li {
+	height:1%;
 }
 .childrenList h4 {
 	margin: 0px;
 	padding: 0px;
+}
+ul.childrenList img {
+	float:left;
+	margin:0 1em 0 0;
 }
 
 /* Siblings */
@@ -1183,31 +1197,31 @@ div#images div.moduleNav ul {
 }
 
 /* Blogs */
-div#blog div.moduleNav ul, div#blog div.submodules div.comments ul {
+div.publication div.moduleNav ul, div.publication div.submodules div.comments ul {
 	margin-left:0px;
 	padding-left:0px;
 	list-style-type:none;
 }
-div#blog div.moduleNav ul li {
+div.publication div.moduleNav ul li {
 	border-top:1px solid #92AAD6;
 }
-div#blog div.moduleNav ul li ul {
+div.publication div.moduleNav ul li ul {
 	padding-left:2em;
 	list-style-type:disc;
 	margin:0;
 }
-div#blog div.moduleNav ul li ul li {
+div.publication div.moduleNav ul li ul li {
 	border:none;
 	margin:0;
 }
-div#blog div.moduleNav ul li h4 {
+div.publication div.moduleNav ul li h4 {
 	margin-bottom:.33em;
 }
-div#blog div.moduleNav ul ul.links {
+div.publication div.moduleNav ul ul.links {
 	list-style-image:url(../ui_images/tiny_arrow.gif);
 	margin-left:20px;
 }
-div#blog div.moduleNav ul ul.links li {
+div.publication div.moduleNav ul ul.links li {
 	font-size:87%;
 	border-top:none;
 	margin:0px;
@@ -1259,7 +1273,7 @@ div#blog div.multiple div.images ul {
 div#blog div.addCommentForm, div#blog div.returnToList {
 	clear:both;
 }
-div#blog div.persistent, div#publication div.persistent {
+div.publication div.persistent {
 	float:right;
 	width:28%;
 	border-left:1px dotted #92AAD6;
