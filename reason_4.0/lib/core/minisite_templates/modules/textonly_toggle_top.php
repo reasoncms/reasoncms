@@ -13,5 +13,11 @@
 			else
 				return 'hide';
 		}
+		function get_documentation()
+		{
+			if (!empty($this->parent->textonly))
+				return parent::get_documentation();
+			return false;
+		}
 	}
 ?>
