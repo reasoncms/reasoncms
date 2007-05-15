@@ -33,5 +33,10 @@
 			if ( empty( $this->parent->textonly )) return make_link(array('textonly' => 1));
 			else return make_link(array('textonly' => ''));
 		}
+		
+		function get_documentation()
+		{
+			return '<p>Displays a link to switch between normal mode and text-only/printer-friendly mode</p>';
+		}
 	}
 ?>
