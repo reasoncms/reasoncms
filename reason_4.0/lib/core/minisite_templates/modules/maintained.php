@@ -31,11 +31,14 @@
 		// [updated by footeb on 7/2/03]
 		function run()
 		{
-			// We were doing this when we were dependent on ldap so that pages didn't take forever to load
-			//ob_flush();
-			
+			echo '<div id="maintained">'."\n";
+			echo '<div id="maintainer">'."\n";
 			$this->show_maintainer();
+			echo '</div>'."\n";
+			echo '<div id="lastUpdated">'."\n";
 			$this->show_last_updated();
+			echo '</div>'."\n";
+			echo '</div>'."\n";
 		}
 		function show_maintainer()
 		{
@@ -96,7 +99,7 @@
 					// show footer information
 					echo $this->parent->site_info->get_value('name').' pages maintained by ';
 					//echo $this->_get_opening_mailto_anchor_tag($maintainer);
-					echo '<a href="mailto:'.$email.'">'.$full_name.'</a><br />';
+					echo '<a href="mailto:'.$email.'">'.$full_name.'</a>';
 				}
 				else
 				{
@@ -120,6 +123,10 @@
 			}
 			
 			echo 'This page was last updated on ' . prettify_mysql_timestamp( $date, $this->last_mod_date_format );
+		}
+		function get_documentation()
+		{
+			return '<p>Provides contact information for the primary maintainer of the site and displays the date that the most recently modified item on the page was edited</p>';
 		}
 	}
 ?>
