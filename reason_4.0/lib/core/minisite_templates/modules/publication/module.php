@@ -207,8 +207,8 @@ class PublicationModule extends Generic3Module
 		$this->show_login_link = false;
 		$this->use_pagination = false;
 		$this->style_string = 'relatedPub';
+		unset ($this->request[ $this->query_string_frag.'_id' ] );
 		if (empty($this->max_num_items)) $this->max_num_items = $this->num_per_page;
-		
 		$pub_es = new entity_selector( $this->parent->site_id );
 		$pub_es->description = 'Selecting publications for this page';
 		$pub_es->add_type( id_of('publication_type') );
