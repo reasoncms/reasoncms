@@ -16,6 +16,17 @@
 			$this->parent->pages->show_top_nav();
 			echo '</div>';
 		}
+		function get_documentation()
+		{
+			if($this->has_content())
+			{
+				return '<p>Displays the top-level navigation for the site</p>';
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 
 ?>
