@@ -355,6 +355,11 @@
 				return false;
 			}
 		} // }}}
+		
+		function get_documentation()
+		{
+			return'<p>Displays a list of people associated with this site</p>';
+		}
 	}
 ?>
 
