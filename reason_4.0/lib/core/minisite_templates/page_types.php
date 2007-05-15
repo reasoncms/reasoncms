@@ -96,6 +96,13 @@
 			'sidebar'=>'events_mini',
 			'pre_sidebar' => '',
 		),
+		'publication_sidebar_via_categories' => array(
+			'sidebar' => array(	'module' => 'publication',
+								'related_mode' => 'true',
+								'related_order' => 'random',
+								'limit_by_page_categories' => true,
+								'max_num_items' => 3),
+       ),
 		'blurb' => array(
 			'main_post' => 'blurb',
 			'sub_nav' => '',
