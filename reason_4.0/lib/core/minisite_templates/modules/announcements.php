@@ -55,5 +55,14 @@
 			}
 			echo '</div>'."\n";
 		}
+		
+		function get_documentation()
+		{
+			if($this->has_content())
+			{
+				return '<p>Sitewide notices are displayed here. (Sitewide notices set up by Reason administrators)</p>';
+			}
+			return false;
+		}
 	}
 ?>
