@@ -50,5 +50,10 @@
 				$this->content = preg_replace('-<img\s[^>]*>-isuU', '[IMAGE]', $this->content);
 			}
 		}
+		
+		function get_documentation()
+		{
+			return '<p>Displays the current page\'s textual content</p>';
+		}
 	}
 ?>
