@@ -49,9 +49,13 @@ div#meat:after, div#banner:after {
     height:0;
 }
 /* These rules force layout in IE 6 & 7, which in turn forces the elements to self-clear */
-div#meat, div#banner {
+* html div#meat, * html div#banner {
 	display:inline-block; /* for some reason this doesn't work in IE 7 */
-	overflow:hidden; /* this one works in IE 7 */
+	/* overflow:hidden; /* this one works in IE 7 */
+	/* zoom:1; */
+}
+div#meat, div#banner {
+	min-height:1px; /* this one works in IE 7 */
 }
 /* Hide from IE Mac \*/
 div#meat, div#banner {
@@ -100,6 +104,9 @@ div#content div div {
 }
 div#footer div {
 	padding:1em;
+}
+div#footer div div {
+	padding:0;
 }
 
 div#content li {
