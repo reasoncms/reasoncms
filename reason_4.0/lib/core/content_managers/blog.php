@@ -41,10 +41,17 @@
 			$this->change_element_type( 'enable_comment_notification', 'hidden' );
 			
 			// right now publication options are limited to blog, and has_issues and has_sections are disabled
-			if (!$this->get_value( 'publication_type' )) $this->set_value( 'publication_type', 'blog' );
-			$this->change_element_type( 'publication_type', 'solidtext' );
-			$this->change_element_type( 'has_issues', 'hidden' ); // related issues do not change the display of a blog
-			$this->change_element_type( 'has_sections', 'hidden' ); // sections will work if attached to blogs - this flag is not followed reliably
+			
+			if (user_is_a( $this->admin_page->user_id, id_of( 'admin_role' )))
+			{
+			}
+			else
+			{
+				$this->change_element_type( 'has_issues', 'hidden' ); // related issues do not change the display of a blog
+				$this->change_element_type( 'has_sections', 'hidden' ); // sections will work if attached to blogs - this flag is not followed reliably
+				if (!$this->get_value( 'publication_type' )) $this->set_value( 'publication_type', 'blog' );
+				$this->change_element_type( 'publication_type', 'solidtext' );
+			}
 			
 			$this->set_order(array('name', 'publication_type', 'unique_name', 'posts_per_page', 
 								   'blog_feed_string', 'description', 'date_format', 'allow_front_end_posting', 
