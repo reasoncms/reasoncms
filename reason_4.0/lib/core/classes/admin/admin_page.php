@@ -640,15 +640,9 @@
 			$es->add_type( id_of('site') );
 			$es->add_left_relationship( $this->user_id, relationship_id_of('site_to_user') );
 			$es->set_order('entity.name ASC');
-			$sites = $es->run_one();
-			if( !empty( $sites ) )
-			{
-				foreach( $sites AS $site )
-					$site_ids[ $site->id() ] = $site->id();
-				return $sites;
-			}
-			else
-				return array();
+			$es->limit_tables();
+			$es->limit_fields('entity.name');
+			return $es->run_one();
 		} // }}}
 		// IN_MODULE
 		function sites() // {{{
@@ -662,13 +656,12 @@
 				$master_admin_id = id_of('master_admin');
 				if(array_key_exists($master_admin_id,$sites))
 				{
-					$master_admin = $sites[$master_admin_id];
-					$this->show_site_list_item($master_admin,'masterAdmin');
+					$this->show_site_list_item($sites[$master_admin_id],'masterAdmin');
 					unset($sites[$master_admin_id]);
 				}
-				foreach( $sites AS $site )
+				foreach( array_keys($sites) AS $site_id )
 				{
-					$this->show_site_list_item($site);
+					$this->show_site_list_item($sites[$site_id]);
 				}
 				echo '</ul>'."\n".'</div>'."\n";
 			}
@@ -679,24 +672,14 @@
 		} // }}}
 		function show_site_list_item($site, $class='')
 		{
-			if( $site->id() == $this->site_id )
-			{
-				$cur_site = true;
-			}
-			else
-				$cur_site = false;
-
 			echo '<li class="navItem';
-			if( $cur_site )
-				echo ' navSelect';
 			if(!empty($class))
 				echo ' '.$class;
 			echo '">';
 
 			echo '<a href="'.$this->make_link( 
 				array( 
-						'site_id' => $site->id() ,
-						'user_id' => $this->user_id
+						'site_id' => $site->id()
 					 )
 				).'" class="nav">'.$site->get_value('name').'</a></li>';
 		}
@@ -707,21 +690,25 @@
 			?>
 				<div class="sites"> 
 				<?php
-					$sites = $this->get_sites();
 					if( !$this->id )
 					{
+						$sites = $this->get_sites();
 						?>
 						<form name="form1">
 						Site: 
 						<select name="menu1" onChange="MM_jumpMenu('parent',this,0)" class="siteMenu">
 							<option value="">--</option>
 						<?php
-						foreach( $sites AS $site )
+						$placeholder = '__this_is_the_site_id_placeholder__';
+						$link_parts = explode($placeholder,$this->make_link( array( 'site_id' => $placeholder, 'type_id' => '', 'id' => '', 'rel_id' => '', 'lister' => '', 'cur_module' => '' ) , true ));
+						if(empty($link_parts[1]))
+							$link_parts[1] = '';
+						foreach( array_keys($sites) AS $site_id )
 						{
-							echo '<option value="'.$this->make_link( array( 'site_id' => $site->id(), 'type_id' => '', 'id' => '', 'rel_id' => '', 'lister' => '', 'cur_module' => '' ) , true ) .'"';
-							if( $site->id() == $this->site_id )
+							echo '<option value="'.$link_parts[0].$site_id.$link_parts[1].'"';
+							if( $site_id == $this->site_id )
 								echo ' selected="selected"';
-							echo '>' . $site->get_value( 'name' ) . '</option>' . "\n";
+							echo '>' . $sites[$site_id]->get_value( 'name' ) . '</option>' . "\n";
 						}
 						$this->show[ 'sites' ] = false;
 						?>
@@ -736,20 +723,18 @@
 					}
 					else
 					{
-						foreach( $sites AS $site )
+						$site = new entity($this->site_id);
+						if($site->get_values())
 						{
-							if( $site->id() == $this->site_id )
+							echo 'Site: <strong>' . $site->get_value( 'name' ) . '</strong>' . "\n";
+							if( $this->type_id )
 							{
-								echo 'Site: <strong>' . $site->get_value( 'name' ) . '</strong>' . "\n";
-								if( $this->type_id )
+								$e = new entity( $this->type_id );
+									echo '<strong> :: </strong>' . prettify_string( $e->get_value( 'name' ) );
+								if( $this->id )
 								{
-									$e = new entity( $this->type_id );
-										echo '<strong> :: </strong>' . prettify_string( $e->get_value( 'name' ) );
-									if( $this->id )
-									{
-										$e = new entity( $this->id );
-											echo '<strong> :: </strong>' . $e->get_value( 'name' ) ;
-									}
+									$e = new entity( $this->id );
+										echo '<strong> :: </strong>' . $e->get_value( 'name' ) ;
 								}
 							}
 						}
