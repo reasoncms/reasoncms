@@ -386,7 +386,7 @@ function load_forms()
 /**
  * Go through all of the iframes on the page
  * and create an array of all of their innerHTMLs indexed on their id
- * array is then stored to global iframes variable
+ * @return an array containing the iframes on the page
  */
 function load_iframes()
 {
@@ -408,7 +408,7 @@ function load_iframes()
     obj["html"] = html;
     arr.push(obj);
   }
-  iframes = arr;
+  return arr;
 }
 
 /**
@@ -469,14 +469,22 @@ function check()
 }
 
 /**
+ * Loads the forms and iframes into the global variables
+ */
+function load_original_state()
+{
+  original_state = load_forms();
+  iframes = load_iframes();
+}
+
+/**
  * Adds event listeners to all the links, loads the initial state of the forms,
  * and creates an XMLHTTPRequest object
  */
 function init()
 {
   add_checks();
-  original_state = load_forms();
-  setTimeout(iframes = load_iframes, 500);
+  setTimeout(load_original_state, 500);
 
 /*  if (window.ActiveXObject)
   {
