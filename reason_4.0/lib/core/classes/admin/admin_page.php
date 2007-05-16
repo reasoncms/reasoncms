@@ -1104,21 +1104,31 @@
 				$es = new entity_selector();
 				$es->add_type( id_of( 'user' ) );
 				$es->set_order( 'name ASC' );
+				$es->limit_tables();
+				$es->limit_fields('name');
 				$users = $es->run_one();
-				?>
-				<form name="form1">
-				<select name="menu1" onChange="MM_jumpMenu('parent',this,0)" class="siteMenu">
-					<option value="">--</option>
-				<?php
-				foreach( $users AS $user )
+				
+				echo '<form action="?" method="get">'."\n";
+				echo '<label for="user_switch_select">User</label>: ';
+				echo '<select name="user_id" class="siteMenu" id="user_switch_select">'."\n";
+				echo '<option value="">--</option>'."\n";
+				foreach( array_keys($users) AS $user_id )
 				{
 					//echo '<option value="'.$this->make_link( array( 'cur_module' => 'KillSession' , 'user_id' => $user->id() ) , false ) .'"';
-					echo '<option value="'.$this->make_link( array( 'user_id' => $user->id() ) , false ) .'"';			
-					if( $user->id() == $this->user_id )
+					echo '<option value="'. $user_id . '"';
+					if( $user_id == $this->user_id )
 						echo ' selected="selected"';
-					echo '>' . $user->get_value( 'name' ) . '</option>' . "\n";
+					echo '>' . $users[$user_id]->get_value( 'name' ) . '</option>' . "\n";
+				}
+				foreach($this->request as $key=>$value)
+				{
+					if($key != 'user_id')
+					{
+						echo '<input type="hidden" name="'.$key.'" value="'.htmlspecialchars($value).'" />'."\n";
+					}
 				}
 				echo '</select>';
+				echo ' <input type="submit" name="go" value="go" />'."\n";
 				if ($show_logout) echo ' <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 				echo '</form>';
 			}
