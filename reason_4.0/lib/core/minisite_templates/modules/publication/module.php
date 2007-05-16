@@ -861,7 +861,8 @@ class PublicationModule extends Generic3Module
 					$es->add_type( id_of('issue_type') );
 					$es->add_left_relationship( $this->publication->id(), relationship_id_of('issue_to_publication') );
 					$temp = $es->run_one();
-					$this->issues = current($temp);
+					$this->issues = $temp;
+					//$this->issues = current($temp);
 				}
 			}
 			return $this->issues;
@@ -961,7 +962,7 @@ class PublicationModule extends Generic3Module
 				$es->description = 'Selecting news sections for this publication';
 				$es->add_type( id_of('news_section_type'));
 				$es->add_left_relationship( $this->publication->id(), relationship_id_of('news_section_to_publication') );
-				$this->sections=current($es->run());
+				$this->sections=$es->run_one();
 			}
 			return $this->sections;
 		}
