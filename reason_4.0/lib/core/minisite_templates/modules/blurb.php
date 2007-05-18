@@ -7,6 +7,7 @@
 	class BlurbModule extends DefaultMinisiteModule
 	{
 		var $acceptable_params = array(
+		'blurb_unique_names_to_show' => '',
 		'num_to_display' => '',
 		'rand_flag' => false,
 		'exclude_shown_blurbs' => true );
@@ -16,25 +17,58 @@
 		function init( $args = array() ) // {{{
 		{
 			parent::init( $args );
-			$this->es = new entity_selector();
-			$this->es->description = 'Selcting blurbs for this page';
-			$this->es->add_type( id_of('text_blurb') );
-			$this->es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_text_blurb') );
-                        $this->es->add_rel_sort_field( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_text_blurb'), 'rel_sort_order');
-			if ($this->params['rand_flag']) $this->es->set_order('rand()');
-			else $this->es->set_order( 'rel_sort_order ASC' );
-			if ($this->params['exclude_shown_blurbs'])
+			if (!empty($this->params['blurb_unique_names_to_show']))
 			{
-				$already_displayed = $this->used_blurbs();
+				$this->build_blurbs_array_using_unique_names();
+			}
+			else
+			{
+				$this->es = new entity_selector();
+				$this->es->description = 'Selcting blurbs for this page';
+				$this->es->add_type( id_of('text_blurb') );
+				$this->es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_text_blurb') );
+               	$this->es->add_rel_sort_field( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_text_blurb'), 'rel_sort_order');
+				if ($this->params['rand_flag']) $this->es->set_order('rand()');
+				else $this->es->set_order( 'rel_sort_order ASC' );
+				if ($this->params['exclude_shown_blurbs'])
+				{
+					$already_displayed = $this->used_blurbs();
+				}
 				if (!empty($already_displayed))
 				{
 					$this->es->add_relation('entity.id NOT IN ('.join(',',$already_displayed).')');
 				}
+				if (!empty($this->params['num_to_display'])) $this->es->set_num($this->params['num_to_display']);
+				$this->blurbs = $this->es->run_one();
 			}
-			if (!empty($this->params['num_to_display'])) $this->es->set_num($this->params['num_to_display']);
-			$this->blurbs = $this->es->run_one();
 			$this->used_blurbs(array_keys($this->blurbs));
 		} // }}}
+		
+		function build_blurbs_array_using_unique_names()
+		{
+			$blurb_array = array();
+			$blurb_unique_name_array = (is_array($this->params['blurb_unique_names_to_show'])) 
+									   ? $this->params['blurb_unique_names_to_show']
+									   : array($this->params['blurb_unique_names_to_show']);
+			
+			if ($this->params['rand_flag'] == true) shuffle($blurb_unique_name_array);
+			
+			$max_count = (!empty($this->params['num_to_display'])) ? $this->params['num_to_display'] : count($blurb_unique_name_array);
+			$count = 0;
+			foreach($blurb_unique_name_array as $blurb_unique_name)
+			{
+				$blurb_id = id_of($blurb_unique_name);
+				if ($this->params['exclude_shown_blurbs'])
+				{
+					if (!isset($used_blurbs)) $used_blurbs = $this->used_blurbs();
+					if (in_array($blurb_id, $used_blurbs)) continue; // it has been used do not add it to our array
+				}
+				$blurb_array[$blurb_id] = new entity($blurb_id);
+				$count++;
+				if ($count == $max_count) break;
+			}
+			$this->blurbs = $blurb_array;
+		}
 		
 		function used_blurbs( $used = array() )
 		{
