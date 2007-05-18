@@ -106,6 +106,25 @@
 			$this->make_site_specific_changes();			
 		} // }}}
 		
+		function make_site_specific_changes()
+		{
+			// the following stuff should be hidden on sites
+			if (!$this -> get_value('news_type')) $this -> set_value('news_type', 'Press Release');
+			$this -> change_element_type ('news_type', 'hidden');
+			$this->change_element_type( 'contact_name', 'hidden');
+			$this->change_element_type( 'contact_email', 'hidden');
+			$this->change_element_type( 'contact_title', 'hidden');
+			$this->change_element_type( 'contact_phone', 'hidden');
+			$this->change_element_type( 'show_on_front_page', 'hidden');
+			$this->change_element_type( 'publish_start_date', 'hidden');
+			$this->change_element_type( 'publish_end_date', 'hidden');
+			$this->change_element_type( 'release_number', 'hidden');
+			$this->change_element_type( 'release_number', 'hidden');
+			$this->change_element_type( 'location', 'hidden');
+			$this->change_element_type( 'show_hide', 'hidden');
+			$this -> set_comments ('status', form_comment('"Published" items will appear on your site; "pending" items will be hidden.'));
+		}
+		
 		function lokify()
 		{
 			$editor_name = html_editor_name($this->admin_page->site_id);
@@ -296,10 +315,6 @@
 			{
 				$this -> set_value( 'commenting_state', 'off' );
 			}
-		}
-
-	    function make_site_specific_changes()
-		{
 		}
 
 //////
