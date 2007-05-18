@@ -72,8 +72,11 @@ div#content {
 div#banner h1 {
 	float:left;
 }
+div#meat div#content {
+	width:100%;
+}
 div#meat.containsRelated div#content {
-	width:50%;
+	width:75%;
 }
 div#meat.containsNavigation div#content {
 	margin-left:25%;
