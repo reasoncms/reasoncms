@@ -44,6 +44,7 @@ if (!isset ($_POST['verify']))
 	echo '<li>news_section_to_blog</li>';
 	echo '<li>news_section_to_image</li>';
 	echo '<li>blog_to_featured_post</li>';
+	echo '<li>event_to_news</li>';
 	echo '</ul>';
 	echo '<h3>Updates allowable relationship:</h3>';
 	echo '<ul>';
@@ -78,17 +79,18 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 	}
 	
 	//check if blog_type exists - if it does not this database has probably already been upgraded and converted
+	//
+	
 	$test = id_of('blog_type');
-	if (empty($test))
-	{
-		echo '<p>There is no type with unique name blog_type, which means ';
-		echo 'the script cannot continue to run and this database has ';
-		echo 'probably already been upgraded.</p>';
-		die;
-	}
+	$blog_type_exists = (empty($test)) ? false : true;
+		
+	//echo '<p>There is no type with unique name blog_type, which means ';
+	//echo 'the script cannot continue to run and this database has ';
+	//echo 'probably already been upgraded.</p>';
+	//die;
 
 	//check if entity table date_format exists
-	if (create_entity_table("date_format", "blog_type", get_user_id($user_netID)))
+	if ($blog_type_exists && create_entity_table("date_format", "blog_type", get_user_id($user_netID)))
 	{
 		echo '<p>created entity table date_format and added to blog type</p>';
 		$fixer = new AmputeeFixer();
@@ -152,7 +154,7 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 	
 	
 	// we only report success - error triggering will report failure and reason for failure
-	if (create_allowable_relationship($issue_type,$blog_type,'issue_to_blog',array(	'connections' => 'one_to_many', 
+	if ($blog_type_exists && create_allowable_relationship($issue_type,$blog_type,'issue_to_blog',array(	'connections' => 'one_to_many', 
 																					'description' => 'Issue to Publication',
 																					'display_name' => 'Assign this issue to a publication')))
 	{
@@ -171,7 +173,7 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 		echo '<p>Created issue_to_text_blurb allowable relationship</p>';
 	}
 	
-	if (create_allowable_relationship($news_section_type,$blog_type,'news_section_to_blog',array(	'connections' => 'one_to_many',
+	if ($blog_type_exists && create_allowable_relationship($news_section_type,$blog_type,'news_section_to_blog',array(	'connections' => 'one_to_many',
 																									'description' => 'News Section to Publication',
 																									'display_name' => 'Assign this section to a publication')))
 	{
@@ -183,7 +185,7 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 	{
 		echo '<p>Created news_section_to_image allowable relationship</p>';
 	}
-	if (create_allowable_relationship($blog_type,$news_type,'blog_to_featured_post',array(	'connections' => 'many_to_many',
+	if ($blog_type_exists && create_allowable_relationship($blog_type,$news_type,'blog_to_featured_post',array(	'connections' => 'many_to_many',
 																							'description' => 'Publication to Featured Post',
 																							'display_name' => 'Assign Featured Posts',
 																							'is_sortable' => 'yes',
@@ -193,18 +195,31 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 	{
 		echo '<p>Created blog_to_featured_post allowable relationship</p>';
 	}
+	if (create_allowable_relationship(id_of('event_type'),$news_type,'event_to_news',array(	'description' => 'Event to News / Post',
+																							'connections' => 'many_to_many',
+																							'display_name' => 'Associate with a News Item',
+																							'directionality' => 'bidirectional',
+																							'is_sortable' => 'yes',
+																							'display_name_reverse_direction' => 'Assign to event(s)',
+																							'description_reverse_direction' => 'Events for this news items')))
+	{
+		echo '<p>Created event_to_news allowable relationship</p>';
+	}
 	
 	//Update Places a blog on a page relationship to proper format
-	$existing_rel_id = relationship_finder('minisite_page', 'blog_type', 'Places a blog on a page');
-	if(!empty($existing_rel_id))
+	if ($blog_type_exists)
 	{
-		$q = 'UPDATE allowable_relationship SET name="page_to_blog" WHERE ID='.$existing_rel_id;
-		db_query($q, 'could not update the places a blog on a page relationship');
-		echo '<p>Renamed "Places a blog on a page" relationship to "page_to_blog"</p>';
-	}
-	else
-	{
-		echo '<p>The "Places a blog on a page" relationship has already been updated</p>';
+		$existing_rel_id = relationship_finder('minisite_page', 'blog_type', 'Places a blog on a page');
+		if(!empty($existing_rel_id))
+		{
+			$q = 'UPDATE allowable_relationship SET name="page_to_blog" WHERE ID='.$existing_rel_id;
+			db_query($q, 'could not update the places a blog on a page relationship');
+			echo '<p>Renamed "Places a blog on a page" relationship to "page_to_blog"</p>';
+		}
+		else
+		{
+			echo '<p>The "Places a blog on a page" relationship has already been updated</p>';
+		}
 	}
 	
 	$news_to_issue_rel = relationship_finder('news', 'issue_type', 'news_to_issue');
