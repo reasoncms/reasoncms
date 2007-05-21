@@ -1105,14 +1105,21 @@
 						echo ' selected="selected"';
 					echo '>' . $users[$user_id]->get_value( 'name' ) . '</option>' . "\n";
 				}
-				foreach($this->request as $key=>$value)
+				echo '</select>';
+				// TODO: support arrays in GET
+				if(!empty($_GET))
 				{
-					if($key != 'user_id')
+					foreach($_GET as $key=>$value)
 					{
-						echo '<input type="hidden" name="'.$key.'" value="'.htmlspecialchars($value).'" />'."\n";
+						if($key != 'user_id')
+						{
+							if(!is_array($value))
+							{
+								echo '<input type="hidden" name="'.$key.'" value="'.htmlspecialchars($value).'" />'."\n";
+							}
+						}
 					}
 				}
-				echo '</select>';
 				echo ' <input type="submit" name="go" value="go" />'."\n";
 				if ($show_logout) echo ' <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 				echo '</form>';
