@@ -778,16 +778,19 @@ class MinisiteTemplate
 	function show_meat_tableless() // {{{
 	{
 		$hasSections = array();
+		$blobclass = 'contains';
 		foreach($this->sections as $section=>$show_function)
 		{
 			$has_function = 'has_'.$section.'_section';
 			if($this->$has_function())
 			{
 				$hasSections[$section] = $show_function;
-				$classes[] = 'contains'.ucfirst($section);
+				$capsed_section_name = ucfirst($section);
+				$classes[] = 'contains'.$capsed_section_name;
+				$blobclass .= substr($capsed_section_name,0,3);
 			}
 		}
-		echo '<div id="meat" class="'.implode(' ',$classes).'">'."\n";
+		echo '<div id="meat" class="'.implode(' ',$classes).' '.$blobclass.'">'."\n";
 		foreach($hasSections as $section=>$show_function)
 		{
 			echo '<div id="'.$section.'">'."\n";
