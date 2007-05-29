@@ -360,21 +360,12 @@ function get_page_link( &$site, &$tree, $page_types, $as_uri = false, $secure = 
 // moved from URL history
 function build_URL( $page_id )
 {
-	$URL = '';
-	$es = new entity_selector( );
-	$es->add_type( id_of( 'minisite_page') ); //'3317' id_of( 'Page' )
-	$es->add_relation( 'entity.id = "' . $page_id . '"' );
-	$es->set_num(1);
-	$results = $es->run_one();
-	if( !empty( $results ) )
+	$page = new entity($page_id);
+	if ($page->get_values() && ($page->get_value('type') == id_of('minisite_page'))) // check if it is valid and of the correct type
 	{
-		$page = current($results);
 		$URL = $page->get_value( 'url_fragment' ).'/';
-
 		$URL = dig_for_URL( $page_id, $URL );
-		
 		$URL = str_replace( '//', '/', $URL );
-
 		return $URL;
 	}
 	else
@@ -385,24 +376,27 @@ function build_URL( $page_id )
 
 function dig_for_URL( $page_id, $URL )
 {
-	$es = new entity_selector();
-	$es->add_type( id_of( 'minisite_page') );
-	$es->add_right_relationship( $page_id, relationship_id_of('minisite_page_parent') );
-	$es->set_num(1);
-	$results = $es->run_one();
+	static $cache;
+	if (isset($cache[$page_id])) $results = $cache[$page_id];
+	else
+	{
+		$es = new entity_selector();
+		$es->add_type( id_of( 'minisite_page') );
+		$es->add_right_relationship( $page_id, relationship_id_of('minisite_page_parent') );
+		$es->set_num(1);
+		$results = $es->run_one();
+		$cache[$page_id] = $results;
+	}
 	if( !empty($results) )
 	{
 		$page = current($results);
 		if( $page->get_value( 'id' ) == $page_id )
 		{
-			//echo $page->get_value( 'id' ) . '::' . $page_id . '~<br />';
 			return get_site_URL( $page_id ) . $URL;
 		}
 		else
 		{
-			//echo $page->get_value( 'id' ) . '::' . $page_id . '!<br />';
-			if($page->get_value( 'url_fragment' ))
-				$URL = $page->get_value( 'url_fragment' ) . '/' . $URL;
+			if($page->get_value( 'url_fragment' )) $URL = $page->get_value( 'url_fragment' ) . '/' . $URL;
 			return dig_for_URL( $page->get_value( 'id' ), $URL );
 		}
 	}
@@ -410,13 +404,18 @@ function dig_for_URL( $page_id, $URL )
 
 function get_site_URL( $page_id )
 {
-	reason_include_once( 'function_libraries/relationship_finder.php' );
-	$es = new entity_selector();
-	$es->add_type( id_of( 'site') );
-	$es->add_left_relationship( $page_id, relationship_finder( 'site', 'minisite_page', 'owns' ) ); //relationship_id_of('owns') 
-	$es->set_num(1);
-	$results = $es->run_one();
-	
+	static $cache;
+	if (isset($cache[$page_id])) $results = $cache[$page_id];
+	else
+	{
+		reason_include_once( 'function_libraries/relationship_finder.php' );
+		$es = new entity_selector();
+		$es->add_type( id_of( 'site') );
+		$es->add_left_relationship( $page_id, relationship_finder( 'site', 'minisite_page', 'owns' ) ); //relationship_id_of('owns') 
+		$es->set_num(1);
+		$results = $es->run_one();
+		$cache[$page_id] = $results;
+	}
 	if( !empty( $results )  )
 	{
 		$site = current($results);
