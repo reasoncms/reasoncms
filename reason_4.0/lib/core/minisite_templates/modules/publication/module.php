@@ -133,7 +133,7 @@ class PublicationModule extends Generic3Module
 									   'comment_moderation_state' => 'get_comment_moderation_state',
 									   //issues
 									   'current_issue' => 'get_current_issue', 
-									   'issues_by_date' => 'get_issues_by_date',
+									   'issues_by_date' => 'get_issues',
 									   'links_to_issues' => 'get_links_to_issues',
 									   //sections
 									   'current_section' => 'get_current_section',
@@ -177,10 +177,10 @@ class PublicationModule extends Generic3Module
 		else
 		{
 			//make sure that there's a publication associated with this page before we do anything else.  
-			$pub_es = new entity_selector( $this->parent->site_id );
+			$pub_es = new entity_selector( $this->site_id );
 			$pub_es->description = 'Selecting publications for this page';
 			$pub_es->add_type( id_of('publication_type') );
-			$pub_es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('page_to_publication') );
+			$pub_es->add_right_relationship( $this->page_id, relationship_id_of('page_to_publication') );
 			$pub_es->set_num( 1 );
 			$publications = $pub_es->run_one();
 			if(!empty($publications))
@@ -209,19 +209,19 @@ class PublicationModule extends Generic3Module
 		$this->style_string = 'relatedPub';
 		unset ($this->request[ $this->query_string_frag.'_id' ] );
 		if (empty($this->max_num_items)) $this->max_num_items = $this->num_per_page;
-		$pub_es = new entity_selector( $this->parent->site_id );
+		$pub_es = new entity_selector( $this->site_id );
 		$pub_es->description = 'Selecting publications for this page';
 		$pub_es->add_type( id_of('publication_type') );
 		$pub_es->enable_multivalue_results();
 		$pub_es->limit_tables();
 		$pub_es->limit_fields();
-		$pub_es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('page_to_related_publication') );
+		$pub_es->add_right_relationship( $this->page_id, relationship_id_of('page_to_related_publication') );
 		$pub_es->add_right_relationship_field('page_to_publication', 'entity', 'id', 'page_id');
 		$publications = $pub_es->run_one();
 		if (empty($publications))
 		{
 			$s = get_microtime();
-			$pub_es = new entity_selector( $this->parent->site_id );
+			$pub_es = new entity_selector( $this->site_id );
 			$pub_es->description = 'Selecting publications for this page';
 			$pub_es->add_type( id_of('publication_type') );
 			$pub_es->enable_multivalue_results();
@@ -238,12 +238,12 @@ class PublicationModule extends Generic3Module
 			if ($this->limit_by_page_categories)
 			{
 				// grab categories in which to limit related news items
-				$cat_es = new entity_selector( $this->parent->site_id );
+				$cat_es = new entity_selector( $this->site_id );
 				$cat_es->description = 'Selecting categories for this page';
 				$cat_es->add_type( id_of('category_type'));
 				$cat_es->limit_tables();
 				$cat_es->limit_fields();
-				$cat_es->add_right_relationship($this->parent->cur_page->id(), relationship_id_of('page_to_category') );
+				$cat_es->add_right_relationship($this->page_id, relationship_id_of('page_to_category') );
 				$categories = $cat_es->run_one();
 				if (!empty($categories))
 				{
@@ -265,12 +265,12 @@ class PublicationModule extends Generic3Module
 	function add_crumb()
 	{
 		foreach( $this->items AS $item )
-        	{
-	        	if( $item->id() == $this->request[ $this->query_string_frag.'_id' ] )
-            		{
-            			$this->parent->add_crumb( $item->get_value( 'release_title' ) );
-            		}
-        	}
+        {
+	       	if( $item->id() == $this->request[ $this->query_string_frag.'_id' ] )
+           	{
+           		$this->parent->add_crumb( $item->get_value( 'release_title' ) );
+          	}
+        }
 	}
 
 	/**
@@ -283,9 +283,9 @@ class PublicationModule extends Generic3Module
 		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'show_login_link', 
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
 		      					  'limit_by_page_categories');
-		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info) +
-							array('item_specific_variables_to_pass' => $this->item_specific_variables_to_pass) + 
-				       	 	array('variables_to_pass' => $this->variables_to_pass);
+		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info, 
+							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
+							      'variables_to_pass' => $this->variables_to_pass);
 		
 		$params_to_add = array_diff_assoc_recursive($params, $markup_params + $potential_params);
 		if (!empty($params_to_add))
@@ -356,30 +356,64 @@ class PublicationModule extends Generic3Module
 				$news_item_descriptor = 'articles';
 			}
 			
-			if($this->has_issues())
+			if($this->has_issues()) // means publication is set to use issues and the publication has related issues
 			{
 				$publication_descriptor = 'issue';
-				
-				if(!empty($this->request['issue_id']))
-				{
-					$this->issue_id = $this->request['issue_id'];
-				}
-				elseif(empty($this->request['section_id']))
-				{
-					$most_recent_issue = $this->get_most_recent_issue();
-					$this->issue_id = $most_recent_issue->id();
-				}
+				$this->init_issue();
 			}
 		
 			$this->no_items_text = 'This '.$publication_descriptor.' does not have any '.$news_item_descriptor.'.';
 				
 			$this->back_link_text = $this->back_link_text.$this->publication->get_value('name');
-			$this->add_feed_link_to_head();	
 			
 			if($this->make_current_page_link_in_nav_when_on_item 
 				&&	(!empty($this->request[$this->query_string_frag.'_id']) || !empty($this->request['section_id']) || !empty($this->request['issue_id']) ) )
 			{
 				$this->parent->pages->make_current_page_a_link();
+			}
+		}
+	}
+
+	/**
+	 * init_issue_for_item checks the item and any issue id it was passed - if an issue does not exist or is
+	 * invalid, the user is redirected to a url with the most recent valid issue for the item
+	 */
+	function init_issue()
+	{
+		$issue_keys = false;
+		$requested_issue = (!empty($this->request['issue_id'])) ? $this->request['issue_id'] : false;
+		$requested_section = (!empty($this->request['section_id'])) ? $this->request['section_id'] : false;
+		if ($this->current_item_id)
+		{
+			$issues =& $this->get_issues_for_item();
+			$issue_keys = (!empty($issues)) ? array_keys($issues) : false;
+		}
+		else
+		{
+			if ($requested_issue) 
+			{
+				$issues =& $this->get_issues();
+				$issue_keys = array_keys($issues);
+			}
+			elseif (!$requested_section) // if no section requested set an issue_id
+			{
+				$most_recent_issue = $this->get_most_recent_issue();
+				$this->issue_id = $most_recent_issue->id();
+				return true;
+			}
+		}	
+		if ($issue_keys) // item is in an issue
+		{
+			if (in_array($requested_issue, $issue_keys))
+			{
+				$this->issue_id = $requested_issue; // requested issue verified
+				return true;
+			}
+			else
+			{
+				$redirect = make_redirect(array('issue_id' => array_shift($issue_keys)));
+				header('Location: '.$redirect);
+				exit;
 			}
 		}
 	}
@@ -581,7 +615,7 @@ class PublicationModule extends Generic3Module
 	//this is the function used to generate the variable needed by the list_markup_generator
 	function get_site_entity()
 	{
-		return new entity($this->parent->site_id);
+		return new entity($this->site_id);
 	}
 	
 ////////
@@ -814,7 +848,7 @@ class PublicationModule extends Generic3Module
 		*/	
 		function build_post_form($net_id)
 		{
-			$form = new BlogPostSubmissionForm($this->parent->site_id, $this->publication, $net_id);
+			$form = new BlogPostSubmissionForm($this->site_id, $this->publication, $net_id);
 			if(!empty($this->issue_id))
 				$form->set_issue_id($this->issue_id);
 			if(!empty($this->request['section_id']))
@@ -836,11 +870,8 @@ class PublicationModule extends Generic3Module
 		{
 			if($this->publication->get_value('has_issues') == "yes")
 			{
-				$issues = $this->get_issues();
-				if(!empty($issues))
-				{
-					return true;
-				}
+				$issues =& $this->get_issues();
+				if(!empty($issues)) return true;
 			}
 			return false;
 		}
@@ -850,40 +881,62 @@ class PublicationModule extends Generic3Module
 		* Format: $issue_id => $issue_entity
 		* @return array array of the issues for this publication
 		*/
-		function get_issues()
+		function &get_issues()
 		{
 			if(empty($this->issues))
 			{
 				if($this->publication->get_value('has_issues') == "yes")
 				{
-					$es = new entity_selector( $this->parent->site_id );
+					$es = new entity_selector( $this->site_id );
 					$es->description = 'Selecting issues for this publication';
 					$es->add_type( id_of('issue_type') );
+					$es->limit_tables('dated');
+					$es->limit_fields('dated.datetime');
+					$es->set_order('dated.datetime DESC');
 					$es->add_left_relationship( $this->publication->id(), relationship_id_of('issue_to_publication') );
-					$temp = $es->run_one();
-					$this->issues = $temp;
-					//$this->issues = current($temp);
+					$this->issues = $es->run_one();
 				}
 			}
 			return $this->issues;
 		}
 		
 		/**
-		*  Creates an issues array keyed by date instead of by id
-		*  @return array array of issues, formatted $datetime => $issue_entity
+		* Returns an array of the issues associated with this publication.
+		* Format: $issue_id => $issue_entity
+		* @return array array of the issues for this publication
 		*/
-		function get_issues_by_date()
+		function &get_issues_for_item()
 		{
-			$issues_by_date = array();
-			if($this->has_issues())
+			static $issues;
+			if (!isset($issues[$this->current_item_id]))
 			{
-				foreach($this->issues as $issue_entity)
-				{
-					$issues_by_date[$issue_entity->get_value('datetime')] = $issue_entity;
-				}
+				$es = new entity_selector( $this->site_id );
+				$es->description = 'Selecting issues for this news item';
+				$es->limit_tables('dated');
+				$es->limit_fields('dated.datetime');
+				$es->add_type( id_of('issue_type') );
+				$es->add_right_relationship( $this->current_item_id, relationship_id_of('news_to_issue') );
+				$es->add_relation('entity.id IN ('.implode(", ", array_keys($this->get_issues())).')');
+				$es->set_order('dated.datetime DESC');
+				$issues = $es->run_one();
+				$issues[$this->current_item_id] = $issues;
 			}
-			return $issues_by_date;
+			return $issues[$this->current_item_id];
 		}
+		
+//		/**
+//		*  Creates an issues array keyed by date instead of by id
+//		*  @return array array of issues, formatted $datetime => $issue_entity
+//		*/
+//		function get_issues_by_date()
+//		{
+//			$issues_by_date = array();
+//			if($this->has_issues())
+//			{
+//				return $this->issues;
+//			}
+//			return array();
+//		}
 		
 		/**
 		* Returns an array of links to each issue for this publication.
@@ -895,9 +948,10 @@ class PublicationModule extends Generic3Module
 			$links = array();
 			if($this->has_issues())
 			{
-				foreach($this->issues as $issue_id => $issue_entity)
+				$issues =& $this->get_issues();
+				foreach($issues as $issue_id => $issue_entity)
 				{
-					$links[$issue_entity->id()] = $this->construct_link(NULL, array( 'issue_id'=>$issue_id, 'page'=> 1  ) );
+					$links[$issue_entity->id()] = $this->construct_link(NULL, array( 'issue_id'=>$issue_id, 'page'=> '1'  ) );
 				}
 			}
 			return $links;
@@ -912,7 +966,8 @@ class PublicationModule extends Generic3Module
 		{
 			if($this->has_issues() && !empty($this->issue_id))
 			{
-				return $this->issues[$this->issue_id];
+				$issues =& $this->get_issues();
+				return $issues[$this->issue_id];
 			}
 			else
 				return false;
@@ -924,9 +979,9 @@ class PublicationModule extends Generic3Module
 		*/
 		function get_most_recent_issue()
 		{
-			$issues_by_date = $this->get_issues_by_date();
-			krsort($issues_by_date);
-			return current($issues_by_date);
+			$issues =& $this->get_issues();
+			reset($issues); // make sure pointer is at first element		
+			return current($issues);
 		}
 
 ///////
@@ -958,7 +1013,7 @@ class PublicationModule extends Generic3Module
 		{
 			if(empty($this->sections))
 			{
-				$es = new entity_selector( $this->parent->site_id );
+				$es = new entity_selector( $this->site_id );
 				$es->description = 'Selecting news sections for this publication';
 				$es->add_type( id_of('news_section_type'));
 				$es->add_left_relationship( $this->publication->id(), relationship_id_of('news_section_to_publication') );
@@ -1068,6 +1123,32 @@ class PublicationModule extends Generic3Module
 			}
 			return $related_sections_for_this_pub;
 		}
+		
+		/**
+		* Returns array containing the issues of this publication that this news item is associated with.
+		* @param object $item A news item entity
+		* @return array issue entitities indexed by id
+		*/
+		function find_issues_for_this_item($item)
+		{
+			$es = new entity_selector($this->site_id);
+			
+			$all_related_sections = $item->get_left_relationship( 'news_to_news_section' );
+			if(!empty($all_related_sections))
+			{
+				foreach($all_related_sections as $section)
+				{
+					$sections = $this->get_sections();
+					
+					//check to make sure that this section is associated with this publication
+					if(array_key_exists($section->id(), $sections))	
+					{
+						$related_sections_for_this_pub[$section->id()] = $section;
+					}
+				}
+			}
+			return $related_sections_for_this_pub;
+		}
 
 		
 		/**
@@ -1142,7 +1223,7 @@ class PublicationModule extends Generic3Module
 		*/
 		function get_comment_group()
 		{
-			$es = new entity_selector( $this->parent->site_id );
+			$es = new entity_selector( $this->site_id );
 			$es->description = 'Getting groups for this publication';
 			$es->add_type( id_of('group_type') );
 			$es->add_right_relationship( $this->publication->id(), relationship_id_of('publication_to_authorized_commenting_group') );
@@ -1176,7 +1257,7 @@ class PublicationModule extends Generic3Module
 		*/
 		function get_post_group()
 		{
-			$es = new entity_selector( $this->parent->site_id );
+			$es = new entity_selector( $this->site_id );
 			$es->description = 'Getting groups for this publication';
 			$es->add_type( id_of('group_type') );
 			$es->add_right_relationship( $this->publication->id(), relationship_id_of('publication_to_authorized_posting_group') );
@@ -1218,8 +1299,9 @@ class PublicationModule extends Generic3Module
 				$blog_type = new entity(id_of('publication_type'));
 				if($blog_type->get_value('feed_url_string'))
 				{
-					#  $this->parent->site_info->get_value('base_url').MINISITE_FEED_DIRECTORY_NAME.'/'.$type->get_value('feed_url_string').
-					$this->feed_url = /*'/'.trim_slashes(*/$this->parent->site_info->get_value('base_url')/*)*/.MINISITE_FEED_DIRECTORY_NAME.'/'.$blog_type->get_value('feed_url_string').'/'.$this->publication->get_value('blog_feed_string');
+					$site = new entity($this->site_id);
+					$base_url = $site->get_value('base_url');
+					$this->feed_url = $base_url.MINISITE_FEED_DIRECTORY_NAME.'/'.$blog_type->get_value('feed_url_string').'/'.$this->publication->get_value('blog_feed_string');
 				}
 			}
 			if(!empty($this->feed_url))
@@ -1231,13 +1313,7 @@ class PublicationModule extends Generic3Module
 				return false;
 			}
 		}
-		function add_feed_link_to_head()
-		{
-			if( $this->get_feed_url() )
-			{
-				$this->parent->add_head_item( 'link', array('rel'=>'alternate','type'=>'application/rss+xml','title'=>$this->feed_link_title,'href'=>$this->get_feed_url() ) );
-			}
-		}
+		
 		function get_login_logout_link()
 		{
 			if ($this->show_login_link)
@@ -1342,7 +1418,7 @@ class PublicationModule extends Generic3Module
 				static $featured_items;
 				if (!isset($featured_items[$this->publication->id()]))
 				{
-					$es = new entity_selector( $this->parent->site_id );
+					$es = new entity_selector( $this->site_id );
 					$es->description = 'Selecting featured news items for this publication';
 					$es->add_type( id_of('news') );
 					$es->set_env('site', $this->site_id);
@@ -1411,7 +1487,7 @@ class PublicationModule extends Generic3Module
 		function count_comments($item)
 		{
 			
-			$es = new entity_selector( $this->parent->site_id );
+			$es = new entity_selector( $this->site_id );
 			$es->description = 'Counting comments for this news item';
 			$es->add_type( id_of('comment_type') );
 			$es->add_relation('show_hide.show_hide = "show"');
