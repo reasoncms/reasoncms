@@ -452,6 +452,21 @@ div#courses div.related ul li h3, div#courses div.related ul li h4 {
 	margin:.75em 0px 0px 0px;
 	display:block;
 }
+div#courses div.inProgressNotice {
+	padding:.5em .75em;
+	background-color:#FDF4C3;
+	margin-bottom:1.75em;
+	border:1px solid #F0E6A9;
+}
+div#courses div.inProgressNotice ul {
+	margin:0;
+	padding:0;
+}
+div#courses div.inProgressNotice ul li {
+	border:none;
+	margin:.5em 0;
+	padding:0;
+}
 
 /* Mini News */
 .sidebarTD #miniNews  {
