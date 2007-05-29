@@ -30,7 +30,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 									'links_to_issues',
 									'view_all_items_in_section_link',
 									'group_by_section',
- 								    'back_link',
+ 								    	'back_link',
 									'publication',
 									'date_format',
 									); 	
@@ -53,7 +53,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$this->markup_string .= $this->get_current_issue_markup($this->passed_vars['current_issue']);
 				
 		//if there are other issues, display a "jump to other issues" dropdown
-		if(!empty($this->passed_vars['issues_by_date']) && !empty($this->passed_vars['links_to_issues']))
+		if(!empty($this->passed_vars['issues_by_date']))
 			$this->markup_string .= $this->get_issue_links_markup();
 			
 		//if we're just listing items from one section ....
@@ -232,9 +232,9 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 	function get_issue_links_markup()
 	{
 		$issues_by_date = $this->passed_vars['issues_by_date'];
-		krsort($issues_by_date);
-		
+		//krsort($issues_by_date);
 		$links_to_issues = $this->passed_vars['links_to_issues'];
+
 		$markup_string = '';
 		
 		$cur_issue_id = '';
@@ -243,24 +243,23 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$cur_issue_id = $this->passed_vars['current_issue']->id();
 		}
 		
-		if(count($links_to_issues) > 1 )
+		if(count($issues_by_date) > 1 )
 		{
 			$markup_string .= '<div class="issueMenu">'."\n";
 			$markup_string .= '<form action="'.get_current_url().'">'."\n";
-			$markup_string .= '<label for="pubIssueMenuElement" class="issueLabel">Other issues:</label>'."\n";
+			$markup_string .= '<label for="pubIssueMenuElement" class="issueLabel">Issue:</label>'."\n";
 			$markup_string .= '<select name="issue_id" id="pubIssueMenuElement">'."\n";
-			//$markup_string .= '<option value="'.$cur_issue_id.'" selected="selected">Jump to another issue</option>'."\n";
-			foreach($issues_by_date as $date => $issue)
+			if (!$cur_issue_id)
 			{
-				
-				//$link = '<a href="'.$links_to_issues[$issue->id()].'">'.$name.' -- '.$date.'</a>';
-				if(empty($this->passed_vars['current_issue']) || $issue->id() != $this->passed_vars['current_issue']->id())
-				{
-					$name = $issue->get_value('name');
-					$date = prettify_mysql_datetime( $issue->get_value( 'datetime' ), $this->passed_vars['date_format'] );
-					$markup_string .= '<option value="'.$issue->id().'">'.$name.' ('.$date.')</option>'."\n";
-				}
-					
+				$markup_string .= '<option value="'.$cur_issue_id.'" selected="selected">Select Issue</option>'."\n";
+			}
+			foreach($issues_by_date as $id => $issue)
+			{
+				$selected = ($cur_issue_id == $id) ? ' selected="selected"' : '';
+				$date = $issue->get_value('datetime');
+				$name = $issue->get_value('name');
+				$date = prettify_mysql_datetime( $issue->get_value( 'datetime' ), $this->passed_vars['date_format'] );
+				$markup_string .= '<option value="'.$id.'"'.$selected.'>'.$name.' ('.$date.')</option>'."\n";
 			}
 			$markup_string .= '</select>'."\n";
 			$markup_string .= '<input type="submit" name="go" value="Go" />'."\n";
@@ -314,7 +313,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 	{
 		$url = $this->passed_vars['view_all_items_in_section_link'];
 		$link_text = 'View items in this section from all issues';	
-		return '<div> <a href="'.$url.'">'.$link_text.'</a></div>'."\n";
+		return '<div class="allIssues"><a href="'.$url.'">'.$link_text.'.</a></div>'."\n";
 	}
 	
 
@@ -347,20 +346,21 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		$markup_string = '';
 		if(!empty($this->passed_vars['items_by_section'][$section_id]))
 		{
+			$markup_string .= '<div class="sectionInfo">';
 			$section_entity = $this->passed_vars['sections'][$section_id];
-			$title = '<h3>'.$section_entity->get_value('name').'</h3>'."\n";
 			$url = $this->passed_vars['links_to_sections'][$section_id];
 			
 			if(!empty($url))
-				$markup_string .= '<a href="'.$url.'">'.$title.'</a>'."\n";
+				$markup_string .= '<h3><a href="'.$url.'">'.$section_entity->get_value('name').'</a></h3>'."\n";
 			else
-				$markup_string .= $title;
+				$markup_string .= '<h3>'.$section_entity->get_value('name').'</h3>'."\n";
 			
 			$description = $section_entity->get_value('description');
 			if(!empty($description))
 			{
 				$markup_string .= '<p>'.$description.'</p>'."\n";
-			}		
+			}
+			$markup_string .= '</div>';
 		}
 		return $markup_string;		
 	}
@@ -374,11 +374,10 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			if(!empty($url))
 			{
 				$section_name = $this->passed_vars['sections'][$section_id]->get_value('name');
-				$markup_string .= '<div>  View all items in <a href="'.$url.'">'.$section_name.'</a></div>'."\n";
+				$markup_string .= '<div class="sectionFoot"><span class="viewEntireSection">View all items in <a href="'.$url.'">'.$section_name.'</a>.</span></div>'."\n";
 			}
 		}
 		return $markup_string;		
 	}
-	
 }
 ?>
