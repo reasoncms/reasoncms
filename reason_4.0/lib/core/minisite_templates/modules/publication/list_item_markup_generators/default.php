@@ -116,7 +116,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 			{
 				$section_links[$id] = '<a href = "'.$info['url'].'">'.$info['section_name'].'</a>';
 			}
-			$section_markup_string = '<p><strong>Section:</strong> '.implode(', ', $section_links).'</p>';
+			$section_markup_string = '<div class="sectionMembership"><strong>Section:</strong> '.implode(', ', $section_links).'</div>';
 		}
 		return $section_markup_string; 
 	}
@@ -150,9 +150,9 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$markup_string .=  '<li class="more">';
 			$markup_string .=  '<a href="' . $this->passed_vars['link_to_full_item'] .'">';
-			$markup_string .=  'Read more of "';
+			$markup_string .=  'Read more of &ldquo;';
 			$markup_string .=  $item->get_value('release_title') ;
-			$markup_string .=  '"';
+			$markup_string .=  '&rdquo;';
 			$markup_string .=  '</a>';
 			$markup_string .=  '</li>'."\n";
 		}
