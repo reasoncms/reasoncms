@@ -78,6 +78,7 @@ class PublicationModule extends Generic3Module
 	var $limit_by_page_categories = false; // by default page to category relationship is ignored - can be enabled in page type
 	
 	var $related_publications;
+	var $related_publications_links = array();
 	var $related_categories;
 	
 	var $class_vars_pass_to_submodules = array('publication');	//needed by the item markup generator
@@ -142,6 +143,7 @@ class PublicationModule extends Generic3Module
 									   'items_by_section' => 'get_items_by_section', 
 									   'links_to_sections' => 'get_links_to_sections',
 									   'view_all_items_in_section_link' => 'get_all_items_in_section_link',
+									   'links_to_current_publications' => 'get_links_to_current_publications',
 									);
 	
 	/**
@@ -452,6 +454,11 @@ class PublicationModule extends Generic3Module
 			//elseif
 			//else 
 			$this->module_title = $this->related_title;
+		}
+		elseif(count($this->related_publications) == 1)
+		{
+			$pub = current($this->related_publications);
+			$this->module_title = $pub->get_value('name');
 		}
 		else $this->module_title = 'Related posts';
 	}
@@ -1537,8 +1544,15 @@ class PublicationModule extends Generic3Module
 		
 		function get_link_to_full_item($item)
 		{
-			$link_args = $this->get_query_string_values(array('issue_id', 'section_id'));
-			return $this->construct_link($item, $link_args);
+			if($this->related_mode)
+			{
+				return $this->get_link_to_related_item($item);
+			}
+			else
+			{
+				$link_args = $this->get_query_string_values(array('issue_id', 'section_id'));
+				return $this->construct_link($item, $link_args);
+			}
 		}
 		
 		function get_link_to_full_item_other_pub($item)
@@ -1633,14 +1647,41 @@ class PublicationModule extends Generic3Module
 		{
 			$pub_id_field = $item->get_value('publication_id');
 			$pub_id = (is_array($pub_id_field)) ? array_shift($pub_id_field) : $pub_id_field;
-			$page_id_field = $this->related_publications[$pub_id]->get_value('page_id');
-			$page_id = (is_array($page_id_field)) ? array_shift($page_id_field) : $page_id_field;
-			if ($page_id)
+			$links = $this->get_basic_links_to_current_publications();
+			if(isset($links[$pub_id]))
 			{
-				$url = build_URL($page_id);
-				$link = construct_link(array( $this->query_string_frag.'_id' => $item->id()), array('textonly'), $url);
+				return construct_link(array( $this->query_string_frag.'_id' => $item->id()), array('textonly'), $links[$pub_id]);
 			}
-			return $link;
+			else
+				return '';
+		}
+		function get_basic_links_to_current_publications()
+		{
+			if(empty($this->related_publications_links))
+			{
+				foreach($this->related_publications as $pub)
+				{
+					$page_id_field = $pub->get_value('page_id');
+					$page_id = (is_array($page_id_field)) ? array_shift($page_id_field) : $page_id_field;
+					if($page_id)
+					{
+						$this->related_publications_links[$pub->id()] = build_URL($page_id);
+					}
+				}
+			}
+			return $this->related_publications_links;
+		}
+		function get_links_to_current_publications()
+		{
+			$links = $this->get_basic_links_to_current_publications();
+			if($this->textonly)
+			{
+				foreach($links as $id=>$link)
+				{
+					$links[$id] = $link.'?textonly=1';
+				}
+			}
+			return $links;
 		}
 	}
 ?>
