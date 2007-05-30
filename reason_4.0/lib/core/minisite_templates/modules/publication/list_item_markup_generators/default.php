@@ -87,7 +87,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 		$item = $this->passed_vars['item'];
 		$link_to_full_item = $this->passed_vars['link_to_full_item'];
 				
-		$markup_string .=  '<h4>';
+		$markup_string .=  '<h4 class="title">';
 		if(isset($link_to_full_item) &&  !empty($link_to_full_item))
 			$markup_string .=  '<a href="' .$link_to_full_item. '">'.$item->get_value('release_title').'</a>';
 		else
@@ -146,20 +146,15 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 		$item = $this->passed_vars['item'];
 
 		$markup_string = '';
-		if(isset($this->passed_vars['link_to_full_item']) &&  !empty($this->passed_vars['link_to_full_item']))
+		if($item->get_value('content') && isset($this->passed_vars['link_to_full_item']) &&  !empty($this->passed_vars['link_to_full_item']))
 		{
 			$markup_string .=  '<li class="more">';
 			$markup_string .=  '<a href="' . $this->passed_vars['link_to_full_item'] .'">';
-			$markup_string .=  'Read more of &ldquo;';
+			$markup_string .=  'Read more of &#8220;';
 			$markup_string .=  $item->get_value('release_title') ;
-			$markup_string .=  '&rdquo;';
+			$markup_string .=  '&#8221;';
 			$markup_string .=  '</a>';
 			$markup_string .=  '</li>'."\n";
-		}
-		else
-		{
-# should this trigger an error?  or is this an acceptable practice and we should just go on our merry way?
-			trigger_error('Could not generate "Read more" link markup; index '.$item->id().' is empty or undefined', WARNING);
 		}
 		return $markup_string;
 	}
