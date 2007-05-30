@@ -13,9 +13,9 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 	var $variables_needed = array(  'list_item_markup_strings',		//array item_id => markup for list item
 									'items_by_section', 
 									'no_section_key', 
-									'back_link',
 									'date_format',
 									'featured_item_markup_strings',
+									'links_to_current_publications',
 									); 	
 
 	function RelatedListMarkupGenerator ()
@@ -43,6 +43,7 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 		$markup_string = '';
 		$list = $this->passed_vars['items_by_section'][$this->passed_vars['no_section_key']];
 		$markup_string .= $this->get_list_markup_for_these_items(array_keys($list))."\n";
+		$markup_string .= $this->get_markup_for_pubs_links();
 		return $markup_string;
 	}
 	
@@ -99,6 +100,26 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string .= '</div>'."\n";
 		}
 		return $markup_string;
+	}
+	
+	function get_markup_for_pubs_links()
+	{
+		$markup_string = '';
+		if(!empty($this->passed_vars['links_to_current_publications']))
+		{
+			$markup_string .= '<ul class="pubLinks">'."\n";
+			foreach($this->passed_vars['links_to_current_publications'] as $id => $url)
+			{
+				$markup_string .= '<li><a href="'.$url.'">'.$this->get_pub_link_text($id).'</a></li>'."\n";
+			}
+			$markup_string .= '</ul>'."\n";
+		}
+		return $markup_string;
+	}
+	function get_pub_link_text($id)
+	{
+		$pub = new entity($id);
+		return 'More '.$pub->get_value('name');
 	}
 }
 ?>
