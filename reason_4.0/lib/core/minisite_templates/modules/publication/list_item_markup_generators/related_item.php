@@ -15,7 +15,7 @@ class RelatedListItemMarkupGenerator extends PublicationMarkupGenerator
 	var $variables_needed = array( 	'use_dates_in_list', 
 									'date_format', 
 									'item',
-									'link_to_related_item',
+									'link_to_full_item',
 									'teaser_image',
 									);
 
@@ -51,11 +51,11 @@ class RelatedListItemMarkupGenerator extends PublicationMarkupGenerator
 	{
 		$markup_string = '';
 		$item = $this->passed_vars['item'];
-		$link_to_related_item = $this->passed_vars['link_to_related_item'];
+		$link_to_full_item = $this->passed_vars['link_to_full_item'];
 				
 		$markup_string .=  '<h4>';
-		if(isset($link_to_related_item) &&  !empty($link_to_related_item))
-			$markup_string .=  '<a href="' .$link_to_related_item. '">'.$item->get_value('release_title').'</a>';
+		if(isset($link_to_full_item) &&  !empty($link_to_full_item))
+			$markup_string .=  '<a href="' .$link_to_full_item. '">'.$item->get_value('release_title').'</a>';
 		else
 			$markup_string .= $item->get_value('release_title');
 		$markup_string .=  '</h4>'."\n";
