@@ -209,13 +209,18 @@ class PublicationModule extends Generic3Module
 		$this->style_string = 'relatedPub';
 		unset ($this->request[ $this->query_string_frag.'_id' ] );
 		if (empty($this->max_num_items)) $this->max_num_items = $this->num_per_page;
+		
+		$publication_ids = (!empty($this->params['related_publication_unique_names'])) 
+						   ? $this->build_ids_from_unique_names($this->params['related_publication_unique_names'])
+						   : array();
 		$pub_es = new entity_selector( $this->site_id );
 		$pub_es->description = 'Selecting publications for this page';
 		$pub_es->add_type( id_of('publication_type') );
 		$pub_es->enable_multivalue_results();
 		$pub_es->limit_tables();
 		$pub_es->limit_fields();
-		$pub_es->add_right_relationship( $this->page_id, relationship_id_of('page_to_related_publication') );
+		if (!empty($publication_ids)) $pub_es->add_relation('entity.id IN (' . implode(",", array_keys($publication_ids)) . ')');
+		else $pub_es->add_right_relationship( $this->page_id, relationship_id_of('page_to_related_publication') );
 		$pub_es->add_right_relationship_field('page_to_publication', 'entity', 'id', 'page_id');
 		$publications = $pub_es->run_one();
 		if (empty($publications))
@@ -230,20 +235,23 @@ class PublicationModule extends Generic3Module
 			$pub_es->add_right_relationship_field('page_to_publication', 'entity', 'id', 'page_id');	
 			$publications = $pub_es->run_one();
 		}	
-			
 		if (!empty($publications))
 		{
 			$this->related_publications = $publications;
 			
 			if ($this->limit_by_page_categories)
 			{
+				$category_ids = (!empty($this->params['related_category_unique_names'])) 
+								? $this->build_ids_from_unique_names($this->params['related_category_unique_names'])
+								: array();
 				// grab categories in which to limit related news items
 				$cat_es = new entity_selector( $this->site_id );
 				$cat_es->description = 'Selecting categories for this page';
 				$cat_es->add_type( id_of('category_type'));
 				$cat_es->limit_tables();
 				$cat_es->limit_fields();
-				$cat_es->add_right_relationship($this->page_id, relationship_id_of('page_to_category') );
+				if (!empty($category_ids)) $cat_es->add_relation('entity.id IN (' . implode(",", array_keys($category_ids)) . ')');
+				else $cat_es->add_right_relationship($this->page_id, relationship_id_of('page_to_category') );
 				$categories = $cat_es->run_one();
 				if (!empty($categories))
 				{
@@ -258,6 +266,20 @@ class PublicationModule extends Generic3Module
 		}
 	}
 
+	/**
+	 * Build array of entities from an array of unique_names (or a string with one unique name)
+	 */
+	function build_ids_from_unique_names($unique_names)
+	{
+		$unique_names = (is_array($unique_names)) ? $unique_names : array($unique_names);	
+		foreach($unique_names as $unique_name)
+		{
+			$id = id_of($unique_name);
+			if (!empty($id)) $ids[$id] = $unique_name;
+		}
+		return (isset($ids)) ? $ids : array();
+	}
+	
 	/**
 	 * Crumb for publication should use the release title and not the name of the item
 	 * @author Nathan White
@@ -282,7 +304,7 @@ class PublicationModule extends Generic3Module
 		// all params that could be provided in page_types
 		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'show_login_link', 
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
-		      					  'limit_by_page_categories');
+		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names');
 		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info, 
 							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
 							      'variables_to_pass' => $this->variables_to_pass);
