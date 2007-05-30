@@ -223,7 +223,7 @@ class defaultFilterDisplay
 		else
 			$v = '';
 		$ret = '';
-		$ret .= '<form method="get">'."\n";
+		$ret .= '<form method="get" action="?">'."\n";
 		foreach($this->filters as $key=>$vals)
 		{
 			$ret .= '<input type="hidden" name="filters['.$key.'][type]" value="'.$vals['type'].'">';
@@ -232,7 +232,7 @@ class defaultFilterDisplay
 		if (!empty($this->textonly))
 			$ret .= '<input type="hidden" name="textonly" value="1">';
 		$ret .= 'Search: <input name="search" value="'.$v.'" size="'.$this->search_field_size.'" />'."\n";
-		$ret .= ' <input name="go" type="submit" value="Go">'."\n";
+		$ret .= ' <input name="go" type="submit" value="Go" />'."\n";
 		if(!empty($this->search_value))
 		{
 			$link = '?';
