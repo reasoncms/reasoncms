@@ -129,6 +129,7 @@
 			'limit_to_current_site'=>true,
 			'filter_displayer'=>'default.php',
 			'pagination_displayer'=>'window.php',
+			'wrapper_id_string'=>'',
 		);
 		var $jump_to_item_if_only_one_result = true;
 		var $has_feed = false;
@@ -167,6 +168,11 @@
 				
 			if(!empty($this->request[ $this->query_string_frag.'_id' ]))
 				$this->current_item_id = $this->request[ $this->query_string_frag.'_id' ];
+				
+			if(!empty($this->params['wrapper_id_string']))
+			{
+				$this->style_string = $this->params['wrapper_id_string'];
+			}
 			
 			$this->additional_init_actions();
 			$this->pre_es_additional_init_actions();
