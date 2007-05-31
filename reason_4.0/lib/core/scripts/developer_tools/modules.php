@@ -18,8 +18,8 @@ reason_include_once( 'function_libraries/user_functions.php' );
 reason_include_once( 'minisite_templates/page_types.php' );
 reason_include_once( 'classes/entity_selector.php');
 
-xdebug_start_profiling();
-$s = get_microtime();
+//xdebug_start_profiling();
+//$s = get_microtime();
 $current_user = reason_require_authentication();
 if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
 {
@@ -202,6 +202,6 @@ function show_filter($limit = '')
 	echo '<p><input type="submit" name="submit" value="Search"></p>';
 }
 
-echo 'time taken - ' . (get_microtime() - $s) . ' seconds';
-xdebug_dump_function_profile(4);
+//echo 'time taken - ' . (get_microtime() - $s) . ' seconds';
+//xdebug_dump_function_profile(4);
 ?>
