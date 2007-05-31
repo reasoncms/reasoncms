@@ -18,8 +18,8 @@ reason_include_once( 'function_libraries/user_functions.php' );
 reason_include_once( 'minisite_templates/page_types.php' );
 reason_include_once( 'classes/entity_selector.php');
 
-//xdebug_start_profiling();
-//$s = get_microtime();
+xdebug_start_profiling();
+$s = get_microtime();
 $current_user = reason_require_authentication();
 if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
 {
@@ -33,7 +33,11 @@ $modules_by_page_type = array();
 $es = new entity_selector();
 $es->add_type(id_of('minisite_page'));
 $es->limit_tables('page_node');
-$es->limit_fields('custom_page');
+$es->limit_fields('entity.name, page_node.custom_page, page_node.url_fragment');
+$es->add_right_relationship_field( 'owns', 'entity' , 'id' , 'owner_id' );
+$es->add_right_relationship_field( 'owns', 'entity', 'name', 'site_name' );
+$es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
+$es->add_relation('entity.name != ""');
 $result = $es->run_one();
 
 $detail_mode = (isset($_REQUEST['detail'])) ? ($_REQUEST['detail'] == 'true') : false;
@@ -54,8 +58,6 @@ foreach( $page_types AS $page_type => $type )
 		$module = is_array( $module_info ) ? $module_info[ 'module' ] : $module_info;
 		if( !empty( $module ) )
 		{
-			//echo $module;
-			//die;
 			if ($detail_mode) $check = ($module == $module_limiter) ? true : false;
 			else $check = (empty($module_limiter)) ? true : (strpos($module, $module_limiter) !== false);
 			if (isset($reason_page_types[$page_type]) && $check)
@@ -82,18 +84,14 @@ if ($detail_mode)
 		$pages = array_rand(array_flip($pages), count($pages)); // randomize array
 		foreach ($pages as $page_id)
 		{
-			$e = new entity($page_id);
-			$site = $e->get_owner();
-			if ($site != 0)
+			$page =& $result[$page_id];
+			$url = build_URL_from_entity_known_parent($page, $result);
+			if ($url)
 			{
-				$url = build_URL($page_id);
-				if ($url)
-				{
-					$site_name[] = $site->get_value('name');
-					$page_name[] = $e->get_value('name');
-					$items[] = '<a href="'.$url.'">'.substr($url,0,50).(strlen($url) > 50 ? '...' : '').'</a>';
-					$count++;
-				}
+				$site_name[] = $page->get_value('site_name');
+				$page_name[] = $page->get_value('name');
+				$items[] = '<a href="'.$url.'">'.substr($url,0,50).(strlen($url) > 50 ? '...' : '').'</a>';
+				$count++;
 			}
 			if ($count == $num) break;
 		}
@@ -167,15 +165,18 @@ else
 		{
 			$page_total += count( $module_pages );
 			$tmp_pages = array_merge( array_keys( $module_pages ), $tmp_pages );
+			//pray ($tmp_pages);
+			//die;
 		}
 		echo "<td>$page_total</td>\n";
-		$count = count($tmp_pages);
-		while (empty($url) && ($count > 0))
+		shuffle($tmp_pages);
+		while (empty($url) && (!empty($tmp_pages)))
 		{
-			$key = rand( 0, $count - 1 );
-			$url = build_URL($tmp_pages[$key]);
-			unset ($tmp_pages[$key]);
-			$count = count($tmp_pages);
+			$page_id = array_pop($tmp_pages);
+			if (isset($result[$page_id]))
+			{
+				$url = build_URL_from_entity_known_parent($result[$page_id], $result);
+			}
 		}
 		if (!$detail_mode)
 		{
@@ -201,6 +202,6 @@ function show_filter($limit = '')
 	echo '<p><input type="submit" name="submit" value="Search"></p>';
 }
 
-//echo 'time taken - ' . (get_microtime() - $s) . ' seconds';
-//xdebug_dump_function_profile(4);
+echo 'time taken - ' . (get_microtime() - $s) . ' seconds';
+xdebug_dump_function_profile(4);
 ?>
