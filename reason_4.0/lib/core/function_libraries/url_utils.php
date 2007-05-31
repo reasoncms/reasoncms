@@ -356,25 +356,74 @@ function get_page_link( &$site, &$tree, $page_types, $as_uri = false, $secure = 
 	return $ret;
 }
 
-
 // moved from URL history
 function build_URL( $page_id )
 {
-	$page = new entity($page_id);
-	if ($page->get_values() && ($page->get_value('type') == id_of('minisite_page'))) // check if it is valid and of the correct type
-	{
-		$URL = $page->get_value( 'url_fragment' ).'/';
-		$URL = dig_for_URL( $page_id, $URL );
-		$URL = str_replace( '//', '/', $URL );
-		return $URL;
-	}
+	static $cache;
+	if (isset($cache[$page_id])) $url = $cache[$page_id];
 	else
 	{
-		return false;
+		$es = new entity_selector();
+		$es->add_type(id_of('minisite_page'));
+		$es->limit_tables('page_node');
+		$es->limit_fields('page_node.url_fragment');
+		$es->add_relation('entity.id = '.$page_id);
+		$result = $es->run_one();
+		$page = (!empty($result)) ? array_shift($result) : false;
+		if ($page)
+		{
+			$url = build_URL_from_entity($page);
+			$cache[$page_id] = (!empty($url)) ? $url : false;
+		}
+		else $cache[$page_id] = $url = false;
 	}
+	return $url;
 }
 
-function dig_for_URL( $page_id, $URL )
+/**
+ * Builds URL from a page entity when the related parent_id field is set and the page entities are present
+ * @param object page entity object
+ * @param object pages set of minisite page entity objects with parent_ids
+ * @param string parent_id_field name of entity field that contains the parent_id
+ * @author Nathan White
+ */
+function build_URL_from_entity_known_parent(&$page, &$pages, $parent_id_field = 'parent_id')
+{
+	$url = dig_for_URL_known_parent( $page->id(), $page->get_value($parent_id_field), $page->get_value('url_fragment').'/', $pages, $parent_id_field);
+	$url = str_replace( '//', '/', $url );
+	return $url;
+}
+
+/**
+ * Takes an array of minisite_pages with the related parent_id present and returns an array of URLs indexed by page id
+ * @param object pages array of page entities
+ * @param string parent_id_field needed if not called "parent_id"
+ * @author Nathan White
+ */
+function multi_build_URLS_known_parent($pages, $parent_id_field = 'parent_id')
+{
+	foreach ($pages as $k => $v)
+	{
+		$url = dig_for_URL_known_parent($k, $v->get_value($parent_id_field), $v->get_value('url_fragment').'/', $pages, $parent_id_field);
+		$url = str_replace( '//', '/', $url );
+		if ($url) $urls[$k] = $url;
+	}
+	return $urls;
+}
+
+/**
+ * Builds URL from a page entity
+ * @param object page entity object
+ * @author Nathan White
+ */
+function build_URL_from_entity(&$page)
+{
+	$url = dig_for_URL( $page->id(), $page->get_value( 'url_fragment' ).'/');
+	$url = str_replace( '//', '/', $url );
+	return $url;
+}
+
+function dig_for_URL( $page_id, $URL)
 {
 	static $cache;
 	if (isset($cache[$page_id])) $results = $cache[$page_id];
@@ -383,6 +432,8 @@ function dig_for_URL( $page_id, $URL )
 		$es = new entity_selector();
 		$es->add_type( id_of( 'minisite_page') );
 		$es->add_right_relationship( $page_id, relationship_id_of('minisite_page_parent') );
+		$es->limit_tables('page_node');
+		$es->limit_fields('page_node.url_fragment');
 		$es->set_num(1);
 		$results = $es->run_one();
 		$cache[$page_id] = $results;
@@ -400,7 +451,29 @@ function dig_for_URL( $page_id, $URL )
 			return dig_for_URL( $page->get_value( 'id' ), $URL );
 		}
 	}
-}    
+}
+
+function dig_for_URL_known_parent($page_id, $parent_id, $url, &$pages, $parent_id_field = 'parent_id')
+{
+	static $cache;
+	if (isset($cache[$page_id])) return $cache[$page_id];
+	if (!isset($pages[$parent_id])) return false;
+	$parent =& $pages[$parent_id];
+	if (!empty($parent))
+	{
+		if ($parent_id == $page_id)
+		{
+			$url = get_site_URL( $page_id ) . $url;
+			$cache[$page_id] = $url;
+			return $url;
+		}
+		else
+		{
+			if ($parent->get_value('url_fragment')) $url = $parent->get_value('url_fragment').'/'.$url;
+			return dig_for_URL_known_parent( $parent_id, $parent->get_value($parent_id_field), $url, $pages, $parent_id_field );
+		}
+	}
+}
 
 function get_site_URL( $page_id )
 {
@@ -411,6 +484,8 @@ function get_site_URL( $page_id )
 		reason_include_once( 'function_libraries/relationship_finder.php' );
 		$es = new entity_selector();
 		$es->add_type( id_of( 'site') );
+		$es->limit_tables('site');
+		$es->limit_fields('site.base_url');
 		$es->add_left_relationship( $page_id, relationship_finder( 'site', 'minisite_page', 'owns' ) ); //relationship_id_of('owns') 
 		$es->set_num(1);
 		$results = $es->run_one();
