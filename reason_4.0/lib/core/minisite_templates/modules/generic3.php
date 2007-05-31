@@ -283,19 +283,25 @@
 			}
 			else
 			{
-				echo '<div class="persistent">'."\n";
-				echo $this->get_add_item_link();
+				$add_item_link = trim($this->get_add_item_link());
+				$login_logout_link = trim($this->get_login_logout_link());
 				
-				if($this->use_filters)
+				if($this->use_filters || !empty($add_item_link) || !empty($login_logout_link))
 				{
-					echo '<div id="filtering">'."\n";
-					$this->show_filtering();
-					echo '</div>'."\n";
+					echo '<div class="persistent">'."\n";
+					echo $add_item_link."\n";
+					
+					if($this->use_filters)
+					{
+						echo '<div id="filtering">'."\n";
+						$this->show_filtering();
+						echo '</div>'."\n";
+					}
+					
+					echo $login_logout_link."\n";
+					
+					echo '</div>'."\n"; // close the persistent items
 				}
-				
-				echo $this->get_login_logout_link();
-				
-				echo '</div>'."\n"; // close the persistent items
 				
 				if(!empty( $this->current_item_id ) )
 				{
