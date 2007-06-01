@@ -11,6 +11,7 @@
 	reason_include_once( 'classes/viewer.php' );
 	reason_include_once( 'classes/entity_selector.php' );
 	reason_include_once( 'classes/admin/admin_module.php' );
+	reason_include_once( 'classes/head_items.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
 	
 	/*
@@ -47,20 +48,13 @@
 		// current AdminModule
 		var $module;
 
+		var $head_items; //head items object
+		
 		// logged in user
-		var $authenticated_user_id;
-
-		//customizing stylesheets for different modules
-		var $style_sheet = array( 'Archive' => 'archive.css' ,
-  		    						  'Associator' => 'assoc.css' ,
-		 						  'ReverseAssociator' => 'assoc.css' ,
-		 						  'Sharing' => 'share.css' ,
-								);
-
-		var $script = array( 'Associator' => 'table_update.js' );
+		var $authenticated_user_id = false;
   
 		//default args will be always passed on admin pages
-		var $default_args = 			    array('site_id',
+		var $default_args = array('site_id',
 								  'type_id',
 								  'id',
 								  'rel_id',
@@ -94,8 +88,23 @@
 		} // }}}
 	
 		// handle all initialization and sessioning stuff
-		// takes the current request state as variable. 
-		function load_params( $authenticated_user_id, $request ) // {{{
+		// takes the current request state as variable.
+		
+		/** 
+		 * Sets up the authenticated_user_id class variable
+		 * @return authenticated_user_id
+		 */
+		function authenticate()
+		{
+			if ($this->authenticated_user_id == false) 
+			{
+				$user_netid = reason_require_authentication();
+				$this->authenticated_user_id = (empty($user_netid)) ? false : get_user_id($user_netid);
+			}
+			return $this->authenticated_user_id;
+		}
+		
+		function load_params() // {{{
 		//first function that is called.  It sets up all the proper variables in admin page and sets user id.
 		{
 			$param_cleanup_rules = array( 'site_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => 'true')),
@@ -115,8 +124,9 @@
 						     'rel_id','cur_module','viewer_id',
 						     'entity_a','entity_b','debugging' );			 
 
-			$this->authenticated_user_id = $authenticated_user_id; 
-
+			// the array_diff is to get rid of the cookie vars that exists in REQUEST.  we don't want cookie values in our admin page request
+			$request = array_diff( conditional_stripslashes($_REQUEST), conditional_stripslashes($_COOKIE) );
+			
 			$this->request = array_merge($request, clean_vars($request, $param_cleanup_rules));
 
 			foreach ( $params_to_localize as $v )
@@ -1130,8 +1140,30 @@
 				echo 'You are <strong>' . $user->get_value( 'name' ) .'</strong>';
 				if ($show_logout) echo ': <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 			}
-
 		} // }}}
+		
+		function set_head_items()
+		{
+			// add the charset information
+			$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ) );
+			
+			// add universal css path
+			if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '') $this->head_items->add_stylesheet(UNIVERSAL_CSS_PATH);
+			
+			// add admin CSS
+			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'admin.css');
+						
+			// add javascript logout timer
+			if (!isset($_SERVER['REMOTE_USER']) && USE_JS_LOGOUT_TIMER) // if we are not logged in via http authentication
+			{
+				$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/timer.css');
+				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'timer/timer.js.php');
+			}
+			
+			// add collapse javasript (should be moved to module method
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'collapse.js');
+		}
+		
 		function head() // {{{
 		//page head.  prints out basic top html stuff
 		{
@@ -1144,27 +1176,7 @@
 			if( !empty( $this->title ) AND !empty( $this->site_id ) AND $this->title != $this->get_name( $this->site_id ) )
 				echo ': '.strip_tags($this->title);
 			echo '</title>'."\n";
-			echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'."\n";
-			if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '')
-			{
-				echo '<link rel="stylesheet" type="text/css" href="'.UNIVERSAL_CSS_PATH.'" />'."\n";
-			}
-			echo '<link rel="stylesheet" type="text/css" href="'.REASON_ADMIN_CSS_DIRECTORY.'admin.css" />'."\n";
-			if ($this->cur_module != 'Sorting')
-			{
-				//echo '<script language="JavaScript" type="text/javaScript" src="'.WEB_JAVASCRIPT_PATH.'modified_form.js"></script>'."\n";
-			}
-			if( !empty( $this->style_sheet[ $this->cur_module ] ) )
-				echo '<link rel="stylesheet" type="text/css" href="'.REASON_ADMIN_CSS_DIRECTORY.$this->style_sheet[ $this->cur_module ].'" />' . "\n";
-			if( !empty( $this->script[ $this->cur_module ] ) )
-				echo '<script language="JavaScript" type="text/javaScript" src="'.WEB_JAVASCRIPT_PATH.$this->script[ $this->cur_module ] .'"></script>'."\n";
-			if (!isset($_SERVER['REMOTE_USER']) && USE_JS_LOGOUT_TIMER) // if we are not logged in via http authentication
-			{
-				echo '<link rel="stylesheet" type="text/css" href="'.REASON_HTTP_BASE_PATH.'css/timer.css'.'" />'. "\n";
-				echo '<script language="JavaScript" type="text/javaScript" src="'.WEB_JAVASCRIPT_PATH.'timer/timer.js.php"></script>'."\n";
-			}
-			echo '<script language="JavaScript" type="text/javaScript" src="'.WEB_JAVASCRIPT_PATH.'collapse.js"></script>'."\n";
-			
+			echo $this->head_items->get_head_item_markup();
 		?>
 		<script language="JavaScript" type="text/JavaScript">
 		<!--
@@ -1257,12 +1269,16 @@
 		 * This method uses the $GLOBALS['_reason_admin_modules'] array defined in admin_module.php
 		 * to determine which module to run.
 		 *
-		 * @return void
+		 * @return true if complete, false if used could not be authenticated
 		 */
 		function init() // {{{
 		//basic init function.  called before anything is displayed.  does its own stuff and then calls the modules
 		//init function
 		{
+			if ($this->authenticate() == false) return false;
+			$this->load_params();
+			$this->head_items = new HeadItems();
+			$this->set_head_items();
 			if( !empty($this->cur_module) )
 			{
 				if(
@@ -1314,12 +1330,14 @@
 			if(class_exists( $module_name ) )
 			{
 				$this->module = new $module_name( $this );
+				$this->module->set_head_items($this->head_items);
 				$this->module->init();
 			}
 			else
 			{
 				trigger_error('Class '.$module_name.' not found', HIGH);
 			}
+			return true;
 		} // }}}
 		function check_errors( $user ) // {{{
 		//checks to make sure user has access to current site, otherwise, sends him home.
@@ -1446,7 +1464,7 @@
 		function run() // {{{
 		//does it's thang
 		{
-			$this->init();
+			//$this->init();
 
 			$this->head();
 		
