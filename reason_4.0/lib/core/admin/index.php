@@ -10,20 +10,13 @@
 	}
 	$_page_timing_start = getmicrotime();
 	
-	//xdebug_start_profiling();
-
 	// admin site needs sessioning
 	// $reason_session = true;
-	
-	////////////////////////////////////////////////////////////////
-	///////// REMOVE ME ////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////
-	// $maintenance_mode = true;
 	
 	include_once( 'reason_header.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
 
-	$authenticated_user_netid = check_authentication('admin_login');
+	$authenticated_user_netid = reason_require_authentication('admin_login');
 
 	if (isset($_GET['do']) && ($_GET['do'] === 'moveup' || $_GET['do'] === 'movedown'))
 	{
@@ -36,18 +29,18 @@
 	
 	reason_include_once( 'classes/admin/admin_page.php' );
  
-    	if(DISABLE_REASON_LOGIN){
+    if(DISABLE_REASON_LOGIN)
+    {
 	    header( 'Location: /errors/maintenance.php'); //?estimate='.$maintenance_estimate );
 	    die();
-        }
+	}
 	
 	ini_set( 'upload_max_filesize','10M' );
 	$f = new AdminPage();
-	$authenticated_user_id = get_user_id( $authenticated_user_netid );
-	if( !empty( $authenticated_user_id ) )
+	$authenticated = $f->authenticate();
+	if ($authenticated)
 	{
-		// the array_diff is to get rid of the cookie vars that exists in REQUEST.  we don't want cookie values in our admin page request
-		$f->load_params( $authenticated_user_id, array_diff( conditional_stripslashes($_REQUEST), conditional_stripslashes($_COOKIE) ) );
+		$f->init(); // init returns false if the user cannot be authentication
 		$f->run();
 	}
 	else
