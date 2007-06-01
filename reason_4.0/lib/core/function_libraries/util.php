@@ -1197,4 +1197,37 @@
 		}
 		return $retrieved[$name];
 	}
+	
+	/**
+	 * Determine if a given user can edit a given site
+	 *
+	 * Note: this function takes a *Reason* ID -- other implementations generally take a username/netid
+	 *
+	 * @param integer $user_id The Reason entity ID of the user
+	 * @param integer $site_id The Reason entity ID of the site
+	 * @param boolean $use_cache Defaults to true; set to false if your script previously changed this value and you need to know what the new value will be
+	 * @return boolean true if user can edit site, false if not
+	 */
+	function user_can_edit_site($user_id, $site_id, $use_cache = true)
+	{
+		static $cache = array();
+		if(!isset($cache[$user_id]))
+			$cache[$user_id] = array();
+		if(!$use_cache || !isset($cache[$user_id][$site_id]))
+		{
+			$es = new entity_selector();
+			$es->add_type(id_of('user'));
+			$es->add_right_relationship($site_id,relationship_id_of('site_to_user'));
+			$es->add_relation('entity.id = "'.$user_id.'"');
+			$es->set_num(1);
+			$es->limit_tables();
+			$es->limit_fields();
+			$users = $es->run_one();
+			if(empty($users))
+				$cache[$user_id][$site_id] = false;
+			else
+				$cache[$user_id][$site_id] = true;
+		}
+		return $cache[$user_id][$site_id];
+	}
 ?>
