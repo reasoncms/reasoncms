@@ -1374,16 +1374,7 @@
 		
 		function verify_user( $user ) // {{{
 		{
-			$rels = $user->get_right_relationships();
-			$stu = $rels[ 'site_to_user' ];
-			foreach( $stu AS $s )
-			{
-				if( $s->id() == $this->site_id )
-				{
-					return true;
-				}
-			}
-			return false;
+			return user_can_edit_site( $user->id(), $this->site_id );
 		} // }}}
 		function site_to_type() // {{{
 		{
