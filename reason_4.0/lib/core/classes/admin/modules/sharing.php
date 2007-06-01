@@ -13,11 +13,9 @@
 		}
 		function init() // {{{
 		{
+			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'sharing.css');
 			reason_include_once( 'classes/sharing_filter.php' );
-			reason_include_once( 'classes/viewer.php' );
-			reason_include_once( 'classes/entity_selector.php' );
 			reason_include_once( 'content_listers/sharing.php' );
-			include_once( CARL_UTIL_INC . 'basic/misc.php' );
 			$this->set_session_vars();
 
 			$type = new entity( $this->admin_page->type_id );

@@ -11,6 +11,7 @@
 		{
 			$this->admin_page =& $page;
 		} // }}}
+		
 		function show_live() // {{{
 		{
 			$s = '<a href="'.$this->admin_page->make_link( $this->admin_page->request +  array( 'state' => 'live' ) ) . '">Back to main list</a><br /><br />';
@@ -48,7 +49,7 @@
 			$d->add_relation('ar.name != "owns"');
 			$d->add_relation('(ar.custom_associator IS NULL OR ar.custom_associator = "")');
 			$r = db_query( $d->get_query() , 'Error selecting relationships' );
-
+			
 			$return_me = array();
 			while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
 				$return_me[ $row[ 'id' ] ] = $row;
@@ -59,6 +60,7 @@
 				list( $key , ) = each( $this->associations );
 
 				$this->admin_page->rel_id = $key;
+				echo $key;
 			}
 		} // }}}
 		function list_associations() // {{{
@@ -100,11 +102,11 @@
 				return;
 			}
 			reason_include_once( 'classes/filter.php' );
-			reason_include_once( 'classes/viewer.php' );
-			reason_include_once( 'classes/entity_selector.php' );
 			reason_include_once( 'content_listers/associate.php' );
 			include_once( CARL_UTIL_INC . 'basic/misc.php' );
 		
+			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'assoc.css');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'table_update.js');
 			$this->set_session_vars();
 			$this->get_associations();
 			$current_assoc = $this->associations[ $this->admin_page->rel_id ];
@@ -138,14 +140,19 @@
 		} // }}}
 		function get_views( $type_id ) // {{{
 		{
+			$s = get_microtime();
 			$ds = new entity_selector();
 			$ds->add_type( id_of('view'));
+			$ds->limit_tables('sortable');
+			$ds->limit_fields();
 			$ds->set_order( 'sortable.sort_order' );
 			$ds->add_right_relationship( $type_id , relationship_id_of( 'type_to_default_view' ) );
 			$default_views = $ds->run_one();
 			
 			$ssvs = new entity_selector();
 			$ssvs->add_type( id_of( 'view' ) );
+			$ds->limit_tables('sortable');
+			$ds->limit_fields();
 			$ssvs->add_left_relationship( $type_id , relationship_id_of( 'view_to_type' ) );
 			$ssvs->add_left_relationship( $this->admin_page->site_id , relationship_id_of( 'view_to_site' ) );
 			$ssvs->set_order( 'sortable.sort_order' );
@@ -179,6 +186,7 @@
 				reset($viewer_type);
 				$this->viewer_entity = current($viewer_type);
 			}
+			//echo 'get_views took ' . (get_microtime() - $s) . ' seconds<br/>';
 		} // }}}
 		function get_viewer($site_id , $type_id , $lister) //{{{
 		{

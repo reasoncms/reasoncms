@@ -2,7 +2,8 @@
 	class DefaultModule // {{{
 	{
 		var $page;
-
+		var $head_items;
+		
 		function DefaultModule( &$page ) // {{{
 		{
 			$this->admin_page =& $page;
@@ -24,6 +25,12 @@
 			}
 			$this->admin_page->title = 'Reason '.REASON_VERSION;
 		} // }}}
+		
+		function set_head_items(&$head_items)
+		{
+			$this->head_items =& $head_items;
+		}
+		
 		function run() // {{{
 		{
 			echo '<div class="oldBrowserAlert">Notice: Reason works with all browsers.  However, it will look and feel quite a lot nicer if you can use it with a modern, standards-based browser such as Internet Explorer 6+, Mozilla 1.5+, Firefox, Netscape 7, Safari, or Opera.</div>'."\n";

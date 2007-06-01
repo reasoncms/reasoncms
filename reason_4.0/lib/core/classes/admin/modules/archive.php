@@ -13,7 +13,7 @@
 		} // }}}
 		function init() // {{{
 		{
-			reason_include_once( 'function_libraries/admin_actions.php' );
+			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'archive.css');
 			$this->current = new entity( $this->admin_page->id );
 
 			$this->admin_page->title = 'History of "'.$this->current->get_value('name').'"';
