@@ -83,9 +83,22 @@
 			$_SESSION[ 'assoc' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ][ $this->admin_page->rel_id ][ $this->admin_page->id ] = 
 				$this->admin_page->make_link( array( 'PHPSESSID' => '' ) , true ); 
 		} // }}}
+		
+		function should_run()
+		{
+			if(empty($this->admin_page->id))
+				return false;
+			else
+				return true;
+		}
 	
 		function init() // {{{
 		{
+			if(!$this->should_run())
+			{
+				trigger_error('Associator module needs an ID to run; none provided.');
+				return;
+			}
 			reason_include_once( 'classes/filter.php' );
 			reason_include_once( 'classes/viewer.php' );
 			reason_include_once( 'classes/entity_selector.php' );
@@ -257,7 +270,11 @@
 		} // }}}
 		function run() // {{{
 		{
-
+			if(!$this->should_run())
+			{
+				echo '<p>There is a problem with the link to this page. Please try to get to this page in another way.</p>';
+				return;
+			}
 			if( !empty ($this->admin_page->request[ 'error_message' ]) )
 			{
 				$e_mess = array( 1 => 'This is a required relationship, You must first choose an item of this type to go with your entity',
