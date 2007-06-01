@@ -84,7 +84,7 @@
 		} // }}}
 		function show_paging() // {{{
 		{
-			$c = $this->es->get_one_count($this->state);
+			$c = (!$this->real_count) ? $this->es->get_one_count($this->state) : $this->real_count;
 			if( $c )
 			{
 				// show paging
@@ -119,7 +119,8 @@
 					}
 					echo '</nobr>';
 				}
-				echo "<nobr>(Items $this->page_start - $this->page_end of approx. ".$this->num_results. ' Results)';
+				$approx_string = ($this->real_count) ? ' of ' : ' of approx. ';
+				echo "<nobr>(Items $this->page_start - $this->page_end".$approx_string.$this->num_results. ' Results)';
 				echo '</nobr>';//</span>';
 			}
 		} // }}}
@@ -220,6 +221,10 @@
 							if ( $row->get_value( $show ) )
 							{
 								$val_to_show = $row->get_value( $show );
+								if (is_array($val_to_show)) 
+								{
+									$val_to_show = implode(", ", $val_to_show);
+								}
 								if ( $first_field )
 								{
 									$first_field = false;
@@ -227,7 +232,7 @@
 								}
 								else
 									$display .= $val_to_show;
-								$display .= '<br />';
+								//$display .= '<br />';
 							}
 						}
 					}
@@ -249,7 +254,7 @@
 						$display = $this->get_rel_sort($display, $data);
 					}
 				}
-
+				if (is_array($display)) $display = '<ul><li>'.implode('</li><li>', $display).'</li></ul>';
 				//echo '<td class="'.$options[ 'class' ].'">'.$display.'</td>';
 				echo '<td>'.$display.'</td>' ."\n";
 			}
