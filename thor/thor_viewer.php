@@ -9,6 +9,8 @@
  * Provides a view of thor form data with filtering and .csv export
  *
  */
+require_once( 'XML/Unserializer.php'); // Requires PEAR XML_Serialize package
+include_once( DISCO_INC . 'disco.php'); // Requires Disco	
 
 class Thor_Viewer
 {
@@ -23,7 +25,7 @@ class Thor_Viewer
 	var $sort_order = 'desc';
 	
 	/**
-	 * @var string export mode currently only csv is supported and this is unused
+	 * @var string export mode currently only csv is supported
 	 */
 	var $export = ''; 
 	
@@ -37,11 +39,25 @@ class Thor_Viewer
 	 */ 
 	var $filter_toggle = true;
 	
+	var $export_enable = true;
+	
+	var $allow_delete = false;
+	
+	var $delete_action;
+	
+	var $delete_form;
 	/**
 	 * @var array populated with a sample row when data is built - allows header row to render correctly if filtering gets rid of all rows
 	 * @access private
 	 */ 
 	var $_row = array();
+	
+	/**
+	 * @var array representing form structure - parsed using PEAR XML Unserialize
+	 */
+	var $_form_xml = array();
+
+	var $_display_values = array();
 	
 	/**
 	 * @var int total number of rows in $table_name
@@ -58,11 +74,79 @@ class Thor_Viewer
 	 */
 	var $extra_fields = array('id', 'submitted_by', 'submitter_ip', 'date_created');
 	
-	function Thor_Viewer($xml, $db_conn = '', $table_name = '')
+	var $cleanup_rules = array('thor_sort_order' => array('function' => 'check_against_array', 'extra_args' => array('asc', 'ASC', 'desc', 'DESC')),
+							   'thor_filters' => array('function' => 'turn_into_array'),
+							   'thor_filter_clear' => array('function' => 'turn_into_string'),
+							   'thor_delete' => array('function' => 'check_against_array', 'extra_args' => array('delete', 'confirm_delete')),
+							   'thor_export' => array('function' => 'check_against_array', 'extra_args' => array('csv')));
+	
+	var $filename_frag = 'form';
+	var $filename_real = '';
+	
+	function Thor_Viewer($xml = '')
 	{
 		$this->_xml = $xml;
-		$this->_db_conn = $db_conn;
-		$this->_table_name = $table_name;
+	}
+	
+	function init_using_reason_form_id($form_id)
+	{
+		$form = new entity($form_id);
+		$form->get_values();
+		if ($form->get_value('type') != id_of('form'))
+		{
+			trigger_error('the thor viewer was passed an invalid id ('.$form_id.') - it must be passed the ID of a reason form entity');
+		}
+		$this->init($form->get_value('thor_content'), THOR_FORM_DB_CONN, 'form_'.$form->id(), $form->id());
+	}
+	
+	function init($xml, $thor_db, $table_name, $filename_frag = '', $filename_real = '')
+	{
+		$this->_xml = $xml;
+		$this->set_db_conn($thor_db, $table_name);
+		if(!empty($this->filename_frag)) $this->filename_frag = $filename_frag;
+		if(!empty($this->_xml))
+		{
+			$unserializer_options = array ( 'parseAttributes' => TRUE, 
+											'forceEnum' => array('hidden','textarea', 'comment', 'optiongroup','checkboxgroup','radiogroup','checkbox','radio','option') ); 
+			$unserializer = &new XML_Unserializer($unserializer_options);
+			$unserializer->unserialize($this->_xml);
+			$this->_form_xml = $unserializer->getUnserializedData();
+			$this->_display_values = $this->_build_display_values();
+		}
+		$this->_set_params();
+		if (!empty($this->delete_action)) $this->init_delete();
+		$this->init_history();
+	}
+	
+	function init_delete()
+	{
+		if ($this->delete_action == 'delete')
+		{
+			$confirm = new DiscoConfirm();
+			$this->delete_form =& $confirm;
+		}
+		elseif ($this->delete_action == 'confirm_delete')
+		{
+		
+		}
+	}
+
+	function init_history()
+	{
+		if (!$this->_check_table_exists('thor_history'))
+		{
+			$this->_create_thor_history_table();
+		}
+	}
+	
+	function enable_delete()
+	{
+		$this->allow_delete = true;
+	}
+	
+	function disable_delete()
+	{
+		$this->allow_delete = false;
 	}
 	
 	function set_db_conn($db_conn, $table_name)
@@ -70,13 +154,30 @@ class Thor_Viewer
 		$this->_db_conn = $db_conn;
 		$this->_table_name = $table_name;
 	}
-	
+
+	function set_filename_real($filename)
+	{
+		$this->filename_real = $filename;
+	}
+	/**
+	 * @deprecated
+	 */
 	function set_params($sort_order, $sort_field, $export, $filters)
 	{
-		if (!empty($sort_order)) $this->set_sort_order($sort_order);
-		if (!empty($sort_field)) $this->set_sort_field($sort_field);
-		if (!empty($export)) $this->set_export($export);
-		if (!empty($filters)) $this->set_filters($filters);
+		$this->init($this->_xml, $this->_db_conn, $this->_table_name);
+	}
+	
+	function _set_params()
+	{
+		$this->cleanup_rules['thor_sort_field'] = array('function' => 'check_against_array', 'extra_args' => array_merge($this->extra_fields, array_keys($this->_display_values))); // dynamically add
+		
+		$this->request = clean_vars($_REQUEST, $this->cleanup_rules);
+		if (!empty($this->request['thor_sort_order'])) $this->set_sort_order($this->request['thor_sort_order']);
+		if (!empty($this->request['thor_sort_field'])) $this->set_sort_field($this->request['thor_sort_field']);
+		if (!empty($this->request['thor_export'])) $this->set_export($this->request['thor_export']);
+		if ((!empty($this->request['thor_filters'])) && !isset($this->request['thor_filter_clear'])) $this->set_filters($this->request['thor_filters']);
+		if (!empty($this->request['thor_delete'])) $this->set_delete($this->request['thor_delete']);
+		else ($this->set_filters(array('')));
 	}
 
 	function set_sort_field($input)
@@ -97,7 +198,10 @@ class Thor_Viewer
 	
 	function set_export($input)
 	{
-		$this->export = $input;
+		if ($this->export_enable)
+		{
+			$this->export = $input;
+		}
 	}
 	
 	function set_num_per_page($num_per_page)
@@ -110,8 +214,12 @@ class Thor_Viewer
 		foreach ($filter_array as $k=>$v)
 		{
 			if (!empty($v)) $this->filters[$k] = array('name' => $k, 'value' => $v);
-			//if (!empty($v)) $this->filters[$k] = $v; // this should be enough ....
 		}
+	}
+	
+	function set_delete($string)
+	{
+		$this->delete_action = $string;
 	}
 	
 	/**
@@ -137,7 +245,7 @@ class Thor_Viewer
 		connectDB(REASON_DB); // reconnect to default DB
 		$this->_row = current($my_data);
 		$this->total_rows = count($my_data);
-		if (($this->filter_toggle == true) && (count($this->filters) > 0)) $this->filter_data($my_data, $this->filters);
+		if (($this->filter_toggle == true) && (count($this->filters) > 0)) $this->_filter_data($my_data, $this->filters);
 		$this->filtered_rows = count ($my_data);
 		return $my_data;
 	}
@@ -152,11 +260,11 @@ class Thor_Viewer
 	}
 	
 	/**
-	 * filter_data modifies data according to an array of filters, and allows modules can apply filtering rules unrelated to user input 
+	 * _filter_data modifies data according to an array of filters, and allows modules to apply filtering rules unrelated to user input 
 	 * @param &$data
 	 * @param $filter_array
 	 */
-	function filter_data(&$data, $filter_array = '')
+	function _filter_data(&$data, $filter_array = '')
 	{
 		//pray ($filter_array);
 		if (!empty($filter_array))
@@ -180,10 +288,10 @@ class Thor_Viewer
 			{
 				foreach ($data as $k => $v) 
 				{
-					if (strpos($v[$active_filter['name']], $active_filter['value']) === false) unset ($data[$k]);
+					if (strpos(strtolower($v[$active_filter['name']]), strtolower($active_filter['value'])) === false) unset ($data[$k]);
 				}
 			}
-			if (count($filter_array) > 0) $this->filter_data($data, $filter_array);
+			if (count($filter_array) > 0) $this->_filter_data($data, $filter_array);
 		}
 	}
 
@@ -208,7 +316,7 @@ class Thor_Viewer
 			if (($type == 'radiogroup') || ($type == 'optiongroup'))
 			{
 				$selected = '';
-				$ret .= '<select name="filters['.$k.']">';
+				$ret .= '<select name="thor_filters['.$k.']">';
 				$ret .= '<option value="">---</option>';
 				foreach ($this->_display_values[$k]['options'] as $v2)
 				{
@@ -219,7 +327,7 @@ class Thor_Viewer
 			}
 			else
 			{
-				$ret .= '<input type="text" name="filters['.$k.']" value="'.$cur_value.'" size="10" /></td>';
+				$ret .= '<input type="text" name="thor_filters['.$k.']" value="'.$cur_value.'" size="10" /></td>';
 			}
 			$count++;
 			$first = '';
@@ -227,7 +335,7 @@ class Thor_Viewer
 		$ret .= '</tr>';
 		$ret .= '<tr>';
 		$ret .= '<td class="filterButtons" colspan='.$count.'>';
-		$ret .= '<input type="submit" name="filter_submit" value="Apply Filters"> <input type="submit" name="clear" value="Clear Filters" />';
+		$ret .= '<input type="submit" name="filter_submit" value="Apply Filters"> <input type="submit" name="thor_filter_clear" value="Clear Filters" />';
 		$ret .= '</form>';
 		$ret .= '</td>';
 		$ret .= '</tr>';
@@ -244,19 +352,16 @@ class Thor_Viewer
 	{
 		$first = ' class="first"';
 		$order_display_name = array('asc' => 'Sort Ascending', 'desc' => 'Sort Descending');
-		if (empty($this->_display_values)) $this->_map_labels($header_row);
-		$parts = parse_url(get_current_url());
-		$base_url = $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . '?mode=data_view&';
+		//$parts = parse_url(get_current_url());
+		//$base_url = $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . '?mode=data_view&';
 		$ret = '<tr class="head">';
 		foreach ($header_row as $k => $v)
 		{
 			if (($this->sort_field == $k) && ($this->sort_order == 'asc')) $order = 'desc';
 			else $order = 'asc';
-			$url = $base_url . 'sort_field='.$k.'&sort_order='.$order;
-			foreach ($this->filters as $k2 => $v2)
-			{
-				$url .= '&filters['.$k2.']='.htmlentities($v2['value']);
-			}
+			$url_array = array('thor_sort_field' => $k, 'thor_sort_order' => $order, 'thor_filters' => '', 'thor_export' => '');
+			$this->parse_filters_for_url($url_array);
+			$url = make_link($url_array);
 			$v = (isset($this->_display_values[$k])) ? $this->_display_values[$k]['label'] : $k;
 			$ret .= '<th'.$first.'><a href="'.$url.'" title="'.$order_display_name[$order].'">'.htmlentities($v).'</a></th>';
 			$first = '';
@@ -298,7 +403,21 @@ class Thor_Viewer
 		$ret = '';
 		$class = 'odd';
 		$header = $this->gen_header_row($this->_row);
+		$links_base = $links_export_all = $this->gen_menu_links_base();
+		$this->parse_filters_for_url($links_base);	
+		$links_export = $links_delete = $links_base;
+		$links_delete['thor_delete'] = 'delete';
+		$links_export_all['thor_export'] = 'csv'; // does not consider filtering
+		$menu_links['Export Stored Data'] = make_link($links_export_all);
+		if ($this->filtered_rows > 0 && ($this->filtered_rows != $this->total_rows))
+		{
+			$num_string = ($this->filtered_rows == 1) ? '1 Item' : $this->filtered_rows . ' Items';
+			$links_export['thor_export'] = 'csv';
+			$menu_links['Export Found Set ('.$num_string.')'] = make_link($links_export);
+		}
+		if ($this->allow_delete) $menu_links['Delete Stored Data'] = make_link($links_delete);
 		$ret .= '<h3>Displaying '.$this->filtered_rows.' of '.$this->total_rows.' rows</h3>';
+		if (!empty($menu_links)) $ret .= $this->gen_menu($menu_links);
 		$ret .= '<table class="thor_data">';
 		$ret .= $header;
 		if ($this->filter_toggle) $ret .= $this->gen_filter_rows($this->_row);
@@ -309,6 +428,31 @@ class Thor_Viewer
 		}
 		$ret .= '</table>';
 		return $ret;
+	}
+
+	/**
+	 * Needs to preserve proper request variables relevant to this module and not provide a link to whatever is currently requested
+	 */
+	function gen_menu_links_base()
+	{
+		$links_base = array('thor_sort_field' => $this->sort_field, 'thor_sort_order' => $this->sort_order, 'thor_filters' => '', 'thor_filters_clear' => '', 'thor_delete' => '', 'thor_export' => '');
+		return $links_base;
+	}
+	
+	function gen_menu($link_array)
+	{
+		foreach ($link_array as $k=>$v)
+		{
+			if (!empty($v))
+			{
+				$links[] = '<a href="'.$v.'">'.$k.'</a>';
+			}
+			else 
+			{
+				$links[] = '<strong>'.$k.'</strong>';
+			}
+		}
+		return '<p><strong>Options</strong>: ' . implode(' | ', $links) . '</p>';
 	}
 	
 	/**
@@ -325,7 +469,6 @@ class Thor_Viewer
 		$ret = '';
 		if ($head) // if head we append a flipped row to the head of the array with flipped and mapped keys
 		{
-			if (empty($this->_display_values)) $this->_map_labels($this->_row);
 			foreach($this->_row as $k=>$v)
 			{
 				$head_row[$k] = (isset($this->_display_values[$k])) ? $this->_display_values[$k]['label'] : $k;
@@ -367,17 +510,84 @@ class Thor_Viewer
 			exit;
 		}
 	}
+
+    /**
+	 * Wraps up the typical use case
+	 */
 	
-	// placeholder function for eventual ability to add/remove columns
+	function run()
+	{
+		$thor_data = $this->build_data();
+		if (!$this->has_data())
+		{
+			echo '<p><strong>The form has no stored data.</strong></p>';
+			return false;
+		}
+		if (!empty($this->delete_action))
+		{
+			$this->run_delete();
+		}
+		elseif (empty($this->export))
+		{
+			// basic display of table
+			$thor_viewer_html = $this->gen_table_html($thor_data);
+			echo $thor_viewer_html;
+		}
+		elseif ($this->export == 'csv')
+		{
+			// csv export
+			$filename = (!empty($this->real_filename)) ? $this->real_filename : $this->filename_frag . '_' .date("Y-m-d");
+ 			$this->gen_csv($thor_data, ',', true, $filename);
+		}
+	}
+
+	function run_delete()
+	{
+		$links_base = $this->gen_menu_links_base();
+		$links_export = $links_view = $links_base;
+		$this->parse_filters_for_url($links_view);
+		$links_export['thor_export'] = 'csv';
+		$menu_links['View Stored Data'] = make_link($links_view);
+		$menu_links['Delete Stored Data'] = '';
+		$this->delete_form->set_num_rows($this->total_rows);
+		$this->delete_form->provide_link_to_csv_export(make_link($links_export));
+		$this->delete_form->generate();
+		$status = $this->delete_form->get_status();
+		if (empty($status))
+		{
+			echo $this->gen_menu($menu_links);
+			echo $this->delete_form->get_form_output();
+		}
+		elseif($status == 'cancel')
+		{
+			header( 'Location: '. make_redirect($links_view) );
+		}
+		elseif($status == 'delete_forever')
+		{
+			if ($this->_check_table_exists())
+			{
+				$this->_delete_data();
+				echo '<p><strong>Deleted ' . $this->total_rows . ' row(s)</strong></p>';
+			}
+			else
+			{
+				echo '<p><strong>There is no data to delete</strong></p>';
+			}
+		}
+	}
+	
+	// placeholder function for eventual ability to show limited number of columns
 	function build_columns()
 	{
 		return '*';
 	}
 	
+	// placeholder function for eventual ability to add columns
 	function add_column($column_name)
 	{
 	}
 	
+	// placeholder function for eventual ability to remove columns
 	function remove_column($column_name)
 	{
 	}
@@ -404,16 +614,25 @@ class Thor_Viewer
 		return $ret;
 	}
 	
+	function parse_filters_for_url(&$url_array)
+	{
+		foreach ($this->filters as $k => $v)
+		{
+			$url_array['thor_filters['.$k.']'] = htmlentities($v['value']);
+		}
+	}
+	
 	/**
 	 * _check_table_exists does just what it says - checks if the table parameter is actually a table in the database
 	 *
 	 * @return boolean true if the table exists, false otherwise
 	 */
-	function _check_table_exists()
+	function _check_table_exists($table = '')
 	{
 		$ret = true;
+		if (empty($table)) $table = $this->_table_name;
 		connectDB($this->_db_conn);
-  		$q = 'check table ' . $this->_table_name . ' fast quick' or trigger_error( 'Error: mysql error in Thor: '.mysql_error() );
+  		$q = 'check table ' . $table . ' fast quick' or trigger_error( 'Error: mysql error in Thor: '.mysql_error() );
   		$res = mysql_query($q);
   		$results = mysql_fetch_assoc($res);
   		if (strstr($results['Msg_text'],"doesn't exist") ) 
@@ -424,100 +643,198 @@ class Thor_Viewer
   		return $ret;
 	}
 	
-    /**
-	 * _map_lables takes a row, and returns an array mapping database column headers to human readable labels
-	 *
-	 * @param array with keys that are database column headers
-	 * @param int maxlength determines number of characters to pad column headers at
-	 * @return array which maps database column headers to real labels
-	 *
-	 * @todo _display_values does not really need to be a class variable probably, though it might be handy ... 
-	 */
-	function _map_labels($array)
+	function _create_thor_history_table()
 	{
-		$xmldoc = domxml_open_mem($this->_xml); // get dom object
-		$xpath = xpath_new_context($xmldoc); // init xpath
-		$this->_html = '';
-
-		// II. Transform the form's elements
-		$xpresult = xpath_eval($xpath, '/form[1]/*');
-		foreach ($xpresult->nodeset as $node) {
-			if ($node->tagname == 'input') {
-				$this->_display_input($node);
-			}
-			elseif ($node->tagname == 'textarea') {
-				$this->_display_textarea($node);
-			}
-			elseif ($node->tagname == 'radiogroup') {
-				$this->_display_radiogroup($node, $xpath);
-			}
-			elseif ($node->tagname == 'checkboxgroup') {
-				$this->_display_checkboxgroup($node, $xpath);
-			}
-			elseif ($node->tagname == 'optiongroup') {
-				$this->_display_optiongroup($node, $xpath);
-			}
-			elseif ($node->tagname == 'hidden') {
-				$this->_display_hidden($node);
-			}
-			//elseif ($node->tagname == 'comment') {
-			//	$this->_display_comment($node);
-			//}
-		}
-		return $this->_display_values;
+		$q = 'CREATE TABLE thor_history(`id` int(11) NOT NULL AUTO_INCREMENT,
+										`table_name` TINYTEXT NOT NULL,
+										`date_created` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+										`num_rows` int(6) NOT NULL,
+										`csv_data` MEDIUMTEXT NOT NULL,
+										PRIMARY KEY(`id`)) TYPE = MYISAM;';
+		connectDB($this->_db_conn);
+		$res = mysql_query( $q ) or trigger_error( 'Error: mysql error in Thor: '.mysql_error() );
+		connectDB(REASON_DB); // reconnect to default DB
 	}
 	
+	function _build_display_values()
+	{
+		$display_values = array();
+		foreach ($this->_form_xml as $k=>$v)
+		{
+			if (method_exists($this, '_build_display_'.$k))
+			{
+				$build_function = '_build_display_'.$k;
+				$display_values = array_merge($display_values, $this->$build_function($v));
+			}
+		}
+		return $display_values;
+	}
+
 	/**
-	 * Helper functions for _map_labels($array)
+	 * Helper functions for _build_display_values()
 	 * @access private
 	 */
 	 
-	function _display_input($element) {
-		$id = $element->get_attribute('id');
-		$this->_display_values[$id]['label'] = $element->get_attribute('label');
-		$this->_display_values[$id]['type'] = $element->tagname;
+	function _build_display_input($element_array)
+	{
+		$type = 'input';
+		foreach ($element_array as $element) 
+		{
+			$display_values[$element['id']] = array('label' => $element['label'], 'type' => $type);
+		}
+		return $display_values;
 	}
 
-	function _display_hidden($element) {
-		// probably don't want to include hidden elements in display
+	function _build_display_hidden($element_array)
+	{
+		$type = 'hidden';
+		foreach ($element_array as $element) 
+		{
+			$display_values[$element['id']] = array('label' => $element['label'], 'type' => $type);
+		}
+		return $display_values;
 	}
  
-	function _display_textarea($element) {
-		$id = $element->get_attribute('id');
-		$this->_display_values[$id]['label'] = $element->get_attribute('label');
-	    $this->_display_values[$id]['type'] = $element->tagname;
+	function _build_display_textarea($element_array)
+	{
+		$type = 'textarea';
+		foreach ($element_array as $element) 
+		{
+			$display_values[$element['id']] = array('label' => $element['label'], 'type' => $type);
+		}
+		return $display_values;
 	}
 
-	function _display_radiogroup($element, $xpath) {
-		$id = $element->get_attribute('id');
-		$this->_display_values[$id]['label'] = $element->get_attribute('label');
-	    $this->_display_values[$id]['type'] = $element->tagname;
-	    $xpresult = xpath_eval($xpath, "//*[@id='" . $element->get_attribute('id') . "']/radio");
-		foreach ($xpresult->nodeset as $node) {
-		    $this->_display_values[$id]['options'][] = $node->get_attribute('value');
+	function _build_display_checkboxgroup($element_array)
+	{
+		foreach ($element_array as $element) 
+		{
+			$type = 'checkbox';
+			foreach ($element['checkbox'] as $k=>$v)
+			{
+				$label = $v['label'];
+				$display_values[$v['id']] = array('label' => $label, 'type' => $type);
+			}
+			
 		}
+		return $display_values;
+	}
+	
+	function _build_display_radiogroup($element_array)
+	{
+		foreach ($element_array as $element) 
+		{
+			$id = $element['id'];
+			$label = $element['label'];
+			$type = 'radiogroup';
+			foreach ($element['radio'] as $k=>$v)
+			{
+				$options[] = $v['value'];
+			}
+			$display_values[$id] = array('label' => $label, 'type' => $type, 'options' => $options);
+		}
+		return $display_values;
 	}
 
-	function _display_checkboxgroup($element, $xpath) {
-	    $id = $element->get_attribute('id');
-	    //$this->_display_values[$id]['label']['wrapper_label'] = $element->get_attribute('label');
-	    //$this->_display_values[$id]['type'] = $element->tagname;
-		$xpresult = xpath_eval($xpath, "//*[@id='" . $element->get_attribute('id') . "']/checkbox");
-		foreach ($xpresult->nodeset as $node) {
-			$id2 = $node->get_attribute('id');
-			$this->_display_values[$id2]['label'] = $node->get_attribute('label');
-			$this->_display_values[$id2]['type'] = $node->tagname;
+	function _build_display_optiongroup($element_array)
+	{
+		foreach ($element_array as $element) 
+		{
+			$id = $element['id'];
+			$label = $element['label'];
+			$type = 'optiongroup';
+			foreach ($element['option'] as $k=>$v)
+			{
+				$options[] = $v['value'];
+			}
+			$display_values[$id] = array('label' => $label, 'type' => $type, 'options' => $options);
 		}
+		return $display_values;
 	}
 
-	function _display_optiongroup($element, $xpath) {
-		$id = $element->get_attribute('id');
-		$this->_display_values[$id]['label'] = $element->get_attribute('label');
-	    $this->_display_values[$id]['type'] = $element->tagname;
-	    $xpresult = xpath_eval($xpath, "//*[@id='" . $element->get_attribute('id') . "']/option");
-		foreach ($xpresult->nodeset as $node) {
-		    $this->_display_values[$id]['options'][] = $node->get_attribute('value');
-		}
+	function _delete_data()
+	{
+		// connect with thor database defined in settings.php3
+		connectDB(THOR_FORM_DB_CONN);
+		$q = 'DROP TABLE ' . $this->_table_name;
+		$res = mysql_query( $q ) or mysql_error();//or trigger_error( 'Error: mysql error in Thor Data delete - URL ' . get_current_url() . ': '.mysql_error() );
+  		connectDB(REASON_DB);
+		return $res;
 	}
 }
+
+	class DiscoConfirm extends Disco
+	{
+		var $num_rows;              
+		var $elements = array('disco_confirm_private' => 'hidden');
+		var $actions = array( 'disco_confirm_delete_forever' => 'Delete Forever',
+							  'disco_confirm_cancel'         => 'Cancel' );
+		var $status = '';
+		var $csv_export_string;
+		var $form_output;
+		
+		function DiscoConfirm()
+		{
+		}
+		
+		function set_num_rows($num_rows)
+		{
+			$this->num_rows = $num_rows;
+		}
+		
+		function pre_show_form()
+		{
+			if ($this->num_rows > 0)
+			{
+				echo '<p>If you choose to proceed to delete the stored data, ';
+				echo '<strong>all information</strong> that has been entered using this form on any page will be deleted from the database. ';
+				echo 'If this information is important, it is highly recommend that you use the following link to <strong>save ';
+				echo 'the data from the form before you proceed with deletion!</strong></p>'."\n";
+				echo '<hr/>'.$this->csv_export_string.'<hr/>';
+				echo '<p>Choose the "Delete Forever" button to <strong>permanently delete all ' . $this->num_rows . ' row(s)</strong> of data:</p>';
+			}
+			else
+			{
+				$this->show_form = false;
+				echo '<p>There appear to be no rows to delete.</p>';
+				$this->actions = array();
+			}
+		}
+		
+		function provide_link_to_csv_export($link)
+		{
+			$this->csv_export_string = '<ul><li><a href="'.$link.'">Download all '.$this->num_rows.' rows of data as .csv file</a></li></ul>';
+		}
+		
+		function get_status()
+		{
+			return $this->status;
+		}
+		
+		function get_form_output()
+		{
+			return $this->form_output;
+		}
+		
+		function generate()
+		{
+			ob_start();
+			$this->run();
+			$this->form_output = ob_get_contents();
+			ob_end_clean();
+		}
+		
+		function process()
+		{
+			$this->show_form = false;
+			if ($this->chosen_action == 'disco_confirm_delete_forever')
+			{
+				$this->status = 'delete_forever';
+			}
+			else
+			{
+				$this->status = 'cancel';
+			}
+		}
+	}
 ?>
