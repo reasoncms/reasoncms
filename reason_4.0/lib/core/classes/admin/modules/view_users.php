@@ -51,7 +51,22 @@
 					echo '<li>'.$user->get_value('name').'</li>'."\n";
 				}
 				echo '</ul>'."\n";
-				echo '<p>Please contact the <a href="/campus/webgroup/">Web Services Group</a> to add or remove users from this list.</p>'."\n";
+				if( user_can_edit_site($this->admin_page->user_id, id_of('master_admin') ) )
+				{
+					echo '<p><a href="';
+					echo $this->admin_page->make_link( array(
+						'site_id'=>id_of('master_admin'),
+						'type_id'=>id_of('site'),
+						'id'=>$this->site->id(),
+						'cur_module'=>'Associator',
+						'rel_id'=>relationship_id_of('site_to_user'),
+					) );
+					echo '">Add or remove individuals from this list</a></p>'."\n";
+				}
+				else
+				{
+					echo '<p>Please contact '.REASON_CONTACT_INFO_FOR_CHANGING_USER_PERMISSIONS.' to add or remove users from this list.</p>'."\n";
+				}
 			}
 		} // }}}
 	} // }}}
