@@ -16,13 +16,8 @@
 		var $access_privileges;
 		var $cleanup_rules = array (
 				'mode' => array('function' => 'check_against_array', 'extra_args' => array ('data_view')),
-				'page' => array('function' => 'turn_into_int'),
-				'sort_order' => array('function' => 'check_against_array', 'extra_args' => array('desc', 'asc')),
-				'sort_field' => array('function' => 'check_against_regexp', 'extra_args' => array('/^[a-z0-9_]*$/i')),
-				'export' => array('function' => 'check_against_array', 'extra_args' => array('csv')),
-				'filters' => array('function' => 'turn_into_array'),
-				'force_login_disable' => array('function' => 'check_against_array', 'extra_args' => array('true')),
-				'clear' => array('function' => 'turn_into_string'));
+				'force_login_disable' => array('function' => 'check_against_array', 'extra_args' => array('true')));
+				
 		var $show_login = false; // will be enabled if viewing groups requiring login are defined, or a database backend is present
 		
 		var $acceptable_params = array('force_login' => false);
@@ -125,28 +120,9 @@
 					{
 						$this->show_login = true;
 						echo $this->show_options_link();
-						$thor = new Thor_Viewer($form->get_value('thor_content'));
-						$thor->set_db_conn(THOR_FORM_DB_CONN, 'form_' . $form->id());
-						$thor->set_params(isset($this->request['sort_order']) ? $this->request['sort_order'] : '',
-										  isset($this->request['sort_field']) ? $this->request['sort_field'] : '', 
-										  isset($this->request['export']) ? $this->request['export'] : '',
-										  (isset($this->request['filters']) && !isset($this->request['clear'])) ? $this->request['filters'] : '');
-						$thor_data = $thor->build_data();
-						if ($thor->has_data() == 0)
-						{
-							echo '<h3>No Data</h3>';
-							echo '<p>There is not yet any stored data associated with the form.</p>';
-						}
-						elseif (!empty($this->request['export']) && ($this->request['export'] == 'csv'))
-						{	
-							$filename = $form->id() . '_' .date("Y-m-d");
-							$thor->gen_csv($thor_data, ',', true, $filename);
-						}
-						else
-						{
-							$thor_viewer_html = $thor->gen_table_html($thor_data);
-							echo $thor_viewer_html;
-						}
+						$thor_viewer = new Thor_Viewer();
+						$thor_viewer->init_using_reason_form_id($form->id());
+						$thor_viewer->run();
 					}
 					// if viewing privs
 					elseif ($this->access_privileges['view'])
@@ -208,25 +184,10 @@
 		
 		function show_options_link()
 		{
-			$form_view_link_items['mode'] = $form_view_link_items['export'] = $form_view_link_items['sort_field'] = $form_view_link_items['sort_order'] = '';
-			$csv_link_items['filters'] = $form_view_link_items['filters'] = '';
-			$csv_link_items['export'] = 'csv';
-			
-			// process filters manually - make_link does not handle arrays by default
-			if (!empty($this->request['filters']))
-			{
-				foreach ($this->request['filters'] as $k=>$v)
-				{
-					$csv_link_items['filters['.$k.']'] = $v;
-					$form_view_link_items['filters['.$k.']'] = '';
-				}
-			}
-			$url = make_link($form_view_link_items);
-			$url2 = make_link($csv_link_items);
-			
+			$url = construct_link(array(), array('textonly'));
 			echo '<div class="formDataAdmin">';
-			echo '<p><a href="'.$url.'">Switch to form view</a> | ';
-			echo '<a href="'.$url2.'">Export result set as .csv</a></p>';
+			echo '<p><a href="'.$url.'">Switch to form view</a>';
+			//echo '<a href="'.$url2.'">Export result set as .csv</a></p>';
 			echo '</div>';
 		}
 		
