@@ -11,83 +11,53 @@
 			$ass_es = new entity_selector( $this->admin_page->site_id );
 			$ass_es->add_type( $this->admin_page->type_id );
 			$ass_es->set_sharing( 'borrows' );
+			$ass_es->limit_fields();
 			
 			//grab site name as well
-			$ass_es->add_table( 'ar2' , 'allowable_relationship' );
-			$ass_es->add_table( 'r2' , 'relationship' );
-
-			$ass_es->add_relation( 'ar2.name = "owns"' );
-			$ass_es->add_relation( 'ar2.id = r2.type' );
-			$ass_es->add_relation( 'r2.entity_b = entity.id' );
+			if ($this->site_is_live()) $ass_es->add_right_relationship_field('owns', 'entity', 'state', 'site_state', '"Live"');
+			$this->alias = $ass_es->add_right_relationship_field('owns', 'entity', 'name', 'site');
+			$this->apply_order_and_limits($ass_es);
 			
-			$ass_es->add_table( 'site_entity' , 'entity' );
-			$ass_es->add_field( 'site_entity' , 'name' , 'site' );
-			$ass_es->add_relation( 'site_entity.id = r2.entity_a' );
-
-
-			if( $this->site_is_live() )
-			{
-				$ass_es->add_table( 'site_table' , 'site' );
-				$ass_es->add_relation( 'site_entity.id = site_table.id' );
-				$ass_es->add_relation( 'site_table.site_state = "Live"' );
-			}
-			$this->alias = $this->alias + array( 'site' => array( 'table' => 'site_entity' , 'field' => 'name' ) );
-
-			if(!empty($this->admin_page->request[ 'order_by' ]))
-			{
-				$alias = isset( $this->alias[ $this->admin_page->request[ 'order_by' ] ] ) ? $this->alias[ $this->admin_page->request[ 'order_by' ] ] : '';
-				if( $alias )  //first, check aliases
-					$table = $alias[ 'table' ] . '.' . $alias[ 'field' ];
-				else //then check normal values
-					$table = table_of( $this->admin_page->request[ 'order_by' ] , $this->type_id);
-				if($table)  //if we've found one, add the relation
-					$ass_es->set_order($table . ' ' . $this->admin_page->request[ 'dir' ] );
-			}
 			$this->ass_vals = $ass_es->run_one();
 			
-			if( $this->ass_vals )
-			{
-				$in = 'entity.id NOT IN (';
-				$first = true;
-				foreach( $this->ass_vals AS $item )
-				{
-					if( !$first )
-						$in .=',';
-					else
-						$first = false;
-
-					$in .= $item->id();
-				}
-				$in .= ')';
-				$this->es->add_relation( $in );
-			}
+			if( $this->ass_vals ) $this->es->add_relation('entity.id NOT IN('.implode(",", array_keys($this->ass_vals)).')');
 			
 			if (!(empty($this->admin_page->request['__old_rel_id'])))
 			{
 				$conn_name = $this->get_connection($this->admin_page->request['__old_rel_id']);
 				if ($conn_name == 'many_to_one')
 				{
-					$ass_related_es = $this->es;
+					$ass_related_es = carl_clone($this->es);
 					$ass_related_es->add_right_relationship_field(relationship_name_of($this->admin_page->request['__old_rel_id']), 'entity', 'id', 'related_id');
 					$this->related_vals = $ass_related_es->run_one();
-					if( $this->related_vals )
-					{
-						$in = 'entity.id NOT IN (';
-						$first = true;
-						foreach( $this->related_vals AS $item )
-						{
-							if( !$first )
-								$in .=',';
-							else
-								$first = false;
-							$in .= $item->id();
-						}
-						$in .= ')';
-						$this->es->add_relation( $in );
-					}
+					if( $this->related_vals ) $this->es->add_relation('entity.id NOT IN('.implode(",", array_keys($this->related_vals)).')');
 				}
 			}
 		} // }}}
+		
+		function apply_order_and_limits(&$es)
+		{
+			if(!empty($this->admin_page->request[ 'order_by' ]))
+			{
+				$alias = isset( $this->alias[ $this->admin_page->request[ 'order_by' ] ] ) ? $this->alias[ $this->admin_page->request[ 'order_by' ] ] : '';
+				if( $alias )  //first, check aliases
+				{
+					$table = $alias[ 'table' ] . '.' . $alias[ 'field' ];
+					$table_name = $alias['table_orig'];
+				}
+				else //then check normal values
+				{
+					$table = table_of( $this->admin_page->request[ 'order_by' ] , $this->type_id);
+					$table_name = substr($table, 0, strpos($table, '.'.$this->admin_page->request[ 'order_by' ]));
+				}
+				if($table)  //if we've found one, add the relation
+				{
+					$es->set_order($table . ' ' . $this->admin_page->request[ 'dir' ] );
+					$es->limit_tables($table_name);
+				}
+			}
+			else $es->limit_tables();
+		}
 		
 		function get_connection($rel_id)
 		{
@@ -119,48 +89,26 @@
 			echo '<a href="' . $borrow_link . '">'. ( $this->select ? 'Borrow' : 'Don\'t Borrow' ) . '</a>';
 			echo '</strong></td>';
 		} // }}}
+		
 		function update_es() // {{{
 		{
+			// lets find the sites that share the type and limit our query to those sites
+			$prep_es = new entity_selector();
+			$prep_es->limit_tables();
+			$prep_es->limit_fields();
+			$prep_es->add_type(id_of('site'));
+			$prep_es->add_left_relationship($this->admin_page->type_id, relationship_id_of('site_shares_type'));
+			$state = ( $this->site_is_live()) ? 'Live' : 'All';
+			$sites = $prep_es->run_one('', $state);
+			
 			$es = new entity_selector();
 			$es->add_type( $this->admin_page->type_id );
-
-			//some other site owns this entity
-			$es->add_table( 'r','relationship' );
-			$es->add_table( 'ar','allowable_relationship' );
-			$es->add_relation( 'r.entity_a != '.$this->admin_page->site_id);
-			$es->add_relation( 'r.entity_b = entity.id');
-			$es->add_relation( 'r.type = ar.id' );
-			$es->add_relation( 'ar.name = "owns"' );
-			
-			//some other site is sharing this entity
-			$es->add_table( 'r2','relationship' );
-			$es->add_table( 'ar2','allowable_relationship' );
-			$es->add_relation( 'r2.entity_a = r.entity_a' );
-			$es->add_relation( 'r2.type = ar2.id' );
-			$es->add_relation( 'ar2.name = "site_shares_type"' );
-			$es->add_relation( 'r2.entity_b = entity.type' );
-
-			//grab site name as well
-			$es->add_table( 'site_entity' , 'entity' );
-			$es->add_field( 'site_entity' , 'name' , 'site' );
-			$es->add_relation( 'site_entity.id = r2.entity_a' );
-			if( $this->site_is_live() )
-			{
-				$es->add_table( 'site_table' , 'site' );
-				$es->add_relation( 'site_entity.id = site_table.id' );
-				$es->add_relation( 'site_table.site_state = "Live"' );
-			}
-			
-			//entity is shared
-			$es->add_relation( '(entity.no_share IS NULL OR entity.no_share = 0)' );
-
-			//for filtering by site
-			if( !empty( $this->admin_page->request['search_site'] ) )
-				$es->add_relation( 'site_entity.id = ' . $this->admin_page->request['search_site'] );
-
-
+			$limiter = (!empty($this->admin_page->request['search_site'])) ? $this->admin_page->request['search_site'] : array_keys($sites);
+			$es->add_right_relationship_field('owns', 'entity', 'id', 'site_id', $limiter);
+			$es->add_right_relationship_field('owns', 'entity', 'name', 'site');
+			$this->apply_order_and_limits($es);
+			$es->add_relation( '(entity.no_share IS NULL OR entity.no_share = 0)' ); // entity is shared
 			$this->es = $es;
-
 		} // }}}
 		function show_item_post( $row , $options = false) // {{{
 		{
