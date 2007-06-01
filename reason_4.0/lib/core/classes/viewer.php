@@ -98,6 +98,7 @@
 			var $state = '';
 			var $assoc = false;
 			var $filter_es_name = 'es';
+			var $real_count;
 
 			/**
 			 * Default columns that are modified by prettify_mysql_datetime function
@@ -440,7 +441,8 @@
 					if($table)  //if we've found one, add the relation
 						$this->es->set_order($table . ' ' . $this->dir);
 				}
-			} // }}}
+			}
+			
 			/**
 			 * Does all the basic initializing functions.
 			 * @param int $site_id id of current site
@@ -482,13 +484,19 @@
 			 * Sets up appropriate variables if not already set
 			 * @return void
 			 */
-			function check_bounds() // {{{
+			function &check_bounds(&$es) // {{{
 			{
+				$clone_es = carl_clone($es);
+				$clone_es->optimize('distinct');
+				$clone_es->limit_fields(); // we limit fields since mostly we want a count and will perform another select in load_values;
+				$clone_es->run_one();
+				$result = $clone_es->run_one($this->type_id, $this->state);
+				$this->real_count = count($result);
 				if( empty( $this->page ) ) $this->page = 1;
-				$count = $this->es->get_one_count($this->state);
-				$max_page = ceil( $count / $this->num_per_page );
+				$max_page = ceil( $this->real_count / $this->num_per_page );
 				if( $this->page > $max_page ) $this->page = $max_page;
 				if( $this->page < 1 ) $this->page = 1;
+				return $result;
 			} // }}}
 			/**
 			 * Runs the es and stores the values in $this->values
@@ -496,19 +504,21 @@
 			 */
 			function load_values() // {{{
 			{
-				$es = $this->es;
+				$es =& $this->es;
 				if( isset( $this->num_per_page ) && isset( $this->page ) )
 				{
-					$this->check_bounds();
-					$es->set_start( ($this->page - 1 ) * ( $this->num_per_page ) );
-					$es->set_num( $this->num_per_page );
-					if(!$es->orderby)
+					$result =& $this->check_bounds($es);
+					$slice_start = ( ($this->page - 1 ) * ( $this->num_per_page ) );
+					$keys = array_slice(array_keys($result), $slice_start, $this->num_per_page);
+					if (!empty($keys)) $es->add_relation('entity.id IN ('.implode(",",$keys).')');
+					else 
 					{
-						$es->set_order( 'entity.last_modified DESC' );
+						$this->values = array();
+						return false;
 					}
 				}
+				$es->enable_multivalue_results();
 				$this->values = $es->run_one($this->type_id, $this->state);
-				$this->es = $es;
 			} // }}}
 
 			/**
