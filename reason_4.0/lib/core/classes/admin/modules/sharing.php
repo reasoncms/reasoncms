@@ -7,6 +7,10 @@
 		{
 			$this->admin_page =& $page;
 		} // }}}
+		function should_run()
+		{
+			return true;
+		}
 		function init() // {{{
 		{
 			reason_include_once( 'classes/sharing_filter.php' );
