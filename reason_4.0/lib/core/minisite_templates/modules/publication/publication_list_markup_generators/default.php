@@ -30,7 +30,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 									'links_to_issues',
 									'view_all_items_in_section_link',
 									'group_by_section',
- 								    	'back_link',
+ 								    'back_link',
 									'publication',
 									'date_format',
 									); 	
@@ -334,7 +334,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 				$keys_that_are_not_section_ids[] = $section_id;
 		}
 		
-		ksort($ordered_sections);
+		//ksort($ordered_sections);
 		$ordered_sections = array_merge($ordered_sections, $keys_that_are_not_section_ids);
 		
 		return $ordered_sections; 
