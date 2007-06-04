@@ -1046,6 +1046,7 @@ class PublicationModule extends Generic3Module
 				$es->description = 'Selecting news sections for this publication';
 				$es->add_type( id_of('news_section_type'));
 				$es->add_left_relationship( $this->publication->id(), relationship_id_of('news_section_to_publication') );
+				$es->set_order('sortable.sort_order ASC');
 				$this->sections=$es->run_one();
 			}
 			return $this->sections;
@@ -1074,10 +1075,23 @@ class PublicationModule extends Generic3Module
 								$items_by_section[$section->id()][$item->id()] = $item;
 							}
 						}
-					}
+					}	
 				}
 				else
 					 $items_by_section[$this->no_section_key][$item->id()] = $item;
+			}
+			
+			if (!empty($items_by_section) && $this->has_sections() && $this->use_group_by_section_view())
+			{
+				$section_order = array_keys($this->get_sections());
+				foreach ($section_order as $section_id)
+				{
+					if (array_key_exists($section_id, $items_by_section))
+					{
+						$items_by_section_ordered[$section_id] = $items_by_section[$section_id];
+					}
+				}
+				$items_by_section = $items_by_section_ordered;
 			}
 			return $items_by_section;
 		}
