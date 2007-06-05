@@ -353,7 +353,7 @@ function sendSimpleForm($query=""){
 ?>
 
 
-<form method=POST action="search.php">
+<form method=GET action="search.php">
 <table border=0>
 <tr><td><input type=text name=query></td><td><input type=submit value=Search></td></tr>
 <tr><td></td><td><a href="search.php?mode=advanced">Advanced Search</a></td></tr>
