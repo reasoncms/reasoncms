@@ -14,7 +14,14 @@
 				// iFrame Preview
 				reason_include_once( 'function_libraries/URL_History.php' );
 				$url = build_URL( $this->_entity->id() );
-				if ($url) $this->show_item_default( 'Public View of Page' , '<iframe src="'.$url.'" width="100%" height="400"></iframe>' );
+				if ($url)
+				{
+					//$this->show_item_default( 'Public View of Page' , '<iframe src="'.$url.'" width="100%" height="400"></iframe>' );
+
+					// iframe replacement method
+					// http://intranation.com/test-cases/object-vs-iframe/
+					$this->show_item_default( 'Public View of Page' , '<object classid="clsid:25336920-03F9-11CF-8FD0-00AA00686F13" type="text/html" data="'.$url.'" class="pageViewer"><p><a href="'.$url.'">View page</a></p></object>');
+				}
 			}
 			
 			// Everything Else
