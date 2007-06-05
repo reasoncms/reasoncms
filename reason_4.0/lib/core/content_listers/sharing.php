@@ -35,6 +35,31 @@
 			}
 		} // }}}
 		
+		/**
+		 * Function to check whether filters are active since view has not yet grabbed them
+		 */
+		function check_filters()
+		{
+			static $active_filters;
+			if (!isset($active_filters))
+			{
+				foreach ($this->filters as $name=>$value )
+				{
+					if ( $value )
+					{
+						$key = 'search_' . $name;
+						if ( !empty( $this->admin_page->request[ $key ]))
+						{
+							$active_filters = true;
+							return true;
+						}
+						else $active_filters = false;
+					}
+				}
+			}
+			return $active_filters;
+		}
+			
 		function apply_order_and_limits(&$es)
 		{
 			if(!empty($this->admin_page->request[ 'order_by' ]))
@@ -53,10 +78,10 @@
 				if($table)  //if we've found one, add the relation
 				{
 					$es->set_order($table . ' ' . $this->admin_page->request[ 'dir' ] );
-					$es->limit_tables($table_name);
+					if (!$this->check_filters()) $es->limit_tables($table_name);  // only limit if filters are not being used
 				}
 			}
-			else $es->limit_tables();
+			elseif (!$this->check_filters()) $es->limit_tables(); // only limit if filters are not being used
 		}
 		
 		function get_connection($rel_id)
