@@ -1,7 +1,7 @@
 <?php
 /**
- *	Default Pagination Display
- * @package Reason_Core
+ * Default Pagination Display
+ * @package reason
  */
  
 $GLOBALS['_reason_pagination_displayers'][basename(__FILE__)] = 'defaultPaginationDisplay';
