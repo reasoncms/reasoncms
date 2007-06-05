@@ -279,3 +279,8 @@ form tr.error td.words {
 #securityWarning h3, #securityWarning p {
 	margin:0;
 }
+div.contentArea object.pageViewer {
+	width:100%;
+	height:500px;
+	border:2px inset;
+}
