@@ -264,7 +264,7 @@ class PublicationModule extends Generic3Module
 		}
 		else
 		{
-			trigger_error('No publication are placed on a page on this site');
+			trigger_error('No publications are placed on a page on this site -- cannot find any eligible news items for related news');
 		}
 	}
 
