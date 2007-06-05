@@ -7,7 +7,8 @@
 
 use CGI qw/:all/;
 
-my $words , $restrict ; 
+my $words ;
+my $restrict ; 
 
 if(defined(param('words'))){ $words = "words=" . param('words') } else { $words = ""; }
 if(defined(param('restrict'))){ $restrict = "&restrict=" . param('restrict') } else { $restrict = ""; }
