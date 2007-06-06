@@ -168,6 +168,13 @@
 				'max_depth' => 2
 			),
 		),
+		'children_and_grandchildren_no_page_title' => array(
+			'main_head' => '',
+			'main_post' => array(
+				'module' => 'children_and_grandchildren',
+				'max_depth' => 2
+			),
+		),
 		'children_and_grandchildren_full_names' => array(
 			'main_post' => array(
 				'module' => 'children_and_grandchildren',
