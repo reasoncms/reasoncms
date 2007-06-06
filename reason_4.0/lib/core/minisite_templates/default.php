@@ -17,7 +17,9 @@ include_once( CARL_UTIL_INC . 'dev/timer.php' );
 class MinisiteTemplate
 {
 	var $site_id;
+	var $site_info;
 	var $page_id;
+	var $page_info;
 	var $title;
 	
 	// These two vars are deprecated and will not do anything any more.
@@ -60,6 +62,8 @@ class MinisiteTemplate
 	var $doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
 	var $use_navigation_cache = false;
 	var $mode = 'default'; // possible values: 'default','documentation','samples'
+	var $queried_for_parent_sites = false;
+	var $parent_sites = array();
 	
 	function initialize( $site_id, $page_id = '' ) // {{{
 	{
@@ -682,6 +686,10 @@ class MinisiteTemplate
 			echo '</div>'."\n";
 		}
 		echo '<div id="banner">'."\n";
+		if($this->should_show_parent_sites())
+		{
+			echo $this->get_parent_sites_markup();
+		}
 		echo '<h1><a href="'.$this->site_info->get_value('base_url').'"><span>'.$this->site_info->get_value('name').'</span></a></h1>'."\n";
 		$this->show_banner_xtra();
 		echo '</div>'."\n";
@@ -733,6 +741,10 @@ class MinisiteTemplate
 		}
 		*/
 		echo '<div class="bannerInfo">'."\n";
+		if($this->should_show_parent_sites())
+		{
+			echo $this->get_parent_sites_markup();
+		}
 		echo '<h1 class="siteName"><a href="';
 		echo $this->site_info->get_value('base_url');
 		if (!empty ($this->textonly) )
@@ -1172,6 +1184,55 @@ class MinisiteTemplate
 		if($this->mode == 'documentation')
 			return true;
 		return false;
+	}
+	function should_show_parent_sites()
+	{
+		return false;
+	}
+	function get_parent_sites_markup()
+	{
+		$ret = '';
+		$parent_sites = $this->get_parent_sites();
+		if(!empty($parent_sites))
+		{
+			$url_xtra = '';
+			if($this->textonly)
+				$url_xtra = '?textonly=1';
+			$ret .= '<div class="parentSites">'."\n";
+			if(count($parent_sites) == 1)
+			{
+				$ps = current($parent_sites);
+				$ret .= '<h2><a href="'.$ps->get_value('base_url').$url_xtra.'"><span>'.$ps->get_value('name').'</span></a></h2>'."\n";
+			}
+			else
+			{
+				$ret .= '<ul>'."\n";
+				foreach($parent_sites as $id=>$ps)
+				{
+					$ret .= '<li><h2><a href="'.$ps->get_value('base_url').$url_xtra.'"><span>'.$ps->get_value('name').'</span></a></h2></li>'."\n";
+				}
+				$ret .= '</ul>'."\n";
+			}
+			$ret .= '</div>'."\n";
+		}
+		return $ret;
+	}
+	function get_parent_sites()
+	{
+		if(!$this->queried_for_parent_sites)
+		{
+			$es = new entity_selector();
+			$es->add_type(id_of('site'));
+			$es->add_right_relationship( $this->site_id, relationship_id_of( 'parent_site' ) );
+			$es->set_order( 'entity.name' );
+			if($this->site_info->get_value('site_state') == 'Live')
+			{
+				$es->add_relation('site_state = "Live"');
+			}
+			$this->parent_sites = $es->run_one();
+			$this->queried_for_parent_sites = true;
+		}
+		return $this->parent_sites;
 	}
 }
 ?>
