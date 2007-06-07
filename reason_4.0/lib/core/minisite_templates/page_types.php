@@ -175,6 +175,27 @@
 				'max_depth' => 2
 			),
 		),
+		'children_and_grandchildren_no_nav' => array(
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+			'main_post' => array(
+				'module' => 'children_and_grandchildren',
+				'max_depth' => 2
+			),
+		),
+		'children_and_grandchildren_no_nav_no_page_title' => array(
+			'main_head' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+			'main_post' => array(
+				'module' => 'children_and_grandchildren',
+				'max_depth' => 2
+			),
+		),
 		'children_and_grandchildren_full_names' => array(
 			'main_post' => array(
 				'module' => 'children_and_grandchildren',
