@@ -15,7 +15,7 @@
 	
 	include_once( 'reason_header.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
-
+	force_secure_if_available();
 	$authenticated_user_netid = reason_require_authentication('admin_login');
 
 	if (isset($_GET['do']) && ($_GET['do'] === 'moveup' || $_GET['do'] === 'movedown'))
