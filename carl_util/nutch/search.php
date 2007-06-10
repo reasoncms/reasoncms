@@ -347,7 +347,10 @@ div#search_content div.pagination strong a, div#search_content div.pagination st
 function sendSimpleForm($query=""){
 
 	// display the current search term
-	if($query != ""){ echo "<H1><FONT COLOR='#6699CC'>Search results for $query</FONT></H1>\n"; }
+	if($query != ""){ 
+		$clean_query = htmlspecialchars($query);
+		echo "<H1><FONT COLOR='#6699CC'>Search results for $clean_query</FONT></H1>\n"; 
+		}
 	else { echo "<H1><FONT COLOR='#6699CC'>Search</FONT></H1>\n"; }
 
 ?>
