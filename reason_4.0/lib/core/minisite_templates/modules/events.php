@@ -195,6 +195,23 @@ class EventsModule extends DefaultMinisiteModule
 			
 		if(!empty($this->request['date']))
 			$this->request['date'] = prettify_mysql_datetime($this->request['date'], 'Y-m-d');
+			
+		if(!empty($this->request['category']))
+		{
+			$e = new entity($this->request['category']);
+			if(!($e->get_values() && $e->get_value('type') == id_of('category_type')))
+			{
+				unset($this->request['category']);
+			}
+		}
+		if(!empty($this->request['audience']))
+		{
+			$e = new entity($this->request['audience']);
+			if(!($e->get_values() && $e->get_value('type') == id_of('audience_type')))
+			{
+				unset($this->request['audience']);
+			}
+		}
 	}
 	
 	function register_passables() // {{{
@@ -346,56 +363,85 @@ class EventsModule extends DefaultMinisiteModule
 	
 	function show_focus_description()
 	{
-		echo '<h3>Currently Browsing:</h3>';
-		echo '<ul>';
-		$clear_parts = array();
+		$out = '';
 		$needs_intro = true;
+		$cat_str = $this->get_category_focus_description();
+		if(!empty($cat_str))
+		{
+			$out .= $cat_str;
+			$needs_intro = false;
+		}
+		$aud_str = $this->get_audience_focus_description($needs_intro);
+		if(!empty($aud_str))
+		{
+			$out .= $aud_str;
+			$needs_intro = false;
+		}
+		$search_str = $this->get_search_focus_description($needs_intro);
+		if(!empty($search_str))
+		{
+			$out .= $search_str;
+		}
+		
+		if(!empty($out))
+		{
+			echo '<h3>Currently Browsing:</h3>';
+			echo '<ul>'.$out.'</ul>'."\n";
+		}
+	}
+	function get_category_focus_description()
+	{
+		$ret = '';
 		if(!empty($this->request['category']))
 		{
 			$e = new entity($this->request['category']);
-			if($e->get_values() & $e->get_value('type') == id_of('category_type'))
-			{
-				$name = strip_tags($e->get_value('name'));
-				echo '<li class="categories first">';
-				echo '<h4>Events in category: '.$name.'</h4>'."\n";
-				echo '<a href="'.$this->construct_link(array('category'=>'','view'=>'')).'" class="clear">See all categories (clear <em>&quot;'.htmlspecialchars($name).'&quot;</em>)</a>';
-				echo '</li>';
-				$needs_intro = false;
-			}
+			$name = strip_tags($e->get_value('name'));
+			$ret .= '<li class="categories first">';
+			$ret .= '<h4>Events in category: '.$name.'</h4>'."\n";
+			$ret .= '<a href="'.$this->construct_link(array('category'=>'','view'=>'')).'" class="clear">See all categories (clear <em>&quot;'.htmlspecialchars($name).'&quot;</em>)</a>';
+			$ret .= '</li>';
 		}
+		return $ret;
+	}
+	function get_audience_focus_description($needs_intro = false)
+	{
+		$ret = '';
 		if(!empty($this->request['audience']))
 		{
 			$e = new entity($this->request['audience']);
-			if($e->get_values() & $e->get_value('type') == id_of('audience_type'))
-			{
-				echo '<li class="audiences';
-				if(empty($this->request['category']))
-					echo ' first';
-				echo '"><h4>';
-				if($needs_intro)
-					echo 'Events ';
-				$name = strip_tags($e->get_value('name'));
-				echo 'for '.$name.'</h4>'."\n";
-				echo '<a href="'.$this->construct_link(array('audience'=>'','view'=>'')).'" class="clear">See events for all groups (clear <em>&quot;'.htmlspecialchars($name).'&quot;</em>)</a>';
-				echo '</li>';
-				$needs_intro = false;
-			}
+			$ret .= '<li class="audiences';
+			if(empty($this->request['category']))
+				$ret .= ' first';
+			$ret .= '"><h4>';
+			if($needs_intro)
+				$ret .= 'Events ';
+			$name = strip_tags($e->get_value('name'));
+			$ret .= 'for '.$name.'</h4>'."\n";
+			$ret .= '<a href="'.$this->construct_link(array('audience'=>'','view'=>'')).'" class="clear">See events for all groups (clear <em>&quot;'.htmlspecialchars($name).'&quot;</em>)</a>';
+			$ret .= '</li>';
 		}
+		return $ret;
+	}
+	function get_search_focus_description($needs_intro = false)
+	{
+		$ret = '';
 		if(!empty($this->request['search']))
 		{
-			echo '<li class="search';
+			$ret .= '<li class="search';
 			if(empty($this->request['category']) && empty($this->request['audience']))
-				echo ' first';
-			echo '">';
-			echo '<h4><label for="calendar_search_above">';
+				$ret .= ' first';
+			$ret .= '">';
+			$ret .= '<h4><label for="calendar_search_above">';
 			if($needs_intro)
-				echo 'Events ';
+				$ret .= 'Events ';
 			echo 'containing</label></h4> ';
+			ob_start();
 			$this->show_search_form('calendar_search_above',true);
 			$this->show_search_other_actions();
-			echo '</li>';
+			$ret .= ob_end_flush();
+			$ret .= '</li>';
 		}
-		echo '</ul>'."\n";
+		return $ret;
 	}
 	
 	function rerun_calendar()
@@ -1298,18 +1344,12 @@ class EventsModule extends DefaultMinisiteModule
 		if(!empty($this->pass_vars['audience']))
 		{
 			$audience = new entity($this->pass_vars['audience']);
-			if($audience->get_values() && $audience->get_value('type') == id_of('audience_type'))
-			{
-				$init_array['audiences'] = array( $audience->id()=>$audience );
-			}
+			$init_array['audiences'] = array( $audience->id()=>$audience );
 		}
 		if(!empty($this->pass_vars['category']))
 		{
 			$category = new entity($this->pass_vars['category']);
-			if($category->get_values() && $category->get_value('type') == id_of('category_type'))
-			{
-				$init_array['categories'] = array( $category->id()=>$category );
-			}
+			$init_array['categories'] = array( $category->id()=>$category );
 		}
 		if($this->params['limit_to_page_categories'])
 		{
@@ -1698,8 +1738,15 @@ class EventsModule extends DefaultMinisiteModule
 			if(!empty($this->pass_vars['textonly']))
 				$link_vars['textonly'] = 1; // always pass the textonly value
 		}
-		foreach( $vars as $key=>$value )
-			$link_vars[$key] = $value;
+		foreach( array_keys($vars) as $key )
+		{
+			$link_vars[$key] = $vars[$key];
+		}
+		
+		foreach(array_keys($link_vars) as $key)
+		{
+			$link_vars[$key] = htmlspecialchars($link_vars[$key]);
+		}
 		return '?'.implode_with_keys('&amp;',$link_vars);
 	} // }}}
 }
