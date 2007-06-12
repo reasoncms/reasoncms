@@ -17,7 +17,6 @@
 			if ($this->site_is_live()) $ass_es->add_right_relationship_field('owns', 'entity', 'state', 'site_state', '"Live"');
 			$this->alias = $ass_es->add_right_relationship_field('owns', 'entity', 'name', 'site');
 			$this->apply_order_and_limits($ass_es);
-			
 			$this->ass_vals = $ass_es->run_one();
 			
 			if( $this->ass_vals ) $this->es->add_relation('entity.id NOT IN('.implode(",", array_keys($this->ass_vals)).')');
@@ -62,6 +61,13 @@
 			
 		function apply_order_and_limits(&$es)
 		{
+			$limit_tables = true;
+			if (isset($this->viewer_id))
+			{
+				$viewer = new entity ($this->viewer_id);
+				$viewer_default_sort = $viewer->get_value('default_sort');
+				if (!empty($viewer_default_sort)) $limit_tables = false;
+			}
 			if(!empty($this->admin_page->request[ 'order_by' ]))
 			{
 				$alias = isset( $this->alias[ $this->admin_page->request[ 'order_by' ] ] ) ? $this->alias[ $this->admin_page->request[ 'order_by' ] ] : '';
@@ -78,10 +84,10 @@
 				if($table)  //if we've found one, add the relation
 				{
 					$es->set_order($table . ' ' . $this->admin_page->request[ 'dir' ] );
-					if (!$this->check_filters()) $es->limit_tables($table_name);  // only limit if filters are not being used
+					if (!$this->check_filters() && $limit_tables) $es->limit_tables($table_name);  // only limit if filters are not being used
 				}
 			}
-			elseif (!$this->check_filters()) $es->limit_tables(); // only limit if filters are not being used
+			elseif (!$this->check_filters() && $limit_tables) $es->limit_tables(); // only limit if filters are not being used
 		}
 		
 		function get_connection($rel_id)
