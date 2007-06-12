@@ -62,11 +62,14 @@
 		function apply_order_and_limits(&$es)
 		{
 			$limit_tables = true;
-			if (isset($this->viewer_id))
+			if (isset($this->viewer_id) && !empty($this->viewer_id))
 			{
 				$viewer = new entity ($this->viewer_id);
-				$viewer_default_sort = $viewer->get_value('default_sort');
-				if (!empty($viewer_default_sort)) $limit_tables = false;
+				if ($viewer->get_values() && ($viewer->get_value('type') == id_of('view')))
+				{
+					$viewer_default_sort = $viewer->get_value('default_sort');
+					if (!empty($viewer_default_sort)) $limit_tables = false;
+				}
 			}
 			if(!empty($this->admin_page->request[ 'order_by' ]))
 			{
