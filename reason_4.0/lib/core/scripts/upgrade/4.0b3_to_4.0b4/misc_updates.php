@@ -91,7 +91,7 @@ function echo_form()
 
 function run_updates($test_mode = true)
 {
-	$updates = array('update_theme_content_manager','add_new_themes','change_event_last_occurence_to_date','add_indexes_b3_to_b4','add_editor_user_role');
+	$updates = array('update_theme_content_manager','add_new_themes','change_event_last_occurence_to_date','add_indexes_b3_to_b4','add_editor_user_role','add_flash_video_media_type');
 	if($test_mode)
 	{
 		echo '<h2>Testing</h2>';
@@ -341,6 +341,39 @@ function add_editor_user_role($test_mode = true)
 		echo '<strong>No users needed to be updated; all users have roles.</strong>';
 	echo '</li>';
 	echo '</ul>';
+}
+
+function add_flash_video_media_type($test_mode = true)
+{
+	echo '<h3>Changing av.media_format to include "Flash Video"</h3>';
+	$handle = db_query('DESC `av` `media_format`');
+	$results = array();
+	while($row = mysql_fetch_assoc($handle))
+	{
+		$results = $row;
+	}
+	if(strpos($results['Type'],'Flash Video'))
+	{
+		echo '<p>av.media_format already includes Flash Video. No db changes are necessary.</p>';
+	}
+	else
+	{
+		if($test_mode)
+		{
+			echo '<p>Would have updated av.media_format to include the Flash Video enum option</p>';
+		}
+		else
+		{
+			if(db_query('ALTER TABLE `av` CHANGE `media_format` `media_format` enum(\'Quicktime\',\'Windows Media\',\'Real\',\'Flash\',\'MP3\',\'AIFF\',\'Flash Video\')'))
+			{
+				echo '<p>Successfully updated av.media_format to include the Flash Video enum option</p>';
+			}
+			else
+			{
+				echo '<p>Failed to update av.media_format to include the Flash Video enum option. You might try to manually update the column definition for av.media_format to "enum(\'Quicktime\',\'Windows Media\',\'Real\',\'Flash\',\'MP3\',\'AIFF\',\'Flash Video\')"</p>';
+			}
+		}
+	}
 }
 
 ?>
