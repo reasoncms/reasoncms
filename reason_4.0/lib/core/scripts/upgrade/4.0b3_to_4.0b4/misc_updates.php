@@ -68,6 +68,7 @@ if ( !isset ($_POST['verify']))
 		echo '</ul>';
 		echo '</li>';
 		echo '<li>Adds a Editor user role and assoiates every user who does not have a role to the new role</li>';
+		echo '<li>Adds Flash Video as an option to av.media_format</li>';
 		echo '</ul>';
 		echo_form();
 }
