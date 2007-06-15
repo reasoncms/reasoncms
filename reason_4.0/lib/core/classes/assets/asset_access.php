@@ -150,7 +150,7 @@ class ReasonAssetAccess
 			$file_size = filesize($file_path);
 		
 			// disposition needs some extensive testing - should it be attachment or inline?
-			$file_disposition = 'inline'; // download by default
+			$file_disposition = ($file_ext == 'pdf') ? 'attachment' : 'inline'; // download by default
 		
 			$mime_type = $this->get_mime_type();
 			if(!empty($mime_type) && strstr($mime_type, "text/")) {
