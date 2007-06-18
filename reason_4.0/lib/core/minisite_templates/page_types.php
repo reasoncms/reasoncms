@@ -670,6 +670,12 @@
 		'no_title' => array(
 			'main_head' => '',
 		),
+		'no_nav' => array(
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+		),
 		'noNavNoSearch' => array(
 			'banner_xtra' => '',
 			'navigation' => '',
