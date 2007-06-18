@@ -556,6 +556,14 @@
 			'main_post' => 'content',
 			'sidebar' => '',
 		),
+		'image_slideshow_before_content_no_nav' => array(
+			'main' => 'image_slideshow',
+			'main_post' => 'content',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sidebar' => '',
+			'post_foot' => 'textonly_toggle',
+		),
 		'image_slideshow_manual' => array(
 			'main_post' => array('module'=>'image_slideshow','slideshow_type'=>'manual'),
 			'sidebar' => '',
