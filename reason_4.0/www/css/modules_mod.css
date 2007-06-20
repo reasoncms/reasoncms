@@ -4,6 +4,9 @@
 	border:1px dotted #d99742;
 	padding:1em;
 }
+a img {
+	border:none;
+}
 
 /* Navigation Module */
 
