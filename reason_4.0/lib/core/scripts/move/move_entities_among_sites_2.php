@@ -116,7 +116,7 @@ foreach ( $entity_bs as $entity_b )
 
 	echo '<tr>';
 	echo '<td>' . $entity_b->id() . '</td>';
-	echo '<td>' . $entity_b->get_value('name') . '</td>';
+	echo '<td>' . $entity_b->get_display_name() . '</td>';
 	echo '<td>' . $select . '</td>';
 	echo '</tr>';
 }
