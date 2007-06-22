@@ -1033,7 +1033,7 @@
 				document.write('<EMBED FlashVars="tmp_id=<?php print ($this->tmp_id); ?>&asset_directory=<?php print ($this->asset_directory); ?>" src="<?php print ($this->asset_directory); ?>thor.swf?time=<?php print (time()); ?>" quality="high" bgcolor="#FFFFFF"  WIDTH="600" HEIGHT="400" NAME="thor" ALIGN="" TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer"></EMBED>');
 				document.write('</OBJECT>');
 			} else{
-				document.write('<span style="color:#ffffff;background-color:#ff0000;">You do not have the most current version of the Flash plug-in. Please contact the Web Communications & Development team to get the Flash plug-in installed.</span>');
+				document.write('<span style="color:#ffffff;background-color:#ff0000;">You do not have the most current version of the Flash plug-in. Please install the latest <a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Flash Player</a> to manage this form.</span>');
 			}
 			//-->
 			</SCRIPT>
