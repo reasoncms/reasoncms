@@ -736,6 +736,19 @@
 				'provide_az_links' => true,
 			),
 		),
+		'show_children_with_first_images' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+			),
+		),
+		'show_children_with_random_images' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'randomize_images' => true,
+			),
+		),
 		'siblings_and_children' => array(
 			'main_post' => 'siblings',
 			'sidebar'=>'children',
