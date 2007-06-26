@@ -12,6 +12,8 @@
 		var $acceptable_params = array(
 										'description_part_of_link' => false,
 										'provide_az_links' => false,
+										'provide_images' => false,
+										'randomize_images' => false,
 									);
 		var $offspring = array();
 		var $az = array();
@@ -25,6 +27,7 @@
 			// find all the children of this page
 			$this->es->add_type( id_of('minisite_page') );
 			$this->es->add_left_relationship( $this->parent->cur_page->id(), relationship_id_of( 'minisite_page_parent' ) );
+			
 			$this->es->set_order('sortable.sort_order ASC');
 			$this->offspring = $this->es->run_one(); 
 			
@@ -75,8 +78,12 @@
 					}
 					echo '</div>';
 				}
-				echo '<ul class="childrenList">'."\n";
+				$class = 'childrenList';
+				if($this->params['provide_images'])
+					$class .= ' childrenListWithImages';
+				echo '<ul class="'.$class.'">'."\n";
 				$counter = 1;
+				$even_odd = 'odd';
 				foreach( $this->offspring AS $child )
 				{
 					if ( $this->parent->cur_page->id() != $child->id() )
@@ -95,10 +102,19 @@
 								$link .= '?textonly=1';
 						}
 							
-						echo '<li class="number'.$counter.'">';
+						echo '<li class="number'.$counter.' '.$even_odd.'">';
+						
 						if($this->params['provide_az_links'] && array_key_exists($child->id(),$this->az))
 						{
 							echo '<a name="child_'.$this->az[$child->id()].'"></a>';
+						}
+						if($this->params['provide_images'])
+						{
+							$image = $this->get_page_image($child->id());
+							if(!empty($image))
+							{
+								show_image( $image->id(), true, false, false, '' , '', false, $link );
+							}
 						}
 						if($this->params['description_part_of_link'])
 						{
@@ -120,11 +136,37 @@
 						}
 						echo '</li>'."\n";
 						$counter++;
+						
+						if($even_odd == 'even')
+							$even_odd = 'odd';
+						else
+							$even_odd = 'even';
 					}
 				}
 				echo "</ul>\n";
 			}
 		} // }}}
+		function get_page_image($page_id)
+		{
+			$es = new entity_selector();
+			$es->set_env( 'site' , $this->site_id );
+			$es->add_type(id_of('image'));
+			$es->add_right_relationship($page_id, relationship_id_of('minisite_page_to_image'));
+			$es->set_num(1);
+			$es->limit_tables();
+			$es->limit_fields();
+			if($this->params['randomize_images'])
+				$es->set_order('rand()');
+			else
+				$es->set_order('relationship.rel_sort_order ASC');
+			$images = $es->run_one();
+			//echo $es->get_one_query();
+			if(!empty($images))
+			{
+				return current($images);
+			}
+			return false;
+		}
 		function last_modified() // {{{
 		{
 			if( $this->has_content() )
@@ -135,6 +177,10 @@
 			else
 				return false;
 		} // }}}
+		function get_documentation()
+		{
+			return '<p>Displays links to the current page\'s children. Each link includes the name of the page, along with that page\'s description</p>';
+		}
 	}
 
 ?>
