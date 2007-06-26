@@ -72,7 +72,8 @@
 		{
 			echo '<div class="answer">';
 			echo $item->get_value( 'content' );
-			if($item->get_value('author') || $item->get_value( 'datetime' ) || $item->get_value( 'keywords' ))
+			$owner = $item->get_owner();
+			if($item->get_value('author') || $item->get_value( 'datetime' ) || $item->get_value( 'keywords' ) || $owner->id() != $this->site_id)
 			{
 				echo '<ul class="meta">';
 				if($item->get_value('author') || $item->get_value( 'datetime' ))
@@ -87,6 +88,13 @@
 					if($item->get_value( 'datetime' ))
 						echo prettify_mysql_datetime( $item->get_value( 'datetime' ), "j F Y" );
 					echo '</li>'."\n";
+				}
+				if($owner->id() != $this->site_id)
+				{
+					$url = $owner->get_value('base_url');
+					if($this->textonly)
+						$url .= '?textonly=1';
+					echo '<li>FAQ courtesy of <a href="'.$url.'">'.$owner->get_value('name').'</a></li>'."\n";
 				}
 				if($item->get_value( 'keywords' ))
 					echo '<li class="hide">Keywords: '.strip_tags($item->get_value( 'keywords' )).'</li>'."\n";
