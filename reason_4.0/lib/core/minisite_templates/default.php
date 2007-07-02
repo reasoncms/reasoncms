@@ -439,7 +439,7 @@ class MinisiteTemplate
 	// the keys set in Settings, and runs the cleaning function
 	// specified in the value of settings
 	{
-		return clean_vars( $vars, $rules );
+		return carl_clean_vars( $vars, $rules );
 	} // }}}
 
 	function run_section( $sec ) // {{{
