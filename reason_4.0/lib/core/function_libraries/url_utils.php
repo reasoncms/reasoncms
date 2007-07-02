@@ -125,13 +125,6 @@ function get_potential_sites_from_path($path)
 	}
 }
 
-//replaces a protocol with another protocol
-//like switching http to https or http to rtsp
-function alter_protocol($url,$current_protocol,$new_protocol)
-{
-	return preg_replace("/^".$current_protocol.":\/\//" , $new_protocol."://" , $url, 1);
-}
-
 /**
  * returns a full url for a minisite_page
  * the function will cache the minisite navigation object for a site so when called repeatedly it
@@ -175,122 +168,6 @@ function get_minisite_page_link($site_id, $page_id, $query_string = '', $secure=
 	}
 	return $ret;
 } 			
-
-/**
- * make_link will preserve the url query string, while adding or removing items specified in the new_request_vars array.
- * note that because of the use of array_merge, this function will handle only keys that are strings - if the keys are
- * integers, the key in new_request_vars will be incremented and added to the query string instead of replacing the numeric
- * key.
- *
- * @author nwhite
- *
- * @param array new_request_vars an array of key/value pairs which specify new items, replacement items, or items to remove from the query string
- * @param string base_path a base path for the returned URL, relative to the web server root - should begin with "/"
- * @param type string default '' - if 'relative' then the url returned will be relative to the web server root versus absolute
- * @param convert_entities  boolean default true - run html entities on link before returning it 
- */
-function make_link( $new_request_vars = array(''), $base_path = '', $type = '', $convert_entities = true, $maintain_original = true ) // {{{
-{
-    $url = get_current_url();
-    $parts = parse_url($url);
-    if ($maintain_original && !empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
-    else $cur_request_vars = array();
-    if (empty($base_path)) $base_path = $parts['path'];
-    $baseurl = $parts['scheme'] . '://' . $parts['host'] . $base_path;
-    if ($type == 'relative') $baseurl = $base_path;
-
-    $params = array_merge( $cur_request_vars, $new_request_vars );
-    $link = '';
-    foreach( $params AS $key => $val )
-    {
-        if(!empty( $val ) )
-        {
-            $link .= '&'.$key.'='.$val;
-        }
-    }
-    $link = substr( $link, strlen( '&' ) );
-    if ($convert_entities) $link = htmlentities($link);
-    if (!empty($link))
-        return trim($baseurl.'?'.$link);
-    else return trim($baseurl);
-} // }}}
-
-function construct_link ( $new_request_vars = array(''), $preserve_request_vars = array(''), $base_path = '' )
-{
-	if (empty($preserve_request_vars))
-	{
-		return make_link( $new_request_vars, $base_path, '', true, false );
-	}
-	else
-	{
-		$url = get_current_url();
-		$preserve_array = '';
-		$parts = parse_url($url);
-		if (!empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
-		foreach ($preserve_request_vars as $key)
-		{
-			if (isset($cur_request_vars[$key]))
-			{
-				$preserve_array[$key] = $cur_request_vars[$key];
-			}
-		}
-		$params = (isset($preserve_array)) ? array_merge( $preserve_array, $new_request_vars ) : $new_request_vars;
-		return make_link( $params, $base_path, '', true, false );
-	}
-}
-
-function construct_relative_link ( $new_request_vars = array(''), $preserve_request_vars = array(''), $base_path = '', $convert_entities = true )
-{
-	if (empty($preserve_request_vars))
-	{
-		return make_link( $new_request_vars, $base_path, 'relative', true, false );
-	}
-	else
-	{
-		$url = get_current_url();
-		$preserve_array = '';
-		$parts = parse_url($url);
-		if (!empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
-		foreach ($preserve_request_vars as $key)
-		{
-			if (isset($cur_request_vars[$key]))
-			{
-				$preserve_array[$key] = $cur_request_vars[$key];
-			}
-		}
-		$params = (isset($preserve_array)) ? array_merge( $preserve_array, $new_request_vars ) : $new_request_vars;
-		return make_link( $params, $base_path, 'relative', true, false );
-	}
-}
-
-function make_redirect ( $new_request_vars, $base_path = '' )
-{
-	return make_link ($new_request_vars, $base_path, '', false, true);
-}
-
-function construct_redirect( $new_request_vars = array(''), $preserve_request_var = array(''), $base_path = '' )
-{
-	if (empty($preserve_request_vars))
-	{
-		return make_link( $new_request_vars, $base_path, '', false, false );
-	}
-	else
-	{
-		$url = get_current_url();
-		$preserve_array = '';
-		$parts = parse_url($url);
-		if (!empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
-		foreach ($preserve_request_vars as $key)
-		{
-			if (isset($cur_request_vars[$key]))
-			{
-				$preserve_array[$key] = $cur_request_vars[$key];
-			}
-		}
-		$params = (isset($preserve_array)) ? array_merge( $preserve_array, $new_request_vars ) : $new_request_vars;
-		return make_link( $params, $base_path, '', false, false );
-	}
-}
 
 /**
  *	Get the URL of a page
@@ -496,5 +373,51 @@ function get_site_URL( $page_id )
 		$site = current($results);
 		return $site->get_value( 'base_url' );
 	}
+}
+
+// DEPRECATED FUNCTIONS _ MOVED INTO url_funcs.php in carl_util
+function make_link( $new_request_vars = array(''), $base_path = '', $type = '', $convert_entities = true, $maintain_original = true ) // {{{
+{
+	$call_info = array_shift( debug_backtrace() );
+	$code_line = $call_info['line'];
+	$file = array_pop( explode('/', $call_info['file']));
+	trigger_error('deprecated function make_link called by ' . $file . ' on line ' . $code_line . ' - use carl_make_link instead.', WARNING);
+	return carl_make_link($new_request_vars, $base_path, $type, $convert_entities, $maintain_original);
+} // }}}
+
+function construct_link ( $new_request_vars = array(''), $preserve_request_vars = array(''), $base_path = '' )
+{
+	$call_info = array_shift( debug_backtrace() );
+	$code_line = $call_info['line'];
+	$file = array_pop( explode('/', $call_info['file']));
+	trigger_error('deprecated function construct_link called by ' . $file . ' on line ' . $code_line . ' - use carl_construct_link instead', WARNING);
+	return carl_construct_link($new_request_vars, $preserve_request_vars, $base_path);
+}
+
+function construct_relative_link ( $new_request_vars = array(''), $preserve_request_vars = array(''), $base_path = '', $convert_entities = true )
+{
+	$call_info = array_shift( debug_backtrace() );
+	$code_line = $call_info['line'];
+	$file = array_pop( explode('/', $call_info['file']));
+	trigger_error('construct_relative_link called by ' . $file . ' on line ' . $code_line . ' - use carl_construct_relative_link instead', WARNING);
+	return carl_construct_relative_link ( $new_request_vars, $preserve_request_vars, $base_path, $convert_entities );
+}
+
+function make_redirect ( $new_request_vars, $base_path)
+{
+	$call_info = array_shift( debug_backtrace() );
+	$code_line = $call_info['line'];
+	$file = array_pop( explode('/', $call_info['file']));
+	trigger_error('make_redirect called by ' . $file . ' on line ' . $code_line . ' - use carl_make_redirect instead', WARNING);
+	return carl_make_redirect ( $new_request_vars, $base_path);
+}
+
+function construct_redirect( $new_request_vars = array(''), $preserve_request_var = array(''), $base_path = '' )
+{
+	$call_info = array_shift( debug_backtrace() );
+	$code_line = $call_info['line'];
+	$file = array_pop( explode('/', $call_info['file']));
+	trigger_error('construct_redirect called by ' . $file . ' on line ' . $code_line . ' - use carl_construct_redirect instead', WARNING);
+	return carl_construct_redirect( $new_request_vars, $preserve_request_var, $base_path);
 }
 ?>
