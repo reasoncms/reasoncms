@@ -285,7 +285,7 @@
 				$this->append_filters($cleanup_rules);
 				
 				// apply the cleanup rules
-				$this->request = clean_vars($request, $cleanup_rules);
+				$this->request = carl_clean_vars($request, $cleanup_rules);
 				
 				// special case a few that unfortunately need localization ... 
 				if (isset($this->request['state'])) $this->state = $this->request['state'] = strtolower($this->request['state']);
