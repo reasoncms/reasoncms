@@ -333,7 +333,7 @@
 								   'editing' => array('function' => 'check_against_array', 'extra_args' => array('off', 'on')));
 			
 			// apply the cleanup rules
-			$this->request = clean_vars($request, $cleanup_rules);
+			$this->request = carl_clean_vars($request, $cleanup_rules);
 		}
 	}
 ?>
