@@ -78,7 +78,7 @@ if(!empty($type_id))
 			$cleanup_rules[$key] = array('function'=>'turn_into_int');
 		}
 	}
-	$full_get = clean_vars( $full_get, $cleanup_rules );
+	$full_get = carl_clean_vars( $full_get, $cleanup_rules );
 	$feed->set_request_vars($full_get);
 	$feed->run();
 }
