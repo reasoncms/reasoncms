@@ -134,6 +134,17 @@
 				if (isset($this->request[$v]))
 					$this->$v = $this->request[$v]; 
 			}
+			
+			// verify that id corresponds to an entity
+			if ($this->id > 0)
+			{
+				$e = new entity($this->id);
+				$values = $e->get_values();
+				if (empty($values))
+				{
+					$this->id = '';
+				}
+			}
 		
 			if( isset( $this->request[ 'PHPSESSID' ] ) )
 				unset( $this->request[ 'PHPSESSID' ] );			
@@ -177,7 +188,7 @@
 		//there are two basic left bars that can be shown.  There's the standard one which comes up if there is no id which lists
 		//types and such.  The other is if there is an id, this shows all the options for the entity being edited.
 		{
-			if( empty( $this->id ) )
+			if( empty( $this->id ) || empty($this->site_id))
 				$this->leftbar_normal();
 			else
 				$this->leftbar_item();
@@ -1059,7 +1070,6 @@
 			{
 				$this->title();
 			}
-
 			$this->module->run();
 			
 			?>
