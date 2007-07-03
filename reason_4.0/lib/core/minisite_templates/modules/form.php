@@ -176,7 +176,7 @@
 		
 		function show_data_view_link($url = '')
 		{
-			$url = make_link(array('mode' => 'data_view', 'thor_success' => ''));
+			$url = carl_make_link(array('mode' => 'data_view', 'thor_success' => ''));
 			echo '<div class="formDataAdmin">';
 			echo '<p><a href="'.$url.'">Switch to data view</a></p>';
 			echo '</div>';
@@ -184,7 +184,7 @@
 		
 		function show_options_link()
 		{
-			$url = construct_link(array(), array('textonly'));
+			$url = carl_construct_link(array(), array('textonly'));
 			echo '<div class="formDataAdmin">';
 			echo '<p><a href="'.$url.'">Switch to form view</a>';
 			//echo '<a href="'.$url2.'">Export result set as .csv</a></p>';
