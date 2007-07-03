@@ -216,7 +216,7 @@ class GalleryVoteModule extends GalleryModule
 			}
 			elseif($this->mode_is_available($mode))
 			{
-				$nav_parts[] = '<a href="'.make_link(array('mode'=>$mode)).'">'.$this->modes_to_nice_names[$mode].'</a>';
+				$nav_parts[] = '<a href="'.carl_make_link(array('mode'=>$mode)).'">'.$this->modes_to_nice_names[$mode].'</a>';
 			}
 		}
 		$ret .= implode(' | ',$nav_parts);
@@ -235,7 +235,7 @@ class GalleryVoteModule extends GalleryModule
 		{
 			if($this->mode_requires_login($this->request['mode']))
 			{
-				$url = make_link( array('mode'=>''), '', '', false );
+				$url = carl_make_link( array('mode'=>''), '', '', false );
 			}
 			else
 			{
