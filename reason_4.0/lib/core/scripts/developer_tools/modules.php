@@ -97,18 +97,18 @@ if ($detail_mode)
 		}
 	}
 	echo '<h3>Detail mode for module ' . $module_limiter . '</h3>';
-	echo '<p><a href="'.construct_link().'">View all modules</a></p>';
+	echo '<p><a href="'.carl_construct_link().'">View all modules</a></p>';
 	if (!empty($items))
 	{
 		$item_count = count($items);
 		$total_count = ($num == 'All') ? $item_count : count($pages);
 		$approx = ($total_count == $item_count) ? '' : ' (approx)';
 		echo '<p>'.$item_count.' valid URLs shown for module ' . $module_limiter .'</p>';
-		if ($total_count > 9) $link[] = '<a href="' . make_link(array('detail' => 'true', 'limit' => $module_limiter, 'num'=>10)) . '" title="10 URLs for module ' . $module_limiter . '">10</a>';
-		if ($total_count > 24) $link[] = '<a href="' . make_link(array('detail' => 'true', 'limit' => $module_limiter, 'num'=>25)) . '" title="25 URLs for module ' . $module_limiter . '">25</a> ';
-		if ($total_count > 99) $link[] = '<a href="' . make_link(array('detail' => 'true', 'limit' => $module_limiter, 'num'=>100)) . '" title="100 URLs for module ' . $module_limiter . '">100</a> ';
-		if ($total_count > 199) $link[] = '<a href="' . make_link(array('detail' => 'true', 'limit' => $module_limiter, 'num'=>'')) . '" title="All URLs for module ' . $module_limiter . '">All ' . $total_count . $approx.'</a> - high database load - not recommended';
-		else $link[] = '<a href="' . make_link(array('detail' => 'true', 'limit' => $module, 'num'=>'')) . '" title="All URLs for module ' . $module_limiter . '">All ' . $total_count . $approx.'</a>';
+		if ($total_count > 9) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module_limiter, 'num'=>10)) . '" title="10 URLs for module ' . $module_limiter . '">10</a>';
+		if ($total_count > 24) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module_limiter, 'num'=>25)) . '" title="25 URLs for module ' . $module_limiter . '">25</a> ';
+		if ($total_count > 99) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module_limiter, 'num'=>100)) . '" title="100 URLs for module ' . $module_limiter . '">100</a> ';
+		if ($total_count > 199) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module_limiter, 'num'=>'')) . '" title="All URLs for module ' . $module_limiter . '">All ' . $total_count . $approx.'</a> - high database load - not recommended';
+		else $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module, 'num'=>'')) . '" title="All URLs for module ' . $module_limiter . '">All ' . $total_count . $approx.'</a>';
 		echo '<p>Number to show: '.implode(" | ", $link) . '</p>';
 			
 		echo '<table border="1" cellpadding="2" cellspacing="0">'."\n";
@@ -130,7 +130,7 @@ if ($detail_mode)
 	else
 	{
 		echo '<p>No page URLs could be found for module ' . $module_limiter . '</p>';
-		echo '<p><a href="'.construct_link().'">View all modules</a></p>';
+		echo '<p><a href="'.carl_construct_link().'">View all modules</a></p>';
 	}
 }
 else
@@ -138,7 +138,7 @@ else
 	if ($module_limiter)
 	{
 		echo '<h3>Modules limited by substring ' . $module_limiter . '</h3>';
-		echo '<p><a href="'.construct_link().'">View all modules</a></p>';
+		echo '<p><a href="'.carl_construct_link().'">View all modules</a></p>';
 	}
 	else echo '<h3>All modules</h3>';
 	show_filter($module_limiter);
@@ -183,10 +183,10 @@ else
 			echo '<td>';
 			echo '<a href="'.$url.'">'.substr($url,0,50).(strlen($url) > 50 ? '...' : '').'</a></td>'."\n";
 			echo '<td>';
-			if ($page_total > 9) $link[] = '<a href="' . make_link(array('detail' => 'true', 'limit' => $module, 'num'=>10)) . '" title="10 URLs for module ' . $module_limiter . '">10</a>';
-			if ($page_total > 24) $link[] = '<a href="' . make_link(array('detail' => 'true', 'limit' => $module, 'num'=>25)) . '" title="50 URLs for module ' . $module_limiter . '">25</a> ';
-			if ($page_total > 99) $link[] = '<a href="' . make_link(array('detail' => 'true', 'limit' => $module, 'num'=>100)) . '" title="50 URLs for module ' . $module_limiter . '">100</a> ';
-			if ($page_total < 200) $link[] = '<a href="' . make_link(array('detail' => 'true', 'limit' => $module, 'num'=>'')) . '" title="All URLs for module ' . $module_limiter . '">All</a>';
+			if ($page_total > 9) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module, 'num'=>10)) . '" title="10 URLs for module ' . $module_limiter . '">10</a>';
+			if ($page_total > 24) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module, 'num'=>25)) . '" title="50 URLs for module ' . $module_limiter . '">25</a> ';
+			if ($page_total > 99) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module, 'num'=>100)) . '" title="50 URLs for module ' . $module_limiter . '">100</a> ';
+			if ($page_total < 200) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module, 'num'=>'')) . '" title="All URLs for module ' . $module_limiter . '">All</a>';
 			echo implode(" | ", $link);
 			echo '</td>';
 			echo "</tr>\n";
@@ -197,7 +197,7 @@ else
 
 function show_filter($limit = '')
 {
-	echo '<form method="post" action="'.construct_link().'">';
+	echo '<form method="post" action="'.carl_construct_link().'">';
 	echo '<p>Limit by module substring: <input type="text" name="limit" value="'.$limit.'"></p>';
 	echo '<p><input type="submit" name="submit" value="Search"></p>';
 }
