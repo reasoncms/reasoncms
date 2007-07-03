@@ -53,7 +53,14 @@ function connectDB($dbName, $dbuser = '', $dbpasswd = '', $dbhost='')
 
 function get_current_db_connection_name()
 {
-	return $GLOBALS['_current_db_connection_name'];
+	return (isset($GLOBALS['_current_db_connection_name'])) ? $GLOBALS['_current_db_connection_name'] : false;
+}
+
+function get_database_name()
+{
+	$conn_name = get_current_db_connection_name();
+	$creds = get_db_credentials($conn_name);
+	return $creds['db'];
 }
 
 /**
