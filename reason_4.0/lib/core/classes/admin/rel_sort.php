@@ -262,7 +262,7 @@ class RelationshipSort
 	 */ 	
 	function redirect()
 	{
-		$redirect_link = make_link(array('do' => '', 'eid' => '', 'rowid' => ''), '', '', false);
+		$redirect_link = carl_make_link(array('do' => '', 'eid' => '', 'rowid' => ''), '', '', false);
 		header('Location: ' . $redirect_link);
 	}
 }
