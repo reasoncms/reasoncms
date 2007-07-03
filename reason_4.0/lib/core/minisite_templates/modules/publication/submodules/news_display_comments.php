@@ -88,7 +88,7 @@
 #			$title = '<'.$this->params['title_tag'].'>'.$this->params['title'].$title_addition.'</'.$this->params['title_tag'].'>';
 			$title = '<p> Return to '.$title_addition.'</p>';
 
-			return '<a href="'.make_link(array('story_id'=>'')).'">'.$title.'</a>';
+			return '<a href="'.carl_make_link(array('story_id'=>'')).'">'.$title.'</a>';
 		}
 	}
 ?>

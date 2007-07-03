@@ -435,7 +435,7 @@ class PublicationModule extends Generic3Module
 			}
 			else
 			{
-				$redirect = make_redirect(array('issue_id' => array_shift($issue_keys)));
+				$redirect = carl_make_redirect(array('issue_id' => array_shift($issue_keys)));
 				header('Location: '.$redirect);
 				exit;
 			}
@@ -1664,7 +1664,7 @@ class PublicationModule extends Generic3Module
 			$links = $this->get_basic_links_to_current_publications();
 			if(isset($links[$pub_id]))
 			{
-				return construct_link(array( $this->query_string_frag.'_id' => $item->id()), array('textonly'), $links[$pub_id]);
+				return carl_construct_link(array( $this->query_string_frag.'_id' => $item->id()), array('textonly'), $links[$pub_id]);
 			}
 			else
 				return '';

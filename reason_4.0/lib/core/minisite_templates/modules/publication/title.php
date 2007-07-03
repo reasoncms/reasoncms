@@ -37,7 +37,7 @@
 			{
 				if(!empty($this->request['story_id']))
 				{
-					$link = construct_link(array(), array('textonly')); // preserve only textonly
+					$link = carl_construct_link(array(), array('textonly')); // preserve only textonly
 					$pubname = '<a href="'.$link.'">'.$this->publication->get_value('name').'</a>';
 				}
 				else
