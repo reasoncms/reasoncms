@@ -419,7 +419,6 @@
 				$element_order = $this->order;
 			else
 				$element_order = array_keys($this->elements);
-				
 			foreach($this->row_order as $row)
 			{
 				foreach($this->column_order as $column)
@@ -431,7 +430,7 @@
 					}
 					
 					//check to make sure that no elements are occupying this position
-					if(empty($this->position[$row][$column]))
+					if(empty($this->position[$row][$column]) && current($element_order))
 					{
 						$this->position[$row][$column] = current($element_order);
 						$this->elements_in_position[] = current($element_order);
