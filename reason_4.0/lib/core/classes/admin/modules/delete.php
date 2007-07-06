@@ -12,6 +12,10 @@
 		} // }}}		
 		function init() // {{{
 		{
+			if(empty($this->admin_page->id))
+			{
+				return false;
+			}
 			$this->deletable = $this->admin_page->is_deletable();
 			if( !isset( $this->admin_page->request[ 'undelete' ] ) )
 			{
@@ -57,6 +61,11 @@
 		} // }}}
 		function run() // {{{
 		{
+			if(empty($this->admin_page->id))
+			{
+				echo '<p>Unable to delete item. Item may already have been deleted (sometimes this happens if you click twice on the delete button)</p>';
+				return false;
+			}
 			if($this->deletable)
 			{
 				$this->disco_item->run();
