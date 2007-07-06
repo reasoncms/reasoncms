@@ -467,7 +467,7 @@ class PublicationModule extends Generic3Module
 	// also disables pagination if max_num_items is set, and is less than num_per_page
 	function do_pagination()
 	{
-		$this->total_count = $this->es->get_one_count();
+		//$this->total_count = $this->es->get_one_count();
 		if($this->use_group_by_section_view() || (!empty($this->max_num_items) && ($this->max_num_items) < $this->num_per_page))
 		{
 			$this->use_pagination = false;
