@@ -1,8 +1,8 @@
 <?php
-	reason_include_once( 'minisite_templates/modules/generic2.php' );
+	reason_include_once( 'minisite_templates/modules/generic3.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'DatabasesModule';
 
-class DatabasesModule extends Generic2Module
+class DatabasesModule extends Generic3Module
 {
 	var $style_string = 'databases';
 	var $current_letter = '';
