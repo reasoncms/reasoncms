@@ -54,6 +54,8 @@
 							);
 		var $search_fields = array('entity.name','chunk.content','meta.description','chunk.author','bug.assigned_to','bug.bug_state');
 		var $make_current_page_link_in_nav_when_on_item = true;
+		var $jump_to_item_if_only_one_result = false;
+		
 		function set_type() // This must always be overloaded, or it will crash crash crash. {{{
 		{
 			$this->type = id_of( 'project' );
