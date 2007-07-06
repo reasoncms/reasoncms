@@ -10,6 +10,7 @@
 		var $make_current_page_link_in_nav_when_on_item = true;
 		var $back_link_text = 'Back to list of minutes';
 		var $show_list_with_details = false;
+		var $jump_to_item_if_only_one_result = false;
 		
 		function alter_es() // {{{
 		{
