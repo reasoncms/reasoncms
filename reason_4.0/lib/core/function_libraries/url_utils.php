@@ -330,10 +330,14 @@ function dig_for_URL( $page_id, $URL)
 	}
 }
 
-function dig_for_URL_known_parent($page_id, $parent_id, $url, &$pages, $parent_id_field = 'parent_id')
+function dig_for_URL_known_parent($page_id, $parent_id, $url, &$pages, $parent_id_field = 'parent_id', $orig_id = '')
 {
-	static $cache;
-	if (isset($cache[$page_id])) return $cache[$page_id];
+	static $cache = array();
+	if(empty($orig_id))
+		$orig_id = $page_id;
+	
+	//echo 'id: '.$page_id.'; p_id: '.$parent_id.'; url: '.$url.'<br />';
+	if (isset($cache[$orig_id])) return $cache[$orig_id];
 	if (!isset($pages[$parent_id])) return false;
 	$parent =& $pages[$parent_id];
 	if (!empty($parent))
@@ -341,13 +345,13 @@ function dig_for_URL_known_parent($page_id, $parent_id, $url, &$pages, $parent_i
 		if ($parent_id == $page_id)
 		{
 			$url = get_site_URL( $page_id ) . $url;
-			$cache[$page_id] = $url;
+			$cache[$orig_id] = $url;
 			return $url;
 		}
 		else
 		{
 			if ($parent->get_value('url_fragment')) $url = $parent->get_value('url_fragment').'/'.$url;
-			return dig_for_URL_known_parent( $parent_id, $parent->get_value($parent_id_field), $url, $pages, $parent_id_field );
+			return dig_for_URL_known_parent( $parent_id, $parent->get_value($parent_id_field), $url, $pages, $parent_id_field, $orig_id );
 		}
 	}
 }
