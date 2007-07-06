@@ -618,9 +618,13 @@
 		} // }}}
 		function is_deletable() // {{{
 		{
+			if(empty($this->id))
+				return false;
 			//get all one-to-many required relationships that the current item is a part of
+			$subject_of_required_rels = array();
 			$dbq = $this->get_required_ar_dbq();
-			$subject_of_required_rels = $dbq->run();
+			if(!empty($dbq))
+				$subject_of_required_rels = $dbq->run();
 			$sites = get_sites_that_are_borrowing_entity($this->id);
 			if( $subject_of_required_rels || !empty($sites) )
 				return false;
@@ -629,6 +633,8 @@
 		} // }}}
 		function get_required_ar_dbq() // {{{
 		{
+			if(empty($this->id))
+				return false;
 			$dbq = new DBSelector;
 			$dbq->add_table( 'ar' , 'allowable_relationship' );
 			$dbq->add_table( 'r' , 'relationship' );
