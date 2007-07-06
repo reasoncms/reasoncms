@@ -25,7 +25,8 @@
 		var $has_feed = true;
 		var $feed_link_title = 'Subscribe to this feed for updates to this FAQ';
 		var $make_current_page_link_in_nav_when_on_item = true;
-
+		var $jump_to_item_if_only_one_result = false;
+		
 		function show_item_name( $item ) // {{{
 		{
 			echo '<h3 class="faqName">' . $item->get_value( 'description' ) . '</h3>'."\n";
@@ -72,21 +73,25 @@
 		{
 			echo '<div class="answer">';
 			echo $item->get_value( 'content' );
+			$datetime = false;
+			if($item->get_value( 'datetime' ) && $item->get_value( 'datetime' ) != '0000-00-00 00:00:00')
+				$datetime = $item->get_value( 'datetime' );
+
 			$owner = $item->get_owner();
-			if($item->get_value('author') || $item->get_value( 'datetime' ) || $item->get_value( 'keywords' ) || $owner->id() != $this->site_id)
+			if($item->get_value('author') || $datetime || $item->get_value( 'keywords' ) || $owner->id() != $this->site_id)
 			{
 				echo '<ul class="meta">';
-				if($item->get_value('author') || $item->get_value( 'datetime' ))
+				if($item->get_value('author') || $datetime)
 				{
 					echo '<li>';
 					if($item->get_value('author'))
 					{
 						echo $item->get_value('author');
-						if($item->get_value( 'datetime' ))
+						if($datetime)
 							echo ', ';
 					}
-					if($item->get_value( 'datetime' ))
-						echo prettify_mysql_datetime( $item->get_value( 'datetime' ), "j F Y" );
+					if($datetime)
+						echo prettify_mysql_datetime( $datetime, "j F Y" );
 					echo '</li>'."\n";
 				}
 				if($owner->id() != $this->site_id)
