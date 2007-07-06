@@ -93,7 +93,7 @@ if ($detail_mode)
 				$items[] = '<a href="'.$url.'">'.substr($url,0,50).(strlen($url) > 50 ? '...' : '').'</a>';
 				$count++;
 			}
-			if ($count == $num) break;
+			if ($count >= $num) break;
 		}
 	}
 	echo '<h3>Detail mode for module ' . $module_limiter . '</h3>';
