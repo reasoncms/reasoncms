@@ -82,6 +82,24 @@
 		var $items = array();
 		
 		/**
+		*  The array of all items that would appear in a full
+		*  list of the module
+		*/
+		var $ids = array();
+		
+		/**
+		*  An array of all items, keyed on positions (1,2,3,4,etc.)
+		*  to item ids
+		*/
+		var $position_to_ids = array();
+		
+		/**
+		*  An array of all items, keyed on ids to
+		*  poistions (1,2,3,4,etc.)
+		*/
+		var $id_to_positions = array();
+		
+		/**
 		 * The string used to denote the item in the query string
 		 * '_id' added to this string to build actual query key
 		 * @var string
@@ -110,7 +128,14 @@
 		var $default_links = array();
 		var $search_field_size = 20;
 		
-		// Power search (psearch) settings
+		/**
+		 * Sets up power search arguments.
+		 * Array of 'url_fragment' => array (
+		 *									'field'=>field in reason to search, 
+		 *									'cleanup_rule' => cleanup rule as defined in generic3,
+		 *								),
+		 * @var array
+		 */
 		var $allowable_psearch_fields = array();
 		
 		// Pagination settings
@@ -156,7 +181,7 @@
 		
 		var $current_item_id;
 		
-		//calls on parent::init, set_type(), alter_es(), apply_user_input_to_es(), do_filtering(), do_pagination() add_crumb(), 
+		//calls on parent::init, set_type(), alter_es(), apply_user_input_to_es(), do_filtering(), do_pagination() add_crumb(), refine_ids_and_positions_arrays()
 		function init( $args ) // {{{
 		{
 			$error = 'Your class needs to have a type id.  Please overload the set_type() function and '.
@@ -190,15 +215,65 @@
 				$this->es->add_type( $this->type );
 				$this->es->set_env('site_id',$this->parent->site_id);
 				$this->alter_es();
-				$this->pre_user_input_es = carl_clone($this->es);
+				
+				// We want to "archive" a version of the entity selector
+				// just before the filters are applied
+				$this->pre_user_input_es = carl_clone($this->es);				
 				$this->apply_user_input_to_es();
 				if($this->use_filters)
 					$this->do_filtering();
-				if($this->use_pagination)
-					$this->do_pagination(); // This needs to go last before calling "run_one."
 				
-				$this->items = $this->es->run_one();
-				$this->alter_items($this->items);
+				
+				// So the idea here is to grab an array of ids of all of the elements
+				// that would appear on a full list of the module. From this we can
+				// easily find an item's position relative to the list and next and
+				// previous items.
+				
+				// If we're viewing a single item and have no list below the item,
+				// we simply want to get the id list and put the current item into
+				// the items array
+				if (!$this->show_list_with_details && !empty($this->current_item_id))
+				{
+					$this->es->limit_fields('entity.id');
+					$this->ids = $this->es->run_one();
+					
+					$this->refine_ids_and_positions_arrays();
+					
+					$this->items[$this->current_item_id] = new entity($this->current_item_id);
+					$this->items[$this->current_item_id]->get_values();
+				}
+				else
+				{
+					// If we have a list, either below an item or by itself, and also
+					// have pagination, we want to basically grab the current page's
+					// "chunk" of items as before and put it into $this->items
+					if ($this->use_pagination)
+					{
+						$all_ids_es = carl_clone($this->es);
+						$all_ids_es->limit_fields('entity.id');
+						$this->ids = $all_ids_es->run_one(); 
+						
+						$this->refine_ids_and_positions_arrays();
+						
+						// We want to define what page the current item should
+						// be on so we know how to do pagination
+						if (!empty($this->current_item_id) && ($page_num = $this->get_page_number_from_id($this->current_item_id)))
+						{
+							$this->request['page'] = $page_num;
+						}
+						$this->do_pagination(); // This needs to go last before calling "run_one."
+						$this->items = $this->es->run_one();
+						$this->alter_items($this->items);
+					}
+					// If we have a list with no pagination, we grab all information
+					// about all items for the array of ids and the items array.
+					else
+					{
+						$this->items = $this->ids = $this->es->run_one();
+						$this->refine_ids_and_positions_arrays();
+						$this->alter_items($this->items);
+					}
+				}
 				
 				if( !empty( $this->items ) && !empty( $this->current_item_id ) && !empty($this->items[$this->current_item_id]) )
 				{
@@ -207,7 +282,7 @@
 				if(
 					$this->make_current_page_link_in_nav_when_on_item
 					&&
-					!empty($this->request[$this->query_string_frag.'_id'])
+					!empty($this->current_item_id)
 				)
 				{
 					$this->parent->pages->make_current_page_a_link();
@@ -316,12 +391,18 @@
 				{
 					if($this->jump_to_item_if_only_one_result && $this->total_count == 1)
 					{
-						reset($this->items);
-						$item = current($this->items);
+						$item = reset($this->items);
 						if(is_object($item))
 						{
 							$url_parts = parse_url(get_current_url());
-							$location = $url_parts['scheme'].'://'.$url_parts['host'].$url_parts['path'].$this->construct_link($item);
+							if ($this->link_to_a_different_page)
+							{
+								$location = $url_parts['scheme'].'://'.$url_parts['host'].$this->construct_link($item);
+							}
+							else
+							{
+								$location = $url_parts['scheme'].'://'.$url_parts['host'].$url_parts['path'].$this->construct_link($item);
+							}
 							$location = html_entity_decode( $location );
 							header('Location: '.$location);
 							die();
@@ -404,6 +485,11 @@
 			 )
 			 {
 			 	$this->ok_ids[] = $id;
+				return $e;
+			}
+			elseif(in_array($id,$this->ids))
+			{
+				$this->ok_ids[] = $id;
 				return $e;
 			}
 			else
@@ -567,7 +653,13 @@
 		//calls on construct_link()
 		function show_back_link()
 		{
-			echo '<div class="back"><a href="'.$this->construct_link(NULL).'">'.$this->back_link_text.'</a></div>'."\n";
+			$item_page = $this->get_page_number_from_id($this->current_item_id);
+			if ($item_page)
+				$arg_array = array('page'=>$item_page);
+			else
+				$arg_array = array();
+				
+			echo '<div class="back"><a href="'.$this->construct_link(NULL,$arg_array).'">'.$this->back_link_text.'</a></div>'."\n";
 		}
 		
 		//Called upon by run(), show_list_item(), show_back_link()
@@ -587,8 +679,17 @@
 				}
 				if(!empty($this->request['search']))
 					$link_frags[ 'search' ] = urlencode($this->request['search']);
+				
+				foreach($this->allowable_psearch_fields as $psearch_frag => $psearch_data)
+				{
+					if (!empty($this->request['search_' . $psearch_frag]))
+					{
+						$link_frags['search_' . $psearch_frag] = strtr(urlencode($this->request['search_' . $psearch_frag]),array('%2A'=>'*'));
+					}
+				}
 			}
-			if (!empty($this->request['page']))
+			
+			if (!empty($this->request['page']) && empty($item))
 				$link_frags[ 'page' ] = $this->request['page'];
 			
 			foreach($other_args as $key=>$value)
@@ -598,7 +699,10 @@
 			$query_frags = array();
 			foreach($link_frags as $key=>$value)
 			{
-				$query_frags[] = $key.'='.$value;
+				if (!empty($value))
+				{
+					$query_frags[] = $key.'='.$value;
+				}
 			}
 			$link = $this->get_path_to_link_target_page().'?'.implode('&amp;',$query_frags);
 			return $link;
@@ -652,13 +756,35 @@
 			}
 			if(!empty($this->request['search']))
 			{
-				$search_array = array();
-				foreach($this->search_fields as $field)
+				$search_term = $this->request['search'];
+				$regexp = '/(?:\"(.+?)\"|([^\*\"\s]+))/';
+				preg_match_all($regexp,$search_term,$matches);
+				
+				$search_term_array = array();
+				foreach ($matches[1] as $chunk)
 				{
-					$search_array[] = $field.' LIKE "%'.addslashes($this->request['search']).'%"';  // add slashes to thwart SQL insertion through query string
+					if (!empty($chunk))	$search_term_array[] = trim($chunk);
 				}
-				//echo '('.implode(' OR ', $search_array).')';
-				$this->es->add_relation('('.implode(' OR ', $search_array).')');
+				
+				foreach ($matches[2] as $chunk)
+				{
+					if (!empty($chunk))	$search_term_array[] = trim($chunk);
+				}
+				$search_array = array();
+				
+				foreach ($search_term_array as $chunk)
+				{
+					$sub_search_array = array();
+					foreach($this->search_fields as $field)
+					{
+						$sub_search_array[] = $field . ' LIKE "%'.strtr(addslashes($chunk),array('*'=>'%')).'%"';
+					}
+					$search_array[] = '('.implode(' OR ',$sub_search_array).')';
+				}
+				if (!empty($search_array))
+				{
+					$this->es->add_relation('('.implode(' AND ', $search_array).')');
+				}
 			}
 			foreach($this->allowable_psearch_fields as $psearch_frag => $psearch_data)
 			{
@@ -673,11 +799,16 @@
 		//Called on by init()
 		function do_pagination()
 		{
-			$this->total_count = $this->es->get_one_count();
+//			$this->total_count = $this->es->get_one_count();
 			if(empty($this->request['page']))
 				$this->request['page'] = 1;
-			$this->es->set_start( $this->num_per_page * ( $this->request['page'] - 1 ) );
-			$this->es->set_num( $this->num_per_page );
+//			$this->es->set_start( $this->num_per_page * ( $this->request['page'] - 1 ) );
+//			$this->es->set_num( $this->num_per_page );
+
+			$pagination_ids = array();
+			$pagination_ids = array_slice($this->position_to_ids, $this->num_per_page * ( $this->request['page'] - 1 ) , $this->num_per_page  );
+			$pagination_ids_string = 'entity.id IN ("'.implode('","',$pagination_ids) . '")';
+			$this->es->add_relation($pagination_ids_string);
 		}
 		
 		//Called on by list_items
@@ -977,5 +1108,74 @@
 		{
 		
 		}
+		
+		
+		/**
+		*  Make the position_to_ids and id_to_positions arrays
+		*  Gets called during init, after the run_ones
+		*/
+		function refine_ids_and_positions_arrays()
+		{
+			$this->position_to_ids = array_keys($this->ids);
+			
+			// We want to make the first element 1 not 0, so we
+			// put a dummy element on the begining of the array
+			// then remove it
+			array_unshift($this->position_to_ids, 'placeholder');
+			unset($this->position_to_ids[0]);
+			$this->id_to_positions = array_flip($this->position_to_ids);
+			$this->total_count = count($this->ids);
+		}
+		
+		/**
+		*  Takes an id and returns it's position in the list
+		*  of items
+		*/
+		function get_item_position($item_id)
+		{
+			if (!empty($this->id_to_positions[$item_id]))
+				return $this->id_to_positions[$item_id];
+			else
+				return false;
+		}
+
+		/**
+		*  Gets the id of the next item after the given id
+		*/
+		function get_next_item_id($item_id)
+		{
+			if ($this->get_item_position($item_id) && !empty($this->position_to_ids[$this->get_item_position($item_id)+1]) )
+				return $this->position_to_ids[$this->get_item_position($item_id)+1];
+			else
+				return false;
+		}
+
+		/**
+		*  Gets the id of the previous item after the given id
+		*/
+		function get_previous_item_id($item_id)
+		{
+			if ($this->get_item_position($item_id) && !empty($this->position_to_ids[$this->get_item_position($item_id)-1]) )
+				return $this->position_to_ids[$this->get_item_position($item_id)-1];
+			else
+				return false;
+		}
+		
+		/**
+		*  Takes an id and returns what page it would appear on
+		*  if pagination is used
+		*/
+		function get_page_number_from_id($item_id)
+		{
+			if ($this->get_item_position($item_id))
+			{
+				if ($this->use_pagination)
+					return (integer) floor(($this->get_item_position($item_id)-1)/$this->num_per_page)+1;
+				else
+					return false;
+			}
+			return false;
+		}
+		
 	}
 ?>
