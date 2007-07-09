@@ -250,10 +250,9 @@ class MinisiteTemplate
 				$this->add_head_item('meta',array('name'=>$meta_name,'content'=>$content) );
 			}
 		}
-		if (!empty ($this->textonly) || !empty( $this->pages->request['no_search'] ) || $this->site_info->get_value('site_state') != 'Live')
+		if (!empty ($this->textonly) || !empty( $_REQUEST['no_search'] ) || $this->site_info->get_value('site_state') != 'Live')
 		{
 			$this->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
-			$this->add_head_item('meta',array('name'=>'htdig-noindex','content'=>'true' ) );
 		}
 	}
 	function run() // {{{
