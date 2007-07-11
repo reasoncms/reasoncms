@@ -148,6 +148,8 @@ class Thor
 	{
 		$db_structure = $this->_build_db_structure();
 		
+		connectDB($this->_db_conn); // connecting here so that mysql_real_escape_string() uses the right charset for the connection
+		
 		$q = 'CREATE TABLE ' . $this->_table_name . '(`id` int(11) NOT NULL AUTO_INCREMENT, ';
 		//$q .= '`formkey` tinytext NOT NULL , ';
 		foreach ($db_structure as $k=>$v)
@@ -160,7 +162,7 @@ class Thor
    				$q .= '`'.$k.'` enum(';
    				foreach ($v['options'] as $option)
    				{
-   					$q .= "'" . $option . "',";
+   					$q .= "'" . mysql_real_escape_string($option) . "',";
    				}
    				$q = substr( $q, 0, -1 ); // trim trailing comma
    				$q .= ') NOT NULL , ';
@@ -174,7 +176,6 @@ class Thor
 		$q .= '`submitter_ip` tinytext NOT NULL , ';
 		$q .= '`date_created` timestamp NOT NULL , ';
 		$q .= 'PRIMARY KEY(`id`)) TYPE = MYISAM;';
-		connectDB($this->_db_conn);
 		$res = mysql_query( $q ) or trigger_error( 'Error: mysql error in Thor: '.mysql_error() );
 		connectDB(REASON_DB); // reconnect to default DB
 	}
