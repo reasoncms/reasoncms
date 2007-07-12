@@ -240,7 +240,8 @@ class Loki2
 				UI__Clipboard_Helper_Editable_Iframe__src = '<?php echo $this->_asset_protocol . $this->_asset_host . $this->_asset_path; ?>auxil/loki_blank.html';
 			</script>
 			<?php
-			if(!empty($_REQUEST['loki_script_src']))
+			//if(!empty($_REQUEST['loki_script_src']))
+			if(1 == 1) // this is the default while we are doing testing
 			{
 				include_once(LOKI_2_INC.'auxil/preg_ls.php');
 				$files = preg_ls($this->_asset_file_path . "js", true, "/.*\.js$/i");
