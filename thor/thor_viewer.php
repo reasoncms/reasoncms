@@ -9,8 +9,9 @@
  * Provides a view of thor form data with filtering and .csv export
  *
  */
+include_once ( 'paths.php' );
 require_once( 'XML/Unserializer.php'); // Requires PEAR XML_Serialize package
-include_once( DISCO_INC . 'disco.php'); // Requires Disco	
+include_once( DISCO_INC . 'disco.php'); // Requires Disco
 
 class Thor_Viewer
 {
@@ -171,7 +172,7 @@ class Thor_Viewer
 	{
 		$this->cleanup_rules['thor_sort_field'] = array('function' => 'check_against_array', 'extra_args' => array_merge($this->extra_fields, array_keys($this->_display_values))); // dynamically add
 		
-		$this->request = clean_vars($_REQUEST, $this->cleanup_rules);
+		$this->request = carl_clean_vars($_REQUEST, $this->cleanup_rules);
 		if (!empty($this->request['thor_sort_order'])) $this->set_sort_order($this->request['thor_sort_order']);
 		if (!empty($this->request['thor_sort_field'])) $this->set_sort_field($this->request['thor_sort_field']);
 		if (!empty($this->request['thor_export'])) $this->set_export($this->request['thor_export']);
@@ -361,7 +362,7 @@ class Thor_Viewer
 			else $order = 'asc';
 			$url_array = array('thor_sort_field' => $k, 'thor_sort_order' => $order, 'thor_filters' => '', 'thor_export' => '');
 			$this->parse_filters_for_url($url_array);
-			$url = make_link($url_array);
+			$url = carl_make_link($url_array);
 			$v = (isset($this->_display_values[$k])) ? $this->_display_values[$k]['label'] : $k;
 			$ret .= '<th'.$first.'><a href="'.$url.'" title="'.$order_display_name[$order].'">'.htmlentities($v).'</a></th>';
 			$first = '';
@@ -408,14 +409,14 @@ class Thor_Viewer
 		$links_export = $links_delete = $links_base;
 		$links_delete['thor_delete'] = 'delete';
 		$links_export_all['thor_export'] = 'csv'; // does not consider filtering
-		$menu_links['Export Stored Data'] = make_link($links_export_all);
+		$menu_links['Export Stored Data'] = carl_make_link($links_export_all);
 		if ($this->filtered_rows > 0 && ($this->filtered_rows != $this->total_rows))
 		{
 			$num_string = ($this->filtered_rows == 1) ? '1 Item' : $this->filtered_rows . ' Items';
 			$links_export['thor_export'] = 'csv';
-			$menu_links['Export Found Set ('.$num_string.')'] = make_link($links_export);
+			$menu_links['Export Found Set ('.$num_string.')'] = carl_make_link($links_export);
 		}
-		if ($this->allow_delete) $menu_links['Delete Stored Data'] = make_link($links_delete);
+		if ($this->allow_delete) $menu_links['Delete Stored Data'] = carl_make_link($links_delete);
 		$ret .= '<h3>Displaying '.$this->filtered_rows.' of '.$this->total_rows.' rows</h3>';
 		if (!empty($menu_links)) $ret .= $this->gen_menu($menu_links);
 		$ret .= '<table class="thor_data">';
@@ -547,10 +548,10 @@ class Thor_Viewer
 		$links_export = $links_view = $links_base;
 		$this->parse_filters_for_url($links_view);
 		$links_export['thor_export'] = 'csv';
-		$menu_links['View Stored Data'] = make_link($links_view);
+		$menu_links['View Stored Data'] = carl_make_link($links_view);
 		$menu_links['Delete Stored Data'] = '';
 		$this->delete_form->set_num_rows($this->total_rows);
-		$this->delete_form->provide_link_to_csv_export(make_link($links_export));
+		$this->delete_form->provide_link_to_csv_export(carl_make_link($links_export));
 		$this->delete_form->generate();
 		$status = $this->delete_form->get_status();
 		if (empty($status))
@@ -560,7 +561,7 @@ class Thor_Viewer
 		}
 		elseif($status == 'cancel')
 		{
-			header( 'Location: '. make_redirect($links_view) );
+			header( 'Location: '. carl_make_redirect($links_view) );
 		}
 		elseif($status == 'delete_forever')
 		{
