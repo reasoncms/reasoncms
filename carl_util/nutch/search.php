@@ -127,6 +127,7 @@
 		if(preg_match('/.pdf$/i', $path)){ echo "$link<img align=absmiddle src='pdf.png' border=0></a>PDF Document<br />\n"; $show_file_icon = 1; } 
 		if(preg_match('/ogg$/i', $path)){ echo "A Ogg Vorbis Document</a><br />\n"; $show_file_icon = 1; } 
 		if(preg_match('/mp3$/i', $path)){ echo "An MP3 Document</a><br />\n"; $show_file_icon = 1; } 
+		if(preg_match('/.jpg$/i', $path)){ echo "An Image Document</a><br />\n"; $show_file_icon = 1; } 
 
 		// display result details and link
 		if($show_file_icon == 0){
