@@ -1,5 +1,6 @@
 <?
 	include_once( DISCO_INC . 'disco.php');
+	$GLOBALS[ '_publication_comment_forms' ][ basename( __FILE__, '.php' ) ] = 'commentForm';
 	
 	////////////////////////
 	//COMMENT SUBMISSION FORM
@@ -56,13 +57,15 @@
 		var $comment_id;
 		var $username;
 		var $hold_comments_for_review;
+		var $publication;
 		
-		function commentForm($site_id, $news_item, $hold_comments_for_review)
+		function commentForm($site_id, $news_item, $hold_comments_for_review, $publication)
 		{
 			$this->site_id = $site_id;
 			$this->site_info = get_entity_by_id ($this->site_id);
 			$this->hold_comments_for_review = $hold_comments_for_review;
 			$this->news_item = $news_item;
+			$this->publication = $publication;
 		}
 		function set_username($username)
 		{
@@ -171,6 +174,35 @@
 				$this->comment_id,
 				relationship_id_of('news_to_comment')
 			);
+			$this->do_notifications();
+		}
+		
+		function do_notifications()
+		{
+			if($this->publication->get_value('notify_upon_comment'))
+			{
+				$subject = 'New comment on '.strip_tags($this->publication->get_value('name'));
+				$message = 'A comment has beeen added to the post '.strip_tags($this->news_item->get_value('name'));
+				$message .= ' on '.strip_tags($this->publication->get_value('name'));
+				$message .= ' (site: '.strip_tags($this->site_info['name']).'.)';
+				$message .= "\n\n";
+				if($this->hold_comments_for_review)
+				{
+					$message .= 'This comment is currently held for review.'."\n\n";
+					$message .= 'Review comment:'."\n";
+				}
+				else
+				{
+					$message .= 'View this comment in context:'."\n";
+					$message .= get_current_url().'#comment'.$this->comment_id."\n\n";
+					$message .= 'Manage this comment:'."\n";
+				}
+				$message .= securest_available_protocol().'://'.REASON_WEB_ADMIN_PATH.'?site_id='.$this->site_info['id'].'&type_id='.id_of('comment_type').'&id='.$this->comment_id."\n\n";
+				
+				include_once(TYR_INC.'email.php');
+				$e = new Email($this->publication->get_value('notify_upon_comment'), WEBMASTER_EMAIL_ADDRESS, WEBMASTER_EMAIL_ADDRESS, $subject, $message);
+				$e->send();
+			}
 		}
 		function where_to() // {{{
 		{
