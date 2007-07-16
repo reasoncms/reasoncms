@@ -94,10 +94,10 @@ class Email
 			$email .= "\n\n--" . $multipart_boundary . "--\n"; //last boundary
 		}
 		$subject = $this->mb_mime_header_encode($this->_subject);
-		echo $additional_headers.$email;
+		
+		// it seems a little odd that we are sending the whole email in via the additional headers parameter
 		$success = mail( '', $subject, '', $additional_headers.$email );
 		return $success;
-		die();
 	}
 	
 	/**
