@@ -21,7 +21,7 @@
 			}
 			else
 			{
-				trigger_error('The field "notify_upon_request" needs to be added to the blog table. Please run the upgrade script: '.securest_available_protocol().'://'.REASON_HTTP_BASE_PATH.'scripts/upgrade/4.0b3_to_4.0b4/upgrade_db.php to add the proper field.');
+				trigger_error('The field "notify_upon_request" needs to be added to the blog table. Please run the upgrade script: '.REASON_HTTP_BASE_PATH.'scripts/upgrade/4.0b3_to_4.0b4/upgrade_db.php to add the proper field.');
 			}
 			if($this->_is_element('notify_upon_comment'))
 			{
@@ -29,7 +29,7 @@
 			}
 			else
 			{
-				trigger_error('The field "notify_upon_comment" needs to be added to the blog table. Please run the upgrade script: '.securest_available_protocol().'://'.REASON_HTTP_BASE_PATH.'scripts/upgrade/4.0b3_to_4.0b4/upgrade_db.php to add the proper field.');
+				trigger_error('The field "notify_upon_comment" needs to be added to the blog table. Please run the upgrade script: '.REASON_HTTP_BASE_PATH.'scripts/upgrade/4.0b3_to_4.0b4/upgrade_db.php to add the proper field.');
 			}
 			if(site_borrows_entity( $this->get_value('site_id'), id_of('nobody_group')) || site_owns_entity( $this->get_value('site_id'), id_of('nobody_group')))
 			{
