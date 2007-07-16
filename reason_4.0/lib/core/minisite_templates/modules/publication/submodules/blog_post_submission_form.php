@@ -272,7 +272,7 @@
 				$message .= ' on the site '.strip_tags($this->site_info['name']).'.';
 				$message .= "\n\n";
 				$message .= 'View post:'."\n";
-				$message .= construct_redirect(array('story_id'=>$this->new_post_id));
+				$message .= carl_construct_redirect(array('story_id'=>$this->new_post_id));
 				
 				include_once(TYR_INC.'email.php');
 				$e = new Email($this->publication->get_value('notify_upon_post'), WEBMASTER_EMAIL_ADDRESS, WEBMASTER_EMAIL_ADDRESS, $subject, $message);
