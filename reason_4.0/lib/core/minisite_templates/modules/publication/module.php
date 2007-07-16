@@ -63,7 +63,7 @@ class PublicationModule extends Generic3Module
 	var $item;			//entity of the news item being viewed 
 	var $user_netID; 	//current user's net_ID
 	var $session;		//reason session
-	var $additional_query_string_frags = array ('comment_posted', 'issue', 'section');	
+	var $additional_query_string_frags = array ('comment_posted', 'issue', 'section');
 	var $issue_id;							// id of the issue being viewed - this is a class var since the most recent issue won't necessarily be in $_REQUEST
 	var $issues = array();					// $issue_id => $issue_entity
 	var $sections = array();				// $section_id => $section_entity
@@ -85,6 +85,11 @@ class PublicationModule extends Generic3Module
 
 	var $show_login_link = true;
 	var $show_featured_items = true;
+	var $queried_for_events_page_url = false;
+	var $events_page_url = '';
+	var $comment_form_file_location = 'minisite_templates/modules/publication/submodules/news_comment_submission_form.php';
+	var $commenting_status = array();
+	var $css = 'css/publication/default_styles.css'; // style sheet(s) to be added
 		
 	/** 
 	* Stores the default class names and file names of the markup generator classes used by the module.  
@@ -144,6 +149,7 @@ class PublicationModule extends Generic3Module
 									   'links_to_sections' => 'get_links_to_sections',
 									   'view_all_items_in_section_link' => 'get_all_items_in_section_link',
 									   'links_to_current_publications' => 'get_links_to_current_publications',
+										'publication'=>'get_publication_entity',
 									);
 	
 	/**
@@ -158,6 +164,14 @@ class PublicationModule extends Generic3Module
 													 'teaser_image' => 'get_teaser_image',
 													 'section_links' => 'get_links_to_sections_for_this_item',
 													 'item_number' => 'get_item_number',
+													 
+													 'item_events' => 'get_item_events',
+													 'item_images' => 'get_item_images',
+													 'item_assets' => 'get_item_assets',
+													 'item_categories' => 'get_item_categories',
+													 'item_comments' => 'get_item_comments',
+													 'comment_form_markup'=>'get_comment_form_markup',
+													 'commenting_status' => 'commentability_status',
 												);
 											   
 
@@ -195,6 +209,10 @@ class PublicationModule extends Generic3Module
 			{
 				trigger_error('No publications are associated with this publication page');
 			}
+		}
+		if(!empty($this->css))
+		{
+			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.$this->css,'',true);
 		}
 	}
 	
@@ -306,7 +324,7 @@ class PublicationModule extends Generic3Module
 		// all params that could be provided in page_types
 		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'show_login_link', 
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
-		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names');
+		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css');
 		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info, 
 							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
 							      'variables_to_pass' => $this->variables_to_pass);
@@ -646,6 +664,10 @@ class PublicationModule extends Generic3Module
 	{
 		return new entity($this->site_id);
 	}
+	function get_publication_entity()
+	{
+		return $this->publication;
+	}
 	
 ////////
 // DISPLAY LIST METHODS
@@ -689,6 +711,7 @@ class PublicationModule extends Generic3Module
 								     : '';
 		if (!empty($markup_generator_settings)) $markup_generator->set_passed_variables($markup_generator_settings);
 		$markup_generator->set_passed_variables($this->get_values_to_pass($markup_generator, $item));
+		//pray($this->get_values_to_pass($markup_generator, $item));
 		return $markup_generator;
 	}
 	
@@ -715,7 +738,9 @@ class PublicationModule extends Generic3Module
 			{
 				$method = $this->item_specific_variables_to_pass[$var_name];
 				if(method_exists($this, $method))
+				{
 					$values_to_pass[$var_name] = $this->$method($item);
+				}
 				else
 					trigger_error('Method "'.$method.'" is not defined', WARNING);
 			}
@@ -742,10 +767,7 @@ class PublicationModule extends Generic3Module
 		function get_add_item_link()
 		{
 			if ($this->related_mode) return false;
-			if(empty($this->user_netID))
-			{
-				$this->user_netID = reason_check_authentication();
-			}
+			$netid = $this->get_user_netid();
 			
 			$ph = $this->get_post_group_helper();
 			if($ph->group_has_members())
@@ -758,7 +780,7 @@ class PublicationModule extends Generic3Module
 					}
 					else // logged in
 					{
-						if($ph->has_authorization($this->user_netID)) // has authorization to post
+						if($ph->has_authorization($netid)) // has authorization to post
 						{
 							return $this->make_add_item_link();
 						}
@@ -844,17 +866,13 @@ class PublicationModule extends Generic3Module
 			{
 				if($posting_group_helper->requires_login())
 				{
-					if(empty($this->user_netID))
-					{
-						//$this->user_netID = $this->get_authentication();
-						$this->user_netID = reason_check_authentication();
-					}
+					$netid = $this->get_user_netid();
 					
-					if(!empty($this->user_netID))
+					if(!empty($netid))
 					{
-						if($posting_group_helper->has_authorization($this->user_netID))
+						if($posting_group_helper->has_authorization($netid))
 						{
-							$this->build_post_form($this->user_netID);
+							$this->build_post_form($netid);
 						}
 						else
 						{
@@ -1607,7 +1625,7 @@ class PublicationModule extends Generic3Module
 		
 		function show_item_name( $item ) // {{{
 		{
-			echo '<h3>' . $item->get_value( 'release_title' ) . '</h3>'."\n";
+			//emptied out so that item markup generator can handle it
 		} // }}}
 		
 		function construct_back_link()
@@ -1696,6 +1714,212 @@ class PublicationModule extends Generic3Module
 				}
 			}
 			return $links;
+		}
+		function get_item_events($item)
+		{
+			$es = new entity_selector();
+			$es->set_env( 'site' , $this->site_id );
+			$es->description = 'Selecting events for this news item';
+			$es->add_type( id_of('event_type') );
+			$es->add_left_relationship( $item->id(), relationship_id_of('event_to_news') );
+			$es->add_rel_sort_field( $item->id(), relationship_id_of('event_to_news') );
+			$es->set_order('rel_sort_order');
+			$events = $es->run_one();
+			if (!empty($events))
+			{
+				$base_url = $this->get_events_page_url();
+				foreach(array_keys($events) as $id)
+				{
+					$url = $base_url;
+					if(!empty($url))
+					{
+						$url .= '?event_id='.$id;
+						if($this->textonly)
+							$url .= '&amp;textonly=1';
+					}
+					$events[$id]->set_value('event_url',$url);
+				}
+			}
+			return $events;
+		}
+		function get_events_page_url()
+		{
+			if(!$this->queried_for_events_page_url)
+			{
+				$modules = array('events','events_archive','events_verbose','events_academic_calendar','event_registration','event_slot_registration', 'event_signup','athletics/schedule');
+				$events_page_types = array();
+				foreach($modules as $module_name)
+				{
+					$events_page_types += page_types_that_use_module($module_name);
+				}
+				$ps = new entity_selector($this->site_id );
+				$ps->add_type( id_of('minisite_page') );
+				$ps->set_num(1);
+				$rels = array();
+				foreach($events_page_types as $page_type)
+				{
+					$rels[] = 'page_node.custom_page = "'.$page_type.'"';
+				}
+				$ps->add_relation('( '.implode(' OR ', $rels).' )');
+				$page_array = $ps->run_one();
+				if (!empty($page_array))
+				{
+					$events_page = current($page_array);
+					$this->events_page_url = build_URL($events_page->id());
+				}
+			}
+			return $this->events_page_url;
+		}
+		function get_item_images($item)
+		{
+			$es = new entity_selector();
+			$es->set_env( 'site' , $this->site_id );
+			$es->description = 'Selecting images for news item';
+			$es->add_type( id_of('image') );
+			$es->add_right_relationship( $item->id(), relationship_id_of('news_to_image') );
+			$es->add_rel_sort_field( $item->id(), relationship_id_of('news_to_image') );
+			$es->set_order('rel_sort_order');
+			return $es->run_one();
+		}
+		function get_item_assets($item)
+		{
+			$es = new entity_selector();
+			$es->description = 'Selecting assets for news item';
+			$es->set_env( 'site' , $this->site_id );
+			$es->add_type( id_of('asset') );
+			$es->add_right_relationship( $item->id(), relationship_id_of('news_to_asset') );
+			return $es->run_one();
+		}
+		function get_item_categories($item)
+		{
+			$es = new entity_selector();
+			$es->description = 'Selecting categories for news item';
+			$es->add_type( id_of('category_type') );
+			$es->set_env('site',$this->site_id);
+			$es->add_right_relationship( $item->id(), relationship_id_of('news_to_category') );
+			$es->set_order( 'entity.name ASC' );
+			$cats = $es->run_one();
+			if(!empty($cats))
+			{
+				foreach(array_keys($cats) as $id)
+				{
+					$url = '?filters[1][type]=category&filters[1][id]='.$id;
+					if($this->textonly)
+						$url .= '&amp;textonly=1';
+					$cats[$id]->set_value('category_url',$url);
+				}
+			}
+			return $cats;
+		}
+		function get_item_comments($item)
+		{
+			$es = new entity_selector();
+			$es->description = 'Selecting comments for news item';
+			$es->add_type( id_of('comment_type') );
+			$es->set_env( 'site' , $this->site_id );
+			$es->add_relation('show_hide.show_hide = "show"');
+			$es->add_right_relationship( $item->id(), relationship_id_of('news_to_comment') );
+			$es->set_order( 'dated.datetime ASC' );
+			return $es->run_one();
+		}
+		function get_comment_form_markup($item)
+		{
+			if($this->comment_form_ok_to_run($item))
+			{
+				reason_include_once($this->comment_form_file_location);
+				$identifier = basename( $this->comment_form_file_location, '.php');
+				if(empty($GLOBALS[ '_publication_comment_forms' ][ $identifier ]))
+				{
+					trigger_error('Comment forms must identify their class name in the $GLOBALS array; the form located at '.$this->comment_form_file_location.' does not and therefore cannot be run.');
+					return '';
+				}
+				
+				$form_class = $GLOBALS[ '_publication_comment_forms' ][ $identifier ];
+				
+				ob_start();
+				$form = new $form_class($this->site_id, $item, $this->get_comment_moderation_state(), $this->publication);
+				$form->set_username($this->get_user_netid());
+				$form->run();
+				$content = ob_get_contents();
+				ob_end_clean();
+				
+				return $content;
+			}
+			return '';
+		}
+		/**
+		 * Specifies which state commenting is currently in
+		 *
+		 * Possible statuses:
+		 * - login_required (comments are on and require auth, but user not currently logged in)
+		 * - open_comments (comments are on and do not require auth)
+		 * - user_has_permission (comments are on and require auth; user has authenticated and is authorized to comment)
+		 * - user_not_permitted (comments are on and require auth; user has authenticated but is not authorized to comment)
+		 * - item_comments_off (comments are on for the publication, but comments have been turned off on this post)
+		 * - publication_comments_off (comments are off for the entire publication)
+		 *
+		 * @param $item post entity
+		 * @return string $status One of the above statuses
+		 */
+		function commentability_status($item)
+		{
+			if(empty($this->commenting_status[$item->id()]))
+			{
+				$this->commenting_status[$item->id()] = $this->get_commentability_status_full_check($item);
+			}
+			return $this->commenting_status[$item->id()];
+		}
+		function get_commentability_status_full_check($item)
+		{
+			$group_helper = $this->get_comment_group_helper();
+			
+			if(!$group_helper->group_has_members())
+			{
+				return 'publication_comments_off';
+			}
+			if($item->get_value('commenting_state') == 'off')
+			{
+				return 'item_comments_off';
+			}
+			if(!$group_helper->requires_login())
+			{
+				return'open_comments';
+			}
+		
+			$netid = $this->get_user_netid();
+			if(empty($netid))
+			{
+				return 'login_required';
+			}
+		
+			if($group_helper->has_authorization($netid))
+			{
+				return 'user_has_permission';
+			}
+			else
+			{
+				return 'user_not_permitted';
+			}
+		}
+		function comment_form_ok_to_run($item)
+		{
+			$status = $this->commentability_status($item);
+			if($status == 'open_comments' || $status == 'user_has_permission')
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		function get_user_netid()
+		{
+			if(empty($this->user_netID))
+			{
+				$this->user_netID = reason_check_authentication();
+			}
+			return $this->user_netID;
 		}
 	}
 ?>
