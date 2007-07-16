@@ -18,6 +18,9 @@ reason_include_once( 'function_libraries/user_functions.php' );
 reason_include_once( 'minisite_templates/page_types.php' );
 reason_include_once( 'classes/entity_selector.php');
 
+echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'."\n";
+echo '<html><head><title>Reason: Modules</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body>';
+
 //xdebug_start_profiling();
 //$s = get_microtime();
 $current_user = reason_require_authentication();
@@ -93,7 +96,7 @@ if ($detail_mode)
 				$items[] = '<a href="'.$url.'">'.substr($url,0,50).(strlen($url) > 50 ? '...' : '').'</a>';
 				$count++;
 			}
-			if ($count >= $num) break;
+			if ($num != 'All' && $count >= $num) break;
 		}
 	}
 	echo '<h3>Detail mode for module ' . $module_limiter . '</h3>';
@@ -193,6 +196,7 @@ else
 		}
 	}
 	echo "</table>\n";
+	echo '</body></html>';
 }
 
 function show_filter($limit = '')
