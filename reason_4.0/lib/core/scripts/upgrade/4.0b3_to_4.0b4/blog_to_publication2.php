@@ -14,7 +14,7 @@ $user_netID = check_authentication();
 echo '<h2>Reason Publication Setup</h2>';
 if (!isset ($_POST['verify']))
 {
-        echo '<p>This script adds the commenting settings entity table to the publication / blog type and removes the issued newsletters option ';
+        echo '<p>This script removes the issued newsletters option ';
         echo 'from the list of publication types, and checks to make sure that all blogs have publication type blog.</p>';
 }
 
@@ -30,14 +30,14 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 		$result = $es->run_one();
 		$field = current($result);
 		reason_update_entity($field->id(), get_user_id($user_netID), array('db_type' => "enum('Blog','Newsletter')"), false);
-		if (add_entity_table_to_type('commenting_settings', 'publication_type'))
-		{
-			echo '<p>added entity table commenting_settings to publication_type.</p>';
-		}
-		else
-		{
-			echo '<p>the entity table commenting_settings is already part of the publication_type.</p>';
-		}
+		//if (add_entity_table_to_type('commenting_settings', 'publication_type'))
+		//{
+		//	echo '<p>added entity table commenting_settings to publication_type.</p>';
+		//}
+		//else
+		//{
+		//	echo '<p>the entity table commenting_settings is already part of the publication_type.</p>';
+		//}
 		$q = 'SHOW COLUMNS FROM blog';
         $result = db_query($q, 'could not get fields');
         while($table = mysql_fetch_assoc($result))

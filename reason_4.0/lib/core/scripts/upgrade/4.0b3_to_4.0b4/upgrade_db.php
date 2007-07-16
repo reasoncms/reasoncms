@@ -25,12 +25,12 @@ if (!isset ($_POST['verify']))
         echo '</ul>';
         echo '<h3>New fields:</h3>';
         echo '<ul>';
-        echo "<li>enable_comment_notification in entity table commenting_settings - enum('yes','no')</li>";
+        //echo "<li>enable_comment_notification in entity table commenting_settings - enum('yes','no')</li>";
         echo "<li>date_format in entity table date_format - tinytext</li>";
         echo "<li>group_has_members in entity table user_group - enum('true','false')</li>";
         echo "<li>hold_posts_for_review in entity table blog - enum('yes','no')</li>";
-        echo "<li>enable_front_end_posting in entity table blog - enum('yes','no')</li>";
-        echo "<li>pagination_state in entity table blog - enum('on','off')</li>";
+//        echo "<li>enable_front_end_posting in entity table blog - enum('yes','no')</li>";
+//        echo "<li>pagination_state in entity table blog - enum('on','off')</li>";
 //        echo "<li>publication_type in entity table blog - enum('Blog','Newsletter','Issued Newsletter')</li>";
         echo "<li>publication_type in entity table blog - enum('Blog','Newsletter')</li>";
         echo "<li>has_issues in entity table blog - enum('yes','no')</li>";
@@ -111,11 +111,11 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 	}
 	else echo '<p>news_section entity table already exists - not created</p>';
 	
-	$entity_table_name = 'commenting_settings';
-	$fields = array('enable_comment_notification' => array('db_type' => "enum('yes','no')"));
-	$updater = new FieldToEntityTable($entity_table_name, $fields);
-	$updater->update_entity_table();
-	$updater->report();
+	//$entity_table_name = 'commenting_settings';
+	//$fields = array('enable_comment_notification' => array('db_type' => "enum('yes','no')"));
+	//$updater = new FieldToEntityTable($entity_table_name, $fields);
+	//$updater->update_entity_table();
+	//$updater->report();
 	
 	$entity_table_name = 'date_format';
 	$fields = array('date_format' => array('db_type' => 'tinytext'));
@@ -131,8 +131,8 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 	
 	$entity_table_name = 'blog';
 	$fields = array('hold_posts_for_review' => array('db_type' => "enum('yes','no')"),
-					'enable_front_end_posting' => array('db_type' => "enum('yes','no')"),
-					'pagination_state' => array('db_type' => "enum('yes','no')"),
+					//'enable_front_end_posting' => array('db_type' => "enum('yes','no')"),
+					//'pagination_state' => array('db_type' => "enum('yes','no')"),
 					'publication_type' => array('db_type' => "enum('Blog','Newsletter')"),
 					'has_issues' => array('db_type' => "enum('yes','no')"),
 					'has_sections' => array('db_type' => "enum('yes','no')"),
@@ -242,11 +242,90 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 	}
 	else echo '<p>Required is already set to "no" for news_to_news_section relationship - no changes made</p>';
 	//if (check_required($news_to_news_section_rel)) echo 'required for news_to_news_section_rel';
+	
+	zap_field('commenting_settings', 'enable_comment_notification');
+	zap_field('blog', 'pagination_state');
+	zap_field('blog', 'enable_front_end_posting');
+	
+	$pub_type_id = id_of('publication_type');
+	if ($pub_type_id)
+	{
+		//check if type is related to commenting_settings entity table and if so, kill the rel
+		$es = new entity_selector();
+		$es->add_type(id_of('content_table'));
+		$es->add_relation('entity.name = "commenting_settings"');
+		$es->add_right_relationship($pub_type_id, relationship_id_of('type_to_table'));
+		$es->set_num(1);
+		$es->limit_tables();
+		$es->limit_fields();
+		$result = $es->run_one();
+		if (!empty($result))
+		{
+			$table = current($result);
+			delete_relationships( array('entity_a' => $pub_type_id, 'entity_b' => $table->id(), 'type' => relationship_id_of('type_to_table')));
+			// grab all publication entities
+			$es2 = new entity_selector();
+			$es2->add_type(id_of('publication_type'));
+			$es2->limit_tables();
+			$es2->limit_fields();
+			$result2 = $es2->run_one();
+			$ids = implode(",", array_keys($result2));
+			$q = "DELETE from commenting_settings WHERE id IN(".$ids.")";
+			db_query($q);
+			echo '<p>zapped the relationship between the publication type and the commenting settings entity table.</p>';
+			// delete rows from commenting_settings where id corresponds to a publication id		
+		}
+	}
 }
 
 else
 {
 	echo_form();
+}
+
+/**
+ * If the enable_comment_notification field exists, then zap it - will only be the case if an earlier version of this script was run
+ *
+ */
+function zap_field($entity_table_name, $field_name)
+{
+	$es = new entity_selector();
+	$es->add_type(id_of('content_table'));
+	$es->add_relation('entity.name = "'.$entity_table_name.'"');
+	$es->set_num(1);
+	$es->limit_tables();
+	$es->limit_fields();
+	$result = $es->run_one();
+	if (empty($result))
+	{
+		echo '<p>The entity table ' . $entity_table_name . ' does not exist - field ' . $field_name . ' could not be zapped</p>';
+		return false;
+	}
+	else
+	{
+		$et = current($result);
+		$es2 = new entity_selector();
+		$es2->add_type(id_of('field'));
+		$es2->add_relation('entity.name = "'.$field_name.'"');
+		$es2->add_left_relationship($et->id(), relationship_id_of('field_to_entity_table'));
+		$es2->set_num(1);
+		//$es2->limit_tables();
+		//$es2->limit_fields();
+		$result2 = $es2->run_one();
+		if (empty($result2))
+		{
+			echo '<p>The field ' . $field_name . ' does not exist in entity table ' . $entity_table_name . ' and could not be zapped</p>';
+			return false;
+		}
+		else
+		{
+			$res = current($result2);
+			$q = "ALTER TABLE ".$entity_table_name." DROP ".$field_name;
+			db_query($q);
+			delete_entity($res->id()); // also deletes all relationships to the field, which fixes the entity table
+			echo '<p>Zapped field ' . $field_name . ' in entity table ' . $entity_table_name . '<p>';
+		}
+	}
 }
 
 function check_for_entity_table($et)
