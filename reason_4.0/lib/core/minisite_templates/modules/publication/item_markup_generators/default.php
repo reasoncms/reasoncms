@@ -341,7 +341,8 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 			case 'publication_comments_off':
 				break;
 			case 'item_comments_off':
-				$ret .= '<p>Comments for this post are turned off</p>';
+				$ret .= '<h4>Comments for this post are turned off</h4>';
+				break;
 			case 'login_required':
 				$ret .= '<h4>Add a comment</h4>'."\n";
 				$ret .= '<p>Please <a href="'.REASON_LOGIN_URL.'"> login </a> to comment.</p>';
