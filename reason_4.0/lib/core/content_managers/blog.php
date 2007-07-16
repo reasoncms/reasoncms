@@ -5,7 +5,6 @@
 	{
 		function alter_data()
 		{
-			$this->change_element_type('enable_front_end_posting', 'hidden');
 			$this->change_element_type( 'keywords','hidden' );
 
 			$this->add_element('allow_comments', 'checkbox');
@@ -59,10 +58,11 @@
 			}	
 
 			// hide things that do not appear fully implemented
-			$this->change_element_type( 'pagination_state', 'hidden' );
-			$this->change_element_type( 'commenting_state', 'hidden' );
 			$this->change_element_type( 'hold_posts_for_review', 'hidden' );
-			$this->change_element_type( 'enable_comment_notification', 'hidden' );
+			if($this->_is_element('commenting_state'))$this->change_element_type( 'commenting_state', 'hidden' );
+			if($this->_is_element('pagination_state')) $this->change_element_type( 'pagination_state', 'hidden' );
+			if($this->_is_element('enable_comment_notification')) $this->change_element_type( 'enable_comment_notification', 'hidden' );
+			if($this->_is_element('enable_front_end_posting')) $this->change_element_type('enable_front_end_posting', 'hidden');
 			
 			// right now publication options are limited to blog, and has_issues and has_sections are disabled
 			

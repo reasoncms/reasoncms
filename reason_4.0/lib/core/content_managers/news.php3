@@ -24,7 +24,7 @@
 			$this -> set_display_name ('release_title', 'title');
 			$this -> set_display_name ('datetime', 'date');
 			$this -> set_display_name ('show_hide', 'Show or Hide?');
-			$this -> set_display_name ('enable_comment_notification', 'Email me when new comments are added to this news item:');
+			if($this->_is_element('enable_comment_notification')) $this -> set_display_name ('enable_comment_notification', 'Email me when new comments are added to this news item:');
 		
 			$this -> set_comments ('name', form_comment('A short name that describes the news item. This is for internal use.'));
 			$this -> set_comments ('release_title', form_comment('The actual title of the item -- this is the one that shows up on the public site.'));
@@ -43,7 +43,7 @@
 			$this->change_element_type('subtitle', 'hidden');
 			$this->change_element_type('author_description', 'hidden');	
 # Make this un-hidden again when we have actually IMPLEMENTED comment notification
-			$this->change_element_type('enable_comment_notification', 'hidden');
+			if($this->_is_element('enable_comment_notification')) $this->change_element_type('enable_comment_notification', 'hidden');
 			
 			
 			//make more sophisticated changes to the content manager
