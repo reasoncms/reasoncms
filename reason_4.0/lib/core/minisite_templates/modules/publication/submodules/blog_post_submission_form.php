@@ -261,6 +261,23 @@
 			/* echo 'Your post has been submitted successfully.  ID = '.$new_post_id;
 			echo '<div> <a href ="?add_item="> Return to list </a> </div>';
 			echo '<div> <a href ="?add_item=true"> Add another post </a> </div>'; */
+			$this->do_notifications();
+		}
+		function do_notifications()
+		{
+			if($this->publication->get_value('notify_upon_post'))
+			{
+				$subject = 'New post on '.strip_tags($this->publication->get_value('name'));
+				$message = 'A post has beeen added to '.strip_tags($this->publication->get_value('name'));
+				$message .= ' on the site '.strip_tags($this->site_info['name']).'.';
+				$message .= "\n\n";
+				$message .= 'View post:'."\n";
+				$message .= construct_redirect(array('story_id'=>$this->new_post_id));
+				
+				include_once(TYR_INC.'email.php');
+				$e = new Email($this->publication->get_value('notify_upon_post'), WEBMASTER_EMAIL_ADDRESS, WEBMASTER_EMAIL_ADDRESS, $subject, $message);
+				$e->send();
+			}
 		}
 		function where_to() // {{{
 		{
