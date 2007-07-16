@@ -227,7 +227,14 @@ class Tyr
 	// At time of writing, the $add_disclaimer flag is only set to false in order to generate the thank-you note
 	function _make_html_body($add_disclaimer = true)
 	{
-		$message = '';
+		$message = '<html><head>';
+		$message .= '<title>';
+		if ( !empty($this->_messages['all']['form_title']) )
+			$message .= htmlspecialchars( $this->_messages['all']['form_title'], ENT_COMPAT, 'UTF-8' );
+		else
+			$message .= 'Auto-generated form response';
+		$message .= '</title>';
+		$message .= '</head><body>'."\n";
 		
 		$hide_empty_values = false;
 		if(!empty($this->_messages['all']['hide_empty_values']) )
@@ -236,14 +243,15 @@ class Tyr
 		}
 	
 		if ( !empty($this->_messages['all']['form_title']) )
-			$message .= "<h2>" . $this->_messages['all']['form_title'] . "</h2>\n";
+			$message .= '<h2>' . htmlspecialchars( $this->_messages['all']['form_title'], ENT_COMPAT, 'UTF-8' ) . '</h2>'."\n";
 
 		$message .= $this->make_html_table($this->_fields, $hide_empty_values);
 
 		if ( $add_disclaimer )
 		{
-			$message .= "<p>This message was automatically generated when someone submitted a form to you from the ".FULL_ORGANIZATION_NAME." website. Please direct problems or questions about this service to <a href='mailto:".$this->admin_email."'>".$this->admin_email."</a>.</p>";
+			$message .= '<p>This message was automatically generated when someone submitted a form to you from the '.FULL_ORGANIZATION_NAME.' website. Please direct problems or questions about this service to <a href="mailto:'.$this->admin_email.'">'.$this->admin_email.'</a>.</p>'."\n";
 		}
+		$message .= '</body></html>'."\n";
 	
 		return $message;
 	}
