@@ -34,6 +34,8 @@ if (!isset ($_POST['verify']))
 //        echo "<li>publication_type in entity table blog - enum('Blog','Newsletter','Issued Newsletter')</li>";
         echo "<li>publication_type in entity table blog - enum('Blog','Newsletter')</li>";
         echo "<li>has_issues in entity table blog - enum('yes','no')</li>";
+        echo "<li>notify_upon_post in entity table blog - tinytext</li>";
+        echo "<li>notify_upon_comment in entity table blog - tinytext</li>";
         echo "<li>posts_per_section_on_front_page in entity table news_section - tinyint DEFAULT 2</li>";
         echo '</ul>';
 	echo '<h3>New allowable relationships:</h3>';
@@ -134,6 +136,9 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 					'publication_type' => array('db_type' => "enum('Blog','Newsletter')"),
 					'has_issues' => array('db_type' => "enum('yes','no')"),
 					'has_sections' => array('db_type' => "enum('yes','no')"),
+					'has_sections' => array('db_type' => "enum('yes','no')"),
+					'notify_upon_post' => array('db_type' => "tinytext"),
+					'notify_upon_comment' => array('db_type' => "tinytext"),
 				);
 	$updater4 = new FieldToEntityTable($entity_table_name, $fields);
 	$updater4->update_entity_table();
