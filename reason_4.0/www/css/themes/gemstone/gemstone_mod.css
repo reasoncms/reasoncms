@@ -149,7 +149,7 @@ div.fullGraphics div#blog div.moduleNav ul li {
 div.fullGraphics div#blog div.moduleNav ul li ul.links {
 	list-style-image:url(pointer_small.gif);
 }
-div.fullGraphics div#blog div.submodules div.comments ul li {
+div.fullGraphics div#blog div.item div.comments ul li {
 	background-color:#DBDBDB;
 	background-image:url(quote_left.gif);
 	background-repeat:no-repeat;
