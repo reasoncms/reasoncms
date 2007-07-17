@@ -455,5 +455,28 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 		if( HTTPS_AVAILABLE ) return 'https';
 		return 'http';
 	}
+	
+	/**
+	 * Windows behaves differently from other systems in a variety of ways
+	 * This function wraps up the logic to determine if we are running under Windows
+	 *
+	 * NOTE: The applications in the Reason/carl_util package do not yet run under Windows --
+	 * this function may allow us to make that happen, but do not assume that everyhing is
+	 * using it yet.
+	 *
+	 * @return boolean
+	 */
+	function server_is_windows()
+	{
+		static $is_windows;
+		static $tested = false;
+		if(!$tested)
+		{
+			if(strtoupper(substr(PHP_OS,0,3) == 'WIN') )
+				$is_windows = true;
+			$tested = true;
+		}
+		return $is_windows;
+	}
 }
 ?>
