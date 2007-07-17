@@ -553,7 +553,7 @@ class MinisiteTemplate
 		{
 			$last_crumb = end( $this->additional_crumbs);
 			reset( $this->additional_crumbs );
-			$ret .= ': '.strip_tags($last_crumb['page_name']);
+			$ret .= ': '.$last_crumb['page_name'];
 		}
 		if (!empty ($this->textonly) )
 		{
