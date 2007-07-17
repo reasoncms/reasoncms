@@ -696,7 +696,7 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 					
 					if(!$this->_has_errors())
 					{
-						$this->transfer_uploaded_file($stream,$user);
+						$this->transfer_uploaded_file($stream,$user,$file->tmp_full_path);
 					}
 				}
 				
@@ -742,7 +742,7 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 			}
 		}
 		
-		function transfer_uploaded_file($stream,$user)
+		function transfer_uploaded_file($stream,$user,$local_temp_location)
 		{
 			if(!$stream->place_local_media($this->get_value('id')))
 			{
@@ -752,6 +752,10 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 			else
 			{
 				$this->update_fields_with_file_data($stream);
+				if(!unlink($local_temp_location))
+				{
+					trigger_error('Unable to delete temp file at '.$local_temp_location);
+				}
 			}
 		}
 		
