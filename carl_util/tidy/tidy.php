@@ -10,26 +10,32 @@
  if( !defined( 'INCLUDE_TIDY_PHP3' ) )
  {
  	define( 'INCLUDE_TIDY_PHP3', true );
-
-	// these are defined in paths.php
-	//define( 'TIDY_EXE', '/usr/local/bin/tidy' );
-        //define( 'TIDY_CONF', '/usr/local/webapps/branches/open-apps/reason_package/carl_util/tidy/tidy.conf' );
-
-	function escape_shell_arg( $x )
-	{
-		return "'".ereg_replace("'","'\\''",$x)."'";
-	}
+	
+	/**
+	 * Turn a string or array into valid, standards-comppliant (x)HTML
+	 *
+	 * @param mixed $text The data to be tidied up
+	 * @param boolean $remove_extra_tags if true returns an html snippet; otherwise returns an entire html page
+	 * @return mixed $result Tidied data
+	 */
 	function tidy( $text, $remove_extra_tags = true )
 	{
+		if(is_array($text))
+		{
+			$result = array();
+			foreach(array_keys($text) as $key)
+			{
+				$result[$key] = tidy($text[$key],$remove_extra_tags);
+			}
+			return $result;
+		}
 		$text = protect_string_from_tidy( $text );
 		// escape the bad stuff in the text
 		$arg = escapeshellarg( $text );
 		// the actual command - pipes the input to tidy which diverts its output to the random file
-		$cmd = "echo $arg | ".TIDY_EXE." -q -config ".TIDY_CONF." 2> /dev/null";
+		$cmd = 'echo '.$arg.' | '.TIDY_EXE.' -q -config '.TIDY_CONF.' 2> /dev/null';
 		// execute the command
 		$result = shell_exec($cmd);
-		// get the random file, convert it to a string
-		//$result = implode('',file( "/tmp/$rand_file" ));
 		// if we want to get rid of the 
 		if ( $remove_extra_tags )
 		{
@@ -43,7 +49,7 @@
 			$remove_from = strrpos( $result, '</body>' ) - strlen( '</body>' ) - 1;
 			$result = substr( $result, 0, $remove_from );
 		}
-		return $result;
+		return trim($result);
 	}
 	function tidy_err( $text )
 	{
