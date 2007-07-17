@@ -23,7 +23,6 @@
 		var $_no_tidy = array(
 			'id',
 			'unique_name',
-			'name',
 			'last_modified',
 			'creation_date',
 			'state',
@@ -133,7 +132,9 @@
 
 			foreach( $values AS $key => $el )
 				if( !in_array( $key, $this->_no_tidy ) )
-					$values[ $key ] = trim( tidy( $el ) );
+				{
+					$values[ $key ] = tidy( $el );
+				}
 		
 			// always update_entity since we created when user clicks "Add"
 			$this->has_changed = update_entity( $this->_id, $this->admin_page->user_id, values_to_tables( get_entity_tables_by_type( $this->get_value('type') ), $values ), false/*!$this->is_new_entity()*/ );
@@ -389,7 +390,6 @@
 		
 		function _process_relationship_elements()
 		{
-			pray($this->_relationship_elements);
 			foreach($this->_relationship_elements as $name=>$info)
 			{
 				$this->_process_relationship_element($name,$info);
@@ -415,7 +415,6 @@
 			{
 				$values = array($values);
 			}
-			echo $info['direction'];
 			foreach($info['options'] as $id)
 			{
 				if(in_array($id,$values))
