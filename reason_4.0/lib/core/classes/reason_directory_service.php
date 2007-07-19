@@ -67,8 +67,7 @@ class ds_reason extends ds_default {
 	* @access private
 	*/
 	function ds_reason() {
-		$this->open_conn();
-		register_shutdown_function(array(&$this, 'dispose'));
+		
 	}
 	
 	/**
@@ -82,6 +81,7 @@ class ds_reason extends ds_default {
 		
 		if(!$query_made)
 		{
+			$this->open_conn();
 			foreach(get_entity_tables_by_type( id_of('user') ) as $table )
 			{
 				foreach(get_fields_by_content_table( $table ) as $field)
@@ -90,6 +90,7 @@ class ds_reason extends ds_default {
 						$ok[] = $field;
 				}
 			}
+			$this->close_conn();
 			foreach($this->_gen_attr_depend as $fields_to_be_queried)
 			{
 				foreach($fields_to_be_queried as $field)
@@ -110,6 +111,7 @@ class ds_reason extends ds_default {
 		static $query_made = false;
 		if(!$query_made)
 		{
+			$this->open_conn();
 			$es = new entity_selector();
 			$auds = $es->run_one(id_of('audience_type'));
 			foreach($auds as $aud)
@@ -117,6 +119,7 @@ class ds_reason extends ds_default {
 				$audiences[$aud->get_value('directory_service_value')] = $aud->id();
 			}
 			$query_made = true;
+			$this->close_conn();
 		}
 		return $audiences;
 	}
@@ -165,6 +168,7 @@ class ds_reason extends ds_default {
 			$filter = $this->construct_filter('equality',$attr,$this->escape_input($qlist));
 		}
 		
+		$this->open_conn();
 		$es = new entity_selector();
 		$es->add_type(id_of('user'));
 		$es->add_relation($filter);
@@ -175,12 +179,9 @@ class ds_reason extends ds_default {
 			$es->enable_multivalue_results();
 		}
 		$results_entities = $es->run_one();
-		//echo $es->get_one_query();
+		$this->close_conn();
 		
 		$results = $this->reason_entities_to_array($results_entities);
-		
-		//pray($results);
-		
 		if (!empty($results))
 		{
 		// add in any generic attributes required
@@ -209,57 +210,6 @@ class ds_reason extends ds_default {
 			return '(user.user_authoritative_source = "reason")';
 		}
 	}
-	/*
-	function attr_search_and($attr, $qlist, $return = array())
-	{
-		$es = new entity_selector();
-		$es->add_type(id_of('user'));
-		
-		if($attr != 'ds_affiliation')
-		{
-			if (is_array($qlist)) {
-				// build a search filter for matching against multiple values.
-				foreach ($qlist as $val)
-					$filter_parts[] = $this->construct_filter('equality',$attr,$this->escape_input($val));
-				$filter = '('.join(' AND ', $filter_parts).')';
-			} else {
-				// build a search filter for matching against a single value.
-				$filter = $this->construct_filter('equality',$attr,$this->escape_input($qlist));
-			}
-			$es->add_relation($filter);
-		}
-		else
-		{
-			$es->add_left_relationship_field('user_to_audience','audience_integration','directory_service_value','ds_affiliation');
-			$es->enable_multivalue_results();
-			$rel_id = relationship_id_of('user_to_audience');
-			$audiences = $this->get_audiences();
-			foreach($qlist as $audience)
-			{
-				if(!empty($audiences[$audience]))
-				{
-					$es->add_left_relationship($audiences[$audience], $rel_id);
-				}
-				else
-				{
-					trigger_error($audience.' audience does not exist');
-					$es->add_relation('1 = 2');
-				}
-			}
-		}
-		$results_entities = $es->run_one();
-		
-		$results = $this->reason_entities_to_array($results_entities);
-
-		if (!empty($results)) {
-		// add in any generic attributes required
-			$augmented_results = $this->add_gen_attrs_to_results($results, array_keys($this->_gen_attr_depend));
-			return ($augmented_results);
-		} else {
-			return false;
-		}
-	}
-	*/
 	
 	/**
 	 * Transforms an array of Reason entities into an array in the style of the directory service
@@ -268,6 +218,7 @@ class ds_reason extends ds_default {
 	function reason_entities_to_array($entities)
 	{
 		$ret = array();
+		$this->open_conn();
 		foreach($entities as $ent)
 		{
 			$ret[$ent->id()] = array();
@@ -282,6 +233,7 @@ class ds_reason extends ds_default {
 				}
 			}
 		}
+		$this->close_conn();
 		return $ret;
 	}
 	
@@ -293,15 +245,14 @@ class ds_reason extends ds_default {
 	* @return mixed an array of data if results, false if no results
 	*/
 	function filter_search($filter, $return=array()) {
-		//echo $filter;
 		$tree = $this->parse_filter($filter);
 		$es = new entity_selector();
-		$es->add_type(id_of('user'));
 		$es->add_relation($this->get_basic_limitation());
 		$es->add_relation($this->filter_to_sql($tree));
-		
+		$this->open_conn();
+		$es->add_type(id_of('user'));
 		$results_entities = $es->run_one();
-		//echo $es->get_one_query();
+		$this->close_conn();
 		
 		$results = $this->reason_entities_to_array($results_entities);
 
@@ -347,7 +298,7 @@ class ds_reason extends ds_default {
 	* @param array $attr List of attributes, some of which may be generic
 	* @return array
 	*/
-	function add_gen_attrs_to_results($results,$attrs) {
+	function add_gen_attrs_to_results($results,$attrs) {	
 		foreach ($results as $key=>$record) {
 			foreach ($attrs as $attr) {
 				if (isset($this->_returned_vals_map[$attr])) {
@@ -444,11 +395,14 @@ class ds_reason extends ds_default {
 					$filter = sprintf('%s (CONCAT(user_given_name," ",user_surname) %s "%s")', $not_flag, $compare, $this->escape_input($value));
 					break;
 				case 'ds_affiliation':
+					
 					$es = new entity_selector();
 					//echo current($this->_gen_attr_depend[$attr]).' '.$compare.' '.$value;
 					$es->add_relation(current($this->_gen_attr_depend[$attr]).' '.$compare.' "'.$this->escape_input($value).'"');
 					$es->add_left_relationship_field('user_to_audience','audience_integration','directory_service_value','ds_affiliation');
+					$this->open_conn();
 					$users = $es->run_one(id_of('user'));
+					$this->close_conn();
 					if(!empty($users))
 					{
 						$filter = 'entity.id '.$not_flag.' IN ('.implode(',',array_keys($users)).')';
@@ -508,7 +462,9 @@ class ds_reason extends ds_default {
 			$es->add_relation('user.user_password_hash = "'.sha1($password).'"');
 			$es->add_relation($this->get_basic_limitation());
 			$es->set_num(1);
+			$this->open_conn();
 			$users = $es->run_one(id_of('user'));
+			$this->close_conn();
 			if(!empty($users))
 			{
 				return true;
@@ -516,16 +472,6 @@ class ds_reason extends ds_default {
 		}
 		return false;
 	}
-	
-	/**
-	* Destructor. Close connection to service here, if appropriate
-	* @access private
-	*/
-	function dispose() {
-		$this->close_conn();
-	}
-
-	
 }
 
 ?>
