@@ -28,7 +28,7 @@
  *
  * @package Reason_Core
  */
-	$GLOBALS['_reason_admin_modules'] = array(
+ 	$GLOBALS['_reason_admin_modules'] = array(
 		'Default'=>array('file'=>'default.php','class'=>'DefaultModule'),
 		'DoBorrow'=>array('file'=>'doBorrow.php','class'=>'DoBorrowModule'),
 		'DoAssociate'=>array('file'=>'doAssociate.php','class'=>'DoAssociateModule'),
@@ -58,5 +58,6 @@
 		'GroupTester'=>array('file'=>'group_tester.php','class'=>'GroupTesterModule'),
 		'ListSites'=>array('file'=>'list_sites.php','class'=>'ListSitesModule'),
 		'ImageImport'=>array('file'=>'image_import.php','class'=>'ImageImportModule'),
+		'AllowableRelationshipManager'=>array('file'=>'allowable_relationship_manager.php','class'=>'AllowableRelationshipManagerModule'),
 	);
 ?>
