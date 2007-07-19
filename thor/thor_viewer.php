@@ -8,6 +8,7 @@
  *
  * Provides a view of thor form data with filtering and .csv export
  *
+ * @todo modify so that this extends CARL_UTIL_INC/db/table_admin.php instead of being a stand-alone class
  */
 include_once ( 'paths.php' );
 require_once( 'XML/Unserializer.php'); // Requires PEAR XML_Serialize package
