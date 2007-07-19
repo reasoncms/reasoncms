@@ -4,7 +4,6 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'Publication
 
 include_once( 'reason_header.php' );
 reason_include_once( 'minisite_templates/modules/generic3.php' );
-reason_include_once( 'minisite_templates/modules/publication/submodules/blog_post_submission_form.php' );
 
 /**
 * A minisite module to handle publications, including blogs, issued newsletters, and newsletters.
@@ -20,7 +19,6 @@ reason_include_once( 'minisite_templates/modules/publication/submodules/blog_pos
 * @author Nathan White
 *
 * @todo Move any remaining markup in the publication module that could possibly be removed to the appropriate markup generator
-* @todo Add functionality to email author of posts when comments are made, owner of blog when posts are made, etc.
 * @todo Alter language from being blog-oriented to being publication-oriented.
 * @todo Limit list of categories to categories that are associated with items FOR THIS PUBLICATION
 */	
@@ -80,14 +78,13 @@ class PublicationModule extends Generic3Module
 	var $related_publications;
 	var $related_publications_links = array();
 	var $related_categories;
-	
-	var $class_vars_pass_to_submodules = array('publication');	//needed by the item markup generator
 
 	var $show_login_link = true;
 	var $show_featured_items = true;
 	var $queried_for_events_page_url = false;
 	var $events_page_url = '';
-	var $comment_form_file_location = 'minisite_templates/modules/publication/submodules/news_comment_submission_form.php';
+	var $comment_form_file_location = 'minisite_templates/modules/publication/forms/submit_comment.php';
+	var $post_form_file_location = 'minisite_templates/modules/publication/forms/submit_post.php';
 	var $commenting_status = array();
 	var $css = 'css/publication/default_styles.css'; // style sheet(s) to be added
 		
@@ -895,7 +892,18 @@ class PublicationModule extends Generic3Module
 		*/	
 		function build_post_form($net_id)
 		{
-			$form = new BlogPostSubmissionForm($this->site_id, $this->publication, $net_id);
+			reason_include_once($this->post_form_file_location);
+			
+			$identifier = basename( $this->post_form_file_location, '.php');
+			if(empty($GLOBALS[ '_publication_post_forms' ][ $identifier ]))
+			{
+				trigger_error('Post forms must identify their class name in the $GLOBALS array; the form located at '.$this->post_form_file_location.' does not and therefore cannot be run.');
+				return '';
+			}
+			
+			$form_class = $GLOBALS[ '_publication_post_forms' ][ $identifier ];
+
+			$form = new $form_class($this->site_id, $this->publication, $net_id);
 			if(!empty($this->issue_id))
 				$form->set_issue_id($this->issue_id);
 			if(!empty($this->request['section_id']))
