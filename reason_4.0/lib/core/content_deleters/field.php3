@@ -18,21 +18,24 @@
 				echo '<p>Expunging this entity will delete all the data stored in the field. If you do not wish to lose the data in the field, you may wish to consider altering the type(s)\' content manager(s) to hide the field rather than deleting it from the database.</p>'."\n";
 			}
 			$tables = $e->get_relationship( 'field_to_entity_table' );
-			$table = current($tables);
 			
-			$es = new entity_selector();
-			$es->add_type(id_of('type'));
-			$es->add_left_relationship($table->id(),relationship_id_of('type_to_table'));
-			$types = $es->run_one();
-			if(!empty($types))
+			if (!empty($tables))
 			{
-				echo '<p>Types currently using this field:</p>';
-				echo '<ul>'."\n";
-				foreach($types as $type)
+				$table = current($tables);
+				$es = new entity_selector();
+				$es->add_type(id_of('type'));
+				$es->add_left_relationship($table->id(),relationship_id_of('type_to_table'));
+				$types = $es->run_one();
+				if(!empty($types))
 				{
-					echo '<li>'.$type->get_value('name').'</li>'."\n";
+					echo '<p>Types currently using this field:</p>';
+					echo '<ul>'."\n";
+					foreach($types as $type)
+					{
+						echo '<li>'.$type->get_value('name').'</li>'."\n";
+					}
+					echo '</ul>'."\n";
 				}
-				echo '</ul>'."\n";
 			}
 		} // }}}
 		function delete_entity() // {{{
@@ -41,13 +44,16 @@
 			if($e->get_value('state') == 'Live' || $e->get_value('state') == 'Deleted')
 			{
 				$tmp = $e->get_relationship( 'field_to_entity_table' );
-				list( , $tmp ) = each( $tmp );
-				$table_id = $tmp->id();
+				if (!empty($tmp))
+				{
+					list( , $tmp ) = each( $tmp );
+					$table_id = $tmp->id();
+	
+					$tables = get_entities_by_type_name( 'content_table' );
 
-				$tables = get_entities_by_type_name( 'content_table' );
-
-				$q = 'ALTER TABLE `'.$tables[ $table_id ][ 'name' ].'` DROP `'.$e->get_value( 'name' ).'`';
-				db_query( $q, 'Unable to drop field from table.' );
+					$q = 'ALTER TABLE `'.$tables[ $table_id ][ 'name' ].'` DROP `'.$e->get_value( 'name' ).'`';
+					db_query( $q, 'Unable to drop field from table.' );
+				}
 			}
 			parent::delete_entity();
 		} // }}}
