@@ -92,10 +92,16 @@ WebServer Configuration
 The following configuration defines two Apache Virtual Host entries for Reason,
 one for HTTP connections and the other for HTTPS connections.  The only
 difference between the two entries are the redirects to HTTPS to secure
-authentication and the SSL key/cert information.  You will need to generate or
-purchase an SSL certificate before proceeding.  Please see the note in the
-"Reason Settings" section below if you choose to use a self signed
-certificate.
+authentication and the SSL key/cert information.
+
+As of Reason 4 Beta 4, Reason can operate in an insecure mode that does not
+require an SSL certificate. If you choose to run Reason in an insecure setting
+(not recommended), you will need to set the HTTPS_AVAILABLE constant in the 
+package_settings.php file to false.
+
+Otherwise, You will need to generate or purchase an SSL certificate before 
+proceeding.  Please see the note in the "Reason Settings" section below if you 
+choose to use a self signed certificate.
 
 
 
@@ -219,7 +225,7 @@ Database Configuration
 	Dump the base reason database (reason4_b3.sql) into your new reason database. The reason4_b3.sql
 	file is located in the reason_package at this location: /reason_package/reason_4.0/data/dbs/
 	
-	cat reason4_b3.sql | mysql -u reason_user --password=some_password -h your.mysql.hostname.or.ip.address reason
+	cat reason4_b4.sql | mysql -u reason_user --password=some_password -h your.mysql.hostname.or.ip.address reason
 
 	In order to use reason's form "type", you need to create a database for the thor utility
 	
@@ -281,10 +287,8 @@ HTTP_HOST_NAME - host-name (or IP) which hits WEB_PATH directory
 PHP_CLI - file system path of the php binary to be used for command line operations
 DB_CREDENTIALS FILEPATH - file system location of .xml file which defines database connections
 TIDY_EXE - location of the tidy binary
-
-Paths to Imagemagick functions are not currently specified in the reason paths.php file ...
-make sure imagemagick is available at the command line without specifying a path. If need be,
-add the path to /etc/profile or otherwise make it available to the apache user.
+IMAGEMAGICK_PATH - file system path to imagemagick functions
+HTTPS_AVAILABLE - whether or not the server is capable of serving pages over https
 
 If reason sites are going to be placed behind areas that require http authentication, then the 
 HTTP_CREDENTIALS_FILEPATH constant must be defined. The constant should reference a file outside the web tree
@@ -293,10 +297,10 @@ used by curl to access areas behind http authentication.
 
 *** reason_package/settings/reason_settings.php ***
 
-This file is reasonably well commented and needs to be configured according to your reason
-setup. Please note the block of options at the top of the file.  You will need to customize 
-those settings specific to your installation.  Comments are provided which
-should help in determining the proper settings.  If not, please contact
+The reason_settings.php file is reasonably well commented and needs to be configured according to 
+your reason setup. Please note the block of options at the top of the file.  You will need to 
+customize those settings specific to your installation.  Comments are provided which should 
+help in determining the proper settings.  If you need assistance, please contact
 reason-support@carleton.edu or visit http://reason-forum.carleton.edu .
 
 ERROR_404_PAGE
