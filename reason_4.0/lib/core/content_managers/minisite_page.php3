@@ -44,7 +44,7 @@
 				}
 			}	
 
-			if ($this->entity->has_right_relation_of_type('minisite_page_parent'))
+			if ($this->entity->has_right_relation_of_type('minisite_page_parent') && $this->get_value('state') == 'Live')
 			{
 				$this->set_comments('state', form_comment('The state cannot be changed because this page has live children'));
 				$this->change_element_type('state', 'solidtext');
