@@ -6,10 +6,20 @@
  	/**
 	 * An extension of Disco that handles loading of table structures and data from a database and saves the information back into the database.
 	 *
+	 * Updated to work with database connects/disconnects when given a named db_conn string, and also to better support distinct init and run phases - nwhite.
+	 *
 	 * Simplest Use:
 	 * <code>
 	 * $f = new DiscoDB;
 	 * $f->load( 'database','table',$item_id );
+	 * $f->run();
+	 * </code>
+	 *
+	 * Simplest use with DB Connection string
+	 *
+	 * <code>
+	 * $f = new DiscoDB;
+	 * $f->setup_db('db_conn','table',$item_id);
 	 * $f->run();
 	 * </code>
 	 * @author Dave Hendler
@@ -43,13 +53,39 @@
 		* Argument to pass to plasmature date types -- whether or not dates fields should be prepopulated with the current date.
 		* @var boolean
 		*/
+		
+		/**
+		 * When set, the load phase understands that the database is actually a db_connection string - this must be set in order for
+		 * disco db to initiate connections to databases outside of reason
+		 */
+		var $_use_db_connection_string = false;
+		var $db_conn;
+		var $table;
+		var $load_has_run = false;
+		
 		var $prepopulate_date_fields = false;
 
 		function init() // {{{
 		// init works a little differently for discoDB.
 		{
+			if (!$this->load_has_run)
+			{
+				if (!empty($this->table) && !empty($this->db_conn))
+				{
+					if (!empty($this->table))
+					{
+						$this->_use_db_connection_string();
+						$this->load($this->db_conn, $this->table, $this->_id);
+					}
+				}
+				else trigger_error('the disco db form must have the class variables $table and $db_conn defined if you are running init prior to load');
+			}
 			if ( !isset( $this->_inited ) OR empty( $this->_inited ))
 			{
+				if ($this->_use_db_connection_string) 
+				{
+					$this->disco_db_connect();
+				}
 				// are we first timing it?
 				if( empty( $this->_request ) ) $this->_request = conditional_stripslashes($_REQUEST);
 				$HTTP_VARS = $this->_request;
@@ -68,6 +104,10 @@
 					if( preg_match( '/__button_/' , $key ) )
 						$this->chosen_action = preg_replace( '/__button_/' , '' , $key );
 				}
+				
+				
+								$HTTP_VARS = $this->_request;
+				$this->_first_time = (isset( $HTTP_VARS[ 'submitted' ] ) AND !empty( $HTTP_VARS[ 'submitted' ] )) ? false : true;
 				
 				// initialize values
 				$this->_error_required = array();
@@ -145,11 +185,21 @@
 				}
 
 				$this->_inited = true;
+				if ($this->_use_db_connection_string) $this->disco_db_disconnect();
 			}
 		} // }}}
 		function load( $db, $tables, $id = '' ) // {{{
 		{
-			$this->_db = $db;
+			if ($this->_use_db_connection_string) // we have a database connection string
+			{
+				$this->disco_db_connect();
+				$this->_db = get_database_name($db);
+				$this->disco_db_disconnect();
+			}
+			else
+			{
+				$this->_db = $db;
+			}
 			if ( is_string( $tables ) )
 				$this->tables = array( $tables );
 			else
@@ -159,6 +209,7 @@
 					$this->tables[ $t ] = array();
 			}
 			$this->_id = $id;
+			$this->load_has_run = true;
 		} // }}}
 		function set_id_column_name( $name )
 		{
@@ -290,6 +341,18 @@
 				$this->_values_loaded = true;
 			}
 		} // }}}
+		
+		function run()
+		{
+			
+			$this->init();
+			if ($this->_use_db_connection_string) $this->disco_db_connect();
+			parent::run_load_phase();
+			parent::run_process_phase();
+			parent::run_display_phase();
+			if ($this->_use_db_connection_string) $this->disco_db_disconnect();
+		}
+		
 		function process() // {{{
 		{
 			// update table instead of inserting
@@ -343,20 +406,115 @@
 					if ( isset( $fields[ $element ] ) )
 						unset( $this->_tables[ $t ][ $element ] );
 				}
-/*				reset( $this->_tables );
-				while( list( $t, $fields ) = each( $this->_tables ) )
-				{
-					if ( isset( $fields[ $element ] ) )
-						unset( $this->_tables[ $t ][ $element ] );
-				} */
 			}
 			
 			parent::remove_element($element);
-			/*if ( isset( $this->_elements[ $element ] ) )
-				unset( $this->_elements[ $element ] );
-			if( isset( $this->elements[ $element ] ) )
-				unset( $this->elements[ $element ] );
-			unset( $this->_errors[ $element ] );*/
 		} // }}}
+		
+		
+		/**
+		 * The following are part of additions to discoDB to properly handle connections to databases outside of reason
+		 *
+		 * @author Nathan White
+		 */
+		 
+		/**
+		 * Disconnect from database specified in class variable db_conn, and reconnect to original database
+		 */
+		
+		function disco_db_disconnect()
+		{
+			$this->_disco_conn(false);
+		}
+		
+		/**
+		 * Connect to database specified in class variable db_conn
+		 */
+		function disco_db_connect()
+		{
+			$this->_disco_conn(true);
+		}
+		
+		/**
+		 * Private function to handle database connections - only makes a new connection when needed
+		 * @access private
+		 */
+		function _disco_conn($bool)
+		{
+			static $orig;
+			static $curr;
+			if (empty($orig)) $orig = $curr = get_current_db_connection_name();
+			if ($bool && ($curr != $this->db_conn))
+			{
+				connectDB($this->db_conn);
+				$curr = $this->db_conn;
+			}
+			elseif (!$bool && ($curr != $orig))
+			{
+				connectDB($orig);
+				$curr = $orig;
+			}
+		}
+		
+		/**
+		 * Set the disco_db_id
+		 */
+		function disco_db_set_id($id)
+		{
+			$this->set_id($id);
+		}
+		
+		/**
+		 * Get the disco_db_id
+		 */ 
+		function disco_db_get_id()
+		{
+			return $this->get_id();
+		}
+		
+		/**
+		 * Set a database connection string
+		 */
+		function _use_db_connection_string()
+		{
+			$this->_use_db_connection_string = true;
+		}
+		
+		function set_db_conn($db_conn)
+		{
+			$this->db_conn = $db_conn;
+		}
+		
+		function set_table_name($table)
+		{
+			$this->table = $table;
+		}
+		
+		function set_id($id)
+		{
+			$this->_id = $id;
+		}
+		
+		function get_id()
+		{
+			return $this->_id;
+		}
+		
+		function get_db_conn()
+		{
+			return $this->db_conn;
+		}
+		
+		function get_table_name()
+		{
+			return $this->table;
+		}
+		
+		function setup_db($db_conn, $table_name, $id)
+		{
+			$this->set_db_conn($db_conn);
+			$this->set_table_name($table_name);
+			$this->set_id($id);
+		}
 	}
 ?>
