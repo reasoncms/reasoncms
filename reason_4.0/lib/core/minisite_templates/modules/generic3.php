@@ -118,7 +118,7 @@
 			'add_item' => array('function' => 'turn_into_string'),
 		);
 		// Empty result settings
-		var $no_items_text = 'There are no items available on this site.';
+		var $no_items_text = 'There are no items available.';
 		// Filter settings
 		var $use_filters = false;
 		var $filter_types = array();
@@ -237,10 +237,19 @@
 					$this->es->limit_fields('entity.id');
 					$this->ids = $this->es->run_one();
 					
-					$this->refine_ids_and_positions_arrays();
+					// make sure the currently selected item has all fields needed (e.g. relationship fields, etc.)
+					$item_es = carl_clone($this->es);
+					$item_es->add_relation('entity.id = "'.$this->current_item_id.'"');
+					$item_es->set_num(1);
+					$item_array = $item_es->run_one();
 					
-					$this->items[$this->current_item_id] = new entity($this->current_item_id);
-					$this->items[$this->current_item_id]->get_values();
+					if(!empty($item_array))
+					{
+						$item = current($item_array);
+						$this->items[$item->id()] = $item;
+					}
+					
+					$this->refine_ids_and_positions_arrays();
 				}
 				else
 				{
