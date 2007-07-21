@@ -6,11 +6,17 @@ include_once( 'reason_header.php' );
 reason_include_once( 'feeds/page_tree.php' );
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'blogPostsFeed';
 
+/**
+ * Generates feed for a particular publication
+ *
+ * @todo figure out how local page types can be added without having to be in this file; remove the carleton-specific page types
+ */
+
 class blogPostsFeed extends pageTreeFeed
 {
 	var $query_string = 'story_id';
 	var $blog; // entity
-	var $modules = array('publication','athletics/athletics_publication');
+	var $modules = array('publication','athletics/athletics_publication','athletics/athletics_sports_page');
 	
 	function grab_blog()
 	{
