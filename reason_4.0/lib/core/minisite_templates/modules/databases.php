@@ -21,6 +21,11 @@ class DatabasesModule extends Generic3Module
 							);
 	var $search_fields = array('entity.name','meta.description','meta.keywords','date_string.date_string','db.output_parser');
 	var $use_filters = true;
+	var $acceptable_params = array(
+								'content_types'=>array(), //array of unique names to limit content types to (using AND in query)
+								'subjects'=>array(), //array of subjects to limit content types to (using AND in query)
+								'vendors'=>array(), //array of vendors to limit content types to (using AND in query)
+	);
 	var $top_link = '<div class="top"><a href="#top">Top</a></div>';
 	
 	function set_type()
@@ -31,7 +36,64 @@ class DatabasesModule extends Generic3Module
 	{
 		$this->es->set_order( 'entity.name ASC' );
 		$this->es->add_left_relationship_field( 'db_to_primary_external_url', 'external_url' , 'url' , 'primary_url' );
+		if(!empty($this->params['content_types']))
+		{
+			$this->add_content_type_limitation($this->params['content_types']);
+		}
+		if(!empty($this->params['subjects']))
+		{
+			$this->add_subject_type_limitation($this->params['subjects']);
+		}
+		if(!empty($this->params['vendors']))
+		{
+			$this->add_vendor_limitation($this->params['vendors']);
+		}
 	} // }}}
+	function add_content_type_limitation($content_types)
+	{
+		$relid = relationship_id_of('database_to_content_type');
+		foreach($content_types as $content_type_uname)
+		{
+			if($content_type_id = id_of($content_type_uname))
+			{
+				$this->es->add_left_relationship($content_type_id,$relid);
+			}
+			else
+			{
+				trigger_error('The content type with unique name '.$content_type_uname.' does not exist in the Reason DB.');
+			}
+		}
+	}
+	function add_subject_type_limitation($subjects)
+	{
+		$relid = relationship_id_of('database_to_subject');
+		foreach($subjects as $subject_uname)
+		{
+			if($subject_id = id_of($subject_uname))
+			{
+				$this->es->add_left_relationship($subject_id,$relid);
+			}
+			else
+			{
+				trigger_error('The subject with unique name '.$subject_uname.' does not exist in the Reason DB.');
+			}
+		}
+	}
+	function add_vendor_limitation($vendors)
+	{
+		$relid = relationship_id_of('db_provided_by_organization');
+		foreach($vendors as $vendor_uname)
+		{
+			if($vendor_id = id_of($vendor_uname))
+			{
+				$this->es->add_left_relationship($vendor_id,$relid);
+			}
+			else
+			{
+				trigger_error('The organization with unique name '.$vendor_uname.' does not exist in the Reason DB.');
+			}
+		}
+	}
 	function _show_item( $id ) // {{{
 	{
 		$item = new entity( $id );
@@ -103,7 +165,7 @@ class DatabasesModule extends Generic3Module
 			{
 				echo $item->get_value('date_string');
 				if(!empty($processed_types))
-					echo ' &bull; ';
+					echo ' &#8226; ';
 			}
 			if(!empty($processed_types))
 			{
@@ -138,7 +200,7 @@ class DatabasesModule extends Generic3Module
 				if($item->get_value('output_parser'))
 				{
 					if(!empty($urls))
-						echo ' &bull; ';
+						echo ' &#8226; ';
 					echo '<em>EndNote Import:</em> '.$item->get_value('output_parser');
 				}
 				echo '</li>'."\n";
