@@ -316,6 +316,10 @@ class MinisiteTemplate
 				$page_type[$key] = $value;
 			}
 		}
+		else
+		{
+			trigger_error('Page type specified ('.htmlspecialchars($type,ENT_QUOTES,'UTF-8').') is not listed in the page_types.php file. You should either reinstate or change the page type.');
+		}
 		
 		foreach( $page_type AS $sec => $module )
 		{
