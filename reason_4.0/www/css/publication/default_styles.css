@@ -27,37 +27,37 @@ div.publication div.moduleNav ul ul.links li {
 	border-top:none;
 	margin:0px;
 }
-div#blog div.fullPost div.comments ul li {
+div.publication div.fullPost div.comments ul li {
 	padding:1em;
 	margin:.5em 0px .5em 0px;
 	background-color:#F0F5FF;
 }
-div#blog div.fullPost div.commentAdded h4 {
+div.publication div.fullPost div.commentAdded h4 {
 	color:#C33C06;
 	margin:0px;
 	display:inline;
 	padding-right:1em;
 }
-div#blog div.fullPost div.commentAdded {
+div.publication div.fullPost div.commentAdded {
 	padding:.33em;
 	border:1px solid #C33C06;
 }
-div#blog div.fullPost div.primaryContent {
+div.publication div.fullPost div.primaryContent {
 	width:70%;
 	float:left;
 }
-div#blog div.fullPost div.relatedItems {
+div.publication div.fullPost div.relatedItems {
 	float:right;
 	width:28%;
 	clear:right;
 }
-div#blog div.fullPost div.images h4 {
+div.publication div.fullPost div.images h4 {
 	display:block;
 	position:absolute;
 	left:-9999px;
 	width:100px;
 }
-div#blog div.fullPost div.images ul {
+div.publication div.fullPost div.images ul {
 	padding:0px;
 	margin:.5em 0px .5em 0px;
 	list-style:none;
@@ -68,12 +68,12 @@ div.publication div.persistent {
 	width:28%;
 	border-left:1px dotted #92AAD6;
 }
-div#blog div#filtering, div#blog div.persistent div.loginlogout, div#blog div.addItemLink {
+div.publication div#filtering, div.publication div.persistent div.loginlogout, div.publication div.addItemLink {
 	margin-left:.5em;
 }
-div#blog div.addItemLink {
+div.publication div.addItemLink {
 	margin-bottom:1em;
 }
-div#blog div.back {
+div.publication div.back {
 	clear:both;
 }
