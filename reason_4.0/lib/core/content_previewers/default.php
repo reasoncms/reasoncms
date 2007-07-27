@@ -296,7 +296,8 @@
 		{
 			$this->_row = 1;
 			echo '<div id="preview">'."\n";
-			echo '<table border="0" cellpadding="2" cellspacing="0" >';
+			echo '<table class="itemData" summary="A comprehensive view of this item\'s data">'."\n";
+			echo '<tr><th class="col1">Field Name</th><th class="col2">Value</th></tr>'."\n";
 		} // }}}
 		function show_all_values( $values ) // {{{
 		{
@@ -334,11 +335,10 @@
 			$this->_row = $this->_row%2;
 			$this->_row++;
 
-			echo '<td class="listRow' . $this->_row . ' col1" align="right">&nbsp;<strong>' . prettify_string( $field );
+			echo '<td class="listRow' . $this->_row . ' col1">' . prettify_string( $field );
 			if( $field != '&nbsp;' ) echo ':';
-			echo '</strong></td>';
-			echo '<td class="listRow' . $this->_row . ' col2">&nbsp;&nbsp;</td>';
-			echo '<td class="listRow' . $this->_row . ' col3" align="left">' . ( ($value OR (strlen($value) > 0)) ? $value : '<em>(No value)</em>' ). '</td>';
+			echo '</td>';
+			echo '<td class="listRow' . $this->_row . ' col2">' . ( ($value OR (strlen($value) > 0)) ? $value : '<em>(No value)</em>' ). '</td>';
 
 			echo '</tr>';
 		} // }}}
