@@ -58,7 +58,24 @@ img.roundedCorner {width: 10px; height: 10px; border: none; display: block; }
 	padding: 4px;
 	margin-left: 15px;
 }
-
+div#preview table.itemData th, div#preview table.itemData td {
+	margin:0;
+	padding:3px 5px;
+	border:none;
+	vertical-align:top;
+}
+div#preview table.itemData th {
+	font-size:80%;
+	color:#999;
+}
+div#preview table.itemData td.col1, div#preview table.itemData th.col1 {
+	text-align:right;
+	font-weight:bold;
+}
+div#preview table.itemData td.col2, div#preview table.itemData th.col2 {
+	text-align:left;
+	font-weight:normal;
+}
 div#previewRels ul {
 	list-style: none;
 	margin:0px;
