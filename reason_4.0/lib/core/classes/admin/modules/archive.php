@@ -18,7 +18,7 @@
 
 			$this->admin_page->title = 'History of "'.$this->current->get_value('name').'"';
 
-			$this->ignore_fields = array( 'id', 'last_edited_by', 'last_modified', 'creation_date', 'type', 'created_by', 'new' );
+			$this->ignore_fields = array( 'id', 'last_edited_by', 'last_modified', 'creation_date', 'type', 'created_by', 'new', 'state' );
 
 			// get archive relationship id
 			$q = 'SELECT id FROM allowable_relationship WHERE name LIKE "%archive%" AND relationship_a = '.$this->admin_page->type_id.' AND relationship_b = '.$this->admin_page->type_id;
