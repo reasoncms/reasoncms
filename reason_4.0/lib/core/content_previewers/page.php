@@ -35,12 +35,11 @@
 			$this->_row = $this->_row%2;
 			$this->_row++;
 
-			echo '<td class="listRow' . $this->_row . ' col1" align="right">&nbsp;<strong>' . prettify_string( $field );
+			echo '<td class="listRow' . $this->_row . ' col1">' . prettify_string( $field );
 			if( $field != '&nbsp;' ) echo ':';
-			echo '</strong></td>';
-			echo '<td class="listRow' . $this->_row . ' col2">&nbsp;&nbsp;</td>';
+			echo '</td>';
 			$value = nl2br(htmlspecialchars($value));
-			echo '<td class="listRow' . $this->_row . ' col3" align="left">' . ( ($value OR (strlen($value) > 0)) ? $value : '<em>(No value)</em>' ). '</td>';
+			echo '<td class="listRow' . $this->_row . ' col2">' . ( ($value OR (strlen($value) > 0)) ? $value : '<em>(No value)</em>' ). '</td>';
 
 			echo '</tr>';
 		}
