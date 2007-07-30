@@ -1,5 +1,5 @@
 // "oSelect" is the id of the controller select menu
-var oSelect="repeatElement";
+var oSelect="recurrenceElement";
 // "menuState" array is for the form elemens that should NOT be shown 
 
 var menuState = new Array();
