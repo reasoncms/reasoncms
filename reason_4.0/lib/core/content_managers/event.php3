@@ -1,6 +1,7 @@
 <?php
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'event_handler';
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
+	reason_include_once('classes/event.php');
 	
 	class event_handler extends ContentManager 
 	{
@@ -13,10 +14,23 @@
 		{
 			parent::init();
 			
+			
 		} // }}}
+		function check_for_recurrence_field_existence()
+		{
+			if(!$this->_is_element('recurrence'))
+			{
+				$msg = 'Recurrence upgrade script needs to be run. A Reason administrator needs to run the script located at '.REASON_HTTP_BASE.'scripts/upgrade/4.0b3_to_4.0b4/event_repeat_field_name_change.php';
+				echo $msg;
+				trigger_error($msg);
+				die();
+			}
+		}
 			
 		function alter_data() // {{{
 		{
+			$this->check_for_recurrence_field_existence();
+			//test_reason_repeating_events($this->get_value('id'));
 			$site = new entity( $this->get_value( 'site_id' ) );
 
 			// create all additional elements
@@ -24,20 +38,38 @@
 			$this->add_element('hr2', 'hr');
 			$this->add_element('hr3', 'hr');
 			$this->add_element('hr4', 'hr');
-			$this->add_element('audiences_heading', 'comment', array('text'=>'<h4>Visibility</h4> To which groups do you wish to promote this event? (Please enter at least one)'));
-			$this->add_relationship_element('audiences', id_of('audience_type'), 
-relationship_id_of('event_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED_AUDIENCE_MODEL,'sortable.sort_order ASC');
 			
-			$old_audience_fields = array('prospective_students','new_students','students','faculty','staff','alumni','families','public');
-			foreach($old_audience_fields as $field)
+			if(REASON_USES_DISTRIBUTED_AUDIENCE_MODEL)
+				$es = new entity_selector($site->id());
+			else
+				$es = new entity_selector();
+			$es->add_type(id_of('audience_type'));
+			$es->limit_tables();
+			$es->limit_fields();
+			$es->set_num(1);
+			$result = $es->run_one();
+			
+			if(!empty($result))
 			{
-				if($this->_is_element($field))
-					$this->change_element_type($field,'hidden');
+				$this->add_element('audiences_heading', 'comment', array('text'=>'<h4>Visibility</h4> To which groups do you wish to promote this event? (Please enter at least one)'));
+				$this->add_relationship_element('audiences', id_of('audience_type'), 
+	relationship_id_of('event_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED_AUDIENCE_MODEL,'sortable.sort_order ASC');
 			}
 			
-			$this->add_relationship_element('categories', id_of('category_type'), 
+			$es = new entity_selector();
+			$es->add_type(id_of('site'));
+			$es->add_left_relationship(id_of('category_type'), relationship_id_of('site_to_type'));
+			$es->add_relation('entity.id = "'.$site->id().'"');
+			$es->limit_tables();
+			$es->limit_fields();
+			$es->set_num(1);
+			$result = $es->run_one();
+			
+			if(!empty($result))
+			{
+				$this->add_relationship_element('categories', id_of('category_type'), 
 relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.name ASC');
-			$this->add_required('categories');
+			}
 			
 			$this->add_element('date_and_time', 'comment', array('text'=>'<h4>Date, Time, and Duration of Event</h4>'));
 			//$this->add_element('repeat_head', 'comment', array('text'=>'<h4>Repeating Events</h4>'));
@@ -57,7 +89,7 @@ relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.na
 			$this->change_element_type( 'datetime','textDateTime_js',array( 'script_url' => REASON_HTTP_BASE_PATH.'js/ymd_to_dow_wom.js' ) );
 			
 			$this->change_element_type( 'content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
-			$this->change_element_type( 'repeat', 'select_no_sort_js', 
+			$this->change_element_type( 'recurrence', 'select_no_sort_js', 
 				array(	'options' => array(	'none'=>'Never (One-Time Event)', 
 											'daily'=>'Daily', 
 											'weekly'=>'Weekly', 
@@ -109,7 +141,7 @@ relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.na
 			$this->set_comments(	 'friday', ' Friday' );
 			$this->set_display_name( 'saturday', ' ' );
 			$this->set_comments(	 'saturday', ' Saturday' );
-			$this->set_display_name( 'repeat', 'Repeat This Event' );
+			$this->set_display_name( 'recurrence', 'Repeat This Event' );
 			$this->set_display_name( 'frequency', 'Every' );
 			$this->set_display_name( 'dates', 'Event Occurs On' );
 			$this->set_display_name( 'week_of_month', 'On the' );
@@ -127,7 +159,7 @@ relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.na
 
 			// set requirements
 			$this->add_required( 'datetime' );
-			$this->add_required( 'repeat' );
+			$this->add_required( 'recurrence' );
 			$this->add_required( 'show_hide' );
 			
 			// Check if there is an event page that allows registration on the site.
@@ -165,212 +197,100 @@ relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.na
 					$user->get_values();
 					$this->set_value( 'contact_username', $user->get_value('name') );
 			}
-			if( !$this->get_value('repeat') )
-				$this->set_value( 'repeat', 'none' );
+			if( !$this->get_value('recurrence') )
+				$this->set_value( 'recurrence', 'none' );
 			if( !$this->get_value('term_only') )
 				$this->set_value('term_only', 'no');
 			if( !$this->get_value('show_hide') )
 				$this->set_value('show_hide', 'show');
 			if( !$this->get_value('registration') )
 				$this->set_value('registration', 'none');
+				
+			$this->add_element('this_event_is','hidden');
+			$this->add_element('this_event_is_comment','hidden');
 			
-			$this->set_order (array ('date_and_time', 'datetime', 'hours', 'minutes', 'repeat', 'frequency', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'monthly_repeat', 'week_of_month', 'month_day_of_week', 'end_date', 'term_only', 'dates', 'hr1', 'info_head', 'name', 'description', 'location', 'sponsor', 'contact_username', 'contact_organization', 'url', 'content', 'keywords', 'categories', 'hr2', 'audiences_heading','audiences',  'show_hide', 'no_share', 'hr3', 'registration',  ));
+			
 			//pray($this);
+			$this->set_event_field_order();
 		} // }}}
+		
+		function set_event_field_order()
+		{
+			$this->set_order (array ('this_event_is_comment','this_event_is', 'date_and_time', 'datetime', 'hours', 'minutes', 'recurrence', 'frequency', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'monthly_repeat', 'week_of_month', 'month_day_of_week', 'end_date', 'term_only', 'dates', 'hr1', 'info_head', 'name', 'description', 'location', 'sponsor', 'contact_username', 'contact_organization', 'url', 'content', 'keywords', 'categories', 'hr2', 'audiences_heading','audiences',  'show_hide', 'no_share', 'hr3', 'registration',  ));
+		}
 		
 		function run_error_checks() // {{{
 		{
 			parent::run_error_checks();
 			
-			if ($this->get_value( 'repeat' ) != 'none')
+			if(!$this->_has_errors())
 			{
-				if (!$this->get_value('frequency'))
+				$rev = new reasonEvent();
+				$rev->pass_disco_form_reference($this);
+				$rev->clean_up();
+				$rev->find_errors();
+				
+				/*
+				
+				// Similarity checking is still experimental.
+				// This code snippet is functional, but we don't really want to put it into production
+				// until the similarity checking is faster and more robust.
+				
+				$similar = $rev->find_similar_events();
+				if(!empty($similar))
 				{
-					$repeat_vals = array( 'daily'=>'day', 'weekly'=>'week', 'monthly'=>'month', 'yearly'=>'year');
-					$this->set_error( 'frequency', 'How often should this event repeat? If it repeats every '.$repeat_vals[ $this->get_value( 'repeat' ) ].', enter a 1.' );
-				}
-				if (!$this->get_value( 'term_only' ) )
-					$this->set_error( 'term_only', 'Please indicate whether this event should occur only while classes are in session.' );
-			}
-			
-			$d = $this->iffydate( $this->get_value( 'datetime' ) );
-			if ($this->get_value( 'repeat' ) == 'weekly')
-			{
-				// there must be at least 1 day of the week the event recurs on
-				$days = array ('sunday','monday','tuesday','wednesday','thursday','friday','saturday');
-				foreach ($days as $day)
-				{
-					if ( $this->get_value( $day ) )
+					$num = count($similar);
+					
+					$options = array();
+					
+					if($num > 1)
 					{
-						$day_set = true;
-						break;
+						$error_text = 'There are '.$num.' events already in Reason that appear similar to this one';
+						entity_sort($similar,'event_similarity');
+						foreach($similar as $other_event)
+						{
+							$options[$other_event->id()] = $other_event->get_value('name');
+						}
+						$options[$this->get_value('id')] = 'None of the above';
+						$display_name = 'This event is�';
 					}
+					else
+					{
+						reset($similar);
+						$other_event = current($similar);
+						$error_text = 'There is an event in Reason that appears to be similar to this one.';
+						$options[$other_event->id()] ='Yes';
+						$options[$this->get_value('id')] = 'No';
+						$txt = 'Is this the same event as "'.$other_event->get_value('name').'"';
+						$txt .= ' on '.prettify_mysql_datetime($this->get_value('datetime'),'F j, Y');
+						$txt .= ' at '.prettify_mysql_datetime($other_event->get_value('datetime'),'g:i a');
+						if($other_event->get_value('location'))
+							$txt .= ' ('.$other_event->get_value('location').')';
+						$txt .= '?';
+						$this->add_element('this_event_is_comment','comment',array('text'=>$txt));
+						$display_name = '&nbsp;';
+					}
+					$this->add_element( 'this_event_is', 'radio_no_sort', array('options'=>$options) );
+					$this->add_required('this_event_is');
+					$this->set_display_name('this_event_is',$display_name);
+					$this->set_error('this_event_is',$error_text);
+					$this->set_event_field_order();
+					
 				}
-				if (empty($day_set))
-					$this->set_error( 'sunday', 'Please enter which day(s) of the week this event will occur.' );
-
-				// the date of the event must be on one of those days of the week
-				$day_o_week = date( 'l', $d['timestamp'] );
-				if( !$this->get_value( strtolower( $day_o_week ) ) )
-					$this->set_error( 'sunday','This event does not occur on the repeated days of the week' );
-			}
-			elseif ($this->get_value( 'repeat' ) == 'monthly')
-			{
-				// don't allow repetition on days that don't occur in every month
-				if ($d['day'] > 28) 
-					$this->set_error( 'datetime', 'There is not such a date in some months' );
-			}
-			elseif ( $this->get_value( 'repeat' ) == 'yearly' )
-			{
-				if( $d['month'] == 2 AND $d['day'] == 29 )
-					$this->set_error( 'datetime', 'February 29th only occurs on leap-years' );
+				*/
 			}
 		} // }}}
 		function do_event_processing()
 		{
-			$this->dates = array();
-			
-			$this->frequency = $this->get_value( 'frequency' );
-
-			if( $this->get_value( 'repeat' ) == 'monthly' AND $this->get_value( 'monthly_repeat' ) == 'semantic' )
-			{
-				$d = $this->iffydate( $this->get_value( 'datetime' ) );
-
-				$this->set_value( 'month_day_of_week',date( 'l',$d['timestamp'] ) );
-				$this->set_value( 'week_of_month',floor($d['day']/7)+1 );
-			}
-			else
-			{
-				$this->set_value( 'month_day_of_week','' );
-				$this->set_value( 'week_of_month','' );
-			}
-			
-			$s = $this->iffydate( $this->get_value( 'datetime' ) ); 
-			$this->ystart = $s['year'];
-			$this->mstart = $s['month'];
-			$this->dstart = $s['day'];
-			$this->ustart = $s['timestamp'];
-
-			if( $this->get_value( 'end_date' ) )
-				$e = $this->iffydate( $this->get_value( 'end_date' ) );
-			else
-				$e = $this->iffydate( $this->ystart+$this->years_out.'-'.$this->mstart.'-'.$this->dstart );
-			$this->yend = $e['year'];
-			$this->mend = $e['month'];
-			$this->dend = $e['day'];
-			$this->uend = $e['timestamp'];
-			
-			$days = array();
-			
-			// chunk out the dates appropriately
-			if ( $this->get_value('repeat') == 'daily' )
-				$this->get_days_daily();
-			elseif ( $this->get_value('repeat') == 'weekly' )
-				$this->get_days_weekly();
-			elseif ( $this->get_value('repeat') == 'monthly' )
-				$this->get_days_monthly();
-			elseif ( $this->get_value('repeat') == 'yearly' )
-				$this->get_days_yearly();
-			else
-				$this->get_days_norepeat();
-			
-			sort($this->dates);
-			
-			$this->set_value( 'dates', implode( ', ',$this->dates ) );
-			
-			$this->set_value( 'last_occurence', end($this->dates) );
+			$rev = new reasonEvent();
+			$dates = $rev->find_occurrence_dates($this->get_values());
+			$this->set_value( 'dates', implode( ', ',$dates ) );
+			$this->set_value( 'last_occurence', end($dates) );
 		}
 		function process() // {{{
 		{
 			$this->do_event_processing();
 			parent::process();
-		} // }}}
-		function get_days_norepeat() // {{{
-		{
-			$this->dates[] = $this->ystart.'-'.$this->mstart.'-'.$this->dstart;
-		} // }}}
-		function get_days_daily() // {{{
-		{
-			for( $ucur = $this->ustart; $ucur <= $this->uend; $ucur = strtotime( '+'.$this->frequency.' days',$ucur ) )
-				$this->dates[] = date( 'Y',$ucur ).'-'.date( 'm',$ucur ).'-'.date( 'd',$ucur );
-		} // }}}
-		function get_days_weekly() // {{{
-		{
-			
-			if( $this->get_value( 'sunday' ) )
-				$days[] = 'Sunday';
-			if( $this->get_value( 'monday' ) )
-				$days[] = 'Monday';
-			if( $this->get_value( 'tuesday' ) )
-				$days[] = 'Tuesday';
-			if( $this->get_value( 'wednesday' ) )
-				$days[] = 'Wednesday';
-			if( $this->get_value( 'thursday' ) )
-				$days[] = 'Thursday';
-			if( $this->get_value( 'friday' ) )
-				$days[] = 'Friday';
-			if( $this->get_value( 'saturday' ) )
-				$days[] = 'Saturday';
-
-			// go through each day of the week to repeat on
-			foreach( $days AS $day )
-			{
-				// start on the date of the event
-				$ucur = $this->ustart;
-
-				// advance until the first occurence of that day of the week
-				while( $day != date( 'l',$ucur ) )
-				{
-					$ucur = strtotime( '+1 day',$ucur );
-				}
-				// now jump by the number of weeks to skip at a time until done
-				while( $ucur <= $this->uend )
-				{
-					$this->dates[] = date( 'Y',$ucur ).'-'.date( 'm',$ucur ).'-'.date( 'd',$ucur );
-					$ucur = strtotime( '+ '.$this->frequency.' weeks',$ucur );
-				}
-			}
-		} // }}}
-		function get_days_monthly() // {{{
-		{
-			$ucur = $this->ustart;
-			while( $ucur <= $this->uend )
-			{
-				$this->dates[] = date( 'Y',$ucur ).'-'.date( 'm',$ucur ).'-'.date( 'd',$ucur );
-				$ucur = strtotime( '+'.$this->frequency.' months',$ucur );
-				if( $this->get_value( 'monthly_repeat' ) == 'semantic' )
-				{
-					$cur_day = 1+7*($this->get_value( 'week_of_month' ) - 1);
-					$ucur_var = date( 'Y',$ucur ).'-'.date( 'm',$ucur ).'-'.str_pad( $cur_day,2,'0',STR_PAD_LEFT );
-					$ucur = get_unix_timestamp( $ucur_var);
-					if($ucur)
-					{
-						while( date( 'l',$ucur ) != $this->get_value( 'month_day_of_week' ) )
-						{
-							$ucur = strtotime( '+1 day',$ucur );
-						}
-					}
-					else
-					{
-						trigger_error('Not able to find appropriate repeat date for '.$ucur_var);
-						break;
-					}
-				}
-			}
-		} // }}}
-		function get_days_yearly() // {{{
-		{
-			for( $ucur = $this->ustart; $ucur < $this->uend; $ucur = strtotime( '+'.$this->frequency.' years',$ucur ) )
-				$this->dates[] = date( 'Y',$ucur ).'-'.date( 'm',$ucur ).'-'.date( 'd',$ucur );
-		} // }}}
-		function iffydate($iffydate) // {{{
-		{
-			// returns an array of year, month, day, timestamp
-			$output = array();
-			list( $idate ) = explode( ' ',$iffydate );
-			list( $output['year'],$output['month'],$output['day']) = explode( '-',$idate );
-			$output['timestamp'] = get_unix_timestamp( $output['year'].'-'.$output['month'].'-'.$output['day'] );
-			return $output;
 		} // }}}
 	}
 ?>
