@@ -20,7 +20,7 @@
 		{
 			if(!$this->_is_element('recurrence'))
 			{
-				$msg = 'Recurrence upgrade script needs to be run. A Reason administrator needs to run the script located at '.REASON_HTTP_BASE.'scripts/upgrade/4.0b3_to_4.0b4/event_repeat_field_name_change.php';
+				$msg = 'Recurrence upgrade script needs to be run. A Reason administrator needs to run the script located at '.REASON_HTTP_BASE_PATH.'scripts/upgrade/4.0b3_to_4.0b4/event_repeat_field_name_change.php';
 				echo $msg;
 				trigger_error($msg);
 				die();
