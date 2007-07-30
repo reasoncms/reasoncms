@@ -15,6 +15,7 @@ for every entity in a reason database, and make a variety of changes which migra
 <li><a href="create_created_by.php">Create created_by field</a></li>
 <li><a href="text_blurb_reorient.php">Change the direction of text blurb to page relationships</a></li>
 <li><a href="news_to_image_sorting.php">Makes news_to_image relationships sortable and sets initial values</a></li>
+<li><a href="event_repeat_field_name_change.php">Change the repeat field name to support mysql 5.x</a></li>
 </ol>
 <p>These scripts should be non destructive and do not depend on files changed in 4.0b4 - they can be run anytime</p>
 <ol>
