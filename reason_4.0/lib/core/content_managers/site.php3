@@ -201,9 +201,6 @@
 				// create root page and set it as its own parent
 				$root_page = reason_create_entity( $site_id, id_of('minisite_page'), $this->admin_page->user_id, $this->get_value('name'),array('nav_display'=>'Yes','new'=>'0'),$testmode);
 				create_relationship( $root_page, $root_page, relationship_id_of('minisite_page_parent') );
-
-				// associate the site with the default template
-				create_relationship( $site_id, id_of( 'default_minisite_template' ), relationship_id_of( 'site_to_minisite_template' ) );
 				
 				$this->create_base_dir();
 			}
