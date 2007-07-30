@@ -23,9 +23,9 @@ function compare_times( $a,$b ) // {{{
 {
 	// grab out the data from the mysql datetime
 	list( ,$a_time ) = explode( ' ',$a->get_value( 'datetime' ) );
-	$a_time = str_replace( ':','',$a_time );
+	//$a_time = str_replace( ':','',$a_time );
 	list( ,$b_time ) = explode( ' ',$b->get_value( 'datetime' ) );
-	$b_time = str_replace( ':','',$b_time );
+	//$b_time = str_replace( ':','',$b_time );
 
 	// compare the two and return the appropriate one
 	if( $a_time > $b_time )
@@ -272,18 +272,24 @@ class reasonCalendar
 		$this->es->add_relation( 'show_hide.show_hide = "show"' );
 		
 		$this->base_es = carl_clone($this->es);
-		$test_es = carl_clone($this->es);
-		$test_es->set_num(1);
-		$test_events = $test_es->run_one();
-		if(empty($test_es))
+		
+		if(!empty($this->site))
 		{
-			$this->events_exist_in_calendar = false;
+			$test_es = carl_clone($this->es);
+			$test_es->set_num(1);
+			$test_es->limit_tables(array('entity','show_hide'));
+			$test_es->limit_fields();
+			$test_events = $test_es->run_one();
+			if(empty($test_es))
+			{
+				$this->events_exist_in_calendar = false;
+			}
 		}
 		
 		//$this->max_event = $this->es->get_max('last_occurence');
 		//$this->min_event = $this->es->get_min('datetime');
 		
-		$this->es->set_order('dated.datetime ASC');
+		//$this->es->set_order('dated.datetime ASC');
 		if(!empty($this->simple_search))
 		{
 			$simple_search_text_fields = array('entity.name','meta.description','meta.keywords','chunk.content','chunk.author','location.location','event.sponsor','event.contact_organization');
@@ -510,12 +516,12 @@ class reasonCalendar
 	 */
 	function build_events_array() // {{{
 	{
-		foreach($this->events as $event)
+		while(list($event_id) = each($this->events) )
 		{
-			$this->process_event($event);
+			$this->process_event($event_id);
 		}
 		ksort($this->events_by_date);
-		foreach($this->events_by_date as $day=>$event_ids)
+		/* foreach($this->events_by_date as $day=>$event_ids)
 		{
 			$events = array();
 			foreach($event_ids as $id)
@@ -528,22 +534,41 @@ class reasonCalendar
 			{
 				$this->events_by_date[$day][] = $event->id();
 			}
-		}
+		} */
 	} // }}}
+	function sort_event_ids_by_time_of_day($event_ids)
+	{
+		$events = array();
+		foreach($event_ids as $id)
+		{
+			$events[] = $this->events[$id];
+		}
+		usort( $events, 'compare_times' );
+		$time_sorted_event_ids = array();
+		foreach( $events as $event )
+		{
+			$time_sorted_event_ids[] = $event->id();
+		}
+		return $time_sorted_event_ids;
+	}
 	/**
 	 * Populate $this->events_by_date for a particular event based on the dates stored in the event entity provided
 	 *
-	 * @param object $event (entity)
+	 * @param integer $event_id
 	 * @return void
 	 */
-	function process_event($event) // {{{
+	function process_event($event_id) // {{{
 	{
-		$dates = explode(', ', $event->get_value('dates') );
+		$dates = explode(', ', $this->events[$event_id]->get_value('dates') );
 		foreach($dates as $date)
 		{
-			if($date >= $this->start_date && $date <= $this->end_date)
+			if($date > $this->end_date)
 			{
-				$this->events_by_date[$date][] = $event->id();
+				break; // no need to continue b/c dates are in chronological order
+			}
+			elseif($date >= $this->start_date)
+			{
+				$this->events_by_date[$date][] = $event_id;
 			}
 		}
 	} // }}}
@@ -563,13 +588,19 @@ class reasonCalendar
 	 */
 	function complete_es()
 	{
+		/*$this->es->add_table( 'event_date_extract' );
+		$this->es->add_relation('event_date_extract.date >= "'.$this->start_date.'"' );
+		$this->es->add_relation('event_date_extract.entity_id = entity.id' ); */
 		$this->es->add_relation( 'event.last_occurence >= "'.$this->start_date.'"' );
 		if($this->get_view() != 'all')
 		{
 			$this->es->add_relation( 'dated.datetime <= "'.$this->end_date.' 23:59:59"' );
+			//$this->es->add_relation('event_date_extract.date >= "'.$this->end_date.'"' );
 		}
 		if( $this->view == 'daily' )
+		{
 			$this->es->add_relation('event.dates LIKE "%'.$this->start_date.'%"');
+		}
 	}
 	/**
 	 * Don't fully understand this method yet --mr
@@ -612,7 +643,8 @@ class reasonCalendar
 		{
 			if($date >= $first && $date <= $last)
 			{
-				$ret[$date] = $ids;
+				$sorted_ids = $this->sort_event_ids_by_time_of_day($ids);
+				$ret[$date] = $sorted_ids;
 			}
 		}
 		return $ret;
@@ -659,7 +691,7 @@ class reasonCalendar
 		}
 		if(!empty($this->min_event))
 		{
-			$this->known_lower_limit = prettify_mysql_datetime($this->min_event->get_value('datetime'), 'Y-m-d');
+			$this->known_lower_limit = substr($this->min_event->get_value('datetime'),0,10);
 			return $this->known_lower_limit;
 		}
 		return false;
@@ -871,13 +903,13 @@ class reasonCalendar
 		$month = $date_array[1];
 		$day = $date_array[2];
 		
-		$year_out = mktime('','','',$month,$day,$year+1);
-		$month_out = mktime('','','',$month+1,$day,$year);
-		$week_out = mktime('','','',$month,$day+7,$year);
+		$year_out = carl_mktime('','','',$month,$day,$year+1);
+		$month_out = carl_mktime('','','',$month+1,$day,$year);
+		$week_out = carl_mktime('','','',$month,$day+7,$year);
 		
-		$week = date('Y-m-d',$week_out);
-		$month = date('Y-m-d',$month_out);
-		$year = date('Y-m-d',$year_out);
+		$week = carl_date('Y-m-d',$week_out);
+		$month = carl_date('Y-m-d',$month_out);
+		$year = carl_date('Y-m-d',$year_out);
 		
 		return array('week'=>$week,'month'=>$month,'year'=>$year);
 	} // }}}
@@ -961,7 +993,7 @@ class reasonCalendar
 		{
 			$result = current($test_results);
 			//echo '<strong>contains_any_events_after</strong>: found event after req.date '.$date.'. id: '.$result->id().'; datetime: '.$result->get_value('datetime').'; ret true<br />';
-			$this->known_upper_limit = prettify_mysql_datetime($result->get_value('datetime'),'Y-m-d');
+			$this->known_upper_limit = substr($result->get_value('datetime'),0,10);
 			return true;
 		}
 		else
