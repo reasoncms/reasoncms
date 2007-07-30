@@ -84,7 +84,7 @@ if ($detail_mode)
 		{
 			$pages = array_merge (array_keys($module_pages), $pages);
 		}
-		$pages = array_rand(array_flip($pages), count($pages)); // randomize array
+		shuffle($pages); // randomize array
 		foreach ($pages as $page_id)
 		{
 			$page =& $result[$page_id];
