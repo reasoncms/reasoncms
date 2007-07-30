@@ -189,7 +189,7 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		$capacity = $slot_values['registration_slot_capacity'];
 		$registrant_str = $slot_values['registrant_data'];
 		
-		if($event_entity['repeat'] != 'none')
+		if($event_entity['recurrence'] != 'none')
 		{
 			//if the last occurence of this event hasn't already happened, figure out which registrants registered for the next date.
 			if($event_entity['last_occurence'] > date('Y-m-d'))
