@@ -2,6 +2,7 @@
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'classes/calendar.php' );
 reason_include_once( 'classes/calendar_grid.php' );
+reason_include_once( 'classes/icalendar.php' );
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsModule';
 
@@ -48,6 +49,13 @@ class EventsModule extends DefaultMinisiteModule
 						);
 	
 	var $views_no_index = array('daily','weekly','monthly');
+	/**
+	 * Toggles on and off the links to iCalendar-formatted data.
+	 *
+	 * Set to true to turn on the links; false to turn them off
+	 * This is still an experimental feature (the icalendar export is not 100% tested yet) so only turn this on for testing purposes.
+	 */
+	var $show_icalendar_links = false;
 	
 	//////////////////////////////////////
 	// General Functions
@@ -55,47 +63,18 @@ class EventsModule extends DefaultMinisiteModule
 	
 	function init( $args = array() ) // {{{
 	{
-		//xdebug_start_profiling();
-		// Profiling -- mr
-		//$s = get_microtime();
-		
 		parent::init( $args );
 		
-		// Profiling -- mr
-		//$e = get_microtime();
-		//echo '<!-- Events parent init: '.round(1000*($e - $s), 1).' ms -->';
-		
-		// Profiling -- mr
-		//$s = get_microtime();
-
 		$this->validate_inputs();
 		
-		// Profiling -- mr
-		//$e = get_microtime();
-		//echo '<!-- Events validate inputs: '.round(1000*($e - $s), 1).' ms -->';
-		
-		// Profiling -- mr
-		//$s = get_microtime();
-		
 		$this->register_passables();
-		
-		// Profiling -- mr
-		//$e = get_microtime();
-		//echo '<!-- Events reg passables: '.round(1000*($e - $s), 1).' ms -->';
 		
 		$this->handle_jump();
 		
 		
 		if(empty($this->request['event_id']))
 		{
-			// Profiling -- mr
-			//$s = get_microtime();
-			
 			$this->init_list();
-		
-			// Profiling -- mr
-			//$e = get_microtime();
-			//echo '<!-- Events init list func: '.round(1000*($e - $s), 1).' ms -->';
 		}
 		else
 			$this->init_event();
@@ -103,8 +82,8 @@ class EventsModule extends DefaultMinisiteModule
 
 	function get_cleanup_rules()
 	{
-		//$calendar = new reasonCalendar(array());
 		$views = reasonCalendar::get_views();
+		$formats = array('ical');
 
 		return array(
 			'audience' => array(
@@ -147,6 +126,10 @@ class EventsModule extends DefaultMinisiteModule
 			'search' => array(
 				'function'=>'turn_into_string'
 			),
+			'format' => array(
+				'function'=>'check_against_array',
+				'extra_args'=>$formats,
+			),
 		);
 	}
 	
@@ -176,17 +159,8 @@ class EventsModule extends DefaultMinisiteModule
 	function validate_inputs()
 	{
 		
-		
-		// Profiling -- mr
-		//$s = get_microtime();
-
-		//$calendar = new reasonCalendar(array());
 		$views = reasonCalendar::get_views();
 		
-		// Profiling -- mr
-		//$e = get_microtime();
-		//echo '<!-- Events validate inputs new reason calendar: '.round(1000*($e - $s), 1).' ms -->';
-			
 		if(!empty($this->request['start_date']))
 			$this->request['start_date'] = prettify_mysql_datetime($this->request['start_date'], 'Y-m-d');
 			
@@ -230,8 +204,6 @@ class EventsModule extends DefaultMinisiteModule
 	
 	function run() // {{{
 	{
-		// Profiling -- mr
-		//$s = get_microtime();
 		echo '<div id="'.$this->div_id.'">'."\n";
 		if (empty($this->request['event_id']))
 			$this->list_events();
@@ -239,12 +211,6 @@ class EventsModule extends DefaultMinisiteModule
 			$this->show_event();
 		echo '</div>'."\n";
 		
-		
-		
-		// Profiling -- mr
-		//$e = get_microtime();
-		//echo '<!-- Events run: '.round(1000*($e - $s), 1).' ms -->';
-		//xdebug_dump_function_profile(6);
 	} // }}}
 	
 	//////////////////////////////////////
@@ -257,6 +223,30 @@ class EventsModule extends DefaultMinisiteModule
 		$this->tomorrow = date('Y-m-d',strtotime($this->today.' +1 day'));
 		$this->yesterday = date('Y-m-d',strtotime($this->today.' -1 day'));
 		
+		if(!empty($this->request['format']) && $this->request['format'] == 'ical')
+		{
+			$this->init_and_run_ical_calendar();
+		}
+		else
+		{
+			$this->init_html_calendar();
+		}
+		
+	}
+	function init_and_run_ical_calendar()
+	{
+		$init_array = $this->make_reason_calendar_init_array($this->today, '', 'all');
+		
+		$this->calendar = new reasonCalendar($init_array);
+		
+		$this->calendar->run();
+		
+		$events = $this->calendar->get_all_events();
+		
+		$this->export_ical($events);
+	}
+	function init_html_calendar()
+	{
 		$start_date = '';
 		$end_date = '';
 		$view = '';
@@ -275,15 +265,8 @@ class EventsModule extends DefaultMinisiteModule
 		
 		$init_array = $this->make_reason_calendar_init_array($start_date, $end_date, $view);
 		$this->calendar = new reasonCalendar($init_array);
-	
-		// Profiling -- mr
-		//$s = get_microtime();
 		
 		$this->calendar->run();
-		
-		// Profiling -- mr
-		//$e = get_microtime();
-		//echo '<!-- Calendar run: '.round(1000*($e - $s), 1).' ms -->';
 	}
 	
 	function list_events()
@@ -344,6 +327,8 @@ class EventsModule extends DefaultMinisiteModule
 		echo '<div class="foot">'."\n";
 		$this->show_navigation();
 		// $this->show_options_bar();
+		if($this->show_icalendar_links)
+			$this->show_list_export_links();
 		$this->show_feed_link();
 		echo '</div>'."\n";
 	}
@@ -434,11 +419,9 @@ class EventsModule extends DefaultMinisiteModule
 			$ret .= '<h4><label for="calendar_search_above">';
 			if($needs_intro)
 				$ret .= 'Events ';
-			echo 'containing</label></h4> ';
-			ob_start();
-			$this->show_search_form('calendar_search_above',true);
-			$this->show_search_other_actions();
-			$ret .= ob_end_flush();
+			$ret .= 'containing</label></h4> ';
+			$ret .= $this->get_search_form('calendar_search_above',true);
+			$ret .= $this->get_search_other_actions();
 			$ret .= '</li>';
 		}
 		return $ret;
@@ -1274,14 +1257,15 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		echo '<div class="search">'."\n";
 		echo '<h4><label for="calendar_search">Search:</label></h4>'."\n";
-		$this->show_search_form();
-		$this->show_search_other_actions();
+		echo $this->get_search_form();
+		echo $this->get_search_other_actions();
 		echo '</div>'."\n";
 	}
 	
-	function show_search_form($input_id = 'calendar_search',$use_val_for_width = false)
+	function get_search_form($input_id = 'calendar_search',$use_val_for_width = false)
 	{
-		echo '<form action="?" method="get">'."\n";
+		$ret = '';
+		$ret .= '<form action="?" method="get">'."\n";
 		$width = 10;
 		if(!empty($this->request['search']))
 		{
@@ -1297,31 +1281,34 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		else
 			$val = '';
-		echo '<input type="text" name="search" class="search" id="'.$input_id.'" value="'.$val.'" size="'.$width.'" />'."\n";
-		echo '<input type="submit" name="go" value="go" />'."\n";
+		$ret .= '<input type="text" name="search" class="search" id="'.$input_id.'" value="'.$val.'" size="'.$width.'" />'."\n";
+		$ret .= '<input type="submit" name="go" value="go" />'."\n";
 		foreach($this->passables as $passable)
 		{
 			if(!empty($this->request[$passable]) && !in_array($passable,array('search','view','end_date') ) )
-				echo '<input type="hidden" name="'.$passable.'" value="'.htmlspecialchars($this->request[$passable]).'" />'."\n";
+				$ret .= '<input type="hidden" name="'.$passable.'" value="'.htmlspecialchars($this->request[$passable]).'" />'."\n";
 		}
-		echo '</form>'."\n";
+		$ret .= '</form>'."\n";
+		return $ret;
 	}
-	function show_search_other_actions()
+	function get_search_other_actions()
 	{
+		$ret = '';
 		if(!empty($this->request['search']))
 		{
-			echo '<div class="otherActions">'."\n";
-			echo '<span class="clear"><a href="'.$this->construct_link(array('search'=>'','view'=>'')).'">Clear search</a></span> | '."\n";
+			$ret .= '<div class="otherActions">'."\n";
+			$ret .= '<span class="clear"><a href="'.$this->construct_link(array('search'=>'','view'=>'')).'">Clear search</a></span> | '."\n";
 			if($this->calendar->get_start_date() > $this->get_min_year().'-01-01')
 			{
-				echo '<span class="toArchive"><a href="'.$this->construct_link(array('start_date'=>$this->get_min_year().'-01-01','view'=>'')).'">Search archived events for <em class="searchTerm">"'.htmlspecialchars($this->request['search']).'"</em></a></span>'."\n";
+				$ret .= '<span class="toArchive"><a href="'.$this->construct_link(array('start_date'=>$this->get_min_year().'-01-01','view'=>'')).'">Search archived events for <em class="searchTerm">"'.htmlspecialchars($this->request['search']).'"</em></a></span>'."\n";
 			}
 			else
 			{
-				echo '<span class="toCurrent"><a href="'.$this->construct_link(array('start_date'=>$this->today,'view'=>'')).'">Search upcoming events for <em class="searchTerm">"'.htmlspecialchars($this->request['search']).'"</em></a></span>'."\n";
+				$ret .= '<span class="toCurrent"><a href="'.$this->construct_link(array('start_date'=>$this->today,'view'=>'')).'">Search upcoming events for <em class="searchTerm">"'.htmlspecialchars($this->request['search']).'"</em></a></span>'."\n";
 			}
-			echo '</div>'."\n";
+			$ret .= '</div>'."\n";
 		}
+		return $ret;
 	}
 	
 	function make_reason_calendar_init_array($start_date, $end_date = '', $view = '')
@@ -1384,6 +1371,26 @@ class EventsModule extends DefaultMinisiteModule
 		if($type->get_value('feed_url_string'))
 			echo '<div class="feedInfo"><a href="'.$this->parent->site_info->get_value('base_url').MINISITE_FEED_DIRECTORY_NAME.'/'.$type->get_value('feed_url_string').'" title="RSS feed for this site\'s events">xml</a></div>';
 	}
+	function show_list_export_links()
+	{
+		echo '<div class="iCalExport">'."\n";
+		$query_string = $this->construct_link(array('start_date'=>'','view'=>'','end_date'=>'','format'=>'ical'));
+		if(!empty($this->request['category']) || !empty($this->request['audience']) || !empty($this->request['search']))
+		{
+			$subscribe_text = 'Subscribe to this view';
+			$download_text = 'Download these events';
+		}
+		else
+		{
+			$subscribe_text = 'Subscribe to this calendar';
+			$download_text = 'Download all events';
+		}
+		echo '<a href="webcal://'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$query_string.'">'.$subscribe_text.'</a>';
+		if(!empty($this->events))
+			echo ' | <a href="'.$query_string.'">'.$download_text.'</a>';
+		//$this->parent->pages->get_full_url( $this->page_id, true).$query_string
+		echo '</div>'."\n";
+	}
 	
 	
 	///////////////////////////////////////////
@@ -1393,23 +1400,71 @@ class EventsModule extends DefaultMinisiteModule
 	function init_event() // {{{
 	{
 		$this->event = new entity($this->request['event_id']);
-		if ($this->event->get_values() && ($this->event->get_value('type') == id_of('event_type')) && ($this->event->get_value('show_hide') == 'show'))
+		if ($this->event_ok_to_show($this->event))
 		{
-			$this->parent->add_crumb( $this->event->get_value( 'name' ) );
-			$this->parent->pages->make_current_page_a_link();
-			if($this->event->get_value('keywords'))
+			if(!empty($this->request['format']) && $this->request['format'] == 'ical')
 			{
-					$this->parent->add_head_item('meta',array( 'name' => 'keywords', 'content' => htmlspecialchars($this->event->get_value('keywords'))));
+				$event = carl_clone($this->event);
+				if(!empty($this->request['date']))
+				{
+					$event->set_value('recurrence','none');
+					$event->set_value('datetime',$this->request['date'].' '.prettify_mysql_datetime($event->get_value('datetime'), 'H:i:s'));
+				}
+				$this->export_ical(array($event));
+			}
+			else
+			{
+				$this->parent->add_crumb( $this->event->get_value( 'name' ) );
+				$this->parent->pages->make_current_page_a_link();
+				if($this->event->get_value('keywords'))
+				{
+						$this->parent->add_head_item('meta',array( 'name' => 'keywords', 'content' => htmlspecialchars($this->event->get_value('keywords'),ENT_QUOTES,'UTF-8')));
+				}
 			}
 		}
 	} // }}}
+	function export_ical($events)
+	{
+		while(ob_get_level() > 0)
+			ob_end_clean();
+		$ical = $this->get_ical($events);
+		$size_in_bytes = strlen($ical);
+		if(count($events) > 1)
+			$filename = 'events.ics';
+		else
+			$filename = 'event.ics';
+		header( reason_iCalendar::get_icalendar_header());
+		header('Content-Disposition: attachment; filename='.$filename.'; size='.$size_in_bytes);
+		echo $ical;
+		die();
+	}
+	function get_ical($events)
+	{
+		if(!is_array($events))
+		{
+			trigger_error('get_ical needs an array of event entities');
+			return '';
+		}
+		
+		$calendar = new reason_iCalendar();
+  		$calendar -> set_events($events);
+		
+  		return $calendar -> get_icalendar_events();
+	}
 	function show_event() // {{{
 	{
-		if ($this->event->get_values() && ($this->event->get_value('type') == id_of('event_type')) && ($this->event->get_value('show_hide') == 'show'))
+		if ($this->event_ok_to_show($this->event))
 			$this->show_event_details();
 		else
 			$this->show_event_error();
 	} // }}}
+	function event_ok_to_show($event)
+	{
+		if ($event->get_values() && ($event->get_value('type') == id_of('event_type')) && ($event->get_value('show_hide') == 'show'))
+			return true;
+		else
+			return false;
+	}
 	function show_event_details() // {{{
 	{
 		$e =& $this->event;
@@ -1431,6 +1486,8 @@ class EventsModule extends DefaultMinisiteModule
 		if ($e->get_value('sponsor'))
 			echo '<p class="sponsor"><strong>Sponsored by:</strong> '.$e->get_value('sponsor').'</p>'."\n";
 		$this->show_contact_info($e);
+		if($this->show_icalendar_links)
+			$this->show_item_export_link($e);
 		if ($e->get_value('content'))
 			echo '<div class="eventContent">'.$e->get_value( 'content' ).'</div>'."\n";
 		$this->show_dates($e);
@@ -1520,7 +1577,7 @@ class EventsModule extends DefaultMinisiteModule
 	} // }}}
 	function show_repetition_info(&$e) // {{{
 	{
-		$rpt = $e->get_value('repeat');
+		$rpt = $e->get_value('recurrence');
 		$freq = '';
 		$words = array();
 		$dates_text = '';
@@ -1598,6 +1655,18 @@ class EventsModule extends DefaultMinisiteModule
 			echo '</ul>'."\n";
 			echo '</div>'."\n";
 		}
+	}
+	function show_item_export_link($e) {
+		echo '<div class="export">'."\n";
+		if($e->get_value('recurrence') == 'none' || empty($this->request['date']))
+		{
+			echo '<a href="'.$this->construct_link(array('event_id'=>$e->id(),'format'=>'ical')).'">Import into your calendar program</a>';
+		}
+		else
+		{
+			echo 'Add to your calendar: <a href="'.$this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>$this->request['date'])).'">This occurence</a> | <a href="'.$this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>'')).'">All occurrences</a>';
+		}
+		echo '</div>'."\n";
 	}
 	function show_back_link() // {{{
 	{
