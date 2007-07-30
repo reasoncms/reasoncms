@@ -281,4 +281,14 @@ function get_microtime() // {{{
 	return ((float)$usec + (float)$sec);
 } // }}}
 
+function parse_mysql_date($date) // {{{
+{
+	// returns an array of year, month, day, timestamp
+	$output = array();
+	list( $idate ) = explode( ' ',$date );
+	list( $output['year'],$output['month'],$output['day']) = explode( '-',$idate );
+	$output['timestamp'] = get_unix_timestamp( $output['year'].'-'.$output['month'].'-'.$output['day'] );
+	return $output;
+} // }}}
+
 ?>
