@@ -74,7 +74,15 @@
 			trigger_error('generate_page called with page_id ' . $page_id . ' which is not a live or pending page', FATAL);
 			die;
 		}
-		$site = $page->get_owner();
+		
+		//$site = $page->get_owner();
+		$site_id = get_owner_site_id($page_id);
+		if (empty($site_id))
+		{
+			trigger_error('page must have an owner site to be displayed', FATAL);
+			die;
+		}
+		$site = new entity($site_id);
 		if ($site->id() != $site_id)
 		{
 			trigger_error('generate page called with site_id ' . $site_id . ', which is not the owner of page_id ' . $page_id, FATAL);
@@ -115,6 +123,7 @@
 		So , in the interest of genuine profiling, we'll just always get the start time
 		and unly use it if there is a 'timing' variable in the request string. */
 	$s = get_microtime();
+	//xdebug_start_profiling();
 	
 	$site_id = !empty( $_GET['site_id'] ) ? turn_into_int($_GET['site_id']) : ''; // force to int
 	$page_id = !empty( $_GET['page_id'] ) ? turn_into_int($_GET['page_id']) : ''; // force to int
@@ -227,23 +236,28 @@
 			}
 			else
 			{
-				$filename = 'default.php';
+				trigger_error('Theme id '.$theme->id().' does not have a template associated with it, so minisite index cannot determine which template to use', FATAL);
+				die();
 			}
 			
 			$include_path = 'minisite_templates/'.$filename;
 			reason_include_once( $include_path );
-			$minisite_template = $GLOBALS[ '_minisite_template_class_names' ][ $filename ];
+			if(empty($GLOBALS[ '_minisite_template_class_names' ][ $filename ]))
+			{
+				trigger_error('Unable to use specified template ('.htmlspecialchars($filename,ENT_QUOTES,'UTF-8').') because it does not have a class name properly set in the array $GLOBALS[ \'_minisite_template_class_names\' ].');
+				reason_include_once( 'minisite_templates/default.php' );
+				$minisite_template = $GLOBALS[ '_minisite_template_class_names' ][ 'default' ];
+			}
+			else
+			{
+				$minisite_template = $GLOBALS[ '_minisite_template_class_names' ][ $filename ];
+			}
 			
 			$t = new $minisite_template;
-			if( !empty( $template ) )
-				$t->template_id = $template->id();
-			else
-				$t->template_id = id_of( 'default_minisite_template' );
-			if( $theme )
-				$t->set_theme( $theme );
+			$t->template_id = $template->id();
+			$t->set_theme( $theme );
 			$t->initialize($site_id,$page_id);
 			$t->run();
-			
 			$page = ob_get_contents();
 			ob_end_clean();
 		}
@@ -285,4 +299,5 @@
 		$e = get_microtime();
 		echo '<!-- start time: '.$s.'   end time: '.$e.'   total time: '.round(1000*($e - $s), 1).' ms -->';
 	}
+	//xdebug_dump_function_profile(4);
 ?>
