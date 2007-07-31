@@ -686,6 +686,8 @@
 	// This is for the session_cookie class, which is not fully implemented.
 	//define('REASON_COOKIE_DOMAIN','.domain_name.domain');
 	
+	define( 'REASON_ICALENDAR_UID_DOMAIN','reason');
+	
 	/**
 	 * Record the types that have feeds for the editor link 
 	 *
