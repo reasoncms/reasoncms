@@ -75,6 +75,8 @@
     {
       $icalendar_event = "";
       $icalendar_event .= 'BEGIN:VEVENT' . "\r\n";
+	  
+	  $icalendar_event .= 'UID:'.$this->_fold_text(str_replace(array('-',' ',':'),'',$event->get_value('creation_date')).'-'.$event->id().'@'.REASON_ICALENDAR_UID_DOMAIN)."\r\n";
      
       //SUMMARY
       if (strlen($event -> get_value('name')) != 0)
@@ -109,13 +111,14 @@
         else
         {
           $icalendar_event .= 'DTSTART:' . $timestamp . "\r\n";
+		  //DURATION
+		  if ((strlen($event -> get_value('hours')) != 0) || (strlen($event -> get_value('minutes')) != 0))
+					if ($event -> get_value('hours') != 0 || $event -> get_value('minutes') != 0)
+				$icalendar_event .= $this -> _create_duration($event -> get_value('hours'), $event -> get_value('minutes'));
+		  else
+				$icalendar_event .= $this -> _create_duration('0','0');
         }
       }
-      
-      //DURATION
-      if ((strlen($event -> get_value('hours')) != 0) || (strlen($event -> get_value('minutes')) != 0))
-				if ($event -> get_value('hours') != 0 || $event -> get_value('minutes') != 0)
-	        $icalendar_event .= $this -> _create_duration($event -> get_value('hours'), $event -> get_value('minutes'));
       
       //Recurrence Rule
       if ($event -> get_value('recurrence') != 'none')
@@ -183,7 +186,12 @@
     {
       $rrule = 'RRULE:';
       $rrule .= 'FREQ=' . strtoupper($repeat) . ';';
-			
+		
+	  $end_date = substr($end_date,0,10);
+	  if($end_date != '0000-00-00')
+	  	$end_date = $end_date.' 23:59:59';
+	  else
+	  	$end_date = $end_date.' 00:00:00';
       $end = $this -> _create_datetime($end_date, $utc);
       if ($end != '00000000T000000')
         $rrule .= 'UNTIL=' . $end . ';';
