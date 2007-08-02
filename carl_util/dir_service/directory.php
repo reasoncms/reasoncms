@@ -467,8 +467,9 @@ class directory_service {
 			}
 			if (isset($record))
 			{
-				if (isset($record[strtolower($attr)]))
-					return $record[strtolower($attr)][0];
+				$attr = strtolower($attr);
+				if (isset($record[$attr]) && isset($record[$attr][0]))
+					return $record[$attr][0];
 			}
 		}
 		return '';
