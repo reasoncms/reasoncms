@@ -94,16 +94,19 @@
 					$full_name = $this->parent->site_info->get_value('name_cache');
 				}
 				
-				if (!empty($email) && !empty($full_name))
+				if (!empty($full_name))
 				{
 					// show footer information
 					echo $this->parent->site_info->get_value('name').' pages maintained by ';
 					//echo $this->_get_opening_mailto_anchor_tag($maintainer);
-					echo '<a href="mailto:'.$email.'">'.$full_name.'</a>';
+					if(!empty($email))
+						echo '<a href="mailto:'.htmlspecialchars($email,ENT_QUOTES,'UTF-8').'">'.htmlspecialchars($full_name,ENT_QUOTES,'UTF-8').'</a>';
+					else
+						echo $full_name;
 				}
 				else
 				{
-					trigger_error('Could not determine site maintainer name and/or e-mail address - check to make sure site maintainer username - ' . $maintainer . ' - is valid');
+					trigger_error('Could not identify site maintainer - check to make sure username - ' . $maintainer . ' - is valid');
 				}
 			}
 		}
