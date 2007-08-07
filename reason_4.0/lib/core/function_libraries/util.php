@@ -751,7 +751,7 @@
 	function get_safer_html($string)
 	{
 		require_once('HTML/Safe.php');
-		$parser = & new HTML_Safe();
+		$parser = new HTML_Safe();
 		$parser->attributes = array('dynsrc');
 		return $parser->parse($string);
 	}
