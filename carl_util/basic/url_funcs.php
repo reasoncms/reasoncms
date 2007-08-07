@@ -24,7 +24,7 @@ function carl_make_link( $new_request_vars = array(''), $base_path = '', $type =
 	$baseurl = $parts['scheme'] . '://' . $parts['host'] . $base_path;
 	if ($type == 'relative') $baseurl = $base_path;
 
-	$params = array_merge( $cur_request_vars, $new_request_vars );
+	$params = array_merge( (array)$cur_request_vars, (array)$new_request_vars );
 	$link_pieces = array();
 	$params = urlencode_array_keys_and_values($params);
 	foreach( $params AS $key => $val )
@@ -64,7 +64,7 @@ function carl_construct_link ( $new_request_vars = array(''), $preserve_request_
 				$preserve_array[$key] = $cur_request_vars[$key];
 			}
 		}
-		$params = (isset($preserve_array)) ? array_merge( $preserve_array, $new_request_vars ) : $new_request_vars;
+		$params = (isset($preserve_array)) ? array_merge( (array)$preserve_array, (array)$new_request_vars ) : $new_request_vars;
 		return carl_make_link( $params, $base_path, '', true, false );
 	}
 }
@@ -88,7 +88,7 @@ function carl_construct_relative_link ( $new_request_vars = array(''), $preserve
 				$preserve_array[$key] = $cur_request_vars[$key];
 			}
 		}
-		$params = (isset($preserve_array)) ? array_merge( $preserve_array, $new_request_vars ) : $new_request_vars;
+		$params = (isset($preserve_array)) ? array_merge( (array)$preserve_array, (array)$new_request_vars ) : $new_request_vars;
 		return carl_make_link( $params, $base_path, 'relative', true, false );
 	}
 }
@@ -117,7 +117,7 @@ function carl_construct_redirect( $new_request_vars = array(''), $preserve_reque
 				$preserve_array[$key] = $cur_request_vars[$key];
 			}
 		}
-		$params = (isset($preserve_array)) ? array_merge( $preserve_array, $new_request_vars ) : $new_request_vars;
+		$params = (isset($preserve_array)) ? array_merge( (array)$preserve_array, (array)$new_request_vars ) : $new_request_vars;
 		return carl_make_link( $params, $base_path, '', false, false );
 	}
 }
