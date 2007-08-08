@@ -339,9 +339,21 @@ mapping.', HIGH );
 					if( chmod( $this->orig_file.'.bak', 0666 ) === FALSE )
 						trigger_error( 'Could not chmod the backup htaccess file', WARNING );
 				}
+				
 				// move the new file to the old position atomically
+				// rename doesn't work right under windows PHP when the destination file exists ... so we use a fallback
+				// added attempt to copy & unlink -cf 8/8/2007
 				if( rename( $this->test_file, $this->orig_file ) === FALSE )
-					trigger_error( 'Unable to rename new rewrites file over old file', HIGH );
+				{
+					if( copy ( $this->test_file, $this->orig_file) === FALSE )
+					{
+						trigger_error( 'Unable to rename new rewrites file over old file', HIGH );
+                    }
+                    else
+                    {
+                        unlink ( $this->test_file );
+					}
+				}
 				// make it world writable so anyone can add rules or other stuff if need be
 				if( !chmod( $this->orig_file, 0666 ) )
 					trigger_error( 'Unable to chmod htaccess file', WARNING );
