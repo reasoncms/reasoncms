@@ -1323,7 +1323,7 @@
 		/**
 		*  Hook for child classes that have a default set of options (e.g. {@link stateType}, {@link languageType}).
 		*/
-		function load_options()
+		function load_options( $args = array() )
 		{
 		}
 
@@ -1607,7 +1607,7 @@
 									  'prettify_file_name',
 									  'directory');
 	
-		function load_options( $args )
+		function load_options( $args = array())
 		{
 			$files = array();
 			if ( isset( $this->directory ) )
@@ -1645,7 +1645,7 @@
 	* @package disco
 	* @subpackage plasmature
 	*/
-	class languageType extends selectType // {{{
+	class languageType extends select_no_sortType // {{{
 	{
 	 	var $type = 'language';
 		var $type_valid_args = array( 'exclude_these_languages' );
@@ -1659,7 +1659,7 @@
 		/**
 		*  Adds the default languages to the {@link options} array.
 		*/
-		function load_options() // {{{
+		function load_options( $args = array() ) // {{{
 		{
 			$languages = array(
 								'eng' => 'English',
@@ -1752,7 +1752,7 @@
 		/**
 		*  Populates the {@link options} array.
 		*/
-		function load_options()
+		function load_options( $args = array())
 		{
 			$this->load_states();
 			//if use_not_in_usa is set to 'top', put it at the top of the select
@@ -1848,7 +1848,7 @@
 		var $use_not_in_usa_option = true;
 		var $sort_options = false;		
 		
-		function load_options()
+		function load_options( $args = array())
 		{
 			$this->load_states();
 			$this->options[] = '--';
@@ -1909,7 +1909,7 @@
 		/**
 		* Populates the {@link options} array with a default list of countries.
 		*/
-		function load_options() // {{{
+		function load_options( $args = array() ) // {{{
 		{
 			$countries = array(
 				'USA' => 'United States of America',
@@ -2170,7 +2170,7 @@
 		var $type_valid_args = array('date_format'); 
 		var $sort_options = false;
 
-		function load_options() // {{{
+		function load_options( $args = array() ) // {{{
 		{
 			for($month = 1; $month <= 12; $month++)
 			{
@@ -2189,7 +2189,7 @@
 		var $table;
 		var $type_valid_args = array('table');
 		
-		function load_options()
+		function load_options( $args = array() )
 		{
 			// see if table is set
 			if ( !isset( $this->table ) OR empty( $this->table ) )
@@ -2260,7 +2260,7 @@
 									   'empty_option',
 									  ); 
 
-		function load_options()
+		function load_options( $args = array() )
 		{
 			$this->add_numrange_to_options();
 		}
@@ -2282,7 +2282,7 @@
 	{
 		var $type = 'age';	
 		
-		function load_options()
+		function load_options( $args = array() )
 		{
 			if( $this->start < 0 ) 
 				$this->start = 0;
@@ -2317,7 +2317,7 @@
 										'num_years_after_today',
 									  ); 
 				 
-		function load_options()
+		function load_options( $args = array() )
 		{		
 			$this->determine_start_year();
 			$this->determine_end_year();
