@@ -2,7 +2,6 @@
 include_once( 'paths.php' );
 include_once( CARL_UTIL_INC . 'error_handler/error_handler.php' );
 $GLOBALS['_current_db_connection_name'] = '';
-require_once( 'XML/Unserializer.php'); // Requires PEAR XML_Serialize package
 
 /**
  * Wraps up MySQL database connection code.
@@ -87,21 +86,21 @@ function get_db_credentials( $conn_name )
 			trigger_error( 'Unable to get db connection info', FATAL );
 		}
 
-                $xml = file_get_contents($db_file);
-                if(!empty($xml))
-                {
-                        $unserializer = &new XML_Unserializer();
-                        $unserializer->unserialize($xml);
-                        $data_array = $unserializer->getUnserializedData();
-
-			//normalize format;
-			if (isset($data_array['database']['connection_name'])) 
-				$db_array['database'][0] = $data_array['database'];
-			else $db_array = $data_array;
-
-			foreach ($db_array['database'] as $my_db)
-			{
-				$db_info[$my_db['connection_name']] = $my_db;
+        $xml = file_get_contents($db_file);
+        if(!empty($xml))
+        {
+        	$parser = xml_parser_create('');
+			xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
+			xml_parse_into_struct($parser, $xml, $vals, $index);
+			xml_parser_free($parser);
+			foreach ($index['CONNECTION_NAME'] as $key=>$val)
+        	{
+        		$tmp = array();
+        		$tmp['db'] = $vals[$index['DB'][$key]]['value'];
+        		$tmp['user'] = $vals[$index['USER'][$key]]['value'];
+				$tmp['password'] = $vals[$index['PASSWORD'][$key]]['value'];
+				$tmp['host'] = $vals[$index['HOST'][$key]]['value'];
+				$db_info[$vals[$val]['value']] = $tmp;
 			}
 		}
 		else
@@ -122,4 +121,5 @@ function get_db_credentials( $conn_name )
 		trigger_error('Unable to use database connection '.$conn_name.' - No credential information found in database credential file', FATAL);
 	}
 }
+
 ?>
