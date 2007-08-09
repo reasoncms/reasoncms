@@ -48,7 +48,7 @@
 			{
 				// Check to see if it's before or after 7 am, and set the last colleague->ldap sync time appropriately.
 				
-				if(date('G') < 7) // it's before 7am
+				if(carl_date('G') < 7) // it's before 7am
 				{
 					$ldap_last_sync_time = strtotime('7 am yesterday');
 				}
