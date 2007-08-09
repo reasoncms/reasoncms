@@ -122,7 +122,7 @@ function get_unix_timestamp( $value ) // {{{
 	 $format = get_date_format( $value );
 	 
 	if( $format == 'mysql_datetime' )
-		$value = datetime_to_unix( $value );
+		$value = datetime_to_unix( $value, false );
 	elseif( $format == 'mysql_timestamp' )
 		$value = timestamp_to_unix( $value );
 	elseif( $format == 'exif_datetime' )
@@ -198,12 +198,16 @@ function timestamp_to_unix( $dt ) // {{{
 	else
 		return false;
 } // }}}
-function datetime_to_unix( $dt ) // {{{
+function datetime_to_unix( $dt, $verify = true ) // {{{
 {
-	list( $date, $time ) = explode( ' ', $dt );
-	list( $year, $month, $day ) = explode( '-', $date );
-	list( $hour, $minute, $second ) = explode( ':', $time );
-	return carl_mktime( $hour, $minute, $second, $month, $day, $year );
+	if ($verify && !is_mysql_datetime($dt)) return false;
+	else
+	{
+		list( $date, $time ) = explode( ' ', $dt );
+		list( $year, $month, $day ) = explode( '-', $date );
+		list( $hour, $minute, $second ) = explode( ':', $time );
+		return carl_mktime( $hour, $minute, $second, $month, $day, $year );
+	}
 } // }}}
 function exif_datetime_to_unix( $edt ) // {{{
 {
