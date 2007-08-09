@@ -230,9 +230,11 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 			//$object = unserialize(serialize($object));
 			
 			// If there is a __clone method call it on the copied object
-			if (method_exists($object, '__clone')) {
-				$object->__clone();
-			}
+			// ...crashes php 5 - nwhite
+			//if (method_exists($object, '__clone')) {
+			//	//clone $object;
+			//	//$object->__clone();
+			//}
 			return $object;
 		}
 	}
