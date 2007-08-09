@@ -1,7 +1,11 @@
 <?php
 
 	// make sure all errors hit the error handler
-	error_reporting( E_ALL );
+	if (defined('E_STRICT')) // report E_STRICT errors if php 5 is running
+	{
+		error_reporting ( E_ALL | E_STRICT );
+	}
+	else error_reporting( E_ALL );
 	
 	$host = !empty( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : 'cli';
 	
@@ -66,9 +70,6 @@
 	define( 'MEDIUM', E_USER_NOTICE );
 	define( 'WARNING', E_USER_NOTICE );
 
-	
-	
-
 	// error email from address
 	// NOTE: by looking at the email address that an error comes from you can determine
 	// where the error occurred.  errors@webdev is webdev, errors@webapps is webapps, and
@@ -93,7 +94,11 @@
 		E_NOTICE => 'NOTICE',
 	);
 
-	
+	if (defined('E_STRICT'))
+	{
+		$GLOBALS[ 'ERRNO_TO_ERROR' ][ E_STRICT ] = 'NOTICE';	
+	}
+
 	$GLOBALS[ '_ERRORS_SO_FAR' ] = array();
 	
 	function carl_util_get_error_list()
@@ -161,18 +166,18 @@
 	
 	// the actual error handler function.  this is put into place below the function declaration
 	function carlUtilErrorHandler( $errno, $errstr, $errfile, $errline, $context )
-	{
+	{	
 		// developer actions
 		if(carl_util_log_errors())
 		{
 			$GLOBALS[ '_ERRORS_SO_FAR' ][] = array('number'=>$errno,'string'=>$errstr,'file'=>$errfile,'line'=>$errline);
 		}
-		
 		if( is_developer() AND empty($_REQUEST['nodebug']) AND carl_util_output_errors())
 		{
-			// handle error_reporting the correct way.  If this type of error
-			// was not set in error_reporting(), do not report an error.
-			if( !($errno & error_reporting())) return;
+			//echo $errno;
+			
+			// handle error_reporting the correct way.
+			if( !($errno) ) return;
 			$err = '<div style="border: 1px #f00 dashed; background-color: #ddd; padding: 8px">';
 			switch ($errno)
 			{
@@ -195,6 +200,7 @@
 					$err .=  "<strong>WARNING:</strong> $errstr on line $errline of file $errfile\n";
 					break;
 				case E_NOTICE:
+				case (defined('E_STRICT') ? E_STRICT : false):
 					$err .=  "<strong>NOTICE:</strong> $errstr on line $errline of file $errfile\n";
 					break;
 				default:
@@ -221,7 +227,7 @@
 			// log the error
 			$err_parts = array(
 				'type' => $GLOBALS['ERRNO_TO_ERROR'][$errno],
-				'time' => date('r'),
+				'time' => carl_date('r'),
 				'msg' => $errstr,
 				'line' => $errline,
 				'file' => $errfile,
