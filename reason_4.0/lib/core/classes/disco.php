@@ -74,7 +74,7 @@
 			{
 				// grab the type's entity tables and fields
 				$es = new entity_selector;
-				$es->description = 'disco reason 2: load_by_type: fields associated with table '.$table;
+				$es->description = 'disco reason 2: load_by_type: fields associated with table '.$table->get_value('name');
 				$es->add_type( id_of('field') );
 				$es->add_left_relationship( $tid, relationship_id_of( 'field_to_entity_table' ) );
 				$fields = $es->run_one('','Live','field es');
