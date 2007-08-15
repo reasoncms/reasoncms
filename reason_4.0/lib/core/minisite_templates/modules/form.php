@@ -22,7 +22,7 @@
 		
 		var $acceptable_params = array('force_login' => false);
 				
-		function init( $args )
+		function init( $args = array() )
 		{
  			force_secure_if_available();
 			parent::init($args);
