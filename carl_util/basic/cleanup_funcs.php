@@ -56,7 +56,7 @@
 			{
 				foreach($value as $k => $v)
 				{
-					$z = ((is_array($v)) ? array_map("stripslashes",$v) : stripslashes($v));
+					$z = ((is_array($v)) ? array_map("conditional_stripslashes",$v) : conditional_stripslashes($v));
 					$value[$k] = $z;
 				}
 				return $value;
