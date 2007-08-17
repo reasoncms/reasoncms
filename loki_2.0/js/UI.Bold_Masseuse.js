@@ -45,6 +45,7 @@ UI.Bold_Masseuse = function()
 	this.get_fake_elem = function(strong)
 	{
 		var dummy = strong.ownerDocument.createElement('B');
+		dummy.setAttribute('loki:fake', 'true');
 		// maybe transfer attributes, too
 		while ( strong.firstChild != null )
 		{
@@ -59,8 +60,7 @@ UI.Bold_Masseuse = function()
 	 */
 	this.get_real_elem = function(dummy)
 	{
-		if ( dummy != null )
-		{
+		if (dummy != null && dummy.nodeName == 'B') {
 			var strong = dummy.ownerDocument.createElement('STRONG');
 			// maybe transfer attributes, too
 			while ( dummy.firstChild != null )
