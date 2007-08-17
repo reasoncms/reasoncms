@@ -41,8 +41,8 @@ UI.Delete_Element_Keybinding = function()
 			// loads and you haven't done anything yet), clicking below the last element in the Loki 
 			// area) and hitting backspace zaps all of the content in the Loki area and you lose the 
 			// cursor."
-			if ( document.all ) // XXX bad   // not sure this restraint is necessary, but there's 
-											 // no point risking unexpected behavior in Gecko
+			if (Util.Browser.windowsIE) // not sure this restraint is necessary, but there's 
+										// no point risking unexpected behavior in Gecko
 			{
 				this._loki.window.focus();
 				//this._loki.exec_command('SelectAll');
