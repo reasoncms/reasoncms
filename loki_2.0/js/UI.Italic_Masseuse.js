@@ -45,6 +45,7 @@ UI.Italic_Masseuse = function()
 	this.get_fake_elem = function(em)
 	{
 		var dummy = em.ownerDocument.createElement('I');
+		dummy.setAttribute('loki:fake', 'true');
 		// maybe transfer attributes, too
 		while ( em.firstChild != null )
 		{
@@ -59,7 +60,7 @@ UI.Italic_Masseuse = function()
 	 */
 	this.get_real_elem = function(dummy)
 	{
-		if ( dummy != null )
+		if (dummy != null && dummy.nodeName == 'I')
 		{
 			var em = dummy.ownerDocument.createElement('EM');
 			// maybe transfer attributes, too
