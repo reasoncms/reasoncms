@@ -373,39 +373,35 @@ UI.Loki = function(textarea, settings)
 		};
 
 		// Add each button to the toolbars
-		if ( _settings.options.test('strong') ) add_button(UI.Bold_Button);
-		if ( _settings.options.test('em') ) add_button(UI.Italic_Button);
-		if ( _settings.options.test('underline') ) add_button(UI.Underline_Button);
-		if ( _settings.options.test('headline') ) add_button(UI.Headline_Button);
-		if ( _settings.options.test('pre') ) add_button(UI.Pre_Button);
-		if ( _settings.options.test('linebreak') ) add_button(UI.BR_Button);
-		if ( _settings.options.test('hrule') ) add_button(UI.HR_Button);
-		if ( _settings.options.test('clipboard') ) add_button(UI.Copy_Button);
-		if ( _settings.options.test('clipboard') ) add_button(UI.Cut_Button);
-		if ( _settings.options.test('clipboard') ) add_button(UI.Paste_Button);
-		/*
-		if ( _settings.options.test('align') ) add_button(UI.Left_Align_Button);
-		if ( _settings.options.test('align') ) add_button(UI.Center_Align_Button);
-		if ( _settings.options.test('align') ) add_button(UI.Right_Align_Button);
-		*/
-		if ( _settings.options.test('highlight') ) add_button(UI.Highlight_Button);
-		if ( _settings.options.test('blockquote') ) add_button(UI.Blockquote_Button);
-		if ( _settings.options.test('olist') ) add_button(UI.OL_Button);
-		if ( _settings.options.test('ulist') ) add_button(UI.UL_Button);
-		if ( _settings.options.test('indenttext') ) add_button(UI.Indent_Button);
-		if ( _settings.options.test('indenttext') ) add_button(UI.Outdent_Button);
-		if ( _settings.options.test('findtext') ) add_button(UI.Find_Button);
-		if ( _settings.options.test('table') ) add_button(UI.Table_Button);
-		if ( _settings.options.test('image') ) add_button(UI.Image_Button);
-		if ( _settings.options.test('link') ) add_button(UI.Page_Link_Button);
-		//if ( _settings.options.test('link') ) add_button(UI.NLink_Button);
-		if ( _settings.options.test('anchor') ) add_button(UI.Anchor_Button);
-		//if ( _settings.options.test('link') ) add_button(UI.Mail_Link_Button);
-		//if ( _settings.options.test('link') ) add_button(UI.Asset_Link_Button);
-		if ( _settings.options.test('spell') ) add_button(UI.Spell_Button);
-		//if ( _settings.options.test('merge') ) add_button('spellCheck.gif', 'Insert mail merge form field', function() { _open_dialog('merge'); });
-		if ( _settings.options.test('source') ) add_button(UI.Source_Button);
-		if ( _settings.options.test('source') ) add_button(UI.Raw_Source_Button);
+		
+		var button_map = {
+			strong: [UI.Bold_Button],
+			em: [UI.Italic_Button],
+			underline: [UI.Underline_Button],
+			headline: [UI.Headline_Button],
+			pre: [UI.Pre_Button],
+			linebreak: [UI.BR_Button],
+			hrule: [UI.HR_Button],
+			clipboard: [UI.Copy_Button, UI.Cut_Button, UI.Paste_Button],
+			// align: [UI.Left_Align_Button, UI.Center_Aligh_Button, UI.Right_Align_Button],
+			highlight: [UI.Highlight_Button],
+			blockquote: [UI.Blockquote_Button],
+			olist: [UI.OL_Button],
+			ulist: [UI.UL_Button],
+			indenttext: [UI.Indent_Button, UI.Outdent_Button],
+			findtext: [UI.Find_Button],
+			table: [UI.Table_Button],
+			image: [UI.Image_Button],
+			link: [UI.Page_Link_Button],
+			anchor: [UI.Anchor_Button],
+			source: [UI.Source_Button, UI.Raw_Source_Button],
+		};
+		
+		for (var s in button_map) {
+			if (_settings.options.test(s)) {
+				Util.Array.for_each(button_map[s], add_button);
+			}
+		}
 	};
 
 	/**
@@ -740,6 +736,7 @@ UI.Loki = function(textarea, settings)
 		if ( _settings.options.test('anchor') ) add_masseuse(UI.Anchor_Masseuse);
 		if ( _settings.options.test('olist') || _settings.options.test('ulist') ) add_masseuse(UI.UL_OL_Masseuse);
 		if ( _settings.options.test('image') ) add_masseuse(UI.Image_Masseuse);
+		if ( _settings.options.test('hrule') ) add_masseuse(UI.HR_Masseuse);
 		add_masseuse(UI.Italic_Masseuse);
 		add_masseuse(UI.Bold_Masseuse);
 	};
@@ -896,9 +893,24 @@ UI.Loki = function(textarea, settings)
 			Util.Event.add_event_listener(_document, 'click', function() { _update_statusbar(); });
 			Util.Event.add_event_listener(_toolbar, 'click', function() { _update_statusbar(); });
 		}
+		
+		function submit_handler(ev)
+		{
+			try {
+				self.copy_iframe_to_hidden();
+			} catch (ex) {
+				alert("Loki encountered an error and was unable to translate " +
+					"your document into normal HTML.\n\n" + ex);
+				Util.Event.prevent_default(ev);
+				return false;
+			}
+			
+			return true;
+		}
 
 		// this copies the changes made in the iframe back to the hidden form element
-		Util.Event.add_event_listener(_hidden.form, 'submit', function() { self.copy_iframe_to_hidden(); });
+		Util.Event.add_event_listener(_hidden.form, 'submit',
+			Util.Event.listener(submit_handler));
 	};
 
 	/**
