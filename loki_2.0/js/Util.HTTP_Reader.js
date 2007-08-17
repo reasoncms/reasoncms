@@ -16,12 +16,14 @@ Util.HTTP_Reader = function()
  *
  * The actual XMLHttpRequest object will be available as this.request.
  *
+ * XXX: This code is icky! -EN
+ *
  * @param	uri				The URI to load
  * @param	post_data		(optional) string containing post data
  */
 Util.HTTP_Reader.prototype.load = function(uri, post_data)
 {
-	if ( document.implementation && document.implementation.createDocument )
+	if (window.XMLHttpRequest)
 	{
 		this.request = new XMLHttpRequest();
 	}
@@ -36,14 +38,16 @@ Util.HTTP_Reader.prototype.load = function(uri, post_data)
 			throw "Util.HTTP_Reader.load: Your browser supports neither the W3C method nor the MS method of reading data over http.";
 		}
 	}
+	
 	this._really_add_load_listeners();
-	if ( post_data )
-	{
+	
+	if (post_data) {
 		this.request.open('POST', uri, true);
 		this.request.send(post_data);
-	}
-	else
+	} else {
 		this.request.open('GET', uri, true);
+		this.request.send();
+	}
 };
 
 /**
@@ -51,15 +55,9 @@ Util.HTTP_Reader.prototype.load = function(uri, post_data)
  * add_event_listener cannot be used because IE doesn't have a load
  * event for xml documents, but instead has an onreadystatechange
  * event.
- * 
- * IMPORTANT NOTE: Right now, this isn't really "add" load listener,
- * but rather "set" load listener. This should be fixed, but
- * it will be a pain, since IE attachEvent doesn't work with document
- * and onreadystatechange. XXX shouldn't be too difficult now:
- * just loop through listeners in the actual listener.
  *
- * @param	listener	a function which will be called when the event is fired, and which receives as a paramater an
- *                      Event object (or, in IE, a Util.Event.DOM_Event object)
+ * @param	listener	a function which will be called when the event is fired, and which receives as a paramater the
+ *                      request object
  */
 Util.HTTP_Reader.prototype.add_load_listener = function(listener)
 {
@@ -68,11 +66,15 @@ Util.HTTP_Reader.prototype.add_load_listener = function(listener)
 
 Util.HTTP_Reader.prototype._really_add_load_listeners = function()
 {
-	for ( var i = 0; i < this._load_listeners.length; i++ )
+	var self = this;
+	
+	this.request.onreadystatechange = function()
 	{
-		var listener = this._load_listeners[i];
-		var node = this.request;
-		node.onreadystatechange = function() { if ( node.readyState == '4' || node.readyState == 'complete' ) listener(); };
-	//	Util.Event.add_event_listener(node, 'readystatechange', function() { if ( node.readyState == 4 ) listener(); });
+		var state = self.request.readyState;
+		if (state == 4 || state == 'complete') {
+			for (var i = 0; i < self._load_listeners.length; i++) {
+				self._load_listeners[i](self.request);
+			}
+		}
 	}
 };
