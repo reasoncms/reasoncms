@@ -168,6 +168,27 @@ Util.Node.has_child_node = function(node, boolean_test)
 	return Util.Node.get_last_child_node(node, boolean_test) != null;
 };
 
+/**
+ * Returns true if the node is an element node and its node name matches the
+ * tag parameter.
+ *
+ * @param	node	node on which the test will be run
+ * @param	tag		tag name to look for
+ * @return			true or false
+ */
+Util.Node.is_tag = function(node, tag)
+{
+	return (node.nodeType == Util.Node.ELEMENT_NODE && node.nodeName == tag);
+};
+
+/**
+ * Creates a function that calls is_tag using the given tag.
+ */
+Util.Node.curry_is_tag = function(tag)
+{
+	return function(node) { return Util.Node.is_tag(node, tag); };
+}
+
 Util.Node.non_whitespace_regexp = new RegExp('[^\f\n\r\t\v]', 'gi');
 Util.Node.is_non_whitespace_text_node = function(node)
 {
@@ -396,3 +417,56 @@ Util.Node.swap_node = function(new_node, old_node)
 	if ( old_node.parentNode != null )
 		old_node.parentNode.replaceChild(new_node, old_node);
 };
+
+/**
+ * Returns the previous sibling of the node that matches the given test,
+ * or null if there is none.
+ */
+Util.Node.previous_matching_sibling = function(node, boolean_test)
+{	
+	for (var sib = node.previousSibling; sib != null; sib = sib.previousSibling) {
+		if (boolean_test(sib))
+			return sib;
+	}
+	
+	return null;
+};
+
+/**
+ * Returns the next sibling of the node that matches the given test,
+ * or null if there is none.
+ */
+Util.Node.next_matching_sibling = function(node, boolean_test)
+{	
+	for (var sib = node.nextSibling; sib != null; sib = sib.nextSibling) {
+		if (boolean_test(sib))
+			return sib;
+	}
+	
+	return null;
+};
+
+/**
+ * Returns the previous sibling of the node that is an element node,
+ * or null if there is none.
+ */
+Util.Node.previous_element_sibling = function(node)
+{
+	return Util.Node.previous_matching_sibling(node, function(n) {
+		return n.nodeType == Util.Node.ELEMENT_NODE;
+	})
+};
+
+/**
+ * Returns the next sibling of the node that is an element node,
+ * or null if there is none.
+ */
+Util.Node.next_element_sibling = function(node)
+{
+	return Util.Node.next_matching_sibling(node, function(n) {
+		return n.nodeType == Util.Node.ELEMENT_NODE;
+	})
+};
+
+// end file Util.Node.js
+
