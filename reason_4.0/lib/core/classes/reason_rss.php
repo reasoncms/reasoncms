@@ -175,9 +175,13 @@
 			$val = trim( htmlspecialchars( $val, ENT_COMPAT, 'UTF-8' ) );
 			return str_replace($this->bad_strings_search, $this->bad_strings_replace, $val);
 		} // }}}
-		function _build_rss() // {{{
+		function _get_items()
 		{
 			$this->items = $this->es->run_one();
+		}
+		function _build_rss() // {{{
+		{
+			$this->_get_items();
 			//pray($this->items);
 			//echo $this->es->get_one_query();
 
