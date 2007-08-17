@@ -14,6 +14,23 @@ Util.Event = function()
 };
 
 /**
+ * Creates a wrapper around a function that ensures it will always be called
+ * with the event object as its sole parameter.
+ *
+ * @param	func	the function to wrap
+ */
+Util.Event.listener = function(func)
+{	
+	return function(e)
+	{
+		if (!e)
+			var e = window.event;
+		
+		return func(e);
+	};
+}
+
+/**
  * Adds an event listener to a node. 
  * <p>
  * N.B., for reference, that it is dangerous in IE to attach as a
