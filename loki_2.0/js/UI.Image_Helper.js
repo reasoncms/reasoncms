@@ -32,7 +32,7 @@ UI.Image_Helper = function()
 			if ( anchor_helper.get_selected_item() == null )
 			{
 				var real_image =
-					self._image_masseuse.get_real_elem(selected_image);
+					self._image_masseuse.realize_elem(selected_image);
 				selected_item =
 				{
 					uri : real_image.getAttribute('src'),
