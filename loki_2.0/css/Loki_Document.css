@@ -66,6 +66,30 @@ blockquote {
 	margin: 1em;
 }
 
+.loki__hr_container {
+	position: relative;
+}
+
+.loki__hr_container span {
+	display: none;
+}
+
+.loki__hr_container a.loki__delete {
+	display: block;
+	height: 16px;
+	width: 16px;
+	
+	position: absolute;
+	top: -8px;
+	right: 0px;
+	
+	background: url('../images/close.gif') top;
+}
+
+.loki__hr_container a.loki__delete:hover {
+	background-position: bottom;
+}
+
 .loki__table { display: table; border: 1px solid black; }
 .loki__tbody { display: table-row-group }
 .loki__tr { display: table-row; border: 1px solid black; }
