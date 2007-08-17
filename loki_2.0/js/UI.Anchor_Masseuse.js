@@ -39,7 +39,7 @@ UI.Anchor_Masseuse = function()
 			var dummies = node.getElementsByTagName(tagnames[j]);
 			for ( var i = dummies.length - 1; i >= 0; i-- )
 			{
-				if ( dummies[i].getAttribute('loki:is_really_a_named_anchor_whose_name_is') )
+				if ( dummies[i].getAttribute('loki:anchor_name') )
 				{
 					var real = self.get_real_elem(dummies[i]);
 					dummies[i].parentNode.replaceChild(real, dummies[i])
@@ -53,27 +53,18 @@ UI.Anchor_Masseuse = function()
 	 */
 	this.get_fake_elem = function(anchor)
 	{
-		//if ( document.all ) // XXX bad
-		if ( true )
-		{
-			var dummy = anchor.ownerDocument.createElement('IMG');
-			Util.Element.add_class(dummy, 'loki__named_anchor'); // changed while in if (false)
-			dummy.title = anchor.name;
-			dummy.setAttribute('loki:is_really_a_named_anchor_whose_name_is', anchor.name);
-			dummy.src = self._loki.settings.base_uri + 'images/nav/anchor.gif';
-			dummy.width = 12;
-			dummy.height = 12;
-			return dummy;
-		}
-		else
-		{
-			var dummy = anchor.ownerDocument.createElement('A');
-			Util.Element.add_class(dummy, 'loki__named_anchor');
-			//dummy.className = 'loki__named_anchor';
-			dummy.title = anchor.name;
-			dummy.setAttribute('loki:is_really_a_named_anchor_whose_name_is', anchor.name);
-			return dummy;
-		}
+		if (anchor == null)
+			return null;
+		
+		var dummy = anchor.ownerDocument.createElement('IMG');
+		Util.Element.add_class(dummy, 'loki__named_anchor');
+		dummy.title = anchor.name;
+		dummy.setAttribute('loki:fake', 'true');
+		dummy.setAttribute('loki:anchor_name', anchor.name);
+		dummy.src = self._loki.settings.base_uri + 'images/nav/anchor.gif';
+		dummy.width = 12;
+		dummy.height = 12;
+		return dummy;
 	};
 
 	/**
@@ -82,17 +73,16 @@ UI.Anchor_Masseuse = function()
 	 */
 	this.get_real_elem = function(dummy)
 	{
-		if ( dummy != null )
-		{
-			var anchor_name = dummy.getAttribute('loki:is_really_a_named_anchor_whose_name_is');
-			if ( anchor_name )
-			{
-				var anchor = Util.Anchor.create_named_anchor({document : dummy.ownerDocument, name : anchor_name});
-				//	dummy.ownerDocument.createElement('A');
-				//anchor.setAttribute('name', anchor_name); // find out why this doesn't work 
-				return anchor;
-			}
+		if (dummy == null || dummy.getAttribute('loki:fake') != 'true') {
+			return null;
 		}
-		return null;
+		
+		var anchor_name = dummy.getAttribute('loki:anchor_name');
+		if (!anchor_name)
+			return null;
+		
+		return Util.Anchor.create_named_anchor(
+			{document: dummy.ownerDocument, name: anchor_name}
+		);
 	};
 };
