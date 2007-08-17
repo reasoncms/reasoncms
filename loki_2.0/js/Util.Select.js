@@ -21,9 +21,20 @@ Util.Select = function(params)
 	this._options = [];
 
 	// Create select element
-	this.select_elem = this.document.createElement('SELECT');
+	function default_factory() { return this.document.createElement('SELECT'); }
+	
+	this.select_elem = (params.factory || default_factory)();
 	if ( this.id != null )
 		this.select_elem.setAttribute('id', this.id);
+		
+	function create_loading_option()
+	{
+		var option = this.document.createElement('OPTION');
+		option.value = '';
+		option.appendChild(this.document.createTextNode(this._loading_str));
+		
+		return option;
+	}
 
 	// Methods
 
@@ -39,9 +50,7 @@ Util.Select = function(params)
 		this._options = [];
 
 		// Add loading option
-		var o = this.document.createElement('OPTION');
-		o.appendChild(this.document.createTextNode(this._loading_str));
-		this.select_elem.appendChild(o);
+		this.select_elem.appendChild(create_loading_option());
 
 /*
 		// Create loading element
@@ -74,9 +83,9 @@ Util.Select = function(params)
 	{
 		// Create loading element
 		this._loading_elem = this.select_elem.cloneNode(true);
-		var o = this.document.createElement('OPTION');
+		/*var o = this.document.createElement('OPTION');
 		o.appendChild(this.document.createTextNode(this._loading_str));
-		this._loading_elem.appendChild(o);
+		this._loading_elem.appendChild(o);*/
 
 		// Hide actual select element
 		if ( this.select_elem.parentNode != null )
