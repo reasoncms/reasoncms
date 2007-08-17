@@ -14,7 +14,7 @@ UI.Page_Link_Dialog = function()
 	this._dialog_window_width = 615;
 	this._dialog_window_height = 410;
 	this._CURRENT_PAGE_STR = '(current page)';
-	this._LOADING_STR = 'Loading ...';
+	this._LOADING_STR = 'Loading...';
 	this._RSS_TAB_STR = 'an existing item';
 	this._CUSTOM_TAB_STR = 'a web address';
 	this._EMAIL_TAB_STR = 'an email address';
@@ -27,8 +27,10 @@ UI.Page_Link_Dialog = function()
 	 *                  <ul>
 	 *                  </ul>
 	 */
-	this.init = function(params)
+	this.init = function(loki, params)
 	{
+		self._loki = loki;
+		
 		this._anchor_names = params.anchor_names;
 		this._sites_feed = params.sites_feed;
 		this._finder_feed = params.finder_feed;
@@ -158,13 +160,17 @@ UI.Page_Link_Dialog = function()
 		//this._links_select.start_loading();
 
 		// Anchors select
-		var anchors_label = this._doc.createElement('LABEL');
-		anchors_label.id = 'anchors_label';
-		anchors_label.htmlFor = 'anchors_select';
-		anchors_label.innerHTML = 'Anchors (optional):';
-		this._links_pane.appendChild(anchors_label);
+		this._anchors_label = this._doc.createElement('LABEL');
+		this._anchors_label.id = 'anchors_label';
+		this._anchors_label.htmlFor = 'anchors_select';
+		this._anchors_label.innerHTML = 'Anchors (optional):';
+		this._links_pane.appendChild(this._anchors_label);
 
-		this._anchors_select = new Util.Select({ document : this._doc, loading_str : this._LOADING_STR, id : 'anchors_select' });
+		this._anchors_select = new Util.Select({
+			document: this._doc,
+			loading_str: this._LOADING_STR,
+			id: 'anchors_select'
+		});
 		this._links_pane.appendChild(this._anchors_select.select_elem);
 		//this._anchors_select.start_loading();
 
@@ -275,9 +281,9 @@ UI.Page_Link_Dialog = function()
 
 		if ( new_title == this._CURRENT_PAGE_STR || 
 			 new_title == this._LOADING_STR )
-			this._link_title_input.value = '';
+			this._set_link_title_input_value('');
 		else
-			this._link_title_input.value = new_title;
+			this._set_link_title_input_value(new_title);
 	};
 
 	this._add_type = function(name, feed_uri, is_selected)
@@ -373,6 +379,13 @@ UI.Page_Link_Dialog = function()
 
 		return true;
 	};
+	
+	this._sanitize_uri = function(uri)
+	{
+		return (Util.URI.extract_domain(uri) == self._loki.editor_domain())
+			? Util.URI.strip_https_and_http(uri)
+			: uri;
+	}
 
 	this._load_finder = function(feed_uri)
 	{
@@ -407,7 +420,7 @@ UI.Page_Link_Dialog = function()
 			var items = reader.get_cur_items();
 			for ( var i = 0; i < items.length; i++ )
 			{
-				var item_uri = Util.URI.strip_https_and_http(items[i].link);
+				var item_uri = self._sanitize_uri(items[i].link);
 				if ( items[i].title == 'site_feed' )
 					initially_selected_site_uri = item_uri;
 				if ( items[i].title == 'type_feed' )
@@ -452,7 +465,7 @@ UI.Page_Link_Dialog = function()
 				//var is_selected = ( items[i].isSelected == 'true' );
 				//var is_selected = ( items[i].link == self._initially_selected_site_uri );
 				//var is_selected = self._compare_uris(items[i].link, self._initially_selected_site_uri);
-				var item_uri = Util.URI.strip_https_and_http(items[i].link);
+				var item_uri = self._sanitize_uri(items[i].link);
 				var is_selected = ( item_uri == self._initially_selected_site_uri ||
 									( !self._initially_selected_site_uri &&
 									  self._default_site_regexp.test(item_uri) ) );
@@ -498,7 +511,7 @@ UI.Page_Link_Dialog = function()
 				//var is_selected = items[i].title == 'Pages';
 				//var is_selected = ( items[i].isSelected == 'true' );
 				//var is_selected = self._compare_uris(items[i].link, self._initially_selected_type_uri);
-				var item_uri = Util.URI.strip_https_and_http(items[i].link);
+				var item_uri = self._sanitize_uri(items[i].link);
 				var is_selected = ( item_uri == self._initially_selected_type_uri ||
 									( /* !self._initially_selected_type_uri */
 									  self._default_type_regexp.test(item_uri) ) );
@@ -567,7 +580,7 @@ UI.Page_Link_Dialog = function()
 				{
 					//var is_selected = ( items[i].isSelected == 'true' );
 					//var is_selected = self._compare_uris(items[i].link, self._initially_selected_nameless_uri);
-					var item_uri = Util.URI.strip_https_and_http(items[i].link);
+					var item_uri = self._sanitize_uri(items[i].link);
 					var is_selected = ( item_uri == self._initially_selected_nameless_uri );
 					self._links_select.add_option(items[i].title, item_uri, is_selected);
 				}
@@ -588,13 +601,17 @@ UI.Page_Link_Dialog = function()
 		});
 		setTimeout(function() { reader.load_next_items(); }, 100); // gives time to render
 	};
+	
+	
 
 	this._load_anchors = function(uri)
 	{
+		this._anchors_label.style.display = '';
+		
 		// Start loading
 		this._anchors_select.start_loading();
 		this._workaround_ie_select_display_bug();
-
+		
 		// Load new anchors
 		if ( uri == '' )
 		{
@@ -602,25 +619,69 @@ UI.Page_Link_Dialog = function()
 		}
 		else
 		{
-			var feed_uri = this._base_uri + 'anchors_feed.php?uri=' + encodeURI(uri);
-
-			// Load new links
-			var reader = (new Util.RSS_Reader).init(feed_uri);
-			var self = this;
-			reader.add_load_listener(function()
+			// Using this method kills two issues at the same time. By using
+			// (internally) an XMLHttpRequest object, we can examine the
+			// Content-Type header of the response and figure out whether or
+			// not we should look for anchors, and avoid creating nasty inline
+			// frames on the document containing the editor. -EN
+			
+			var dialog = this;
+			
+			function disable_anchors(request)
 			{
-				// Get anchors` names
-				var names = [];
-				var items = reader.get_cur_items();
-				for ( var i = 0; i < items.length; i++ )
-					names.push(items[i].title);
+				request.abort();
+				dialog._add_anchors([]);
+				dialog._anchors_select.select_elem.disabled = true;
+			}
+			
+			var req = new Util.Request(uri, {
+				method: 'get',
+				
+				on_interactive: function(request)
+				{
+					if (!request.successful())
+						disable_anchors(request);
+					
+					if (!dialog._test_for_anchor_availability(request))
+						disable_anchors(request);
+				},
+				
+				on_success: function(request, transport)
+				{
+					if (!dialog._test_for_anchor_availability(request))
+						disable_anchors(request);
+					
+					var parser = new Util.HTML_Parser();
+					var names = [];
 
-				// Add anchors
-				self._add_anchors(names);
+					parser.add_listener('open', function(tag, params) {
+						if (tag.toUpperCase() == 'A') {
+							if (params.name && !params.href)
+								names.push(params.name);
+						}
+					})
+					parser.parse(transport.responseText);
+
+					dialog._anchors_select.select_elem.disabled = false;
+					dialog._add_anchors(names);
+				}
 			});
-			setTimeout(function() { reader.load_next_items(); }, 100); // gives time to render
 		}
 	};
+	
+	this._test_for_anchor_availability = function(request)
+	{
+		if (
+			request.get_header('Content-Type').indexOf('text/html') == 0
+			|| request.get_header('Content-Type').indexOf('text/xml') == 0
+			|| request.get_header('Content-Type').indexOf('application/xhtml+xml') == 0
+			|| request.get_header('Content-Type').indexOf('application/xml') == 0
+		)
+		{
+			return true;
+		}
+		return false;
+	}
 
 	this._add_anchors = function(names)
 	{
@@ -852,7 +913,7 @@ UI.Page_Link_Dialog = function()
 	 */
 	this._workaround_ie_select_display_bug = function()
 	{
-		if ( document.all ) // XXX
+		if (window.attachEvent && !window.opera) // XXX: icky IE detection
 		{
 			var tab_name = this._tabset.get_name_of_selected_tab();
 			if ( tab_name != 'rss' )
@@ -962,8 +1023,18 @@ UI.Page_Link_Dialog = function()
 			new_window : this._initially_selected_item.new_window
 		}
 
-		this._link_title_input.value = this._initially_selected_item.title;
+		this._set_link_title_input_value(this._initially_selected_item.title);
 		this._new_window_checkbox.checked = this._initially_selected_item.new_window;
+	}
+	
+	this._set_link_title_input_value = function(value)
+	{
+		/* Strip any number of hyphens and spaces from beginning of title */
+		while(value.indexOf('-') == 0 || value.indexOf(' ') == 0)
+		{
+			value = value.substring(1);
+		}
+		this._link_title_input.value = value;
 	}
 
 	/**
@@ -983,12 +1054,12 @@ UI.Page_Link_Dialog = function()
 		// set new information
 		if ( this._link_information[new_name] != null )
 		{
-			this._link_title_input.value = this._link_information[new_name].link_title;
+			this._set_link_title_input_value(this._link_information[new_name].link_title);
 			this._new_window_checkbox.checked = this._link_information[new_name].new_window;
 		}
 		else
 		{
-			this._link_title_input.value = '';
+			this._set_link_title_input_value('');
 			this._new_window_checkbox.checked = false;
 		}
 	};
