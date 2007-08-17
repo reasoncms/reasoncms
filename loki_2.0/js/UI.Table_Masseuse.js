@@ -43,6 +43,7 @@ UI.Table_Masseuse = function()
 		{
 			// First, try innerHTML
 			var h = table.innerHTML;
+			// XXX: should this really be (h != null && h != '')? -EN
 			if ( h == '' || h == null )
 			{
 				h.replace( new RegExp('(<td[ ]?[^>]*>)[ ]*(</td>)', 'g'), '$1<br />$2' );
