@@ -791,7 +791,7 @@ Util.Fix_Keys.fix_delete_and_backspace = function(e, win)
 		if ( e.keyCode == e.DOM_VK_DELETE && 
 			 Util.Range.is_at_end_of_block(rng, cur_block) )
 		{
-			do_merge(cur_block, cur_block.nextSibling, sel);
+			do_merge(cur_block, Util.Node.next_element_sibling(cur_block), sel);
 		}
 		else if ( e.keyCode == e.DOM_VK_BACK_SPACE && 
 				  // both the following two are necessary to avoid
@@ -799,7 +799,8 @@ Util.Fix_Keys.fix_delete_and_backspace = function(e, win)
 				  Util.Range.is_at_beg_of_block(rng, cur_block) && 
 				  rng.isPointInRange(rng.startContainer, 0) )
 		{
-			do_merge(cur_block.previousSibling, cur_block, sel);
+			do_merge(Util.Node.previous_element_sibling(cur_block), cur_block,
+				sel);
 		}
 	}
 
