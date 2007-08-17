@@ -57,6 +57,7 @@ UI.Image_Masseuse = function()
 			placeholder.title = img.title;
 			placeholder.alt = img.alt;
 			placeholder.setAttribute('loki:src', img.src);
+			placeholder.setAttribute('loki:fake', 'true');
 			placeholder.src = new_src;
 			
 			return placeholder;
@@ -77,12 +78,16 @@ UI.Image_Masseuse = function()
 	this.unmassage_node = function(img)
 	{
 		var real = self.get_real_elem(img);
-		if (real.src != img.src)
+		if (real && real.src != img.src)
 			img.parentNode.replaceChild(real, img);
 	};
 	
 	this.get_real_elem = function(img)
 	{
+		if (img == null || img.getAttribute('loki:fake') != 'true') {
+			return null;
+		}
+		
 		var src = img.getAttribute('loki:src');
 		if (src == null)
 			return img;
@@ -94,4 +99,13 @@ UI.Image_Masseuse = function()
 		
 		return real;
 	};
+	
+	/**
+	 * If "img" is a fake element, returns its corresponding real element,
+	 * otherwise return the element itself.
+	 */
+	this.realize_elem = function(img)
+	{
+		return this.get_real_elem(img) || img;
+	}
 };
