@@ -13,8 +13,7 @@
 // privileged/HOWTO
 //
 // Gecko
-if ( !document.all ) // XXX bad
-//if ( netscape != null && netscape.security != null )
+if ('object' == typeof(Components))
 {
 	UI.Clipboard_Helper_Privileged_Iframe = document.createElement('IFRAME');
 	UI.Clipboard_Helper_Privileged_Iframe.src = UI__Clipboard_Helper_Privileged_Iframe__src;
