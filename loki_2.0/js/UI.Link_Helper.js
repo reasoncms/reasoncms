@@ -31,7 +31,8 @@ UI.Link_Helper = function()
 
 		if ( this._page_link_dialog == null )
 			this._page_link_dialog = new UI.Page_Link_Dialog();
-		this._page_link_dialog.init({ base_uri : this._loki.settings.base_uri,
+		this._page_link_dialog.init(self._loki,
+									{ base_uri : this._loki.settings.base_uri,
 						    		  anchor_names : this.get_anchor_names(),
 						    		  submit_listener : this.insert_link,
 						    		  selected_item : this.get_selected_item(),
