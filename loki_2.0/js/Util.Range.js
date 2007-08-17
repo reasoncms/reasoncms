@@ -40,8 +40,8 @@ Util.Range.create_range = function(sel)
 
 /**
  * Gets the ancestor node which surrounds the given range.
- * NB: probably better usually to use get_start_container, to
- * follow the convention used elsewhere in Loki.
+ * XXX: probably better usually to use get_start_container, to
+ * follow the convention used elsewhere in Loki. -NB
  *
  * @param	rng		the range in question
  * @return			the ancestor node which surrounds the range
@@ -269,6 +269,7 @@ Util.Range.insert_node = function(rng, node)
 */
 
 			rng.collapse(true); // collapse to start
+			// XXX (EN): Why is this temporary node pasted?
 			rng.pasteHTML('<span id="util_range_insert_node__tmp_node"></span>');
 			var tmp = node.ownerDocument.getElementById('util_range_insert_node__tmp_node');
 			tmp.parentNode.insertBefore(node, tmp);
