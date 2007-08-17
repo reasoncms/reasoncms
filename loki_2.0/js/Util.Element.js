@@ -58,13 +58,13 @@ Util.Element.has_class = function(elem, class_name)
 // string if no such attribute is set.
 Util.Element.get_all_classes = function(elem)
 {
-	if ( elem.getAttribute('class') == null )
-		return elem.getAttribute('className');
-	else
-		return elem.getAttribute('class');
-
-	// Changed to the above 2005-10-21 NF
-	//return elem.getAttribute('class');
+	if (elem == null)
+		return null;
+	
+	var cache = elem.getAttribute('class');
+	return (cache != null)
+		? cache
+		: elem.getAttribute('className');
 };
 
 // Sets the class attribute of an element to the given string which
