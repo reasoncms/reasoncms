@@ -12,29 +12,18 @@ class editorPageFeed extends defaultFeed
 	
 	function alter_feed()
 	{
-		if($this->site_specific)
-		{
-			$this->feed->set_item_field_map('author','');
-			$this->feed->set_item_field_map('description','');
-			$this->feed->set_item_field_map('pubDate','');
-			$this->feed->set_item_field_map('title','name');
-			$this->feed->set_item_field_map('link','id');
-			$this->feed->set_item_field_handler( 'link', 'make_page_link', true );
-			
-			$this->feed->es->set_num( 100000 );
-			// make sure we don't grab any pages that are not really part of the page tree
-			$this->feed->es->add_left_relationship_field( 'minisite_page_parent' , 'entity' , 'id' , 'parent_id' );
-		}
-		else
-		{
-			$this->feed->es->add_relation( '1 = 2' );
-		}
+		$this->feed->set_item_field_map('author','');
+		//$this->feed->set_item_field_map('description','name');
+		$this->feed->set_item_field_map('description','');
+		$this->feed->set_item_field_map('pubDate','');
+		$this->feed->set_item_field_map('title','prepped_name');
+		$this->feed->set_item_field_map('link','url');
 	}
 }
 
 class editorPagesRSS extends ReasonRSS
 {
-	var $trees = array();
+	var $tree = array();
 	var $page_type_id;
 	var $site;
 	
@@ -44,34 +33,64 @@ class editorPagesRSS extends ReasonRSS
 		$this->site = new entity($site_id);
 		$this->init( $site_id, $type_id );
 	} // }}}
-	function make_page_link( $page_id )
+	function _get_items()
 	{
-		if($this->items[ $page_id ]->get_value('url'))
-		{
-			return $this->items[ $page_id ]->get_value('url');
-		}
 		if(empty($this->site))
 		{
-			$owner = $this->items[ $page_id ]->get_owner();
+			$this->items = array();
 		}
 		else
 		{
-			$owner = $this->site;
+			$this->tree = new minisiteNavigation();
+			$this->tree->site_info = $this->site;
+			$this->tree->init( $this->site->id(), $this->page_type_id );
+			$tree_data = $this->tree->get_tree_data();
+			if(!empty($tree_data))
+			{
+				$this->items = $this->flatten_tree($tree_data,0);
+			}
 		}
-		
-		if(empty( $this->trees[ $owner->id() ] ) )
+	}
+	function flatten_tree($tree_data,$depth)
+	{
+		$ret = array();
+		foreach($tree_data as $id=>$info)
 		{
-			$this->trees[ $owner->id() ] = new minisiteNavigation();
-			$this->trees[ $owner->id() ]->site_info = $owner;
-			$this->trees[ $owner->id() ]->init( $owner->id(), $this->page_type_id );
+			//echo $id.'.';
+			$ret[$id] = $info['item'];
+			$ret[$id]->set_value('prepped_name',$this->prep_name($ret[$id],$depth));
+			$ret[$id]->set_value('depth',$depth);
+			if(!$ret[$id]->get_value('url'))
+			{
+				$url = 'http://'.REASON_HOST.'/'.trim_slashes($this->site->get_value('base_url')).$this->tree->get_nice_url($id).'/';
+				$ret[$id]->set_value('url',$url);
+			}
+			if(!empty($info['children']))
+			{
+				$next_depth = $depth + 1;
+				$ret = $ret + $this->flatten_tree($info['children'],$next_depth);
+			}
 		}
-		
-		if(empty($this->pages[ $owner->id() ][ $page_id ]))
+		return $ret;
+	}
+	
+	function prep_name($item, $depth)
+	{
+		$prepped_name = '';
+		for($i = 1; $i <= $depth; $i++)
 		{
-			$this->pages[ $owner->id() ][ $page_id ] = 'http://'.$_SERVER['HTTP_HOST'].'/'.trim_slashes($owner->get_value("base_url")).$this->trees[ $owner->id() ]->get_nice_url($page_id).'/';
+			$prepped_name .= '--';
 		}
-		
-		return $this->pages[ $owner->id() ][ $page_id ];
+		if(!empty($prepped_name))
+		{
+			$prepped_name .= ' ';
+		}
+		$prepped_name .= $item->get_value('name');
+		if($depth == 0)
+		{
+			$prepped_name .= ' (Home Page)';
+		}
+		return $prepped_name;
 	}
 }
 
