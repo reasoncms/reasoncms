@@ -376,5 +376,32 @@
 			return $depth;
 			
 		}
+		
+		function get_tree_data()
+		{
+			$ret = array();
+			$root_id = $this->root_node();
+			if(!empty($root_id))
+			{
+				$ret[$root_id] = $this->recurse_tree_data($root_id);
+			}
+			return $ret;
+		}
+		
+		function recurse_tree_data($id)
+		{
+			$ret = array();
+			$ret['item'] = $this->values[$id];
+			$children = $this->children($id);
+			if(!empty($children))
+			{
+				$ret['children'] = array();
+				foreach($children as $child_id)
+				{
+					$ret['children'][$child_id] = $this->recurse_tree_data($child_id);
+				}
+			}
+			return $ret;
+		}
 	}
 ?>
