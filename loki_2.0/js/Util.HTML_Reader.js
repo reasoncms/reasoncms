@@ -28,6 +28,9 @@ Util.HTML_Reader = function()
 	 */
 	this.init = function(params)
 	{
+		if (typeof(params) == 'undefined')
+			var params = {};
+		
 		this._owner_document = params.document == null ? document : params.document;
 		this._blank_uri = params.blank_uri == null ? 'about:blank' : params.blank_uri;
 		this._load_listeners = new Array();
