@@ -33,6 +33,7 @@ UI.Outdent_Button = function()
 		if ( Util.Range.get_nearest_ancestor_element_by_tag_name(rng, 'UL') == null ||
 			 Util.Range.get_nearest_ancestor_element_by_tag_name(rng, 'OL') == null )
 		{
+			// XXX: *should* this be so? -EN
 			// return disabled
 		}
 	};
