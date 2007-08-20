@@ -86,22 +86,21 @@ function get_db_credentials( $conn_name )
 			trigger_error( 'Unable to get db connection info', FATAL );
 		}
 
+	require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
         $xml = file_get_contents($db_file);
         if(!empty($xml))
         {
-        	$parser = xml_parser_create('');
-			xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
-			xml_parse_into_struct($parser, $xml, $vals, $index);
-			xml_parser_free($parser);
-			foreach ($index['CONNECTION_NAME'] as $key=>$val)
-        	{
-        		$tmp = array();
-        		$tmp['db'] = $vals[$index['DB'][$key]]['value'];
-        		$tmp['user'] = $vals[$index['USER'][$key]]['value'];
-				$tmp['password'] = $vals[$index['PASSWORD'][$key]]['value'];
-				$tmp['host'] = $vals[$index['HOST'][$key]]['value'];
-				$db_info[$vals[$val]['value']] = $tmp;
-			}
+        	$xml_parse = new XMLParser($xml);
+        	$xml_parse->Parse();
+        	foreach ($xml_parse->document->database as $database)
+  	 	    {
+  	 	     	$tmp = array();
+  	 	     	$tmp['db'] = $database->db[0]->tagData;
+   	    	 	$tmp['user'] = $database->user[0]->tagData;
+   	    	 	$tmp['password'] = $database->password[0]->tagData;
+   	    	 	$tmp['host'] = $database->host[0]->tagData;
+   	    	 	$db_info[$database->connection_name[0]->tagData] = $tmp;
+        	}
 		}
 		else
 		{
