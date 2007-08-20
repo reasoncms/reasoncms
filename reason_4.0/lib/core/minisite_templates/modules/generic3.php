@@ -182,7 +182,7 @@
 		var $current_item_id;
 		
 		//calls on parent::init, set_type(), alter_es(), apply_user_input_to_es(), do_filtering(), do_pagination() add_crumb(), refine_ids_and_positions_arrays()
-		function init( $args ) // {{{
+		function init( $args = array()) // {{{
 		{
 			$error = 'Your class needs to have a type id.  Please overload the set_type() function and '.
 					 'include a line such as $this->type = id_of( "something" ) to run this module.';
