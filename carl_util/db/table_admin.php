@@ -38,7 +38,8 @@
  *
  * @todo add pagination
  * @todo add more export formats
- * @todo implememnt archiving
+ * @todo implement archiving
+ * @todo abstract out html generation into markup generator like system
  * @todo allow filtering to take place in php or mysql
  */
 
@@ -224,7 +225,7 @@ class TableAdmin
 		
 			// call appropriate init
 			if (isset($this->table_action)) $this->init_action();
-			elseif (isset($this->table_row_action) && isset($this->table_action_id)) $this->init_row_action();
+			elseif (isset($this->table_row_action) && isset($this->table_action_id) && $this->verify_table_action_id()) $this->init_row_action();
 			else $this->init_default();
 		}
 		else
@@ -256,8 +257,6 @@ class TableAdmin
 	 */
 	function init_row_action()
 	{
-		if (!$this->verify_table_action_id()) return $this->init_default(); // a row action requires a valid table action id
-		
 		$form =& $this->get_admin_form();
 		if (!$form) $form = new DiscoDefaultAdmin();
 		$this->set_admin_form($form);
@@ -265,7 +264,6 @@ class TableAdmin
 		$form->set_action($this->get_table_row_action());
 		$form->set_id_column_name($this->get_primary_key());
 		$form->init();
-		//$this->_active_form =& $form;
 	}
 	
 	/**
@@ -305,12 +303,12 @@ class TableAdmin
 		$this->cleanup_rules['table_action']['extra_args'] = $this->_get_valid_actions();
 		$this->cleanup_rules['table_row_action']['extra_args'] = $this->_get_valid_row_actions();
 		$this->request = carl_clean_vars($_REQUEST, $this->cleanup_rules);
-		if (isset($this->request['table_action'])) 		$this->set_action($this->request['table_action']);
-		if (isset($this->request['table_row_action'])) 	$this->set_row_action($this->request['table_row_action']);
-		if (isset($this->request['table_action_id'])) 	$this->set_action_id($this->request['table_action_id']);	
-		if (isset($this->request['table_sort_order'])) 	$this->set_sort_order($this->request['table_sort_order']);
-		if (isset($this->request['table_sort_field'])) 	$this->set_sort_field($this->request['table_sort_field']);
-		if (isset($this->request['table_filters']))		$this->set_filters($this->request['table_filters']);
+		if (isset($this->request['table_action'])) 		 $this->set_action($this->request['table_action']);
+		if (isset($this->request['table_row_action'])) 	 $this->set_row_action($this->request['table_row_action']);
+		if (isset($this->request['table_action_id'])) 	 $this->set_action_id($this->request['table_action_id']);	
+		if (isset($this->request['table_sort_order'])) 	 $this->set_sort_order($this->request['table_sort_order']);
+		if (isset($this->request['table_sort_field'])) 	 $this->set_sort_field($this->request['table_sort_field']);
+		if (isset($this->request['table_filters']))		 $this->set_filters($this->request['table_filters']);
 		if (isset($this->request['table_filter_clear'])) $this->set_filters();
 	}
 	
@@ -670,7 +668,7 @@ class TableAdmin
 	 */
 	function _filter_data(&$data, $filter_array = NULL)
 	{
-		$filter_array = ($filter_array == NULL) ? carl_clone($this->get_filters()) : $filter_array; // want to operate on a copy of the filter array
+		$filter_array = ($filter_array == NULL) ? $this->get_filters() : $filter_array; // want to operate on a copy of the filter array
 		if (!empty($filter_array) && $this->allow_filters)
 		{
 			$active_filter = array_pop($filter_array);
@@ -1092,23 +1090,28 @@ class TableAdmin
 		{
 			$this->run_action();
 		}
-		elseif (isset($this->table_row_action) && isset($this->table_action_id))
+		elseif (isset($this->table_row_action) && isset($this->table_action_id) && $this->verify_table_action_id())
 		{
 			$this->run_row_action();
 		}
 		else
 		{
-			$data =& $this->get_data();
-			if (!$this->has_data())
-			{
-				echo '<p><strong>The form has no stored data.</strong></p>';
-				return false;
-			}
-			else
-			{
-				$table_viewer_html = $this->gen_table_html($data);
-				echo $table_viewer_html;
-			}
+			$this->run_default();
+		}
+	}
+	
+	function run_default()
+	{
+		$data =& $this->get_data();
+		if (!$this->has_data())
+		{
+			echo '<p><strong>The form has no stored data.</strong></p>';
+			return false;
+		}
+		else
+		{
+			$table_viewer_html = $this->gen_table_html($data);
+			echo $table_viewer_html;
 		}
 	}
 	
@@ -1456,7 +1459,10 @@ class TableAdmin
 				{
 					return $this->$as();
 				}
-				else return $this->allowable_actions[$action_string];
+				else
+				{
+					return $this->allowable_actions[$action_string];
+				}
 			}
 			return NULL;
 		}
