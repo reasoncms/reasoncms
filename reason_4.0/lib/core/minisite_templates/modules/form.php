@@ -21,6 +21,8 @@
 		var $show_login = false; // will be enabled if viewing groups requiring login are defined, or a database backend is present
 		
 		var $acceptable_params = array('force_login' => false);
+		var $magic_transform_prefix = 'your';
+		var $custom_disco_thor;
 				
 		function init( $args = array() )
 		{
@@ -128,36 +130,7 @@
 					elseif ($this->access_privileges['view'])
 					{
 						if ($this->access_privileges['data']  && ($form->get_value('db_flag') == 'yes')) $this->show_data_view_link();
-						$confirmation_page = get_current_url();
-						if(strstr($confirmation_page,'?'))
-						{
-							$confirmation_page .= '&thor_success=true';
-						}
-						else
-						{
-							$confirmation_page .= '?thor_success=true';
-						}
-	
-						$thor = new Thor($form->get_value('thor_content'),
-									     $form->get_value('email_of_recipient'),
-									     $confirmation_page);
-						$thor->set_form_title($form->get_value('name'));
-						$thor->set_show_submitted_data($form->get_value('show_submitted_data'));
-						if (!empty($this->user_netID)) $thor->set_submitted_by($this->user_netID);
-						if (!empty($_SERVER['REMOTE_ADDR'])) $thor->set_submitter_ip($_SERVER['REMOTE_ADDR']);
-						if ($form->get_value('db_flag') == 'yes')
-						{
-							$thor->set_db_conn(THOR_FORM_DB_CONN, 'form_' . $form->id());
-						}
-						$autofill = $form->get_value('magic_string_autofill');
-						
-						if (($autofill != 'none') && ($autofill != ''))
-						{
-							$editable = ($autofill == 'not_editable') ? false : true;
-							$transform_array = $this->gen_magic_string_transform_array();
-							$thor->magic_transform($transform_array, 'your', $editable);
-						}
-						echo $thor->get_html();
+						$this->run_thor($form);
 					}
 					else // no privileges
 					{
@@ -172,6 +145,43 @@
 			if ($this->show_login) echo $this->get_login_logout_link();
 			echo '</div>'."\n";
 			return true;
+		}
+		
+		function run_thor(&$form)
+		{
+			$confirmation_page = get_current_url();
+			if(strstr($confirmation_page,'?')) $confirmation_page .= '&thor_success=true';
+			else $confirmation_page .= '?thor_success=true';
+			
+			$thor = new Thor($form->get_value('thor_content'),
+						     $form->get_value('email_of_recipient'),
+						     $confirmation_page);
+			
+			if (isset($this->custom_disco_thor)) $thor->set_custom_disco_thor($this->custom_disco_thor);
+			
+			$thor->init();
+			$thor->set_form_title($form->get_value('name'));
+			$thor->set_show_submitted_data($form->get_value('show_submitted_data'));
+			if (!empty($this->user_netID)) $thor->set_submitted_by($this->user_netID);
+			if (!empty($_SERVER['REMOTE_ADDR'])) $thor->set_submitter_ip($_SERVER['REMOTE_ADDR']);
+			if ($form->get_value('db_flag') == 'yes')
+			{
+				$thor->set_db_conn(THOR_FORM_DB_CONN, 'form_' . $form->id());
+			}
+			$autofill = $form->get_value('magic_string_autofill');
+						
+			if (($autofill != 'none') && ($autofill != ''))
+			{
+				$editable = ($autofill == 'not_editable') ? false : true;
+				$transform_array = $this->gen_magic_string_transform_array();
+				$thor->magic_transform($transform_array, $this->magic_transform_prefix, $editable);
+			}
+			$this->pre_thor_get_html($thor);
+			echo $thor->get_html();
+		}
+		
+		function pre_thor_get_html(&$thor)
+		{
 		}
 		
 		function show_data_view_link($url = '')
@@ -410,10 +420,10 @@
         			
         function get_directory_data()
         {
-		$dir = new directory_service();
-		$dir->search_by_attribute('ds_username', $this->user_netID, 
-			array('ds_firstname','ds_lastname','ds_fullname','ds_phone','ds_email','ou','title','homephone','telephonenumber'));
-		return $dir->get_first_record();
-	}
+			$dir = new directory_service();
+			$dir->search_by_attribute('ds_username', $this->user_netID, 
+				array('ds_firstname','ds_lastname','ds_fullname','ds_phone','ds_email','ou','title','homephone','telephonenumber'));
+			return $dir->get_first_record();
+		}
 	}
 ?>
