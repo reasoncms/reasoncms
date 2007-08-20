@@ -41,7 +41,7 @@
 		 */	
 		var $redir_link_text = '';
 
-		function init( $args )
+		function init( $args = array() )
 		{
  			parent::init($args);
 			
