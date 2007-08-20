@@ -11,7 +11,7 @@
  * @todo modify so that this extends CARL_UTIL_INC/db/table_admin.php instead of being a stand-alone class
  */
 include_once ( 'paths.php' );
-require_once( 'XML/Unserializer.php'); // Requires PEAR XML_Serialize package
+require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
 include_once( DISCO_INC . 'disco.php'); // Requires Disco
 
 class Thor_Viewer
@@ -108,12 +108,9 @@ class Thor_Viewer
 		if(!empty($this->filename_frag)) $this->filename_frag = $filename_frag;
 		if(!empty($this->_xml))
 		{
-			$unserializer_options = array ( 'parseAttributes' => TRUE, 
-											'forceEnum' => array('hidden','textarea', 'comment', 'optiongroup','checkboxgroup','radiogroup','checkbox','radio','option') ); 
-			$unserializer = &new XML_Unserializer($unserializer_options);
-			$unserializer->unserialize($this->_xml);
-			$this->_form_xml = $unserializer->getUnserializedData();
-			$this->_display_values = $this->_build_display_values();
+			$form_xml_obj = new XMLParser($this->_xml);
+			$form_xml_obj->Parse();
+			$this->_display_values = $this->_build_display_values($form_xml_obj);
 		}
 		$this->_set_params();
 		if (!empty($this->delete_action)) $this->init_delete();
@@ -172,8 +169,8 @@ class Thor_Viewer
 	function _set_params()
 	{
 		$this->cleanup_rules['thor_sort_field'] = array('function' => 'check_against_array', 'extra_args' => array_merge($this->extra_fields, array_keys($this->_display_values))); // dynamically add
-		
-		$this->request = carl_clean_vars($_REQUEST, $this->cleanup_rules);
+		$prepped_request = conditional_stripslashes($_REQUEST);
+		$this->request = carl_clean_vars($prepped_request, $this->cleanup_rules);
 		if (!empty($this->request['thor_sort_order'])) $this->set_sort_order($this->request['thor_sort_order']);
 		if (!empty($this->request['thor_sort_field'])) $this->set_sort_field($this->request['thor_sort_field']);
 		if (!empty($this->request['thor_export'])) $this->set_export($this->request['thor_export']);
@@ -657,15 +654,16 @@ class Thor_Viewer
 		$res = mysql_query( $q ) or trigger_error( 'Error: mysql error in Thor: '.mysql_error() );
 		connectDB(REASON_DB); // reconnect to default DB
 	}
-	
-	function _build_display_values()
+
+	function _build_display_values(&$xml_obj)
 	{
 		$display_values = array();
-		foreach ($this->_form_xml as $k=>$v)
+		foreach ($xml_obj->document->tagChildren as $k=>$v)
 		{
-			if (method_exists($this, '_build_display_'.$k))
+			$tagname = is_object($v) ? $v->tagName : '';
+			if (method_exists($this, '_build_display_'.$tagname))
 			{
-				$build_function = '_build_display_'.$k;
+				$build_function = '_build_display_'.$tagname;
 				$display_values = array_merge($display_values, $this->$build_function($v));
 			}
 		}
@@ -677,80 +675,72 @@ class Thor_Viewer
 	 * @access private
 	 */
 	 
-	function _build_display_input($element_array)
+	function _build_display_input($element_obj)
 	{
+		$element_attrs = $element_obj->tagAttrs;
 		$type = 'input';
-		foreach ($element_array as $element) 
-		{
-			$display_values[$element['id']] = array('label' => $element['label'], 'type' => $type);
-		}
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
 		return $display_values;
 	}
 
-	function _build_display_hidden($element_array)
+	function _build_display_hidden($element_obj)
 	{
+		$element_attrs = $element_obj->tagAttrs;
 		$type = 'hidden';
-		foreach ($element_array as $element) 
-		{
-			$display_values[$element['id']] = array('label' => $element['label'], 'type' => $type);
-		}
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
 		return $display_values;
 	}
  
-	function _build_display_textarea($element_array)
+	function _build_display_textarea($element_obj)
 	{
+		$element_attrs = $element_obj->tagAttrs;
 		$type = 'textarea';
-		foreach ($element_array as $element) 
-		{
-			$display_values[$element['id']] = array('label' => $element['label'], 'type' => $type);
-		}
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
 		return $display_values;
 	}
 
-	function _build_display_checkboxgroup($element_array)
+	function _build_display_checkboxgroup($element_obj)
 	{
-		foreach ($element_array as $element) 
+		$element_children = $element_obj->tagChildren;
+		$type = 'checkbox';
+		foreach ($element_children as $element_child) 
 		{
-			$type = 'checkbox';
-			foreach ($element['checkbox'] as $k=>$v)
-			{
-				$label = $v['label'];
-				$display_values[$v['id']] = array('label' => $label, 'type' => $type);
-			}
-			
+			$child_attrs = $element_child->tagAttrs;
+			$label = $child_attrs['label'];
+			$display_values[$child_attrs['id']] = array('label' => $label, 'type' => $type);
 		}
 		return $display_values;
 	}
 	
-	function _build_display_radiogroup($element_array)
+	function _build_display_radiogroup($element_obj)
 	{
-		foreach ($element_array as $element) 
+		$element_attrs = $element_obj->tagAttrs;
+		$element_children = $element_obj->tagChildren;
+		$id = $element_attrs['id'];
+		$label = $element_attrs['label'];
+		$type = 'radiogroup';
+		foreach ($element_children as $element_child)
 		{
-			$id = $element['id'];
-			$label = $element['label'];
-			$type = 'radiogroup';
-			foreach ($element['radio'] as $k=>$v)
-			{
-				$options[] = $v['value'];
-			}
-			$display_values[$id] = array('label' => $label, 'type' => $type, 'options' => $options);
+			$child_attrs =& $element_child->tagAttrs;
+			$options[] = $child_attrs['value'];
 		}
+		$display_values[$id] = array('label' => $label, 'type' => $type, 'options' => $options);
 		return $display_values;
 	}
 
-	function _build_display_optiongroup($element_array)
+	function _build_display_optiongroup($element_obj)
 	{
-		foreach ($element_array as $element) 
+		$element_attrs = $element_obj->tagAttrs;
+		$element_children = $element_obj->tagChildren;
+		$id = $element_attrs['id'];
+		$label = $element_attrs['label'];
+		$type = 'optiongroup';
+		foreach ($element_children as $element_child)
 		{
-			$id = $element['id'];
-			$label = $element['label'];
-			$type = 'optiongroup';
-			foreach ($element['option'] as $k=>$v)
-			{
-				$options[] = $v['value'];
-			}
-			$display_values[$id] = array('label' => $label, 'type' => $type, 'options' => $options);
+			$child_attrs =& $element_child->tagAttrs;
+			$options[] = $child_attrs['value'];
 		}
+		$display_values[$id] = array('label' => $label, 'type' => $type, 'options' => $options);
 		return $display_values;
 	}
 

@@ -38,6 +38,10 @@ class DiscoThor extends Disco
 			{
 				$values['messages'][0]['to'] = $this->get_value($element_name);
 			}
+			elseif (( $element_name == 'messages[0][subject]') && $process_messages)
+			{
+				$values['messages'][0]['subject'] = $this->get_value($element_name);
+			}
 			elseif (( $element_name == 'messages[all][next_page]' ) && $process_messages)
 			{
 				$values['messages']['all']['next_page'] = $this->get_value($element_name);

@@ -33,7 +33,8 @@
 
 require_once( THOR_INC .'disco_thor.php');
 include_once(TYR_INC.'tyr.php');
-		
+require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
+
 class Thor
 {
 	var $_nextpage;
@@ -45,6 +46,7 @@ class Thor
 	var $_table_name;
 	var $_show_submitted_data;
 	var $extra_fields = array('submitted_by', 'submitter_ip'); // extra fields that aren't represented in thor
+	var $disco_thor_class = 'DiscoThor';
 
 	function Thor($xml, $email, $nextpage, $db_conn = '', $table_name = '') {
 		$this->_xml = $xml;
@@ -52,14 +54,27 @@ class Thor
 		$this->_nextpage = $nextpage;
 		$this->_db_conn = $db_conn;
 		$this->_table_name = $table_name;
-
-		$this->_build_form();
 	}
 
+	function init()
+	{
+		$this->_build_form();
+	}
+	
 	function set_db_conn($db_conn, $table_name)
 	{
 		$this->_db_conn = $db_conn;
 		$this->_table_name = $table_name;
+	}
+	
+	function set_custom_disco_thor($thor_name)
+	{
+		$this->disco_thor_class = $thor_name;
+	}
+	
+	function set_error_check($element, $error_mapping)
+	{
+	
 	}
 	
 	function get_html() {
@@ -180,170 +195,199 @@ class Thor
 		connectDB(REASON_DB); // reconnect to default DB
 	}
 	
-	function _build_db_structure() {
-		$xmldoc = domxml_open_mem($this->_xml); // get dom object
-		$xpath = xpath_new_context($xmldoc); // init xpath
-		$db_structure = array();
-
-		// II. Transform the form's elements
-		$xpresult = xpath_eval($xpath, '/form[1]/*');
-		
-		foreach ($xpresult->nodeset as $node) {
-			if ($node->tagname == 'input') {
-				$db_structure[$node->get_attribute('id')]['type'] = 'tinytext';
+	/**
+	 * Updated for php 4 and php 5 compatibility using Adam Flynn's XML Parser class instead of xpath
+	 * - see http://www.criticaldevelopment.net/xml/
+	 *
+	 * @author Nathan White
+	 */
+	function _build_db_structure()
+	{
+		$xml = new XMLParser($this->_xml);
+		$xml->Parse();
+		foreach ($xml->document->tagChildren as $node) // we use tagName to make sure we iterate through them by order instead of type
+		{	
+			if ($node->tagName == 'input') {
+				$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
 			}
-			elseif ($node->tagname == 'textarea') {
-				$db_structure[$node->get_attribute('id')]['type'] = 'text';
+			elseif ($node->tagName == 'textarea') {
+				$db_structure[$node->tagAttrs['id']]['type'] = 'text';
 			}
-			elseif ($node->tagname == 'radiogroup') {
-				$db_structure[$node->get_attribute('id')]['type'] = 'enum';
-				$xpresult2 = xpath_eval($xpath, "//*[@id='" . $node->get_attribute('id') . "']/radio");
-				foreach ($xpresult2->nodeset as $node2) {
-					$db_structure[$node->get_attribute('id')]['options'][] = $node2->get_attribute('value');
+			elseif ($node->tagName == 'hidden') {
+			$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
+			}
+			elseif (($node->tagName == 'radiogroup') || ($node->tagName == 'optiongroup')) {
+				$db_structure[$node->tagAttrs['id']]['type'] = 'enum';
+				$node_children = $node->tagChildren;
+				foreach ($node_children as $node2) {
+					$db_structure[$node->tagAttrs['id']]['options'][] = $node2->tagAttrs['value'];
 				}
 			}
-			elseif ($node->tagname == 'checkboxgroup') {
-				$xpresult2 = xpath_eval($xpath, "//*[@id='" . $node->get_attribute('id') . "']/checkbox");
-				foreach ($xpresult2->nodeset as $node2) {
-					$db_structure[$node2->get_attribute('id')]['type'] = 'tinytext';
+			elseif ($node->tagName == 'checkboxgroup') {
+				$node_children = $node->tagChildren;
+				foreach ($node_children as $node2) {
+					$db_structure[$node2->tagAttrs['id']]['type'] = 'tinytext';
 				}
-			}
-			elseif ($node->tagname == 'optiongroup') {
-				$db_structure[$node->get_attribute('id')]['type'] = 'enum';
-				$xpresult2 = xpath_eval($xpath, "//*[@id='" . $node->get_attribute('id') . "']/option");
-				foreach ($xpresult2->nodeset as $node2) {
-					$db_structure[$node->get_attribute('id')]['options'][] = $node2->get_attribute('value');
-				}
-			}
-			elseif ($node->tagname == 'hidden') {
-			$db_structure[$node->get_attribute('id')]['type'] = 'tinytext';
 			}
 		}
 		return $db_structure;
 	}
 
-	function _build_form() {
+	function _build_form()
+	{
 
-		$this->_d = new DiscoThor;
-
-		$xmldoc = domxml_open_mem($this->_xml); // get dom object
-		$xpath = xpath_new_context($xmldoc); // init xpath
+		$this->_d = new $this->disco_thor_class;
+		$xml = new XMLParser($this->_xml);
+		$xml->Parse();
 		$this->_html = '';
 
 		// II. Transform the form's elements
-		$xpresult = xpath_eval($xpath, '/form[1]/*');
-		foreach ($xpresult->nodeset as $node) {
-			if ($node->tagname == 'input') {
-				$this->_transform_input($node);
-			}
-			elseif ($node->tagname == 'textarea') {
-				$this->_transform_textarea($node);
-			}
-			elseif ($node->tagname == 'radiogroup') {
-				$this->_transform_radiogroup($node, $xpath);
-			}
-			elseif ($node->tagname == 'checkboxgroup') {
-				$this->_transform_checkboxgroup($node, $xpath);
-			}
-			elseif ($node->tagname == 'optiongroup') {
-				$this->_transform_optiongroup($node, $xpath);
-			}
-			elseif ($node->tagname == 'hidden') {
-				$this->_transform_hidden($node);
-			}
-			elseif ($node->tagname == 'comment') {
-				$this->_transform_comment($node);
-			}
+		foreach ($xml->document->tagChildren as $node)
+		{
+			if ($node->tagName == 'input') $this->_transform_input($node);
+			elseif ($node->tagName == 'textarea') $this->_transform_textarea($node);
+			elseif ($node->tagName == 'radiogroup') $this->_transform_radiogroup($node);
+			elseif ($node->tagName == 'checkboxgroup') $this->_transform_checkboxgroup($node);
+			elseif ($node->tagName == 'optiongroup') $this->_transform_optiongroup($node);
+			elseif ($node->tagName == 'hidden') $this->_transform_hidden($node);
+			elseif ($node->tagName == 'comment') $this->_transform_comment($node);
 		}
-
-		// II. Transform the form's submit and reset buttons
-		$xpresult = xpath_eval($xpath, '/form[1]');			
-		$this->_transform_submit($xpresult->nodeset[0]);
-
-
-		// IV. Transform the form's meta info
+		
+		$this->_transform_submit($xml->document->tagAttrs);
 		if (!empty($this->_email)) $this->_transform_email();
 		$this->_transform_nextpage();
 	}
 
-
-	function _transform_input($element) {
-		$id = $element->get_attribute('id');
-		$args = Array('size' => ($element->get_attribute('size') ? $element->get_attribute('size') : 30),
-					  'maxlength' => $element->get_attribute('maxlength'),
-					  'display_name' => $element->get_attribute('label'),
-					  'default' => $element->get_attribute('value'));
+	function _transform_input($element)
+	{
+		$id = $element->tagAttrs['id'];
+		$size = (!empty($element->tagAttrs['size'])) ? $element->tagAttrs['size'] : 30;
+		$maxlength = (!empty($element->tagAttrs['maxlength'])) ? $element->tagAttrs['maxlength'] : '';
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$default = (!empty($element->tagAttrs['value'])) ? $element->tagAttrs['value'] : '';
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		
+		$args = array('size' => $size,
+					  'maxlength' => $maxlength,
+					  'display_name' => $display_name,
+					  'default' => $default);
 
 		$this->_d->add_element($id, 'text', $args);
-
-		if ( $element->get_attribute('required') != '' )
-			$this->_d->add_required($id);
+		if ( $required ) $this->_d->add_required($id);
 	}
 
-	function _transform_hidden($element) {
-		$id = $element->get_attribute('id');
-
+	function _transform_hidden($element)
+	{
+		$id = $element->tagAttrs['id'];
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$value = (!empty($element->tagAttrs['value'])) ? $element->tagAttrs['value'] : '';
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		
 		$this->_d->add_element($id, 'hidden');
-		$this->_d->set_value($id, $element->get_attribute('value'));
-		$this->_d->set_display_name($id, '(hidden field) ' . $element->get_attribute('label'));
-
-		if ( $element->get_attribute('required') != '' )
-			$this->_d->add_required($id);
+		$this->_d->set_value($id, $value);
+		$this->_d->set_display_name($id, '(hidden field) ' . $display_name);
+		if ( $required) $this->_d->add_required($id);
 	}
  
-	function _transform_comment($element) {
-		$id = $element->get_attribute('id');
-
-		$args = Array('text' => $element->get_content());
+	function _transform_comment($element)
+	{
+		$id = $element->tagAttrs['id'];
+		$args = Array('text' => $element->tagData);
 		$this->_d->add_element($id, 'comment', $args);
 	}
  
-	function _transform_textarea($element) {
-		$id = $element->get_attribute('id');
-		$args = Array('rows' => ($element->get_attribute('rows') ? $element->get_attribute('rows') : 6),
-					  'cols' => ($element->get_attribute('cols') ? $element->get_attribute('cols') : 40),
-					  'display_name' => $element->get_attribute('label'),
-					  'default' => $element->get_attribute('value'));
+	function _transform_textarea($element)
+	{
+		$id = $element->tagAttrs['id'];
+		$rows = (!empty($element->tagAttrs['rows'])) ? $element->tagAttrs['rows'] : 6;
+		$cols = (!empty($element->tagAttrs['cols'])) ? $element->tagAttrs['cols'] : 40;
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$default = (!empty($element->tagAttrs['value'])) ? $element->tagAttrs['value'] : '';
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		
+		$args = Array('rows' => $rows,
+					  'cols' => $cols,
+					  'display_name' => $display_name,
+					  'default' => $default);
 
 		$this->_d->add_element($id, 'textarea', $args);
-
-		if ( $element->get_attribute('required') != '' )
-			$this->_d->add_required($id);
+		if ( $required ) $this->_d->add_required($id);
 	}
 
-	function _transform_radiogroup($element, $xpath) {
-		$id = $element->get_attribute('id');
+	function _transform_radiogroup($element)
+	{
+		$id = $element->tagAttrs['id'];
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$required = (!empty($element_child->tagAttrs['required'])) ? true : false;
 		$args = Array( 'options' => Array(),
-					   'display_name' => $element->get_attribute('label'),
+					   'display_name' => $display_name,
 					   'default' => '' );
 
-		$xpresult = xpath_eval($xpath, "//*[@id='" . $element->get_attribute('id') . "']/radio");
-		foreach ($xpresult->nodeset as $node) {
-			$args['options'][$node->get_attribute('value')] = $node->get_attribute('label');
-
-			if ( $node->get_attribute('selected') != '' )
-				$args['default'] = $node->get_attribute('value');
+		$element_children = $element->tagChildren; 
+		foreach ($element_children as $element_child)
+		{
+			$value = (!empty($element_child->tagAttrs['value'])) ? $element_child->tagAttrs['value'] : '';
+			$selected = (!empty($element_child->tagAttrs['selected'])) ? true : false;
+			
+			
+			$args['options'][$value] = $value;
+			if ( $selected ) $args['default'] = $value;
 		}
 
 		$this->_d->add_element($id, 'radio_no_sort', $args);
-
-		if ( $element->get_attribute('required') != '' )
-			$this->_d->add_required($id);
+		if ( $required ) $this->_d->add_required($id);
 	}
 
-	function _transform_checkboxgroup($element, $xpath) {
-		$id = $element->get_attribute('id');
-		$args = Array('options' => Array(),
-					  'display_name' => $element->get_attribute('label'),
-					  'default' => Array());
+	function _transform_optiongroup($element)
+	{
+		$id = $element->tagAttrs['id'];
+		$multiple = (!empty($element->tagAttrs['multiple'])) ? true : false;
+		$size = (!empty($element->tagAttrs['size']) && ($element->tagAttrs['size'] > 1)) ? $element->tagAttrs['size'] : 1;
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		
+		$args = array('options' => array(),
+					  'multiple' => $multiple,
+					  'size' => $size,
+					  'default' => array(),
+					  'display_name' => $display_name);
+					  
+		$element_children = $element->tagChildren;
+		foreach ($element_children as $element_child)
+		{
+			$value = (!empty($element_child->tagAttrs['value'])) ? $element_child->tagAttrs['value'] : '';
+			$selected = (!empty($element_child->tagAttrs['selected'])) ? true : false;
+			$multiple = (!empty($element_child->tagAttrs['multiple'])) ? true : false;
+			$args['options'][$value] = $value;
+				
+			if ( !$multiple && $selected ) $args['default'] = $value;
+			else if ( $selected ) $args['default'][]= $value;
+		}
 
-		$xpresult = xpath_eval($xpath, "//*[@id='" . $element->get_attribute('id') . "']/checkbox");
+		$this->_d->add_element($id, 'select_no_sort', $args);
+		if ( $required ) $this->_d->add_required($id);
+	}
+	
+	function _transform_checkboxgroup($element) {
+		$id = $element->tagAttrs['id'];
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		
+		$args = array('options' => array(),
+					  'display_name' => $display_name,
+					  'default' => array());
+
 		$index = 0;
-		foreach ($xpresult->nodeset as $node) {
-			$args['options'][$node->get_attribute('value')] = $node->get_attribute('label');
-			$id2 = $node->get_attribute('id');
-			if ( $node->get_attribute('selected') )
-				$args['default'] []= $node->get_attribute('value');
+		$element_children = $element->tagChildren;
+		
+		foreach ($element_children as $element_child)
+		{
+			$value = (!empty($element_child->tagAttrs['value'])) ? $element_child->tagAttrs['value'] : '';
+			$selected = (!empty($element_child->tagAttrs['selected'])) ? true : false;
+			$id2 = $element_child->tagAttrs['id'];
+			$args['options'][$value] = $value;
+			
+			if ( $selected ) $args['default'] []= $value;
 			$this->_d->add_element('transform['.$id.']['.$index.']', 'hidden');
 			$this->_d->set_value('transform['.$id.']['.$index.']', $id2);
 			$index++;
@@ -351,36 +395,7 @@ class Thor
 
 		$this->_d->add_element($id, 'checkboxgroup_no_sort', $args);
 
-		if ( $element->get_attribute('required') != '' )
-			$this->_d->add_required($id);
-	}
-
-	function _transform_optiongroup($element, $xpath) {
-		$id = $element->get_attribute('id');
-		$args = Array('options' => Array(),
-					  'multiple' => $element->get_attribute('multiple') ? true : false,
-					  'size' => $element->get_attribute('size') > 1 ? $element->get_attribute('size') : 1,
-					  'default' => Array(),
-					  'display_name' => $element->get_attribute('label'));
-
-		$xpresult = xpath_eval($xpath, "//*[@id='" . $element->get_attribute('id') . "']/option");
-		foreach ($xpresult->nodeset as $node) {
-			$args['options'][$node->get_attribute('value')] = $node->get_attribute('label');
-				
-			if ( !$element->get_attribute('multiple') ) {
-				if ( $node->get_attribute('selected') )
-					$args['default'] = $node->get_attribute('value');
-			}
-			else {
-				if ( $node->get_attribute('selected') )
-					$args['default'] []= $node->get_attribute('value');
-			}
-		}
-
-		$this->_d->add_element($id, 'select_no_sort', $args);
-
-		if ( $element->get_attribute('required') != '' )
-			$this->_d->add_required($id);
+		if ( $required ) $this->_d->add_required($id);
 	}
 
 	function _transform_email() {
@@ -397,19 +412,23 @@ class Thor
 		$this->_d->add_required($id);
 	}
 
-	function _transform_submit($element) {
-		$this->_d->actions = Array( 'submit' => $element->get_attribute('submit'),
-									'reset' => $element->get_attribute('reset') );
-
-		// 			$submit = htmlspecialchars($element->get_attribute('submit'));
-
-		// 			$reset = htmlspecialchars($element->get_attribute('reset'));
+	function _transform_submit($element_attributes)
+	{
+		$submit = (!empty($element_attributes['submit'])) ? $element_attributes['submit'] : '';
+		$reset = (!empty($element_attributes['reset'])) ? $element_attributes['reset'] : '';
+		$this->_d->actions = Array( 'submit' => $submit, 'reset' => $reset);
 	}
 	
 	function set_form_title($form_title) {
 		$id = 'messages[all][form_title]';
 		$this->_d->add_element($id, 'hidden');
 		$this->_d->set_value($id, $form_title);
+	}
+
+	function set_form_subject($form_subject) {
+		$id = 'messages[0][subject]';
+		$this->_d->add_element($id, 'hidden');
+		$this->_d->set_value($id, $form_subject);
 	}
 	
 	function set_show_submitted_data($show) {
@@ -432,6 +451,31 @@ class Thor
 	function set_value($element, $value)
 	{
 		$this->_d->set_value($element, $value);
+	}
+	
+	function set_disco_error($element_label, $error)
+	{
+		$transform_array = $this->_magic_map_keys_to_id($element_label, false);
+		if (!empty($transform_array))
+		{
+			$this->_d->error_checks[$transform_array[strtolower($element_label)]] = $error;
+		}
+	}
+	
+	/**
+	 * Populate element_mappings array on the disco object - the element mappings array maps
+	 * plain text strings corresponding to lowercased display names with "_" characters in place of spaces
+	 * to thor unique identifiers.
+	 *
+	 * @var $prefix string - limits the size of the array mapped by specifying a prefix display names must contain
+	 */
+	function set_disco_element_mappings($prefix = '')
+	{
+		$transform_array = $this->_magic_map_keys_to_id($prefix, true);
+		if (!empty($transform_array))
+		{
+			$this->_d->element_mappings = $transform_array;
+		}
 	}
 	
 	function change_element_type( $element, $new_type = '', $args = array() )
@@ -493,14 +537,15 @@ class Thor
 				{
 					
 					if ($alter_string) $key = str_replace(' ', '_', strtolower($v->display_name));
-					else ($key = $v->display_name);
+					else ($key = strtolower($v->display_name));
 					$mapping[$key] = $k;
 				}
 			}
 			else 
 			{
 				if ($alter_string) $key = str_replace(' ', '_', strtolower($v->display_name));
-				else $key = $mapping[$v->display_name];
+				else $key = strtolower($mapping[$v->display_name]);
+				if ($key != strtolower($k))
 				$mapping[$key] = $k;
 			}
 		}
