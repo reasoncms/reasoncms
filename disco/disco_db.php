@@ -65,7 +65,7 @@
 		
 		var $prepopulate_date_fields = false;
 
-		function init() // {{{
+		function init($externally_set_up = false) // {{{
 		// init works a little differently for discoDB.
 		{
 			if (!$this->load_has_run)
