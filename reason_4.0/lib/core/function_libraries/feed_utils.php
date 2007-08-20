@@ -57,22 +57,20 @@ function get_feed_as_text( $params )
 
 function get_links_from_rss_string( $rss )
 {
-	include_once('XML/Unserializer.php');
-	$unserializer = &new XML_Unserializer();
-	$unserializer->unserialize($rss);
-	$type_feed_data = $unserializer->getUnserializedData();
+	require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
+	$xml_parse = new XMLParser($rss);
+	$xml_parse->Parse();
 	$links = array();
-	if (isset($type_feed_data['channel']['item']))
+	if (isset($xml_parse->document->channel[0]->item))
 	{
- 		foreach($type_feed_data['channel']['item'] as $k=>$v)
- 		{
- 			if (is_array($v) && isset($v['link'])) 
+		foreach ($xml_parse->document->channel[0]->item as $k=>$item)
+		{
+			if (isset($item->link[0]->tagData)) 
  			{
- 				$links[] = trim(str_replace('&amp;','&',$v['link']));
+ 				$links[] = trim(str_replace('&amp;','&',$item->link[0]->tagData));
  			}
- 			else if ($k == 'link' && (!empty($v))) $links[] = trim(str_replace('&amp;','&',$v));
- 		}
- 	}
+		}
+	}
  	return $links;
 }
 ?>
