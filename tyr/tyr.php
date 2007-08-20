@@ -19,6 +19,7 @@ class Tyr
 	var $_messages = Array(); // Array of message arrays--i.e., directive as to how to format Emails
 	var $_fields = Array(); // Array of fields--i.e., data to use in Emails
 	var $admin_email = TYR_ADMIN_EMAIL;
+	var $add_disclaimer = true;
 
 	function Tyr($messages = Array(), $fields = Array())
 	{
@@ -156,7 +157,7 @@ class Tyr
 		}
 	}
 
-	function _make_body()
+	function _make_body($add_disclaimer = true)
 	{
 		$message = '';
 		
@@ -218,9 +219,11 @@ class Tyr
 			}
 
 		}
-			
-		$message .= "\n\n\n\n-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\nThis message was automatically generated when someone submitted a form to you from the ".FULL_ORGANIZATION_NAME." website. Please direct problems or questions about this service to ".$this->admin_email." .\n";
-
+		
+		if ( $add_disclaimer )
+		{
+			$message .= "\n\n\n\n-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\nThis message was automatically generated when someone submitted a form to you from the ".FULL_ORGANIZATION_NAME." website. Please direct problems or questions about this service to ".$this->admin_email." .\n";
+		}
 		return $message;
 	}
 
@@ -320,8 +323,8 @@ class Tyr
 		{
 			if ($mkey !== 'all' && empty($message['body']))
 			{
-				$this->_messages[$mkey]['body'] = $this->_make_body();
-				$this->_messages[$mkey]['html_body'] = $this->_make_html_body();
+				$this->_messages[$mkey]['body'] = $this->_make_body($this->add_disclaimer);
+				$this->_messages[$mkey]['html_body'] = $this->_make_html_body($this->add_disclaimer);
 			}
 		}
 	}
