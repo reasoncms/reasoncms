@@ -282,6 +282,20 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 		}
 	}
 	
+	/**
+	 * Returns true if the version of php is php5
+	 * @author Nathan White
+	 */
+	function carl_is_php5()
+	{
+		static $is_php5;
+		if (!isset($is_php5))
+		{
+			if(version_compare(phpversion(), '5.0') < 0) $is_php5 = false;
+			else $is_php5 = true;
+		}
+		return $is_php5;
+	}
 	
 	/**
 	 * Convert a MySQL TIMESTAMP field to a UNIX timestamp.
