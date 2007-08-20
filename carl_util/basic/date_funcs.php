@@ -51,7 +51,8 @@ function carl_mktime($hr,$min,$sec,$month=false,$day=false,$year=false,$is_dst=f
 	$int_year = intval($year);
 	if( $int_year == 0 )
 	{
-		return mktime($hr,$min,$sec,$month,$day,$year,$is_dst);
+		//return mktime($hr,$min,$sec,$month,$day,$year,$is_dst); // $is_dst param is deprecated in php 5
+		return mktime($hr,$min,$sec,$month,$day,$year);
 	}
 	else
 	{
@@ -62,7 +63,7 @@ function carl_mktime($hr,$min,$sec,$month=false,$day=false,$year=false,$is_dst=f
 			// before running adodb_mktime
 			$year = carl_date('Y',adodb_mktime(1,0,0,1,1,$year));
 		}
-		return adodb_mktime($hr,$min,$sec,$month,$day,$year,$is_dst,$is_gmt);
+		return adodb_mktime((int)$hr,(int)$min,(int)$sec,(int)$month,(int)$day,(int)$year,$is_dst,$is_gmt);
 	}
 }
 /**
@@ -77,7 +78,7 @@ function carl_gmmktime($hr,$min,$sec,$month=false,$day=false,$year=false,$is_dst
 	}
 	else
 	{
-		return adodb_gmmktime($hr,$min,$sec,$month,$day,$year,$is_dst);
+		return adodb_gmmktime((int)$hr,(int)$min,(int)$sec,(int)$month,(int)$day,(int)$year,$is_dst);
 	}
 }
 /**
