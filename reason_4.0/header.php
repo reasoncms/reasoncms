@@ -1,7 +1,7 @@
 <?php
 /**
  * This file includes a number of core libraries and functions needed by reason
- * It is included by reason_header.php ans should not be included by anything else directly
+ * It is included by reason_header.php and should not be included by anything else directly
  *
  */
 	include_once( CARL_UTIL_INC.'error_handler/error_handler.php' );
@@ -55,6 +55,18 @@
 	if( empty( $_REQUEST[ '_ob_off' ] ) )
 		ob_start();
 
-	error_reporting( E_ALL );
-// }
+	// setup the REASON_LOGIN_URL constant dynamically based upon value of HTTPS_AVAILABLE
+	if (HTTPS_AVAILABLE)
+	{
+		define( 'REASON_LOGIN_URL', 'https://'.HTTP_HOST_NAME.'/'.REASON_LOGIN_PATH );
+	}
+	else define( 'REASON_LOGIN_URL', 'http://'.HTTP_HOST_NAME.'/'.REASON_LOGIN_PATH );
+
+	if (function_exists('date_default_timezone_set')) // for php5, set default timezone if the constant is defined
+	{
+		if (defined('REASON_DEFAULT_TIMEZONE'))
+		{
+			date_default_timezone_set(REASON_DEFAULT_TIMEZONE);
+		}
+	}
 ?>
