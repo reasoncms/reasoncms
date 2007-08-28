@@ -161,11 +161,11 @@
 	//define( 'REASON_URL_FOR_PODCAST_HELP', 'http://www.domain_name.domain/your/path/here/' );
 	
 	/**
-	 * REASON_LOGIN_URL
-	 * The full URI, including https://, of the main login page for Reason
+	 * REASON_LOGIN_PATH
+	 * This setting identifies the location of the login site relative to the server root directory/
 	 * Reason uses this to make links to log in and to header in the cases of secured content
 	 */
-	define( 'REASON_LOGIN_URL', 'https://'.HTTP_HOST_NAME.'/login/' );
+	define( 'REASON_LOGIN_PATH', 'login/' );
 	
 	define ('ACCESS_LOG_USER_AGENT_REGEX_FILTER', '(?!htdig|msnbot|psbot|NaverBot|Gigabot|sohu|YahooSeeker|.*Googlebot|.*ZyBorg|.*Slurp|.*Jeeves\/Teoma)' );
 	
@@ -431,6 +431,12 @@
 	define( 'WEB_PHOTOSTOCK', REASON_HTTP_BASE_PATH.'images/' );
 	
 	/**
+	 * REASON_TEMP_DIR
+	 * This setting defines the location for Reason temporary data
+	 */
+	define( 'REASON_TEMP_DIR', REASON_INC.'data/tmp/' );
+	
+	/**
 	 * REASON_LOG_DIR
 	 * This setting defines the location for Reason to log information about its activity
 	 * This directory will have to have permissions that allow Apache/php to write to it
@@ -452,7 +458,7 @@
 	define( 'REASON_PATH',REASON_INC);
 	
 	/**
-	 * REASON_PATH
+	 * REASON_HOST
 	 * This setting identifies the http host name (e.g. www.foo.com)
 	 * It should be the same as the constant HTTP_HOST_NAME defined in paths.php
 	 * All scripts should use this or HTTP_HOST_NAME rather than HTTP_HOST or
