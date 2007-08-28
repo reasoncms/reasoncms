@@ -31,6 +31,8 @@ define('TIDY_EXE', '/usr/bin/tidy' ); // Define the path to tidy
 
 define('IMAGEMAGICK_PATH', '/usr/bin/'); // Define the path to imagemagick files
 
+define('CURL_PATH', '/usr/bin/curl/'); // Define the path to curl - used only if libcurl is not available
+
 define('UNIVERSAL_CSS_PATH', ''); // if you have css that you want included on all pages, enter its url here
 
 /**
@@ -105,4 +107,16 @@ define('TYR_INC',INCLUDE_PATH.'tyr/');
 // Define the path to ADOdb libraries
 define('ADODB_INC',INCLUDE_PATH.'adodb/');
 define('ADODB_DATE_INC',ADODB_INC.'adodb-time.inc.php');
+
+// Define the path to XML Parser files
+define('XML_PARSER_DIRNAME', 'xml');
+define('XML_PARSER_INC',INCLUDE_PATH.XML_PARSER_DIRNAME.'/');
+
+// Define the path to HTML Purifier
+define('HTML_PURIFIER_DIRNAME', 'htmlpurifier');
+define('HTML_PURIFIER_INC',INCLUDE_PATH.HTML_PURIFIER_DIRNAME.'/');
+
+// Define the path to libcurlemu
+define('LIBCURLEMU_DIRNAME', 'libcurlemu-1.0.4');
+define('LIBCURLEMU_INC',INCLUDE_PATH.LIBCURLEMU_DIRNAME.'/');
 ?>
