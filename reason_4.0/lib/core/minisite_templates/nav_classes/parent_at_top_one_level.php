@@ -125,7 +125,7 @@
 		}
 		
 		// is this still necessary?
-		function get_item_class($item, $open, $depth)
+		function get_item_class($item, $open, $depth = 0, $counter = 0)
 		{
 			static $first_call = true;
 			if($open)
