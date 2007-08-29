@@ -14,8 +14,9 @@
 	 */
 
 	include_once( 'reason_header.php' );
-	reason_include_once( 'classes/entity_selector.php' );
 	include_once(CARL_UTIL_INC.'basic/filesystem.php');
+	reason_include_once( 'classes/entity_selector.php' );
+	reason_include_once( 'function_libraries/url_utils.php' );
 
 	class url_manager
 	{
@@ -280,41 +281,20 @@ mapping.', HIGH );
 				// error, that means the file is not valid and someone needs to 
 				// look at it.
 				
-				// Should include the variables $http_authentication_username and $http_authentication_password
-				$credentials_supplied = false;
-				if(!empty($this->http_credentials_settings_file) && file_exists($this->http_credentials_settings_file))
-				{
-					include($this->http_credentials_settings_file);
-					if(!empty($http_authentication_username) && !empty($http_authentication_password))
-					{
-						$credentials_supplied = true;
-					}
-				}
-				$tmp_valid_file = '/tmp/'.uniqid( 'htvalid' );
+				$tmp_valid_file = REASON_TEMP_DIR.uniqid( 'htvalid' );
 				// create a quick test file to see if it shows up
 				$test_file_name = 'testfile.txt';
 				$tmp_test_file = $this->test_dir_name.'/'.$test_file_name;
 				$fp = fopen( $this->test_full_base_url.'/'.$tmp_test_file, 'w' ) OR trigger_error( 'Unable to create test index file', HIGH );
 				fputs( $fp,'test successful' ) OR trigger_error( 'Unable to write to test index file', HIGH );
 				fclose( $fp ) OR trigger_error( 'Unable to close test index file', HIGH );
-				// use curl to grab the test index page
-				$curl_cmd = 'curl ';
-
-				// when used without the -k option, curl will fail if the server does not have a valid SSL cert.
-				// ... -k allows curl to function without a valid certificate on a secure connection
-
-				if( !REASON_HOST_HAS_VALID_SSL_CERTIFICATE ) $curl_cmd .= ' -k ';
-				if($credentials_supplied)
-				{
-					$curl_cmd .= ' -u'.$http_authentication_username.':'.$http_authentication_password.' ';
-				}
-				$curl_cmd .= securest_available_protocol().'://'.REASON_HOST.$this->test_web_base_url.$tmp_test_file.' > '.$tmp_valid_file;
-
-				exec( $curl_cmd, $curl_output, $curl_return_var );
-
-				if( $curl_return_var > 0 )
-					trigger_error( 'Unable to even try to validate .htaccess file - curl failed - '.$curl_return_var."\n\n$curl_output", HIGH );
-
+				
+				$url = securest_available_protocol().'://'.REASON_HOST.$this->test_web_base_url.$tmp_test_file;
+				$url_contents = get_reason_url_contents($url);
+				$fp2 = fopen( $tmp_valid_file, 'w' ) OR trigger_error( 'Unable to create file at ' . $tmp_valid_file, HIGH );
+				fwrite( $fp2, $url_contents ) OR trigger_error( 'Unable to write to file at ' . $tmp_valid_file, HIGH );
+				fclose( $fp2 ) OR trigger_error( 'Unable to close file at ' . $tmp_valid_file, HIGH );
+				
 				// compare the test index page with the downloaded one
 				$diff_cmd = 'diff --brief '.$this->test_dir.'/'.$test_file_name.' '.$tmp_valid_file;
 
@@ -328,7 +308,7 @@ mapping.', HIGH );
 			
 				// if empty, file did not validate
 				if( $diff_result )
-					trigger_error( $curl_cmd . ' .htaccess file did not validate.', HIGH );
+					trigger_error( '.htaccess file did not validate.', HIGH );
 		
 				// make a backup of the original file
 				if( !empty( $orig ) )
