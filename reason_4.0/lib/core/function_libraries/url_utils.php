@@ -4,15 +4,24 @@
 // returns a string or false on error
 function get_reason_url_contents( $url )
 {
+	require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
+	
 	// Includes the variables $http_authentication_username and $http_authentication_password
-	include( HTTP_CREDENTIALS_FILEPATH );
-	$ch = curl_init( $url );
+	if (defined('HTTP_CREDENTIALS_FILEPATH') && file_exists(HTTP_CREDENTIALS_FILEPATH)) include( HTTP_CREDENTIALS_FILEPATH );
+	else $http_authentication_username = $http_authentication_password = '';
+	$ch = curl_init( $url );	
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 	curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
 	curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
-	curl_setopt( $ch, CURLOPT_USERPWD, $http_authentication_username.':'.$http_authentication_password);
-	curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false);
-	curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false);
+	if (!empty($http_authentication_username) || !empty($http_authentication_password))
+	{
+		curl_setopt( $ch, CURLOPT_USERPWD, $http_authentication_username.':'.$http_authentication_password);
+	}
+	if (!REASON_HOST_HAS_VALID_SSL_CERTIFICATE)
+	{
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false);
+	}
 	$page = curl_exec( $ch );
 	// check for errors
 	if( empty( $page ) )
@@ -32,6 +41,8 @@ function get_reason_url_contents( $url )
 */
 function get_remote_filesize($uri,$user='',$pw='')
 {
+   require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
+
    // start output buffering
    ob_start();
    // initialize curl with given uri
