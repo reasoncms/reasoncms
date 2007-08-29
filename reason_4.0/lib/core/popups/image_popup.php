@@ -27,36 +27,38 @@
 	{
 		$image = new entity( $id );
 	}
-	if( empty($id ) OR ($image->get_value( 'type' ) != id_of( 'image' )) OR ($image->get_value('state') != 'Live' ) )
+	if( empty($id ) OR !$image->get_values() OR ($image->get_value( 'type' ) != id_of( 'image' )) OR ($image->get_value('state') != 'Live' ) )
 	{
+		header('HTTP/1.0 404 Not Found');
 		$title = 'No image found';
-		if(empty($id))
+		if(!empty($_SERVER['HTTP_REFERER'])) // only trigger an error if there is a referer (e.g. we can do something about it)
 		{
-			$xtra = 'Invalid id passed to script';
-		}
-		elseif($image->get_value( 'type' ) != id_of( 'image' ))
-		{
-			$xtra = 'id passed to script is not the id of an image';
-		}
-		elseif($image->get_value('state') != 'Live' )
-		{
-			$xtra = 'image requested is '.strtolower($image->get_value('state'));
-		}
-		if(!empty($_SERVER['HTTP_REFERER']))
-		{
+			if(empty($id))
+			{
+				$xtra = 'Invalid id passed to script';
+			}
+			elseif(!$image->get_values())
+			{
+				$xtra = 'id passed to script is not the id of a Reason entity';
+			}
+			elseif($image->get_value( 'type' ) != id_of( 'image' ))
+			{
+				$xtra = 'id passed to script is not the id of an image';
+			}
+			elseif($image->get_value('state') != 'Live' )
+			{
+				$xtra = 'image requested is '.strtolower($image->get_value('state'));
+			}
 			$xtra .= ' ( Referrer: '.$_SERVER['HTTP_REFERER'].' )';
+			trigger_error('Bad image request on image popup script - '.$xtra);
 		}
 		$image = null;
-		trigger_error('Bad image request on image popup script - '.$xtra);
-	}
-	else
-	{
-		$GLOBALS['_reason_image_popup_data']['title'] = $image->get_value( 'description' ) ? $image->get_value( 'description' ) : 'Image';
-		$GLOBALS['_reason_image_popup_data']['id'] = $id;
 	}
 	
 	if(!empty( $image ))
 	{
+		$GLOBALS['_reason_image_popup_data']['id'] = $id;
+		$GLOBALS['_reason_image_popup_data']['title'] = $image->get_value( 'description' ) ? $image->get_value( 'description' ) : 'Image';
 		$GLOBALS['_reason_image_popup_data']['image_exists'] = true;
 		$GLOBALS['_reason_image_popup_data']['image_tag'] = '<img src="'.WEB_PHOTOSTOCK.$id.'.'.$image->get_value('image_type').'" width="'.$image->get_value('width').'" height="'.$image->get_value('height').'" border="0" alt="'.htmlentities(strip_tags($image->get_value('description'))).'" />';
 		
@@ -67,6 +69,7 @@
 	else
 	{
 		$GLOBALS['_reason_image_popup_data']['image_exists'] = false;
+		$GLOBALS['_reason_image_popup_data']['title'] = 'Image not found';
 	}
 	
 	if(defined('IMAGE_POPUP_TEMPLATE_FILENAME'))
