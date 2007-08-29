@@ -37,6 +37,7 @@
 		// execute the command
 		$result = shell_exec($cmd);
 		// if we want to get rid of the 
+
 		if ( $remove_extra_tags )
 		{
 			// remove everything from the beginning up to and including the <body
@@ -46,7 +47,7 @@
 			$remove_until = strpos( $result,'>' ) + strlen( '>' );
 			$result = substr( $result, $remove_until );
 			// remove the ending </body> and </html>
-			$remove_from = strrpos( $result, '</body>' ) - strlen( '</body>' ) - 1;
+			$remove_from = strrpos( $result, '<' ) - strlen( '</body>' ) - 1; // find last instance of "<"
 			$result = substr( $result, 0, $remove_from );
 		}
 		return trim($result);
