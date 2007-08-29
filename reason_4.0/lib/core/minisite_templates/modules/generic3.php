@@ -909,7 +909,7 @@
 					$setup_es->set_num(1);
 					foreach($filter_entities as $key=>$filter)
 					{
-						$es = $setup_es;
+						$es = carl_clone($setup_es);
 						$es->add_left_relationship( $filter->id() );
 						$results = $es->run_one();
 						if(empty($results))
