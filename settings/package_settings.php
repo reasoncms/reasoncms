@@ -58,6 +58,9 @@ define( 'HTTPS_AVAILABLE', true );
  */
 define('REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH','/reason_package/');
 
+// Define the name of the function which performs html sanitization
+define('HTML_SANITIZATION_FUNCTION','get_safer_html_html_purifier');
+
 // Define the path to the settings files for the various applications in the package
 define('SETTINGS_INC',INCLUDE_PATH.'settings/');
 
