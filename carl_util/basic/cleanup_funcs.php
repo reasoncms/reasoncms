@@ -212,4 +212,55 @@
 		$rules = array('pattern' => 'filename', 'replace' => '_');
 		return sanitize_by_replace_regexp($filename, $rules);
 	}
+	
+	/**
+	 * Sanitizes HTML using the function specified in the package_settings.php HTML_SANITIZATION_FUNTION
+	 * - defaults to using get_safer_html_html_purifier
+	 * @param string html string needing sanitization
+	 * @return string sanitized html string
+	 */
+	function carl_get_safer_html($string)
+	{
+		if (defined('HTML_SANITIZATION_FUNCTION'))
+		{
+			$func_name = HTML_SANITIZATION_FUNCTION;
+		}
+		else
+		{
+			trigger_error('The HTML_SANITIZATION_FUNCTION constant in package_settings.php is not defined - defaulting to get_safer_html_html_purifier', WARNING);
+			$func_name = 'get_safer_html_html_purifier';
+		}
+		return $func_name($string);
+	}
+
+	function get_safer_html_html_purifier($string)
+	{
+		require_once( HTML_PURIFIER_INC . 'htmlpurifier.php' );
+		$config = HTMLPurifier_Config::createDefault();
+		$config->set('HTML', 'Doctype', 'HTML 4.01 Strict');
+		$config->set('HTML', 'TidyLevel', 'heavy');
+		
+		// lets transform b to strong and i to em
+		$def =& $config->getDefinition('HTML');
+		$def->info_tag_transform['b'] = new HTMLPurifier_TagTransform_Simple('strong');
+		$def->info_tag_transform['i'] = new HTMLPurifier_TagTransform_Simple('em');
+
+		$purifier = new HTMLPurifier($config);
+
+    	return $purifier->purify( $string );
+	}
+
+	function get_safer_html($string)
+	{
+		return carl_get_safer_html($string);
+	}
+
+	function get_safer_html_html_safe($string)
+	{
+		require_once('HTML/Safe.php');
+		$parser = new HTML_Safe();
+		$parser->attributes = array('dynsrc');
+		return $parser->parse($string);
+	}
+
 ?>
