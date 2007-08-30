@@ -1,10 +1,7 @@
 <?php
 include ('reason_header.php');
 reason_include_once ('classes/entity_selector.php');
-reason_include_once ('classes/user.php');
 reason_include_once ('function_libraries/admin_actions.php');
-reason_include_once ('classes/url_manager.php');
-
 include_once( CARL_UTIL_INC . 'tidy/tidy.php' );
 
 ?>
@@ -13,8 +10,15 @@ include_once( CARL_UTIL_INC . 'tidy/tidy.php' );
 <title>Reason Setup</title>
 </head>
 <body>
+
 <h2>Reason Setup</h2>
 <?
+if (isset($_GET['curl_test']))
+{
+	echo '</body></html>';
+	die;
+}
+
 if (isset($_POST['do_it_pass']) == false)
 {
 	if (perform_checks() == false)
@@ -28,6 +32,7 @@ if (isset($_POST['do_it_pass']) == false)
 	if(!is_dir($path))
 	{
 		echo '<p>Setting up login site</p>';
+		reason_include_once ('classes/url_manager.php');
 		include_once(CARL_UTIL_INC.'basic/filesystem.php');
 		mkdir_recursive($path, 0775);
 		$um = new url_manager( $login_site_id, true );
@@ -89,6 +94,7 @@ function admin_user_exists()
 
 function create_admin_user($password)
 {
+	reason_include_once ('classes/user.php');
 	$password_hash = sha1($password);
 	$my_user = new User();
 	$user = $my_user->create_user('admin');
@@ -125,10 +131,12 @@ function perform_checks()
 	if (tidy_check()) $check_passed++;
 	else $check_failed++;
 	
-	if (data_dir_writable(REASON_CSV_DIR, 'REASON_CSV_DIR')) $check_passed++;
+	if (curl_check()) $check_passed++;
 	else $check_failed++;
 	
-	if (data_dir_writable(PHOTOSTOCK, 'PHOTOSTOCK')) $check_passed++;
+	echo '<h3>Performing Directory and File Checks</h3>';
+	
+	if (data_dir_writable(REASON_CSV_DIR, 'REASON_CSV_DIR')) $check_passed++;
 	else $check_failed++;
 	
 	if (data_dir_writable(REASON_LOG_DIR, 'REASON_LOG_DIR')) $check_passed++;
@@ -137,11 +145,27 @@ function perform_checks()
 	if (data_dir_writable(ASSET_PATH, 'ASSET_PATH')) $check_passed++;
 	else $check_failed++;
 	
+	if (data_dir_writable(PHOTOSTOCK, 'PHOTOSTOCK')) $check_passed++;
+	else $check_failed++;
+	
+	if (data_dir_writable(REASON_TEMP_DIR, 'REASON_TEMP_DIR')) $check_passed++;
+	else $check_failed++;
+	
+	// In our default config if this path is not writable then uploads should fail. Probably it would be better to distribute the package with 
+	// the /www/tmp directory being an alias to the file system location of REASON_TEMP_DIR. Until this is done, we are leaving it like this. 
+	// We may want to do something to check the validity of those aliases, such as writing a file then trying to access it via curl. The same 
+	// thing could be done for assets.
+	if (data_dir_writable($_SERVER[ 'DOCUMENT_ROOT' ].WEB_TEMP, 'WEB_TEMP')) $check_passed++;
+	else $check_failed++;
+	
 	if (check_file_readable(APACHE_MIME_TYPES, 'APACHE_MIME_TYPES')) $check_passed++;
 	else $check_failed++;
 	
-	echo '<p>'.$check_passed.' checks were successful</p>';
-	echo '<p>'.$check_failed.' checks failed</p>';
+	echo '<h3>Summary</h3>';
+	echo '<ul>';
+	echo '<li>'.$check_passed.' checks were successful</li>';
+	echo '<li>'.$check_failed.' checks failed</li>';
+	echo '</ul>';
 	if ($check_failed == 0) return true;
 	else return false;
 }
@@ -158,6 +182,13 @@ function tidy_check()
 	$string = tidy($html_string);
 	if ($string == '') return msg('tidy check failed - make sure the constant TIDY_EXE in paths.php is set to the location of the tidy executable', false);
 	else return msg('tidy check passed', true);
+}
+
+function curl_check()
+{
+	$content = get_reason_url_contents( carl_make_link(array('curl_test' => 'true')));
+	if (empty($content)) return msg('curl check failed', false);
+	else return msg('curl check passed', true);
 }
 
 function data_dir_writable($dir, $name)
