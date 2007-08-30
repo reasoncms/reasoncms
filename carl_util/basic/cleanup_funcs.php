@@ -237,17 +237,22 @@
 	{
 		require_once( HTML_PURIFIER_INC . 'htmlpurifier.php' );
 		$config = HTMLPurifier_Config::createDefault();
-		$config->set('HTML', 'Doctype', 'HTML 4.01 Strict');
-		$config->set('HTML', 'TidyLevel', 'heavy');
-		
+
+		$config->set('HTML', 'DefinitionID', 'allow_anchors_transform_em_and_strong');
+		$config->set('HTML', 'DefinitionRev', 1);
+
 		// lets transform b to strong and i to em
 		$def =& $config->getDefinition('HTML');
 		$def->info_tag_transform['b'] = new HTMLPurifier_TagTransform_Simple('strong');
 		$def->info_tag_transform['i'] = new HTMLPurifier_TagTransform_Simple('em');
 
+		// lets add support for named anchors		
+		$def2 =& $config->getHTMLDefinition(true);
+		$def2->addAttribute('a', 'name', new HTMLPurifier_AttrDef_HTML_Nmtokens);
+
 		$purifier = new HTMLPurifier($config);
 
-    	return $purifier->purify( $string );
+	    	return $purifier->purify( $string );
 	}
 
 	function get_safer_html($string)
