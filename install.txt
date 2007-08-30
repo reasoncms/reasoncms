@@ -28,11 +28,9 @@ Requirements
 	Not currently compatible with PHP 5+
 
 	MySQL http://www.mysql.org
-	Works with 4.0 and 4.1, not tested with 5.0+
+	Works with 4.0 and 4.1, and 5
 
 	Tidy http://tidy.sourceforge.net/#source 
-
-	Curl http://curl.haxx.se/
 
 	ImageMagick http://www.imagemagick.org/script/index.php 
 
@@ -73,20 +71,10 @@ listed in the PHP_configuration.txt file included alongside this install.txt.
 	Reason uses the error handler in carl_util and controls error reporting / display accordingly.
 	The settings you specify in php.ini apply only to applications that do not use the error
 	handler within carl_util.
-
-	Reason relies on the following Pear modules.
-
-	HTML_Safe
-	XML_HTMLSax3
-	XML_Serialize
-
-	Each has a number of dependencies. You can install them with the following commands:
-
-	pear install --onlyreqdeps XML_Serializer-0.18.0
-	pear install channel://pear.php.net/XML_HTMLSax3-3.0.0RC1
-	pear install channel://pear.php.net/HTML_Safe-0.9.9beta
-
-
+	
+	Reason will perform best if you compile PHP with libcurl, or have the command line version
+	of curl available.
+	
 WebServer Configuration
 
 The following configuration defines two Apache Virtual Host entries for Reason,
@@ -102,7 +90,6 @@ package_settings.php file to false.
 Otherwise, You will need to generate or purchase an SSL certificate before 
 proceeding.  Please see the note in the "Reason Settings" section below if you 
 choose to use a self signed certificate.
-
 
 
 	Enable PHP:
@@ -288,6 +275,7 @@ PHP_CLI - file system path of the php binary to be used for command line operati
 DB_CREDENTIALS FILEPATH - file system location of .xml file which defines database connections
 TIDY_EXE - location of the tidy binary
 IMAGEMAGICK_PATH - file system path to imagemagick functions
+CURL_PATH - needed only if libcurl is not available
 HTTPS_AVAILABLE - whether or not the server is capable of serving pages over https
 
 If reason sites are going to be placed behind areas that require http authentication, then the 
