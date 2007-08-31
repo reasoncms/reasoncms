@@ -123,60 +123,34 @@ function check_URL_history( $request_uri )
 		//do normal 404
 		header( 'http/1.1 404 Not Found' );
 	}
-	elseif( $num_results == 1 )
-	{
-		$row = mysql_fetch_array( $results );
-		$page_id = $row['page_id'];
-		
-		$es = new entity_selector( );
-		$es->add_type( id_of( 'minisite_page') ); //'3317' id_of( 'Page' )
-		$es->add_relation( 'entity.id = "' . $page_id . '"' );
-		$es->add_relation( 'entity.state = "Live"' );
-		$results = $es->run();
-		$results = $results[ id_of( 'minisite_page') ];        
-		if( count( $results ) == 1 )
-		{
-			if( empty( $GLOBAL['SSL_SESSION_ID'] ) )
-			{
-				$URL = 'http://' . REASON_HOST . build_URL( $page_id ) . $query_string;
-			}
-			else
-			{
-				$URL = 'https://' . REASON_HOST . build_URL( $page_id ) . $query_string;
-			}
-			
-			//header( 'http/1.1 301 Moved Permanently' );
-			header( 'Location: ' . $URL, true, 301 );
-			die();
-		}        
-	}
 	else
 	{
-		//do something: either display a list of possible pages or redirect to most recent (as above)
-		$row = mysql_fetch_array( $results );
+		$row = mysql_fetch_array( $results ); // grab the first result (e.g. most recent)
 		$page_id = $row['page_id'];
 		
 		$es = new entity_selector( );
 		$es->add_type( id_of( 'minisite_page') ); //'3317' id_of( 'Page' )
 		$es->add_relation( 'entity.id = "' . $page_id . '"' );
 		$es->add_relation( 'entity.state = "Live"' );
-		$results = $es->run();
-		$results = $results[ id_of( 'minisite_page') ];        
-		if( count( $results ) == 1 )
+		$results = $es->run_one();  
+		$path = build_URL( $page_id );     
+		if( !empty($results) && !empty($path) )
 		{
+			
 			if( empty( $GLOBAL['SSL_SESSION_ID'] ) )
 			{
-				$URL = 'http://' . REASON_HOST . build_URL( $page_id ) . $query_string;
+				$path = build_URL( $page_id );
+				$URL = 'http://' . REASON_HOST . $path . $query_string;
 			}
 			else
 			{
-				$URL = 'https://' . REASON_HOST . build_URL( $page_id ) . $query_string;
+				$URL = 'https://' . REASON_HOST . $path . $query_string;
 			}
 			
 			//header( 'http/1.1 301 Moved Permanently' );
 			header( 'Location: ' . $URL, true, 301 );
 			die();
-		}     
+		}   
 	}
 }
 ?>
