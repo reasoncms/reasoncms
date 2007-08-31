@@ -331,7 +331,11 @@ function dig_for_URL( $page_id, $URL)
 		$page = current($results);
 		if( $page->get_value( 'id' ) == $page_id )
 		{
-			return get_site_URL( $page_id ) . $URL;
+			$site_url = get_site_URL( $page_id );
+			if(!empty($site_url))
+				return $site_url . $URL;
+			else
+				return;
 		}
 		else
 		{
@@ -355,7 +359,11 @@ function dig_for_URL_known_parent($page_id, $parent_id, $url, &$pages, $parent_i
 	{
 		if ($parent_id == $page_id)
 		{
-			$url = get_site_URL( $page_id ) . $url;
+			$site_url = get_site_URL( $page_id );
+			if(!empty($site_url))
+				$url = get_site_URL( $page_id ) . $url;
+			else
+				$url = NULL;
 			$cache[$orig_id] = $url;
 			return $url;
 		}
