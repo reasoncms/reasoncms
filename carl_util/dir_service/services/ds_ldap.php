@@ -115,13 +115,14 @@ class ds_ldap extends ds_default {
 		// ldap_list is faster for single level searches; if you need to descend a directory hierarchy, 
 		// use ldap_search instead.
 		if ($this->_search_params['subtree_search'])
-			$result = ldap_search($this->_conn, $this->_search_params['base_dn'], $this->_search_params['filter'], $this->_search_params['attrs']);
+			$result = @ldap_search($this->_conn, $this->_search_params['base_dn'], $this->_search_params['filter'], $this->_search_params['attrs']);
 		else
-			$result = ldap_list($this->_conn, $this->_search_params['base_dn'], $this->_search_params['filter'], $this->_search_params['attrs']);
+			$result = @ldap_list($this->_conn, $this->_search_params['base_dn'], $this->_search_params['filter'], $this->_search_params['attrs']);
 		
 		if ($result) {
 			return ($this->format_results($result));
 		} else {
+			$this->_error = sprintf( 'LDAP search failed for filter %s' , $this->_search_params['filter']);
 			return false;
 		}
 	} 
