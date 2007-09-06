@@ -475,6 +475,15 @@
 			),
 			'sidebar' => '',
 		),
+		'gallery_above_blurbs' => array(
+			'main' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',//'meta.description ASC',
+			),
+			'main_post'=>'blurb',
+			'sidebar' => '',
+			'sub_nav' => 'content',
+		),
 		'gallery_entire_site' => array(
 			'main_post' => array(
 				'module' => 'gallery2',
