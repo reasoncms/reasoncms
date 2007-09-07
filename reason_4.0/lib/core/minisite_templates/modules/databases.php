@@ -22,9 +22,12 @@ class DatabasesModule extends Generic3Module
 	var $search_fields = array('entity.name','meta.description','meta.keywords','date_string.date_string','db.output_parser');
 	var $use_filters = true;
 	var $acceptable_params = array(
-								'content_types'=>array(), //array of unique names to limit content types to (using AND in query)
-								'subjects'=>array(), //array of subjects to limit content types to (using AND in query)
-								'vendors'=>array(), //array of vendors to limit content types to (using AND in query)
+								'content_types'=>array(), //array of content type unique names to limit dbs to 
+								'content_type_matching'=>'and', // 'and' = grab dbs related to ALL; 'or' = grab dbs related to ANY
+								'subjects'=>array(), //array of subject unique names to limit dbs to
+								'subject_matching'=>'and', // 'and' = grab dbs related to ALL; 'or' = grab dbs related to ANY
+								'vendors'=>array(), //array of vendor unique names to limit dbs to
+								'vendor_matching'=>'and', // 'and' = grab dbs related to ALL; 'or' = grab dbs related to ANY
 	);
 	var $top_link = '<div class="top"><a href="#top">Top</a></div>';
 	
@@ -38,59 +41,51 @@ class DatabasesModule extends Generic3Module
 		$this->es->add_left_relationship_field( 'db_to_primary_external_url', 'external_url' , 'url' , 'primary_url' );
 		if(!empty($this->params['content_types']))
 		{
-			$this->add_content_type_limitation($this->params['content_types']);
+			if($this->params['content_type_matching'] == 'or')
+				$this->add_or_style_limitation('database_to_content_type',$this->params['content_types']);
+			else
+				$this->add_and_style_limitation('database_to_content_type',$this->params['content_types']);
 		}
 		if(!empty($this->params['subjects']))
 		{
-			$this->add_subject_type_limitation($this->params['subjects']);
+			if($this->params['subject_matching'] == 'or')
+				$this->add_or_style_limitation('database_to_subject',$this->params['subjects']);
+			else
+				$this->add_and_style_limitation('database_to_subject',$this->params['subjects']);
 		}
 		if(!empty($this->params['vendors']))
 		{
-			$this->add_vendor_limitation($this->params['vendors']);
+			if($this->params['vendor_matching'] == 'or')
+				$this->add_or_style_limitation('db_provided_by_organization',$this->params['vendors']);
+			else
+				$this->add_and_style_limitation('db_provided_by_organization',$this->params['vendors']);
 		}
 	} // }}}
-	function add_content_type_limitation($content_types)
+	
+	function add_and_style_limitation($rel_name, $unique_names)
 	{
-		$relid = relationship_id_of('database_to_content_type');
-		foreach($content_types as $content_type_uname)
+		$relid = relationship_id_of($rel_name);
+		foreach($unique_names as $uname)
 		{
-			if($content_type_id = id_of($content_type_uname))
-			{
-				$this->es->add_left_relationship($content_type_id,$relid);
-			}
-			else
-			{
-				trigger_error('The content type with unique name '.$content_type_uname.' does not exist in the Reason DB.');
-			}
+			if($id = id_of($uname))
+				$this->es->add_left_relationship($id,$relid);
 		}
 	}
-	function add_subject_type_limitation($subjects)
+	function add_or_style_limitation($rel_name, $unique_names)
 	{
-		$relid = relationship_id_of('database_to_subject');
-		foreach($subjects as $subject_uname)
+		$relid = relationship_id_of($rel_name);
+		if($relid)
 		{
-			if($subject_id = id_of($subject_uname))
+			$rel_field_info = $this->es->add_left_relationship_field($rel_name,'entity','id','related_id');
+			$ids = array();
+			foreach($unique_names as $uname)
 			{
-				$this->es->add_left_relationship($subject_id,$relid);
+				if($id = id_of($uname))
+					$ids[] = $id;
 			}
-			else
+			if(!empty($ids))
 			{
-				trigger_error('The subject with unique name '.$subject_uname.' does not exist in the Reason DB.');
-			}
-		}
-	}
-	function add_vendor_limitation($vendors)
-	{
-		$relid = relationship_id_of('db_provided_by_organization');
-		foreach($vendors as $vendor_uname)
-		{
-			if($vendor_id = id_of($vendor_uname))
-			{
-				$this->es->add_left_relationship($vendor_id,$relid);
-			}
-			else
-			{
-				trigger_error('The organization with unique name '.$vendor_uname.' does not exist in the Reason DB.');
+				$this->es->add_relation($rel_field_info['related_id']['table'].'.'.$rel_field_info['related_id']['field'].' IN ('.implode(',',$ids).')');
 			}
 		}
 	}
