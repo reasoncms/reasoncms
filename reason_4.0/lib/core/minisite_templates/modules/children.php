@@ -14,6 +14,7 @@
 										'provide_az_links' => false,
 										'provide_images' => false,
 										'randomize_images' => false,
+										'show_only_pages_in_nav' => false,
 									);
 		var $offspring = array();
 		var $az = array();
@@ -27,6 +28,10 @@
 			// find all the children of this page
 			$this->es->add_type( id_of('minisite_page') );
 			$this->es->add_left_relationship( $this->parent->cur_page->id(), relationship_id_of( 'minisite_page_parent' ) );
+			if($this->params['show_only_pages_in_nav'])
+			{
+				$this->es->add_relation('nav_display = "Yes"');
+			}
 			
 			$this->es->set_order('sortable.sort_order ASC');
 			$this->offspring = $this->es->run_one(); 
