@@ -750,6 +750,12 @@
 			'main_post' => 'children',
 			'sidebar' => 'news_mini',
 		),
+		'show_children_hide_non_nav' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'show_only_pages_in_nav' => true,
+			),
+		),
 		'show_children_no_title' => array(
 			'main_head' => '',
 			'main_post' => 'children',
