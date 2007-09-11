@@ -761,7 +761,7 @@
 				'module'=>'children',
 				'show_only_pages_in_nav' => true,
 			),
-			'sidebar' => 'blurbs',
+			'sidebar' => 'blurb',
 			'sub_nav' => 'image_sidebar',
 		),
 		'show_children_no_title' => array(
