@@ -102,7 +102,22 @@
 								'related_order' => 'random',
 								'limit_by_page_categories' => true,
 								'max_num_items' => 3),
-       ),
+        ),
+        'publication_with_full_images_on_listing' => array(
+        	'main_post' => array('module' => 'publication',
+        						 'use_filters' => false,
+        						 'show_login_link' => false,
+        						 'markup_generator_info' => 
+        						 array('list_item' => array('classname' => 'FullImageListItemMarkupGenerator',
+        						 							'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/full_image.php',
+        						 	  					   ),
+        							  ),
+        						),
+        	'main_head' => 'publication/title',
+        	'main' => 'publication/description',
+        	'sidebar'=>'',
+        	'pre_sidebar' => '',
+        ),
 		'blurb' => array(
 			'main_post' => 'blurb',
 			'sub_nav' => '',
