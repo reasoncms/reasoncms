@@ -756,6 +756,14 @@
 				'show_only_pages_in_nav' => true,
 			),
 		),
+		'show_children_hide_non_nav_sidebar_blurbs' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'show_only_pages_in_nav' => true,
+			),
+			'sidebar' => 'blurbs',
+			'sub_nav' => 'image_sidebar',
+		),
 		'show_children_no_title' => array(
 			'main_head' => '',
 			'main_post' => 'children',
