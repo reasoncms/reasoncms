@@ -144,8 +144,9 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 	}
 	function get_date_section()
 	{
-		// todo: use publication date format setting
-		return prettify_mysql_datetime($this->item->get_value( 'datetime' ), 'F j, Y \a\t g:i a');
+		$date_format_string = $this->passed_vars['publication']->get_value('date_format');
+		$date_format = (!empty($date_format_string)) ? $date_format_string : 'F j, Y \a\t g:i a';
+		return prettify_mysql_datetime($this->item->get_value( 'datetime' ), $date_format);
 	}
 	function should_show_author_section()
 	{
