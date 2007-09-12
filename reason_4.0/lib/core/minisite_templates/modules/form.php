@@ -412,6 +412,7 @@
 							$transform['your_work_phone'] = $dir_array['telephonenumber'];
 						}
 					}
+					$transform['your_mail_stop'] = $dir_array['carlcampuspostaladdress'][0];
 					return $transform;
         		}
         	}
@@ -422,7 +423,7 @@
         {
 			$dir = new directory_service();
 			$dir->search_by_attribute('ds_username', $this->user_netID, 
-				array('ds_firstname','ds_lastname','ds_fullname','ds_phone','ds_email','ou','title','homephone','telephonenumber'));
+				array('ds_firstname','ds_lastname','ds_fullname','ds_phone','ds_email','ou','title','homephone','telephonenumber','carlcampuspostaladdress'));
 			return $dir->get_first_record();
 		}
 	}
