@@ -54,7 +54,7 @@
 				}
 
 				//set login visibility and force login when needed
-				if (!empty($groups_viewing) && ($this->check_privs($groups_viewing, '') == false)) // not empty or defined as everybody
+				if (!empty($groups_viewing) || ($this->check_privs($groups_viewing, '') == false)) // not empty or defined as everybody
 				{
 					if (empty($this->user_netID) && ($this->params['force_login']) && (empty($this->request['mode'])) && (empty($this->request['force_login_disable'])))
 					{
