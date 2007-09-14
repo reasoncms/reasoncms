@@ -191,10 +191,9 @@ relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.na
 					$this->set_value( 'sponsor', $site->get_value('name') );
 				}
 			}
-			if( !$this->get_value('contact_username') && !empty($this->admin_page->request['user_id']) )
+			if( !$this->get_value('contact_username') )
 			{
-					$user = new entity( $this->admin_page->request['user_id'] );
-					$user->get_values();
+					$user = new entity( $this->admin_page->user_id );
 					$this->set_value( 'contact_username', $user->get_value('name') );
 			}
 			if( !$this->get_value('recurrence') )
