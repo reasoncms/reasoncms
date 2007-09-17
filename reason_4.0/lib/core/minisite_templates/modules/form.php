@@ -313,7 +313,7 @@
         	if (isset($_SESSION['form_confirm']))
         	{	
         		echo '<div class="submitted_data">';
-        		echo '<h2>The following data was successfully submitted:</h2>';
+        		echo '<h3>You submitted:</h3>';
         		$tyr = new Tyr();
         		echo $tyr->make_html_table($_SESSION['form_confirm'], false);
         		echo '</div>';
