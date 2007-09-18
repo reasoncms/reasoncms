@@ -41,6 +41,9 @@
 		 */
 		var $_relationship_elements = array();
 		
+		var $strip_tags_from_user_input = true;
+		var $allowable_HTML_tags = REASON_DEFAULT_ALLOWED_TAGS;
+		
 		function is_new_entity() // {{{
 		{
 			$temp = new entity( $this->get_value('id'),false );
