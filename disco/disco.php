@@ -255,8 +255,13 @@
 		var $strip_tags_from_user_input = false;
 		/**
 		* Tags that are allowed in user input.
-		* If {@link $strip_tags_from_user_input} is true, this string will be used as the second argument of strip_tags().
-		* @var string
+		* If {@link $strip_tags_from_user_input} is true, this value will be used as the second argument of strip_tags().
+		*
+		* If a single set of tags works for this form, provide a string here -- e.g. '<em><strong>'
+		* If you need to allow different sets of tags for different fields, provide an array keyed on element name,
+		* using the key "default_tags" for any fields not defined, -- e.g. 'array('default_tags'=>'<em><strong>','name'=>'')
+		*
+		* @var mixed
 		* @see get_value()
 		*/
 		var $allowable_HTML_tags = '';
@@ -1506,7 +1511,7 @@
 				{
 					$value = $element->get();
 					if(!empty($value) && $this->strip_tags_from_user_input)
-						return strip_tags($value);
+						return strip_tags($value, $this->get_allowable_html_tags($element_name));
 					else	
 						return $value;
 				}
@@ -1537,7 +1542,7 @@
 				{
 					$value = $element->get_value_for_display();
 					if(!empty($value) && $this->strip_tags_from_user_input)
-						return strip_tags($value);
+						return strip_tags($value, $this->get_allowable_html_tags($element_name));
 					else	
 						return $value;
 				}
@@ -1548,6 +1553,50 @@
 			}
 			return false;
 		} // }}}
+		
+		/**
+		* Determine which html tags are allowed for a given element
+		* @param string $element_name 
+		* @return string allowed tags
+		*/
+		function get_allowable_html_tags($element_name)
+		{
+			if(is_string($this->allowable_HTML_tags))
+			{
+				return $this->allowable_HTML_tags;
+			}
+			elseif(isset($this->allowable_HTML_tags[$element_name]))
+			{
+				return $this->allowable_HTML_tags[$element_name];
+			}
+			elseif(isset($this->allowable_HTML_tags['default_tags']))
+			{
+				return $this->allowable_HTML_tags['default_tags'];
+			}
+			else
+			{
+				return '';
+			}
+		}
+		
+		/**
+		* Set which html tags are allowed for a given element
+		* @see allowable_HTML_tags 
+		* @see get_allowable_html_tags
+		* @param string $element_name (use "default_tags" to set a default set for all fields that do not have allowable tags specifically defined)
+		* @param string $tags (use this format: '<a><b><cite>')
+		* @return void
+		*/
+		function set_allowable_html_tags($element_name,$tags)
+		{
+			if(is_string($this->allowable_HTML_tags))
+			{
+				$default = $this->allowable_HTML_tags;
+				$this->allowable_HTML_tags = array();
+				$this->allowable_HTML_tags['default_tags'] = $default;
+			}
+			$this->allowable_HTML_tags[$element_name] = $tags;
+		}
 		
 		/**
 		* Set the value of an element in the form
