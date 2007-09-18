@@ -1511,7 +1511,7 @@
 				{
 					$value = $element->get();
 					if(!empty($value) && $this->strip_tags_from_user_input)
-						return strip_tags($value, $this->get_allowable_html_tags($element_name));
+						return $this->_strip_tags($value, $this->get_allowable_html_tags($element_name));
 					else	
 						return $value;
 				}
@@ -1542,7 +1542,7 @@
 				{
 					$value = $element->get_value_for_display();
 					if(!empty($value) && $this->strip_tags_from_user_input)
-						return strip_tags($value, $this->get_allowable_html_tags($element_name));
+						return $this->_strip_tags($value, $this->get_allowable_html_tags($element_name));
 					else	
 						return $value;
 				}
@@ -1553,6 +1553,24 @@
 			}
 			return false;
 		} // }}}
+		
+		/**
+		* A wrapper for strip tags that understands special values for the second argument
+		*
+		* At the moment there is only one special value:
+		* "all" will not strip any tags and will return the value as given
+		*
+		* @param string $element_name 
+		* @param string $allowable_tags
+		* @return string stripped text
+		*/
+		function _strip_tags($value, $allowable_tags)
+		{
+			if($allowable_tags == 'all')
+				return $value;
+			else
+				return strip_tags($value, $allowable_tags);
+		}
 		
 		/**
 		* Determine which html tags are allowed for a given element
@@ -1581,10 +1599,10 @@
 		
 		/**
 		* Set which html tags are allowed for a given element
-		* @see allowable_HTML_tags 
+		* @see allowable_HTML_tags
 		* @see get_allowable_html_tags
 		* @param string $element_name (use "default_tags" to set a default set for all fields that do not have allowable tags specifically defined)
-		* @param string $tags (use this format: '<a><b><cite>')
+		* @param string $tags (use this format: '<a><b><cite>'; use an empty string to allow no tags; use the string 'all' to turn tag-stripping off for a given field)
 		* @return void
 		*/
 		function set_allowable_html_tags($element_name,$tags)
