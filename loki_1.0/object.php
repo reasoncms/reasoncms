@@ -499,8 +499,8 @@ class Loki_Process extends Loki
 	{
 		$this->_field_value = $field_value;
 
-		$good_tags = '<a><abbrev><acronym><address><area><au><author><b><big><blockquote><bq><br><caption><center><cite><code><col><colgroup><credit><dfn><dir><div><dl><dt><dd><em><fn><form><h1><h2><h3><h4><h5><h6><hr><i><img><input><lang><lh><li><link><listing><map><math><menu><multicol><nobr><note><ol><option><p><param><person><plaintext><pre><samp><select><small><strike><strong><sub><sup><table><tbody><td><textarea><tfoot><th><thead><tr><tt><u><ul><var><wbr>';
-		$good_tags_regexp = 'a|abbrev|acronym|address|area|au|author|b|big|blockquote|bq|br|caption|center|cite|code|col|colgroup|credit|dfn|dir|div|dl|dt|dd|em|fn|form|h1|h2|h3|h4|h5|h6|hr|i|img|input|lang|lh|li|link|listing|map|math|menu|multicol|nobr|note|ol|option|p|param|person|plaintext|pre|samp|select|small|strike|strong|sub|sup|table|tbody|td|textarea|tfoot|th|thead|tr|tt|u|ul|var|wbr';
+		$good_tags = '<a><abbrev><acronym><address><area><au><author><b><big><blockquote><bq><br><caption><center><cite><code><col><colgroup><credit><dfn><dir><div><dl><dt><dd><em><fn><form><h1><h2><h3><h4><h5><h6><hr><i><iframe><img><input><lang><lh><li><link><listing><map><math><menu><multicol><nobr><note><ol><option><p><param><person><plaintext><pre><samp><select><small><strike><strong><sub><sup><table><tbody><td><textarea><tfoot><th><thead><tr><tt><u><ul><var><wbr>';
+		$good_tags_regexp = 'a|abbrev|acronym|address|area|au|author|b|big|blockquote|bq|br|caption|center|cite|code|col|colgroup|credit|dfn|dir|div|dl|dt|dd|em|fn|form|h1|h2|h3|h4|h5|h6|hr|i|iframe|img|input|lang|lh|li|link|listing|map|math|menu|multicol|nobr|note|ol|option|p|param|person|plaintext|pre|samp|select|small|strike|strong|sub|sup|table|tbody|td|textarea|tfoot|th|thead|tr|tt|u|ul|var|wbr';
 		$this->_field_value = strip_tags( $field_value, $good_tags );
 		
 		// Change all &nbsp;'s to plain ol' spaces -- 2003-12-04 NF
