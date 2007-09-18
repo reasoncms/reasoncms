@@ -15,6 +15,8 @@
 			$this->_no_tidy[] = 'url_fragment';
 			$this->_no_tidy[] = 'custom_page';
 			$this->_no_tidy[] = 'extra_head_content';
+			
+			$this->set_allowable_html_tags('extra_head_content','all');
 
 			$this->add_element( 'is_link', 'hidden' );
 			if( !empty( $_REQUEST[ 'is_link' ] ) OR $this->get_value( 'url' ) )
