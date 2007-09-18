@@ -700,4 +700,12 @@
 	 * If you add a new feed for the Loki link dialog box, register it here so it can show up
 	 */
 	$GLOBALS['_reason_types_with_editor_link_feeds'] = array('minisite_page','news','event_type','asset');
+	
+	/**
+	 * REASON_DEFAULT_ALLOWED_TAGS
+	 * A whitelist of the HTML tags Reason will allow to be saved to the database.
+	 *
+	 * This string should be in the same format as the second argument to php's built-in strip_tags() function, e.g.: '<a><abbrev><acronym><address>'
+	 */
+	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbrev><acronym><address><area><au><author><b><big><blockquote><bq><br><caption><center><cite><code><col><colgroup><credit><dfn><dir><div><dl><dt><dd><em><fn><form><h1><h2><h3><h4><h5><h6><hr><i><img><input><lang><lh><li><link><listing><map><math><menu><multicol><nobr><note><ol><option><p><param><person><plaintext><pre><samp><select><small><strike><strong><sub><sup><table><tbody><td><textarea><tfoot><th><thead><tr><tt><u><ul><var><wbr>');
 ?>
