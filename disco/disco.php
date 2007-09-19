@@ -258,11 +258,18 @@
 		* If {@link $strip_tags_from_user_input} is true, this value will be used as the second argument of strip_tags().
 		*
 		* If a single set of tags works for this form, provide a string here -- e.g. '<em><strong>'
+		*
 		* If you need to allow different sets of tags for different fields, provide an array keyed on element name,
 		* using the key "default_tags" for any fields not defined, -- e.g. 'array('default_tags'=>'<em><strong>','name'=>'')
 		*
+		* You can allow all tags by using the keyword 'all' instead of a list of tags.
+		*
+		* Note that it is easier to interact with the methods {@link set_allowable_html_tags()} and {@link get_allowable_html_tags()] than to work with this variable directly.
+		*
 		* @var mixed
 		* @see get_value()
+		* @see set_allowable_html_tags()
+		* @see get_allowable_html_tags()
 		*/
 		var $allowable_HTML_tags = '';
 		/**
