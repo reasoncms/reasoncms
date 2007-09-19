@@ -69,4 +69,8 @@
 			date_default_timezone_set(REASON_DEFAULT_TIMEZONE);
 		}
 	}
+	if(!defined('REASON_DEFAULT_ALLOWED_TAGS'))
+	{
+		define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbrev><acronym><address><area><au><author><b><big><blockquote><bq><br><caption><center><cite><code><col><colgroup><credit><dfn><dir><div><dl><dt><dd><em><fn><form><h1><h2><h3><h4><h5><h6><hr><i><img><input><lang><lh><li><link><listing><map><math><menu><multicol><nobr><note><ol><option><p><param><person><plaintext><pre><samp><select><small><strike><strong><sub><sup><table><tbody><td><textarea><tfoot><th><thead><tr><tt><u><ul><var><wbr>');
+	}
 ?>
