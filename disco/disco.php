@@ -1562,21 +1562,35 @@
 		} // }}}
 		
 		/**
-		* A wrapper for strip tags that understands special values for the second argument
+		* A wrapper for strip_tags that understands special values for the second argument
+		* and works recursively on arrays
 		*
 		* At the moment there is only one special value:
 		* "all" will not strip any tags and will return the value as given
 		*
-		* @param string $element_name 
+		* @param mixed $value may be a string or mixed array of arrays and/or strings
 		* @param string $allowable_tags
 		* @return string stripped text
 		*/
 		function _strip_tags($value, $allowable_tags)
 		{
 			if($allowable_tags == 'all')
+			{
 				return $value;
+			}
+			elseif(is_array($value))
+			{
+				$return = array();
+				foreach(array_keys($value) as $key)
+				{
+					$return[$key] = $this->_strip_tags($value[$key],$allowable_tags);
+				}
+				return $return;
+			}
 			else
+			{
 				return strip_tags($value, $allowable_tags);
+			}
 		}
 		
 		/**
