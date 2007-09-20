@@ -15,6 +15,7 @@
 		
 		function alter_data()
 		{
+			$this->set_allowable_html_tags('thor_content','all');
 			//$this->add_required( 'email_of_recipient' ); // only required if db_flag == 'no'
 			$this->add_required( 'thor_content' );
 			$this->add_required( 'thank_you_message' );
