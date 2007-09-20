@@ -146,7 +146,7 @@ class PublicationModule extends Generic3Module
 									   'links_to_sections' => 'get_links_to_sections',
 									   'view_all_items_in_section_link' => 'get_all_items_in_section_link',
 									   'links_to_current_publications' => 'get_links_to_current_publications',
-										'publication'=>'get_publication_entity',
+									   'publication'=>'get_publication_entity',
 									);
 	
 	/**
@@ -182,7 +182,7 @@ class PublicationModule extends Generic3Module
 	*	Extended from generic3 so that the generic3 init function is called on ONLY if there is actually 
 	*   a publication associated with the page.  We don't want any orphaned news items showing up.  
 	*/
-	function init( $args ) 
+	function init( $args = array() ) 
 	{
 		$this->set_defaults_from_parameters($this->params);
 		if ($this->related_mode) $this->init_related( $args );
@@ -217,7 +217,7 @@ class PublicationModule extends Generic3Module
 	 * Init when publication is in related_mode
 	 * @author Nathan White
 	 */
-	function init_related( $args )
+	function init_related( $args = array())
 	{
 		// init defaults
 		$this->use_filters = false;
@@ -463,7 +463,11 @@ class PublicationModule extends Generic3Module
 	 */
 	function related_pre_es_additional_init_actions()
 	{
-		if (!empty($this->related_title))
+		if (isset($this->params['related_title']))
+		{
+			$this->module_title = $this->params['related_title'];
+		}
+		elseif (!empty($this->related_title))
 		{
 			//if ($this->related_title = 'keywords')  // rules can be defined to handle title keywords
 			//elseif
@@ -1563,8 +1567,7 @@ class PublicationModule extends Generic3Module
 			$es->add_right_relationship( $item->id(), relationship_id_of('news_to_comment') );
 			return $es->get_one_count();
 		}
-	
-		
+
 		/**
 		*  Returns the permalink to an item.
 		*  @return string the url of the permalink
@@ -1582,7 +1585,7 @@ class PublicationModule extends Generic3Module
 			return $link;
 		}
 		
-		function get_link_to_full_item($item)
+		function get_link_to_full_item(&$item)
 		{
 			if($this->related_mode)
 			{
@@ -1595,7 +1598,7 @@ class PublicationModule extends Generic3Module
 			}
 		}
 		
-		function get_link_to_full_item_other_pub($item)
+		function get_link_to_full_item_other_pub(&$item)
 		{
 			$link_args = $this->get_query_string_values(array('issue_id', 'section_id'));
 			return $this->construct_link($item, $link_args);
