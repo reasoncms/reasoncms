@@ -45,7 +45,7 @@
 					$e = new entity( $id );
 					if( $e->get_value( 'state' ) == 'Live'  )
 					{
-						$q = 'UPDATE entity SET state = "Deleted" where id = ' . $id;
+						$q = 'UPDATE entity SET state = "Deleted", last_edited_by = "'.$this->admin_page->user_id.'" where id = ' . $id;
 						db_query( $q , 'Error setting state as deleted in deleteDisco::finish()' );
 
 						$type = new entity( $this->admin_page->type_id );
