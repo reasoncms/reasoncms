@@ -45,7 +45,7 @@
 			}
 			else
 			{
-				$q = 'UPDATE entity SET state = "Live" where id = ' . $this->admin_page->id;
+				$q = 'UPDATE entity SET state = "Live", last_edited_by = "'.$this->admin_page->user_id.'" where id = ' . $this->admin_page->id;
 				db_query( $q , 'Error setting state as live in DeleteModule::init()' );
 
 				if( get_class( $graph->nodes[ $graph->start ] ) == 'admin_lister_node' 
