@@ -15,7 +15,7 @@
 		}
 		function run()
 		{
-			$siteName = htmlentities (strip_tags($this->parent->pages->site_info->get_value('name')), ENT_QUOTES, 'UTF-8' );
+			$siteName = reason_htmlspecialchars(strip_tags($this->parent->pages->site_info->get_value('name')));
 			$defaultText = ' Search ' . $siteName;
 			$defaultTextLength = strlen($defaultText);
 			if($defaultTextLength > 40)
