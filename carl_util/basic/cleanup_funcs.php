@@ -111,14 +111,26 @@
 			// form.  Otherwise, default values can come cropping back up unexpectedly. --dh
 			if ( isset($vars[$key]) )
 			{
-				$func = $func_and_args['function'];
-				if ( !empty($func_and_args['extra_args']) )
+				if(!is_array($func_and_args))
 				{
-					$extra_args = $func_and_args['extra_args'];
-					$return[$key] = $func( $vars[$key], $extra_args );
+					$func_and_args = array('function'=>$func_and_args);
+				}
+				$func = $func_and_args['function'];
+				if(!function_exists($func))
+				{
+					trigger_error('Function '.$func. ' does not exist');
+					$return[$key] = '';
 				}
 				else
-					$return[$key] = $func( $vars[$key] );
+				{
+					if ( !empty($func_and_args['extra_args']) )
+					{
+						$extra_args = $func_and_args['extra_args'];
+						$return[$key] = $func( $vars[$key], $extra_args );
+					}
+					else
+						$return[$key] = $func( $vars[$key] );
+				}
 			}
 		}
 		return $return;
