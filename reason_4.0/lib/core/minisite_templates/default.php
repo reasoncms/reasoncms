@@ -246,7 +246,7 @@ class MinisiteTemplate
 		{
 			if( $this->cur_page->get_value( $entity_field ) )
 			{
-				$content = htmlspecialchars( $this->cur_page->get_value( $entity_field ), ENT_COMPAT, 'UTF-8' );
+				$content = reason_htmlspecialchars( $this->cur_page->get_value( $entity_field ) );
 				$this->add_head_item('meta',array('name'=>$meta_name,'content'=>$content) );
 			}
 		}
@@ -563,7 +563,7 @@ class MinisiteTemplate
 		{
 			$ret .= ' (Text Only)';
 		}
-		$ret = strip_tags($ret);
+		$ret = reason_htmlspecialchars(strip_tags($ret));
 		$this->add_head_item('title',array(),$ret, true);
 		//return $ret;
 	}
