@@ -87,7 +87,7 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 					echo $pre_link;
 						
 				// show photo
-				echo '<img src="'.WEB_PHOTOSTOCK.$image_name.'?cb='.$mod_time.'" width="'.$width.'" height="'.$height.'" alt="'.htmlentities( $image['description'] ).'" class="thumbnail" border="0"/>';
+				echo '<img src="'.WEB_PHOTOSTOCK.$image_name.'?cb='.$mod_time.'" width="'.$width.'" height="'.$height.'" alt="'.reason_htmlspecialchars( $image['description'] ).'" class="thumbnail" border="0"/>';
 				if( ($tn AND $show_popup_link AND  $full_image_exists) || ($tn && !empty($link_with_url) ) )
 				{
 					echo '</a>';
