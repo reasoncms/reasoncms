@@ -984,4 +984,20 @@
 		}
 		return $cache[$user_id][$site_id];
 	}
+	
+	/**
+	 * Convert special characters into HTML/XHTML/XML entities, but don't double-encode
+	 *
+	 * This function is necessary because Tidy will convert some -- but not all -- characters into their entities (quotes remain simple quotes, for example)
+	 *
+	 * As of php 5.2 it might be possible to use the 4th parameter of htmlspeciachars
+	 *
+	 * @param string $string
+	 * @return string encoded string
+	 */
+	function reason_htmlspecialchars($string)
+	{
+		$string = str_replace(array('&amp;','&gt;','&lt;','&quot;','&#039;'),array('&','>','<','"',"'"),$string);
+		return htmlspecialchars($string, ENT_QUOTES, 'UTF-8' );
+	}
 ?>
