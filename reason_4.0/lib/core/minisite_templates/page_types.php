@@ -276,9 +276,6 @@
 			'post_foot' => 'textonly_toggle',
 			'main_post'=>'children',
 		),
-		'custom_form' => array(
-			'main_post' => 'custom_form'
-		),
 		'databases' => array(
 			'main' => '',
 			'main_post' => 'databases',
