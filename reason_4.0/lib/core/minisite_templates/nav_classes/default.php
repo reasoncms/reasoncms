@@ -152,16 +152,29 @@
 		{
 			$this->link_to_current_page = true;
 		}
+		function get_home_page_link_text()
+		{
+			$home_page = $this->values[ $this->root_node() ];
+			if($home_page->get_value('link_name'))
+			{
+				return $home_page->get_value('link_name');
+			}
+			else
+			{
+				return $this->site_info->get_value('name').' Home';
+			}
+		}
 		function show_item( &$item , $options = false) // {{{
 		{
-			$page_name = $item->get_value( 'link_name' ) ? $item->get_value( 'link_name' ) : $item->get_value('name');
 			$class_attr = '';
-			// Show home instead of site name again
-			// notice, this overrides the link_name if set above
 			if( $item->id() == $this->root_node() )
 			{
-				$page_name = '<span>'.$this->site_info->get_value('name').' Home</span>';
+				$page_name = '<span>'.$this->get_home_page_link_text().'</span>';
 				$class_attr = ' class="home"';
+			}
+			else
+			{
+				$page_name = $item->get_value( 'link_name' ) ? $item->get_value( 'link_name' ) : $item->get_value('name');
 			}
 			$page_name = strip_tags($page_name,'<span><strong><em>');
 			if( $this->cur_page_id != $item->id() || $this->link_to_current_page )
