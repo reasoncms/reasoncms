@@ -193,6 +193,13 @@
 					$this->add_type_to_site(id_of('group_type'));
 				}
 			}
+			if($this->get_value('allow_comments'))
+			{
+				if(!$this->site_has_type(id_of('comment_type')))
+				{
+					$this->add_type_to_site(id_of('comment_type'));
+				}
+			}
 			
 			if($this->get_value('has_issues') == 'yes' && !$this->site_has_type(id_of('issue_type')))
 			{
@@ -201,6 +208,11 @@
 			if($this->get_value('has_sections') == 'yes' && !$this->site_has_type(id_of('news_section_type')))
 			{
 				$this->add_type_to_site(id_of('news_section_type'));
+			}
+			if(!$this->site_has_type(id_of('news')))
+			{
+				// publicatons don't make much sense without news
+				$this->add_type_to_site(id_of('news'));
 			}
 			
 			parent::process();
