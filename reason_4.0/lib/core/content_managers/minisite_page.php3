@@ -29,7 +29,7 @@
 			if( !$this->get_value( 'nav_display' ) )
 				$this->set_value( 'nav_display', 'Yes' );
 				
-			$this->set_comments( 'link_name', form_comment('The name of the page as it appears in the site\'s navigation box. If empty, the title of the page will be used.') );
+			$this->set_comments( 'link_name', form_comment('If the page title is long, you can provide a shorter title for use in the site\'s navigation.<br /><em>Leave this field <strong>empty</strong> to use the full page title.</em>') );
 
 			if( !user_is_a( $this->admin_page->user_id, id_of( 'contribute_only_role' ) ) )
 			{
@@ -63,6 +63,15 @@
 					$this->change_element_type( 'parent_id', 'hidden' );
 				}
 				$this->change_element_type( 'nav_display', 'hidden' );
+				if(!user_is_a( $this->admin_page->user_id, id_of( 'admin_role' )))
+				{
+					$this->change_element_type( 'link_name', 'hidden' );
+				}
+				else
+				{
+					$site = new entity($this->admin_page->site_id);
+					$this->set_comments('link_name',form_comment('The contents of this field will be used to indicate the home page in the site\'s navigation.<br />Leave this field <strong>empty</strong> to use the default text: <strong>'.$site->get_value('name').' Home</strong>'));
+				}
 			}
 			// if we have a subpage, show the url fragment field
 			elseif( !$this->get_value( 'is_link' ) )
@@ -98,7 +107,7 @@
 
 				}
 				
-				$this->set_comments( 'name', form_comment('This will be shown above the content, and will be used to link to this page, unless the link name is set.') );
+				$this->set_comments( 'name', form_comment('What should this page be called?') );
 				$this->set_comments( 'author', form_comment('Source or original author of this page') );
 				$this->set_comments( 'description', form_comment('A brief one or two sentence summary of the page') );
 				$this->set_comments( 'keywords', form_comment('Comma-separated keywords (for search engines) ie "Dave, Hendler, College, Relations"') );
@@ -280,8 +289,9 @@
 		function pre_show_form() // {{{
 		{
 			parent::pre_show_form();
-
-			if( $this->is_new_entity() AND !$this->get_value( 'is_link' ) )
+			
+			$roots = $this->root_node();
+			if( $this->is_new_entity() && !$this->get_value( 'is_link' ) && !empty($roots))
 				echo '&raquo; <a href="'.$this->admin_page->make_link( array( 'is_link' => 1 ), true ).'">Create an external link instead of a page.</a><br /><br />';
 		} // }}}
 		function finish() // {{{
