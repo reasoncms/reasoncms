@@ -108,7 +108,7 @@
 		
 		function show_admin_control_box()
 		{
-			if (!empty($this->admin_form) && $this->admin_form->authenticate() && !$this->custom_form->get_init_and_run_form())
+			if (!empty($this->admin_form) && $this->admin_form->authenticate() && $this->custom_form->allow_show_admin_control_box())
 			{
 				$url = carl_construct_link(array('form_admin_view' => 'true'), array('textonly'));
 				$link[] = '<a href="'.$url.'">Enter administrative view</a>';

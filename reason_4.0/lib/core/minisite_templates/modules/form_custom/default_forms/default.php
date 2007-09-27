@@ -48,6 +48,9 @@
 			}
 		}
 		
+		/**
+		 * Populate cur_request according to the current disco_db_id
+		 */
 		function refresh_cur_request()
 		{
 			$id = $this->disco_db_get_id();
@@ -110,9 +113,11 @@
 		{
 		}
 		
+		/**
+		 * Init phase when no disco form is initialized
+		 */ 
 		function init_no_form()
 		{
-			echo 'in init no form';
 		}
 		
 		/**
@@ -127,18 +132,18 @@
 			else $this->run_no_form();
 		}
 		
+		/**
+		 * Run phase when no disco form is initialized
+		 */ 
 		function run_no_form()
 		{
-			echo 'in run no form';
 		}
 		
 		/**
 		 * Run before the discoDB form init and run are executed - common usage would be a conditional that sets $this->init_and_run_form to false
-		 * In this case, the init and run methods would call init_no_form and run_no_form in place of discoDB run and init.
 		 */
 		function pre_init_and_run_form()
 		{
-			$this->user_netid = reason_require_authentication();
 		}
 		
 		function has_content()
@@ -160,16 +165,12 @@
 			else return false;
 		}
 		
-		function get_table()
+		/**
+		 * Sets whether or not the module should allow the admin control box to be shown if the user has access to the admin interface
+		 */
+		function allow_show_admin_control_box()
 		{
-			echo 'should call get_table_name instead';
-			die;
-			return $this->table;
-		}
-		
-		function get_init_and_run_form()
-		{
-			return $this->init_and_run_form;
+			return true;
 		}
 	}
 ?>
