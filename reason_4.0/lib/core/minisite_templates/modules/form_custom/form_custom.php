@@ -25,7 +25,10 @@
 		var $form_name;
 		var $admin_form_name;
 		var $acceptable_params = array('custom_form' => false,
-									   'admin_form' => false);
+									   'admin_form' => false,
+									   'enter_admin_view_text' => 'Enter administrative view',
+									   'exit_admin_view_text' => 'Exit administrative view',
+									   'show_lister_view_text' => 'Show summary view');
 									   
 		var $cleanup_rules = array('form_admin_view' => array('function' => 'check_against_array', 'extra_args' => array('true')));
 		
@@ -108,20 +111,21 @@
 		
 		function show_admin_control_box()
 		{
-			if (!empty($this->admin_form) && $this->admin_form->authenticate() && $this->custom_form->allow_show_admin_control_box())
-			{
-				$url = carl_construct_link(array('form_admin_view' => 'true'), array('textonly'));
-				$link[] = '<a href="'.$url.'">Enter administrative view</a>';
-			}
-			elseif (!empty($this->table_admin)) // && ($this->table_admin->get_table_action() == ''))
+			if (!empty($this->table_admin)) // show exit administive view link as we are in administrative view
 			{
 				$url = carl_construct_link(array('form_admin_view' => ''), array('textonly'));
-				$link[] = '<a href="'.$url.'">Exit administrative view</a>';
+				$link[] = '<a href="'.$url.'">'.$this->params['exit_admin_view_text'].'</a>';
 				if ($this->table_admin->get_table_row_action())
 				{
 					$url2 = carl_make_link($this->table_admin->get_menu_links_base_with_filters());
-					$link[] = '<a href="'.$url2.'">Show summary view</a>';
+					$link[] = '<a href="'.$url2.'">'.$this->params['show_lister_view_text'].'</a>';
 				}
+			}
+			// show administrative view entry link if the user has access and the form allows
+			elseif (!empty($this->admin_form) && $this->admin_form->authenticate() && $this->custom_form->allow_show_admin_control_box())
+			{
+				$url = carl_construct_link(array('form_admin_view' => 'true'), array('textonly'));
+				$link[] = '<a href="'.$url.'">'.$this->params['enter_admin_view_text'].'</a>';
 			}
 			if (!empty($link))
 			{

@@ -74,6 +74,22 @@
 		function process()
 		{
 			$this->pre_process();
+			$this->main_process();
+			$this->post_process();
+		}
+		
+		/**
+		 * Runs immediately before discoDB process phase when error_checking is complete and form has no errors
+		 */
+		function pre_process()
+		{
+		}
+		
+		/**
+		 * Runs the process where the database is actually altered
+		 */
+		function main_process()
+		{
 			$fields = $this->_tables[$this->table];
 			$allowable_fields = (!empty($this->allowable_fields)) ? $this->allowable_fields : array_keys($fields);
 			foreach ($fields as $field_name => $field_values)
@@ -88,22 +104,19 @@
 			}
 			if (isset($values))
 			{
-				if ($this->_id) $GLOBALS['sqler']->update_one($this->table, $values, $this->_id, $this->id_column_name);
+				$this->disco_db_connect();
+				if ($this->_id)
+				{
+					$GLOBALS['sqler']->update_one($this->table, $values, $this->_id, $this->id_column_name);
+				}
 				else
 				{
 					$GLOBALS['sqler']->insert( $this->table, $values );
 					$this->disco_db_set_id(mysql_insert_id()); // set id to what was just inserted
 				}
+				$this->disco_db_disconnect();
 				$this->refresh_cur_request(); // update cur_request with the just inserted row
 			}
-			$this->post_process();
-		}
-		
-		/**
-		 * Runs immediately before discoDB process phase when error_checking is complete and form has no errors
-		 */
-		function pre_process()
-		{
 		}
 		
 		/**
