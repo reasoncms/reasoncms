@@ -195,6 +195,7 @@ class HeadItems
 			}
 			$html_items[] = $html_item;
 		}
+		$html_items = array_reverse(array_unique(array_reverse($html_items))); // removes duplicates - leaving only last instance of a string
 		return implode("\n",$html_items)."\n";
 	}
 }
