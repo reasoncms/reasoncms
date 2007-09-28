@@ -12,6 +12,7 @@ reason_include_once( 'function_libraries/images.php' );
 reason_include_once( 'function_libraries/file_finders.php' );
 reason_include_once( 'content_listers/tree.php3' );
 reason_include_once( 'minisite_templates/nav_classes/default.php' );
+reason_include_once( 'classes/head_items.php' );
 include_once( CARL_UTIL_INC . 'dev/timer.php' );
 
 class MinisiteTemplate
@@ -54,6 +55,10 @@ class MinisiteTemplate
 					'content'=>'This is the page\'s title',
 					),
 		); */
+	
+	/**
+	 * Head items object
+	 */
 	var $head_items;
 	var $use_default_org_name_in_page_title = false;
 	var $use_tables = false;
@@ -71,6 +76,7 @@ class MinisiteTemplate
 		$this->page_id = $page_id;
 		$this->site_info = new entity( $site_id );
 		$this->page_info = new entity( $page_id );
+		$this->head_items = new HeadItems();
 
 		// make sure that the page exists or that the page's state is Live
 		// if not, redirect to the 404
@@ -118,8 +124,8 @@ class MinisiteTemplate
 			$this->pages->textonly = $this->textonly;
 		if (!empty($this->textonly))
 		{
-			$this->add_stylesheet(REASON_HTTP_BASE_PATH.'/css/textonly_styles.css');
-			$this->add_stylesheet(REASON_HTTP_BASE_PATH.'/css/print_styles.css','print');
+			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'/css/textonly_styles.css');
+			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'/css/print_styles.css','print');
 		}
 		
 		if( $this->pages->values  )
@@ -158,8 +164,8 @@ class MinisiteTemplate
 				
 				if (USE_JS_LOGOUT_TIMER)
 				{
-					$this->add_stylesheet(REASON_HTTP_BASE_PATH.'css/timer.css');
-					$this->add_head_item('script',array( 'language' => 'JavaScript', 'type' => 'text/javaScript',  'src' => WEB_JAVASCRIPT_PATH.'timer/timer.js.php'));
+					$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/timer.css');
+					$this->head_items->add_head_item('script',array( 'language' => 'JavaScript', 'type' => 'text/javaScript',  'src' => WEB_JAVASCRIPT_PATH.'timer/timer.js.php'));
 				}
 				
 				// we know that someone is logged in if the session exists
@@ -209,7 +215,7 @@ class MinisiteTemplate
 		$es->set_order( 'sortable.sort_order' );
 		$css_files += $es->run_one();
 
-		$this->add_stylesheet(REASON_HTTP_BASE_PATH.'css/modules.css');
+		$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/modules.css');
 		if( $css_files )
 		{
 			foreach( $css_files AS $css )
@@ -222,14 +228,14 @@ class MinisiteTemplate
 				{
 					$url = $css->get_value( 'url' );
 				}
-				$this->add_stylesheet( $url );
+				$this->head_items->add_stylesheet( $url );
 			}
 		}
 	}
 	function get_meta_information()
 	{
 		// add the charset information
-		$this->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ) );
+		$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ) );
 		
 		// array of meta tags to search for in the page entity
 		// key: entity field
@@ -247,12 +253,12 @@ class MinisiteTemplate
 			if( $this->cur_page->get_value( $entity_field ) )
 			{
 				$content = reason_htmlspecialchars( $this->cur_page->get_value( $entity_field ) );
-				$this->add_head_item('meta',array('name'=>$meta_name,'content'=>$content) );
+				$this->head_items->add_head_item('meta',array('name'=>$meta_name,'content'=>$content) );
 			}
 		}
 		if (!empty ($this->textonly) || !empty( $_REQUEST['no_search'] ) || $this->site_info->get_value('site_state') != 'Live')
 		{
-			$this->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
+			$this->head_item->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
 		}
 	}
 	function run() // {{{
@@ -386,7 +392,7 @@ class MinisiteTemplate
 					$args[ 'page_id' ] = $this->page_id;
 					$args[ 'site_id' ] = $this->site_id;
 					$args[ 'cur_page' ] = $this->cur_page;
-					$args[ 'nav_pages' ] =& $this->pages;
+					//$args[ 'nav_pages' ] =& $this->pages;
 					$args[ 'textonly' ] = $this->textonly;
 					
 					// this is used by a few templates to add some arguments.  leaving it in for backwards
@@ -508,7 +514,7 @@ class MinisiteTemplate
 		
 		$this->do_org_head_items();
 		
-		echo $this->get_head_item_markup();
+		echo $this->head_items->get_head_item_markup();
 		
 		if($this->cur_page->get_value('extra_head_content'))
 		{
@@ -564,7 +570,7 @@ class MinisiteTemplate
 			$ret .= ' (Text Only)';
 		}
 		$ret = reason_htmlspecialchars(strip_tags($ret));
-		$this->add_head_item('title',array(),$ret, true);
+		$this->head_items->add_head_item('title',array(),$ret, true);
 		//return $ret;
 	}
 
@@ -1065,67 +1071,28 @@ class MinisiteTemplate
 	} // }}}
 	
 	
-	/* This function allows modules to add head items. They must add any head items during their init process. */
+	/** This function allows modules to add head items. They must add any head items during their init process.
+	 * @deprecated method should be called on the head_items object
+	 */
 	function add_head_item( $element, $attributes, $content = '', $add_to_top = false )
 	{
-		$item = array('element'=>$element,'attributes'=>$attributes,'content'=>$content);
-		if($add_to_top)
-		{
-			$temp = array_reverse($this->head_items);
-			$temp[] = $item;
-			$this->head_items = array_reverse($temp);
-		}
-		else
-		{
-			$this->head_items[] = $item;
-		}
-	}
-	function add_stylesheet( $url, $media = '', $add_to_top = false )
-	{
-		$attrs = array('rel'=>'stylesheet','type'=>'text/css','href'=>$url);
-		if(!empty($media))
-		{
-			$attrs['media'] = $media;
-		}
-		$this->add_head_item('link',$attrs, '', $add_to_top);
+		$this->head_items->add_head_item( $element, $attributes, $content, $add_to_top);
 	}
 	
-	/* this function assembles the head items from the data provided by the modules and handles some basic checking */
+	/** 
+	 * @deprecated method should be called on the head_items object
+	 */
+	function add_stylesheet( $url, $media = '', $add_to_top = false )
+	{
+		$this->head_items->add_stylesheet( $url, $media, $add_to_top );
+	}
+	
+	/** this function assembles the head items from the data provided by the modules and handles some basic checking
+	 * @deprecated method should be called on the head_items object
+	 */
 	function get_head_item_markup()
 	{
-		$allowable_elements = array('base','link','meta','script','style','title');
-		$elements_that_may_have_content = array('script','style','title');
-		$elements_that_may_not_self_close = array('script','title');
-		$html_items = array();
-		foreach($this->head_items as $item)
-		{
-			if(in_array($item['element'], $allowable_elements))
-			{
-				$html_item = '<'.$item['element'];
-				foreach($item['attributes'] as $attr_key=>$attr_val)
-				{
-					$html_item .= ' '.$attr_key.'="'.$attr_val.'"';
-				}
-				if(in_array($item['element'],$elements_that_may_have_content) && !empty($item['content']) )
-				{
-					$html_item .= '>'.$item['content'].'</'.$item['element'].'>';
-				}
-				elseif(in_array($item['element'],$elements_that_may_not_self_close))
-				{
-					$html_item .= '></'.$item['element'].'>';
-				}
-				else
-				{
-					$html_item .= ' />';
-				}
-				$html_items[] = $html_item;
-			}
-			else
-			{
-				trigger_error('Encountered Invalid head element: '.$item['element'].'. Head items must be one of these elements: '.implode($allowable_elements) );
-			}
-		}
-		return implode("\n",$html_items)."\n";
+		return $this->head_items->get_head_item_markup();
 	}
 	
 	/*this stuff comes from the tableless template. from here... */
