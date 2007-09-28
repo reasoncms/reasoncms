@@ -258,7 +258,7 @@ class MinisiteTemplate
 		}
 		if (!empty ($this->textonly) || !empty( $_REQUEST['no_search'] ) || $this->site_info->get_value('site_state') != 'Live')
 		{
-			$this->head_item->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
+			$this->head_items->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
 		}
 	}
 	function run() // {{{
