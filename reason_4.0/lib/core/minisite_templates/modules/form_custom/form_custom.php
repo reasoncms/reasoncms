@@ -9,7 +9,7 @@
 	 * A module which runs custom discoDB forms - and provides an interface for data viewing and editing of the form contents
 	 *
 	 * Typical usage would be to invoke with module on a page type that also passes a parameter custom_form consisting of the
-	 * custom form filename in the without the .php extension.
+	 * custom form filename without the .php extension.
 	 *
 	 * An admin form name can also be passed. This form will be used by the table_viewer to customize the adminstrative options
 	 * that are available, hide/show columns, set comments in editing fields, etc. If an admin form name is not passed, the
@@ -44,17 +44,19 @@
 	 			reason_include_once( 'minisite_templates/modules/form_custom/'.$this->params['custom_form'].".php");
 	 			$form_name = $GLOBALS[ '_custom_form_class_names' ][ $this->params['custom_form'] ];
  				$this->custom_form = new $form_name();
+ 				$this->custom_form->head_items =& $this->parent->head_items;
  				
  				if (!empty($this->params['admin_form'])) // if an admin form is specified instantiate it...if not 
  				{
  					reason_include_once( 'minisite_templates/modules/form_custom/'.$this->params['admin_form'].".php");
  					$admin_form_name = $GLOBALS[ '_custom_form_class_names' ][ $this->params['admin_form'] ];
  					$this->admin_form = new $admin_form_name();
+ 					$this->admin_form->head_items =& $this->parent->head_items;
  				}
  			
  				// CSS - this needs work
  				$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
- 				$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/reason_admin/admin.css');		
+ 				$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/reason_admin/admin.css');
  						
  				if (!empty($this->request['form_admin_view']) && !empty($this->admin_form) && $this->admin_form->authenticate())
  				{	

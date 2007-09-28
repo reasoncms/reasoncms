@@ -4,14 +4,14 @@
 	
 	/**
 	 * DefaultCustomForm is an extension of DiscoDB that sets up a framework for DiscoDB forms used by the form_custom reason module
-	 * It modifieds the DiscoDB init, run, and process methods.
+	 * It modifies the DiscoDB init, run, and process methods.
 	 *
-	 * A new method pre_init_and_run form is introducted, which typically would set the class variable init_and_run_form.
+	 * A new method pre_init_and_run form is introducted, which typically would set the class variable init_and_run_form, or other intial
+	 * tasks like adding head items to the page.
 	 *
-	 * In the init phase, it alternatively calls init_no_form and run_no_form if the class variable init_and_run_form is set to false.
+	 * In the init phase, init_no_form is invoked if the class variable init_and_run_form is set to false.
 	 *
-	 * In the run phase, it alternatively calls run_no_form if the class variable init_and_run_form is set to false.
-	 * conditional parameters specific to the form.
+	 * In the run phase, run_no_form is invoked if the class variable init_and_run_form is set to false.
 	 *
 	 * In the process phase, the class variable allowable_fields is consulted. If not empty, then only the fields in this array
 	 * will be updated by the database calls.
@@ -27,6 +27,7 @@
 		var $cur_request;
 		var $cleanup_rules = array();
 		var $allowable_fields = array();
+		var $head_items; // populated by module with a reference to template head items object
 		
 		/**
 		 * Inits the DiscoDB form using class variables $db_conn, $table, and $id
@@ -35,7 +36,8 @@
 		{
 			if (isset($this->_inited) == false)
 			{
-				$this->request = carl_clean_vars(carl_clone($_REQUEST), $this->cleanup_rules);
+				$cleanup_rules = $this->get_cleanup_rules();
+				$this->request = carl_clean_vars(carl_clone($_REQUEST), $cleanup_rules);
 				$this->pre_init_and_run_form();
 				if ($this->init_and_run_form)
 				{
@@ -46,6 +48,11 @@
 					$this->init_no_form();
 				}
 			}
+		}
+		
+		function get_cleanup_rules()
+		{
+			return $this->cleanup_rules;
 		}
 		
 		/**
