@@ -71,7 +71,7 @@ class reasonAVDisplay
 										),
 							'flv'=>array(
 										'wmode'=>'transparent',
-										'autoStart'=>'true',
+										'autostart'=>'true',
 										),
 							'swf'=>array(
 										'wmode'=>'transparent',
@@ -120,7 +120,7 @@ class reasonAVDisplay
 		$this->set_parameter( 'qt', 'autoplay', 'false' );
 		$this->set_parameter( 'real', 'autostart', 'false' );
 		$this->set_parameter( 'wmv', 'autostart', 'false' );
-		$this->set_parameter( 'flv', 'autoStart', 'false' );
+		$this->set_parameter( 'flv', 'autostart', 'false' );
 	}
 	/**
 	 * Wraps up the various parameter modifications needed to enable automatic play in the various players
@@ -130,7 +130,7 @@ class reasonAVDisplay
 		$this->set_parameter( 'qt', 'autoplay', 'true' );
 		$this->set_parameter( 'real', 'autostart', 'true' );
 		$this->set_parameter( 'wmv', 'autostart', 'true' );
-		$this->set_parameter( 'flv', 'autoStart', 'true' );
+		$this->set_parameter( 'flv', 'autostart', 'true' );
 	}
 	/**
 	 * Sets the dimensions to be used by the class when generating markup for an audio item
@@ -309,7 +309,7 @@ class reasonAVDisplay
 			$dimensions_attrs = 'width="'.$dimensions['width'].'" height="'.$dimensions['height'].'"';
 		}
 		
-		$url = REASON_FLASH_VIDEO_PLAYER_URI.'?file='.$entity->get_value('url').'&amp;autoStart='.$this->parameters['flv']['autoStart'];
+		$url = REASON_FLASH_VIDEO_PLAYER_URI.'?file='.$entity->get_value('url').'&amp;autostart='.$this->parameters['flv']['autostart'];
 		
 		$ret[] = '<object id="flashVideoWidget'.$entity->id().'" '.$dimensions_attrs.' classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" type="application/x-shockwave-flash" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab">';
 		$ret[] = '<param name="movie" value="'.$url.'" />';
