@@ -131,7 +131,7 @@
 		{
 			if(empty($this->group))
 			{
-				$this->group = new entity($permission_id);
+				$this->group = new entity($group_id);
 				$this->init_audiences($this->group->id());
 			}
 			else
