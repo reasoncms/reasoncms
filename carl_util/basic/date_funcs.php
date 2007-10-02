@@ -40,7 +40,7 @@ function carl_date($format,$timestamp=false,$is_gmt=false)
  */
 function carl_gmdate($format,$timestamp=false)
 {
-	return adodb_gmdate($format,$timestamp=false);
+	return adodb_gmdate($format,$timestamp);
 }
 /**
  * Wrapper for adodb_mktime()
