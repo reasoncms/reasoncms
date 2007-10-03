@@ -12,6 +12,7 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 		'default_tag' => 'strong',
 		'depth_to_tag_map' => array(1=>'h4'),
 		'show_only_this_branch' => '',
+		'show_only_pages_in_nav' => false,
 	);
 	
 	function run() // {{{
@@ -99,6 +100,10 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 		// find all the children of this page
 		$es->add_type( id_of('minisite_page') );
 		$es->add_left_relationship( $child->id(), relationship_id_of( 'minisite_page_parent' ) );
+		if($this->params['show_only_pages_in_nav'])
+		{
+			$this->es->add_relation('nav_display = "Yes"');
+		}
 		$es->set_order('sortable.sort_order ASC');
 		return $es->run_one();
 	}
