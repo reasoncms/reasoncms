@@ -193,6 +193,10 @@ class ReasonAssetAccess
 					asset access to function.');
 			
 		}
+		elseif (!file_exists($mime_path))
+		{
+			trigger_error ('APACHE_MIME_TYPES file ' . APACHE_MIME_TYPES . ' does not exist');
+		}
 	 	else
 		{
 			$myhandle = fopen(APACHE_MIME_TYPES, 'r');
