@@ -132,7 +132,7 @@ class ReasonObjectCache
 			trigger_error('ReasonObjectCache Error - you must set the cache id in the constructor or the init function before calling clear');
 		}
 		if(file_exists($this->_cache_file)) 
-			return unlink( $f );
+			return unlink( $this->_cache_file );
 	}
 }
 
