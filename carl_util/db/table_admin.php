@@ -63,9 +63,9 @@ class TableAdmin
 	 */
 	var $sort_field = '';	
 	/**
-	 * @var string sort order to use default 'desc'
+	 * @var string sort order to use
 	 */
-	var $sort_order = 'desc';	
+	var $sort_order = '';	
 	/**
 	 * @var string export mode currently only csv is supported
 	 */
@@ -274,10 +274,9 @@ class TableAdmin
 		// check on whether columns are limited
 		if ($this->admin_form)
 		{
-			if (method_exists($this->admin_form, 'get_fields_to_show'))
-			{
-				$this->fields_to_show = $this->admin_form->get_fields_to_show();
-			}
+			$this->fields_to_show = $this->admin_form->get_fields_to_show();
+			if (!($this->get_sort_field())) $this->set_sort_field($this->admin_form->get_default_sort_field());
+			if (!$this->get_sort_order()) $this->set_sort_order($this->admin_form->get_default_sort_order());
 		}			
 	}
 
@@ -1331,6 +1330,20 @@ class TableAdmin
 		var $fields_to_export;
 		
 		/**
+		 * Default sort field
+		 *
+		 * @var string
+		 */
+		var $default_sort_field;
+		
+		/**
+		 * Default sort order
+		 *
+		 * @var string asc or desc
+		 */
+		var $default_sort_order = 'desc';
+		
+		/**
 		 * If set to true, each row of data will be passed to the forms transform_data function
 		 */
 		var $form_transforms_data = false;
@@ -1505,6 +1518,16 @@ class TableAdmin
 			{
 				return $this->fields_to_export;
 			}
+		}
+		
+		function get_default_sort_order()
+		{
+			return $this->default_sort_order;
+		}
+		
+		function get_default_sort_field()
+		{
+			return $this->default_sort_field;
 		}
 	}
 	
