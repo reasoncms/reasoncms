@@ -13,13 +13,11 @@ class RelatedFullStoryLinkListItemMarkupGenerator extends RelatedListItemMarkupG
 
 	function run ()
 	{	
-		$this->markup_string .= '<li>';
 		$this->markup_string .= $this->get_teaser_image_markup();
 		$this->markup_string .= $this->get_date_markup();
 		$this->markup_string .= $this->get_title_markup();
 		$this->markup_string .= $this->get_description_markup();
 		$this->markup_string .= $this->get_links_markup();
-		$this->markup_string .= '</li>';
 	}
 	
 	function get_links_markup()
@@ -43,7 +41,7 @@ class RelatedFullStoryLinkListItemMarkupGenerator extends RelatedListItemMarkupG
 		if($item->get_value('content') && isset($this->passed_vars['link_to_full_item']) &&  !empty($this->passed_vars['link_to_full_item']))
 		{
 			$markup_string .=  '<li class="more">';
-			$markup_string .=  '<a href="' . $this->passed_vars['link_to_full_item'] .'" title="'.$item->get_value('release_title').'">';
+			$markup_string .=  '<a href="' . $this->passed_vars['link_to_full_item'] .'" title="'.reason_htmlspecialchars( $item->get_value('release_title'), ENT_QUOTES, 'UTF-8' ).'">';
 			$markup_string .=  'full story';
 			$markup_string .=  '</a>';
 			$markup_string .=  '</li>'."\n";

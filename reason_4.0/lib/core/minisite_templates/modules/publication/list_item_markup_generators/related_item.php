@@ -25,12 +25,10 @@ class RelatedListItemMarkupGenerator extends PublicationMarkupGenerator
 	
 	function run ()
 	{	
-		$this->markup_string .= '<li>';
 		$this->markup_string .= $this->get_teaser_image_markup();
 		$this->markup_string .= $this->get_date_markup();
 		$this->markup_string .= $this->get_title_markup();
 		$this->markup_string .= $this->get_description_markup();
-		$this->markup_string .= '</li>';
 	}
 	
 /////
@@ -77,7 +75,7 @@ class RelatedListItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$markup_string .= '<div class="teaserImage">';
 			ob_start();	
-			show_image( reset($image), false, false, true, '' , '', true,'' );
+			show_image( reset($image), false, false, false, '' , '', true,'' );
 			$markup_string .= ob_get_contents();
 			ob_end_clean();
 			$markup_string .= '</div>';
