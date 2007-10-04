@@ -6,17 +6,34 @@
 	class publicationDescriptionModule extends DefaultMinisiteModule
 	{
 		var $publication;
+		var $cleanup_rules = array(
+			'story_id' => array( 'function' => 'turn_into_int' ),
+			'page' => array('function' => 'turn_into_int' ),
+		);
+		var $acceptable_params = array(
+			'hide_on_item' => false,
+			'hide_on_archive_pages' => false,
+		);
 		function init( $args = array() )
 		{
-			$es = new entity_selector( $this->parent->site_id );
-			$es->description = 'Selecting publications for this page';
-			$es->add_type( id_of('publication_type') );
-			$es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('page_to_publication') );
-			$es->set_num( 1 );
-			$publications = $es->run_one();
-			if(!empty($publications))
+			$show = true;
+			if($this->params['hide_on_item'] && !empty($this->request['story_id']) )
+				$show = false;
+			elseif($this->params['hide_on_archive_pages'] && !empty($this->request['page']) && $this->request['page'] > 1)
+				$show = false;
+				
+			if($show)
 			{
-				$this->publication = current($publications);
+				$es = new entity_selector( $this->parent->site_id );
+				$es->description = 'Selecting publications for this page';
+				$es->add_type( id_of('publication_type') );
+				$es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('page_to_publication') );
+				$es->set_num( 1 );
+				$publications = $es->run_one();
+				if(!empty($publications))
+				{
+					$this->publication = current($publications);
+				}
 			}
 		}
 		function has_content()
