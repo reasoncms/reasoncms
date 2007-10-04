@@ -147,6 +147,17 @@ function get_unix_timestamp( $value ) // {{{
 	else
 		return $value; 
 } // }}}
+
+/**
+ * Returns a timestamp in mysql datetime format - returns current mysql datetime if no parameter is given
+ * @param int timestamp optional
+ * @return string mysql datetime
+ */
+function get_mysql_datetime($timestamp = false)
+{
+	return carl_date("Y-m-d G:i:s", $timestamp);
+}
+
 /**
  * Tries to identify the date format for a given value
  * Formats identified:
