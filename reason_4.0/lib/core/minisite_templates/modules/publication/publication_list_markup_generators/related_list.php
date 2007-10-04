@@ -63,7 +63,7 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 			foreach($item_ids as $item_id)
 			{
 				if(!empty($this->passed_vars['list_item_markup_strings'][$item_id]) && !array_key_exists($item_id, $this->passed_vars['featured_item_markup_strings']))
-					$markup_string .= $this->passed_vars['list_item_markup_strings'][$item_id]."\n";
+					$markup_string .= '<li>'.$this->passed_vars['list_item_markup_strings'][$item_id].'</li>'."\n";
 			}
 			$markup_string .= '</ul>'."\n";
 		}
