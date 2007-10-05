@@ -763,7 +763,7 @@
 			return false;
 		}
 		$repeatable_names = array('borrows','owns');
-		if( !in_array($name,$repeatable_names) && relationship_id_of($name, false) )
+		if( !in_array($name,$repeatable_names) && reason_relationship_name_exists($name, false) )
 		{
 			trigger_error('Unable to create allowable relationship named '.$name.' because there is already an allowable relationship with that name in Reason');
 			return false;

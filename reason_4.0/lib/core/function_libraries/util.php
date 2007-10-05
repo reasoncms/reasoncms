@@ -24,7 +24,7 @@
 	//	 results you want.
 	//////////////////////////////////////////////////
 
-	function id_of( $content_name, $cache = true ) //returns the id of content with unique name $content_name, false if none  // {{{
+	function id_of( $content_name, $cache = true, $report_not_found_error = true ) //returns the id of content with unique name $content_name, false if none  // {{{
 	{
 		static $retrieved = false;
 
@@ -44,11 +44,18 @@
 			return $retrieved[ $content_name ];
 		else
 		{
-			trigger_error('Unique name requested ('.$content_name.') not in database');
+			if($report_not_found_error)
+				trigger_error('Unique name requested ('.$content_name.') not in database');
 			return 0;
 		}
 	} // }}}
-	function relationship_id_of( $relationship_name, $cache = true ) // much like id_of, but with relationship names{{{
+	function reason_unique_name_exists($content_name, $cache = true)
+	{
+		if(id_of($content_name, $cache, false))
+			return true;
+		return false;
+	}
+	function relationship_id_of( $relationship_name, $cache = true, $report_not_found_error = true ) // much like id_of, but with relationship names{{{
 	{
 		static $retrieved;
 		if( !isset( $retrieved ) OR empty( $retrieved ) )
@@ -67,7 +74,8 @@
 			}
 			else
 			{
-				trigger_error('Relationship unique name requested ('.$relationship_name.') not in database');
+				if($report_not_found_error)
+					trigger_error('Relationship unique name requested ('.$relationship_name.') not in database');
 				mysql_free_result( $r );
 				return false;
 			}
@@ -75,6 +83,13 @@
 		else
 			return $retrieved[ $relationship_name ];
 	} // }}}
+	
+	function reason_relationship_name_exists($relationship_name, $cache = true)
+	{
+		if(relationship_id_of($relationship_name, $cache, false))
+			return true;
+		return false;
+	}
 	
 	function relationship_name_of( $relationship_id, $cache = true ) // much like id_of, but with relationship names{{{
 	{
