@@ -83,6 +83,16 @@
 			'sidebar'=>'',
 			'pre_sidebar' => '',
 		),
+		'publication_listnav' => array(
+			'main_post'=>array(
+				'module'=>'publication',
+				'filter_displayer'=>'listnav.php',
+			),
+			'main_head' => 'publication/title',
+			'main'=>'publication/description',
+			'sidebar'=>'',
+			'pre_sidebar' => '',
+		),
 		'publication_with_events_sidebar' => array(
 			'main_head' => 'publication/title',
 			'main'=>'publication/description',
