@@ -881,9 +881,11 @@
 			'edit_link' => '',
 			'banner_xtra' => '',
 			'navigation' => '',
+			'sub_nav' => '',
 			'sub_nav_2' => '',
 			'post_foot' => 'textonly_toggle',
 			'main_post' => 'login',
+			'sidebar' => 'blurb',
 		),
 		'tasks' => array(
 			'main_post' => 'tasks',
