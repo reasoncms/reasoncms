@@ -55,6 +55,7 @@
  				}
  			
  				$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_error.css'); // add form error highlighting
+ 				$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css'); // add form data stylesheet
  						
  				if (!empty($this->request['form_admin_view']) && !empty($this->admin_form) && $this->admin_form->authenticate())
  				{	
@@ -71,9 +72,7 @@
 		}
 		
 		function init_admin_view()
-		{
-			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css'); // add form data stylesheet
- 				
+		{	
 			$this->table_admin = new TableAdmin();
 			$tt =& $this->table_admin;
 			$af =& $this->admin_form;
@@ -131,8 +130,8 @@
 			}
 			if (!empty($link))
 			{
-				echo '<div id="formAdminControlBox" style="background: #dfdfdf;">';
-				echo '<p style="padding: 2px;">'.implode(' | ', $link).'</p>';
+				echo '<div id="formAdminControlBox">';
+				echo '<p>'.implode(' | ', $link).'</p>';
 				echo '</div>';
 			}
 		}
