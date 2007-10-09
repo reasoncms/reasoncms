@@ -1,0 +1,7 @@
+form tr.error td {
+	background-color:#FFC;
+}
+form tr.error td.words {
+	font-weight:bold;
+	color:#900;
+}
