@@ -54,9 +54,7 @@
  					$this->admin_form->head_items =& $this->parent->head_items;
  				}
  			
- 				// CSS - this needs work
- 				$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
- 				$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/reason_admin/admin.css');
+ 				$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_error.css'); // add form error highlighting
  						
  				if (!empty($this->request['form_admin_view']) && !empty($this->admin_form) && $this->admin_form->authenticate())
  				{	
@@ -74,6 +72,8 @@
 		
 		function init_admin_view()
 		{
+			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css'); // add form data stylesheet
+ 				
 			$this->table_admin = new TableAdmin();
 			$tt =& $this->table_admin;
 			$af =& $this->admin_form;
