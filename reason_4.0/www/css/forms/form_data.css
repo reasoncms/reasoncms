@@ -38,3 +38,11 @@ table.thor_data tr.even, table.table_data tr.even {
 #form div.formDataAdmin p {
 	margin:0;
 }
+
+#formAdminControlBox {
+	background: #dfdfdf;
+}
+
+#formAdminControlBox p {
+	padding: 3px;
+}
