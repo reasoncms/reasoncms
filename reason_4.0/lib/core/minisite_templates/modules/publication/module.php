@@ -80,7 +80,7 @@ class PublicationModule extends Generic3Module
 	var $related_categories;
 
 	var $show_login_link = true;
-	var $show_featured_items = true;
+	var $show_featured_items;
 	var $queried_for_events_page_url = false;
 	var $events_page_url = '';
 	var $comment_form_file_location = 'minisite_templates/modules/publication/forms/submit_comment.php';
@@ -107,7 +107,6 @@ class PublicationModule extends Generic3Module
 										                 ),
 										'featured_item' => array ('classname' => 'PublicationListItemMarkupGenerator', 
 										                          'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/default.php',
-										                          //'settings' => array()
 										                          ),
 								   	   );
 								   	   
@@ -117,6 +116,9 @@ class PublicationModule extends Generic3Module
 												'list' => array ('classname' => 'RelatedListMarkupGenerator', 
 										                 'filename' => 'minisite_templates/modules/publication/publication_list_markup_generators/related_list.php',
 										                 ),
+										        'featured_item' => array ('classname' => 'PublicationListItemMarkupGenerator', 
+										                          'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/default.php',
+										                          ),
 								   	   			);								   
 
 	/** 
@@ -185,6 +187,7 @@ class PublicationModule extends Generic3Module
 	function init( $args = array() ) 
 	{
 		$this->set_defaults_from_parameters($this->params);
+		$this->set_show_featured_items();
 		if ($this->related_mode) $this->init_related( $args );
 		elseif (!empty($this->publication)) parent::init( $args );
 		else
@@ -210,6 +213,15 @@ class PublicationModule extends Generic3Module
 		if(!empty($this->css))
 		{
 			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.$this->css,'',true);
+		}
+	}
+	
+	function set_show_featured_items()
+	{
+		if (isset($this->params['show_featured_items'])) $this->show_featured_items = $this->params['show_featured_items']; // set from parameter if present
+		if (!isset($this->show_featured_items))
+		{	
+			$this->show_featured_items = ($this->related_mode) ? false : true;
 		}
 	}
 	
@@ -321,7 +333,8 @@ class PublicationModule extends Generic3Module
 		// all params that could be provided in page_types
 		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'show_login_link', 
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
-		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css');
+		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css',
+		      					  'show_featured_items');
 		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info, 
 							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
 							      'variables_to_pass' => $this->variables_to_pass);
@@ -1486,8 +1499,9 @@ class PublicationModule extends Generic3Module
 		{
 			if ($this->related_mode) return $this->get_related_featured_items();
 			else
-				{
-				if ($this->show_featured_items == false) return array();
+			{
+				$page_num = isset($this->request['page']) ? $this->request['page'] : 1;
+				if ($this->show_featured_items == false || $page_num > 1) return array();
 				static $featured_items;
 				if (!isset($featured_items[$this->publication->id()]))
 				{
@@ -1505,9 +1519,34 @@ class PublicationModule extends Generic3Module
 			}
 		}
 		
+		/**
+		 * Grab featured items from related publications and populate $featured_items[$pub_id]
+		 */
 		function get_related_featured_items()
 		{
-			return array();
+			$featured_items = array();
+			$related_pub_ids = implode(",", array_keys($this->related_publications));
+			if ($this->show_featured_items && !empty($related_pub_ids))
+			{
+				$es = new entity_selector( $this->site_id );
+				$es->description = 'Selecting featured news items from related publications';
+				$es->add_type( id_of('news') );
+				$es->set_env('site', $this->site_id);
+				$alias['rel_pub_id'] = current($es->add_right_relationship_field( 'publication_to_featured_post', 'entity', 'id', 'related_publication_id' ));
+				$alias['pub_id'] = current($es->add_left_relationship_field( 'news_to_publication', 'entity', 'id', 'publication_id' ));
+				$es->add_relation($alias['rel_pub_id']['table'] . '.id IN ('.$related_pub_ids.')');
+				$es->add_relation($alias['rel_pub_id']['table'] . '.id = '.$alias['pub_id']['table'] . '.id');
+				$es->set_order('dated.datetime DESC');
+				$fi = $es->run_one();
+				if (!empty($fi))
+				{
+					foreach($fi as $k=>$v)
+					{
+						$featured_items[$k] = $v;
+					}
+				}
+			}
+			return $featured_items;
 		}
 		
 		/**

@@ -27,6 +27,10 @@ class PublicationFiltersOnlyModule extends PublicationModule
 	{
 		// do nothing
 	}
+	function add_crumb()
+	{
+		// do nothing
+	}
 }
 
 ?>

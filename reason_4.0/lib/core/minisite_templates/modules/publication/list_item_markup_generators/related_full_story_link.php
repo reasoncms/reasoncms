@@ -42,7 +42,7 @@ class RelatedFullStoryLinkListItemMarkupGenerator extends RelatedListItemMarkupG
 		{
 			$markup_string .=  '<li class="more">';
 			$markup_string .=  '<a href="' . $this->passed_vars['link_to_full_item'] .'" title="'.reason_htmlspecialchars( $item->get_value('release_title'), ENT_QUOTES, 'UTF-8' ).'">';
-			$markup_string .=  'full story';
+			$markup_string .=  'Full Story';
 			$markup_string .=  '</a>';
 			$markup_string .=  '</li>'."\n";
 		}
