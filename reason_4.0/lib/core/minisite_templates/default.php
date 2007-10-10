@@ -283,7 +283,12 @@ class MinisiteTemplate
 	} // }}}
 	function alter_modules() // {{{
 	{
+		trigger_error('alter_modules() is deprecated. Please use alter_page_type() instead');
 	} // }}}
+	function alter_page_type($page_type)
+	{
+		return $page_type;
+	}
 	function additional_args( &$args ) // {{{
 	//if a module needs additional args
 	{
@@ -327,6 +332,8 @@ class MinisiteTemplate
 			trigger_error('Page type specified ('.htmlspecialchars($type,ENT_QUOTES,'UTF-8').') is not listed in the page_types.php file. You should either reinstate or change the page type.');
 		}
 		
+		$page_type = $this->alter_page_type($page_type);
+		
 		foreach( $page_type AS $sec => $module )
 		{
 			if( is_array( $module ) )
@@ -335,8 +342,6 @@ class MinisiteTemplate
 				$module_name = $module;
 			$this->section_to_module[ $sec ] = $module_name;
 		}
-		
-		$this->alter_modules();
 		
 		$prepped_request = conditional_stripslashes($_REQUEST);
 		
