@@ -16,11 +16,11 @@ if ( !empty($xml) )
 {
 	if ( !empty($tmp_id) )
 	{
-		$sqler->update_one('thor', Array('content' => $xml), $tmp_id);
+		$sqler->update_one('thor', Array('content' => conditional_stripslashes($xml)), $tmp_id);
 	}
 	else
 	{
-		$sqler->insert('thor', Array('content' => $xml));
+		$sqler->insert('thor', Array('content' => conditional_stripslashes($xml)));
 		$tmp_id = mysql_insert_id();
 		echo $tmp_id;
 	}
