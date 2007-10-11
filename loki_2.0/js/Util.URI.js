@@ -8,6 +8,47 @@ Util.URI = function()
 };
 
 /**
+ * Parses a URI into its constituent parts.
+ */
+Util.URI.parse = function(uri)
+{
+	var match = Util.URI.uri_pattern.exec(uri);
+	
+	if (!match) {
+		throw new Error('Invalid URI: "' + uri + '".');
+	}
+	
+	var authority_match = (typeof(match[4]) == 'string' && match[4].length)
+		? Util.URI.authority_pattern.exec(match[4])
+		: [];
+	
+	// this wouldn't need to be so convulted if JScript weren't so crappy!
+	function get_match(source, index)
+	{
+		try {
+			if (typeof(source[index]) == 'string' && source[index].length) {
+				return source[index];
+			}
+		} catch (e) {
+			// ignore and return null below
+		}
+		
+		return null;
+	}
+	
+	return {
+		scheme: get_match(match, 2),
+		authority: get_match(match, 4),
+		user: get_match(authority_match, 2),
+		password: get_match(authority_match, 4),
+		host: get_match(authority_match, 5),
+		path: get_match(match, 5),
+		query: get_match(match, 7),
+		fragment: get_match(match, 9)
+	};
+}
+
+/**
  * Converts the given uri to either https or http, depending on value of
  * use_https.
  * 
@@ -59,5 +100,7 @@ Util.URI.make_domain_relative = function(uri)
 Util.URI.uri_pattern =
 	new RegExp('^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?',
 	'i');
+Util.URI.authority_pattern =
+	new RegExp('^(([^:@]+)(:([^@]+))?@)?(.+)$');
 Util.URI.protocol_host_pattern =
 	new RegExp('^(([^:/?#]+):)?(//([^/?#]*))?', 'i');
