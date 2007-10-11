@@ -15,10 +15,12 @@
 // Gecko
 if ('object' == typeof(Components))
 {
-	UI.Clipboard_Helper_Privileged_Iframe = document.createElement('IFRAME');
-	UI.Clipboard_Helper_Privileged_Iframe.src = UI__Clipboard_Helper_Privileged_Iframe__src;
-	UI.Clipboard_Helper_Privileged_Iframe.setAttribute('style', 'height:2px; width:2px; left:-500px; position:absolute;');
-	document.getElementsByTagName('BODY')[0].appendChild(UI.Clipboard_Helper_Privileged_Iframe);
+	document.addEventListener('DOMContentLoaded', function() {
+		UI.Clipboard_Helper_Privileged_Iframe = document.createElement('IFRAME');
+		UI.Clipboard_Helper_Privileged_Iframe.src = UI__Clipboard_Helper_Privileged_Iframe__src;
+		UI.Clipboard_Helper_Privileged_Iframe.setAttribute('style', 'height:2px; width:2px; left:-500px; position:absolute;');
+		document.getElementsByTagName('BODY')[0].appendChild(UI.Clipboard_Helper_Privileged_Iframe);
+	}, false);
 }
 // For IE also we want a separate sandbox for clipboard operations. We
 // execCommand paste here, then run clean/masseuses, then transfer to 
