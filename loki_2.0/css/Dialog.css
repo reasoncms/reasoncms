@@ -106,3 +106,26 @@ h1 {
 .field {
 	margin:.5em 0;
 }
+
+.progress_large {
+	width: 200px;
+	padding: 0.4em;
+	margin: auto;
+	text-align: center;
+}
+
+.progress_large p {
+	margin: 0.2em 0 0 0;
+	font-weight: bold;
+	text-align: center;
+}
+
+.error {
+	background: url('../images/error.png') #FFF9BB 4px 4px no-repeat;
+	border: 1px solid #333;
+	padding: 4px 5px 4px 25px;
+	color: black;
+	margin: 0;
+	min-height: 16px;
+	line-height: 16px;
+}
