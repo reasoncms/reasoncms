@@ -14,6 +14,10 @@ Util.OOP = {};
  *   only inside methods, not directly inside the constructor. (Note: The existing
  *   code doesn't follow this advice perfectly; follow this advice, not that code.)
  *
+ * Changed on 2007-09-13 by EN: Now calls the parent class's constructor! Any
+ * arguments that need to be passed to the constructor can be provided after
+ * the child and parent.
+ *
  * Inspired by but independent of <http://www.crockford.com/javascript/inheritance.html>.
  *
  * The main problem with just doing something like
@@ -29,6 +33,9 @@ Util.OOP.inherits = function(child, parent)
 		child[name] = parent_prototype[name];
 	}
 	child['superclass'] = parent_prototype;
+	
+	// call the superclass' constructor on the child object
+	parent.apply(child, Util.Array.from(arguments).slice(2));
 };
 
 /**
