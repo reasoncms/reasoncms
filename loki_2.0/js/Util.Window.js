@@ -10,9 +10,9 @@
  */
 Util.Window = function()
 {
-	this.window;
-	this.document;
-	this.body;
+	this.window = null;
+	this.document = null;
+	this.body = null;
 };
 Util.Window.FORCE_SYNC = true;
 Util.Window.DONT_FORCE_SYNC = false;
@@ -52,7 +52,7 @@ Util.Window.prototype.open = function(uri, window_name, window_options, force_sy
 
 	if ( window_options == null )
 		window_options = 'status=1,scrollbars=1,resizable,width=600,height=300';
-
+	
 	if ( force_sync == null )
 		force_sync = Util.Window.DONT_FORCE_SYNC;
 
@@ -183,3 +183,14 @@ Util.Window.alert = function(alertandum)
 	// Append the document chunk to the window
 	alert_window.body.appendChild(doc_chunk);
 };
+
+Util.Window.alert_debug = function(message)
+{
+	var alert_window = new Util.Window;
+	alert_window.open('', '_blank', 'status=1,scrollbars=1,resizable,width=600,height=300');
+	
+	var text_chunk = alert_window.document.createElement('P');
+	text_chunk.style.fontFamily = 'monospace';
+	text_chunk.appendChild(alert_window.document.createTextNode(message));
+	alert_window.body.appendChild(text_chunk);
+}
