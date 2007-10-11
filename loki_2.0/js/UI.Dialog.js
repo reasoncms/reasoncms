@@ -23,6 +23,7 @@ UI.Dialog = function()
 	this._initially_selected_item;
 	this._dialog_window;
 	this._doc;
+	this._udoc;
 
 	this._dialog_window_width = 600;
 	this._dialog_window_height = 300;
@@ -65,10 +66,12 @@ UI.Dialog = function()
 			this._dialog_window = new Util.Window;
 
 			var success = this._dialog_window.open(this._base_uri + 'auxil/loki_blank.html', '_blank', 'status=1,scrollbars=1,toolbars=1,resizable,width=' + this._dialog_window_width + ',height=' + this._dialog_window_height + ',dependent=yes,dialog=yes', Util.Window.FORCE_SYNC);
+			//var success = this._dialog_window.open(this._base_uri + 'auxil/loki_blank.html', '_blank', '', Util.Window.FORCE_SYNC);
 			if ( !success ) // e.g., the popup was blocked
 				return false;
 
 			this._doc = this._dialog_window.document; // added 28/12/2005 NF--do we want this?
+			this._udoc = new Util.Document(function() { return this._dialog_window.document; }.bind(this));
 
 			// XXX tmp possibly:
 			this._root = this._doc.createElement('DIV');
@@ -83,6 +86,27 @@ UI.Dialog = function()
 			this._dialog_window.body.style.display = 'block';
 		}
 	};
+	
+	/**
+	 * Creates a new activity indicator (UI.Activity) for the dialog.
+	 */
+	this.create_activity_indicator = function(kind, text)
+	{
+		if (!text)
+			var text = null;
+		
+		return new UI.Activity(this._base_uri, this._dialog_window.document, kind, text);
+	}
+	
+	/**
+	 * Creates a new form (Util.Form) for the dialog.
+	 */
+	this.create_form = function(params)
+	{
+		if (!params)
+			var params = {};
+		return new Util.Form(this.dialog_window.document, params);
+	}
 
 	/**
 	 * Sets the page title
@@ -97,7 +121,8 @@ UI.Dialog = function()
 	 */
 	this._append_style_sheets = function()
 	{
-		Util.Document.append_style_sheet(this._dialog_window.document, this._base_uri + 'css/Dialog.css');
+		this._udoc.append_style_sheet(this._base_uri + 'css/Dialog.css');
+		this._udoc.append_style_sheet(this._base_uri + 'css/Pretty_Forms.css');
 	};
 
 	/**
@@ -197,39 +222,25 @@ UI.Dialog = function()
 	 */
 	this._append_submit_and_cancel_chunk = function(submit_text, cancel_text)
 	{
-		// Init submit and cancel text
-		submit_text = submit_text == null ? 'OK' : submit_text;
-		cancel_text = cancel_text == null ? 'Cancel' : cancel_text;
-
-
-		// Setup submit and cancel buttons
-
-		var submit_button = this._dialog_window.document.createElement('BUTTON');
-		var cancel_button = this._dialog_window.document.createElement('BUTTON');
-
-		submit_button.setAttribute('type', 'button');
-		cancel_button.setAttribute('type', 'button');
-
-		submit_button.appendChild( this._dialog_window.document.createTextNode(submit_text) );
-		cancel_button.appendChild( this._dialog_window.document.createTextNode(cancel_text) );
-
-		var self = this;
-		Util.Event.add_event_listener(submit_button, 'click', function() { self._internal_submit_listener(); });
-		Util.Event.add_event_listener(cancel_button, 'click', function() { self._internal_cancel_listener(); });
-
-		Util.Element.add_class(submit_button, 'ok');
+		var self = this; // some sort of scope rule I'm not aware of is keeping
+		                 // create_button from having direct access to the
+		                 // Dialog's "this". closures to the rescue! -Eric
 		
+		function create_button(text, click_listener) {
+			var b = self._udoc.create_element('BUTTON', {type: 'button'}, [text]);
+			Util.Event.add_event_listener(b, 'click', click_listener.bind(self));
+			return b;
+		}
+		
+		var chunk = this._doc.createElement('DIV');
+		Util.Element.add_class(chunk, 'submit_and_cancel_chunk');
+		
+		var submit = create_button(submit_text || 'OK', this._internal_submit_listener);
+		Util.Element.add_class(submit, 'ok');
+		chunk.appendChild(submit);
+		chunk.appendChild(create_button(cancel_text || 'Cancel', this._internal_cancel_listener));
 
-		// Setup their containing chunk
-		var submit_and_cancel_chunk = this._dialog_window.document.createElement('DIV');
-		Util.Element.add_class(submit_and_cancel_chunk, 'submit_and_cancel_chunk');
-		submit_and_cancel_chunk.appendChild(cancel_button);
-		submit_and_cancel_chunk.appendChild(submit_button);
-
-
-		// Append their containing chunk
-		//this._dialog_window.body.appendChild(submit_and_cancel_chunk);
-		this._root.appendChild(submit_and_cancel_chunk);
+		this._root.appendChild(chunk);
 	};
 
 	/**
