@@ -383,7 +383,7 @@ UI.Loki = function(textarea, settings)
 			linebreak: [UI.BR_Button],
 			hrule: [UI.HR_Button],
 			clipboard: [UI.Copy_Button, UI.Cut_Button, UI.Paste_Button],
-			// align: [UI.Left_Align_Button, UI.Center_Aligh_Button, UI.Right_Align_Button],
+			// align: [UI.Left_Align_Button, UI.Center_Align_Button, UI.Right_Align_Button],
 			highlight: [UI.Highlight_Button],
 			blockquote: [UI.Blockquote_Button],
 			olist: [UI.OL_Button],
@@ -394,7 +394,7 @@ UI.Loki = function(textarea, settings)
 			image: [UI.Image_Button],
 			link: [UI.Page_Link_Button],
 			anchor: [UI.Anchor_Button],
-			source: [UI.Source_Button, UI.Raw_Source_Button],
+			source: [UI.Source_Button, UI.Raw_Source_Button]
 		};
 		
 		for (var s in button_map) {
@@ -850,9 +850,7 @@ UI.Loki = function(textarea, settings)
 
 		Util.Event.add_event_listener(_document, 'contextmenu', function(event) 
 		{
-			//event = event == null ? _window.event : event;
-			event = event == null ? _window.event : event;
-			return _show_contextmenu(event);
+			return _show_contextmenu(event || _window.event);
 		});
 
 		// XXX: perhaps you should put these two in classes similar to UI.Keybinding
@@ -1094,12 +1092,7 @@ UI.Loki = function(textarea, settings)
 
 		menu.display(x, y);
 
-		// Stop the normal context menu from displaying
-		//event.preventDefault(); // Gecko
-		try { 
-			event.preventDefault(); 
-			event.stopPropagation();
-		} catch(e) {}
+		Util.Event.prevent_default(event);
 		return false; // IE
 	};
 
