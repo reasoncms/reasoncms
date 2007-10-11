@@ -69,14 +69,11 @@
 
 .loki .contextmenu
 {
-	background-color: buttonface;
-	border: outset 2px lightgrey;
-	/*
-	border-bottom: buttonshadow solid 1px;
-	border-left: buttonhighlight solid 1px;
-	border-right: buttonshadow solid 1px;
-	border-top:  buttonhighlight solid 1px;
-	*/
+	background-color: ButtonFace;
+	/*border: outset 2px lightgrey;*/
+	border: 2px solid buttonshadow;
+	border-left-color: buttonhighlight;
+	border-top-color: buttonhighlight;
 	font-size: 9pt;
 	font-family: sans-serif;
 	color: black
@@ -94,8 +91,8 @@
 .loki .contextmenu a.menuitem:hover
 {
 	/* use buttonshadow-esque colors instead of real ones here? */
-	background-color: darkblue;
-	color:white;
+	background-color: Highlight;
+	color: HighlightText;
 }
 
 .loki .contextmenu .disabled
@@ -103,7 +100,7 @@
 	padding: 2px;
 	cursor: default;
 	display: block;
-	color: buttonshadow; /* use something better here */
+	color: GrayText;
 }
 
 .loki .grippy_wrapper
