@@ -4,6 +4,8 @@
  * @constructor
  *
  * @class Reads items from an RSS feed, but gets them only one page at a time.
+ * 
+ * -- DEPRECATED by Util.RSS.Reader! --
  *
  * New structure:
  * - Variables
