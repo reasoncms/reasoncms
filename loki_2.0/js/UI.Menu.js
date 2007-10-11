@@ -142,7 +142,7 @@ UI.Menu = function()
 				while ( cur_window )
 				{
 					Util.Event.add_event_listener(cur_window.document, 'click', close_menu);
-					//Util.Event.add_event_listener(cur_window.document, 'contextmenu', close_menu);
+					Util.Event.add_event_listener(cur_window.document, 'contextmenu', close_menu);
 					if ( cur_window != cur_window.parent )
 						cur_window = cur_window.parent;
 					else
