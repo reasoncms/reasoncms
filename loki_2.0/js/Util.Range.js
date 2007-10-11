@@ -512,6 +512,16 @@ Util.Range.is_at_beg_of_block = function(rng, block)
 	return ret;
 };
 
+Util.Range.is_at_end_of_text = function(rng)
+{
+	return (rng.endContainer.nodeType == Util.Node.TEXT_NODE && rng.endOffset == rng.endContainer.length);
+};
+
+Util.Range.is_at_beg_of_text = function(rng)
+{
+	return (rng.startContainer.nodeType == Util.Node.TEXT_NODE && rng.startOffset == 0);
+}
+
 Util.Range.intersects_node = function(rng, node)
 {
 	try
