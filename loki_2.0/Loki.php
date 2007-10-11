@@ -1,8 +1,15 @@
 <?php
-include_once('paths.php');
+
+if (!defined('LOKI_2_INC')) {
+	if (!defined('DIRECTORY_SEPARATOR'))
+		define('DIRECTORY_SEPARATOR', '/');
+	define('LOKI_2_INC', dirname(__FILE__).DIRECTORY_SEPARATOR);
+}
+
+// include_once('paths.php'); // ?
 include_once(LOKI_2_INC.'Loki_Options.php'); // so we can get L_DEFAULT etc.
 /**
- * 2nd generation of the Loki XHTML editor
+ * Second generation of the Loki XHTML editor
  *
  * Takes care of building the (x)html to instantiate Loki
  * 
@@ -131,7 +138,7 @@ class Loki2
 	 */
 	function print_form_children()
 	{
-		$this->_include_loki_js();
+		$this->include_js();
 		?>
 
 		<!--div><a href="javascript:void(0);" onclick="Util.Window.alert(document.body.innerHTML);">View virtual source</a></div-->
@@ -212,11 +219,7 @@ class Loki2
 	}
 	
 	/**
-	 * Include all js files
-	 *
-	 * If loki_script_src, load the js files using a script src. 
-	 * (Note: if we're behind https, this is much slower than echoing the js inline.)
-	 * XXX: this should be a setting, probably, not a request var
+	 * Include all JavaScript files.
 	 *
 	 * NOTE: This function will only run once per page generation so as not to bloat the page.
 	 * it is important to make sure method contains only the hooks to the general Loki 
@@ -226,8 +229,14 @@ class Loki2
 	 * NOTE: static vars in a method are shared by all objects in PHP
 	 * we are depending on this fact to make sure that only the first Loki object spits 
 	 * out the Loki js.
+	 *
+	 * @param	mode	Either 'debug', to include all files individually;
+	 *					'inline', to print the contents of all the files inline;
+	 *					or 'external', to reference an external, cache-aware
+	 *					script that merges all of the Loki JavaScript files
+	 *					together.
 	 */
-	function _include_loki_js()
+	function include_js($mode=null)
 	{
 		static $loki_js_has_been_included = false;
 		
@@ -240,31 +249,45 @@ class Loki2
 				UI__Clipboard_Helper_Editable_Iframe__src = '<?php echo $this->_asset_protocol . $this->_asset_host . $this->_asset_path; ?>auxil/loki_blank.html';
 			</script>
 			<?php
-			//if(!empty($_REQUEST['loki_script_src']))
-			if(1 == 1) // this is the default while we are doing testing
-			{
-				include_once(LOKI_2_INC.'auxil/preg_ls.php');
-				$files = preg_ls($this->_asset_file_path . "js", true, "/.*\.js$/i");
-				// the following two lines are a hack to get UI.js and Util.js first
-				sort($files);
-				$files = array_reverse($files);
-				foreach ($files as $filename )
-					echo '<script type="text/javascript" language="javascript" src="' . $this->_asset_path . 'js/' . $filename .'"></script>' . "\n";
+			
+			if (!$mode) {
+				$mode = ($this->_debug)
+					? 'debug'
+					: 'external';
+			} else {
+				$mode = strtolower($mode);
 			}
-			// Otherwise, load the js files by echoing them all inline in the html.
-			else
-			{
-				echo '<script type="text/javascript" language="javascript">';
-				include_once(LOKI_2_INC.'auxil/preg_ls.php');
-				$files = preg_ls($this->_asset_file_path . "js", true, "/.*\.js$/i");
-				// the following two lines are a hack to get UI.js and Util.js first
-				sort($files);
-				$files = array_reverse($files);
-				foreach ($files as $filename )
-					readfile($this->_asset_file_path . "js/" . $filename);
-	
-				echo '</script>' . "\n";
+			
+			if ($mode == 'debug') {
+				$files = $this->_get_js_files();
+				$base = $this->_asset_path.'js';
+				if (!$files)
+					return;
+				
+				foreach ($files as $filename) {
+					echo '<script type="text/javascript" '.
+						'src="'.$base.$filename.'" charset="utf-8"></script>';
+				}
+			} else if ($mode == 'external') {
+				echo '<script type="text/javascript" '.
+					'src="'.$this->_asset_path.'loki_editor.php"></script>';
+			} else if ($mode == 'inline') {
+				$files = $this->_get_js_files();
+				$base = $this->_asset_file_path.'js';
+				if (!$files)
+					return;
+				
+				echo '<script type="text/javascript">', "\n";
+				foreach ($files as $filename) {
+					echo "\n// file $file \n\n";
+					readfile($base.$filename);
+				}
+			} else {
+				user_error('Unknown Loki JS inclusion mode "'.$mode.'". '.
+					'Cannot load Loki\'s JavaScript.', E_USER_WARNING);
+				return;
 			}
+			
 			$loki_js_has_been_included = true;
 		}
 	}
@@ -278,7 +301,8 @@ class Loki2
 	function js_regexp_quote($s)
 	{
 		$specials_pat = '/(\/|\.|\*|\+|\?|\||\(|\)|\[|\]|\{|\}|\\\\)/';
-		// first two \\\\ are for one \ each in the ultimate javascript code; last \1 is a backreference:
+		// first two \\\\ are for one \ each in the ultimate javascript code,
+		// and the ending \1 is a backreference:
 		return preg_replace($specials_pat, '\\\\\\\\\1', $s);
 	}
 
@@ -299,6 +323,85 @@ class Loki2
 	function _set_field_value($field_value) 
 	{
 		$this->_field_value = $field_value;
+	}
+	
+	function _get_js_files($source=null)
+	{
+		if (!$source)
+			$source = $this->_asset_file_path.'js';
+		
+		if (!$d = dir($source)) {
+			user_error('Failed to load Loki\'s JavaScript code from "'.
+				$base.'".', E_USER_WARNING);
+			return false;
+		}
+		
+		$files = array();
+		
+		while (false !== $e = $d->read()) {
+			if ($e{0} == '.' || substr($e, -3) != '.js')
+				continue;
+
+			$this->_add_file($files, $e);
+		}
+		
+		return $files;
+	}
+	
+	function _compare_filenames($a, $b)
+	{
+		$a_ut = (0 == strncmp($a, 'Util', 4));
+		$a_ui = (0 == strncmp($a, 'UI', 2));
+		$b_ut = (0 == strncmp($b, 'Util', 4));
+		$b_ui = (0 == strncmp($b, 'UI', 2));
+
+		if (!$a_ut && !$a_ui) {
+			return (!$b_ut && !$b_ui)
+				? strcasecmp($a, $b)
+				: -1;
+		} else if (!$b_ut && !$b_ui) {
+			return 1;
+		} else if ($a_ut) {
+			if ($b_ui)
+				return -1;
+			else if ($a == 'Util.js')
+				return -1;
+			else if ($b == 'Util.js')
+				return 1;
+			else if ($a == 'Util.Function.js')
+				return -1;
+			else if ($b == 'Util.Function.js')
+				return 1;
+			else
+				return strcasecmp($a, $b);
+		} else if ($b_ut) {
+			if ($a_ui)
+				return 1;
+			else
+				return strcasecmp($a, $b);
+		} else if ($a == 'UI.js') {
+			return -1;
+		} else if ($b == 'UI.js') {
+			return 1;
+		} else {
+			return strcasecmp($a, $b);
+		}
+	}
+
+	function _add_file(&$files, $file)
+	{
+		for ($i = 0; $i < count($files); $i++) {
+			if ($this->_compare_filenames($files[$i], $file) < 0)
+				continue;
+
+			for ($j = (count($files) - 1); $j >= $i; $j--) {
+				$files[$j + 1] = $files[$j];
+			}
+
+			break;
+		}
+
+		$files[$i] = $file;
 	}
 }
 ?>
