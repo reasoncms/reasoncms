@@ -29,7 +29,7 @@ UI.Page_Link_Dialog = function()
 	 */
 	this.init = function(loki, params)
 	{
-		self._loki = loki;
+		this._loki = loki;
 		
 		this._anchor_names = params.anchor_names;
 		this._sites_feed = params.sites_feed;
@@ -68,6 +68,8 @@ UI.Page_Link_Dialog = function()
 
 	this._populate_main = function()
 	{
+		this.item_selector = new UI.Page_Link_Selector(this);
+		
 		this._append_heading();
 		this._append_tabset();
 		if ( this._use_rss )
@@ -79,10 +81,8 @@ UI.Page_Link_Dialog = function()
 		this._append_submit_and_cancel_chunk();
 		this._append_remove_link_chunk();
 
-		//this._load_sites(this._sites_feed);
-		//this._load_finder(this._finder_feed);
-		// this is already called in UI.Dialog.open;
-		//this._apply_initially_selected_item();
+		this._sites_error_state =
+			new UI.Error_State(this._doc.getElementById('sites_pane'));
 	};
 
 	this._append_heading = function()
@@ -116,102 +116,10 @@ UI.Page_Link_Dialog = function()
 		var sites_pane = this._doc.createElement('DIV');
 		sites_pane.id = 'sites_pane';
 		container.appendChild(sites_pane);
-
-		var sites_label = this._doc.createElement('LABEL');
-		sites_label.innerHTML = 'Sites: ';
-		sites_label.htmlFor = 'sites_select';
-		sites_pane.appendChild(sites_label);
-
-		this._sites_select = new Util.Select({document : this._doc, loading_str : this._LOADING_STR, id : 'sites_select'});
-		sites_pane.appendChild(this._sites_select.select_elem);
-		//this._sites_select.start_loading();
-
-		// Types/Links wrapper
-		var pane_wrapper = this._doc.createElement('DIV');
-		pane_wrapper.id = 'pane_wrapper';
-		container.appendChild(pane_wrapper);
-
-		// Types pane
-		this._types_pane = this._doc.createElement('DIV');
-		this._types_pane.id = 'types_pane';
-		pane_wrapper.appendChild(this._types_pane);
-
-		this._types_pane_ul = this._doc.createElement('UL');
-		this._types_pane_ul.id = 'types_pane_ul';
-		this._types_pane.appendChild(this._types_pane_ul);
-
-		var types_pane_loading_li = this._doc.createElement('LI');
-		types_pane_loading_li.innerHTML = this._LOADING_STR;
-		this._types_pane_ul.appendChild(types_pane_loading_li);
-
-		// Links pane
-		this._links_pane = this._doc.createElement('DIV');
-		this._links_pane.id = 'links_pane';
-		pane_wrapper.appendChild(this._links_pane);
-
-		// Links select
-		this._links_label = this._doc.createElement('LABEL');
-		this._links_label.id = 'links_label';
-		this._links_label.htmlFor = 'links_select';
-		this._links_pane.appendChild(this._links_label);
-
-		this._links_select = new Util.Select({ document : this._doc, loading_str : this._LOADING_STR, id : 'links_select' });
-		this._links_pane.appendChild(this._links_select.select_elem);
-		//this._links_select.start_loading();
-
-		// Anchors select
-		this._anchors_label = this._doc.createElement('LABEL');
-		this._anchors_label.id = 'anchors_label';
-		this._anchors_label.htmlFor = 'anchors_select';
-		this._anchors_label.innerHTML = 'Anchors (optional):';
-		this._links_pane.appendChild(this._anchors_label);
-
-		this._anchors_select = new Util.Select({
-			document: this._doc,
-			loading_str: this._LOADING_STR,
-			id: 'anchors_select'
-		});
-		this._links_pane.appendChild(this._anchors_select.select_elem);
-		//this._anchors_select.start_loading();
-
-/*
-		container.innerHTML =
-			'<div id="sites_pane">' +
-			'  <label for="sites_select">Site:</label>' +
-			'  <select id="sites_select"><option>' + this._LOADING_STR + '</option></select>' +
-			'</div>' +
-			'<div id="pane_wrapper">' +
-			'  <div id="types_pane"><ul id="types_pane_ul"><li>' + this._LOADING_STR + '</li></ul></div>' +
-			'  <div id="links_pane">' +
-		    '    <label id="links_label" for="links_select"></label>' +
-		    '    <select id="links_select"><option>' + this._LOADING_STR + '</option></select>' +
-		    '    <label for="anchors_select">Anchors you can link to (optional):</label>' +
-		    '    <select id="anchors_select"><option>' + this._LOADING_STR + '</option></select>' +
-			'  </div>' +
-			'</div>';
-
-		this._sites_select = this._doc.getElementById('sites_select');
-		this._types_pane = this._doc.getElementById('types_pane');
-		this._types_pane_ul = this._doc.getElementById('types_pane_ul');
-		this._links_pane = this._doc.getElementById('links_pane');
-		this._links_label = this._doc.getElementById('links_label');
-		this._links_select = this._doc.getElementById('links_select');
-		this._anchors_select = this._doc.getElementById('anchors_select');
-*/
-
-		var self = this;
-		Util.Event.add_event_listener(this._sites_select.select_elem, 'change', function()
-		{ 
-			var option = self._sites_select.select_elem.options[self._sites_select.select_elem.selectedIndex];
-			self._load_types(option.text, option.value);
-		});
-
-		Util.Event.add_event_listener(this._links_select.select_elem, 'change', function()
-		{ 
-			var option = self._links_select.select_elem.options[self._links_select.select_elem.selectedIndex];
-			self._set_link_title(option.text);
-			self._load_anchors(option.value);
-		});
+		
+		this._sites_progress = this.create_activity_indicator('textual', 'Loading sites…');
+		this._sites_progress.insert(sites_pane);
+		return;
 	};
 
 	this._append_custom_tab = function()
@@ -273,49 +181,11 @@ UI.Page_Link_Dialog = function()
 
 	this._set_link_title = function(new_title)
 	{
-		// We don't want to overwrite the initially given
-		// title onload, before the user has taken any
-		// action or even seen the original title.
-		if ( this._links_already_loaded_once == false )
-			return;
-
 		if ( new_title == this._CURRENT_PAGE_STR || 
 			 new_title == this._LOADING_STR )
 			this._set_link_title_input_value('');
 		else
 			this._set_link_title_input_value(new_title);
-	};
-
-	this._add_type = function(name, feed_uri, is_selected)
-	{
-		var li = this._doc.createElement('LI');
-
-		var a = this._doc.createElement('A');
-		a.href = 'javascript:void(0);';
-		a.appendChild(this._doc.createTextNode(name));
-
-		var self = this;
-		Util.Event.add_event_listener(a, 'click', function() { 
-			self._select_type(li, name, feed_uri);
-		});
-
-		li.appendChild(a);
-		this._types_pane_ul.appendChild(li);
-
-		if ( is_selected )
-			this._select_type(li, name, feed_uri);
-	};
-
-	this._select_type = function(li, name, feed_uri)
-	{
-		// Deselect all, then select new
-		var lis = this._types_pane_ul.getElementsByTagName('LI');
-		for ( var i = 0; i < lis.length; i++ )
-			Util.Element.remove_class(lis[i], 'selected');
-		Util.Element.add_class(li, 'selected');
-
-		//this._tabset.select_tab('rss');
-		this._load_links(name, feed_uri); 
 	};
 
 	this._compare_uris = function(uri_a, uri_b)
@@ -382,8 +252,8 @@ UI.Page_Link_Dialog = function()
 	
 	this._sanitize_uri = function(uri)
 	{
-		return (Util.URI.extract_domain(uri) == self._loki.editor_domain())
-			? Util.URI.strip_https_and_http(uri)
+		return (Util.URI.extract_domain(uri) == this._loki.editor_domain())
+			? Util.URI.make_domain_relative(uri)
 			: uri;
 	}
 
@@ -406,335 +276,161 @@ UI.Page_Link_Dialog = function()
 
 		// Load finder
 		feed_uri = add_initially_selected_uri(feed_uri)
-		var reader = (new Util.RSS_Reader).init(feed_uri, 10);
-		var self = this;
-		reader.add_load_listener(function()
-		{
-			// Set initially selected site uri
-			// Set initially selected type uri
-			// Set initially selected link uri
-			// Set initially selected anchor uri
-
-			// Find site and type uris in feed ...
+		var reader = new Util.RSS.Reader(feed_uri);
+		var select = this._doc.getElementById('sites_select') || null;
+		var error_state = this._sites_error_state;
+		var sites_pane = this._doc.getElementById('sites_pane');
+		
+		error_state.exit(null);
+		
+		function report_error(message) {
+			this._sites_progress.remove();
+			if (select && select.parentNode)
+				select.parentNode.removeChild(select);
+			
+			error_state.set('Failed to load finder: ' + message, function() {
+				this._load_finder(feed_uri);
+			}.bind(this));
+			error_state.enter(null);
+		}
+		
+		reader.add_event_listener('load', function(feed, new_items) {
 			var initially_selected_site_uri, initially_selected_type_uri;
-			var items = reader.get_cur_items();
-			for ( var i = 0; i < items.length; i++ )
-			{
-				var item_uri = self._sanitize_uri(items[i].link);
-				if ( items[i].title == 'site_feed' )
+			
+			new_items.each(function(item) {
+				var item_uri = this._sanitize_uri(item.link);
+				if ( item.title == 'site_feed' )
 					initially_selected_site_uri = item_uri;
-				if ( items[i].title == 'type_feed' )
+				else if ( item.title == 'type_feed' )
 					initially_selected_type_uri = item_uri;
-			}
+			}, this);
 
 			// ... then set them if found
 			if ( initially_selected_site_uri )
-				self._initially_selected_site_uri = initially_selected_site_uri;
+				this._initially_selected_site_uri = initially_selected_site_uri;
 			else
-				self._initially_selected_site_uri = null; // (might already be set from previous opening of dialog)
+				this._initially_selected_site_uri = null; // (might already be set from previous opening of dialog)
 
 			if ( initially_selected_type_uri )
-				self._initially_selected_type_uri = initially_selected_type_uri;
+				this._initially_selected_type_uri = initially_selected_type_uri;
 			else
-				self._initially_selected_type_uri = null; // (might already be set from previous opening of dialog)
-				
-			// Trigger load_sites
-			//self._load_sites(self._sites_feed);
+				this._initially_selected_type_uri = null; // (might already be set from previous opening of dialog)
 
 			// Trigger listener
-			self._finder_listener();
-		});
-		setTimeout(function() { reader.load_next_items(); }, 100); // gives time to render
+			this._finder_listener();
+		}.bind(this));
+		reader.add_event_listener('error', report_error.bind(this));
+		reader.add_event_listener('timeout', function() {
+			report_error.call(this, 'Failed to load the list of sites within a reasonable amount of time.');
+		}.bind(this));
+		
+		try {
+			reader.load(null, 10 /* 10 = 10 seconds until timeout */);
+		} catch (e) {
+			var message = e.message || e;
+			report_error(message);
+		}
 	};
 
 	this._load_sites = function(feed_uri)
 	{
-		// Start loading
-		this._sites_select.start_loading();
-		this._workaround_ie_select_display_bug();
-
-		// Load new sites
-		var reader = (new Util.RSS_Reader).init(feed_uri);
-		var self = this;
-		reader.add_load_listener(function()
-		{
-			// Add new sites
-			var items = reader.get_cur_items();
-			for ( var i = 0; i < items.length; i++ )
-			{
-				//var is_selected = ( items[i].isSelected == 'true' );
-				//var is_selected = ( items[i].link == self._initially_selected_site_uri );
-				//var is_selected = self._compare_uris(items[i].link, self._initially_selected_site_uri);
-				var item_uri = self._sanitize_uri(items[i].link);
-				var is_selected = ( item_uri == self._initially_selected_site_uri ||
-									( !self._initially_selected_site_uri &&
-									  self._default_site_regexp.test(item_uri) ) );
-				self._sites_select.add_option(items[i].title, item_uri, is_selected);
-			}
-
-			/*
-			// Select initially selected site
-			// XXX: should be current site, not just first
-			self._sites_select.selectedIndex = 0;
-			*/
-
-			self._sites_select.end_loading();
-
-			// Now trigger load types
-			if ( self._sites_select.select_elem.options.length > 0 )
-			{
-				var i = self._sites_select.select_elem.selectedIndex;
-				var option = self._sites_select.select_elem.options[i];
-				self._load_types(option.text, option.value);
-			}
-		});
-		setTimeout(function() { reader.load_next_items(); }, 100); // gives time to render
-	};
-
-	this._load_types = function(name, feed_uri)
-	{
-		// Remove all old types and set loading message 
-		this._types_pane_ul.innerHTML = '<li>' + this._LOADING_STR + '</li>';
-
-		// Load new types
-		var reader = (new Util.RSS_Reader).init(feed_uri);
-		var self = this;
-		reader.add_load_listener(function()
-		{
-			// Remove loading message
-			self._types_pane_ul.innerHTML = '';
-
-			// Add new types
-			var items = reader.get_cur_items();
-			for ( var i = 0; i < items.length; i++ )
-			{
-				//var is_selected = items[i].title == 'Pages';
-				//var is_selected = ( items[i].isSelected == 'true' );
-				//var is_selected = self._compare_uris(items[i].link, self._initially_selected_type_uri);
-				var item_uri = self._sanitize_uri(items[i].link);
-				var is_selected = ( item_uri == self._initially_selected_type_uri ||
-									( /* !self._initially_selected_type_uri */
-									  self._default_type_regexp.test(item_uri) ) );
-				self._add_type(items[i].title, item_uri, is_selected);
-			}
-
-			/*
-			// Add "custom" pseudo-type
-			//XXX deprecated:...
-			//self._add_custom(some_type_is_selected == false);
-			if ( !some_type_is_selected )
-				self._select_custom_or_email_tab();
-			*/
-
-			/*
-			// Select initially selected item
-			// XXX: should be "pages" type, not just first
-			var li = self._types_pane_ul.getElementsByTagName('LI').item(0);
-			var name = items[0].title;
-			var feed_uri = items[0].link;
-			self._select_type(li, name, feed_uri);
-			*/
-		});
-		setTimeout(function() { reader.load_next_items(); }, 100); // gives time to render
-	};
-
-/*
-	this._select_custom_or_email_tab = function()
-	{
-		var uri = this._initially_selected_item.uri;
-		if ( uri.match(new RegExp('^mailto\:', 'i')) != null )
-		{
-			this._tabset.select_tab('email');
-		}
-		else
-		{
-			this._tabset.select_tab('custom');
-		}
-	};
-*/
-
-	this._load_links = function(name, feed_uri)
-	{
-		// Set labela and start loading
-		this._links_label.innerHTML = name + ':';
-		this._links_select.start_loading();
-		this._workaround_ie_select_display_bug();
-
-		// Load new links
-		var reader = (new Util.RSS_Reader).init(feed_uri);
-		var self = this;
-		reader.add_load_listener(function()
-		{
-			// If "pages" type, add "current page" option
-			var i = self._sites_select.select_elem.selectedIndex;
-			var selected_site_option = self._sites_select.select_elem.options[i];
-			var selected_site_uri = selected_site_option.value;
-			if ( name == 'Pages' && self._default_site_regexp.test(selected_site_uri) ) // XXX here
-				self._links_select.add_option(self._CURRENT_PAGE_STR, '', true);
-
-			// Add new links
-			var items = reader.get_cur_items();
-			for ( var i = 0; i < items.length; i++ )
-			{
-				if(items[i].link)
-				{
-					//var is_selected = ( items[i].isSelected == 'true' );
-					//var is_selected = self._compare_uris(items[i].link, self._initially_selected_nameless_uri);
-					var item_uri = self._sanitize_uri(items[i].link);
-					var is_selected = ( item_uri == self._initially_selected_nameless_uri );
-					self._links_select.add_option(items[i].title, item_uri, is_selected);
-				}
-			}
-
-			self._links_select.end_loading();
-
-			// Now trigger load anchors
-			if ( self._links_select.select_elem.options.length > 0 )
-			{
-				var i = self._links_select.select_elem.selectedIndex;
-				var option = self._links_select.select_elem.options[i];
-				self._set_link_title(option.text);
-				self._load_anchors(option.value);
-			}
-
-			self._links_already_loaded_once = true;
-		});
-		setTimeout(function() { reader.load_next_items(); }, 100); // gives time to render
-	};
-	
-	
-
-	this._load_anchors = function(uri)
-	{
-		this._anchors_label.style.display = '';
+		var sites_pane = this._doc.getElementById('sites_pane');
 		
-		// Start loading
-		this._anchors_select.start_loading();
-		this._workaround_ie_select_display_bug();
-		
-		// Load new anchors
-		if ( uri == '' )
-		{
-			this._add_anchors(this._anchor_names);
-		}
-		else
-		{
-			// Using this method kills two issues at the same time. By using
-			// (internally) an XMLHttpRequest object, we can examine the
-			// Content-Type header of the response and figure out whether or
-			// not we should look for anchors, and avoid creating nasty inline
-			// frames on the document containing the editor. -EN
-			
-			var dialog = this;
-			
-			function disable_anchors(request)
-			{
-				request.abort();
-				dialog._add_anchors([]);
-				dialog._anchors_select.select_elem.disabled = true;
-			}
-			
-			var req = new Util.Request(uri, {
-				method: 'get',
-				
-				on_interactive: function(request)
-				{
-					if (!request.successful())
-						disable_anchors(request);
-					
-					if (!dialog._test_for_anchor_availability(request))
-						disable_anchors(request);
-				},
-				
-				on_success: function(request, transport)
-				{
-					if (!dialog._test_for_anchor_availability(request))
-						disable_anchors(request);
-					
-					var parser = new Util.HTML_Parser();
-					var names = [];
-
-					parser.add_listener('open', function(tag, params) {
-						if (tag.toUpperCase() == 'A') {
-							if (params.name && !params.href)
-								names.push(params.name);
-						}
-					})
-					parser.parse(transport.responseText);
-
-					dialog._anchors_select.select_elem.disabled = false;
-					dialog._add_anchors(names);
-				}
-			});
-		}
-	};
-	
-	this._test_for_anchor_availability = function(request)
-	{
-		if (
-			request.get_header('Content-Type').indexOf('text/html') == 0
-			|| request.get_header('Content-Type').indexOf('text/xml') == 0
-			|| request.get_header('Content-Type').indexOf('application/xhtml+xml') == 0
-			|| request.get_header('Content-Type').indexOf('application/xml') == 0
-		)
-		{
-			return true;
-		}
-		return false;
-	}
-
-	this._add_anchors = function(names)
-	{
-		// Split name from uri
 		/*
-		var a = this._initially_selected_item.uri.split('#');
-		var selected_nameless_uri = a[0];
-		var selected_name = a.length > 1 ? a[1] : '';
+		function make_uri(offset, num)
+		{
+			var connector = (uri.indexOf('?') > -1) ? '&' : '?';
+			return feed_uri + connector + 'start=' + offset + '&num=' + num;
+		}
 		*/
-
-		// Add "none selected" option, and select it by default
-		this._anchors_select.add_option('(none selected)', '');
-
-		// Add new anchors
-		for ( var i = 0; i < names.length; i++ )
-		{
-			// We only want to automatically select the item matching
-			// the originally selected anchor the first time around, i.e.
-			// when the dialog is first loading.
-			var is_selected = ( this._anchors_already_loaded_once == false && 
-								names[i] == this._initially_selected_name );
-			this._anchors_select.add_option(names[i], names[i], is_selected);
-			if ( is_selected && this._use_rss )
-			{
-				this._tabset.select_tab('rss');
-				this._initialize_link_information('rss');
-			}
+		
+		var reader = new Util.RSS.Reader(feed_uri);
+		var select = this._doc.getElementById('sites_select') || null;
+		var error_state = this._sites_error_state;
+		
+		error_state.exit(null);
+		
+		function report_error(message) {
+			this._sites_progress.remove();
+			if (select && select.parentNode)
+				select.parentNode.removeChild(select);
+			
+			error_state.set('Failed to load sites: ' + message, function() {
+				this._load_sites(feed_uri);
+			}.bind(this));
+			error_state.enter(null);
 		}
-
-		this._anchors_select.end_loading();
-
-		// XXX this is only temporarily commented out, until I figure out why
-		// things are loading twice on start (which I've done, but now it's
-		// not necessary)
-		//this._anchors_already_loaded_once = true;
-	};
-
-	/**
-	 * Returns an array of names from the given collection of A elements.
-	 */
-	this._get_anchor_names = function(as)
-	{
-		// Get a list of the named anchors in the document
-		var names = new Array();
-		for ( var i = 0; i < as.length; i++ )
+		
+		reader.add_event_listener('load', function(feed, new_items)
 		{
-			if ( !as[i].getAttribute('href') &&
-				 as[i].getAttribute('name') )
+			function load_site()
 			{
-				names.push(as[i].getAttribute('name'));
+				if (select.selectedIndex <= 0) {
+					this.item_selector.revert();
+				} else {
+					var o = select.options[select.selectedIndex];
+					this.item_selector.load(o.text, o.value);
+				}
 			}
+			
+			if (new_items.length == 0) {
+				report_error('No sites are available to choose from.');
+			}
+			
+			if (!select) {
+				sites_pane.appendChild(this._udoc.create_element('label', {
+					htmlFor: 'sites_select'
+				}, ['Site:']));
+				select = this._udoc.create_element('select', {id: 'sites_select', size: 1});
+				select.appendChild(this._udoc.create_element('option', {}, ''));
+				
+				Util.Event.add_event_listener(select, 'change', load_site.bind(this));
+			}
+			
+			new_items.each(function(item) {
+				var uri = this._sanitize_uri(item.link);
+				var selected = (this._initially_selected_site_uri)
+					? uri == this._initially_selected_site_uri
+					: this._default_site_regexp.test(uri);
+				
+				var option = this._udoc.create_element('option', {value: uri,
+						selected: selected});
+				option.innerHTML = item.title;
+				
+				select.appendChild(option);
+			}.bind(this));
+			
+			this._sites_progress.remove();
+			
+			if (select.parentNode != sites_pane)
+				sites_pane.appendChild(select);
+			
+			this.item_selector.insert(sites_pane.parentNode);
+			
+			if (select.selectedIndex > 0) {
+				// Delay this step by a trivial amount to allow the browser
+				// to continue execution and render the current state of the
+				// page.
+				
+				var self = this;
+				Util.Scheduler.defer(function() {
+					load_site.call(self);
+				});
+			}
+				
+		}.bind(this));
+		
+		reader.add_event_listener('error', report_error.bind(this));
+		reader.add_event_listener('timeout', function() {
+			report_error.call(this, 'Failed to load the list of sites within a reasonable amount of time.');
+		}.bind(this));
+		
+		try {
+			reader.load(null, 10 /* 10 = 10 seconds until timeout */);
+		} catch (e) {
+			var message = e.message || e;
+			report_error(message);
 		}
-		return names;
 	};
 
 	/**
@@ -748,17 +444,11 @@ UI.Page_Link_Dialog = function()
 		var uri;
 		if ( this._tabset.get_name_of_selected_tab() == 'rss' )
 		{
-			uri = this._links_select.select_elem.value;
-			var anchor = this._anchors_select.select_elem.value;
-
-			if ( uri == '' && anchor == '')
-			{
+			uri = this.item_selector.get_uri();
+			if (!uri) {
 				this._dialog_window.window.alert('Please select a page to be linked to.');
 				return false;
 			}
-
-			if ( anchor != '' )
-				uri += '#' + anchor;
 		}
 		else if ( this._tabset.get_name_of_selected_tab() == 'custom' )
 		{
@@ -904,12 +594,14 @@ UI.Page_Link_Dialog = function()
 	 * tab causes the document to flicker, and we the bug
 	 * doesn't surface there anyway.
 	 *
-	 * XXX At some point it might make sense to hack more
+	 * XXX: At some point it might make sense to hack more
 	 * on Util.Select to avoid this bug altogether. I think
 	 * the solution would be to never add or remove options
 	 * from a displayed select--but hiding and reshowing
 	 * the selects gets complicated because so much in
 	 * this dialog is done asynchronously.
+	 *
+	 * XXX: This has been maybe neutered by my changes to this dialog. -EN
 	 */
 	this._workaround_ie_select_display_bug = function()
 	{
@@ -958,15 +650,19 @@ UI.Page_Link_Dialog = function()
 			this._other_options_chunk.style.display = 'none';
 
 		var other_options_label = this._dialog_window.document.createElement('H3');
-		var other_options_a = this._dialog_window.document.createElement('A');
-		other_options_a.href = 'javascript:void(0);';
-		other_options_a.innerHTML = 'More Options';
+		var other_options_a = this._udoc.create_element('A',
+			{href: 'javascript:void(0)'},
+			['More Options']);
+			
 		var self = this;
 		Util.Event.add_event_listener(other_options_a, 'click', function() {
-			if ( self._other_options_chunk.style.display == 'none' )
+			if (self._other_options_chunk.style.display == 'none') {
 				self._other_options_chunk.style.display = 'block';
-			else
+				other_options_a.firstChild.nodeValue = 'Fewer Options'
+			} else {
 				self._other_options_chunk.style.display = 'none';
+				other_options_a.firstChild.nodeValue = 'More Options'
+			}
 		});
 		other_options_label.appendChild(other_options_a);
 		
@@ -1006,15 +702,12 @@ UI.Page_Link_Dialog = function()
 	this._initialize_link_information = function(tab_name)
 	{
 		// Set all tabs to default values
-		var tab_names = ['rss', 'custom', 'email'];
-		for ( var i in tab_names )
-		{
-			this._link_information[i] = 
-			{
-				link_title : '',
-				new_window : ''
+		['rss', 'custom', 'email'].each(function (name) {
+			this._link_information[name] = {
+				link_title: '',
+				new_window: ''
 			}
-		}
+		}, this);
 
 		// set given tab to initial values
 		this._link_information[tab_name] =
@@ -1029,6 +722,11 @@ UI.Page_Link_Dialog = function()
 	
 	this._set_link_title_input_value = function(value)
 	{
+		if (!value) {
+			this._link_title_input.value = '';
+			return;
+		}
+		
 		/* Strip any number of hyphens and spaces from beginning of title */
 		while(value.indexOf('-') == 0 || value.indexOf(' ') == 0)
 		{
