@@ -6,6 +6,8 @@
 Util.Request = function(url, options)
 {
 	var self = this;
+	var timeout = null;
+	var timed_out = false;
 	
 	this.options = options || {};
 		
@@ -31,7 +33,7 @@ Util.Request = function(url, options)
 		}
 	}
 	
-	function empty() {}
+	var empty = Util.Function.empty;
 	
 	function ready_state_changed()
 	{
@@ -46,10 +48,34 @@ Util.Request = function(url, options)
 	
 	function completed()
 	{
+		if (timeout) {
+			timeout.cancel();
+			timeout = null;
+		}
+		
 		(self.options['on_'] + self.get_status()
 			|| self.options['on_' + (self.succeeded() ? 'success' : 'failure')]
 			|| empty)(self, self.transport);
 		self.transport.onreadystatechange = empty;
+	}
+	
+	function internal_abort(send_notification)
+	{
+		this.transport.onreadystatechange = empty;
+		
+		try {
+			if (send_notificiation) {
+				try {
+					(this.options.on_abort || empty)(this, this.transport);
+				} catch (handler_exception) {
+					// ignore
+				}
+			}
+			
+			this.transport.abort();
+		} catch (e) {
+			// do nothing
+		}
 	}
 	
 	this.get_status = function()
@@ -58,6 +84,17 @@ Util.Request = function(url, options)
 			return this.transport.status || 0;
 		} catch (e) {
 			return 0;
+		}
+	}
+	
+	this.get_status_text = function()
+	{
+		try {
+			return (timed_out)
+				? 'Operation timed out.'
+				: (this.transport.statusText || '');
+		} catch (e) {
+			return '';
 		}
 	}
 	
@@ -78,25 +115,38 @@ Util.Request = function(url, options)
 	
 	this.abort = function()
 	{
-		try {
-			this.transport.abort();
-		} catch (e) {
-			// do nothing
-		}
-		
-		this.transport.onreadystatechange = empty;
+		internal_abort.call(this, true);
 	}
 	
+	timed_out = false;
+	
+	if (this.options.timeout) {
+		timeout = Util.Scheduler.delay(function() {
+			internal_abort.call(this, false);
+			(this.options.on_timeout || this.options.on_failure || empty)
+				(this, this.transport);
+		}.bind(this), this.options.timeout);
+	}
 	
 	this.transport = create_transport();
 	this.url = url;
 	this.method = this.options.method;
 	this.transport.onreadystatechange = ready_state_changed;
 	
-	this.transport.open(this.method.toUpperCase(), this.url,
-		this.options.asynchronus);
-	this.transport.send(this.options.body || null);
-}
+	try {
+		this.transport.open(this.method.toUpperCase(), this.url,
+			this.options.asynchronus);
+		this.transport.send(this.options.body || null);
+	} catch (e) {
+		if (timeout) {
+			timeout.cancel();
+			timeout = null;
+		}
+		
+		throw e;
+	}
+	
+};
 
 Util.Request.Default_Options = {
 	method: 'post',
@@ -104,6 +154,7 @@ Util.Request.Default_Options = {
 	content_type: 'application/x-www-form-urlencoded',
 	encoding: 'UTF-8',
 	parameters: '',
+	timeout: null
 };
 
 Util.Request.Events =
