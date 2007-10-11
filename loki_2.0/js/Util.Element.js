@@ -5,47 +5,23 @@ Util.Element = function()
 // Adds a class to the list contained in the element's class attribute.
 Util.Element.add_class = function(elem, class_name)
 {
-	if ( Util.Element.get_all_classes(elem) == null )
-	{
-		Util.Element.set_all_classes(elem, class_name);
-	}
-	else
-	{
-		Util.Element.set_all_classes(elem, Util.Element.get_all_classes(elem) + ' ' + class_name);
-	}
+	var classes = Util.Element.get_class_array(elem);
+	classes.push(class_name);
+	Util.Element.set_class_array(elem, classes);
 };
 
 // Removes the given class_name from the list contained in the
 // element's class attribute.
 Util.Element.remove_class = function(elem, removable_class)
 {
-	var all_classes = Util.Element.get_all_classes(elem);
-
-	// If there aren't any classes, no need to try to remove any
-	if ( all_classes == null )
-		return;
-
-	var all_classes_arr = all_classes.split(' ');
-	var new_classes = '';
-
-	// Loop through the array of classes. For each class that doesn't
-	// match removable_class, add that class to new_classes.
-	for ( var i = 0; i < all_classes_arr.length; i++ )
-	{
-		if ( all_classes_arr[i] != removable_class )
-		{
-			if ( new_classes == '' )
-				new_classes = all_classes_arr[i];
-			else
-				new_classes += ' ' + all_classes_arr[i];
-		}
+	var classes = Util.Element.get_class_array(elem);
+	
+	for (var i = 0; i < classes.length; i++) {
+		if (classes[i] == removable_class)
+			classes.splice(i, 1);
 	}
-
-	// Don't want an empty class
-	if ( new_classes != '' )
-		Util.Element.set_all_classes(elem, new_classes);
-	else
-		Util.Element.remove_all_classes(elem);
+	
+	Util.Element.set_class_array(elem, classes);
 };
 
 // Returns true if the given element has the given class
@@ -67,6 +43,14 @@ Util.Element.get_all_classes = function(elem)
 		: elem.getAttribute('className');
 };
 
+/**
+ * Returns an array whose members are the element's classes.
+ */
+Util.Element.get_class_array = function(elem)
+{
+	return elem.className.split(/\s+/);
+};
+
 // Sets the class attribute of an element to the given string which
 // contains a list of class names. It is necessary to set className
 // because for elements added using the DOM, IE requires one to set a
@@ -85,6 +69,11 @@ Util.Element.set_all_classes = function(elem, all_classes)
 		elem.setAttribute('className', all_classes);
 	}
 	elem.setAttribute('class', all_classes);
+};
+
+Util.Element.set_class_array = function(elem, classes)
+{
+	elem.className = classes.join(' ');
 };
 
 // Removes the given element's class attribute. For info about
