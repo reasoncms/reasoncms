@@ -18,11 +18,13 @@ UI.HR_Masseuse = function()
 	
 	this.unmassage_node_descendants = function(node)
 	{
-		Util.Array.for_each(node.getElementsByTagName('DIV'),
-			function(node) {
-				if (node.getAttribute('loki:container') == 'hr')
-					this.unmassage_node(node);
-			}, self);
+		var div_elements = Util.Array.from(node.getElementsByTagName('DIV'));
+		
+		div_elements.each(function(div) {
+			if (div.getAttribute('loki:container') == 'hr') {
+				this.unmassage_node(div);
+			}
+		}, self);
 	};
 	
 	this.massage_node = function(node)
@@ -44,7 +46,8 @@ UI.HR_Masseuse = function()
 	
 	this.unmassage_node = function(node)
 	{
-		node.parentNode.replaceChild(self.get_real(node), node);
+		var r = self.get_real(node) || node.ownerDocument.createElement('HR');
+		node.parentNode.replaceChild(r, node);
 	};
 	
 	this.get_real = function(node)
@@ -73,6 +76,14 @@ UI.HR_Masseuse = function()
 		var span = doc.createElement('SPAN');
 		span.appendChild(doc.createTextNode('Remove'));
 		link.appendChild(span);
+		
+		Util.Event.add_event_listener(container, 'mouseover', function() {
+			link.style.display = 'block';
+		});
+		
+		Util.Event.add_event_listener(container, 'mouseout', function() {
+			link.style.display = '';
+		});
 		
 		Util.Event.add_event_listener(link, 'click', function(e) {
 			if (!e) var e = window.event;
