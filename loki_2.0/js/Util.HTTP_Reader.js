@@ -16,7 +16,7 @@ Util.HTTP_Reader = function()
  *
  * The actual XMLHttpRequest object will be available as this.request.
  *
- * XXX: This code is icky! -EN
+ * XXX: This code is icky! Use Util.Request. -EN
  *
  * @param	uri				The URI to load
  * @param	post_data		(optional) string containing post data
