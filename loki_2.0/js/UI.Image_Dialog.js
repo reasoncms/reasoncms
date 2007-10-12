@@ -113,7 +113,7 @@ UI.Image_Dialog = function()
 		};
 
 		// Append to the listbox items retrieved using an RSS feed
-		var rss_buffered_reader = (new Util.RSS_Reader).init(this._data_source);
+		var rss_buffered_reader = (new Util.RSS_Reader).init(this._data_source, 25);
 		this._image_listbox.append_items_from_buffered_reader(rss_buffered_reader, initially_selected_item_boolean_test);
 	};
 
