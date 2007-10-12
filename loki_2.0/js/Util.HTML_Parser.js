@@ -4,6 +4,7 @@
  * @constructor
  *
  * @class A SAX-style tolerant HTML parser that doesn't rely on the browser.
+ * @author Eric Naeseth
  */
 Util.HTML_Parser = function()
 {
@@ -15,8 +16,20 @@ Util.HTML_Parser = function()
 		close: []
 	};
 	
-	// woefully-incomplete but it doesn't matter right now
-	var self_closing_tags = ['LINK', 'META', 'IMG'];
+	var self_closing_tags = (function() {
+		var ret = {};
+		
+		for (var i = 0; i < arguments.length; i++) {
+			ret[arguments[i]] = true;
+		}
+		
+		ret.test = function(tag)
+		{
+			return !!this[tag];
+		}
+		
+		return ret;
+	})('BR', 'AREA', 'LINK', 'IMG', 'PARAM', 'HR', 'INPUT', 'COL', 'BASE', 'META');
 	
 	// -- Public Methods --
 	
@@ -100,19 +113,6 @@ Util.HTML_Parser = function()
 		while (position < data.length && " \n\r\t".indexOf(data.charAt(position)) >= 0) {
 			position++;
 		}
-	}
-	
-	function self_closes(name)
-	{
-		var len = self_closing_tags.length;
-		name = name.toUpperCase();
-		
-		for (var i = 0; i < len; i++) {
-			if (self_closing_tags[i] == name)
-				return true;
-		}
-		
-		return false;
 	}
 	
 	function tag_opened(name, attributes)
@@ -206,7 +206,7 @@ Util.HTML_Parser = function()
 			tag_opened(tag, attributes);
 			
 			var next_char = scan_character();
-			if (next_char == '/' || self_closes(tag)) {
+			if (next_char == '/' || self_closing_tags.test(tag)) {
 				// self-closing tag (XML-style or known)
 				tag_closed(tag);
 				
