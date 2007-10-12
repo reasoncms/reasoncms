@@ -74,7 +74,9 @@ Util.URI.make_https_or_http = function(uri, use_https)
  */
 Util.URI.strip_https_and_http = function(uri)
 {
-	return uri.replace(new RegExp('^https?:', ''), '');
+	return (typeof(uri) == 'string')
+		? uri.replace(new RegExp('^https?:', ''), '')
+		: null;
 };
 
 /**
