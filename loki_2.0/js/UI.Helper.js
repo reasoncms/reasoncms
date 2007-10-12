@@ -8,7 +8,7 @@
  * the action is.
  */
 UI.Helper = function()
-{
+{	
 	this.init = function(loki)
 	{
 		this._loki = loki;
