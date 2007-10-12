@@ -96,7 +96,10 @@ UI.Page_Link_Selector = function(dialog)
 						types.push({
 							name: item.plural_title,
 							instance_name: item.title,
-							url: dialog._sanitize_uri(item.link)
+							url: dialog._sanitize_uri(item.link),
+							is_default: (dialog._initially_selected_type_uri)
+								? item.link == dialog._initially_selected_type_uri
+								: dialog._default_type_regexp.test(item.link)
 						});
 					});
 					
@@ -191,11 +194,7 @@ UI.Page_Link_Selector = function(dialog)
 						}
 					}.bind(this));
 					
-					var selected = (dialog._initially_selected_type_uri)
-						? type.url == dialog._initially_selected_type_uri
-						: dialog._default_type_regexp.test(type.url);
-					type.is_default = selected;
-					if (selected)
+					if (type.is_default)
 						selected_type = [type, item];
 				}.bind(this));
 
@@ -311,14 +310,15 @@ UI.Page_Link_Selector.Item_Selector = function(parent, wrapper)
 				
 				var reader = new Util.RSS.Reader(type.url);
 				var machine = this.machine;
-				var initial_uri =
-					dialog._sanitize_uri(dialog._initially_selected_nameless_uri);
+				var initial_uri = // XXX: REASON HACK
+					Util.URI.strip_https_and_http(dialog._initially_selected_nameless_uri);
 
 				reader.add_event_listener('load', function(feed)
 				{
 					items = [];
 					
 					if (type.is_default) {
+						// XXX: this is kinda hackish
 						items.push(
 							{
 								value: '',
@@ -339,11 +339,12 @@ UI.Page_Link_Selector.Item_Selector = function(parent, wrapper)
 					// might be doing fancy things (e.g. nesting).
 					
 					feed.items.each(function(item) {
-						var uri = dialog._sanitize_uri(item.link);
 						items.push({
 							text: item.title,
-							value: uri,
-							selected: (initial_uri == uri)
+							value: dialog._sanitize_uri(item.link),
+							selected: (initial_uri)
+								? (initial_uri == Util.URI.strip_https_and_http(item.link))
+								: false
 						});
 					});
 
