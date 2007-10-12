@@ -19,7 +19,8 @@ class editorTypeFeed extends defaultFeed
 	}
 	function alter_feed()
 	{
-		$this->feed->set_item_field_map('title','plural_name');
+		$this->feed->set_item_field_map('title','name');
+		$this->feed->set_item_field_map('plural_title', 'plural_name');
 		$this->feed->set_item_field_map('link','id');
 		$this->feed->set_item_field_handler( 'link', 'make_link_to_feed_of_type', true );
 		$this->feed->set_item_field_map( 'description', '' );
