@@ -295,26 +295,21 @@ UI.Page_Link_Dialog = function()
 		}
 		
 		reader.add_event_listener('load', function(feed, new_items) {
-			var initially_selected_site_uri, initially_selected_type_uri;
+			var site_uri, type_uri;
 			
 			new_items.each(function(item) {
-				var item_uri = this._sanitize_uri(item.link);
-				if ( item.title == 'site_feed' )
-					initially_selected_site_uri = item_uri;
-				else if ( item.title == 'type_feed' )
-					initially_selected_type_uri = item_uri;
+				if (item.title == 'site_feed')
+					site_uri = item.link;
+				else if (item.title == 'type_feed')
+					type_uri = item.link;
 			}, this);
+		
 
 			// ... then set them if found
-			if ( initially_selected_site_uri )
-				this._initially_selected_site_uri = initially_selected_site_uri;
-			else
-				this._initially_selected_site_uri = null; // (might already be set from previous opening of dialog)
-
-			if ( initially_selected_type_uri )
-				this._initially_selected_type_uri = initially_selected_type_uri;
-			else
-				this._initially_selected_type_uri = null; // (might already be set from previous opening of dialog)
+			// We make sure to at least set them to null because they may
+			// already be set from some previous opening of the dialog.
+			this._initially_selected_site_uri = site_uri || null;
+			this._initially_selected_type_uri = type_uri || null;
 
 			// Trigger listener
 			this._finder_listener();
@@ -390,8 +385,8 @@ UI.Page_Link_Dialog = function()
 			new_items.each(function(item) {
 				var uri = this._sanitize_uri(item.link);
 				var selected = (this._initially_selected_site_uri)
-					? uri == this._initially_selected_site_uri
-					: this._default_site_regexp.test(uri);
+					? item.link == this._initially_selected_site_uri
+					: this._default_site_regexp.test(item.link);
 				
 				var option = this._udoc.create_element('option', {value: uri,
 						selected: selected});
