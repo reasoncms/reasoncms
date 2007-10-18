@@ -44,6 +44,7 @@
 		$phrase = $_REQUEST['exact_phrase'] ; 
 		$phrase = preg_replace('/"/' , "" , $phrase);
 		$phrase = preg_replace("/'/" , "" , $phrase);
+		$phrase = preg_replace("/ /", "+" , $phrase);
 
 		$query .= " +'" . $phrase . "'"; 
 
