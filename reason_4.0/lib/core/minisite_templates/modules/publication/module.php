@@ -1406,10 +1406,12 @@ class PublicationModule extends Generic3Module
 			{
 				$sess_auth = reason_check_authentication('session');
 				$auth = reason_check_authentication('server');
-				$ret = '<div class="loginlogout">';
+				if(!empty($sess_auth) || !empty($auth)) $class = 'login';
+				else $class = 'logout';
+				$ret = '<div class="loginlogout '.$class.'">';
 				if(!empty($sess_auth))
 				{
-					$ret .= '<div class="loginlogout">Logged in: '.$sess_auth.' <a href="'.REASON_LOGIN_URL.'?logout=true">Log Out</a></div>';
+					$ret .= 'Logged in: '.$sess_auth.' <a href="'.REASON_LOGIN_URL.'?logout=true"><span class="action">Log Out</span></a>';
 				}
 				elseif(!empty($auth))
 				{
@@ -1417,7 +1419,7 @@ class PublicationModule extends Generic3Module
 				}
 				else
 				{
-					$ret .= '<a href="'.REASON_LOGIN_URL.'">Log In</a>';
+					$ret .= '<a href="'.REASON_LOGIN_URL.'"><span class="action">Log In</span></a>';
 				}
 				$ret .= '</div>';
 				return $ret;
