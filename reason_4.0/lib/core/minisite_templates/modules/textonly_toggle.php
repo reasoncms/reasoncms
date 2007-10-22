@@ -18,7 +18,7 @@
 			}
 			else
 			{
-				echo '<p class="'.$this->generate_class().'"><a href="'.$this->generate_link().'">Text Only/<span class="tiny"> </span>Printer-Friendly</a></p>'."\n";
+				echo '<p class="'.$this->generate_class().'"><a href="'.$this->generate_link().'"><span class="textOnly">Text Only/<span class="tiny"> </span>Printer-Friendly</span></a></p>'."\n";
 			}
 		}
 		function generate_class()
