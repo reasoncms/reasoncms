@@ -29,6 +29,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 								  'item_comments',
 								  'comment_form_markup',
 								  'commenting_status',
+								  'permalink',
 								);
 
 
