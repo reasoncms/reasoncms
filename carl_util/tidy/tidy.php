@@ -12,49 +12,65 @@
  	define( 'INCLUDE_TIDY_PHP3', true );
 	
 	/**
-	 * Turn a string or array into valid, standards-comppliant (x)HTML
+	 * Turn a string or array into valid, standards-compliant (x)HTML
+	 *
+	 * Uses configuraton options in tidy.conf - which should minimally have show-body-only set to yes
 	 *
 	 * @param mixed $text The data to be tidied up
-	 * @param boolean $remove_extra_tags if true returns an html snippet; otherwise returns an entire html page
 	 * @return mixed $result Tidied data
 	 */
-	function tidy( $text, $remove_extra_tags = true )
+	function tidy( $text )
 	{
+		static $tidy_funcs;
+
 		if(is_array($text))
 		{
 			$result = array();
 			foreach(array_keys($text) as $key)
 			{
-				$result[$key] = tidy($text[$key],$remove_extra_tags);
+				$result[$key] = tidy($text[$key]);
 			}
 			return $result;
 		}
+		
+		// determine what tidy libraries are available
+		if (empty($tidy_funcs)) $tidy_funcs = get_extension_funcs('tidy');
+		$tidy_1_lib_available = (!empty($tidy_funcs)) && (array_search('tidy_setopt', $tidy_funcs) !== false);
+		$tidy_2_lib_available = (!empty($tidy_funcs)) && (array_search('tidy_setopt', $tidy_funcs) === false);
+		
 		$text = protect_string_from_tidy( $text );
-		// escape the bad stuff in the text
-		$arg = escapeshellarg( $text );
-		// the actual command - pipes the input to tidy which diverts its output to the random file
-		$cmd = 'echo '.$arg.' | '.TIDY_EXE.' -q -config '.TIDY_CONF.' 2> /dev/null';
-		// execute the command
-		$result = shell_exec($cmd);
-		// if we want to get rid of the 
-
-		if ( $remove_extra_tags )
+				
+		if ($tidy_2_lib_available) // Run tidy for PHP 5
 		{
-			// remove everything from the beginning up to and including the <body
-			$remove_until = strpos( $result,'<body') + strlen( '<body' );
-			$result = substr( $result, $remove_until );
-			// finish the body tag...
-			$remove_until = strpos( $result,'>' ) + strlen( '>' );
-			$result = substr( $result, $remove_until );
-			// remove the ending </body> and </html>
-			$remove_from = strrpos( $result, '<' ) - strlen( '</body>' ) - 1; // find last instance of "<"
-			$result = substr( $result, 0, $remove_from );
+			$tidy = new tidy();
+			$tidy->parseString($text, TIDY_CONF, 'utf8');
+			$tidy->cleanRepair();
+			$result = $tidy;
+		}
+		elseif ($tidy_1_lib_available) // Run tidy for PHP 4
+		{
+			tidy_load_config(TIDY_CONF);
+			tidy_set_encoding('utf8');
+			tidy_parse_string($text);
+			tidy_clean_repair();
+			$result = tidy_get_output();
+		}		
+		else // attempt to run COMMAND LINE tidy
+		{
+			$arg = escapeshellarg( $text ); // escape the bad stuff in the text
+			$cmd = 'echo '.$arg.' | '.TIDY_EXE.' -q -config '.TIDY_CONF.' 2> /dev/null'; // the actual command - pipes the input to tidy which diverts its output to the random file
+			$result = shell_exec($cmd); // execute the command			
 		}
 		return trim($result);
 	}
+	
+	/**
+	 * See where this is used and provide better error handling for tidylib in php 4 and 5
+	 */
 	function tidy_err( $text )
 	{
-		$err = shell_exec( 'echo '.escapeshellarg($text).' | '.TIDY_EXE.' -q -config '.TIDY_CONF.' 2>&1' );
+		$arg = escapeshellarg( $text );
+		$err = shell_exec( 'echo '.$arg.' | '.TIDY_EXE.' -q -config '.TIDY_CONF.' 2>&1' );
 		$err = explode( "\n", $err );
 		$errors = array();
 		foreach( $err AS $line )
@@ -65,6 +81,7 @@
 		}
 		return implode("\n",$errors);
 	}
+
 	function protect_string_from_tidy( $str )
 	{
 		$utf_entity_trans = array(
