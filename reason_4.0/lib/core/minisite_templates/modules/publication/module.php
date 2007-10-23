@@ -1615,14 +1615,7 @@ class PublicationModule extends Generic3Module
 		*/
 		function construct_permalink($item)
 		{
-			$link_frags = array();
-			$link_frags[ $this->query_string_frag.'_id' ] = $item->id();
-			$query_frags = array();
-			foreach($link_frags as $key=>$value)		//hmm.  why do we have a foreach loop when there's only one thing in the array?
-			{
-				$query_frags[] = $key.'='.$value;
-			}
-			$link = '?'.implode('&amp;',$query_frags);
+			$link = carl_make_link( array($this->query_string_frag.'_id'=>$item->id()), '', '', true, false );
 			return $link;
 		}
 		
