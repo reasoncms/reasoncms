@@ -122,10 +122,10 @@
 
 		$link = "<a href=\"" . $nutch->current_item['link'] . "\">";
 
-		if(preg_match('/.doc$/i', $path)){ echo "$link<img align=absmiddle src='doc.png' border=0></a>Word Document<br />\n"; $show_file_icon = 1; } 
+		if(preg_match('/.doc$/i', $path)){ echo "$link<img align=absmiddle src='doc.png' border=0></a>Word Document<br />\n"; $show_file_icon = 0; } 
 		if(preg_match('/.ppt$/i', $path)){ echo "$link<img align=absmiddle src='ppt.png' border=0></a>PowerPoint Document<br />\n"; $show_file_icon = 1; } 
 		if(preg_match('/.xls$/i', $path)){ echo "$link<img align=absmiddle src='xls.png' border=0></a>Excel Document<br />\n"; $show_file_icon = 1; } 
-		if(preg_match('/.pdf$/i', $path)){ echo "$link<img align=absmiddle src='pdf.png' border=0></a>PDF Document<br />\n"; $show_file_icon = 1; } 
+		if(preg_match('/.pdf$/i', $path)){ echo "$link<img align=absmiddle src='pdf.png' border=0></a>PDF Document<br />\n"; $show_file_icon = 0; } 
 		if(preg_match('/ogg$/i', $path)){ echo "A Ogg Vorbis Document</a><br />\n"; $show_file_icon = 1; } 
 		if(preg_match('/mp3$/i', $path)){ echo "An MP3 Document</a><br />\n"; $show_file_icon = 1; } 
 		if(preg_match('/.jpg$/i', $path)){ echo "An Image Document</a><br />\n"; $show_file_icon = 1; } 
