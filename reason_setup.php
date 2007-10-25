@@ -5,7 +5,6 @@
 <body>
 
 <h2>Reason Setup</h2>
-
 <?
 
 if (isset($_GET['curl_test']))
@@ -14,6 +13,11 @@ if (isset($_GET['curl_test']))
 	die;
 }
 
+?>
+<p>This script should be run after you have setup Reason according to the instructions in the <a href="./install.htm">Reason Install Documentation</a>. 
+The script will verify the Reason environment, perform a variety of checks for Reason utilities, confirm file paths and permissions, 
+and then setup the first site and user for your instance.</p>
+<?
 // do what we can to enable error reporting
 ini_set("display_errors","On");
 error_reporting (E_ALL);
@@ -120,7 +124,8 @@ if (admin_user_exists() == false)
 }
 else
 {
-	die_with_message('<p>This reason instance already has an admin user - you should consider moving this script out of the web tree or deleting it.</p>');
+	die_with_message('<p>This reason instance already has an admin user - you should consider moving this script out of the web tree or deleting it.
+					  <p><a href="'.securest_available_protocol().'://'.REASON_WEB_ADMIN_PATH.'">Login to Reason</a></p>');
 }
 ?>
 </body>
