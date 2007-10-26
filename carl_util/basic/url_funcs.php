@@ -21,7 +21,8 @@ function carl_make_link( $new_request_vars = array(''), $base_path = '', $type =
 	if ($maintain_original && !empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
 	else $cur_request_vars = array();
 	if (empty($base_path)) $base_path = $parts['path'];
-	$baseurl = $parts['scheme'] . '://' . $parts['host'] . $base_path;
+	$port = (isset($parts['port']) && !empty($parts['port'])) ? ':'.$parts['port'] : '';
+	$baseurl = $parts['scheme'] . '://' . $parts['host'] . $port . $base_path;
 	if ($type == 'relative') $baseurl = $base_path;
 
 	$params = array_merge( (array)$cur_request_vars, (array)$new_request_vars );
@@ -137,7 +138,7 @@ function get_current_url( $scheme = '' )
 			$scheme = 'http';
 		}
 	}
-	$host = $_SERVER['SERVER_NAME'];
+	$host = $_SERVER['HTTP_HOST'];
 	$path = $_SERVER['REQUEST_URI'];
 	$url = $scheme.'://'.$host.$path;
 	return $url;
