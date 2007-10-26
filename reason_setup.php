@@ -1,6 +1,17 @@
 <html>
 <head>
 <title>Reason Setup</title>
+<style>
+.error
+{
+color: red;
+}
+
+.success
+{
+color: green;
+}
+</style>
 </head>
 <body>
 
@@ -26,35 +37,52 @@ error_reporting (E_ALL);
 if (isset($_POST['do_it_pass']) == false)
 {
 	echo '<h3>Verifying Environment</h3>';
+	echo '<h4>Checking package availability</h4>';
 	check_php_include_path();
 	echo '...attempting to load paths.php, which loads the package_settings - a fatal error here probably means that the require_once statement in paths.php is referencing a file that does not exist<br/>';
-	if (!file_exists('paths.php')) die_with_message('<p>ERROR: The file paths.php in the reason_package directory does not appear to exist - check permissions and file paths.</p>');
+	if (!file_exists('paths.php')) die_with_message('<p class="error">ERROR: The file paths.php in the reason_package directory does not appear to exist - check permissions and file paths.</p>');
 	include_once('paths.php'); // paths loads the package_settings file
 	if (!defined('REASON_INC'))
 	{
-		die_with_message('<p>ERROR: The file paths.php was included, but did not properly include the package_settings.php file. Modify the require_once statement in paths.php
+		die_with_message('<p class="error">ERROR: The file paths.php was included, but did not properly include the package_settings.php file. Modify the require_once statement in paths.php
 						  to include an absolute file system path reference to package_settings.php</p>
 						  <p>Unless you are placing your settings files in a different location than the default, the absolute path of the package_settings.php file 
 						  should probably look like this:</p>
-						  <p>'.dirname(__FILE__).'/settings/package_settings.php</p>');
+						  <p><pre>'.$_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) .'/settings/package_settings.php</pre></p>');
 	}
 	else
 	{
-		echo '...paths.php correctly loaded the package_settings.php file<br/>';
-		if (file_exists(REASON_INC.'header.php'))
+		$included_so_far = get_included_files();
+		$package_settings_path = array_pop($included_so_far);
+		echo '...paths.php loaded package_settings.php<br/>';
+		echo '<p><strong>Package settings path</strong>: ' . $package_settings_path . '</p>';
+		echo '<h4>Checking component availability</h4>';
+		if (is_readable(INCLUDE_PATH . 'reason_setup.php'))
 		{
 			// verify settings files loaded by header.php before we load the header
-			check_environment(SETTINGS_INC.'reason_settings.php', 'reason settings', 'verify the path stored in the constant SETTINGS_INC in package_settings.php');
-			check_environment(CARL_UTIL_INC.'error_handler/error_handler.php', 'error handler', 'verify the path to CARL_UTIL_INC in package_settings.php');
-			check_environment(DB_CREDENTIALS_FILEPATH, 'db credentials xml file', 'verify the DB_CREDENTIALS_FILEPATH in package_settings.php and permissions');
-			check_environment(DISCO_INC.'disco.php', 'disco include path', 'verify the path to DISCO_INC in package_settings.php');
-			check_environment(TYR_INC.'tyr.php', 'tyr include path', 'verify the path to TYR_INC in package_settings.php');
-			check_environment(THOR_INC.'thor.php', 'thor include path ', 'verify the path to THOR_INC in package_settings.php');
-			check_environment(XML_PARSER_INC.'xmlparser.php', 'xml parser', 'verify the path to XML_PARSER_INC in package_settings.php');
-			check_environment(HTML_PURIFIER_INC.'htmlpurifier.php', 'html purifier', 'verify the path to HTML_PURIFIER_INC in package_settings.php');
+			check_environment_and_trailing_slash(WEB_PATH, 'web path', 'Check the WEB_PATH constant in package_settings.php.</p><p>
+			                                         The value should probably be</p>
+			                                         <p><pre>'.$_SERVER['DOCUMENT_ROOT'].'/</pre>');
+			check_environment(CARL_UTIL_INC.'error_handler/error_handler.php', 'error handler', 'Verify the path to CARL_UTIL_INC in package_settings.php');
+			check_environment(DB_CREDENTIALS_FILEPATH, 'db credentials xml file', 'Verify the DB_CREDENTIALS_FILEPATH in package_settings.php and permissions');
+			check_environment(DISCO_INC.'disco.php', 'disco include path', 'Verify the path to DISCO_INC in package_settings.php');
+			check_environment(TYR_INC.'tyr.php', 'tyr include path', 'Verify the path to TYR_INC in package_settings.php');
+			check_environment(THOR_INC.'thor.php', 'thor include path ', 'Verify the path to THOR_INC in package_settings.php');
+			check_environment(XML_PARSER_INC.'xmlparser.php', 'xml parser', 'Verify the path to XML_PARSER_INC in package_settings.php');
+			check_environment(HTML_PURIFIER_INC.'htmlpurifier.php', 'html purifier', 'Verify the path to HTML_PURIFIER_INC in package_settings.php');
+			check_environment(SETTINGS_INC.'reason_settings.php', 'reason settings', 'Verify the path stored in the constant SETTINGS_INC in package_settings.php');
+			check_environment(REASON_INC.'header.php', 'reason header', 'Verify the path stored in the constant REASON_INC in package_settings.php');
 			include_once( REASON_INC.'header.php' );
+			$found = array_search(SETTINGS_INC.'reason_settings.php', get_included_files());
+			if ($found !== false)
+			{
+				echo '<p><strong>Reason settings path</strong>: ' . SETTINGS_INC.'reason_settings.php' . '</p>';
+			}
+			echo '<p style="color: green;"><strong>...the Reason environment has been loaded</strong></p>';
 		}
-		else die_with_message('<p>'.REASON_INC.'header.php does not appear to exist - check the pathname for REASON_INC in package_settings.php</p>');
+		else die_with_message('<p class="error">ERROR: The INCLUDE_PATH constant ('.INCLUDE_PATH.') appears to be invalid.</p>
+							   <p>Check package_settings.php to make sure the value is correct - it should probably be set to:</p>
+							   <p><pre>'.$_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) .'/</pre></p>');
 	}
 }
 else include_once('reason_header.php');
@@ -76,12 +104,23 @@ if (isset($_POST['do_it_pass']) == false)
 	echo '<h3>Checking for Login Site</h3>';
 	if(!is_dir($path))
 	{
-		echo '<p>Setting up login site</p>';
+		echo '<p>Creating login site</p>';
 		reason_include_once ('classes/url_manager.php');
 		include_once(CARL_UTIL_INC.'basic/filesystem.php');
 		mkdir_recursive($path, 0775);
+		if (!is_dir($path)) die_with_message('<p>The login site folder at ' . $path.' could not be written. Check paths and permissions.</p>');
+		else echo '<p>The login site folder at ' . $path.' has been created.</p>';
+	}
+	
+	$htaccess = $path . '/.htaccess';
+	if (!file_exists($htaccess))
+	{
+		reason_include_once ('classes/url_manager.php');
+		echo '<p>Creating .htaccess rewrite rules</p>';
 		$um = new url_manager( $login_site_id, true );
 		$um->update_rewrites();
+		if (!file_exists($htaccess)) die_with_message('<p>The login site .htaccess rules were not written to ' . $htaccess.'. Checks paths and permissions.</p>');
+		else echo '<p>The .htaccess access rules were written to ' . $htaccess .'.</p>'; 
 	}
 	else echo '<p>The login site appears to be setup</p>';
 }
@@ -114,7 +153,7 @@ if (admin_user_exists() == false)
 		}
 		else 
 		{
-			die_with_message('<p>Sorry to be the bearer of bad news, but the admin user does not exist and could not be created.</p>');
+			die_with_message('<p class="error">Sorry to be the bearer of bad news, but the admin user does not exist and could not be created.</p>');
 		}
 	}	
 	else
@@ -133,9 +172,8 @@ else
 <?
 function admin_user_exists()
 {
- 	$admin_user_id = id_of('admin_user');
- 	if ($admin_user_id > 0) return true;
- 	else return false;
+	reason_include_once('function_libraries/admin_actions.php');
+	return reason_unique_name_exists('admin_user');
 }
 
 function create_admin_user($password)
@@ -159,7 +197,7 @@ function created_admin_HTML($password)
 {
 	echo '<h3>Admin User Created</h3>';
 	echo '<p>The reason user <strong>admin</strong> has been created with password <strong>'.$password.'</strong></p>';
-	echo '<p>Write down the password! This script will not create another unless the original is deleted.</p>';
+	echo '<p><strong>Write down the password!</strong> This script will not create another admin user unless the original is deleted.</p>';
 	echo '<p>You should now be able to login to the <a href="'.securest_available_protocol().'://'.REASON_WEB_ADMIN_PATH.'">reason administrative interface</a>.</p>';
 }
 
@@ -177,7 +215,7 @@ function check_php_include_path()
 	
 	if (($include_path_set === false) && ($alt_include_path_set === false))
 	{
-		die_with_message('<p><strong>ERROR:</strong> The reason_package directory must be part of your php include path.</p><p>Your current include path is:</p>
+		die_with_message('<p class="error"><strong>ERROR:</strong> The reason_package directory must be part of your php include path.</p><p>Your current include path is:</p>
 						  <p><pre>'.$include_path.'</pre></p>
 						  <p>Please modify the include path line in your php.ini file so that it reads as follows</p>
 						  <p><pre>include_path = "'.$include_path.':'.$cur_path.'"</pre></p>
@@ -202,10 +240,10 @@ function perform_checks()
 	// $check_passed and $check_failed increment accordingly. perform_checks returns true if all checks pass
 	
 	// check mysql connections
-	if (verify_mysql(REASON_DB, 'REASON_DB', 'reason_settings.php')) $check_passed++;
+	if (verify_mysql(REASON_DB, 'REASON_DB', 'reason_settings.php', 'entity')) $check_passed++;
 	else $check_failed++;
 	
-	if (verify_mysql(THOR_FORM_DB_CONN, 'THOR_FORM_DB_CONN', 'thor_settings.php')) $check_passed++;
+	if (verify_mysql(THOR_FORM_DB_CONN, 'THOR_FORM_DB_CONN', 'thor_settings.php', false)) $check_passed++;
 	else $check_failed++;
 	
 	if (http_host_check()) $check_passed++;
@@ -247,7 +285,8 @@ function perform_checks()
 	if (data_dir_writable($_SERVER[ 'DOCUMENT_ROOT' ].WEB_TEMP, 'WEB_TEMP')) $check_passed++;
 	else $check_failed++;
 	
-	if (check_file_readable(APACHE_MIME_TYPES, 'APACHE_MIME_TYPES')) $check_passed++;
+	if (check_file_readable(APACHE_MIME_TYPES, 'APACHE_MIME_TYPES', 
+							' Also make sure APACHE_MIME_TYPES constant in reason_settings is set to the full path of the mime.types file (include the filename).')) $check_passed++;
 	else $check_failed++;
 	
 	// lets check the thor http file using curl
@@ -255,26 +294,26 @@ function perform_checks()
 	$link_with_file = $link . 'getXML.php';
 	if (strpos(get_reason_url_contents($link_with_file), 'tmp_id') !== false)
 	{	
-		msg('thor getXML.php file accessible over http - passed', true);
+		msg('<span class="success">thor getXML.php file accessible over http</span> - passed', true);
 		$check_passed++;
 	}
 	else
 	{
-		msg('could not access thor getXML.php over http - you may need to set THOR_HTTP_PATH equal to "/thor/", and create an alias at ' . WEB_PATH . 'thor/ to ' . THOR_INC.'. 
-		     Future revisions to thor should make this more flexible, but for the moment you need the alias in your web root to the thor directory', false);
+		msg('<span class="error">could not access thor getXML.php over http</span><p>You may need to set THOR_HTTP_PATH equal to "/thor/", and create an alias at ' . WEB_PATH . 'thor/ to ' . THOR_INC.'. 
+		     Future revisions to thor should make this more flexible, but for the moment you need the alias in your web root to the thor directory</p>', false);
 		$check_failed++;
 	}
 	
 	echo '<h3>Summary</h3>';
 	echo '<ul>';
-	echo '<li>'.$check_passed.' checks were successful</li>';
-	echo '<li>'.$check_failed.' checks failed</li>';
+	echo '<li class="success">'.$check_passed.' checks were successful</li>';
+	echo '<li class="error">'.$check_failed.' checks failed</li>';
 	echo '</ul>';
 	if ($check_failed == 0) return true;
 	else return false;
 }
 
-function verify_mysql($db_conn_name, $constant_name, $constant_location) // see if we can connect to mysql using the connection parameters specified in REASON_DB
+function verify_mysql($db_conn_name, $constant_name, $constant_location, $check_for_tables = false) // see if we can connect to mysql using the connection parameters specified in REASON_DB
 {
 	include_once( INCLUDE_PATH . 'xml/xmlparser.php' ); // we have verified this exists already
 	$db_file = DB_CREDENTIALS_FILEPATH; // we have verified this exists
@@ -293,20 +332,20 @@ function verify_mysql($db_conn_name, $constant_name, $constant_location) // see 
     		$db_info_all[$database->connection_name[0]->tagData] = $tmp;
         }
 	}
-	else return msg('mysql connection ' . $db_conn_name . ' check failed - the db connection xml file does not appear to have any contents', false);
+	else return msg('<span class="error">mysql connection ' . $db_conn_name . ' check failed</span> - the db connection xml file does not appear to have any contents', false);
 	$db_info = (isset($db_info_all[$db_conn_name])) ? $db_info_all[$db_conn_name] : false;
 	if ($db_info === false) return msg ('mysql check failed - ' . $db_conn_name . ' is an invalid connection name.
 		<p>Make sure the constant ' . $constant_name . ' in ' . $constant_location . ' maps to the connection name in your db connection xml file</p>', false);
 	
 	if (empty($db_info['db']) || empty($db_info['user']) || empty($db_info['password']) || empty($db_info['host']))
 	{
-		return msg('mysql connection ' . $db_conn_name . ' check failed - the db connection xml file for does not have full information for the connection named ' . $db_conn_name . '.
+		return msg('<span class="error">mysql connection ' . $db_conn_name . ' check failed</span> - the db connection xml file for does not have full information for the connection named ' . $db_conn_name . '.
 		<p>Check the constant ' . $constant_name . ' in ' . $constant_location . ' to make sure it matches the connection name in your db connection xml file.</p>', false);
 	}
 	$db = mysql_connect($db_info['host'], $db_info['user'], $db_info['password']);
 	if (empty($db))
 	{
-		return msg('mysql connection ' . $db_conn_name . ' check failed - count not connect to server - could be one of the following
+		return msg('<span class="error">mysql connection ' . $db_conn_name . ' check failed</span> - count not connect to server - could be one of the following
 					<ul>
 					<li>Improper username and/or password in the db credentials file</li>
 					<li>Improper mysql hostname - currently set to ' .$db_info['host'].'</li>
@@ -317,32 +356,58 @@ function verify_mysql($db_conn_name, $constant_name, $constant_location) // see 
 	{
 		if( !mysql_select_db($db_info[ 'db' ], $db) )
 		{
-			return msg('mysql connection ' . $db_conn_name . ' check failed - connected to host as user ' . $db_info['user'] . ' but could not select database ' . $db_info['db'] . '. Check the db credential xml file and user privileges', false);
+			return msg('<span class="error">mysql connection ' . $db_conn_name . ' check failed</span> - connected to host as user ' . $db_info['user'] . ' but could not select database ' . $db_info['db'] . '. Check the db credential xml file and user privileges', false);
 		}
 	}
-	return msg('mysql connection ' . $constant_name . '('.$db_conn_name . ') check passed', true);
+	
+	// check_for_tables
+	if ($check_for_tables)
+	{
+		$result = db_query('show tables');
+		$table_count = mysql_num_rows($result);
+		if ($table_count == 0)
+		{
+			return msg('<span class="error">mysql connection ' . $db_conn_name . ' check failed</span> - 
+			           The database ' . $db_info['db'] . ' does not appear to have any tables.<p><a href="./install.htm#database_setup">Consult the reason install documentation</a> 
+			           for information on how to import the reason database.</p>', false);
+		}
+	}
+	return msg('<span class="success">mysql connection ' . $constant_name . '('.$db_conn_name . ') check passed</span>', true);
 }
 
 function http_host_check()
 {
-	if ($_SERVER['HTTP_HOST'] == HTTP_HOST_NAME) return msg('http host check passed', true);
-	else return msg('http host check failed - make sure the HTTP_HOST_NAME constant in paths.php is equivalent to the $_SERVER[\'HTTP_HOST\'] value', false);
+	if ($_SERVER['HTTP_HOST'] == HTTP_HOST_NAME) return msg('<span class="success">http host check passed</span>', true);
+	else return msg('<span class="error">http host check failed</span> - make sure the HTTP_HOST_NAME constant in paths.php is equivalent to the $_SERVER[\'HTTP_HOST\'] value', false);
 }
 
 function tidy_check()
 {
 	$html_string = '<html><body><h3>babababab</h3></body></html>';
 	$string = tidy($html_string);
-	if ($string == '') return msg('tidy check failed - make sure the constant TIDY_EXE in paths.php is set to the location of the tidy executable', false);
-	elseif (strpos($string, 'body') !== false) return msg('tidy is not properly stripping body tags - make sure that the tidy.conf file in your settings directory includes "show-body-only: yes"', false);
-	else return msg('tidy check passed', true);
+	if ($string == '') return msg('<span class="error">tidy check failed</span> - make sure the constant TIDY_EXE in paths.php is set to the location of the tidy executable', false);
+	elseif (strpos($string, 'body') !== false) return msg('<span class="error">tidy check failed</span> - tidy is not properly stripping body tags - make sure that the tidy.conf file in your settings directory includes "show-body-only: yes"', false);
+	else return msg('<span class="success">tidy check passed</span>', true);
 }
 
 function curl_check()
 {
-	$content = get_reason_url_contents( carl_make_link(array('curl_test' => 'true')));
-	if (empty($content)) return msg('curl check failed', false);
-	else return msg('curl check passed', true);
+	$insecure_link = 'http://'.$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'].'?curl_test=true';
+	$secure_link = 'https://'.$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'].'?curl_test=true';
+	$content = get_reason_url_contents( $insecure_link );
+	if (empty($content)) return msg('<span class="error">curl check failed</span>', false);
+	else 
+	{
+		// if HTTPS_AVAILABLE is true, lets hit the current page in that way
+		if (securest_available_protocol() == 'https') 
+		{
+			$content = get_reason_url_contents($secure_link);
+			if (empty($content)) return msg('<span class="error">curl check failed over https</span>.
+											<p>Your server probably does not support https connections</p>
+											<p>Set the HTTPS_AVAILABLE constant in package_settings.php to false and try again.</p>', false);
+		}
+		return msg('<span class="success">curl check passed</span>', true);
+	}
 }
 
 function imagemagick_check()
@@ -353,28 +418,39 @@ function imagemagick_check()
 		$output = shell_exec($cmd);
 		
 		// see if the string imagemagick exists in the output - if not it did not work properly
-		if (strpos(strtolower($output), 'imagemagick') === false) return msg('mogrify is executable but does not appear to function properly when invoked via php...your php install should not be running in safe mode and needs to be able to use exec and shell_exec functions', false);
-		else return msg('imagemagick check passed', true);
+		if (strpos(strtolower($output), 'imagemagick') === false) return msg('<span class="error">imagemagick check failed</span> - mogrify is executable but does not appear to function properly when invoked via php...your php install should not be running in safe mode and needs to be able to use exec and shell_exec functions', false);
+		else return msg('<span class="success">imagemagick check passed</span>', true);
 	}
-	else return msg(IMAGEMAGICK_PATH.'mogrify is not executable - check the IMAGEMAGICK_PATH constant in package_settings.php, and php permissions.', false);
+	else return msg('<span class="error">imagemagick check failed</span> - ' .IMAGEMAGICK_PATH.'mogrify is not executable - check the IMAGEMAGICK_PATH constant in package_settings.php, and php permissions.', false);
 }
 
 function data_dir_writable($dir, $name)
 {
-	if (is_writable($dir)) return msg($name . ' directory is writable - check passed', true);
-	else return msg ($name . ' directory not writable - failed. Make sure apache user has write access to ' . $dir, false);
+	if (is_writable($dir)) return msg('<span class="success">'.$name . ' directory is writable</span> - check passed', true);
+	else return msg ('<span class="error">'.$name . ' directory not writable - failed</span>. Make sure apache user has write access to ' . $dir, false);
 }
 
-function check_file_readable($file, $name)
+function check_file_readable($file, $name, $extra = '')
 {
-	if (is_readable($file)) return msg($name . ' file is readable - check passed', true);
-	else return msg ($name . ' file not readable - failed. Make sure ' .$file. ' exists and apache user has read access to it', false);
+	if (is_readable($file)) return msg('<span class="success">'.$name . ' file is readable</span> - check passed', true);
+	else return msg ('<span class="error">'.$name . ' file not readable - failed</span>. Make sure ' .$file. ' exists and apache user has read access to it. '.$extra, false);
 }
 
 function check_environment($path, $check_name, $error_msg)
 {
 	if (file_exists($path)) return msg($check_name . ' found', true);
-	else die_with_message('<p>ERROR: '.$check_name . ' not found - ' . $error_msg . '. Please fix the problem and run this script again.</p>');
+	else die_with_message('<p class="error">ERROR: '.$check_name . ' not found</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
+}
+
+function check_environment_and_trailing_slash($path, $check_name, $error_msg)
+{
+	if (file_exists($path))
+	{
+		// lets make sure the last character of the path is a trailing slash
+		if (substr($path, -1) != '/') die_with_message('<p class="error">ERROR: '.$check_name . ' missing trailing slash.</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
+		return msg($check_name . ' found', true);
+	}
+	else die_with_message('<p class="error">ERROR: '.$check_name . ' not found</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
 }
 
 function msg($msg, $bool)
