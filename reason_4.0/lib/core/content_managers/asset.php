@@ -139,15 +139,21 @@
 					$es = new entity_selector( $this->get_value( 'site_id' ) );
 					$es->add_type( id_of( 'asset' ) );
 					$assets = $es->run_one('', 'All');
-					foreach( $assets AS $asset )
-						if( $asset->id() != $this->_id )
-							$asset_names[] = $asset->get_value( 'file_name' );
-
-					
-					// transparently change filename to something unique
-					if ( in_array( $this->get_value( 'file_name' ), $asset_names ) )
+					if(!empty($assets))
 					{
-						$this->set_value ('file_name', $this->get_unique_filename ( $this->get_value( 'file_name' ), $asset_names ) );
+						$asset_names = array();
+						foreach( $assets AS $asset )
+						{
+							if( $asset->id() != $this->_id )
+								$asset_names[] = $asset->get_value( 'file_name' );
+						}
+	
+						
+						// transparently change filename to something unique
+						if ( in_array( $this->get_value( 'file_name' ), $asset_names ) )
+						{
+							$this->set_value ('file_name', $this->get_unique_filename ( $this->get_value( 'file_name' ), $asset_names ) );
+						}
 					}
 
 				}
@@ -245,7 +251,7 @@
 //
 //			include_once( REASON_INC.'micro_scripts/update_global_rewrites.php' );
 
-			$um = new url_manager( $this->get_value( 'site_id'), true);
+			$um = new url_manager( $this->get_value( 'site_id') );
 			$um->update_rewrites();
 
 		} // }}}
