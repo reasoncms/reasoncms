@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>>Upgrade content manager for site types</title>
+<title>Upgrade content manager for site types</title>
 </head>
 
 <body>
