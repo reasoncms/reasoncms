@@ -665,7 +665,7 @@
 			$dbq->add_table( 'user','entity' );
 			$dbq->add_table( 'type','entity' );
 			$dbq->add_field( 'user','id' );
-			$dbq->add_relation( 'user.name = "'.$username.'"' );
+			$dbq->add_relation( 'user.name = "'.addslashes($username).'"' );
 			$dbq->add_relation( 'type.unique_name = "user"' );
 			$dbq->add_relation( 'type.id = user.type' );
 			$dbq->add_relation( 'user.state = "Live"' );
