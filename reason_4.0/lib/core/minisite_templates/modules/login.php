@@ -115,7 +115,10 @@
 					if( empty( $this->request[ 'noredirect' ] ) )
 					{
 						$parts = parse_url( $this->dest_page );
-						header( 'Location: http://'.$parts['host'].$parts['path'].(!empty($parts['query']) ? '?'.$parts['query'] : '') );
+						$port = (isset($parts['port']) && !empty($parts['port'])) ? ":".$parts['port'] : '';
+						$query = (isset($parts['query']) && !empty($parts['query'])) ? '?'.$parts['query'] : '';
+						$loc = 'http://'.$parts['host'].$port.$parts['path'].$query;
+						header( 'Location: '.$loc);
 						exit;
 					}
 				}
@@ -154,7 +157,10 @@
 							if( !empty( $this->dest_page ) )
 							{
 								$parts = parse_url( $this->dest_page );
-								header( 'Location: ' . securest_available_protocol() . '://'.$parts['host'].$parts['path'].(!empty($parts['query']) ? '?'.$parts['query'] : '' ) );
+								$port = (isset($parts['port']) && !empty($parts['port'])) ? ":".$parts['port'] : '';
+								$query = (isset($parts['query']) && !empty($parts['query'])) ? '?'.$parts['query'] : '';
+								$loc = securest_available_protocol() . '://'.$parts['host'].$port.$parts['path'].$query;
+								header( 'Location: '.$loc);
 								exit;
 							}
 							if (!empty($this->request['popup']))
