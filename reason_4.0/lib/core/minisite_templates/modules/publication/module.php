@@ -962,9 +962,10 @@ class PublicationModule extends Generic3Module
 					$es = new entity_selector( $this->site_id );
 					$es->description = 'Selecting issues for this publication';
 					$es->add_type( id_of('issue_type') );
-					$es->limit_tables('dated');
+					$es->limit_tables(array('dated','show_hide'));
 					$es->limit_fields('dated.datetime');
 					$es->set_order('dated.datetime DESC');
+					$es->add_relation('show_hide.show_hide = "show"');
 					$es->add_left_relationship( $this->publication->id(), relationship_id_of('issue_to_publication') );
 					$this->issues = $es->run_one();
 				}
