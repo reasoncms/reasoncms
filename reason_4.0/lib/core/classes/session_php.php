@@ -91,10 +91,10 @@
 				{
 					if( empty( $_COOKIE[ $this->sess_name.'_EXISTS' ] ) )
 					{
-						setcookie( $this->sess_name.'_EXISTS', 'true', 0, '/', $_SERVER['HTTP_HOST'], 0 );
+						setcookie( $this->sess_name.'_EXISTS', 'true', 0, '/', $this->_strip_port($_SERVER['SERVER_NAME']), 0 );
 					}
 					session_name( $this->sess_name );
-					session_set_cookie_params(0, '/', $_SERVER['HTTP_HOST'], $this->secure_session_flag );
+					session_set_cookie_params(0, '/', $this->_strip_port($_SERVER['SERVER_NAME']), $this->secure_session_flag );
 					session_start();
 					
 					$this->__session_ref =& $_SESSION;
@@ -172,10 +172,11 @@
 		{
 			if( $this->secure_if_available )
 			{
-				setcookie( $this->sess_name.'_EXISTS', '', 0, '/', $_SERVER['HTTP_HOST'], 0 );
+				$domain = $this->_strip_port($_SERVER['HTTP_HOST']);
+				setcookie( $this->sess_name.'_EXISTS', '', 0, '/', $domain, 0 );
 				$_SESSION = array();
 				session_destroy();
-				setcookie( $this->sess_name, '', 0, '/', $_SERVER['HTTP_HOST'], $this->secure_session_flag );
+				setcookie( $this->sess_name, '', 0, '/', $domain, $this->secure_session_flag );
 			}
 			else
 			{
@@ -212,5 +213,15 @@
 				trigger_error( 'Trying to get a session variable on an insecure page when https is available.  Unable to retrieve', WARNING );
 			}
 		} // }}}
+		
+		/**
+		 * Strip the port number from the domain if it is present - cookies with a domain that contains a port number will not be properly retrieved by browser
+		 */
+		function _strip_port($domain)
+		{
+			$port_check = strpos($domain, ':');
+      		if ($port_check !== false) return substr($domain, 0, $port_check);
+      		else return $domain;
+		}
 	}
 ?>
