@@ -50,8 +50,8 @@
 <li>register_globals set to OFF</li>
 <li>allow_call_time_pass_reference set to OFF</li>
 </ol>
-<p>Reason will use libcurl and libtidy if installed. If these libraries are not a part of your PHP installation, you should make sure the command-line binaries for curl and tidy are available, and set the paths to these utilities in package_settings.php.<br /></p>
-<p>Reason uses the error handler in carl_util and controls error reporting / display accordingly. The settings you specify in php.ini apply only to applications that do not use the error handler within carl_util. When setting up Reason, it can be useful to have "Display Errors" turned on in case the error handler itself is not being properly loaded.<br /></p>
+<p>Reason will use libcurl and libtidy if installed. If these libraries are not a part of your PHP installation, you should make sure the command-line binaries for curl and tidy are available, and set the paths to these utilities in package_settings.php. Note that your version of tidy needs to support the show-body-only option (should be set to yes in your tidy.conf file).<br /></p>
+<p>Reason uses the error handler in carl_util and controls error reporting / display accordingly. The settings you specify in php.ini apply only to applications that do not use the error handler within carl_util. When setting up Reason, it can be useful to have "display_errors" turned on in case the error handler itself is not being properly loaded.<br /></p>
 <p>As of Reason 4 Beta 4, Reason can operate in an insecure mode that does not require an SSL certificate. If you choose to run Reason in an insecure setting (not recommended), you will need to set the HTTPS_AVAILABLE constant in the package_settings.php file to false. Otherwise, You will need to generate or purchase an SSL certificate.</p>
 <p>Your web server must allow .htaccess directives. Specifically, the directive types "Limit" and "FileInfo" are needed.<br /></p>
 
@@ -148,7 +148,6 @@
 <li><strong>DB_CREDENTIALS FILEPATH</strong> - file system location of .xml file which defines database connections</li>
 <li><strong>IMAGEMAGICK_PATH</strong> - file system path to imagemagick functions</li>
 <li><strong>TIDY_EXE</strong> - location of the tidy binary (needed only if libtidy is not available)<br /></li>
-
 <li><strong>CURL_PATH</strong> - location of the curl binary (needed only if libcurl is not available)</li>
 <li><strong>HTTPS_AVAILABLE</strong> - whether or not the server is capable of serving pages over https</li>
 </ul>
