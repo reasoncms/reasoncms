@@ -48,7 +48,7 @@ else
 	}
 }
 
-echo '<p><a href="index.php">Back to 4.0b4 to 3.0b5 upgrades</a></p>';
+echo '<p><a href="index.php">Back to 4.0b4 to 4.0b5 upgrades</a></p>';
 
 ?>
 </body>
