@@ -55,7 +55,7 @@
 <p>As of Reason 4 Beta 4, Reason can operate in an insecure mode that does not require an SSL certificate. If you choose to run Reason in an insecure setting (not recommended), you will need to set the HTTPS_AVAILABLE constant in the package_settings.php file to false. Otherwise, You will need to generate or purchase an SSL certificate.</p>
 <p>Your web server must allow .htaccess directives. Specifically, the directive types "Limit" and "FileInfo" are needed.<br /></p>
 
-<p>Reason will work without modification to your httpd.conf file in many environments, but there are a number of customizations that a savvy administrator may want to make. For more information on Carleton's setup, consult webserver_config.txt in the same directory as this file.</p>
+<p>Reason will work without modification to your httpd.conf file in many environments, but there are a number of customizations that a savvy administrator may want to make. For more information on Carleton's setup, consult server_configuration.txt in the same directory as this file.</p>
 <p>Reason does require that the reason_package directory be a part of the include_path. Typically this can be done in either the httpd.conf file (php_value include_path .:/path/to/your/reason_package/) or in your php.ini file (include_path = ".:/path/to/your/reason_package/").</p>
 <h3><a name="database_setup" id="database_setup"></a>Setting up Databases</h3>
 <p>You'll need to connect to MySQL to setup a database for Reason, and a database for Thor, Reason's form utility. You'll need to log into MySQL with a user who has privileges to create databases and grant privileges to other users. You can do these operations from the command line or using a tool such as phpMyAdmin.</p>
