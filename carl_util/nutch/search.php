@@ -337,6 +337,7 @@ div#search_content div.pagination strong a, div#search_content div.pagination st
 
 <!-- Location Bar -->
 <!-- Remember to add ** class="locationBarLinks" ** to your anchor tags -->
+<body onLoad="document.getElementById('searchForm').query.focus()">
 <table border="0" cellpadding="4" cellspacing="0" width="100%"><tr><td align="left" valign="middle" width="100%" class="locationBarText">&nbsp;You are here:&nbsp;<a href="/" class="locationBarLinks">Search</a>&nbsp;>&nbsp;Search Results</td></tr></table>
 
 <!-- Content Starts Here -->
@@ -360,7 +361,7 @@ function sendSimpleForm($query=""){
 ?>
 
 
-<form method=GET action="search.php">
+<form method=GET id="searchForm" action="search.php">
 <table border=0>
 <tr><td><input type=text name=query></td><td><input type=submit value=Search></td></tr>
 <tr><td></td><td><a href="search.php?mode=advanced">Advanced Search</a></td></tr>
@@ -434,7 +435,7 @@ function sendAdvancedForm(){
 
 function sendfooter(){
 
-	print "<table border=0 width='100%'><tr><td align=right><i>Maintained By: <a href='mailto:mbockol@carleton.edu'>Matt Bockol</a></i></td></tr></table>";
+	print "<table border=0 width='100%'><tr><td align=right><i>Maintained By: <a href='mailto:mbockol@carleton.edu'>Matt Bockol</a></i></td></tr></table></body></html>";
 
 	}
 
