@@ -235,13 +235,14 @@
 			echo '<tr class="' . $class . '" id="row' . $this->row_counter . '">';
 		} // }}}
 		
-		function show_item_post( $row , $options = false) // {{{
+		function show_item_post( $row , $options ) // {{{
 		{
+			if( empty( $options ) ) $options = false;
 			$this->show_admin_associate( $row , $options );
 			echo '</tr>';
 		} // }}}
 		
-		function get_rel_sort($number, $data)
+		function get_rel_sort($number, $data = array())
 		{
 			if ($this->alter_order_enable)
 			{
@@ -378,8 +379,8 @@
 			if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) )
 			{
 				$this->rel_type =& $this->admin_page->module->rel_type;
-				$edit_link = AssociatorModule::get_second_level_vars();
-			    $edit_link[ 'new_entity' ] = '';
+				$edit_link = $this->admin_page->module->get_second_level_vars();
+				$edit_link[ 'new_entity' ] = '';
 				$preview_link = $edit_link;
 				$preview_link[ 'id' ] = $row->id();
 				$preview_link[ 'cur_module' ] = 'Preview';
