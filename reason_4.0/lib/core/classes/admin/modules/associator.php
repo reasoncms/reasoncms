@@ -296,7 +296,9 @@
 			echo '</td></tr><tr><td>&nbsp;';
 			echo '</td></tr><tr><td class="assocHead" colspan="'. $colspan .'">';
 			echo '&nbsp;&nbsp;Not Selected<br /><br /></td></tr><tr><td colspan="'.$colspan.'"><table><tr>';
-			ListerModule::show_filters();
+			$list_mod = new ListerModule($this->admin_page);
+			$list_mod->init();
+			$list_mod->show_filters();
 			echo '</tr></table></td></tr><tr><td>';
 			if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) && $this->admin_page->cur_module == 'Associator' )
 			{
