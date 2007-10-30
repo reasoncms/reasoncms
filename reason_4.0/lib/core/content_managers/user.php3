@@ -48,7 +48,8 @@
 				$this->add_comments('password',form_comment('(This user does not currently have a password. They will not be able to log in until they have a password.)'));
 			}
 			include_once(CARL_UTIL_INC.'dir_service/directory.php');
-			$srvcs = directory_service::get_available_services();
+			$dir_service = new directory_service();
+			$srvcs = $dir_service->get_available_services();
 			if(empty($srvcs))
 			{
 				trigger_error('Major problem -- no directory services appear to be set up. Reason needs at least one directory service to function. Fr a basic setup, add this line to the directory service config file: $available_services = array(\'reason\');');
