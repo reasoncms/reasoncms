@@ -49,7 +49,6 @@
 			$d->add_relation('ar.name != "owns"');
 			$d->add_relation('(ar.custom_associator IS NULL OR ar.custom_associator = "")');
 			$r = db_query( $d->get_query() , 'Error selecting relationships' );
-			
 			$return_me = array();
 			while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
 				$return_me[ $row[ 'id' ] ] = $row;
@@ -112,7 +111,7 @@
 			$current_assoc = $this->associations[ $this->admin_page->rel_id ];
 			$type = new entity( $current_assoc[ 'e_id' ] );
 			// save the type entity in an object scope
-			$this->rel_type = $type;
+			$this->rel_type = carl_clone($type);
 			$this->admin_page->title = 'Selecting ' . $type->get_value('name');
 			
 			$this->get_views( $type->id() );
@@ -136,7 +135,6 @@
 			$this->filter = new filter;
 			$this->filter->set_page( $this->admin_page );
 			$this->filter->grab_fields( $this->viewer->filters );
-			
 		} // }}}
 		function get_views( $type_id ) // {{{
 		{
