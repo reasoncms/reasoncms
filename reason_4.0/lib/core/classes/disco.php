@@ -307,7 +307,7 @@
 			{
 				$es->set_env( 'site' , $this->get_value('site_id') );
 			}
-			$rel_es = $es;
+			$rel_es = carl_clone($es);
 			
 			if($direction == 'right')
 			{
