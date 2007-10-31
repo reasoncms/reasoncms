@@ -14,7 +14,7 @@
 			if ($is_relationship_sortable) $this->columns['rel_sort_order'] = true;
 			$this->es->set_sharing( 'owns,borrows' );
 			$this->es->add_field( 'ar' , 'name' , 'sharing' );
-			$ass_es = carl_clone($this->es);
+			$ass_es = $this->es;
 			$ass_es->add_right_relationship( $this->admin_page->id , $this->admin_page->rel_id );
 			
 			if ($is_relationship_sortable) 
@@ -48,6 +48,7 @@
 			
 			$my_query = $ass_es->get_one_query();
 			$this->ass_vals = $ass_es->run_one();
+			
 			if (count($this->ass_vals) == 1) unset($this->columns['rel_sort_order']);
 			
 			if ($is_relationship_sortable)
@@ -234,14 +235,13 @@
 			echo '<tr class="' . $class . '" id="row' . $this->row_counter . '">';
 		} // }}}
 		
-		function show_item_post( $row , $options ) // {{{
+		function show_item_post( $row , $options = false) // {{{
 		{
-			if( empty( $options ) ) $options = false;
 			$this->show_admin_associate( $row , $options );
 			echo '</tr>';
 		} // }}}
 		
-		function get_rel_sort($number, $data = array())
+		function get_rel_sort($number, $data)
 		{
 			if ($this->alter_order_enable)
 			{
@@ -354,6 +354,7 @@
 					$one_to_many = true;
 				else $one_to_many = false;
 			}
+
 			$link = array( 'rel_id' => $e_rel, 'entity_b' => $row->id() );
 			if( !$this->select )
 			{
@@ -377,8 +378,8 @@
 			if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) )
 			{
 				$this->rel_type =& $this->admin_page->module->rel_type;
-				$edit_link = $this->admin_page->module->get_second_level_vars();
-				$edit_link[ 'new_entity' ] = '';
+				$edit_link = AssociatorModule::get_second_level_vars();
+			    $edit_link[ 'new_entity' ] = '';
 				$preview_link = $edit_link;
 				$preview_link[ 'id' ] = $row->id();
 				$preview_link[ 'cur_module' ] = 'Preview';
@@ -483,10 +484,8 @@
 			if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) )
 			{
 				$this->rel_type =& $this->admin_page->module->rel_type;
-				$ass_mod = new AssociatorModule($this->admin_page);
-				$ass_mod->rel_type =& $this->admin_page->module->rel_type;
-				$edit_link = $ass_mod->get_second_level_vars();
-				$edit_link[ 'new_entity' ] = '';
+				$edit_link = AssociatorModule::get_second_level_vars();
+			    $edit_link[ 'new_entity' ] = '';
 				$preview_link = $edit_link;
 				$preview_link[ 'id' ] = $row->id();
 				$preview_link[ 'cur_module' ] = 'Preview';
