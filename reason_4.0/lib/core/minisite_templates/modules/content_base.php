@@ -14,14 +14,8 @@
 		}
 		function has_content()
 		{
-			if( empty( $this->content ) )
+			if( carl_empty_html($this->content) )
 				return false;
-			elseif(strlen($this->content) < 256)
-			{
-				$trimmed = trim(strip_tags($this->content,'<img><hr><script><embed><object><form>'));
-				if(empty($trimmed))
-					return false;
-			}
 			return true;
 		}
 		function run()
