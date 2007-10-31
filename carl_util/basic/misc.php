@@ -494,5 +494,27 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 		}
 		return $is_windows;
 	}
+	
+	/**
+	 * Determine if an HTML snippet is essentially empty -- e.g. is there no actual content in the HTML?
+	 *
+	 * e.g. '<p><em></em><br /></p>' should return true -- there is no content here
+	 * '<img src="foo.gif" alt="foo" />' and '<p>foo</p>' should return false -- these contain real content
+	 *
+	 * @param string $string
+	 * @return boolean
+	 */
+	function carl_empty_html($string)
+	{
+		if( empty( $string ) )
+				return true;
+		elseif(strlen($string) < 256)
+		{
+			$trimmed = trim(strip_tags($string,'<img><hr><script><embed><object><form><iframe><input><select><textarea>'));
+			if(empty($trimmed))
+				return true;
+		}
+		return false;
+	}
 }
 ?>
