@@ -146,7 +146,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 		$item = $this->passed_vars['item'];
 
 		$markup_string = '';
-		if($item->get_value('content') && isset($this->passed_vars['link_to_full_item']) &&  !empty($this->passed_vars['link_to_full_item']))
+		if(!carl_empty_html($item->get_value('content')) && isset($this->passed_vars['link_to_full_item']) &&  !empty($this->passed_vars['link_to_full_item']))
 		{
 			$markup_string .=  '<li class="more">';
 			$markup_string .=  '<a href="' . $this->passed_vars['link_to_full_item'] .'">';
