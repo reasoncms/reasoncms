@@ -169,13 +169,13 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 	}
 	function get_content_section()
 	{
-		if( $this->item->get_value( 'content' ) )
+		if( carl_empty_html( $this->item->get_value( 'content' ) ) )
 		{
-			return $this->alter_content($this->item->get_value( 'content' ) );
+			return $this->alter_content( $this->item->get_value('description') );
 		}
 		else
 		{
-			return $this->alter_content( $this->item->get_value('description') );
+			return $this->alter_content($this->item->get_value( 'content' ) );
 		}
 	}
 	function alter_content($content)
