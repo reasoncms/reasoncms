@@ -49,6 +49,7 @@
 			$d->add_relation('ar.name != "owns"');
 			$d->add_relation('(ar.custom_associator IS NULL OR ar.custom_associator = "")');
 			$r = db_query( $d->get_query() , 'Error selecting relationships' );
+			
 			$return_me = array();
 			while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
 				$return_me[ $row[ 'id' ] ] = $row;
@@ -111,7 +112,7 @@
 			$current_assoc = $this->associations[ $this->admin_page->rel_id ];
 			$type = new entity( $current_assoc[ 'e_id' ] );
 			// save the type entity in an object scope
-			$this->rel_type = carl_clone($type);
+			$this->rel_type = $type;
 			$this->admin_page->title = 'Selecting ' . $type->get_value('name');
 			
 			$this->get_views( $type->id() );
@@ -135,6 +136,7 @@
 			$this->filter = new filter;
 			$this->filter->set_page( $this->admin_page );
 			$this->filter->grab_fields( $this->viewer->filters );
+			
 		} // }}}
 		function get_views( $type_id ) // {{{
 		{
@@ -294,9 +296,7 @@
 			echo '</td></tr><tr><td>&nbsp;';
 			echo '</td></tr><tr><td class="assocHead" colspan="'. $colspan .'">';
 			echo '&nbsp;&nbsp;Not Selected<br /><br /></td></tr><tr><td colspan="'.$colspan.'"><table><tr>';
-			$list_mod = new ListerModule($this->admin_page);
-			$list_mod->init();
-			$list_mod->show_filters();
+			ListerModule::show_filters();
 			echo '</tr></table></td></tr><tr><td>';
 			if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) && $this->admin_page->cur_module == 'Associator' )
 			{
