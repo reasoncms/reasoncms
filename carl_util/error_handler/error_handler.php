@@ -167,6 +167,7 @@
 	// the actual error handler function.  this is put into place below the function declaration
 	function carlUtilErrorHandler( $errno, $errstr, $errfile, $errline, $context )
 	{	
+		$errstr = reason_htmlspecialchars($errstr);
 		// developer actions
 		if(carl_util_log_errors())
 		{
@@ -184,14 +185,14 @@
 				case FATAL:
 					$err .= "<strong>FATAL:</strong> $errstr on line $errline of file $errfile\n";
 					$err .= '<pre>Error Context:'."\n\n";
-					$err .= sprint_r( $context );
+					$err .= reason_htmlspecialchars( sprint_r( $context ) );
 					$err .= '</pre>';
 					$err .= '<br /><br /><strong>Script Execution Terminated.</strong>';
 					break;
 				case ERROR:
 					$err .= "<strong>ERROR:</strong> $errstr on line $errline of file $errfile\n";
 					$err .= '<pre>Error Context:'."\n\n";
-					$err .= sprint_r( $context );
+					$err .= reason_htmlspecialchars( sprint_r( $context ) );
 					$err .= '</pre>';
 					$err .= '<br /><br /><strong>Script Execution Terminated.</strong>';
 					break;
