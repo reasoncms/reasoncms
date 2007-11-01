@@ -655,7 +655,7 @@
 		if(is_numeric($type_unique_name))
 			$type_id = $type_unique_name;
 		else
-			$type_id = id_of($type_unique_name);
+			$type_id = id_of($type_unique_name, false); // lets not use cache in case type was just created
 		if(empty($type_id))
 		{
 			trigger_error( 'The type ' . $type_unique_name . ' does not exist.');
