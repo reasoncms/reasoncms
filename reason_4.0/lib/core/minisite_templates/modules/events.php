@@ -1377,7 +1377,7 @@ class EventsModule extends DefaultMinisiteModule
 		$query_string = $this->construct_link(array('start_date'=>'','view'=>'','end_date'=>'','format'=>'ical'));
 		if(!empty($this->request['category']) || !empty($this->request['audience']) || !empty($this->request['search']))
 		{
-			$subscribe_text = 'Subscribe to this view';
+			$subscribe_text = 'Subscribe to this view in desktop calendar';
 			$download_text = 'Download these events';
 		}
 		else
@@ -1460,7 +1460,12 @@ class EventsModule extends DefaultMinisiteModule
 	} // }}}
 	function event_ok_to_show($event)
 	{
-		if ($event->get_values() && ($event->get_value('type') == id_of('event_type')) && ($event->get_value('show_hide') == 'show'))
+		if ($event->get_values() 
+		&& ($event->get_value('type') == id_of('event_type')) 
+		&& ($event->get_value('show_hide') == 'show') 
+		&& $event->get_value('state') == 'Live'
+		&& ( !$this->limit_to_current_site || site_owns_entity( $this->site_id, $event->id() ) || site_borrows_entity( $this->site_id, $event->id() ) )
+		)
 			return true;
 		else
 			return false;
@@ -1501,7 +1506,7 @@ class EventsModule extends DefaultMinisiteModule
 	} // }}}
 	function show_event_error() // {{{
 	{
-		echo '<p>We\'re sorry, the URL was poorly formatted (the event indicated does not exist.) This may be due to incorrectly typing in the URL; if you believe this is a bug, please report it to the contact person listed at the bottom of the page.</p>';
+		echo '<p>We\'re sorry; the event requested does not exist or has been removed from this calendar. This may be due to incorrectly typing in the page address; if you believe this is a bug, please report it to the contact person listed at the bottom of the page.</p>';
 		$this->init_list();
 		$this->list_events();
 	} // }}}
@@ -1666,6 +1671,12 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			echo 'Add to your calendar: <a href="'.$this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>$this->request['date'])).'">This occurence</a> | <a href="'.$this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>'')).'">All occurrences</a>';
 		}
+		echo '</div>'."\n";
+	}
+	function show_item_add_to_personal_calendar_interface($e)
+	{
+		echo '<div class="addToPersonalCalendar">';
+		echo '<a href="'.$this->construct_link(array('event_id'=>$e->id(),'add'=>'true')).'">Add to my personal calendar</a>';
 		echo '</div>'."\n";
 	}
 	function show_back_link() // {{{
