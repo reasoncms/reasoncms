@@ -764,26 +764,31 @@
 	 */
 	function site_shares_type($site_id, $type_id)
 	{
-		$dbq = new DBSelector();
-		$dbq->add_table( 'ar','allowable_relationship' );
-		$dbq->add_table( 'r', 'relationship' );
+		static $retrieved;
+		if (!isset($retrieved[$site_id][$type_id]))
+		{
+			$dbq = new DBSelector();
+			$dbq->add_table( 'ar','allowable_relationship' );
+			$dbq->add_table( 'r', 'relationship' );	
 
-		$dbq->add_relation( 'ar.name = "site_shares_type"' );
-		$dbq->add_relation( 'r.type = ar.id' );
+			$dbq->add_relation( 'ar.name = "site_shares_type"' );
+			$dbq->add_relation( 'r.type = ar.id' );
 
-		$dbq->add_relation( 'r.entity_a = '.$site_id );
-		$dbq->add_relation( 'r.entity_b = '.$type_id );
+			$dbq->add_relation( 'r.entity_a = '.$site_id );
+			$dbq->add_relation( 'r.entity_b = '.$type_id );
 	
-		$q = $dbq->get_query();
-		$r = db_query( $q, 'Failed determination of site\'s sharing status.' );
-		if( mysql_num_rows( $r ) > 0 )
-		{
-			return true;
+			$q = $dbq->get_query();
+			$r = db_query( $q, 'Failed determination of site\'s sharing status.' );
+			if( mysql_num_rows( $r ) > 0 )
+			{
+				$retrieved[$site_id][$type_id] = true;
+			}
+			else
+			{
+				$retrieved[$site_id][$type_id] = false;
+			}
 		}
-		else
-		{
-			return false;
-		}
+		return $retrieved[$site_id][$type_id];
 	}
 	
 	
