@@ -96,7 +96,7 @@
 			else
 				return false;
 		} // }}}
-		function make_tree( $item , $root , $depth ) // {{{
+		function make_tree( &$item , &$root , $depth, $counter = 0 ) // {{{
 		{
 			if( $this->has_filters() AND !empty( $this->filter_values[ $item ] ) )
 			{

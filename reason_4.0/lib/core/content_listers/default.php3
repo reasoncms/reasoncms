@@ -159,7 +159,7 @@
 					
 					$col_display_name = $this->get_col_display_name($col);
 					echo '<th class="listHead">';
-					echo '<a href="'.$this->get_link(array('dir' => $dir_link, 'order_by' => $col, 'page' => '' )).'">'.$col_display_name.'</a>'.$dir_show;
+					echo '<a href="'.carl_make_link(array('dir' => $dir_link, 'order_by' => $col, 'page' => '' )).'">'.$col_display_name.'</a>'.$dir_show;
 					echo '</th>';
 				}
 				if(!$this->user_has_role( 'contribute_only_role' ) || $this->state == 'pending')
@@ -171,7 +171,7 @@
 			return prettify_string($string);
 		}
 		
-		function show_item( $row , $options = false) // {{{
+		function show_item( &$row , $options = false) // {{{
 		{
 			if( !$options )
 				$options = $this->get_options();
@@ -239,26 +239,19 @@
 					else
 						$display = $handler( $row->get_value( $col ) );
 				}
-				else
-				{
-					if( $name == 'name' )
-					{
-						$display =   $row->get_display_name();
-					}	
-					else
-						$display = $row->get_value( $name );
-					
-					if ($name == 'rel_sort_order')
-					{
-						$data['eid'] = $row->id();
-						$display = $this->get_rel_sort($display, $data);
-					}
-				}
+				else $display = $this->get_display_no_handler($row, $name);
 				if (is_array($display)) $display = '<ul><li>'.implode('</li><li>', $display).'</li></ul>';
-				//echo '<td class="'.$options[ 'class' ].'">'.$display.'</td>';
-				echo '<td>'.$display.'</td>' ."\n";
+				echo '<td>'.$display.'</td>' ."\n";				
 			}
 		} // }}}
+		
+		function get_display_no_handler(&$row, $name)
+		{
+			if( $name == 'name' ) $display = $row->get_display_name();
+			else $display = $row->get_value( $name );
+			return $display;
+		}
+		
 		function show_item_post( $row , $options ) // {{{
 		{
 			if( empty( $options ) ) $options = array();
@@ -277,12 +270,6 @@
 					$this->show_admin_pending( $row, $options );
 			echo '</tr>' . "\n";
 		} // }}}
-	
-		function get_rel_sort($number, $data = array())
-		{
-			return $number;
-			// extended in classes that want to do something with the relationship sort field display
-		}
 		
 		function get_options() // {{{
 		{

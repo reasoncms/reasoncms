@@ -3,6 +3,8 @@
 	$GLOBALS[ '_content_lister_class_names' ][ basename( __FILE__) ] = 'sharing_viewer';
 	class sharing_viewer extends assoc_viewer
 	{
+		var $sites_that_borrow_type;
+		
 		function alter_values() // {{{
 		{
 			$this->add_column( 'site' );
@@ -15,6 +17,7 @@
 			
 			//grab site name as well
 			if ($this->site_is_live()) $ass_es->add_right_relationship_field('owns', 'entity', 'state', 'site_state', '"Live"');
+			$ass_es->add_right_relationship_field('owns', 'entity', 'id', 'site_id');
 			$this->alias = $ass_es->add_right_relationship_field('owns', 'entity', 'name', 'site');
 			$this->apply_order_and_limits($ass_es);
 			$this->ass_vals = $ass_es->run_one();
@@ -120,8 +123,16 @@
 			$borrow_link = $this->admin_page->make_link( $borrow_array );
 			$preview_link = $this->admin_page->make_link( array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
 			echo '<a href="' . $preview_link . '">Preview</a> | ';
-			echo '<a href="' . $borrow_link . '">'. ( $this->select ? 'Borrow' : 'Don\'t Borrow' ) . '</a>';
-			echo '</strong></td>';
+			echo '<a href="' . $borrow_link . '">'. ( $this->select ? "Borrow" : "Don't Borrow" ) . '</a></strong>';
+			if (!$this->select && ($row->get_value('no_share') == 1))
+			{
+				echo '<p><strong>Note: </strong><em>Item is no longer shared by owner and cannot be borrowed again.</em></p>';
+			}
+			elseif (!$this->select && !isset($this->sites_that_borrow_type[$row->get_value('site_id')]))
+			{
+				echo '<p><strong>Note: </strong><em>Type is no longer shared by owner. This item cannot be borrowed again.</em></p>';
+			}	
+			echo '</td>';
 		} // }}}
 		
 		function update_es() // {{{
@@ -133,18 +144,18 @@
 			$prep_es->add_type(id_of('site'));
 			$prep_es->add_left_relationship($this->admin_page->type_id, relationship_id_of('site_shares_type'));
 			$state = ( $this->site_is_live()) ? 'Live' : 'All';
-			$sites = $prep_es->run_one('', $state);
+			$this->sites_that_borrow_type = $prep_es->run_one('', $state);
 			
 			$es = new entity_selector();
 			$es->add_type( $this->admin_page->type_id );
-			$limiter = (!empty($this->admin_page->request['search_site'])) ? $this->admin_page->request['search_site'] : array_keys($sites);
+			$limiter = (!empty($this->admin_page->request['search_site'])) ? $this->admin_page->request['search_site'] : array_keys($this->sites_that_borrow_type);
 			$es->add_right_relationship_field('owns', 'entity', 'id', 'site_id', $limiter);
 			$es->add_right_relationship_field('owns', 'entity', 'name', 'site');
 			$this->apply_order_and_limits($es);
 			$es->add_relation( '(entity.no_share IS NULL OR entity.no_share = 0)' ); // entity is shared
 			$this->es = $es;
 		} // }}}
-		function show_item_post( $row , $options = false) // {{{
+		function show_item_post( $row , $options ) // {{{
 		{
 			$this->show_admin_normal( $row , $options );
 			echo '</tr>';

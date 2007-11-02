@@ -2,6 +2,9 @@
 	reason_include_once( 'content_listers/default.php3' );
 	$GLOBALS[ '_content_lister_class_names' ][ basename( __FILE__) ] = 'assoc_viewer';
 	
+	/**
+	 * This viewer shows associated items and provides custom options for selecting and deselecting items
+	 */
 	class assoc_viewer extends generic_viewer
 	{
 		var $related_vals = array();
@@ -10,103 +13,102 @@
 		
 		function alter_values() // {{{
 		{
-			$is_relationship_sortable = $this->check_is_rel_sortable();
-			if ($is_relationship_sortable) $this->columns['rel_sort_order'] = true;
+			$this->setup_associated_items();
+			
+			// show items the site owns or borrows - add sharing field
 			$this->es->set_sharing( 'owns,borrows' );
 			$this->es->add_field( 'ar' , 'name' , 'sharing' );
-			$ass_es = carl_clone($this->es);
-			$ass_es->add_right_relationship( $this->admin_page->id , $this->admin_page->rel_id );
 			
-			if ($is_relationship_sortable) 
-			{
-				$ass_es->add_field( 'relationship', 'id', 'rel_id' );
-				$ass_es->add_rel_sort_field($this->admin_page->id);
-			}
-			if(!empty($this->admin_page->request[ 'order_by' ]))
-			{
-				$alias = isset( $this->alias[ $this->admin_page->request[ 'order_by' ] ] ) ? $this->alias[ $this->admin_page->request[ 'order_by' ] ] : '';
-				if( $alias )  //first, check aliases
-					$table = $alias[ 'table' ] . '.' . $alias[ 'field' ];
-				else //then check normal values
-					$table = table_of( $this->admin_page->request[ 'order_by' ] , $this->type_id);
-				if($table)  //if we've found one, add the relation
-					$ass_es->set_order($table . ' ' . $this->admin_page->request[ 'dir' ] );
-				elseif ($is_relationship_sortable)
-				{
-					//default to relationship sort order
-					$ass_es->set_order('relationship.rel_sort_order' . ' ' . $this->admin_page->request[ 'dir' ]);
-					$this->alter_order_enable = true;
-				}
-			}
-			elseif ($is_relationship_sortable)
-			{
-				//default to relationship sort order
-				$ass_es->set_order('relationship.rel_sort_order ASC');
-				$this->order_by = 'rel_sort_order';
-				$this->alter_order_enable = true;
-			}
-			
-			$my_query = $ass_es->get_one_query();
-			$this->ass_vals = $ass_es->run_one();
-			if (count($this->ass_vals) == 1) unset($this->columns['rel_sort_order']);
-			
-			if ($is_relationship_sortable)
-			{
-				if ($ass_es->orderby == 'relationship.rel_sort_order ASC')
-					$rel_update_array = $this->validate_rel_sort_order($this->ass_vals, true);
-				else
-					$rel_update_array = $this->validate_rel_sort_order($this->ass_vals);
-				if (count($rel_update_array) > 0)
-				{
-					foreach ($rel_update_array as $k=>$v)
-					{
-						update_relationship($k, array('rel_sort_order' => $v));
-					}
-				}
-			}
-			
+			// modify entity selector to exclude items that are already associated
 			if( $this->ass_vals )
 			{
-				$in = 'entity.id NOT IN (';
-				$first = true;
-				foreach( $this->ass_vals AS $item )
-				{
-					if( !$first )
-						$in .=',';
-					else
-						$first = false;
-
-					$in .= $item->id();
-				}
-				$in .= ')';
-				$this->es->add_relation( $in );
+				$relation = 'entity.id NOT IN ('.implode(",",array_keys($this->ass_vals)).')';
+				$this->es->add_relation( $relation );
 			}
 			
+			// modify entity selector to exlude items that should not be available for association because they are already part of a many_to_one relationship
 			if ($this->admin_page->module->associations[$this->admin_page->rel_id]['connections'] == 'many_to_one')
 			{
-				$ass_related_es = $this->es;
+				$ass_related_es = carl_clone($this->es);
 				$ass_related_es->add_right_relationship_field(relationship_name_of($this->admin_page->rel_id), 'entity', 'id', 'related_id');
 				$this->related_vals = $ass_related_es->run_one();
 				if( $this->related_vals )
 				{
-					$in = 'entity.id NOT IN (';
-					$first = true;
-					foreach( $this->related_vals AS $item )
-					{
-						if( !$first )
-							$in .=',';
-						else
-							$first = false;
-	
-						$in .= $item->id();
-					}
-					$in .= ')';
+					$relation = 'entity.id NOT IN ('.implode(",",array_keys($this->related_vals)).')';
 					$this->es->add_relation( $in );
 				}
 			}
-			
 		} // }}}
 		
+		function setup_associated_items()
+		{
+			// populate associated entity selector from scratch
+			$ass_es = new entity_selector();
+			$ass_es->add_type($this->type_id);
+			$ass_es->add_right_relationship($this->admin_page->id, $this->admin_page->rel_id );
+			$ass_es->add_right_relationship_field('owns', 'entity', 'id', 'site_owner_id');
+			
+			if ($this->check_is_rel_sortable()) 
+			{
+				$this->columns['rel_sort_order'] = true;
+				$ass_es->add_field( 'relationship', 'id', 'rel_id' );
+				$ass_es->add_rel_sort_field($this->admin_page->id);
+				$ass_es->set_order('relationship.rel_sort_order ASC');
+				$this->alter_order_enable = true;
+			}
+			
+			if ($this->assoc_viewer_order_by($ass_es)) $this->alter_order_enable = false;
+			
+			$this->ass_vals = $ass_es->run_one();
+			
+			// check sharing on associated entities
+			foreach ($this->ass_vals as $k=>$val)
+			{
+				// setup sharing value
+				if ($this->site_id == $val->get_value('site_owner_id')) $this->ass_vals[$k]->set_value('sharing', 'owns');
+				else ($this->ass_vals[$k]->set_value('sharing', 'borrows'));
+			}
+			
+			if (count($this->ass_vals) == 1) unset($this->columns['rel_sort_order']);
+			
+			// this verifies and updates the associated items rel_sort_order
+			if ($this->check_is_rel_sortable())
+			{
+				if ($ass_es->orderby == 'relationship.rel_sort_order ASC') $rel_update_array = $this->validate_rel_sort_order($this->ass_vals, true);
+				else $rel_update_array = $this->validate_rel_sort_order($this->ass_vals);
+				if (count($rel_update_array) > 0)
+				{
+					foreach ($rel_update_array as $k=>$v) update_relationship($k, array('rel_sort_order' => $v));
+				}
+			}
+		}
+		
+		/**
+		 * Sets a sort order for the associated items if a sort order was passed in the url
+		 * 
+	 	 * @return boolean did it set a custom order
+	 	 */
+		function assoc_viewer_order_by(&$ass_es)
+		{
+			if(!empty($this->admin_page->request[ 'order_by' ]))
+			{
+				// first, check aliases
+				$alias = isset( $this->alias[ $this->admin_page->request[ 'order_by' ] ] ) ? $this->alias[ $this->admin_page->request[ 'order_by' ] ] : '';
+				if( $alias ) $table = $alias[ 'table' ] . '.' . $alias[ 'field' ];
+				
+				// else check normal values
+				else $table = table_of( $this->admin_page->request[ 'order_by' ] , $this->type_id);
+				
+				// if we found something, add the relation
+				if($table) 
+				{
+					$ass_es->set_order($table . ' ' . $this->admin_page->request[ 'dir' ] );
+					return true;
+				}
+			}
+			return false;
+		}
+	
 		function show_all_items() // {{{
 		{
 			$this->show_disassociated_items();
@@ -163,62 +165,58 @@
 		
 		function show_sorting() // {{{
 		{
-		$hide_sort = false;
-		?>
-					<tr>
-			<?php
-				foreach( $this->columns AS $key => $val )
+			//$hide_sort = false;
+			$show_rel_sort_order = (isset($this->columns['rel_sort_order'])) && $this->alter_order_enable;
+			echo '<tr>';
+			foreach( $this->columns AS $key => $val )
+			{
+				if ( is_int( $key ) ) $col = $val;
+				else $col = $key;
+				
+				// set up sorting directions and such
+				if ( ($col ==  $this->order_by) && !$show_rel_sort_order)
 				{
-					if ( is_int( $key ) )
-						$col = $val;
-					else
-						$col = $key;
-
-					// set up sorting directions and such
-					if ( $col ==  $this->order_by )
+					if ( $this->dir == 'DESC' )
 					{
-						if ($col == 'rel_sort_order')
-						{
-							$hide_sort = true;
-						}
-						elseif ( $this->dir == 'DESC' )
-						{
-							$dir_show = ' v';
-							$dir_link = 'ASC';
-						}
-						else
-						{
-							$dir_show = ' ^';
-							$dir_link = 'DESC';
-						}
-					}
-					else
-					{
+						$dir_show = ' v';
 						$dir_link = 'ASC';
-						$dir_show = '';
 					}
-					
-					$col_display_name = $this->get_col_display_name($col);
-					echo '<th class="listHead">';
-					if ($hide_sort == true) echo $col_display_name;
-					else echo '<a href="'.$this->get_link(array('dir' => $dir_link, 'order_by' => $col, 'page' => '' )).'">'.$col_display_name.'</a>'.$dir_show;
-					echo '</th>';
+					else
+					{
+						$dir_show = ' ^';
+						$dir_link = 'DESC';
+					}
 				}
-			?>
-						<th class="listHead"><?php $this->show_admin_paging();?></th></tr>
-		<?php
-		} // }}}
+				else
+				{
+					$dir_link = 'ASC';
+					$dir_show = '';
+				}
+				
+				$col_display_name = $this->get_col_display_name($col);
+				echo '<th class="listHead">';
+				if ($show_rel_sort_order && ($col == 'rel_sort_order')) echo $col_display_name;
+				elseif ($col == 'rel_sort_order') echo '<a href="'.carl_make_link(array('dir' => '', 'order_by' => '', 'page' => '' )).'">'.$col_display_name.'</a>';
+				else echo '<a href="'.carl_make_link(array('dir' => $dir_link, 'order_by' => $col, 'page' => '' )).'">'.$col_display_name.'</a>'.$dir_show;
+				echo '</th>';
+			}
+			echo '<th class="listHead">';
+			$this->show_admin_paging();
+			echo '</th></tr>';
+		}
+		
 		function show_admin_paging() // {{{
 		{
 			echo ( $this->select ? 'Select' : 'Deselect' );
-		} // }}}
-			function display() // {{{
-			{
-				$this->show_filters();
-				$this->show_all_items();
-			} // }}}
+		}
+		
+		function display() // {{{
+		{
+			$this->show_filters();
+			$this->show_all_items();
+		}
 			
-		function show_item_pre( $row , &$options ) // {{{
+		function show_item_pre( $row , &$options )
 		{
 			if (empty($this->row_counter)) $this->row_counter = 0;
 			$this->row_counter++;
@@ -232,7 +230,7 @@
 				$options = array();
 			$options[ 'class' ] = $class;
 			echo '<tr class="' . $class . '" id="row' . $this->row_counter . '">';
-		} // }}}
+		}
 		
 		function show_item_post( $row , $options ) // {{{
 		{
@@ -262,11 +260,16 @@
 		
 		function check_is_rel_sortable()
 		{
-			$q = 'SELECT is_sortable FROM allowable_relationship WHERE id = ' . $this->admin_page->rel_id;
-        	$r = db_query( $q , 'error getting relationship info' );
-        	$row = mysql_fetch_array( $r , MYSQL_ASSOC );
-        	if ($row['is_sortable'] == 'yes') return true;
-        	else return false;
+			static $is_rel_sortable;
+			if (!isset($is_rel_sortable))
+			{
+				$q = 'SELECT is_sortable FROM allowable_relationship WHERE id = ' . $this->admin_page->rel_id;
+   	     		$r = db_query( $q , 'error getting relationship info' );
+   	     		$row = mysql_fetch_array( $r , MYSQL_ASSOC );
+   	     		if ($row['is_sortable'] == 'yes') $is_rel_sortable = true;
+        		else $is_rel_sortable = false;
+        	}
+        	return $is_rel_sortable;
 		}
 		
 		function validate_rel_sort_order(&$assoc_entities, $rel_sort_order = false)
@@ -335,6 +338,16 @@
 			else return prettify_string($string);
 		}
 		
+		function get_display_no_handler(&$row, $name)
+		{
+			if ($name == 'rel_sort_order')
+			{
+				$data['eid'] = $row->id();
+				return $this->get_rel_sort($row->get_value( $name ), $data);
+			}
+			else return parent::get_display_no_handler($row, $name);
+		}
+		
 		function show_admin_associate( $row , $options ) // {{{
 		{
 			$e_rel = $this->admin_page->rel_id;
@@ -387,52 +400,35 @@
 				echo ' | <a href="'.$this->admin_page->make_link( $preview_link ).'">Preview</a>';
 				if( $row->get_value( 'sharing' ) == 'owns' )
 					echo ' | <a href="'.$this->admin_page->make_link( $edit_link ).'">Edit</a>';
-				else 
+				elseif ($row->get_value( 'sharing' ) == 'borrows')
 					echo ' | Borrowed';
 			}
 				
 			echo '</strong></td>';	
 		} // }}}
 	}
-
+	
 	class reverse_assoc_viewer extends assoc_viewer
 	{
 		function alter_values() // {{{
 		{
 			$this->es->set_sharing( 'owns,borrows' );
 			$this->es->add_field( 'ar' , 'name' , 'sharing' );
-			$ass_es = $this->es;
-			$ass_es->add_left_relationship( $this->admin_page->id , $this->admin_page->rel_id );
-			$ass_es->add_field('relationship','site','rel_site_id');
 			
-			if(!empty($this->admin_page->request[ 'order_by' ]))
-			{
-				$alias = isset( $this->alias[ $this->admin_page->request[ 'order_by' ] ] ) ? $this->alias[ $this->admin_page->request[ 'order_by' ] ] : '';
-				if( $alias )  //first, check aliases
-					$table = $alias[ 'table' ] . '.' . $alias[ 'field' ];
-				else //then check normal values
-					$table = table_of( $this->admin_page->request[ 'order_by' ] , $this->type_id);
-				if($table)  //if we've found one, add the relation
-					$ass_es->set_order($table . ' ' . $this->admin_page->request[ 'dir' ] );
-			}
+			$ass_es = carl_clone($this->es);
+			$ass_es->add_left_relationship( $this->admin_page->id , $this->admin_page->rel_id );
+			$ass_es->add_field('relationship','site','rel_site_id');		
+			
+			$this->assoc_viewer_order_by($ass_es);			
 			$this->ass_vals = $ass_es->run_one();
+			
 			if( $this->ass_vals )
 			{
-				$in = 'entity.id NOT IN (';
-				$first = true;
-				foreach( $this->ass_vals AS $item )
-				{
-					if( !$first )
-						$in .=',';
-					else
-						$first = false;
-
-					$in .= $item->id();
-				}
-				$in .= ')';
-				$this->es->add_relation( $in );
+				$relation = 'entity.id NOT IN ('.implode(",",array_keys($this->ass_vals)).')';
+				$this->es->add_relation( $relation );
 			}
 		} // }}}
+		
 		function show_admin_associate( $row , $options ) // {{{
 		{
 			$e_rel = $this->admin_page->rel_id;
@@ -485,7 +481,7 @@
 				$this->rel_type =& $this->admin_page->module->rel_type;
 				$ass_mod = new AssociatorModule($this->admin_page);
 				$ass_mod->rel_type =& $this->admin_page->module->rel_type;
-				$edit_link = $ass_mod->get_second_level_vars(); 
+				$edit_link = $ass_mod->get_second_level_vars();
 				$edit_link[ 'new_entity' ] = '';
 				$preview_link = $edit_link;
 				$preview_link[ 'id' ] = $row->id();
