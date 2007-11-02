@@ -437,7 +437,11 @@
 					if( $alias )  //first, check aliases
 						$table = $alias[ 'table' ] . '.' . $alias[ 'field' ];
 					else //then check normal values
-						$table = table_of( $this->order_by , $this->type_id);
+					{
+						// chop table name if it is present
+						$orderby = (strrchr($this->order_by, ".")) ? substr(strrchr($this->order_by, "."), 1) : $this->order_by;
+						$table = table_of( $orderby , $this->type_id);
+					}
 					if($table)  //if we've found one, add the relation
 						$this->es->set_order($table . ' ' . $this->dir);
 				}
@@ -716,7 +720,7 @@
 			/**
 			 * Default for showing one item in a column, can be overloaded
 			 */
-			function show_item( $item ) // {{{
+			function show_item( &$item, $options = false ) // {{{
 			{
 				static $row_num = 1;
 				$row_num = 1 - $row_num;
