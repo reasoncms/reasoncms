@@ -144,29 +144,31 @@
 				// the last argument determines whether or not to archive the entity.  if it's new, don't worry about it.  otherwise, archive
 				// the $changed var grabs the result, true if changed, false if not
 
+			// commented out nwhite 11-02-07
+			// if a site is borrowing an item and the tiems sharing goes to private, the item is still borrowed by sites that had it ...
+			// the owner will need to contact those sites and get them to manually remove the item from the list of those that are available.
+			//
 			//delete borrow relationships if no_share is true
-#			if( $this->_elements[ 'no_share' ] )
-			if($this->_is_element('no_share'))
-			{
-				if( $this->get_value( 'no_share' ) )
-				{
-					$d = new DBSelector;
-					$d->add_table( 'ar' , 'allowable_relationship' );
-					$d->add_table( 'r' , 'relationship' );
-
-					$d->add_field( 'r' , 'id' , 'id' );
-					
-					$d->add_relation( 'r.type = ar.id' );
-					$d->add_relation( 'ar.name = "borrows"' );
-					$d->add_relation( 'ar.relationship_a = ' . id_of( 'site' ) );
-					$d->add_relation( 'ar.relationship_b = ' . $this->admin_page->type_id );
-					$d->add_relation( 'r.entity_b = ' . $this->admin_page->id );
-
-					$x = $d->run();
-					foreach( $x AS $rel )
-						db_query( 'DELETE FROM relationship WHERE id = ' . $rel[ 'id' ] , 'Error deleting borrowed relationship' );
-				}
-			}
+			//if( $this->_elements[ 'no_share' ] )
+			//if($this->_is_element('no_share'))
+			//{
+			//	if( $this->get_value( 'no_share' ) )
+			//	{
+			//		$d = new DBSelector;
+			//		$d->add_table( 'ar' , 'allowable_relationship' );
+			//		$d->add_table( 'r' , 'relationship' );
+			//		$d->add_field( 'r' , 'id' , 'id' );
+			//		$d->add_relation( 'r.type = ar.id' );
+			//		$d->add_relation( 'ar.name = "borrows"' );
+			//		$d->add_relation( 'ar.relationship_a = ' . id_of( 'site' ) );
+			//		$d->add_relation( 'ar.relationship_b = ' . $this->admin_page->type_id );
+			//		$d->add_relation( 'r.entity_b = ' . $this->admin_page->id );
+			//		$x = $d->run();
+			//		foreach( $x AS $rel )
+			//			db_query( 'DELETE FROM relationship WHERE id = ' . $rel[ 'id' ] , 'Error deleting borrowed relationship' );
+			//	}
+			//}
+			
 			$this->_process_relationship_elements();
 		
 		} // }}}
