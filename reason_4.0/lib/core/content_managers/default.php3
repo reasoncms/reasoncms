@@ -129,11 +129,11 @@
 
 				$x = $d->run();
 				
-				$comments = 'Your site is currently sharing this type.  You should only select private if you absolutely don\'t want other sites to have access to this item.  ';
+				$comments = 'Your site is currently sharing this type.  Select private to prevent other sites from borrowing this item. ';
 
 				if( $x )
 				{
-					$comments .= 'This item is currently be borrowed by the following site';
+					$comments .= 'This item is currently being borrowed by the following site';
 					if( count( $x > 1 ) )
 						$comments .= 's';
 					$comments .= ': ';
