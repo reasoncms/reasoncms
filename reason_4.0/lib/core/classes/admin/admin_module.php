@@ -59,5 +59,6 @@
 		'ListSites'=>array('file'=>'list_sites.php','class'=>'ListSitesModule'),
 		'ImageImport'=>array('file'=>'image_import.php','class'=>'ImageImportModule'),
 		'AllowableRelationshipManager'=>array('file'=>'allowable_relationship_manager.php','class'=>'AllowableRelationshipManagerModule'),
+		'SortPosts'=>array('file'=>'sort_posts.php','class'=>'SortPostsModule'),
 	);
 ?>
