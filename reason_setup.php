@@ -61,8 +61,8 @@ if (isset($_POST['do_it_pass']) == false)
 		{
 			// verify settings files loaded by header.php before we load the header
 			check_environment_and_trailing_slash(WEB_PATH, 'web path', 'Check the WEB_PATH constant in package_settings.php.</p><p>
-			                                         The value should probably be</p>
-			                                         <p><pre>'.$_SERVER['DOCUMENT_ROOT'].'/</pre>');
+								 The value should probably be</p>
+								 <p><pre>'.$_SERVER['DOCUMENT_ROOT'].'/</pre>');
 			check_environment(CARL_UTIL_INC.'error_handler/error_handler.php', 'error handler', 'Verify the path to CARL_UTIL_INC in package_settings.php');
 			check_environment(DB_CREDENTIALS_FILEPATH, 'db credentials xml file', 'Verify the DB_CREDENTIALS_FILEPATH in package_settings.php and permissions');
 			check_environment(DISCO_INC.'disco.php', 'disco include path', 'Verify the path to DISCO_INC in package_settings.php');
@@ -78,6 +78,7 @@ if (isset($_POST['do_it_pass']) == false)
 			{
 				echo '<p><strong>Reason settings path</strong>: ' . SETTINGS_INC.'reason_settings.php' . '</p>';
 			}
+			check_error_handler_log_file_dir();
 			echo '<p style="color: green;"><strong>...the Reason environment has been loaded</strong></p>';
 		}
 		else die_with_message('<p class="error">ERROR: The INCLUDE_PATH constant ('.INCLUDE_PATH.') appears to be invalid.</p>
@@ -215,20 +216,27 @@ function check_php_include_path()
 	
 	if (($include_path_set === false) && ($alt_include_path_set === false))
 	{
+		$include_path_separator = (setup_check_is_windows()) ? ';' : ':';
 		die_with_message('<p class="error"><strong>ERROR:</strong> The reason_package directory must be part of your php include path.</p><p>Your current include path is:</p>
 						  <p><pre>'.$include_path.'</pre></p>
 						  <p>Please modify the include path line in your php.ini file so that it reads as follows</p>
-						  <p><pre>include_path = "'.$include_path.':'.$cur_path.'"</pre></p>
+						  <p><pre>include_path = "'.$include_path.$include_path_separator.$cur_path.'"</pre></p>
 						  <p>If you do not have access to modify php.ini you may be able to create an .htaccess 
 						  file that sets the include path. For this to work, AllowOverride Option must be enabled in your httpd.conf file. The .htaccess rule
 						  should read as follows:</p>
-		              	  <p><pre>php_value include_path ".:'.$cur_path.'"</pre></p>
-		              	  <p>Please run the script again after your include path has been properly setup</p>');
+					<p><pre>php_value include_path ".'.$include_path_separator.$cur_path.'"</pre></p>
+					<p>Please run the script again after your include path has been properly setup</p>');
 	}
 	else
 	{
 		echo '...the php include_path includes the reason_package directory<br/>';
 	}
+}
+
+function setup_check_is_windows()
+{
+	if (strtoupper(substr(PHP_OS,0,3) == 'WIN')) return true;
+	else return false;
 }
 
 function perform_checks()
@@ -318,19 +326,19 @@ function verify_mysql($db_conn_name, $constant_name, $constant_location, $check_
 	include_once( INCLUDE_PATH . 'xml/xmlparser.php' ); // we have verified this exists already
 	$db_file = DB_CREDENTIALS_FILEPATH; // we have verified this exists
 	$xml = file_get_contents($db_file);
-    if(!empty($xml))
-    {
-    	$xml_parse = new XMLParser($xml);
-    	$xml_parse->Parse();
-    	foreach ($xml_parse->document->database as $database)
-    	{
-    		$tmp = array();
-    		$tmp['db'] = $database->db[0]->tagData;
-    		$tmp['user'] = $database->user[0]->tagData;
-    		$tmp['password'] = $database->password[0]->tagData;
-    		$tmp['host'] = $database->host[0]->tagData;
-    		$db_info_all[$database->connection_name[0]->tagData] = $tmp;
-        }
+	if(!empty($xml))
+	{
+		$xml_parse = new XMLParser($xml);
+		$xml_parse->Parse();
+		foreach ($xml_parse->document->database as $database)
+		{
+			$tmp = array();
+			$tmp['db'] = $database->db[0]->tagData;
+			$tmp['user'] = $database->user[0]->tagData;
+			$tmp['password'] = $database->password[0]->tagData;
+			$tmp['host'] = $database->host[0]->tagData;
+			$db_info_all[$database->connection_name[0]->tagData] = $tmp;
+		}
 	}
 	else return msg('<span class="error">mysql connection ' . $db_conn_name . ' check failed</span> - the db connection xml file does not appear to have any contents', false);
 	$db_info = (isset($db_info_all[$db_conn_name])) ? $db_info_all[$db_conn_name] : false;
@@ -368,8 +376,8 @@ function verify_mysql($db_conn_name, $constant_name, $constant_location, $check_
 		if ($table_count == 0)
 		{
 			return msg('<span class="error">mysql connection ' . $db_conn_name . ' check failed</span> - 
-			           The database ' . $db_info['db'] . ' does not appear to have any tables.<p><a href="./install.htm#database_setup">Consult the reason install documentation</a> 
-			           for information on how to import the reason database.</p>', false);
+				   The database ' . $db_info['db'] . ' does not appear to have any tables.<p><a href="./install.htm#database_setup">Consult the reason install documentation</a> 
+				   for information on how to import the reason database.</p>', false);
 		}
 	}
 	return msg('<span class="success">mysql connection ' . $constant_name . '('.$db_conn_name . ') check passed</span>', true);
@@ -412,16 +420,17 @@ function curl_check()
 
 function imagemagick_check()
 {
-	if (is_executable(IMAGEMAGICK_PATH.'mogrify'))
+	$mogrify_filename = (server_is_windows()) ? 'mogrify.exe' : 'mogrify';
+	if (file_exists(IMAGEMAGICK_PATH.$mogrify_filename))
 	{
 		$cmd = IMAGEMAGICK_PATH . 'mogrify -version 2>&1';
 		$output = shell_exec($cmd);
 		
 		// see if the string imagemagick exists in the output - if not it did not work properly
-		if (strpos(strtolower($output), 'imagemagick') === false) return msg('<span class="error">imagemagick check failed</span> - mogrify is executable but does not appear to function properly when invoked via php...your php install should not be running in safe mode and needs to be able to use exec and shell_exec functions', false);
+		if (strpos(strtolower($output), 'imagemagick') === false) return msg('<span class="error">imagemagick check failed</span> - mogrify exists but does not appear to function properly when invoked via php...your php install should not be running in safe mode and needs to be able to use exec and shell_exec functions', false);
 		else return msg('<span class="success">imagemagick check passed</span>', true);
 	}
-	else return msg('<span class="error">imagemagick check failed</span> - ' .IMAGEMAGICK_PATH.'mogrify is not executable - check the IMAGEMAGICK_PATH constant in package_settings.php, and php permissions.', false);
+	else return msg('<span class="error">imagemagick check failed</span> - ' .IMAGEMAGICK_PATH.'mogrify not found - check the IMAGEMAGICK_PATH constant in package_settings.php, and php permissions.', false);
 }
 
 function data_dir_writable($dir, $name)
@@ -451,6 +460,31 @@ function check_environment_and_trailing_slash($path, $check_name, $error_msg)
 		return msg($check_name . ' found', true);
 	}
 	else die_with_message('<p class="error">ERROR: '.$check_name . ' not found</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
+}
+
+function check_error_handler_log_file_dir()
+{
+	if (!file_exists(PHP_ERROR_LOG_FILE))
+	{
+		$success = false;
+		// attempt to create the file.
+		$file = PHP_ERROR_LOG_FILE;
+		if ($file_handle = fopen($file,"a")) fclose($file_handle);
+		else
+		{
+			die_with_message('<p class="error">The error handler log file is set to ' . PHP_ERROR_LOG_FILE . ' - this file does not exist, and
+				   could not be created. Please create the file, and make sure the apache user can write to it. You can alternatively change the
+				   PHP_ERROR_LOG_FILE constant in error_handler_settings.php to a writable directory. After you have fixed the problem
+				   run this script again.</p>');
+		}
+	}
+	if (!is_writable(PHP_ERROR_LOG_FILE))
+	{
+		die_with_message('<p class="error">The error handler log file is set to ' . PHP_ERROR_LOG_FILE . ' - this file is not writable.
+				   Please make the file writable to the apache user or change the value of the constant PHP_ERROR_LOG_FILE in error_handler_settings.php
+				   to a writable file. After you have fixed the problem run this file again.</p>');
+	}
+	return true;
 }
 
 function msg($msg, $bool)
