@@ -23,5 +23,10 @@ relationship_id_of('issue_to_publication'),'right','select');
 			
 			$this -> set_order (array ('publication','name','number','datetime','show_hide'));
 		} // }}}
+		
+		function pre_show_form()
+		{
+			echo '<div class="issueSortPosts smallText"><a href="'.carl_make_link(array('cur_module'=>'SortPosts')).'">Sort posts</a></div>'."\n";
+		}
 	}
 ?>
