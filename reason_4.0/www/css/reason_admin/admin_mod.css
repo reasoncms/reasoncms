@@ -301,3 +301,7 @@ div.contentArea object.pageViewer {
 	height:500px;
 	border:2px inset;
 }
+div.sortPostsModule td.words {
+	font-size:90%;
+	width:42%;
+}
