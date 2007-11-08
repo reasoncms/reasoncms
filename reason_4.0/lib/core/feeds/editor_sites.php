@@ -20,7 +20,7 @@ class editorSiteFeed extends defaultFeed
 		$this->feed->set_item_field_map( 'author', '' );
 		
 		//$this->feed->es->add_relation( 'site.site_state = "Live"' );
-		$this->feed->es->add_relation( 'site.custom_url_handler = ""' );
+		$this->feed->es->add_relation( '((site.custom_url_handler = "") OR (site.custom_url_handler IS NULL))' );
 		$this->feed->es->set_order( 'name ASC' );
 		$this->feed->es->set_num( 10000 );
 	}
