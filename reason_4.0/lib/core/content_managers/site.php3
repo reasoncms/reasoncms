@@ -4,16 +4,23 @@
 	
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 	reason_include_once('classes/url_manager.php');
+	
+	/**
+	 * Content manager for sites
+	 *
+	 * @todo Write an upgrade script to remove the is_incarnate field from the DB, now that it is not used
+	 */
 	class SiteManager extends ContentManager
 	{
 		var $old_entity_values = array();
-		
+
 		function alter_data() // {{{
 		{
 			// don't allow the user to see whether the site is new or not
-			$this->change_element_type( 'is_incarnate','hidden' );
-			if ( !($this->get_value('is_incarnate') == 'true') )
-				$this->set_value('is_incarnate','false');
+			$this->remove_element( 'is_incarnate' );
+			
+			$old_entity = new entity( $this->get_value('id'), false );
+			$this->old_entity_values = $old_entity->get_values();
 				
 			$this->change_element_type(
 				'use_page_caching',
@@ -136,49 +143,14 @@
 				}
 			}
 
-			if(!$this->_has_errors())
-			{
-				//grab the old copy's values from the db -- this is for base dir moving in the finish function
-				$old_entity = new entity( $this->get_value('id'), false );
-				$this->old_entity_values = $old_entity->get_values();
-			}
-
 		} // }}}
+		
 		function finish() // {{{
 		{
-			// don't do anything if this has already been run or the site is generic
-			if( ($this->get_value('is_incarnate') != 'false') || ($this->get_value('site_category') == 'skeleton') )
+			$first_time = empty($this->old_entity_values['base_url']);
+
+			if($first_time) // a new site
 			{
-				update_entity( $this->get_value( 'id' ),$this->admin_page->user_id,array( "site" => array( "is_incarnate" => "true" ) ),false);
-
-				// try to move the directory if it has changed
-				if( $this->has_changed &&
-					!empty($this->old_entity_values['base_url']) &&
-					$this->old_entity_values['base_url'] != $this->get_value('base_url') )
-				{
-					$old_entity = new entity( $this->get_value('id'), false );
-					$old_entity_values = $old_entity->get_values();
-					$this->move_base_dir($this->old_entity_values['base_url'], $this->get_value('base_url'));
-				}
-
-
-				//update URL history informaiton. 
-				reason_include_once( 'function_libraries/root_finder.php');
-				reason_include_once( 'function_libraries/URL_History.php');
-				$site_id = $this->get_value( 'id' );
-				$page_id = root_finder( $site_id ); 
-				if(!empty($page_id))
-				{
-					update_URL_history( $page_id );     
-				}                     
-
-				return;
-			}
-			// these actions are for both academic department and organization sites
-			else
-			{
-				$testmode = false;
-
 				// create site entry
 				$site_id = $this->get_value('id');
 
@@ -199,13 +171,16 @@
 				create_relationship( $site_id, id_of('text_blurb'), relationship_id_of('site_to_type'));
 
 				// create root page and set it as its own parent
-				$root_page = reason_create_entity( $site_id, id_of('minisite_page'), $this->admin_page->user_id, $this->get_value('name'),array('nav_display'=>'Yes','new'=>'0'),$testmode);
+				$root_page = reason_create_entity( $site_id, id_of('minisite_page'), $this->admin_page->user_id, $this->get_value('name'),array('nav_display'=>'Yes','new'=>'0'));
 				create_relationship( $root_page, $root_page, relationship_id_of('minisite_page_parent') );
 				
 				$this->create_base_dir();
 			}
-			update_entity( $site_id,$this->admin_page->user_id,array( "site" => array( "is_incarnate" => "true" ) ),false);
-
+			elseif( $this->old_entity_values['base_url'] != $this->get_value('base_url') ) // try to move the directory if it has changed
+			{
+				$this->move_base_dir($this->old_entity_values['base_url'], $this->get_value('base_url'));
+			}
+			
 			//update URL history informaiton. 
 			reason_include_once( 'function_libraries/root_finder.php');
 			reason_include_once( 'function_libraries/URL_History.php');
@@ -214,7 +189,7 @@
 			if(!empty($page_id))
 			{
 				update_URL_history( $page_id );
-			}                                
+			}                      
 		} // }}}
 		
 		function create_base_dir()
