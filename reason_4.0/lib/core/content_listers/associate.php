@@ -35,7 +35,7 @@
 				if( $this->related_vals )
 				{
 					$relation = 'entity.id NOT IN ('.implode(",",array_keys($this->related_vals)).')';
-					$this->es->add_relation( $in );
+					$this->es->add_relation( $relation );
 				}
 			}
 		} // }}}
