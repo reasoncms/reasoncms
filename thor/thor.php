@@ -180,7 +180,7 @@ class Thor
    					$q .= "'" . mysql_real_escape_string($option) . "',";
    				}
    				$q = substr( $q, 0, -1 ); // trim trailing comma
-   				$q .= ') NOT NULL , ';
+   				$q .= ') NULL , ';
    				break;
 			case 'text':
    				$q .= '`'.$k.'` text NOT NULL , ';
