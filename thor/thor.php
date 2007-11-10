@@ -317,8 +317,8 @@ class Thor
 	function _transform_radiogroup($element)
 	{
 		$id = $element->tagAttrs['id'];
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
 		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
-		$required = (!empty($element_child->tagAttrs['required'])) ? true : false;
 		$args = Array( 'options' => Array(),
 					   'display_name' => $display_name,
 					   'default' => '' );
@@ -328,8 +328,6 @@ class Thor
 		{
 			$value = (!empty($element_child->tagAttrs['value'])) ? $element_child->tagAttrs['value'] : '';
 			$selected = (!empty($element_child->tagAttrs['selected'])) ? true : false;
-			
-			
 			$args['options'][$value] = $value;
 			if ( $selected ) $args['default'] = $value;
 		}
