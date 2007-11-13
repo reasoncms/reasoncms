@@ -166,8 +166,7 @@
 	
 	// the actual error handler function.  this is put into place below the function declaration
 	function carlUtilErrorHandler( $errno, $errstr, $errfile, $errline, $context )
-	{	
-		$errstr = reason_htmlspecialchars($errstr);
+	{
 		// developer actions
 		if(carl_util_log_errors())
 		{
@@ -176,36 +175,36 @@
 		if( is_developer() AND empty($_REQUEST['nodebug']) AND carl_util_output_errors())
 		{
 			//echo $errno;
-			
+			$htmlescaped_errstr = htmlspecialchars($errstr, ENT_QUOTES, 'UTF-8' );
 			// handle error_reporting the correct way.
 			if( !($errno) ) return;
 			$err = '<div style="border: 1px #f00 dashed; background-color: #ddd; padding: 8px">';
 			switch ($errno)
 			{
 				case FATAL:
-					$err .= "<strong>FATAL:</strong> $errstr on line $errline of file $errfile\n";
+					$err .= '<strong>FATAL:</strong> '.$htmlescaped_errstr.' on line '.$errline.' of file '.$errfile."\n";
 					$err .= '<pre>Error Context:'."\n\n";
-					$err .= reason_htmlspecialchars( sprint_r( $context ) );
+					$err .= htmlspecialchars( sprint_r( $context ), ENT_QUOTES, 'UTF-8' );
 					$err .= '</pre>';
 					$err .= '<br /><br /><strong>Script Execution Terminated.</strong>';
 					break;
 				case ERROR:
-					$err .= "<strong>ERROR:</strong> $errstr on line $errline of file $errfile\n";
+					$err .= '<strong>ERROR:</strong> '.$htmlescaped_errstr.' on line '.$errline.' of file '.$errfile."\n";
 					$err .= '<pre>Error Context:'."\n\n";
-					$err .= reason_htmlspecialchars( sprint_r( $context ) );
+					$err .= htmlspecialchars( sprint_r( $context ), ENT_QUOTES, 'UTF-8' );
 					$err .= '</pre>';
 					$err .= '<br /><br /><strong>Script Execution Terminated.</strong>';
 					break;
 				case E_WARNING:
 				case WARNING:
-					$err .=  "<strong>WARNING:</strong> $errstr on line $errline of file $errfile\n";
+					$err .= '<strong>WARNING:</strong> '.$htmlescaped_errstr.' on line '.$errline.' of file '.$errfile."\n";
 					break;
 				case E_NOTICE:
 				case (defined('E_STRICT') ? E_STRICT : false):
-					$err .=  "<strong>NOTICE:</strong> $errstr on line $errline of file $errfile\n";
+					$err .= '<strong>NOTICE:</strong> '.$htmlescaped_errstr.' on line '.$errline.' of file '.$errfile."\n";
 					break;
 				default:
-					$err .=  "Unknown error type: [$errno] $errstr on line $errline of file $errfile\n";
+					$err .=  'Unknown error type: ['.$errno.'] '.$htmlescaped_errstr.' on line '.$errline.' of file '.$errfile."\n";
 					break;
 			}
 			$err .= '</div>';
@@ -321,4 +320,5 @@
 	{
 		echo '<p style="background-color:#ddd;color:#333;font-size:80%;margin:0;padding:.35em;border-bottom:1px solid #333;"><strong>Note:</strong> The error handler is not yet set up. Administrators must look in the php error logs ('.PHP_ERROR_LOG_FILE.') to see any errors that occur in the execution of this script. To turn this notice off, edit '.SETTINGS_INC.'error_handler_settings.php</p>'."\n";
 	}
+	
 ?>
