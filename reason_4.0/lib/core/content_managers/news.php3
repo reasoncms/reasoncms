@@ -130,10 +130,10 @@
 			$editor_name = html_editor_name($this->admin_page->site_id);
 			$wysiwyg_settings = html_editor_params($this->admin_page->site_id, $this->admin_page->user_id);
 			$wysiwyg_settings_desc = $wysiwyg_settings;
-			if(strpos($editor_name,'loki') === 0)
+			/* if(strpos($editor_name,'loki') === 0)
 			{
 				$wysiwyg_settings_desc['widgets'] = array('strong','em','lists','link','assets');
-			}
+			} */
 			
 			$this -> change_element_type ('description', $editor_name , $wysiwyg_settings_desc );
 			$this -> set_comments ('description', form_comment('A brief summary of the news item; this is what appears on lists of news items'));
