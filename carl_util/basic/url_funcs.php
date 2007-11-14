@@ -21,10 +21,16 @@ function carl_make_link( $new_request_vars = array(''), $base_path = '', $type =
 	if ($maintain_original && !empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
 	else $cur_request_vars = array();
 	if (empty($base_path)) $base_path = $parts['path'];
-	$port = (isset($parts['port']) && !empty($parts['port'])) ? ':'.$parts['port'] : '';
-	$baseurl = $parts['scheme'] . '://' . $parts['host'] . $port . $base_path;
-	if ($type == 'relative') $baseurl = $base_path;
-
+	
+	if ($type == 'relative')
+	{
+		$baseurl = $base_path;
+	}
+	else
+	{
+		$port = (isset($parts['port']) && !empty($parts['port'])) ? ':'.$parts['port'] : '';
+		$baseurl = $parts['scheme'] . '://' . $parts['host'] . $port . $base_path;
+	}
 	$params = array_merge( (array)$cur_request_vars, (array)$new_request_vars );
 	$link_pieces = array();
 	$params = urlencode_array_keys_and_values($params);
@@ -32,7 +38,7 @@ function carl_make_link( $new_request_vars = array(''), $base_path = '', $type =
 	{
 		if(is_array($val))
 		{
-			$link_pieces += flatten_array_for_url($key, $val);
+			$link_pieces = array_merge( $link_pieces, flatten_array_for_url($key, $val) );
 		}
 		elseif(strlen($val) > 0)
 		{
