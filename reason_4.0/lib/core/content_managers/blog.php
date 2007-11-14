@@ -64,15 +64,16 @@
 			if($this->_is_element('enable_comment_notification')) $this->change_element_type( 'enable_comment_notification', 'hidden' );
 			if($this->_is_element('enable_front_end_posting')) $this->change_element_type('enable_front_end_posting', 'hidden');
 			
+			$this->set_display_name('has_issues','Issue-based?');
+			$this->add_comments('has_issues', form_comment('Choose "no" for standard chronological display of posts.<br />Choose "yes" to group posts together into issues, similar to in a print-based magazine (note that you will need to set up at least one issue before any posts will appear).'));
+			
+			$this->set_display_name('has_sections','Broken into sections?');
+			$this->add_comments('has_sections', form_comment('Choose "no" for standard chronological display of posts.<br />Choose "yes" to group posts together into sections (note that you will need to create sections for your publication)'));
+			
 			// right now publication options are limited to blog, and has_issues and has_sections are disabled
 			
-			if (user_is_a( $this->admin_page->user_id, id_of( 'admin_role' )))
+			if (!user_is_a( $this->admin_page->user_id, id_of( 'admin_role' )))
 			{
-			}
-			else
-			{
-				$this->change_element_type( 'has_issues', 'hidden' ); // related issues do not change the display of a blog
-				$this->change_element_type( 'has_sections', 'hidden' ); // sections will work if attached to blogs - this flag is not followed reliably
 				if (!$this->get_value( 'publication_type' )) $this->set_value( 'publication_type', 'blog' );
 				$this->change_element_type( 'publication_type', 'solidtext' );
 			}			   
@@ -85,10 +86,12 @@
 																								  'j F Y' => date('j F Y'),
 																								  'j F Y \a\t  g:i a' => date('j F Y \a\t  g:i a'),
 																								  'j F Y \a\t  g:i a' => date('j F Y \a\t  H:i'), )));
-
+			$this->add_element('comment_comment','comment',array('text'=>'<h4>Commenting</h4>'));
+			$this->add_element('posting_comment','comment',array('text'=>'<h4>Posting on the public site</h4>'));
+			$this->add_element('issue_section_comment','comment',array('text'=>'<h4>Issues and sections</h4>'));
 			$this->set_order(array('name', 'publication_type', 'posts_per_page', 
-								   'blog_feed_string', 'description', 'date_format', 'allow_front_end_posting', 'notify_upon_post',
-								   'allow_comments', 'notify_upon_comment', 'hold_comments_for_review'));
+								   'blog_feed_string', 'description', 'date_format', 'posting_comment', 'allow_front_end_posting', 'notify_upon_post',
+								   'comment_comment','allow_comments', 'notify_upon_comment', 'hold_comments_for_review', 'issue_section_comment', 'has_issues','has_sections',));
 		}
 
 		function alter_display_names()
@@ -104,6 +107,7 @@
 			$this->set_comments('date_format',form_comment('Posts on this publication will use the date format that you select to show the date (and/or) time of publication.'));
 			$this->add_comments('notify_upon_post',form_comment('Who should be notified when a post is added to this publication? Enter usernames or email addresses, separated by commas. Leave this field blank if you don\'t want any notification to be sent.'));
 			$this->add_comments('notify_upon_comment',form_comment('Who should be notified when a comment is added to this publication? Enter usernames or email addresses, separated by commas. Leave this field blank if you don\'t want any notification to be sent.'));
+			$this->add_comments('allow_front_end_posting',form_comment('Check to enable simple posting on the publication itself (you can always post from inside Reason)'));
 			
 
 			if( $this->is_new_entity() || user_is_a( $this->admin_page->user_id, id_of( 'admin_role' ) ) )
