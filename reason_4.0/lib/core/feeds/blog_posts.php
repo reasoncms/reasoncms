@@ -1,6 +1,10 @@
 <?php
 
-/* This is the news feed */
+/**
+ * This is the feed generator for posts on a publication
+ *
+ * @package reason
+ */
 
 include_once( 'reason_header.php' );
 reason_include_once( 'feeds/page_tree.php' );
@@ -83,10 +87,18 @@ class blogPostsFeed extends pageTreeFeed
 			if($issue_id = $this->_get_latest_published_issue_id($this->blog->id()))
 			{
 				$this->feed->es->add_left_relationship( $issue_id , relationship_id_of( 'news_to_issue' ) );
+				$this->feed->es->set_num(999); // show all posts in issue up to a reasonable number
 			}
 			else
 			{
 				$this->feed->es->add_relation('1 = 2'); // don't show any posts if there are no shown issues
+			}
+		}
+		else
+		{
+			if($this->blog->get_value('posts_per_page'))
+			{
+				$this->feed->es->set_num($this->blog->get_value('posts_per_page'));
 			}
 		}
 		
