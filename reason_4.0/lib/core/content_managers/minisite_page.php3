@@ -103,7 +103,7 @@
 						$options[ $k ] = prettify_string( $k );
 					}
 					$this->change_element_type( 'custom_page' , 'select' , array( 'options' => $options ) );
-					$this->set_comments( 'custom_page', form_comment('Further information about page types can be found <a href="'.REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php"> here </a>.') );
+					$this->set_comments( 'custom_page', form_comment('<a href="'.REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php">Page type definitions</a>.') );
 
 				}
 				
