@@ -78,7 +78,36 @@ class blogPostsFeed extends pageTreeFeed
 		$this->feed->es->add_relation( 'status.status != "pending"' );
 		$this->feed->es->add_relation( 'dated.datetime <= NOW()' );
 		
+		if($this->blog->get_value('has_issues') == 'yes')
+		{
+			if($issue_id = $this->_get_latest_published_issue_id($this->blog->id()))
+			{
+				$this->feed->es->add_left_relationship( $issue_id , relationship_id_of( 'news_to_issue' ) );
+			}
+			else
+			{
+				$this->feed->es->add_relation('1 = 2'); // don't show any posts if there are no shown issues
+			}
+		}
+		
 		$this->feed->es->add_left_relationship( $this->blog->id() , relationship_id_of( 'news_to_publication' ) );
+	}
+	function _get_latest_published_issue_id($blog_id)
+	{
+		$es = new entity_selector();
+		$es->add_type(id_of('issue_type'));
+		$es->add_left_relationship($blog_id, relationship_id_of('issue_to_publication'));
+		$es->limit_tables(array('dated','show_hide'));
+		$es->set_num(1);
+		$es->set_order( 'datetime DESC' );
+		$es->add_relation('show_hide.show_hide = "show"');
+		$issues = $es->run_one();
+		if(!empty($issues))
+		{
+			$issue = current($issues);
+			return $issue->id();
+		}
+		return false;
 	}
 }
 
