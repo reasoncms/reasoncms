@@ -408,10 +408,18 @@ class PublicationModule extends Generic3Module
 				$news_item_descriptor = 'articles';
 			}
 			
-			if($this->has_issues()) // means publication is set to use issues and the publication has related issues
+			if($this->publication->get_value('has_issues') == 'yes')
+			{
+				$this->init_issue();
+			}
+			if(!empty($this->issue_id)) // means publication is set to use issues and the publication has related issues
 			{
 				$publication_descriptor = 'issue';
-				$this->init_issue();
+			}
+			
+			if(!empty($this->request['search']))
+			{
+				$news_item_descriptor .= ' that match the search phrase "'.reason_htmlspecialchars($this->request['search']).'"';
 			}
 		
 			$this->no_items_text = 'This '.$publication_descriptor.' does not have any '.$news_item_descriptor.'.';
@@ -447,7 +455,7 @@ class PublicationModule extends Generic3Module
 				$issues =& $this->get_issues();
 				$issue_keys = array_keys($issues);
 			}
-			elseif (!$requested_section) // if no section requested set an issue_id
+			elseif ($this->_should_restrict_to_current_issue() ) // if no section requested set an issue_id
 			{
 				$most_recent_issue = $this->get_most_recent_issue();
 				$this->issue_id = $most_recent_issue->id();
@@ -468,6 +476,14 @@ class PublicationModule extends Generic3Module
 				exit;
 			}
 		}
+	}
+	
+	function _should_restrict_to_current_issue()
+	{
+		if(empty($this->current_item_id) && empty($this->request['section_id'])&& empty($this->request['issue_id']) && empty($this->request['search']) && empty($this->request['filters']))
+			return true;
+		else
+			return false;
 	}
 	
 	/**
@@ -540,9 +556,18 @@ class PublicationModule extends Generic3Module
 			$this->es->add_left_relationship( $this->publication->id(), relationship_id_of('news_to_publication') );
 			if($this->publication->get_value('has_issues') == 'yes')
 			{
-				if(!empty($this->issue_id))
+				if($issues = $this->get_issues())
 				{
-					$this->es->add_left_relationship( $this->issue_id, relationship_id_of('news_to_issue') );
+					if(!empty($this->issue_id))
+					{
+						$this->es->add_left_relationship( $this->issue_id, relationship_id_of('news_to_issue') );
+					}
+					else
+					{
+						// limit to shown issues in publication here so that people can't discover unpublished stories through search, etc.
+						$this->es->add_left_relationship(array_keys($issues), relationship_id_of('news_to_issue') );
+						
+					}
 				}
 				else
 				{
@@ -1973,6 +1998,13 @@ class PublicationModule extends Generic3Module
 				$this->user_netID = reason_check_authentication();
 			}
 			return $this->user_netID;
+		}
+		
+		function alter_relationship_checker_es($es)
+		{
+			$es->add_left_relationship( $this->publication->id(), relationship_id_of('news_to_publication') );
+			$es->add_relation('status.status = "published"');
+			return $es;
 		}
 	}
 ?>
