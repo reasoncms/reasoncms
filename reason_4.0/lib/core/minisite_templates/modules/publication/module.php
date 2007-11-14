@@ -538,9 +538,16 @@ class PublicationModule extends Generic3Module
 		{
 			$this->es->set_order( 'dated.datetime DESC' );
 			$this->es->add_left_relationship( $this->publication->id(), relationship_id_of('news_to_publication') );
-			if(!empty($this->issue_id))
+			if($this->publication->get_value('has_issues') == 'yes')
 			{
-				$this->es->add_left_relationship( $this->issue_id, relationship_id_of('news_to_issue') );
+				if(!empty($this->issue_id))
+				{
+					$this->es->add_left_relationship( $this->issue_id, relationship_id_of('news_to_issue') );
+				}
+				else
+				{
+					$this->es->add_relation('1 = 2'); // if it is an issued publication without any issues associated, don't show any posts
+				}
 			}
 			if(!empty($this->request['section_id']))
 			{
