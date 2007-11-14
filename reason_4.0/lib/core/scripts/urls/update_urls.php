@@ -5,11 +5,20 @@
 	reason_include_once( 'function_libraries/user_functions.php' );
 	force_secure_if_available();
 	$current_user = check_authentication();
+	
+	echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'."\n";
+	echo '<html>'."\n";
+	echo '<head>'."\n";
+	echo '<title>Update Reason URLs</title>'."\n";
+	echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'."\n";
+	echo '<meta name="robots" content="none" />'."\n";
+	echo '</head>'."\n";
+	echo '<body>'."\n";
+	
 	if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
 	{
 		die('<h1>Sorry.</h1><p>You do not have permission to update urls.</p><p>Only Reason users who have the Administrator role may do that.</p></body></html>');
 	}
-
 
 	$es = new entity_selector();
 	$es->add_type( id_of( 'site' ) );
@@ -106,4 +115,6 @@
 		}
 		echo '<br />done';
 	}
+	echo '</body>'."\n";
+	echo '</html>'."\n";
 ?>
