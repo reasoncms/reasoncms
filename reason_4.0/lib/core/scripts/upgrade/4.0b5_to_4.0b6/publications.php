@@ -39,6 +39,7 @@ class pubUpdaterb5b6
 		
 		// The updates
 		$this->update_default_issue_view();
+		$this->update_section_content_manager();
 	}
 
 	function update_default_issue_view()
@@ -146,6 +147,31 @@ class pubUpdaterb5b6
 		$field = current($fields);
 		return $field->id();
 	}
+	
+	function update_section_content_manager()
+	{
+		$type = new entity(id_of('news_section_type'));
+		if($type->get_value('custom_content_handler'))
+		{
+			echo '<p>Section type already has a content manager. No need to update.</p>'."\n";
+			return;
+		}
+		if($this->mode == 'run')
+		{
+			if(reason_update_entity( $type->id(), $this->reason_user_id, array('custom_content_handler'=>'news_section.php') ) )
+			{
+				echo '<p>Section content manager successfully updated</p>'."\n";
+			}
+			else
+			{
+				echo '<p>Section content manager not updated. Go to master admin -&gt; Types -&gt; News Section and set the Content Manger field to "News Section."</p>'."\n";
+			}
+		}
+		else
+		{
+			echo '<p>Would have updated the section type to use the content manager news_section.php</p>'."\n";
+		}
+	}
 }
 
 force_secure_if_available();
@@ -164,6 +190,7 @@ if(empty($reason_user_id))
 <p>What will this update do?</p>
 <ul>
 <li>If you have not already set up a default view for issues, this script will create a default issue view that displays information about issue visibility and date</li>
+<li>Set up sections to use the new section content manager (if they do not already have a content manager)</li>
 </ul>
 <form method="post"><input type="submit" name="go" value="test" /><input type="submit" name="go" value="run" /></form>
 <?
