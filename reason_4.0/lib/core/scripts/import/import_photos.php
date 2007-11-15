@@ -2,7 +2,7 @@
 	/**
 	 * Bulk Image Import
 	 *
-	 * @package Reason_Core
+	 * @package reason
 	 * @subpackage scripts
 	 *
 	 * This script will run through a define directory( INCOMING_DIR ), and make Reason
