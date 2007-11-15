@@ -4,7 +4,7 @@
 	 *
 	 * Handles batch importing of images
 	 *
-	 * @package Reason_Core
+	 * @package reason
 	 * @author Matt Ryan, mryan@acs.carleton.edu
 	 */
 	reason_include_once('classes/admin/modules/default.php');
