@@ -2,7 +2,7 @@
 	/**
 	 * Content Previewer
 	 * @author Brendon Stanton
-	 * @package Reason_Core
+	 * @package reason
 	 */
 
 	/**
