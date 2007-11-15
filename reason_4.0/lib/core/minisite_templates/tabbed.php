@@ -3,7 +3,7 @@
 /** Tabbed Template
  * Uses the Basic Tabs Navigation to provide the top level of site as tabs
  * @author Matt Ryan
- * @package Reason
+ * @package reason
  */
 
 // include the MinisiteTemplate class
