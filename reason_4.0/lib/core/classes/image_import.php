@@ -7,7 +7,7 @@
 	/**
 	 * Form to upload and add bulk metadata to images
 	 *
-	 * @package Reason_Core
+	 * @package reason
 	 * @author Dave Hendler, Matt Ryan
 	 */
 	class PhotoUploadForm extends disco
