@@ -16,7 +16,7 @@
  *  	$obj =& $cache->fetch();
  *  </code>
  *
- *	@package Reason_Core
+ *	@package reason
  *  @author Nathan White
  *  @todo more error checking - especially during file system transactions
  *  @todo option to save in database instead of file system
