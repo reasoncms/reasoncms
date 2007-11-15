@@ -1,39 +1,48 @@
 <?php
+/**
+ * @package thor
+ */
 
-/////////////////////////////////////////////////
-// This class transforms an appropriately-constructed xml file into an html form.
-//
-// For example:
-//
-//	<form email="fillmorn@carleton.edu" nextpage="http://www.carleton.edu" submit="Enter" reset="Clear">
-//		<input id="first_name" value="Nathanael" size="20" maxlength="40" label="First name:" required="required" />
-//		<hidden id="last_name" value="Fillmore" />
-//		<textarea id="message" value="Dear Mr. President, You look like a monkey. Sincerely, Nathanael Fillmore"
-//		          cols="40" rows="10" label="Message for the President:" required="required" />
-//		<radiogroup id="affiliation" label="Are you a student, faculty, or staff?" required="required">
-//			<radio selected="selected" value="student" label="Student" />
-//			<radio value="faculty" label="Faculty" />
-//			<radio value="staff" label="Staff" />
-//		</radiogroup>
-//		<checkboxgroup id="complaint" label="Which of these describes your complaint?" required="required">
-//			<checkbox selected="selected" label="You're arrogant, Mr. President" value="arrogance" />
-//			<checkbox selected="selected" label="You're a bad speaker, Mr. President" value="badspeaker" />
-//			<checkbox label="Those monkey ears of your are just too damn handsome, Mr. President" value="handsome" />
-//		</checkboxgroup>
-//		<optiongroup id="replacement" label="Who's your favorite replacement?" size="3" required="required">
-//			<option value="john kerry" label="John Kerry" />
-//			<option selected="selected" value="howard dean" label="Howard Dean" />
-//		</optiongroup>
-//	</form>
-//
-// Created 26/Nov/2003, Nathanael Fillmore
-/////////////////////////////////////////////////
-
-// 4/10/2006 added ability to save form data to a database  - nwhite
-
+/**
+ * Include dependencies
+ */
 require_once( THOR_INC .'disco_thor.php');
 include_once(TYR_INC.'tyr.php');
 require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
+
+/**
+ * Thor: builds an html form out of xml data and handles processing of form inputs
+ *
+ * Example XML:
+ * 
+ * <pre>
+ * <form email="fillmorn@carleton.edu" nextpage="http://www.carleton.edu" submit="Enter" reset="Clear">
+ * 	<input id="first_name" value="Nathanael" size="20" maxlength="40" label="First name:" required="required" />
+ * 	<hidden id="last_name" value="Fillmore" />
+ * 	<textarea id="message" value="Dear Mr. President, You look like a monkey. Sincerely, Nathanael Fillmore"
+ * 	          cols="40" rows="10" label="Message for the President:" required="required" />
+ * 	<radiogroup id="affiliation" label="Are you a student, faculty, or staff?" required="required">
+ * 		<radio selected="selected" value="student" label="Student" />
+ * 		<radio value="faculty" label="Faculty" />
+ * 		<radio value="staff" label="Staff" />
+ * 	</radiogroup>
+ * 	<checkboxgroup id="complaint" label="Which of these describes your complaint?" required="required">
+ * 		<checkbox selected="selected" label="You're arrogant, Mr. President" value="arrogance" />
+ * 		<checkbox selected="selected" label="You're a bad speaker, Mr. President" value="badspeaker" />
+ * 		<checkbox label="Those monkey ears of yours are just too damn handsome, Mr. President" value="handsome" />
+ * 	</checkboxgroup>
+ * 	<optiongroup id="replacement" label="Who's your favorite replacement?" size="3" required="required">
+ * 		<option value="john kerry" label="John Kerry" />
+ * 		<option selected="selected" value="howard dean" label="Howard Dean" />
+ * 	</optiongroup>
+ * 	</form>
+ *	</pre>
+ *
+ * Note: 4/10/2006 added ability to save form data to a database  - nwhite
+ *
+ * @author Nathanael Fillmore, Nate White
+ * @since 26 November 2003
+ */
 
 class Thor
 {
