@@ -3,7 +3,7 @@
 /** Default with Tables
  * Extends the default template to turn tables on. Includes no branding.
  * @author Ben Cochran
- * @package Reason
+ * @package reason
  */
 
 // include the MinisiteTemplate class
