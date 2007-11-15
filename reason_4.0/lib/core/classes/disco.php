@@ -1,5 +1,9 @@
 <?php
-	
+	/**
+	 *  @package reason
+	 *  @subpackage classes
+	 */
+	 
 	include_once (DISCO_INC . 'disco.php');
 	/**
 	*  Disco Reason 2
@@ -9,8 +13,6 @@
 	* There was once DiscoReason; hence the name
 	*
 	*  @author dave hendler
-	*  @package Reason_Core
-	*  @subpackage classes
 	*/
 	class DiscoReason2 extends Disco
 	{
