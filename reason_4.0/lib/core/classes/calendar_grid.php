@@ -1,7 +1,7 @@
 <?php
 /**
 * A class to generate the HTML necessary to make a calendar with linked dates.
-* @package calendar_grid
+* @package reason
 * @author Meg Gibbs
 * 21-7-2005
 */
