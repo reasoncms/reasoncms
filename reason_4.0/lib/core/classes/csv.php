@@ -2,7 +2,7 @@
 
 /**
  * Simple CSV Class
- * @package Reason
+ * @package reason
  * @author nwhite
  *
  * This class is a basic CSV class which can read (and minimally write to) a .csv file stored in the filesystem
