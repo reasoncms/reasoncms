@@ -1,7 +1,7 @@
 <?php
 /**
  *	Default Filter Display
- * @package Reason_Core
+ * @package reason
  */
  
 $GLOBALS['_reason_filter_displayers'][basename(__FILE__)] = 'defaultFilterDisplay';
