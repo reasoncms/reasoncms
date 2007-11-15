@@ -2,8 +2,8 @@
 	/**
 	  *	Admin Actions
 	  *	These are actions that modify the database.
-	  *	@author Dave Hendler 2002
-	  * 	@package Reason_Core
+	  *	@author Dave Hendler, Matt Ryan, Nate White
+	  * @package reason
 	  */
 	
 	// get the SQLER object for simple queries
