@@ -1,6 +1,6 @@
 <?
 /**
-* @package Reason_Core
+* @package reason
 * @author Matt Ryan
 * 
 * A directory service interface for Reason
