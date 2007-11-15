@@ -1,7 +1,7 @@
 <?php
 /**
  * Filter Display with Gallery2-Specific features
- * @package Reason_Core
+ * @package reason
  */
 reason_include_once('minisite_templates/modules/filter_displayers/default.php');
 $GLOBALS['_reason_filter_displayers'][basename(__FILE__)] = 'galleryFilterDisplay';
