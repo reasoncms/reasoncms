@@ -1,7 +1,7 @@
 <?php
 /**
  * Default Minisite Navigation
- * @package Reason_Core
+ * @package reason
  */
  
  	/**
