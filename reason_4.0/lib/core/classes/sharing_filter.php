@@ -7,7 +7,7 @@
 	/**
 	 * New Filter class designed for sharing module.  Allows user to search by site.
 	 * @author Brendon Stanton
-	 * @package Disco
+	 * @package reason
 	 */
 	class sharing_filter extends filter
 	{
