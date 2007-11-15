@@ -2,7 +2,7 @@
 
 	/**
 	 * The group helper
-	 * @package Reason_Core
+	 * @package reason
 	 */
 	 
 	include_once( 'reason_header.php' );
