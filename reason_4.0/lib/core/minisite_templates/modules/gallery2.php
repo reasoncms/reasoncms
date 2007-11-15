@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package reason
+ * @subpackage Minisite_Module
+ */
 
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'Gallery2Module';
 reason_include_once( 'minisite_templates/modules/generic3.php' );
@@ -6,9 +10,6 @@ reason_include_once( 'minisite_templates/modules/generic3.php' );
 /**
  * New image gallery. Based on Generic3, gets rid of pop-ups for images
  * and includes next and previous links on image page.
- *
- * @package Reason_Core
- * @subpackage Minisite_Module
  *
  * @author Ben Cochran
  **/
