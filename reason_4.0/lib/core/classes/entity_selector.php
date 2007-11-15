@@ -135,7 +135,6 @@
 	 * entity_selector class
 	 * Extension of DBSelector used for grabbing an array of entity objects.
 	 * @author Brendon Stanton
-	 * @package Reason_Core
 	 */
 	class entity_selector extends DBSelector // {{{
 	{ 
