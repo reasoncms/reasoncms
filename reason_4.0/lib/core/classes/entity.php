@@ -25,7 +25,7 @@ connectDB(REASON_DB);
  * column doesn't exist, it returns false.
  *
  * @author Brendon Stanton
- * @package Reason_Core
+ * @package reason
  */
 class entity
 {
