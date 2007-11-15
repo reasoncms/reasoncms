@@ -3,7 +3,7 @@
 	 * entity_selector
 	 * A core piece of Reason; grabs entities out of the database
 	 * @author Brendon Stanton
-	 * @package Reason_Core
+	 * @package reason
 	 */
 	 
 	/**
