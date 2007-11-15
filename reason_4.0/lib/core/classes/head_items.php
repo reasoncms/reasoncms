@@ -16,7 +16,7 @@
  *		$head_html = $head_item->get_head_items_html();
  *  </code>
  *
- *	@package Reason_Core
+ *	@package reason
  *  @author Nathan White and the author(s) of functions that I lifted from the default template
  */
 
