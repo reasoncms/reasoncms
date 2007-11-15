@@ -51,7 +51,7 @@
 	 *
 	 * }}}
 	 * @author Brendon Stanton and Dave Hendler
-	 * @package Reason_Core
+	 * @package reason
 	 */
 	
 	/**
