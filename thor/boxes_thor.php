@@ -1,8 +1,20 @@
 <?php
+/**
+ * @package thor
+ */
 
+/**
+ * Include parent class
+ */
 include_once('paths.php');
 include_once( DISCO_INC . 'boxes/boxes.php');
 
+/**
+ * A special box class to handle unique characteristics of thor forms
+ *
+ * Mostly just adds the class thorTable to the table and adds a note 
+ * explaining that fields with asterisks are required.
+ */
 class BoxThor extends Box
 {
 	function head()
