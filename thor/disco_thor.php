@@ -1,10 +1,21 @@
 <?php
+/**
+ * @package thor
+ */
 
+/**
+ * Include dependencies
+ */
 include_once( 'paths.php' );
 require_once( DISCO_INC.'disco.php' );
 require_once( DISCO_INC.'plasmature/plasmature.php' );
 require_once( THOR_INC.'boxes_thor.php' );
 
+/**
+ * The Disco form used by Thor to display thor forms
+ * 
+ * Mostly handles the sending of emails -- probably could be factored out of existence someday
+ */
 class DiscoThor extends Disco
 {
 	var $box_class = 'BoxThor';
