@@ -1,4 +1,8 @@
 <?php
+/**
+ * Provides a web service for the Thor WYSIWYG editor to update the temporary XML file in the DB
+ * @package thor
+ */
 
 include_once('paths.php');
 include_once ( SETTINGS_INC.'thor_settings.php' );
