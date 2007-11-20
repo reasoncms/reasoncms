@@ -9,7 +9,7 @@
 	/**
 	 * An extension of the basic box class, designed specifically for reason.
 	 * @author Brendon Stanton
-	 * @package disco
+	 * @package reason
 	 */
 	class filter_box extends Box //{{{
 	{
@@ -70,7 +70,7 @@
 	 * then creates a form object.  Takes all global variables and puts them into hidden
 	 * fields.
 	 * @author Brendon Stanton
-	 * @package Disco
+	 * @package reason
 	 */
 	class filter extends Disco
 	{
