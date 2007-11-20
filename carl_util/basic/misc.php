@@ -6,6 +6,7 @@ if( !defined( '__INC_DAVE_MISC' ) )
 	include_once('date_funcs.php');
 	include_once('url_funcs.php');
 	include_once('cleanup_funcs.php');
+	include_once('html_funcs.php');
 	
 	/**
 	 * Use both keys and values to produce imploded string
@@ -423,48 +424,6 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 		else
 			return true;
 	}
-	
-	/**
-	 * Performs tag replacement in an XHTML string
-	 * @param string $xhtml the xhtml string needing tag replacement
-	 * @param array $tag_array an array mapping any number of html tags (keys) to replacement tags (values)
-	 * @return string $output the xhtml string with replacement tags
-	 */
-	function tagTransform($xhtml, $tag_array)
-	{
-		$output = preg_replace("/(<\/?)(\w+)([^>]*>)/e", "'\\1'._tagMap('\\2', \$tag_array ).stripslashes('\\3')", $xhtml);
-		return $output;
-	}
-	
-	/**
-	 * Performs a search / replace of a tag in an XHTML string
-	 * @param string $xhtml the xhtml string needing tag replacement
-	 * @param string $tag_original xhtml tag to be replaced
-	 * @param string $tag_replace the xhtml tag which replaces $tag_original
-	 * @return string $output the xhtml string with $tag_replace substituted for $tag_original
-	 */
-	function tagSearchReplace($xhtml, $tag_original, $tag_replace)
-	{
-		$tag_array = array($tag_original => $tag_replace);
-		$output = tagTransform($xhtml, $tag_array);
-		return $output;
-	}
-
-	/**
-	 * Helper function for tagTransform
-	 * @param string $value a single xhtml tag extracted from an xhtml string
-	 * @param array $transform_array an array mapping tags which need to be replaced
-	 * @return string $value returns the replaced value
-	 */
-	 
-	function _tagMap($value, $transform_array)
-	{
-		if (isset($transform_array[$value]))
-		{
-			return $transform_array[$value];
-		}
-		else return $value;
-	}
 
 	function securest_available_protocol()
 	{
@@ -495,26 +454,5 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 		return $is_windows;
 	}
 	
-	/**
-	 * Determine if an HTML snippet is essentially empty -- e.g. is there no actual content in the HTML?
-	 *
-	 * e.g. '<p><em></em><br /></p>' should return true -- there is no content here
-	 * '<img src="foo.gif" alt="foo" />' and '<p>foo</p>' should return false -- these contain real content
-	 *
-	 * @param string $string
-	 * @return boolean
-	 */
-	function carl_empty_html($string)
-	{
-		if( empty( $string ) )
-				return true;
-		elseif(strlen($string) < 256)
-		{
-			$trimmed = trim(strip_tags($string,'<img><hr><script><embed><object><form><iframe><input><select><textarea>'));
-			if(empty($trimmed))
-				return true;
-		}
-		return false;
-	}
 }
 ?>
