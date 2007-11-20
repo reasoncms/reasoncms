@@ -76,7 +76,8 @@ class blogPostsFeed extends pageTreeFeed
 		$this->feed->set_item_field_map('description','description');
 		$this->feed->set_item_field_map('pubDate','datetime');
 		
-		$this->feed->set_item_field_handler( 'description', 'strip_tags', false );
+		$this->feed->set_item_field_handler( 'description', 'expand_all_links_in_html', false );
+		
 		$this->feed->es->add_relation( 'show_hide.show_hide = "show"' );
 		$this->feed->es->set_order( 'datetime DESC' );
 		$this->feed->es->add_relation( 'status.status != "pending"' );
