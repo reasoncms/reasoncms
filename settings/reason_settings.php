@@ -5,7 +5,7 @@
  * This file contains all of the settings needed for Reason to function
  * (except for those in paths.php.) Many of these settings can/should be altered to match
  * the environment for this Reason instance.
- * @package Reason_Core
+ * @package reason
  */
  	include_once( 'paths.php');
 	
