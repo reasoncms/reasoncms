@@ -1,14 +1,24 @@
 <?
-/*
-access log regex builder
+/**
+ * @package reason
+ */
 
-bstanton34490.publications.carleton.edu - - [15/Mar/2004:09:36:16 -0600] "GET /test/joswald/ HTTP/1.1" 200 7519 "-" "Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.6) Gecko/20040113"
-(.*\..*\..*\..*) (.*) (.*) [.*] "ACTION DIR METHOD" (3-DIGIT RESPONSE) (BYTES) (\".*\") (\"AGENT\/VERSION (.*)\")
-host usr1 usr2 time request response length something agent
-*/
+/**
+ * Include dependencies
+ */
 
 include_once( 'reason_header.php' );
 include_once( REASON_INC . 'function_libraries/regex_builder.php' );
+
+/**
+ * access log regex builder -- creates regular expressions for parsing the apache logs to grab minisite stats
+ 
+Example line from apache log
+bstanton34490.publications.carleton.edu - - [15/Mar/2004:09:36:16 -0600] "GET /test/joswald/ HTTP/1.1" 200 7519 "-" "Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.6) Gecko/20040113"
+(.*\..*\..*\..*) (.*) (.*) [.*] "ACTION DIR METHOD" (3-DIGIT RESPONSE) (BYTES) (\".*\") (\"AGENT\/VERSION (.*)\")
+host usr1 usr2 time request response length something agent
+
+ */
 
 class access_log_regex_builder extends regex_builder
 {
