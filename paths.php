@@ -11,5 +11,5 @@
  *
  *
  */
-require_once('/usr/local/webapps/branches/test-apps/reason_package_local/settings_prod/package_settings.php');
+require_once('settings/package_settings.php');
 ?>
