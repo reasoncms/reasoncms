@@ -9,8 +9,7 @@
  * 2. change the constant SETTINGS_INC in package_settings.php to indicate the
  *    same directory.
  *
- * @package Reason_Core
  *
  */
-require_once('settings/package_settings.php');
+require_once('/usr/local/webapps/branches/test-apps/reason_package_local/settings_prod/package_settings.php');
 ?>
