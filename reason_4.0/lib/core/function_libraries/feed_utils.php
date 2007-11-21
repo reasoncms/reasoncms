@@ -1,5 +1,15 @@
 <?php
+/**
+ * Functions for working with feeds
+ * @package reason
+ */
 
+/**
+ * Make a standardized link to a feed
+ * @param string $url the url of the feed
+ * @param string $title the anchor title
+ * @param string $text the visible link text
+ */
 function make_feed_link( $url, $title = 'Link to feed', $text = 'xml' )
 {
 	$ret = '<div class="feedInfo"><a href="'.$url.'" title="'.$title.'">'.$text.'</a></div>';
