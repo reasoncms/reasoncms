@@ -1,12 +1,23 @@
 <?
-/*
-    Gets an array of directories and an array of actions (e.g. GET, POST) 
-    Returns a regular expression of the form:
-        
-        /\"(ACTION1|ACTION2|...|ACTIONn) ((\/DIRECTORY1\/|\/DIRECTORY2\/|...|\/DIRECTORYn\/).[^\"]+)/
-        
-    which matches a resource request in an apache log file
-*/
+/**
+ * Functions for building regular expressions 
+ * @package reason
+ */
+
+/**
+ * Builds a regular expressions designed to be used to extract requests for a particular Reason minisite from the entire server's access log
+ *
+ *  Gets an array of directories and an array of actions (e.g. GET, POST) 
+ *  Returns a regular expression of the form:
+ *   /\"(ACTION1|ACTION2|...|ACTIONn) ((\/DIRECTORY1\/|\/DIRECTORY2\/|...|\/DIRECTORYn\/).[^\"]+)/
+ *  
+ * which matches a resource request in an apache log file
+ *
+ * @param array $directories
+ * @param array $actions
+ *
+ * @todo rework to remove out-of-date Carleton-specific code specific to htdig
+ */
 
 function build_access_log_regex( $directories = array( '' ), $actions = array( 'GET', 'POST', 'PUT', 'DELETE' ) )
 {
