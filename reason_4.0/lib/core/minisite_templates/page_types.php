@@ -93,6 +93,14 @@
 			'sidebar'=>'',
 			'pre_sidebar' => '',
 		),
+		'publication_section_nav' => array(
+			'main_post'=>'publication',
+			'main_head' => 'publication/title',
+			'main'=>'publication/description',
+			'sidebar'=>'',
+			'pre_sidebar' => '',
+			'navigation'=>'publication/sections',
+		),
 		'publication_with_events_sidebar' => array(
 			'main_head' => 'publication/title',
 			'main'=>'publication/description',
