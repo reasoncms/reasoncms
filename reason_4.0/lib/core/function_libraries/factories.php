@@ -5,6 +5,8 @@
 	 *	9.9.04
 	 *
 	 *	This library is for factory functions that load the appropriate classes for a given system.
+	 *
+	 * @package reason
 	 */
 
 	function get_session_factory( $class )
