@@ -1,7 +1,27 @@
 <?php
+/**
+ * A module that displays the full news items in a list for easy printing, etc.
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+ /**
+  * Store the class name so the template can use this module
+  */
     $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'AllNewsModule';
+    
+ /**
+  * Include dependencies
+  */
     reason_include_once( 'minisite_templates/modules/news.php' );
     
+    /**
+     * Class for showing items if no issues are present on all_news module
+     *
+     * This class is an artifact of the old news framework.
+     *
+     * @todo Refactor this class out of existence
+     */
     class AllNewsNoIssueViewer extends no_issue_news_viewer
     {
         function show_item( $item )  // {{{
@@ -9,7 +29,14 @@
             AllNewsModule::show_story($item);
         }  // }}}
     }
-
+	
+	 /**
+     * Class for showing items if issues are present on all_news module
+     *
+     * This class is an artifact of the old news framework.
+     *
+     * @todo Refactor this class out of existence
+     */
     class AllNewsIssueViewer extends issue_news_viewer
     {
         function show_item( $item )  // {{{
@@ -22,6 +49,16 @@
 		}  // }}}
     }
 
+    /**
+	 * A module that displays the full news items in a list for easy printing, etc.
+	 *
+	 * NOTE: This is a convenience class that will probably not last much longer -- it uses really horrendous badness and is not publication-aware, so it will list *all* posts in the current site, regardless of publication. However, it is still needed because we do not natively support this functionality in the publication module
+	 *
+	 * Here's how one would replicate this functionality in the publications framework: 1. make a list item markup generator that shows the full content, etc. rather than the description; 2. make a page type that sets num_per_page to a really high number; 3. associate the appropriate publication with the page assigned the page type (it might be best to do it using the related publication approach, so that there is still a single "official" place where the publication exists.)
+	 *
+	 * @todo Make sure this functionality is built into the publication framework so we can deprecate this code. Use the approach outlined in the full description of this module.
+	 *
+	 */
     class AllNewsModule extends NewsMinisiteModule
     {
         function run()  // {{{
