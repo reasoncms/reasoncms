@@ -1,4 +1,13 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<?php
+/**
+ * This page provides an index to the beta1/2 -> beta3 upgrade
+ *
+ * NOTE: This page may not link to all the necessary files
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">

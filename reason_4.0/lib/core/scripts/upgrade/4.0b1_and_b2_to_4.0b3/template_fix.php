@@ -4,6 +4,8 @@
  * to the new one (move the branded out of the default and into local).
  * @author Ben Cochran
  * @date 2006-10-18
+ * @package reason
+ * @subpackage scripts
  */
 include_once('reason_header.php');
 reason_include_once('classes/entity_selector.php');

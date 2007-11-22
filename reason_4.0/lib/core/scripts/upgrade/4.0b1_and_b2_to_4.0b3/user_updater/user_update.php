@@ -1,4 +1,12 @@
 <?
+/**
+ * This script updates the reason database to that Reason can be used as a primary authentication service
+ *
+ * This script is part of the beta1/2 to beta 3 upgrade package
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 include ('reason_header.php');
 reason_include_once ('classes/field_to_entity_table_class.php');
 reason_include_once('classes/entity_selector.php');

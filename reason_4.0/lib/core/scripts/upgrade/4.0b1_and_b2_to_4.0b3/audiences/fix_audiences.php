@@ -1,4 +1,10 @@
 <?php
+/**
+ * This script updates reason beta 1 and beta 2 instances to use a more flexible entity-based audience system
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 set_time_limit( 0 );
 include_once('reason_header.php');
 reason_include_once('function_libraries/admin_actions.php');
