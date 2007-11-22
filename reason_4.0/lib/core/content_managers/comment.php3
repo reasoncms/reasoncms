@@ -1,6 +1,21 @@
 <?php
+/**
+ * A content manager for comments
+ * @package reason
+ * @subpackage content_managers
+ */
+ 
+  /**
+   * Store the class name so that the admin page can use this content manager
+   */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'commentManager';
 
+	/**
+	 * A content manager for comments
+	 *
+	 * This content manager modifies the editing interface for comments.
+	 *
+	 */
 	class commentManager extends ContentManager
 	{
 		function pre_show_form()
@@ -15,8 +30,7 @@
 			{
 				$news_item_names[] = '"'.$news_item->get_value('name').'"';
 			}
-			if (!empty($news_item_names)) echo '<h3>Comment made to '.implode(',',$news_item_names).'</h3>'."\n";
-			else echo '<h3>Comment (not attached to any news items)</h3>';		
+			if (!empty($news_item_names)) echo '<h3>Comment made to '.implode(', ',$news_item_names).'</h3>'."\n";
 		}
 		function alter_data() {
 			
