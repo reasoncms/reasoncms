@@ -1,12 +1,15 @@
 <?php
-	/*
+	/**
 	 *	Admin Page
 	 *
 	 *	Wraps up most of the funcionality of the Reason Admin
 	 *
-	 *	@package Reason_Core
+	 *	@package reason
 	 */
 
+	/**
+	 * Include dependencies
+	 */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'classes/viewer.php' );
 	reason_include_once( 'classes/entity_selector.php' );
@@ -14,7 +17,7 @@
 	reason_include_once( 'classes/head_items.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
 	
-	/*
+	/**
 	 *	Admin Page
 	 *
 	 *	Wraps up most of the funcionality of the Reason Admin
