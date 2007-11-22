@@ -1,4 +1,15 @@
 <?php
+/**
+ * The script that bootstraps the Reason administrative interface
+ *
+ * This is also where hooks to AJAXy calls are placed (though this should probably be changed), basic profiling, and initial authentication (e.g. does Reason know who you are)
+ *
+ * @package reason
+ * @subpackage admin
+ * @todo Remove the ini_set that fixes max upload filesize at 10 megs (though this does not seem to have the effect one would imagine, as larger files can be uploaded...)\
+ * @todo Develop a better system for supporting an XML/JSON/whatever API
+ */
+
 	//xdebug_start_trace();
 	//xdebug_start_profiling();
 	
