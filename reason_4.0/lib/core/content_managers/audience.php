@@ -1,6 +1,27 @@
 <?php
+/**
+ * A content manager for audience entities
+ * @package reason
+ * @subpackage content_managers
+ */
+ 
+ /**
+  * Include dependencies
+  */
+	reason_include_once( 'content_managers/default.php3' );
+ 
+ /**
+  * Define the class name so that the admin page can use this content manager
+  */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'audienceManager';
 
+	/**
+	 * A content manager for audience entities
+	 * 
+	 * This content manager costomizes the interface and error checking for managing audiences
+	 *
+	 * @todo Make sure that this content manager has actually been attached to the audience type via an upgrade script
+	 */
 	class audienceManager extends ContentManager
 	{
 		function alter_data()
