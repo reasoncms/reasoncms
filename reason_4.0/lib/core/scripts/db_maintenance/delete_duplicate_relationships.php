@@ -1,4 +1,15 @@
 <?php
+/**
+ * Deletes all but one from any sets of identical relationships
+ *
+ * This script is a useful tool to keep the Reason DB from getting too crufty.
+ * This script probably should be run regularly. In fact, it should probably be 
+ * made into a cron job at some point.
+ *
+ * @package reason
+ * @subpackage scripts
+ * @todo Add to crontab (and decide which mode to use in cron...)
+ */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
 	force_secure_if_available();
