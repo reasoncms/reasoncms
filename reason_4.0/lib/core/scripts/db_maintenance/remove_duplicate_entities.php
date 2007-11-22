@@ -4,6 +4,9 @@
  * Note: This scipt is not finding any duplicates.  I'm not currently sure if this is because there aren't any, or because there is something "off" about it.
  * In any case, this script should probably be considered experimental until we have it figured out.
  * --Matt Ryan, 2006-06-20
+ *
+ * @package reason
+ * @subpackage scripts
  */
 
 
