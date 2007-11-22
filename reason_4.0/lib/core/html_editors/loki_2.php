@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @package reason
+ */
+
 $GLOBALS[ '_html_editor_plasmature_types' ][ basename( __FILE__) ] = 'loki2';
 $GLOBALS[ '_html_editor_param_generator_functions' ][ basename( __FILE__) ] = 'get_loki_2_params';
 $GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_2_options';
@@ -43,10 +47,11 @@ $GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_2
 		$id_of_site_type = id_of('site');
 		$paths['site_feed'] = FEED_GENERATOR_STUB_PATH.'?type_id='.$id_of_site_type.'&site_id='.id_of('master_admin').'&feed=editor_sites';
 		$paths['finder_feed'] = FEED_GENERATOR_STUB_PATH.'?type_id='.$id_of_site_type.'&feed=editor_feed_finder';
+		$loki_obj = new Loki2('temp');
 		if(!empty($site_id))
 		{
 			$paths['image_feed'] = FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('image').'&feed=images&site_id='.$site_id;
-			$paths['default_site_regexp'] = Loki2::js_regexp_quote('//'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('type').'&site_id='.$site_id);
+			$paths['default_site_regexp'] = $loki_obj->js_regexp_quote('//'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('type').'&site_id='.$site_id);
 		}
 		else
 		{
@@ -54,7 +59,7 @@ $GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_2
 			$paths['default_site_regexp'] = '';
 			trigger_error('No site id passed to get_loki_paths');
 		}
-		$paths['default_type_regexp'] = Loki2::js_regexp_quote('//'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('minisite_page').'&site_id=').'[^&]*'.Loki2::js_regexp_quote('&feed=editor_links_for_minisite_page');
+		$paths['default_type_regexp'] = $loki_obj->js_regexp_quote('//'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('minisite_page').'&site_id=').'[^&]*'.$loki_obj->js_regexp_quote('&feed=editor_links_for_minisite_page');
 		return $paths;
 	}
 	
