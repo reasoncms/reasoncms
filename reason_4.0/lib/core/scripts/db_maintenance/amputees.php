@@ -1,5 +1,25 @@
 <?php
-	// amputees: entities without a record in its entity tables
+/**
+ * Fixes entities that do not have records in all their tables
+ *
+ * Amputees are entities that do not have records in all of their tables. 
+ * Amputees are generally invisible to Reason, since entities are grabbed all-at-once
+ * (Though for performance reasons entities are sometimes *not* grabbed with their tables, 
+ * so amputees in your database can cause inconsistent behavior)
+ *
+ * When this script is run, it will find all of the amputees in Reason and 
+ * fix them by creating records in the appropriate tables.
+ *
+ * This script must be run after a table is added to a type.  We should probably make 
+ * this script a cron job and/or have this code be run when finishing a type.
+ *
+ * @package reason
+ * @subpackage scripts
+ * @todo Put this script in the crontab
+ * @todo Add code to the type content manager to run the amputee fixer class 
+ *       (like this script does) whenever the type is finished, to immediately 
+ *       catch new tables added to the type
+ */
 
 	include_once( 'reason_header.php' );
 	include_once(CARL_UTIL_INC . 'db/db.php' );
@@ -27,7 +47,7 @@
 	<form method="post">
 	<p>Amputees are entities that do not have records in all of their tables. Amputees are generally invisible to Reason, since entities are grabbed all-at-once.</p>
 	<p>When this script is run, it will find all of the amputees in Reason and fix them by creating records in the appropriate tables.</p>
-	<p> This script must be run after a table is added to a type.  We should probably make this script a cron job and/or have this code be run when finishing a type.</p>
+	<p>This script must be run after a table is added to a type.  We should probably make this script a cron job and/or have this code be run when finishing a type.</p>
 	<input type="submit" name="do_it" value="Run the script" />
 	</form>
 	<?php
