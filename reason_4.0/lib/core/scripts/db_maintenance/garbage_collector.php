@@ -1,7 +1,17 @@
 <?php
-	// reason garbage collecter
-	// runs periodically and deletes all entities marked for deletion at least one week ago.
-	// dave hendler 12/3/02
+/**
+ * Reason garbage collector
+ *
+ * runs periodically and deletes all entities marked as deleted at least two weeks ago.
+ *
+ * Also deleted pending entities without names that are more than 2 days old (e.g. someone created a new entity but never actually submitted the form that would have populated the entity)
+ *
+ * @author Dave Hendler, 12/3/02
+ * @package reason
+ * @subpackage scripts
+ * @todo We should provide Reason administrators some level of control over how long they want to keep deleted entities around
+ * @todo We should give Reason administrators the choice to log or archive the deleted entities' data somewhere in case things are deleted which should not have been
+ */
 	
 	include_once( 'reason_header.php' );
 	include_once( CARL_UTIL_INC . 'db/db.php' );
