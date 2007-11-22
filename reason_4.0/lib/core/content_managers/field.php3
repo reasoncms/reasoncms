@@ -1,8 +1,27 @@
 <?php
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/**
+ * A content manager for database fields
+ * @package reason
+ * @subpackage content_managers
+ */
+ 
+ /**
+  * Include dependencies
+  */
 	reason_include_once( 'content_managers/associator.php3' );
+	
+ /**
+  * Store the class name so that the admin page can use this content manager
+  */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'FieldManager';
 	
+	/**
+	 * A content manager for database fields
+	 *
+	 * @todo Stop inheriting from the associator manager so we can remove the associator manager entirely -- 
+	 *       use the add_relationship_element() functionality built in to all content managers 
+	 *       to take care of the field-to-table relationship.
+	 */
 	class FieldManager extends associatorManager
 	{
 		function alter_data() // {{{
@@ -29,7 +48,7 @@
 		{
 			// alter tables accordingly
 			$tables = get_entities_by_type_name( 'content_table' );
-			if( $this->get_value( 'field_to_entity_table' ) != $this->original_rel['id'] )
+			if( empty($this->original_rel['id']) || $this->get_value( 'field_to_entity_table' ) != $this->original_rel['id'] )
 			{
 				if( !$this->is_new_entity() )
 				{
