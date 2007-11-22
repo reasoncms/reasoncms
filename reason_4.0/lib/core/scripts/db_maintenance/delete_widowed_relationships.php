@@ -1,4 +1,15 @@
 <?php
+/**
+ * Deletes relationships that do not have an entity on one or the other side.
+ *
+ * If one or both of the entities of a relationship have been expunged from the Reason database -- but the relationship still exists -- then the relationship is "widowed." This is one of the types of data cruft that can build up in a relational database without transactions.
+ *
+ *	This script deletes any widowed relationships in Reason. It should probably should be run regularly. In fact, it should probably be made into a cron job at some point.
+ *
+ * @package reason
+ * @subpackage scripts
+ * @todo Add to crontab
+ */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'function_libraries/admin_actions.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
