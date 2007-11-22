@@ -1,9 +1,24 @@
 <?php
+/**
+ * A content manager for assets (e.g. files/documents)
+ * @package reason
+ * @subpackage content_managers
+ */
+ 
+ /**
+  * Include dependencies
+  */
 	reason_include_once( 'classes/url_manager.php' );
 	reason_include_once( 'content_managers/default.php3' );
 
+ /**
+  * Define the class name so that the admin page can use this content manager
+  */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'AssetManager';
 
+ /**
+  * A content manager for assets (e.g. files/documents)
+  */
 	class AssetManager extends ContentManager
 	{
 		var $form_enctype = 'multipart/form-data';
