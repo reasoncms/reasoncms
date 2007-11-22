@@ -1,8 +1,10 @@
 <?php
 /**
  * This file includes a number of core libraries and functions needed by reason
+ *
  * It is included by reason_header.php and should not be included by anything else directly
  *
+ * @package reason
  */
 	include_once( CARL_UTIL_INC.'error_handler/error_handler.php' );
 	
