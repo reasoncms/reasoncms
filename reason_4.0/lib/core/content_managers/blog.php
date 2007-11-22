@@ -1,11 +1,21 @@
 <?php
 /**
- * Content manager for publications
+ * Content manager for publications/blogs
  * @package reason
+ * @subpackage content_managers
  */
+ 
+  /**
+   * Store the class name so that the admin page can use this content manager
+   */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'BlogManager';
+	
 	/**
 	 * Content manager for publications
+	 *
+	 * Customizes the form used to manage publications (e.g. blogs, newsletters, etc.) so that helpful comments, nice labels, etc. are used.
+	 *
+	 * Also handles error checking to make sure publications do not share a feed URL, and ensures the current site has all the necessary types for a given publication to function properly (e.g. issues, sections, comments, etc.)
 	 * 
 	 * @todo Add js-based show/hide stuff to simplify form (e.g. only show comment-related fields when commenting is enabled)
 	 */
