@@ -1,6 +1,14 @@
 <?php
+/**
+ * Content manager for publications
+ * @package reason
+ */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'BlogManager';
-
+	/**
+	 * Content manager for publications
+	 * 
+	 * @todo Add js-based show/hide stuff to simplify form (e.g. only show comment-related fields when commenting is enabled)
+	 */
 	class BlogManager extends ContentManager
 	{
 		function alter_data()
