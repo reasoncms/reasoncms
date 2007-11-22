@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Script that helps find conflicting and/or badly formatted unique names
+ * @package reason
+ * @subpackage scripts
+ */
 	include_once( 'reason_header.php' );
 	include_once(CARL_UTIL_INC . 'db/db.php' );
 	include_once(CARL_UTIL_INC . 'dev/pray.php' );
