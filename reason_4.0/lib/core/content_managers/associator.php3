@@ -1,4 +1,10 @@
 <?php
+/**
+ * An abstract(ish) content manager that handles associating relationships
+ *
+ * @package reason
+ * @subpackage content_managers
+ */
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//
 	//		this line is important - make sure any content handlers have this variable set in their include files!!!!
@@ -7,6 +13,17 @@
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	reason_include_once( 'classes/entity_selector.php' );
 	
+	/**
+	 * An abstract(ish) content manager that handles associating relationships
+	 * 
+	 * NOTE: this class is deprecated (though it is still used by the field content manager).
+	 * Using the add_relationship_element() functionality built into the default content manager
+	 * is much safer, more powerful, and more flexible than the method used in this class.
+	 *
+	 * @deprecated
+	 * @todo rework the field content manager to use the standard add_relationship_element() method of handling relationships
+	 * @todo remove this class entirely
+	 */
 	class associatorManager extends ContentManager
 	{	
 		function prep_for_run( $site_id, $type_id, $id, $user_id ) // {{{
@@ -119,15 +136,25 @@
 				else
 				{
 					$values = $this->get_value( $row[ 'name' ] );
-					while( list( , $val) = each( $values ) )
+					if(is_array($values))
 					{
-						if($val)  //val may have value "", in which case it could cause a mysql error...this eliminates that
+						foreach($values as $val )
 						{
-							create_relationship( $this->get_value( 'id' ) ,
-									     $val,
-									     $row['id']
-									   );
+							if($val)  //val may have value "", in which case it could cause a mysql error...this eliminates that
+							{
+								create_relationship( $this->get_value( 'id' ) ,
+											 $val,
+											 $row['id']
+										   );
+							}
 						}
+					}
+					elseif(!empty($values))
+					{
+						create_relationship( $this->get_value( 'id' ) ,
+											 $values,
+											 $row['id']
+										   );
 					}
 				}
 			}
