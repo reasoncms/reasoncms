@@ -1,4 +1,10 @@
 <?php
+/**
+ * Script that helps find references to nonexistent (or non-local) files in the Reason db
+ * and assists in fixing them.
+ * @package reason
+ * @subpackage scripts
+ */
 
 include_once('reason_header.php');
 reason_include_once('classes/entity_selector.php');
