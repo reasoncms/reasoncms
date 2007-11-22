@@ -1,4 +1,18 @@
 <?php
+/**
+ * Deletes records in Reason tables that do not correspond to a record in the master entity table.
+ *
+ * "Headless chickens" are records in Reason tables that do not correspond to a record in 
+ * the master entity table. This script will delete all of the headless chickens.
+ *
+ * This script is a useful tool to keep the Reason DB from getting too crufty.
+ * This script probably should be run regularly. In fact, it should probably be 
+ * made into a cron job at some point.
+ *
+ * @package reason
+ * @subpackage scripts
+ * @todo Add to crontab
+ */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
 	force_secure_if_available();
