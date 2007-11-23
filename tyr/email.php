@@ -1,12 +1,24 @@
 <?php
+/**
+ * @package tyr
+ */
+
+/**
+ * include the paths settings
+ */
 include_once('paths.php');
+/**
+ * include the directory service so that usernames as well as email addresses can be sent to this class
+ */
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 
-// 
-// This class represents an email. Example usage:
-// 				$email = new Email( $to, $from, $replyto, $subject, $txtbody, $htmlbody );
-// 				$email->send();
-//
+/**
+ * This class represents an email. Example usage:
+ * <code>
+ * 		$email = new Email( $to, $from, $replyto, $subject, $txtbody, $htmlbody );
+ *		$email->send();
+ * </code>
+ */
 class Email
 {
 	var $_tos;

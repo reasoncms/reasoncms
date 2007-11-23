@@ -1,19 +1,44 @@
 <?php
+/**
+ * A class designed to format data and email it
+ * @package tyr
+ */
+
+/**
+ * Include general paths info
+ */
 include_once('paths.php');
+/**
+ * Include the tyr settings
+ */
 include_once(SETTINGS_INC.'tyr_settings.php');
+
+/**
+ * Include a debugging helper
+ */
 include_once(CARL_UTIL_INC.'dev/prp.php');
+
+/**
+ * Include the emailer class
+ */
 include_once('email.php');
 
-//
-// When Thor and Tyr traveled to the giant Hymir hall to brew ale for the gods, ...
-//
-// Example usage: 
-//   $tyr = new Tyr($_POST['messages'], $_POST);
-//   $tyr->run();
-//   $tyr->finish();
-//
-// See ./form_process.php for more information
-//
+/**
+ * A class designed to format data and email it
+ *
+ * Helpful for form submission data, among other things
+ *
+ * "When Thor and Tyr traveled to the giant Hymir hall to brew ale for the gods, ..."
+ *
+ * Example usage: 
+ * <code>
+ *   $tyr = new Tyr($_POST['messages'], $_POST);
+ *   $tyr->run();
+ *   $tyr->finish();
+ * </code>
+ *
+ * See Thor for more information
+ */
 class Tyr
 {
 	var $_messages = Array(); // Array of message arrays--i.e., directive as to how to format Emails
