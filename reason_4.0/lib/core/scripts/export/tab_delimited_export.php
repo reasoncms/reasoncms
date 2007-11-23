@@ -1,4 +1,20 @@
 <?php
+/**
+ * An attempt at a generalized tab-delimited data export tool for Reason
+ *
+ * This is still experimental, and it particularly needs work around authorization
+ * -- at the moment it only allows administrators to export data
+ *
+ * @package reason
+ * @subpackage scripts
+ *
+ * @todo improve authorization to allow reason users to export data in their sites
+ * @todo perhaps change to CSV rather than tab-delimited?
+ */
+ 
+/**
+ * Include dependencies
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'classes/entity_selector.php' );
 connectDB( REASON_DB );
