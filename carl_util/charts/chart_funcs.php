@@ -1,6 +1,16 @@
 <?php
-	//include_once( 'charts.php' );
+/**
+ * A set of useful functions that are helpful in drawing charts
+ *
+ * This code is fairly old, and my not work properly in php5
+ *
+ * @package carl_util
+ * @subpackage charts
+ */
 	
+	/**
+	 * Convert unix time to mysql time
+	 */
 	function ut_to_mysql( $ut )
 	{
 		list( $y, $m, $d, $h, $i, $s ) = explode( ' ', date('Y m d H i s',$ut) );
