@@ -1,6 +1,14 @@
 <?php
+/**
+ * @package carl_util
+ * @subpackage ldap
+ * @todo move this file out of the reaosn package, as it is not generalized code and may be completely deprecated
+ */
+
 	/**
-	 *  Given an OU, find the long OU.  This is to address a change in LDAP that is storing both the long and short form
+	 *  Given an OU, find the long OU.
+	 *
+	 *	This is to address a change in LDAP that is storing both the long and short form
 	 *  of OUs.
 	 */
 	function ldap_get_long_ou( $ous )
@@ -28,7 +36,9 @@
 		return $ret;
 	}
 	
-	
+	/**
+	 * @deprecated
+	 */
 	class LDAPHelper
 	{
 		var $ldap_connection_settings_file = '/usr/local/etc/php3/global_php_settings.php';
