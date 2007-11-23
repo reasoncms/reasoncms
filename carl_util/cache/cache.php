@@ -6,9 +6,13 @@
 	 *	First stab at an implementation of a Page Cache for the public site.
 	 *	- Basic implementation stores a cached version of the page keyed by the MD5 of the URI.  In Reason, the canonical
 	 *	value of the current URI is retrieved by using the get_current_uri() function.
-	 *	- Current implementation uses 
+	 * @package carl_util
+	 * @subpackage cache
 	 */
 	
+	/**
+	 * Set up necessary constants
+	 */
 	define( 'CACHE_LOG_MSG_FETCH_OLD', 'fetch_old' );
 	define( 'CACHE_LOG_MSG_STORE', 'store' );
 	define( 'CACHE_LOG_MSG_STORE_DIFF', 'diff' );
@@ -20,6 +24,12 @@
 	define( 'CACHE_LOG_MSG_MISS_AGE', 'age' );
 	define( 'CACHE_LOG_MSG_MISS_NO_CACHE', 'no cache' );
 	
+	/*
+	 *	A basic caching system
+	 *
+	 *	Basic implementation stores a cached version of the page keyed by the MD5 of the URI.  In Reason, the canonical
+	 *	value of the current URI is retrieved by using the get_current_uri() function.
+	 */
 	class PageCache
 	{
 		// time to regen a page, in seconds
