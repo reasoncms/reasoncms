@@ -1,4 +1,16 @@
 <?php
+/**
+ * Code that places flash charts on a page
+ *
+ * This code is fairly old, and my not work properly in php5.
+ *
+ * It might be a good idea to remove this code entirely from the Reason Package tree
+ *
+ * @package carl_util
+ * @subpackage charts
+ * @todo look into licensing issues -- if this is shareware and not open source or public domain, we may not be able to continue including it in the Reason package
+ */
+
 // charts.php v2.4
 // ------------------------------------------------------------------------
 // Copyright (c) 2004, maani.us
