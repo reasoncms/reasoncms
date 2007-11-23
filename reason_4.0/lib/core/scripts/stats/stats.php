@@ -1,4 +1,26 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<?php
+/**
+ * Reports on some general statistics about the current Reason instance
+ *
+ * Includes:
+ * - The entity ID that Reason has incremented up to
+ * - The total number of entities
+ * - The relationship ID that Reason has incremented up to
+ * - The total number of relationships in Reason
+ * - The most active users
+ * - the top types in numbers of entities
+ * - The most recently created, edited, and deleted entities
+ * - The least recently edited entities
+ * - and more
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * Begin the page
+ */
+?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><title>Reason Stats</title>
 <?php
 if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '')
