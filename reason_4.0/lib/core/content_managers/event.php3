@@ -1,8 +1,25 @@
 <?php
+/**
+ * A content manager for events
+ * @package reason
+ * @subpackage content_managers
+ */
+ 
+ /**
+  * Store the class name so that the admin page can use this content manager
+  */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'event_handler';
+ /**
+  * Include dependencies
+  */
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 	reason_include_once('classes/event.php');
 	
+	/**
+	 * A content manager for event entities
+	 *
+	 * Provides a custom interface for adding and editing events in Reason
+	 */
 	class event_handler extends ContentManager 
 	{
 	
