@@ -1,12 +1,21 @@
 <?php
-/*
- * tidy
- * dave hendler
+/**
+ * Tidy HTML
  *
  * tidy function converts HTML to XHTML in a sort of round-a-bout way
  * uses the w3c's tidy program and some command line and string manipulation trickery
  * to produce valid XHTML from HTML
+ *
+ * @author dave hendler
+ * @author nate white
+ * @package carl_util
+ * @subpackage tidy
+ * @todo remove old method of forcing include_once
  */
+ 
+ /**
+  * old method of forcing include_once
+  */
  if( !defined( 'INCLUDE_TIDY_PHP3' ) )
  {
  	define( 'INCLUDE_TIDY_PHP3', true );
