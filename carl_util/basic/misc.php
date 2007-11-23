@@ -1,4 +1,9 @@
 <?php
+/**
+ * A collection of generally useful functions
+ * @package carl_util
+ * @subpackage basic
+ */
 
 if( !defined( '__INC_DAVE_MISC' ) )
 {
