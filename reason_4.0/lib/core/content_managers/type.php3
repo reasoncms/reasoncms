@@ -1,9 +1,28 @@
 <?php
+/**
+ * A content manager for type entities
+ * @package reason
+ * @subpackage content_managers
+ */
 	
+	/**
+	 * Save the class name so that the admin page can use this content manager
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'TypeManager';
-	reason_include_once('function_libraries/file_finders.php');
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
+	/**
+	 * Include dependencies
+	 */
+	reason_include_once('function_libraries/file_finders.php');
+	
+	/**
+	 * A content manager for type entities
+	 *
+	 * Provides custom behavior and interface for managing types
+	 *
+	 * @todo add automatic amputee fixing upon finish here or somewhere else
+	 *       (manual amputee fixing is one of the least intuitive aspects of reason db management)
+	 */
 	class TypeManager extends ContentManager
 	{
 		function alter_data()
