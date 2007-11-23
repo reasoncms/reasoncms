@@ -1,5 +1,18 @@
 <?php
+/**
+ * Creates a quicktime link
+ *
+ * A link file is necessary to properly handle streaming quicktime files
+ *
+ * This script will create one for the requested media file id.
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * include dependencies
+ */
 $reason_session = false;
 include_once( 'reason_header.php' );
 reason_include_once( 'classes/entity.php' );
