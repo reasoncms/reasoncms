@@ -1,7 +1,22 @@
 <?php
+/**
+ * A URL shortcut tool
+ *
+ * @package carl_util
+ * @subpackage go
+ */
 
+/**
+ * Include dependencies
+ */
 include_once ( 'paths.php' );
-    
+
+/**
+ * A URL shortcut tool
+ *
+ * @todo make this its own project or something...
+ * @todo factor Carleton-specific code into a settings file
+ */
 class ShortURL
 {
     var $long_URL = '';
