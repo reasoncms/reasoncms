@@ -1,5 +1,14 @@
 <?php
+/**
+ * Find entities that match a given string in *any* field on *any* site
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * include dependencies
+ */
 include_once('reason_header.php');
 include_once(DISCO_INC .'disco.php');
 reason_include_once( 'classes/entity_selector.php');
