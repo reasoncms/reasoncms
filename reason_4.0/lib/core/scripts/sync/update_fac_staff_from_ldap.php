@@ -1,5 +1,19 @@
 <?php
-
+/**
+ * Update sites' people listings from the directory service
+ *
+ * This is designed so it can be run as a cron job
+ *
+ * We probably need to make sure everythiing works outside a Carleton-specific context
+ *
+ * @package reason
+ * @subpackage scripts
+ * @todo remove carleton-specific filter
+ */
+ 
+/**
+ * include dependencies
+ */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'classes/entity_selector.php' );
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
