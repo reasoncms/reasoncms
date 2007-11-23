@@ -1,16 +1,29 @@
 <?php
-	/*		dave hendler
-	 *		DBSelector
-	 *
-	 *		quick and dirty class to automate query generation
-	 *		just set the appropriate values and let her rip
-	 */
+/**	
+ * DBSelector class
+ *
+ * quick and dirty class to automate query generation
+ * just set the appropriate values and let her rip
+ *
+ * @package carl_util
+ * @subpackage db
+ * @author dave hendler
+ * @todo remove old method of enforcing include_once
+ */
 	
-	// requires db_query function from db.php3
+/**
+ * Old method of enforcing include_once
+ */
 if( !defined( '__DB_SELECTOR' ) )
 {
 	define ( '__DB_SELECTOR', true );
 	
+	/**
+	 * DBSelector class
+	 *
+	 * quick and dirty class to automate query generation
+	 * just set the appropriate values and let her rip
+	 */
 	class DBSelector
 	{
 		// data members {{{

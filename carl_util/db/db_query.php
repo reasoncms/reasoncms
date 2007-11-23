@@ -1,5 +1,13 @@
 <?php
+/**
+ * Wrapper function for querying the database
+ * @package carl_util
+ * @subpackage db
+ */
 
+/**
+ * include the paths and error handler
+ */
 include_once( 'paths.php' );
 include_once( CARL_UTIL_INC . 'error_handler/error_handler.php' );
 

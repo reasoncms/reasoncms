@@ -1,6 +1,24 @@
 <?php
+/**
+ * Wraps up several useful functions for managing database connections
+ *
+ * @package carl_util
+ * @subpackage db
+ */
+ 
+/**
+ * include the paths file that sets up basic include paths
+ */
 include_once( 'paths.php' );
+
+/**
+ * include the error handler so that errors are logged, etc.
+ */
 include_once( CARL_UTIL_INC . 'error_handler/error_handler.php' );
+
+/**
+ * Set up a spot in the $GLOBALS array to store the current database connection name
+ */
 $GLOBALS['_current_db_connection_name'] = '';
 
 /**
@@ -13,6 +31,8 @@ $GLOBALS['_current_db_connection_name'] = '';
  * @param string $dbpasswd Deprecated - is now ignored
  * @param string $dbhost Deprecated - is now ignored
  * @return resource database connection resource
+ *
+ * @todo remove the $dbuse, $dbpasswd, and $dbhost parameters entirely to remove a potential source of confusion
  */
 function connectDB($dbName, $dbuser = '', $dbpasswd = '', $dbhost='')
 {
@@ -50,11 +70,19 @@ function connectDB($dbName, $dbuser = '', $dbpasswd = '', $dbhost='')
 	return $db;
 }
 
+/**
+ * Find out what database connection is currently in use
+ * @return string name of db connection
+ */
 function get_current_db_connection_name()
 {
 	return (isset($GLOBALS['_current_db_connection_name'])) ? $GLOBALS['_current_db_connection_name'] : false;
 }
 
+/**
+ * Find out what database is currently in use
+ * @return string name of db
+ */
 function get_database_name()
 {
 	$conn_name = get_current_db_connection_name();

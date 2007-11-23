@@ -1,11 +1,16 @@
 <?php
-/*
- * db functions
+/**
+ * Includes connectDB.php and db_query.php, along with a few useful libraries
+ *
+ * @package carl_util
+ * @subpackage db
+ *
+ * @todo remove old method of enforcing require_once
  */
 
-//-----------------------------------------------
-// CONNECTION SCRIPT
-//-----------------------------------------------
+/**
+ * Old php3-style method of enforcing require_once
+ */
 if(!defined("_DBPHP3" ))
 {
 	define("_DBPHP3", 1);

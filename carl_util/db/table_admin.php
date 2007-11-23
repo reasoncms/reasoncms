@@ -1,9 +1,22 @@
 <?
-
 /**
  * Carl Table Admin
  *
  * @package carl_util
+ * @subpackage db
+ */
+
+/**
+ * include dependencies
+ */
+include_once( 'paths.php' );
+include_once( CARL_UTIL_INC . 'db/db.php'); // Requires ConnectDB Functionality
+include_once( CARL_UTIL_INC . 'basic/misc.php'); // Requires carl_clean_vars
+include_once( DISCO_INC . 'disco_db.php'); // Requires Disco_DB
+
+/**
+ * Carl Table Admin
+ *
  * @author nathan white
  *
  * Provides an interface to edit a database table, with support for a variety of operations
@@ -42,12 +55,6 @@
  * @todo abstract out html generation into markup generator like system
  * @todo allow filtering to take place in php or mysql
  */
-
-include_once( 'paths.php' );
-include_once( CARL_UTIL_INC . 'db/db.php'); // Requires ConnectDB Functionality
-include_once( CARL_UTIL_INC . 'basic/misc.php'); // Requires carl_clean_vars
-include_once( DISCO_INC . 'disco_db.php'); // Requires Disco_DB
-
 class TableAdmin
 {
 	/**
