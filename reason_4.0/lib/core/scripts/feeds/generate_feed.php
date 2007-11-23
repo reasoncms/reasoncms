@@ -1,5 +1,16 @@
 <?php
+/**
+ * Create a feed
+ * 
+ * This script will run the requested RSS feed
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * include dependencies
+ */
 $reason_session = false;
 include_once( 'reason_header.php' );
 reason_include_once( 'classes/entity_selector.php' );
