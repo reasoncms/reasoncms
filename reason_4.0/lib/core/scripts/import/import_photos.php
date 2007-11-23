@@ -1,32 +1,14 @@
 <?php
 	/**
-	 * Bulk Image Import
+	 * This script used to do image importing.
+	 *
+	 * It is left in place so that people with bookmarks do not get a 404
+	 *
+	 * At some point it will probably be OK to remove
 	 *
 	 * @package reason
 	 * @subpackage scripts
-	 *
-	 * This script will run through a define directory( INCOMING_DIR ), and make Reason
-	 * Image entities out of those images.  It will resize and make thumbnails as
-	 * appropriate.
-	 *
-	 * TODO: Generalize this script for any site.
-	 * [6/14/04] the only ID information needed by this script to perform correctly
-	 * is the ID of the page to link to and the directory of the incoming images.
-	 * If we standardize the incoming directory name, this script can work for
-	 * any site.  All that needs to be passed in is the unique_name or id of the
-	 * page to relate the images to.  My initial thought is to have a directory
-	 * called incoming_photos, incoming_images, or just incoming in the base
-	 * directory of a site similarly to how we treat .htaccess and test directories.
-	 * To further slickify the system, we could have a bulk image import script
-	 * that could drop in a zip file or a number of images into one of these
-	 * directories and then import based on those files. -dh
-	 *
-	 * [12/13/2004] Added a form to populate all uploads with information specified.  Description, name, keywords,
-	 * content, and datetime.
-	 *
-	 * @author Dave Hendler
 	 */
-	set_time_limit( 0 );	
 
 	include_once( 'reason_header.php' );
 	
