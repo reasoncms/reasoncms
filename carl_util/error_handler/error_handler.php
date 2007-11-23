@@ -2,7 +2,7 @@
 /**
  * A sophisticated error handling utility
  *
- * @package carl_utiil
+ * @package carl_util
  * @subpackage error_handler
  */
 
