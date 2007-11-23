@@ -1,11 +1,25 @@
 <?php
+/**
+ * Functions for manipulating dates
+ *
+ * These functions should all be ADODB-style 64-bit capable 
+ * (e.g. each integer = 1 second, 0 is same as Unix era 0, backwards-compatible within Unix era)
+ *
+ * @package carl_util
+ * @subpackage basic
+ */
+
+/**
+ * Include dependencies
+ */
 include_once('paths.php');
 include_once(ADODB_DATE_INC);
 
-//----------------------------------------------------------
-// EXPLODE THE DATE INTO YEAR, MONTH, AND DAY VALUES
-//----------------------------------------------------------
-
+/**
+ * Explode a MYSQL-formatted date into year, month, and day values
+ * @param string $date YYYY-MM-DD
+ * @return array [0]=>YYYY,[1]=>MM,[2]=>DD
+ */
 function explodeDate($date) {
 
 	$dateStrip = explode ("-", $date);
