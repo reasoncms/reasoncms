@@ -1,5 +1,14 @@
 <?php
+/**
+ * Move entities from one site to another -- step 3
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * include dependencies
+ */
 include_once('reason_header.php');
 include_once( DISCO_INC .'disco.php');
 reason_include_once( 'classes/entity_selector.php');

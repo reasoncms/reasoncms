@@ -1,5 +1,18 @@
 <?php
+/**
+ * Move entities from one site to another -- step 1
+ *
+ * @package reason
+ * @subpackage scripts
+ *
+ * @todo move this into the admin interface
+ * @todo come up with a way to better handle moving different types, 
+ *       esp. those that need special treatment when moved (like pages & assets)
+ */
 
+/**
+ * include dependencies
+ */
 include_once('reason_header.php');
 include_once( DISCO_INC . 'disco.php');
 reason_include_once( 'classes/entity_selector.php');
