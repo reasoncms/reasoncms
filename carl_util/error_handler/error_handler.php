@@ -1,6 +1,14 @@
 <?php
+/**
+ * A sophisticated error handling utility
+ *
+ * @package carl_utiil
+ * @subpackage error_handler
+ */
 
-	// make sure all errors hit the error handler
+	/**
+	 * make sure all errors hit the error handler
+	 */
 	if (defined('E_STRICT')) // report E_STRICT errors if php 5 is running
 	{
 		error_reporting ( E_ALL | E_STRICT );
@@ -15,8 +23,12 @@
 	include_once( CARL_UTIL_INC . 'basic/misc.php' );
 	include_once( CARL_UTIL_INC . 'dev/pray.php' );
 	
-	// quick boolean function to determine if the visitor in a particular transaction is a developer or not.  uses the
-	// global array of IPs that is actually defined later on.
+	/**
+	 * quick boolean function to determine if the visitor in a particular 
+	 * transaction is a developer or not.  uses the
+	 * global array of IPs that is actually defined later on.
+	 * @return boolean
+	 */
 	function is_developer()
 	{
 		if( !empty( $_SERVER[ 'REMOTE_ADDR' ] ) )
@@ -30,50 +42,58 @@
 		}
 	}
 	
-	/*
-		
-		Usage of error handling system
-		
-		If you want to use the error notification system coded up here, all you
-		really have to do is use the trigger_error() or user_error() functions.
-		They are both the same function, so you can use whichever you please.
-		The basic usage is trigger_error( error_message, error_level ), so, for
-		example, if I want to trigger an emergency message for some action, I
-		would use trigger_error( "Something really bad happened", EMERGENCY ).
-		The constants defined below can be used in place of EMERGENCY for
-		different levels of notification.  
-		
-	*/
+	/**
+	 *	Usage of error handling system
+	 *	
+	 *	If you want to use the error notification system coded up here, all you
+	 *	really have to do is use the trigger_error() or user_error() functions.
+	 *	They are both the same function, so you can use whichever you please.
+	 *	The basic usage is trigger_error( error_message, error_level ), so, for
+	 *	example, if I want to trigger an emergency message for some action, I
+	 *	would use trigger_error( "Something really bad happened", EMERGENCY ).
+	 *	The constants defined below can be used in place of EMERGENCY for
+	 *	different levels of notification.  
+	 *	
+	 */
 	
 	
-	// Constants for programmer level error triggering
+	/**
+	 * Constants for programmer level error triggering
+	 *
+	 * If a machine with one of the listed IPs gets ones of these errors,
+	 * they behave like normal PHP errors and just get printed out.
+	 * If the error is bad enough, the current script exit()s.
+	 * The notification only happens if a non-developer (i.e. most of the
+	 * world) triggers an error.
+	 */
 	
-	// If a machine with one of the listed IPs gets ones of these errors,
-	// they behave like normal PHP errors and just get printed out.
-	// If the error is bad enough, the current script exit()s.
-	// The notification only happens if a non-developer (i.e. most of the
-	// world) triggers an error.
-	
-	// EMERGENCY is for really bad errors.  If an EMERGENCY is triggered,
-	// cell phones should be alerted.  Alias: FATAL
+	/**
+	 * EMERGENCY is for really bad errors.  If an EMERGENCY is triggered,
+	 * cell phones should be alerted.  Alias: FATAL
+	 */
 	define( 'EMERGENCY', E_USER_ERROR );
 	define( 'FATAL', E_USER_ERROR );
 
-	// HIGH is for pretty bad errors.  These are errors that don't
-	// takes sites down, but result in bad pages.  These usually go
-	// to email.  Alias: ERROR
+	/**
+	 * HIGH is for pretty bad errors.  These are errors that don't
+	 * takes sites down, but result in bad pages.  These usually go
+	 * to email.  Alias: ERROR
+	 */
 	define( 'HIGH', E_USER_WARNING );
 	define( 'ERROR', E_USER_WARNING );
 
-	// MEDIUM errors just get logged.  Check out the error handler code to 
-	// see where they go.  Alias: WARNING
+	/**
+	 * MEDIUM errors just get logged.  Check out the error handler code to 
+	 * see where they go.  Alias: WARNING
+	 */
 	define( 'MEDIUM', E_USER_NOTICE );
 	define( 'WARNING', E_USER_NOTICE );
 
-	// error email from address
-	// NOTE: by looking at the email address that an error comes from you can determine
-	// where the error occurred.  errors@webdev is webdev, errors@webapps is webapps, and
-	// apache@Detroit is a command line script error
+	/** error email from address
+	 * NOTE: by looking at the email address that an error comes from you can determine
+	 * where the error occurred.  errors@webdev is webdev, errors@webapps is webapps, and
+	 * apache@Detroit is a command line script error
+	 */
 	if( !empty( $_SERVER['HTTP_HOST'] ) )
 	{
 		$err_email_from = 'errors@'.$_SERVER['HTTP_HOST'];
