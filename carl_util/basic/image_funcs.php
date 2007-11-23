@@ -2,10 +2,17 @@
 /**
  * Functions for manipulating images
  * @package carl_util
+ * @subpackage basic
  */
 
-
-	// general function for reducing the size of an image
+	/**
+	 * general function for reducing the size of an image
+	 * @param string $src_path The filesystem location of the image to be resized
+	 * @param string $dest_path The filesystem location to put the resized image
+	 * @param integer $maxh The maximum height of the resized image
+	 * @param integer $maxw The maximum width of the resized image
+	 * @param boolean $sharpen Should the resized image be sharpened or not?
+	 */
 	function resize_image($src_path, $dest_path, $maxh, $maxw, $sharpen = TRUE) // {{{
 	{
 		if ($src_path <> $dest_path) copy( $src_path, $dest_path );
@@ -30,7 +37,14 @@
 		}                                                                                                                                  
 	}
 	
-	// general function for reducing the size of an image using GD (UNDER DEVELOPMENT)
+	/**
+	 * general function for reducing the size of an image using GD (UNDER DEVELOPMENT)
+	 * @param string $src_path The filesystem location of the image to be resized
+	 * @param string $dest_path The filesystem location to put the resized image
+	 * @param integer $maxh The maximum height of the resized image
+	 * @param integer $maxw The maximum width of the resized image
+	 * @param boolean $sharpen Should the resized image be sharpened or not?
+	 */
 	function resize_image_gd($src_path, $dest_path, $maxh, $maxw, $sharpen = TRUE) // {{{
 	{
 		//	print_r(gd_info());
