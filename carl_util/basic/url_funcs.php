@@ -1,5 +1,10 @@
 <?
-// Collection of functions to work with urls
+/**
+ * A collection of functions to work with urls
+ *
+ * @package carl_util
+ * @subpackage basic
+ */
 
 /**
  * make_link will preserve the url query string, while adding or removing items specified in the new_request_vars array.
