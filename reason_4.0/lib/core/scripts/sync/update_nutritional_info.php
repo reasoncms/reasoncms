@@ -1,5 +1,14 @@
-
 <?php 
+/**
+ * Import nutritional data into the menus module
+ *
+ * @package reason_carleton
+ * @subpackage scripts
+ */
+ 
+/**
+ * include dependencies
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'function_libraries/admin_actions.php');
 reason_include_once( 'classes/entity_selector.php');
