@@ -1,7 +1,11 @@
 <?php
-/*
+/**
  * This script links to an administrative lister page for each type in reason
+ *
  * It can be used to ease the checking of each type after major changes/upgrades
+ *
+ * @package reason
+ * @subpackage scripts
  */
 
 include_once( 'reason_header.php' );

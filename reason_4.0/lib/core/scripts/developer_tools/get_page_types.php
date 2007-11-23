@@ -1,10 +1,17 @@
 <?php
-/*
+/**
  * This script finds a random page for each of the Reason page types and displays links to those pages.
+ *
  * It is useful for testing major changes to Reason to make sure they do not affect obscure
  * page types in adverse ways.
+ *
+ * @package reason
+ * @subpackage scripts
  */
 
+/**
+ * include dependencies
+ */
 include_once( 'reason_header.php' );
 reason_include_once('function_libraries/URL_History.php');
 reason_include_once( 'classes/entity_selector.php' );

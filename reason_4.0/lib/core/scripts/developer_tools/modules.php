@@ -1,18 +1,24 @@
 <?php
-/*
+/**
+ * Find which pages use which modules
+ *
  * This script lists all modules and a link to a page on which that module is found.
  * it is useful for finding a page that hosts a particular module so you can troubleshoot
  * and is also useful for taking a quick survey of Reason modules after making a core change
  *
  * updated 5/7/07 Nathan White
- *
  * - allows for substring search of module name
  * - ability to view multiple urls for any module
  * - detail view shows site and page name
  * - some speed improvements (could use more)
  *
+ * @package reason
+ * @subpackage scripts
  */
 
+/**
+ * include dependencies
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'function_libraries/user_functions.php' );
 reason_include_once( 'minisite_templates/page_types.php' );

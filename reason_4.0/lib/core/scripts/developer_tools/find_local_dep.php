@@ -1,4 +1,16 @@
 <?php
+/**
+ * Find local dependencies
+ *
+ * This script checks all files in Reason's core directory to see if they use one of the reason_include() functions to bring in a file *not* in the core.
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * Start the page
+ */
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n";
 echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
 echo '<head>'."\n";
