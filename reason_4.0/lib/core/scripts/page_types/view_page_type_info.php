@@ -1,4 +1,15 @@
-<?php 
+<?php
+/**
+ * A page that allows people who do not have acces to the code to see what modules go 
+ * in which page types (and where, kinda)
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * include dependencies
+ */
 	include_once( 'reason_header.php' );
 	reason_require_once( 'minisite_templates/page_types.php' );
 	$page_types = $GLOBALS['_reason_page_types'];
