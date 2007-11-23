@@ -1,8 +1,16 @@
 <?php
-/*
+/**
  * simple timer class
- * dave hendler
+ * @package carl_util
+ * @subpackage dev
+ */
+ 
+/**
+ * simple timer class
+ *
  * times events so you can check out the performance of your code
+ *
+ * @author dave hendler
  */
 	class Timer
 	{

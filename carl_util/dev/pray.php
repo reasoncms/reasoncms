@@ -1,32 +1,59 @@
 <?php
 /*
  * PRint arrAY function
- * nice debug function, stolen off of php.net
+ * nice debug function for uncovering the contents of arrays in an (x)HTML context
+ *
+ * @package carl_util
+ * @subpackage dev
+ * 
+ * @todo remove old method of enforcing include_once
  */
 
+/**
+ * old method of enforcing include_once
+ */
 if( !defined( '__PRAY' ) )
 {
 	define( '__PRAY', true );
  
+ 	/**
+ 	 * pray - short for print_array
+ 	 *
+ 	 * Traverse the argument array/object recursively and print an ordered list.
+ 	 * Optionally show function names (in an object)
+ 	 *
+ 	 * NB: This is a *** HUGE SECURITY HOLE *** in the wrong hands!!
+ 	 * It prints all the variables it can find
+ 	 * If the argument is $GLOBALS this will include your database connection 
+ 	 * information, magic keys and session data!!
+ 	 *
+ 	 * This function should only be used when debugging or trying to understand the 
+ 	 * structure of some array-like data. It should not show up in production code.
+ 	 * 
+ 	 * Changelog:
+ 	 *
+ 	 * sometime earlier
+ 	 *
+ 	 * added $escape param.  will htmlentities() all values if set to true instead of displaying HTML
+ 	 * 13 Dec 02
+ 	 *
+ 	 * modified to show actual "empty" value.  If something doesn't have a value, it will display 0, NULL, false, or (none) depending on type.
+ 	 * added strict check for true.  shows 'true' if var is true and of type bool
+ 	 *
+ 	 * 28 Jan 03
+ 	 *
+ 	 * infinite recursion is bad. added level and max_depth vars
+ 	 *
+ 	 * @param mixed $data Whatever you want to inspect
+ 	 * @param boolean $escape true = htmlentities() all strings; false = output raw
+ 	 * @param boolean $functions Unclear purpose
+ 	 * @param integer $level How deep has pray() recursed so far?
+ 	 * @param integer $max_depth How deep should pray() recurse?
+ 	 *
+ 	 * @todo figure out what the $functions parameter is all about
+ 	 */
 	function pray ($data, $escape=false, $functions=false, $level = 0, $max_depth = 5 )
 	{
-		//    pray - short for print_array
-		//    Traverse the argument array/object recursively and print an ordered list.
-		//    Optionally show function names (in an object)
-		//    NB: This is a *** HUGE SECURITY HOLE *** in the wrong hands!!
-		//        It prints all the variables it can find
-		//        If the argument is $GLOBALS this will include your database connection information, magic keys and session data!!
-		//
-		//	dave hendler: 
-		//		sometime earlier
-		//			added $escape param.  will htmlentities() all values if set to true instead of displaying HTML
-		//		13 Dec 02
-		//			modified to show actual "empty" value.  If something doesn't have a value, it will display 0, NULL, false, or (none) depending on type.
-		//			added strict check for true.  shows 'true' if var is true and of type bool
-		//		28 Jan 03
-		//			infinite recursion is bad. added level and max_depth vars
-
-
 		if( $level >= $max_depth )
 			echo 'Max Depth reached.';
 		else

@@ -1,18 +1,26 @@
 <?php
+/**
+ * A nice wrapper for print_r()
+ * @package carl_util
+ * @subpackage dev
+ */
 
-// Print_r Pre
-//
-// This function is meant primarly to overcome the tedium of writing
-// "echo '<pre>'" etc. all the time, as well as to make the output look a little nicer.
-//
-// (Designed to combine the advantages of pray and print_r.)
-//
-// Nathanael Fillmore, 2003-12-23
-//
-// Modified by Dave Hendler, 2004-09-03
-// I modified the structure.  sprp() is the base function which returns a string instead of echoing
-// osprp() returns a string and also gets rid of the HTML and unhtmlentities the whole thing for console output
-//
+/**
+ * Print_r Pre
+ *
+ * This function is meant primarly to overcome the tedium of writing
+ * "echo '<pre>'" etc. all the time, as well as to make the output look a little nicer.
+ *
+ * (Designed to combine the advantages of pray and print_r.)
+ *
+ * @author Nathanael Fillmore, 2003-12-23
+ *
+ * Modified by Dave Hendler, 2004-09-03
+ * I modified the structure.  sprp() is the base function which returns a string instead of echoing
+ * osprp() returns a string and also gets rid of the HTML and unhtmlentities the whole thing for console output
+ * @param $v array to print
+ * @param $k label for array
+ */
 function sprp( $v, $k = 'sprp' )
 {
 	$str = '';

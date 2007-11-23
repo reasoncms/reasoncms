@@ -1,7 +1,14 @@
 <?php
-/*
+/**
  * A simple debugger
- * dave hendler
+ * @package carl_util
+ * @subpackage dev
+ */
+
+/**
+ * A simple debugger
+ * @author dave hendler
+ * @todo Is this class used anywhere?
  */
 
 	class SimpleDebugger
