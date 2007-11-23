@@ -1,5 +1,16 @@
 <?php
+/**
+ * Fifth step of the db minization process
+ *
+ * This script serves as a stopping point before continuing to minimize_to_core.php
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * This script may take a long time, so extend the time limit to infinity
+ */
 set_time_limit( 0 );
 
 include_once('reason_header.php');

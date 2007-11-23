@@ -1,5 +1,19 @@
 <?php
+/**
+ * Fourth step of the db minization process: file removal
+ *
+ * This stage of the script removes the following items from this Reason instance:
+ * - All image files that do not correspond to an image
+ * - All asset files that do not correspond to an asset
+ * - All cache files
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * This script may take a long time, so extend the time limit to infinity
+ */
 set_time_limit( 0 );
 
 include_once('reason_header.php');

@@ -1,5 +1,22 @@
 <?php
+/**
+ * Third step of the db minization process
+ *
+ * This stage of the script removes the following items from this Reason instance:
+ * - All entities that do not belong to a site
+ * - All tables not used by a type (excluding the special tables like relationship, etc.)
+ * - All fields not used by Reason
+ * - All entries in cache/history/log tables
+ * - All allowable relationships which do not match up with a Reason type
+ * - All relationships which do not match up with a Reason entity
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * This script may take a long time, so extend the time limit to infinity
+ */
 set_time_limit( 0 );
 
 include_once('reason_header.php');

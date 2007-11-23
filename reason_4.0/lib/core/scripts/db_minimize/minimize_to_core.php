@@ -1,5 +1,18 @@
 <?php
+/**
+ * Final step of the db minization process
+ *
+ * This script takes an already minimized Reason DB and strips it down to the Reason core
+ *
+ * This script is likely out of date; it should probably be updated before being run as it whitelists core types, etc and we add core types from time to time.
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * This script may take a long time, so extend the time limit to infinity
+ */
 set_time_limit( 0 );
 
 include_once('reason_header.php');

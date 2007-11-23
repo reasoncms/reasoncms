@@ -1,5 +1,21 @@
 <?php
+/**
+ * Second step of the db minization process
+ *
+ * This stage of the script removes the following items from this Reason instance:
+ * - All Non-Reason Sites
+ * - All Site Types not currently in use
+ * - All text blurbs, except a few core ones
+ * - All users, except a few core ones
+ * - All Deleted, Pending, and Archived entities
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * This script may take a long time, so extend the time limit to infinity
+ */
 set_time_limit( 0 );
 
 include_once('reason_header.php');

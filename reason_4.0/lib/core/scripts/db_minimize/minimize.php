@@ -1,5 +1,25 @@
 <?php
+/**
+ * First step of the db minization process
+ *
+ * This script allows you to package up a minimal Reason DB for creating a new Reason instance.
+ *
+ * Note: This is not the best way to go about DB minimization. It would be a lot easier 
+ * to have a script which exported <em>only</em> those parts of the DB that were needed, 
+ * rather than deleting everything unnecessary.  This method's problems are, primarly, time -- 
+ * it is super slow, you have to babysit it as you crunch through the sites in small batches, etc. 
+ * But at the moment we have no good way of exporting just pieces of Reason data -- just the 
+ * whole shebang as a SQL dump. So at least for the moment this is how we're doing it.
+ *
+ * This stage of the script will destroy all Reason sites except for a few core ones.
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * This script may take a long time, so extend the time limit to infinity
+ */
 set_time_limit( 0 );
 
 include_once('reason_header.php');
