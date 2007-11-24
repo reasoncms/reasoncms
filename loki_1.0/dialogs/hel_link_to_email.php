@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package loki_1
+ * @subpackage hel
+ */
+/**
+ * Include reason libraries
+ */
 include_once( 'reason_header.php');
 
 header('Content-Type: application/vnd.mozilla.xul+xml');
@@ -44,7 +51,7 @@ FINIS;
 			<vbox flex="1">
 				<label control="custom_link" value="Enter email address:" />
 				<textbox id="mailto_email_address" flex="1" style="min-width: 15em; min-height: 2em;"/>
-				<description flex="1" style="width:30em;">Please enter the recipient's whole email address, including the "@carleton.edu" or "@acs.carleton.edu".</description><!-- ' -->
+				<description flex="1" style="width:30em;">Please enter the recipient's whole email address.</description><!-- ' -->
 			</vbox>
 		</tabpanel>
 	</tabpanels>
@@ -79,7 +86,7 @@ FINIS;
 <![CDATA[
 
 try {
-	var editor_obj = opener.<?php echo $_REQUEST['editor_obj'] ?>;
+	var editor_obj = opener.<?php echo htmlspecialchars($_REQUEST['editor_obj'], ENT_QUOTES, 'UTF-8'); ?>;
 } catch(e) {}
 
 function do_onload()
