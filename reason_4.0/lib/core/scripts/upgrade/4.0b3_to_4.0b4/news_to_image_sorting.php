@@ -1,4 +1,16 @@
 <?
+/**
+ * Upgrade to allow images to be sorted on their news items
+ *
+ * This is part of the beta 3 to beta 4 upgrade
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * include dependencies
+ */
 include_once ('reason_header.php');
 include_once (CARL_UTIL_INC. '/db/db.php');
 reason_include_once ('classes/entity_selector.php');

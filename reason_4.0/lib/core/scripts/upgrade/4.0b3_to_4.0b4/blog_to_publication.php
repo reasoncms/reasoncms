@@ -1,4 +1,16 @@
 <?
+/**
+ * Part 1 of the publication framework setup
+ *
+ * This script is part of the 4.0 beta 3 to beta 4 upgrade
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * include dependencies
+ */
 include ('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('function_libraries/user_functions.php');

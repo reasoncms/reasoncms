@@ -1,4 +1,17 @@
 <?
+/**
+ * Upgrade the DB from beta 3 to beta 4 for the publications framework
+ *
+ * This script creates and modifies the database for the new publication system.
+ * It does not migrate existent publications into the new system.
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * include dependencies
+ */
 include ('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('function_libraries/user_functions.php');

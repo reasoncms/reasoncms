@@ -1,4 +1,17 @@
 <?
+/**
+ * Change the name of the field event.repeat to event.recurrence
+ *
+ * This script will change the name of the event.repeat field to
+ * event.recurrence so that Reason can be run under MySQL 5.x
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * include dependencies
+ */
 include_once ('reason_header.php');
 include_once (CARL_UTIL_INC. '/db/db.php');
 reason_include_once ('classes/entity_selector.php');

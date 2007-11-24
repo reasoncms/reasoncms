@@ -1,5 +1,20 @@
 <?php
+/**
+ * Run a variety of updates for the beta 3 to beta 4 upgrade
+ *
+ * Includes:
+ * - Adding a content manager for themes
+ * - A bunch of new themes
+ * - Adds new Editor user role
+ * - Enables flash video as a media type
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * include dependencies
+ */
 include ('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('function_libraries/user_functions.php');

@@ -1,5 +1,20 @@
 <?php
+/**
+ * Change the direction of the page-text blurb relationship
+ *
+ * This script is part of the beta 3 to beta 4 upgrade
+ *
+ * The relationship direction has been changed so that blurbs can be shared among 
+ * sites and placed on various pages, as well as making it possible for them to be 
+ * sorted on those relationships
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * include dependencies
+ */
 include ('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('function_libraries/user_functions.php');

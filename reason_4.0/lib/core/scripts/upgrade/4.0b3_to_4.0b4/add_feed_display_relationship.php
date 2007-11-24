@@ -1,5 +1,16 @@
 <?php
+/**
+ * Add athe page-to-feed-diplay-url relationship
+ *
+ * This script is part of the 4.0 beta 3 to beta 4 upgrade
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * include dependencies
+ */
 include ('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('function_libraries/user_functions.php');
@@ -7,7 +18,6 @@ reason_include_once('function_libraries/admin_actions.php');
 reason_include_once('classes/field_to_entity_table_class.php');
 reason_include_once('classes/amputee_fixer.php');
 
-// try to increase limits in case user chooses a really big chunk
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">

@@ -1,4 +1,16 @@
 <?
+/**
+ * Creates the page_to_related_publication allowable relationship
+ *
+ * This script is part of the 4.0 beta 3 to beta 4 upgrade
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * include dependencies
+ */
 include ('reason_header.php');
 reason_include_once('function_libraries/user_functions.php');
 reason_include_once('function_libraries/relationship_finder.php');
