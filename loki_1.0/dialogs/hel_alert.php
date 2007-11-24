@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package loki_1
+ * @subpackage hel
+ */
+
+/**
+ * Include the reason libraries
+ */
 include_once("reason_header.php");
 ?>
 
@@ -14,7 +22,7 @@ echo "<link rel='stylesheet' type='text/css' href='".UNIVERSAL_CSS_PATH."' />";
 
 function do_onload()
 {
-	var editor_obj = opener.<?php echo $_REQUEST['editor_obj'] ?>;
+	var editor_obj = opener.<?php echo htmlspecialchars($_REQUEST['editor_obj'],ENT_QUOTES,'UTF-8'); ?>;
 	var text = editor_obj.temp_modal_args.text;
 	text = text.replace( /\&/g, "&amp;" );
 	text = text.replace( /\>/g, "&gt;" );
