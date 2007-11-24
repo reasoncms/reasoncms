@@ -1,12 +1,18 @@
 <?php
-
+/**
+ * @package loki_1
+ * @subpackage hel
+ * @todo  ***important*** look into var reflection -- is it possible to keep it from happening???
+ */
+/**
+ * Include reason libraries
+ */
 include_once('reason_header.php');
 
 $sc = new spell_check;
 $sc->init($_REQUEST['text']);
 
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:spell="http://www.carleton.edu/spell_check">
