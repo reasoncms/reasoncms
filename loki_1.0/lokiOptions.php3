@@ -1,8 +1,15 @@
 <?php
+/**
+ * A php class that wraps up info about the potential loki options
+ *
+ * @package loki_1
+ */
 
-/* LOKI EDITING OPTIONS */
-/* last updated: 2004-06-29 NF */
-
+/**
+ * Loki editing options
+ * last updated: 2004-06-29
+ * @author Nate Fillmore
+ */
 class Loki_Options
 {
 	var $_all;
