@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package loki_1
+ * @subpackage hel
+ */
+/**
+ * Include reason libraries
+ */
 include_once( 'reason_header.php' );
 
 header('Content-Type: application/vnd.mozilla.xul+xml');
@@ -24,6 +31,7 @@ FINIS;
 				<menupopup>
 					<?php
 						$site_id = isset( $_REQUEST[ 'site_id' ] ) ? $_REQUEST[ 'site_id' ] : '';
+						settype($site_id, 'integer');
 						print_asset_links($site_id);
 					?>
 				</menupopup>
@@ -61,7 +69,7 @@ FINIS;
 <![CDATA[
 
 try {
-	var editor_obj = opener.<?php echo $_REQUEST['editor_obj'] ?>;
+	var editor_obj = opener.<?php echo htmlspecialchars($_REQUEST['editor_obj'],ENT_QUOTES,'UTF-8'); ?>;
 } catch(e) {}
 
 function do_onload()
