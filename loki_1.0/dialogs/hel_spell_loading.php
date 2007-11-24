@@ -1,4 +1,11 @@
 <?
+/**
+ * @package loki_1
+ * @subpackage hel
+ */
+/**
+ * Include paths info
+ */
 	include_once ( 'paths.php' );
 ?>
 <html>
