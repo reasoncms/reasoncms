@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package loki_1
+ * @subpackage hel
+ */
+ /**
+  * Include reason libraries
+  */
 include_once( 'reason_header.php' );
 
 header('Content-Type: application/vnd.mozilla.xul+xml');
@@ -39,6 +46,7 @@ FINIS;
 				<vbox style="overflow: scroll; height: 250px;" id="image_buttons_container">
 					<?php
 						$site_id = isset( $_REQUEST[ 'site_id' ] ) ? $_REQUEST[ 'site_id' ] : 0;
+						settype($site_id, 'integer');
 						print_image_buttons($site_id);
 					?>
 				</vbox>
@@ -55,6 +63,7 @@ FINIS;
 					<menupopup>
 						<?php
 							$site_id = isset( $_REQUEST[ 'site_id' ] ) ? $_REQUEST[ 'site_id' ] : 0;
+							settype($site_id, 'integer');
 							print_image_links($site_id);
 						?>
 					</menupopup>
@@ -96,7 +105,7 @@ FINIS;
 <![CDATA[
 
 try {
-	var editor_obj = opener.<?php echo $_REQUEST['editor_obj'] ?>;
+	var editor_obj = opener.<?php echo htmlspecialchars($_REQUEST['editor_obj'],ENT_QUOTES,'UTF-8'); ?>;
 } catch(e) {}
 
 function do_onload()
