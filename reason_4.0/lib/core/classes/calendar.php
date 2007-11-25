@@ -1,10 +1,16 @@
 <?php
-
 /**
  * calendar.php
+ *
  * This file contains the reasonCalendar class, which wraps up the event logic in an object that can be used by modules, feeds, etc.
+ *
+ * @package reason
+ * @subpackage classes
  */
 
+/**
+ * include dependencies
+ */
 include_once( 'reason_header.php' );
 include_once( CARL_UTIL_INC . 'db/db.php' );
 reason_include_once( 'classes/entity_selector.php' );
