@@ -1,8 +1,12 @@
 <?
-
 /**
  * Simple CSV Class
  * @package reason
+ * @subpackage classes
+ */
+
+/**
+ * Simple CSV Class
  * @author nwhite
  *
  * This class is a basic CSV class which can read (and minimally write to) a .csv file stored in the filesystem
@@ -13,7 +17,6 @@
  *	- appends array of values to csv file with proper separator
  *  	- appends string to end of csv file
  */
- 
 class CSV {
 
 	/**
