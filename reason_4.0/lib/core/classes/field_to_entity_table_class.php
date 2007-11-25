@@ -1,9 +1,22 @@
 <?
 /**
+ * Code to add fields to entity tables
+ *
+ * @package reason
+ * @subpackage classes
+ */
+
+/**
+ * Include necessary Reason libraries
+ */
+reason_include_once('classes/entity_selector.php');
+reason_include_once('function_libraries/user_functions.php');
+reason_include_once('function_libraries/admin_actions.php');
+
+/**
  * Field to Entity Table Class
  *
  * Intended for use by scripts that need to add field(s) to entity tables.
- * @author nwhite
  *
  * Sample Usage:
  *
@@ -23,14 +36,10 @@
  *
  * </code>
  *
+ * @author nwhite
  * @package reason
- * @subpackage upgrade
+ * @subpackage classes
  */
-
-reason_include_once('classes/entity_selector.php');
-reason_include_once('function_libraries/user_functions.php');
-reason_include_once('function_libraries/admin_actions.php');
-
 class FieldToEntityTable 
 {
 	var $entity_table_name;
