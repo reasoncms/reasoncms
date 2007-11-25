@@ -6,6 +6,10 @@
 	 */
 	
 	/**
+	 * include the reason libraries
+	 */
+	include_once('reason_header.php');
+	/**
 	 * Include disco so we can extend it
 	 */
 	include_once( DISCO_INC .'disco.php' );
