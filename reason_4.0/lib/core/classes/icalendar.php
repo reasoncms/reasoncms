@@ -1,22 +1,36 @@
 <?php
+/**
+ * A class for creating iCalendar-formatted data from Reason event entities
+ *
+ * @package reason
+ * @subpackage classes
+ */
+
+/**
+ * Include the Reason libraries
+ */
   include_once('reason_header.php');
   
-  /*
-  //Example code
-  reason_include_once('classes/entity_selector.php');
-  
-  $es = new entity_selector();
-  $es -> add_type(id_of('event_type'));
-  $es -> add_relation('contact_username = \'grossh\'');
-  $es -> add_relation('name = \'Test\'');
-  $es -> set_num(10);
-  $events = $es -> run_one();
-
-  $calendar = new reason_iCalendar();
-  $calendar -> set_events($events);
-  header( $calendar->get_icalendar_header());
-  echo $calendar -> get_icalendar_events();
-*/
+/**
+ * A class for creating iCalendar-formatted data from Reason event entities
+ * 
+ * Example code:
+ * <code>
+ * reason_include_once('classes/entity_selector.php');
+ * $es = new entity_selector();
+ * $es -> add_type(id_of('event_type'));
+ * $es -> add_relation('contact_username = \'grossh\'');
+ * $es -> add_relation('name = \'Test\'');
+ * $es -> set_num(10);
+ * $events = $es -> run_one();
+ * $calendar = new reason_iCalendar();
+ * $calendar -> set_events($events);
+ * header( $calendar->get_icalendar_header());
+ * echo $calendar -> get_icalendar_events();
+ * </code>
+ *
+ * @author Henry Gross
+ */
   class reason_iCalendar
   {
 
