@@ -1,12 +1,20 @@
 <?php
-	/*
-		Imager Class
-		dave hendler
-
-		The Imager class is a generic class to handle images.  It grabs images 
-		from the db and shows them.
-	*/
-
+	
+	/**
+	 *	Class that displays images
+	 *
+	 *	@package reason
+	 *	@subpackage classes
+	 */
+	 
+	/**
+	 *	Imager Class
+	 *	
+	 *	The Imager class is a generic class to handle images.  It grabs images 
+	 *	from the db and shows them.
+	 *
+	 *	@author dave hendler
+	 */
 	class Imager // {{{
 	{
 		/*
