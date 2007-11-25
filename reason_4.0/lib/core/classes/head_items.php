@@ -1,4 +1,9 @@
 <?php
+/**
+ *	Class for managing head items
+ *	@package reason
+ *	@subpackage classes
+ */
 
 /**
  *	Inputs and outputs head items.
@@ -16,10 +21,8 @@
  *		$head_html = $head_item->get_head_items_html();
  *  </code>
  *
- *	@package reason
  *  @author Nathan White and the author(s) of functions that I lifted from the default template
  */
-
 class HeadItems
 {
 	/**
