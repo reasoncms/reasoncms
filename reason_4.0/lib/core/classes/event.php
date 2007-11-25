@@ -1,7 +1,20 @@
 <?php
+/**
+ * Reason Event helper class
+ *
+ * @package reason
+ * @subpackage classes
+ */
+
+/**
+ * Include Reason libraries
+ */
 include_once('reason_header.php');
 reason_include_once('classes/entity.php');
-
+/**
+ * Reason Event helper class -- gathers event-related code into one place
+ * @author Matt Ryan
+ */
 class reasonEvent
 {
 	var $event;
