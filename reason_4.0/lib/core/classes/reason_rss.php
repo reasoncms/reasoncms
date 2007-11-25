@@ -1,51 +1,62 @@
 <?php
-	/*
+/**
+ * Class that produces RSS feeds from Reason data
+ *
+ * @package reason
+ * @subpackage classes
+ */
 
-	dave hendler
-	Reason RSS class
-
-	Basically, a quick and dirty class to make an RSS feed from some Reason data.
-	Things to set up:
-		site_id - which site the data is coming from
-		type_id - which type to use
-		es - the es can be modified as a public data member for special queries
-		set_channel_attribute - public method to add/set channel attributes, like language, title, link, etc
-		set_item_field_handler - public method to set a handler for an RSS field/attribute
-		set_item_field_map - public method to map an RSS field to a Reason field
-			for example, if we want the <title> element of the RSS doc to be the "name" field of some type,
-			use set_item_field_map( 'title', 'name' );
-		set_item_field_validator - public method to attach an error checking function to an RSS field
-
-		finally, run get_rss() to get the rss feed
-
-	I apologize for some of the confusion of the wording in this class
-
-	Generally,
-		channel: the RSS channel
-		channel attributes: fields/attributes that pertain to the channel itself, not one of the items.
-			 - so, the channel's title is a channel attribute
-		
-
-	*/
-
+	/**
+	 * Include dependencies
+	 */
 	reason_include_once( 'classes/entity_selector.php' );
 	include_once(CARL_UTIL_INC.'basic/date_funcs.php');
 	
-	
-	// quick function to convert a date field into RFC 822, required by RSS 2.0
+	/**
+	 * quick function to convert a date field into RFC 822, required by RSS 2.0
+	 */
 	function mysql_to_rfc_date( $date )
 	{
-		//echo $date.': '.get_unix_timestamp( $date )."\n";
 		return carl_date( 'r', get_unix_timestamp( $date ) );
 	}
 	
-
-	// hacky email error checker - author field needs an email in it
+	/**
+	 * hacky email error checker - author field needs an email in it
+	 * @todo use a *real* email format regular expression
+	 */
 	function valid_rss_author( $value )
 	{
 		return preg_match( '/@/', $value );
 	}
 
+/**
+ *	Reason RSS class
+ *	@author dave hendler
+ *	
+ *
+ *	Basically, a quick and dirty class to make an RSS feed from some Reason data.
+ *	Things to set up:
+ *		site_id - which site the data is coming from
+ *		type_id - which type to use
+ *		es - the es can be modified as a public data member for special queries
+ *		set_channel_attribute - public method to add/set channel attributes, like language, title, link, etc
+ *		set_item_field_handler - public method to set a handler for an RSS field/attribute
+ *		set_item_field_map - public method to map an RSS field to a Reason field
+ *			for example, if we want the <title> element of the RSS doc to be the "name" field of some type,
+ *			use set_item_field_map( 'title', 'name' );
+ *		set_item_field_validator - public method to attach an error checking function to an RSS field
+ *
+ *		finally, run get_rss() to get the rss feed
+ *
+ *	I apologize for some of the confusion of the wording in this class
+ *
+ *	Generally,
+ *		channel: the RSS channel
+ *		channel attributes: fields/attributes that pertain to the channel itself, not one of the items.
+ *			 - so, the channel's title is a channel attribute
+ *		
+ *
+ */
 	class ReasonRSS
 	{
 	
@@ -185,7 +196,7 @@
 			//pray($this->items);
 			//echo $this->es->get_one_query();
 
-			$this->_out = '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<rss version="2.0">'."\n".'<channel>'."\n\n";
+			$this->_out = '<?xml version="1.0" encoding="UTF-8"?'.'>'."\n".'<rss version="2.0">'."\n".'<channel>'."\n\n";
 			foreach( $this->_channel_attr_values AS $attr => $value )
 				$this->_out .= '<'.$attr.'>'.$this->_clean_value( $value ).'</'.$attr.'>'."\n";
 			$this->_out .= "\n";
