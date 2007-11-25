@@ -1,11 +1,13 @@
 <?
 /**
-* @package reason
-* @author Matt Ryan
-* 
-* A directory service interface for Reason
-*/
+ * A directory service interface for Reason
+ * @package reason
+ * @subpackage classes
+ */
 
+/**
+ * Include reason and directory service libraries
+ */
 include_once('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 require_once(CARL_UTIL_INC.'dir_service/services/ds_default.php');
