@@ -1,4 +1,10 @@
 <?php
+/**
+ *	Simple cache for storing a php object
+ *
+ *	@package reason
+ * 	@subpackage classes
+ */
 
 /**
  *	Super basic object cache system that fetches and sets serialized objects by id
@@ -16,7 +22,6 @@
  *  	$obj =& $cache->fetch();
  *  </code>
  *
- *	@package reason
  *  @author Nathan White
  *  @todo more error checking - especially during file system transactions
  *  @todo option to save in database instead of file system
