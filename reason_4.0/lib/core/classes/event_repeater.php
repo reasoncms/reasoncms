@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * Class that wraps up logic to determine on which a days a given event occurs
+ * @package reason
+ * @subpackage classes
+ */
+ 
+/**
+ * Class that wraps up logic to determine on which a days a given event occurs
+ * @author Matt Ryan
+ */
 class reasonEventRepeater
 {
 	var $frequency;
