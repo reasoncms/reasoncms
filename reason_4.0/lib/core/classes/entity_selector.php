@@ -4,6 +4,7 @@
 	 * A core piece of Reason; grabs entities out of the database
 	 * @author Brendon Stanton
 	 * @package reason
+	 * @subpackage classes
 	 */
 	 
 	/**
