@@ -6,6 +6,10 @@
  */
 
 /**
+ * Include the reason libraries
+ */
+ include_once('reason_header.php');
+/**
  * Include database management stuff
  */
 include_once( CARL_UTIL_INC . 'db/db.php' );
