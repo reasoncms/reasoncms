@@ -1,13 +1,18 @@
 <?php
-	/*
-		Image Import Class
-	*/
+	/**
+	 *	Image Import Disco Form
+	 *	@package reason
+	 *	@subpackage classes
+	 */
+	
+	/**
+	 * Include disco so we can extend it
+	 */
 	include_once( DISCO_INC .'disco.php' );
 
 	/**
 	 * Form to upload and add bulk metadata to images
 	 *
-	 * @package reason
 	 * @author Dave Hendler, Matt Ryan
 	 */
 	class PhotoUploadForm extends disco
