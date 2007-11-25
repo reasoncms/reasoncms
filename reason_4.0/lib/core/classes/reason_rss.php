@@ -9,6 +9,7 @@
 	/**
 	 * Include dependencies
 	 */
+	include_once('reason_header.php');
 	reason_include_once( 'classes/entity_selector.php' );
 	include_once(CARL_UTIL_INC.'basic/date_funcs.php');
 	
