@@ -4,12 +4,17 @@
 	 *  @subpackage classes
 	 */
 	 
+	 /**
+	  * Include parent class -- disco
+	  */
 	include_once (DISCO_INC . 'disco.php');
 	/**
 	*  Disco Reason 2
 	*
 	*  disco reason is a slightly modified DiscoDB that takes care of some of the Reason CMS stuff automatically.
+	*
 	*  example: you can give a content type name or id to the load function to auto load the tables for that type instead of using the other functions
+	*
 	* There was once DiscoReason; hence the name
 	*
 	*  @author dave hendler
