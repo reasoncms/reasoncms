@@ -1,4 +1,10 @@
 <?php
+/**
+ * A disco box class for Reason admin filter forms
+ * @package reason
+ * @subpackage classes
+ */
+
 	/**
 	 * Required Includes
 	 */
@@ -9,7 +15,6 @@
 	/**
 	 * An extension of the basic box class, designed specifically for reason.
 	 * @author Brendon Stanton
-	 * @package reason
 	 */
 	class filter_box extends Box //{{{
 	{
