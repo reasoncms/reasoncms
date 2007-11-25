@@ -1,7 +1,18 @@
 <?php
+/**
+ * Entity Class
+ * @package reason
+ * @subpackage classes
+ */
 
+/**
+ * Include database management stuff
+ */
 include_once( CARL_UTIL_INC . 'db/db.php' );
 
+/**
+ * connect to Reason
+ */
 connectDB(REASON_DB);
 
 /**
