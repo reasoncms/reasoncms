@@ -8,6 +8,7 @@
 	/**
 	 * Required Includes
 	 */
+	include_once('reason_header.php');
 	reason_include_once( 'classes/entity.php' );
 	reason_include_once( 'classes/admin/admin_page.php' );
 	include_once( DISCO_INC . 'disco.php' );
