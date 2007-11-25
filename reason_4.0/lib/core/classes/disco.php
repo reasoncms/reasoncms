@@ -5,6 +5,10 @@
 	 */
 	 
 	 /**
+	  * include Reason libraries
+	  */
+	 include_once('reason_header.php');
+	 /**
 	  * Include parent class -- disco
 	  */
 	include_once (DISCO_INC . 'disco.php');
