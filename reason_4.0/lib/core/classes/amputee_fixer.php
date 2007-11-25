@@ -1,5 +1,39 @@
 <?php
+/**
+ * Fixes entities that do not have records in all their tables (e.g. amputees)
+ *
+ * @package reason
+ * @subpackage classes
+ */
+ 
+/**
+ * Include the reason libraries & setup
+ */
 include_once('reason_header.php');
+
+/**
+ * Fixes entities that do not have records in all their tables
+ *
+ * Amputees are entities that do not have records in all of their tables. 
+ * Amputees are generally invisible to Reason, since entities are grabbed all-at-once
+ * (Though for performance reasons entities are sometimes *not* grabbed with their tables, 
+ * so amputees in your database can cause inconsistent behavior)
+ *
+ * This class creates the records necessary for entities to have records in all the appropriate tables.
+ *
+ * Example usage to fix all amputees in db and spit out an html report on what happened:
+ * <code>
+ * 	$fixer = new AmputeeFixer();
+ *	$fixer->fix_amputees();
+ *	$fixer->generate_report();
+ * </code>
+ *
+ * Example usage to fix amputees of a particular type, for example after changing the type definition
+ * <code>
+ * 	$fixer = new AmputeeFixer();
+ *	$fixer->fix_amputees($type_id);
+ * </code>
+ */
 class AmputeeFixer
 {
 	var $queries = array();
