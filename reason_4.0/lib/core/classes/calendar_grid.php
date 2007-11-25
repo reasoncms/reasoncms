@@ -2,17 +2,24 @@
 /**
 * A class to generate the HTML necessary to make a calendar with linked dates.
 * @package reason
+* @subpackage classes
 * @author Meg Gibbs
 * 21-7-2005
 */
 
-////////////////////
-// 	Notes: I have dumbed the calendar grid down a lot.  It now just gets links for next and previous months and does not try to determine that stuff itself.
-///////////
-
+	/**
+	 * Include dependencies
+	 */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'function_libraries/calendar_utilities.php' );
 	
+	/**
+	 * A class to generate the HTML necessary to make a calendar with linked dates.
+	 *
+	 * Notes: I have dumbed the calendar grid down a lot.  
+	 * It now just gets links for next and previous months and does not try to 
+	 * determine that stuff itself.
+	 */
 	class calendar_grid
 	{
 		var $wrapper_class = 'calendarGrid';
