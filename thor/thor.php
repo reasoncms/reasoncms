@@ -357,7 +357,8 @@ class Thor
 					  'multiple' => $multiple,
 					  'size' => $size,
 					  'default' => array(),
-					  'display_name' => $display_name);
+					  'display_name' => $display_name,
+					  'add_null_value_to_top' => !$required);
 					  
 		$element_children = $element->tagChildren;
 		foreach ($element_children as $element_child)
