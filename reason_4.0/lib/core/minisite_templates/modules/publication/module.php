@@ -53,7 +53,7 @@ class PublicationModule extends Generic3Module
 													'relationship'=>'news_to_category',
 												 ),
 							);
-	var $search_fields = array('entity.name','chunk.content','meta.keywords','meta.description','chunk.author');
+	var $search_fields = array('entity.name','chunk.content','meta.keywords','meta.description','chunk.author','press_release.release_title');
 	var $search_field_size = 10;
 	
 	
@@ -336,7 +336,7 @@ class PublicationModule extends Generic3Module
 		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'show_login_link', 
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
 		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css',
-		      					  'show_featured_items');
+		      					  'show_featured_items','jump_to_item_if_only_one_result');
 		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info, 
 							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
 							      'variables_to_pass' => $this->variables_to_pass);
@@ -461,6 +461,7 @@ class PublicationModule extends Generic3Module
 			{
 				$most_recent_issue = $this->get_most_recent_issue();
 				$this->issue_id = $most_recent_issue->id();
+				$this->_add_css_urls_to_head($this->_get_issue_css($this->issue_id));
 				return true;
 			}
 		}	
@@ -469,6 +470,7 @@ class PublicationModule extends Generic3Module
 			if (in_array($requested_issue, $issue_keys))
 			{
 				$this->issue_id = $requested_issue; // requested issue verified
+				$this->_add_css_urls_to_head($this->_get_issue_css($this->issue_id));
 				return true;
 			}
 			else
@@ -486,6 +488,40 @@ class PublicationModule extends Generic3Module
 			return true;
 		else
 			return false;
+	}
+	
+	function _get_issue_css($issue_id)
+	{
+		$css = array();
+		$r_id = relationship_id_of('issue_to_css_url');
+		if($r_id)
+		{
+			$es = new entity_selector();
+			$es->add_type(id_of('external_url'));
+			$es->add_right_relationship($issue_id,$r_id);
+			$es->set_order('rel_sort_order ASC');
+			$css_entities = $es->run_one();
+			if(!empty($css_entities))
+			{
+				foreach($css_entities as $e)
+				{
+					$css[] = $e->get_value('url');
+				}
+			}
+		}
+		else
+		{
+			trigger_error('Please run the Reason beta 5 to beta 6 publications upgrade script to add the issue_to_css_url relationship');
+		}
+		return $css;
+	}
+	
+	function _add_css_urls_to_head($css)
+	{
+		foreach($css as $url)
+		{
+			$this->parent->add_stylesheet( $url );
+		}
 	}
 	
 	/**
