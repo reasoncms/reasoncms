@@ -18,9 +18,10 @@ reason_include_once( 'minisite_templates/modules/generic3.php' );
 * @author Matt Ryan
 * @author Nathan White
 *
-* @todo Move any remaining markup in the publication module that could possibly be removed to the appropriate markup generator
+* @todo Move any remaining markup in the publication module that could possibly be removed to the appropriate markup generator *or* make an ubermarkupgenerator that handles the surrounding html
 * @todo Alter language from being blog-oriented to being publication-oriented.
-* @todo Limit list of categories to categories that are associated with items FOR THIS PUBLICATION
+* @todo fix featured items/issues interaction
+* @todo improve mathod of removing featured items from other item lists so that specified number of items in section remains correct
 */	
 class PublicationModule extends Generic3Module
 {
@@ -149,6 +150,7 @@ class PublicationModule extends Generic3Module
 									   'view_all_items_in_section_link' => 'get_all_items_in_section_link',
 									   'links_to_current_publications' => 'get_links_to_current_publications',
 									   'publication'=>'get_publication_entity',
+									   'search_string' => 'get_sanitized_search_string',
 									);
 	
 	/**
@@ -736,7 +738,7 @@ class PublicationModule extends Generic3Module
 	function do_list()
 	{	
 		$list_markup_generator = $this->set_up_generator_of_type('list');
-		echo $list_markup_generator->get_markup();	
+		echo $list_markup_generator->get_markup();
 		
 		if(empty($this->items))	//this should only appear if we have issues ... otherwise would be echoed list_items()
 			echo $this->no_items_text;
@@ -2005,6 +2007,16 @@ class PublicationModule extends Generic3Module
 			$es->add_left_relationship( $this->publication->id(), relationship_id_of('news_to_publication') );
 			$es->add_relation('status.status = "published"');
 			return $es;
+		}
+		
+		function get_sanitized_search_string()
+		{
+			if(!empty($this->request['search']))
+			{
+				return reason_htmlspecialchars($this->request['search']);
+			}
+			else
+				return '';
 		}
 	}
 ?>
