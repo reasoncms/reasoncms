@@ -1,4 +1,15 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<?php
+/**
+ * Upgrade publications from 4.0 beta 5 to beta 6
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * Start script
+ */
+?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -40,6 +51,7 @@ class pubUpdaterb5b6
 		// The updates
 		$this->update_default_issue_view();
 		$this->update_section_content_manager();
+		$this->add_issue_to_css_url_relationship();
 	}
 
 	function update_default_issue_view()
@@ -170,6 +182,41 @@ class pubUpdaterb5b6
 		else
 		{
 			echo '<p>Would have updated the section type to use the content manager news_section.php</p>'."\n";
+		}
+	}
+	
+	function add_issue_to_css_url_relationship()
+	{
+		$r_id = relationship_id_of('issue_to_css_url');
+		if(!empty($r_id))
+		{
+			echo '<p>issue_to_css_url already exists. No need to update.</p>'."\n";
+			return;
+		}
+		if($this->mode == 'run')
+		{
+			 $r_id = create_allowable_relationship(id_of('issue_type'), id_of('external_url'), 'issue_to_css_url', array('description'=>'Attaches CSS to a given issue','connections'=>'many_to_many','required'=>'no','is_sortable'=>'yes','display_name'=>'Issue CSS'));
+			if($r_id)
+			{
+				echo '<p>issue_to_css_url allowable relationship successfully created</p>'."\n";
+			}
+			else
+			{
+				echo '<p>Unable to create issue_to_css_url allowable relationship. Please create this allowable relationship manually: go into Reason=>Master Admin=>Allowable Relationship Manager=>Add New Allowable Relationship and fill out the form this way:</p>';
+				echo '<p>Name: issue_to_css_url<br />';
+				echo 'Description: Attaches CSS to a given issue<br />';
+				echo 'Relationship A: Issue<br />';
+				echo 'Relationship B: External URL<br />';
+				echo 'Connections: Many to Many<br />';
+				echo 'Directionality: Unidirectional<br />';
+				echo 'Required: no<br />';
+				echo 'Is Sortable: yes<br />';
+				echo 'Display Name: Issue CSS</p>';
+			}
+		}
+		else
+		{
+			echo '<p>Would have added the issue_to_css_url allowable relationship.</p>'."\n";
 		}
 	}
 }
