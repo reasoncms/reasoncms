@@ -33,7 +33,8 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
  								    'back_link',
 									'publication',
 									'date_format',
-									); 	
+									'search_string',
+									);
 
 	function PublicationListMarkupGenerator ()
 	{
@@ -55,6 +56,9 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		//if there are other issues, display a "jump to other issues" dropdown
 		if(!empty($this->passed_vars['issues_by_date']))
 			$this->markup_string .= $this->get_issue_links_markup();
+			
+		if(!empty($this->passed_vars['search_string']))
+			$this->markup_string .= $this->get_search_header_markup();
 			
 		//if we're just listing items from one section ....
 		if(!empty($this->passed_vars['current_section']))
@@ -81,7 +85,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			//provide links to other sections in the publication
 			if(!empty($this->passed_vars['links_to_sections']))
 				$this->markup_string .= $this->get_section_links_markup();
-			$markup_string = '<div class="back">'."\n";
+			$markup_string .= '<div class="back">'."\n";
 			$main_list_name = $this->passed_vars['publication']->get_value('name');
 		 	if(!empty($this->passed_vars['current_issue']))
 				$main_list_name .= ': '.$this->passed_vars['current_issue']->get_value('name');
@@ -154,6 +158,15 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		return $markup_string;
 	}
 	
+	function get_search_header_markup()
+	{
+		if(!empty($this->passed_vars['search_string']))
+		{
+			return '<h3>Results for "'.$this->passed_vars['search_string'].'"</h3>'."\n";
+		}
+		return '';
+	}
+	
 //////
 // Featured item methods
 //////
@@ -204,8 +217,10 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			{
 				if(!empty($this->passed_vars['items_by_section'][$this->passed_vars['current_section']->id()]))
 					$section_array = $this->passed_vars['items_by_section'][$this->passed_vars['current_section']->id()];
-				else
+				elseif(!empty($this->passed_vars['no_section_key']) && isset($this->passed_vars['items_by_section'][$this->passed_vars['no_section_key']]) )
 					$section_array = $this->passed_vars['items_by_section'][$this->passed_vars['no_section_key']];
+				else
+					$section_array = array();
 
 				if(array_key_exists($id, $section_array))
 				{
@@ -225,6 +240,10 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		$markup_string = '';
 		$name = $issue->get_value('name');
 		$date = prettify_mysql_datetime( $issue->get_value( 'datetime' ), $this->passed_vars['date_format'] );
+		if(!empty($this->passed_vars['links_to_issues'][$issue->id()]) )
+		{
+			$name = '<a href="'.$this->passed_vars['links_to_issues'][$issue->id()].'">'.$name.'</a>';
+		}
 		$markup_string .= '<div class="issueName"><h3>'.$name.' <span class="date">('.$date.')</span></h3></div>'."\n";
 		return $markup_string;
 	}
