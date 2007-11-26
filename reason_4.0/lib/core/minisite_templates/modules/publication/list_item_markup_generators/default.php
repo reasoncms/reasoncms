@@ -85,7 +85,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 	{
 		$markup_string = '';
 		$item = $this->passed_vars['item'];
-		$link_to_full_item = $this->passed_vars['link_to_full_item'];
+		$link_to_full_item = isset($this->passed_vars['link_to_full_item']) ? $this->passed_vars['link_to_full_item'] : '';
 				
 		$markup_string .=  '<h4 class="title">';
 		if(isset($link_to_full_item) &&  !empty($link_to_full_item))
