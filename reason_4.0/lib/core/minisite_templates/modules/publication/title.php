@@ -8,6 +8,10 @@
 		var $publication;
 		var $cleanup_rules = array(
 			'story_id' => array( 'function' => 'turn_into_int' ),
+			'issue_id' => array( 'function' => 'turn_into_int' ),
+			'section_id' => array( 'function' => 'turn_into_int' ),
+			'filters' => array( 'function' => 'turn_into_array' ),
+			'search' => array( 'function' => 'turn_into_string' ),
 		);
 		function init( $args = array() )
 		{
@@ -35,7 +39,7 @@
 		{
 			if( !empty($this->publication) && $this->publication->get_value('name') )
 			{
-				if(!empty($this->request['story_id']))
+				if(!empty($this->request['story_id']) || !empty($this->request['section_id']) || !empty($this->request['filters']) || !empty($this->request['search']))
 				{
 					$link = carl_construct_link(array(), array('textonly')); // preserve only textonly
 					$pubname = '<a href="'.$link.'">'.$this->publication->get_value('name').'</a>';
