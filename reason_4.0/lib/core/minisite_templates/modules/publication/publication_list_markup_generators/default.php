@@ -265,7 +265,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		if(count($issues_by_date) > 1 )
 		{
 			$markup_string .= '<div class="issueMenu">'."\n";
-			$markup_string .= '<form action="'.get_current_url().'">'."\n";
+			$markup_string .= '<form action="'.htmlspecialchars(get_current_url(),ENT_QUOTES,'UTF-8').'">'."\n";
 			$markup_string .= '<label for="pubIssueMenuElement" class="issueLabel">Issue:</label>'."\n";
 			$markup_string .= '<select name="issue_id" id="pubIssueMenuElement">'."\n";
 			if (!$cur_issue_id)
