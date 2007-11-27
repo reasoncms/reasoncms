@@ -231,7 +231,8 @@ class defaultFilterDisplay
 		}
 		if (!empty($this->textonly))
 			$ret .= '<input type="hidden" name="textonly" value="1">';
-		$ret .= 'Search: <input name="search" value="'.$v.'" size="'.$this->search_field_size.'" />'."\n";
+		$id = 'filterSearch'.$this->counter();
+		$ret .= '<label for="'.$id.'">Search:</label> <input name="search" value="'.$v.'" size="'.$this->search_field_size.'" class="search" id="'.$id.'" />'."\n";
 		$ret .= ' <input name="go" type="submit" value="Go" />'."\n";
 		if(!empty($this->search_value))
 		{
@@ -244,6 +245,13 @@ class defaultFilterDisplay
 		}
 		$ret .= '</form>'."\n";
 		return $ret;
+	}
+	
+	function counter()
+	{
+		static $count = 0;
+		$count++;
+		return $count;
 	}
 	/**
 	 * Assemble the markup for the relationship filtering interface
