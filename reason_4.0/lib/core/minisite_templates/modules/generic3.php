@@ -760,7 +760,25 @@
 				foreach($this->filters as $key=>$filter)
 				{
 					settype($filter['id'], 'integer'); // force an integer to thwart SQL insertion through query string
-					$this->es->add_left_relationship( $filter['id'] /*, $this->filter_types[$filter['type']]['relationship'] */);
+					$r_id = 0;
+					if(empty($this->filter_types[$filter['type']]['relationship']))
+					{
+						trigger_error($filter['type'].' does not have a relationship name specified');
+					}
+					else
+					{
+						$r_id = relationship_id_of($this->filter_types[$filter['type']]['relationship']);
+					}
+					if($r_id)
+					{
+						$this->es->add_left_relationship( $filter['id'] , relationship_id_of($this->filter_types[$filter['type']]['relationship']) );
+					}
+					else
+					{
+						trigger_error($filter['type'].' is not a valid allowable relationship');
+						$this->es->add_left_relationship( $filter['id'] );
+					}
+					
 				}
 			}
 			if(!empty($this->request['search']))
