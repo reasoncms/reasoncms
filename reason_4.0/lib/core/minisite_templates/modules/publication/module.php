@@ -1578,15 +1578,13 @@ class PublicationModule extends Generic3Module
 				static $featured_items;
 				if (!isset($featured_items[$this->publication->id()]))
 				{
-					$es = new entity_selector( $this->site_id );
+					$es = carl_clone($this->es);
 					$es->description = 'Selecting featured news items for this publication';
-					$es->add_type( id_of('news') );
-					$es->set_env('site', $this->site_id);
 					$es->add_right_relationship( $this->publication->id(), relationship_id_of('publication_to_featured_post') );
-					$es->add_rel_sort_field($this->publication->id(), relationship_id_of('publication_to_featured_post') );
-					$es->set_order('rel_sort_order ASC');
-					$temp = $es->run();
-					$featured_items[$this->publication->id()] = current($temp);
+					$es->add_rel_sort_field($this->publication->id(), relationship_id_of('publication_to_featured_post'), 'featured_sort_order' );
+					$es->set_order('featured_sort_order ASC');
+					$es->set_num(-1);
+					$featured_items[$this->publication->id()] = $es->run_one();
 				}
 				return $featured_items[$this->publication->id()];
 			}
