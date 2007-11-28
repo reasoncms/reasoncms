@@ -278,9 +278,9 @@ AND bug.bug_state != "Cancelled"');
 			echo '</p>'."\n";
 			parent::list_items();
 		}
-		function construct_link($item)
+		function construct_link($item, $other_args = array())
 		{
-			$link = parent::construct_link($item);
+			$link = parent::construct_link($item, $other_args);
 			if(!empty($this->request['order_projects']))
 				$link .= '&amp;order_projects='.$this->request['order_projects'];
 			return $link;
