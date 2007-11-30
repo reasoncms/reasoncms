@@ -64,11 +64,7 @@ Util.Element.get_class_array = function(elem)
 // "element.addEventListener('click', xxx, false)".)
 Util.Element.set_all_classes = function(elem, all_classes)
 {
-	if ( document.all ) // TEMP: the existence of document.all isn't really related to 'className', so I should use something else ... but what?
-	{
-		elem.setAttribute('className', all_classes);
-	}
-	elem.setAttribute('class', all_classes);
+	elem.className = all_classes;
 };
 
 Util.Element.set_class_array = function(elem, classes)

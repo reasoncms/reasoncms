@@ -38,6 +38,9 @@ Util.HTML_Parser = function()
 		listeners[type.toLowerCase()].push(func);
 	}
 	
+	// consistency
+	this.add_event_listener = this.add_listener;
+	
 	this.parse = function(text)
 	{
 		data = text;
@@ -82,7 +85,7 @@ Util.HTML_Parser = function()
 	function expect(s)
 	{
 		var len = s.length;
-		if (position + len < data.length && data.indexOf(s, position) == 0) {
+		if (position + len < data.length && data.indexOf(s, position) == position) {
 			position += len;
 			return true;
 		}
@@ -115,16 +118,23 @@ Util.HTML_Parser = function()
 		}
 	}
 	
+	function character_data(data)
+	{
+		listeners.data.each(function(l) {
+			l(data);
+		});
+	}
+	
 	function tag_opened(name, attributes)
 	{
-		Util.Array.for_each(listeners.open, function(l) {
+		listeners.open.each(function(l) {
 			l(name, attributes);
 		});
 	}
 	
 	function tag_closed(name)
 	{
-		Util.Array.for_each(listeners.close, function(l) {
+		listeners.close.each(function(l) {
 			l(name);
 		});
 	}
@@ -135,9 +145,7 @@ Util.HTML_Parser = function()
 	{
 		var cdata = scan_until_string('<');
 		if (cdata) {
-			Util.Array.for_each(listeners.data, function(l) {
-				l(cdata);
-			});
+			character_data(cdata);
 		}
 		
 		ignore_character();
@@ -206,7 +214,7 @@ Util.HTML_Parser = function()
 			tag_opened(tag, attributes);
 			
 			var next_char = scan_character();
-			if (next_char == '/' || self_closing_tags.test(tag)) {
+			if (next_char == '/' || self_closing_tags.test(tag.toUpperCase())) {
 				// self-closing tag (XML-style or known)
 				tag_closed(tag);
 				
@@ -245,7 +253,9 @@ Util.HTML_Parser = function()
 			ignore_characters(2);
 		} else if (expect('[CDATA[')) {
 			// CDATA section
-			scan_until_string(']]>');
+			var cdata = scan_until_string(']]>');
+			if (cdata)
+				character_data(cdata);
 			ignore_characters(2);
 		} else {
 			scan_until_string('>');

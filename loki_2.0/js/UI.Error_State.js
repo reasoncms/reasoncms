@@ -1,12 +1,10 @@
 /**
  * @class A canned state for a Util.State_Machine for displaying errors.
+ * @see UI.Error_Display
  */
 UI.Error_State = function(message_container)
 {
-	var doc = message_container.ownerDocument;
-	var dh = new Util.Document(doc);
-	
-	this.display = null;
+	var display = new UI.Error_Display(message_container);
 	var error = null;
 	
 	/**
@@ -30,36 +28,12 @@ UI.Error_State = function(message_container)
 			throw new Error('Entered error state, but there is no error!');
 		}
 
-		var children = [error.message];
-		if (error.retry) {
-			var link = dh.create_element('a',
-				{
-					href: '#',
-					className: 'retry',
-					style: {display: 'block'}
-				},
-				['Retry']);
-			Util.Event.add_event_listener(link, 'click', function(e) {
-				if (!e)
-					var e = window.event;
-
-				try {
-					error.retry();
-				} finally {
-					return Util.Event.prevent_default(e);
-				}
-			});
-			children.push(link);
-		}
-
-		this.display = dh.create_element('p', {className: 'error'}, children);
-		message_container.appendChild(this.display);
+		display.show(error.message, error.retry);
 	}
 	
 	this.exit = function()
 	{
-		if (this.display)
-			this.display.parentNode.removeChild(this.display);
+		display.clear();
 		error = null;
 	}
 }

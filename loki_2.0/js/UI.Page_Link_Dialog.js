@@ -54,7 +54,7 @@ UI.Page_Link_Dialog = function()
 	this._set_title = function()
 	{
 		if ( this._initially_selected_item.uri == '' )
-			this._dialog_window.document.title = "Make a Link";
+			this._dialog_window.document.title = "Create a Link";
 		else
 			this._dialog_window.document.title = "Edit a Link";
 	};
@@ -80,9 +80,10 @@ UI.Page_Link_Dialog = function()
 		this._append_link_information_chunk();
 		this._append_submit_and_cancel_chunk();
 		this._append_remove_link_chunk();
-
-		this._sites_error_state =
-			new UI.Error_State(this._doc.getElementById('sites_pane'));
+		
+		this._sites_error_display = (this._use_rss)
+			? new UI.Error_Display(this._doc.getElementById('sites_pane'))
+			: null;
 	};
 
 	this._append_heading = function()
@@ -269,29 +270,27 @@ UI.Page_Link_Dialog = function()
 		var add_initially_selected_uri = function(uri)
 		{
 			var connector = ( uri.indexOf('?') > -1 ) ? '&' : '?';
-			// XXX: shouldn't need to add "http:" here--fix RSS feed
 			return uri + connector + 'url=' + 
-				encodeURIComponent('http:' + self._initially_selected_nameless_uri);
+				encodeURIComponent(self._initially_selected_nameless_uri);
 		};
 
 		// Load finder
 		feed_uri = add_initially_selected_uri(feed_uri)
 		var reader = new Util.RSS.Reader(feed_uri);
 		var select = this._doc.getElementById('sites_select') || null;
-		var error_state = this._sites_error_state;
+		var error_display = this._sites_error_display;
 		var sites_pane = this._doc.getElementById('sites_pane');
 		
-		error_state.exit(null);
+		error_display.clear();
 		
 		function report_error(message) {
 			this._sites_progress.remove();
 			if (select && select.parentNode)
 				select.parentNode.removeChild(select);
 			
-			error_state.set('Failed to load finder: ' + message, function() {
+			error_display.show('Failed to load finder: ' + message, function() {
 				this._load_finder(feed_uri);
 			}.bind(this));
-			error_state.enter(null);
 		}
 		
 		reader.add_event_listener('load', function(feed, new_items) {
@@ -316,11 +315,12 @@ UI.Page_Link_Dialog = function()
 		}.bind(this));
 		reader.add_event_listener('error', report_error.bind(this));
 		reader.add_event_listener('timeout', function() {
-			report_error.call(this, 'Failed to load the list of sites within a reasonable amount of time.');
+			report_error.call(this, 'Failed to check the origin of the link ' +
+				'within a reasonable amount of time.');
 		}.bind(this));
 		
 		try {
-			reader.load(null, 10 /* 10 = 10 seconds until timeout */);
+			reader.load(null, 20 /* 20 = 20 seconds until timeout */);
 		} catch (e) {
 			var message = e.message || e;
 			report_error(message);
@@ -341,19 +341,18 @@ UI.Page_Link_Dialog = function()
 		
 		var reader = new Util.RSS.Reader(feed_uri);
 		var select = this._doc.getElementById('sites_select') || null;
-		var error_state = this._sites_error_state;
+		var error_display = this._sites_error_display;
 		
-		error_state.exit(null);
+		error_display.clear();
 		
 		function report_error(message) {
 			this._sites_progress.remove();
 			if (select && select.parentNode)
 				select.parentNode.removeChild(select);
 			
-			error_state.set('Failed to load sites: ' + message, function() {
+			error_display.show('Failed to load sites: ' + message, function() {
 				this._load_sites(feed_uri);
 			}.bind(this));
-			error_state.enter(null);
 		}
 		
 		reader.add_event_listener('load', function(feed, new_items)

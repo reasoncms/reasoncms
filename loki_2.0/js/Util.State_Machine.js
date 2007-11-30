@@ -3,10 +3,39 @@
  * @class A "state machine"; an organized way of tracking discrete software states.
  * @author Eric Naeseth
  */
-Util.State_Machine = function(states, starting_state)
+Util.State_Machine = function(states, starting_state, name)
 {
 	this.states = states || {};
-	this.state = null;
+	// I have no idea why this helps keep the machine in sync, but it does:
+	this.state = {
+		real_state: null,
+		
+		get: function()
+		{
+			return this.real_state;
+		},
+		
+		set: function(new_state)
+		{
+			this.real_state = new_state;
+		}
+	};
+	this.name = name || null;
+	this.changing = false;
+	this.lock = new Util.Lock(this.name);
+	
+	this.determine_name = function(state)
+	{
+		if (!state)
+			return '[null]';
+		
+		for (var name in this.states) {
+			if (this.states[name] == state)
+				return name;
+		}
+		
+		return '[unknown]';
+	}
 	
 	this.change = function(new_state)
 	{
@@ -16,13 +45,19 @@ Util.State_Machine = function(states, starting_state)
 			new_state = this.states[new_state];
 		}
 		
-		var old_state = this.state;
-		if (old_state) {
-			old_state.exit(new_state);
+		this.lock.acquire();
+		try {
+			var old_state = this.state.get();
+
+			if (old_state) {
+				old_state.exit(new_state);
+			}
+
+			this.state.set(new_state);
+			new_state.enter(old_state);
+		} finally {
+			this.lock.release();
 		}
-		
-		this.state = new_state;
-		new_state.enter(old_state);
 	}
 	
 	var machine = this;

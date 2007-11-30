@@ -1,9 +1,29 @@
+/**
+ * @class Container for methods that allow standard OOP thinking to be
+ * shoehorned into JavaScript, for better or worse.
+ */
 Util.OOP = {};
+
+/**
+ * "Mixes in" an object's properties.
+ * @param	{object}	target	The object into which things will be mixed
+ * @param	{object}	source	The object providing the properties
+ * @type object
+ * @return target
+ */
+Util.OOP.mixin = function(target, source)
+{
+	var names = Util.Object.names(source);
+	for (var i = 0; i < names.length; i++) {
+		target[names[i]] = source[names[i]];
+	}
+	
+	return target;
+}
 
 /**
  * Sets up inheritance from parent to child. To use:
  * - Create parent and add parent's methods and properties.
- * - Do not require any arguments to parent's constructor--use an init method instead.
  * - Create child
  * - At beginning of child's constructor, call inherits(parent, child)
  * - Add child's new methods and properties
@@ -27,22 +47,31 @@ Util.OOP = {};
  */
 Util.OOP.inherits = function(child, parent)
 {
-	var parent_prototype = new parent;
-	for ( var name in parent_prototype )
-	{
-		child[name] = parent_prototype[name];
-	}
-	child['superclass'] = parent_prototype;
+	var parent_prototype = null;
+	var nargs = arguments.length;
 	
-	// call the superclass' constructor on the child object
-	parent.apply(child, Util.Array.from(arguments).slice(2));
+	if (nargs < 2) {
+		throw new TypeError('Must provide a child and a parent class.');
+	} else if (nargs == 2) {
+		parent_prototype = new parent;
+	} else {
+		// XXX: Is there really no better way to do this?!
+		//      Something involving parent.constructor maybe?
+		var arg_list = $R(2, nargs).map(function (i) {
+			return 'arguments[' + String(i) + ']';
+		});
+		eval('parent_prototype = new parent(' + arg_list.join(', ') + ')')
+	}
+	
+	Util.OOP.mixin(child, parent_prototype);
+	child.superclass = parent_prototype;
 };
 
 /**
  * Sets up inheritance from parent to child, but only copies over the elements
  * in the parent's prototype provided as arguments after the parent class.
  */
-Util.OOP.swiss = function (child, parent)
+Util.OOP.swiss = function(child, parent)
 {
 	var parent_prototype = new parent;
     for (var i = 2; i < arguments.length; i += 1) {
@@ -51,39 +80,3 @@ Util.OOP.swiss = function (child, parent)
     }
     return child;
 };
-
-
-/**
- * Sets up inheritance from parent to child. To use:
- * - Create parent and add parent's methods and properties
- * - Create child
- * - Call inherits(parent, child)
- * - Add child's new methods and properties
- *
- * Slightly modified from <http://www.crockford.com/javascript/inheritance.html>.
- */
-Util.OOP.inherits_old = function(parent, child)
-{
-    var d = 0, p = (child.prototype = new parent());
-    child.prototype.uber = function uber(name) {
-        var f, r, t = d, v = parent.prototype;
-        if (t) {
-            while (t) {
-                v = v.constructor.prototype;
-                t -= 1;
-            }
-            f = v[name];
-        } else {
-            f = p[name];
-            if (f == child[name]) {
-                f = v[name];
-            }
-        }
-        d += 1;
-        r = f.apply(child, Array.prototype.slice.apply(arguments, [1]));
-        d -= 1;
-        return r;
-    };
-    return child;
-};
-

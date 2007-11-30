@@ -95,6 +95,28 @@ Util.Event.remove_event_listener = function(node, type, listener)
 };
 
 /**
+ * Tests whether the given keyboard event matches the provided key code.
+ * @param {Event} the keyboard event
+ * @param {intgeger} the key code
+ * @type boolean
+ */
+Util.Event.matches_keycode = function(event, key_code)
+{
+	if (['keydown', 'keyup'].contains(event.type) && e.keyCode == keycode) {
+		return true;
+	} else if (event.type == 'keypress') {
+		var code = (e.charCode)
+			? e.charCode
+			: e.keyCode; // Internet Explorer instead puts the ASCII value here.
+			
+			return key_code == code ||
+				(key_code >= 65 && key_code <= 90 && key_code + 32 == code);
+	} else {
+		throw new Error('The given event is not an applicable keyboard event.');
+	}
+}
+
+/**
  * Calls the listeners which have been "attached" to the
  * event.currentTarget using add_event_listener. This function is
  * intended for use primarily by add_event_listener.

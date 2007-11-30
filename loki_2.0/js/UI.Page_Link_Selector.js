@@ -76,7 +76,8 @@ UI.Page_Link_Selector = function(dialog)
 				types = [];
 				
 				message.insert();
-				message.innerHTML = 'Loading &ldquo;' + site.name + '&rdquo&hellip;';
+				message.setHTML('Loading &ldquo;' + site.name +
+					'&rdquo&hellip;');
 				
 				var reader = new Util.RSS.Reader(site.url);
 				var machine = this.machine;
@@ -94,11 +95,11 @@ UI.Page_Link_Selector = function(dialog)
 					
 					feed.items.each(function(item) {
 						types.push({
-							name: item.plural_title,
+							name: (item.plural_title || item.title),
 							instance_name: item.title,
 							url: dialog._sanitize_uri(item.link),
 							is_default: (dialog._initially_selected_type_uri)
-								? item.link == dialog._initially_selected_type_uri
+								? Util.URI.equal(item.link, dialog._initially_selected_type_uri)
 								: dialog._default_type_regexp.test(item.link)
 						});
 					});
@@ -158,7 +159,7 @@ UI.Page_Link_Selector = function(dialog)
 			types_list: null,
 			
 			links_pane: null,
-			arbiter: null,
+			arbiter: new UI.Page_Link_Selector.Item_Selector(dialog, wrapper),
 			
 			enter: function(old_state)
 			{
@@ -206,9 +207,7 @@ UI.Page_Link_Selector = function(dialog)
 
 				Util.Element.add_class(wrapper, 'contains_types');
 				wrapper.appendChild(this.types_pane);
-				
-				this.arbiter =
-					new UI.Page_Link_Selector.Item_Selector(this.machine, wrapper);
+				this.arbiter.change('message');
 				
 				if (selected_type) {
 					// Delay this step by a trivial amount to allow the browser
@@ -224,10 +223,7 @@ UI.Page_Link_Selector = function(dialog)
 			
 			exit: function()
 			{
-				if (this.arbiter && this.arbiter.state) {
-					this.arbiter.state.exit();
-					this.arbiter = null;
-				}
+				this.arbiter.states.inactive.enter();
 				
 				wrapper.removeChild(this.types_pane);
 				Util.Element.remove_class(wrapper, 'contains_types');
@@ -235,7 +231,7 @@ UI.Page_Link_Selector = function(dialog)
 		},
 		
 		error: new UI.Error_State(wrapper)
-	}, 'initial');
+	}, 'initial', 'Type selector');
 	
 	this.insert = function(container)
 	{
@@ -269,9 +265,8 @@ UI.Page_Link_Selector = function(dialog)
 /**
  * @class Chooses the item.
  */
-UI.Page_Link_Selector.Item_Selector = function(parent, wrapper)
+UI.Page_Link_Selector.Item_Selector = function(dialog, wrapper)
 {
-	var dialog = parent.dialog;
 	var doc = wrapper.ownerDocument;
 	var dh = new Util.Document(doc);
 	
@@ -288,11 +283,21 @@ UI.Page_Link_Selector.Item_Selector = function(parent, wrapper)
 	{
 		type = new_type;
 		inline_p_name = type.name.toLowerCase();
-		this.states.loading.enter();
+		this.change('loading');
 	}
 	
 	Util.OOP.inherits(this, Util.State_Machine, {
-		initial: {
+		inactive: {
+			enter: function() {
+				
+			},
+			
+			exit: function() {
+				
+			}
+		},
+		
+		message: {
 			enter: function() {
 				message.insert();
 				message.setText(please_choose);
@@ -306,7 +311,7 @@ UI.Page_Link_Selector.Item_Selector = function(parent, wrapper)
 		loading: {
 			enter: function() {
 				message.insert();
-				message.setText('Loading ' + inline_p_name + '…');
+				message.setHTML('Loading ' + inline_p_name + '&hellip;');
 				
 				var reader = new Util.RSS.Reader(type.url);
 				var machine = this.machine;
@@ -343,12 +348,12 @@ UI.Page_Link_Selector.Item_Selector = function(parent, wrapper)
 							text: item.title,
 							value: dialog._sanitize_uri(item.link),
 							selected: (initial_uri)
-								? (initial_uri == Util.URI.strip_https_and_http(item.link))
+								? Util.URI.equal(initial_uri, item.link)
 								: false
 						});
 					});
 
-					machine.change('interactive');
+					machine.states.interactive.enter();
 				});
 
 				reader.add_event_listener('error', function (error_msg, code)
@@ -445,13 +450,18 @@ UI.Page_Link_Selector.Item_Selector = function(parent, wrapper)
 						}
 
 						var ideal_width = needed_width + 55 + width_diff;
-						if (window.screenX + ideal_width >= window.screen.availWidth - 10)
-							ideal_width = window.screen.availWidth - window.screenX - 10;
+						var screen = dialog_window.screen;
+						var screen_x = dialog_window.screenX - screen.left;
+						
+						if (screen_x + ideal_width >= screen.availWidth - 10) {
+							ideal_width =
+								window.screen.availWidth - screen_x - 10;
+						}
 
 						dialog_window.resizeTo(
 							[dialog._dialog_window_width, ideal_width].max(),
 							height);
-					}).delay(.05);
+					}).delay(.15);
 				}
 				
 				
@@ -464,6 +474,7 @@ UI.Page_Link_Selector.Item_Selector = function(parent, wrapper)
 					var present = null;
 					
 					var activity = dialog.create_activity_indicator('bar');
+					// TODO: display a text input box instead of the message
 					var message = dh.create_element('p',
 						{style: {margin: '0px', fontStyle: 'italic'}},
 						['(No anchors were found.)']);
@@ -625,9 +636,7 @@ UI.Page_Link_Selector.Item_Selector = function(parent, wrapper)
 		},
 		
 		error: new UI.Error_State(wrapper)
-	}, 'initial');
-	
-	// links_pane = dh.create_element('div', {id: 'links_pane'});
+	}, 'inactive', 'Item selector');
 }
 
 /**
@@ -657,5 +666,13 @@ UI.Page_Link_Selector.Message_Display = function(wrapper)
 			message.removeChild(message.firstChild);
 
 		message.appendChild(text);
+	}
+	
+	this.setHTML = function(html)
+	{
+		while (message.childNodes.length > 0)
+			message.removeChild(message.firstChild);
+		
+		message.innerHTML = html;
 	}
 }

@@ -10,29 +10,30 @@
  * by having a built in filter and pager.
  *
  * @author	Nathanael Fillmore
- * @version 2004-08-23
+ * @author	Eric Naeseth
+ * @version 2007-10-16
  * 
  */
 UI.Listbox = function()
 {
 	// Permanent listbox instance properties
-	this._doc_obj; // reference to the document object for the document this listbox will be added to
-	this._root_elem; // the root listbox element
-	this._items = new Array(); // holds the list items (their data, that is, not their document fragments)
-	this._item_chunks = new Array(); // holds the document chunk for each list item
-	this._selected_index; // holds index in this._items of the currently selected item
+	this._doc_obj = null; // reference to the document object for the document this listbox will be added to
+	this._root_elem = null; // the root listbox element
+	this._items = []; // holds the list items (their data, that is, not their document fragments)
+	this._item_chunks = []; // holds the document chunk for each list item
+	this._selected_index = null; // holds index in this._items of the currently selected item
 
-	this._filtered_indices = new Array(); // holds indices of the items which match the _filter_string
-	this._cur_page_num;
-	this._num_results_per_page;
-	this._filter_string;
+	this._filtered_indices = []; // holds indices of the items which match the _filter_string
+	this._cur_page_num = null;
+	this._num_results_per_page = null;
+	this._filter_string = null;
 
-	this._items_chunk_elem;
-	this._next_page_elem;
-	this._prev_page_elem;
-	this._page_num_elem;
+	this._items_chunk_elem = null;
+	this._next_page_elem = null;
+	this._prev_page_elem = null;
+	this._page_num_elem = null;
 
-	this._event_listeners = new Object();
+	this._event_listeners = {};
 };
 
 /**
@@ -42,18 +43,25 @@ UI.Listbox = function()
  * @param	listbox_id	the desired id of the root listbox HTML element.  
  * @param	doc_obj		a reference to the document object for the document
  *                      this listbox will be added to.
+ * @param	options		behavior options
  */
-UI.Listbox.prototype.init = function(listbox_id, doc_obj)
+UI.Listbox.prototype.init = function(listbox_id, doc_obj, options)
 {
+	if (!options)
+		var options = {};
+	
 	// Permanent listbox instance properties
 	this._doc_obj = doc_obj;
 	this._create_root_elem(listbox_id);
+	this._error_display = new UI.Error_Display(this._root_elem);
+	this._chunks = [];
 
 	// Current state of listbox
 	this._cur_page_num = 0; // zero-based
-	//this._num_results_per_page = 40;
-	this._num_results_per_page = 8;
-	this._filter_string = '';
+	this._chunk_transfer_size = options.chunk_transfer_size || 16;
+	this._transfer_timeout = options.transfer_timeout || 10;
+	this._num_results_per_page = options.results_per_page || 8;
+	this._filter_string = options.filter_string || '';
 	this._selected_index = -1;
 
 	// Append chunks
@@ -167,8 +175,9 @@ UI.Listbox.prototype.select_item_by_index = function(index, dont_refresh, debug)
 
 	// Trigger change listeners
 	var self = this;
-	var async = function() { self._trigger_event_listeners('change'); }
-	setTimeout(async, 10);
+	(function() {
+		self._trigger_event_listeners('change');
+	}).defer();
 };
 
 /**
@@ -244,63 +253,92 @@ UI.Listbox.prototype.get_listbox_elem = function()
 };
 
 /**
- * Loads items from a buffered reader and appends them all to the listbox.
- *
- * @param	buffered_reader			the buffered reader
- * @param	initially_selected_item_boolean_test	(optional) is passed a reader_item, and returns true if the item should be initially selected
+ * Loads items from a RSS reader.
+ * @param	reader	The Util.RSS.Reader object
+ * @param	is_selected	(optional) Boolean-returning function that will be
+ * 						called with each RSS item to determine if it should
+ *						be initially selected
  */
-UI.Listbox.prototype.append_items_from_buffered_reader = function(buffered_reader, initially_selected_item_boolean_test)
+UI.Listbox.prototype.load_rss_feed = function(reader, is_selected)
 {
-	var self = this;
-	var cumulative_i = 0;
-	var original_listbox_length = this._items.length;
-	function load_listener()
+	var items_added = 0;
+	var original_length = this._items.length;
+	
+	if (!is_selected) {
+		var is_selected = function() { return false; };
+	}
+	var already_selected = this._selected_index >= 0;
+	
+	var load_more = (function()
 	{
-		// Get the current reader items
-		var reader_items = buffered_reader.get_cur_items();
-		var initially_selected_index = -1;
-
-		// Append each item from the reader to the list box
-		for ( var i = 0; i < reader_items.length; i++ )
-		{
-			var reader_item = reader_items[i];
-			self.append_item(reader_item);
-
-			// Check whether this is the initially selected item; if
-			// so, mark it
-			if ( initially_selected_item_boolean_test != null &&
-				 initially_selected_item_boolean_test(reader_item) )
-			{
-				initially_selected_index = original_listbox_length + cumulative_i;
-			}
-
-			cumulative_i++;
+		reader.load(this._chunk_transfer_size, this._transfer_timeout);
+	}).bind(this);
+	
+	var retry = (function()
+	{
+		for (var i = original_length; i < this._items.length; i++) {
+			this.remove_item(original_length);
 		}
-
-		// Refresh the listbox
-		self.refresh();
-
-		// Select the item marked as initially selected
-		if ( initially_selected_index > -1 )
-		{
-			self.select_item_by_index(initially_selected_index);
-			self.page_to_selected_item();
+		
+		this.load_rss_feed(reader, is_selected);
+	}).bind(this);
+	
+	function handle_error(error_msg, code)
+	{
+		if (code) {
+			error_msg += ' (HTTP Error ' + code + ')';
 		}
-
-		// Load the next set of items.
-		// Note: This should work, but does not. What it should do is
-		// start the process to load the next set of items, which will
-		// eventually call this listener again, at least if there are
-		// more items. Instead, calling load_next_items from here
-		// hangs Gecko and causes an error in IE. If anyone knows why,
-		// it is god.
-		if ( reader_items.length != 0 )
-			buffered_reader.load_next_items();
+		this._report_error('Failed to load items: ' + error_msg, retry);
 	}
 	
-	buffered_reader.add_load_listener(load_listener);
-	buffered_reader.load_next_items();
-};
+	reader.add_event_listener('timeout', function() {
+		handle_error('Failed to load items: The operation timed out.', 0);
+	}.bind(this));
+	
+	reader.add_event_listener('load', function(reader, items) {
+		var selected = null;
+		
+		items.each(function(item) {
+			this.append_item(item);
+			
+			// Determine if the current item should start out selected
+			// (don't bother doing this if we already have a selected item)
+			if (selected === null && !already_selected && is_selected(item)) {
+				selected = original_length + items_added;
+			}
+			
+			items_added++;
+		}, this);
+		
+		// Display the newly-added items
+		this.refresh();
+		
+		// Select the item marked as initially selected, if any
+		if (selected !== null) {
+			this.select_item_by_index(selected);
+			this.page_to_selected_item();
+		}
+		
+		if (items.length > 0) {
+			try {
+				load_more();
+			} catch (e) {
+				handle_error('Failed to load the next group of items: ' +
+					(e.message || e.description || e), 0);
+			}
+		}
+	}.bind(this));
+	
+	reader.add_event_listener('error', handle_error.bind(this));
+	
+	// Load the first chunk
+	try {
+		load_more();
+	} catch (e) {
+		handle_error('Failed to load the first group of items: ' +
+			(e.message || e.description || e), 0)
+	}
+}
 
 /**
  * Adds a listener to be called on some event.
@@ -326,6 +364,28 @@ UI.Listbox.prototype._trigger_event_listeners = function(event_type)
 		}
 	}
 };
+
+UI.Listbox.prototype._report_error = function(error, retry)
+{
+	if (!retry)
+		var retry = null;
+	
+	while (this._root_elem.firstChild) {
+		this._chunks.push(this._root_elem.firstChild);
+		this._root_elem.removeChild(this._root_elem.firstChild);
+	}
+	
+	this._error_display.show(error, retry);
+}
+
+UI.Listbox.prototype._clear_error = function()
+{
+	this._error_display.clear();
+	
+	for (var i = 0; i < this._chunks.length; i++) {
+		this._root_elem.appendChild(this._chunks.shift());
+	}
+}
 
 
 ///////////////////////////////////
@@ -433,6 +493,32 @@ UI.Listbox.prototype._set_filter_string = function(filter_string)
 UI.Listbox.prototype._update_filtered_indices = function()
 {
 	this._filtered_indices = new Array();
+	
+	function matches_filter(obj, filter)
+	{
+		var bare = {}; // see Util.Object.names() for justification
+		
+		for (var name in obj) {
+			if (name in bare)
+				continue;
+			
+			var value = obj[name];
+			if (value == null)
+				continue;
+			
+			var t = typeof(value);
+			
+			if (t == 'object' && matches_filter(value, filter))
+				return true;
+			if (t == 'function')
+				continue;
+			if (t != 'string')
+				value = String(value);
+			
+			if (value.toLowerCase().indexOf(filter) >= 0)
+				return true;
+		}
+	}
 
 	if ( this._filter_string == '' )
 	{
@@ -446,15 +532,9 @@ UI.Listbox.prototype._update_filtered_indices = function()
 		for ( var i = 0; i < this._items.length; i++ )
 		{
 			cur_item = this._items[i];
-			for ( item_property_name in cur_item )
-			{
-				item_property_lc = cur_item[item_property_name].toLowerCase();
-				if ( item_property_lc.indexOf(filter_string_lc) != -1 ) // if matches
-				{
-					this._filtered_indices.push(i);
-					break;
-				}
-			}
+			
+			if (matches_filter(cur_item, filter_string_lc))
+				this._filtered_indices.push(i);
 		}
 	}
 };

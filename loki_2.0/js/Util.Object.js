@@ -8,17 +8,96 @@ Util.Object = function()
 };
 
 /**
- * Returns the names of an object's properties as an array.
+ * Returns the names of an object's properties as an array. Ignores properties
+ * found on any object.
  */
 Util.Object.names = function(obj)
 {
 	var names = [];
+	var bare = {};
+	
+	// JavaScript doesn't really have a hash or dictionary type, only a
+	// generic object type. This is a problem because the variables object
+	// we're given can have properties that are intrinsic to objects which
+	// shouldn't be added to the query string. To work around this, we
+	// create a bare object and ignore any properties in variables that are
+	// also found on the bare object.
 	
 	for (var name in obj) {
+		if (name in bare)
+			continue;
 		names.push(name);
 	}
 	
 	return names;
+}
+
+/**
+ * Calls the given function once per property in the object. The function
+ * should accept the property's name as the first argument and its value as
+ * the second.
+ */
+Util.Object.enumerate = function(obj, func, thisp)
+{
+	if (!thisp)
+		var thisp = null;
+	
+	Util.Object.names(obj).each(function (name)
+	{
+		func.call(thisp, name, obj[name]);
+	});
+}
+
+/**
+ * Clones (creates a copy of) the given object.
+ */
+Util.Object.clone = function(some_object)
+{
+	var new_obj;
+	
+	if (!some_object || typeof(some_object) != 'object')
+		return some_object;
+	
+	try {
+		new_obj = new some_object.constructor();
+	} catch (e) {
+		new_obj = new Object();
+	}
+	
+	for (var name in some_object) {
+		new_obj[name] = some_object[name];
+	}
+	
+	return new_obj;
+}
+
+/**
+ * Determines if two objects are equal.
+ */
+Util.Object.equal = function(a, b)
+{
+	if (typeof(a) != 'object') {
+		return (typeof(b) == 'object')
+			? false
+			: (a == b);
+	} else if (typeof(b) != 'object') {
+		return false;
+	}
+	
+	seen = {};
+	
+	for (var name in a) {
+		if (!(name in b && Util.Object.equal(a[name], b[name])))
+			return false;
+		seen[name] = true;
+	}
+	
+	for (var name in b) {
+		if (!(name in seen))
+			return false;
+	}
+	
+	return true;
 }
 
 /**

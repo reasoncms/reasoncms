@@ -11,8 +11,6 @@ UI.Image_Dialog = function()
 
 	this._dialog_window_width = 625;
 	this._dialog_window_height = 600;
-	this._tn_regexp =  new RegExp('_tn\.', ''); // matches the "thumbnail" portion
-												// of a URI
 
 	this.init = function(params)
 	{
@@ -77,7 +75,8 @@ UI.Image_Dialog = function()
 	{
 		// Instantiate a listbox to display the images 
 		this._image_listbox = new UI.Image_Listbox;
-		this._image_listbox.init('image_listbox', this._dialog_window.document);
+		this._image_listbox.init('image_listbox', this._dialog_window.document,
+			{chunk_transfer_size: 500});
 
 		// Append the listbox's root element. (Do
 		// this here rather than later so that the listbox items are
@@ -87,34 +86,59 @@ UI.Image_Dialog = function()
 
 		// Setup test for initially selected item
 		var self = this;
-		var initially_selected_item_boolean_test = function(item)
-		{
+		function is_initially_selected(item)
+		{			
 			if ( !item || !item.link || !self._initially_selected_item || !self._initially_selected_item.uri )
 				return false;
 			else
 			{
 				var item_uri = Util.URI.strip_https_and_http(item.link);
+				var enclosure_uri = (item.enclosure)
+					? Util.URI.strip_https_and_http(item.enclosure.url)
+					: null;
 				var initial_uri = Util.URI.strip_https_and_http(self._initially_selected_item.uri);
-				if ( item_uri.replace(self._tn_regexp, '.') ==
-					   initial_uri.replace(self._tn_regexp, '.') )
-				/*
-				if ( item && item.link && 
-					 self._initially_selected_item && self._initially_selected_item.uri &&
-					 item.link.replace(self._tn_regexp, '.') ==
-					   self._initially_selected_item.uri.replace(self._tn_regexp, '.') )
-				*/
-				{
+				
+				if (item_uri == initial_uri || enclosure_uri == initial_uri) {
 					self._tabset.select_tab('listbox');
 					return true;
-				}
-				else
+				} else {
 					return false;
+				}
 			}
 		};
+		
+		function url_maker(offset, num)
+		{
+			return Util.URI.append_to_query(this._data_source,
+				{start: offset, num: num});
+		}
+		
+		this._image_listbox.add_event_listener('change', function() {
+			var item = this._image_listbox.get_selected_item();
+			
+			if (item.enclosure) {
+				this._listbox_size_chunk.style.display = '';
+				
+				if (this._initially_selected_item && this._initially_selected_item.uri) {
+					var isu = Util.URI.strip_https_and_http(
+						this._initially_selected_item.uri);
+
+					if (isu == Util.URI.strip_https_and_http(item.enclosure.url)) {
+						this._listbox_tn_size_radio.input_elem.checked = true;
+						this._listbox_full_size_radio.input_elem.checked = false;
+					} else if (isu == Util.URI.strip_https_and_http(item.link)) {
+						this._listbox_tn_size_radio.input_elem.checked = false;
+						this._listbox_full_size_radio.input_elem.checked = true;
+					}
+				}
+			} else {
+				this._listbox_size_chunk.style.display = 'none';
+			}
+		}.bind(this));
 
 		// Append to the listbox items retrieved using an RSS feed
-		var rss_buffered_reader = (new Util.RSS_Reader).init(this._data_source, 25);
-		this._image_listbox.append_items_from_buffered_reader(rss_buffered_reader, initially_selected_item_boolean_test);
+		var reader = new Util.RSS.Reader(url_maker.bind(this));
+		this._image_listbox.load_rss_feed(reader, is_initially_selected)
 	};
 
 	this._append_image_custom = function()
@@ -215,18 +239,13 @@ UI.Image_Dialog = function()
 	 */
 	this._create_size_chunk = function(tabname)
 	{
-		// Check for initial value
-		var is_full = ( this._initially_selected_item &&
-						this._initially_selected_item.uri &&
-						!this._initially_selected_item.uri.match(this._tn_regexp) );
-
 		// Create radios
 		this['_' + tabname + '_tn_size_radio'] = new Util.Radio({
 			id : tabname + '_tn_size_radio', 
 			tabname : tabname + '_size', 
 			label : 'Thumbnail', 
 			value : 'tn', 
-			checked: !is_full, 
+			checked: true, 
 			document : this._dialog_window.document
 		});
 		this['_' + tabname + '_full_size_radio'] = new Util.Radio({
@@ -234,7 +253,7 @@ UI.Image_Dialog = function()
 			tabname : tabname + '_size', 
 			label : 'Full', 
 			value : 'full',  
-			checked: is_full, 
+			checked: false, 
 			document : this._dialog_window.document
 		});
 
@@ -244,6 +263,8 @@ UI.Image_Dialog = function()
 		// Append radios and labels to fieldset
 		fieldset.fieldset_elem.appendChild(this['_' + tabname + '_tn_size_radio'].chunk);
 		fieldset.fieldset_elem.appendChild(this['_' + tabname + '_full_size_radio'].chunk);
+
+		this['_' + tabname + '_size_chunk'] = fieldset.chunk;
 
 		// Return fieldset chunk
 		return fieldset.chunk;
@@ -332,17 +353,10 @@ UI.Image_Dialog = function()
 		button.appendChild( this._dialog_window.document.createTextNode('Remove image') );
 
 		var self = this;
-		var listener = function()
-		{
-			/* not really necessary for just an image
-			if ( confirm('Really remove image? WARNING: This cannot be undone.') )
-			{
-			*/
-				self._remove_listener();
-				self._dialog_window.window.close();
-			//}
-		}
-		Util.Event.add_event_listener(button, 'click', listener);
+		Util.Event.add_event_listener(button, 'click', function() {
+			self._remove_listener();
+			self._dialog_window.window.close();
+		});
 
 		// Setup their containing chunk
 		var chunk = this._dialog_window.document.createElement('DIV');
@@ -365,14 +379,14 @@ UI.Image_Dialog = function()
 			var img_item = this._image_listbox.get_selected_item();
 			if ( img_item == null )
 			{
-				this._dialog_window.window.alert('Please select an image to insert');
+				this._dialog_window.window.alert('Please select an image to insert.');
 				return false;
 			}
 
 			// Determine uri
-			var uri = Util.URI.strip_https_and_http(img_item.link);
-			if ( this._listbox_full_size_radio.input_elem.checked )
-				uri = uri.replace( this._tn_regexp, '.' );
+			var uri = (img_item.enclosure && this._listbox_tn_size_radio.input_elem.checked)
+				? Util.URI.strip_https_and_http(img_item.enclosure.url)
+				: Util.URI.strip_https_and_http(img_item.link);
 
 			// Determine alt text
 			var alt = img_item.title;

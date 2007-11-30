@@ -17,15 +17,11 @@ Util.Array.from = function(iterable)
 		return [];
 	if (iterable.toArray)
 		return iterable.toArray();
-	
-	var results = [];
-	for (var i = 0, length = iterable.length; i < length; i++) {
-		results.push(iterable[i]);
-	}
-	return results;
+		
+	return Array.prototype.slice.call(iterable, 0);
 };
 
-$A = Util.Array.from; // convenience alias
+var $A = Util.Array.from; // convenience alias
 
 /**
  * Creates an array of integers from start up to (but not including) stop.
@@ -44,7 +40,7 @@ Util.Array.range = function(start, stop)
 	return ret;
 }
 
-$R = Util.Array.range; // convenience alias
+var $R = Util.Array.range; // convenience alias
 
 /**
  * Methods that are callable by two methods:
@@ -64,10 +60,10 @@ Util.Array.Methods = {
 	 * @param	thisp	optional "this" context
 	 * @see	http://tinyurl.com/ds8lo
 	 */
-	for_each: function(array, func, thisp)
+	for_each: function(array, func)
 	{
-		if (typeof(thisp) == 'undefined')
-			var thisp = null;
+		var thisp = arguments[2] || null;
+
 		if (typeof(func) != 'function')
 			throw new TypeError();
 
@@ -82,12 +78,18 @@ Util.Array.Methods = {
 	},
 	
 	/**
-	 * [a, b, c, ...] -> [func(a), func(b), func(c), ...]
+	 * Creates a new array by applying the given function to each element of
+	 * the given array.
+	 * i.e. [a, b, c, ...] -> [func(a), func(b), func(c), ...]
+	 * @param {array} array the array over which map will loop
+	 * @param {function} fund the function to apply to each element
+	 * @param {object} thisp optional "this" context for the function
+	 * @type array
+	 * @see http://tinyurl.com/32ww7d
 	 */
-	map: function(array, func, thisp)
+	map: function(array, func)
 	{
-		if (typeof(thisp) == 'undefined')
-			thisp = null;
+		var thisp = arguments[2] || null;
 
 		var len = array.length;
 		var ret = new Array(len);
@@ -216,6 +218,53 @@ Util.Array.Methods = {
 		return array.reduce(function(a, b) {
 			return a * b;
 		});
+	},
+	
+	contains: function(array, item)
+	{
+		return !!array.find(function(element) {
+			return item == element;
+		});
+	},
+	
+	remove: function(array, item)
+	{
+		var len = array.length;
+		for (var i = 0; i < len; i++) {
+			if (i in array && array[i] == item) {
+				array.splice(i, 1);
+				return true;
+			}
+		}
+		
+		return false;
+	},
+	
+	remove_all: function(array, item)
+	{
+		var len = array.length;
+		var found = false;
+		
+		for (var i = 0; i < len; i++) {
+			if (i in array && array[i] == item) {
+				found = true;
+				array.splice(i, 1);
+			}
+		}
+		
+		return found;
+	},
+	
+	append: function(a, b)
+	{
+		// XXX: any more efficient way to do this using Array.splice?
+		
+		var len = b.length;
+		for (var i = 0; i < len; i++) {
+			if (i in b) {
+				a.push(b[i]);
+			}
+		}
 	}
 }
 

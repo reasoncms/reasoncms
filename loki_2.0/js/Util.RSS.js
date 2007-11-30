@@ -160,6 +160,8 @@ Util.RSS.Reader = function(url)
 			this.feed.items.push(item_object);
 		}
 		
+		offset += i;
+		
 		listeners.load.each(function(l) {
 			l(this.feed, new_items);
 		}.bind(this));

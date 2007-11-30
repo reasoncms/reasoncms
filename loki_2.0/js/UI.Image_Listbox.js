@@ -23,6 +23,14 @@ UI.Image_Listbox = function()
 	 */
 	this._create_item_chunk = function(item)
 	{
+		function use_enclosure_url()
+		{
+			if (!item.enclosure || !item.enclosure.type || !item.enclosure.url)
+				return false;
+			
+			return item.enclosure.type.match(/^image\//);
+		}
+		
 		//var item_chunk = this._doc_obj.createElement('DIV');
 		var item_chunk = this._doc_obj.createElement('A');
 		item_chunk.href = 'javascript:void(0);';
@@ -30,7 +38,10 @@ UI.Image_Listbox = function()
 
 		// Image
 		var image_elem = this._doc_obj.createElement('IMG');
-		var src = Util.URI.strip_https_and_http(item.link);
+		var uri = (use_enclosure_url())
+			? item.enclosure.url
+			: item.link;
+		var src = Util.URI.strip_https_and_http(uri);
 		image_elem.setAttribute('src', src);
 		image_elem.setAttribute('alt', '[Image: ' + item.title + ']');
 		Util.Image.set_max_size(image_elem, 125, 125); // this needs to be here for IE, and in the load handler for Gecko
