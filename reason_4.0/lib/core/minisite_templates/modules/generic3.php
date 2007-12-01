@@ -253,6 +253,13 @@
 				}
 				else
 				{
+					// when filters are being used and active, the default way mysql 5 chooses to optimize the query can result
+					// in some extremely long load times. Forcing a straight join appears to address this issue.
+					if ($this->use_filters && !empty($this->request['filters']))
+					{
+						$this->es->optimize('STRAIGHT_JOIN'); 
+					}									  
+					
 					// If we have a list, either below an item or by itself, and also
 					// have pagination, we want to basically grab the current page's
 					// "chunk" of items as before and put it into $this->items
@@ -683,8 +690,8 @@
 			{
 				foreach($this->filters as $key=>$vals)
 				{
-					$link_frags[ 'filters['.$key.'][type]' ] = $vals['type'];
-					$link_frags[ 'filters['.$key.'][id]' ] = $vals['id'];
+					if (!empty($vals['type'])) $link_frags[ 'filters['.$key.'][type]' ] = $vals['type'];
+					if (!empty($vals['id'])) $link_frags[ 'filters['.$key.'][id]' ] = $vals['id'];
 				}
 				if(!empty($this->request['search']))
 					$link_frags[ 'search' ] = urlencode($this->request['search']);
@@ -759,26 +766,33 @@
 				$this->filters = $this->request['filters'];
 				foreach($this->filters as $key=>$filter)
 				{
-					settype($filter['id'], 'integer'); // force an integer to thwart SQL insertion through query string
-					$r_id = 0;
-					if(empty($this->filter_types[$filter['type']]['relationship']))
+					if (!empty($filter['type']) && !empty($filter['id']))
 					{
-						trigger_error($filter['type'].' does not have a relationship name specified');
+						settype($filter['id'], 'integer'); // force an integer to thwart SQL insertion through query string
+						$r_id = 0;
+						if(empty($this->filter_types[$filter['type']]['relationship']))
+						{
+							trigger_error($filter['type'].' does not have a relationship name specified');
+						}
+						else
+						{
+							$r_id = relationship_id_of($this->filter_types[$filter['type']]['relationship']);
+						}
+						if($r_id)
+						{
+							$this->es->add_left_relationship( $filter['id'] , relationship_id_of($this->filter_types[$filter['type']]['relationship']) );
+						}
+						else
+						{
+							trigger_error($filter['type'].' is not a valid allowable relationship');
+							//$this->es->add_left_relationship( $filter['id'] );
+						}
 					}
 					else
 					{
-						$r_id = relationship_id_of($this->filter_types[$filter['type']]['relationship']);
+						trigger_error('request for filter (key ' . $key . ') does not have both a type and an id - unsetting the malformed filter');
+						unset ($this->filters[$key]);
 					}
-					if($r_id)
-					{
-						$this->es->add_left_relationship( $filter['id'] , relationship_id_of($this->filter_types[$filter['type']]['relationship']) );
-					}
-					else
-					{
-						trigger_error($filter['type'].' is not a valid allowable relationship');
-						$this->es->add_left_relationship( $filter['id'] );
-					}
-					
 				}
 			}
 			if(!empty($this->request['search']))
@@ -906,6 +920,14 @@
 		{
 			foreach($this->filter_types as $filter_name=>$filter_type)
 			{
+				$r_id = false;
+				if(empty($filter_type['relationship'])) trigger_error($filter_type['type'].' does not have a relationship name specified');
+				else
+				{
+					$r_id = relationship_id_of($filter_type['relationship']);
+					if (!$r_id) trigger_error($filter_type['relationship'] . ' is not a valid allowable relationship');
+				}
+					
 				$es = new entity_selector($this->parent->site_id);
 				$es->add_type(id_of($filter_type['type']));
 				$es->set_order('entity.name ASC');
@@ -928,7 +950,7 @@
 					foreach($filter_entities as $key=>$filter)
 					{
 						$es = carl_clone($setup_es);
-						$es->add_left_relationship( $filter->id() );
+						$es->add_left_relationship( $filter->id(), $r_id );
 						$results = $es->run_one();
 						if(empty($results))
 						{
