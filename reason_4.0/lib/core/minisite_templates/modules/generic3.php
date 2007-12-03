@@ -690,8 +690,12 @@
 			{
 				foreach($this->filters as $key=>$vals)
 				{
-					if (!empty($vals['type'])) $link_frags[ 'filters['.$key.'][type]' ] = $vals['type'];
-					if (!empty($vals['id'])) $link_frags[ 'filters['.$key.'][id]' ] = $vals['id'];
+					// only add if both type and id are present
+					if (!empty($vals['type']) && !empty($vals['id']))
+					{
+						$link_frags[ 'filters['.$key.'][type]' ] = $vals['type'];
+						$link_frags[ 'filters['.$key.'][id]' ] = $vals['id'];
+					}
 				}
 				if(!empty($this->request['search']))
 					$link_frags[ 'search' ] = urlencode($this->request['search']);
@@ -790,8 +794,10 @@
 					}
 					else
 					{
-						trigger_error('request for filter (key ' . $key . ') does not have both a type and an id - unsetting the malformed filter');
-						unset ($this->filters[$key]);
+						// filter request is malformed - googlebot may have lots of these - we will send a redirect with no filters
+						$redirect_link = carl_make_redirect(array('filters' => ''));
+						header('Location: ' . $redirect_link);
+						exit;
 					}
 				}
 			}
