@@ -6,9 +6,28 @@ reason_include_once( 'function_libraries/url_utils.php' );
 reason_include_once( 'function_libraries/feed_utils.php' );
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'editorFeedFinder';
 
+/**
+ * @todo clean this up so that request['url'] is consistently provided and loki 2 hack is unnecessary
+ * @todo 
+ */
+
+/**
+ * Loki 2 link style was not being properly handled by the editor_feed_finder - this function converts links that start with // to http://
+ * @todo normalize loki link formats, ensure
+ */
+function turn_into_normalized_url($string)
+{
+	$url = turn_into_string($string);
+	if ($url) $url = (substr($url, 0, 2) === '//') ? 'http:' . $url : $url;
+	return $url;
+}
+
+/**
+ * @todo Make smarter and more efficient on sites with many entities
+ */
 class editorFeedFinder extends defaultFeed
 {
-	var $cleanup_rules = array('url'=>array('function'=>'turn_into_string'));
+	var $cleanup_rules = array('url'=>array('function'=>'turn_into_normalized_url'));
 	function run($send_header = true)
 	{
 		$hit = false;
