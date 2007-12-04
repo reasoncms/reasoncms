@@ -172,7 +172,7 @@
 				// now load values from db
 				if ( !isset( $this->_id ) )
 				{
-					$HTTP_VARS = conditional_stripslashes(get_http_vars());
+					$HTTP_VARS = conditional_stripslashes($_REQUEST);
 					$this->_id = isset( $HTTP_VARS[ 'id' ] ) ? $HTTP_VARS[ 'id' ] : '';
 				}
 				$this->load_values();
