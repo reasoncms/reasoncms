@@ -27,7 +27,15 @@ $GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_2
 	function get_loki_2_paths_for_reason($site_id)
 	{
 		include_once('paths.php');
-		include_once(LOKI_2_INC.'Loki.php');
+		if (file_exists(LOKI_2_INC.'loki.php'))
+		{
+			include_once(LOKI_2_INC.'loki.php');
+		}
+		else
+		{
+			trigger_error('Loki 2 file structure has changed slightly. Please update LOKI_2_INC in package_settings.php to reference the ' . LOKI_2_INC . '/helpers/php/ directory.');
+			include_once( LOKI_2_INC.'/helpers/php/loki.php' );
+		}
 		$paths = array();
 		// This commented-out section will allow us to only show live sites to other live sites
 		/* $site_feed_query = '';
@@ -98,7 +106,15 @@ $GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_2
 	
 	function get_loki_2_options()
 	{
-		include_once(LOKI_2_INC.'Loki_Options.php');
+		if (file_exists(LOKI_2_INC.'inc/options.php'))
+		{
+			include_once (LOKI_2_INC.'inc/options.php');
+		}
+		else
+		{
+			trigger_error('Loki 2 file structure has changed slightly. Please update LOKI_2_INC in package_settings.php to reference the ' . LOKI_2_INC . '/helpers/php/ directory.');
+			include_once( LOKI_2_INC.'/helpers/php/inc/options.php' );
+		}
 		
 		$options_object = new Loki2_Options();
 		$options = $options_object->get_all();
