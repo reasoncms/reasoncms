@@ -41,7 +41,7 @@
 		 */	
 		var $param;
 		
-		function init()
+		function init( $args = array() )
 		{
 			parent::init();
 			$valid = true;
