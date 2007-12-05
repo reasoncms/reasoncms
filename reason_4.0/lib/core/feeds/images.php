@@ -73,7 +73,7 @@ class imagesRSS extends ReasonRSS
 		$url = 'http://'.REASON_HOST.WEB_PHOTOSTOCK.$filename;
 		$type = @$mime_map[$extension];
 		
-		$size = filesize(PHOTOSTOCK.$filename);
+		$size = (file_exists(PHOTOSTOCK.$filename)) ? filesize(PHOTOSTOCK.$filename) : 0;
 	
 		return '<'.$attr.' url="'.$url.'" length="'.$size.'" '.
 			'type="'.($type ? $type : 'image/x-unknown').'" />'."\n";
