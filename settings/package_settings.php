@@ -88,7 +88,7 @@ define('LOKI_HTTP_PATH',REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH.LOKI_DIRNAME.'/')
 
 // Define the path to loki files
 define('LOKI_2_DIRNAME', 'loki_2.0');
-define('LOKI_2_INC',INCLUDE_PATH.LOKI_2_DIRNAME.'/');
+define('LOKI_2_INC',INCLUDE_PATH.LOKI_2_DIRNAME.'/helpers/php/');
 define('LOKI_2_HTTP_PATH',REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH.LOKI_2_DIRNAME.'/');
 
 // Define the path to tinymce files
