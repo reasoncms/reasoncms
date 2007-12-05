@@ -17,8 +17,22 @@ Util.Array.from = function(iterable)
 		return [];
 	if (iterable.toArray)
 		return iterable.toArray();
+	
+	try {
+		return Array.prototype.slice.call(iterable, 0);
+	} catch (e) {
+		// This doesn't work in Internet Explorer with iterables that are not
+		// real JavaScript objects. But we still want to keep around the slice
+		// version for performance on Gecko.
 		
-	return Array.prototype.slice.call(iterable, 0);
+		var new_array = [];
+		for (var i = 0; i < iterable.length; i++) {
+			new_array.push(iterable[i]);
+		}
+		
+		return new_array;
+	}
+	
 };
 
 var $A = Util.Array.from; // convenience alias

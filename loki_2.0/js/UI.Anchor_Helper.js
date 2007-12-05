@@ -22,31 +22,21 @@ UI.Anchor_Helper = function()
 	{
 		return this.get_selected_item() != null;
 	};
-
-	var _get_selected_anchor = function()
+	
+	function _get_selected_placeholder()
 	{
 		var sel = Util.Selection.get_selection(self._loki.window);
 		var rng = Util.Range.create_range(sel);
-		//var surrounding_node = Util.Range.get_common_ancestor(rng);
+		
+		return Util.Range.get_nearest_ancestor_element_by_tag_name(rng, 'IMG');
+	}
 
-		var selected_anchor;
-		// IE
-		var selected_image = Util.Range.get_nearest_ancestor_element_by_tag_name(rng, 'IMG');
-		if ( selected_image != null )
-		{
-			selected_anchor = self._anchor_masseuse.get_real_elem(selected_image);
-		}
-		// Gecko
-		if ( selected_anchor == null )
-		{
-			var selected_a = Util.Range.get_nearest_ancestor_element_by_tag_name(rng, 'A');
-			if ( selected_a != null )
-			{
-				selected_anchor = self._anchor_masseuse.get_real_elem(selected_a);
-			}
-		}
-
-		return selected_anchor;
+	var _get_selected_anchor = function()
+	{
+		var placeholder = _get_selected_placeholder();
+		return (placeholder)
+			? self._anchor_masseuse.get_real_elem(placeholder)
+			: null;
 	};
 
 	this.get_selected_item = function()
@@ -74,18 +64,27 @@ UI.Anchor_Helper = function()
 
 	this.insert_anchor = function(anchor_info)
 	{
-		// Create the anchor
-		var anchor = self._loki.document.createElement('A');
-		anchor.name = anchor_info.name;
+		var selected = _get_selected_placeholder();
+		if (selected) {
+			// Edit an existing anchor.
+			// XXX: This code probably shouldn't be here, but it does fix
+			//      issue #13.
+			selected.setAttribute('loki:anchor_name', anchor_info.name);
+			selected.title = anchor_info.name;
+		} else {
+			// Create the anchor
+			var anchor = self._loki.document.createElement('A');
+			anchor.name = anchor_info.name;
 
-		// Create the dummy
-		var dummy = self._anchor_masseuse.get_fake_elem(anchor);
+			// Create the dummy
+			var dummy = self._anchor_masseuse.get_fake_elem(anchor);
 
-		// Insert the dummy
-		var sel = Util.Selection.get_selection(self._loki.window);
-		Util.Selection.collapse(sel, true); // to beg
-		Util.Selection.paste_node(sel, dummy);
-
+			// Insert the dummy
+			var sel = Util.Selection.get_selection(self._loki.window);
+			Util.Selection.collapse(sel, true); // to beg
+			Util.Selection.paste_node(sel, dummy);	
+		}
+		
 		self._loki.window.focus();
 	};
 

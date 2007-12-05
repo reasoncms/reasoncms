@@ -1,13 +1,24 @@
 <?php
 
-if (!defined('LOKI_2_INC')) {
-	if (!defined('DIRECTORY_SEPARATOR'))
-		define('DIRECTORY_SEPARATOR', '/');
-	define('LOKI_2_INC', dirname(__FILE__).DIRECTORY_SEPARATOR);
+if (!defined('DIRECTORY_SEPARATOR'))
+	define('DIRECTORY_SEPARATOR', '/');
+
+if (!defined('LOKI_2_PHP_INC')) {
+	define('LOKI_2_PHP_INC', dirname(__FILE__).DIRECTORY_SEPARATOR.
+		'inc'.DIRECTORY_SEPARATOR);
 }
 
-// include_once('paths.php'); // ?
-include_once(LOKI_2_INC.'Loki_Options.php'); // so we can get L_DEFAULT etc.
+if (!defined('LOKI_2_PATH')) {
+	if (defined('LOKI_2_INC')) {
+		// old constant name
+		define('LOKI_2_PATH', LOKI_2_INC);
+	} else {
+		define('LOKI_2_PATH', Loki2::_guess_path());
+	}
+}
+
+include_once(LOKI_2_PHP_INC.'options.php'); // so we can get L_DEFAULT etc.
+
 /**
  * Second generation of the Loki XHTML editor
  *
@@ -60,6 +71,8 @@ class Loki2
 	var $_default_site_regexp = '';
 	var $_default_type_regexp = '';
 	var $_sanitize_unsecured = false;
+	var $_allowable_tags = null;
+	var $_external_script_path = null;
 
 	/**
 	 * Constructor
@@ -72,11 +85,19 @@ class Loki2
 	 */
 	function Loki2( $field_name, $field_value = '', $current_options = 'default', $user_is_admin = false, $debug = false )
 	{
+		if (!defined('LOKI_2_HTTP_PATH')) {
+			trigger_error('The constant LOKI_2_HTTP_PATH must be defined '.
+				'in order to instantiate a copy of the Loki2 editor.',
+				E_USER_ERROR);
+		}
+		
 		$this->_asset_protocol = strpos($_SERVER['SCRIPT_URI'], 'https') === 0 ? 'https://' : 'http://';
 		$this->_asset_host = $_SERVER['HTTP_HOST'];
-		$this->_asset_path = LOKI_2_HTTP_PATH;
+		$this->_asset_path = ('/' != substr(LOKI_2_HTTP_PATH, -1, 1))
+			? LOKI_2_HTTP_PATH.'/'
+			: LOKI_2_HTTP_PATH;
 		$this->_asset_uri = $this->_asset_protocol . $this->_asset_host . $this->_asset_path;
-		$this->_asset_file_path = LOKI_2_INC;
+		$this->_asset_file_path = LOKI_2_PATH;
 		$this->_current_options = $current_options;
 
 		$this->_field_name = $field_name;
@@ -182,7 +203,8 @@ class Loki2
 					use_reason_integration : false,
                     use_xhtml : true,
 					sanitize_unsecured : <?php echo (($this->_sanitize_unsecured) ? 'true' : 'false') ?>,
-					options : options
+					options : options,
+					allowable_tags : <?php echo $this->_js_allowable_tags() ?>
 				};
 
 				loki = new UI.Loki;
@@ -235,8 +257,12 @@ class Loki2
 	 *					or 'external', to reference an external, cache-aware
 	 *					script that merges all of the Loki JavaScript files
 	 *					together.
+	 * @param	path	For the 'external' mode, specifies the HTTP path to the
+	 *					Loki script aggregator. If this is not specified,
+	 *					the path will be guessed based on the default Loki
+	 *					directory layout.
 	 */
-	function include_js($mode=null)
+	function include_js($mode=null, $path=null)
 	{
 		static $loki_js_has_been_included = false;
 		
@@ -244,7 +270,7 @@ class Loki2
 		{
 			// Set up hidden iframe for clipboard operations
 			?>
-			<script type="text/javascript" language="javascript">
+			<script type="text/javascript">
 				UI__Clipboard_Helper_Privileged_Iframe__src = 'jar:<?php echo $this->_asset_protocol . $this->_asset_host . $this->_asset_path; ?>auxil/privileged.jar!/Clipboard_Helper_Privileged_Iframe.html';
 				UI__Clipboard_Helper_Editable_Iframe__src = '<?php echo $this->_asset_protocol . $this->_asset_host . $this->_asset_path; ?>auxil/loki_blank.html';
 			</script>
@@ -262,20 +288,25 @@ class Loki2
 				$files = $this->_get_js_files();
 				$base = $this->_asset_path.'js';
 				if (!$files)
-					return;
+					return false;
 				
 				foreach ($files as $filename) {
 					echo '<script type="text/javascript" '.
 						'src="'.$base.$filename.'" charset="utf-8"></script>';
 				}
 			} else if ($mode == 'external') {
-				echo '<script type="text/javascript" '.
-					'src="'.$this->_asset_path.'loki_editor.php"></script>';
+				if (!$path) {
+					$path = $this->_asset_path.
+						'helpers/php/loki_editor_scripts.php';
+				}
+				
+				echo '<script type="text/javascript" src="'.$path.'">',
+					"</script>\n";
 			} else if ($mode == 'inline') {
 				$files = $this->_get_js_files();
 				$base = $this->_asset_file_path.'js';
 				if (!$files)
-					return;
+					return false;
 				
 				echo '<script type="text/javascript">', "\n";
 				foreach ($files as $filename) {
@@ -285,11 +316,13 @@ class Loki2
 			} else {
 				user_error('Unknown Loki JS inclusion mode "'.$mode.'". '.
 					'Cannot load Loki\'s JavaScript.', E_USER_WARNING);
-				return;
+				return false;
 			}
 			
 			$loki_js_has_been_included = true;
 		}
+		
+		return true;
 	}
 
 	/**
@@ -315,7 +348,6 @@ class Loki2
 		return $this->_field_value; 
 	}
 
-
 	/**
 	 * Sets the field's value.
 	 * @param  string  $field_value  The value of the Loki-ized field (before being edited).
@@ -330,78 +362,39 @@ class Loki2
 		if (!$source)
 			$source = $this->_asset_file_path.'js';
 		
-		if (!$d = dir($source)) {
-			user_error('Failed to load Loki\'s JavaScript code from "'.
-				$base.'".', E_USER_WARNING);
-			return false;
-		}
-		
-		$files = array();
-		
-		while (false !== $e = $d->read()) {
-			if ($e{0} == '.' || substr($e, -3) != '.js')
-				continue;
-
-			$this->_add_file($files, $e);
-		}
-		
-		return $files;
+		$finder = new Loki2ScriptFinder($source);
+		return $finder->files;
 	}
 	
-	function _compare_filenames($a, $b)
+	/**
+	 * 
+	 */
+	function set_allowable_tags($tags)
 	{
-		$a_ut = (0 == strncmp($a, 'Util', 4));
-		$a_ui = (0 == strncmp($a, 'UI', 2));
-		$b_ut = (0 == strncmp($b, 'Util', 4));
-		$b_ui = (0 == strncmp($b, 'UI', 2));
-
-		if (!$a_ut && !$a_ui) {
-			return (!$b_ut && !$b_ui)
-				? strcasecmp($a, $b)
-				: -1;
-		} else if (!$b_ut && !$b_ui) {
-			return 1;
-		} else if ($a_ut) {
-			if ($b_ui)
-				return -1;
-			else if ($a == 'Util.js')
-				return -1;
-			else if ($b == 'Util.js')
-				return 1;
-			else if ($a == 'Util.Function.js')
-				return -1;
-			else if ($b == 'Util.Function.js')
-				return 1;
-			else
-				return strcasecmp($a, $b);
-		} else if ($b_ut) {
-			if ($a_ui)
-				return 1;
-			else
-				return strcasecmp($a, $b);
-		} else if ($a == 'UI.js') {
-			return -1;
-		} else if ($b == 'UI.js') {
-			return 1;
-		} else {
-			return strcasecmp($a, $b);
-		}
+		$this->_allowable_tags = $tags;
 	}
-
-	function _add_file(&$files, $file)
+	
+	function _js_allowable_tags()
 	{
-		for ($i = 0; $i < count($files); $i++) {
-			if ($this->_compare_filenames($files[$i], $file) < 0)
-				continue;
-
-			for ($j = (count($files) - 1); $j >= $i; $j--) {
-				$files[$j + 1] = $files[$j];
-			}
-
-			break;
-		}
-
-		$files[$i] = $file;
+		if (!$this->_allowable_tags)
+			return 'null';
+			
+		$quote = array(&$this, '_quote');
+		return '['.implode(', ', array_map($quote, $this->_allowable_tags)).']';
+	}
+	
+	function _quote($tag)
+	{
+		return '"'.str_replace('\'', "\\'", $tag).'"';
+	}
+	
+	/**
+	 * @static
+	 * @return string
+	 */
+	function _guess_path()
+	{
+		return dirname(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR;
 	}
 }
 ?>

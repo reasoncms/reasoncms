@@ -11,33 +11,6 @@
  */
 UI.Clean = new Object;
 
-// List originally taken from <http://hacks.oreilly.com/pub/h/4110>, by 
-// Mark Pilgrim <http://diveintomark.org/projects/greasemonkey/>
-UI.Clean.special_char_replacements = 
-{
-	"\xa0": " ",
-	"\xa9": "(c)",
-	"\xae": "(r)",
-	"\xb7": "*",
-	"\u2018": "'",
-	"\u2019": "'",
-	"\u201c": '"',
-	"\u201d": '"',
-	"\u2026": "?",
-	"\u2002": " ",
-	"\u2003": " ",
-	"\u2009": " ",
-	"\u2013": "-",
-	"\u2014": "--",
-	"\u2122": "(tm)",
-	"\u2026": " . . . "
-};
-UI.Clean.special_char_regexps = {};
-for (var k in UI.Clean.special_char_replacements)
-{
-	UI.Clean.special_char_regexps[k] = new RegExp(k, 'g');
-}
-
 /**
  * Cleans the children of the given root.
  *
@@ -280,7 +253,7 @@ UI.Clean.clean = function(root, settings)
 		// Axe form elements?
 		{
 			description : "Remove U unless there's an appropriate option set.",
-			test : function(node) { return !settings.options.test('underline') && has_tagname(node, ['U']); },
+			test : function(node) { return has_tagname(node, ['U']); },
 			action : function(node) 
 			{
 				/* buggy (actually it's not--the bug is in remove_tag--but leave this
@@ -343,17 +316,9 @@ UI.Clean.clean = function(root, settings)
 			}
 		},
 		{
-			description : 'Convert curly quotes and such to normal ones',
-			test : function(node) { return node.nodeType == Util.Node.TEXT_NODE; },
-			action : function(node) 
-			{
-				var text = node.data;
-				for (var k in UI.Clean.special_char_replacements)
-				{
-					text = text.replace(UI.Clean.special_char_regexps[k], UI.Clean.special_char_replacements[k]);
-				}
-				node.data = text;
-			}
+			description: 'Remove bubbles',
+			test: function(node) { return has_class(node, ['loki__bubble']); },
+			action: remove_node
 		}
 		// TODO: deal with this?
 		// In content pasted from Word, there may be 
@@ -459,12 +424,10 @@ UI.Clean.cleanHtml = function(html, settings)
     ];
 
 
-    mb('UI.Clean.cleanHtml: html before clean', html);
-    for (var i in tests)
-        if (tests[i].test == null || tests[i].test())
+    for (var i in tests) {
+        if (!tests[i].test || tests[i].test())
             html = html.replace(tests[i].pattern, tests[i].replacement);
-    //alert(html);
-    mb('UI.Clean.cleanHtml: html after clean', html);
+	}
 
     return html;
 };

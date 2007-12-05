@@ -103,4 +103,5 @@ class Loki2_Options
 		}
 	}
 }
+
 ?>

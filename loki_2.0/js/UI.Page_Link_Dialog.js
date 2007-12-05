@@ -38,6 +38,9 @@ UI.Page_Link_Dialog = function()
 		this._default_type_regexp = params.default_type_regexp;
 		// use rss integration only if sites_feed and finder_feed are given:
 		this._use_rss = params.sites_feed && params.finder_feed;
+		
+		this._initially_selected_nameless_uri = null;
+		this._initially_selected_name = null;
 
 		// used because we want to perform certain actions only
 		// when the dialog is first starting up, and others only
@@ -264,6 +267,16 @@ UI.Page_Link_Dialog = function()
 		var a = this._initially_selected_item.httpless_uri.split('#');
 		this._initially_selected_nameless_uri = a[0];
 		this._initially_selected_name = a.length > 1 ? a[1] : '';
+		
+		if (a.length > 1 && a[0].length == 0) {
+			// We have an anchor but nothing else; this means that the user
+			// linked to an anchor on the current item. In this case, we should
+			// simply skip going through the finder and proceed as if this
+			// were a new link.
+			
+			this._load_sites(this._sites_feed);
+			return;
+		}
 
 		// Add initially selected uri
 		var self = this;
@@ -517,7 +530,7 @@ UI.Page_Link_Dialog = function()
 	};
 
 	this._apply_initially_selected_item = function()
-	{
+	{	
 		if ( this._use_rss )
 		{	
 			if ( !this._initially_selected_item.uri )
@@ -540,9 +553,6 @@ UI.Page_Link_Dialog = function()
 	this._finder_listener = function()
 	{
 		var not_found = !this._initially_selected_site_uri;
-
-		// Note: if an anchor on the current page is selected (i.e., uri == "#anchor"),
-		// the RSS tab will not be selected here, but rather once the anchors are loaded.
 
 		if ( not_found || !this._use_rss )
 		{

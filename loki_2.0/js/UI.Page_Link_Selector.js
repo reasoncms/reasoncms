@@ -44,12 +44,14 @@ UI.Page_Link_Selector = function(dialog)
 			? '#' + anchor_select.options[anchor_select.selectedIndex].value
 			: '';
 		
-		if (url.length == 0 && anchor.length == 0)
-			return null;
-			
-		var parsed_uri = Util.URI.parse(url);
-		if (!parsed_uri.authority) {
-			url = '//' + this.dialog._loki.editor_domain() + url;
+		if (url.length == 0) {
+			if (anchor.length == 0)
+				return null;
+		} else {
+			var parsed_uri = Util.URI.parse(url);
+			if (!parsed_uri.authority) {
+				url = '//' + this.dialog._loki.editor_domain() + url;
+			}
 		}
 		
 		return url + anchor;

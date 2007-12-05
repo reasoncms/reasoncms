@@ -20,7 +20,7 @@ UI.HR_Helper = function()
 
 	this.is_selected = function()
 	{
-		return self._get_selected_hr() != null;
+		return !!_get_selected_hr();
 	};
 
 	var _get_selected_hr = function()
