@@ -20,7 +20,7 @@
 		var $header_text;
 		var $acceptable_params = array('header_text' => NULL, 'default_text' => NULL);
 		
-		function init()
+		function init( $args = array() )
 		{
 			$this->default_text = (isset($this->params['default_text'])) 
 								  ? $this->params['default_text'] 
