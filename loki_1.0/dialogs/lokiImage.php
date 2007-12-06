@@ -1,4 +1,14 @@
-<?php include_once( 'reason_header.php' ); ?>
+<?php
+/**
+* Insert Image or Link to Image dialog
+ * @package loki_1
+ * @subpackage loki
+ */
+
+/**
+ * Include reason libraries
+ */
+include_once( 'reason_header.php' ); ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -182,6 +192,7 @@ function changeTab(newTab)
 function printAssetOptions()
 {
 	$site_id = isset( $_REQUEST[ 'site_id' ] ) ? $_REQUEST[ 'site_id' ] : '';
+	settype($site_id, 'integer');
 	echo "<h3>$site_id</h3>";
 	if( $site_id )
 	{
@@ -214,6 +225,7 @@ function printImageTable()
 	echo '<table cellpadding="15" cellspacing="0" border="0">' . "\n";
 
 	$site_id = isset( $_REQUEST[ 'site_id' ] ) ? $_REQUEST[ 'site_id' ] : '';
+	settype($site_id, 'integer');
 	if( $site_id )
 	{
 		reason_include_once( 'classes/entity_selector.php' );
@@ -266,6 +278,7 @@ function printImageTable()
 function printImageOptions()
 {
 	$site_id = isset( $_REQUEST[ 'site_id' ] ) ? $_REQUEST[ 'site_id' ] : '';
+	settype($site_id, 'integer');
 	if( $site_id )
 	{
 		reason_include_once( 'classes/entity_selector.php' );
