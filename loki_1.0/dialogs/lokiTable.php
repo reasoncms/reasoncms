@@ -1,4 +1,12 @@
-<html>
+<?php
+/**
+ * @package loki_1
+ * @subpackage loki
+ */
+/**
+ * Begin the dialog
+ */
+?><html>
 <head>
 <title>Insert Table</title>
 <link rel='stylesheet' type='text/css' href='../css/modalStyles.css'>
