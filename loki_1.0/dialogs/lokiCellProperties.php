@@ -1,4 +1,14 @@
-<html>
+<?php
+/**
+ * Table Cell Properties
+ * @package loki_1
+ * @subpackage loki
+ */
+
+/**
+ * Start page
+ */
+?><html>
 <head>
 <title>Table Cell Properties</title>
 <link rel='stylesheet' type='text/css' href='../css/modalStyles.css'>
