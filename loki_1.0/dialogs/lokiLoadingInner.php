@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @package loki_1
+ * @subpackage loki
+ */
+/**
+ * set dialog
+ */
 if ( !empty($_REQUEST['dialog']) )
 	$dialog = $_REQUEST['dialog'];
 else
@@ -12,7 +18,7 @@ else
 <title>Loading ...</title>
 </head>
 
-<body onload="window.location = '<?php echo $dialog; ?>'">
+<body onload="window.location = '<?php echo htmlspecialchars($dialog, ENT_QUOTES); ?>'">
 <table width="100%" height="100%">
 <tr>
 <td class="txt" align="center" valign="middle">Loading ...</td>
