@@ -1,6 +1,14 @@
-<?php include_once( 'reason_header.php' ); ?>
+<?php
+/**
+ * @package loki_1
+ * @subpackage loki
+ */
+ /**
+  * Include reason libraries
+  */
+include_once( 'reason_header.php' );
 
-<HTML>
+?><HTML>
 <HEAD>
 <TITLE>Add Hyperlink</TITLE>
 <link rel='stylesheet' type='text/css' href='../css/modalStyles.css'>
@@ -305,7 +313,7 @@ function get_nice_url( $page, $sites ) // {{{
 function print_minisite_links()
 {
 	$site_id = isset( $_REQUEST[ 'site_id' ] ) ? $_REQUEST[ 'site_id' ] : '';
-
+	settype($site_id, 'integer');
 	if( $site_id )
 	{
 		reason_include_once( 'classes/entity_selector.php' );
