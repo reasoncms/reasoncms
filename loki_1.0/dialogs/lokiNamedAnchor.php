@@ -1,6 +1,14 @@
-<?php include_once( 'reason_header.php' ); ?>
+<?php
+/**
+ * @package loki_1
+ * @subpackage loki
+ */
+/**
+ * include reason libraries
+ */
+include_once( 'reason_header.php' );
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html>
@@ -105,6 +113,7 @@ function do_onRemoveLink()
 function printOptions()
 {
 	$site_id = isset( $_REQUEST[ 'site_id' ] ) ? $_REQUEST[ 'site_id' ] : '';
+	settype($site_id,'integer');
 	echo "<h3>$site_id</h3>";
 	if( $site_id )
 	{
