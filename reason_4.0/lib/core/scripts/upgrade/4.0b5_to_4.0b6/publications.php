@@ -19,6 +19,7 @@
 <body>
 <?php
 include ('reason_header.php');
+include_once(CARL_UTIL_INC.'db/db_selector.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('function_libraries/util.php');
 reason_include_once('function_libraries/user_functions.php');
@@ -52,6 +53,7 @@ class pubUpdaterb5b6
 		$this->update_default_issue_view();
 		$this->update_section_content_manager();
 		$this->add_issue_to_css_url_relationship();
+		$this->fix_pub_to_featured_post_typo();
 	}
 
 	function update_default_issue_view()
@@ -219,6 +221,60 @@ class pubUpdaterb5b6
 			echo '<p>Would have added the issue_to_css_url allowable relationship.</p>'."\n";
 		}
 	}
+	
+	function fix_pub_to_featured_post_typo()
+	{
+		$alrel_id = relationship_id_of('publication_to_featured_post');
+		if(empty($alrel_id))
+		{
+			echo '<p>publication_to_featured_post relationship does not exist. Unable to do update.</p>';
+			return;
+		}
+		//$q = 'SELECT * FROM allowable_relationship WHERE id = "'.$alrel_id.'"';
+		$dbs = new dbSelector();
+		$dbs->add_table('allowable_relationship');
+		$dbs->add_relation('id = "'.$alrel_id.'"');
+		$dbs->set_num(1);
+		$results = $dbs->run();
+		if(empty($results))
+		{
+			echo '<p>Unable to get publication_to_featured_post info. Unable to do update.</p>';
+			return;
+		}
+		$alrel = current($results);
+		$updates = array();
+		if($alrel['display_name_reverse_direction'] == 'Feature on Publiction(s)')
+		{
+			$updates['display_name_reverse_direction'] = 'Feature on Publication(s)';
+		}
+		if($alrel['display_name'] == 'Assign Featured Posts')
+		{
+			$updates['display_name'] = 'Featured Posts';
+		}
+		if(empty($updates))
+		{
+			echo '<p>publication_to_featured_post relationship is up-to-date. No changes needed.</p>';
+			return;
+		}
+		if($this->mode == 'run')
+		{
+			if($GLOBALS['sqler']->update_one('allowable_relationship', $updates, $alrel_id))
+			{
+				echo '<p>Successfully updated publication_to_featured_post allowable relationship labels</p>';
+				return;
+			}
+			else
+			{
+				echo '<p>Unable to update publication_to_featured_post allowable relationship labels</p>';
+				return;
+			}
+		}
+		else
+		{
+			echo '<p>Would have updated publication_to_featured_post allowable relationship labels</p>';
+			return;
+		}
+	}
 }
 
 force_secure_if_available();
@@ -238,6 +294,8 @@ if(empty($reason_user_id))
 <ul>
 <li>If you have not already set up a default view for issues, this script will create a default issue view that displays information about issue visibility and date</li>
 <li>Set up sections to use the new section content manager (if they do not already have a content manager)</li>
+<li>Add the capability to assign custom css to an individual issue</li>
+<li>Improve the labels for managing featured posts</li>
 </ul>
 <form method="post"><input type="submit" name="go" value="test" /><input type="submit" name="go" value="run" /></form>
 <?
