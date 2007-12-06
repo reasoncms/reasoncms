@@ -1,4 +1,14 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+<?php
+/**
+ * Find & Replace Text
+ * @package loki_1
+ * @subpackage loki
+ */
+
+/**
+ * Start the page
+ */
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html>
@@ -19,9 +29,9 @@ var callerWindowObj = dialogArguments;
 	
 } */
 
-var currentTRange = getTextRangeById('<?php echo $editorID ?>');
+var currentTRange = getTextRangeById('<?php echo htmlspecialchars($_REQUEST['editorID'], ENT_QUOTES); ?>');
 currentTRange.collapse(true); //move to the beginning of the TR
-var containerTRange = getTextRangeById('<?php echo $editorID ?>');
+var containerTRange = getTextRangeById('<?php echo htmlspecialchars($_REQUEST['editorID'], ENT_QUOTES); ?>');
 var foundTRange = false;
 
 function find( editor_container_id, str  )
