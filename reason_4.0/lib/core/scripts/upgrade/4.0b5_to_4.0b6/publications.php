@@ -288,6 +288,11 @@ if(empty($reason_user_id))
 	die('valid Reason user required');
 }
 
+if(!user_is_a( $reason_user_id, id_of('admin_role') ) )
+{
+	die('You must be a Reason admin to run this script');
+}
+
 ?>
 <h2>Reason: run updates to publications for 4.0b6</h2>
 <p>What will this update do?</p>
