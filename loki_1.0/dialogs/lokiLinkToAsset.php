@@ -1,6 +1,14 @@
-<?php include_once( 'reason_header.php' ); ?>
+<?php
+/**
+ * @package loki_1
+ * @subpackage loki
+ */
+/**
+ * include reason libraries
+ */
+include_once( 'reason_header.php' );
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html>
@@ -124,9 +132,10 @@ function do_onRemoveLink()
 function printOptions()
 {
 	$site_id = isset( $_REQUEST[ 'site_id' ] ) ? $_REQUEST[ 'site_id' ] : '';
-	echo "<h3>$site_id</h3>";
+	echo '<h3>'.htmlspecialchars($site_id, ENT_QUOTES).'</h3>';
 	if( $site_id )
 	{
+		settype($site_id, 'integer');
 		reason_include_once( 'classes/entity_selector.php' );
 		$es = new entity_selector( $site_id );
 		$es->add_type( id_of( 'asset' ) );
