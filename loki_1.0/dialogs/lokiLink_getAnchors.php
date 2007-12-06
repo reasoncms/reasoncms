@@ -1,12 +1,33 @@
 <?php
+/**
+ * @package loki_1
+ * @subpackage loki
+ */
 
-	$page = file($url);
+/**
+ * Include the find_anchors_naive() function
+ */
+include_once('anchors_from_string.php');
+ 
+ /**
+ * Make sure request starts with http:// or https://
+ */
+ 	if(strpos($_REQUEST['url'],'http://'.$_SERVER['HTTP_HOST']) === 0 || strpos($_REQUEST['url'],'https://'.$_SERVER['HTTP_HOST']) === 0)
+	{
+		$page = file($_REQUEST['url']);
 	
-	$string = implode( '',$page );
-	
-	$string=eregi_replace("\r","",$string);
-	$string=eregi_replace("\n","",$string);
-	$string=strip_tags($string, "<a>");
+		$html = implode( '',$page );
+		$anchors = find_anchors_naive($html);
+		$string = '';
+		foreach($anchors as $a)
+		{
+			$string .= '<a name="'.$a.'"></a>';
+		}
+	}
+	else
+	{
+		$string = 'not an http or https URL on the current host';
+	}
 	$string=addslashes($string);
 ?>
 <script type="text/javascript">
