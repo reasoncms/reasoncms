@@ -1,4 +1,11 @@
-<?
+<?php
+/**
+ * @package loki_1
+ * @subpackage loki
+ */
+/**
+ * include paths
+ */
 	include ( 'paths.php' );
 ?>
 <html>
