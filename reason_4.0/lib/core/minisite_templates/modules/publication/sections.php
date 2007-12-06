@@ -18,6 +18,7 @@
 		var $issue;
 		var $cleanup_rules = array(
 			'section_id' => array( 'function' => 'turn_into_int' ),
+			'issue_id' => array( 'function' => 'turn_into_int' ),
 		);
 		function init( $args = array() )
 		{
@@ -42,19 +43,30 @@
 			}
 			if(!empty($this->sections) && !empty($this->publication) && $this->publication->get_value('has_issues'))
 			{
-				$es = new entity_selector( $this->site_id );
-				$es->description = 'Selecting issues for this publication';
-				$es->add_type( id_of('issue_type') );
-				$es->limit_tables(array('dated','show_hide'));
-				$es->limit_fields('dated.datetime');
-				$es->set_order('dated.datetime DESC');
-				$es->add_relation('show_hide.show_hide = "show"');
-				$es->add_left_relationship( $this->publication->id(), relationship_id_of('issue_to_publication') );
-				$es->set_num(1);
-				$issues = $es->run_one();
-				if(!empty($issues))
+				if(!empty($this->request['issue_id']))
 				{
-					$this->issue = current($issues);
+					$iss = new entity($this->request['issue_id']);
+					if($iss->get_values() && $iss->get_value('type') == id_of('issue_type'))
+					{
+						$this->issue = $iss;
+					}
+				}
+				else
+				{
+					$es = new entity_selector( $this->site_id );
+					$es->description = 'Selecting issues for this publication';
+					$es->add_type( id_of('issue_type') );
+					$es->limit_tables(array('dated','show_hide'));
+					$es->limit_fields('dated.datetime');
+					$es->set_order('dated.datetime DESC');
+					$es->add_relation('show_hide.show_hide = "show"');
+					$es->add_left_relationship( $this->publication->id(), relationship_id_of('issue_to_publication') );
+					$es->set_num(1);
+					$issues = $es->run_one();
+					if(!empty($issues))
+					{
+						$this->issue = current($issues);
+					}
 				}
 			}
 		}
