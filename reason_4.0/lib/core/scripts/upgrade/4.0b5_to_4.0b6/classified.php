@@ -31,7 +31,7 @@ $user = get_user_id(check_authentication());
 $admin_site = id_of('master_admin');
 
 if (empty($_GET['go']))
-	echo '<a href="?go=go">Click here to install the housing module</a>';
+	echo '<a href="?go=go">Upgrade DB with the classified type</a>';
 elseif (!user_is_a($user, id_of('admin_role')))
 	echo 'You must be logged in as an administrator';
 else {
@@ -101,8 +101,6 @@ else {
 		else echo "Missing name $t!<br/>";
 
 	echo "Install was successful!<br/>";
-
-	echo "Optionally, you may <a href='/reason_package_local/local/scripts/upgrade/4.0b5_to_4.0b6/classifieds.php'>proceed</a> to the local housing configuration for classified ads.";
 }
 ?>
 </body></html>
