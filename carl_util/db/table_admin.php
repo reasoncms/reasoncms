@@ -53,6 +53,7 @@ include_once( DISCO_INC . 'disco_db.php'); // Requires Disco_DB
  * @todo add more export formats
  * @todo implement archiving
  * @todo abstract out html generation into markup generator like system
+ * @todo allow to work with a set of entities as a data source
  * @todo allow filtering to take place in php or mysql
  */
 class TableAdmin
@@ -86,9 +87,17 @@ class TableAdmin
 	 */
 	var $fields_to_show;
 	/**
+	 * @var array if populated, only the names fields are converted - otherwise all are converted
+	 */
+	var $fields_to_entity_convert;
+	/**
 	 * @var array if populated, limits fields exported from summary view to field names in this array
 	 */
 	var $fields_to_export;
+	/**
+	 * @var array if populated, limits sortable fields to field names in this array
+	 */
+	var $fields_that_allow_sorting;
 	/**
 	 * @var boolean allow filters
 	 */ 
@@ -121,6 +130,10 @@ class TableAdmin
 	 * @var boolean allow creation of new rows
 	 */ 
 	var $allow_new = false;
+	/**
+	 * @var boolean whether or not to show the "Displaying x of y rows" header
+	 */
+	var $show_header = true;
 	/**
 	 * @var boolean whether or not to show action column in first table cell
 	 */
@@ -281,8 +294,9 @@ class TableAdmin
 		// check on whether columns are limited
 		if ($this->admin_form)
 		{
-			$this->fields_to_show = $this->admin_form->get_fields_to_show();
-			if (!($this->get_sort_field())) $this->set_sort_field($this->admin_form->get_default_sort_field());
+			if (!$this->get_fields_to_show()) $this->set_fields_to_show(); // gets fields from admin form if it defines them
+			if (!$this->get_fields_to_entity_convert()) $this->set_fields_to_entity_convert(); // gets the fields to entity convert if admin form defines them
+			if (!$this->get_sort_field()) $this->set_sort_field($this->admin_form->get_default_sort_field());
 			if (!$this->get_sort_order()) $this->set_sort_order($this->admin_form->get_default_sort_order());
 		}			
 	}
@@ -338,9 +352,40 @@ class TableAdmin
 	}
 	
 	// SET COMMANDS WITH SOME LOGIC
+	function set_fields_to_show($fields_to_show_array = NULL)
+	{
+		if (!is_null($fields_to_show_array)) $this->fields_to_show = $fields_to_show_array;
+		else
+		{
+			if ($af =& $this->get_admin_form())
+			{
+				if (method_exists($af, 'get_fields_to_show'))
+				{
+					$this->fields_to_show = $af->get_fields_to_show();
+				}
+			}
+		}	
+	}
+	
+	// SET COMMANDS WITH SOME LOGIC
+	function set_fields_to_entity_convert($fields_to_entity_convert_array = NULL)
+	{
+		if (!is_null($fields_to_entity_convert_array)) $this->fields_to_entity_convert = $fields_to_entity_convert_array;
+		else
+		{
+			if ($af =& $this->get_admin_form())
+			{
+				if (method_exists($af, 'get_fields_to_entity_convert'))
+				{
+					$this->fields_to_entity_convert = $af->get_fields_to_entity_convert();
+				}
+			}
+		}	
+	}
+	
 	function set_export_fields($export_fields_array = NULL)
 	{
-		if (!is_null($val)) $this->fields_to_export = $export_fields_array;
+		if (!is_null($export_fields_array)) $this->fields_to_export = $export_fields_array;
 		else
 		{
 			if ($af =& $this->get_admin_form())
@@ -348,6 +393,21 @@ class TableAdmin
 				if (method_exists($af, 'get_fields_to_export'))
 				{
 					$this->fields_to_export = $af->get_fields_to_export();
+				}
+			}
+		}	
+	}
+	
+	function set_fields_that_allow_sorting($fields_that_allow_sorting_array = NULL)
+	{
+		if (!is_null($fields_that_allow_sorting_array)) $this->fields_that_allow_sorting = $fields_that_allow_sorting_array;
+		else
+		{
+			if ($af =& $this->get_admin_form())
+			{
+				if (method_exists($af, 'get_fields_that_allow_sorting'))
+				{
+					$this->fields_that_allow_sorting = $af->get_fields_that_allow_sorting();
 				}
 			}
 		}
@@ -393,6 +453,11 @@ class TableAdmin
 	function set_allow_filters($val = NULL)
 	{
 		if (!is_null($val)) $this->allow_filters = $val;
+	}
+
+	function set_show_header($val = NULL)
+	{
+		if (!is_null($val)) $this->show_header = $val;
 	}
 	
 	function set_show_actions_first_cell($val = NULL)
@@ -556,6 +621,16 @@ class TableAdmin
 		return $this->admin_form;
 	}
 	
+	function &get_fields_to_show()
+	{
+		return $this->fields_to_show;
+	}
+	
+	function &get_fields_to_entity_convert()
+	{
+		return $this->fields_to_entity_convert;
+	}
+	
 	/**
 	 * @return string the current table global action
 	 */
@@ -665,6 +740,18 @@ class TableAdmin
 			$my_data = array();
 		}
 		return $my_data;
+	}
+	
+	/**
+	 * Hacky and temporary until I standardize this
+	 */
+	function &custom_build_data(&$data)
+	{
+		$this->_row = current($data);
+		$this->_total_rows = count($data);
+		$this->_filter_data($data);
+		$this->_filtered_rows = count ($data);
+		return $data;
 	}
 	
 	/**
@@ -808,13 +895,21 @@ class TableAdmin
 		}
 		foreach ($header_row as $k => $v)
 		{
-			if (($this->sort_field == $k) && ($this->sort_order == 'asc')) $order = 'desc';
-			else $order = 'asc';
-			$url_array = array('table_sort_field' => $k, 'table_sort_order' => $order, 'table_filters' => '', 'table_export_format' => '', 'table_action' => '', 'table_row_action' => '', 'table_action_id' => '');
-			$this->parse_filters_for_url($url_array);
-			$url = carl_make_link($url_array);
+			if ($this->field_is_sortable($k))
+			{
+				if (($this->sort_field == $k) && ($this->sort_order == 'asc')) $order = 'desc';
+				else $order = 'asc';
+				$url_array = array('table_sort_field' => $k, 'table_sort_order' => $order, 'table_filters' => '', 'table_export_format' => '', 'table_action' => '', 'table_row_action' => '', 'table_action_id' => '');
+				$this->parse_filters_for_url($url_array);
+				$url = carl_make_link($url_array);
+			}
+			else $url = '';
 			$v = (isset($this->_display_values[$k])) ? $this->_display_values[$k]['label'] : $k;
-			$ret .= '<th'.$first.'><a href="'.$url.'" title="'.$order_display_name[$order].'">'.htmlspecialchars($v,ENT_QUOTES,'UTF-8').'</a></th>';
+			$ret .= '<th'.$first.'>';
+			if ($url) $ret .= '<a href="'.$url.'" title="'.$order_display_name[$order].'">';
+			$ret .= htmlspecialchars($v,ENT_QUOTES,'UTF-8');
+			if ($url) $ret .= '</a>';
+			$ret .= '</th>';
 			$first = '';
 		}
 		if ($this->show_actions_last_cell)
@@ -823,6 +918,11 @@ class TableAdmin
 		}
 		$ret .= '</tr>';
 		return $ret;
+	}
+	
+	function field_is_sortable($k)
+	{
+		return (!isset($this->fields_that_allow_sorting)) ? true : in_array($k, $this->fields_that_allow_sorting);
 	}
 	
 	/**
@@ -834,7 +934,10 @@ class TableAdmin
 	function gen_data_row($data_row, $class)
 	{
 		$row_id = $data_row[$this->primary_key];
-		if (isset($this->fields_to_show)) $this->limit_columns($data_row);
+		if (isset($this->fields_to_show)) 
+		{
+			$this->limit_columns($data_row);
+		}
 		$first = ' class="first"';
 		$ret = '<tr class="'.$class.'">';
 		$row_actions = $this->get_row_actions($data_row, $row_id);
@@ -846,7 +949,7 @@ class TableAdmin
 		}
 		foreach ($data_row as $k=>$v)
 		{
-			$v = htmlspecialchars($v,ENT_QUOTES,'UTF-8');	
+			$v = $this->should_convert_field($k) ? htmlspecialchars($v,ENT_QUOTES,'UTF-8') : $v;	
 			$v = (!empty($v)) ? $v : '<br />';
 			$ret .= '<td'.$first.'>'.$v.'</td>';
 			$first = '';
@@ -857,6 +960,22 @@ class TableAdmin
 		}
 		$ret .= '</tr>';
 		return $ret;
+	}
+	
+	function should_convert_field($k)
+	{
+		static $fields_to_entity_convert;
+		if (isset($fields_to_entity_convert[$k])) return $fields_to_entity_convert[$k];
+		else
+		if (isset ($this->fields_to_entity_convert) && in_array($k, $this->fields_to_entity_convert))
+		{
+			$fields_to_entity_convert[$k] = true;
+		}
+		else
+		{
+			$fields_to_entity_convert[$k] = false;
+		}
+		return $fields_to_entity_convert[$k];
 	}
 	
 	/**
@@ -982,7 +1101,7 @@ class TableAdmin
 		}
 		if ($this->allow_delete) $menu_links['Delete Stored Data'] = carl_make_link($links_delete);
 		if ($this->allow_new) $menu_links['Create New Row'] = carl_make_link($links_new);
-		$ret .= '<h3>Displaying '.$this->_filtered_rows.' of '.$this->_total_rows.' rows</h3>';
+		if ($this->show_header) $ret .= '<h3>Displaying '.$this->_filtered_rows.' of '.$this->_total_rows.' rows</h3>';
 		if (!empty($menu_links)) $ret .= $this->gen_menu($menu_links);
 		$ret .= '<table class="table_data">';
 		$ret .= $header;
@@ -1327,7 +1446,7 @@ class TableAdmin
 		 *
 		 * @var array
 		 */
-		 var $field_display_names;		
+		var $field_display_names;		
 		
 		/**
 		 * Which fields to include in export
