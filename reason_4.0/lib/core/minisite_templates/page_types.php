@@ -938,6 +938,11 @@
 					   'pre_sidebar' => 'magpie/magpie_feed_search',
                        'sidebar' => 'magpie/magpie_feed_display',
         ),
+        'classified' => array(
+        	'main_post' => array(
+        	'module' => 'classified/classified',
+        	'filter_displayer' => 'listnav.php'),
+        ),
 	);
 	
 	if (reason_file_exists('minisite_templates/page_types_local.php'))
