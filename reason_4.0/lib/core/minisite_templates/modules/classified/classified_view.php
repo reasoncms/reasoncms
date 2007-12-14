@@ -447,6 +447,7 @@ class ClassifiedView extends Disco
 	 */
 	function get_preview_list_item_html($element_name, $display_value)
 	{
+		if (strlen($display_value) == 0) return false;
 		$pretty_name = prettify_string($element_name);
 		$html = '<strong>'.$pretty_name.'</strong>: ' . $display_value;
 		return $html;
