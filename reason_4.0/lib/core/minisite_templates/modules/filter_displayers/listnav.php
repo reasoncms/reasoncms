@@ -78,7 +78,7 @@ class listNavFilterDisplay extends defaultFilterDisplay
 						if(!empty($this->search_value))
 							$link .= 'search='.urlencode($this->search_value).'&amp;';
 						$link .= 'filters['.$key.'][type]='.$filter_name.'&amp;filters['.$key.'][id]='.$entity->id();
-						if (!empty($this->parent->textonly))
+						if (!empty($this->textonly))
 							$link .= '&amp;textonly=1';
 						$ret .= '<a href="'.$link.'">'.$entity->get_value('name').'</a>'."\n";
 					}
