@@ -77,13 +77,17 @@ class TableAdmin
 	/**
 	 * @var string export mode currently only csv is supported
 	 */
-	var $export_format = 'csv'; 	
+	var $export_format = 'csv'; 
+	/**
+	 * $var string default no data message
+	 */
+	var $default_no_data_message = '<p><strong>No data is available.</strong></p>';
+	/**
+	 * $var string no data message
+	 */
+	var $no_data_message;
 	/**
 	 * @var array data filters, indexed by column name
-	 */
-	var $filters = array();
-	/**
-	 * @var array if populated, limits fields shown in summary view to field names in this array
 	 */
 	var $fields_to_show;
 	/**
@@ -100,7 +104,11 @@ class TableAdmin
 	var $fields_that_allow_sorting;
 	/**
 	 * @var boolean allow filters
-	 */ 
+	 */
+	 var $filters = array();
+	/**
+	 * @var array if populated, limits fields shown in summary view to field names in this array
+	 */
 	var $allow_filters = true;
 	/**
 	 * @var boolean allow deletion
@@ -206,11 +214,9 @@ class TableAdmin
 	var $cleanup_rules = array('table_sort_order' => array('function' => 'check_against_array', 'extra_args' => array('asc', 'ASC', 'desc', 'DESC')),
 							   'table_filters' => array('function' => 'turn_into_array'),
 							   'table_filter_clear' => array('function' => 'turn_into_string'),
-							   'table_action' => array('function' => 'check_against_array', 'extra_args' => array()),
-							   'table_row_action' => array('function' => 'check_against_array', 'extra_args' => array()),
 							   'table_action_id' => array('function' => 'check_against_regexp', 'extra_args' => array('naturalnumber')));
 	
-
+	var $_no_db_mode = false;
 	/**
 	 * Constructor
 	 * @return void
@@ -251,6 +257,32 @@ class TableAdmin
 		else
 		{
 			trigger_error('The table ' . $this->get_table_name() . ' does not exist - using database connection ' . $this->get_db_conn());
+		}
+	}
+	
+	/**
+	 * Init from array takes an array of display values and sets up the request and _display_values
+	 */
+	function init_view_no_db($display_values, $custom_setup = false)
+	{
+		if (!$display_values) trigger_error('You must provide an array mapping field_name_keys to display_names for each column of the view you want to setup', FATAL);
+		else
+		{
+			$this->_no_db_mode = true;
+			$this->_build_display_values_from_array($display_values);
+			
+			if (!$custom_setup) // disable functions that are enabled by default class
+			{
+				$this->set_show_actions_first_cell(false);
+				$this->set_allow_filters(false);
+				$this->set_allow_export(false);
+				$this->set_allow_view(false);
+				$this->set_allow_archive(false);
+				$this->set_show_header(false);	
+			}
+			
+			$this->_set_params_from_request();
+			$this->init_default();
 		}
 	}
 	
@@ -296,8 +328,10 @@ class TableAdmin
 		{
 			if (!$this->get_fields_to_show()) $this->set_fields_to_show(); // gets fields from admin form if it defines them
 			if (!$this->get_fields_to_entity_convert()) $this->set_fields_to_entity_convert(); // gets the fields to entity convert if admin form defines them
+			if (!$this->get_fields_that_allow_sorting()) $this->set_fields_that_allow_sorting(); // gets the fields that allow sorting admin form defines them
 			if (!$this->get_sort_field()) $this->set_sort_field($this->admin_form->get_default_sort_field());
 			if (!$this->get_sort_order()) $this->set_sort_order($this->admin_form->get_default_sort_order());
+			if (!$this->get_no_data_message()) $this->set_no_data_message();
 		}			
 	}
 
@@ -320,8 +354,12 @@ class TableAdmin
 	{
 		// alter cleanup rules
 		$this->cleanup_rules['table_sort_field'] = array('function' => 'check_against_array', 'extra_args' => array_keys($this->_display_values)); // dynamically add		
-		$this->cleanup_rules['table_action']['extra_args'] = $this->_get_valid_actions();
-		$this->cleanup_rules['table_row_action']['extra_args'] = $this->_get_valid_row_actions();
+		
+		$va = $this->_get_valid_actions();
+		$vra = $this->_get_valid_row_actions();
+		if (!empty($va)) $this->cleanup_rules['table_action'] = array('function' => 'check_against_array', 'extra_args' => $va);
+		if (!empty($vra)) $this->cleanup_rules['table_row_action'] = array('function' => 'check_against_array', 'extra_args' => $vra);
+		
 		$this->request = carl_clean_vars($_REQUEST, $this->cleanup_rules);
 		if (isset($this->request['table_action'])) 		 $this->set_action($this->request['table_action']);
 		if (isset($this->request['table_row_action'])) 	 $this->set_row_action($this->request['table_row_action']);
@@ -412,6 +450,21 @@ class TableAdmin
 			}
 		}
 		
+	}
+	
+	function set_no_data_message($no_data_message = NULL)
+	{
+		if (!is_null($no_data_message)) $this->no_data_message = $no_data_message;
+		else
+		{
+			if ($af =& $this->get_admin_form())
+			{
+				if (method_exists($af, 'get_no_data_message'))
+				{
+					$this->no_data_message = $af->get_no_data_message();
+				}
+			}
+		}		
 	}
 	
 	// BASIC SET COMMANDS
@@ -576,6 +629,18 @@ class TableAdmin
 	}
 	
 	/**
+	 * Set data sets _table_data
+	 */
+	function set_data_from_array(&$data)
+	{
+		$this->_row = current($data);
+		$this->_total_rows = count($data);
+		$this->_filter_data($data);
+		$this->_filtered_rows = count ($data);
+		$this->_table_data =& $data;
+	}
+	
+	/**
 	 * verify that the table_action_id requested is valid
 	 */
 	function verify_table_action_id()
@@ -604,11 +669,15 @@ class TableAdmin
 	function &get_data()
 	{
 		if (isset($this->_table_data)) return $this->_table_data;
-		else
+		elseif (!$this->_no_db_mode)
 		{
 			$this->_table_data =& $this->_build_data();
-			return $this->_table_data;
 		}
+		else
+		{
+			trigger_error('You must pass the data using the set_data_from_array method before get_data will return data in no_db_mode');
+		}
+		return $this->_table_data;
 	}
 
 	function &get_filters()
@@ -629,6 +698,11 @@ class TableAdmin
 	function &get_fields_to_entity_convert()
 	{
 		return $this->fields_to_entity_convert;
+	}
+	
+	function &get_fields_that_allow_sorting()
+	{
+		return $this->fields_that_allow_sorting;
 	}
 	
 	/**
@@ -691,6 +765,10 @@ class TableAdmin
 		return $this->sort_order;
 	}
 
+	function get_no_data_message()
+	{
+		return $this->no_data_message;
+	}
 	/**
 	 * @return boolean true if the row count of unfiltered data is greater than 0
 	 */
@@ -740,18 +818,6 @@ class TableAdmin
 			$my_data = array();
 		}
 		return $my_data;
-	}
-	
-	/**
-	 * Hacky and temporary until I standardize this
-	 */
-	function &custom_build_data(&$data)
-	{
-		$this->_row = current($data);
-		$this->_total_rows = count($data);
-		$this->_filter_data($data);
-		$this->_filtered_rows = count ($data);
-		return $data;
 	}
 	
 	/**
@@ -1204,10 +1270,6 @@ class TableAdmin
 			exit;
 		}
 	}
-
-    /**
-	 * Wraps up the typical use case
-	 */
 	
 	function run()
 	{
@@ -1230,7 +1292,8 @@ class TableAdmin
 		$data =& $this->get_data();
 		if (!$this->has_data())
 		{
-			echo '<p><strong>The form has no stored data.</strong></p>';
+			$no_data_message = ($this->get_no_data_message()) ? $this->get_no_data_message() : $this->default_no_data_message;
+			echo $no_data_message;
 			return false;
 		}
 		else
@@ -1406,6 +1469,22 @@ class TableAdmin
   			else $display_values[$field['Field']]['label'] = $field_name;
   		}
   		$this->_display_values = (isset($display_values)) ? $display_values : array();
+	}
+	
+	/** 
+	 * Returns an array that describes the label and gives a plasmature type of text
+	 */
+	function _build_display_values_from_array($data)
+	{
+		foreach ($data as $k=>$v)
+		{
+			if ($this->admin_form && method_exists($this->admin_form, 'get_field_display_name'))
+  			{
+  				$v = $this->admin_form->get_field_display_name($k);
+  			}
+			$display_values[$k] = array('type' => 'text', 'label' => $v);
+		}
+		$this->_display_values = (isset($display_values)) ? $display_values : array();
 	}
 
 	function _delete_data()
