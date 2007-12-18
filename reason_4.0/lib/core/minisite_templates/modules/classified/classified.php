@@ -34,8 +34,6 @@ class ClassifiedModule extends Generic3Module
 	
 	var $jump_to_item_if_only_one_result = false;
 	
-	var $filter_displayer = 'listnav.php';
-	
 	var $acceptable_params = array('view' => NULL,'model' => NULL);
 	
 	/**
@@ -75,17 +73,20 @@ class ClassifiedModule extends Generic3Module
 	{
 		$cleanup_rules = array('classified_mode' => array('function' => 'check_against_array',
 														  'extra_args' => array('add_item', 'submit_success')));
-														  
-		$extra_cleanup_rules =& $this->model->get_extra_cleanup_rules();
-		return array_merge(parent::get_cleanup_rules(), $cleanup_rules, $extra_cleanup_rules);
+		
+		return array_merge(parent::get_cleanup_rules(), $cleanup_rules);
 	}
 
 	function init( $options = array() )
 	{
 		if (empty($this->request['classified_mode']))
 		{
-			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
 			$this->view->init_view();
+			
+			// set various generic 3 instance variables based upon the view
+			$this->show_list_with_details = $this->view->get_show_list_with_details();
+			$this->use_filters = $this->view->get_use_filters();
+			
 			parent::init();
 		}
 		elseif ($this->request['classified_mode'] == 'add_item')
@@ -121,46 +122,40 @@ class ClassifiedModule extends Generic3Module
 		}
 	}
 
-	// Grab the sort field and the sort order - can these happen in the init?
-	function get_sort_field() {
-		return empty($this->request['table_sort_field']) ? 'datetime' : $this->request['table_sort_field'];
-	}
-	
-	function get_sort_order() {
-		return empty($this->request['table_sort_order']) ? 'desc' : $this->request['table_sort_order'];
-	}
-
+	/**
+	 * Provide the view and model with an opportunity to alter the entity selector
+	 * Typically the model might add an additional limited (such as limiting the selection based on the classified_days_duration value
+	 * The view typically applies the sort field and direction.
+	 */
 	function alter_es()
 	{	
-		$sort_order = $this->get_sort_field() . ' ' . $this->get_sort_order();
-		
-		$this->es->set_order($sort_order);
-		if (!empty($this->request['category']))
-			$this->es->add_left_relationship($this->request['category'], relationship_id_of('classified_to_classified_category'));
-		$this->es->add_relation('classified_duration_days < NOW() - datetime');
+		$this->model->alter_es($this->es);
+		$this->view->alter_es($this->es);
 	}
 
 	/**
-	 * Ask the view to generate the item_list instead of using the generic3 do_list method
+	 * Instruct the view to generate the summary list of items
 	 */
 	function do_list()
 	{	
-		$this->view->show_list($this->items);
+		$this->view->show_summary_list($this->items);
 	}
 
+	/**
+	 * Instruct the view to generate the item detail view.
+	 */
 	function show_item_content($entity)
 	{
 		$this->view->show_item($entity);
 	}
 	
 	/**
-	 * Uses carl_make_link instead of the construct_link method used in generic3 - allows us to preserve sort order
+	 * We are going to zap the normal functionality of construct_link in favor of carl_make_link
 	 */
-	function get_pages_for_pagination_markup()
+	function construct_link($item, $args)
 	{
-		for ($i=1; $i<=$this->total_pages; $i++)
-			$pages[$i] = array('url' => carl_make_link(array('page' => $i, 'item_id' => '')));
-		return $pages;
+		$args['item_id'] = (!empty($item)) ? $item->id() : '';
+		return carl_make_link($args);
 	}
 }
 

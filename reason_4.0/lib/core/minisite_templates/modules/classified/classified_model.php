@@ -20,7 +20,7 @@ class ClassifiedModel
 	 * If approval is required, saved entities will be marked at pending
 	 * @var boolean
 	 */
-	var $requires_approval = false;
+	var $classified_requires_approval = false;
 	
 	/**
 	 * Limit availability of items to a certain number of days
@@ -62,6 +62,10 @@ class ClassifiedModel
 		return $this->head_items;
 	}
 	
+	function alter_es(&$es)
+	{
+	}
+	
 	/**
 	 * @return array classified category names indexed by classified category entity id
 	 */
@@ -82,12 +86,6 @@ class ClassifiedModel
 			}
 		}
 		return $this->category_names;
-	}	
-	
-	function &get_extra_cleanup_rules()
-	{
-		$extra_cleanup_rules = array();
-		return $extra_cleanup_rules;
 	}
 
 	/**
@@ -165,6 +163,17 @@ class ClassifiedModel
 		return carl_make_redirect(array_merge($empty_request, array('classified_mode' => 'submit_success')));
 	}
 	
+	function get_classified_duration_days()
+	{
+		$dd = (isset($this->classified_duration_days)) ? $this->classified_duration_days : '';
+		return $dd;
+	}
+	
+	function get_classified_requires_approval()
+	{
+		return $this->classified_requires_approval;
+	}
+	
 	/**
 	 * Creates new entity
 	 */
@@ -176,6 +185,8 @@ class ClassifiedModel
 		
 		$name = reason_htmlspecialchars($values['name']);
 		$category = reason_htmlspecialchars($values['category']);
+		$duration_days = $this->get_classified_duration_days();
+		$requires_approval = $this->get_classified_requires_approval();
 		
 		$values['location'] = reason_htmlspecialchars($values['location']);
 		$values['content'] = reason_htmlspecialchars($values['content']);
@@ -186,9 +197,8 @@ class ClassifiedModel
 		$values['classified_date_available'] = reason_htmlspecialchars($values['classified_date_available']);
 		$values['description'] = $this->string_summary($values['content']);
 		$values['datetime'] = get_mysql_datetime();
-		$values['classified_duration_days'] = 30;
-		if ($this->requires_approval == false) $values['state'] = 'Live';
-		else $values['state'] = 'Pending';
+		if (!empty($duration_days)) $values['classified_duration_days'] = $duration_days;
+		$values['state'] = ($requires_approval) ? 'Pending' : 'Live';
 		$values['new'] = 0;
 		
 		$entity_id = reason_create_entity($this->get_site_id(), id_of('classified_type'), $user, $name, $values);
@@ -243,6 +253,16 @@ class ClassifiedModel
 		
 		$link = $protocol . '://' . REASON_WEB_ADMIN_PATH . '?' . 'site_id='.$site_id.'&type_id='.$type_id.'&id='.$classified_id.'&cur_module=Editor';
 		return $link;
+	}
+	
+	function &get_classified_type_fields()
+	{
+		static $classified_type_fields;
+		if (!isset($classified_type_fields))
+		{
+			$classified_type_fields = get_fields_by_type(id_of('classified_type'));
+		}
+		return $classified_type_fields;
 	}
 	
 	function string_summary($string) {
