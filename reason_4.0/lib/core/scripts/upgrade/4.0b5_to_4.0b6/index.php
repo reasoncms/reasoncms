@@ -21,6 +21,8 @@
 <ul>
 <li><a href="publications.php">Upgrade publications framework</a></li>
 <li><a href="thor_db_structure_fix.php">Update thor tables</a></li>
+<li><a href="classified.php">Add classified framework</a></li>
+<li><a href="assets.php">Update assets</a></li>
 </ul>
 </body>
 </html>
