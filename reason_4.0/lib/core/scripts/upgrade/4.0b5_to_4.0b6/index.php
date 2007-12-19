@@ -23,6 +23,7 @@
 <li><a href="thor_db_structure_fix.php">Update thor tables</a></li>
 <li><a href="classified.php">Add classified framework</a></li>
 <li><a href="assets.php">Update assets</a></li>
+<li><a href="page_to_category_sorting.php">Update page to category relationship for relationship sorting</a></li>
 </ul>
 </body>
 </html>
