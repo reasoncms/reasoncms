@@ -16,6 +16,7 @@
 		{
 			$this->es = new entity_selector();
 			$this->es->description = 'Selecting assets for this page';
+			$this->es->set_env( 'site', $this->site_id);
 			$this->es->add_type( id_of('asset') );
 			$this->es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('page_to_asset') );
 			if(!empty($this->params['order']))
