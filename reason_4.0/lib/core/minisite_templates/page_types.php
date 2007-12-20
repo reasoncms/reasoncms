@@ -46,6 +46,13 @@
 				'order'=>'dated.datetime DESC, chunk.author ASC',
 				),
 		),
+		'assets_by_category' => array(
+			'pre_sidebar' => '',
+			'main_post' => array(
+				'module'=>'assets',
+				'limit_by_page_categories' => true,
+				),
+		),
 		'audio_video' => array(
 			'main_post' => 'av',
 		),
