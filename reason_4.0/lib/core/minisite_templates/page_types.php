@@ -950,6 +950,9 @@
         	'module' => 'classified/classified',
         	'filter_displayer' => 'listnav.php'),
         ),
+        'quote' => array(
+        	'sub_nav' => 'quote',
+        ),
 	);
 	
 	if (reason_file_exists('minisite_templates/page_types_local.php'))
