@@ -24,6 +24,7 @@
 <li><a href="classified.php">Add classified framework</a></li>
 <li><a href="assets.php">Update assets</a></li>
 <li><a href="page_to_category_sorting.php">Update page to category relationship for relationship sorting</a></li>
+<li><a href="quote_type.php">Create the quote type</a></li>
 </ul>
 </body>
 </html>
