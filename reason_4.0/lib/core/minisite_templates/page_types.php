@@ -950,8 +950,16 @@
         	'module' => 'classified/classified',
         	'filter_displayer' => 'listnav.php'),
         ),
+        'quote_sidebar_random' => array(
+        	'sub_nav' => array(
+        		'module'=> 'quote',
+        		'enable_javascript_refresh' => true,
+        		'prefer_short_quotes' => true,
+        		'rand_flag' => true,
+        	),
+        ),
         'quote' => array(
-        	'sub_nav' => 'quote',
+        	'main_post' => 'quote',
         ),
 	);
 	
