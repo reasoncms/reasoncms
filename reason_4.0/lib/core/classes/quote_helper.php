@@ -144,7 +144,7 @@ reason_include_once( 'classes/object_cache.php' );
  		return (!empty($available)) ? $available : false;
  	}
  	
- 	function &get_quotes($num, $rand_flag = false)
+ 	function &get_quotes($num = NULL, $rand_flag = NULL)
  	{
  		if ($rand_flag)
  		{
@@ -152,14 +152,18 @@ reason_include_once( 'classes/object_cache.php' );
  		}
  		else
  		{
- 			$index = 0;
  			$quotes =& $this->get_quote_pool();
- 			foreach ($quotes as $k=>$v)
+ 			if ($num)
  			{
- 				if ($index == $num) break;
- 				$quote_set[$k] =& $quotes[$k];
- 				$index++;
+ 				$index = 0;
+ 				foreach ($quotes as $k=>$v)
+ 				{
+ 					if ($index == $num) break;
+ 					$quote_set[$k] =& $quotes[$k];
+ 					$index++;
+ 				}
  			}
+ 			else $quote_set =& $quotes;
  			return $quote_set;
  		}
  	}
