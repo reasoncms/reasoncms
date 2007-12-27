@@ -955,8 +955,15 @@
         		'module'=> 'quote',
         		'enable_javascript_refresh' => true,
         		'prefer_short_quotes' => true,
+        		'num_to_display' => 1,
         		'rand_flag' => true,
         	),
+        ),
+        'quote_by_category' => array(
+        	'main_post' => array(
+        		'module' => 'quote',
+        		'page_category_mode' => true,
+        	)
         ),
         'quote' => array(
         	'main_post' => 'quote',
