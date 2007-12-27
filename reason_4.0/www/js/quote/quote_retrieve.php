@@ -33,6 +33,7 @@ if (!empty($quote))
 	$short_description = ($prefer_short_quotes) ? $quote->get_value('description') : '';
 	$quote_id = $quote->id();
 	$quote_text = ($short_description) ? $short_description : $quote->get_value('content');
+	$quote_author = ($quote->get_value('author')) ? $quote->get_value('author') : '';
 }
 
 // if we have a quote id and quote text then return the xml chunk
@@ -41,8 +42,9 @@ if (!empty($quote_id) && !empty($quote_text))
 	header('Content-type: text/xml');
 	echo '<?xml version="1.0" encoding="UTF-8"?>';
 	echo '<quote>';
-	echo '<quote_id>'.$quote_id.'</quote_id>';
-	echo '<quote_text>'.$quote_text.'</quote_text>';
+	echo '<id>'.$quote_id.'</id>';
+	echo '<text>'.$quote_text.'</text>';
+	echo '<author>'.$quote_author.'</author>';
 	echo '</quote>';
 }
 

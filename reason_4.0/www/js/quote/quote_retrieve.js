@@ -3,12 +3,13 @@
 
 viewed_quotes = [];
 pending_quote = '';
+pending_author = '';
 
 $(document).ready(function()
 {
 	var js_src = $('script[src*=quote_retrieve]:first').attr("src");
 	
-	// define global vars
+	// define global vars - parse all in integerse
 	js_site_id = parseInt(queryString ('site_id', js_src), 10);
 	js_page_id = parseInt(queryString ('page_id', js_src), 10);
 	js_cur_quote_id = parseInt(queryString ('quote_id', js_src), 10);
@@ -32,7 +33,6 @@ function create_refresh_link()
 
 function get_viewed_quotes()
 {
-	//alert (viewed_quotes.toString());
 	return viewed_quotes.toString();
 }
 
@@ -69,11 +69,15 @@ function grab_quote()
 		}, 
 		function(data, statusText) //
 		{
-			$(data).find('quote_text').each(function(){
+			$(data).find('text').each(function(){
 				var quote_text = $(this).text();
 				pending_quote = quote_text;
 				});
-			$(data).find('quote_id').each(function(){
+			$(data).find('author').each(function(){
+				var quote_author = $(this).text();
+				pending_author = quote_author;
+				});
+			$(data).find('id').each(function(){
 				js_cur_quote_id = $(this).text();
 				add_viewed_quote(js_cur_quote_id);
 				});
@@ -88,7 +92,9 @@ function replace_quote()
 function update_quote()
 {
 	$("div#quotes .quote").fadeOut("fast", function() {
-		$(this).html('<p>'+pending_quote+'</p>').fadeIn('slow', function() {
+		text_html = '<p class="quoteText">'+pending_quote+'</p>';
+		if (pending_author != "") text_html += '<p class="quoteAuthor">'+pending_author+'</p>';
+		$(this).html(text_html).fadeIn('slow', function() {
 			grab_quote();
 		});
 	});
