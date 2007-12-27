@@ -6,6 +6,9 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 /**
  * The quote module displays a single random quote, and provides an option to refresh the quote
  *
+ * If changing class names or the HTML generation structure, make sure to modify the html generation
+ * portions of quote_retrieve.js so that dynamically created quotes maintain the same structure.
+ *
  * @package reason
  * @subpackage minisite_modules
  * 
@@ -16,7 +19,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 		var $quotes;
 		var $acceptable_params = array ('page_category_mode' => false,
 										'cache_lifespan' => 0,
-										'num_to_display' => 1,
+										'num_to_display' => NULL,
 										'enable_javascript_refresh' => false,
 										'prefer_short_quotes' => false,
 										'rand_flag' => false);
@@ -41,6 +44,8 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 				$prefer_short_quotes = ($this->params['prefer_short_quotes']) ? 1 : 0;
 				
 				$cache_lifespan = ($this->params['cache_lifespan'] > 0) ? $this->params['cache_lifespan'] : 0;
+				
+				// all these parameters are sent in integer format so the javascript can accept only numeric params for security
 				$qry_string = '?site_id='.$this->site_id.
 							  '&page_id='.$this->page_id.
 							  '&quote_id='.$quote_id.
@@ -50,7 +55,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 				
 				$head_items =& $this->parent->head_items;
 				$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/jquery/jquery-1.2.1.min.js');
-				$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/quote/quote_retrieve.js'.$qry_string);
+				$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/quote/quote_retrieve.js'.$qry_string); // pass params in qry string
 			}
 		}
 		
@@ -68,17 +73,34 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 			foreach ($this->quotes as $quote)
 			{
 				echo '<div class="quote">'."\n";
-				echo '<p>'.$this->get_quote_content($quote) .'</p>';
+				echo $this->get_quote_content_html($quote) . "\n";
+				echo $this->get_quote_author_html($quote) . "\n";
 				echo '</div>'."\n";
 			}
 			echo '</div>'."\n";
 		}
 		
-		function get_quote_content(&$quote)
+		function get_quote_content_html(&$quote)
 		{
 			$short_description = ($this->params['prefer_short_quotes']) ? $quote->get_value('description') : '';
 			$quote_text = ($short_description) ? $short_description : $quote->get_value('content');
-			return $quote_text;
+			$quote_html = '<p class="quoteText">';
+			$quote_html .= $quote_text;
+			$quote_html .= '</p>';
+			return $quote_html;
+		}
+		
+		function get_quote_author_html(&$quote)
+		{
+			$author = $quote->get_value('author');
+			if ($author)
+			{
+				$author_html = '<p class"quoteAuthor">';
+				$author_html .= $author;
+				$author_html .= '</p>';
+				return $author_html;
+			}
+			return '';
 		}
 		
 		/**
