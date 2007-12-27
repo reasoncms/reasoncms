@@ -12,6 +12,9 @@ $(document).ready(function()
 	js_site_id = parseInt(queryString ('site_id', js_src), 10);
 	js_page_id = parseInt(queryString ('page_id', js_src), 10);
 	js_cur_quote_id = parseInt(queryString ('quote_id', js_src), 10);
+	js_page_category_mode = parseInt(queryString ('page_category_mode', js_src), 10);
+	js_cache_lifespan = parseInt(queryString ('cache_lifespan', js_src), 10);
+	js_prefer_short_quotes = parseInt(queryString ('prefer_short_quotes', js_src), 10);
 	
 	if (js_cur_quote_id > 0) add_viewed_quote(js_cur_quote_id);
 	create_refresh_link();
@@ -29,6 +32,7 @@ function create_refresh_link()
 
 function get_viewed_quotes()
 {
+	//alert (viewed_quotes.toString());
 	return viewed_quotes.toString();
 }
 
@@ -58,7 +62,10 @@ function grab_quote()
 			viewed_quote_ids: get_viewed_quotes(), 
 			site_id: js_site_id,
 			page_id: js_page_id,
-			quote_id: js_cur_quote_id
+			quote_id: js_cur_quote_id,
+			page_category_mode: js_page_category_mode,
+			prefer_short_quotes: js_prefer_short_quotes,
+			cache_lifespan: js_cache_lifespan
 		}, 
 		function(data, statusText) //
 		{
@@ -76,12 +83,15 @@ function grab_quote()
 function replace_quote()
 {
 	update_quote();
-	grab_quote();
 }
 
 function update_quote()
 {
-	$("div#quote").replaceWith('<div id="quote">'+pending_quote+'</div>');
+	$("div#quotes .quote").fadeOut("fast", function() {
+		$(this).html('<p>'+pending_quote+'</p>').fadeIn('slow', function() {
+			grab_quote();
+		});
+	});
 }
 
 function queryString( key, url )

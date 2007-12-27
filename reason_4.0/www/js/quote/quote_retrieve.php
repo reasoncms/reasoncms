@@ -7,25 +7,32 @@ $page_id = (!empty($_REQUEST['page_id'])) ? $_REQUEST['page_id'] : '5';
 
 $cleanup_rules = array('site_id' => array('function' => 'turn_into_int'),
 					   'page_id' => array('function' => 'turn_into_int'),
+					   'page_category_mode' => array('function' => 'turn_into_int'),
+					   'prefer_short_quotes' => array('function' => 'turn_into_int'),
+					   'cache_lifespan' => array('function' => 'turn_into_int'),
 					   'viewed_quote_ids' => array('function' => 'populate_viewed_quote_ids'));
 
 $request = carl_clean_vars($_REQUEST, $cleanup_rules);
-$used_ids = (isset($request['viewed_quote_ids'])) ? $request['viewed_quote_ids'] : NULL;
 
-$qh = new QuoteHelper($request['site_id'], $request['page_id']);
+$qh = new QuoteHelper();
 
-if (isset($request['viewed_quote_ids']))
-{
-	$qh->set_unavailable_quote_ids($request['viewed_quote_ids']);
-}
+$qh->set_site_id($request['site_id']);
+$qh->set_page_id($request['page_id']);
 
+if (isset($request['cache_lifespan'])) $qh->set_cache_lifespan($request['cache_lifespan']);
+if (isset($request['page_category_mode'])) $qh->set_page_category_mode($request['page_category_mode']);
+if (isset($request['viewed_quote_ids'])) $qh->set_unavailable_quote_ids($request['viewed_quote_ids']);
+
+// this should be able to support quotes when not in random mode as well probably
 $qh->init();
 $quote =& $qh->get_random_quote();
 
 if (!empty($quote))
 {
+	$prefer_short_quotes = (isset($request['prefer_short_quotes'])) ? ($request['prefer_short_quotes']) : false;
+	$short_description = ($prefer_short_quotes) ? $quote->get_value('description') : '';
 	$quote_id = $quote->id();
-	$quote_text = $quote->get_value('description');
+	$quote_text = ($short_description) ? $short_description : $quote->get_value('content');
 }
 
 // if we have a quote id and quote text then return the xml chunk
