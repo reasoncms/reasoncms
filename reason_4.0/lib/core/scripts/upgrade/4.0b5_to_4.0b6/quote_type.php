@@ -33,6 +33,7 @@ class quoteCreatorb5b6
 	var $quote_type_details = array (
 		'new'=>0,
 		'unique_name'=>'quote_type',
+		'custom_content_handler'=>'quote.php',
 		'plural_name'=>'Quotes');
 	
 	var $quote_to_category_details = array (
@@ -79,6 +80,7 @@ class quoteCreatorb5b6
 		$this->add_quote_type();
 		$this->add_page_to_quote_relationship();
 		$this->add_quote_to_category_relationship();
+		$this->ensure_quote_type_is_using_content_manager();
 	}
 
 	function add_quote_type()
@@ -166,6 +168,31 @@ class quoteCreatorb5b6
 		}
 	}
 	
+	function ensure_quote_type_is_using_content_manager()
+	{
+		if (reason_unique_name_exists('quote_type', false))
+		{
+			$qt_id = id_of('quote_type');
+			$qt = new entity($qt_id);
+			if ($qt->get_value('custom_content_handler') != 'quote.php')
+			{
+				if ($this->mode == 'run')
+				{
+					reason_update_entity( $qt_id, $this->reason_user_id, $this->quote_type_details );
+					echo '<p>Updated quote type to use correct content manager.</p>';
+				}
+				else
+				{
+					echo '<p>Would update quote type to use correct content manager.</p>';
+				}
+			}
+			else
+			{
+				echo '<p>The quote type is using the correct content manager. No need to update.</p>';
+			}
+		}
+	}
+	
 	function add_entity_table_to_type($et, $type)
 	{
 		$pub_type_id = id_of($type);	
@@ -215,6 +242,7 @@ if(!user_is_a( $reason_user_id, id_of('admin_role') ) )
 <li>Create the quote type.</li>
 <li>Create the quote to category relationship.</li>
 <li>Create the page_to_quote relationship.</li>
+<li>Ensure quote type is using quote content manager.</li>
 </ul>
 <form method="post"><input type="submit" name="go" value="test" /><input type="submit" name="go" value="run" /></form>
 <?
