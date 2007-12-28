@@ -28,6 +28,7 @@ function create_refresh_link()
 	$("div#quotes").append(refresh_div);
 	$("div#refresh_link a").click(function(e) {
 		replace_quote();
+		return false;
 	});
 }
 
