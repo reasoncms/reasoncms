@@ -203,6 +203,11 @@ class entity
 	{
 		$this->_values[ $col ] = $val;
 	}
+
+	function unset_value($col)
+	{
+		unset($this->_values[ $col ]);
+	}
 	/**
 	 * Gets the display name of the entity
 	 *
