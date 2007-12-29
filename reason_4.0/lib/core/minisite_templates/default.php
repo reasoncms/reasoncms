@@ -533,15 +533,15 @@ class MinisiteTemplate
 		if ($this->has_content( 'pre_bluebar' ))
 			$this->run_section( 'pre_bluebar' );
 		//$this->textonly_toggle( 'hide_link' );
-		if (empty($this->textonly))  // This includes the Blue Bar
+		if (empty($this->textonly))
 		{
-			$this->do_org_navigation_textonly();
+			$this->do_org_navigation();
 		// You are here bar
 			$this->you_are_here();
 		}
 		else
 		{
-			$this->do_org_navigation();
+			$this->do_org_navigation_textonly();
 		}	
 	} // }}}
 	function create_body_tag()
