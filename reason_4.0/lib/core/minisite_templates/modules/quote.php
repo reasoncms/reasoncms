@@ -95,7 +95,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 			$author = $quote->get_value('author');
 			if ($author)
 			{
-				$author_html = '<p class"quoteAuthor">';
+				$author_html = '<p class="quoteAuthor">';
 				$author_html .= $author;
 				$author_html .= '</p>';
 				return $author_html;
