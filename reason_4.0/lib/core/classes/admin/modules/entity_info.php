@@ -22,6 +22,10 @@
 				$id = $this->admin_page->request['entity_id_test'];
 				settype($id, 'integer');
 			}
+			if(empty($id))
+			{
+				$id = '';
+			}
 			echo '<form method="get" action="?"><label for="entity_id_test">Entity ID:</label> <input type="text" name="entity_id_test" id="entity_id_test" value="'.$id.'"/><input type="submit" value="submit" /><input type="hidden" name="cur_module" value="EntityInfo" /></form>';
 			if(!empty($id))
 			{
