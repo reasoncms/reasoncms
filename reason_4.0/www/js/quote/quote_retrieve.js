@@ -9,6 +9,9 @@ $(document).ready(function()
 {
 	var js_src = $('script[src*=quote_retrieve]:first').attr("src");
 	
+	// define the filepath to which we will post data
+	js_post_path = getDirectory(js_src)+"quote_retrieve.php";
+	
 	// define global vars - parse all in integerse
 	js_site_id = parseInt(queryString ('site_id', js_src), 10);
 	js_page_id = parseInt(queryString ('page_id', js_src), 10);
@@ -17,8 +20,13 @@ $(document).ready(function()
 	js_cache_lifespan = parseInt(queryString ('cache_lifespan', js_src), 10);
 	js_prefer_short_quotes = parseInt(queryString ('prefer_short_quotes', js_src), 10);
 	
+	// add the current quote to the list of viewed quotes
 	if (js_cur_quote_id > 0) add_viewed_quote(js_cur_quote_id);
+	
+	// add the refresh link to the DOM
 	create_refresh_link();
+	
+	// queue up the next quote
 	grab_quote();
 });
 
@@ -26,7 +34,7 @@ function create_refresh_link()
 {
 	var refresh_div = '<div id="refresh_link"><p><a href="#">New Quote</a></p></div>';
 	$("div#quotes").append(refresh_div);
-	$("div#refresh_link a").click(function(e) {
+	$("div#refresh_link a").click(function() {
 		replace_quote();
 		return false;
 	});
@@ -58,7 +66,7 @@ function objectify(a)
 
 function grab_quote()
 {
-	$.post("/reason_package/reason_4.0/www/js/quote/quote_retrieve.php",
+	$.post(js_post_path,
 		{ 
 			viewed_quote_ids: get_viewed_quotes(), 
 			site_id: js_site_id,
@@ -82,23 +90,28 @@ function grab_quote()
 				js_cur_quote_id = $(this).text();
 				add_viewed_quote(js_cur_quote_id);
 				});
+			link_enabled = true;
 		}, "xml");
 }
 
 function replace_quote()
 {
-	update_quote();
-}
-
-function update_quote()
-{
-	$("div#quotes .quote").fadeOut("fast", function() {
+	if (link_enabled)
+	{
+		link_enabled = false;
 		text_html = '<p class="quoteText">'+pending_quote+'</p>';
 		if (pending_author != "") text_html += '<p class="quoteAuthor">'+pending_author+'</p>';
-		$(this).html(text_html).fadeIn('slow', function() {
-			grab_quote();
+		$("div#quotes .quote").fadeTo(100, 0, function() {
+			$(this).html(text_html).fadeTo(300, 1);
 		});
-	});
+		grab_quote();
+	}
+}
+
+function getDirectory( url )
+{
+	strpos = url.lastIndexOf("/");
+	return url.substring(0, strpos)+"/";
 }
 
 function queryString( key, url )
