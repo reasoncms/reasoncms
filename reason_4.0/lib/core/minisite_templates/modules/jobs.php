@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package reason
+ */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'JobsModule';
 
@@ -62,6 +65,10 @@ class JobsModule extends DefaultMinisiteModule
 		$es->add_relation( 'job.posting_start <= "'.date( 'Y-m-d' ).'"' );
 		$es->add_relation( 'adddate( job.posting_start, interval duration.duration day ) >= "'.date( 'Y-m-d' ).'"' );
 		$this->jobs = $es->run_one();
+		if(!empty($this->request['job_id']) && !empty($this->jobs[$this->request['job_id']]) )
+		{
+			$this->parent->add_crumb( strip_tags( $this->jobs[$this->request['job_id']]->get_value('name') ) );
+		}
 	} // }}}
 	function show_job()
 	{
@@ -98,7 +105,8 @@ class JobsModule extends DefaultMinisiteModule
 	}
 	function show_job_error() // {{{
 	{
-		echo '<p>We\'re sorry, the job requested does not exist or is not currently available. This may be due to incorrectly typing in the URL; if you believe this is a bug, please report it to the contact person listed at the bottom of the page.</p>'."\n";
+		header('HTTP/1.0 404 Not Found');
+		echo '<p>We\'re sorry, the job requested is not currently available. This may be due to incorrectly typing in the URL; if you believe this is a bug, please report it to the contact person listed at the bottom of the page.</p>'."\n";
 	} // }}}
 	function show_feed_link()
 	{
