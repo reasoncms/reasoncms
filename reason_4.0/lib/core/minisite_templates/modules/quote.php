@@ -22,7 +22,8 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 										'num_to_display' => NULL,
 										'enable_javascript_refresh' => false,
 										'prefer_short_quotes' => false,
-										'rand_flag' => false);
+										'rand_flag' => false,
+										'footer_html' => '');
 		
 		function init( $args = array() )
 		{	
@@ -76,6 +77,12 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 				echo $this->get_quote_content_html($quote) . "\n";
 				echo $this->get_quote_author_html($quote) . "\n";
 				echo '</div>'."\n";
+				if (!empty($this->params['footer_html']) || $this->params['enable_javascript_refresh'])
+				{
+					echo '<div id="quotes_footer">'."\n";
+					if (!empty($this->params['footer_html'])) echo ($this->params['footer_html']);
+					echo '</div>';
+				}
 			}
 			echo '</div>'."\n";
 		}
