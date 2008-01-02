@@ -185,7 +185,7 @@
 		function process()
 		{	
 			$description = trim(tidy($this->get_value('description')));
-			$content = trim(tidy($this->get_value('post_content')));
+			$content = trim(get_safer_html(tidy($this->get_value('post_content'))));
 			if(empty($description))
 			{
 				$words = explode(' ', $content, 31);
