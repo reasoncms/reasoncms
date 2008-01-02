@@ -69,6 +69,7 @@ class MinisiteTemplate
 	var $mode = 'default'; // possible values: 'default','documentation','samples'
 	var $queried_for_parent_sites = false;
 	var $parent_sites = array();
+	var $include_modules_css = true;
 	
 	function initialize( $site_id, $page_id = '' ) // {{{
 	{
@@ -215,7 +216,10 @@ class MinisiteTemplate
 		$es->set_order( 'sortable.sort_order' );
 		$css_files += $es->run_one();
 
-		$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/modules.css');
+		if($this->include_modules_css)
+		{
+			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/modules.css');
+		}
 		if( $css_files )
 		{
 			foreach( $css_files AS $css )
