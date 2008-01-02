@@ -130,6 +130,9 @@ class EventsModule extends DefaultMinisiteModule
 				'function'=>'check_against_array',
 				'extra_args'=>$formats,
 			),
+			'no_search' => array(
+				'function'=>'turn_into_int',
+			),
 		);
 	}
 	
@@ -250,6 +253,11 @@ class EventsModule extends DefaultMinisiteModule
 		$start_date = '';
 		$end_date = '';
 		$view = '';
+		
+		if( empty($this->request['no_search']) && empty($this->request['textonly']) && ( !empty($this->request['start_date']) || !empty($this->request['end_date']) || !empty($this->request['view']) || !empty($this->request['audience']) || !empty($this->request['view']) || !empty($this->request['nav_date']) || !empty($this->request['category']) ) )
+		{
+			$this->parent->head_items->add_head_item('meta', array('name'=>'robots','content'=>'noindex,follow'));
+		}
 		
 		if(!empty($this->pass_vars['start_date']))
 			$start_date = $this->pass_vars['start_date'];
