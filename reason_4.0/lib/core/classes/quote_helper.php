@@ -172,9 +172,12 @@ reason_include_once( 'classes/object_cache.php' );
  		for ($i=0; $i<$num; $i++)
  		{
  			$quote =& $this->get_random_quote();
- 			$id = $quote->id();
- 			$this->set_unavailable_quote_id($id);
- 			$quotes[$id] =& $quote;
+ 			if ($quote) 
+ 			{
+ 				$id = $quote->id();
+ 				$this->set_unavailable_quote_id($id);
+ 				$quotes[$id] =& $quote;
+ 			}
  		}
  		return $quotes;
  	}
