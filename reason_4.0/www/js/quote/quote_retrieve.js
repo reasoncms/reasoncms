@@ -33,7 +33,7 @@ $(document).ready(function()
 function create_refresh_link()
 {
 	var refresh_div = '<div id="refresh_link"><p><a href="#">New Quote</a></p></div>';
-	$("div#quotes").append(refresh_div);
+	$("div#quotes_footer").prepend(refresh_div);
 	$("div#refresh_link a").click(function() {
 		replace_quote();
 		return false;
