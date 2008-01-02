@@ -694,12 +694,20 @@
 		 * Looking at this code now, I'm not sure it will work properly if this function is called more than once
 		 * per entity_selector.
 		 * @param mixed $entity_id the id of the the entity with which our entities have a relationship (can also be an array of ids)
-		 * @param int $relationship_type the type of relationship our entities have (optional)
+		 * @param int $relationship_type the type of relationship our entities have
 		 * @return void
 		 * @todo retest this method calling it more than once.  fix it if it needs fixin
 		 */
 		function add_left_relationship( $entity_id , $relationship_type = false ) // {{{
 		{
+			if (!$relationship_type)
+			{
+				$call_info = array_shift( debug_backtrace() );
+        		$code_line = $call_info['line'];
+        		$file = array_pop( explode('/', $call_info['file']));
+        		$msg = 'entity selector method add_left_relationship called by ' . $file . ' on line ' . $code_line . ' without parameter 2 (relationship_type).';
+				trigger_error($msg, WARNING);
+			}
 			$es = new entity_selector( $this->site_id );
 			$es->add_table('relationship' , 'relationship');
 			if($relationship_type)
@@ -749,12 +757,20 @@
 		 * Looking at this code now, I'm not sure it will work properly if this function is called more than once
 		 * per entity_selector.
 		 * @param mixed $entity_id the id of the the entity with which our entities have a relationship (can also be an array of ids)
-		 * @param int $relationship_type the type of relationship our entities have (optional)
+		 * @param int $relationship_type the type of relationship our entities have
 		 * @return void
 		 * @todo retest this method calling it more than once.  fix it if it needs fixin
 		 */
 		function add_right_relationship( $entity_id , $relationship_type = false ) // {{{
 		{
+			if (!$relationship_type)
+			{
+				$call_info = array_shift( debug_backtrace() );
+        		$code_line = $call_info['line'];
+        		$file = array_pop( explode('/', $call_info['file']));
+        		$msg = 'entity selector method add_right_relationship called by ' . $file . ' on line ' . $code_line . ' without parameter 2 (relationship_type).';
+				trigger_error($msg, WARNING);
+			}
 			$es = new entity_selector( $this->site_id );
 			$es->add_table('relationship' , 'relationship');
 			if($relationship_type)
