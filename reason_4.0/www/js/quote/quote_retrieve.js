@@ -10,7 +10,7 @@ $(document).ready(function()
 	var js_src = $('script[src*=quote_retrieve]:first').attr("src");
 	
 	// define the filepath to which we will post data
-	js_post_path = getDirectory(js_src)+"quote_retrieve.php";
+	js_post_path = getRelativeDirectory(js_src)+"quote_retrieve.php";
 	
 	// define global vars - parse all in integerse
 	js_site_id = parseInt(queryString ('site_id', js_src), 10);
@@ -108,10 +108,16 @@ function replace_quote()
 	}
 }
 
-function getDirectory( url )
+// get the directory location relative to the server base
+function getRelativeDirectory( url )
 {
-	strpos = url.lastIndexOf("/");
-	return url.substring(0, strpos)+"/";
+		abs_test = url.indexOf("//");
+		if (abs_test != -1) // trim server name
+		{
+			url = url.substring( (abs_test+2) );
+			url = url.substring(url.indexOf("/"));
+		}
+        return url.substring(0, url.lastIndexOf("/") )+"/";
 }
 
 function queryString( key, url )
