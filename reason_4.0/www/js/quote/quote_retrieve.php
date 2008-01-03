@@ -16,9 +16,8 @@ $request = carl_clean_vars($_REQUEST, $cleanup_rules);
 
 $qh = new QuoteHelper();
 
-$qh->set_site_id($request['site_id']);
-$qh->set_page_id($request['page_id']);
-
+if (isset($request['site_id'])) $qh->set_site_id($request['site_id']);
+if (isset($request['page_id'])) $qh->set_page_id($request['page_id']);
 if (isset($request['cache_lifespan'])) $qh->set_cache_lifespan($request['cache_lifespan']);
 if (isset($request['page_category_mode'])) $qh->set_page_category_mode($request['page_category_mode']);
 if (isset($request['viewed_quote_ids'])) $qh->set_unavailable_quote_ids($request['viewed_quote_ids']);
