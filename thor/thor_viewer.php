@@ -46,10 +46,6 @@ class ThorViewer extends TableAdmin
 			elseif (isset($this->table_row_action) && isset($this->table_action_id) && $this->verify_table_action_id()) $this->init_row_action();
 			else $this->init_default();
 		}
-		else
-		{
-			trigger_error('The table ' . $this->get_table_name() . ' does not exist - using database connection ' . $this->get_db_conn());
-		}
 	}
 	
 	function thor_build_display_values()
@@ -92,6 +88,16 @@ class ThorViewer extends TableAdmin
 			$field_display_names[$k] = $v['label'];
 		}
 		$form->field_display_names = $field_display_names;
+	}
+	
+	function _delete_data()
+	{
+		// connect with table database defined in settings.php3
+		connectDB($this->get_db_conn());
+		$q = 'DROP TABLE ' . $this->get_table_name();
+		$res = mysql_query( $q ) or mysql_error();//or trigger_error( 'Error: mysql error in Thor Data delete - URL ' . get_current_url() . ': '.mysql_error() );
+  		connectDB($this->get_orig_db_conn());
+		return $res;
 	}
 	
 	/**
@@ -221,6 +227,25 @@ class DiscoThorAdmin extends DiscoDefaultAdmin
 		{
 			if (isset($this->field_display_names[$element]));
 			$this->set_display_name($element, $this->field_display_names[$element]);
+		}
+	}
+	
+	function process_delete()
+	{
+		if ($this->chosen_action == 'delete')
+		{
+			$id_to_delete = $this->get_id();
+			$qry = 'DELETE FROM ' . $this->get_table_name() . ' WHERE '.$this->id_column_name.' = '.$id_to_delete;
+			$result = db_query($qry, 'The delete query failed');
+			
+			$qry = 'SELECT COUNT(*) as totalfound FROM ' . $this->get_table_name();
+			$result = db_query($qry, 'The count query failed');
+			$result = mysql_fetch_assoc($result);
+			if ($result['totalfound'] == 0)
+			{
+				$q = 'DROP TABLE ' . $this->get_table_name();
+				$res = mysql_query( $q ) or mysql_error();//or trigger_error( 'Error: mysql error in Thor Data delete - URL ' . get_current_url() . ': '.mysql_error() );
+			}
 		}
 	}
 	
