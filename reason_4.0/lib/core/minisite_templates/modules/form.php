@@ -122,8 +122,10 @@
 					{
 						$this->show_login = true;
 						echo $this->show_options_link();
-						$thor_viewer = new Thor_Viewer();
-						$thor_viewer->init_using_reason_form_id($form->id());
+						$thor_admin_form = new DiscoThorAdmin();
+						$thor_viewer = new ThorViewer();
+						$thor_viewer->set_admin_form($thor_admin_form);
+						$thor_viewer->init_thor_viewer($form->id());
 						$thor_viewer->run();
 					}
 					// if viewing privs
