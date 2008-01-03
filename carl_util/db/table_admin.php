@@ -1092,11 +1092,11 @@ class TableAdmin
 	function get_row_actions(&$data_row, $row_id)
 	{
 		$row_actions = array();
-		
-		// delete
-		if ($this->allow_row_delete)
+			
+		// view
+		if ($this->allow_view)
 		{
-			$row_actions['Delete'] = carl_make_link(array('table_row_action' => 'delete', 'table_action_id' => $row_id, 'table_action' => ''));
+			$row_actions['View'] = carl_make_link(array('table_row_action' => 'view', 'table_action_id' => $row_id, 'table_action' => ''));
 		}
 		
 		// edit
@@ -1105,10 +1105,10 @@ class TableAdmin
 			$row_actions['Edit'] = carl_make_link(array('table_row_action' => 'edit', 'table_action_id' => $row_id, 'table_action' => ''));
 		}
 		
-		// view
-		if ($this->allow_view)
+		// delete
+		if ($this->allow_row_delete)
 		{
-			$row_actions['View'] = carl_make_link(array('table_row_action' => 'view', 'table_action_id' => $row_id, 'table_action' => ''));
+			$row_actions['Delete'] = carl_make_link(array('table_row_action' => 'delete', 'table_action_id' => $row_id, 'table_action' => ''));
 		}
 
 		return $row_actions;
