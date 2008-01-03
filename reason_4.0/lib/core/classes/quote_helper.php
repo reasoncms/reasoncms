@@ -84,6 +84,7 @@ reason_include_once( 'classes/object_cache.php' );
  		}
  		else
  		{
+ 			$this->quote_pool = false;
  			trigger_error('The page_id and site_id must be available to find quotes');
  		}
  	}
