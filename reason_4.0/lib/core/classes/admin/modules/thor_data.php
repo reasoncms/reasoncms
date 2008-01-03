@@ -31,10 +31,16 @@
 			$this->form = new entity( $this->admin_page->id );
 			if ($this->validate_form())
 			{		
+				$form_id = $this->form->id();
 				$this->admin_page->title = 'Data Manager for Form "' . $this->form->get_value('name').'"';
-				$this->thor_viewer = new Thor_Viewer();
-				$this->thor_viewer->enable_delete();
-				$this->thor_viewer->init_using_reason_form_id($this->form->id());
+				
+				$admin_form = new DiscoThorAdmin();
+				$this->thor_viewer = new ThorViewer();
+				$this->thor_viewer->set_admin_form($admin_form);
+				$this->thor_viewer->set_allow_edit(true);
+				$this->thor_viewer->set_allow_delete(true);
+				$this->thor_viewer->set_allow_row_delete(true);
+				$this->thor_viewer->init_thor_viewer($form_id);
 			}
 		}
 		
