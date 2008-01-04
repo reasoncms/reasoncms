@@ -53,9 +53,7 @@
 	}
 
 	// start output buffering
-	// if the request variable _ob_off is non-empty, output buffering will not be used
-	if( empty( $_REQUEST[ '_ob_off' ] ) )
-		ob_start();
+	ob_start();
 
 	// setup the REASON_LOGIN_URL constant dynamically based upon value of HTTPS_AVAILABLE
 	if (HTTPS_AVAILABLE)
