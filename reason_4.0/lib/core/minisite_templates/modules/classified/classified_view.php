@@ -10,7 +10,7 @@ $GLOBALS[ '_classified_module_view' ][ module_basename( __FILE__) ] = 'Classifie
  * Extensions of the class can define a method that modifies the display of a field at preview or display as follows
  *
  * get_display_value_field_name($value, &$item, $summary_mode)
- 
+ *
  * The base class defines clean_value methods for classified_date_available, datetime, and price to format these appropriately on display
  *
  * @author Nathan White
@@ -157,8 +157,6 @@ class ClassifiedView extends Disco
 	
 	var $required = array('category', 
 						  'price',
-						  'location',
-						  'classified_date_available',
 						  'name',
 						  'content',
 						  'author',
