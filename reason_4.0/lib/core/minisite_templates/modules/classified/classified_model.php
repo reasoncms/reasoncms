@@ -175,33 +175,36 @@ class ClassifiedModel
 	}
 	
 	/**
-	 * Creates new entity
+	 * Preps values for the database and and creates new entity
 	 */
 	function save_classified($values)
 	{
 		$user_netid = reason_check_authentication();
-		$user = get_user_id($user_netid ? $user_netid : 'classified_user');
-		if (!$user) trigger_error('User does not exist', FATAL);
-		
-		$name = reason_htmlspecialchars($values['name']);
-		$category = reason_htmlspecialchars($values['category']);
+		$user = get_user_id($user_netid ? $user_netid : 'classified_user');		
+		$name = trim(strip_tags($values['name']));
+		$category = turn_into_int($values['category']);
 		$duration_days = $this->get_classified_duration_days();
 		$requires_approval = $this->get_classified_requires_approval();
 		
-		$values['location'] = reason_htmlspecialchars($values['location']);
-		$values['content'] = reason_htmlspecialchars($values['content']);
-		$values['author'] = reason_htmlspecialchars($values['author']);
-		$values['classified_contact_email'] = reason_htmlspecialchars($values['classified_contact_email']);
-		$values['display_contact_info'] = reason_htmlspecialchars($values['display_contact_info']);
-		$values['price'] = reason_htmlspecialchars($values['price']);
-		$values['classified_date_available'] = reason_htmlspecialchars($values['classified_date_available']);
-		$values['description'] = $this->string_summary($values['content']);
-		$values['datetime'] = get_mysql_datetime();
-		if (!empty($duration_days)) $values['classified_duration_days'] = $duration_days;
-		$values['state'] = ($requires_approval) ? 'Pending' : 'Live';
-		$values['new'] = 0;
+		if (!empty($values['classified_date_available']))
+		{
+			$ts = get_unix_timestamp($values['classified_date_available']);
+			if ($ts) $clean_values['classified_date_available'] = get_mysql_datetime($ts);
+		}
+		if (!empty($duration_days)) $clean_values['classified_duration_days'] = $duration_days;
+		if (!empty($values['location'])) $clean_values['location'] = trim(strip_tags($values['location']));
+		if (!empty($values['content'])) $clean_values['content'] = trim(strip_tags($values['content']));
+		if (!empty($values['author'])) $clean_values['author'] = trim(strip_tags($values['author']));
+		if (!empty($values['classified_contact_email'])) $clean_values['classified_contact_email'] = trim(strip_tags($values['classified_contact_email']));
+		if (!empty($values['price'])) $clean_values['price'] = turn_into_int($values['price']);
+		if (!empty($clean_values['content'])) $clean_values['description'] = $this->string_summary($values['content']);
 		
-		$entity_id = reason_create_entity($this->get_site_id(), id_of('classified_type'), $user, $name, $values);
+		$clean_values['display_contact_info'] = turn_into_int($values['display_contact_info']); // always either 0 or 1
+		$clean_values['datetime'] = get_mysql_datetime();
+		$clean_values['state'] = ($requires_approval) ? 'Pending' : 'Live';
+		$clean_values['new'] = 0;
+		
+		$entity_id = reason_create_entity($this->get_site_id(), id_of('classified_type'), $user, $name, $clean_values);
 		create_relationship($entity_id, $category, relationship_id_of('classified_to_classified_category'));
 		
 		$this->set_classified_id($entity_id);
@@ -266,7 +269,7 @@ class ClassifiedModel
 	}
 	
 	function string_summary($string) {
-		return trim(tidy(implode(' ', array_slice(explode(' ', $string, 30), 0, -1)))).'...';
+		return trim(implode(' ', array_slice(explode(' ', $string, 30), 0, -1))).'...';
 	}
 
 	/**
