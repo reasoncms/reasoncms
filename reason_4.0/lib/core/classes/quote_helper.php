@@ -52,7 +52,7 @@ reason_include_once( 'classes/object_cache.php' );
  	function init()
  	{
  		$this->init_from_cache();
-		if (!isset($this->quote_pool)) $this->init_from_database(); // there is no cache
+		if (!isset($this->quote_pool) || ($this->quote_pool === false) ) $this->init_from_database();
  	}
  	
  	function init_from_cache()
