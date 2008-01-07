@@ -99,7 +99,7 @@ class HeadItems
 	 */	
 	function add_javascript( $url, $add_to_top = false )
 	{
-		$attrs = array('language' => 'JavaScript', 'type' => 'text/javaScript', 'src' => $url);
+		$attrs = array('type' => 'text/javaScript', 'src' => $url);
 		$this->add_head_item('script', $attrs, '', $add_to_top);
 	}
 	
@@ -182,7 +182,7 @@ class HeadItems
 			$html_item = '<'.$item['element'];
 			foreach($item['attributes'] as $attr_key=>$attr_val)
 			{
-				$html_item .= ' '.$attr_key.'="'.$attr_val.'"';
+				$html_item .= ' '.reason_htmlspecialchars($attr_key).'="'.reason_htmlspecialchars($attr_val).'"';
 			}
 			if(!empty($item['content']) )
 			{
