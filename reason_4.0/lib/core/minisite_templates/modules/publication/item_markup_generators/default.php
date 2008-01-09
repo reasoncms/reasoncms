@@ -267,7 +267,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 	}
 	function get_categories_section()
 	{
-		$ret = '<h4>Categories</h4>';
+		$ret = '<h4>Posted In</h4>';
 		$ret .= '<ul>';
 		foreach($this->passed_vars['item_categories'] as $category)
 		{
