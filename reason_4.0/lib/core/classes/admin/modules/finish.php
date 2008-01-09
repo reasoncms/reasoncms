@@ -9,6 +9,7 @@
 		} // }}}		
 		function init() // {{{
 		{
+			if (!$this->admin_page->id) return false;
 			//these next few lines check the entity to make sure it has everything it needs
 			$this->load_content_manager();
 			$this->check_entity_values(); 
@@ -159,7 +160,6 @@
 			}
 			$this->disco_item = new $content_handler;
 			$this->disco_item->admin_page =& $this->admin_page;
-
 			$this->disco_item->prep_for_run( $this->admin_page->site_id, $this->admin_page->type_id, $this->admin_page->id, $this->admin_page->user_id );
 			$this->disco_item->init();
 
@@ -246,6 +246,10 @@
 		} // }}}
 		function run() // {{{
 		{
+			if (!$this->admin_page->id)
+			{
+				echo '<p>The entity could not be finished because it does not exist in the database. You may have chosen cancel or delete prior to finishing the entity.</p>';
+			}
 		} // }}}
 	} // }}}
 ?>
