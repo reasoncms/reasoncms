@@ -73,7 +73,6 @@ class ClassifiedView extends Disco
 	 * Sets order, display name, and visibility of item fields for detail view and preview
 	 */
 	var $item_detail_fields_to_display = array(
-		'name' => 'Posting title',
 		'category' => 'Category',
 		'content' => 'Posting description',
 		'price' => 'Price',
@@ -136,6 +135,9 @@ class ClassifiedView extends Disco
 		);
 	
 	// disco form settings - should generally not be changed directly - change instead using alter_classified_elements method
+	/**
+	 * If this is set to false, be very careful about making sure that your preview methods properly sanitize user input before displaying it
+	 */
 	var $strip_tags_from_user_input = true;	
 	
 	var $elements = array(
@@ -468,8 +470,9 @@ class ClassifiedView extends Disco
 	// Overloadable methods for item preview
 	function show_preview()
 	{
+		$name = reason_htmlspecialchars($this->get_value('name')); // htmlspecialchars for now should use same methods as model
 		echo '<div class="classifiedPreview">';
-		echo '<h3>Preview</h3>';
+		echo '<h3>'.$name.'</h3>';
 		$this->show_item($this->get_values());
 		echo '</div>';
 	}
@@ -483,7 +486,7 @@ class ClassifiedView extends Disco
 
 	function show_item_value_default($display_name, $display_value)
 	{
-		echo '<li><strong>'.$display_name.'</strong>: ' . $display_value . '</li>';
+		echo '<li><strong>'.reason_htmlspecialchars($display_name).'</strong>: ' . reason_htmlspecialchars($display_value) . '</li>';
 	}
 
 	function show_summary_list(&$items)
@@ -591,7 +594,11 @@ class ClassifiedView extends Disco
 	
 	function get_display_value_price($value, &$item, $summary_mode)
 	{
-		return '$'.$value;
+		if (!empty($value))
+		{
+			return '$'.$value;
+		}
+		else return '';
 	}
 	
 	function get_display_value_author($value, &$item, $summary_mode)
@@ -673,8 +680,8 @@ class ClassifiedView extends Disco
 	 */
 	function run_classified_default_error_checks()
 	{
-		if ($this->get_value('price') <= 0) $this->set_error('price', 'Price is too low');
-		if (!check_against_regexp($this->get_value('classified_contact_email'), array('email')))
+		if ($this->get_value('price') && ($this->get_value('price') <= 0)) $this->set_error('price', 'Price is too low');
+		if ($this->get_value('classified_contact_email') && !check_against_regexp($this->get_value('classified_contact_email'), array('email')))
 		{
 			$this->set_error('classified_contact_email', 'Malformed email address');
 		}
@@ -725,7 +732,7 @@ class ClassifiedView extends Disco
 			$email_info['html'] = $this->get_classified_email_html($email_link);
 			
 			// provided we have at least a "to" and "from" - pass the parts to the model for e-mailing
-			if( !empty($email_info['to']) && !empty($email_info['from']) )
+			if( !empty($email_info['to']))
 			{
 				$this->model->email_classified($email_info);
 			}

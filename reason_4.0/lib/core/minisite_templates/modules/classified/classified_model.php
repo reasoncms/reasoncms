@@ -176,6 +176,8 @@ class ClassifiedModel
 	
 	/**
 	 * Preps values for the database and and creates new entity
+	 * @todo the cleaning methods should be available to the view as well outside of save so that the view can filter
+	 *       the values in the same way for preview purposes (trim/strip tags in most cases)
 	 */
 	function save_classified($values)
 	{
