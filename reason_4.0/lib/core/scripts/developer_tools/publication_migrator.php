@@ -171,9 +171,9 @@ class MigratorScreen3 extends MigratorScreen
 		$this->add_element('pub_name', 'text', array('display_name' => 'Publication Name'));
 		$this->set_value('pub_name', $this->helper->guess_desired_publication_name());
 		$this->add_required('pub_name');
-		$this->add_element('pub_description', 'loki', array('display_name' => 'Publication Description'));
+		$this->add_element('pub_description', 'textarea', array('display_name' => 'Publication Description'));
 		$this->set_value('pub_description', $this->helper->guess_desired_publication_description());
-		$this->set_comment('pub_description', form_comment('Any text entered here will be displayed at the top of the primary page for the publication'));
+		$this->set_comments('pub_description', form_comment('Any text entered here will be displayed at the top of the primary page for the publication'));
 		$this->add_element('pub_rss_feed_url', 'text', array('display_name' => 'Publication RSS Feed URL'));
 		$this->set_value('pub_rss_feed_url', $this->helper->guess_desired_publication_rss_feed_url());
 		$this->add_required('pub_rss_feed_url');
