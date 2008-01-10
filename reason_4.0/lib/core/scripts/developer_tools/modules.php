@@ -12,6 +12,11 @@
  * - detail view shows site and page name
  * - some speed improvements (could use more)
  *
+ * updated 1/10/2008 to add limiting by core/local file location
+ * not that when limited to "core" modules, the actual page when being tested would use the "local" 
+ * version of the module if available and the files are titled the same.
+ *
+ * @author Nathan White
  * @package reason
  * @subpackage scripts
  */
@@ -50,8 +55,19 @@ $es->add_relation('entity.name != ""');
 $result = $es->run_one();
 
 $detail_mode = (isset($_REQUEST['detail'])) ? ($_REQUEST['detail'] == 'true') : false;
-$module_limiter = (isset($_REQUEST['limit'])) ? turn_into_string($_REQUEST['limit']) : '';
+$module_limiter = (isset($_REQUEST['limit'])) ? conditional_stripslashes(turn_into_string($_REQUEST['limit'])) : '';
+$detail_limiter = (isset($_REQUEST['detail_limit'])) ? conditional_stripslashes(turn_into_string($_REQUEST['detail_limit'])) : '';
+
+$core_local_limiter = (isset($_REQUEST['core_local_limit'])) 
+					  ? check_against_array($_REQUEST['core_local_limit'], array('core', 'local')) 
+					  : '';					  
 $num = (isset($_REQUEST['num'])) ? turn_into_int($_REQUEST['num']) : 'All';
+
+if (isset($_REQUEST['reset']))
+{
+	header("Location: " . carl_make_redirect(array('limit' => '', 'core_local_limit' => '')));
+	exit();
+}
 
 foreach ($result as $k=>$mypage)
 {
@@ -67,17 +83,21 @@ foreach( $page_types AS $page_type => $type )
 		$module = is_array( $module_info ) ? $module_info[ 'module' ] : $module_info;
 		if( !empty( $module ) )
 		{
-			if ($detail_mode) $check = ($module == $module_limiter) ? true : false;
+			if ($detail_mode) $check = ($module == $detail_limiter) ? true : false;
 			else $check = (empty($module_limiter)) ? true : (strpos($module, $module_limiter) !== false);
 			if (isset($reason_page_types[$page_type]) && $check)
 			{
-				$modules_by_page_type[$module][$page_type] = $reason_page_types[$page_type];
+				if (empty($core_local_limiter) || module_location_is_acceptable($module, $core_local_limiter))
+				{
+					$modules_by_page_type[$module][$page_type] = $reason_page_types[$page_type];
+				}
 			}
 		}
 	}
 }
 
-$module_limiter = htmlentities($module_limiter); // in case of weird chars
+$module_limiter = reason_htmlspecialchars($module_limiter); // in case of weird chars - parse the limiter since we are going to display it
+$detail_limiter = reason_htmlspecialchars($detail_limiter); // in case of weird chars - parse the limiter since we are going to display it
 
 if ($detail_mode)
 {
@@ -105,19 +125,19 @@ if ($detail_mode)
 			if ($num != 'All' && $count >= $num) break;
 		}
 	}
-	echo '<h3>Detail mode for module ' . $module_limiter . '</h3>';
-	echo '<p><a href="'.carl_construct_link().'">View all modules</a></p>';
+	echo '<h3>Detail mode for module ' . $detail_limiter . '</h3>';
+	echo '<p><a href="'.carl_make_link(array('num' => '', 'detail'=>'', 'detail_limit' => '')).'">Return to Summary View</a></p>';
 	if (!empty($items))
 	{
 		$item_count = count($items);
 		$total_count = ($num == 'All') ? $item_count : count($pages);
 		$approx = ($total_count == $item_count) ? '' : ' (approx)';
-		echo '<p>'.$item_count.' valid URLs shown for module ' . $module_limiter .'</p>';
-		if ($total_count > 9) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module_limiter, 'num'=>10)) . '" title="10 URLs for module ' . $module_limiter . '">10</a>';
-		if ($total_count > 24) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module_limiter, 'num'=>25)) . '" title="25 URLs for module ' . $module_limiter . '">25</a> ';
-		if ($total_count > 99) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module_limiter, 'num'=>100)) . '" title="100 URLs for module ' . $module_limiter . '">100</a> ';
-		if ($total_count > 199) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module_limiter, 'num'=>'')) . '" title="All URLs for module ' . $module_limiter . '">All ' . $total_count . $approx.'</a> - high database load - not recommended';
-		else $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module, 'num'=>'')) . '" title="All URLs for module ' . $module_limiter . '">All ' . $total_count . $approx.'</a>';
+		echo '<p>'.$item_count.' valid URLs shown for module ' . $detail_limiter .'</p>';
+		if ($total_count > 9) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'detail_limit' => $detail_limiter, 'num'=>10)) . '" title="10 URLs for module ' . $detail_limiter . '">10</a>';
+		if ($total_count > 24) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'detail_limit' => $detail_limiter, 'num'=>25)) . '" title="25 URLs for module ' . $detail_limiter . '">25</a> ';
+		if ($total_count > 99) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'detail_limit' => $detail_limiter, 'num'=>100)) . '" title="100 URLs for module ' . $detail_limiter . '">100</a> ';
+		if ($total_count > 199) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'detail_limit' => $detail_limiter, 'num'=>'')) . '" title="All URLs for module ' . $detail_limiter . '">All ' . $total_count . $approx.'</a> - high database load - not recommended';
+		else $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'detail_limit' => $detail_limiter, 'num'=>'')) . '" title="All URLs for module ' . $detail_limiter . '">All ' . $total_count . $approx.'</a>';
 		echo '<p>Number to show: '.implode(" | ", $link) . '</p>';
 			
 		echo '<table border="1" cellpadding="2" cellspacing="0">'."\n";
@@ -138,19 +158,15 @@ if ($detail_mode)
 	}
 	else
 	{
-		echo '<p>No page URLs could be found for module ' . $module_limiter . '</p>';
-		echo '<p><a href="'.carl_construct_link().'">View all modules</a></p>';
+		echo '<p>No page URLs could be found for module ' . $detail_limiter . '</p>';
 	}
 }
 else
 {
-	if ($module_limiter)
-	{
-		echo '<h3>Modules limited by substring ' . $module_limiter . '</h3>';
-		echo '<p><a href="'.carl_construct_link().'">View all modules</a></p>';
-	}
-	else echo '<h3>All modules</h3>';
-	show_filter($module_limiter);
+	$module_location_text = ($core_local_limiter) ? ucfirst($core_local_limiter) . ' modules' : 'All modules';
+	$module_limit_text = ($module_limiter) ? ' limited by substring ' . $module_limiter : '';
+	echo '<h3>'.$module_location_text . $module_limit_text.'</h3>';
+	show_filter($module_limiter, $core_local_limiter);
 	if (empty($modules_by_page_type))
 	{
 		echo '<hr /><p>No results to show</p><hr />';
@@ -192,10 +208,10 @@ else
 			echo '<td>';
 			echo '<a href="'.$url.'">'.substr($url,0,50).(strlen($url) > 50 ? '...' : '').'</a></td>'."\n";
 			echo '<td>';
-			if ($page_total > 9) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module, 'num'=>10)) . '" title="10 URLs for module ' . $module_limiter . '">10</a>';
-			if ($page_total > 24) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module, 'num'=>25)) . '" title="50 URLs for module ' . $module_limiter . '">25</a> ';
-			if ($page_total > 99) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module, 'num'=>100)) . '" title="50 URLs for module ' . $module_limiter . '">100</a> ';
-			if ($page_total < 200) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module, 'num'=>'')) . '" title="All URLs for module ' . $module_limiter . '">All</a>';
+			if ($page_total > 9) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module_limiter, 'detail_limit' => $module, 'num'=>10)) . '" title="10 URLs for module ' . $module . '">10</a>';
+			if ($page_total > 24) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module_limiter, 'detail_limit' => $module, 'num'=>25)) . '" title="50 URLs for module ' . $module . '">25</a> ';
+			if ($page_total > 99) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module_limiter, 'detail_limit' => $module, 'num'=>100)) . '" title="50 URLs for module ' . $module . '">100</a> ';
+			if ($page_total < 200) $link[] = '<a href="' . carl_make_link(array('detail' => 'true', 'limit' => $module_limiter, 'detail_limit' => $module, 'num'=>'')) . '" title="All URLs for module ' . $module . '">All</a>';
 			echo implode(" | ", $link);
 			echo '</td>';
 			echo "</tr>\n";
@@ -205,11 +221,29 @@ else
 	echo '</body></html>';
 }
 
-function show_filter($limit = '')
+// make sure the module file exists at the specified location
+function module_location_is_acceptable($name, $location)
 {
-	echo '<form method="post" action="'.carl_construct_link().'">';
-	echo '<p>Limit by module substring: <input type="text" name="limit" value="'.$limit.'"></p>';
-	echo '<p><input type="submit" name="submit" value="Search"></p>';
+	$file = REASON_INC.'lib/'.$location.'/minisite_templates/modules/'.$name.'.php';
+	$file2 = REASON_INC.'lib/'.$location.'/minisite_templates/modules/'.$name.'/module.php';
+	return (file_exists($file) || file_exists($file2));
+}
+
+function show_filter($string_limit = '', $location_limit = '')
+{
+	if ($location_limit != 'core') $options[] = '<a href="'.carl_make_link(array('core_local_limit' => 'core', 'limit' => $string_limit)).'">Core</a>';
+	else $options[] = 'Core';
+	if ($location_limit != 'local') $options[] = '<a href="'.carl_make_link(array('core_local_limit' => 'local', 'limit' => $string_limit)).'">Local</a>';
+	else $options[] = 'Local';
+	if ( ($location_limit == 'local') || ($location_limit == 'core') ) $options[] = '<a href="'.carl_make_link(array('core_local_limit' => '', 'limit' => $string_limit)).'">Any</a>';
+	else $options[] = 'Any';
+	echo '<p>Filter by module location: ' . implode(" | ", $options) . '</p>';
+	echo '<form method="post" action="'.carl_make_link(array('core_local_limit' => $location_limit)).'">';
+	echo '<p>Filter by module substring: <input type="text" name="limit" value="'.$string_limit.'"></p>';
+	$reset_button = ($string_limit || $location_limit)
+					? ' <input type="submit" name="reset" value="Clear Filters">' 
+					: '';
+	echo '<p><input type="submit" name="submit" value="Search">'.$reset_button.'</p>';
 }
 
 //echo 'time taken - ' . (get_microtime() - $s) . ' seconds';
