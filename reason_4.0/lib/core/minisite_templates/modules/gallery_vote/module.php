@@ -24,7 +24,7 @@ class GalleryVoteModule extends GalleryModule
 		return $cr;
 	}
 			
-	function init( $args )
+	function init( $args = array() )
 	{
  		if (empty($this->request['mode'])) $this->request['mode'] = 'gallery'; // default mode is gallery
 		
