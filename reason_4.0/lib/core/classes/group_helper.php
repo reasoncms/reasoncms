@@ -13,6 +13,7 @@
 	 * Include the directory service
 	 */ 
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
+	reason_include_once( 'classes/entity_selector.php' );
 	reason_include_once( 'function_libraries/admin_actions.php');
 	
 	/**
@@ -278,7 +279,58 @@
 				return false;
 			}
 	}
-	
+
+	/**
+	 * Returns directory service records for a group
+	 *
+	 * @param array optional array specifying which attributes are desired for the directory service records
+	 *
+	 * @author Nathan White
+	 * @return array directory service records
+	 * @access public
+	 *
+	 * @todo test with diverse groups - not well tested at this point but works at least for groups that are sets of authorized usernames
+	 */
+	function get_records_for_group($return_attr = array())
+	{
+		$filter = $this->get_group_representation();
+		if (isset($filter['general']))
+		{
+			if (isset($filter['general']['group_filter']))
+			{
+				// get all the members of the group
+				$group_filter = $filter['general']['group_filter'];
+				$group_dir = new directory_service();
+				$group_dir->group_search_by_filter($group_filter);
+				$result = current($group_dir->get_records());
+				if (!empty($result))
+				{
+					foreach($result['ds_member'] as $member) $str[] = '(ds_username='.trim($member).')';
+					{
+						if (!empty($str))
+						{
+							$filter['general']['filter'] = (isset($filter['general']['filter']))
+														 ? '(|'.$filter['general']['filter'].implode('', $str).')'
+														 : '(|'.implode('', $str).')';
+						}
+					}
+				}
+			}
+			if (isset($filter['general']['filter']))
+			{
+				$dir = new directory_service();
+				$dir->search_by_filter($filter['general']['filter'], $return_attr);
+				$result = $dir->get_records();
+				if (!empty($result)) return $result;
+			}
+		}
+		else
+		{
+			trigger_error('get_records_for_group called on a group that does not appear to be filtered by meaningful criteria');
+		}
+		return false;
+	}
+
 	/**
 	 * Returns the directory service-style array that represents the group
 	 *
