@@ -724,19 +724,16 @@ class ClassifiedView extends Disco
 		if (!empty($email_info['to'])) // we have a recipient
 		{
 			$email_link = $this->model->get_classified_entity_link_string();
-			
 			$email_info['from'] = (!empty($this->email_from)) ? $this->email_from : $this->get_email_from();
 			$email_info['subject'] = (!empty($this->email_subject)) ? $this->email_subject : $this->get_email_subject();
 			$email_info['reply_to'] = (!empty($this->email_reply_to)) ? $this->email_reply_to : $this->get_email_reply_to();
 			$email_info['txt'] = $this->get_classified_email_txt($email_link);
 			$email_info['html'] = $this->get_classified_email_html($email_link);
-			
-			// provided we have at least a "to" and "from" - pass the parts to the model for e-mailing
-			if( !empty($email_info['to']))
-			{
-				$this->model->email_classified($email_info);
-			}
-			else trigger_error('The classified model did not have a to and from address - the email notification could not be sent.');
+			$this->model->email_classified($email_info);	
+		}
+		else
+		{
+			trigger_error('The classified model did not have a to address - the email notification could not be sent.');
 		}
 	}
 	
