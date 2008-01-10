@@ -82,7 +82,8 @@ class EventsModule extends DefaultMinisiteModule
 
 	function get_cleanup_rules()
 	{
-		$views = reasonCalendar::get_views();
+		if (!isset($this->calendar)) $this->calendar = new reasonCalendar;
+		$views = $this->calendar->get_views();
 		$formats = array('ical');
 
 		return array(
@@ -161,8 +162,8 @@ class EventsModule extends DefaultMinisiteModule
 
 	function validate_inputs()
 	{
-		
-		$views = reasonCalendar::get_views();
+		if (!isset($this->calendar)) $this->calendar = new reasonCalendar;
+		$views = $this->calendar->get_views();
 		
 		if(!empty($this->request['start_date']))
 			$this->request['start_date'] = prettify_mysql_datetime($this->request['start_date'], 'Y-m-d');
