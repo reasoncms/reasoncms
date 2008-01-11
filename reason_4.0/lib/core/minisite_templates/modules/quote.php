@@ -23,15 +23,21 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 										'enable_javascript_refresh' => false,
 										'prefer_short_quotes' => false,
 										'rand_flag' => false,
+										'template' => '&#8220;[[quote]]&#8221; [[divider]][[author]]',
+										'quote_divider' => '',
 										'footer_html' => '');
 		
 		function init( $args = array() )
 		{	
 			$qh = new QuoteHelper($this->site_id, $this->page_id);
+			if ($this->params['quote_divider']) $qh->set_quote_divider($this->params['quote_divider']);
 			if ($this->params['cache_lifespan'] > 0) $qh->set_cache_lifespan($this->params['cache_lifespan']);
 			if ($this->params['page_category_mode']) $qh->set_page_category_mode($this->params['page_category_mode']);
 			$qh->init();
-			$this->quotes =& $qh->get_quotes($this->params['num_to_display'], $this->params['rand_flag']);
+			
+			// javascript refresh mode currently forces display to a single quote
+			$num_to_display = ($this->params['enable_javascript_refresh']) ? 1 : $this->params['num_to_display'];
+			$this->quotes =& $qh->get_quotes($num_to_display, $this->params['rand_flag']);
 			$this->init_head_items();
 		}
 		
@@ -52,7 +58,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 							  '&quote_id='.$quote_id.
 							  '&page_category_mode='.$page_cat_mode.
 							  '&cache_lifespan='.$cache_lifespan.
-							  '&prefer_short_quotes='.$prefer_short_quotes;
+							  '&prefer_short_quotes='.$prefer_short_quotes.
 				
 				$head_items =& $this->parent->head_items;
 				$head_items->add_javascript('//' . REASON_HOST . REASON_HTTP_BASE_PATH . 'js/jquery/jquery-1.2.1.min.js');
@@ -70,44 +76,57 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 		
 		function run()
 		{
-			echo '<div id="quotes">'."\n";
+			echo '<div id="quotes">';
+			echo '<ul>'."\n";
 			foreach ($this->quotes as $quote)
 			{
-				echo '<div class="quote">'."\n";
-				echo $this->get_quote_content_html($quote) . "\n";
-				echo $this->get_quote_author_html($quote) . "\n";
-				echo '</div>'."\n";
-				if (!empty($this->params['footer_html']) || $this->params['enable_javascript_refresh'])
-				{
-					echo '<div id="quotes_footer">'."\n";
-					if (!empty($this->params['footer_html'])) echo ($this->params['footer_html']);
-					echo '</div>';
-				}
+				echo '<li>'."\n";
+				echo $this->get_quote_html($quote);
+				echo '</li>'."\n";
 			}
-			echo '</div>'."\n";
+			echo '</ul>'."\n";
+			if (!empty($this->params['footer_html']) || $this->params['enable_javascript_refresh'])
+			{
+				echo '<div id="quotes_footer">'."\n";
+				if (!empty($this->params['footer_html'])) echo ($this->params['footer_html']);
+				echo '</div>';
+			}
+			echo '</div>';
+		}
+		
+		function get_quote_html(&$quote)
+		{
+			$quote_content = $this->get_quote_content_html($quote);
+			$quote_divider = $this->get_quote_divider_html($quote);
+			$quote_author = $this->get_quote_author_html($quote);
+			$quote_html = str_replace(array('[[quote]]', '[[divider]]', '[[author]]'), array($quote_content, $quote_divider, $quote_author), $this->params['template']);
+			return $quote_html;
 		}
 		
 		function get_quote_content_html(&$quote)
 		{
 			$short_description = ($this->params['prefer_short_quotes']) ? $quote->get_value('description') : '';
 			$quote_text = ($short_description) ? $short_description : $quote->get_value('content');
-			$quote_html = '<p class="quoteText">';
+			$quote_html = '<span class="quoteText">';
 			$quote_html .= $quote_text;
-			$quote_html .= '</p>';
+			$quote_html .= '</span>';
 			return $quote_html;
 		}
 		
 		function get_quote_author_html(&$quote)
 		{
-			$author = $quote->get_value('author');
-			if ($author)
-			{
-				$author_html = '<p class="quoteAuthor">';
-				$author_html .= $author;
-				$author_html .= '</p>';
-				return $author_html;
-			}
-			return '';
+			$author_html = '<span class="quoteAuthor">';
+			$author_html .= $quote->get_value('author');
+			$author_html .= '</span>';
+			return $author_html;
+		}
+		
+		function get_quote_divider_html(&$quote)
+		{
+			$divider_html = '<span class="quoteDivider">';
+			$divider_html .= ($quote->get_value('author')) ? $quote->get_value('quote_divider') : '';
+			$divider_html .= '</span>';
+			return $divider_html;
 		}
 		
 		/**
