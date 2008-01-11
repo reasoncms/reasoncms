@@ -26,6 +26,7 @@ reason_include_once( 'classes/object_cache.php' );
  * @subpackage classes
  *
  * @author Nathan white
+ * @todo Needs some work if this is going to work with cache and different quote dividers in multiple locations of same page
  */
 
  class QuoteHelper
@@ -36,6 +37,8 @@ reason_include_once( 'classes/object_cache.php' );
 	var $unavailable_quote_ids = array();
 	var $page_category_mode = false;
 	var $cache_lifespan = 0;
+	var $quote_divider;
+	var $quote_divider_default = '&#8212;';
 	
 	var $quote;
 	var $quote_pool;
@@ -80,6 +83,7 @@ reason_include_once( 'classes/object_cache.php' );
  			$result_array = ($result) ? $result : array();
  			$extra_results = $this->init_from_categories($result);
  			$this->quote_pool = $result + $extra_results;
+ 			$this->add_quote_divider_value($this->quote_pool);
  			$this->set_cache();
  		}
  		else
@@ -111,6 +115,45 @@ reason_include_once( 'classes/object_cache.php' );
 		}
 		return (!empty($result)) ? $result : array();
 	}
+ 	
+ 	/**
+ 	 * Determine quote divider from page type parameters - if it cannot be determined, use default_divider
+ 	 * To avoid executing this code, use the set_quote_divider  method prior to init
+ 	 */
+ 	function init_quote_divider()
+ 	{
+ 		$page = new entity($this->page_id);
+ 		$page_type = $page->get_value('custom_page');
+ 		if (!isset($GLOBALS['_reason_page_types']))
+ 		{
+ 			reason_include_once( 'minisite_templates/page_types.php' );
+ 		}
+ 		if (isset($GLOBALS['_reason_page_types'][$page_type]))
+ 		{
+ 			foreach($GLOBALS['_reason_page_types'][$page_type] as $k => $v)
+ 			{
+ 				if (is_array($v) && (isset($v['module'])) && ($v['module'] == 'quote')) // must be the quote module in an instance with parameters
+ 				{
+ 					if (isset($v['quote_divider']))
+ 					{
+ 						$this->set_quote_divider($v['quote_divider']);
+ 						break;
+ 					}
+ 				}
+ 			}
+ 		}
+ 		if (empty($this->quote_divider)) $this->set_quote_divider($this->quote_divider_default);
+ 	}
+ 	
+ 	function add_quote_divider_value(&$quote_pool)
+ 	{
+ 		$quote_pool_keys = array_keys($quote_pool);
+ 		if (!isset($this->quote_divider)) $this->init_quote_divider();
+ 		foreach ($quote_pool_keys as $key)
+ 		{
+ 			$quote_pool[$key]->set_value('quote_divider', $this->quote_divider);
+ 		}
+ 	}
  	
  	function &get_quote_pool()
  	{
@@ -232,6 +275,11 @@ reason_include_once( 'classes/object_cache.php' );
  	function set_unavailable_quote_id($unavailable_quote_id)
  	{
  		$this->unavailable_quote_ids[] = $unavailable_quote_id;
+ 	}
+ 	
+ 	function set_quote_divider($divider)
+ 	{
+ 		$this->quote_divider = $divider;
  	}
 		
 	function set_cache()
