@@ -33,17 +33,19 @@ if (!empty($quote))
 	$quote_id = $quote->id();
 	$quote_text = ($short_description) ? $short_description : $quote->get_value('content');
 	$quote_author = ($quote->get_value('author')) ? $quote->get_value('author') : '';
+	$quote_divider = ($quote->get_value('quote_divider')) ? $quote->get_value('quote_divider') : '';
 }
 
 // if we have a quote id and quote text then return the xml chunk
 if (!empty($quote_id) && !empty($quote_text))
 {
 	header('Content-type: text/xml');
-	echo '<?xml version="1.0" encoding="UTF-8"?>';
-	echo '<quote>';
-	echo '<id>'.$quote_id.'</id>';
-	echo '<text>'.$quote_text.'</text>';
-	echo '<author>'.$quote_author.'</author>';
+	echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+	echo '<quote>'."\n";
+	echo '<id>'.$quote_id.'</id>'."\n";
+	echo '<text>'.$quote_text.'</text>'."\n";
+	echo '<author>'.$quote_author.'</author>'."\n";
+	echo '<divider>'.$quote_divider.'</divider>'."\n";
 	echo '</quote>';
 }
 

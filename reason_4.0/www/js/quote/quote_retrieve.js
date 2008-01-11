@@ -4,6 +4,7 @@
 viewed_quotes = [];
 pending_quote = '';
 pending_author = '';
+pending_divider = '';
 
 $(document).ready(function()
 {
@@ -32,7 +33,7 @@ $(document).ready(function()
 
 function create_refresh_link()
 {
-	var refresh_div = '<div id="refresh_link"><p><a href="#">New Quote</a></p></div>';
+	var refresh_div = '<div id="refresh_link"><a href="#">New Quote</a></div>';
 	$("div#quotes_footer").prepend(refresh_div);
 	$("div#refresh_link a").click(function() {
 		replace_quote();
@@ -78,6 +79,10 @@ function grab_quote()
 		}, 
 		function(data, statusText) //
 		{
+			$(data).find('id').each(function(){
+				js_cur_quote_id = $(this).text();
+				add_viewed_quote(js_cur_quote_id);
+				});
 			$(data).find('text').each(function(){
 				var quote_text = $(this).text();
 				pending_quote = quote_text;
@@ -86,10 +91,14 @@ function grab_quote()
 				var quote_author = $(this).text();
 				pending_author = quote_author;
 				});
-			$(data).find('id').each(function(){
-				js_cur_quote_id = $(this).text();
-				add_viewed_quote(js_cur_quote_id);
+			if (pending_author != "")
+			{
+				$(data).find('divider').each(function(){
+					var quote_divider = $(this).text();
+					pending_divider = quote_divider;
 				});
+			}
+			else pending_divider = "";
 			link_enabled = true;
 		}, "xml");
 }
@@ -99,10 +108,11 @@ function replace_quote()
 	if (link_enabled)
 	{
 		link_enabled = false;
-		text_html = '<p class="quoteText">'+pending_quote+'</p>';
-		if (pending_author != "") text_html += '<p class="quoteAuthor">'+pending_author+'</p>';
-		$("div#quotes .quote").fadeTo(100, 0, function() {
-			$(this).html(text_html).fadeTo(300, 1);
+		$("div#quotes ul li:first").fadeTo(100, 0, function() {
+			$(this).find("span.quoteText").text(pending_quote);
+			$(this).find("span.quoteAuthor").text(pending_author);
+			$(this).find("span.quoteDivider").text(pending_divider);
+			$(this).fadeTo(300, 1);
 		});
 		grab_quote();
 	}
