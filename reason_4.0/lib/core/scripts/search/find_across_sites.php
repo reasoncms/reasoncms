@@ -139,7 +139,11 @@ if(!empty($_REQUEST['search_string']))
 				{
 					if(stristr($value,$_REQUEST['search_string']))
 					{
-						$value = preg_replace('/('.$_REQUEST['search_string'].')/i','<span class="hit">\\0</span>',$value);
+						
+						if(function_exists('str_ireplace'))
+							$value = str_ireplace($_REQUEST['search_string'],'<span class="hit">'.$_REQUEST['search_string'].'</span>',$value);
+						else
+							$value = preg_replace('/('.preg_quote($_REQUEST['search_string']).')/i','<span class="hit">\\0</span>',$value);
 						$txt .= '<li><strong>'.$key.':</strong> '.$value.'</li>';
 					}
 				}
