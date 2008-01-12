@@ -58,7 +58,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 							  '&quote_id='.$quote_id.
 							  '&page_category_mode='.$page_cat_mode.
 							  '&cache_lifespan='.$cache_lifespan.
-							  '&prefer_short_quotes='.$prefer_short_quotes.
+							  '&prefer_short_quotes='.$prefer_short_quotes;
 				
 				$head_items =& $this->parent->head_items;
 				$head_items->add_javascript('//' . REASON_HOST . REASON_HTTP_BASE_PATH . 'js/jquery/jquery-1.2.1.min.js');
