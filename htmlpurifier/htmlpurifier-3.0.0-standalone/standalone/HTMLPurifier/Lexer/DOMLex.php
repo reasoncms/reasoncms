@@ -45,7 +45,7 @@ class HTMLPurifier_TokenFactory
      */
     public function createStart($name, $attr = array()) {
         $p = clone $this->p_start;
-        $p->HTMLPurifier_Token_Tag($name, $attr);
+        $p->__construct($name, $attr);
         return $p;
     }
     
@@ -56,7 +56,7 @@ class HTMLPurifier_TokenFactory
      */
     public function createEnd($name) {
         $p = clone $this->p_end;
-        $p->HTMLPurifier_Token_Tag($name);
+        $p->__construct($name);
         return $p;
     }
     
@@ -68,7 +68,7 @@ class HTMLPurifier_TokenFactory
      */
     public function createEmpty($name, $attr = array()) {
         $p = clone $this->p_empty;
-        $p->HTMLPurifier_Token_Tag($name, $attr);
+        $p->__construct($name, $attr);
         return $p;
     }
     
@@ -79,7 +79,7 @@ class HTMLPurifier_TokenFactory
      */
     public function createText($data) {
         $p = clone $this->p_text;
-        $p->HTMLPurifier_Token_Text($data);
+        $p->__construct($data);
         return $p;
     }
     
@@ -90,7 +90,7 @@ class HTMLPurifier_TokenFactory
      */
     public function createComment($data) {
         $p = clone $this->p_comment;
-        $p->HTMLPurifier_Token_Comment($data);
+        $p->__construct($data);
         return $p;
     }
     
@@ -129,11 +129,11 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
     
     public function __construct() {
         // setup the factory
-        parent::HTMLPurifier_Lexer();
+        parent::__construct();
         $this->factory = new HTMLPurifier_TokenFactory();
     }
     
-    public function tokenizeHTML($html, $config, &$context) {
+    public function tokenizeHTML($html, $config, $context) {
         
         $html = $this->normalize($html, $config, $context);
         
@@ -142,9 +142,9 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
         if ($config->get('Core', 'AggressivelyFixLt')) {
             $char = '[^a-z!\/]';
             $comment = "/<!--(.*?)(-->|\z)/is";
-            $html = preg_replace_callback($comment, array('HTMLPurifier_Lexer_DOMLex', 'callbackArmorCommentEntities'), $html);
+            $html = preg_replace_callback($comment, array($this, 'callbackArmorCommentEntities'), $html);
             $html = preg_replace("/<($char)/i", '&lt;\\1', $html);
-            $html = preg_replace_callback($comment, array('HTMLPurifier_Lexer_DOMLex', 'callbackUndoCommentSubst'), $html); // fix comments
+            $html = preg_replace_callback($comment, array($this, 'callbackUndoCommentSubst'), $html); // fix comments
         }
         
         // preprocess html, essential for UTF-8
@@ -253,7 +253,7 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
      * Callback function for undoing escaping of stray angled brackets
      * in comments
      */
-    static public function callbackUndoCommentSubst($matches) {
+    public function callbackUndoCommentSubst($matches) {
         return '<!--' . strtr($matches[1], array('&amp;'=>'&','&lt;'=>'<')) . $matches[2];
     }
     
@@ -261,14 +261,14 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
      * Callback function that entity-izes ampersands in comments so that
      * callbackUndoCommentSubst doesn't clobber them
      */
-    static public function callbackArmorCommentEntities($matches) {
+    public function callbackArmorCommentEntities($matches) {
         return '<!--' . str_replace('&', '&amp;', $matches[1]) . $matches[2];
     }
     
     /**
      * Wraps an HTML fragment in the necessary HTML
      */
-    function wrapHTML($html, $config, &$context) {
+    protected function wrapHTML($html, $config, $context) {
         $def = $config->getDefinition('HTML');
         $ret = '';
         
@@ -281,6 +281,7 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
         
         $ret .= '<html><head>';
         $ret .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+        // No protection if $html contains a stray </div>!
         $ret .= '</head><body><div>'.$html.'</div></body></html>';
         return $ret;
     }
