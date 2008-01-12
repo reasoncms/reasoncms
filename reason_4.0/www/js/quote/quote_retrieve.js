@@ -79,26 +79,18 @@ function grab_quote()
 		}, 
 		function(data, statusText) //
 		{
-			$(data).find('id').each(function(){
-				js_cur_quote_id = $(this).text();
-				add_viewed_quote(js_cur_quote_id);
-				});
-			$(data).find('text').each(function(){
-				var quote_text = $(this).text();
-				pending_quote = quote_text;
-				});
-			$(data).find('author').each(function(){
-				var quote_author = $(this).text();
-				pending_author = quote_author;
-				});
-			if (pending_author != "")
-			{
-				$(data).find('divider').each(function(){
-					var quote_divider = $(this).text();
-					pending_divider = quote_divider;
-				});
-			}
-			else pending_divider = "";
+			// grab id
+			js_cur_quote_id = $(data).find('id').text();
+			
+			// add quote id to the list of viewed quotes
+			add_viewed_quote(js_cur_quote_id);
+
+			// grab text, author, and divider
+			pending_quote = $(data).find('text').text();
+			pending_author = $(data).find('author').text();
+			pending_divider = (pending_author != "") ? $(data).find('divider').text() : '';
+			
+			// re-enable the link
 			link_enabled = true;
 		}, "xml");
 }
