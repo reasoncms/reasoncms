@@ -957,6 +957,16 @@
         	'module' => 'classified/classified',
         	'filter_displayer' => 'listnav.php'),
         ),
+        'quote_sidebar_random_no_page_title' => array(
+        	'main_head' => '',
+        	'sub_nav' => array(
+        		'module'=> 'quote',
+        		'enable_javascript_refresh' => true,
+        		'prefer_short_quotes' => true,
+        		'num_to_display' => 1,
+        		'rand_flag' => true,
+        	),
+        ),
         'quote_sidebar_random' => array(
         	'sub_nav' => array(
         		'module'=> 'quote',
