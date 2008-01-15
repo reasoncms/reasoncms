@@ -10,6 +10,7 @@
 		var $related_vals = array();
 		var $alter_order_enable = false;
 		var $is_relationship_sortable = false;
+		var $rel_direction = 'a_to_b';
 		
 		function alter_values() // {{{
 		{
@@ -27,6 +28,7 @@
 			}
 			
 			// modify entity selector to exlude items that should not be available for association because they are already part of a many_to_one relationship
+			// currently this will only run for unidirectional relationships since bidirectional rels are forced to be many_to_many
 			if ($this->admin_page->module->associations[$this->admin_page->rel_id]['connections'] == 'many_to_one')
 			{
 				$ass_related_es = carl_clone($this->es);
@@ -45,10 +47,13 @@
 			// populate associated entity selector from scratch
 			$ass_es = new entity_selector();
 			$ass_es->add_type($this->type_id);
-			$ass_es->add_right_relationship($this->admin_page->id, $this->admin_page->rel_id );
+			
+			if ($this->rel_direction == 'a_to_b') $ass_es->add_right_relationship($this->admin_page->id, $this->admin_page->rel_id );
+			else $ass_es->add_left_relationship($this->admin_page->id, $this->admin_page->rel_id );
+			
 			$ass_es->add_right_relationship_field('owns', 'entity', 'id', 'site_owner_id');
 			
-			if ($this->check_is_rel_sortable()) 
+			if ( ($this->rel_direction == 'a_to_b') && $this->check_is_rel_sortable() ) 
 			{
 				$this->columns['rel_sort_order'] = true;
 				$ass_es->add_field( 'relationship', 'id', 'rel_id' );
@@ -56,9 +61,12 @@
 				$ass_es->set_order('relationship.rel_sort_order ASC');
 				$this->alter_order_enable = true;
 			}
+			else
+			{
+				$ass_es->add_field('relationship','site','rel_site_id');
+			}
 			
 			if ($this->assoc_viewer_order_by($ass_es)) $this->alter_order_enable = false;
-			
 			$this->ass_vals = $ass_es->run_one();
 			
 			// check sharing on associated entities
@@ -66,14 +74,13 @@
 			{
 				// setup sharing value
 				if ($this->site_id == $val->get_value('site_owner_id')) $this->ass_vals[$k]->set_value('sharing', 'owns');
-				else ($this->ass_vals[$k]->set_value('sharing', 'borrows'));
+				else $this->ass_vals[$k]->set_value('sharing', $this->check_borrow_status($k));
 			}
 			
-			if (count($this->ass_vals) == 1) unset($this->columns['rel_sort_order']);
-			
-			// this verifies and updates the associated items rel_sort_order
-			if ($this->check_is_rel_sortable())
+			// this verifies and updates the associated items rel_sort_order if this is an a to b relationship
+			if ( ($this->rel_direction == 'a_to_b') && $this->check_is_rel_sortable())
 			{
+				if ( (count($this->ass_vals) == 1) && isset($this->columns['rel_sort_order'])) unset($this->columns['rel_sort_order']);
 				if ($ass_es->orderby == 'relationship.rel_sort_order ASC') $rel_update_array = $this->validate_rel_sort_order($this->ass_vals, true);
 				else $rel_update_array = $this->validate_rel_sort_order($this->ass_vals);
 				if (count($rel_update_array) > 0)
@@ -81,6 +88,28 @@
 					foreach ($rel_update_array as $k=>$v) update_relationship($k, array('rel_sort_order' => $v));
 				}
 			}
+		}
+		
+		/**
+		 * Grabs an index of ids for items of the current type borrowed by the site and makes sure the associated item is part of the list
+		 *
+		 * @return string 'borrows' if the site borrows the item or ''
+		 */
+		function check_borrow_status($associated_value_id)
+		{
+			if (!isset($this->item_ids_borrowed_by_site))
+			{
+				$es = new entity_selector($this->site_id);
+				$es->add_type($this->type_id);
+				$es->set_sharing('borrows');
+				$es->limit_tables();
+				$es->limit_fields();
+				$result = $es->run_one();
+				if ($result) $this->item_ids_borrowed_by_site = array_flip(array_keys($result));
+				else $this->item_ids_borrowed_by_site = array();
+			}
+			if (isset($this->item_ids_borrowed_by_site[$associated_value_id])) return 'borrows';
+			else return '';
 		}
 		
 		/**
@@ -312,10 +341,24 @@
 				}
 			}
 			
-			// resort original entities only if they are sorted by rel_sort_order
+			// resort original entities only if they are sorted by rel_sort_order - this code is kind of icky because we need to preserve keys.
 			if ($changed == true)
 			{
-				if ($rel_sort_order == true) entity_sort($assoc_entities, 'rel_sort_order', 'ASC', 'numerical');
+				if ($rel_sort_order == true)
+				{
+					foreach($assoc_entities as $k=>$v)
+					{
+						$container[$k] = $v->get_value('rel_sort_order');
+					}
+					$container = array_flip($container);
+					ksort($container);
+					foreach ($container as $key)
+					{
+						$new_assoc_entities[$key] = $assoc_entities[$key];
+					}
+					$assoc_entities = carl_clone($new_assoc_entities);
+					//entity_sort($assoc_entities, 'rel_sort_order', 'ASC', 'numerical'); // old way did not preserve keys
+				}
 				return $update_values;
 			}
 			else return array();
@@ -367,12 +410,30 @@
 					$one_to_many = true;
 				else $one_to_many = false;
 			}
-			$link = array( 'rel_id' => $e_rel, 'entity_b' => $row->id() );
+			
+			$entity_a_or_b = ($this->rel_direction == 'b_to_a') ? 'entity_a' : 'entity_b';
+			
+			$link = array( 'rel_id' => $e_rel, $entity_a_or_b => $row->id() );
 			if( !$this->select )
 			{
-				//echo $row->get_value('rel_site_id');
-				$link = array_merge( $link, array( 'cur_module' => 'DoDisassociate') );
-				$name = 'Deselect';
+			
+				// B TO A BEHAVIOR
+				// if the associated item is borrowed, and that relationship is not in the scope of the current site,
+				// we do not provide the DoDisassociate link.
+				if ($this->rel_direction == 'b_to_a')
+				{
+					if (($row->get_value('sharing') == 'owns') || ($this->site_id == $row->get_value('rel_site_id')))
+					{
+						$link = array_merge( $link, array( 'cur_module' => 'DoDisassociate') );
+					}
+					else $link = '';
+					$name = 'Deselect';
+				}
+				else
+				{
+					$link = array_merge( $link, array( 'cur_module' => 'DoDisassociate') );
+					$name = 'Deselect';
+				}
 			}
 			else
 			{
@@ -385,13 +446,26 @@
 				echo 'Selected';
 			else
 			{
-				echo '<a href="' .$this->admin_page->make_link( $link ).'">' . $name . '</a>';
+				if (!empty($link)) echo '<a href="' .$this->admin_page->make_link( $link ).'">' . $name . '</a>';
+				else echo $name;
 			}
 			if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) )
 			{
 				$this->rel_type =& $this->admin_page->module->rel_type;
-				$edit_link = $this->admin_page->module->get_second_level_vars();
-				$edit_link[ 'new_entity' ] = '';
+				
+				// THIS IS HOW THE B TO A WAS CODED - REVIEW AND DELETE THIS CONDITION IF POSSIBLE
+				if ($this->rel_direction == 'b_to_a')
+				{
+					$ass_mod = new AssociatorModule($this->admin_page);
+					$ass_mod->rel_type =& $this->admin_page->module->rel_type;
+					$edit_link = $ass_mod->get_second_level_vars();
+					$edit_link[ 'new_entity' ] = '';
+				}
+				else
+				{
+					$edit_link = $this->admin_page->module->get_second_level_vars();
+					$edit_link[ 'new_entity' ] = '';
+				}
 				$preview_link = $edit_link;
 				$preview_link[ 'id' ] = $row->id();
 				$preview_link[ 'cur_module' ] = 'Preview';
@@ -402,102 +476,18 @@
 					echo ' | <a href="'.$this->admin_page->make_link( $edit_link ).'">Edit</a>';
 				elseif ($row->get_value( 'sharing' ) == 'borrows')
 					echo ' | Borrowed';
+				else
+				{
+					echo '<p><strong>Note: </strong><em>Item is not currently owned or borrowed by the site.</em></p>';
+				}
 			}
 				
 			echo '</strong></td>';	
 		} // }}}
 	}
-	
+
 	class reverse_assoc_viewer extends assoc_viewer
 	{
-		function alter_values() // {{{
-		{
-			$this->es->set_sharing( 'owns,borrows' );
-			$this->es->add_field( 'ar' , 'name' , 'sharing' );
-			
-			$ass_es = carl_clone($this->es);
-			$ass_es->add_left_relationship( $this->admin_page->id , $this->admin_page->rel_id );
-			$ass_es->add_field('relationship','site','rel_site_id');		
-			
-			$this->assoc_viewer_order_by($ass_es);			
-			$this->ass_vals = $ass_es->run_one();
-			
-			if( $this->ass_vals )
-			{
-				$relation = 'entity.id NOT IN ('.implode(",",array_keys($this->ass_vals)).')';
-				$this->es->add_relation( $relation );
-			}
-		} // }}}
-		
-		function show_admin_associate( $row , $options ) // {{{
-		{
-			$e_rel = $this->admin_page->rel_id;
-			$e_id = $this->admin_page->id;
-			$e = new entity( $e_id );
-			$e_type = $e->get_value( 'type' );
-			static $one_to_many = false;
-			static $found_connections = false;
-			if( !$found_connections )
-			{
-				$found_connections = true;
-				$q = 'SELECT * FROM allowable_relationship WHERE id = ' . $e_rel .
-					' AND required = "yes"';
-				$r = db_query( $q , 'error selecting connections' );
-				$ar = mysql_fetch_array( $r , MYSQL_ASSOC );
-				if( $ar AND $ar[ 'connections' ] == 'one_to_many')
-					$one_to_many = true;
-				else $one_to_many = false;
-			}
-
-			$link = array( 'rel_id' => $e_rel, 'entity_a' => $row->id() );
-			if( !$this->select )
-			{
-				// if the associated item is borrowed, and that relationship is not in the scope of the current site,
-				// we do not provide the DoDisassociate link.
-				if (($row->get_value('sharing') == 'owns') || ($this->site_id == $row->get_value('rel_site_id')))
-				{
-					$link = array_merge( $link, array( 'cur_module' => 'DoDisassociate') );
-					//echo $this->site_id;
-				}
-				else $link = '';
-				$name = 'Deselect';
-			}
-			else
-			{
-				$link = array_merge( $link, array( 'cur_module' => 'DoAssociate') );
-				$name = 'Select';
-			}
-			//echo '<td class="'.$options[ 'class' ].'"><strong>';
-			echo '<td><strong>';
-			if( !$this->select AND $one_to_many )
-				echo 'Selected';
-			else
-			{
-				if (!empty($link))	echo '<a href="' .$this->admin_page->make_link( $link ).'">' . $name . '</a>';
-				else echo $name;
-			}
-			if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) )
-			{
-				$this->rel_type =& $this->admin_page->module->rel_type;
-				$ass_mod = new AssociatorModule($this->admin_page);
-				$ass_mod->rel_type =& $this->admin_page->module->rel_type;
-				$edit_link = $ass_mod->get_second_level_vars();
-				$edit_link[ 'new_entity' ] = '';
-				$preview_link = $edit_link;
-				$preview_link[ 'id' ] = $row->id();
-				$preview_link[ 'cur_module' ] = 'Preview';
-				$edit_link[ 'id' ] = $row->id();
-				$edit_link[ 'cur_module' ] = 'Edit';
-				echo ' | <a href="'.$this->admin_page->make_link( $preview_link ).'">Preview</a>';
-				if( $row->get_value( 'sharing' ) == 'owns' )
-					echo ' | <a href="'.$this->admin_page->make_link( $edit_link ).'">Edit</a>';
-				else 
-					echo ' | Borrowed';
-			}
-				
-			echo '</strong></td>';	
-		} // }}}
+		var $rel_direction = 'b_to_a';
 	}
-	
-
 ?>
