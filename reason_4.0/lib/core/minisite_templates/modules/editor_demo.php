@@ -10,9 +10,9 @@
 		var $acceptable_params = array('demo' => array('function'=>'turn_into_string'));
 		var $current_option = '';
 		
-		function init()
+		function init( $args = array() )
 		{
-			parent::init();
+			parent::init( $args );
 			
 			// force secure form due to a bug that causes images not to work in unsecure environment
 			if(!on_secure_page())
