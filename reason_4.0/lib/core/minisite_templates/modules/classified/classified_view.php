@@ -473,7 +473,8 @@ class ClassifiedView extends Disco
 		$name = reason_htmlspecialchars($this->get_value('name')); // htmlspecialchars for now should use same methods as model
 		echo '<div class="classifiedPreview">';
 		echo '<h3>'.$name.'</h3>';
-		$this->show_item($this->get_values());
+		$items = $this->get_values();
+		$this->show_item($items);
 		echo '</div>';
 	}
 	
