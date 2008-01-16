@@ -216,14 +216,14 @@
 		
 		/**
 		 * Browser cookies that include a port number or localhost are problematic and will cause the browser to be unable to access the cookie.
-		 * This function strips any port number from the domain, and will return an empty string if the domain is localhost
+		 * This function strips any port number from the domain, and will return an empty string if the domain is localhost (or any single word without a period character)
 		 * @author Nathan White
 		 */
-		function _transform_domain($domain)
-		{
-			$port_check = strpos($domain, ':');
-      		if ($port_check !== false) $domain = substr($domain, 0, $port_check);
-      		return ($domain == 'localhost') ? '' : $domain;
-		}
+		 function _transform_domain($domain)
+		 {
+		 	$port_check = strpos($domain, ':');
+		 	if ($port_check !== false) $domain = substr($domain, 0, $port_check);
+		 	return (strpos($domain,'.') !== false) ? $domain : '';
+		 }
 	}
 ?>
