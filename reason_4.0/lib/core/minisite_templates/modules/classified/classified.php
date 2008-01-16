@@ -152,10 +152,10 @@ class ClassifiedModule extends Generic3Module
 	/**
 	 * We are going to zap the normal functionality of construct_link in favor of carl_make_link
 	 */
-	function construct_link($item, $args)
+	function construct_link($item, $other_args=array() )
 	{
-		$args['item_id'] = (!empty($item)) ? $item->id() : '';
-		return carl_make_link($args);
+		$other_args['item_id'] = (!empty($item)) ? $item->id() : '';
+		return carl_make_link($other_args);
 	}
 }
 
