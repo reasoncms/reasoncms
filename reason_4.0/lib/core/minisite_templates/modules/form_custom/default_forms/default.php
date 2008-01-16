@@ -32,12 +32,13 @@
 		/**
 		 * Inits the DiscoDB form using class variables $db_conn, $table, and $id
 		 */
-		function init()
+		function init( $externally_set_up = false )
 		{
 			if (isset($this->_inited) == false)
 			{
 				$cleanup_rules = $this->get_cleanup_rules();
-				$this->request = carl_clean_vars(carl_clone($_REQUEST), $cleanup_rules);
+				$request = conditional_stripslashes($_REQUEST);
+				$this->request = carl_clean_vars($request, $cleanup_rules);
 				$this->pre_init_and_run_form();
 				if ($this->init_and_run_form)
 				{

@@ -32,7 +32,7 @@
 									   
 		var $cleanup_rules = array('form_admin_view' => array('function' => 'check_against_array', 'extra_args' => array('true')));
 		
-		function init( $args )
+		function init( $args=array() )
 		{
  			force_secure_if_available();
  			if (empty($this->params['custom_form'])) 
