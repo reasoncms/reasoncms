@@ -7,10 +7,10 @@ reason_include_once('minisite_templates/modules/filter_displayers/default.php');
 $GLOBALS['_reason_filter_displayers'][basename(__FILE__)] = 'galleryFilterDisplay';
  
 /**
- * The default filter markup generation class
+ * Gallery specific filter displayer
  *
- * Takes the needed raw data from a reason module and builds html interfaces
- * for the search box and relationship filtering
+ * @package reason
+ * @subpackage filter_displayers
  *
  * @author Ben Cochran
  * @date 2007-04-16
@@ -36,16 +36,13 @@ class galleryFilterDisplay extends defaultFilterDisplay
 	{
 		if (!empty($this->module_ref))
 		{
-			if (is_a($this->module_ref,'Gallery2Module'))
+			if (method_exists($this->module_ref,'get_total_num_images_after_user_input') &&
+				method_exists($this->module_ref,'get_total_num_images_before_user_input'))
 			{
-				if (method_exists($this->module_ref,'get_total_num_images_after_user_input') &&
-					method_exists($this->module_ref,'get_total_num_images_before_user_input'))
+				if (($this->num_after_filter = $this->module_ref->get_total_num_images_after_user_input()) &&
+					($this->num_before_filter = $this->module_ref->get_total_num_images_before_user_input()))
 				{
-					if (($this->num_after_filter = $this->module_ref->get_total_num_images_after_user_input()) &&
-						($this->num_before_filter = $this->module_ref->get_total_num_images_before_user_input()))
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 		}
@@ -56,14 +53,11 @@ class galleryFilterDisplay extends defaultFilterDisplay
 	{
 		if (!empty($this->module_ref))
 		{
-			if (is_a($this->module_ref,'Gallery2Module'))
+			if (method_exists($this->module_ref,'show_search'))
 			{
-				if (method_exists($this->module_ref,'show_search'))
+				if ($this->module_ref->show_search())
 				{
-					if ($this->module_ref->show_search())
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 		}
