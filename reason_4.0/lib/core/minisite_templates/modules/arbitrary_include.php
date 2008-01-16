@@ -17,7 +17,7 @@
 			'force_secure',
 		);
 		
-		function init() // {{{
+		function init( $args=array() ) // {{{
 		{
  			if( $this->params['force_secure'] && HTTPS_AVAILABLE && !on_secure_page() )
                 	{
