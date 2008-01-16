@@ -151,7 +151,7 @@ class reasonFeedDisplay
                
             // yank basic info from the feed
             if(isset($item['dc']['creator'])){ $author = $item['dc']['creator']; } else { $author = ''; } 
-            $date = $item['date_timestamp'];
+            $date = isset($item['date_timestamp']) ? $item['date_timestamp'] : "";
            	
 			$new_entry_date = '';
 			if(!empty($item['pubdate']))

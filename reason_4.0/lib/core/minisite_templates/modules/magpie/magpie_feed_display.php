@@ -19,9 +19,9 @@
 		);
 		var $feed_location;
 		var $is_remote;
-		function init()
+		function init( $args = array() )
 		{
-			parent::init();
+			parent::init( $args );
 			$rel_url = $this->get_feed_relationship_url();
 			if(!empty($rel_url))
 			{
