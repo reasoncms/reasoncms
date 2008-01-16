@@ -14,7 +14,7 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 
 	var $extra_params = array('form_include' => 'minisite_templates/modules/event_slot_registration/event_slot_registration_form.php' );
 
-	function init( $args )
+	function init( $args = array() )
 	{
  		parent::init($args);
   		$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/events/event_slot.css');
