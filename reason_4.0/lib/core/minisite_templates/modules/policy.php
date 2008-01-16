@@ -48,7 +48,7 @@
 			}
 			echo '</div>'."\n";
 		} // }}}
-		function show_item( $item , $options = false) // {{{
+		function show_item( &$item , $options = false) // {{{
 		{
 			$policy_name = $item->get_value('name');
 			echo '<a name="'.$item->id().'" id="'.$item->id().'"></a>';
@@ -62,7 +62,7 @@
 			echo '<div class="policyContent">'.$item->get_value( 'content' ) . '</div>';
 			if ( !in_array( $item->id(), $this->root_node() ) ) echo '</li>';
 		} //  }}}
-		function make_tree( $item , $root , $depth ) // {{{
+		function make_tree( &$item , &$root , $depth, $counter = 0 ) // {{{
 		{
 			if($this->has_filters() AND !empty( $this->filter_values[ $item ] ) )
 			{
