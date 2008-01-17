@@ -16,9 +16,9 @@ if( !defined( 'DISPLAY_HANDLER_IMAGE_PHP3' ) )
 		
 		$tn_name = $e->id().'_tn.'.$e->get_value( 'image_type' );
 		$full_name = $e->id().'.'.$e->get_value( 'image_type' );
-		if( file_exists( PHOTOSTOCK.$tn_name ) )
+		if( file_exists( PHOTOSTOCK.$tn_name ) && (filesize(PHOTOSTOCK.$tn_name) > 0) )
 			$image_name = $tn_name;
-		elseif( file_exists( PHOTOSTOCK.$full_name ) )
+		elseif( file_exists( PHOTOSTOCK.$full_name ) && (filesize(PHOTOSTOCK.$full_name) > 0) )
 			$image_name = $full_name;
 		if( !empty($image_name) )
 		{
