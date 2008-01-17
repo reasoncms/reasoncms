@@ -931,7 +931,7 @@
 			{
 				if( $page_type != 'default' )
 				{
-					$type = array_merge( $type, $GLOBALS['_reason_page_types'][ 'default' ] );
+					$type = array_merge( $GLOBALS['_reason_page_types'][ 'default' ], $type  );
 				}
 				foreach( $type AS $section => $module_info )
 				{
