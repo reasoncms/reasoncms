@@ -61,7 +61,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 							  '&prefer_short_quotes='.$prefer_short_quotes;
 				
 				$head_items =& $this->parent->head_items;
-				$head_items->add_javascript('//' . REASON_HOST . REASON_HTTP_BASE_PATH . 'js/jquery/jquery-1.2.1.min.js');
+				$head_items->add_javascript('//' . REASON_HOST . JQUERY_URL);
 				$head_items->add_javascript('//' . REASON_HOST . REASON_HTTP_BASE_PATH . 'js/quote/quote_retrieve.js'.$qry_string); // pass params in qry string
 			}
 		}
