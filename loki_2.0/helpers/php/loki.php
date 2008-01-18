@@ -91,7 +91,7 @@ class Loki2
 				E_USER_ERROR);
 		}
 		
-		$this->_asset_protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+		$this->_asset_protocol = strpos($_SERVER['SCRIPT_URI'], 'https') === 0 ? 'https://' : 'http://';
 		$this->_asset_host = $_SERVER['HTTP_HOST'];
 		$this->_asset_path = ('/' != substr(LOKI_2_HTTP_PATH, -1, 1))
 			? LOKI_2_HTTP_PATH.'/'
@@ -252,11 +252,10 @@ class Loki2
 	 * we are depending on this fact to make sure that only the first Loki object spits 
 	 * out the Loki js.
 	 *
-	 * @param	mode	Either 'debug', to include all files individually;
-	 *					'inline', to print the contents of all the files inline;
-	 *					or 'external', to reference an external, cache-aware
-	 *					script that merges all of the Loki JavaScript files
-	 *					together.
+	 * @param	mode	Defaults to 'static', which uses the prebuilt script
+	 *                  file that ships with Loki. Other modes are only useful
+	 *                  for Loki testing and only work when paired with a
+	 *                  source distribution or Subversion checkout of Loki.
 	 * @param	path	For the 'external' mode, specifies the HTTP path to the
 	 *					Loki script aggregator. If this is not specified,
 	 *					the path will be guessed based on the default Loki
@@ -265,26 +264,30 @@ class Loki2
 	function include_js($mode=null, $path=null)
 	{
 		static $loki_js_has_been_included = false;
-		
+
 		if(!$loki_js_has_been_included)
 		{
 			// Set up hidden iframe for clipboard operations
+			$priv_jar = 'jar:'.$this->_asset_protocol.$this->_asset_host.
+				$this->_asset_path.'auxil/privileged.jar!/gecko_clipboard.html';
+
 			?>
 			<script type="text/javascript">
-				UI__Clipboard_Helper_Privileged_Iframe__src = 'jar:<?php echo $this->_asset_protocol . $this->_asset_host . $this->_asset_path; ?>auxil/privileged.jar!/Clipboard_Helper_Privileged_Iframe.html';
+				var _gecko_clipboard_helper_src = '<?php echo $priv_jar ?>';
 				UI__Clipboard_Helper_Editable_Iframe__src = '<?php echo $this->_asset_protocol . $this->_asset_host . $this->_asset_path; ?>auxil/loki_blank.html';
 			</script>
 			<?php
-			
-			if (!$mode) {
-				$mode = ($this->_debug)
-					? 'debug'
-					: 'external';
-			} else {
-				$mode = strtolower($mode);
-			}
-			
-			if ($mode == 'debug') {
+
+			$mode = ($mode) ? strtolower($mode) : 'static';
+
+			if ($mode == 'static') {
+				if (!$path) {
+					$path = $this->_asset_path.'loki.js';
+				}
+
+				echo '<script type="text/javascript" language="javascript" src="'.$path.'">',
+					"</script>\n";
+			} else if ($mode == 'debug') {
 				$files = $this->_get_js_files();
 				$base = $this->_asset_path.'js';
 				if (!$files)

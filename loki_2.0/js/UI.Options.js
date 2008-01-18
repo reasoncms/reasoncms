@@ -1,4 +1,0 @@
-UI.Options = function()
-{
-}
-
