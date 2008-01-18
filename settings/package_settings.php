@@ -122,4 +122,10 @@ define('HTML_PURIFIER_INC',INCLUDE_PATH.HTML_PURIFIER_DIRNAME.'/');
 // Define the path to libcurlemu
 define('LIBCURLEMU_DIRNAME', 'libcurlemu-1.0.4');
 define('LIBCURLEMU_INC',INCLUDE_PATH.LIBCURLEMU_DIRNAME.'/');
+
+// Define the path to jquery
+define('JQUERY_DIRNAME', 'jquery');
+define('JQUERY_INC',INCLUDE_PATH.JQUERY_DIRNAME.'/');
+define('JQUERY_HTTP_PATH',REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH.JQUERY_DIRNAME.'/');
+define('JQUERY_URL',JQUERY_HTTP_PATH.'jquery_latest.js');
 ?>
