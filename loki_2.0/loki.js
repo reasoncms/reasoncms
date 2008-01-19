@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0b4
+// Loki WYSIWIG Editor 2.0b4-p1
 // Copyright 2006 Carleton College
 
-// Compiled 2008-01-18 16:58:14 
+// Compiled 2008-01-18 18:35:42 
 // http://loki-editor.googlecode.com
 
 
@@ -16269,15 +16269,11 @@ UI.Page_Link_Dialog = function()
 	{	
 		var tab = this._determine_tab();
 		
-		if (tab == 'rss') {
-			if (this._initially_selected_item.uri) {
-				this._load_finder(this._finder_feed);
-			} else {
-				this._select_tab(tab);
-				this._load_sites(this._sites_feed);
-			}
+		if (tab == 'rss' && this._initially_selected_item.uri) {
+			this._load_finder(this._finder_feed);
 		} else {
 			this._select_tab(tab);
+			this._load_sites(this._sites_feed);
 		}
 	};
 
