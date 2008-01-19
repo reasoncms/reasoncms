@@ -1,0 +1,97 @@
+.tabset .tabs_chunk, .tabset .tabpanels_chunk
+{
+	clear:none;
+	width:100%;
+}
+.tabset .force_clear_for_ie
+{
+	clear:both;
+}
+
+.tabset div.tabs_chunk:after, .tabset div.tabpanel_chunk:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+.tabset div.tabs_chunk, .tabset div.tabpanel_chunk {display: inline-block;}
+
+/* Hides from IE-mac \*/
+* html .tabset div.tabs_chunk, * html .tabset div.tabpanel_chunk {height: 1%;}
+.tabset div.tabs_chunk, .tabset div.tabpanels_chunk {display: block;}
+/* End hide from IE-mac */
+
+.tabset div.tabs_chunk ul {
+	list-style:none;
+	margin: 0 0 0 .5em;
+	padding:0;
+}
+.tabset li.tab_chunk
+{
+	/*
+	display:inline;
+	clear:right;
+	float:left;
+	border:1px grey solid;
+	*/
+	float:left;
+	margin:0 .15em;
+	white-space:nowrap;
+	background:#ccc url(../images/tab_left.gif) no-repeat;
+}
+.tabset li.tab_chunk a
+{
+	display:block;
+	background:transparent url(../images/tab_right.gif) no-repeat right top;
+	padding:.25em .4em;
+	text-decoration:none;
+	color:#444;
+	border-bottom:1px grey solid;
+}
+
+.tabset li.tab_chunk.selected
+/* Note to Matt: This should specify, rather, an 
+ * element whose ancestor has class "tabset", and 
+ * which has _both_ classes "tab_chunk" and "selected".
+ * There should be no need to specify <li>, but 
+ * "tab_chunk" is necessary.  (Similarly, below,
+ * for "tabpanel_chunk" and <div>.)
+ */
+{
+	/* background:lightblue;
+	color:#900;
+	border:1px black solid; */
+	background-color:#ddd;
+	font-weight:bold;
+	color:#000;
+	padding-bottom:1px;
+}
+.tabset li.tab_chunk.selected a, .tabset li:hover a {
+	color:#000;
+}
+.tabset li.tab_chunk.selected a {
+	cursor:default;
+	border-bottom:none;
+	color:#900;
+}
+.tabset li:hover
+{
+	background-color:#ddd;
+	color:#000;
+}
+
+.tabset div.tabpanel_chunk
+{
+	border:1px #7a7a7a solid;
+	display:none;
+	margin-top:-1px;
+	background-color:#ddd;
+	padding:1em 1.15em 1.25em 1.15em;
+}
+
+.tabset div.selected
+{
+	display:block;
+}

@@ -1,0 +1,77 @@
+/**
+ * "Pretty" Forms for Loki
+ * @author Eric Naeseth
+ */
+form.generated {
+	
+}
+
+form.generated ul.form_section {
+	list-style: none;
+	margin: 0 0 0 0.5em;
+	padding: 0;
+}
+
+form.generated ul.form_section li {
+	margin-bottom: 0.9em;
+}
+
+form.generated ul.form_section li.buttons {
+	padding-top: 0.4em;
+	border-top: 1px dotted #666;
+}
+
+form.generated ul.form_section li label.description {
+	font-size: 95%;
+	font-weight: bold;
+	display: block;
+	margin: 0 4px 1px 0;
+}
+
+form.generated ul.form_section li p.elaboration {
+	margin: 0.3em 0;
+	color: #333;
+}
+
+form.generated ul.form_section li .elaborated {
+}
+
+form.generated li input,form.generated li textarea,form.generated li select {
+	color: #202020;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 110%;
+}
+
+form.generated li input {
+	padding: 2px 0;
+}
+
+ul.form_section li div, ul.form_section li span {
+	margin: 0 4px 1px 0;
+}
+
+ul.form_section li span {
+	float: left;
+}
+
+ul.form_section li div label, ul.form_section li span label {
+	padding-top: 3px;
+	clear: both;
+	font-size: 80%;
+	display: block;
+}
+
+ul.form_section li div label.check {
+	padding: 0;
+	display: inline;
+	clear: none;
+	font-size: 95%;
+}
+
+.form_error {
+	clear: both;
+	background-color: #FF8B8B;
+	border: 1px solid red;
+	color: black;
+	padding: 0.3em;
+}

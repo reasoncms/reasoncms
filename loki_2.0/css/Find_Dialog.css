@@ -1,0 +1,32 @@
+div.options {
+	float:left;
+	width:70%;
+}
+div.actions {
+	text-align:right;
+}
+div.actions ul {
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+div.actions ul li {
+	margin:.5em;
+}
+div.actions button.ok {
+	font-weight:bold;
+}
+div.fieldset:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+div.fieldset {display: inline-block;}
+
+/* Hides from IE-mac \*/
+* html .div.fieldset {height: 1%;}
+div.fieldset {display: block;}
+/* End hide from IE-mac */

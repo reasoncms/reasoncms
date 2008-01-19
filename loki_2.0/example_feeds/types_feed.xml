@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+
+<title>Carleton College Athletics Images</title>
+<description>Images from Athletics</description>
+<link>http://webdev.acs.carleton.edu/athletics/</link>
+<generator>Reason</generator>
+<copyright>Carleton College, 2005</copyright>
+
+<item>
+<title>Assets</title>
+<description>A list of assets to link to.</description>
+<pubDate>Fri, 12 Mar 2004 16:59:52 -0600</pubDate>
+<link>/global_stock/php/loki/example_feeds/assets_feed.xml</link>
+</item>
+
+<item>
+<title>Events</title>
+<description>A list of events to link to.</description>
+<pubDate>Fri, 12 Mar 2004 16:59:52 -0600</pubDate>
+<link>/global_stock/php/loki/example_feeds/events_feed.xml</link>
+</item>
+
+<item>
+<title>Pages</title>
+<description>A list of pages to link to.</description>
+<pubDate>Fri, 12 Mar 2004 16:59:52 -0600</pubDate>
+<link>/global_stock/php/loki/example_feeds/pages_feed.xml</link>
+<isSelected>true</isSelected>
+</item>
+
+</channel>
+</rss>
