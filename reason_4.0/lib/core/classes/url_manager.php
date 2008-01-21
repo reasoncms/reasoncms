@@ -81,6 +81,12 @@
 				$hta = 'Order deny,allow'."\n";
 				$hta .= 'deny from all'."\n";
 				$hta .= 'allow from '.$_SERVER['SERVER_ADDR']."\n";
+				// sometimes the server_addr will be present, but when the hostname is localhost CURL requests are still forbidden.
+				// we address this by conditionally adding allow from localhost.
+				if (strpos(strtolower(HTTP_HOST_NAME), 'localhost') !== false)
+				{
+					$hta .= 'allow from localhost'."\n";
+				}
 				
 				$hta_path = $this->test_full_base_url.'.htaccess';
 				$fh = fopen($hta_path,'w');
