@@ -79,6 +79,16 @@
 	// but a basic install of Reason should work OK without touching them.
 	//
 	////////////////////////////////////////////////////////////
+
+	/**
+	 * REASON_DEFAULT_TIMEZONE
+	 * PHP 5 will send warnings in E_STRICT mode if a default timezone is not set
+	 *
+	 * List of supported time zones: http://us2.php.net/manual/en/timezones.php
+	 *
+	 * In PHP 4, this setting will be ignored.
+	 */
+	define( 'REASON_DEFAULT_TIMEZONE', 'America/Chicago' ); 
 	
 	/**
 	 * DISABLE_REASON_LOGIN
@@ -398,17 +408,6 @@
 	 * basis in a mixed environment; this constant simply sets the default value.
 	 */
 	define('REASON_USERS_DEFAULT_TO_AUTHORITATIVE', true);
-
-        /**
-         * PHP 5 will send warnings in E_STRICT mode if a default timezone is not set - if running PHP 5
-         * with E_STRICT error reporting enabled, you should set this variable to match the time zone
-         * that the server is operating in.
-         *
-         * List of supported time zones: http://us2.php.net/manual/en/timezones.php
-         *
-         * In PHP 4, this setting will be ignored.
-         */
-        //define( 'REASON_DEFAULT_TIMEZONE', 'America/Chicago' ); 
 	
 	////////////////////////////////////////////////////////////
 	//
