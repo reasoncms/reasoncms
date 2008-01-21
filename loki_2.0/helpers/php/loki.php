@@ -91,7 +91,8 @@ class Loki2
 				E_USER_ERROR);
 		}
 		
-		$this->_asset_protocol = strpos($_SERVER['SCRIPT_URI'], 'https') === 0 ? 'https://' : 'http://';
+		if (isset($_SERVER['SCRIPT_URI'])) $this->_asset_protocol = strpos($_SERVER['SCRIPT_URI'], 'https') === 0 ? 'https://' : 'http://';
+		else $this->_asset_protocol = ( !empty( $_SERVER['HTTPS'] ) AND strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
 		$this->_asset_host = $_SERVER['HTTP_HOST'];
 		$this->_asset_path = ('/' != substr(LOKI_2_HTTP_PATH, -1, 1))
 			? LOKI_2_HTTP_PATH.'/'
