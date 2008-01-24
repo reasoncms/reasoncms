@@ -19,6 +19,7 @@
 			'footer' => 'maintained',
 			'sub_nav' => 'blurb',
 			'sub_nav_2' => 'textonly_toggle',
+			'sub_nav_3' => '',
 			'post_foot' => '',
 		),
 		'a_to_z' => array(
