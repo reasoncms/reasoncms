@@ -516,8 +516,8 @@ class MinisiteTemplate
 		$this->get_title();
 		
 		// start page
-		echo $this->doctype."\n";
-		echo '<html>'."\n";
+		echo $this->get_doctype()."\n";
+		echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
 		echo '<head>'."\n";
 		//echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' . "\n";
 		
@@ -551,6 +551,10 @@ class MinisiteTemplate
 	function create_body_tag()
 	{
 		return '<body>'."\n";
+	}
+	function get_doctype()
+	{
+		 return $this->doctype;
 	}
 	
 	function get_title()
@@ -876,10 +880,15 @@ class MinisiteTemplate
 		{
 			$this->run_section( 'sub_nav_2' );
 		}
+		
+		if ($this->has_content( 'sub_nav_3' ))
+		{
+			$this->run_section( 'sub_nav_3' );
+		}
 	} // }}}
 	function show_navbar_tabled() // {{{
 	{
-		if ($this->has_content( 'navigation' ) || $this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) ) 
+		if ($this->has_content( 'navigation' ) || $this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) || $this->has_content( 'sub_nav_3' ) ) 
 		{
 			echo '<td valign="top" class="navigationTD">'."\n";
 			if ($this->has_content( 'navigation' )) 
@@ -901,6 +910,8 @@ class MinisiteTemplate
 			}
 			if ($this->has_content( 'sub_nav_2' ))
 				$this->run_section( 'sub_nav_2' );
+			if ($this->has_content( 'sub_nav_3' ))
+				$this->run_section( 'sub_nav_3' );
 			echo '<div class="navigationSpacer"><img src="'.REASON_HTTP_BASE_PATH.'ui_images/stp.gif" width="150" height="2" alt="" /></div>'."\n";
 			echo '</td>'."\n";
 		}
@@ -1115,7 +1126,7 @@ class MinisiteTemplate
 	}
 	function has_navigation_section()
 	{
-		if( $this->has_content( 'navigation' ) || $this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) )
+		if( $this->has_content( 'navigation' ) || $this->has_content( 'sub_nav' ) || $this->has_content( 'sub_nav_2' ) || $this->has_content( 'sub_nav_3' ) )
 		{
 			return true;
 		}
