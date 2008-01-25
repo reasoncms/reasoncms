@@ -36,9 +36,6 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 	function additional_init_actions()
 	{
 		$this->item = $this->passed_vars['item'];
-		$creator = $this->item->get_value('created_by');
-		if(empty($creator))
-			$this->update_entity_to_include_creator($this->item);
 	}
 
 	function run()
@@ -347,36 +344,6 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 				trigger_error( 'commenting_status not an expected value ('.$this->passed_vars['commenting_status'].')' );
 		}
 		return $ret;
-	}
-
-	function update_entity_to_include_creator($entity)
-	{
-		$creator = $this->find_creator($entity);
-		$flat_values = array('created_by' => $creator);
-		$tables = get_entity_tables_by_type(id_of('news'));
-		$successful = update_entity( 
-				$entity->id(), 
-# shouldn't be using my user_id - which one?
-				get_user_id('gibbsm'),
-				values_to_tables($tables, $flat_values,  $ignore = array())
-		); 		
-	}
-
-	function find_creator($item)
-	{
-		$site = $this->passed_vars['site'];
-		$es = new entity_selector($site->id());
-		$es->add_type( id_of('news') );
-		$es->add_right_relationship( $item->id(), relationship_id_of('news_archive') );
-     	$es->set_order( 'entity.last_modified ASC' );
-		$archive = $es->run_one(false, 'Archived');
-		if(empty($archive))
-			return $item->get_value('last_edited_by');
-		else
-		{
-			$first = current($archive);
-			return $first->get_value('last_edited_by');
-		}
 	}
 	
 	function get_back_links_markup()
