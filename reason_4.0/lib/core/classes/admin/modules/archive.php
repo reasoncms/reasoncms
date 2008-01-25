@@ -144,9 +144,11 @@
 
 			$e = new entity( $id );
 			$values = $e->get_values();
+			if (isset($values['id'])) unset($values['id']);
+			if (isset($values['last_modified'])) unset($values['last_modified']);
 			$values[ 'state' ] = 'Live';
 
-			update_entity( $this->admin_page->id, $this->admin_page->user_id, values_to_tables( get_entity_tables_by_id( $id ), $values, array('id','last_modified') ) );
+			reason_update_entity( $this->admin_page->id, $this->admin_page->user_id, $values );
 
 			header( 'Location: '.unhtmlentities($this->admin_page->make_link( array( 'id' => $this->admin_page->id ) ) ) );
 			die();
