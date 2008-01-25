@@ -404,13 +404,8 @@ class user
 			$primary_maintainer = $e->get_value( 'primary_maintainer' );
 			if ($user_netID != $primary_maintainer)
 			{
-				$flat_values = array ('primary_maintainer' => $user_netID);
-           		$tables = get_entity_tables_by_type(id_of('site'));
-            	if (update_entity(
-                        $e->id(),
-                        '"'.$this->causal_agent.'"',
-                        values_to_tables($tables, $flat_values, $ignore = array() ),
-                        true))
+				$values = array ('primary_maintainer' => $user_netID);
+           		if (reason_update_entity( $e->id(), get_user_id($this->causal_agent), $values, true) )
 				{
 					unset ($this->sites); // blow about sites array as primary_maintainer is no longer reliable
 					return true;
