@@ -40,7 +40,8 @@ class EventSignupModule extends EventRegistrationModule
 		// to person who filled out email
 		mail(strip_tags($_POST["email"]),$subject,$body.$other_info,"From: ".strip_tags($to));
 		
-		update_entity( $this->event->id(), $this->event->get_value('last_edited_by'), values_to_tables( get_entity_tables_by_id( $this->event->id() ), array('registration'=>'full','show_hide'=>'hide', 'content'=>$this->event->get_value('content').'<h3>Registration Information</h3>'.nl2br($body) ) ), true );
+		$values = array('registration'=>'full','show_hide'=>'hide', 'content'=>$this->event->get_value('content').'<h3>Registration Information</h3>'.nl2br($body));
+		reason_update_entity( $this->event->id(), $this->event->get_value('last_edited_by'), $values, true );
 		
 		$this->show_registration_thanks();
 	}
