@@ -599,7 +599,7 @@ class MinisiteTemplate
 
 		// show breadcrumb base
 		if($this->site_info->get_value('base_breadcrumbs'))
-			echo $this->site_info->get_value('base_breadcrumbs').'&nbsp;&gt;&nbsp;';
+			echo $this->site_info->get_value('base_breadcrumbs').' &gt; ';
 
 		// Get the trail of pages back to the root page in the site
 		$cur_node = $this->cur_page->id();
@@ -676,9 +676,19 @@ class MinisiteTemplate
 	} // }}}
 	function show_body_tabled() // {{{
 	{
+		if (!empty($this->textonly))
+		{
+			$class = 'textOnlyView';
+		}
+		else
+		{
+			$class = 'fullGraphicsView';
+		}
+		echo '<div id="wrapper" class="'.$class.'">'."\n";
 		$this->show_banner();
 		$this->show_meat();
 		$this->show_footer();
+		echo '</div>'."\n";
 	} // }}}
 	function end_page() // {{{
 	{
