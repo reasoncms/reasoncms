@@ -150,8 +150,8 @@
 					$values[ $key ] = tidy( $el );
 				}
 		
-			// always update_entity since we created when user clicks "Add"
-			$this->has_changed = update_entity( $this->_id, $this->admin_page->user_id, values_to_tables( get_entity_tables_by_type( $this->get_value('type') ), $values ), false/*!$this->is_new_entity()*/ );
+			// always reason_update_entity since we created when user clicks "Add"
+			$this->has_changed = reason_update_entity( $this->_id, $this->admin_page->user_id, $values, false );
 				// the last argument determines whether or not to archive the entity.  if it's new, don't worry about it.  otherwise, archive
 				// the $changed var grabs the result, true if changed, false if not
 
