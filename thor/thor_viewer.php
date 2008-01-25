@@ -255,17 +255,4 @@ class DiscoThorAdmin extends DiscoDefaultAdmin
 		return $link;
 	}
 }
-
-class Thor_Viewer extends ThorViewer
-{
-	function init_using_reason_form_id($form_id)
-	{
-		$this->init_thor_viewer($form_id);
-	}
-
-	function build_data()
-	{
-		return $this->get_data();
-	}
-}
 ?>
