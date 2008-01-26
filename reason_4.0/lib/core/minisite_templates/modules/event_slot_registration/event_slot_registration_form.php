@@ -83,26 +83,14 @@ class EventSlotRegistrationForm extends Disco{
 		$slot_values = get_entity_by_id($this->request_array['slot_id']);
 
 		$old_data = $slot_values['registrant_data'];
-		if(!empty($old_data))
-		{
-			$registrant_data = $old_data.$this->delimiter1.$new_data;
-		}
-		else
-		{
-			$registrant_data = $new_data;
-		}
+		if(!empty($old_data)) $registrant_data = $old_data.$this->delimiter1.$new_data;
+		else $registrant_data = $new_data;
 		
-		$flat_values = array (
+		$values = array (
 			'registrant_data' => $registrant_data, 
 		);
-				
-		$tables = get_entity_tables_by_type(id_of('registration_slot_type'));	
 
-		$successful_update = update_entity( 
-			$this->request_array['slot_id'],
-			get_user_id('event_agent'),
-			values_to_tables($tables, $flat_values, $ignore = array() ) 
-		);
+		$successful_update = reason_update_entity( $this->request_array['slot_id'], get_user_id('event_agent'), $values );
 		
 		if($successful_update)
 		{

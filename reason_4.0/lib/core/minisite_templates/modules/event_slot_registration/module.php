@@ -264,17 +264,9 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		{
 			$old_data = $registrants[$this->request['delete_registrant']];
 			unset($registrants[$this->request['delete_registrant']]);
-			$flat_values = array (
-				'registrant_data' => implode($this->delimiter1, $registrants), 
-			);
-					
-			$tables = get_entity_tables_by_type(id_of('registration_slot_type'));	
+			$values = array ( 'registrant_data' => implode($this->delimiter1, $registrants));
 	
-			$successful_update = update_entity( 
-				$this->request['slot_id'],
-				get_user_id('event_agent'),
-				values_to_tables($tables, $flat_values, $ignore = array() ) 
-			);
+			$successful_update = reason_update_entity( $this->request['slot_id'], get_user_id('event_agent'), $values );
 			
 			if($successful_update)
 			{
