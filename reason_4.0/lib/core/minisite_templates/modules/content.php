@@ -133,8 +133,8 @@
 			{
 				$archive = true;
 			}
-			// update_entity
-			update_entity( $id, $this->get_user_id(), values_to_tables( get_entity_tables_by_id( $id ), $values ), $archive );
+			// reason_update_entity
+			reason_update_entity( $id, $this->get_user_id(), $values, $archive );
 		}
 		function where_to()
 		{
