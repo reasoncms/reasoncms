@@ -77,3 +77,26 @@ div.publication div.addItemLink {
 div.publication div.back {
 	clear:both;
 }
+
+/* --- Related Publication defaults --- */
+
+div.relatedPub div.moduleNav ul {
+	margin:0px;
+	padding:0px;
+	list-style-type:none;
+}
+div.relatedPub div.moduleNav ul li {
+	margin:1em 0;
+}
+div.relatedPub div.moduleNav ul li h4 {
+	margin:0;
+	font-size:1em;
+}
+div.relatedPub div.moduleNav ul li .date {
+	font-size:0.8125em;
+}
+div.relatedPub div.moduleNav ul ul.links li {
+	font-size:87%;
+	border-top:none;
+	margin:0px;
+}
