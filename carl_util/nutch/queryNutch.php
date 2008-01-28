@@ -23,6 +23,7 @@ require_once('reason_header.php');
 define('NUTCH_BASE_URL', 'http://nutch.carleton.edu/nutch-0.9/opensearch?');
 define('MAGPIE_DIR', MAGPIERSS_INC);
 require_once(MAGPIE_DIR . 'rss_parse.inc');
+require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
 
 class nutchQuery {
 
