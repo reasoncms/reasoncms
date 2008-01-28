@@ -16,7 +16,7 @@
  *
  * @param array new_request_vars an array of key/value pairs which specify new items, replacement items, or items to remove from the query string
  * @param string base_path a base path for the returned URL, relative to the web server root - should begin with "/"
- * @param type string default '' - if 'relative' then the url returned will be relative to the web server root versus absolute
+ * @param type string default '' - if 'relative' then the url returned will be relative to the web server root, if 'qs_only' only the query string part will be returned
  * @param convert_entities  boolean default true - run html entities on link before returning it 
  */
 function carl_make_link( $new_request_vars = array(''), $base_path = '', $type = '', $convert_entities = true, $maintain_original = true ) // {{{
@@ -27,7 +27,11 @@ function carl_make_link( $new_request_vars = array(''), $base_path = '', $type =
 	else $cur_request_vars = array();
 	if (empty($base_path)) $base_path = $parts['path'];
 	
-	if ($type == 'relative')
+	if ($type == 'qs_only')
+	{
+		$baseurl = '';
+	}
+	elseif ($type == 'relative')
 	{
 		$baseurl = $base_path;
 	}
@@ -54,6 +58,7 @@ function carl_make_link( $new_request_vars = array(''), $base_path = '', $type =
 	if ($convert_entities) $link = htmlspecialchars($link);
 	if (!empty($link))
 		return trim($baseurl.'?'.$link);
+	elseif ($type == 'qs_only') return '?'; 
 	else return trim($baseurl);
 } // }}}
 	
