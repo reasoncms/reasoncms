@@ -536,9 +536,6 @@ class PublicationModule extends Generic3Module
 		}
 		elseif (!empty($this->related_title))
 		{
-			//if ($this->related_title = 'keywords')  // rules can be defined to handle title keywords
-			//elseif
-			//else 
 			$this->module_title = $this->related_title;
 		}
 		elseif(count($this->related_publications) == 1)
@@ -547,6 +544,15 @@ class PublicationModule extends Generic3Module
 			$this->module_title = $pub->get_value('name');
 		}
 		else $this->module_title = 'Related posts';
+		
+		// use date format for publication if there is only one and the date_format was not set by the page type
+		
+		if (!isset($this->params['date_format']) && (count($this->related_publications) == 1) )
+		{
+			$pub = current($this->related_publications);
+			$date_format = $pub->get_value('date_format');
+			if(!empty($date_format)) $this->date_format = $date_format;
+		}
 	}
 	
 	//overloaded from generic3 so that pagination is turned off if we're grouping items by section
@@ -1712,7 +1718,8 @@ class PublicationModule extends Generic3Module
 		//overloaded from generic3
 		function show_style_string()
 		{
-			echo '<div id="'.$this->style_string.'" class="publication">'."\n";
+			$class_string = ($this->related_mode) ? 'relatedPub' : 'publication';
+			echo '<div id="'.$this->style_string.'" class="'.$class_string.'">'."\n";
 		}
 		
 		//overloaded from generic3
