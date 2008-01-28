@@ -24,11 +24,12 @@ reason_include_once('function_libraries/user_functions.php');
 class MigratorScreen extends Disco
 {
 	var $helper;
+	var $redirect_after_process = true;
 	
-	function init()
+	function init( $externally_setup = true )
 	{
 		$this->step_init();
-		parent::init(true);
+		parent::init( $externally_setup );
 	}
 	
 	function step_init()
@@ -37,7 +38,8 @@ class MigratorScreen extends Disco
 	
 	function pre_show_form()
 	{
-		echo '<h3>Publication Migrator Wizard</h3>';
+		echo '<h1>Publication Migration Wizard</h1>';
+		$this->show_site_status();
 		$this->step_pre_show_form();
 	}
 	
@@ -47,8 +49,11 @@ class MigratorScreen extends Disco
 	
 	function where_to()
 	{
-		$values =& $this->get_values_to_pass();
-		return carl_make_redirect($values);
+		if ($this->redirect_after_process)
+		{
+			$values =& $this->get_values_to_pass();
+			return carl_make_redirect($values);
+		}
 	}
 	
 	function redirect_to_screen($screen)
@@ -62,6 +67,32 @@ class MigratorScreen extends Disco
 	{
 		$values = array('active_screen' => '');
 		return $values;
+	}
+	
+	function show_site_status()
+	{
+		$site_id = $this->helper->get_site_id();
+		if ($site_id > 0)
+		{
+			$status_html[] = '<strong>Active site is ' . $this->helper->get_site_name() . '</strong>';
+			$publications = $this->helper->get_site_publication_names_by_id();
+			$pub_count = (!empty($publications)) ? count($publications) : '0';
+			$pub_string = ($pub_count == 1) ? 'publication' : 'publications';
+			$status_html[] = 'Site has ' . $pub_count . ' ' . $pub_string;
+			$unattached_news_items = $this->helper->get_unattached_news_item_names_by_id();
+			if (!empty($unattached_news_items)) $status_html[] = 'Site has ' . count($unattached_news_items) . ' unattached news items';
+			$status_html = '<ul><li>' . implode('</li><li>', $status_html) . '</li></ul>';
+			$start_over_link = true;
+		}
+		else
+		{
+			$status_html = '<ul><li>No site is selected</li></ul>';
+		}
+		echo '<div id="status">';
+		echo '<h2>Status</h2>';
+		echo $status_html;
+		if (isset($start_over_link)) echo '<p><a href="'.carl_construct_link().'">Start Over</a></p>';
+		echo '</div>';
 	}
 }
 
@@ -84,7 +115,7 @@ class MigratorScreen1 extends MigratorScreen
 	
 	function step_pre_show_form()
 	{
-		echo '<h4>Select a Site</h4>';
+		echo '<h2>Select a Site</h2>';
 	}
 	
 	function &get_values_to_pass()
@@ -98,8 +129,19 @@ class MigratorScreen2 extends MigratorScreen
 {
 	function step_pre_show_form()
 	{
-		echo '<h4>Attach News Items to site ' . $this->site_name. '</h4>';
-		echo '<p>In this step, choose a publication and select unattached published news items to attach to the publication.</p>';
+		echo '<h2>Attach News Items</h2>';
+		if (!empty($this->unattached_news_item_names_by_id))
+		{
+			echo '<p>In this step, choose a publication and select unattached published news items to attach to the publication.</p>';
+		}
+		else
+		{
+			echo '<p>All news items on the site are attached to a publication. You may proceed do the following:</p>';
+			$options[] = '<a href="'.carl_make_link(array('active_screen' => 4)).'">Modify page types on the site</a>';
+			$options[] = '<a href="'.carl_make_link(array('active_screen' => 3)).'">Create a new publication</a>';
+			$options[] = '<a href="'.carl_construct_link().'">Choose another site</a>';
+			echo '<ul><li>'.implode('</li><li>',$options).'</li></ul>';
+		}
 	}
 	
 	function step_init()
@@ -111,8 +153,8 @@ class MigratorScreen2 extends MigratorScreen
 		if (empty($this->site_publication_names_by_id)) $this->redirect_to_screen("3");
 		else
 		{
-			$this->news_item_names_by_id = $this->helper->get_unattached_news_item_names_by_id();
-			if (empty($this->news_item_names_by_id)) $this->redirect_to_screen("4");
+			$this->unattached_news_item_names_by_id = $this->helper->get_unattached_news_item_names_by_id();
+			//if (empty($this->news_item_names_by_id)) $this->redirect_to_screen("4");
 		}
 	}
 	
@@ -121,10 +163,17 @@ class MigratorScreen2 extends MigratorScreen
 	 */
 	function on_every_time()
 	{
-		$this->add_element('publication_id', 'select_no_sort', array('options' => $this->site_publication_names_by_id, 'display_name' => 'Choose a Publication'));
-		$this->set_comments('publication_id', form_comment('<p>...Or <a href="'.$this->new_publication_link.'">create a new publication<a/></p>'));
-		$this->add_element('news_items', 'checkboxgroup', array('options' => $this->news_item_names_by_id, 'display_name' => 'Choose News Items to Attach'));
-		$this->set_value('news_items', array_keys($this->news_item_names_by_id)); // check all by default
+		if (!empty($this->unattached_news_item_names_by_id))
+		{
+			$this->add_element('publication_id', 'select_no_sort', array('options' => $this->site_publication_names_by_id, 'display_name' => 'Choose a Publication'));
+			$this->set_comments('publication_id', form_comment('<p>...Or <a href="'.$this->new_publication_link.'">create a new publication<a/></p>'));
+			$this->add_element('news_items', 'checkboxgroup', array('options' => $this->unattached_news_item_names_by_id, 'display_name' => 'Choose News Items to Attach'));
+			$this->set_value('news_items', array_keys($this->unattached_news_item_names_by_id)); // check all by default
+		}
+		else
+		{
+			$this->actions = array();
+		}
 	}
 	
 	function run_error_checks()
@@ -137,11 +186,14 @@ class MigratorScreen2 extends MigratorScreen
 	
 	function process()
 	{
-		$pub_id = $this->get_value('publication_id');
-		$news_items_to_link = $this->get_value('news_items');
-		foreach ($news_items_to_link as $item_id)
+		if (!empty($this->unattached_news_item_names_by_id))
 		{
-			create_relationship($item_id, $pub_id, relationship_id_of('news_to_publication'));
+			$pub_id = $this->get_value('publication_id');
+			$news_items_to_link = $this->get_value('news_items');
+			foreach ($news_items_to_link as $item_id)
+			{
+				create_relationship($item_id, $pub_id, relationship_id_of('news_to_publication'));
+			}
 		}
 	}
 	
@@ -159,26 +211,29 @@ class MigratorScreen3 extends MigratorScreen
 	{
 		$this->site_id = $this->helper->get_site_id();
 		$this->user_id = $this->helper->get_user_id();
+		$this->site_publication_names_by_id = $this->helper->get_site_publication_names_by_id();
 	}
 	
 	function step_pre_show_form()
 	{
-		echo '<h4>Create a Publication</h4>';
+		echo '<h2>Create a Publication</h2>';
+		if (!empty($this->site_publication_names_by_id))
+		{
+			$pub_string = (count($this->site_publication_names_by_id) == 1) ? 'publication' : 'publications';
+			$link = carl_make_link(array('active_screen' => 2));
+			echo '<p>...Or <a href="'.$link.'">attach news items to existing '.$pub_string.'</a></p>';
+		}
 	}
 
 	function on_every_time()
 	{
 		$this->add_element('pub_name', 'text', array('display_name' => 'Publication Name'));
-		$this->set_value('pub_name', $this->helper->guess_desired_publication_name());
 		$this->add_required('pub_name');
 		$this->add_element('pub_description', 'textarea', array('display_name' => 'Publication Description'));
-		$this->set_value('pub_description', $this->helper->guess_desired_publication_description());
 		$this->set_comments('pub_description', form_comment('Any text entered here will be displayed at the top of the primary page for the publication'));
 		$this->add_element('pub_rss_feed_url', 'text', array('display_name' => 'Publication RSS Feed URL'));
-		$this->set_value('pub_rss_feed_url', $this->helper->guess_desired_publication_rss_feed_url());
 		$this->add_required('pub_rss_feed_url');
 		$this->add_element('pub_posts_per_page', 'text', array('display_name' => 'Posts per page'));
-		$this->set_value('pub_posts_per_page', $this->helper->guess_desired_publication_posts_per_page());
 		$this->add_required('pub_posts_per_page');
 		$this->add_element('pub_unique_name', 'text', array('display_name' => 'Publication Unique Name'));
 		$this->add_element( 'date_format', 'select_no_sort', array('options' => array('F j, Y \a\t g:i a' => date('F j, Y \a\t g:i a'),
@@ -190,6 +245,16 @@ class MigratorScreen3 extends MigratorScreen
 																								  'j F Y' => date('j F Y'),
 																								  'j F Y \a\t  g:i a' => date('j F Y \a\t  g:i a'),
 																								  'j F Y \a\t  g:i a' => date('j F Y \a\t  H:i'), )));
+		// if the site does not have any publications yet, we'll guess at certain values
+		if (empty($this->site_publication_names_by_id))
+		{
+			$this->set_value('pub_rss_feed_url', $this->helper->guess_desired_publication_rss_feed_url());
+			$this->set_value('pub_description', $this->helper->guess_desired_publication_description());
+			$this->set_value('pub_name', $this->helper->guess_desired_publication_name());
+		}
+		
+		// we always guess at posts per page
+		$this->set_value('pub_posts_per_page', $this->helper->guess_desired_publication_posts_per_page());
 	}
 	
 	function run_error_checks()
@@ -246,25 +311,117 @@ class MigratorScreen4 extends MigratorScreen
 	{
 		$this->site_id = $this->helper->get_site_id();
 		$this->user_id = $this->helper->get_user_id();
+		$this->pages_using_news_modules = $this->helper->get_pages_using_news_modules();
+		$this->publication_module_page_types = $this->helper->get_publication_module_page_types();
+		$this->recommended_page_type_map = $this->helper->get_recommended_page_type_mapping();
 	}
 	
 	function step_pre_show_form()
 	{
-		echo '<h3>NOT YET IMPLEMENTED</h3>';
-		echo '<h4>Modify Page Types</h4>';
+		echo '<h2>Modify Page Types</h2>';
 		echo '<p>This phase does some analysis of page types and allows you to modify the pages that currently use old-style news to use page types 
 			  compatible with the new publications module. This process is imperfect - many custom page types cannot be mapped directly onto a 
 			  publication page type and will require the creation of new page types. Also, CSS files may need to be updated depending upon whether 
 			  or not the site was using custom CSS for the display of news pages/sidebars.</p>';
 			  
 	}
+	
+	function on_every_time()
+	{
+		foreach ($this->pages_using_news_modules as $k=>$page)
+		{
+			$grp_name = 'page' . $k;
+			$cpt_name = 'cpt_page'.$k;
+			$npt_name = 'npt_page'.$k;
+			$pt_value = $page->get_value('custom_page');
+		
+			$this->add_element($cpt_name, 'solidtext');
+			$this->set_value($cpt_name, $page->get_value('custom_page'));
+			$this->add_element($npt_name, 'select_no_sort', array('options' => $this->publication_module_page_types, 'add_null_value_to_top' => true));
+			$this->add_element_group('table', $grp_name, array($cpt_name, $npt_name), array('use_element_labels' => false, 
+																							'rows' => array('Current Page Type: ', 'New Page Type: ')) );
+			$this->set_display_name($grp_name, '<h3>'.$page->get_value('name').'</h3>');
+			
+			if (isset($this->recommended_page_type_map[$pt_value]))
+			{
+				$this->set_value($npt_name, $this->recommended_page_type_map[$pt_value]);
+			}
+		}
+	}
+	
+	function pre_error_check_actions()
+	{
+		foreach ($this->pages_using_news_modules as $k=>$page)
+		{
+			$npt_name = 'npt_page'.$k;
+			$value = $this->get_value($npt_name);
+		}
+		echo 'in pre error check';
+	}
+	
+	function process()
+	{
+		foreach ($this->pages_using_news_modules as $k=>$page)
+		{
+			$grp_name = 'page' . $k;
+			$cpt_name = 'cpt_page'.$k;
+			$npt_name = 'npt_page'.$k;
+			$npt_value = $this->get_value($npt_name);
+			$this->redirect_after_process = false;
+		}
+		echo 'just finished process';
+	}
+	
+	function &get_values_to_pass()
+	{
+		$values = array('active_screen' => "4", 'site_id' => $this->site_id);
+		return $values;
+	}
+}
+
+class MigratorScreen5 extends MigratorScreen
+{
+	function step_init()
+	{
+		$this->site_id = $this->helper->get_site_id();
+		$this->user_id = $this->helper->get_user_id();
+	}
+	
+	function step_pre_show_form()
+	{
+		$link = carl_construct_link();
+		echo '<h4>Finished</h4>';
+		echo '<p><a href="'.$link.'">Start Over</a></p>';		  
+	}
+	
+	function &get_values_to_pass()
+	{
+		$values = array('active_screen' => "5", 'site_id' => $this->site_id);
+		return $values;
+		//return array();
+	}
 }
 
 class PublicationMigratorHelper
 {
-	var $cleanup_rules = array('active_screen' => array('function' => 'check_against_array', 'extra_args' => array("1","2","3","4")),
+	var $cleanup_rules = array('active_screen' => array('function' => 'check_against_array', 'extra_args' => array("1","2","3","4","5")),
 							   'site_id' => array('function' => 'turn_into_int'));
 	
+	/**
+	 * Old style news modules
+	 * @var array
+	 */
+	var $news_modules = array('news', 'news_mini', 'news_via_categories', 'news_by_category', 'news_rand', 'news_all',
+	                          'news_one_at_a_time', 'news_proofing', 'news_proofing_multipage', 
+	                          'news2', 'news2_mini', 'news2_mini_random');
+	                          
+	var $publication_modules = array('publication');
+	
+	/**
+	 * Defines known suggested page type mappings from old style news to publication module
+	 * @var array
+	 */
+	var $recommended_page_type_mapping = array('news' => 'publication', 'events_and_news_sidebar' => 'events_and_publication_sidebar');
 	/**
 	 * Determine state and init the appropriate migrator screen
 	 */
@@ -307,6 +464,8 @@ class PublicationMigratorHelper
 	
 	/**
 	 * @return array site entities that appear to need migration
+	 *
+	 * @todo be more discriminating currently lists all sites with news items
 	 */
 	function &get_sites_that_need_migration()
 	{	
@@ -406,6 +565,70 @@ class PublicationMigratorHelper
 		return (isset($result)) ? $result : '';
 	}
 	
+	function &get_pages_using_news_modules()
+	{
+		static $pages_using_news_modules;
+		if (!isset($pages_using_news_modules))
+		{
+			foreach ($this->news_modules as $module)
+			{
+				$valid_page_types = (isset($valid_page_types))
+									? array_unique(array_merge($valid_page_types, page_types_that_use_module($module)))
+									: page_types_that_use_module($module);
+			}
+			foreach (array_keys($valid_page_types) as $k) quote_walk($valid_page_types[$k], NULL);
+		
+			$site_id = $this->get_site_id();
+			$es = new entity_selector($site_id);
+			$es->add_type(id_of('minisite_page'));
+			$es->add_relation('page_node.custom_page IN ('.implode(",", $valid_page_types).')');
+			$pages_using_news_modules = $es->run_one();
+		}
+		return $pages_using_news_modules;
+	}
+	
+	function &get_publication_module_page_types()
+	{
+		static $publication_module_page_types;
+		if (!isset($publication_module_page_types))
+		{
+			foreach ($this->publication_modules as $module)
+			{
+				$valid_page_types = (isset($valid_page_types))
+									? array_unique(array_merge($valid_page_types, page_types_that_use_module($module)))
+									: array_unique(page_types_that_use_module($module));
+			}
+			foreach ($valid_page_types as $page_type)
+			{
+				$publication_module_page_types[$page_type] = $page_type;
+			}
+		}
+		return $publication_module_page_types;
+	}
+	
+	function &get_news_minisite_page()
+	{
+		static $news_minisite_page;
+		if (!isset($news_minisite_page))
+		{
+			$site_id = $this->get_site_id();
+			$es = new entity_selector($site_id);
+			$es->add_type(id_of('minisite_page'));
+			$es->add_relation('page_node.custom_page = "news"');
+			$es->set_num(1);
+			$result = $es->run_one();
+			if (!empty($result))
+			{
+				$news_minisite_page = current($result);
+			}
+			else
+			{
+				$news_minisite_page = false;
+			}
+		}
+		return $news_minisite_page;
+	}
+	
 	/**
 	 * @return object disco form
 	 */
@@ -459,12 +682,18 @@ class PublicationMigratorHelper
 		return false;
 	}
 	
+	function &get_recommended_page_type_mapping()
+	{
+		return $this->recommended_page_type_mapping;
+	}
+	
 	/**
 	 * GUESS METHODS - return best guess for a variety of things and an empty guess if nothing makes sense
 	 */
 	function guess_desired_publication_name()
 	{
-		return "";
+		$page =& $this->get_news_minisite_page();
+		return ($page) ? $this->get_minisite_page_value($page, 'name') : '';
 	}
 
 	function guess_desired_publication_posts_per_page()
@@ -474,12 +703,21 @@ class PublicationMigratorHelper
 	
 	function guess_desired_publication_description()
 	{
-		return "";
+		$page =& $this->get_news_minisite_page();
+		return ($page) ? strip_tags($this->get_minisite_page_value($page, 'content')) : '';
 	}
 	
 	function guess_desired_publication_rss_feed_url()
 	{
-		return "";
+		$page =& $this->get_news_minisite_page();
+		$page_name = ($page) ? $this->get_minisite_page_value($page, 'name') : '';
+		$rss_feed_url = ($page_name) ? strtolower(str_replace(" ", "_", $page_name)) : '';
+		return $rss_feed_url;
+	}
+	
+	function get_minisite_page_value(&$page, $value)
+	{
+		return $page->get_value($value);
 	}
 	
 	function report()
@@ -490,8 +728,12 @@ class PublicationMigratorHelper
 // instantiate relevant classes
 $head_items = new HeadItems();
 $pmg = new PublicationMigratorHelper();
+
 // add needed head items
 $head_items->add_head_item('title',array(),'Publication Migration Wizard',true);
+$head_items->add_javascript('//' . REASON_HOST . JQUERY_URL);
+$head_items->add_javascript('//' . REASON_HOST . REASON_HTTP_BASE_PATH . 'js/publication_migrator/publication_migrator.js');
+$head_items->add_stylesheet('//' . REASON_HOST . REASON_HTTP_BASE_PATH . 'css/publication_migrator/publication_migrator.css');
 $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'."\n";
 $html .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">'."\n";
 $html .= '<head>'."\n";
