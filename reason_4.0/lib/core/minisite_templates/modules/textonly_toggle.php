@@ -30,8 +30,8 @@
 		}
 		function generate_link()
 		{
-			if ( empty( $this->parent->textonly )) return carl_make_link(array('textonly' => 1),'','relative');
-			else return carl_make_link(array('textonly' => ''),'','relative');
+			if ( empty( $this->parent->textonly )) return carl_make_link(array('textonly' => 1));
+			else return carl_make_link(array('textonly' => ''));
 		}
 		
 		function get_documentation()
