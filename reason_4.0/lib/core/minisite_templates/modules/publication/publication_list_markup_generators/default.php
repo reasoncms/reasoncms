@@ -34,6 +34,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 									'publication',
 									'date_format',
 									'search_string',
+									'text_only',
 									);
 
 	function PublicationListMarkupGenerator ()
@@ -147,13 +148,20 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		$markup_string = '';
 		if(!empty($this->passed_vars['list_item_markup_strings']) && !empty($item_ids))
 		{
-			$markup_string .= '<ul class="posts">'."\n";
+			/* this might seem somewhat backward but it's a reasonably efficient way 
+			to ensure that the ul in only output if there is in fact at least one list item to show */
+			$list_body = '';
 			foreach($item_ids as $item_id)
 			{
 				if(!empty($this->passed_vars['list_item_markup_strings'][$item_id]) && !array_key_exists($item_id, $this->passed_vars['featured_item_markup_strings']))
-					$markup_string .= '<li>'.$this->passed_vars['list_item_markup_strings'][$item_id].'</li>'."\n";
+					$list_body .= '<li>'.$this->passed_vars['list_item_markup_strings'][$item_id].'</li>'."\n";
 			}
-			$markup_string .= '</ul>'."\n";
+			if(!empty($list_body))
+			{
+				$markup_string .= '<ul class="posts">'."\n";
+				$markup_string .= $list_body;
+				$markup_string .= '</ul>'."\n";
+			}
 		}
 		return $markup_string;
 	}
