@@ -1,5 +1,10 @@
 """
-Helper code for Loki, a WYSIWYG HTML editor.
+Helper code for Loki, a JavaScript WYSIWYG HTML editor.
+
+This file will eventually be fleshed out to be on par with the PHP helper code,
+but not yet.
+
+Copyright (c) 2008 Carleton College.
 """
 
 def get_source_filenames(folder_path, priority_util_files=[]):
@@ -76,10 +81,12 @@ def get_source_filenames(folder_path, priority_util_files=[]):
 		
 		script_files.insert(lo, filename)
 			
+	def accept(path, filename):
+		return (os.path.isfile(path) and filename.endswith('.js')
+			and not filename.startswith('.'))
 	
 	for filename in os.listdir(folder_path):
-		path = os.path.join(folder_path, filename)
-		if not (os.path.isfile(path) and filename.endswith('.js')):
+		if not accept(os.path.join(folder_path, filename), filename):
 			continue
 		
 		add_file(filename)

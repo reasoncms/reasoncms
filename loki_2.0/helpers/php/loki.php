@@ -78,10 +78,10 @@ class Loki2
 	 * Constructor
 	 *
 	 * @param	string	$field_name		  How Loki is identified within its containing form. This will become the name of the textarea that Loki creates
-	 *                                    and therefore of the request variable received by the form's action.
-	 * @param   string  $field_value      The HTML that Loki will initially be editing.
+	 *									  and therefore of the request variable received by the form's action.
+	 * @param	string	$field_value	  The HTML that Loki will initially be editing.
 	 * @param	string	$current_options  Indicates which buttons etc Loki should present to the user. For the possible values, see js/UI.Loki_Options.js
-	 * @param	boolean	$user_is_admin	  Whether the user is an administrator. Administrators can get options normal users can't.
+	 * @param	boolean $user_is_admin	  Whether the user is an administrator. Administrators can get options normal users can't.
 	 */
 	function Loki2( $field_name, $field_value = '', $current_options = 'default', $user_is_admin = false, $debug = false )
 	{
@@ -91,8 +91,7 @@ class Loki2
 				E_USER_ERROR);
 		}
 		
-		if (isset($_SERVER['SCRIPT_URI'])) $this->_asset_protocol = strpos($_SERVER['SCRIPT_URI'], 'https') === 0 ? 'https://' : 'http://';
-		else $this->_asset_protocol = ( !empty( $_SERVER['HTTPS'] ) AND strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
+		$this->_asset_protocol = $this->_get_protocol().'://';
 		$this->_asset_host = $_SERVER['HTTP_HOST'];
 		$this->_asset_path = ('/' != substr(LOKI_2_HTTP_PATH, -1, 1))
 			? LOKI_2_HTTP_PATH.'/'
@@ -106,7 +105,7 @@ class Loki2
 		$this->_editor_id = uniqid('loki');
 		$this->_editor_obj = $this->_editor_id."_obj";
 		$this->_user_is_admin = $user_is_admin;
-        $this->_debug = $debug;
+		$this->_debug = $debug;
 	}
 
 	/**
@@ -124,8 +123,8 @@ class Loki2
 	 * Sets the regular expression used by the link dialog to determine which site 
 	 * to display as default when no link is selected.
 	 *
-	 * @param	string	$regexp	The _Javascript_ regexp. You might want to use 
-	 *                          {@link js_regexp_quote()} to make things easier.
+	 * @param	string	$regexp The _Javascript_ regexp. You might want to use 
+	 *							{@link js_regexp_quote()} to make things easier.
 	 */
 	function set_default_site_regexp($regexp)
 	{
@@ -136,8 +135,8 @@ class Loki2
 	 * Sets the regular expression used by the link dialog to determine which type 
 	 * to display as default when no link is selected.
 	 *
-	 * @param	string	$regexp	The _Javascript_ regexp. You might want to use 
-	 *                          {@link js_regexp_quote()} to make things easier.
+	 * @param	string	$regexp The _Javascript_ regexp. You might want to use 
+	 *							{@link js_regexp_quote()} to make things easier.
 	 */
 	function set_default_type_regexp($regexp)
 	{
@@ -160,16 +159,31 @@ class Loki2
 	 */
 	function print_form_children()
 	{
+		$id = $this->_editor_id;
+		$onload = $this->_editor_id.'_do_onload';
+		
 		$this->include_js();
 		?>
 
 		<!--div><a href="javascript:void(0);" onclick="Util.Window.alert(document.body.innerHTML);">View virtual source</a></div-->
 		<script type="text/javascript" language="javascript">
 		//document.domain = 'carleton.edu'; /// XXX: for testing; maybe remove later if not necessary
-		var loki;
+		var <?php echo $id ?>;
 		var loki_debug = <?php echo $this->_debug ? 'true' : 'false' ?>; // set to false or remove when live
-		function loki_do_onload()
+		function <?php echo $onload ?>()
 		{
+			if (!UI || !Util) {
+				throw new Error("The Loki code does not appear to be loaded " +
+					"on the document; make sure that loki.js is being " +
+					"included.");
+			}
+			
+			if (<?php echo $id ?>) {
+				return;
+			}
+			
+			<?php echo $id ?> = new UI.Loki;
+			
 			var options = new UI.Loki_Options;
 			<?php
 			if ( is_array($this->_current_options) )
@@ -189,53 +203,42 @@ class Loki2
 			//echo "options.init(['all', 'source'], '');\n"; // XXX tmp, for testing
 			?>
 			
-			/*
-			try
-			{
-			*/
-				var settings = {
-					base_uri : '<?php echo $this->_asset_path; ?>',
-					images_feed : '<?php if(!empty($this->_feeds['images'])) echo $this->_feeds['images']; ?>',
-					sites_feed : '<?php if(!empty($this->_feeds['sites'])) echo $this->_feeds['sites']; ?>',
-					finder_feed : '<?php if(!empty($this->_feeds['finder'])) echo $this->_feeds['finder']; ?>',
-					default_site_regexp : new RegExp('<?php echo $this->_default_site_regexp; ?>'),
-					default_type_regexp : new RegExp('<?php echo $this->_default_type_regexp; ?>'),
-					use_https : <?php echo $this->_asset_protocol == 'https://' ? 'true' : 'false'; ?>,
-					use_reason_integration : false,
-                    use_xhtml : true,
-					sanitize_unsecured : <?php echo (($this->_sanitize_unsecured) ? 'true' : 'false') ?>,
-					options : options,
-					allowable_tags : <?php echo $this->_js_allowable_tags() ?>
-				};
+			var settings = {
+				base_uri : '<?php echo $this->_asset_path; ?>',
+				images_feed : '<?php if(!empty($this->_feeds['images'])) echo $this->_feeds['images']; ?>',
+				sites_feed : '<?php if(!empty($this->_feeds['sites'])) echo $this->_feeds['sites']; ?>',
+				finder_feed : '<?php if(!empty($this->_feeds['finder'])) echo $this->_feeds['finder']; ?>',
+				default_site_regexp : new RegExp('<?php echo $this->_default_site_regexp; ?>'),
+				default_type_regexp : new RegExp('<?php echo $this->_default_type_regexp; ?>'),
+				use_https : <?php echo $this->_asset_protocol == 'https://' ? 'true' : 'false'; ?>,
+				use_reason_integration : false,
+				   use_xhtml : true,
+				sanitize_unsecured : <?php echo (($this->_sanitize_unsecured) ? 'true' : 'false') ?>,
+				options : options,
+				allowable_tags : <?php echo $this->_js_allowable_tags() ?>
+			};
 
-				loki = new UI.Loki;
-				loki.init(document.getElementById('loki__<?php echo $this->_field_name; ?>__textarea'), settings);
-			/*
-			}
-			catch(e)
-			{
-				mb('Error:', e.message);
-				throw e;
-			}
-			*/
+			
+			<?php echo $id ?>.init(document.getElementById('loki__<?php echo $this->_field_name; ?>__textarea'), settings);
 		}
-		try
-		{
-			window.addEventListener('load', loki_do_onload, false);
-		}
-		catch(e)
-		{
-			try
-			{
-				window.attachEvent('onload', loki_do_onload);
-			}
-			catch(f)
-			{
-				throw(new Error('Neither the W3C nor the IE way of adding the event listener to start Loki worked. When the W3C way was tried, an error with the following message was thrown: <<' + e.message + '>>. When the IE way was tried, an error with the following message was thrown: <<' + f.message + '>>.'));
+		
+		if (Util && Util.Event && Util.Event.observe) {
+			Util.Event.observe(document, 'DOMContentLoaded', <?php echo $onload ?>);
+			Util.Event.observe(window, 'load', <?php echo $onload ?>);
+		} else if (window.addEventListener) {
+			document.addEventListener('DOMContentLoaded', <?php echo $onload ?>, false);
+			window.addEventListener('load', <?php echo $onload ?>, false);
+		} else if (window.attachEvent) {
+			window.attachEvent('onload', <?php echo $onload ?>);
+		} else {
+			if (Util && Util.Unsupported_Error) {
+				throw new Util.Unsupported_Error('modern event API\'s');
+			} else {
+				throw new Error("No known modern event API is available.");
 			}
 		}
 		</script>
-		<?php // we htmlspecialchars because Mozilla converts all greater and less than signs in the textarea to entities, but doesn't convert amperstands to entities. When the value of the textarea is copied into the iframe, these entities are resolved, so as to create tags ... but then so are greater and less than signs that were originally entity'd. This is not desirable, and in particular allows people to add their own HTML tags, which is bad bad bad. ?>
+		<?php /* we htmlspecialchars because Mozilla converts all greater and less than signs in the textarea to entities, but doesn't convert amperstands to entities. When the value of the textarea is copied into the iframe, these entities are resolved, so as to create tags ... but then so are greater and less than signs that were originally entity'd. This is not desirable, and in particular allows people to add their own HTML tags, which is bad bad bad. */ ?>
 		<textarea name="<?php echo $this->_field_name; ?>" rows="20" cols="80" id="loki__<?php echo $this->_field_name; ?>__textarea"><?php echo htmlentities($this->_field_value, ENT_QUOTES, 'UTF-8'); ?></textarea>
 		<?php
 
@@ -254,9 +257,9 @@ class Loki2
 	 * out the Loki js.
 	 *
 	 * @param	mode	Defaults to 'static', which uses the prebuilt script
-	 *                  file that ships with Loki. Other modes are only useful
-	 *                  for Loki testing and only work when paired with a
-	 *                  source distribution or Subversion checkout of Loki.
+	 *					file that ships with Loki. Other modes are only useful
+	 *					for Loki testing and only work when paired with a
+	 *					source distribution or Subversion checkout of Loki.
 	 * @param	path	For the 'external' mode, specifies the HTTP path to the
 	 *					Loki script aggregator. If this is not specified,
 	 *					the path will be guessed based on the default Loki
@@ -345,7 +348,7 @@ class Loki2
 
 	/**
 	 * Gets the field's value.
-	 * @return  string  The value of the Loki-ized field (before being edited).
+	 * @return	string	The value of the Loki-ized field (before being edited).
 	 */
 	function get_field_value()
 	{ 
@@ -354,7 +357,7 @@ class Loki2
 
 	/**
 	 * Sets the field's value.
-	 * @param  string  $field_value  The value of the Loki-ized field (before being edited).
+	 * @param  string  $field_value	 The value of the Loki-ized field (before being edited).
 	 */
 	function _set_field_value($field_value) 
 	{
@@ -390,6 +393,25 @@ class Loki2
 	function _quote($tag)
 	{
 		return '"'.str_replace('\'', "\\'", $tag).'"';
+	}
+	
+	/**
+	 * @access private
+	 * @return string
+	 */
+	function _get_protocol()
+	{
+		if (!empty($_SERVER['SCRIPT_URI'])) {
+			$proto_pos = strpos($_SERVER['SCRIPT_URI'], ':');
+			if (false !== $proto_pos)
+				return substr($_SERVER['SCRIPT_URI'], 0, $proto_pos);
+		}
+		
+		if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')
+			return 'https';
+		
+		// Make a (very) good guess.
+		return 'http';
 	}
 	
 	/**

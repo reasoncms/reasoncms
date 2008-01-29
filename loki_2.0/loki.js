@@ -1,8 +1,8 @@
-// Loki WYSIWIG Editor 2.0b4-p1
-// Copyright 2006 Carleton College
+// Loki WYSIWIG Editor 2.0rc1
+// Copyright (c) 2006 Carleton College
 
-// Compiled 2008-01-18 18:35:42 
-// http://loki-editor.googlecode.com
+// Compiled 2008-01-29 14:34:16 
+// http://loki-editor.googlecode.com/
 
 
 // file TinyMCE.js
@@ -1958,6 +1958,35 @@ Util.Node.has_ancestor_node =
 };
 
 /**
+ * Finds the node that is equal to or an ancestor of the given node that
+ * matches the provided test.
+ * @param	{Node}	node	the node to examine
+ * @param	{function}	test	the test function that should return true when
+ *								passed a suitable node
+ * @return {Node}	the matching node if one was found, otherwise null
+ */
+Util.Node.find_match_in_ancestry =
+	function find_matching_node_in_ancestry(node, test)
+{
+	function terminal(node) {
+		switch (node.nodeType) {
+			case Util.Node.DOCUMENT_NODE:
+			case Util.Node.DOCUMENT_FRAGMENT_NODE:
+				return true;
+			default:
+				return false;
+		}
+	}
+	
+	for (var n = node; n && !terminal(n); n = n.parentNode) {
+		if (test(n))
+			return n;
+	}
+	
+	return null;
+}
+
+/**
  * Gets the nearest ancestor of the node that is currently being displayed as
  * a block.
  * @param {Node}	node		the node to examine
@@ -2059,6 +2088,29 @@ Util.Node.is_tag = function(node, tag)
 };
 
 /**
+ * Finds the offset of the given node within its parent.
+ * @param {Node}  node  the node whose offset is desired
+ * @return {number}     the node's offset
+ * @throws {Error} if the node is orphaned (i.e. it has no parent)
+ */
+Util.Node.get_offset = function get_node_offset_within_parent(node)
+{
+	var parent = node.parentNode;
+	
+	if (!parent) {
+		throw new Error('Node ' + Util.Node.get_debug_string(node) + ' has ' +
+			' no parent.');
+	}
+	
+	for (var i = 0; i < parent.childNodes.length; i++) {
+		if (parent.childNodes[i] == node)
+			return i;
+	}
+	
+	throw new Error();
+}
+
+/**
  * Creates a function that calls is_tag using the given tag.
  */
 Util.Node.curry_is_tag = function(tag)
@@ -2141,7 +2193,8 @@ Util.Node.is_block_level_element = function(node)
  */
 Util.Node.is_nestable_block_level_element = function(node)
 {
-	return Util.Node.is_block_level_element && !(/^(BODY|TBODY|THEAD|TR|TH|TD)$/i).test(node.tagName);
+	return Util.Node.is_block_level_element(node)
+		&& !(/^(BODY|TBODY|THEAD|TR|TH|TD)$/i).test(node.tagName);
 };
 
 /**
@@ -2179,10 +2232,7 @@ Util.Node.is_leftmost_descendent = function(node, ref)
  */
 Util.Node.insert_after = function(new_node, ref_node)
 {
-	if ( ref_node == ref_node.parentNode.lastChild )
-		ref_node.parentNode.appendChild(new_node);
-	else
-		ref_node.parentNode.insertBefore(new_node, ref_node.nextSibling);
+	ref_node.parentNode.insertBefore(new_node, ref_node.nextSibling);
 };
 
 /**
@@ -3318,6 +3368,24 @@ Util.Block = {
 				var br;
 				var next;
 				
+				var paragraphs = [];
+				function add_paragraph(para)
+				{
+					if (para)
+						paragraphs.push(para);
+					
+					return !!para;
+				}
+				
+				function replace_with_children(node)
+				{
+					for (var i = 0; i < node.childNodes.length; i++) {
+						node.parentNode.insertBefore(node.childNodes[i], node);
+					}
+					
+					node.parentNode.removeChild(node);
+				}
+				
 				function create_upto(stop)
 				{
 					var para = stop.ownerDocument.createElement('P');
@@ -3344,11 +3412,13 @@ Util.Block = {
 					if (!multi) {
 						next = c.nextSibling;
 						
+						if (c.tagName == 'P')
+							add_paragraph(c);
+						
 						if (!belongs_inside_paragraph(c)) {
-							create_upto(c);
-							multi = true;
+							multi = add_paragraph(create_upto(c));
 						} else if (br = is_breaker(c)) { // assignment intent.
-							multi = !!create_upto(c);
+							multi = add_paragraph(create_upto(c));
 							next = br[1].nextSibling;
 							br.each(function(b) {
 								b.parentNode.removeChild(b);
@@ -3357,6 +3427,10 @@ Util.Block = {
 					} else {
 						next = enforce_container_child(context, node, c);
 					}
+				}
+				
+				if (!multi && paragraphs.length == 1) {
+					replace_with_children(paragraphs[0]);
 				}
 				
 				return node.hasChildNodes();
@@ -3775,6 +3849,10 @@ Util.Document.make_editable = function make_editable(doc)
 			// editable)
 			doc.designMode = 'on';
 			doc.execCommand('undo', false, null);
+			
+			try {
+				doc.execCommand('useCSS', false, true);
+			} catch (no_use_css) {}
 		} catch (f) {
 			throw new Error('Unable to make the document editable. ' +
 				'(' + e + '); (' + f + ')');
@@ -3783,10 +3861,26 @@ Util.Document.make_editable = function make_editable(doc)
 }
 
 /**
+ * Creates a new range on the document.
+ * @param {Document}  doc   document on which the range will be created
+ * @return {Range} the new range
+ */
+Util.Document.create_range = function create_range_on_document(doc)
+{
+	if (doc.createRange) {
+		return doc.createRange();
+	} else if (doc.body.createTextRange) {
+		return doc.body.createTextRange();
+	} else {
+		throw new Util.Unsupported_Error('creating a range on a document');
+	}
+}
+
+/**
  * Gets the HEAD element of a document.
  * @param	doc		document from which to obtain the HEAD
  */
-Util.Document.get_head = function(doc)
+Util.Document.get_head = function get_document_head(doc)
 {
 	try {
 		return doc.getElementsByTagName('HEAD')[0];
@@ -3802,7 +3896,7 @@ Util.Document.get_head = function(doc)
  * @param	new_document	the document to import the node to
  * @param	node			the node to import
  * @param	deep			boolean indicating whether to import child
- *							nodes (currently ignored in IE ... is always true)
+ *							nodes
  */
 Util.Document.import_node = function import_node(new_document, node, deep)
 {
@@ -4456,30 +4550,19 @@ Util.Form.Instructions = function(text)
  * @class A SAX-style tolerant HTML parser that doesn't rely on the browser.
  * @author Eric Naeseth
  */
-Util.HTML_Parser = function()
+Util.HTML_Parser = function SAX_HTML_Parser()
 {
 	var data = null;
 	var position = 0;
 	var listeners = {
-		data: [],
 		open: [],
-		close: []
+		close: [],
+		text: [],
+		cdata: [],
+		comment: [],
 	};
 	
-	var self_closing_tags = (function() {
-		var ret = {};
-		
-		for (var i = 0; i < arguments.length; i++) {
-			ret[arguments[i]] = true;
-		}
-		
-		ret.test = function(tag)
-		{
-			return !!this[tag];
-		}
-		
-		return ret;
-	})('BR', 'AREA', 'LINK', 'IMG', 'PARAM', 'HR', 'INPUT', 'COL', 'BASE', 'META');
+	var self_closing_tags = Util.HTML_Parser.self_closing_tags.toSet();
 	
 	// -- Public Methods --
 	
@@ -4570,7 +4653,25 @@ Util.HTML_Parser = function()
 	
 	function character_data(data)
 	{
-		listeners.data.each(function(l) {
+		var cdata_listeners = (listeners.cdata.length > 0)
+			? listeners.cdata
+			: listeners.text;
+		
+		cdata_listeners.each(function(l) {
+			l(data);
+		});
+	}
+	
+	function text_data(data)
+	{
+		listeners.text.each(function(l) {
+			l(data);
+		});
+	}
+	
+	function comment(contents)
+	{
+		listeners.comment.each(function(l) {
 			l(data);
 		});
 	}
@@ -4595,7 +4696,7 @@ Util.HTML_Parser = function()
 	{
 		var cdata = scan_until_string('<');
 		if (cdata) {
-			character_data(cdata);
+			text_data(cdata);
 		}
 		
 		ignore_character();
@@ -4660,18 +4761,24 @@ Util.HTML_Parser = function()
 		
 		var tag = scan_until_characters("/> \n\r\t");
 		if (tag) {
-			var attributes = parse_attributes();
+			var attributes = parse_attributes(); // last step ignores whitespace
 			tag_opened(tag, attributes);
 			
 			var next_char = scan_character();
-			if (next_char == '/' || self_closing_tags.test(tag.toUpperCase())) {
-				// self-closing tag (XML-style or known)
+			if (next_char == '/') {
+				// self-closing tag (XML-style)
 				tag_closed(tag);
-				
 				ignore_whitespace();
-				next_char = scan_character();
-				if (next_char != '>') // oh my, what on earth?
-					unscan_character();
+				next_char = scan_character(); // advance to the "<"
+			} else if (tag.toUpperCase() in self_closing_tags) {
+				// self-closing tag (known HTML tag)
+				tag_closed(tag);
+			}
+			
+			if (next_char != '>') {
+				// oh my, what on earth?
+				throw new Util.HTML_Parser.Error('Opening tag not terminated ' +
+					'by ">".');
 			}
 		}
 		
@@ -4685,8 +4792,11 @@ Util.HTML_Parser = function()
 			var next_char = scan_character();
 			if (next_char == '/') {
 				next_char = scan_character();
-				if (next_char != '>') // oh my, what on earth?
-					unscan_character();
+				if (next_char != '>') {
+					// oh my, what on earth?
+					throw new Util.HTML_Parser.Error('Closing tag not ' +
+						'terminated by ">".');
+				}
 			}
 			
 			tag_closed(tag);
@@ -4697,15 +4807,19 @@ Util.HTML_Parser = function()
 	
 	function escape_state()
 	{
+		var data;
+		
 		if (expect('--')) {
 			// comment
-			scan_until_string('-->');
+			data = scan_until_string('-->');
+			if (data)
+				comment(data);
 			ignore_characters(2);
 		} else if (expect('[CDATA[')) {
 			// CDATA section
-			var cdata = scan_until_string(']]>');
-			if (cdata)
-				character_data(cdata);
+			data = scan_until_string(']]>');
+			if (data)
+				character_data(data);
 			ignore_characters(2);
 		} else {
 			scan_until_string('>');
@@ -4722,7 +4836,22 @@ Util.HTML_Parser = function()
 		
 		return starting_state;
 	}
-} 
+}
+
+/**
+ * Constructs a new HTML parse error.
+ * @class An HTML parse error.
+ * @constructor
+ * @extends Error
+ */
+Util.HTML_Parser.Error = function HTML_Parse_Error(message)
+{
+	Util.OOP.inherits(this, Error, message);
+	this.name = 'HTML_Parse_Error';
+}
+
+Util.HTML_Parser.self_closing_tags = ['BR', 'AREA', 'LINK', 'IMG', 'PARAM',
+	'HR', 'INPUT', 'COL', 'BASE', 'META']; 
 // file Util.HTML_Reader.js
 /**
  * Declares instance variables.
@@ -5634,7 +5763,7 @@ Util.RSS = {
  *
  * @author Eric Naeseth
  */
-Util.RSS.Reader = function(url)
+Util.RSS.Reader = function RSSReader(url)
 {
 	this.url = url;
 	
@@ -5805,7 +5934,7 @@ Util.RSS.Reader = function(url)
 	/**
 	 * Adds an event listener.
 	 */
-	this.add_event_listener = function(type, func)
+	this.add_event_listener = function add_rss_event_listener(type, func)
 	{
 		if (!listeners[type]) {
 			throw new Error('Unknown listener type "' + type + '".');
@@ -5819,7 +5948,7 @@ Util.RSS.Reader = function(url)
 	 * Loads items from the feed. If the "num" parameter is provided and the URL has been set up
 	 * to support chunking (see description of the construtor), only requests that many items.
 	 */
-	this.load = function(num, timeout)
+	this.load = function load_rss_feed(num, timeout)
 	{
 		if (!num)
 			var num = null;
@@ -5872,7 +6001,7 @@ Util.RSS.Reader = function(url)
  * @class An RSS feed.
  * @author Eric Naeseth
  */
-Util.RSS.Feed = function()
+Util.RSS.Feed = function RSSFeed()
 {
 	this.version = null;
 	this.channel = null;
@@ -5885,7 +6014,7 @@ Util.RSS.Feed = function()
  * @class An RSS channel.
  * @author Eric Naeseth
  */
-Util.RSS.Channel = function()
+Util.RSS.Channel = function RSSChannel()
 {
 	// required elements
 	this.title = null;
@@ -5917,7 +6046,7 @@ Util.RSS.Channel = function()
  * @class An RSS feed.
  * @author Eric Naeseth
  */
-Util.RSS.Item = function()
+Util.RSS.Item = function RSSItem()
 {
 	this.title = null;
 	this.link = null;
@@ -6006,6 +6135,8 @@ Util.Range.create_range = function create_range_from_selection(sel)
 	// Safari only provides ranges for non-collapsed selections, but still
 	// populates the (anchor|focus)(Node|Offset) properties of the selection.
 	// Using this, if necessary, we can build our own range object.
+	// XXX: I don't actually think that this is true anymore, but I hesitate to
+	//      delete the code anyway. -Eric
 	
 	if (Util.is_function(sel.getRangeAt) && Util.is_number(sel.rangeCount)) {
 		if (sel.rangeCount > 0) {
@@ -6105,28 +6236,12 @@ Util.Range.get_boundaries = function get_range_boundaries(rng)
 	var parent; // some node's parent element
 	
 	function get_boundary(side)
-	{
-		// Find the offset that this node occurs at within its parent
-		// element.
-		function get_offset_of_node(parent, node)
-		{
-			for (var i = 0; i < parent.childNodes.length; i++) {
-				if (parent.childNodes[i] == node) {
-					return i;
-				}
-			}
-			
-			// The loop didn't find anything? wtf?
-			throw new Error('Could not find the node ' +
-				Util.Node.get_debug_string(node) + ' within its parent ' +
-				Util.Node.get_debug_string(parent) + '! (This is very odd.)');
-		}
-		
+	{		
 		if (rng[side + 'Container']) {
 			// W3C range
 			
 			return {
-				node: rng[side + 'Container'],
+				container: rng[side + 'Container'],
 				offset: rng[side + 'Offset']
 			};
 		} else if (rng.duplicate && rng.parentElement) {
@@ -6172,7 +6287,7 @@ Util.Range.get_boundaries = function get_range_boundaries(rng)
 					// Found it! It's an element!
 					return {
 						node: parent,
-						offset: get_offset_of_node(parent, child)
+						offset: Util.Node.get_offset(child)
 					}
 				} else if (child.nodeType != Util.Node.TEXT_NODE) {
 					// Not interested.
@@ -6196,7 +6311,7 @@ Util.Range.get_boundaries = function get_range_boundaries(rng)
 			
 			// End of the parent
 			return {
-				node: parent,
+				container: parent,
 				offset: parent.childNodes.length
 			};
 		} else if (rng.item) {
@@ -6210,8 +6325,8 @@ Util.Range.get_boundaries = function get_range_boundaries(rng)
 			parent = node.parentNode;
 			
 			return {
-				node: parent,
-				offset: get_offset_of_node(parent, node)
+				container: parent,
+				offset: Util.Node.get_offset(node)
 			};
 		} else {
 			throw new Util.Unsupported_Error('ranges');
@@ -6397,50 +6512,33 @@ Util.Range.delete_contents = function delete_range_contents(rng)
  *
  * @param	rng		the range
  * @param	node	the node to insert
+ * @return {void}
  */
 Util.Range.insert_node = function insert_node_in_range(rng, node)
 {
-	// W3C
-	try
-	{
+	var bounds;
+	var point;
+	
+	if (rng.insertNode) {
+		// W3C range
 		rng.insertNode(node);
-	}
-	catch(e)
-	{
-		// IE TextRange
-		try
-		{
-/*
-			rng.collapse(true); // collapse to start
-			rng.pasteHTML(node.outerHTML);
-*/
-
-			rng.collapse(true); // collapse to start
-			// XXX (EN): Why is this temporary node pasted?
-			rng.pasteHTML('<span id="util_range_insert_node__tmp_node"></span>');
-			var tmp = node.ownerDocument.getElementById('util_range_insert_node__tmp_node');
-			tmp.parentNode.insertBefore(node, tmp);
-			tmp.parentNode.removeChild(tmp);
-		}
-		catch(f)
-		{
-			// IE ControlRange
-			try
-			{
-				// Collapse to start
-// 				while (rng.length > 0)
-// 					rng.remove(0);
-
-				// This will only work, I think, if node is an element
-				rng.addElement(node);
-			}
-			catch(g)
-			{
-				throw(new Error('Util.Range.insert_node(): Neither the W3C nor the IE way of inserting the given node worked. ' +
-								'When the W3C way was tried, an error with the following message was thrown: <<' + e.message + '>>. ' +
-								'When the IE TextRange way was tried, an error with the following message was thrown: <<' + f.message + '>>. ' +
-								'When the IE ControlRange way was tried, an error with the following message was thrown: <<' + g.message + '>>.'));
-			}
+	} else {
+		// Internet Explorer range
+		
+		bounds = Util.Range.get_boundaries(rng);
+		
+		if (bounds.start.container.nodeType == Util.Node.TEXT_NODE) {
+			// Inserting the node into a text node; split it at the insertion
+			// point.
+			point = bounds.start.container.splitText(bounds.start.offset);
+			
+			// Now the node can be inserted between the two text nodes.
+			bounds.start.container.parentNode.insertBefore(node, point);
+		} else {
+			point = (bounds.start.container.hasChildNodes())
+				? bounds.start.container.childNodes[bounds.start.offset]
+				: null;
+			bounds.start.container.insertBefore(node, point);
 		}
 	}
 };
@@ -6461,6 +6559,62 @@ Util.Range.clone_range = function clone_range(rng)
 		throw new Util.Unsupported_Error("cloning a range");
 	}
 };
+
+/**
+ * Clones the contents of the given range.
+ *
+ * @param  {Range}  rng       the range whose contents are desired
+ * @return {DocumentFragment} the range's contents
+ */
+Util.Range.clone_contents = function clone_range_contents(rng)
+{
+	var html;
+	var doc;
+	var hack;
+	var frag;
+	
+	if (rng.cloneContents) {
+		// W3C range
+		return rng.cloneContents();
+	} else if (html = rng.htmlText) { // assignment intentional
+		// IE text range
+		// This is just painfully hackish, but the option of writing the code
+		// to properly traverse a range and clone its contents is far worse.
+		
+		doc = rng.parentElement().ownerDocument;
+		
+		hack = doc.createElement('DIV');
+		hack.innerHTML = html;
+		
+		frag = doc.createDocumentFragment();
+		while (hack.firstChild) {
+			frag.appendChild(hack.firstChild);
+		}
+		
+		return frag;
+	} else {
+		throw new Util.Unsupported_Error('cloning the contents of a range');
+	}
+}
+
+/**
+ * Deletes the contents of the given range.
+ *
+ * @param {Range}  rng   the range whose contents should be deleted
+ * @return {void}
+ */
+Util.Range.delete_contents = function delete_range_contents(rng)
+{
+	if (rng.deleteContents) {
+		// W3C range
+		rng.deleteContents();
+	} else if (rng.parentElement) {
+		// IE text range
+		rng.text = ''; // seriously.
+	} else {
+		throw new Util.Unsupported_Error('deleting the contents of a range');
+	}
+}
 
 /**
  * Gets the html of the range.
@@ -6971,157 +7125,147 @@ Util.Range.get_intersecting_blocks = function get_range_intersecting_blocks(rng)
 	return get_intersecting_blocks(ret.branch, ret.b1_or_ancestor, ret.b2_or_ancestor);
 };
 
+Util.Range._ie_set_endpoint =
+	function _ie_text_range_set_endpoint(rng, which, node, offset)
+{
+	// Frustratingly, we cannot directly set the absolute end points of an
+	// Internet Explorer text range; we can only set them in terms of an end
+	// point of another text range. So, we create a text range whose start point 
+	// will beat the desired node and offset and then set the given endpoint of
+	// the range in terms of our new range.
+	
+	var marker = rng.parentElement().ownerDocument.body.createTextRange();
+	var parent = (node.nodeType == Util.Node.TEXT_NODE)
+		? node.parentNode
+		: node;
+	var node_of_interest;
+	var char_offset;
+	
+	marker.moveToElementText(parent);
+	
+	// IE text ranges use the character as their principal unit. So, in order
+	// to translate from the W3C container/offset convention, we must find
+	// the number of characters a node is located from the start of "parent".
+	function find_node_character_offset(node)
+	{
+		var stack = [parent];
+		var offset = 0;
+		var o;
+		
+		while (o = stack.pop()) { // assignment intentional
+			if (node && o == node)
+				return offset;
+			
+			if (o.nodeType == Util.Node.TEXT_NODE) {
+				offset += o.nodeValue.length;
+			} else if (o.nodeType == Util.Node.ELEMENT_NODE) {
+				if (o.hasChildNodes()) {
+					for (var i = o.childNodes.length - 1; i >= 0; i--) {
+						stack.push(o.childNodes[i]);
+					}
+				} else {
+					offset += 1;
+				}
+			}
+		}
+		
+		if (!node)
+			return offset;
+		
+		throw new Error('Could not find the node\'s offset in characters.');
+	}
+	
+	if (node.nodeType == Util.Node.TEXT_NODE) {
+		if (offset > node.nodeValue.length) {
+			throw new Error('Offset out of bounds.');
+		}
+		
+		char_offset = find_node_character_offset(node);
+		char_offset += offset;
+	} else {
+		if (offset > node.childNodes.length) {
+			throw new Error('Offset out of bounds.');
+		}
+		
+		node_of_interest = (offset == node.childNodes.length)
+			? null
+			: node.childNodes[offset];
+		char_offset = find_node_character_offset(node_of_interest);
+	}
+	
+	marker.move('character', char_offset);
+	rng.setEndPoint(which + 'ToEnd', marker);
+}
+
 Util.Range.set_start = function set_range_start(rng, start, offset)
 {
-	try // W3C
-	{
+	if (rng.setStart) {
+		// W3C range
 		rng.setStart(start, offset);
-	}
-	catch(e)
-	{
-		try // IE
-		{
-			// Taken from <http://jorgenhorstink.nl/test/javascript/range/range.js>
-			var node = start;
-
-			if (start.nodeType == 3) {
-			  // text nodes
-			  var moveCharacters = offset;
-			  var moveToNode = null, collapse = true;
-			  while (node.previousSibling) {
-				switch (node.previousSibling.nodeType) {
-				  case 1:
-					// Right candidate node for moving the Range to is found
-					moveToNode = node.previousSibling;
-					collapse   = false;
-					break;
-				  case 3:
-					moveCharacters += node.previousSibling.data.length;
-					break;
-				}
-				// if a right candidate is found, we escape the while
-				if (moveToNode != null) {
-				  break;
-				}
-				node = node.previousSibling;
-			  }
-			  // no right candidate is found, so we select the parent node
-			  // of the start node (which is an Element node always, since
-			  // start node is a Text node).
-			  if (moveToNode == null) {
-				moveToNode = start.parentNode;
-				collapse   = true;
-			  }
-			  rng.moveToElementText(moveToNode);
-			  rng.collapse(collapse);
-			  rng.move('Character', moveCharacters);
-			} else if (start.nodeType == 1) {
-			  // elements
-			  switch (Range.startContainer.childNodes.item(Range.startOffset).nodeType) {
-				case 1:
-				case 3:          
-				  Range.setStart(Range.startContainer.childNodes.item(Range.startOffset), 0);
-				  return this._selectStart(Range);
-				  break;
-				default:
-				  alert('error');
-			  }
-			}  
-		}
-		catch(f)
-		{
-			throw(new Error('Util.Range.set_start(): Neither the W3C nor the IE way of setting the range\'s start worked. ' +
-							'When the Mozilla way was tried, an error with the following message was thrown: <<' + e.message + '>>. ' +
-							'When the IE way was tried, an error with the following message was thrown: <<' + f.message + '>>.'));
-		}
+	} else if (rng.setEndPoint) {
+		// IE text range
+		Util.Range._ie_set_endpoint(rng, 'Start', start, offset);
+	} else {
+		throw new Util.Unsupported_Error('setting the start of a range');
 	}
 };
 
 Util.Range.set_end = function set_range_end(rng, end, offset)
 {
-	try // W3C
-	{
+	if (rng.setEnd) {
+		// W3C range
 		rng.setEnd(end, offset);
-	}
-	catch(e)
-	{
-		try // IE
-		{
-			// Taken from <http://jorgenhorstink.nl/test/javascript/range/range.js>
-			var node = end;
-
-			if (end.nodeType == 3) {
-			  // text nodes
-			  var moveCharacters = end.data.length - offset;
-			  var moveToNode = null, collapse = false;
-			  while (node.nextSibling) {
-				switch (node.nextSibling.nodeType) {
-				  case 1:
-					// Right candidate node for moving the Range to is found
-					moveToNode = node.nextSibling;
-					collapse   = true;
-					break;
-				  case 3:
-					moveCharacters += node.nextSibling.data.length;
-					break;
-				}
-				// if a right candidate is found, we escape the while
-				if (moveToNode != null) {
-				  break;
-				}
-				node = node.nextSibling;
-			  }
-			  // no right candidate is found, so we select the parent node
-			  // of the start node (which is an Element node always, since
-			  // start node is a Text node).
-			  if (moveToNode == null) {
-				moveToNode = end.parentNode;
-				collapse   = false;
-			  }
-
-			  // block level elements have a closing space after collapsing
-			  switch (moveToNode.nodeName.toLowerCase()) {
-				case 'p':
-				case 'div':
-				case 'h1':
-				case 'h2':
-				case 'h3':
-				case 'h4':
-				case 'h5':
-				case 'h6':
-				// need some extension
-				  moveCharacters++;
-			  }
-			  //alert(moveCharacters);
-			  WindowsRange.moveToElementText(moveToNode);
-			  WindowsRange.collapse(collapse);
-
-			  WindowsRange.move('Character', -moveCharacters);
-
-			} else if (end.nodeType == 1) {
-			  // elements
-			  switch (Range.endContainer.childNodes.item(Range.endOffset).nodeType) {
-				case 3:
-				  var offset  = 0; //Range.endContainer.childNodes.item(Range.endOffset).data.length;
-				  var refNode = Range.endContainer.childNodes.item(Range.endOffset);
-	              //alert(refNode.nodeValue);
-				  Range.setEnd(refNode, offset);
-				  return this._selectEnd(Range);
-				  break;
-				default:
-				  alert('error');
-			  }
-			}  
-		}
-		catch(f)
-		{
-			throw(new Error('Util.Range.set_end(): Neither the W3C nor the IE way of setting the range\'s start worked. ' +
-							'When the Mozilla way was tried, an error with the following message was thrown: <<' + e.message + '>>. ' +
-							'When the IE way was tried, an error with the following message was thrown: <<' + f.message + '>>.'));
-		}
+	} else if (rng.setEndPoint) {
+		// IE text range
+		Util.Range._ie_set_endpoint(rng, 'End', end, offset);
+	} else {
+		throw new Util.Unsupported_Error('setting the end of a range');
 	}
 };
 
+Util.Range.set_start_before = function set_range_start_before(rng, node)
+{
+	if (rng.setStartBefore) {
+		// W3C range
+		rng.setStartBefore(node);
+	} else {
+		// Fake it
+		Util.Range.set_start(node.parentNode, Util.Node.get_offset(node));
+	}
+}
+
+Util.Range.set_start_after = function set_range_start_after(rng, node)
+{
+	if (rng.setStartAfter) {
+		// W3C range
+		rng.setStartAfter(node);
+	} else {
+		// Fake it
+		Util.Range.set_start(node.parentNode, Util.Node.get_offset(node) + 1);
+	}
+}
+
+Util.Range.set_end_before = function set_range_end_before(rng, node)
+{
+	if (rng.setEndBefore) {
+		// W3C range
+		rng.setEndBefore(node);
+	} else {
+		// Fake it
+		Util.Range.set_end(node.parentNode, Util.Node.get_offset(node));
+	}
+}
+
+Util.Range.set_end_after = function set_range_end_after(rng, node)
+{
+	if (rng.setEndAfter) {
+		// W3C range
+		rng.setEndAfter(node);
+	} else {
+		// Fake it
+		Util.Range.set_end(node.parentNode, Util.Node.get_offset(node) + 1);
+	}
+} 
 // file Util.Request.js
 /**
  * @class  Asynchronus HTTP requests (an XMLHttpRequest wrapper).
@@ -17059,7 +17203,6 @@ UI.Page_Link_Selector.Item_Selector = function(dialog, wrapper)
 						selector.appendChild(dh.create_element('option',
 							{value: ''}, ['(none)']));
 						
-						anchors.sort();
 						anchors.each(function(a) {
 							selector.appendChild(dh.create_element('option',
 								{
@@ -19435,7 +19578,7 @@ UI.Underline_Keybinding = function()
  *
  * @class A WYSIWYG HTML editor.
  */
-UI.Loki = function(textarea, settings)
+UI.Loki = function()
 {
 	var _owner_window;
 	var _owner_document; // that of _textarea etc.
@@ -19591,7 +19734,7 @@ UI.Loki = function(textarea, settings)
 	{
 		// Incompatible browser check.
 		if (!(Util.Browser.IE || Util.Browser.Gecko)) {
-			throw new Error('Unsupported browser.');
+			throw new Error('Loki does not currently support your browser.');
 		}
 		
 		_settings = settings;
@@ -20522,7 +20665,7 @@ UI.Loki = function(textarea, settings)
 				var bubble = fire_keybindings(event);
 				if ( !bubble )
 				{
-					event.cancleBubble = true;
+					event.cancelBubble = true;
 					return Util.Event.prevent_default(event);
 				}
 			});
