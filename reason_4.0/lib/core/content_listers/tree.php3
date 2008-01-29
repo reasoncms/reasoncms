@@ -325,7 +325,7 @@
 		
 		function grab_filters() // {{{
 		{
-			$this->filter_es = $this->es;
+			$this->filter_es = carl_clone($this->es);
 			parent::grab_filters();
 		} // }}}
 		function load_values() // {{{
