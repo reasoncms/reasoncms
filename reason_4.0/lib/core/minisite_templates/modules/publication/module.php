@@ -151,6 +151,7 @@ class PublicationModule extends Generic3Module
 									   'links_to_current_publications' => 'get_links_to_current_publications',
 									   'publication'=>'get_publication_entity',
 									   'search_string' => 'get_sanitized_search_string',
+									   'text_only' => 'get_text_only_state',
 									);
 	
 	/**
@@ -1730,7 +1731,7 @@ class PublicationModule extends Generic3Module
 			$main_list_name = $this->publication->get_value('name');
 			$current_issue = $this->get_current_issue();
 			if(!empty($current_issue))
-				$main_list_name .= ', '.$current_issue->get_value('name').' Issue';
+				$main_list_name .= ', '.$current_issue->get_value('name');
 			echo '<div><a href="'.$this->construct_back_link().'">Return to '.$main_list_name.'</a></div>';
 			
 			
@@ -2058,6 +2059,10 @@ class PublicationModule extends Generic3Module
 			}
 			else
 				return '';
+		}
+		function get_text_only_state()
+		{
+			return $this->textonly;
 		}
 	}
 ?>
