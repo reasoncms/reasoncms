@@ -791,6 +791,20 @@
 			'main_post' => 'children',
 			'sidebar' => 'news_mini',
 		),
+		'show_children_and_publication_sidebar' => array(
+			'main_post' => 'children',
+			'sidebar' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' =>
+				array('list_item' => array(
+									'classname' => 'MinimalListItemMarkupGenerator', 
+									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+									)
+					 ),
+				'max_num_items' => 4,
+			),
+		),
 		'show_children_hide_non_nav' => array(
 			'main_post' => array(
 				'module'=>'children',
