@@ -81,6 +81,8 @@ class MigratorScreen extends Disco
 			$status_html[] = 'Site has ' . $pub_count . ' ' . $pub_string;
 			$unattached_news_items = $this->helper->get_unattached_news_item_names_by_id();
 			if (!empty($unattached_news_items)) $status_html[] = 'Site has ' . count($unattached_news_items) . ' unattached news items';
+			$attached_news_items = $this->helper->get_attached_news_item_names_by_id();
+			if (!empty($attached_news_items)) $status_html[] = 'Site has ' . count($attached_news_items) . ' attached news items';
 			$status_html = '<ul><li>' . implode('</li><li>', $status_html) . '</li></ul>';
 			$start_over_link = true;
 		}
@@ -311,6 +313,7 @@ class MigratorScreen4 extends MigratorScreen
 	{
 		$this->site_id = $this->helper->get_site_id();
 		$this->user_id = $this->helper->get_user_id();
+		$this->site_publication_names_by_id = $this->helper->get_site_publication_names_by_id();
 		$this->pages_using_news_modules = $this->helper->get_pages_using_news_modules();
 		$this->publication_module_page_types = $this->helper->get_publication_module_page_types();
 		$this->recommended_page_type_map = $this->helper->get_recommended_page_type_mapping();
@@ -319,33 +322,49 @@ class MigratorScreen4 extends MigratorScreen
 	function step_pre_show_form()
 	{
 		echo '<h2>Modify Page Types</h2>';
-		echo '<p>This phase does some analysis of page types and allows you to modify the pages that currently use old-style news to use page types 
-			  compatible with the new publications module. This process is imperfect - many custom page types cannot be mapped directly onto a 
-			  publication page type and will require the creation of new page types. Also, CSS files may need to be updated depending upon whether 
-			  or not the site was using custom CSS for the display of news pages/sidebars.</p>';
-			  
+		if (!empty($this->pages_using_news_modules))
+		{
+			echo '<p>This phase does some analysis of page types and allows you to modify the pages that currently use old-style news to use page types 
+				  compatible with the new publications module. This process is imperfect - many custom page types cannot be mapped directly onto a 
+			      publication page type and will require the creation of new page types. Also, CSS files may need to be updated depending upon whether 
+			      or not the site was using custom CSS for the display of news pages/sidebars.</p>';
+		}
+		else
+		{
+			echo '<p>There are no pages on the site using old-style news. You are probably finished!</p>';
+			$options[] = '<a href="'.carl_construct_link().'">Choose another site</a>';
+			echo '<ul><li>'.implode('</li><li>',$options).'</li></ul>';
+		}	  
 	}
 	
 	function on_every_time()
 	{
-		foreach ($this->pages_using_news_modules as $k=>$page)
+		if (!empty($this->pages_using_news_modules))
 		{
-			$grp_name = 'page' . $k;
-			$cpt_name = 'cpt_page'.$k;
-			$npt_name = 'npt_page'.$k;
-			$pt_value = $page->get_value('custom_page');
-		
-			$this->add_element($cpt_name, 'solidtext');
-			$this->set_value($cpt_name, $page->get_value('custom_page'));
-			$this->add_element($npt_name, 'select_no_sort', array('options' => $this->publication_module_page_types, 'add_null_value_to_top' => true));
-			$this->add_element_group('table', $grp_name, array($cpt_name, $npt_name), array('use_element_labels' => false, 
-																							'rows' => array('Current Page Type: ', 'New Page Type: ')) );
-			$this->set_display_name($grp_name, '<h3>'.$page->get_value('name').'</h3>');
-			
-			if (isset($this->recommended_page_type_map[$pt_value]))
+			foreach ($this->pages_using_news_modules as $k=>$page)
 			{
-				$this->set_value($npt_name, $this->recommended_page_type_map[$pt_value]);
+				$grp_name = 'page' . $k;
+				$cpt_name = 'cpt_page'.$k;
+				$npt_name = 'npt_page'.$k;
+				$pt_value = $page->get_value('custom_page');
+			
+				$this->add_element($cpt_name, 'solidtext');
+				$this->set_value($cpt_name, $page->get_value('custom_page'));
+				$this->add_element($npt_name, 'select_no_sort', array('options' => $this->publication_module_page_types, 'add_null_value_to_top' => true));
+				$this->add_element_group('table', $grp_name, array($cpt_name, $npt_name), array('use_element_labels' => false, 
+																								'rows' => array('Current Page Type: ', 'New Page Type: ')) );
+				$this->set_display_name($grp_name, '<h3>'.$page->get_value('name').'</h3>');
+				
+				if (isset($this->recommended_page_type_map[$pt_value]))
+				{
+					$this->set_value($npt_name, $this->recommended_page_type_map[$pt_value]);
+				}
+				$this->add_element('pubs_for_page'.$k, 'checkboxgroup', array('options' => $this->site_publication_names_by_id, 'display_name' => 'Publication(s) to relate to page'));
 			}
+		}
+		else
+		{
+			$this->actions = array();
 		}
 	}
 	
@@ -353,23 +372,42 @@ class MigratorScreen4 extends MigratorScreen
 	{
 		foreach ($this->pages_using_news_modules as $k=>$page)
 		{
-			$npt_name = 'npt_page'.$k;
-			$value = $this->get_value($npt_name);
+			
 		}
-		echo 'in pre error check';
+	}
+	
+	function run_error_checks()
+	{
+		foreach ($this->pages_using_news_modules as $k=>$page)
+		{
+			$npt_name = 'npt_page'.$k;
+			$ar_name = $this->helper->get_allowable_relationship_for_page_type($this->get_value($npt_name));
+			$pubs_for_page = $this->get_value('pubs_for_page'.$k);
+			if (empty($pubs_for_page))
+			{
+				$this->set_error('pubs_for_page'.$k, 'You must choose a publication to relate to ' . $page->get_value('name'));
+			}
+			elseif ( (count($pubs_for_page) > 1) && ($this->helper->get_allowable_relationship_for_page_type($this->get_value($npt_name)) == 'page_to_publication') )
+			{
+				$this->set_error('pubs_for_page'.$k, 'You can only choose one publication to related to the page for the new page type ' . $npt_name);
+			}
+		}
 	}
 	
 	function process()
 	{
 		foreach ($this->pages_using_news_modules as $k=>$page)
 		{
-			$grp_name = 'page' . $k;
-			$cpt_name = 'cpt_page'.$k;
 			$npt_name = 'npt_page'.$k;
-			$npt_value = $this->get_value($npt_name);
-			$this->redirect_after_process = false;
+			$ar_name = $this->helper->get_allowable_relationship_for_page_type($this->get_value($npt_name));
+			$pubs_for_page = $this->get_value('pubs_for_page'.$k);
+			
+			reason_update_entity($k, $this->user_id, array('custom_page' => $this->get_value($npt_name)));
+			foreach ($pubs_for_page as $pub_id)
+			{
+				create_relationship($k, $pub_id, relationship_id_of($ar_name)); 
+			}
 		}
-		echo 'just finished process';
 	}
 	
 	function &get_values_to_pass()
@@ -421,7 +459,9 @@ class PublicationMigratorHelper
 	 * Defines known suggested page type mappings from old style news to publication module
 	 * @var array
 	 */
-	var $recommended_page_type_mapping = array('news' => 'publication', 'events_and_news_sidebar' => 'events_and_publication_sidebar');
+	var $recommended_page_type_mapping = array('news' => 'publication', 
+											   'events_and_news_sidebar' => 'events_and_publication_sidebar',
+											   'show_children_and_news_sidebar' => 'show_children_and_publication_sidebar');
 	/**
 	 * Determine state and init the appropriate migrator screen
 	 */
@@ -460,6 +500,19 @@ class PublicationMigratorHelper
 			else $site_name = '';
 		}
 		return $site_name;
+	}
+	
+	function get_allowable_relationship_for_page_type($page_type)
+	{
+		$pt = ($GLOBALS['_reason_page_types'][$page_type]);
+		foreach ($pt as $section)
+		{
+			if (is_array($section))
+			{
+				if (isset($section['related_mode']) && ($section['related_mode'] == true)) return 'page_to_related_publication';
+			}
+		}
+		return 'page_to_publication';
 	}
 	
 	/**
@@ -531,13 +584,7 @@ class PublicationMigratorHelper
 		$site_id = $this->get_site_id();
 		if (!isset($unattached_news_items))
 		{
-			$es = new entity_selector($site_id);
-			$es->limit_tables();
-			$es->limit_fields();
-			$es->add_type(id_of('news'));
-			$es->add_left_relationship_field('news_to_publication', 'entity', 'id', 'news_id');
-			$attached_news_items = $es->run_one();
-			
+			$attached_news_items =& $this->get_attached_news_items();
 			$es2 = new entity_selector($site_id);
 			$es2->limit_tables(array('entity', 'press_release', 'status'));
 			$es2->limit_fields(array('release_title'));
@@ -552,12 +599,42 @@ class PublicationMigratorHelper
 		return $unattached_news_items;
 	}
 	
+	function &get_attached_news_items()
+	{
+		static $attached_news_items;
+		$site_id = $this->get_site_id();
+		if (!isset($attached_news_items))
+		{
+			$site_pubs =& $this->get_site_publications();
+			$es = new entity_selector($site_id);
+			$es->limit_tables();
+			$es->limit_fields();
+			$es->add_type(id_of('news'));
+			if (!empty($site_pubs)) $es->add_left_relationship_field('news_to_publication', 'entity', 'id', 'pub_id', array_keys($site_pubs));
+			$attached_news_items = $es->run_one();
+		}
+		return $attached_news_items;
+	}
+	
 	function get_unattached_news_item_names_by_id()
 	{
 		$unattached_news_items =& $this->get_unattached_news_items();
 		if (!empty($unattached_news_items))
 		{
 			foreach ($unattached_news_items as $k=>$v)
+			{
+				$result[$k] = $v->get_value('release_title');
+			}
+		}
+		return (isset($result)) ? $result : '';
+	}
+	
+	function get_attached_news_item_names_by_id()
+	{
+		$attached_news_items =& $this->get_attached_news_items();
+		if (!empty($attached_news_items))
+		{
+			foreach ($attached_news_items as $k=>$v)
 			{
 				$result[$k] = $v->get_value('release_title');
 			}
@@ -755,8 +832,6 @@ else
 	$html .= ob_get_contents();
 	ob_end_clean();
 }
-
-
 $html .= '</body>';
 $html .= '</html>';
 echo $html;
