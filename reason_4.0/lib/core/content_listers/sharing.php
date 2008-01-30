@@ -16,9 +16,9 @@
 			$ass_es->limit_fields();
 			
 			//grab site name as well
-			if ($this->site_is_live()) $ass_es->add_right_relationship_field('owns', 'entity', 'state', 'site_state', '"Live"');
-			$ass_es->add_right_relationship_field('owns', 'entity', 'id', 'site_id');
 			$this->alias = $ass_es->add_right_relationship_field('owns', 'entity', 'name', 'site');
+			$ass_es->add_right_relationship_field('owns', 'entity', 'id', 'site_id');
+			if ($this->site_is_live()) $ass_es->add_right_relationship_field('owns', 'entity', 'state', 'site_state', '"Live"');
 			$this->apply_order_and_limits($ass_es);
 			$this->ass_vals = $ass_es->run_one();
 			
