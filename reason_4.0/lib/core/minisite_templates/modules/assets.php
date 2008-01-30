@@ -26,11 +26,6 @@
 			$this->es->set_env( 'site', $this->site_id);
 			$this->es->add_type( id_of('asset') );
 			$this->es->add_right_relationship( $this->page_id, relationship_id_of('page_to_asset') );
-			if ($this->params['limit_by_page_categories'])
-			{
-				$this->es->enable_multivalue_results();
-				$this->es->add_left_relationship_field('asset_to_category', 'entity', 'id', 'cat_id'); // grab category ids
-			}
 			if(!empty($this->params['order']))
 			{
 				$this->es->set_order( $this->params['order'] );
@@ -40,17 +35,17 @@
 				$this->es->add_rel_sort_field( $this->page_id, relationship_id_of('page_to_asset'));
 				$this->es->set_order( 'rel_sort_order' );
 			}
-			$result = $this->es->run_one();
+			if ($this->params['limit_by_page_categories']) $es_by_cat = carl_clone($this->es);
+			$this->assets = $this->es->run_one();
 			
-			if ($result)
+			if ($this->assets)
 			{
 				if ($this->params['limit_by_page_categories'])
 				{
-					$this->assets_by_category =& $this->init_by_category($result);
-				}
-				if (!$this->assets_by_category)
-				{
-					$this->assets =& $result;
+					$es_by_cat->enable_multivalue_results();
+					$es_by_cat->add_left_relationship_field('asset_to_category', 'entity', 'id', 'cat_id'); // grab category ids
+					$result = $es_by_cat->run_one();
+					if (!empty($result)) $this->assets_by_category =& $this->init_by_category($result);
 				}
 			}
 		} // }}}
@@ -82,8 +77,13 @@
 					$asset_cat_ids = (is_array($item->get_value('cat_id'))) ? $item->get_value('cat_id') : array($item->get_value('cat_id'));
 					$cat_intersect = array_intersect($asset_cat_ids, $cat_ids);
 					if (!empty($cat_intersect))
-					foreach ($cat_intersect as $cat_id)
-					$stack[$cat_id][$asset_id] =& $item;
+					{
+						foreach ($cat_intersect as $cat_id)
+						{
+							$stack[$cat_id][$asset_id] =& $item;
+						}
+						unset ($this->assets[$asset_id]); // it is in at least one category - zap from main asset list
+					}
 				}
 				foreach ($cat_ids as $cat_id)
 				{
@@ -99,13 +99,13 @@
 		
 		function has_content() // {{{
 		{
-			if( $this->assets || $this->assets_by_category) return true;
+			if( $this->assets || $this->assets_by_category ) return true;
 			else return false;
 		} // }}}
 		function run() // {{{
 		{
 			$markup = '';
-			
+			if ($this->assets) $markup .= $this->get_asset_markup($this->assets);
 			if ($this->assets_by_category)
 			{
 				foreach ($this->assets_by_category as $category_id=>$assets)
@@ -115,7 +115,6 @@
 					$markup .= $this->get_asset_markup($assets);
 				}
 			}
-			else $markup = $this->get_asset_markup($this->assets);
 			
 			if(!empty($markup))
 			{
