@@ -445,7 +445,7 @@ class FormController
 		$no_session = array();
 		foreach( $this->forms AS $f )
 		{
-			$no_session = array_merge( $no_session, $f->no_session );
+			$no_session = array_merge( (array) $no_session, (array) $f->no_session );
 		}
 		foreach( $this->_form_vars[ $this->_current_step ] AS $var )
 		{
