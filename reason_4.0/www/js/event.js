@@ -17,30 +17,42 @@ freqState[3] = 'month(s)';
 freqState[4] = 'year(s)';
 
 function init() {
-	try {
-		if (document.getElementById) {
-			var oSel = document.getElementById(oSelect);
-			var oSelIndex = oSel.options[oSel.selectedIndex].index;
-			// the default when page is loaded
-			for (i in menuState[oSelIndex]) {
+	if (document.getElementById)
+	{
+		var oSel = document.getElementById(oSelect);
+		var oSelIndex = oSel.options[oSel.selectedIndex].index;
+		
+		// the default when page is loaded
+		for (i in menuState[oSelIndex])
+		{
+			if (document.getElementById(menuState[oSelIndex][i]))
+			{
 				document.getElementById(menuState[oSelIndex][i]).style.display="none";
 			}
-			document.getElementById("frequencyComment").firstChild.nodeValue=freqState[oSelIndex];
-			// when the select is changed turn them all ON, then turn the correct ones OFF
-			oSel.onchange=function() {
-				for (i in menuState) {
-					for (j in menuState[i]) {
+		}
+		
+		document.getElementById("frequencyComment").firstChild.nodeValue=freqState[oSelIndex];
+		// when the select is changed turn them all ON, then turn the correct ones OFF
+		oSel.onchange=function()
+		{
+			for (i in menuState) {
+				for (j in menuState[i]) {
+					if (document.getElementById(menuState[i][j]))
+					{
 						document.getElementById(menuState[i][j]).style.display="";
 					}
 				}
-				var nSel = this.options[this.selectedIndex].index;
-				for (i in menuState[nSel]) {
-					document.getElementById(menuState[nSel][i]).style.display="none";
-			 	}
-				document.getElementById("frequencyComment").firstChild.nodeValue=freqState[nSel];
 			}
+			var nSel = this.options[this.selectedIndex].index;
+			for (i in menuState[nSel]) {
+				if (document.getElementById(menuState[nSel][i]))
+				{
+					document.getElementById(menuState[nSel][i]).style.display="none";
+				}
+			}
+			document.getElementById("frequencyComment").firstChild.nodeValue=freqState[nSel];
 		}
-	} catch(e) {}
+	} 
 	update_radio_buttons();
 }
 
