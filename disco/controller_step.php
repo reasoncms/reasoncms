@@ -53,8 +53,10 @@ class FormStep extends Disco
 	 * @access private
 	 * @return void
 	 */
-	function handle_transition()
+	function handle_transition( $kludge )
 	{
+		if(!empty($kludge))
+			trigger_error('$kludge is deprecated; ignoring value');
 		$this->processed = true;
 		$this->show_form = false;
 	}
