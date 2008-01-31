@@ -320,6 +320,14 @@
 			'post_foot' => 'textonly_toggle',
 			'main_post'=>'children',
 		),
+		'children_no_nav_no_title' => array(
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'main_head' => '',
+			'post_foot' => 'textonly_toggle',
+			'main_post'=>'children',
+		),
 		'databases' => array(
 			'main' => '',
 			'main_post' => 'databases',
