@@ -11,6 +11,21 @@
 .banner {
 	background-color: #748FC2;
 }
+
+table.banner {
+	width: 100%;
+	border: 0px;
+}
+
+table.banner td {
+	padding: 8px;
+	margin: 0px;
+}
+
+table.banner td.crumbs span {
+	white-space: nowrap;
+}
+
 .id {
 	right: 100%;
 	text-align: right;
