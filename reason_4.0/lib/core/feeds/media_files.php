@@ -9,9 +9,75 @@ class mediaFileFeed extends defaultFeed
 {
 	var $feed_class = 'mediaFileRSS';
 	var $default_num_works = 15;
+	var $_page = NULL; // NULL = unchecked; false = checked but bad; integer = checked and OK
 	//var $page_types = array('av');
+	function _get_page()
+	{
+		// note -- limiting to page only works for site-specific feeds to reduce spelunking
+		if($this->site_specific && $this->_page === NULL && !empty($this->request['page_id']))
+		{
+			$e = new entity($this->request['page_id']);
+			if($e->get_value('type') == id_of('minisite_page'))
+			{
+				$owner = $e->get_owner();
+				if($owner->id() == $this->site_id)
+				{
+					$this->_page = $e;
+				}
+			}
+		}
+		if(empty($this->_page))
+			$this->_page = false;
+		return $this->_page;
+	}
+	function get_feed_title()
+	{
+		if($p = $this->_get_page())
+		{
+			$this->feed_title = $p->get_value('name');
+			if($this->site_specific)
+			{
+				$this->feed_title .= ' :: ';
+				$this->feed_title .= $this->site->get_value( 'name' ).' ';
+			}
+			$this->feed_title .= ' :: ';
+			$this->feed_title .= $this->institution;
+		}
+		else
+		{
+			parent::get_feed_title();
+		}
+	}
+	function get_feed_description()
+	{
+		if($p = $this->_get_page())
+		{
+			if($p->get_value('description'))
+				$this->feed_description = $p->get_value('description');
+		}
+		if(empty($this->feed_description))
+		{
+			parent::get_feed_description();
+		}
+	}
+	function get_site_link()
+	{
+		if($p = $this->_get_page())
+		{
+			$this->site_link = 'http://'.REASON_HOST.build_url($p->id());
+		}
+		else
+		{
+			parent::get_site_link();
+		}
+	}
 	function alter_feed()
 	{
+		if($p = $this->_get_page())
+		{
+			$this->feed->set_page_id($p->id());
+		}
+		
 		$this->feed->set_item_field_map('title','id');
 		$this->feed->set_item_field_map('pubDate','work_publication_datetime');
 		$this->feed->set_item_field_map('enclosure','id');
@@ -41,9 +107,14 @@ class mediaFileFeed extends defaultFeed
 class mediaFileRSS extends ReasonRSS
 {
 	var $num_works = 15;
+	var $_page_id;
 	function set_num_works( $num )
 	{
 		$this->num_works = $num;
+	}
+	function set_page_id( $id )
+	{
+		$this->_page_id = $id;
 	}
 	function _build_rss() // {{{
 	{
@@ -52,14 +123,21 @@ class mediaFileRSS extends ReasonRSS
 		$works_es->set_num( $this->num_works );
 		$works_es->add_relation('show_hide.show_hide = "show"');
 		$works_es->set_order('media_work.media_publication_datetime DESC');
+		if(!empty($this->_page_id))
+		{
+			$works_es->add_right_relationship($this->_page_id, relationship_id_of('minisite_page_to_av'));
+		}
+		
 		$media_works = $works_es->run_one();
 		
 		foreach($media_works as $work)
 		{
-			$es = $this->es;
+			$es = carl_clone($this->es);
 			$es->add_right_relationship($work->id(),relationship_id_of('av_to_av_file'));
 			
 			$media_files = $es->run_one();
+			/* echo 'Files found: '.count($media_files)."\n";
+			echo 'Query: '.$es->get_one_query()."\n"; */
 			foreach($media_files as $media_file)
 			{
 				$media_file->set_value('work_publication_datetime',$work->get_value('media_publication_datetime'));
