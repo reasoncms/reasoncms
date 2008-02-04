@@ -140,7 +140,7 @@
 		function _get_cache_file( $key ) // {{{
 		{
 			$file = $this->dir.'/'.md5($key).'.cache';
-			echo '<!-- key = '.$key.' file = '.$file.'-->';
+			//echo '<!-- key = '.$key.' file = '.$file.'-->';
 			return $file;
 		} // }}}
 		function _clean_key( $key )
