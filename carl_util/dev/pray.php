@@ -65,9 +65,10 @@ if( !defined( '__PRAY' ) )
 				{
 					if (count ($data))
 					{
-						echo "<UL>\n";
+						echo '<ul>'."\n";
 						while (list ($key,$value) = each ($data))
 						{
+							echo '<li>';
 							$type=gettype($value);
 							if ($type=="array" || $type == "object")
 							{
@@ -77,7 +78,7 @@ if( !defined( '__PRAY' ) )
 									$type = get_class( $value );
 									$key = htmlentities( $key );
 								}
-								printf ("<li>(%s)<b>%s</b>:\n",$type, $key);
+								printf ("(%s)<strong>%s</strong>:\n",$type, $key);
 								pray ($value,$escape,$sf,$level + 1);
 							}
 							elseif (eregi ("function", $type))
@@ -90,7 +91,7 @@ if( !defined( '__PRAY' ) )
 										$key = htmlentities( $key );
 										$value = htmlentities( $value );
 									}
-									printf ("<li>(%s) <b>%s</b></LI>\n",$type, $key, $value);
+									printf ("(%s) <strong>%s</strong>",$type, $key, $value);
 									//    There doesn't seem to be anything traversable inside functions.
 								}
 							}
@@ -124,14 +125,15 @@ if( !defined( '__PRAY' ) )
 									$key = htmlentities( $key );
 									$value = nl2br(htmlentities( $value ));
 								}
-								printf ("<li>(%s) <b>%s</b> = %s</LI>\n",$type, $key, $value);
+								printf ("(%s) <strong>%s</strong> = %s",$type, $key, $value);
 							}
+							echo '</li>'."\n";
 						}
-						echo "</UL>\n";
+						echo "</ul>\n";
 					}
 					else
 					{
-						echo "(empty)";
+						echo '(empty)'."\n";
 					}
 				}
 			}
