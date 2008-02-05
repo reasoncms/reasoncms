@@ -89,7 +89,7 @@ func();
 } } }
 
 function startSlideshow() {
-initSlideShow($('mySlideshow'), mySlideData);
+initSlideShow($Prototype('mySlideshow'), mySlideData);
 }
 
 addLoadEvent(startSlideshow);
