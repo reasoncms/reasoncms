@@ -134,8 +134,10 @@ function carl_validdate($y,$m,$d)
  */
 function get_unix_timestamp( $value ) // {{{
 {
-	 $format = get_date_format( $value );
-	 
+	// in php5 the string 0000-00-00 00:00:00 returns a timestamp - in php4 it does not ... accordingly we do this:
+	if ($value === '0000-00-00 00:00:00') return false;
+	
+	$format = get_date_format( $value );	 
 	if( $format == 'mysql_datetime' )
 		$value = datetime_to_unix( $value, false );
 	elseif( $format == 'mysql_timestamp' )
