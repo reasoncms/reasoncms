@@ -26,13 +26,13 @@
 		var $years_out = 3;
 		var $sync_vals = array();
 		var $registration_page_types = array('event_registration','event_signup',);
-	
-		function init() // {{{
+		
+		function init_head_items()
 		{
-			parent::init();
-			
-			
-		} // }}}
+			$this->head_items->add_javascript(JQUERY_URL, true); // uses jquery - jquery should be at top
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js');
+		}
+		
 		function check_for_recurrence_field_existence()
 		{
 			if(!$this->_is_element('recurrence'))
@@ -70,7 +70,7 @@
 			{
 				$this->add_element('audiences_heading', 'comment', array('text'=>'<h4>Visibility</h4> To which groups do you wish to promote this event? (Please enter at least one)'));
 				$this->add_relationship_element('audiences', id_of('audience_type'), 
-	relationship_id_of('event_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED_AUDIENCE_MODEL,'sortable.sort_order ASC');
+				relationship_id_of('event_to_audience'),'right','checkbox',REASON_USES_DISTRIBUTED_AUDIENCE_MODEL,'sortable.sort_order ASC');
 			}
 			
 			$es = new entity_selector();
@@ -84,12 +84,10 @@
 			
 			if(!empty($result))
 			{
-				$this->add_relationship_element('categories', id_of('category_type'), 
-relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.name ASC');
+				$this->add_relationship_element('categories', id_of('category_type'), relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.name ASC');
 			}
 			
 			$this->add_element('date_and_time', 'comment', array('text'=>'<h4>Date, Time, and Duration of Event</h4>'));
-			//$this->add_element('repeat_head', 'comment', array('text'=>'<h4>Repeating Events</h4>'));
 			$this->add_element('info_head', 'comment', array('text'=>'<h4>General Information</h4>'));
 
 			// change element types if necessary
@@ -103,17 +101,16 @@ relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.na
 			for( $i = 10; $i <= 55; $i += 5 )
 				$minutes[$i] = $i;
 
-			$this->change_element_type( 'datetime','textDateTime_js',array( 'script_url' => REASON_HTTP_BASE_PATH.'js/ymd_to_dow_wom.js' ) );
+			$this->change_element_type( 'datetime','textDateTime' );
 			
 			$this->change_element_type( 'content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
-			$this->change_element_type( 'recurrence', 'select_no_sort_js', 
+			$this->change_element_type( 'recurrence', 'select_no_sort', 
 				array(	'options' => array(	'none'=>'Never (One-Time Event)', 
 											'daily'=>'Daily', 
 											'weekly'=>'Weekly', 
 											'monthly'=>'Monthly', 
 											'yearly'=>'Yearly'), 
-						'script_url' => REASON_HTTP_BASE_PATH.'js/event.js',
-						'add_null_value_to_top' => false,
+											'add_null_value_to_top' => false,
 					) );
 			$this->change_element_type( 'minutes', 'select_no_sort', array('options'=>$minutes) );
 			$this->change_element_type( 'hours', 'select_no_sort', array('options'=>$hours) );
@@ -308,5 +305,5 @@ relationship_id_of('event_to_event_category'),'right','checkbox',true,'entity.na
 			$this->do_event_processing();
 			parent::process();
 		} // }}}
-	}
+	}	
 ?>

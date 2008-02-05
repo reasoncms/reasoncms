@@ -49,6 +49,19 @@
 
 		var $actions = array( 'stay_here' => 'Save and Continue Editing' , 'assoc' => 'Save and Associate' , 'finish' => 'Save and Finish' );
 
+		function init( $externally_set_up = false)
+		{
+			$this->init_head_items();
+			parent::init();
+		}
+		
+		/**
+		 * Add head items to the head_items object if head_items need to be added by the content manager
+		 */
+		function init_head_items()
+		{
+		}
+		
 		/**
 		 * Monster function that sets up all the basics.
 		 *
@@ -208,6 +221,16 @@
 				}
 			}
 		} // }}}
+		
+		/**
+		 * Accept a reference to the head items so that content managers can interact with head items directly
+		 * @author Nathan White
+		 */
+		function set_head_items(&$head_items)
+		{
+			$this->head_items =& $head_items;
+		}
+		
 		/**
 		 * This function is used when you're editting an entity within editing another entity
 		 * @return void

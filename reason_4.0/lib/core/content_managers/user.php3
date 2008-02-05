@@ -14,10 +14,10 @@
 								'user_phone'=>'Phone',
 								'user_popup_alert_pref'=>'Logout Notification Preference',
 								);
-		function pre_show_form()
+
+		function init_head_items()
 		{
-			parent::pre_show_form();
-			echo '<script language="JavaScript" src="'.REASON_HTTP_BASE_PATH.'js/user_content_manager.js"></script>'."\n";
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'user_content_manager.js');
 		}
 		function alter_data()
 		{
