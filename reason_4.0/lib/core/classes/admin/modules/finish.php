@@ -160,6 +160,7 @@
 			}
 			$this->disco_item = new $content_handler;
 			$this->disco_item->admin_page =& $this->admin_page;
+			$this->disco_item->set_head_items( $this->head_items );
 			$this->disco_item->prep_for_run( $this->admin_page->site_id, $this->admin_page->type_id, $this->admin_page->id, $this->admin_page->user_id );
 			$this->disco_item->init();
 
