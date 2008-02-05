@@ -81,6 +81,10 @@ class mediaFileFeed extends defaultFeed
 		if($p = $this->_get_page())
 		{
 			$this->feed->set_page_id($p->id());
+			if($p->get_value('author') && valid_rss_author( $p->get_value('author') ))
+			{
+				$this->feed->set_channel_attribute( 'author', $p->get_value('author') );
+			}
 		}
 		
 		$this->feed->set_item_field_map('title','id');
