@@ -14,7 +14,7 @@ fx.Scroll.prototype = Object.extend(new fx.Base(), {
 	},
 
 	scrollTo: function(el){
-		var dest = Position.cumulativeOffset($(el))[1];
+		var dest = Position.cumulativeOffset($Prototype(el))[1];
 		var client = window.innerHeight || document.documentElement.clientHeight;
 		var full = document.documentElement.scrollHeight;
 		var top = window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop;
@@ -31,7 +31,7 @@ fx.Scroll.prototype = Object.extend(new fx.Base(), {
 fx.Text = Class.create();
 fx.Text.prototype = Object.extend(new fx.Base(), {
 	initialize: function(el, options) {
-		this.el = $(el);
+		this.el = $Prototype(el);
 		this.setOptions(options);
 		if (!this.options.unit) this.options.unit = "em";
 	},
@@ -54,7 +54,7 @@ fx.Combo.prototype = {
 	},
 
 	initialize: function(el, options) {
-		this.el = $(el);
+		this.el = $Prototype(el);
 		this.setOptions(options);
 		if (this.options.opacity) {
 			this.o = new fx.Opacity(el, options);
@@ -146,7 +146,7 @@ var Remember = new Object();
 Remember = function(){};
 Remember.prototype = {
 	initialize: function(el, options){
-		this.el = $(el);
+		this.el = $Prototype(el);
 		this.days = 365;
 		this.options = options;
 		this.effect();

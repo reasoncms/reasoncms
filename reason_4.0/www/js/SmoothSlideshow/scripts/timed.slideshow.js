@@ -8,7 +8,6 @@ var slideShowDelay = 9000;
 var articleLink = "";
 
 function initSlideShow(element, data) {
-	//alert ('hit this');
 	slideShowElement = element;
 	slideShowData = data;
 	element.style.display="block";
@@ -59,8 +58,8 @@ function nextSlideShow() {
 }
 
 function doSlideShow() {
-	if (lastIter > -1) lastImg = $('slideElement' + parseInt(lastIter));
-	curImg = $('slideElement' + parseInt(currentIter));
+	if (lastIter > -1) lastImg = $Prototype('slideElement' + parseInt(lastIter));
+	curImg = $Prototype('slideElement' + parseInt(currentIter));
 	
 	//curImg.currentOpacity.options.onComplete = function()     // Uncomment this wrapper for more delayed fade effect
 	//{
@@ -79,7 +78,7 @@ function doSlideShow() {
 }
 
 function showInfoSlideShow() {
-	articleLink.removeChild($('slideInfoZone'));
+	articleLink.removeChild($Prototype('slideInfoZone'));
 	var slideInfoZone = document.createElement('div');
 	slideInfoZone.setAttribute('id','slideInfoZone');
 	slideInfoZone.combo = new fx.Combo(slideInfoZone);
@@ -99,6 +98,6 @@ function showInfoSlideShow() {
 }
 
 function hideInfoSlideShow() {
-	$('slideInfoZone').combo.o.custom(0.7, 0);
+	$Prototype('slideInfoZone').combo.o.custom(0.7, 0);
 	//$('slideInfoZone').combo.h.custom(slideInfoZone.combo.h.el.offsetHeight, 0);
 }

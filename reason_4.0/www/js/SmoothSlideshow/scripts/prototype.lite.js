@@ -33,7 +33,7 @@ var __method = this;
 	}
 }
 
-function $() {
+function $Prototype() {
 	if (arguments.length == 1) return get$(arguments[0]);
 	var elements = [];
 	$c(arguments).each(function(el){
@@ -51,12 +51,12 @@ if (!window.Element) var Element = new Object();
 
 Object.extend(Element, {
 	remove: function(element) {
-		element = $(element);
+		element = $Prototype(element);
 		element.parentNode.removeChild(element);
 	},
 
 	hasClassName: function(element, className) {
-		element = $(element);
+		element = $Prototype(element);
 		if (!element) return;
 		var hasClass = false;
 		element.className.split(' ').each(function(cn){
@@ -66,13 +66,13 @@ Object.extend(Element, {
 	},
 
 	addClassName: function(element, className) {
-		element = $(element);
+		element = $Prototype(element);
 		Element.removeClassName(element, className);
 		element.className += ' ' + className;
 	},
   
 	removeClassName: function(element, className) {
-		element = $(element);
+		element = $Prototype(element);
 		if (!element) return;
 		var newClassName = '';
 		element.className.split(' ').each(function(cn, i){
@@ -85,14 +85,14 @@ Object.extend(Element, {
 	},
 
 	cleanWhitespace: function(element) {
-		element = $(element);
+		element = $Prototype(element);
 		$c(element.childNodes).each(function(node){
 			if (node.nodeType == 3 && !/\S/.test(node.nodeValue)) Element.remove(node);
 		});
 	},
 
 	find: function(element, what) {
-		element = $(element)[what];
+		element = $Prototype(element)[what];
 		while (element.nodeType != 1) element = element[what];
 		return element;
 	}

@@ -90,8 +90,8 @@ function prevSlideShow() {
 
 function doSlideShow(position) {
 	//alert(currentIter);
-	curImg = $('slideElement' + parseInt(currentIter));
-	lastImg = $('slideElement' + parseInt(lastIter));
+	curImg = $Prototype('slideElement' + parseInt(currentIter));
+	lastImg = $Prototype('slideElement' + parseInt(lastIter));
 	if (position == 1)
 	{
 		if (lastIter >= 0)
@@ -118,7 +118,7 @@ function doSlideShow(position) {
 }
 
 function showInfoSlideShow() {
-	slideShowElement.removeChild($('slideInfoZone'));
+	slideShowElement.removeChild($Prototype('slideInfoZone'));
 	var slideInfoZone = document.createElement('div');
 	slideInfoZone.setAttribute('id','slideInfoZone');
 	slideInfoZone.combo = new fx.Combo(slideInfoZone);
@@ -135,6 +135,6 @@ function showInfoSlideShow() {
 }
 
 function hideInfoSlideShow() {
-	$('slideInfoZone').combo.o.custom(0.7, 0);
+	$Prototype('slideInfoZone').combo.o.custom(0.7, 0);
 	//$('slideInfoZone').combo.h.custom(slideInfoZone.combo.h.el.offsetHeight, 0);
 }

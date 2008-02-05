@@ -57,7 +57,7 @@ fx.Base.prototype = {
 fx.Layout = Class.create();
 fx.Layout.prototype = Object.extend(new fx.Base(), {
 	initialize: function(el, options) {
-		this.el = $(el);
+		this.el = $Prototype(el);
 		this.el.style.overflow = "hidden";
 		this.iniWidth = this.el.offsetWidth;
 		this.iniHeight = this.el.offsetHeight;
@@ -93,7 +93,7 @@ Object.extend(Object.extend(fx.Width.prototype, fx.Layout.prototype), {
 fx.Opacity = Class.create();
 fx.Opacity.prototype = Object.extend(new fx.Base(), {
 	initialize: function(el, options) {
-		this.el = $(el);
+		this.el = $Prototype(el);
 		this.now = 1;
 		this.increase();
 		this.setOptions(options);
