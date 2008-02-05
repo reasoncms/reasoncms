@@ -231,12 +231,10 @@
 		function leftbar_item() // {{{
 		//leftbar if id is present
 		{
-		?>
-			<div class="managerNav">
-							<div class="roundedTop"> <img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>nw.gif" alt="" class="roundedCorner" /> 
-							</div>
-							<div class="managerList">
-		<?php
+			echo '<div class="managerNav">';
+			echo '<div class="roundedTop"> <img src="'. REASON_ADMIN_IMAGES_DIRECTORY .'nw.gif" alt="" class="roundedCorner" />';
+			echo '</div>'. "\n";
+			echo '<div class="managerList">';
 			if( !empty( $this->request[ CM_VAR_PREFIX . 'id' ] ) )
 			{
 				$old_name = new entity( $this->request[ CM_VAR_PREFIX . 'id' ] );
@@ -258,13 +256,11 @@
 				$this->show_borrows_links();
 				echo '</ul>';
 			}
-		?>
-							</div>
-							<div class="roundedBottom"> <img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>sw.gif" alt="" class="roundedCorner" /> 
-							</div>	
-			</div> 
-		<?php
-		} // }}}
+			echo '</div>';
+			echo '<div class="roundedBottom"> <img src="'. REASON_ADMIN_IMAGES_DIRECTORY .'sw.gif" alt="" class="roundedCorner" />'; 
+			echo '</div>';	
+			echo '</div>';
+		}
 		
 		function is_selected( $item ) // {{{
 		//helper for leftbar_item.  tells you if current item on list is selected
@@ -289,23 +285,17 @@
 			} // }}}
 			if( $this->cur_module == 'Associator' ) // {{{
 			{
-				foreach( $this->associations AS $ass )
-				{
-					if( $this->rel_id == $item )
+				if( $this->rel_id == $item )
 						return true;
 					else
 						return false;
-				}
 			} // }}}
 			if( $this->cur_module == 'ReverseAssociator' ) // {{{
 			{
-				foreach( $this->reverse_associations AS $ass )
-				{
-					if( $this->rel_id == $item )
+				if( $this->rel_id == $item )
 						return true;
 					else
 						return false;
-				}
 			} // }}}
 			return false;
 		} // }}}
@@ -572,7 +562,7 @@
 					echo '<strong>'.$page_name.'</strong>';
 				else
 					echo '<a href="' . $this->make_link( array( 'cur_module' => 'Delete' ) ) . '" class="nav">'.$page_name.'</a>';
-				echo '</li>';
+				echo '</li>' . "\n";
 			}
 			else
 			{
@@ -584,7 +574,7 @@
 				if( $this->cur_module != 'NoDelete' )
 					echo 'Deletion Not Available <span class="smallText">(<a href="' . $link . '">Explain</a>)</span>';
 				else echo 'Deletion Not Available';
-				echo '</li>';
+				echo '</li>' . "\n";
 			}
 			//echo '<li class="navItem"><a href="' . $this->make_link( array( 'cur_module' => 'Archive' ) ) . '" class="nav">History</a></li>';
 
@@ -616,7 +606,7 @@
 					echo '<a href="'.$this->make_link( array( 'cur_module' => 'Archive' ) ).'" class="nav">'.$page_name.'</a>';
 			}
 			else
-				echo '<li class="navItem">No Edits</li>';
+				echo '<li class="navItem">No Edits</li>' . "\n";
 			echo '</ul>';
 		} // }}}
 		function is_deletable() // {{{
@@ -711,68 +701,62 @@
 				array( 
 						'site_id' => $site->id()
 					 )
-				).'" class="nav">'.$site->get_value('name').'</a></li>';
+				).'" class="nav">'.$site->get_value('name').'</a></li>' . "\n";
 		}
 		function sitebar() // {{{
 		//if and entity is not selected, it shows a list of all the users sites in an option menu, otherwise just prints out
 		//the name of the current site.  This is seen in the bar at the top of the page
 		{
-			?>
-				<div class="sites"> 
-				<?php
-					if( !$this->id )
+			echo '<div class="sites">'; 
+			if( !$this->id )
+			{
+				$sites = $this->get_sites();
+				echo '<form action="?" name="siteSwitchSelect" class="jumpNavigation" method="get">'. "\n";
+				echo 'Site: <select name="site_id" class="jumpDestination siteMenu">' . "\n";
+				echo '<option value="">--</option>'. "\n";
+				foreach( array_keys($sites) AS $site_id )
+				{
+					echo '<option value="'.$site_id.'"';
+					if( $site_id == $this->site_id ) echo ' selected="selected"';
+					echo '>' . $sites[$site_id]->get_value( 'name' ) . '</option>' . "\n";
+				}
+				$this->show[ 'sites' ] = false;
+				echo '</select>';
+				if(isset($_GET['user_id']) && !empty($_GET['user_id']))
+				{
+					$user_id = turn_into_int($_GET['user_id']);
+					if (!empty($user_id)) echo '<input type="hidden" name="user_id" value="'.$user_id.'" />';
+				}
+				echo '<input type="submit" class="jumpNavigationGo" value="go" />';
+				$cur_site = $sites[ $this->site_id ];
+				$cur_site_base_url = $cur_site->get_value( 'base_url' );
+				$target = ($this->user->get_value('site_window_pref') == 'Popup Window') ? 'target="_blank" ' : '';
+				if(!empty($cur_site_base_url))
+				{
+					echo '<a href="http://'.REASON_HOST.$cur_site_base_url.'" '.$target.'class="publicSiteLink">Go to public site</a>';
+				}
+				echo '</form>';
+			}
+			else
+			{
+				$site = new entity($this->site_id);
+				if($site->get_values())
+				{
+					echo 'Site: <strong>' . $site->get_value( 'name' ) . '</strong>' . "\n";
+					if( $this->type_id )
 					{
-						$sites = $this->get_sites();
-						?>
-						<form name="form1">
-						Site: 
-						<select name="menu1" onChange="MM_jumpMenu('parent',this,0)" class="siteMenu">
-							<option value="">--</option>
-						<?php
-						$placeholder = '__this_is_the_site_id_placeholder__';
-						$link_parts = explode($placeholder,$this->make_link( array( 'site_id' => $placeholder, 'type_id' => '', 'id' => '', 'rel_id' => '', 'lister' => '', 'cur_module' => '' ) , true ));
-						if(empty($link_parts[1]))
-							$link_parts[1] = '';
-						foreach( array_keys($sites) AS $site_id )
+						$e = new entity( $this->type_id );
+						echo '<strong> :: </strong>' . prettify_string( $e->get_value( 'name' ) );
+						if( $this->id )
 						{
-							echo '<option value="'.$link_parts[0].$site_id.$link_parts[1].'"';
-							if( $site_id == $this->site_id )
-								echo ' selected="selected"';
-							echo '>' . $sites[$site_id]->get_value( 'name' ) . '</option>' . "\n";
-						}
-						$this->show[ 'sites' ] = false;
-						?>
-						</select>
-						<?php
-						$cur_site = $sites[ $this->site_id ];
-						if( $cur_site->get_value( 'base_url' ) )
-							echo '<a href="http://'.REASON_HOST.$cur_site->get_value('base_url').'" '.($this->user->get_value('site_window_pref') == 'Popup Window' ? 'target="_blank" ' : '').'class="publicSiteLink">Go to public site</a>';
-						?>
-						</form>
-						<?php
-					}
-					else
-					{
-						$site = new entity($this->site_id);
-						if($site->get_values())
-						{
-							echo 'Site: <strong>' . $site->get_value( 'name' ) . '</strong>' . "\n";
-							if( $this->type_id )
-							{
-								$e = new entity( $this->type_id );
-									echo '<strong> :: </strong>' . prettify_string( $e->get_value( 'name' ) );
-								if( $this->id )
-								{
-									$e = new entity( $this->id );
-										echo '<strong> :: </strong>' . $e->get_value( 'name' ) ;
-								}
-							}
+							$e = new entity( $this->id );
+							echo '<strong> :: </strong>' . $e->get_value( 'name' ) ;
 						}
 					}
-				?>
-				</div>
-				<?php
-		} // }}}
+				}
+			}
+			echo '</div>';
+		}
 		function user_has_site_admin_privileges() //{{{
 		{
 			if( user_is_a( $this->user_id, id_of( 'contribute_only_role' ) ) )
@@ -802,11 +786,8 @@
 
 			if( $types )
 			{
-				?>
-					<div class="typeNav"><strong>Add/Edit</strong>
-					<ul class="leftList">		
-				<?php
-				
+				echo '<div class="typeNav"><strong>Add/Edit</strong>';
+				echo '<ul class="leftList">' . "\n";
 				$mpid = id_of('minisite_page');
 				if(array_key_exists($mpid,$types))
 				{
@@ -837,7 +818,7 @@
 									'type_id' => $type->id() ,
 									'cur_module' => 'Lister' ) );
 					echo '<a href="'.$_SESSION[ 'listers' ][ $this->site_id ][ $type->id()  ].
-						'" class="nav">'.($type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' )).'</a></li>';
+						'" class="nav">'.($type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' )).'</a></li>' . "\n";
 				}
 				echo '</ul></div>';
 			}
@@ -860,7 +841,7 @@
 					$url = ($link->get_value('relative_to_reason_http_base') == 'true') ?
 						REASON_HTTP_BASE_PATH . $link->get_value('url') :
 						$link->get_value('url');
-					echo '<li class="navItem"><a href="'.$url.'" class="nav">'.$link->get_value('name').'</a></li>';
+					echo '<li class="navItem"><a href="'.$url.'" class="nav">'.$link->get_value('name').'</a></li>' . "\n";
 				}
 				echo '</ul></div>'."\n";
 			}
@@ -921,11 +902,8 @@
 			$sharables = $this->get_sharable_relationships();
 			if( $sharables )
 			{
-				?>
-					<div class="typeNav"><strong>Borrow</strong>
-					<ul class="leftList">		
-				<?php
-					
+				echo '<div class="typeNav"><strong>Borrow</strong>';
+				echo '<ul class="leftList">';
 				
 				foreach( $sharables AS $type )
 				{
@@ -949,7 +927,7 @@
 					echo '">';
 
 					echo '<a href="'. $_SESSION[ 'sharing_main' ][ $this->site_id ][ $type->id() ].
-						'" class="nav">'.($type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' )).'</a></li>';
+						'" class="nav">'.($type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' )).'</a></li>' . "\n";
 				}
 				echo '</ul></div>';
 			}
@@ -1014,10 +992,8 @@
 
 				if( user_is_a( $this->user_id, id_of( 'admin_role' ) ) )
 				{
-					?>
-					<div class="typeNav"><strong>Other Tools</strong>
-					<ul class="leftList">		
-					<?php
+					echo '<div class="typeNav"><strong>Other Tools</strong>';
+					echo '<ul class="leftList">';		
 					$urls = array(
 							'User Information' => 'user_info',
 							'Show Session Vars' => 'show_session',
@@ -1026,7 +1002,7 @@
 					);
 					foreach( $urls AS $name => $module_name )
 					{
-						echo '<li class="navItem"><a href="'.$this->make_link( array( 'cur_module' => $module_name ) ).'" class="nav">'.$name.'</a></li>';
+						echo '<li class="navItem"><a href="'.$this->make_link( array( 'cur_module' => $module_name ) ).'" class="nav">'.$name.'</a></li>' . "\n";
 					}
 					echo '</ul></div>';
 				}
@@ -1055,55 +1031,41 @@
 				}
 			}
 			echo '</strong></div>';
-		} // }}}
-		function title() // {{{
-		//title of the page
+		}
+		
+		function title()
 		{
 			echo '<div class="header3">'.$this->title.'</div>';
-		} // }}}
-		function main_area() // {{{
+		}
+		
+		function main_area()
 		//displays the main area of the page.  First does it's own stuff then calls the module to do it's stuff.
 		{
-			?>
-			<div class="contentArea">
-			<?php
-/*
-			if( $this->show[ 'breadcrumbs' ] )
-			{
-				$this->breadcrumbs();
-				echo '<br />';
-			}
-*/			
-			
+			echo '<div class="contentArea">';		
 			if( $this->show[ 'title' ] )
 			{
 				$this->title();
 			}
 			$this->module->run();
 			
-			?>
-			</div>
-			<?php
-		} // }}}
-		function banner() // {{{
+			echo '</div>';
+		}
+		
+		function banner()
 		//the top banner.  doesn't really do much except display some stuff and the show the user
 		{
-		?>
-			<table width="100%" border="0" cellpadding="8" cellspacing="0" class="banner">
-				<tr>
-					
-      <td class="crumbs"> <?php echo REASON_ADMIN_LOGO_MARKUP; ?> 
-        <span style="white-space:nowrap"><strong>:: <a href="<?php echo $this->make_link(array('cur_module'=>'about_reason')); ?>" class="bannerLink">Reason <?php echo REASON_VERSION; ?></a> ::</strong> <?php echo REASON_TAGLINE; ?></span></td>
-					<td class="id">
-					<?php
-						$this->show_user();
-					?>
-					</td>
-				</tr>
-			</table>
-		<?php
-		} // }}}
-		function show_user() // {{{
+			echo '<table class="banner">' . "\n";
+			echo '<tr>' . "\n";
+			echo '<td class="crumbs"> '.REASON_ADMIN_LOGO_MARKUP;
+			echo '<span><strong> :: <a href="'.$this->make_link(array('cur_module'=>'about_reason')).'" class="bannerLink">Reason '.REASON_VERSION.'</a> :: </strong>'.REASON_TAGLINE.'</span></td>' . "\n";
+			echo '<td class="id">';
+			$this->show_user();
+			echo '</td>' . "\n";
+			echo '</tr>' . "\n";
+			echo '</table>' . "\n";
+		}
+		
+		function show_user()
 		//if logged in user is an admin, displays a drop down of all users so that they can log in as that person (for debugging purposes).
 		//otherwise, tells the user who they are
 		{
@@ -1122,34 +1084,21 @@
 				$es->limit_fields('name');
 				$users = $es->run_one();
 				
-				echo '<form action="?" method="get">'."\n";
+				echo '<form action="?" class="jumpNavigation" name="userSwitchSelect" method="get">'."\n";
 				echo '<label for="user_switch_select">User</label>: ';
-				echo '<select name="user_id" class="siteMenu" id="user_switch_select">'."\n";
+				echo '<select name="user_id" class="jumpDestination siteMenu" id="user_switch_select">'."\n";
 				echo '<option value="">--</option>'."\n";
 				foreach( array_keys($users) AS $user_id )
 				{
-					//echo '<option value="'.$this->make_link( array( 'cur_module' => 'KillSession' , 'user_id' => $user->id() ) , false ) .'"';
 					echo '<option value="'. $user_id . '"';
 					if( $user_id == $this->user_id )
 						echo ' selected="selected"';
 					echo '>' . $users[$user_id]->get_value( 'name' ) . '</option>' . "\n";
 				}
 				echo '</select>';
-				// TODO: support arrays in GET
-				if(!empty($_GET))
-				{
-					foreach($_GET as $key=>$value)
-					{
-						if($key != 'user_id')
-						{
-							if(!is_array($value))
-							{
-								echo '<input type="hidden" name="'.$key.'" value="'.htmlspecialchars($value).'" />'."\n";
-							}
-						}
-					}
-				}
-				echo ' <input type="submit" name="go" value="go" />'."\n";
+				$this->echo_hidden_fields('user_id');
+				echo '<input type="submit" class="jumpNavigationGo" value="go" />'."\n";
+				//echo ' <input type="submit" name="go" value="go" />'."\n";
 				if ($show_logout) echo ' <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 				echo '</form>';
 			}
@@ -1180,10 +1129,11 @@
 			}
 			
 			// add collapse javasript (should be moved to module method
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'collapse.js');
+			$this->head_items->add_javascript(JQUERY_URL, true);
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'jump_navigation.js');
 		}
 		
-		function head() // {{{
+		function head()
 		//page head.  prints out basic top html stuff
 		{
 			echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'."\n";
@@ -1196,51 +1146,32 @@
 				echo ': '.strip_tags($this->title);
 			echo '</title>'."\n";
 			echo $this->head_items->get_head_item_markup();
-		?>
-		<script language="JavaScript" type="text/JavaScript">
-		<!--
-		function MM_jumpMenu(targ,selObj,restore){ //v3.0
-		  eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
-		  if (restore) selObj.selectedIndex=0;
+			echo '</head>' . "\n";
+			echo '<body>' . "\n";
+			if( $this->show[ 'banner' ] ) $this->banner();
+			if( $this->show[ 'sitebar' ] ) $this->sitebar();
+			echo '<table cellpadding="0" cellspacing="0" border="0" id="adminLayoutTable">';
+			echo '<tr><td valign="top" width="20%">';
 		}
-		//-->
-		</script>
-	</head>
-	<body>
-		<?php
-		if( $this->show[ 'banner' ] )
-			$this->banner();
-		if( $this->show[ 'sitebar' ] )
-			$this->sitebar();
-		?>
-		<table cellpadding="0" cellspacing="0" border="0" id="adminLayoutTable">
-			<tr>
-				<td valign="top" width="20%">
-			<?php
-		} // }}}
-		function finish_page() // {{{
+		
+		function finish_page()
 		{
 			
-		} // }}}
-		function foot() // {{{
-		//bottow o' page
+		}
+		
+		function foot()
+		//botton o' page
 		{
-			?>
-					</td>
-				</tr>
-			</table>
-		</body>
-	</html>
-			<?php
-		} // }}}
-		function new_column() // {{{
+			echo '</td></tr></table>' . "\n";
+			echo '</body>' . "\n";
+			echo '</html>' . "\n";
+		}
+		
+		function new_column()
 		//creates a new column
 		{
-			?>
-				</td>
-				<td valign="top">
-			<?php
-		} // }}}
+			echo '</td><td valign="top">';
+		}
 
 		function make_link( $params = '', $pass_rest = false ) // {{{
 		//this function should ALWAYS be used when creating a link in the admin site.  
@@ -1483,8 +1414,6 @@
 		function run() // {{{
 		//does it's thang
 		{
-			//$this->init();
-
 			$this->head();
 		
 			if( $this->show[ 'leftbar' ] )
@@ -1531,5 +1460,26 @@
 			print_r($this);
 			echo '</pre>';
 		} // }}}
+		
+		/**
+		 * @todo work with arrays and move into a utility file
+		 */
+		function echo_hidden_fields($ignore_value, $values = NULL )
+		{
+			$values = (isset($values)) ? $values : $_GET;
+			if(!empty($values))
+			{
+				foreach($_GET as $key=>$value)
+				{
+					if($key != $ignore_value)
+					{
+						if(!is_array($value))
+						{
+							echo '<input type="hidden" name="'.$key.'" value="'.htmlspecialchars($value).'" />'."\n";
+						}
+					}
+				}
+			}
+		}
 	}
 ?>
