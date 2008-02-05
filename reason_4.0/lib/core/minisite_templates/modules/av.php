@@ -321,6 +321,10 @@
 			parent::list_items();
 			$media_file_type = new entity(id_of('av_file'));
 			$feed_link = $this->parent->site_info->get_value('base_url').MINISITE_FEED_DIRECTORY_NAME.'/'.$media_file_type->get_value('feed_url_string');
+			if($this->params['limit_to_current_page'])
+			{
+				$feed_link .= '?page_id='.$this->parent->cur_page->id();
+			}
 			echo '<p class="podcast">';
 			echo '<a href="'.$feed_link.'" class="feedLink">Podcast Feed</a>';
 			echo ' <a href="itpc://'.HTTP_HOST_NAME.$feed_link.'" class="subscribe">Subscribe in iTunes</a>';
