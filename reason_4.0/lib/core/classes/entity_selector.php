@@ -934,16 +934,21 @@
 		 * @param int $type type_id (or blank for default)
 		 * @param string $status Either Live, Pending, Archived... (optional)
 		 * @param string $error optional error message
-		 * @return void
+		 * @return array
 		 */
 		function run_one($type = '', $status = 'Live' , $error = 'run_one error') // runs query for one type, returns array of results {{{
 		{
 			if( !$type )
 			{
-				if( $this->type[0] )
+				if( isset($this->type[0]) && $this->type[0] )
+				{
 					$type = $this->type[0] ;
-				else 
-					return '';
+				}
+				else
+				{
+					trigger_error('Entity Selector: No type available. Try using the method add_type($type_id) before calling run_one(), or call run_one() with the type id as the first argument.');
+					return array();
+				}
 			}
 			$results = array();
 			$r = db_query( $this->get_one_query( $type , $status) , $this->description.': '.$error );
