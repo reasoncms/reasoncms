@@ -118,7 +118,8 @@
 			
 			if(!empty($markup))
 			{
-				echo '<div class="assets">'."\n";
+				$class = ($this->assets_by_category) ? "assets assetsByCategory" : "assets";
+				echo '<div class="'.$class.'">'."\n";
 				echo '<h3>Related Documents</h3>'."\n";
 				echo $markup;
 				echo '</div>'."\n";
