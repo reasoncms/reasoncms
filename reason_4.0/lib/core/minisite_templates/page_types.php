@@ -74,6 +74,17 @@
 				'limit_to_current_page'=>false,
 			),
 		),
+		'audio_video_on_current_site_no_nav' => array(
+			'main_post' => array(
+				'module'=>'av',
+				'limit_to_current_page'=>false,
+			),
+			'navigation' => '',
+			'sub_nav' => '',
+			'sub_nav_2' => '',
+			'sub_nav_3' => '',
+			'post_foot' => 'textonly_toggle',
+		),
 		'audio_video_on_current_site_with_filters' => array(
 			'main_post' => array(
 				'module'=>'av_with_filters',
