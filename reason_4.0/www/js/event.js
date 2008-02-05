@@ -1,62 +1,112 @@
-// "oSelect" is the id of the controller select menu
-var oSelect="recurrenceElement";
-// "menuState" array is for the form elemens that should NOT be shown 
+/** 
+ * event.js - Show / hide fields based upon "Repeat this Event" setting in the Reason event content manager
+ *
+ * @author Nathan White
+ * @requires jQuery
+ */
 
 var menuState = new Array();
-menuState[0]= new Array("frequencyRow","sundayRow", "mondayRow", "tuesdayRow", "wednesdayRow", "thursdayRow", "fridayRow", "saturdayRow", "enddateRow", "monthlyrepeatRow");
-menuState[1]= new Array("sundayRow", "mondayRow", "tuesdayRow", "wednesdayRow", "thursdayRow", "fridayRow", "saturdayRow", "monthlyrepeatRow");
-menuState[2]= new Array("monthlyrepeatRow");
-menuState[3]= new Array("sundayRow", "mondayRow", "tuesdayRow", "wednesdayRow", "thursdayRow", "fridayRow", "saturdayRow");
-menuState[4]= new Array("sundayRow", "mondayRow", "tuesdayRow", "wednesdayRow", "thursdayRow", "fridayRow", "saturdayRow", "monthlyrepeatRow");
+menuState["none"]= new Array("frequencyRow","sundayRow", "mondayRow", "tuesdayRow", "wednesdayRow", "thursdayRow", "fridayRow", "saturdayRow", "enddateRow", "monthlyrepeatRow");
+menuState["daily"]= new Array("sundayRow", "mondayRow", "tuesdayRow", "wednesdayRow", "thursdayRow", "fridayRow", "saturdayRow", "monthlyrepeatRow");
+menuState["weekly"]= new Array("monthlyrepeatRow");
+menuState["monthly"]= new Array("sundayRow", "mondayRow", "tuesdayRow", "wednesdayRow", "thursdayRow", "fridayRow", "saturdayRow");
+menuState["yearly"]= new Array("sundayRow", "mondayRow", "tuesdayRow", "wednesdayRow", "thursdayRow", "fridayRow", "saturdayRow", "monthlyrepeatRow");
 
 var freqState = new Array();
-freqState[0] = '';
-freqState[1] = 'day(s)';
-freqState[2] = 'week(s)';
-freqState[3] = 'month(s)';
-freqState[4] = 'year(s)';
+freqState["none"] = '';
+freqState["daily"] = 'day(s)';
+freqState["weekly"] = 'week(s)';
+freqState["monthly"] = 'month(s)';
+freqState["yearly"] = 'year(s)';
 
-function init() {
-	if (document.getElementById)
+$(document).ready(function()
+{
+	hide_fields(); // hide the fields to start with	
+	$("select#recurrenceElement").change(function()
 	{
-		var oSel = document.getElementById(oSelect);
-		var oSelIndex = oSel.options[oSel.selectedIndex].index;
-		
-		// the default when page is loaded
-		for (i in menuState[oSelIndex])
-		{
-			if (document.getElementById(menuState[oSelIndex][i]))
-			{
-				document.getElementById(menuState[oSelIndex][i]).style.display="none";
-			}
-		}
-		
-		document.getElementById("frequencyComment").firstChild.nodeValue=freqState[oSelIndex];
-		// when the select is changed turn them all ON, then turn the correct ones OFF
-		oSel.onchange=function()
-		{
-			for (i in menuState) {
-				for (j in menuState[i]) {
-					if (document.getElementById(menuState[i][j]))
-					{
-						document.getElementById(menuState[i][j]).style.display="";
-					}
-				}
-			}
-			var nSel = this.options[this.selectedIndex].index;
-			for (i in menuState[nSel]) {
-				if (document.getElementById(menuState[nSel][i]))
-				{
-					document.getElementById(menuState[nSel][i]).style.display="none";
-				}
-			}
-			document.getElementById("frequencyComment").firstChild.nodeValue=freqState[nSel];
-		}
-	} 
-	update_radio_buttons();
+		update_display(this);
+		update_radio_buttons();
+	});
+	
+	$("input#datetimemonthElement").change(function()
+	{
+		update_radio_buttons();
+	});
+	$("input#datetimedayElement").change(function()
+	{
+		update_radio_buttons();
+	});
+	$("input#datetimeyearElement").change(function()
+	{
+		update_radio_buttons();
+	});
+});
+
+function show_fields()
+{	
+	for (var i = 0; i < menuState["none"].length; i++)
+	{
+		$("tr#"+menuState["none"][i]).show();
+	}
 }
 
-if (window.addEventListener)
-  window.addEventListener("load", init, true);
-else if (window.attachEvent)
-  window.attachEvent("onload", init);
+function hide_fields(index)
+{	
+	index = index || "none";
+	for (var i = 0; i < menuState[index].length; i++)
+	{
+		$("tr#"+menuState[index][i]).hide();
+	}
+}
+
+function update_display(selectElement)
+{
+	index = $(selectElement).val(); // determine what was selected
+	show_fields(); // show all fields
+	hide_fields(index); // hide fields as specified for the index in menuState
+	$("span#frequencyComment").text(freqState[index]);
+}
+
+// The remainer of this file used to be ymd_to_dow__wom.js
+
+// Scripts for Date Conversions
+// Year-Month-Day -> Day of Week and Week of Month
+// Developed for the Reason event content manager, Dec. 2003 by NF, BK, MR
+// jQuerified, Feb 1, 2008 - Nathan White
+function update_radio_buttons()
+{
+	var day = $("input#datetimedayElement").val();
+	var month = $("input#datetimemonthElement").val();
+	var year = $("input#datetimeyearElement").val();
+	var wom = Math.floor(day/7)+1;
+	var dow = ymd_to_dow( year,month,day );	
+	$("div#monthly_repeat_container label[for='radio_monthly_repeat_0']").text("On the "+wom+suffix( wom )+" "+dow+" of the month");
+	$("div#monthly_repeat_container label[for='radio_monthly_repeat_1']").text("On the "+day+suffix( day )+" of the month");
+}
+
+// append the correct pair of letters to a number
+function suffix( number )
+{
+	if( number > 10 && number < 20 ) return "th";
+	else if( number % 10 == 1 ) return "st";
+	else if( number % 10 == 2 ) return "nd";
+	else if( number % 10 == 3 ) return "rd";
+	else return "th";
+}
+
+// determine what day of the week the specified day falls on
+function ymd_to_dow(dayear, damonth, daday) {
+	damonth -= 1; // JavaScript months are zero-indexed
+	var date = new Date(dayear, damonth, daday);
+	var danewday = date.getDay();
+
+	if ( danewday < 0 ) return '(error!)';
+	if ( danewday == 0 ) return 'Sunday';
+	if ( danewday == 1 ) return 'Monday';
+	if ( danewday == 2 ) return 'Tuesday';
+	if ( danewday == 3 ) return 'Wednesday';
+	if ( danewday == 4 ) return 'Thursday';
+	if ( danewday == 5 ) return 'Friday';
+	if ( danewday == 6 ) return 'Saturday';
+	if ( danewday > 6 ) return '(error!)';
+}
