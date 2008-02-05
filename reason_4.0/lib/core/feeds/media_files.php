@@ -9,25 +9,30 @@ class mediaFileFeed extends defaultFeed
 {
 	var $feed_class = 'mediaFileRSS';
 	var $default_num_works = 15;
-	var $_page = NULL; // NULL = unchecked; false = checked but bad; integer = checked and OK
+	var $_page;
+	var $_page_check_state = 'unchecked';
 	//var $page_types = array('av');
 	function _get_page()
 	{
 		// note -- limiting to page only works for site-specific feeds to reduce spelunking
-		if($this->site_specific && $this->_page === NULL && !empty($this->request['page_id']))
+		if($this->site_specific && $this->_page_check_state === 'unchecked' && !empty($this->request['page_id']))
 		{
-			$e = new entity($this->request['page_id']);
-			if($e->get_value('type') == id_of('minisite_page'))
+			// using entity selector as easy way to enforce ownership rules & ensure acceptable state
+			$es = new entity_selector($this->site->id());
+			$es->add_type(id_of('minisite_page'));
+			$es->add_relation('entity.id = "'.$this->request['page_id'].'"');
+			$es->set_num(1);
+			$pages = $es->run_one();
+			if(!empty($pages))
 			{
-				$owner = $e->get_owner();
-				if($owner->id() == $this->site_id)
-				{
-					$this->_page = $e;
-				}
+				$this->_page = current($pages);
+				$this->_page_check_state = 'ok';
+			}
+			else
+			{
+				$this->_page_check_state = 'fail';
 			}
 		}
-		if(empty($this->_page))
-			$this->_page = false;
 		return $this->_page;
 	}
 	function get_feed_title()
@@ -92,7 +97,12 @@ class mediaFileFeed extends defaultFeed
 		$this->feed->es->add_relation('url.url != ""');
 		$this->feed->es->add_relation('av.media_is_progressively_downloadable != "false"');
 		$this->feed->es->set_order('av.av_part_number ASC');
+		$ok_formats = array_keys(reason_get_valid_formats_for_podcasting());
+		$ok_formats = array_map('addslashes',$ok_formats);
+		$this->feed->es->add_relation('av.media_format IN ("'.implode('","',$ok_formats).'")');
+		$this->feed->es->set_site(NULL);
 		$this->feed->es->set_num(-1);
+
 		if(!empty($this->request['num_works']))
 		{
 			$this->feed->set_num_works($this->request['num_works']);
@@ -101,6 +111,10 @@ class mediaFileFeed extends defaultFeed
 		{
 			$this->feed->set_num_works($this->default_num_works);
 		}
+		if($this->_page_check_state == 'fail')
+		{
+			$this->feed->nullify_items();
+		}
 	}
 }
 
@@ -108,6 +122,7 @@ class mediaFileRSS extends ReasonRSS
 {
 	var $num_works = 15;
 	var $_page_id;
+	var $_nullify_items = false;
 	function set_num_works( $num )
 	{
 		$this->num_works = $num;
@@ -116,7 +131,37 @@ class mediaFileRSS extends ReasonRSS
 	{
 		$this->_page_id = $id;
 	}
+	function nullify_items()
+	{
+		$this->_nullify_items = true;
+	}
 	function _build_rss() // {{{
+	{
+		if(!$this->_nullify_items)
+		{
+			$this->_get_av_items();
+		}
+		
+		//pray($this->items);
+		//echo $this->es->get_one_query();
+
+		$this->_out = '<?xml version="1.0" encoding="UTF-8"?'.'>'."\n".'<rss version="2.0">'."\n".'<channel>'."\n\n";
+		foreach( $this->_channel_attr_values AS $attr => $value )
+			$this->_out .= '<'.$attr.'>'.$this->_clean_value( $value ).'</'.$attr.'>'."\n";
+		$this->_out .= "\n";
+		
+		if( !empty( $this->items ) )
+		{
+			foreach( $this->items AS $item )
+			{
+				$this->generate_item( $item );
+			}
+		}
+
+		$this->_out .= '</channel>'."\n".'</rss>';
+		
+	} // }}}
+	function _get_av_items()
 	{
 		$works_es = new entity_selector($this->site_id);
 		$works_es->add_type( id_of('av') );
@@ -147,25 +192,7 @@ class mediaFileRSS extends ReasonRSS
 				$this->items[$media_file->id()] = $media_file;
 			}
 		}
-		//pray($this->items);
-		//echo $this->es->get_one_query();
-
-		$this->_out = '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<rss version="2.0">'."\n".'<channel>'."\n\n";
-		foreach( $this->_channel_attr_values AS $attr => $value )
-			$this->_out .= '<'.$attr.'>'.$this->_clean_value( $value ).'</'.$attr.'>'."\n";
-		$this->_out .= "\n";
-		
-		if( !empty( $this->items ) )
-		{
-			foreach( $this->items AS $item )
-			{
-				$this->generate_item( $item );
-			}
-		}
-
-		$this->_out .= '</channel>'."\n".'</rss>';
-		
-	} // }}}
+	}
 	function make_enclosure($item, $attr, $value)
 	{
 		if($item->get_value('url'))
@@ -191,7 +218,7 @@ class mediaFileRSS extends ReasonRSS
 	function get_additional_enclosure_arributes( $item )
 	{
 		$return = array();
-		$valid_formats = array('Quicktime'=>'video/quicktime','MP3'=>'audio/mpeg');
+		$valid_formats = reason_get_valid_formats_for_podcasting();
 		if(array_key_exists($item->get_value('media_format'), $valid_formats))
 		{
 			$return[] = 'type="'.$valid_formats[$item->get_value('media_format')].'"';
@@ -231,7 +258,7 @@ class mediaFileRSS extends ReasonRSS
 
 function validate_media_format_for_rss_enclosure( $id )
 {
-	$valid_formats = array('Quicktime'=>'video/quicktime','MP3'=>'audio/mpeg');
+	$valid_formats = reason_get_valid_formats_for_podcasting();
 	$entity = new entity( $id );
 	if(array_key_exists($entity->get_value('media_format'), $valid_formats))
 	{
@@ -242,5 +269,14 @@ function validate_media_format_for_rss_enclosure( $id )
 		return false;
 	}
 }
-
+/**
+ * Get an array of formats considered acceptable to place in a podcast
+ *
+ * Keys are values in the Reason field media_format
+ * Values are MIME types
+ */
+function reason_get_valid_formats_for_podcasting()
+{
+	return array('Quicktime'=>'video/quicktime','MP3'=>'audio/mpeg');
+}
 ?>
