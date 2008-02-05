@@ -6,6 +6,7 @@
 		{
 			$this->admin_page =& $page;
 		} // }}}
+		
 		function init() // {{{
 		{
 			if( empty( $this->admin_page->id ) )
@@ -26,12 +27,7 @@
 
 			$this->admin_page->set_show( 'title',false );
 			$this->admin_page->set_show( 'breadcrumbs', false );
-		} // }}}
-		function run() // {{{
-		{
-/*			echo '<table cellpadding="4"><tr><td valign="top">';
-			$this->show_editor_navigation();
-			echo '</td><td valign="top">';*/
+			
 			reason_include_once( 'content_managers/default.php3' );
 			$content_handler = $GLOBALS[ '_content_manager_class_names' ][ 'default.php3' ];
 			if ( $this->type_entity->get_value( 'custom_content_handler' ) )
@@ -47,12 +43,17 @@
 					trigger_error('Content handler not found in '.$include_file);
 				}
 			}
+			
 			$this->disco_item = new $content_handler;
 			$this->disco_item->admin_page =& $this->admin_page;
+			$this->disco_item->set_head_items( $this->head_items );
 			$this->disco_item->prep_for_run( $this->admin_page->site_id, $this->admin_page->type_id, $this->admin_page->id, $this->admin_page->user_id );
 			$this->disco_item->init();
+		} // }}}
+		
+		function run() // {{{
+		{
 			echo '<h3 class="pageTitle editor">'.$this->admin_page->title.'</h3>';
-
 			$this->disco_item->run();
 		} // }}}
 	} // }}}
