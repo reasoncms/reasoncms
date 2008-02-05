@@ -14,6 +14,7 @@
 		{
 			$this->admin_page =& $page;
 		} // }}}
+		
 		function list_header( ) // {{{
 		{
 			echo '<table border="0" cellpadding="0" cellspacing="0">'."\n".'<tr>';
@@ -197,6 +198,7 @@
 		} // }}}
 		function init() // {{{
 		{
+			$this->verify_parameters();
 			reason_include_once ( 'classes/filter.php' );
 			reason_include_once ( 'classes/viewer.php' );
 			reason_include_once ( 'classes/entity_selector.php' );
@@ -237,8 +239,16 @@
 					}
 				}
 			}
-
+				
 			$this->viewer = new $content_viewer;
+			
+			// check if the viewer pays attention to hierarchy and if so, add collapse javascript
+			// this is not exactly pretty, but better than including collapse.js on every page.
+			if (array_key_exists('children',get_object_vars($this->viewer)))
+			{
+				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'collapse.js');
+			}
+			
 			$this->viewer->set_page( $this->admin_page );
 			$this->viewer->init( $this->admin_page->site_id, $this->admin_page->type_id, isset($lister) ? $lister : '' ); // }}}
 			$this->filter = new filter;
@@ -257,5 +267,17 @@
 			echo '</td></tr></table>';
 			// echo '<a href="scripts/tab_delimited_export.php?site_id='.$this->admin_page->site_id.'&amp;type_id='.$this->admin_page->type_id.'">Export Spreadsheet (Tab Delimited)</a>';
 		} // }}}
+		
+		/**
+		 * Make sure conditions are okay for the lister to run and if not, redirect appropriately
+		 */
+		function verify_parameters()
+		{
+			if (empty($this->admin_page->site_id) && ($this->admin_page->cur_module == 'Lister') )
+			{
+				header('Location: ' . carl_make_redirect(array('cur_module' => '')));
+				exit;
+			}
+		}
 	} // }}}
 ?>
