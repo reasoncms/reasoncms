@@ -48,7 +48,7 @@
 		var $_all_fields = array('carlnetid','ou','cn','sn','givenName','eduPersonNickname','mail','title',
 				'eduPersonPrimaryAffiliation','carlOfficeLocation','carlCampusPostalAddress','telephoneNumber','carlSpouse',
 				'homePostalAddress', 'carlStudentPermanentAddress', 'homePhone', 'carlMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
-				'eduPersonAffiliation','carlStudentStatus','carlGraduationYear','carlCohortYear','carlHomeEmail');
+				'eduPersonAffiliation','carlStudentStatus','carlGraduationYear','carlCohortYear','carlHomeEmail', 'carlHidePersonalInfo');
 		var $_dept_fields = array('ou','description','telephonenumber','facsimiletelephonenumber');
 		var $_dept_base_dn = 'dc=carleton,dc=edu';
 		var $prospie_base_dn = 'ou=prospects,dc=carleton,dc=edu';
