@@ -1,17 +1,18 @@
 <?php
 	reason_include_once ( 'function_libraries/url_utils.php' );
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'FormManager';
+	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 
 	class FormManager extends ContentManager
 	{
 		var $form_prefix = 'form_'; // default prefix for thor db tables
 		var $type = 'email';
 
-                function init()
-                {
-                        parent::init();
-			$this->ensure_temp_db_table_exists();
-                }
+		function init( $externally_set_up = false)
+		{
+			parent::init();
+		$this->ensure_temp_db_table_exists();
+		}
 		
 		function alter_data()
 		{
@@ -75,7 +76,41 @@
 			{
 				$this->set_error('email_of_recipient', 'Because the data is not being saved to a database, you must provide an valid e-mail address or netID' );
 			}
-		}	
+			
+			if($this->get_value('email_of_recipient'))
+			{
+				$bad_usernames = array();
+				$addresses = explode(',',$this->get_value('email_of_recipient'));
+				foreach($addresses as $address)
+				{
+					$address = trim($address);
+					$num_results = preg_match( '/^([-.]|\w)+@([-.]|\w)+\.([-.]|\w)+$/i', $address );
+					if ($num_results <= 0)
+					{
+						$dir = new directory_service();
+						$result = $dir->search_by_attribute('ds_username', $address, array('ds_email'));
+						$dir_value = $dir->get_first_value('ds_email');
+						if(empty($dir_value))
+						{
+							$bad_usernames[] = htmlspecialchars($address,ENT_QUOTES,'UTF-8');
+						}
+					}
+				}
+				if(!empty($bad_usernames))
+				{
+					$joined_usernames = '<em>'.implode('</em>, <em>',$bad_usernames).'</em>';
+					if(count($bad_usernames) > 1 )
+					{
+						$msg = 'The usernames '.$joined_usernames.' do not have a email addresses associated with them. Please try different usernames or full email addresses.';
+					}
+					else
+					{
+						$msg = 'The username '.$joined_usernames.' does not have an email address associated with it. Please try a different username or a full email address.';
+					}
+					$this->set_error('email_of_recipient',$msg);
+				}
+			}
+		}
 		
 		function pre_show_form()
 		{
