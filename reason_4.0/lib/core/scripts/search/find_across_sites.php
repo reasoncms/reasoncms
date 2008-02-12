@@ -17,7 +17,7 @@ class DiscoSearcher extends Disco
 {
 	function where_to()
 	{
-		return ( '?search_string=' . urlencode($this->get_value('search_string')));
+		return ( '?search_string=' . urlencode($this->get_value('search_string') ) . '&type=' . urlencode($this->get_value('type') ) );
 	}
 }
 
@@ -47,8 +47,23 @@ echo '<style type="text/css">
 </style>';
 echo '</head><body>';
 echo '<a name="top" id="top"></a><h1>Find Something in Reason</h1><p>This tool will find the entities in Reason that contain the search string in any field. This tool is not case sensitive.</p>';
+
+$es = new entity_selector();
+$es->add_type(id_of('type'));
+$es->set_order('entity.name ASC');
+$types = $es->run_one();
+$type_names = array('All');
+foreach($types as $id=>$type)
+{
+	$type_names[$id] = $type->get_value('name');
+}
 $d = new DiscoSearcher;
 $d->add_element('search_string');
+$d->add_element('type','select_no_sort',array('options'=>$type_names));
+if(!empty($_REQUEST['type']))
+{
+	$d->set_value('type', $_REQUEST['type']);
+}
 if(!empty($_REQUEST['search_string']))
 {
 	$d->set_value('search_string', $_REQUEST['search_string']);
@@ -59,14 +74,24 @@ if(!empty($_REQUEST['search_string']))
 {
 	$sql_search_string = str_replace('"','\"',$_REQUEST['search_string']);
 	$use_fields = array('id','name','last_modified');
-	$es = new entity_selector();
-	$es->add_type(id_of('type'));
-	$types = $es->run_one();
 
 	echo '<h2>Search results</h2>';
 	$hit_count = 0;
 	$txt = '';
 	
+	if(!empty($_REQUEST['type']))
+	{
+		if(isset($types[$_REQUEST['type']]))
+		{
+			$only_type = $types[$_REQUEST['type']];
+			$types = array($_REQUEST['type'] => $only_type);
+		}
+		else
+		{
+			$types = array();
+			echo 'Not a type';
+		}
+	}
 	foreach($types as $type)
 	{
 		//echo $type->get_value('name').'<br />';
@@ -111,6 +136,10 @@ if(!empty($_REQUEST['search_string']))
 					if($field == 'last_modified')
 					{
 						$txt .= '<td>'.date('j M Y',get_unix_timestamp($e->get_value($field))).'</td>'."\n";
+					}
+					elseif($field == 'name')
+					{
+						$txt .= '<td>'.$e->get_display_name().'</td>'."\n";
 					}
 					else
 					{
