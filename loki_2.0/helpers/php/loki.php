@@ -212,7 +212,7 @@ class Loki2
 				default_type_regexp : new RegExp('<?php echo $this->_default_type_regexp; ?>'),
 				use_https : <?php echo $this->_asset_protocol == 'https://' ? 'true' : 'false'; ?>,
 				use_reason_integration : false,
-				   use_xhtml : true,
+				use_xhtml : true,
 				sanitize_unsecured : <?php echo (($this->_sanitize_unsecured) ? 'true' : 'false') ?>,
 				options : options,
 				allowable_tags : <?php echo $this->_js_allowable_tags() ?>
