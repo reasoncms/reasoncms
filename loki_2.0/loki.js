@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0rc1
+// Loki WYSIWIG Editor 2.0rc2
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-01-29 14:34:16 
+// Compiled 2008-02-05 15:23:22 
 // http://loki-editor.googlecode.com/
 
 
@@ -1799,6 +1799,10 @@ Util.Array.Methods = {
 	{
 		// XXX: any more efficient way to do this using Array.splice?
 		
+		if (b.length === undefined || b.length === null) {
+			throw new TypeError("Cannot append a non-iterable to an array.");
+		}
+		
 		var len = b.length;
 		for (var i = 0; i < len; i++) {
 			if (i in b) {
@@ -2030,6 +2034,7 @@ Util.Node.get_nearest_bl_ancestor_element = function(node)
 {
 	return Util.Node.get_nearest_ancestor_node(node, Util.Node.is_block_level_element);
 };
+
 /**
  * Gets the given node's nearest ancestor which is an element whose
  * tagname matches the one given.
@@ -2116,6 +2121,74 @@ Util.Node.get_offset = function get_node_offset_within_parent(node)
 Util.Node.curry_is_tag = function(tag)
 {
 	return function(node) { return Util.Node.is_tag(node, tag); };
+}
+
+/**
+ * Attempts to find the window that corresponds with a given node.
+ * @param {Node}  node   the node whose window is desired
+ * @return {Window}   the window object if it could be found, otherwise null.
+ */
+Util.Node.get_window = function find_window_of_node(node)
+{
+	var doc = (node.nodeType == Util.Node.DOCUMENT_NODE)
+		? node
+		: node.ownerDocument;
+	var seen;
+	var stack;
+	var candidate;
+	
+	if (!doc)
+		return null;
+	
+	if (doc._loki__document_window) {
+		return doc._loki__document_window;
+	}
+	
+	function accept(w)
+	{
+		if (!w)
+			return false;
+		
+		if (!seen.contains(w)) {
+			seen.push(w);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	function get_elements(tag)
+	{
+		return candidate.document.getElementsByTagName(tag);
+	}
+	
+	seen = [];
+	stack = [window];
+	
+	accept(window);
+	
+	while (candidate = stack.pop()) { // assignment intentional
+		if (candidate.document == doc) {
+			// found it!
+			doc._loki__document_window = candidate;
+			return candidate;
+		}
+		
+		if (candidate.parent != candidate && accept(candidate)) {
+			stack.push(candidate);
+		}
+		
+		
+		['FRAME', 'IFRAME'].map(get_elements).each(function (frames) {
+			for (var i = 0; i < frames.length; i++) {
+				if (accept(frames[i].contentWindow))
+					stack.push(frames[i].contentWindow);
+			}
+		});
+	}
+	
+	// guess it couldn't be found
+	return null;
 }
 
 Util.Node.non_whitespace_regexp = /[^\f\n\r\t\v]/gi;
@@ -2441,7 +2514,16 @@ Util.Element = {
 	 */
 	is_block_level: function is_block_level_element(window, elem)
 	{
-		return Util.Element.get_computed_style(window, elem).display == 'block';
+		var s = Util.Element.get_computed_style(window, elem);
+		
+		try {
+			return s.display == 'block';
+		} catch (e) {
+			var ex = new Error('Unable to get the computed style for ' +
+				Util.Node.get_debug_string(elem) + '.');
+			ex.cause = e;
+			throw ex;
+		}
 	},
 	
 	/**
@@ -3379,8 +3461,8 @@ Util.Block = {
 				
 				function replace_with_children(node)
 				{
-					for (var i = 0; i < node.childNodes.length; i++) {
-						node.parentNode.insertBefore(node.childNodes[i], node);
+					while (node.firstChild) {
+						node.parentNode.insertBefore(node.firstChild, node);
 					}
 					
 					node.parentNode.removeChild(node);
@@ -8714,23 +8796,6 @@ Util.URI.append_to_query = function(uri, params)
 }
 
 /**
- * Converts the given uri to either https or http, depending on value of
- * use_https.
- * 
- * @param	uri			the uri
- * @param 	use_https	(boolean) whether to use https or http
- */
-Util.URI.make_https_or_http = function(uri, use_https)
-{
-	if ( this._use_https )
-		uri = uri.replace(new RegExp('^http:', ''), 'https:');
-	else
-		uri = uri.replace(new RegExp('^https:', ''), 'http:');
-	mb('Util.URI.make_https_or_http: made uri:', uri);
-	return uri
-};
-
-/**
  * Strips leading "https:" or "http:" from a uri, to avoid warnings about
  * mixing https and http. E.g.: https://apps.carleton.edu/asdf ->
  * //apps.carleton.edu/asdf.
@@ -10612,6 +10677,30 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 			node.tagName in allowable_tags);
 	}
 	
+	function is_block(node)
+	{
+		var wdw = Util.Node.get_window(node);
+		if (wdw) {
+			try {
+				return Util.Element.is_block_level(wdw, node);
+			} catch (e) {
+				if (typeof(console) == 'object' && console.firebug) {
+					console.error(e);
+					console.warn('Warning: Loki was unable to determine the',
+						'block-level status of', node, 'using',
+						'computed CSS; falling back to tag name.');
+				}
+			}
+		} else {
+			if (typeof(console) == 'object' && console.firebug) {
+				console.warn('Warning: Loki was unable to find the window of',
+					node, '; using tag name to get block-level status.');
+			}
+		}
+		
+		return Util.Node.is_block_level_element(node);
+	}
+	
 
 	var tests =
 	[
@@ -10783,8 +10872,9 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 					}
 				}
 				
-				return has_tagname(node, ['BR']) &&
+				return has_tagname(node, ['BR']) && is_block(node.parentNode) &&
 					get_last_relevant_child(node.parentNode) == node;
+				
 			},
 			action: remove_node
 		},
@@ -10846,7 +10936,7 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 				try {
 					tests[i].action(node, result);
 				} catch (e) {
-					if (console) {
+					if (typeof(console) == 'object') {
 						if (console.warn)
 							console.warn(e);
 						else if (console.log)
@@ -10865,7 +10955,7 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 	}
 	catch(e)
 	{
-		if (console) {
+		if (typeof(console) == 'object') {
 			if (console.warn)
 				console.warn(e);
 			else if (console.log)
@@ -11047,7 +11137,7 @@ UI.Clipboard_Helper = function()
 		return Util.Selection.is_collapsed(sel);
 	};
 
-	this.cut = function()
+	this.cut = function clipboard_cut()
 	{
 		self.copy();
 		var sel = Util.Selection.get_selection(self._loki.window);
@@ -11056,13 +11146,18 @@ UI.Clipboard_Helper = function()
 		self._loki.focus();
 	};
 
-	this.copy = function()
+	this.copy = function clipboard_copy()
 	{
 		// Get the HTML to copy
 		var sel = Util.Selection.get_selection(self._loki.window);
 		var rng = Util.Range.create_range(sel);
 		var html = Util.Range.get_html(rng);
 		//var text = rng.toString();
+		
+		if (Util.Selection.is_collapsed(sel)) {
+			// If nothing is actually selected; do not overwrite the clipboard.
+			return;
+		}
 
 		// Unmassage and clean HTML
 		var container = self._loki.document.createElement('DIV');
@@ -11104,7 +11199,7 @@ UI.Clipboard_Helper = function()
 		self._loki.focus();
 	};
 
-	this.paste = function()
+	this.paste = function clipboard_paste()
 	{
 		try // IE
 		{
@@ -11168,11 +11263,24 @@ UI.Clipboard_Helper = function()
 			'    <li>Restart your browser.</li>';
 		*/
 	};
+	
+	function _show_gecko_privileges_warning()
+	{
+		var message = "Your browser requires that you give explicit permission for " +
+			"your clipboard to be accessed, so you may see a security warning " +
+			"after dismissing this message. You are free to deny this permssion, " +
+			"but if you do, you may be unable to cut, copy, or paste into this " +
+			"document.";
+		
+		UI.Messenger.display_once_per_duration('gecko clipboard warning',
+			message, 45);
+	}
 
-	var _gecko_copy = function(html)
+	function _gecko_copy(html)
 	{
 		try
 		{
+			_show_gecko_privileges_warning();
 			self._loki.owner_window.GeckoClipboard.set(html);
 		}
 		catch(e)
@@ -11181,7 +11289,7 @@ UI.Clipboard_Helper = function()
 		}
 	};
 
-	var _ie_copy = function(html)
+	function _ie_copy(html)
 	{
 		try
 		{
@@ -11204,10 +11312,11 @@ UI.Clipboard_Helper = function()
 		}
 	};
 
-	var _gecko_paste = function()
+	function _gecko_paste()
 	{
 		try
 		{
+			_show_gecko_privileges_warning();
 			var data = self._loki.owner_window.GeckoClipboard.get();
 			
 			var html = (data.type == 'text/html')
@@ -11246,7 +11355,7 @@ UI.Clipboard_Helper = function()
 		}
 	};
 
-	var _ie_paste = function()
+	function _ie_paste()
 	{
 		try
 		{
@@ -15742,23 +15851,44 @@ UI.Messenger = {
 	 * exists, the message is not displayed.
 	 * @param {string}  id       a fixed ID that can be used to identify this
 	 *                           message in a cookie name
-	 * @param {string}  message  the mesage to be displayed
+	 * @param {string}  message  the message to be displayed
 	 * @return {boolean} true if the message was actually displayed, false if
 	 *                   not
 	 */
 	display_once: function display_message_once_per_session(id, message)
 	{
-		var cookie_name = '_loki2_pmsg_' + id.replace(/\W+/, '_');
-		
-		if (Util.Cookie.get(cookie_name)) {
-			// Already displayed this session.
+		return this.display_once_per_duration(id, message, null);
+	},
+	
+	/**
+	 * Displays a message only once for at least some number of days.
+	 * This works by setting a cookie with an expiration date when the message
+	 * is first displayed. If, when this function is called again, the cookie
+	 * already exists, the message is not displayed.
+	 * @param {string}  id       a fixed ID that can be used to identify this
+	 *                           message in a cookie name
+	 * @param {string}  message  the message to be displayed
+	 * @param {number}  days     the number of days for which the message should
+	 *                           not be shown
+	 * @return {boolean} true if the message was actually displayed, false if
+	 *                   not
+	 */
+	display_once_per_duration:
+		function display_message_once_per_duration(id, message, days)
+	{
+		if (!navigator.cookieEnabled)
 			return false;
-		}
 		
-		this.display(message);
+		var cookie_name = '_loki2_pmsg_' + id.replace(/\W+/g, '_');
 		
-		Util.Cookie.set(cookie_name, 'displayed');
-		return true;
+		var displayed = Boolean(Util.Cookie.get(cookie_name));
+		
+		if (!displayed)
+			this.display(message);
+		
+		Util.Cookie.set(cookie_name, 'displayed', days);
+		
+		return !displayed;
 	}
 } 
 // file UI.OL_Button.js
