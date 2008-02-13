@@ -1,0 +1,94 @@
+body { min-width: 750px; }	/* 2x LC width + RC width */
+
+div#wrapper.fullGraphicsView div#meat
+{
+	padding-left: 200px;
+	padding-right: 200px;
+}
+
+/* Contains navigation and reled */
+div#wrapper.fullGraphicsView div#meat.containsConRelNav
+{
+	padding-left: 200px;
+	padding-right: 200px;
+}
+
+/* Contains related but no navigation */
+div#wrapper.fullGraphicsView div#meat.containsConRel 
+{
+  	padding-left: 0px;   	/* LC width */
+  	padding-right: 200px;  	/* RC width */
+}
+
+/* Contains navigation but no related */
+div#wrapper.fullGraphicsView div#meat.containsConNav 
+{
+  	padding-left: 200px;   	/* LC width */
+  	padding-right: 0px;  	/* RC width */
+}
+
+/* Contains neither navigation nor related */
+div#wrapper.fullGraphicsView div#meat.containsCon
+{
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+div#wrapper.fullGraphicsView div#content, div#wrapper.fullGraphicsView div#related, div#wrapper.fullGraphicsView div#navigation
+{
+  	position: relative;
+  	float: left;
+}
+
+div#wrapper.fullGraphicsView div#content { width: 100%; }
+
+div#wrapper.fullGraphicsView div#navigation
+{
+  	width: 200px;          	/* LC width */
+  	right: 200px;          	/* LC width */
+  	margin-left: -100%;
+}
+
+div#wrapper.fullGraphicsView div#related 
+{
+  	width: 200px;          	/* RC width */
+  	margin-right: -200px;  	/* RC width */
+}
+
+div#wrapper.fullGraphicsView div#footer { clear: both; }
+
+/*** IE6 Fixes ***/
+
+* html div#wrapper.fullGraphicsView div#navigation { left: 260px; } /* RC width */
+* html div#wrapper.fullGraphicsView div#meat { padding-right: 0px; }
+* html div#wrapper.fullGraphicsView div#meat.containsConNav div#navigation { left: 40px; }
+
+/*** Start self-clearning rules ***/
+
+/* :after rules force elements to self-clear in standards-compliant browsers */
+div#meat:after, div#banner:after 
+{
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:both;
+    height:0;
+}
+
+/* These rules force layout in IE 6 & 7, which in turn forces the elements to self-clear */
+* html div#banner 
+{
+	display:inline-block; /* for some reason this doesn't work in IE 7 */
+	/* overflow:hidden; /* this one works in IE 7 */
+	/* zoom:1; */
+}
+
+div#meat, div#banner { min-height:1px; } /* this one works in IE 7 */
+
+/* Hide from IE Mac \*/
+div#meat, div#banner { display:block; }
+/* End hide from IE Mac */
+
+div.clear { clear: both; }
+
+/*** End self-clearing rules ***/
