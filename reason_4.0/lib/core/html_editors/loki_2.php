@@ -68,6 +68,10 @@ $GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_2
 			trigger_error('No site id passed to get_loki_paths');
 		}
 		$paths['default_type_regexp'] = $loki_obj->js_regexp_quote('//'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('minisite_page').'&site_id=').'[^&]*'.$loki_obj->js_regexp_quote('&feed=editor_links_for_minisite_page');
+		if(defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH)
+		{
+			$paths['css'] = array(UNIVERSAL_CSS_PATH);
+		}
 		return $paths;
 	}
 	
