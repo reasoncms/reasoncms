@@ -1,4 +1,4 @@
-<?php	
+<?php
 	/**
 	* Plasmature
 	*
@@ -966,6 +966,10 @@
 			if(!empty($this->paths['default_type_regexp']))
 			{
 				$loki->set_default_type_regexp($this->paths['default_type_regexp']);
+			}
+			if(!empty($this->paths['css']))
+			{
+				$loki->add_document_style_sheets($this->paths['css']);
 			}
 			
 			$loki->print_form_children();
