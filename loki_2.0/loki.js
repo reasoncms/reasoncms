@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0rc2
+// Loki WYSIWIG Editor 2.0rc2-pl1
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-02-05 15:23:22 
+// Compiled 2008-02-14 13:37:55 
 // http://loki-editor.googlecode.com/
 
 
@@ -4220,7 +4220,8 @@ Util.Fix_Keys.fix_delete_and_backspace = function(e, win)
 	
 	function is_container(node)
 	{
-		return (node && node.getAttribute('loki:container'));
+		return (node && node.nodeType == Util.Node.ELEMENT_NODE &&
+			node.getAttribute('loki:container'));
 	}
 
 	function do_merge(one, two, sel)
@@ -10618,25 +10619,21 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 	}
 
 	/**
-	 * Checks whether the given node has any attributes
+	 * Checks whether the given node has any classes
 	 * matching the given strings.
 	 */
 	function has_class(node, strs)
 	{
 		var matches = [];
-		if ( node.nodeType == Util.Node.ELEMENT_NODE )
-		{
-			for ( var i = 0; i < strs.length; i++ )
-			{
-				if ( Util.Element.has_class(node, strs[i]) )
+		
+		if (node.nodeType == Util.Node.ELEMENT_NODE) {
+			for (var i = 0; i < strs.length; i++) {
+				if (Util.Element.has_class(node, strs[i]))
 					matches.push(strs[i]);
 			}
 		}
 		
-		if ( matches.length > 0 )
-			return matches;
-		else
-			return false;
+		return (matches.length > 0) ? matches : false;
 	}
 
 	/**
@@ -10644,8 +10641,7 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 	 */
 	function remove_class(node, strs)
 	{
-		for ( var i = 0; i < strs.length; i++ )
-		{
+		for (var i = 0; i < strs.length; i++) {
 			Util.Element.remove_class(node, strs[i]);
 		}
 	}
@@ -10701,6 +10697,14 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 		return Util.Node.is_block_level_element(node);
 	}
 	
+	function is_within_container(node) {
+		for (var n = node; n; n = n.parentNode) {
+			if (is_element(n) && n.getAttribute('loki:container'))
+				return true;
+		}
+		
+		return false;
+	}
 
 	var tests =
 	[
@@ -10794,8 +10798,12 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 			action: remove_tag
 		},
 		{
-			description : 'Remove all miscellaneous bad tags.',
-			test : function(node) { return has_tagname(node, ['SPAN']); },
+			description : 'Remove unnecessary span elements',
+			test : function is_bad_span(node) {
+				 return (has_tagname(node, ['SPAN'])
+					&& !has_attributes(node, ['class', 'style'])
+					&& !is_within_container(node));
+			},
 			action : remove_tag
 		},
 		{
@@ -10844,7 +10852,7 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 				var href = node.getAttribute('href');
 				if (href != null) {
 					node.setAttribute('href',
-						UI.Clean.cleanURI(href));
+						UI.Clean.clean_URI(href));
 				}
 			}
 		},
@@ -10964,7 +10972,7 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 	}
 };
 
-UI.Clean.cleanURI = function(uri)
+UI.Clean.clean_URI = function clean_URI(uri)
 {
 	var local = Util.URI.extract_domain(uri) ==
 		Util.URI.extract_domain(window.location);
@@ -10974,7 +10982,7 @@ UI.Clean.cleanURI = function(uri)
 		: uri;
 }
 
-UI.Clean.cleanHtml = function(html, settings)
+UI.Clean.clean_HTML = function clean_HTML(html, settings)
 {
     // empty elements (as defined by HTML 4.01)
     var empty_elems = '(br|area|link|img|param|hr|input|col|base|meta)';
@@ -11029,7 +11037,8 @@ UI.Clean.self_nesting_disallowed =
 	'CODE', 'DEL', 'DFN', 'EM', 'FORM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6',
 	'HR', 'I', 'IMG', 'INPUT', 'INS', 'KBD', 'LABEL', 'MAP', 'NOSCRIPT',
 	'OPTION', 'P', 'PARAM', 'PRE', 'SCRIPT', 'SELECT', 'STRONG', 'TT', 'U',
-	'VAR'].toSet(); 
+	'VAR'].toSet();
+
 // file UI.Clean_Button.js
 /**
  * Declares instance variables.
@@ -12806,13 +12815,12 @@ UI.HR_Masseuse = function()
 	{
 		var doc = container.ownerDocument;
 		var link = doc.createElement('A');
-		link.href = '#';
 		link.title = 'Click to remove this horizontal line.'
 		Util.Element.add_class(link, 'loki__delete');
 		
-		var span = doc.createElement('SPAN');
+		/*var span = doc.createElement('SPAN');
 		span.appendChild(doc.createTextNode('Remove'));
-		link.appendChild(span);
+		link.appendChild(span);*/
 		
 		Util.Event.add_event_listener(container, 'mouseover', function() {
 			link.style.display = 'block';
@@ -13546,7 +13554,7 @@ UI.Image_Helper = function()
 	{
 		// Create the image
 		var image = self._loki.document.createElement('IMG');
-		var clean_src = UI.Clean.cleanURI(image_info.uri);
+		var clean_src = UI.Clean.clean_URI(image_info.uri);
 		image.setAttribute('src', clean_src);
 		if (clean_src != image_info.uri)
 			image.setAttribute('loki:src', image_info.uri);
@@ -19754,7 +19762,7 @@ UI.Loki = function()
 		_unmassage_body();
 		UI.Clean.clean(_body, _settings);
 		html = _body.innerHTML;
-		html = UI.Clean.cleanHtml(html, _settings);
+		html = UI.Clean.clean_HTML(html, _settings);
 		_massage_body();
 		return html;
 
@@ -19987,9 +19995,14 @@ UI.Loki = function()
 		{
 			// If anything goes wrong during initialization, first
 			// revert to the textarea before re-throwing the error
-			self.iframe_to_textarea();
-			throw(new Error('UI.Loki._init_async: I reverted to source view because the following ' +
-							'error prevented Loki from initializing: <<' + e.message + '>>.'));
+			try {
+				self.iframe_to_textarea();
+			} catch (desperation) {
+				// If even that doesn't work, go all the way back.
+				_root.parentNode.replaceChild(_textarea, _root);
+			}
+			
+			throw e;
 		}
 	};
 	
@@ -20345,13 +20358,13 @@ UI.Loki = function()
 	 */
 	var _append_document_style_sheets = function()
 	{
-		Util.Document.append_style_sheet(_document, _settings.base_uri + 'css/cssSelector.css');
-		if ( !document.all ) // XXX bad
-			Util.Document.append_style_sheet(_document, _settings.base_uri + 'css/cssSelector_gecko.css');
-		Util.Document.append_style_sheet(_document, '/global_stock/css/modules.css'); //this should perhaps be more generalized
-		Util.Document.append_style_sheet(_document, '/global_stock/css/default_styles.css'); //this should perhaps be more generalized
-// 		Util.Document.append_style_sheet(_document, '/global_stock/css/minisites_styles.css'); //this should perhaps be more generalized
-		Util.Document.append_style_sheet(_document, _settings.base_uri + 'css/Loki_Document.css');
+		var add = Util.Document.append_style_sheet.curry(_document);
+		
+		add((_settings.base_uri || '') + 'css/Loki_Document.css');
+		
+		(_settings.document_style_sheets || []).each(function (sheet) {
+			add(sheet);
+		});
 	};
 	
 	/**
