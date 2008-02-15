@@ -45,7 +45,7 @@ div#wrapper.fullGraphicsView div#banner h1 a
 {
 	color: white;
 	text-decoration: none;
-	font-family: "Bookman Old Style";
+	font-family: "Bookman Old Style", Bookman, "ITC Bookman", Bookface, "Bookman Antique", Bookprint, "Revival 710", "Century Schoolbook", Georgia, Times, "Times New Roman", serif;
 	font-size: 150%;
 	font-weight: normal;
 	margin-left: 30px;
@@ -90,7 +90,8 @@ div#wrapper.fullGraphicsView div#content
 
 div#wrapper.fullGraphicsView div#content div.contentHead h2
 {
-	font-family: "Bookman Old Style";
+	
+	font-family: "Bookman Old Style", Bookman, "ITC Bookman", Bookface, "Bookman Antique", Bookprint, "Revival 710", "Century Schoolbook", Georgia, Times, "Times New Roman", serif;
 	font-size: 170%;
 	font-weight: normal;
 	margin-bottom: 0px;
@@ -119,7 +120,7 @@ div#related div#sidebar div.imageChunk div.tnImage
 div#related div#sidebar div.imageChunk div.tnDesc a
 {
 	text-decoration: none;
-	font-family: "Bookman Old Style";
+	font-family: "Bookman Old Style", Bookman, "ITC Bookman", Bookface, "Bookman Antique", Bookprint, "Revival 710", "Century Schoolbook", Georgia, Times, "Times New Roman", serif;
 	font-size: 70%;
 	color: black;
 	display: block;
@@ -177,7 +178,7 @@ div#wrapper.fullGraphicsView div#minisiteNavigation ul li ul li ul li a
 { 
 	margin: 0px -5px 0px 5px !important; 
 	background: #c00e0e !important;
-	color: white; !important;
+	color: white !important;
 	border: 1px solid #e2dbc8 !important;
 }
 
