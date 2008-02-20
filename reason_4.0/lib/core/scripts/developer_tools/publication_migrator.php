@@ -149,6 +149,7 @@ class MigratorScreen2 extends MigratorScreen
 	function step_init()
 	{
 		$this->site_id = $this->helper->get_site_id();
+		if (!$this->site_id) $this->redirect_to_screen(1);
 		$this->site_name = $this->helper->get_site_name();
 		$this->site_publication_names_by_id = $this->helper->get_site_publication_names_by_id();
 		$this->new_publication_link = carl_make_link(array('active_screen' => "3"));
@@ -212,6 +213,7 @@ class MigratorScreen3 extends MigratorScreen
 	function step_init()
 	{
 		$this->site_id = $this->helper->get_site_id();
+		if (!$this->site_id) $this->redirect_to_screen(1);
 		$this->user_id = $this->helper->get_user_id();
 		$this->site_publication_names_by_id = $this->helper->get_site_publication_names_by_id();
 	}
@@ -312,6 +314,7 @@ class MigratorScreen4 extends MigratorScreen
 	function step_init()
 	{
 		$this->site_id = $this->helper->get_site_id();
+		if (!$this->site_id) $this->redirect_to_screen(1);
 		$this->user_id = $this->helper->get_user_id();
 		$this->site_publication_names_by_id = $this->helper->get_site_publication_names_by_id();
 		$this->pages_using_news_modules = $this->helper->get_pages_using_news_modules();
