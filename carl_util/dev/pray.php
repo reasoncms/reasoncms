@@ -54,6 +54,9 @@ if( !defined( '__PRAY' ) )
  	 */
 	function pray ($data, $escape=false, $functions=false, $level = 0, $max_depth = 5 )
 	{
+		if (is_object($data))
+			$data = carl_clone($data);
+		
 		if( $level >= $max_depth )
 			echo 'Max Depth reached.';
 		else
