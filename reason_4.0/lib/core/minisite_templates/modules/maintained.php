@@ -8,21 +8,35 @@
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'MaintainedModule';
-	
-	function getmicrotime()
-	{
-		list( $usec, $sec ) = explode( " ", microtime() );
-		return ((float)$usec + (float)$sec);
-	}
 
 	class MaintainedModule extends DefaultMinisiteModule
 	{
 		var $last_mod_date_format = 'j F Y';
+		var $_content;
 
+		function init($args = array())
+		{
+			$format = $this->_get_format();
+			if(!empty($format))
+			{
+				$replacements = array('[[sitename]]'=>'_get_site_name_html','[[maintainer]]'=>'_get_maintainer_html','[[lastmodified]]'=>'_get_last_modified_date_html');
+				foreach($replacements as $search=>$function)
+				{
+					if(strpos($format,$search) === false)
+					{
+						unset($replacements[$search]);
+					}
+					else
+					{
+						$replacements[$search] = $this->$replacements[$search]();
+					}
+				}
+				$this->_content = str_replace(array_keys($replacements),array_values($replacements),$format);
+			}
+		}
 		function has_content()
 		{
-			if( $this->parent->cur_page->get_value( 'primary_maintainer' ) OR
-				$this->parent->cur_page->get_value( 'last_modified ' ) )
+			if( !empty($this->_content) )
 				return true;
 			else
 				return false;
@@ -31,17 +45,41 @@
 		// [updated by footeb on 7/2/03]
 		function run()
 		{
-			echo '<div id="maintained">'."\n";
-			echo '<div id="maintainer">'."\n";
-			$this->show_maintainer();
-			echo '</div>'."\n";
-			echo '<div id="lastUpdated">'."\n";
-			$this->show_last_updated();
-			echo '</div>'."\n";
-			echo '</div>'."\n";
+			if(!empty($this->_content))
+			{
+				echo '<div id="maintained">'."\n";
+				echo $this->_content;
+				echo '</div>'."\n";
+			}
 		}
-		function show_maintainer()
+		function _get_format()
 		{
+			$format = '';
+			if($this->parent->site_info->get_value('use_custom_footer') == 'yes')
+			{
+				$format = $this->parent->site_info->get_value('custom_footer');
+			}
+			else
+			{
+				if(defined('REASON_DEFAULT_FOOTER_XHTML'))
+				{
+					$format = REASON_DEFAULT_FOOTER_XHTML;
+				}
+				else
+				{
+					trigger_error('REASON_DEFAULT_FOOTER_XHTML needs to be defined in settings/reason_settings.php. Please follow the instructions in the Reason 4 beta 6->beta 7 upgrade script.');
+					$format = '<div id="maintainer">[[sitename]] pages maintained by [[maintainer]]</div><div id="lastUpdated">This page was last updated on [[lastmodified]]</div>';
+				}
+			}
+			return $format;
+		}
+		function _get_site_name_html()
+		{
+			return $this->parent->site_info->get_value('name');
+		}
+		function _get_maintainer_html()
+		{
+			$html = '';
 			// check for a maintainer--only go forward if there is one
 			$maintainer = $this->parent->site_info->get_value('primary_maintainer');
 			if( !empty($maintainer) )
@@ -96,21 +134,20 @@
 				
 				if (!empty($full_name))
 				{
-					// show footer information
-					echo $this->parent->site_info->get_value('name').' pages maintained by ';
-					//echo $this->_get_opening_mailto_anchor_tag($maintainer);
 					if(!empty($email))
-						echo '<a href="mailto:'.htmlspecialchars($email,ENT_QUOTES,'UTF-8').'">'.htmlspecialchars($full_name,ENT_QUOTES,'UTF-8').'</a>';
+						$html = '<a href="mailto:'.htmlspecialchars($email,ENT_QUOTES,'UTF-8').'">'.htmlspecialchars($full_name,ENT_QUOTES,'UTF-8').'</a>';
 					else
-						echo $full_name;
+						$html = $full_name;
 				}
 				else
 				{
 					trigger_error('Could not identify site maintainer - check to make sure username - ' . $maintainer . ' - is valid');
+					$html = $maintainer;
 				}
 			}
+			return $html;
 		}
-		function show_last_updated()
+		function _get_last_modified_date_html()
 		{
 			// munge date into a good looking format
 			$date = $this->parent->cur_page->get_value('last_modified');
@@ -125,7 +162,7 @@
 					$date = $temp;
 			}
 			
-			echo 'This page was last updated on ' . prettify_mysql_timestamp( $date, $this->last_mod_date_format );
+			return prettify_mysql_timestamp( $date, $this->last_mod_date_format );
 		}
 		function get_documentation()
 		{
