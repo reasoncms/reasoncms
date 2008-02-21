@@ -718,4 +718,19 @@
 	 * This string should be in the same format as the second argument to php's built-in strip_tags() function, e.g.: '<a><abbrev><acronym><address>'
 	 */
 	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbrev><acronym><address><area><au><author><b><big><blockquote><bq><br><caption><center><cite><code><col><colgroup><credit><dfn><dir><div><dl><dt><dd><em><fn><form><h1><h2><h3><h4><h5><h6><hr><i><img><input><lang><lh><li><link><listing><map><math><menu><multicol><nobr><note><ol><option><p><param><person><plaintext><pre><samp><select><small><strike><strong><sub><sup><table><tbody><td><textarea><tfoot><th><thead><tr><tt><u><ul><var><wbr>');
+	
+	/**
+	 * REASON_DEFAULT_FOOTER_XHTML
+	 *
+	 * The default text to be used to indicate maintainer/contact information
+	 *
+	 * There are three strings that will be automagically replaced with the site/page info:
+	 * 
+	 * [[sitename]] is replaced with the name of the site
+	 *
+	 * [[maintainer]] is replaced with the name/email of the site maintainer
+	 *
+	 * [[lastmodified]] is replaced with the date the page was most recently modified
+	 */
+	define('REASON_DEFAULT_FOOTER_XHTML','<div id="maintainer">[[sitename]] pages maintained by [[maintainer]]</div><div id="lastUpdated">This page was last updated on [[lastmodified]]</div>');
 ?>
