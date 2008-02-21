@@ -24,6 +24,7 @@ reason_include_once('classes/entity_selector.php');
 reason_include_once('function_libraries/util.php');
 reason_include_once('function_libraries/user_functions.php');
 reason_include_once('function_libraries/admin_actions.php');
+reason_include_once('classes/field_to_entity_table_class.php');
 
 force_secure_if_available();
 
