@@ -20,6 +20,7 @@
 <h3>Scripts to Run</h3>
 <p>The following scripts should be run to upgrade a Reason 4 Beta 6 database to Reason 4 Beta 7. If you setup Reason with the database distributed with Reason 4 Beta 6 you do not need to run these scripts.</p>
 <ul>
+<li><a href="custom_footer.php">Add capability to customize site footers</a></li>
 <li><a href="site_parent_rel.php">Upgrade parent-child site relationship</a></li>
 <li><a href="new_themes.php">Add new themes</a></li>
 </ul>
