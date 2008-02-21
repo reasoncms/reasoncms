@@ -14,6 +14,12 @@
 	{
 		var $old_entity_values = array();
 
+		function init_head_items()
+		{
+			$this->head_items->add_javascript(JQUERY_URL, true); // uses jquery - jquery should be at top
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'content_managers/site.js');
+		}
+		
 		function alter_data() // {{{
 		{
 			// don't allow the user to see whether the site is new or not
@@ -29,7 +35,8 @@
 					'options' => array(
 						0 => 'Off',
 						1 => 'On' 
-					)
+					),
+					'add_null_value_to_top' => false,
 				)
 			);
 			$this->add_required( 'unique_name' );
@@ -44,6 +51,15 @@
 			$this->set_comments( 'department',form_comment('(If integrated) The office or department code or ID in central information system (e.g. LDAP, etc.)') );
 			//$this->set_comments( 'custom_url_handler', form_comment('Give a descriptive value if this site will NOT use Reason\'s default URL management code.') );
 			$this->change_element_type( 'custom_url_handler','hidden');
+			$this->change_element_type( 'use_custom_footer','select_no_sort',array('display_name'=>'Footer Type','options'=>array('no'=>'Standard','yes'=>'Custom'),'add_null_value_to_top' => false,));
+			if(!$this->get_value('use_custom_footer'))
+			{
+				$this->set_value('use_custom_footer','no');
+			}
+			if(defined('REASON_DEFAULT_FOOTER_XHTML') && $this->get_value('use_custom_footer') == 'no' && !$this->get_value('custom_footer'))
+			{
+				$this->set_value('custom_footer',REASON_DEFAULT_FOOTER_XHTML);
+			}
 			$this->set_comments( 'use_page_caching', form_comment('<strong>Note:</strong> page caching may make changes to your pages be delayed up to 1 hour after they are made.  Only turn this on if your site has a lot of traffic and you need to improve performance.') );
 			$this->set_comments( 'keywords',form_comment('These words or phrases will be used by the A-Z module to provide a keyword index of Reason sites. Separate words and phrases with a comma, like this: <em>Economics, Monetary Policy, Political Economy</em>'));
 			$this->set_comments( 'site_state',form_comment('The current status of the site. "Live" sites are listed in the A-Z and Sitemap modules, and cannot borrow items from "Not Live" sites. "Not Live" sites are hidden from search engines and do not appear in listings of live sites. When you are building a site you probably want it to be "Not Live," and when it is ready for primetime you should set it to be "Live" so it can be indexed.'));
@@ -81,7 +97,7 @@
 				$this->set_value( 'loki_default','notables' );
 
 			$this->set_comments( 'loki_default',form_comment('The HTML editor options available when editing content on the site.'));
-			$this->set_order(array('name','unique_name','primary_maintainer','base_url','base_breadcrumbs','description','keywords','department','site_state','loki_default','other_base_urls','use_page_caching','theme','allow_site_to_change_theme','site_type'));
+			$this->set_order(array('name','unique_name','primary_maintainer','base_url','base_breadcrumbs','description','keywords','department','site_state','loki_default','other_base_urls','use_page_caching','theme','allow_site_to_change_theme','site_type','use_custom_footer','custom_footer',));
 		} // }}}
 		function alter_editor_options_field()
 		{
@@ -119,6 +135,11 @@
 				{
 					$this->set_error( 'base_url', 'Your base URL contains illegal characters. Allowable characters are letters, numbers, underscores, and slashes.' );
 				}
+			}
+			
+			if( $this->get_value('use_custom_footer') != 'yes' )
+			{
+				$this->set_value('custom_footer','');
 			}
 
 
