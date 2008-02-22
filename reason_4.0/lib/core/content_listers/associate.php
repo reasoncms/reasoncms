@@ -356,7 +356,7 @@
 					{
 						$new_assoc_entities[$key] = $assoc_entities[$key];
 					}
-					$assoc_entities = carl_clone($new_assoc_entities);
+					$assoc_entities = $new_assoc_entities;
 					//entity_sort($assoc_entities, 'rel_sort_order', 'ASC', 'numerical'); // old way did not preserve keys
 				}
 				return $update_values;
