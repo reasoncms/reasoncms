@@ -1,46 +1,31 @@
-// Cross-browser function for attaching events to objects
-function addEvent( obj, type, fn ) {
-	if ( obj.attachEvent ) {
-		obj['e'+type+fn] = fn;
-		obj[type+fn] = function(){obj['e'+type+fn]( window.event );}
-		obj.attachEvent( 'on'+type, obj[type+fn] );
-	} else {
-		obj.addEventListener( type, fn, false );
-	}
-}
+/**
+ * Manage display of upload fields for batch image uploads - Does two primary things:
+ * 
+ * 1. Makes sure the next upload field is shown anytime an upload field is updated
+ * 2. On load, ensure there is an upload field without a file or error available
+ *
+ * @requires Jquery
+ * @author Nathan White
+ */
 
-// Hide all but the first upload row
-function hideUploadFields() {
-	if (document.getElementById) {
-		index = 1;
-		// loop through sequentially while we can find a row with the current number
-		while ( row = document.getElementById('upload'+index+'Row')) {
-			if (index > 1) {
-				// hide everything past the first row
-				row.style.display='none';	
-			}
-			// find the file input object for this row and add an event to it to show the next row
-			// when its value changes
-			var upload = document.getElementById('upload_'+index+'Element');
-			addEvent(upload, 'change', showNext, index);
-			index++;
-		}
-	}
-}
-
-// Show the next input row after the one that triggered the event
-function showNext() {
-	if (document.getElementById) {
-		// Use regex to find the number of this input
-		if ( nameparts = this.id.match(/upload_(\d+)Element/) ) {
-			var index = parseInt(nameparts[1]);
-			index++;
-			// If there's a row at thisrow+1, show it
-			if ( row = document.getElementById('upload'+index+'Row')) {
-				row.style.display='';
-			}
-		}
-	}
-}
-
-addEvent(window, 'load', hideUploadFields);
+$(document).ready(function()
+{
+	//hide_fields(); // hide the fields to start with
+	var upload_rows = $("tr[id^='upload'][id$='Row']");
+	var error_last_index = $(upload_rows).index($("tr.error:last")[0]);
+	var file_last_index = $(upload_rows).index($("tr:has(input[name*='tmp_file']):last")[0]);
+	
+	if (file_last_index > error_last_index) var hide_after_index = (file_last_index + 1);
+	else if (error_last_index > "-1") var hide_after_index = error_last_index;
+	else var hide_after_index = 0;
+	
+	$(upload_rows).each(function()
+	{
+		var index = $(upload_rows).index(this); // what is the index in the set of upload field rows?
+		if (index > hide_after_index) $(this).hide();
+		$(this).change(function() // change event to show next index
+		{
+			$(upload_rows).eq(index+1).show();
+		});
+	});
+});
