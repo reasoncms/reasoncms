@@ -22,7 +22,15 @@
 		function init() // {{{
 		{
 			$this->admin_page->title = 'Batch Import Images';
+			$this->init_head_items();
 		} // }}}
+		
+		function init_head_items()
+		{
+			$this->head_items->add_javascript(JQUERY_URL, true);
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'import_photos.js');
+		}
+		
 		/**
 		 * Run form if it is OK
 		 */
