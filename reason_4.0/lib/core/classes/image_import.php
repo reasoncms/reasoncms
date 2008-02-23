@@ -70,11 +70,6 @@
 		var $categories;
 		var $max_upload_number = 25;
 		
-		function pre_show_form()
-		{
-			echo '<script src="'.WEB_JAVASCRIPT_PATH.'import_photos.js" type="text/javascript"></script>'."\n";
-		}
-		
 		function get_available_categories($site_id)
 		{
 			$es = new entity_selector($site_id);
@@ -116,15 +111,24 @@
 			$pages = $es->run_one();
 			return $pages;
 		}
+		
 		function on_every_time()
 		{
 			$this->form_enctype = 'multipart/form-data';
 			$this->change_element_type( 'original_image_format','select', array( 'options' => array( 'slide' => 'Slide','print' => 'Print','digital' => 'Digital' ) ) );
 			
-			$site_id = $this->site_id;
-
+			$this->on_every_time_categories();
+			$this->on_every_time_galleries();
+			$this->on_every_time_sharing();
+			$this->on_every_time_order();
+			
+			
+		}
+		
+		function on_every_time_categories()
+		{
 			//find available categories
-			$this->categories = $this->get_available_categories($site_id);
+			$this->categories = $this->get_available_categories($this->site_id);
 			if(!empty($this->categories))
 			{
 				$args = array();
@@ -135,9 +139,11 @@
 				}
 				$this->change_element_type( 'assign_to_categories','select_multiple', array( 'options' => $category_args, 'display_name'=>'Assign to Categories <span class="smallText">(Control-click (PC) or command-click (Mac) to select multiple categories)</span>') );
 			}
-			
+		}
+		function on_every_time_galleries()
+		{	
 			//find available galleries
-			$this->galleries = $this->get_available_image_galleries($site_id);
+			$this->galleries = $this->get_available_image_galleries($this->site_id);
 			$gallery_args = array();
 			foreach($this->galleries  as $gallery_id => $gallery)
 			{
@@ -147,7 +153,10 @@
 			{
 				$this->change_element_type('attach_to_gallery','select', array( 'options' => $gallery_args ) );
 			}
-			
+		}
+		
+		function on_every_time_sharing()
+		{
 			// sharing
 			if(!$this->get_value('no_share'))
 			{
@@ -157,31 +166,65 @@
 			{
 				$this->set_value('exif_override','true');
 			}
-			if( site_shares_type($site_id, id_of('image')) )
+			if( site_shares_type($this->site_id, id_of('image')) )
 			{
 				$this->change_element_type( 'no_share', 'select', array( 'options' => array( 0=>'Shared', 1=>'Private' ) ) );
 				$this->set_display_name( 'no_share', 'Sharing' );
 			}
-			
-			$site = new entity($site_id);
-			
+		}
+		
+		function on_every_time_order()
+		{
 			$order = array();
 			if($this->_is_element('cancel_text'))
 			{
 				$order[] = 'cancel_text';
 			}
 			$order[] = 'source_selection_note';
-			//$order[] = 'incoming_dir';
 			$order[] = 'destination_selection_note';
 			for($i = 1; $i <= $this->max_upload_number; $i++)
 			{
 				$name = 'upload_'.$i;
 				$this->add_element( $name, 'image_upload', array('max_width'=>REASON_STANDARD_MAX_IMAGE_WIDTH,'max_height'=>REASON_STANDARD_MAX_IMAGE_HEIGHT) );
+				$this->add_element( $name . '_filename', 'hidden' );
+				
 				$order[] = $name;
 			}
 			
 			$this->set_order( $order );
 		}
+		
+		/**
+		 *
+		 */
+		function verify_image($img_pathname)
+		{
+			// return true if the image is an image, false otherwise
+			$size = getimagesize($img_pathname);
+			if (!$size)
+			{
+				trigger_error('Uploaded image at location ' . $img_pathname. ' returns false on getimagesize and will not be imported. The user has been notified.');
+			}
+			return ($size);
+		}
+		
+		// we are going to store the filename separately so that it is always accessible at process time even if there was an error
+		// this handling should be build into plasmature probably so that anything using the image type does not have to worry about it...
+		function pre_error_check_actions()
+		{
+			for($i = 1; $i <= $this->max_upload_number; $i++)
+			{
+				$element = $this->get_element( 'upload_'.$i );
+				if( !empty($element->tmp_full_path) AND file_exists( $element->tmp_full_path ) )
+				{
+					if (!empty($element->file['name']))
+					{
+						$this->set_value('upload_'.$i.'_filename', $element->file['name']);
+					}
+				}
+			}
+		}
+		
 		function process()
 		{
 			$site_id = $this->site_id;
@@ -189,22 +232,31 @@
 			$counts = array();
 			for($i = 1; $i <= $this->max_upload_number; $i++)
 			{
-				$name = 'upload_'.$i;
 				$element = $this->get_element( 'upload_'.$i );
 				if( !empty($element->tmp_full_path) AND file_exists( $element->tmp_full_path ) )
 				{
-					if(empty($counts[$element->file['name']]))
+					$filename = $this->get_value('upload_'.$i.'_filename');
+					
+					if ($this->verify_image($element->tmp_full_path))
 					{
-						$this->files[$element->file['name']] = $element->tmp_full_path;
-						$counts[$element->file['name']] = 1;
+						if(empty($counts[$filename]))
+						{
+							$this->files[$filename] = $element->tmp_full_path;
+							$counts[$filename] = 1;
+						}
+						else
+						{
+							$counts[$filename]++;
+							$this->files[$filename.'.'.$counts[$filename]] = $element->tmp_full_path;
+						}
 					}
 					else
 					{
-						$counts[$element->file['name']]++;
-						$this->files[$element->file['name'].'.'.$counts[$element->file['name']]] = $element->tmp_full_path;
+						$this->invalid_files[$filename] = $element->tmp_full_path;
 					}
 				}
 			}
+			
 			if( count( $this->files ) )
 			{
 				// try to find the gallery page for the chosen site
@@ -217,10 +269,10 @@
 				
 				$tables = get_entity_tables_by_type( id_of( 'image' ) );
 				
-				echo '<ul>'."\n";
+				$valid_file_html = '<ul>'."\n";
 				foreach( $this->files AS $entry => $cur_name )
 				{
-					echo '<li><strong>'.$entry.':</strong> processing ';
+					$valid_file_html .= '<li><strong>'.$entry.':</strong> processing ';
 					
 					$date = '';
 					
@@ -365,27 +417,42 @@
 						{
 							create_relationship($gallery_page_id,$id,$page_to_image_rel_id);
 						}
-						echo 'completed</li>';
+						$valid_file_html .= 'completed</li>';
 					}
 					else
 					{
 						trigger_error('Unable to create image entity');
-						echo '<li>Unable to import '.$entry.'</li>';
+						$valid_file_html .= '<li>Unable to import '.$entry.'</li>';
 					}
 					sleep( 1 );
 				}
-				echo '</ul>'."\n";
-				echo '<p>Your images have been successfully imported into Reason.</p>';
-				echo '<p>They are now pending.</p>';
-				
-				$site = new entity($site_id);
-				
-				echo '<p>Next Steps:</p><ul><li><a href="?site_id='.$site_id.'&amp;type_id='.id_of( 'image' ).'&amp;user_id='.$this->user_id.'&amp;cur_module=Lister&amp;state=pending">review & approve imported images</a></li><li><a href="'.get_current_url().'">Import another set of images</a></li></ul>'."\n";
+				$valid_file_html .= '</ul>'."\n";
+				$num_image_string = (count($this->files) == 1) ? '1 image has ' : count($this->files) . ' images have ';
+				$valid_file_html .= '<p>'. $num_image_string . 'been successfully imported into Reason.</p>';
+				$valid_file_html .= '<p>They are now pending.</p>';
+				$next_steps[] = '<a href="?site_id='.$site_id.'&amp;type_id='.id_of( 'image' ).'&amp;user_id='.$this->user_id.'&amp;cur_module=Lister&amp;state=pending">review & approve imported images</a>';
 			}
-			else
+			
+			if (isset($this->invalid_files))
 			{
-				echo 'You chose a folder that has no images.';
+				$invalid_files = array_keys($this->invalid_files);
+				
+				$invalid_file_html = '<p>The following could not be validated as image files and were not successfully imported.</p>';
+				$invalid_file_html .= '<ul>';
+				foreach ($invalid_files as $file)
+				{
+					$invalid_file_html .= '<li><strong>' . reason_htmlspecialchars($file) . '</strong></li>';
+				}
+				$invalid_file_html .= '</ul>';
 			}
+			
+			
+			$next_steps[] = '<a href="'.get_current_url().'">Import another set of images</a>';
+			
+			if (!isset($this->invalid_files) && !isset($this->files)) echo '<p>You did not select any files for upload</p>';
+			if (isset($valid_file_html)) echo $valid_file_html;
+			if (isset($invalid_file_html)) echo $invalid_file_html;
+			echo '<p>Next Steps:</p><ul><li>' . implode('</li><li>', $next_steps) . '</li></ul>';
 			
 			$this->show_form = false;
 		}
