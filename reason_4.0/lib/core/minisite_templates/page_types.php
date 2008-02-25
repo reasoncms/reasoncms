@@ -118,6 +118,19 @@
 				'related_mode'=>'true',
 			),
 		),
+		'publication_related_7_headlines' => array(
+			'main_post'=>array(
+				'module'=>'publication',
+				'related_mode'=>'true',
+				'markup_generator_info' =>
+					array('list_item' => array(
+									'classname' => 'MinimalListItemMarkupGenerator', 
+									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+									)
+					 ),
+				'max_num_items' => 7,
+			),
+		),
 		'publication_section_nav' => array(
 			'main_post'=>'publication',
 			'main_head' => 'publication/title',
