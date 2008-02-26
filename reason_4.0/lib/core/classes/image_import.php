@@ -259,19 +259,13 @@
 			
 			if( count( $this->files ) )
 			{
-				// try to find the gallery page for the chosen site
-				if( $this->get_value( 'attach_to_gallery' ) )
-				{
-					$gallery_page_id = '';
-				}
-
-				$page_to_image_rel_id = relationship_id_of('minisite_page_to_image');
-				
 				$tables = get_entity_tables_by_type( id_of( 'image' ) );
 				
 				$valid_file_html = '<ul>'."\n";
+				$image_number = 0;
 				foreach( $this->files AS $entry => $cur_name )
 				{
+					$image_number++;
 					$valid_file_html .= '<li><strong>'.$entry.':</strong> processing ';
 					
 					$date = '';
@@ -354,7 +348,7 @@
 						//assign to	gallery page
 						$page_id = $this->get_value('attach_to_gallery');
 						if(!empty($page_id))
-							create_relationship($page_id, $id, relationship_id_of('minisite_page_to_image') );
+							create_relationship($page_id, $id, relationship_id_of('minisite_page_to_image'), array('rel_sort_order'=>$image_number) );
 						
 						
 						// resize and move photos
@@ -413,10 +407,6 @@
 						// we needed that ID to do something
 						reason_update_entity( $id, $this->user_id, $values, false );
 						
-						if( !empty( $gallery_page_id ) )
-						{
-							create_relationship($gallery_page_id,$id,$page_to_image_rel_id);
-						}
 						$valid_file_html .= 'completed</li>';
 					}
 					else
