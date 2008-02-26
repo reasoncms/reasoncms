@@ -259,13 +259,20 @@
 			
 			if( count( $this->files ) )
 			{
+				$page_id = (integer) $this->get_value('attach_to_gallery');
+				$max_sort_order_value = 0;
+				if($page_id)
+				{
+					$max_sort_order_value = $this->_get_max_sort_order_value($page_id);
+				}
+				$sort_order_value = $max_sort_order_value;
+				
 				$tables = get_entity_tables_by_type( id_of( 'image' ) );
 				
 				$valid_file_html = '<ul>'."\n";
-				$image_number = 0;
 				foreach( $this->files AS $entry => $cur_name )
 				{
-					$image_number++;
+					$sort_order_value++;
 					$valid_file_html .= '<li><strong>'.$entry.':</strong> processing ';
 					
 					$date = '';
@@ -346,9 +353,8 @@
 						}
 					
 						//assign to	gallery page
-						$page_id = $this->get_value('attach_to_gallery');
-						if(!empty($page_id))
-							create_relationship($page_id, $id, relationship_id_of('minisite_page_to_image'), array('rel_sort_order'=>$image_number) );
+						if($page_id)
+							create_relationship($page_id, $id, relationship_id_of('minisite_page_to_image'), array('rel_sort_order'=>$sort_order_value) );
 						
 						
 						// resize and move photos
@@ -445,6 +451,25 @@
 			echo '<p>Next Steps:</p><ul><li>' . implode('</li><li>', $next_steps) . '</li></ul>';
 			
 			$this->show_form = false;
+		}
+		
+		function _get_max_sort_order_value($page_id)
+		{
+			$es = new entity_selector();
+			$es->add_type(id_of('image'));
+			$es->add_right_relationship($page_id, relationship_id_of('minisite_page_to_image'));
+			$es->add_field( 'relationship', 'id', 'rel_id' );
+			$es->add_rel_sort_field($page_id);
+			$es->set_order('relationship.rel_sort_order DESC');
+			$es->set_num(1);
+			$images = $es->run_one();
+			if(!empty($images))
+			{
+				$image = current($images);
+				if($image->get_value('rel_sort_order'))
+					return $image->get_value('rel_sort_order');
+			}
+			return 0;
 		}
 	}
 ?>
