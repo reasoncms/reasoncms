@@ -160,6 +160,7 @@ class ReasonAssetAccess
 			if (empty($mime_type)) $mime_type = 'application/octet-stream';
 			ob_end_clean();
 			header( 'Pragma: public');
+			header( 'Cache-Control: max-age=0' ); //added to squash weird IE 6 bug where pdfs say that the file is not found
 			header( 'Content-Type: ' . $mime_type );
 			header( 'Content-Disposition: ' . $file_disposition . '; filename="'.$file_name.'"' );
 			header( 'Content-Length: '.$file_size );
