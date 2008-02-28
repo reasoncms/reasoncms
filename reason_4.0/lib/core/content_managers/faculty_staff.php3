@@ -89,5 +89,27 @@
 		{
 			return '<a href="mailto:'.$email.'">'.$email.'</a>';
 		} // }}}
+		
+		function run_error_checks()
+		{
+			// make sure an entity with the same name is not already on the site - if so, throw an error
+			$es = new entity_selector($this->admin_page->site_id);
+			$es->add_type(id_of('faculty_staff'));
+			$es->limit_tables();
+			$es->limit_fields('entity.name');
+			$result = $es->run_one();
+			if (!empty($result))
+			{
+				foreach ($result as $k=>$v)
+				{
+					if ( ($v->get_value('name') == $this->get_value('name')) && ($k != $this->admin_page->id) )
+					{
+						$link = carl_make_link(array('id' => $k, 'new_entity' => '', 'entity_saved' => ''));
+						$this->set_error('name', 'There is already a faculty / staff member on the site with the name ' . $this->get_value('name') . ' (<a href="'.$link.'">go to existing record</a>). To save this record, you need to choose a different name.');
+						break;
+					}
+				}
+			}
+		}
 	}
 ?>
