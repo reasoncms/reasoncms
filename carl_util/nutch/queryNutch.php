@@ -66,7 +66,7 @@ class nutchQuery {
 		if(empty($xml_result)){ $this->success = FALSE ; return ;}
 
 		// parse the query into our rss object	
-		$rss = new MagpieRSS( $xml_result );
+		$rss = new MagpieRSS( $xml_result, 'UTF-8' );
 
 		// if there was an RSS parse error, the search fails
 		if($rss->ERROR){ echo $rss->ERROR . "\n"; $this->success = FALSE ; return ; }
