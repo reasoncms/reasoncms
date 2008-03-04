@@ -728,6 +728,19 @@
 		'news_sidebar' => array(
 			'sidebar' => 'news_mini',
 		),
+		'publication_sidebar' => array(
+			'sidebar' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' =>
+				array('list_item' => array(
+									'classname' => 'MinimalListItemMarkupGenerator', 
+									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+									)
+					 ),
+				'max_num_items' => 4,
+			),
+		),
 		'news_random' => array(
 			'main_post' => 'news_rand',
 		),
