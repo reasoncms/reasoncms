@@ -461,9 +461,12 @@ class PublicationModule extends Generic3Module
 			elseif ($this->_should_restrict_to_current_issue() ) // if no section requested set an issue_id
 			{
 				$most_recent_issue = $this->get_most_recent_issue();
-				$this->issue_id = $most_recent_issue->id();
-				$this->_add_css_urls_to_head($this->_get_issue_css($this->issue_id));
-				return true;
+				if ($most_recent_issue)
+				{
+					$this->issue_id = $most_recent_issue->id();
+					$this->_add_css_urls_to_head($this->_get_issue_css($this->issue_id));
+					return true;
+				}
 			}
 		}	
 		if ($issue_keys) // item is in an issue
