@@ -464,7 +464,9 @@ class PublicationMigratorHelper
 	 */
 	var $recommended_page_type_mapping = array('news' => 'publication', 
 											   'events_and_news_sidebar' => 'events_and_publication_sidebar',
-											   'show_children_and_news_sidebar' => 'show_children_and_publication_sidebar');
+											   'show_children_and_news_sidebar' => 'show_children_and_publication_sidebar',
+											   'events_and_news_sidebar_show_children_nagios_status' => 'events_and_publication_sidebar_show_children_nagios_status',
+											   'news_sidebar' => 'publication_sidebar');
 	/**
 	 * Determine state and init the appropriate migrator screen
 	 */
