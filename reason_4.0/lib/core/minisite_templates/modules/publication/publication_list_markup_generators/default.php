@@ -119,7 +119,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 				$list = $this->passed_vars['items_by_section'][$section_id];
 				if($do_section_headings && array_key_exists($section_id, $this->passed_vars['sections']))
 				{		
-					$markup_string .= '<li>'."\n";
+					$markup_string .= '<li class="section">'."\n";
 					$markup_string .= $this->get_section_heading_markup($section_id);
 					$markup_string .= $this->get_list_markup_for_these_items(array_keys($list));
 					$markup_string .= $this->get_section_footer_markup($section_id);
@@ -154,7 +154,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			foreach($item_ids as $item_id)
 			{
 				if(!empty($this->passed_vars['list_item_markup_strings'][$item_id]) && !array_key_exists($item_id, $this->passed_vars['featured_item_markup_strings']))
-					$list_body .= '<li>'.$this->passed_vars['list_item_markup_strings'][$item_id].'</li>'."\n";
+					$list_body .= '<li class="post">'.$this->passed_vars['list_item_markup_strings'][$item_id].'</li>'."\n";
 			}
 			if(!empty($list_body))
 			{
@@ -196,10 +196,10 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string = '<div id="featuredItems">'."\n";
 			if (!empty($feature_header_string)) $markup_string .= '<h3> '.$feature_header_string.' </h3>'."\n";
 			
-			$markup_string .= '<ul>'."\n";
+			$markup_string .= '<ul class="posts">'."\n";
 			foreach($this->passed_vars['featured_item_markup_strings'] as $list_item_string)
 			{
-				$markup_string .= '<li>'.$list_item_string.'</li>'."\n";
+				$markup_string .= '<li class="post">'.$list_item_string.'</li>'."\n";
 			}
 			$markup_string .= '</ul>'."\n";
 			$markup_string .= '</div>'."\n";
@@ -385,7 +385,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$description = $section_entity->get_value('description');
 			if(!empty($description))
 			{
-				$markup_string .= '<p>'.$description.'</p>'."\n";
+				$markup_string .= '<p class="sectionDesc">'.$description.'</p>'."\n";
 			}
 			$markup_string .= '</div>';
 		}
