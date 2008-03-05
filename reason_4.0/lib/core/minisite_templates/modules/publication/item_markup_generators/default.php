@@ -177,8 +177,9 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 	}
 	function alter_content($content)
 	{
-		if(strpos($content,'<h3') !== false || strpos($content,'<h4') !== false)
+		if(strpos($content,'<h3') !== false || strpos($content,'<h4') !== false || strpos($content,'<h5') !== false)
 		{
+			$content = tagSearchReplace($content, 'h5', 'h6');
 			$content = tagSearchReplace($content, 'h4', 'h5');
 			$content = tagSearchReplace($content, 'h3', 'h4');
 		}
