@@ -64,7 +64,7 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 			foreach($item_ids as $item_id)
 			{
 				if(!empty($this->passed_vars['list_item_markup_strings'][$item_id]) && !array_key_exists($item_id, $this->passed_vars['featured_item_markup_strings']))
-					$markup_string .= '<li>'.$this->passed_vars['list_item_markup_strings'][$item_id].'</li>'."\n";
+					$markup_string .= '<li class="post">'.$this->passed_vars['list_item_markup_strings'][$item_id].'</li>'."\n";
 			}
 			$markup_string .= '</ul>'."\n";
 		}
@@ -92,10 +92,10 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string = '<div id="featuredItems">'."\n";
 			if (!empty($feature_header_string)) $markup_string .= '<h3> '.$feature_header_string.' </h3>'."\n";
 			
-			$markup_string .= '<ul>'."\n";
+			$markup_string .= '<ul class="posts">'."\n";
 			foreach($this->passed_vars['featured_item_markup_strings'] as $list_item_string)
 			{
-				$markup_string .= '<li>'.$list_item_string.'</li>'."\n";
+				$markup_string .= '<li class="post">'.$list_item_string.'</li>'."\n";
 			}
 			$markup_string .= '</ul>'."\n";
 			$markup_string .= '</div>'."\n";
