@@ -466,7 +466,8 @@ class PublicationMigratorHelper
 											   'events_and_news_sidebar' => 'events_and_publication_sidebar',
 											   'show_children_and_news_sidebar' => 'show_children_and_publication_sidebar',
 											   'events_and_news_sidebar_show_children_nagios_status' => 'events_and_publication_sidebar_show_children_nagios_status',
-											   'news_sidebar' => 'publication_sidebar');
+											   'news_sidebar' => 'publication_sidebar',
+											   'children_and_grandchildren_full_names_sidebar_blurbs_no_title_random_news_subnav' => 'international_students_information_front_page');
 	/**
 	 * Determine state and init the appropriate migrator screen
 	 */
