@@ -102,6 +102,21 @@
 			'sidebar'=>'',
 			'pre_sidebar' => '',
 		),
+		'publication_no_dates' => array(
+			'main_post'=> array('module' => 'publication',
+								'use_dates_in_list' => false,
+								'markup_generator_info' =>
+									array('item' => array(
+										'classname' => 'NoDateItemMarkupGenerator', 
+										'filename' => 'minisite_templates/modules/publication/item_markup_generators/no_date.php',
+										)
+					 				),
+							   ),
+			'main_head' => 'publication/title',
+			'main'=>'publication/description',
+			'sidebar'=>'',
+			'pre_sidebar' => '',
+		),
 		'publication_listnav' => array(
 			'main_post'=>array(
 				'module'=>'publication',
