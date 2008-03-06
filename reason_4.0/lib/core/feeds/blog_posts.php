@@ -83,6 +83,9 @@ class blogPostsFeed extends pageTreeFeed
 		$this->feed->es->add_relation( 'status.status != "pending"' );
 		$this->feed->es->add_relation( 'dated.datetime <= NOW()' );
 		
+		if(!empty($this->request['shared_only']))
+			$this->feed->es->add_relation( 'entity.no_share = "0"' );
+		
 		if($this->blog->get_value('has_issues') == 'yes')
 		{
 			if($issue_id = $this->_get_latest_published_issue_id($this->blog->id()))
