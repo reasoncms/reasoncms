@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0rc2-pl1
+// Loki WYSIWIG Editor 2.0rc2-pl4
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-02-14 13:37:55 
+// Compiled 2008-02-29 18:31:27 
 // http://loki-editor.googlecode.com/
 
 
@@ -3323,15 +3323,18 @@ Util.Block = {
 		}
 		
 		// Factored out this enforcement because both normal paragraph
-		// containers and containers that can only contain 0 or >2 paragraphs
+		// containers and containers that can only contain 0 or ≥2 paragraphs
 		// both potentially use the same behavior.
 		function enforce_container_child(context, node, c)
 		{
 			var br;
 			var next;
+			var created_p;
 			
 			if (!context.p)
 				context.p = null;
+			if (context.created_p)
+				delete context.created_p;
 			
 			if (br = is_breaker(c)) { // assignment intentional
 				context.p = c.ownerDocument.createElement('P');
@@ -3340,9 +3343,12 @@ Util.Block = {
 					node.removeChild(b);
 				});
 				node.insertBefore(context.p, next);
-			} else if (belongs_inside_paragraph(c)) {
+			} else if (belongs_inside_paragraph(c)
+				&& Util.Node.is_non_whitespace_text_node(c)) 
+			{
 				if (!context.p && is_relevant(c)) {
 					context.p = c.ownerDocument.createElement('P');
+					context.created_p = context.p;
 					node.insertBefore(context.p, c);
 				}
 				
@@ -3445,12 +3451,24 @@ Util.Block = {
 			
 			MULTI_PARAGRAPH_CONTAINER: function enforce_multi_p_container(node)
 			{
-				var multi = false;
+				var paragraphs = [];
+				var multi = get_paragraph_children(node).length > 1;
 				var context = {};
 				var br;
 				var next;
 				
-				var paragraphs = [];
+				function get_paragraph_children(node)
+				{
+					var paras = [];
+					
+					for (var n = node.firstChild; n; n = n.nextSibling) {
+						if (n.tagName == 'P')
+							paras.push(n);
+					}
+					
+					return paras;
+				}
+				
 				function add_paragraph(para)
 				{
 					if (para)
@@ -3494,11 +3512,10 @@ Util.Block = {
 					if (!multi) {
 						next = c.nextSibling;
 						
-						if (c.tagName == 'P')
-							add_paragraph(c);
-						
 						if (!belongs_inside_paragraph(c)) {
 							multi = add_paragraph(create_upto(c));
+							if (c.tagName == 'P')
+								multi = add_paragraph(c);
 						} else if (br = is_breaker(c)) { // assignment intent.
 							multi = add_paragraph(create_upto(c));
 							next = br[1].nextSibling;
@@ -3508,10 +3525,12 @@ Util.Block = {
 						}
 					} else {
 						next = enforce_container_child(context, node, c);
+						if (context.created_p)
+							paragraphs.push(context.created_p);
 					}
 				}
 				
-				if (!multi && paragraphs.length == 1) {
+				if (paragraphs.length == 1) {
 					replace_with_children(paragraphs[0]);
 				}
 				
@@ -4642,7 +4661,7 @@ Util.HTML_Parser = function SAX_HTML_Parser()
 		close: [],
 		text: [],
 		cdata: [],
-		comment: [],
+		comment: []
 	};
 	
 	var self_closing_tags = Util.HTML_Parser.self_closing_tags.toSet();
@@ -4934,7 +4953,8 @@ Util.HTML_Parser.Error = function HTML_Parse_Error(message)
 }
 
 Util.HTML_Parser.self_closing_tags = ['BR', 'AREA', 'LINK', 'IMG', 'PARAM',
-	'HR', 'INPUT', 'COL', 'BASE', 'META']; 
+	'HR', 'INPUT', 'COL', 'BASE', 'META'];
+
 // file Util.HTML_Reader.js
 /**
  * Declares instance variables.
@@ -15413,10 +15433,10 @@ UI.Listbox.prototype._goto_next_page = function()
 };
 
 // file UI.Loki_Options.js
-UI.Loki_Options = function(pluses, minuses)
+UI.Loki_Options = function()
 {
-	this._all;
-	this._sel;
+	this._all = null;
+	this._sel = null;
 };
 
 /**
@@ -15432,6 +15452,8 @@ UI.Loki_Options.prototype.init = function(pluses, minuses)
 {
 	this._init_all();
 	this._init_sel(pluses, minuses);
+	
+	return this;
 };
 
 /**
@@ -15492,45 +15514,42 @@ UI.Loki_Options.prototype._init_all = function()
 	var all = 0;
 	for ( var i in this._all )
 		if ( i != 'merge' )
-			all += this._all[i];
-	this._all.all = all - this._all.source; // we never want to assign the ability to edit source on a site-wide basis
-	//this._all.all = this._all["default"] + this._all.lists + this._all.align + this._all.headline + this._all.indenttext + this._all.findtext + this._all.image + this._all.assets + this._all.spell + this._all.table + this._all.pre;
+			all |= this._all[i];
+	this._all.all = all & ~this._all.source; // we never want to assign the ability to edit source on a site-wide basis
+	//this._all.all = this._all["default"] | this._all.lists | this._all.align | this._all.headline | this._all.indenttext | this._all.findtext | this._all.image | this._all.assets | this._all.spell | this._all.table | this._all.pre;
 					  
 	// (we need to use the bracket syntax to access default because default is a reserved word in js)
-	this._all["default"] = this._all.strong + this._all.em + this._all.linebreak + this._all.hrule + this._all.link + this._all.anchor + this._all.clipboard;
-	this._all.lists = this._all.olist + this._all.ulist;
+	this._all["default"] = this._all.strong | this._all.em | this._all.linebreak | this._all.hrule | this._all.link | this._all.anchor | this._all.clipboard;
+	this._all.lists = this._all.olist | this._all.ulist;
 
-	this._all.all_minus_pre = this._all.all - this._all.pre;
-	this._all.notables = this._all.all_minus_pre - this._all.table;
-	this._all.notables_plus_pre = this._all.notables + this._all.pre;
+	this._all.all_minus_pre = this._all.all & ~this._all.pre;
+	this._all.notables = this._all.all_minus_pre & ~this._all.table;
+	this._all.notables_plus_pre = this._all.notables | this._all.pre;
 
-	this._all.wellstone = this._all["default"] + this._all.lists + this._all.align + this._all.headline + this._all.indenttext + this._all.findtext;
-	this._all.ocs = this._all["default"] + this._all.lists + this._all.align + this._all.headline + this._all.indenttext + this._all.findtext + this._all.table;
-	this._all.commencement = this._all["default"] + this._all.lists + this._all.align + this._all.headline + this._all.indenttext + this._all.findtext + this._all.table;
+	this._all.wellstone = this._all["default"] | this._all.lists | this._all.align | this._all.headline | this._all.indenttext | this._all.findtext;
+	this._all.ocs = this._all["default"] | this._all.lists | this._all.align | this._all.headline | this._all.indenttext | this._all.findtext | this._all.table;
+	this._all.commencement = this._all["default"] | this._all.lists | this._all.align | this._all.headline | this._all.indenttext | this._all.findtext | this._all.table;
 };
 
 UI.Loki_Options.prototype._init_sel = function(pluses, minuses)
 {
-	if ( !pluses )
-		pluses = ['default'];
-	if ( !minuses)
-		minuses = [];
-	if ( typeof(pluses) == 'string' )
-		pluses = [pluses];
-	if ( typeof(minuses) == 'string' )
-		minuses = [minuses];
+	var i;
+	
+	pluses = (typeof(pluses) == 'string')
+		? [pluses]
+		: pluses || ['default'];
+	minuses = (typeof(minuses) == 'string')
+		? [minuses]
+		: minuses || [];
 
 	this._sel = 0;
-
-	for ( var i = 0; i < pluses.length; i++ )
-	{
-		if ( !this.test(pluses[i]) ) // we don't want to add anything twice
-			this._sel += this._all[pluses[i]];
+	
+	for (i = 0; i < pluses.length; i++) {
+		this._sel |= this._all[pluses[i]] || 0;
 	}
-	for ( var i = 0; i < minuses.length; i++ )
-	{
-		if ( this.test(minuses[i]) ) // we don't want to add anything twice
-			this._sel -= this._all[minuses[i]];
+	
+	for (i = 0; i < minuses.length; i++) {
+		this._sel &= ~(this._all[minuses[i]] || 0);
 	}
 };
 
@@ -19716,7 +19735,7 @@ UI.Underline_Keybinding = function()
  *
  * @class A WYSIWYG HTML editor.
  */
-UI.Loki = function()
+UI.Loki = function Loki()
 {
 	var _owner_window;
 	var _owner_document; // that of _textarea etc.
@@ -19737,10 +19756,10 @@ UI.Loki = function()
 
 	var _settings;
 	var _use_p_hack;
-	var _state_change_listeners = Array();
-	var _masseuses = Array();
-	var _menugroups = Array();
-	var _keybindings = Array();
+	var _state_change_listeners = [];
+	var _masseuses = [];
+	var _menugroups = [];
+	var _keybindings = [];
 	var _editor_domain;
 
 	var self = this;
@@ -19868,15 +19887,29 @@ UI.Loki = function()
 	 *
 	 * @param	textarea	the textarea to replace with Loki
 	 */
-	this.init = function(textarea, settings)
+	this.init = function init_loki(textarea, settings)
 	{
 		// Incompatible browser check.
 		if (!(Util.Browser.IE || Util.Browser.Gecko)) {
-			throw new Error('Loki does not currently support your browser.');
+			throw new Error('The Loki HTML editor does not currently support ' +
+				'your browser.');
 		}
 		
 		_settings = settings;
-
+		
+		// Clean up the settings, if necessary.
+		if (!settings.options)
+			settings.options = 'default';
+		if (Util.is_string(settings.options) || !settings.options.test) {
+			settings.options = (new UI.Loki_Options).init(settings.options, '');
+		}
+		['site', 'type'].each(function cleanup_default_regexp(which) {
+			var setting = 'default_' + which + '_regexp';
+			if (!(settings[setting].exec && settings[setting].test)) {
+				settings[setting] = new RegExp(settings[setting]);
+			}
+		});
+		
 		_textarea = textarea;
 		_owner_window = window;
 		_owner_document = _textarea.ownerDocument;
