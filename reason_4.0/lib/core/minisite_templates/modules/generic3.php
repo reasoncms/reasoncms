@@ -479,8 +479,16 @@
 			}
 		} // }}}
 		
-		//Called upon by _show_item()
-		//Calls on further_checks_on_entity()
+		/**
+		 * Check a given id to see if it is OK to show
+		 *
+		 * Called upon by _show_item()
+		 * Calls on further_checks_on_entity()
+		 *
+		 * @todo check to see if the order of the checking is appropriate... it seems a little wonky
+		 * @param integer $id Reason Entity ID
+		 * @return mixed false if not OK, the entity object if OK
+		 */
 		function check_id( $id )
 		{
 			$e = new entity ( $id );
@@ -503,7 +511,7 @@
 			 	$this->ok_ids[] = $id;
 				return $e;
 			}
-			elseif(in_array($id,$this->ids))
+			elseif(array_key_exists($id,$this->ids))
 			{
 				$this->ok_ids[] = $id;
 				return $e;
@@ -514,7 +522,9 @@
 				header('HTTP/1.0 404 Not Found');
 				if(!empty($_SERVER['HTTP_REFERER']))
 				{
-					trigger_error('ID given does not correspond to an appropriate entity. Referer: '.$_SERVER['HTTP_REFERER']);
+					$parts = parse_url($_SERVER['HTTP_REFERER']);
+					if($parts['host'] == HTTP_HOST_NAME) // probably can't do anything about it if the link is offsite...
+						trigger_error('ID given does not correspond to an appropriate entity. Referer: '.$_SERVER['HTTP_REFERER']);
 				}
 				return false;
 			}
