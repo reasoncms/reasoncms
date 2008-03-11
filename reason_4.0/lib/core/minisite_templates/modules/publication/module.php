@@ -933,14 +933,11 @@ class PublicationModule extends Generic3Module
 			// This  should return true if the entity looks OK to be shown and false if it does not.
 			if(empty($this->items[$entity->id()]))
 			{
-				if($entity->has_left_relation_with_entity($this->publication, 'news_to_publication'))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				$publication_check = ($entity->has_left_relation_with_entity($this->publication, 'news_to_publication'));
+				if ($this->has_issues()) $issue_check = in_array($this->current_item_id, $this->get_issues_for_item());
+				else $issue_check = true;
+				if ($publication_check && $issue_check) return true;
+				else return false;
 			}
 			else
 			{
@@ -1043,16 +1040,60 @@ class PublicationModule extends Generic3Module
 					$es->description = 'Selecting issues for this publication';
 					$es->add_type( id_of('issue_type') );
 					$es->limit_tables(array('dated','show_hide'));
-					$es->limit_fields('dated.datetime');
+					$es->limit_fields(array('dated.datetime', 'show_hide.show_hide'));
 					$es->set_order('dated.datetime DESC');
-					$es->add_relation('show_hide.show_hide = "show"');
 					$es->add_left_relationship( $this->publication->id(), relationship_id_of('issue_to_publication') );
-					$this->issues = $es->run_one();
+					$issues = $es->run_one();
+					if (!empty($issues))
+					{
+						$this->issues = $this->filter_hidden_issues($issues);
+					}
+					else $this->issues = false;
 				}
 			}
 			return $this->issues;
 		}
 		
+		function &get_visible_issues()
+		{
+			$issues =& $this->get_issues();
+			$visible_issues = ($issues) ? $this->filter_hidden_issues($issues, false) : false;
+			return $visible_issues;
+		}
+		
+		function &filter_hidden_issues($issues, $site_users_have_access = true)
+		{
+			if ($site_users_have_access && $this->user_has_access_to_site()) return $issues;
+			else
+			{
+				foreach ($issues as $k=>$v)
+				{
+					if ($v->get_value('show_hide') == 'show') $visible_issues[$k] = $v;
+				}
+				return $visible_issues;	
+			}
+		}
+		
+		/**
+		 * check if the currently logged in user has access to the site - do not force login
+		 */
+		function user_has_access_to_site()
+		{
+			static $has_access_to_site;
+			if (!isset($has_access_to_site))
+			{
+				$netid = reason_check_authentication();
+				if ($netid)
+				{
+					reason_include_once('classes/user.php');
+					$user = new user();
+					$has_access_to_site = $user->is_site_user($netid, $this->site_id);
+				}
+				else $has_access_to_site = false;
+			}
+			return $has_access_to_site;
+		}
+			
 		/**
 		* Returns an array of the issues associated with this publication.
 		* Format: $issue_id => $issue_entity
@@ -1071,8 +1112,8 @@ class PublicationModule extends Generic3Module
 				$es->add_right_relationship( $this->current_item_id, relationship_id_of('news_to_issue') );
 				$es->add_relation('entity.id IN ('.implode(", ", array_keys($this->get_issues())).')');
 				$es->set_order('dated.datetime DESC');
-				$issues = $es->run_one();
-				$issues[$this->current_item_id] = $issues;
+				$issue_set = $es->run_one();
+				$issues[$this->current_item_id] = $issue_set;
 			}
 			return $issues[$this->current_item_id];
 		}
@@ -1132,7 +1173,7 @@ class PublicationModule extends Generic3Module
 		*/
 		function get_most_recent_issue()
 		{
-			$issues =& $this->get_issues();
+			$issues =& $this->get_visible_issues();
 			reset($issues); // make sure pointer is at first element		
 			return current($issues);
 		}
