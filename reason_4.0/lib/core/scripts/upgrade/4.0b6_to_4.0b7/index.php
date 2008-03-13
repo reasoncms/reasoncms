@@ -17,6 +17,11 @@
 </head>
 <body>
 <h2>Upgrade Reason from 4.0 Beta 6 to 4.0 Beta 7</h2>
+<h3>Upgrade Notes</h3>
+<p>Reason's object caching system has been moved into carl_util/cache/. There is a new settings file called object_cache_settings.php that
+   may need to be configured for your environment. The object caching system now supports caching using memcached or mysql, as well
+   as caching to the file system. By default, the object cache is configured to use file system caching to the REASON_LOG_DIR (in the Reason
+   environment, or to /tmp/ if the reason_header has not been loaded.</p>
 <h3>Scripts to Run</h3>
 <p>The following scripts should be run to upgrade a Reason 4 Beta 6 database to Reason 4 Beta 7. If you setup Reason with the database distributed with Reason 4 Beta 6 you do not need to run these scripts.</p>
 <ul>
