@@ -93,8 +93,6 @@ class MinisiteTemplate
 		if ($this->use_navigation_cache)
 		{
 			$cache = new ReasonObjectCache($this->site_id . $this->nav_class, 900); // lifetime of 15 minutes
-			$max_last_modified = filemtime(WEB_PATH.trim_slashes($this->site_info->get_value('base_url')).'/.htaccess');
-			if ($max_last_modified) $cache->set_max_last_modified($max_last_modified);
 			$this->pages =& $cache->fetch();
 		}
 		// lets check the persistent cache
