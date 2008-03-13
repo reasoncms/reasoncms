@@ -145,6 +145,7 @@ function get_db_credentials( $conn_name )
 	}
 	else
 	{
+		array_walk($db_info, create_function('&$x', '$x["password"] = "**********";')); // replace password so it will not be exposed onscreen - nwhite
 		trigger_error('Unable to use database connection '.$conn_name.' - No credential information found in database credential file', FATAL);
 	}
 }
