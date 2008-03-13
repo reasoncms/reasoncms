@@ -674,6 +674,12 @@
 			'main_post' => 'content',
 			'sidebar' => '',
 		),
+		'image_slideshow_before_content_one_blurb_subnav_others_sidebar' => array(
+			'main' => 'image_slideshow',
+			'main_post' => 'content',
+			'sub_nav' => array('module' => 'blurb', 'num_to_display' => 1),
+			'sidebar' => 'blurb',
+		),
 		'image_slideshow_before_content_no_nav' => array(
 			'main' => 'image_slideshow',
 			'main_post' => 'content',
