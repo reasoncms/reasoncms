@@ -262,6 +262,10 @@ ul.childrenList {
 .childrenList li {
 	list-style-type: none;
 	margin-bottom: 5px;
+	display:inline-block; /* This is important for ie5-7 haslayout */
+}
+.childrenList li {
+	display:block; /* This is important for ie5-7 haslayout -- do not combine with above rule */
 }
 .childrenList li:after {
     content:".";
@@ -269,9 +273,6 @@ ul.childrenList {
     visibility:hidden;
     clear:left;
     height:0px;
-}
-* html .childrenList li {
-	height:1%;
 }
 .childrenList h4 {
 	margin: 0px;
