@@ -44,11 +44,6 @@
 			echo '<ul>'."\n".implode("\n",$lines).'</ul>'."\n";
 			}
 		} // }}}
-		function show_item_ldap_created($field, $value) //{{{
-		{
-			if( user_is_a( $this->admin_page->user_id , id_of( 'admin_role' ) ) )
-				$this->show_item_default( $field , $value );
-		} // }}}
 		function make_email_link($email) //{{{
 		{
 			return ('<a href="mailto:'.$email.'>'.$email.'</a>');
