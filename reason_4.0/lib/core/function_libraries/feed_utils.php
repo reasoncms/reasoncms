@@ -12,11 +12,12 @@
  */
 function make_feed_link( $url, $title = 'Link to feed', $text = 'xml' )
 {
-	$ret = '<div class="feedInfo"><a href="'.$url.'" title="'.$title.'">'.$text.'</a></div>';
+	$ret = '<div class="feedLink"><div class="feedInfo"><a href="'.$url.'" title="'.$title.'">'.$text.'</a></div>';
 	if(defined('REASON_URL_FOR_GENERAL_FEED_HELP'))
 	{
 		$ret .= '<div class="feedHelp"><a href="'.REASON_URL_FOR_GENERAL_FEED_HELP.'" title="More information about feeds">What is this?</a></div>';
 	}
+	$ret .= '</div>';
 	return $ret;
 }
 
