@@ -53,14 +53,18 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		echo '<div id="slotInfo">'."\n";
 		if(!($this->event->get_value('last_occurence') < date('Y-m-d')))
 		{
-			if(!empty($this->request['delete_registrant']))
+			if(!empty($this->request['delete_registrant']) && $this->request['admin_id'] == $this->user_is_admin() )
 			{
 				$this->delete_registrant();
 			}
 		
-			if(!empty($this->request['admin_id']) && $this->request['admin_id'] == $this->user_is_admin() )
+			if(!empty($this->request['admin_id']) && $this->request['admin_id'] == $this->user_is_admin() && $this->validate_date() )
 			{
 				$this->show_admin_view();
+			}
+			elseif(!$this->validate_date())
+			{
+				$this->show_registration_dates();
 			}
 			elseif(empty($this->request['slot_id']))
 			{
@@ -72,6 +76,31 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 			}
 		}
 		echo '</div>'."\n";
+	}
+	
+	/**
+	 * Registrations need to be accompanied by a valid date
+	 */
+	function validate_date()
+	{
+		$date = (isset($this->request['date'])) ? $this->request['date'] : '';
+		if (empty($date)) return false;
+		else
+		{
+			$possible_dates_str = $this->event->get_value('dates');
+			$possible_dates = explode(", ", $possible_dates_str);
+			if (in_array($date, $possible_dates))
+			{
+				return true;
+			}
+			else
+			{
+				carl_make_redirect(array('date' => ''));
+				header("Location: " . carl_make_redirect(array('date' => '')));
+				exit;
+			}
+		}
+		// if the value for request['date'] is missing or invalid
 	}
 	
 	function gen_cancel_link()
@@ -129,12 +158,61 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		}
 	}
 	
+	/**
+	 * We require a specific date to be passed in order to register for an event
+	 * 
+	 * If only one date is available, redirect to that date ... otherwise show a screen that allows a date selection
+	 */
+	function show_registration_dates()
+	{
+		$possible_dates =& $this->get_possible_registration_dates();
+		if (count($possible_dates) == 1) // redirect to the date
+		{
+			$date = current($possible_dates);
+			$link = carl_make_redirect(array('date' => $date));
+			header("Locaiton: " . $link);
+			exit;
+		}
+		else
+		{
+			echo '<h3>To register, please choose a date</h3>';
+			echo '<ul>';
+			foreach ($possible_dates as $the_date)
+			{
+				$link = carl_make_link(array('date' => $the_date));
+				echo '<li>';
+				echo '<a href="'. $link . '">'.prettify_mysql_datetime($the_date).'</a>';
+				echo '</li>';
+			}
+			echo '</ul>';
+		}
+	}
+	
+	function &get_possible_registration_dates()
+	{
+		$possible_dates_str = $this->event->get_value('dates');
+		$possible_dates = explode(", ", $possible_dates_str);
+		$cur_date = get_mysql_datetime();
+		$time_frag = substr($this->event->get_value('datetime'), 10);
+		foreach ($possible_dates as $k=>$v)
+		{
+			$working_date = $v . $time_frag;
+			if ($cur_date > $working_date)
+			{
+				unset($possible_dates[$k]);
+			}
+		}
+		return $possible_dates;
+	}
+	
 	function show_registration_form()
 	{
 		$slot_entity = get_entity_by_id($this->request['slot_id']);
 		echo '<div class="form">'."\n";
 		echo '<h3>Register for '.$this->event->get_value('name').' ('.$slot_entity['name'].')'.'</h3>'."\n";
 		$form = new EventSlotRegistrationForm($this->event, $this->request, $this->delimiter1, $this->delimiter2, $this->gen_cancel_link());
+		if (count($this->get_possible_registration_dates() > 1))
+		$form->show_date_change_link();
 		$form->run();
 		echo '</div>'."\n";
 	}
@@ -183,7 +261,7 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		echo '</div>'."\n";
 	}
 
-	function get_spaces_available($slot_values)
+	function get_spaces_available($slot_values, $date = '')
 	{
 		$event_entity = get_entity_by_id($this->request['event_id']);
 		$capacity = $slot_values['registration_slot_capacity'];
@@ -199,7 +277,7 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 					return $capacity;
 				}
 				$all_registrants = explode($this->delimiter1, $registrant_str);
-				$registrants = $this->get_registrants_for_this_date($all_registrants);
+				$registrants = $this->get_registrants_for_this_date($all_registrants, $date);
 
 			}
 			//if the last occurence of this event has already happened, there aren't any spaces available.
@@ -217,21 +295,22 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		return ($capacity - count($registrants));
 	}
 	
-	function get_registrants_for_this_date($all_registrants)
+	function get_registrants_for_this_date($all_registrants, $date = '')
 	{
+		$date = (!empty($date)) ? $date : $this->request['date'];
 		$registrants = array();
 		foreach($all_registrants as $registrant)
 		{
 			$registrant_pieces = explode($this->delimiter2, $registrant);
 			$event_date = $registrant_pieces[0];
-			if($event_date == $this->request['date'])					
+			if($event_date == $date)					
 			{
 				//use date/time signed up and name as the key for the $registrants array
 				$registrants[$registrant_pieces[3]] = $registrant;
 			}
 		}
 		return $registrants; 				
-	}	
+	}
 	
 	function user_is_admin()
 	{
@@ -270,8 +349,10 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 			
 			if($successful_update)
 			{
-				//$this->admin_messages .= '<h4>Success</h4><p>Successfully deleted registrant with the following information: '.$old_data.'</p>';
-				$this->admin_messages .= '<h4>Success</h4><p>Successfully deleted registrant.</p>';
+				// redirect on successful delete
+				$link = carl_make_redirect(array('delete_registrant' => ''));
+				header("Location: " . $link );
+				exit;
 			}
 			else
 				{

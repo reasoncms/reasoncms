@@ -11,10 +11,9 @@ class EventSlotRegistrationForm extends Disco{
 	* @var array
 	*/
 	var $elements = array(
+		'event_date',
 		'name',
 		'email',
-		'event_date' => 'hidden',
-		'old_registrant_data' => 'hidden',
 	);
 	
 	/**
@@ -41,6 +40,7 @@ class EventSlotRegistrationForm extends Disco{
 	var $event;
 	var $request_array;
 	var $cancel_link;
+	var $show_date_change_link = false;
 	
 	function EventSlotRegistrationForm($event_entity, $request_array, $delimiter1, $delimiter2, $cancel_link)
 	{
@@ -72,6 +72,21 @@ class EventSlotRegistrationForm extends Disco{
 		return true;
 	}
 	
+	function on_every_time()
+	{
+		$this->change_element_type('event_date', 'solidtext');
+		$this->set_value('event_date', prettify_mysql_datetime($this->request_array['date']));
+		if ($this->show_date_change_link == true)
+		{
+			$link = carl_make_link(array('date' => '', 'slot_id' => ''));
+			$this->add_comments('event_date', '<a href="'. $link . '">Register for a different date</a>');
+		}
+	}
+	
+	function show_date_change_link()
+	{
+		$this->show_date_change_link = true;
+	}
 	
 	/**
 	* Actions which happen based on the validated data from the form.
