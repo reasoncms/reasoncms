@@ -88,6 +88,8 @@ class PublicationModule extends Generic3Module
 	var $post_form_file_location = 'minisite_templates/modules/publication/forms/submit_post.php';
 	var $commenting_status = array();
 	var $css = 'css/publication/default_styles.css'; // style sheet(s) to be added
+	var $_ok_to_view = true;
+	var $_unauthorized_message = NULL;
 		
 	/** 
 	* Stores the default class names and file names of the markup generator classes used by the module.  
@@ -337,7 +339,7 @@ class PublicationModule extends Generic3Module
 		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'show_login_link', 
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
 		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css',
-		      					  'show_featured_items','jump_to_item_if_only_one_result');
+		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization');
 		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info, 
 							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
 							      'variables_to_pass' => $this->variables_to_pass);
@@ -433,6 +435,50 @@ class PublicationModule extends Generic3Module
 				&&	(!empty($this->request[$this->query_string_frag.'_id']) || !empty($this->request['section_id']) || !empty($this->request['issue_id']) ) )
 			{
 				$this->parent->pages->make_current_page_a_link();
+			}
+			
+			$this->_handle_authorization();
+		}
+	}
+	
+	function _handle_authorization()
+	{
+		if(!empty($this->params['authorization']))
+		{
+			reason_include_once($this->params['authorization']);
+			if(empty($GLOBALS[ '_reason_publication_auth_classes' ][$this->params['authorization']]) || !class_exists($GLOBALS[ '_reason_publication_auth_classes' ][$this->params['authorization']]))
+			{
+				trigger_error($this->params['authorization'].' did not define its class name properly in $GLOBALS[ \'_reason_publication_auth_classes\' ]');
+				return; // should it shut everything down or open everything up???
+			}
+			else
+			{
+				$netid = $this->get_user_netid();
+				$item_id = !empty($this->request['story_id']) ? $this->request['story_id'] : NULL;
+				
+				$auth = new $GLOBALS[ '_reason_publication_auth_classes' ][$this->params['authorization']]();
+				$auth->set_username($netid);
+				$auth->set_item_id($item_id);
+				if($this->has_issues())
+				{
+					$auth->set_issue_id($this->issue_id);
+					if($ri = $this->get_most_recent_issue());
+						$auth->set_most_recent_issue_id($ri->id());
+				}
+				if(!$auth->authorized_to_view())
+				{
+					if(!$netid)
+					{
+						// header to the login page
+						force_login($auth->get_login_message_unique_name());
+					}
+					else
+					{
+						// store a not authorized flag for the display phase to pick up
+						$this->_ok_to_view = false;
+						$this->_unauthorized_message = $auth->get_unauthorized_message();
+					}
+				}
 			}
 		}
 	}
@@ -727,6 +773,7 @@ class PublicationModule extends Generic3Module
 			return true;
 		}
 	}
+	
 
 ////////
 // DISPLAY INDIVIDUAL ITEM METHODS
@@ -739,6 +786,11 @@ class PublicationModule extends Generic3Module
 	*/
 	function show_item_content( $item ) // {{{
 	{
+		if( !$this->_ok_to_view )
+		{
+			echo $this->_unauthorized_message;
+			return;
+		}
 		$this->item = $item;
 		
 		//if this is an issued publication, we want to say what issue we're viewing
@@ -783,6 +835,11 @@ class PublicationModule extends Generic3Module
 	*/ 
 	function do_list()
 	{	
+		if( !$this->_ok_to_view )
+		{
+			echo $this->_unauthorized_message;
+			return;
+		}
 		$list_markup_generator = $this->set_up_generator_of_type('list');
 		echo $list_markup_generator->get_markup();
 		
