@@ -168,9 +168,9 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		$possible_dates =& $this->get_possible_registration_dates();
 		if (count($possible_dates) == 1) // redirect to the date
 		{
-			$date = current($possible_dates);
+			$date = $possible_dates[0];
 			$link = carl_make_redirect(array('date' => $date));
-			header("Locaiton: " . $link);
+			header("Location: " . $link);
 			exit;
 		}
 		else
@@ -211,8 +211,11 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		echo '<div class="form">'."\n";
 		echo '<h3>Register for '.$this->event->get_value('name').' ('.$slot_entity['name'].')'.'</h3>'."\n";
 		$form = new EventSlotRegistrationForm($this->event, $this->request, $this->delimiter1, $this->delimiter2, $this->gen_cancel_link());
-		if (count($this->get_possible_registration_dates() > 1))
-		$form->show_date_change_link();
+		$possible_date =& $this->get_possible_registration_dates();
+		if (count($possible_date) > 1)
+		{
+			$form->show_date_change_link();
+		}
 		$form->run();
 		echo '</div>'."\n";
 	}
