@@ -239,7 +239,8 @@ class EventsModule extends DefaultMinisiteModule
 	}
 	function init_and_run_ical_calendar()
 	{
-		$init_array = $this->make_reason_calendar_init_array($this->today, '', 'all');
+		$start_date = !empty($this->request['start_date']) ? $this->request['start_date'] : $this->today;
+		$init_array = $this->make_reason_calendar_init_array($start_date, '', 'all');
 		
 		$this->calendar = new reasonCalendar($init_array);
 		
@@ -1442,7 +1443,8 @@ class EventsModule extends DefaultMinisiteModule
 			$filename = 'events.ics';
 		else
 			$filename = 'event.ics';
-		header( reason_iCalendar::get_icalendar_header());
+		$ic = new reason_iCalendar();
+		header( $ic->get_icalendar_header() );
 		header('Content-Disposition: attachment; filename='.$filename.'; size='.$size_in_bytes);
 		echo $ical;
 		die();
