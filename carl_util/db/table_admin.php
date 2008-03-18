@@ -1227,7 +1227,7 @@ class TableAdmin
 		$ret = '';
 		if ($head) // if head we append a flipped row to the head of the array with flipped and mapped keys
 		{
-			$row = carl_clone($this->_row);
+			$row = $this->_row;
 			if (isset($this->fields_to_export)) $this->limit_export_columns($row);
 			foreach($row as $k=>$v)
 			{
