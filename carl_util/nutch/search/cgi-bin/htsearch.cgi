@@ -7,13 +7,23 @@
 
 use CGI qw/:all/;
 
-my $words ;
-my $restrict ; 
+my $words = "";
+my $restrict = ""; 
 
 if(defined(param('words'))){ $words = "words=" . param('words') } else { $words = ""; }
-if(defined(param('restrict'))){ $restrict = "&restrict=" . param('restrict') } else { $restrict = ""; }
+
+# if we're passed a PHP array of values
+if(defined(param('restrict[]'))){ 
+
+	my @restrict_set = param('restrict[]');
+	foreach my $r (@restrict_set){
+		$restrict .= "&restrict[]=" . $r ;
+		}
+	}
+
+# if we're passed a single value
+if(defined(param('restrict'))){ $restrict = "&restrict=" . param('restrict') } 
 
 my $URL = "/search.php?" . $words . $restrict ;
 
 print "Status: 302 Moved\nLocation: $URL\n\n";
-
