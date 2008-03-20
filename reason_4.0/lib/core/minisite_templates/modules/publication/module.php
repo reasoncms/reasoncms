@@ -64,6 +64,7 @@ class PublicationModule extends Generic3Module
 	var $session;		//reason session
 	var $additional_query_string_frags = array ('comment_posted', 'issue', 'section');
 	var $issue_id;							// id of the issue being viewed - this is a class var since the most recent issue won't necessarily be in $_REQUEST
+	var $all_issues = array();
 	var $issues = array();					// $issue_id => $issue_entity
 	var $sections = array();				// $section_id => $section_entity
 	var $no_section_key = 'no_section';		//key to be used in the items_by_section array when there are no sections.
@@ -489,20 +490,22 @@ class PublicationModule extends Generic3Module
 	 */
 	function init_issue()
 	{
-		$issue_keys = false;
+		$user_issue_keys = $all_issue_keys = false;
 		$requested_issue = (!empty($this->request['issue_id'])) ? $this->request['issue_id'] : false;
 		$requested_section = (!empty($this->request['section_id'])) ? $this->request['section_id'] : false;
 		if ($this->current_item_id)
 		{
 			$issues =& $this->get_issues_for_item();
-			$issue_keys = (!empty($issues)) ? array_keys($issues) : false;
+			$user_issue_keys = (!empty($issues)) ? array_keys($issues) : false;
 		}
 		else
 		{
 			if ($requested_issue) 
 			{
-				$issues =& $this->get_issues();
-				$issue_keys = array_keys($issues);
+				$all_issues =& $this->get_all_issues();
+				$user_issues =& $this->get_issues();
+				$all_issue_keys = array_keys($all_issues);
+				$user_issue_keys = array_keys($user_issues);
 			}
 			elseif ($this->_should_restrict_to_current_issue() ) // if no section requested set an issue_id
 			{
@@ -515,17 +518,24 @@ class PublicationModule extends Generic3Module
 				}
 			}
 		}	
-		if ($issue_keys) // item is in an issue
+		if ($requested_issue && (!empty($user_issue_keys) || !empty($all_issue_keys) ) ) // item is in an issue
 		{
-			if (in_array($requested_issue, $issue_keys))
+			if (in_array($requested_issue, $user_issue_keys))
 			{
 				$this->issue_id = $requested_issue; // requested issue verified
 				$this->_add_css_urls_to_head($this->_get_issue_css($this->issue_id));
 				return true;
 			}
-			else
+			elseif (in_array($requested_issue, $all_issue_keys))
 			{
-				$redirect = carl_make_redirect(array('issue_id' => array_shift($issue_keys)));
+				if (!reason_check_authentication()) // person is not logged in, but could have access to a hidden issue - force login
+				{
+					reason_require_authentication();
+				}
+			}
+			elseif (!empty($user_issue_keys))
+			{
+				$redirect = carl_make_redirect(array('issue_id' => array_shift($user_issue_keys)));
 				header('Location: '.$redirect);
 				exit;
 			}
@@ -1093,6 +1103,23 @@ class PublicationModule extends Generic3Module
 			{
 				if($this->publication->get_value('has_issues') == "yes")
 				{
+					$issues =& $this->get_all_issues();
+					if (!empty($issues))
+					{
+						$this->issues =& $this->filter_hidden_issues($issues);
+					}
+					else $this->issues = false;
+				}
+			}
+			return $this->issues;
+		}
+		
+		function &get_all_issues()
+		{
+			if (empty($this->all_issues))
+			{
+				if($this->publication->get_value('has_issues') == "yes")
+				{
 					$es = new entity_selector( $this->site_id );
 					$es->description = 'Selecting issues for this publication';
 					$es->add_type( id_of('issue_type') );
@@ -1103,12 +1130,12 @@ class PublicationModule extends Generic3Module
 					$issues = $es->run_one();
 					if (!empty($issues))
 					{
-						$this->issues = $this->filter_hidden_issues($issues);
+						$this->all_issues = $issues;
 					}
-					else $this->issues = false;
+					else $this->all_issues = false;
 				}
 			}
-			return $this->issues;
+			return $this->all_issues;
 		}
 		
 		function &get_visible_issues()
