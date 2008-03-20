@@ -44,14 +44,44 @@
 			{
 				echo '<h3>' . $this->header_text .'</h3>';
 			}
+			$this->run_form_open();
+			$this->run_search_input_field();
+			$this->run_script_go();
+			$this->run_noscript_go();
+			$this->run_restrict();
+			$this->run_form_hidden_fields();
+			$this->run_form_close();
+		}
+		function run_form_open()
+		{
 			echo '<form method="'.REASON_SEARCH_FORM_METHOD.'" action="'.REASON_SEARCH_ENGINE_URL.'" name="search" class="searchForm">'."\n";
+		}
+		function run_search_input_field()
+		{
 			echo '<input type="text" name="'.REASON_SEARCH_FORM_INPUT_FIELD_NAME.'" size="'.min(strlen($this->default_text), 40).'" value="'.$this->default_text.'" onfocus=\'if(this.value=="'.$this->default_text.'") {this.value="";}\' onblur=\'if(this.value=="") {this.value="'.$this->default_text.'";}\' class="searchInputBox" id="minisiteSearchInput" />'."\n";
+		}
+		function run_script_go()
+		{
 			echo '<a href="javascript:document.search.submit()" class="searchSubmitLink">Go</a>'."\n";
+		}
+		function run_noscript_go()
+		{
 			echo '<noscript><input name="go" type="submit" value="go" /></noscript>'."\n";
+		}
+		
+		function run_restrict()
+		{
 			echo '<input type="hidden" name="'.REASON_SEARCH_FORM_RESTRICTION_FIELD_NAME.'" value="http://'.REASON_HOST . $this->parent->site_info->get_value('base_url').'" />'."\n";
+		}
+		function run_form_hidden_fields()
+		{
 			echo REASON_SEARCH_FORM_HIDDEN_FIELDS."\n";
+		}
+		function run_form_close()
+		{
 			echo '</form>';
 		}
+		
 		function get_documentation()
 		{
 			if($this->has_content())
