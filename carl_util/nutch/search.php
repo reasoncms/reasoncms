@@ -19,11 +19,30 @@
 	if(isset($_REQUEST['words'])){ $query .= " " . $_REQUEST['words']; }
 
 	// limit to a particular URL
-	if(isset($_REQUEST['restrict'])){ 
-		$url = $_REQUEST['restrict'] ; 
-		$url = preg_replace('/http:\/\//i', '', $url);
-		$url = preg_replace('/https:\/\//i', '', $url);
-		$query .= " url:" . $url ; 
+	if(isset($_REQUEST['restrict'])){
+
+
+        if(is_array($_REQUEST['restrict'])){
+
+            $count = 0 ; 
+
+            foreach($_REQUEST['restrict'] as $restrict){
+                $url = $restrict ; 
+                $url = preg_replace('/http:\/\//i', '', $url);
+                $url = preg_replace('/https:\/\//i', '', $url);
+
+                if($count > 0){ $query .= " OR"; }
+                $query .= " url:" . $url ; 
+                $count++ ; 
+
+                }
+            }
+        else { 
+            $url = $_REQUEST['restrict'] ; 
+            $url = preg_replace('/http:\/\//i', '', $url);
+            $url = preg_replace('/https:\/\//i', '', $url);
+            $query .= " url:" . $url ; 
+            }
 		}
 
 	// reformat the query string for required words specified on the advanced search page
