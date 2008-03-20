@@ -33,6 +33,28 @@ function make_sure_username_is_user($username, $creator_id)
 }
 
 /**
+ * check if the currently logged in user has access to the site - do not force login
+ */
+function user_has_access_to_site($site_id, $force_refresh = false)
+{
+	static $user;
+	static $has_access_to_site;
+	
+ 	if (!isset($has_access_to_site[$site_id]) || $force_refresh)
+ 	{
+ 		$netid = reason_check_authentication();
+ 		if ($netid)
+ 		{
+			reason_include_once('classes/user.php');
+			if (!isset($user)) $user = new user();
+			$has_access_to_site[$site_id] = $user->is_site_user($netid, $site_id, $force_refresh);
+		}
+		else $has_access_to_site[$site_id] = false;
+	}
+	return $has_access_to_site[$site_id];
+}
+
+/**
 * check_authentication returns a username from http authentication or the session and forces login if not found
 * @param string $msg_uname unique name of text blurb to show on the login page
 * @deprecated since reason 4 beta 4 - use reason_check_authentication or reason_required_authentication
