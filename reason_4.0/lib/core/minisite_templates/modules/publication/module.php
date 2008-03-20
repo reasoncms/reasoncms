@@ -518,7 +518,7 @@ class PublicationModule extends Generic3Module
 				}
 			}
 		}	
-		if ($requested_issue && (!empty($user_issue_keys) || !empty($all_issue_keys) ) ) // item is in an issue
+		if ((!empty($user_issue_keys) || !empty($all_issue_keys))) // item is in an issue
 		{
 			if (in_array($requested_issue, $user_issue_keys))
 			{
@@ -1147,7 +1147,7 @@ class PublicationModule extends Generic3Module
 		
 		function &filter_hidden_issues($issues, $site_users_have_access = true)
 		{
-			if ($site_users_have_access && $this->user_has_access_to_site()) return $issues;
+			if ($site_users_have_access && user_has_access_to_site($this->site_id)) return $issues;
 			else
 			{
 				foreach ($issues as $k=>$v)
@@ -1156,26 +1156,6 @@ class PublicationModule extends Generic3Module
 				}
 				return $visible_issues;	
 			}
-		}
-		
-		/**
-		 * check if the currently logged in user has access to the site - do not force login
-		 */
-		function user_has_access_to_site()
-		{
-			static $has_access_to_site;
-			if (!isset($has_access_to_site))
-			{
-				$netid = reason_check_authentication();
-				if ($netid)
-				{
-					reason_include_once('classes/user.php');
-					$user = new user();
-					$has_access_to_site = $user->is_site_user($netid, $this->site_id);
-				}
-				else $has_access_to_site = false;
-			}
-			return $has_access_to_site;
 		}
 			
 		/**
