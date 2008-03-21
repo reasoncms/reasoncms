@@ -46,14 +46,14 @@ class blogPostsFeed extends pageTreeFeed
 		}
 		else
 		{
-			$this->feed_description = 'The latest posts from '.$this->blog->get_value('name');
+			$this->feed_description = 'The latest posts from '.strip_tags($this->blog->get_value('name'));
 		}
 	}
 	function get_feed_title()
 	{
 		$this->grab_blog();
 		
-		$this->feed_title = $this->blog->get_value('name').' :: '.$this->institution;
+		$this->feed_title = strip_tags($this->blog->get_value('name')).' :: '.$this->institution;
 	}
 	function get_site_link()
 	{
@@ -77,6 +77,7 @@ class blogPostsFeed extends pageTreeFeed
 		$this->feed->set_item_field_map('pubDate','datetime');
 		
 		$this->feed->set_item_field_handler( 'description', 'expand_all_links_in_html', false );
+		$this->feed->set_item_field_handler( 'title', 'strip_tags', false );
 		
 		$this->feed->es->add_relation( 'show_hide.show_hide = "show"' );
 		$this->feed->es->set_order( 'datetime DESC' );
