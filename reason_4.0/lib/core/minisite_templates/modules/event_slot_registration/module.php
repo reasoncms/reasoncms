@@ -273,7 +273,7 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		if($event_entity['recurrence'] != 'none')
 		{
 			//if the last occurence of this event hasn't already happened, figure out which registrants registered for the next date.
-			if($event_entity['last_occurence'] > date('Y-m-d'))
+			if($event_entity['last_occurence'] >= date('Y-m-d'))
 			{
 				if(empty($registrant_str))
 				{
