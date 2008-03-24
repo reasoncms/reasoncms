@@ -490,7 +490,7 @@ class PublicationModule extends Generic3Module
 	 */
 	function init_issue()
 	{
-		$user_issue_keys = $all_issue_keys = false;
+		$user_issue_keys = $all_issue_keys = array();
 		$requested_issue = (!empty($this->request['issue_id'])) ? $this->request['issue_id'] : false;
 		$requested_section = (!empty($this->request['section_id'])) ? $this->request['section_id'] : false;
 		if ($this->current_item_id)
