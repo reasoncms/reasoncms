@@ -459,6 +459,13 @@
 			'main_post' => 'events_archive',
 			'sidebar' => '',
 		),
+		'events_archive_verbose' => array(
+			'main_post' => array(
+				'module'=>'events_archive',
+				'list_type'=>'verbose',
+			),
+			'sidebar' => '',
+		),
 		'events_archive_nav_below' => array(
 			'main' => 'events_archive',
 			'main_post'=>'navigation',
