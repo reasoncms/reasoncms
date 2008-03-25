@@ -29,5 +29,9 @@
 <li><a href="site_parent_rel.php">Upgrade parent-child site relationship</a></li>
 <li><a href="new_themes.php">Add new themes</a></li>
 </ul>
+<h3>Scripts to Maybe Run</h3>
+<ul>
+<li><a href="blurb_page_type_change.php">Change blurb page types to demote headings</a></li>
+</ul>
 </body>
 </html>
