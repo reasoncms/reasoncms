@@ -10,7 +10,8 @@
 		'blurb_unique_names_to_show' => '',
 		'num_to_display' => '',
 		'rand_flag' => false,
-		'exclude_shown_blurbs' => true );
+		'exclude_shown_blurbs' => true,
+		'demote_headings' => 1, );
 		var $es;
 		var $blurbs = array();
 		
@@ -92,7 +93,7 @@
 			{
 				$i++;
 				echo '<div class="blurb number'.$i.'">';
-				echo tagSearchReplace($blurb->get_value('content'), 'h3', 'h4');
+				echo demote_headings($blurb->get_value('content'), $this->params['demote_headings']);
 				echo '</div>'."\n";
 			}
 			echo '</div>'."\n";
