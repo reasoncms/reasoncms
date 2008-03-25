@@ -48,6 +48,29 @@ function _tagMap($value, $transform_array)
 }
 
 /**
+ * Replace headings with less-important headings
+ *
+ * E.g. if $steps is 1, h4s become h5s
+ * if $steps is 2, h4s become h6es
+ * @param string $content XHTML content
+ * @param integer $steps how far to demote
+ */
+function demote_headings($content, $steps)
+{
+	$steps = (integer) $steps;
+	if(empty($steps))
+		return $content;
+	
+	$tag_array = array();
+	for($i = 1; $i <= 6; $i++)
+	{
+		$new_level = $i + $steps;
+		$tag_array['h'.$i] = 'h'.( $new_level < 6 ? $new_level : 6 );
+	}
+	return tagTransform($content, $tag_array);
+}
+
+/**
  * Determine if an HTML snippet is essentially empty -- e.g. is there no actual content in the HTML?
  *
  * e.g. '<p><em></em><br /></p>' should return true -- there is no content here
