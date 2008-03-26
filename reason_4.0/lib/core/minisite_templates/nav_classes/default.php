@@ -152,6 +152,10 @@
 		{
 			$this->link_to_current_page = true;
 		}
+		function should_link_to_current_page()
+		{
+			return $this->link_to_current_page;
+		}
 		function get_home_page_link_text()
 		{
 			$home_page = $this->values[ $this->root_node() ];
@@ -177,7 +181,7 @@
 				$page_name = $item->get_value( 'link_name' ) ? $item->get_value( 'link_name' ) : $item->get_value('name');
 			}
 			$page_name = strip_tags($page_name,'<span><strong><em>');
-			if( $this->cur_page_id != $item->id() || $this->link_to_current_page )
+			if( $this->cur_page_id != $item->id() || $this->should_link_to_current_page() )
 			{
 				$link = $this->get_full_url($item->id());
 				
