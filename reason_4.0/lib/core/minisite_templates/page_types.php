@@ -95,6 +95,15 @@
 			'pre_sidebar' => 'image_sidebar',
 			'sidebar' => 'av',
 		),
+		'basic_tabs' => array(
+			'main_head' => 'basic_tabs',
+		),
+		'basic_tabs_parent' => array(
+			'main_head' => array(
+				'module'=>'basic_tabs',
+				'mode'=>'parent',
+			),
+		),
 		'publication' => array(
 			'main_post'=>'publication',
 			'main_head' => 'publication/title',
