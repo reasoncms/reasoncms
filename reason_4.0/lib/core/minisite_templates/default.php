@@ -123,8 +123,8 @@ class MinisiteTemplate
 			$this->pages->textonly = $this->textonly;
 		if (!empty($this->textonly))
 		{
-			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'/css/textonly_styles.css');
-			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'/css/print_styles.css','print');
+			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/textonly_styles.css');
+			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/print_styles.css','print');
 		}
 		
 		if( $this->pages->values  )
@@ -238,6 +238,11 @@ class MinisiteTemplate
 	{
 		// add the charset information
 		$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ) );
+		
+		if(defined('REASON_DEFAULT_FAVICON_PATH') && REASON_DEFAULT_FAVICON_PATH )
+		{
+			$this->head_items->add_head_item('link',array('rel'=>'shortcut icon','href'=>REASON_DEFAULT_FAVICON_PATH, ) );
+		}
 		
 		// array of meta tags to search for in the page entity
 		// key: entity field
