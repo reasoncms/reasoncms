@@ -173,6 +173,7 @@
 													'language_center_site'=>array('blurb'=>'Blurbs below the content',),
 													'digital_commons_site'=>array('assets_with_author_and_date'=>'Assets below the content',),
 													'recruit_center'=>array('recruit_center_profile'=>'Recruit Center Profile',),
+													'institutional_research'=>array('basic_tabs'=>'Tabbed Page','basic_tabs_parent'=>'Parent of Tabbed Page',),
 												);
 				
 					if(!empty($types_to_optional_pages))
