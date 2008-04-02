@@ -62,7 +62,7 @@ class DefaultObjectCache
 	{
 		foreach ($constants as $k=>$v)
 		{
-			define($k, $v);
+			if (!defined($k)) define($k, $v);
 		}
 	}
 	
