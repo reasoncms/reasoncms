@@ -48,7 +48,9 @@
 		$tidy_2_lib_available = (!empty($tidy_funcs)) && (array_search('tidy_setopt', $tidy_funcs) === false);
 		
 		$text = protect_string_from_tidy( $text );
-				
+		
+		$text = '<html><body>'.$text.'</body></html>';
+		
 		if ($tidy_2_lib_available) // Run tidy for PHP 5
 		{
 			$tidy = new tidy();
