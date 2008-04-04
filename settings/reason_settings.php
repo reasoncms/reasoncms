@@ -713,11 +713,20 @@
 	
 	/**
 	 * REASON_DEFAULT_ALLOWED_TAGS
-	 * A whitelist of the HTML tags Reason will allow to be saved to the database.
+	 * A whitelist of the XHTML tags Reason will allow to be saved to the database.
 	 *
-	 * This string should be in the same format as the second argument to php's built-in strip_tags() function, e.g.: '<a><abbrev><acronym><address>'
+	 * Note: The default vaue of this setting is the set of xhtml strict elements that can be placed in the body of a page
+	 *
+	 * The two exceptions are the <script> tag, which is disabled 
+	 * (but which can be enabled by adding it to this setting),
+	 * and the <u> tag, which is enabled for legacy reasons.
+	 *
+	 * Note that if your templates all use transitional doctypes, the following tags deprecated may be added:
+	 * <applet><center><dir><font><iframe><isindex><menu><s><strike><xmp>
+	 *
+	 * This string should be in the same format as the second argument to php's built-in strip_tags() function, e.g.: '<a><abbr><acronym><address>'
 	 */
-	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbrev><acronym><address><area><au><author><b><big><blockquote><bq><br><caption><center><cite><code><col><colgroup><credit><dfn><dir><div><dl><dt><dd><em><fn><form><h1><h2><h3><h4><h5><h6><hr><i><img><input><lang><lh><li><link><listing><map><math><menu><multicol><nobr><note><ol><option><p><param><person><plaintext><pre><samp><select><small><strike><strong><sub><sup><table><tbody><td><textarea><tfoot><th><thead><tr><tt><u><ul><var><wbr>');
+	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbr><acronym><address><area><b><bdo><big><blockquote><br><button><caption><cite><code><col><colgroup><dd><del><dfn><div><dl><dt><em><fieldset><form><h1><h2><h3><h4><h5><h6><hr><i><img><input><ins><kbd><label><legend><li><map><noscript><object><ol><optgroup><option><p><param><pre><q><samp><select><span><small><strike><strong><sub><sup><table><tbody><td><textarea><tfoot><th><thead><tr><tt><u><ul><var>');
 	
 	/**
 	 * REASON_DEFAULT_FOOTER_XHTML
@@ -733,4 +742,15 @@
 	 * [[lastmodified]] is replaced with the date the page was most recently modified
 	 */
 	define('REASON_DEFAULT_FOOTER_XHTML','<div id="maintainer">[[sitename]] pages maintained by [[maintainer]]</div><div id="lastUpdated">This page was last updated on [[lastmodified]]</div>');
+	
+	/**
+	 * REASON_DEFAULT_FAVICON_PATH
+	 *
+	 * The URL of the image that should be used as a favicon for sites in this instance.
+	 *
+	 * Leave this string empty to keep Reason from including a favicon link on pages.
+	 *
+	 * In future releases there will likely be a way to specify favicons for individual sites.
+	 */
+	define('REASON_DEFAULT_FAVICON_PATH','');
 ?>
