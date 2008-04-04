@@ -14,9 +14,8 @@
 									'size' => 30,
 									),
 			'comment_content' => array(
-									'type'=>'loki',
+									'type'=>'textarea',
 									'display_name' => 'Comment',
-									'widgets' => array('strong','em','link',),
 									),
 			'tarbaby_pre' => array(
 									'type'=>'comment',
@@ -62,7 +61,7 @@
 		function commentForm($site_id, $news_item, $hold_comments_for_review, $publication)
 		{
 			$this->site_id = $site_id;
-			$this->site_info = get_entity_by_id ($this->site_id);
+			$this->site_info = new entity($this->site_id);
 			$this->hold_comments_for_review = $hold_comments_for_review;
 			$this->news_item = $news_item;
 			$this->publication = $publication;
@@ -77,7 +76,38 @@
 			{
 				$this->actions['Submit'] = 'Submit Comment (Moderated)';
 			}
-		} 
+				$this->do_wysiwygs();
+		}
+		
+		function do_wysiwygs()
+		{
+			$editor_name = html_editor_name($this->site_info->id());
+			$params = html_editor_params($this->site_info->id());
+			if(strpos($editor_name,'loki') === 0)
+			{
+				if(!empty($this->username) && $user_id = get_user_id( $this->username ) )
+				{
+					if($editor_name == 'loki') //loki 1
+						$params['widgets'] = array('strong','em','link');
+					else
+						$params['widgets'] = array('strong','em','link','blockquote');
+					if( function_exists('reason_user_has_privs') )
+						$params['user_is_admin'] = reason_user_has_privs( $user_id, 'edit_html' );
+				}
+				else
+				{
+					if($editor_name == 'loki') //loki 1
+						$params['widgets'] = array('strong','em');
+					else
+						$params['widgets'] = array('strong','em','blockquote');
+					unset($params['paths']['site_feed']);
+					unset($params['paths']['finder_feed']);
+					unset($params['paths']['default_site_regexp']);
+					unset($params['paths']['default_type_regexp']);
+				}
+			}
+			$this->change_element_type('comment_content',$editor_name,$params);
+		}
 		function get_site_user_id( $username, $site)
 		{
 			// Check if site user is a type on the site
@@ -137,7 +167,7 @@
 			}
 			else
 			{
-				$user_id = $this->site_info['id'];
+				$user_id = $this->site_info->id();
 			}
 	#  Things to consider - difference between names and titles.  Perhaps add a title field and default name to title, 
 	#  then make it be an author-date name if there is not title.  Dave says do first sixty words for name.
@@ -184,7 +214,7 @@
 				$subject = 'New comment on '.strip_tags($this->publication->get_value('name'));
 				$message = 'A comment has beeen added to the post '.strip_tags($this->news_item->get_value('name'));
 				$message .= ' on '.strip_tags($this->publication->get_value('name'));
-				$message .= ' (site: '.strip_tags($this->site_info['name']).'.)';
+				$message .= ' (site: '.strip_tags($this->site_info->get_value('name')).'.)';
 				$message .= "\n\n";
 				if($this->hold_comments_for_review)
 				{
@@ -197,7 +227,7 @@
 					$message .= get_current_url().'#comment'.$this->comment_id."\n\n";
 					$message .= 'Manage this comment:'."\n";
 				}
-				$message .= securest_available_protocol().'://'.REASON_WEB_ADMIN_PATH.'?site_id='.$this->site_info['id'].'&type_id='.id_of('comment_type').'&id='.$this->comment_id."\n\n";
+				$message .= securest_available_protocol().'://'.REASON_WEB_ADMIN_PATH.'?site_id='.$this->site_info->id().'&type_id='.id_of('comment_type').'&id='.$this->comment_id."\n\n";
 				
 				include_once(TYR_INC.'email.php');
 				$e = new Email($this->publication->get_value('notify_upon_comment'), WEBMASTER_EMAIL_ADDRESS, WEBMASTER_EMAIL_ADDRESS, $subject, $message);
