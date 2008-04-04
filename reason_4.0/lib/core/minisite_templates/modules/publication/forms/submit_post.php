@@ -18,12 +18,11 @@
 			'title',
 			'author',
 			'post_content' => array(
-									'type'=>'loki',
-									'widgets'=>'notables',
+									'type'=>'textarea',
 									'display_name' => 'Content',
 								),
 			'description' => array(
-									'type'=>'loki',
+									'type'=>'textarea',
 									'display_name' => 'Excerpt/Teaser (displayed on post listings; not required)',
 								),
 			'categories',
@@ -51,7 +50,7 @@
 		function BlogPostSubmissionForm($site_id, $publication, $user_netID)
 		{
 			$this->publication = $publication;
-			$this->site_info = get_entity_by_id ($site_id);
+			$this->site_info = new entity($site_id);
 			$this->user_netID = $user_netID;
 		}
 		
@@ -66,13 +65,23 @@
 			{
 				$this->set_value('author', $this->user_netID);
 			}
+			$this->do_wysiwygs();
 			$this->do_categories();
 			$this->do_issues();
 			$this->do_sections();
 			$this->set_order($this->get_order_array());
 		}
-
-		
+		function do_wysiwygs()
+		{
+			$editor_name = html_editor_name($this->site_info->id());
+			$params = html_editor_params($this->site_info->id());
+			if(function_exists('reason_user_has_privs') && strpos($editor_name,'loki') === 0 && $user_id = get_user_id( $this->user_netID ) )
+			{
+				$params['user_is_admin'] = reason_user_has_privs( $user_id, 'edit_html' );
+			}
+			$this->change_element_type('post_content',$editor_name,$params);
+			$this->change_element_type('description',$editor_name,$params);
+		}
 		function get_order_array()
 		{
 			return array('dont_post','issue','section','title','author','post_content','description','categories');
@@ -165,7 +174,7 @@
 		}
 		function do_categories()
 		{
-			$es = new entity_selector($this->site_info['id']);
+			$es = new entity_selector($this->site_info->id());
 			$es->add_type(id_of('category_type'));
 			$es->set_order('entity.name ASC');
 			$this->categories = $es->run_one();
@@ -196,11 +205,11 @@
 			
 			if(!empty($this->user_netID))
 			{
-				$user_id = make_sure_username_is_user($this->user_netID, $this->site_info['id']);
+				$user_id = make_sure_username_is_user($this->user_netID, $this->site_info->id());
 			}
 			else
 			{
-				$user_id = $this->site_info['id'];
+				$user_id = $this->site_info->id();
 			}
 					
 			$flat_values = array (
@@ -219,7 +228,7 @@
 				
 			#Who should the author id be of?
 			$this->new_post_id = create_entity( 
-				$this->site_info['id'], 
+				$this->site_info->id(), 
 				id_of('news'), 
 				$user_id, 
 				$flat_values['release_title'], 
@@ -271,7 +280,7 @@
 			{
 				$subject = 'New post on '.strip_tags($this->publication->get_value('name'));
 				$message = 'A post has beeen added to '.strip_tags($this->publication->get_value('name'));
-				$message .= ' on the site '.strip_tags($this->site_info['name']).'.';
+				$message .= ' on the site '.strip_tags($this->site_info->get_value('name')).'.';
 				$message .= "\n\n";
 				$message .= 'View post:'."\n";
 				$message .= carl_construct_redirect(array('story_id'=>$this->new_post_id));
@@ -290,7 +299,7 @@
 		function get_issues()
 		{
 			$issues = array();
-			$es = new entity_selector( $this->site_info['id'] );
+			$es = new entity_selector( $this->site_info->id() );
 			$es->description = 'Selecting issues for this publication';
 			$es->add_type( id_of('issue_type') );
 			$es->add_left_relationship( $this->publication->id(), relationship_id_of('issue_to_publication') );
@@ -301,7 +310,7 @@
 		
 		function get_sections()
 		{
-			$es = new entity_selector( $this->site_info['id']  );
+			$es = new entity_selector( $this->site_info->id()  );
 			$es->description = 'Selecting news sections for this publication';
 			$es->add_type( id_of('news_section_type'));
 			$es->add_left_relationship( $this->publication->id(), relationship_id_of('news_section_to_publication') );
