@@ -724,6 +724,10 @@
 	 * Note that if your templates all use transitional doctypes, the following tags deprecated may be added:
 	 * <applet><center><dir><font><iframe><isindex><menu><s><strike><xmp>
 	 *
+	 * If you plan on serving your content as XHTML 1.1, you may wish to add these tags for
+	 * ruby (pronunciation annotations for East Asian languages):
+	 * <ruby><rb><rbc><rp><rt><rtc>
+	 *
 	 * This string should be in the same format as the second argument to php's built-in strip_tags() function, e.g.: '<a><abbr><acronym><address>'
 	 */
 	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbr><acronym><address><area><b><bdo><big><blockquote><br><button><caption><cite><code><col><colgroup><dd><del><dfn><div><dl><dt><em><fieldset><form><h1><h2><h3><h4><h5><h6><hr><i><img><input><ins><kbd><label><legend><li><map><noscript><object><ol><optgroup><option><p><param><pre><q><samp><select><span><small><strike><strong><sub><sup><table><tbody><td><textarea><tfoot><th><thead><tr><tt><u><ul><var>');
