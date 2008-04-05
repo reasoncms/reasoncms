@@ -682,6 +682,15 @@
 		}
 	} // }}}
 
+	/**
+	* Determines if a given reason user has a given role
+	*
+	* Note: This function is fairly slow (requires a potentially poky db hit on every call).  If you must use it, store its results rather than asking again. Better yet, use reason_user_has_privs().
+	*
+	* @deprecated Use reason_user_has_privs(), for performance reasons and to allow extensibility of user roles
+	* @param integer $user_id
+	* @param integer $role_id
+	*/
 	function user_is_a( $user_id, $role_id ) // {{{
 	{
 		$user = new entity( $user_id );
@@ -690,6 +699,91 @@
 		else
 			return false;
 	} // }}}
+	
+	/**
+	 * Determines if a given reason user has a given privilege
+	 *
+	 * Note: This function is *fast*. There's no need to carefully store and pass around its results -- just call it again.
+	 *
+	 * Privileges:
+	 * <dl>
+	 * <dt>add</dt><dd>The privilege to create new (pending) entities.</dd>
+	 * <dt>edit_pending</dt><dd>The privilege to edit pending entities</dd>
+	 * <dt>delete_pending</dt><dd>The privilege to delete pending entities (e.g. mark them as "deleted")</dd>
+	 * <dt>edit</dt><dd>The privilege to edit live entities</dd>
+	 * <dt>delete</dt><dd>The privilege to delete live entities (e.g. mark them as "deleted")</dd>
+	 * <dt>publish</dt><dd>The privilege to publish entities (e.g. change their state from pending to live)</dd>
+	 * <dt>borrow</dt><dd>The privilege to borrow entities from other sites</dd>
+	 * <dt>expunge</dt><dd>The privilege to expunge deleted entities from the Reason database (That, is remove them forever)</dd>
+	 * <dt>duplicate</dt><dd>The privilege to duplicate entities (By default, limited to admins as of 3/08, as this is a experimental feature of Reason)</dd>
+	 * <dt>edit_html</dt><dd>The privilege to switch between WYSIWYG view and HTML view in the HTML editor</dd>
+	 * <dt>switch_theme</dt><dd>The privilege to change the site's theme (if the site's theme is not locked by an administrator)</dd>
+	 * <dt>pose_as_other_user</dt><dd>The privilege to interact with the Reason edministrative interface as if they were someone else. NOTE: This is a *very* powerful privilege, as it amounts to superuser rights!</dd>
+	 * <dt>assign_any_page_type</dt><dd>The privilege to choose from all Reason page types, rather than a select few</dd>
+	 * <dt>edit_head_items</dt><dd>The privilege to insert arbitrary HTML into the page head (css, scripts, meta tags, etc.)</dd>
+	 * <dt>edit_unique_names</dt><dd>The privilege to give Reason entities unique names. This is necessary for creating sites and types.</dd>
+	 * <dt>edit_fragile_slugs</dt><dd>The privilege to modify a slug that may cause broken links if changed (e.g. publication feed URL slugs)</dd>
+	 * <dt>edit_home_page_nav_link</dt><dd>The privilege to insert a custom link to site home pages in the navigation (instead of the standard "Sitename Home")</dd>
+	 * <dt>manage_allowable_relationships</dt><dd>The privilege to modify, create, and delete the set of relationships can be made between Reason entities. NOTE: This is very powerful, and should only be given to highly trustworthy individuals</dd>
+	 * <dt>view_sensitive_data</dt><dd>The privilege to view any data in Reason</dd>
+	 * <dt>manage_integration_settings</dt><dd>The privilege to modify or override foreign keys and other values in Reason that pertain to integration with external data sources</dd>
+	 * <dt>edit_raw_ldap_filters</dt><dd>The privilege to write full LDAP filters/queries (e.g. in the construction of dynamic groups)</dd>
+	 * <dt>upload_full_size_image/dt><dd>The privilege to keep images from being resized upon upload, thereby retaining their original dimensions</dd>
+	 * <dt>upgrade/dt><dd>The privilege to run Reason's upgrade scripts</dd>
+	 * <dt>db_maintenance/dt><dd>The privilege to run standard database cleanup and sanity-checking scripts</dd>
+	 * <dt>update_urls/dt><dd>The privilege to run Reason's .htaccess regeneration script</dd>
+	 *
+	 * @param integer $user_id The Reason entity id of the user
+	 * @param string $privilege
+	 * @return boolean true if the user has the privilege, false if not
+	 */
+	function reason_user_has_privs( $user_id, $privilege /*, $site_id = NULL, $type_id = NULL, $item_id = NULL */ )
+	{
+		$user_id = (integer) $user_id;
+		if(empty($user_id))
+			return false;
+		static $roles_cache = array();
+		static $privs_cache = array();
+		if(empty($cache[$user_id]))
+		{
+			reason_include_once('classes/entity_selector.php');
+			$es = new entity_selector();
+			$es->add_type(id_of('user_role'));
+			$es->limit_tables();
+			$es->limit_fields(array('unique_name'));
+			$es->add_right_relationship($user_id, relationship_id_of( 'user_to_user_role' ));
+			$roles_cache[$user_id] = $es->run_one();
+			if(empty($roles_cache[$user_id]))
+			{
+				$roles_cache[$user_id][id_of('editor_user_role')] = new entity(id_of('editor_user_role'));
+			}
+		}
+		elseif(isset($privs_cache[$user_id][$privilege]))
+		{
+			return $privs_cache[$user_id][$privilege];
+		}
+		$privs = reason_get_privs_table();
+		foreach($roles_cache[$user_id] as $role)
+		{
+			if(isset($privs[$role->get_value('unique_name')]) && in_array($privilege,$privs[$role->get_value('unique_name')]))
+			{
+				$privs_cache[$user_id][$privilege] = true;
+				return true;
+			}
+		}
+		$privs_cache[$user_id][$privilege] = false;
+		return false;
+	}
+	
+	function reason_get_privs_table()
+	{
+		return array(
+				'contribute_only_role'=>array('add','edit_pending','delete_pending',),
+				'editor_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme',),
+				'power_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme','edit_html','upload_full_size_image',),
+				'admin_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','duplicate','edit_html','switch_theme','pose_as_other_user','assign_any_page_type','edit_head_items','edit_unique_names','edit_fragile_slugs','edit_home_page_nav_link','manage_allowable_relationships','view_sensitive_data','manage_integration_settings','edit_raw_ldap_filters','upload_full_size_image','upgrade','db_maintenance','update_urls',),
+		);
+	}
 
 	function get_owner_site_id( $entity_id ) //{{{
 	{
