@@ -29,10 +29,17 @@ connectDB( REASON_DB );
 *	@author nathan white
 */
 
-$current_user = reason_require_authentication();
-if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
+$current_user = $user_netID = reason_require_authentication();
+$reason_user_id = get_user_id( $user_netID );
+
+if(empty($reason_user_id))
 {
-	die('<h1>You must be a reason administrator to run this script</h1>');
+	die('valid Reason user required');
+}
+
+if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
+{
+	die('You must have upgrade privileges to run this script');
 }
 
 ini_set('max_execution_time', 1800);

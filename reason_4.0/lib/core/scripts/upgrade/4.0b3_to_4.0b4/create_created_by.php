@@ -35,6 +35,17 @@ $root_user_id = get_user_id('root');
 force_secure_if_available();
 
 $user_netID = check_authentication();
+$reason_user_id = get_user_id( $user_netID );
+
+if(empty($reason_user_id))
+{
+	die('valid Reason user required');
+}
+
+if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
+{
+	die('You must have upgrade privileges to run this script');
+}
 
 echo '<h2>Reason Entity Updater - add the created_by field</h2>';
 if (!isset ($_POST['verify']))

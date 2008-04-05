@@ -20,9 +20,15 @@ connectDB( REASON_DB );
 
 $current_user = reason_require_authentication();
 $cur_user_id = get_user_id ( $current_user );
-if (empty($cur_user_id) || !user_is_a( $cur_user_id, id_of('admin_role') ) )
+
+if(empty($cur_user_id))
 {
-	die('<h1>You must be a reason administrator to run this script</h1>');
+	die('valid Reason user required');
+}
+
+if(!reason_user_has_privs( $cur_user_id, 'upgrade' ) )
+{
+	die('You must have upgrade privileges to run this script');
 }
 
 $es = new entity_selector();

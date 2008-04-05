@@ -52,6 +52,11 @@ else
 	die();
 }
 
+if(!reason_user_has_privs( $GLOBALS['__cur_user_id_hack__'], 'upgrade' ) )
+{
+	die('You must have upgrade privileges to run this script');
+}
+
 echo '<h2>Reason: Miscellaneous 4.0b3 to 4.0b4 Updates</h2>';
 if ( !isset ($_POST['verify']))
 {
