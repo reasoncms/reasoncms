@@ -16,7 +16,7 @@
 		
 		function run() // {{{
 		{
-			if(user_is_a($this->admin_page->user_id, id_of('admin_role')))
+			if(reason_user_has_privs($this->admin_page->user_id, 'duplicate'))
 			{
 				echo '<h3>Cloning</h3>'."\n";
 				if(!empty($this->admin_page->request['clone']) && $this->admin_page->request['clone'] == 'true')
