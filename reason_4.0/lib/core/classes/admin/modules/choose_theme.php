@@ -36,14 +36,16 @@
 		{
 			parent::init();
 			$this->site = new entity( $this->admin_page->site_id );
-			if( $this->site->get_value( 'allow_site_to_change_theme' ) == 'false' )
-				$this->self_change = false;
-			else
+			if( ALLOW_REASON_SITES_TO_SWITCH_THEMES && $this->site->get_value( 'allow_site_to_change_theme' ) == 'true' && reason_user_has_privs( $this->admin_page->user_id, 'switch_theme' ) )
+			{
 				$this->self_change = true;
-			if( $this->self_change )
 				$this->admin_page->title = 'Select a Site Theme';
+			}
 			else
+			{
+				$this->self_change = false;
 				$this->admin_page->title = 'Site Theme';
+			}
 		} // }}}
 		/**
 		 * Lists the current and available themes (if appropriate to do so) otherwise, changes the theme
@@ -53,8 +55,6 @@
 		 */
 		function run() // {{{
 		{
-			if( !ALLOW_REASON_SITES_TO_SWITCH_THEMES || user_is_a( $this->admin_page->user_id , id_of( 'contribute_only_role' ) ) )
-				die( 'Quit trying to beat the system.  You\'ll only end up hurting yourself.' );
 			if(!empty($this->admin_page->request[ 'chosen_theme' ] ) )
 			{
 				if( $this->self_change )
@@ -179,7 +179,7 @@
 			{
 				$ret .= '<br /><br />You are currently not allowed to change themes.  In most cases, this is because ';
 				$ret .= 'your site has been given a custom theme.  If you have further questions about this, please contact ';
-				$ret .= 'the web services group.' . "\n";
+				$ret .= REASON_CONTACT_INFO_FOR_CHANGING_USER_PERMISSIONS . "\n";
 			}
 			elseif(!empty($other_themes))
 			{
