@@ -14,12 +14,13 @@ reason_include_once( 'function_libraries/user_functions.php' );
 
 echo '<html><head><title>Fix Templates</title></head><body>'."\n";
 
+
 force_secure_if_available();
 $current_user = check_authentication();
 $user_id = get_user_id ($current_user);
-if (!user_is_a( $user_id, id_of('admin_role') ) )
+if (!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 {
-	die('<h1>Sorry.</h1><p>You do not have permission to fix templates.</p><p>Only Reason users who have the Administrator role may do that.</p></body></html>');
+	die('<h1>Sorry.</h1><p>You do not have permission to fix templates.</p><p>Only Reason users who have upgrade privileges may do that.</p></body></html>');
 }
 
 echo '<h1>Fix Templates</h1>'."\n";

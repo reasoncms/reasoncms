@@ -22,8 +22,11 @@ include_once(XML_PARSER_INC . 'xmlparser.php');
  */
 
 $user_netid = reason_require_authentication();
-
-if ($user_netid && (user_is_a(get_user_id($user_netid), id_of('admin_role'))))
+if($user_netid)
+{
+	$reason_user_id = get_user_id($user_netid);
+}
+if (!empty($reason_user_id) && reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 {
 	if (isset($_REQUEST['do_it']) && ($_REQUEST['do_it'] == 1))
 	{
@@ -56,7 +59,7 @@ if ($user_netid && (user_is_a(get_user_id($user_netid), id_of('admin_role'))))
 else
 {
 	echo '<h3>Unauthorized</h3>';
-	echo '<p>You must be a Reason administrator to run this script</p>';
+	echo '<p>You must have Reason upgrade rights to run this script</p>';
 }
 
 class ThorDatabaseUpdate

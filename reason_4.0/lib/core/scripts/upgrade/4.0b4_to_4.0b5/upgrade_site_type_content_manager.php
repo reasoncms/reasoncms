@@ -31,6 +31,11 @@ if(empty($reason_user_id))
 	die('valid Reason user required');
 }
 
+if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
+{
+	die('You must have upgrade privileges to run this script');
+}
+
 $stt = new entity(id_of('site_type_type'));
 
 if($stt->get_value('custom_content_handler'))

@@ -1,4 +1,17 @@
-<html><head><title>Install the housing module--global installation</title></head><body>
+<?php
+/**
+ * Install the classifieds module
+ *
+ * @package reason
+ * @subpackage scripts
+ *
+ * @todo remove carleton-specific code at end of script
+ */
+
+/**
+ * Start script
+ */
+?><html><head><title>Install the housing module--global installation</title></head><body>
 <?php
 include_once('reason_header.php');
 reason_include_once('function_libraries/admin_actions.php');
@@ -28,12 +41,18 @@ function create_type($site, $type, $user, $name, $array) {
 }
 
 $user = get_user_id(check_authentication());
+if(empty($user))
+{
+	die('valid Reason user required');
+}
+if (!reason_user_has_privs( $user, 'upgrade' ))
+{
+	die('You must have Reason upgrade rights');
+}
 $admin_site = id_of('master_admin');
 
 if (empty($_GET['go']))
 	echo '<a href="?go=go">Upgrade DB with the classified type</a>';
-elseif (!user_is_a($user, id_of('admin_role')))
-	echo 'You must be logged in as an administrator';
 else {
 	echo 'Installing...<br/>';
 

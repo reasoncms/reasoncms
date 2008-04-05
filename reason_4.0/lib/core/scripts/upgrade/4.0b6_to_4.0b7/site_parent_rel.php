@@ -36,9 +36,9 @@ if(empty($reason_user_id))
 	die('valid Reason user required');
 }
 
-if(!user_is_a( $reason_user_id, id_of('admin_role') ) )
+if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 {
-	die('You must be a Reason admin to run this script');
+	die('You must have upgrade privileges to run this script');
 }
 
 ?>

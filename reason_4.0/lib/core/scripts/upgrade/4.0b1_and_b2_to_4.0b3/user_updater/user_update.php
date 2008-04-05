@@ -17,6 +17,14 @@ reason_include_once('function_libraries/admin_actions.php');
 force_secure_if_available();
 $user_netID = check_authentication();
 $user_id = get_user_id($user_netID);
+if(empty($user_id))
+{
+	die('You must be a valid Reason user to run this script');
+}
+if (!reason_user_has_privs( $user_id, 'upgrade' ) )
+{
+	die('Sorry. You do not have permission to run this script. Only Reason users who have upgrade privileges may do that.');
+}
 
 echo '<h2>Reason User Updater</h2>';
 if (!isset ($_POST['verify']))
