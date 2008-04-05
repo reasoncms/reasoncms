@@ -35,9 +35,9 @@ echo '<html><head><title>Reason: Modules</title><meta http-equiv="Content-Type" 
 //xdebug_start_profiling();
 //$s = get_microtime();
 $current_user = reason_require_authentication();
-if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
+if (!reason_user_has_privs( get_user_id ( $current_user ), 'view_sensitive_data' ) )
 {
-	die('<h1>Sorry.</h1><p>You do not have permission to view modules.</p><p>Only Reason users who have the Administrator role may do that.</p></body></html>');
+	die('<h1>Sorry.</h1><p>You do not have permission to view modules.</p>');
 }
 
 $page_types = $GLOBALS['_reason_page_types'];

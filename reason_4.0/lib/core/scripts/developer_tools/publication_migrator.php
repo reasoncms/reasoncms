@@ -727,7 +727,7 @@ class PublicationMigratorHelper
 	function authenticate()
 	{
 		$reason_user_id = $this->get_user_id();
-		return user_is_a( $reason_user_id, id_of('admin_role') );
+		return reason_user_has_privs( $reason_user_id, 'upgrade' );
 	}
 	
 	function ensure_type_is_on_site($type_id)
@@ -826,7 +826,7 @@ $html .= '<body>'."\n";
 
 if (!$pmg->authenticate())
 {
-	$html .= '<h3>Unauthorized</h3><p>You must be a Reason administrator to use this tool</p>';
+	$html .= '<h3>Unauthorized</h3><p>You must have Reason upgrade privileges to use this tool.</p>';
 }
 else
 {

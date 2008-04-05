@@ -22,6 +22,15 @@ echo '<h1>Reason: Check for core->local dependencies</h1>'."\n";
 
 
 include_once( 'reason_header.php' );
+connectDB( REASON_DB );
+reason_include_once( 'function_libraries/user_functions.php' );
+force_secure_if_available();
+$current_user = check_authentication();
+$reason_user_id = get_user_id ( $current_user );
+if (!reason_user_has_privs( $reason_user_id, 'view_sensitive_data' ) )
+{
+	die('<h1>Sorry.</h1><p>You do not have proper permissions to run this script.</p></body></html>');
+}
 
 $dir = REASON_INC.'lib/core/';
 echo '<p>In most cases, core files should not include local files.</p>'."\n";
