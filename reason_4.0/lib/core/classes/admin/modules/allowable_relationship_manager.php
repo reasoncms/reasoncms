@@ -56,7 +56,7 @@
 			{
 				echo '<h3>You do not have the proper privileges to use this module</h3>';
 			}
-			elseif ($this->authenticate())
+			else
 			{
 				$this->table_admin->run();
 			}
@@ -69,13 +69,21 @@
 		{
 			if (!isset($this->authenticated))
 			{
-				$user_netid = reason_require_authentication();
-				if(user_is_a( get_user_id($user_netid), id_of('admin_role') ) )
+				if(!empty($this->admin_page->user_id))
 				{
-					{
-						$user_man = new User();
-						$this->authenticated = $user_man->is_site_user($user_netid, id_of('master_admin'));
-					}
+					$user_id = $this->admin_page->user_id;
+					$user = new entity($user_id);
+					$user_netid = $user->get_value('name');
+				}
+				else
+				{
+					$user_netid = reason_require_authentication();
+					$user_id = get_user_id($user_netid);
+				}
+				if( reason_user_has_privs( $user_id, 'manage_allowable_relationships' ) )
+				{
+					$user_man = new User();
+					$this->authenticated = $user_man->is_site_user($user_netid, id_of('master_admin'));
 				}
 			}
 			return $this->authenticated;
