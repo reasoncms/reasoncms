@@ -15,9 +15,9 @@ include_once( 'reason_header.php' );
 reason_include_once( 'function_libraries/user_functions.php' );
 force_secure_if_available();
 $current_user = check_authentication();
-if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
+if (!reason_user_has_privs( get_user_id ( $current_user ), 'db_maintenance' ) )
 {
-	die('<h1>Sorry.</h1><p>You do not have permission to remove duplicate entities.</p><p>Only Reason users who have the Administrator role may do that.</p></body></html>');
+	die('<html><head><title>Reason: Delete Duplicate Relationships</title></head><body><h1>Sorry.</h1><p>You do not have permission to delete duplicate relationships.</p><p>Only Reason users who have database maintenance privileges may do that.</p></body></html>');
 }
 
 ?>

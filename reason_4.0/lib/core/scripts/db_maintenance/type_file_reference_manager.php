@@ -31,9 +31,9 @@ $authenticated_user_netid = check_authentication();
 auth_site_to_user( id_of('master_admin'), $authenticated_user_netid );
 $user_id = get_user_id( $authenticated_user_netid );
 
-if(!user_is_a( $user_id, id_of('admin_role') ) )
+if (!reason_user_has_privs( $user_id, 'db_maintenance' ) )
 {
-	die('you must have admin priviliges to view this page');
+	die('<html><head><title>Reason: Delete Duplicate Relationships</title></head><body><h1>Sorry.</h1><p>You do not have permission to delete duplicate relationships.</p><p>Only Reason users who have database maintenance privileges may do that.</p></body></html>');
 }
 
 if (!isset($_GET['fields_referencing'])) $_GET['fields_referencing'] = 'local';

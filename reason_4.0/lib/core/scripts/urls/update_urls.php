@@ -15,9 +15,10 @@
 	echo '</head>'."\n";
 	echo '<body>'."\n";
 	
-	if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
+	
+	if (!reason_user_has_privs( get_user_id ( $current_user ), 'update_urls' ) )
 	{
-		die('<h1>Sorry.</h1><p>You do not have permission to update urls.</p><p>Only Reason users who have the Administrator role may do that.</p></body></html>');
+		die('<h1>Sorry.</h1><p>You do not have permission to update urls.</p></body></html>');
 	}
 
 	$es = new entity_selector();

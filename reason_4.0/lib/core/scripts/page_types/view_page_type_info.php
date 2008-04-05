@@ -21,9 +21,9 @@
 	reason_include_once( 'function_libraries/user_functions.php' );
         force_secure_if_available();
         $current_user = check_authentication();
-	if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
+	if (!reason_user_has_privs( get_user_id ( $current_user ), 'assign_any_page_type') )
 	{
-		die('<h1>Sorry.</h1><p>You do not have permission to view page type info.</p><p>Only Reason users who have the Administrator role may do that.</p></body></html>');
+		die('<h1>Sorry.</h1><p>You do not have permission to view page type info.</p></body></html>');
 	}
 
 	echo '<html><head>';

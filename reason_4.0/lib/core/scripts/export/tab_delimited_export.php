@@ -24,11 +24,15 @@ connectDB( REASON_DB );
 reason_include_once( 'function_libraries/user_functions.php' );
 force_secure_if_available();
 $current_user = check_authentication();
-if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
-{
-	die('<h1>Sorry.</h1><p>You do not have permission to export this.</p><p>Only Reason users who have the Administrator role may do that.</p></body></html>');
-}
+$reason_user_id = get_user_id ( $current_user );
 
+// Note: this is a temporary restriction in place until this tool comes out of experimental mode
+if (!reason_user_has_privs( $reason_user_id, 'view_sensitive_data' ) )
+{
+	die('<h1>Sorry.</h1><p>You do not have permission to do an export.</p><p>Only Reason users who have the Administrator role may do that.</p></body></html>');
+}
+else
+{
 
 	if(!empty($_REQUEST['site_id']) && !empty($_REQUEST['type_id']) )
 	{
@@ -46,10 +50,9 @@ if (!user_is_a( get_user_id ( $current_user ), id_of('admin_role') ) )
 		$type = new entity($type_id);
 		$site = new entity($site_id);
 		
-		$reason_user_id = get_user_id ( $_SERVER[ 'REMOTE_USER' ] );
 		$reason_user_entity = new entity($reason_user_id);
 		
-		if( user_is_a($reason_user_id, id_of('admin_role')) || $site->has_left_relation_with_entity( $reason_user_entity, 'site_to_user'))
+		if( reason_user_has_privs( $reason_user_id, 'view_sensitive_data' ) || $site->has_left_relation_with_entity( $reason_user_entity, 'site_to_user'))
 		{
 		
 			$es = new entity_selector( $site_id );
