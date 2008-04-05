@@ -12,9 +12,9 @@
 		} // }}}
 		function run() // {{{
 		{
-			if(!user_is_a($this->admin_page->user_id, id_of('admin_role')))
+			if(!reason_user_has_privs($this->admin_page->user_id, 'view_sensitive_data'))
 			{
-				echo '<p>Sorry; only admin users can get entity information.</p>'."\n";
+				echo '<p>Sorry; use of this module is restricted.</p>'."\n";
 				return;
 			}
 			if(!empty($this->admin_page->request['entity_id_test']))
