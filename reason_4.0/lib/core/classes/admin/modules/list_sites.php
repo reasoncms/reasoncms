@@ -39,7 +39,7 @@
 			$this->ls_count = $lm->get_one_count();
 			$this->live_sites_list = $lm->run_one();
 			
-			if(user_is_a($this->admin_page->user_id, id_of('admin_role'))) 
+			if(reason_user_has_privs( $this->admin_page->user_id, 'view_sensitive_data') )
 			{
 				$nm = new entity_selector();
 				$nm->add_type(id_of('site'));
@@ -61,7 +61,7 @@
 			$this->list_minisites( $this->live_sites_list );
 			
 			/* Non-live sites are listed only if viewed by an admin */
-			if(user_is_a($this->admin_page->user_id, id_of('admin_role')))
+			if(reason_user_has_privs( $this->admin_page->user_id, 'view_sensitive_data'))
 			{
 				
 				echo '<h2>'.$this->nls_count.' Non-Live Sites</h2>'."\n";
