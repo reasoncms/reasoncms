@@ -47,7 +47,8 @@
 				trigger_error( 'Site-specific url_manager called without a site_id in the constructor.  It needs one.', HIGH );
 
 			// set up the directory that is the root of the web tree.
-			$this->web_root = '/'.trim_slashes( !empty( $_SERVER[ '_' ] ) ? WEB_PATH : $_SERVER[ 'DOCUMENT_ROOT' ] ).'/';
+			$prefix = (server_is_windows()) ? '' : '/';
+			$this->web_root = $prefix.trim_slashes( !empty( $_SERVER[ '_' ] ) ? WEB_PATH : $_SERVER[ 'DOCUMENT_ROOT' ] ).'/';
 			
 			$this->test_full_base_url = REASON_INC.'www/tmp/rewrites/';
 			if(!is_dir($this->test_full_base_url))
