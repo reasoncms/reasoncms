@@ -100,6 +100,7 @@
 			{
 				$this->redir_link_text = $this->request ['redir_link_text'];
 			}
+			$this->dest_page = $this->localize_destination_page();
 			$this->sess =& get_reason_session();
 			$this->logged_in = false;
 			// A session exists
@@ -284,6 +285,22 @@
 				echo '<a href="?logout=1" class="logoutLink">Logout</a>';
 			}
 			echo '</div>'."\n";
+		}
+		
+		/**
+		 * The destination page should only be on the same server as the login page ... this function makes sure that is the case
+		 * @author Nathan White
+		 */
+		function localize_destination_page()
+		{
+			if ($this->dest_page)
+			{
+				$current_parts = parse_url( get_current_url() );
+				$parts = parse_url( $this->dest_page );
+				$port = (isset($parts['port']) && !empty($parts['port'])) ? ":".$parts['port'] : '';
+				$query = (isset($parts['query']) && !empty($parts['query'])) ? '?'.$parts['query'] : '';
+				return securest_available_protocol() . '://'.$current_parts['host'].$port.$parts['path'].$query;
+			}
 		}
 	}
 ?>
