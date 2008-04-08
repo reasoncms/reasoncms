@@ -38,7 +38,14 @@
 		{
 			if($this->site_can_manage_images($this->admin_page->site_id))
 			{
-				$this->run_form();
+				if(reason_user_has_privs($this->admin_page->user_id, 'add'))
+				{
+					$this->run_form();
+				}
+				else
+				{
+					echo 'Sorry. You do not have privileges to add images to this site.';
+				}
 			}
 			else
 			{
@@ -73,8 +80,9 @@
 		function run_form()
 		{
 			$f = new $this->image_import_form_class_name;
-			$f->username = $this->admin_page->user->get_value('name');
-			$f->user_id = $this->admin_page->user->id();
+			$user = new entity($this->admin_page->user_id);
+			$f->username = $user->get_value('name');
+			$f->user_id = $this->admin_page->user_id;
 			$f->site_id = $this->admin_page->site_id;
 			$f->add_element('cancel_text','comment',array('text'=>'<a href="'.$this->admin_page->make_link(  array( 'cur_module' => 'Lister' , 'id' => '') ).'">Cancel batch import</a>'));
 			$f->run();
