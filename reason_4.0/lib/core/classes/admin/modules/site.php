@@ -75,12 +75,22 @@
 					$es->limit_tables();
 					$es->limit_fields();
 					$es->set_order('entity.last_modified DESC');
-					$ents = $es->run_one();
+					if(reason_user_has_privs( $this->admin_page->user_id, 'edit' ))
+					{
+						$state = 'Live';
+						$state_link_val = 'live';
+					}
+					else
+					{
+						$state = 'Pending';
+						$state_link_val = 'pending';
+					}
+					$ents = $es->run_one($type->id(),$state);
 					$ents_count = count($ents);
 					$name = $type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' );
 					
 					echo '<li class="'.$type->get_value('unique_name').'">';
-					echo '<h4><a href="'.$this->admin_page->make_link( array( 'type_id' => $type->id(),'cur_module'=>'Lister' ) ).'">'.$name.'</a> <span class="count">('.$ents_count.')</span></h4>'."\n";
+					echo '<h4><a href="'.$this->admin_page->make_link( array( 'type_id' => $type->id(),'cur_module'=>'Lister','state'=>$state_link_val ) ).'">'.$name.'</a> <span class="count">('.$ents_count.')</span></h4>'."\n";
 					if(!empty($ents))
 					{
 						echo '<div class="recent">'."\n";
@@ -90,7 +100,10 @@
 						foreach($ents as $ent_id=>$ent)
 						{
 							if ($i > 3) break;
-							echo '<li class="item'.$i.'"><a href="'.$this->admin_page->make_link( array( 'type_id' => $type->id(),'id'=>$ent_id,'cur_module'=>'Editor' ) ).'">'.strip_tags($ent->get_display_name()).'</a></li>'."\n";
+							$name = strip_tags($ent->get_display_name());
+							if(empty($name))
+								$name = '[unnamed]';
+							echo '<li class="item'.$i.'"><a href="'.$this->admin_page->make_link( array( 'type_id' => $type->id(),'id'=>$ent_id,'cur_module'=>'Editor', ) ).'">'.$name.'</a></li>'."\n";
 							$i++;
 						}
 						echo '</ul>'."\n";
