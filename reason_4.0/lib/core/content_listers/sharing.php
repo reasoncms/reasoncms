@@ -139,13 +139,20 @@
 		{
 			// lets find the sites that share the type and limit our query to those sites
 			$prep_es = new entity_selector();
-			$prep_es->limit_tables();
-			$prep_es->limit_fields();
 			$prep_es->add_type(id_of('site'));
 			$prep_es->add_left_relationship($this->admin_page->type_id, relationship_id_of('site_shares_type'));
-			$state = ( $this->site_is_live()) ? 'Live' : 'All';
-			$this->sites_that_borrow_type = $prep_es->run_one('', $state);
-			
+			if ($this->site_is_live())
+			{
+				$prep_es->limit_tables('site');
+				$prep_es->limit_fields('site.site_state');
+				$prep_es->add_relation('site.site_state = "Live"');
+			}
+			else
+			{
+				$prep_es->limit_tables();
+				$prep_es->limit_fields();
+			}
+			$this->sites_that_borrow_type = $prep_es->run_one();			
 			$es = new entity_selector();
 			$es->add_type( $this->admin_page->type_id );
 			$limiter = (!empty($this->admin_page->request['search_site'])) ? $this->admin_page->request['search_site'] : array_keys($this->sites_that_borrow_type);
