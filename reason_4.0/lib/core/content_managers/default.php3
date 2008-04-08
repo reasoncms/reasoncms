@@ -46,7 +46,7 @@
 		var $right_assoc_display_names = array();
 		var $right_assoc_omit_relationship = array();
 		var $right_assoc_omit_link = array();
-
+		
 		var $actions = array( 'stay_here' => 'Save and Continue Editing' , 'assoc' => 'Save and Associate' , 'finish' => 'Save and Finish' );
 
 		function init( $externally_set_up = false)
@@ -91,6 +91,7 @@
 				$this->entity->get_values();
 				$this->entity->get_relationships();
 			}
+			
 			
 			// make sure to let MySQL auto handle the last_modified field - don't let the user see it
 			$this->remove_element( 'last_modified');
@@ -188,7 +189,7 @@
 				unset( $this->actions );
 				// check for user role.  If contributor, change the name of the button.  The FinishModule is smart
 				// enough to not set this item as live if the user is a contributor.
-				if( !user_is_a( $this->admin_page->user_id, id_of( 'contribute_only_role' ) ) )
+				if( reason_user_has_privs( $this->admin_page->user_id, 'publish' ) )
 				{
 					$this->actions[ 'publish_and_next' ] = 'Publish and go to Next';
 				}
