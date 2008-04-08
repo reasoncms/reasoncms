@@ -44,7 +44,7 @@
 			$this->set_display_name( 'authorized_usernames','These specific people' );
 			$this->set_comments( 'authorized_usernames',form_comment( 'Separate usernames with commas, like this: mryan, gibbsm, jlawrenc' ) );
 			$this->set_display_name( 'arbitrary_ldap_query','People who match this LDAP filter' );
-			if(!user_is_a($this->admin_page->user_id, id_of('admin_role')))
+			if(!reason_user_has_privs($this->admin_page->user_id, 'edit_raw_ldap_filters'))
 			{
 				$fields = array('arbitrary_ldap_query','ldap_group_filter','ldap_group_member_fields');
 				foreach($fields as $field)
