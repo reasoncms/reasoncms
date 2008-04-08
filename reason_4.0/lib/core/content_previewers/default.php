@@ -359,7 +359,7 @@
 		} // }}}
 		function show_item_unique_name( $field , $value ) // {{{
 		{
-			if( user_is_a( $this->admin_page->user_id, id_of( 'admin_role' ) ) )
+			if( reason_user_has_privs( $this->admin_page->user_id, 'view_sensitive_data' ) )
 				$this->show_item_default( $field , $value );
 		} // }}}
 		function show_item_last_edited_by( $field , $value ) // {{{
