@@ -120,9 +120,16 @@
 		function show_all_items() // {{{
 		{
 			$root = $this->root_node();
-			echo '<ul class="navListTop">';
+			ob_start();
 			$this->make_tree( $root , $root , 0);
-			echo '</ul>'."\n";
+			$tree = ob_get_contents();
+			ob_clean();
+			if(!empty($tree))
+			{
+				echo '<ul class="navListTop">';
+				echo $tree;
+				echo '</ul>'."\n";
+			}
 		} // }}}
 		function main_nav_has_content()
 		{
