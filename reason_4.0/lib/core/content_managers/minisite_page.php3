@@ -31,7 +31,7 @@
 				
 			$this->set_comments( 'link_name', form_comment('If the page title is long, you can provide a shorter title for use in the site\'s navigation.<br /><em>Leave this field <strong>empty</strong> to use the full page title.</em>') );
 
-			if( !user_is_a( $this->admin_page->user_id, id_of( 'contribute_only_role' ) ) )
+			if( reason_user_has_privs( $this->admin_page->user_id, 'publish' ) )
 			{
 				if( $this->get_value( 'parent_id' ) != $this->admin_page->id AND !$this->is_new_entity() )
 				{
@@ -63,14 +63,14 @@
 					$this->change_element_type( 'parent_id', 'hidden' );
 				}
 				$this->change_element_type( 'nav_display', 'hidden' );
-				if(!user_is_a( $this->admin_page->user_id, id_of( 'admin_role' )))
-				{
-					$this->change_element_type( 'link_name', 'hidden' );
-				}
-				else
+				if(reason_user_has_privs( $this->admin_page->user_id, 'edit_home_page_nav_link'))
 				{
 					$site = new entity($this->admin_page->site_id);
 					$this->set_comments('link_name',form_comment('The contents of this field will be used to indicate the home page in the site\'s navigation.<br />Leave this field <strong>empty</strong> to use the default text: <strong>'.$site->get_value('name').' Home</strong>'));
+				}
+				else
+				{
+					$this->change_element_type( 'link_name', 'hidden' );
 				}
 			}
 			// if we have a subpage, show the url fragment field
@@ -87,14 +87,13 @@
 				$this->set_display_name( 'custom_page','Type of Page' );
 				
 				// for non-admin users
-				if( !user_is_a( $this->admin_page->user_id, id_of( 'admin_role' ) ) )
+				if( !reason_user_has_privs( $this->admin_page->user_id, 'edit_head_items') )
 				{
 					$this->remove_element( 'extra_head_content' );
-					$this->alter_page_type_section();
 				}
 				
 				// for admin users
-				else
+				if(reason_user_has_privs( $this->admin_page->user_id, 'assign_any_page_type'))
 				{
 					reason_require_once( 'minisite_templates/page_types.php' );
 					$options = array();
@@ -105,6 +104,10 @@
 					$this->change_element_type( 'custom_page' , 'select' , array( 'options' => $options ) );
 					$this->set_comments( 'custom_page', form_comment('<a href="'.REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php">Page type definitions</a>.') );
 
+				}
+				else
+				{
+					$this->alter_page_type_section();
 				}
 				
 				$this->set_comments( 'name', form_comment('What should this page be called?') );
@@ -293,7 +296,7 @@
 			
 			$roots = $this->root_node();
 			if( $this->is_new_entity() && !$this->get_value( 'is_link' ) && !empty($roots))
-				echo '&raquo; <a href="'.$this->admin_page->make_link( array( 'is_link' => 1 ), true ).'">Create an external link instead of a page.</a><br /><br />';
+				echo '&raquo; <a href="'.$this->admin_page->make_link( array( 'is_link' => 1 ) ).'">Create an external link instead of a page.</a><br /><br />';
 		} // }}}
 		function finish() // {{{
 		{
