@@ -181,6 +181,11 @@
 		function do_associate() // {{{
 		{
 			list( $entity_a , $entity_b , $rel_info ) = $this->get_entities();
+			
+			if(!$this->_cur_user_has_privs($entity_a, $entity_b))
+			{
+				return false;
+			}
 
 			//put entity id into site id rather than site id if entity_a is owned by this site
 			$own = $entity_a->get_owner();
@@ -213,6 +218,20 @@
 			if (isset($new_rel_sort)) create_relationship($entity_a->id(),$entity_b->id(),$rel_info['id'],array('site'=>$site_id, 'rel_sort_order'=>$new_rel_sort), true);
 			else create_relationship($entity_a->id(),$entity_b->id(),$rel_info['id'],array('site'=>$site_id), true);
 		} // }}}
+		
+		function _cur_user_has_privs($entity_a, $entity_b)
+		{
+			if($entity_a->get_value('state') == 'Pending' || $entity_b->get_value('state') == 'Pending')
+			{
+				$priv = 'edit_pending';
+			}
+			else
+			{
+				$priv = 'edit';
+			}
+			return reason_user_has_privs($this->admin_page->user_id, $priv);
+			
+		}
 		
 		function remove_relationships( $entity_a , $rel_info ) // {{{
 		{
@@ -259,6 +278,10 @@
 		function do_unassociate() // {{{
 		{
 			list( $entity_a , $entity_b , $rel_info ) = $this->get_entities();
+			if(!$this->_cur_user_has_privs($entity_a, $entity_b))
+			{
+				return false;
+			}
 			$q = 'DELETE FROM relationship where entity_a = ' . $entity_a->id() . 
 				 ' AND entity_b = ' . $entity_b->id() .
 				 ' AND type = ' . $rel_info[ 'id' ];
