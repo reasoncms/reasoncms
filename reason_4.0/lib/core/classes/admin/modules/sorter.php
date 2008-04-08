@@ -82,6 +82,10 @@
 
 		function init() // {{{
 		{
+			if(!reason_user_has_privs($this->admin_page->user_id, 'edit'))
+			{
+				return;
+			}
 			$type_entity = new entity( $this->admin_page->type_id );
 			$this->type_entity = $type_entity;
 			$this->admin_page->title = 'Sorting ' . prettify_string( $type_entity->get_value( 'plural_name' ) );
@@ -98,6 +102,11 @@
 		} // }}}
 		function run() // {{{
 		{
+			if(!reason_user_has_privs($this->admin_page->user_id, 'edit'))
+			{
+				echo 'Sorry. You do not have privileges to edit live items on this site.';
+				return;
+			}
 			$fields = get_fields_by_type( $this->admin_page->type_id );
 			if( is_array($fields) && in_array( 'sort_order' , $fields ) )
 			{
