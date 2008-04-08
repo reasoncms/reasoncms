@@ -32,7 +32,7 @@
 			
 			$this->change_element_type( 'content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
 			
-			if( !user_is_a( $this->admin_page->user_id , id_of( 'admin_role' ) ) )
+			if( !reason_user_has_privs( $this->admin_page->user_id , 'manage_integration_settings' ) )
 				$this->change_element_type( 'ldap_created' , 'hidden' );
 			else
 				$this->set_display_name ('ldap_created', 'Automatically Created');
