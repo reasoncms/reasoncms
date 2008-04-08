@@ -120,7 +120,7 @@
 			$this->set_value( 'type', $type_id );
 			$this->change_element_type( 'last_edited_by','hidden' );
 			$this->set_value( 'last_edited_by', $user_id );
-			if( !user_is_a( $this->admin_page->user_id , id_of('admin_role') ) )
+			if( !reason_user_has_privs( $user_id, 'edit_unique_names' ) )
 				$this->change_element_type( 'unique_name','hidden' );
 			elseif($this->get_value('unique_name'))
 				$this->change_element_type( 'unique_name','solidText' );
