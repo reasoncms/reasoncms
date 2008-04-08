@@ -14,6 +14,15 @@
 */
 
 /**
+ * Modification Note -- CharacterData method -- Nathan White
+ *
+ * old line: $tag->tagData .= trim($data);
+ * new line: $tag->tagData .= trim($data, "\t\n\r\0\x0B");
+ *
+ * Fixes issue where space characters around valid xml entities would be erased.
+ */
+ 
+/**
  * XML Parser Class (php5)
  * 
  * Parses an XML document into an object structure much like the SimpleXML extension.
@@ -197,7 +206,7 @@ class XMLParser
         $tag = $this->GetStackLocation();
 
         //Assign data to it
-        $tag->tagData .= trim($data);
+        $tag->tagData .= trim($data, "\t\n\r\0\x0B");
     }
 }
 

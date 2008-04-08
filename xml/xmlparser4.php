@@ -14,6 +14,15 @@
 */
 
 /**
+ * Modification Note -- CharacterData method -- Nathan White
+ *
+ * old line: eval('$this->'.$tag.'->tagData .= trim($data);');
+ * new line: eval('$this->'.$tag.'->tagData .= trim($data, "\t\n\r\0\x0B");');
+ *
+ * Fixes issue where space characters around valid xml entities would be erased.
+ */
+ 
+/**
  * XML Parser Class (php4)
  * 
  * Parses an XML document into an object structure much like the SimpleXML extension.
@@ -202,7 +211,7 @@ class XMLParser
         $tag = $this->GetStackLocation();
 
         //Assign data to it
-        eval('$this->'.$tag.'->tagData .= trim($data);');
+        eval('$this->'.$tag.'->tagData .= trim($data, "\t\n\r\0\x0B");');
     }
 }
 
