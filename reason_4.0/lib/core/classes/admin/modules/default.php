@@ -34,7 +34,7 @@
 		function run() // {{{
 		{
 			echo '<div class="oldBrowserAlert">Notice: Reason works with all browsers.  However, it will look and feel quite a lot nicer if you can use it with a modern, standards-based browser such as Internet Explorer 6+, Mozilla 1.5+, Firefox, Netscape 7, Safari, or Opera.</div>'."\n";
-			if(!HTTPS_AVAILABLE && user_is_a($this->admin_page->user_id, id_of('admin_role')))
+			if(!HTTPS_AVAILABLE && reason_user_has_privs($this->admin_page->user_id, 'upgrade'))
 			{
 				echo '<div id="securityWarning">'."\n";
 				echo '<h3>Security Notice</h3>'."\n";
