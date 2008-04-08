@@ -88,13 +88,9 @@
 			$this->set_display_name('has_sections','Broken into sections?');
 			$this->add_comments('has_sections', form_comment('Choose "no" for standard chronological display of posts.<br />Choose "yes" to group posts together into sections (note that you will need to create sections for your publication)'));
 			
-			// right now publication options are limited to blog, and has_issues and has_sections are disabled
 			
-			if (!user_is_a( $this->admin_page->user_id, id_of( 'admin_role' )))
-			{
-				if (!$this->get_value( 'publication_type' )) $this->set_value( 'publication_type', 'blog' );
-				$this->change_element_type( 'publication_type', 'solidtext' );
-			}			   
+			if (!$this->get_value( 'publication_type' )) $this->set_value( 'publication_type', 'blog' );
+			$this->add_required('publication_type');
 			$this->change_element_type( 'date_format', 'select_no_sort', array('options' => array('F j, Y \a\t g:i a' => date('F j, Y \a\t g:i a'),
 																								  'n/d/y \a\t g:i a' => date('n/d/y \a\t g:i a'),
 																								  'l, F j, Y' => date('l, F j, Y'),
@@ -128,10 +124,10 @@
 			$this->add_comments('allow_front_end_posting',form_comment('Check to enable simple posting on the publication itself (you can always post from inside Reason)'));
 			
 
-			if( $this->is_new_entity() || user_is_a( $this->admin_page->user_id, id_of( 'admin_role' ) ) )
+			if( $this->is_new_entity() || reason_user_has_privs( $this->admin_page->user_id, 'edit_fragile_slugs' ) )
 			{
 				$this->add_comments('blog_feed_string',form_comment('Only lowercase letters and underscores are allowed in this field.'));
-				if(!user_is_a( $this->admin_page->user_id, id_of( 'admin_role' )))
+				if(!reason_user_has_privs( $this->admin_page->user_id, 'edit_fragile_slugs' ))
 				{
 					$this->add_comments('blog_feed_string',form_comment('After this publication has been "finished" the first time, this URL snippet will not be editable. So choose wisely.'));
 				}
