@@ -66,16 +66,12 @@
 				{
 					if(!empty($person[$ldap_term]))
 					{
-						if(!empty($this->ldap_function_mapping[$ldap_term]))
+						$vals = array();
+						foreach($person[$ldap_term] as $val)
 						{
-							$function = $this->ldap_function_mapping[$ldap_term];
-							$value = $this->$function($person[$ldap_term][0]);
+							$vals[] = $this->_get_modified_ldap_value($ldap_term, $val);
 						}
-						else
-						{
-							$value = $person[$ldap_term][0];
-						}
-						$lines[] = '<li><strong>'.$english_term.':</strong> '.$value.'</li>';
+						$lines[] = '<li><strong>'.$english_term.':</strong> '.implode(', ',$vals).'</li>';
 					}
 				}
 				if(!empty($lines))
@@ -85,6 +81,18 @@
 			}
 			return $ret;
 		} // }}}
+		function _get_modified_ldap_value($ldap_term, $value)
+		{
+			if(!empty($this->ldap_function_mapping[$ldap_term]))
+			{
+				$function = $this->ldap_function_mapping[$ldap_term];
+				return $this->$function($value);
+			}
+			else
+			{
+				return $value;
+			}
+		}
 		function make_email_link($email) //{{{
 		{
 			return '<a href="mailto:'.$email.'">'.$email.'</a>';
