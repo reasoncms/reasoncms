@@ -9,15 +9,50 @@
 		
 		function init() // {{{
 		{
+			$this->type_entity = new entity( $this->admin_page->type_id );
 			if( empty( $this->admin_page->id ) )
 			{
-				$new_id = create_entity( $this->admin_page->site_id, $this->admin_page->type_id, $this->admin_page->user_id, '', array( 'entity' => array( 'state' => 'Pending' ) ) );
-				header( 'Location: '.unhtmlentities($this->admin_page->make_link( array( 'id' => $new_id ), true ) ) );
-				die();
+				if(reason_user_has_privs($this->admin_page->user_id, 'add' ))
+				{
+					$new_id = create_entity( $this->admin_page->site_id, $this->admin_page->type_id, $this->admin_page->user_id, '', array( 'entity' => array( 'state' => 'Pending' ) ) );
+					header( 'Location: '.unhtmlentities($this->admin_page->make_link( array( 'id' => $new_id ), true ) ) );
+					die();
+				}
+				else
+				{
+					echo 'You do not have the privileges needed to add a '.$this->type_entity->get_value('name');
+					die();
+				}
 			}
-			$this->type_entity = new entity( $this->admin_page->type_id );
+			
 			$this->entity = new entity( $this->admin_page->id );
 
+			if($this->_cm_ok_to_run())
+			{
+				$this->_do_admin_page_prep();
+				$this->disco_item = $this->_build_content_manager();
+			}
+			
+			
+		} // }}}
+		
+		
+		
+		function _cm_ok_to_run()
+		{
+			switch($this->entity->get_value('state'))
+			{
+				case 'Live':
+					return reason_user_has_privs($this->admin_page->user_id, 'edit' );
+				case 'Pending':
+					return reason_user_has_privs($this->admin_page->user_id, 'edit_pending' );
+				default:
+					return false;
+			}
+		}
+		
+		function _do_admin_page_prep()
+		{
 			// get type name and item name for the page title
 			$type_name = $this->type_entity->get_value( 'name' );
 			if( !($this->entity->get_value( 'name' ) ) AND !(strlen($this->entity->get_value( 'name' )) > 0)) // AND statement handles case of '0'
@@ -27,7 +62,10 @@
 
 			$this->admin_page->set_show( 'title',false );
 			$this->admin_page->set_show( 'breadcrumbs', false );
-			
+		}
+		
+		function _build_content_manager()
+		{
 			reason_include_once( 'content_managers/default.php3' );
 			$content_handler = $GLOBALS[ '_content_manager_class_names' ][ 'default.php3' ];
 			if ( $this->type_entity->get_value( 'custom_content_handler' ) )
@@ -44,17 +82,33 @@
 				}
 			}
 			
-			$this->disco_item = new $content_handler;
-			$this->disco_item->admin_page =& $this->admin_page;
-			$this->disco_item->set_head_items( $this->head_items );
-			$this->disco_item->prep_for_run( $this->admin_page->site_id, $this->admin_page->type_id, $this->admin_page->id, $this->admin_page->user_id );
-			$this->disco_item->init();
-		} // }}}
+			$disco_item = new $content_handler;
+			$disco_item->admin_page =& $this->admin_page;
+			$disco_item->set_head_items( $this->head_items );
+			$disco_item->prep_for_run( $this->admin_page->site_id, $this->admin_page->type_id, $this->admin_page->id, $this->admin_page->user_id );
+			$disco_item->init();
+			return $disco_item;
+		}
 		
 		function run() // {{{
 		{
-			echo '<h3 class="pageTitle editor">'.$this->admin_page->title.'</h3>';
-			$this->disco_item->run();
+			if($this->_cm_ok_to_run())
+			{
+				echo '<h3 class="pageTitle editor">'.$this->admin_page->title.'</h3>';
+				$this->disco_item->run();
+			}
+			else
+			{
+				if(!empty($this->admin_page->request['submitted']))
+				{
+					echo '<p>This item may have errors, but you do not have editing rights to this item.</p>';
+					echo '<p><a href="'.$this->admin_page->make_link( array( 'id' => '','site_id' => $this->admin_page->site_id , 'type_id' => $this->admin_page->type_id , 'cur_module' => 'Lister', 'state' => 'pending' ) ).'">Exit this item without editing</a></p>';
+				}
+				else
+				{
+					echo '<p>Sorry. You do not have the privileges to edit this item.</p>';
+				}
+			}
 		} // }}}
 	} // }}}
 
