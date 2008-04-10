@@ -122,16 +122,19 @@
 				$borrow_array[ 'unborrow' ] = 1;
 			$borrow_link = $this->admin_page->make_link( $borrow_array );
 			$preview_link = $this->admin_page->make_link( array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
-			echo '<a href="' . $preview_link . '">Preview</a> | ';
-			echo '<a href="' . $borrow_link . '">'. ( $this->select ? "Borrow" : "Don't Borrow" ) . '</a></strong>';
-			if (!$this->select && ($row->get_value('no_share') == 1))
+			echo '<a href="' . $preview_link . '">Preview</a>';
+			if(reason_user_has_privs($this->admin_page->user_id, 'borrow'))
 			{
-				echo '<p><strong>Note: </strong><em>Item is no longer shared by owner and cannot be borrowed again.</em></p>';
+				echo ' | <a href="' . $borrow_link . '">'. ( $this->select ? "Borrow" : "Don't Borrow" ) . '</a></strong>';
+				if (!$this->select && ($row->get_value('no_share') == 1))
+				{
+					echo '<p><strong>Note: </strong><em>Item is no longer shared by owner and cannot be borrowed again.</em></p>';
+				}
+				elseif (!$this->select && !isset($this->sites_that_borrow_type[$row->get_value('site_id')]))
+				{
+					echo '<p><strong>Note: </strong><em>Type is no longer shared by owner. This item cannot be borrowed again.</em></p>';
+				}
 			}
-			elseif (!$this->select && !isset($this->sites_that_borrow_type[$row->get_value('site_id')]))
-			{
-				echo '<p><strong>Note: </strong><em>Type is no longer shared by owner. This item cannot be borrowed again.</em></p>';
-			}	
 			echo '</td>';
 		} // }}}
 		
@@ -169,7 +172,11 @@
 		} // }}}
 		function show_admin_paging() // {{{
 		{
-			echo 'Preview/' . ( $this->select ? 'Borrow' : 'Don\'t Borrow' );
+			echo 'Preview';
+			if(reason_user_has_privs($this->admin_page->user_id, 'borrow'))
+			{
+				echo '/' . ( $this->select ? 'Borrow' : 'Don\'t Borrow' );
+			}
 		} // }}}
 	}
 	
