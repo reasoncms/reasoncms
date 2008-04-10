@@ -852,11 +852,11 @@
 			if ($this->union)
 			{
 				$union_clause = '';
-				$union_es = $new_e;
+				$union_es = carl_clone($new_e);
 				
 				foreach ($this->diff['fields'] as $k=>$union)
 				{
-					$multi_union_es[$k] = $new_e;
+					$multi_union_es[$k] = carl_clone($new_e);
 					$multi_union_es[$k]->fields = array_diff($union_es->fields, $this->diff['fields'][$k]);
 					$multi_union_es[$k]->tables = array_diff_assoc($union_es->tables, $this->diff['tables'][$k]);
 					$multi_union_es[$k]->relations = array_diff($union_es->relations, $this->diff['relations'][$k]);
@@ -870,7 +870,7 @@
 					ksort($multi_union_es[$k]->fields);
 				}
 
-				foreach ($multi_union_es as $mu_es) $merged_es[] = $mu_es;
+				foreach ($multi_union_es as $mu_es) $merged_es[] = carl_clone($mu_es);
 				
 				if (count($multi_union_es) > 1) // if we are unifying multiples we want to run altered multi_union_es queries and one additional
 				{
@@ -900,11 +900,11 @@
 						$merged_es[$k]->tables = array_merge($this->diff['tables'][$k], $union_es->tables);
 						$merged_es[$k]->relations = array_merge($this->diff['relations'][$k], $union_es->relations);
 					}
-					$merged_es[] = $union_es;
+					$merged_es[] = carl_clone($union_es);
 				}
 				else
 				{
-					$merged_es[] = $new_e;
+					$merged_es[] = carl_clone($new_e);
 				}
 				return $this->get_merged_query($merged_es);
 			}
@@ -1150,7 +1150,7 @@
 		{
 			if ($limit_results === false)
 			{
-				$cur_es = $this;
+				$cur_es = carl_clone($this);
 				$this->union = true;
 			}
 			
@@ -1235,7 +1235,7 @@
 		{
 			if ($limit_results === false)
 			{
-				$cur_es = $this;
+				$cur_es = carl_clone($this);
 				$this->union = true;
 			}
 			
