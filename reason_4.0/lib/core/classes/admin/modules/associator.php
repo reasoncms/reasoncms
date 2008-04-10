@@ -297,15 +297,16 @@
 			$list_mod = new ListerModule($this->admin_page);
 			$list_mod->filter =& $this->filter;
 			$list_mod->show_filters();
-			echo '</tr></table></td></tr><tr><td>';
-			if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) && $this->admin_page->cur_module == 'Associator' )
+			echo '</tr></table></td></tr>';
+			if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) && $this->admin_page->cur_module == 'Associator' && reason_user_has_privs($this->admin_page->user_id, 'add') )
 			{
+				echo '<tr><td>';
 				$this->do_add_link();
 				echo '</td></tr>';
 			}
 			$assoc_ok = !$this->admin_page->is_second_level() && $this->admin_page->cur_module == 'Associator' && $this->some_site_shares_type();
 			$sharing_ok = $this->admin_page->is_second_level() && $this->admin_page->cur_module == 'Sharing';
-			if( $assoc_ok || $sharing_ok )
+			if( reason_user_has_privs($this->admin_page->user_id, 'borrow') && ( $assoc_ok || $sharing_ok ) )
 			{
 			echo '<tr><td>';
 			$this->do_sharing_link();
