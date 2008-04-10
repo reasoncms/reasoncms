@@ -28,13 +28,31 @@
 	reason_include_once( 'function_libraries/user_functions.php' );
 	force_secure_if_available();
 	$authenticated_user_netid = reason_require_authentication('admin_login');
+	$auth_user_id = get_user_id( $authenticated_user_netid );
 
-	if (isset($_GET['do']) && ($_GET['do'] === 'moveup' || $_GET['do'] === 'movedown'))
+	if ($auth_user_id && isset($_GET['do']) && ($_GET['do'] === 'moveup' || $_GET['do'] === 'movedown'))
 	{
+		if(reason_user_has_privs($auth_user_id,'pose_as_other_user'))
+		{
+			if(!empty($_GET['user_id']))
+			{
+				$user_id = (integer) $_GET['user_id'];
+				if(!empty($user_id))
+				{
+					$e = new entity($user_id);
+					if($e->get_value('type') == id_of('user'))
+						$user_netid = $e->get_value('name');
+				}
+			}
+			if(empty($user_netid))
+			{
+				$user_netid = $authenticated_user_netid;
+			}
+		}
 		reason_include_once( 'classes/admin/rel_sort.php' );
 		$background = (isset($_GET['xmlhttp']) && $_GET['xmlhttp'] === 'true') ? 'yes' : 'no';
 		$relationship_sort = new RelationshipSort();
-		$relationship_sort->init($_GET['site_id'], $_GET['rel_id'], $_GET['id'], $_GET['eid'], $_GET['rowid'], $_GET['do'], $authenticated_user_netid, $background);
+		$relationship_sort->init($_GET['site_id'], $_GET['rel_id'], $_GET['id'], $_GET['eid'], $_GET['rowid'], $_GET['do'], $user_netid, $background);
 		if ($relationship_sort->validate_request()) $relationship_sort->run();
 	}
 	
