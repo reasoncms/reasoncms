@@ -249,7 +249,14 @@ class RelationshipSort
 		{
 			if ($user_manager->is_site_user($this->user_netID))
 			{
-				return true;
+				$user_id = get_user_id($this->user_netID);
+				$e1 = new entity($this->entity_id);
+				$e2 = new entity($this->left_entity_id);
+				if($e1->get_value('state') == 'Pending' || $e2->get_value('state') == 'Pending')
+					$priv = 'edit_pending';
+				else
+					$priv = 'edit';
+				return reason_user_has_privs($user_id,$priv);
 			}
 		}
 		return false;
