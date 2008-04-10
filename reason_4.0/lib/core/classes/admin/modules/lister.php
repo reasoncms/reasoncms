@@ -20,10 +20,16 @@
 			echo '<table border="0" cellpadding="0" cellspacing="0">'."\n".'<tr>';
 			$this->show_filters();
 			echo '<td valign="top">'."\n";
-			$this->show_add();
+			if(reason_user_has_privs($this->admin_page->user_id,'add'))
+			{
+				$this->show_add();
+			}
 			$this->show_other();
 			$this->show_view_box();
-			$this->show_sorting();
+			if(reason_user_has_privs($this->admin_page->user_id,'edit'))
+			{
+				$this->show_sorting();
+			}
 			echo '</td>'."\n".'</tr>'."\n".'</table>'."\n";
 		} // }}}
 		function show_filters() // {{{
@@ -80,7 +86,8 @@
 		{
 			$es = new entity_selector($this->admin_page->site_id);
 			$es->add_type( $this->admin_page->type_id );
-
+			$es->limit_tables();
+			$es->limit_fields();
 			$c = $es->get_one_count( 'Deleted' );
 			$this->deleted_item_count = $c;
 			if( !empty( $this->admin_page->request[ 'state' ] ) && $this->admin_page->request[ 'state' ] == 'deleted' )
@@ -99,7 +106,8 @@
 		{
 			$es = new entity_selector($this->admin_page->site_id);
 			$es->add_type( $this->admin_page->type_id );
-
+			$es->limit_tables();
+			$es->limit_fields();
 			$c = $es->get_one_count( 'Pending' );
 			$this->pending_item_count = $c;
 			if( !empty( $this->admin_page->request[ 'state' ] ) && $this->admin_page->request[ 'state' ] == 'pending' )
@@ -120,6 +128,8 @@
 			$es->add_type( $this->admin_page->type_id );
 			// I was moving over the new_entity stuff and saw this hadn't been updated. I thought we were really looking to get this up, and I remember that it worked correctly on webdev, so I just moved these two lines over as well. If something is going wrong, it might be because of this. --Footie
 			$es->set_sharing( 'owns' );
+			$es->limit_tables();
+			$es->limit_fields();
 			//die( 'turned sharing to "owns"' );
 
 			$c = $es->get_one_count( 'Live' );
@@ -259,12 +269,10 @@
 		function run() // {{{
 		{
 			$this->list_header();
-			echo '<br />';
 			$this->viewer->do_display();
-			echo '<br />';
-			echo '<table border="0" cellpadding="0" cellspacing="0"><tr><td>';
+			echo '<div class="paging">';
 			$this->viewer->show_paging();
-			echo '</td></tr></table>';
+			echo '</div>';
 			// echo '<a href="scripts/tab_delimited_export.php?site_id='.$this->admin_page->site_id.'&amp;type_id='.$this->admin_page->type_id.'">Export Spreadsheet (Tab Delimited)</a>';
 		} // }}}
 		
