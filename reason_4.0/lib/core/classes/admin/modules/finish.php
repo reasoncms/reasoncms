@@ -10,6 +10,7 @@
 		function init() // {{{
 		{
 			if (!$this->admin_page->id) return false;
+			
 			//these next few lines check the entity to make sure it has everything it needs
 			$this->load_content_manager();
 			$this->check_entity_values(); 
@@ -31,8 +32,9 @@
 			else
 				$this->new_entity = false;
 			
-			// Don't set entity live if user is of the contribute only role
-			if( !user_is_a( $this->admin_page->user_id, id_of( 'contribute_only_role' ) ) )
+			// Set the entity live if the user has rights to publish
+			$user_can_publish = reason_user_has_privs( $this->admin_page->user_id, 'publish' );
+			if($temp->get_value('state') != 'Live' && $user_can_publish )
 			{
 				// Leave the state of pages alone so that people can hide them if they want to, but otherwise set the object live
 				if( $this->admin_page->type_id != id_of( 'minisite_page' ) )
@@ -42,8 +44,11 @@
 				}
 			}
 			// regardless, set the entity to no longer be "new"
-			$q = 'UPDATE entity set new = 0 where id = ' . $this->admin_page->id;
-			db_query( $q , 'Error finishing' );
+			if($temp->get_value('new') != '0')
+			{
+				$q = 'UPDATE entity set new = 0 where id = ' . $this->admin_page->id;
+				db_query( $q , 'Error finishing' );
+			}
 
 			$original = new entity( $this->admin_page->id,false );
 			$original->get_values();
@@ -98,17 +103,18 @@
 						$old_vars[ $arg ] = '';
 				$link = $this->admin_page->make_link( $old_vars );
 			}
-			else if( !empty( $this->admin_page->request[ 'next_entity' ] ) )
+			elseif( !empty( $this->admin_page->request[ 'next_entity' ] ) )
 			{
 				$link = $this->admin_page->make_link( array('cur_module'=>'Editor', 'id' => $this->admin_page->request['next_entity']) );
 			}
-			else if( isset($_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ]) )
+			elseif( isset($_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ]) )
 			{
 				$link = $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ];
 			}
 			else
 			{
-				$link = $this->admin_page->make_link( array( 'id' => '',/*'new_entity' => '',*/'site_id' => $this->admin_page->site_id , 'type_id' => $this->admin_page->type_id , 'cur_module' => 'Lister' ) );
+				$dest_state = $user_can_publish ? 'live' : 'pending';
+				$link = $this->admin_page->make_link( array( 'id' => '',/*'new_entity' => '',*/'site_id' => $this->admin_page->site_id , 'type_id' => $this->admin_page->type_id , 'cur_module' => 'Lister', 'state' => $dest_state ) );
 			}
 
 			// before redirecting, check to see if there are any finish actions associated with this type.
@@ -245,6 +251,11 @@
 				die( '' );
 			}
 		} // }}}
+		function _user_can_edit_item($user_id, $id)
+		{
+			$entity = new entity($id);
+			return $entity->get_value('state') == 'Pending' ? reason_user_has_privs($user_id,'edit_pending') : reason_user_has_privs($user_id,'edit');
+		}
 		function run() // {{{
 		{
 			if (!$this->admin_page->id)
