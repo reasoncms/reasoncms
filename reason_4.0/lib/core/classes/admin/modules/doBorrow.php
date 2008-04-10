@@ -8,6 +8,10 @@
 		} // }}}
 		function init() // {{{
 		{
+			if(!reason_user_has_privs($this->admin_page->user_id, 'borrow'))
+			{
+				die('You do not have privileges to borrow or unborrow items');
+			}
 			$mysession = false;
 			$this->set_borrowship_first_level();
 			if( $this->admin_page->is_second_level() )
