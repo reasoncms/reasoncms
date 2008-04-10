@@ -38,6 +38,8 @@
 		'Site'=>array('file'=>'site.php','class'=>'SiteModule'),
 		'Lister'=>array('file'=>'lister.php','class'=>'ListerModule'),
 		'Delete'=>array('file'=>'delete.php','class'=>'DeleteModule'),
+		'Undelete'=>array('file'=>'undelete.php','class'=>'UndeleteModule'),
+		'Expunge'=>array('file'=>'expunge.php','class'=>'ExpungeModule'),
 		'Editor'=>array('file'=>'editor.php','class'=>'EditorModule'),
 		'Associator'=>array('file'=>'associator.php','class'=>'AssociatorModule'),
 		'ReverseAssociator'=>array('file'=>'reverse_associator.php','class'=>'ReverseAssociatorModule'),
