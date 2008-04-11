@@ -44,11 +44,8 @@
 						$user_netid = $e->get_value('name');
 				}
 			}
-			if(empty($user_netid))
-			{
-				$user_netid = $authenticated_user_netid;
-			}
 		}
+		$user_netid = (isset($user_netid)) ? $user_netid : $authenticated_user_netid;
 		reason_include_once( 'classes/admin/rel_sort.php' );
 		$background = (isset($_GET['xmlhttp']) && $_GET['xmlhttp'] === 'true') ? 'yes' : 'no';
 		$relationship_sort = new RelationshipSort();
