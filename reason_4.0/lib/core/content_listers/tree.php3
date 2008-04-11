@@ -134,9 +134,7 @@
 		} // }}}
 		function show_sorting() // {{{
 		{
-		?>
-					<tr>
-			<?php
+				echo '<tr>';
 				echo '<th class="listHead"><strong>Id</strong></th>';
 				echo '<th class="listHead">&nbsp;</th>';
 				foreach( $this->columns as $key => $val )
@@ -146,16 +144,12 @@
 					else
 						$col = $key;
 
-					
 					echo '<th class="listHead">';
-//echo prettify_string($col);
 					echo prettify_string($col);
 					echo '</th>';
 				}
-			?>
-						<th class="listHead">Admin Functions</th>
-		
-		<?php
+			if($this->_should_show_admin_functions_column())
+				echo '<th class="listHead">Admin Functions</th>';
 		} // }}}
 
 		function show_item_pre( $row , &$options) // {{{
@@ -247,10 +241,11 @@
 							$wrapper_count++;
 						$display .= '<div class="treeItemWrapDepth'.$wrapper_count.'">';
 						$display .=  '<strong>' . $row->get_value( 'name' ) . '</strong>';
-						if( count( $this->children( $row->id() ) ) > 1 )
+						if( reason_user_has_privs($this->admin_page->user_id,'edit') && count( $this->children( $row->id() ) ) > 1 )
 						{
-							$display .= '<br />';
-							$display .= '<a href="'.$this->admin_page->make_link( array( 'cur_module' => 'Sorting','parent_id' => $row->id() ) ).'" class="smallText">Sort children</a>';
+							$display .= '<div class="addlActions">';
+							$display .= '<a href="'.$this->admin_page->make_link( array( 'cur_module' => 'Sorting','parent_id' => $row->id() ) ).'" class="smallText sortChildren">Sort children</a>';
+							$display .= '</div>';
 						}
 						$display .= '</div>';
 					}
