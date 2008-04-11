@@ -21,7 +21,6 @@
 		var $num_pages;
 		var $order_by = 'last_modified';
 		var $dir = 'DESC';
-		var $user_roles = array();
 
 		var $options = array();
 
@@ -162,9 +161,25 @@
 					echo '<a href="'.carl_make_link(array('dir' => $dir_link, 'order_by' => $col, 'page' => '' )).'">'.$col_display_name.'</a>'.$dir_show;
 					echo '</th>';
 				}
-				if(!$this->user_has_role( 'contribute_only_role' ) || $this->state == 'pending')
+				if($this->_should_show_admin_functions_column())
 					echo '<th class="listHead">Admin Functions</th></tr>'."\n";;
 		} // }}}
+		
+		function _should_show_admin_functions_column()
+		{
+			if($this->state == 'pending')
+			{
+				return reason_user_has_privs($this->admin_page->user_id,'edit_pending');
+			}
+			elseif($this->state == 'deleted')
+			{
+				return reason_user_has_privs($this->admin_page->user_id,'delete');
+			}
+			else
+			{
+				return reason_user_has_privs($this->admin_page->user_id,'edit');
+			}
+		}
 		
 		function get_col_display_name($string)
 		{
@@ -254,11 +269,9 @@
 		
 		function show_item_post( $row , $options ) // {{{
 		{
-			if( empty( $options ) ) $options = array();
-			if(!$this->user_has_role( 'contribute_only_role' ))
+			if($this->_should_show_admin_functions_column())
 			{
-				//if( isset( $options[ 'assoc' ] ) AND $options[ 'assoc' ] == 'associate' )
-				//	$this->show_admin_associate( $row , $options);
+				if( empty( $options ) ) $options = array();
 				if( $options[ 'state' ] == 'deleted' )
 					$this->show_admin_delete( $row , $options );
 				elseif( $options['state'] == 'pending' )
@@ -266,8 +279,6 @@
 				else
 					$this->show_admin_live( $row , $options );
 			}
-			elseif( $options['state'] == 'pending' )
-					$this->show_admin_pending( $row, $options );
 			echo '</tr>' . "\n";
 		} // }}}
 		
@@ -285,27 +296,60 @@
 
 		function show_admin_live( $row , $options) // {{{
 		{
-			//echo '<td align="left" class="'.$options[ 'class' ].'"><strong>';
-			echo '<td align="left"><strong>';
-			$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
-			$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
-
+			echo '<td>';
+			if(reason_user_has_privs($this->admin_page->user_id,'edit'))
+			{
+				echo '<strong>';
+				$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
+				$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
 			echo '<a href="' . $preview_link . '">'. 'Preview</a> | <a href="' . $edit_link . '">Edit</a>';
-			echo '</strong></td>'."\n";;
+				echo '</strong>';
+			}
+			else
+			{
+				echo '&nbsp;';
+			}
+			echo '</td>'."\n";;
 		} // }}}
 		function show_admin_pending( $row , $options ) //{{{
 		{
-			$this->show_admin_live( $row, $options );
+			echo '<td>';
+			if(reason_user_has_privs($this->admin_page->user_id,'edit_pending'))
+			{
+				echo '<strong>';
+				$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
+				$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
+			echo '<a href="' . $preview_link . '">'. 'Preview</a> | <a href="' . $edit_link . '">Edit</a>';
+				echo '</strong>';
+			}
+			else
+			{
+				echo '&nbsp;';
+			}
+			echo '</td>'."\n";;
 		} // }}}
 		function show_admin_delete( $row  , $options ) // {{{
 		{
-			//echo '<td class="'.$options[ 'class' ].'">';
 			echo '<td>';
-			$link =  $this->admin_page->make_link( array( 'id' => $row->id(), 'cur_module' => 'Delete' , 'undelete' => 'undelete' ) );
-			echo '<strong><a href="'.$link.'">Undelete</a>';
-			
-			$link =  $this->admin_page->make_link( array( 'id' => $row->id(), 'cur_module' => 'Delete' ) );
-			echo ' | <a href="'.$link.'">Expunge</a></strong>';
+			$links = array();
+			if(reason_user_has_privs($this->admin_page->user_id,'publish'))
+			{
+				$link =  $this->admin_page->make_link( array( 'id' => $row->id(), 'cur_module' => 'Undelete' ) );
+				$links[] = '<a href="'.$link.'">Undelete</a>';
+			}
+			if(reason_user_has_privs($this->admin_page->user_id,'expunge'))
+			{
+				$link =  $this->admin_page->make_link( array( 'id' => $row->id(), 'cur_module' => 'Expunge' ) );
+				$links[] = '<a href="'.$link.'">Expunge</a>';
+			}
+			if(!empty($links))
+			{
+				echo '<strong>' . implode( ' | ' , $links ) . '</strong>';
+			}
+			else
+			{
+				echo '&nbsp;';
+			}
 			echo '</td>'."\n";;
 		} // }}}
 		function alter_values() // {{{
@@ -313,28 +357,15 @@
 		} // }}}	
 		function get_user_roles() //{{{
 		{
-			$urs = new entity_selector();
-			$urs->add_type(id_of('user_role'));
-			$urs->add_right_relationship( $this->admin_page->user_id, relationship_id_of('user_to_user_role') );
-			$user_roles = $urs->run_one();
-			foreach($user_roles as $ur)
-			{
-				$this->user_roles[$ur->get_value('unique_name')] = $ur;
-			}
+			trigger_error( 'lister->get_user_roles() is deprecated. use global function reason_user_has_privs() instead');
 		} // }}}
 		function user_has_role( $role ) //{{{
 		{
-			if(array_key_exists($role, $this->user_roles))
-				return true;
-			else
-				return false;
+			trigger_error( 'lister->user_has_role is deprecated. use global function reason_user_has_privs() instead');
+			return false;
 		} // }}}
 		function display() // {{{
 		{
-			/* HACK HACK HACK
-			we really need to fix the inheritance of listers so that front and back end stuff are better isolated from each other. */
-			if(!empty($this->admin_page))
-				$this->get_user_roles();
 			$this->show_filters();
 			$this->show_paging();
 			echo '<div class="list">';
