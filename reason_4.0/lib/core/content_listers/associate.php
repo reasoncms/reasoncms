@@ -59,7 +59,10 @@
 				$ass_es->add_field( 'relationship', 'id', 'rel_id' );
 				$ass_es->add_rel_sort_field($this->admin_page->id);
 				$ass_es->set_order('relationship.rel_sort_order ASC');
-				$this->alter_order_enable = true;
+				if($this->_cur_user_has_edit_privs())
+				{
+					$this->alter_order_enable = true;
+				}
 			}
 			else
 			{
@@ -234,9 +237,18 @@
 			echo '</th></tr>';
 		}
 		
+		function _cur_user_has_edit_privs()
+		{
+			$e = new entity($this->admin_page->id);
+			return $e->get_value('state') == 'Pending' ? reason_user_has_privs($this->admin_page->user_id,'edit_pending') : reason_user_has_privs($this->admin_page->user_id,'edit');
+		}
+		
 		function show_admin_paging() // {{{
 		{
-			echo ( $this->select ? 'Select' : 'Deselect' );
+			if($this->_cur_user_has_edit_privs())
+				echo ( $this->select ? 'Select' : 'Deselect' );
+			else
+				echo '&nbsp;';
 		}
 		
 		function display() // {{{
@@ -393,6 +405,11 @@
 		
 		function show_admin_associate( $row , $options ) // {{{
 		{
+			if(!$this->_cur_user_has_edit_privs())
+			{
+				echo '<td>&nbsp;</td>';
+				return;
+			}
 			$e_rel = $this->admin_page->rel_id;
 			$e_id = $this->admin_page->id;
 			$e = new entity( $e_id );
