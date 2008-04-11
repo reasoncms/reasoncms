@@ -211,7 +211,7 @@
 				{
 					$this->types();
 				}
-				if( $this->show[ 'sharing' ] )
+				if( $this->show[ 'sharing' ] && reason_user_has_privs($this->user_id, 'borrow') )
 				{
 					$this->sharing();
 				}
@@ -439,53 +439,58 @@
 		//returns an array of the main links
 		{
 			$links = array();
+			$entity = new entity($this->id);
 			$links[ 'Preview' ] = array( 'title' => 'Preview' , 'link' => $this->make_link( array( 'cur_module' => 'Preview' ) ) );
-			$links[ 'Edit' ] = array( 'title' => 'Edit' , 'link' => $this->make_link( array( 'cur_module' => 'Editor' ) ) );
-			if( $second )
-				$rels = $second;
-			else
-				$rels = $this->get_rels();
-			foreach( $rels AS $rel )
+			$can_edit = $entity->get_value('state') == 'Pending' ? reason_user_has_privs($this->user_id, 'edit_pending') : reason_user_has_privs($this->user_id, 'edit');
+			if($can_edit)
 			{
-				$ass_name = !empty( $rel[ 'display_name' ] ) ? $rel[ 'display_name' ] : $rel[ 'entity_name' ];
-				$index = $rel[ 'id' ];
-				if( empty( $_SESSION[ 'assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ] ) )
-					$_SESSION[ 'assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ] = $this->make_link( array( 
-								'site_id' => $this->site_id, 
-								'type_id' => $this->type_id,
-								'rel_id' => $rel[ 'id' ],
-								'id' => $this->id,
-								'user_id' => $this->user_id,
-								'cur_module' => 'Associator' ) );
-				$links[ $index ] = array( 'title' => $ass_name , 
-										  'link' => $_SESSION[ 'assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ], 
-										  'rel_info' => $rel );
-			}
-			if($second)
-				$rels = $this->get_backward_rels( 'I AM A GOLDEN GOD!!!' );
-			else
-				$rels = $this->get_backward_rels();
-			foreach( $rels AS $rel )
-			{
-				$ass_name = !empty( $rel[ 'display_name_reverse_direction' ] ) ? $rel[ 'display_name_reverse_direction' ] : $rel[ 'entity_name' ];
-				$index = $rel[ 'id' ];
-				if( empty( $_SESSION[ 'reverse_assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ] ) )
-					$_SESSION[ 'reverse_assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ] = $this->make_link( array( 
-								'site_id' => $this->site_id, 
-								'type_id' => $this->type_id,
-								'rel_id' => $rel[ 'id' ],
-								'id' => $this->id,
-								'user_id' => $this->user_id,
-								'cur_module' => 'ReverseAssociator' ) );
-				$links[ $index ] = array( 'title' => $ass_name , 
-										  'link' => $_SESSION[ 'reverse_assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ], 
-										  'rel_info' => $rel );
+				$links[ 'Edit' ] = array( 'title' => 'Edit' , 'link' => $this->make_link( array( 'cur_module' => 'Editor' ) ) );
+				if( $second )
+					$rels = $second;
+				else
+					$rels = $this->get_rels();
+				foreach( $rels AS $rel )
+				{
+					$ass_name = !empty( $rel[ 'display_name' ] ) ? $rel[ 'display_name' ] : $rel[ 'entity_name' ];
+					$index = $rel[ 'id' ];
+					if( empty( $_SESSION[ 'assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ] ) )
+						$_SESSION[ 'assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ] = $this->make_link( array( 
+									'site_id' => $this->site_id, 
+									'type_id' => $this->type_id,
+									'rel_id' => $rel[ 'id' ],
+									'id' => $this->id,
+									'user_id' => $this->user_id,
+									'cur_module' => 'Associator' ) );
+					$links[ $index ] = array( 'title' => $ass_name , 
+											  'link' => $_SESSION[ 'assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ], 
+											  'rel_info' => $rel );
+				}
+				if($second)
+					$rels = $this->get_backward_rels( 'I AM A GOLDEN GOD!!!' );
+				else
+					$rels = $this->get_backward_rels();
+				foreach( $rels AS $rel )
+				{
+					$ass_name = !empty( $rel[ 'display_name_reverse_direction' ] ) ? $rel[ 'display_name_reverse_direction' ] : $rel[ 'entity_name' ];
+					$index = $rel[ 'id' ];
+					if( empty( $_SESSION[ 'reverse_assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ] ) )
+						$_SESSION[ 'reverse_assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ] = $this->make_link( array( 
+									'site_id' => $this->site_id, 
+									'type_id' => $this->type_id,
+									'rel_id' => $rel[ 'id' ],
+									'id' => $this->id,
+									'user_id' => $this->user_id,
+									'cur_module' => 'ReverseAssociator' ) );
+					$links[ $index ] = array( 'title' => $ass_name , 
+											  'link' => $_SESSION[ 'reverse_assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ], 
+											  'rel_info' => $rel );
+				}
 			}
 			$links[ 'Finish' ] = array( 'title' => '<strong>Finish</strong>' , 'link' => $this->make_link( array( 'cur_module' => 'Finish' ) ) );
 
 			// if the entity is new, give the link to cancel its creation
 			$e = new entity( $this->id );
-			if( $e->get_value( 'new' ) )
+			if( $e->get_value( 'new' ) && $e->get_value('state') == 'Pending' && $can_edit )
 			{
 				$links[ 'Cancel' ] = array( 'title' => 'Cancel', 'link' => $this->make_link( array( 'cur_module' => 'Cancel' ) ) );
 			}
@@ -549,66 +554,96 @@
 		//other links, delete, finish, and cancel.  Cancel is only shown if new_entity is true.  
 		//should put in logic so that delete is not always shown as well.  
 		{
-			echo '<p class="otherActionItems"><strong>Other Action Items</strong></p>';
-			echo '<ul class="leftList">';
-			if( $this->is_deletable() )
+			$show_delete = false;
+			$show_history = false;
+			
+			$item = new entity($this->id);
+			if($item->get_value('state') == 'Pending')
 			{
-				echo '<li class="navItem';
-				if( $this->cur_module == 'Delete' )
-					echo ' navSelect';
-				echo '">';
-				$page_name = 'Delete';
-				if( $this->cur_module == 'Delete' )
-					echo '<strong>'.$page_name.'</strong>';
-				else
-					echo '<a href="' . $this->make_link( array( 'cur_module' => 'Delete' ) ) . '" class="nav">'.$page_name.'</a>';
-				echo '</li>' . "\n";
+				$show_delete = reason_user_has_privs($this->user_id, 'delete_pending');
+				$show_history = reason_user_has_privs($this->user_id, 'edit_pending');
 			}
 			else
 			{
-				echo '<li class="navItem';
-				if( $this->cur_module == 'NoDelete' )
-					echo ' navSelect';
-				echo '">';
-				$link = $this->make_link( array( 'cur_module' => 'NoDelete' ) );
-				if( $this->cur_module != 'NoDelete' )
-					echo 'Deletion Not Available <span class="smallText">(<a href="' . $link . '">Explain</a>)</span>';
-				else echo 'Deletion Not Available';
-				echo '</li>' . "\n";
+				$show_delete = reason_user_has_privs($this->user_id, 'delete');
+				$show_history = reason_user_has_privs($this->user_id, 'edit');
 			}
-			//echo '<li class="navItem"><a href="' . $this->make_link( array( 'cur_module' => 'Archive' ) ) . '" class="nav">History</a></li>';
-
-			// get archive relationship id
-			$q = 'SELECT id FROM allowable_relationship WHERE name LIKE "%archive%" AND relationship_a = '.$this->type_id.' AND relationship_b = '.$this->type_id;
+			if(!$show_delete && !$show_history)
+			{
+				return;
+			}
+			echo '<p class="otherActionItems"><strong>Other Action Items</strong></p>';
+			echo '<ul class="leftList">';
+			
+			if($show_delete)
+			{
+				if( $this->is_deletable() )
+				{
+					echo '<li class="navItem';
+					if( $this->cur_module == 'Delete' )
+						echo ' navSelect';
+					echo '">';
+					$page_name = 'Delete';
+					if( $this->cur_module == 'Delete' )
+						echo '<strong>'.$page_name.'</strong>';
+					else
+						echo '<a href="' . $this->make_link( array( 'cur_module' => 'Delete' ) ) . '" class="nav">'.$page_name.'</a>';
+					echo '</li>' . "\n";
+				}
+				else
+				{
+					echo '<li class="navItem';
+					if( $this->cur_module == 'NoDelete' )
+						echo ' navSelect';
+					echo '">';
+					$link = $this->make_link( array( 'cur_module' => 'NoDelete' ) );
+					if( $this->cur_module != 'NoDelete' )
+						echo 'Deletion Not Available <span class="smallText">(<a href="' . $link . '">Explain</a>)</span>';
+					else echo 'Deletion Not Available';
+					echo '</li>' . "\n";
+				}
+			}
+			
+			if($show_history)
+			{
+				// get archive relationship id
+				$num_arch = $this->_get_archived_item_count($this->id, $this->type_id);
+				if( $num_arch > 0 )
+				{
+					$selected = $this->cur_module == 'Archive' ? true : false;
+					$page_name = 'History ('.$num_arch.' edit'.($num_arch == 1 ? '' : 's' ).')';
+					echo '<li class="navItem';
+					if( $selected )
+						echo ' navSelect';
+					echo '">';
+					if( $selected )
+						echo '<strong>'.$page_name.'</strong>';
+					else
+						echo '<a href="'.$this->make_link( array( 'cur_module' => 'Archive' ) ).'" class="nav">'.$page_name.'</a>';
+				}
+				else
+					echo '<li class="navItem">No Edits</li>' . "\n";
+			}
+			echo '</ul>';
+		} // }}}
+		
+		function _get_archived_item_count($id, $type_id)
+		{
+			$q = 'SELECT id FROM allowable_relationship WHERE name LIKE "%archive%" AND relationship_a = '.$type_id.' AND relationship_b = '.$type_id.' LIMIT 0,1';
 			$r = db_query( $q, 'Unable to get archive relationship.' );
 			$row = mysql_fetch_array( $r, MYSQL_ASSOC );
 			mysql_free_result( $r );
 			$rel_id = $row['id'];
 
 			$es = new entity_selector();
-			$es->add_type( $this->type_id );
-			$es->add_right_relationship( $this->id, $rel_id );
-			$es->set_order( 'last_modified DESC' );
+			$es->add_type( $type_id );
+			$es->add_right_relationship( $id, $rel_id );
+			$es->limit_tables();
+			$es->limit_fields();
 			$archived = $es->run_one(false,'Archived','show_archived error in CM');
 
-			$num_arch = count( $archived );
-			if( $num_arch > 0 )
-			{
-				$selected = $this->cur_module == 'Archive' ? true : false;
-				$page_name = 'History ('.$num_arch.' edit'.($num_arch == 1 ? '' : 's' ).')';
-				echo '<li class="navItem';
-				if( $selected )
-					echo ' navSelect';
-				echo '">';
-				if( $selected )
-					echo '<strong>'.$page_name.'</strong>';
-				else
-					echo '<a href="'.$this->make_link( array( 'cur_module' => 'Archive' ) ).'" class="nav">'.$page_name.'</a>';
-			}
-			else
-				echo '<li class="navItem">No Edits</li>' . "\n";
-			echo '</ul>';
-		} // }}}
+			return count( $archived );
+		}
 		function is_deletable() // {{{
 		{
 			if(empty($this->id))
@@ -730,7 +765,8 @@
 				echo '<input type="submit" class="jumpNavigationGo" value="go" />';
 				$cur_site = $sites[ $this->site_id ];
 				$cur_site_base_url = $cur_site->get_value( 'base_url' );
-				$target = ($this->user->get_value('site_window_pref') == 'Popup Window') ? 'target="_blank" ' : '';
+				$user = new entity($this->user_id);
+				$target = ($user->get_value('site_window_pref') == 'Popup Window') ? 'target="_blank" ' : '';
 				if(!empty($cur_site_base_url))
 				{
 					echo '<a href="http://'.REASON_HOST.$cur_site_base_url.'" '.$target.'class="publicSiteLink">Go to public site</a>';
@@ -757,10 +793,12 @@
 			}
 			echo '</div>';
 		}
+		/**
+		 * @deprecated
+		 */
 		function user_has_site_admin_privileges() //{{{
 		{
-			if( user_is_a( $this->user_id, id_of( 'contribute_only_role' ) ) )
-				return false;
+			trigger_error('admin_page->user_has_site_admin_privileges() is DEPRECATED. Please use reason_user_has_privs() function instead!');
 			return true; 
 		} // }}}
 		// IN_MODULE
@@ -848,16 +886,13 @@
 		} // }}}
 		function site_tools() //{{{
 		{
-			$show_site_admin = false;
 			$stats_link = $this->stats_link();
-			if( $this->user_has_site_admin_privileges() )
-				$show_site_admin = true;
 
 			/* if( $show_site_admin OR ($stats_link AND $this->show[ 'stats' ] ) )
 			{ */
 				echo '<div class="typeNav"><strong>Site Tools</strong>';
 				echo '<ul class="leftList">';
-				if( $show_site_admin && $this->show[ 'themes' ]  )
+				if( $this->show[ 'themes' ]  )
 				{
 					$l = $this->make_link( array( 'cur_module' => 'ChooseTheme', 'type_id' => '' ) );
 					echo '<li class="navItem';
@@ -979,18 +1014,12 @@
 			return $es->run_one();
 		} // }}}
 		function admin_tools() // {{{
-		//only shown to admin users.  shows yet more links in the non-id sidebar.
+		// shows yet more links in the non-id sidebar.
 		{
 			if( $this->show[ 'admin_tools' ] )
 			{
-				// nwhite - should we really check this again??? - should not be set to true
-				// 	    unless we have already verified the user is an admin
-				// 	    if the if clause was removed admin users would see
-				//   	    admin tools even when posing as a different user
-				// 	    the main function right now is just to hide admin tools
-				// 	    if an admin is posing as another user
 
-				if( user_is_a( $this->user_id, id_of( 'admin_role' ) ) )
+				if( reason_user_has_privs( $this->user_id, 'view_sensitive_data' ) )
 				{
 					echo '<div class="typeNav"><strong>Other Tools</strong>';
 					echo '<ul class="leftList">';		
@@ -1066,16 +1095,14 @@
 		}
 		
 		function show_user()
-		//if logged in user is an admin, displays a drop down of all users so that they can log in as that person (for debugging purposes).
+		//if logged in user has pose_as_other_user privs, displays a drop down of all users so that they can log in as that person (for debugging purposes).
 		//otherwise, tells the user who they are
 		{
-			$show_logout = true;
-
 			// if behind HTTP authentication the session lasts until the browser is closed and logout will not do anything
-			if (isset($_SERVER['REMOTE_USER'])) $show_logout = false; 
-
-			$this->user = $user = new entity( $this->authenticated_user_id );
-			if( $user->has_left_relation_with_entity( new entity( id_of( 'admin_role') ) ) )
+			$show_logout = !isset($_SERVER['REMOTE_USER']);
+			$user = new entity( $this->authenticated_user_id );
+			
+			if( reason_user_has_privs($this->authenticated_user_id, 'pose_as_other_user' ) )
 			{
 				$es = new entity_selector();
 				$es->add_type( id_of( 'user' ) );
@@ -1098,13 +1125,11 @@
 				echo '</select>';
 				$this->echo_hidden_fields('user_id');
 				echo '<input type="submit" class="jumpNavigationGo" value="go" />'."\n";
-				//echo ' <input type="submit" name="go" value="go" />'."\n";
 				if ($show_logout) echo ' <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 				echo '</form>';
 			}
 			else
 			{
-				//You are  echo '<a href="'.$this->make_link(array('cur_module'=>'user_info')).'" class="idLink">'.$user->get_value( 'name' );</a>
 				echo 'You are <strong>' . $user->get_value( 'name' ) .'</strong>';
 				if ($show_logout) echo ': <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 			}
@@ -1214,7 +1239,7 @@
 			{
 				if( isset( $default_args[ $key ] ) OR !empty( $val ) ) //we need to get anything through that is in default args or has a value
 				{
-					$link .= '&amp;'.$key.'='.$val;
+					$link .= '&amp;'.htmlspecialchars($key, ENT_QUOTES).'='.htmlspecialchars($val, ENT_QUOTES);
 				}
 			}
 			$link = substr( $link, strlen( '&amp;' ) );
@@ -1435,26 +1460,13 @@
 			$this->foot();
 		} // }}}
 		function select_user() // {{{
-		//changes user id to the requested user if user is an admin.  
-		//otherwise sets $this->user_id to $this->authenticated_user_id
 		{
-			// FORMER WAY OF DOING THINGS - DEPRECATED
-			// just set this up initially.
-			// $_SESSION[ 'ORIG_REMOTE_USER' ] = $_SERVER[ 'REMOTE_USER' ];
-			// if( !setcookie( 'REMOTE_USER', $this->authenticated_user_id, 0, '/',$_SERVER[ 'HTTP_HOST' ], 0 ) )
-			// trigger_error( 'Unable to set remote user cookie' );
-
-			$user = new entity( $this->authenticated_user_id );
-			$is_admin = $user->has_left_relation_with_entity( new entity( id_of( 'admin_role' ) ) );
-			if ($is_admin) $this->set_show( 'admin_tools', true );
-
-			// if user id specified in query is not authenticated user
-			if (!empty($this->user_id) && ($this->authenticated_user_id != $this->user_id ) && ($is_admin))
+			if ( empty($this->user_id) || ( $this->user_id != $this->authenticated_user_id && !reason_user_has_privs($this->authenticated_user_id, 'pose_as_other_user') ) )
 			{
-					$user = new entity($this->user_id);
+				$this->user_id = $this->authenticated_user_id;
 			}
-			else $this->user_id = $this->authenticated_user_id;
-
+			
+			$user = new entity($this->user_id);
 			if( empty( $this->site_id ) )
 				$this->show[ 'sitebar' ] = false;
 			else
