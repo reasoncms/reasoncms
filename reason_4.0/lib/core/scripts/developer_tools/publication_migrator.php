@@ -16,8 +16,12 @@ reason_include_once('function_libraries/user_functions.php');
  * - Screen 2: Allow association of news items to an existing or new publication.
  * - Screen 3: Map known page types from old page type to new page type and relate publication.
  *
- * Not all page types can be known, and some sites will require some manual work to migrate. In the initial incarnation,
- * this should only be used on sites that need a publication without issues or sections.
+ * Not all page types can be known, and some sites will require some manual work to migrate.
+ *
+ * While this migrator references some Carleton specific sites and page_types, it should work just fine
+ * on non-Carleton old style news.
+ *
+ * Even for sites that require manual work, it may be worthwhile to extend this tool to handle them...
  *
  * @author Nathan White
  */
@@ -79,10 +83,26 @@ class MigratorScreen extends Disco
 			$pub_count = (!empty($publications)) ? count($publications) : '0';
 			$pub_string = ($pub_count == 1) ? 'publication' : 'publications';
 			$status_html[] = 'Site has ' . $pub_count . ' ' . $pub_string;
+			
 			$unattached_news_items = $this->helper->get_unattached_news_item_names_by_id();
+			
 			if (!empty($unattached_news_items)) $status_html[] = 'Site has ' . count($unattached_news_items) . ' unattached news items';
 			$attached_news_items = $this->helper->get_attached_news_item_names_by_id();
+			
+			
 			if (!empty($attached_news_items)) $status_html[] = 'Site has ' . count($attached_news_items) . ' attached news items';
+			
+			$unattached_issues = $this->helper->get_unattached_issue_names_by_id();
+			if (!empty($unattached_issues)) $status_html[] = 'Site has ' . count($unattached_issues) . ' unattached issues';
+			$attached_issues = $this->helper->get_attached_issue_names_by_id();
+			if (!empty($attached_issues)) $status_html[] = 'Site has ' . count($attached_issues) . ' attached issues';
+			
+			$unattached_sections = $this->helper->get_unattached_section_names_by_id();
+			if (!empty($unattached_sections)) $status_html[] = 'Site has ' . count($unattached_sections) . ' unattached news sections';
+			$attached_sections = $this->helper->get_attached_section_names_by_id();
+			if (!empty($attached_sections)) $status_html[] = 'Site has ' . count($attached_sections) . ' attached news sections';
+			
+			
 			$status_html = '<ul><li>' . implode('</li><li>', $status_html) . '</li></ul>';
 			$start_over_link = true;
 		}
@@ -138,7 +158,21 @@ class MigratorScreen2 extends MigratorScreen
 		}
 		else
 		{
-			echo '<p>All news items on the site are attached to a publication. You may proceed do the following:</p>';
+			if (empty($this->unattached_news_items_names_by_id))
+			{
+				echo '<p>All news items on the site are attached to a publication.</p>';
+			}
+			if ($this->site_has_issue_type)
+			{
+				if (empty($this->unattached_issue_names_by_id)) echo '<p>All issues on the site are attached to a publication.</p>';
+				else $options[] = '<a href="'.carl_make_link(array('active_screen' => 6)).'">Attach issues to a publication</a>';
+			}
+			if ($this->site_has_section_type)
+			{
+				if (empty($this->unattached_section_names_by_id)) echo '<p>All news sections attached to a publication.</p>';
+				else $options[] = '<a href="'.carl_make_link(array('active_screen' => 7)).'">Attach news sections to a publcation</a>';
+			}
+			echo '<p>You may proceed do the following:</p>';
 			$options[] = '<a href="'.carl_make_link(array('active_screen' => 4)).'">Modify page types on the site</a>';
 			$options[] = '<a href="'.carl_make_link(array('active_screen' => 3)).'">Create a new publication</a>';
 			$options[] = '<a href="'.carl_construct_link().'">Choose another site</a>';
@@ -150,14 +184,24 @@ class MigratorScreen2 extends MigratorScreen
 	{
 		$this->site_id = $this->helper->get_site_id();
 		if (!$this->site_id) $this->redirect_to_screen(1);
+		$this->user_id = $this->helper->get_user_id();
 		$this->site_name = $this->helper->get_site_name();
+		$this->site_has_issue_type = $this->helper->does_site_have_issue_type();
+		$this->site_has_section_type = $this->helper->does_site_have_section_type();
 		$this->site_publication_names_by_id = $this->helper->get_site_publication_names_by_id();
 		$this->new_publication_link = carl_make_link(array('active_screen' => "3"));
 		if (empty($this->site_publication_names_by_id)) $this->redirect_to_screen("3");
 		else
 		{
 			$this->unattached_news_item_names_by_id = $this->helper->get_unattached_news_item_names_by_id();
-			//if (empty($this->news_item_names_by_id)) $this->redirect_to_screen("4");
+			if ($this->site_has_issue_type)
+			{
+				$this->unattached_issue_names_by_id = $this->helper->get_unattached_issue_names_by_id();
+			}
+			if ($this->site_has_section_type)
+			{
+				$this->unattached_section_names_by_id = $this->helper->get_unattached_section_names_by_id();
+			}
 		}
 	}
 	
@@ -196,8 +240,187 @@ class MigratorScreen2 extends MigratorScreen
 			foreach ($news_items_to_link as $item_id)
 			{
 				create_relationship($item_id, $pub_id, relationship_id_of('news_to_publication'));
+				/* Carleton specific custom code for dean of the college laird news pub */
+				if (reason_unique_name_exists('dean_of_the_college_office') && ($this->helper->get_site_id() == id_of('dean_of_the_college_office')))
+				{
+					$this->process_doc($item_id, $pub_id);
+				}
 			}
 		}
+	}
+	
+	/**
+	 * Carleton specific custom code for dean of the college laird news pub
+	 *
+	 * If the news type field is populated, make sure the section it maps to exists and is associated with the publication.
+	 * Also, make sure the news item is associated with the publication. 
+	 *
+	 * ...should this also zap the news_type field from each entity? This will mean the page is broken temporarily until the page type is changed
+	 *
+	 * 'Press Release'=>'General News',
+	 * 'Kudos'=>'Congratulations',
+	 * 'Grants'=>'Grants and Fellowships',
+	 * 'Conferences'=>'Conferences and Workshops',
+	 */
+	function process_doc($item_id, $pub_id)
+	{
+		$type_map = array('Press Release' => 'General News',
+						  'Kudos'=>'Congratulations',
+						  'Grants'=>'Grants and Fellowships',
+						  'Conferences'=>'Conferences and Workshops');
+
+		$item = new entity($item_id);
+		$type = $item->get_value('news_type');
+		if (isset($type_map[$type]))
+		{
+			$this->helper->ensure_type_is_on_site(id_of('news_section_type'));
+			$section_id = $this->helper->get_section_id_by_name($type_map[$type]);
+			if (!$section_id) // create the section
+			{
+				$section_type_id = id_of('news_section_type');
+				$name = $type_map[$type];
+				$order_array = array_keys($type_map);
+				$values['new'] = 0;
+				$values['sort_order'] = array_search($type, $order_array);
+				$section_id = reason_create_entity($this->site_id, $section_type_id, $this->user_id, $name, $values);
+				//create_relationship($section_id, $pub_id, relationship_id_of('news_section_to_publication'));
+			}
+			create_relationship($item_id, $section_id, relationship_id_of('news_to_news_section')); // relate news item to section
+		}
+	}
+	
+	// we'll jump to same screen in case there are others to associate ... if finished, the init will bounce us on to the next phase
+	function &get_values_to_pass()
+	{
+		$values = array('active_screen' => "2", 'site_id' => $this->site_id);
+		return $values;
+	}
+}
+
+/**
+ * Issues
+ */
+class MigratorScreen6 extends MigratorScreen
+{
+function step_pre_show_form()
+	{
+		echo '<h2>Attach Issues</h2>';
+		if (!empty($this->unattached_news_item_names_by_id))
+		{
+			echo '<p>In this step, choose a publication and select unattached issues to attach to the publication.</p>';
+		}
+	}
+	
+	function step_init()
+	{
+		$this->site_id = $this->helper->get_site_id();
+		if (!$this->site_id) $this->redirect_to_screen(1);
+		$this->user_id = $this->helper->get_user_id();
+		$this->site_name = $this->helper->get_site_name();
+		$this->new_publication_link = carl_make_link(array('active_screen' => "3"));
+		$this->site_publication_names_by_id = $this->helper->get_site_publication_names_by_id();
+		$this->unattached_issue_names_by_id = $this->helper->get_unattached_issue_names_by_id();
+		if (empty($this->site_publication_names_by_id)) $this->redirect_to_screen("3");
+		if (empty($this->unattached_issue_names_by_id)) $this->redirect_to_screen("2");
+	}
+	
+	/**
+	 * @todo add javascript hooks to check / uncheck all
+	 */
+	function on_every_time()
+	{
+		$this->add_element('publication_id', 'select_no_sort', array('options' => $this->site_publication_names_by_id, 'display_name' => 'Choose a Publication'));
+		$this->set_comments('publication_id', form_comment('<p>...Or <a href="'.$this->new_publication_link.'">create a new publication<a/></p>'));
+		$this->add_element('issues', 'checkboxgroup', array('options' => $this->unattached_issue_names_by_id, 'display_name' => 'Choose Issues to Attach'));
+		$this->set_value('issues', array_keys($this->unattached_issue_names_by_id)); // check all by default
+	}
+	
+	function run_error_checks()
+	{
+		if (!$this->get_value('issues'))
+		{
+			$this->set_error('issues', 'You must select at least one issue to attach to the publication.');
+		}
+	}
+	
+	function process()
+	{
+		$pub_id = $this->get_value('publication_id');
+		$issues_to_link = $this->get_value('issues');
+		foreach ($issues_to_link as $issue_id)
+		{
+			create_relationship($issue_id, $pub_id, relationship_id_of('issue_to_publication'));
+		}
+		
+		// update the publication - set has_issues to "Yes"
+		reason_update_entity($pub_id, $this->user_id, array('has_issues' => 'yes'));
+	}
+	
+	// we'll jump to same screen in case there are others to associate ... if finished, the init will bounce us on to the next phase
+	function &get_values_to_pass()
+	{
+		$values = array('active_screen' => "2", 'site_id' => $this->site_id);
+		return $values;
+	}
+}
+
+/**
+ * Sections
+ */
+class MigratorScreen7 extends MigratorScreen
+{
+function step_pre_show_form()
+	{
+		echo '<h2>Attach News Sections</h2>';
+		if (!empty($this->unattached_sections_names_by_id))
+		{
+			echo '<p>In this step, choose a publication and select unattached news sections to attach to the publication.</p>';
+		}
+	}
+	
+	function step_init()
+	{
+		$this->site_id = $this->helper->get_site_id();
+		if (!$this->site_id) $this->redirect_to_screen(1);
+		$this->user_id = $this->helper->get_user_id();
+		$this->site_name = $this->helper->get_site_name();
+		$this->new_publication_link = carl_make_link(array('active_screen' => "3"));
+		$this->site_publication_names_by_id = $this->helper->get_site_publication_names_by_id();
+		$this->unattached_section_names_by_id = $this->helper->get_unattached_section_names_by_id();
+		if (empty($this->site_publication_names_by_id)) $this->redirect_to_screen("3");
+		if (empty($this->unattached_section_names_by_id)) $this->redirect_to_screen("2");
+	}
+	
+	/**
+	 * @todo add javascript hooks to check / uncheck all
+	 */
+	function on_every_time()
+	{
+		$this->add_element('publication_id', 'select_no_sort', array('options' => $this->site_publication_names_by_id, 'display_name' => 'Choose a Publication'));
+		$this->set_comments('publication_id', form_comment('<p>...Or <a href="'.$this->new_publication_link.'">create a new publication<a/></p>'));
+		$this->add_element('sections', 'checkboxgroup', array('options' => $this->unattached_section_names_by_id, 'display_name' => 'Choose News Sections to Attach'));
+		$this->set_value('sections', array_keys($this->unattached_section_names_by_id)); // check all by default
+	}
+	
+	function run_error_checks()
+	{
+		if (!$this->get_value('sections'))
+		{
+			$this->set_error('sections', 'You must select at least one issue to attach to the publication.');
+		}
+	}
+	
+	function process()
+	{
+		$pub_id = $this->get_value('publication_id');
+		$sections_to_link = $this->get_value('sections');
+		foreach ($sections_to_link as $section_id)
+		{
+			create_relationship($section_id, $pub_id, relationship_id_of('news_section_to_publication'));
+		}
+		
+		// update the publication - set has_sections to "Yes"
+		reason_update_entity($pub_id, $this->user_id, array('has_sections' => 'yes'));
 	}
 	
 	// we'll jump to same screen in case there are others to associate ... if finished, the init will bounce us on to the next phase
@@ -445,7 +668,7 @@ class MigratorScreen5 extends MigratorScreen
 
 class PublicationMigratorHelper
 {
-	var $cleanup_rules = array('active_screen' => array('function' => 'check_against_array', 'extra_args' => array("1","2","3","4","5")),
+	var $cleanup_rules = array('active_screen' => array('function' => 'check_against_array', 'extra_args' => array("1","2","3","4","5","6","7")),
 							   'site_id' => array('function' => 'turn_into_int'));
 	
 	/**
@@ -454,9 +677,11 @@ class PublicationMigratorHelper
 	 */
 	var $news_modules = array('news', 'news_mini', 'news_via_categories', 'news_by_category', 'news_rand', 'news_all',
 	                          'news_one_at_a_time', 'news_proofing', 'news_proofing_multipage', 
-	                          'news2', 'news2_mini', 'news2_mini_random');
-	                          
+	                          'news2', 'news2_mini', 'news2_mini_random', 'news_doc');
+	
 	var $publication_modules = array('publication');
+	
+	var $page_types_with_main_post_news = array('news', 'news_doc', 'news_one_at_a_time', 'news_rand', 'news_all', 'news2');
 	
 	/**
 	 * Defines known suggested page type mappings from old style news to publication module
@@ -467,7 +692,9 @@ class PublicationMigratorHelper
 											   'show_children_and_news_sidebar' => 'show_children_and_publication_sidebar',
 											   'events_and_news_sidebar_show_children_nagios_status' => 'events_and_publication_sidebar_show_children_nagios_status',
 											   'news_sidebar' => 'publication_sidebar',
-											   'children_and_grandchildren_full_names_sidebar_blurbs_no_title_random_news_subnav' => 'international_students_information_front_page');
+											   'children_and_grandchildren_full_names_sidebar_blurbs_no_title_random_news_subnav' => 'international_students_information_front_page',
+											   'news_doc' => 'publication_doc',
+											   'news_proofing' => 'publication');
 	/**
 	 * Determine state and init the appropriate migrator screen
 	 */
@@ -506,6 +733,30 @@ class PublicationMigratorHelper
 			else $site_name = '';
 		}
 		return $site_name;
+	}
+	
+	function does_site_have_issue_type()
+	{
+		$site_id = $this->get_site_id();
+		$es = new entity_selector();
+		$es->add_type(id_of('type'));
+		$es->add_right_relationship($this->get_site_id(),relationship_id_of('site_to_type'));
+		$es->add_relation('entity.id = "'.id_of('issue_type').'"');
+		$es->set_num(1);
+		$type = $es->run_one();
+		return ($type);
+	}
+	
+	function does_site_have_section_type()
+	{
+		$site_id = $this->get_site_id();
+		$es = new entity_selector();
+		$es->add_type(id_of('type'));
+		$es->add_right_relationship($this->get_site_id(),relationship_id_of('site_to_type'));
+		$es->add_relation('entity.id = "'.id_of('news_section_type').'"');
+		$es->set_num(1);
+		$type = $es->run_one();
+		return ($type);	
 	}
 	
 	function get_allowable_relationship_for_page_type($page_type)
@@ -611,13 +862,16 @@ class PublicationMigratorHelper
 		$site_id = $this->get_site_id();
 		if (!isset($attached_news_items))
 		{
-			$site_pubs =& $this->get_site_publications();
-			$es = new entity_selector($site_id);
-			$es->limit_tables();
-			$es->limit_fields();
-			$es->add_type(id_of('news'));
-			if (!empty($site_pubs)) $es->add_left_relationship_field('news_to_publication', 'entity', 'id', 'pub_id', array_keys($site_pubs));
-			$attached_news_items = $es->run_one();
+			if ($site_pubs =& $this->get_site_publications())
+			{
+				$es = new entity_selector($site_id);
+				$es->limit_tables();
+				$es->limit_fields();
+				$es->add_type(id_of('news'));
+				$es->add_left_relationship_field('news_to_publication', 'entity', 'id', 'pub_id', array_keys($site_pubs));
+				$attached_news_items = $es->run_one();
+			}
+			else $attached_news_items = false;
 		}
 		return $attached_news_items;
 	}
@@ -646,6 +900,172 @@ class PublicationMigratorHelper
 			}
 		}
 		return (isset($result)) ? $result : '';
+	}
+
+	function &get_unattached_sections()
+	{
+		static $unattached_sections;
+		$site_id = $this->get_site_id();
+		if (!isset($unattached_sections))
+		{
+			$attached_sections =& $this->get_attached_sections();
+			$es2 = new entity_selector($site_id);
+			$es2->limit_tables();
+			$es2->limit_fields();
+			$es2->add_type(id_of('news_section_type'));
+			if ($attached_sections)
+			{
+				$es2->add_relation('entity.id NOT IN ('.implode(",",array_keys($attached_sections)).')');
+			}
+			$unattached_sections = $es2->run_one();
+		}
+		return $unattached_sections;
+	}
+	
+	function &get_attached_sections()
+	{
+		static $attached_sections;
+		$site_id = $this->get_site_id();
+		if (!isset($attached_sections))
+		{
+			if ($site_pubs =& $this->get_site_publications())
+			{
+				$es = new entity_selector($site_id);
+				$es->limit_tables();
+				$es->limit_fields();
+				$es->add_type(id_of('news_section_type'));
+				$es->add_left_relationship_field('news_section_to_publication', 'entity', 'id', 'pub_id', array_keys($site_pubs));
+				$attached_sections = $es->run_one();
+			}
+			else $attached_sections = false;
+		}
+		return $attached_sections;
+	}
+	
+	function get_unattached_section_names_by_id()
+	{
+		$unattached_sections =& $this->get_unattached_sections();
+		if (!empty($unattached_sections))
+		{
+			foreach ($unattached_sections as $k=>$v)
+			{
+				$result[$k] = $v->get_value('name');
+			}
+		}
+		return (isset($result)) ? $result : '';
+	}
+	
+	function get_attached_section_names_by_id()
+	{
+		$attached_sections =& $this->get_attached_sections();
+		if (!empty($attached_sections))
+		{
+			foreach ($attached_sections as $k=>$v)
+			{
+				$result[$k] = $v->get_value('name');
+			}
+		}
+		return (isset($result)) ? $result : '';
+	}
+
+	function &get_unattached_issues()
+	{
+		static $unattached_issues;
+		$site_id = $this->get_site_id();
+		if (!isset($unattached_issues))
+		{
+			$attached_issues =& $this->get_attached_issues();
+			$es2 = new entity_selector($site_id);
+			$es2->limit_tables();
+			$es2->limit_fields();
+			$es2->add_type(id_of('issue_type'));
+			if ($attached_issues)
+			{
+				$es2->add_relation('entity.id NOT IN ('.implode(",",array_keys($attached_issues)).')');
+			}
+			$unattached_issues = $es2->run_one();
+		}
+		return $unattached_issues;
+	}
+	
+	function &get_attached_issues()
+	{
+		static $attached_issues;
+		$site_id = $this->get_site_id();
+		if (!isset($attached_issues))
+		{
+			if ($site_pubs =& $this->get_site_publications())
+			{
+				$es = new entity_selector($site_id);
+				$es->limit_tables();
+				$es->limit_fields();
+				$es->add_type(id_of('issue_type'));
+				$es->add_left_relationship_field('issue_to_publication', 'entity', 'id', 'pub_id', array_keys($site_pubs));
+				$attached_issues = $es->run_one();
+			}
+			else $attached_issues = false;
+		}
+		return $attached_issues;
+	}
+	
+	function get_unattached_issue_names_by_id()
+	{
+		$unattached_issues =& $this->get_unattached_issues();
+		if (!empty($unattached_issues))
+		{
+			foreach ($unattached_issues as $k=>$v)
+			{
+				$result[$k] = $v->get_value('name');
+			}
+		}
+		return (isset($result)) ? $result : '';
+	}
+	
+	function get_attached_issue_names_by_id()
+	{
+		$attached_issues =& $this->get_attached_issues();
+		if (!empty($attached_issues))
+		{
+			foreach ($attached_issues as $k=>$v)
+			{
+				$result[$k] = $v->get_value('name');
+			}
+		}
+		return (isset($result)) ? $result : '';
+	}
+	
+	function get_section_id_by_name( $name )
+	{
+		static $section_ids_by_name;
+		echo 'given name ' .$name;
+		if (!isset($section_ids_by_name[$name]))
+		{
+			$sections =& $this->get_sections( true );
+			if ($sections)
+			{
+				foreach ($sections as $section)
+				{
+					$section_name = $section->get_value('name');
+					$id = $section->id();
+					$section_ids_by_name[$section_name] = $id;
+				}
+			}
+		}
+		return (isset($section_ids_by_name[$name])) ? $section_ids_by_name[$name] : false;
+	}
+	
+	function &get_sections( $refresh = false )
+	{
+		static $sections;
+		if (!isset($sections) || $refresh)
+		{
+			$site_id = $this->get_site_id();
+			$es = new entity_selector($site_id);
+			$es->add_type(id_of('news_section_type'));
+			$sections = $es->run_one();
+			$sections = ($sections) ? $sections : false;
+		}
+		return $sections;
 	}
 	
 	function &get_pages_using_news_modules()
@@ -689,15 +1109,20 @@ class PublicationMigratorHelper
 		return $publication_module_page_types;
 	}
 	
+	/**
+	 * @todo search for all page_types that have a news module in main_post instead of using page_types_with_main_post_news
+	 */
 	function &get_news_minisite_page()
 	{
 		static $news_minisite_page;
 		if (!isset($news_minisite_page))
 		{
+			$pub_module_page_types =& $this->get_publication_module_page_types();
+			$page_types = implode('","', $this->page_types_with_main_post_news);
 			$site_id = $this->get_site_id();
 			$es = new entity_selector($site_id);
 			$es->add_type(id_of('minisite_page'));
-			$es->add_relation('page_node.custom_page = "news"');
+			$es->add_relation('page_node.custom_page IN ("'.$page_types.'")');
 			$es->set_num(1);
 			$result = $es->run_one();
 			if (!empty($result))
