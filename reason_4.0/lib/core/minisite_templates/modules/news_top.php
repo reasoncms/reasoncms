@@ -4,6 +4,9 @@
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'NewsTopModule';
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
+	/**
+	 * @deprecated
+	 */
 	class NewsTopModule extends DefaultMinisiteModule
 	{
 		var $items = array();
@@ -11,7 +14,8 @@
 		function init ( $args = array() )	 // {{{
 		{
 			parent::init( $args );
-
+			trigger_error('NewsTop is deprecated and will be removed from the Reason Core before RC1. Transition pages using this module to use publications instead - a migrator is available in /scripts/developer_tools/publication_migrator.php');
+			
 			$now = date('Y-m-d H:i:s');
 			$es = new entity_selector(id_of('media_relations'));
 			$es->description = 'Selecting top news';
