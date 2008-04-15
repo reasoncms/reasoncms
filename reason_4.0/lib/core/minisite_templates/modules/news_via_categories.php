@@ -4,6 +4,9 @@
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'NewsViaCategoriesModule';
 	
+	/**
+	 * @deprecated
+	 */
 	class NewsViaCategoriesModule extends DefaultMinisiteModule
 	{
 		var $es;
@@ -20,7 +23,8 @@
 		function init( $args = array() ) // {{{
 		{
 			parent::init( $args );
-
+			trigger_error('NewsViaCategories is deprecated and will be removed from the Reason Core before RC1. Transition pages using this module to use publications instead - a migrator is available in /scripts/developer_tools/publication_migrator.php');
+			
 			$this->es = new entity_selector( $this->parent->site_id );
 			$this->es->description = 'Selecting categories for this page';
 			$this->es->add_type( id_of('category_type') );
