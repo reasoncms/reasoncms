@@ -10,6 +10,8 @@
 	 *
 	 *  most of this is just changing the references to this->parent->site_id
 	 *  to  this->parent_site->id() which gets the parent's site id.
+	 *
+	 * @deprecated
 	 */
         
 	class ParentNewsMinisiteModule extends NewsMinisiteModule
@@ -19,7 +21,8 @@
 		{
 			// skip NewsMinisiteModule and go straight to the source
 			DefaultMinisiteModule::init( $args );
-
+			trigger_error('ParentNewsMinisiteModule is deprecated and will be removed from the Reason Core before RC1. Transition pages using this module to use publications instead - a migrator is available in /scripts/developer_tools/publication_migrator.php');
+			
 			// get parent site information
 			$es = new entity_selector();
 			$es->add_type( id_of( 'site' ) );
