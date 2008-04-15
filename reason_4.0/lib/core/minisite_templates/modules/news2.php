@@ -2,6 +2,9 @@
 	reason_include_once( 'minisite_templates/modules/generic3.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'News2Module';
 
+/**
+ * @deprecated
+ */
 class News2Module extends Generic3Module
 {	
 	var $style_string = 'news';
@@ -38,6 +41,12 @@ class News2Module extends Generic3Module
 	var $class_vars_pass_to_submodules = array();
 	var $has_feed = true;
 
+	function init( $args = array() )
+	{
+		parent::init( $args );
+		trigger_error('The News2Module is deprecated and will be removed from the Reason Core before RC1. Transition pages using this module to use publications instead - a migrator is available in /scripts/developer_tools/publication_migrator.php');	
+	}
+	
 	function set_type()
 	{
 		$this->type = id_of('news');
