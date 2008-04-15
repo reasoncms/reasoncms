@@ -224,7 +224,10 @@
 		} // }}}
 		
 	}
-        
+	
+	/**
+	 * @deprecated
+	 */
 	class NewsMinisiteModule extends DefaultMinisiteModule
 	{
 		var $num_per_page = 12;
@@ -248,6 +251,7 @@
 		function init( $args ) // {{{
 		{
 			parent::init( $args );
+			trigger_error('NewsMinisiteModule is deprecated and will be removed from the Reason Core before RC1. Transition pages using this module to use publications instead - a migrator is available in /scripts/developer_tools/publication_migrator.php');
 			$this->get_issues();
 			if( $this->is_issued && $this->has_issues() )
 			{
