@@ -1,6 +1,9 @@
 <?php
 /**
  * A module that displays the full news items in a list for easy printing, etc.
+ *
+ * @deprecated
+ *
  * @package reason
  * @subpackage minisite_modules
  */
