@@ -702,7 +702,31 @@ class PublicationModule extends Generic3Module
 		{
 			$this->es->add_left_relationship( array_keys($this->related_categories), relationship_id_of('news_to_category'));
 		}
+		$this->related_issue_limit($this->es);
 		$this->related_order_and_limit($this->es, array('status'));
+	}
+	
+	/**
+	 * If we are dealing with a single publication and it has issues, make sure that the items listed are part of a visible issue
+	 */
+	function related_issue_limit(&$es)
+	{
+		if (count($this->related_publications) == 1)
+		{
+			$pub = reset($this->related_publications);
+			if ($pub->get_value('has_issues') == 'yes')
+			{
+				$es2 = new entity_selector( $this->site_id );
+				$es2->limit_tables('show_hide');
+				$es2->limit_fields('show_hide');
+				$es2->add_type( id_of('issue_type') );
+				$es2->add_left_relationship( $pub->id(), relationship_id_of('issue_to_publication') );
+				$es2->add_relation("show_hide.show_hide = 'show'");
+				$issues = $es2->run_one();
+				$issue_array = ($issues) ? array_keys($issues) : array("0");
+				$es->add_left_relationship($issue_array, relationship_id_of('news_to_issue'));
+			}
+		}
 	}
 
 	/**
