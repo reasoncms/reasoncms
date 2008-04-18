@@ -246,13 +246,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 	function get_current_issue_markup($issue)
 	{
 		$markup_string = '';
-		$name = $issue->get_value('name');
-		$date = prettify_mysql_datetime( $issue->get_value( 'datetime' ), $this->passed_vars['date_format'] );
-		if(!empty($this->passed_vars['links_to_issues'][$issue->id()]) )
-		{
-			$name = '<a href="'.$this->passed_vars['links_to_issues'][$issue->id()].'">'.$name.'</a>';
-		}
-		$markup_string .= '<div class="issueName"><h3>'.$name.' <span class="date">('.$date.')</span></h3></div>'."\n";
+		$markup_string .= '<div class="issueName"><h3>'.$this->_get_issue_label($issue).'</span></h3></div>'."\n";
 		return $markup_string;
 	}
 	
@@ -283,10 +277,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			foreach($issues_by_date as $id => $issue)
 			{
 				$selected = ($cur_issue_id == $id) ? ' selected="selected"' : '';
-				$date = $issue->get_value('datetime');
-				$name = $issue->get_value('name');
-				$date = prettify_mysql_datetime( $issue->get_value( 'datetime' ), $this->passed_vars['date_format'] );
-				$markup_string .= '<option value="'.$id.'"'.$selected.'>'.$name.' ('.$date.')</option>'."\n";
+				$markup_string .= '<option value="'.$id.'"'.$selected.'>'.strip_tags($this->_get_issue_label($issue)).'</option>'."\n";
 			}
 			$markup_string .= '</select>'."\n";
 			$markup_string .= '<input type="submit" name="go" value="Go" />'."\n";
@@ -294,6 +285,19 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string .= '</div>'."\n";
 		}
 		return $markup_string;
+	}
+	
+	function _get_issue_label($issue)
+	{
+		$name = $issue->get_value('name');
+		if(!empty($this->passed_vars['links_to_issues'][$issue->id()]) )
+		{
+			$name = '<a href="'.$this->passed_vars['links_to_issues'][$issue->id()].'">'.$name.'</a>';
+		}
+		if($issue->get_value('show_hide') == 'hide')
+				$name = '[Unpublished] '.$name;
+		$date = prettify_mysql_datetime( $issue->get_value( 'datetime' ), $this->passed_vars['date_format'] );
+		return $name.' <span class="date">('.$date.')</span>';
 	}
 	
 	
