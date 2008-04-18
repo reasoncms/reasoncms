@@ -32,7 +32,7 @@ class PublicationModule extends Generic3Module
 	//generic 3 variable overrides
 	var $query_string_frag = 'story';
 	var $pagination_prev_next_texts = array('previous'=>'Newer','next'=>'Older');
-	var $use_dates_in_list = true;
+	var $use_dates_in_list = true; // this is kinda pointless, since this module is a) never meant to be overloaded, and b) we have morkup generators that can decide this on their own. So the default markup generator now ignores it.
 	var $show_list_with_details = false;
 	var $has_feed = true;
 	var $jump_to_item_if_only_one_result = false;
@@ -91,6 +91,7 @@ class PublicationModule extends Generic3Module
 	var $css = 'css/publication/default_styles.css'; // style sheet(s) to be added
 	var $_ok_to_view = true;
 	var $_unauthorized_message = NULL;
+	var $_items_by_section = array(); // a place to cache items organized by section
 		
 	/** 
 	* Stores the default class names and file names of the markup generator classes used by the module.  
@@ -1288,7 +1289,10 @@ class PublicationModule extends Generic3Module
 		*/
 		function get_items_by_section()
 		{
-			$items_by_section = array();
+			if(!empty($this->_items_by_section))
+			{
+				return $this->_items_by_section;
+			}
 			foreach($this->items as $item)
 			{
 				if($this->has_sections() && $this->use_group_by_section_view())
@@ -1301,28 +1305,28 @@ class PublicationModule extends Generic3Module
 						{
 							if(empty($current_section) || $section->id() == $current_section->id())
 							{
-								$items_by_section[$section->id()][$item->id()] = $item;
+								$this->_items_by_section[$section->id()][$item->id()] = $item;
 							}
 						}
 					}	
 				}
 				else
-					 $items_by_section[$this->no_section_key][$item->id()] = $item;
+					$this->_items_by_section[$this->no_section_key][$item->id()] = $item;
 			}
 			
-			if (!empty($items_by_section) && $this->has_sections() && $this->use_group_by_section_view())
+			if (!empty($this->_items_by_section) && $this->has_sections() && $this->use_group_by_section_view())
 			{
 				$section_order = array_keys($this->get_sections());
 				foreach ($section_order as $section_id)
 				{
-					if (array_key_exists($section_id, $items_by_section))
+					if (array_key_exists($section_id, $this->_items_by_section))
 					{
-						$items_by_section_ordered[$section_id] = $items_by_section[$section_id];
+						$items_by_section_ordered[$section_id] = $this->_items_by_section[$section_id];
 					}
 				}
-				$items_by_section = $items_by_section_ordered;
+				$this->_items_by_section = $items_by_section_ordered;
 			}
-			return $items_by_section;
+			return $this->_items_by_section;
 		}
 		
 		
