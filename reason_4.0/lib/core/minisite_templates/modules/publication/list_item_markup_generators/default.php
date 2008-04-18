@@ -20,8 +20,9 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 									'item_comment_count', 
 									'link_to_full_item', 
 									'permalink',
-									'section_links',
-									'teaser_image'
+									//'section_links', you can turn this on if show_section_name is true
+									'teaser_image',
+									'current_issue',
 									);
 									
 	//methods to run, in the order that they should be run.  This should be moved up to the higher level. 
@@ -34,7 +35,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 										'get_links_markup',
 									  ); 	*/
 	
-	var $show_section_name = true;
+	var $show_section_name = false;
 
 	function PublicationListItemMarkupGenerator ()
 	{
@@ -99,7 +100,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 	function get_date_markup()
 	{
 		$item = $this->passed_vars['item'];
-		if($item->get_value( 'datetime') && $this->passed_vars['use_dates_in_list'] )
+		if($item->get_value( 'datetime') && empty($this->passed_vars['current_issue']) )
 		{
 			$datetime = prettify_mysql_datetime( $item->get_value( 'datetime' ), $this->passed_vars['date_format'] );
 			return  '<div class="date">'.$datetime.'</div>'."\n";
@@ -109,7 +110,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 	function get_section_markup()
 	{
 		$section_markup_string = '';
-		if($this->show_section_name && !empty($this->passed_vars['section_links']))
+		if($this->show_section_name() && !empty($this->passed_vars['section_links']))
 		{
 			$section_links = array();
 			foreach($this->passed_vars['section_links'] as $id => $info)
@@ -119,6 +120,11 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 			$section_markup_string = '<div class="sectionMembership"><strong>Section:</strong> '.implode(', ', $section_links).'</div>';
 		}
 		return $section_markup_string; 
+	}
+	
+	function show_section_name()
+	{
+		return $this->show_section_name;
 	}
 
 	function get_description_markup()
