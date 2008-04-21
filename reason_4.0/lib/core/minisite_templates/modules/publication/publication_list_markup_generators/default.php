@@ -282,6 +282,8 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string .= '</select>'."\n";
 			$markup_string .= '<input type="submit" name="go" value="Go" />'."\n";
 			$markup_string .= '</form>'."\n";
+			$link = carl_make_link(array('issue_id' => 0));
+			$markup_string .= '<div class="allIssuesLink"><a href="'.$link.'">List all issues</a></div>';
 			$markup_string .= '</div>'."\n";
 		}
 		return $markup_string;
