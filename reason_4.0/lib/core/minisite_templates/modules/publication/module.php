@@ -868,7 +868,7 @@ class PublicationModule extends Generic3Module
 	
 	function issue_list_should_be_displayed()
 	{
-		return ($this->has_issues() && isset($this->request['issue_id']) && ($this->request['issue_id'] === 0));
+		return (!$this->related_mode && $this->has_issues() && isset($this->request['issue_id']) && ($this->request['issue_id'] === 0));
 	}
 	
 	// overloaded generic3 function
@@ -882,8 +882,7 @@ class PublicationModule extends Generic3Module
 		{
 			echo $this->_unauthorized_message;
 			return;
-		}
-		
+		}	
 		if ($this->issue_list_should_be_displayed())
 		{
 			$issue_markup_generator = $this->set_up_generator_of_type('issue_list');
@@ -1125,7 +1124,7 @@ class PublicationModule extends Generic3Module
 		*/
 		function has_issues()
 		{
-			if($this->publication->get_value('has_issues') == "yes")
+			if($this->publication && $this->publication->get_value('has_issues') == "yes")
 			{
 				$issues =& $this->get_issues();
 				if(!empty($issues)) return true;
