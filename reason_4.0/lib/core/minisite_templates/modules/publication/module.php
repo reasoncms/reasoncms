@@ -113,6 +113,9 @@ class PublicationModule extends Generic3Module
 										'featured_item' => array ('classname' => 'PublicationListItemMarkupGenerator', 
 										                          'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/default.php',
 										                          ),
+										'issue_list' => array ('classname' => 'PublicationIssueListMarkupGenerator',
+															   'filename' => 'minisite_templates/modules/publication/issue_list_markup_generators/default.php',
+															   ),
 								   	   );
 								   	   
 	var $related_markup_generator_info = array( 'list_item' => array ('classname' => 'RelatedListItemMarkupGenerator', 
@@ -863,6 +866,11 @@ class PublicationModule extends Generic3Module
 			return false;
 	}
 	
+	function issue_list_should_be_displayed()
+	{
+		return ($this->has_issues() && isset($this->request['issue_id']) && ($this->request['issue_id'] === 0));
+	}
+	
 	// overloaded generic3 function
 	/** 
 	* Gets the markup for the list from the list markup generator.
@@ -875,11 +883,19 @@ class PublicationModule extends Generic3Module
 			echo $this->_unauthorized_message;
 			return;
 		}
-		$list_markup_generator = $this->set_up_generator_of_type('list');
-		echo $list_markup_generator->get_markup();
 		
-		if(empty($this->items))	//this should only appear if we have issues ... otherwise would be echoed list_items()
-			echo $this->no_items_text;
+		if ($this->issue_list_should_be_displayed())
+		{
+			$issue_markup_generator = $this->set_up_generator_of_type('issue_list');
+			echo $issue_markup_generator->get_markup();
+		}
+		else
+		{
+			$list_markup_generator = $this->set_up_generator_of_type('list');
+			echo $list_markup_generator->get_markup();
+			if(empty($this->items))	//this should only appear if we have issues ... otherwise would be echoed list_items()
+				echo $this->no_items_text;
+		}
 	}
 
 	/**
