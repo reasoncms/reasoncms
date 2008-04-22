@@ -280,6 +280,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 				$markup_string .= '<option value="'.$id.'"'.$selected.'>'.strip_tags($this->_get_issue_label($issue)).'</option>'."\n";
 			}
 			$markup_string .= '</select>'."\n";
+			$markup_string .= ($this->passed_vars['text_only'] == 1) ? '<input type="hidden" name="textonly" value="1">' : '';
 			$markup_string .= '<input type="submit" name="go" value="Go" />'."\n";
 			$markup_string .= '</form>'."\n";
 			$link = carl_make_link(array('issue_id' => 0));
