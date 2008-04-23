@@ -102,10 +102,10 @@ function update_db(image, link, eid, rowid, rowid_switch)
   else
     return false;
     
-  timeout = setTimeout("follow_link();",3000);
+  timeout = setTimeout("follow_link();",5000);
   req.onreadystatechange = function() {
     clearTimeout(timeout);
-    timeout = setTimeout("follow_link();",3000);
+    timeout = setTimeout("follow_link();",5000);
     if(req.readyState==4)
     {
       if (req.status == 200) 
