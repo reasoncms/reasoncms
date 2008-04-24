@@ -13,6 +13,7 @@ reason_include_once( 'function_libraries/file_finders.php' );
 reason_include_once( 'content_listers/tree.php3' );
 reason_include_once( 'minisite_templates/nav_classes/default.php' );
 reason_include_once( 'classes/head_items.php' );
+reason_include_once( 'classes/page_access.php' );
 include_once( CARL_UTIL_INC . 'dev/timer.php' );
 
 class MinisiteTemplate
@@ -88,8 +89,6 @@ class MinisiteTemplate
 			die();
 		}
 		
-		$this->get_css_files();
-		
 		if ($this->use_navigation_cache)
 		{
 			$cache = new ReasonObjectCache($this->site_id . $this->nav_class, 900); // lifetime of 15 minutes
@@ -116,6 +115,10 @@ class MinisiteTemplate
 			$this->pages->site_info =& $this->site_info;
 			$this->pages->order_by = 'sortable.sort_order'; // in case it was changed in the request
 		}
+		
+		$this->_handle_access_auth_check();
+		
+		$this->get_css_files();
 		
 		$this->textonly = '';
 		if (!empty($this->pages->request['textonly']))
@@ -148,7 +151,8 @@ class MinisiteTemplate
 				// if a session exists and we're on a secure page and this site has site users, pop over to the secure
 				// site so we have access to the secure session information
 				force_secure_if_available();
-				$this->sess->start();
+				if(!$this->sess->has_started())
+					$this->sess->start();
 				if( !empty( $this->pages->request[ 'editing' ] ) )
 				{
 					if( $this->pages->request[ 'editing' ] == 'off' )
@@ -184,6 +188,35 @@ class MinisiteTemplate
 		else
 			die( 'no pages on this site' );
 	} // }}}
+	
+	function _handle_access_auth_check()
+	{
+		$auth_username = reason_check_authentication();
+		$rpa = new reasonPageAccess();
+		$rpa->set_page_tree($this->pages);
+		if(!$rpa->has_access($auth_username,$this->page_id))
+		{
+			if(!empty($auth_username))
+			{
+				header('HTTP/1.0 403 Forbidden');
+				if(file_exists(WEB_PATH.ERROR_403_PATH) && is_readable(WEB_PATH.ERROR_403_PATH))
+				{
+					include(WEB_PATH.ERROR_403_PATH);
+				}
+				else
+				{
+					trigger_error('The setting ERROR_403_FULL_PATH is not able to be included');
+					echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>403: Forbidden</title></head><body><h1>403: Forbidden</h1><p>You do not have access to this page.</p></body></html>';
+				}
+				die();
+			}
+			else
+			{
+				header('Location: '.REASON_LOGIN_URL.'?dest_page='.urlencode(get_current_url()));
+				die();
+			}
+		}
+	}
 	
 	// hook
 	function pre_load_modules()
