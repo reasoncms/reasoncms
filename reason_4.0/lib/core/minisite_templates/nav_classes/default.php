@@ -359,5 +359,19 @@
 			// apply the cleanup rules
 			$this->request = carl_clean_vars($request, $cleanup_rules);
 		}
+		
+		function get_id_chain($page_id)
+		{
+			if(!isset($this->values[ $page_id ]))
+			{
+				return array();
+			}
+			$chain = array($page_id);
+			if($page_id == $this->root_node())
+			{
+				return $chain;
+			}
+			return array_merge($chain, $this->get_id_chain($this->parent($page_id)));
+		}
 	}
 ?>
