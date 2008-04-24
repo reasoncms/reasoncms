@@ -55,7 +55,7 @@ class reasonPageAccess
 			$alrel_id = relationship_id_of('page_to_access_group');
 			if(!$alrel_id)
 			{
-				trigger_error('page_to_access_group needs to be added. Please upgrade your database at '.REASON_HTTP_BASE_PATH.'scripts/upgrade/');
+				trigger_error('page_to_access_group needs to be added. Please upgrade your database at '.REASON_HTTP_BASE_PATH.'scripts/upgrade/4.0b6_to_4.0b7/');
 				return array();
 			}
 			$chain = $this->_page_tree->get_id_chain($page_id);
