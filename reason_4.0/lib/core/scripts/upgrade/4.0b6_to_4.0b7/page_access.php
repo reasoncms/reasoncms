@@ -65,7 +65,7 @@ if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 		$a_side_type_id = id_of('minisite_page');
 		$b_side_type_id = id_of('group_type');
 		$name = 'page_to_access_group';
-		$other_data = array('description'=>'Limits access to a group','connections'=>'one_to_many','directionality'=>'unidirectional','required'=>'no','is_sortable'=>'no','display_name'=>'Restrict Access to Page','description_reverse_direction'=>'Pages that use this group for access restrictions');
+		$other_data = array('description'=>'Limits access to a group','connections'=>'one_to_many','directionality'=>'unidirectional','required'=>'no','is_sortable'=>'no','display_name'=>'Restrict Access','description_reverse_direction'=>'Pages that use this group for access restrictions');
 		if($_POST['go'] == 'run')
 		{
 			$id = create_allowable_relationship($a_side_type_id,$b_side_type_id,$name,$other_data);
