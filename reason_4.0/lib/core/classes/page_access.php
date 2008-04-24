@@ -52,12 +52,18 @@ class reasonPageAccess
 	{
 		if(!isset($this->_pages_to_groups[$page_id]))
 		{
+			$alrel_id = relationship_id_of('page_to_access_group');
+			if(!$alrel_id)
+			{
+				trigger_error('page_to_access_group needs to be added. Please upgrade your database at '.REASON_HTTP_BASE_PATH.'scripts/upgrade/');
+				return array();
+			}
 			$chain = $this->_page_tree->get_id_chain($page_id);
 			$es = new entity_selector();
 			$es->add_type(id_of('group_type'));
 			$es->limit_tables();
 			$es->limit_fields();
-			$es->add_right_relationship($chain, relationship_id_of('page_to_access_group'));
+			$es->add_right_relationship($chain, $alrel_id);
 			$es->set_num(count($chain));
 			$this->_pages_to_groups[$page_id] = $es->run_one();
 		}
@@ -68,7 +74,7 @@ class reasonPageAccess
 	 * @param string $username
 	 * @param integer $page_id
 	 * @return boolean username has access to view page
-	 * @todo rather than doing a separate group membership check against each group, it should be possible to merge the ldap representations of each group into a single one and then run a single directory service request. This could improve performance when there are multiple groups involved.
+	 * @todo Look into merging group representations to reduce number of dir service queries
 	 */
 	function has_access($username, $page_id)
 	{
