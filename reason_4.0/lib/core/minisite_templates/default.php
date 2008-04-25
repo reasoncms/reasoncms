@@ -116,6 +116,16 @@ class MinisiteTemplate
 			$this->pages->order_by = 'sortable.sort_order'; // in case it was changed in the request
 		}
 		
+		$this->sess =& get_reason_session();
+		if( $this->sess->exists() )
+		{
+			// if a session exists and we're on a secure page and this site has site users, pop over to the secure
+			// site so we have access to the secure session information
+			force_secure_if_available();
+			if(!$this->sess->has_started())
+				$this->sess->start();
+		}
+		
 		$this->_handle_access_auth_check();
 		
 		$this->get_css_files();
@@ -145,14 +155,8 @@ class MinisiteTemplate
 
 			$this->get_meta_information();
 			
-			$this->sess =& get_reason_session();
 			if( $this->sess->exists() )
 			{
-				// if a session exists and we're on a secure page and this site has site users, pop over to the secure
-				// site so we have access to the secure session information
-				force_secure_if_available();
-				if(!$this->sess->has_started())
-					$this->sess->start();
 				if( !empty( $this->pages->request[ 'editing' ] ) )
 				{
 					if( $this->pages->request[ 'editing' ] == 'off' )
@@ -186,7 +190,11 @@ class MinisiteTemplate
 			$this->load_modules();
 		}
 		else
-			die( 'no pages on this site' );
+		{
+			trigger_error('Page requested not able to be displayed... no pages on site');
+			$this->_display_403_page();
+			die();
+		}
 	} // }}}
 	
 	function _handle_access_auth_check()
@@ -198,23 +206,29 @@ class MinisiteTemplate
 		{
 			if(!empty($auth_username))
 			{
-				header('HTTP/1.0 403 Forbidden');
-				if(file_exists(WEB_PATH.ERROR_403_PATH) && is_readable(WEB_PATH.ERROR_403_PATH))
-				{
-					include(WEB_PATH.ERROR_403_PATH);
-				}
-				else
-				{
-					trigger_error('The setting ERROR_403_FULL_PATH is not able to be included');
-					echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>403: Forbidden</title></head><body><h1>403: Forbidden</h1><p>You do not have access to this page.</p></body></html>';
-				}
+				$this->_display_403_page();
 				die();
 			}
 			else
 			{
+				
 				header('Location: '.REASON_LOGIN_URL.'?dest_page='.urlencode(get_current_url()));
 				die();
 			}
+		}
+	}
+	
+	function _display_403_page()
+	{
+		header('HTTP/1.0 403 Forbidden');
+		if(file_exists(WEB_PATH.ERROR_403_PATH) && is_readable(WEB_PATH.ERROR_403_PATH))
+		{
+			include(WEB_PATH.ERROR_403_PATH);
+		}
+		else
+		{
+			trigger_error('The setting ERROR_403_FULL_PATH is not able to be included');
+			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>403: Forbidden</title></head><body><h1>403: Forbidden</h1><p>You do not have access to this page.</p></body></html>';
 		}
 	}
 	
