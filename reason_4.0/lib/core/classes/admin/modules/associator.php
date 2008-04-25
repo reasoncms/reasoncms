@@ -108,6 +108,11 @@
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'table_update.js');
 			$this->set_session_vars();
 			$this->get_associations();
+			if(empty($this->associations[ $this->admin_page->rel_id ]))
+			{
+				trigger_error( $this->admin_page->rel_id.' is not a valid relationship type id');
+				die();
+			}
 			$current_assoc = $this->associations[ $this->admin_page->rel_id ];
 			$type = new entity( $current_assoc[ 'e_id' ] );
 			// save the type entity in an object scope
