@@ -23,6 +23,10 @@
 		var $acceptable_params = array('force_login' => false);
 		var $magic_transform_prefix = 'your';
 		var $custom_disco_thor;
+		// The list of attributes you want returned from directory service searches
+		// ( used by gen_magic_string_transform_array() )
+		var $search_attributes = array('ds_firstname','ds_lastname','ds_fullname','ds_phone',
+					'ds_email','ou','title','homephone','telephonenumber');
 				
 		function init( $args = array() )
 		{
@@ -414,7 +418,6 @@
 							$transform['your_work_phone'] = $dir_array['telephonenumber'];
 						}
 					}
-					$transform['your_mail_stop'] = $dir_array['carlcampuspostaladdress'][0];
 					return $transform;
         		}
         	}
@@ -424,8 +427,7 @@
         function get_directory_data()
         {
 			$dir = new directory_service();
-			$dir->search_by_attribute('ds_username', $this->user_netID, 
-				array('ds_firstname','ds_lastname','ds_fullname','ds_phone','ds_email','ou','title','homephone','telephonenumber','carlcampuspostaladdress'));
+			$dir->search_by_attribute('ds_username', $this->user_netID, $this->search_attributes);
 			return $dir->get_first_record();
 		}
 	}
