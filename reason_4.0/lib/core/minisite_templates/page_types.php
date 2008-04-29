@@ -450,6 +450,22 @@
 			'main_post' => 'children',
 			'main_head' => '',
 		),
+		'publication_related_and_events_sidebar_show_children_no_title' => array(
+			'sidebar' => 'events_mini',
+			'pre_sidebar' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' =>
+					array('list_item' => array(
+									'classname' => 'MinimalListItemMarkupGenerator', 
+									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+									)
+				),
+				'max_num_items' => 4,
+			),
+			'main_post' => 'children',
+			'main_head' => '',
+		),
 		'events_and_news_sidebar' => array(
 			'pre_sidebar' => array(
 				'module' => 'events_mini',
