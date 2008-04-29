@@ -75,27 +75,27 @@
 			die;
 		}
 		
-		//$site = $page->get_owner();
-		$site_id = get_owner_site_id($page_id);
-		if (empty($site_id))
+		$actual_site_id = get_owner_site_id($page_id);
+		if (empty($actual_site_id))
 		{
 			trigger_error('page must have an owner site to be displayed', FATAL);
 			die;
 		}
-		$site = new entity($site_id);
-		if ($site->id() != $site_id)
+		if ($actual_site_id != $site_id)
 		{
-			trigger_error('generate page called with site_id ' . $site_id . ', which is not the owner of page_id ' . $page_id, FATAL);
+			trigger_error('generate page called with site_id ' . $site_id . ', but the actual owner of page_id ' . $page_id . ' is ' . $actual_site_id .'. Rewrites may need to be run.', FATAL);
 			die;
 		}
+		
+		$site = new entity($actual_site_id);
 		if (!$site->get_values())
 		{
-			trigger_error('generate_page could not generate a page for site id ' . $site_id . ' - the site entity was empty', FATAL);
+			trigger_error('generate_page could not generate a page for site id ' . $actual_site_id . ' - the site entity was empty', FATAL);
 			die;
 		}
 		if ($site->get_value('type') != id_of('site'))
 		{
-			trigger_error('generate_page called with site_id ' . $site_id . ' which is not an entity of type site', FATAL);
+			trigger_error('generate_page called with a page whose owner with id ' . $actual_site_id . ' is not an entity of type site', FATAL);
 			die;
 		}
 		return $site;
