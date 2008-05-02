@@ -30,13 +30,19 @@ class HeadItems
 	 * @access private
 	 */
 	var $_head_items = array();
+
+	/**
+	 * @var array _top_head_items
+	 * @access private
+	 */
+	var $_top_head_items = array();
 	
 	/**
 	 * @var array _to_remove
 	 * @access private
 	 */
 	var $_to_remove = array();
-
+	
 	var $allowable_elements = array('base','link','meta','script','style','title');
 	var $elements_that_may_have_content = array('script','style','title');
 	var	$elements_that_may_not_self_close = array('script','title');
@@ -67,6 +73,7 @@ class HeadItems
 			if($add_to_top)
 			{
 				array_unshift($this->_head_items, $item);
+				array_unshift($this->_top_head_items, $item); 
 			}
 			else
 			{
@@ -123,6 +130,7 @@ class HeadItems
 					if (empty($diff_array))
 					{
 						unset ($head_items[$k]);
+						if (isset($this->_top_head_items[$k])) unset ($this->_top_head_items[$k]);
 					}
 				}
 			}
@@ -198,7 +206,27 @@ class HeadItems
 			}
 			$html_items[] = $html_item;
 		}
-		$html_items = array_reverse(array_unique(array_reverse($html_items))); // removes duplicates - leaving only last instance of a string
+		$this->handle_duplicates($html_items);
 		return implode("\n",$html_items)."\n";
+	}
+	
+	/**
+	 * Modifes the html items array to remove exact duplicates - "add to top" items remain at the top when duplicates are found,
+	 * while the last instance of regular items is preserved. This is important because while javascript files such as jquery
+	 * may need to be at the top of the head items, when CSS duplicates are found the last instance will override rules in previous files.
+	 * @param array html_items
+	 * @return void
+	 * @author Nathan White
+	 */
+	function handle_duplicates(&$html_items)
+	{
+		$top_head_items_count = count($this->_top_head_items);
+		if ($top_head_items_count > 0)
+		{
+			$top_html_items = array_unique(array_slice($html_items, 0, $top_head_items_count));
+			$non_top_html_items = array_diff($html_items, $top_html_items);
+			$html_items = array_merge($top_html_items, $non_top_html_items);
+		}
+		$html_items = array_reverse(array_unique(array_reverse($html_items))); // removes duplicates - leaving only last instance of a string
 	}
 }
