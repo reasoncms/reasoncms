@@ -1,118 +1,64 @@
 <?php
-/*
- * Edit Module
+include_once( 'reason_header.php' );
+reason_include_once( 'function_libraries/user_functions.php' );
+
+/**
+ * EditLink Module
+ *
+ * @package reason
+ * @subpackage minisite_modules
  */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EditLinkModule';
 	
 	/*
-	 * Module creates the login/logout and page editing links
+	 * Create page editing links for site users with editing access and login/logout link.
 	 */
 	class EditLinkModule extends DefaultMinisiteModule
 	{
-		/*
-		 * Class-level storage for the session object
-		 */
-		var $sess;
-		/*
-		 * Class-level storage for the username determined in is_reason_user()
-		 */
-		var $username;
-		/*
+		var $user_netid;
+		var $edit_link;
+		
+		/**
 		 * Tells the template that this module always contains content
 		 */
 		function has_content() // {{{
 		{
 			return true;
-		} // }}}
+		}
+		
+		/**
+		 * Check whether or not the logged in user (if any) has the right privileges to edit the current page.
+		 */
+		function init( $args = array() ) 
+		{
+			$this->user_netid = reason_check_authentication();
+			if( ($this->user_netid) && user_has_access_to_site($this->site_id) && reason_user_has_privs(get_user_id($this->user_netid), 'edit') )
+			{
+				$type_id = id_of('minisite_page');
+				$fromweb = carl_make_link(array(), '', 'relative');
+				$qs_array = array('site_id' => $this->site_id, 'type_id' => $type_id, 'id' => $this->page_id, 'cur_module' => 'Editor', 'fromweb' => $fromweb);
+				$qs = carl_make_link($qs_array, '', 'qs_only', true, false);
+				$this->edit_link = securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . $qs;	
+			}
+		}
+		
 		/*
-		 * run the module
+		 * Output appropriate HTML according to the users login state and access privileges
 		 */
 		function run() // {{{
 		{
-			$this->sess =& get_reason_session();
-			if( $this->is_reason_user() )
+			if (!empty($this->edit_link))
 			{
-				$link = '/admin/index.php?site_id='. $this->site_id . '&amp;type_id=' . id_of( 'minisite_page' )
-						. '&amp;id=' . $this->page_id . '&amp;cur_module=Editor'
-						. '&amp;fromweb=' . $_SERVER[ 'REQUEST_URI' ];
 				echo '<div class="editDiv">'."\n";
-				echo prettify_string($this->username).': You may <a href="'.$link.'" class="editLink">edit this page</a>'."\n";
+				echo $this->user_netid . ': You may <a href="'.$this->edit_link.'" class="editLink">edit this page</a>'."\n";
 				echo '</div>';
 			}
-			// if they are not a backend user, check to see if this site is front end editable
-			/* else
-			{
-				// check to see if this site has the Site User type
-				$e = new entity( $this->site_id );
-				$is_editable = $e->has_left_relation_with_entity( new entity(id_of( 'site_user_type' ) ) );
-				if( $is_editable )
-				{ */
-					// check to see if this user is logged in
-					echo '<p id="footerLoginLink">';
-					if( $this->sess->exists() )
-					{
-						if( !HTTPS_AVAILABLE OR (!empty( $_SERVER['HTTPS'] ) AND strtolower( $_SERVER['HTTPS'] ) == 'on' ))
-						{
-							echo 'Logged in as '.$this->username.'. ';
-							echo '<a href="'.REASON_LOGIN_URL.'?logout=1">Logout</a>';
-						}
-						// this should hopefully never happen since the template is now bouncing to HTTPS as needed
-						else
-						{
-							$parts = parse_url( get_current_url() );
-							$url = securest_available_protocol() . '://'.$parts['host'].$parts['path'].(!empty($parts['query']) ? '?'.$parts['query'] : '' );
-							echo 'You are logged in but on an insecure page.  To edit, please go to <a href="'.$url.'">the secure page</a>';
-						}
-					}
-					// otherwise, show login link
-					else
-					{
-						echo '<a href="'.REASON_LOGIN_URL.'">Login</a>';
-					}
-					echo '</p>';
-				/* }
-			} */
-		} // }}}
-		/*
-		 * run the module
-		 * @return boolean true if the user should get a link to edit the site on the backend
-		 */
-		function is_reason_user() // {{{
-		{
-			$ret = false;
-			if($this->sess->exists() && $this->sess->get('username'))
-			{
-				$this->username = $this->sess->get('username');
-			}
-			else
-				$this->username = false;
-			if( $this->username )
-			{
-				$ret = $this->get_sites_users();	
-			}
-			return $ret;
-		} // }}}
+			echo '<p id="footerLoginLink">';
+			echo ($this->user_netid) ? 'Logged in as ' . $this->user_netid . '. ' : '';
+			echo ($this->user_netid) ? '<a href="'.REASON_LOGIN_URL.'?logout=1">Logout</a>' : '<a href="'.REASON_LOGIN_URL.'">Login</a>';
+			echo '</p>';	
+		}
 
-		/*
-		 * query the db to see if the current user has permission to edit the site
-		 * @return boolean true if the user is a backend user of the current site
-		 */
-		function get_sites_users() // {{{
-		{
-			$es = new entity_selector();
-			$es->add_type( id_of( 'user' ) );
-			$es->add_right_relationship( $this->site_id , relationship_id_of( 'site_to_user' ) );
-			$es->add_relation('entity.name LIKE "'.addslashes($this->username).'"');
-			$es->set_num(1);
-
-			$users = $es->run_one();
-			if(!empty($users))
-			{
-				return true;
-			}
-			
-			return false;
-		} // }}}
 		function get_documentation()
 		{
 			return '<p>Provies a link to log in and log out of Reason. If you are logged in and have access to administer this site, this module provides a link to edit the current page.</p>';
