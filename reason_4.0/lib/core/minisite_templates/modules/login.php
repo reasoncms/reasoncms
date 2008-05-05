@@ -57,6 +57,9 @@
 		}
 		function init( $args = array() )
 		{
+			$head_items =& $this->parent->head_items;
+            $head_items->add_javascript(JQUERY_URL, true);
+            $head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'login/focus.js');
 			$this->current_url = get_current_url();
 			$this->on_secure_page_if_available = (!HTTPS_AVAILABLE || on_secure_page());
 			// this should catch when there is no dest page being passed in.  there is the possibility that a dest_page
