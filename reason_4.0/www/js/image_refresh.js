@@ -9,11 +9,17 @@
  * @param class_substring string change the class substring used by the class from the default "refresh" to something else
  * @param src_contains string additionally include images that have an src containing the substring src_contains
  *
+ * Example Script Load - Refresh all images on a page with src's that include webcam (or have class refresh) every 10 seconds
+ *
+ * <script type="text/javaScript" src="/js/image_refresh.js?src_contains=webcam&refresh_time=10"></script>
+ *
  * Note that src_contains must contain only numbers, letters, _, ., #, -, and % characters.
  * Also note that any class_substring replacement must contain only number, letters, _, and - characters.
  *
  * Each image can set its own refresh time (in seconds) by including the class name refresh (or the name specified in class_substring)
- * followed by an integer - example:
+ * followed by an integer.
+ *
+ * Example Image Syntax
  *
  * <img class="refresh25" src="/my_image.jpg">
  *
@@ -44,7 +50,8 @@ $(document).ready(function()
 		var image = $(this);
 		
 		// extract only digits from the custom class name ... probably a simpler regexp to do it in a single step but oh well.
-		var refresh_check = image.attr('class').match(new RegExp(class_substring+"\\d*"));
+		var image_class = image.attr('class');
+		var refresh_check = (image_class) ? image_class.match(new RegExp(class_substring+"\\d*")) : false;
 		var img_refresh_time = (refresh_check) ? refresh_check.toString().replace(/\D/g, "").toString() : refresh_time;
 		
 		setInterval(function()
