@@ -609,6 +609,13 @@
 			'main' => 'form_content',
 			'main_post' => 'form'
 		),
+		'form_sidebar_blurbs' => array(
+			'main' => 'form_content',
+			'main_post' => 'form',
+			'sidebar' => 'blurb',
+			'sub_nav' => 'assets',
+			'pre_sidebar' => 'image_sidebar',
+		),
 		'gallery' => array(
 			'main_post' => array(
 				'module'=>'gallery2',
