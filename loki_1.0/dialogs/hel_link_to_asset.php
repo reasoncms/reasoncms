@@ -134,7 +134,7 @@ function do_unlink()
 				// no longer do we have an 'asset_directory' - everything is in the assets directory
 				$href = '/'.trim_slashes( $site->get_value( 'base_url' ) ).'/assets/'.trim_slashes( $asset->get_value( 'file_name' ) );
 
-				echo '<menuitem value="'.$href.'" label="'.htmlentities($asset->get_value('name')).'"/>'."\n";
+				echo '<menuitem value="'.$href.'" label="'.reason_htmlspecialchars($asset->get_value('name')).'"/>'."\n";
 
 // 					printf('<option value="%s" loki:linkChooser="true" loki:href="%s" ' .
 // 						   ' loki:name="%s" loki:filename="%s" loki:category="asset">%s (%s)</option>',
