@@ -20,7 +20,7 @@
 
 					// iframe replacement method
 					// http://intranation.com/test-cases/object-vs-iframe/
-					$this->show_item_default( 'Public View of Page' , '<object classid="clsid:25336920-03F9-11CF-8FD0-00AA00686F13" type="text/html" data="'.$url.'" class="pageViewer"><p><a href="'.$url.'">View page</a></p></object>');
+					$this->show_item_default( 'Public View of Page' , '<object classid="clsid:25336920-03F9-11CF-8FD0-00AA00686F13" type="text/html" data="'.$url.'" class="pageViewer"></object><p><a href="'.$url.'" target="_new">Open page in new window</a></p>');
 				}
 			}
 			
