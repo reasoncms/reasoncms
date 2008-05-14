@@ -103,7 +103,7 @@
 			reason_include_once( 'classes/filter.php' );
 			reason_include_once( 'content_listers/associate.php' );
 			include_once( CARL_UTIL_INC . 'basic/misc.php' );
-		
+			$this->head_items->add_javascript(JQUERY_URL, true);
 			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'assoc.css');
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'table_update.js');
 			$this->set_session_vars();
