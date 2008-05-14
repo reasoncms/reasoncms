@@ -10,10 +10,14 @@
  * - checks for status string of "success" before updating display
  * - added active and reason_http_base_path variables
  * - added separate class designation for sort_switch_up vs sort_switch_down
+ * 
+ * August, 2006
  *
  * @todo automatically determine reason_http_base_path so it can be maintained in settings file
  *
- * August, 2006
+ * May 14, 2008 
+ *
+ * Partially jquerified, also zapped the setTimeouts that would automatically follow the original link if javascript did not respond in time.
  */
 
 var link;
@@ -22,21 +26,17 @@ var active = true; // turn off and on interception of clicks on links
 var reason_http_base_path = "/reason_package/reason_4.0/www/";
 var reason_http_admin_images_path = reason_http_base_path + "ui_images/reason_admin/";
 
+$(document).ready(function()
+{	
+	create_event_handlers();
+});
+
 /**
  * Create the onclick events for all of the sorting links
  */
 function create_event_handlers()
 {
-  var links;
-  if (active == false) return false;
-  contentArea = document.getElementById("associatedItems");
-  links = contentArea.getElementsByTagName("a");
-  for (var i=0; i<links.length; i++)
-    if (links[i].getAttribute("class") == "sort_switch_up"
-      || links[i].getAttribute("className") == "sort_switch_up"
-      || links[i].getAttribute("class") == "sort_switch_down"
-      || links[i].getAttribute("className") == "sort_switch_down")
-      links[i].onclick=sort;
+	$("a[@class^='sort_switch_']").click(sort);
 }
 
 /**
@@ -46,98 +46,47 @@ function sort()
 {
   var re, rowid, direction, rowid_switch;
 
-  link = this.getAttribute("href");
-  clicked_image = this.childNodes[0];
+  link = $(this).attr("href");
+  clicked_image = $("img:first-child", this);
   
   re = /(.*?)do=move(.*?)&rowid=(.*)&eid=(.*)/;
   direction = re.exec(link)[2];
   rowid = Number(re.exec(link)[3]);
   eid = Number(re.exec(link)[4]);
 
-  if (direction == "up")
-    rowid_switch = rowid-1;
-  else if (direction == "down")
-    rowid_switch = rowid+1;
+  if (direction == "up") rowid_switch = rowid-1;
+  else if (direction == "down") rowid_switch = rowid+1;
 
-  if (!document.getElementById("row"+rowid_switch))
-    {
-    return true;
-	}
+  if (!document.getElementById("row"+rowid_switch)) return true;
   
   if (link_disable == false) update_db(clicked_image, link, eid, rowid, rowid_switch);
   return false;
 }
-
+	
 /**
  * XMLHttpRequest to send link thorugh tp update the database
  */
 function update_db(image, link, eid, rowid, rowid_switch)
 {
-  link_disable = true;
-  orig_img_url = image.getAttribute("src");
-  image.setAttribute("src", reason_http_admin_images_path + "wait.gif");
-  
-  var req;
-  link = link + "&xmlhttp=true";
-  if (window.ActiveXObject)
-  {
-    try {
-      req = new ActiveXObject("Msxml2.XMLHTTP");
-    } catch(e) {
-      try {
-        req = new ActiveXObject("Microsoft.XMLHTTP");
-      } catch(e) {
-        return false;
-      }
-    }
-  }
-  else if (window.XMLHttpRequest)
-  {
-    try {
-      req = new XMLHttpRequest();
-    } catch(e) {
-      return false;
-    }
-  }
-  else
-    return false;
-    
-  timeout = setTimeout("follow_link();",5000);
-  req.onreadystatechange = function() {
-    clearTimeout(timeout);
-    timeout = setTimeout("follow_link();",5000);
-    if(req.readyState==4)
-    {
-      if (req.status == 200) 
-      {
-        clearTimeout(timeout);
-        content = req.responseText;
-        if (content == "success")
-        {
-        	image.setAttribute("src", orig_img_url);
-        	status = change_dom(eid, rowid, rowid_switch);
-        	if (status!="")
-          	window.location.reload();
-          	link_disable = false; 
-        }
-        else
-        {
-        	image.setAttribute("src", orig_img_url);
-        	alert('There was an error alternating the sort order - please reload the page and try again.');
-        	link_disable = false;
-        }
-      }
-    }
-  }
-  req.open("GET", link, true);
-  req.send("");
-  return true;
-}
-
-//doing it this way since there seem to be poblems doing it in quotes in the callback
-function follow_link()
-{
-  window.location = link;
+	link_disable = true;
+	orig_src = $(image).attr("src");
+	$(image).attr("src", reason_http_admin_images_path + "wait.gif");
+	$.get(link, { xmlhttp: "true" }, function(data)
+	{
+		if (data == "success")
+		{
+			$(image).attr("src", orig_src);
+			status = change_dom(eid, rowid, rowid_switch);
+			link_disable = false;
+		}
+		else
+		{
+			$(image).attr("src", orig_src);
+			alert('There was an error alternating the sort order - please reload the page in your browser and try again.');
+			link_disable = false;
+		}
+	});
+	return true;
 }
 
 /**
@@ -232,7 +181,7 @@ function change_dom(eid, rowid, rowid_switch)
 //step four: update row colors - nwhite
   change_row_color(row, row_switch);
 
-//step five: recreate the onclick handlers that might have gotten lost in the process somehow
+//step five: recreate the onclick handlers that have gotten lost in the process somehow (better yet do not lose them)
   create_event_handlers();
 
   return "";
@@ -349,6 +298,3 @@ function change_row_color(row1, row2)
   	row2.setAttribute("class",row2_class);
   	row2.setAttribute("className",row2_class);
 }
-
-//start me up
-window.onload = create_event_handlers;
