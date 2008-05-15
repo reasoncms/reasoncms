@@ -193,7 +193,7 @@
 					{
 						$type = 'submit';
 					}
-					$markup .= '<input type="'.$type.'" name="'.$name.'" value=" '.$value.' " />&nbsp;&nbsp;';
+					$markup .= '<input type="'.$type.'" name="'.$name.'" value="'.$value.'" />&nbsp;&nbsp;';
 				}
 				$markup .= '</td>'."\n".'</tr>'."\n";
 			}
