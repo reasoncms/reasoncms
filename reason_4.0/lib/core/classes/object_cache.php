@@ -26,6 +26,16 @@ include_once(CARL_UTIL_INC . 'cache/object_cache.php');
 
 class ReasonObjectCache extends ObjectCache
 {
+	
+	/**
+	 * @param string $id unique identifier for cache object
+	 * @param int $lifespan
+	 */
+	function ReasonObjectCache($id = '', $lifespan = '', $type = '') // {{{
+	{
+		if ($id) $this->init($id, $lifespan, $type);
+	}
+	
 	// program me!!!
 	function register_clear_condition()
 	{
