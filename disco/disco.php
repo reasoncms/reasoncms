@@ -2107,6 +2107,8 @@
 			// textarea types - big blobs
 			else if( preg_match( '/^(text|blob|mediumblob|mediumtext|longblob|longtext)/i', $db_type ) )
 				$t = 'textarea';
+			
+			/* THIS IS A LITTLE TOO MAGICAL AND DOES NOT APPEAR TO BE USED - COMMENTING IT OUT
 			// automatically link tables if field name ends in _id
 			else if ( preg_match( '/(.*)_id$/i', $name, $matches ) )
 			{
@@ -2114,6 +2116,8 @@
 				$args[ 'table' ] = $matches[1];
 				$args[ 'display_name' ] = $matches[1];
 			}
+			*/
+			
 			// enumerated types - make a select
 			else if ( preg_match( "/^enum\((.*)\).*$/", $db_type, $matches ) )
 			{
