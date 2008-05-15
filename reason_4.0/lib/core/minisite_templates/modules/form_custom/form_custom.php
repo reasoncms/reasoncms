@@ -1,6 +1,7 @@
 <?php
 
 	reason_include_once( 'minisite_templates/modules/default.php' );
+	reason_include_once( 'function_libraries/file_finders.php' );
 	include_once( CARL_UTIL_INC . 'db/table_admin.php' );
 	
 	$GLOBALS[ '_module_class_names' ][ module_basename( __FILE__) ] = 'FormCustomMinisiteModule';
@@ -19,11 +20,12 @@
 	 */ 
 	class FormCustomMinisiteModule extends DefaultMinisiteModule
 	{
-		var $custom_form;
-		var $admin_form;
-		var $table_viewer;
-		var $form_name;
-		var $admin_form_name;
+		var $custom_form = false;
+		var $admin_form = false;
+		
+		// will get set to the table admin object if it needs to exist
+		var $table_admin = false;
+		
 		var $acceptable_params = array('custom_form' => false,
 									   'admin_form' => false,
 									   'enter_admin_view_text' => 'Enter administrative view',
@@ -35,95 +37,181 @@
 		function init( $args=array() )
 		{
  			force_secure_if_available();
- 			if (empty($this->params['custom_form'])) 
- 			{
- 				trigger_error('the form custom minisite module must be provided with a custom form to operate');
+ 			$this->init_head_items();
+ 			$this->init_custom_form();
+ 			$this->init_admin_form();
+ 			$method = ($this->is_admin_view()) ? 'init_admin_view' : 'init_form_view';
+ 			$this->$method();
+		}
+		
+		function init_custom_form()
+		{
+			// custom form setup
+ 			$custom_form_object =& $this->get_custom_form_object();
+	 		if ($custom_form_object)
+	 		{
+	 			$custom_form =& $custom_form_object->get_custom_form();
+ 				$custom_form->head_items =& $this->parent->head_items;
+ 				$this->set_custom_form($custom_form);
  			}
- 			else
+		}
+		
+		function init_admin_form()
+		{
+			$admin_form_object =& $this->get_admin_form_object();
+ 			if ($admin_form_object)
  			{
-	 			reason_include_once( 'minisite_templates/modules/form_custom/'.$this->params['custom_form'].".php");
-	 			$form_name = $GLOBALS[ '_custom_form_class_names' ][ $this->params['custom_form'] ];
- 				$this->custom_form = new $form_name();
- 				$this->custom_form->head_items =& $this->parent->head_items;
- 				
- 				if (!empty($this->params['admin_form'])) // if an admin form is specified instantiate it...if not 
- 				{
- 					reason_include_once( 'minisite_templates/modules/form_custom/'.$this->params['admin_form'].".php");
- 					$admin_form_name = $GLOBALS[ '_custom_form_class_names' ][ $this->params['admin_form'] ];
- 					$this->admin_form = new $admin_form_name();
- 					$this->admin_form->head_items =& $this->parent->head_items;
- 				}
- 			
- 				$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_error.css'); // add form error highlighting
- 				$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css'); // add form data stylesheet
- 						
- 				if (!empty($this->request['form_admin_view']) && !empty($this->admin_form) && $this->admin_form->authenticate())
- 				{	
- 					$this->init_admin_view();
- 				}
- 				else $this->init_form_view();
- 			}
+ 				$admin_form =& $admin_form_object->get_custom_form();
+ 				$admin_form->head_items =& $this->parent->head_items;
+ 				$this->set_admin_form($admin_form);
+ 			}	
+		}
+		
+		function init_head_items()
+		{
+			$head_items =& $this->parent->head_items;
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_error.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
 		}
 		
 		function init_form_view()
 		{
-			$this->custom_form->init();
- 			$this->apply_custom_title();
+			$custom_form =& $this->get_custom_form();
+			if ($custom_form) 
+			{
+				$custom_form->init();
+				$this->apply_custom_title();
+			}
+ 			else trigger_error('The form view cannot be initialized because no form object has been setup using set_custom_form');
 		}
 		
 		function init_admin_view()
 		{	
-			$this->table_admin = new TableAdmin();
-			$tt =& $this->table_admin;
-			$af =& $this->admin_form;
-			$cf =& $this->custom_form;
+			$tt = new TableAdmin();
+			$af =& $this->get_admin_form();
+			$cf =& $this->get_custom_form();
 			$db_conn = ($af->get_db_conn() != '') ? $af->get_db_conn() : $cf->get_db_conn();
 			$table_name = ($af->get_table_name() != '') ? $af->get_table_name() : $cf->get_table_name();
 			$tt->set_admin_form($af);
 			$tt->set_privileges_from_admin_form();
 			$tt->init($db_conn, $table_name);
-			// ignoring filtering for the moment
-			//$this->table_viewer->set_options($this->admin_form->get_options());
+			$this->set_table_admin($tt);
+		}
+		/**
+		 * @return boolean true if the user has access to and has requested the administrative view
+		 */
+		function is_admin_view()
+		{
+			return (isset($this->request['form_admin_view']) && $this->has_admin_access());
+		}
+		
+		function has_admin_access()
+		{
+			$admin_form =& $this->get_admin_form();
+			return ($admin_form) ? $admin_form->authenticate() : false;
+		}
+		
+		function &get_custom_form_object()
+		{
+			if (!empty($this->params['custom_form']))
+			{
+				reason_include_once( 'minisite_templates/modules/form_custom/'.$this->params['custom_form'].".php");
+	 			$form_name = $GLOBALS[ '_custom_form_class_names' ][ $this->params['custom_form'] ];		
+ 				$custom_form_object = new $form_name();
+ 			}
+ 			else
+ 			{
+ 				$custom_form_object = false;
+ 				trigger_error('the form custom minisite module must be provided with a custom form to operate', FATAL);
+ 			}
+ 			return $custom_form_object;
+		}
+		
+		function &get_admin_form_object()
+		{
+			if (!empty($this->params['admin_form']))
+			{
+				reason_include_once( 'minisite_templates/modules/form_custom/'.$this->params['admin_form'].".php");
+ 				$admin_form_name = $GLOBALS[ '_custom_form_class_names' ][ $this->params['admin_form'] ];
+ 				$admin_form_object = new $admin_form_name();
+ 			}
+ 			else $admin_form_object = false;
+ 			return $admin_form_object;
+		}
+		
+		function set_custom_form($custom_form)
+		{
+			$this->custom_form =& $custom_form;
+		}
+		
+		function &get_custom_form()
+		{	
+			return $this->custom_form;
+		}
+		
+		function set_admin_form($admin_form)
+		{
+			$this->admin_form =& $admin_form;
+		}
+		
+		function &get_admin_form()
+		{	
+			return $this->admin_form;
+		}
+		
+		function set_table_admin($table_admin)
+		{
+			$this->table_admin =& $table_admin;
+		}
+		
+		function &get_table_admin()
+		{	
+			return $this->table_admin;
 		}
 		
 		function apply_custom_title()
 		{
-			$custom_title = $this->custom_form->get_custom_title();
-			if (!empty($custom_title)) $this->parent->title = $custom_title;
+			$custom_form =& $this->get_custom_form();
+			$custom_title = ($custom_form) ? $custom_form->get_custom_title() : false;
+			if ($custom_title) $this->parent->title = $custom_title;
 		}
 		
 		function has_content()
 		{
-			return $this->custom_form->has_content();
+			$custom_form =& $this->get_custom_form();
+			return ($custom_form && method_exists($custom_form, 'has_content')) ? $custom_form->has_content() : true;
 		}
 		
 		function run()
 		{
-			if (!empty($this->table_admin)) $this->run_admin_view();
-			else $this->run_form_view();
+			$method = ($this->get_table_admin()) ? 'run_admin_view' : 'run_form_view';
+			$this->$method();
 		}
 		
 		function run_form_view()
 		{
 			$this->show_admin_control_box();
-			$form =& $this->custom_form;
+			$form =& $this->get_custom_form();
 			$form->run();
 		}
 		
 		function show_admin_control_box()
 		{
-			if (!empty($this->table_admin)) // show exit administive view link as we are in administrative view
+			$table_admin =& $this->get_table_admin();
+			$custom_form =& $this->get_custom_form();
+			
+			if ($table_admin) // show exit administive view link as we are in administrative view
 			{
 				$url = carl_construct_link(array('form_admin_view' => ''), array('textonly'));
 				$link[] = '<a href="'.$url.'">'.$this->params['exit_admin_view_text'].'</a>';
-				if ($this->table_admin->get_table_row_action())
+				if ($table_admin->get_table_row_action())
 				{
-					$url2 = carl_make_link($this->table_admin->get_menu_links_base_with_filters());
+					$url2 = carl_make_link($table_admin->get_menu_links_base_with_filters());
 					$link[] = '<a href="'.$url2.'">'.$this->params['show_lister_view_text'].'</a>';
 				}
 			}
 			// show administrative view entry link if the user has access and the form allows
-			elseif (!empty($this->admin_form) && $this->admin_form->authenticate() && $this->custom_form->allow_show_admin_control_box())
+			elseif ($this->has_admin_access() && $custom_form->allow_show_admin_control_box())
 			{
 				$url = carl_construct_link(array('form_admin_view' => 'true'), array('textonly'));
 				$link[] = '<a href="'.$url.'">'.$this->params['enter_admin_view_text'].'</a>';
@@ -138,8 +226,9 @@
 		
 		function run_admin_view()
 		{
+			$table_admin = $this->get_table_admin();
 			$this->show_admin_control_box();
-			$this->table_admin->run();
+			$table_admin->run();
 		}
 	}
 ?>
