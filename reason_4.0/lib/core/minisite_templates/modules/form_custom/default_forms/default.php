@@ -24,9 +24,21 @@
 		var $table;
 		var $_id = '0'; // set this internally so disco will not grab the id from the request directly
 		var $init_and_run_form = true;
+		
+		/**
+		 * The data corresponding to the current id
+		 * @var array
+		 */
+		var $row_data;
+		
+		/**
+		 * cur_request is deprecated - use row_data instead
+		 * @var array
+		 * @deprecated in favor of row_data which is less confusing
+		 */
 		var $cur_request;
 		var $cleanup_rules = array();
-		var $allowable_fields = array();
+		var $allowable_fields;
 		var $head_items; // populated by module with a reference to template head items object
 		
 		/**
@@ -51,6 +63,11 @@
 			}
 		}
 		
+		function &get_custom_form()
+		{
+			return $this;
+		}
+		
 		function get_cleanup_rules()
 		{
 			return $this->cleanup_rules;
@@ -58,22 +75,51 @@
 		
 		/**
 		 * Populate cur_request according to the current disco_db_id
+		 * @deprecated should use refresh_row_data()
 		 */
 		function refresh_cur_request()
 		{
+			$this->refresh_row_data();
+		}
+		
+		function refresh_row_data()
+		{
 			$id = $this->disco_db_get_id();
-			$qry = 'SELECT * from `' . $this->table . '` WHERE `id` = '.$id.' LIMIT 0,1';
-			$this->disco_db_connect();
-			$result = db_query($qry);
-			$this->disco_db_disconnect();
-			if (mysql_num_rows($result) > 0)
+			if ($id)
 			{
-				while ($row = mysql_fetch_assoc($result))
+				$qry = 'SELECT * from `' . $this->table . '` WHERE `id` = '.$id.' LIMIT 0,1';
+				$this->disco_db_connect();
+				$result = db_query($qry);
+				if (mysql_num_rows($result) > 0)
 				{
-					$this->cur_request = $row;
+					while ($row = mysql_fetch_assoc($result))
+					{
+						$this->set_row_data($row);
+					}
 				}
+				else
+				{
+					$row = false;
+					$this->set_row_data($row);
+				}
+				$this->disco_db_disconnect();
+
 			}
-			else trigger_error('The request could not be refreshed - no results were found');
+			else trigger_error('The form does not have an id so cannot refresh the row data');
+		}
+		
+		function set_row_data(&$data)
+		{
+			$this->row_data = $data;
+		}
+		
+		/**
+		 * return a reference to the data for the current row
+		 */
+		function &get_row_data()
+		{
+			if (!isset($this->row_data) && $this->disco_db_get_id()) $this->refresh_row_data();
+			return $this->row_data;
 		}
 		
 		/**
@@ -99,31 +145,31 @@
 		function main_process()
 		{
 			$fields = $this->_tables[$this->table];
-			$allowable_fields = (!empty($this->allowable_fields)) ? $this->allowable_fields : array_keys($fields);
-			foreach ($fields as $field_name => $field_values)
-			{
-				if ($field_name != $this->id_column_name)
+			$allowable_fields = (isset($this->allowable_fields) && is_array($this->allowable_fields)) ? $this->allowable_fields : array_keys($fields);
+			if (!empty($allowable_fields))
+			{		
+				foreach ($fields as $field_name => $field_values)
 				{
-					if (in_array($field_name, $allowable_fields))
+					if ($field_name != $this->id_column_name)
 					{
-						$values[$field_name] = $this->get_value($field_name);
+						if (in_array($field_name, $allowable_fields)) $values[$field_name] = $this->get_value($field_name);
 					}
 				}
-			}
-			if (isset($values))
-			{
-				$this->disco_db_connect();
-				if ($this->_id)
+				if (isset($values))
 				{
-					$GLOBALS['sqler']->update_one($this->table, $values, $this->_id, $this->id_column_name);
+					$this->disco_db_connect();
+					if ($this->_id)
+					{
+						$GLOBALS['sqler']->update_one($this->table, $values, $this->_id, $this->id_column_name);
+					}
+					else
+					{
+						$GLOBALS['sqler']->insert( $this->table, $values );
+						$this->disco_db_set_id(mysql_insert_id()); // set id to what was just inserted
+					}
+					$this->disco_db_disconnect();
+					$this->refresh_row_data(); // update row data with the just inserted row
 				}
-				else
-				{
-					$GLOBALS['sqler']->insert( $this->table, $values );
-					$this->disco_db_set_id(mysql_insert_id()); // set id to what was just inserted
-				}
-				$this->disco_db_disconnect();
-				$this->refresh_cur_request(); // update cur_request with the just inserted row
 			}
 		}
 		
@@ -178,11 +224,12 @@
 		}
 		
 		/**
-		 * Returns the db_value for a field if it exists in the class variable cur_request - otherwise returns false
+		 * Returns the db_value for a field if it exists in the class variable row_data - otherwise returns false
 		 */
 		function get_db_value($field)
 		{
-			if (isset($this->cur_request[$field])) return $this->cur_request[$field];
+			$data =& $this->get_row_data();
+			if (isset($data[$field])) return $data[$field];
 			else return false;
 		}
 		
