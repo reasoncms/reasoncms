@@ -75,19 +75,24 @@ div#banner h1 {
 div#meat div#content {
 	width:100%;
 }
-div#meat.containsRelated div#content, div#meat.containsConRel div#content {
+div#meat.containsConRel div#content {
 	width:75%;
 }
-div#meat.containsNavigation div#content, div#meat.containsConNav div#content {
+div#meat.containsNavigation div#content {
 	margin-left:25%;
+}
+div#meat.containsConNav div#content {
 	width:75%;
 }
 * html div#meat.containsNavigation div#content {
 	display: inline;
 }
-div#meat.containsNavigation.containsRelated div#content, div#meat.containsConRelNav div#content {
+div#meat.containsConRelNav div#content {
 	width:50%;
 }
+/* div#meat.containsNavigation.containsRelated div#content, div#meat.containsConRelNav div#content {
+	width:50%;
+} */
 div#related {
 	float:left;
 	width:25%;
