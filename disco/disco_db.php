@@ -441,18 +441,18 @@
 		 */
 		function _disco_conn($bool)
 		{
-			static $orig;
-			static $curr;
-			if (empty($orig)) $orig = $curr = get_current_db_connection_name();
-			if ($bool && ($curr != $this->db_conn))
+			//static $orig;
+			//static $curr;
+			if (empty($this->orig)) $this->orig = $this->curr = get_current_db_connection_name();
+			if ($bool && ($this->curr != $this->db_conn))
 			{
 				connectDB($this->db_conn);
-				$curr = $this->db_conn;
+				$this->curr = $this->db_conn;
 			}
-			elseif (!$bool && ($curr != $orig))
+			elseif (!$bool && ($this->curr != $this->orig))
 			{
-				connectDB($orig);
-				$curr = $orig;
+				connectDB($this->orig);
+				$this->curr = $this->orig;
 			}
 		}
 		
