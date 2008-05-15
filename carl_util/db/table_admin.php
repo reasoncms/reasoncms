@@ -91,7 +91,7 @@ class TableAdmin
 	 */
 	var $fields_to_show;
 	/**
-	 * @var array if populated, only the names fields are converted - otherwise all are converted
+	 * @var array if populated, only the named fields are converted - otherwise all are converted
 	 */
 	var $fields_to_entity_convert;
 	/**
@@ -248,7 +248,7 @@ class TableAdmin
 		
 			// not implemented
 			//$this->init_history();
-		
+			
 			// call appropriate init
 			if (isset($this->table_action)) $this->init_action();
 			elseif (isset($this->table_row_action) && isset($this->table_action_id) && $this->verify_table_action_id()) $this->init_row_action();
@@ -263,7 +263,7 @@ class TableAdmin
 	/**
 	 * Init from array takes an array of display values and sets up the request and _display_values
 	 */
-	function init_view_no_db($display_values, $custom_setup = false)
+	function init_view_no_db($display_values = array(), $custom_setup = false)
 	{
 		if (!$display_values) trigger_error('You must provide an array mapping field_name_keys to display_names for each column of the view you want to setup', FATAL);
 		else
@@ -278,7 +278,7 @@ class TableAdmin
 				$this->set_allow_export(false);
 				$this->set_allow_view(false);
 				$this->set_allow_archive(false);
-				$this->set_show_header(false);	
+				$this->set_show_header(false);
 			}
 			
 			$this->_set_params_from_request();
@@ -287,10 +287,27 @@ class TableAdmin
 	}
 	
 	/**
+	 * If the data keys are the column headers, this can be used as a shortcut - just init and run
+	 */
+	function init_from_array($data, $custom_setup = false)
+	{
+		$labels = array_keys(current($data));
+		foreach ($labels as $label)
+		{
+			$display_values[$label] = $label;
+		}
+		$this->init_view_no_db($display_values, $custom_setup);
+		$this->set_data_from_array($data);
+	}
+	
+	/**
 	 * Init table global action
 	 */
 	function init_action()
 	{
+		$form =& $this->get_admin_form();
+		if ($form) $form->set_action($this->get_table_action());
+		
 		switch ($this->get_table_action()) {
 		case "delete_all":
 			$this->get_data();
@@ -329,8 +346,8 @@ class TableAdmin
 			if (!$this->get_fields_to_show()) $this->set_fields_to_show(); // gets fields from admin form if it defines them
 			if (!$this->get_fields_to_entity_convert()) $this->set_fields_to_entity_convert(); // gets the fields to entity convert if admin form defines them
 			if (!$this->get_fields_that_allow_sorting()) $this->set_fields_that_allow_sorting(); // gets the fields that allow sorting admin form defines them
-			if (!$this->get_sort_field()) $this->set_sort_field($this->admin_form->get_default_sort_field());
-			if (!$this->get_sort_order()) $this->set_sort_order($this->admin_form->get_default_sort_order());
+			if (!$this->get_sort_field()) $this->set_sort_field();
+			if (!$this->get_sort_order()) $this->set_sort_order();
 			if (!$this->get_no_data_message()) $this->set_no_data_message();
 		}			
 	}
@@ -354,7 +371,6 @@ class TableAdmin
 	{
 		// alter cleanup rules
 		$this->cleanup_rules['table_sort_field'] = array('function' => 'check_against_array', 'extra_args' => array_keys($this->_display_values)); // dynamically add		
-		
 		$va = $this->_get_valid_actions();
 		$vra = $this->_get_valid_row_actions();
 		if (!empty($va)) $this->cleanup_rules['table_action'] = array('function' => 'check_against_array', 'extra_args' => $va);
@@ -389,7 +405,7 @@ class TableAdmin
 		return $actions;
 	}
 	
-	// SET COMMANDS WITH SOME LOGIC
+	// SET COMMANDS THAT PASS THRU TO ADMIN CLASS METHODS IF THEY EXISTS
 	function set_fields_to_show($fields_to_show_array = NULL)
 	{
 		if (!is_null($fields_to_show_array)) $this->fields_to_show = $fields_to_show_array;
@@ -465,6 +481,40 @@ class TableAdmin
 				}
 			}
 		}		
+	}
+	
+	function set_sort_field($field = NULL)
+	{
+		if (!is_null($field)) $this->sort_field = $field;
+		else
+		{
+			if ($af =& $this->get_admin_form())
+			{
+				if (method_exists($af, 'get_default_sort_field'))
+				{
+					$this->sort_field = ($af->get_default_sort_field()) ? $af->get_default_sort_field() : 'id';
+				}
+				
+			}
+		}
+		if (empty($this->sort_field)) $this->sort_field = 'id';
+	}
+	
+	function set_sort_order($order = NULL)
+	{
+		//only 'desc' or 'asc' are valid -- if invalid default to 'desc'
+		if (!is_null($order)) $this->sort_field = ((strtolower($order) == 'desc') || (strtolower($order) == 'asc')) ? strtolower($order) : 'desc';
+		else
+		{
+			if ($af =& $this->get_admin_form())
+			{
+				if (method_exists($af, 'get_default_sort_order'))
+				{
+					$this->sort_order = ((strtolower($order) == 'desc') || (strtolower($order) == 'asc')) ? strtolower($order) : 'desc';
+				}
+			}
+		}
+		if (empty($this->sort_order)) $this->sort_order = 'desc';
 	}
 	
 	// BASIC SET COMMANDS
@@ -553,17 +603,6 @@ class TableAdmin
 	function set_filename_frag($filename_frag)
 	{
 		$this->filename_frag = $filename_frag;
-	}
-
-	function set_sort_field($input)
-	{
-		$this->sort_field = $input;
-	}
-	
-	function set_sort_order($input)
-	{
-		//only 'desc' or 'asc' are valid -- if invalid default to 'desc'
-		$this->sort_order = ((strtolower($input) == 'desc') || (strtolower($input) == 'asc')) ? $input : 'desc';
 	}
 	
 	/**
@@ -798,11 +837,11 @@ class TableAdmin
 			connectDB($this->get_orig_db_conn()); // reconnect to default DB
 			if (mysql_num_rows( $res ) > 0 )
 			{
-				$admin_form = $this->get_admin_form();
-				$transforms = $admin_form->does_form_transform_data();
+				$af =& $this->get_admin_form();
+				$transforms = (method_exists($af, 'does_form_transform_data') && $af->does_form_transform_data());
 				while($row = mysql_fetch_assoc($res))
 				{
-					if ($transforms) $admin_form->transform_data($row);
+					if ($transforms) $af->transform_data($row);
 					$my_data[$row[$pk]] = $row;
 				}
 				$this->_row = current($my_data);
@@ -1033,13 +1072,16 @@ class TableAdmin
 		static $fields_to_entity_convert;
 		if (isset($fields_to_entity_convert[$k])) return $fields_to_entity_convert[$k];
 		else
-		if (isset ($this->fields_to_entity_convert) && in_array($k, $this->fields_to_entity_convert))
 		{
-			$fields_to_entity_convert[$k] = true;
-		}
-		else
-		{
-			$fields_to_entity_convert[$k] = false;
+			if (isset ($this->fields_to_entity_convert) && in_array($k, $this->fields_to_entity_convert))
+			{
+				$fields_to_entity_convert[$k] = true;
+			}
+			elseif (isset ($this->fields_to_entity_convert))
+			{
+				$fields_to_entity_convert[$k] = false;
+			}
+			else $fields_to_entity_convert[$k] = true;
 		}
 		return $fields_to_entity_convert[$k];
 	}
@@ -1558,6 +1600,9 @@ class TableAdmin
 		 */
 		var $custom_handled_actions = array(); // NOT CURRENTLY BEING USED
 		
+		/**
+		 * Contains the current table action - if any
+		 */
 		var $table_action;
 		
 		/**
@@ -1575,6 +1620,14 @@ class TableAdmin
 		{
 		}
 
+		/**
+		 * Allows an admin form object to function as a factory in admin form objects that extend the base class
+		 */
+		function &get_custom_form()
+		{
+			return $this;
+		}
+		
 		function pre_show_form()
 		{
 			if ($this->get_action() == 'new') $this->pre_show_form_new();
