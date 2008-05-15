@@ -1,6 +1,7 @@
 <?php
 include_once( 'reason_header.php' );
 reason_include_once( 'function_libraries/admin_actions.php' );
+reason_include_once( 'function_libraries/util.php' );
 
 function make_sure_username_is_user($username, $creator_id)
 {
@@ -34,49 +35,44 @@ function make_sure_username_is_user($username, $creator_id)
 
 /**
  * check if the currently logged in user has access to the site - do not force login
+ * @deprecated use reason_check_access_to_site
  */
 function user_has_access_to_site($site_id, $force_refresh = false)
+{
+	return reason_check_access_to_site($site_id, $force_refresh);
+}
+
+function reason_username_has_access_to_site($username, $site_id, $force_refresh = false)
 {
 	static $user;
 	static $has_access_to_site;
 	
- 	if (!isset($has_access_to_site[$site_id]) || $force_refresh)
+ 	if (!isset($has_access_to_site[$username][$site_id]) || $force_refresh)
  	{
- 		$netid = reason_check_authentication();
- 		if ($netid)
- 		{
-			reason_include_once('classes/user.php');
-			if (!isset($user)) $user = new user();
-			$has_access_to_site[$site_id] = $user->is_site_user($netid, $site_id, $force_refresh);
-		}
-		else $has_access_to_site[$site_id] = false;
+ 		reason_include_once('classes/user.php');
+		if (!isset($user)) $user = new user(); // single instance even if force refresh is called
+		$has_access_to_site[$username][$site_id] = $user->is_site_user($username, $site_id, $force_refresh);
 	}
-	return $has_access_to_site[$site_id];
+	return $has_access_to_site[$username][$site_id];
 }
 
 /**
-* check_authentication returns a username from http authentication or the session and forces login if not found
-* @param string $msg_uname unique name of text blurb to show on the login page
-* @deprecated since reason 4 beta 4 - use reason_check_authentication or reason_required_authentication
-* @return string $username
-*/
-function check_authentication($msg_uname = '')
+ * Combines reason_check_authentication with reason_username_has_access_to_site
+ */
+function reason_check_access_to_site($site_id, $force_refresh = false)
 {
-		if($username = get_authentication_from_server())
-		{
-				return $username;
-		}
-		else
-		{
-				if($username = get_authentication_from_session())
-				{
-						return $username;
-				}
-				else
-				{
-						force_login($msg_uname);
-				}
-		}
+	$netid = reason_check_authentication();
+	return reason_username_has_access_to_site($netid, $site_id, $force_refresh);
+}
+
+/**
+ * Combines reason_check_authentication with reason_user_has_privs
+ */
+function reason_check_privs($privilege)
+{
+	$netid = reason_check_authentication();
+	$user_id = get_user_id($netid);
+	return reason_user_has_privs($user_id, $privilege);
 }
 
 /**
@@ -145,6 +141,31 @@ function force_secure_if_available()
 {
 	if(HTTPS_AVAILABLE)
 		force_secure();
+}
+
+/**
+* check_authentication returns a username from http authentication or the session and forces login if not found
+* @param string $msg_uname unique name of text blurb to show on the login page
+* @deprecated since reason 4 beta 4 - use reason_check_authentication or reason_require_authentication
+* @return string $username
+*/
+function check_authentication($msg_uname = '')
+{
+		if($username = get_authentication_from_server())
+		{
+				return $username;
+		}
+		else
+		{
+				if($username = get_authentication_from_session())
+				{
+						return $username;
+				}
+				else
+				{
+						force_login($msg_uname);
+				}
+		}
 }
 
 /**
