@@ -8,6 +8,7 @@
  *
  * Provides a view of thor form data with filtering, and view/edit/delete row action support
  *
+ * @deprecated use ThorAdmin
  */
 include_once ( 'paths.php' );
 include_once ( CARL_UTIL_INC . 'db/table_admin.php' );
