@@ -11,6 +11,206 @@ include_once(TYR_INC.'tyr.php');
 require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
 
 /**
+ * ThorCore
+ *
+ * - Adds elements described in thor xml to a disco form
+ *
+ * @todo table creation / validation?
+ * @todo finish me
+ * 
+ * @author Nathan White
+ */
+class ThorCore
+{
+	var $_xml = false;
+
+	function ThorCore($xml = '')
+	{
+		if ($xml) $this->set_thor_xml($xml);
+	}
+	
+	function set_thor_xml($xml)
+	{
+		$this->_xml = $xml;
+	}
+	
+	function get_thor_xml()
+	{
+		return $this->_xml;
+	}
+	
+	function append_thor_elements_to_form(&$disco_obj, $xml = '')
+	{
+		$xml = ($xml) ? $xml : $this->get_thor_xml();
+		if ($xml && $disco_obj)
+		{
+			$xml = new XMLParser($this->_xml);
+			$xml->Parse();
+			foreach ($xml->document->tagChildren as $node)
+			{
+				if ($node->tagName == 'input') $this->_transform_input($node, $disco_obj);
+				elseif ($node->tagName == 'textarea') $this->_transform_textarea($node, $disco_obj);
+				elseif ($node->tagName == 'radiogroup') $this->_transform_radiogroup($node, $disco_obj);
+				elseif ($node->tagName == 'checkboxgroup') $this->_transform_checkboxgroup($node, $disco_obj);
+				elseif ($node->tagName == 'optiongroup') $this->_transform_optiongroup($node, $disco_obj);
+				elseif ($node->tagName == 'hidden') $this->_transform_hidden($node, $disco_obj);
+				elseif ($node->tagName == 'comment') $this->_transform_comment($node, $disco_obj);
+			}
+			$this->_transform_submit($xml->document->tagAttrs, $disco_obj);
+		}
+		else
+		{
+			trigger_error('To add thor elements to a disco form you need to provide a disco object and thor xml');
+		}
+	}
+	
+	function _transform_input($element, &$d)
+	{
+		$id = $element->tagAttrs['id'];
+		$size = (!empty($element->tagAttrs['size'])) ? $element->tagAttrs['size'] : 30;
+		$maxlength = (!empty($element->tagAttrs['maxlength'])) ? $element->tagAttrs['maxlength'] : '';
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$default = (!empty($element->tagAttrs['value'])) ? $element->tagAttrs['value'] : '';
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		
+		$args = array('size' => $size,
+					  'maxlength' => $maxlength,
+					  'display_name' => $display_name,
+					  'default' => $default);
+
+		$d->add_element($id, 'text', $args);
+		if ( $required ) $d->add_required($id);
+	}
+
+	function _transform_hidden($element, &$d)
+	{
+		$id = $element->tagAttrs['id'];
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$value = (!empty($element->tagAttrs['value'])) ? $element->tagAttrs['value'] : '';
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		
+		$d->add_element($id, 'hidden');
+		$d->set_value($id, $value);
+		$d->set_display_name($id, '(hidden field) ' . $display_name);
+		if ( $required) $d->add_required($id);
+	}
+ 
+	function _transform_comment($element, &$d)
+	{
+		$id = $element->tagAttrs['id'];
+		$args = Array('text' => $element->tagData);
+		$d->add_element($id, 'comment', $args);
+	}
+ 
+	function _transform_textarea($element, &$d)
+	{
+		$id = $element->tagAttrs['id'];
+		$rows = (!empty($element->tagAttrs['rows'])) ? $element->tagAttrs['rows'] : 6;
+		$cols = (!empty($element->tagAttrs['cols'])) ? $element->tagAttrs['cols'] : 40;
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$default = (!empty($element->tagAttrs['value'])) ? $element->tagAttrs['value'] : '';
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		
+		$args = Array('rows' => $rows,
+					  'cols' => $cols,
+					  'display_name' => $display_name,
+					  'default' => $default);
+
+		$d->add_element($id, 'textarea', $args);
+		if ( $required ) $d->add_required($id);
+	}
+
+	function _transform_radiogroup($element, &$d)
+	{
+		$id = $element->tagAttrs['id'];
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$args = Array( 'options' => Array(),
+					   'display_name' => $display_name,
+					   'default' => '' );
+
+		$element_children = $element->tagChildren; 
+		foreach ($element_children as $element_child)
+		{
+			$value = (!empty($element_child->tagAttrs['value'])) ? $element_child->tagAttrs['value'] : '';
+			$selected = (!empty($element_child->tagAttrs['selected'])) ? true : false;
+			$args['options'][$value] = $value;
+			if ( $selected ) $args['default'] = $value;
+		}
+
+		$d->add_element($id, 'radio_no_sort', $args);
+		if ( $required ) $d->add_required($id);
+	}
+
+	function _transform_optiongroup($element, &$d)
+	{
+		$id = $element->tagAttrs['id'];
+		$multiple = (!empty($element->tagAttrs['multiple'])) ? true : false;
+		$size = (!empty($element->tagAttrs['size']) && ($element->tagAttrs['size'] > 1)) ? $element->tagAttrs['size'] : 1;
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		
+		$args = array('options' => array(),
+					  'multiple' => $multiple,
+					  'size' => $size,
+					  'default' => array(),
+					  'display_name' => $display_name,
+					  'add_null_value_to_top' => !$required);
+					  
+		$element_children = $element->tagChildren;
+		foreach ($element_children as $element_child)
+		{
+			$value = (!empty($element_child->tagAttrs['value'])) ? $element_child->tagAttrs['value'] : '';
+			$selected = (!empty($element_child->tagAttrs['selected'])) ? true : false;
+			$multiple = (!empty($element_child->tagAttrs['multiple'])) ? true : false;
+			$args['options'][$value] = $value;
+				
+			if ( !$multiple && $selected ) $args['default'] = $value;
+			else if ( $selected ) $args['default'][]= $value;
+		}
+
+		$d->add_element($id, 'select_no_sort', $args);
+		if ( $required ) $d->add_required($id);
+	}
+	
+	function _transform_checkboxgroup($element, &$d) {
+		$id = $element->tagAttrs['id'];
+		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
+		$required = (!empty($element->tagAttrs['required'])) ? true : false;
+		
+		$args = array('options' => array(),
+					  'display_name' => $display_name,
+					  'default' => array());
+
+		$index = 0;
+		$element_children = $element->tagChildren;
+		
+		foreach ($element_children as $element_child)
+		{
+			$value = (!empty($element_child->tagAttrs['value'])) ? $element_child->tagAttrs['value'] : '';
+			$selected = (!empty($element_child->tagAttrs['selected'])) ? true : false;
+			$id2 = $element_child->tagAttrs['id'];
+			$args['options'][$value] = $value;
+			
+			if ( $selected ) $args['default'] []= $value;
+			$d->add_element('transform['.$id.']['.$index.']', 'hidden');
+			$d->set_value('transform['.$id.']['.$index.']', $id2);
+			$index++;
+		}
+
+		$d->add_element($id, 'checkboxgroup_no_sort', $args);
+		if ( $required ) $d->add_required($id);
+	}
+	
+	function _transform_submit($element_attributes, &$d)
+	{
+		$submit = (!empty($element_attributes['submit'])) ? $element_attributes['submit'] : '';
+		$reset = (!empty($element_attributes['reset'])) ? $element_attributes['reset'] : '';
+		$d->actions = Array( 'submit' => $submit, 'reset' => $reset);
+	}
+}
+
+/**
  * Thor: builds an html form out of xml data and handles processing of form inputs
  *
  * Example XML:
@@ -41,6 +241,7 @@ require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
  * Note: 4/10/2006 added ability to save form data to a database  - nwhite
  *
  * @author Nathanael Fillmore, Nate White
+ * @deprecated use ThorLight
  * @since 26 November 2003
  */
 
@@ -56,13 +257,15 @@ class Thor
 	var $_show_submitted_data;
 	var $extra_fields = array('submitted_by', 'submitter_ip'); // extra fields that aren't represented in thor
 	var $disco_thor_class = 'DiscoThor';
-
-	function Thor($xml, $email, $nextpage, $db_conn = '', $table_name = '') {
+	var $thor_core;
+	
+	function Thor($xml, $email, $nextpage = '', $db_conn = '', $table_name = '') {
 		$this->_xml = $xml;
 		$this->_email = $email;
 		$this->_nextpage = $nextpage;
 		$this->_db_conn = $db_conn;
 		$this->_table_name = $table_name;
+		$this->thor_core = new ThorCore($xml);
 	}
 
 	function init()
@@ -244,166 +447,10 @@ class Thor
 
 	function _build_form()
 	{
-
 		$this->_d = new $this->disco_thor_class;
-		$xml = new XMLParser($this->_xml);
-		$xml->Parse();
-		$this->_html = '';
-
-		// II. Transform the form's elements
-		foreach ($xml->document->tagChildren as $node)
-		{
-			if ($node->tagName == 'input') $this->_transform_input($node);
-			elseif ($node->tagName == 'textarea') $this->_transform_textarea($node);
-			elseif ($node->tagName == 'radiogroup') $this->_transform_radiogroup($node);
-			elseif ($node->tagName == 'checkboxgroup') $this->_transform_checkboxgroup($node);
-			elseif ($node->tagName == 'optiongroup') $this->_transform_optiongroup($node);
-			elseif ($node->tagName == 'hidden') $this->_transform_hidden($node);
-			elseif ($node->tagName == 'comment') $this->_transform_comment($node);
-		}
-		
-		$this->_transform_submit($xml->document->tagAttrs);
+		$this->thor_core->append_thor_elements_to_form($this->_d);
 		if (!empty($this->_email)) $this->_transform_email();
 		$this->_transform_nextpage();
-	}
-
-	function _transform_input($element)
-	{
-		$id = $element->tagAttrs['id'];
-		$size = (!empty($element->tagAttrs['size'])) ? $element->tagAttrs['size'] : 30;
-		$maxlength = (!empty($element->tagAttrs['maxlength'])) ? $element->tagAttrs['maxlength'] : '';
-		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
-		$default = (!empty($element->tagAttrs['value'])) ? $element->tagAttrs['value'] : '';
-		$required = (!empty($element->tagAttrs['required'])) ? true : false;
-		
-		$args = array('size' => $size,
-					  'maxlength' => $maxlength,
-					  'display_name' => $display_name,
-					  'default' => $default);
-
-		$this->_d->add_element($id, 'text', $args);
-		if ( $required ) $this->_d->add_required($id);
-	}
-
-	function _transform_hidden($element)
-	{
-		$id = $element->tagAttrs['id'];
-		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
-		$value = (!empty($element->tagAttrs['value'])) ? $element->tagAttrs['value'] : '';
-		$required = (!empty($element->tagAttrs['required'])) ? true : false;
-		
-		$this->_d->add_element($id, 'hidden');
-		$this->_d->set_value($id, $value);
-		$this->_d->set_display_name($id, '(hidden field) ' . $display_name);
-		if ( $required) $this->_d->add_required($id);
-	}
- 
-	function _transform_comment($element)
-	{
-		$id = $element->tagAttrs['id'];
-		$args = Array('text' => $element->tagData);
-		$this->_d->add_element($id, 'comment', $args);
-	}
- 
-	function _transform_textarea($element)
-	{
-		$id = $element->tagAttrs['id'];
-		$rows = (!empty($element->tagAttrs['rows'])) ? $element->tagAttrs['rows'] : 6;
-		$cols = (!empty($element->tagAttrs['cols'])) ? $element->tagAttrs['cols'] : 40;
-		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
-		$default = (!empty($element->tagAttrs['value'])) ? $element->tagAttrs['value'] : '';
-		$required = (!empty($element->tagAttrs['required'])) ? true : false;
-		
-		$args = Array('rows' => $rows,
-					  'cols' => $cols,
-					  'display_name' => $display_name,
-					  'default' => $default);
-
-		$this->_d->add_element($id, 'textarea', $args);
-		if ( $required ) $this->_d->add_required($id);
-	}
-
-	function _transform_radiogroup($element)
-	{
-		$id = $element->tagAttrs['id'];
-		$required = (!empty($element->tagAttrs['required'])) ? true : false;
-		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
-		$args = Array( 'options' => Array(),
-					   'display_name' => $display_name,
-					   'default' => '' );
-
-		$element_children = $element->tagChildren; 
-		foreach ($element_children as $element_child)
-		{
-			$value = (!empty($element_child->tagAttrs['value'])) ? $element_child->tagAttrs['value'] : '';
-			$selected = (!empty($element_child->tagAttrs['selected'])) ? true : false;
-			$args['options'][$value] = $value;
-			if ( $selected ) $args['default'] = $value;
-		}
-
-		$this->_d->add_element($id, 'radio_no_sort', $args);
-		if ( $required ) $this->_d->add_required($id);
-	}
-
-	function _transform_optiongroup($element)
-	{
-		$id = $element->tagAttrs['id'];
-		$multiple = (!empty($element->tagAttrs['multiple'])) ? true : false;
-		$size = (!empty($element->tagAttrs['size']) && ($element->tagAttrs['size'] > 1)) ? $element->tagAttrs['size'] : 1;
-		$required = (!empty($element->tagAttrs['required'])) ? true : false;
-		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
-		
-		$args = array('options' => array(),
-					  'multiple' => $multiple,
-					  'size' => $size,
-					  'default' => array(),
-					  'display_name' => $display_name,
-					  'add_null_value_to_top' => !$required);
-					  
-		$element_children = $element->tagChildren;
-		foreach ($element_children as $element_child)
-		{
-			$value = (!empty($element_child->tagAttrs['value'])) ? $element_child->tagAttrs['value'] : '';
-			$selected = (!empty($element_child->tagAttrs['selected'])) ? true : false;
-			$multiple = (!empty($element_child->tagAttrs['multiple'])) ? true : false;
-			$args['options'][$value] = $value;
-				
-			if ( !$multiple && $selected ) $args['default'] = $value;
-			else if ( $selected ) $args['default'][]= $value;
-		}
-
-		$this->_d->add_element($id, 'select_no_sort', $args);
-		if ( $required ) $this->_d->add_required($id);
-	}
-	
-	function _transform_checkboxgroup($element) {
-		$id = $element->tagAttrs['id'];
-		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';
-		$required = (!empty($element->tagAttrs['required'])) ? true : false;
-		
-		$args = array('options' => array(),
-					  'display_name' => $display_name,
-					  'default' => array());
-
-		$index = 0;
-		$element_children = $element->tagChildren;
-		
-		foreach ($element_children as $element_child)
-		{
-			$value = (!empty($element_child->tagAttrs['value'])) ? $element_child->tagAttrs['value'] : '';
-			$selected = (!empty($element_child->tagAttrs['selected'])) ? true : false;
-			$id2 = $element_child->tagAttrs['id'];
-			$args['options'][$value] = $value;
-			
-			if ( $selected ) $args['default'] []= $value;
-			$this->_d->add_element('transform['.$id.']['.$index.']', 'hidden');
-			$this->_d->set_value('transform['.$id.']['.$index.']', $id2);
-			$index++;
-		}
-
-		$this->_d->add_element($id, 'checkboxgroup_no_sort', $args);
-
-		if ( $required ) $this->_d->add_required($id);
 	}
 
 	function _transform_email() {
@@ -418,13 +465,6 @@ class Thor
 		$this->_d->add_element($id, 'hidden');
 		$this->_d->set_value($id, $this->_nextpage);
 		$this->_d->add_required($id);
-	}
-
-	function _transform_submit($element_attributes)
-	{
-		$submit = (!empty($element_attributes['submit'])) ? $element_attributes['submit'] : '';
-		$reset = (!empty($element_attributes['reset'])) ? $element_attributes['reset'] : '';
-		$this->_d->actions = Array( 'submit' => $submit, 'reset' => $reset);
 	}
 	
 	function set_form_title($form_title) {
@@ -441,9 +481,6 @@ class Thor
 	
 	function set_show_submitted_data($show) {
 		$this->_show_submitted_data = $show;
-	//	$id = 'messages[all][show_submitted_data]';
-	//	$this->_d->add_element($id, 'hidden');
-	//	$this->_d->set_value($id, $show);
 	}
 	
 	function set_submitted_by($netID) {
