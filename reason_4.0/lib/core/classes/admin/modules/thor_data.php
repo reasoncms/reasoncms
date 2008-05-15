@@ -1,6 +1,6 @@
 <?php
 	reason_include_once('classes/admin/modules/default.php');
-	include_once( THOR_INC .'thor_viewer.php' );
+	include_once( THOR_INC .'thor_admin.php' );
 	
 	/**
 	 * Thor Data Manager Module
@@ -10,7 +10,7 @@
 	
 	class ThorDataModule extends DefaultModule // {{{
 	{
-		var $thor_viewer; // thor viewer object
+		var $thor_admin; // thor viewer object
 		var $form; // form entity
 		
 		function ThorDataModule( &$page ) // {{{
@@ -32,15 +32,16 @@
 			if ($this->validate_form())
 			{		
 				$form_id = $this->form->id();
+				$form_xml = $this->form->get_value('thor_content');
 				$this->admin_page->title = 'Data Manager for Form "' . $this->form->get_value('name').'"';
 				
 				$admin_form = new DiscoThorAdmin();
-				$this->thor_viewer = new ThorViewer();
-				$this->thor_viewer->set_admin_form($admin_form);
-				$this->thor_viewer->set_allow_edit(true);
-				$this->thor_viewer->set_allow_delete(true);
-				$this->thor_viewer->set_allow_row_delete(true);
-				$this->thor_viewer->init_thor_viewer($form_id);
+				$this->thor_admin = new ThorAdmin();
+				$this->thor_admin->set_admin_form($admin_form);
+				$this->thor_admin->set_allow_edit(true);
+				$this->thor_admin->set_allow_delete(true);
+				$this->thor_admin->set_allow_row_delete(true);
+				$this->thor_admin->init_thor_admin($form_xml, 'form_'.$form_id);
 			}
 		}
 		
@@ -68,11 +69,11 @@
 		 */
 		function run() // {{{
 		{
-			if (!empty($this->thor_viewer))
+			if (!empty($this->thor_admin))
 			{
 				$link_return = $this->admin_page->make_link( array( 'cur_module' => 'Editor'));
 				$this->gen_menu(array('Edit "'.$this->form->get_value('name').'" (Form)' => $link_return));
-				$this->thor_viewer->run();
+				$this->thor_admin->run();
 			}
 			else
 			{
