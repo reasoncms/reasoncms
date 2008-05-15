@@ -637,64 +637,55 @@ class MinisiteTemplate
 		//return $ret;
 	}
 
-	function you_are_here() // {{{
-	/* [7/17/03 footeb] update: use the link name for a page if it exist; otherwise, use the page's name */
+	function you_are_here($delimiter = ' &gt; ') // {{{
 	{
-		// set up the table, etc.
-		//echo ("\n".'<table border="0" cellpadding="4" cellspacing="0" width="100%" summary="You are here">'."\n");
-		//echo ('<tr>'."\n");
-		//echo ('<td align="left" valign="middle" width="100%" class="locationBarText">&nbsp;You are here:&nbsp;');
 		echo '<div id="breadcrumbs" class="locationBarText">';
 		echo 'You are here: ';
-
-		// show breadcrumb base
-		if($this->site_info->get_value('base_breadcrumbs'))
-			echo $this->site_info->get_value('base_breadcrumbs').' &gt; ';
-
-		// Get the trail of pages back to the root page in the site
-		$cur_node = $this->cur_page->id();
-		while( $cur_node != $this->pages->root_node() )
-		{
-			$crumbs[] = $cur_node;
-			$cur_node = $this->pages->parent( $cur_node );
-		}
-		$crumbs[] = $cur_node;
-
-		// Iterate through and print out a link for each page in the trail
-		for( $i = count( $crumbs ) - 1; $i >= 0; $i-- )
-		{
-			$page = $this->pages->values[ $crumbs[ $i ] ];
-			
-			// set page name.  if page is root node, use the name of the site intead of the name of the page
-			if( $crumbs[ $i ] == $this->pages->root_node() )
-				$page_name = $this->site_info->get_value('name');
-			else
-				$page_name = $page->get_value('link_name')? $page->get_value( 'link_name' ) : $page->get_value ( 'name' );
-			
-			// make all crumbs links except for the last one
-			if( ( $i > 0 ) || !empty( $this->additional_crumbs ) )
-				echo '<a href="'.$this->pages->get_full_url( $page->id() ).'" class="locationBarLinks">'.$page_name.'</a> &gt; ';
-			else
-				echo $page_name;
-		}
-		$num_crumbs = count( $this->additional_crumbs );
-		for( $i=0; $i < $num_crumbs; $i++ )
-		{
-			$crumb = $this->additional_crumbs[ $i ];
-			if( $i < ( $num_crumbs - 1) )	
-				echo '<a href="'.$crumb[ 'link' ].'" class="locationBarLinks">'.$crumb[ 'page_name' ].'</a> &gt; ';
-			else
-				echo $crumb[ 'page_name' ];
-			
-		}
-	
-	
-		// Finish you are here bar
-		
-		echo '</div>';
-		//echo ('</td>'."\n".'</tr>'."\n".'</table>'."\n");
-
+		echo $this->_get_breadcrumb_markup($this->_get_breadcrumbs(), $this->site_info->get_value('base_breadcrumbs'), $delimiter);
+		echo '</div>'."\n";
 	} // }}}
+	
+	function _get_breadcrumb_markup($breadcrumb_array, $base = '', $delimiter = ' &gt; ')
+	{
+		$pieces = array();
+		if(!empty($base))
+			$pieces[] = $base;
+		$last = array_pop($breadcrumb_array);
+		foreach($breadcrumb_array as $crumb)
+		{
+			$pieces[] = '<a href="'.$crumb['link'].'" class="locationBarLinks">'.$crumb[ 'page_name' ].'</a>';
+		}
+		$pieces[] = $last['page_name'];
+		return implode($delimiter,$pieces);
+	}
+	
+	/**
+	 * array(0=>array('link'=>'/foo/bar/','page_name'=>'Some Name'),2=>array(etc...))
+	 */
+	function _get_breadcrumbs()
+	{
+		$page_ids = $this->pages->get_id_chain($this->cur_page->id());
+		$root_page_id = array_pop($page_ids);
+		$breadcrumbs = array();
+		
+		// home page
+		$breadcrumbs[] = array('link'=>$this->pages->get_full_url( $root_page_id ),'page_name'=>$this->site_info->get_value('name'));
+		
+		$page_ids = array_reverse($page_ids);
+		foreach( $page_ids as $page_id )
+		{
+			$page = $this->pages->values[ $page_id ];
+			$breadcrumbs[] = array(
+				'link' => $this->pages->get_full_url( $page_id ),
+				'page_name' => ( $page->get_value('link_name') ? $page->get_value( 'link_name' ) : $page->get_value ( 'name' ) )
+			);
+		}
+		if(!empty($this->additional_crumbs))
+		{
+			$breadcrumbs = array_merge($breadcrumbs, $this->additional_crumbs);
+		}
+		return $breadcrumbs;
+	}
 	function show_body()
 	{
 		if($this->use_tables)
