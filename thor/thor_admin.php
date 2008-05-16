@@ -184,6 +184,21 @@ class DiscoThorAdmin extends DiscoDefaultAdmin
 	{
 	}
 	
+	//function authorize()
+	//{
+	//	return true;
+	//}
+	
+	//function set_form_id($id)
+	//{
+	//	$this->form_id = $id;
+	//}
+	
+	//function get_form_id()
+	//{
+	//	return $this->form_id;
+	//}
+	
 	function pre_show_form_edit()
 	{
 		$id = $this->get_id();
