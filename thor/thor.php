@@ -44,7 +44,7 @@ class ThorCore
 		$xml = ($xml) ? $xml : $this->get_thor_xml();
 		if ($xml && $disco_obj)
 		{
-			$xml = new XMLParser($this->_xml);
+			$xml = new XMLParser($xml);
 			$xml->Parse();
 			foreach ($xml->document->tagChildren as $node)
 			{
