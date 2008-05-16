@@ -6,46 +6,87 @@
 /**
  * Include dependencies
  */
+include_once('paths.php');
 require_once( THOR_INC .'disco_thor.php');
 include_once(TYR_INC.'tyr.php');
 require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
+include_once ( SETTINGS_INC.'thor_settings.php' );
+include_once( CARL_UTIL_INC . 'db/db.php'); // Requires ConnectDB Functionality
 
 /**
  * ThorCore
  *
  * - Adds elements described in thor xml to a disco form
+ * - Table creation / validation
  *
  * @todo table creation / validation?
  * @todo finish me
- * 
+ * @todo deprecate option xml on methods ... lets require it to get set before - that way we can parse once per instance.
  * @author Nathan White
  */
 class ThorCore
 {
 	var $_xml = false;
-
-	function ThorCore($xml = '')
+	var $_table = false;
+	var $_db_conn = THOR_FORM_DB_CONN;
+	var $_extra_fields = array('id', 'submitted_by', 'submitter_ip', 'date_created', 'date_modified');
+	
+	function ThorCore($xml = '', $table = '')
 	{
 		if ($xml) $this->set_thor_xml($xml);
+		if ($table) $this->set_thor_table($table);
+	}
+	
+	/**
+	 * If you need to instantiate thor with a different db_conn this can be called - but typically the
+	 * the database connection is determined by the THOR_FORM_DB_CONN constant.
+	 */
+	function set_db_conn($db_conn)
+	{
+		$this->_db_conn = $db_conn;
+	}
+	
+	function get_db_conn()
+	{
+		return $this->_db_conn;
 	}
 	
 	function set_thor_xml($xml)
 	{
-		$this->_xml = $xml;
+		$xml = new XMLParser($xml);
+		$xml->Parse();
+		$this->_xml = $xml;	
 	}
-	
+		
 	function get_thor_xml()
 	{
 		return $this->_xml;
 	}
 	
-	function append_thor_elements_to_form(&$disco_obj, $xml = '')
+	function set_thor_table($table)
 	{
-		$xml = ($xml) ? $xml : $this->get_thor_xml();
+		$this->_table = $table;
+	}
+	
+	function get_thor_table()
+	{
+		return $this->_table;
+	}
+	
+	function &get_display_values()
+	{
+		if (!isset($this->_display_values))
+		{
+			$this->_build_display_values();	
+		}
+		return $this->_display_values;
+	}
+	
+	function append_thor_elements_to_form(&$disco_obj)
+	{
+		$xml = $this->get_thor_xml();
 		if ($xml && $disco_obj)
 		{
-			$xml = new XMLParser($xml);
-			$xml->Parse();
 			foreach ($xml->document->tagChildren as $node)
 			{
 				if ($node->tagName == 'input') $this->_transform_input($node, $disco_obj);
@@ -62,6 +103,478 @@ class ThorCore
 		{
 			trigger_error('To add thor elements to a disco form you need to provide a disco object and thor xml');
 		}
+	}
+	
+	function apply_magic_transform_to_form(&$disco_obj, $transform_array)
+	{
+		$display_values =& $this->get_display_values();
+		foreach ($display_values as $key => $details)
+		{
+			$real_label = $details['label'];
+			$normalized_label = strtolower(str_replace(" ", "_", $real_label));
+			if (isset($transform_array[$real_label]) || isset($transform_array[$normalized_label]))
+			{
+				$value = (isset($transform_array[$real_label])) ? $transform_array[$real_label] : $transform_array[$normalized_label];
+				$disco_obj->set_value($key, $value);
+			}
+		}
+	}
+	
+	function apply_solidtext(&$disco_obj, $transform_array)
+	{
+		$display_values =& $this->get_display_values();
+		foreach ($display_values as $key => $details)
+		{
+			$real_label = $details['label'];
+			$normalized_label = strtolower(str_replace(" ", "_", $real_label));
+			if (isset($transform_array[$real_label]) || isset($transform_array[$normalized_label]))
+			{
+				$disco_obj->change_element_type($key, 'solidtext');
+			}
+		}
+	}
+	
+	/**
+	 * Works for thor forms where there is one row per username
+	 * @return boolean true if a record was found for the username
+	 */
+	function apply_values_for_user_to_form(&$disco_obj, $username)
+	{
+		if ($this->table_exists())
+		{
+			$user_values = $this->get_values_for_user($username);
+			$display_values =& $this->get_display_values();
+			if ($user_values)
+			{
+				foreach ($user_values as $k=>$v)
+				{
+					if ($disco_obj->get_element($k))
+					{
+						$disco_obj->set_value($k, $v);
+					}
+					elseif (isset($display_values[$k]['group_id']))
+					{
+						$group[$display_values[$k]['group_id']][] = $v;
+					}
+				}
+				if (isset($group))
+				{
+					foreach ($group as $k=>$v)
+					{
+						if ($disco_obj->get_element($k))
+						{
+							$disco_obj->set_value($k, $v);
+						}
+					}
+				}
+				return true;
+			}
+			else return false;
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns a save array that can be used by disco, or passed to save_values
+	 * @todo instead of accessing $_REQUEST directly - we should probably parse the disco get_values array.
+	 */
+	function get_form_values_for_save()
+	{
+		$db_save_array = conditional_stripslashes($_REQUEST);
+		if (isset($db_save_array['transform']))
+		{
+			foreach ($db_save_array['transform'] as $k=>$v) //process checkbox transformations
+			{
+				foreach ($v as $k2=>$v2)
+				{
+					$db_save_array[$v2] = isset($db_save_array[$k][$k2]) ? $db_save_array[$k][$k2] : '';
+				}
+				unset ($db_save_array['transform'][$k]);
+				unset ($db_save_array[$k]);
+			}
+		}
+		foreach ($db_save_array as $k => $v)
+		{
+			if (substr($k, 0, 3) != "id_")
+			{
+				if (in_array($k, $this->_extra_fields) == false) unset ($db_save_array[$k]);
+			}
+		}
+		return $db_save_array;
+	}
+	
+	function save_values($values)
+	{
+		if ($this->get_thor_table() && $values)
+		{
+			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
+			if ($reconnect_db) connectDB($this->get_db_conn());
+  			$GLOBALS['sqler']->mode = 'get_query';
+  			$query = $GLOBALS['sqler']->insert( $this->get_thor_table(), $values );
+  			$result = db_query($query);
+  			$GLOBALS['sqler']->mode = '';
+  			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+  		}
+  		elseif (!$this->get_thor_table())
+  		{
+  			trigger_error('save_values called but no table has been defined via the thorCore set_thor_table method');
+  			return NULL;
+  		}
+  		elseif (empty($values))
+  		{
+  			trigger_error('save_values called but no the values array was empty');
+  			return NULL;
+  		}
+	}
+	
+	function save_values_for_user($values, $username)
+	{
+		if ($this->get_thor_table() && $values && $username)
+		{
+			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
+			if ($reconnect_db) connectDB($this->get_db_conn());
+  			$GLOBALS['sqler']->mode = 'get_query';
+  			$query = $GLOBALS['sqler']->update_one( $this->get_thor_table(), $values, $username, 'submitted_by' );
+  			$result = db_query($query);
+  			$GLOBALS['sqler']->mode = '';
+  			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+  		}
+  		elseif (!$this->get_thor_table())
+  		{
+  			trigger_error('save_values_for_user called but no table has been defined via the thorCore set_thor_table method');
+  			return NULL;
+  		}
+  		elseif (empty($values))
+  		{
+  			trigger_error('save_values_for_user called but no the values array was empty');
+  			return NULL;
+  		}
+  		elseif (empty($username))
+  		{
+  			trigger_error('save_values_for_user called but the username array was empty');
+  			return NULL;
+  		}
+	}
+	
+	function get_values_for_user($username)
+	{
+		$table = $this->get_thor_table();
+		if ($this->get_thor_table() && $username)
+		{
+			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
+			if ($reconnect_db) connectDB($this->get_db_conn());
+  			$q = 'SELECT * FROM '.$this->get_thor_table().' WHERE submitted_by = "'.$username.'"';
+  			$res = mysql_query($q);
+  			if (mysql_num_rows($res) > 0)
+  			{
+  				$result = mysql_fetch_assoc($res);
+  			}
+  			else $result = false;
+  			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+  			return $result;
+  		}
+  		elseif (!$this->get_thor_table())
+  		{
+  			trigger_error('get_values_for_user called but no table has been defined via the thorCore set_thor_table method');
+  			return NULL;
+  		}
+  		elseif (empty($username))
+  		{
+  			trigger_error('get_values_for_user called but the username passed was empty');
+  			return NULL;
+  		}
+	}
+	
+	function get_output_data_for_screen($username)
+	{
+		$raw_data = $this->get_values_for_user($username);
+		$display_values =& $this->get_display_values();
+		
+		//unset id and extra fields
+		$unset_array = $this->_extra_fields;
+		$unset_array[] = 'id';
+		foreach ($unset_array as $v)
+		{
+			unset($raw_data[$v]);
+		}
+		
+		foreach ($raw_data as $k=>$v)
+		{
+			if (isset($display_values[$k]))
+			{
+				if (isset($display_values[$k]['group_id']))
+				{
+					$group_id = $display_values[$k]['group_id'];
+					if (isset($display_values[$group_id]) && !(empty($v)))
+					{
+						$user_data[$display_values[$group_id]['label']][] = $display_values[$k]['label'];
+					}
+				}
+				else
+				{
+					$label = $display_values[$k]['label'];
+					$user_data[$label] = $v;
+				}
+			}
+		}
+		return $user_data;
+	}
+	
+	function get_output_data_for_email($username)
+	{
+		$raw_data = $this->get_values_for_user($username);
+		$display_values =& $this->get_display_values();
+		
+		$unset_array[] = 'id';
+		foreach ($unset_array as $v)
+		{
+			unset($raw_data[$v]);
+		}
+		
+		foreach ($raw_data as $k=>$v)
+		{
+			if (isset($display_values[$k]))
+			{
+				if (isset($display_values[$k]['group_id']))
+				{
+					$group_id = $display_values[$k]['group_id'];
+					if (isset($display_values[$group_id]) && !(empty($v)))
+					{
+						$user_data[$display_values[$group_id]['label']][] = $display_values[$k]['label'];
+					}
+				}
+				else
+				{
+					$label = $display_values[$k]['label'];
+					$user_data[$label] = $v;
+				}
+			}
+		}
+		return $user_data;
+	}
+	
+	function get_create_table_sql()
+	{
+		$db_structure = $this->_build_db_structure();
+		$q = 'CREATE TABLE ' . $this->get_thor_table() . '(`id` int(11) NOT NULL AUTO_INCREMENT, ';
+		//$q .= '`formkey` tinytext NOT NULL , ';
+		foreach ($db_structure as $k=>$v)
+		{
+			switch ($v['type']) {
+			case 'tinytext':
+   				$q .= '`'.$k.'` tinytext NOT NULL , ';
+   				break;
+			case 'enum':
+   				$q .= '`'.$k.'` enum(';
+   				foreach ($v['options'] as $option)
+   				{
+   					$q .= "'" . mysql_real_escape_string($option) . "',";
+   				}
+   				$q = substr( $q, 0, -1 ); // trim trailing comma
+   				$q .= ') NULL , ';
+   				break;
+			case 'text':
+   				$q .= '`'.$k.'` text NOT NULL , ';
+   				break;
+			}
+		}
+		$q .= '`submitted_by` tinytext NOT NULL , ';
+		$q .= '`submitter_ip` tinytext NOT NULL , ';
+		$q .= '`date_created` timestamp default 0 NOT NULL , ';
+		$q .= '`date_modified` timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP , ';
+		$q .= 'PRIMARY KEY(`id`)) TYPE = MYISAM;';
+		return $q;
+	}
+	
+	function table_exists()
+	{
+		if (!isset($this->_table_exists))
+		{
+			$table = $this->get_thor_table();
+			if ($this->get_thor_table())
+			{
+				$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
+				if ($reconnect_db) connectDB($this->get_db_conn());
+  				$q = 'show tables like "'.$this->get_thor_table().'"';
+  				$res = mysql_query($q);
+  				if (mysql_num_rows($res) > 0) $this->_table_exists = true;
+  				else $this->_table_exists = false;
+  				if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+  			}
+  			else
+  			{
+  				trigger_error('table_exists called but no table has been defined via the thorCore set_thor_table method');
+  				return NULL;
+  			}
+  		}
+  		return $this->_table_exists;
+	}
+	
+	function create_table()
+	{
+		if ($this->get_thor_table() && !$this->table_exists())
+		{
+			$sql = $this->get_create_table_sql();
+			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
+			if ($reconnect_db) connectDB($this->get_db_conn());
+			$res = db_query($sql);
+			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+			return true;
+		}
+		else
+  		{
+  			$error = ($this->get_thor_table()) ? 'The table already exists' : 'You need to define the table name using set_thor_table before calling create_table'; 
+  			trigger_error($error);
+  			return NULL;
+  		}
+	}
+	
+	function create_table_if_needed()
+	{
+		if ($this->get_thor_table() && !$this->table_exists())
+		{
+			return $this->create_table();
+		}
+		elseif (!$this->get_thor_table())
+		{
+			trigger_error('create_table_if_needed called but no table has been defined via the thorCore set_thor_table method');
+  			return NULL;
+		}
+		return false;
+	}
+	
+	/**
+	 * Updated for php 4 and php 5 compatibility using Adam Flynn's XML Parser class instead of xpath
+	 * - see http://www.criticaldevelopment.net/xml/
+	 *
+	 * @author Nathan White
+	 */
+	function _build_db_structure()
+	{
+		$xml = $this->get_thor_xml();
+		foreach ($xml->document->tagChildren as $node) // we use tagName to make sure we iterate through them by order instead of type
+		{	
+			if ($node->tagName == 'input') {
+				$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
+			}
+			elseif ($node->tagName == 'textarea') {
+				$db_structure[$node->tagAttrs['id']]['type'] = 'text';
+			}
+			elseif ($node->tagName == 'hidden') {
+			$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
+			}
+			elseif (($node->tagName == 'radiogroup') || ($node->tagName == 'optiongroup')) {
+				$db_structure[$node->tagAttrs['id']]['type'] = 'enum';
+				$node_children = $node->tagChildren;
+				foreach ($node_children as $node2) {
+					$db_structure[$node->tagAttrs['id']]['options'][] = $node2->tagAttrs['value'];
+				}
+			}
+			elseif ($node->tagName == 'checkboxgroup') {
+				$node_children = $node->tagChildren;
+				foreach ($node_children as $node2) {
+					$db_structure[$node2->tagAttrs['id']]['type'] = 'tinytext';
+				}
+			}
+		}
+		return $db_structure;
+	}
+	
+	function _build_display_values()
+	{
+		$xml = $this->get_thor_xml();
+		$display_values = array();
+		foreach ($xml->document->tagChildren as $k=>$v)
+		{
+			$tagname = is_object($v) ? $v->tagName : '';
+			if (method_exists($this, '_build_display_'.$tagname))
+			{
+				$build_function = '_build_display_'.$tagname;
+				$display_values = array_merge($display_values, $this->$build_function($v));
+			}
+		}
+		foreach ($this->_extra_fields as $field_name)
+		{
+			$display_values[$field_name]['label'] = prettify_string($field_name);
+			$display_values[$field_name]['type'] = 'text';
+		}
+		$this->_display_values = (isset($display_values)) ? $display_values : array();
+	}
+
+	/**
+	 * Helper functions for _build_display_values()
+	 * @access private
+	 */
+	 
+	function _build_display_input($element_obj)
+	{
+		$element_attrs = $element_obj->tagAttrs;
+		$type = 'input';
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
+		return $display_values;
+	}
+
+	function _build_display_hidden($element_obj)
+	{
+		$element_attrs = $element_obj->tagAttrs;
+		$type = 'hidden';
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
+		return $display_values;
+	}
+ 
+	function _build_display_textarea($element_obj)
+	{
+		$element_attrs = $element_obj->tagAttrs;
+		$type = 'textarea';
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => $type);
+		return $display_values;
+	}
+
+	function _build_display_checkboxgroup($element_obj)
+	{
+		$element_attrs = $element_obj->tagAttrs;
+		$display_values[$element_attrs['id']] = array('label' => $element_attrs['label'], 'type' => 'checkboxgroup'); 
+		$element_children = $element_obj->tagChildren;
+		$type = 'checkbox';
+		foreach ($element_children as $element_child) 
+		{
+			$child_attrs = $element_child->tagAttrs;
+			$label = $child_attrs['label'];
+			$display_values[$child_attrs['id']] = array('label' => $label, 'type' => $type, 'group_id' => $element_attrs['id'] );
+		}
+		return $display_values;
+	}
+	
+	function _build_display_radiogroup($element_obj)
+	{
+		$element_attrs = $element_obj->tagAttrs;
+		$element_children = $element_obj->tagChildren;
+		$id = $element_attrs['id'];
+		$label = $element_attrs['label'];
+		$type = 'radiogroup';
+		foreach ($element_children as $element_child)
+		{
+			$child_attrs =& $element_child->tagAttrs;
+			$options[] = $child_attrs['value'];
+		}
+		$display_values[$id] = array('label' => $label, 'type' => $type, 'options' => $options);
+		return $display_values;
+	}
+
+	function _build_display_optiongroup($element_obj)
+	{
+		$element_attrs = $element_obj->tagAttrs;
+		$element_children = $element_obj->tagChildren;
+		$id = $element_attrs['id'];
+		$label = $element_attrs['label'];
+		$type = 'optiongroup';
+		foreach ($element_children as $element_child)
+		{
+			$child_attrs =& $element_child->tagAttrs;
+			$options[] = $child_attrs['value'];
+		}
+		$display_values[$id] = array('label' => $label, 'type' => $type, 'options' => $options);
+		return $display_values;
 	}
 	
 	function _transform_input($element, &$d)
@@ -415,34 +928,7 @@ class Thor
 	 */
 	function _build_db_structure()
 	{
-		$xml = new XMLParser($this->_xml);
-		$xml->Parse();
-		foreach ($xml->document->tagChildren as $node) // we use tagName to make sure we iterate through them by order instead of type
-		{	
-			if ($node->tagName == 'input') {
-				$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
-			}
-			elseif ($node->tagName == 'textarea') {
-				$db_structure[$node->tagAttrs['id']]['type'] = 'text';
-			}
-			elseif ($node->tagName == 'hidden') {
-			$db_structure[$node->tagAttrs['id']]['type'] = 'tinytext';
-			}
-			elseif (($node->tagName == 'radiogroup') || ($node->tagName == 'optiongroup')) {
-				$db_structure[$node->tagAttrs['id']]['type'] = 'enum';
-				$node_children = $node->tagChildren;
-				foreach ($node_children as $node2) {
-					$db_structure[$node->tagAttrs['id']]['options'][] = $node2->tagAttrs['value'];
-				}
-			}
-			elseif ($node->tagName == 'checkboxgroup') {
-				$node_children = $node->tagChildren;
-				foreach ($node_children as $node2) {
-					$db_structure[$node2->tagAttrs['id']]['type'] = 'tinytext';
-				}
-			}
-		}
-		return $db_structure;
+		return $this->thor_core->_build_db_structure();
 	}
 
 	function _build_form()
