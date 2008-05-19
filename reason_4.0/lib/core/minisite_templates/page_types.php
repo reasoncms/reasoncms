@@ -930,6 +930,11 @@
 			'sidebar' => 'blurb',
 			'sub_nav' => 'image_sidebar',
 		),
+		'show_children_images_replace_nav' => array(
+			'main_post' => 'children',
+			'sidebar' => '',
+			'navigation' => 'image_sidebar',
+		),
 		'show_children_no_title' => array(
 			'main_head' => '',
 			'main_post' => 'children',
