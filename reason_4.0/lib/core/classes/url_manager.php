@@ -458,16 +458,25 @@ mapping.', HIGH );
 			$es->add_type( id_of( 'asset' ) );
 			$assets = $es->run_one();
 
-			// get assets that are related to a viewing group
-			//$es->add_left_relationship_field('asset_access_permissions_to_group', 'entity', 'id', 'viewing_group_id');
-			//$assets_with_permissions = $es->run_one();
+			/*
+			  NOTE: You might think that it would make sense to only run restricted-access assets through the asset
+			  access handler, and to do a simple rewrite directly to the file for publicly accessible assets.
+			  
+			  In fact, we initially planned to do things that way.
+			  
+			  However, that approach, whie it would theoretically lessen the server load and keep unneeded php processes
+			  and DB hits from ocurring, does not work (at least in a simple implementation) -- because Apache applies 
+			  permissions from the *real* directory regardless of the URL requested, and the *real* directory needs to
+			  be locked down or outside the web tree in order to provide any meaningful security.
+			  
+			  We could, theoretically, alias the unrestricted assets in another directory, but without a pressing performance
+			  issue it would be hard to justify something like that, which seems somewhat fragile.
+			*/
 
 			foreach( $assets AS $id => $asset )
 			{
 				$real_filename = $id.'.'.$asset->get_value('file_type');
-				//if (isset($assets_with_permissions[$id]))
 				fputs( $this->_fp, 'RewriteRule ^'.MINISITE_ASSETS_DIRECTORY_NAME.'/'.$asset->get_value('file_name').'$ '.$asset_handler_path.'?id='.$id."\n" ) OR trigger_error( 'Unable to write to htaccess file', HIGH );
-				//else fputs( $this->_fp, 'RewriteRule ^'.MINISITE_ASSETS_DIRECTORY_NAME.'/'.$asset->get_value('file_name').'$ '.WEB_ASSET_PATH.$real_filename."\n" ) OR trigger_error( 'Unable to write to htaccess file', HIGH );
 				$existing_asset_filenames[] = $asset->get_value('file_name');
 			}
 			
