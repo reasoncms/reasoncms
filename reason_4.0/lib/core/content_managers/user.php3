@@ -117,14 +117,14 @@
 					$this->add_element('conflict_notice','comment',array('text'=>$error_string));
 				}
 			}
-			foreach($this->nice_labels as $name=>$label)
-			{
-				$this->set_display_name($name,$label);
-			}
 			$this->add_relationship_element('role', id_of('user_role'), relationship_id_of('user_to_user_role'),'right','select');
 			if(!$this->get_value('role'))
 			{
 				$this->set_value('role',id_of('editor_user_role'));
+			}
+			foreach($this->nice_labels as $name=>$label)
+			{
+				$this->set_display_name($name,$label);
 			}
 			$this->set_order(array('conflict_notice','name','role','site_window_pref','user_popup_alert_pref','user_authoritative_source','user_given_name','user_surname','user_email','user_phone','password','confirm_password'));
 		}
