@@ -123,7 +123,7 @@
 			ob_start();
 			$this->make_tree( $root , $root , 0);
 			$tree = ob_get_contents();
-			ob_clean();
+			ob_end_clean();
 			if(!empty($tree))
 			{
 				echo '<ul class="navListTop">';
