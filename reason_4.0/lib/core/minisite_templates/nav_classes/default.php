@@ -70,18 +70,25 @@
 				$this->show_item( $this->values[ $item  ] );
 				if( $open AND !empty( $children ))
 				{
-					echo '<ul class="navList">';
-					$child_counter = 1;
+					$shown_children = array();
+					$i = $counter;
 					foreach($children as $child_id )
 					{
-						$c = $this->values[ $child_id ];
-						if( $c->get_value( 'nav_display' ) == 'Yes' )
+						if( $this->values[ $child_id ]->get_value( 'nav_display' ) == 'Yes' )
 						{
-							$this->make_tree( $child_id , $root, $depth +1,$child_counter);
-							$child_counter++;
+							$shown_children[$i] = $child_id;
+							$i++;
 						}
 					}
-					echo '</ul>';
+					if(!empty($shown_children))
+					{
+						echo '<ul class="navList">';
+						foreach($shown_children as $child_counter=>$child_id)
+						{
+							$this->make_tree( $child_id , $root, $depth +1,$child_counter);
+						}
+						echo '</ul>';
+					}
 				}
 				echo '</li>';
 			}
