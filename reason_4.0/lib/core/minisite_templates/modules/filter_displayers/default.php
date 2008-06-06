@@ -266,7 +266,7 @@ class defaultFilterDisplay
 		if(!empty($this->filter_types) && !empty($this->filter_entities))
 		{
 			
-			$ret .= '<script language="JavaScript">
+			$ret .= '<script language="JavaScript" type="text/javascript">
 			<!--
 				function MM_jumpMenu(targ,selObj,restore){ //v3.0
 				  eval(targ+".location=\'"+selObj.options[selObj.selectedIndex].value+"\'");
@@ -274,7 +274,7 @@ class defaultFilterDisplay
 				}
 			//-->
 			</script>';
-			$ret .= '<form method="get">'."\n";
+			$ret .= '<form method="get" action="?">'."\n";
 			if(count($this->filter_types) != 1)
 				$ret .= 'Browse by '.implode('/',array_keys($this->filter_types)).':'."\n";
 			foreach($this->filters as $key=>$values)
