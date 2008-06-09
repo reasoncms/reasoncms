@@ -698,7 +698,7 @@
 			'main_post' => 'go',
 			'post_foot' => 'textonly_toggle',
 		),
-		'image_left' => array(
+		'images_under_nav' => array(
 			'sidebar' => 'blurb',
 			'sub_nav' => 'image_sidebar',
 		),
