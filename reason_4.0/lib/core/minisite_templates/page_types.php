@@ -698,6 +698,10 @@
 			'main_post' => 'go',
 			'post_foot' => 'textonly_toggle',
 		),
+		'image_left' => array(
+			'sidebar' => 'blurb',
+			'sub_nav' => 'image_sidebar',
+		),
 		'image_left_no_nav' => array(
 			'navigation' => 'image_sidebar',
 			'sub_nav_2' => '',
