@@ -381,7 +381,7 @@
 			$rel_sort++;
 			if (in_array($rel_sort, $used_values))
 			{
-				$this->increment_next($rel_sort, $used_values);
+				return $this->increment_next($rel_sort, $used_values);
 			}
 			else return ($rel_sort);
 		}
