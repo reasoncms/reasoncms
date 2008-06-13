@@ -24,7 +24,8 @@ class DiscoSearcher extends Disco
 reason_include_once( 'function_libraries/user_functions.php' );
 force_secure_if_available();
 $current_user = check_authentication();
-if (!reason_user_has_privs( get_user_id ( $current_user ), 'view_sensitive_data' ) )
+$current_user_id = get_user_id ( $current_user );
+if (!reason_user_has_privs( $current_user_id, 'view_sensitive_data' ) )
 {
 	die('<html><head><title>Find Something in Reason</title></head><body><h1>Sorry.</h1><p>You do not have permission to search across sites.</p><p>Only Reason users who have sensitive data viewing privileges may do that.</p></body></html>');
 }
@@ -72,7 +73,7 @@ $d->actions = array('Search');
 $d->run();
 if(!empty($_REQUEST['search_string']))
 {
-	$sql_search_string = str_replace('"','\"',$_REQUEST['search_string']);
+	$sql_search_string = addslashes($_REQUEST['search_string']);
 	$use_fields = array('id','name','last_modified');
 
 	echo '<h2>Search results</h2>';
@@ -126,6 +127,7 @@ if(!empty($_REQUEST['search_string']))
 			}
 			$txt .= '<th>Owned By</th>';
 			$txt .= '<th>Search Hits</th>';
+			$txt .= '<th>Edit</th>';
 			$txt .= '</tr>';
 			$class = 'odd';
 			foreach($entities as $e)
@@ -177,6 +179,12 @@ if(!empty($_REQUEST['search_string']))
 					}
 				}
 				$txt .= '</ul>';
+				$txt .= '</td>';
+				$txt .= '<td>';
+				if(!empty($owner_site_id) && user_can_edit_site($current_user_id, $owner_site_id))
+				{
+					$txt .= '<a href="http://'.REASON_WEB_ADMIN_PATH.'?site_id='.$owner_site_id.'&amp;type_id='.$type->id().'&amp;id='.$e->id().'">Edit</a>';
+				}
 				$txt .= '</td>';
 				$txt .= '</tr>'."\n";
 				if( $class == 'odd' )
