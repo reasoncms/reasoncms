@@ -45,6 +45,30 @@
 .roundedTop { background: url(../../ui_images/reason_admin/ne.gif) no-repeat top right }
 .roundedBottom { background: url(../../ui_images/reason_admin/se.gif) no-repeat bottom right }
 img.roundedCorner {width: 10px; height: 10px; border: none; display: block; }
+.viewFilter h4 {
+	margin:0;
+	font-size:1em;
+}
+.viewFilter tr.submitRow input {
+	background-color:#e9eef8;
+	border:1px solid #385790;
+	padding:3px 5px;
+	color:#385790;
+	text-transform:uppercase;
+	font-weight:bold;
+	cursor:pointer;
+	font-size:0.9em;
+	letter-spacing:0.05em;
+}
+.viewFilter tr.submitRow input:hover {
+	background-color:#fff;
+}
+.viewFilter tr.submitRow input.clear {
+	background-color:#c5d2eb;
+}
+.viewFilter tr.submitRow input.clear:hover {
+	background-color:#e9eef8;
+}
 .addLink {
 	background-color: #EFC87B;
 }
