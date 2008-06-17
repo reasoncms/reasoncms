@@ -5,6 +5,9 @@
  * nutchQuery - requests search results from nutch.carleton.edu's XML interface
  * see example.php for how to use the class
  *
+ * @todo generalize and/or move out of reason package
+ * @todo remove dependency on Reason the application
+ *
  * $search = new nutchQuery($query_term , $start_of_results , $number_of_results_to_return , $results_per_site);
  * $search->nextResult returns a result with each successive call.
  * $search->nextQueryArgs provides the fields necessary for nutchQuery to get the next batch of results for the same query. Returns FALSE if none exist.
@@ -16,11 +19,12 @@
  *
  */
 
+require_once('paths.php');
 
-
-
-require_once('reason_header.php');
+// This should not be defined here if this file stays inside reason_package
+// it makes the entire class unusable outside of Carleton -- mr
 define('NUTCH_BASE_URL', 'http://nutch.carleton.edu/nutch-0.9/opensearch?');
+
 define('MAGPIE_DIR', MAGPIERSS_INC);
 require_once(MAGPIE_DIR . 'rss_parse.inc');
 require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
@@ -228,7 +232,10 @@ class nutchQuery {
 
 	// uses curl to request a url and returns the result as a string
 	// in this case we're hitting the nutch server and getting the xml search response
-	function getURL($url){
+	function getURL($url)
+	{
+		$xml = '';
+		
 		// create the curl object
 		$ch=curl_init();
 
@@ -239,7 +246,15 @@ class nutchQuery {
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
 		
 		// get the response
-		$xml = curl_exec ($ch);
+		if( $xml = curl_exec ($ch) )
+		{
+			$http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
+			if($http_code >= 300)
+			{
+				$xml = '';
+				trigger_error('Nutch web service returned http status '.$http_code.'; clearing result');
+			}
+		}
 
 		// clean up
 		curl_close ($ch);
