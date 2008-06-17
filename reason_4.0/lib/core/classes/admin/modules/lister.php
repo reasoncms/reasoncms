@@ -35,16 +35,15 @@
 		function show_filters() // {{{
 		{
 			echo '<td valign="top">'."\n".'<div class="viewFilter">'."\n".'<div class="roundedTop">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent">'."\n";
-
+			echo '<h4>Search</h4>';
 			$this->filter->run();
 			echo "\n".'</div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n".'</td>'."\n";
 		} // }}}
 		function show_add() // {{{
 		{
 			echo '<div class="addLink">'."\n".'<div class="roundedTop">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent">'."\n";
-			$e = new entity( $this->admin_page->type_id );
-			echo '<a href="'. $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => '', 'new_entity' => 1) ).'">Add '.$e->get_value( 'name' ).'</a>'."\n";
 			$type = new entity($this->admin_page->type_id);
+			echo '<a href="'. $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => '', 'new_entity' => 1) ).'">Add '.$type->get_value( 'name' ).'</a>'."\n";
 			if(array_key_exists($type->get_value('unique_name'),$this->import_modules))
 			{
 				$import_module = $this->import_modules[$type->get_value('unique_name')];
