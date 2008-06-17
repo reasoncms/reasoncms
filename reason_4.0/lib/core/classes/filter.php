@@ -26,16 +26,14 @@
 		function foot( $buttons = '' ) // {{{
 		{
 				?>
-				<tr>
-					<td align="right">&nbsp;</td>
-					<td align="left">
-					<input type="image" src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>filter.gif" />&nbsp;&nbsp;
+				<tr class="submitRow">
+					<td>&nbsp;</td>
+					<td>
+					<input type="submit" value="Search" class="submit" />
 					<?php
 						if( $this->has_filters() )
 						{
-					?>
-					<input type="image" name="__button_clear" src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>clear_filters.gif" />&nbsp;&nbsp;
-					<?php
+							echo '<input type="submit" name="__button_clear" value="Clear" class="clear" />';
 						}
 					?>
 					</td>
@@ -108,14 +106,6 @@
 		function set_page( &$page) // {{{
 		{
 			$this->page =& $page;
-		} // }}}
-		/**
-		 * Just displays a header.
-		 * @return void
-		 */
-		function pre_show_form() // {{{
-		{
-			echo '<strong>Filters</strong>';
 		} // }}}
 		/**
 		 * Grabs Any Search fields from the Viewer and sets up display names properly
