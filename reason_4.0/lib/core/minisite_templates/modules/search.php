@@ -12,7 +12,7 @@
 	 * Support for default_text and header_text from parameters added 11/28/07 - Nathan White
 	 *
 	 * @package reason
-	 * @subpackage modules
+	 * @subpackage minisite_modules
 	 */
 	class SearchModule extends DefaultMinisiteModule
 	{
