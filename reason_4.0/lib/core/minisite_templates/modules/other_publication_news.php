@@ -16,7 +16,7 @@ reason_include_once( 'function_libraries/util.php' );
  * - max_num_to_show: if greater than 0, sets a maximum number of items to show
  * - title: if set, shows a custom module title
  *
- * @package reason_local
+ * @package reason
  * @subpackage minisite_modules
  * 
  * @author Nathan White
