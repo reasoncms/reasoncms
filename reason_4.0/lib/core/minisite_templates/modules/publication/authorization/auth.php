@@ -3,7 +3,7 @@
  * A base class for publication authorization logic
  *
  * @package reason
- * @subpackage modules
+ * @subpackage minisite_modules
  */
  
  /**
