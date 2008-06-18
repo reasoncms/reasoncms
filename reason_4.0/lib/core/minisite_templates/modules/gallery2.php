@@ -1,7 +1,7 @@
 <?php
 /**
  * @package reason
- * @subpackage Minisite_Module
+ * @subpackage minisite_modules
  */
 
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'Gallery2Module';
@@ -159,9 +159,13 @@ class Gallery2Module extends Generic3Module
 		$this->use_desc_in_list = ($this->params['show_descriptions_in_list']) ? true : false;
 		$this->date_format = $this->params['date_format'];
 		$this->min_num_to_show_search = $this->params['min_num_to_show_search'];
-		
+		$this->init_sort_order();
+	}
+	
+	function init_sort_order()
+	{
 		// Since rel_sort doesn't make sense on a site-wide gallery, we need to keep this from happening
-		if (empty($this->params['sort_order']) || ($this->params['sort_order'] == 'rel' && $this->params['entire_site']))
+		if (empty($this->params['sort_order']) || ($this->params['sort_order'] == 'rel' && $this->params['entire_site'] && !$this->is_virtual))
 		{
 			$sort_order_string = 'dated.datetime ASC, entity.id ASC';
 		}
@@ -188,7 +192,7 @@ class Gallery2Module extends Generic3Module
 				$sort_order_string = 'dated.datetime ASC, entity.id ASC';
 			}
 			$this->sort_order_string = implode(',',reset($matches));
-		}	
+		}
 	}
 	
 	/**
@@ -377,6 +381,14 @@ class Gallery2Module extends Generic3Module
 			echo '<div class="keywords"><h4>Keywords:</h4> ' .  $item->get_value( 'keywords' ) . '</div>'."\n";
 		if ($item->get_value( 'datetime' ))
 			echo '<div class="dateTime">' .  prettify_mysql_datetime($item->get_value( 'datetime' ), $this->date_format) . '</div>'."\n";
+		
+		$this->show_item_owner_site_info ( $item ); 
+		$this->show_item_categories( $item );
+		echo '</div>'."\n";
+	} // }}}
+	
+	function show_item_owner_site_info ( &$item )
+	{
 		$owner_site_id = get_owner_site_id($item->id());
 		if ($owner_site_id != $this->site_id)
 		{
@@ -386,10 +398,15 @@ class Gallery2Module extends Generic3Module
 				echo '<div class="owner">From site: <a href="'.$owner_site->get_value( 'base_url' ).'">' . $owner_site->get_value( 'name' ) . '</a></div>'."\n"; 
 			}
 		}
+	}
+	
+	function show_item_categories( &$item )
+	{
 		if ($cat_array = $this->get_categories_for_image($item->id()))
+		{
 			echo '<div class="categories"><h4>Categories:</h4> ' . implode(', ',$cat_array) . '</h4></div>';
-		echo '</div>'."\n";
-	} // }}}
+		}
+	}
 	
 	/**
 	 * Gets the categories associated with a given image
@@ -420,11 +437,11 @@ class Gallery2Module extends Generic3Module
 		
 		if ($next_id = $this->get_next_item_id($item->id()))
 		{
-			$return['next'] = new entity($next_id);
+			$return['next'] = (isset($this->items[$next_id])) ? $this->items[$next_id] : new entity($next_id);
 		}
 		if ($prev_id = $this->get_previous_item_id($item->id()))
 		{
-			$return['prev'] = new entity($prev_id);
+			$return['prev'] = (isset($this->items[$prev_id])) ? $this->items[$prev_id] : new entity($prev_id);
 		}
 		if(!empty($return))
 		{
