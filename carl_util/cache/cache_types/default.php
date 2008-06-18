@@ -1,20 +1,20 @@
 <?php
 
 /**
- *	Defines the interface for object cache types
+ * Defines the interface for object cache types
  *
- *  Any object cache type should define these methods
+ * Any object cache type should define these methods
  *
- *	- fetch
- *	- set
- *	- clear
- *  - validate
+ * -fetch
+ * -set
+ * -clear
+ * -validate
  *
- *  A method setup_custom has access can be used to refer to additional settings for the type present in the object_cache_settings.php file
+ * A method setup_custom can be used to refer to additional settings for the type present in the object_cache_settings.php file
  *
- *	@package carl_util
- * 	@subpackage cache
- *  @author Nathan White
+ * @package carl_util
+ * @subpackage cache
+ * @author Nathan White
  */
 
 class DefaultObjectCache
