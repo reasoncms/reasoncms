@@ -2,7 +2,7 @@
 
 /**
  * @author Matt Ryan and Bedrich Rios
- * @package Reason
+ * @package reason
  */
 
 // include the MinisiteTemplate class
