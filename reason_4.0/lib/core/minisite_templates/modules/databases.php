@@ -39,44 +39,49 @@ class DatabasesModule extends Generic3Module
 	{
 		$this->es->set_order( 'entity.name ASC' );
 		$this->es->add_left_relationship_field( 'db_to_primary_external_url', 'external_url' , 'url' , 'primary_url' );
+		$this->db_alter_es($this->es);
+		
+	} // }}}
+	function db_alter_es(&$es)
+	{
 		if(!empty($this->params['content_types']))
 		{
 			if($this->params['content_type_matching'] == 'or')
-				$this->add_or_style_limitation('database_to_content_type',$this->params['content_types']);
+				$this->add_or_style_limitation('database_to_content_type',$this->params['content_types'],$es);
 			else
-				$this->add_and_style_limitation('database_to_content_type',$this->params['content_types']);
+				$this->add_and_style_limitation('database_to_content_type',$this->params['content_types'],$es);
 		}
 		if(!empty($this->params['subjects']))
 		{
 			if($this->params['subject_matching'] == 'or')
-				$this->add_or_style_limitation('database_to_subject',$this->params['subjects']);
+				$this->add_or_style_limitation('database_to_subject',$this->params['subjects'],$es);
 			else
-				$this->add_and_style_limitation('database_to_subject',$this->params['subjects']);
+				$this->add_and_style_limitation('database_to_subject',$this->params['subjects'],$es);
 		}
 		if(!empty($this->params['vendors']))
 		{
 			if($this->params['vendor_matching'] == 'or')
-				$this->add_or_style_limitation('db_provided_by_organization',$this->params['vendors']);
+				$this->add_or_style_limitation('db_provided_by_organization',$this->params['vendors'],$es);
 			else
-				$this->add_and_style_limitation('db_provided_by_organization',$this->params['vendors']);
+				$this->add_and_style_limitation('db_provided_by_organization',$this->params['vendors'],$es);
 		}
-	} // }}}
+	}
 	
-	function add_and_style_limitation($rel_name, $unique_names)
+	function add_and_style_limitation($rel_name, $unique_names, &$es)
 	{
 		$relid = relationship_id_of($rel_name);
 		foreach($unique_names as $uname)
 		{
 			if($id = id_of($uname))
-				$this->es->add_left_relationship($id,$relid);
+				$es->add_left_relationship($id,$relid);
 		}
 	}
-	function add_or_style_limitation($rel_name, $unique_names)
+	function add_or_style_limitation($rel_name, $unique_names, &$es)
 	{
 		$relid = relationship_id_of($rel_name);
 		if($relid)
 		{
-			$rel_field_info = $this->es->add_left_relationship_field($rel_name,'entity','id','related_id');
+			$rel_field_info = $es->add_left_relationship_field($rel_name,'entity','id','related_id');
 			$ids = array();
 			foreach($unique_names as $uname)
 			{
@@ -85,7 +90,7 @@ class DatabasesModule extends Generic3Module
 			}
 			if(!empty($ids))
 			{
-				$this->es->add_relation($rel_field_info['related_id']['table'].'.'.$rel_field_info['related_id']['field'].' IN ('.implode(',',$ids).')');
+				$es->add_relation($rel_field_info['related_id']['table'].'.'.$rel_field_info['related_id']['field'].' IN ('.implode(',',$ids).')');
 			}
 		}
 	}
@@ -202,6 +207,11 @@ class DatabasesModule extends Generic3Module
 			}
 			echo '</ul>';
 		}
+	}
+	function alter_relationship_checker_es($es)
+	{
+		$this->db_alter_es($es);
+		return $es;
 	}
 	function show_jump()
 	{
