@@ -154,7 +154,7 @@ class Gallery2Module extends Generic3Module
 		$this->parent->add_stylesheet( REASON_HTTP_BASE_PATH.'css/gallery2/gallery2.css', '', true );
 		$this->parent->add_head_item('script',array( 'language' => 'JavaScript', 'type' => 'text/javaScript',  'src' => REASON_HTTP_BASE_PATH.'js/gallery2/next_page_link.js'));
 		$this->use_pagination = ($this->params['use_pagination']) ? true : false;
-		$this->num_per_page = $this->params['min_num_to_show_search'];
+		$this->num_per_page = $this->params['number_per_page'];
 		$this->use_dates_in_list = ($this->params['show_dates_in_list']) ? true : false;
 		$this->use_desc_in_list = ($this->params['show_descriptions_in_list']) ? true : false;
 		$this->date_format = $this->params['date_format'];
