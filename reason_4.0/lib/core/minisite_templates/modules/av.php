@@ -173,7 +173,7 @@
 					elseif($av_file->get_value( 'url' ))
 					{
 						$args = $query_args + array('av_file_id'=>$av_file->id());
-						echo '<a href="'.$this->construct_link($item,$args).'" title="'.$av_file->get_value( 'media_format' )." ".$av_file->get_value( 'av_type' ).': '.htmlspecialchars($item->get_value('name')).'">';
+						echo '<a href="'.$this->construct_link($item,$args).'" title="'.$av_file->get_value( 'media_format' )." ".$av_file->get_value( 'av_type' ).': '.htmlspecialchars($item->get_value('name')).'" class="fileLink">';
 					}
 					$file_desc = '';
 					if ( $av_file->get_value( 'av_part_number' ) )
