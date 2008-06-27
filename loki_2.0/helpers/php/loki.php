@@ -231,8 +231,8 @@ class Loki2
 				use_xhtml : true,
 				<?php $this->_bool_param('sanitize_unsecured') ?>
 				<?php $this->_o_param('document_style_sheets') ?>
-				options : options,
 				<?php $this->_o_param('allowable_tags', true) ?>
+				options : options
 			};
 
 			
