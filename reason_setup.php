@@ -1,3 +1,5 @@
+<?php
+$head_content = "
 <html>
 <head>
 <title>Reason Setup</title>
@@ -6,7 +8,6 @@
 {
 color: red;
 }
-
 .success
 {
 color: green;
@@ -14,15 +15,14 @@ color: green;
 </style>
 </head>
 <body>
-
-<h2>Reason Setup</h2>
-<?
-
+<h2>Reason Setup</h2>";
+$curl_test_content = $head_content . '</body></html>';
 if (isset($_GET['curl_test']))
 {
-	echo '</body></html>';
+	echo $curl_test_content;
 	die;
 }
+else echo $head_content;
 
 ?>
 <p>This script should be run after you have setup Reason according to the instructions in the <a href="./install.htm">Reason Install Documentation</a>. 
@@ -413,10 +413,15 @@ function tidy_check()
 
 function curl_check()
 {
+	global $curl_test_content;
 	$insecure_link = 'http://'.$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'].'?curl_test=true';
 	$secure_link = 'https://'.$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'].'?curl_test=true';
 	$content = get_reason_url_contents( $insecure_link );
-	if (empty($content)) return msg('<span class="error">curl check failed</span>', false);
+	if ($content != $curl_test_content)
+	{
+		$extra_error_txt = (!empty($content)) ? ' - the curl attempt returned this content: <pre>' . htmlentities($content) . '</pre> and should have returned <pre>' . htmlentities($curl_test_content) .'</pre>' : ' - The curl attempt returned no content.';
+		return msg('<span class="error">curl check failed</span>' . $extra_error_txt, false);
+	}
 	else 
 	{
 		// if HTTPS_AVAILABLE is true, lets hit the current page in that way
