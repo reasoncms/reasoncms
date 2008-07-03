@@ -902,12 +902,26 @@
 	/**
 	 * Examines the allowable relationships table, removes allowable relationships that reference a type that does not exist
 	 *
-	 * @return boolean success or failure
+	 * @todo database abstraction
+	 * @todo move into a database maintenance class
+	 * @return number of deleted allowable_relationships
 	 * @author Nathan White
 	 */
 	function remove_allowable_relationships_with_missing_types()
 	{
-		$to_delete = array();
+		$ids = get_allowable_relationships_with_missing_types();
+		if (!empty($ids))
+		{
+			$ids_to_delete = implode(',', $ids);
+			$q = 'DELETE from allowable_relationship WHERE id IN ('.$ids_to_delete.')';
+			db_query($q);
+			return count($ids);
+		}
+		return 0;
+	}
+	
+	function get_allowable_relationships_with_missing_types()
+	{
 		$es = new entity_selector();
 		$es->limit_tables();
 		$es->limit_fields(array('id', 'name'));
@@ -920,16 +934,49 @@
 		$results = db_query($q);
 		while ($result = mysql_fetch_assoc($results))
 		{
-			$to_delete[$result['id']] = $result['id'];
+			$ids[] = $result['id'];
 		}
-		if (!empty($to_delete))
-		{
-			$ids_to_delete = implode(',', array_keys($to_delete));
-			$q = 'DELETE from allowable_relationship WHERE id IN ('.$ids_to_delete.')';
-			db_query($q);
-			return true;
-		}
-		return false;
+		return (isset($ids)) ? $ids : array();
 	}
-
+	
+	/**
+	 * An orphaned relationship does not correspond to an allowable relationship in the allowable relationship table and should be deleted
+	 * @todo move into a database maintenance class which separated detection from deletion
+	 * @return number of deleted orphaned relationships
+	 */
+	function remove_orphaned_relationships()
+	{
+		$ids = get_orphaned_relationship_ids();
+		if (count($ids) > 0)
+		{
+			$q = 'DELETE FROM relationship where `id` IN ("'.implode('","', $ids).'")';
+			$result = db_query($q);
+			return count($ids);
+		}
+		else return 0;
+	}
+	
+	/**
+	 * @return array of relationship ids that have a type that does not exist in the allowable relationships table
+	 */
+	function get_orphaned_relationship_ids()
+	{
+		$q = 'SELECT id from allowable_relationship';
+		$results = db_query($q);
+		while ($result = mysql_fetch_assoc($results))
+		{
+			$ids[$result['id']] = $result['id'];
+		}
+		if (isset($ids)) // only works if some distinct allowable_relationships existed
+		{
+			$allowable_rel_ids = implode('","', $ids);
+			$q = 'SELECT id from relationship where `type` NOT IN ("'.$allowable_rel_ids.'")';
+			$results = db_query($q);
+			while ($result = mysql_fetch_assoc($results))
+			{
+				$orphan_ids[] = $result['id'];
+			}
+		}
+		return (isset($orphan_ids)) ? $orphan_ids : array();
+	}
 ?>
