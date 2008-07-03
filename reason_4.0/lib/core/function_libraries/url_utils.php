@@ -9,7 +9,9 @@ function get_reason_url_contents( $url )
 	// Includes the variables $http_authentication_username and $http_authentication_password
 	if (defined('HTTP_CREDENTIALS_FILEPATH') && file_exists(HTTP_CREDENTIALS_FILEPATH)) include( HTTP_CREDENTIALS_FILEPATH );
 	else $http_authentication_username = $http_authentication_password = '';
-	$ch = curl_init( $url );	
+	$ch = curl_init( $url );
+	$useragent = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : false; // grab the current browser user agent is possible
+	if ($useragent) curl_setopt( $ch, CURLOPT_USERAGENT, $useragent); // we spoof the browsers user agent if possible - some servers reject the default
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 	curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
 	curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
