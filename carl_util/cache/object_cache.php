@@ -78,9 +78,9 @@ class ObjectCache
 	
 	function &set_cache()
 	{
-		if ($cache_class = $this->get_cache_class())
+		if ($cache_class =& $this->get_cache_class())
 		{
-			$this->_cache =& $cache_class;
+			$this->_cache = carl_clone($cache_class); // localize a clone of the cache_class
 		}
 		elseif ($cache_class === NULL) trigger_error('The cache type you requested (' . $this->get_cache_type() . ') in not defined in object_cache_settings.php');
 		return $this->_cache;
@@ -89,7 +89,7 @@ class ObjectCache
 	/**
 	 * Includes the cache_class file, returns a verified cache class
 	 */
-	function get_cache_class()
+	function &get_cache_class()
 	{
 		static $settings;
 		static $class;
