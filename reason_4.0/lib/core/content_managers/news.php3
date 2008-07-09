@@ -180,7 +180,7 @@
 					{
 						$section_names[$section_id] = $section->get_value('name');
 					}
-					$this->add_element($pub_id.'-sections','select',array( 'options' => $section_names, 'display_name'=>'Section'));
+					$this->add_element($pub_id.'-sections','select_no_sort',array( 'options' => $section_names, 'display_name'=>'Section'));
 				}
 			}
 		}
@@ -324,14 +324,39 @@
 		function run_error_checks()
 		{
 			parent::run_error_checks();
-			
-			$publication_selected = false;
+			$this->run_publication_issue_and_section_checks();
+			$this->run_publication_association_error_check();
+		}
+		
+		/**
+		 * Makes sure the news item is associated with at least one publication
+		 *
+		 * @todo it seems this only works if there is exactly one publication on the site - is that desired???
+		 */
+		function run_publication_association_error_check() 
+		{
+			foreach($this->publications as $pub_id=>$pub_entity)
+			{
+				if($this->get_value($pub_id)) return true;
+			}
+			if(!empty($this->publications))
+			{
+				//this is a bit of a hack - couldn't figure out what to point to for "jump to error"
+				$first_pub= reset($this->publications);
+				// this causes error - site may not have a publication ...
+				$this->set_error($first_pub->id(), 'This news item needs to be associated with at least one publication.' );
+			}
+		}
+		
+		/**
+		 * Makes sure that if a publication is selected that has issues and/or sections, that proper associations are present
+		 */
+		function run_publication_issue_and_section_checks()
+		{
 			foreach($this->publications as $pub_id=>$pub_entity)
 			{
 				if($this->get_value($pub_id))
 				{
-					$publication_selected = true;
-				
 					//make sure they have a relationship with at least one issue -- remember that if they have a relationship with more than one issue, the issue element will be hidden
 #					//we can't have an empty issue_val, can we?  since it's a select?  										
 					$issue_val = $this->get_value($pub_id.'-issues');
@@ -347,19 +372,6 @@
 					}
 				}
 			}
-			if(!$publication_selected)
-			{
-				if(!empty($this->publications) && count($this->publications) == 1)
-				{
-					//this is a bit of a hack - couldn't figure out what to point to for "jump to error"
-					$first_pub= reset($this->publications);
-					// this causes error - site may not have a publication ...
-					$this->set_error($first_pub->id(), 'This news item needs to be associated with at least one publication.' );
-				}
-			}
-			
-			//check to make sure that there are no associations with issues or sections if there's not an association with the appropriate publication?
-			
 		}
 
 
