@@ -1741,14 +1741,18 @@
 
 	/**
 	* The plasmature class for a drop-down of U.S. states.
+	*
 	* To include Canadian provinces, use {@link state_provinceType}.
+	*
+	* To include military APO/FPO codes, pass the include_military_codes argument as true
+	*
 	* @package disco
 	* @subpackage plasmature
 	*/
 	class stateType extends selectType // {{{
 	{
 	 	var $type = 'state';
-		var $type_valid_args = array('use_not_in_usa_option'); 
+		var $type_valid_args = array('use_not_in_usa_option','include_military_codes'); 
 		var $sort_options = false;
 
 		/**
@@ -1758,6 +1762,13 @@
 		* @var mixed
 		*/	
 		var $use_not_in_usa_option = false;
+		
+		/**
+		* Adds the US military state codes to the list of options
+		* The default value is false. A true value will add the military state codes after Wyoming.
+		* @var boolean
+		*/	
+		var $include_military_codes = false;
 
 		/**
 		*  Populates the {@link options} array.
@@ -1841,6 +1852,13 @@
 				'WI' => 'Wisconsin',
 				'WY' => 'Wyoming',
 			);
+			if($this->include_military_codes)
+			{
+				$states[] = '--';
+				$states['AA'] = 'AA (Military APO/FPO)';
+				$states['AE'] = 'AE (Military APO/FPO)';
+				$states['AP'] = 'AP (Military APO/FPO)';
+			}
 			foreach( $states as $key => $val )
 				$this->options[ $key ] = $val;
 		} // }}}
