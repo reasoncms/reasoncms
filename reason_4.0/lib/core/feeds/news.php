@@ -1,9 +1,16 @@
 <?php
 
-/* This is the news feed */
+/* This is the old style news feed - 
+ *
+ * These old style feeds are deprecated - feed links that use this feed will not be produced on sites that use the publications module. 
+ * The URL manager continues to create rewrite rules that use this feed for backwards compatibility. 
+ *
+ * This module, whenever possible, will redirect to the feed for the oldest publication on the site.
+ */
 
 include_once( 'reason_header.php' );
 reason_include_once( 'feeds/page_tree.php' );
+reason_include_once( 'helpers/publication_helper.php');
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'newsFeed';
 
 class newsFeed extends pageTreeFeed
@@ -12,6 +19,37 @@ class newsFeed extends pageTreeFeed
 	var $feed_class = 'newsRSS';
 	var $page_types = array('news','news_doc','news_currently','news_random_aaf','news_insideCarleton','recruit_center_profile',);
 	var $query_string = 'story_id';
+	
+	function newsFeed($type, $site = false)
+	{
+		if ($site) $this->publication_check($site);
+		$this->init($type, $site);
+	}
+	
+	/**
+	 * If the current site has the publication type, find the feed url for the oldest publication and redirect
+	 */
+	function publication_check($site)
+	{
+		$es = new entity_selector($site->id());
+		$es->add_type(id_of('publication_type'));
+		$es->add_right_relationship_field('news_to_publication', 'entity', 'id', 'news_id');
+		$es->limit_tables('entity');
+		$es->limit_fields('entity.creation_date');
+		$es->set_num(1);
+		$es->set_order('entity.creation_date ASC');
+		$result = $es->run_one();
+		if ($result)
+		{
+			$id_array = array_keys($result);
+			$ph = new publicationHelper(reset($id_array)); // should I bother with the helper or just do it here?
+			$feed_url = $ph->get_feed_url($site->id());
+			if ($feed_url)
+			{
+				header("Location: ".$feed_url, true, 301);
+			}
+		}		
+	}
 	
 	function get_site_link()
 	{
