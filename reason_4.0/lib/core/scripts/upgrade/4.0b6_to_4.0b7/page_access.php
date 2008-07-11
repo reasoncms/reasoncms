@@ -91,5 +91,6 @@ if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 }
 
 ?>
+<p><a href="index.php">Return to Index</a></p>
 </body>
 </html>
