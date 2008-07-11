@@ -190,6 +190,7 @@ mapping.', HIGH );
 						$this->_update_pages();
 						$this->_update_assets();
 						$this->_update_feeds();
+						$this->_update_old_style_news();
 					}
 					else
 					{
@@ -584,6 +585,23 @@ mapping.', HIGH );
 			{
 				if($type->get_value('feed_url_string'))
 					fputs( $this->_fp, 'RewriteRule ^'.$type->get_value('feed_url_string').'$ '.FEED_GENERATOR_STUB_PATH.'?type_id='.$type->id()."\n" ) OR trigger_error( 'Unable to write to htaccess file', HIGH );
+			}
+		}
+		/**
+		 * If the news type feed_url_string is no longer news,
+		 * still create a rewrite for the old style news page so that the old link does not break.
+		 *
+		 * @author Nathan White
+		 * @todo consider removal at some future point
+		 */
+		function _update_old_style_news()
+		{
+			$news_type_entity = new entity( id_of('news') );
+			if ($news_type_entity->get_value('feed_url_string') != 'news')
+			{
+				$this->debug( 'updating old style news' );
+				fputs( $this->_fp, "\n# old style news rewrite\n\n" ) OR trigger_error('Unable to write to htaccess', HIGH );
+				fputs( $this->_fp, 'RewriteRule ^'.MINISITE_FEED_DIRECTORY_NAME.'/news$ '.FEED_GENERATOR_STUB_PATH.'?type_id='.$news_type_entity->id().'&site_id='.$this->site->id()."&feed=news\n" ) OR trigger_error( 'Unable to write to htaccess file', HIGH );
 			}
 		}
 	}
