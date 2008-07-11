@@ -203,7 +203,11 @@ class entity
 	{
 		$this->_values[ $col ] = $val;
 	}
-
+	function has_value($col)
+	{
+		$values = $this->get_values();
+		return (isset($values[ $col ]));
+	}
 	function unset_value($col)
 	{
 		unset($this->_values[ $col ]);
