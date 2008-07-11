@@ -128,6 +128,10 @@
 			$this->es->set_order( 'last_modified DESC' );
 			
 		}
+		function set_items( $items )
+		{
+			$this->items = $items;
+		}
 		function set_channel_attribute( $attr, $value ) // {{{
 		{
 			$this->_channel_attr_values[ $attr ] = $value;
@@ -189,7 +193,10 @@
 		} // }}}
 		function _get_items()
 		{
-			$this->items = $this->es->run_one();
+			if(!isset($this->items))
+			{
+				$this->items = $this->es->run_one();
+			}
 		}
 		function _build_rss() // {{{
 		{
