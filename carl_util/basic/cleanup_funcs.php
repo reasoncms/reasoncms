@@ -245,6 +245,10 @@
 		return $func_name($string);
 	}
 
+	/**
+	 * Supporting php 4 is getting kind of hacky, and HTML purifier is no longer being developed for php 4
+	 * @todo remove conditional logic when we stop supporting php 4
+	 */
 	function get_safer_html_html_purifier($string)
 	{
 		require_once( HTML_PURIFIER_INC . 'htmlpurifier.php' );
@@ -254,17 +258,18 @@
 		$config->set('HTML', 'DefinitionRev', 1);
 
 		// lets transform b to strong and i to em
-		$def =& $config->getDefinition('HTML');
+		if (carl_is_php5()) $def = $config->getDefinition('HTML');
+		else $def =& $config->getDefinition('HTML');
 		$def->info_tag_transform['b'] = new HTMLPurifier_TagTransform_Simple('strong');
 		$def->info_tag_transform['i'] = new HTMLPurifier_TagTransform_Simple('em');
 
 		// lets add support for named anchors		
-		$def2 =& $config->getHTMLDefinition(true);
+		if (carl_is_php5()) $def2 = $config->getHTMLDefinition(true);
+		else $def2 =& $config->getHTMLDefinition(true);
 		$def2->addAttribute('a', 'name', new HTMLPurifier_AttrDef_HTML_Nmtokens);
 
 		$purifier = new HTMLPurifier($config);
-
-	    	return $purifier->purify( $string );
+		return $purifier->purify( $string );
 	}
 
 	function get_safer_html($string)
