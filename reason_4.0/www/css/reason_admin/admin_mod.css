@@ -329,3 +329,6 @@ div.sortPostsModule td.words {
 	font-size:90%;
 	width:42%;
 }
+div.contentArea div.editor form#disco_form table#discoTable {
+	width:100%;
+}
