@@ -94,8 +94,10 @@
 		{
 			if($this->_cm_ok_to_run())
 			{
+				echo '<div class="editor">'."\n";
 				echo '<h3 class="pageTitle editor">'.$this->admin_page->title.'</h3>';
 				$this->disco_item->run();
+				echo '</div>'."\n";
 			}
 			else
 			{
