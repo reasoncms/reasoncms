@@ -896,10 +896,9 @@
 	{
 		var $type = 'loki2';
 		var $widgets = 'default';
-		var $user_is_admin = false;
 		var $site_id = 0;
 		var $paths = array();
-		var $type_valid_args = array('widgets', 'user_is_admin', 'site_id', 'paths');
+		var $type_valid_args = array('widgets', 'site_id', 'paths');
 		
 		function do_includes()
 		{
@@ -946,7 +945,7 @@
 		
 		function display() // {{{
 		{
-			$loki = new Loki2( $this->name, $this->value, $this->widgets, $this->user_is_admin );
+			$loki = new Loki2( $this->name, $this->value, $this->_flatten_widgets($this->widgets) );
 			if(!empty($this->paths['image_feed']))
 			{
 				$loki->set_feed('images',$this->paths['image_feed']);
@@ -974,6 +973,14 @@
 			
 			$loki->print_form_children();
 		} // }}}
+		
+		function _flatten_widgets($widgets)
+		{
+			if(is_array($widgets))
+				return implode(' ',$widgets);
+			else
+				return $widgets;
+		}
 		
 	} // }}}
 	
