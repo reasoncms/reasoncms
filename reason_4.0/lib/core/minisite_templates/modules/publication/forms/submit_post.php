@@ -195,7 +195,7 @@
 		{	
 			$description = trim(tidy($this->get_value('description')));
 			$content = trim(get_safer_html(tidy($this->get_value('post_content'))));
-			if(empty($description))
+			if(carl_empty_html($description))
 			{
 				$words = explode(' ', $content, 31);
 				unset($words[count($words)-1]);
