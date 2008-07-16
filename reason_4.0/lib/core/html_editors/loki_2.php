@@ -90,40 +90,56 @@ $GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_2
 		$site = new entity($site_id);
 		if($site->get_value( 'loki_default' ))
 		{
-			$params['widgets'] = $site->get_value( 'loki_default' );
+			$map = get_loki_2_options_map();
+			if(array_key_exists($site->get_value( 'loki_default' ),$map))
+			{
+				$params['widgets'] = $map[$site->get_value( 'loki_default' )]['maps_to'];
+			}
+			else
+			{
+				$params['widgets'] = $site->get_value( 'loki_default' );
+			}
+		}
+		else
+		{
+			$params['widgets'] = 'default';
 		}
 		
 		// user is admin
 		if( !empty($user_id) && (user_is_a($user_id, id_of('admin_role'))
 					|| user_is_a($user_id, id_of('power_user_role') ) ) )
 		{
-			$params['user_is_admin'] = true;
+			$params['widgets'] .= ' +source +debug';
 		}
 		else
 		{
-			$params['user_is_admin'] = false;
+			$params['widgets'] .= ' -source -debug';
 		}
 		return $params;
 		
 		
 	}
 	
+	function get_loki_2_options_map()
+	{
+		$options = array(
+			'notables' => array('label'=>'Standard (All minus Tables &amp; Pre)','maps_to'=>'all -pre -underline -table'),
+			'default' => array('label'=>'Loki 2 Default Set','maps_to'=>'default'),
+			'all' => array('label'=>'Most (no underline)','maps_to'=>'all -underline'),
+			'all_minus_pre' => array('label'=>'Most minus Pre','maps_to'=>'all -pre -underline'),
+			'notables_plus_pre' => array('label'=>'Most minus Tables','maps_to'=>'all -underline -table'),
+		);
+		return $options;
+	}
+	
 	function get_loki_2_options()
 	{
-		if (file_exists(LOKI_2_INC.'inc/options.php'))
+		$map = get_loki_2_options_map();
+		$ret = array();
+		foreach($map as $key=>$option)
 		{
-			include_once (LOKI_2_INC.'inc/options.php');
+			$ret[$key] = $option['label'];
 		}
-		else
-		{
-			trigger_error('Loki 2 file structure has changed slightly. Please update LOKI_2_INC in package_settings.php to reference the ' . LOKI_2_INC . '/helpers/php/ directory.');
-			include_once( LOKI_2_INC.'/helpers/php/inc/options.php' );
-		}
-		
-		$options_object = new Loki2_Options();
-		$options = $options_object->get_all();
-		foreach ( $options as $k => $v )
-			$options[$k] = prettify_string($k);
-		return $options;
+		return $ret;
 	}
 ?>
