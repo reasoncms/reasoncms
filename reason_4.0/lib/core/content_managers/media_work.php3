@@ -15,7 +15,11 @@
 			$min_wysiwyg_settings = $wysiwyg_settings;
 			if(strpos($editor_name,'loki') === 0)
 			{
-				$min_wysiwyg_settings['widgets'] = array('strong','em','lists','link');
+				$min_wysiwyg_settings['widgets'] = array('strong','em','linebreak','lists','link');
+				if(reason_user_has_privs( $this->admin_page->user_id, 'edit_html' ))
+				{
+					$min_wysiwyg_settings['widgets'][] = 'source';
+				}
 			}
 			$this->change_element_type( 'description' , $editor_name , $min_wysiwyg_settings );
 			$this->change_element_type( 'content' , $editor_name , $wysiwyg_settings );
