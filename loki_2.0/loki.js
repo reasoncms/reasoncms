@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0rc3
+// Loki WYSIWIG Editor 2.0rc5
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-06-26 14:29:28 
+// Compiled 2008-07-16 15:30:09 
 // http://loki-editor.googlecode.com/
 
 
@@ -995,123 +995,8 @@ TinyMCEControl.prototype.getSel = function() {
 /**
  * For debugging.
  */
-var messagebox_i = 0;
-var messagebox_elem;
-var messagebox = mb = function(message, obj)
-{
-	if (loki_debug)
-	{
-		function init()
-		{
-			messagebox_elem = document.createElement('DIV');
-			document.body.appendChild(messagebox_elem);
-			messagebox_elem.setAttribute('style', 'position:fixed; bottom:0px; background:white; height:200px; overflow:scroll');
-			document.body.style.marginBottom = document.body.style.marginBottom + 220;
-			messagebox_elem.appendChild( document.createTextNode(' ') ); // so insertBefore firstChild always works
-		};
-
-		if ( messagebox_i == 0 )
-			init();
-
-		if ( typeof(message) != 'string' )
-		{
-			obj = message;
-			message = '';
-		}
-
-		var mb_line = document.createElement('DIV');
-		mb_line.innerHTML = (messagebox_i++) + ': ' + message + ' ';
-		if ( obj != null )
-		{
-			mb_line.innerHTML = mb_line.innerHTML + ': ' + obj.toString();
-			mb_line.onclick = function() { Util.Object.print_r(obj); };
-		}
-		mb_line.innerHTML = mb_line.innerHTML + '<br />';
-		messagebox_elem.insertBefore(mb_line, messagebox_elem.firstChild);
-
-		//document.getElementById('messagebox').innerHTML = 
-		//(messagebox_i++) + ": " + message + ' ' + obj_part + "<br />" + document.getElementById('messagebox').innerHTML;
-	}
-};
-
-// file mctabs.js
-/**
- * $RCSfile: mctabs.js,v $
- * $Revision: 1.1 $
- * $Date: 2005/08/01 18:36:35 $
- *
- * Moxiecode DHTML Tabs script.
- *
- * @author Moxiecode
- * @copyright Copyright � 2004, Moxiecode Systems AB, All rights reserved.
- */
-
-function MCTabs() {
-	this.settings = new Array();
-};
-
-MCTabs.prototype.init = function(settings) {
-	this.settings = settings;
-};
-
-MCTabs.prototype.getParam = function(name, default_value) {
-	var value = null;
-
-	value = (typeof(this.settings[name]) == "undefined") ? default_value : this.settings[name];
-
-	// Fix bool values
-	if (value == "true" || value == "false")
-		return (value == "true");
-
-	return value;
-};
-
-MCTabs.prototype.displayTab = function(tab_id, panel_id) {
-	var panelElm = document.getElementById(panel_id);
-	var panelContainerElm = panelElm ? panelElm.parentNode : null;
-	var tabElm = document.getElementById(tab_id);
-	var tabContainerElm = tabElm ? tabElm.parentNode : null;
-	var selectionClass = this.getParam('selection_class', 'current');
-
-	if (tabElm && tabContainerElm) {
-		var nodes = tabContainerElm.childNodes;
-
-		// Hide all other tabs
-		for (var i=0; i<nodes.length; i++) {
-			if (nodes[i].nodeName == "LI")
-				nodes[i].className = '';
-		}
-
-		// Show selected tab
-		tabElm.className = 'current';
-	}
-
-	if (panelElm && panelContainerElm) {
-		var nodes = panelContainerElm.childNodes;
-
-		// Hide all other panels
-		for (var i=0; i<nodes.length; i++) {
-			if (nodes[i].nodeName == "DIV")
-				nodes[i].className = 'panel';
-		}
-
-		// Show selected panel
-		panelElm.className = 'current';
-	}
-};
-
-MCTabs.prototype.getAnchor = function() {
-	var pos, url = document.location.href;
-
-	if ((pos = url.lastIndexOf('#')) != -1)
-		return url.substring(pos + 1);
-
-	return "";
-};
-
-// Global instance
-var mcTabs = new MCTabs();
-
+var messagebox = function() { };
+var mb = messagebox; 
 // file Util.js
 /**
  * @class This is merely a container which holds a library of utility
@@ -1197,28 +1082,28 @@ var Util = {
  * @class Provides a more convenient interface to setTimeout and clearTimeout.
  * @author Eric Naeseth
  */
-Util.Scheduler = function()
+Util.Scheduler = function Scheduler()
 {
 	throw new Error('This is a static class; it does not make sense to call its constructor.');
 }
 
-Util.Scheduler.Error = function(message)
+Util.Scheduler.Error = function SchedulerError(message)
 {
 	Util.OOP.inherits(this, Error, message);
 	this.name = 'Util.Scheduler.Error';
 }
 
-Util.Scheduler.Task = function(callable)
+Util.Scheduler.Task = function SchedulerTask(callable)
 {
 	this.id = null;
 	this.invoke = callable;
 	
-	this.runDelayed = function(delay)
+	this.runDelayed = function run_task_delayed(delay)
 	{
 		this.id = setTimeout(callable, delay * 1000);
 	}
 	
-	this.runPeriodically = function(interval)
+	this.runPeriodically = function run_task_periodically(interval)
 	{
 		var self = this;
 		interval *= 1000;
@@ -1231,7 +1116,7 @@ Util.Scheduler.Task = function(callable)
 		this.id = setTimeout(standin, interval);
 	}
 	
-	this.cancel = function()
+	this.cancel = function cancel_task()
 	{
 		if (this.id === null) {
 			throw new Util.Scheduler.Error('Nothing has been scheduled.');
@@ -1241,21 +1126,21 @@ Util.Scheduler.Task = function(callable)
 	}
 }
 
-Util.Scheduler.delay = function(func, delay)
+Util.Scheduler.delay = function sched_delay(func, delay)
 {
 	var task = new Util.Scheduler.Task(func);
 	task.runDelayed(delay);
 	return task;
 }
 
-Util.Scheduler.defer = function(func)
+Util.Scheduler.defer = function sched_defer(func)
 {
 	var task = new Util.Scheduler.Task(func);
 	task.runDelayed(0.01 /* 10ms */);
 	return task;
 }
 
-Util.Scheduler.runPeriodically = function(func, interval)
+Util.Scheduler.runPeriodically = function sched_run_periodically(func, interval)
 {
 	var task = new Util.Scheduler.Task(func);
 	task.runPeriodically(interval);
@@ -1354,7 +1239,7 @@ Util.Function = {
 var $S = Util.Function.synchronize;
 
 Util.Function.Methods = {
-	bind: function(function_)
+	bind: function bind(function_)
 	{
 		if (arguments.length < 2 && arguments[0] === undefined)
 			return function_;
@@ -1365,7 +1250,7 @@ Util.Function.Methods = {
 		}
 	},
 	
-	bind_to_event: function(function_)
+	bind_to_event: function bind_to_event(function_)
 	{
 		var args = Util.Array.from(arguments), object = args.shift();
 		return function event_binder(event) {
@@ -1373,7 +1258,7 @@ Util.Function.Methods = {
 		}
 	},
 	
-	curry: function(function_)
+	curry: function curry(function_)
 	{
 		if (arguments.length <= 1)
 			return function_;
@@ -1385,7 +1270,7 @@ Util.Function.Methods = {
 		}
 	},
 	
-	dynamic_curry: function(function_)
+	dynamic_curry: function dynamic_curry(function_)
 	{
 		if (arguments.length <= 1)
 			return function_;
@@ -1401,7 +1286,7 @@ Util.Function.Methods = {
 		}
 	},
 	
-	methodize: function(function_)
+	methodize: function methodize(function_)
 	{
 		if (!function_.methodized) {
 			function_.methodized = function methodized() {
@@ -1412,12 +1297,12 @@ Util.Function.Methods = {
 		return function_.methodized;
 	},
 	
-	delay: function(function_, delay)
+	delay: function delay(function_, delay)
 	{
 		return Util.Scheduler.delay(function_, delay);
 	},
 	
-	defer: function(function_)
+	defer: function defer(function_)
 	{
 		return Util.Scheduler.defer(function_);
 	}
@@ -1898,6 +1783,42 @@ Util.Node.remove_child_nodes = function(node, boolean_test)
 			node.removeChild(node.firstChild);
 };
 
+/**
+ * Returns all children of the given node who match the given test.
+ * @param {Node} node the node whose children will be traversed
+ * @param {Function|String|Number} match either a boolean-test matching function,
+ *        or a tag name, or a node type to be matched
+ * @return {Node[]} all matching child nodes
+ */
+Util.Node.find_children = function find_matching_node_children(node, match) {
+	var i, length, node_type;
+	var children = [], child;
+	
+	if (!Util.is_valid_object(node) || !node.nodeType) {
+		throw new TypeError('Must provide Util.Node.find_children with a ' +
+			'node to traverse.');
+	}
+	
+	if (Util.is_string(match)) {
+		match = Util.Node.curry_is_tag(match);
+	} else if (Util.is_number(match)) {
+		node_type = match;
+		match = function is_correct_node_type(node) {
+			return (node && node.nodeType == node_type);
+		}
+	} else if (!Util.is_function(match)) {
+		throw new TypeError('Must provide Util.Node.find_children with ' +
+			'something to match nodes against.');
+	}
+	
+	for (i = 0, length = node.childNodes.length; i < length; i++) {
+		child = node.childNodes[i];
+		if (match(child))
+			children.push(child);
+	}
+	
+	return children;
+};
 
 /**
  * <p>Recurses through the ancestor nodes of the specified node,
@@ -2089,13 +2010,22 @@ Util.Node.has_child_node = function(node, boolean_test)
  */
 Util.Node.is_tag = function(node, tag)
 {
-	return (node.nodeType == Util.Node.ELEMENT_NODE && node.nodeName == tag);
+	return (node.nodeType == Util.Node.ELEMENT_NODE
+		&& node.nodeName == tag.toUpperCase());
 };
+
+/**
+ * Creates a function that calls is_tag using the given tag.
+ */
+Util.Node.curry_is_tag = function(tag)
+{
+	return function(node) { return Util.Node.is_tag(node, tag); };
+}
 
 /**
  * Finds the offset of the given node within its parent.
  * @param {Node}  node  the node whose offset is desired
- * @return {number}     the node's offset
+ * @return {Number}     the node's offset
  * @throws {Error} if the node is orphaned (i.e. it has no parent)
  */
 Util.Node.get_offset = function get_node_offset_within_parent(node)
@@ -2113,14 +2043,6 @@ Util.Node.get_offset = function get_node_offset_within_parent(node)
 	}
 	
 	throw new Error();
-}
-
-/**
- * Creates a function that calls is_tag using the given tag.
- */
-Util.Node.curry_is_tag = function(tag)
-{
-	return function(node) { return Util.Node.is_tag(node, tag); };
 }
 
 /**
@@ -2168,23 +2090,28 @@ Util.Node.get_window = function find_window_of_node(node)
 	accept(window);
 	
 	while (candidate = stack.pop()) { // assignment intentional
-		if (candidate.document == doc) {
-			// found it!
-			doc._loki__document_window = candidate;
-			return candidate;
-		}
-		
-		if (candidate.parent != candidate && accept(candidate)) {
-			stack.push(candidate);
-		}
-		
-		
-		['FRAME', 'IFRAME'].map(get_elements).each(function (frames) {
-			for (var i = 0; i < frames.length; i++) {
-				if (accept(frames[i].contentWindow))
-					stack.push(frames[i].contentWindow);
+		try {
+			if (candidate.document == doc) {
+				// found it!
+				doc._loki__document_window = candidate;
+				return candidate;
 			}
-		});
+
+			if (candidate.parent != candidate && accept(candidate)) {
+				stack.push(candidate);
+			}
+
+
+			['FRAME', 'IFRAME'].map(get_elements).each(function (frames) {
+				for (var i = 0; i < frames.length; i++) {
+					if (accept(frames[i].contentWindow))
+						stack.push(frames[i].contentWindow);
+				}
+			});
+		} catch (e) {
+			// Sometimes Mozilla gives security errors when trying to access
+			// the documents.
+		}
 	}
 	
 	// guess it couldn't be found
@@ -2478,10 +2405,17 @@ Util.Node.get_debug_string = function get_node_debug_string(node)
  */
 Util.Element = {
 	/**
+	 * Set of empty elements
+	 * @type Object
+	 */
+	empty: (['BR', 'AREA', 'LINK', 'IMG', 'PARAM', 'HR', 'INPUT', 'COL',
+		'BASE', 'META'].toSet()),
+	
+	/**
 	 * Gets an element's computed styles.
 	 * @param {Window}	window	the element's window
 	 * @param {Element}	elem	the element whose computed style is desired
-	 * @type object
+	 * @return {object}
 	 */
 	get_computed_style: function get_element_computed_style(window, elem)
 	{
@@ -2510,7 +2444,7 @@ Util.Element = {
 	 * Cf. Util.Node.is_block_level_element; this uses different logic.
 	 * @param {Window}	window	the element's window
 	 * @param {Element}	elem	the element whose block level status is desired
-	 * @type boolen
+	 * @return {boolean}
 	 */
 	is_block_level: function is_block_level_element(window, elem)
 	{
@@ -2663,7 +2597,7 @@ Util.Element = {
 	 * Adds a class to an element.
 	 * @param {Element}	elem	the element to which the class will be added
 	 * @param {string}	class_name	the name of the class to add
-	 * @type void
+	 * @return {void}
 	 */
 	add_class: function add_class_to_element(elem, class_name)
 	{
@@ -2676,7 +2610,7 @@ Util.Element = {
 	 * Removes a class from an element.
 	 * @param {Element}	elem	the element from which the class will be removed
 	 * @param {string}	class_name	the name of the class to remove
-	 * @type void
+	 * @return {void}
 	 */
 	remove_class: function remove_class_from_element(elem, class_name)
 	{
@@ -2695,7 +2629,7 @@ Util.Element = {
 	 * @param {Element}	elem	the element to check
 	 * @param {string}	class_name	the name of the class to check for
 	 * @return true if the element has the class, false otherwise
-	 * @type boolean
+	 * @return {boolean}
 	 */
 	has_class: function element_has_class(elem, class_name)
 	{
@@ -2707,7 +2641,7 @@ Util.Element = {
 	 * @param {Element}	elem	the element to check
 	 * @param {mixed}	classes	either a string or an array of class names
 	 * @return true if the element has all of the classes, false if otherwise
-	 * @type boolean
+	 * @return {boolean}
 	 */
 	has_classes: function element_has_classes(elem, classes)
 	{
@@ -2723,7 +2657,7 @@ Util.Element = {
 	/**
 	 * Returns a string with all of an element's classes or null.
 	 * @param {Element}	elem
-	 * @type string
+	 * @return {string}
 	 */
 	get_all_classes: function get_all_classes_from_element(elem)
 	{
@@ -2735,7 +2669,7 @@ Util.Element = {
 	/**
 	 * Gets all of an element's classes as an array.
 	 * @param {Element}	elem
-	 * @type array
+	 * @return {array}
 	 */
 	get_class_array: function get_array_of_classes_from_element(elem)
 	{
@@ -2748,7 +2682,7 @@ Util.Element = {
 	 * Sets all of the classes on an element.
 	 * @param {Element} elem
 	 * @param {string} class_names
-	 * @type void
+	 * @return {void}
 	 */
 	set_all_classes: function set_all_classes_on_element(elem, class_names)
 	{
@@ -2759,7 +2693,7 @@ Util.Element = {
 	 * Sets all of the classes on an element.
 	 * @param {Element} elem
 	 * @param {array} class_names
-	 * @type void
+	 * @return {void}
 	 */
 	set_class_array: function set_array_of_classes_on_element(elem, class_names)
 	{
@@ -2772,7 +2706,7 @@ Util.Element = {
 	/**
 	 * Removes all of an element's classes.
 	 * @param {Element}	elem
-	 * @type void
+	 * @return {void}
 	 */
 	remove_all_classes: function remove_all_classes_from_element(elem)
 	{
@@ -2781,10 +2715,67 @@ Util.Element = {
 	},
 	
 	/**
+	 * Find all elements below the given root with a matching class name.
+	 * @param {Element|Document} root	the root element
+	 * @param {string} classes	the class name(s) to search for
+	 * @return {array}	an array (NOT a NodeList) of elements
+	 */
+	find_by_class: function find_elements_by_class_name(root, classes)
+	{
+		if (root.getElementsByClassName) { // use native impl. where available
+			return Util.Array.from(root.getElementsByClassName(classes));
+		}
+		
+		function xpath_evaluate(expression)
+		{
+			var results = [];
+			var query;
+			var i, length;
+			
+			if (!document.evaluate || !XPathResult) {
+				throw new Util.Unsupported_Error("XPath");
+			}
+			
+			query = document.evaluate(expression, root, null,
+				XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+			for (i = 0, length = query.snapshotLength; i < length; i++) {
+				results.push(query.snapshotItem(i));
+			}
+			return results;
+		}
+		
+		classes = classes.toString().replace(/^\s*/, '').replace(/\s*$/, '');
+		if (document.evaluate) {
+			function convert(cn) {
+				return (cn.length > 0) ? "[contains(concat(' ', @class, ' '), "
+					+ "' " + cn + " ')]" : null;
+			}
+			var expr = classes.split(/\s+/).map(convert).join('');
+			return (expr.length) ? xpath_evaluate('.//*' + expr) : [];
+		} else {
+			var found = [];
+			var children = root.getElementsByTagName("*")
+			var child;
+			
+			classes = classes.split(/\s+/);
+			var test = (classes.length == 1)
+				? function(e) { return Util.Element.has_class(e, classes[0]); }
+				: function(e) { return Util.Element.has_classes(e, classes); };
+			
+			for (var i = 0; child = children[i]; i++) {
+				if (test(child))
+					found.push(child);
+			}
+			
+			return found;
+		}
+	},
+	
+	/**
 	 * Returns an element's name's prefix or an empty string if there is none.
 	 * (e.g. <o:p> --> 'o';  <p> --> '')
 	 * @param {Element}	elem
-	 * @type string
+	 * @return {string}
 	 */
 	get_prefix: function get_element_name_prefix(elem)
 	{
@@ -2801,7 +2792,7 @@ Util.Element = {
 	 * Finds the absolute position of the element; i.e. its position relative to
 	 * the window.
 	 * @param {HTMLElement} elem
-	 * @type object
+	 * @return {object}
 	 */
 	get_position: function get_element_position(elem)
 	{
@@ -3709,6 +3700,164 @@ Util.Browser = {
 	Mac: (navigator.platform.indexOf('Mac') > -1)
 };
 
+
+// file Util.Chooser.js
+/**
+ * Constructs a new chooser.
+ * @class Allows items and sets of those items to be easily chosen using
+ * a simple string selector.
+ * @constructor
+ * @author Eric Naeseth
+ */
+Util.Chooser = function Chooser()
+{
+	this.sets = {
+		all: []
+	};
+	
+	this.items = {};
+	this.aliases = {};
+	
+	var bundled_added = false;
+	
+	function dealias(aliases, name) {
+		while (name in aliases)
+			name = aliases[name];
+		return name;
+	}
+	
+	/**
+	 * Retrieves the items requested by the given selector.
+	 * @param {String} selector selector string
+	 * @param {Boolean} [lenient=false] if true, will not throw an error on
+	 * unknown items
+	 * @return {Object[]} array of chosen items
+	 * @throws {Error} unless lenient is set to true, throws an error when a
+	 * selector is provided that does not correspond with an item or a set
+	 */
+	this.get = function get_from_chooser(selector, lenient)
+	{
+		var working = {};
+		var self = this;
+		
+		if (!bundled_added && Util.is_function(this._add_bundled)) {
+			bundled_added = true;
+			this._add_bundled();
+		}
+		
+		var operations = {
+			'+': function(name) {
+				if (name in self.sets) {
+					self.sets[name].each(function (name) {
+						if (name in self.sets)
+							Util.OOP.mixin(working, self.get(name));
+						else
+							working[name] = self.items[name];
+					});
+				} else if (name in self.items) {
+					working[name] = self.items[name];
+				} else if (!lenient) {
+					throw new Error('Unknown item or set "' + name + '".');
+				}
+			},
+			
+			'-': function(name) {
+				if (name in self.sets) {
+					self.sets[name].each(function (name) {
+						var k;
+						if (name in self.sets) {
+							for (k in self.get(name)) {
+								delete working[k];
+							}
+						} else {
+							delete working[name];
+						}
+					});
+				} else if (name in self.items) {
+					delete working[name];
+				} else if (!lenient) {
+					throw new Error('Unknown item or set "' + name + '".');
+				}
+			}
+		};
+		
+		var operation = operations['+'];
+		var part_pattern = /([+-])?\s*(\w+)/;
+		
+		(selector || 'default').match(/([+-])?\s*(\w+)/g).each(function(part) {
+			var breakdown = part.match(part_pattern);
+			if (!breakdown) {
+				throw new Error('Invalid selector component "' + part + '".');
+			}
+			
+			if (breakdown[1]) {
+				operation = operations[breakdown[1]];
+				if (!operation) {
+					throw new Error('Invalid operator "' + breakdown[1] + '".');
+				}
+			}
+			
+			operation(dealias(this.aliases, breakdown[2]));
+		}, this);
+		
+		return working;
+	}
+	
+	/**
+	 * Registers an item.
+	 * @param {string} the selectable name under which the item will be
+	 *   available
+	 * @param {mixed} the item being registered
+	 * @return the registered item
+	 * @type mixed
+	 */
+	this.add = function add_item_to_chooser(name, item)
+	{
+		if (name in this.items) {
+			if (this.items[name] == item)
+				return item;
+			throw new Error('An item with the name "' + name + '" is ' +
+				'already registered.');
+		} else if (name in this.sets) {
+			throw new Error('A set is registered under the name "' + name +
+				'".');
+		}
+		
+		this.items[name] = item;
+		this.sets.all.push(name);
+		
+		return item;
+	}
+	
+	/**
+	 * Creates an alias.
+	 * @param {String} actual
+	 * @param {String} alias
+	 * @return {void}
+	 */
+	this.alias = function create_alias(actual, alias) {
+		this.aliases[alias] = actual;
+	}
+	
+	/**
+	 * Adds a new set, or adds new members to an existing set.
+	 * @param {string} the set's name
+	 * @param {array} the set's members
+	 * @type void
+	 */
+	this.put_set = function put_set_into_chooser(name, members)
+	{
+		if (name in this.items) {
+			throw new Error('An item is registered under the name "' +
+				name + '"; cannot create a set with the same name.');
+		}
+		
+		if (!this.sets[name])
+			this.sets[name] = members.slice(0); // make a copy
+		else
+			this.sets[name].append(members);
+	}
+}
 
 // file Util.Cookie.js
 /**
@@ -6395,7 +6544,7 @@ Util.Range.get_boundaries = function get_range_boundaries(rng)
 					
 					// Found it! It's an element!
 					return {
-						node: parent,
+						container: parent,
 						offset: Util.Node.get_offset(child)
 					}
 				} else if (child.nodeType != Util.Node.TEXT_NODE) {
@@ -6413,7 +6562,7 @@ Util.Range.get_boundaries = function get_range_boundaries(rng)
 				
 				// Found it!
 				return {
-					node: child,
+					container: child,
 					offset: offset - travelled
 				};
 			}
@@ -6446,7 +6595,77 @@ Util.Range.get_boundaries = function get_range_boundaries(rng)
 		start: get_boundary('start'),
 		end: get_boundary('end')
 	};
-}
+};
+
+/**
+ * Finds matching elements within the range.
+ * @param {Range} rng the range to search in
+ * @param {Function|String} [matcher] either a matching function or a tag name.
+ * @param {Boolean} [up=false] also search up the tree from the range's common
+ *        ancestor. It is an error to set this option if there is no matcher.
+ * @throws {Error} if up is true but there is no matcher
+ * @return {HTMLElement[]} all found matching elements
+ */
+Util.Range.find_nodes = function find_nodes_in_range(rng, matcher, up) {
+	function process_boundary(bound) {
+		return (bound.container.nodeType == Util.Node.TEXT_NODE)
+			? bound.container
+			: bound.container.childNodes[bound.offset];
+	}
+	
+	var bounds = Util.Range.get_boundaries(rng);
+	var matched_nodes = [];
+	var start = process_boundary(bounds.start);
+	var end = process_boundary(bounds.end);
+	var node;
+	var ancestor;
+	
+	if (!matcher && up) {
+		throw new Error('Cannot find nodes that are ancestors of the range ' +
+			'if no matcher is selected.');
+	}
+	
+	function next_node(n) {
+		if (n.hasChildNodes()) {
+			n = n.firstChild;
+		} else if (n.nextSibling) {
+			n = n.nextSibling;
+		} else if (n.parentNode && n.parentNode.nextSibling) {
+			n = n.parentNode.nextSibling;
+		} else {
+			n = null;
+		}
+		
+		return (n != end) ? n : null;
+	}
+	
+	if (typeof(matcher) == 'string')
+		matcher = Util.Node.curry_is_tag(matcher);
+	else if (!matcher)
+		matcher = Util.Function.optimist;
+	else if (typeof(matcher) != 'function')
+		throw new TypeError('Invalid matcher.');
+	
+	for (node = start; node; node = next_node(node)) {
+		if (matcher(node))
+			matched_nodes.push(node);
+	}
+	
+	if (up) {
+		ancestor = Util.Range.get_common_ancestor(rng);
+		if (!ancestor)
+			return matched_nodes;
+		if (ancestor == start || ancestor == end)
+			ancestor = ancestor.parentNode;
+		end = start.ownerDocument;
+		for (node = ancestor; node && node != end; node = node.parentNode) {
+			if (matcher(node))
+				matched_nodes.push(node);
+		}
+	}
+	
+	return matched_nodes;
+};
 
 /**
  * Returns the start container of the given range (if
@@ -6639,7 +6858,8 @@ Util.Range.insert_node = function insert_node_in_range(rng, node)
 		if (bounds.start.container.nodeType == Util.Node.TEXT_NODE) {
 			// Inserting the node into a text node; split it at the insertion
 			// point.
-			point = bounds.start.container.splitText(bounds.start.offset);
+			bounds.start.container.splitText(bounds.start.offset);
+			point = bounds.start.container.nextSibling;
 			
 			// Now the node can be inserted between the two text nodes.
 			bounds.start.container.parentNode.insertBefore(node, point);
@@ -6786,6 +7006,9 @@ Util.Range.get_nearest_ancestor_node =
 {
 	// XXX: Do we really want this? -Eric
 	var ancestor = Util.Range.get_start_container(rng);
+	
+	if (!ancestor)
+		return null;
 	
 	if (boolean_test(ancestor)) {
 		return ancestor;
@@ -7043,6 +7266,16 @@ Util.Range.compare_boundary_points =
 	} else {
 		throw new Util.Unsupported_Error("comparing two ranges' boundary " +
 			"points");
+	}
+};
+
+Util.Range.select_node = function range_select_node(rng, node)
+{
+	if (rng.selectNode) {
+		rng.selectNode(node);
+	} else {
+		Util.Range.set_start_before(rng, node);
+		Util.Range.set_start_after(rng, node);
 	}
 };
 
@@ -8618,8 +8851,6 @@ Util.Tabset = function(params)
 		// Fire listeners
 		for ( var i = 0; i < _select_listeners.length; i++ )
 			_select_listeners[i](old_name, _name_of_selected_tab);
-
-		//mcTabs.display_tab(_tabs[name].tab_id, _tabs[name].tabpanel_id);
 	};
 
 	/**
@@ -8651,6 +8882,7 @@ Util.Tabset = function(params)
  */
 Util.URI = function()
 {
+	throw new Error("Util.URI objects may not be constructed.");
 };
 
 /**
@@ -8659,38 +8891,13 @@ Util.URI = function()
  * Special handling that this function performs:
  *	- Does not distinguish between http and https.
  * 	- Domain-relative links are assumed to be relative to the current domain.
- * @param {string or object}
- * @param {string or object}
- * @type boolean
+ * @param {string|object}
+ * @param {string|object}
+ * @return {boolean}
  */
-Util.URI.equal = function(a, b)
+Util.URI.equal = function uri_equal(a, b)
 {
-	function normalize(url)
-	{
-		if (typeof(url) != 'string') {
-			if (url.scheme === undefined)
-				throw TypeError();
-			url = Util.Object.clone(url);
-		} else {
-			url = Util.URI.parse(url);
-		}
-		
-		if (!url.scheme) {
-			url.scheme = 'http';
-		} else if (url.scheme = 'https') {
-			if (url.port == 443)
-				url.port = null;
-			url.scheme = 'http';
-		}
-		
-		if (!url.host)
-			url.host = Util.URI.extract_domain(window.location);
-			
-		if (url.scheme == 'http' && url.port == 80)
-			url.port = null;
-			
-		return url;
-	}
+	var normalize = Util.URI.normalize;
 	
 	a = normalize(a);
 	b = normalize(b);
@@ -8706,7 +8913,7 @@ Util.URI.equal = function(a, b)
 /**
  * Parses a URI into its constituent parts.
  */
-Util.URI.parse = function(uri)
+Util.URI.parse = function parse_uri(uri)
 {
 	var match = Util.URI.uri_pattern.exec(uri);
 	
@@ -8741,7 +8948,7 @@ Util.URI.parse = function(uri)
 		password: get_match(authority_match, 4),
 		host: get_match(authority_match, 5),
 		port: (port ? Number(port) : port),
-		path: get_match(match, 5),
+		path: get_match(match, 5) || '/',
 		query: get_match(match, 7),
 		fragment: get_match(match, 9)
 	};
@@ -8750,7 +8957,7 @@ Util.URI.parse = function(uri)
 /**
  * Parses a query fragment into its constituent variables.
  */
-Util.URI.parse_query = function(fragment)
+Util.URI.parse_query = function parse_query(fragment)
 {
 	var vars = {};
 	
@@ -8773,7 +8980,7 @@ Util.URI.parse_query = function(fragment)
 /**
  * Builds a query fragment from an object.
  */
-Util.URI.build_query = function(variables)
+Util.URI.build_query = function build_query(variables)
 {
 	var parts = [];
 	
@@ -8787,13 +8994,16 @@ Util.URI.build_query = function(variables)
 /**
  * Builds a URI from a parsed URI object.
  */
-Util.URI.build = function(parsed)
+Util.URI.build = function build_uri_from_parsed(parsed)
 {
-	var uri = parsed.scheme || '';
+	var uri = '';
+	if (parsed.scheme)
+		uri = parsed.scheme + ':'
+	
 	if (parsed.authority) {
-		uri += '://' + parsed.authority;
+		uri += '//' + parsed.authority;
 	} else if (parsed.host) {
-		uri += '://';
+		uri += '//';
 		if (parsed.user) {
 			uri += parsed.user;
 			if (parsed.password)
@@ -8804,6 +9014,9 @@ Util.URI.build = function(parsed)
 		uri += parsed.host;
 		if (parsed.port)
 			uri += ':' + parsed.port;
+	} else if (parsed.scheme) {
+		throw new Error('To build a URI with the scheme specified, the host ' +
+			'or authority must also be specified.');
 	}
 	
 	if (parsed.path)
@@ -8820,7 +9033,7 @@ Util.URI.build = function(parsed)
  * Safely appends query parameters to an existing URI.
  * Previous occurrences of a query parameter are replaced.
  */
-Util.URI.append_to_query = function(uri, params)
+Util.URI.append_to_query = function append_params_to_query(uri, params)
 {
 	var parsed = Util.URI.parse(uri);
 	var query_params = Util.URI.parse_query(parsed.query);
@@ -8834,13 +9047,84 @@ Util.URI.append_to_query = function(uri, params)
 }
 
 /**
+ * Normalizes a URI, expanding it to an absolute form and removing redundant
+ * port information.
+ * @param {string|object}	uri	a parsed URI object or a URI string
+ * @param {string|object}	[base]	an explicit base URI to use
+ * @return {object}	the parsed normalized URI
+ */
+Util.URI.normalize = function normalize_uri(uri, base)
+{
+	var path_parts, i;
+	
+	if (typeof(base) == 'string') {
+		base = Util.URI.parse(base);
+	} else {
+		if (!base)
+			base = Util.URI.parse((window.top || window).location);
+		else if (Util.is_object(base))
+			base = Util.Object.clone(base);
+		else if (typeof(base) != 'object' || typeof(base.path) == 'undefined')
+			throw new TypeError("Invalid base URI.");
+		
+		// take the path's basename and add a trailing slash:
+		base.path = base.path.split('/').slice(0, -1).join('/') + '/';
+	}
+	
+	if (typeof(uri) != 'string') {
+		if (uri.scheme === undefined)
+			throw new TypeError("Invalid URI object.");
+		uri = Util.Object.clone(uri);
+	} else {
+		uri = Util.URI.parse(uri);
+	}
+	
+	if (!uri.scheme) {
+		uri.scheme = base.scheme;
+	} else if (uri.scheme = 'https') {
+		if (uri.port == 443)
+			uri.port = null;
+	}
+	
+	if (!uri.host)
+		uri.host = base.host;
+	uri.host = uri.host.toLowerCase();
+	
+	if (uri.path.charAt(0) != '/' && uri.host == base.host) {
+		uri.path = base.path + uri.path;
+	}
+	
+	path_parts = uri.path.split('/');
+	uri.path = [];
+	for (i = 0; i < path_parts.length; i++) {
+		if (path_parts[i] == '.') {
+			continue;
+		} else if (path_parts[i] == '..') {
+			if (uri.path.length <= 1) { // first "/" creates an empty part
+				throw new Error('Invalid relative URI: too many parent ' +
+					'directory references (..).');
+			}
+			uri.path.pop();
+		} else {
+			uri.path.push(path_parts[i]);
+		}
+	}
+	uri.path = uri.path.join('/');
+		
+	if (uri.scheme == 'http' && uri.port == 80)
+		uri.port = null;
+		
+	return uri;
+}
+
+/**
  * Strips leading "https:" or "http:" from a uri, to avoid warnings about
  * mixing https and http. E.g.: https://apps.carleton.edu/asdf ->
  * //apps.carleton.edu/asdf.
  * 
- * @param	uri			the uri
+ * @param	{string}	uri			the uri
  */
-Util.URI.strip_https_and_http = function(uri)
+Util.URI.strip_https_and_http = function strip_https_and_http(uri)
 {
 	return (typeof(uri) == 'string')
 		? uri.replace(new RegExp('^https?:', ''), '')
@@ -8852,7 +9136,7 @@ Util.URI.strip_https_and_http = function(uri)
  * @param	uri	the URI
  * @return	the domain name or null if an invalid URI was provided
  */
-Util.URI.extract_domain = function(uri)
+Util.URI.extract_domain = function extract_domain_from_uri(uri)
 {
 	var match = Util.URI.uri_pattern.exec(uri);
 	return (!match || !match[4]) ? null : match[4].toLowerCase();
@@ -8862,7 +9146,7 @@ Util.URI.extract_domain = function(uri)
  * Makes the given URI relative to its domain
  * (i.e. strips the protocol and domain).
  */
-Util.URI.make_domain_relative = function(uri)
+Util.URI.make_domain_relative = function make_uri_domain_relative(uri)
 {
 	return uri.replace(Util.URI.protocol_host_pattern, '');
 }
@@ -9152,8 +9436,9 @@ UI.Activity = function(base, document, kind, text) {
 		
 		textual: function()
 		{
-			return helper.create_element('SPAN', {className: 'progress_text'},
-				[text || 'Loading…']);
+			var el = helper.create_element('SPAN', {className: 'progress_text'});
+			el.innerHTML = text || 'Loading&hellip;';
+			return el;
 		}
 	}
 	
@@ -9310,8 +9595,6 @@ UI.Align_Menugroup = function()
 				//listener : function() { self._loki.exec_command('JustifyRight'); }
 				listener : function() { self._align_helper.align_right(); }
 			}) );
-
-			menuitems.push( (new UI.Separator_Menuitem).init() );
 		}
 
 		return menuitems;
@@ -9331,7 +9614,7 @@ UI.Anchor_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'anchorInNav.gif';
+	this.image = 'anchor.png';
 	this.title = 'Insert named anchor';
 	this.click_listener = function() { self._anchor_helper.open_dialog(); };
 
@@ -9459,6 +9742,24 @@ UI.Anchor_Dialog = function()
 
 		this._external_submit_listener({name : anchor_name});
 		this._dialog_window.window.close();
+	};
+};
+
+// file UI.Anchor_Double_Click.js
+UI.Anchor_Double_Click = function AnchorDoubleClick() {
+	Util.OOP.inherits(this, UI.Double_Click);
+	this.helper = null;
+	
+	this.init = function(loki)
+	{
+		this.superclass.init.call(this, loki);
+		this.helper = (new UI.Anchor_Helper).init(loki);
+		return this;
+	};
+	
+	this.double_click = function() {
+		if (this.helper.is_selected())
+			this.helper.open_dialog();
 	};
 };
 
@@ -9693,8 +9994,6 @@ UI.Anchor_Menugroup = function()
 				label : 'Edit anchor',
 				listener : this._anchor_helper.open_dialog 
 			}) );
-
-			menuitems.push( (new UI.Separator_Menuitem).init() );
 		}
 
 		return menuitems;
@@ -9714,8 +10013,8 @@ UI.BR_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'break.gif';
-	this.title = 'Single line break (Shift+Enter)';
+	this.image = 'break.png';
+	this.title = 'Single-line break (Shift+Enter)';
 	this.click_listener = function() { self._br_helper.insert_br(); };
 
 	this.init = function(loki)
@@ -9828,7 +10127,7 @@ UI.Blockquote_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'blockquote.gif';
+	this.image = 'quote.png';
 	this.title = 'Blockquote';
 	this.click_listener = function() { self._helper.toggle_blockquote_paragraph(); };
 	this.state_querier = function() { return self._helper.query_blockquote_paragraph(); };
@@ -10107,7 +10406,7 @@ UI.Bold_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'bold.gif';
+	this.image = 'strong.png';
 	this.title = 'Strong (Ctrl+B)';
 	this.click_listener = function() { self._loki.exec_command('Bold'); };
 	this.state_querier = function() { return self._loki.query_command_state('Bold'); };
@@ -10454,7 +10753,7 @@ UI.Center_Align_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'center.gif';
+	this.image = 'align_center.png';
 	this.title = 'Center align (Ctrl+E)';
 	this.click_listener = function() { self._loki.exec_command('JustifyCenter'); };
 	this.state_querier = function() { return self._loki.query_command_state('JustifyCenter'); };
@@ -10717,17 +11016,7 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 			try {
 				return Util.Element.is_block_level(wdw, node);
 			} catch (e) {
-				if (typeof(console) == 'object' && console.firebug) {
-					console.error(e);
-					console.warn('Warning: Loki was unable to determine the',
-						'block-level status of', node, 'using',
-						'computed CSS; falling back to tag name.');
-				}
-			}
-		} else {
-			if (typeof(console) == 'object' && console.firebug) {
-				console.warn('Warning: Loki was unable to find the window of',
-					node, '; using tag name to get block-level status.');
+				// try using tag name below
 			}
 		}
 		
@@ -10854,7 +11143,7 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 		// Axe form elements?
 		{
 			description : "Remove U unless there's an appropriate option set.",
-			test : function(node) { return !settings.options.test('underline') && has_tagname(node, ['U']); },
+			test : function(node) { return !settings.options.underline && has_tagname(node, ['U']); },
 			action : remove_tag
 		},
 		{
@@ -10884,8 +11173,7 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 		{
 			description: 'Remove protocol from links on the current server',
 			test: function(node) { return has_tagname(node, ['A']); },
-			action: function(node)
-			{
+			action: function(node) {
 				var href = node.getAttribute('href');
 				if (href != null) {
 					node.setAttribute('href',
@@ -10894,10 +11182,13 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 			}
 		},
 		{
-			description: 'Remove bubbles',
-			run_on_live: false,
-			test: function(node) { return has_class(node, ['loki__bubble']); },
-			action: remove_node
+			description: "Normalize all image URI's",
+			test: Util.Node.curry_is_tag('IMG'),
+			action: function normalize_image_uri(img) {
+				var norm = Util.URI.normalize(img.src);
+				norm.scheme = null;
+				img.src = Util.URI.build(norm);
+			}
 		},
 		{
 			description: 'Remove unnecessary BR\'s that are elements\' last ' +
@@ -11088,7 +11379,7 @@ UI.Clean_Button = function()
 {
 	Util.OOP.inherits(this, UI.Button);
 
-	this.image = 'force_cleanup.gif';
+	this.image = 'cleanup.png';
 	this.title = 'Clean up HTML';
 	this.click_listener = function()
 	{
@@ -11097,6 +11388,233 @@ UI.Clean_Button = function()
 };
 
 // file UI.Clipboard_Helper.js
+/**
+ * Declares instance variables.
+ *
+ * @constructor
+ *
+ * @class A class for helping insert an anchor. Contains code
+ * common to both the button and the menu item.
+ */
+UI.Clipboard_Helper = function ClipboardHelper()
+{
+	var self = this;
+	Util.OOP.inherits(self, UI.Helper);
+
+	this.is_selection_empty = function()
+	{
+		var sel = Util.Selection.get_selection(this._loki.window);
+		return Util.Selection.is_collapsed(sel);
+	};
+
+	this.cut = function clipboard_cut()
+	{
+		self.copy('Cut', 'X');
+		var sel = Util.Selection.get_selection(self._loki.window);
+		var rng = Util.Range.create_range(sel);
+		Util.Range.delete_contents(rng);
+		self._loki.focus();
+	};
+
+	this.copy = function clipboard_copy(command, accel)
+	{
+		// Get the HTML to copy
+		var sel = Util.Selection.get_selection(self._loki.window);
+		var rng = Util.Range.create_range(sel);
+		var html = Util.Range.get_html(rng);
+		//var text = rng.toString();
+		
+		if (Util.Selection.is_collapsed(sel)) {
+			// If nothing is actually selected; do not overwrite the clipboard.
+			return;
+		}
+
+		// Unmassage and clean HTML
+		var container = self._loki.document.createElement('DIV');
+		container.innerHTML = html;
+		self._loki.unmassage_node_descendants(container);
+		
+		// Clean the copied HTML. We pass an override to the block-level element
+		// rule enforcer that specifies that inline content within paragraphs do
+		// not have to be wrapped in (e.g.) paragraph tags. This prevents inline
+		// content that is being copied from being treated as its own paragraph.
+		UI.Clean.clean(container, self._loki.settings, false, {
+			overrides: {DIV: Util.Block.BLOCK}
+		});
+		html = container.innerHTML;
+
+		// Move HTML to clipboard
+		try // IE
+		{
+			_ie_copy(html);
+		}
+		catch(e) // Gecko
+		{
+			_gecko_copy(html, command || 'Copy', accel || 'C');
+		}
+		self._loki.focus();
+	};
+
+	this.paste = function clipboard_paste()
+	{
+		try // IE
+		{
+			_ie_paste();
+		}
+		catch(e)
+		{
+			_gecko_paste();
+		}
+		self._loki.focus();
+	};
+
+	this.delete_it = function() // delete is a reserved word
+	{
+		var sel = Util.Selection.get_selection(self._loki.window);
+		var rng = Util.Range.create_range(sel);
+		rng.deleteContents();
+		self._loki.focus();
+	};
+
+	this.select_all = function()
+	{
+		self._loki.exec_command('SelectAll');
+		self._loki.focus();
+	};
+
+	this.is_security_error = function(e)
+	{
+		return ( e.message != null && e.message.indexOf != null && e.message.indexOf('Clipboard_Helper') > -1 );
+	};
+	
+	function _show_gecko_privileges_warning()
+	{
+		var message = "Your browser requires that you give explicit permission for " +
+			"your clipboard to be accessed, so you may see a security warning " +
+			"after dismissing this message. You are free to deny this permssion, " +
+			"but if you do, you may be unable to cut, copy, or paste into this " +
+			"document.";
+		
+		UI.Messenger.display_once_per_duration('gecko clipboard warning',
+			message, 45);
+	}
+	
+	function _verify_gecko_clipboard(command, accel)
+	{
+		var key;
+		if (!self._loki.owner_window.GeckoClipboard) {
+			key = ((Util.Browser.Mac) ? '⌘' : 'Ctrl-') + accel;
+			alert('Unable to access your system\'s clipboard. Please choose ' +
+				command + ' from your browser\'s Edit menu, or press ' +
+				key + '.');
+			throw new Util.Unsupported_Error('programmatic clipboard access');
+		}
+	}
+
+	function _gecko_copy(html, command, accel)
+	{
+		_verify_gecko_clipboard(command, accel);
+		_show_gecko_privileges_warning();
+		self._loki.owner_window.GeckoClipboard.set(html);
+	};
+
+	function _ie_copy(html)
+	{
+		try
+		{
+			var sel = Util.Selection.get_selection(self._loki.window);
+			var rng = Util.Range.create_range(sel);
+
+			// transfer from iframe to editable div
+			// select all of editable div
+			// copy from editable div
+			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.innerHTML = html;
+			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("SelectAll", false, null);
+			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("Copy", false, null);
+
+			// Reposition cursor
+			rng.select();
+		}
+		catch(e)
+		{
+			throw("UI.Clipboard_Helper: couldn't copy in _ie_copy, because <<" + e.message + ">>.");
+		}
+	};
+
+	function _gecko_paste()
+	{
+		_verify_gecko_clipboard('Paste', 'V');
+		_show_gecko_privileges_warning();
+		var data = self._loki.owner_window.GeckoClipboard.get();
+		
+		var html = (data.type == 'text/html')
+			? data.value
+			: data.value.replace(/\r?\n/g, "<br />\n");
+
+		// Massage and clean HTML
+		var container = self._loki.document.createElement('DIV');
+		container.innerHTML = html;
+		// See UI.Clipboard_helper.copy() for the override rationale.
+		UI.Clean.clean(container, self._loki.settings, false, {
+			overrides: {DIV: Util.Block.BLOCK}
+		});
+		self._loki.massage_node_descendants(container);
+		html = container.innerHTML;
+
+		// Get selection and range
+		var sel = Util.Selection.get_selection(self._loki.window);
+		var rng = Util.Range.create_range(sel);
+
+		// Paste into temporary container
+		container = rng.startContainer.ownerDocument.createElement('DIV');
+		container.innerHTML = html;
+
+		// Copy into document fragment
+		var frag = rng.startContainer.ownerDocument.createDocumentFragment();
+		for ( var i = 0; i < container.childNodes.length; i++ )
+			frag.appendChild(container.childNodes[i].cloneNode(true));
+
+		// Paste the document fragment
+		Util.Selection.paste_node(sel, frag);
+	};
+
+	function _ie_paste()
+	{
+		try
+		{
+			var sel = Util.Selection.get_selection(self._loki.window);
+			var rng = Util.Range.create_range(sel);
+
+			// Make clipboard iframe editable
+			// clear editable div
+			// select all of editable div
+			// paste into editable div
+			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.contentEditable = true;
+			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.innerHTML = "";
+			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("SelectAll", false, null);
+			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("Paste", false, null);
+
+			// Get HTML
+			var html = UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.innerHTML;
+
+			// Massage and clean HTML
+			var container = self._loki.document.createElement('DIV');
+			container.innerHTML = html;
+			UI.Clean.clean(container, self._loki.settings);
+			self._loki.massage_node_descendants(container);
+			html = container.innerHTML;
+
+			// Actually paste HTML
+			rng.pasteHTML(html);
+			rng.select();
+		}
+		catch(e)
+		{
+			throw("UI.Clipboard_Helper: couldn't paste in _ie_paste, because <<" + e.message + ">>.");
+		}
+	};
+};
+
 // We need to create this iframe as a place to put code that
 // Gecko needs to run with special privileges, for which
 // privileges Gecko requires that the code be signed.
@@ -11110,9 +11628,19 @@ UI.Clean_Button = function()
 //
 // For more information about how to sign scripts, see 
 // privileged/HOWTO
-//
-// Gecko
-(function setup_clipboard_helper() {
+
+/** @ignore */
+UI.Clipboard_Helper._setup_done = false
+
+/** @ignore */
+UI.Clipboard_Helper._setup = function setup_clipboard_helper() {
+	var base_uri = (arguments[0]
+	 	? Util.URI.build(Util.URI.normalize(arguments[0]))
+		: null);
+	var helper_src = null;
+	
+	if (UI.Clipboard_Helper._setup_done)
+		return;
 	
 	function watch_onload(func)
 	{
@@ -11154,290 +11682,44 @@ UI.Clean_Button = function()
 		return frame;
 	}
 	
+	function make_uri(path)
+	{
+		if (base_uri.charAt(base_uri.length - 1) == '/')
+			return base_uri + path;
+		else
+			return [base_uri, path].join('/');
+	}
+	
 	if (typeof(Components) == 'object') {
 		// Gecko
-		create_hidden_iframe(_gecko_clipboard_helper_src);
-	} else {
-		// everyone else
-		UI.Clipboard_Helper_Editable_Iframe =
-			create_hidden_iframe(UI__Clipboard_Helper_Editable_Iframe__src);
-	}
-})();
-
-/**
- * Declares instance variables.
- *
- * @constructor
- *
- * @class A class for helping insert an anchor. Contains code
- * common to both the button and the menu item.
- */
-UI.Clipboard_Helper = function()
-{
-	var self = this;
-	Util.OOP.inherits(self, UI.Helper);
-
-	this.is_selection_empty = function()
-	{
-		var sel = Util.Selection.get_selection(this._loki.window);
-		return Util.Selection.is_collapsed(sel);
-	};
-
-	this.cut = function clipboard_cut()
-	{
-		self.copy();
-		var sel = Util.Selection.get_selection(self._loki.window);
-		var rng = Util.Range.create_range(sel);
-		Util.Range.delete_contents(rng);
-		self._loki.focus();
-	};
-
-	this.copy = function clipboard_copy()
-	{
-		// Get the HTML to copy
-		var sel = Util.Selection.get_selection(self._loki.window);
-		var rng = Util.Range.create_range(sel);
-		var html = Util.Range.get_html(rng);
-		//var text = rng.toString();
-		
-		if (Util.Selection.is_collapsed(sel)) {
-			// If nothing is actually selected; do not overwrite the clipboard.
+		if (typeof(_gecko_clipboard_helper_src) == 'string') {
+			// PHP helper is providing this for us.
+			helper_src = _gecko_clipboard_helper_src;
+		} else if (base_uri) {
+			helper_src = 'jar:' +
+				make_uri('auxil/privileged.jar!/gecko_clipboard.html');
+		} else {
 			return;
 		}
-
-		// Unmassage and clean HTML
-		var container = self._loki.document.createElement('DIV');
-		container.innerHTML = html;
-		self._loki.unmassage_node_descendants(container);
 		
-		// Clean the copied HTML. We pass an override to the block-level element
-		// rule enforcer that specifies that inline content within paragraphs do
-		// not have to be wrapped in (e.g.) paragraph tags. This prevents inline
-		// content that is being copied from being treated as its own paragraph.
-		UI.Clean.clean(container, self._loki.settings, false, {
-			overrides: {DIV: Util.Block.BLOCK}
-		});
-		html = container.innerHTML;
-
-		// Move HTML to clipboard
-		try // IE
-		{
-			_ie_copy(html);
+		create_hidden_iframe(helper_src);
+	} else {
+		// everyone else
+		if (typeof(UI__Clipboard_Helper_Editable_Iframe__src) == 'string') {
+			// PHP helper is providing this for us.
+			helper_src = UI__Clipboard_Helper_Editable_Iframe__src;
+		} else if (base_uri) {
+			helper_src = make_uri('auxil/loki_blank.html');
+		} else {
+			return;
 		}
-		catch(e) // Gecko
-		{
-			/*
-			try
-			{
-			*/
-				_gecko_copy(html);
-			/*
-			}
-			catch(f)
-			{
-				if ( _is_privilege_error(f) )
-					_alert_helpful_message();
-				else
-					throw('UI.Clipboard_Helper.copy: Neither the IE way nor the Gecko way of copying worked. The IE way resulted in the following error: <<' + e.message + '>>. The Gecko way resulted in the following error: <<' + f.message + '>>.');
-			}
-			*/
-		}
-		self._loki.focus();
-	};
-
-	this.paste = function clipboard_paste()
-	{
-		try // IE
-		{
-			_ie_paste();
-		}
-		catch(e)
-		{
-			/*
-			try // Gecko
-			{
-			*/
-				_gecko_paste();
-			/*
-			}
-			catch(f)
-			{
-				if ( _is_privilege_error(f) )
-					_alert_helpful_message();
-				else
-					throw('UI.Clipboard_Helper.paste: Neither the IE way nor the Gecko way of pasteing worked. The IE way resulted in the following error: <<' + e.message + '>>. The Gecko way resulted in the following error: <<' + f.message + '>>.');
-			}
-			*/
-		}
-		self._loki.focus();
-	};
-
-	this.delete_it = function() // delete is a reserved word
-	{
-		var sel = Util.Selection.get_selection(self._loki.window);
-		var rng = Util.Range.create_range(sel);
-		rng.deleteContents();
-		self._loki.focus();
-	};
-
-	this.select_all = function()
-	{
-		self._loki.exec_command('SelectAll');
-		self._loki.focus();
-	};
-
-	this.is_security_error = function(e)
-	{
-		return ( e.message != null && e.message.indexOf != null && e.message.indexOf('Clipboard_Helper') > -1 );
-	};
-
-	this.alert_helpful_message = function()
-	{
-		//self._loki.window.alert("Sorry, your browser's security settings prohibit Loki from accessing the clipboard. \n\nIf you just clicked 'Deny' in a dialog asking about security--congratulations, you have good instincts. But if you want to copy, cut, or paste via Loki's toolbar or context menu, you'll need to try again and click 'Allow' in that dialog, and might want to check 'Remember this decision', too.\n\nIf you saw no such dialog, please contact the Web Services group.");
-
-		var alert_win = new Util.Window;
-		//alert_win.open('http://fillmore-apps.carleton.edu/global_stock/php/loki/auxil/lokiaux_message.html', '_blank', 'status=1,scrollbars=1,resizable,width=600,height=300');
-		// We have to use a real page rather than innerHTML because,
-		// at least in FF1.5.0.4, a JS error in FF's XPI-install 
-		// chrome causes nothing to happen when you click on the link
-		// if the page is dynamically generated.
-		/*
-		alert_win.body.innerHTML = 
-			'<p>You need to install the Lokiaux extension in order to use the clipboard.</p>' +
-			'<ol><li><a href="' + self._loki.settings.base_uri + 'lokiaux.xpi" target="_blank">Download it</a></li>' +
-			'    <li>When prompted, press Install</li>' +
-			'    <li>Restart your browser.</li>';
-		*/
-	};
-	
-	function _show_gecko_privileges_warning()
-	{
-		var message = "Your browser requires that you give explicit permission for " +
-			"your clipboard to be accessed, so you may see a security warning " +
-			"after dismissing this message. You are free to deny this permssion, " +
-			"but if you do, you may be unable to cut, copy, or paste into this " +
-			"document.";
-		
-		UI.Messenger.display_once_per_duration('gecko clipboard warning',
-			message, 45);
+		UI.Clipboard_Helper_Editable_Iframe = create_hidden_iframe(helper_src);
 	}
+	
+	UI.Clipboard_Helper._setup_done = true;
+}
 
-	function _gecko_copy(html)
-	{
-		try
-		{
-			_show_gecko_privileges_warning();
-			self._loki.owner_window.GeckoClipboard.set(html);
-		}
-		catch(e)
-		{
-			throw("UI.Clipboard_Helper: couldn't copy in _gecko_copy, because <<" + e + ">>.");
-		}
-	};
-
-	function _ie_copy(html)
-	{
-		try
-		{
-			var sel = Util.Selection.get_selection(self._loki.window);
-			var rng = Util.Range.create_range(sel);
-
-			// transfer from iframe to editable div
-			// select all of editable div
-			// copy from editable div
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.innerHTML = html;
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("SelectAll", false, null);
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("Copy", false, null);
-
-			// Reposition cursor
-			rng.select();
-		}
-		catch(e)
-		{
-			throw("UI.Clipboard_Helper: couldn't copy in _ie_copy, because <<" + e.message + ">>.");
-		}
-	};
-
-	function _gecko_paste()
-	{
-		try
-		{
-			_show_gecko_privileges_warning();
-			var data = self._loki.owner_window.GeckoClipboard.get();
-			
-			var html = (data.type == 'text/html')
-				? data.value
-				: data.value.replace(/\r?\n/g, "<br />\n");
-
-			// Massage and clean HTML
-			var container = self._loki.document.createElement('DIV');
-			container.innerHTML = html;
-			// See UI.Clipboard_helper.copy() for the override rationale.
-			UI.Clean.clean(container, self._loki.settings, false, {
-				overrides: {DIV: Util.Block.BLOCK}
-			});
-			self._loki.massage_node_descendants(container);
-			html = container.innerHTML;
-
-			// Get selection and range
-			var sel = Util.Selection.get_selection(self._loki.window);
-			var rng = Util.Range.create_range(sel);
-
-			// Paste into temporary container
-			container = rng.startContainer.ownerDocument.createElement('DIV');
-			container.innerHTML = html;
-
-			// Copy into document fragment
-			var frag = rng.startContainer.ownerDocument.createDocumentFragment();
-			for ( var i = 0; i < container.childNodes.length; i++ )
-				frag.appendChild(container.childNodes[i].cloneNode(true));
-
-			// Paste the document fragment
-			Util.Selection.paste_node(sel, frag);
-		}
-		catch(e)
-		{
-			throw("UI.Clipboard_Helper: couldn't paste in _gecko_paste, because <<" + e + ">>.");
-		}
-	};
-
-	function _ie_paste()
-	{
-		try
-		{
-			var sel = Util.Selection.get_selection(self._loki.window);
-			var rng = Util.Range.create_range(sel);
-
-			// Make clipboard iframe editable
-			// clear editable div
-			// select all of editable div
-			// paste into editable div
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.contentEditable = true;
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.innerHTML = "";
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("SelectAll", false, null);
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("Paste", false, null);
-
-			// Get HTML
-			var html = UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.innerHTML;
-
-			// Massage and clean HTML
-			var container = self._loki.document.createElement('DIV');
-			container.innerHTML = html;
-			UI.Clean.clean(container, self._loki.settings);
-			self._loki.massage_node_descendants(container);
-			html = container.innerHTML;
-
-			// Actually paste HTML
-			rng.pasteHTML(html);
-			rng.select();
-		}
-		catch(e)
-		{
-			throw("UI.Clipboard_Helper: couldn't paste in _ie_paste, because <<" + e.message + ">>.");
-		}
-	};
-};
-
+UI.Clipboard_Helper._setup(); 
 // file UI.Clipboard_Menugroup.js
 /**
  * Declares instance variables.
@@ -11543,7 +11825,7 @@ UI.Copy_Button = function()
 {
 	Util.OOP.inherits(this, UI.Button);
 
-	this.image = 'copy.gif';
+	this.image = 'copy.png';
 	this.title = 'Copy (Ctrl+C)';
 	this.click_listener = function()
 	{
@@ -11613,7 +11895,7 @@ UI.Cut_Button = function()
 {
 	Util.OOP.inherits(this, UI.Button);
 
-	this.image = 'cut.gif';
+	this.image = 'cut.png';
 	this.title = 'Cut (Ctrl+X)';
 	this.click_listener = function()
 	{
@@ -11785,7 +12067,7 @@ UI.Dialog = function()
 	 *					determine which if any image is initially selected.</li>
 	 *                  </ul>
 	 */
-	this.init = function(params)
+	this.init = function init_dialog(params)
 	{
 		this._data_source = params.data_source;
 		this._base_uri = params.base_uri;
@@ -11796,37 +12078,56 @@ UI.Dialog = function()
 		return this;
 	};
 
-	this.open = function()
+	this.open = function open_dialog()
 	{
-		if ( this._dialog_window != null && 
-			 this._dialog_window.window != null &&
-			 this._dialog_window.window.closed != true )
-		{
-			this._dialog_window.window.focus();
-		}
-		else
-		{
-			this._dialog_window = new Util.Window;
-
-			var success = this._dialog_window.open(this._base_uri + 'auxil/loki_blank.html', '_blank', 'status=1,scrollbars=1,toolbars=1,resizable,width=' + this._dialog_window_width + ',height=' + this._dialog_window_height + ',dependent=yes,dialog=yes', Util.Window.FORCE_SYNC);
-			//var success = this._dialog_window.open(this._base_uri + 'auxil/loki_blank.html', '_blank', '', Util.Window.FORCE_SYNC);
-			if ( !success ) // e.g., the popup was blocked
-				return false;
-
-			this._doc = this._dialog_window.document; // added 28/12/2005 NF--do we want this?
-			this._udoc = new Util.Document(function() { return this._dialog_window.document; }.bind(this));
-
-			// XXX tmp possibly:
-			this._root = this._doc.createElement('DIV');
-			this._dialog_window.body.appendChild(this._root);
+		function populate_dialog() {
+			if (this._dialog_window._dialog_populated)
+				return;
 			
-			this._dialog_window.body.style.display = 'none'; // don`t render till we`ve built the document -- fixes IE display bug
-			this._set_title();
-			this._append_style_sheets();
-			this._add_dialog_listeners();
-			this._append_main_chunk();
-			this._apply_initially_selected_item();
-			this._dialog_window.body.style.display = 'block';
+			this._dialog_window._dialog_populated = true;
+			
+			this._doc = this._dialog_window.window.document;
+			this._dialog_window.document = this._doc;
+			this._udoc = new Util.Document(this._doc);
+			
+			this._root =
+				this._doc.body.appendChild(this._doc.createElement('DIV'));
+			
+			// Work around an IE display glitch: don't render until the document
+			// has been built.
+			if (Util.Browser.IE)
+				this._doc.body.style.display = 'none';
+			try {
+				this._dialog_window.body = this._doc.body;
+				this._set_title();
+				this._append_style_sheets();
+				this._add_dialog_listeners();
+				this._append_main_chunk();
+				this._apply_initially_selected_item();
+			} finally {
+				this._doc.body.style.display = '';
+			}
+		}
+		
+		var already_open = (this._dialog_window && this._dialog_window.window
+			&& !this._dialog_window.window.closed);
+		
+		if (already_open) {
+			this._dialog_window.window.focus();
+		} else {
+			this._dialog_window = new Util.Window;
+			var window_opened = this._dialog_window.open(
+				this._base_uri + 'auxil/loki_dialog.html',
+				'_blank', 'status=1,scrollbars=1,toolbars=1,resizable,width=' +
+					this._dialog_window_width + ',height=' + 
+					this._dialog_window_height + ',dependent=yes,dialog=yes'
+			);
+			
+			if (!window_opened) // popup blocker
+				return false;
+			
+			Util.Event.observe(this._dialog_window.window, 'load',
+				populate_dialog.bind(this));
 		}
 	};
 	
@@ -11854,19 +12155,12 @@ UI.Dialog = function()
 	/**
 	 * Sets the page title
 	 */
-	this._set_title = function()
-	{
-		this._dialog_window.document.title = "Dialog";
-	};
+	this._set_title = function() { /* do nothing by default */ };
 
 	/**
 	 * Appends all the style sheets needed for this dialog.
 	 */
-	this._append_style_sheets = function()
-	{
-		this._udoc.append_style_sheet(this._base_uri + 'css/Dialog.css');
-		this._udoc.append_style_sheet(this._base_uri + 'css/Pretty_Forms.css');
-	};
+	this._append_style_sheets = function() { /* do nothing by default */ };
 
 	/**
 	 * Adds all the dialog event listeners for this dialog.
@@ -12099,6 +12393,24 @@ UI.Dialog = function()
 	};
 };
 
+// file UI.Double_Click.js
+/**
+ * Declares instance variables.
+ * @class A body double-click listener. For extending only.
+ */
+UI.Double_Click = function DoubleClick()
+{
+	this.init = function(loki)
+	{
+		this._loki = loki;
+		return this;
+	};
+	
+	this.double_click = function() {
+		throw new Error('unimplemented');
+	};
+};
+
 // file UI.Error_Display.js
 /**
  * @class Provides a nicely-formatted inline error display.
@@ -12225,7 +12537,7 @@ UI.Find_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'findReplace.gif';
+	this.image = 'search_replace.png';
 	this.title = 'Find and replace (Ctrl+F)';
 	this.click_listener = function() { self._find_helper.open_dialog(); };
 
@@ -12699,7 +13011,7 @@ UI.HR_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'hr.gif';
+	this.image = 'hr.png';
 	this.title = 'Horizontal rule';
 	this.click_listener = function() { self._hr_helper.insert_hr(); };
 
@@ -12891,8 +13203,8 @@ UI.Headline_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'header.gif';
-	this.title = 'Headline';
+	this.image = 'head.png';
+	this.title = 'Heading';
 	this.click_listener = function() { self._loki.toggle_block('h3'); };
 	this.state_querier = function() { return self._loki.query_command_state('FormatBlock') == 'h3'; };
 };
@@ -12929,8 +13241,6 @@ UI.Headline_Menugroup = function()
 				label : 'Remove headline',
 				listener : function() { self._toggle_h3(); }
 			}) );
-
-			menuitems.push( (new UI.Separator_Menuitem).init() );
 		}
 		else if ( this._is_h4() )
 		{
@@ -12943,8 +13253,6 @@ UI.Headline_Menugroup = function()
 				label : 'Remove headline',
 				listener : function() { self._toggle_h4(); }
 			}) );
-
-			menuitems.push( (new UI.Separator_Menuitem).init() );
 		}
 
 		return menuitems;
@@ -13003,7 +13311,7 @@ UI.Highlight_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'highlight.gif';
+	this.image = 'highlight.png';
 	this.title = 'Highlight';
 	this.click_listener = function() { self._helper.toggle_blockquote_paragraph(); };
 	this.state_querier = function() { return self._helper.query_blockquote_paragraph(); };
@@ -13050,8 +13358,6 @@ UI.Highlight_Menugroup = function()
 				label : 'Highlight',
 				listener : function() { self._helper.toggle_blockquote_paragraph(); }
 			}) );
-
-			menuitems.push( (new UI.Separator_Menuitem).init() );
 		}
 
 		return menuitems;
@@ -13071,7 +13377,7 @@ UI.Image_Button = function()
 	var self = this;
 	Util.OOP.inherits(this, UI.Button);
 
-	this.image = 'image.gif';
+	this.image = 'image.png';
 	this.title = 'Insert image';
 	this.click_listener = function() { self._helper.open_dialog(); };
 
@@ -13101,7 +13407,7 @@ UI.Image_Dialog = function()
 	this.init = function(params)
 	{
 		// use rss integration only if data_source is given:
-		this._use_rss = params.data_source ? true : false;
+		this._use_rss = !!params.data_source;
 		this.superclass.init.call(this, params);
 		return this;
 	};
@@ -13523,6 +13829,24 @@ UI.Image_Dialog = function()
 	};
 };
 
+// file UI.Image_Double_Click.js
+UI.Image_Double_Click = function ImageDoubleClick() {
+	Util.OOP.inherits(this, UI.Double_Click);
+	this.helper = null;
+	
+	this.init = function(loki)
+	{
+		this.superclass.init.call(this, loki);
+		this.helper = (new UI.Image_Helper).init(loki);
+		return this;
+	};
+	
+	this.double_click = function() {
+		if (this.helper.is_selected())
+			this.helper.open_dialog();
+	};
+};
+
 // file UI.Image_Helper.js
 /**
  * Declares instance variables.
@@ -13543,118 +13867,138 @@ UI.Image_Helper = function()
 		this._image_masseuse = (new UI.Image_Masseuse()).init(this._loki);
 		return this;
 	};
-
-	this.get_selected_item = function()
+	
+	this.get_selected_image = function get_selected_image()
 	{
 		var sel = Util.Selection.get_selection(self._loki.window);
 		var rng = Util.Range.create_range(sel);
+		
+		var images;
+		var image;
+		var real_image;
+		var anchor_masseuse = (new UI.Anchor_Masseuse).init(this._loki);
+		
+		function is_valid_image(node) {
+			if (!Util.Node.is_tag(node, 'IMG'))
+				return false;
+			
+			return !anchor_masseuse.get_real_elem(node);
+		}
+		
+		images = Util.Range.find_nodes(rng, is_valid_image, true);
+		
+		if (!images) {
+			return null;
+		} else if (images.length > 1) {
+			throw new UI.Multiple_Items_Error('Multiple images are currently ' +
+				'selected.');
+		}
+		
+		image = images[0];
+		
+		return this._image_masseuse.realize_elem(image);
+	};
+	
+	this.get_selected_item = function get_selected_image_info()
+	{
+		var image = this.get_selected_image();
+		if (!image)
+			return null;
+		
+		return {
+			uri: image.src,
+			alt: image.alt,
+			align: image.align
+		};
+	};
 
-		var selected_item;
-		var selected_image = Util.Range.get_nearest_ancestor_element_by_tag_name(rng, 'IMG');
-		if ( selected_image != null )
-		{
-			// Because we use an image as a stand-in for named anchors ...
-			var anchor_helper = (new UI.Anchor_Helper).init(this._loki);
-			if ( anchor_helper.get_selected_item() == null )
-			{
-				var real_image =
-					self._image_masseuse.realize_elem(selected_image);
-				selected_item =
-				{
-					uri : real_image.getAttribute('src'),
-					alt : real_image.getAttribute('alt'),
-					align : real_image.getAttribute('align')
-				}; 
+	this.is_selected = function image_is_selected()
+	{
+		try {
+			return !!this.get_selected_image();
+		} catch (e) {
+			if (e.name == 'UI.Multiple_Items_Error')
+				return true;
+			throw e;
+		}
+	};
+	
+	this.open_dialog = function open_image_dialog()
+	{
+		var selected_image;
+		
+		try {
+			selected_image = this.get_selected_item();
+		} catch (e) {
+			if (e.name == 'UI.Multiple_Items_Error') {
+				alert('Multiple images are currently selected. Please narrow ' +
+					'down your selection so that it only contains one image.');
+				return;
+			} else {
+				throw e;
 			}
 		}
-		return selected_item;
-	};
-
-	this.is_selected = function()
-	{
-		return ( this.get_selected_item() != null );
-	};
-
-	this.open_dialog = function()
-	{
-		if ( this._image_dialog == null )
-			this._image_dialog = new UI.Image_Dialog;
-		this._image_dialog.init({ data_source : self._loki.settings.images_feed,
-							base_uri : self._loki.settings.base_uri,
-							submit_listener : self.insert_image,
-							remove_listener : self.remove_image,
-							selected_item : this.get_selected_item() });
+		
+		if (!this._image_dialog)
+			this._image_dialog = new UI.Image_Dialog();
+		
+		this._image_dialog.init({
+			data_source: self._loki.settings.images_feed,
+			base_uri: self._loki.settings.base_uri,
+			submit_listener: self.insert_image,
+			remove_listener: self.remove_image,
+			selected_item: selected_image
+		});
 		this._image_dialog.open();
 	};
-
-	this.insert_image = function(image_info)
+	
+	this.insert_image = function insert_image(params)
 	{
-		// Create the image
-		var image = self._loki.document.createElement('IMG');
-		var clean_src = UI.Clean.clean_URI(image_info.uri);
-		image.setAttribute('src', clean_src);
-		if (clean_src != image_info.uri)
-			image.setAttribute('loki:src', image_info.uri);
-		image.setAttribute('alt', image_info.alt);
-
-		if ( image_info.align != '' )
-			image.setAttribute('align', image_info.align);
-		else
-			image.removeAttribute('align');
-
-		/*
-			if ( image_info.border == 'yes' )
-				Util.Element.add_class(image, 'bordered');
-			else
-				Util.Element.remove_class(image, 'bordered');
-		*/
-
-		// disallow resizing (only works in IE)
-		/*
-		//image.onclick = function(event) 
-		image.onresize = function(event) 
-		{
-			event = event == null ? window.event : event;
-			event.returnValue = false;
-			return false;
-		};
-		*/
-
-		// Massage the image
+		var image, clean_src, selected_image, sel, range;
+		
+		image = self._loki.document.createElement('IMG');
+		clean_src = UI.Clean.clean_URI(params.uri);
+		
+		image.src = clean_src;
+		image.alt = params.alt;
+		
+		if (params.align)
+			image.align = params.align;
+		
 		image = self._image_masseuse.get_fake_elem(image);
-
-		// Insert the image
-		self._loki.window.focus();	
-		var sel = Util.Selection.get_selection(self._loki.window);
-		var rng = Util.Range.create_range(sel);
-		// We check for an image ancestor and replace it if found
-		// because in Gecko, if an image in the document isn't found on the server
-		// the ALT text will be displayed, and will be editable; in such
-		// a case, the cursor can be inside an image--with the result 
-		// that if one pastes the new image, it is nested in the original 
-		// image rather than replacing it.
-		var selected_image = Util.Range.get_nearest_ancestor_element_by_tag_name(rng, 'IMG');
-		if ( selected_image != null )
+		
+		self._loki.window.focus();
+		selected_image = self.get_selected_image();
+		if (selected_image) {
 			selected_image.parentNode.replaceChild(image, selected_image);
-		else
-			Util.Selection.paste_node(sel, image);
-
-		self._loki.window.focus();	
+		} else {
+			sel = Util.Selection.get_selection(self._loki.window);
+			rng = Util.Range.create_range(sel);
+			
+			Util.Range.delete_contents(rng);
+			Util.Range.insert_node(rng, image);
+		}
 	};
 
-	this.remove_image = function()
+	this.remove_image = function remove_image()
 	{
-		var sel = Util.Selection.get_selection(self._loki.window);
-		var rng = Util.Range.create_range(sel);
-		var image = Util.Range.get_nearest_ancestor_element_by_tag_name(rng, 'IMG');
+		var image, sel;
+		
+		image = self.get_selected_image();
+		
+		if (!image)
+			return false;
+		
+		sel = Util.Selection.get_selection(self._loki.window);
 
 		// Move cursor
 		Util.Selection.select_node(sel, image);
 		Util.Selection.collapse(sel, false); // to end
 		self._loki.window.focus();
 
-		if ( image.parentNode != null )
+		if (image.parentNode)
 			image.parentNode.removeChild(image);
+		return true;
 	};
 };
 
@@ -13764,7 +14108,7 @@ UI.Image_Masseuse = function()
 	this.init = function(loki)
 	{
 		this.superclass.init.call(this, loki);
-		this._unsecured = new RegExp('^http:', '');
+		this._unsecured = /^http:/;
 		return this;
 	};
 
@@ -13791,24 +14135,24 @@ UI.Image_Masseuse = function()
 	
 	this.get_fake_elem = function(img)
 	{
-		var src = img.getAttribute('src');
+		var placeholder, src = img.getAttribute('src');
 		if (src == null)
 			return;
 		
 		if (self._unsecured.test(src)) {
-			if (Util.URI.extract_domain(src) == self._loki.editor_domain())
+			placeholder = img.cloneNode();
+			
+			if (Util.URI.extract_domain(src) == self._loki.editor_domain()) {
 				new_src = Util.URI.strip_https_and_http(src);
-			else if (self._loki.settings.sanitize_unsecured)
+			} else if (self._loki.settings.sanitize_unsecured) {
 				new_src = self._loki.settings.base_uri +
 					'images/insecure_image.gif';
-			else
+				placeholder.setAttribute('loki:src', img.src);
+				placeholder.setAttribute('loki:fake', 'true');
+			} else {
 				return img;
+			}
 			
-			var placeholder = img.ownerDocument.createElement('IMG');
-			placeholder.title = img.title;
-			placeholder.alt = img.alt;
-			placeholder.setAttribute('loki:src', img.src);
-			placeholder.setAttribute('loki:fake', 'true');
 			placeholder.src = new_src;
 			
 			return placeholder;
@@ -13835,17 +14179,20 @@ UI.Image_Masseuse = function()
 	
 	this.get_real_elem = function(img)
 	{
-		if (img == null || img.getAttribute('loki:fake') != 'true') {
+		var src, real;
+		
+		if (!img)
 			return null;
-		}
 		
-		var src = img.getAttribute('loki:src');
-		if (src == null)
-			return img;
+		src = img.getAttribute('loki:src');
+		if (!src)
+			return null;
 		
-		var real = img.ownerDocument.createElement('IMG');
-		real.title = img.title;
-		real.alt = img.alt;
+		real = img.ownerDocument.createElement('IMG');
+		if (img.title)
+			real.title = img.title;
+		if (img.alt)
+			real.alt = img.alt;
 		real.src = src;
 		
 		return real;
@@ -13896,8 +14243,6 @@ UI.Image_Menugroup = function()
 				label : 'Edit image',
 				listener : function() { self._helper.open_dialog() }
 			}) );
-
-			menuitems.push( (new UI.Separator_Menuitem).init() );
 		}
 
 		return menuitems;
@@ -13917,7 +14262,7 @@ UI.Indent_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'indent.gif';
+	this.image = 'indent.png';
 	this.title = 'Indent list item(s)';
 	this.helper = null;
 	
@@ -13964,7 +14309,7 @@ UI.Italic_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'italic.gif';
+	this.image = 'em.png';
 	this.title = 'Emphasis (Ctrl+I)';
 	this.click_listener = function() { self._loki.exec_command('Italic'); };
 	this.state_querier = function() { return self._loki.query_command_state('Italic'); };
@@ -14119,7 +14464,7 @@ UI.Left_Align_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'leftalign.gif';
+	this.image = 'align_left.png';
 	this.title = 'Left align (Ctrl-L)';
 	this.click_listener = function() { self._loki.exec_command('JustifyLeft'); };
 	this.state_querier = function() { return self._loki.query_command_state('JustifyLeft'); };
@@ -14284,6 +14629,24 @@ UI.Link_Dialog = function()
 
 		// Close dialog window
 		this._dialog_window.window.close();
+	};
+};
+
+// file UI.Link_Double_Click.js
+UI.Link_Double_Click = function LinkDoubleClick() {
+	Util.OOP.inherits(this, UI.Double_Click);
+	this.helper = null;
+	
+	this.init = function(loki)
+	{
+		this.superclass.init.call(this, loki);
+		this.helper = (new UI.Link_Helper).init(loki);
+		return this;
+	};
+	
+	this.double_click = function() {
+		if (this.helper.is_selected())
+			this.helper.open_page_link_dialog();
 	};
 };
 
@@ -14571,8 +14934,6 @@ UI.Link_Menugroup = function()
 				//listener : function() { self._link_helper.open_dialog_by_context() } 
 				listener : function() { self._link_helper.open_page_link_dialog() } 
 			}) );
-
-			menuitems.push( (new UI.Separator_Menuitem).init() );
 		}
 		else if ( this._link_helper.check_for_linkable_selection() )
 		{
@@ -14582,8 +14943,6 @@ UI.Link_Menugroup = function()
 				//listener : function() { self._link_helper.open_dialog_by_context() } 
 				listener : function() { self._link_helper.open_page_link_dialog() } 
 			}) );
-
-			menuitems.push( (new UI.Separator_Menuitem).init() );
 		}
 		return menuitems;
 	};
@@ -15449,127 +15808,6 @@ UI.Listbox.prototype._goto_next_page = function()
 	this.refresh();
 };
 
-// file UI.Loki_Options.js
-UI.Loki_Options = function()
-{
-	this._all = null;
-	this._sel = null;
-};
-
-/**
- * Both pluses and minuses can be either arrays or strings. E.g.:
- * new Loki_Options( 'all' );
- * new Loki_Options( 'default', ['table', 'hrule'] );
- * new Loki_Options( ['strong', 'em', 'linebreak'] );
- *
- * @param 	pluses (mixed)   Array or string of options to include. See _init_all for available values.
- * @param 	minuses (mixed)  Array or string of options to exclude. See _init_all for available values.
- */
-UI.Loki_Options.prototype.init = function(pluses, minuses)
-{
-	this._init_all();
-	this._init_sel(pluses, minuses);
-	
-	return this;
-};
-
-/**
- * Tests whether the given option is set.
- *
- * @param	option 	(string) Must be a string containing the name of one option
- */
-UI.Loki_Options.prototype.test = function(option)
-{
-	return ( this._all[option] != null &&
-			 (this._sel & this._all[option]) > 0 );
-};
-
-/**
- * Gets all the avilable options.
- *
- * @return	An array with all available options
- */
-UI.Loki_Options.prototype.get_all = function()
-{
-	return this._all;
-};
-	
-/**
- * Initializes the array of all the options
- *
- * NOTE: Be sure to keep this list synced with that in ../Loki_Options.php
- */
-UI.Loki_Options.prototype._init_all = function()
-{
-	this._all = { strong : 1,
-				  em : 2,
-				  headline : 4,
-				  linebreak : 8,
-				  align : 16,
-				  blockquote : 32,
-				  highlight : 64,
-				  olist : 128,
-				  ulist : 256,
-				  indenttext : 512,
-				  findtext : 1024,
-				  link : 2048,
-				  table : 4096,
-				  image : 8192,
-				  cleanup : 16384,
-				  source : 32768,
-				  anchor : 65536,
-				  hrule : 131072,
-				  spell : 262144,  
-				  merge : 524288,  // This shouldnt be included in default or all
-				  pre : 1048576,
-				  //highlight : 2097152,  // available for reassignment
-				  clipboard : 4194304,
-				  underline : 8388608
-				  //asdf : 16777216
-	};
-
-	var all = 0;
-	for ( var i in this._all )
-		if ( i != 'merge' )
-			all |= this._all[i];
-	this._all.all = all & ~this._all.source; // we never want to assign the ability to edit source on a site-wide basis
-	//this._all.all = this._all["default"] | this._all.lists | this._all.align | this._all.headline | this._all.indenttext | this._all.findtext | this._all.image | this._all.assets | this._all.spell | this._all.table | this._all.pre;
-					  
-	// (we need to use the bracket syntax to access default because default is a reserved word in js)
-	this._all["default"] = this._all.strong | this._all.em | this._all.linebreak | this._all.hrule | this._all.link | this._all.anchor | this._all.clipboard;
-	this._all.lists = this._all.olist | this._all.ulist;
-
-	this._all.all_minus_pre = this._all.all & ~this._all.pre;
-	this._all.notables = this._all.all_minus_pre & ~this._all.table;
-	this._all.notables_plus_pre = this._all.notables | this._all.pre;
-
-	this._all.wellstone = this._all["default"] | this._all.lists | this._all.align | this._all.headline | this._all.indenttext | this._all.findtext;
-	this._all.ocs = this._all["default"] | this._all.lists | this._all.align | this._all.headline | this._all.indenttext | this._all.findtext | this._all.table;
-	this._all.commencement = this._all["default"] | this._all.lists | this._all.align | this._all.headline | this._all.indenttext | this._all.findtext | this._all.table;
-};
-
-UI.Loki_Options.prototype._init_sel = function(pluses, minuses)
-{
-	var i;
-	
-	pluses = (typeof(pluses) == 'string')
-		? [pluses]
-		: pluses || ['default'];
-	minuses = (typeof(minuses) == 'string')
-		? [minuses]
-		: minuses || [];
-
-	this._sel = 0;
-	
-	for (i = 0; i < pluses.length; i++) {
-		this._sel |= this._all[pluses[i]] || 0;
-	}
-	
-	for (i = 0; i < minuses.length; i++) {
-		this._sel &= ~(this._all[minuses[i]] || 0);
-	}
-};
-
 // file UI.Masseuse.js
 /**
  * Declares instance variables.
@@ -15648,16 +15886,13 @@ UI.Menu = function()
 	{
 		_menuitems.push(menuitem);
 	};
-	
 
 	self.add_menuitems = function(menuitems)
 	{
-		if ( menuitems != null )
-		{
-			for ( var i = 0; i < menuitems.length; i++ )
-			{
+		var i, length;
+		if (menuitems) {
+			for (i = 0, length = menuitems.length; i < length; ++i)
 				self.add_menuitem(menuitems[i]);
-			}
 		}
 	};
 
@@ -15738,7 +15973,7 @@ UI.Menu = function()
 			Util.Event.add_event_listener(popup.document, 'click', function() { popup.hide(); });
 
 			// Show the popup
-			popup.show(x, y, width, height);
+			popup.show(x, y, width, height, _loki.owner_document.body);
 		}
 		catch(e)
 		{
@@ -15752,42 +15987,46 @@ UI.Menu = function()
 				menu_chunk.style.visibility = 'hidden';
 
 				// Position menu
-				menu_chunk.style.left = x + 'px';
-				menu_chunk.style.top = y + 'px';
+				menu_chunk.style.left = (x - 1) + 'px';
+				menu_chunk.style.top = (y - 1) + 'px';
 
 				// Watch the "click" event for all windows to close the menu
-				var close_menu = function() 
-				{
-					// We're adding the listener to several windows,
-					// and aren't controlling bubbling, so the event may be triggered
-					// several times.
-					if ( menu_chunk.parentNode != null )
+				function close_menu() {
+					var w;
+					
+					if (menu_chunk.parentNode) {
 						menu_chunk.parentNode.removeChild(menu_chunk);
-				};
-				var cur_window = _loki.window;
-				while ( cur_window )
-				{
-					Util.Event.add_event_listener(cur_window.document, 'click', close_menu);
-					Util.Event.add_event_listener(cur_window.document, 'contextmenu', close_menu);
-					if ( cur_window != cur_window.parent )
-						cur_window = cur_window.parent;
-					else
-						break;
+						
+						var w = _loki.window;
+						while (w) {
+							w.document.removeEventListener('click', close_menu, false);
+							w.document.removeEventListener('contextmenu', close_menu, false);
+							w = (w != w.parent) ? w.parent : null;
+						}
+					}
 				}
+				
+				function add_close_listeners() {
+					var w = _loki.window;
+					while (w) {
+						w.document.addEventListener('click', close_menu, false);
+						w.document.addEventListener('contextmenu', close_menu, false);
+						w = (w != w.parent) ? w.parent : null;
+					}
+				}
+				
+				add_close_listeners.defer();
 		
 				// Show menu
 				menu_chunk.style.visibility	= '';
 			}
 			catch(f)
 			{
-				throw(new Error('UI.Menu.display(): Neither the IE nor the Gecko way of displaying a menu worked. ' +
-								'When the IE way was tried, an error with the following message was thrown: <<' + e.message + '>>. ' +
-								'When the Gecko way was tried, an error with the following message was thrown: <<' + f.message + '>>.'));
+				throw new Util.Unsupported_Error("showing a contextual menu");
 			}
 		}
-	};
-};
-
+	}
+} 
 // file UI.Menugroup.js
 /**
  * Declares instance variables.
@@ -15826,7 +16065,7 @@ UI.Menugroup = function()
  */
 UI.Menuitem = function()
 {
-	var _label, _listener, _disabled;
+	var label, listener, disabled;
 
 	/**
 	 * Inits the menuitem. Params:
@@ -15836,39 +16075,64 @@ UI.Menuitem = function()
 	 */
 	this.init = function(params)
 	{
-		if ( params == null || params.label == '' || params.listener == null )
-			throw(new Error('UI.Menuitem.init: invalid paramaters. (label: <<' + params.label + '>>; listener: <<' + params.listener + '>>)'));
+		if (!params || !params.label || !params.listener) {
+			throw new Error('Insufficient information to construct a menu item.');
+		}
 
-		_label = params.label;
-		_listener = params.listener;
-		_disabled = params.disabled == null ? false : params.disabled;
+		label = params.label;
+		listener = params.listener;
+		disabled = !!params.disabled;
 
 		return this;
 	};
 
 	/**
 	 * Returns an appendable chunk to render the menuitem.
+	 * @return {HTMLElement} chunk
 	 */
 	this.get_chunk = function(doc)
 	{
-		if ( _disabled )
-		{
-			var container = doc.createElement('SPAN');
+		var container;
+		
+		if (disabled) {
+			container = doc.createElement('SPAN');
 			Util.Element.add_class(container, 'disabled');
-		}
-		else
-		{
-			var container = doc.createElement('A');
+		} else {
+			container = doc.createElement('A');
 			container.href = 'javascript:void(0);';
 			Util.Element.add_class(container, 'menuitem');
-			Util.Event.add_event_listener(container, 'click', function() { _listener(); });
+			Util.Event.add_event_listener(container, 'click', listener);
 		}
-
-		//container.appendChild( doc.createTextNode(_label) );
-		container.innerHTML = _label.replace(' ', '&nbsp;');
-
+		
+		container.innerHTML = label.replace(' ', '&nbsp;');
 		return container;
 	};
+	
+	/**
+	 * Gets the menu item's label.
+	 * @return {String}
+	 */
+	this.get_label = function()
+	{
+		return label;
+	}
+	
+	/**
+	 * Gets the menu item's click listener.
+	 * @return {Function}
+	 */
+	this.get_listener = function()
+	{
+		return listener;
+	}
+	
+	/**
+	 * Returns true if the menu item is disabled, false if otherwise.
+	 * @return {Boolean}
+	 */
+	this.is_disabled = function() {
+		return disabled;
+	}
 };
 
 // file UI.Messenger.js
@@ -15935,6 +16199,14 @@ UI.Messenger = {
 		return !displayed;
 	}
 } 
+// file UI.Multiple_Items_Error.js
+UI.Multiple_Items_Error = function MultipleItemsError(message) {
+	Error.call(this, message);
+	this.name = 'UI.Multiple_Items_Error';
+};
+
+UI.Multiple_Items_Error.prototype = new Error();
+
 // file UI.OL_Button.js
 /**
  * Declares instance variables.
@@ -15948,7 +16220,7 @@ UI.OL_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'ol.gif';
+	this.image = 'ol.png';
 	this.title = 'Ordered list';
 	this.click_listener = function() { self._loki.toggle_list('ol'); };
 };
@@ -15972,7 +16244,7 @@ UI.Outdent_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'outdent.gif';
+	this.image = 'outdent.png';
 	this.title = 'Unindent list item(s)';
 	this.helper = null;
 	
@@ -16006,7 +16278,7 @@ UI.Page_Link_Button = function()
 	var self = this;
 	Util.OOP.inherits(this, UI.Button);
 
-	this.image = 'link.gif';
+	this.image = 'link.png';
 	this.title = 'Insert link (Ctrl+K)';
 	this.click_listener = function() { self._helper.open_page_link_dialog(); };
 
@@ -16142,7 +16414,7 @@ UI.Page_Link_Dialog = function()
 		sites_pane.id = 'sites_pane';
 		container.appendChild(sites_pane);
 		
-		this._sites_progress = this.create_activity_indicator('textual', 'Loading sites…');
+		this._sites_progress = this.create_activity_indicator('textual', 'Loading sites&hellip;');
 		this._sites_progress.insert(sites_pane);
 		return;
 	};
@@ -16591,7 +16863,8 @@ UI.Page_Link_Dialog = function()
 			this._load_finder(this._finder_feed);
 		} else {
 			this._select_tab(tab);
-			this._load_sites(this._sites_feed);
+			if (this._sites_feed && this._use_rss)
+				this._load_sites(this._sites_feed);
 		}
 	};
 
@@ -17608,7 +17881,7 @@ UI.Paste_Button = function()
 {
 	Util.OOP.inherits(this, UI.Button);
 
-	this.image = 'paste.gif';
+	this.image = 'paste.png';
 	this.title = 'Paste (Ctrl+V)';
 	this.click_listener = function()
 	{
@@ -17679,7 +17952,7 @@ UI.Pre_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'pre.gif';
+	this.image = 'pre.png';
 	this.title = 'Preformatted';
 	this.click_listener = function() { self._loki.toggle_block('pre'); };
 	this.state_querier = function() { return self._loki.query_command_state('FormatBlock') == 'pre'; };
@@ -17698,7 +17971,7 @@ UI.Raw_Source_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'raw_source.gif';
+	this.image = 'debug_source.png';
 	this.title = 'Alert raw source';
 	this.show_on_source_toolbar = true;
 	this.click_listener = function() { Util.Window.alert_debug(self._loki.get_dirty_html()); };
@@ -17717,7 +17990,7 @@ UI.Right_Align_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'rightalign.gif';
+	this.image = 'align_right.png';
 	this.title = 'Right align (Ctrl+R)';
 	this.click_listener = function() { self._loki.exec_command('JustifyRight'); };
 	this.state_querier = function() { return self._loki.query_command_state('JustifyRight'); };
@@ -17810,8 +18083,8 @@ UI.Source_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'source.gif';
-	this.title = 'Toggle source';
+	this.image = 'source.png';
+	this.title = 'Toggle HTML source view';
 	this.show_on_source_toolbar = true;
 	this.click_listener = function() { self._loki.toggle_iframe_textarea(); };
 };
@@ -18374,7 +18647,7 @@ UI.Table_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'insertTable.gif';
+	this.image = 'table.png';
 	this.title = 'Insert table';
 	this.click_listener = function() { self._table_helper.open_table_dialog(); };
 
@@ -19716,11 +19989,6 @@ UI.Table_Menugroup = function()
 			}
 		}
 
-		if ( this._table_helper.is_table_selected() )
-		{
-			menuitems.push( (new UI.Separator_Menuitem).init() );
-		}
-
 		return menuitems;
 	};
 };
@@ -19738,7 +20006,7 @@ UI.UL_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'ul.gif';
+	this.image = 'ul.png';
 	this.title = 'Unordered list';
 	this.click_listener = function() { self._loki.toggle_list('ul'); };
 };
@@ -19831,7 +20099,7 @@ UI.Underline_Button = function()
 	var self = this;
 	Util.OOP.inherits(self, UI.Button);
 
-	this.image = 'underline.gif';
+	this.image = 'underline.png';
 	this.title = 'Underline (Ctrl+U)';
 	this.click_listener = function() { self._loki.exec_command('Underline'); };
 	this.state_querier = function() { return self._loki.query_command_state('Underline'); };
@@ -19857,8 +20125,6 @@ UI.Underline_Keybinding = function()
  * Declares instance variables. <code>init</code> must be called to initialize them.
  * @constructor
  *
- * @param	textarea	the textarea to replace with Loki
- *
  * @class A WYSIWYG HTML editor.
  */
 UI.Loki = function Loki()
@@ -19881,6 +20147,7 @@ UI.Loki = function Loki()
 	var _hidden;             // |--- hidden (input)
 
 	var _settings;
+	var _options;
 	var _use_p_hack;
 	var _state_change_listeners = [];
 	var _masseuses = [];
@@ -20006,12 +20273,53 @@ UI.Loki = function Loki()
 		_root.replaceChild(_toolbar, old_toolbar);
 		_window.focus();
 	};
+	
+	function enumerate_options(property) {
+		var key, results = [];
+		
+		if (_options) {
+			for (key in _options) {
+				if (!property)
+					results.append(_options[key]);
+				else if (_options[key][property])
+					results.append(_options[key][property]);
+			}
+		}
+		
+		return results;
+	}
+	
+	/**
+	 * Sets focus to the editing window.
+	 * @return {void}
+	 */
+	this.focus = function focus_on_loki()
+	{
+		var doc = _owner_document;
+		
+		if (_is_textarea_active()) {
+			if ((!doc.hasFocus || doc.hasFocus()) && _textarea == doc.activeElement)
+				return;
+			_textarea.focus();
+		} else if (!_window) {
+			throw new Error('Invalid Loki state: cannot focus; Loki window ' +
+				'does not yet exist.');
+		} else if (Util.Browser.IE) {
+			_body.setActive();
+			_window.focus();
+		} else {
+			_window.focus();
+		}
+	}
 
 
 	/**
 	 * Initializes instance variables.
 	 *
-	 * @param	textarea	the textarea to replace with Loki
+	 * @param {HTMLTextAreaElement} textarea the textarea to replace with Loki
+	 * @param {Object} settings Loki settings
+	 * @returns {UI.Loki} this Loki instance
+	 * @see http://code.google.com/p/loki-editor/wiki/Settings
 	 */
 	this.init = function init_loki(textarea, settings)
 	{
@@ -20021,20 +20329,24 @@ UI.Loki = function Loki()
 				'your browser.');
 		}
 		
-		_settings = settings;
+		_settings = (settings) ? Util.Object.clone(settings) : {};
+		self.options = _options = UI.Loki.Options.get(_settings.options || 'default', true);
+		_settings.options = _options;
 		
-		// Clean up the settings, if necessary.
-		if (!settings.options)
-			settings.options = 'default';
-		if (Util.is_string(settings.options) || !settings.options.test) {
-			settings.options = (new UI.Loki_Options).init(settings.options, '');
-		}
 		['site', 'type'].each(function cleanup_default_regexp(which) {
 			var setting = 'default_' + which + '_regexp';
-			if (!(settings[setting].exec && settings[setting].test)) {
-				settings[setting] = new RegExp(settings[setting]);
+			if (!_settings[setting])
+				return;
+			if (!(_settings[setting].exec && _settings[setting].test)) {
+				_settings[setting] = new RegExp(_settings[setting]);
 			}
 		});
+		
+		if (!_settings.base_uri) {
+			_settings.base_uri = autodetect_base_uri();
+		}
+		
+		UI.Clipboard_Helper._setup(_settings.base_uri);
 		
 		_textarea = textarea;
 		_owner_window = window;
@@ -20046,7 +20358,7 @@ UI.Loki = function Loki()
 		_create_root();
 		_create_toolbars();
 		_create_iframe();
-		if ( _settings.options.test('statusbar') )
+		if ( _options.statusbar )
 			_create_statusbar();
 		_create_grippy();
 		_create_hidden();
@@ -20054,7 +20366,7 @@ UI.Loki = function Loki()
 		// And append them to root
 		_root.appendChild( _toolbar );
 		_root.appendChild( _iframe_wrapper );
-		if ( _settings.options.test('statusbar') )
+		if ( _options.statusbar )
 			_root.appendChild( _statusbar );
 		_root.appendChild( _grippy_wrapper );
 		_root.appendChild( _hidden );
@@ -20073,7 +20385,28 @@ UI.Loki = function Loki()
 
 		// Continue the initialization, but asynchronously
 		_init_async();
+		
+		return self;
 	};
+	
+	/*
+	 * Attempts to automatically detect the Loki base URI.
+	 */
+	function autodetect_base_uri()
+	{
+		var scripts = document.getElementsByTagName('SCRIPT');
+		var pattern = /\bloki\.js(\?[^#]*)?(#\S+)?$/;
+		
+		for (var i = 0; i < scripts.length; i++) {
+			if (pattern.test(scripts[i].src)) {
+				// Found Loki!
+				return scripts[i].src.replace(pattern, '');
+			}
+		}
+		
+		throw new Error("Unable to automatically determine the Loki base URI." +
+			" Please set it explicitly.");
+	}
 
 	/**
 	 * Finishes initializing instance variables, but does so
@@ -20134,7 +20467,6 @@ UI.Loki = function Loki()
 			self.exec_command = _exec_command;
 			self.query_command_state = _query_command_state;
 			self.query_command_value = _query_command_value;
-			self.focus = function() { _window.focus() };
 			
 			// Set body's html to textarea's value
 			self.set_html( _textarea.value );
@@ -20143,6 +20475,7 @@ UI.Loki = function Loki()
 			_make_document_editable();
 
 			// Add certain event listeners to the document and elsewhere
+			_add_double_click_listeners();
 			_add_document_listeners();
 			_add_state_change_listeners();
 			_add_grippy_listeners();
@@ -20206,14 +20539,14 @@ UI.Loki = function Loki()
 		Util.Element.add_class(_textarea_toolbar, 'toolbar');
 
 		// Function to add a button to a the toolbars
-		var add_button = function(button_class)
+		function add_button(button_class)
 		{
 			var b = new button_class();
 			b.init(self);
 
 			function create_button()
 			{
-				var button = _owner_document.createElement('A');
+				var button = _owner_document.createElement('A'), img, img_src;
 				button.href = 'javascript:void(0);';
 
 				Util.Event.add_event_listener(button, 'mouseover', function() { Util.Element.add_class(button, 'hover'); });
@@ -20222,30 +20555,27 @@ UI.Loki = function Loki()
 				Util.Event.add_event_listener(button, 'mouseup', function() { Util.Element.remove_class(button, 'active'); });
 				Util.Event.add_event_listener(button, 'click', function() { b.click_listener(); });
 
-				// make the button appear depressed whenever the current selection is in a relevant (bold, heading, etc) region
-				if ( b.state_querier != null )
-				{
-					_state_change_listeners.push( 
-						function()
-						{
-							if ( b.state_querier() &&	(Util.Element.get_all_classes(button)).indexOf('active') == -1 ) 
-								Util.Element.add_class(button, 'active' /*'selected'*/);
-							else
-								if ( !b.state_querier() && (Util.Element.get_all_classes(button)).indexOf('active') > -1 )
-									Util.Element.remove_class(button, 'active' /*'selected'*/);
-						}
-					);
+				img_src = _settings.base_uri + 'images/toolbar/' + b.image;
+
+				// Apply PNG fix.
+				if (Util.Browser.IE && /MSIE 6/.test(navigator.userAgent)) {
+					button.title = b.title;
+					img = _owner_document.createElement('SPAN');
+					img_src = Util.URI.build(Util.URI.normalize(img_src));
+					img.className = 'loki_filtered_button';
+					img.style.filter = "progid:" +
+						"DXImageTransform.Microsoft.AlphaImageLoader(src='" +
+					    img_src + "', sizingMethod='image')";
+					img.setAttribute('unselectable', 'on');
+				} else {
+					img = _owner_document.createElement('IMG');
+					img.src = img_src;
+					img.title = b.title;
+					img.border = 0;
+					img.setAttribute('unselectable', 'on')
 				}
-
-				var img = _owner_document.createElement('IMG');
-				img.src = _settings.base_uri + 'images/nav/' + b.image;
-				img.title = b.title;
-				img.width = 21;
-				img.height = 20;
-				img.border = 0;
-				img.setAttribute('unselectable', 'on');
+				
 				button.appendChild(img);
-
 				return button;
 			};
 
@@ -20255,36 +20585,7 @@ UI.Loki = function Loki()
 		};
 
 		// Add each button to the toolbars
-		
-		var button_map = {
-			strong: [UI.Bold_Button],
-			em: [UI.Italic_Button],
-			underline: [UI.Underline_Button],
-			headline: [UI.Headline_Button],
-			pre: [UI.Pre_Button],
-			linebreak: [UI.BR_Button],
-			hrule: [UI.HR_Button],
-			clipboard: [UI.Copy_Button, UI.Cut_Button, UI.Paste_Button],
-			// align: [UI.Left_Align_Button, UI.Center_Align_Button, UI.Right_Align_Button],
-			highlight: [UI.Highlight_Button],
-			blockquote: [UI.Blockquote_Button],
-			olist: [UI.OL_Button],
-			ulist: [UI.UL_Button],
-			indenttext: [UI.Indent_Button, UI.Outdent_Button],
-			findtext: [UI.Find_Button],
-			table: [UI.Table_Button],
-			image: [UI.Image_Button],
-			link: [UI.Page_Link_Button],
-			anchor: [UI.Anchor_Button],
-			cleanup: [UI.Clean_Button],
-			source: [UI.Source_Button, UI.Raw_Source_Button]
-		};
-		
-		for (var s in button_map) {
-			if (_settings.options.test(s)) {
-				Util.Array.for_each(button_map[s], add_button);
-			}
-		}
+		enumerate_options('buttons').each(add_button);
 	};
 
 	/**
@@ -20303,7 +20604,7 @@ UI.Loki = function Loki()
 		Util.Element.add_class(_iframe_wrapper, 'iframe_wrapper');
 
 		_iframe = _owner_document.createElement('IFRAME');
-		_iframe.src = _settings.base_uri + 'auxil/loki_blank.html';
+		_iframe.src = 'javascript:""';
 		_iframe.frameBorder = '0'; // otherwise, IE puts an extra border around the iframe that css cannot erase
 
 		td.appendChild(_iframe);
@@ -20367,7 +20668,7 @@ UI.Loki = function Loki()
 			Util.Event.add_event_listener(_document, 'mousemove', resize);
 			Util.Event.add_event_listener(_document, 'mouseup', stop_resize);
 
-			if ( !document.all ) // XXX bad
+			if ( !Util.Browser.IE ) // XXX bad
 				_owner_document.documentElement.appendChild(resize_mask);
 
 			return Util.Event.prevent_default(event);
@@ -20381,7 +20682,7 @@ UI.Loki = function Loki()
 		{
 			event = event == null ? window.event : event;
 
-			if ( !document.all ) // XXX bad
+			if ( !Util.Browser.IE ) // XXX bad
 				_owner_document.documentElement.removeChild(resize_mask);
 
 			var coords = determine_coords(event);
@@ -20453,14 +20754,7 @@ UI.Loki = function Loki()
 	 */
 	var _get_height = function()
 	{
-		if ( _is_textarea_active() )
-		{
-			return _textarea.clientHeight;
-		}
-		else
-		{
-			return _iframe_wrapper.clientHeight;
-		}
+		return (_is_textarea_active() ? _textarea : _iframe_wrapper).clientHeight;
 	};
 
 	/**
@@ -20534,12 +20828,14 @@ UI.Loki = function Loki()
 	 */
 	var _clear_document = function()
 	{
+		var html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\n'+
+			'\t"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n'+
+			'<html>\n\t<head xmlns="http://www.w3.org/1999/xhtml">\n'+
+			'\t<title>Loki editing document</title>\n</head>\n'+
+			'<body></body>\n</html>';
+			
 		_document.open();
-		_document.write(
-			'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' +
-			'<html><head><title></title></head><body>' +
-			'</body></html>'
-		);
+		_document.write(html);
 		_document.close();
 	};
 
@@ -20554,46 +20850,25 @@ UI.Loki = function Loki()
 	 */
 	var _make_document_editable = function()
 	{
-		// IE way
-		try
-		{
+		if (Util.Browser.IE) {
 			_body.contentEditable = true;
-			// If the document isn't editable, this will throw an
-			// error. If the document is editable, this is perfectly
-			// harmless.
-			_query_command_state('Bold');
-		}
-		// Mozilla way
-		catch(e)
-		{
-			try
-			{
-				// Turn on design mode.  N.B.: designMode has to be
-				// set after the iframe_elem's src is set (or its
-				// document is closed). ... Otherwise the designMode
-				// attribute will be reset to "off", and things like
-				// execCommand won't work (though, due to Mozilla bug
-				// #198155, the iframe's new document will be
-				// editable)
-				_document.designMode = 'on';
+			try {
+				// If the document isn't really editable, this will throw an
+				// error. If the document is editable, this is perfectly
+				// harmless.
+				_query_command_state('Bold');
+			} catch (e) {
+				throw new Util.Unsupported_Error('rich text editing');
+			}
+		} else {
+			_document.designMode = 'On';
+			try {
 				_document.execCommand('undo', false, null);
-				//_query_command_state('Bold');
-			}
-			catch(f)
-			{
-				throw(new Error('UI.Loki._init_editor_iframe: Neither the IE nor the Mozilla way of starting the editor worked.'+
-								'When the IE way was tried, the following error was thrown: <<' + e.message + '>>. ' +
-								'When the Mozilla way was tried, the following error was thrown: <<' + f.message + '>>.'));
+				_document.execCommand('useCSS', false, true);
+			} catch (e) {
+				throw new Util.Unsupported_Error('rich text editing');
 			}
 		}
-
-		// Tell Mozilla to use CSS.  Wrap in try block because IE
-		// doesn't have a useCSS command, nor do some older versions
-		// of Mozilla (even ones that support designMode),
-		// e.g. Gecko/20030312 Mozilla 1.3 OS X
-		try {
-			_document.execCommand('useCSS', false, true);
-		} catch (e) {}
 	};
 
 	/**
@@ -20608,20 +20883,12 @@ UI.Loki = function Loki()
 	{
 		function add_masseuse(masseuse_class)
 		{
-			var masseuse = new masseuse_class;
+			var masseuse = new masseuse_class();
 			masseuse.init(self);
 			_masseuses.push(masseuse);
-		};
-
-		// innerHTML masseuses must go first, ...
-		if ( _settings.options.test('table') ) add_masseuse(UI.Table_Masseuse);
-		// ... before any add_event_listener masseuses
-		if ( _settings.options.test('anchor') ) add_masseuse(UI.Anchor_Masseuse);
-		if ( _settings.options.test('olist') || _settings.options.test('ulist') ) add_masseuse(UI.UL_OL_Masseuse);
-		if ( _settings.options.test('image') ) add_masseuse(UI.Image_Masseuse);
-		if ( _settings.options.test('hrule') ) add_masseuse(UI.HR_Masseuse);
-		add_masseuse(UI.Italic_Masseuse);
-		add_masseuse(UI.Bold_Masseuse);
+		}
+		
+		enumerate_options('masseuses').each(add_masseuse);
 	};
 
 	/**
@@ -20665,6 +20932,18 @@ UI.Loki = function Loki()
 			_masseuses[i].unmassage_node_descendants(node);
 		}
 	};
+	
+	function _add_double_click_listeners()
+	{
+		function add(listener_class) {
+			var listener = (new listener_class()).init(self);
+			Util.Event.observe(_body, 'dblclick', function(ev) {
+				listener.double_click(ev);
+			});
+		}
+		
+		enumerate_options('double_click_listeners').each(add);
+	}
 
 	/**
 	 * Add certain event listeners to the document, e.g. to listen to
@@ -20678,8 +20957,9 @@ UI.Loki = function Loki()
 		var tinyMCE = new TinyMCE();
 		tinyMCE.init(_window, control);
 		
-		var paste_dni; // a DOMNodeInserted event handler has been registered
-		var ni_count = 0;
+		var paste_keyup = false; // a keyup event listener has been registered
+		var mod_key = (Util.Browser.Mac ? 'meta' : 'ctrl') + 'Key';
+		var mod_key_pressed = null;
 
 		var paragraph_helper = (new UI.Paragraph_Helper).init(self);
 		Util.Event.add_event_listener(_document, 'keypress', function(event)
@@ -20691,7 +20971,7 @@ UI.Loki = function Loki()
 		Util.Event.add_event_listener(_document, 'keypress', function(event)
 		{
 			event = event == null ? _window.event : event;
-			if ( !_document.all ) // XXX bad
+			if ( !Util.Browser.IE ) // XXX bad
 			{
 				Util.Fix_Keys.fix_delete_and_backspace(event, _window);
 				tinyMCE.handleEvent(event);
@@ -20702,137 +20982,131 @@ UI.Loki = function Loki()
 		Util.Event.add_event_listener(_document, 'keypress', function(event)
 		{
 			event = event == null ? _window.event : event;
-			if ( _document.all ) // XXX bad
+			if ( Util.Browser.IE ) // XXX bad
 			{
 				return Util.Fix_Keys.fix_enter_ie(event, _window, self);
 			}
 		});
 
-		Util.Event.add_event_listener(_document, 'keydown', function(event)
-		{
-			return;
-			/*
-			event = event == null ? _window.event : event;
-			//Util.Fix_Keys.fix_enter_keydown(event, _window);
-			Util.Fix_Keys.tinymce_fix_keyupdown(event, _window);
-
-			// This does fix the display-spacing bug,--but breaks 
-			// the motion keys 
-			//_body.style.display = 'none';
-			//_body.style.display = 'block';
-			*/
-		});
-
-		/* 2006-07-11 commented for testing: not at all sure it should be commented.
-		(Nothing seems to have changed after commenting, so I will leave commented.
-		Util.Event.add_event_listener(_document, 'keyup', function(event) 
-		{
-			event = event == null ? _window.event : event;
-			//Util.Fix_Keys.fix_enter_keyup(event, _window);
-			Util.Fix_Keys.tinymce_fix_keyupdown(event, _window);
-		});
-		*/
-
 		Util.Event.add_event_listener(_document, 'contextmenu', function(event) 
 		{
 			return _show_contextmenu(event || _window.event);
 		});
-
-		// XXX: perhaps you should put these two in classes similar to UI.Keybinding
-		if ( _settings.options.test('link') )
-		{
-			var link_helper = (new UI.Link_Helper).init(self);
-			Util.Event.add_event_listener(_body, 'dblclick', function(event)
-			{
-				if ( link_helper.is_selected() )
-					link_helper.open_page_link_dialog();
+		
+		if (Util.Browser.IE) {
+			function select_end(sel, range, el) {
+				var c, text, length;
+				for (c = el.lastChild; c; c = c.previousSibling) {
+					if (c.nodeType == Util.Node.ELEMENT_NODE) {
+						if (c.nodeName in Util.Element.empty) {
+							Util.Range.set_start_after(range, c);
+							Util.Range.set_end_after(range, c);
+							Util.Selection.select_range(sel, range);
+							return true;
+						} else if (select_end(sel, range, c)) {
+							return true;
+						}
+					} else if (c.nodeType == Util.Node.TEXT_NODE) {
+						length = c.nodeValue.length;
+						Util.Range.set_start(range, c, length);
+						Util.Range.set_end(range, c, length);
+						Util.Selection.select_range(sel, range);
+						return true;
+					}
+				}
+				
+				text = el.ownerDocument.createTextNode('');
+				el.insertBefore(text, el.lastChild);
+				
+				Util.Range.set_start(range, text, 0);
+				Util.Range.set_end(range, text, 0);
+				Util.Selection.select_range(sel, range);
+				return true;
+			}
+			
+			Util.Event.observe(_document, 'mouseup', function(event) {
+				var sel, range;
+				
+				if (event.srcElement.tagName == 'HTML') {
+					self.focus();
+					
+					sel = Util.Selection.get_selection(_window);
+					range = Util.Document.create_range(_document);
+					select_end(sel, range, _body);
+					
+					event.cancelBubble = true;
+					event.returnValue = false;
+				}
 			});
 		}
-
-		if ( _settings.options.test('anchor') )
-		{
-			var anchor_helper = (new UI.Anchor_Helper).init(self);
-			Util.Event.add_event_listener(_body, 'dblclick', function(event)
-			{
-				if ( anchor_helper.is_selected() )
-					anchor_helper.open_dialog();
-			});
-		}
-
-		if ( _settings.options.test('image') )
-		{
-			var image_helper = (new UI.Image_Helper).init(self);
-			Util.Event.add_event_listener(_body, 'dblclick', function(event)
-			{
-				if ( image_helper.is_selected() )
-					image_helper.open_dialog();
-			});
-		}
-
-
-		if ( _settings.options.test('statusbar') )
+		
+		if ( _options.statusbar )
 		{
 			Util.Event.add_event_listener(_document, 'keyup', function() { _update_statusbar(); });
 			Util.Event.add_event_listener(_document, 'click', function() { _update_statusbar(); });
 			Util.Event.add_event_listener(_toolbar, 'click', function() { _update_statusbar(); });
 		}
 		
-		if (_settings.options.test('clipboard')) {
-			function perform_cleanup(last_ni_count)
-			{
-				var c_count = ni_count; // current count
+		function perform_cleanup()
+		{
+			_unmassage_body();
+			UI.Clean.clean(_body, _settings, true);
+			_massage_body();
+		}
+		
+		function handle_paste_event(ev)
+		{
+			if (paste_keyup && ev.type == 'paste') {
+				// If the browser is capable of generating actual paste
+				// events, then remove the DOMNodeInserted handler.
 				
-				if (Util.is_number(last_ni_count) && c_count > last_ni_count) {
-					// More has happened since we last looked; wait some more.
-					wait_to_cleanup(c_count);
-					return;
-				}
-				
-				ni_count = 0;
-				UI.Clean.clean(_body, _settings, true);
+				Util.Event.remove_event_handler(_document, 'keyup',
+					key_raised);
+				paste_keyup = false;
 			}
 			
-			function handle_paste_event(ev)
-			{
-				if (paste_dni && ev.type == 'paste') {
-					// If the browser is capable of generating actual paste
-					// events, then remove the DOMNodeInserted handler.
-					
-					Util.Event.remove_event_handler(_document, 'DOMNodeInserted',
-						node_inserted);
-					paste_dni = false;
-				}
-				
-				perform_cleanup(null);
+			perform_cleanup();
+		}
+		
+		// Q: Eric, why is there all this code to accomplish the simple task
+		//    of figuring out if the user pressed (Command|Ctrl)+V?
+		// A: Firefox/Mac does not always give us a keydown event for when
+		//    Cmd+V is pressed. We can't simply look for a Cmd+V keyup, as
+		//    it's perfectly acceptable to release the command key before
+		//    the V key, so the V's keyup event may have metaKey set to
+		//    false. Therefore, we look for a Command keydown and store the
+		//    time at which it happened. If we get a keyup for V within 2
+		//    seconds of this, run a cleanup.
+		
+		function key_pressed(ev)
+		{
+			if (!paste_keyup)
+				return;
+			if (ev[mod_key]) {
+				// We might be starting a paste.
+				mod_key_pressed = (new Date()).getTime();
 			}
-			
-			function wait_to_cleanup(current_ni_count)
-			{
-				(function call_cleanup_performer() {
-					perform_cleanup(current_ni_count);
-				}).delay(0.15);
+		}
+		
+		function key_raised(ev)
+		{
+			if (!paste_keyup)
+				return;
+			if (mod_key_pressed && ev.keyCode == 86 /* V */) {
+				if (mod_key_pressed + 2000 >= (new Date()).getTime())
+					perform_cleanup();
+				mod_key_pressed = null;
 			}
-			
-			function node_inserted(ev)
-			{
-				if (ni_count <= 0) {
-					ni_count = 1;
-					wait_to_cleanup(1);
-				} else {
-					ni_count++;
-				}
-			}
-			
-			Util.Event.observe(_document, 'paste', handle_paste_event);
-			if (Util.Browser.IE) {
-				// We know that we have paste events.
-				paste_dni = false;
-			} else {
-				paste_dni = true;
-				Util.Event.observe(_document, 'DOMNodeInserted',
-					node_inserted);
-			}
-			
+		}
+		
+		Util.Event.observe(_document, 'paste', handle_paste_event);
+		if (Util.Browser.IE) {
+			// We know that we have paste events.
+			paste_keyup = false;
+		} else {
+			paste_keyup = true;
+			Util.Event.observe(_document, 'keydown', key_pressed);
+			Util.Event.observe(_document, 'keyup', key_raised);
 		}
 		
 		function submit_handler(ev)
@@ -20840,8 +21114,9 @@ UI.Loki = function Loki()
 			try {
 				self.copy_iframe_to_hidden();
 			} catch (ex) {
-				alert("Loki encountered an error and was unable to translate " +
-					"your document into normal HTML.\n\n" + ex);
+				alert("An error occurred that is preventing your document " +
+					"from being safely submitted.\n\nTechnical details:\n" +
+					ex);
 				Util.Event.prevent_default(ev);
 				return false;
 			}
@@ -20941,25 +21216,13 @@ UI.Loki = function Loki()
 			return true; // bubble
 		};
 
-		if ( _settings.options.test('strong') ) add_keybinding(UI.Bold_Keybinding); // Ctrl-B
-		if ( _settings.options.test('em') ) add_keybinding(UI.Italic_Keybinding); // Ctrl-I
-		if ( _settings.options.test('underline') ) add_keybinding(UI.Underline_Keybinding); // Ctrl-U
-		if ( _settings.options.test('clipboard') ) add_keybinding(UI.Cut_Keybinding); // Ctrl-X
-		if ( _settings.options.test('clipboard') ) add_keybinding(UI.Copy_Keybinding); // Ctrl-C
-		if ( _settings.options.test('clipboard') ) add_keybinding(UI.Paste_Keybinding); // Ctrl-V
-		if ( _settings.options.test('align') ) add_keybinding(UI.Left_Align_Keybinding); // Ctrl-L
-		if ( _settings.options.test('align') ) add_keybinding(UI.Center_Align_Keybinding); // Ctrl-E
-		if ( _settings.options.test('align') ) add_keybinding(UI.Right_Align_Keybinding); // Ctrl-R
-		if ( _settings.options.test('findtext') ) add_keybinding(UI.Find_Keybinding); // Ctrl-F (H?)
-		if ( _settings.options.test('link') ) add_keybinding(UI.Page_Link_Keybinding); // Ctrl-K
-		//if ( _settings.options.test('source') ) add_keybinding(UI.Source_Keybinding);
-		if ( _settings.options.test('spell') ) add_keybinding(UI.Spell_Keybinding); // F7
+		enumerate_options('keybindings').each(add_keybinding);
 		add_keybinding(UI.Delete_Element_Keybinding); // Delete image, anchor, HR, or table when selected
 		add_keybinding(UI.Tab_Keybinding); // Tab
 
 		// We need to listen for different key events for IE and Gecko,
 		// because their default actions are on different events.
-		if ( document.all ) // IE // XXX: hack
+		if ( Util.Browser.IE ) // IE // XXX: hack
 		{
 			Util.Event.add_event_listener(_document, 'keydown', function(event) 
 			{ 
@@ -20991,17 +21254,9 @@ UI.Loki = function Loki()
 		{
 			var menugroup = (new menugroup_class).init(self);
 			_menugroups.push(menugroup);
-		};
-
-		if ( _settings.options.test('headline') ) add_menugroup(UI.Headline_Menugroup);
-		if ( _settings.options.test('image') ) add_menugroup(UI.Image_Menugroup);
-		if ( _settings.options.test('anchor') ) add_menugroup(UI.Anchor_Menugroup);
-		if ( _settings.options.test('link') ) add_menugroup(UI.Link_Menugroup);
-		if ( _settings.options.test('table') ) add_menugroup(UI.Table_Menugroup);
-		if ( _settings.options.test('align') ) add_menugroup(UI.Align_Menugroup);
-		// This doesn't work properly right now:
-		//if ( _settings.options.test('highlight') ) add_menugroup(UI.Highlight_Menugroup);
-		if ( _settings.options.test('clipboard') ) add_menugroup(UI.Clipboard_Menugroup);
+		}
+		
+		enumerate_options('menugroups').each(add_menugroup);
 	};
 
 	/**
@@ -21010,17 +21265,24 @@ UI.Loki = function Loki()
 	var _show_contextmenu = function(event)
 	{
 		var menu = (new UI.Menu).init(self);
+		var i, menuitems, added = false;
 
 		// Get appropriate menuitems
-		for ( var i = 0; i < _menugroups.length; i++ )
-		{
-			var menuitems = _menugroups[i].get_contextual_menuitems();
-			menu.add_menuitems(menuitems);
+		for (i = 0; i < _menugroups.length; i++) {
+			menuitems = _menugroups[i].get_contextual_menuitems();
+			if (menuitems && menuitems.length > 0) {
+				if (!added)
+					added = true;
+				else
+					menu.add_menuitem((new UI.Separator_Menuitem).init());
+				
+				menu.add_menuitems(menuitems);
+			}
 		}
 
 		// Determine the coordinates at which the menu should be displayed.
 		var frame_pos = Util.Element.get_position(_iframe);
-		var event_pos = Util.Event.get_coordinates(event);
+		var event_pos = {x: event.clientX, y: event.clientY};
 		var root_offset = Util.Element.get_relative_offsets(_owner_window,
 			_root);
 		
@@ -21125,15 +21387,11 @@ UI.Loki = function Loki()
 	 */
 	this.toggle_block = function(tag)
 	{
-		if ( _query_command_value('FormatBlock') != tag )
-		{
-			_exec_command('FormatBlock', false, '<' + tag + '>');
-		}
-		else
-		{
-			_exec_command('FormatBlock', false, '<p>');
-		}
-
+		var tag_string = (_query_command_value('FormatBlock') != tag)
+			? '<' + tag + '>'
+			: '<p>';
+		
+		_exec_command('FormatBlock', false, tag_string);
 		_window.focus();
 	};
 
@@ -21164,3 +21422,268 @@ UI.Loki = function Loki()
 		}
 	};
 };
+
+UI.Loki.Options = new Util.Chooser();
+UI.Loki.Options._add_bundled = function add_bundled_loki_options() {
+	this.add('bold', {
+		buttons: [UI.Bold_Button],
+		masseuses: [UI.Bold_Masseuse],
+		keybindings: [UI.Bold_Keybinding]
+	});
+	this.add('italic', {
+		buttons: [UI.Italic_Button],
+		masseuses: [UI.Italic_Masseuse],
+		keybindings: [UI.Italic_Keybinding]
+	});
+	this.add('underline', {
+		buttons: [UI.Underline_Button],
+		keybindings: [UI.Underline_Keybinding]
+	});
+	this.add('headings', {
+		buttons: [UI.Headline_Button],
+		menugroups: [UI.Headline_Menugroup],
+		keybindings: []
+	});
+	this.add('pre', {
+		buttons: [UI.Pre_Button]
+	});
+	this.add('br', {
+		buttons: [UI.BR_Button]
+	});
+	this.add('hr', {
+		buttons: [UI.HR_Button]
+	});
+	this.add('clipboard', {
+		buttons: [UI.Cut_Button, UI.Copy_Button, UI.Paste_Button],
+		menugroups: [UI.Clipboard_Menugroup],
+		keybindings: [UI.Cut_Keybinding, UI.Copy_Keybinding, UI.Paste_Keybinding]
+	});
+	this.add('highlight', {
+		buttons: [UI.Highlight_Button]
+	});
+	this.add('align', {
+		// buttons: [UI.Left_Align_Button, UI.Center_Align_Button, UI.Right_Align_Button],
+		menugroups: [UI.Align_Menugroup],
+		keybindings: [UI.Left_Align_Keybinding, UI.Center_Align_Keybinding, UI.Right_Align_Keybinding]
+	});
+	this.add('blockquotes', {
+		buttons: [UI.Blockquote_Button]
+	});
+	this.add('lists', {
+		buttons: [UI.OL_Button, UI.UL_Button, UI.Indent_Button, UI.Outdent_Button],
+		masseuses: [UI.UL_OL_Masseuse]
+	});
+	this.add('find', {
+		buttons: [UI.Find_Button],
+		keybindings: [UI.Find_Keybinding]
+	});
+	this.add('tables', {
+		buttons: [UI.Table_Button],
+		masseuses: [UI.Table_Masseuse],
+		menugroups: [UI.Table_Menugroup]
+	});
+	this.add('images', {
+		buttons: [UI.Image_Button],
+		masseuses: [UI.Image_Masseuse],
+		double_click_listeners: [UI.Image_Double_Click]
+	});
+	this.add('links', {
+		buttons: [UI.Page_Link_Button],
+		menugroups: [UI.Link_Menugroup],
+		keybindings: [UI.Page_Link_Keybinding],
+		double_click_listeners: [UI.Link_Double_Click]
+	});
+	this.add('anchors', {
+		buttons: [UI.Anchor_Button],
+		masseuses: [UI.Anchor_Masseuse],
+		menugroups: [UI.Anchor_Menugroup],
+		double_click_listeners: [UI.Anchor_Double_Click]
+	});
+	this.add('cleanup', {
+		buttons: [UI.Clean_Button]
+	});
+	this.add('source', {
+		buttons: [UI.Source_Button]
+	});
+	this.add('debug', {
+		buttons: [UI.Raw_Source_Button]
+	});
+	//this.add('statusbar', true);
+	
+	// Some of these aliases are for installer sanity, while others are for
+	// Loki 1 compatibility.
+	this.alias('bold', 'strong');
+	this.alias('italic', 'em');
+	this.alias('tables', 'table');
+	this.alias('images', 'image');
+	this.alias('links', 'link');
+	this.alias('lists', 'list');
+	this.alias('blockquotes', 'blockquote');
+	this.alias('anchors', 'anchor');
+	this.alias('headings', 'heading');
+	this.alias('headings', 'headlines');
+	this.alias('headings', 'headline');
+	this.alias('br', 'linebreaks');
+	this.alias('br', 'linebreak');
+	this.alias('find', 'findtext');
+	
+	this.put_set('default', ['strong', 'em', 'headline', 'br', 'hr',
+		'highlight', 'align', 'blockquotes', 'lists', 'find', 'images',
+		'links', 'cleanup']);
+	this.put_set('power', ['strong', 'em', 'headline', 'br', 'hr', 'pre',
+		'clipboard', 'highlight', 'align', 'blockquotes', 'lists',
+		'find', 'tables', 'images', 'links', 'anchors', 'cleanup', 'source']);
+	this.put_set('developer', ['power', 'debug']);
+};
+
+var Loki = {
+	/**
+	 * Converts the given textarea to an instance of the Loki WYSIWYG editor.
+	 * @param {HTMLTextAreaElement} area a TEXTAREA element or the ID of one
+	 * @param {object} [settings] Loki settings
+	 * @param {function} [callback] a function that will be called when the
+	 *        conversion is finished
+	 * @see UI.Loki#init
+	 * @see http://code.google.com/p/loki-editor/wiki/Settings
+	 * @returns {void}
+	 */
+	convert_textarea: function loki_convert_textarea(area, settings,
+		callback)
+	{
+		Loki.convert_textareas([area], settings || {}, callback || null);
+	},
+	
+	/**
+	 * Converts the given textareas to instances of the Loki WYSIWYG editor.
+	 * @param {HTMLTextAreaElement[]} areas an array of TEXTAREA elements to
+	 * convert, or the ID's of the elements
+	 * @param {object} [settings] Loki settings
+	 * @param {function} [callback] a function that will be called as the
+	 *        conversions are finished
+	 * @see UI.Loki#init
+	 * @see http://code.google.com/p/loki-editor/wiki/Settings
+	 * @returns {void}
+	 */
+	convert_textareas: function loki_convert_textareas(areas, settings,
+		callback)
+	{	
+		var area;
+		var instance;
+		
+		for (var i = 0; i < areas.length; i++) {
+			if (typeof(areas[i]) == 'string') {
+				area = document.getElementById(areas[i]);
+				if (!area) {
+					if (Loki._loaded) {
+						throw new Error('No element with the ID of "' +
+							areas[i] + '" exists in the document.');
+					}
+					Loki._pend(areas[i], settings || {}, callback || null);
+					continue;
+				}
+			} else {
+				area = areas[i];
+			}
+			
+			if (!Util.Node.is_tag(area, "TEXTAREA")) {
+				throw new TypeError("Unable to convert a non-textarea to a " +
+					"Loki instance.");
+			}
+			
+			instance = (new UI.Loki).init(area, settings || {});
+			
+			if (callback) {
+				callback(instance, area);
+			}
+		}
+	},
+	
+	/**
+	 * Converts all of the textareas in the document which have the specified
+	 * class(es).
+	 * @param {string} classes	one or more class names
+	 * @param {object} [settings] Loki settings
+	 * @param {function} [callback] a function that will be called as the
+	 *        conversions are finished
+	 * @returns {void}
+	 */
+	convert_textareas_by_class: function loki_convert_classed_textareas(classes,
+		settings, callback)
+	{
+		function get_textareas()
+		{
+			return Util.Element.find_by_class(document, classes);
+		}
+		
+		if (this._loaded) {
+			Loki.convert_textareas(get_textareas(), settings, callback);
+		} else {
+			Loki._pend(get_textareas, settings || {}, callback || null);
+		}
+	},
+	
+	/**
+	 * Converts all of the textareas on the document into Loki instances.
+	 * @param {object} [settings] Loki settings
+	 * @param {function} [callback] a function that will be called as the
+	 *        conversions are finished
+	 * @see UI.Loki#init
+	 * @see http://code.google.com/p/loki-editor/wiki/Settings
+	 * @returns {void}
+	 */
+	convert_all_textareas: function loki_convert_all_textareas(settings,
+		callback)
+	{
+		if (this._loaded) {
+			Loki.convert_textareas(document.getElementsByTagName("TEXTAREA"),
+				settings || {}, callback);
+		} else {
+			Loki._pend(null, settings || {}, callback || null);
+		}
+		
+	},
+	
+	/**
+	 * The Loki version.
+	 * @type string
+	 */
+	version: "2.0rc5",
+	
+	/** @private */
+	_pending: [],
+	/** @private */
+	_loaded: false,
+	
+	/** @private */
+	_pend: function loki_pend_textarea(area, settings, callback) {
+		this._pending.push([area, settings, callback]);
+	},
+	
+	/** @private */
+	_finish_conversions: function loki_finish_conversions() {
+		var a;
+		
+		if (this._loaded)
+			return false;
+		this._loaded = true;
+		
+		while (a = this._pending.pop()) {
+			if (a[0] == null) {
+				Loki.convert_all_textareas(a[1], a[2]);
+				return true;
+			} else if (typeof(a[0]) == 'function') {
+				Loki.convert_textareas(a[0](), a[1], a[2]);
+			} else {
+				Loki.convert_textarea(a[0], a[1], a[2]);
+			}
+		}
+		
+		return true;
+	}
+};
+
+(function loki_wait_for_load() {
+	var done = Loki._finish_conversions.bind(Loki);
+	Util.Event.observe(document, 'DOMContentLoaded', done);
+	Util.Event.observe(window, 'load', done);
+})();

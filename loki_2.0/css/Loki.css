@@ -26,43 +26,49 @@
 
 .loki .toolbar
 {
-	line-height:23px;
+	line-height: 23px;
 }
 
 .loki .toolbar a
 {
-	border: #e2e2d2 solid 1px;
+	border: #E2E2D2 solid 1px;
 
-	margin:2px 1px;
+	margin: 2px 1px;
 	vertical-align: top;
 }
 
-.loki .toolbar a img
+.loki .toolbar a img, .loki .toolbar a span
 {
 	vertical-align: top;
-	/* this makes a weird blue border in IE (maybe b/c it's a link?) ... */
-	/*border: transparent solid 1px;*/
-	/* ... so instead we add a margin here and take it away below: */
-	margin: 1px;
+	padding: 2px 1px;
+	margin: 2px 1px;
+	height: 16px;
+	width: 16px;
+	cursor: pointer;
 }
 
-.loki .toolbar a.hover img    /* use real classes rather than pseudo-classes to accomodate IE */
+.loki .toolbar a span.loki_filtered_button
+{
+	display: inline-block;
+}
+
+.loki .toolbar a.hover img, .loki .toolbar a.hover span
 {
 	background-color: buttonface;
 	border-bottom: buttonshadow solid 1px;
 	border-left: buttonhighlight solid 1px;
 	border-right: buttonshadow solid 1px;
-	border-top:  buttonhighlight solid 1px;
-	margin: 0px;
+	border-top: buttonhighlight solid 1px;
+	margin: 1px 0px;
 }
 
-.loki .toolbar a.active img   /* use real classes rather than pseudo-classes to accomodate IE */
+.loki .toolbar a.active img, .loki .toolbar a.active span
 {
 	background-color: buttonface;
 	border-bottom: buttonhighlight solid 1px;
 	border-left: buttonshadow solid 1px;
 	border-right: buttonhighlight solid 1px;
-	border-top:  buttonshadow solid 1px;
+	border-top: buttonshadow solid 1px;
 	margin: 0px;
 }
 
@@ -70,7 +76,6 @@
 .loki .contextmenu
 {
 	background-color: ButtonFace;
-	/*border: outset 2px lightgrey;*/
 	border: 2px solid buttonshadow;
 	border-left-color: buttonhighlight;
 	border-top-color: buttonhighlight;

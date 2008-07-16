@@ -13,11 +13,9 @@ if (!defined('LOKI_2_PATH')) {
 		// old constant name
 		define('LOKI_2_PATH', LOKI_2_INC);
 	} else {
-		define('LOKI_2_PATH', Loki2::_guess_path());
+		guess_loki2_path();
 	}
 }
-
-include_once(LOKI_2_PHP_INC.'options.php'); // so we can get L_DEFAULT etc.
 
 /**
  * Second generation of the Loki XHTML editor
@@ -66,7 +64,6 @@ class Loki2
 	var $_field_value;
 	var $_editor_id;
 	var $_editor_obj;
-	var $_user_is_admin;
 	var $_feeds = array();
 	var $_default_site_regexp = '';
 	var $_default_type_regexp = '';
@@ -81,10 +78,9 @@ class Loki2
 	 * @param	string	$field_name		  How Loki is identified within its containing form. This will become the name of the textarea that Loki creates
 	 *									  and therefore of the request variable received by the form's action.
 	 * @param	string	$field_value	  The HTML that Loki will initially be editing.
-	 * @param	string	$current_options  Indicates which buttons etc Loki should present to the user. For the possible values, see js/UI.Loki_Options.js
-	 * @param	boolean $user_is_admin	  Whether the user is an administrator. Administrators can get options normal users can't.
+	 * @param	string	$current_options  Indicates which buttons etc Loki should present to the user.
 	 */
-	function Loki2( $field_name, $field_value = '', $current_options = 'default', $user_is_admin = false, $debug = false )
+	function Loki2($field_name, $field_value='', $current_options=null)
 	{
 		if (!defined('LOKI_2_HTTP_PATH')) {
 			trigger_error('The constant LOKI_2_HTTP_PATH must be defined '.
@@ -105,8 +101,6 @@ class Loki2
 		$this->_set_field_value($field_value);
 		$this->_editor_id = uniqid('loki');
 		$this->_editor_obj = $this->_editor_id."_obj";
-		$this->_user_is_admin = $user_is_admin;
-		$this->_debug = $debug;
 	}
 
 	/**
@@ -166,7 +160,7 @@ class Loki2
 		$path_arrays = func_get_args();
 		
 		foreach ($path_arrays as $paths) {
-			foreach ($paths as $path) {
+			foreach (((array) $paths) as $path) {
 				$this->_document_style_sheets[] = $path;
 			}
 		}
@@ -187,7 +181,6 @@ class Loki2
 		<script type="text/javascript" language="javascript">
 		//document.domain = 'carleton.edu'; /// XXX: for testing; maybe remove later if not necessary
 		var <?php echo $id ?>;
-		var loki_debug = <?php echo $this->_debug ? 'true' : 'false' ?>; // set to false or remove when live
 		function <?php echo $onload ?>()
 		{
 			if (!UI || !Util) {
@@ -201,40 +194,9 @@ class Loki2
 			}
 			
 			<?php echo $id ?> = new UI.Loki;
+			<?php $settings = $this->_get_js_settings_object(); ?>
 			
-			var options = new UI.Loki_Options;
-			<?php
-			if ( is_array($this->_current_options) )
-			{
-				echo "options.init(['";
-				echo implode("', '", $this->_current_options)."'";
-			}
-			else
-				echo "options.init(['" . $this->_current_options . "'";
-
-			// Source is only available if the user is an admin
-			if ($this->_user_is_admin)
-				echo ", 'source'";
-			echo "], '');\n";
-			// XXX deal with minuses
-
-			//echo "options.init(['all', 'source'], '');\n"; // XXX tmp, for testing
-			?>
-			
-			var settings = {
-				base_uri : '<?php echo $this->_asset_path; ?>',
-				<?php $this->_feed('images') ?>
-				<?php $this->_feed('sites') ?>
-				<?php $this->_feed('finder') ?>
-				default_site_regexp : new RegExp('<?php echo $this->_default_site_regexp; ?>'),
-				default_type_regexp : new RegExp('<?php echo $this->_default_type_regexp; ?>'),
-				use_xhtml : true,
-				<?php $this->_bool_param('sanitize_unsecured') ?>
-				<?php $this->_o_param('document_style_sheets') ?>
-				<?php $this->_o_param('allowable_tags', true) ?>
-				options : options
-			};
-
+			var settings = <?php echo _js_serialize($settings) ?>;
 			
 			<?php echo $id ?>.init(document.getElementById('loki__<?php echo $this->_field_name; ?>__textarea'), settings);
 		}
@@ -306,7 +268,7 @@ class Loki2
 					$path = $this->_asset_path.'loki.js';
 				}
 
-				echo '<script type="text/javascript" language="javascript" src="'.$path.'">',
+				echo '<script type="text/javascript" charset="utf-8" language="javascript" src="'.$path.'">',
 					"</script>\n";
 			} else if ($mode == 'debug') {
 				$files = $this->_get_js_files();
@@ -324,7 +286,7 @@ class Loki2
 						'helpers/php/loki_editor_scripts.php';
 				}
 				
-				echo '<script type="text/javascript" src="'.$path.'">',
+				echo '<script type="text/javascript" src="'.$path.'" charset="utf-8">',
 					"</script>\n";
 			} else if ($mode == 'inline') {
 				$files = $this->_get_js_files();
@@ -332,7 +294,7 @@ class Loki2
 				if (!$files)
 					return false;
 				
-				echo '<script type="text/javascript">', "\n";
+				echo '<script type="text/javascript" charset="utf-8">', "\n";
 				foreach ($files as $filename) {
 					echo "\n// file $file \n\n";
 					readfile($base.$filename);
@@ -358,9 +320,7 @@ class Loki2
 	function js_regexp_quote($s)
 	{
 		$specials_pat = '/(\/|\.|\*|\+|\?|\||\(|\)|\[|\]|\{|\}|\\\\)/';
-		// first two \\\\ are for one \ each in the ultimate javascript code,
-		// and the ending \1 is a backreference:
-		return preg_replace($specials_pat, '\\\\\\\\\1', $s);
+		return preg_replace($specials_pat, '\\\\\1', $s);
 	}
 
 	/**
@@ -369,7 +329,7 @@ class Loki2
 	 */
 	function get_field_value()
 	{ 
-		return $this->_field_value; 
+		return $this->_field_value;
 	}
 
 	/**
@@ -419,91 +379,96 @@ class Loki2
 		return 'http';
 	}
 	
-	/**
-	 * @static
-	 * @return string
-	 */
-	function _guess_path()
+	function _get_js_settings_object()
 	{
-		return dirname(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR;
-	}
-	
-	function _bool_param($which, $last=false)
-	{
-		$var = '_'.$which;
-		$value = $this->$var;
+		$options = $this->_current_options;
 		
-		echo $which.' : '.(($value) ? 'true' : 'false');
+		$s = new stdClass; // create an anonymous object
 		
-		if (!$last)
-			echo ',';
-		echo "\n";
-	}
-	
-	function _o_param($which, $last=false)
-	{
-		$var = '_'.$which;
+		if ($this->_asset_path)
+			$s->base_uri = $this->_asset_path;
+		if ($options)
+			$s->options = $options;
 		
-		if (!empty($this->$var)) {
-			echo $which.' : ', $this->_js_translate($this->$var);
-			if (!$last)
-				echo ',';
+		foreach (array('images', 'sites', 'finder') as $f) {
+			if (!empty($this->_feeds[$f]))
+			$s->{$f.'_feed'} = $this->_feeds[$f];
 		}
-		echo "\n";
+		if ($this->_default_site_regexp)
+			$s->default_site_regexp = $this->_default_site_regexp;
+		if ($this->_default_type_regexp)
+			$s->default_type_regexp = $this->_default_type_regexp;
+		$s->use_xhtml = true;
+		if ($this->_sanitize_unsecured)
+			$s->sanitize_unsecured = $this->_sanitize_unsecured;
+		if ($this->_document_style_sheets)
+			$s->document_style_sheets = $this->_document_style_sheets;
+		if ($this->_allowable_tags)
+			$s->allowable_tags = $this->_allowable_tags;
+		
+		return $s;
 	}
+}
+
+/** @ignore */
+function guess_loki2_path()
+{
+	if (defined('LOKI_2_PATH'))
+		return;
 	
-	function _feed($which, $last=false)
-	{
-		if (!empty($this->_feeds[$which])) {
-			echo $which, '_feed : ',
-				$this->_js_translate($this->_feeds[$which]);
-			if (!$last)
-				echo ',';
+	$php_helper = dirname(__FILE__);
+	if (basename($php_helper) == 'php') {
+		$helpers = dirname($php_helper);
+		if (basename($helpers) == 'helpers') {
+			define('LOKI_2_PATH', dirname($helpers).DIRECTORY_SEPARATOR);
+			return;
 		}
-		echo "\n";
 	}
 	
-	function _js_translate($item)
-	{
-		if (is_scalar($item)) {
-			if (is_string($item)) {
-				return '"'.addslashes($item).'"';
-			} else if (is_numeric($item)) {
-				return $item;
-			} else if (is_bool($item)) {
-				return ($item) ? 'true' : 'false';
-			} else {
-				trigger_error('Unknown scalar type "'.gettype($item).'".',
-					E_USER_WARNING);
-				return 'undefined';
-			}
+	user_error('Cannot automatically determine the path to Loki 2; please '.
+		'define the LOKI_2_PATH constant.', E_USER_ERROR);
+}
+
+/** @ignore */
+function _js_serialize($item)
+{
+	if (is_scalar($item)) {
+		if (is_string($item)) {
+			return '"'.addslashes($item).'"';
+		} else if (is_numeric($item)) {
+			return $item;
+		} else if (is_bool($item)) {
+			return ($item) ? 'true' : 'false';
 		} else {
-			if (is_null($item)) {
-				return 'null';
-			} else if (is_array($item)) {
-				$trans_item = array();
-				foreach($item as $part)
-					$trans_item[] = $this->_js_translate($part);
-				return '['.implode(', ',$trans_item).']';
-			} else if (is_object($item)) {
-				$repr = '{';
-				$first = true;
-				foreach ((array) $item as $k => $v) {
-					if ($first)
-						$first = false;
-					else
-						$repr .= ', ';
-					
-					$repr .= "'".addslashes($k)."': ".$this->_js_translate($v);
-				}
-				$repr .= '}';
-				return $repr;
-			} else {
-				trigger_error('Unknown non-scalar type "'.gettype($item).'".',
-					E_USER_WARNING);
-				return 'undefined';
+			trigger_error('Unknown scalar type "'.gettype($item).'".',
+				E_USER_WARNING);
+			return 'undefined';
+		}
+	} else {
+		if (is_null($item)) {
+			return 'null';
+		} else if (is_array($item)) {
+			return '['.implode(', ',
+				array_map('_js_serialize', $item)).']';
+		} else if (is_object($item)) {
+			$repr = '{';
+			$first = true;
+			foreach ((array) $item as $k => $v) {
+				if ($first)
+					$first = false;
+				else
+					$repr .= ', ';
+				
+				$repr .= "'".addslashes($k)."': "._js_serialize($v);
 			}
+			$repr .= '}';
+			return $repr;
+		} else {
+			trigger_error('Unknown non-scalar type "'.gettype($item).'".',
+				E_USER_WARNING);
+			return 'undefined';
 		}
 	}
 }
+
 ?>
