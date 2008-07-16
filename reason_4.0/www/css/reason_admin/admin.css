@@ -80,6 +80,9 @@ form {
 .nav {
 	text-decoration: none;
 }
+.nav:hover {
+	text-decoration:underline;
+}
 .viewFilter {
 	margin-right: 15px;
 	margin-bottom: 15px;
