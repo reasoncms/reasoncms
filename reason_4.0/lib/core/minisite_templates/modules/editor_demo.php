@@ -45,7 +45,7 @@
 				unset($params['paths']['finder_feed']);
 				unset($params['paths']['default_site_regexp']);
 				unset($params['paths']['default_type_regexp']);
-				$params['user_is_admin'] = true;
+				$params['widgets'] .= ' +source +debug';
 			}
 			$form->add_element('demo',$editor_name,$params);
 			$form->set_display_name('demo',' ');
@@ -54,16 +54,19 @@
 			if($form->get_value('demo'))
 			{
 				echo '<h3>Output</h3>'."\n";
+				echo '<p>(For security reasons, this may differ from the Raw and Tidied markup -- it has been run through <a href="http://htmlpurifier.org/">HTML Purifier</a>)</p>';
 				echo '<div class="echoBack">'."\n";
-				echo $form->get_value('demo');
+				echo carl_get_safer_html($form->get_value('demo'));
 				echo '</div>'."\n";
 				echo '<h3>Tidied Markup</h3>'."\n";
+				echo '<p>This is what you submitted after being run through <a href="http://tidy.sourceforge.net/">Tidy</a></p>';
 				echo '<div class="echoBack">'."\n";
 				echo nl2br(htmlspecialchars($form->get_value('demo')));
 				echo '</div>'."\n";
 				echo '<h3>Raw Markup</h3>'."\n";
+				echo '<p>This is exactly what you submitted</p>';
 				echo '<div class="echoBack">'."\n";
-				echo nl2br(htmlspecialchars($_POST['demo']));
+				echo nl2br(htmlspecialchars(conditional_stripslashes($_POST['demo'])));
 				echo '</div>'."\n";
 			}
 		}
