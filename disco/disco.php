@@ -2021,6 +2021,16 @@
 		} // }}}
 		
 		/**
+		* Set the actions
+		* @param array $actions Array of action in format of internal @link{actions} array
+		*/
+		function set_actions( $actions ) // {{{
+		{
+			$this->actions = $actions;
+		} // }}}
+		
+		
+		/**
 		*  Returns the names of elements and element groups in the order that they should be displayed.
 		*  Elements that are members of element groups will not appear in this array, since they will be displayed as part of the element group.
 		*  To get an array that just contains the names of elements (including elements that are members of element groups), use {@link get_element_names()}.
