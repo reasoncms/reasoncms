@@ -53,7 +53,7 @@ include_once( DISCO_INC . 'disco_db.php'); // Requires Disco_DB
  * @todo add more export formats
  * @todo implement archiving
  * @todo abstract out html generation into markup generator like system
- * @todo allow to work with a set of entities as a data source
+ * @todo implement plug in data models
  * @todo allow filtering to take place in php or mysql
  */
 class TableAdmin
@@ -329,9 +329,12 @@ class TableAdmin
 		$form =& $this->get_admin_form();
 		if (!$form) $form = new DiscoDefaultAdmin();
 		$this->set_admin_form($form);
-		$form->setup_db($this->get_db_conn(), $this->get_table_name(), $this->get_table_action_id()); 
-		$form->set_action($this->get_table_row_action());
-		$form->set_id_column_name($this->get_primary_key());
+		$form->setup_form($this);
+		// this is all discodb specific stuff ... should not really be here
+		//$form->setup_db($this->get_db_conn(), $this->get_table_name(), $this->get_table_action_id()); 
+		//$form->set_action($this->get_table_row_action());
+		//$form->set_id_column_name($this->get_primary_key());
+		
 		$form->init();
 	}
 	
@@ -503,7 +506,7 @@ class TableAdmin
 	function set_sort_order($order = NULL)
 	{
 		//only 'desc' or 'asc' are valid -- if invalid default to 'desc'
-		if (!is_null($order)) $this->sort_field = ((strtolower($order) == 'desc') || (strtolower($order) == 'asc')) ? strtolower($order) : 'desc';
+		if (!is_null($order)) $this->sort_order = ((strtolower($order) == 'desc') || (strtolower($order) == 'asc')) ? strtolower($order) : 'desc';
 		else
 		{
 			if ($af =& $this->get_admin_form())
@@ -1038,16 +1041,19 @@ class TableAdmin
 	 */
 	function gen_data_row($data_row, $class)
 	{
-		$row_id = $data_row[$this->primary_key];
+		$row_id = (isset($data_row[$this->primary_key])) ? $data_row[$this->primary_key] : false;
 		if (isset($this->fields_to_show)) 
 		{
 			$this->limit_columns($data_row);
 		}
 		$first = ' class="first"';
 		$ret = '<tr class="'.$class.'">';
-		$row_actions = $this->get_row_actions($data_row, $row_id);
-		$row_action_html = (!empty($row_actions)) ? $this->get_row_action_html($row_actions, $row_id) : 'None Available';
-		if ($this->show_actions_first_cell)
+		if ($row_id && (strlen($row_id) > 0))
+		{
+			$row_actions = $this->get_row_actions($data_row, $row_id);
+			$row_action_html = (!empty($row_actions)) ? $this->get_row_action_html($row_actions, $row_id) : 'None Available';
+		}
+		if ($this->show_actions_first_cell && isset($row_action_html) )
 		{
 			$ret .= '<td'.$first.'>'.$row_action_html.'</td>';
 			$first = '';
@@ -1059,7 +1065,7 @@ class TableAdmin
 			$ret .= '<td'.$first.'>'.$v.'</td>';
 			$first = '';
 		}
-		if ($this->show_actions_last_cell)
+		if ($this->show_actions_last_cell && isset($row_action_html) )
 		{
 			$ret .= '<td>'.$row_action_html.'</td>';
 		}
@@ -1069,21 +1075,20 @@ class TableAdmin
 	
 	function should_convert_field($k)
 	{
-		static $fields_to_entity_convert;
-		if (isset($fields_to_entity_convert[$k])) return $fields_to_entity_convert[$k];
+		if (isset($this->_fields_to_entity_convert[$k])) return $this->_fields_to_entity_convert[$k];
 		else
 		{
 			if (isset ($this->fields_to_entity_convert) && in_array($k, $this->fields_to_entity_convert))
 			{
-				$fields_to_entity_convert[$k] = true;
+				$this->_fields_to_entity_convert[$k] = true;
 			}
 			elseif (isset ($this->fields_to_entity_convert))
 			{
-				$fields_to_entity_convert[$k] = false;
+				$this->_fields_to_entity_convert[$k] = false;
 			}
-			else $fields_to_entity_convert[$k] = true;
+			else $this->_fields_to_entity_convert[$k] = true;
 		}
-		return $fields_to_entity_convert[$k];
+		return $this->_fields_to_entity_convert[$k];
 	}
 	
 	/**
@@ -1093,15 +1098,14 @@ class TableAdmin
 	 */
 	function limit_columns(&$row)
 	{
-		static $fields_to_unset;
 		$tn = $this->get_table_name();
 		$dbc = $this->get_db_conn();
-		if (!isset($fields_to_unset[$dbc][$tn]))
+		if (!isset($this->_fields_to_unset[$dbc][$tn]))
 		{
 			$row_fields = array_keys($row);
-			$fields_to_unset[$dbc][$tn] = array_diff($row_fields, $this->fields_to_show);
+			$this->_fields_to_unset[$dbc][$tn] = array_diff($row_fields, $this->fields_to_show);
 		}
-		foreach ($fields_to_unset[$dbc][$tn] as $z) { unset($row[$z]); }
+		foreach ($this->_fields_to_unset[$dbc][$tn] as $z) { unset($row[$z]); }
 	}
 	
 	/**
@@ -1111,13 +1115,12 @@ class TableAdmin
 	 */
 	function limit_export_columns(&$row)
 	{
-		static $fields_to_unset;
-		if (!isset($fields_to_unset))
+		if (!isset($this->_fields_to_unset))
 		{
 			$row_fields = array_keys($row);
-			$fields_to_unset = array_diff($row_fields, $this->fields_to_export);
+			$this->_fields_to_unset = array_diff($row_fields, $this->fields_to_export);
 		}
-		foreach ($fields_to_unset as $z) { unset($row[$z]); }
+		foreach ($this->_fields_to_unset as $z) { unset($row[$z]); }
 	}
 	
 	/**
@@ -1611,6 +1614,14 @@ class TableAdmin
 		function authenticate()
 		{
 			return false;
+		}
+		
+		// setup form is given a reference to the table_admin at instantiation and should be whatever necessary
+		function setup_form(&$table_admin)
+		{
+			$this->setup_db($table_admin->get_db_conn(), $table_admin->get_table_name(), $table_admin->get_table_action_id());
+			$this->set_action($table_admin->get_table_row_action());
+			$this->set_id_column_name($table_admin->get_primary_key());
 		}
 		
 		/**
