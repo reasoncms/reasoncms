@@ -49,6 +49,7 @@
 			}
 			$form->add_element('demo',$editor_name,$params);
 			$form->set_display_name('demo',' ');
+			$form->set_actions(array('Submit'));
 			$form->run();
 			
 			if($form->get_value('demo'))
