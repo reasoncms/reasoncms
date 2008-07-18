@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0rc5-pl1
+// Loki WYSIWIG Editor 2.0rc5-pl2
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-07-17 18:00:18 
+// Compiled 2008-07-18 12:12:17 
 // http://loki-editor.googlecode.com/
 
 
@@ -2423,6 +2423,17 @@ Util.Element = {
 	 */
 	empty: (['BR', 'AREA', 'LINK', 'IMG', 'PARAM', 'HR', 'INPUT', 'COL',
 		'BASE', 'META'].toSet()),
+		
+	/**
+	 * Determines if the given node or tag name represents an empty HTML tag.
+	 * @param {Element|String}
+	 * @return {Boolean}
+	 */
+	empty_tag: function is_empty_tag(el)
+	{
+		var tag = (el.nodeName || String(el)).toUpperCase();
+		return (tag in Util.Element.empty);
+	},
 	
 	/**
 	 * Gets an element's computed styles.
@@ -2505,6 +2516,9 @@ Util.Element = {
 					break;
 				case 'for':
 					attrs.htmlFor = v;
+					break;
+				case 'style':
+					attrs.style = v.style.cssText;
 					break;
 				default:
 					attrs[a.nodeName] = v;
@@ -4821,10 +4835,16 @@ Util.Form.Instructions = function(text)
  *        instead of a single string
  */
 Util.HTML_Generator = function HTMLGenerator(options) {
-	this.options = Util.Object.mixin({
+	this.options = Util.OOP.mixin({
 		xhtml: true,
+		escape_non_ascii: true,
 		line_array: false
 	}, options || {});
+	
+	this.output = null;
+	this.named_entities = Util.HTML_Generator.named_entities;
+	this.handlers.options = this.options;
+	this.handlers.handle = this.handle;
 }
 
 /**
@@ -4834,23 +4854,60 @@ Util.HTML_Generator = function HTMLGenerator(options) {
 Util.HTML_Generator.prototype.generate = function generate_html(root)
 {
 	var output = [];
-	var level = 0;
+	var options = this.options;
+	var entities = Util.HTML_Generator.named_entities;
 	
-	function handle(node) {
-		this.handlers[node.nodeType](output, node);
+	function append(level, text) {
+		var i, indent = '';
+		for (i = 0; i < level; ++i)
+			indent += '  ';
+		
 	}
+	
+	function handle(level, node) {
+		
+	}
+	
 	
 	if (root.nodeType == Util.Node.DOCUMENT_NODE) {
 		if (root.doctype)
-			handle(root.doctype);
+			this.handle(root.doctype);
 		root = root.documentElement;
 	}
 	
+	this.handle(root);
+	
 	return (this.options.line_array)
-		? output
-		: output.join("\n");
+		? this.output
+		: this.output.join("\n");
 };
 
+Util.HTML_Generator.prototype.get_handler = function get_handler(node) {
+	var name;
+	var nt = node.nodeType;
+	for (name in this.handlers) {
+		if (Util.Node[name.toUpperCase() + '_NODE'] == nt) {
+			return this.handlers[name](this.output, 0, node);
+		}
+	}
+	throw new Error();
+};
+
+Util.HTML_Generator.prototype.handle = function handle_node(level, node, h) {
+	var handler = h || this.get_handler(node);
+	var i, j, indent, line_count, output = [];
+	if (handler) {
+		handler(output, level, node);
+		for (i = 0, line_count = output.length; i < line_count; ++i) {
+			indent = ''
+			for (j = 0; j < level; ++j)
+				indent += '  ';
+			this.output.push(indent + output[i]);
+		}
+	}
+};
+
+/*
 Util.Node.ELEMENT_NODE                   = 1;
 Util.Node.ATTRIBUTE_NODE                 = 2;
 Util.Node.TEXT_NODE                      = 3;
@@ -4863,11 +4920,133 @@ Util.Node.DOCUMENT_NODE                  = 9;
 Util.Node.DOCUMENT_TYPE_NODE             = 10;
 Util.Node.DOCUMENT_FRAGMENT_NODE         = 11;
 Util.Node.NOTATION_NODE                  = 12;
-
+*/
 Util.HTML_Generator.prototype.handlers = {
+	document_type: function doctype_html(output, level, doctype) {
+		var html = '<!DOCTYPE ' + doctype.name;
+		if (doctype.publicId) {
+			html += ' PUBLIC "' + doctype.publicId + '"';
+			if (doctype.systemId) {
+				output.push(html);
+				output.push('  "' + doctype.systemId + '">')
+				return;
+			}
+		} else if (doctype.systemId) {
+			html += ' SYSTEM "' + doctype.systemId + '"';
+		}
+		output.push(html + '>');
+	},
 	element: function element_html(output, level, el) {
+		var str = '<' + el.nodeName.toLowerCase();
+		var end;
+		var temp;
 		
+		Util.Object.enumerate(Util.Element.get_attributes(el),
+			function append_attribute(name, value) {
+				str += ' ' + name + '="' + value + '"';
+			}
+		);
+		
+		if (!el.hasChildNodes() && Util.Element.empty_tag(el)) {
+			if (this.options.xhtml)
+				output.push(str + '/>');
+			else
+				output.push(str + '>');
+			return;
+		}
+		str += '>';
+		end = '</' + el.nodeName.toLowerCase() + '>';
+		
+		if (Util.Block.is_block(el)) {
+			output.push(str);
+			this._children(output, 1, el);
+			output.push()
+		} else {
+			temp = [];
+			this._children(temp, 0, el);
+			if (temp.length == 1) {
+				output.push(str + temp[0] + end);
+			} else {
+				str += temp.shift();
+				output.push(str);
+				output.append(temp);
+				output.push(end);
+			}
+		}
+	},
+	_children: function element_children_html(output, level, el) {
+		var block = Util.Block.is_block(el);
+		var temp;
+		var line = '';
+		var n;
+		var i;
+		
+		for (n = el.firstChild; n; n = el.nextSibling) {
+			if (n.nodeType == Util.Node.TEXT_NODE) {
+				line += this.text(null, 0, n);
+			} else if (n.nodeType == Util.Node.ELEMENT_NODE) {
+				if (Util.Block.is_block(n)) {
+					output.push(line);
+					this.element(output, level, n);
+					line = '';
+				} else {
+					temp = [];
+					this.element(temp, 0, n);
+					for (i = 0; i < temp.length; ++i) {
+						line += temp[i].replace(/^\s*/, '');
+					}
+				}
+			}
+		}
+		
+		if (line.length)
+			output.push(line);
+	},
+	text: function text_html(output, level, el) {
+		/*
+		#x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
+		*/
+		var pattern = (this.options.escape_non_ascii)
+			? /[\x00-\x1F\x80-\uFFFF]/g
+			: /[\x00-\x1F]/g;
+		
+		function html_escape(txt) {
+			var c = txt.charCodeAt(0);
+			if (c == 9 || c == 10 || c == 13)
+				return txt;
+			return (this.named_entities[c] || '&#' + c + ';');
+		}
+		var text = el.nodeText.replace(pattern, html_escape);
+		if (output)
+			output.push(text);
+		return text;
 	}
+};
+
+Util.HTML_Generator.named_entities = {
+	'38': 'amp', '60': 'lt', '62': 'gt', '127': '#127',
+	'160': 'nbsp', '161': 'iexcl', '162': 'cent', '163': 'pound', '164':
+	'curren', '165': 'yen', '166': 'brvbar', '167': 'sect', '168': 'uml', '169':
+	'copy', '170': 'ordf', '171': 'laquo', '172': 'not', '173': 'shy', '174':
+	'reg', '175': 'macr', '176': 'deg', '177': 'plusmn', '178': 'sup2', '179':
+	'sup3', '180': 'acute', '181': 'micro', '182': 'para', '183': 'middot',
+	'184': 'cedil', '185': 'sup1', '186': 'ordm', '187': 'raquo', '188':
+	'frac14', '189': 'frac12', '190': 'frac34', '191': 'iquest', '192':
+	'Agrave', '193': 'Aacute', '194': 'Acirc', '195': 'Atilde', '196': 'Auml',
+	'197': 'Aring', '198': 'AElig', '199': 'Ccedil', '200': 'Egrave', '201':
+	'Eacute', '202': 'Ecirc', '203': 'Euml', '204': 'Igrave', '205': 'Iacute',
+	'206': 'Icirc', '207': 'Iuml', '208': 'ETH', '209': 'Ntilde', '210':
+	'Ograve', '211': 'Oacute', '212': 'Ocirc', '213': 'Otilde', '214': 'Ouml',
+	'215': 'times', '216': 'Oslash', '217': 'Ugrave', '218': 'Uacute', '219':
+	'Ucirc', '220': 'Uuml', '221': 'Yacute', '222': 'THORN', '223': 'szlig',
+	'224': 'agrave', '225': 'aacute', '226': 'acirc', '227': 'atilde', '228':
+	'auml', '229': 'aring', '230': 'aelig', '231': 'ccedil', '232': 'egrave',
+	'233': 'eacute', '234': 'ecirc', '235': 'euml', '236': 'igrave', '237':
+	'iacute', '238': 'icirc', '239': 'iuml', '240': 'eth', '241': 'ntilde',
+	'242': 'ograve', '243': 'oacute', '244': 'ocirc', '245': 'otilde', '246':
+	'ouml', '247': 'divide', '248': 'oslash', '249': 'ugrave', '250': 'uacute',
+	'251': 'ucirc', '252': 'uuml', '253': 'yacute', '254': 'thorn', '255':
+	'yuml', '8364': 'euro'
 };
 
 // file Util.HTML_Parser.js
@@ -11247,8 +11426,15 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 		return false;
 	};
 	
-	var allowable_tags =
-		(settings.allowable_tags || UI.Clean.default_allowable_tags).toSet();
+	var allowable_tags;
+	if (settings.allowable_tags) {
+		allowable_tags = settings.allowable_tags.map(function(tag) {
+			return tag.toUpperCase();
+		}).toSet();
+	} else {
+		allowable_tags = UI.Clean.default_allowable_tags.toSet();
+	}
+	
 	var acceptable_css = settings.allowable_inline_styles.toSet();
 		
 	function is_allowable_tag(node)
@@ -11302,6 +11488,18 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 			description : 'Remove bad attributes. (v:shape from Ppt)',
 			test : function (node) { return has_attributes(node, ['v:shape']); },
 			action : remove_attributes
+		},
+		{
+			description: 'Translate align attributes.',
+			test: function(node) { return has_attributes(node, ['align']); },
+			action: function translate_alignment(el) {
+				// Exception: tables and images still use the align attribute.
+				if (has_tagname(el, ['TD', 'TH', 'TR', 'TABLE', 'IMG']))
+					return;
+				
+				el.style.textAlign = el.align.toLowerCase();
+				el.removeAttribute('align');
+			}
 		},
 		{
 			description: 'Strip unwanted inline styles',
@@ -18334,7 +18532,7 @@ UI.Source_Button = function()
 		} catch (e) {
 			alert("An error occurred that prevented your document's HTML " +
 				"from being generated.\n\nTechnical details:\n" +
-				ex);
+				e);
 		}
 		
 	};
@@ -20300,11 +20498,12 @@ UI.UL_OL_Masseuse = function()
 		}
 	};
 
+	// <ul><li>out<ul><li>in</li></ul></li><li>out again</li></ul>
+	//   -->
+	// <ul><li>out</li><ul><li>in</li></ul><li>out again</li></ul>
 	this.massage_elem = function(ul)
 	{
-		// <ul><li>out<ul><li>in</li></ul></li><li>out again</li></ul>
-		//   -->
-		// <ul><li>out</li><ul><li>in</li></ul><li>out again</li></ul>
+		
 		if ( ul.parentNode.nodeName == 'LI' )
 		{
 			var old_li = ul.parentNode;
@@ -20315,24 +20514,22 @@ UI.UL_OL_Masseuse = function()
 		}
 	};
 
-	this.unmassage_elem = function(ul)
+	// <ul><li>out</li><ul><li>in</li></ul><li>out again</li></ul>
+	//   -->
+	// <ul><li>out<ul><li>in</li></ul></li><li>out again</li></ul>
+	this.unmassage_elem = function(list)
 	{
-		// <ul><li>out</li><ul><li>in</li></ul><li>out again</li></ul>
-		//   -->
-		// <ul><li>out<ul><li>in</li></ul></li><li>out again</li></ul>
-		if ( ul.parentNode.nodeName == 'UL' || ul.parentNode.nodeName == 'OL' )
-		{
-			var prev_li = ul.previousSibling;
-			if ( prev_li != null )
-			{
-				prev_li.appendChild(ul);
+		var prev_item;
+		var is_li = Util.Node.curry_is_tag('LI');
+		
+		if (_tagnames.contains(list.parentNode.nodeName)) {
+			prev_item = Util.Node.previous_matching_sibling(list, is_li);
+			
+			if (!prev_item) {
+				prev_item = list.ownerDocument.createElement('LI');
+				list.parentNode.insertBefore(prev_item, list);
 			}
-			else
-			{
-				var new_li = ul.ownerDocument.createElement('LI');
-				ul.parentNode.insertBefore(new_li, ul);
-				new_li.appendChild(ul);
-			}
+			prev_item.appendChild(list);
 		}
 	};
 };
@@ -21383,6 +21580,13 @@ UI.Loki = function Loki()
 					"being safely submitted.\n\nTechnical details:\n" +
 					ex);
 				Util.Event.prevent_default(ev);
+				
+				if (typeof(console) == 'object' && console.firebug) {
+					console.error('Failed to generate HTML:',
+						ex);
+					throw ex;
+				}
+				
 				return false;
 			}
 			
@@ -21723,7 +21927,8 @@ UI.Loki.Options._add_bundled = function add_bundled_loki_options() {
 		buttons: [UI.BR_Button]
 	});
 	this.add('hr', {
-		buttons: [UI.HR_Button]
+		buttons: [UI.HR_Button],
+		masseuses: [UI.HR_Masseuse]
 	});
 	this.add('clipboard', {
 		buttons: [UI.Cut_Button, UI.Copy_Button, UI.Paste_Button],
@@ -21919,7 +22124,7 @@ var Loki = {
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0rc5-pl1",
+	version: "2.0rc5-pl2",
 	
 	/** @private */
 	_pending: [],
