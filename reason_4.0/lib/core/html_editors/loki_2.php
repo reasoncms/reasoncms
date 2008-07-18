@@ -115,6 +115,10 @@ $GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_2
 		{
 			$params['widgets'] .= ' -source -debug';
 		}
+		if(defined('REASON_DEFAULT_ALLOWED_TAGS'))
+		{
+			$params['allowable_tags'] = explode(',',str_replace(array('><','<','>'),array(',','',''),REASON_DEFAULT_ALLOWED_TAGS));
+		}
 		return $params;
 		
 		
