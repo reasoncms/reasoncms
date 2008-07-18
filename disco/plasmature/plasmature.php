@@ -898,7 +898,8 @@
 		var $widgets = 'default';
 		var $site_id = 0;
 		var $paths = array();
-		var $type_valid_args = array('widgets', 'site_id', 'paths');
+		var $allowable_tags = array();
+		var $type_valid_args = array('widgets', 'site_id', 'paths', 'allowable_tags');
 		
 		function do_includes()
 		{
@@ -969,6 +970,10 @@
 			if(!empty($this->paths['css']))
 			{
 				$loki->add_document_style_sheets($this->paths['css']);
+			}
+			if(!empty($this->allowable_tags))
+			{
+				$loki->set_allowable_tags($this->allowable_tags);
 			}
 			
 			$loki->print_form_children();
