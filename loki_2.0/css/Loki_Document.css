@@ -80,7 +80,6 @@ blockquote {
 	display: none;
 	
 	cursor: pointer !important;
-	cursor: hand !important;
 }
 
 .loki__hr_container a.loki__delete {
@@ -95,7 +94,6 @@ blockquote {
 	background: url('../images/close.gif') top;
 	
 	cursor: pointer !important;
-	cursor: hand !important;
 }
 
 .loki__hr_container a.loki__delete:hover {

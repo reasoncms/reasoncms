@@ -69,6 +69,7 @@ class Loki2
 	var $_default_type_regexp = '';
 	var $_sanitize_unsecured = false;
 	var $_allowable_tags = null;
+	var $_allowable_inline_styles = null;
 	var $_external_script_path = null;
 	var $_document_style_sheets = array();
 
@@ -361,6 +362,16 @@ class Loki2
 	}
 	
 	/**
+	 * Sets the list of inline styles allowed to exist in Loki output.
+	 * @param array $styles the CSS names of the allowed styles
+	 * @return void
+	 */
+	function set_allowable_inline_styles($styles)
+	{
+		$this->_allowable_inline_styles = $styles;
+	}
+	
+	/**
 	 * @access private
 	 * @return string
 	 */
@@ -405,6 +416,8 @@ class Loki2
 			$s->document_style_sheets = $this->_document_style_sheets;
 		if ($this->_allowable_tags)
 			$s->allowable_tags = $this->_allowable_tags;
+		if ($this->_allowable_inline_styles)
+			$s->allowable_inline_styles = $this->_allowable_inline_styles;
 		
 		return $s;
 	}

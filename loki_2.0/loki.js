@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0rc5
+// Loki WYSIWIG Editor 2.0rc5-pl1
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-07-16 15:30:09 
+// Compiled 2008-07-17 18:00:18 
 // http://loki-editor.googlecode.com/
 
 
@@ -2172,18 +2172,31 @@ Util.Node.get_nearest_non_whitespace_sibling_node = function(node, next_or_previ
 };
 
 /**
- * Determines whether the given node is an element that is block-level by
- * default in HTML.
+ * Determines whether the given node is a block-level element. Tries to use the
+ * element's computed style, and if that fails, falls back on what the default
+ * is for the element's tag.
  *
  * @see Util.Element.is_block_level
  * @see Util.Block.is_block
- * @param	node	the node in question
- * @return	{boolean}	true if the node is by default a block-level element
+ * @param	{Node}	node	the node in question
+ * @return	{Boolean}	true if the node is a block-level element
  */
 Util.Node.is_block_level_element = function(node)
 {
-	return Util.Block.is_block(node);
+	var w;
+	
+	if (node.nodeType != Util.Node.ELEMENT_NODE)
+		return false;
+	
+	try {
+		w = Util.Node.get_window(node);
+		return Util.Element.is_block_level(w, node);
+	} catch (e) {
+		return Util.Block.is_block(node);
+	}
 };
+
+Util.Node.is_block = Util.Node.is_block_level_element;
 
 /**
  * Determines whether the given node, in addition to being a block-level
@@ -4798,6 +4811,65 @@ Util.Form.Instructions = function(text)
 			[text]);
 	}
 } 
+// file Util.HTML_Generator.js
+/**
+ * Constructs a new HTML generator
+ * @class Generates nicely-formatted HTML by traversing the DOM.
+ * @param {Object} [options] generation options
+ * @param {Boolean} [options.xhtml=true] generate XHTML output
+ * @param {Boolean} [options.line_array=false] return an array of source lines
+ *        instead of a single string
+ */
+Util.HTML_Generator = function HTMLGenerator(options) {
+	this.options = Util.Object.mixin({
+		xhtml: true,
+		line_array: false
+	}, options || {});
+}
+
+/**
+ * @param {Document|Element|DocumentFragment} root
+ * @return {String|String[]} the formatted source
+ */
+Util.HTML_Generator.prototype.generate = function generate_html(root)
+{
+	var output = [];
+	var level = 0;
+	
+	function handle(node) {
+		this.handlers[node.nodeType](output, node);
+	}
+	
+	if (root.nodeType == Util.Node.DOCUMENT_NODE) {
+		if (root.doctype)
+			handle(root.doctype);
+		root = root.documentElement;
+	}
+	
+	return (this.options.line_array)
+		? output
+		: output.join("\n");
+};
+
+Util.Node.ELEMENT_NODE                   = 1;
+Util.Node.ATTRIBUTE_NODE                 = 2;
+Util.Node.TEXT_NODE                      = 3;
+Util.Node.CDATA_SECTION_NODE             = 4;
+Util.Node.ENTITY_REFERENCE_NODE          = 5;
+Util.Node.ENTITY_NODE                    = 6;
+Util.Node.PROCESSING_INSTRUCTION_NODE    = 7;
+Util.Node.COMMENT_NODE                   = 8;
+Util.Node.DOCUMENT_NODE                  = 9;
+Util.Node.DOCUMENT_TYPE_NODE             = 10;
+Util.Node.DOCUMENT_FRAGMENT_NODE         = 11;
+Util.Node.NOTATION_NODE                  = 12;
+
+Util.HTML_Generator.prototype.handlers = {
+	element: function element_html(output, level, el) {
+		
+	}
+};
+
 // file Util.HTML_Parser.js
 /**
  * Declares instance variables.
@@ -6598,8 +6670,63 @@ Util.Range.get_boundaries = function get_range_boundaries(rng)
 };
 
 /**
+ * Gets the nearest block-level elements in the ancestry of each boundary of
+ * the given range.
+ * @param {Range} range the range of which the bounding blocks are desired
+ * @param {Boolean} [as_bounds=false] if true, returns an object in the style
+ * of {@link Util.Range.get_boundaries} specifying the blocks
+ * @return {Object} the bounding blocks
+ */
+Util.Range.get_boundary_blocks = function get_range_boundary_blocks(range,
+	as_bounds)
+{
+	var bounds = Util.Range.get_boundaries(range);
+	var side;
+	
+	function get_block(boundary) {
+		var container = boundary.container;
+		var length = container.childNodes.length;
+		var start;
+		var node;
+		
+		if (container.nodeType == Util.Node.TEXT_NODE)
+			start = container.parentNode;
+		else if (container.childNodes[boundary.offset])
+			start = container.childNodes[boundary.offset];
+		else if (length == 0)
+			start = container;
+		else
+			start = container.childNodes[boundary.offset - 1];
+			
+		for (var node = start; node; node = node.parentNode) {
+			if (Util.Node.is_block(node))
+				return node;
+		}
+		
+		throw new Error('Could not find an enclosing block for the range ' +
+			'boundary.');
+	}
+	
+	function process_block(block) {
+		if (!as_bounds)
+			return block;
+		
+		return {
+			container: block.parentNode,
+			offset: Util.Node.get_offset(block)
+		};
+	}
+	
+	for (side in bounds) {
+		bounds[side] = process_block(get_block(bounds[side]));
+	}
+	return bounds;
+};
+
+/**
  * Finds matching elements within the range.
- * @param {Range} rng the range to search in
+ * @param {Range|Object} rng the range to search in, or a range boundary object
+ *        like the one returned from {@link Util.Range.get_boundaries}.
  * @param {Function|String} [matcher] either a matching function or a tag name.
  * @param {Boolean} [up=false] also search up the tree from the range's common
  *        ancestor. It is an error to set this option if there is no matcher.
@@ -6608,12 +6735,27 @@ Util.Range.get_boundaries = function get_range_boundaries(rng)
  */
 Util.Range.find_nodes = function find_nodes_in_range(rng, matcher, up) {
 	function process_boundary(bound) {
-		return (bound.container.nodeType == Util.Node.TEXT_NODE)
-			? bound.container
-			: bound.container.childNodes[bound.offset];
+		var length;
+		
+		if (bound.container.nodeType == Util.Node.TEXT_NODE)
+			return bound.container;
+		
+		if (bound.container.childNodes[bound.offset])
+			return bound.container.childNodes[bound.offset];
+		
+		length = bound.container.childNodes.length;
+		if (length == 0 || bound.offset == 0)
+			return bound.container;
+		else if (bound.offset >= length)
+			return bound.container.childNodes[length - 1];
+		else
+			throw new Error('Unable to process boundary for find_nodes_in_range: ' +
+				Util.Node.get_debug_string(bound.container) + ':' + bound.offset);
 	}
 	
-	var bounds = Util.Range.get_boundaries(rng);
+	var bounds = (rng.start && rng.start.container && rng.end.container)
+		? rng
+		: Util.Range.get_boundaries(rng);
 	var matched_nodes = [];
 	var start = process_boundary(bounds.start);
 	var end = process_boundary(bounds.end);
@@ -6636,7 +6778,7 @@ Util.Range.find_nodes = function find_nodes_in_range(rng, matcher, up) {
 			n = null;
 		}
 		
-		return (n != end) ? n : null;
+		return n;
 	}
 	
 	if (typeof(matcher) == 'string')
@@ -6649,6 +6791,8 @@ Util.Range.find_nodes = function find_nodes_in_range(rng, matcher, up) {
 	for (node = start; node; node = next_node(node)) {
 		if (matcher(node))
 			matched_nodes.push(node);
+		if (node == end)
+			break;
 	}
 	
 	if (up) {
@@ -9484,8 +9628,7 @@ UI.Activity = function(base, document, kind, text) {
  *
  * @constructor
  *
- * @class A class for helping insert an anchor. Contains code
- * common to both the button and the menu item.
+ * @class Changes the alignment of block-level elements.
  */
 UI.Align_Helper = function()
 {
@@ -9498,55 +9641,100 @@ UI.Align_Helper = function()
 		this._paragraph_helper = (new UI.Paragraph_Helper()).init(this._loki);
 		return this;
 	};
-
-	var _get_alignable_elem = function()
+	
+	function get_alignable_elements()
 	{
-		// Make sure we're not directly within BODY
+		var elements;
+		var selection;
+		var range;
+		var bounds;
+		
+		function find_blocks(scan_ancestors) {
+			return Util.Range.find_nodes(bounds, Util.Node.is_block,
+				scan_ancestors);
+		}
+		
+		// Ensure that there's a paragraph; that we're not directly within the
+		// document's body.
 		self._paragraph_helper.possibly_paragraphify();
-
-		var sel = Util.Selection.get_selection(self._loki.window);
-		var rng = Util.Range.create_range(sel);
-		var ble = Util.Range.get_nearest_bl_ancestor_element(rng);
-		return ble;
+		
+		selection = Util.Selection.get_selection(self._loki.window);
+		range = Util.Range.create_range(selection);
+		bounds = Util.Range.get_boundary_blocks(range, true);
+		
+		// First, see if there are any block-level elements within the selected
+		// range.
+		elements = find_blocks(false);
+		if (elements.length)
+			return elements;
+		
+		// Find any that are ancestors of the range.
+		return find_blocks(true);
 	};
 
-	this.is_alignable = function()
+	this.is_alignable = function selection_is_alignable()
 	{
-		return _get_alignable_elem() != null;
-	};
-
-	this.align_left = function()
-	{
-		if ( this.is_alignable() )
-		{
-			// We assume that the elem is left aligned by default, 
-			// if there's no align attr. This is not necessarily true,
-			// but we've decided it's better to assume it anyway rather
-			// than have lots of unnecessary align="left" attrs popping 
-			// up. But maybe we should check "runtime" styles (can we
-			// in Gecko ... ?). Good enough for now.
-			var elem = _get_alignable_elem();
-			if ( elem.getAttribute('align') != null )
-				elem.removeAttribute('align');
+		try {
+			return !!get_alignable_elements().length;
+		} catch (e) {
+			return false;
 		}
 	};
-
-	this.align_center = function()
+	
+	this.align = function align_selection(position)
 	{
-		if ( this.is_alignable() )
-		{
-			var elem = _get_alignable_elem();
-			elem.setAttribute('align', 'center');
+		var elements = get_alignable_elements();
+		
+		position = position.toLowerCase();
+		if (!['left', 'center', 'right', 'justify'].contains(position)) {
+			throw new Error('Invalid position {' + position + '}.');
 		}
+		
+		if (!elements.length)
+			return;
+		elements.each(function align_element(el) {
+			var w = (self._loki.window.document == el.ownerDocument)
+				? self._loki.window
+				: Util.Node.get_window(el);
+			
+			var align = Util.Element.get_computed_style(w, el).textAlign;
+			if (align.toLowerCase() == position)
+				return;
+			
+			if (position == 'left') {
+				// Try simply removing the inline style, since "left" is
+				// probably the default. Check it momentarily, and if the
+				// alignment isn't really left, set it explicitly.
+				el.style.textAlign = '';
+				if (el.style.cssText.length == 0)
+					el.removeAttribute('style');
+				(function verify_element_alignment() {
+					var a = Util.Element.get_computed_style(w, el).textAlign;
+					a = a.toLowerCase();
+					// For Mozilla, the default alignment is actually "start",
+					// which is equivalent to left for our purposes.
+					if (a != position && !(position == 'left' && a == 'start'))
+						el.style.textAlign = position;
+				}).defer();
+			} else {
+				el.style.textAlign = position;
+			}
+		});
 	};
 
-	this.align_right = function()
+	this.align_left = function align_selection_to_left()
 	{
-		if ( this.is_alignable() )
-		{
-			var elem = _get_alignable_elem();
-			elem.setAttribute('align', 'right');
-		}
+		this.align('left');
+	};
+
+	this.align_center = function align_selection_to_center()
+	{
+		this.align('center');
+	};
+
+	this.align_right = function align_selection_to_right()
+	{
+		this.align('right');
 	};
 };
 
@@ -9780,75 +9968,73 @@ UI.Anchor_Helper = function()
 	this.init = function(loki)
 	{
 		this._loki = loki;
-		this._anchor_masseuse = (new UI.Anchor_Masseuse()).init(this._loki);
+		this._masseuse = (new UI.Anchor_Masseuse()).init(this._loki);
 		return this;
 	};
 
 	this.is_selected = function()
 	{
-		return this.get_selected_item() != null;
+		return !!this.get_selected_item();
 	};
 	
 	function _get_selected_placeholder()
 	{
 		var sel = Util.Selection.get_selection(self._loki.window);
-		var rng = Util.Range.create_range(sel);
-		
-		return Util.Range.get_nearest_ancestor_element_by_tag_name(rng, 'IMG');
+		var range = Util.Range.create_range(sel);
+	 	var found = Util.Range.find_nodes(range, self._masseuse.is_placeholder,
+			true);
+			
+		if (found.length == 0) {
+			return null;
+		} else if (found.length > 1) {
+			throw new Util.Multiple_Items_Error('Multiple anchor placeholders' +
+				' are selected.');
+		} else {
+			return found[0];
+		}
 	}
-
-	var _get_selected_anchor = function()
-	{
-		var placeholder = _get_selected_placeholder();
-		return (placeholder)
-			? self._anchor_masseuse.get_real_elem(placeholder)
-			: null;
-	};
 
 	this.get_selected_item = function()
 	{
-		var selected_anchor = _get_selected_anchor();
-		var selected_item;
-		if ( selected_anchor != null )
-			selected_item = { name : selected_anchor.getAttribute('name') }; 
-
-		return selected_item;
+		var placeholder = _get_selected_placeholder();
+		return (placeholder)
+			? {name: self._masseuse.get_name_from_placeholder(placeholder)}
+			: null;
 	};
 
 	this.open_dialog = function()
 	{
 		var selected_item = self.get_selected_item();
-
-		if ( this._dialog == null )
-			this._dialog = new UI.Anchor_Dialog;
-		this._dialog.init({ base_uri : self._loki.settings.base_uri,
-							submit_listener : self.insert_anchor,
-							remove_listener : self.remove_anchor,
-							selected_item : selected_item });
+		
+		if (!this._dialog)
+			this._dialog = new UI.Anchor_Dialog();
+	
+		this._dialog.init({
+			base_uri: self._loki.settings.base_uri,
+			submit_listener: self.insert_anchor,
+			remove_listener: self.remove_anchor,
+			selected_item: selected_item
+		});
 		this._dialog.open();
 	};
 
 	this.insert_anchor = function(anchor_info)
 	{
 		var selected = _get_selected_placeholder();
+		var sel;
+		var anchor;
+		
 		if (selected) {
-			// Edit an existing anchor.
-			// XXX: This code probably shouldn't be here, but it does fix
-			//      issue #13.
-			selected.setAttribute('loki:anchor_name', anchor_info.name);
-			selected.title = anchor_info.name;
+			self._masseuse.update_name(selected, anchor_info.name);
 		} else {
-			// Create the anchor
-			var anchor = self._loki.document.createElement('A');
+			anchor = self._loki.document.createElement('A');
 			anchor.name = anchor_info.name;
-
-			// Create the dummy
-			var dummy = self._anchor_masseuse.get_fake_elem(anchor);
-
-			// Insert the dummy
-			var sel = Util.Selection.get_selection(self._loki.window);
-			Util.Selection.collapse(sel, true); // to beg
-			Util.Selection.paste_node(sel, dummy);	
+			
+			sel = Util.Selection.get_selection(self._loki.window);
+			Util.Selection.collapse(sel, true); // to beginning
+			Util.Selection.paste_node(sel, anchor);
+			
+			self._masseuse.massage(anchor);
 		}
 		
 		self._loki.window.focus();
@@ -9856,17 +10042,17 @@ UI.Anchor_Helper = function()
 
 	this.remove_anchor = function()
 	{
-		var sel = Util.Selection.get_selection(self._loki.window);
-		var rng = Util.Range.create_range(sel);
-		var fake_anchor = Util.Range.get_nearest_ancestor_element_by_tag_name(rng, 'IMG');
-
-		// Move cursor
-		Util.Selection.select_node(sel, fake_anchor);
-		Util.Selection.collapse(sel, false); // to end
-		self._loki.window.focus();
-
-		if ( fake_anchor.parentNode != null )
-			fake_anchor.parentNode.removeChild(fake_anchor);
+		var selected = _get_selected_placeholder();
+		var anchor;
+		
+		if (!selected)
+			return;
+		
+		anchor = self._masseuse.unmassage(selected);
+		if (!anchor.hasChildNodes())
+			anchor.parentNode.removeChild(anchor);
+		else
+			anchor.removeAttribute('name');
 	};
 };
 
@@ -9882,6 +10068,16 @@ UI.Anchor_Masseuse = function()
 {
 	var self = this;
 	Util.OOP.inherits(self, UI.Masseuse);
+	
+	function needs_massaging(node) {
+		return !!node.name;
+	}
+	needs_massaging.tag = 'A';
+	
+	function needs_unmassaging(node) {
+		return !!node.getAttribute('loki:anchor_id');
+	}
+	needs_unmassaging.tag = 'IMG';
 
 	/**
 	 * Massages the given node's children, replacing any named anchors with
@@ -9889,14 +10085,13 @@ UI.Anchor_Masseuse = function()
 	 */
 	this.massage_node_descendants = function(node)
 	{
-		var anchors = node.getElementsByTagName('A');
-		for ( var i = anchors.length - 1; i >= 0; i-- )
-		{
-			if ( anchors[i].getAttribute('name') ) //&& anchors[i].href == null )
-			{
-				var fake = self.get_fake_elem(anchors[i]);
-				anchors[i].parentNode.replaceChild(fake, anchors[i]);
-			}
+		var anchors = node.getElementsByTagName(needs_massaging.tag);
+		var i, anchor;
+
+		for (i = anchors.length - 1; i >= 0; i--) {
+			anchor = anchors[i];
+			if (needs_massaging(anchor))
+				self.massage(anchor);
 		}
 	};
 
@@ -9906,57 +10101,109 @@ UI.Anchor_Masseuse = function()
 	 */
 	this.unmassage_node_descendants = function(node)
 	{
-		var tagnames = ['A', 'IMG'];
-		for ( var j in tagnames )
-		{
-			var dummies = node.getElementsByTagName(tagnames[j]);
-			for ( var i = dummies.length - 1; i >= 0; i-- )
-			{
-				if ( dummies[i].getAttribute('loki:anchor_name') )
-				{
-					var real = self.get_real_elem(dummies[i]);
-					dummies[i].parentNode.replaceChild(real, dummies[i])
-				}
-			}
+		var fakes = node.getElementsByTagName(needs_unmassaging.tag);
+		var i, fake;
+
+		for (i = fakes.length - 1; i >= 0; i--) {
+			fake = fakes[i];
+			if (needs_unmassaging(fake))
+				self.unmassage(fake);
 		}
 	};
-
-	/**
-	 * Returns a fake element for the given anchor.
-	 */
-	this.get_fake_elem = function(anchor)
+	
+	this.massage = function massage_anchor(anchor)
 	{
-		if (anchor == null)
-			return null;
+		var doc = anchor.ownerDocument;
+		var placeholder;
+		var anchor_id = self.assign_fake_id(anchor);
 		
-		var dummy = anchor.ownerDocument.createElement('IMG');
-		Util.Element.add_class(dummy, 'loki__named_anchor');
-		dummy.title = anchor.name;
-		dummy.setAttribute('loki:fake', 'true');
-		dummy.setAttribute('loki:anchor_name', anchor.name);
-		dummy.src = self._loki.settings.base_uri + 'images/nav/anchor.gif';
-		dummy.width = 12;
-		dummy.height = 12;
-		return dummy;
+		placeholder = Util.Document.create_element(doc, 'img', {
+			className: 'loki__named_anchor',
+			title: '#' + anchor.name,
+			src: self._loki.settings.base_uri + 'images/nav/anchor.gif',
+			style: {width: 12, height: 12},
+			'loki:fake': true,
+			'loki:anchor_id': anchor_id
+		});
+		
+		return anchor.parentNode.insertBefore(placeholder, anchor);
 	};
-
-	/**
-	 * If the given fake element is really fake, returns the appropriate 
-	 * real anchor. Else, returns null.
-	 */
-	this.get_real_elem = function(dummy)
-	{
-		if (dummy == null || dummy.getAttribute('loki:fake') != 'true') {
-			return null;
+	
+	this.update_name = function update_massaged_anchor_name(placeholder, name) {
+		var anchor = self.get_anchor_for_placeholder(placeholder);
+		
+		placeholder.title = '#' + name;
+		if (anchor)
+			anchor.name = name;
+	};
+	
+	this.unmassage = function unmassage_anchor(placeholder) {
+		var anchor = self.get_anchor_for_placeholder(placeholder);
+		var actual_id;
+		var name;
+		var expected_id;
+		
+		if (!anchor) {
+			// The original anchor tag was somehow removed from the document.
+			anchor = placeholder.ownerDocument.createElement('A');
+			anchor.name = placeholder.title.substr(1); // strips leading "#"
+			placeholder.parentNode.replaceChild(anchor, placeholder);
+			return anchor;
 		}
 		
-		var anchor_name = dummy.getAttribute('loki:anchor_name');
-		if (!anchor_name)
-			return null;
+		expected_id = placeholder.getAttribute('loki:anchor_id');
+		actual_id = placeholder.nextSibling.id;
+		self.remove_fake_id(anchor);
+		if (actual_id == expected_id) {
+			// Relative position has not changed. Simple.
+			placeholder.parentNode.removeChild(placeholder);
+			return anchor;
+		}
 		
-		return Util.Anchor.create_named_anchor(
-			{document: dummy.ownerDocument, name: anchor_name}
-		);
+		// The user has moved the anchor away from its original position.
+		if (!anchor.hasChildNodes()) {
+			// Bare named anchor; we can just move it to the correct spot.
+			placeholder.parentNode.replaceChild(anchor, placeholder);
+			return anchor;
+		}
+		
+		// Anchor has child nodes: it must be split, leaving the original anchor
+		// without a name and creating a new named anchor at the placeholder's
+		// position.
+		name = anchor.name;
+		anchor.removeAttribute('name');
+		
+		anchor = placeholder.ownerDocument.createElement('A');
+		anchor.name = name;
+		
+		placeholder.parentNode.replaceChild(anchor, placeholder);
+		return anchor;
+	};
+	
+	this.is_placeholder = function is_anchor_placeholder(elem) {
+		return (Util.Node.is_tag(elem, needs_unmassaging.tag)
+			&& needs_unmassaging(elem));
+	};
+	
+	this.get_name_from_placeholder = function get_anchor_name(placeholder) {
+		var anchor;
+		try {
+			anchor = self.get_anchor_for_placeholder(placeholder);
+			if (anchor && anchor.name)
+				return anchor.name;
+		} catch (e) { /* ignore it */ }
+		
+		return placeholder.title.substr(1); // strips leading "#"
+	};
+	
+	this.get_anchor_for_placeholder = function get_real_anchor(placeholder) {
+		var id = placeholder.getAttribute('loki:anchor_id');
+		
+		if (!id) {
+			throw new Error('The placeholder has no associated anchor ID.');
+		}
+		
+		return placeholder.ownerDocument.getElementById(id) || null;
 	};
 };
 
@@ -11002,6 +11249,7 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 	
 	var allowable_tags =
 		(settings.allowable_tags || UI.Clean.default_allowable_tags).toSet();
+	var acceptable_css = settings.allowable_inline_styles.toSet();
 		
 	function is_allowable_tag(node)
 	{
@@ -11051,9 +11299,29 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 			action : remove_node
 		},
 		{
-			description : 'Remove all bad attributes. (v:shape from Ppt)',
-			test : function (node) { return has_attributes(node, ['style', 'v:shape']); },
+			description : 'Remove bad attributes. (v:shape from Ppt)',
+			test : function (node) { return has_attributes(node, ['v:shape']); },
 			action : remove_attributes
+		},
+		{
+			description: 'Strip unwanted inline styles',
+			test: function(node) { return has_attributes(node, ['style']); },
+			action: function strip_unwanted_inline_styles(el) {
+				var rule = /([\w-]+)\s*:\s*([^;]+)(?:;|$)/g;
+				var raw = el.style.cssText;
+				var accepted = [];
+				var match;
+				var name;
+				
+				while (match = rule.exec(raw)) {
+					name = match[1].toLowerCase();
+					if (name in acceptable_css) {
+						accepted.push(match[0]);
+					}
+				}
+				
+				el.style.cssText = accepted.join(' ');
+			}
 		},
 		{
 			description: 'Remove empty Word paragraphs',
@@ -11752,15 +12020,7 @@ UI.Clipboard_Menugroup = function()
 			label : 'Cut',
 			listener : function()
 			{
-				try
-				{
-					self._clipboard_helper.cut();
-				}
-				catch(e)
-				{
-					self._clipboard_helper.alert_helpful_message();
-					throw e;
-				}
+				self._clipboard_helper.cut();
 			},
 			disabled : this._clipboard_helper.is_selection_empty()
 		}) );
@@ -11768,15 +12028,7 @@ UI.Clipboard_Menugroup = function()
 			label : 'Copy',
 			listener : function()
 			{
-				try
-				{
-					self._clipboard_helper.copy();
-				}
-				catch(e)
-				{
-					self._clipboard_helper.alert_helpful_message();
-					throw e;
-				}
+				self._clipboard_helper.copy();
 			},
 			disabled : this._clipboard_helper.is_selection_empty()
 		}) );
@@ -11784,15 +12036,7 @@ UI.Clipboard_Menugroup = function()
 			label : 'Paste',
 			listener : function()
 			{
-				try
-				{
-					self._clipboard_helper.paste();
-				}
-				catch(e)
-				{
-					self._clipboard_helper.alert_helpful_message();
-					throw e;
-				}
+				self._clipboard_helper.paste();
 			}
 			//disabled : this._clipboard_helper.is_selection_empty()
 		}) );
@@ -11829,14 +12073,7 @@ UI.Copy_Button = function()
 	this.title = 'Copy (Ctrl+C)';
 	this.click_listener = function()
 	{
-		try
-		{
-			this._clipboard_helper.copy();
-		}
-		catch(e)
-		{
-			this._clipboard_helper.alert_helpful_message();
-		}
+		this._clipboard_helper.copy();
 	};
 
 	this.init = function(loki)
@@ -11899,15 +12136,7 @@ UI.Cut_Button = function()
 	this.title = 'Cut (Ctrl+X)';
 	this.click_listener = function()
 	{
-		try
-		{
-			this._clipboard_helper.cut();
-		}
-		catch(e)
-		{
-			this._clipboard_helper.alert_helpful_message();
-			throw(e); // XXX tmp
-		}
+		this._clipboard_helper.cut();
 	};
 
 	this.init = function(loki)
@@ -13882,12 +14111,12 @@ UI.Image_Helper = function()
 			if (!Util.Node.is_tag(node, 'IMG'))
 				return false;
 			
-			return !anchor_masseuse.get_real_elem(node);
+			return !anchor_masseuse.is_placeholder(node);
 		}
 		
 		images = Util.Range.find_nodes(rng, is_valid_image, true);
 		
-		if (!images) {
+		if (!images || !images.length) {
 			return null;
 		} else if (images.length > 1) {
 			throw new UI.Multiple_Items_Error('Multiple images are currently ' +
@@ -15861,6 +16090,37 @@ UI.Masseuse.prototype.init = function(loki)
 	return this;
 };
 
+UI.Masseuse.prototype.assign_fake_id = function assign_fake_element_id(elem) {
+	var base = 'az';
+	
+	function random_int(min, max) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+	
+	function generate_id(length) {
+		var i, id = '_loki_', c;
+		if (!length)
+			length = 6
+		for (i = 0; i < length; ++i) {
+			c = random_int(base.charCodeAt(0), base.charCodeAt(1));
+			id += String.fromCharCode(c);
+		}
+		return (elem.ownerDocument.getElementById(id))
+			? generate_id(length)
+			: id;
+	}
+	
+	if (!elem.id)
+		elem.id = generate_id();
+	return elem.id;
+};
+
+UI.Masseuse.prototype.remove_fake_id = function remove_fake_element_id(elem) {
+	var pattern = /^_loki_[a-z]+$/;
+	if (elem.id && pattern.test(elem.id))
+		elem.removeAttribute('id');
+};
+
 // file UI.Menu.js
 /**
  * Declares instance variables.
@@ -15927,9 +16187,7 @@ UI.Menu = function()
 	 */
 	self.display = function(x, y)
 	{
-		// IE way
-		try
-		{
+		if (window.createPopup) {
 			// Make the popup and append the menu to it
 			var popup = window.createPopup();
 			var menu_chunk = _get_chunk(popup.document);
@@ -15974,56 +16232,46 @@ UI.Menu = function()
 
 			// Show the popup
 			popup.show(x, y, width, height, _loki.owner_document.body);
-		}
-		catch(e)
-		{
-			// Gecko way
-			try
-			{
-				// Create menu, hidden
-				var menu_chunk = _get_chunk(_loki.owner_document);
-				_loki.root.appendChild(menu_chunk);
-				menu_chunk.style.position = 'absolute';
-				menu_chunk.style.visibility = 'hidden';
+		} else {
+			// Create menu, hidden
+			var menu_chunk = _get_chunk(_loki.owner_document);
+			_loki.root.appendChild(menu_chunk);
+			menu_chunk.style.position = 'absolute';
+			menu_chunk.style.visibility = 'hidden';
 
-				// Position menu
-				menu_chunk.style.left = (x - 1) + 'px';
-				menu_chunk.style.top = (y - 1) + 'px';
+			// Position menu
+			menu_chunk.style.left = (x - 1) + 'px';
+			menu_chunk.style.top = (y - 1) + 'px';
 
-				// Watch the "click" event for all windows to close the menu
-				function close_menu() {
-					var w;
-					
-					if (menu_chunk.parentNode) {
-						menu_chunk.parentNode.removeChild(menu_chunk);
-						
-						var w = _loki.window;
-						while (w) {
-							w.document.removeEventListener('click', close_menu, false);
-							w.document.removeEventListener('contextmenu', close_menu, false);
-							w = (w != w.parent) ? w.parent : null;
-						}
-					}
-				}
+			// Watch the "click" event for all windows to close the menu
+			function close_menu() {
+				var w;
 				
-				function add_close_listeners() {
+				if (menu_chunk.parentNode) {
+					menu_chunk.parentNode.removeChild(menu_chunk);
+					
 					var w = _loki.window;
 					while (w) {
-						w.document.addEventListener('click', close_menu, false);
-						w.document.addEventListener('contextmenu', close_menu, false);
+						w.document.removeEventListener('click', close_menu, false);
+						w.document.removeEventListener('contextmenu', close_menu, false);
 						w = (w != w.parent) ? w.parent : null;
 					}
 				}
-				
-				add_close_listeners.defer();
-		
-				// Show menu
-				menu_chunk.style.visibility	= '';
 			}
-			catch(f)
-			{
-				throw new Util.Unsupported_Error("showing a contextual menu");
+			
+			function add_close_listeners() {
+				var w = _loki.window;
+				while (w) {
+					w.document.addEventListener('click', close_menu, false);
+					w.document.addEventListener('contextmenu', close_menu, false);
+					w = (w != w.parent) ? w.parent : null;
+				}
 			}
+			
+			add_close_listeners.defer();
+	
+			// Show menu
+			menu_chunk.style.visibility	= '';
 		}
 	}
 } 
@@ -16201,8 +16449,9 @@ UI.Messenger = {
 } 
 // file UI.Multiple_Items_Error.js
 UI.Multiple_Items_Error = function MultipleItemsError(message) {
-	Error.call(this, message);
-	this.name = 'UI.Multiple_Items_Error';
+	var err = new Error(message);
+	err.name = 'UI.Multiple_Items_Error';
+	return err;
 };
 
 UI.Multiple_Items_Error.prototype = new Error();
@@ -17885,14 +18134,7 @@ UI.Paste_Button = function()
 	this.title = 'Paste (Ctrl+V)';
 	this.click_listener = function()
 	{
-		try
-		{
-			this._clipboard_helper.paste();
-		}
-		catch(e)
-		{
-			this._clipboard_helper.alert_helpful_message();
-		}
+		this._clipboard_helper.paste();
 	};
 
 	this.init = function(loki)
@@ -18086,7 +18328,16 @@ UI.Source_Button = function()
 	this.image = 'source.png';
 	this.title = 'Toggle HTML source view';
 	this.show_on_source_toolbar = true;
-	this.click_listener = function() { self._loki.toggle_iframe_textarea(); };
+	this.click_listener = function() {
+		try {
+			self._loki.toggle_iframe_textarea(); 
+		} catch (e) {
+			alert("An error occurred that prevented your document's HTML " +
+				"from being generated.\n\nTechnical details:\n" +
+				ex);
+		}
+		
+	};
 };
 
 // file UI.Spell_Button.js
@@ -20346,6 +20597,10 @@ UI.Loki = function Loki()
 			_settings.base_uri = autodetect_base_uri();
 		}
 		
+		if (!_settings.allowable_inline_styles) {
+			_settings.allowable_inline_styles = default_allowed_styles();
+		}
+		
 		UI.Clipboard_Helper._setup(_settings.base_uri);
 		
 		_textarea = textarea;
@@ -20406,6 +20661,14 @@ UI.Loki = function Loki()
 		
 		throw new Error("Unable to automatically determine the Loki base URI." +
 			" Please set it explicitly.");
+	}
+	
+	function default_allowed_styles()
+	{
+		var builtin = ['text-align', 'vertical-align', 'float', 'direction',
+			'display', 'clear', 'list-style'];
+		
+		return builtin;
 	}
 
 	/**
@@ -21060,12 +21323,14 @@ UI.Loki = function Loki()
 				// If the browser is capable of generating actual paste
 				// events, then remove the DOMNodeInserted handler.
 				
-				Util.Event.remove_event_handler(_document, 'keyup',
+				Util.Event.remove_event_listener(_document, 'keydown',
+					key_pressed);
+				Util.Event.remove_event_listener(_document, 'keyup',
 					key_raised);
 				paste_keyup = false;
 			}
 			
-			perform_cleanup();
+			perform_cleanup.defer();
 		}
 		
 		// Q: Eric, why is there all this code to accomplish the simple task
@@ -21099,14 +21364,14 @@ UI.Loki = function Loki()
 			}
 		}
 		
-		Util.Event.observe(_document, 'paste', handle_paste_event);
-		if (Util.Browser.IE) {
+		Util.Event.observe(_document.body, 'paste', handle_paste_event);
+		if (Util.Browser.IE || (Util.Browser.Gecko && /rv:1\.9/.test(navigator.userAgent))) {
 			// We know that we have paste events.
 			paste_keyup = false;
 		} else {
 			paste_keyup = true;
-			Util.Event.observe(_document, 'keydown', key_pressed);
-			Util.Event.observe(_document, 'keyup', key_raised);
+			Util.Event.add_event_listener(_document, 'keydown', key_pressed);
+			Util.Event.add_event_listener(_document, 'keyup', key_raised);
 		}
 		
 		function submit_handler(ev)
@@ -21114,8 +21379,8 @@ UI.Loki = function Loki()
 			try {
 				self.copy_iframe_to_hidden();
 			} catch (ex) {
-				alert("An error occurred that is preventing your document " +
-					"from being safely submitted.\n\nTechnical details:\n" +
+				alert("An error occurred that prevented your document from " +
+					"being safely submitted.\n\nTechnical details:\n" +
 					ex);
 				Util.Event.prevent_default(ev);
 				return false;
@@ -21123,7 +21388,7 @@ UI.Loki = function Loki()
 			
 			return true;
 		}
-
+		
 		// this copies the changes made in the iframe back to the hidden form element
 		Util.Event.add_event_listener(_hidden.form, 'submit',
 			Util.Event.listener(submit_handler));
@@ -21269,13 +21534,20 @@ UI.Loki = function Loki()
 
 		// Get appropriate menuitems
 		for (i = 0; i < _menugroups.length; i++) {
-			menuitems = _menugroups[i].get_contextual_menuitems();
+			try {
+				menuitems = _menugroups[i].get_contextual_menuitems();
+			} catch (e) {
+				if (typeof(console) == 'object' && console.firebug) {
+					console.warn('Failed to add menugroup', i, '.', e);
+				}
+			}
+			
 			if (menuitems && menuitems.length > 0) {
 				if (!added)
 					added = true;
 				else
 					menu.add_menuitem((new UI.Separator_Menuitem).init());
-				
+
 				menu.add_menuitems(menuitems);
 			}
 		}
@@ -21647,7 +21919,7 @@ var Loki = {
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0rc5",
+	version: "2.0rc5-pl1",
 	
 	/** @private */
 	_pending: [],
