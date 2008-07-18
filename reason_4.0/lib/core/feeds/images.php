@@ -71,12 +71,15 @@ class imagesRSS extends ReasonRSS
 		$extension = $this->items[$value]->get_value('image_type');
 		$filename = $value.'_tn.'.$extension;
 		$url = 'http://'.REASON_HOST.WEB_PHOTOSTOCK.$filename;
-		$type = @$mime_map[$extension];
+		$type = 'image/x-unknown';
+		if(!empty($extension) && array_key_exists($extension, $mime_map))
+		{
+			$type = $mime_map[$extension];
+		}
 		
 		$size = (file_exists(PHOTOSTOCK.$filename)) ? filesize(PHOTOSTOCK.$filename) : 0;
 	
-		return '<'.$attr.' url="'.$url.'" length="'.$size.'" '.
-			'type="'.($type ? $type : 'image/x-unknown').'" />'."\n";
+		return '<'.$attr.' url="'.$url.'" length="'.$size.'" type="'.$type.'" />'."\n";
 	}
 }
 
