@@ -89,6 +89,8 @@ class ds_ldap extends ds_default {
 		}
 		if (isset($this->_conn_params['ldap_version']))
 			ldap_set_option( $this->_conn, LDAP_OPT_PROTOCOL_VERSION, $this->_conn_params['ldap_version'] );
+		if (isset($this->_conn_params['opt_referrals']))
+			ldap_set_option( $this->_conn, LDAP_OPT_REFERRALS, $this->_conn_params['opt_referrals'] );
 		if ($this->_conn_params['use_tls'])
 			ldap_start_tls( $this->_conn );
 		if( !ldap_bind( $this->_conn, $this->_conn_params['lookup_dn'], $this->_conn_params['lookup_password'] ) ) {
