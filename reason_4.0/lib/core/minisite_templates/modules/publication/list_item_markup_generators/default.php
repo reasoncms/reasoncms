@@ -14,7 +14,7 @@ reason_include_once( 'minisite_templates/modules/publication/markup_generator.ph
 class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 {
 	//variables needed to be passed from the publication module
-	var $variables_needed = array( 	'use_dates_in_list', 
+	var $variables_needed = array( 					'use_dates_in_list', 
 									'date_format', 
 									'item',
 									'item_comment_count', 
@@ -100,7 +100,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 	function get_date_markup()
 	{
 		$item = $this->passed_vars['item'];
-		if($item->get_value( 'datetime') && empty($this->passed_vars['current_issue']) )
+		if($item->get_value( 'datetime') && empty($this->passed_vars['current_issue']) && $this->passed_vars['use_dates_in_list'])
 		{
 			$datetime = prettify_mysql_datetime( $item->get_value( 'datetime' ), $this->passed_vars['date_format'] );
 			return  '<div class="date">'.$datetime.'</div>'."\n";
