@@ -216,11 +216,10 @@
 		{
 			$left_relationships = $this->entity->get_left_relationships();
 			
-#	What if there's not any publications for the site?
+			#	What if there's not any publications for the site?
 			if(!empty($this->publications) && count($this->publications) == 1)
 			{
-				$first_pub = reset($this->publications);
-				$this->set_value($first_pub->id(), 'true');
+				$this->set_value_for_only_publication();
 			}
 			else
 			{
@@ -292,6 +291,12 @@
 			}
 		}
 	
+		function set_value_for_only_publication()
+		{
+			$first_pub = reset($this->publications);
+			$this->set_value($first_pub->id(), 'true');
+		}
+		
 		function alter_commenting_state_field()
 		{
 			$es = new entity_selector();
