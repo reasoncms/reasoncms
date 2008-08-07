@@ -33,7 +33,14 @@
 				if($entity->get_values())
 				{
 					$owner = $entity->get_owner();
-					echo '<p>Owner site: '.$owner->get_value('name').' (ID: '.$owner->id().')</p>'."\n";
+					if(is_object($owner))
+					{
+						echo '<p>Owner site: '.$owner->get_value('name').' (ID: '.$owner->id().')</p>'."\n";
+					}
+					else
+					{
+						echo '<p>No owner site (orphan entity)</p>'."\n";
+					}
 					echo '<p>Entity name: '.$entity->get_display_name().'</p>'."\n";
 					echo '<p>Entity data:</p>';
 					pray($entity->get_values());
