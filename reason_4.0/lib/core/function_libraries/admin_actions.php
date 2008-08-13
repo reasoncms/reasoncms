@@ -432,7 +432,12 @@
 	{
 		if(empty($id))
 		{
-			trigger_error('reason_create_entity() needs an id to function properly');
+			trigger_error('reason_update_entity() needs an id to function properly');
+			return false;
+		}
+		elseif(empty($user_id))
+		{
+			trigger_error('reason_update_entity() needs a user_id to function properly');
 			return false;
 		}
 		else
