@@ -140,7 +140,7 @@
 		
 		function update_es() // {{{
 		{
-			// lets find the sites that share the type and limit our query to those sites
+			// lets find the sites that share the type (except the current site) and limit our query to those sites
 			$prep_es = new entity_selector();
 			$prep_es->add_type(id_of('site'));
 			$prep_es->add_left_relationship($this->admin_page->type_id, relationship_id_of('site_shares_type'));
@@ -149,6 +149,7 @@
 				$prep_es->limit_tables('site');
 				$prep_es->limit_fields('site.site_state');
 				$prep_es->add_relation('site.site_state = "Live"');
+				$prep_es->add_relation('entity.id != "'.$this->admin_page->site_id.'"');
 			}
 			else
 			{
