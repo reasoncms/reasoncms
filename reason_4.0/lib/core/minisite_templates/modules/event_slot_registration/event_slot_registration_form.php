@@ -1,7 +1,8 @@
-<?php 
-        require_once( DISCO_INC.'disco.php');
-	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
-        reason_include_once( 'function_libraries/user_functions.php');
+<?php
+require_once( DISCO_INC.'disco.php');
+include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
+reason_include_once( 'function_libraries/user_functions.php');
+reason_include_once( 'classes/user.php');
 
 class EventSlotRegistrationForm extends Disco{
 
@@ -92,8 +93,12 @@ class EventSlotRegistrationForm extends Disco{
 	* Actions which happen based on the validated data from the form.
 	* @access public
 	*/
-	function process(){
-
+	function process()
+	{
+		// lets make sure the event_agent user exists
+		$user = new User();
+		if (!$user->get_user('event_agent')) $user->create_user('event_agent');
+		
 		$new_data = implode($this->delimiter2, array(strip_tags($this->request_array['date']),strip_tags($this->get_value('name')),strip_tags($this->get_value('email')), time() ) );	
 		$slot_values = get_entity_by_id($this->request_array['slot_id']);
 
