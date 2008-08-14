@@ -1,434 +1,213 @@
 <?php
 
 	reason_include_once( 'minisite_templates/modules/default.php' );
-	reason_include_once( 'classes/group_helper.php' );
 	reason_include_once( 'function_libraries/url_utils.php' );
-	include_once( THOR_INC .'thor.php' );
-	include_once( THOR_INC .'thor_viewer.php' );
-	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
-	
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'FormMinisiteModule';
 
+	/**
+	 * Form 2.0
+	 *
+	 * Reason Form Module - intended to be used to build interfaces around thor or custom forms, while maintaining backwards
+	 * compatibility with Reason's old thor form module.
+	 *
+	 * Common usage would involve instantiation of a model, view (optional), and controller. If no parameters are provided, 
+	 * then the default thor form model, controller, and view (as specified in the content manager) will be used.
+	 *
+	 * The model is passed a reference to the module at the time of instantiation, so that head items, the cur_page object, 
+	 * or other items available to the module can be localized into the model. The controller handles cleanup rules and request
+	 * variables, just like a module would. Essentially, the controller serves as a sub-module.
+	 *
+	 * The controller itself will be provided the view if it is provided in a parameter, but the view is optional.
+	 *
+	 * @author Nathan White
+	 */
 	class FormMinisiteModule extends DefaultMinisiteModule
 	{
-		var $user_netID;
-		var $access_privileges;
-		var $cleanup_rules = array (
-				'mode' => array('function' => 'check_against_array', 'extra_args' => array ('data_view')),
-				'force_login_disable' => array('function' => 'check_against_array', 'extra_args' => array('true')));
+		var $form_controller;
+		var $form_model;
+		var $form_view;
 				
-		var $show_login = false; // will be enabled if viewing groups requiring login are defined, or a database backend is present
+		var $acceptable_params = array('form_model' => false,
+									   'form_controller' => false,
+									   'form_view' => false,
+									   'force_login' => false);
 		
-		var $acceptable_params = array('force_login' => false);
-		var $magic_transform_prefix = 'your';
-		var $custom_disco_thor;
-		// The list of attributes you want returned from directory service searches
-		// ( used by gen_magic_string_transform_array() )
-		var $search_attributes = array('ds_firstname','ds_lastname','ds_fullname','ds_phone',
-					'ds_email','ou','title','homephone','telephonenumber');
-				
-		function init( $args = array() )
+		function _init_legacy()
 		{
- 			force_secure_if_available();
-			parent::init($args);
- 			$es = new entity_selector();
- 			$es->description = 'Selecting form to display on a minisite page.';
- 			$es->add_type( id_of('form') );
- 			$es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('page_to_form') );
- 			$es->set_num(1);
-  			$this->forms = $es->run_one();
-  			$this->user_netID = $this->get_authentication();
-  			
-  			foreach ($this->forms as $form)
-  			{
-  				// check permissions
-  				$id = $form->id();
-				$groups_viewing = $this->get_groups_by_relationship($id, 'form_to_authorized_viewing_group');
-				$groups_results = $this->get_groups_by_relationship($id, 'form_to_authorized_results_group');
-
-				$this->access_privileges['view'] = empty($groups_viewing) ? true : $this->check_privs($groups_viewing, $this->user_netID);
-				$this->access_privileges['data'] = empty($groups_results) ? false : $this->check_privs($groups_results, $this->user_netID);
-
-				if (($this->access_privileges['data'] == false))
-				{
-					// check if they are in e-mail list for db_backed form in which case they are also given access
-					$auth_usernames = (explode(',', $form->get_value( 'email_of_recipient' )));
-					if ((!empty($this->user_netID)) && (in_array($this->user_netID, $auth_usernames))) $this->access_privileges['data'] = true; 
-				}
-
-				//set login visibility and force login when needed
-				if (!empty($groups_viewing) || ($this->check_privs($groups_viewing, '') == false)) // not empty or defined as everybody
-				{
-					if (empty($this->user_netID) && ($this->params['force_login']) && (empty($this->request['mode'])) && (empty($this->request['force_login_disable'])))
-					{
-						$dest_page = urlencode(get_current_url());
-						header('Location: '.REASON_LOGIN_URL. '?dest_page=' . $dest_page . '&msg_uname=form_login_msg');
-						exit();
-					}
-					$this->show_login = true;
-				}
-			}
-			
-			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
-			if (($this->access_privileges['data']) && (!empty($this->request['mode'])) && ($this->request['mode'] == 'data_view'))
-			{
-				$this->parent->add_stylesheet( REASON_HTTP_BASE_PATH.'css/hide_nav.css');
-			}
+			// prep items to always do for backwards compatibility with old form module
+			force_secure_if_available();
+			$this->_check_force_login_parameter();
+			$this->_redirect_old_style_url();
 		}
 		
-		function has_content()
+		/** 
+		 * Invokes the controller init method
+		 */
+		function init( $args=array() )
 		{
-			if (empty($this->forms))
-			{
-				trigger_error('a page with page type "form" was called, but no form is associated with the page at url ' .get_current_url());
-				return false;
-			}
-			foreach ( $this->forms as $form )
-			{
-				if ( trim($form->get_value('thor_content')) == '' )
-				{
-					trigger_error('a page with page type "form" was called, but the thor_content of the form is null at url ' .get_current_url());
-					return false;
-				}
-			}
-			return true;
+			$this->_init_legacy();	
+ 			if ($this->model_is_usable())
+ 			{
+ 				$controller =& $this->get_form_controller();
+ 				$controller->init();
+ 			}
+ 			else parent::init();
 		}
 		
+		/**
+		 * Invokes the controller run method
+		 */
 		function run()
 		{
-			echo '<div id="form">'."\n";
-			// Display thank you message
-			if ( array_key_exists('thor_success', $_REQUEST) )
+			if ($this->model_is_usable())
 			{
-				foreach ( $this->forms as $form )
+				$controller = $this->get_form_controller();
+ 				$controller->run();
+ 			}
+ 			else // present a somewhat friendly error message
+ 			{
+ 				echo '<div id="form">';
+ 				echo '<p>This page should display a form, but is not setup correctly. Please try again later.</p>';
+ 				echo '</div>';
+ 			}
+		}
+
+		function model_is_usable()
+		{
+			if (!isset($this->model_is_usable))
+			{
+				$model =& $this->get_form_model();
+				$this->model_is_usable = $model->is_usable();
+			}
+			return $this->model_is_usable;
+		}
+		
+		/**
+		 * Get the form model - this must be specified as a page type parameter, otherwise the thor model is used.
+		 */
+		function &get_form_model()
+		{
+			if (!isset($this->form_model))
+			{
+				$model_filename = (!empty($this->params['form_model'])) ? $this->params['form_model'] : 'thor.php';
+				if (reason_file_exists('minisite_templates/modules/form/models/'.$model_filename))
 				{
-					echo $form->get_value('thank_you_message');
+					reason_include_once('minisite_templates/modules/form/models/'.$model_filename);
 				}
-				$form_url = str_replace( array('?thor_success=true','&thor_success=true'),'',get_current_url() );
-				if ($this->access_privileges['data']  && ($form->get_value('db_flag') == 'yes')) $this->show_data_view_link($form_url);
-				if ($form->get_value( 'display_return_link' ) != 'no' ) echo '<p>You may <a href="' . $form_url . '">return to the form</a>.</p>';
-				if ($form->get_value( 'show_submitted_data' ) == 'yes' ) $this->show_submitted_data();
-			}
-			// Display/process form
-			else
-			{
-				foreach ( $this->forms as $form )
+				elseif (reason_file_exists($model_filename))
 				{
-					// if data view privs
-					if ((!empty($this->request['mode'])) && ($this->request['mode'] == 'data_view') && (empty($this->user_netID)))
-					{
-						echo '<h3>Access to the form data is restricted</h3>';
-						echo '<p>You are not currently logged in. If you have access to the form data, the contents will be displayed after you login.</p>';
-						$this->show_login = true;
-					}
-					elseif (($this->access_privileges['data']) && (!empty($this->request['mode'])) && ($this->request['mode'] == 'data_view'))
-					{
-						$this->show_login = true;
-						echo $this->show_options_link();
-						$thor_admin_form = new DiscoThorAdmin();
-						$thor_viewer = new ThorViewer();
-						$thor_viewer->set_admin_form($thor_admin_form);
-						$thor_viewer->init_thor_viewer($form->id());
-						$thor_viewer->run();
-					}
-					// if viewing privs
-					elseif ($this->access_privileges['view'])
-					{
-						if ($this->access_privileges['data']  && ($form->get_value('db_flag') == 'yes')) $this->show_data_view_link();
-						$this->run_thor($form);
-					}
-					else // no privileges
-					{
-						echo '<h3>Access to this form is restricted</h3>';
-						if (empty($this->user_netID))
-						{
-							echo '<p>You are not currently logged in. If you have access to this form, the contents will be displayed after you login.</p>';
-						}
-					}
+					reason_include_once($model_filename);
 				}
-			}
-			if ($this->show_login) echo $this->get_login_logout_link();
-			echo '</div>'."\n";
-			return true;
-		}
-		
-		function run_thor(&$form)
-		{
-			$confirmation_page = get_current_url();
-			if(strstr($confirmation_page,'?')) $confirmation_page .= '&thor_success=true';
-			else $confirmation_page .= '?thor_success=true';
-			
-			$thor = new Thor($form->get_value('thor_content'),
-						     $form->get_value('email_of_recipient'),
-						     $confirmation_page);
-			
-			if (isset($this->custom_disco_thor)) $thor->set_custom_disco_thor($this->custom_disco_thor);
-			
-			$thor->init();
-			$thor->set_form_title($form->get_value('name'));
-			$thor->set_show_submitted_data($form->get_value('show_submitted_data'));
-			if (!empty($this->user_netID)) $thor->set_submitted_by($this->user_netID);
-			if (!empty($_SERVER['REMOTE_ADDR'])) $thor->set_submitter_ip($_SERVER['REMOTE_ADDR']);
-			if ($form->get_value('db_flag') == 'yes')
-			{
-				$thor->set_db_conn(THOR_FORM_DB_CONN, 'form_' . $form->id());
-			}
-			$autofill = $form->get_value('magic_string_autofill');
-						
-			if (($autofill != 'none') && ($autofill != ''))
-			{
-				$editable = ($autofill == 'not_editable') ? false : true;
-				$transform_array = $this->gen_magic_string_transform_array();
-				$thor->magic_transform($transform_array, $this->magic_transform_prefix, $editable);
-			}
-			$this->pre_thor_get_html($thor);
-			echo $thor->get_html();
-		}
-		
-		function pre_thor_get_html(&$thor)
-		{
-		}
-		
-		function show_data_view_link($url = '')
-		{
-			$url = carl_make_link(array('mode' => 'data_view', 'thor_success' => ''));
-			echo '<div class="formDataAdmin">';
-			echo '<p><a href="'.$url.'">Switch to data view</a></p>';
-			echo '</div>';
-		}
-		
-		function show_options_link()
-		{
-			$url = carl_construct_link(array(), array('textonly'));
-			echo '<div class="formDataAdmin">';
-			echo '<p><a href="'.$url.'">Switch to form view</a>';
-			//echo '<a href="'.$url2.'">Export result set as .csv</a></p>';
-			echo '</div>';
-		}
-		
-		/**	
-		* Helper function to add_item() - Returns the current user's netID, or false if the user is not logged in.
-		* Borrowed from blog module - perhaps this should be more core.
-		* @return string user's netID
-		*/	
-		function get_authentication()
-		{
-			if(empty($this->user_netID))
-			{
-				if(!empty($_SERVER['REMOTE_USER']))
+				elseif (file_exists($model_filename))
 				{
-					$this->user_netID = $_SERVER['REMOTE_USER'];
-					return $this->user_netID;
+					include_once($model_filename);
 				}
-				else
-				{
-					$this->user_netID = $this->get_authentication_from_session();
-					return $this->user_netID;
-				}
-			}
-			else
-			{
-				return $this->user_netID;
-			}
+				else trigger_error('The forms module was unable to load a model - the model_filename in get_form_model is ' . $model_filename, FATAL);
+				$model_name = $GLOBALS[ '_form_model_class_names' ][ basename($model_filename, '.php')];		
+ 				$model = new $model_name($this);
+ 				$this->form_model =& $model;
+ 			}
+ 			return $this->form_model;
 		}
-		function get_authentication_from_session()
-		{
-			$this->session =& get_reason_session();
-			if($this->session->exists())
-			{
-				force_secure_if_available();
-				if( !$this->session->has_started() )
-				{
-					$this->session->start();
-				}
-				$this->user_netID = $this->session->get( 'username' );
-				return $this->user_netID;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		
-	   /**	
-		* @return array of groups associated with this relationship.
-		*/	
-		function get_groups_by_relationship($form_id, $rel_unique_name)
-		{
-			$es = new entity_selector();
-			$es->description = 'Getting groups for this relationship';
-			$es->add_type( id_of('group_type') );
-			$es->add_right_relationship( $form_id, relationship_id_of($rel_unique_name) );
-			return $es->run_one();
-		}
-		
-		function check_privs($group_name, $user_netID)
-		{
-			foreach($group_name as $group)
-			{
-				$grouphelper = new group_helper();
-				$grouphelper->set_group_by_entity($group);
-				if ($grouphelper->requires_login() == false) return true;
-				elseif (!(empty($user_netID)) && ($grouphelper->has_authorization($user_netID))) return true;
-			}
-			return false;
-		}
-		
-		function get_login_logout_link()
-        {
-                $sess_auth = $this->get_authentication_from_session();
-                $auth = $this->get_authentication();
-                $ret = '<div class="loginlogout">';
-                if(!empty($sess_auth))
-                {
-                	if ($this->params['force_login'])
-			{
- 	               		$parts = parse_url(get_current_url());
-				$url = $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . '?force_login_disable=true&';
-                        	$parts['query'] = (isset($parts['query'])) ? str_replace('&force_login_disable=true', '', $parts['query']) : '';
-                        	$parts['query'] = (isset($parts['query'])) ? str_replace('force_login_disable=true&', '', $parts['query']) : '';
-                        	$parts['query'] = (isset($parts['query'])) ? str_replace('force_login_disable=true', '', $parts['query']) : '';
-                        	$url .= rtrim ($parts['query'], '&');
-                        	$url = urlencode($url);
-			}
-                        else 
-			{
-				$url = urlencode(get_current_url());
-			}
-                        $ret .= 'Logged in: '.$sess_auth.' <a href="'.REASON_LOGIN_URL.'?logout=true&dest_page=' .$url. '">Log Out</a>';
-                }
-                elseif(!empty($auth))
-                {
-                        $ret .= 'Logged in as '.$auth;
-                }
-                else
-                {		$ret .= '<a href="'.REASON_LOGIN_URL.'">Log In</a>';
-                }
-                $ret .= '</div>'."\n";
-                return $ret;
-        }
-        
-        function show_submitted_data()
-        {
-        	if (!session_id())
-        	{
-        		session_start();
-        		$destroy = true;
-        	}
-        	if (isset($_SESSION['form_confirm']))
-        	{	
-        		echo '<div class="submitted_data">';
-        		echo '<h3>You submitted:</h3>';
-        		$tyr = new Tyr();
-        		echo $tyr->make_html_table($_SESSION['form_confirm'], false);
-        		echo '</div>';
-        		unset ($_SESSION['form_confirm']);
-        	}
-        	if (isset($destroy))
-        	{
-        		$_SESSION = NULL;
-        		if (isset($_COOKIE[session_name()])) 
-        		{
-        			setcookie(session_name(), '', time()-42000, '/');
-				}
-        		session_destroy();
-        	}
-        }
 
 		/**
-         * Magic string functions and directory service stuff
-         */
-        
-        function gen_magic_string_transform_array()
-        {
-        	if (!empty($this->user_netID))
-        	{
-        		$dir_array = $this->get_directory_data();
-        		if (!empty($dir_array))
-        		{
-					$transform['your_full_name'] = $dir_array['ds_fullname'][0];
-					$transform['your_last_name'] = $dir_array['ds_lastname'][0];
-					if (!empty($dir_array['edupersonnickname']))
+		 *  Get the form controller - this must be specified as a page type parameter, otherwise the thor controller is used.
+		 */
+		function &get_form_controller()
+		{
+			if (!isset($this->form_controller))
+			{
+				$controller_filename = (!empty($this->params['form_controller'])) ? $this->params['form_controller'] : 'thor.php';
+				if (reason_file_exists('minisite_templates/modules/form/controllers/'.$controller_filename))
+				{
+					reason_include_once('minisite_templates/modules/form/controllers/'.$controller_filename);
+				}
+				elseif (reason_file_exists($controller_filename))
+				{
+					reason_include_once($controller_filename);
+				}
+				elseif (file_exists($controller_filename))
+				{
+					include_once($controller_filename);
+				}
+				else trigger_error('The forms module was unable to load a controller - the controller_filename in get_form_controller is ' . $controller_filename, FATAL);
+				$model =& $this->get_form_model();
+				$view =& $this->get_form_view();
+				$controller_name = $GLOBALS['_form_controller_class_names'][basename($controller_filename, '.php')];
+				$controller = new $controller_name();
+				$controller->set_model($model);
+				if ($view) $controller->set_view($view);
+				$this->form_controller =& $controller;
+			}
+			return $this->form_controller;
+		}
+		
+		/**
+		 * Get the form view from page type parameter if it exists - in many cases (like thor) the controller may handle view selection.		
+		 */
+		function &get_form_view()
+		{
+			if (!isset($this->form_view))
+			{
+				$view_filename = (!empty($this->params['form_view'])) ? $this->params['form_view'] : false;
+				if ($view_filename)
+				{
+					if (reason_file_exists('minisite_templates/modules/form/views/'.$view_filename))
 					{
-						$transform['your_first_name'] = $dir_array['edupersonnickname'][0];
+						reason_include_once('minisite_templates/modules/form/views/'.$view_filename);
 					}
-					elseif (!empty($dir_array['ds_firstname']))
+					elseif (reason_file_exists($view_filename))
 					{
-						$transform['your_first_name'] = $dir_array['ds_firstname'][0];
+						reason_include_once($view_filename);
 					}
-					$transform['your_name'] = $dir_array['ds_fullname'][0];
-					if (!empty($dir_array['ds_email']))
+					elseif (file_exists($view_filename))
 					{
-						$transform['your_email'] = $dir_array['ds_email'][0];
+						include_once($view_filename);
 					}
-					if (!empty($dir_array['ou']))
-					{
-						if (count($dir_array['ou']) > 1)
-						{
-							$str = '';
-							foreach ($dir_array['ou'] as $k=>$v)
-							{
-								$str .= $v . '; ';
-							}
-							$transform['your_department'] = substr($str, 0, -2);
-						}
-						else
-						{
-							$transform['your_department'] = $dir_array['ou'][0];
-						}
-					}
-					if (!empty($dir_array['title']))
-					{
-						if (count($dir_array['title']) > 1)
-						{
-							$str = '';
-							foreach ($dir_array['title'] as $k=>$v)
-							{
-								$str .= $v . '; ';
-							}
-							$transform['your_title'] = substr($str, 0, -2);
-						}
-						else
-						{
-							$transform['your_title'] = $dir_array['title'][0];
-						}
-					}
-					if (!empty($dir_array['homephone']))
-					{
-						if (is_array($dir_array['homephone'])) $dir_array['homephone'] = $dir_array['homephone'][0];
-						if (substr($dir_array['homephone'], 0, 3) == '+1 ')
-						{
-							$transform['your_home_phone'] = str_replace(' ', '-', substr($dir_array['homephone'], 3));
-						}
-						else 
-						{
-							$transform['your_home_phone'] = $dir_array['homephone'];
-						}
-					}
-					if (!empty($dir_array['telephonenumber']))
-					{
-						if (is_array($dir_array['telephonenumber'])) $dir_array['telephonenumber'] = $dir_array['telephonenumber'][0];
-						if (substr($dir_array['telephonenumber'], 0, 3) == '+1 ')
-						{
-							$transform['your_work_phone'] = str_replace(' ', '-', substr($dir_array['telephonenumber'], 3));
-						}
-						else 
-						{
-							$transform['your_work_phone'] = $dir_array['telephonenumber'];
-						}
-					}
-					return $transform;
-        		}
-        	}
-        	return array();
-        }
-        			
-        function get_directory_data()
-        {
-			$dir = new directory_service();
-			$dir->search_by_attribute('ds_username', $this->user_netID, $this->search_attributes);
-			return $dir->get_first_record();
+					$view_name = $GLOBALS['_form_view_class_names'][basename($view_filename, '.php')];
+					$view = new $view_name();
+					$model =& $this->get_form_model();
+					$view->set_model($model);
+				}
+				else $view = false;
+				$this->form_view =& $view;
+			}
+			return $this->form_view;
+		}
+		
+		/**
+		 * People may have admin URLs bookmarked from the old form module ... 
+		 *
+		 * ... in this case a permanent redirect is sent to the correct admin URL
+		 *
+		 * This method is included only for backwards compatibility - 
+		 * the query string parameter data_view should now be form_admin_view
+		 *
+		 * @access private
+		 */
+		function _redirect_old_style_url()
+		{
+			if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'data_view')
+			{
+				$redirect = carl_make_redirect(array('mode' => '', 'form_admin_view' => 'true'));
+				header("Location: " . $redirect);
+				exit;
+			}
+		}
+		
+		/**
+		 * The old form module supported a force_login parameter - we will continue to support it though really the controllers
+		 * are probably a better place to force login.
+		 *
+		 * @access private
+		 */
+		function _check_force_login_parameter()
+		{
+			if ($this->params['force_login'])
+			{
+				reason_require_authentication('form_login_msg');
+			}
 		}
 	}
 ?>
