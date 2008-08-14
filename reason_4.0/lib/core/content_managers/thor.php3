@@ -3,6 +3,10 @@
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'FormManager';
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 
+	/**
+	 * @todo zap the php3 extension
+	 * @todo move table exists stuff to thor core
+	 */
 	class FormManager extends ContentManager
 	{
 		var $form_prefix = 'form_'; // default prefix for thor db tables
@@ -11,7 +15,7 @@
 		function init( $externally_set_up = false)
 		{
 			parent::init();
-		$this->ensure_temp_db_table_exists();
+			$this->ensure_temp_db_table_exists();
 		}
 		
 		function alter_data()
@@ -48,9 +52,87 @@
 			$this->add_element('magic_string_autofill_note','comment',array('text'=>'<h3>Autofilling of Fields</h3><p>If you choose one of the "Autofill" options below, the will form automatically fill in personal information for the person submitting the form. The special field names that can be autofilled are: "Your Full Name", "Your Name", "Your First Name", "Your Last Name", "Your Department", "Your Email", "Your Home Phone", "Your Work Phone", and "Your Title".</p><p><strong>Note: The autofill feature will only work if the visitor is logged in.</strong></p>') );
 			$this->add_element('thank_you_note','comment',array('text'=>'<h3>Thank You Note</h3><p>This information is displayed after someone submits the form.</p>') );
 			$this->change_element_type( 'thor_content', 'thor', array('thor_db_conn_name' => THOR_FORM_DB_CONN) );
-			$this->set_order (array ('name', 'db_flag', 'email_of_recipient', 'thor_content','magic_string_autofill_note','magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data', 'unique_name'));
+			
+			$this->alter_data_advanced_options();
+			$this->set_order (array ('name', 'db_flag', 'email_of_recipient', 'thor_content','magic_string_autofill_note',
+									 'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data', 
+									 'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter', 'email_link', 'email_data', // advanced options
+									 'unique_name'));
 		}
 
+		/**
+		 * Some of these new features should trickle down to use level control but they are where they are for now.
+		 */
+		function alter_data_advanced_options()
+		{
+			$advanced_option_display_names = array(
+				'thor_view' => 'Choose Thor View:',
+				'is_editable' => 'Are Submissions Editable by the Submitter?',
+			 	'allow_multiple' => 'Allow Multiple Submissions per User?',
+			  	'email_submitter' => 'Email Form Results to Submitter?',
+			  	'email_link' => 'Include Edit Link When Possible?',
+			  	'email_data' => 'Include Submitted Data in E-mails?');
+			if(reason_user_has_privs($this->admin_page->user_id, 'edit_form_advanced_options'))
+			{
+				$this->add_element('advanced_options_header','comment',array('text'=>'<h3>Advanced Options</h3>') );
+				foreach ($advanced_option_display_names as $k=>$v)
+				{
+					$this->set_display_name($k, $v);
+				}
+				$this->setup_thor_view_element();
+			}
+			else
+			{
+				foreach($advanced_option_display_names as $k=>$v)
+				{
+					$this->remove_element($k);	
+				}
+			}
+		}
+		
+		function pre_error_check_advanced_options()
+		{
+		}
+		
+		function run_error_checks_advanced_options()
+		{
+			if(reason_user_has_privs($this->admin_page->user_id, 'edit_form_advanced_options'))
+			{
+				$custom_view = $this->get_value('thor_view_custom');
+				if (!empty($custom_view)) // lets make sure the file exists, no?
+				{
+					if (!reason_file_exists($custom_view) && !file_exists($custom_view))
+					{
+						$this->set_error('thor_view_custom', 'The custom thor view file you entered does not appear to exist.');
+					}
+					else $this->set_value('thor_view', $custom_view); // it is official - set it.
+				}
+			}
+		}
+		/**
+		 * Grab the value of the thor_view element - if it corresponds to something in the folder, then set the value
+		 * of the pull down menu accordingly. If not, 
+		 */
+		function setup_thor_view_element()
+		{
+			foreach(reason_get_merged_fileset('minisite_templates/modules/form/views/thor/') as $k=>$v)
+			{
+				$name = basename($v, 'php');
+				$name = basename($name, 'php3');
+				$options[$k] = str_replace('.','',$name);
+			}
+			$form_entity = new entity ($this->admin_page->id);
+			$thor_view_value = $form_entity->get_value('thor_view');
+			$this->change_element_type('thor_view', 'select', array('options' => $options));
+			
+			$comment_str = form_comment('Enter the fully qualified path <strong>OR</strong> a relative path from your core / local directory to a thor_view file');
+			$comment_str .= form_comment('Note that if you enter a path here, it will clear any view selected above.');
+			$this->add_element('thor_view_custom','text', array('display_name' => 'Custom Thor View Path', 'comments' => $comment_str));
+			if (!empty($thor_view_value) && !isset($options[$thor_view_value]))
+			$this->set_value('thor_view_custom', $thor_view_value);
+		}
+		
+		
 		function pre_error_check_actions()
 		{
 			if ($this->db_table_exists_check())
@@ -66,6 +148,7 @@
 				}
 				$this->remove_element('thor_content');
 			}
+			$this->pre_error_check_advanced_options();
 		}
 		
 		function run_error_checks()
@@ -110,6 +193,7 @@
 					$this->set_error('email_of_recipient',$msg);
 				}
 			}
+			$this->run_error_checks_advanced_options();
 		}
 		
 		function pre_show_form()
