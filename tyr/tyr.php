@@ -196,54 +196,67 @@ class Tyr
 			ksort($this->_fields);
 		}
 		
-		foreach ( $this->_fields as $key => $value )
+		if(!empty($this->_messages['all']['form_origin_link']) )
 		{
-			// Replace key with value[label], and value with value[value]
-			//   N.B.: We do this here, rather than earlier, because $value['label']
-			//   doesn't have to be unique, but the key of an associative array
-			//   such as $this->_fields would have to be unique.
-			if ( is_array($value) && array_key_exists('label', $value) )
-			{
-				$key = $value['label'];
-				$value = ( array_key_exists('value', $value) ) ? $value['value'] : '';
-			}
-
-			// Write out arrays
-			if ( is_array($value) )
-			{
-				$new_value = '';
-				foreach ( $value as $sub_key => $sub_value )
-				{
-					if ( is_int($sub_key) )
-						$new_value .= '    ' . $sub_value . "\n";
-					else
-						$new_value .= '    ' . $sub_key . "\n    " . $sub_value . "\n";
-				}
-				$value = $new_value;
-			}
-			$show_item = true;
-			if(trim($value) == '')
-			{
-				if($hide_empty_values)
-				{
-					$show_item = false;
-				}
-				else
-				{
-					$value = '(no value)';
-				}
-			}
-			//$value = ( trim($value) == '' ) ? '(no value)' : $value;
-			if($show_item)
-			{
-				$value = str_replace( "\'", "'", $value );
-				$key = str_replace( '_', " ", $key );
-				$key = $key . ( (substr($key, -1) != ':' && substr($key, -1) != '?') ? ':' : '' );
-				
-				$message .= "\n__________________________________\n\n" . $key . "\n" . $value;
-			}
-
+			$message .= "\n\nThe form was submitted from this web address:\n\n".$this->_messages['all']['form_origin_link']."\n\n";
 		}
+		
+		if(!empty($this->_messages['all']['form_access_link']) )
+		{
+			$message .= "\n\nYou can access this form submission online at:\n\n".$this->_messages['all']['form_access_link']."\n\n";
+		}
+		
+		if (!empty($this->_fields))
+		{
+			foreach ( $this->_fields as $key => $value )
+			{
+				// Replace key with value[label], and value with value[value]
+				//   N.B.: We do this here, rather than earlier, because $value['label']
+				//   doesn't have to be unique, but the key of an associative array
+				//   such as $this->_fields would have to be unique.
+				if ( is_array($value) && array_key_exists('label', $value) )
+				{
+					$key = $value['label'];
+					$value = ( array_key_exists('value', $value) ) ? $value['value'] : '';
+				}	
+	
+				// Write out arrays
+				if ( is_array($value) )
+				{
+					$new_value = '';
+					foreach ( $value as $sub_key => $sub_value )
+					{
+						if ( is_int($sub_key) )
+							$new_value .= '    ' . $sub_value . "\n";
+						else
+							$new_value .= '    ' . $sub_key . "\n    " . $sub_value . "\n";
+					}
+					$value = $new_value;
+				}
+				$show_item = true;
+				if(trim($value) == '')
+				{
+					if($hide_empty_values)
+					{
+						$show_item = false;
+					}
+					else
+					{
+						$value = '(no value)';
+					}
+				}
+				//$value = ( trim($value) == '' ) ? '(no value)' : $value;
+				if($show_item)
+				{
+					$value = str_replace( "\'", "'", $value );
+					$key = str_replace( '_', " ", $key );
+					$key = $key . ( (substr($key, -1) != ':' && substr($key, -1) != '?') ? ':' : '' );
+					
+					$message .= "\n__________________________________\n\n" . $key . "\n" . $value;
+				}
+	
+			}
+		}	
 		
 		if ( $add_disclaimer )
 		{
@@ -271,9 +284,21 @@ class Tyr
 		}
 	
 		if ( !empty($this->_messages['all']['form_title']) )
+		{
 			$message .= '<h2>' . htmlspecialchars( $this->_messages['all']['form_title'], ENT_COMPAT, 'UTF-8' ) . '</h2>'."\n";
+		}
 
-		$message .= $this->make_html_table($this->_fields, $hide_empty_values);
+		if(!empty($this->_messages['all']['form_origin_link']) )
+		{
+			$message .= '<p>The form was submitted from this web address:</p><p><a href="'.$this->_messages['all']['form_origin_link'].'">'.$this->_messages['all']['form_origin_link'].'</a><p>';
+		}
+		
+		if(!empty($this->_messages['all']['form_access_link']) )
+		{
+			$message .= '<p>You can access this form submission online at:</p><p><a href="'.$this->_messages['all']['form_access_link'].'">'.$this->_messages['all']['form_access_link'].'</a><p>';
+		}
+		
+		if (!empty($this->_fields)) $message .= $this->make_html_table($this->_fields, $hide_empty_values);
 
 		if ( $add_disclaimer )
 		{
