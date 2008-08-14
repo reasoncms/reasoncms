@@ -137,9 +137,8 @@
 			$model =& $this->get_model();
 			$head_items =& $model->get_head_items();
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/hide_nav.css');
 			$thor_admin =& $model->get_thor_admin_object();
-			$thor_admin->set_allow_edit(true);
-			$thor_admin->set_allow_row_delete(true);	
 			$thor_admin->init_thor_admin();
 		}
 
