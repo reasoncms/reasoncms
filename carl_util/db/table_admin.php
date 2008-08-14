@@ -1061,7 +1061,7 @@ class TableAdmin
 		foreach ($data_row as $k=>$v)
 		{
 			$v = $this->should_convert_field($k) ? htmlspecialchars($v,ENT_QUOTES,'UTF-8') : $v;	
-			$v = (!empty($v)) ? $v : '<br />';
+			$v = (strlen($v) > 0) ? $v : '<br />';
 			$ret .= '<td'.$first.'>'.$v.'</td>';
 			$first = '';
 		}
