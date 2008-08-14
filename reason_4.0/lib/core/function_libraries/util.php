@@ -724,6 +724,7 @@
 	 * <dt>edit_unique_names</dt><dd>The privilege to give Reason entities unique names. This is necessary for creating sites and types.</dd>
 	 * <dt>edit_fragile_slugs</dt><dd>The privilege to modify a slug that may cause broken links if changed (e.g. publication feed URL slugs)</dd>
 	 * <dt>edit_home_page_nav_link</dt><dd>The privilege to insert a custom link to site home pages in the navigation (instead of the standard "Sitename Home")</dd>
+	 * <dt>edit_form_advanced_options</dt><dd>The privilege to edit advanced options in the thor form content manager</dd>
 	 * <dt>manage_allowable_relationships</dt><dd>The privilege to modify, create, and delete the set of relationships can be made between Reason entities. NOTE: This is very powerful, and should only be given to highly trustworthy individuals</dd>
 	 * <dt>view_sensitive_data</dt><dd>The privilege to view any data in Reason</dd>
 	 * <dt>manage_integration_settings</dt><dd>The privilege to modify or override foreign keys and other values in Reason that pertain to integration with external data sources</dd>
@@ -781,7 +782,7 @@
 				'contribute_only_role'=>array('add','edit_pending','delete_pending',),
 				'editor_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme',),
 				'power_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme','edit_html','upload_full_size_image',),
-				'admin_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','duplicate','edit_html','switch_theme','pose_as_other_user','assign_any_page_type','edit_head_items','edit_unique_names','edit_fragile_slugs','edit_home_page_nav_link','manage_allowable_relationships','view_sensitive_data','manage_integration_settings','edit_raw_ldap_filters','upload_full_size_image','upgrade','db_maintenance','update_urls',),
+				'admin_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','duplicate','edit_html','switch_theme','pose_as_other_user','assign_any_page_type','edit_head_items','edit_unique_names','edit_fragile_slugs','edit_home_page_nav_link','edit_form_advanced_options','manage_allowable_relationships','view_sensitive_data','manage_integration_settings','edit_raw_ldap_filters','upload_full_size_image','upgrade','db_maintenance','update_urls',),
 		);
 	}
 
