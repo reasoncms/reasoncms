@@ -14,14 +14,19 @@ include_once ( SETTINGS_INC.'thor_settings.php' );
 include_once( CARL_UTIL_INC . 'db/db.php'); // Requires ConnectDB Functionality
 
 /**
- * ThorCore
+ * ThorCore - essentially a thor replacement that does less than the old thor, but does it better and with more extensibility
  *
- * - Adds elements described in thor xml to a disco form
- * - Table creation / validation
+ * - Create / delete thor tables
+ * - Get / set data in thor tables 
+ * 
+ * ThorCore can also be used to augment disco forms
  *
- * @todo table creation / validation?
- * @todo finish me
- * @todo deprecate option xml on methods ... lets require it to get set before - that way we can parse once per instance.
+ * - Add elements described in thor XML to a disco form
+ *
+ * @todo better database abstraction - currently using mysql_query and sqler
+ * @todo replace XML Parser with Simple XML once reason moves to PHP 5+ only
+ * @todo support caching
+ *
  * @author Nathan White
  */
 class ThorCore
@@ -82,6 +87,72 @@ class ThorCore
 		return $this->_display_values;
 	}
 	
+	function &get_column_names_indexed_by_label()
+	{
+		if (!isset($this->_column_names_indexed_by_label))
+		{
+			$dv =& $this->get_display_values();
+			foreach ($dv as $k => $v)
+			{
+				$this->_column_names_indexed_by_label[$v['label']] = $k;
+			}
+		}
+		return $this->_column_names_indexed_by_label;
+	}
+	
+	function &get_column_names_indexed_by_normalized_label()
+	{
+		if (!isset($this->_column_names_indexed_by_normalized_label))
+		{
+			$dv =& $this->get_display_values();
+			foreach ($dv as $k => $v)
+			{
+				$this->_column_names_indexed_by_normalized_label[strtolower(str_replace(" ", "_", $v['label']))] = $k;
+			}
+		}
+		return $this->_column_names_indexed_by_normalized_label;
+	}
+	
+	function &get_column_labels_indexed_by_name()
+	{
+		if (!isset($this->_column_labels_indexed_by_name))
+		{
+			$dv =& $this->get_display_values();
+			foreach ($dv as $k => $v)
+			{
+				$this->_column_labels_indexed_by_name[$k] = $v['label'];
+			}
+		}
+		return $this->_column_labels_indexed_by_name;
+	}
+
+	/**
+	 * Retrieve the database column name from the column label
+	 */
+	function get_column_name($label)
+	{
+		$names =& $this->get_column_names_indexed_by_label();
+		return (isset($names[$label])) ? $names[$label] : false;
+	}
+	
+	/**
+	 * Retrieve the database column name from the normalized column label
+	 */
+	function get_column_name_from_normalized_label($normalized_label)
+	{
+		$names =& $this->get_column_names_indexed_by_normalized_label();
+		return (isset($names[$normalized_label])) ? $names[$normalized_label] : false;
+	}
+	
+	/**
+	 * Retrieve the column label from the database column name
+	 */
+	function get_column_label($name)
+	{
+		$labels =& $this->get_column_labels_indexed_by_name();
+		return (isset($labels[$name])) ? $labels[$name] : false;
+	}
+	
 	function append_thor_elements_to_form(&$disco_obj)
 	{
 		$xml = $this->get_thor_xml();
@@ -105,7 +176,7 @@ class ThorCore
 		}
 	}
 	
-	function apply_magic_transform_to_form(&$disco_obj, $transform_array)
+	function apply_magic_transform_to_form(&$disco_obj, $transform_array, $editable = true)
 	{
 		$display_values =& $this->get_display_values();
 		foreach ($display_values as $key => $details)
@@ -116,6 +187,7 @@ class ThorCore
 			{
 				$value = (isset($transform_array[$real_label])) ? $transform_array[$real_label] : $transform_array[$normalized_label];
 				$disco_obj->set_value($key, $value);
+				if (!$editable) $disco_obj->change_element_type($key, 'solidtext');
 			}
 		}
 	}
@@ -133,20 +205,19 @@ class ThorCore
 			}
 		}
 	}
-	
+
 	/**
-	 * Works for thor forms where there is one row per username
-	 * @return boolean true if a record was found for the username
+	 * Applies values stored in thor for a record to the appropriate disco elements
 	 */
-	function apply_values_for_user_to_form(&$disco_obj, $username)
+	function apply_values_for_primary_key_to_form(&$disco_obj, $primary_key)
 	{
 		if ($this->table_exists())
 		{
-			$user_values = $this->get_values_for_user($username);
+			$values = $this->get_values_for_primary_key($primary_key);
 			$display_values =& $this->get_display_values();
-			if ($user_values)
+			if ($values)
 			{
-				foreach ($user_values as $k=>$v)
+				foreach ($values as $k=>$v)
 				{
 					if ($disco_obj->get_element($k))
 					{
@@ -175,8 +246,97 @@ class ThorCore
 	}
 	
 	/**
+	 * Using a reference to a disco form, returns a set of key value pairs in a format saveable by thor_core
+	 * Notably, this checks whether checkbox group elements have checked items, and returns appropriate populated
+	 * thor column names and values for those items.
+	 */
+	function get_thor_values_from_form(&$disco_obj)
+	{
+		$xml = $this->get_thor_xml();
+		$thor_values = array();
+		if ($xml && $disco_obj)
+		{
+			foreach ($xml->document->tagChildren as $node)
+			{
+				if (in_array($node->tagName, array('input', 'textarea', 'radiogroup', 'optiongroup', 'hidden')))
+				{
+					// just basic - get the disco value
+					$key = $node->tagAttrs['id'];
+					$thor_values[$key] = $disco_obj->get_value($key);
+				}
+				elseif ($node->tagName == 'checkboxgroup')
+				{
+					$key = $node->tagAttrs['id'];
+					$value = $disco_obj->get_value($key);
+					foreach ($node->tagChildren as $child_key => $child_node)
+					{
+						$key2 = $child_node->tagAttrs['id'];
+						$child_value = (isset($value[$child_key])) ? $value[$child_key] : '';
+						$thor_values[$key2] = $child_value;
+					}
+				}
+			}
+		}
+		return $thor_values;
+	}
+	
+	/**
+	 * Shortcut method to grab thor values with proper labels from a disco object
+	 */
+	function get_thor_values_from_form_for_display(&$disco_obj)
+	{
+		return $this->transform_thor_values_for_display($this->get_thor_values_from_form($disco_obj));
+	}
+	
+	/** 
+	 * Takes an array of thor_values and transforms using labels whenever possible - preserve fields that cannot be transformed
+	 *
+	 * @param array thor_values - raw thor_value array (or arrays) from database or from a disco_object
+	 * @param boolean transform_undefined_fields - whether to run prettify_string on field not defined on xml 
+	 */
+	function transform_thor_values_for_display($thor_values, $transform_undefined_fields = true)
+	{	
+		$display_values =& $this->get_display_values();
+		foreach ($thor_values as $k=>$v)
+		{
+			if (is_array($v)) $values[$k] = $this->transform_thor_values_for_display($v, $transform_undefined_fields);
+			else
+			{
+				if (isset($display_values[$k]))
+				{
+					if (isset($display_values[$k]['group_id']))
+					{
+						$group_id = $display_values[$k]['group_id'];
+						if (isset($display_values[$group_id]) && !(empty($v)))
+						{
+							$values[$display_values[$group_id]['label']][] = $display_values[$k]['label'];
+						}
+					}
+					else
+					{
+						$label = $display_values[$k]['label'];
+						$values[$label] = $v;
+					}
+				}
+				elseif ($transform_undefined_fields)
+				{
+					$values[prettify_string($k)] = $v;
+				}
+				else
+				{
+					$values[$k] = $v;
+				}
+			}
+		}
+		return $values;
+	}
+	
+
+		
+	/**
 	 * Returns a save array that can be used by disco, or passed to save_values
 	 * @todo instead of accessing $_REQUEST directly - we should probably parse the disco get_values array.
+	 * @deprecated delete after fixing custom_form/thor stuff to use get_thor_values_from_form
 	 */
 	function get_form_values_for_save()
 	{
@@ -203,71 +363,145 @@ class ThorCore
 		return $db_save_array;
 	}
 	
+	/**
+	 * @deprecated use insert_values
+	 */
 	function save_values($values)
+	{
+		$this->insert_values($values);
+	}
+	
+	/**
+	 * Insert a row - we automatically add the date created timestamp
+	 * @return id of row inserted
+	 */
+	function insert_values($values)
 	{
 		if ($this->get_thor_table() && $values)
 		{
+			$this->create_table_if_needed(); // create the table if it does not exist
+			if (!isset($values['date_created'])) $values['date_created'] = get_mysql_datetime();
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
   			$GLOBALS['sqler']->mode = 'get_query';
   			$query = $GLOBALS['sqler']->insert( $this->get_thor_table(), $values );
   			$result = db_query($query);
+  			$insert_id = mysql_insert_id();
   			$GLOBALS['sqler']->mode = '';
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+  			return $insert_id;
   		}
   		elseif (!$this->get_thor_table())
   		{
-  			trigger_error('save_values called but no table has been defined via the thorCore set_thor_table method');
+  			trigger_error('insert_values called but no table has been defined via the thorCore set_thor_table method');
   			return NULL;
   		}
   		elseif (empty($values))
   		{
-  			trigger_error('save_values called but no the values array was empty');
+  			trigger_error('insert_values called but the values array was empty');
   			return NULL;
   		}
 	}
 	
-	function save_values_for_user($values, $username)
+	//function update_values($values
+	
+	//function save_values_for_user($values, $username)
+	//{
+	//	return $this->save_values_for_primary_key($values, $username, 'submitted_by');
+	//}
+	
+	/**
+	 * @todo more error checks
+	 */
+	function update_values_for_primary_key($primary_key, $values)
 	{
-		if ($this->get_thor_table() && $values && $username)
+		if ($this->get_thor_table() && !empty($values) && ($primary_key > 0))
 		{
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
   			$GLOBALS['sqler']->mode = 'get_query';
-  			$query = $GLOBALS['sqler']->update_one( $this->get_thor_table(), $values, $username, 'submitted_by' );
+  			$query = $GLOBALS['sqler']->update_one( $this->get_thor_table(), $values, $primary_key, 'id' );
   			$result = db_query($query);
   			$GLOBALS['sqler']->mode = '';
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
   		}
   		elseif (!$this->get_thor_table())
   		{
-  			trigger_error('save_values_for_user called but no table has been defined via the thorCore set_thor_table method');
+  			trigger_error('update_values_for_primary_key called but no table has been defined via the thorCore set_thor_table method');
   			return NULL;
   		}
   		elseif (empty($values))
   		{
-  			trigger_error('save_values_for_user called but no the values array was empty');
+  			trigger_error('update_values_for_primary_key called but the values array was empty so nothing was saved');
   			return NULL;
   		}
-  		elseif (empty($username))
+  		else
   		{
-  			trigger_error('save_values_for_user called but the username array was empty');
+  			trigger_error('update_values_for_primary_key called but no primary key was passed so nothing could be saved.');
   			return NULL;
   		}
 	}
 	
-	function get_values_for_user($username)
+	/**
+	 * Shortcut function maybe overkill
+	 */
+	function get_values_for_user($username, $sort_field = '', $sort_order = '')
+	{
+		return $this->get_rows_for_key($username, 'submitted_by', $sort_field, $sort_order);
+	}
+	
+	function get_values_for_primary_key($id) // id is the primary key in a thor table
+	{
+		$rows = $this->get_rows_for_key($id, 'id');
+		return ($rows) ? current($rows) : false;
+	}
+	
+	//function get_values_for_primary_key($primary_key, $primary_key_column = 'id')
+	//{
+	//	$table = $this->get_thor_table();
+	//	if ($this->get_thor_table() && (strlen($primary_key) > 0) )
+	//	{
+	//		$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
+	//		if ($reconnect_db) connectDB($this->get_db_conn());
+	//		$q = $this->get_select_by_key_sql($primary_key, $primary_key_column);
+  	//		$res = mysql_query($q);
+  	//		if ($res && mysql_num_rows($res) > 0)
+  	//		{
+  	//			$result = mysql_fetch_assoc($res);
+  	//		}
+  	//		else $result = false;
+  	//		if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+  	//		return $result;
+  	//	}
+  	//	elseif (!$this->get_thor_table())
+  	//	{
+  	//		trigger_error('get_values_for_primary_key called but no table has been defined via the thorCore set_thor_table method');
+  	//		return NULL;
+  	//	}
+  	//	else
+  	//	{
+  	//		return array(); // the primary key was empty
+  	//	}
+	// }
+	
+	/**
+	 * Is there any values in having this be a separate method than get_values_for_primary_key?
+	 */
+	function get_rows_for_key($key, $key_column, $sort_field = '', $sort_order = '')
 	{
 		$table = $this->get_thor_table();
-		if ($this->get_thor_table() && $username)
+		if ($this->get_thor_table() && (strlen($key) > 0) )
 		{
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
-  			$q = 'SELECT * FROM '.$this->get_thor_table().' WHERE submitted_by = "'.$username.'"';
+			$q = $this->get_select_by_key_sql($key, $key_column, $sort_field, $sort_order);
   			$res = mysql_query($q);
-  			if (mysql_num_rows($res) > 0)
+  			if ($res && mysql_num_rows($res) > 0)
   			{
-  				$result = mysql_fetch_assoc($res);
+  				while ($row = mysql_fetch_assoc($res))
+  				{
+  					$result[$row['id']] = $row;
+  				}
   			}
   			else $result = false;
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
@@ -275,12 +509,59 @@ class ThorCore
   		}
   		elseif (!$this->get_thor_table())
   		{
-  			trigger_error('get_values_for_user called but no table has been defined via the thorCore set_thor_table method');
+  			trigger_error('get_rows_for_key called but no table has been defined via the thorCore set_thor_table method');
   			return NULL;
   		}
-  		elseif (empty($username))
+  		else
   		{
-  			trigger_error('get_values_for_user called but the username passed was empty');
+  			return array(); // the primary key was empty
+  		}
+	}
+	
+	function get_row_count()
+	{
+		$table = $this->get_thor_table();
+		if ($this->get_thor_table())
+		{
+			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
+			if ($reconnect_db) connectDB($this->get_db_conn());
+			$q = $this->get_row_count_sql();
+  			$res = mysql_query($q);
+  			$result = mysql_fetch_assoc($res);
+  			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+  			return $result['count'];
+  		}
+  		else
+  		{
+  			trigger_error('get_row_count called but no table has been defined via the thorCore set_thor_table method');
+  			return NULL;
+  		}
+	}
+	
+	/**
+	 * Delete a row, also call delete_table_if_needed to check if the last row was just deleted
+	 */
+	function delete_by_primary_key($primary_key, $primary_key_column = 'id')
+	{
+		$table = $this->get_thor_table();
+		if ($this->get_thor_table() && (strlen($primary_key) > 0) )
+		{
+			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
+			if ($reconnect_db) connectDB($this->get_db_conn());
+			$q = $this->get_delete_by_key_sql($primary_key, $primary_key_column);
+  			$res = mysql_query($q);
+  			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+  			$this->delete_table_if_needed();
+  			return true;
+  		}
+  		elseif (!$this->get_thor_table())
+  		{
+  			trigger_error('delete_by_primary_key called but no table has been defined via the thorCore set_thor_table method');
+  			return NULL;
+  		}
+  		else
+  		{
+  			trigger_error('delete_by_primary_key called but no primary key was given');
   			return NULL;
   		}
 	}
@@ -353,6 +634,47 @@ class ThorCore
 		return $user_data;
 	}
 	
+	/**
+	 * Returns key / value pairs with human readable labels for all the fields in a thor table row
+	 */
+	function get_output_data_for_primary_key($primary_key, $primary_key_column = 'id', $fields_to_ignore = array())
+	{
+		$raw_data = $this->get_values_for_primary_key($primary_key, $primary_key_column);
+		$display_values =& $this->get_display_values();
+		
+		$this->get_column_name('id');
+		
+		if (!empty($fields_to_ignore))
+		{
+			foreach ($fields_to_ignore as $v)
+			{
+				$field_to_unset = (isset($raw_data[$v])) ? $v : $this->get_column_name($v);
+				if ($field_to_unset) unset($raw_data[$field_to_unset]);
+			}
+		}
+		
+		foreach ($raw_data as $k=>$v)
+		{
+			if (isset($display_values[$k]))
+			{
+				if (isset($display_values[$k]['group_id']))
+				{
+					$group_id = $display_values[$k]['group_id'];
+					if (isset($display_values[$group_id]) && !(empty($v)))
+					{
+						$output_data[$display_values[$group_id]['label']][] = $display_values[$k]['label'];
+					}
+				}
+				else
+				{
+					$label = $display_values[$k]['label'];
+					$output_data[$label] = $v;
+				}
+			}
+		}
+		return $output_data;
+	}
+	
 	function get_create_table_sql()
 	{
 		$db_structure = $this->_build_db_structure();
@@ -386,6 +708,42 @@ class ThorCore
 		return $q;
 	}
 	
+	function get_delete_table_sql()
+	{
+		return 'DROP TABLE '.$this->get_thor_table();
+	}
+	
+	function get_table_exists_sql()
+	{
+		return 'SHOW TABLES LIKE "'.$this->get_thor_table().'"';
+	}
+	
+	/**
+	 * Maybe limit to one???
+	 */
+	function get_delete_by_key_sql($key, $key_column)
+	{
+		return 'DELETE FROM '.$this->get_thor_table().' WHERE '.$key_column.' = "'.$key.'"';
+	}
+
+	/**
+	 * Maybe limit to one???
+	 */	
+	function get_select_by_key_sql($key, $key_column, $sort_field = '', $sort_order = '')
+	{
+		$str = 'SELECT * FROM '.$this->get_thor_table().' WHERE '.$key_column.' = "'.$key.'"';
+		if (!empty($sort_field) && !empty($sort_order))
+		{
+			$str .= ' ORDER BY "' . $sort_field . '" ' . $sort_order; 
+		}
+		return $str;
+	}
+	
+	function get_row_count_sql()
+	{
+		return 'SELECT COUNT(*) AS count FROM '.$this->get_thor_table();
+	}
+	
 	function table_exists()
 	{
 		if (!isset($this->_table_exists))
@@ -395,7 +753,7 @@ class ThorCore
 			{
 				$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 				if ($reconnect_db) connectDB($this->get_db_conn());
-  				$q = 'show tables like "'.$this->get_thor_table().'"';
+  				$q = $this->get_table_exists_sql();
   				$res = mysql_query($q);
   				if (mysql_num_rows($res) > 0) $this->_table_exists = true;
   				else $this->_table_exists = false;
@@ -441,6 +799,43 @@ class ThorCore
   			return NULL;
 		}
 		return false;
+	}
+	
+	function delete_table()
+	{
+		if ($this->get_thor_table() && $this->table_exists())
+		{
+			$sql = $this->get_delete_table_sql();
+			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
+			if ($reconnect_db) connectDB($this->get_db_conn());
+			$res = db_query($sql);
+			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+			return true;
+		}
+		else
+  		{
+  			$error = (!$this->get_thor_table()) ? 'You need to define the table name using set_thor_table before calling create_table' : 'The table you are trying to delete does not exist!';
+  			trigger_error($error);
+  			return NULL;
+  		}
+	}
+	
+	function delete_table_if_needed()
+	{		
+		if ($this->get_thor_table() && $this->table_exists() && ($this->get_row_count() == 0) )
+		{
+			$this->delete_table();
+		}
+		elseif (!$this->get_thor_table())
+		{
+			trigger_error('delete_table_if_needed called but no table has been defined via the thorCore set_thor_table method');
+  			return NULL;
+		}
+	}
+	
+	function &get_extra_field_names()
+	{
+		return $this->_extra_fields;
 	}
 	
 	/**
@@ -506,6 +901,15 @@ class ThorCore
 	 * @access private
 	 */
 	 
+/*	function _build_display_comment($element_obj)
+	{
+		$element_attrs = $element_obj->tagAttrs;
+		$type = 'comment';
+		$display_values[$element_attrs['id']] = array('label' => $element_obj->tagData, 'type' => $type);
+		return $display_values;
+	}
+*/
+
 	function _build_display_input($element_obj)
 	{
 		$element_attrs = $element_obj->tagAttrs;
@@ -754,7 +1158,7 @@ class ThorCore
  * Note: 4/10/2006 added ability to save form data to a database  - nwhite
  *
  * @author Nathanael Fillmore, Nate White
- * @deprecated use ThorLight
+ * @deprecated use ThorCore
  * @since 26 November 2003
  */
 
