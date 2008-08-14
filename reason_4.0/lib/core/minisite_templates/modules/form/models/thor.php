@@ -352,8 +352,10 @@ class ThorFormModel extends DefaultFormModel
 		{
 			$thor_core =& $this->get_thor_core_object();
 			$thor_values = $this->_get_values_and_extra_email_fields($disco_obj);
+			$disco_hidden_fields =& $this->_get_disco_hidden_fields($disco_obj);
 			$fields_to_hide =& $disco_obj->get_submitted_data_hidden_fields_submitter_view();
 			if (!empty($fields_to_hide)) $this->_hide_fields($thor_values, $fields_to_hide);
+			if (!empty($disco_hidden_fields)) $this->_hide_fields($thor_values, $disco_hidden_fields);
 			$this->_values_for_submitter_view = $thor_core->transform_thor_values_for_display($thor_values);
 		}
 		return $this->_values_for_submitter_view;
@@ -393,6 +395,21 @@ class ThorFormModel extends DefaultFormModel
 		return $thor_values;
 	}
 	
+	function &_get_disco_hidden_fields($disco_obj)
+	{
+		if (!isset($this->_disco_hidden_fields))
+		{
+			$elements = $disco_obj->get_element_names();
+			foreach ($elements as $elm)
+			{
+				$type = $disco_obj->get_element_property($elm, 'type');
+				if ($type == 'hidden') $hidden[] = $elm;
+			}
+			$this->_disco_hidden_fields = (isset($hidden)) ? $hidden : array();
+		}
+		return $this->_disco_hidden_fields;
+	}
+
 	/**
 	 * The recipients have administrative access to the data. We provide a link if the form is saved to a database.
 	 */
