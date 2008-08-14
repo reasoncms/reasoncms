@@ -593,7 +593,7 @@
 			'main' => 'form_content',
 			'main_post' => 'form'
 		),
-		'form_force_login' => array(
+		'form_force_login' => array( // @deprecated remove in reason 4 beta 8
 			'main' => 'form_content',
 			'main_post' => array(
 				'module'=>'form',
