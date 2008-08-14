@@ -203,6 +203,12 @@ class entity
 	{
 		$this->_values[ $col ] = $val;
 	}
+	
+	/**
+	 * Returns true if the field exists on the entity and is not NULL.
+	 *
+	 * NOTE - this will return false if a field exists on the entity but has the value NULL
+	 */
 	function has_value($col)
 	{
 		$values = $this->get_values();
