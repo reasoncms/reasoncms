@@ -84,7 +84,10 @@
 			}
  			else trigger_error('The form view cannot be initialized because no form object has been setup using set_custom_form');
 		}
-		
+
+		/**
+		 * The way this is setup filename_frag and filename_real are not set for any admin view of a custom form ...
+		 */ 		
 		function init_admin_view()
 		{	
 			$tt = new TableAdmin();
