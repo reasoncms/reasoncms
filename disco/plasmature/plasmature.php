@@ -279,20 +279,35 @@
 		/////////////////////////////////////////
 		
 		/**
-		* Finds the value of this element in {@link _request} and sets the value.
+		* Finds the value of this element from userland using {@link grab_value()} and sets the value using {@link set()}
+		* @return void
 		*@todo Give this method a more descriptive/intuitive name?
 		*/
 		function grab() // {{{
 		{
-			$HTTP_VARS = $this->get_request();
-			if ( isset( $HTTP_VARS[ $this->name ] ) )
+			$val = $this->grab_value();
+			if($val !== NULL)
 			{
-				if( !is_array( $HTTP_VARS[ $this->name ] ) AND !is_object( $HTTP_VARS[ $this->name ] ) )
-					$this->set( trim($HTTP_VARS[ $this->name ]) );
-				else
-					$this->set( $HTTP_VARS[ $this->name ] );
+				$this->set( $val );
 			}
 		} // }}}
+		
+		/**
+		 * Finds the value of this element from userland (in {@link _request}) and returns it
+		 * @return mixed array, integer, or string if available, otherwise NULL if no value from userland
+		 */
+		function grab_value()
+		{
+			$http_vars = $this->get_request();
+			if ( isset( $http_vars[ $this->name ] ) )
+			{
+				if( !is_array( $http_vars[ $this->name ] ) AND !is_object( $http_vars[ $this->name ] ) )
+					return trim($http_vars[ $this->name ]);
+				else
+					return $http_vars[ $this->name ];
+			}
+			return NULL;
+		}
 		
 		/**
 		* Sets the value of this element.
@@ -314,7 +329,7 @@
 		*/
 		function get_display() // {{{
 		{
-			$str  = '<input type="text" name="'.$this->name.'" value="'.$this->get().'" size="50" />';
+			$str  = '<input type="text" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="50" />';
 			return $str;
 		} // }}}
 		
@@ -649,15 +664,26 @@
 	
 	/**
 	* Prints out value of item without allowing you to edit it.
+	* Changing of this value in userland is now deprecated; in future releases it will not be possible.
+	* @todo remove userland get behavior before 4.0rc1
 	* @package disco
 	* @subpackage plasmature
 	*/
 	class solidtextType extends defaultType // {{{
 	{
 		var $type = 'solidtext';
+		function grab() // {{{
+		{
+			$value = $this->grab_value();
+			if($value !== NULL && $value != $this->get())
+			{
+				trigger_error('solidText element ('.$this->name.') value changed in userland. This is deprecated (insecure) behavior and will not be allowed in future releases.');
+			}
+			parent::grab();
+		} // }}}
 		function get_display() // {{{
 		{
-			$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get()).'"/>';
+			$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
 			$str .= "\n".'<div class="solidText">' . $this->get(). '</div>';
 			return $str;
 		} // }}}		
@@ -673,7 +699,10 @@
 		var $text = 'Comment';
 		var $colspan = 2;
 		var $type_valid_args = array( 'text' );
-				
+		
+		function grab() // {{{
+		{
+		}
 		function get_display() // {{{
 		{
 			return $this->text;
@@ -690,29 +719,52 @@
 	}
 	
 	/**
+	* Plain Text -- similar to solidText -- shows text value but no form element
+	* @todo remove userland get behavior before 4.0rc1
 	* @package disco
 	* @subpackage plasmature
 	*/
 	class plainTextType extends defaultType // {{{
 	{
 		var $type = 'plainText';
+		function grab() // {{{
+		{
+			$value = $this->grab_value();
+			if($value !== NULL && $value != $this->get())
+			{
+				trigger_error('plainText element ('.$this->name.') value changed in userland. This is deprecated (insecure) behavior and will not be allowed in future releases.');
+			}
+			parent::grab();
+		} // }}}
 		function get_display() // {{{
 		{
-			$str  = '<input type="hidden" name="'.$this->name.'" value="'.$this->get().'" />'.$this->get();
+			$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" />'.$this->get();
 			return $str;
 		} // }}}
 	} // }}}
 	
 	/**
+	* Disabled Text -- shows a disabled form element
+	* Changing of this value in userland is now deprecated; in future releases it will not be possible.
+	* @todo remove userland get behavior before 4.0rc1
 	* @package disco
 	* @subpackage plasmature
 	*/
 	class disabledTextType extends textType // {{{
 	{
 	 	var $type = 'disabledText';
+		function grab() // {{{
+		{
+			$value = $this->grab_value();
+			if($value !== NULL && $value != $this->get())
+			{
+				trigger_error('disabledText element ('.$this->name.') value changed in userland. This is deprecated (insecure) behavior and will not be allowed in future releases.');
+			}
+			parent::grab();
+		} // }}}
 		function get_display() // {{{
 		{
-			$str  = '<input type="text" name="'.$this->name.'" value="'.$this->get().'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" disabled="disabled" />';
+			$str  = '<input type="text" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" disabled="disabled" />';
 			return $str;
 		} // }}}
 	} // }}}
@@ -730,7 +782,7 @@
 		
 		function get_display() // {{{
 		{
-			return '<input type="password" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" />';
+			return '<input type="password" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" />';
 		} // }}}		
 	} // }}}
 	
@@ -771,7 +823,7 @@
 		
 		function get_display() // {{{
 		{
-			$str  = '<textarea name="'.$this->name.'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlentities($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
+			$str  = '<textarea name="'.$this->name.'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
 			return $str;
 		} // }}}
 		
@@ -810,10 +862,19 @@
 	class hiddenType extends defaultType // {{{
 	{
 		var $type = 'hidden';
-
+		
+		function grab() // {{{
+		{
+			$value = $this->grab_value();
+			if($value !== NULL && $value != $this->get())
+			{
+				trigger_error('hidden element ('.$this->name.') value changed in userland. This is deprecated (insecure) behavior and will not be allowed in future releases.');
+			}
+			parent::grab();
+		} // }}}
 		function get_display() // {{{
 		{
-			$str = '<input type="hidden" id="'.$this->name.'Element" name="'.$this->name.'" value="'.$this->get().'" />';
+			$str = '<input type="hidden" id="'.$this->name.'Element" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" />';
 			return $str;
 		} // }}}
 	} // }}}
@@ -889,17 +950,22 @@
 	/**
 	* @package disco
 	* @subpackage plasmature
-	* @todo Why does this extend the {@link hiddenType}?  This should extend the {@link defaultType if it's not drawing on 
-	* 		any of {@link hiddenType}'s functionality.	
 	*/
-	class loki2Type extends hiddenType // {{{
+	class loki2Type extends defaultType // {{{
 	{
 		var $type = 'loki2';
 		var $widgets = 'default';
 		var $site_id = 0;
 		var $paths = array();
 		var $allowable_tags = array();
-		var $type_valid_args = array('widgets', 'site_id', 'paths', 'allowable_tags');
+		/**
+		 * Exists for backwards compatibility with Loki 1
+		 *
+		 * Proper method to use now is to just pass the source option as a a widget, or not
+		 * @deprecated
+		 */
+		var $user_is_admin;
+		var $type_valid_args = array('widgets', 'site_id', 'paths', 'allowable_tags', 'user_is_admin');
 		
 		function do_includes()
 		{
@@ -946,7 +1012,7 @@
 		
 		function display() // {{{
 		{
-			$loki = new Loki2( $this->name, $this->value, $this->_flatten_widgets($this->widgets) );
+			$loki = new Loki2( $this->name, $this->value, $this->_resolve_widgets($this->widgets) );
 			if(!empty($this->paths['image_feed']))
 			{
 				$loki->set_feed('images',$this->paths['image_feed']);
@@ -978,6 +1044,20 @@
 			
 			$loki->print_form_children();
 		} // }}}
+		
+		function _resolve_widgets($widgets)
+		{
+			$widgets = $this->_flatten_widgets($widgets);
+			if($this->user_is_admin)
+			{
+				$widgets .= ' +source +debug';
+			}
+			elseif($this->user_is_admin === false)
+			{
+				$widgets .= ' -source -debug';
+			}
+			return $widgets;
+		}
 		
 		function _flatten_widgets($widgets)
 		{
@@ -1016,19 +1096,23 @@
 	* @todo Why does this extend the {@link hiddenType}?  This should extend the {@link defaultType if it's not drawing on 
 	* 		any of {@link hiddenType}'s functionality.
 	*/
-	class thorType extends hiddenType // {{{
+	class thorType extends defaultType // {{{
 	{
 		var $tmp_id; // private, and don't set it using args, either
 		var $original_db_conn_name; // private
 		var $type = 'thor';
-		var $thor_db_conn_name = 'temp_data';
+		var $thor_db_conn_name = NULL;
 		var $asset_directory = THOR_HTTP_PATH;
 		var $type_valid_args = array( 'thor_db_conn_name' );
 
 		function display() // {{{
-		{	
+		{
+			if(!$this->can_run())
+			{
+				return;
+			}
 			?>
-			<SCRIPT LANGUAGE=JavaScript1.1>
+			<script type="text/javascript">
 			<!--
 			var MM_contentVersion = 6;
 			var plugin = (navigator.mimeTypes && navigator.mimeTypes["application/x-shockwave-flash"]) ? navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin : 0;
@@ -1058,7 +1142,7 @@
 				document.write('<span style="color:#ffffff;background-color:#ff0000;">You do not have the most current version of the Flash plug-in. Please install the latest <a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Flash Player</a> to manage this form.</span>');
 			}
 			//-->
-			</SCRIPT>
+			</script>
 			<?php
 			// Use a hidden field to pass along the tmp_id to $this->get()
 			echo '<input type="hidden" id="' . $this->name . 'Element" name="' . $this->name . '" value="' . $this->tmp_id.'" />' . "\n";
@@ -1066,6 +1150,10 @@
 
 		function set( $value )
 		{
+			if(!$this->can_run())
+			{
+				return;
+			}
 			if ( empty($value) )
 				$this->value = '<' . '?xml version="1.0" ?' . '><form submit="Submit" reset="Clear" />';
 			else
@@ -1106,6 +1194,12 @@
 		function init( $args = array() ) // {{{
 		{
 			parent::init($args);
+			if(!$this->can_run())
+			{
+				trigger_error('thor needs a db connection name (thor_db_conn_name)');
+				return;
+			}
+			include_once(CARL_UTIL_INC.'db/db.php');
 			$this->original_db_conn_name = get_current_db_connection_name();
 			$this->set($this->value);			
 			return true;
@@ -1139,24 +1233,24 @@
 				connectDB($this->original_db_conn_name);
 			}
 		} // }}}
+		
+		function can_run()
+		{
+			if(empty($this->thor_db_conn_name))
+			{
+				return false;
+			}
+			return true;
+		}
 
 		function get() // {{{
 		{
+			if(!$this->can_run())
+			{
+				return;
+			}
+			
 			return $this->value;
-
-			if ( preg_match('-^\d+$-siuU', $this->value) > 0 ) // if $this->value contains only a number
-			{
-				$this->tmp_id = $this->value;
-				return ( implode("\n", file('http://'.HTTP_HOST_NAME.THOR_HTTP_PATH.'getXML.php?tmp_id=' . $this->tmp_id)) );
-			}
-			elseif ( !empty($this->value) ) // if $this->value contains the XML
-			{
-				return $this->value;
-			}
-			else
-			{
-				prp('Neither a tmp_id nor XML content was contained by $this-value in thorType::get');
-			}
 		} // }}}
 	} // }}}
 	
@@ -1183,6 +1277,10 @@
 		var $type = 'cloaked';
 		var $display_style = 'hidden';
 		
+		function grab() // {{{
+		{
+		} // }}}
+		
 		function get_display() // {{{
 		{
 			// don't put any code here!
@@ -1198,6 +1296,9 @@
 	 	var $type = 'disabledDate';
 		var $format = 'F j, Y, g:i a';
 		
+		function grab() // {{{
+		{
+		} // }}}
 		function get_display() // {{{
 		{
 			$year = substr( $this->get(), 0, 4 );
@@ -1554,6 +1655,7 @@
 	/**
 	* @package disco
 	* @subpackage plasmature
+	* @todo do better data checking to make sure that value is one of the available options (or empty/null)
 	*/
 	class selectType extends optionType // {{{
 	{
@@ -1574,6 +1676,34 @@
 		* If true, adds a null value to the top of the select.
 		*/
 		var $add_null_value_to_top = true;	
+		
+		/* function grab() // {{{
+		{
+			parent::grab();
+			
+			$value = $this->get();
+			if(is_array($value))
+			{
+				foreach($value as $key => $val)
+				{
+					if(!isset($this->options[$key]))
+					{
+						$this->set_error(htmlspecialchars($key,ENT_QUOTES).' is not an acceptable value');
+					}
+				}
+			}
+			elseif(is_string($value))
+			{
+				if(!isset($this->options[$value]))
+				{
+					$this->set_error(htmlspecialchars($value,ENT_QUOTES).' is not an acceptable value');
+				}
+			}
+			else
+			{
+				$this->set_error('Strange problem');
+			}
+		} */
 				
 		function get_display() // {{{
 		{
@@ -2239,7 +2369,10 @@
 					$this->table = $matches[ 1 ];
 				// bad stuff.  we need a valid table name
 				else
-					die( 'dblinkerType::init - no valid tablename found' );
+				{
+					trigger_error( 'dblinkerType::init - no valid tablename found' );
+					return;
+				}
 
 			// load options from DB
 			$q = "SELECT id, name FROM ".$this->table;
@@ -2632,6 +2765,7 @@
 		var $existing_file;
 		var $existing_file_web;
 		var $allow_upload_on_edit;
+		var $replacement_text = 'Replace image:';
 		var $resize_image = true;
 		var $max_width = 500;
 		var $max_height = 500;
@@ -2642,6 +2776,7 @@
 									  'max_height',
 									  'max_width',
 									  'resize_image',
+									  'replacement_text',
 									 ); 
 		
 		function additional_init_actions($args = array())
@@ -2778,9 +2913,9 @@
 				$str .= '<img src="'.$this->tmp_web_path.'?cb='.filemtime( $this->tmp_full_path ).'" width="'.$w.'" height="'.$h.'" /><br />';
 				$str .= $image_size.'<br />';
 				$str .= '<br />';
-				$str .= '<span class="smallText">Upload a different image:</span><br />';
+				$str .= '<div class="imageReplace"><label for="'.$this->name.'Element"><span class="smallText">'.$this->replacement_text.'</span></label><br />';
 				$str .= $input;
-				$str .= '<input type="hidden" name="'.$this->name.'[tmp_file]" value="'.$this->tmp_web_path.'" />';
+				$str .= '<input type="hidden" name="'.$this->name.'[tmp_file]" value="'.$this->tmp_web_path.'" /></div>';
 				return $str;
 			}
 			else if ( $this->state == 'existing' )
@@ -2793,8 +2928,9 @@
 					$str .= '<img src="'.$this->existing_file_web.'?cb='.filemtime( $this->existing_file ).'" width="'.$w.'" height="'.$h.'" /><br />';
 					$str .= $image_size.'<br />';
 					$str .= '<br />';
-					$str .= '<span class="smallText">Upload a different image:</span><br />';
+					$str .= '<div class="imageReplace"><label for="'.$this->name.'Element"><span class="smallText">'.$this->replacement_text.'</span></label><br />';
 					$str .= $input;
+					$str .= '</div>';
 				}
 				else
 				{
@@ -3261,7 +3397,7 @@
 		function get_month_display($month_val = '')
 		{
 			$str = '';
-			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'monthElement" name="'.$this->name.'[month]" value="'.$month_val.'" />';
+			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'monthElement" name="'.$this->name.'[month]" value="'.htmlspecialchars($month_val, ENT_QUOTES).'" />';
 			return $str;
 		}
 		
@@ -3269,7 +3405,7 @@
 		{
 			$str = '';
 			$str .= ' / ';
-			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'dayElement" name="'.$this->name.'[day]" value="'.$day_val.'" />';
+			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'dayElement" name="'.$this->name.'[day]" value="'.htmlspecialchars($day_val, ENT_QUOTES).'" />';
 			return $str;
 		}
 		
@@ -3277,7 +3413,7 @@
 		{
 			$str = '';
 			$str .= ' / ';
-			$str .= '<input type="text" size="4" maxlength="4" id="'.$this->name.'yearElement" name="'.$this->name.'[year]" value="'.$year_val.'" />';
+			$str .= '<input type="text" size="4" maxlength="4" id="'.$this->name.'yearElement" name="'.$this->name.'[year]" value="'.htmlspecialchars($year_val, ENT_QUOTES).'" />';
 			return $str;
 		}
 		
@@ -3285,7 +3421,7 @@
 		{
 			$str = '';
 			$str .= '&nbsp;&nbsp; at ';
-			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'hourElement" name="'.$this->name.'[hour]" value="'.$hour_val.'" />';
+			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'hourElement" name="'.$this->name.'[hour]" value="'.htmlspecialchars($hour_val, ENT_QUOTES).'" />';
 			return $str;
 		}
 		
@@ -3293,7 +3429,7 @@
 		{
 			$str = '';
 			$str .= ' : ';
-			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'minuteElement" name="'.$this->name.'[minute]" value="'.$minute_val.'" />';	
+			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'minuteElement" name="'.$this->name.'[minute]" value="'.htmlspecialchars($minute_val, ENT_QUOTES).'" />';	
 			return $str;
 		}
 		
@@ -3301,7 +3437,7 @@
 		{
 			$str = '';
 			$str .= ' : ';
-			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'secondElement" name="'.$this->name.'[second]" value="'.$second_val.'" />';
+			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'secondElement" name="'.$this->name.'[second]" value="'.htmlspecialchars($second_val, ENT_QUOTES).'" />';
 			return $str;
 		}
 		
@@ -3439,6 +3575,10 @@
 				$this->year_args['end'] = $this->year_max;
 			if(empty($this->year_args['start']) || (isset($this->year_args['start']) && $this->year_args['start'] < $this->year_min))
 				$this->year_args['start'] = $this->year_min;
+			if(empty($this->year_args['end']))
+				unset($this->year_args['end']);
+			if(empty($this->year_args['start']))
+				unset($this->year_args['start']);
 			$this->year_element->init($this->year_args); 
 		}
 					
