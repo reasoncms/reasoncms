@@ -185,7 +185,7 @@ class ThorAdmin extends TableAdmin
 	}
 	
 	/**
-	 * Grab the data (minus id) from thor core and display as a list
+	 * Grab the data from thor core and display as a list
 	 */
 	function on_every_time_view()
 	{
@@ -194,8 +194,10 @@ class ThorAdmin extends TableAdmin
 		echo '<h3>Viewing row id ' . $id . '</h3>';
 		$link = carl_make_link(array('table_row_action' => '', 'table_action_id' => ''));
 		echo '<p><a href="'.$link.'">Return to summary form data</a></p>';
-			
-		$data = $tc->get_output_data_for_primary_key($this->get_action_id(), 'id', array('id')); // exclude only the id field
+		
+		$data = $tc->get_values_for_primary_key($this->get_action_id());
+		unset ($data['id']); // lets not show the id in this view
+		$data = $tc->transform_thor_values_for_display($data);
 		if ($data)
 		{
 			// we are going to use Tyr to format this up though it is a little silly ... 
@@ -230,7 +232,11 @@ class ThorAdmin extends TableAdmin
 		}
 		echo '<h3>Are you sure you want to delete row id ' . $id . '?</h3>';
 		$this->actions = array('delete' => 'Confirm Delete', 'cancel' => 'Cancel');
-		$data = $tc->get_output_data_for_primary_key($this->get_action_id(), 'id', array('id')); // exclude only the id field
+		
+		$data = $tc->get_values_for_primary_key($this->get_action_id());
+		unset ($data['id']); // lets not show the id in this view
+		$data = $tc->transform_thor_values_for_display($data);
+		
 		if ($data)
 		{
 			// we are going to use Tyr to format this up though it is a little silly ... 

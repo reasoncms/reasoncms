@@ -14,15 +14,17 @@ include_once ( SETTINGS_INC.'thor_settings.php' );
 include_once( CARL_UTIL_INC . 'db/db.php'); // Requires ConnectDB Functionality
 
 /**
- * ThorCore - essentially a thor replacement that does less than the old thor, but does it better and with more extensibility
+ * ThorCore - essentially a thor replacement that does less than the old thor, but does it better.
+ *
+ * Do not extend this class - while other classes may use ThorCore, it should be kept as simple as possible.
  *
  * - Create / delete thor tables
  * - Get / set data in thor tables 
- * 
- * ThorCore can also be used to augment disco forms
+ * - Retrieves thor key/value pairs from a disco form
+ * - Adds thor elements to a disco form
+ * - Sets the values of disco elements from stored thor data
  *
- * - Add elements described in thor XML to a disco form
- *
+ * @todo consideral removal of magic transform - really a ReasonThor feature ... not ThorCore
  * @todo better database abstraction - currently using mysql_query and sqler
  * @todo replace XML Parser with Simple XML once reason moves to PHP 5+ only
  * @todo support caching
@@ -330,47 +332,7 @@ class ThorCore
 		}
 		return $values;
 	}
-	
 
-		
-	/**
-	 * Returns a save array that can be used by disco, or passed to save_values
-	 * @todo instead of accessing $_REQUEST directly - we should probably parse the disco get_values array.
-	 * @deprecated delete after fixing custom_form/thor stuff to use get_thor_values_from_form
-	 */
-	function get_form_values_for_save()
-	{
-		$db_save_array = conditional_stripslashes($_REQUEST);
-		if (isset($db_save_array['transform']))
-		{
-			foreach ($db_save_array['transform'] as $k=>$v) //process checkbox transformations
-			{
-				foreach ($v as $k2=>$v2)
-				{
-					$db_save_array[$v2] = isset($db_save_array[$k][$k2]) ? $db_save_array[$k][$k2] : '';
-				}
-				unset ($db_save_array['transform'][$k]);
-				unset ($db_save_array[$k]);
-			}
-		}
-		foreach ($db_save_array as $k => $v)
-		{
-			if (substr($k, 0, 3) != "id_")
-			{
-				if (in_array($k, $this->_extra_fields) == false) unset ($db_save_array[$k]);
-			}
-		}
-		return $db_save_array;
-	}
-	
-	/**
-	 * @deprecated use insert_values
-	 */
-	function save_values($values)
-	{
-		$this->insert_values($values);
-	}
-	
 	/**
 	 * Insert a row - we automatically add the date created timestamp
 	 * @return id of row inserted
@@ -402,13 +364,6 @@ class ThorCore
   			return NULL;
   		}
 	}
-	
-	//function update_values($values
-	
-	//function save_values_for_user($values, $username)
-	//{
-	//	return $this->save_values_for_primary_key($values, $username, 'submitted_by');
-	//}
 	
 	/**
 	 * @todo more error checks
@@ -456,36 +411,8 @@ class ThorCore
 		return ($rows) ? current($rows) : false;
 	}
 	
-	//function get_values_for_primary_key($primary_key, $primary_key_column = 'id')
-	//{
-	//	$table = $this->get_thor_table();
-	//	if ($this->get_thor_table() && (strlen($primary_key) > 0) )
-	//	{
-	//		$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
-	//		if ($reconnect_db) connectDB($this->get_db_conn());
-	//		$q = $this->get_select_by_key_sql($primary_key, $primary_key_column);
-  	//		$res = mysql_query($q);
-  	//		if ($res && mysql_num_rows($res) > 0)
-  	//		{
-  	//			$result = mysql_fetch_assoc($res);
-  	//		}
-  	//		else $result = false;
-  	//		if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
-  	//		return $result;
-  	//	}
-  	//	elseif (!$this->get_thor_table())
-  	//	{
-  	//		trigger_error('get_values_for_primary_key called but no table has been defined via the thorCore set_thor_table method');
-  	//		return NULL;
-  	//	}
-  	//	else
-  	//	{
-  	//		return array(); // the primary key was empty
-  	//	}
-	// }
-	
 	/**
-	 * Is there any values in having this be a separate method than get_values_for_primary_key?
+	 * @return array rows associated with a key and key column
 	 */
 	function get_rows_for_key($key, $key_column, $sort_field = '', $sort_order = '')
 	{
@@ -541,14 +468,14 @@ class ThorCore
 	/**
 	 * Delete a row, also call delete_table_if_needed to check if the last row was just deleted
 	 */
-	function delete_by_primary_key($primary_key, $primary_key_column = 'id')
+	function delete_by_primary_key($primary_key)
 	{
 		$table = $this->get_thor_table();
 		if ($this->get_thor_table() && (strlen($primary_key) > 0) )
 		{
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
-			$q = $this->get_delete_by_key_sql($primary_key, $primary_key_column);
+			$q = $this->get_delete_by_key_sql($primary_key, 'id');
   			$res = mysql_query($q);
   			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
   			$this->delete_table_if_needed();
@@ -564,115 +491,6 @@ class ThorCore
   			trigger_error('delete_by_primary_key called but no primary key was given');
   			return NULL;
   		}
-	}
-	
-	function get_output_data_for_screen($username)
-	{
-		$raw_data = $this->get_values_for_user($username);
-		$display_values =& $this->get_display_values();
-		
-		//unset id and extra fields
-		$unset_array = $this->_extra_fields;
-		$unset_array[] = 'id';
-		foreach ($unset_array as $v)
-		{
-			unset($raw_data[$v]);
-		}
-		
-		foreach ($raw_data as $k=>$v)
-		{
-			if (isset($display_values[$k]))
-			{
-				if (isset($display_values[$k]['group_id']))
-				{
-					$group_id = $display_values[$k]['group_id'];
-					if (isset($display_values[$group_id]) && !(empty($v)))
-					{
-						$user_data[$display_values[$group_id]['label']][] = $display_values[$k]['label'];
-					}
-				}
-				else
-				{
-					$label = $display_values[$k]['label'];
-					$user_data[$label] = $v;
-				}
-			}
-		}
-		return $user_data;
-	}
-	
-	function get_output_data_for_email($username)
-	{
-		$raw_data = $this->get_values_for_user($username);
-		$display_values =& $this->get_display_values();
-		
-		$unset_array[] = 'id';
-		foreach ($unset_array as $v)
-		{
-			unset($raw_data[$v]);
-		}
-		
-		foreach ($raw_data as $k=>$v)
-		{
-			if (isset($display_values[$k]))
-			{
-				if (isset($display_values[$k]['group_id']))
-				{
-					$group_id = $display_values[$k]['group_id'];
-					if (isset($display_values[$group_id]) && !(empty($v)))
-					{
-						$user_data[$display_values[$group_id]['label']][] = $display_values[$k]['label'];
-					}
-				}
-				else
-				{
-					$label = $display_values[$k]['label'];
-					$user_data[$label] = $v;
-				}
-			}
-		}
-		return $user_data;
-	}
-	
-	/**
-	 * Returns key / value pairs with human readable labels for all the fields in a thor table row
-	 */
-	function get_output_data_for_primary_key($primary_key, $primary_key_column = 'id', $fields_to_ignore = array())
-	{
-		$raw_data = $this->get_values_for_primary_key($primary_key, $primary_key_column);
-		$display_values =& $this->get_display_values();
-		
-		$this->get_column_name('id');
-		
-		if (!empty($fields_to_ignore))
-		{
-			foreach ($fields_to_ignore as $v)
-			{
-				$field_to_unset = (isset($raw_data[$v])) ? $v : $this->get_column_name($v);
-				if ($field_to_unset) unset($raw_data[$field_to_unset]);
-			}
-		}
-		
-		foreach ($raw_data as $k=>$v)
-		{
-			if (isset($display_values[$k]))
-			{
-				if (isset($display_values[$k]['group_id']))
-				{
-					$group_id = $display_values[$k]['group_id'];
-					if (isset($display_values[$group_id]) && !(empty($v)))
-					{
-						$output_data[$display_values[$group_id]['label']][] = $display_values[$k]['label'];
-					}
-				}
-				else
-				{
-					$label = $display_values[$k]['label'];
-					$output_data[$label] = $v;
-				}
-			}
-		}
-		return $output_data;
 	}
 	
 	function get_create_table_sql()
@@ -900,15 +718,6 @@ class ThorCore
 	 * Helper functions for _build_display_values()
 	 * @access private
 	 */
-	 
-/*	function _build_display_comment($element_obj)
-	{
-		$element_attrs = $element_obj->tagAttrs;
-		$type = 'comment';
-		$display_values[$element_attrs['id']] = array('label' => $element_obj->tagData, 'type' => $type);
-		return $display_values;
-	}
-*/
 
 	function _build_display_input($element_obj)
 	{
