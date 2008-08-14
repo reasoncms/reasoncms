@@ -15,7 +15,7 @@ include_once( DISCO_INC . 'boxes/boxes.php');
  * Mostly just adds the class thorTable to the table and adds a note 
  * explaining that fields with asterisks are required.
  *
- * @todo remove the asterisk/required note and move that logic into Thor, which can add it as plasmature element
+ * @deprecated
  */
 class BoxThor extends Box
 {
@@ -26,4 +26,15 @@ class BoxThor extends Box
 	}
 }
 
+/**
+ * This doesn't do much but currently Disco does not provide a way to interact with a box class between instantiation and the head method
+ * and so this class exists for now
+ */
+class BoxThor2 extends Box
+{
+	function head()
+	{
+		echo '<table border="0" cellpadding="6" cellspacing="0" class="thorTable">' . "\n";
+	}
+}
 ?>
