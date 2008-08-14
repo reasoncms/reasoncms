@@ -1,5 +1,6 @@
 <?php
 	reason_include_once('classes/admin/modules/default.php');
+	include_once( THOR_INC .'thor.php' );
 	include_once( THOR_INC .'thor_admin.php' );
 	
 	/**
@@ -10,8 +11,8 @@
 	
 	class ThorDataModule extends DefaultModule // {{{
 	{
-		var $thor_admin; // thor viewer object
-		var $form; // form entity
+		var $_thor_admin; // thor viewer object
+		var $_form; // form entity
 		
 		function ThorDataModule( &$page ) // {{{
 		{
@@ -28,40 +29,55 @@
 		{
 			parent::init();
 			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
-			$this->form = new entity( $this->admin_page->id );
-			if ($this->validate_form())
-			{		
-				$form_id = $this->form->id();
-				$form_xml = $this->form->get_value('thor_content');
-				$this->admin_page->title = 'Data Manager for Form "' . $this->form->get_value('name').'"';
-				
-				$admin_form = new DiscoThorAdmin();
-				$this->thor_admin = new ThorAdmin();
-				$this->thor_admin->set_admin_form($admin_form);
-				$this->thor_admin->set_allow_edit(true);
-				$this->thor_admin->set_allow_delete(true);
-				$this->thor_admin->set_allow_row_delete(true);
-				$this->thor_admin->init_thor_admin($form_xml, 'form_'.$form_id);
+			$form =& $this->get_form();
+			if ($form)
+			{
+				$this->admin_page->title = 'Data Manager for Form "' . $form->get_value('name').'"';
+			}
+			$ta =& $this->get_thor_admin();
+			if ($ta)
+			{
+				$ta->set_allow_edit(true);
+				$ta->set_allow_delete(true);
+				$ta->set_allow_new(true);
+				$ta->set_allow_row_delete(true);
+				$ta->init_thor_admin();
 			}
 		}
 		
-		/**
-		 * make sure the form id passed is valid and owned by the site
-		 */
-		function validate_form()
+		function &get_thor_admin()
 		{
-			if ($this->form->get_values())
+			if (!isset($this->_thor_admin))
 			{
-				if ($this->form->get_value('type') == id_of('form'))
+				$form =& $this->get_form();
+				if ($form)
 				{
-					$owner = $this->form->get_owner();
-					if ($owner->id() == $this->admin_page->site_id)
-					{
-						return true;
-					}
+					$id = $form->id();
+					$xml = $form->get_value('thor_content');
+					$tc = new ThorCore($xml, 'form_'.$id);
+					$af = new DiscoThorAdmin();
+					$this->_thor_admin = new ThorAdmin();
+					$this->_thor_admin->set_thor_core($tc);
+					$this->_thor_admin->set_admin_form($af);
 				}
+				else $this->_thor_admin = false;
 			}
-			return false;
+			return $this->_thor_admin;
+		}
+		
+		function &get_form()
+		{
+			if (!isset($this->_form))
+			{
+				$form = new entity($this->admin_page->id);
+				if ($form->get_values() && ($form->get_value('type') == id_of('form')))
+				{
+					$owner = $form->get_owner();
+					if ($owner->id() == $this->admin_page->site_id) $this->_form = $form;
+				}
+				if (!isset($this->_form)) $this->_form = false;
+			}
+			return $this->_form;
 		}
 		
 		/**
@@ -69,11 +85,13 @@
 		 */
 		function run() // {{{
 		{
-			if (!empty($this->thor_admin))
+			$form =& $this->get_form();
+			$ta =& $this->get_thor_admin();
+			if ($ta)
 			{
 				$link_return = $this->admin_page->make_link( array( 'cur_module' => 'Editor'));
-				$this->gen_menu(array('Edit "'.$this->form->get_value('name').'" (Form)' => $link_return));
-				$this->thor_admin->run();
+				$this->gen_menu(array('Edit "'.$form->get_value('name').'" (Form)' => $link_return));
+				$ta->run();
 			}
 			else
 			{
