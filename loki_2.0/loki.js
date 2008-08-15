@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0rc5-pl2
+// Loki WYSIWIG Editor 2.0rc6
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-07-18 12:12:17 
+// Compiled 2008-07-18 17:26:22 
 // http://loki-editor.googlecode.com/
 
 
@@ -901,7 +901,7 @@ TinyMCEControl.prototype.selectNode = function(node, collapse, select_text_node,
 		sel.addRange(rng);
 	}
 
-	this.scrollToNode(node);
+	//this.scrollToNode(node);
 
 	// Set selected element
 	tinyMCE.selectedElement = null;
@@ -2859,11 +2859,38 @@ Util.Element = {
 			var position = Util.Element.get_computed_style(window, e).position;
 			if (position == 'relative') {
 				pos.x += e.offsetLeft;
-				pos.y += e.offsetTop;
+				if (!Util.Element._buggy_ie_offset_top())
+					pos.y += e.offsetTop;
 			}
 		}
 		
 		return pos;
+	},
+	
+	/**
+	 * True if the browser is IE ≤ 7, which incorrectly calculates elements'
+	 * offsetTop attribute.
+	 * @see http://www.quirksmode.org/dom/w3c_cssom.html#offsetParent
+	 * @type Boolean
+	 */
+	_buggy_ie_offset_top: function buggy_ie_offset_top() {
+		var match, major;
+		
+		if (typeof(buggy_ie_offset_top.result) == 'undefined') {
+			if (!Util.Browser.IE) {
+				buggy_ie_offset_top.result = false;
+			} else {
+				match = /^(\d)/.exec(Util.Browser.get_version());
+				if (match && match.length && match.length >= 1) {
+					major = parseInt(match[1]);
+					buggy_ie_offset_top.result =  (major <= 7);
+				} else {
+					buggy_ie_offset_top.result = false;
+				}
+			}
+		}
+		
+		return buggy_ie_offset_top.result;
 	}
 };
 
@@ -3724,7 +3751,57 @@ Util.Browser = {
 		&& navigator.userAgent.indexOf('KHTML') == -1),
 		
 	Windows: (navigator.platform.indexOf('Win') > -1),
-	Mac: (navigator.platform.indexOf('Mac') > -1)
+	Mac: (navigator.platform.indexOf('Mac') > -1),
+	
+	get_version: function get_browser_version() {
+		var pattern, match;
+		
+		if (Util.Browser.IE) {
+			pattern = /MSIE\s+([\d+\.]+)/;
+		} else if (Util.Browser.Gecko) {
+			pattern = /rv:([\d+\.]+)/;
+		} else if (Util.Browser.WebKit) {
+			if (/Safari/.test(navigator.userAgent)) {
+				match = /Version\/([\d+\.]+)/.exec(navigator.userAgent);
+				if (match && match.length >= 1)
+					return match[1];
+				match = /Safari\/([\d+\.]+)/.exec(navigator.userAgent);
+				if (match && match.length >= 1) {
+					if (Util.Browser._safari_versions[match[1]])
+						return Util.Browser._safari_versions[match[1]];
+				}
+			}
+			return '';
+		} else if (Util.Browser.Opera) {
+			pattern = /Opera[\/ ]([\d+\.]+)/;
+		}
+		
+		match = pattern.exec(navigator.userAgent);
+		return (match && match.length >= 1)
+			? match[1]
+			: '';
+	},
+	
+	_safari_versions: {
+		'525.19': '3.1.2',
+		'525.18': '3.1.1',
+		'525.7': '3.1',
+		'523': '3.0.4',
+		'418.8': '2.0.4',
+		'417.9': '2.0.3',
+		'416': '2.0.2',
+		'412.7': '2.0.1',
+		'412': '2.0',
+		'312.8': '1.3.2',
+		'312.5': '1.3.1',
+		'312.1': '1.3',
+		'125.5.5': '1.2.4',
+		'125.4': '1.2.3',
+		'125.2': '1.2.2',
+		'100': '1.1',
+		'85.8.2': '1.0.3',
+		'85.7': '1.0.2'
+	}
 };
 
 
@@ -11518,7 +11595,10 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 					}
 				}
 				
-				el.style.cssText = accepted.join(' ');
+				if (accepted.length > 0)
+					el.style.cssText = accepted.join(' ');
+				else
+					el.removeAttribute('style');
 			}
 		},
 		{
@@ -16383,11 +16463,11 @@ UI.Menu = function()
 	 * modified from FCK; some parts are modified from TinyMCE;
 	 * some parts come from Brian's Loki menu code.
 	 */
-	self.display = function(x, y)
+	self.display = function(click_event)
 	{
-		if (window.createPopup) {
+		if (_loki.owner_window.createPopup) {
 			// Make the popup and append the menu to it
-			var popup = window.createPopup();
+			var popup = _loki.owner_window.createPopup();
 			var menu_chunk = _get_chunk(popup.document);
 			var popup_body = popup.document.body;
 			Util.Element.add_class(popup_body, 'loki');
@@ -16429,8 +16509,16 @@ UI.Menu = function()
 			Util.Event.add_event_listener(popup.document, 'click', function() { popup.hide(); });
 
 			// Show the popup
-			popup.show(x, y, width, height, _loki.owner_document.body);
+			popup.show(click_event.screenX, click_event.screenY, width, height);
 		} else {
+			// Determine the coordinates at which the menu should be displayed.
+			var frame_pos = Util.Element.get_position(_loki.iframe);
+			var event_pos = {x: click_event.clientX, y: click_event.clientY};
+			var root_offset = Util.Element.get_relative_offsets(_loki.owner_window, _loki.root);
+
+			var x = frame_pos.x + event_pos.x - root_offset.x;
+			var y = frame_pos.y + event_pos.y - root_offset.y;
+			
 			// Create menu, hidden
 			var menu_chunk = _get_chunk(_loki.owner_document);
 			_loki.root.appendChild(menu_chunk);
@@ -20472,55 +20560,50 @@ UI.UL_OL_Masseuse = function()
 {
 	var self = this;
 	var _tagnames = ['UL', 'OL'];
+	var is_li = Util.Node.curry_is_tag('LI');
 	Util.OOP.inherits(self, UI.Masseuse);
 
 	this.massage_node_descendants = function(node)
 	{
-		for ( var j in _tagnames )
-		{
-			var uls = node.getElementsByTagName(_tagnames[j]);
-			for ( var i = 0; i < uls.length; i++ )
-			{
-				self.massage_elem(uls[i]);
+		_tagnames.each(function massage_list_tag_descendants(tag) {
+			var lists = $A(node.getElementsByTagName(tag));
+			var i, length;
+			for (i = 0, length = lists.length; i < length; ++i) {
+				self.massage_elem(lists[i]);
 			}
-		}
+		});
 	};
 	
 	this.unmassage_node_descendants = function(node)
 	{
-		for ( var j in _tagnames )
-		{
-			var uls = node.getElementsByTagName(_tagnames[j]);
-			for ( var i = 0; i < uls.length; i++ )
-			{
-				self.unmassage_elem(uls[i]);
+		_tagnames.each(function unmassage_list_tag_descendants(tag) {
+			var lists = $A(node.getElementsByTagName(tag));
+			var i, length;
+			for (i = 0, length = lists.length; i < length; ++i) {
+				self.unmassage_elem(lists[i]);
 			}
-		}
+		});
 	};
 
 	// <ul><li>out<ul><li>in</li></ul></li><li>out again</li></ul>
 	//   -->
 	// <ul><li>out</li><ul><li>in</li></ul><li>out again</li></ul>
-	this.massage_elem = function(ul)
+	this.massage_elem = function massage_list(list)
 	{
-		
-		if ( ul.parentNode.nodeName == 'LI' )
-		{
-			var old_li = ul.parentNode;
-			if ( old_li.nextSibling == null )
-				old_li.parentNode.appendChild(ul);
-			else
-				old_li.parentNode.insertBefore(ul, old_li.nextSibling);
+		var parent = list.parentNode;
+		var next_item;
+		if (parent.nodeName == 'LI') {
+			next_item = Util.Node.next_matching_sibling(parent, is_li);
+			parent.parentNode.insertBefore(list, next_item);
 		}
 	};
 
 	// <ul><li>out</li><ul><li>in</li></ul><li>out again</li></ul>
 	//   -->
 	// <ul><li>out<ul><li>in</li></ul></li><li>out again</li></ul>
-	this.unmassage_elem = function(list)
+	this.unmassage_elem = function unmassage_list(list)
 	{
 		var prev_item;
-		var is_li = Util.Node.curry_is_tag('LI');
 		
 		if (_tagnames.contains(list.parentNode.nodeName)) {
 			prev_item = Util.Node.previous_matching_sibling(list, is_li);
@@ -20922,6 +21005,7 @@ UI.Loki = function Loki()
 			self.owner_window = _owner_window;
 			self.owner_document = _owner_document;
 			self.root = _root;
+			self.iframe = _iframe;
 			self.hidden = _hidden;
 			self.settings = _settings;
 			self.exec_command = _exec_command;
@@ -21755,17 +21839,8 @@ UI.Loki = function Loki()
 				menu.add_menuitems(menuitems);
 			}
 		}
-
-		// Determine the coordinates at which the menu should be displayed.
-		var frame_pos = Util.Element.get_position(_iframe);
-		var event_pos = {x: event.clientX, y: event.clientY};
-		var root_offset = Util.Element.get_relative_offsets(_owner_window,
-			_root);
 		
-		var x = frame_pos.x + event_pos.x - root_offset.x;
-		var y = frame_pos.y + event_pos.y - root_offset.y;
-		
-		menu.display(x, y);
+		menu.display(event);
 
 		Util.Event.prevent_default(event);
 		return false; // IE
@@ -22124,7 +22199,7 @@ var Loki = {
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0rc5-pl2",
+	version: "2.0rc6",
 	
 	/** @private */
 	_pending: [],
