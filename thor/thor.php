@@ -282,18 +282,10 @@ class ThorCore
 		return $thor_values;
 	}
 	
-	/**
-	 * Shortcut method to grab thor values with proper labels from a disco object
-	 */
-	function get_thor_values_from_form_for_display(&$disco_obj)
-	{
-		return $this->transform_thor_values_for_display($this->get_thor_values_from_form($disco_obj));
-	}
-	
 	/** 
 	 * Takes an array of thor_values and transforms using labels whenever possible - preserve fields that cannot be transformed
 	 *
-	 * @param array thor_values - raw thor_value array (or arrays) from database or from a disco_object
+	 * @param array thor_values - raw thor_value array from database
 	 * @param boolean transform_undefined_fields - whether to run prettify_string on field not defined on xml 
 	 */
 	function transform_thor_values_for_display($thor_values, $transform_undefined_fields = true)
@@ -301,33 +293,30 @@ class ThorCore
 		$display_values =& $this->get_display_values();
 		foreach ($thor_values as $k=>$v)
 		{
-			if (is_array($v)) $values[$k] = $this->transform_thor_values_for_display($v, $transform_undefined_fields);
-			else
+			if (isset($display_values[$k]))
 			{
-				if (isset($display_values[$k]))
+				if (isset($display_values[$k]['group_id']))
 				{
-					if (isset($display_values[$k]['group_id']))
+					$group_id = $display_values[$k]['group_id'];
+					if (isset($display_values[$group_id]) && !(empty($v)))
 					{
-						$group_id = $display_values[$k]['group_id'];
-						if (isset($display_values[$group_id]) && !(empty($v)))
-						{
-							$values[$display_values[$group_id]['label']][] = $display_values[$k]['label'];
-						}
+						$values[$group_id]['label'] = $display_values[$group_id]['label'];
+						$values[$group_id]['value'][] = $display_values[$k]['label'];
 					}
-					else
-					{
-						$label = $display_values[$k]['label'];
-						$values[$label] = $v;
-					}
-				}
-				elseif ($transform_undefined_fields)
-				{
-					$values[prettify_string($k)] = $v;
 				}
 				else
 				{
-					$values[$k] = $v;
+					$label = $display_values[$k]['label'];
+					$values[$k] = array('label' => $label, 'value' => $v);
 				}
+			}
+			elseif ($transform_undefined_fields)
+			{
+				$values[$k] = array('label' => prettify_string($k), 'value' => $v);
+			}
+			else
+			{
+				$values[$k] = array('label' => $k, 'value' => $v);
 			}
 		}
 		return $values;
