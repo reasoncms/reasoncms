@@ -252,7 +252,12 @@ class PublicationModule extends Generic3Module
 		$publication_ids = (!empty($this->params['related_publication_unique_names'])) 
 						   ? $this->build_ids_from_unique_names($this->params['related_publication_unique_names'])
 						   : array();
-		$pub_es = new entity_selector( $this->site_id );
+		
+		if(!empty($publication_ids))
+			$pub_es = new entity_selector();
+		else
+			$pub_es = new entity_selector( $this->site_id );
+		
 		$pub_es->description = 'Selecting publications for this page';
 		$pub_es->add_type( id_of('publication_type') );
 		$pub_es->enable_multivalue_results();
@@ -264,7 +269,7 @@ class PublicationModule extends Generic3Module
 		$publications = $pub_es->run_one();
 		if (empty($publications))
 		{
-			$s = get_microtime();
+			//$s = get_microtime();
 			$pub_es = new entity_selector( $this->site_id );
 			$pub_es->description = 'Selecting publications for this page';
 			$pub_es->add_type( id_of('publication_type') );
