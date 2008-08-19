@@ -413,7 +413,11 @@
 			if(empty($this->feed_url))
 			{
 				$type = new entity(id_of('news'));
-				if($type->get_value('feed_url_string'))
+				if($type->get_value('feed_url_string') == 'posts')
+				{
+					$this->feed_url = $this->parent->site_info->get_value('base_url').MINISITE_FEED_DIRECTORY_NAME.'/news';
+				}
+				elseif($type->get_value('feed_url_string'))
 				{
 					$this->feed_url = $this->parent->site_info->get_value('base_url').MINISITE_FEED_DIRECTORY_NAME.'/'.$type->get_value('feed_url_string');
 				}
