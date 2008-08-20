@@ -31,7 +31,7 @@
 <li><a href="new_themes.php">Add new themes</a></li>
 <li><a href="post_feed.php">Upgrade news feed generator</a></li>
 <li><a href="forms.php">Upgrade thor form infrastructure</a></li>
-<li><a href="kill_cruft.php">Kill database cruft</a></li>
+<li><a href="kill_cruft.php">Kill database cruft (and more)</a></li>
 </ul>
 <h3>Scripts to Maybe Run</h3>
 <ul>

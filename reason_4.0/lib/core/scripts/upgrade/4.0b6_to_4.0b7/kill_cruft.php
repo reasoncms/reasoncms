@@ -53,6 +53,7 @@ class killCruft
 		$this->remove_allowable_relationships_with_missing_types();
 		$this->remove_orphaned_relationships();
 		$this->update_whats_new_in_reason_blurb();
+		$this->remove_sortable_table_from_blurbs();
 		$this->update_type_type_finish_actions();
 	}
 	
@@ -159,6 +160,55 @@ class killCruft
 		}
 	}
 	
+	function remove_sortable_table_from_blurbs()
+	{
+		echo '<hr/>';
+		$tables = get_entity_tables_by_type(id_of('text_blurb'), false); // no cache
+		if (!in_array("sortable", $tables))
+		{
+			echo "<p>The text blurb type does not use the entity table sortable - this script has probably been run</p>";
+		}
+		else
+		{
+			$es = new entity_selector();
+			$es->add_type(id_of('content_table'));
+			$es->add_relation('entity.name = "sortable"');
+			$es->add_right_relationship(id_of('text_blurb'), relationship_id_of('type_to_table'));
+			$es->set_num(1);
+			$es->limit_tables();
+			$es->limit_fields();
+			$result = $es->run_one();
+			if (!empty($result))
+			{
+				$table = current($result);
+				// grab all text blurb entities
+				$es2 = new entity_selector();
+				$es2->add_type(id_of('text_blurb'));
+				$es2->limit_tables();
+				$es2->limit_fields();
+				$result2 = $es2->run_one();
+				$ids = implode(",", array_keys($result2));
+				$q = "DELETE from sortable WHERE id IN(".$ids.")";
+				if ($this->mode == "test")
+				{
+					echo "<p>Would delete all relationships between the text blurb type and the sortable entity table across type_to_table<p>";
+					echo "<p>Would also run this query to zap all the entities in the sortable table that correspond to text blurbs:</p>";
+					echo "<p>" . $q . "</p>";
+				}
+				else
+				{
+					delete_relationships( array('entity_a' => id_of('text_blurb'), 'entity_b' => $table->id(), 'type' => relationship_id_of('type_to_table')));
+					db_query($q);
+					echo "<p>Deleted type_to_table relationship to sortable, and the corresponding sortable entities</p>";
+				}
+			}
+			else
+			{
+				echo '<p>Could not find the entity table even though get_entity_tables_by_type says that it exists. Doing nothing.</p>';
+			}
+		}
+	}
+	
 	function update_type_type_finish_actions()
 	{
 		echo '<hr/>';
@@ -210,6 +260,7 @@ more database upgrade actions.</p>
 <li>Removes any allowable relationships that reference missing types.</li>
 <li>Delete orphaned relationships (those that do not correspond to a valid allowable relationship).</li>
 <li>If the blurb with unique name whats_new_in_reason_blurb is titled "Welcome to Reason 4 Beta 4" we update it to remove the version reference.</li>
+<li>Removes the sortable table from the blurb type.</li>
 <li>Updates the type type to use a finish action which fixes amputees.</li>
 </ul>
 
