@@ -248,12 +248,24 @@
 
 		return $dbq;
 	} // }}}
+	/**
+	 * Given a type id, find the tables that make up the type
+	 * @param integer $id the id of a Reason type entity
+	 * @param boolean $cache false will force this function to do a new query (normally does only one query per type and subsequently refers to an internal cache)
+	 * @return array of table names
+	 */
 	function get_entity_tables_by_id( $id, $cache = true ) // {{{
 	{
+		$id = (integer) $id;
 		static $retrieved;
 		if( empty( $retrieved ) )
 			$retrieved = array();
-
+		if(!$id)
+		{
+			trigger_error('Empty ID passed to get_entity_tables_by_id()',FATAL);
+			die();
+		}
+		
 		// originally: if( !$cache OR !isset( $retrieved[ $id ] ) OR !$retrieved[ $id ] )
 		if( !$cache OR empty( $retrieved[ $id ] ) )
 		{
@@ -375,9 +387,19 @@
 		else
 			return $retrieved[ $id ];
 	} // }}}
-
+	
+	/**
+	 * Set up a dbselector object for grabbing Reason entities
+	 *
+	 * @param integer $type the id of the type to grab
+	 * @param mixed $site_id an site id (integer) or an array of site ids
+	 * @param string $sharing either "owns", "borrows", "owns borrows", or ""
+	 * @param array $table_mod tables to be included or excluded
+	 * @param string $table_action either "include" or "exclude" -- specifies what to do with tables given in $table_mod
+	 */
 	function get_entities_by_type_object( $type, $site_id = '' , $sharing = 'owns', $table_mod = array(), $table_action = '' ) // {{{
 	{
+		$type = (integer) $type;
 		$dbq = new DBSelector;
 		if ($table_action == 'include') $tables = $table_mod;
 		else $tables = get_entity_tables_by_type( $type );
@@ -398,7 +420,10 @@
 		{
 			$dbq->add_table( 'r','relationship' );
 			$dbq->add_table( 'ar','allowable_relationship' );
-			$dbq->add_relation( 'r.entity_a = '.$site_id);
+			if(is_array($site_id))
+				$dbq->add_relation( 'r.entity_a IN ("'.implode('","',$site_id).'")');
+			else
+				$dbq->add_relation( 'r.entity_a = "'.$site_id.'"');
 			$dbq->add_relation( 'r.entity_b = entity.id');
 			$dbq->add_relation( 'r.type = ar.id' );
 			if( preg_match( '/owns/' , $sharing ) && preg_match( '/borrows/' , $sharing ) )
@@ -894,8 +919,8 @@
 	 */
 	function html_editor_name($site_id)
 	{
-		$info = get_html_editor_info($site_id);
-		return $info['plasmature_type'];
+		$obj = get_html_editor_integration_object($site_id);
+		return $obj->get_plasmature_type();
 	}
 	
 	/**
@@ -906,37 +931,19 @@
 	 */
 	function html_editor_params($site_id,$user_id=0)
 	{
-		$info = get_html_editor_info($site_id);
-		$function = $info['param_generator'];
-		if(function_exists($function))
-		{
-			return $function($site_id,$user_id);
-		}
-		else
-		{
-			trigger_error('Function defined for html editor parameter generation [ '.$function.'() ] does not exist');
-			return array();
-		}
+		$obj = get_html_editor_integration_object($site_id);
+		return $obj->get_plasmature_element_parameters($site_id, $user_id);
 	}
 	function html_editor_options($site_id)
 	{
-		$info = get_html_editor_info($site_id);
-		$function = $info['options_function'];
-		if(function_exists($function))
-		{
-			return $function();
-		}
-		else
-		{
-			trigger_error('Function defined for getting html editor options [ '.$function.'() ] does not exist');
-			return array();
-		}
+		$obj = get_html_editor_integration_object($site_id);
+		return $obj->get_configuration_options();
 	}
 	
-	function get_html_editor_info($site_id)
+	function get_html_editor_integration_object($site_id)
 	{
-		static $editor_info = array();
-		if( empty( $editor_info[$site_id] ) )
+		static $editor_objects = array();
+		if( empty( $editor_objects[$site_id] ) )
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('html_editor_type'));
@@ -944,7 +951,7 @@
 			$es->set_num(1);
 			$editors = $es->run_one();
 			
-			$html_editor_filename = REASON_DEFAULT_HTML_EDITOR;
+			$html_editor_filename = defined('REASON_DEFAULT_HTML_EDITOR') ? REASON_DEFAULT_HTML_EDITOR : 'base.php';
 			if(!empty($editors))
 			{
 				$editor = current($editors);
@@ -958,25 +965,36 @@
 				$html_editor_filename .= '.php';
 			}
 			
-			$editor_info[$site_id]['plasmature_type'] = 'textarea';
-			$editor_info[$site_id]['param_generator'] = 'make_empty_array';
-			$editor_info[$site_id]['options_function'] = 'make_empty_array';
-			
-			reason_include_once('html_editors/'.$html_editor_filename);
-			if(!empty($GLOBALS[ '_html_editor_plasmature_types' ][ $html_editor_filename ]))
+			if(reason_file_exists('html_editors/'.$html_editor_filename))
 			{
-				$editor_info[$site_id]['plasmature_type'] = $GLOBALS[ '_html_editor_plasmature_types' ][ $html_editor_filename ];
+				reason_include_once('html_editors/'.$html_editor_filename);
+				if(!empty($GLOBALS[ '_reason_editor_integration_classes' ][ $html_editor_filename ]))
+				{
+					if(class_exists($GLOBALS[ '_reason_editor_integration_classes' ][ $html_editor_filename ]))
+					{
+						$editor_objects[$site_id] = new $GLOBALS[ '_reason_editor_integration_classes' ][ $html_editor_filename ];
+					}
+					else
+					{
+						trigger_error('The class '.$GLOBALS[ '_reason_editor_integration_classes' ][ $html_editor_filename ].' does not exist; using default editor (plain text)');
+					}
+				}
+				else
+				{
+					trigger_error('The file html_editors/'.$html_editor_filename.' is not recording its class name in $GLOBALS[ \'_reason_editor_integration_classes\' ]. Using default editor (plain text)');
+				}
 			}
-			if(!empty($GLOBALS[ '_html_editor_param_generator_functions' ][ $html_editor_filename ]))
+			else
 			{
-				$editor_info[$site_id]['param_generator'] = $GLOBALS[ '_html_editor_param_generator_functions' ][ $html_editor_filename ];
+				trigger_error('The file html_editors/'.$html_editor_filename.' does not exist. Using default editor (plain text)');
 			}
-			if(!empty($GLOBALS[ '_html_editor_options_function' ][ $html_editor_filename ]))
+			if(!isset($editor_objects[$site_id]))
 			{
-				$editor_info[$site_id]['options_function'] = $GLOBALS[ '_html_editor_options_function' ][ $html_editor_filename ];
+				reason_include_once('html_editors/base.php');
+				$editor_objects[$site_id] = new $GLOBALS[ '_reason_editor_integration_classes' ][ 'base.php' ];
 			}
 		}
-		return $editor_info[$site_id];
+		return $editor_objects[$site_id];
 	}
 	
 	function make_empty_array($site_id = 0, $user_id = 0)
