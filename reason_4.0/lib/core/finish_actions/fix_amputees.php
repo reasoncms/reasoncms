@@ -22,7 +22,7 @@ class fixAmputees extends defaultFinishAction
 	function run()
 	{
 		$fixer = new AmputeeFixer();
-		$fixer->fix_amputees($this->vars['type_id']);
+		$fixer->fix_amputees($this->vars['id']);
 	}
 }
 ?>
