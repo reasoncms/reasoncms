@@ -199,7 +199,7 @@ class killCruft
 				{
 					delete_relationships( array('entity_a' => id_of('text_blurb'), 'entity_b' => $table->id(), 'type' => relationship_id_of('type_to_table')));
 					db_query($q);
-					echo "<p>Deleted type_to_table relationship to sortable, and the corresponding sortable entities</p>";
+					echo "<p>Deleted type_to_table relationship bewteen text blurbs and sortable, and the corresponding sortable entities</p>";
 				}
 			}
 			else
