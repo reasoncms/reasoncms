@@ -53,6 +53,7 @@ class killCruft
 		$this->remove_allowable_relationships_with_missing_types();
 		$this->remove_orphaned_relationships();
 		$this->update_whats_new_in_reason_blurb();
+		$this->update_type_type_finish_actions();
 	}
 	
 	function remove_site_to_minisite_template_allowable_relationship()
@@ -157,6 +158,34 @@ class killCruft
 			echo "<p>The blurb with unique_name 'whats_new_in_reason_blurb' does not exist in this instance.</p>";
 		}
 	}
+	
+	function update_type_type_finish_actions()
+	{
+		echo '<hr/>';
+		$type_id = id_of('type');
+		$type = new entity($type_id);
+		$finish_action = $type->get_value('finish_actions');
+		if ($finish_action == 'fix_amputees.php') // indicate update has already taken place
+		{
+			echo "<p>The type type is already running fix_amputees as a finish action. The script has probably been run.</p>";
+		}
+		elseif (!empty($finish_action)) // indicate update should be done manually
+		{
+			echo "<p>The type type currently has a finish action assigned (".$finish_action."). It will not be automatically updated,
+				  but you could manually change it by going to the type type in Master Admin, and choosing fix amputees to be the finish
+				  action for the type.</p>";
+		}
+		elseif ($this->mode == 'test') // indicate that we would do the update
+		{
+			echo "<p>Would update the type type to run fix_amputees as a finish action.</p>";
+		}
+		else // actually perform update
+		{
+			$values['finish_actions'] = 'fix_amputees.php';
+			reason_update_entity($type_id, $this->reason_user_id, $values);
+			echo "<p>Updated the type type to run fix_amputees as a finish action.</p>";
+		}
+	}
 }
 
 force_secure_if_available();
@@ -172,14 +201,16 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 }
 
 ?>
-<h2>Reason: Kill Cruft</h2>
-<p>As Reason changes, sometimes old crufty relationships and entities persist past their useful lifespan. This script zaps cruft.</p>
+<h2>Reason: Kill Cruft and More</h2>
+<p>As Reason changes, sometimes old crufty relationships and entities persist past their useful lifespan. This script zaps cruft and does a few 
+more database upgrade actions.</p>
 <p><strong>What will this update do?</strong></p>
 <ul>
 <li>Deletes the site_to_minisite_template allowable relationship.</li>
 <li>Removes any allowable relationships that reference missing types.</li>
 <li>Delete orphaned relationships (those that do not correspond to a valid allowable relationship).</li>
 <li>If the blurb with unique name whats_new_in_reason_blurb is titled "Welcome to Reason 4 Beta 4" we update it to remove the version reference.</li>
+<li>Updates the type type to use a finish action which fixes amputees.</li>
 </ul>
 
 <form method="post"><input type="submit" name="go" value="test" /><input type="submit" name="go" value="run" /></form>
