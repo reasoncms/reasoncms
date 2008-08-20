@@ -1,10 +1,37 @@
 <?php
 
-$GLOBALS[ '_html_editor_plasmature_types' ][ basename( __FILE__) ] = 'loki';
-$GLOBALS[ '_html_editor_param_generator_functions' ][ basename( __FILE__) ] = 'get_loki_params';
-$GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_options';
+/**
+ * @package Reason
+ * @author Matt Ryan
+ */
+ 
+reason_include('html_editors/base.php');
 
-	function get_loki_params($site_id, $user_id = 0)
+// Identify the class that should be used
+$GLOBALS[ '_reason_editor_integration_classes' ][ basename( __FILE__) ] = 'reasonLoki1Integration';
+
+/**
+ * An editor integration class for Loki 1
+ * 
+ */
+class reasonLoki1Integration extends reasonEditorIntegrationBase
+{
+	/**
+	 * Get the name of the plasmature element that should be used for this editor
+	 * @return string name of the plasmature element
+	 */
+	function get_plasmature_type()
+	{
+		return 'loki';
+	}
+	
+	/**
+	 * Get the appropriate parameters to pass to the plasmature element
+	 * @param integer $site_id The Reason id of the site in which this editor is being invoked
+	 * @param integer $user_id The Reason id of the current user (0 if user is anonymous or not in the Reason user store)
+	 * @return array plasmature parameters 
+	 */
+	function get_plasmature_element_parameters($site_id, $user_id = 0)
 	{
 		
 		$params = array();
@@ -18,10 +45,7 @@ $GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_o
 		{
 			$params['widgets'] = $site->get_value( 'loki_default' );
 		}
-		
-		// user is admin
-		if( !empty($user_id) && (user_is_a($user_id, id_of('admin_role'))
-					|| user_is_a($user_id, id_of('power_user_role') ) ) )
+		if( !empty($user_id) && reason_user_has_privs( $user_id, 'edit_html', $site_id ) )
 		{
 			$params['user_is_admin'] = true;
 		}
@@ -30,9 +54,17 @@ $GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_o
 			$params['user_is_admin'] = false;
 		}
 		return $params;
-		
 	}
-	function get_loki_options()
+	
+	/**
+	 * Get the available configuration options for the editor
+	 *
+	 * These options are presented to administrators when setting up a Reason site
+	 * Each option must be represented as a string <= 256 bytes, since it is stored in a tinytext field in the database
+	 *
+	 * @return array keys are values to be stored in the db and can then be used by @get_plasmature_element_parameters() when setting up the plasmature element, values are labels that are presented to the administrator
+	 */
+	function get_configuration_options()
 	{
 		include_once(LOKI_INC.'lokiOptions.php3');
 		
@@ -42,4 +74,6 @@ $GLOBALS[ '_html_editor_options_function' ][ basename( __FILE__) ] = 'get_loki_o
 			$options[$k] = prettify_string($k);
 		return $options;
 	}
+}
+
 ?>
