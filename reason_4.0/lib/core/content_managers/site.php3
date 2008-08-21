@@ -101,16 +101,12 @@
 		} // }}}
 		function alter_editor_options_field()
 		{
-			// get editor related to site if possible
-			$info = get_html_editor_info($this->get_value('id'));
-			
-			$function = $info['options_function'];
-			$options = $function();
+			$options = html_editor_options($this->get_value('id'));
 			
 			if(!empty($options))
 			{
 				$this->change_element_type( 'loki_default','select_no_sort',array( 'options' => $options ) );
-				$this->set_display_name('loki_default',prettify_string($info['plasmature_type']).' Options');
+				$this->set_display_name('loki_default',prettify_string(html_editor_name($this->get_value('id'))).' Options');
 			}
 			else
 			{
