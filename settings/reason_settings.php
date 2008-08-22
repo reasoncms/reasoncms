@@ -757,4 +757,43 @@
 	 * In future releases there will likely be a way to specify favicons for individual sites.
 	 */
 	define('REASON_DEFAULT_FAVICON_PATH','');
+	
+	/**
+	 * REASON_FORMS_THOR_DEFAULT_VIEW
+	 *
+	 * Indicates the filename that should be used as the default thor view for thor forms within Reason.
+	 * 
+	 * You can provide the path in one of three ways:
+	 *
+	 * 1. Fully qualified path
+	 * 2. Pathname from the core/local split
+	 * 3. filename within minisite_templates/modules/form/views/thor/ directory
+	 */
+	define('REASON_FORMS_THOR_DEFAULT_VIEW', 'default.php');
+	
+	/**
+	 * REASON_FORMS_THOR_DEFAULT_MODEL
+	 *
+	 * Indicates the filename that should be used as the default model for thor forms within Reason.
+	 * 
+	 * You can provide the path in one of three ways:
+	 *
+	 * 1. Fully qualified path
+	 * 2. Pathname from the core/local split
+	 * 3. Relative path from within minisite_templates/modules/form/models/ directory
+	 */
+	define('REASON_FORMS_THOR_DEFAULT_MODEL', 'thor.php');
+	
+	/**
+	 * REASON_FORMS_THOR_DEFAULT_CONTROLLER
+	 *
+	 * Indicates the filename that should be used as the default controller for thor forms within Reason.
+	 * 
+	 * You can provide the path in one of three ways:
+	 *
+	 * 1. Fully qualified path
+	 * 2. Pathname from the core/local split
+	 * 3. Relative path from within minisite_templates/modules/form/controllers/ directory
+	 */
+	define('REASON_FORMS_THOR_DEFAULT_CONTROLLER', 'thor.php');
 ?>
