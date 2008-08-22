@@ -90,7 +90,8 @@
 		{
 			if (!isset($this->form_model))
 			{
-				$model_filename = (!empty($this->params['form_model'])) ? $this->params['form_model'] : 'thor.php';
+				$default_model_filename = (defined('REASON_FORMS_THOR_DEFAULT_MODEL')) ? REASON_FORMS_THOR_DEFAULT_MODEL : 'thor.php';
+				$model_filename = (!empty($this->params['form_model'])) ? $this->params['form_model'] : $default_model_filename;
 				if (reason_file_exists('minisite_templates/modules/form/models/'.$model_filename))
 				{
 					reason_include_once('minisite_templates/modules/form/models/'.$model_filename);
@@ -118,7 +119,8 @@
 		{
 			if (!isset($this->form_controller))
 			{
-				$controller_filename = (!empty($this->params['form_controller'])) ? $this->params['form_controller'] : 'thor.php';
+				$default_controller_filename = (defined('REASON_FORMS_THOR_DEFAULT_CONTROLLER')) ? REASON_FORMS_THOR_DEFAULT_CONTROLLER : 'thor.php';
+				$controller_filename = (!empty($this->params['form_controller'])) ? $this->params['form_controller'] : $default_controller_filename;
 				if (reason_file_exists('minisite_templates/modules/form/controllers/'.$controller_filename))
 				{
 					reason_include_once('minisite_templates/modules/form/controllers/'.$controller_filename);
