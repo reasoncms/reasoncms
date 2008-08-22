@@ -323,23 +323,59 @@ Reason 4 Beta 8 will expose more of the new functionality to site administrators
 <li>Updates all thor tables to add a last_modified field, and changes the definition of the date_created field</li>
 </ul>
 <?php
-if(!defined('REASON_FORMS_THOR_DEFAULT_VIEW'))
+if(!defined('REASON_FORMS_THOR_DEFAULT_VIEW') || !defined('REASON_FORMS_THOR_DEFAULT_CONTROLLER') || !defined('REASON_FORMS_THOR_DEFAULT_VIEW'))
 {
 	echo '<h3>Step 1: Add setting</h3>';
 	if(!empty($_GET['setting']))
 	{
-		echo '<h4 style="color:#c00;">ALERT: It does not appear that the constant REASON_FORMS_THOR_DEFAULT_VIEW has been defined. Please make sure it is defined in reason_settings.php before proceeding with this upgrade.</h4>'."\n";
+		echo '<h4 style="color:#c00;">ALERT: It does not appear that all needed constants are defined. You need to add the following constants to reason_settings.php before proceeding.</h4>'."\n";
+		echo '<ul>';
+		if(!defined('REASON_FORMS_THOR_DEFAULT_VIEW')) echo '<li>REASON_FORMS_THOR_DEFAULT_VIEW</li>';
+		if(!defined('REASON_FORMS_THOR_DEFAULT_CONTROLLER')) echo '<li>REASON_FORMS_THOR_DEFAULT_CONTROLLER</li>';
+		if(!defined('REASON_FORMS_THOR_DEFAULT_MODEL')) echo '<li>REASON_FORMS_THOR_DEFAULT_MODEL</li>';
+		echo '</ul>';
 	}	
 ?>
-<p>In your reason settings file, add this php code:</p>
-<textarea rows="8" cols="80" style="width:100%;background-color:#ddd;">
+<p>Copy and paste the missing constant definitions below into your reason_settings.php file.</p>
+<textarea rows="24" cols="80" style="width:100%;background-color:#ddd;">
+/**
+ * REASON_FORMS_THOR_DEFAULT_MODEL
+ *
+ * Indicates the filename that should be used as the default model for thor forms within Reason.
+ * 
+ * You can provide the path in one of three ways:
+ *
+ * 1. Fully qualified path
+ * 2. Pathname from the core/local split
+ * 3. Relative path from within minisite_templates/modules/form/models/ directory
+ */
+define('REASON_FORMS_THOR_DEFAULT_MODEL', 'thor.php');
+
+/**
+ * REASON_FORMS_THOR_DEFAULT_CONTROLLER
+ *
+ * Indicates the filename that should be used as the default controller for thor forms within Reason.
+ * 
+ * You can provide the path in one of three ways:
+ *
+ * 1. Fully qualified path
+ * 2. Pathname from the core/local split
+ * 3. Relative path from within minisite_templates/modules/form/controllers/ directory
+ */
+define('REASON_FORMS_THOR_DEFAULT_CONTROLLER', 'thor.php');
+
 /**
  * REASON_FORMS_THOR_DEFAULT_VIEW
  *
- * Indicates the filename (without the .php) in minisite_templates/modules/form/views/thor/ that should be used
- * as the default thor view for thor forms within Reason.
+ * Indicates the filename that should be used as the default thor view for thor forms within Reason.
+ * 
+ * You can provide the path in one of three ways:
+ *
+ * 1. Fully qualified path
+ * 2. Pathname from the core/local split
+ * 3. filename within minisite_templates/modules/form/views/thor/ directory
  */
- define('REASON_FORMS_THOR_DEFAULT_VIEW', 'default');
+define('REASON_FORMS_THOR_DEFAULT_VIEW', 'default.php');
 </textarea>
 <p>Once you have done that, <a href="?setting=1">Proceed to the database upgrade</a>.</p>
 <?php
