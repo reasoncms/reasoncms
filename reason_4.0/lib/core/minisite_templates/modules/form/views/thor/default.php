@@ -5,28 +5,41 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultTh
 /**
  * DefaultThorForm is an extension of Disco used to work with Thor forms.
  *
- * Prior to init, this class should be passed a reference to a model via the set_model method. 
+ * Prior to init, this class should be passed a reference to a model via the set_model method. Using the model and parameters set in the model 
+ * by the controller, the forms sets itself up during the thor_init method. All the core disco methods are available for use in extending the
+ * thor from, including:
  *
- * Using the model and parameters set in the model by the controller, the forms sets itself up during the thor_init method.
+ * 1. on_every_time
+ * 2. run_error_checks
+ * 3. pre_error_check_actions
+ * 4. post_error_check_actions
+ * 5. process
  *
- * Key aspects of this class.
+ * Note that the process method is invoked just prior to the thor_process method, and is intended for custom process actions.
  *
- * 1. Prior to on_every_time, sets the display names of elements using the ThorCore class
- * 2. Adds a method get_element_name_from_label that returns the database name from a label using the ThorCore class
- *
- * Class variables you may want to overload:
- *
- * 1. magic_transform_attributes - fields to grab from the directory service for the logged in user
- * 2. magic_transform_methods - methods to load for normalized element names if they appear in the form (make sure you define these methods)
- * 3. submitted_data_hidden_fields - fields to hide when showing submitted data to e-mail recipients and those with viewing privs for form data
- * 4. submitted_data_hiiden_fields_submitter_view - same as above, but when the viewer is the submitter
- *
- * Methods you may want to overload:
+ * In custom thor views, if you want to modify the typical thor processes, you should overload these methods:
  *
  * 1. email_form_data
  * 2. email_form_submitter
  * 3. save_form_data
  * 4. show_submitted_data
+ *
+ * Methods you'll want to use in custom views:
+ * 
+ * 1. get_element_name_from_label - returns the name of the disco element that correspons to a label
+ * 2. get_value_from_label - returns the value of the disco element that corresponds to a label
+ *
+ * Class variables you may want to overload:
+ *
+ * 1. custom_magic_transform_attributes - extra fields to grab from the directory service for the logged in user
+ * 2. custom_magic_transform_methods - custom mappings from normalized elements labels to methods that return an autofill value
+ * 
+ * Class variables which replace defaults set by the model - overloading these should rarely be necessary:
+ *
+ * 1. magic_transform_attributes - fields to grab from the directory service used by magic transform methods
+ * 2. magic_transform_methods - mappings of normalized elements to methods that return an autofill value
+ * 3. submitted_data_hidden_fields - fields to hide when showing submitted data to e-mail recipients and those with viewing privs for form data
+ * 4. submitted_data_hidden_fields_submitter_view - same as above, but when the viewer is the submitter
  *
  * General tips
  *
@@ -41,49 +54,36 @@ class DefaultThorForm extends Disco
 {
 	var $box_class = 'BoxThor2'; // modifies the table class to thorTable
 	var $_model; // thor model
-	//var $_thor_core; // thor core object
-	
-	// The list of attributes you want returned from directory service searches - everything needed by magic_transform_methods should be included
-	var $magic_transform_attributes = array('ds_firstname',
-								   			'ds_lastname',
-								   			'ds_fullname',
-								   			'ds_phone',
-								   			'ds_email',
-								   			'ou',
-								   			'title',
-								   			'homephone',
-								   			'telephonenumber');
-	
-	/**
-	 * Keys correspond to normalized element names, and the values correspond to class methods that return a string, or if the method
-	 * is not present, the value itself.
-	 */
-	var $magic_transform_methods = array('your_full_name' => 'get_full_name',
-								 'your_name' => 'get_full_name',
-					 	   	     'your_first_name' => 'get_first_name',
-							     'your_last_name' => 'get_last_name',
-								 'your_email' => 'get_email',
-								 'your_department' => 'get_department',
-								 'your_title' => 'get_title',
-								 'your_home_phone' => 'get_home_phone',
-								 'your_work_phone' => 'get_work_phone');
 
 	/**
-	 * Specifies any fields that should be hiddein in screen and e-mail views of submitted data (when the viewer is the submitter)
+	 * @var array extra directory service attributes - merged with magic transform attribues
 	 */
-	var $submitted_data_hidden_fields_submitter_view = array('id', 'submitted_by', 'submitter_ip', 'date_created', 'date_modified');
+	var $custom_magic_transform_attributes;
+	
+	/**
+	 * @var array extra magic transform methods - merged with magic transform methods array
+	 */
+	var $custom_magic_transform_methods;
 
 	/**
-	 * Specifies any fields that should be hidden in screen and e-mail views of submitted data
+	 * @var array directory service attributes needed by magic transform methods - if defined, replaces model defaults
 	 */
-	var $submitted_data_hidden_fields = array('id');
-		
+	var $magic_transform_attributes; // in most cases do not define this - the model has defaults
+
 	/**
-	 * Setup by the thor model in _thor_init so that magic transform methods can access the magic transform values
-	 * @var array
-	 * @access private
+	 * @var array maps normalized element names (lower case, spaces replaced with _) to magic transform methods - if defined, replaces model defaults
 	 */
-	var $_magic_transform_values;
+	var $magic_transform_methods; // in most cases do not define this - the model has defaults
+	
+	/**
+	 * @var array fields that should be hidden from the submitter in screen and e-mail views of data - if defined, replaces model defaults
+	 */
+	var $submitted_data_hidden_fields_submitter_view; // in most cases do not define this - the model has defaults
+
+	/**
+	 * @var array fields that should be hidden from everyone in screen and e-mail views of data - if defined, replaces model defaults
+	 */
+	var $submitted_data_hidden_fields; // in most cases do not define this - the model has defaults
 	
 	/**
 	 * Inits the Disco Form
@@ -125,13 +125,24 @@ class DefaultThorForm extends Disco
 		}
 	}
 	
-	function process()
+	/**
+	 * Default thor process actions
+	 */
+	function thor_process()
 	{
 		$model =& $this->get_model();
 		if ($model->should_save_form_data()) $this->save_form_data();
 		if ($model->should_email_submitter()) $this->email_form_submitter();
 		if ($model->should_email()) $this->email_form_data();
 		if ($model->should_show_submitted_data()) $this->save_submitted_data_to_session();
+	}
+	
+	/**
+	 * We use (abuse) the disco finish method to do our thor processing, leaving the process method for custom views
+	 */
+	function finish()
+	{
+		$this->thor_process();
 	}
 	
 	/**
@@ -229,118 +240,6 @@ class DefaultThorForm extends Disco
 		}
 		else return false;
 	}
-		
-	// magic string autofill methods
-	function get_first_name()
-	{
-		return ($this->_get_simple_field_from_key('edupersonnickname')) 
-			   ? $this->_get_simple_field_from_key('edupersonnickname') 
-			   : $this->_get_simple_field_from_key('ds_firstname');
-	}
-
-	function get_full_name()
-	{
-		return $this->_get_simple_field_from_key('ds_fullname');
-	}
-		
-	function get_last_name()
-	{
-		return $this->_get_simple_field_from_key('ds_lastname');
-	}
-	
-	function get_email()
-	{
-		return $this->_get_simple_field_from_key('ds_email');
-	}
-	
-	function get_department()
-	{
-		return $this->_get_multiple_fields_from_key('ou');
-		
-	}
-	
-	function get_title()
-	{
-		return $this->_get_multiple_fields_from_key('title');
-	}
-	
-	function get_home_phone()
-	{
-		return $this->_get_clean_phone_number('homephone');
-	}
-	
-	function get_work_phone()
-	{
-		return $this->_get_clean_phone_number('telephonenumber');
-	}
-	
-	function _get_clean_phone_number($key)
-	{
-		$dir_info =& $this->get_magic_transform_values();
-		if (!empty($dir_info[$key]))
-		{
-			$clean_phone = (is_array($dir_info[$key])) ? $dir_info[$key][0] : $dir_info[$key];
-			$clean_phone = (substr($clean_phone, 0, 3) == '+1 ') ? str_replace(' ', '-', substr($clean_phone, 3)) : $clean_phone;
-			return $clean_phone;
-		}
-	}
-	
-	function _get_simple_field_from_key($key)
-	{
-		$dir_info =& $this->get_magic_transform_values();
-		return (!empty($dir_info[$key])) ? $dir_info[$key][0] : '';
-	}
-	
-	function _get_multiple_fields_from_key($key)
-	{
-		$dir_info =& $this->get_magic_transform_values();
-		if (!empty($dir_info[$key]))
-		{
-			if (count($dir_info[$key]) > 1)
-			{
-				$str = '';
-				foreach ($dir_info[$key] as $k=>$v)
-				{
-					$str .= $v . '; ';
-				}
-				return substr($str, 0, -2);
-			}
-			else
-			{
-				return $dir_info[$key][0];
-			}
-		}
-	}
-
-	function &get_submitted_data_hidden_fields()
-	{
-		return $this->submitted_data_hidden_fields;
-	}
-	
-	function &get_submitted_data_hidden_fields_submitter_view()
-	{
-		return $this->submitted_data_hidden_fields_submitter_view;
-	}
-
- 	function &get_magic_transform_methods()
- 	{
- 		return $this->magic_transform_methods;
- 	}
- 	
-	function &get_magic_transform_attributes()
-	{
-		return $this->magic_transform_attributes;
-	}
-	
-	function &get_magic_transform_values()
-	{
-		return $this->_magic_transform_values;
-	}
-	
-	function set_magic_transform_values($values)
-	{
-		$this->_magic_transform_values =& $values;
-	}
 	
 	/**
 	 * DefaultThorForm must be provided with a thor model
@@ -353,6 +252,38 @@ class DefaultThorForm extends Disco
 	function &get_model()
 	{
 		return $this->_model;
+	}
+	
+	// the following are get methods for optional parameters
+	
+	function get_custom_magic_transform_attributes()
+	{
+		return (isset($this->custom_magic_transform_attributes)) ? $this->custom_magic_transform_attributes : false;
+	}
+	
+	function get_custom_magic_transform_methods()
+	{
+		return (isset($this->custom_magic_transform_methods)) ? $this->custom_magic_transform_methods : false;
+	}
+	
+	function get_magic_transform_attributes()
+	{
+		return (isset($this->magic_transform_attributes)) ? $this->magic_transform_attributes : false;
+	}
+	
+	function get_magic_transform_methods()
+	{
+		return (isset($this->magic_transform_methods)) ? $this->magic_transform_methods : false;
+	}
+	
+	function get_submitted_data_hidden_fields_submitter_view()
+	{
+		return (isset($this->submitted_data_hidden_fields_submitter_view)) ? $this->submitted_data_hidden_fields_submitter_view : false;
+	}
+	
+	function get_submitted_data_hidden_fields()
+	{
+		return (isset($this->submitted_data_hidden_fields)) ? $this->submitted_data_hidden_fields : false;
 	}
 }
 ?>

@@ -32,6 +32,30 @@ class ThorFormModel extends DefaultFormModel
 	var $_user_requested_admin_view = false;
 	var $_form_submission_appears_complete = false;
 	
+	var $magic_transform_attributes = array('ds_firstname',
+								   		 	'ds_lastname',
+								   			'ds_fullname',
+								   			'ds_phone',
+								   			'ds_email',
+								   			'ou',
+								   			'title',
+								   			'homephone',
+								   			'telephonenumber');
+								   			
+	var $magic_transform_methods = array('your_full_name' => 'get_full_name',
+								 		 'your_name' => 'get_full_name',
+					 	   	     		 'your_first_name' => 'get_first_name',
+							     		 'your_last_name' => 'get_last_name',
+								 		 'your_email' => 'get_email',
+								 		 'your_department' => 'get_department',
+								 		 'your_title' => 'get_title',
+								 		 'your_home_phone' => 'get_home_phone',
+								 		 'your_work_phone' => 'get_work_phone');
+								 		 
+	var $submitted_data_hidden_fields_submitter_view = array('id', 'submitted_by', 'submitter_ip', 'date_created', 'date_modified');
+	
+	var $submitted_data_hidden_fields = array('id');
+	
 	/**
 	 * Make sure there is a form on the page, otherwise return false
 	 */
@@ -305,9 +329,6 @@ class ThorFormModel extends DefaultFormModel
 		}
 		elseif ($this->user_requested_admin_view() && $this->user_has_administrative_access())
 		{
-			//$thor_admin =& $this->get_thor_admin_object();
-			//$base_links = $thor_admin->get_menu_links_base_with_filters(); // maintains sort order, sort field, and filters
-			//$links = array_merge($base_links, array('form_admin_view' => ''));
 			$link['Exit administrative view'] = carl_construct_link(array('form_admin_view' => ''), array('textonly', 'netid'));
 		}
 		return $link;
@@ -327,7 +348,7 @@ class ThorFormModel extends DefaultFormModel
 		{
 			$thor_core =& $this->get_thor_core_object();
 			$thor_values = $this->_get_values_and_extra_email_fields($disco_obj);
-			$fields_to_hide =& $disco_obj->get_submitted_data_hidden_fields();
+			$fields_to_hide =& $this->get_submitted_data_hidden_fields($disco_obj);
 			if (!empty($fields_to_hide)) $this->_hide_fields($thor_values, $fields_to_hide);
 			$values = $thor_core->transform_thor_values_for_display($thor_values);
 		}
@@ -353,7 +374,7 @@ class ThorFormModel extends DefaultFormModel
 			$thor_core =& $this->get_thor_core_object();
 			$thor_values = $this->_get_values_and_extra_email_fields($disco_obj);
 			$disco_hidden_fields =& $this->_get_disco_hidden_fields($disco_obj);
-			$fields_to_hide =& $disco_obj->get_submitted_data_hidden_fields_submitter_view();
+			$fields_to_hide =& $this->get_submitted_data_hidden_fields_submitter_view($disco_obj);
 			if (!empty($fields_to_hide)) $this->_hide_fields($thor_values, $fields_to_hide);
 			if (!empty($disco_hidden_fields)) $this->_hide_fields($thor_values, $disco_hidden_fields);
 			$this->_values_for_submitter_view = $thor_core->transform_thor_values_for_display($thor_values);
@@ -746,19 +767,38 @@ class ThorFormModel extends DefaultFormModel
 		if ($this->get_magic_string_autofill()) // is magic string autofill enabled?
 		{
 			$editable = ($this->get_magic_string_autofill() == 'editable');
-			$attributes =& $disco->get_magic_transform_attributes();
-			$attribute_values =& $this->get_directory_info($attributes);
-			$methods =& $disco->get_magic_transform_methods();
-			$disco->set_magic_transform_values($attribute_values);
+			$methods =& $this->get_magic_transform_methods($disco);
+			$attribute_values =& $this->get_magic_transform_values($disco);
 			if (!empty($methods) && !empty($attribute_values))
 			{
 				foreach ($methods as $k => $v)
 				{
-					$transform_array[$k] = (method_exists($disco, $v)) ? $disco->$v() : $v;
+					if (!empty($v)) // a method that maps to an empty string will not be run (allows one to turn off magic transform for a field)
+					{
+						if (method_exists($disco, $v)) $transform_array[$k] = $disco->$v();
+						elseif (method_exists($this, $v)) $transform_array[$k] = $this->$v();
+						else trigger_error('The magic transform method ' . $v . ' was not defined in the thor model or view - will not transform the field ' . $k);
+					}
 				}
 			}
-			if (!empty($transform_array)) $thor_core->apply_magic_transform_to_form($disco, $transform_array, $editable);
+			if (!empty($transform_array)) $this->apply_magic_transform_to_form($disco, $transform_array, $editable); // zap this!
 			return true;
+		}
+	}
+	
+	function apply_magic_transform_to_form(&$disco_obj, $transform_array, $editable = true)
+	{
+		$thor_core =& $this->get_thor_core_object();
+		$display_values =& $thor_core->get_column_labels_indexed_by_name();
+		foreach ($display_values as $key => $label)
+		{
+			$normalized_label = strtolower(str_replace(" ", "_", $label));
+			if (isset($transform_array[$label]) || isset($transform_array[$normalized_label]))
+			{
+				$value = (isset($transform_array[$label])) ? $transform_array[$label] : $transform_array[$normalized_label];
+				$disco_obj->set_value($key, $value);
+				if (!$editable) $disco_obj->change_element_type($key, 'solidtext');
+			}
 		}
 	}
 	
@@ -922,6 +962,176 @@ class ThorFormModel extends DefaultFormModel
 	function get_form_id()
 	{
 		return (isset($this->_form_id)) ? $this->_form_id : false;
+	}
+	
+	// magic string autofill methods
+	function get_first_name()
+	{
+		return ($this->_get_simple_field_from_key('edupersonnickname')) 
+			   ? $this->_get_simple_field_from_key('edupersonnickname') 
+			   : $this->_get_simple_field_from_key('ds_firstname');
+	}
+
+	function get_full_name()
+	{
+		return $this->_get_simple_field_from_key('ds_fullname');
+	}
+		
+	function get_last_name()
+	{
+		return $this->_get_simple_field_from_key('ds_lastname');
+	}
+	
+	function get_email()
+	{
+		return $this->_get_simple_field_from_key('ds_email');
+	}
+	
+	function get_department()
+	{
+		return $this->_get_multiple_fields_from_key('ou');
+		
+	}
+	
+	function get_title()
+	{
+		return $this->_get_multiple_fields_from_key('title');
+	}
+	
+	function get_home_phone()
+	{
+		return $this->_get_clean_phone_number('homephone');
+	}
+	
+	function get_work_phone()
+	{
+		return $this->_get_clean_phone_number('telephonenumber');
+	}
+	
+	function _get_clean_phone_number($key)
+	{
+		$dir_info =& $this->get_magic_transform_values();
+		if (!empty($dir_info[$key]))
+		{
+			$clean_phone = (is_array($dir_info[$key])) ? $dir_info[$key][0] : $dir_info[$key];
+			$clean_phone = (substr($clean_phone, 0, 3) == '+1 ') ? str_replace(' ', '-', substr($clean_phone, 3)) : $clean_phone;
+			return $clean_phone;
+		}
+	}
+	
+	function _get_simple_field_from_key($key)
+	{
+		$dir_info =& $this->get_magic_transform_values();
+		return (!empty($dir_info[$key])) ? $dir_info[$key][0] : '';
+	}
+	
+	function _get_multiple_fields_from_key($key)
+	{
+		$dir_info =& $this->get_magic_transform_values();
+		if (!empty($dir_info[$key]))
+		{
+			if (count($dir_info[$key]) > 1)
+			{
+				$str = '';
+				foreach ($dir_info[$key] as $k=>$v)
+				{
+					$str .= $v . '; ';
+				}
+				return substr($str, 0, -2);
+			}
+			else
+			{
+				return $dir_info[$key][0];
+			}
+		}
+	}
+
+	function &get_submitted_data_hidden_fields($disco_obj = NULL)
+	{
+		if (!isset($this->_submitted_data_hidden_fields))
+		{
+			if ($disco_obj != NULL)
+			{
+				$this->_submitted_data_hidden_fields = ($disco_obj->get_submitted_data_hidden_fields()) 
+													 ? $disco_obj->get_submitted_data_hidden_fields() 
+													 : $this->submitted_data_hidden_fields;
+			}
+			else $this->_submitted_data_hidden_fields = $this->submitted_data_hidden_fields;
+		}
+		return $this->_submitted_data_hidden_fields;
+	}
+	
+	function &get_submitted_data_hidden_fields_submitter_view($disco_obj = NULL)
+	{
+		if (!isset($this->_submitted_data_hidden_fields_submitter_view))
+		{
+			if ($disco_obj != NULL)
+			{
+				$this->_submitted_data_hidden_fields_submitter_view = ($disco_obj->get_submitted_data_hidden_fields_submitter_view()) 
+													 ? $disco_obj->get_submitted_data_hidden_fields_submitter_view() 
+													 : $this->submitted_data_hidden_fields_submitter_view;
+			}
+			else $this->_submitted_data_hidden_fields_submitter_view = $this->submitted_data_hidden_fields_submitter_view;
+		}
+		return $this->_submitted_data_hidden_fields_submitter_view;
+	}
+
+ 	/**
+ 	 * @return array magic_transform_methods from model (and possibly view)
+ 	 * @todo change paramater to &$disco_obj=NULL when php 4 is no longer supported
+ 	 */
+ 	function &get_magic_transform_methods($disco_obj = NULL)
+ 	{
+ 		if (!isset($this->_magic_transform_methods)) // if internal build hasn't been done then do it - merge methods from view
+ 		{
+ 			if ($disco_obj != NULL)
+ 			{
+ 				$magic_transform_methods = ($disco_obj->get_magic_transform_methods()) 
+ 										 ? $disco_obj->get_magic_transform_methods() 
+ 										 : $this->magic_transform_methods;
+ 				$this->_magic_transform_methods = ($disco_obj->get_custom_magic_transform_methods()) 
+ 											    ? array_merge($magic_transform_methods, $disco_obj->get_custom_magic_transform_methods())
+ 											    : $magic_transform_methods;
+ 			}
+ 			else $this->_magic_transform_methods = $this->magic_transform_methods;
+ 		}
+ 		return $this->_magic_transform_methods;
+ 	}
+ 	
+ 	/**
+ 	 * @return array magic_transform_attributes from model (and possibly view)
+ 	 * @todo change paramater to &$disco_obj=NULL when php 4 is no longer supported
+ 	 */
+	function &get_magic_transform_attributes($disco_obj = NULL)
+	{
+		if (!isset($this->_magic_transform_attributes)) // if internal build hasn't been done then do it - merge methods from view
+ 		{
+ 			if ($disco_obj != NULL)
+ 			{
+ 				$magic_transform_attributes = ($disco_obj->get_magic_transform_attributes()) 
+ 											? $disco_obj->get_magic_transform_attributes() 
+ 											: $this->magic_transform_attributes;
+ 				$this->_magic_transform_attributes = ($disco_obj->get_custom_magic_transform_attributes()) 
+ 												   ? array_merge($magic_transform_attributes, $disco_obj->get_custom_magic_transform_attributes())
+ 												   : $magic_transform_attributes;
+ 			}
+ 			else $this->_magic_transform_attributes = $this->magic_transform_attributes;
+ 		}
+ 		return $this->_magic_transform_attributes;
+	}
+
+ 	/**
+ 	 * @return array magic_transform_values
+ 	 * @todo change paramater to &$disco_obj=NULL when php 4 is no longer supported
+ 	 */	
+	function &get_magic_transform_values($disco_obj = NULL)
+	{
+		if (!isset($this->_magic_transform_values)) // build internally if necessary
+ 		{
+ 			$attributes =& $this->get_magic_transform_attributes($disco_obj);
+ 			$this->_magic_transform_values =& $this->get_directory_info($attributes);
+ 		}
+ 		return $this->_magic_transform_values;
 	}
 }
 ?>
