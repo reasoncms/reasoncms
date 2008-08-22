@@ -125,7 +125,7 @@
 		{
 			$view =& $this->get_view();
 			$method_exists = method_exists($view, $method);
-			if (method_exists($view, $method)) $view->$method();
+			if (method_exists($view, $method)) return $view->$method();
 			else
 			{
 				return $this->$method();
