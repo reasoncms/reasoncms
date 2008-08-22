@@ -24,9 +24,8 @@ include_once( CARL_UTIL_INC . 'db/db.php'); // Requires ConnectDB Functionality
  * - Adds thor elements to a disco form
  * - Sets the values of disco elements from stored thor data
  *
- * @todo consideral removal of magic transform - really a ReasonThor feature ... not ThorCore
  * @todo better database abstraction - currently using mysql_query and sqler
- * @todo replace XML Parser with Simple XML once reason moves to PHP 5+ only
+ * @todo replace XML Parser with Simple XML after move to PHP 5+ only
  * @todo support caching
  *
  * @author Nathan White
@@ -175,36 +174,6 @@ class ThorCore
 		else
 		{
 			trigger_error('To add thor elements to a disco form you need to provide a disco object and thor xml');
-		}
-	}
-	
-	function apply_magic_transform_to_form(&$disco_obj, $transform_array, $editable = true)
-	{
-		$display_values =& $this->get_display_values();
-		foreach ($display_values as $key => $details)
-		{
-			$real_label = $details['label'];
-			$normalized_label = strtolower(str_replace(" ", "_", $real_label));
-			if (isset($transform_array[$real_label]) || isset($transform_array[$normalized_label]))
-			{
-				$value = (isset($transform_array[$real_label])) ? $transform_array[$real_label] : $transform_array[$normalized_label];
-				$disco_obj->set_value($key, $value);
-				if (!$editable) $disco_obj->change_element_type($key, 'solidtext');
-			}
-		}
-	}
-	
-	function apply_solidtext(&$disco_obj, $transform_array)
-	{
-		$display_values =& $this->get_display_values();
-		foreach ($display_values as $key => $details)
-		{
-			$real_label = $details['label'];
-			$normalized_label = strtolower(str_replace(" ", "_", $real_label));
-			if (isset($transform_array[$real_label]) || isset($transform_array[$normalized_label]))
-			{
-				$disco_obj->change_element_type($key, 'solidtext');
-			}
 		}
 	}
 
@@ -511,7 +480,7 @@ class ThorCore
 		$q .= '`submitter_ip` tinytext NOT NULL , ';
 		$q .= '`date_created` timestamp default 0 NOT NULL , ';
 		$q .= '`date_modified` timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP , ';
-		$q .= 'PRIMARY KEY(`id`)) TYPE = MYISAM;';
+		$q .= 'PRIMARY KEY(`id`)) TYPE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;';
 		return $q;
 	}
 	
