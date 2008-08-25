@@ -403,6 +403,33 @@ class ThorCore
   		}
 	}
 	
+	function get_rows($sort_field = '', $sort_order = '')
+	{
+		$table = $this->get_thor_table();
+		if ($this->get_thor_table())
+		{
+			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
+			if ($reconnect_db) connectDB($this->get_db_conn());
+			$q = $this->get_rows_sql($sort_field, $sort_order);
+  			$res = mysql_query($q);
+  			if ($res && mysql_num_rows($res) > 0)
+  			{
+  				while ($row = mysql_fetch_assoc($res))
+  				{
+  					$result[$row['id']] = $row;
+  				}
+  			}
+  			else $result = false;
+  			if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+  			return $result;
+  		}
+  		else
+  		{
+  			trigger_error('get_rows called but no table has been defined via the thorCore set_thor_table method');
+  			return NULL;
+  		}
+	}
+	
 	function get_row_count()
 	{
 		$table = $this->get_thor_table();
@@ -513,6 +540,15 @@ class ThorCore
 			$str .= ' ORDER BY "' . $sort_field . '" ' . $sort_order; 
 		}
 		return $str;
+	}
+
+	function get_rows_sql($sort_field = '', $sort_order = '')
+	{
+		return 'SELECT * FROM '.$this->get_thor_table();
+		if (!empty($sort_field) && !empty($sort_order))
+		{
+			$str .= ' ORDER BY "' . $sort_field . '" ' . $sort_order; 
+		}
 	}
 	
 	function get_row_count_sql()
