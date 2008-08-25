@@ -544,11 +544,12 @@ class ThorCore
 
 	function get_rows_sql($sort_field = '', $sort_order = '')
 	{
-		return 'SELECT * FROM '.$this->get_thor_table();
+		$str = 'SELECT * FROM '.$this->get_thor_table();
 		if (!empty($sort_field) && !empty($sort_order))
 		{
 			$str .= ' ORDER BY "' . $sort_field . '" ' . $sort_order; 
 		}
+		return $str;
 	}
 	
 	function get_row_count_sql()
