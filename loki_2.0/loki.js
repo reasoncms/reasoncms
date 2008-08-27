@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0rc6
+// Loki WYSIWIG Editor 2.0rc7
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-07-18 17:26:22 
+// Compiled 2008-08-26 23:12:32 
 // http://loki-editor.googlecode.com/
 
 
@@ -901,7 +901,7 @@ TinyMCEControl.prototype.selectNode = function(node, collapse, select_text_node,
 		sel.addRange(rng);
 	}
 
-	//this.scrollToNode(node);
+	this.scrollToNode(node);
 
 	// Set selected element
 	tinyMCE.selectedElement = null;
@@ -2382,7 +2382,7 @@ Util.Node.get_debug_string = function get_node_debug_string(node)
 	
 	switch (node.nodeType) {
 		case Util.Node.ELEMENT_NODE:
-			str = '<' + node.nodeName;
+			str = '<' + node.nodeName.toLowerCase();
 			
 			Util.Object.enumerate(Util.Element.get_attributes(node),
 				function append_attribute(name, value) {
@@ -2938,25 +2938,20 @@ Util.Event.listener = function(func)
  */
 Util.Event.add_event_listener = function(node, type, listener)
 {
-	try
-	{
-		//bubble = bubble == null ? false : bubble;
-		//node.addEventListener(type, listener, bubble);
-		node.addEventListener(type, listener, false);
+	if (!Util.is_valid_object(node)) {
+		throw new TypeError("Cannot listen for a '" + type + "' event on a " +
+			"non-object.");
+	} else if (!type || !listener) {
+		throw new Error("Must provide an event type and a callback function " +
+			"to add an event listener.");
 	}
-	catch(e)
-	{
-		try
-		{
-// 			node.attachEvent('on' + type, function() { listener(new Util.Event.DOM_Event(node)); });
-			node.attachEvent('on' + type, listener);
-		}
-		catch(f)
-		{
-			throw(new Error('Util.Event.add_event_listener(): Neither the W3C nor the IE way of adding an event listener worked. ' +
-							'When the W3C way was tried, an error with the following message was thrown: <<' + e.message + '>>. ' +
-							'When the IE way was tried, an error with the following message was thrown: <<' + f.message + '>>.'));
-		}
+	
+	if (node.addEventListener) {
+		node.addEventListener(type, listener, false);
+	} else if (node.attachEvent) {
+		node.attachEvent('on' + type, listener);
+	} else {
+		throw new Util.Unsupported_Error('modern event handling');
 	}
 };
 
@@ -2970,7 +2965,7 @@ Util.Event.add_event_listener = function(node, type, listener)
  */
 Util.Event.observe = function(target, type, listener, context)
 {
-	if (typeof(target.addEventListener) == 'function') {
+	if (target.addEventListener) {
 		if (context) {
 			target.addEventListener(type, function event_listener_proxy() {
 				listener.apply(context, arguments);
@@ -3853,6 +3848,7 @@ Util.Chooser = function Chooser()
 			'+': function(name) {
 				if (name in self.sets) {
 					self.sets[name].each(function (name) {
+						name = dealias(self.aliases, name);
 						if (name in self.sets)
 							Util.OOP.mixin(working, self.get(name));
 						else
@@ -3871,10 +3867,10 @@ Util.Chooser = function Chooser()
 						var k;
 						if (name in self.sets) {
 							for (k in self.get(name)) {
-								delete working[k];
+								delete working[dealias(self.aliases, k)];
 							}
 						} else {
-							delete working[name];
+							delete working[dealias(name)];
 						}
 					});
 				} else if (name in self.items) {
@@ -4902,230 +4898,6 @@ Util.Form.Instructions = function(text)
 			[text]);
 	}
 } 
-// file Util.HTML_Generator.js
-/**
- * Constructs a new HTML generator
- * @class Generates nicely-formatted HTML by traversing the DOM.
- * @param {Object} [options] generation options
- * @param {Boolean} [options.xhtml=true] generate XHTML output
- * @param {Boolean} [options.line_array=false] return an array of source lines
- *        instead of a single string
- */
-Util.HTML_Generator = function HTMLGenerator(options) {
-	this.options = Util.OOP.mixin({
-		xhtml: true,
-		escape_non_ascii: true,
-		line_array: false
-	}, options || {});
-	
-	this.output = null;
-	this.named_entities = Util.HTML_Generator.named_entities;
-	this.handlers.options = this.options;
-	this.handlers.handle = this.handle;
-}
-
-/**
- * @param {Document|Element|DocumentFragment} root
- * @return {String|String[]} the formatted source
- */
-Util.HTML_Generator.prototype.generate = function generate_html(root)
-{
-	var output = [];
-	var options = this.options;
-	var entities = Util.HTML_Generator.named_entities;
-	
-	function append(level, text) {
-		var i, indent = '';
-		for (i = 0; i < level; ++i)
-			indent += '  ';
-		
-	}
-	
-	function handle(level, node) {
-		
-	}
-	
-	
-	if (root.nodeType == Util.Node.DOCUMENT_NODE) {
-		if (root.doctype)
-			this.handle(root.doctype);
-		root = root.documentElement;
-	}
-	
-	this.handle(root);
-	
-	return (this.options.line_array)
-		? this.output
-		: this.output.join("\n");
-};
-
-Util.HTML_Generator.prototype.get_handler = function get_handler(node) {
-	var name;
-	var nt = node.nodeType;
-	for (name in this.handlers) {
-		if (Util.Node[name.toUpperCase() + '_NODE'] == nt) {
-			return this.handlers[name](this.output, 0, node);
-		}
-	}
-	throw new Error();
-};
-
-Util.HTML_Generator.prototype.handle = function handle_node(level, node, h) {
-	var handler = h || this.get_handler(node);
-	var i, j, indent, line_count, output = [];
-	if (handler) {
-		handler(output, level, node);
-		for (i = 0, line_count = output.length; i < line_count; ++i) {
-			indent = ''
-			for (j = 0; j < level; ++j)
-				indent += '  ';
-			this.output.push(indent + output[i]);
-		}
-	}
-};
-
-/*
-Util.Node.ELEMENT_NODE                   = 1;
-Util.Node.ATTRIBUTE_NODE                 = 2;
-Util.Node.TEXT_NODE                      = 3;
-Util.Node.CDATA_SECTION_NODE             = 4;
-Util.Node.ENTITY_REFERENCE_NODE          = 5;
-Util.Node.ENTITY_NODE                    = 6;
-Util.Node.PROCESSING_INSTRUCTION_NODE    = 7;
-Util.Node.COMMENT_NODE                   = 8;
-Util.Node.DOCUMENT_NODE                  = 9;
-Util.Node.DOCUMENT_TYPE_NODE             = 10;
-Util.Node.DOCUMENT_FRAGMENT_NODE         = 11;
-Util.Node.NOTATION_NODE                  = 12;
-*/
-Util.HTML_Generator.prototype.handlers = {
-	document_type: function doctype_html(output, level, doctype) {
-		var html = '<!DOCTYPE ' + doctype.name;
-		if (doctype.publicId) {
-			html += ' PUBLIC "' + doctype.publicId + '"';
-			if (doctype.systemId) {
-				output.push(html);
-				output.push('  "' + doctype.systemId + '">')
-				return;
-			}
-		} else if (doctype.systemId) {
-			html += ' SYSTEM "' + doctype.systemId + '"';
-		}
-		output.push(html + '>');
-	},
-	element: function element_html(output, level, el) {
-		var str = '<' + el.nodeName.toLowerCase();
-		var end;
-		var temp;
-		
-		Util.Object.enumerate(Util.Element.get_attributes(el),
-			function append_attribute(name, value) {
-				str += ' ' + name + '="' + value + '"';
-			}
-		);
-		
-		if (!el.hasChildNodes() && Util.Element.empty_tag(el)) {
-			if (this.options.xhtml)
-				output.push(str + '/>');
-			else
-				output.push(str + '>');
-			return;
-		}
-		str += '>';
-		end = '</' + el.nodeName.toLowerCase() + '>';
-		
-		if (Util.Block.is_block(el)) {
-			output.push(str);
-			this._children(output, 1, el);
-			output.push()
-		} else {
-			temp = [];
-			this._children(temp, 0, el);
-			if (temp.length == 1) {
-				output.push(str + temp[0] + end);
-			} else {
-				str += temp.shift();
-				output.push(str);
-				output.append(temp);
-				output.push(end);
-			}
-		}
-	},
-	_children: function element_children_html(output, level, el) {
-		var block = Util.Block.is_block(el);
-		var temp;
-		var line = '';
-		var n;
-		var i;
-		
-		for (n = el.firstChild; n; n = el.nextSibling) {
-			if (n.nodeType == Util.Node.TEXT_NODE) {
-				line += this.text(null, 0, n);
-			} else if (n.nodeType == Util.Node.ELEMENT_NODE) {
-				if (Util.Block.is_block(n)) {
-					output.push(line);
-					this.element(output, level, n);
-					line = '';
-				} else {
-					temp = [];
-					this.element(temp, 0, n);
-					for (i = 0; i < temp.length; ++i) {
-						line += temp[i].replace(/^\s*/, '');
-					}
-				}
-			}
-		}
-		
-		if (line.length)
-			output.push(line);
-	},
-	text: function text_html(output, level, el) {
-		/*
-		#x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
-		*/
-		var pattern = (this.options.escape_non_ascii)
-			? /[\x00-\x1F\x80-\uFFFF]/g
-			: /[\x00-\x1F]/g;
-		
-		function html_escape(txt) {
-			var c = txt.charCodeAt(0);
-			if (c == 9 || c == 10 || c == 13)
-				return txt;
-			return (this.named_entities[c] || '&#' + c + ';');
-		}
-		var text = el.nodeText.replace(pattern, html_escape);
-		if (output)
-			output.push(text);
-		return text;
-	}
-};
-
-Util.HTML_Generator.named_entities = {
-	'38': 'amp', '60': 'lt', '62': 'gt', '127': '#127',
-	'160': 'nbsp', '161': 'iexcl', '162': 'cent', '163': 'pound', '164':
-	'curren', '165': 'yen', '166': 'brvbar', '167': 'sect', '168': 'uml', '169':
-	'copy', '170': 'ordf', '171': 'laquo', '172': 'not', '173': 'shy', '174':
-	'reg', '175': 'macr', '176': 'deg', '177': 'plusmn', '178': 'sup2', '179':
-	'sup3', '180': 'acute', '181': 'micro', '182': 'para', '183': 'middot',
-	'184': 'cedil', '185': 'sup1', '186': 'ordm', '187': 'raquo', '188':
-	'frac14', '189': 'frac12', '190': 'frac34', '191': 'iquest', '192':
-	'Agrave', '193': 'Aacute', '194': 'Acirc', '195': 'Atilde', '196': 'Auml',
-	'197': 'Aring', '198': 'AElig', '199': 'Ccedil', '200': 'Egrave', '201':
-	'Eacute', '202': 'Ecirc', '203': 'Euml', '204': 'Igrave', '205': 'Iacute',
-	'206': 'Icirc', '207': 'Iuml', '208': 'ETH', '209': 'Ntilde', '210':
-	'Ograve', '211': 'Oacute', '212': 'Ocirc', '213': 'Otilde', '214': 'Ouml',
-	'215': 'times', '216': 'Oslash', '217': 'Ugrave', '218': 'Uacute', '219':
-	'Ucirc', '220': 'Uuml', '221': 'Yacute', '222': 'THORN', '223': 'szlig',
-	'224': 'agrave', '225': 'aacute', '226': 'acirc', '227': 'atilde', '228':
-	'auml', '229': 'aring', '230': 'aelig', '231': 'ccedil', '232': 'egrave',
-	'233': 'eacute', '234': 'ecirc', '235': 'euml', '236': 'igrave', '237':
-	'iacute', '238': 'icirc', '239': 'iuml', '240': 'eth', '241': 'ntilde',
-	'242': 'ograve', '243': 'oacute', '244': 'ocirc', '245': 'otilde', '246':
-	'ouml', '247': 'divide', '248': 'oslash', '249': 'ugrave', '250': 'uacute',
-	'251': 'ucirc', '252': 'uuml', '253': 'yacute', '254': 'thorn', '255':
-	'yuml', '8364': 'euro'
-};
-
 // file Util.HTML_Parser.js
 /**
  * Declares instance variables.
@@ -11990,28 +11762,29 @@ UI.Clipboard_Helper = function ClipboardHelper()
 		html = container.innerHTML;
 
 		// Move HTML to clipboard
-		try // IE
-		{
-			_ie_copy(html);
+		try {
+			if (UI.Clipboard_Helper._gecko) {
+				_gecko_copy(html, command || 'Copy', accel || 'C');
+			} else {
+				_ie_copy(html);
+			}
+		} finally {
+			self._loki.focus();
 		}
-		catch(e) // Gecko
-		{
-			_gecko_copy(html, command || 'Copy', accel || 'C');
-		}
-		self._loki.focus();
+		
 	};
 
 	this.paste = function clipboard_paste()
 	{
-		try // IE
-		{
-			_ie_paste();
+		try {
+			if (UI.Clipboard_Helper._gecko) {
+				_gecko_paste();
+			} else {
+				_ie_paste();
+			}
+		} finally {
+			self._loki.focus();
 		}
-		catch(e)
-		{
-			_gecko_paste();
-		}
-		self._loki.focus();
 	};
 
 	this.delete_it = function() // delete is a reserved word
@@ -12066,25 +11839,18 @@ UI.Clipboard_Helper = function ClipboardHelper()
 
 	function _ie_copy(html)
 	{
-		try
-		{
-			var sel = Util.Selection.get_selection(self._loki.window);
-			var rng = Util.Range.create_range(sel);
+		var sel = Util.Selection.get_selection(self._loki.window);
+		var rng = Util.Range.create_range(sel);
 
-			// transfer from iframe to editable div
-			// select all of editable div
-			// copy from editable div
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.innerHTML = html;
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("SelectAll", false, null);
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("Copy", false, null);
+		// transfer from iframe to editable div
+		// select all of editable div
+		// copy from editable div
+		UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.innerHTML = html;
+		UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("SelectAll", false, null);
+		UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("Copy", false, null);
 
-			// Reposition cursor
-			rng.select();
-		}
-		catch(e)
-		{
-			throw("UI.Clipboard_Helper: couldn't copy in _ie_copy, because <<" + e.message + ">>.");
-		}
+		// Reposition cursor
+		rng.select();
 	};
 
 	function _gecko_paste()
@@ -12126,40 +11892,59 @@ UI.Clipboard_Helper = function ClipboardHelper()
 
 	function _ie_paste()
 	{
-		try
-		{
-			var sel = Util.Selection.get_selection(self._loki.window);
-			var rng = Util.Range.create_range(sel);
+		var sel = Util.Selection.get_selection(self._loki.window);
+		var rng = Util.Range.create_range(sel);
+		var parent = rng.parentElement();
+		
+		// Ensure that the selection is within the editing document.
+		// if (parent && parent.ownerDocument != self._loki.document)
+		// 	return;
 
-			// Make clipboard iframe editable
-			// clear editable div
-			// select all of editable div
-			// paste into editable div
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.contentEditable = true;
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.innerHTML = "";
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("SelectAll", false, null);
-			UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("Paste", false, null);
+		// Make clipboard iframe editable
+		// clear editable div
+		// select all of editable div
+		// paste into editable div
+		UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.contentEditable = true;
+		UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.innerHTML = "";
+		UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("SelectAll", false, null);
+		UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.execCommand("Paste", false, null);
 
-			// Get HTML
-			var html = UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.innerHTML;
+		// Get HTML
+		var html = UI.Clipboard_Helper_Editable_Iframe.contentWindow.document.body.innerHTML;
 
-			// Massage and clean HTML
-			var container = self._loki.document.createElement('DIV');
-			container.innerHTML = html;
-			UI.Clean.clean(container, self._loki.settings);
-			self._loki.massage_node_descendants(container);
-			html = container.innerHTML;
-
-			// Actually paste HTML
-			rng.pasteHTML(html);
-			rng.select();
+		// Massage and clean HTML
+		var nodeName = 'DIV';
+		if (rng.text != null && rng.text == "") {
+			if (typeof(parent) == 'object' && parent.tagName)
+				nodeName = parent.tagName;
 		}
-		catch(e)
-		{
-			throw("UI.Clipboard_Helper: couldn't paste in _ie_paste, because <<" + e.message + ">>.");
+		
+		function clean(nodeName) {
+			var temp = self._loki.document.createElement(nodeName);
+			temp.innerHTML = html;
+			
+			UI.Clean.clean(temp, self._loki.settings);
+			self._loki.massage_node_descendants(temp);
+			return temp.innerHTML;
 		}
+		
+		var cleanedHTML;
+		try {
+			cleanedHTML = clean(nodeName);
+		} catch (e) {
+			if (nodeName != 'DIV')
+				cleanedHTML = clean('DIV');
+			else
+				throw e;
+		}
+
+		// Actually paste HTML
+		rng.pasteHTML(cleanedHTML);
+		rng.select();
 	};
 };
+
+UI.Clipboard_Helper._gecko = (typeof(Components) == 'object');
 
 // We need to create this iframe as a place to put code that
 // Gecko needs to run with special privileges, for which
@@ -12190,6 +11975,11 @@ UI.Clipboard_Helper._setup = function setup_clipboard_helper() {
 	
 	function watch_onload(func)
 	{
+		if (typeof(Loki) == "object" && Loki.is_document_ready()) {
+			func();
+			return;
+		}
+		
 		if (document.addEventListener) {
 			document.addEventListener('DOMContentLoaded', func, false);
 			window.addEventListener('load', func, false);
@@ -12236,7 +12026,7 @@ UI.Clipboard_Helper._setup = function setup_clipboard_helper() {
 			return [base_uri, path].join('/');
 	}
 	
-	if (typeof(Components) == 'object') {
+	if (UI.Clipboard_Helper._gecko) {
 		// Gecko
 		if (typeof(_gecko_clipboard_helper_src) == 'string') {
 			// PHP helper is providing this for us.
@@ -20858,6 +20648,12 @@ UI.Loki = function Loki()
 		if (!(Util.Browser.IE || Util.Browser.Gecko)) {
 			throw new Error('The Loki HTML editor does not currently support ' +
 				'your browser.');
+		} else if (!textarea) {
+			throw new Error('Cannot initialize Loki without a textarea.');
+		} else if (!textarea.form) {
+			throw new Error('Cannot initialize Loki because the textarea ' +
+				Util.Node.get_debug_string(textarea) + ' does not belong to ' +
+				'a form.');
 		}
 		
 		_settings = (settings) ? Util.Object.clone(settings) : {};
@@ -22196,10 +21992,19 @@ var Loki = {
 	},
 	
 	/**
+	 * Returns true if the DOM is ready.
+	 * @returns {boolean}
+	 */
+	is_document_ready: function is_document_ready()
+	{
+		return this._loaded;
+	},
+	
+	/**
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0rc6",
+	version: "2.0rc7",
 	
 	/** @private */
 	_pending: [],
