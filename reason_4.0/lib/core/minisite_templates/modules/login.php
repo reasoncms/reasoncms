@@ -1,9 +1,26 @@
 <?php
+	/**
+	 * @package reason
+	 * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
+	 */
+	 
+	/**
+	 * Register the module
+	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LoginModule';
+	
+	/**
+	 * Include dependencies
+	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	include_once( CARL_UTIL_INC . 'basic/browser.php' );
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 	
+	/**
+	 * The module that handles login to Reason authentication
+	 *
+	 * @todo Figure out if there is a more secure way to handle the msg_uname request value... right now if you know the unique name of a text blurb you can display its content. This makes the content of uniquely named text blurbs marely obscure rather than truly secure. (luckily there are likely not that many uniquely named text blurbs, but this should still be resolved in a better way somehow.)
+	 */
 	class LoginModule extends DefaultMinisiteModule
 	{
 		var $sess;
@@ -25,8 +42,7 @@
 			'dest_page' => array( 'function' => 'turn_into_string' ),
 			'noredirect' => array( 'function' => 'turn_into_string' ),
 			'code' => array( 'function' => 'turn_into_int' ),
-			// 'msg' => array( 'function' => 'turn_into_string' ), // this is deprecated!
-			'msg_uname' => array( 'function' => 'addslashes' ),
+			'msg_uname' => array( 'function' => 'reason_unique_name_validate_string' ),
 			'redir_link_text' => array( 'function' => 'turn_into_string' ),
 			'popup' => array('function' =>'check_against_array', 'extra_args' => array('true'))
 		);
@@ -194,15 +210,14 @@
 					}
 					if( !empty( $this->request[ 'msg_uname' ] ) )
 					{
-						$msg_id = id_of($this->request[ 'msg_uname' ]);
+						$msg_id = id_of($this->request[ 'msg_uname' ], true, false);
 						if(!empty($msg_id))
 						{
 							$msg_ent = new entity($msg_id);
-							$this->msg .= $msg_ent->get_value('content');
+							if( $msg_ent->get_value( 'type' ) == id_of('text_blurb') )
+								$this->msg .= $msg_ent->get_value('content');
 						}
 					}
-					/* elseif( !empty( $this->request[ 'msg' ] ) ) // this is deprecated!
-						$this->msg .= $this->request[ 'msg' ]; */
 				}
 			}
 		}
