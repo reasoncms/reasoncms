@@ -1,30 +1,61 @@
 <?php
-	/*
-		Reason Utility Functions and Variables
-		dave hendler - august 2002
+	/**
+	 *	Reason Utility Functions
+	 *
+	 *	This file contains a set of functions that can be considered the core of the Reason global function API.
+	 *
+	 *	This file contains basic functions for:
+	 *	-- reading data from the Reason DB
+	 *	-- providing reflection of the Reason DB data structure
+	 *	-- privileges
+	 *	-- editor integration
+	 *	-- common string handling needs & other basic utilities
+	 *
+	 *	Functions that write to the database -- Create, Update, Delete -- are *not* in this file; they are in admin_actions.php
+	 *
+	 *	@todo Rethink the global namespace aspect of many of these functions -- can they be put in a static class so as to fimplify the API and clean up the global namespace?
+	 *
+	 *	@author Dave Hendler
+	 *	@author Nate White
+	 *	@author Matt Ryan
+	 *
+	 *	@copyright 2002-2008 Carleton College
+	 *	@license http://www.gnu.org/copyleft/gpl.html GNU General Public License
+	 *
+	 *	@package reason
+	 */
 
-		this file contains several functions and variables and stuff
-	*/
-
-	//////////////////////////////////////////////////
-	// Constants and Variables
-	//////////////////////////////////////////////////
-
+	/**
+	 * Include dependencies and other files that should be considered part of the basic Reason utilities
+	 */
 	include_once( 'reason_header.php' );
 	include_once( CARL_UTIL_INC . 'db/db_selector.php' );
 	reason_include_once('function_libraries/url_utils.php');
-	
-	//////////////////////////////////////////////////
-	// REASON API
-	// - automated data grabbing functions
-	// - most functions are powered by the DBSelector.
-	//	 for more sophisticated data pulling you
-	//	 should use the _object functions.  you can
-	//	 modify the DBSelector object to get the
-	//	 results you want.
-	//////////////////////////////////////////////////
 
-	function id_of( $content_name, $cache = true, $report_not_found_error = true ) //returns the id of content with unique name $content_name, false if none  // {{{
+	/**
+	 * Get the id of an item with a given unique name
+	 *
+	 * This is the standard way to find the ID of a specific item in the Reason database.
+	 * It is how, for example, reason type entities are identified.
+	 *
+	 * For example, if you are confident a given unique name is in the database:
+	 *
+	 * $image_type = new entity(id_of('image'));
+	 *
+	 * Or, if you're not confident:
+	 * 
+	 * if($id = id_of('notsure', true, false))
+	 * {
+	 * 	$entity = new entity($id);
+	 * 	...
+	 * }
+	 *
+	 * @param string $unique_name The unique name that you want the id of
+	 * @param boolean $cache Use a cache (specific to the script)? Set to false if you think the current process may have updated this unique name
+	 * @param boolean $report_not_found_error Trigger a warning if the unique name is not in the database. Set to false if the value is coming from userland or if it is a test that you will be doing separate reporting on.
+	 * @return integer The Reason ID of the corresponding entity or 0 if not found
+	 */
+	function id_of( $unique_name, $cache = true, $report_not_found_error = true )// {{{
 	{
 		static $retrieved = false;
 
@@ -40,22 +71,73 @@
 			mysql_free_result( $r );
 
 		}
-		if( isset( $retrieved[ $content_name ] ) )
-			return $retrieved[ $content_name ];
+		if( isset( $retrieved[ $unique_name ] ) )
+			return $retrieved[ $unique_name ];
 		else
 		{
 			if($report_not_found_error)
-				trigger_error('Unique name requested ('.$content_name.') not in database');
+				trigger_error('Unique name requested ('.$unique_name.') not in database');
 			return 0;
 		}
 	} // }}}
-	function reason_unique_name_exists($content_name, $cache = true)
+	/**
+	 * Check to see if a given unique name exists in the Reason database
+	 *
+	 * @param string $unique_name The unique name to check
+	 * @param boolean $cache Set to false if you don't want Reason to use the process-level cache (this option will take somewhat longer to complete)
+	 * @return boolean true if the unique name exists, false if it does not
+	 */
+	function reason_unique_name_exists($unique_name, $cache = true)
 	{
-		if(id_of($content_name, $cache, false))
+		if(id_of($unique_name, $cache, false))
 			return true;
 		return false;
 	}
-	function relationship_id_of( $relationship_name, $cache = true, $report_not_found_error = true ) // much like id_of, but with relationship names{{{
+	/**
+	 * Identifies whether a given string could be used as a unique name
+	 *
+	 * Note that this function *does not* check whether the given string is already used as a unique name -- only if it matches a fixed pattern
+	 *
+	 * @param string $string The string to check
+	 * @return boolean true if it matches the pattern, otherwise false
+	 */
+	function reason_unique_name_valid_string($string)
+	{
+		if(!empty($string) && eregi( "^[0-9a-z_]*$", $string))
+			return true;
+		return false;
+	}
+	/**
+	 * Validate a string as fitting the unique name pattern
+	 *
+	 * This function is similar to @reason_unique_name_valid_string(), but returns the given string if the given string matches the pattern
+	 *
+	 * @param string $string The string to validate
+	 * @return string The given string if it matches the pattern; otherwise an empty string
+	 */
+	function reason_unique_name_validate_string($string)
+	{
+		if(reason_unique_name_valid_string($string))
+			return $string;
+		return '';
+	}
+	/**
+	 * Get the id of a relationship in the allowable_relationships table
+	 *
+	 * This is the standard way to reference a relationship type defined in the allowable_relationships table
+	 *
+	 * Usage:
+	 * $es = new entity_selector();
+	 * $es->add_type(id_of('image');
+	 * $es->add_left_relationship($page_id, relationship_id_of('page_to_image'); // limit selection to images related to the page via the page_to_image relationship
+	 * $images = $es->run_one();
+	 *
+	 * @param string $relationship_name The name of the relationship we want to get the ID of
+	 * @param boolean $cache Set to false if you don't want Reason to consult its process-level cache (for example, if you have added the relationship earlier in the same process)
+	 * @param boolean $report_not_found_error Set to false if you don't want Reason to emit a warning if the relationship name can't be found
+	 * @return mixed The relationship's ID if found; otherwise boolean false
+	 */
+	function relationship_id_of( $relationship_name, $cache = true, $report_not_found_error = true ) // {{{
 	{
 		static $retrieved;
 		if( !isset( $retrieved ) OR empty( $retrieved ) )
@@ -84,6 +166,13 @@
 			return $retrieved[ $relationship_name ];
 	} // }}}
 	
+	/**
+	 * Find out if a given relationship name exists in the allowable relationships table
+	 *
+	 * @param string $relationship_name The name we want to test
+	 * @param boolean $cache Set to false if you don't want Reason to consult its process-level cache (for example, if you have added the relationship earlier in the same process)
+	 * @return boolean true if found, otherwise false
+	 */
 	function reason_relationship_name_exists($relationship_name, $cache = true)
 	{
 		if(relationship_id_of($relationship_name, $cache, false))
@@ -91,7 +180,14 @@
 		return false;
 	}
 	
-	function relationship_name_of( $relationship_id, $cache = true ) // much like id_of, but with relationship names{{{
+	/**
+	 * Find the name of a relationship from its ID
+	 *
+	 * @param integer $relationship_id The ID of the relationship to test
+	 * @param boolean $cache Set to false if you don't want Reason to consult its process-level cache (for example, if you have added the relationship earlier in the same process)
+	 * @return mixed The (string) relationship name if found, otherwise boolean false
+	 */
+	function relationship_name_of( $relationship_id, $cache = true ) // {{{
 	{
 		static $retrieved;
 		if( !isset( $retrieved ) OR empty( $retrieved ) )
