@@ -143,13 +143,14 @@
 			/*foreach( $this->_elements AS $key => $element )
 				if( !in_array( $key, $this->_process_ignore ) )
 					$values[ $key ] = $element->get(); */
-
 			foreach( $values AS $key => $el )
+			{
 				if( !in_array( $key, $this->_no_tidy ) )
 				{
 					$values[ $key ] = tidy( $el );
 				}
-		
+			}
+			
 			// always reason_update_entity since we created when user clicks "Add"
 			$this->has_changed = reason_update_entity( $this->_id, $this->admin_page->user_id, $values, false );
 				// the last argument determines whether or not to archive the entity.  if it's new, don't worry about it.  otherwise, archive
@@ -203,31 +204,17 @@
 		{
 			if( $this->get_value('unique_name') )
 			{
-				if(!eregi( "^[0-9a-z_]*$" , $this->get_value('unique_name') ) )
+				if(!reason_unique_name_valid_string($this->get_value('unique_name') ) )
 				{
 					$this->set_error('unique_name','Unique name must be just numbers, letters, and/or underscores. Please make sure the unique name doesn\'t contain any other characters.');
 				}
 				else
 				{
-					$dbs = new DBSelector();
-					$dbs->add_table('entity');
-					$dbs->add_field('entity','id','id');
-					$dbs->add_field('entity','unique_name','unique_name');
-					$dbs->add_field('entity','name','name');
-					$dbs->add_relation('`unique_name` = "'.addslashes($this->get_value('unique_name')).'"');
-					$dbs->add_relation('`id` != "'.$this->_id.'"');
-					$dbs->add_relation('`state` = "Live"');
-					$results = $dbs->run('Error getting other unique names');
-					if(!empty($results))
+					$id = id_of($this->get_value('unique_name'), true, false);
+					if(!empty($id) && $id != $this->_id)
 					{
-						$others = '<ul>';
-						foreach($results as $result)
-						{
-							$others .= '<li>'.$result['name'].'</li>';
-						}
-						$others .= '</ul>';
-						$this->set_error('unique_name','The unique name "'.$this->get_value('unique_name').'" already exists. Please choose another. Items with this unique name: '.$others);
-						
+						$entity = new entity($id);
+						$this->set_error('unique_name','The unique name "'.$this->get_value('unique_name').'" is already used by the item "'.$entity->get_value('name').'". Please choose another.');
 					}
 				}
 			}
