@@ -145,7 +145,7 @@
 
 		if( !$cache OR !isset( $retrieved[ $relationship_name ] ) OR !$retrieved[ $relationship_name ] )
 		{
-			$q = "SELECT id FROM allowable_relationship WHERE name = '" . $relationship_name . "'";
+			$q = "SELECT id FROM allowable_relationship WHERE name = '" . addslashes($relationship_name) . "'";
 			$r = db_query( $q , "Error getting relationship id" );
 			if( $row = mysql_fetch_array( $r ))
 			{
