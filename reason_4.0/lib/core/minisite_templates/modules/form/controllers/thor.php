@@ -86,11 +86,7 @@
 			if ($this->admin_view_requested()) $model->set_user_requested_admin_view(true);
 			if ($this->form_submission_appears_complete()) $model->set_form_submission_appears_complete(true);
 			if ($this->form_id_is_valid()) $model->set_form_id($this->request['form_id']);
-			
-			// ask the model for the thor view - which is set in the content manager
-			$view =& $model->get_thor_view();
-			$this->set_view($view);
-			
+
 			// ask the model some questions to determine how to proceed
 			if ($model->user_requested_admin_view() && $model->user_has_administrative_access())
 			{
@@ -130,6 +126,20 @@
 			{
 				return $this->$method();
 			}
+		}
+		
+		/**
+		 * If the view has not been already been set (probably via page type), lets ask the model to get it from the content manager
+		 */
+		function &get_view()
+		{
+			if (!isset($this->view) || $this->view == false)
+			{
+				$model =& $this->get_model();
+				$view =& $model->get_thor_view();
+				$this->set_view($view);
+			}
+			return parent::get_view();
 		}
 		
 		function init_admin_view()
