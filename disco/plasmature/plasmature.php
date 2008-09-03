@@ -675,8 +675,8 @@
 		function grab() // {{{
 		{
 			$value = $this->grab_value();
-			if($value !== NULL && $value != $this->get())
-			{
+			if($value !== NULL && $value != $this->get() && preg_replace('/\s+/','',$value) != preg_replace('/\s+/','',$this->get()))
+			{				
 				trigger_error('solidText element ('.$this->name.') value changed in userland. This is deprecated (insecure) behavior and will not be allowed in future releases.');
 			}
 			parent::grab();
@@ -730,7 +730,7 @@
 		function grab() // {{{
 		{
 			$value = $this->grab_value();
-			if($value !== NULL && $value != $this->get())
+			if($value !== NULL && $value != $this->get() && preg_replace('/\s+/','',$value) != preg_replace('/\s+/','',$this->get()))
 			{
 				trigger_error('plainText element ('.$this->name.') value changed in userland. This is deprecated (insecure) behavior and will not be allowed in future releases.');
 			}
@@ -756,7 +756,7 @@
 		function grab() // {{{
 		{
 			$value = $this->grab_value();
-			if($value !== NULL && $value != $this->get())
+			if($value !== NULL && $value != $this->get() && preg_replace('/\s+/','',$value) != preg_replace('/\s+/','',$this->get()))
 			{
 				trigger_error('disabledText element ('.$this->name.') value changed in userland. This is deprecated (insecure) behavior and will not be allowed in future releases.');
 			}
@@ -866,7 +866,7 @@
 		function grab() // {{{
 		{
 			$value = $this->grab_value();
-			if($value !== NULL && $value != $this->get())
+			if($value !== NULL && $value != $this->get() && preg_replace('/\s+/','',$value) != preg_replace('/\s+/','',$this->get()))
 			{
 				trigger_error('hidden element ('.$this->name.') value changed in userland. This is deprecated (insecure) behavior and will not be allowed in future releases.');
 			}
