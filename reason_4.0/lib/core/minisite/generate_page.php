@@ -119,11 +119,10 @@
 	reason_include_once( 'classes/entity.php' );
 	connectDB( REASON_DB );
 	
-	/* Can't check query yet because the request merge hasn't happened.
-		So , in the interest of genuine profiling, we'll just always get the start time
-		and unly use it if there is a 'timing' variable in the request string. */
 	$s = get_microtime();
-	//xdebug_start_profiling();
+	
+	/* if(function_exists('xdebug_start_profiling'))
+		xdebug_start_profiling(); */
 	
 	$site_id = !empty( $_GET['site_id'] ) ? turn_into_int($_GET['site_id']) : ''; // force to int
 	$page_id = !empty( $_GET['page_id'] ) ? turn_into_int($_GET['page_id']) : ''; // force to int
@@ -221,11 +220,7 @@
 				$template = get_minisite_template($theme->id());
 			else
 			{
-				/* $es = new entity_selector();
-				$es->add_type(id_of('minisite_template'));
-				$es->add_right_relationship( $site_id, relationship_id_of('site_to_minisite_template'));
-				$tmp = $es->run_one();
-				$template = current( $tmp ); */
+				// perhaps we should use a default theme if none is found?
 				trigger_error('Site id '.$site_id.' does not have a theme associated with it, so minisite index cannot determine which template to use', FATAL);
 				die();
 			}
@@ -271,15 +266,17 @@
 		
 		// if we're using a cache, make sure to store the new result
 		// also, record stats about misses here
+		
+		$page_gen_time = round( 1000 * (get_microtime() - $s) );
 		if( $use_cache AND !$cache_hit )
 		{
-			$cache->page_gen_time = round( 1000 * (get_microtime() - $s) );
+			$cache->page_gen_time = $page_gen_time;
 			//echo $cache->page_gen_time;
 			$cache->store( get_current_url(), $page );
 		}
 		if( is_developer() )
 		{
-			$str = round( 1000 * (get_microtime() - $s) ).'ms | ';
+			$str = $page_gen_time.' ms | ';
 			if( $use_cache )
 			{
 				$str .= 'caching is ON: ';
@@ -292,12 +289,10 @@
 				$str .= "caching is OFF: $no_cache_reason";
 			trigger_error( $str );
 		}
+		reason_log_page_generation_time($page_gen_time);
 	}
-	
-	if(!empty($_REQUEST['timing']))
+	/* if(function_exists('xdebug_dump_function_profile'))
 	{
-		$e = get_microtime();
-		echo '<!-- start time: '.$s.'   end time: '.$e.'   total time: '.round(1000*($e - $s), 1).' ms -->';
-	}
-	//xdebug_dump_function_profile(4);
+		xdebug_dump_function_profile(4);
+	} */
 ?>
