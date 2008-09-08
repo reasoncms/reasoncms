@@ -194,14 +194,6 @@
 	define('ERROR_404_PATH', 'errors/404.php');
 	
 	/**
-	 * ERROR_404_FULL_PATH
-	 * This setting identifies the absolute location of the 404 page in the filesystem.
-	 * Assuming the 404 page is within the server root, this setting will probably look like this:
-	 * REASON_HTTP_BASE_PATH.ERROR_404_PATH
-	 */
-	define('ERROR_404_FULL_PATH', REASON_HTTP_BASE_PATH.ERROR_404_PATH);
-	
-	/**
 	 * ERROR_404_PAGE
 	 * This setting identifies the URI of the 404 page
 	 * It will typically look like this: 'http://'.HTTP_HOST_NAME.'/'.ERROR_404_PATH
@@ -222,14 +214,6 @@
 	 * Example: errors/403.php
 	 */
 	define('ERROR_403_PATH', 'errors/403.php');
-	
-	/**
-	 * ERROR_403_FULL_PATH
-	 * This setting identifies the absolute location of the 403 page in the filesystem.
-	 * Assuming the 404 page is within the server root, this setting will probably look like this:
-	 * REASON_HTTP_BASE_PATH.ERROR_403_PATH
-	 */
-	define('ERROR_403_FULL_PATH', REASON_HTTP_BASE_PATH.ERROR_403_PATH);
 	
 	/**
 	 * ERROR_404_PAGE
@@ -563,6 +547,8 @@
 	
 	define('NOTIFY_WHEN_MEDIA_IS_IMPORTED',false);
 	
+	define('MEDIA_MAX_UPLOAD_FILESIZE_MEGS', 50);
+	
 	define('MEDIA_FILESIZE_NOTIFICATION_THRESHOLD',0);
 	
 	define('MEDIA_NOTIFICATION_EMAIL_ADDRESSES',WEBMASTER_EMAIL_ADDRESS);
@@ -757,6 +743,17 @@
 	 * In future releases there will likely be a way to specify favicons for individual sites.
 	 */
 	define('REASON_DEFAULT_FAVICON_PATH','');
+	
+	/**
+	 * REASON_PERFORMANCE_PROFILE_LOG
+	 *
+	 * This defines the path to a file where Reason can log performance-related information
+	 *
+	 * If you enter a path to a file on the filesystem, Reason will 
+	 * log page generation times into that file, enabling analysis of which pages need to be
+	 * optimized, or performance changes over time.
+	 */	
+	define('REASON_PERFORMANCE_PROFILE_LOG','');
 	
 	/**
 	 * REASON_FORMS_THOR_DEFAULT_VIEW
