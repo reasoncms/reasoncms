@@ -1229,4 +1229,22 @@
 		$string = str_replace(array('&amp;','&gt;','&lt;','&quot;','&#039;'),array('&','>','<','"',"'"),$string);
 		return htmlspecialchars($string, ENT_QUOTES, 'UTF-8' );
 	}
+	
+	/**
+	 * Log the amount of time it took to generate the current page/process
+	 *
+	 * @param integer $milliseconds The number of milliseconds that it took to generate the page
+	 * @return boolean success
+	 */
+	function reason_log_page_generation_time($milliseconds)
+	{
+		if(defined('REASON_PERFORMANCE_PROFILE_LOG') && REASON_PERFORMANCE_PROFILE_LOG)
+		{
+			$pieces = array( carl_date('r'), get_current_url(), $milliseconds );
+			array_walk( $pieces, 'quote_walk' );
+			$msg = implode( ',', $pieces )."\n";
+			return dlog( $msg, REASON_PERFORMANCE_PROFILE_LOG );
+		}
+		return false;
+	}
 ?>
