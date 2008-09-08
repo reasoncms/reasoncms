@@ -25,6 +25,7 @@
 	// $reason_session = true;
 	
 	include_once( 'reason_header.php' );
+	
 	reason_include_once( 'function_libraries/user_functions.php' );
 	force_secure_if_available();
 	$authenticated_user_netid = reason_require_authentication('admin_login');
@@ -81,7 +82,9 @@
 	}
 
 	$_page_timing_end = getmicrotime();
-	echo '<!-- start time: '.$_page_timing_start.'   end time: '.$_page_timing_end.'   total time: '.round(1000*($_page_timing_end - $_page_timing_start), 1).' ms -->';
+	$page_gen_time = round(1000*($_page_timing_end - $_page_timing_start), 0);
+	echo '<!-- start time: '.$_page_timing_start.'   end time: '.$_page_timing_end.'   total time: '.$page_gen_time.' ms -->';
+	reason_log_page_generation_time($page_gen_time);
 
 	//echo 'mem usage: '.xdebug_memory_usage().'<br/>';
 	//xdebug_dump_function_trace();
