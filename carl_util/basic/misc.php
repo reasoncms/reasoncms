@@ -77,11 +77,20 @@ if (!defined("ENT_COMPAT")) define("ENT_COMPAT", 2);
 if (!defined("ENT_NOQUOTES")) define("ENT_NOQUOTES", 0);
 if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 
+	/**
+	 *	Log a line to a file
+	 *
+	 *	If not passed a destination, this function will try to log to /tmp/dlog-hostname
+	 *
+	 *	@param string $msg The line to log
+	 *	@param string $dest destination file to log to
+	 *	@return boolean success
+	 */
 	function dlog( $msg, $dest = '' )
 	{
 		if( empty( $dest ) )
 			$dest = '/tmp/dlog-'.$_SERVER['HTTP_HOST'];
-		error_log( $msg."\n", 3, $dest );
+		return error_log( $msg."\n", 3, $dest );
 	}
 
 	function quote_walk( &$val, $key )
@@ -354,7 +363,7 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 				}
 			}
 		}
-
+		
 		// check for all 0s (an empty date)
 		return ((int) $year && (int) $month && (int) $day)
 			? carl_mktime($hour, $minute, $second, $month, $day, $year)
