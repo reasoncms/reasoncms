@@ -15,6 +15,8 @@ $reason_session = false;
 include_once( 'reason_header.php' );
 reason_include_once( 'classes/entity_selector.php' );
 
+$start_time = get_microtime();
+
 // clean up type id
 if(!empty($_GET['type_id']))
 {
@@ -98,5 +100,8 @@ else
 	header('HTTP/1.1 400 Bad Request');
 	echo '<html><head><title>Feed did not work</title><meta name="robots" content="none" /></head><body><h1>Feed did not work</h1><p>Use the form "?type_id=xx [ &site_id=yy ]"</p></body></html>';
 }
+
+reason_log_page_generation_time( round( 1000 * (get_microtime() - $start_time) ) );
+
 
 ?>
