@@ -1242,7 +1242,7 @@
 		{
 			$pieces = array( carl_date('r'), get_current_url(), $milliseconds );
 			array_walk( $pieces, 'quote_walk' );
-			$msg = implode( ',', $pieces )."\n";
+			$msg = implode( ',', $pieces );
 			return dlog( $msg, REASON_PERFORMANCE_PROFILE_LOG );
 		}
 		return false;
