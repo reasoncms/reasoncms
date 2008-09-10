@@ -1247,4 +1247,17 @@
 		}
 		return false;
 	}
+	
+	function reason_unique_names_to_entities($unique_names)
+	{
+		$entities = array();
+		foreach($unique_names as $unique_name)
+		{
+			if($id = id_of($unique_name) )
+			{
+				$entities[$id] = new entity($id);
+			}
+		}
+		return $entities;
+	}
 ?>
