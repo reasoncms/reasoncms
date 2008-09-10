@@ -632,6 +632,11 @@
 			'sidebar' => '',
 			'sub_nav' => 'content',
 		),
+		'gallery_above_content' => array(
+			'main' => 'gallery2',
+			'main_post'=>'content',
+			'sidebar' => '',
+		),
 		'gallery_entire_site' => array(
 			'main_post' => array(
 				'module' => 'gallery2',
