@@ -143,6 +143,9 @@ class Gallery2Module extends Generic3Module
 	 */
 	var $use_desc_in_list = true;
 	
+	var $back_link_text = 'Thumbnails';
+	var $make_current_page_link_in_nav_when_on_item = true;
+	
 	/**
 	 * Does the interacting with parameters, setting of defaults,
 	 * and cleaning of the sort order string
