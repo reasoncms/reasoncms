@@ -633,7 +633,10 @@
 			'sub_nav' => 'content',
 		),
 		'gallery_above_content' => array(
-			'main' => 'gallery2',
+			'main' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',
+			),
 			'main_post'=>'content',
 			'sidebar' => '',
 		),
