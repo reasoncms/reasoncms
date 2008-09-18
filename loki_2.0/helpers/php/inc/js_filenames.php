@@ -65,7 +65,8 @@ class Loki2ScriptFinder
 	{
 		static $priority_util_files = array(
 			'Util.js', 'Util.Scheduler.js', 'Util.Function.js', 'Util.Array.js',
-			'Util.Node.js', 'Util.Element.js', 'Util.Event.js'
+			'Util.Node.js', 'Util.Element.js', 'Util.Event.js',
+			'Util.Object.js', 'Util.OOP.js'
 		);
 
 		$a_ut = (0 == strncmp($a, 'Util', 4));

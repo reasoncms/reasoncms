@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0rc7
+// Loki WYSIWIG Editor 2.0rc8-pl2
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-08-26 23:12:32 
+// Compiled 2008-09-18 15:51:47 
 // http://loki-editor.googlecode.com/
 
 
@@ -33,15 +33,15 @@ TinyMCE.prototype.isBlockElement = function(node) {
 };
 
 TinyMCE.prototype.getParentBlockElement = function(node) {
-        // Search up the tree for block element
-        while (node) {
-                if (this.blockRegExp.test(node.nodeName))
-                        return node;
+	// Search up the tree for block element
+	while (node) {
+		if (this.blockRegExp.test(node.nodeName))
+			return node;
 
-                node = node.parentNode;
-        }
+		node = node.parentNode;
+	}
 
-        return null;
+	return null;
 };
 
 TinyMCE.prototype.getNodeTree = function(node, node_array, type, node_name) {
@@ -57,18 +57,15 @@ TinyMCE.prototype.getNodeTree = function(node, node_array, type, node_name) {
 };
 
 TinyMCE.prototype.getAbsPosition = function(node) {
-	var pos = new Object();
-
-	pos.absLeft = pos.absTop = 0;
-
-	var parentNode = node;
-	while (parentNode) {
-		pos.absLeft += parentNode.offsetLeft;
-		pos.absTop += parentNode.offsetTop;
-
-		parentNode = parentNode.offsetParent;
+	var pos = {absLeft: 0, absTop: 0};
+	
+	// if (node.nodeType != 1)
+	// 	node = node.parentNode;
+	for (var n = node; n; n = n.offsetParent) {
+		pos.absLeft += n.offsetLeft;
+		pos.absTop += n.offsetTop;
 	}
-
+	
 	return pos;
 };
 
@@ -679,7 +676,7 @@ TinyMCEControl.prototype._insertPara = function(e) {
 			paraAfter = body.childNodes[1];
 		}
 
-		this.selectNode(paraAfter, true, true);
+		this.selectNode(paraAfter, true, true, true, false);
 
 		return true;
 	}
@@ -747,7 +744,7 @@ TinyMCEControl.prototype._insertPara = function(e) {
 	paraAfter.normalize();
 	paraBefore.normalize();
 
-	this.selectNode(paraAfter, true, true);
+	this.selectNode(paraAfter, true, true, true, false);
 
 	return true;
 };
@@ -788,7 +785,7 @@ TinyMCEControl.prototype._handleBackSpace = function(evt_type) {
 	if (para != null && para.nodeName.toLowerCase() == 'p' && evt_type == "keypress") {
 		var htm = para.innerHTML;
 		var block = tinyMCE.getParentBlockElement(node);
-
+		
 		// Empty node, we do the killing!!
 		if (htm == "" || htm == "&nbsp;" || block.nodeName.toLowerCase() == "li") {
 			var prevElm = para.previousSibling;
@@ -802,10 +799,10 @@ TinyMCEControl.prototype._handleBackSpace = function(evt_type) {
 			// Get previous elements last text node
 			var nodes = tinyMCE.getNodeTree(prevElm, new Array(), 3);
 			var lastTextNode = nodes.length == 0 ? null : nodes[nodes.length-1];
-
+			
 			// Select the last text node and move curstor to end
 			if (lastTextNode != null)
-				this.selectNode(lastTextNode, true, false, false);
+				this.selectNode(lastTextNode, true, false, false, false);
 
 			// Remove the empty paragrapsh
 			para.parentNode.removeChild(para);
@@ -829,7 +826,7 @@ TinyMCEControl.prototype._handleBackSpace = function(evt_type) {
 	return false;
 };
 
-TinyMCEControl.prototype.selectNode = function(node, collapse, select_text_node, to_start) {
+TinyMCEControl.prototype.selectNode = function(node, collapse, select_text_node, to_start, scroll) {
 	if (!node)
 		return;
 
@@ -841,6 +838,9 @@ TinyMCEControl.prototype.selectNode = function(node, collapse, select_text_node,
 
 	if (typeof(to_start) == "undefined")
 		to_start = true;
+		
+	if (typeof(scroll) == "undefined")
+		scroll = true;
 
 	if (tinyMCE.isMSIE) {
 		var rng = this.getBody().createTextRange();
@@ -871,7 +871,8 @@ TinyMCEControl.prototype.selectNode = function(node, collapse, select_text_node,
 					sel.realSelection.collapseToEnd();
 			}
 
-			this.scrollToNode(node);
+			if (scroll)
+				this.scrollToNode(node);
 
 			return;
 		}
@@ -901,7 +902,8 @@ TinyMCEControl.prototype.selectNode = function(node, collapse, select_text_node,
 		sel.addRange(rng);
 	}
 
-	this.scrollToNode(node);
+	if (scroll)
+		this.scrollToNode(node);
 
 	// Set selected element
 	tinyMCE.selectedElement = null;
@@ -918,8 +920,11 @@ TinyMCEControl.prototype.scrollToNode = function(node) {
 	var height = tinyMCE.isMSIE ? document.getElementById(this.editorId).style.pixelHeight : this.targetElement.clientHeight;
 
 	// Only scroll if out of visible area
-	if (!tinyMCE.settings['auto_resize'] && !(node.absTop > scrollY && node.absTop < (scrollY - 25 + height)))
+	if (!tinyMCE.settings['auto_resize'] && !(node.absTop > scrollY && node.absTop < (scrollY - 25 + height))) {
+		console.debug(node, pos);
+		console.info("Scrolling to: (", pos.absLeft, ", ", pos.absTop - height + 25, ")");
 		this.contentWindow.scrollTo(pos.absLeft, pos.absTop - height + 25);
+	}
 };
 
 TinyMCEControl.prototype.getBody = function() {
@@ -1074,6 +1079,29 @@ var Util = {
 		}
 		
 		return true;
+	},
+	
+	is_enumerable: function is_enumerable()
+	{
+		for (var i = 0; i < arguments.length; i++) {
+			var o = arguments[i];
+			if (typeof(o) != 'object' || typeof(o.length) != 'number')
+				return false;
+		}
+		
+		return true;
+	},
+	
+	trim: function trim_string(str)
+	{
+		str = str.replace(/^\s+/, '');
+		for (var i = str.length - 1; i >= 0; i--) {
+			if (/\S/.test(str.charAt(i))) {
+				str = str.substring(0, i + 1);
+				break;
+			}
+		}
+		return str;
 	}
 };
 
@@ -2001,6 +2029,33 @@ Util.Node.has_child_node = function(node, boolean_test)
 };
 
 /**
+ * Returns true if the given node is an element node.
+ * @param {Node} node node whose type will be tested
+ * @returns {Boolean} true if "node" is an element node, false if otherwise
+ */
+Util.Node.is_element = function node_is_element(node) {
+	return (Util.is_object(node) && node.nodeType == Util.Node.ELEMENT_NODE);
+}
+
+/**
+ * Returns true if the given node is a text node.
+ * @param {Node} node node whose type will be tested
+ * @returns {Boolean} true if "node" is a text node, false if otherwise
+ */
+Util.Node.is_text = function node_is_text(node) {
+	return (Util.is_object(node) && node.nodeType == Util.Node.TEXT_NODE);
+}
+
+/**
+ * Returns true if the given node is a document node.
+ * @param {Node} node node whose type will be tested
+ * @returns {Boolean} true if "node" is a document node, false if otherwise
+ */
+Util.Node.is_document = function node_is_document(node) {
+	return (Util.is_object(node) && node.nodeType == Util.Node.DOCUMENT_NODE);
+}
+
+/**
  * Returns true if the node is an element node and its node name matches the
  * tag parameter, false otherwise.
  *
@@ -2393,8 +2448,7 @@ Util.Node.get_debug_string = function get_node_debug_string(node)
 			str += '>';
 			break;
 		case Util.Node.TEXT_NODE:
-			str = '"' +
-				node.nodeValue.toString().replace(/^\s+|\s+$/g, '') + '"';
+			str = '"' + Util.trim(node.nodeValue.toString()) + '"';
 			break;
 		case Util.Node.DOCUMENT_NODE:
 			str = '[Document';
@@ -2487,10 +2541,12 @@ Util.Element = {
 	/**
 	 * Returns the attributes of an element.
 	 * @param {Element}	elem
-	 * @return {object}	an object whose keys are attribute names and whose
+	 * @param {Boolean} [no_translation=false] if true, attribute names that may
+	 * be language keywords (like "class" and "for") will not be translated
+	 * @return {Object}	an object whose keys are attribute names and whose
 	 *					values are the corresponding values
 	 */
-	get_attributes: function get_element_attributes(elem)
+	get_attributes: function get_element_attributes(elem, no_translation)
 	{
 		var attrs = {};
 		
@@ -2512,13 +2568,15 @@ Util.Element = {
 			
 			switch (a.nodeName) {
 				case 'class':
-					attrs.className = v;
+				case 'className':
+					attrs[(no_translation) ? 'class' : 'className'] = v;
 					break;
 				case 'for':
-					attrs.htmlFor = v;
+				case 'htmlFor':
+					attrs[(no_translation) ? 'for' : 'htmlFor'] = v;
 					break;
 				case 'style':
-					attrs.style = v.style.cssText;
+					attrs.style = elem.style.cssText;
 					break;
 				default:
 					attrs[a.nodeName] = v;
@@ -3135,6 +3193,318 @@ Util.Event.get_target = function get_event_target(e)
 	return targ;
 };
 
+// file Util.Object.js
+/**
+ * Does nothing.
+ *
+ * @class Container for functions relating to objects.
+ */
+Util.Object = function()
+{
+};
+
+/**
+ * Returns the names of an object's properties as an array. Ignores properties
+ * found on any object.
+ */
+Util.Object.names = function(obj)
+{
+	var names = [];
+	var bare = {};
+	
+	// JavaScript doesn't really have a hash or dictionary type, only a
+	// generic object type. This is a problem because the variables object
+	// we're given can have properties that are intrinsic to objects which
+	// shouldn't be added to the query string. To work around this, we
+	// create a bare object and ignore any properties in variables that are
+	// also found on the bare object.
+	
+	for (var name in obj) {
+		if (name in bare)
+			continue;
+		names.push(name);
+	}
+	
+	return names;
+}
+
+/**
+ * Calls the given function once per property in the object. The function
+ * should accept the property's name as the first argument and its value as
+ * the second.
+ */
+Util.Object.enumerate = function(obj, func, thisp)
+{
+	if (!thisp)
+		var thisp = null;
+	
+	Util.Object.names(obj).each(function (name)
+	{
+		func.call(thisp, name, obj[name]);
+	});
+}
+
+/**
+ * Clones (creates a copy of) the given object.
+ */
+Util.Object.clone = function(some_object)
+{
+	var new_obj;
+	
+	if (!some_object || typeof(some_object) != 'object')
+		return some_object;
+	
+	try {
+		new_obj = new some_object.constructor();
+	} catch (e) {
+		new_obj = new Object();
+	}
+	
+	for (var name in some_object) {
+		new_obj[name] = some_object[name];
+	}
+	
+	return new_obj;
+}
+
+/**
+ * Determines if two objects are equal.
+ */
+Util.Object.equal = function(a, b)
+{
+	if (typeof(a) != 'object') {
+		return (typeof(b) == 'object')
+			? false
+			: (a == b);
+	} else if (typeof(b) != 'object') {
+		return false;
+	}
+	
+	seen = {};
+	
+	for (var name in a) {
+		if (!(name in b && Util.Object.equal(a[name], b[name])))
+			return false;
+		seen[name] = true;
+	}
+	
+	for (var name in b) {
+		if (!(name in seen))
+			return false;
+	}
+	
+	return true;
+}
+
+/**
+ * Pops up a window whose contents are generated by get_print_r_chunk, q.v.
+ *
+ * @param	obj				the object to print_r
+ * @param	max_deepness	(optional) how many levels of parameters to automatically open. Defaults to 1.
+ * @return					a UL element which has as descendents a representation of the given object
+ */
+Util.Object.print_r = function(obj, max_deepness)
+{
+	var alert_win = new Util.Window;
+	alert_win.open('', '_blank', 'status=1,scrollbars=1,resizable,width=600,height=300');
+	var print_r_chunk = Util.Object.get_print_r_chunk(obj, alert_win.document, alert_win, max_deepness);
+	alert_win.body.appendChild(print_r_chunk);
+};
+
+/**
+ * Generates a UL element which has as descendents a representation of
+ * the given object. The representation is similar to that exposed by
+ * PHP's print_r or pray.
+ *
+ * @param	obj				the object to print_r
+ * @param	doc_obj			(optional) the document object with which to create the print_r chunk. 
+ *                          Defaults to the document refered to by <code>document</code>.
+ * @param	max_deepness	(optional) how many levels of parameters to automatically open. Defaults to 1.
+ * @return					a UL element which has as descendents a representation of the given object
+ */
+Util.Object.get_print_r_chunk = function(obj, doc_obj, win, max_deepness)
+{
+	if ( doc_obj == null )
+	{
+		doc_obj = document;
+	}
+
+	if ( max_deepness == null )
+	{
+		max_deepness = 1;
+	}
+
+
+	/**
+	 * Displays or hides the properties of a property of an object being
+	 * print_r'd. Should be called only when a click event is fired by the
+	 * appropriate element in the print_r window.
+	 *
+	 * @param	event	The event object passed onclick
+	 */
+	var open_or_close_print_r_ul = function(event, variable)
+	{
+		event = event == null ? win.event : event;
+		var span_elem = event.currentTarget == null ? event.srcElement : event.currentTarget;
+
+		// If open, close
+		if ( span_elem.nextSibling != null )
+		{
+			//alert('open, so close (nextSibling =' + span_elem.nextSibling);
+			while ( span_elem.nextSibling != null )
+				span_elem.parentNode.removeChild(span_elem.nextSibling);
+		}
+		// Else (if closed), open
+		else
+		{
+			//alert('closed, so open (variable:' + variable + '); span_elem:' + span_elem);
+			span_elem.parentNode.appendChild(
+				Util.Object.get_print_r_chunk(variable, span_elem.ownerDocument, 1)
+			);
+		}
+	};
+
+
+	var ul_elem = doc_obj.createElement('UL');
+
+	for ( var var_name in obj )
+	{
+		var variable, li_elem;
+		try
+		{
+			variable = obj[var_name];
+
+			li_elem = ul_elem.appendChild(
+				doc_obj.createElement('LI')
+			);
+			span_elem = li_elem.appendChild(
+				doc_obj.createElement('SPAN')
+			);
+			span_elem.appendChild(
+				doc_obj.createTextNode(var_name + " => " + variable)
+			);
+			Util.Event.add_event_listener(span_elem, 'click', function (event) { open_or_close_print_r_ul(event, variable); });
+			//span_elem.onclick = open_or_close_print_r_ul;
+
+			var typeof_variable = typeof(variable);
+			if ( typeof_variable == "object" &&
+				 !( typeof_variable == "string" ||
+					typeof_variable == "boolean" ||
+					typeof_variable == "number" ) )
+			{
+				if ( max_deepness > 1 )
+				{
+					li_elem.appendChild(
+						Util.Object.get_print_r_chunk(variable, doc_obj, win, max_deepness - 1)
+					);
+				}
+			}
+		}
+		catch(e)
+		{
+			// Only stop for fatal errors, because some properties when
+			// accessed will always throw an error, and to die for
+			// all of these would make print_r useless.
+			if ( e.name != 'InternalError' )
+			{
+				ul_elem.appendChild(
+					doc_obj.createElement('LI')
+				).appendChild(
+					doc_obj.createTextNode(var_name + " => [[[Exception thrown: " + e.message + "]]]")
+				);
+			}
+			else
+			{
+				throw e;
+			}
+		}
+	}
+	return ul_elem;
+};
+
+// file Util.OOP.js
+/**
+ * @class Container for methods that allow standard OOP thinking to be
+ * shoehorned into JavaScript, for better or worse.
+ */
+Util.OOP = {};
+
+/**
+ * "Mixes in" an object's properties.
+ * @param	{object}	target	The object into which things will be mixed
+ * @param	{object}	source	The object providing the properties
+ * @type object
+ * @return target
+ */
+Util.OOP.mixin = function(target, source)
+{
+	var names = Util.Object.names(source);
+	for (var i = 0; i < names.length; i++) {
+		target[names[i]] = source[names[i]];
+	}
+	
+	return target;
+}
+
+/**
+ * Sets up inheritance from parent to child. To use:
+ * - Create parent and add parent's methods and properties.
+ * - Create child
+ * - At beginning of child's constructor, call inherits(parent, child)
+ * - Add child's new methods and properties
+ * - To call method foo in the parent: this.superclass.foo.call(this, params)
+ * - Be careful where you use self and this: in inherited methods, self
+ *   will still refer to the superclass, whereas this will refer, properly, to the
+ *   child class. If you must use self, e.g. for event listeners, define self
+ *   only inside methods, not directly inside the constructor. (Note: The existing
+ *   code doesn't follow this advice perfectly; follow this advice, not that code.)
+ *
+ * Changed on 2007-09-13 by EN: Now calls the parent class's constructor! Any
+ * arguments that need to be passed to the constructor can be provided after
+ * the child and parent.
+ *
+ * Inspired by but independent of <http://www.crockford.com/javascript/inheritance.html>.
+ *
+ * The main problem with just doing something like
+ *     child.prototype = new parent();
+ * is that methods inherited from the parent can't set properties accessible
+ * by methods defined in the child.
+ */
+Util.OOP.inherits = function(child, parent)
+{
+	var parent_prototype = null;
+	var nargs = arguments.length;
+	
+	if (nargs < 2) {
+		throw new TypeError('Must provide a child and a parent class.');
+	} else if (nargs == 2) {
+		parent_prototype = new parent;
+	} else {
+		// XXX: Is there really no better way to do this?!
+		//      Something involving parent.constructor maybe?
+		var arg_list = $R(2, nargs).map(function (i) {
+			return 'arguments[' + String(i) + ']';
+		});
+		eval('parent_prototype = new parent(' + arg_list.join(', ') + ')')
+	}
+	
+	Util.OOP.mixin(child, parent_prototype);
+	child.superclass = parent_prototype;
+};
+
+/**
+ * Sets up inheritance from parent to child, but only copies over the elements
+ * in the parent's prototype provided as arguments after the parent class.
+ */
+Util.OOP.swiss = function(child, parent)
+{
+	var parent_prototype = new parent;
+    for (var i = 2; i < arguments.length; i += 1) {
+        var name = arguments[i];
+        child[name] = parent_prototype[name];
+    }
+    return child;
+}; 
 // file Util.Anchor.js
 Util.Anchor = function()
 {
@@ -3189,7 +3559,7 @@ Util.Anchor.create_named_anchor = function(params)
 Util.Block = {
 	/**
 	 * Element is a block-level element.
-	 * @type integer
+	 * @type Number
 	 */
 	BLOCK: 1,
 	
@@ -3201,7 +3571,7 @@ Util.Block = {
 	/**
 	 * Element can contain paragraphs (and, in fact, all inline content should
 	 * be within them).
-	 * @type integer
+	 * @type Number
 	 */
 	PARAGRAPH_CONTAINER: 4,
 	
@@ -3209,28 +3579,34 @@ Util.Block = {
 	 * Inline content nodes should be direct children of this element unless
 	 * multiple paragraphs are desired, in which case it should behave as a
 	 * paragraph container.
-	 * @type integer
+	 * @type Number
 	 */
 	MULTI_PARAGRAPH_CONTAINER: 8,
 	
 	/**
 	 * Directly contains inline content; should not contain paragraphs.
-	 * @type integer
+	 * @type Number
 	 */
 	INLINE_CONTAINER: 16,
 	
 	/**
 	 * Block-level element that may not contain anything.
-	 * @type integer
+	 * @type Number
 	 */
 	EMPTY: 32,
 	
 	/**
 	 * Can exist as either a block-level element or an inline child of a block-
 	 * level element.
-	 * @type integer
+	 * @type Number
 	 */
 	MIXED: 64,
+	
+	/**
+	 * Whitespace is preserved within these elements.
+	 * @type Number
+	 */
+	PREFORMATTED: 128,
 	
 	get_flags: function get_flags(element)
 	{
@@ -3266,6 +3642,11 @@ Util.Block = {
 	is_mixed: function is_mixed(element)
 	{
 		return !!(this.get_flags(element) & Util.Block.MIXED);
+	},
+	
+	is_preformatted: function is_preformatted(element)
+	{
+		return !!(this.get_flags(element) & Util.Block.PREFORMATTED);
 	},
 	
 	/**
@@ -3697,7 +4078,7 @@ Util.Block = {
 				H5: Util.Block.INLINE_CONTAINER,
 				H6: Util.Block.INLINE_CONTAINER,
 				ADDRESS: Util.Block.INLINE_CONTAINER,
-				PRE: Util.Block.INLINE_CONTAINER,
+				PRE: Util.Block.INLINE_CONTAINER | Util.Block.PREFORMATTED,
 
 				TH: Util.Block.MULTI_PARAGRAPH_CONTAINER,
 				TD: Util.Block.MULTI_PARAGRAPH_CONTAINER,
@@ -4898,6 +5279,413 @@ Util.Form.Instructions = function(text)
 			[text]);
 	}
 } 
+// file Util.HTML_Generator.js
+/**
+ * Constructs a new HTML generator.
+ * @class Generates nicely-formatted HTML by traversing the DOM.
+ * @param {Object} [options] generation options
+ * @param {Boolean} [options.xhtml=true] generate XHTML output
+ * @param {Boolean} [options.escape_non_ascii=true]
+ * @param {Boolean} [options.indent_text="\t"]
+ */
+Util.HTML_Generator = function HTMLGenerator(options) {
+	if (!options)
+		options = {};
+	this.xhtml = options.xhtml || true;
+	this.escape_non_ascii = options.escape_non_ascii || true;
+	this.indent_text = options.indent_text || "\t";
+};
+
+/**
+ * Generates HTML.
+ * @param {Node|Node[]} nodes
+ * @return {String} the formatted source
+ */
+Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
+	var gen = this;
+	var pattern = (gen.escape_non_ascii)
+		? /[\x00-\x1F\x80-\uFFFF]/g
+		: /[\x00-\x1F]/g;
+	
+	function clean_text(text) {
+		function html_escape(txt) {
+			var c = txt.charCodeAt(0);
+			if (c == 9 || c == 10 || c == 13)
+				return txt;
+			var entity = Util.HTML_Generator.named_entities[c];
+			return (typeof(entity) == "string")
+				? '&' + entity + ';'
+				: '&#' + c + ';'
+		}
+		
+		return text.replace(pattern, html_escape);
+	}
+	
+	function is_whitespace_irrelevant(node) {
+		var parent = node.parentNode;
+		var parent_is_block = Util.Block.is_block(parent);
+		var results = [false, false];
+		
+		if (parent_is_block) {
+			if (node == node.parentNode.firstChild)
+				results[0] == true;
+			if (node == node.parentNode.lastChild)
+				results[1] == true;
+			
+			if (results[0] && results[1])
+				return results;
+		}
+		
+		if (node.previousSibling && Util.Block.is_block(node.previousSibling))
+			results[0] = true;
+		if (node.nextSibling && Util.Block.is_block(node.nextSibling))
+			results[1] = true;
+		
+		return results;
+	}
+	
+	function make_text(buffer, text_node) {
+		if (!Util.Node.is_text(text_node))
+			throw new TypeError();
+		
+		var text = text_node.nodeValue, orig_text = text, irw;
+		
+		if (!buffer.flagged("preformatted")) {
+			if (text_node == text_node.parentNode.firstChild)
+				text = text.replace(/^[\t\r\n]+/g, '');
+			if (text_node == text_node.parentNode.lastChild)
+				text = text.replace(/[\t\r\n]+$/g, '');
+			text = text.replace(/(\S)[\r\n]+(\S)/g, "$1 $2");
+			text = text.replace(/(\s)[\r\n]+|[\r\n]+(\s)/g, "$1$2");
+			text = text.replace(/[ ][ ]+/g, ' ');
+			
+			irw = is_whitespace_irrelevant(text_node);
+			if (irw[0])
+				text = text.replace(/^[\s\n]+/, '');
+			if (irw[1])
+				text = text.replace(/[\s\n]+$/, '');
+		}
+		
+		text = clean_text(text);
+		if (text.length > 0)
+			buffer.write(text);
+	}
+	
+	function make_comment(buffer, comment_node) {
+		if (comment_node.nodeType != Util.Node.COMMENT_NODE)
+			throw new TypeError();
+		
+		buffer.write('<!--' + clean_text(comment_node.nodeValue) + '-->');
+	}
+	
+	function make_processing_instruction(buffer, pi_node) {
+		if (pi_node.nodeType != Util.Node.PROCESSING_INSTRUCTION_NODE)
+			throw new TypeError();
+		
+		buffer.write('<?' + pi_node.target + ' ' + pi_node.data + '?>');
+	}
+	
+	function make_open_tag(buffer, element, xml_self_close) {
+		if (!Util.Node.is_element(element))
+			throw new TypeError();
+			
+		buffer.write('<', element.nodeName.toLowerCase());
+		
+		Util.Object.enumerate(Util.Element.get_attributes(element, true),
+			function append_attr(name, value) {
+				if (name.charAt(0) == "_")
+					return;
+				buffer.write(' ', name, '="', clean_text(value), '"');
+			}
+		);
+		
+		buffer.write((xml_self_close) ? ' />' : '>');
+	}
+	
+	function make_close_tag(buffer, element) {
+		if (!Util.Node.is_element(element))
+			throw new TypeError();
+			
+		buffer.write('</' + element.nodeName.toLowerCase() + '>');
+	}
+	
+	function make_empty_element(buffer, element) {
+		if (!Util.Node.is_element(element))
+			throw new TypeError();
+			
+		make_open_tag(buffer, element, gen.xhtml);
+	}
+	
+	function make_inline_element(buffer, element) {
+		if (!Util.Node.is_element(element))
+			throw new TypeError();
+			
+		make_open_tag(buffer, element);
+		make_nodes(buffer, element.childNodes);
+		make_close_tag(buffer, element);
+	}
+	
+	function make_block_element(buffer, element) {
+		if (!Util.Node.is_element(element))
+			throw new TypeError();
+		
+		if (!element.hasChildNodes() || buffer.flagged("preformatted")) {
+			make_inline_element(buffer, element);
+			return;
+		}
+		
+		if (buffer.flagged('after_indented_block')) {
+			buffer.end_line();
+		}
+		
+		var block_children = Util.Node.find_children(element, function(node) {
+			return Util.Block.is_block(node);
+		}).length > 0;
+		var child_buffer;
+		
+		make_open_tag(buffer, element);
+		
+		if (block_children) {
+			//buffer.end_line(true);
+			child_buffer = buffer.spawn();
+			make_nodes(child_buffer, element.childNodes);
+			child_buffer.close();
+			buffer.end_line(true);
+		} else {
+			make_nodes(buffer, element.childNodes);
+		}
+		
+		make_close_tag(buffer, element);
+		buffer.end_line();
+		if (block_children)
+			buffer.set_flag('after_indented_block', 'write');
+	}
+	
+	function make_pre_element(buffer, element) {
+		if (!Util.Node.is_element(element))
+			throw new TypeError();
+			
+		buffer.set_flag('preformatted');
+		make_inline_element(buffer, element);
+		buffer.new_line(true);
+		buffer.clear_flag('preformatted');
+	}
+	
+	function make_element(buffer, element) {
+		if (!Util.Node.is_element(element))
+			throw new TypeError();
+			
+		if (Util.Node.is_tag(element, 'PRE'))
+			return make_pre_element(buffer, element);
+		else if (Util.Block.is_block(element))
+			return make_block_element(buffer, element);
+		else if (!element.hasChildNodes() && Util.Element.empty_tag(element))
+			return make_empty_element(buffer, element);
+		else
+			return make_inline_element(buffer, element);
+	}
+	
+	function make_node(buffer, node) {
+		if (!Util.is_number(node.nodeType))
+			throw new TypeError();
+		
+		switch (node.nodeType) {
+			case Util.Node.TEXT_NODE:
+				return make_text(buffer, node);
+			case Util.Node.COMMENT_NODE:
+				return make_comment(buffer, node);
+			case Util.Node.PROCESSING_INSTRUCTION_NODE:
+				return make_processing_instruction(buffer, node);
+			case Util.Node.ELEMENT_NODE:
+				return make_element(buffer, node);
+			case Util.Node.DOCUMENT_NODE:
+				return make_element(buffer, node.documentElement);
+			default:
+				return '';
+		}
+	}
+	
+	function make_nodes(buffer, nodes) {
+		if (!Util.is_enumerable(nodes))
+			throw new TypeError();
+		
+		for (var i = 0; i < nodes.length; i++) {
+			make_node(buffer, nodes[i]);
+		}
+	}
+	
+	var buffer = new Util.HTML_Generator.Buffer(null, this.indent_text);
+	if (!Util.is_enumerable(nodes))
+		nodes = [nodes];
+	make_nodes(buffer, nodes);
+	return buffer.close().read();
+};
+
+Util.HTML_Generator.Buffer = function Buffer(parent, indent_text)
+{
+	this.parent = parent || null;
+	this.depth = (parent) ? parent.depth + 1 : 0;
+	this.lines = [];
+	this.current_line = [];
+	this.indent_text = indent_text || (parent && parent.indent_text) || "\t";
+	this.closed = false;
+	this.active_child = null;
+	this.flags = {
+		'manual': {},
+		'write': {},
+		'flush': {}
+	};
+	
+	if (parent)
+		parent.active_child = this;
+}
+
+Util.OOP.mixin(Util.HTML_Generator.Buffer.prototype, {
+	flags: null,
+	
+	_verify_open: function _verify_buffer_is_open() {
+		if (this.closed) {
+			throw new Error("Buffer is closed!");
+		} else if (this.active_child) {
+			throw new Error("A child buffer is active!");
+		}
+	},
+	
+	_gen_indent: function _buffer_generate_indentation() {
+		var indent = new Array(this.depth);
+		for (var i = 0; i < this.depth; i++)
+			indent[i] = this.indent_text;
+		return indent.join('');
+	},
+	
+	spawn: function spawn_child_buffer() {
+		this.flush();
+		return new Util.HTML_Generator.Buffer(this);
+	},
+	
+	set_flag: function set_buffer_flag(name, cancellation, value) {
+		if (cancellation)
+			cancellation = cancellation.toLowerCase();
+		else
+			cancellation = 'manual';
+		
+		if (typeof(name) != 'string') {
+			throw new Error('Illegal buffer flag name "' + name + '".');
+		} else if (!cancellation in this.flags) {
+			throw new Error('Unknown flag cancellation "' + cancellation +
+				'".');
+		}
+		
+		this.clear_flag(name);
+		this.flags[cancellation][name] = value || true;
+		return this;
+	},
+	
+	get_flag: function get_buffer_flag(name) {
+		for (var c in this.flags) {
+			var value = this.flags[c][name];
+			if (typeof(value) != 'undefined')
+				return value;
+		}
+		
+		return undefined;
+	},
+	
+	clear_flag: function clear_buffer_flag(name) {
+		for (var c in this.flags) {
+			delete this.flags[c][name];
+		}
+	},
+	
+	flagged: function is_buffer_flagged(name) {
+		return typeof(this.get_flag(name)) != 'undefined';
+	},
+	
+	write: function write_to_buffer(text) {
+		var i, arg;
+		
+		this._verify_open();
+		
+		for (var flag_name in this.flags.write)
+			delete this.flags.write[flag_name];
+		
+		for (i = 0; i < arguments.length; i++) {
+			arg = String(arguments[i]);
+			if (arg.length > 0)
+				this.current_line.push(arg);
+		}
+		
+		return this;
+	},
+	
+	flush: function flush_buffer(always_flush) {
+		var line;
+		
+		this._verify_open();
+		
+		for (var flag_name in this.flags.flush)
+			delete this.flags.flush[flag_name];
+		
+		if (this.current_line.length == 0 && !always_flush) {
+			return this;
+		}
+		
+		line = this._gen_indent() + this.current_line.join('');
+		this.lines.push(line);
+		this.current_line = [];
+		return this;
+	},
+	
+	end_line: function buffer_end_line(only_if_content) {
+		return this.flush(!only_if_content);
+	},
+	
+	close: function close_buffer() {
+		this.flush(); // calls _verify_open
+		this.closed = true;
+		if (this.parent) {
+			if (this.parent.closed) // should never happen, but be safe
+				throw new Error("Parent buffer is closed!");
+			this.parent.lines.append(this.lines);
+			this.parent.active_child = null;
+		}
+		return this;
+	},
+	
+	read: function read_buffer() {
+		if (!this.closed) {
+			throw new Error("Cannot read buffer contents: buffer still open.");
+		}
+		return this.lines.join("\n");
+	}
+});
+
+Util.HTML_Generator.named_entities = {
+	'38': 'amp', '60': 'lt', '62': 'gt', '127': '#127',
+	'160': 'nbsp', '161': 'iexcl', '162': 'cent', '163': 'pound', '164':
+	'curren', '165': 'yen', '166': 'brvbar', '167': 'sect', '168': 'uml', '169':
+	'copy', '170': 'ordf', '171': 'laquo', '172': 'not', '173': 'shy', '174':
+	'reg', '175': 'macr', '176': 'deg', '177': 'plusmn', '178': 'sup2', '179':
+	'sup3', '180': 'acute', '181': 'micro', '182': 'para', '183': 'middot',
+	'184': 'cedil', '185': 'sup1', '186': 'ordm', '187': 'raquo', '188':
+	'frac14', '189': 'frac12', '190': 'frac34', '191': 'iquest', '192':
+	'Agrave', '193': 'Aacute', '194': 'Acirc', '195': 'Atilde', '196': 'Auml',
+	'197': 'Aring', '198': 'AElig', '199': 'Ccedil', '200': 'Egrave', '201':
+	'Eacute', '202': 'Ecirc', '203': 'Euml', '204': 'Igrave', '205': 'Iacute',
+	'206': 'Icirc', '207': 'Iuml', '208': 'ETH', '209': 'Ntilde', '210':
+	'Ograve', '211': 'Oacute', '212': 'Ocirc', '213': 'Otilde', '214': 'Ouml',
+	'215': 'times', '216': 'Oslash', '217': 'Ugrave', '218': 'Uacute', '219':
+	'Ucirc', '220': 'Uuml', '221': 'Yacute', '222': 'THORN', '223': 'szlig',
+	'224': 'agrave', '225': 'aacute', '226': 'acirc', '227': 'atilde', '228':
+	'auml', '229': 'aring', '230': 'aelig', '231': 'ccedil', '232': 'egrave',
+	'233': 'eacute', '234': 'ecirc', '235': 'euml', '236': 'igrave', '237':
+	'iacute', '238': 'icirc', '239': 'iuml', '240': 'eth', '241': 'ntilde',
+	'242': 'ograve', '243': 'oacute', '244': 'ocirc', '245': 'otilde', '246':
+	'ouml', '247': 'divide', '248': 'oslash', '249': 'ugrave', '250': 'uacute',
+	'251': 'ucirc', '252': 'uuml', '253': 'yacute', '254': 'thorn', '255':
+	'yuml', '8364': 'euro'
+};
+
 // file Util.HTML_Parser.js
 /**
  * Declares instance variables.
@@ -5790,318 +6578,6 @@ Util.Lock = function(name)
 		active_thread.number = 0;
 	}
 } 
-// file Util.OOP.js
-/**
- * @class Container for methods that allow standard OOP thinking to be
- * shoehorned into JavaScript, for better or worse.
- */
-Util.OOP = {};
-
-/**
- * "Mixes in" an object's properties.
- * @param	{object}	target	The object into which things will be mixed
- * @param	{object}	source	The object providing the properties
- * @type object
- * @return target
- */
-Util.OOP.mixin = function(target, source)
-{
-	var names = Util.Object.names(source);
-	for (var i = 0; i < names.length; i++) {
-		target[names[i]] = source[names[i]];
-	}
-	
-	return target;
-}
-
-/**
- * Sets up inheritance from parent to child. To use:
- * - Create parent and add parent's methods and properties.
- * - Create child
- * - At beginning of child's constructor, call inherits(parent, child)
- * - Add child's new methods and properties
- * - To call method foo in the parent: this.superclass.foo.call(this, params)
- * - Be careful where you use self and this: in inherited methods, self
- *   will still refer to the superclass, whereas this will refer, properly, to the
- *   child class. If you must use self, e.g. for event listeners, define self
- *   only inside methods, not directly inside the constructor. (Note: The existing
- *   code doesn't follow this advice perfectly; follow this advice, not that code.)
- *
- * Changed on 2007-09-13 by EN: Now calls the parent class's constructor! Any
- * arguments that need to be passed to the constructor can be provided after
- * the child and parent.
- *
- * Inspired by but independent of <http://www.crockford.com/javascript/inheritance.html>.
- *
- * The main problem with just doing something like
- *     child.prototype = new parent();
- * is that methods inherited from the parent can't set properties accessible
- * by methods defined in the child.
- */
-Util.OOP.inherits = function(child, parent)
-{
-	var parent_prototype = null;
-	var nargs = arguments.length;
-	
-	if (nargs < 2) {
-		throw new TypeError('Must provide a child and a parent class.');
-	} else if (nargs == 2) {
-		parent_prototype = new parent;
-	} else {
-		// XXX: Is there really no better way to do this?!
-		//      Something involving parent.constructor maybe?
-		var arg_list = $R(2, nargs).map(function (i) {
-			return 'arguments[' + String(i) + ']';
-		});
-		eval('parent_prototype = new parent(' + arg_list.join(', ') + ')')
-	}
-	
-	Util.OOP.mixin(child, parent_prototype);
-	child.superclass = parent_prototype;
-};
-
-/**
- * Sets up inheritance from parent to child, but only copies over the elements
- * in the parent's prototype provided as arguments after the parent class.
- */
-Util.OOP.swiss = function(child, parent)
-{
-	var parent_prototype = new parent;
-    for (var i = 2; i < arguments.length; i += 1) {
-        var name = arguments[i];
-        child[name] = parent_prototype[name];
-    }
-    return child;
-}; 
-// file Util.Object.js
-/**
- * Does nothing.
- *
- * @class Container for functions relating to objects.
- */
-Util.Object = function()
-{
-};
-
-/**
- * Returns the names of an object's properties as an array. Ignores properties
- * found on any object.
- */
-Util.Object.names = function(obj)
-{
-	var names = [];
-	var bare = {};
-	
-	// JavaScript doesn't really have a hash or dictionary type, only a
-	// generic object type. This is a problem because the variables object
-	// we're given can have properties that are intrinsic to objects which
-	// shouldn't be added to the query string. To work around this, we
-	// create a bare object and ignore any properties in variables that are
-	// also found on the bare object.
-	
-	for (var name in obj) {
-		if (name in bare)
-			continue;
-		names.push(name);
-	}
-	
-	return names;
-}
-
-/**
- * Calls the given function once per property in the object. The function
- * should accept the property's name as the first argument and its value as
- * the second.
- */
-Util.Object.enumerate = function(obj, func, thisp)
-{
-	if (!thisp)
-		var thisp = null;
-	
-	Util.Object.names(obj).each(function (name)
-	{
-		func.call(thisp, name, obj[name]);
-	});
-}
-
-/**
- * Clones (creates a copy of) the given object.
- */
-Util.Object.clone = function(some_object)
-{
-	var new_obj;
-	
-	if (!some_object || typeof(some_object) != 'object')
-		return some_object;
-	
-	try {
-		new_obj = new some_object.constructor();
-	} catch (e) {
-		new_obj = new Object();
-	}
-	
-	for (var name in some_object) {
-		new_obj[name] = some_object[name];
-	}
-	
-	return new_obj;
-}
-
-/**
- * Determines if two objects are equal.
- */
-Util.Object.equal = function(a, b)
-{
-	if (typeof(a) != 'object') {
-		return (typeof(b) == 'object')
-			? false
-			: (a == b);
-	} else if (typeof(b) != 'object') {
-		return false;
-	}
-	
-	seen = {};
-	
-	for (var name in a) {
-		if (!(name in b && Util.Object.equal(a[name], b[name])))
-			return false;
-		seen[name] = true;
-	}
-	
-	for (var name in b) {
-		if (!(name in seen))
-			return false;
-	}
-	
-	return true;
-}
-
-/**
- * Pops up a window whose contents are generated by get_print_r_chunk, q.v.
- *
- * @param	obj				the object to print_r
- * @param	max_deepness	(optional) how many levels of parameters to automatically open. Defaults to 1.
- * @return					a UL element which has as descendents a representation of the given object
- */
-Util.Object.print_r = function(obj, max_deepness)
-{
-	var alert_win = new Util.Window;
-	alert_win.open('', '_blank', 'status=1,scrollbars=1,resizable,width=600,height=300');
-	var print_r_chunk = Util.Object.get_print_r_chunk(obj, alert_win.document, alert_win, max_deepness);
-	alert_win.body.appendChild(print_r_chunk);
-};
-
-/**
- * Generates a UL element which has as descendents a representation of
- * the given object. The representation is similar to that exposed by
- * PHP's print_r or pray.
- *
- * @param	obj				the object to print_r
- * @param	doc_obj			(optional) the document object with which to create the print_r chunk. 
- *                          Defaults to the document refered to by <code>document</code>.
- * @param	max_deepness	(optional) how many levels of parameters to automatically open. Defaults to 1.
- * @return					a UL element which has as descendents a representation of the given object
- */
-Util.Object.get_print_r_chunk = function(obj, doc_obj, win, max_deepness)
-{
-	if ( doc_obj == null )
-	{
-		doc_obj = document;
-	}
-
-	if ( max_deepness == null )
-	{
-		max_deepness = 1;
-	}
-
-
-	/**
-	 * Displays or hides the properties of a property of an object being
-	 * print_r'd. Should be called only when a click event is fired by the
-	 * appropriate element in the print_r window.
-	 *
-	 * @param	event	The event object passed onclick
-	 */
-	var open_or_close_print_r_ul = function(event, variable)
-	{
-		event = event == null ? win.event : event;
-		var span_elem = event.currentTarget == null ? event.srcElement : event.currentTarget;
-
-		// If open, close
-		if ( span_elem.nextSibling != null )
-		{
-			//alert('open, so close (nextSibling =' + span_elem.nextSibling);
-			while ( span_elem.nextSibling != null )
-				span_elem.parentNode.removeChild(span_elem.nextSibling);
-		}
-		// Else (if closed), open
-		else
-		{
-			//alert('closed, so open (variable:' + variable + '); span_elem:' + span_elem);
-			span_elem.parentNode.appendChild(
-				Util.Object.get_print_r_chunk(variable, span_elem.ownerDocument, 1)
-			);
-		}
-	};
-
-
-	var ul_elem = doc_obj.createElement('UL');
-
-	for ( var var_name in obj )
-	{
-		var variable, li_elem;
-		try
-		{
-			variable = obj[var_name];
-
-			li_elem = ul_elem.appendChild(
-				doc_obj.createElement('LI')
-			);
-			span_elem = li_elem.appendChild(
-				doc_obj.createElement('SPAN')
-			);
-			span_elem.appendChild(
-				doc_obj.createTextNode(var_name + " => " + variable)
-			);
-			Util.Event.add_event_listener(span_elem, 'click', function (event) { open_or_close_print_r_ul(event, variable); });
-			//span_elem.onclick = open_or_close_print_r_ul;
-
-			var typeof_variable = typeof(variable);
-			if ( typeof_variable == "object" &&
-				 !( typeof_variable == "string" ||
-					typeof_variable == "boolean" ||
-					typeof_variable == "number" ) )
-			{
-				if ( max_deepness > 1 )
-				{
-					li_elem.appendChild(
-						Util.Object.get_print_r_chunk(variable, doc_obj, win, max_deepness - 1)
-					);
-				}
-			}
-		}
-		catch(e)
-		{
-			// Only stop for fatal errors, because some properties when
-			// accessed will always throw an error, and to die for
-			// all of these would make print_r useless.
-			if ( e.name != 'InternalError' )
-			{
-				ul_elem.appendChild(
-					doc_obj.createElement('LI')
-				).appendChild(
-					doc_obj.createTextNode(var_name + " => [[[Exception thrown: " + e.message + "]]]")
-				);
-			}
-			else
-			{
-				throw e;
-			}
-		}
-	}
-	return ul_elem;
-};
-
 // file Util.RSS.js
 /**
  * @class Home to RSS-related facilities.
@@ -7810,7 +8286,7 @@ Util.Request = function(url, options)
 				try {
 					return new ActiveXObject('Microsoft.XMLHTTP');
 				} catch (g) {
-					throw 'Util.Request: Unable to create a HTTP request object!';
+					throw new Util.Unsupported_Error('XMLHttpRequest');
 				}
 			}
 		}
@@ -7941,7 +8417,8 @@ Util.Request.Default_Options = {
 };
 
 Util.Request.Events =
-	['uninitialized', 'ready', 'send', 'interactive', 'complete']; 
+	['uninitialized', 'ready', 'send', 'interactive', 'complete'];
+
 // file Util.Select.js
 /**
  * @constructor Nothing
@@ -11823,9 +12300,8 @@ UI.Clipboard_Helper = function ClipboardHelper()
 		var key;
 		if (!self._loki.owner_window.GeckoClipboard) {
 			key = ((Util.Browser.Mac) ? '⌘' : 'Ctrl-') + accel;
-			alert('Unable to access your system\'s clipboard. Please choose ' +
-				command + ' from your browser\'s Edit menu, or press ' +
-				key + '.');
+			alert("In your browser, you must either choose " + command + " " +
+				"from the Edit menu, or press " + key + ".");
 			throw new Util.Unsupported_Error('programmatic clipboard access');
 		}
 	}
@@ -12164,7 +12640,12 @@ UI.Copy_Keybinding = function()
 {
 	Util.OOP.inherits(this, UI.Keybinding);
 
-	this.test = function(e) { return this.matches_keycode(e, 67) && e.ctrlKey; }; // Ctrl-C
+	this.test = function(e) {
+		if (Util.Browser.Gecko && Util.Browser.Windows && !this.loki.owner_window.GeckoClipboard)
+			return false;
+		return this.matches_keycode(e, 67) && e.ctrlKey;
+	}; // Ctrl-C
+	
 	this.action = function() 
 	{
 		// try-catch so that if anything should go wrong, copy
@@ -12227,7 +12708,11 @@ UI.Cut_Keybinding = function()
 {
 	Util.OOP.inherits(this, UI.Keybinding);
 
-	this.test = function(e) { return this.matches_keycode(e, 88) && e.ctrlKey; }; // Ctrl-X
+	this.test = function(e) {
+		if (Util.Browser.Gecko && Util.Browser.Windows && !this.loki.owner_window.GeckoClipboard)
+			return false;
+		return this.matches_keycode(e, 88) && e.ctrlKey;
+	}; // Ctrl-X
 	this.action = function() 
 	{
 		// try-catch so that if anything should go wrong, cut
@@ -18233,7 +18718,11 @@ UI.Paste_Keybinding = function()
 {
 	Util.OOP.inherits(this, UI.Keybinding);
 
-	this.test = function(e) { return this.matches_keycode(e, 86) && e.ctrlKey; }; //Ctrl-V
+	this.test = function(e) {
+		if (Util.Browser.Gecko && Util.Browser.Windows && !this.loki.owner_window.GeckoClipboard)
+			return false;
+		return this.matches_keycode(e, 86) && e.ctrlKey;
+	}; //Ctrl-V
 	this.action = function() 
 	{
 		// try-catch so that if anything should go wrong, paste
@@ -20475,40 +20964,29 @@ UI.Loki = function Loki()
 	var _menugroups = [];
 	var _keybindings = [];
 	var _editor_domain;
+	var _html_generator = null;
 
 	var self = this;
 
 
 	/**
-	 * Returns the HTML of the document currently being edited.
+	 * Returns the (cleaned-up) HTML of the document currently being edited.
 	 *
-	 * @return	string	the HTML of the document currently being edited.
+	 * @returns {String} the HTML of the document currently being edited.
 	 */
 	this.get_html = function()
 	{
-		// For some reason, this doesn't work (clean still cleans
-		// _body, not clone) ... but it's not really necessary, either
-// 		var clone = _body.cloneNode(true);
-// 		UI.Clean.clean(clone, _settings);
-// 		return clone.innerHTML;
-
+		var html;
+		
 		_unmassage_body();
 		UI.Clean.clean(_body, _settings);
-		html = _body.innerHTML;
+		if (_html_generator)
+			html = _html_generator.generate(_body.childNodes);
+		else
+			html = _body.innerHTML;
 		html = UI.Clean.clean_HTML(html, _settings);
 		_massage_body();
 		return html;
-
-/*
-		// added NF 10/21 for TinyMCE
-		var control = new TinyMCEControl();
-		control.init(_window, _iframe);
-		var tinyMCE = new TinyMCE();
-		tinyMCE.init(_window, control);
-
-		tinyMCE._cleanupHTML(tinyMCE.selectedInstance, tinyMCE.contentWindow.document, null, tinyMCE.contentWindow.document.body, null, false);
-		//TinyMCE.prototype._cleanupHTML = function(inst, doc, config, element, visual, on_save) 
-*/
 	};
 
 	this.get_dirty_html = function()
@@ -20675,6 +21153,21 @@ UI.Loki = function Loki()
 		
 		if (!_settings.allowable_inline_styles) {
 			_settings.allowable_inline_styles = default_allowed_styles();
+		}
+		
+		if (!_settings.html_generator || _settings.html_generator == 'default')
+			_settings.html_generator = 'browser';
+		else
+			_settings.html_generator = _settings.html_generator.toLowerCase();
+			
+		if (_settings.html_generator == 'loki') {
+			_html_generator = new Util.HTML_Generator({
+				xhtml: _settings.use_xhtml || false,
+				indent_text: "    "
+			});
+		} else if (_settings.html_generator != 'browser') {
+			throw new Error('Unknown HTML generator "' +
+				_settings.html_generator + '"; cannot instantiate Loki.');
 		}
 		
 		UI.Clipboard_Helper._setup(_settings.base_uri);
@@ -21304,27 +21797,15 @@ UI.Loki = function Loki()
 		var paragraph_helper = (new UI.Paragraph_Helper).init(self);
 		Util.Event.add_event_listener(_document, 'keypress', function(event)
 		{
-			event = event == null ? _window.event : event;
-			paragraph_helper.possibly_paragraphify();
-		});
-
-		Util.Event.add_event_listener(_document, 'keypress', function(event)
-		{
-			event = event == null ? _window.event : event;
-			if ( !Util.Browser.IE ) // XXX bad
-			{
+			if (!event)
+				event = window.event;
+			if (!event.metaKey && !event.ctrlKey)
+				paragraph_helper.possibly_paragraphify();
+			if (Util.Browser.IE) {
+				return Util.Fix_Keys.fix_enter_ie(event, _window, self);
+			} else {
 				Util.Fix_Keys.fix_delete_and_backspace(event, _window);
 				tinyMCE.handleEvent(event);
-			}
-		});
-
-		// XXX make this a keybinding instead?
-		Util.Event.add_event_listener(_document, 'keypress', function(event)
-		{
-			event = event == null ? _window.event : event;
-			if ( Util.Browser.IE ) // XXX bad
-			{
-				return Util.Fix_Keys.fix_enter_ie(event, _window, self);
 			}
 		});
 
@@ -21549,19 +22030,17 @@ UI.Loki = function Loki()
 		// return value indicates whether to continue bubbling of event or not
 		function fire_keybindings(event)
 		{
-			for ( var i = 0; i < _keybindings.length; i++ )
-			{
-				if ( _keybindings[i].test(event) )
-				{
-					// return the value of action, so the keybinding can
-					// choose not to cancel the browser's default event handler
-					var ret_value = _keybindings[i].action();
-					if ( ret_value === true || ret_value === false )
-						return ret_value;
-					else
-						return false; // don't bubble
+			var i, keybinding, length = _keybindings.length;
+			for (i = 0; i < length; ++i) {
+				keybinding = _keybindings[i];
+				if (keybinding.test(event)) {
+					var should_bubble = keybinding.action();
+					return (typeof(should_bubble) == "boolean")
+						? should_bubble
+						: false; // don't bubble
 				}
 			}
+			
 			return true; // bubble
 		};
 
@@ -21571,30 +22050,25 @@ UI.Loki = function Loki()
 
 		// We need to listen for different key events for IE and Gecko,
 		// because their default actions are on different events.
-		if ( Util.Browser.IE ) // IE // XXX: hack
-		{
-			Util.Event.add_event_listener(_document, 'keydown', function(event) 
-			{ 
-				event = event == null ? _window.event : event;
-				var bubble = fire_keybindings(event);
-				if ( !bubble )
-				{
+		var firer, event_name;
+		if (Util.Browser.IE) {
+			event_name = 'keydown';
+			firer = function ie_fire_keybindings(event) {
+				if (!fire_keybindings(event)) {
 					event.cancelBubble = true;
 					return Util.Event.prevent_default(event);
 				}
-			});
+				return true;
+			};
+		} else {
+			event_name = 'keypress';
+			firer = function gecko_fire_keybindings(event) {
+				return (fire_keybindings(event))
+					? true
+					: Util.Event.prevent_default(event);
+			};
 		}
-		else // Gecko
-		{
-			Util.Event.add_event_listener(_document, 'keypress', function(event) 
-			{ 
-				var bubble = fire_keybindings(event);
-				if ( !bubble )
-				{
-					return Util.Event.prevent_default(event);
-				}
-			});
-		}
+		Util.Event.observe(_document, event_name, firer);
 	};
 
 	var _init_menugroups = function()
@@ -22004,7 +22478,7 @@ var Loki = {
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0rc7",
+	version: "2.0rc8-pl2",
 	
 	/** @private */
 	_pending: [],

@@ -71,6 +71,7 @@ class Loki2
 	var $_allowable_tags = null;
 	var $_allowable_inline_styles = null;
 	var $_external_script_path = null;
+	var $_html_generator = null;
 	var $_document_style_sheets = array();
 
 	/**
@@ -165,6 +166,16 @@ class Loki2
 				$this->_document_style_sheets[] = $path;
 			}
 		}
+	}
+	
+	/**
+	 * Sets the HTML generator to use with Loki.
+	 * @param string $generator the HTML generator to use
+	 * @return void
+	 */
+	function set_html_generator($generator)
+	{
+		$this->_html_generator = $generator;
 	}
 
 	/**
@@ -418,6 +429,8 @@ class Loki2
 			$s->allowable_tags = $this->_allowable_tags;
 		if ($this->_allowable_inline_styles)
 			$s->allowable_inline_styles = $this->_allowable_inline_styles;
+		if ($this->_html_generator)
+			$s->html_generator = $this->_html_generator;
 		
 		return $s;
 	}
