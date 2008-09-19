@@ -12,7 +12,7 @@ class miniEventsModule extends EventsModule
 	var $show_months = false;
 	var $snap_to_nearest_view = false;
 	var $events_page;
-	var $events_page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','event_slot_registration');
+	var $events_page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','event_slot_registration','events_archive');
 	var $list_date_format = 'D. M. j';
 	var $show_calendar_grid = false;
 	
