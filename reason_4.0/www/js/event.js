@@ -22,7 +22,11 @@ freqState["yearly"] = 'year(s)';
 $(document).ready(function()
 {
 	hide_fields(); // hide the fields to start with	
-	$("select#recurrenceElement").change(function()
+	selectElm = $("select#recurrenceElement");
+	update_display(selectElm);
+	update_radio_buttons();
+
+	$(selectElm).change(function()
 	{
 		update_display(this);
 		update_radio_buttons();
