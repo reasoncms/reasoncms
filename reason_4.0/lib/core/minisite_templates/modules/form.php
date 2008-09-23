@@ -106,7 +106,8 @@
 				}
 				else trigger_error('The forms module was unable to load a model - the model_filename in get_form_model is ' . $model_filename, FATAL);
 				$model_name = $GLOBALS[ '_form_model_class_names' ][ basename($model_filename, '.php')];		
- 				$model = new $model_name($this);
+ 				$model = new $model_name();
+ 				$model->init_from_module($this);
  				$this->form_model =& $model;
  			}
  			return $this->form_model;
