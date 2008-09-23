@@ -43,6 +43,8 @@ class formUpgrader
 			  'email_link' => 
 			    array('db_type' => 'enum("yes","no")'),
 			  'email_data' =>
+			    array('db_type' => 'enum("yes","no") DEFAULT "yes"'),
+			  'email_empty_fields' =>
 			    array('db_type' => 'enum("yes","no") DEFAULT "yes"')); // lets preserve old behavior
 		
 	//type_to_default_view
@@ -305,6 +307,7 @@ Reason 4 Beta 8 will expose more of the new functionality to site administrators
 <li>A form can allow multiple editable submissions from a single user</li>
 <li>Forms can be set to e-mail the submitter</li>
 <li>Forms can be set to e-mail data, a link to the form data (great for more secure forms), or both</li>
+<li>Forms can be set to not e-mail empty fields</li>
 <li>Administrators can develop and choose custom views for a particular thor form.</li>
 <li>Thor tables now have both a last_modified and date_created field - date_created used to function like a last_modified</li>
 </ul>
@@ -316,6 +319,7 @@ Reason 4 Beta 8 will expose more of the new functionality to site administrators
 <li>Adds email_submitter to the form entity table.</li>
 <li>Adds email_link to the form entity table.</li>
 <li>Adds email_data to the form entity table.</li>
+<li>Adds email_empty_fields to the form entity table.</li>
 <li>Adds thor_view to the form entity table.</li>
 <li>Create the authenticated group - a group comprised of people with netids, it it does not exist</li>
 <li>Modifies pages using form_force_login page type to be restricted to users with a netid.</li>
