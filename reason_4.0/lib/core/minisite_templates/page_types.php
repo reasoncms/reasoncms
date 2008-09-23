@@ -893,6 +893,9 @@
 		'random_news_sub_nav' => array(
 			'sub_nav'=>'news2_mini_random',
 		),
+		'random_sidebar_images' => array(
+			'sidebar' => array('module' => 'image_sidebar', 'num_to_display' => 3, 'caption_flag' => false, 'rand_flag' => true)
+		),
 		'related_policies' => array(
 			'main_post' => 'policy_related',
 		),
