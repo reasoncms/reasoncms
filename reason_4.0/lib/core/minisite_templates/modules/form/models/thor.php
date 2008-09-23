@@ -136,6 +136,13 @@ class ThorFormModel extends DefaultFormModel
 		$value = $form->get_value('email_link');
 		return ($value == 'yes');
 	}
+
+	function should_email_empty_fields()
+	{
+		$form =& $this->get_form_entity();
+		$value = $form->get_value('email_empty_fields');
+		return ($value == 'yes');
+	}
 	
 	function should_email_data()
 	{
@@ -157,7 +164,7 @@ class ThorFormModel extends DefaultFormModel
 		$show_submitted_data = $form->get_value('show_submitted_data');
 		return ($show_submitted_data == 'yes');
 	}
-	
+
 	function should_display_return_link()
 	{
 		$form =& $this->get_form_entity();
@@ -165,6 +172,24 @@ class ThorFormModel extends DefaultFormModel
 		return ($display_return_link == 'yes');
 	}
 	
+	function set_form_id_if_valid($form_id)
+	{
+		if ($this->form_id_is_valid($form_id)) $this->set_form_id($form_id);
+	}
+	
+	function set_spoofed_netid_if_allowed($requested_netid = false)
+	{
+		$netid = reason_check_authentication();
+		if (!empty($requested_netid) && !empty($netid) && ($requested_netid != $netid))
+		{
+			$user_id = get_user_id($netid);
+			if (reason_user_has_privs($user_id, 'pose_as_other_user'))
+			{
+				$this->set_user_netid($requested_netid);
+			}
+		}
+	}
+			
 	/**
 	 * Does the following:
 	 *
@@ -194,7 +219,6 @@ class ThorFormModel extends DefaultFormModel
 		// consider redirect cases
 		$user_netid = $this->get_user_netid();
 		$user_submissions = (!empty($user_netid)) ? $this->get_values_for_user($user_netid) : false;
-		
 		
 		// redirect case 1 - user logged in, editable form, multiples not allowed, valid row exists
 		if ($this->is_editable() && !$this->form_allows_multiple() && !empty($user_submissions))
@@ -323,15 +347,25 @@ class ThorFormModel extends DefaultFormModel
 	
 	function &get_top_links()
 	{
-		if (!$this->user_requested_admin_view() && $this->user_has_administrative_access())
+		if ($this->admin_view_is_available())
 		{
-			$link['Enter administrative view'] = carl_construct_link(array('form_admin_view' => 'true'), array('textonly', 'netid'));
+			if (!$this->user_requested_admin_view() && $this->user_has_administrative_access())
+			{
+				$link['Enter administrative view'] = carl_construct_link(array('form_admin_view' => 'true'), array('textonly', 'netid'));
+			}
+			elseif ($this->user_requested_admin_view() && $this->user_has_administrative_access())
+			{
+				$link['Exit administrative view'] = carl_construct_link(array('form_admin_view' => ''), array('textonly', 'netid'));
+			}	
 		}
-		elseif ($this->user_requested_admin_view() && $this->user_has_administrative_access())
-		{
-			$link['Exit administrative view'] = carl_construct_link(array('form_admin_view' => ''), array('textonly', 'netid'));
-		}
+		else $link = array();
 		return $link;
+	}
+	
+	function admin_view_is_available()
+	{
+		$form =& $this->get_form_entity();
+		return ($this->should_save_form_data() || $this->get_values());		
 	}
 	
 	function &get_values_for_save(&$disco_obj)
@@ -468,20 +502,6 @@ class ThorFormModel extends DefaultFormModel
 			}
 		}
 	}
-	
-// 	function &get_disco_object()
-// 	{
-// 		if (!isset($this->_disco_obj))
-// 		{
-// 			reason_include_once('minisite_templates/modules/form/views/thor/default.php');
-// 			$thor_core =& $this->get_thor_core_object();
-// 			$netid = $this->get_user_netid();
-// 			$this->_disco_obj = new DefaultThorForm();
-// 			$this->_disco_obj->set_thor_core($thor_core);
-// 			$this->_disco_obj->set_user_netid($netid);
-// 		}	
-// 		return $this->_disco_obj;
-// 	}
 		
 	function &get_disco_admin_object()
 	{
@@ -565,6 +585,16 @@ class ThorFormModel extends DefaultFormModel
   			else $this->_form = false;
   		}
   		return $this->_form;
+	}
+	
+	function &get_values()
+	{
+		if (!isset($this->_values))
+		{
+			$thor_core =& $this->get_thor_core_object();
+			$this->_values = $thor_core->get_rows();
+		}
+		return $this->_values;
 	}
 	
 	function &get_values_for_user()
@@ -657,6 +687,7 @@ class ThorFormModel extends DefaultFormModel
 		$to = (is_array($to)) ? implode(",", $to) : $to;
 		if (strlen(trim($to)) > 0)
 		{
+			if (!$this->should_email_empty_fields()) $messages['all']['hide_empty_values'] = true;
 			if (isset($options['origin_link'])) $messages['all']['form_origin_link'] = $options['origin_link'];
 			if (isset($options['access_link'])) $messages['all']['form_access_link'] = $options['access_link'];
 			$messages['all']['form_title'] = (isset($options['header'])) ? $options['header'] : $form->get_value('name');
@@ -946,6 +977,10 @@ class ThorFormModel extends DefaultFormModel
 	
 	function set_user_requested_admin_view($boolean)
 	{
+		if ($boolean == true)
+		{
+			if ($this->admin_view_requires_login()) reason_require_authentication();
+		}
 		$this->_user_requested_admin_view = $boolean;
 	}
 	

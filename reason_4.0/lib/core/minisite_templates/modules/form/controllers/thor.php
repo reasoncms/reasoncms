@@ -41,22 +41,30 @@
 	 * 10. get_unauthorized_header_html 	// the header of the unauthorized message
 	 * 11. get_unauthorized_html 			// the body of the unauthorized message after the header
 	 *
-	 * Overloadable for major changes - just define the method in the view - more complicated (these may include calls to the html methods above):
+	 * Overloadable for major changes - just overload the core init and run methods in the view.
 	 *
-	 * 1. init_admin_view
-	 * 2. init_form_complete_view
-	 * 3. init_summary_view
-	 * 4. init_form_view
-	 * 5. init_unauthorized_view
-	 * 6. run_admin_view
-	 * 7. run_form_complete_view
-	 * 8. run_summary_view
-	 * 9. run_form_view
-	 * 10. run_unauthorized_view
+	 * This approach is more complicated, and these may include calls to the html methods above:
+	 *
+	 * 1. setup_model
+	 * 2. init_admin_view
+	 * 3. init_form_complete_view
+	 * 4. init_summary_view
+	 * 5. init_form_view
+	 * 6. init_unauthorized_view
+	 * 7. run_admin_view
+	 * 8. run_form_complete_view
+	 * 9. run_summary_view
+	 * 10. run_form_view
+	 * 11. run_unauthorized_view
+     *
+     * You can even depart from the standard init and run methods by defining a method in the view that provides the init and/or run method.
+     * 
+     * 1. get_init_method
+     * 2. get_run_method
      *
 	 * This allows for basically the whole framework to be extended by the form view, though this isn't necessarily the best approach.
 	 *
-	 * More involved modules based upon thor forms could use of a custom page type that specifies explicitly a model, view, and controller. 
+	 * More involved modules based upon thor forms should probably use a custom page type that specifies explicitly a model, view, and controller. 
 	 *
 	 * @author Nathan White
 	 *
@@ -71,46 +79,39 @@
 		/**
 		 * The ThorDefaultFormController init method does the following:
 		 *
-		 * 1. Setup the model based upon user input - including spoofed netids for administrators
-		 * 2. Setup the view by asking the model for the view selected in the content manager
-		 * 3. Invoke the appropriate init method (admin, form, or unauthorized)
+		 * 1. Runs a method to setup netid spoofing
+		 * 2. Runs the setup model method, which typically provides info to the model based upon request variables
+		 * 3. Invoke the appropriate init method obtained with the get_method_name method
 		 */
 		function init( )
 		{
-			// spoof the netid if it is allowed!
-			if (THIS_IS_A_DEVELOPMENT_REASON_INSTANCE) $this->_set_spoofed_netid_if_allowed();
-			
+			$this->check_view_and_invoke_method('setup_model');
+			$this->check_view_and_invoke_method($this->check_view_and_invoke_method('get_init_method'));
+		}
+		
+		/**
+		 * Returns the name of the main init method.
+		 *
+		 * @return string name of init method
+		 */
+		function get_init_method()
+		{		
+			return $this->_get_mode_with_prefix('init_');
+		}
+		
+		/**
+		 * Setup the model according to request variables
+		 */
+		function setup_model()
+		{
 			// setup the model according to parameters
 			$model =& $this->get_model();
-			if ($this->admin_view_requested() && $model->admin_view_requires_login()) reason_require_authentication();
+			$request =& $this->get_request();
+			if ($this->user_provided_netid()) $model->set_spoofed_netid_if_allowed($this->request['netid']);
 			if ($this->admin_view_requested()) $model->set_user_requested_admin_view(true);
 			if ($this->form_submission_appears_complete()) $model->set_form_submission_appears_complete(true);
-			if ($this->form_id_is_valid()) $model->set_form_id($this->request['form_id']);
-
-			// ask the model some questions to determine how to proceed
-			if ($model->user_requested_admin_view() && $model->user_has_administrative_access())
-			{
-				$method_name = 'init_admin_view';
-			}
-			elseif ($model->form_submission_appears_complete() && $model->form_submission_is_complete())
-			{
-				$method_name = 'init_form_complete_view';
-			}
-			elseif ($model->form_allows_multiple() && $model->user_has_submitted() && !$model->get_form_id() && ($model->get_form_id() !== 0) )
-			{
-				$method_name = 'init_summary_view';
-			}
-			elseif ($model->user_has_access_to_fill_out_form())
-			{
-				$method_name = 'init_form_view';
-			}
-			else
-			{
-				$method_name = 'init_unauthorized_view';
-			}
-			
-			// invoke the appropriate init method
-			$this->check_view_and_invoke_method($method_name);
+			if ($this->user_provided_form_id()) $model->set_form_id_if_valid($request['form_id']);
+			else $model->set_form_id_if_valid(NULL);
 		}
 		
 		/**
@@ -124,12 +125,12 @@
 			if (method_exists($view, $method)) return $view->$method();
 			else
 			{
-				return $this->$method();
+				return (!empty($method)) ? $this->$method() : false;
 			}
 		}
 		
 		/**
-		 * If the view has not been already been set (probably via page type), lets ask the model to get it from the content manager
+		 * If the view has not been already been set (probably via page type), lets ask the model for it
 		 */
 		function &get_view()
 		{
@@ -192,35 +193,21 @@
 		
 		function run()
 		{
-			$model =& $this->get_model();
-			
 			echo $this->check_view_and_invoke_method('get_module_header_html');
 			echo $this->check_view_and_invoke_method('get_top_links_html');
-			
-			// ask the model some questions to determine how to proceed
-			if ($model->user_requested_admin_view() && $model->user_has_administrative_access())
-			{
-				$method_name = 'run_admin_view';
-			}
-			elseif ($model->form_submission_appears_complete() && $model->form_submission_is_complete())
-			{
-				$method_name = 'run_form_complete_view';
-			}
-			elseif ($model->form_allows_multiple() && $model->user_has_submitted() && !$model->get_form_id() && ($model->get_form_id() !== 0) )
-			{
-				$method_name = 'run_summary_view';
-			}
-			elseif ($model->user_has_access_to_fill_out_form())
-			{
-				$method_name = 'run_form_view';
-			}
-			else
-			{
-				$method_name = 'run_unauthorized_view';
-			}
-			echo $this->check_view_and_invoke_method($method_name);
+			echo $this->check_view_and_invoke_method($this->check_view_and_invoke_method('get_run_method'));
 			echo $this->check_view_and_invoke_method('get_bottom_links_html');
 			echo $this->check_view_and_invoke_method('get_module_footer_html');
+		}
+
+		/**
+		 * Returns the name of the main run method.
+		 *
+		 * @return string name of init method
+		 */
+		function get_run_method()
+		{		
+			return $this->_get_mode_with_prefix('run_');
 		}
 		
 		function run_admin_view()
@@ -285,7 +272,19 @@
 			return (isset($request['thor_success']) && ($request['thor_success'] == 'true'));
 		}
 		
-		function form_id_is_valid()
+		function user_provided_netid()
+		{
+			$request =& $this->get_request();
+			return (isset($request['netid']));
+		}
+		
+		function user_provided_form_id()
+		{
+			$request =& $this->get_request();
+			return (isset($request['form_id']));
+		}
+		
+		function form_id_is_valid() // this determination should be in the model
 		{
 			$model =& $this->get_model();
 			$request =& $this->get_request();
@@ -412,24 +411,31 @@
 			else $ret = '';
 			return $ret;
 		}
-		
+
 		/**
-		 * On development instances, we allow admins to specify a netid other than their own for testing purposes and set it in the model
+		 * Consults with the model to determine what the "mode" of the module is - returns appropriate method with a given prefix.
+		 * @param string mode prefix
+		 * @return string module mode with prefix
+		 * @access private
 		 */
-		function _set_spoofed_netid_if_allowed()
+		function _get_mode_with_prefix($prefix)
 		{
-			$netid = reason_check_authentication();
-			$request =& $this->get_request();
-			$requested_netid = (isset($this->request['netid'])) ? $request['netid'] : false;
-			if (!empty($requested_netid) && !empty($netid) && ($requested_netid != $netid))
+			$model =& $this->get_model();
+			if ($model->user_requested_admin_view() && $model->user_has_administrative_access() && $model->admin_view_is_available())
 			{
-				$user_id = get_user_id($netid);
-				if (reason_user_has_privs($user_id, 'pose_as_other_user'))
-				{
-					$model =& $this->get_model();
-					$model->set_user_netid($requested_netid);
-				}
+				$method_name = 'admin_view';
 			}
+			elseif ($model->form_submission_appears_complete() && $model->form_submission_is_complete())
+			{
+				$method_name = 'form_complete_view';
+			}
+			elseif ($model->form_allows_multiple() && $model->user_has_submitted() && !$model->get_form_id() && ($model->get_form_id() !== 0) )
+			{
+				$method_name = 'summary_view';
+			}
+			elseif ($model->user_has_access_to_fill_out_form()) $method_name = 'form_view';
+			else $method_name = 'unauthorized_view';
+			return $prefix . $method_name;
 		}
 	}
 ?>

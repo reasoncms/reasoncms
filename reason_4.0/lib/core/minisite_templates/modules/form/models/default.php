@@ -8,25 +8,50 @@ $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultF
 class DefaultFormModel
 {
 	/**
-	 * Form Models are provided with a reference to the module upon instantiation and should localize only what is needed.
-	 *
-	 * The default model localizes site_id, page_id, and head_items, and passes a reference to the module to localize so that
-	 * models can localize other items from the module (if needed).
+	 * Form Models can optionally be provided with a reference to a module, in which case the following will occur:
+	 * 
+	 * 1. The model site_id variable will be set to the module site_id
+	 * 2. The model page_id variable will be set to the module page_id
+	 * 3. The model head_items variable will be be set to refer to the module head_items variable
+	 * 4. The module object will be passed to a method called localize that does nothing by default
 	 *
 	 * @author Nathan White
 	 */
-	function DefaultFormModel(&$module)
+	function DefaultFormModel()
 	{
-		$this->site_id = $module->site_id;
-		$this->page_id = $module->page_id;
-		$this->head_items =& $module->parent->head_items;
+	}
+	
+	function init()
+	{
+	}
+	
+	function init_from_module(&$module)
+	{
+		if (isset($module->site_id)) $this->set_site_id($module->site_id);
+		if (isset($module->page_id)) $this->set_page_id($module->page_id);
+		if (isset($module->parent->head_items)) $this->set_head_items($module->parent->head_items);
 		$this->localize($module);
+	}
+	
+	function set_site_id($site_id)
+	{
+		$this->site_id = $site_id;
+	}
+	
+	function set_page_id($page_id)
+	{
+		$this->page_id = $page_id;
+	}
+	
+	function set_head_items(&$head_items)
+	{
+		$this->head_items =& $head_items;
 	}
 	
 	/**
 	 * Localize module variables upon instantiation if needed
 	 */
-	function localize(&$module)
+	function localize(&$object)
 	{
 		return false;
 	}
