@@ -1149,6 +1149,9 @@
         'quote' => array(
         	'main_post' => 'quote',
         ),
+        'user_settings' => array(
+        	'main_post' => 'user_settings/user_settings'
+        ),
 	);
 	
 	if (reason_file_exists('minisite_templates/page_types_local.php'))
