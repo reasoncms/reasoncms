@@ -11,6 +11,7 @@ include_once('paths.php');
  * include the directory service so that usernames as well as email addresses can be sent to this class
  */
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
+include_once( CARL_UTIL_INC . 'basic/misc.php' );
 
 /**
  * This class represents an email. Example usage:
@@ -107,8 +108,10 @@ class Email
 		}
 		$subject = $this->mb_mime_header_encode($this->_subject);
 		
-		// it seems a little odd that we are sending the whole email in via the additional headers parameter
-		$success = mail( '', $subject, '', $additional_headers.$email );
+		// it seems a little odd that we are sending the whole email in via the additional headers parameter when not running windows
+		$success = (server_is_windows()) 
+				 ? mail('', $subject, $email, $additional_headers )
+				 : mail('', $subject, '', $additional_headers.$email );
 		return $success;
 	}
 	
