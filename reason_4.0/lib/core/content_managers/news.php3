@@ -39,6 +39,7 @@
 			if (!$this -> get_value('status')) 
 				$this -> set_value('status', 'published');
 				
+			$this->change_element_type( 'show_hide', 'hidden');
 			$this->change_element_type('names', 'hidden');
 			$this->change_element_type('subtitle', 'hidden');
 			$this->change_element_type('author_description', 'hidden');	
