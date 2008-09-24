@@ -61,18 +61,15 @@ if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 			if($GLOBALS['sqler']->update_one('allowable_relationship', array('connections'=>'many_to_many'), $alrel_id))
 			{
 				echo '<p>Successfully updated the parent_site allowable relationship to be many-to-many</p>';
-				return;
 			}
 			else
 			{
 				echo '<p>Unable to update the parent_site allowable relationship to be many-to-many. You many want to use the <a href="'.REASON_WEB_ADMIN_PATH.'?cur_module=AllowableRelationshipManager">allowable relationship manager</a> to do this update (Change the "Connections" field to "many_to_many.")</p>';
-				return;
 			}
 		}
 		else
 		{
 			echo '<p>Would have updated the parent_site allowable relationship to be many-to-many</p>';
-			return;
 		}
 	}
 	else
