@@ -1,0 +1,52 @@
+table#userSettingsTable thead {
+	display: none;
+}
+
+table#userSettingsTable tr th {
+	text-align: right;
+	color: #333;
+}
+table#userSettingsTable tr td, table#userSettingsTable tr th {
+	padding: .5em 1em;
+	border-bottom: 2px solid #FFFFFF;
+	vertical-align: top;
+}
+
+tr.odd td, tr.odd th {
+	background-color:#E9EEF8;
+}
+
+tr.even td, tr.even th {
+	background-color:#D9E2F4;
+}
+
+table#userSettingsTable tr td a {
+	font-size: x-small;
+}
+
+table#userSettingsTable tr th {
+	padding-right: 0;
+}
+
+table#userSettingsTable tr td.value {
+	border-right: 1px solid #FFFFFF;
+}
+
+p.preForm {
+	max-width: 40em;
+}
+
+* html p.preForm {
+	width: 50%;
+}
+
+h3.settingsH3 {
+	display: inline;
+}
+p.userNameText {
+	display: inline;
+	padding: 0 .5em;
+}
+div.settingHead {
+	margin: 1em 0;
+}
