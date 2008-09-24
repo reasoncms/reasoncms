@@ -56,7 +56,7 @@
 			$this->alter_data_advanced_options();
 			$this->set_order (array ('name', 'db_flag', 'email_of_recipient', 'thor_content','magic_string_autofill_note',
 									 'magic_string_autofill', 'thank_you_note', 'thank_you_message', 'display_return_link', 'show_submitted_data', 
-									 'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter', 'email_link', 'email_data', // advanced options
+									 'advanced_options_header', 'thor_view', 'thor_view_custom', 'is_editable', 'allow_multiple', 'email_submitter', 'email_link', 'email_data', 'email_empty_fields', // advanced options
 									 'unique_name'));
 		}
 
@@ -71,7 +71,8 @@
 			 	'allow_multiple' => 'Allow Multiple Submissions per User?',
 			  	'email_submitter' => 'Email Form Results to Submitter?',
 			  	'email_link' => 'Include Edit Link When Possible?',
-			  	'email_data' => 'Include Submitted Data in E-mails?');
+			  	'email_data' => 'Include Submitted Data in E-mails?',
+			  	'email_empty_fields' => 'Include Empty Fields in E-mails?');
 			if(reason_user_has_privs($this->admin_page->user_id, 'edit_form_advanced_options'))
 			{
 				$this->add_element('advanced_options_header','comment',array('text'=>'<h3>Advanced Options</h3>') );
