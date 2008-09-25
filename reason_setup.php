@@ -189,8 +189,10 @@ function create_admin_user($password)
 	$rel_id1 = relationship_id_of('user_to_user_role');
 	$rel_id2 = relationship_id_of('site_to_user');
 	$ma_id = id_of('master_admin');
+	$ls_id = id_of('site_login');
 	create_relationship($user_id, $admin_id, $rel_id1, false, true);
 	create_relationship($ma_id, $user_id, $rel_id2, false, true);
+	create_relationship($ls_id, $user_id, $rel_id2, false, true);
 	return $user_id;
 }
 
