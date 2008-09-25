@@ -72,9 +72,11 @@
 	}
 	else
 	{
-		$unauthorized = id_of('unauthorized_reason_user'); // unauthorized_reason_user can be defined as a text blurb in master admin
-		$e = new entity($unauthorized);
-		if ($e->get_values()) echo $e->get_value('content');
+		if (reason_unique_name_exists('unauthorized_reason_user'))
+		{
+			$e = new entity(id_of('unauthorized_reason_user'));
+			echo $e->get_value('content');
+		}
 		else
 		{
 			echo '<p>We\'re sorry, but we do not have any record of you being an authorized Reason user.</p>';
