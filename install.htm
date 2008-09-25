@@ -44,7 +44,7 @@ div.callOut {
 <li><strong><a href="http://www.boutell.com/gd/">GDlib</a></strong></li>
 <li><strong><a href="http://aspell.sourceforge.net/">ASpell</a></strong> - Required for Loki spell checking feature.</li>
 </ul>
-<p>Reason has been installed under Linux, Mac OS X, and Windows. Windows compatibility is new to Reason 4 Beta 6 and is still considered experimental.</p>
+<p>Reason has been installed under Linux, Mac OS X, and Windows. Windows compatibility was new to Reason 4 Beta 6 and is still considered experimental.</p>
 <h3><a name="server_configuration" id="server_configuration"></a>Server Configuration</h3>
 <p>When you unpack the Reason distribution you should place the 'reason_package' folder in a web accessible directory. Only certain portions actually need to be under the webroot, but for simplicity we're keeping everything there for now.</p>
 <p>Reason requires that the reason_package directory be a part of the include_path. Typically this can be done in either the httpd.conf file (php_value include_path .:/path/to/your/reason_package/) or in your php.ini file (include_path = ".:/path/to/your/reason_package/").</p>
@@ -97,14 +97,14 @@ div.callOut {
 <p>Next we are going to populate the Reason database with some basic information needed for an empty Reason instance. We can leave the Thor database empty, as Reason will automatically create the necessary tables the first time a form is created. There are many ways you could import the reason4_b5.sql file using phpMyAdmin or from within MySQL.</p>
 <p>Here is one way to import the database from the command line:</p>
 <div class="callOut">
-<p><strong>Change into the directory that contains the file reason4_b6.sql. From within /reason_package:</strong></p>
+<p><strong>Change into the directory that contains the file reason4_b7.sql. From within /reason_package:</strong></p>
 <ul>
 <li>cd ./reason_4.0/data/dbs</li>
 </ul>
 
-<strong>Import reason4_b6.sql into the database named reason - fill in your own credentials:</strong>
+<strong>Import reason4_b7.sql into the database named reason - fill in your own credentials:</strong>
 <ul>
-<li>cat reason4_b6.sql | mysql -u reason_user --password=some_password -h your.mysql.hostname.or.ip.address reason</li>
+<li>cat reason4_b7.sql | mysql -u reason_user --password=some_password -h your.mysql.hostname.or.ip.address reason</li>
 </ul>
 </div>
 <p>The database connection information to connect to the databases you just created must be defined in a simple XML file. The location of this file can be specified by the DB_CREDENTIALS_FILEPATH constant in the reason_package/settings/package_settings.php file.</p>
