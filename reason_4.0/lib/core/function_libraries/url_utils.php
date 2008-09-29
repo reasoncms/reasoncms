@@ -121,7 +121,7 @@ function get_potential_sites_from_path($path)
 	if(!empty($path))
 	{
 		$path_parts = explode('/',trim_slashes($path));
-		$values = array();
+		$values = array('/');
 		$prev_parts = '/';
 		foreach($path_parts as $part)
 		{
