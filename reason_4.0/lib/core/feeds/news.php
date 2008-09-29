@@ -110,8 +110,8 @@ class newsRSS extends pageTreeRSS
 	
 	function newsRSS( $site_id, $type_id = '' ) // {{{
 	{
-		$this->special_sites['news'] = id_of('media_relations');
-		$this->special_sites['athletics'] = id_of('athletics');
+		$this->special_sites['news'] = reason_unique_name_exists('media_relations') ? id_of('media_relations') : '';
+		$this->special_sites['athletics'] = reason_unique_name_exists('athletics') ? id_of('athletics') : '';
 		$this->page_type_id = id_of('minisite_page');
 		$this->site = new entity($site_id);
 		$this->init( $site_id, $type_id );
