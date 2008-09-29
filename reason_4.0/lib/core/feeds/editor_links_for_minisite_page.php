@@ -62,7 +62,11 @@ class editorPagesRSS extends ReasonRSS
 			$ret[$id]->set_value('depth',$depth);
 			if(!$ret[$id]->get_value('url'))
 			{
-				$url = 'http://'.REASON_HOST.'/'.trim_slashes($this->site->get_value('base_url')).$this->tree->get_nice_url($id).'/';
+				$base_url = trim_slashes($this->site->get_value('base_url'));
+				$nice_url = $this->tree->get_nice_url($id);
+				$url = (!empty($base_url))
+					   ? 'http://'.REASON_HOST.'/'.$base_url.$nice_url.'/'
+					   : 'http://'.REASON_HOST.$nice_url.'/';
 				$ret[$id]->set_value('url',$url);
 			}
 			if(!empty($info['children']))
