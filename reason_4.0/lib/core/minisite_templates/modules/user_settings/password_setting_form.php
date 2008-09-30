@@ -5,8 +5,8 @@ include_once (DISCO_INC . 'disco.php');
  * A user setting form to change a user's password. Check their against
  * their current password and requires a new password to be 6 characters.
  * 
- * @package Reason_Core
- * @subpackage Minisite_Modules
+ * @package reason
+ * @subpackage minisite_modules
  *
  * @author Ben Cochran
  **/

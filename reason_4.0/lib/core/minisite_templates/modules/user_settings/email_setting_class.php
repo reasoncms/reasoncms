@@ -4,8 +4,8 @@ include_once('default_setting_class.php');
 /**
  * A user setting class for changing a user's email address.
  * 
- * @package Reason_Core
- * @subpackage Minisite_Modules
+ * @package reason
+ * @subpackage minisite_modules
  *
  * @author Ben Cochran
  **/

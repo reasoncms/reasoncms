@@ -6,7 +6,7 @@ include_once( DISCO_INC . 'disco.php' );
  * user settings module. Basically hides the form after it's run
  * and adds a redirect to get rid of the user_setting querystring.
  * 
- * @package Reason_Core
+ * @package reason
  * @subpackage Minisite_Module
  *
  * @author Ben Cochran
