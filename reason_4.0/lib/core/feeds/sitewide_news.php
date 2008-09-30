@@ -131,7 +131,7 @@ class sitewideNewsFeed extends defaultFeed
 			if ($raw_items)
 			{
 				krsort($date_index);
-				$item_keys = array_slice($date_index, 0, $this->num_to_display);
+				$item_keys = (isset($this->num_to_display)) ? array_slice($date_index, 0, $this->num_to_display) : $date_index;
 				foreach ($item_keys as $key)
 				{
 					$items[$key] =& $raw_items[$key];
