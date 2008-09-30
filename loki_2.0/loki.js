@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0rc8-pl2
+// Loki WYSIWIG Editor 2.0rc8-pl3
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-09-18 15:51:47 
+// Compiled 2008-09-30 14:56:59 
 // http://loki-editor.googlecode.com/
 
 
@@ -17685,8 +17685,9 @@ UI.Page_Link_Dialog = function()
 			this._select_tab(this._determine_tab(false));
 		} else {
 			this._select_tab('rss');
-			this._load_sites(this._sites_feed);
 		}
+		
+		this._load_sites(this._sites_feed);
 	};
 
 	/**
@@ -18899,7 +18900,7 @@ UI.Source_Button = function()
 		} catch (e) {
 			alert("An error occurred that prevented your document's HTML " +
 				"from being generated.\n\nTechnical details:\n" +
-				e);
+				self._loki.describe_error(e));
 		}
 		
 	};
@@ -21777,6 +21778,53 @@ UI.Loki = function Loki()
 		
 		enumerate_options('double_click_listeners').each(add);
 	}
+	
+	this.describe_error = function describe_error(ex) {
+		// The following probably only works under Mozilla.
+		function get_stack_trace(e) {
+			if (typeof(e.stack) != "string")
+				return null;
+			
+			var stack = [];
+			var raw_parts = e.stack.split("\n");
+			var URI = Util.URI;
+			var base = URI.build(URI.normalize(self.settings.base_uri));
+			
+			return raw_parts.map(function parse_stack_trace_element(l) {
+				var pos = l.lastIndexOf("@");
+				var source = l.substr(0, pos);
+				var location = l.substr(pos + 1);
+				
+				if (source.charAt(0) == "(")
+					source = "anonymous_fn" + source;
+				
+				pos = location.lastIndexOf(":");
+				var file = location.substr(0, pos);
+				var line = parseInt(location.substr(pos + 1));
+				
+				if (file.indexOf(base) == 0)
+					file = file.substr(base.length);
+				
+				return {
+					source: source,
+					file: file,
+					line: line
+				};
+			});
+		}
+		
+		var message = ex.message || ex.toString();
+		var stack = get_stack_trace(ex);
+		
+		if (stack) {
+			for (var i = 0; i < 4; i++) {
+				message += ("\n" + stack[i].source + "\t" +
+					stack[i].file + ":" + stack[i].line);
+			}
+		}
+		
+		return message;
+	}
 
 	/**
 	 * Add certain event listeners to the document, e.g. to listen to
@@ -21939,7 +21987,7 @@ UI.Loki = function Loki()
 			} catch (ex) {
 				alert("An error occurred that prevented your document from " +
 					"being safely submitted.\n\nTechnical details:\n" +
-					ex);
+					self.describe_error(ex));
 				Util.Event.prevent_default(ev);
 				
 				if (typeof(console) == 'object' && console.firebug) {
@@ -21953,6 +22001,7 @@ UI.Loki = function Loki()
 			
 			return true;
 		}
+		
 		
 		// this copies the changes made in the iframe back to the hidden form element
 		Util.Event.add_event_listener(_hidden.form, 'submit',
@@ -22478,7 +22527,7 @@ var Loki = {
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0rc8-pl2",
+	version: "2.0rc8-pl3",
 	
 	/** @private */
 	_pending: [],
