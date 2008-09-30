@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Reason
+ * @package reason
  * @author Matt Ryan
  */
  
