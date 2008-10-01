@@ -7,7 +7,7 @@ include_once( DISCO_INC . 'disco.php' );
  * and adds a redirect to get rid of the user_setting querystring.
  * 
  * @package reason
- * @subpackage Minisite_Module
+ * @subpackage minisite_modules
  *
  * @author Ben Cochran
  **/
