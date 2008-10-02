@@ -101,7 +101,6 @@
 		return $site;
 	}
 
-	ob_start();
 	$collect_cache_stats = true;
 	
 	header("Content-Type: text/html; charset=UTF-8");
