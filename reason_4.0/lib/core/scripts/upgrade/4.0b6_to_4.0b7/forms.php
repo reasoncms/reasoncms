@@ -272,9 +272,11 @@ class formUpgrader
 	 */
 	function show_local_link()
 	{
-		if (reason_file_exists('scripts/upgrade/4.0b6_to_4.0b7/forms_local.php'));
-		$link = carl_construct_link(array(), array(), '/reason_package/reason_4.0/lib/local/scripts/upgrade/4.0b6_to_4.0b7/forms_local.php');
-		echo '<a href="'.$link.'">Proceed to local updates</a>';
+		if (reason_file_exists('scripts/upgrade/4.0b6_to_4.0b7/forms_local.php'))
+		{
+			$link = carl_construct_link(array(), array(), '/reason_package/reason_4.0/lib/local/scripts/upgrade/4.0b6_to_4.0b7/forms_local.php');
+			echo '<a href="'.$link.'">Proceed to local updates</a>';
+		}
 	}
 	
 	function add_type_to_site($type_id)
