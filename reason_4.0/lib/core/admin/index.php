@@ -13,7 +13,6 @@
 	//xdebug_start_trace();
 	//xdebug_start_profiling();
 	
-	ob_start();
 	function getmicrotime()
 	{
 		list( $usec, $sec ) = explode( " ", microtime() );
