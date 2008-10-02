@@ -9804,7 +9804,7 @@ Util.URI.uri_pattern =
 	new RegExp('^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?',
 	'i');
 Util.URI.authority_pattern =
-	new RegExp('^(([^:@]+)(:([^@]+))?@)?([^:]+)(:(\d+))?$');
+	new RegExp('^(([^:@]+)(:([^@]+))?@)?([^:]+)(:(\\d+))?$');
 Util.URI.protocol_host_pattern =
 	new RegExp('^(([^:/?#]+):)?(//([^/?#]*))?', 'i'); 
 // file Util.Unsupported_Error.js
