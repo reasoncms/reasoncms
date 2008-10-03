@@ -54,9 +54,8 @@ class EventsModule extends DefaultMinisiteModule
 	 * Toggles on and off the links to iCalendar-formatted data.
 	 *
 	 * Set to true to turn on the links; false to turn them off
-	 * This is still an experimental feature (the icalendar export is not 100% tested yet) so only turn this on for testing purposes.
 	 */
-	var $show_icalendar_links = false;
+	var $show_icalendar_links = true;
 	
 	//////////////////////////////////////
 	// General Functions
@@ -1260,7 +1259,7 @@ class EventsModule extends DefaultMinisiteModule
 		//echo 'start: '.$year.'<br />';
 		$min_year = NULL;
 		$min_found_so_far = $year;
-		for( $i=2; $i < 64; $i = $i*2 )
+		for( $i=2; $i < 65; $i = $i*2 )
 		{
 			//echo 'testing: '. ( $year - $i ) .'<br />';
 			if($this->calendar->contains_any_events_before(($year-$i).'-01-01'))
@@ -1421,21 +1420,30 @@ class EventsModule extends DefaultMinisiteModule
 	function show_list_export_links()
 	{
 		echo '<div class="iCalExport">'."\n";
-		$query_string = $this->construct_link(array('start_date'=>'','view'=>'','end_date'=>'','format'=>'ical'));
+		
+		/* If they are looking at the current view or a future view, start date in link should be pinned to current date.
+			If they are looking at an archive view, start date should be pinned to the start date they are currently viewing */
+		
+		$start_date = $this->today;
+		if(!empty($this->request['start_date']) && $this->request['start_date'] < $this->today)
+		{
+			$start_date = $this->request['start_date'];
+		}
+		
+		$query_string = $this->construct_link(array('start_date'=>$start_date,'view'=>'','end_date'=>'','format'=>'ical'));
 		if(!empty($this->request['category']) || !empty($this->request['audience']) || !empty($this->request['search']))
 		{
 			$subscribe_text = 'Subscribe to this view in desktop calendar';
-			$download_text = 'Download these events';
+			$download_text = 'Download these events (.ics)';
 		}
 		else
 		{
 			$subscribe_text = 'Subscribe to this calendar';
-			$download_text = 'Download all events';
+			$download_text = 'Download events (.ics)';
 		}
 		echo '<a href="webcal://'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$query_string.'">'.$subscribe_text.'</a>';
 		if(!empty($this->events))
 			echo ' | <a href="'.$query_string.'">'.$download_text.'</a>';
-		//$this->parent->pages->get_full_url( $this->page_id, true).$query_string
 		echo '</div>'."\n";
 	}
 	
