@@ -319,7 +319,7 @@
 			}
 			if ( !$this -> get_value('commenting_state') )
 			{
-				$this -> set_value( 'commenting_state', 'off' );
+				$this -> set_value( 'commenting_state', 'on' );
 			}
 		}
 
