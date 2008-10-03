@@ -253,10 +253,7 @@ class PublicationModule extends Generic3Module
 						   ? $this->build_ids_from_unique_names($this->params['related_publication_unique_names'])
 						   : array();
 		
-		if(!empty($publication_ids))
-			$pub_es = new entity_selector();
-		else
-			$pub_es = new entity_selector( $this->site_id );
+		$pub_es = new entity_selector();
 		
 		$pub_es->description = 'Selecting publications for this page';
 		$pub_es->add_type( id_of('publication_type') );
@@ -289,7 +286,7 @@ class PublicationModule extends Generic3Module
 								? $this->build_ids_from_unique_names($this->params['related_category_unique_names'])
 								: array();
 				// grab categories in which to limit related news items
-				$cat_es = new entity_selector( $this->site_id );
+				$cat_es = new entity_selector();
 				$cat_es->description = 'Selecting categories for this page';
 				$cat_es->add_type( id_of('category_type'));
 				$cat_es->limit_tables();
@@ -345,6 +342,9 @@ class PublicationModule extends Generic3Module
 	 */
 	function handle_params( $params )
 	{
+		// This is a slight hack to get publications to default to *not* limiting to the current site. This should allow publications to be displayed anywhere.
+		$this->base_params['limit_to_current_site'] = false;
+		
 		// all params that could be provided in page_types
 		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'show_login_link', 
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
