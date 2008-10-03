@@ -41,10 +41,9 @@
 				echo '<p>This instance of Reason is running <strong>without</strong> https/ssl. This means that credentials and other potentially sensitive information are being sent in the clear. To run Reason with greater security -- and to make this notice go away -- 1) make sure your server is set up to run https and 2) change the setting HTTPS_AVAILABLE to true in settings/package_settings.php.</p>'."\n";
 				echo '</div>'."\n";
 			}
-			$intro_id = id_of('whats_new_in_reason_blurb');
-			if(!empty($intro_id))
+			if(reason_unique_name_exists('whats_new_in_reason_blurb'))
 			{
-				$intro = new entity($intro_id);
+				$intro = new entity(id_of('whats_new_in_reason_blurb'));
 				echo "\n".'<div id="whatsNew">'."\n";
 				echo '<h3>'.$intro->get_value('name').'</h3>'."\n";
             	            echo '<p><em>Updated '.prettify_mysql_timestamp($intro->get_value('last_modified'), 'j F Y').'</em></p>'."\n";
