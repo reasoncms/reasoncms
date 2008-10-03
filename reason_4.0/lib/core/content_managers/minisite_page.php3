@@ -150,79 +150,46 @@
 		function alter_page_type_section()
 		{
 			$basic_options = array( 
-						"default" => "Normal Page",
-						"gallery" => 'Photo Gallery <span class="smallText">(Shows associated images in a gallery format)</span>',
-						'show_children' => 'Shows children <span class="smallText">(Shows child pages in a list with their descriptions. Note: this includes pages not shown in navigation.)</span>',
-						'show_siblings' => 'Shows siblings <span class="smallText">(Shows this page\'s sibling pages after the content of the page. Note: this includes pages not shown in navigation.)</span>',
-					);
+				"default" => "Normal Page",
+				"gallery" => 'Photo Gallery <span class="smallText">(Shows associated images in a gallery format)</span>',
+				'show_children' => 'Shows children <span class="smallText">(Shows child pages in a list with their descriptions. Note: this includes pages not shown in navigation.)</span>',
+				'show_siblings' => 'Shows siblings <span class="smallText">(Shows this page\'s sibling pages after the content of the page. Note: this includes pages not shown in navigation.)</span>',
+			);
 					
-					$news_via_categories_types = array(
-														'news_via_categories'=>'Related News Sidebar',
-														'news_via_categories_with_children'=>'Related News Sidebar plus children pages',
-														'news_via_categories_with_siblings'=>'Related News Sidebar plus sibling pages'
-														
-													);
-					$types_to_optional_pages = array(
-													'alumni_adventure_type'=>array('adventure'=>'Home page for a particular adventure <span class="smallText">(adventure needs to be associated with page)</span>',),
-													'publication_type'=>array('publication'=>'Blog/Publication page <span class="smallText">(A blog/publication must be associated with page for this to work)</span>',),
-													'av'=>array('audio_video'=>'Media <span class="smallText">(Shows audio and/or video after the page content. At least one media work must be associated with page for this to work)</span>',),
-													'external_url'=>array('feed_display_full'=>'Full-Page feed display <span class="smallText">Provides the contents of an RSS or Atom feed as the main content of the page. An external URL must be associated with the page for this to work.</span>','feed_display_sidebar'=>'Sidebar feed display <span class="smallText">Lists the contents of an RSS or Atom feed in the sidebar. An external URL must be associated with the page for this to work.</span>'),
-												);
-					$sites_to_optional_pages = array(
-													'giving_to_carleton_site'=>$news_via_categories_types,
-													'planned_giving_site'=>$news_via_categories_types,
-													'faculty_workload_discussion_site'=>array('blurb_under_nav_and_below_content'=>'Blurbs placed both under navigation and below content of page',),
-													'gould_library_site'=>array('children_and_grandchildren'=>'Children and Grandchildren',),
-													'language_center_site'=>array('blurb'=>'Blurbs below the content',),
-													'digital_commons_site'=>array('assets_with_author_and_date'=>'Assets below the content',),
-													'recruit_center'=>array('recruit_center_profile'=>'Recruit Center Profile',),
-													'institutional_research'=>array('basic_tabs'=>'Tabbed Page','basic_tabs_parent'=>'Parent of Tabbed Page',),
-												);
+			$types_to_optional_pages = array(
+				'form'=>array('form'=>'Form page <span class="smallText">(A form must be associated with page for this to work)</span>',),
+				'publication_type'=>array('publication'=>'Blog/Publication page <span class="smallText">(A blog/publication must be associated with page for this to work)</span>',),
+				'av'=>array('audio_video'=>'Media <span class="smallText">(Shows audio and/or video after the page content. At least one media work must be associated with page for this to work)</span>',),
+				'external_url'=>array('feed_display_full'=>'Full-Page feed display <span class="smallText">Provides the contents of an RSS or Atom feed as the main content of the page. An external URL must be associated with the page for this to work.</span>','feed_display_sidebar'=>'Sidebar feed display <span class="smallText">Lists the contents of an RSS or Atom feed in the sidebar. An external URL must be associated with the page for this to work.</span>'),
+			);
 				
-					if(!empty($types_to_optional_pages))
+			if(!empty($types_to_optional_pages))
+			{
+				$es = new entity_selector();
+				$es->add_type(id_of('type'));
+				$es->add_right_relationship( $this->get_value('site_id'), relationship_id_of('site_to_type') );
+				$es->add_relation( 'entity.unique_name IN ("'.implode('","',array_keys($types_to_optional_pages)).'")' );
+				$types = $es->run_one();
+				
+				foreach($types as $type)
+				{
+					if(!empty($types_to_optional_pages[$type->get_value('unique_name')]))
 					{
-						$es = new entity_selector();
-						$es->add_type(id_of('type'));
-						$es->add_right_relationship( $this->get_value('site_id'), relationship_id_of('site_to_type') );
-						$es->add_relation( 'entity.unique_name IN ("'.implode('","',array_keys($types_to_optional_pages)).'")' );
-						$types = $es->run_one();
-						
-						foreach($types as $type)
-						{
-							if(!empty($types_to_optional_pages[$type->get_value('unique_name')]))
-							{
-								foreach($types_to_optional_pages[$type->get_value('unique_name')] as $page_type=>$desc)
-								{
-									$basic_options[$page_type] = $desc;
-								}
-							}
-						}
-					}
-					
-					$site = new entity($this->get_value('site_id'));
-					$site_unique_name = $site->get_value('unique_name');
-					if(!empty($sites_to_optional_pages[$site_unique_name]))
-					{
-						foreach($sites_to_optional_pages[$site_unique_name] as $page_type=>$desc)
+						foreach($types_to_optional_pages[$type->get_value('unique_name')] as $page_type=>$desc)
 						{
 							$basic_options[$page_type] = $desc;
 						}
 					}
-					
-					if ( !$this->get_value('custom_page') )
-					{
-						$this->set_value( 'custom_page', 'default' ); // set as default if no value
-					}
-					
-					if ( array_key_exists($this->get_value('custom_page'),$basic_options ) )
-					{
-						$this->change_element_type( 'custom_page' , 'radio_no_sort' , array( 'options' => $basic_options ) );
-					}
-					else
-					{
-						$this->change_element_type( 'custom_page', 'solidtext' );
-					}
-						
+				}
+			}
+			
+			if ( !$this->get_value('custom_page') ) $this->set_value( 'custom_page', 'default' ); // set as default if no value
+			
+			if ( array_key_exists($this->get_value('custom_page'),$basic_options ) )
+			{
+				$this->change_element_type( 'custom_page' , 'radio_no_sort' , array( 'options' => $basic_options ) );
+			}
+			else $this->change_element_type( 'custom_page', 'solidtext' );	
 		}
 		
 		function alter_tree_list( $list, $parent_id )
