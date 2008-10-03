@@ -128,6 +128,7 @@
 						     'entity_a','entity_b','debugging' );			 
 
 			// the array_diff is to get rid of the cookie vars that exists in REQUEST.  we don't want cookie values in our admin page request
+			
 			$request = array_diff( conditional_stripslashes($_REQUEST), conditional_stripslashes($_COOKIE) );
 			
 			$this->request = array_merge($request, carl_clean_vars($request, $param_cleanup_rules));
@@ -1239,7 +1240,7 @@
 			{
 				if( isset( $default_args[ $key ] ) OR !empty( $val ) ) //we need to get anything through that is in default args or has a value
 				{
-					$link .= '&amp;'.htmlspecialchars($key, ENT_QUOTES).'='.htmlspecialchars($val, ENT_QUOTES);
+					$link .= '&amp;'.urlencode($key).'='.urlencode($val);
 				}
 			}
 			$link = substr( $link, strlen( '&amp;' ) );
