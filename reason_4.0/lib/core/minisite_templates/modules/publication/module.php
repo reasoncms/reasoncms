@@ -173,7 +173,7 @@ class PublicationModule extends Generic3Module
 													 'teaser_image' => 'get_teaser_image',
 													 'section_links' => 'get_links_to_sections_for_this_item',
 													 'item_number' => 'get_item_number',
-													 
+													 'item_publication' => 'get_item_publication',
 													 'item_events' => 'get_item_events',
 													 'item_images' => 'get_item_images',
 													 'item_assets' => 'get_item_assets',
@@ -1964,6 +1964,14 @@ class PublicationModule extends Generic3Module
 			}
 			else
 				return '';
+		}
+		function get_item_publication(&$item)
+		{
+			if(isset($this->related_publications[$item->get_value('publication_id')]))
+			{
+				return $this->related_publications[$item->get_value('publication_id')];
+			}
+			return;
 		}
 		function get_basic_links_to_current_publications()
 		{
