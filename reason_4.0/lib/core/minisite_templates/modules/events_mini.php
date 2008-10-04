@@ -64,5 +64,8 @@ class miniEventsModule extends EventsModule
 	{
 		echo '<p class="more"><a href="'.$this->events_page_url.'">More events</a></p>'."\n";
 	}
+	function show_list_export_links()
+	{
+	}
 }
 ?>
