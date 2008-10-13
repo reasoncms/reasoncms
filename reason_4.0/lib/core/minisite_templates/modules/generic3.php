@@ -257,7 +257,7 @@
 					// in some extremely long load times. Forcing a straight join appears to address this issue.
 					if ($this->use_filters && !empty($this->request['filters']))
 					{
-						$this->es->optimize('STRAIGHT_JOIN'); 
+						//$this->es->optimize('STRAIGHT_JOIN'); 
 					}									  
 					
 					// If we have a list, either below an item or by itself, and also
