@@ -227,15 +227,23 @@ class entity
 	 */
 	function get_display_name() // {{{
 	{
-		$type = new entity( $this->get_value( 'type' ) );
-		if( $type->get_value( 'display_name_handler' ) )
+		$type_id = $this->get_value( 'type' );
+		if(!empty($type_id))
 		{
-			$file = 'display_name_handlers/' . $type->get_value( 'display_name_handler' );
-			reason_include_once( $file );
-			$display_handler = $GLOBALS['display_name_handlers'][$type->get_value( 'display_name_handler' )];
-			return $display_handler( $this );
+			$type = new entity( $type_id );
+			if( $type->get_value( 'display_name_handler' ) )
+			{
+				$file = 'display_name_handlers/' . $type->get_value( 'display_name_handler' );
+				reason_include_once( $file );
+				$display_handler = $GLOBALS['display_name_handlers'][$type->get_value( 'display_name_handler' )];
+				return $display_handler( $this );
+			}
 		}
-		else return $this->get_value( 'name' );
+		else
+		{
+			trigger_error('Item id '.$this->id().' does not have an entry in Type field. Potential database corruption.');
+		}
+		return $this->get_value( 'name' );
 	} // }}}
 
 	//////////////////////////////////////////////////////
