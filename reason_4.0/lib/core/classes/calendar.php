@@ -263,18 +263,19 @@ class reasonCalendar
 		if(!empty($this->site))
 		{
 			$this->es = new entity_selector( $this->site->id() );
+			$this->es->add_type( id_of('event_type') );
 			$this->es->description = 'Selecting all events on '.$this->site->get_value('name');
 		}
 		else
 		{
 			$this->es = new entity_selector();
+			$this->es->add_type( id_of('event_type') );
 			$this->es->description = 'Selecting all events';
 			$this->es->add_relation( 'entity.no_share != 1');
 			$this->es->add_right_relationship_field( 'owns' , 'site' , 'site_state' , 'owner_site_state' );
 			$this->es->add_relation('site.site_state = "Live"');
 			$this->es->optimize('STRAIGHT_JOIN');
 		}
-		$this->es->add_type( id_of('event_type') );
 		$this->es->add_relation( 'show_hide.show_hide = "show"' );
 		
 		$this->base_es = carl_clone($this->es);
