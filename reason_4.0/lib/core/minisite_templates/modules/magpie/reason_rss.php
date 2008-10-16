@@ -341,7 +341,8 @@ function generate_search (){
 
     $output .= '<form method="get" id="rss_search_form" action="?'.$this->_page_query_string_key.'=1">';
 	$output .= 'Search Posts For: ';
-    $output .= '<input type="text" id="rss_search_box" name="'.$this->_search_query_string_key.'" value="' . $search . '" />';
+    $output .= '<input type="text" id="rss_search_box" name="'.$this->_search_query_string_key.'" value="' . 
+htmlspecialchars($search, ENT_QUOTES) . '" />';
     $output .= " <a href=\"javascript:document.getElementById('rss_search_form').submit()\" class=\"searchSubmitLink\">Go</a>";
 	$output .= '<noscript><input type="submit" name="go" value="Go" /></noscript>';
 	if(!empty($search))
