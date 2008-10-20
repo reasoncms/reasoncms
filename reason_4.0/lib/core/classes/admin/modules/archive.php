@@ -36,6 +36,7 @@
 			$history_top = array( $this->current->id() => $this->current );
 
 			$this->history = $history_top + $archived;
+			
 		} // }}}
 		function run() // {{{
 		{
@@ -164,11 +165,19 @@
 
 		function get_archive_name( $id ) // {{{
 		{
-			$user = new entity( $this->history[ $id ]->get_value( 'last_edited_by' ) );
-			if($user->get_values())
-				$name = $user->get_value('name');
+			$edited_by_id = $this->history[ $id ]->get_value( 'last_edited_by' );
+			if(!empty($edited_by_id))
+			{
+				$user = new entity( $edited_by_id );
+				if($user->get_values())
+					$name = $user->get_value('name');
+				else
+					$name = 'user id '.$user->id();
+			}
 			else
-				$name = 'user id '.$user->id();
+			{
+				$name = '[unknown]';
+			}
 			if( $id == $this->current->id() )
 				return 'Current Version - '.$name;
 			else
@@ -213,16 +222,20 @@
 			$select_form_b = '<form name="form3">with
 				<select name="menu3" onChange="MM_jumpMenu(\'parent\',this,0)" class="siteMenu">
 					<option value="'.$this->admin_page->make_link( array( 'archive_b' => '' ), true ).'"'.(empty( $b_id ) ? ' selected="selected"' : '' ).'>--</option>';
+			
 			foreach( $this->history AS $h )
 			{
 				$select_form_a .= '<option value="' . $this->admin_page->make_link( array( 'archive_a' => $h->id() ) , true );
 				if( $a->id() == $h->id() )
 					$select_form_a .= '" selected="selected';
 				$select_form_a .= '">'. $this->get_archive_name( $h->id() ) . "</option>\n";
+				
+				
 				$select_form_b .= '<option value="' . $this->admin_page->make_link( array( 'archive_b' => $h->id() ) , true );
 				if( !empty( $b_id ) AND $b->id() == $h->id() )
 					$select_form_b .= '" selected="selected';
 				$select_form_b .= '">'. $this->get_archive_name( $h->id() ) . "</option>\n";
+				
 			}
 			$select_form_a .=
 				'</select>
@@ -230,6 +243,7 @@
 			$select_form_b .=
 				'</select>
 				</form>';
+				
 
 			echo '<table border="0 cellspacing="0" cellpadding="4">';
 			echo '<tr>';
