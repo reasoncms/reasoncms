@@ -179,6 +179,8 @@
 			$head_items =& $model->get_head_items();
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_error.css');
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+			$head_items->add_javascript(JQUERY_URL, true);
+			$head_items->add_javascript(WEB_JAVASCRIPT_PATH .'disable_submit.js?id=disco_form&reset_time=60000');
 			$view =& $this->get_view();
 			$view->init();
 		}
