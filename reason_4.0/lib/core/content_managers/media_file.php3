@@ -145,8 +145,6 @@
 		{
 			parent::pre_show_form();
 			echo '<script language="JavaScript" src="'.REASON_HTTP_BASE_PATH.'js/media_file_content_manager.js"></script>'."\n";
-			// commenting out the javascript submit disabler until we can figure out how to get it to pass the correct button
-			echo '<script language="JavaScript" src="'.REASON_HTTP_BASE_PATH.'js/disable_submit.js"></script>'."\n";
 			$this->add_additional_attribute('onsubmit="disable_submit(event,90000)"');
 		}
 		function get_actual_max_upload_size()
