@@ -86,6 +86,11 @@ class DefaultThorForm extends Disco
 	var $submitted_data_hidden_fields; // in most cases do not define this - the model has defaults
 	
 	/**
+	 * @var boolean whether or not the clear button should be shown
+	 */
+	var $show_clear_button; // set to true if you want the clear button to be available
+	
+	/**
 	 * Inits the Disco Form
 	 */
 	function init( $externally_set_up = false )
@@ -284,6 +289,11 @@ class DefaultThorForm extends Disco
 	function get_submitted_data_hidden_fields()
 	{
 		return (isset($this->submitted_data_hidden_fields)) ? $this->submitted_data_hidden_fields : false;
+	}
+	
+	function get_show_clear_button()
+	{
+		return (isset($this->show_clear_button)) ? $this->show_clear_button : false;
 	}
 }
 ?>
