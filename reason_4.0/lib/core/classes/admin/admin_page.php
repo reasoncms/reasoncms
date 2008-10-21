@@ -1157,6 +1157,7 @@
 			// add collapse javasript (should be moved to module method
 			$this->head_items->add_javascript(JQUERY_URL, true);
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'jump_navigation.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'disable_submit.js?id=disco_form&reset_time=60000');
 		}
 		
 		function head()
