@@ -5,6 +5,7 @@
  *
  * - forms can be specified with a name, id, or class
  * - a reset time (in milliseconds) can optionally be provided
+ * - if no form is specified, all forms on the page will be considered
  *
  * @author Nathan White
  * @todo ensure keypress submissions are properly handled (i think they are)
@@ -26,7 +27,9 @@ $(document).ready(function()
 	if (valid_ids) selector[selector.length] = $.map(valid_ids.split(","), function (item) { return "form#" + item; }).toString();
 	if (valid_classes) selector[selector.length] = $.map(valid_classes.split(","), function (item) { return "form." + item; }).toString();
 	
-	if (selector.length > 0) $(selector.toString()).submit(function() // sets up a submit event for valid forms
+	var selector_string = (selector.length > 0) ? selector.toString() : "form";
+	
+	$(selector_string).submit(function() // sets up a submit event for valid forms
 	{
 		var buttons = new Array();
 		buttons["text"] = new Array();
