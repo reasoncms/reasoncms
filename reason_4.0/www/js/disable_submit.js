@@ -37,8 +37,11 @@ $(document).ready(function()
 			buttons["refs"][index] = $(this);
 			buttons["text"][index] = ($(this).attr("value"));
 			if (valid_reset_time) setTimeout( function() { enableSubmit(buttons["refs"][index], buttons["text"][index]); }, valid_reset_time);
-			setTimeout( function() { disableSubmit(buttons["refs"][index], "Please wait..."); }, 100);
+			
+			// we use a timer with no delay - allows original form to be submitted as is but buttons are disabled as soon as possible
+			setTimeout( function() { disableSubmit(buttons["refs"][index], "Please wait..."); }, 0); 
 		});
+		return true;
 	});
 	
 	function enableSubmit(button, value)
