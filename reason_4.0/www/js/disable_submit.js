@@ -28,22 +28,16 @@ $(document).ready(function()
 	
 	if (selector.length > 0) $(selector.toString()).submit(function() // sets up a submit event for valid forms
 	{
-		if (valid_reset_time)
-		{
-			var buttons = new Array();
-			buttons["text"] = new Array();
-			buttons["refs"] = new Array();
-		}
+		var buttons = new Array();
+		buttons["text"] = new Array();
+		buttons["refs"] = new Array();
 		
 		$("input[type=submit]", this).each(function(index)
 		{
-			if (valid_reset_time)
-			{
-				buttons["refs"][index] = $(this);
-				buttons["text"][index] = ($(this).attr("value"));
-				setTimeout( function() { enableSubmit(buttons["refs"][index], buttons["text"][index]); }, valid_reset_time);
-			}
-			disableSubmit(this, "Please wait...");
+			buttons["refs"][index] = $(this);
+			buttons["text"][index] = ($(this).attr("value"));
+			if (valid_reset_time) setTimeout( function() { enableSubmit(buttons["refs"][index], buttons["text"][index]); }, valid_reset_time);
+			setTimeout( function() { disableSubmit(buttons["refs"][index], "Please wait..."); }, 100);
 		});
 	});
 	
