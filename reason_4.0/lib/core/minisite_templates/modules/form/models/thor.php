@@ -247,15 +247,16 @@ class ThorFormModel extends DefaultFormModel
 	/**
 	 * If the form submission was just completed - we should be able to retrieve the serialized submission data from the session
 	 * If show submitted data is not enabled, we just return true.
+	 * @todo make me do some actual work
 	 */
 	function form_submission_is_complete()
 	{
-		if ($this->should_show_submitted_data())
-		{
-			$values =& $this->get_values_for_show_submitted_data();
-			return (!empty($values));
-		}
-		else return true;
+		//if ($this->should_show_submitted_data())
+		//{
+			//$values =& $this->get_values_for_show_submitted_data(); // this is not sufficient - relys on cookie being set on client
+			//return (!empty($values));
+		//}
+		return true;
 	}
 
 	function form_allows_multiple()

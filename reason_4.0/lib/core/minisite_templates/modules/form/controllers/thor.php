@@ -329,12 +329,16 @@
 			include_once(TYR_INC.'tyr.php');
 			$tyr = new Tyr();
         	$model =& $this->get_model();
+			$data =& $model->get_values_for_show_submitted_data();
 			
-			$html = '<div class="submitted_data">';
-        	$html .= '<h3>You submitted:</h3>';
-        	$html .= $tyr->make_html_table($model->get_values_for_show_submitted_data(), false);
-        	$html .= '</div>';
-        	return $html;
+			if ($data)
+			{
+				$html = '<div class="submitted_data">';
+        		$html .= '<h3>You submitted:</h3>';
+        		$html .= $tyr->make_html_table($data, false);
+        		$html .= '</div>';
+        		return $html;
+        	}
 		}
 		
 		function get_thank_you_html()
