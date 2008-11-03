@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0rc8-pl3
+// Loki WYSIWIG Editor 2.0rc9
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-09-30 14:56:59 
+// Compiled 2008-10-14 15:20:14 
 // http://loki-editor.googlecode.com/
 
 
@@ -921,8 +921,6 @@ TinyMCEControl.prototype.scrollToNode = function(node) {
 
 	// Only scroll if out of visible area
 	if (!tinyMCE.settings['auto_resize'] && !(node.absTop > scrollY && node.absTop < (scrollY - 25 + height))) {
-		console.debug(node, pos);
-		console.info("Scrolling to: (", pos.absLeft, ", ", pos.absTop - height + 25, ")");
 		this.contentWindow.scrollTo(pos.absLeft, pos.absTop - height + 25);
 	}
 };
@@ -1822,7 +1820,7 @@ Util.Node.find_children = function find_matching_node_children(node, match) {
 	var i, length, node_type;
 	var children = [], child;
 	
-	if (!Util.is_valid_object(node) || !node.nodeType) {
+	if (!node || !node.nodeType) {
 		throw new TypeError('Must provide Util.Node.find_children with a ' +
 			'node to traverse.');
 	}
@@ -1952,7 +1950,7 @@ Util.Node.get_enclosing_block =
 	function get_enclosing_block_of_node(node, node_window)
 {
 	// Sanity checks.
-	if (!Util.is_valid_object(node)) {
+	if (!node || !node.nodeType) {
 		throw new TypeError('Must provide a node to ' + 
 			'Util.Node.get_enclosing_block.');
 	} else if (!Util.is_valid_object(node_window)) {
@@ -2034,7 +2032,7 @@ Util.Node.has_child_node = function(node, boolean_test)
  * @returns {Boolean} true if "node" is an element node, false if otherwise
  */
 Util.Node.is_element = function node_is_element(node) {
-	return (Util.is_object(node) && node.nodeType == Util.Node.ELEMENT_NODE);
+	return (node && node.nodeType == Util.Node.ELEMENT_NODE);
 }
 
 /**
@@ -2043,7 +2041,7 @@ Util.Node.is_element = function node_is_element(node) {
  * @returns {Boolean} true if "node" is a text node, false if otherwise
  */
 Util.Node.is_text = function node_is_text(node) {
-	return (Util.is_object(node) && node.nodeType == Util.Node.TEXT_NODE);
+	return (node && node.nodeType == Util.Node.TEXT_NODE);
 }
 
 /**
@@ -2052,7 +2050,7 @@ Util.Node.is_text = function node_is_text(node) {
  * @returns {Boolean} true if "node" is a document node, false if otherwise
  */
 Util.Node.is_document = function node_is_document(node) {
-	return (Util.is_object(node) && node.nodeType == Util.Node.DOCUMENT_NODE);
+	return (node && node.nodeType == Util.Node.DOCUMENT_NODE);
 }
 
 /**
@@ -2497,7 +2495,7 @@ Util.Element = {
 	 */
 	get_computed_style: function get_element_computed_style(window, elem)
 	{
-		if (!Util.is_valid_object(window, elem)) {
+		if (!elem || !Util.is_valid_object(window)) {
 			throw new TypeError('Valid window and element objects must be ' +
 				'provided to Util.Element.get_computed_style.');
 		}
@@ -2550,12 +2548,15 @@ Util.Element = {
 	{
 		var attrs = {};
 		
-		if (!Util.is_valid_object(elem)) {
-			throw new TypeError('Cannot get the attributes of a non-object.');
+		if (!elem) {
+			throw new TypeError('No element provided; cannot get attributes.');
 		}
 		
-		if (elem.nodeType != Util.Node.ELEMENT_NODE || !elem.hasAttributes())
+		if (elem.nodeType != Util.Node.ELEMENT_NODE) {
 			return attrs;
+		} else if (elem.hasAttributes && !elem.hasAttributes()) {
+			return attrs;
+		}
 		
 		for (var i = 0; i < elem.attributes.length; i++) {
 			var a = elem.attributes[i];
@@ -2598,7 +2599,7 @@ Util.Element = {
 	 */
 	is_basically_empty: function element_is_basically_empty(elem)
 	{
-		if (elem.nodeType != Util.Node.ELEMENT_NODE) {
+		if (!elem || elem.nodeType != Util.Node.ELEMENT_NODE) {
 			throw new TypeError('Must provide an element node to ' +
 				'Util.Element.is_basically_empty(); instead got ' +
 				Util.Node.get_debug_string(elem));
@@ -2906,7 +2907,7 @@ Util.Element = {
 	 */
 	get_relative_offsets: function get_element_relative_offsets(window, elem)
 	{
-		if (!Util.is_valid_object(window, elem)) {
+		if (!Util.Node.is_element(elem) || !Util.is_valid_object(window)) {
 			throw new TypeError('Must provide valid window and element ' +
 				'objects to Util.Event.get_relative_offsets().');
 		}
@@ -5412,8 +5413,10 @@ Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
 	function make_empty_element(buffer, element) {
 		if (!Util.Node.is_element(element))
 			throw new TypeError();
-			
+		
 		make_open_tag(buffer, element, gen.xhtml);
+		if (element.nodeName == "PARAM")
+			buffer.end_line();
 	}
 	
 	function make_inline_element(buffer, element) {
@@ -5472,15 +5475,17 @@ Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
 	}
 	
 	function make_element(buffer, element) {
-		if (!Util.Node.is_element(element))
-			throw new TypeError();
+		if (!Util.Node.is_element(element)) {
+			throw new TypeError("Tried to make a non-element as an element: " +
+				element);
+		}
 			
 		if (Util.Node.is_tag(element, 'PRE'))
 			return make_pre_element(buffer, element);
-		else if (Util.Block.is_block(element))
-			return make_block_element(buffer, element);
 		else if (!element.hasChildNodes() && Util.Element.empty_tag(element))
 			return make_empty_element(buffer, element);
+		else if (Util.Block.is_block(element))
+			return make_block_element(buffer, element);
 		else
 			return make_inline_element(buffer, element);
 	}
@@ -11802,7 +11807,11 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 
 		{
 			description : 'Remove all comment nodes.',
-			test : function(node) { return node.nodeType == Util.Node.COMMENT_NODE; },
+			test : function(node) {
+				if (node.nodeType != Util.Node.COMMENT_NODE)
+					return false;
+				return ("!" in allowable_tags);
+			},
 			action : remove_node
 		},
 		{
@@ -22527,7 +22536,7 @@ var Loki = {
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0rc8-pl3",
+	version: "2.0rc9",
 	
 	/** @private */
 	_pending: [],

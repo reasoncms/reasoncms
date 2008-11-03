@@ -40,11 +40,19 @@
 .loki .toolbar a img, .loki .toolbar a span
 {
 	vertical-align: top;
-	padding: 2px 1px;
-	margin: 2px 1px;
+	margin: 4px 2px;
 	height: 16px;
 	width: 16px;
 	cursor: pointer;
+}
+
+.loki .toolbar a.hover
+{
+	background-color: #EFEFEF;
+	border-top-color: buttonhighlight;
+	border-left-color: buttonhighlight;
+	border-bottom-color: buttonshadow;
+	border-right-color: buttonshadow;
 }
 
 .loki .toolbar a span.loki_filtered_button
@@ -52,30 +60,10 @@
 	display: inline-block;
 }
 
-.loki .toolbar a.hover img, .loki .toolbar a.hover span
-{
-	background-color: buttonface;
-	border-bottom: buttonshadow solid 1px;
-	border-left: buttonhighlight solid 1px;
-	border-right: buttonshadow solid 1px;
-	border-top: buttonhighlight solid 1px;
-	margin: 1px 0px;
-}
-
-.loki .toolbar a.active img, .loki .toolbar a.active span
-{
-	background-color: buttonface;
-	border-bottom: buttonhighlight solid 1px;
-	border-left: buttonshadow solid 1px;
-	border-right: buttonhighlight solid 1px;
-	border-top: buttonshadow solid 1px;
-	margin: 0px;
-}
-
 
 .loki .contextmenu
 {
-	background-color: ButtonFace;
+	background-color: buttonface;
 	border: 2px solid buttonshadow;
 	border-left-color: buttonhighlight;
 	border-top-color: buttonhighlight;
