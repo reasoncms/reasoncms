@@ -282,7 +282,7 @@
 					$ok_types = array('jpg');
 					
 					// get exif data
-					if( $this->get_value( 'exif_override' ) && in_array($type,$ok_types))
+					if( $this->get_value( 'exif_override' ) && in_array($type,$ok_types) && function_exists('read_exif_data'))
 					{
 						// read_exif_data() does not obey error supression
 						turn_carl_util_error_logging_off();
