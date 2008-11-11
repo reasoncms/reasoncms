@@ -244,10 +244,10 @@ class PublicationModule extends Generic3Module
 		// init defaults
 		$this->use_filters = false;
 		$this->show_login_link = false;
-		$this->use_pagination = false;
+		$this->use_pagination = (isset($this->params['use_pagination']) && $this->params['use_pagination']) ? true : false;
+		if (!$this->use_pagination && empty($this->max_num_items)) $this->max_num_items = $this->num_per_page;
 		$this->style_string = 'relatedPub';
 		unset ($this->request[ $this->query_string_frag.'_id' ] );
-		if (empty($this->max_num_items)) $this->max_num_items = $this->num_per_page;
 		
 		$publication_ids = (!empty($this->params['related_publication_unique_names'])) 
 						   ? $this->build_ids_from_unique_names($this->params['related_publication_unique_names'])
