@@ -202,17 +202,24 @@
 		}
 		function make_parent( ) // {{{
 		{
-			if($this->get_parent_relationship() && $this->get_value( 'parent_id' ) && $this->get_existing_parent_id() != $this->get_value( 'parent_id' ))
+			if($this->has_new_parent())
 			{
 				$id = $this->get_value( 'id' );
-			
 				$q = 'DELETE FROM relationship WHERE entity_a = "' . $id . '" AND type = "' . $this->get_parent_relationship().'"';
-
 				db_query( $q , 'error deleting existing parent relationship' );
-				
 				create_relationship( $id , $this->get_value( 'parent_id' ) , $this->get_parent_relationship() );
 			}
 		} // }}}
+		
+		function has_new_parent()
+		{
+			if (!isset($this->_has_new_parent))
+			{
+				$this->_has_new_parent = ($this->get_parent_relationship() && $this->get_value( 'parent_id' ) && $this->get_existing_parent_id() != $this->get_value( 'parent_id' ));
+			}
+			return $this->_has_new_parent;
+		}
+		
 		function finish() // {{{
 		{
 			$val = $this->CMfinish();
