@@ -1,5 +1,6 @@
 <?php
 	reason_include_once( 'content_managers/parent_child.php3' );
+	reason_include_once('classes/url_manager.php');
 	
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'MinisitePageManager';
 
@@ -275,15 +276,33 @@
 				db_query( $q , 'Error finishing' );
 			}
 
-			// call parent finish function
-			$res = parent::finish();
-
-			update_URL_history( $this->get_value( 'id' ) );
-			//include( REASON_INC.'micro_scripts/update_global_rewrites.php' );
-
-			// finish up and return
-			return $res;
+			if ($this->has_new_parent() || $this->has_new_url_fragment())
+			{
+				// call parent finish function - this changes the parent if there is a new parent
+				$res = parent::finish();
+				update_URL_history( $this->get_value( 'id' ) );
+				
+				// update rewrites if it is not set as a finish action - maintains backwards compatibility in case reason 4 beta 8
+				// upgrade scripts have not been run.
+				$type = new entity($this->admin_page->type_id);
+				if ($type->get_value('finish_actions') != 'update_rewrites.php') 
+				{
+					$urlm = new url_manager($this->admin_page->site_id);
+					$urlm->update_rewrites();
+				}
+			}
+			return true;
 		} // }}}
+		
+		function has_new_url_fragment()
+		{
+			if (!isset($this->_has_new_url_fragment))
+			{
+				$this->_has_new_url_fragment = ($this->entity->get_value('url_fragment') != $this->get_value('url_fragment'));
+			}
+			return $this->_has_new_url_fragment;
+		}
+		
 		function where_to() // {{{
 		{
 			if( $this->chosen_action == 'finish' && $this->get_value( 'fromweb' ) )
