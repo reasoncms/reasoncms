@@ -290,6 +290,11 @@
 					$urlm = new url_manager($this->admin_page->site_id);
 					$urlm->update_rewrites();
 				}
+				else
+				{
+					$script_url = REASON_HTTP_BASE_PATH . 'scripts/upgrade/4.0b7_to_4.0b8/remove_rewrite_finish_actions.php';
+					trigger_error('It appears you still need to run the remove_rewrites_finish_actions.php upgrade script located at ' . $script_url);
+				}
 			}
 			return true;
 		} // }}}
