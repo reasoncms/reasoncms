@@ -1,5 +1,6 @@
 <?php
 include_once( 'reason_header.php' );
+reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'function_libraries/user_functions.php' );
 
 /**
