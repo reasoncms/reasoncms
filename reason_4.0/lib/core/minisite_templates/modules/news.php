@@ -295,7 +295,7 @@
 			{
 				$news_post_type = id_of('news');
 				$e_type = $e->get_value('type');
-				if ($news_post_type == $e_type) return true;
+				if ($news_post_type == $e_type && $e->get_value('status') != 'pending' ) return true;
 			}
 			header('Location: ' . ERROR_404_PAGE);
 			exit;
