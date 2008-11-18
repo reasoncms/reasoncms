@@ -47,6 +47,13 @@
 				'order'=>'dated.datetime DESC, chunk.author ASC',
 				),
 		),
+		'assets_by_date' => array(
+			'pre_sidebar' => '',
+			'main_post' => array(
+				'module' => 'assets',
+				'order' => 'dated.datetime DESC',
+				),
+		),
 		'assets_by_category' => array(
 			'pre_sidebar' => '',
 			'main_post' => array(
