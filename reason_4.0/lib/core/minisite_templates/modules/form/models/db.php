@@ -4,34 +4,41 @@ reason_include_once( 'minisite_templates/modules/form/models/default.php' );
 reason_include_once( 'classes/object_cache.php' );
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 include_once(TYR_INC.'tyr.php');
+include_once( CARL_UTIL_INC . 'db/connectDB.php');
 
-$GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'ThorFormModel';
+$GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DBFormModel';
 
 
 /**
- * The ThorFormModel is used by thor controllers and views and does the following:
+ * Reason Form module DB Form Model
  *
  * 1. Answers information requests from controller and view(s)
- * 2. Uses thor core to handle initial transformations of a thor form
- * 3. Processes database saves using thor core
+ * 2. Handle initial transformations of a database structure into a disco form (like DiscoDB)
+ * 3. Processes database saves
  * 4. E-mails values using Tyr to submitter and recipients
  * 5. Saves data to session to assist with the display of the submitted data
+ *
+ * By default, administrative access to a db form is available to all administrators of the site where the page appears.
  * 
- * @todo revamp to avoid use of Tyr - use the e-mail class directly and maintain the model send_email API
+ * @todo support allows_multiple, is_editable, custom_admin_form, and admin_access_group page type parameters
+ * @todo support summary object
+ * @todo test magic autofill support
+ * @todo lots more testing
+ * @todo abstract parts of this and thor model to the default model
+ *
+ * @version beta1 - this is not yet fully implemented, but is serving as the model for the work transfer form at carleton 
  *
  * @author Nathan White
  */
-class ThorFormModel extends DefaultFormModel
+class DBFormModel extends DefaultFormModel
 {
-	var $_form;
 	var $_form_id; // active form id
-	var $_disco_admin_obj;
 	var $_admin_obj;
 	var $_summary_obj;
 	var $_is_usable;
-	var $_view;
-	var $_admin_view;
-
+	var $_form_view;
+	var $_form_admin_view;
+	
 	var $_user_has_administrative_access;	
 	var $_user_requested_admin = false;
 	var $_form_submission_key;
@@ -56,29 +63,23 @@ class ThorFormModel extends DefaultFormModel
 								 		 'your_home_phone' => 'get_home_phone',
 								 		 'your_work_phone' => 'get_work_phone');
 								 		 
-	var $submitted_data_hidden_fields_submitter_view = array('id', 'submitted_by', 'submitter_ip', 'date_created', 'date_modified');
+	var $submitted_data_hidden_fields_submitter_view = array('id', 'submitted_by', 'submitter_ip', 'date_created', 'date_modified', 'required_text');
 	
 	var $submitted_data_hidden_fields = array('id');
 	
 	var $show_clear_button = false;
 	
 	/**
-	 * Make sure there is a form on the page, otherwise return false
+	 * Make sure the model can get its connection params, otherwise return false
 	 */
 	function is_usable()
 	{
 		if (!isset($this->_is_usable))
 		{
-			$form =& $this->get_form_entity();
-			if (!$form)
+			$params = $this->get_connection_params();
+			if (empty($params['db_conn']) || empty($params['table']))
 			{
-				trigger_error('The thor form model is not usable because it is being invoked on a page that does not contain a thor form.');
-				$this->_is_usable = false;
-			}
-			elseif (!array_key_exists('thor_view', $form->get_values()))
-			{
-				$link = carl_construct_link(array(), array(), REASON_HTTP_BASE_PATH . 'scripts/upgrade/4.0b6_to_4.0b7/forms.php');
-				trigger_error('The form type needs to be upgraded to work with this module. Run the forms upgrade script: ' . $link);
+				trigger_error('The DB form model is not usable because it has not been provided with a valid DB connection and table.');
 				$this->_is_usable = false;
 			}
 			else $this->_is_usable = true;
@@ -86,8 +87,31 @@ class ThorFormModel extends DefaultFormModel
 		return $this->_is_usable;
 	}
 	
+	function &get_connection_params()
+	{
+		if (!isset($this->_connection_params))
+		{
+			$params =& $this->get_params();
+			$this->_connection_params['db_conn'] = (isset($params['form_model']['db_conn'])) ? $params['form_model']['db_conn'] : false;
+			$this->_connection_params['table'] = (isset($params['form_model']['table'])) ? $params['form_model']['table'] : false;
+		}
+		return $this->_connection_params;
+	}
+	
+	function get_db_conn()
+	{
+		$params =& $this->get_connection_params();
+		return $params['db_conn'];
+	}
+	
+	function get_table_name()
+	{
+		$params =& $this->get_connection_params();
+		return $params['table'];
+	}
+	
 	/**
-	 * Setup the thor form model based upon request vars passed from the controller
+	 * Process the request vars that are passed from the controller
 	 */
 	function handle_request_vars(&$request_vars)
 	{
@@ -100,9 +124,7 @@ class ThorFormModel extends DefaultFormModel
 	
 	function is_editable()
 	{
-		$form =& $this->get_form_entity();
-		$is_editable = $form->get_value('is_editable');
-		return ($is_editable === 'yes');
+		return false;
 	}
 
 	function is_admin()
@@ -132,9 +154,7 @@ class ThorFormModel extends DefaultFormModel
 	
 	function get_email_of_recipient()
 	{
-		$form =& $this->get_form_entity();
-		$email_of_recipient = $form->get_value('email_of_recipient');
-		return $email_of_recipient;
+		return false;
 	}
 	
 	function get_email_of_submitter()
@@ -142,112 +162,67 @@ class ThorFormModel extends DefaultFormModel
 		return $this->get_user_netid();
 	}
 	
-	function get_thank_you_message()
-	{
-		$form =& $this->get_form_entity();
-		$thank_you_message = $form->get_value('thank_you_message');
-		return $thank_you_message;
-	}
-	
 	function get_form_name()
 	{
-		$form =& $this->get_form_entity();
-		$form_name = $form->get_value('name');
-		return $form_name;
+		return '';
 	}
 	
 	/**
-	 * The model provides answers to a number of behavior-related "should scenarios"
-	 */
-	function should_email()
-	{
-		$form =& $this->get_form_entity();
-		$email = $this->get_email_of_recipient();
-		return (!empty($email) && ($this->should_email_link() || $this->should_email_data()) );
-	}
-	
-		/**
-	 * The model provides answers to a number of behavior-related "should scenarios"
+	 * THIS SHOULD STUFF NEEDS THINKING ABOUT...
 	 */
 	function should_email_form_data()
 	{
-		$form =& $this->get_form_entity();
-		$email = $this->get_email_of_recipient();
-		return (!empty($email) && ($this->should_email_link() || $this->should_email_data()) );
+		return false;
 	}
 	
 	function should_email_form_data_to_submitter()
 	{
-		$form =& $this->get_form_entity();
-		$value = $form->get_value('email_submitter');
-		return ( ($value == 'yes') && ($this->should_email_link() || $this->should_email_data()) );
-	}
-	
-	function should_email_link()
-	{
-		$form =& $this->get_form_entity();
-		$value = $form->get_value('email_link');
-		return ($value == 'yes');
-	}
-
-	function should_email_empty_fields()
-	{
-		$form =& $this->get_form_entity();
-		$value = $form->get_value('email_empty_fields');
-		return ($value == 'yes');
-	}
-	
-	function should_email_data()
-	{
-		$form =& $this->get_form_entity();
-		$value = $form->get_value('email_data');
-		return ($value == 'yes');
+		return false;
 	}
 	
 	function should_save_form_data()
 	{
-		$form =& $this->get_form_entity();
-		$db_save = $form->get_value('db_flag');
-		return ($db_save == 'yes');
+		return true;
 	}
-	
+
 	function should_save_submitted_data_to_session()
 	{
-		$form =& $this->get_form_entity();
-		$show_submitted_data = $form->get_value('show_submitted_data');
-		return ($show_submitted_data == 'yes');
+		return true;
 	}
-
-	/** The following should_ methods provide defaults for the view - views can override these methods **/
-	function should_display_return_link()
+	
+	function should_email_link()
 	{
-		$form =& $this->get_form_entity();
-		$display_return_link = $form->get_value('display_return_link');
-		return ($display_return_link == 'yes');
+		return false;
 	}
 
+	function should_email_empty_fields()
+	{
+		return false;
+	}
+	
 	function should_show_submitted_data()
 	{
-		$form =& $this->get_form_entity();
-		$show_submitted_data = $form->get_value('show_submitted_data');
-		return ($show_submitted_data == 'yes');
+		return true;
+	}
+
+	function should_display_return_link()
+	{
+		return true;
 	}
 	
 	function should_show_login_logout()
 	{
-		return ($this->get_magic_string_autofill() || $this->is_editable() || $this->form_requires_authentication());
+		return true;
 	}
 	
 	function should_show_submission_list_link()
 	{
-		return ($this->form_allows_multiple() && $this->user_has_submitted());
+		return false;
 	}
-			
+	
 	function should_show_thank_you_message()
 	{
-		$form =& $this->get_form_entity();
-		$thank_you_message = $form->get_value('thank_you_message');
-		return ($thank_you_message); // does the thank you message have content?
+		return true;
 	}
 	
 	function set_form_id_if_valid($form_id)
@@ -272,29 +247,25 @@ class ThorFormModel extends DefaultFormModel
 	/**
 	 * Does the following:
 	 *
-	 * Redirect case when/if form id spoofing is going on - 
-	 * Returns true if the form_id makes sense to the model, redirects intelligently if it does not, otherwise returns false
+	 * If a form_id has been provided, return true if the user has access to it.
 	 *
 	 * @todo how are forms that do not require login handled?
 	 */
 	function form_id_is_valid($form_id)
 	{
-		$thor_core =& $this->get_thor_core_object();
 		$user_netid = $this->get_user_netid();
 		if ($form_id && $user_netid) // only attempt retrieval if user is logged in!
 		{
-			$row = ($form_id) ? $thor_core->get_values_for_primary_key($form_id) : false;
-			if ($row)
-			{
-				if (isset($row['submitted_by']) && ($user_netid == $row['submitted_by'])) return true;
-			}
+			$qry = $this->get_select_by_key_sql($form_id, 'id');
+			$result = $this->perform_query($qry);
+			return true;
 		}
 		elseif ($form_id && !$user_netid && $this->is_editable()) reason_require_authentication();
 		elseif ($form_id == "0") // a form_id of 0 is valid if the user is allowed to create new entries
 		{
 			if ($this->form_allows_multiple()) return true;
 		}
-		
+		return false;
 		// consider redirect cases
 		$user_netid = $this->get_user_netid();
 		$user_submissions = (!empty($user_netid)) ? $this->get_values_for_user($user_netid) : false;
@@ -337,7 +308,6 @@ class ThorFormModel extends DefaultFormModel
 	 */
 	function create_form_submission_key()
 	{
-		$disco_obj =& $this->get_view();
 		$values = $this->get_values_for_save();
 		$str = get_mysql_datetime();
 		foreach ($values as $val) $str = $str . $val;
@@ -349,20 +319,12 @@ class ThorFormModel extends DefaultFormModel
 	
 	function form_allows_multiple()
 	{
-		$form =& $this->get_form_entity();
-		$allows_multiple = $form->get_value('allow_multiple');
-		return ($allows_multiple == 'yes');
+		return false;
 	}
 	
 	function form_requires_authentication()
 	{
-		if ($group =& $this->_get_group('form_to_authorized_viewing_group'))
-		{
-			$gh = new group_helper();
-			$gh->set_group_by_entity($group);
-			return $gh->requires_login();
-		}
-		else return false;
+		return true;
 	}
 	
 	/**
@@ -375,60 +337,11 @@ class ThorFormModel extends DefaultFormModel
 	}
 	
 	/**
-	 * This intelligently tries to prep up the raw thor data for the summary view table. It does the following:
-	 *
-	 * Unsets submitted_by, submitter_ip, and date_created, and any column for which there is no value for any row
-	 * Limits display to a maximum of 6 columns
-	 * Attempts to optimize for columns that provide most uniqueness between rows
-	 * Also will not show particularly wide columns
-	 *
-	 * This code is a little obtuse - there are probably some better, quicker array functions to do the same thing.
-	 */
-	function get_values_for_user_summary_view()
-	{
-		$thor_core =& $this->get_thor_core_object();
-		$sort_field = $this->get_sort_field();
-		$sort_order = $this->get_sort_order();
-		if (!empty($sort_field) && !empty($sort_order)) $thor_values =& $this->get_sorted_values_for_user($sort_field, $sort_order);
-		else $thor_values =& $this->get_values_for_user();
-		foreach ($thor_values as $k=>$v)
-		{
-			// we will add a row with an edit link if this is editable
-			if ($this->is_editable())
-			{
-				$edit_link = carl_construct_link(array('form_id' => $v['id']), array('textonly', 'netid'));
-				$thor_values[$k]['Action'] = '<a href="'.$edit_link.'">Edit</a>';
-			}
-			
-			if (isset($v['submitted_by'])) unset ($thor_values[$k]['submitted_by']);
-			if (isset($v['submitter_ip'])) unset ($thor_values[$k]['submitter_ip']);
-			if (isset($v['date_created'])) unset ($thor_values[$k]['date_created']);
-			if (isset($v['id'])) unset ($thor_values[$k]['id']);
-			foreach ($thor_values[$k] as $k2=>$v2)
-			{
-				if (strlen($v2) > 0) $has_value[$k2] = true;
-			}
-		}
-		foreach ($thor_values as $k=>$v)
-		{
-			foreach ($thor_values[$k] as $k2=>$v2)
-			{
-				if (!isset($has_value[$k2])) unset ($thor_values[$k][$k2]);
-			}
-		}
-		return $thor_values;
-	}
-	
-	/**
 	 * Return editable or not_editable is magic string autofill is enabled, otherwise return false
 	 */
 	function get_magic_string_autofill()
 	{
-		$form =& $this->get_form_entity();
-		$magic_string_autofill = $form->get_value('magic_string_autofill');
-		return ( ($magic_string_autofill == 'editable') || ($magic_string_autofill == 'not_editable') )
-			   ? $form->get_value('magic_string_autofill')
-			   : false;
+		return false;
 	}
 	
 	function &get_top_links()
@@ -442,6 +355,11 @@ class ThorFormModel extends DefaultFormModel
 			elseif ($this->user_requested_admin() && $this->user_has_administrative_access())
 			{
 				$link['Exit administrative view'] = carl_construct_link(array('form_admin_view' => ''), array('textonly', 'netid'));
+				
+				// add summary view link if we have an action id selected
+				$admin_obj =& $this->get_admin_object();
+				$action_id = $admin_obj->get_table_action_id();
+				if ($action_id) $link['Show summary view'] = carl_construct_link(array('form_admin_view' => 'true'), array('textonly', 'netid'));
 			}	
 		}
 		else $link = array();
@@ -450,42 +368,36 @@ class ThorFormModel extends DefaultFormModel
 	
 	function admin_view_is_available()
 	{
-		$form =& $this->get_form_entity();
-		return ($this->should_save_form_data() || $this->get_values());		
+		return true;	
 	}
 	
+	/**
+	 * Get all the values from the form that correspond to values in the database
+	 */
 	function &get_values_for_save()
 	{
 		$disco_obj =& $this->get_view();
-		$thor_core =& $this->get_thor_core_object();
-		$thor_values = array_merge($thor_core->get_thor_values_from_form($disco_obj), $this->get_values_for_save_extra_fields());
-		return $thor_values;
+		$values = array_merge($disco_obj->get_values(), $this->get_values_for_save_extra_fields());
+		$columns =& $this->get_database_columns();
+		foreach (array_keys($columns) as $col_name)
+		{
+			if (isset($values[$col_name])) $valid_values[$col_name] = $values[$col_name];
+		}
+		return $valid_values;
 	}
 	
 	function &get_values_for_email()
 	{
 		$disco_obj =& $this->get_view();
-		$form =& $this->get_form_entity();
-		if ($form->get_value('email_data') == 'yes')
-		{
-			$thor_core =& $this->get_thor_core_object();
-			$thor_values = $this->_get_values_and_extra_email_fields($disco_obj);
-			$fields_to_hide =& $this->get_submitted_data_hidden_fields($disco_obj);
-			if (!empty($fields_to_hide)) $this->_hide_fields($thor_values, $fields_to_hide);
-			$values = $thor_core->transform_thor_values_for_display($thor_values);
-		}
-		else $values = array();
+		$values = $disco_obj->get_values();
+		$fields_to_hide =& $this->get_submitted_data_hidden_fields($disco_obj);
+		if (!empty($fields_to_hide)) $this->_hide_fields($values, $fields_to_hide);
 		return $values;
 	}
 	
 	function &get_values_for_email_submitter_view()
 	{
-		$form =& $this->get_form_entity();
-		if ($form->get_value('email_data') == 'yes')
-		{
-			$values =& $this->get_values_for_submitter_view();
-		}
-		else $values = array();
+		$values =& $this->get_values_for_submitter_view();
 		return $values;
 	}
 	
@@ -494,13 +406,13 @@ class ThorFormModel extends DefaultFormModel
 		if (!isset($this->_values_for_submitter_view))
 		{
 			$disco_obj =& $this->get_view();
-			$thor_core =& $this->get_thor_core_object();
-			$thor_values = $this->_get_values_and_extra_email_fields($disco_obj);
+			$values = $disco_obj->get_values();
 			$disco_hidden_fields =& $this->_get_disco_hidden_fields($disco_obj);
 			$fields_to_hide =& $this->get_submitted_data_hidden_fields_submitter_view($disco_obj);
-			if (!empty($fields_to_hide)) $this->_hide_fields($thor_values, $fields_to_hide);
-			if (!empty($disco_hidden_fields)) $this->_hide_fields($thor_values, $disco_hidden_fields);
-			$this->_values_for_submitter_view = $thor_core->transform_thor_values_for_display($thor_values);
+			if (!empty($fields_to_hide)) $this->_hide_fields($values, $fields_to_hide);
+			if (!empty($disco_hidden_fields)) $this->_hide_fields($values, $disco_hidden_fields);
+			
+			$this->_values_for_submitter_view = $values;
 		}
 		return $this->_values_for_submitter_view;
 	}
@@ -532,15 +444,16 @@ class ThorFormModel extends DefaultFormModel
 		return array('submitted_by' => $submitted_by, 'submitter_ip' => $submitter_ip, 'submission_time' => get_mysql_datetime());
 	}
 
-	function &_get_values_and_extra_email_fields(&$disco_obj)
+	function &_get_values_and_extra_email_fields()
 	{
-		$thor_core =& $this->get_thor_core_object();
-		$thor_values = array_merge($thor_core->get_thor_values_from_form($disco_obj), $this->get_values_for_email_extra_fields());
-		return $thor_values;
+		$disco_obj =& $this->get_view();
+		$values = array_merge($disco_obj->get_values(), $this->get_values_for_email_extra_fields());
+		return $values;
 	}
 	
-	function &_get_disco_hidden_fields($disco_obj)
+	function &_get_disco_hidden_fields()
 	{
+		$disco_obj =& $this->get_view();
 		if (!isset($this->_disco_hidden_fields))
 		{
 			$elements = $disco_obj->get_element_names();
@@ -559,13 +472,19 @@ class ThorFormModel extends DefaultFormModel
 	 */
 	function get_link_for_email()
 	{
-		$form =& $this->get_form_entity();
 		if ($this->should_email_link() && $this->should_save_form_data())
 		{
 			$link = carl_construct_link(array('form_admin_view' => 'true', 'table_row_action' => 'view', 'table_action_id' => $this->get_form_id()));
 			return $link;
 		}
 		else return '';
+	}
+	
+	function get_redirect_url()
+	{
+		$form_id = ($this->is_editable() && $this->get_user_netid()) ? $this->get_form_id() : '';
+		$redirect = carl_make_redirect(array('submission_key' => $this->create_form_submission_key(), 'form_id' => $form_id));
+		return $redirect;
 	}
 	
 	/**
@@ -585,135 +504,111 @@ class ThorFormModel extends DefaultFormModel
 	{
 		foreach ($fields_to_hide as $key)
 		{
-			if (isset($values[$key]))
+			if (array_key_exists($key, $values))
 			{
 				unset ($values[$key]);
 			}
 		}
 	}
-		
-	function &get_disco_admin_object()
+
+	/**
+	 * @todo the db.php model should probably support custom table admin forms, but maybe not - this is pretty easy.
+	 */
+	function init_admin()
 	{
-		if (!isset($this->_disco_admin_obj))
-		{
-			include_once( THOR_INC . 'thor_admin.php');
-			$form =& $this->get_form_entity();
-			$netid = $this->get_user_netid();
-			$this->_disco_admin_obj = new DiscoThorAdmin();
-			$this->_disco_admin_obj->set_thor_core($thor_core);
-			$this->_disco_admin_obj->set_user_netid($netid);
-		}
-		return $this->_disco_admin_obj;
+		$head_items =& $this->get_head_items();
+		$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+		$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/hide_nav.css');
+		$admin_obj =& $this->get_admin_object();
+		$admin_view = $this->get_admin_view();
+		$admin_obj->set_admin_form($admin_view);
+		$admin_obj->set_privileges_from_admin_form();
+		$admin_obj->init($this->get_db_conn(), $this->get_table_name());
 	}
 	
 	function &get_admin_object()
 	{
 		if (!isset($this->_admin_obj))
 		{
-			include_once( THOR_INC . 'thor_admin.php');
-			$form =& $this->get_form_entity();
-			$thor_core =& $this->get_thor_core_object();
-			$disco_admin_obj =& $this->get_disco_admin_object();
-			$xml = $form->get_value('thor_content');
-			$table = 'form_' . $form->id();
-			$this->_admin_obj = new ThorAdmin();
-			$this->_admin_obj->set_thor_core($thor_core);
-			$this->_admin_obj->set_admin_form($disco_admin_obj);
+			include_once( CARL_UTIL_INC . 'db/table_admin.php');
+			$this->_admin_obj = new TableAdmin();
 		}
 		return $this->_admin_obj;
 	}
 
+	function init_summary_object()
+	{
+		$summary_obj =& $this->get_summary_object();
+		$summary_obj->init_from_array($this->get_values_for_user());
+	}
+	
 	function &get_summary_object()
 	{
 		if (!isset($this->_summary_obj))
 		{
 			include_once( CARL_UTIL_INC . 'db/table_admin.php');
 			// we want to entity convert all the fields that occur naturally 
-			$thor_core =& $this->get_thor_core_object();
-			$display_values =& $thor_core->get_column_labels_indexed_by_name();
 			$this->_summary_obj = new TableAdmin();
-			$this->_summary_obj->init_view_no_db($display_values);
-			$this->_summary_obj->set_fields_to_entity_convert(array_keys($display_values));
+			$this->_summary_obj->init_from_array($this->get_values_for_user());
+			//$this->_summary_obj->set_fields_to_entity_convert(array_keys($display_values));
 		 	$this->set_sort_field($this->_summary_obj->get_sort_field());
 		 	$this->set_sort_order($this->_summary_obj->get_sort_order());
 		}
 		return $this->_summary_obj;
 	}
 	
-	function &get_thor_core_object()
-	{
-		if (!isset($this->_thor_core_obj))
-		{
-			include_once( THOR_INC . 'thor.php' );
-			$form =& $this->get_form_entity();
-			$xml = $form->get_value('thor_content');
-			$table = 'form_' . $form->id();
-			$this->_thor_core_obj = new ThorCore($xml, $table); 
-		}
-		return $this->_thor_core_obj;
-	}
-	
-	/**
-	 * Return mixed form entity object or false
-	 * @access private
-	 */
-	function &get_form_entity()
-	{
-		if (!isset($this->_form))
-		{
-			$es = new entity_selector($this->get_site_id());
-			$es->description = 'Selecting form to display on a minisite page.';
-			$es->add_type( id_of('form') );
-			$es->add_right_relationship( $this->get_page_id(), relationship_id_of('page_to_form') );
-			$es->set_num(1);
-			$result = $es->run_one();
-			if ($result)
-			{
- 				$this->_form = reset($result);
- 			}
-  			else $this->_form = false;
-  		}
-  		return $this->_form;
-	}
-	
-	function &get_values()
-	{
-		if (!isset($this->_values))
-		{
-			$thor_core =& $this->get_thor_core_object();
-			$this->_values = $thor_core->get_rows();
-		}
-		return $this->_values;
-	}
-	
 	function &get_values_for_user()
 	{
 		if (!isset($this->_values_for_user))
 		{
-			$thor_core =& $this->get_thor_core_object();
 			$netid = $this->get_user_netid();
-			$this->_values_for_user = (!empty($netid)) ? $thor_core->get_values_for_user($netid) : false;
+			if ($netid)
+			{
+				$qry = $this->get_select_by_key_sql($netid, 'submitted_by');
+				$result = $this->perform_query($qry);
+				if ($result)
+				{
+					while ($row = mysql_fetch_assoc($result))
+					{
+						$this->_values_for_user[] = $row;
+					}
+				}
+			}
+			if (!isset($this->_values_for_user)) $this->_values_for_user = false;
 		}
 		return $this->_values_for_user;
 	}
 	
-	function get_redirect_url()
+	function &get_values_for_primary_key()
 	{
-		if (!isset($this->_redirect_url))
+		if (!isset($this->_values_for_user))
 		{
-			$form_id = ($this->is_editable() && $this->get_user_netid()) ? $this->get_form_id() : '';
-			$this->_redirect_url = carl_make_redirect(array('submission_key' => $this->create_form_submission_key(), 'form_id' => $form_id));
+			$netid = $this->get_user_netid();
+			if ($netid)
+			{
+				$qry = $this->get_select_by_key_sql($netid, 'submitted_by');
+				$result = $this->perform_query($qry);
+				if ($result)
+				{
+					while ($row = mysql_fetch_assoc($result))
+					{
+						$this->_values_for_user[] = $row;
+					}
+				}
+			}
+			if (!isset($this->_values_for_user)) $this->_values_for_user = false;
 		}
-		return $this->_redirect_url;
+		return $this->_values_for_user;
 	}
 	
+	/**
+	 * @todo implement me
+	 */
 	function &get_sorted_values_for_user($sort_field, $sort_order)
 	{
 		if (!isset($this->_sorted_values_for_user[$sort_field][$sort_order]))
 		{
-			$thor_core =& $this->get_thor_core_object();
-			$netid = $this->get_user_netid();
-			$this->_sorted_values_for_user[$sort_field][$sort_order] = (!empty($netid)) ? $thor_core->get_values_for_user($netid, $sort_field, $sort_order) : false;
+			return false;
 		}
 		return $this->_sorted_values_for_user[$sort_field][$sort_order];
 	}
@@ -725,20 +620,20 @@ class ThorFormModel extends DefaultFormModel
 	{
 		if (!isset($this->_disco_field_name[$label]))
 		{
-			$thor_core =& $this->get_thor_core_object();
-			$this->_disco_field_name[$label] = ($thor_core->get_column_name($label)) 
-											   ? $thor_core->get_column_name($label) 
-											   : $thor_core->get_column_name_from_normalized_label($label);
+			$view =& $this->get_view();
+			$elements = $view->get_element_names();
+			$normalized_label = strtolower(str_replace(" ", "_", $label));
+			foreach ($elements as $element)
+			{
+				
+				$display_name = $view->get_element_property($element, 'display_name');
+				$this->_disco_field_name[$label] = ( ($display_name == $label) || 
+													 (strtolower(str_replace(" ", "_", $display_name)) == $normalized_label) )
+											     ? $element : false;
+				if ($this->_disco_field_name[$label] != false) break;
+			}
 		}
 		return $this->_disco_field_name[$label];
-	}
-	
-	function get_field_name_from_normalized_label($normalized_label)
-	{
-		if (!isset($this->_field_name_from_normalized_label[$label]))
-		{
-			$thor_core =& $this->get_thor_core_object();
-		}
 	}
 	
 	function set_sort_field($field)
@@ -760,67 +655,6 @@ class ThorFormModel extends DefaultFormModel
 	{
 		return (isset($this->_sort_order)) ? $this->_sort_order : '';
 	}
-
-	/**
-	 * @todo update to not use Tyr
-	 */
-	function email_form_data_to_submitter()
-	{
-		if ($this->get_email_of_submitter())
-		{
-			$email_data = $this->get_values_for_email_submitter_view(); // grab the values
-			if ($this->should_email_link())
-			{
-				$email_link = $this->get_link_for_email_submitter_view();
-				if (!empty($email_link))
-				{
-					$options['access_link'] = $email_link;
-				}
-				else
-				{
-					$options['origin_link'] = carl_construct_link(array('')); // we use the origin if no link to edit is available
-				}
-			}
-			$options['subject'] = 'Form Submission Confirmation: ' . $this->get_form_name(); // should i include form name
-			$options['header'] = $this->get_form_name() . " - " . "Successfully Submitted " . carl_date('l, FÊjS Y \\a\tÊh:i:sÊA');
-			$options['to'] = $this->get_email_of_submitter();
-			$options['disclaimer'] = false;
-			$this->send_email($email_data, $options);
-		}
-	}
-	
-	/**
-	 * @todo work out how to handle email_link
-	 */
-	function email_form_data()
-	{
-		$email_data = $this->get_values_for_email();
-		$email_link = $email_link = $this->get_link_for_email();
-		if ($this->get_email_of_recipient())
-		{
-			if (!empty($email_link)) $options['access_link'] = $email_link;
-			$options['to'] = $this->get_email_of_recipient();
-			$this->send_email($email_data, $options);
-		}
-		else
-		{
-			trigger_error('submitter e-mail could not be determined!');
-		}
-	}
-	
-	function save_form_data()
-	{
-		$save_values = $this->get_values_for_save();
-		$this->save_data($save_values);
-	}
-
-	function save_submitted_data_to_session()
-	{
-		$values =& $this->get_values_for_submitter_view();
-		$session =& get_reason_session();
-		if (!$session->has_started()) $session->start();
-		$session->set('form_confirm', $values);
-	}
 	
 	/**
 	 * Uses Tyr to send an e-mail, given an array of key value pairs where the key is the item display name, and the value is the value
@@ -841,18 +675,16 @@ class ThorFormModel extends DefaultFormModel
 	 */
 	function send_email(&$data, $options = array())
 	{
-		$form =& $this->get_form_entity();
-		$thor_core =& $this->get_thor_core_object();
-		$to = (isset($options['to'])) ? $options['to'] : $form->get_value('email_of_recipient');
+		$to = (isset($options['to'])) ? $options['to'] : $this->get_email_of_recipient();
 		$to = (is_array($to)) ? implode(",", $to) : $to;
 		if (strlen(trim($to)) > 0)
 		{
 			if (!$this->should_email_empty_fields()) $messages['all']['hide_empty_values'] = true;
 			if (isset($options['origin_link'])) $messages['all']['form_origin_link'] = $options['origin_link'];
 			if (isset($options['access_link'])) $messages['all']['form_access_link'] = $options['access_link'];
-			$messages['all']['form_title'] = (isset($options['header'])) ? $options['header'] : $form->get_value('name');
+			$messages['all']['form_title'] = (isset($options['header'])) ? $options['header'] : $this->get_form_name();
 			$messages[0]['to'] = $to;
-			$messages[0]['subject'] = (isset($options['subject'])) ? $options['subject'] : 'Response to Form: ' . $form->get_value('name');	
+			$messages[0]['subject'] = (isset($options['subject'])) ? $options['subject'] : 'Response to Form: ' . $this->get_form_name();	
 			$tyr = new Tyr($messages, $data);
 			$tyr->add_disclaimer = (isset($options['disclaimer']) && ($options['disclaimer'] == false) ) ? false : true;
 			$tyr->run();
@@ -871,60 +703,27 @@ class ThorFormModel extends DefaultFormModel
 	 */
 	function save_data(&$data, $options = array())
 	{
-		$form =& $this->get_form_entity();
-		$thor_core =& $this->get_thor_core_object();
 		$form_id = $this->get_form_id();
 		
 		if ( $form_id && $this->is_editable() ) // update
 		{
-			$thor_core->update_values_for_primary_key($form_id, $data);
-			}
+			$result = $this->perform_update($form_id, $data);
+		}
 		else // insert
 		{
-			$insert_id = $thor_core->insert_values($data);
-			$this->set_form_id($insert_id);
+			$columns = $this->get_database_columns();
+			if (isset($columns['date_created']) && !isset($data['date_created'])) $data['date_created'] = get_mysql_datetime();
+			$result = $this->perform_insert($data);
+			if ($result) $this->set_form_id($result);
 		}
 	}
-
-	function &setup_view()
+	
+	function save_submitted_data_to_session()
 	{
-		if (!isset($this->_view))
-		{
-			if (!defined('REASON_FORMS_THOR_DEFAULT_VIEW'))
-			{
-				trigger_error('REASON_FORMS_THOR_DEFAULT_VIEW constant is not defined - using the default for now, but please set the constant in the reason_settings.php file.');
-				define('REASON_FORMS_THOR_DEFAULT_VIEW', 'default.php'); // trigger error as well
-			}
-			$form =& $this->get_form_entity();
-			$custom_view_filename = $form->get_value('thor_view');
-			if (!empty($custom_view_filename) && reason_file_exists('minisite_templates/modules/form/views/thor/'.$custom_view_filename))
-			{
-				reason_include_once('minisite_templates/modules/form/views/thor/'.$custom_view_filename);
-			}
-			elseif (!empty($custom_view_filename) && reason_file_exists($custom_view_filename))
-			{
-				reason_include_once($custom_view_filename);
-			}
-			elseif (reason_file_exists('minisite_templates/modules/form/views/thor/'.REASON_FORMS_THOR_DEFAULT_VIEW))
-			{
-				reason_include_once('minisite_templates/modules/form/views/thor/'.REASON_FORMS_THOR_DEFAULT_VIEW);
-			}
-			elseif (reason_file_exists('minisite_templates/modules/form/views/'.REASON_FORMS_THOR_DEFAULT_VIEW))
-			{
-				reason_include_once('minisite_templates/modules/form/views/'.REASON_FORMS_THOR_DEFAULT_VIEW);
-			}
-			elseif (file_exists(REASON_FORMS_THOR_DEFAULT_VIEW))
-			{
-				include_once(REASON_FORMS_THOR_DEFAULT_VIEW);
-			}
-			else trigger_error('The thor view (' . (!empty($custom_view_filename)) ? $custom_view_filename : REASON_FORMS_THOR_DEFAULT_VIEW . ') could not be loaded for a form (' . $form->get_value('name') . ') with id ' . $form->id() .  
-							   ' Check the thor_view value in the content manager or the REASON_FORMS_THOR_DEFAULT_VIEW constant.', FATAL);
-			
-			$view_name = $GLOBALS['_form_view_class_names'][basename( (!empty($custom_view_filename)) ? $custom_view_filename : REASON_FORMS_THOR_DEFAULT_VIEW, '.php')];
-			$this->_view = new $view_name();
-			$this->_view->set_model($this);
-		}
-		return $this->get_view();
+		$values =& $this->get_values_for_submitter_view();
+		$session =& get_reason_session();
+		if (!$session->has_started()) $session->start();
+		$session->set('form_confirm', $values);
 	}
 	
 	function user_requested_admin()
@@ -938,54 +737,49 @@ class ThorFormModel extends DefaultFormModel
 	function transform_form()
 	{
 		$disco =& $this->get_view();
-		$disco->set_form_class('BoxThor2');
-		$thor_core =& $this->get_thor_core_object();
-		$thor_core->append_thor_elements_to_form($disco);		
 		if (!$this->get_show_clear_button())
 		{
 			if (isset($disco->actions['reset'])) unset ($disco->actions['reset']);
 		}
-		// if it is editable, load data for the user (if it exists)
-		if ($this->is_editable())
+		$this->_setup_elements($disco);
+		$editable = true;
+		$methods =& $this->get_magic_transform_methods($disco);
+		$attribute_values =& $this->get_magic_transform_values($disco);
+		if (!empty($methods) && !empty($attribute_values))
 		{
-			$form_id = $this->get_form_id();
-			$values = ($form_id) ? $thor_core->get_values_for_primary_key($form_id) : false;
-			if ($values)
+			foreach ($methods as $k => $v)
 			{
-				$thor_core->apply_values_for_primary_key_to_form($disco, $form_id);
-				if ($this->get_magic_string_autofill() != 'not_editable') return true; // end here unless the autofill values are not editable in which case we enforce them
-			}
-		}
-		if ($this->get_magic_string_autofill()) // is magic string autofill enabled?
-		{
-			$editable = ($this->get_magic_string_autofill() == 'editable');
-			$methods =& $this->get_magic_transform_methods($disco);
-			$attribute_values =& $this->get_magic_transform_values($disco);
-			if (!empty($methods) && !empty($attribute_values))
-			{
-				foreach ($methods as $k => $v)
+				if (!empty($v)) // a method that maps to an empty string will not be run (allows one to turn off magic transform for a field)
 				{
-					if (!empty($v)) // a method that maps to an empty string will not be run (allows one to turn off magic transform for a field)
-					{
-						if (method_exists($disco, $v)) $transform_array[$k] = $disco->$v();
-						elseif (method_exists($this, $v)) $transform_array[$k] = $this->$v();
-						else trigger_error('The magic transform method ' . $v . ' was not defined in the thor model or view - will not transform the field ' . $k);
-					}
+					if (method_exists($disco, $v)) $transform_array[$k] = $disco->$v();
+					elseif (method_exists($this, $v)) $transform_array[$k] = $this->$v();
+					else trigger_error('The magic transform method ' . $v . ' was not defined in the thor model or view - will not transform the field ' . $k);
 				}
 			}
-			if (!empty($transform_array)) $this->apply_magic_transform_to_form($disco, $transform_array, $editable); // zap this!
-			return true;
+		}
+		if (!empty($transform_array)) $this->apply_magic_transform_to_form($disco, $transform_array, $editable); // zap this!
+		return true;
+	}
+	
+	function _setup_elements(&$disco)
+	{
+		$column_types =& $this->get_database_columns();
+		foreach ($column_types as $name=>$db_type)
+		{
+			$result = $disco->plasmature_type_from_db_type( $name, $db_type, array('find_maxlength_of_text_field' => true, 'do_not_sort_enums' => true));
+			$plas_type = (reset($result)) ? reset($result) : 'text';
+			$args = (next($result));
+			if(($plas_type == 'textDate' || $plas_type == 'textDateTime')) $args['prepopulate'] = true;
+			$disco->add_element( $name, $plas_type, $args );
 		}
 	}
 	
 	function apply_magic_transform_to_form(&$disco_obj, $transform_array, $editable = true)
 	{
-		$thor_core =& $this->get_thor_core_object();
-		$display_values =& $thor_core->get_column_labels_indexed_by_name();
+		$display_values = $disco_obj->get_element_names();
 		foreach ($display_values as $key => $label)
 		{
-			$normalized_label = strtolower(str_replace(" ", "_", $label));
-			if (isset($transform_array[$label]) || isset($transform_array[$normalized_label]))
+			if (isset($transform_array[$label]))
 			{
 				$value = (isset($transform_array[$label])) ? $transform_array[$label] : $transform_array[$normalized_label];
 				$disco_obj->set_value($key, $value);
@@ -1011,8 +805,6 @@ class ThorFormModel extends DefaultFormModel
 			$netid = $this->get_user_netid();
 			$user_id = ($netid) ? get_user_id($netid) : false;
 			if ( ($user_id) && reason_username_has_access_to_site($netid, $this->get_site_id()) && reason_user_has_privs($user_id, 'edit')) $access = true;
-			elseif ($this->_user_is_in_admin_access_group()) $access = true;
-			elseif ($this->_user_receives_email_results()) $access = true;
 			else $access = false;
 			$this->_user_has_administrative_access = $access;
 		}
@@ -1024,22 +816,12 @@ class ThorFormModel extends DefaultFormModel
 	 */
 	function admin_requires_login()
 	{
-		if ($group =& $this->_get_group('form_to_authorized_results_group'))
-		{
-			$gh = new group_helper();
-			$gh->set_group_by_entity($group);
-			return $gh->requires_login();
-		}
 		return true;
 	}
 	
 	function user_has_access_to_fill_out_form()
 	{
-		if (!isset($this->_user_has_access_to_fill_out_form))
-		{
-			$this->_user_has_access_to_fill_out_form = $this->_user_is_in_viewing_group();
-		}
-		return $this->_user_has_access_to_fill_out_form;
+		return true;
 	}
 	
 	/**
@@ -1074,66 +856,13 @@ class ThorFormModel extends DefaultFormModel
 		}
 		return $this->_directory_info;
 	}
-	
-	function _user_is_in_admin_access_group()
-	{
-		if ($group =& $this->_get_group('form_to_authorized_results_group'))
-		{
-			$netid = $this->get_user_netid();
-			$gh = new group_helper();
-			$gh->set_group_by_entity($group);
-			return $gh->has_authorization($netid);
-		}
-		else return false;
-	}
-	
-	function _user_is_in_viewing_group()
-	{
-		if ($group =& $this->_get_group('form_to_authorized_viewing_group'))
-		{
-			$netid = $this->get_user_netid();
-			$gh = new group_helper();
-			$gh->set_group_by_entity($group);
-			return $gh->has_authorization($netid);
-		}
-		else return true;
-	}
 		
 	/**
 	 * @access private
 	 */
 	function _user_receives_email_results()
 	{
-		$form =& $this->get_form_entity();
-		$netid = $this->get_user_netid();
-		$auth_usernames = (explode(',', $form->get_value( 'email_of_recipient' )));
-		if ($netid && $auth_usernames)
-		{
-			return (in_array($netid, $auth_usernames));
-		}
-		else return false;
-	}
-		
-	/**
-	 * @access private
-	 */
-	function &_get_group($rel)
-	{
-		$form =& $this->get_form_entity();
-		if (!isset($this->_groups[$rel]))
-		{
-			$es = new entity_selector();
-			$es->description = 'Getting groups for this relationship';
-			$es->add_type( id_of('group_type') );
-			$es->add_right_relationship( $form->id(), relationship_id_of($rel) );
-			$result = $es->run_one();
-			if ($result)
-			{
-  				$this->_groups[$rel] = reset($result);
-  			}
-  			else $this->_groups[$rel] = false;
-  		}
-  		return $this->_groups[$rel];
+		return false;
 	}
 	
 	function set_user_requested_admin($boolean)
@@ -1323,6 +1052,82 @@ class ThorFormModel extends DefaultFormModel
 			else $this->_show_clear_button = $this->show_clear_button;
 		}
 		return $this->_show_clear_button;
+	}
+	
+	// SQL METHODS - These should really be abstracted out of this
+	/**
+	 * Maybe limit to one???
+	 */	
+	function get_select_by_key_sql($key, $key_column, $sort_field = '', $sort_order = '')
+	{
+		$str = 'SELECT * FROM '.$this->get_thor_table().' WHERE '.$key_column.' = "'.$key.'"';
+		if (!empty($sort_field) && !empty($sort_order))
+		{
+			$str .= ' ORDER BY "' . $sort_field . '" ' . $sort_order; 
+		}
+		return $str;
+	}
+	
+	function &get_database_column_names()
+	{
+		$columns =& $this->get_database_columns();
+		$names = array_keys($columns);
+		return $names;
+	}
+	
+	/**
+	 * @return array column_name=>column_type
+	 * @todo this is old code pulled form discodb and should be reviewed for efficiency
+	 */
+	function &get_database_columns()
+	{
+		if (!isset($this->_database_columns))
+		{
+			$table = $this->get_table_name();
+			connectDB($this->get_db_conn());
+			$types = mysql_query( "show fields from $table" ) OR $this->_internal_error( 'Could not retrieve types from DB' );
+			$fields = mysql_list_fields( $this->get_db_conn(), $table ) OR $this->_internal_error( 'Could not retrieve fields from DB: '.mysql_error() );
+			$columns = mysql_num_fields( $fields );
+			connectDB(REASON_DB);
+			
+			for ($i = 0; $i < $columns; $i++)
+			{
+				$f = mysql_field_name($fields, $i) OR $this->_internal_error( 'um ... something is wrong. you should check me. and someone should write a more descriptive error message.' );
+				$db_type = mysql_result($types, $i,'Type' )  OR $this->_internal_error( 'um ... something is wrong. you should check me. and someone should write a more descriptive error message.' );
+				$this->_database_columns[$f] = $db_type;
+			}
+		}
+		return $this->_database_columns;
+	}
+	
+	/**
+	 * Wrapper for generic query to makes sure we connect, disconnect from the database as appropriate
+	 */
+	function perform_query($qry)
+	{
+		$restore_conn = ($this->get_db_conn() != get_current_db_connection_name()) ? get_current_db_connection_name() : false;
+		if ($restore_conn) connectDB($this->get_db_conn());
+		$result = db_query($qry);
+		if ($restore_conn) connectDB($restore_conn);
+		return $result;
+	}
+	
+	function perform_insert($values)
+	{
+		$restore_conn = ($this->get_db_conn() != get_current_db_connection_name()) ? get_current_db_connection_name() : false;
+		if ($restore_conn) connectDB($this->get_db_conn());
+		$result = $GLOBALS['sqler']->insert( $this->get_table_name(), $values );
+		if ($restore_conn) connectDB($restore_conn);
+		return ($result) ? mysql_insert_id() : false;
+	}
+	
+	function perform_update($id, $values)
+	{
+		$restore_conn = ($this->get_db_conn() != get_current_db_connection_name()) ? get_current_db_connection_name() : false;
+		if ($restore_conn) connectDB($this->get_db_conn());
+		$result = $GLOBALS['sqler']->update( $this->get_table_name(), $values, $id );
+		if ($restore_conn) connectDB($restore_conn);
+		return $result;
 	}
 }
 ?>
