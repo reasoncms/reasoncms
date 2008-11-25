@@ -12,7 +12,7 @@
 			// submitted, because we'll already be displaying a
 			// thank-you message in main_post, and it would look silly
 			// to have the content there too
-			if ( !array_key_exists('thor_success', $_REQUEST) )
+			if ( !array_key_exists('submission_key', $_REQUEST) )
 				parent::run();
 		}
 	}
