@@ -764,11 +764,11 @@ class TableAdmin
 	}
 	
 	/**
-	 * @return string the current table row action
+	 * @return string the current table row action id
 	 */
 	function get_table_action_id()
 	{
-		return $this->table_action_id;
+		return (isset($this->table_action_id)) ? $this->table_action_id : false;
 	}
 	
 	/**
