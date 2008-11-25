@@ -16,6 +16,7 @@
 	 * that are available, hide/show columns, set comments in editing fields, etc. If an admin form name is not passed, the
 	 * form will not offer an administrative interface.
 	 *
+	 * @deprecated - use form module with appropriate model
 	 * @author Nathan White
 	 */ 
 	class FormCustomMinisiteModule extends DefaultMinisiteModule

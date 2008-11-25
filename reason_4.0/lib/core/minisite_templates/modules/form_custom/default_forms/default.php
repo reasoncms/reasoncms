@@ -16,6 +16,7 @@
 	 * In the process phase, the class variable allowable_fields is consulted. If not empty, then only the fields in this array
 	 * will be updated by the database calls.
 	 *
+	 * @deprecated use the standard form module with the DB model
 	 * @author Nathan White
 	 */
 	class DefaultCustomForm extends DiscoDB
