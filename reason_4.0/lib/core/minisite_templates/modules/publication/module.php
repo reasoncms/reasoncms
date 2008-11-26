@@ -1033,9 +1033,9 @@ class PublicationModule extends Generic3Module
 		}
 		
 		/**
-		*  Checks to make sure that the given news item really belongs to this publication.
+		*  Checks to make sure that the given news item is OK to display.
 		*  @param entity $entity News item entity
-		*  @return boolean True if the item belongs to this publication.
+		*  @return boolean True if OK
 		*/
 		function further_checks_on_entity( $entity )
 		{
@@ -1045,6 +1045,8 @@ class PublicationModule extends Generic3Module
 			// This  should return true if the entity looks OK to be shown and false if it does not.
 			if(empty($this->items[$entity->id()]))
 			{
+				if($entity->get_value('status') == 'pending' && !user_has_access_to_site($this->site_id) )
+					return false;
 				$publication_check = ($entity->has_left_relation_with_entity($this->publication, 'news_to_publication'));
 				if ($this->has_issues()) $issue_check = in_array($this->current_item_id, $this->get_issues_for_item());
 				else $issue_check = true;
