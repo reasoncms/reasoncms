@@ -47,7 +47,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$this->markup_string .= '<div class="commentAdded">'.$this->get_comment_added_section().'</div>'."\n";
 		}
-		$this->markup_string .= '<h3 class="postTitle">'.$this->item->get_value( 'release_title' ).'</h3>'."\n";
+		$this->markup_string .= $this->get_title_section();
 		if($this->should_show_date_section())
 		{
 			$this->markup_string .= '<div class="date">'.$this->get_date_section().'</div>'."\n";
@@ -131,6 +131,18 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 			$ret .= '<h4>Your comment has been added.</h4>';
 			$ret .= '<a href="#comment'.$this->passed_vars['request']['comment_posted_id'].'">Jump to your comment</a>';
 		}
+		return $ret;
+	}
+	function get_title_section()
+	{
+		$ret = '';
+		$ret .= '<h3 class="postTitle">';
+		$ret .= $this->item->get_value( 'release_title' );
+		if($this->item->get_value( 'status' ) == 'pending')
+		{
+			$ret .= ' <span class="pending">[Unpublished]</span>';
+		}
+		$ret .= '</h3>'."\n";
 		return $ret;
 	}
 	function should_show_date_section()
