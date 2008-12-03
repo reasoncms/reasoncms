@@ -28,6 +28,8 @@
 			$this->change_element_type( 'use_page_caching', 'hidden');
 			$this->change_element_type( 'allow_site_to_change_theme', 'hidden');
 			$this->change_element_type( 'other_base_urls', 'hidden');
+                        $this->change_element_type( 'use_custom_footer', 'hidden');
+                        $this->change_element_type( 'custom_footer', 'hidden');
 			
 		} // }}}
 		
