@@ -451,7 +451,7 @@ class ThorFormModel extends DefaultFormModel
 	function admin_view_is_available()
 	{
 		$form =& $this->get_form_entity();
-		return ($this->should_save_form_data() || $this->get_values());		
+		return ($this->get_values());		
 	}
 	
 	function &get_values_for_save()
