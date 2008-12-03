@@ -12,6 +12,7 @@
 	include_once('reason_header.php');
 	reason_include_once( 'classes/entity_selector.php' );
 	include_once(CARL_UTIL_INC.'basic/date_funcs.php');
+	include_once(CARL_UTIL_INC.'basic/cleanup_funcs.php');
 	
 	/**
 	 * quick function to convert a date field into RFC 822, required by RSS 2.0
@@ -22,12 +23,11 @@
 	}
 	
 	/**
-	 * hacky email error checker - author field needs an email in it
-	 * @todo use a *real* email format regular expression
+	 * checks if the author field is an e-mail address and returns it if so
 	 */
 	function valid_rss_author( $value )
 	{
-		return preg_match( '/@/', $value );
+		return check_against_regexp($value, array('email'));
 	}
 
 /**
