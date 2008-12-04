@@ -23,11 +23,17 @@ $GLOBALS[ '_form_admin_view_class_names' ][ basename( __FILE__, '.php') ] = 'Def
 	var $allowable_actions = array ('view' => true);
 	
 	/**
-	 *  Accepts a referenc to the model
+	 *  Accepts a reference to the model
 	 */
 	function set_model(&$model)
 	{
 		$this->_model =& $model;
+	}
+	
+	function setup_form(&$table_admin)
+	{
+		if (method_exists($this, 'custom_init')) $this->custom_init();
+		parent::setup_form(&$table_admin);
 	}
 	
 	/**
