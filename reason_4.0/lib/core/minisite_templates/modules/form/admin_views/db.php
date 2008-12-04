@@ -33,7 +33,7 @@ $GLOBALS[ '_form_admin_view_class_names' ][ basename( __FILE__, '.php') ] = 'Def
 	function setup_form(&$table_admin)
 	{
 		if (method_exists($this, 'custom_init')) $this->custom_init();
-		parent::setup_form(&$table_admin);
+		parent::setup_form($table_admin);
 	}
 	
 	/**
