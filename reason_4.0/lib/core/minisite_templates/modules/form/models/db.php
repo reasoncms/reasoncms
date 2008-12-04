@@ -24,6 +24,7 @@ $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DBFormMo
  * @todo support summary object
  * @todo test magic autofill support
  * @todo lots more testing
+ * @todo create get_values method, only show admin view if values are present?
  * @todo abstract parts of this and thor model to the default model
  *
  * @version beta1 - this is not yet fully implemented, but is serving as the model for the work transfer form at carleton 
@@ -510,15 +511,9 @@ class DBFormModel extends DefaultFormModel
 			}
 		}
 	}
-
-	/**
-	 * @todo the db.php model should probably support custom table admin forms, but maybe not - this is pretty easy.
-	 */
-	function init_admin()
+	
+	function init_admin_object()
 	{
-		$head_items =& $this->get_head_items();
-		$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
-		$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/hide_nav.css');
 		$admin_obj =& $this->get_admin_object();
 		$admin_view = $this->get_admin_view();
 		$admin_obj->set_admin_form($admin_view);
@@ -712,8 +707,9 @@ class DBFormModel extends DefaultFormModel
 		else // insert
 		{
 			$columns = $this->get_database_columns();
+			
 			if (isset($columns['date_created']) && !isset($data['date_created'])) $data['date_created'] = get_mysql_datetime();
-			$result = $this->perform_insert($data);
+			$result = $this->perform_insert(array_merge($data, $this->get_values_for_save_extra_fields()));
 			if ($result) $this->set_form_id($result);
 		}
 	}
