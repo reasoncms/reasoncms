@@ -6,9 +6,13 @@ $GLOBALS[ '_form_admin_view_class_names' ][ basename( __FILE__, '.php') ] = 'Def
 /**
  * Default DB Admin Form
  *
- * Sets default allowable action to view only, accept and return reference to model
+ * Extends DiscoDefaultAdmin to allow interaction with our model. This is done by:
  *
- * @todo consider move away from the standard DiscoDB based DiscoDefaultAdmin for save / edit / delete and use model methods instead
+ * 1. providing set_model and get_model methods
+ * 2. set the model form id to the table action form id
+ * 3. add a custom_init method option to allow for head items, etc.
+ *
+ * @todo consider move away from DiscoDB and DiscoDefaultAdmin and use the model directly for all phases (more like the form view)
  *
  * @author Nathan White
  */
@@ -32,6 +36,8 @@ $GLOBALS[ '_form_admin_view_class_names' ][ basename( __FILE__, '.php') ] = 'Def
 	
 	function setup_form(&$table_admin)
 	{
+		$model =& $this->get_model();
+		$model->set_form_id($table_admin->get_table_action_id());
 		if (method_exists($this, 'custom_init')) $this->custom_init();
 		parent::setup_form($table_admin);
 	}
