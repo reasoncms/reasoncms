@@ -766,9 +766,10 @@
 				echo '<input type="submit" class="jumpNavigationGo" value="go" />';
 				$cur_site = $sites[ $this->site_id ];
 				$cur_site_base_url = $cur_site->get_value( 'base_url' );
+				$cur_site_unique_name = $cur_site->get_value( 'unique_name' );
 				$user = new entity($this->user_id);
 				$target = ($user->get_value('site_window_pref') == 'Popup Window') ? 'target="_blank" ' : '';
-				if(!empty($cur_site_base_url))
+				if(!empty($cur_site_base_url) && ($cur_site_unique_name != 'master_admin') ) 
 				{
 					echo '<a href="http://'.REASON_HOST.$cur_site_base_url.'" '.$target.'class="publicSiteLink">Go to public site</a>';
 				}
