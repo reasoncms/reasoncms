@@ -18,7 +18,7 @@ def get_source_filenames(folder_path, priority_util_files=[]):
 	
 	if len(priority_util_files) is 0:
 		priority_util_files.extend(['Util.js', 'Util.Scheduler.js',
-			'Util.Function.js', 'Util.Array.js', 'Util.Node.js',
+			'Util.Function.js', 'Util.Array.js', 'Util.Node.js', 'Util.Browser.js',
 			'Util.Element.js', 'Util.Event.js', 'Util.Object.js',
 			'Util.OOP.js'])
 			

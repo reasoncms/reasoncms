@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0rc9
+// Loki WYSIWIG Editor 2.0.2-b1
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-10-14 15:20:14 
+// Compiled 2008-12-17 17:04:33 
 // http://loki-editor.googlecode.com/
 
 
@@ -999,7 +999,8 @@ TinyMCEControl.prototype.getSel = function() {
  * For debugging.
  */
 var messagebox = function() { };
-var mb = messagebox; 
+var mb = messagebox;
+
 // file Util.js
 /**
  * @class This is merely a container which holds a library of utility
@@ -2464,6 +2465,69 @@ Util.Node.get_debug_string = function get_node_debug_string(node)
 // end file Util.Node.js
 
 
+// file Util.Browser.js
+Util.Browser = {
+	IE:     !!(window.attachEvent && !window.opera),
+	Opera:  !!window.opera,
+	WebKit: (navigator.userAgent.indexOf('AppleWebKit/') > -1),
+	Gecko:  (navigator.userAgent.indexOf('Gecko') > -1
+		&& navigator.userAgent.indexOf('KHTML') == -1),
+		
+	Windows: (navigator.platform.indexOf('Win') > -1),
+	Mac: (navigator.platform.indexOf('Mac') > -1),
+	
+	get_version: function get_browser_version() {
+		var pattern, match;
+		
+		if (Util.Browser.IE) {
+			pattern = /MSIE\s+([\d+\.]+)/;
+		} else if (Util.Browser.Gecko) {
+			pattern = /rv:([\d+\.]+)/;
+		} else if (Util.Browser.WebKit) {
+			if (/Safari/.test(navigator.userAgent)) {
+				match = /Version\/([\d+\.]+)/.exec(navigator.userAgent);
+				if (match && match.length >= 1)
+					return match[1];
+				match = /Safari\/([\d+\.]+)/.exec(navigator.userAgent);
+				if (match && match.length >= 1) {
+					if (Util.Browser._safari_versions[match[1]])
+						return Util.Browser._safari_versions[match[1]];
+				}
+			}
+			return '';
+		} else if (Util.Browser.Opera) {
+			pattern = /Opera[\/ ]([\d+\.]+)/;
+		}
+		
+		match = pattern.exec(navigator.userAgent);
+		return (match && match.length >= 1)
+			? match[1]
+			: '';
+	},
+	
+	_safari_versions: {
+		'525.19': '3.1.2',
+		'525.18': '3.1.1',
+		'525.7': '3.1',
+		'523': '3.0.4',
+		'418.8': '2.0.4',
+		'417.9': '2.0.3',
+		'416': '2.0.2',
+		'412.7': '2.0.1',
+		'412': '2.0',
+		'312.8': '1.3.2',
+		'312.5': '1.3.1',
+		'312.1': '1.3',
+		'125.5.5': '1.2.4',
+		'125.4': '1.2.3',
+		'125.2': '1.2.2',
+		'100': '1.1',
+		'85.8.2': '1.0.3',
+		'85.7': '1.0.2'
+	}
+};
+
+
 // file Util.Element.js
 /**
  * @class Container for functions relating to document elements.
@@ -2558,16 +2622,14 @@ Util.Element = {
 			return attrs;
 		}
 		
-		for (var i = 0; i < elem.attributes.length; i++) {
-			var a = elem.attributes[i];
-			if (!a.specified || a.nodeName in attrs)
-				continue;
-				
-			var v = (a.nodeValue.toString)
-				? a.nodeValue.toString()
-				: a.nodeValue;
+		var names = Util.Element._get_attribute_names(elem);
+		var i, name, v, length = names.length;
+		for (i = 0; i < length; i++) {
+			name = names[i];
+			v = elem.getAttribute(name);
+			v = (v.toString) ? v.toString() : v;
 			
-			switch (a.nodeName) {
+			switch (name) {
 				case 'class':
 				case 'className':
 					attrs[(no_translation) ? 'class' : 'className'] = v;
@@ -2580,7 +2642,7 @@ Util.Element = {
 					attrs.style = elem.style.cssText;
 					break;
 				default:
-					attrs[a.nodeName] = v;
+					attrs[name] = v;
 			}
 		}
 		
@@ -2952,6 +3014,60 @@ Util.Element = {
 		return buggy_ie_offset_top.result;
 	}
 };
+
+Util.Element._get_attribute_names = (function has_outer_html() {
+	var guinea_pig = document.createElement('P');
+	var parser = null;
+	var attrs;
+	guinea_pig.className = "_foo";
+	
+	if (guinea_pig.outerHTML && (/_foo/.test(guinea_pig.outerHTML))) {
+		return function _get_attribute_names_from_outer_html(el) {
+			var result;
+			
+			if (!parser) {
+				parser = new Util.HTML_Parser();
+				parser.add_listener('open', function tag_opened(n, attributes) {
+					attrs = Util.Object.names(attributes);
+					parser.halt();
+				});
+			}
+			
+			parser.parse(el.outerHTML);
+			result = attrs;
+			attrs = null;
+			return result;
+		};
+	} else if (Util.Browser.Gecko) {
+		// It looks like at least Firefox 3 is giving us the attributes in
+		// reversed declaration order, so we'll read them out backwards.
+		return function _get_attribute_names_reversed(el) {
+			var length = el.attributes.length;
+			var attributes = {};
+			var a;
+			for (var i = (length - 1); i >= 0; i--) {
+				a = el.attributes[i];
+				if (!a.specified || a.nodeName in attributes)
+					continue;
+				attributes[a.nodeName] = true;
+			}
+			return Util.Object.names(attributes);	
+		};
+	} else {
+		return function _get_attribute_names(el) {
+			var length = el.attributes.length;
+			var attributes = {};
+			var a;
+			for (var i = 0; i < length; i++) {
+				a = el.attributes[i];
+				if (!a.specified || a.nodeName in attributes)
+					continue;
+				attributes[a.nodeName] = true;
+			}
+			return Util.Object.names(attributes);	
+		};
+	}
+})();
 
 // file Util.Event.js
 /**
@@ -4119,69 +4235,6 @@ Util.Block = {
 	}
 };
 
-// file Util.Browser.js
-Util.Browser = {
-	IE:     !!(window.attachEvent && !window.opera),
-	Opera:  !!window.opera,
-	WebKit: (navigator.userAgent.indexOf('AppleWebKit/') > -1),
-	Gecko:  (navigator.userAgent.indexOf('Gecko') > -1
-		&& navigator.userAgent.indexOf('KHTML') == -1),
-		
-	Windows: (navigator.platform.indexOf('Win') > -1),
-	Mac: (navigator.platform.indexOf('Mac') > -1),
-	
-	get_version: function get_browser_version() {
-		var pattern, match;
-		
-		if (Util.Browser.IE) {
-			pattern = /MSIE\s+([\d+\.]+)/;
-		} else if (Util.Browser.Gecko) {
-			pattern = /rv:([\d+\.]+)/;
-		} else if (Util.Browser.WebKit) {
-			if (/Safari/.test(navigator.userAgent)) {
-				match = /Version\/([\d+\.]+)/.exec(navigator.userAgent);
-				if (match && match.length >= 1)
-					return match[1];
-				match = /Safari\/([\d+\.]+)/.exec(navigator.userAgent);
-				if (match && match.length >= 1) {
-					if (Util.Browser._safari_versions[match[1]])
-						return Util.Browser._safari_versions[match[1]];
-				}
-			}
-			return '';
-		} else if (Util.Browser.Opera) {
-			pattern = /Opera[\/ ]([\d+\.]+)/;
-		}
-		
-		match = pattern.exec(navigator.userAgent);
-		return (match && match.length >= 1)
-			? match[1]
-			: '';
-	},
-	
-	_safari_versions: {
-		'525.19': '3.1.2',
-		'525.18': '3.1.1',
-		'525.7': '3.1',
-		'523': '3.0.4',
-		'418.8': '2.0.4',
-		'417.9': '2.0.3',
-		'416': '2.0.2',
-		'412.7': '2.0.1',
-		'412': '2.0',
-		'312.8': '1.3.2',
-		'312.5': '1.3.1',
-		'312.1': '1.3',
-		'125.5.5': '1.2.4',
-		'125.4': '1.2.3',
-		'125.2': '1.2.2',
-		'100': '1.1',
-		'85.8.2': '1.0.3',
-		'85.7': '1.0.2'
-	}
-};
-
-
 // file Util.Chooser.js
 /**
  * Constructs a new chooser.
@@ -4823,6 +4876,7 @@ Util.Fix_Keys = function()
 {
 };
 
+Util.Fix_Keys.NO_MERGE = /^(BODY|HEAD|TABLE|TBODY|THEAD|TR|TH|TD)$/;
 Util.Fix_Keys.fix_delete_and_backspace = function(e, win)
 {
 	function is_not_at_end_of_body(rng)
@@ -4834,7 +4888,7 @@ Util.Fix_Keys.fix_delete_and_backspace = function(e, win)
 		rng2.setStart(start_container, start_offset);
 		var ret = rng2.toString().length > 0;// != '';
 		return ret;
-	};
+	}
 
 	function is_not_at_beg_of_body(rng)
 	{
@@ -4845,14 +4899,14 @@ Util.Fix_Keys.fix_delete_and_backspace = function(e, win)
 		rng2.setEnd(start_container, start_offset);
 		var ret = rng2.toString().length > 0;// != '';
 		return ret;
-	};
+	}
 
 	function move_selection_to_end(node, sel)
 	{
 		var rightmost = Util.Node.get_rightmost_descendent(node);
 		Util.Selection.select_node(sel, rightmost);
 		Util.Selection.collapse(sel, false); // to end
-	};
+	}
 
 	function remove_trailing_br(node)
 	{
@@ -4862,34 +4916,44 @@ Util.Fix_Keys.fix_delete_and_backspace = function(e, win)
 		{
 			node.removeChild(node.lastChild);
 		}
-	};
-
+	}
+	
+	
 	function merge_blocks(one, two)
 	{
-		while ( two.firstChild != null )
+		while (two.firstChild)
 			one.appendChild(two.firstChild);
 		two.parentNode.removeChild(two);
-
-		//one.normalize(); // this messes up cursor position
-		return;
-	};
+	}
 	
+	/*
+	 * If the node is a special Loki container (e.g. for a horizontal rule),
+	 * we shouldn't merge with it.
+	 */
 	function is_container(node)
 	{
 		return (node && node.nodeType == Util.Node.ELEMENT_NODE &&
 			node.getAttribute('loki:container'));
 	}
+	
+	function is_empty_block(node)
+	{
+		return (Util.Node.is_block_level_element(node) && 
+			Util.Node.is_basically_empty(node));
+	}
+	
+	function is_unmergable(node)
+	{
+		return (is_container(node) ||
+			is_empty_block(node) || 
+			Util.Element.empty_tag(node));
+	}
 
 	function do_merge(one, two, sel)
 	{
-		/*
-		 * If the node is a special Loki container (e.g. for a horizontal rule),
-		 * we shouldn't merge with it. Instead, delete the container (and the)
-		 * page element it contains.
-		 */
-		function handle_containers(node)
+		function handle_unmergable(node)
 		{
-			if (is_container(node)) {
+			if (is_unmergable(node)) {
 				node.parentNode.removeChild(node);
 				return true;
 			}
@@ -4897,24 +4961,18 @@ Util.Fix_Keys.fix_delete_and_backspace = function(e, win)
 			return false;
 		}
 		
-		var tags_regexp = new RegExp('BODY|HEAD|TABLE|TBODY|THEAD|TR|TH|TD', '');
-		if ( one == null || one.nodeName.match(tags_regexp) ||
-			 two == null || two.nodeName.match(tags_regexp) )
-		{
+		var tags = Util.Fix_Keys.NO_MERGE;
+		if (!one || !two || one.nodeName.match(tags) || two.nodeName.match(tags)) {
 			return;
-		}
-		else if (handle_containers(one) || handle_containers(two))
-		{
+		} else if (handle_unmergable(one) || handle_unmergable(two)) {
 			return;
-		}
-		else
-		{
+		} else {
 			remove_trailing_br(one);
 			move_selection_to_end(one, sel);
 			merge_blocks(one, two);
 			e.preventDefault();
 		}
-	};
+	}
 	
 	function remove_container(container)
 	{
@@ -5305,13 +5363,15 @@ Util.HTML_Generator = function HTMLGenerator(options) {
 Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
 	var gen = this;
 	var pattern = (gen.escape_non_ascii)
-		? /[\x00-\x1F\x80-\uFFFF]/g
-		: /[\x00-\x1F]/g;
+		? (/[\x00-\x1F\x80-\uFFFF&<>"]/g)
+		: (/[\x00-\x1F^<>]/g);
 	
-	function clean_text(text) {
+	function clean_text(text, in_attribute) {
 		function html_escape(txt) {
 			var c = txt.charCodeAt(0);
 			if (c == 9 || c == 10 || c == 13)
+				return txt;
+			if (c == 34 && !in_attribute) // don't do " -> &quot; unless in attr
 				return txt;
 			var entity = Util.HTML_Generator.named_entities[c];
 			return (typeof(entity) == "string")
@@ -5396,7 +5456,7 @@ Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
 			function append_attr(name, value) {
 				if (name.charAt(0) == "_")
 					return;
-				buffer.write(' ', name, '="', clean_text(value), '"');
+				buffer.write(' ', name, '="', clean_text(value, true), '"');
 			}
 		);
 		
@@ -5666,7 +5726,7 @@ Util.OOP.mixin(Util.HTML_Generator.Buffer.prototype, {
 });
 
 Util.HTML_Generator.named_entities = {
-	'38': 'amp', '60': 'lt', '62': 'gt', '127': '#127',
+	'34': 'quot', '38': 'amp', '60': 'lt', '62': 'gt', '127': '#127',
 	'160': 'nbsp', '161': 'iexcl', '162': 'cent', '163': 'pound', '164':
 	'curren', '165': 'yen', '166': 'brvbar', '167': 'sect', '168': 'uml', '169':
 	'copy', '170': 'ordf', '171': 'laquo', '172': 'not', '173': 'shy', '174':
@@ -5703,6 +5763,8 @@ Util.HTML_Generator.named_entities = {
 Util.HTML_Parser = function SAX_HTML_Parser()
 {
 	var data = null;
+	var parsing = false;
+	var halted = false;
 	var position = 0;
 	var listeners = {
 		open: [],
@@ -5716,7 +5778,7 @@ Util.HTML_Parser = function SAX_HTML_Parser()
 	
 	// -- Public Methods --
 	
-	this.add_listener = function(type, func)
+	this.add_listener = function add_html_parse_listener(type, func)
 	{
 		listeners[type.toLowerCase()].push(func);
 	}
@@ -5724,16 +5786,26 @@ Util.HTML_Parser = function SAX_HTML_Parser()
 	// consistency
 	this.add_event_listener = this.add_listener;
 	
-	this.parse = function(text)
+	this.parse = function parse_html(text)
 	{
 		data = text;
 		position = 0;
 		var state = starting_state;
 		var len = data.length;
 		
+		parsing = true;
+		halted = false;
 		do {
 			state = state();
-		} while (state && position < len);
+		} while (state && position < len && !halted);
+		parsing = halted = false;
+	}
+	
+	this.halt = function halt_html_parser()
+	{
+		if (!parsing)
+			return false;
+		return (halted = true);
 	}
 	
 	// -- Parsing Functions --
@@ -6513,6 +6585,146 @@ Util.Input.create_named_input = function(params)
 		
 	return input;
 }; 
+// file Util.JSON.js
+Util.JSON = (function JSON() {
+	var special = {
+		'\b': '\\b',
+		'\t': '\\t',
+		'\n': '\\n',
+		'\f': '\\f',
+		'\r': '\\r',
+		'\\': '\\\\'
+	};
+	var indent = "    ";
+	
+	function str_repeat(string, count) {
+		return count < 1 ? '' : new Array(count + 1).join(string);
+	}
+	
+	function pad_number(num, length, radix) {
+		var string = num.toString(radix || 10);
+		return str_repeat('0', length - string.length) + string;
+	}
+	
+	var primitive_dumpers = {
+		"number": function json_dump_number(num) {
+			return isFinite(num) ? num.toString() : null;
+		},
+		
+		"string": function json_dump_string(s) {
+			s = s.replace(/[\x00-\x1f\\]/g, function(c) {
+				var character = special[c];
+				return special[c] || '\\u00' + pad_number(c.charCodeAt(0), 2, 16);
+			});
+			return '"' + s.replace(/"/g, '\\"') + '"';
+		},
+		
+		"boolean": function json_dump_boolean(b) {
+			return (b) ? "true" : "false";
+		},
+		
+		"undefined": function json_dump_undefined() {
+			return "null";
+		},
+		
+		"function": function json_dump_function(fn) {
+			return "null";
+		}
+	};
+	
+	function json_dump_regexp(re) {
+		return primitive_dumpers.string(re.toString());
+	}
+	
+	function is_regexp(value) {
+		return (value && typeof(value) == 'object' &&
+			typeof(value.test) == "function" &&
+			typeof(value.exec) == "function" &&
+			typeof(value.global) == "boolean");
+	}
+	
+	function _json_dump_child_value(buf, level, value) {
+		var t = typeof(value), end;
+		var is_re = is_regexp(value);
+		if (value !== null && t == "object" && !is_re) {
+			json_dump_object(buf, level + 1, value);
+		} else {
+			if (value === null)
+				value = 'null';
+			else if (is_re)
+				value = json_dump_regexp(value);
+			else
+				value = primitive_dumpers[t](value);
+			end = buf.length - 1;
+			buf[end] = buf[end] + value;
+		}
+	}
+	
+	function json_dump_object(buf, level, object) {
+		if (typeof(object.each) == "function") {
+			json_dump_array(buf, level, object);
+			return;
+		}
+		
+		var last = buf.length - 1;
+		buf[last] = buf[last] + '{';
+		
+		var ci = str_repeat(indent, level + 1);
+		var name, start, value;
+		var keys = Util.Object.names(object), i, t;
+		last = keys.length - 1;
+		for (i = 0; i < keys.length; i++) {
+			name = keys[i];
+			value = object[name];
+			if (typeof(value) == "function")
+				continue;
+			buf.push(ci + primitive_dumpers.string(name) + ": ");
+			_json_dump_child_value(buf, level, value);
+			if (i < last)
+				buf[buf.length - 1] = buf[buf.length - 1] + ",";
+		}
+		
+		buf.push(str_repeat(indent, level) + "}");
+	}
+	
+	function json_dump_array(buf, level, array) {
+		var last = buf.length - 1;
+		buf[last] = buf[last] + '[';
+		var ci = str_repeat(indent, level + 1);
+		var i, value, last = array.length - 1;
+		for (i = 0; i < array.length; i++) {
+			value = array[i];
+			if (typeof(value) == "function")
+				continue;
+			buf.push(ci);
+			_json_dump_child_value(buf, level, value);
+			if (i < last)
+				buf[buf.length - 1] = buf[buf.length - 1] + ",";
+		}
+		
+		buf.push(str_repeat(indent, level) + "]");
+	}
+	
+	return {
+		dump: function json_dump(object) {
+			var t = typeof(object), dumper, buf;
+			if (object === null) {
+				return 'null';
+			} else if (t == "object") {
+				if (is_regexp(object))
+					return json_dump_regexp(object);
+				buf = [''];
+				json_dump_object(buf, 0, object);
+				return buf.join("\n");
+			} else {
+				dumper = primitive_dumpers[t];
+				if (!dumper)
+					throw new TypeError("Cannot dump to JSON; unknown type " + t + ".");
+				return dumper(object);
+			}
+		}
+	};
+})(); 
 // file Util.Lock.js
 /**
  * @class A synchronization object, based on Lamport's Bakery algorithm.
@@ -6592,7 +6804,7 @@ Util.RSS = {
 }
 
 /**
- * @class A replacement for Util.RSS_Reader that doesn't suck quite so much.
+ * @class A RSS 2.0 feed reader.
  *
  * @constructor Creates a new RSS 2.0 feed reader for the given URL.
  * @param	url	The URL of the RSS feed. You may pass in a function returning the URI instead
@@ -8400,6 +8612,11 @@ Util.Request = function(url, options)
 	try {
 		this.transport.open(this.method.toUpperCase(), this.url,
 			this.options.asynchronus);
+		if (this.options.headers) {
+			Util.Object.enumerate(this.options.headers, function(k, v) {
+				this.transport.setRequestHeader(k, v);
+			}, this);
+		}
 		this.transport.send(this.options.body || null);
 	} catch (e) {
 		if (timeout) {
@@ -9579,7 +9796,7 @@ Util.URI.parse = function parse_uri(uri)
 		? Util.URI.authority_pattern.exec(match[4])
 		: [];
 	
-	// this wouldn't need to be so convulted if JScript weren't so crappy!
+	// this wouldn't need to be so convoluted if JScript weren't so crappy!
 	function get_match(source, index)
 	{
 		try {
@@ -9594,18 +9811,29 @@ Util.URI.parse = function parse_uri(uri)
 	}
 	
 	var port = get_match(authority_match, 7);
+	var host = get_match(authority_match, 5);
 	
 	return {
 		scheme: get_match(match, 2),
 		authority: get_match(match, 4),
 		user: get_match(authority_match, 2),
 		password: get_match(authority_match, 4),
-		host: get_match(authority_match, 5),
+		host: host,
 		port: (port ? Number(port) : port),
-		path: get_match(match, 5) || '/',
+		path: get_match(match, 5) || (host ? '/' : null),
 		query: get_match(match, 7),
 		fragment: get_match(match, 9)
 	};
+}
+
+/**
+ * Checks to see if a URI is a URN (such as a mailto:) address.
+ */
+Util.URI.is_urn = function uri_is_urn(uri) {
+	if (typeof(uri) != 'object')
+		uri = Util.URI.parse(uri);
+	
+	return (uri.scheme && uri.path && !uri.authority);
 }
 
 /**
@@ -10643,8 +10871,13 @@ UI.Anchor_Masseuse = function()
 		var anchor = self.get_anchor_for_placeholder(placeholder);
 		
 		placeholder.title = '#' + name;
-		if (anchor)
+		if (anchor) {
+			if (anchor.id && anchor.id == anchor.name) {
+				anchor.id = name;
+				placeholder.setAttribute("loki:anchor_id", name);
+			}
 			anchor.name = name;
+		}		
 	};
 	
 	this.unmassage = function unmassage_anchor(placeholder) {
@@ -11796,6 +12029,18 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 		
 		return false;
 	}
+	
+	function is_on_current_page(uri) {
+		if (!uri.host && (!uri.path || (/$\.\/?/.exec(uri.path))))
+			return true;
+		
+		// Mozilla makes us go the extra mile.
+		var base = Util.URI.parse(window.location);
+		if (base.authority == uri.authority && base.path == uri.path)
+			return true;
+		
+		return false;
+	}
 
 	var tests =
 	[
@@ -11975,23 +12220,34 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 			}
 		},
 		{
-			description: 'Remove protocol from links on the current server',
-			test: function(node) { return has_tagname(node, ['A']); },
-			action: function(node) {
-				var href = node.getAttribute('href');
-				if (href != null) {
-					node.setAttribute('href',
-						UI.Clean.clean_URI(href));
-				}
-			}
-		},
-		{
 			description: "Normalize all image URI's",
 			test: Util.Node.curry_is_tag('IMG'),
 			action: function normalize_image_uri(img) {
+				if (Util.URI.is_urn(img)) {
+					// Don't normalize URN's (like data:).
+					return;
+				}
 				var norm = Util.URI.normalize(img.src);
 				norm.scheme = null;
 				img.src = Util.URI.build(norm);
+			}
+		},
+		{
+			description: "Normalize all link URI's",
+			test: Util.Node.curry_is_tag('A'),
+			action: function normalize_image_uri(link) {
+				if (!link.href)
+					return;
+				var uri = Util.URI.parse(link.href);
+				if (Util.URI.is_urn(uri)) {
+					// Do nothing to URN's (like mailto: addresses).
+					return;
+				}
+				if (is_on_current_page(uri))
+					return;
+				var norm = Util.URI.normalize(link.href);
+				norm.scheme = null;
+				link.href = Util.URI.build(norm);
 			}
 		},
 		{
@@ -12213,7 +12469,8 @@ UI.Clipboard_Helper = function ClipboardHelper()
 
 	this.cut = function clipboard_cut()
 	{
-		self.copy('Cut', 'X');
+		if (!self.copy('Cut', 'X'))
+			return;
 		var sel = Util.Selection.get_selection(self._loki.window);
 		var rng = Util.Range.create_range(sel);
 		Util.Range.delete_contents(rng);
@@ -12230,7 +12487,7 @@ UI.Clipboard_Helper = function ClipboardHelper()
 		
 		if (Util.Selection.is_collapsed(sel)) {
 			// If nothing is actually selected; do not overwrite the clipboard.
-			return;
+			return false;
 		}
 
 		// Unmassage and clean HTML
@@ -12251,6 +12508,7 @@ UI.Clipboard_Helper = function ClipboardHelper()
 		try {
 			if (UI.Clipboard_Helper._gecko) {
 				_gecko_copy(html, command || 'Copy', accel || 'C');
+				return false;
 			} else {
 				_ie_copy(html);
 			}
@@ -12258,6 +12516,7 @@ UI.Clipboard_Helper = function ClipboardHelper()
 			self._loki.focus();
 		}
 		
+		return true;
 	};
 
 	this.paste = function clipboard_paste()
@@ -12304,22 +12563,19 @@ UI.Clipboard_Helper = function ClipboardHelper()
 			message, 45);
 	}
 	
-	function _verify_gecko_clipboard(command, accel)
+	function _gecko_clipboard_error(command, accel)
 	{
 		var key;
 		if (!self._loki.owner_window.GeckoClipboard) {
 			key = ((Util.Browser.Mac) ? '⌘' : 'Ctrl-') + accel;
 			alert("In your browser, you must either choose " + command + " " +
 				"from the Edit menu, or press " + key + ".");
-			throw new Util.Unsupported_Error('programmatic clipboard access');
 		}
 	}
 
 	function _gecko_copy(html, command, accel)
 	{
-		_verify_gecko_clipboard(command, accel);
-		_show_gecko_privileges_warning();
-		self._loki.owner_window.GeckoClipboard.set(html);
+		_gecko_clipboard_error(command, accel);
 	};
 
 	function _ie_copy(html)
@@ -12340,39 +12596,7 @@ UI.Clipboard_Helper = function ClipboardHelper()
 
 	function _gecko_paste()
 	{
-		_verify_gecko_clipboard('Paste', 'V');
-		_show_gecko_privileges_warning();
-		var data = self._loki.owner_window.GeckoClipboard.get();
-		
-		var html = (data.type == 'text/html')
-			? data.value
-			: data.value.replace(/\r?\n/g, "<br />\n");
-
-		// Massage and clean HTML
-		var container = self._loki.document.createElement('DIV');
-		container.innerHTML = html;
-		// See UI.Clipboard_helper.copy() for the override rationale.
-		UI.Clean.clean(container, self._loki.settings, false, {
-			overrides: {DIV: Util.Block.BLOCK}
-		});
-		self._loki.massage_node_descendants(container);
-		html = container.innerHTML;
-
-		// Get selection and range
-		var sel = Util.Selection.get_selection(self._loki.window);
-		var rng = Util.Range.create_range(sel);
-
-		// Paste into temporary container
-		container = rng.startContainer.ownerDocument.createElement('DIV');
-		container.innerHTML = html;
-
-		// Copy into document fragment
-		var frag = rng.startContainer.ownerDocument.createDocumentFragment();
-		for ( var i = 0; i < container.childNodes.length; i++ )
-			frag.appendChild(container.childNodes[i].cloneNode(true));
-
-		// Paste the document fragment
-		Util.Selection.paste_node(sel, frag);
+		_gecko_clipboard_error('Paste', 'V');
 	};
 
 	function _ie_paste()
@@ -12513,17 +12737,7 @@ UI.Clipboard_Helper._setup = function setup_clipboard_helper() {
 	
 	if (UI.Clipboard_Helper._gecko) {
 		// Gecko
-		if (typeof(_gecko_clipboard_helper_src) == 'string') {
-			// PHP helper is providing this for us.
-			helper_src = _gecko_clipboard_helper_src;
-		} else if (base_uri) {
-			helper_src = 'jar:' +
-				make_uri('auxil/privileged.jar!/gecko_clipboard.html');
-		} else {
-			return;
-		}
-		
-		create_hidden_iframe(helper_src);
+		// Our clipboard support doesn't work there anymore. Dropping it.
 	} else {
 		// everyone else
 		if (typeof(UI__Clipboard_Helper_Editable_Iframe__src) == 'string') {
@@ -14930,8 +15144,9 @@ UI.Image_Masseuse = function()
 		if (src == null)
 			return;
 		
-		if (self._unsecured.test(src)) {
-			placeholder = img.cloneNode();
+		var my_url = self._loki.owner_window.location;
+		if (!self._unsecured.test(my_url) && self._unsecured.test(src)) {
+			placeholder = img.cloneNode(false);
 			
 			if (Util.URI.extract_domain(src) == self._loki.editor_domain()) {
 				new_src = Util.URI.strip_https_and_http(src);
@@ -15490,41 +15705,6 @@ UI.Link_Helper = function()
 	};
 
 	/**
-	 * Opens the mail link dialog.
-	 */
-	this.open_mail_link_dialog = function()
-	{
-		if ( !this._check_for_selected_text() )
-			return;
-
-		if ( this._mail_link_dialog == null )
-			this._mail_link_dialog = new UI.Mail_Link_Dialog();
-		this._mail_link_dialog.init({ base_uri : this._loki.settings.base_uri,
-						    		  submit_listener : this.insert_link,
-						    		  selected_item : this.get_selected_item() });
-		this._mail_link_dialog.open();
-	};
-
-	/**
-	 * Opens the appropriate link dialog depending on 
-	 * the context of the current selection.
-	 */
-	this.open_dialog_by_context = function()
-	{
-		var selected_item = this.get_selected_item();
-		if ( selected_item != null &&
-			 selected_item.uri != null &&
-			 selected_item.uri.match(new RegExp('mailto\:', 'i')) != null )
-		{
-			this.open_mail_link_dialog();
-		}
-		else
-		{
-			this.open_page_link_dialog();
-		}
-	};
-
-	/**
 	 * Returns info about the selected link, if any.
 	 */
 	this.get_selected_item = function()
@@ -15605,79 +15785,51 @@ UI.Link_Helper = function()
 	this.insert_link = function(params)
 	{
 		var uri = params.uri;
-		var new_window = params.new_window == null ? false : params.new_window;
-		var title = params.title == null ? '' : params.title;
-		var onclick = params.onclick == null ? '' : params.onclick;
-		var a_tag;
-
-		mb('uri', uri);
+		var new_window = params.new_window || false;
+		var title = params.title || '';
+		var onclick = params.onclick || '';
+		
+		var tags;
 
 		// If the selection is inside an existing link, select that link
 		var sel = Util.Selection.get_selection(self._loki.window);
 		var rng = Util.Range.create_range(sel);
 		var ancestor = Util.Range.get_nearest_ancestor_element_by_tag_name(rng, 'A');
-		if ( ancestor != null && ancestor.getAttribute('href') != null )
-		{
-			//Util.Selection.select_node(sel, ancestor);
-			a_tag = ancestor;
-		}
-		else
-		{
-			// If the selection is collapsed, insert either the title (if
-			// given) or the uri, and select that, so that it is used as the
-			// link's text--otherwise, in Gecko no link will be created,
-			// and in IE, the uri will be used as link text even if a title
-			// is available.
-			// - Now we check this above, before the dialog is opened, in 
-			//   check_for_selected_text()
-			/*
-			var sel = Util.Selection.get_selection(self._loki.window);
-			var rng = Util.Range.create_range(sel);
-			if ( Util.Selection.is_collapsed(sel) )
-			{
-				var text = title == '' ? uri : title;
-				var text_node = self._loki.document.createTextNode(text);
-				Util.Range.insert_node(rng, text_node);
-				Util.Selection.select_node(sel, text_node);
-			}
-			*/
-
+		if (ancestor && ancestor.getAttribute('href')) {
+			tags = [ancestor];
+		} else {
 			self._loki.exec_command('CreateLink', false, 'hel_temp_uri');
-			var links = self._loki.document.getElementsByTagName('a');
-			for (var i = 0; i < links.length; i++)
-			{
-				if ( links.item(i).getAttribute('href') == 'hel_temp_uri')
-				{
-					a_tag = links.item(i);
+			var links = self._loki.document.getElementsByTagName('A');
+			tags = [];
+			
+			for (var i = 0; i < links.length; i++) {
+				if (links[i].getAttribute('href') == 'hel_temp_uri') {
+					tags.push(links[i]);
 				}
 			}
 		}
-
-		// if URI is not given, remove the link entirely
-		if ( uri == '' )
-		{
-			Util.Node.replace_with_children(a_tag);
-		}
-		// otherwise, actually add/update link attributes
-		else
-		{
-			a_tag.setAttribute('href', uri);
-
-			if ( new_window == true )
-				a_tag.setAttribute('target', '_blank');
-			else
-				a_tag.removeAttribute('target');
-
-			if ( title != '' )
-				a_tag.setAttribute('title', title);
-			else
-				a_tag.removeAttribute('title');
-
-			if ( onclick != '' )
-				a_tag.setAttribute('loki:onclick', onclick);
-			else
-				a_tag.removeAttribute('loki:onclick');
-
+		
+		if (!uri || !uri.length) {
+			// If no URI received, remove the links.
+			tags.each(function remove_link(tag) {
+				Util.Node.replace_with_children(tag);
+			});
+		} else {
+			// Update link attributes.
+			tags.each(function update_link(tag) {
+				function set_attribute(name, value) {
+					if (value && value.length > 0)
+						tag.setAttribute(name, value);
+					else
+						tag.removeAttribute(name);
+				}
+				
+				set_attribute('href', uri);
+				set_attribute('target', (new_window) ? '_blank' : null);
+				set_attribute('title', title);
+				set_attribute('loki:onclick', onclick);
+			});
+			
 			// Collapse selection to end so people can see the link and
 			// to avoid a Gecko bug that the anchor tag is only sort of
 			// selected (such that if you click the anchor toolbar button
@@ -17840,17 +17992,7 @@ UI.Page_Link_Dialog = function()
 	
 	this._set_link_title_input_value = function(value)
 	{
-		if (!value) {
-			this._link_title_input.value = '';
-			return;
-		}
-		
-		/* Strip any number of hyphens and spaces from beginning of title */
-		while(value.indexOf('-') == 0 || value.indexOf(' ') == 0)
-		{
-			value = value.substring(1);
-		}
-		this._link_title_input.value = value;
+		this._link_title_input.value = value || '';
 	}
 
 	/**
@@ -17879,6 +18021,22 @@ UI.Page_Link_Dialog = function()
 			this._new_window_checkbox.checked = false;
 		}
 	};
+	
+	this._update_link_title = function update_link_title(tab_name, title)
+	{
+		var info;
+		var active = (this._tabset.get_name_of_selected_tab() == tab_name);
+		if (!(info = this._link_information[tab_name])) {
+			info = this._link_information[tab_name] = {
+				link_title: '',
+				new_window: (active && this._new_window_checkbox.checked)
+			};
+		}
+		
+		info.link_title = title;
+		if (active)
+			this._set_link_title(title);
+	}
 
 	/**
 	 * Creates and appends a chunk containing a "remove link" button. 
@@ -18143,7 +18301,7 @@ UI.Page_Link_Selector = function(dialog)
 					Util.Event.add_event_listener(link, 'click', function(e)
 					{
 						try {
-							dialog._set_link_title('');
+							dialog._update_link_title('rss', '');
 							select_type.call(this, type, item);
 						} finally {
 							Util.Event.prevent_default(e || window.event);
@@ -18233,6 +18391,7 @@ UI.Page_Link_Selector.Item_Selector = function(dialog, wrapper)
 	var type = null;
 	var error = null;
 	var items = null;
+	var uris_to_items = null;
 	
 	this.load = function(new_type)
 	{
@@ -18276,6 +18435,7 @@ UI.Page_Link_Selector.Item_Selector = function(dialog, wrapper)
 				reader.add_event_listener('load', function(feed)
 				{
 					items = [];
+					uris_to_items = {};
 					
 					if (type.is_default) {
 						// XXX: this is kinda hackish
@@ -18299,13 +18459,17 @@ UI.Page_Link_Selector.Item_Selector = function(dialog, wrapper)
 					// might be doing fancy things (e.g. nesting).
 					
 					feed.items.each(function(item) {
-						items.push({
-							text: item.title,
-							value: dialog._sanitize_uri(item.link),
+						var uri = dialog._sanitize_uri(item.link);
+						var item = {
+							title: item.title,
+							text: item.selector_text || item.title,
+							value: uri,
 							selected: (initial_uri)
 								? Util.URI.equal(initial_uri, item.link)
 								: false
-						});
+						};
+						items.push(item);
+						uris_to_items[uri] = item;
 					});
 
 					machine.states.interactive.enter();
@@ -18372,7 +18536,19 @@ UI.Page_Link_Selector.Item_Selector = function(dialog, wrapper)
 				function item_changed()
 				{
 					var el = select.element;
-					dialog._set_link_title(el.options[el.selectedIndex].text);
+					var option = el.options[el.selectedIndex];
+					var item = uris_to_items[option.value];
+					var title;
+					var initial = dialog._sanitize_uri(dialog._initially_selected_item.uri);
+					
+					if (initial == option.value) {
+						title = dialog._initially_selected_item.title;
+					} else {
+						// "item" may not be set if we're on the current page
+						title = (item) ? item.title : '';
+					}
+					
+					dialog._update_link_title('rss', title);
 				}
 					
 				Util.Event.add_event_listener(select.element, 'change',
@@ -18907,8 +19083,11 @@ UI.Source_Button = function()
 		try {
 			self._loki.toggle_iframe_textarea(); 
 		} catch (e) {
+			var sent = self._loki.crashed(e);
 			alert("An error occurred that prevented your document's HTML " +
-				"from being generated.\n\nTechnical details:\n" +
+				"from being generated." +
+				(sent ? " A report of this error has been sent." : "") +
+				"\n\nTechnical details:\n" +
 				self._loki.describe_error(e));
 		}
 		
@@ -21015,6 +21194,37 @@ UI.Loki = function Loki()
 		UI.Clean.clean(_body, _settings);
 		_massage_body();
 	};
+	
+	this.crash_report = function editor_generate_crash_report(exc)
+	{
+		var s = Util.Object.clone(this.settings);
+		delete s.options;
+		
+		return {
+			version: this.version,
+			report_version: "1.0",
+			user_agent: navigator.userAgent,
+			platform: navigator.platform,
+			settings: s,
+			options: Util.Object.names(this.options),
+			'exception': exc,
+			document: this.get_dirty_html()
+		};
+	};
+	
+	this.crashed = function loki_editor_crashed(exc)
+	{
+		var report_uri = _settings.crash_report_uri;
+		if (!report_uri)
+			return false;
+		
+		new Util.Request(report_uri, {
+			method: "POST",
+			headers: {'Content-Type': 'application/json'},
+			body: Util.JSON.dump(self.crash_report(exc))
+		});
+		return true;
+	};
 
 	/**
 	 * Copies the value of the iframe to the value of the textarea.
@@ -21229,7 +21439,7 @@ UI.Loki = function Loki()
 	function autodetect_base_uri()
 	{
 		var scripts = document.getElementsByTagName('SCRIPT');
-		var pattern = /\bloki\.js(\?[^#]*)?(#\S+)?$/;
+		var pattern = /\bloki\.js\b/;
 		
 		for (var i = 0; i < scripts.length; i++) {
 			if (pattern.test(scripts[i].src)) {
@@ -21994,10 +22204,13 @@ UI.Loki = function Loki()
 			try {
 				self.copy_iframe_to_hidden();
 			} catch (ex) {
-				alert("An error occurred that prevented your document from " +
-					"being safely submitted.\n\nTechnical details:\n" +
-					self.describe_error(ex));
 				Util.Event.prevent_default(ev);
+				var sent = self.crashed(ex);
+				alert("An error occurred that prevented your document from " +
+					"being safely submitted." +
+					(sent ? " A report of this error has been sent." : "") +
+					"\n\nTechnical details:\n" +
+					self.describe_error(ex));
 				
 				if (typeof(console) == 'object' && console.firebug) {
 					console.error('Failed to generate HTML:',
@@ -22301,6 +22514,7 @@ UI.Loki = function Loki()
 		}
 	};
 };
+UI.Loki.prototype.version = "2.0.2-b1";
 
 UI.Loki.Options = new Util.Chooser();
 UI.Loki.Options._add_bundled = function add_bundled_loki_options() {
@@ -22536,7 +22750,7 @@ var Loki = {
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0rc9",
+	version: "2.0.2-b1",
 	
 	/** @private */
 	_pending: [],
