@@ -100,6 +100,15 @@
 	define('DISABLE_REASON_LOGIN', false);
 	
 	/**
+	 * DISABLE_REASON_ADMINISTRATIVE_INTERFACE
+	 * Set this to true if you want to temporarily disable the reason administrative interface
+	 * false = normal -- people can use the administrative interface
+	 * true = shut down -- people cannot use the administrative interface
+	 * Boolean (e.g. true, false -- no quotes)
+	 */
+	define('DISABLE_REASON_ADMINISTRATIVE_INTERFACE', false);
+	
+	/**
 	 * ADMIN_NOTIFICATIONS_EMAIL_ADDRESSES
 	 * Some code will send email to an administrator if it encounters an error.
 	 * This email address (or email addresses) can be set here if different from
