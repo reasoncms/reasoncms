@@ -16,7 +16,8 @@ class editorPageFeed extends defaultFeed
 		//$this->feed->set_item_field_map('description','name');
 		$this->feed->set_item_field_map('description','');
 		$this->feed->set_item_field_map('pubDate','');
-		$this->feed->set_item_field_map('title','prepped_name');
+		$this->feed->set_item_field_map('title','name');
+		$this->feed->set_item_field_map('selector_text','prepped_name');
 		$this->feed->set_item_field_map('link','url');
 	}
 }
@@ -51,14 +52,20 @@ class editorPagesRSS extends ReasonRSS
 			}
 		}
 	}
-	function flatten_tree($tree_data,$depth)
+	
+	function flatten_tree($tree_data,$depth,$exclude_depths = array())
 	{
 		$ret = array();
+		$num = count($tree_data);
+		$i = 1;
 		foreach($tree_data as $id=>$info)
 		{
+			$last = ( $i >= $num );
+			if($last)
+				$exclude_depths[] = $depth+1;
 			//echo $id.'.';
 			$ret[$id] = $info['item'];
-			$ret[$id]->set_value('prepped_name',$this->prep_name($ret[$id],$depth));
+			$ret[$id]->set_value('prepped_name',$this->prep_name($ret[$id],$depth,$last,$exclude_depths));
 			$ret[$id]->set_value('depth',$depth);
 			if(!$ret[$id]->get_value('url'))
 			{
@@ -72,22 +79,26 @@ class editorPagesRSS extends ReasonRSS
 			if(!empty($info['children']))
 			{
 				$next_depth = $depth + 1;
-				$ret = $ret + $this->flatten_tree($info['children'],$next_depth);
+				$ret = $ret + $this->flatten_tree($info['children'],$next_depth,$exclude_depths);
 			}
+			$i++;
 		}
 		return $ret;
 	}
 	
-	function prep_name($item, $depth)
+	function prep_name($item, $depth, $last = false, $exclude_depths = array() )
 	{
 		$prepped_name = '';
-		for($i = 1; $i <= $depth; $i++)
+		for($i = 2; $i <= $depth; $i++)
 		{
-			$prepped_name .= '--';
+			if(in_array($i, $exclude_depths))
+				$prepped_name .= '&#160;&#160;&#160;';
+			else
+				$prepped_name .= '&#9474;&#160;';
 		}
-		if(!empty($prepped_name))
+		if($depth)
 		{
-			$prepped_name .= ' ';
+			$prepped_name .= ($last ? '&#9492;' : '&#9500;' ).'&#160;';
 		}
 		$prepped_name .= $item->get_value('name');
 		if($depth == 0)
