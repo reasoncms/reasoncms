@@ -8,6 +8,7 @@
  * @subpackage admin
  * @todo Remove the ini_set that fixes max upload filesize at 10 megs (though this does not seem to have the effect one would imagine, as larger files can be uploaded...)\
  * @todo Develop a better system for supporting an XML/JSON/whatever API
+ * @todo remove fallback check to DISABLE_REASON_LOGIN by the release of RC 1
  */
 
 	//xdebug_start_trace();
@@ -55,7 +56,11 @@
 	
 	reason_include_once( 'classes/admin/admin_page.php' );
  
-    if(DISABLE_REASON_LOGIN)
+ 	/**
+ 	 * Reason 4 Beta 8 adds a setting DISABLE_REASON_ADMINISTRATIVE_INTERFACE, which is more specific than DISABLE_REASON_LOGIN,
+ 	 * and gets used if it is defined.
+ 	 */
+ 	if( (defined('DISABLE_REASON_ADMINISTRATIVE_INTERFACE')) ? DISABLE_REASON_ADMINISTRATIVE_INTERFACE : DISABLE_REASON_LOGIN )
     {
 	    header( 'Location: /errors/maintenance.php'); //?estimate='.$maintenance_estimate );
 	    die();
