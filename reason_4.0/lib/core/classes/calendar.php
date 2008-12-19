@@ -257,6 +257,7 @@ class reasonCalendar
 	}
 	/**
 	 * Assembles main entity selector
+	 * @todo remove check of location field location for Reason 4 RC 1
 	 */
 	function build_es()
 	{
@@ -299,7 +300,8 @@ class reasonCalendar
 		//$this->es->set_order('dated.datetime ASC');
 		if(!empty($this->simple_search))
 		{
-			$simple_search_text_fields = array('entity.name','meta.description','meta.keywords','chunk.content','chunk.author','location.location','event.sponsor','event.contact_organization');
+			$location_field = (in_array('location', get_fields_by_content_table('event'))) ? 'event.location' : 'location.location';
+			$simple_search_text_fields = array('entity.name','meta.description','meta.keywords','chunk.content','chunk.author',$location_field,'event.sponsor','event.contact_organization');
 			$simple_search_date_fields = array('dated.datetime','event.dates');
 			$time = strtotime($this->simple_search);
 			$search_chunks = array();
