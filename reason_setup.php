@@ -314,17 +314,18 @@ function perform_checks()
 		$check_failed++;
 	}
 	
-	// lets check for loki_2.0 readme.txt file using CURL - if not accessible, Loki 2 paths could be a problem
+	// lets check for loki_2.0 loki.js file using CURL - if not accessible, Loki 2 paths could be a problem
 	$link2 = carl_construct_link(array(''), array(''), LOKI_2_HTTP_PATH);
-	$link2_with_file = $link2 . 'readme.txt';
-	if (strpos(get_reason_url_contents($link2_with_file), 'Loki') !== false)
+	$link2_with_file = $link2 . 'loki.js';
+	if (strpos(get_reason_url_contents($link2_with_file), 'loki') !== false)
 	{
-		msg('<span class="success">Loki 2 readme.txt file accessible over http</span> - passed', true);
+		msg('<span class="success">Loki 2 loki.js file accessible over http</span> - passed', true);
 		$check_passed++;
 	}
 	else
 	{
-		msg('<span class="error">could not access readme.txt in the Loki 2.0 folder over http</span><p>Check the constant LOKI_2_HTTP_PATH, which currently is set to ' . LOKI_2_HTTP_PATH . ' and make sure it correctly references the Loki 2 directory. The error could also be in the REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH constant in package_settings.php.</p>', false);
+		msg('<span class="error">could not access loki.js in the Loki 2.0 folder over http</span><p>Check the 
+constant LOKI_2_HTTP_PATH, which currently is set to ' . LOKI_2_HTTP_PATH . ' and make sure it correctly references the Loki 2 directory. The error could also be in the REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH constant in package_settings.php.</p>', false);
 			 $check_failed++;
 	}
 	echo '<h3>Summary</h3>';
