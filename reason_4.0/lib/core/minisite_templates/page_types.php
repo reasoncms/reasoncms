@@ -1054,6 +1054,21 @@
 			'sidebar' => 'blurb',
 			'main_post' => 'children',
 		),
+		'sidebar_blurb_with_related_publication' => array(
+			'pre_sidebar' => 'blurb',
+			'sidebar' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' =>
+				array('list_item' => array(
+									'classname' => 'MinimalListItemMarkupGenerator', 
+									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+									)
+					 ),
+				'max_num_items' => 4,
+			),
+			'sub_nav' => '',
+		),
 		'sidebar_images_alpha_by_keywords' => array(
 			'sidebar' => array(
 				'module'=>'image_sidebar',
