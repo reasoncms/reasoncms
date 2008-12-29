@@ -834,6 +834,21 @@
 				'max_num_items' => 4,
 			),
 		),
+		'publication_and_blurbs_sidebar' => array(
+			'pre_sidebar' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' =>
+				array('list_item' => array(
+									'classname' => 'MinimalListItemMarkupGenerator', 
+									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+									)
+					 ),
+				'max_num_items' => 4,
+			),
+			'sidebar' => 'blurb',
+			'sub_nav' => '',
+		),
 		'news_random' => array(
 			'main_post' => 'news_rand',
 		),
