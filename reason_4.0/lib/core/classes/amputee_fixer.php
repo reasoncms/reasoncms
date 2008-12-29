@@ -48,7 +48,7 @@ class AmputeeFixer
 		{
 			if($type_id == 0 || $type_id == $type['id'])
 			{
-				$tables = get_entity_tables_by_type( $type['id'] );
+				$tables = get_entity_tables_by_type( $type['id'], false ); // lets not cache - this could be used right after a type is setup
 				foreach( $tables as $table )
 				{
 					$q = "SELECT e.*,type.name as type_name FROM entity AS e LEFT JOIN $table AS t ON e.id = t.id, entity AS type WHERE e.type = ".$type['id']." AND t.id IS NULL AND e.type = type.id";
