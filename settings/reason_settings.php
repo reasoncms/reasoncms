@@ -503,6 +503,14 @@
 	define( 'WEB_ASSET_PATH',  REASON_HTTP_BASE_PATH.'assets/' );
 	
 	/**
+	 * REASON_ASSET_MAX_UPLOAD_SIZE_MEGS
+	 * The largest size that uploaded Reason assets can be, in megabytes.
+	 * Note that Reason will use the smallest of these three values:
+	 * post_max_size in php.ini, upload_max_filesize in php.ini, and this setting.
+	 */
+	define( 'REASON_ASSET_MAX_UPLOAD_SIZE_MEGS',  50 );
+	
+	/**
 	 * MINISITE_ASSETS_DIRECTORY_NAME
 	 * This setting defines the assets directory vis-a-vis a site's base directory
 	 * So a site at /foo/bar/ will have its assets available at /foo/bar/this_string/
@@ -710,7 +718,7 @@
 	 * REASON_DEFAULT_ALLOWED_TAGS
 	 * A whitelist of the XHTML tags Reason will allow to be saved to the database.
 	 *
-	 * Note: The default vaue of this setting is the set of xhtml strict elements that can be placed in the body of a page
+	 * Note: The default value of this setting is the set of xhtml strict elements that can be placed in the body of a page
 	 *
 	 * The two exceptions are the <script> tag, which is disabled 
 	 * (but which can be enabled by adding it to this setting),
