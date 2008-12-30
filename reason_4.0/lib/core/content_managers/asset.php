@@ -25,7 +25,7 @@
 
 		function alter_data() // {{{
 		{
-			$this->add_element( 'asset', 'AssetUpload' );
+			$this->add_element( 'asset', 'AssetUpload', array('max_file_size'=>$this->get_actual_max_upload_size() ) );
 	
 			$this->set_comments( 'name', form_comment('A name for internal reference.') );
 			$this->set_comments( 'content', form_comment('A long description of the document, if it needs it. This field is not required.') );
@@ -50,7 +50,7 @@
 			$web_asset_path = WEB_ASSET_PATH.$this->_id.'.'.$this->get_value('file_type');
 			$full_asset_path = ASSET_PATH.$this->_id.'.'.$this->get_value('file_type');
 			if( file_exists( $full_asset_path ) )
-				$this->change_element_type( 'asset','AssetUpload',array('existing_file' => $full_asset_path, 'allow_upload_on_edit' => true, 'file_display_name' => $this->get_value( 'file_name' ) ) );
+				$this->change_element_type( 'asset','AssetUpload',array('existing_file' => $full_asset_path, 'allow_upload_on_edit' => true, 'file_display_name' => $this->get_value( 'file_name' ), 'max_file_size'=>$this->get_actual_max_upload_size(), ) );
 		} // }}}
 		function pre_error_check_actions() // {{{
 		{
@@ -107,7 +107,8 @@
 						'vb' => 'vb.txt',
 						'bat' => 'bat.txt',
 					);
-			$fext  = array_pop(explode('.', $filename));
+			$parts = explode('.', $filename);
+			$fext  = array_pop($parts);
 			if ($fext == $filename) $fext = '';
 			$fnamebase = basename($filename, '.'.$fext);
 			if( !empty( $unsafe_to_safer[ $fext ] ) ) $fext = $unsafe_to_safer[$fext];
@@ -270,6 +271,40 @@
 			$um->update_rewrites();
 
 		} // }}}
+		
+		function get_actual_max_upload_size()
+		{
+			static $max;
+			
+			if(!empty($max))
+				return $max;
+			
+			$post_max_size = get_php_size_setting_as_bytes('post_max_size');
+			$upload_max_filesize = get_php_size_setting_as_bytes('upload_max_filesize');
+			
+			if(!defined('REASON_ASSET_MAX_UPLOAD_SIZE_MEGS'))
+				return $post_max_size < $upload_max_filesize ? $post_max_size : $upload_max_filesize;
+			
+			$reason_max_asset_upload = REASON_ASSET_MAX_UPLOAD_SIZE_MEGS*1024*1024;
+			
+			if($post_max_size < $reason_max_asset_upload || $upload_max_filesize < $reason_max_asset_upload)
+			{
+				if($post_max_size < $upload_max_filesize)
+				{
+					trigger_error('post_max_size in php.ini is less than Reason setting REASON_ASSET_MAX_UPLOAD_SIZE_MEGS; using post_max_size as max upload value');
+					return $max = $post_max_size;
+				}
+				else
+				{
+					trigger_error('upload_max_filesize in php.ini is less than Reason setting REASON_ASSET_MAX_UPLOAD_SIZE_MEGS; using upload_max_filesize as max upload value');
+					return $max = $upload_max_filesize;
+				}
+			}
+			else
+			{
+				return $max = $reason_max_asset_upload;
+			}
+		}
 	}
 
 ?>
