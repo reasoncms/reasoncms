@@ -53,7 +53,6 @@ class databaseCleanup
 		// The updates
 		$this->change_relationship_terminology('page_to_publication', 'Places a blog / publication on a page', 'Place a blog / publication');
 		$this->change_relationship_terminology('page_to_related_publication', 'Places a related publication on a page', 'Attach a related publication');
-		$this->remove_fields_from_non_reason_site_type();
 	}
 	
 	function change_relationship_terminology($rel_name, $term_search, $term_replace)
@@ -83,24 +82,6 @@ class databaseCleanup
 			}
 		}
 	}
-	
-	function remove_fields_from_non_reason_site_type()
-	{
-		// $minisite_page_type_entity = new entity(id_of('minisite_page'));
-// 		$finish_action = $minisite_page_type_entity->get_value('finish_actions');
-// 		if ($finish_action != 'update_rewrites.php')
-// 		{
-// 			echo '<p>The minisite_page finish action is not update_rewrites.php - this script has probably been run</p>';
-// 		}
-// 		elseif ($this->mode == 'test') echo '<p>Would remove the update_rewrites.php finish action from the minisite_page type</p>';
-// 		elseif ($this->mode == 'run')
-// 		{
-// 			$updates = array('finish_actions' => '');
-// 			reason_update_entity(id_of('minisite_page'), $this->reason_user_id, $updates);
-// 			echo '<p>Removed the update_rewrites.php finish action from the minisite_page type</p>';
-// 		}
-	}
-
 }
 
 force_secure_if_available();
