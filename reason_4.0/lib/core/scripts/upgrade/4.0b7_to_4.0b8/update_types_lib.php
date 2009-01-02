@@ -36,9 +36,13 @@ class updateTypes
 		$this->remove_field_from_entity_table('category', 'old_calendar_equivalent');
 		$this->remove_field_from_entity_table('category', 'campus_pipeline_equivalent');
 		$this->move_location_field_to_event();
-		$this->modify_allowable_relationship('office_department_to_category', array('display_name' => 'Is Related to Topic / Category',
-					     		  													'display_name_reverse_direction' => 'Is Related to Office / Department',
+		$this->modify_allowable_relationship('office_department_to_category', array('display_name' => 'Is Related To Topic / Category',
+					     		  													'display_name_reverse_direction' => 'Is Related To Office / Department',
 					     		  													'directionality' => 'bidirectional'));
+		$this->modify_allowable_relationship('quote_to_category', array(			'display_name' => 'Is About Topic / Category',
+					     		  													'display_name_reverse_direction' => 'Is Subject of Quote',
+					     		  													));
+
 		//$this->fix_amputees();
 		//$this->create_location_type(); // note at carleton this method is a lot different - see local copy
 	}
@@ -277,7 +281,7 @@ class updateTypes
 					$sqler->update_one( 'allowable_relationship', $fields, $rel_id );
 					echo '<p>Updated the allowable relationship ' . $rel_name . '</p>';
 				}
-				else echo '<p>The office_department_to_category relationships is up to date. This script has probably been run</p>';
+				else echo '<p>The '.$rel_name.' relationship is up to date. This script has probably been run</p>';
 			}
 		}
 		else echo '<p>The allowable relationship name ' . $rel_name . ' does not exist</p>';
