@@ -276,7 +276,7 @@
 				db_query( $q , 'Error finishing' );
 			}
 
-			if ($this->has_new_parent() || $this->has_new_url_fragment())
+			if ($this->has_new_parent() || $this->has_new_url_fragment() || $this->state_has_changed())
 			{
 				// call parent finish function - this changes the parent if there is a new parent
 				$res = parent::finish();
@@ -306,6 +306,15 @@
 				$this->_has_new_url_fragment = ($this->entity->get_value('url_fragment') != $this->get_value('url_fragment'));
 			}
 			return $this->_has_new_url_fragment;
+		}
+		
+		function state_has_changed()
+		{
+			if (!isset($this->_state_has_changed))
+			{
+				$this->_state_has_changed = ( ($this->entity->get_value('state') != $this->get_value('state')) || $this->get_value('state_action') );
+			}
+			return $this->_state_has_changed;
 		}
 		
 		function where_to() // {{{
