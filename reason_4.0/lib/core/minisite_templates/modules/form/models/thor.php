@@ -782,7 +782,7 @@ class ThorFormModel extends DefaultFormModel
 				}
 			}
 			$options['subject'] = 'Form Submission Confirmation: ' . $this->get_form_name(); // should i include form name
-			$options['header'] = $this->get_form_name() . " - " . "Successfully Submitted " . carl_date('l, FÊjS Y \\a\tÊh:i:sÊA');
+			$options['header'] = $this->get_form_name() . " - " . "Successfully Submitted " . carl_date('l, F jS Y \\a\t h:i:s A');
 			$options['to'] = $this->get_email_of_submitter();
 			$options['disclaimer'] = false;
 			$this->send_email($email_data, $options);
