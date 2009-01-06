@@ -3,7 +3,11 @@
 
 	class av_handler extends ContentManager
 	{
-		function alter_data() {
+		var $fields_to_remove = array('rating');
+		var $field_order = array ('name', 'datetime', 'author', 'description', 'keywords', 'content','transcript_status', 'rights_statement', 'show_hide');
+		
+		function alter_data()
+		{
 			$this -> set_display_name ('name', 'Title');
 			$this -> set_display_name ('datetime', 'Date Originally Recorded/Created');
 			$this -> add_comments ('datetime', form_comment('The date this work was made or released'));
@@ -37,8 +41,16 @@
 			{
 				$this->change_element_type('media_publication_datetime','solidText',array('display_name'=>'Published'));
 			}
-			$this -> set_order (array ('name', 'datetime', 'author', 'description', 'keywords', 'content','transcript_status', 'rights_statement', 'show_hide'));
+			if (!empty($this->fields_to_remove))
+			{
+				foreach ($this->fields_to_remove as $field)
+				{
+					$this->remove_element($field);
+				}
+			}
+			$this -> set_order ($this->field_order);
 		}
+		
 		function process() // {{{
 		{
 			$old_entity = new entity($this->get_value('id'));
