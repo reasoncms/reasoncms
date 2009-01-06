@@ -28,6 +28,9 @@ class updateTypes
 		
 		// The updates
 		$this->add_field_to_entity_table('category', 'slug', 'tinytext');
+		$this->add_field_to_entity_table('media_work', 'rating', 'tinyint');
+		$this->add_new_entity_table_to_type('quote', 'quote_type');
+		$this->add_field_to_entity_table('quote', 'rating', 'tinyint');
 		
 		// THIS STUFF IS NOT ACTUALLY IN THE CORE!
 		//$this->add_new_entity_table_to_type('course', 'course_type');
@@ -43,7 +46,7 @@ class updateTypes
 					     		  													'display_name_reverse_direction' => 'Is Subject of Quote',
 					     		  													));
 
-		//$this->fix_amputees();
+		$this->fix_amputees();
 		//$this->create_location_type(); // note at carleton this method is a lot different - see local copy
 	}
 	
