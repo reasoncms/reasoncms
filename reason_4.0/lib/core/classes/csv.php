@@ -38,6 +38,12 @@ class CSV {
 	var $delim; // delimiter character
 	
 	/**
+	* Enclose character to surround fields with spaces
+	* @var string
+	*/	
+	var $enclos; // enclosure character
+
+	/**
 	* Maximum line length to consider per line
 	* @var int
 	*/
@@ -46,11 +52,12 @@ class CSV {
 	var $writable = false;
 	var $exists = false;
 	
-	function CSV($file_path, $head = false, $delim = ',', $len = 1000)
+	function CSV($file_path, $head = false, $delim = ',', $len = 1000, $enclos = '"')
 	{
 		$this->file_path = $file_path;
 		$this->head = $head;
 		$this->delim = $delim;
+		$this->enclos = $enclos;
 		$this->len = $len;
 		$this->exists = file_exists($file_path);
 		$this->readable = is_readable($file_path);
@@ -72,9 +79,9 @@ class CSV {
 			$handle = fopen($this->file_path, "r");
 			if ($this->head) 
 			{
-				$header = fgetcsv($handle, $this->len, $this->delim);
+				$header = fgetcsv($handle, $this->len, $this->delim, $this->enclos);
 			}
-			while (($data = fgetcsv($handle, $this->len, $this->delim)) !== FALSE)
+			while (($data = fgetcsv($handle, $this->len, $this->delim, $this->enclos)) !== FALSE)
 			{
 				if ($this->head AND isset($header))
 				{
@@ -94,6 +101,40 @@ class CSV {
    		return $return;
 	}
 	
+	/**
+	 * Writes the contents of a multidimensional array (like that created by csv_to_array)
+	 * out to a CSV file, overwriting the existing contents (if any).
+	 * Uses locking to ensure only one client is writing to the file at one time
+	 *
+	 * @param string line to add to csv file
+	 * @return boolean success / failure to append a line
+	 *
+	 * TODO: Modify to use a temp file and swap into place on success
+	 */ 
+	function array_to_csv($arr)
+	{
+		$success = true;
+		if (($handle = fopen($this->file_path, 'w')) && (flock($handle, LOCK_EX)))
+		{
+			if ($this->head)
+			{
+				$headings = array_keys(reset($arr));
+				$result = fputcsv($handle, $headings, $this->delim, $this->enclos);
+				$success = $success && $result;
+			}
+			foreach ($arr as $row)
+			{
+				$result = fputcsv($handle, $row, $this->delim, $this->enclos);
+				$success = $success && $result;
+			}
+			flock($handle, LOCK_UN);
+			fclose($handle);
+		} else {
+			$success = false;
+		}
+		return $success;
+	}
+
 	/**
  	 * Passes an array of values into appendLine with proper separators
  	 * 
@@ -172,5 +213,37 @@ class CSV {
 		$html .= '</table>' . "\n";
 		return $html;
 	}
+}
+
+if (!function_exists('fputcsv')) {
+	/**
+	 * PHP4 replacement for PHP5 fputcsv function; from nate at example dot com on php.net
+	 *
+	 * @param $fh resource handle to opened file
+	 * @param $fields array values to write to file
+	 * @param $delimiter string character to use as field delimiter
+	 * @param $enclosure string character to enclose fields
+	 * @param $mysql_null boolean flag to change PHP nulls to MySQL nulls
+	 * @return boolean success / failure to write a line
+	 */ 
+
+	function fputcsv ($fh, $fields, $delimiter = ',', $enclosure = '"', $mysql_null = false) {
+	    $delimiter_esc = preg_quote($delimiter, '/');
+	    $enclosure_esc = preg_quote($enclosure, '/');
+	
+	    $output = array();
+	    foreach ($fields as $field) {
+		if ($field === null && $mysql_null) {
+		    $output[] = 'NULL';
+		    continue;
+		}
+	
+		$output[] = preg_match("/(?:${delimiter_esc}|${enclosure_esc}|\s)/", $field) ? (
+		    $enclosure . str_replace($enclosure, $enclosure . $enclosure, $field) . $enclosure
+		) : $field;
+	    }
+	
+	    return fwrite($fh, join($delimiter, $output) . "\n");
+	} 
 }
 ?>
