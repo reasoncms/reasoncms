@@ -66,7 +66,6 @@
 	    die();
 	}
 	
-	ini_set( 'upload_max_filesize','10M' );
 	$f = new AdminPage();
 	$authenticated = $f->authenticate();
 	if ($authenticated)
