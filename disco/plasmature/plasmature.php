@@ -965,7 +965,8 @@
 		 * @deprecated
 		 */
 		var $user_is_admin;
-		var $type_valid_args = array('widgets', 'site_id', 'paths', 'allowable_tags', 'user_is_admin');
+		var $crash_report_uri;
+		var $type_valid_args = array('widgets', 'site_id', 'paths', 'allowable_tags', 'user_is_admin', 'crash_report_uri');
 		
 		function do_includes()
 		{
@@ -1001,7 +1002,7 @@
 				else
 				{
 					// this looks like a hack. We could look into removing it.
-					$val = eregi_replace("</table>\n\n<br />\n<br />\n","</table>\n", $val);
+					// $val = eregi_replace("</table>\n\n<br />\n<br />\n","</table>\n", $val);
 					$this->set( $val );
 				}
 			}
@@ -1040,6 +1041,10 @@
 			if(!empty($this->allowable_tags))
 			{
 				$loki->set_allowable_tags($this->allowable_tags);
+			}
+			if(!empty($this->crash_report_uri))
+			{
+				$loki->set_crash_report_uri($this->crash_report_uri);
 			}
 			
 			$loki->print_form_children();
@@ -1573,7 +1578,8 @@
 		
 		function get_display() // {{{
 		{
-			$str = '<table border="0" cellpadding="1" cellspacing="0">'."\n";
+			$str = '<div class="checkBoxGroup">'."\n";
+			$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
 			$i = 0;
 			foreach( $this->options as $key => $val )
 			{
@@ -1591,6 +1597,7 @@
 				$i++;
 			}
 			$str .= '</table>'."\n";
+			$str .= '</div>'."\n";
 			return $str;
 		} // }}}
 		function grab()
