@@ -146,6 +146,7 @@
 				$values = $e->get_values();
 				if (empty($values))
 				{
+					trigger_error('Malformed request from '.$_SERVER['HTTP_REFERER'] .' (ID given does not correspond to an entity)');
 					$this->id = '';
 				}
 			}
