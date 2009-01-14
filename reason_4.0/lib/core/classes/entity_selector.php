@@ -162,7 +162,10 @@
 		 * @var boolean
 		 */
 		var $borrows = true;
-		
+		/**
+		 * @var object entity factory class
+		 */
+		var $entity_factory_class;
 		/**
 		 * Table Mod Array
 		 *
@@ -980,7 +983,14 @@
 				}
 				else
 				{
-					$e = new entity( $row[ 'id' ] );
+					if ($factory =& $this->get_entity_factory())
+					{
+						$e = $factory->get_entity( $row );
+					}
+					else
+					{
+						$e = new entity( $row[ 'id' ] );
+					}
 					$e->_values = $row;
 				}
 				$results[ $row[ 'id' ] ] = $e;
@@ -1379,6 +1389,17 @@
 			$str .= ( $this->orderby ) ? ' ORDER BY '.$this->orderby."\n" : '';
 			if ($this->num > 0) $str .= "LIMIT\n".$this->start.', '.$this->num;
 			return $str;
+		}
+		
+		function set_entity_factory(&$factory_class)
+		{
+			$this->entity_factory_class =& $factory_class;
+		}
+		
+		function &get_entity_factory()
+		{
+			if (!isset($this->entity_factory_class)) $this->entity_factory_class = false;
+			return $this->entity_factory_class;
 		}
 	} // }}}
 ?>
