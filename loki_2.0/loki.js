@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0.2-b1
+// Loki WYSIWIG Editor 2.0.2
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-12-17 17:04:33 
+// Compiled 2008-12-30 13:43:00 
 // http://loki-editor.googlecode.com/
 
 
@@ -1101,6 +1101,12 @@ var Util = {
 			}
 		}
 		return str;
+	},
+	
+	regexp_escape: function escape_string_for_regexp(str)
+	{
+		// credit: Prototype
+		return String(str).replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
 	}
 };
 
@@ -2627,7 +2633,12 @@ Util.Element = {
 		for (i = 0; i < length; i++) {
 			name = names[i];
 			v = elem.getAttribute(name);
-			v = (v.toString) ? v.toString() : v;
+			try {
+				v = v.toString();
+			} catch (e) {
+				// Why not just test for toString? Because IE will throw an
+				// exception.
+			}
 			
 			switch (name) {
 				case 'class':
@@ -5364,7 +5375,7 @@ Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
 	var gen = this;
 	var pattern = (gen.escape_non_ascii)
 		? (/[\x00-\x1F\x80-\uFFFF&<>"]/g)
-		: (/[\x00-\x1F^<>]/g);
+		: (/[\x00-\x1F&<>"]/g);
 	
 	function clean_text(text, in_attribute) {
 		function html_escape(txt) {
@@ -5379,7 +5390,7 @@ Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
 				: '&#' + c + ';'
 		}
 		
-		return text.replace(pattern, html_escape);
+		return (text) ? text.replace(pattern, html_escape) : '';
 	}
 	
 	function is_whitespace_irrelevant(node) {
@@ -9896,9 +9907,6 @@ Util.URI.build = function build_uri_from_parsed(parsed)
 		uri += parsed.host;
 		if (parsed.port)
 			uri += ':' + parsed.port;
-	} else if (parsed.scheme) {
-		throw new Error('To build a URI with the scheme specified, the host ' +
-			'or authority must also be specified.');
 	}
 	
 	if (parsed.path)
@@ -9961,7 +9969,7 @@ Util.URI.normalize = function normalize_uri(uri, base)
 		uri = Util.URI.parse(uri);
 	}
 	
-	if (!uri.scheme) {
+	if (!uri.scheme && uri.scheme != '') {
 		uri.scheme = base.scheme;
 	} else if (uri.scheme = 'https') {
 		if (uri.port == 443)
@@ -9970,7 +9978,8 @@ Util.URI.normalize = function normalize_uri(uri, base)
 	
 	if (!uri.host)
 		uri.host = base.host;
-	uri.host = uri.host.toLowerCase();
+	if (typeof(uri.host) == 'string')
+		uri.host = uri.host.toLowerCase();
 	
 	if (uri.path.charAt(0) != '/' && uri.host == base.host) {
 		uri.path = base.path + uri.path;
@@ -11999,7 +12008,40 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 		allowable_tags = UI.Clean.default_allowable_tags.toSet();
 	}
 	
-	var acceptable_css = settings.allowable_inline_styles.toSet();
+	var acceptable_css;
+	if (typeof(settings.allowable_inline_styles) != 'undefined') {
+		if ('string' == typeof(settings.allowable_inline_styles)) {
+			var macros = {
+				'all': true,
+				'any': true,
+				'*': true,
+				'none': false
+			};
+			acceptable_css = settings.allowable_inline_styles.toLowerCase();
+			if (acceptable_css in macros) {
+				acceptable_css = macros[acceptable_css];
+			} else {
+				acceptable_css = acceptable_css.split(/\s+/);
+			}
+		} else if (null === settings.allowable_inline_styles) {
+			acceptable_css = UI.Clean.default_allowable_inline_styles;
+		} else {
+			acceptable_css = settings.allowable_inline_styles;
+		}
+	} else {
+		acceptable_css = UI.Clean.default_allowable_inline_styles;
+	}
+	
+	if (typeof(acceptable_css.join) == 'function') { // it's an array!	
+		acceptable_css = get_css_pattern(acceptable_css);
+	}
+	
+	function get_css_pattern(names) {
+		names = names.map(Util.regexp_escape).map(function(name) {
+			return name.toLowerCase();
+		});
+		return new RegExp('^(' + names.join('|') + ')');
+	}
 		
 	function is_allowable_tag(node)
 	{
@@ -12041,6 +12083,10 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 		
 		return false;
 	}
+	
+	function is_same_domain(uri) {
+		return (uri.host == Util.URI.extract_domain(window.location));
+	}
 
 	var tests =
 	[
@@ -12055,7 +12101,7 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 			test : function(node) {
 				if (node.nodeType != Util.Node.COMMENT_NODE)
 					return false;
-				return ("!" in allowable_tags);
+				return !("!" in allowable_tags);
 			},
 			action : remove_node
 		},
@@ -12083,9 +12129,16 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 		},
 		{
 			description: 'Strip unwanted inline styles',
-			test: function(node) { return has_attributes(node, ['style']); },
+			test: function(node) {
+				return acceptable_css !== true && has_attributes(node, ['style']); 
+			},
 			action: function strip_unwanted_inline_styles(el) {
-				var rule = /([\w-]+)\s*:\s*([^;]+)(?:;|$)/g;
+				if (acceptable_css === false) {
+					el.removeAttribute('style');
+					return;
+				}
+				
+				var rule = /([\w\-]+)\s*:\s*([^;]+)(?:;|$)/g;
 				var raw = el.style.cssText;
 				var accepted = [];
 				var match;
@@ -12093,8 +12146,8 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 				
 				while (match = rule.exec(raw)) {
 					name = match[1].toLowerCase();
-					if (name in acceptable_css) {
-						accepted.push(match[0]);
+					if (acceptable_css.test(name)) {
+						accepted.push(name + ": " + match[2] + ";");
 					}
 				}
 				
@@ -12117,7 +12170,8 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 					return false;
 				
 				// Check for the paragraph to only contain non-breaking spaces
-				var pattern = new RegExp("^(\xA0| )+$", "");
+				// or other whitespace characters.
+				var pattern = new RegExp("^[\\s\xA0]+$", "");
 				for (var i = 0; i < node.childNodes.length; i++) {
 					var child = node.childNodes[i];
 					if (child.nodeType == Util.Node.ELEMENT_NODE) {
@@ -12137,24 +12191,6 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 			action: remove_node
 		},
 		{
-			description : 'Remove all classes that include Mso (from Word) or O (from Powerpoint) in them.',
-			test : is_element,
-			action : function strip_ms_office_classes(node)
-			{
-				var office_pattern = /^(Mso|O)/;
-				var classes = Util.Element.get_class_array(node);
-				var length = classes.length;
-				
-				for (var i = 0; i < length; i++) {
-					if (office_pattern.test(classes[i]))
-						classes.splice(i, 1); // remove the class
-				}
-				
-				if (classes.length != length)
-					Util.Element.set_class_array(node, classes);
-			}
-		},
-		{
 			description: 'Remove Microsoft Word section DIV\'s',
 			test: function is_ms_word_section_div(node) {
 				if (!has_tagname(node, ['DIV']))
@@ -12171,6 +12207,24 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 				return true;
 			},
 			action: remove_tag
+		},
+		{
+			description : 'Remove Microsoft Office internal classes.',
+			test : is_element,
+			action : function strip_ms_office_classes(node)
+			{
+				var office_pattern = /^(Mso|O|Section\d+$)/;
+				var classes = Util.Element.get_class_array(node);
+				var length = classes.length;
+				
+				for (var i = 0; i < length; i++) {
+					if (office_pattern.test(classes[i]))
+						classes.splice(i, 1); // remove the class
+				}
+				
+				if (classes.length != length)
+					Util.Element.set_class_array(node, classes);
+			}
 		},
 		{
 			description : 'Remove unnecessary span elements',
@@ -12227,15 +12281,19 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 					// Don't normalize URN's (like data:).
 					return;
 				}
+				var uri = Util.URI.parse(img.src);
 				var norm = Util.URI.normalize(img.src);
-				norm.scheme = null;
+				if (is_same_domain(uri))
+					norm.scheme = null;
+				else
+					norm.scheme = uri.scheme; // undo any changes
 				img.src = Util.URI.build(norm);
 			}
 		},
 		{
 			description: "Normalize all link URI's",
 			test: Util.Node.curry_is_tag('A'),
-			action: function normalize_image_uri(link) {
+			action: function normalize_link_uri(link) {
 				if (!link.href)
 					return;
 				var uri = Util.URI.parse(link.href);
@@ -12245,8 +12303,11 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 				}
 				if (is_on_current_page(uri))
 					return;
-				var norm = Util.URI.normalize(link.href);
-				norm.scheme = null;
+				var norm = Util.URI.normalize(uri);
+				if (is_same_domain(uri))
+					norm.scheme = null;
+				else
+					norm.scheme = uri.scheme; // undo any changes
 				link.href = Util.URI.build(norm);
 			}
 		},
@@ -12419,6 +12480,10 @@ UI.Clean.default_allowable_tags =
 	'SAMP', 'SCRIPT', 'SELECT', 'SMALL', 'SPAN', 'STRONG', 'SUB', 'SUP', 'TABLE',
 	'TBODY', 'TD', 'TEXTAREA', 'TFOOT', 'TH', 'THEAD', 'TR', 'TT', 'U', 'UL',
 	'VAR'];
+	
+UI.Clean.default_allowable_inline_styles =
+	['text-align', 'vertical-align', 'float', 'direction', 'display', 'clear',
+	'list-style'];
 
 UI.Clean.self_nesting_disallowed =
 	['ABBR', 'ACRONYM', 'ADDRESS', 'AREA', 'B', 'BR', 'BUTTON', 'CAPTION',
@@ -21371,10 +21436,6 @@ UI.Loki = function Loki()
 			_settings.base_uri = autodetect_base_uri();
 		}
 		
-		if (!_settings.allowable_inline_styles) {
-			_settings.allowable_inline_styles = default_allowed_styles();
-		}
-		
 		if (!_settings.html_generator || _settings.html_generator == 'default')
 			_settings.html_generator = 'browser';
 		else
@@ -21439,7 +21500,7 @@ UI.Loki = function Loki()
 	function autodetect_base_uri()
 	{
 		var scripts = document.getElementsByTagName('SCRIPT');
-		var pattern = /\bloki\.js\b/;
+		var pattern = /\bloki\.js\b.*$/;
 		
 		for (var i = 0; i < scripts.length; i++) {
 			if (pattern.test(scripts[i].src)) {
@@ -21452,14 +21513,6 @@ UI.Loki = function Loki()
 			" Please set it explicitly.");
 	}
 	
-	function default_allowed_styles()
-	{
-		var builtin = ['text-align', 'vertical-align', 'float', 'direction',
-			'display', 'clear', 'list-style'];
-		
-		return builtin;
-	}
-
 	/**
 	 * Finishes initializing instance variables, but does so
 	 * asynchronously. All initing that requires _window or _document
@@ -22032,7 +22085,18 @@ UI.Loki = function Loki()
 			});
 		}
 		
-		var message = ex.message || ex.toString();
+		var message;
+		if (ex.message) {
+			message = ex.message;
+		} else {
+			try {
+				message = ex.toString();
+			} catch (e) {
+				// Why not just test for toString? Because IE will throw an
+				// exception.
+				message = '(unable to get exception message)';
+			}
+		}
 		var stack = get_stack_trace(ex);
 		
 		if (stack) {
@@ -22215,9 +22279,9 @@ UI.Loki = function Loki()
 				if (typeof(console) == 'object' && console.firebug) {
 					console.error('Failed to generate HTML:',
 						ex);
-					throw ex;
 				}
 				
+				throw ex;
 				return false;
 			}
 			
@@ -22514,7 +22578,7 @@ UI.Loki = function Loki()
 		}
 	};
 };
-UI.Loki.prototype.version = "2.0.2-b1";
+UI.Loki.prototype.version = "2.0.2";
 
 UI.Loki.Options = new Util.Chooser();
 UI.Loki.Options._add_bundled = function add_bundled_loki_options() {
@@ -22750,7 +22814,7 @@ var Loki = {
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0.2-b1",
+	version: "2.0.2",
 	
 	/** @private */
 	_pending: [],
