@@ -72,9 +72,14 @@ class ReasonAssetAccess
 	{
 		if (empty($this->asset)) return false;
 		if (empty($this->site)) $this->set_site_id_from_asset_id();
-		if($this->access_allowed())
+		if( ($this->asset->get_value('state') != 'Deleted') && $this->access_allowed())
 		{
 			$this->_send_file();
+		}
+		elseif ($this->asset->get_value('state') == 'Deleted')
+		{
+			header( 'Location: '.ERROR_404_PAGE );
+			exit();
 		}
 		else
 		{
