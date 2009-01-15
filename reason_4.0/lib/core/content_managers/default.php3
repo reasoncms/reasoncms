@@ -51,7 +51,11 @@
 
 		function init( $externally_set_up = false)
 		{
-			$this->init_head_items();
+			if ( !isset( $this->_inited_head_items ) OR empty( $this->_inited_head_items ))
+			{
+				$this->init_head_items();
+				$this->_inited_head_items = true;
+			}
 			parent::init();
 		}
 		
