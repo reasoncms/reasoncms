@@ -150,7 +150,10 @@ class DefaultForm extends Disco
 		{
 			foreach ($actions as $action)
 			{
-				if ($this->check_and_invoke_view_or_model_method('should_'.$action)) $this->check_and_invoke_view_or_model_method($action);
+				if (!empty($action))
+				{
+					if ($this->check_and_invoke_view_or_model_method('should_'.$action)) $this->check_and_invoke_view_or_model_method($action);
+				}
 			}
 		}
 	}
