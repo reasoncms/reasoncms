@@ -43,6 +43,7 @@ class PublicationHelper extends entity
 			$owner = $this->get_owner();
 			$this->site_id = $owner->id();
 		}
+		return $this->site_id;
 	}
 	
 	/**
