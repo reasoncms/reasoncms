@@ -150,6 +150,10 @@
 			$this->_item_field_handlers[ $field ] = $func;
 			$this->_item_field_handler_rules[ $field ]['class_variable'] = $class_variable;
 		} // }}}
+		function set_custom_output_handler( $field, $func ) // {{{
+		{
+			$this->_custom_output_handlers[ $field ] = $func;
+		} // }}}
 		function set_item_field_validator( $field, $func ) // {{{
 		{
 			$this->_item_field_validator[ $field ] = $func;
@@ -277,15 +281,22 @@
 						}
 						else
 						{
-							$return .= '<'.$attr.'>';
-							// call a field handler if one is set up
-							$return .= $this->_clean_value( $value );
-							$return .= '</'.$attr.'>'."\n";
+							$return .= $this->_default_output_handler($item, $attr, $value);
 						}
 					}
 				}
 				return $return;
 			}
+		}
+		
+		// can be overriden and customized in child classes
+		function _default_output_handler($item, $attr, $value)
+		{
+			$return = '<'.$attr.'>';
+			// call a field handler if one is set up
+			$return .= $this->_clean_value( $value );
+			$return .= '</'.$attr.'>'."\n";
+			return $return;
 		}
 		
 		function make_enclosure($item, $attr, $value)
