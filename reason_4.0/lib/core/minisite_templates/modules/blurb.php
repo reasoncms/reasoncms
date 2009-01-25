@@ -92,7 +92,10 @@
 			foreach( $this->blurbs as $blurb )
 			{
 				$i++;
-				echo '<div class="blurb number'.$i.'">';
+				echo '<div class="blurb number'.$i;
+				if($blurb->get_value('unique_name'))
+					echo ' uname_'.htmlspecialchars($blurb->get_value('unique_name'));
+				echo '">';
 				echo demote_headings($blurb->get_value('content'), $this->params['demote_headings']);
 				echo '</div>'."\n";
 			}
