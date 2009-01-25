@@ -1538,7 +1538,7 @@
 		function get_display() // {{{
 		{
 			$i = 0;
-			$str = '<div id="'.$this->name.'_container">'."\n";
+			$str = '<div id="'.$this->name.'_container" class="radioButtons">'."\n";
 			$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
 			foreach( $this->options as $key => $val )
 			{
