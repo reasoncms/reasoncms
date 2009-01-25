@@ -66,10 +66,11 @@ class PublicationHelper extends entity
 				$es = new entity_selector();
 				$es->description = 'Selecting published news items for this publication';
 				$es->add_type( id_of('news') );
-				$es->limit_tables(array('dated','show_hide'));
-				$es->limit_fields(array('dated.datetime', 'show_hide.show_hide'));
+				$es->limit_tables(array('dated','show_hide', 'status'));
+				$es->limit_fields(array('dated.datetime', 'status.status', 'show_hide.show_hide'));
 				$es->add_left_relationship( $this->id(), relationship_id_of('news_to_publication') );
 				$es->set_order('dated.datetime DESC');
+				$es->add_relation("status.status != 'pending'");
 				if ($issues) $es->add_left_relationship_field( 'news_to_issue', 'entity', 'id', 'issue_id', array_keys($issues) );
 				$this->published_items = $es->run_one();
 			}
