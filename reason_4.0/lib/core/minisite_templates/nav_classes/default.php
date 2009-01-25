@@ -121,6 +121,8 @@
 				$class = 'closed';
 			if($counter)
 				$class .= ' item'.$counter;
+			if(isset($this->values[$id]) && $this->values[$id]->get_value( 'url' ))
+				$class .= ' jump';
 			return $class;
 		}
 		
