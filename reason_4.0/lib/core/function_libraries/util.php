@@ -925,12 +925,33 @@
 		else
 			return false;
 	} // }}}
-
-	function get_text_blurb_content( $unique_name ) //{{{
+	
+	/**
+	 * A simple helper function for getting the content of a uniquely named text blurb
+	 *
+	 * @param string $unique_name The unique name of the text blurb you want to get the contents of
+	 * @param boolean $cache	Use the id_of function's cache or not
+	 * @param boolean $report_not_found_error	Trigger an error if the unique name is not in the Reason database
+	 * @return mixed	String if success; otherwise NULL
+	 * @todo In a future version: return NULL if entity is not a text blurb
+	 */
+	function get_text_blurb_content( $unique_name, $cache = true, $report_not_found_error = true ) //{{{
 	{
-		$e = new entity( id_of( $unique_name ) );
-		$c = $e->get_value( 'content' );
-		return $c;
+		$id = id_of( $unique_name, $cache, $report_not_found_error );
+		if(!empty($id))
+		{
+			$e = new entity( $id );
+			if($e->get_value('type') == id_of('text_blurb'))
+			{
+				return $e->get_value( 'content' );
+			}
+			else
+			{
+				trigger_error($unique_name.' is not a text blurb. Use of get_text_blurb_content() for non-blurb entities is deprecated.');
+				return $e->get_value( 'content' );
+			}
+		}
+		return;
 	} // }}}
 
 	// Like php basename, but returns partial path from the modules directory
