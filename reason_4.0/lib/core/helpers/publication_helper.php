@@ -51,12 +51,14 @@ class PublicationHelper extends entity
 	 *
 	 * 1. the news item is marked as published
 	 * 2. if the publication is issued, the news item must be related to at least one published issue
+	 * @param limit_num int set a max number of items to return from the publicaiton
+	 * @param force_refresh force a new query
 	 *
 	 * @return array news/post entities that are published
 	 */
-	function &get_published_items()
+	function &get_published_items( $limit_num = false, $force_refresh = false)
 	{
-		if (!isset($this->published_items))
+		if (!isset($this->published_items) && !$force_refresh)
 		{
 			$issued = ($this->get_value('has_issues') == 'yes');
 			$issues = ($issued) ? $this->get_published_issues() : false;
@@ -70,6 +72,7 @@ class PublicationHelper extends entity
 				$es->limit_fields(array('dated.datetime', 'status.status', 'show_hide.show_hide'));
 				$es->add_left_relationship( $this->id(), relationship_id_of('news_to_publication') );
 				$es->set_order('dated.datetime DESC');
+				if ($limit_num) $es->set_num($limit_num);
 				$es->add_relation("status.status != 'pending'");
 				if ($issues) $es->add_left_relationship_field( 'news_to_issue', 'entity', 'id', 'issue_id', array_keys($issues) );
 				$this->published_items = $es->run_one();
