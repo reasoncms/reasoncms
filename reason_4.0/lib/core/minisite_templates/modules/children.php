@@ -15,6 +15,7 @@
 										'provide_images' => false,
 										'randomize_images' => false,
 										'show_only_pages_in_nav' => false,
+										'show_external_links' => true,
 									);
 		var $offspring = array();
 		var $az = array();
@@ -31,6 +32,10 @@
 			if($this->params['show_only_pages_in_nav'])
 			{
 				$this->es->add_relation('nav_display = "Yes"');
+			}
+			if(!$this->params['show_external_links'])
+			{
+				$this->es->add_relation('(url = "" OR url IS NULL)');
 			}
 			
 			$this->es->set_order('sortable.sort_order ASC');
