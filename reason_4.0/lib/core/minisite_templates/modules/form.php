@@ -33,12 +33,13 @@
 									   'form_controller' => false,
 									   'form_view' => false,
 									   'form_admin_view' => false,
-									   'force_login' => false);
+									   'force_login' => false,
+									   'force_secure' => true);
 		
 		function _init_legacy()
 		{
 			// prep items to always do for backwards compatibility with old form module
-			force_secure_if_available();
+			$this->_check_force_secure_parameter();
 			$this->_check_force_login_parameter();
 			$this->_redirect_old_style_url();
 		}
@@ -248,7 +249,7 @@
 		}
 		
 		/**
-		 * The old form module supported a force_login parameter - we will continue to support it though really the controllers
+		 * The old form module supported a force_login parameter - we will continue to support it though really the models
 		 * are probably a better place to force login.
 		 *
 		 * @access private
@@ -258,6 +259,20 @@
 			if ($this->params['force_login'])
 			{
 				reason_require_authentication('form_login_msg');
+			}
+		}
+		
+		/**
+		 * The old form module always would force a secure connection if available. We will maintain this as the default,
+		 * but allow the force_secure parameters to also be set to false, thus disabling force_secure.
+		 *
+		 * @access private
+		 */
+		function _check_force_secure_parameter()
+		{
+			if ($this->params['force_secure'])
+			{
+				force_secure_if_available();
 			}
 		}
 	}
