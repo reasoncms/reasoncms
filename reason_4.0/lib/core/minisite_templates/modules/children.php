@@ -16,6 +16,8 @@
 										'randomize_images' => false,
 										'show_only_pages_in_nav' => false,
 										'show_external_links' => true,
+										'exclude' => array(),
+										'limit_to' => array(),
 									);
 		var $offspring = array();
 		var $az = array();
@@ -33,9 +35,17 @@
 			{
 				$this->es->add_relation('nav_display = "Yes"');
 			}
-			if(!$this->params['show_external_links'])
+			if(isset($this->params['show_external_links']) && !$this->params['show_external_links'])
 			{
 				$this->es->add_relation('(url = "" OR url IS NULL)');
+			}
+			if(!empty($this->params['exclude']))
+			{
+				$this->es->add_relation('unique_name NOT IN ('.$this->_param_to_sql_set($this->params['exclude']).')');
+			}
+			if(!empty($this->params['limit_to']))
+			{
+				$this->es->add_relation('unique_name IN ('.$this->_param_to_sql_set($this->params['limit_to']).')');
 			}
 			
 			$this->es->set_order('sortable.sort_order ASC');
@@ -60,6 +70,18 @@
 			}
 
 		} // }}}
+		function _param_to_sql_set($param)
+		{
+			if(is_array($param))
+			{
+				array_walk($param, 'db_prep_walk');
+				return implode(',',$param);
+			}
+			else
+			{
+				return '"'.addslashes($param).'"';
+			}
+		}
 		function has_content() // {{{
 		{
 			if( empty($this->offspring) )
@@ -94,6 +116,7 @@
 				echo '<ul class="'.$class.'">'."\n";
 				$counter = 1;
 				$even_odd = 'odd';
+				
 				foreach( $this->offspring AS $child )
 				{
 					if ( $this->parent->cur_page->id() != $child->id() )
