@@ -52,6 +52,7 @@
 		//var $redir_link_text = '';
 		var $on_secure_page_if_available = false;
 		var $current_url = '';
+		var $msg_extra = '';
 		
 		function set_test_cookie()
 		{
@@ -153,6 +154,15 @@
 				{
 					$this->logged_in = true;
 					$this->msg = 'You are logged in as '.$this->sess->get('username').'.';
+					if( !empty( $this->dest_page ) )
+					{
+						if( $this->dest_page != get_current_url() )
+						{
+							$dest_txt = $this->_get_dest_page_text();
+							$cleaned_dest_page = htmlspecialchars($this->dest_page);
+							$this->msg_extra ='<p>Proceed to <a href="'.$cleaned_dest_page.'" title="'.$cleaned_dest_page.'">'.htmlspecialchars($dest_txt).'</a></p>';
+						}
+					}
 				}
 			}
 			// no session, not logged in
@@ -234,7 +244,11 @@
 			echo '<div id="login">'."\n";
 			if( !empty( $this->msg ) )
 			{
-				echo '<h4>'.$this->msg.'</h4>';
+				echo '<h4 class="msg">'.$this->msg.'</h4>'."\n";
+			}
+			if(!empty( $this->msg_extra ) )
+			{
+				echo '<div class="msg_extra">'.$this->msg_extra.'</div>'."\n";
 			}
 			if( !$this->logged_in )
 			{
@@ -273,25 +287,7 @@
 					{
 						if( $this->dest_page != get_current_url() )
 						{
-							if(empty($this->redir_link_text))
-							{
-								$max_chars = 50;
-								if(strlen($this->dest_page) > $max_chars)
-								{
-									$piece_length = floor($max_chars/2);
-									$dest_txt_1 = substr($this->dest_page,0,$piece_length);
-									$dest_txt_2 = substr($this->dest_page,strlen($this->dest_page)-$piece_length);
-									$dest_txt = $dest_txt_1.'...'.$dest_txt_2;
-								}
-								else
-								{
-									$dest_txt = $this->dest_page;
-								}
-							}
-							else
-							{
-								$dest_txt = $this->redir_link_text;
-							}
+							$dest_txt = $this->_get_dest_page_text();
 							$cleaned_dest_page = htmlspecialchars($this->dest_page);
 							echo '<p class="smallText">You will be redirected to <a href="'.$cleaned_dest_page.'" title="'.$cleaned_dest_page.'">'.htmlspecialchars($dest_txt).'</a> once you login.</p>';
 						}
@@ -303,6 +299,35 @@
 				echo '<a href="?logout=1" class="logoutLink">Logout</a>';
 			}
 			echo '</div>'."\n";
+		}
+		
+		function _get_dest_page_text($max_chars = 50)
+		{
+			if( !empty( $this->dest_page ) )
+			{
+				if( $this->dest_page != get_current_url() )
+				{
+					if(empty($this->redir_link_text))
+					{
+						if(strlen($this->dest_page) > $max_chars)
+						{
+							$piece_length = floor($max_chars/2);
+							$dest_txt_1 = substr($this->dest_page,0,$piece_length);
+							$dest_txt_2 = substr($this->dest_page,strlen($this->dest_page)-$piece_length);
+							$dest_txt = $dest_txt_1.'...'.$dest_txt_2;
+						}
+						else
+						{
+							$dest_txt = $this->dest_page;
+						}
+					}
+					else
+					{
+						$dest_txt = $this->redir_link_text;
+					}
+					return $dest_txt;
+				}
+			}
 		}
 		
 		/**
