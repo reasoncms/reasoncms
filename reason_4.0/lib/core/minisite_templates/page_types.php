@@ -364,6 +364,15 @@
 			'sidebar' => 'blurb',
 			'sub_nav' => '',
 		),
+		'children_and_sidebar_blurbs_no_nav' => array(
+			'main_post' => 'children',
+			'sidebar' => 'blurb',
+			'navigation' => '',
+			'sub_nav' => '',
+			'sub_nav_2' => '',
+			'sub_nav_3' => '',
+			'post_foot' => 'textonly_toggle',
+		),
 		'children_before_content' => array(
 			'main_post' => 'content',
 			'main'=>'children',
