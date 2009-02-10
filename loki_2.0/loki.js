@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0.2
+// Loki WYSIWIG Editor 2.0.2-pl1
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2008-12-30 13:43:00 
+// Compiled 2009-02-10 10:52:28 
 // http://loki-editor.googlecode.com/
 
 
@@ -5541,7 +5541,7 @@ Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
 			
 		buffer.set_flag('preformatted');
 		make_inline_element(buffer, element);
-		buffer.new_line(true);
+		buffer.end_line(true);
 		buffer.clear_flag('preformatted');
 	}
 	
@@ -20802,7 +20802,7 @@ UI.Table_Masseuse = function TableMasseuse()
 		if (head.getElementsByTagName("TR").length == 0) {
 			// See if the first row of the table is actually a header row.
 			var candidate = get_first_row();
-			if (is_header_row(candidate)) {
+			if (candidate && is_header_row(candidate)) {
 				promote_row(candidate, 'head');
 			} else {
 				head_valid = false; // don't worry about the lack of header
@@ -22578,7 +22578,7 @@ UI.Loki = function Loki()
 		}
 	};
 };
-UI.Loki.prototype.version = "2.0.2";
+UI.Loki.prototype.version = "2.0.2-pl1";
 
 UI.Loki.Options = new Util.Chooser();
 UI.Loki.Options._add_bundled = function add_bundled_loki_options() {
@@ -22814,7 +22814,7 @@ var Loki = {
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0.2",
+	version: "2.0.2-pl1",
 	
 	/** @private */
 	_pending: [],
