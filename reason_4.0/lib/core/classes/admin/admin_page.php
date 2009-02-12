@@ -921,14 +921,34 @@
 			if(defined('REASON_STATS_URI_BASE') && REASON_STATS_URI_BASE != '')
 			{
 				$site = new entity ( $this->site_id );
-				if( $site->get_value( 'site_state' ) == 'Live' && $site->get_value( 'unique_name' ) )
+				if( $site->get_value( 'unique_name' ))
 				{
-					$link = REASON_STATS_URI_BASE;
-					$uname = posix_uname();
-					$link .=  strtolower($uname['nodename']).'/';
-					$link .= $_SERVER['HTTP_HOST'].'/';
-					$link .= $site->get_value( 'unique_name' ).'/';
-					return $link;
+					$show = false;
+					if($site->get_value( 'site_state' ) == 'Live')
+					{
+						$show = true;
+					}
+					else
+					{
+						$es = new entity_selector();
+						$es->add_right_relationship($site->id(),relationship_id_of('site_archive'));
+						$es->add_relation( 'site_state = "Live"' );
+						$es->set_num(1);
+						$sites = $es->run_one(id_of('site'), 'Archived');
+						if(!empty($sites))
+						{
+							$show = true;
+						}
+					}
+					if($show)
+					{
+						$link = REASON_STATS_URI_BASE;
+						$uname = posix_uname();
+						$link .=  strtolower($uname['nodename']).'/';
+						$link .= $_SERVER['HTTP_HOST'].'/';
+						$link .= $site->get_value( 'unique_name' ).'/';
+						return $link;
+					}
 				}
 			}
 			return false;
