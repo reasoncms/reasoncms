@@ -3,7 +3,7 @@
 
 	class av_handler extends ContentManager
 	{
-		var $fields_to_remove = array('rating');
+		var $fields_to_remove = array('rating', 'standalone');
 		var $field_order = array ('name', 'datetime', 'author', 'description', 'keywords', 'content','transcript_status', 'rights_statement', 'show_hide');
 		
 		function alter_data()
@@ -31,7 +31,10 @@
 
 			$this -> set_display_name ('content', 'Transcript');
 			$this -> set_display_name ('show_hide', 'Show or Hide?');
-			$this->change_element_type( 'show_hide', 'radio_no_sort', array('options'=>array('show'=>'Show this work on the public site','hide'=>'Hide this work from the public site')));
+			$this -> change_element_type( 'show_hide', 'radio_no_sort', array('options'=>array('show'=>'Show this work on the public site','hide'=>'Hide this work from the public site')));
+			$this -> add_required ('show_hide');
+			$show_hide_val = $this->get_value('show_hide');
+			if (empty($show_hide_val)) $this->set_value('show_hide', 'show');
 			$this -> set_display_name ('author', 'Creator');
 			$this -> add_comments ('author', form_comment('The person or entity who made this work (e.g. director/producer)'));
 			$this -> add_comments ('rights_statement', form_comment('e.g. "Some rights reserved. '.FULL_ORGANIZATION_NAME.' licenses this work under the <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>." or "Copyright Margaret Smith, 1983. All rights reserved. Used with permission." You may leave this field blank if you are not sure about what license applies to this work.'));
