@@ -211,12 +211,23 @@ div#guide div.recent ul li.item1 {
 div#guide div.recent a.more {
 	font-style:italic;
 }
-div#siteIntro div#siteDesc, div#siteIntro div#whatsNew {
+div#siteIntro div#siteNotices {
 	float:right;
-	width:42%;
+	width:33%;
+}
+div#siteIntro div#siteNotices div#siteDesc, div#siteIntro div#siteNotices div#whatsNew, div#siteIntro div#siteNotices div.notLiveNotice {
 	padding:1em;
 	margin:0 0 1em 1em;
 	background-color:#E9EEF8;
+}
+div#siteIntro div#siteNotices div.notLiveNotice h4 {
+	margin:0;
+	color:#555;
+}
+div#siteIntro div#siteNotices div.notLiveNotice p {
+	margin:0.5em 0 0 0;
+	font-size:0.9em;
+	color:#333;
 }
 div.otherSiteRelation {
 	margin: .5em;
