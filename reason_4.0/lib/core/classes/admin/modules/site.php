@@ -26,7 +26,7 @@
 			echo '<div id="siteIntro">'."\n";
 			$e = new entity( $this->admin_page->site_id );
 			echo '<div id="siteNotices">'."\n";
-			if($e->get_value('site_state') == "Not Live")
+			if( $e->get_value('site_state') == "Not Live" && $e->get_value('unique_name') != 'master_admin' )
 			{
 				echo '<div class="notLiveNotice"><h4>This site is not live.</h4><p>Among other things, that means that it\'s excluded from search engines (so people won\'t stumble upon a site that isn\'t ready for public consumption).</p>'."\n";
 				if( user_can_edit_site($this->admin_page->user_id, id_of('master_admin') ) )
