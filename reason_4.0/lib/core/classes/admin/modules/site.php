@@ -25,7 +25,17 @@
 		{
 			echo '<div id="siteIntro">'."\n";
 			$e = new entity( $this->admin_page->site_id );
-			if( $e->get_value( 'description' ) )
+			echo '<div id="siteNotices">'."\n";
+			if($e->get_value('site_state') == "Not Live")
+			{
+				echo '<div class="notLiveNotice"><h4>This site is not live.</h4><p>Among other things, that means that it\'s excluded from search engines (so people won\'t stumble upon a site that isn\'t ready for public consumption).</p>'."\n";
+				if( user_can_edit_site($this->admin_page->user_id, id_of('master_admin') ) )
+					echo '<p><a href="'.$this->admin_page->make_link( array('site_id'=>id_of('master_admin'),'type_id'=>id_of('site'),'id'=>$e->id(),'cur_module'=>'Editor' ) ).'">Edit this site</a></p>'."\n";
+				else
+					echo '<p>Please contact '.REASON_CONTACT_INFO_FOR_CHANGING_USER_PERMISSIONS.' when you are ready to make this site live.</p>'."\n";
+				echo '</div>'."\n";
+			}
+			if($e->get_value( 'description' ))
 			{
 				echo '<div id="siteDesc">'."\n";
 				if(strip_tags( $e->get_value( 'description' )) == $e->get_value( 'description' ))
@@ -38,12 +48,10 @@
 				}
 				echo '</div>'."\n";
 			}
-			else
-			{
-				$sites = $this->admin_page->get_sites();
-				if( count( $sites ) == 1 )
-					parent::run();
-			}
+			$sites = $this->admin_page->get_sites();
+			if( count( $sites ) == 1 )
+				parent::run();
+			echo '</div>'."\n";
 			echo '<div id="guide">'."\n";
 			$es = new entity_selector();
 			$es->add_type(id_of('type'));
