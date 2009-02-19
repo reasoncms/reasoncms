@@ -534,8 +534,14 @@ class ThorFormModel extends DefaultFormModel
 
 	function &_get_values_and_extra_email_fields(&$disco_obj)
 	{
+		$thor_values = array();
 		$thor_core =& $this->get_thor_core_object();
-		$thor_values = array_merge($thor_core->get_thor_values_from_form($disco_obj), $this->get_values_for_email_extra_fields());
+		if ($disco_obj->get_show_submitted_data_dynamic_fields())
+		{
+			$values = $disco_obj->get_values();
+			foreach ($values as $k=>$value) if (isset($values[$k])) $thor_values[$k] =& $values[$k];
+		}
+		$thor_values = array_merge($thor_values, $thor_core->get_thor_values_from_form($disco_obj), $this->get_values_for_email_extra_fields());
 		return $thor_values;
 	}
 	
