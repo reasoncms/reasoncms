@@ -76,7 +76,7 @@ $(document).ready(function()
 		$("tr#"+element_group+"Row table tr:last").each(function(index)
 		{
 			row_index = $(hours_table_rows).index(this);
-			new_row = $(this).clone().insertAfter(this);
+			new_row = $(this).clone(true).insertAfter(this);
 			$("input", new_row).each(function(index)
 			{
 				if (clear) $(this).val("");
