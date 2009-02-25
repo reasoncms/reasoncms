@@ -324,8 +324,7 @@ function perform_checks()
 	}
 	else
 	{
-		msg('<span class="error">could not access loki.js in the Loki 2.0 folder over http</span><p>Check the 
-constant LOKI_2_HTTP_PATH, which currently is set to ' . LOKI_2_HTTP_PATH . ' and make sure it correctly references the Loki 2 directory. The error could also be in the REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH constant in package_settings.php.</p>', false);
+		msg('<span class="error">could not access loki.js in the Loki 2.0 folder over http</span><p>Check the constant LOKI_2_HTTP_PATH, which currently is set to ' . LOKI_2_HTTP_PATH . ' and make sure it correctly references the Loki 2 directory.</p>', false);
 			 $check_failed++;
 	}
 	echo '<h3>Summary</h3>';
