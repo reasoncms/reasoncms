@@ -1042,6 +1042,11 @@
 			'post_foot' => 'textonly_toggle',
 			'main_post'=>'siblings',
 		),
+		'siblings_and_sidebar_blurbs' => array(
+			'sidebar' => 'blurb',
+			'sub_nav' => '',
+			'main_post'=>'siblings',
+		),
 		'sidebar_blurb' => array(
 			'sub_nav' => '',
 			'sidebar' => 'blurb',
