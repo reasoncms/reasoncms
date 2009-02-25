@@ -45,18 +45,6 @@ define( 'HTTPS_AVAILABLE', true );
 // You shouldn't have to alter any of the constants below in a default install for reason to function
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Location of web-available portions of Reason package
- *
- * Several parts of the Reason package need to be web-available.
- * Modify this setting to indicate the URL of the web-available directory 
- * where these are located.
- *
- * If you have unpacked Reason inside the web tree, you can simply identify the location
- * of the reason package from the http root.
- *
- */
-define('REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH','/reason_package/');
 
 // Define the name of the function which performs html sanitization
 define('HTML_SANITIZATION_FUNCTION','get_safer_html_html_purifier');
@@ -79,22 +67,22 @@ define('DISCO_INC',INCLUDE_PATH.'disco/');
 // Define the path to flvplayer files
 define('FLVPLAYER_DIRNAME', 'flvplayer');
 define('FLVPLAYER_INC',INCLUDE_PATH.FLVPLAYER_DIRNAME.'/');
-define('FLVPLAYER_HTTP_PATH',REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH.FLVPLAYER_DIRNAME.'/');
+define('FLVPLAYER_HTTP_PATH','/reason_package/'.FLVPLAYER_DIRNAME.'/');
 
 // Define the path to loki files
 define('LOKI_DIRNAME', 'loki_1.0');
 define('LOKI_INC',INCLUDE_PATH.LOKI_DIRNAME.'/');
-define('LOKI_HTTP_PATH',REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH.LOKI_DIRNAME.'/');
+define('LOKI_HTTP_PATH','/reason_package/'.LOKI_DIRNAME.'/');
 
 // Define the path to loki files
 define('LOKI_2_DIRNAME', 'loki_2.0');
 define('LOKI_2_INC',INCLUDE_PATH.LOKI_2_DIRNAME.'/helpers/php/');
-define('LOKI_2_HTTP_PATH',REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH.LOKI_2_DIRNAME.'/');
+define('LOKI_2_HTTP_PATH','/reason_package/'.LOKI_2_DIRNAME.'/');
 
 // Define the path to tinymce files
 define('TINYMCE_DIRNAME', 'tiny_mce');
 define('TINYMCE_INC',INCLUDE_PATH.TINYMCE_DIRNAME.'/');
-define('TINYMCE_HTTP_PATH',REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH.TINYMCE_DIRNAME.'/');
+define('TINYMCE_HTTP_PATH','/reason_package/'.TINYMCE_DIRNAME.'/');
 
 // Define the path to Magpie RSS files
 define('MAGPIERSS_INC',INCLUDE_PATH.'magpierss/');
@@ -126,6 +114,6 @@ define('LIBCURLEMU_INC',INCLUDE_PATH.LIBCURLEMU_DIRNAME.'/');
 // Define the path to jquery
 define('JQUERY_DIRNAME', 'jquery');
 define('JQUERY_INC',INCLUDE_PATH.JQUERY_DIRNAME.'/');
-define('JQUERY_HTTP_PATH',REASON_PACKAGE_WEB_AVAILABLE_HTTP_PATH.JQUERY_DIRNAME.'/');
+define('JQUERY_HTTP_PATH','/reason_package/'.JQUERY_DIRNAME.'/');
 define('JQUERY_URL',JQUERY_HTTP_PATH.'jquery_latest.js');
 ?>
