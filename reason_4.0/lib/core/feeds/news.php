@@ -17,7 +17,7 @@ class newsFeed extends pageTreeFeed
 {
 	var $home_url = REASON_PRIMARY_NEWS_PAGE_URI;
 	var $feed_class = 'newsRSS';
-	var $page_types = array('news','news_doc','news_currently','news_random_aaf','news_insideCarleton','recruit_center_profile',);
+	var $page_types = array('news','news_doc','news_currently','news_random_aaf','news_insideCarleton','recruit_center_profile','news_with_sidebar_blurbs',);
 	var $query_string = 'story_id';
 	
 	function newsFeed($type, $site = false)
