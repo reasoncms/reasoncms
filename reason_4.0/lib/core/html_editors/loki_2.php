@@ -73,7 +73,11 @@ class reasonLoki2Integration extends reasonEditorIntegrationBase
 		}
 		if(defined('REASON_DEFAULT_ALLOWED_TAGS'))
 		{
-			//$params['allowable_tags'] = explode(',',str_replace(array('><','<','>'),array(',','',''),REASON_DEFAULT_ALLOWED_TAGS));
+			$params['allowable_tags'] = explode(',',str_replace(array('><','<','>'),array(',','',''),REASON_DEFAULT_ALLOWED_TAGS));
+		}
+		if(defined('REASON_LOKI_CRASH_REPORT_URI') && REASON_LOKI_CRASH_REPORT_URI != '' )
+		{
+			$params['crash_report_uri'] = REASON_LOKI_CRASH_REPORT_URI;
 		}
 		return $params;
 	}
@@ -144,9 +148,18 @@ class reasonLoki2Integration extends reasonEditorIntegrationBase
 			trigger_error('No site id passed to get_loki_paths');
 		}
 		$paths['default_type_regexp'] = $loki_obj->js_regexp_quote('//'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('minisite_page').'&site_id=').'[^&]*'.$loki_obj->js_regexp_quote('&feed=editor_links_for_minisite_page');
+		$css = array();
 		if(defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH)
 		{
-			$paths['css'] = array(UNIVERSAL_CSS_PATH);
+			$css[] = UNIVERSAL_CSS_PATH;
+		}
+		if(defined('REASON_LOKI_CSS_FILE') && REASON_LOKI_CSS_FILE)
+		{
+			$css[] = REASON_LOKI_CSS_FILE;
+		}
+		if(!empty($css))
+		{
+			$paths['css'] = $css;
 		}
 		return $paths;
 	}
