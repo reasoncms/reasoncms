@@ -91,7 +91,7 @@
 				$this->test_limits( $c );	
 				if( $this->num_pages > 1 )
 				{
-					echo '<nobr>';
+					echo '<span class="listerPageNum">';
 					echo ' Page: ';
 					echo '&nbsp;';
 					$showable_pages = $this->get_showable_pages();
@@ -116,11 +116,11 @@
 							echo '<a href="'. $this->admin_page->make_link( array_merge( $this->admin_page->request , array( 'page' => $i ) ) ) .'">'.$i.'</a>';
 						echo '&nbsp;';
 					}
-					echo '</nobr>';
+					echo '</span>';
 				}
 				$approx_string = ($this->real_count) ? ' of ' : ' of approx. ';
-				echo "<nobr>(Items $this->page_start - $this->page_end".$approx_string.$this->num_results. ' Results)';
-				echo '</nobr>';//</span>';
+				echo "<span class=\"listerResultNum\">(Items $this->page_start - $this->page_end".$approx_string.$this->num_results. ' Results)';
+				echo '</span>';
 			}
 		} // }}}
 		function show_sorting() // {{{
