@@ -157,6 +157,7 @@
 								echo '<li>'.$ent->get_display_name().'</li>'."\n";
 							}
 							echo '</ul>'."\n";
+							echo '</li>'."\n";
 						}
 					}
 					echo '</ul>'."\n";
@@ -239,6 +240,7 @@
 								echo '</li>'."\n";
 							}
 							echo '</ul>'."\n";
+							echo '</li>'."\n";
 						}
 					}
 					echo '</ul>'."\n";
