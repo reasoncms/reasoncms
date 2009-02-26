@@ -46,7 +46,7 @@
 			if( $num )
 			{
 				$size = ( $num > 25 ? 25 : $num + 1 );
-				echo '<select multiple size='.$size.' name="list2">';
+				echo '<select multiple="multiple" size="'.$size.'" name="list2">';
 				foreach( $this->values AS $v )
 				{
 					echo '<option value="'.$v->id().'">'.strip_tags( $v->get_display_name() )."</option>\n";
@@ -131,7 +131,7 @@
 		function show_top_code() // {{{
 		{
 		?>
-		<SCRIPT LANGUAGE="JavaScript">
+		<script language="JavaScript" type="text/javaScript">
         <!-- Begin
             function Moveup(dbox) 
             {
@@ -192,12 +192,12 @@
 		{
 		?>
 			<h5>To change the order of the list, simply highlight an item, then move it up and down using the arrows.</h5>
-  			<form ACTION="" METHOD="POST" name="sortForm" action="<?php echo $_SERVER[ 'PHP_SELF' ]; ?>">
+  			<form method="post" name="sortForm" action="<?php echo htmlspecialchars($_SERVER[ 'PHP_SELF' ], ENT_QUOTES); ?>">
             <table>
             <tr>
             <td>
-            <a href="#" onclick="javascript:Moveup(document.sortForm.list2);"><img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>arrow_up.gif" border="0"></a><br />
-            <a href="#" onclick="javascript:Movedown(document.sortForm.list2);"><img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>arrow_down.gif" border="0"></a><br />
+            <a href="#" onclick="javascript:Moveup(document.sortForm.list2);"><img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>arrow_up.gif" border="0" alt="up" /></a><br />
+            <a href="#" onclick="javascript:Movedown(document.sortForm.list2);"><img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>arrow_down.gif" border="0" alt="down" /></a><br />
             </td>
             <td>
 			<?php
@@ -211,12 +211,12 @@
 			</td>
             </tr>
             </table>
-			<input type="hidden" name="order" value="">
+			<input type="hidden" name="order" value="" />
 			<?php
 				foreach( $this->admin_page->request AS $k => $v )
-					echo '<input type="hidden" name="'.$k.'" value="'.$v.'">' . "\n";
+					echo '<input type="hidden" name="'.htmlspecialchars($k, ENT_QUOTES).'" value="'.htmlspecialchars($v, ENT_QUOTES).'" />' . "\n";
 			?>
-			<br /><br /><input type="submit" name="submit" value="Save Order" onclick="cycle(this.form.list2);">
+			<br /><br /><input type="submit" name="submit" value="Save Order" onclick="cycle(this.form.list2);" />
             </form>
 		<?php
 		} // }}}
