@@ -1,13 +1,13 @@
 @import url(share_mod.css);
 
-.listrow1 {
+.listRow1 td {
 	background-color: #EAEFE0;
 	background-image: url(../../ui_images/1px_white.gif);
 	background-repeat: repeat-x;
 	/* background-color: #FFFBDA; */
 	/* background-color: #EAEFE0; */
 }
-.listrow2 {
+.listRow2 td {
 	background-color: #D6DEC6;
 	background-image: url(../../ui_images/1px_white.gif);
 	background-repeat: repeat-x;
