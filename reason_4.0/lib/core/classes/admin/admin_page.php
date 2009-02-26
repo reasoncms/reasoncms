@@ -622,6 +622,7 @@
 						echo '<strong>'.$page_name.'</strong>';
 					else
 						echo '<a href="'.$this->make_link( array( 'cur_module' => 'Archive' ) ).'" class="nav">'.$page_name.'</a>';
+					echo '</li>'."\n";
 				}
 				else
 					echo '<li class="navItem">No Edits</li>' . "\n";
@@ -755,7 +756,7 @@
 				{
 					echo '<option value="'.$site_id.'"';
 					if( $site_id == $this->site_id ) echo ' selected="selected"';
-					echo '>' . $sites[$site_id]->get_value( 'name' ) . '</option>' . "\n";
+					echo '>' . strip_tags($sites[$site_id]->get_value( 'name' )) . '</option>' . "\n";
 				}
 				$this->show[ 'sites' ] = false;
 				echo '</select>';
@@ -1087,7 +1088,7 @@
 		
 		function title()
 		{
-			echo '<div class="header3">'.$this->title.'</div>';
+			echo '<h2 class="pageTitle">'.$this->title.'</h2>';
 		}
 		
 		function main_area()
@@ -1185,8 +1186,8 @@
 		function head()
 		//page head.  prints out basic top html stuff
 		{
-			echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'."\n";
-			echo '<html>'."\n";
+			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n";
+			echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
 			echo '<head>'."\n";
 			echo '<title>Reason';
 			if( !empty( $this->site_id ) )
@@ -1205,6 +1206,7 @@
 			echo '</script>' . "\n";
 			echo '</head>' . "\n";
 			echo '<body>' . "\n";
+			echo '<div id="wrapper">'."\n";
 			if( $this->show[ 'banner' ] ) $this->banner();
 			if( $this->show[ 'sitebar' ] ) $this->sitebar();
 			echo '<table cellpadding="0" cellspacing="0" border="0" id="adminLayoutTable">';
@@ -1220,6 +1222,7 @@
 		//botton o' page
 		{
 			echo '</td></tr></table>' . "\n";
+			echo '</div>'."\n";
 			echo '</body>' . "\n";
 			echo '</html>' . "\n";
 		}
