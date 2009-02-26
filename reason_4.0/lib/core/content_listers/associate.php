@@ -149,9 +149,9 @@
 		function show_associated_items() // {{{
 		{
 			$this->select = false;
-			echo '<table id="associatedItems" cellspacing="0" cellpadding="8">';
 			if( $this->ass_vals )
 			{
+				echo '<table id="associatedItems" cellspacing="0" cellpadding="8">';
 				$c = count( $this->ass_vals );
 				$columns = count( $this->columns ) + 1;
 				echo '<tr><td colspan="'.$columns.'" class="assocHead">';
@@ -164,8 +164,8 @@
 					$this->show_item( $item );
 					$row++;
 				}
+				echo '</table>';
 			}
-			echo '</table>';
 		} // }}}
 		
 		function show_disassociated_items() // {{{
