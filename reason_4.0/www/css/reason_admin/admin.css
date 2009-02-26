@@ -151,3 +151,7 @@ div#allRels tr.odd td {
 div#allRels tr.even td {
 	background-color:#F0F5FF;
 }
+h2.pageTitle {
+	margin-top:0;
+	font-size:1.385em;
+}
