@@ -1,8 +1,22 @@
 <?php
+/**
+ * Functions for user creation, authentication, and privilege checking
+ * @package reason
+ */
+
+/**
+ * Include dependencies
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'function_libraries/admin_actions.php' );
 reason_include_once( 'function_libraries/util.php' );
 
+/**
+ * Get the Reason ID for a given username; otherwise create a new user and return created Reason ID
+ * @param string $username
+ * @param integer $creator_id the ID of the user that is creating the user (if needed)
+ * @return integer $user_id
+ */
 function make_sure_username_is_user($username, $creator_id)
 {
 	$master_admin_id = id_of('master_admin');
@@ -42,6 +56,17 @@ function user_has_access_to_site($site_id, $force_refresh = false)
 	return reason_check_access_to_site($site_id, $force_refresh);
 }
 
+/**
+ * Find out if a given username has access to edit a given site
+ *
+ * Note that an additional check against reason_user_has_privs() should be done before granting privilegesm, 
+ * as the user may not have the specific privileges needed despite having access.
+ *
+ * @param string $username
+ * @param integer $site_id
+ * @param boolean $force_refresh Set this to false if the same script has previously changed site privs (this should be a very rare case)
+ * @return boolean true if the user has access to edit the site; false if the user does not
+ */
 function reason_username_has_access_to_site($username, $site_id, $force_refresh = false)
 {
 	static $user;
@@ -124,6 +149,10 @@ function force_login($msg_uname = '')
 
 /**
  * redirects the current url to force a secure session
+ *
+ *If the current page is insecure, this function will header to the secure version of the page and die
+ *
+ * @return void
  */
 function force_secure()
 {
@@ -136,6 +165,7 @@ function force_secure()
 }
 /**
  * redirects the current url to force a secure session -- but only if the server supports https
+ * @return void
  */
 function force_secure_if_available()
 {
