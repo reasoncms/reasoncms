@@ -216,11 +216,11 @@
 			else
 				$compare_or_comparing = 'Comparing';
 
-			$select_form_a = '<form name="form2">'.$compare_or_comparing.'
-				<select name="menu2" onChange="MM_jumpMenu(\'parent\',this,0)" class="siteMenu">
+			$select_form_a = '<form name="form2" action="'.htmlspecialchars(get_current_url(), ENT_QUOTES).'">'.$compare_or_comparing.'
+				<select name="menu2" onchange="MM_jumpMenu(\'parent\',this,0)" class="siteMenu">
 					';
-			$select_form_b = '<form name="form3">with
-				<select name="menu3" onChange="MM_jumpMenu(\'parent\',this,0)" class="siteMenu">
+			$select_form_b = '<form name="form3" action="'.htmlspecialchars(get_current_url(), ENT_QUOTES).'">with
+				<select name="menu3" onchange="MM_jumpMenu(\'parent\',this,0)" class="siteMenu">
 					<option value="'.$this->admin_page->make_link( array( 'archive_b' => '' ), true ).'"'.(empty( $b_id ) ? ' selected="selected"' : '' ).'>--</option>';
 			
 			foreach( $this->history AS $h )
@@ -245,7 +245,7 @@
 				</form>';
 				
 
-			echo '<table border="0 cellspacing="0" cellpadding="4">';
+			echo '<table border="0" cellspacing="0" cellpadding="4">';
 			echo '<tr>';
 			echo '<th class="listHead" align="left">Field</th>';
 			echo '<th class="listHead">'.$select_form_a .'</th>';
