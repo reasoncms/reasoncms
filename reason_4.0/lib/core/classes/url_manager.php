@@ -50,7 +50,8 @@
 			$prefix = (server_is_windows()) ? '' : '/';
 			$this->web_root = $prefix.trim_slashes( !empty( $_SERVER[ '_' ] ) ? WEB_PATH : $_SERVER[ 'DOCUMENT_ROOT' ] ).'/';
 			
-			$this->test_full_base_url = REASON_INC.'www/tmp/rewrites/';
+			$this->test_full_base_url = WEB_PATH . trim_slashes(WEB_TEMP) . '/rewrites/';
+
 			if(!is_dir($this->test_full_base_url))
 			{
 				 if(!mkdir_recursive($this->test_full_base_url))
