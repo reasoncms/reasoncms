@@ -64,6 +64,12 @@
 		'audio_video' => array(
 			'main_post' => 'av',
 		),
+		'audio_video_sidebar_blurbs' => array(
+			'main_post' => 'av',
+			'pre_sidebar' => 'image_sidebar',
+			'sidebar' => 'blurb',
+			'sub_nav' => 'assets',
+		),
 		'audio_video_with_filters' => array(
 			'main_post' => array(
 				'module'=>'av_with_filters',
