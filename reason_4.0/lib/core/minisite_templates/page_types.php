@@ -155,6 +155,13 @@
 				'related_mode'=>'true',
 			),
 		),
+		'publication_related_via_category' => array(
+			'main_post'=>array(
+				'module'=>'publication',
+				'related_mode'=>'true',
+				'limit_by_page_categories'=>'true',
+			),
+		),
 		'publication_related_7_headlines' => array(
 			'main_post'=>array(
 				'module'=>'publication',
