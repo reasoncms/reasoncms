@@ -32,15 +32,13 @@ and then setup the first site and user for your instance.</p>
 // do what we can to enable error reporting
 ini_set("display_errors","On");
 error_reporting (E_ALL);
-
 // Environmental checks - include path and basic location of files needed to perform other checks
 if (isset($_POST['do_it_pass']) == false)
 {
 	echo '<h3>Verifying Environment</h3>';
-	echo '<h4>Checking package availability</h4>';
 	check_php_include_path();
-	echo '...attempting to load paths.php, which loads the package_settings - a fatal error here probably means that the require_once statement in paths.php is referencing a file that does not exist<br/>';
-	if (!file_exists('paths.php')) die_with_message('<p class="error">ERROR: The file paths.php in the reason_package directory does not appear to exist - check permissions and file paths.</p>');
+	echo '<h4>Checking package availability</h4>';
+	echo '...loading package_settings.php by including paths.php - a fatal error here probably means there is a misconfiguration within paths.php<br/>';
 	include_once('paths.php'); // paths loads the package_settings file
 	if (!defined('REASON_INC'))
 	{
@@ -48,13 +46,12 @@ if (isset($_POST['do_it_pass']) == false)
 						  to include an absolute file system path reference to package_settings.php</p>
 						  <p>Unless you are placing your settings files in a different location than the default, the absolute path of the package_settings.php file 
 						  should probably look like this:</p>
-						  <p><pre>'.$_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) .'/settings/package_settings.php</pre></p>');
+						  <p><pre>'.$_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) .'settings/package_settings.php</pre></p>');
 	}
 	else
 	{
 		$included_so_far = get_included_files();
-		$package_settings_path = array_pop($included_so_far);
-		echo '...paths.php loaded package_settings.php<br/>';
+		$package_settings_path = reset(preg_grep('/package_settings.php/', $included_so_far));
 		echo '<p><strong>Package settings path</strong>: ' . $package_settings_path . '</p>';
 		echo '<h4>Checking component availability</h4>';
 		if (is_readable(INCLUDE_PATH . 'reason_setup.php'))
@@ -206,32 +203,37 @@ function created_admin_HTML($password)
 
 function check_php_include_path()
 {
+	$failure = false;
+	if (!file_is_includable('paths.php'))
+	{
+		echo '<p class="error">ERROR: The file paths.php in the reason_package directory does not appear to be includeable from any location in the web tree</p>';
+		$failure = true;
+	}
+	if (!file_is_includable('reason_header.php'))
+	{
+		echo '<p class="error">ERROR: The file reason_header.php in the reason_package directory does not appear to be includeable from any location in the web tree</p>';
+		$failure = true;
+	}
+	
 	$include_path = ini_get('include_path');
-	
-	// method one - found to be unpredicable in some shared hosting environments (ie. dreamhost)
-	$cur_path = dirname(__FILE__);
-	$include_path_set = strpos($include_path, $cur_path);
-	
-	// method two - if this works the path is probably okay
-	$alt_cur_path = $_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']);
-	$alt_include_path_set = strpos($include_path, $alt_cur_path);
-	
-	if (($include_path_set === false) && ($alt_include_path_set === false))
+	if ($failure)
 	{
 		$include_path_separator = (setup_check_is_windows()) ? ';' : ':';
-		die_with_message('<p class="error"><strong>ERROR:</strong> The reason_package directory must be part of your php include path.</p><p>Your current include path is:</p>
+		die_with_message('<p class="error">The files paths.php and reason_header.php, inside the reason_package, must be accessible through the php include path.</p>
+						  <p>Your current include path is:</p>
 						  <p><pre>'.$include_path.'</pre></p>
-						  <p>Please modify the include path line in your php.ini file so that it reads as follows</p>
-						  <p><pre>include_path = "'.$include_path.$include_path_separator.$cur_path.'"</pre></p>
-						  <p>If you do not have access to modify php.ini you may be able to create an .htaccess 
-						  file that sets the include path. For this to work, AllowOverride Option must be enabled in your httpd.conf file. The .htaccess rule
-						  should read as follows:</p>
-					<p><pre>php_value include_path ".'.$include_path_separator.$cur_path.'"</pre></p>
-					<p>Please run the script again after your include path has been properly setup</p>');
+						  <p>Please modify the include path line in your php.ini file so that it reads as follows - substitute your path for /path/to/root/of/reason_package/</p>
+						  <p><pre>include_path = "'.$include_path.$include_path_separator.'/path/to/root/of/reason_package/"</pre></p>
+						  <p>Alternatively, you can create aliases within the include path that reference the paths.php and reason_header.php files in the reason_package folder (experimental)</p>
+						  <p>If you do not have access to modify php.ini and cannot create aliases within the include path, you may be able to create an .htaccess 
+						  file that dynamically sets the include path. For this to work, AllowOverride Option must be enabled in your httpd.conf file. The .htaccess rule
+						  should read as follows - substitute your path for /path/to/root/of/reason_package/:</p>
+						  <p><pre>php_value include_path ".'.$include_path.$include_path_separator.'/path/to/root/of/reason_package/"</pre></p>
+						  <p>Please run the script again after your include path has been properly setup</p>');
 	}
 	else
 	{
-		echo '...the php include_path includes the reason_package directory<br/>';
+		echo '<p>...paths.php and reason_header.php are accessible through the php include path<br/>';
 	}
 }
 
@@ -505,6 +507,23 @@ function check_error_handler_log_file_dir()
 				   to a writable file. After you have fixed the problem run this file again.</p>');
 	}
 	return true;
+}
+
+/**
+ * This method checks all the paths in the include path for a file with the exception of "." and returns true if it is includeable
+ */
+function file_is_includable($file)
+{
+	$paths = explode(PATH_SEPARATOR, get_include_path());
+	foreach ($paths as $path)
+	{
+		if ($path != ".")
+		{
+			$fullpath = $path . DIRECTORY_SEPARATOR . $file;
+ 			if (file_exists($fullpath)) return true;
+		}
+        }
+	return false;
 }
 
 function msg($msg, $bool)
