@@ -510,6 +510,7 @@ div#calendar div.options ul li {
 	margin-left: 0px;
 	font-size: 95%;
 }
+	
 div#calendar div.views h4 {
 	position:absolute;
 	left:-9999px;
@@ -518,7 +519,6 @@ div#calendar div.views ul {
 	margin:0;
 	padding:0;
 	list-style:none;
-	height:1px;
 }
 div#calendar div.views ul li {
 	margin:0;
@@ -545,6 +545,24 @@ div#calendar div.views ul li strong {
 	background:#748FC2 url(../ui_images/calendar_selected_view_bg.gif) repeat-x;
 	color:#fff;
 }
+
+
+	/* Self-Clearing 
+	---------------- */
+	
+	div#calendar div.views:after
+	{
+		clear: both;
+		content: ".";
+		display: block;
+		height: 0;
+		visibility: hidden;
+	}
+	
+	div#calendar div.views { display: inline-block; }
+	div#calendar div.views { display: block; }
+
+
 div#calendar div.options h4, div#calendar div.dateJump h4, div#calendar div.gridAndOptions div.search h4 {
 	margin: 0px;
 	padding: 0px;
