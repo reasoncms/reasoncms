@@ -24,7 +24,6 @@ function tidy( $text )
 {
 	static $tidy_funcs;
 	static $tidy_conf;
-	
 	if (!isset($tidy_conf)) $tidy_conf = SETTINGS_INC . 'tidy.conf';
 
 	if(is_array($text))
@@ -75,6 +74,8 @@ function tidy( $text )
  */
 function tidy_err( $text )
 {
+	static $tidy_conf;
+	if (!isset($tidy_conf)) $tidy_conf = SETTINGS_INC . 'tidy.conf';
 	$arg = escapeshellarg( $text );
 	$err = shell_exec( 'echo '.$arg.' | '.TIDY_EXE.' -q -config '.$tidy_conf.' 2>&1' );
 	$err = explode( "\n", $err );
