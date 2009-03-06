@@ -47,7 +47,6 @@
 		function on_every_time() // {{{
 		{
 			// set up existing file.  if it exists.
-			$web_asset_path = WEB_ASSET_PATH.$this->_id.'.'.$this->get_value('file_type');
 			$full_asset_path = ASSET_PATH.$this->_id.'.'.$this->get_value('file_type');
 			if( file_exists( $full_asset_path ) )
 				$this->change_element_type( 'asset','AssetUpload',array('existing_file' => $full_asset_path, 'allow_upload_on_edit' => true, 'file_display_name' => $this->get_value( 'file_name' ), 'max_file_size'=>$this->get_actual_max_upload_size(), ) );
