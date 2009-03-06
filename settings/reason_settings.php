@@ -161,7 +161,7 @@
 	 * Note that this is the same as the name of the file in lib/[core|local]/html_editors, 
 	 * but without the ".php"
 	 */
-	define('REASON_DEFAULT_HTML_EDITOR', 'loki_2');
+	define('REASON_DEFAULT_HTML_EDITOR', 'loki_2.0');
 	
 	/**
 	 * REASON_URL_FOR_GENERAL_FEED_HELP
@@ -495,12 +495,6 @@
 	 * The filesystem path to the directory that contains reason-managed files
 	 */
 	define( 'ASSET_PATH', REASON_INC.'data/assets/' );
-	
-	/**
-	 * WEB_ASSET_PATH
-	 * The web address of all the assets in reason.  The difference between this and ASSET_PATH is the same as the difference between PHOTOSTOCK and WEB_PHOTOSTOCK.
-	 */
-	define( 'WEB_ASSET_PATH',  REASON_HTTP_BASE_PATH.'assets/' );
 	
 	/**
 	 * REASON_ASSET_MAX_UPLOAD_SIZE_MEGS
