@@ -158,8 +158,8 @@ class EventSlotRegistrationForm extends Disco{
 	function show_registration_thanks()
 	{
 		echo '<div class="formResponse">'."\n";
-		echo '<h4>Thanks for registering, '.$this->get_value('name').'!</h4>'."\n";
-		echo '<p>An email copy of your registration request will be sent to '.$this->get_value('email').'.</p>'."\n";
+		echo '<h4>Thanks for registering, '.htmlspecialchars($this->get_value('name'),ENT_QUOTES).'!</h4>'."\n";
+		echo '<p>An email copy of your registration request will be sent to '.htmlspecialchars($this->get_value('email'),ENT_QUOTES).'.</p>'."\n";
 		echo '</div>'."\n";
 	}
 	
