@@ -574,26 +574,22 @@ class DBFormModel extends DefaultFormModel
 		return $this->_values_for_user;
 	}
 	
-	function &get_values_for_primary_key()
+	function &get_values_for_id($id)
 	{
-		if (!isset($this->_values_for_user))
+		if (!isset($this->_values_for_id[$id]))
 		{
-			$netid = $this->get_user_netid();
-			if ($netid)
+			$qry = $this->get_select_by_key_sql($id, 'id');
+			$result = $this->perform_query($qry);
+			if ($result)
 			{
-				$qry = $this->get_select_by_key_sql($netid, 'submitted_by');
-				$result = $this->perform_query($qry);
-				if ($result)
+				while ($row = mysql_fetch_assoc($result))
 				{
-					while ($row = mysql_fetch_assoc($result))
-					{
-						$this->_values_for_user[] = $row;
-					}
+					$this->_values_for_id[$id] = $row;
 				}
 			}
-			if (!isset($this->_values_for_user)) $this->_values_for_user = false;
+			if (!isset($this->_values_for_id[$id])) $this->_values_for_id[$id] = false;
 		}
-		return $this->_values_for_user;
+		return $this->_values_for_id[$id];
 	}
 	
 	/**
@@ -765,7 +761,7 @@ class DBFormModel extends DefaultFormModel
 			$result = $disco->plasmature_type_from_db_type( $name, $db_type, array('find_maxlength_of_text_field' => true, 'do_not_sort_enums' => true));
 			$plas_type = (reset($result)) ? reset($result) : 'text';
 			$args = (next($result));
-			if(($plas_type == 'textDate' || $plas_type == 'textDateTime')) $args['prepopulate'] = true;
+			//if(($plas_type == 'textDate' || $plas_type == 'textDateTime')) $args['prepopulate'] = true;
 			$disco->add_element( $name, $plas_type, $args );
 		}
 	}
@@ -1056,7 +1052,7 @@ class DBFormModel extends DefaultFormModel
 	 */	
 	function get_select_by_key_sql($key, $key_column, $sort_field = '', $sort_order = '')
 	{
-		$str = 'SELECT * FROM '.$this->get_thor_table().' WHERE '.$key_column.' = "'.$key.'"';
+		$str = 'SELECT * FROM '.$this->get_table_name().' WHERE '.$key_column.' = "'.$key.'"';
 		if (!empty($sort_field) && !empty($sort_order))
 		{
 			$str .= ' ORDER BY "' . $sort_field . '" ' . $sort_order; 
@@ -1081,15 +1077,17 @@ class DBFormModel extends DefaultFormModel
 		{
 			$table = $this->get_table_name();
 			connectDB($this->get_db_conn());
+			
 			$types = mysql_query( "show fields from $table" ) OR $this->_internal_error( 'Could not retrieve types from DB' );
-			$fields = mysql_list_fields( $this->get_db_conn(), $table ) OR $this->_internal_error( 'Could not retrieve fields from DB: '.mysql_error() );
+			
+			$fields = mysql_list_fields( get_database_name(), $table ) OR trigger_error( 'Could not retrieve fields from DB: '.mysql_error() );
 			$columns = mysql_num_fields( $fields );
 			connectDB(REASON_DB);
 			
 			for ($i = 0; $i < $columns; $i++)
 			{
 				$f = mysql_field_name($fields, $i) OR $this->_internal_error( 'um ... something is wrong. you should check me. and someone should write a more descriptive error message.' );
-				$db_type = mysql_result($types, $i,'Type' )  OR $this->_internal_error( 'um ... something is wrong. you should check me. and someone should write a more descriptive error message.' );
+				$db_type = mysql_result($types, $i,'Type' )  OR trigger_error( 'um ... something is wrong. you should check me. and someone should write a more descriptive error message.' );
 				$this->_database_columns[$f] = $db_type;
 			}
 		}
