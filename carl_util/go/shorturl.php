@@ -1,6 +1,6 @@
 <?php
 /**
- * A URL shortcut tool
+ * A URL shortcut tool - not currently usable out of the box outside of Carleton
  *
  * @package carl_util
  * @subpackage go
