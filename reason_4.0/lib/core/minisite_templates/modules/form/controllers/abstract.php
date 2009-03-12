@@ -82,6 +82,7 @@
 			$this->setup_view();
 			$this->setup_admin_view();
 			$this->setup_controller();
+			$this->check_view_and_invoke_model_method('validate_request');
 		}
 		/**
 		 * Provide the request variables to the model
@@ -173,12 +174,12 @@
 		 * Checks if the view has a method with name method - if so, run that method, otherwise run the controller method
 		 * @param string method name to invoke
 		 */
-		function check_view_and_invoke_method($method)
+		function check_view_and_invoke_method($method, $show_errors = true)
 		{
 			$view =& $this->get_view();
 			if (method_exists($view, $method)) return $view->$method();
 			elseif (method_exists($this, $method)) return $this->$method();
-			else trigger_error('The form controller called a method ' . $method . ' that does not exists in the view or controller');
+			elseif ($show_errors) trigger_error('The form controller called a method ' . $method . ' that does not exists in the view or controller');
 			return false;
 		}
 		
@@ -199,13 +200,13 @@
 		 * Checks if the view has a method with name method - if so, run that method, otherwise run the model method
 		 * @param string method name to invoke
 		 */
-		function check_view_and_invoke_model_method($method)
+		function check_view_and_invoke_model_method($method, $show_errors = true)
 		{
 			$model =& $this->get_model();
 			$view =& $this->get_view();
 			if (method_exists($view, $method)) return $view->$method();
 			elseif (method_exists($model, $method)) return $model->$method();
-			else trigger_error('The form controller called a method ' . $method . ' that does not exists in the view or model');
+			elseif ($show_errors) trigger_error('The form controller called a method ' . $method . ' that does not exists in the view or model');
 			return false;
 		}
 		
@@ -213,14 +214,14 @@
 		 * Checks if the view or model has a method with name method - if so, run that method, otherwise run the controller method
 		 * @param string method name to invoke
 		 */
-		function check_view_and_model_and_invoke_method($method)
+		function check_view_and_model_and_invoke_method($method, $show_errors = true)
 		{
 			$model =& $this->get_model();
 			$view =& $this->get_view();
 			if (method_exists($view, $method)) return $view->$method();
 			elseif (method_exists($model, $method)) return $model->$method();
 			elseif (method_exists($this, $method)) return $this->$method();
-			else trigger_error('The form controller called a method ' . $method . ' that does not exists in the view, model, or controller');
+			elseif ($show_errors) trigger_error('The form controller called a method ' . $method . ' that does not exists in the view, model, or controller');
 			return false;
 		}
 

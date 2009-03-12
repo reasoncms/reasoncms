@@ -1,12 +1,9 @@
 <?php
-
 reason_include_once( 'minisite_templates/modules/form/models/default.php' );
 reason_include_once( 'classes/object_cache.php' );
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 include_once(TYR_INC.'tyr.php');
-
 $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'ThorFormModel';
-
 
 /**
  * The ThorFormModel is used by thor controllers and views and does the following:
@@ -34,6 +31,7 @@ class ThorFormModel extends DefaultFormModel
 
 	var $_user_has_administrative_access;	
 	var $_user_requested_admin = false;
+	var $_requested_form_id;
 	var $_form_submission_key;
 	
 	var $magic_transform_attributes = array('ds_firstname',
@@ -86,23 +84,18 @@ class ThorFormModel extends DefaultFormModel
 		return $this->_is_usable;
 	}
 	
-	/**
-	 * Setup the thor form model based upon request vars passed from the controller
-	 */
-	function handle_request_vars(&$request_vars)
+	function validate_request()
 	{
-		if (isset($request_vars['netid']) && !empty($request_vars['netid'])) $this->set_spoofed_netid_if_allowed($request_vars['netid']);
-		if (isset($request_vars['form_admin_view']) && ($request_vars['form_admin_view'] == 'true')) $this->set_user_requested_admin(true);
-		if (isset($request_vars['submission_key']) && !empty($request_vars['submission_key'])) $this->set_form_submission_key($request_vars['submission_key']);
-		if (isset($request_vars['form_id'])) $this->set_form_id_if_valid($request_vars['form_id']);
-		else $this->set_form_id_if_valid(NULL);
+		$form_id = $this->get_requested_form_id();
+		$form_id = (strlen($form_id) > 0) ? $form_id : NULL;
+		$this->set_form_id_if_valid($form_id);
 	}
-	
-	function is_editable()
+
+	function _is_editable()
 	{
 		$form =& $this->get_form_entity();
-		$is_editable = $form->get_value('is_editable');
-		return ($is_editable === 'yes');
+		$_is_editable = $form->get_value('is_editable');
+		return ($_is_editable === 'yes');
 	}
 
 	function is_admin()
@@ -235,7 +228,7 @@ class ThorFormModel extends DefaultFormModel
 	
 	function should_show_login_logout()
 	{
-		return ($this->get_magic_string_autofill() || $this->is_editable() || $this->form_requires_authentication());
+		return ($this->get_magic_string_autofill() || $this->_is_editable() || $this->form_requires_authentication());
 	}
 	
 	function should_show_submission_list_link()
@@ -254,20 +247,6 @@ class ThorFormModel extends DefaultFormModel
 	{
 		if ($this->form_id_is_valid($form_id)) $this->set_form_id($form_id);
 	}
-	
-	function set_spoofed_netid_if_allowed($requested_netid = false)
-	{
-		$netid = reason_check_authentication();
-		if (!empty($requested_netid) && !empty($netid) && ($requested_netid != $netid))
-		{
-			$user_id = get_user_id($netid);
-			if (reason_user_has_privs($user_id, 'pose_as_other_user'))
-			{
-				$this->set_user_netid($requested_netid);
-			}
-		}
-	}
-	
 
 	/**
 	 * Does the following:
@@ -289,7 +268,7 @@ class ThorFormModel extends DefaultFormModel
 				if (isset($row['submitted_by']) && ($user_netid == $row['submitted_by'])) return true;
 			}
 		}
-		elseif ($form_id && !$user_netid && $this->is_editable()) reason_require_authentication();
+		elseif ($form_id && !$user_netid && $this->_is_editable()) reason_require_authentication();
 		elseif ($form_id == "0") // a form_id of 0 is valid if the user is allowed to create new entries
 		{
 			if ($this->form_allows_multiple()) return true;
@@ -300,7 +279,7 @@ class ThorFormModel extends DefaultFormModel
 		$user_submissions = (!empty($user_netid)) ? $this->get_values_for_user($user_netid) : false;
 		
 		// redirect case 1 - user logged in, editable form, multiples not allowed, valid row exists
-		if ($this->is_editable() && !$this->form_allows_multiple() && !empty($user_submissions))
+		if ($this->_is_editable() && !$this->form_allows_multiple() && !empty($user_submissions))
 		{
 			$redirect_form_id = max(array_keys($user_submissions)); // highest id in the user submissions array
 		}
@@ -394,7 +373,7 @@ class ThorFormModel extends DefaultFormModel
 		foreach ($thor_values as $k=>$v)
 		{
 			// we will add a row with an edit link if this is editable
-			if ($this->is_editable())
+			if ($this->_is_editable())
 			{
 				$edit_link = carl_construct_link(array('form_id' => $v['id']), array('textonly', 'netid'));
 				$thor_values[$k]['Action'] = '<a href="'.$edit_link.'">Edit</a>';
@@ -579,7 +558,7 @@ class ThorFormModel extends DefaultFormModel
 	 */
 	function get_link_for_email_submitter_view()
 	{
-		if ($this->should_email_link() && $this->should_save_form_data() && $this->is_editable())
+		if ($this->should_email_link() && $this->should_save_form_data() && $this->_is_editable())
 		{
 			$link = carl_construct_link(array('form_id' => $this->get_form_id()));
 			return $link;
@@ -707,7 +686,7 @@ class ThorFormModel extends DefaultFormModel
 	{
 		if (!isset($this->_redirect_url))
 		{
-			$form_id = ($this->is_editable() && $this->get_user_netid()) ? $this->get_form_id() : '';
+			$form_id = ($this->_is_editable() && $this->get_user_netid()) ? $this->get_form_id() : '';
 			$this->_redirect_url = carl_make_redirect(array('submission_key' => $this->create_form_submission_key(), 'form_id' => $form_id));
 		}
 		return $this->_redirect_url;
@@ -881,7 +860,7 @@ class ThorFormModel extends DefaultFormModel
 		$thor_core =& $this->get_thor_core_object();
 		$form_id = $this->get_form_id();
 		
-		if ( $form_id && $this->is_editable() ) // update
+		if ( $form_id && $this->_is_editable() ) // update
 		{
 			$thor_core->update_values_for_primary_key($form_id, $data);
 			}
@@ -952,7 +931,7 @@ class ThorFormModel extends DefaultFormModel
 			if (isset($disco->actions['reset'])) unset ($disco->actions['reset']);
 		}
 		// if it is editable, load data for the user (if it exists)
-		if ($this->is_editable())
+		if ($this->_is_editable())
 		{
 			$form_id = $this->get_form_id();
 			$values = ($form_id) ? $thor_core->get_values_for_primary_key($form_id) : false;
@@ -1046,26 +1025,6 @@ class ThorFormModel extends DefaultFormModel
 			$this->_user_has_access_to_fill_out_form = $this->_user_is_in_viewing_group();
 		}
 		return $this->_user_has_access_to_fill_out_form;
-	}
-	
-	/**
-	 * Gets the user_netid - sets it to the logged in users netid if it has not been set
-	 */
-	function get_user_netid()
-	{
-		if (!isset($this->_user_netid))
-		{
-			$this->set_user_netid(reason_check_authentication());
-		}
-		return $this->_user_netid;
-	}
-	
-	/**
-	 * Sets the working user_netid
-	 */
-	function set_user_netid($netid = false)
-	{
-		$this->_user_netid = $netid;
 	}
 	
 	function &get_directory_info($attributes = false)

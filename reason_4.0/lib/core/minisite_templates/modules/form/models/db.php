@@ -8,7 +8,6 @@ include_once( CARL_UTIL_INC . 'db/connectDB.php');
 
 $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DBFormModel';
 
-
 /**
  * Reason Form module DB Form Model
  *
@@ -20,7 +19,8 @@ $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DBFormMo
  *
  * By default, administrative access to a db form is available to all administrators of the site where the page appears.
  * 
- * @todo support allows_multiple, is_editable, custom_admin_form, and admin_access_group page type parameters
+ * @todo support allows_multiple and is_editable - should be controllable in views
+ * @todo support custom_admin_form, and admin_access_group page type parameters
  * @todo support summary object
  * @todo test magic autofill support
  * @todo lots more testing
@@ -33,6 +33,9 @@ $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DBFormMo
  */
 class DBFormModel extends DefaultFormModel
 {
+	/**
+	 * This should not be set in the model unless the current user has access to the form id
+	 */
 	var $_form_id; // active form id
 	var $_admin_obj;
 	var $_summary_obj;
@@ -42,6 +45,8 @@ class DBFormModel extends DefaultFormModel
 	
 	var $_user_has_administrative_access;	
 	var $_user_requested_admin = false;
+	var $_requested_form_id;
+	
 	var $_form_submission_key;
 	
 	var $magic_transform_attributes = array('ds_firstname',
@@ -118,16 +123,17 @@ class DBFormModel extends DefaultFormModel
 	{
 		if (isset($request_vars['netid']) && !empty($request_vars['netid'])) $this->set_spoofed_netid_if_allowed($request_vars['netid']);
 		if (isset($request_vars['form_admin_view']) && ($request_vars['form_admin_view'] == 'true')) $this->set_user_requested_admin(true);
+		if (isset($request_vars['form_id']) && strlen($request_vars['form_id'] > 1)) $this->set_requested_form_id($request_vars['form_id']);
 		if (isset($request_vars['submission_key']) && !empty($request_vars['submission_key'])) $this->set_form_submission_key($request_vars['submission_key']);
-		if (isset($request_vars['form_id'])) $this->set_form_id_if_valid($request_vars['form_id']);
-		else $this->set_form_id_if_valid(NULL);
-	}
-	
-	function is_editable()
-	{
-		return false;
 	}
 
+	function validate_request()
+	{
+		$form_id = $this->get_requested_form_id();
+		$form_id = (strlen($form_id) > 0) ? $form_id : NULL;
+		$this->set_form_id_if_valid($form_id);
+	}
+	
 	function is_admin()
 	{
 		return ($this->user_requested_admin() && $this->user_has_administrative_access() && $this->admin_view_is_available());
@@ -226,8 +232,9 @@ class DBFormModel extends DefaultFormModel
 		return true;
 	}
 	
-	function set_form_id_if_valid($form_id)
+	function set_form_id_if_valid($form_id = NULL)
 	{
+		$form_id = ( ($form_id == NULL) && strlen($this->get_requested_form_id() > 0) ) ? $this->get_requested_form_id() : $form_id;
 		if ($this->form_id_is_valid($form_id)) $this->set_form_id($form_id);
 	}
 	
@@ -317,15 +324,15 @@ class DBFormModel extends DefaultFormModel
 		$sk->set(true);
 		return $key;
 	}
-	
-	function form_allows_multiple()
+		
+	function is_editable()
 	{
 		return false;
 	}
 	
-	function form_requires_authentication()
+	function form_allows_multiple()
 	{
-		return true;
+		return false;
 	}
 	
 	/**
@@ -696,7 +703,7 @@ class DBFormModel extends DefaultFormModel
 	{
 		$form_id = $this->get_form_id();
 		
-		if ( $form_id && $this->is_editable() ) // update
+		if ( $form_id ) // update
 		{
 			$result = $this->perform_update($form_id, $data);
 		}
@@ -710,6 +717,31 @@ class DBFormModel extends DefaultFormModel
 		}
 	}
 	
+	/**
+	 * @todo implement sensible default behavior
+	 */
+	function email_form_data_to_submitter()
+	{
+		return false;
+	}
+	
+	/**
+	 * @todo implement sensible default behavior
+	 */
+	function save_form_data()
+	{
+		$values =& $this->get_values_for_save();
+		$this->save_data($values);
+	}
+	
+	/**
+	 * @todo implement sensible default behavior
+	 */
+	function email_form_data()
+	{
+		return false;
+	}
+	
 	function save_submitted_data_to_session()
 	{
 		$values =& $this->get_values_for_submitter_view();
@@ -718,11 +750,16 @@ class DBFormModel extends DefaultFormModel
 		$session->set('form_confirm', $values);
 	}
 	
+	function set_user_requested_admin($boolean)
+	{
+		$this->_user_requested_admin = $boolean;
+	}
+	
 	function user_requested_admin()
 	{
 		return $this->_user_requested_admin;
 	}
-	
+
 	/**
 	 * @param object disco form
 	 */
@@ -816,26 +853,6 @@ class DBFormModel extends DefaultFormModel
 		return true;
 	}
 	
-	/**
-	 * Gets the user_netid - sets it to the logged in users netid if it has not been set
-	 */
-	function get_user_netid()
-	{
-		if (!isset($this->_user_netid))
-		{
-			$this->set_user_netid(reason_check_authentication());
-		}
-		return $this->_user_netid;
-	}
-	
-	/**
-	 * Sets the working user_netid
-	 */
-	function set_user_netid($netid = false)
-	{
-		$this->_user_netid = $netid;
-	}
-	
 	function &get_directory_info($attributes = false)
 	{
 		if (!isset($this->_directory_info))
@@ -855,15 +872,6 @@ class DBFormModel extends DefaultFormModel
 	function _user_receives_email_results()
 	{
 		return false;
-	}
-	
-	function set_user_requested_admin($boolean)
-	{
-		if ($boolean == true)
-		{
-			if ($this->admin_requires_login()) reason_require_authentication();
-		}
-		$this->_user_requested_admin = $boolean;
 	}
 	
 	// magic string autofill methods
@@ -1078,7 +1086,7 @@ class DBFormModel extends DefaultFormModel
 			$table = $this->get_table_name();
 			connectDB($this->get_db_conn());
 			
-			$types = mysql_query( "show fields from $table" ) OR $this->_internal_error( 'Could not retrieve types from DB' );
+			$types = mysql_query( "show fields from $table" ) OR trigger_error( 'Could not retrieve types from DB' );
 			
 			$fields = mysql_list_fields( get_database_name(), $table ) OR trigger_error( 'Could not retrieve fields from DB: '.mysql_error() );
 			$columns = mysql_num_fields( $fields );
@@ -1086,7 +1094,7 @@ class DBFormModel extends DefaultFormModel
 			
 			for ($i = 0; $i < $columns; $i++)
 			{
-				$f = mysql_field_name($fields, $i) OR $this->_internal_error( 'um ... something is wrong. you should check me. and someone should write a more descriptive error message.' );
+				$f = mysql_field_name($fields, $i) OR trigger_error( 'um ... something is wrong. you should check me. and someone should write a more descriptive error message.' );
 				$db_type = mysql_result($types, $i,'Type' )  OR trigger_error( 'um ... something is wrong. you should check me. and someone should write a more descriptive error message.' );
 				$this->_database_columns[$f] = $db_type;
 			}
@@ -1119,7 +1127,7 @@ class DBFormModel extends DefaultFormModel
 	{
 		$restore_conn = ($this->get_db_conn() != get_current_db_connection_name()) ? get_current_db_connection_name() : false;
 		if ($restore_conn) connectDB($this->get_db_conn());
-		$result = $GLOBALS['sqler']->update( $this->get_table_name(), $values, $id );
+		$result = $GLOBALS['sqler']->update_one( $this->get_table_name(), $values, $id );
 		if ($restore_conn) connectDB($restore_conn);
 		return $result;
 	}

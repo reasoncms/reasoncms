@@ -1,26 +1,46 @@
 <?php
-
+reason_include_once( 'minisite_templates/modules/form/models/abstract.php' );
 $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultFormModel';
 
 /**
- * The DefaultFormModel
+ * The DefaultFormModel provides the basis for our default form interaction model in the reason environment.
+ *
+ * It provides is_* methods for our basic form modes:
+ *
+ * 'admin', 'form_complete', 'summary', 'form', 'unauthorized'
+ *
+ * 1. admin - The user wants to administer a form
+ * 2. form_complete - The user has just completed the form
+ * 3. summary - The user wants to see a listing of completed forms 
+ * 4. form - The user wants to create or edit a form
+ * 5. unauthorized - The user wants to do something but is unauthorized or not logged in
+ *
+ * The default is_* methods return false for everything - so nothing will be done.
+ * 
+ * We add an init_from_module(&$module) method that causes the following to happen
+ * 
+ * 1. The model site_id variable will be set to the module site_id
+ * 2. The model page_id variable will be set to the module page_id
+ * 3. The model head_items variable will be be set to refer to the module head_items variable
+ * 4. The model params will be set to refer to the module params
+ * 5. The module object will be passed to a method called localize that does nothing by default
+ *
+ * Form models that extend the default should define two methods - these are:
+ *
+ * transform_form - transforms the view according to the particular model
+ * validate_request - should set the internal form_id if get_requested_form_id() returns a form that is valid in the current environment
+ *                    this method might also perform redirects if the request vars provided suggest a misconfiguration or access control problem
+ *
+ * Models may also define various "should" methods that provide defaults for what should be shown or hidden, or whether or not a particular process
+ * action should be run. If defaults are not defined in the model for should_* methods, they will be required in all views which use the model.
+ *
  */
-class DefaultFormModel
-{
-	/**
-	 * Form Models can be inited from a module, in which case the following will happen
-	 * 
-	 * 1. The model site_id variable will be set to the module site_id
-	 * 2. The model page_id variable will be set to the module page_id
-	 * 3. The model head_items variable will be be set to refer to the module head_items variable
-	 * 4. The model params will be set to refer to the module params
-	 * 5. The module object will be passed to a method called localize that does nothing by default
-	 *
-	 * @author Nathan White
-	 */
-	
+ 
+class DefaultFormModel extends AbstractFormModel
+{	
 	var $_site_id;
 	var $_page_id;
+	var $_requested_form_id;
 	var $_form_id;
 	var $_head_items;
 	var $_params;
@@ -44,30 +64,60 @@ class DefaultFormModel
 	}
 	
 	/**
-	 * When a view is instantiated - the model is given an opportunity to transform it
-	 */
-	function transform_form()
-	{
-		$disco =& $this->get_view();
-		return false;
-	}
-
-	/**
-	 * When a view is instantiated - the model is given an opportunity to transform it
-	 */
-	function transform_admin_form()
-	{
-		$disco =& $this->get_admin_view();
-		return false;
-	}
-	
-	/**
-	 * Accept and process request vars from the user
-	 * @param array parameters key/value pairs of setup parameters
+	 * Process the request vars that are passed from the controller
 	 */
 	function handle_request_vars(&$request_vars)
 	{
+		if (isset($request_vars['netid']) && !empty($request_vars['netid'])) $this->set_spoofed_netid_if_allowed($request_vars['netid']);
+		if (isset($request_vars['form_admin_view']) && ($request_vars['form_admin_view'] == 'true')) $this->set_user_requested_admin(true);
+		if (isset($request_vars['form_id']) && (strlen($request_vars['form_id']) > 0)) $this->set_requested_form_id($request_vars['form_id']);
+		if (isset($request_vars['submission_key']) && !empty($request_vars['submission_key'])) $this->set_form_submission_key($request_vars['submission_key']);
+	}
+	
+	/**
+ 	 * Should validate the request - the outcome would typically result in setting the internal form_id
+	 */
+	function validate_request()
+	{
 		return false;
+	}
+
+	function is_admin()
+	{
+		return false;
+	}
+	
+	function is_form_complete()
+	{
+		return false;
+	}
+	
+	function is_summary()
+	{
+		return false;
+	}
+	
+	function is_form()
+	{
+		return false;
+	}
+	
+	function is_unauthorized()
+	{
+		return false;
+	}
+	
+	function set_spoofed_netid_if_allowed($requested_netid = false)
+	{
+		$netid = reason_check_authentication();
+		if (!empty($requested_netid) && !empty($netid) && ($requested_netid != $netid))
+		{
+			$user_id = get_user_id($netid);
+			if (reason_user_has_privs($user_id, 'pose_as_other_user'))
+			{
+				$this->set_user_netid($requested_netid);
+			}
+		}
 	}
 	
 	function set_site_id($site_id)
@@ -90,6 +140,16 @@ class DefaultFormModel
 		return $this->_page_id;
 	}
 	
+	function set_requested_form_id($requested_form_id)
+	{
+		$this->_requested_form_id = $requested_form_id;
+	}
+
+	function get_requested_form_id()
+	{
+		return $this->_requested_form_id;
+	}
+
 	function set_form_id($form_id)
 	{
 		$this->_form_id = $form_id;
@@ -97,7 +157,7 @@ class DefaultFormModel
 	
 	function get_form_id()
 	{
-		return (isset($this->_form_id)) ? $this->_form_id : false;
+		return $this->_form_id;
 	}
 	
 	function set_form_submission_key($key)
@@ -131,43 +191,23 @@ class DefaultFormModel
 	}
 
 	/**
-	 * Returns the view selected in the content manager
+	 * Gets the user_netid - sets it to the logged in users netid if it has not been set
 	 */
-	function &get_view()
+	function get_user_netid()
 	{
-		if (!isset($this->_view))
+		if (!isset($this->_user_netid))
 		{
-			trigger_error('The model requested a reference to the view but it is not available.');
+			$this->set_user_netid(reason_check_authentication());
 		}
-		return $this->_view;
+		return $this->_user_netid;
 	}
 	
 	/**
-	 * Provides a reference to the active view that the model can use
+	 * Sets the working user_netid
 	 */
-	function set_view(&$view)
+	function set_user_netid($netid = false)
 	{
-		$this->_view =& $view;
-	}
-
-	/**
-	 * Returns the view selected in the content manager
-	 */
-	function &get_admin_view()
-	{
-		if (!isset($this->_admin_view))
-		{
-			trigger_error('The model requested a reference to the admin view but it is not available.');
-		}
-		return $this->_admin_view;
-	}
-	
-	/**
-	 * Returns the view selected in the content manager
-	 */
-	function set_admin_view(&$admin_view)
-	{
-		$this->_admin_view =& $admin_view;
+		$this->_user_netid = $netid;
 	}
 	
 	/**

@@ -12,8 +12,8 @@
 	 *
 	 * 1. admin - The user wants to administer a form
 	 * 2. form_complete - The user has just completed the form
-	 * 3. form - The user wants to create or edit a form
-	 * 4. summary - The user wants to see a listing of completed forms
+	 * 3. summary - The user wants to see a listing of completed forms 
+	 * 4. form - The user wants to create or edit a form
 	 * 5. unauthorized - The user wants to do something but is unauthorized or not logged in
 	 *
 	 * Simple customization:
@@ -147,7 +147,6 @@
 				echo $this->check_view_and_invoke_method('get_view_submission_list_html');
 			}
 			$view =& $this->get_view();
-			//$view->set_process_actions($this->get_process_actions());
 			$view->run();
 		}
 		
