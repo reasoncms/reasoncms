@@ -13,6 +13,7 @@
 * @author Mark Heiman
 */
 
+include_once( CARL_UTIL_INC . 'db/connectDB.php' );
 include_once('ds_default.php');
 
 class ds_mysql extends ds_default {
@@ -23,10 +24,7 @@ class ds_mysql extends ds_default {
 	* @var array
 	*/
 	var $_conn_params = array(
-	  	'host' => 'mysql.carleton.edu',
-	  	'user' => 'dirtest_user',
-	  	'host' => 'password',
- 		'database' => 'dirtest',
+	  	'connectDBname' => 'dirtest',
 		);
 	
 	/**
@@ -53,18 +51,17 @@ class ds_mysql extends ds_default {
 		);
 
 	/**
-	* resource MySQL link identifier for any preexisting link 
+	* string Name of any database we were previously connected to  
 	* @access private
-	* @var resource
+	* @var string
 	*/	
-	var $previous_link;
+	var $prev_connection_name;
 	
 	/**
 	* Constructor. Open connection to service here, if appropriate
 	* @access private
 	*/
 	function ds_mysql() {
-		$this->open_conn();
 		register_shutdown_function(array(&$this, "dispose")); 
 	}
 	
@@ -73,16 +70,13 @@ class ds_mysql extends ds_default {
 	* @access public
 	*/
 	function open_conn() {
-		// Get the link for any pre-existing connection (e.g. Reason so we can restore it)
-		$this->previous_link = mysql_connect();
-		if ($this->is_conn_open()) $this->close_conn();
-		//include($this->_conn_settings_file);
-		if (!($this->_conn=mysql_connect($this->_conn_params['host'], $this->_conn_params['user'], $this->_conn_params['password']))) {
-			$this->_error = sprintf('Error connecting to host %s, by user %s', $this->_conn_params['host'], $this->_conn_params['user']);
-			return false;
-		}
-		if (!mysql_select_db($this->_conn_params['database'], $this->_conn)) {
-			$this->_error = sprintf("Error selecting database %s: %d %s", $this->_conn_params['database'], mysql_errno($this->_conn), mysql_error($this->_conn));
+		if (get_current_db_connection_name() != $this->_conn_params['connectDBname'])
+		{
+			$this->prev_connection_name = get_current_db_connection_name();
+			if($this->_conn = connectDB($this->_conn_params['connectDBname']))
+			{
+				return true;
+			}
 			return false;
 		}
 		return true;
@@ -93,19 +87,31 @@ class ds_mysql extends ds_default {
 	* @access public
 	*/
 	function close_conn() {
-		// mysql_close doesn't always do what you expect (see the PHP docs) thus this solution.
-		if ($this->is_conn_open()) $this->_conn = null;
-		// If we were connected to another DB, reconnect
-		if ($this->previous_link) mysql_ping($this->previous_link);
+		$this->reconnect_prev_db();
 	}
 
-		
+	/**
+	* Reconnect to previously open database
+	* @access public
+	*/
+	function reconnect_prev_db() {
+		if(!empty($this->prev_connection_name) && $this->prev_connection_name != $this->_conn_params['connectDBname'])
+		{
+			connectDB($this->prev_connection_name);
+		}
+	}
+	
 	/**
 	* Conduct a search using the values in search_params
 	* @access public
 	*/
 	function search() {
-		if ($result = mysql_query($this->_search_params['filter'], $this->_conn)) {
+		$this->open_conn();
+		$result = mysql_query($this->_search_params['filter'], $this->_conn);
+		// If we were connected to another DB, reconnect
+		$this->close_conn();
+
+		if ($result) {
 			return ($this->format_results($result));
 		} else {
 			$this->_error = sprintf('Error executing statement: %s -- %d %s', $this->_search_params['filter'], mysql_errno($this->_conn), mysql_error($this->_conn));
