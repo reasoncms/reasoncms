@@ -22,22 +22,48 @@ class eventsFeed extends pageTreeFeed
 		{
 			$this->feed->set_category_id($this->request['category_id']);
 		}
+		if(!empty($this->request['audience_id']))
+		{
+			$this->feed->set_audience_id($this->request['audience_id']);
+		}
 		
-		$this->feed->set_item_field_handler( 'description', 'make_description', true );
-		$this->feed->set_item_field_handler( 'title', 'make_title', true );
+		$this->feed->set_item_field_handler( 'description', 'make_event_description', true );
+		$this->feed->set_item_field_handler( 'title', 'make_event_title', true );
+		
+		if($this->site_specific)
+		{
+			$this->feed->set_item_field_handler( 'link', 'site_specific_event_item_link', true );
+		}
+		else
+		{
+			$this->feed->set_item_field_handler( 'link', 'non_site_specific_event_item_link', true );
+		}
 	}
 }
 class eventsRSS extends pageTreeRSS
 {
 	var $calendar;
 	var $categories;
+	var $audiences;
 	function eventsRSS( $site_id, $type_id = '', $category_id = '' )
 	{
 		$this->init( $site_id, $type_id );
 	}
 	function set_category_id($cat_id)
 	{
-		$this->categories[$cat_id] = new entity($cat_id);
+		$cat = new entity($cat_id);
+		if($cat->get_values())
+		{
+			$this->categories[$cat_id] = $cat;
+		}
+	}
+	function set_audience_id($aud_id)
+	{
+		$aud = new entity($aud_id);
+		if($aud->get_values())
+		{
+			$this->audiences[$aud_id] = $aud;
+		}
 	}
 	function _build_rss() // {{{
 		{
@@ -50,6 +76,10 @@ class eventsRSS extends pageTreeRSS
 			if(!empty($this->categories))
 			{
 				$cal_init['categories'] = $this->categories;
+			}
+			if(!empty($this->audiences))
+			{
+				$cal_init['audiences'] = $this->audiences;
 			}
 			$this->calendar = new reasonCalendar($cal_init);
 		
@@ -69,7 +99,7 @@ class eventsRSS extends pageTreeRSS
 					foreach( $item_ids as $item_id )
 					{
 						
-						$this->generate_item( $item_id, $date );
+						$this->generate_event_item( $item_id, $date );
 					}
 				}
 			}
@@ -77,7 +107,7 @@ class eventsRSS extends pageTreeRSS
 			$this->_out .= '</channel>'."\n".'</rss>';
 			
 		} // }}}
-		function generate_item( $item_id, $date )
+		function generate_event_item( $item_id, $date )
 		{
 			$this->_out .= ('<item>'."\n");
 			foreach( $this->_item_field_map AS $attr => $field )
@@ -133,7 +163,7 @@ class eventsRSS extends pageTreeRSS
 			}
 			$this->_out .= ('</item>'."\n\n");
 		}
-		function make_description( $id, $date )
+		function make_event_description( $id, $date )
 		{
 			$ret = '';
 			if($this->items[$id]->get_value('location'))
@@ -146,18 +176,18 @@ class eventsRSS extends pageTreeRSS
 			}
 			return $ret;
 		}
-		function make_title( $id, $date )
+		function make_event_title( $id, $date )
 		{
 			$ret = prettify_mysql_datetime( $date, 'F j' ).' - ';
 			$ret .= $this->items[$id]->get_value( 'name' );
 			return $ret;
 		}
-		function site_specific_item_link( $item_id, $date )
+		function site_specific_event_item_link( $item_id, $date )
 		{
 			return $this->get_channel_attr( 'link' ).'?'.$this->query_string.'='.$item_id.'&date='.$date;
 		}
 
-		function non_site_specific_item_link( $item_id )
+		function non_site_specific_event_item_link( $item_id, $date )
 		{
 			$this->page_type_id = id_of('minisite_page');
  	              	$owner = $this->items[ $item_id ]->get_owner();
@@ -173,7 +203,7 @@ class eventsRSS extends pageTreeRSS
                         	$this->pages[ $owner->id() ] = get_page_link( $owner, $this->trees[ $owner->id() ], $this->page_types, true );
                 	}
 
-	                return $this->pages[ $owner->id() ].'?'.$this->query_string.'='.$item_id;
+	                return $this->pages[ $owner->id() ].'?'.$this->query_string.'='.$item_id.'&date='.$date;
         	}
 }
 
