@@ -29,29 +29,44 @@ class Email
 	var $_txtbody;
 	var $_htmlbody;
 
-
-	function Email($tos, $froms = '', $replytos = '', $subject = '', $txtbody = '', $htmlbody = '') {
-		$this->add_tos($tos);
-		$this->add_froms($froms);
-		$this->add_replytos($replytos);
+	/**
+	 * Construct the Email object
+	 * @param mixed $tos array or comma-separated string of usernames and/or email addresses
+	 * @param mixed $froms array or comma-separated string of usernames and/or email addresses
+	 * @param mixed $replaytos array or comma-separated string of usernames and/or email addresses
+	 * @param string $subject the email's subject
+	 * @param string $txtbody The text version of the email body
+	 * @param string $htmlbody An HTML version of the email body (if available)
+	 * @param string $address_types one of "mixed", "email", or "username" -- if tos, froms, and replytos are all either email addresses or usernames, indicating that here can save lookup time
+	 * @return void
+	 */
+	function Email($tos, $froms = '', $replytos = '', $subject = '', $txtbody = '', $htmlbody = '', $address_types = 'mixed') {
+		if($address_types != 'mixed' && $address_types != 'email' && $address_types != 'username')
+		{
+			trigger_error('$address_types parameter ('.$address_types.') must be "mixed","email", or "username." Defaulting to "mixed".');
+			$address_types = 'mixed';
+		}
+		$this->add_tos($tos, $address_types);
+		$this->add_froms($froms, $address_types);
+		$this->add_replytos($replytos, $address_types);
 		$this->set_subject($subject);
 		$this->set_txtbody($txtbody);
 		$this->set_htmlbody($htmlbody);
 	}
 
 	// For details about $tos see $this->_prettify_addresses()
-	function add_tos($tos) {
-		$this->_tos .= $this->_prettify_addresses($tos);
+	function add_tos($tos, $address_types) {
+		$this->_tos .= $this->_prettify_addresses($tos, $address_types);
 	}
 
 	// For details about $froms see $this->_prettify_addresses()
-	function add_froms($froms) {
-		$this->_froms .= $this->_prettify_addresses($froms);
+	function add_froms($froms, $address_types) {
+		$this->_froms .= $this->_prettify_addresses($froms, $address_types);
 	}
 
 	// For details about $replytos see $this->_prettify_addresses()
-	function add_replytos($replytos) {
-		$this->_replytos .= $this->_prettify_addresses($replytos);
+	function add_replytos($replytos, $address_types) {
+		$this->_replytos .= $this->_prettify_addresses($replytos, $address_types);
 	}
 
 	function set_subject($subject) {
@@ -159,12 +174,18 @@ class Email
 	 * If the address is invalid, the webmaster is included in the recipient list and an error is triggered
 	 *
 	 * @param mixed $addresses can be any of the following: 1) a valid email address, 2) a username in the directory, 3) a comma-delimited combination of addresses and/or usernames, or 4) an array of addresses and/or usernames.
+	 * @param string $address_type can be 'mixed', 'email', or 'username'
 	 * @return string $pretty_addresses Comma separated email addresses
 	 *
 	 * @todo add ability to handle addresses that include names like this: "Jane Smith" <janesmith@example.com>
 	 **/
-	function _prettify_addresses($addresses)
+	function _prettify_addresses($addresses, $address_type = 'mixed')
 	{
+		if($address_type != 'mixed' && $address_type != 'email' && $address_type != 'username')
+		{
+			trigger_error('$address_type parameter ('.$address_type.') must be "mixed","email", or "username." Defaulting to "mixed".');
+			$address_type = 'mixed';
+		}
 		if ( !is_array($addresses) )
 			$addresses = explode(',', $addresses);
 		$pretty_address_array = array();
@@ -173,14 +194,34 @@ class Email
 			$address = trim($address);
 			if ( !empty($address) )
 			{
-				$dir = new directory_service();
-				$result = $dir->search_by_attribute('ds_username', $address, array('ds_email'));
-				$dir_value = $dir->get_first_value('ds_email');
-				$address = (!empty($dir_value)) ? $dir_value : $address;
+				if($address_type != 'email')
+				{
+					$dir = new directory_service();
+					$result = $dir->search_by_attribute('ds_username', $address, array('ds_email'));
+					$dir_value = $dir->get_first_value('ds_email');
+					if($address_type == 'username')
+					{
+						if(empty($dir_value))
+						{
+							trigger_error('Username does not exist in directory service: '.$address.'. setting address to ' . WEBMASTER_EMAIL_ADDRESS . ' instead.');
+							$address = WEBMASTER_EMAIL_ADDRESS;
+						}
+						else
+						{
+							$address = $dir_value;
+						}
+					}
+					else // mixed or other value
+					{
+						$address = (!empty($dir_value)) ? $dir_value : $address;
+					}
+					
+				}
+				
 				$num_results = preg_match( '/^([-.]|\w)+@([-.]|\w)+\.([-.]|\w)+$/i', $address );
 				if ($num_results <= 0)
 				{
-					trigger_error('The address ' . $address . ' is invalid - sending e-mail to ' . WEBMASTER_EMAIL_ADDRESS . ' instead.');
+					trigger_error('The address ' . $address . ' is invalid - setting address to ' . WEBMASTER_EMAIL_ADDRESS . ' instead.');
 					$pretty_address_array[] = WEBMASTER_EMAIL_ADDRESS;
 				}
 				else
