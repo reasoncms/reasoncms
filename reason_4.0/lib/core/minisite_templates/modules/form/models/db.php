@@ -2,7 +2,6 @@
 
 reason_include_once( 'minisite_templates/modules/form/models/default.php' );
 reason_include_once( 'classes/object_cache.php' );
-include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 include_once(TYR_INC.'tyr.php');
 include_once( CARL_UTIL_INC . 'db/connectDB.php');
 
@@ -28,6 +27,7 @@ $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DBFormMo
  * @todo abstract parts of this and thor model to the default model
  *
  * @version beta1 - this is not yet fully implemented, but is serving as the model for the work transfer form at carleton 
+ * @version beta2 - bugs fixed with insert and update queries, many methods moved to the default, isolation of validate request stage
  *
  * @author Nathan White
  */
@@ -104,18 +104,33 @@ class DBFormModel extends DefaultFormModel
 		return $this->_connection_params;
 	}
 	
+	function set_connection_params(&$params)
+	{
+		$this->set_db_conn($params['db_conn']);
+		$this->set_table_name($params['table']);
+	}
+	
 	function get_db_conn()
 	{
 		$params =& $this->get_connection_params();
 		return $params['db_conn'];
 	}
 	
+	function set_db_conn($db_conn)
+	{
+		$this->_connection_params['db_conn'] = $db_conn;
+	}
+		
 	function get_table_name()
 	{
 		$params =& $this->get_connection_params();
 		return $params['table'];
 	}
-	
+
+	function set_table_name($table)
+	{
+		$this->_connection_params['table'] = $table;
+	}
 	/**
 	 * Process the request vars that are passed from the controller
 	 */
@@ -296,21 +311,6 @@ class DBFormModel extends DefaultFormModel
 	}
 	
 	/**
-	 * If the form submission was just completed - we should have a valid submission_key passed in the request
-	 */
-	function form_submission_is_complete()
-	{
-		if (!isset($this->_form_submission_is_complete))
-		{
-			$submission_key = $this->get_form_submission_key();
-			$sk_cache = new ReasonObjectCache($submission_key);
-			$this->_form_submission_is_complete = ($sk_cache->fetch());
-			if ($sk_cache->fetch()) $sk_cache->clear();
-		}
-		return $this->_form_submission_is_complete;
-	}
-	
-	/**
 	 * Create and return a submission key generated from the current submission
 	 * @param object disco_obj
 	 */
@@ -323,6 +323,21 @@ class DBFormModel extends DefaultFormModel
 		$sk = new ReasonObjectCache($key, '60'); // only last for a minute
 		$sk->set(true);
 		return $key;
+	}
+	
+	/**
+	 * If the form submission was just completed - we should have a valid submission_key passed in the request
+	 */
+	function form_submission_is_complete()
+	{
+		if (!isset($this->_form_submission_is_complete))
+		{
+			$submission_key = $this->get_form_submission_key();
+			$sk_cache = new ReasonObjectCache($submission_key);
+			$this->_form_submission_is_complete = ($sk_cache->fetch());
+			if ($sk_cache->fetch()) $sk_cache->clear();
+		}
+		return $this->_form_submission_is_complete;
 	}
 		
 	function is_editable()
@@ -853,19 +868,8 @@ class DBFormModel extends DefaultFormModel
 		return true;
 	}
 	
-	function &get_directory_info($attributes = false)
-	{
-		if (!isset($this->_directory_info))
-		{
-			$netid = $this->get_user_netid();	
-	    	$dir = new directory_service();
-			if ($attributes) $dir->search_by_attribute('ds_username', $netid, $attributes);
-			else $dir->search_by_attribute('ds_username', $netid);
-			$this->_directory_info = $dir->get_first_record();
-		}
-		return $this->_directory_info;
-	}
-		
+
+	
 	/**
 	 * @access private
 	 */
@@ -1119,8 +1123,9 @@ class DBFormModel extends DefaultFormModel
 		$restore_conn = ($this->get_db_conn() != get_current_db_connection_name()) ? get_current_db_connection_name() : false;
 		if ($restore_conn) connectDB($this->get_db_conn());
 		$result = $GLOBALS['sqler']->insert( $this->get_table_name(), $values );
+		$insert_id = ($result) ? mysql_insert_id() : false;
 		if ($restore_conn) connectDB($restore_conn);
-		return ($result) ? mysql_insert_id() : false;
+		return ($result) ? $insert_id : false;
 	}
 	
 	function perform_update($id, $values)

@@ -1,5 +1,7 @@
 <?php
 reason_include_once( 'minisite_templates/modules/form/models/abstract.php' );
+include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
+
 $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultFormModel';
 
 /**
@@ -107,19 +109,6 @@ class DefaultFormModel extends AbstractFormModel
 		return false;
 	}
 	
-	function set_spoofed_netid_if_allowed($requested_netid = false)
-	{
-		$netid = reason_check_authentication();
-		if (!empty($requested_netid) && !empty($netid) && ($requested_netid != $netid))
-		{
-			$user_id = get_user_id($netid);
-			if (reason_user_has_privs($user_id, 'pose_as_other_user'))
-			{
-				$this->set_user_netid($requested_netid);
-			}
-		}
-	}
-	
 	function set_site_id($site_id)
 	{
 		$this->_site_id = $site_id;
@@ -191,6 +180,24 @@ class DefaultFormModel extends AbstractFormModel
 	}
 
 	/**
+	 * If the actual user has the privilege "pose_as_other_user" this method
+	 * will set the internal netid returned by get_user_netid to the spoofed
+	 * netid passed into this method. Very useful for testing purposes.
+	 */
+	function set_spoofed_netid_if_allowed($requested_netid = false)
+	{
+		$netid = reason_check_authentication();
+		if (!empty($requested_netid) && !empty($netid) && ($requested_netid != $netid))
+		{
+			$user_id = get_user_id($netid);
+			if (reason_user_has_privs($user_id, 'pose_as_other_user'))
+			{
+				$this->set_user_netid($requested_netid);
+			}
+		}
+	}
+	
+	/**
 	 * Gets the user_netid - sets it to the logged in users netid if it has not been set
 	 */
 	function get_user_netid()
@@ -208,6 +215,43 @@ class DefaultFormModel extends AbstractFormModel
 	function set_user_netid($netid = false)
 	{
 		$this->_user_netid = $netid;
+	}
+
+	/**
+	 * Gets directory information for the current user_netid
+	 *
+	 * @todo handle for cases where attribute set requested is different
+	 */
+	function &get_directory_info($attributes = false)
+	{
+		$netid = $this->get_user_netid();
+		if ($netid && !isset($this->_directory_info[$netid]))
+		{
+			$dir = new directory_service();
+			if ($attributes) $dir->search_by_attribute('ds_username', $netid, $attributes);
+			else $dir->search_by_attribute('ds_username', $netid);
+			$this->_directory_info[$netid] = $dir->get_first_record();
+		}
+		if (!$netid)
+		{
+			$ret = false;
+			return $ret;
+		}
+		return $this->_directory_info[$netid];
+	}
+	
+	/**
+	 * Live person search
+	 *
+	 * @todo broaden to do more than just first record
+	 */
+	function &find_one_person($search_field, $search_value, $attributes = NULL)
+	{
+		$dir = new directory_service();
+		if ($attributes) $dir->search_by_attribute($search_field, $search_value, $attributes);
+		else $dir->search_by_attribute($search_field, $search_value);
+		$result = $dir->get_first_record();
+		return $result;
 	}
 	
 	/**

@@ -1,7 +1,6 @@
 <?php
 reason_include_once( 'minisite_templates/modules/form/models/default.php' );
 reason_include_once( 'classes/object_cache.php' );
-include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 include_once(TYR_INC.'tyr.php');
 $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'ThorFormModel';
 
@@ -294,6 +293,21 @@ class ThorFormModel extends DefaultFormModel
 			exit;
 		}
 	}
+
+	/**
+	 * Create and return a submission key generated from the current submission
+	 * @param object disco_obj
+	 */
+	function create_form_submission_key()
+	{
+		$values = $this->get_values_for_save();
+		$str = get_mysql_datetime();
+		foreach ($values as $val) $str = $str . $val;
+		$key = md5($str);
+		$sk = new ReasonObjectCache($key, '60'); // only last for a minute
+		$sk->set(true);
+		return $key;
+	}
 	
 	/**
 	 * If the form submission was just completed - we should have a valid submission_key passed in the request
@@ -309,23 +323,7 @@ class ThorFormModel extends DefaultFormModel
 		}
 		return $this->_form_submission_is_complete;
 	}
-	
-	/**
-	 * Create and return a submission key generated from the current submission
-	 * @param object disco_obj
-	 */
-	function create_form_submission_key()
-	{
-		$disco_obj =& $this->get_view();
-		$values = $this->get_values_for_save();
-		$str = get_mysql_datetime();
-		foreach ($values as $val) $str = $str . $val;
-		$key = md5($str);
-		$sk = new ReasonObjectCache($key, '60'); // only last for a minute
-		$sk->set(true);
-		return $key;
-	}
-	
+
 	function form_allows_multiple()
 	{
 		$form =& $this->get_form_entity();
@@ -1025,19 +1023,6 @@ class ThorFormModel extends DefaultFormModel
 			$this->_user_has_access_to_fill_out_form = $this->_user_is_in_viewing_group();
 		}
 		return $this->_user_has_access_to_fill_out_form;
-	}
-	
-	function &get_directory_info($attributes = false)
-	{
-		if (!isset($this->_directory_info))
-		{
-			$netid = $this->get_user_netid();	
-	    	$dir = new directory_service();
-			if ($attributes) $dir->search_by_attribute('ds_username', $netid, $attributes);
-			else $dir->search_by_attribute('ds_username', $netid);
-			$this->_directory_info = $dir->get_first_record();
-		}
-		return $this->_directory_info;
 	}
 	
 	function _user_is_in_admin_access_group()

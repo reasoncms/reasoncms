@@ -1,4 +1,4 @@
-<?
+<?php
 include_once('reason_header.php');
 include_once(DISCO_INC . 'disco.php');
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultForm';
