@@ -68,12 +68,12 @@ class ds_mysql extends ds_default {
 	function open_conn() {
 		if ($this->is_conn_open()) $this->close_conn();
 		//include($this->_conn_settings_file);
-		if (!($this->_conn=mysql_connect($this->$_conn_params['host'], $this->$_conn_params['user'], $this->$_conn_params['password']))) {
-			$this->_error = sprintf('Error connecting to host %s, by user %s', $this->$_conn_params['host'], $this->$_conn_params['user']);
+		if (!($this->_conn=mysql_connect($this->_conn_params['host'], $this->_conn_params['user'], $this->_conn_params['password']))) {
+			$this->_error = sprintf('Error connecting to host %s, by user %s', $this->_conn_params['host'], $this->_conn_params['user']);
 			return false;
 		}
-		if (!mysql_select_db($this->$_conn_params['database'], $this->_conn)) {
-			$this->_error = sprintf("Error selecting database %s: %d %s", $this->$_conn_params['database'], mysql_errno($this->_conn), mysql_error($this->_conn));
+		if (!mysql_select_db($this->_conn_params['database'], $this->_conn)) {
+			$this->_error = sprintf("Error selecting database %s: %d %s", $this->_conn_params['database'], mysql_errno($this->_conn), mysql_error($this->_conn));
 			return false;
 		}
 		return true;
@@ -145,7 +145,6 @@ class ds_mysql extends ds_default {
 	*/
 	function filter_search($filter, $return=array()) {
 		$tree = $this->parse_filter($filter);
-		$this->set_search_param('filter', $this->filter_to_sql($tree));
 		// assemble a list of all the attributes that should be returned --
 		// anything in the filter, the base list, or explicitly requested
 		$involved_attrs = array_unique(array_merge($return,$this->_search_params['base_attrs']));
@@ -153,6 +152,7 @@ class ds_mysql extends ds_default {
 		// ldap_search requires sequential array elements; sort ensures that.
 		sort($return_attrs);
 		$this->set_search_param('attrs',$return_attrs);
+		$this->set_search_param('filter', sprintf('SELECT %s FROM %s WHERE %s', join(', ', $return_attrs), $this->_search_params['table'], $this->filter_to_sql($tree)));
 		if ($results = $this->search()) {
 		// add in any generic attributes required
 			$augmented_results = $this->add_gen_attrs_to_results($results, $involved_attrs);
@@ -271,6 +271,9 @@ class ds_mysql extends ds_default {
 		switch ($type) {
 			case '~=':
 				$compare = 'LIKE';
+				break;
+			case 'equality':
+				$compare = '=';
 				break;
 			default:
 				$compare = $type;
