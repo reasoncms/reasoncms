@@ -53,6 +53,13 @@ class ds_mysql extends ds_default {
 		);
 
 	/**
+	* resource MySQL link identifier for any preexisting link 
+	* @access private
+	* @var resource
+	*/	
+	var $previous_link;
+	
+	/**
 	* Constructor. Open connection to service here, if appropriate
 	* @access private
 	*/
@@ -66,6 +73,8 @@ class ds_mysql extends ds_default {
 	* @access public
 	*/
 	function open_conn() {
+		// Get the link for any pre-existing connection (e.g. Reason so we can restore it)
+		$this->previous_link = mysql_connect();
 		if ($this->is_conn_open()) $this->close_conn();
 		//include($this->_conn_settings_file);
 		if (!($this->_conn=mysql_connect($this->_conn_params['host'], $this->_conn_params['user'], $this->_conn_params['password']))) {
@@ -86,6 +95,8 @@ class ds_mysql extends ds_default {
 	function close_conn() {
 		// mysql_close doesn't always do what you expect (see the PHP docs) thus this solution.
 		if ($this->is_conn_open()) $this->_conn = null;
+		// If we were connected to another DB, reconnect
+		if ($this->previous_link) mysql_ping($this->previous_link);
 	}
 
 		
