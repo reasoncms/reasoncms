@@ -1,4 +1,4 @@
-<?
+<?php
 include_once('reason_header.php');
 include_once(CARL_UTIL_INC . 'db/table_admin.php');
 $GLOBALS[ '_form_admin_view_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultDBAdminForm';

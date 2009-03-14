@@ -596,9 +596,9 @@ class DBFormModel extends DefaultFormModel
 		return $this->_values_for_user;
 	}
 	
-	function &get_values_for_id($id)
+	function &get_values_for_id($id, $force_refresh = false)
 	{
-		if (!isset($this->_values_for_id[$id]))
+		if (!isset($this->_values_for_id[$id]) || $force_refresh)
 		{
 			$qry = $this->get_select_by_key_sql($id, 'id');
 			$result = $this->perform_query($qry);
