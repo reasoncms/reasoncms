@@ -804,4 +804,14 @@
 	 * 3. Relative path from within minisite_templates/modules/form/controllers/ directory
 	 */
 	define('REASON_FORMS_THOR_DEFAULT_CONTROLLER', 'thor.php');
+	
+	/**
+	 * REASON_LOKI_CSS_FILE
+	 *
+	 * If this constant is a non-empty string, Reason will instruct Loki 2+ to add a stylesheet to the content editing pane.
+	 * The value of the constant should be the URL of the stylesheet to add. It's best to provide a URL relative 
+	 * to the base of the server or starting with //domain.com/ so as to avoid security warnings.
+	 */
+	define('REASON_LOKI_CSS_FILE','');
+	
 ?>
