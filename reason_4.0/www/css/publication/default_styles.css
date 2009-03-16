@@ -74,9 +74,7 @@ div.publication div#filtering, div.publication div.persistent div.loginlogout, d
 div.publication div.addItemLink {
 	margin-bottom:1em;
 }
-div.publication div.back {
-	clear:both;
-}
+
 /* lets hide the "List All Issues" link */
 div.publication div.allIssuesLink
 {
