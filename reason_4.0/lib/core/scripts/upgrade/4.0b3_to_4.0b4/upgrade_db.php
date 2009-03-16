@@ -267,9 +267,9 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run'))
 	else echo '<p>Required is already set to "no" for news_to_news_section relationship - no changes made</p>';
 	//if (check_required($news_to_news_section_rel)) echo 'required for news_to_news_section_rel';
 	
-	zap_field('commenting_settings', 'enable_comment_notification');
-	zap_field('blog', 'pagination_state');
-	zap_field('blog', 'enable_front_end_posting');
+	zap_field('commenting_settings', 'enable_comment_notification', $reason_user_id);
+	zap_field('blog', 'pagination_state', $reason_user_id);
+	zap_field('blog', 'enable_front_end_posting', $reason_user_id);
 	
 	$pub_type_id = id_of('publication_type');
 	if ($pub_type_id)
@@ -311,7 +311,7 @@ else
  * If the enable_comment_notification field exists, then zap it - will only be the case if an earlier version of this script was run
  *
  */
-function zap_field($entity_table_name, $field_name)
+function zap_field($entity_table_name, $field_name, $reason_user_id)
 {
 	$es = new entity_selector();
 	$es->add_type(id_of('content_table'));
@@ -346,7 +346,7 @@ function zap_field($entity_table_name, $field_name)
 			$res = current($result2);
 			$q = "ALTER TABLE ".$entity_table_name." DROP ".$field_name;
 			db_query($q);
-			delete_entity($res->id()); // also deletes all relationships to the field, which fixes the entity table
+			reason_expunge_entity($res->id(), $reason_user_id); // also deletes all relationships to the field, which fixes the entity table
 			echo '<p>Zapped field ' . $field_name . ' in entity table ' . $entity_table_name . '<p>';
 		}
 	}
