@@ -279,31 +279,67 @@
 		return $new_entity_id;
 	} // }}}
 
-	/** delete_entity( $id ) {{{
-	 *	Deletes entity with id = $id and all relationships with that id
+	/** delete_entity( $id )
+	 *
+	 *	Removes entity with id = $id and all relationships with that id from the database.
+	 *
+	 *	This function is deprecated, as it is confusingly named (it does not make an entity
+	 *	"deleted," which is just a state change. It actually expunges the entity from the database.)
+	 *
+	 *	Use reason_expunge_entity() instead.
+	 *
+	 *	@deprecated
+	 *	@param	integer	$id		The ID of the entity to delete
+	 *	@return		array	the entity and all relationships of the entity just deleted
+	 */
+	function delete_entity( $id )
+	{
+		trigger_error('delete_entity() is deprecated. Use reason_expunge_entity() instead.');
+		return reason_expunge_entity( $id );
+	}
+	
+	/** Removes entity with id = $id and all relationships with that id from the database.
 	 *
 	 *	Specifically, deletes the entry from the entity table and all sub-tables.
 	 *	Also deletes all relationships where entity_a or entity_b = id
 	 *
-	 *	@param	$id		The ID of the entity to delete
-	 *	@return			the entity and all relationships of the entity just deleted
+	 *	@todo add logging of expungements so that these important actions are traceable
+	 *
+	 *	@param	integer	$id		The ID of the entity to delete
+	 *	@param	integer	$user_id		The ID of the reason user who is deleting the item
+	 *	@return		array	the entity and all relationships of the entity just deleted
 	 */
-	function delete_entity( $id )
+	function reason_expunge_entity( $id, $user_id )
 	{
 		$testmode = false;
-
-		$sqler = new SQLER;
+		
+		if(empty($user_id) || !is_numeric($user_id) || $user_id < 1 )
+		{
+			trigger_error('Expungement without providing a Reason user id is deprecated. Future releases of Reason will not allow entities to be expunged without providing a user id');
+		}
 		
 		// get all entity information before deleting it
-
-		$entity = get_entity_by_id( $id );
 		
-		/* This line was floating in the test code. Presumably it exists to force this function to return the database copy of the entity. The 2nd paramater determines whether get_entity_by_id uses a chached copy of the entity or not. get_entity_by_id lives in util.php3. We were not 100% confident in this line, since it had not been tested. */
-		// $entity = get_entity_by_id( $id, false );
+		$id = (integer) $id;
+		if(empty($id) || $id < 1)
+		{
+			trigger_error('ID passed to reason_expunge_entity() not a positive integer. Unable to expunge.');
+			return false;
+		}
+
+		$entity = get_entity_by_id( $id, false );
+		
+		if(empty($entity['id']))
+		{
+			trigger_error('Entity id '.$id.' does not exisit; unable to expunge.');
+			return false;
+		}
+		
+		$sqler = new SQLER;
 
 		$archives = array();
 		$q = "SELECT r.entity_b, r.type, ar.name FROM relationship AS r,  allowable_relationship AS ar WHERE r.entity_a = $id AND r.type = ar.id";
-		$r = db_query( $q, 'Unable to retrieve entity left relationships' );
+		$r = db_query( $q, 'Unable to retrieve entity left relationships for expungement' );
 		while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
 		{
 			$entity[ 'left_relationships' ][] = $row;
@@ -313,7 +349,7 @@
 		}
 		
 		$q = "SELECT entity_a, type FROM relationship WHERE entity_b = $id";
-		$r = db_query( $q, 'Unable to retrieve entity right relationships' );
+		$r = db_query( $q, 'Unable to retrieve entity right relationships for expungement' );
 		while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
 			$entity[ 'right_relationships' ][] = $row;
 
@@ -338,7 +374,7 @@
 			if( $table != 'entity' )
 			{
 				if( $testmode )
-					echo '$sqler->delete_one( "'.$table.'",'.$id.' )<br /><br />';
+					echo '$sqler->delete_one( "'.htmlspecialchars($table).'",'.$id.' )<br /><br />';
 				else
 					$sqler->delete_one( $table, $id );
 			}
@@ -353,10 +389,10 @@
 
 		// delete all archived entities
 		foreach( $archives AS $archive )
-			delete_entity( $archive );
+			reason_expunge_entity( $archive, $user_id );
 
 		return $entity;
-	} // }}}
+	} //
 
 	/** update_entity( $id, $user_id, $updates = array(), $archive = true ) {{{
 	 *	Updates entity with id = $id with the values of the array $values
