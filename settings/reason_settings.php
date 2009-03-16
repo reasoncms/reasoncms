@@ -814,4 +814,13 @@
 	 */
 	define('REASON_LOKI_CSS_FILE','');
 	
+	/**
+	 * REASON_DELETED_ITEM_EXPUNGEMENT_WAIT_DAYS
+	 *
+	 * The number of days Reason's garbage collector should wait before expunging a deleted item from the database.
+	 *
+	 * Note: Reason's garbage collector script must be run as a nightly cron job in order for this feature to work.
+	 */
+	define('REASON_DELETED_ITEM_EXPUNGEMENT_WAIT_DAYS', 14);
+	
 ?>
