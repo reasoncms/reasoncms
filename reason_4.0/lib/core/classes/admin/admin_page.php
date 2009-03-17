@@ -492,7 +492,7 @@
 
 			// if the entity is new, give the link to cancel its creation
 			$e = new entity( $this->id );
-			if( $e->get_value( 'new' ) && $e->get_value('state') == 'Pending' && $can_edit )
+			if( $e->get_value( 'new' ) && $e->get_value('state') == 'Pending' && $can_edit && !$e->get_value('name') &&  $this->cur_module == 'Editor' )
 			{
 				$links[ 'Cancel' ] = array( 'title' => 'Cancel', 'link' => $this->make_link( array( 'cur_module' => 'Cancel' ) ) );
 			}
