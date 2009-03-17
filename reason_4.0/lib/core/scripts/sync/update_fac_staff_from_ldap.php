@@ -4,7 +4,7 @@
  *
  * This is designed so it can be run as a cron job
  *
- * We probably need to make sure everythiing works outside a Carleton-specific context
+ * @todo We probably need to make sure everything works outside a Carleton-specific context
  *
  * @package reason
  * @subpackage scripts
@@ -83,7 +83,6 @@
 		$diff = array_diff($ldap_created, $netids );
 		foreach( $diff AS $old_person )
 		{
-			// delete_entity( $reason_id[ $old_person ] );
 			update_entity(	$reason_id[ $old_person ], 
 							id_of('ldap'),
 							array(
