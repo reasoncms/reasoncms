@@ -42,6 +42,10 @@ include_once(CARL_UTIL_INC . 'tidy/tidy.php');
 //define('PLANET_CONFIG_FILE', WEB_PATH . 'planets/carlplanet/config.ini'); 
 //define('PLANET_RSS_FILE', WEB_PATH . 'planets/carlplanet/rss20.xml'); 
 
+// magpie fails to detect UTF-8, we force it. 
+define('MAGPIE_OUTPUT_ENCODING', 'UTF-8');
+define('MAGPIE_INPUT_ENCODING', 'UTF-8');
+define('MAGPIE_DETECT_ENCODING', false);
 
 require_once(MAGPIERSS_INC . 'rss_fetch.inc');
 require_once(MAGPIERSS_INC . 'rss_parse.inc');
