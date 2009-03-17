@@ -75,7 +75,7 @@
 		function delete_entity() // {{{
 		{
 			reason_include_once( 'function_libraries/admin_actions.php' );
-			delete_entity( $this->get_value( 'id' ) );
+			reason_expunge_entity( $this->get_value( 'id' ), $this->admin_page->user_id );
 		} // }}}
 		function where_to() // {{{
 		{
