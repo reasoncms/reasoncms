@@ -147,7 +147,7 @@ class updateTypes
 			}
 			elseif ($field && ($this->mode == 'run'))
 			{
-				delete_entity($field->id());
+				reason_expunge_entity($field->id(), $this->reason_id);
                 db_query( $q, 'Unable to drop field from table.' );
                 echo '<p>Deleted field ' . $field_name . ' and removed it from entity table ' . $table_name . '</p>';
 			}
@@ -247,7 +247,7 @@ class updateTypes
 					$q = "DROP TABLE location";
 					$r = db_query( $q, 'Could not drop the entity table location' );
 					
-					delete_entity($location_table->id());
+					reason_expunge_entity($location_table->id(), $this->reason_id);
 					echo '<p>Moved location.location to event.location, and deleted the location entity table</p>';
 				}
 			}
