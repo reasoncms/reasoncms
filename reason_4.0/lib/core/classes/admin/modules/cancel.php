@@ -12,9 +12,9 @@
 			if( !empty( $this->admin_page->id ) )
 			{
 				$temp = new entity( $this->admin_page->id,false );
-				if( $temp->get_value( 'new' ) && $temp->get_value( 'state' ) == 'Pending' && reason_user_has_privs($this->admin_page->user_id,'delete_pending') )
+				if( $temp->get_value( 'new' ) && $temp->get_value( 'state' ) == 'Pending' && !$temp->get_value( 'name' ) && reason_user_has_privs($this->admin_page->user_id,'delete_pending')  )
 				{
-					delete_entity( $this->admin_page->id );
+					reason_expunge_entity( $this->admin_page->id, $this->admin_page->user_id );
 				}
 			}
 			if( !empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) )
