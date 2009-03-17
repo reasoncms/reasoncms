@@ -115,7 +115,7 @@ if (isset ($_POST['verify']) && ($_POST['verify'] == 'Run the Script'))
 			if(!empty($fields))
 			{
 				$field = current($fields);
-				delete_entity($field->id());
+				reason_expunge_entity($field->id(), $user_id);
 				echo 'Deleted course_identifier_strings field<br />';
 			}
 			else
