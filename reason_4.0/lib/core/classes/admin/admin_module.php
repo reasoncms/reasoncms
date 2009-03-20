@@ -63,5 +63,6 @@
 		'AllowableRelationshipManager'=>array('file'=>'allowable_relationship_manager.php','class'=>'AllowableRelationshipManagerModule'),
 		'SortPosts'=>array('file'=>'sort_posts.php','class'=>'SortPostsModule'),
 		'EntityInfo'=>array('file'=>'entity_info.php','class'=>'EntityInfoModule'),
+		'BatchDelete'=>array('file'=>'batch_delete.php','class'=>'BatchDeleteModule'),
 	);
 ?>
