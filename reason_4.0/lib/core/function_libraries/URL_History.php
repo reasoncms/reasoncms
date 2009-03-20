@@ -112,6 +112,10 @@ function check_URL_history( $request_uri )
 	{
 		$query_string = '?'.$url_arr['query'];
 	}
+	else
+	{
+		$query_string = '';
+	}
 	
 	$query =  'SELECT * FROM URL_history WHERE url ="' . addslashes ( $URL ) . '" AND deleted="no" ORDER BY timestamp DESC';
 	$results = db_query( $query );
