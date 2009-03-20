@@ -34,26 +34,33 @@
 				$this->_ok_to_run = false;
 				$this->_not_ok_message = 'Sorry; you don\'t have the privileges to delete items on this site.';
 			}
+			elseif(empty($this->admin_page->site_id))
+			{
+				$this->_ok_to_run = false;
+				$this->_not_ok_message = 'Sorry; you need to specify a site before batch deleting items.';
+			}
 			elseif(empty($this->admin_page->type_id))
 			{
 				$this->_ok_to_run = false;
 				$this->_not_ok_message = 'Sorry; you need to specify a type before batch deleting items.';
 			}
 			
-			$this->_type = new entity($this->admin_page->type_id);
-			$this->admin_page->title = 'Batch Delete ' . $this->_type->get_value('plural_name');
-			
-			$es = new entity_selector( $this->admin_page->site_id);
-			$es->add_type($this->admin_page->type_id);
-			$es->set_sharing( 'owns' );
-			$es->set_order('entity.last_modified DESC');
-			$this->_items = $es->run_one();
-			foreach(array_keys($this->_items) as $id)
+			if($this->_ok_to_run)
 			{
-				if(!$this->admin_page->is_deletable($id))
+				$this->_type = new entity($this->admin_page->type_id);
+				$this->admin_page->title = 'Batch Delete ' . $this->_type->get_value('plural_name');
+				
+				$es = new entity_selector( $this->admin_page->site_id);
+				$es->add_type($this->admin_page->type_id);
+				$es->set_sharing( 'owns' );
+				$es->set_order('entity.last_modified DESC');
+				$this->_items = $es->run_one();
+				foreach(array_keys($this->_items) as $id)
 				{
-					unset($this->_items[$id]);
-					echo $id;
+					if(!$this->admin_page->is_deletable($id))
+					{
+						unset($this->_items[$id]);
+					}
 				}
 			}
 		}
