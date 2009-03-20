@@ -647,24 +647,30 @@
 
 			return count( $archived );
 		}
-		function is_deletable() // {{{
+		function is_deletable($id = 0) // {{{
 		{
-			if(empty($this->id))
+			$id = (integer) $id;
+			if(empty($id))
+				$id = $this->id;
+			if(empty($id))
 				return false;
 			//get all one-to-many required relationships that the current item is a part of
 			$subject_of_required_rels = array();
-			$dbq = $this->get_required_ar_dbq();
+			$dbq = $this->get_required_ar_dbq($id);
 			if(!empty($dbq))
 				$subject_of_required_rels = $dbq->run();
-			$sites = get_sites_that_are_borrowing_entity($this->id);
+			$sites = get_sites_that_are_borrowing_entity($id);
 			if( $subject_of_required_rels || !empty($sites) )
 				return false;
 			else
 				return true;
 		} // }}}
-		function get_required_ar_dbq() // {{{
+		function get_required_ar_dbq($id = 0) // {{{
 		{
-			if(empty($this->id))
+			$id = (integer) $id;
+			if(empty($id))
+				$id = $this->id;
+			if(empty($id))
 				return false;
 			$dbq = new DBSelector;
 			$dbq->add_table( 'ar' , 'allowable_relationship' );
@@ -680,7 +686,7 @@
 			$dbq->add_relation( 'ar.connections = "one_to_many"' );
 			$dbq->add_relation( 'ar.required = "yes"' );
 
-			$dbq->add_relation( 'r.entity_b = ' . $this->id );
+			$dbq->add_relation( 'r.entity_b = ' . $id );
 			$dbq->add_relation( 'r.type = ar.id' );
 			$dbq->add_relation( 'entity.id = r.entity_a' );
 			$dbq->add_relation( 'entity.state = "Live"' );
