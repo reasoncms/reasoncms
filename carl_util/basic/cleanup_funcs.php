@@ -156,7 +156,10 @@
 		$common_regexp['alphanumeric'] = '/^[a-z0-9]*$/i';
 		$common_regexp['naturalnumber'] = '/^[0-9]*$/i';
 		$common_regexp['safechars'] = '/^[a-z0-9_-]*$/i';
-		$common_regexp['email'] = '/^[0-9A-Za-z_\-]+[@][0-9A-Za-z_\-]+([.][0-9A-Za-z]+)([.][A-Za-z]{2,3}){0,1}$/x';
+		// This regex is not permissive enough -- it doesn't allow all kinds of legal chars in the username
+		//$common_regexp['email'] = '/^[0-9A-Za-z_\-]+[@][0-9A-Za-z_\-]+([.][0-9A-Za-z]+)([.][A-Za-z]{2,3}){0,1}$/x';
+		// This one has been used for several years. It's not perfect (probably somewhat overpermissive) but it should be better.
+		$common_regexp['email'] = '/^([-.]|\w)+@([-.]|\w)+\.([-.]|\w)+$/i';
 		foreach ($array as $this_regexp)
 		{
 			$this_regexp = isset($common_regexp[$this_regexp]) ? $common_regexp[$this_regexp] : $this_regexp;
