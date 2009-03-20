@@ -21,7 +21,7 @@
 				header( 'Location: ' . $link );
 				die();
 			}
-			$this->admin_page->title = 'Deletion Explanation';
+			$this->admin_page->title = 'Why can\'t I delete this item?';
 		} // }}}
 		function is_root_node() // {{{
 		{
