@@ -28,9 +28,6 @@ class EventSlotRegistrationForm extends Disco{
 	);
 	
 	var $error_checks = array(
-		'name' => array(
-			'contains_no_delimiters' => 'Fields cannot contain the \';\' or \'|\' characters.',
-		),
 		'email' => array(
 			'email_is_correctly_formatted' => 'The email address you entered does not appear to be valid.  Please check to make sure you entered it correctly',
 		 ),
@@ -50,17 +47,6 @@ class EventSlotRegistrationForm extends Disco{
 		$this->delimiter1 = $delimiter1;
 		$this->delimiter2 = $delimiter2;
 		$this->cancel_link = $cancel_link;
-	}
-	
-	
-	function contains_no_delimiters()
-	{
-		$name = $this->get_value('name');
-		if(strpos($name, $this->delimiter1)||strpos($name, $this->delimiter2))
-		{
-			return false;
-		}
-		return true;
 	}
 	
 	function email_is_correctly_formatted()
@@ -99,7 +85,9 @@ class EventSlotRegistrationForm extends Disco{
 		$user = new User();
 		if (!$user->get_user('event_agent')) $user->create_user('event_agent');
 		
-		$new_data = implode($this->delimiter2, array(strip_tags($this->request_array['date']),strip_tags($this->get_value('name')),strip_tags($this->get_value('email')), time() ) );	
+		$name = str_replace(array($this->delimiter1, $this->delimiter2), '_', $this->get_value('name'));
+		
+		$new_data = implode($this->delimiter2, array(strip_tags($this->request_array['date']),strip_tags($name),strip_tags($this->get_value('email')), time() ) );	
 		$slot_values = get_entity_by_id($this->request_array['slot_id']);
 
 		$old_data = $slot_values['registrant_data'];
@@ -138,10 +126,13 @@ class EventSlotRegistrationForm extends Disco{
 		$body = $this->get_value('name').' has registered for '.$this->event->get_value('name')."\n\n";
 		$body.='Name: '.$this->get_value('name')."\n";
 		$body.="E-mail Address: ".$this->get_value('email')."\n";
-//		the original code gives the datetime field of event in order to give both date & time, but that doesn't work for repeating events.  How to do both date & time?
 		$body .= 'Date: '.prettify_mysql_datetime($this->request_array['date'], 'm/d/Y')."\n";
-#		$body.='Class: '.$this->event->get_value('name')."\n\n";
-#		$body.='Date & Time: '.prettify_mysql_datetime($this->event->get_value('datetime'), 'm/d/Y \a\t g:i a')."\n\n";
+		$time = $this->event->get_value('datetime');
+		$time_parts = explode(' ',$time);
+		if($time_parts[1] != '00:00:00')
+		{
+			$body.= 'Time: '.prettify_mysql_datetime($time,'g:i a')."\n";
+		}
 		$location = $this->event->get_value('location');
 		if(!empty($location))
 			$body.='Location: '.$location."\n";

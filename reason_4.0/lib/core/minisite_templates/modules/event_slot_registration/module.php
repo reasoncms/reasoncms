@@ -32,7 +32,7 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		$cleanup_rules = parent::get_cleanup_rules();
 		$cleanup_rules['slot_id'] = array('function' => 'turn_into_int');
 		$cleanup_rules['admin_id'] = array('function' => 'turn_into_int');
-		$cleanup_rules['delete_registrant'] = array('function' => 'turn_into_int');
+		$cleanup_rules['delete_registrant'] = array('function' => 'turn_into_string');
 		return $cleanup_rules;
 	}
 
@@ -107,7 +107,7 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 	{
 	
 		$link = $this->events_page_url;
-		$link .= $this->construct_link(array('event_id'=>$this->request['event_id'],'date'=>$this->request['date'],'view'=>$this->request['view'] ));
+		$link .= $this->construct_link(array('event_id'=>$this->request['event_id'],'date'=>$this->request['date'],'view'=>(isset($this->request['view']) ? $this->request['view'] : '') ));
 		return $link;
 	}
 
@@ -142,14 +142,14 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 				if($spaces_available > 0)
 				{
 					$link_vars = array('event_id'=>$this->request['event_id'], 'date'=>$this->request['date'], 'slot_id'=>$slot->id());
-					echo '<li><a href="'.$this->construct_link($link_vars).'" title = "Register for '.$slot->get_value('name').'">Register Now</a></li>'."\n";;
+					echo '<li><a href="'.$this->construct_link($link_vars).'" title = "Register for '.htmlspecialchars($slot->get_value('name'), ENT_QUOTES).'">Register Now</a></li>'."\n";;
 				}
 				//if user is admin of slot, display admin link
 				$admin_id = $this->user_is_admin();
 				if($admin_id)
 				{
 					$link_vars = array('event_id'=>$this->request['event_id'], 'date'=>$this->request['date'], 'slot_id'=>$slot->id(), 'admin_id'=>$admin_id);
-					echo '<li><a href="'.$this->construct_link($link_vars).'" title = "Administer '.$slot->get_value('name').'">Administer '.$slot->get_value('name').'</a></li>'."\n";;
+					echo '<li><a href="'.$this->construct_link($link_vars).'" title = "Administer '.htmlspecialchars($slot->get_value('name'), ENT_QUOTES).'">Administer '.$slot->get_value('name').'</a></li>'."\n";;
 				}
 				echo '</ul>'."\n";
 				echo '</li>'."\n";
@@ -248,11 +248,11 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 			{
 				$registrant_pieces = explode($this->delimiter2, $registrant);
 				echo '<tr class='.$thisrow.'>'."\n";	
-				echo '<td>'.$registrant_pieces[1].'</td>'."\n";
-				echo '<td>'.$registrant_pieces[2].'</td>'."\n";
+				echo '<td>'.htmlspecialchars($registrant_pieces[1], ENT_QUOTES).'</td>'."\n";
+				echo '<td>'.htmlspecialchars($registrant_pieces[2], ENT_QUOTES).'</td>'."\n";
 				echo '<td>'.date('m/d/Y', $registrant_pieces[3]).'</td>'."\n";
-				$link_vars = array('event_id'=>$this->request['event_id'], 'date'=>$this->request['date'], 'slot_id'=>$slot['id'], 'admin_id'=>$this->request['admin_id'], 'delete_registrant'=>$registrant_pieces[3]);
-				echo '<td><a href="'.$this->construct_link($link_vars).'" title = "Delete '.$registrant_pieces[1].'">Delete this registrant</a></td>'."\n";
+				$link_vars = array('event_id'=>$this->request['event_id'], 'date'=>$this->request['date'], 'slot_id'=>$slot['id'], 'admin_id'=>$this->request['admin_id'], 'delete_registrant'=>md5($registrant));
+				echo '<td><a href="'.$this->construct_link($link_vars).'" title = "Delete '.htmlspecialchars($registrant_pieces[1], ENT_QUOTES).'">Delete this registrant</a></td>'."\n";
 				echo '</tr>'."\n";
 				$thisrow = ($thisrow == 'odd') ? 'even' : 'odd';
 			}
@@ -339,16 +339,26 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 	function delete_registrant()
 	{	
 		$slot = get_entity_by_id($this->request['slot_id']);
-		$all_registrants = explode($this->delimiter1, $slot['registrant_data']);
-		$registrants = $this->get_registrants_for_this_date($all_registrants);
-		
-		if(!empty($registrants[$this->request['delete_registrant']]))
+		$registrants = explode($this->delimiter1, $slot['registrant_data']);
+		$changed = false;
+		foreach($registrants as $key=>$registrant)
 		{
-			$old_data = $registrants[$this->request['delete_registrant']];
-			unset($registrants[$this->request['delete_registrant']]);
+			if(md5($registrant) == $this->request['delete_registrant'])
+			{
+				$old_data[] = $registrants[$key];
+				unset($registrants[$key]);
+				$changed = true;
+			}
+		}
+		
+		if($changed)
+		{
 			$values = array ( 'registrant_data' => implode($this->delimiter1, $registrants));
-	
-			$successful_update = reason_update_entity( $this->request['slot_id'], get_user_id('event_agent'), $values );
+			
+			$update_user = $this->user_is_admin();
+			if(empty($update_user))
+				$update_user = get_user_id('event_agent');
+			$successful_update = reason_update_entity( $this->request['slot_id'], $update_user, $values );
 			
 			if($successful_update)
 			{
@@ -358,10 +368,10 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 				exit;
 			}
 			else
-				{
-					$this->admin_messages .=  '<h4>Sorry</h4><p>Deletion unsuccesful. The Web Services group has been notified of this error - please try again later.</p>';
-					$this->send_delete_error_message($old_data);
-				}
+			{
+				$this->admin_messages .=  '<h4>Sorry</h4><p>Deletion unsuccesful. The Web Services group has been notified of this error - please try again later.</p>';
+				$this->send_delete_error_message( print_r($old_data, true) );
+			}
 		}
 		else
 			$this->admin_messages .=  '<h4>Sorry</h4><p>Could not find registrant to delete - most likely they were already deleted.</p>';
