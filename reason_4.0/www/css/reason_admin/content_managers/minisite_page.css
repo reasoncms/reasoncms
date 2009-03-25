@@ -1,0 +1,11 @@
+.inappropriate_url_warning {
+    background: #FFE684;
+    color: #2C1D19;
+}
+.incomplete_warning {
+    color: #444;
+}
+tr#urlfragmentRow span.parent_path, tr#urlfragmentRow span.trailing_slash {
+	font-size:0.9em;
+	color:#777;
+}
