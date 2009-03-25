@@ -190,10 +190,8 @@ class reasonFeedDisplay
 
             if($this->_display_timestamp)   
             {
-                $pubdate_sans_zone = $pub_date ; 
-                $pubdate_sans_zone = preg_replace('/\+.*/','', $pubdate_sans_zone);
-
-                if(isset($item['title'])){ $title = strip_tags($item['title']) . " @ " . strip_tags($pubdate_sans_zone); } else { $title = ''; }
+                $timestamp = date('g:i a, D, M d Y',strtotime($pub_date));
+                if(isset($item['title'])){ $title = strip_tags($item['title']) . " @ " . $timestamp; } else { $title = ''; }
             }
 
 
