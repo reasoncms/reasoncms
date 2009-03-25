@@ -47,7 +47,7 @@ define('MAGPIE_OUTPUT_ENCODING', 'UTF-8');
 //define('MAGPIE_INPUT_ENCODING', 'UTF-8');
 //define('MAGPIE_DETECT_ENCODING', false);
 
-define('MAGPIE_CACHE_ON', false);
+//define('MAGPIE_CACHE_ON', false);
 //define('MAGPIE_CACHE_DIR', '/tmp/magpie_cache');
 
 require_once(MAGPIERSS_INC . 'rss_fetch.inc');
@@ -65,12 +65,29 @@ class reasonFeedDisplay
 	var $_page_query_string_key = 'view_page';
 	var $_search_query_string_key = 'search';
 	var $_show_descriptions = true;
+    var $_display_timestamp = false ; 
 	
 	function set_location($location, $remote = true)
 	{
 		$this->_feed_location = $location;
 		$this->_feed_is_remote = $remote;
 	}
+
+    function set_cache_disable($disabled = false)
+    {
+        if($disabled == true)
+        {
+            define('MAGPIE_CACHE_ON', false);
+        }
+    }
+
+    function set_display_timestamp($show_timestamp = false)
+    {
+        if($show_timestamp == true)
+        {
+            $this->_display_timestamp = true ; 
+        }
+    }
 	
 	function set_search_string($search_string)
 	{
@@ -170,6 +187,16 @@ class reasonFeedDisplay
             if(isset($item['title'])){ $title = strip_tags($item['title']); } else { $title = ''; }
             if(isset($item['description'])){ $description = $item['description']; } else { $description = ''; }
             if(isset($item['link'])){ $href = strip_tags($item['link']); } else { $href = ''; }
+
+            if($this->_display_timestamp)   
+            {
+                $pubdate_sans_zone = $pub_date ; 
+                $pubdate_sans_zone = preg_replace('/\+.*/','', $pubdate_sans_zone);
+
+                if(isset($item['title'])){ $title = strip_tags($item['title']) . " @ " . strip_tags($pubdate_sans_zone); } else { $title = ''; }
+            }
+
+
  
             // limit to search term
             $search_match = 1 ; 

@@ -16,6 +16,8 @@
 			'num_per_page'=>0,
 			'desc_char_limit'=>0,
 			'show_descriptions'=>true,
+            'display_timestamp'=>false,
+            'disable_cache'=>false,
 		);
 		var $feed_location;
 		var $is_remote;
@@ -33,6 +35,16 @@
 				$this->feed_location = $this->params['feed_location'];
 				$this->is_remote = $this->params['is_remote'];
 			}
+
+            if(!empty($this->params['display_timestamp']))
+            {
+                $this->display_timestamp = $this->params['display_timestamp'];
+            }
+
+            if(!empty($this->params['disable_cache']))
+            {
+                $this->disable_cache = $this->params['disable_cache'] ;
+            }
 		}
 		function get_feed_relationship_url()
 		{

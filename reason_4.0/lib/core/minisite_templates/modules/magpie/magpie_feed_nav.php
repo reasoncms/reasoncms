@@ -12,6 +12,18 @@
         	
 			$rfd = new reasonFeedDisplay();
 			$rfd->set_location($this->feed_location, $this->is_remote);
+
+
+            if(isset($this->disable_cache))
+            {
+                $rfd->set_cache_disable($this->disable_cache);
+            }
+            
+            if(isset($this->display_timestamp))
+            {
+                $rfd->set_display_timestamp($this->display_timestamp);
+            }
+
 			$rfd->set_page_query_string_key('view_page');
 			$rfd->set_search_query_string_key('search');
 			if(!empty($this->request['view_page']))
