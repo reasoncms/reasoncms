@@ -106,17 +106,27 @@
 		{
 			if(is_array($value2))
 			{
-				$module_name = '<strong>'.$value2['module'].'</strong>';
+				$module_name = $value2['module'];
+				$is_a_module = true;
 			}
 			elseif(empty($value2))
 			{
 				$module_name = '[empty]';
+				$is_a_module = false;
 			}
 			else
 			{
-				$module_name = '<strong>'.$value2.'</strong>';
+				$module_name = $value2;
+				$is_a_module = true;
 			}
 			
+			if($is_a_module)
+			{
+				$xtra = '';
+				if(isset($GLOBALS['_reason_deprecated_page_types']) && in_array($module_name,$GLOBALS['_reason_deprecated_page_types']))
+					$xtra = ' (deprecated)';
+				$module_name = '<strong>'.$module_name.'</strong>'.$xtra;
+			}
 			echo '<li>'.prettify_string($key2).': '.str_replace('_',' ',$module_name).'</li>';
 			
 			if(is_array($value2))
