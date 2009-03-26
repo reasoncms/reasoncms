@@ -246,7 +246,7 @@
 		}
 		
 		/** 
-		 * 
+		 *
 		 */
 		function get_top_links_html()
 		{
@@ -299,7 +299,7 @@
 			return false;
 		}
 		
-		function should_show_login_logout_link()
+		function should_show_login_logout()
 		{
 			return true;
 		}

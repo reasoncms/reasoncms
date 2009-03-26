@@ -27,8 +27,9 @@ $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultF
  * 4. The model params will be set to refer to the module params
  * 5. The module object will be passed to a method called localize that does nothing by default
  *
- * Form models that extend the default should define two methods - these are:
+ * Form models that extend the default should define several methods - these are:
  *
+ * is_usable - should return whether or not the form is usable ... can trigger errors for developers
  * transform_form - transforms the view according to the particular model
  * validate_request - should set the internal form_id if get_requested_form_id() returns a form that is valid in the current environment
  *                    this method might also perform redirects if the request vars provided suggest a misconfiguration or access control problem
@@ -108,6 +109,26 @@ class DefaultFormModel extends AbstractFormModel
 	{
 		return false;
 	}
+
+	function should_save_form_data()
+	{
+		return false;
+	}
+	
+	function should_email_form_data_to_submitter()
+	{
+		return false;
+	}
+	
+	function should_email_form_data()
+	{
+		return false;
+	}
+	
+	function should_save_submitted_data_to_session()
+	{
+		return false;
+	}
 	
 	function set_site_id($site_id)
 	{
@@ -179,6 +200,12 @@ class DefaultFormModel extends AbstractFormModel
 		return $this->_params;
 	}
 
+	function &get_top_links()
+	{
+		$top_links = array();
+		return $top_links;
+	}
+	
 	/**
 	 * If the actual user has the privilege "pose_as_other_user" this method
 	 * will set the internal netid returned by get_user_netid to the spoofed
@@ -217,6 +244,21 @@ class DefaultFormModel extends AbstractFormModel
 		$this->_user_netid = $netid;
 	}
 
+	function get_redirect_url()
+	{
+		if (!isset($this->_redirect_url))
+		{
+			$form_id = ($this->get_form_id()) ? $this->get_form_id() : '';
+			$this->_redirect_url = carl_make_redirect(array('submission_key' => $this->create_form_submission_key(), 'form_id' => $form_id));
+		}
+		return $this->_redirect_url;
+	}
+	
+	function create_form_submission_key()
+	{
+		return uniqid();
+	}
+	
 	/**
 	 * Gets directory information for the current user_netid
 	 *
