@@ -1232,6 +1232,24 @@
         ),
 	);
 	
+	$GLOBALS['_reason_deprecated_page_types'] = array(
+				'news_via_categories',
+				'news2_mini_random',
+				'news_mini',
+				'news',
+				'news_all',
+				'news_one_at_a_time',
+				'news_proofing_multipage',
+				'news_rand',
+				'news_proofing',
+				'news_by_category',
+				'news_image_sidebar',
+				'news_parent',
+				'news_top',
+				'news2_mini',
+				'news2',
+	);
+	
 	if (reason_file_exists('minisite_templates/page_types_local.php'))
 	{
 		reason_include_once('minisite_templates/page_types_local.php');
