@@ -31,7 +31,7 @@ jQuery(function warp_page($) {
 			    'URL.)');
 			trail.text('');
 		} else {
-			path = $('#path_to_' + parent_id).text();
+			path = $('#path_to_' + parent_id + 'Element').val();
 			parent_path.text(path);
 			incomplete.text('');
 			trail.text('/');
