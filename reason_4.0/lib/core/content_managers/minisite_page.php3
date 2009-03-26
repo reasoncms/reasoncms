@@ -81,6 +81,34 @@
 			return $fragment;
 		}
 		
+		function _get_deprecated_modules()
+		{
+			if(isset($GLOBALS['_reason_deprecated_page_types']))
+				return $GLOBALS['_reason_deprecated_page_types'];
+			else
+				return array();
+		}
+		
+		function _page_type_has_one_of_modules($page_type, $modules)
+		{
+			foreach($page_type as $k=>$v)
+			{
+				if(is_array($v))
+				{
+					if(isset($v['module']) && in_array($v['module'], $modules))
+					{
+						return $v['module'];
+					}
+				}
+				else
+				{
+					if(in_array($v, $modules))
+						return $v;
+				}
+			}
+			return false;
+		}
+		
 		function alter_data() // {{{
 		{
 			parent::alter_data();
@@ -174,9 +202,13 @@
 				{
 					reason_require_once( 'minisite_templates/page_types.php' );
 					$options = array();
-					foreach( $GLOBALS['_reason_page_types'] AS $k => $asgneiosjk )
+					foreach( $GLOBALS['_reason_page_types'] AS $k => $page_type )
 					{
 						$options[ $k ] = prettify_string( $k );
+						if($dep = $this->_page_type_has_one_of_modules($page_type, $this->_get_deprecated_modules() ) )
+						{
+							$options[ $k ] .= ' (deprecated)';
+						}
 					}
 					$this->change_element_type( 'custom_page' , 'select' , array( 'options' => $options ) );
 					$this->set_comments( 'custom_page', form_comment('<a href="'.REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php">Page type definitions</a>.') );
