@@ -10,6 +10,77 @@
 		var $multiple_root_nodes_allowed = false;
 		var $root_node_description_text = '-- Home Page --';
 		var $parent_sort_order = 'sortable.sort_order ASC';
+		
+		function init_head_items()
+		{
+			parent::init_head_items();
+			if ($this->has_url()) {
+			    $this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.
+			        'content_managers/page_parent_url.js');
+			}
+			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.
+			        'content_managers/minisite_page.css');
+		}
+		
+		/**
+		 * Returns true if the page gets its own URL in the hierarchy of its
+		 * minisite, and false if otherwise.
+		 *
+		 * @author Eric Naeseth <enaeseth@gmail.com>
+		 */
+		function has_url()
+		{
+		    return !$this->get_value('is_link');
+		}
+		
+		/**
+		 * Converts the given array returned by {@link get_available_parents()}
+		 * into an array that maps entity ID's to paths.
+		 * 
+		 * @author Eric Naeseth <enaeseth@gmail.com>
+		 */
+		function build_path_map($available_parents)
+		{
+			$map = array();
+			$site = new Entity($this->get_value('site_id'));
+			$root = rtrim($site->get_value('base_url'), '/');
+			
+			$count = count($available_parents);
+			for ($i = 0; $i < $count; $i++) {
+				$map += $this->_build_path_map_fragment($root,
+					$available_parents[$i]);
+			}
+			
+			return $map;
+		}
+		
+		/**
+		 * @access private
+		 * @author Eric Naeseth <enaeseth@gmail.com>
+		 */
+		function _build_path_map_fragment($path, &$entry)
+		{
+			$fragment = array();
+			$entity =& $entry[0];
+			
+			if (!$entity)
+				return $fragment;
+			
+			if ($entity->get_value('url_fragment')) {
+				$path = implode('/',
+					array($path, $entity->get_value('url_fragment')));
+			}
+			
+			$fragment[$entity->id()] = $path.'/';
+			$child_count = count($entry[1]);
+			for ($i = 0; $i < $child_count; $i++) {
+				$fragment += $this->_build_path_map_fragment($path,
+					$entry[1][$i]);
+			}
+			
+			return $fragment;
+		}
+		
 		function alter_data() // {{{
 		{
 			parent::alter_data();
@@ -75,15 +146,20 @@
 				}
 			}
 			// if we have a subpage, show the url fragment field
-			elseif( !$this->get_value( 'is_link' ) )
+			elseif( $this->has_url() )
 			{
-				$this->set_display_name( 'url_fragment','Page URL Name' );
-				$this->set_comments( 'url_fragment', form_comment('The page URL. Do not use spaces or an .html extension (ie "syllabus", "faculty_links", NOT "guestbook.html").') );
+			    $this->set_element_properties( 'url_fragment', array('size' => 12) );
+				$this->set_display_name( 'url_fragment', 'Page URL' );
+				// Note that the contents of the url_comment_replace block are replaced by javascript to indicate
+				// a slight sematic difference in the behavior of the field when javascript is enabled.
+				// You may need to change the javascript to see any wording change here.
+				$this->set_comments( 'url_fragment', form_comment('<span class="url_comment_replace">The final part of the page\'s Web address.</span> <span class="rules">Only use letters and numbers; separate words with underscores (_). Please avoid upper-case letters.</span>') );
 				$this->add_required( 'url_fragment' );
 				$this->add_required( 'nav_display' );
+				$this->_add_page_url_elements($this->_available_parents);
 			}
 
-			if( !$this->get_value( 'is_link' ) )
+			if( $this->has_url() )
 			{
 				$this->set_display_name( 'custom_page','Type of Page' );
 				
@@ -141,9 +217,18 @@
 				$this->set_comments( 'name', form_comment('The title of link displayed in your site\'s navigation.') );
 				$this->set_comments( 'parent_id', form_comment('Use this field to choose the link\'s parent page.') );
 			}
-			$this->set_order(array('name', 'link_name', 'unique_name', 'author', 'description', 'keywords', 'url_fragment', 'extra_head_content', 'parent_id', 'nav_display', 'custom_page', 'content') );
+			$this->set_order(array('name', 'link_name', 'unique_name', 'author', 'description', 'keywords', 'parent_id', 'url_fragment', 'extra_head_content', 'nav_display', 'custom_page', 'content') );
 			
 		} // }}}
+		
+		function _add_page_url_elements($parents)
+		{
+			foreach($this->build_path_map($parents) as $id=>$path)
+			{
+				$this->add_element('path_to_'.$id, 'hidden');
+				$this->set_value('path_to_'.$id, $path);
+			}
+		}
 		function on_first_time() // {{{
 		{
 		} // }}}
@@ -212,7 +297,7 @@
 		}
 		function run_error_checks() // {{{
 		{
-			if( !$this->get_value( 'is_link' ) && !in_array( $this->get_value( 'id' ) , $this->root_node() ) )
+			if( $this->has_url() && !in_array( $this->get_value( 'id' ) , $this->root_node() ) )
 			{
 				if( !$this->has_error( 'url_fragment' ) )
 					if( !eregi( "^[0-9a-z_]*$" , $this->get_value('url_fragment') ) )
@@ -263,7 +348,7 @@
 			parent::pre_show_form();
 			
 			$roots = $this->root_node();
-			if( $this->is_new_entity() && !$this->get_value( 'is_link' ) && !empty($roots))
+			if( $this->is_new_entity() && $this->has_url() && !empty($roots))
 				echo '&raquo; <a href="'.$this->admin_page->make_link( array( 'is_link' => 1 ) ).'">Create an external link instead of a page.</a><br /><br />';
 		} // }}}
 		function finish() // {{{

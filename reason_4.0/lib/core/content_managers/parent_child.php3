@@ -18,7 +18,122 @@
 		var $existing_parent_id;
 		var $roots = array();
 		var $_children = array();
+		var $_available_parents = null;
 		var $parent_sort_order;
+		
+		/**
+		 * Retrieves a hierarchical list of all items that can be used as
+		 * parents for the item in question.
+		 * 
+		 * @return an array of "nodes"; each node is a two-element array, the
+		 *         first member of which is an item, and the second member is an
+		 *         array of nodes for that item's children
+		 * 
+		 * @author Eric Naeseth <enaeseth@gmail.com>
+		 */
+		function get_available_parents()
+		{
+			$list = array();
+			$multiple_roots_allowed = $this->multiple_root_nodes_allowed;
+			$current = $this->get_value('id');
+			$roots = $this->root_node();
+			
+			if ($this->parent_id_defaults_to_null) {
+			    // A "null parent" (i.e., no parent) is possible.
+				$list[] = array(null, array());
+			}
+			
+			if ($this->allow_creation_of_root_node) {
+				if ($multiple_roots_allowed || empty($roots)) {
+					$top = new Entity($current);
+					$top->set_value('name', $this->root_node_description_text);
+					$list[] = array($top, array());
+				}
+				
+				if ($multiple_roots_allowed || !in_array($current, $roots)) {
+				    // Build the tree by starting with the current root nodes
+				    // and recursively finding their children.
+				    
+					$queue = array();
+					    // `$queue` holds nodes whose children have not yet been
+					    // looked up
+					
+					foreach ($roots as $root) {
+						$item = $this->parent_option_items[$root];
+						if ($item->id() == $current)
+							continue;
+						
+						$list[] = array($item, array());
+						$queue[] =& $list[count($list) - 1];
+					}
+					
+					while (!empty($queue)) {
+						$next =& $queue[0];
+						if (!$next[0]) // the "null parent" possibility
+							continue;
+						$id = $next[0]->id();
+						
+						foreach ($this->children($id) as $child_id) {
+							if ($child_id == $current)
+								continue;
+							
+							$item = $this->parent_option_items[$child_id];
+							$next[1][] = array($item, array());
+							$queue[] =& $next[1][count($next[1]) - 1];
+						}
+						
+						array_shift($queue);
+					}
+				}
+			}
+			
+			return $list;
+		}
+		
+		/**
+		 * Converts the given array returned by {@link get_available_parents()}
+		 * into a flat array suitable for a "select_no_sort" Plasmature element.
+		 * 
+		 * @author Eric Naeseth <enaeseth@gmail.com>
+		 */
+		function build_select_list($available_parents)
+		{
+			$list = array();
+			
+			$count = count($available_parents);
+			for ($i = 0; $i < $count; $i++) {
+				$frag = $this->_build_select_fragment($available_parents[$i]);
+				foreach ($frag as $id => $name) {
+					$list[$id] = $name;
+				}
+			}
+			
+			return $list;
+		}
+		
+		/**
+		 * @access private
+		 * @author Eric Naeseth <enaeseth@gmail.com>
+		 */
+		function _build_select_fragment(&$entry, $depth=0) {
+			$fragment = array();
+			$entity =& $entry[0];
+			$text = ($entity) ? $entity->get_value('name') : '(none)';
+			$id = ($entity) ? $entity->id() : '';
+			$prefix = str_repeat('&mdash;', $depth);
+			
+			$fragment[$id] = $prefix.$text;
+			$child_count = count($entry[1]);
+			for ($i = 0; $i < $child_count; $i++) {
+				$sf = $this->_build_select_fragment($entry[1][$i], $depth + 1);
+				foreach ($sf as $id => $name) {
+					$fragment[$id] = $name;
+				}
+			}
+			
+			return $fragment;
+		}
+		
 		function alter_data() // {{{
 		{
 			$r_id = $this->get_parent_relationship();
@@ -52,31 +167,9 @@
 					}
 				}
 				
-				$list = array();
-				
-				if($this->parent_id_defaults_to_null)
-				{
-					$list[''] = '--';
-				}
-				if($this->allow_creation_of_root_node)
-				{
-					if(empty($roots) || $this->multiple_root_nodes_allowed)
-					{
-						$list[$this->get_value( 'id' )] = $this->root_node_description_text;
-					}
-				}
-				if( 
-					($this->allow_creation_of_root_node && $this->multiple_root_nodes_allowed) ||
-					(!in_array( $this->get_value( 'id' ) , $roots ))
-				 )
-				 {
-					foreach( $roots AS $root )
-					{
-						$list = $list + $this->recurse_children( $root, $this->get_value( 'id' ) );
-					}
-				}
-				
-				$list = $this->alter_tree_list( $list, $p_id );
+				$this->_available_parents = $this->get_available_parents();
+				$list = $this->build_select_list($this->_available_parents);
+				$list = $this->alter_tree_list($list, $p_id);
 				$this->add_element( 'parent_id' , 'select_no_sort' , array( 'options' => $list ) );
 				$this->set_value( 'parent_id', $p_id );
 				$this->set_display_name( 'parent_id' , 'Parent Page' );
@@ -136,13 +229,15 @@
 				$roots = $this->root_node();
 				foreach( $this->parent_option_items AS $item )
 				{
-					if(!isset($this->_children[$item->get_value( 'parent_id' )]))
+					$parent_id = $item->get_value('parent_id');
+					
+					if(!isset($this->_children[$parent_id]))
 					{
-						$this->_children[$item->get_value( 'parent_id' )] = array();
+						$this->_children[$parent_id] = array();
 					}
 					if(!in_array( $item->id() , $roots ) )
 					{
-						$this->_children[$item->get_value( 'parent_id' )][] = $item->id();
+						$this->_children[$parent_id][] = $item->id();
 					}
 				}
 			}
@@ -151,25 +246,6 @@
 				return $this->_children[$id];
 			}
 			return array();
-		} // }}}
-
-		
-		function recurse_children( $id , $current, $depth='') // {{{
-		{
-			//if ( $id > 0 ) { // Added 4/17/03 nate
-				$item = $this->parent_option_items[ $id ];
-				if( $id == $current )
-					return array();
-				$children_list = array( $id => $depth . $item->get_value( 'name' ) );
-
-				$children = $this->children( $id );
-				reset( $children );
-				foreach($children as $value)
-				{
-					$children_list = $children_list + $this->recurse_children( $value, $current, $depth . "--" );
-				}
-				return $children_list;
-			//}
 		} // }}}
 		function get_parent_relationship() // {{{
 		{
