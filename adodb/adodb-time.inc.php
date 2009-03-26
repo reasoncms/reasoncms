@@ -716,7 +716,7 @@ global $ADODB_DATETIME_CLASS;
 	} else {
 	if (isset($TZ)) return $TZ;
 	$y = date('Y');
-	$TZ = mktime(0,0,0,12,2,$y,0) - gmmktime(0,0,0,12,2,$y,0);
+	$TZ = mktime(0,0,0,12,2,$y) - gmmktime(0,0,0,12,2,$y);
 	}
 	
 	return $TZ;
@@ -1200,11 +1200,12 @@ function adodb_mktime($hr,$min,$sec,$mon=false,$day=false,$year=false,$is_dst=fa
 			return $is_gmt? @gmmktime($hr,$min,$sec): @mktime($hr,$min,$sec);
 		}
 		
+		
 		// for windows, we don't check 1970 because with timezone differences, 
 		// 1 Jan 1970 could generate negative timestamp, which is illegal
                 //CARLETON ADDITION:  since this function doesn't handle null dates in the same way as mktime(),
                 //we've added an additional check here so that mktime() handles the null dates
-                if (empty($intyear) || 1971 < $year && $year < 2038
+                if (!$year || (1971 < $year && $year < 2038)
 			|| !defined('ADODB_NO_NEGATIVE_TS') && (1901 < $year && $year < 2038)
 			) {
 				return $is_gmt ?
