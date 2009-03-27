@@ -312,7 +312,7 @@ class reasonFeedDisplay
    			$rss_string = utf8_encode(file_get_contents($this->_feed_location));
     		$rss = new MagpieRSS( $rss_string );
    		}
-		if(!empty($rss) && $rss && !$rss->ERROR)
+		if(!empty($rss) && $rss && !$rss->ERROR && $rss != false)
 		{
 			return $rss;
 		}
