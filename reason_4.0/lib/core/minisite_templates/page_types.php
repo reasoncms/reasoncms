@@ -726,6 +726,14 @@
 			'main_post' => 'gallery_vote',
 			'sidebar' => '',
 		),
+		'gallery_24_per_page' => array(
+			'main_post' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',//'meta.description ASC',
+				'number_per_page' => 24,
+			),
+			'sidebar' => '',
+		),
 		'GoModule' => array( 
 			'sub_nav_2' => '',
 			'banner_xtra' => '',
