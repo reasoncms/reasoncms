@@ -256,7 +256,7 @@ class DefaultFormModel extends AbstractFormModel
 	
 	function create_form_submission_key()
 	{
-		return uniqid();
+		return md5(uniqid(rand(), true));
 	}
 	
 	/**
