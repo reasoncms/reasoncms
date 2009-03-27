@@ -2804,6 +2804,7 @@
 				3 => 'png'
 			);
 			$cmd = IMAGEMAGICK_PATH . 'mogrify -geometry '.$this->max_width.'x'.$this->max_height.' -format '.$num_to_type[ $type ].' '.$image.' 2>&1';
+			clearstatcache();
 			echo exec( $cmd, $results, $return_var );
 		} // }}}
 		function need_to_resize( $image ) // {{{
