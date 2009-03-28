@@ -1,7 +1,19 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_navigation
+ */
+ 
+  /**
+  * Include the base class
+  */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'minisite_templates/nav_classes/default.php' );
 
+	/**
+	 * A nav class that does not show child pages in the nav if the page contains 
+	 * the children module
+	 */
 	class MinimalChildrenNavigation extends MinisiteNavigation
 	{
 		var $page_types = array();

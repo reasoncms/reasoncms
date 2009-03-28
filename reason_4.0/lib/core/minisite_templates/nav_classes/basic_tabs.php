@@ -2,8 +2,13 @@
 /**
  * Basic Tabs Minisite Navigation
  * @author matt ryan
+ * @package reason
+ * @subpackage minisite_navigation
  */
  
+ /**
+  * Include the base class
+  */
  /**
   * Include the default minisite navigation class
   */

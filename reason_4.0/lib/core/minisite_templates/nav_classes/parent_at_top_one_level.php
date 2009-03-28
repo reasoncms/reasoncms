@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_navigation
+ */
+ 
+ /**
+  * Include the parent class
+  */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'minisite_templates/nav_classes/link_at_top.php' );
 	

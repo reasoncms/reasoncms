@@ -2,6 +2,8 @@
 /**
  * Second Level Minisite Navigation
  * @author matt ryan
+ * @package reason
+ * @subpackage minisite_navigation
  */
  
  /**

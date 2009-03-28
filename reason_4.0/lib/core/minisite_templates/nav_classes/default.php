@@ -2,6 +2,7 @@
 /**
  * Default Minisite Navigation
  * @package reason
+ * @subpackage minisite_navigation
  */
  
  	/**

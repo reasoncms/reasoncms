@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_navigation
+ */
+ 
+ /**
+  * Include the base class and other neccessities
+  */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'minisite_templates/nav_classes/default.php' );
 	reason_include_once( 'function_libraries/url_utils.php' );
