@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+/**
+ * Include base class
+ */
 reason_include_once( 'minisite_templates/modules/publication/list_item_markup_generators/related_item.php' );
 
 /**

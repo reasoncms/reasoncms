@@ -1,13 +1,20 @@
 <?php
+/**
+ *  @package reason
+ *  @subpackage minisite_modules
+ */
+ 
+ /**
+  * Include the base class
+  */
 reason_include_once( 'minisite_templates/modules/publication/markup_generator.php' );
 
 
 /**
 *  Generates the markup to display a summary of an individual news item or blog post (as it would be displayed in a list).   
+*
 *  Helper class to the publication minisite module.  
 *
-*  @package reason
-*  @subpackage minisite_modules
 *  @author Meg Gibbs
 *
 */

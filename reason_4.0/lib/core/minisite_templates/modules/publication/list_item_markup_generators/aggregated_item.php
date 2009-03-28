@@ -1,5 +1,12 @@
 <?php
-//reason_include_once( 'minisite_templates/modules/publication/list_item_markup_generators/default.php' );
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+/**
+ * Include the base class
+ */
 reason_include_once( 'minisite_templates/modules/publication/markup_generator.php' );
 
 /**
@@ -8,7 +15,6 @@ reason_include_once( 'minisite_templates/modules/publication/markup_generator.ph
  * @author Nathan White
  *
  */
-
 class AggregatorListItemMarkupGenerator extends PublicationMarkupGenerator
 {
 	//variables needed to be passed from the publication module

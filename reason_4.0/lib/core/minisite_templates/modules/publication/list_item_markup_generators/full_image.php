@@ -1,13 +1,20 @@
 <?php
+/**
+ *  @package reason
+ *  @subpackage minisite_modules
+ */
+ 
+/**
+ * Include base class
+ */
 reason_include_once( 'minisite_templates/modules/publication/list_item_markup_generators/default.php' );
 
 
 /**
 *  Simple extension of the default list item markup generator to show full image instead of thumbnails for each item
+*
 *  The markup generator also does not display the permalink.
 *
-*  @package reason
-*  @subpackage minisite_modules
 *  @author Nathan White
 *
 */
