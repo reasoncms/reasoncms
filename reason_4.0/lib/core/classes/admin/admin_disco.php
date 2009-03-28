@@ -1,6 +1,20 @@
 <?php
+/**
+ * A bunch of various disco classes for use in the administrative interface
+ * @todo break these up into separate files and perhaps come up with a better organization
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include base disco class and admin actions, which most of these forms use
+  */
 	include_once( DISCO_INC . 'disco.php' );
 	reason_include_once( 'function_libraries/admin_actions.php' );
+	
+	/**
+	 * The admin form that confirms the deletion of an item
+	 */
 	class deleteDisco extends Disco // {{{
 	{
 		function set_page( &$page ) // {{{
@@ -94,6 +108,9 @@
 		} // }}}
 	} // }}}
 
+	/**
+	 * The admin form that handles associating entities
+	 */
 	class doAssociateDisco extends Disco // {{{
 	{
 		var $actions = array( 'yes' => 'Yes' , 'cancel' => 'No' );
@@ -252,6 +269,9 @@
 		} // }}}
 	} // }}}
 
+	/**
+	 * The admin form that handles disassociating entities from each other
+	 */
 	class doUnassociateDisco extends doAssociateDisco // {{{
 	{
 		function pre_show_form() // {{{
@@ -288,45 +308,4 @@
 			db_query( $q , 'Error removing existing relationship' );
 		} // }}}
 	} // }}}
-/*
-	class admin_do_associate_node extends admin_workflow_node // {{{
-	{
-		function admin_do_associate_node() // {{{
-		{
-		} // }}}		
-		function init( $graph ) // {{{
-		{
-			$this->disco_item = new doAssociateDisco;
-			$this->disco_item->set_page( $this->admin_page );
-			
-			$this->disco_item->grab_info( $graph );
-			$this->disco_item->init();
-			$this->admin_page->set_show( 'leftbar', false );
-		} // }}}
-		function run() // {{{
-		{
-			$this->disco_item->run();
-		} // }}}
-	} // }}}
-
-	class admin_do_unassociate_node extends admin_workflow_node // {{{
-	{
-		function admin_do_unassociate_node() // {{{
-		{
-		} // }}}		
-		function init( $graph ) // {{{
-		{
-			$this->disco_item = new doUnassociateDisco;
-			$this->disco_item->set_page( $this->admin_page );
-			
-			$this->disco_item->grab_info( $graph );
-			$this->disco_item->init();
-			$this->admin_page->set_show( 'leftbar', false );
-		} // }}}
-		function run() // {{{
-		{
-			$this->disco_item->run();
-		} // }}}
-	} // }}}
-*/
 ?>
