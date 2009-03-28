@@ -1,6 +1,21 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module
+  */
 	reason_include_once('classes/admin/modules/default.php');
-	reason_include_once( 'function_libraries/images.php' );
+	
+	/**
+	 * Administrative module that zaps a user's current session
+	 *
+	 * This may be less important now that we have session-based authentication
+	 * as logging out does essentially the same thing, but this can
+	 * be useful if there is some weird state and you want to clear it up.
+	 */
 	class KillSessionModule extends DefaultModule// {{{
 	{
 		function KillSessionModule( &$page ) // {{{

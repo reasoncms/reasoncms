@@ -1,5 +1,17 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module
+  */
 	reason_include_once('classes/admin/modules/default.php');
+	
+	/**
+	 * Administrative module that provides access to and reversion of entity history
+	 */
 	class ArchiveModule extends DefaultModule
 	{
 		var $content_transform = array(

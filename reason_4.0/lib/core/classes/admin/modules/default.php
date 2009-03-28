@@ -1,4 +1,19 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * The default administrative module
+  *
+  * This module defines the administrative module API, such as it is
+  * 
+  * Note that this module is *not* abstract -- it is actually also the
+  * module that provides messages to newly-logged-in users
+  *
+  * @todo make this class more abstract, and create a new messages module
+  */
 	class DefaultModule // {{{
 	{
 		var $page;

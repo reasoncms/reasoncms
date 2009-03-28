@@ -1,6 +1,17 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module
+  */
 	reason_include_once('classes/admin/modules/default.php');
-	reason_include_once( 'function_libraries/images.php' );
+	
+	/**
+	 * An administrative module that explains why a given item may not be deleted
+	 */
 	class NoDeleteModule extends DefaultModule // {{{
 	{
 		function NoDeleteModule( &$page ) // {{{

@@ -1,5 +1,17 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module
+  */
 	reason_include_once('classes/admin/modules/default.php');
+	
+	/**
+	 * The administrative module that handles the action of borrowing entities from other sites
+	 */
 	class DoBorrowModule extends DefaultModule // {{{
 	{
 		function DoBorrowModule( &$page ) // {{{

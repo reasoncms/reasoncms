@@ -1,5 +1,19 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module
+  */
 	reason_include_once('classes/admin/modules/default.php');
+	
+	/**
+	 * The administrative module that produces the UI for editing entities
+	 *
+	 * Note that this module is essentially a wrapper for content managers.
+	 */
 	class EditorModule extends DefaultModule // {{{
 	{
 		function EditorModule( &$page ) // {{{

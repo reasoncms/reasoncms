@@ -1,6 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module and other needed utilities
+  */
 	reason_include_once('classes/admin/modules/default.php');
 	reason_include_once('classes/admin/admin_disco.php');
+	
+	/**
+	 * The administrative module that handles the association of entities
+	 */
 	class DoAssociateModule extends DefaultModule // {{{
 	{
 		function DoAssociateModule( &$page) // {{{

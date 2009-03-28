@@ -1,6 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module and other needed utilities
+  */
 	reason_include_once('classes/admin/modules/default.php');
 	reason_include_once( 'classes/admin/modules/lister.php' );
+	
+	/**
+	 * An administrative module that provides an interface to associate Reason entities
+	 */
 	class AssociatorModule extends DefaultModule // {{{
 	{
 		var $viewer;

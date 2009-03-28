@@ -1,7 +1,19 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module and other needed utilities
+  */
 	reason_include_once('classes/admin/modules/default.php');
 	reason_include_once( 'classes/admin/modules/associator.php' );
 	reason_include_once( 'function_libraries/images.php' );
+	
+	/**
+	 * An administrative module that displays info about the currently logged-in user
+	 */
 	class UserInfoModule extends DefaultModule// {{{
 	{
 		function UserInfoModule( &$page ) // {{{

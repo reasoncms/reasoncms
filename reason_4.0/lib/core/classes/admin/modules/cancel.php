@@ -1,6 +1,23 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module and other needed utilities
+  * @todo look into whether the image library is actually needed
+  */
 	reason_include_once('classes/admin/modules/default.php');
 	reason_include_once( 'function_libraries/images.php' );
+	
+	/**
+	 * An administrative module that handles cancellation
+	 *
+	 * In the context of the administrative interface, "cancellation"
+	 * means backing out of entity creation with irrevocable expungement of
+	 * new, empty entity.
+	 */
 	class CancelModule extends DefaultModule // {{{
 	{
 		function CancelModule( &$page ) // {{{

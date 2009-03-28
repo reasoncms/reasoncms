@@ -1,5 +1,20 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module
+  */
 	reason_include_once('classes/admin/modules/default.php');
+	
+	/**
+	 * Provide basic information on any entity ID
+	 *
+	 * This module limits its access to users who have the privilege to view sensitive data,
+	 * as it can show some basic info about any entity.
+	 */
 	class EntityInfoModule extends DefaultModule// {{{
 	{
 		function EntityInfoModule( &$page ) // {{{

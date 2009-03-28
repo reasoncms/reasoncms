@@ -1,7 +1,21 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module and other needed utilities
+  */
 	reason_include_once('classes/admin/modules/default.php');
-	reason_include_once( 'function_libraries/images.php' );
+	//reason_include_once( 'function_libraries/images.php' );
 	
+	/**
+	 * The administrative module that greets users when they select a site
+	 *
+	 * This module lists recently edited entities, as well as basic info like
+	 * a notice if the site isn't live, adn the site's description if it has one.
+	 */
 	class SiteModule extends DefaultModule // {{{
 	{
 		function SiteModule( &$page ) // {{{

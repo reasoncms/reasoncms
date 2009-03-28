@@ -1,8 +1,19 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module and other needed utilities
+  */
 	reason_include_once('classes/admin/modules/default.php');
 	reason_include_once('classes/admin/admin_disco.php');
 	reason_include_once('classes/admin/modules/doAssociate.php');
 	
+	/**
+	 * The administrative module that handles the action of deleting a relationship between two entities
+	 */
 	class DoDisassociateModule extends DefaultModule // {{{
 	{
 		function DoDisassociateModule( &$page ) // {{{

@@ -1,7 +1,17 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the module this extends
+  */
 reason_include_once('classes/admin/modules/associator.php');
 
+/**
+ * An administrative module that provides an interface for making b-to-a relationships between entities
+ */
 class ReverseAssociatorModule extends AssociatorModule // {{{
 	{
 		var $viewer;

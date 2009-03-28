@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module and other needed utilities
+  */
 	reason_include_once('classes/admin/modules/default.php');
 	include_once( THOR_INC .'thor.php' );
 	include_once( THOR_INC .'thor_admin.php' );

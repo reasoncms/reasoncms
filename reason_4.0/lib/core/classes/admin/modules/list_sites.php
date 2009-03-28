@@ -1,13 +1,20 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module
+  */
 	reason_include_once('classes/admin/modules/default.php');
+	
 	/**
 	 * Site List Module
 	 * A module that lists live sites (as well as not live sites if it's run by an admin)
 	 * @author Ben Cochran
 	 * @date 2006-10-31
 	 */
-
-	reason_include_once( 'function_libraries/images.php' );
 	class ListSitesModule extends DefaultModule // {{{
 	{
 		var $live_sites_list = array();

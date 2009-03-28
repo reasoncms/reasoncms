@@ -1,5 +1,20 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module
+  */
 	reason_include_once('classes/admin/modules/default.php');
+	
+	/**
+	 * An administrative module that provides a sorting widget for entities with the sort_order column
+	 *
+	 * @todo get things working for those with js off
+	 * @todo figure out a drag-and-drop interface
+	 */
 	class sorter
 	{
 		var $admin_page;

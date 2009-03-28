@@ -1,9 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module
+  */
 	reason_include_once('classes/admin/modules/default.php');
-	reason_include_once( 'function_libraries/images.php' );
 
 	/**
-	 * Theme choosing module for backend
+	 * An administrative module that lists the users of the current site
+	 *
+	 * @todo add full names rather than just usernames
 	 */
 	class ViewUsersModule extends DefaultModule // {{{
 	{

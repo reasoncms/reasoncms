@@ -1,6 +1,19 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module
+  */
 	reason_include_once('classes/admin/modules/associator.php');
-	reason_include_once( 'function_libraries/images.php' );
+	
+	/**
+	 * An administrative module that provides an interface to borrow entities from another site
+	 *
+	 * You'd think this would be called BorrowModule, but you would be incorrect.
+	 */
 	class SharingModule extends AssociatorModule // {{{
 	{
 		function SharingModule( &$page ) // {{{

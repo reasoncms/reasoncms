@@ -1,6 +1,22 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module and other needed utilities
+  */
 	reason_include_once('classes/admin/modules/default.php');
 	reason_include_once( 'classes/admin/admin_disco.php' );
+	
+	/**
+	 * Administrative module that provides an interface to expunge entities
+	 *
+	 * Note that expungement is final -- it is genuine removal from the db.
+	 * Unless this is what you want, it is often better to delete the entity,
+	 * which is easier to recover from if you make a mistake.
+	 */
 	class ExpungeModule extends DefaultModule // {{{
 	{
 		var $expungable = false;

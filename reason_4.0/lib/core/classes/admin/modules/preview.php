@@ -1,6 +1,19 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module
+  */
 	reason_include_once('classes/admin/modules/default.php');
-	reason_include_once( 'function_libraries/images.php' );
+	
+	/**
+	 * An administrative module that produces a raw(ish) view of an entity's data
+	 *
+	 * This module is essentially a wrapper for content_previewers
+	 */
 	class PreviewModule extends DefaultModule // {{{
 	{
 		var $_ok_to_run;

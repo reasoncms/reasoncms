@@ -1,6 +1,17 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module
+  */
 	reason_include_once('classes/admin/modules/default.php');
-	reason_include_once( 'function_libraries/images.php' );
+	
+	/**
+	 * The administrative module that handles entity lists in the admin UI
+	 */
 	class ListerModule extends DefaultModule // {{{
 	{
 		var $viewer;

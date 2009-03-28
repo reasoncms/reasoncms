@@ -1,6 +1,22 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
+ /**
+  * Include the default module and other needed utilities
+  */
 	reason_include_once('classes/admin/modules/default.php');
 	reason_include_once( 'classes/admin/admin_disco.php' );
+	
+	/**
+	 * The administrative module that provides confirmation & handling of entity deletion
+	 *
+	 * Note that deletion in this context means setting the state of the entity
+	 * to "deleted," akin to putting an item in the trash. Total removal from
+	 * the db is called "expungement."
+	 */
 	class DeleteModule extends DefaultModule // {{{
 	{
 		var $deletable = false;
