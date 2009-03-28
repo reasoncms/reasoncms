@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package reason
+ * @subpackage admin
+ */
+ 
 /*
  * Rules for inclusion of admin modules
  *
@@ -26,7 +31,6 @@
  * available simply by altering the cur_module request element to match the key you used in 
  * this array.
  *
- * @package reason
  */
  	$GLOBALS['_reason_admin_modules'] = array(
 		'Default'=>array('file'=>'default.php','class'=>'DefaultModule'),
