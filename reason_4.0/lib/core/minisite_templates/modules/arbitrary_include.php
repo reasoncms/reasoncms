@@ -1,14 +1,25 @@
 <?php
 	/*
-	 *    Arbitrary Include Module
+ 	 * @package reason
+ 	 * @subpackage minisite_modules
+	*/
+	
+	 /**
+ 	  * Include base class
+  	  */
+	reason_include_once( 'minisite_templates/modules/default.php' );
+	
+	/**
+	 * Register the class so the template can instantiate it
+	 */
+	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ArbitraryInclude';
+	
+	/**
+	 * Arbitrary Include Module
 	 *
 	 * This module includes arbitrary code from any location; use as a last resort when you don't have any other way
 	 * to get (usually legacy) code running in the Reason environment. 
-	*/
-	reason_include_once( 'minisite_templates/modules/default.php' );
-	
-	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ArbitraryInclude';
-	
+	 */
 	class ArbitraryInclude extends DefaultMinisiteModule
 	{
 		var $form;
