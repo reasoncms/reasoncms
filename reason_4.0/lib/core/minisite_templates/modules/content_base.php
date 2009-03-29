@@ -1,9 +1,19 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
 
+	/**
+	 * Include base class & register module with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ContentModule';
-
+	
+	/**
+	 * A minisite module that displays the value of the content field of the current page
+	 */
 	class ContentModule extends DefaultMinisiteModule
 	{
 		var $content;
