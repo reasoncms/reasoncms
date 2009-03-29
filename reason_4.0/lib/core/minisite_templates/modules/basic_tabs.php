@@ -1,10 +1,18 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include the base class & register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'basicTabsModule';
 
-
+	/**
+	 * Minisite module that builds a tabset among a page and its children
+	 */
 	class basicTabsModule extends DefaultMinisiteModule
 	{
 		var $acceptable_params = array(
