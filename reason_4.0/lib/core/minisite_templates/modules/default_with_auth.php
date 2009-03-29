@@ -1,5 +1,12 @@
 <?php
-
+	/**
+	 * @package reason
+	 * @subpackage minisite_modules
+	 */
+	
+	/**
+	 * Include the base module and register this module with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'DefaultMinisiteWithAuthModule';
