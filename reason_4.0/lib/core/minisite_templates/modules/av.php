@@ -1,10 +1,24 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+ /**
+  * Include base class & other dependencies
+  */
 	reason_include_once( 'minisite_templates/modules/generic3.php' );
 	reason_include_once( 'classes/av_display.php' );
 	reason_include_once( 'function_libraries/url_utils.php' );
-
+	
+	/**
+	 * Register the class so the template can instantiate it
+	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'AvModule';
-
+	
+	/**
+	 * A minisite module to display media works & media files
+	 */
 	class AvModule extends Generic3Module
 	{
 		var $type_unique_name = 'av';
