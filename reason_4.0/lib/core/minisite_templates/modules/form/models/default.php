@@ -1,7 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+/**
+ * Include base class & other dependencies
+ */
 reason_include_once( 'minisite_templates/modules/form/models/abstract.php' );
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 
+/**
+ * Register model with Reason
+ */
 $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultFormModel';
 
 /**

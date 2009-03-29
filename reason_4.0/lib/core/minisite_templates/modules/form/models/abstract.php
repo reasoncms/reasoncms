@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+/**
+ * Register model with Reason
+ */
 $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'AbstractFormModel';
 
 /**

@@ -1,5 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
 
+	/**
+	 * Include base class & register controller with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/form/controllers/abstract.php' );
 	$GLOBALS[ '_form_controller_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultFormController';
 

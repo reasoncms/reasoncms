@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+	/**
+	 * Register controller with Reason
+	 */
 	$GLOBALS[ '_form_controller_class_names' ][ basename( __FILE__, '.php') ] = 'AbstractFormController';
 
 	/**
