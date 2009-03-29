@@ -1,19 +1,29 @@
 <?php
-	/*
-	 *    Dave Hendler
-	 *    2004 Nov 16
-	 *
-	 *    Generic Disco Module
-	 *
-	 *    This is the first generic module to be built.  It requires two parameters to work at all: a form_name and a
-	 *    form_include which are the class name of the Disco form to use and the include path of that form,
-	 *    respectively.  Automatically taken care of is making sure the include file exists as well as instantiation and
-	 *    running of the form itself.
+	/**
+	 * @package reason
+	 * @subpackage minisite_modules
+	 */
+	
+	/**
+	 * Include the base module and register this module with Reason
 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'DiscoModule';
 	
+	/**
+	 *    Generic Disco Module
+	 * 
+	 *    2004 Nov 16
+	 *
+	 *    This is the first generic module to be built.  It requires two parameters to work at all: a form_name and a
+	 *    form_include which are the class name of the Disco form to use and the include path of that form,
+	 *    respectively.  Automatically taken care of is making sure the include file exists as well as instantiation and
+	 *    running of the form itself.
+	 *
+	 * @author Dave Hendler
+	 *
+	 */
 	class DiscoModule extends DefaultMinisiteModule
 	{
 		var $form;
