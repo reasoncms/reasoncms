@@ -1,10 +1,23 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+ /**
+  * Include base class & other dependencies
+  */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	reason_include_once( 'function_libraries/asset_functions.php' );
 
+	/**
+	 * Register the class so the template can instantiate it
+	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'AssetsModule';
 	
+	/**
+	 * A minisite module to display assets (files) attached to the current page
+	 */
 	class AssetsModule extends DefaultMinisiteModule
 	{
 		var $es;
