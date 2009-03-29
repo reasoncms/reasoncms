@@ -1,9 +1,22 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include the base class & register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'BlurbModule';
 	
+	/**
+	 * A minisite module that displays text blurbs.
+	 *
+	 * By default, this module displays blurbs attached to the page by relationship order.
+	 *
+	 * Via parameters, you can make the module display a set number, randomize, and more.
+	 */
 	class BlurbModule extends DefaultMinisiteModule
 	{
 		var $acceptable_params = array(
