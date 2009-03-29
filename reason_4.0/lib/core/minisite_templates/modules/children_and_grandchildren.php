@@ -1,9 +1,22 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
 
+/**
+ * Include base class & register module with Reason
+ */
 reason_include_once( 'minisite_templates/modules/children.php' );
 
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ChildrenAndGrandchildrenModule';
 
+/**
+ * A minisite module that shows a tree of children, grandchildren, etc. of the
+ * current page.
+ *
+ * Use the parameter max_depth to control how deeply the module shows progeny
+ */
 class ChildrenAndGrandchildrenModule extends ChildrenModule 
 {
 	var $acceptable_params = array(
