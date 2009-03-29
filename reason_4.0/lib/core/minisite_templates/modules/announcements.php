@@ -1,7 +1,15 @@
 <?php
 	/**
 	 * Announcements
+	 *
 	 * Provides a way to add a prominent announcement to an entire site via the Master Admin
+	 *
+	 * @package reason
+	 * @subpackage minisite_modules
+	 */
+	 
+	/**
+	 * Include the base module & register with Reason
 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'AnnouncementsModule';
