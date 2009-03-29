@@ -1,8 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include the base class & register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'blogDescriptionModule';
 	
+	/**
+	 * Minisite module that displays the description of the blog attached to the page
+	 */
 	class blogDescriptionModule extends DefaultMinisiteModule
 	{
 		var $blog;
