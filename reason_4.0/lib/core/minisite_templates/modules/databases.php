@@ -1,7 +1,23 @@
 <?php
+	/**
+	 * @package reason
+	 * @subpackage minisite_modules
+	 */
+	
+	/**
+	 * Include the base class & register the module with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/generic3.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'DatabasesModule';
 
+/**
+ * A minisite template that lists reason entities that represent databases
+ *
+ * Note that these are "databases" in the library science sense -- really it lists websites
+ * that are presumed to be interfaces to databases of scholarly research
+ *
+ * This module might be flexible enough to serve as a directory of websites/online resources.
+ */
 class DatabasesModule extends Generic3Module
 {
 	var $style_string = 'databases';
