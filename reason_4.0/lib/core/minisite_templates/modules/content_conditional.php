@@ -1,5 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
 
+	/**
+	 * Include base class & register module with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/content_base.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ContentConditionalModule';
