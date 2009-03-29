@@ -1,11 +1,22 @@
 <?php
-	/* atoz.php: list sites alphabetically by keywords */
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+	
+ /**
+  * Include base class
+  */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
+	/**
+	 * Register the class so the template can instantiate it
+	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'atozModule';
 
-
+	/**
+	 * A minisite module that lists live sites alphabetically by keywords
+	 */
 	class atozModule extends DefaultMinisiteModule
 	{
 		var $sites = array();
