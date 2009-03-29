@@ -1,8 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include the base class & register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/page_title.php' );
 	
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'blogTitleModule';
 	
+	/**
+	 * A minisite module that displays the title of the blog attached to the page
+	 */
 	class blogTitleModule extends PageTitleModule
 	{
 		var $blog;
