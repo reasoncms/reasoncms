@@ -1,11 +1,24 @@
 <?php
 
-	/* children.php: this is a module whose output is all the child pages of the current page, in sort order */
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+	/**
+	 * Include base class & register module with Reason
+	 */
 
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ChildrenModule';
 	
+	
+	/**
+	 * A minisite module whose output is all the child pages of the current page, in sort order
+	 *
+	 * Various parameters are available for variant behavior.
+	 */
 	class ChildrenModule extends DefaultMinisiteModule 
 	{
 		var $es;
