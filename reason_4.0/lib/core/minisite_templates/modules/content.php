@@ -1,11 +1,23 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
 
+	/**
+	 * Include base class, include dependencies, & register module with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/content_base.php' );
 	include_once( DISCO_INC . 'disco.php' );
 	reason_include_once( 'function_libraries/admin_actions.php' );
 	
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EditableContentModule';
 	
+	/**
+	 * A minisite template that enables editing of the current page's content
+	 *
+	 * @todo enable a session-based toggle to show/hide the editable box
+	 */
 	class EditableContentModule extends ContentModule
 	{
 		var $username;
