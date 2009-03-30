@@ -1,8 +1,20 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+	/**
+	 * Include base class & register module with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/child_sites.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ChildSitesTopPagesModule';
 
+	/**
+	 * A minisite module that lists child sites of the current site, plus 
+	 * the top pages in their page hierarchies
+	 */
 	class ChildSitesTopPagesModule extends ChildSitesModule
 	{
 		function show_site( $site )
