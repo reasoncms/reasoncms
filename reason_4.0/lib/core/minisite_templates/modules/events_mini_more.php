@@ -15,6 +15,6 @@
  */
 class moreMiniEventsModule extends miniEventsModule
 {
-	var $ideal_count = 5;
+	var $ideal_count = 9;
 }
 ?>
