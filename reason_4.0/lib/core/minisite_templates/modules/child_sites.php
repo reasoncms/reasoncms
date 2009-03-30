@@ -1,8 +1,21 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+	/**
+	 * Include base class & register module with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ChildSitesModule';
 
+	/**
+	 * A minisite module that lists child sites of the current site
+	 *
+	 * If the current site is live, the module only lists live child sites.
+	 */
 	class ChildSitesModule extends DefaultMinisiteModule
 	{
 		var $child_sites = array();
