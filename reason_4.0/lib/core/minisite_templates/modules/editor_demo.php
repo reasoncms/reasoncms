@@ -1,10 +1,19 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
 
+	/**
+	 * Include the base class and register the module with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'editorDemoModule';
 
-
+	/**
+	 * A minisite module that provides a demonstration version of whatever editor is assigned to the site
+	 */
 	class editorDemoModule extends DefaultMinisiteModule
 	{
 		var $acceptable_params = array('demo' => array('function'=>'turn_into_string'));
