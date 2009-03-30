@@ -1,9 +1,19 @@
-<?php 
+<?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+	/**
+	 * Include the base class, include dependencies, and register the module with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/events.php' );
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventRegistrationModule';
 
-
+/**
+ * A minisite module that displays a site calendar and offer basic event registration capability to logged-in users
+ */
 class EventRegistrationModule extends EventsModule
 {
 	
