@@ -1,11 +1,20 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
 
-// FAQ Module; extends the Generic 2 Module -- July 2004 MR
-// now extends generic3
-
+	/**
+	 * Register the module with Reason and include the parent class
+	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'FAQModule';
 	reason_include_once( 'minisite_templates/modules/generic3.php' );
 
+	/**
+	 * A minisite module that lists FAQs
+	 *
+	 * By default, shows all FAQs on the current site
+	 */
 	class FAQModule extends Generic3Module
 	{
 		var $type_unique_name = 'faq_type';
