@@ -1,8 +1,18 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+	/**
+	 * Include parent class & dependencies
+	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	reason_include_once( 'function_libraries/url_utils.php' );
 
+	/**
+	 * Register module with Reason
+	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'FormMinisiteModule';
 
 	/**
