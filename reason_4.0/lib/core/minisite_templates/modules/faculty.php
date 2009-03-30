@@ -1,18 +1,40 @@
 <?php
-
-	// Split into functions and cleaned up for easier extension 2/2004 MR
-	// This class needs intensive documentation.
-	
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+	/**
+	 * Register module with Reason and include dependencies
+	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'FacultyStaffModule';
 
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 	
+	/**
+	 * usort function for sorting a set of directory results by last name
+	 *
+	 * Note: uses strcomp(), so it may not return a good alpha sort for non-ascii chars
+	 *
+	 * @param array $a an array with a ds_lastname key holding an array value with a string at position 0
+	 * @param array $b an array with a ds_lastname key holding an array value with a string at position 0
+	 */
 	function dir_result_last_name_sort( $a, $b )
 	{
 		return strcmp( $a['ds_lastname'][0], $b['ds_lastname'][0] );
 	}
 	
+	/**
+	 * A minisite module that lists a set of people
+	 *
+	 * By default, lists individuals who have faculty/staff entities in the current site
+	 *
+	 * Can be extended to list people automatically via the directory service; overload the
+	 * build_dept_filter() method to map a site field to an LDAP-style filter.
+	 *
+	 * @todo This class needs intensive documentation.
+	 */
 	class FacultyStaffModule extends DefaultMinisiteModule
 	{
 		var $directory_people = array();
