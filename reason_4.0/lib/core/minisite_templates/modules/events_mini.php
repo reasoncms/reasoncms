@@ -1,7 +1,18 @@
-<?php 
+<?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+ /**
+  * include the base class and register the module with Reason
+  */
 	reason_include_once( 'minisite_templates/modules/events.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'miniEventsModule';
 
+/**
+ * A minisite module that creates a minimal "sidebar" style event listing, linking to the main events page on the site
+ */
 class miniEventsModule extends EventsModule
 {
 	var $ideal_count = 7;
