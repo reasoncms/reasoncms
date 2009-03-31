@@ -1,8 +1,24 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+ 	/**
+ 	 * Include parent class & register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'GalleryModule';
 	
+	/**
+	 * A module that displays images attached to the page in a grid-style gallery
+	 *
+	 * This module is deprecated; use gallery2 instead.
+	 *
+	 * @deprecated
+	 * @todo Move out of the core
+	 */
 	class GalleryModule extends DefaultMinisiteModule
 	{
 		var $rows = 4;
