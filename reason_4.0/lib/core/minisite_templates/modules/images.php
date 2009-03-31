@@ -1,7 +1,17 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/generic3.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'imageModule';
 
+/**
+ * A minisite module that displays the normal-sized images attached to the current page
+ */
 class imageModule extends Generic3Module
 {
 	var $type_unique_name = 'image';
