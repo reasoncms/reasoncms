@@ -1,8 +1,22 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ImageSidebarModule';
 	
+	/**
+	 * A minisite module that displays image thumbnails
+	 *
+	 * Thumbnails have a link to a popup window that displays the full-sized image
+	 *
+	 * @todo Use lightbox-like display method instead of popup; make sure that individual photos still have uniquely linkable URLs
+	 */
 	class ImageSidebarModule extends DefaultMinisiteModule
 	{
 		var $es;
