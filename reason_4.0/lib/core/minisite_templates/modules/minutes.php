@@ -1,7 +1,23 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_templates
+ */
+	
+	/**
+	 * Include parent class; register module with Reason
+	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'MinutesModule';
 	reason_include_once( 'minisite_templates/modules/generic3.php' );
 
+	/**
+	 * A minisite module that displays minute entities on the current site
+	 *
+	 * Note: this module currently assumes that dividing line between sets of minutes should be
+	 * Spet. 1 (a common northern hemisphere academic year start date)
+	 *
+	 * @todo generalize so that the dividing line can be placed anywhere on the calendar (like Jan. 1, for example)
+	 */
 	class MinutesModule extends Generic3Module
 	{
 		var $prev_month;
