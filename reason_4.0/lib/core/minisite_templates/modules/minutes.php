@@ -13,8 +13,8 @@
 	/**
 	 * A minisite module that displays minute entities on the current site
 	 *
-	 * Note: this module currently assumes that dividing line between sets of minutes should be
-	 * Spet. 1 (a common northern hemisphere academic year start date)
+	 * Note: this module currently assumes that the dividing line between sets of minutes should be
+	 * Sept. 1 (a common northern hemisphere academic year start date)
 	 *
 	 * @todo generalize so that the dividing line can be placed anywhere on the calendar (like Jan. 1, for example)
 	 */
