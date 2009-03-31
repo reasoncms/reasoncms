@@ -1,18 +1,21 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+/**
+ * Include parent class and dependencies, and register module with Reason
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'function_libraries/user_functions.php' );
 
-/**
- * EditLink Module
- *
- * @package reason
- * @subpackage minisite_modules
- */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EditLinkModule';
 	
-	/*
-	 * Create page editing links for site users with editing access and login/logout link.
+	/**
+	 * A module that displays a login/logout button and an "edit this page" link for 
+	 * logged-in site maintainers
 	 */
 	class EditLinkModule extends DefaultMinisiteModule
 	{
