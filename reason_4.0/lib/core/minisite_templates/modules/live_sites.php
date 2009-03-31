@@ -1,10 +1,18 @@
 <?php 
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LiveSitesModule';
 
-
+	/**
+	 * A minisite module that lists all the live sites hosted by this Reason instance
+	 */
 	class LiveSitesModule extends DefaultMinisiteModule
 	{
 		
