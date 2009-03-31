@@ -1,9 +1,19 @@
 <?php
-	/* This lists out just a few news items and links to the appropriate page.  It's useful in sidebars and the like. --MR, 9/8/03 */
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+	
+	/**
+	 * Register module with Reason and include dependencies
+	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'MiniNewsMinisiteModule';
 	reason_include_once( 'minisite_templates/modules/news.php' );
 
+	/**
+	 * MiniNewsMinisiteModule delegates querying and listing of news items to this if there is no issue
+	 * @deprecated
+	 */
 	class mini_no_issue_news_viewer extends no_issue_news_viewer
 	{
 		function show_item( $item ) // {{{
@@ -27,6 +37,11 @@
 			//$this->num_pages = ceil( $this->num / $this->num_per_page );
 		} // }}}
 	}
+	
+	/**
+	 * MiniNewsMinisiteModule delegates querying and listing of news items to this if there is an issue
+	 * @deprecated
+	 */
 	class mini_news_viewer extends issue_news_viewer
 	{
 		function show_item( $item ) // {{{
@@ -74,7 +89,15 @@
 			$this->show_all_items();
 		} // }}}
 	}
-
+	
+	/**
+	 * A minisite module that lists out just a few news items and links to the appropriate page. It's useful in sidebars and the like.
+	 *
+	 * Note: this module is deprecated. Use the publications framework instead -- pass the is_related parameter the publications 
+	 * module and attach a publication to the page via page_to_related_publication.
+	 *
+	 * @deprecated
+	 */
 	class MiniNewsMinisiteModule extends NewsMinisiteModule
 	{
 		var $num_per_page = 4;
