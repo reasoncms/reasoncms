@@ -3,7 +3,10 @@
  * @package reason
  * @subpackage minisite_modules
  */
-
+ 
+/**
+ * Include parent class & register module with Reason
+ */
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'Gallery2Module';
 reason_include_once( 'minisite_templates/modules/generic3.php' );
 
@@ -12,7 +15,9 @@ reason_include_once( 'minisite_templates/modules/generic3.php' );
  * and includes next and previous links on image page.
  *
  * @author Ben Cochran
- **/
+ * @todo build in js-based slideshow
+ * @todo figure out how randomness can be handled
+ */
 class Gallery2Module extends Generic3Module
 {
 	/**
