@@ -1,14 +1,27 @@
 <?php
-
-	/* Major change -- only checks directory service if info cached on the site is old.
-	By mryan, Jan. 28 2004  */
+/**
+ * @package reason
+ * @subpackage minisite_templates
+ */
 	
+	/**
+	 * Include parent class & dependencies; register module with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	reason_include_once( 'minisite_templates/nav_classes/default.php' );
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'MaintainedModule';
-
+	
+	/**
+	 * A minisite module that displays information about who maintains the site & when the page was last updated
+	 *
+	 * Note that this module uses the Reason site entity to cache the contact information of the primary maintainer.
+	 * It does this to avoid potentially expensive directory service lookups on each page hit.
+	 *
+	 * This cache is renewed each day at 7:00 am, so if the underlying directory information changes during the day,
+	 * it won't show up until 7:00 am the next morning.
+	 */
 	class MaintainedModule extends DefaultMinisiteModule
 	{
 		var $last_mod_date_format = 'j F Y';
