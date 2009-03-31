@@ -1,7 +1,19 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_templates
+ */
+	
+	/**
+	 * Include parent class; register module with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/image_sidebar.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'newsImageSidebarModule';
 
+/**
+ * A minisite module that displays images associated with the news item requested in story_id
+ * @deprecated
+ */
 class newsImageSidebarModule extends ImageSidebarModule
 {
 	var $cleanup_rules = array('story_id' => array ('function' => 'turn_into_int'));
