@@ -1,10 +1,19 @@
 <?php
 /**
  * @package reason
+ * @subpackage minisite_modules
  */
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'JobsModule';
 
+/**
+ * A minisite module that lists job entities on the current site
+ *
+ * @todo redo, based on generic3/4
+ */
 class JobsModule extends DefaultMinisiteModule
 {
 	var $job_type;
