@@ -1,8 +1,20 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/image_sidebar.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ImageSlideshowModule';
 	
+	/**
+	 * A minisite module that displays a js-based slideshow of images attached to the page
+	 *
+	 * @todo  improve significantly and/or merge with gallery2
+	 */
 	class ImageSlideshowModule extends ImageSidebarModule
 	{
 		function handle_params( $params )
