@@ -1,9 +1,12 @@
 <?php
-
 /**
- * Contains the 3.0 version of the generic module
+ * @package reason
+ * @subpackage minisite_modules
  */
-
+ 
+	/**
+	 * Include parent class & register module with Reason
+	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'Generic3Module';
 	reason_include_once('minisite_templates/modules/default.php' );
 	reason_include_once('function_libraries/url_utils.php');
@@ -18,6 +21,7 @@
 	 * so modules based on those can be upgraded to generic3 with no modification
 	 *
 	 * @author Matt Ryan
+	 * @todo Work up a next-generation MVC-style generic module that can truly deserve the title
 	 */
 	class Generic3Module extends DefaultMinisiteModule
 	{
@@ -530,7 +534,7 @@
 			}
 		}
 		
-		//Called on by further_checks_on_entity
+		//Called on by check_id
 		function further_checks_on_entity( $entity )
 		{
 			// This exists to allow modules to do checks that are specific to the type or the appplication.  To use this function, overload it. It should return true if the entity looks OK to be shown and false if it does not.
