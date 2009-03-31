@@ -1,8 +1,8 @@
 <?php
-	/*
+	/**
  	 * @package reason
  	 * @subpackage minisite_modules
-	*/
+	 */
 	
 	 /**
  	  * Include base class
