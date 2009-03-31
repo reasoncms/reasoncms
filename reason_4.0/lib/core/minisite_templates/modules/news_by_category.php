@@ -1,7 +1,22 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_templates
+ */
+	
+	/**
+	 * Include parent class; register module with Reason
+	 */
 	reason_include_once( 'minisite_templates/modules/news2.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'newsByCategoryModule';
 
+/**
+ * A minisite module that displays the news items that are a)on the current site, and b) attached to the same categories as the page is
+ *
+ * Note: this module is deprecated. Use the publications framework instead, setting the limit_by_page_categories parameter to true in the page type.
+ *
+ * @deprecated
+ */
 class newsByCategoryModule extends News2Module
 {
 	var $style_string = 'newsByCategory';
