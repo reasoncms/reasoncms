@@ -7,6 +7,7 @@
  * due to url snippet renaming; from one site to another.
  *
  * @package reason
+ * @subpackage scripts
  */
 
 $reason_session = false;
