@@ -1,11 +1,18 @@
 <?php
-	// get the name of the file, without all the path information
-	// and without the .php suffix and set the name of the class
-	// to that index of this global array
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+	/**
+	 * Register module with Reason and include dependencies
+	 */
 	reason_include_once( 'minisite_templates/modules/policy_related.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'AllRelatedPolicyModule';
 
+	/**
+	 * A minisite module that displays the full tree of policies attached to the current page
+	 */
 	class AllRelatedPolicyModule extends RelatedPolicyModule
 	{
 		function init( $args = array() ) // {{{
