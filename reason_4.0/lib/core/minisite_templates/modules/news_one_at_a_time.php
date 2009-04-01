@@ -1,7 +1,22 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/news2.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'newsOneAtATimeModule';
 
+/**
+ * A minisite module that lists news items singly (i.e. with only one per page)
+ *
+ * Note: this module is deprecated. Use the publications framework instead, with the parameter
+ * num_per_page set to 1.
+ *
+ * @deprecated
+ */
 class newsOneAtATimeModule extends News2Module
 {
 	var $num_per_page = 1;
