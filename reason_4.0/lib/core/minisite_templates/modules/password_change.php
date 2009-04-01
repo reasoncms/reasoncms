@@ -1,10 +1,27 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+/**
+ * Register module with Reason and include dependencies
+ */
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'function_libraries/user_functions.php' );
 include_once (DISCO_INC . 'disco.php');
 	
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'PasswordChangeModule';
 
+/**
+ * A minisite module that provides an interface for users to change their Reason account password
+ *
+ * Note that this module is only for accounts that are not bound to another identity store, and
+ * which rely on the other identity store for authentication.
+ *
+ * In other words, only users who have been set up with a password in the Reason database --
+ * and use that password when logging in to Reason -- can change their password using this module.
+ */
 class PasswordChangeModule extends DefaultMinisiteModule
 {
 	var $user;
