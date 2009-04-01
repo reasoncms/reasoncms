@@ -1,11 +1,21 @@
 <?php 
-
-	/* siblings.php: display all the pages that have the same parent as the current page */
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+ 	/**
+ 	 * Include the parent class and register the module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/generic3.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ProjectModule';
 
+	/**
+	 * A minisite module that displays the project entities on the current site
+	 *
+	 * Not sure if this module is sufficiently generalized.
+	 */
 	class ProjectModule extends Generic3Module
 	{
 		var $style_string = 'projects';
