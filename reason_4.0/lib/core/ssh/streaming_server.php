@@ -1,8 +1,13 @@
 <?php
-/* Streaming Server Media Management Object
+/**
+ * @package reason
+ * @subpackage ssh
+ */
+ 
+/**
+ * Streaming Server Media Management Object
  * 
  * @author Matthew Bockol
- * @package None
  * @version .002
  * @date 01.31.2006
  *

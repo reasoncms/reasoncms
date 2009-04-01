@@ -1,9 +1,13 @@
-
 <?php
-/* SSH access Object
+/**
+ * @package reason
+ * @subpackage ssh
+ */
+ 
+/**
+ * SSH access Object
  *
  * @author Matthew Bockol
- * @package None
  * @version .003
  * @date 01.31.2006
  * 
