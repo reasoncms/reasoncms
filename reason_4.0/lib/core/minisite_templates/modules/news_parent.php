@@ -1,9 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ParentNewsMinisiteModule';
 	reason_include_once( 'minisite_templates/modules/news.php' );
 
-	/*
-	 *  dave hendler
+	/**
+	 * A minisite module that displays news from the parent site
+	 *
+	 *  @author dave hendler
 	 *
 	 *  the primary purpose of this module is to pull news from a parent site 
 	 *  and make it look like it is a part of the child site.
