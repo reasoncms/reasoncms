@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+/**
+ * Register module with Reason and include dependencies
+ */
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'OtherPublicationNewsModule';
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'classes/object_cache.php' );
@@ -15,9 +23,6 @@ reason_include_once( 'function_libraries/util.php' );
  * - publication_unique_name: sets the publication to use as a source for the news items
  * - max_num_to_show: if greater than 0, sets a maximum number of items to show
  * - title: if set, shows a custom module title
- *
- * @package reason
- * @subpackage minisite_modules
  * 
  * @author Nathan White
  */
