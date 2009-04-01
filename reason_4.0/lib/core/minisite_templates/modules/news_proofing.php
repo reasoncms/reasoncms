@@ -1,7 +1,17 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
     $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'NewsProofingModule';
     reason_include_once( 'minisite_templates/modules/news_all.php' );
-        
+    
+    /**
+     * @deprecated
+     */
     class NewsProofingNoIssueViewer extends AllNewsNoIssueViewer
     {
 		function show_item( $item ) 
@@ -10,6 +20,9 @@
         }
     }
 
+	/**
+     * @deprecated
+     */
     class NewsProofingIssueViewer extends AllNewsIssueViewer
     {
         function show_item( $item ) 
@@ -22,6 +35,14 @@
 		} 
     }
 	
+	/**
+	 * A minisite template that shows, in one big page, all the stories' descriptions and content
+	 *
+	 * Note: this module is deprecated. Use the publication framework instead. If you want this behavior, create a custom
+	 * list_item_markup_generator that shows the content of the stories.
+	 *
+	 * @deprecated
+	 */
 	class NewsProofingModule extends AllNewsModule
     {
 		var $limit_to_shown_issues = false;
