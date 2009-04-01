@@ -1,7 +1,21 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+  	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/news2.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'news2MiniModule';
 
+/**
+ * A minisite module that lists the 4 most recent news items on the site
+ *
+ * Note: this module is deprecated. Use the publications module instead, in related mode.
+ *
+ * @deprecated
+ */
 class news2MiniModule extends News2Module
 {
 	var $style_string = 'newsMini';
