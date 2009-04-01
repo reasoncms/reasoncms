@@ -1,7 +1,12 @@
 <?php
 /**
  * Default Reason search module
+ * @package reason
+ * @subpackage minisite_modules
  */
+ 	/**
+ 	 * Include the parent class and register the module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'SearchModule';
@@ -10,9 +15,6 @@
 	 * Reason Search Module
 	 * 
 	 * Support for default_text and header_text from parameters added 11/28/07 - Nathan White
-	 *
-	 * @package reason
-	 * @subpackage minisite_modules
 	 */
 	class SearchModule extends DefaultMinisiteModule
 	{
