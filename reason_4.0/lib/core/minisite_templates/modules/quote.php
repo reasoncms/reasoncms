@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+/**
+ * Include the parent class & dependencies, and register the module with Reason
+ */
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'classes/quote_helper.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule';
@@ -8,9 +16,6 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
  *
  * If changing class names or the HTML generation structure, make sure to modify the html generation
  * portions of quote_retrieve.js so that dynamically created quotes maintain the same structure.
- *
- * @package reason
- * @subpackage minisite_modules
  * 
  * @author Nathan White
  */
