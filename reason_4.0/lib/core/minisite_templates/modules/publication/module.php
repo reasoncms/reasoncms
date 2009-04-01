@@ -1,7 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+/**
+ *  Register the module with Reason
+ */
 $GLOBALS[ '_module_class_names' ][ 'publication' ] = 'PublicationModule';
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'PublicationModule';
 
+/**
+ * Include parent class
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'minisite_templates/modules/generic3.php' );
 
@@ -92,6 +103,7 @@ class PublicationModule extends Generic3Module
 	var $_ok_to_view = true;
 	var $_unauthorized_message = NULL;
 	var $_items_by_section = array(); // a place to cache items organized by section
+	var $_blurbs_by_issue; // a place to cache blurbs organized by issue
 		
 	/** 
 	* Stores the default class names and file names of the markup generator classes used by the module.  
@@ -148,6 +160,7 @@ class PublicationModule extends Generic3Module
 									   'current_issue' => 'get_current_issue', 
 									   'issues_by_date' => 'get_issues',
 									   'links_to_issues' => 'get_links_to_issues',
+									   'issue_blurbs' => 'get_current_issue_blurbs',
 									   //sections
 									   'current_section' => 'get_current_section',
 									   'sections' => 'get_sections',
@@ -1287,6 +1300,29 @@ class PublicationModule extends Generic3Module
 			$issues =& $this->get_visible_issues();
 			reset($issues); // make sure pointer is at first element		
 			return current($issues);
+		}
+		
+		/**
+		* Returns the blurbs attached to the current issue
+		* @todo make the issue_to_text_blurb relationship sortable
+		* @return object the most recent issue entity
+		*/
+		function get_current_issue_blurbs()
+		{
+			$issue = $this->get_current_issue();
+			if( is_object($issue) )
+			{
+				if( !isset( $this->_blurbs_by_issue[ $issue->id() ] ) )
+				{
+					$es = new entity_selector();
+					$es->add_type(id_of('text_blurb'));
+					$es->set_env('site', $this->site_id);
+					$es->add_right_relationship($issue->id(), relationship_id_of('issue_to_text_blurb'));
+					$this->_blurbs_by_issue[ $issue->id() ] = $es->run_one();
+				}
+				return $this->_blurbs_by_issue[ $issue->id() ];
+			}
+			return array();
 		}
 
 ///////
