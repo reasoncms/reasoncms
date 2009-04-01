@@ -1,11 +1,20 @@
 <?php
-	/* sitemap.php: list sites alphabetically by type */
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include the parent class and register the module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'siteMapModule';
 
-
+	/**
+	 * A minisite module that lists live sites alphabetically by type
+	 *
+	 * This module merges both Reason sites and non_reason_sites entered in the master admin.
+	 */
 	class siteMapModule extends DefaultMinisiteModule
 	{
 		var $id_of_site_type;
