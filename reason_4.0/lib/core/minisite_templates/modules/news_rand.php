@@ -1,7 +1,23 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'RandNewsMinisiteModule';
 	reason_include_once( 'minisite_templates/modules/news.php' );
 
+	/**
+	 * A minisite module that on any given request lists a single random news item on the site
+	 *
+	 * Note: this module is deprecated. Use the publications framework instead.
+	 * If you want this functionality, set this up as a related publication, set num_per_page to 1,
+	 * and set related_order to "RAND()".
+	 *
+	 * @deprecated
+	 */
 	class RandNewsMinisiteModule extends NewsMinisiteModule
 	{
 		var $num_per_page = 1;
