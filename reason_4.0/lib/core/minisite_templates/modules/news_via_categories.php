@@ -1,11 +1,31 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'NewsViaCategoriesModule';
 	
 	/**
+	 * A minisite module that lists three posts that are related to the same categories as the page
+	 *
+	 * This module does sophisticated relevance matching. Posts are ranked using an algorithm that
+	 * takes into account both post recency and how many of the page's categories that post shares.
+	 * So an older post that shares all 5 categories with the current page may show up above a more
+	 * recent post that only shares one.
+	 *
+	 * Note: this module is deprecated; try to use the publication framework instead.
+	 * You can set the parameter limit_by_page_categories on a related publication to get a similar 
+	 * effect, though I do not believe that the publication module currently does the same sort of 
+	 * sophisticated relevance matching, incorporating recency, that this module does.
+	 *
 	 * @deprecated
+	 * @todo Figure out how the sophisticated relevence matching of this module can be done in the
+	 *       publications framework before obsoleting this code
 	 */
 	class NewsViaCategoriesModule extends DefaultMinisiteModule
 	{
