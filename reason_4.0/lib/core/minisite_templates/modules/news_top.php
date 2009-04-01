@@ -1,11 +1,25 @@
 <?php
-	/* Top news, from the main news site. mr, 9/23/2004 */
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'NewsTopModule';
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	/**
+	 * A minisite module that pulls all "top" news from a site with the unique name of "media_relations."
+	 * using a complicated logic around the publish_start_date and publish_end_date fields.
+	 *
+	 * *Don't use this module; it will be removed in an upcoming release.*
+	 *
+	 * This module is not only deprecated, but was never sufficiently generalized to merit
+	 * inclusion in the Reason core.
+	 *
 	 * @deprecated
+	 * @todo move out of the Reason core
 	 */
 	class NewsTopModule extends DefaultMinisiteModule
 	{
