@@ -1,12 +1,20 @@
 <?php 
-
-	/* siblings.php: display all the pages that have the same parent as the current page */
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include the parent class and register the module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'SiblingModule';
 
-
+	/**
+	 * A minisite module that displays all the pages that have the same parent as the current page
+	 *
+	 * The current page is included in the list, but is not a link
+	 */
 	class SiblingModule extends DefaultMinisiteModule
 	{
 		var $siblings = array();
