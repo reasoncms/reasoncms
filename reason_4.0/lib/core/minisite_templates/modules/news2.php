@@ -1,8 +1,19 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+  	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/generic3.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'News2Module';
 
 /**
+ * A module that lists news items on the current site.
+ *
+ * Note: this module is deprecated. Use the publications framework instead.
+ *
  * @deprecated
  */
 class News2Module extends Generic3Module
@@ -135,6 +146,9 @@ class News2Module extends Generic3Module
 		}
 	}
 }
+/**
+ * @deprecated
+ */
 class submodule
 {
 	var $request = array();
@@ -174,7 +188,11 @@ class submodule
 	{
 		trigger_error('this must be overloaded');
 	}
-}class news_content extends submodule
+}
+/**
+ * @deprecated
+ */
+class news_content extends submodule
 {
 	var $item;
 	var $params = array('date_format'=>'j F Y');
@@ -216,6 +234,9 @@ class submodule
 		return $ret;
 	}
 }
+/**
+ * @deprecated
+ */
 class news_images extends submodule
 {
 	var $images = array();
@@ -271,6 +292,9 @@ class news_images extends submodule
 		return $title."\n".$content;
 	}
 }
+/**
+ * @deprecated
+ */
 class news_assets extends submodule
 {
 	var $assets = array();
@@ -303,6 +327,9 @@ class news_assets extends submodule
 		return $title."\n".$content;
 	}
 }
+/**
+ * @deprecated
+ */
 class news_related extends submodule // ummm there is not even a news_to_news relationship
 {
 	var $related = array();
@@ -345,6 +372,7 @@ class news_related extends submodule // ummm there is not even a news_to_news re
 ///////////////////////
 /**
 * Display categories associated with a news item
+* @deprecated
 */
 class news_categories_submodule extends submodule
 {
