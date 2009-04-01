@@ -6,6 +6,7 @@
  * It is a simple reason include of lib/[core|local]/errors/404.php
  *
  * @package reason
+ * @subpackage errors
  */
 	include_once('reason_header.php');
 	reason_include('errors/404.php');
