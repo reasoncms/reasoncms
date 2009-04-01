@@ -1,8 +1,15 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+  	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'NewsMinisiteModule';
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	/**
-	 * @deprecated deprecated since Reason 4 Beta 4 and not fully php5 friendly - use the publications module to display news
+	 * @deprecated
 	 */
     class no_issue_news_viewer extends Viewer
 	{
@@ -91,6 +98,9 @@
 		}
 		
 	}
+	/**
+	 * @deprecated
+	 */
 	class issue_news_viewer extends Viewer
 	{
 		var $section;
@@ -206,6 +216,9 @@
 		} // }}}
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	class related_news_viewer extends Viewer
 	{
 		function alter_values() // {{{
@@ -226,6 +239,10 @@
 	}
 	
 	/**
+	 * A minisite module that lists all news items on the current site
+	 *
+	 * deprecated since Reason 4 Beta 4 and not fully php5 friendly - use the publications module to display news
+	 *
 	 * @deprecated
 	 */
 	class NewsMinisiteModule extends DefaultMinisiteModule
