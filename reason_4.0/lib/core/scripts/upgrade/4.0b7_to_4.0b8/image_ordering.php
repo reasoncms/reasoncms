@@ -126,6 +126,7 @@ class imagePageOrderUpdate
 <p>In Reason Beta 8, the images module lists images as they are manually sorted in Reason. Previously it listed images in ascending order by date and time.</p>
 <p>This update checks to see if there are any pages using the images module, and if so, checks to see if the order of their images will change when this update is applied.</p>
 <p>(Note: the images module is neither the common image gallery module nor the image sidebar module. It shows a list of full-sized images, with captions, all together on a page.</p>
+<p style="background-color:#eee;border:1px solid #aaa;padding:1em;"><strong>This update will change the sort order of images on the changed pages -- it will make the sort order match their datetime values. This script should only be run <em>once</em>. As Reason has no way of knowing if you have previously run this update, you will need to make sure to not run it again. It <em>will</em> report that it needs to be run again once any images have been moved around on these pages after its initial run. Ignore that report and do not run it again. If you need to, alter this script after it successfully runs and place a statement like <tt>die('Already run');</tt> at the top.</strong></p>
 <p>What will this update do?</p>
 <ul>
 <li>In "test" mode, it will report on pages whose images's sort values need to be reordered to remain in the same order on the pages in question</li>
