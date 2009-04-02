@@ -23,13 +23,27 @@ class imageModule extends Generic3Module
 		'show_captions'=>true,
 		'show_authors'=>true,
 		'limit_to_current_site'=>true,
-	);
+		'max_num' => false, // false or integer
+		'sort_order' => 'rel', // Either a sort_order value (like "datetime ASC) or the special value "rel", meaning sort by page relationship
+		);
 	
 	function alter_es() // {{{
 	{
-		$this->es->set_order( 'dated.datetime ASC' );
+		if($this->params['sort_order'] == 'rel')
+		{
+			$this->es->add_rel_sort_field( $this->page_id, relationship_id_of('minisite_page_to_image'), 'rel_sort_order');
+			$this->es->set_order( 'rel_sort_order ASC, dated.datetime ASC, meta.description ASC, entity.id ASC' );
+		}
+		else
+		{
+			$this->es->set_order( $this->params['sort_order'] );
+		}
+		if($this->params['max_num'])
+		{
+			$this->es->set_num($this->params['max_num']);
+		}
 		$this->es->set_env( 'site' , $this->site_id );
-		$this->es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_image') );
+		$this->es->add_right_relationship( $this->page_id, relationship_id_of('minisite_page_to_image') );
 	} // }}}
 	function show_list_item( $item ) // {{{
 	{
