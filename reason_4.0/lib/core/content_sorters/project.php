@@ -1,7 +1,16 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_sorters
+ */
+	/**
+	 * Register sorter with Reason
+	 */
 	$GLOBALS[ '_content_sorter_class_names' ][ basename( __FILE__) ] = 'project_sorter';
 	
-
+	/**
+	 * A content sorter for projects
+	 */
 	class project_sorter extends sorter
 	{
 		function update_es( $es ) // {{{

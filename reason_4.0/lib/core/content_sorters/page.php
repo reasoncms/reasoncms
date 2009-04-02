@@ -1,6 +1,16 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_sorters
+ */
+	/**
+	 * Register sorter with Reason
+	 */
 	$GLOBALS[ '_content_sorter_class_names' ][ basename( __FILE__) ] = 'page_sorter';
 
+	/**
+	 * A content sorter for minisite pages
+	 */
 	class page_sorter extends sorter
 	{
 		function init() // {{{

@@ -1,7 +1,17 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_sorters
+ */
+	/**
+	 * Register sorter with Reason
+	 */
 	$sorter = 'registration_slot_sorter';
         $GLOBALS[ '_content_sorter_class_names' ][ basename( __FILE__) ] = 'registration_slot_sorter';
 
+	/**
+	 * A content sorter for registration slots
+	 */
 	class registration_slot_sorter extends sorter
 	{
 		//sort by:
