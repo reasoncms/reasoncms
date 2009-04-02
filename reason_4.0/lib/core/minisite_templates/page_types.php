@@ -789,6 +789,15 @@
 			'main_post' => 'content',
 			'sidebar' => '',
 		),
+		'images_full_size_before_content_randomized_single' => array(
+			'main' => array(
+				'module'=>'images',
+				'max_num'=>1,
+				'sort_order' => 'RAND()',
+			),
+			'main_post' => 'content',
+			'sidebar' => '',
+		),
 		'jobs' => array(
 			'main_post' => 'jobs',
 			'sub_nav' => '',
