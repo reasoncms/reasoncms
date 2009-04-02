@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_post_deleters
+ */
+
+/**
+ * Register the post deleter with Reason
+ */
 $GLOBALS['_content_post_deleter_classes'][ basename( __FILE__) ] = 'defaultPostDeleter';
 
 /**
