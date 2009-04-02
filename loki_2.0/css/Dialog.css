@@ -129,3 +129,8 @@ h1 {
 	min-height: 16px;
 	line-height: 16px;
 }
+
+.error a.action {
+    display: block;
+    margin-top: 2px;
+}
