@@ -3,6 +3,7 @@
 	 * Content Previewer
 	 * @author Brendon Stanton
 	 * @package reason
+	 * @subpackage content_previewers
 	 */
 
 	/**
@@ -154,7 +155,7 @@
 							echo '<ul>'."\n";
 							foreach($associated_items[$key] AS $ent )
 							{
-								echo '<li>'.$ent->get_display_name().'</li>'."\n";
+								echo '<li>'.$this->_get_rel_list_display_name($ent,$v['name'],'left').'</li>'."\n";
 							}
 							echo '</ul>'."\n";
 							echo '</li>'."\n";
@@ -231,7 +232,7 @@
 							echo '<ul>'."\n";
 							foreach($associated_items[$key] AS $ent )
 							{
-								echo '<li>'.$ent->get_display_name();
+								echo '<li>'.$this->_get_rel_list_display_name($ent,$v['name'],'right');
 								if($show_owner_site && $ent->get_value('owner_id') != $this->admin_page->site_id)
 								{
 									//echo ' <em>(<a href="http://'.REASON_HOST.$ent->get_value('owner_base_url').'">'.$ent->get_value('owner_name').'</a>)</em>';
@@ -247,6 +248,10 @@
 				}
 			}
 		} // }}}
+		function _get_rel_list_display_name($entity,$rel_name,$direction)
+		{
+			return $entity->get_display_name();
+		}
 		function get_left_relationships() // {{{
 		{
 			return $this->get_relationships();
