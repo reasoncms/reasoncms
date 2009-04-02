@@ -53,6 +53,8 @@ class databaseCleanup
 		// The updates
 		$this->change_relationship_terminology('page_to_publication', 'Places a blog / publication on a page', 'Place a blog / publication');
 		$this->change_relationship_terminology('page_to_related_publication', 'Places a related publication on a page', 'Attach a related publication');
+		
+		$this->_update_theme_previewer();
 	}
 	
 	function change_relationship_terminology($rel_name, $term_search, $term_replace)
@@ -82,6 +84,33 @@ class databaseCleanup
 			}
 		}
 	}
+	
+	function _update_theme_previewer()
+	{
+		$theme_type = new entity(id_of('theme_type'));
+		if(!$theme_type->get_value('custom_previewer'))
+		{
+			if($this->mode == 'run')
+			{
+				if(reason_update_entity($theme_type->id(), $this->reason_user_id, array('custom_previewer'=>'theme.php')))
+				{
+					echo '<p>Updated the theme type to use the new theme previewer</p>'."\n";
+				}
+				else
+				{
+					echo '<p>Unable to update the theme type to use the new theme previewer.</p>'."\n";
+				}
+			}
+			else
+			{
+				echo '<p>Would add the theme previewer to the theme type</p>'."\n";
+			}
+		}
+		else
+		{
+			echo '<p>Theme type is up to date</p>'."\n";
+		}
+	}
 }
 
 force_secure_if_available();
@@ -103,7 +132,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 <ul>
 <li>Changes "Places blog/publication on a page" to "Place a blog/publication" (addresses <a href="http://code.google.com/p/reason-cms/issues/detail?id=33">issue 33</a>)</li>
 <li>Changes "Places a related publication on a page" to "Attach a related publication" (addresses <a href="http://code.google.com/p/reason-cms/issues/detail?id=33">issue 33</a>)</li>
-
+<li>Adds the theme previewer to the theme type</li>
 <?
 /* TODO
 <li>Removes the finish action for sites.</li>
