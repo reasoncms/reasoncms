@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0.2-pl1
+// Loki WYSIWIG Editor 2.0.3-b2
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2009-02-10 10:52:28 
+// Compiled 2009-03-25 13:33:59 
 // http://loki-editor.googlecode.com/
 
 
@@ -2178,7 +2178,7 @@ Util.Node.get_window = function find_window_of_node(node)
 	return null;
 }
 
-Util.Node.non_whitespace_regexp = /[^\f\n\r\t\v]/gi;
+Util.Node.non_whitespace_regexp = /[^\f\n\r\t\v ]/gi;
 Util.Node.is_non_whitespace_text_node = function(node)
 {
 	// [^\f\n\r\t\v] should be the same as \S, but at least on
@@ -2594,10 +2594,15 @@ Util.Element = {
 	 */
 	is_block_level: function is_block_level_element(window, elem)
 	{
-		var s = Util.Element.get_computed_style(window, elem);
+		var s;
 		
 		try {
-			return s.display == 'block';
+		    s = Util.Element.get_computed_style(window, elem);
+		    if (s.display == 'inline' || s.display == 'none')
+		        return false;
+		    // Assume that everything else ('block', 'table-cell', 'list-item',
+		    // etc.) is a block.
+			return true;
 		} catch (e) {
 			var ex = new Error('Unable to get the computed style for ' +
 				Util.Node.get_debug_string(elem) + '.');
@@ -4999,12 +5004,31 @@ Util.Fix_Keys.fix_delete_and_backspace = function(e, win)
 
 	var sel = Util.Selection.get_selection(win);
 	var rng = Util.Range.create_range(sel);
-	var cur_block = Util.Range.get_nearest_bl_ancestor_element(rng);
+	var cur_block;
+	try {
+	    cur_block = Util.Range.get_nearest_bl_ancestor_element(rng);
+	} catch (e) {
+	    cur_nlock = null;
+	}
 	
 	function get_neighbor_element(direction)
 	{
 		if (rng.startContainer != rng.endContainer || rng.startOffset != rng.endOffset)
 			return null;
+		
+		if (rng.startContainer.nodeType == Util.Node.TEXT_NODE) {
+		    if (direction == Util.Node.NEXT) {
+		        if (rng.endOffset == rng.endContainer.nodeValue.length)
+		            return rng.endContainer.nextSibling;
+		    } else if (direction == Util.Node.PREVIOUS) {
+		        if (rng.startOffset == 0)
+		            return rng.startContainer.previousSibling;
+		    }
+		    
+		    // If we're in the middle of a text node; well, how did we reach
+		    // this code?
+		    return null;
+		}
 		
 		if (direction == Util.Node.NEXT && rng.endContainer.childNodes[rng.endOffset])
 			return rng.endContainer.childNodes[rng.endOffset];
@@ -5013,27 +5037,64 @@ Util.Fix_Keys.fix_delete_and_backspace = function(e, win)
 		else
 			return null;
 	}
+	
+	function is_named_anchor(element) {
+	    return (element && element.tagName == 'A' && element.name &&
+	        !Util.Node.get_last_non_whitespace_child_node(element));
+	}
+	
+	function remove_anchor(anchor) {
+	    var id = anchor.id, sibling = anchor.previousSibling, i, images;
+	    
+	    function is_marker(node) {
+	        return (node.nodeName == 'IMG' &&
+	            node.getAttribute('loki:anchor.id') == id);
+	    }
+	    
+	    if (is_marker(sibling)) {
+	        // easy case: marker is in its original position, we avoid a DOM
+	        // search
+	        sibling.parentNode.removeChild(sibling);
+	    } else {
+	        images = anchor.ownerDocument.getElementsByTagName('IMG');
+	        for (i = 0; i < images.length; i++) {
+	            if (is_marker(images[i])) {
+	                images[i].parentNode.removeChild(images[i]);
+	                break;
+	            }
+	        }
+	    }
+	    
+	    anchor.parentNode.removeChild(anchor);
+	}
 
 	if ( rng.collapsed == true && !e.shiftKey )
 	{
 		var neighbor = null;
 		
 		if (e.keyCode == e.DOM_VK_DELETE) {
-			if (Util.Range.is_at_end_of_block(rng, cur_block)) {
+		    neighbor = get_neighbor_element(Util.Node.NEXT);
+		    if (is_named_anchor(neighbor)) {
+		        remove_anchor(neighbor);
+		    } else if (cur_block && Util.Range.is_at_end_of_block(rng, cur_block)) {
 				do_merge(cur_block, Util.Node.next_element_sibling(cur_block), sel);
 			} else if (Util.Range.is_at_end_of_text(rng) && is_container(rng.endContainer.nextSibling)) {
 				remove_container(rng.endContainer.nextSibling);
-			} else if (neighbor = get_neighbor_element(Util.Node.NEXT)) {
+			} else if (neighbor) {
 				remove_if_container(neighbor);
 			}
 		} else if (e.keyCode == e.DOM_VK_BACK_SPACE) {
-			// both the following two are necessary to avoid
-			// merge on B's here: <p>s<b>|a</b>h</p>
-			if (Util.Range.is_at_beg_of_block(rng, cur_block) && rng.isPointInRange(rng.startContainer, 0)) {
+		    neighbor = get_neighbor_element(Util.Node.PREVIOUS);
+		    
+			if (is_named_anchor(neighbor)) {
+		        remove_anchor(neighbor);
+			} else if (cur_block && Util.Range.is_at_beg_of_block(rng, cur_block) && rng.isPointInRange(rng.startContainer, 0)) {
+				// Both the above range tests are necessary to avoid
+    			// merge on B's here: <p>s<b>|a</b>h</p>
 				do_merge(Util.Node.previous_element_sibling(cur_block), cur_block, sel);
 			} else if (Util.Range.is_at_beg_of_text(rng) && is_container(rng.startContainer.previousSibling)) {
 				remove_container(rng.endContainer.nextSibling);
-			} else if (neighbor = get_neighbor_element(Util.Node.PREVIOUS)) {
+			} else if (neighbor) {
 				remove_if_container(neighbor);
 			}
 		}
@@ -7252,6 +7313,22 @@ Util.Range.create_range = function create_range_from_selection(sel)
 	}
 };
 
+Util.Range.is_collapsed = function is_range_collapsed(rng) {
+    var undefined;
+    
+    if (rng.text !== undefined && rng.text !== null)
+        return rng.text == '';
+    else if (rng.length !== undefined && rng.length !== null)
+        return rng.length <= 0;
+    else if (rng.collapsed !== undefined && rng.collapsed !== null)
+        return rng.collapsed;
+    else if (rng.startContainer && rng.endOffset)
+        return (rng.startContainer == rng.endContainer &&
+            rng.startOffset == rng.endOffset);
+    else
+        throw new Util.Unsupported_Error('checking if a range is collapsed');
+};
+
 /**
  * Gets the ancestor node which surrounds the given range.
  * XXX: probably better usually to use get_start_container, to
@@ -9030,14 +9107,7 @@ Util.Selection.is_collapsed = function selection_is_collapsed(sel)
 			throw e;
 	}
 	
-	if ( rng.text != null )
-		return rng.text == '';
-	else if ( rng.length != null )
-		return rng.length == 0;
-	else if ( rng.collapsed != null )
-		return rng.collapsed;
-	else
-		throw("Util.Selection.is_selection_collapsed: Couldn't determine whether selection is collapsed.");
+	return Util.Range.is_collapsed(rng);
 };
 
 /**
@@ -9065,7 +9135,7 @@ Util.Selection.bookmark = function create_selection_bookmark(window, sel, rng)
 		rng = Util.Range.create_range(sel);
 	}
 	
-	var doc = Util.Selection.get_document(selection, range);
+	var doc = Util.Selection.get_document(sel, rng);
 	var dim = Util.Document.get_dimensions(doc);
 	var elem;
 	var i;
@@ -9083,11 +9153,11 @@ Util.Selection.bookmark = function create_selection_bookmark(window, sel, rng)
 	
 	// Try the native Windows IE text range implementation. This branch was not
 	// in the original TinyMCE code.
-	if (range.getBookmark) {
+	if (rng.getBookmark) {
 		try {
-			var mark_id = range.getBookmark();
+			var mark_id = rng.getBookmark();
 			return {
-				range: range,
+				range: rng,
 				id: mark_id,
 				
 				restore: function restore_native_ie_bookmark()
@@ -9187,7 +9257,7 @@ Util.Selection.bookmark = function create_selection_bookmark(window, sel, rng)
 					// Found the ending node in the tree under the root.
 					// Store the position at which it was found and return the
 					// boundaries.
-					bound.end = p;
+					bounds.end = p;
 					return bounds;
 				}
 				
@@ -9206,7 +9276,7 @@ Util.Selection.bookmark = function create_selection_bookmark(window, sel, rng)
 			}
 			
 			bounds.start += sel.anchorOffset;
-			bound.end += sel.focusOffset;
+			bounds.end += sel.focusOffset;
 		} else {
 			bounds = get_textual_position(rng.startContainer, rng.endContainer);
 			if (!bounds) {
@@ -9214,7 +9284,7 @@ Util.Selection.bookmark = function create_selection_bookmark(window, sel, rng)
 			}
 			
 			bounds.start += rng.startOffset;
-			bound.end += rng.endOffset;
+			bounds.end += rng.endOffset;
 		}
 		
 		return {
@@ -10850,7 +10920,25 @@ UI.Anchor_Masseuse = function()
 	{
 		var fakes = node.getElementsByTagName(needs_unmassaging.tag);
 		var i, fake;
+		
+		// Remove anchors that have had their placeholder images deleted.
+		var anchors = node.getElementsByTagName(needs_massaging.tag);
+		var anchor;
+		var placeholder_map = {}, id;
+		
+		for (i = 0; i < fakes.length; i++) {
+		    id = fakes[i].getAttribute('loki:anchor_id');
+		    if (id)
+		        placeholder_map[id] = fakes[i];
+		}
+		
+		for (i = anchors.length - 1; i >= 0; i--) {
+			anchor = anchors[i];
+			if (needs_massaging(anchor) && !placeholder_map[anchor.id])
+				anchor.parentNode.removeChild(anchor);
+		}
 
+        // Unmassage the placeholders that still exist.
 		for (i = fakes.length - 1; i >= 0; i--) {
 			fake = fakes[i];
 			if (needs_unmassaging(fake))
@@ -12198,6 +12286,9 @@ UI.Clean.clean = function(root, settings, live, block_settings)
 			
 				var pattern = /^Section\d+$/;
 				var classes = Util.Element.get_class_array(node);
+				if (!classes.length) {
+				    return false;
+				}
 				
 				for (var i = 0; i < classes.length; i++) {
 					if (!pattern.test(classes[i]))
@@ -13327,9 +13418,7 @@ UI.Dialog = function()
 	 */
 	this._append_submit_and_cancel_chunk = function(submit_text, cancel_text)
 	{
-		var self = this; // some sort of scope rule I'm not aware of is keeping
-		                 // create_button from having direct access to the
-		                 // Dialog's "this". closures to the rescue! -Eric
+		var self = this;
 		
 		function create_button(text, click_listener) {
 			var b = self._udoc.create_element('BUTTON', {type: 'button'}, [text]);
@@ -13496,37 +13585,44 @@ UI.Error_Display = function(message_container)
 	
 	this.display = null;
 	
-	function create(message, retry)
+	function create(message, options)
 	{
-		if (!retry)
-			var retry = null;
+		if ('function' == typeof(options)) {
+		    options = [['Retry.', options]];
+		}
 		
-		var children = [message];
-		if (retry) {
-			var link = dh.create_element('a',
-				{
-					href: '#',
-					className: 'retry',
-					style: {display: 'block'}
-				},
-				['Retry']);
+		self.display = dh.create_element('p', {className: 'error'});
+		self.display.innerHTML = message;
+		
+		function add_action(text, action) {
+		    var link = dh.create_element('a', {
+				href: '#',
+				className: 'action'
+			});
+			link.innerHTML = text;
 			
 			Util.Event.add_event_listener(link, 'click', function(e) {
 				if (!e)
 					var e = window.event;
 
 				try {
-					retry();
+					action();
 				} catch (e) {
-					self.show('Failed to retry: ' + (e.message || e), retry);
+					self.show('That didn\'t work: ' + (e.message || e), action);
 				} finally {
 					return Util.Event.prevent_default(e);
 				}
 			});
-			children.push(link);
+			
+			self.display.appendChild(link);
 		}
-
-		self.display = dh.create_element('p', {className: 'error'}, children);
+		
+		if (options) {
+    		options.each(function (action) {
+    		   add_action(action[0], action[1]); 
+    		});
+    	}
+		
 		message_container.appendChild(self.display);
 	}
 	
@@ -13537,7 +13633,7 @@ UI.Error_Display = function(message_container)
 		this.display = null;
 	}
 	
-	this.show = function(message, retry)
+	this.show = function(message, retry, retry_text)
 	{
 		if (!retry)
 			var retry = null;
@@ -13545,7 +13641,7 @@ UI.Error_Display = function(message_container)
 		if (this.display)
 			remove.call(this);
 		
-		create.call(this, message, retry);
+		create.call(this, message, retry, retry_text);
 	}
 	
 	this.clear = function()
@@ -13553,7 +13649,8 @@ UI.Error_Display = function(message_container)
 		if (this.display)
 			remove.call(this);
 	}
-} 
+}
+
 // file UI.Error_State.js
 /**
  * @class A canned state for a Util.State_Machine for displaying errors.
@@ -15347,6 +15444,7 @@ UI.Indent_Button = function()
 		
 		var list = this.helper.get_ancestor_list();
 		var li = this.helper.get_list_item();
+		var sib;
 		
 		if (list) {
 			// Don't indent first element in a list, if it is not in a nested list.
@@ -15354,9 +15452,10 @@ UI.Indent_Button = function()
 			// the UL/OL with a BLOCKQUOTE tag. I.e. <ul><li>as|df</li></ul>
 			// --> <blockquote><ul><li>as|df</li></ul></blockquote>
 			
-			if (li.previousSibling || this.helper.get_more_distant_list(list)) {
-				this._loki.exec_command('Indent');
-				this._loki.document.normalize();
+			sib = Util.Node.get_nearest_non_whitespace_sibling_node(li,
+			    Util.Node.PREVIOUS);
+			if (sib || this.helper.get_more_distant_list(list)) {
+				this.helper.indent();
 			} else {
 				UI.Messenger.display_once('indent_first_li',
 					"The first item in a list cannot be indented.");
@@ -15965,6 +16064,17 @@ UI.List_Helper = function ListHelper()
 {
 	Util.OOP.inherits(this, UI.Helper);
 	
+	this.indent = function indent_list()
+	{
+        this._loki.exec_command('Indent');
+        this._loki.document.normalize();
+	};
+	
+	this.outdent = function outdent_list()
+	{
+        this._loki.exec_command('Outdent');
+	};
+	
 	this.get_ancestor_list = function get_ancestor_list_of_selected_range()
 	{
 		var sel = Util.Selection.get_selection(this._loki.window);
@@ -15972,7 +16082,7 @@ UI.List_Helper = function ListHelper()
 		
 		return Util.Range.get_nearest_ancestor_element_by_tag_name(range, 'UL')
 			|| Util.Range.get_nearest_ancestor_element_by_tag_name(range, 'OL');
-	}
+	};
 	
 	this.get_list_item = function get_list_item_for_selected_range()
 	{
@@ -15980,13 +16090,13 @@ UI.List_Helper = function ListHelper()
 		var range = Util.Range.create_range(sel);
 		
 		return Util.Range.get_nearest_ancestor_element_by_tag_name(range, 'LI');
-	}
+	};
 	
 	this.get_more_distant_list = function get_list_ancestor_of_list(list)
 	{
 		return Util.Node.get_nearest_ancestor_element_by_tag_name(list, 'UL')
 			|| Util.Node.get_nearest_ancestor_element_by_tag_name(list, 'OL');
-	}
+	};
 	
 	this.nag_about_indent_use = function nag_about_indent_use()
 	{
@@ -15994,7 +16104,7 @@ UI.List_Helper = function ListHelper()
 			'The indent and unindent buttons can only be used to indent and' +
 			' outdent list items; in particular, it cannot be used to indent' +
 			' paragraphs.');
-	}
+	};
 } 
 // file UI.Listbox.js
 /**
@@ -17293,7 +17403,7 @@ UI.Outdent_Button = function()
 			this.helper = (new UI.List_Helper).init(this._loki);
 			
 		if (this.helper.get_ancestor_list()) {
-			this._loki.exec_command('Outdent');
+			this.helper.outdent();
 		} else {
 			this.helper.nag_about_indent_use();
 		}
@@ -17412,6 +17522,8 @@ UI.Page_Link_Dialog = function()
 		this._append_link_information_chunk();
 		this._append_submit_and_cancel_chunk();
 		this._append_remove_link_chunk();
+		
+		this._sanity_error_displays = null;
 		
 		this._sites_error_display = (this._use_rss)
 			? new UI.Error_Display(this._doc.getElementById('sites_pane'))
@@ -17775,97 +17887,163 @@ UI.Page_Link_Dialog = function()
 	 */
 	this._internal_submit_listener = function()
 	{
-		// Get URI
-		
+	    var self = this;
 		var tab_name = this._tabset.get_name_of_selected_tab();
+		
+		if (!this._sanity_error_displays) {
+		    this._sanity_error_displays = {};
+		}
+		
+		function get_error_display() {
+		    if (!self._sanity_error_displays[tab_name]) {
+		        self._sanity_error_displays[tab_name] = new UI.Error_Display(
+		            self._tabset.get_tabpanel_elem(tab_name));
+		    }
+		    
+		    return self._sanity_error_displays[tab_name];
+		}
 		
 		if (!this._initially_selected_item.uri) {
 			UI.Page_Link_Dialog._default_tab = tab_name;
 		}
+		
+		function do_submission() {
+		    // Call external event listener
+    		self._external_submit_listener({
+    		    uri: uri,
+    		    new_window: self._new_window_checkbox.checked,
+    		    title: self._link_title_input.value
+    		});
 
-		var uri;
-		if ( tab_name == 'rss' )
-		{
-			uri = this.item_selector.get_uri();
+    		// Close dialog window
+    		self._dialog_window.window.close();
+		}
+		
+		function capitalize(s) {
+		    return s.charAt(0).toUpperCase() + s.substr(1).toLowerCase();
+		}
+
+		var uri, match, display_uri, actions;
+		var errdisp = get_error_display();
+		var verb = (!this._initially_selected_item.uri) ? 'insert' : 'save';
+		if (tab_name == 'rss') {
+		    uri = this.item_selector.get_uri();
 			if (!uri) {
 				this._dialog_window.window.alert('Please select a page to be linked to.');
 				return false;
 			}
-		}
-		else if ( tab_name == 'custom' )
-		{
-			var uri = this._custom_input.value;
-			if ( uri.search( new RegExp('\@', '') ) > -1 && 
-				 uri.search( new RegExp('\/', '') ) == -1 && // e.g. http://c.edu/fmail?to=me@c.edu would work
-				 // We might as well let them create links to 
-				 // email addresses from here if they know how:
-				 uri.search( new RegExp('^mailto:') ) == -1 )
-			{
-				var answer = confirm("You've asked to create a link to a custom page, but <<" + uri + ">> looks like an email address. If you want to create a link to an email address, you should press \"Cancel\" here and use the \"" + this._EMAIL_TAB_STR + "\" tab instead. \n\nAre you sure you want to continue anyway?");
-				if ( !answer )
-					return;
+		} else if (tab_name == 'custom') {
+		    uri = this._custom_input.value;
+		    
+		    // Check for an email address here.
+		    if (!(/^mailto:/).test(uri) && (/@/).test(uri) && !(/\//).test(uri)) {
+		        function fix_email() {
+		            self._email_input.value = uri;
+		            self._tabset.select_tab('email');
+		            errdisp.clear();
+		        }
+		        
+		        actions = [
+		            ["Take me to the right place for an email address.", fix_email],
+		            ["No, " + verb + " the link as-is.", do_submission]
+		        ];
+		        errdisp.show("If you want to link to an email address, you " +
+		            "should use the \"" + this._EMAIL_TAB_STR + "\" tab " +
+		            "instead.", actions);
+		        return;
+		    }
+		    
+		    // Check for a link to the local system.
+		    if ((/^file:/).test(uri) || (/[A-Za-z]:\\/).test(uri)) {
+		        errdisp.show("That link points to a file on your computer. " +
+		            "It will not work if it is clicked on from any other " +
+		            "computer. You should upload the file to the Web first. " +
+		            "(If you need help doing that, contact your site " +
+		            "administrator.)", [[
+		                "Ignore this warning and link to the local file.",
+		                    do_submission
+		            ]]);
+		        return;
+		    }
+		    
+		    // Check for weird-protocol links.
+		    match = /^(\w+):/.exec(uri);
+		    if (match && !(/^(?:https?|mailto|ftp):/.test(uri))) {
+		        actions = [[
+		            "I understand; " + verb + " the link anyway.", do_submission
+		        ]];
+		        errdisp.show("This link uses the the <strong>" +
+		            match[1].toLowerCase() + "</strong> protocol. Web " +
+		            "browsers may not be able to open this link directly.",
+		            actions);
+		        return;
+		    }
+		    
+		    // Check for an empty link.
+		    if (uri.replace(/^\w+:(?:\/\/)?(?:www\.?)?/, '').length <= 0) {
+		        errdisp.show("You haven't entered anything to link to.",
+		            [["Ignore this warning and " + verb + " the link anyway.",
+		                do_submission]]);
+		        return;
+		    }
+		    
+		    // Check for a cross-domain link with no protocol.
+		    if (!(/^#/).test(uri) && !(/^\w+:/).test(uri) && (/^[^\/]+\.[A-Za-z]+/).test(uri)) {
+		        if (uri.length > 20) {
+		            display_uri = uri.substr(0, 20) + '&hellip;';
+		        } else {
+		            display_uri = uri;
+		        }
+		        
+		        function add_scheme() {
+		            self._custom_input.value = 'http://' + uri;
+		            errdisp.clear();
+		        }
+		        
+		        actions = [
+		            ["Fix it.", add_scheme],
+		            [capitalize(verb) + " the link as-is.",
+		                do_submission]
+		        ];
+		        errdisp.show("Did you mean to link to link to the Web site "
+		            + "<strong>http://</strong>" + display_uri + '? If you ' +
+		            'did, the link won\'t work without the http:// at the ' +
+		            'beginning.', actions);
+		        return;
+		    }
+		} else if (tab_name == 'email') {
+			uri = this._email_input.value;
+			if (!(/@/).test(uri) || ((/^\w+:/).test(uri) && !(/^mailto:/).test(uri)) || (/^www\./).test(uri)) {
+			    if (uri.length > 20) {
+		            display_uri = uri.substr(0, 20) + '&hellip;';
+		        } else {
+		            display_uri = uri;
+		        }
+		        
+		        function fix_non_email() {
+		            self._custom_input.value = uri;
+		            self._tabset.select_tab('custom');
+		            errdisp.clear();
+		        }
+		        
+		        actions = [
+		            ["Take me to the right place for a Web page link.", fix_non_email],
+		            ["No, " + verb + " the link as-is.", do_submission]
+		        ];
+			    errdisp.show("You've asked to link to an email address, " +
+			        "but " + uri + " doesn't look like one (maybe it's a Web " +
+			        "page?). Are you sure you want to continue?", actions);
+			    return;
 			}
-			else if ( uri.search( new RegExp('^file:') ) > -1 ||
-			          uri.search( new RegExp('^[A-Za-z]:') ) > -1 )
-			{
-				var answer = confirm("It appears that you've tried to create a link to a file on your specific computer. This will not work anywhere but your own computer--probably not what you want. \n\nAre you sure you want to continue anyway?");
-				if ( !answer )
-					return;
-			}
-			else if ( uri.search( new RegExp('^https?:') ) == -1 && 
-					  uri.search( new RegExp('^#') ) == -1 )
-			{
-				if ( uri.search( new RegExp('^www') ) > -1 ||
-				     uri.search( new RegExp('^apps') ) > -1 )
-				{
-					uri = 'http://' + uri;
-				}
-				// Since links to pages on the same server/protocol are okay
-				// without specifying protocol:
-				else if ( uri.search( new RegExp('^[./]') ) == -1 ) 
-				{
-					if ( uri.search( new RegExp('^[A-Za-z]+://') ) == -1 )
-					{
-						var answer = confirm("It appears that you're trying to link to a page without specifying a protocol like HTTP. You probably want to press \"Cancel\" here, and add an \"http://\" to the beginning of your link. \n\nAre you sure you want to continue anyway?");
-						if ( !answer )
-							return;
-					}
-					else
-					{
-						var answer = confirm("It appears that you're trying to link to a page using a protocol other than HTTP. You shouldn't try this unless you know what you're doing. \n\nAre you sure you want to continue anyway?");
-						if ( !answer )
-							return;
-					}
-				}
-			}
+			
+			if (!(/^mailto:/).test(uri))
+		        uri = "mailto:" + uri;
+		} else {
+			throw new Error('Bizarre error: unknown tab "' + tab_name + '".');
 		}
-		else if (tab_name == 'email')
-		{
-			var uri = this._email_input.value;
-			if ( uri.search( new RegExp('\@', '') ) == -1 ||
-			     uri.search( new RegExp('^https?:') ) > -1 ||
-			     uri.search( new RegExp('^www[.]') ) > -1 )
-			{
-				var answer = confirm("You've asked to create a link to an email address, but <<" + uri + ">> doesn't look like an email address. Are you sure you want to continue?");
-				if ( answer == false )
-					return;
-			}
-
-			if ( uri.search( new RegExp('^mailto:', 'i') ) == -1 )
-				uri = 'mailto:' + uri;
-		}
-		else
-		{
-			throw new Error('Unknown tab "' + tab_name + '".');
-		}
-
-		// Call external event listener
-		this._external_submit_listener({uri : uri, 
-										new_window : this._new_window_checkbox.checked, 
-										title : this._link_title_input.value});
-
-		// Close dialog window
-		this._dialog_window.window.close();
+		
+		// We made it to the end! Let's go through with it.
+		do_submission();
 	};
 	
 	this._determine_tab = function determine_tab(use_rss)
@@ -21180,7 +21358,7 @@ UI.Underline_Button = function()
 UI.Underline_Keybinding = function()
 {
 	Util.OOP.inherits(this, UI.Keybinding);
-	this.test = function(e) { return this.matches_keycode(e, 73) && e.ctrlKey; }; // Ctrl-U
+	this.test = function(e) { return this.matches_keycode(e, 85) && e.ctrlKey; }; // Ctrl-U
 	this.action = function() { this._loki.exec_command('Underline'); };
 };
 
@@ -22124,6 +22302,105 @@ UI.Loki = function Loki()
 		var paste_keyup = false; // a keyup event listener has been registered
 		var mod_key = (Util.Browser.Mac ? 'meta' : 'ctrl') + 'Key';
 		var mod_key_pressed = null;
+		
+		function move_past_nbsp(direction) {
+		    var sel = Util.Selection.get_selection(self.window);
+    		var range = Util.Range.create_range(sel);
+    		
+    		if (!Util.Range.is_collapsed(range))
+    		    return false;
+    		
+    		var bounds = Util.Range.get_boundaries(range);
+    		var node, pos, must_move = false, value;
+    		
+    		function is_at_edge() {
+    		    if (pos <= 1)
+    		        return true;
+    		    
+    		    if (node.nodeType == Util.Node.TEXT_NODE) {
+    		        return (pos >= node.nodeValue.length - 1);
+    		    } else {
+    		        return (pos >= node.childNodes.length - 1);
+    		    }
+    		}
+    		
+    		if (bounds.start.container.nodeType == Util.Node.TEXT_NODE) {
+    		    node = bounds.start.container;
+    		    value = node.nodeValue;
+    		    if ((direction < 0 && bounds.start.offset > 0) || (direction > 0 && bounds.end.offset < value.length)) {
+    		        pos = bounds.start.offset;
+    		        if (direction < 0)
+    		            pos--;
+    		        if (node.nodeValue.charCodeAt(pos) != 160 || !is_at_edge())
+    		            return false;
+    		        else
+    		            must_move = true;
+    		    }
+    		}
+    		
+    		if (!must_move) {
+    		    if (bounds.start.container.nodeType == Util.Node.TEXT_NODE) {
+    		        node = bounds.start.container;
+    		        node = (direction < 0) ? node.previousSibling : node.nextSibling;
+    		    } else {
+    		        node = bounds.start.container.childNodes[bounds.start.offset]
+    		    }
+        		if (!node)
+        		    return false;
+        		    
+        		while (true) {
+        		    if (!node)
+        		        return false;
+        		    if (node.nodeType != Util.Node.TEXT_NODE)
+        		        return false;
+        		    value = node.nodeValue;
+        		    if (value.length == 0) {
+        		        // try the neighboring node
+        		        node = (direction < 0) ?
+            		        node.previousSibling :
+            		        node.nextSibling;
+        		        continue;
+        		    }
+    		    
+        		    pos = (direction < 0) ? value.length - 1 : 0;
+        		    if (value.charCodeAt(pos) != 160 || !is_at_edge())
+        		        return false;
+        		    break;
+    		    }
+    		}
+    		
+    		if (direction > 0 && node.nodeType == Util.Node.TEXT_NODE) {
+    		    node = Util.Node.next_element_sibling(node.parentNode);
+    		    if (!node)
+    		        return false;
+    		    pos = 0;
+    		}
+    		
+    		range = Util.Document.create_range(self.document);
+    		try {
+        		Util.Range.set_start(range, node, pos);
+        		range.collapse(true /* to start */);
+        		Util.Selection.select_range(sel, range);
+        	} catch (e) {
+        	    return false;
+        	}
+    		return true;
+		}
+		
+		Util.Event.add_event_listener(_document, 'mouseup', function() {
+		    move_past_nbsp(-1);
+		});
+		Util.Event.add_event_listener(_document, 'keyup', function(ev) {
+		    if (ev.keyCode == 37)
+		        move_past_nbsp(-1);
+		});
+		Util.Event.add_event_listener(_document, 'keydown', function(ev) {
+		    if (ev.keyCode == 39) {
+		        if (move_past_nbsp(1)) {
+		            return Util.Event.prevent_default(ev);
+		        }
+		    }
+		});
 
 		var paragraph_helper = (new UI.Paragraph_Helper).init(self);
 		Util.Event.add_event_listener(_document, 'keypress', function(event)
@@ -22578,7 +22855,7 @@ UI.Loki = function Loki()
 		}
 	};
 };
-UI.Loki.prototype.version = "2.0.2-pl1";
+UI.Loki.prototype.version = "2.0.3-b2";
 
 UI.Loki.Options = new Util.Chooser();
 UI.Loki.Options._add_bundled = function add_bundled_loki_options() {
@@ -22814,7 +23091,7 @@ var Loki = {
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0.2-pl1",
+	version: "2.0.3-b2",
 	
 	/** @private */
 	_pending: [],
