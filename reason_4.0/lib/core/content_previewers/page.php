@@ -1,7 +1,16 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage content_previewers
+ */
+	/**
+	 * Register previewer with Reason
+	 */
 	$GLOBALS[ '_content_previewer_class_names' ][ basename( __FILE__) ] = 'page_previewer';
 
+	/**
+	 * A content previewer for minisite pages
+	 */
 	class page_previewer extends default_previewer
 	{
 		function display_entity() // {{{

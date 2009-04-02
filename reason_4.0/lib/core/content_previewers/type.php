@@ -1,9 +1,18 @@
 <?php
-	/* [7/23/03 footeb] this previewer now also shows what an entity of this type looks like by listing all of
-	 * the fields from the entity tables the type is associated with */
-
+/**
+ * @package reason
+ * @subpackage content_previewers
+ */
+	/**
+	 * Register previewer with Reason
+	 */
 	$GLOBALS[ '_content_previewer_class_names' ][ basename( __FILE__) ] = 'type_previewer';
 
+	/**
+	 * A content previewer for types
+	 *
+	 * includes a handy display of the tables and fiels that make up the type
+	 */
 	class type_previewer extends default_previewer
 	{
 		function post_show_entity()

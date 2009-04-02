@@ -1,9 +1,20 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage content_previewers
+ */
+	/**
+	 * Include dependencies & register previewer with Reason
+	 */
 	reason_include_once( 'classes/av_display.php' );
 
 	$GLOBALS[ '_content_previewer_class_names' ][ basename( __FILE__) ] = 'av_file_previewer';
 
+	/**
+	 * A content previewer for media files
+	 *
+	 * @todo display embedding code (not able to do it until the embed code conforms to web standards)
+	 */
 	class av_file_previewer extends default_previewer
 	{
 		function display_entity() // {{{
@@ -17,6 +28,10 @@
 			if(!empty($embed_markup))
 			{
 				$this->show_item_default( 'File Preview' , $embed_markup );
+				/* if($embed_markup == strip_tags($embed_markup, REASON_DEFAULT_ALLOWED_TAGS) )
+				{
+					$this->show_item_default( 'Embed Code', htmlspecialchars($embed_markup) );
+				} */
 			}
 			
 			// Everything Else

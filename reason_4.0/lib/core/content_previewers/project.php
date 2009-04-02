@@ -1,7 +1,16 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage content_previewers
+ */
+	/**
+	 * Register previewer with Reason
+	 */
 	$GLOBALS[ '_content_previewer_class_names' ][ basename( __FILE__) ] = 'project_previewer';
 
+	/**
+	 * A content previewer for projects
+	 */
 	class project_previewer extends default_previewer
 	{
 		function display_entity() // {{{

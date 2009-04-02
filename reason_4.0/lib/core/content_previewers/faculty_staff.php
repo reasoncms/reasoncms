@@ -1,8 +1,17 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage content_previewers
+ */
+	/**
+	 * Register previewer with Reason & include dependencies
+	 */
 	$GLOBALS[ '_content_previewer_class_names' ][ basename( __FILE__) ] = 'facultyStaffPreviewer';
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 	
+	/**
+	 * A content previewer for faculty/staff entities
+	 */
 	class facultyStaffPreviewer extends default_previewer
 	{
 		var $ldap_field_mapping = array(

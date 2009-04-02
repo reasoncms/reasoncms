@@ -1,9 +1,16 @@
 <?php
-
-/* Updated 9 Nov 2004 to show link to original image -- mr */
-
+/**
+ * @package reason
+ * @subpackage content_previewers
+ */
+	/**
+	 * Register previewer with Reason
+	 */
 	$GLOBALS[ '_content_previewer_class_names' ][ basename( __FILE__) ] = 'image_previewer';
 
+	/**
+	 * A content previewer for images
+	 */
 	class image_previewer extends default_previewer
 	{
 		function display_entity() // {{{
