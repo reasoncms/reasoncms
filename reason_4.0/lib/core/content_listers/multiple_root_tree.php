@@ -1,13 +1,18 @@
-
 <?php
-	
+/**
+ * @package reason
+ * @subpackage content_listers
+ */
+	/**
+	 * Include parent class and register viewer with Reason.
+	 */
 	reason_include_once( 'content_listers/tree.php3' );
 
-	///////////////////////////////////////////////////////////////////////////////
-	// MAKE SURE THIS VARIABLE IS SET IF OVERLOADING
 	$GLOBALS[ '_content_lister_class_names' ][ basename( __FILE__) ] = 'multiple_root_tree_viewer';
-	///////////////////////////////////////////////////////////////////////////////
-	
+
+	/**
+	 * A lister/viewer that shows hierarchical entities that can have multiple roots in the same site
+	 */
 	class multiple_root_tree_viewer extends tree_viewer
 	{
 		var $roots = array();

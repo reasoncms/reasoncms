@@ -1,6 +1,17 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_listers
+ */
+	/**
+	 * Include parent class and register viewer with Reason.
+	 */
 	reason_include_once( 'content_listers/associate.php' );
 	$GLOBALS[ '_content_lister_class_names' ][ basename( __FILE__) ] = 'sharing_viewer';
+	
+	/**
+	 * A lister/viewer that lists shared entities and presents an interface for borrowing them
+	 */
 	class sharing_viewer extends assoc_viewer
 	{
 		var $sites_that_borrow_type;

@@ -1,12 +1,19 @@
 <?php
-	///////////////////////////////////////////////////////////////////////////////
-	// MAKE SURE THIS VARIABLE IS SET IF OVERLOADING
+/**
+ * @package reason
+ * @subpackage content_listers
+ */
+	/**
+	 * Register viewer with Reason. This is critically important to remember when extending.
+	 */
 	$GLOBALS[ '_content_lister_class_names' ][ basename( __FILE__) ] = 'generic_viewer';
-	///////////////////////////////////////////////////////////////////////////////
 
 	include_once( 'reason_header.php' );
 	reason_include_once( 'classes/viewer.php' );
 
+	/**
+	 * A class that lists entities in the Reason administrative interface
+	 */
 	class generic_viewer extends Viewer
 	{
 		var $columns = array(

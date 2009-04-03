@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_listers
+ */
+	/**
+	 * Include parent class and register viewer with Reason
+	 */
 	reason_include_once( 'content_listers/default.php3' );
 	$GLOBALS[ '_content_lister_class_names' ][ basename( __FILE__) ] = 'assoc_viewer';
 	

@@ -1,13 +1,18 @@
 <?php
-	
+/**
+ * @package reason
+ * @subpackage content_listers
+ */
+	/**
+	 * Include parent class and register viewer with Reason.
+	 */
 	reason_include_once( 'content_listers/tree.php3' );
 	
-	///////////////////////////////////////////////////////////////////////////////
-	// MAKE SURE THIS VARIABLE IS SET IF OVERLOADING
 	$GLOBALS[ '_content_lister_class_names' ][ basename( __FILE__) ] = 'page_tree_viewer';
-	///////////////////////////////////////////////////////////////////////////////
 	
-	
+	/**
+	 * A lister/viewer for types that are hierarchical with only one root per site
+	 */
 	class page_tree_viewer extends tree_viewer
 	{
 		function is_open( $id )  // {{{

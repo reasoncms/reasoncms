@@ -1,12 +1,18 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage content_listers
+ */
+	/**
+	 * Include parent class and register viewer with Reason.
+	 */
 	reason_include_once( 'content_listers/default.php3' );
 
-	///////////////////////////////////////////////////////////////////////////////
-	// MAKE SURE THIS VARIABLE IS SET IF OVERLOADING
 	$GLOBALS[ '_content_lister_class_names' ][ basename( __FILE__) ] = 'image_viewer';
-	///////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * A lister/viewer for Reason images
+	 */
 	class image_viewer extends generic_viewer
 	{
 		var $columns = array(
