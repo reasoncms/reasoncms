@@ -63,6 +63,14 @@
 	 */
 	define( 'REASON_SITE_DIRECTORY_OWNER', 'www' ); // replace this with the user/group that Apache runs as
 	
+	/*
+	 NOTE: while it is not necessary to get Reason up and running, please note that when you are
+	 ready to put Reason into production you will need to set THIS_IS_A_DEVELOPMENT_REASON_INSTANCE,
+	 below, to *false* on your production instance. Reason prevents search engines
+	 from indexing development instances (a good thing on a development instance, but a decidently
+	 bad thing if it is inadvertently applied to a production instance!)
+	 */
+	
 	////////////////////////////////////////////////////////////
 	//
 	// End items you may need to change to get Reason up and running
@@ -118,11 +126,20 @@
 	
 	/**
 	 * THIS_IS_A_DEVELOPMENT_REASON_INSTANCE
+	 *
 	 * Identifies whether this copy of Reason is a testing/development instance of Reason
 	 * or a production/live instance of Reason
+	 *
 	 * Boolean (e.g. true, false -- no quotes)
+	 *
 	 * true = testing/development
 	 * false = production/live
+	 *
+	 * IMPORTANT: If this setting is true (the default value), Reason will hide all pages in this 
+	 * instance from search engines. This is based on the assumption that development and testing
+	 * copies of Reason are not intended to be picked up by search engines and the like.
+	 * In order for pages in your Reason instance to be visible to search engines, you *must*
+	 * change this setting to false.
 	 */
 	define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
 	
