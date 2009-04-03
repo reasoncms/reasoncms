@@ -9,6 +9,8 @@
  * and identify the template file by defining the constant MEDIA_POPUP_TEMPLATE_FILENAME 
  * in the Reason settings.
  * @author Matt Ryan
+ * @package reason
+ * @subpackage popup_templates
  */
 	if( empty( $_GET['id'] ) )
 	{

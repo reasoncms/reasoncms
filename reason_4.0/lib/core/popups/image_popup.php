@@ -9,6 +9,8 @@
  * and identify the template file by defining the constant IMAGE_POPUP_TEMPLATE_FILENAME 
  * in the Reason settings.
  * @author Matt Ryan
+ * @package reason
+ * @subpackage popup_templates
  */
 
 	$reason_session = false;
