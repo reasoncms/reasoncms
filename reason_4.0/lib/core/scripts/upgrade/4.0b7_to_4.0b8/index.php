@@ -53,7 +53,7 @@ define( 'REASON_ASSET_MAX_UPLOAD_SIZE_MEGS',  50 );
 <h3>Additional Notes</h3>
 <p>Starting with this release, it is especially important to ensure that the setting THIS_IS_A_DEVELOPMENT_REASON_INSTANCE is properly defined
 in your settings file. This is because Reason now uses the value of this setting to determine if the a meta tag excluding robots should be
-included on pages. Please make sure that your prduction instance of Reason has this setting set to <tt>false</tt>, and your development and
+included on pages. Please make sure that your production instance of Reason has this setting set to <tt>false</tt>, and your development and
 testing instances of Reason have this setting set to <tt>true</tt>. This upgrade helps to ensure that your development and testing versions of
 Reason are not inadvertently indexed by Google or other search engines.</p>
 <h3>Scripts to Run</h3>
