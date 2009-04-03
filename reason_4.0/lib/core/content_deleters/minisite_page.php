@@ -1,7 +1,17 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_deleters
+ */
+ 	/**
+ 	 * Register deleter with Reason and include dependencies
+ 	 */
 	$GLOBALS[ '_reason_content_deleters' ][ basename( __FILE__) ] = 'minisite_page_deleter';
 	reason_include_once( 'classes/admin/admin_disco.php' );
 
+	/**
+	 * A content deleter that handles expungement of minisite pages
+	 */
 	class minisite_page_deleter extends deleteDisco
 	{
 		function delete_entity() // {{{

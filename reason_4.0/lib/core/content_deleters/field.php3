@@ -1,9 +1,19 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_deleters
+ */
+ 	/**
+ 	 * Register deleter with Reason and include dependencies
+ 	 */
 	$GLOBALS[ '_reason_content_deleters' ][ basename( __FILE__) ] = 'field_deleter';
 	
 	reason_include_once( 'classes/admin/admin_disco.php' );
 	reason_include_once( 'classes/entity.php' );
 
+	/**
+	 * A content deleter that handles expungement of fields
+	 */
 	class field_deleter extends deleteDisco
 	{
 		function pre_show_form() // {{{
