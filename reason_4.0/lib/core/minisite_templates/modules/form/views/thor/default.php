@@ -1,6 +1,18 @@
 <?
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+/**
+ * Include dependencies
+ */
 include_once('reason_header.php');
 reason_include_once('minisite_templates/modules/form/views/default.php');
+
+/**
+ * Register form with Reason
+ */
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultThorForm';
 
 /**

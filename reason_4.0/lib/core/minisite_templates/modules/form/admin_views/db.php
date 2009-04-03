@@ -1,6 +1,17 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+/**
+ * Include dependencies
+ */
 include_once('reason_header.php');
 include_once(CARL_UTIL_INC . 'db/table_admin.php');
+/**
+ * Register view with Reason
+ */
 $GLOBALS[ '_form_admin_view_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultDBAdminForm';
 
 /**

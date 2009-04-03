@@ -1,6 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+/**
+ * Include dependencies
+ */
 include_once('reason_header.php');
 include_once(DISCO_INC . 'disco.php');
+
+/**
+ * Register form with Reason
+ */
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultForm';
 
 /**
