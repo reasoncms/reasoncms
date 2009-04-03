@@ -1269,6 +1269,17 @@
 		return false;
 	}
 	
+	/**
+	 * Turn an array of unique names into an array of entities
+	 *
+	 * The returned array is keyed on entity id.
+	 *
+	 * The returned array will be smaller than the array given if any of the unique names aren't
+	 * found in the database.
+	 *
+	 * @param array $unique_names
+	 * @return array Reason entities
+	 */
 	function reason_unique_names_to_entities($unique_names)
 	{
 		$entities = array();
@@ -1280,5 +1291,15 @@
 			}
 		}
 		return $entities;
+	}
+	
+	/**
+	 * Get a list of tables that are not normal entity tables, and which should not be treated as such
+	 *
+	 * @return array
+	 */
+	function reason_get_protected_tables()
+	{
+		return array('allowable_relationship','entity','page_cache_log','page_cache_log_archive','relationship','URL_history',);
 	}
 ?>
