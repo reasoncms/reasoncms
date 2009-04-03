@@ -1,4 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?php
+/**
+ * A script that will copy a page's URL history
+ *
+ * This script can be handy if you are replacing one site with another.
+ *
+ * Even if the new pages have the same URLs as the old pages, if the old pages ever existed
+ * at different URLs, Reason's 404 handling mechanism will redirect them to the *old* pages.
+ *
+ * This script will allow you to take care of that problem by overlaying the old page's
+ * URL history with a new history created for the new page. It is as if you had, in rapid
+ * succession, moved the new page to all the locations where the old page had ever existed.
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Replicate History</title>
