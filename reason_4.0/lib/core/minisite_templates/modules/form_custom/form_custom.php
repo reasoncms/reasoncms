@@ -1,9 +1,18 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+	/**
+	 * Include parent class and other dependencies
+	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	reason_include_once( 'function_libraries/file_finders.php' );
 	include_once( CARL_UTIL_INC . 'db/table_admin.php' );
 	
+	/**
+	 * Register module with Reason
+	 */
 	$GLOBALS[ '_module_class_names' ][ module_basename( __FILE__) ] = 'FormCustomMinisiteModule';
 
 	/**

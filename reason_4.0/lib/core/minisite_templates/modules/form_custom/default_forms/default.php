@@ -1,5 +1,15 @@
 <?
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+	/**
+	 * Include parent class
+	 */
 	include_once( DISCO_INC.'disco_db.php' );
+	/**
+	 * Register form with Reason
+	 */
 	$GLOBALS[ '_custom_form_class_names' ][ module_basename( __FILE__, '.php') ] = 'DefaultCustomForm';
 	
 	/**
