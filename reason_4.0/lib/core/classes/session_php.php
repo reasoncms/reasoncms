@@ -1,39 +1,74 @@
 <?php
-	/*
-	 *	session_php.php
-	 *	Dave Hendler
-	 *	9/9/04
-	 *
-	 *	Implementation of the session interface using PHP sesssions
-	 *
-	 *	THIS IS ACTUALLY A SECURE IMPLEMENTATION.  Uses a second cookie for a number of reasons to be specified later.
+	/**
+	 *	@package reason
+	 *	@subpackage classes
 	 */
-
+	
+	/**
+	 * Include dependencies
+	 */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'classes/session.php' );
 	reason_include_once( 'classes/entity_selector.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
 	
+	/**
+	 *	Implementation of the session interface using PHP sesssions
+	 *
+	 *	THIS A SECURE IMPLEMENTATION.  Uses a second cookie for a number of reasons to be specified later.
+	 *
+	 *	@author Dave Hendler
+	 */
 	class Session_PHP extends Session
 	{
-		// boolean to determine if we are on a secure page or not
+		/**
+		 * boolean to determine if we are on a secure page or not
+		 * @var boolean
+		 */
 		var $secure_if_available = false;
-		// flag passed to session to choose secure (1) /unsecure (0) sessions
+		/**
+		 * flag passed to session to choose secure (1) /unsecure (0) sessions
+		 * @var integer (1 or 0)
+		 */
 		var $secure_session_flag = 1;
-		// this is a debug tool.  when a session is started, this is pointed at the $_SESSION array.  This basically
-		// allows me to see if the session has loaded properly when prp()ing the session object.  DO NOT USE THIS.
-		// again, DO NOT USE THIS FOR ANYTHING.
+		/**
+		 * A debug tool.
+		 *
+		 * When a session is started, this is pointed at the $_SESSION array.  This basically
+		 * allows us to see if the session has loaded properly when prp()ing the session object.
+		 *
+		 * DO NOT USE THIS.
+		 *
+		 * Again, DO NOT USE THIS FOR ANYTHING.
+		 *
+		 * @access private
+		 * @deprecated
+		 */
 		var $__session_ref;
 		
-		// keep track of whether the session has been started.
+		/**
+		 * Keep track of whether the session has been started.
+		 * @var boolean
+		 */
 		var $_started = false;
 		
 		var $_sid;
 		
 		var $error_num;
 		
+		/**
+		 * The length of the session, in seconds.
+		 *
+		 * The default value is overridden with REASON_SESSION_TIMEOUT * 60 if
+		 * REASON_SESSION_TIMEOUT is set.
+		 *
+		 * @var integer
+		 */
 		var $expires = 3600;
 		
+		/**
+		 * @var array
+		 */
 		var $errors = array(
 			1 => array(
 				'name' => 'ERR_SESS_EXPIRED',
