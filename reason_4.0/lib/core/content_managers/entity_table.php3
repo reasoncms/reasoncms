@@ -64,6 +64,10 @@
 				{
 					$this->set_error('name','That is a is a reserved table name. Please choose a different table name.');
 				}
+				elseif( $this->_table_is_protected($this->get_value('name')) )
+				{
+					$this->set_error('name','That is a protected table name. Please choose a different table name.');
+				}
 			}
 		}
 		/**
@@ -129,6 +133,16 @@
 					return true;
 			}
 			return false;
+		}
+		/**
+		 * Makes sure table does not use name of a protected Reason table
+		 *
+		 * @param string $name Name of the prospective table
+		 * @return boolean true if conflicting, false if not conflicting
+		 */
+		function _table_is_protected($name)
+		{
+			return in_array($name, reason_get_protected_tables());
 		}
 		/**
 		 * Creates the table when a new entity is saved
