@@ -1,8 +1,13 @@
 <?php
 /*
- * This script contains a class fixes amputees for the current type.
+ * This script contains a class that fixes amputees for the current type.
+ * @package reason
+ * @subpackage finish_actions
  */
  
+/**
+ * Register the finish action with Reason & include dependencies
+ */
 $GLOBALS['_finish_action_classes'][ basename( __FILE__) ] = 'fixAmputees';
 reason_include_once('finish_actions/default.php');
 reason_include_once('classes/url_manager.php');

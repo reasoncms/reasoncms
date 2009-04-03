@@ -1,8 +1,13 @@
 <?php
 /*
  * This file contains the class defaultFinishAction
+ * @package reason
+ * @subpackage finish_actions
  */
  
+/**
+ * Register the finish action with Reason
+ */
 $GLOBALS['_finish_action_classes'][ basename( __FILE__) ] = 'defaultFinishAction';
 
 /**
