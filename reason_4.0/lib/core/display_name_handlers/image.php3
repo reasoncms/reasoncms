@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage display_name_handlers
+ */
+	
+/**
+ * Register display name handler with Reason
+ */
 $display_handler = 'image_display_handler';
 $GLOBALS['display_name_handlers']['image.php3'] = 'image_display_handler';
 
@@ -8,6 +16,14 @@ if( !defined( 'DISPLAY_HANDLER_IMAGE_PHP3' ) )
 
 	reason_include_once( 'classes/entity.php' );
 
+	/**
+	 * A display name handler for images
+	 *
+	 * Includes a thumbnail of the image as part of the display name
+	 *
+	 * @param mixed $id Reason ID or entity
+	 @ @return string
+	 */
 	function image_display_handler( $id )
 	{
 		if( !is_object( $id ) )

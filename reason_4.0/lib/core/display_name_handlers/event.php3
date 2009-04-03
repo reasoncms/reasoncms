@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage display_name_handlers
+ */
+	
+/**
+ * Register display name handler with Reason
+ */
 $display_handler = 'event_display_handler';
 $GLOBALS['display_name_handlers']['event.php3'] = 'event_display_handler';
 
@@ -8,6 +16,11 @@ if( !defined( 'DISPLAY_HANDLER_EVENT_PHP3' ) )
 
 	reason_include_once( 'classes/entity.php' );
 
+	/**
+	 * A display name handler for events
+	 *
+	 * This seems to be Carleton-specific code. Why is it in the core?
+	 */
 	function event_display_handler( $id )
 	{
 		if( !is_object( $id ) )
