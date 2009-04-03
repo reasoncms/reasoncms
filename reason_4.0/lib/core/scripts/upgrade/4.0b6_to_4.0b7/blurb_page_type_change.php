@@ -1,17 +1,15 @@
 <?php
-include_once('reason_header.php');
-include_once(CARL_UTIL_INC . 'basic/html_funcs.php');
-
 /**
- * Change pages of page type "blurb" that have blurbs with headings to a page type that demotes heading levels.
- *
  * @package reason
  * @subpackage scripts
  */
 
 /**
- * Start script
+ * Include Reason library
  */
+include_once('reason_header.php');
+include_once(CARL_UTIL_INC . 'basic/html_funcs.php');
+
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -26,6 +24,9 @@ include_once(CARL_UTIL_INC.'db/db_selector.php');
 reason_include_once('function_libraries/user_functions.php');
 reason_include_once('function_libraries/admin_actions.php');
 
+/**
+ * Change pages of page type "blurb" that have blurbs with headings to a page type that demotes heading levels.
+ */
 class changeBlurbPageType
 {
 	var $mode;
