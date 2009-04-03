@@ -1,10 +1,13 @@
 <?php
 	/*
-	 *	dave hendler 2002
 	 *	minisite front end
 	 *
 	 *	gets site id and page id from passed paramaters
 	 *	gets all minisite information from that and just goes for it
+	 *
+	 *	@author dave hendler
+	 * 	@package reason
+	 * 	@subpackage minisite
 	 */
 	
 	/*
@@ -152,7 +155,7 @@
 		}
 	
 		// Determine whether to use caching or not
-		$no_cache_reason = '';
+		$no_cache_reasons = array();
 		if( $site->get_value( 'use_page_caching' ) )
 		{
 			$use_cache = true;
@@ -160,7 +163,7 @@
 		else
 	    	{
 			$use_cache = false;
-			$no_cache_reason .= 'unsupported site, ';
+			$no_cache_reasons[] = 'unsupported site';
 		}
 		// did we hit or miss the cache if we used it?
 		$cache_hit = null;
@@ -177,17 +180,17 @@
 		if( is_developer() )
 		{
 			$use_cache = false;
-			$no_cache_reason .= 'developer, ';
+			$no_cache_reasons[] = 'developer';
 		}
 		if( !empty( $_POST ) )
 		{
 			$use_cache = false;
-			$no_cache_reason .= '_POST, ';
+			$no_cache_reasons[] = '_POST';
 		}
 		if ( $sess->exists() )
 		{
 			$use_cache = false;
-			$no_cache_reason .= 'session, ';
+			$no_cache_reasons[] = 'session';
 		}
 
 		// Check the cache
@@ -285,8 +288,15 @@
 					$str .= 'miss';
 			}
 			else
-				$str .= "caching is OFF: $no_cache_reason";
-			trigger_error( $str );
+				$str .= 'caching is OFF: '.implode(', ',$no_cache_reasons);
+			
+			echo "\n".'<div style="background-color:#ddd;color:#555;font-size:0.75em;padding:1px 1em;">';
+			echo '<p>'.$str.'</p>';
+			if(defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE)
+			{
+				echo '<p style="color:#777;">This instance of Reason is set up as a development/testing instance. As a result, this page is hidden from search engines. If this is an error, modify the setting THIS_IS_A_DEVELOPMENT_REASON_INSTANCE.</p>';
+			}
+			echo '</div>';
 		}
 		reason_log_page_generation_time($page_gen_time);
 	}
