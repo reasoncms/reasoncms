@@ -1,7 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+/**
+ * Include parent class(es)
+ */
 include_once(DISCO_INC.'disco.php');
 include_once (CARL_UTIL_INC . 'db/table_admin.php');
 
+/**
+ * Register the view with Reason
+ */
 $GLOBALS[ '_classified_module_view' ][ module_basename( __FILE__) ] = 'ClassifiedView';
 
 /**

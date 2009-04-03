@@ -1,7 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+/**
+ * include dependencies
+ */
 reason_include_once('minisite_templates/modules/generic3.php');
 reason_include_once('minisite_templates/modules/classified/classified_model.php');
 
+/**
+ * Register the module with Reason
+ */
 $GLOBALS[ '_module_class_names' ][ module_basename( __FILE__) ] = 'ClassifiedModule';
 /**
  * The classified module is based upon Generic3, and uses something of an MVC approach to handle various scenarios
@@ -9,9 +20,6 @@ $GLOBALS[ '_module_class_names' ][ module_basename( __FILE__) ] = 'ClassifiedMod
  * Both the model and the view can be specified in the page type - the module acts as the controller
  *
  * The model responds to requests for information (ie - categories, classified entities, etc) and is available to view and the controller
- *
- * @package reason
- * @subpackage minisite_modules
  * 
  * @author Nathan White and Dan Ehrenberg
  */

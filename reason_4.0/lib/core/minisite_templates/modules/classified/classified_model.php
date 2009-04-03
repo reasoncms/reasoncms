@@ -1,10 +1,18 @@
 <?
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+/**
+ * Register the model with Reason
+ */
 $GLOBALS[ '_classified_module_model' ][ module_basename( __FILE__) ] = 'ClassifiedModel';
 
 include_once(TYR_INC.'email.php');
 
 /**
- * Classified model - primary returns data. The controlling module and the views may use this model.
+ * Classified model - primarily returns data. The controlling module and the views may use this model.
  * @author Nathan White
  */
  
