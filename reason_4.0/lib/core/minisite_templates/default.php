@@ -1,13 +1,30 @@
 <?php
-	/* 
-		dave hendler, brendon stanton, matt ryan 2003
-		
-		the default minisite_template object
-	*/
+/**
+ * the default minisite_template object
+ * @author dave hendler
+ * @author brendon stanton
+ * @author matt ryan
+ * @author ben cochran
+ * @author nathan white
+ * @package reason
+ * @subpackage minisite_templates
+ */
 
-
+/**
+ * Register the template with Reason
+ *
+ * This is important for any template you create.
+ *
+ * Because templates are referred to by filename alone, Reason needs a way to identify
+ * the name of the class to instantiate. The way it does this is by looking to see if there
+ * is an index in the $GLOBALS[ '_minisite_template_class_names' ] array that
+ * matches the name of the file.
+ */
 $GLOBALS[ '_minisite_template_class_names' ][ basename( __FILE__) ] = 'MinisiteTemplate';
-	
+
+/**
+ * Include a bunch of Reason libraries
+ */
 reason_include_once( 'function_libraries/images.php' );
 reason_include_once( 'function_libraries/file_finders.php' );
 reason_include_once( 'content_listers/tree.php3' );
@@ -16,62 +33,294 @@ reason_include_once( 'classes/head_items.php' );
 reason_include_once( 'classes/page_access.php' );
 include_once( CARL_UTIL_INC . 'dev/timer.php' );
 
+/**
+ * The default (and base) Reason minisite template class
+ *
+ * This class handles building Reason pages. It is responsible for two main things:
+ * 
+ * 1. Reading the page type of the current reason page, instantiating, and initializing
+ *    the modules that are part of the page
+ *
+ * 2. Producing and assembling the HTML of the page. Note that modules typically handle their own
+ *    markup generation, so the template is only responsible for the markup *outside* the modules'
+ *    output. Altering the oputput of modules can be done in some cases by extending the module,
+ *    or in more advanced cases by using a view/markup_generation/templating system implemented by
+ *    the module itself. This can vary from module-to-module.
+ *
+ * To create a new Reason template, you can extend this class and overload methods. As the inner
+ * workings of this class are not 100% guaranteed to remain exactly as-is, it is a good idea to
+ * limit modifications to the run() method and the other methods that produce (X)HTML markup.
+ *
+ * Note that Templates *should not* obligate particular css. Coding css directly into the template
+ * will make it a lot less flexible, as it means that you will be creating a new template for every
+ * single little css change. It is much better practice to think of the template as the markup and 
+ * the theme (set up in the Reason database as a template + css) as where the markup and the style 
+ * meet. This will enable you to use a single template for any number of similar themes.
+ *
+ * @todo Complete documenting this class
+ *
+ * @todo Make a clearer distinction between the logic and presentation -- greater mvc design
+ *       and/or use of Smarty or other templating system for the markup, perhaps
+ *
+ * @todo Tighten up distinction between public and private methods and attributes
+ *
+ * @todo Work to stop passing a reference to the template to the modules. This is a bad design, as
+ *       it tightly couples the modules to the template (meaning that they cannot be intantiated
+ *       or run outside the context of a minisite template).
+ *
+ * @todo Allow multiple modules to be placed in a single section
+ *
+ * @todo Eliminate the silly table-based/non-table-based logic... it currently means that an ideal
+ *       extension modifies both branches of the logic, which would be kind of crazy.
+ */
 class MinisiteTemplate
 {
+	/**
+	 * The id of the current site
+	 * @var integer
+	 * @todo clean up modules so that this can be private
+	 */
 	var $site_id;
+	/**
+	 * An entity object representing the current site
+	 * @var object (entity)
+	 * @todo clean up modules so that this can be private
+	 */
 	var $site_info;
+	/**
+	 * The id of the current page
+	 * @var integer
+	 * @todo clean up modules so that this can be private
+	 */
 	var $page_id;
+	/**
+	 * An entity object representing the current page
+	 * @var object (entity)
+	 * @todo clean up modules so that this can be private
+	 */
 	var $page_info;
+	/**
+	 * The title of the current page
+	 *
+	 * NOTE: this generally just contains the name of the page.
+	 * The full title as used in the <title> tag is produced by the method get_title().
+	 *
+	 * @var string
+	 * @access private
+	 */
 	var $title;
 	
-	// These two vars are deprecated and will not do anything any more.
-	// Now use $this->head_items.
+	/**
+	 * @deprecated
+	 * @access private
+	 * Now use $this->head_items object.
+	 */
 	var $css_files;
+	
+	/**
+	 * @deprecated
+	 * @access private
+	 * Now use $this->head_items object.
+	 */
 	var $meta;
 	
+	/**
+	 * A minisite navigation class, which contains a tree of all pages in the site
+	 * and can be asked for links, etc.
+	 * @var object (supports minisiteNavigation API)
+	 * @todo clean up modules so that this can be a private variable
+	 */
 	var $pages;
+	/**
+	 * The theme entity that the template should use to get css, etc.
+	 * @var object (entity)
+	 * @access private
+	 */
 	var $theme;
+	/**
+	 * The name of the navigation class that the module should instantiate
+	 *
+	 * To use a different navigation class than the default, include the class in the file that
+	 * defines your template, and then overload the value of this variable.
+	 *
+	 * @access private
+	 * @var string
+	 */
 	var $nav_class = 'MinisiteNavigation';
+	/**
+	 * An array of breadcrumbs that can be displayed in the template.
+	 * 
+	 * The last breadcrumb will be used in the <title> attribute.
+	 *
+	 * Do not address this array directly to set crumbs; use the method add_crumb() instead.
+	 *
+	 * @access private
+	 * @var array
+	 */
 	var $additional_crumbs = array();
+	/**
+	 * @deprecated
+	 * @access private
+	 */
 	var $last_modified;
+	/**
+	 * Is there a current user logged in?
+	 * @var boolean
+	 */
 	var $logged_in = false;
+	/**
+	 * Is the current user in editing mode?
+	 * @var boolean
+	 */
 	var $editing = false;
+	/**
+	 * An array that maps section names to module names
+	 *
+	 * Array keys are section names, array values are module names
+	 *
+	 * @var array
+	 * @access private
+	 */
 	var $section_to_module = array();
+	
+	/**
+	 * An array of module objects
+	 *
+	 * Array keys are section names, array values are module objects
+	 * @access private
+	 */
 	var $_modules = array();
-	
-	/* This is an array that allows modules to add head items. 
-	It is also used to replace the css_files and meta class arrays on the template.
-	
-	It looks like this:
-	array(	1=>array(
-					'element'=>'link',
-					'attributes'=>array(
-											'rel'=>'Stylesheet',
-											'href'=>'foo.css',
-											'type'=>'text/css',
-										),
-					),
-			2=>array(
-					'element'=>'title',
-					'content'=>'This is the page\'s title',
-					),
-		); */
 	
 	/**
 	 * Head items object
+	 *
+	 * This object represents all the html elements that should be placed in the head of the page.
+	 * You can use it to add head items (like css, js, meta, etc.) to the page.
+	 *
+	 * A reference to this object is passed to all modules, enabling them to add any required head
+	 * items to the page.
+	 *
+	 * Note that head items added after the head items have already been output in the run phase
+	 * will not be included -- they must be added during the initialization phase of the template
+	 * or module.
+	 *
+	 * Don't worry about duplicate items; the head_items object scrubs duplicates.
+	 *
+	 * @var object
+	 * @todo clean up modules so that this can be a private variable
 	 */
 	var $head_items;
+	/**
+	 * A simple boolean that controls whether the default org name (the constant
+	 * FULL_ORGANIZATION_NAME, set in  settings/package_settings.php ) should be placed in the 
+	 * title of the page.
+	 * @var boolean
+	 * @access private
+	 */
 	var $use_default_org_name_in_page_title = false;
+	/**
+	 * This is a boolean that sends the default module into two different modes -- 
+	 * table-based or non-table-based
+	 * 
+	 * This is a really bad design necessitated by our coupling of logic and presentation --
+	 * we wanted to have logic shared by both table-based and non-table-based layouts.
+	 *
+	 * You probably should not rely on this variable being present in extensions to the class.
+	 * 
+	 * @deprecated
+	 * @var boolean
+	 * @access private
+	 */
 	var $use_tables = false;
+	/**
+	 * An array of major page sections
+	 *
+	 * Keys are section names and values are class methods
+	 *
+	 * This is another not-so-well-thought-out design that probably shouldn't be in the default template.
+	 * It was an attempt at generalization that does not allow enough customization -- what if I want a
+	 * particular html element between these two sections, or this section needs an additional wrapper
+	 * div?
+	 *
+	 * You should probably not rely on this variable in your extensions.
+	 * 
+	 * @var array
+	 * @access private
+	 */
 	var $sections = array('content'=>'show_main_content','related'=>'show_sidebar','navigation'=>'show_navbar');
-	//var $doctype = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+	/**
+	 * The doctype that the template should use
+	 * @var string
+	 * @access private
+	 */
 	var $doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
+	/**
+	 * Should the template cache the navigation object?
+	 *
+	 * The default template has the option to store the navigation object in a cache.
+	 * This can help speed things up (reducing queries and php processing) for sites that are 
+	 * large and have high traffic.
+	 *
+	 * The downside to navigation caching is that page changes -- title changes, new pages,
+	 * deletions, moves -- may not appear on the site for up to 15 minutes.
+	 *
+	 * @var boolean
+	 * @access private
+	 */
 	var $use_navigation_cache = false;
-	var $mode = 'default'; // possible values: 'default','documentation','samples'
+	/**
+	 * EXPERIMENTAL: page mode
+	 *
+	 * This class variable stores the mode of the page
+	 *
+	 * The template can be put into non-standard modes like "documentation," in which the template
+	 * asks the modules for their documentation rather than asking them for their output, or
+	 * "samples" in which the module can produce sample output.
+	 *
+	 * This is still an experimental feature of the Reaspon template system.
+	 *
+	 * @var string possible values: 'default','documentation','samples'
+	 * @access private
+	 */
+	var $mode = 'default';
+	/**
+	 * Have the current site's parent site been requested from the db?
+	 *
+	 * Until they have, the value of this is false. Afterwards, it is true.
+	 *
+	 * @var boolean
+	 * @acces private
+	 */
 	var $queried_for_parent_sites = false;
+	/**
+	 * The parent sites of the current site
+	 *
+	 * Do not attempt to access this directly, as it will not necessarily be populated.
+	 * Use the method get_parent_sites() instead.
+	 *
+	 * @access private
+	 * @var array
+	 */
 	var $parent_sites = array();
+	/**
+	 * Should the template add the basic Reason modules.css and modules_mod.css?
+	 *
+	 * These css files include basic styling for many common modules. If you want to style 
+	 * modules 100% from scratch, set this variable to false.
+	 *
+	 * @access private
+	 * @var boolean
+	 */
 	var $include_modules_css = true;
 	
+	/**
+	 * Set up the template
+	 *
+	 * @var integer $site_id
+	 * @var integer $page_id
+	 * @todo page_id should not have a default value -- this makes it seem like you could initialize
+	 *       the template without providing a page_id, but that would result in a 404.
+	 */
 	function initialize( $site_id, $page_id = '' ) // {{{
 	{
 		$this->site_id = $site_id;
@@ -227,7 +476,7 @@ class MinisiteTemplate
 		}
 		else
 		{
-			trigger_error('The setting ERROR_403_FULL_PATH is not able to be included');
+			trigger_error('The file at ERROR_403_PATH ('.ERROR_403_PATH.') is not able to be included');
 			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>403: Forbidden</title></head><body><h1>403: Forbidden</h1><p>You do not have access to this page.</p></body></html>';
 		}
 	}
@@ -310,7 +559,7 @@ class MinisiteTemplate
 				$this->head_items->add_head_item('meta',array('name'=>$meta_name,'content'=>$content) );
 			}
 		}
-		if (!empty ($this->textonly) || !empty( $_REQUEST['no_search'] ) || $this->site_info->get_value('site_state') != 'Live')
+		if (!empty ($this->textonly) || !empty( $_REQUEST['no_search'] ) || $this->site_info->get_value('site_state') != 'Live' || ( defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE ) )
 		{
 			$this->head_items->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
 		}
@@ -735,9 +984,24 @@ class MinisiteTemplate
 	{
 		// finish body and html
 		$this->do_org_foot();
+		//$this->_do_testing_form();
 		echo '</body>'."\n";
 		echo '</html>'."\n";
 	} // }}}
+	
+	/* function _do_testing_form()
+	{
+		echo '<form name="testing123" action="?">';
+		$keys = array();
+		foreach(array_keys($this->_modules) as $module_key)
+		{
+			$keys = array_merge($keys,array_keys($this->_modules[$module_key]->get_cleanup_rules()));
+		}
+		$keys = array_unique($keys);
+		foreach($keys as $key)
+			echo '<input type="hidden" name="'.htmlspecialchars($key,ENT_QUOTES).'" value="" />';
+		echo '</form>';
+	} */
 	
 	function show_banner()
 	{
@@ -1123,6 +1387,9 @@ class MinisiteTemplate
 		if ($this->has_content( 'post_foot' ))
 			$this->run_section( 'post_foot' );
 		echo '</div>';
+		// I'm not ready to turn this on, but in the near future we should make this part of the
+		// default template -- Matt Ryan. Apr. 3, 2009
+		// $this->show_reason_badge();
 		echo '</div>'."\n";
 	} // }}}
 	function show_footer_tabled() // {{{
@@ -1132,8 +1399,14 @@ class MinisiteTemplate
 		$this->run_section( 'edit_link' );
 		if ($this->has_content( 'post_foot' ))
 			$this->run_section( 'post_foot' );
+		// $this->show_reason_badge();
 		echo '</div>'."\n";
 	} // }}}
+	
+	function show_reason_badge()
+	{
+		echo '<div class="poweredBy">Powered by <a href="http://reason.carleton.edu" title="Reason Content Management System">Reason CMS</a></div>';
+	}
 
 	function add_crumb( $name , $link = '' ) // {{{
 	{
