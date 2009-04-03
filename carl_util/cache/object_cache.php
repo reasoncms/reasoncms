@@ -1,5 +1,12 @@
 <?php
+/**
+ * @package carl_util
+ * @subpackage cache
+ */
 
+/**
+ * Include dependencies
+ */
 require_once( 'paths.php');
 require_once(SETTINGS_INC.'object_cache_settings.php');
 
@@ -20,8 +27,6 @@ require_once(SETTINGS_INC.'object_cache_settings.php');
  *  	$obj =& $cache->fetch();
  *  </code>
  *
- *  @package carl_util
- *  @subpackage cache
  *  @author Nathan White
  *  @todo implement smart fallbacks so that alternate caching can be used if the specified type fails
  */
