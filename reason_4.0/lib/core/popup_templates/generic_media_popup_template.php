@@ -13,6 +13,8 @@
  * MEDIA_POPUP_TEMPLATE_FILENAME in the Reason settings
  * 
  * @author Matt Ryan
+ * @package reason
+ * @subpackage popup_templates
  */
 foreach($GLOBALS['_reason_media_popup_data'] as $key=>$val)
 {
