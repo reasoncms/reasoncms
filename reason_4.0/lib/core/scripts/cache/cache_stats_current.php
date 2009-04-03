@@ -1,4 +1,10 @@
 <?php
+/**
+ * A file that graphs out page cache information
+ * @todo This method of recording stats is way too slow to report on; should probably log into files instead of into the DB
+ * @package reason
+ * @subpackage scripts
+ */
 	include_once( 'reason_header.php' );
 	connectDB( REASON_DB );
 
