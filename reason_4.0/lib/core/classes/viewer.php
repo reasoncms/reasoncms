@@ -52,6 +52,7 @@
 	 * }}}
 	 * @author Brendon Stanton and Dave Hendler
 	 * @package reason
+	 * @subpackage classes
 	 */
 	
 	/**
