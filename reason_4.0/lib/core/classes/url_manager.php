@@ -1,41 +1,92 @@
 <?php
-
-	/*
-	 *	new url management solution
-	 *	dave hendler, started 7/24/03
-	 *
-	 *	The goal of this system is to handle URLs in a nice way.  Instead of
-	 *	having all URLs have ugly IDs and queries, we use mod_rewrite and
-	 *	.htaccess files to hide the ugly URLs from sight.  This new method is
-	 *	going to stray away from the central .htaccess file with thousands of
-	 *	rules and instead have independent files for each site.
-	 *
-	 *	The url_manager class handles all of these things.  
+/**
+ * @package reason
+ * @subpackage classes
+ */
+	/**
+	 * Include dependencies
 	 */
-
 	include_once( 'reason_header.php' );
 	include_once(CARL_UTIL_INC.'basic/filesystem.php');
 	reason_include_once( 'classes/entity_selector.php' );
 	reason_include_once( 'function_libraries/url_utils.php' );
 
+	/**
+	 *	Tool to manage .htaccess files
+	 *
+	 *	The goal of this system is to handle URLs in a nice way.  Instead of
+	 *	having all URLs have ugly IDs and queries, we use mod_rewrite and
+	 *	.htaccess files to hide the ugly URLs from sight.  This tool produce
+	 *	independent .htaccess files for each site.
+	 *
+	 *	The url_manager class handles all of these things.  
+	 *
+	 *	@author dave hendler
+	 */
 	class url_manager
 	{
-		var $site_id;	// site to work on
-		var $web_root;	// root of the web tree
-		var $debug = false;
-
-		var $_fp;		// internal file pointer
-		var $_rewrite_begin_str = 'reason-auto-rewrite-begin';	// beginning marker of rewrites
-		var $_rewrite_end_str = 'reason-auto-rewrite-end';		// ending marker of rewrites
+		/**
+		 * The id of the site to work on
+		 * @var integer
+		 */
+		var $site_id;
 		
-		// Specifies an external filepath to get the username and password for http authentication
-		// Should include the local variables $http_authentication_username and $http_authentication_password
+		/**
+		 * root of the web tree
+		 * @var string
+		 */
+		var $web_root;
+		
+		/**
+		 * @var boolean
+		 */
+		var $debug = false;
+		
+		/**
+		 * internal file pointer
+		 * @access private
+		 */
+		var $_fp;
+		
+		/**
+		 * beginning marker of rewrites
+		 * @var string
+		 */
+		var $_rewrite_begin_str = 'reason-auto-rewrite-begin';
+		
+		/**
+		 * ending marker of rewrites
+		 * @var string
+		 */
+		var $_rewrite_end_str = 'reason-auto-rewrite-end';
+		
+		/**
+		 * Specifies an external filepath to get the username and password for http authentication
+		 *
+		 * Should include the local variables $http_authentication_username and $http_authentication_password
+		 *
+		 * @var string
+		 */
 		var $http_credentials_settings_file = HTTP_CREDENTIALS_FILEPATH;
 		
+		/**
+		 * @var string
+		 */
 		var $web_base_url;
+		
+		/**
+		 * @var string
+		 */
 		var $full_base_url;
 		
+		/**
+		 * @var string
+		 */
 		var $test_web_base_url;
+		
+		/**
+		 * @var string
+		 */
 		var $test_full_base_url;
 		
 		function url_manager( $site_id, $debug = false, $do_global_rewrites = false ) // {{{
