@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package reason
+ * @subpackage classes
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'function_libraries/admin_actions.php');
 reason_include_once( 'classes/entity_selector.php');
@@ -28,7 +32,6 @@ reason_include_once( 'classes/entity_selector.php');
 * 
 * The default $causal_agent "causal_agent" needs to be a valid reason user on any instance that uses this class.
 *
-* @package reason
 * @author Nathan White
 * 4-28-2006
 */
