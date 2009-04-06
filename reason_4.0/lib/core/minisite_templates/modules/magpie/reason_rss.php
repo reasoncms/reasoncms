@@ -200,8 +200,10 @@ class reasonFeedDisplay
             $search_match = 1 ; 
             if($this->_search_string != ''){
                 $search_match = 0 ; 
-                if(preg_match('/'.$this->_search_string.'/i' , $title)){ $search_match = 1 ; }
-                if(preg_match('/'.$this->_search_string.'/i' , $description)){ $search_match = 1 ; }
+
+                $clean_search_string = preg_quote($this->_search_string,'/') ; 
+                if(preg_match('/'.$clean_search_string.'/i' , $title)){ $search_match = 1 ; }
+                if(preg_match('/'.$clean_search_string.'/i' , $description)){ $search_match = 1 ; }
                 }
  
             // skip events in the future
