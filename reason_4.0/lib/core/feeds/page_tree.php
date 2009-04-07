@@ -1,13 +1,21 @@
 <?php
+/**
+ * @package reason
+ * @subpackage feeds
+ */
 
-/* This is the page tree feed */
-
+/**
+ * Include dependencies & register feed with Reason
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'feeds/default.php' );
 reason_include_once( 'minisite_templates/nav_classes/default.php' );
 reason_include_once('function_libraries/url_utils.php');
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'pageTreeFeed';
 
+/**
+ * This is the page tree feed
+ */
 class pageTreeFeed extends defaultFeed
 {
 	var $page_tree;
