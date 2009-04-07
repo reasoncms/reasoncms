@@ -1,10 +1,25 @@
 <?php
-/*
-    term sorting code written by Mark Heiman, adapted by Jason Oswald
-    added summer "term" in, just in case. made it functionally equivalent
-    a fall term and so we don't lose the 'adjacency' of spring and fall. 
-*/
+/**
+ * Term-based sorting functions
+ * 
+ * This code is not fully generalized -- it assumes a quarter/trimester system
+ * rather than the more common semester system.
+ *
+ * @author Mark Heiman, adapted by Jason Oswald
+ *
+ * Jason notes: "added summer "term" in, just in case. made it functionally equivalent
+ * a fall term and so we don't lose the 'adjacency' of spring and fall."
+ *
+ * @package reason
+ * @subpackage function_libraries
+ * @todo Generalize to handle other term systems
+ * @todo Fully document these functions
+ */
 
+/**
+ * @param array $termlist
+ * @return array
+ */
 function term_range( $termlist )
 {
 	if( !is_array( $termlist ) )
@@ -13,6 +28,11 @@ function term_range( $termlist )
     return termRange($termlist);
 }
 
+/**
+ * @param string $a
+ * @param string $b
+ * @return integer
+ */
 function termCmp( $a, $b ) 
 {
     // sort an array of terms in 00/TT format
@@ -33,6 +53,10 @@ function termCmp( $a, $b )
     return $result;
 }
 
+/**
+ * @param array $termlist
+ * @return string
+ */
 function termRange($termlist) 
 {
     // Take a list of terms in 00/TT format and turn them into
