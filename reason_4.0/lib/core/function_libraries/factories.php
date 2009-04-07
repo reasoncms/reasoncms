@@ -1,14 +1,17 @@
 <?php
-	/*
-	 *	factories.php
-	 *	Dave Hendler
-	 *	9.9.04
+	/**
+	 * This library is for factory functions that load the appropriate classes for a given system.
 	 *
-	 *	This library is for factory functions that load the appropriate classes for a given system.
-	 *
+	 * @author Dave Hendler
 	 * @package reason
+	 * @subpackage function_libraries
 	 */
 
+	/**
+	 * Get a new session object of the given session class
+	 * @param string $class
+	 * @return object
+	 */
 	function get_session_factory( $class )
 	{
 		switch( $class )
