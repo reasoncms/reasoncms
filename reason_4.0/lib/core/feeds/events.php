@@ -1,5 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage feeds
+ */
 
+/**
+ * Include dependencies & register feed with Reason
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'feeds/page_tree.php' );
 reason_include_once( 'classes/calendar.php' );
