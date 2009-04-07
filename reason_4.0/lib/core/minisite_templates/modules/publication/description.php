@@ -1,8 +1,20 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	
 	$GLOBALS[ '_module_class_names' ][ 'publication/'.basename( __FILE__, '.php' ) ] = 'publicationDescriptionModule';
 	
+	/**
+ 	 * A minisite module that outputs the description of the publication attached to the
+ 	 * current page
+ 	 */
 	class publicationDescriptionModule extends DefaultMinisiteModule
 	{
 		var $publication;
