@@ -1,12 +1,20 @@
 <?php
+/**
+ * @package reason
+ * @subpackage feeds
+ */
 
-/* This is the site feed that provides regular expressions for log analysis */
-
+/**
+ * Include dependencies & register feed with Reason
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'feeds/default.php' );
 reason_include_once( 'function_libraries/access_log_functions.php' );
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'regexFeed';
 
+/**
+ * This is the site feed that provides regular expressions for log analysis
+ */
 class regexFeed extends defaultFeed
 {
 	function create_feed()
