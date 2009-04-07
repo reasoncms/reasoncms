@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage feeds
+ */
+
+/**
+ * Include dependencies & register feed with Reason
+ */
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'sitewideNewsFeed';
 
 include_once( 'reason_header.php' );
