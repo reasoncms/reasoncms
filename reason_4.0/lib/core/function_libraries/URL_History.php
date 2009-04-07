@@ -1,29 +1,36 @@
 <?
-/*
-    URL History Functions
-    
-    definitions: 
-    
-    fully resolved URL: 
-    hostname + site_URL + (base_URL of parent(s))* + base_URL of current page 
-    
-    Here we are trying to solve the problem of broken URLs. The solution 
-    involves a few steps. 
-    
-    1:  A table in the Reason Database will be kept to track the following
-        bits of information: a fully resolved URL, page_ID, unique_ID and a 
-        timestamp. 
-        
-    2:  When a page is finished, the above table will be queried. If there
-        is no fully resolved URL and page_ID pair in the database, it is
-        added. If the pair exists, the timestamp is updated.
-    
-    3:  When a user would normally get a 404 error, the above table is 
-        queried for the requested URL. If rows are returned, the page 
-        decides what action to take (which will probably be a redirect to
-        the fully resolved URL of page_ID with the most recent time stamp). 
-*/
+/**
+ *  URL History Functions
+ *  
+ *  Definitions: 
+ *  
+ *  fully resolved URL: 
+ *  hostname + site_URL + (base_URL of parent(s))* + base_URL of current page 
+ *  
+ *  Here we are trying to solve the problem of broken URLs. The solution 
+ *  involves a few steps. 
+ *  
+ *  1:  A table in the Reason Database will be kept to track the following
+ *      bits of information: a fully resolved URL, page_ID, unique_ID and a 
+ *      timestamp. 
+ *      
+ *  2:  When a page is finished, the above table will be queried. If there
+ *      is no fully resolved URL and page_ID pair in the database, it is
+ *      added. If the pair exists, the timestamp is updated.
+ *  
+ *  3:  When a user would normally get a 404 error, the above table is 
+ *      queried for the requested URL. If rows are returned, the page 
+ *      decides what action to take (which will probably be a redirect to
+ *      the fully resolved URL of page_ID with the most recent time stamp). 
+ *
+ *  @package reason
+ *  @subpackage function_libraries
+ *  @todo fully document functions
+ */
 
+/**
+ * Include dependencies
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'classes/entity_selector.php' );
 reason_include_once( 'function_libraries/relationship_finder.php' );
@@ -32,6 +39,11 @@ reason_include_once( 'function_libraries/url_utils.php' );
 $GLOBALS['dig_calls'] = 0;
 $GLOBALS['build_calls'] = 0;
 
+/**
+ * @param integer $page_id
+ * @param boolean $check_children
+ * @return boolean true on success
+ */
 function update_URL_history( $page_id, $check_children = true )
 {
 	//connectDB( REASON_DB );
@@ -75,6 +87,10 @@ function update_URL_history( $page_id, $check_children = true )
 	return true;
 }
 
+/**
+ * @param integer $page_id
+ * @return NULL
+ */
 function update_children( $page_id )
 {
 	$es = new entity_selector();
@@ -94,11 +110,25 @@ function update_children( $page_id )
 }
 
 
-/*
-    Looks for the URL in the URL_history table. 
-    If there is no URL, send a 404 header. 
-    If there are URLs, send a 301 header and a Location header.
-*/
+/**
+ * Header the browser to the current location of the most recent page
+ * that occupied a given URL
+ *
+ * How it works:
+ *
+ * 1. Looks for the URL in the URL_history table. 
+ *
+ * 2. If there is no URL, send a 404 header. 
+ *    If there are URLs, send a 301 header and a Location header to the
+ *    location of the live page that most recent inhabited that URL.
+ *
+ * Important: Because it may attempt to header the client to a different URL, 
+ * this method must be called before any output is started, or in the context
+ * of output buffering. 
+ *
+ * @param string $request_uri a URL relative to the host root (e.g. /foo/bar/)
+ * @return NULL
+ */
 function check_URL_history( $request_uri )
 {
 	$url_arr = parse_URL( $request_uri );
