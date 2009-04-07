@@ -1,7 +1,14 @@
 <?
-
-// By Nate White
-// Converts a string of xml to an array
+/**
+ * @package reason
+ * @subpackage function_libraries
+ */
+/**
+ * Convert a string of xml to an array
+ * @author Nate White
+ * @param string $xml
+ * @return mixed array if success; else null
+ */
 function xmlstring2array($xml)
 {
    //$ReElements = '/<(\w+)\s*([^\/>]*)\s*(?:\/>|>(.*)<\/\s*\\1\s*>)/s';
