@@ -1,7 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage feeds
+ */
 
-/* This is the site feed */
-
+/**
+ * Include dependencies & register feed with Reason
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'feeds/default.php' );
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'siteFeed';
@@ -10,7 +15,9 @@ function make_site_link( $base_url )
 {
 	return 'http://'.REASON_HOST.$base_url;
 }
-
+/**
+ * This is the site feed
+ */
 class siteFeed extends defaultFeed
 {
 	function alter_feed()
