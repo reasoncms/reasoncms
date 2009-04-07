@@ -5,6 +5,7 @@
  * file exists in the local directory before falling over to the core directory and finally 
  * spitting out an error if no file is found.
  * @package reason
+ * @subpackage function_libraries
  * @author Matt Ryan
  * @date 2006-05-17
  */
