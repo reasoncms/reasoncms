@@ -2,13 +2,19 @@
 /**
  * List sections on a publication
  * @package reason
+ * @subpackage minisite_modules
  */
+ 
+  	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 	
 	$GLOBALS[ '_module_class_names' ][ 'publication/'.basename( __FILE__, '.php' ) ] = 'publicationSectionsModule';
 	
 	/**
-	 * Module to list sections on a publication
+	 * Module that lists the sections on the current publication
+	 *
 	 * @todo add parameter to allow switch between two behaviors -- link to top issue always, or link to issue being browsed
 	 */
 	class publicationSectionsModule extends DefaultMinisiteModule
