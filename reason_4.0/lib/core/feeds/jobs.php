@@ -1,5 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage feeds
+ */
 
+/**
+ * Include dependencies & register feed with Reason
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'feeds/page_tree.php' );
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'jobsFeed';
