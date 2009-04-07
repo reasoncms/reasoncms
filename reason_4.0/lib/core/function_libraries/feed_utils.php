@@ -2,6 +2,7 @@
 /**
  * Functions for working with feeds
  * @package reason
+ * @subpackage function_libraries
  */
 
 /**
