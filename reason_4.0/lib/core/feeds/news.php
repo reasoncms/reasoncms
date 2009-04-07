@@ -1,18 +1,25 @@
 <?php
+/**
+ * @package reason
+ * @subpackage feeds
+ */
 
-/* This is the old style news feed - 
+/**
+ * Include dependencies & register feed with Reason
+ */
+include_once( 'reason_header.php' );
+reason_include_once( 'feeds/page_tree.php' );
+reason_include_once( 'helpers/publication_helper.php');
+$GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'newsFeed';
+
+/**
+ * This is the old style news feed
  *
  * These old style feeds are deprecated - feed links that use this feed will not be produced on sites that use the publications module. 
  * The URL manager continues to create rewrite rules that use this feed for backwards compatibility. 
  *
  * This module, whenever possible, will redirect to the feed for the oldest publication on the site.
  */
-
-include_once( 'reason_header.php' );
-reason_include_once( 'feeds/page_tree.php' );
-reason_include_once( 'helpers/publication_helper.php');
-$GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'newsFeed';
-
 class newsFeed extends pageTreeFeed
 {
 	var $home_url = REASON_PRIMARY_NEWS_PAGE_URI;
