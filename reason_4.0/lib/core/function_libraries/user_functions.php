@@ -2,6 +2,7 @@
 /**
  * Functions for user creation, authentication, and privilege checking
  * @package reason
+ * @subpackage function_libraries
  */
 
 /**
