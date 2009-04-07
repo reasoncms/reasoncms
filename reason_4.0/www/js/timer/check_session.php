@@ -1,4 +1,9 @@
 <?
+/**
+ * A script that reports (in XML form)  in whether the current user is logged in or not
+ * @package reason
+ * @subpackage js
+ */
 include ('reason_header.php');
 reason_include_once('function_libraries/user_functions.php');
 header('Content-Type: text/xml');
