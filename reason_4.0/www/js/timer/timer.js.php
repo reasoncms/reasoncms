@@ -1,15 +1,21 @@
 <?php
-include ('reason_header.php');
-reason_include_once ('function_libraries/reason_session.php');
-?>
-
 /**
  * Reason session login timer
+ *
+ * A php script produces a javascript script that alerts users when they have been or are about
+ * to be logged out so they can log back in again.
+ *
+ * Things look odd in this script as a result.
+ *
  * @date  modified February 12, 2007
  * @author Henry Gross
  * @author Ben Cochran - Almost completely rewritten to include div alert and tighten up bugs
+ * @package reason
+ * @subpackage js
  */
-
+include ('reason_header.php');
+reason_include_once ('function_libraries/reason_session.php');
+?>
 if (window.attachEvent)
   window.attachEvent('onload', init);
 else
