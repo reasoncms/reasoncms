@@ -1,23 +1,32 @@
 <?php
-
-/*
-
-This is the default feed.
-
-It will produce a very simple rss feed for any type.  If given a site, it will limit the rss feed to that site only.
-
-Reason-wide feeds are limited to shared entities on live sites.
-
-It is meant to be extended by type-specific feeds.
-
-Built February 2004 by Matt Ryan
-
+/**
+ * The base feed class
+ * @package reason
+ * @subpackage feeds
  */
 
+/**
+ * Include dependencies and register feed with Reason
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'classes/reason_rss.php' );
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'defaultFeed';
 
+/**
+ * This is the default feed.
+ *
+ * It will produce a very simple rss feed for any type.  If given a site, it will limit the rss
+ * feed to that site only.
+ *
+ * Reason-wide feeds are limited to shared entities on live sites.
+ *
+ * It is meant to be extended by type-specific feeds.
+ *
+ * Built February 2004 by Matt Ryan
+ *
+ * @author Matt Ryan
+ * @todo Fully document this class
+ */
 class defaultFeed
 {
 	var $institution = FULL_ORGANIZATION_NAME;
