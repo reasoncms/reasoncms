@@ -1,13 +1,16 @@
 <?php
-	/*
-	 *	cache.php
-	 *	Dave Hendler
+	/**
+	 *	A simple whole-page caching tool
 	 *
 	 *	First stab at an implementation of a Page Cache for the public site.
-	 *	- Basic implementation stores a cached version of the page keyed by the MD5 of the URI.  In Reason, the canonical
-	 *	value of the current URI is retrieved by using the get_current_uri() function.
+	 *	- Basic implementation stores a cached version of the page keyed by the MD5 of the URI.
+	 *
+	 *  In Reason, the canonical value of the current URI is retrieved by using the
+	 *  get_current_uri() function.
+	 *
 	 * @package carl_util
 	 * @subpackage cache
+	 * @author Dave Hendler
 	 */
 	
 	/**
