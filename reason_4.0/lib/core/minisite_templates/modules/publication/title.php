@@ -1,8 +1,20 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class and register module with Reason
+ 	 */
 	reason_include_once( 'minisite_templates/modules/page_title.php' );
 	
 	$GLOBALS[ '_module_class_names' ][ 'publication/'.basename( __FILE__, '.php' ) ] = 'publicationTitleModule';
 	
+	/**
+	 * A minisite module that outputs the title of the publication attached to the current page
+	 *
+	 * This module treats the publication's title as the page title is typically treated.
+	 */
 	class publicationTitleModule extends PageTitleModule
 	{
 		var $publication;
