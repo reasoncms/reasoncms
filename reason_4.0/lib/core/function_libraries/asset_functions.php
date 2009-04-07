@@ -1,6 +1,7 @@
 <?php
 /**
  * @package reason
+ * @subpackage function_libraries
  */
  
  /**
@@ -11,6 +12,7 @@
   * @param object $site (the site entity that the assets are being displayed within)
   * @param array $fields (the fields to display)
   * @param string $date_format (how to format the dates)
+  * @return string XHTML markup
   */
 
 	function make_assets_list_markup( $assets, $site, $fields = array('name','file_size','file_type','description','datetime'), $date_format = 'j F Y' )
