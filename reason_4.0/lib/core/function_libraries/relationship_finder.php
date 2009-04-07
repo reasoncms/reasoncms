@@ -1,18 +1,19 @@
 <?php
-/*
-    Relationship Finder:
-    a function to find the id of a relationship given two entities' unique names. 
-    relationship_finder will return false if zero, or multiple relationships are found. 
-    
-    for example: 
-    
-    echo relationship_finder( 'site', 'minisite_page', 'owns' ) . '<br />';
-    
-    gives you:
-    78
-*/
+/**
+ * @package reason
+ * @subpackage function_libraries
+ */
+
+/**
+ * Include the reason header
+ */
 include_once( 'reason_header.php' );
 
+/**
+ * @param string $entity_a The unique name of the type on the "A" side of the relationship
+ * @param string $entity_b The unique name of the type on the "B" side of the relationship
+ * @return mixed false if not found or if multiple rels available; else space delimited string data (a_to_b the_rel_name or b_to_a the_rel_name)
+ */
 function find_relationship_name( $entity_a, $entity_b )
 {
     $total_results = 0;
@@ -50,35 +51,64 @@ function find_relationship_name( $entity_a, $entity_b )
     }    
 }
 
-
+/**
+ *  Relationship Finder
+ *
+ *  A function to find the id of a relationship given two entities' unique names. 
+ *  relationship_finder will return false if zero, or multiple relationships are found. 
+ *  
+ *  For example: 
+ *  
+ *  echo relationship_finder( 'site', 'minisite_page', 'owns' ) . '<br />';
+ *  
+ *  gives you:
+ *  78
+ *
+ * @param string $entity_a The unique name of the type on the "A" side of the relationship
+ * @param string $entity_b The unique name of the type on the "B" side of the relationship
+ * @return mixed The ID of the allowable relationship or NULL if not found
+ */
 function relationship_finder( $entity_a, $entity_b, $name = 'owns' )
 {
-    if( !isset( $entity_a ) && !isset( $entity_b ) )
+	$entity_a = (string) $entity_a;
+	$entity_b = (string) $entity_b;
+	$name = (string) $name;
+	
+    if( empty( $entity_a ) || empty( $entity_b ) || empty($name) )
     {
-        echo 'How am I supposed to find a relationship if you don\'t give me anything to work with?';
+        trigger_error( '$entity_a, $entity_b, and $name are all required for relationship_finder() to work');
+        return;
     }
-    else
+    $a_id = id_of( $entity_a );
+    $b_id = id_of( $entity_b );
+    if( empty($a_id))
     {
-    
-        $query = 'SELECT id FROM allowable_relationship WHERE ' . 
-                    'relationship_a="' . id_of( $entity_a ) . '" ' .
-                    'AND relationship_b="' . id_of( $entity_b ) . '" ' .
-                    'AND name="' . $name . '"';
-        $results = db_query( $query );
-		$num = mysql_num_rows( $results );
-        if( $num < 1 )
-        {
-            //Relationship finder returned zero results.
-            return false;
-        }
-		elseif( $num > 1 )
-		{
-			 //Relationship finder returned too many results!
-			trigger_error('Multiple relationships exist for "'.$entity_a.'" to "'.$entity_b.'" under name "'.$name.'"');
-		}
-		$results = mysql_fetch_array( $results );
-		return $results['id'];
+        trigger_error( '$entity_a ('.$entity_a.') is not a valid unique name');
+        return;
     }
+    if( empty($b_id))
+    {
+        trigger_error( '$entity_b ('.$entity_b.') is not a valid unique name');
+        return;
+    }
+	$query = 'SELECT id FROM allowable_relationship WHERE ' . 
+				'relationship_a="' . $a_id . '" ' .
+				'AND relationship_b="' . $b_id . '" ' .
+				'AND name="' . addslashes($name) . '"';
+	$results = db_query( $query );
+	$num = mysql_num_rows( $results );
+	if( $num < 1 )
+	{
+		//Relationship finder returned zero results.
+		return false;
+	}
+	elseif( $num > 1 )
+	{
+		 //Relationship finder returned too many results!
+		trigger_error('Multiple relationships exist for "'.$entity_a.'" to "'.$entity_b.'" under name "'.$name.'"; returning only first result.');
+	}
+	$results = mysql_fetch_array( $results );
+	return (integer) $results['id'];
 }
         
 
