@@ -1,6 +1,8 @@
 <?php
 /**
  * Functions for finding Reason files
+ * @package reason
+ * @subpackage function_libraries
  */
  
 /**
