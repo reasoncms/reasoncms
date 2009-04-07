@@ -1,8 +1,11 @@
 <?php
-	/*
-		dave hendler 2002
-		images.php3 contains utility code for the image module
-	*/
+	/**
+	 * Utility functions for image display
+	 *
+	 * @author dave hendler
+	 * @package reason
+	 * @subpackage function_libraries
+	 */
 
 if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 {
@@ -10,7 +13,25 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 	
 	reason_include_once( 'classes/imager.php' );
 
-	function get_show_image_html( $image, $die_without_thumbnail = false, $show_popup_link = true, $show_description = true, $other_text = '' , $textonly = '', $show_author = false, $link_with_url = '' ) // {{{
+	/**
+	 * Get the mearkup to show an image thumbnail
+	 *
+	 * This function is a wrapper for show_image() that returns what show_image() would
+	 * normally simply output.
+	 *
+	 * @param mixed $image An image object, image ID, or array of image values
+	 * @param boolean $die_without_thumbnail Echo nothing if no thumb available? (default behavior 
+	 *                                       is to make link to full-sized image if no thumb available)
+	 * @param boolean $show_popup_link Wrap image in link that pops up image popup?
+	 * @param boolean $show_description Place the image description (i.e. short caption) below the image?
+	 * @param string $other_text Text to use instead of image description
+	 * @param boolean $textonly True sets function into textonly mode, which instead of outputting
+	 *                          image markup outputs a text description linking to image
+	 * @param boolean $show_author Output the value of the author field below the description?
+	 * @param string $link_with_url Wrap the image in a link to this URL instead of to image popup
+	 * @return string XHTML markup
+	 */
+	function get_show_image_html( $image, $die_without_thumbnail = false, $show_popup_link = true, $show_description = true, $other_text = '' , $textonly = false, $show_author = false, $link_with_url = '' ) // {{{
 	{
 		ob_start();
 		show_image( $image, $die_without_thumbnail, $show_popup_link, $show_description, $other_text, $textonly, $show_author, $link_with_url);
@@ -19,7 +40,27 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 		return $result;
 	}
 	
-	function show_image( $image, $die_without_thumbnail = false, $show_popup_link = true, $show_description = true, $other_text = '' , $textonly = '', $show_author = false, $link_with_url = '' ) // {{{
+	/**
+	 * Show an image thumbnail
+	 *
+	 * Note that this function does not return XHTML; instead it directly outputs it
+	 * via echo statements. If you want returned XHTML, use get_show_image_html().
+	 *
+	 * @param mixed $image An image object, image ID, or array of image values
+	 * @param boolean $die_without_thumbnail Echo nothing if no thumb available? (default behavior 
+	 *                                       is to make link to full-sized image if no thumb available)
+	 * @param boolean $show_popup_link Wrap image in link that pops up image popup?
+	 * @param boolean $show_description Place the image description (i.e. short caption) below the image?
+	 * @param string $other_text Text to use instead of image description
+	 * @param boolean $textonly True sets function into textonly mode, which instead of outputting
+	 *                          image markup outputs a text description linking to image
+	 * @param boolean $show_author Output the value of the author field below the description?
+	 * @param string $link_with_url Wrap the image in a link to this URL instead of to image popup
+	 * @return void
+	 *
+	 * @todo Make a better image markup library!
+	 */
+	function show_image( $image, $die_without_thumbnail = false, $show_popup_link = true, $show_description = true, $other_text = '' , $textonly = false, $show_author = false, $link_with_url = '' ) // {{{
 	{
 		if( is_array( $image ) )
 		{
@@ -159,8 +200,16 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 		}*/
 		return $i;
 	} // }}} 
+	/**
+	 * Get the contents of the image table for a given ID
+	 * @deprecated
+	 * @param integer $id
+	 * @return array
+	 * @todo Remove from Reason
+	 */
 	function get_image_info( $id ) //  {{{
 	{
+		trigger_error('get_image_info() is deprecated. Use the standard Reason API (entity class) instead.');
 		$q = "SELECT * FROM  image WHERE id = '$id'";
 		$r = mysql_query( $q ) OR die( 'Unable to load image: '.mysql_error() );
 		return mysql_fetch_array( $r, MYSQL_ASSOC );
