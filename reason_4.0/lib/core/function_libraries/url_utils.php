@@ -1,7 +1,17 @@
 <?php
+/**
+ * @package reason
+ * @subpackage function_libraries
+ */
 
-// grab contents of a URL.  includes authentication to get at URLs in protected areas.
-// returns a string or false on error
+/**
+ * Grab contents of a URL.
+ *
+ * Includes authentication to get at URLs in protected areas.
+ *
+ * @param string $url Absolute URL
+ * @return mixed a string or false on error
+ */
 function get_reason_url_contents( $url )
 {
 	require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
@@ -34,13 +44,20 @@ function get_reason_url_contents( $url )
 	return $page;
 }
 
-/*
-* (mixed)remote_filesize($uri,$user='',$pw='')
-* returns the size of a remote stream in bytes or
-* the string 'unknown'. Also takes user and pw
-* incase the site requires authentication to access
-* the uri
-*/
+/**
+ * Get the filesize of a remote document
+ *
+ * (mixed)remote_filesize($uri,$user='',$pw='')
+ * returns the size of a remote stream in bytes or
+ * the string 'unknown'. Also takes user and pw
+ * in case the site requires authentication to access
+ * the uri
+ *
+ * @param string $uri Absolute URL
+ * @param string $user Username
+ * @param string $pw Password
+ * @return mixed integer size in bytes or null if unable to determine filesize
+ */
 function get_remote_filesize($uri,$user='',$pw='')
 {
    require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
@@ -86,7 +103,14 @@ function get_remote_filesize($uri,$user='',$pw='')
    return $size;
 }
 
-// Takes any url and attempts to identify the most likely site 
+/**
+ * Attempt to identify the most likely Reason site given a URL
+ *
+ * Like get_potential_sites_from_path, but for absolute URLs
+ *
+ * @param $url
+ * @return mixed site ID integer if successful, else NULL
+ */
 function get_site_id_from_url($url)
 {
 	$parsed = parse_url($url);
@@ -102,6 +126,16 @@ function get_site_id_from_url($url)
 	}
 }
 
+/**
+ * Determine if a given host name is now or has in the past served up this Reason instance
+ *
+ * This allows you to change your host/domain name, and (as long as you register the old
+ * domain name in the constant REASON_PREVIOUS_HOSTS) Reason/Loki will still recognize links
+ * to pages it administers.
+ *
+ * @param string $hostname Like www.example.com
+ * @return boolean
+ */
 function hostname_is_associated_with_this_reason_instance($hostname)
 {
 	if($hostname == REASON_HOST || in_array($hostname, explode(',',REASON_PREVIOUS_HOSTS)) )
@@ -114,8 +148,15 @@ function hostname_is_associated_with_this_reason_instance($hostname)
 	}
 }
 
-// Takes a path relative to the http root of the server, e.g. /foo/bar/baz/
-// returns an array of site entities, with the most likely (e.g. with the closest match) first
+/**
+ * Get an array of sites that might contain a resource at a given path
+ *
+ * Takes a path relative to the http root of the server, e.g. /foo/bar/baz/
+ * returns an array of site entities, with the most likely (e.g. with the closest match) first
+ *
+ * @param string $path
+ * @return array Site entities
+ */
 function get_potential_sites_from_path($path)
 {
 	if(!empty($path))
@@ -139,9 +180,15 @@ function get_potential_sites_from_path($path)
 }
 
 /**
- * returns a full url for a minisite_page
+ * Get the full url (from server root) for a minisite page
+ *
  * the function will cache the minisite navigation object for a site so when called repeatedly it
  * should only instantiate minisite navigation once per site
+ *
+ * Because this method caches whole sites, it will likely be faster than build_URL() if
+ * you are getting the URLs of bunches of pages on a site. If you are getting just a single
+ * URL of a single page, or you are getting URLs of a few pages on different sites, build_URL()
+ * will likely be faster (and consume less memory).
  * 
  * @param int site_id
  * @param int page_id
@@ -246,9 +293,24 @@ function get_page_link( &$site, &$tree, $page_types, $as_uri = false, $secure = 
 	return $ret;
 }
 
-// moved from URL history
+/**
+ * Get the URL for a page
+ *
+ * Originally developed as part of URL history as a lightweight
+ * way to find a page's URL without having to query for all pages
+ * in the site
+ *
+ * @param integer $page_id
+ * return mixed string URL if found; else NULL
+ */
 function build_URL( $page_id )
 {
+	$page_id = (integer) $page_id;
+	if(empty($page_id))
+	{
+		trigger_error('Bad $page_id');
+		return;
+	}
 	static $cache;
 	if (isset($cache[$page_id])) $url = $cache[$page_id];
 	else
@@ -377,6 +439,14 @@ function dig_for_URL_known_parent($page_id, $parent_id, $url, &$pages, $parent_i
 	}
 }
 
+/**
+ * Get the URL of the site that owns a given page
+ *
+ * This function returns a URL relative to the server root
+ *
+ * @param integer $page_id
+ * @return mixed string URL if successful; else null
+ */
 function get_site_URL( $page_id )
 {
 	static $cache;
@@ -401,6 +471,10 @@ function get_site_URL( $page_id )
 }
 
 // DEPRECATED FUNCTIONS _ MOVED INTO url_funcs.php in carl_util
+/**
+ * Deprecated -- use carl_make_link()
+ * @deprecated
+ */
 function make_link( $new_request_vars = array(''), $base_path = '', $type = '', $convert_entities = true, $maintain_original = true ) // {{{
 {
 	$call_info = array_shift( debug_backtrace() );
@@ -410,6 +484,10 @@ function make_link( $new_request_vars = array(''), $base_path = '', $type = '', 
 	return carl_make_link($new_request_vars, $base_path, $type, $convert_entities, $maintain_original);
 } // }}}
 
+/**
+ * Deprecated -- use carl_construct_link()
+ * @deprecated
+ */
 function construct_link ( $new_request_vars = array(''), $preserve_request_vars = array(''), $base_path = '' )
 {
 	$call_info = array_shift( debug_backtrace() );
@@ -419,6 +497,10 @@ function construct_link ( $new_request_vars = array(''), $preserve_request_vars 
 	return carl_construct_link($new_request_vars, $preserve_request_vars, $base_path);
 }
 
+/**
+ * Deprecated -- use carl_construct_relative_link()
+ * @deprecated
+ */
 function construct_relative_link ( $new_request_vars = array(''), $preserve_request_vars = array(''), $base_path = '', $convert_entities = true )
 {
 	$call_info = array_shift( debug_backtrace() );
@@ -428,6 +510,10 @@ function construct_relative_link ( $new_request_vars = array(''), $preserve_requ
 	return carl_construct_relative_link ( $new_request_vars, $preserve_request_vars, $base_path, $convert_entities );
 }
 
+/**
+ * Deprecated -- use carl_make_redirect()
+ * @deprecated
+ */
 function make_redirect ( $new_request_vars, $base_path)
 {
 	$call_info = array_shift( debug_backtrace() );
@@ -437,6 +523,10 @@ function make_redirect ( $new_request_vars, $base_path)
 	return carl_make_redirect ( $new_request_vars, $base_path);
 }
 
+/**
+ * Deprecated -- use carl_construct_redirect()
+ * @deprecated
+ */
 function construct_redirect( $new_request_vars = array(''), $preserve_request_var = array(''), $base_path = '' )
 {
 	$call_info = array_shift( debug_backtrace() );
