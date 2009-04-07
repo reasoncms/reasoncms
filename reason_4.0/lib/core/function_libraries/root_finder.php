@@ -1,12 +1,21 @@
 <?php
-/*
-    Root finder:
-    Takes a site id and returns the id of the root page. 
-*/
+/**
+ * @package reason
+ * @subpackage function_libraries
+ */
 
+/**
+ * Include dependencies
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'classes/entity_selector.php' );
 
+/**
+ * Root finder:
+ * Takes a site id and returns the id of the root page. 
+ * @param integer $site_id
+ * @return mixed page id integer if found; NULL if not found
+ */
 function root_finder( $site_id )
 {
     $es = new entity_selector( );
@@ -22,12 +31,15 @@ function root_finder( $site_id )
     }
 }
 /*
-    Takes a page_id and determines if it is the root of a site
-    04/07/04 probably need to add a check to make sure that the page is live.
-*/
+ * Takes a page_id and determines if it is the root of a site
+ * @todo Add a check to make sure that the page is live.
+ * @todo Use standard Reason entity selector API
+ * @param integer $page_id
+ * @return boolean
+ */
 function is_site_root( $page_id )
 {
-    $query = 'SELECT * FROM relationship WHERE entity_a="' . $page_id . '" AND type="' . relationship_id_of( 'minisite_page_parent' ) . '"';
+    $query = 'SELECT * FROM relationship WHERE entity_a="' . addslashes($page_id) . '" AND type="' . relationship_id_of( 'minisite_page_parent' ) . '"';
     $results = db_query( $query );
     while( $row = mysql_fetch_array( $results ) )
     {   
