@@ -1,4 +1,14 @@
 <?php
+/**
+ * @package reason
+ * @subpackage function_libraries
+ */
+	/**
+	 * Get a reason session object that represents the current session
+	 *
+	 * @param string $session_name
+	 * @return object
+	 */
 	function &get_reason_session( $session_name = '' )
 	{
 		static $sess;
