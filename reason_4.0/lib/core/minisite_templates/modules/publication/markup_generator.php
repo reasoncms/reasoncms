@@ -1,12 +1,15 @@
 <?php
 /**
-*  The abstract class for the markup generators for the Publication minisite module. 
-*
-*  @package reason
-*  @subpackage minisite_modules
-*  @author Meg Gibbs
-*/
+ * The abstract class for the markup generators for the Publication minisite module. 
+ *
+ * @package reason
+ * @subpackage minisite_modules
+ * @author Meg Gibbs
+ */
 
+/**
+ *  The abstract class for the markup generators for the Publication minisite module. 
+ */
 class PublicationMarkupGenerator 
 {
 
