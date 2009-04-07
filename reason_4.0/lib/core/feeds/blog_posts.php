@@ -1,11 +1,14 @@
 <?php
-
 /**
  * This is the feed generator for posts on a publication
  *
  * @package reason
+ * @subpackage feeds
  */
 
+/**
+ * Include dependencies & register feed with Reason
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'feeds/page_tree.php' );
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'blogPostsFeed';
@@ -15,7 +18,6 @@ $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'blogPostsFeed
  *
  * @todo figure out how local page types can be added without having to be in this file; remove the carleton-specific page types
  */
-
 class blogPostsFeed extends pageTreeFeed
 {
 	var $query_string = 'story_id';
