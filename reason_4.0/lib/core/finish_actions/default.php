@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file contains the class defaultFinishAction
  * @package reason
  * @subpackage finish_actions
