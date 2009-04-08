@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Code to add fields to entity tables
  *
