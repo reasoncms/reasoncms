@@ -31,7 +31,7 @@ else echo $head_content;
 <p>This script should be run after you have setup Reason according to the instructions in the <a href="./install.htm">Reason Install Documentation</a>. 
 The script will verify the Reason environment, perform a variety of checks for Reason utilities, confirm file paths and permissions, 
 and then setup the first site and user for your instance.</p>
-<?
+<?php
 // do what we can to enable error reporting
 ini_set("display_errors","On");
 error_reporting (E_ALL);
@@ -170,7 +170,7 @@ else
 ?>
 </body>
 </html>
-<?
+<?php
 function admin_user_exists()
 {
 	reason_include_once('function_libraries/admin_actions.php');
