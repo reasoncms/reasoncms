@@ -1,5 +1,11 @@
 <?php
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'SiteManager';
 	
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
