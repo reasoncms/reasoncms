@@ -1,4 +1,12 @@
-<?
+<?php
+/**
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * Include various dependencies
+ */
 include_once('reason_header.php');
 include_once(DISCO_INC . 'disco.php');
 reason_include_once('classes/entity_selector.php');
@@ -279,7 +287,7 @@ class FindReplaceWizard4 extends FindReplaceWizard
 					}
 				}	
 			}
-			$this->add_element('replace_list', 'confirmFindReplace', array('options' => $options, 'display_style' => 'none'));
+			$this->add_element('replace_list', 'confirmFindReplace', array('options' => $options));
 			$replace_list = $this->get_element('replace_list');
 		
 			$this->set_value('replace_list', array_keys($options)); // check all by default - should exclude ID!
