@@ -1,7 +1,8 @@
-<?
+<?php
 /**
  * Functions for building regular expressions 
  * @package reason
+ * @subpackage function_libraries
  */
 
 /**
