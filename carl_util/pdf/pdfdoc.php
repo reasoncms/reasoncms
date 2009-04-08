@@ -1,10 +1,23 @@
 <?php
+/**
+ * @package carl_util
+ * @subpackage pdf
+ */
 
-// Includes all needed functions
+/**
+ * Include all needed functions
+ */
 include ('paths.php');
 include_once( CARL_UTIL_INC . 'pdf/htmlparser.inc' );
 include_once( CARL_UTIL_INC . 'tidy/tidy.php' );
 
+/**
+ * A class that takes HTML and renders it as a PDF
+ *
+ * This class requires pdflib
+ *
+ * See http://us3.php.net/pdf
+ */
 class PDFDoc
 {
     var $fonts = array( 'p' => array( 'name' => 'Times-Roman', 'size' => 10 ),
