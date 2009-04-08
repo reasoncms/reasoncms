@@ -1,6 +1,7 @@
 <?php
 	/**
 	 * @package reason
+	 * @subpackage minisite_modules
 	 * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
 	 */
 	 
@@ -239,7 +240,7 @@
 				<script language="JavaScript">
 				window.close();
 				</script>
-				<?
+				<?php
 			}
 			echo '<div id="login">'."\n";
 			if( !empty( $this->msg ) )
