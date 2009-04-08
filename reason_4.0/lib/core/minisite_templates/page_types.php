@@ -1,9 +1,49 @@
 <?php
+/**
+ * The core Reason page types
+ *
+ * NOTE: This is a very fragile file.  
+ * If there is a parse error in this file, all of Reason will go down.
+ * So tread lightly, and fully test changes on a development/testing
+ * instance before moving them into production.
+ *
+ * @package reason
+ * @subpackage page_types
+ */
+ 	/**
+ 	 * Include the Reason header
+ 	 */
 	include_once('reason_header.php');
-	/* NOTE: This is a very fragile file.  
-	If there is a parse error in this file, all of Reason will go down.
-	So tread lightly, and test changes on webdev before moving them here. */
-	
+
+	/**
+	 * Define the reason page types array.
+	 *
+	 * *Form*
+	 *
+	 * array(
+	 *	'page_type_1'=>array('page_location_1'=>'module_1','page_location_2'=>'module_2'),
+	 *  'page_type_2'=>array('page_location_1'=>'module_2','page_location_2'=>'module_1'),
+	 * );
+	 *
+	 * *Alternate syntax for specifying parameters*
+	 *
+	 * array(
+	 *	'page_type_1'=>array(
+	 *		'page_location_1'=>array('module=>'module_1','param_key'=>'param_value'),
+	 *		'page_location_2'=>'module_2'
+	 *	),
+	 *  'page_type_2'=>array('page_location_1'=>'module_2','page_location_2'=>'module_1'),
+	 * );
+	 *
+	 * *Customizations*
+	 *
+	 * Do not customize this array. Instead, define $GLOBALS['_reason_page_types_local']
+	 * in lib/local/minisite_templates/page_types_local.php .
+	 *
+	 * Page types defined in that array will be automatically merged with the contents of
+	 * this array; where keys exist in both arrays, Reason will use the page type defined
+	 * in page_types_local.
+	 */
 	$GLOBALS['_reason_page_types'] = array(
 		'default' => array(
 			'pre_bluebar' => 'textonly_toggle_top',
