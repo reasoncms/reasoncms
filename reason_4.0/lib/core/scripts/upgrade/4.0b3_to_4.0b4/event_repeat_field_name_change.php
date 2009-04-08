@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Change the name of the field event.repeat to event.recurrence
  *
