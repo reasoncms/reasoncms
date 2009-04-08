@@ -51,6 +51,13 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultFo
  * 3. submitted_data_hidden_fields - fields to hide when showing submitted data to e-mail recipients and those with viewing privs for form data
  * 4. submitted_data_hidden_fields_submitter_view - same as above, but when the viewer is the submitter
  *
+ * Class methods that you can optionally define:
+ *
+ * get_custom_options_for_email - should return an array with any send_email custom options for the recipient of submitted form data
+ * get_custom_options_for_email_submitter_view - should return an array with any send_email custom options for the email that goes to the submitter
+ *
+ * Example of a custom subject line. Define get_custom_options_for_email(). The method should return array('subject' => 'My custom subject line');
+ *
  * MODEL REQUIREMENTS
  *
  * The DefaultForm view assumes the availability of these model methods
