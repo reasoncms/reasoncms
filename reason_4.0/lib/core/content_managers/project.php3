@@ -1,7 +1,22 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+ 
+/**
+ * Register directory service
+ */
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
+
+/**
+ * Register content manager with Reason
+ */
 $GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'ProjectManager';
 
+/**
+ * A content manager for projects
+ */
 class ProjectManager extends ContentManager
 {
 	var $email_addresses = array();
