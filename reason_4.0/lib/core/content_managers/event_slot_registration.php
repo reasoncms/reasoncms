@@ -1,6 +1,16 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'EventSlotRegistrationManager';
 
+	/**
+	 * A content manager for registration slots
+	 */
 	class EventSlotRegistrationManager extends ContentManager
 	{
 		function alter_data()
