@@ -1,6 +1,16 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'SiteTypeContentManager';
 
+	/**
+	 * A content manager for site types
+	 */
 	class SiteTypeContentManager extends ContentManager
 	{
 		function alter_data()
