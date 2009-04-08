@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
  * Copyright (c) 2003 Starnetsys, LLC.  All rights reserved.
