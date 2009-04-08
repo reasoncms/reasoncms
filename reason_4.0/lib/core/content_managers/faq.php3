@@ -1,9 +1,20 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+ 	/**
+	 * Include parent class
+	 */
 	reason_include_once('content_managers/default.php3');
-
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'faqManager';
 
+	/**
+	 * A content manager for FAQs
+	 */
 	class faqManager extends ContentManager
 	{
 		function alter_data()
