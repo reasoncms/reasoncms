@@ -1,5 +1,40 @@
 <?php
+/**
+ * A script that headers a user to a given site.
+ *
+ * This script exists to handle requests for the home page of a site
+ * that has moved, but a directory still exists on the filesystem at that location.
+ *
+ * The 404 handler doesn't take care of these, because the 404 script is never called
+ * (Apache produces a 403 -- permission denied -- instead.)
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * Include basic Reason libraries & settings
+ */
 include_once('reason_header.php');
+
+/*
+ * We don't want people to call this script directly so we check to see if their requested
+ * path ends in '.php' and give them an error if it does. Keeps people from fishing around for
+ * non-live sites and trying to find things they shouldn't.
+ */
+$request_uri = get_current_url();
+$parts = parse_url($request_uri);
+if( substr($parts['path'],-4) == '.php' )
+{
+	header('HTTP/1.1 403 Permission denied');
+	echo '<html>'."\n";
+	echo '<head><title>Permission Denied</title></head>'."\n";
+	echo '<body>'."\n";
+	echo '<h1>403: Permission Denied</h1><p>This script may only be requested through a .htaccess file.</p>'."\n";
+	echo '</body>';
+	die();
+}
+
 reason_include_once('classes/entity.php');
 $id = $_GET['id'];
 
@@ -26,5 +61,6 @@ if (isset($url))
 else
 {
 	include(ERROR_403_PAGE);
+	die();
 }
 ?>
