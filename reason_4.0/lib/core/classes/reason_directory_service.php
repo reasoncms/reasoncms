@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * A directory service interface for Reason
  * @package reason
