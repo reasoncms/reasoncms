@@ -1,10 +1,22 @@
-<?
+<?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+	/**
+	 * Include Disco
+	 */
 	include_once( DISCO_INC . 'disco.php');
+	
+	/**
+	 * Register the form with Reason
+	 */
 	$GLOBALS[ '_publication_comment_forms' ][ basename( __FILE__, '.php' ) ] = 'commentForm';
 	
-	////////////////////////
-	//COMMENT SUBMISSION FORM
-	///////////////////////
+	/**
+	 * Comment submission form
+	 */
 	class commentForm extends Disco
 	{
 		var $elements = array(

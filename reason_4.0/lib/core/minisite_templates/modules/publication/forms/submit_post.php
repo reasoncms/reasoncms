@@ -1,13 +1,23 @@
-<?
+<?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+	/**
+	 * Include Reason libraries and Disco
+	 */
 	include_once('reason_header.php');
 	include_once( DISCO_INC . 'disco.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
 	
+	/**
+	 * Register form with Reason
+	 */
 	$GLOBALS[ '_publication_post_forms' ][ basename( __FILE__, '.php' ) ] = 'BlogPostSubmissionForm';
 	
-	////////////////////////
-	//POST SUBMISSION FORM
-	///////////////////////
+	/**
+	 * Post submission form
+	 */
 	class BlogPostSubmissionForm extends Disco
 	{
 		var $elements = array(
