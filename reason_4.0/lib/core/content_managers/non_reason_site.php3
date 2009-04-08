@@ -1,8 +1,22 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Include the parent class
+	 */
 	reason_include_once( 'content_managers/default.php3' );
 	
+	/**
+	 * Register the content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'NonReasonSiteManager';
 
+	/**
+	 * A content manager for non-reason sites (e.g. metadata about sites not managed by
+	 * reason, but which you want to integrate into a-z guide, etc.)
+	 */
 	class NonReasonSiteManager extends ContentManager
 	{
 		function alter_data() // {{{
