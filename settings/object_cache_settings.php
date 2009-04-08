@@ -4,6 +4,8 @@
  *
  * To define settings for a new type, add an entry to the object_cache_types array
  * @author Nathan White
+ * @package carl_util
+ * @subpackage cache
  */
 
 /**
