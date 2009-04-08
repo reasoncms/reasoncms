@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+ 	/**
+ 	 * Include dependecies and register content manager with Reason
+ 	 */
 	reason_include_once ( 'function_libraries/url_utils.php' );
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'FormManager';
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
