@@ -1,5 +1,9 @@
 <?php
 /**
+ * @package reason
+ * @subpackage scripts
+ */
+/**
  * Sections
  */
 class MigratorScreen7 extends MigratorScreen

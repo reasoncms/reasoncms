@@ -1,5 +1,9 @@
 <?php
 /**
+ * @package reason
+ * @subpackage scripts
+ */
+/**
  * Base Migrator Screen Class
  * @author Nathan White
  */

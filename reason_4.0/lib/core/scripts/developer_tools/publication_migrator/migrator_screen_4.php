@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package reason
+ * @subpackage scripts
+ */
+/**
+ * Modify page types
+ */
 class MigratorScreen4 extends MigratorScreen
 {
 	function step_init()

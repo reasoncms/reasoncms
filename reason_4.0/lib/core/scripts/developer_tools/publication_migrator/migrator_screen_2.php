@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package reason
+ * @subpackage scripts
+ */
+ /**
+ * Attach posts to a publication
+ */
 class MigratorScreen2 extends MigratorScreen
 {
 	function step_pre_show_form()

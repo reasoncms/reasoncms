@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage scripts
+ */
+/**
+ * Create a publication
+ */
 class MigratorScreen3 extends MigratorScreen
 {
 	function step_init()

@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package reason
+ * @subpackage scripts
+ */
+/**
+ * Completion
+ */
 class MigratorScreen5 extends MigratorScreen
 {
 	function step_init()

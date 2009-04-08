@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package reason
+ * @subpackage scripts
+ */
+/**
+ * Choose site to migrate
+ */
 class MigratorScreen1 extends MigratorScreen
 {
 	var $actions = array('Continue');
