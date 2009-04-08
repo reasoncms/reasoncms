@@ -124,7 +124,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 
 ?>
 <h2>Reason: Change Blurb Page Types to Demote Headings</h2>
-<?
+<?php
 $updater = new changeBlurbPageType();
 
 if (empty($_POST['go']) || (isset($_POST['go']) && ($_POST['go'] == 'test')) )

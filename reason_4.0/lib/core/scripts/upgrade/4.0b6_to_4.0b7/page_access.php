@@ -45,7 +45,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 <h2>Reason: Add page-to-access-group relationship</h2>
 <p>This update will add the page_to_access_group allowable relationship, which will enable easy placement of access restrictions on Reason pages.</p>
 <form method="post"><input type="submit" name="go" value="test" /><input type="submit" name="go" value="run" /></form>
-<?
+<?php
 
 if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 {

@@ -50,7 +50,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 <li>Bedrich</li>
 </ul>
 <form method="post"><input type="submit" name="go" value="test" /><input type="submit" name="go" value="run" /></form>
-<?
+<?php
 class theme_updater_b6_to_b7
 {
 	var $_testmode = true;

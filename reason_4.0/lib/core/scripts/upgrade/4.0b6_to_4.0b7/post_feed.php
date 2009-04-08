@@ -162,7 +162,7 @@ redirect to the feed for the oldest publication, so that the old links continue 
 <li>Change the news type custom_feed from news to sitewide_news.</li>
 </ul>
 <form method="post"><input type="submit" name="go" value="test" /><input type="submit" name="go" value="run" /></form>
-<?
+<?php
 
 if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 {
