@@ -10,6 +10,9 @@
  *
  * @package reason
  * @subpackage scripts
+ * @todo figure out better way to fall through to 403 page... ERROR_403_PAGE appears 
+ *       to contain an absolute URL rather than a filesystem path? This makes including it
+ *       tricky.
  */
 
 /**
