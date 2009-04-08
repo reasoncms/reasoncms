@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package reason
+ * @subpackage scripts
+ *
+ * @todo this script should probably move into lib/core/scripts, leaving just a stub here
+ */
 include_once('reason_header.php');
 reason_include_once( 'classes/quote_helper.php' );
 
