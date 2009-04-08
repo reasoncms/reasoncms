@@ -1,4 +1,13 @@
 <?php
+/**
+ * An interface to update .htaccess files & check validity of site directories
+ *
+ * @package reason
+ * @subpackage scripts
+ */
+	/**
+	 * Include Reason libraries
+	 */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'classes/url_manager.php' );
 
