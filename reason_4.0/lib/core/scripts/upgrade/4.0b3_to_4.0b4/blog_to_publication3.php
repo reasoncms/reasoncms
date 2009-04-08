@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Creates the page_to_related_publication allowable relationship
  *
