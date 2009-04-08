@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Carl Table Admin
  *
