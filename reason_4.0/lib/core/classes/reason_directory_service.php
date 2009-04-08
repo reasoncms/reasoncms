@@ -417,7 +417,7 @@ class ds_reason extends ds_default {
 				default:
 					if(count($this->_gen_attr_depend[$attr]) == 1)
 					{
-						$attr = current($this->_gen_attr_depend[$attr]);
+						$attr = reset($this->_gen_attr_depend[$attr]);
 					}
 			}
 		}
