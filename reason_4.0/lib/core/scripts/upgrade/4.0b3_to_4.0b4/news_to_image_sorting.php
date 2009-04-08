@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Upgrade to allow images to be sorted on their news items
  *
