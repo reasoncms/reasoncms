@@ -1,4 +1,13 @@
 <?php
+/**
+ * Error handler settings/configuration
+ * @package carl_util
+ * @subpackage error_handler
+ */
+
+/**
+ * Define the error log file name
+ */
 $host = !empty( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : 'cli';
 define( 'PHP_ERROR_LOG_FILE', '/tmp/php-errors-'.$host );
 
