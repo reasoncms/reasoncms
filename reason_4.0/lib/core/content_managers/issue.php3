@@ -1,6 +1,16 @@
 <?php
+/**
+ * @pacakge reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'issue_handler';
 
+	/**
+	 * Content manager for publication issues
+	 */
 	class issue_handler extends ContentManager 
 	{
 		function alter_data()  // {{{
