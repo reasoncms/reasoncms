@@ -1,8 +1,21 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Include the parent class
+	 */
 	reason_include_once( 'content_managers/parent_child.php3' );
 	
+	/**
+	 * Register module with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'PolicyManager';
 
+	/**
+	 * A content manager for policies
+	 */
 	class PolicyManager extends parent_childManager
 	{
 		var $allow_creation_of_root_node = true;
