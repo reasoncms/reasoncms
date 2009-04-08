@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * asset_access_handler.php is a procedural wonder that uses the asset_access.php class to secure assets
