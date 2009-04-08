@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+/**
+ * Include parent class
+ */
 reason_include_once( 'minisite_templates/modules/publication/markup_generator.php' );
 	
 /**
