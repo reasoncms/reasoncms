@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * Include Reason libraries & other dependencies
+ */
 include_once('reason_header.php');
 reason_include_once('function_libraries/user_functions.php');
 reason_include_once('classes/entity_selector.php');
