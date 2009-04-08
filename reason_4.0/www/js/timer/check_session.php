@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * A script that reports (in XML form)  in whether the current user is logged in or not
  * @package reason

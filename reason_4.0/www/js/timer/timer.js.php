@@ -51,16 +51,16 @@ var popup_alert = <?php echo $popup_alert; ?>; // popup alert to warn of impendi
 var has_killed_session = false;
 
 var check_cookie_time = 30;  //in seconds
-var timer_time = <? echo REASON_SESSION_TIMEOUT ?>;  //in minutes
-var warn_logout_time = <? echo REASON_SESSION_TIMEOUT_WARNING ?>;  //in minutes
+var timer_time = <?php echo REASON_SESSION_TIMEOUT ?>;  //in minutes
+var warn_logout_time = <?php echo REASON_SESSION_TIMEOUT_WARNING ?>;  //in minutes
 
 //THESE SETTINGS WORK WELL FOR DEBUGGING BUT ARE REALLY ANNOYING OTHERWISE
 //var check_cookie_time = 5;  
 //var timer_time = 1;
 //var warn_logout_time = .5;
 
-var refresh_login_link = "<? echo WEB_JAVASCRIPT_PATH ?>timer/check_session.php"; //link to attempt to refresh session
-var logout_page = "<? echo REASON_LOGIN_URL ?>?msg_uname=expired_login&popup=true"; //link to logout page
+var refresh_login_link = "<?php echo WEB_JAVASCRIPT_PATH ?>timer/check_session.php"; //link to attempt to refresh session
+var logout_page = "<?php echo REASON_LOGIN_URL ?>?msg_uname=expired_login&popup=true"; //link to logout page
 var logout_alert_active = false;
 var logout_active = false;
 var debug_active = false; // shows information about the timeout and cookies and such
