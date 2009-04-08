@@ -1,6 +1,16 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'text_blurb';
 
+	/**
+	 * A content manager for text blurbs
+	 */
 	class text_blurb extends ContentManager
 	{
 		function alter_data()
