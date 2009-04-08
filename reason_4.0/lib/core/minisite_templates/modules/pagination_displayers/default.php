@@ -2,8 +2,12 @@
 /**
  * Default Pagination Display
  * @package reason
+ * @subpackage minisite_modules
  */
  
+/**
+ * Register pagination displayer with Reason
+ */
 $GLOBALS['_reason_pagination_displayers'][basename(__FILE__)] = 'defaultPaginationDisplay';
  
 /**
