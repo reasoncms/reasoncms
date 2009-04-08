@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @package reason
  * @subpackage function_libraries
