@@ -1,9 +1,21 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'sidebar_feature_manager';
 
+	/**
+	 * A content manager for sidebar features
+	 * @deprecated
+	 * @todo Remove from Reason core
+	 */
 	class sidebar_feature_manager extends ContentManager 
 	{
-	
+		trigger_error('sidebar_feature_manager is deprecated.');
 		function alter_data() {
 			$this -> add_required ("description");
 			$this -> add_required ("show_hide");
