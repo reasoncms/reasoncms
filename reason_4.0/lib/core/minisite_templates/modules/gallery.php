@@ -76,7 +76,7 @@
 							echo '<span class="smallText"><a href="?textonly='.$this->parent->textonly.'">Clear Search</a></span>';
 					?>
 				</form>
-			<?
+			<?php
 		} // }}}
 		function check_bounds() // {{{
 		{
