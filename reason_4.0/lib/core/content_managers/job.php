@@ -1,7 +1,16 @@
 <?php
-	
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'job_handler';
 
+	/**
+	 * Content manager for jobs (i.e. emnployment opportunities)
+	 */
 	class job_handler extends ContentManager // {{{
 	{
 		function alter_data() // {{{
