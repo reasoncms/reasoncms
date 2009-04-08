@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * This is a stub that includes the admin index.php page
  * @package reason
