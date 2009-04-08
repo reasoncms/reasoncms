@@ -1,13 +1,14 @@
-<?
+<?php
 /**
  * A collection of functions to work with urls
  *
  * @package carl_util
  * @subpackage basic
+ * @todo document these functions
  */
 
 /**
- * make_link will preserve the url query string, while adding or removing items specified in the new_request_vars array.
+ * carl_make_link() will preserve the url query string, while adding or removing items specified in the new_request_vars array.
  * note that because of the use of array_merge, this function will handle only keys that are strings - if the keys are
  * integers, the key in new_request_vars will be incremented and added to the query string instead of replacing the numeric
  * key.
