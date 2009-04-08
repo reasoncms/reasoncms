@@ -59,7 +59,7 @@ Reason are not inadvertently indexed by Google or other search engines.</p>
 <h3>Scripts to Run</h3>
 <ul>
 
-<?
+<?php
 //<li><a href="allowable_rel_structure.php">Update the allowable relationship table structure</a> <em>(this script may have been autorun already)</em></li>
 echo '<li>Update the allowable relationship table structure (NOT READY YET)</li>';
 ?>

@@ -133,7 +133,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 <li>Changes "Places blog/publication on a page" to "Place a blog/publication" (addresses <a href="http://code.google.com/p/reason-cms/issues/detail?id=33">issue 33</a>)</li>
 <li>Changes "Places a related publication on a page" to "Attach a related publication" (addresses <a href="http://code.google.com/p/reason-cms/issues/detail?id=33">issue 33</a>)</li>
 <li>Adds the theme previewer to the theme type</li>
-<?
+<?php
 /* TODO
 <li>Removes the finish action for sites.</li>
 <li>Removes the finish action for assets.</li>*/
@@ -142,7 +142,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 </ul>
 
 <form method="post"><input type="submit" name="go" value="test" /><input type="submit" name="go" value="run" /></form>
-<?
+<?php
 
 if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 {

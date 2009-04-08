@@ -1,4 +1,4 @@
-<?
+<?php
 include ('reason_header.php');
 include_once(CARL_UTIL_INC.'db/db_selector.php');
 include_once( CARL_UTIL_INC . 'db/sqler.php' );

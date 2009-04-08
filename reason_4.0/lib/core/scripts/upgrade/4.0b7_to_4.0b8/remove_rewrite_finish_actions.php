@@ -92,7 +92,7 @@ the rewrites are updated anytime a url_fragment change or parent change takes pl
 <ul>
 <li>Removes the finish action for pages.</li>
 
-<?
+<?php
 /* TODO
 <li>Removes the finish action for sites.</li>
 <li>Removes the finish action for assets.</li>*/
@@ -101,7 +101,7 @@ the rewrites are updated anytime a url_fragment change or parent change takes pl
 </ul>
 
 <form method="post"><input type="submit" name="go" value="test" /><input type="submit" name="go" value="run" /></form>
-<?
+<?php
 
 if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 {

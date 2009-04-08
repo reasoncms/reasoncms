@@ -132,7 +132,7 @@ class imagePageOrderUpdate
 <li>In "test" mode, it will report on pages whose images's sort values need to be reordered to remain in the same order on the pages in question</li>
 <li>In "run" mode, it will update the sort order of the images on the page to match the order the images appeared in before Beta 8.</li>
 </ul>
-<?
+<?php
 
 if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 {

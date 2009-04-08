@@ -40,7 +40,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 
 <h2>Reason: Update Types</h2>
 <p>Updates types to remove obsolete junk and create some new types and fields.</p>
-<?
+<?php
 if (!defined("DISABLE_REASON_ADMINISTRATIVE_INTERFACE"))
 {
 	echo '<p><strong>You have not defined DISABLE_REASON_ADMINISTRATIVE_INTERFACE in your reason_settings.php file. It is strongly suggested that you do so AND
@@ -66,7 +66,7 @@ elseif (DISABLE_REASON_ADMINISTRATIVE_INTERFACE == true)
 <li>Make office/department to category bidirectional, and add a relationship display name.</li>
 <li>Rename the quote_to_category display name reverse direction to "Is Subject of Quote"</li>
 <li>Move the field location.location to event.location</li>
-<?
+<?php
 //<li>Create/update the address type</li>*/
 ?>
 </ul>
