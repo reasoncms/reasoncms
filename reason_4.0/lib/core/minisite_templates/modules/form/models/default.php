@@ -332,6 +332,7 @@ class DefaultFormModel extends AbstractFormModel
 			$messages['all']['form_title'] = (isset($options['header'])) ? $options['header'] : '';
 			$messages[0]['to'] = $to;
 			$messages[0]['from'] = (isset($options['from'])) ? $options['from'] : TYR_REPLY_TO_EMAIL_ADDRESS;
+			$messages[0]['reply-to'] = (isset($options['reply-to'])) ? $options['reply-to'] : TYR_REPLY_TO_EMAIL_ADDRESS;
 			$messages[0]['subject'] = (isset($options['subject'])) ? $options['subject'] : 'Response to Form';
 			$tyr = new Tyr($messages, $data);
 			$tyr->add_disclaimer = (isset($options['disclaimer']) && ($options['disclaimer'] == false) ) ? false : true;
