@@ -1,12 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+/**
+ * Include parent class
+ */
 reason_include_once( 'minisite_templates/modules/publication/markup_generator.php' );
 
 /**
-*  Generates the full markup for an individual news item or blog post.  
+*  Generates the full markup for an individual news item or blog post.
+*
 *  Helper class to the publication minisite module.  
 *
-*  @package reason
-*  @subpackage minisite_modules
 *  @author Meg Gibbs, Matt Ryan, Nate White
 *
 */
