@@ -1,6 +1,21 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'faculty_staff_handler';
 
+	/**
+	 * A content manager for faculty/staff (e.g. people in directory service)
+	 *
+	 * Note that the name of the type (and therefore this content manager)
+	 * is somewhat more restrictive than the actual capabilities of this
+	 * type. See the faculty_staff module for more info.
+	 *
+	 */
 	class faculty_staff_handler extends ContentManager 
 	{
 		var $ldap_field_mapping = array(
