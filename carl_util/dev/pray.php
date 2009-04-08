@@ -1,6 +1,7 @@
 <?php
-/*
+/**
  * PRint arrAY function
+ *
  * nice debug function for uncovering the contents of arrays in an (x)HTML context
  *
  * @package carl_util
