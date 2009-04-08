@@ -1,17 +1,22 @@
 <?php
 /**
- *	Default Pagination Display
+ * Default Pagination Display
  * @package reason
+ * @subpackage minisite_modules
  */
- 
+
+/**
+ * register pagination displayer with Reason & include parent class
+ */
 $GLOBALS['_reason_pagination_displayers'][basename(__FILE__)] = 'windowPaginationDisplay';
 reason_include_once('minisite_templates/modules/pagination_displayers/default.php');
  
 /**
- * The default pagination markup generation class
+ * Displays pagination that only shows a "window" of pages arounf the current page
  *
- * Takes the needed raw data from a reason module and builds html interfaces
- * for pagination
+ * This pagination class can handle large numbers of pages a little more gracefully
+ * than the default, which lists every single page. This lists first, last and 5 before
+ * and after the current page.
  *
  * @author Matt Ryan <mryan@acs.carleton.edu>
  * @date 2006-12-04
