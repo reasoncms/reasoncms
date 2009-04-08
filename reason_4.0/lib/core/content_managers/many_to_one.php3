@@ -1,16 +1,27 @@
 <?php
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//
-	//		this line is important - make sure any content handlers have this variable set in their include files!!!!
-	
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register the content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'many_to_oneManager';
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	
+	/**
+	 * A content manager that includes elements to select entities across all relationships
+	 *
+	 * This is very old code. Use the add_relationship_element() method
+	 * instead of extending this class.
+	 *
+	 * @deprecated
+	 * @todo Remove from the Reason core
+	 */
 	class many_to_oneManager extends ContentManager
 	{	
 		function prep_for_run( $site_id, $type_id, $id, $user_id ) // {{{
 		{
+			trigger_error('The many_to_one content manager is deprecated. Use add_relationship_element() instead.');
 			parent::prep_for_run( $site_id, $type_id, $id, $user_id );
 			$this->get_relationships();
 		} // }}}
