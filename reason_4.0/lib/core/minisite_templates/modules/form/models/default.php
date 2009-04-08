@@ -307,7 +307,8 @@ class DefaultFormModel extends AbstractFormModel
 	 * The options array can define any of the following keys - if none are defined default behaviors will be used
 	 * 
 	 * - to: netid, array of netids, or comma separated string indicating who the e-mails should go to
-	 * - from: netid or full e-mail address for the from fields
+	 * - from: netid or full e-mail address for the from field
+	 * - reply-to: netid or full e-mail address for the reply-to field
 	 * - subject: string indicating the subject line
 	 * - header: string containing header line for the first line of the e-mail
 	 * - dislaimer: boolean indicating whether or not to add a dislaimer - defaults to true
@@ -327,7 +328,6 @@ class DefaultFormModel extends AbstractFormModel
 		{
 			if (isset($options['origin_link'])) $messages['all']['form_origin_link'] = $options['origin_link'];
 			if (isset($options['access_link'])) $messages['all']['form_access_link'] = $options['access_link'];
-			if (isset($options['replyto'])) $messages[0]['reply-to'] = $options['replyto'];
 			$messages['all']['hide_empty_values'] = (isset($options['email_empty_fields'])) ? !$options['email_empty_fields'] : true;
 			$messages['all']['form_title'] = (isset($options['header'])) ? $options['header'] : '';
 			$messages[0]['to'] = $to;
