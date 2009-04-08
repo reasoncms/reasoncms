@@ -1,4 +1,12 @@
-<?php 
+<?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+/**
+ * register pagination displayer with reason & include parent class
+ */
 $GLOBALS['_reason_pagination_displayers'][basename(__FILE__)] = 'nextPrevPaginationDisplay';
 reason_include_once('minisite_templates/modules/pagination_displayers/default.php');
  
