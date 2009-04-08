@@ -184,11 +184,6 @@ class DBFormModel extends DefaultFormModel
 		return (!$this->user_has_access_to_fill_out_form());
 	}
 	
-	function get_email_of_recipient()
-	{
-		return false;
-	}
-	
 	function get_email_of_submitter()
 	{
 		return $this->get_user_netid();
@@ -262,20 +257,6 @@ class DBFormModel extends DefaultFormModel
 		$form_id = ( ($form_id == NULL) && strlen($this->get_requested_form_id() > 0) ) ? $this->get_requested_form_id() : $form_id;
 		if ($this->form_id_is_valid($form_id)) $this->set_form_id($form_id);
 	}
-	
-	function set_spoofed_netid_if_allowed($requested_netid = false)
-	{
-		$netid = reason_check_authentication();
-		if (!empty($requested_netid) && !empty($netid) && ($requested_netid != $netid))
-		{
-			$user_id = get_user_id($netid);
-			if (reason_user_has_privs($user_id, 'pose_as_other_user'))
-			{
-				$this->set_user_netid($requested_netid);
-			}
-		}
-	}
-	
 
 	/**
 	 * Does the following:
@@ -677,41 +658,6 @@ class DBFormModel extends DefaultFormModel
 	function get_sort_order()
 	{
 		return (isset($this->_sort_order)) ? $this->_sort_order : '';
-	}
-	
-	/**
-	 * Uses Tyr to send an e-mail, given an array of key value pairs where the key is the item display name, and the value is the value
-	 *
-	 * The options array can define any of the following keys - if none are defined default behaviors will be used
-	 * 
-	 * - to: netid, array of netids, or comma separated string indicating who the e-mails should go to
-	 * - from: netid or full e-mail address for the from fields
-	 * - subject: string indicating the subject line
-	 * - header: string containing header line for the first line of the e-mail
-	 * - dislaimer: boolean indicating whether or not to add a dislaimer - defaults to true
-	 * - origin_link: link indicating where the URL where the form was filled out
-	 * - access_link: link indicating where the form can be accessed for view/edit
-	 *
-	 * @param array data - key/value pairs of the data to e-mail
-	 * @param array options - allows various parameters to be optionally passed
-	 * @todo remove this weird mini system and the tyr "message" framework and use e-mail class directly
-	 */
-	function send_email(&$data, $options = array())
-	{
-		$to = (isset($options['to'])) ? $options['to'] : $this->get_email_of_recipient();
-		$to = (is_array($to)) ? implode(",", $to) : $to;
-		if (strlen(trim($to)) > 0)
-		{
-			if (!$this->should_email_empty_fields()) $messages['all']['hide_empty_values'] = true;
-			if (isset($options['origin_link'])) $messages['all']['form_origin_link'] = $options['origin_link'];
-			if (isset($options['access_link'])) $messages['all']['form_access_link'] = $options['access_link'];
-			$messages['all']['form_title'] = (isset($options['header'])) ? $options['header'] : $this->get_form_name();
-			$messages[0]['to'] = $to;
-			$messages[0]['subject'] = (isset($options['subject'])) ? $options['subject'] : 'Response to Form: ' . $this->get_form_name();	
-			$tyr = new Tyr($messages, $data);
-			$tyr->add_disclaimer = (isset($options['disclaimer']) && ($options['disclaimer'] == false) ) ? false : true;
-			$tyr->run();
-		}
 	}
 	
 	// do we need an options array? 

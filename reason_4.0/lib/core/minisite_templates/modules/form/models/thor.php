@@ -764,24 +764,45 @@ class ThorFormModel extends DefaultFormModel
 		if ($this->get_email_of_submitter())
 		{
 			$email_data = $this->get_values_for_email_submitter_view(); // grab the values
-			if ($this->should_email_link())
-			{
-				$email_link = $this->get_link_for_email_submitter_view();
-				if (!empty($email_link))
-				{
-					$options['access_link'] = $email_link;
-				}
-				else
-				{
-					$options['origin_link'] = carl_construct_link(array('')); // we use the origin if no link to edit is available
-				}
-			}
-			$options['subject'] = 'Form Submission Confirmation: ' . $this->get_form_name(); // should i include form name
-			$options['header'] = $this->get_form_name() . " - " . "Successfully Submitted " . carl_date('l, F jS Y \\a\t h:i:s A');
-			$options['to'] = $this->get_email_of_submitter();
-			$options['disclaimer'] = false;
-			$this->send_email($email_data, $options);
+			$email_options = $this->get_options_for_email_submitter_view(); // grab the options
+			$this->send_email($email_data, $email_options);
 		}
+		else
+		{
+			trigger_error('submitter e-mail could not be determined!');
+		}
+	}
+	
+	function get_options_for_email_submitter_view()
+	{
+		if ($this->should_email_link())
+		{
+			$email_link = $this->get_link_for_email_submitter_view();
+			if (!empty($email_link))
+			{
+				$options['access_link'] = $email_link;
+			}
+			else
+			{
+				$options['origin_link'] = carl_construct_link(array('')); // we use the origin if no link to edit is available
+			}
+		}
+		$options['email_empty_fields'] = $this->should_email_empty_fields();
+		$options['subject'] = 'Form Submission Confirmation: ' . $this->get_form_name(); // should i include form name
+		$options['header'] = $this->get_form_name() . " - " . "Successfully Submitted " . carl_date('l, F jS Y \\a\t h:i:s A');
+		$options['to'] = $this->get_email_of_submitter();
+		$options['disclaimer'] = false;
+		$view =& $this->get_view();
+		if (method_exists($view, 'get_custom_options_for_email_submitter_view'))
+		{
+			$view_options = $view->get_custom_options_for_email_submitter_view();
+			if (is_array($view_options))
+			{
+				$options = array_merge($options, $view_options);
+			}
+			else trigger_error('The method get_custom_options_for_email_submitter_view, if defined in the view, needs to return an array.');
+		}
+		return $options;
 	}
 	
 	/**
@@ -789,18 +810,38 @@ class ThorFormModel extends DefaultFormModel
 	 */
 	function email_form_data()
 	{
-		$email_data = $this->get_values_for_email();
-		$email_link = $email_link = $this->get_link_for_email();
 		if ($this->get_email_of_recipient())
 		{
-			if (!empty($email_link)) $options['access_link'] = $email_link;
-			$options['to'] = $this->get_email_of_recipient();
-			$this->send_email($email_data, $options);
+			$email_data = $this->get_values_for_email();
+			$email_options = $this->get_options_for_email();
+			$this->send_email($email_data, $email_options);
 		}
 		else
 		{
-			trigger_error('submitter e-mail could not be determined!');
+			trigger_error('recipient e-mail could not be determined!');
 		}
+	}
+	
+	function get_options_for_email()
+	{
+		$email_link = $this->get_link_for_email();
+		if (!empty($email_link)) $options['access_link'] = $email_link;
+		$options['email_empty_fields'] = $this->should_email_empty_fields();
+		$options['subject'] = 'Response to Form: ' . $this->get_form_name();
+		$options['header'] = $this->get_form_name();
+		$options['to'] = $this->get_email_of_recipient();
+		$options['disclaimer'] = true;
+		$view =& $this->get_view();
+		if (method_exists($view, 'get_custom_options_for_email'))
+		{
+			$view_options = $view->get_custom_options_for_email();
+			if (is_array($view_options))
+			{
+				$options = array_merge($options, $view_options);
+			}
+			else trigger_error('The method get_custom_options_for_email, if defined in the view, needs to return an array.');
+		}
+		return $options;
 	}
 	
 	function save_form_data()
@@ -817,44 +858,6 @@ class ThorFormModel extends DefaultFormModel
 		$session->set('form_confirm', $values);
 	}
 	
-	/**
-	 * Uses Tyr to send an e-mail, given an array of key value pairs where the key is the item display name, and the value is the value
-	 *
-	 * The options array can define any of the following keys - if none are defined default behaviors will be used
-	 * 
-	 * - to: netid, array of netids, or comma separated string indicating who the e-mails should go to
-	 * - from: netid or full e-mail address for the from fields
-	 * - subject: string indicating the subject line
-	 * - header: string containing header line for the first line of the e-mail
-	 * - dislaimer: boolean indicating whether or not to add a dislaimer - defaults to true
-	 * - origin_link: link indicating where the URL where the form was filled out
-	 * - access_link: link indicating where the form can be accessed for view/edit
-	 *
-	 * @param array data - key/value pairs of the data to e-mail
-	 * @param array options - allows various parameters to be optionally passed
-	 * @todo remove this weird mini system and the tyr "message" framework and use e-mail class directly
-	 */
-	function send_email(&$data, $options = array())
-	{
-		$form =& $this->get_form_entity();
-		$thor_core =& $this->get_thor_core_object();
-		$to = (isset($options['to'])) ? $options['to'] : $form->get_value('email_of_recipient');
-		$to = (is_array($to)) ? implode(",", $to) : $to;
-		if (strlen(trim($to)) > 0)
-		{
-			if (!$this->should_email_empty_fields()) $messages['all']['hide_empty_values'] = true;
-			if (isset($options['origin_link'])) $messages['all']['form_origin_link'] = $options['origin_link'];
-			if (isset($options['access_link'])) $messages['all']['form_access_link'] = $options['access_link'];
-			$messages['all']['form_title'] = (isset($options['header'])) ? $options['header'] : $form->get_value('name');
-			$messages[0]['to'] = $to;
-			$messages[0]['subject'] = (isset($options['subject'])) ? $options['subject'] : 'Response to Form: ' . $form->get_value('name');	
-			$tyr = new Tyr($messages, $data);
-			$tyr->add_disclaimer = (isset($options['disclaimer']) && ($options['disclaimer'] == false) ) ? false : true;
-			$tyr->run();
-		}
-	}
-	
-	// do we need an options array? 
 	/**
 	 * Saves the data in the appropriate way. Assumes should_save_form_data has been checked.
 	 *

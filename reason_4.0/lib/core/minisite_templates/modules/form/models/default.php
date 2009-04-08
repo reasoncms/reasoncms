@@ -248,6 +248,14 @@ class DefaultFormModel extends AbstractFormModel
 	}
 	
 	/**
+	 * Gets the email of the recipient - by default the logged in users netid
+	 */
+	function get_email_of_recipient()
+	{
+		return $this->get_user_netid();
+	}
+	
+	/**
 	 * Sets the working user_netid
 	 */
 	function set_user_netid($netid = false)
@@ -291,6 +299,44 @@ class DefaultFormModel extends AbstractFormModel
 			return $ret;
 		}
 		return $this->_directory_info[$netid];
+	}
+
+	/**
+	 * Uses Tyr to send an e-mail, given an array of key value pairs where the key is the item display name, and the value is the value
+	 *
+	 * The options array can define any of the following keys - if none are defined default behaviors will be used
+	 * 
+	 * - to: netid, array of netids, or comma separated string indicating who the e-mails should go to
+	 * - from: netid or full e-mail address for the from fields
+	 * - subject: string indicating the subject line
+	 * - header: string containing header line for the first line of the e-mail
+	 * - dislaimer: boolean indicating whether or not to add a dislaimer - defaults to true
+	 * - origin_link: link indicating where the URL where the form was filled out
+	 * - access_link: link indicating where the form can be accessed for view/edit
+	 * - email_empty_fields: boolean indicating whether or not to email empty fields
+	 *
+	 * @param array data - key/value pairs of the data to e-mail
+	 * @param array options - allows various parameters to be optionally passed
+	 * @todo remove this weird mini system and the tyr "message" framework and use e-mail class directly
+	 */
+	function send_email(&$data, $options = array())
+	{
+		$to = (isset($options['to'])) ? $options['to'] : $this->get_email_of_recipient();
+		$to = (is_array($to)) ? implode(",", $to) : $to;
+		if (strlen(trim($to)) > 0)
+		{
+			if (isset($options['origin_link'])) $messages['all']['form_origin_link'] = $options['origin_link'];
+			if (isset($options['access_link'])) $messages['all']['form_access_link'] = $options['access_link'];
+			if (isset($options['replyto'])) $messages[0]['reply-to'] = $options['replyto'];
+			$messages['all']['hide_empty_values'] = (isset($options['email_empty_fields'])) ? !$options['email_empty_fields'] : true;
+			$messages['all']['form_title'] = (isset($options['header'])) ? $options['header'] : '';
+			$messages[0]['to'] = $to;
+			$messages[0]['from'] = (isset($options['from'])) ? $options['from'] : TYR_REPLY_TO_EMAIL_ADDRESS;
+			$messages[0]['subject'] = (isset($options['subject'])) ? $options['subject'] : 'Response to Form';
+			$tyr = new Tyr($messages, $data);
+			$tyr->add_disclaimer = (isset($options['disclaimer']) && ($options['disclaimer'] == false) ) ? false : true;
+			$tyr->run();
+		}
 	}
 	
 	/**
