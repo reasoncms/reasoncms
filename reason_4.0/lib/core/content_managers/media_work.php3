@@ -1,6 +1,16 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register the content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'av_handler';
 
+	/**
+	 * A content manager for Media Works
+	 */
 	class av_handler extends ContentManager
 	{
 		var $fields_to_remove = array('rating', 'standalone');
