@@ -1,6 +1,16 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'QuoteManager';
 
+	/**
+	 * A content manager for quotes
+	 */
 	class QuoteManager extends ContentManager
 	{
 		var $fields_to_remove = array('rating');
