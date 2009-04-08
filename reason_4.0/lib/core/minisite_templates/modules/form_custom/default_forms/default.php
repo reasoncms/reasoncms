@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @package reason
  * @subpackage minisite_modules
