@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Part 1 of the publication framework setup
  *
