@@ -1,8 +1,4 @@
-<?
-include_once('reason_header.php');
-include_once(DISCO_INC . 'disco.php');
-reason_include_once('scripts/developer_tools/publication_migrator/publication_migrator_helper.php');
-
+<?php
 /**
  * The publication migrator helps transition sites using old style news to use
  * the publications module.
@@ -20,9 +16,20 @@ reason_include_once('scripts/developer_tools/publication_migrator/publication_mi
  * For extension, look to the PublicationMigratorHelper.
  *
  * @author Nathan White
+ * @package reason
+ * @subpackage scripts
  */
 
-// instantiate relevant classes
+/**
+ * Include dependencies
+ */
+include_once('reason_header.php');
+include_once(DISCO_INC . 'disco.php');
+reason_include_once('scripts/developer_tools/publication_migrator/publication_migrator_helper.php');
+
+/**
+ * Instantiate & run relevant classes
+ */
 $pmg = new PublicationMigratorHelper();
 $pmg->init();
 $pmg->run();

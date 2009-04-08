@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * Include the entire publication migrator family of utilities
+ */
 reason_include_once('classes/head_items.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('function_libraries/user_functions.php');
@@ -11,6 +19,22 @@ reason_include_once('scripts/developer_tools/publication_migrator/migrator_scree
 reason_include_once('scripts/developer_tools/publication_migrator/migrator_screen_6.php');
 reason_include_once('scripts/developer_tools/publication_migrator/migrator_screen_7.php');
 
+/**
+ * The publication migrator helps transition sites using old style news to use
+ * the publications module.
+ *
+ * It basically works as follows:
+ * 
+ * - Identify sites using page types from the old publications framework
+ * - Screen 1: Allow selection of a site to "migrate."
+ * - Screen 2: Allow association of news items, issues, and sections to an existing or new publication.
+ * - Screen 3: Map known page types from old page type to new page type and relate publication.
+ *
+ * Not all page types can be known, and some sites will require some manual work to migrate.
+ * Even for sites that require manual work, it may be worthwhile to extend this tool to handle them...
+ *
+ * @author Nathan White
+ */
 class PublicationMigratorHelper
 {
 	var $cleanup_rules = array('active_screen' => array('function' => 'check_against_array', 'extra_args' => array("1","2","3","4","5","6","7")),
