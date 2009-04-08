@@ -145,7 +145,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 <li>Create an asset to category relationship if it does not exist.</li>
 </ul>
 <form method="post"><input type="submit" name="go" value="test" /><input type="submit" name="go" value="run" /></form>
-<?
+<?php
 
 if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 {

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Upgrade to allow categories to be sorted on a page
  *
