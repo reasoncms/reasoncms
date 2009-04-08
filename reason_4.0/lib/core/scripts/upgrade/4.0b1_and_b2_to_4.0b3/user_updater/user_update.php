@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * This script updates the reason database to that Reason can be used as a primary authentication service
  *
