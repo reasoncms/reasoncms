@@ -1,4 +1,12 @@
-<?
+<?php
+/**
+ * @package reason
+ * @subpackage classes
+ */
+ 
+/**
+ * Include Reason libraries
+ */
 include_once('reason_header.php');
 reason_include_once( 'classes/entity_selector.php' );
 reason_include_once( 'classes/object_cache.php' );
@@ -21,9 +29,6 @@ reason_include_once( 'classes/object_cache.php' );
  *		$qh->init();
  *		$quote =& $qh->get_random_quote();	
  *  </code>
- *
- * @package reason
- * @subpackage classes
  *
  * @author Nathan white
  * @todo Needs some work if this is going to work with cache and different quote dividers in multiple locations of same page
