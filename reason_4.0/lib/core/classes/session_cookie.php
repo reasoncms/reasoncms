@@ -1,9 +1,18 @@
 <?php
-	/*
-	 *	session_cookie.php
-	 *	Dave Hendler
-	 *	7/28/04
-	 *
+/**
+ * @package reason
+ * @subpackage classes
+ *
+ *  @todo remove the code that allows users to directly access this file
+ *        and see their cookie information
+ */
+
+	/**
+	 * Include Reason libraries & parent class
+	 */
+	include_once( 'reason_header.php' );
+	reason_include_once( 'classes/session.php' );
+	/**
 	 *	Implementation of the session interface using cookies.
 	 *	a.k.a. client-side sessions.  no data is stored on the server.
 	 *
@@ -15,12 +24,11 @@
 	 *	appends some extra, internal variables.
 	 *	TODO: decide what these are.
 	 *
+	 *  @todo Figure out what this session class would be useful for, as it seems
+	 *        like a possibly insecure implementation?
 	 *
+	 *	@author Dave Hendler, 7/28/04
 	 */
-
-	include_once( 'reason_header.php' );
-	reason_include_once( 'classes/session.php' );
-
 	class Session_Cookie extends Session  /* interface */
 	{
 		var $cookie_glue = '|';
@@ -84,8 +92,12 @@
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	if( $_SERVER['SCRIPT_FILENAME'] == __FILE__ )
 	{
+		trigger_error('Using the session cookie file directly to test the contents of the session is deprecated. This aspect of session_cookie will be removed in a later release.');
 		echo 'testing session_cookie<br/>';
 		$s = new Session_Cookie();
 		$s->define_vars( array( 'user_id','username','first_name','foo' ) );
