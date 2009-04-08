@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Stub for the generate_page script
  * @package reason
