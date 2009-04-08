@@ -1,8 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register the content manager with Reason
+	 */
 	reason_include_once( 'content_managers/parent_child.php3' );
 	
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'MinuteManager';
 
+	/**
+	 * A content manager for minutes
+	 */
 	class MinuteManager extends ContentManager
 	{
 		function alter_data() // {{{
