@@ -1,8 +1,16 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'GroupManager';
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
+	/**
+	 * A content manager for groups
+	 */
 	class GroupManager extends ContentManager
 	{
 		var $triggers_for_limit_authorization_field = array(
