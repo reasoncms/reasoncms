@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  *  URL History Functions
  *  
