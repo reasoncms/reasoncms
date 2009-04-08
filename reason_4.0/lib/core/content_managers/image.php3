@@ -1,8 +1,20 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Include image library
+	 */
 	reason_include_once( 'function_libraries/images.php' );
-
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'ImageManager';
 
+	/**
+	 * A content manager for images
+	 */
 	class ImageManager extends ContentManager
 	{
 		var $form_enctype = 'multipart/form-data';
