@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Upgrade the DB from beta 3 to beta 4 for the publications framework
  *
