@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Add created_by field and attempt to figure out sensible values
  *
