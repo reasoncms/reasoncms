@@ -1,21 +1,21 @@
-<?
+<?php
 /**
-* @package carl_util
-* @subpackage dir_service
-* @author Mark Heiman
-* 
-* A general purpose directory service interface
-*/
+ * A general purpose directory service interface
+ * @package carl_util
+ * @subpackage dir_service
+ * @author Mark Heiman
+ */
 
 /**
-* MySQL Directory Service -- Interface for access to directory info in MySQL tables
-* @subpackage dir_service
-* @author Mark Heiman
-*/
-
+ * Include database connection library and parent class
+ */
 include_once( CARL_UTIL_INC . 'db/connectDB.php' );
 include_once('ds_default.php');
 
+/**
+ * MySQL Directory Service -- Interface for access to directory info in MySQL tables
+ * @author Mark Heiman
+ */
 class ds_mysql extends ds_default {
 
 	/**

@@ -1,17 +1,16 @@
-<?
+<?php
 /**
-* @package carl_util
-* @subpackage dir_service
-* @author Mark Heiman
-* 
-* A general purpose directory service interface
-*/
+ * A general purpose directory service interface
+ *
+ * @package carl_util
+ * @subpackage dir_service
+ * @author Mark Heiman
+ */
 
 /**
-* Default Directory Service -- Stub interface from which other services inherit
-* @subpackage dir_service
-* @author Mark Heiman
-*/
+ * Default Directory Service -- Stub interface from which other services inherit
+ * @author Mark Heiman
+ */
 class ds_default {
 	
 	/**

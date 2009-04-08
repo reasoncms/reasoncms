@@ -1,21 +1,22 @@
-<?
+<?php
 /**
-* @package carl_util
-* @subpackage dir_service
-* @author Mark Heiman
-* 
-* A general purpose directory service interface
-*/
+ * A general purpose directory service interface
+ * @package carl_util
+ * @subpackage dir_service
+ * @author Mark Heiman
+ */
 
 /**
-* General LDAP Directory Service -- Interface for access to LDAP directories
-* @subpackage dir_service
-* @author Mark Heiman
-*/
-
+ * Include parent class and general util functions
+ */
 include_once('ds_default.php');
 include_once(CARL_UTIL_INC.'basic/misc.php');
 
+/**
+ * General LDAP Directory Service -- Interface for access to LDAP directories
+ * @subpackage dir_service
+ * @author Mark Heiman
+ */
 class ds_ldap extends ds_default {
 
 	/**

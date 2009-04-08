@@ -1,5 +1,5 @@
 <pre>
-<?
+<?php
 /**
  * A little tester for trying out directory service functionality
  *
