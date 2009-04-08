@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Add a user preference regarding how they are notified of impending auto-logout
  *
