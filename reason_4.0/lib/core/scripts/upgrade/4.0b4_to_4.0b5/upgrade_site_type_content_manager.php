@@ -17,7 +17,7 @@
 </head>
 
 <body>
-<?
+<?php
 include ('reason_header.php');
 reason_include_once('function_libraries/user_functions.php');
 reason_include_once('function_libraries/admin_actions.php');
