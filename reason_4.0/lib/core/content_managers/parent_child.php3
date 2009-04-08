@@ -1,7 +1,21 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Include the entity selector
+	 */
 	reason_include_once( 'classes/entity_selector.php' );
+
+	/**
+	 * Register the content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'parent_childManager';
 
+	/**
+	 * A content manager for hierarchical types
+	 */
 	class parent_childManager extends ContentManager
 	{
 		var $pages = array();
