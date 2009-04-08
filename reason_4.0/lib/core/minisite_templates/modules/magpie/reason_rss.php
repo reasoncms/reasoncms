@@ -1,9 +1,10 @@
 <?php
-
-/* Magpie RSS Feed display functions
+/**
+ * Magpie RSS Feed display functions
  * 
  * @author Matthew Bockol
- * @package None
+ * @package reason
+ * @subpackage minisite_modules
  * @version .001
  * @date 02.28.2006
  *
@@ -52,6 +53,7 @@ define('MAGPIE_OUTPUT_ENCODING', 'UTF-8');
 
 require_once(MAGPIERSS_INC . 'rss_fetch.inc');
 require_once(MAGPIERSS_INC . 'rss_parse.inc');
+
 
 class reasonFeedDisplay
 {
