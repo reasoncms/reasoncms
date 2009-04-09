@@ -1,7 +1,24 @@
 <?php
+/**
+ * @package reason
+ * @subpackage scripts
+ */
+
+/**
+ * Include the Reason basic libraries
+ */
 include ('reason_header.php');
+/**
+ * Include the db selector utility class
+ */
 include_once(CARL_UTIL_INC.'db/db_selector.php');
+/**
+ * Include the sqler utility class
+ */
 include_once( CARL_UTIL_INC . 'db/sqler.php' );
+/**
+ * Include various other Reason utilities
+ */
 reason_include_once('classes/entity_selector.php');
 reason_include_once('classes/field_to_entity_table_class.php');
 reason_include_once('function_libraries/util.php');
@@ -9,7 +26,9 @@ reason_include_once('function_libraries/user_functions.php');
 reason_include_once('function_libraries/admin_actions.php');
 reason_include_once('function_libraries/relationship_finder.php');
 reason_include_once('classes/amputee_fixer.php');
-
+/**
+ * Run type updates that are part of the Reason 4.0 beta 7 to 4.0 beta 8 upgrade
+ */
 class updateTypes
 {
 	var $mode;
