@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+/**
+ * Include parent class
+ */
 include_once('default_setting_form.php');
 
 class emailSettingForm extends defaultSettingForm

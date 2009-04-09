@@ -1,13 +1,14 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
 include_once( DISCO_INC . 'disco.php' );
 
 /**
  * An extension of disco reason manual map for use with the 
  * user settings module. Basically hides the form after it's run
  * and adds a redirect to get rid of the user_setting querystring.
- * 
- * @package reason
- * @subpackage minisite_modules
  *
  * @author Ben Cochran
  **/

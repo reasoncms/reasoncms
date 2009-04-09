@@ -1,12 +1,11 @@
 <?php
-
-
 /**
  * A user setting class to be used by the user settings module.
  * Defines a form to be used to edit a setting as well as other
  * things about that setting, such as how to create links to edit it.
  *
  * @package reason
+ * @subpackage minisite_modules
  *
  * @author Ben Cochran
  **/

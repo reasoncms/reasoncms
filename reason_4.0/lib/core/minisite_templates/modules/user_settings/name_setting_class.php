@@ -1,11 +1,15 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+/**
+ * Include parent class
+ */
 include_once('default_setting_class.php');
 
 /**
  * A user setting class for changing a user's given name and surname.
- * 
- * @package reason
- * @subpackage minisite_modules
  *
  * @author Ben Cochran
  **/

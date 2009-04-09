@@ -1,8 +1,18 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+/**
+ * Include parent class & other utils
+ */
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'function_libraries/url_utils.php');
 reason_include_once( 'classes/user.php');
 
+/**
+ * Register module with Reason
+ */
 //$GLOBALS[ '_module_class_names' ][ 'user_settings' ] = 'UserSettingsModule';
 $GLOBALS[ '_module_class_names' ][ module_basename( __FILE__) ] = 'UserSettingsModule';
 
@@ -11,12 +21,9 @@ $GLOBALS[ '_module_class_names' ][ module_basename( __FILE__) ] = 'UserSettingsM
  *
  * Designed to be easy to expand and configure. Settings to be configured are defined in an array
  * of settings classes.
- * 
- * @package reason
- * @subpackage minisite_modules
  *
  * @author Ben Cochran, Nathan White
- **/
+ */
 class UserSettingsModule extends DefaultMinisiteModule
 {
 	var $user;

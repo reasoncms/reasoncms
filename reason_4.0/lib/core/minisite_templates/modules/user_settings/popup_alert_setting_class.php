@@ -1,12 +1,16 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+/**
+ * Include parent class
+ */
 include_once('default_setting_class.php');
 
 /**
  * A user setting class for changing a user's popup alert preference (what 
  * we're referring to on the front-end as the "logout notification method")
- * 
- * @package reason
- * @subpackage minisite_modules
  *
  * @author Ben Cochran
  **/
