@@ -1,7 +1,14 @@
 <?php
-
-/*
- * Copyright (c) 2003 Starnetsys, LLC.  All rights reserved.
+/**
+ * HTML parsing class
+ *
+ * Note: package info is included by Carleton for documentation purposes.
+ * This file's copyright is still as stated by Starnetsys, LLC.
+ *
+ * @package carl_util
+ * @subpackage pdf
+ *
+ * @copyright Copyright (c) 2003 Starnetsys, LLC.  All rights reserved.
  * Redistribution of source must retain this copyright notice.
  *
  * Starnetsys, LLC (http://starnetsys.com) specializes in
