@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This script contains a class that fixes amputees for the current type.
  * @package reason
  * @subpackage finish_actions
