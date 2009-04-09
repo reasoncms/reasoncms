@@ -1,5 +1,11 @@
 <?php
+/**
+ * @package loki
+ */
 
+/**
+ * PHP class to find all Loki source files
+ */
 class Loki2ScriptFinder
 {
 	var $files = array();
