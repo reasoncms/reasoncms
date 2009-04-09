@@ -1,21 +1,25 @@
 <?php
-	/*
-	 *	minisite front end
+	/**
+	 *	Minisite front end page generation
 	 *
-	 *	gets site id and page id from passed paramaters
-	 *	gets all minisite information from that and just goes for it
+	 *	Gets site id and page id from passed paramaters
 	 *
-	 *	@author dave hendler
+	 *	Gets all minisite information from that, finds the proper template, and
+	 *  generates the page.
+	 *
+	 *  Also handles page caching.
+	 *
+	 *	@author Dave Hendler
 	 * 	@package reason
 	 * 	@subpackage minisite
 	 */
 	
-	/*
+	/**
 	 *  Ok.  The way this page works has been altered in parts and in order to maximize the efficiency of the caching
 	 *  mechanism.
 	 */
 	 
-	/*
+	/**
 	 * We don't want people to call generate_page.php directly so we check to see if their requested
 	 * path ends in '.php' and give them an error if it does. Keeps people from fishing around for not
 	 * live sites and trying to find things they shouldn't.
