@@ -1,6 +1,6 @@
 <?php
 /**
- * @pacakge reason
+ * @package reason
  * @subpackage content_managers
  */
 	/**
