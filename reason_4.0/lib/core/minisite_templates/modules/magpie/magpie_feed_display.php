@@ -1,9 +1,21 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class
+ 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
 
+	/**
+ 	 * Register module with Reason
+ 	 */
 	$GLOBALS[ '_module_class_names' ][ 'magpie/' . basename( __FILE__, '.php' ) ] = 'Magpie_Feed_Display';
 
+	/**
+	 * A minisite module that will display the contents of an RSS feed
+	 */
 	class Magpie_Feed_Display extends DefaultMinisiteModule
 	{
 		var $cleanup_rules = array(

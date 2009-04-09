@@ -1,9 +1,23 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 	/**
+ 	 * Include parent class
+ 	 */
 	reason_include_once( 'minisite_templates/modules/magpie/magpie_feed_display.php' );
 
+	/**
+ 	 * Register module with Reason
+ 	 */
 	$GLOBALS[ '_module_class_names' ][ 'magpie/' . basename( __FILE__, '.php' ) ] = 'Magpie_Feed_Nav';
 
+	/**
+ 	 * A minisite module that will display a list of current items in the feed, with links
+ 	 * to the items. This module is intended to be used in conjunction with the
+ 	 * magpie_feed_display module.
+ 	 */
 	class Magpie_Feed_Nav extends Magpie_Feed_Display
 	{
 		function run()
