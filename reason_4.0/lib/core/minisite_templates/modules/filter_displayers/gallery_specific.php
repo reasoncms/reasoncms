@@ -2,15 +2,16 @@
 /**
  * Filter Display with Gallery2-Specific features
  * @package reason
+ * @subpackage filter_displayers
+ */
+/**
+ * Include parent class & register filter displayer with Reason
  */
 reason_include_once('minisite_templates/modules/filter_displayers/default.php');
 $GLOBALS['_reason_filter_displayers'][basename(__FILE__)] = 'galleryFilterDisplay';
  
 /**
  * Gallery specific filter displayer
- *
- * @package reason
- * @subpackage filter_displayers
  *
  * @author Ben Cochran
  * @date 2007-04-16

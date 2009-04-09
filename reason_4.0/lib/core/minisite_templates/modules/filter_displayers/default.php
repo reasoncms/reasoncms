@@ -1,7 +1,8 @@
 <?php
 /**
- *	Default Filter Display
+ * Default Filter Display
  * @package reason
+ * @subpackage filter_displayers
  */
  
 $GLOBALS['_reason_filter_displayers'][basename(__FILE__)] = 'defaultFilterDisplay';
@@ -14,6 +15,7 @@ $GLOBALS['_reason_filter_displayers'][basename(__FILE__)] = 'defaultFilterDispla
  * 
  * @author Matt Ryan <mryan@acs.carleton.edu>
  * @date 2006-07-20
+ * @todo improve accessibility and allow this to work without js
  */
 class defaultFilterDisplay
 {

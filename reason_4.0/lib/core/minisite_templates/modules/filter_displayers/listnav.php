@@ -2,11 +2,17 @@
 /**
  * List Filter Display
  * @package reason
+ * @subpackage filter_displayers
  */
- 
+/**
+ * Include parent class & register filter displayer with Reason
+ */
 reason_include_once('minisite_templates/modules/filter_displayers/default.php');
 $GLOBALS['_reason_filter_displayers'][basename(__FILE__)] = 'listNavFilterDisplay';
- 
+
+/**
+ * A filter displayer that lists items as links rather than using select elements
+ */
 class listNavFilterDisplay extends defaultFilterDisplay
 {
 	/**
