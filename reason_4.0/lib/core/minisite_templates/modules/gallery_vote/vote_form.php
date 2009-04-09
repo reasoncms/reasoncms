@@ -1,6 +1,16 @@
-<?php 
+<?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+/**
+ * Include parent class
+ */
 	include_once( DISCO_INC.'disco.php' );
-	
+
+/**
+ * The form that the gallery vote module uses to provide users the ability to vote on images
+ */
 class GalleryVoteForm extends Disco
 {
 	var $submitted = false;

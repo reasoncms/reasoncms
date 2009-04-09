@@ -1,11 +1,25 @@
-<?php 
+<?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+/**
+ * Include the parent class & other dependencies
+ */
 	reason_include_once( 'minisite_templates/modules/gallery.php' );
 	reason_include_once( 'minisite_templates/modules/gallery_vote/vote_form.php' );
 	reason_include_once( 'function_libraries/admin_actions.php');
 	reason_include_once( 'classes/csv.php');
 	
+/**
+ * Register the module with Reason
+ */
 	$GLOBALS[ '_module_class_names' ][ 'gallery_vote' ] = 'GalleryVoteModule';
 
+/**
+ * A minisite module that enables voting on the photos for logged-in users
+ */
 class GalleryVoteModule extends GalleryModule
 {
 	var $user_netID; // current user netid
