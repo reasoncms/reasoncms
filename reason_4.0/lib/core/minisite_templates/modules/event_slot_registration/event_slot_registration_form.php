@@ -1,9 +1,25 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+/**
+ * The parent class
+ */
 require_once( DISCO_INC.'disco.php');
+/**
+ * The directory service class
+ */
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
+/**
+ * User libraries
+ */
 reason_include_once( 'function_libraries/user_functions.php');
 reason_include_once( 'classes/user.php');
-
+/**
+ * A form by which people can register for an event's registration slot
+ */
 class EventSlotRegistrationForm extends Disco{
 
 	/**

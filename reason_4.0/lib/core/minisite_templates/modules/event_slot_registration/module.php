@@ -1,13 +1,36 @@
-<?php 
+<?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+	/**
+	 * Include the parent module & Reason db update library
+	 */
 	reason_include_once( 'minisite_templates/modules/events_verbose.php' );
 	reason_include_once( 'function_libraries/admin_actions.php');
-	
+	/**
+	 * Register the module with Reason
+	 */
 	$GLOBALS[ '_module_class_names' ][ 'event_slot_registration' ] = 'EventSlotRegistrationModule';
-
+/**
+ * A minisite module that allows users to register for events via registration slots
+ */
 class EventSlotRegistrationModule extends VerboseEventsModule
 {
-	var $delimiter1 = ';';			//the delimiter used to separate the information of different registrants in the registrant_data field
-	var $delimiter2 = '|';			//the delimiter used to separate the different kinds of information of an individual registrant in the registrant_data field
+	/**
+	 * The delimiter used to separate the information of different registrants in the registrant_data field
+	 * @var string
+	 */
+	var $delimiter1 = ';';
+	/**
+	 * The delimiter used to separate the different kinds of information of an individual registrant in the registrant_data field
+	 * @var string
+	 */
+	var $delimiter2 = '|';
+	/**
+	 * The username of the currently logged-in user
+	 * @var string
+	 */
 	var $user_netID;
 	var $session;
 	var $admin_messages;
