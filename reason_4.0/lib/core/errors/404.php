@@ -5,6 +5,7 @@
  * This 404 page includes the 404action script, which takes care of redirecting requests to Reason pages that have moved.
  *
  * @package reason
+ * @subpackage errors
  */
  
  /**
