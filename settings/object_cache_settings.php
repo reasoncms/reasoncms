@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Object Cache Type Settings - defines constants and paths for Cache Types
  *
