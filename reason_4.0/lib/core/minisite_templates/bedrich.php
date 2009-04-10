@@ -3,6 +3,7 @@
 /**
  * @author Matt Ryan and Bedrich Rios
  * @package reason
+ * @subpackage minisite_templates
  */
 
 // include the MinisiteTemplate class
