@@ -23,6 +23,10 @@ if (empty( $current_user_id ) )
 {
 	die('<h1>Sorry.</h1><p>You do not have permission to move entities among sites.</p><p>Only Reason users may do that.</p></body></html>');
 }
+elseif (!reason_user_has_privs( $current_user_id, 'edit' ) )
+{
+	die('<h1>Sorry.</h1><p>You do not have permission to move entities among sites.</p><p>Only Reason users who have full editing privs may do that.</p></body></html>');
+}
 if ( !empty($_REQUEST['new_site_ids']) && !empty($_REQUEST['old_site_id']) &&
 	!empty($_REQUEST['allowable_relationship_id']) )
 {

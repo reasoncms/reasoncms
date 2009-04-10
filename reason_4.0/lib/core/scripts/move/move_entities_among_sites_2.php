@@ -21,6 +21,10 @@ if (empty( $user_id ) )
 {
 	die('<h1>Sorry.</h1><p>You do not have permission to move entities among sites.</p><p>Only Reason users may do that.</p></body></html>');
 }
+elseif (!reason_user_has_privs( $user_id, 'edit' ) )
+{
+	die('<h1>Sorry.</h1><p>You do not have permission to move entities among sites.</p><p>Only Reason users who have full editing privs may do that.</p></body></html>');
+}
 if ( !empty($_REQUEST['site_id']) && !empty($_REQUEST['type_id'])  )
 {
 	$site_id = $_REQUEST['site_id'];
@@ -31,20 +35,20 @@ else
 	header('Location: ' . securest_available_protocol() . '://' . REASON_HOST . REASON_HTTP_BASE_PATH  . 'scripts/move/move_entities_among_sites.php');
 }
 
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
-echo '<html><head>';
-echo '<title>Reason: Move Entities Among Sites: Step 2</title>';
-echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'."\n";
+echo '<html><head>'."\n";
+echo '<title>Reason: Move Entities Among Sites: Step 2</title>'."\n";
+echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'."\n";
 if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '')
 {
 	echo '<link rel="stylesheet" type="text/css" href="'.UNIVERSAL_CSS_PATH.'" />'."\n";
 }
-echo '</head><body>';
+echo '</head><body>'."\n";
 
-echo '<h1>Move Entities Among Sites</h1>';
-echo '<h2>Step 2 of 2: Choose which site owns each entity</h2>';
+echo '<h1>Move Entities Among Sites</h1>'."\n";
+echo '<h2>Step 2 of 2: Choose which site owns each entity</h2>'."\n";
 
-echo '<form method="post" action="' . REASON_HTTP_BASE_PATH . 'scripts/move/move_entities_among_sites_3.php' . '">';
+echo '<form method="post" action="' . REASON_HTTP_BASE_PATH . 'scripts/move/move_entities_among_sites_3.php' . '">'."\n";
 
 // 1. Get $allowable_relationship_id where relationship_a =
 // id_of('site') and relationship_b = $type_id (if there's not one,
@@ -107,19 +111,21 @@ tr {
 }
 </style>
 TELOS;
-echo '<table width="100%">';
-echo '<tr><th align="left">Id</th><th align="left">Name</th><th align="left">Belongs to<sup><span class="small">1</span></sup></th></tr>';
+echo '<table width="100%">'."\n";
+echo '<tr><th align="left">Id</th><th align="left">Name</th><th align="left">Belongs to<sup><span class="small">1</span></sup></th></tr>'."\n";
+$options_chunk = '';
+foreach ( $sites as $site )
+{
+	$options_chunk .=  ( '<option value="' . $site->id() . '" ' .
+				  ($site->id() == $site_id ? ' selected="selected" ' : ' ') .
+				  '>' .
+				  reason_htmlspecialchars(strip_tags($site->get_value('name')), ENT_QUOTES) .
+				  '</option>' );
+}
 foreach ( $entity_bs as $entity_b )
 {
 	$select = '<select name="new_site_ids[' . $entity_b->id() . ']">';
-	foreach ( $sites as $site )
-	{
-		$select .=  ( '<option value="' . $site->id() . '" ' .
-					  ($site->id() == $site_id ? ' selected="selected" ' : ' ') .
-					  '>' .
-					  htmlentities($site->get_value('name')) .
-					  '</option>' );
-	}
+	$select .= $options_chunk;
 	$select .= '</select>';
 
 
@@ -127,16 +133,16 @@ foreach ( $entity_bs as $entity_b )
 	echo '<td>' . $entity_b->id() . '</td>';
 	echo '<td>' . $entity_b->get_display_name() . '</td>';
 	echo '<td>' . $select . '</td>';
-	echo '</tr>';
+	echo '</tr>'."\n";
 }
-echo '</table>';
+echo '</table>'."\n";
 
 echo '<input type="hidden" name="old_site_id" value="' . $site_id . '" />';
 echo '<input type="hidden" name="allowable_relationship_id" value="' . $allowable_relationship_id . '" />';
 
-echo '<p><input type="submit" value="Finish" /></p>';
+echo '<p><input type="submit" value="Finish" /></p>'."\n";
 echo '</form>';
-echo '<p class="small"><sup>1</sup>Lists sites that (a) you own and (b) are associated with these entities&apos; type.</p>';
+echo '<p class="small"><sup>1</sup>Lists sites that (a) you own and (b) are associated with these entities&apos; type.</p>'."\n";
 
 echo '</body></html>';
 

@@ -45,7 +45,10 @@ if (empty( $user_id ) )
 {
 	die('<h1>Sorry.</h1><p>You do not have permission to move entities among sites.</p><p>Only Reason users may do that.</p></body></html>');
 }
-
+elseif (!reason_user_has_privs( $user_id, 'edit' ) )
+{
+	die('<h1>Sorry.</h1><p>You do not have permission to move entities among sites.</p><p>Only Reason users who have full editing privs may do that.</p></body></html>');
+}
 echo '<h1>Move Entities Among Sites</h1>';
 echo '<h2>Step 1 of 2: Choose site and entity type</h2>';
 
