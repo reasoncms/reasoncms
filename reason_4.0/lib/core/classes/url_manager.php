@@ -89,6 +89,15 @@
 		 */
 		var $test_full_base_url;
 		
+		/**
+		 * Is the URL manager OK to run?
+		 *
+		 * This starts out as false; init_site() needs to set it to true before things can run.
+		 *
+		 * @var boolean
+		 */
+		var $_ok_to_run = false;
+		
 		function url_manager( $site_id, $debug = false, $do_global_rewrites = false ) // {{{
 		{
 			$this->debug = $debug;
@@ -154,12 +163,30 @@
 			$this->site_id = $site_id;
 			$this->site = new entity( $site_id, false );
 			$this->site->refresh_values(false);
+			if(!$this->site->get_values())
+			{
+				$this->debug( 'Site provided is not a valid entity' );
+				return;
+			}
+			if($this->site->get_value('type') != id_of('site'))
+			{
+				$this->debug( 'ID provided is not of a site entity' );
+				return;
+			}
+			if($this->site->get_value('state') != 'Live')
+			{
+				$this->debug( 'Site is not live.' );
+				return;
+			}
+			if( !$this->site->get_value( 'base_url' ) )
+			{
+				$this->debug( $this->site->get_value( 'name' ).' does not have a base_url.' );
+				return;
+			}
+			
+			$this->_ok_to_run = true;
 
 			$this->debug( 'Site id = '.$site_id.', '.$this->site->get_value( 'name' ) );
-
-			if( !$this->site->get_value( 'base_url' ) )
-				trigger_error( $this->site->get_value( 'name' ).' does not have a base_url.  This is bad for URL 
-mapping.', HIGH );
 
 			// full, absolute path to the root of the web tree
 			$this->web_base_url = $this->site->get_value( 'base_url' );
@@ -174,11 +201,16 @@ mapping.', HIGH );
 		function debug( $str ) // {{{
 		{
 			if( $this->debug )
-				echo 'URL Manager: '.$str."<br />\n";
+				echo 'URL Manager: '.$str.(php_sapi_name() == 'cli' ? '' : '<br />')."\n";
 		} // }}}
 		function update_rewrites() // {{{
 		// this is the method that does all the work.
 		{
+			if(!$this->_ok_to_run)
+			{
+				$this->debug( 'NOT RUN.' );
+				return;
+			}
 			if( !empty($this->site) && $this->site->get_value('custom_url_handler') )
 			{
 				$this->debug( 'SKIPPED - CUSTOM URL HANDLER DEFINED: '.$this->site->get_value('custom_url_handler') );
