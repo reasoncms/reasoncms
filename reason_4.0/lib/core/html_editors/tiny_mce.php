@@ -2,6 +2,7 @@
 
 /**
  * @package reason
+ * @subpackage html_editors
  * @author Matt Ryan
  */
  
