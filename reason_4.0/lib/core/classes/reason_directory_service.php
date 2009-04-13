@@ -401,8 +401,8 @@ class ds_reason extends ds_default {
 					$es = new entity_selector();
 					//echo current($this->_gen_attr_depend[$attr]).' '.$compare.' '.$value;
 					$es->add_relation(current($this->_gen_attr_depend[$attr]).' '.$compare.' "'.$this->escape_input($value).'"');
-					$es->add_left_relationship_field('user_to_audience','audience_integration','directory_service_value','ds_affiliation');
 					$this->open_conn();
+					$es->add_left_relationship_field('user_to_audience','audience_integration','directory_service_value','ds_affiliation');
 					$users = $es->run_one(id_of('user'));
 					$this->close_conn();
 					if(!empty($users))
