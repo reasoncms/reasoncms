@@ -3,14 +3,13 @@
  * Domain settings are experimental in Reason 4 Beta 8
  * 
  * If you configure this file, you will be given an additional option in the Master Admin site content manager
- * that allows you to choose a domain on a per site basis. These are the per domain settings that can be configured
- * as of Reason 4 Beta 8.
+ * that allows you to choose a domain on a per site basis.
  *
- * settings contained originally in package_settings.php
+ * For each domain, you must set the WEB_PATH, which should be equivalent to $_SERVER['DOCUMENT_ROOT'] . '/' for 
+ * that domain. This is required so that rewrites rules are properly executed in the proper directories.
  *
- * - WEB_PATH
- * - HTTP_HOST_NAME (specification of this one is optional - will be autopopulated from the key)
- * - HTTPS_AVAILABLE
+ * Here are some other settings you may want to customize on the per domain basis.
+ *
  * - FULL_ORGANIZATION_NAME
  * - SHORT_ORGANIZATION_NAME
  * - ORGANIZATION_HOME_PAGE_URI
@@ -19,8 +18,6 @@
  * - UNIVERSAL_CSS_PATH
  *
  * NOTE: Any settings that you setup here, to be applied, must be setup using domain_define in the applicable settings file
- *
- * @todo implement this
  */
 
 /**
@@ -28,7 +25,7 @@
  *
  * <code>
  * $GLOBALS['_reason_domain_settings'] = array(
- *	'my.reason.domain' => array()
+ *	'my.reason.domain' => array("WEB_PATH" => '/domain/specific/path/to/document_root/')
  * </code>
  *
  * @var array
