@@ -40,6 +40,7 @@ function tidy( $text )
 	if (empty($tidy_funcs)) $tidy_funcs = get_extension_funcs('tidy');
 	$tidy_1_lib_available = (!empty($tidy_funcs)) && (array_search('tidy_setopt', $tidy_funcs) !== false);
 	$tidy_2_lib_available = (!empty($tidy_funcs)) && (array_search('tidy_setopt', $tidy_funcs) === false);
+	$tidy_command_line_available = (TIDY_EXE) ? file_exists(TIDY_EXE) : false;
 	
 	$text = protect_string_from_tidy( $text );
 	
@@ -60,11 +61,16 @@ function tidy( $text )
 		tidy_clean_repair();
 		$result = tidy_get_output();
 	}		
-	else // attempt to run COMMAND LINE tidy
+	elseif ($tidy_command_line_available) // attempt to run COMMAND LINE tidy
 	{
 		$arg = escapeshellarg( $text ); // escape the bad stuff in the text
 		$cmd = 'echo '.$arg.' | '.TIDY_EXE.' -q -config '.$tidy_conf.' 2> /dev/null'; // the actual command - pipes the input to tidy which diverts its output to the random file
-		$result = shell_exec($cmd); // execute the command			
+		$result = shell_exec($cmd); // execute the command		
+	}
+	else
+	{
+		trigger_error('tidy does not appear to be available within php or at the command line - no tidying is taking place.');
+		$result = $text;
 	}
 	return trim($result);
 }
