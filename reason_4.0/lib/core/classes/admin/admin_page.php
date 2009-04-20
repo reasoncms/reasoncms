@@ -5,6 +5,7 @@
 	 *	Wraps up most of the funcionality of the Reason Admin
 	 *
 	 *	@package reason
+	 *  @subpackage admin
 	 */
 
 	/**
