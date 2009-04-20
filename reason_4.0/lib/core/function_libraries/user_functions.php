@@ -109,6 +109,7 @@ function reason_check_privs($privilege)
  */
 function reason_require_authentication($msg_uname = '', $method = '')
 {
+	force_secure_if_available();
 	if ($method == 'server') $username = get_authentication_from_server();
 	elseif ($method == 'session') $username = get_authentication_from_session();
 	else $username = (get_authentication_from_server()) ? get_authentication_from_server() : get_authentication_from_session();
