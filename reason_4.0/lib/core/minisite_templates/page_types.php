@@ -98,7 +98,7 @@
 			'pre_sidebar' => '',
 			'main_post' => array(
 				'module'=>'assets',
-				'limit_by_page_categories' => true,
+				'organize_by_page_categories' => true,
 				),
 		),
 		'audio_video' => array(
