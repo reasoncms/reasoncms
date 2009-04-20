@@ -1,10 +1,22 @@
 <?php
-
 /**
  * Asset Access Viewer
  *
  * @package reason
- * @author Matt Ryan and Nathan White
+ * @subpackage classes
+ */
+
+/**
+ * Include the Reason libraries & other dependencies
+ */
+include_once( 'reason_header.php' );
+reason_include_once( 'classes/group_helper.php');
+reason_include_once( 'classes/entity_selector.php');
+reason_include_once( 'function_libraries/user_functions.php');
+reason_include_once( 'function_libraries/asset_functions.php');
+
+/**
+ * Asset Access Viewer
  *
  * This class is the gatekeeper for assets that are associated with a viewing group
  *
@@ -20,18 +32,13 @@
  * if (!$asset->run()) echo '<h2>There was an error</h2>';
  * </code>
  *
+ * @author Matt Ryan and Nathan White
  */
-
-include_once( 'reason_header.php' );
-reason_include_once( 'classes/group_helper.php');
-reason_include_once( 'classes/entity_selector.php');
-reason_include_once( 'function_libraries/user_functions.php');
-
 class ReasonAssetAccess
 {
 	var $site;
 	var $asset;
-	var $username;
+	var $_username;
 	
 	function ReasonAssetAccess($asset_id = '')
 	{
@@ -65,6 +72,20 @@ class ReasonAssetAccess
 		$this->set_site_id($owner_asset->id());
 	}
 	
+	function set_username($username)
+	{
+		$this->_username = $username;
+	}
+	
+	function get_username()
+	{
+		if($this->_username === NULL)
+		{
+			$this->_username = reason_check_authentication();
+		}
+		return $this->_username;
+	}
+	
 	/**
 	 * does everything - ensures page is secure, checks for access, delivers file or headers user to forbidden page
 	 */ 
@@ -78,25 +99,43 @@ class ReasonAssetAccess
 		}
 		elseif ($this->asset->get_value('state') == 'Deleted')
 		{
-			header( 'Location: '.ERROR_404_PAGE );
+			//header('HTTP/1.0 404 Not Found');
+			if(defined('ERROR_404_PATH') && file_exists(WEB_PATH.ERROR_404_PATH) && is_readable(WEB_PATH.ERROR_404_PATH))
+			{
+				include(WEB_PATH.ERROR_404_PATH);
+			}
+			else
+			{
+				echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n";
+				echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
+				echo '<head><title>File Not Found (HTTP 404)</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head>'."\n";
+				echo '<body>'."\n";
+				echo '<h2>File Not Found (HTTP 404)</h2>'."\n";;
+				echo '<p>The file you are trying to access is not available.</p>'."\n";
+				echo '</body>'."\n";
+				echo '</html>'."\n";
+			}
 			exit();
 		}
 		else
 		{
-			if (!defined('ERROR_403_PAGE'))
+			header('HTTP/1.0 403 Forbidden');
+			if(defined('ERROR_403_PATH') && file_exists(WEB_PATH.ERROR_403_PATH) && is_readable(WEB_PATH.ERROR_403_PATH))
 			{
-				header('HTTP/1.0 403 Forbidden');
-				{
-					echo '<h2>Access Forbidden</h2>';
-					echo '<p>The resource you are trying to access is access-controlled and you do not have proper privileges.</p>';
-					exit();
-				}
+				include(WEB_PATH.ERROR_403_PATH);
 			}
 			else
 			{
-				header( 'Location: '.ERROR_403_PAGE );
-				exit();
+				echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n";
+				echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
+				echo '<head><title>Access Forbidden (HTTP 403)</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head>'."\n";
+				echo '<body>'."\n";
+				echo '<h2>Access Forbidden (HTTP 403)</h2>'."\n";;
+				echo '<p>The file you are trying to access is access-controlled and you do not have proper privileges.</p>'."\n";
+				echo '</body>'."\n";
+				echo '</html>'."\n";
 			}
+			exit();
 		}
 	}
 	
@@ -107,34 +146,28 @@ class ReasonAssetAccess
 	 */
 	function access_allowed()
 	{
-		$es = new entity_selector($this->site->id());
+		$es = new entity_selector();
 		$es->add_right_relationship($this->asset->id(), relationship_id_of('asset_access_permissions_to_group'));
 		$es->add_type(id_of('group_type'));
 		$es->set_num(1);
 		$groups = $es->run_one();
+		
 		if(empty($groups))
 		{
 			return true;
 		}
-		else
+		
+		$group = current($groups);
+		$gh = new group_helper();
+		$gh->set_group_by_entity($group);
+		
+		$access = $gh->is_username_member_of_group( $this->get_username() );
+		if($access === NULL) // unknown due to non-logged-in-user
 		{
-			$group = current($groups);
-			$gh = new group_helper();
-			$gh->set_group_by_entity($group);
-			if(!$gh->requires_login())
-			{
-				return true;
-			}
-			else
-			{
-				force_secure_if_available();
-				$this->username = reason_require_authentication('login_to_access_file');
-				if(!empty($this->username))
-				{
-					return $gh->is_username_member_of_group($this->username);
-				}
-			}
+			reason_require_authentication('login_to_access_file');
+			die();
 		}
+		return $access; // true or false
 	}
 	
 	/**
@@ -148,7 +181,7 @@ class ReasonAssetAccess
 		//$extensions_to_display_inline = array('jpg', 'gif', 'htm', 'html', 'swf', 'txt');
 		$file_name = $this->asset->get_value( 'file_name' );
 		$file_ext = $this->asset->get_value( 'file_type' );
-		$file_path = ASSET_PATH.$this->asset->id().'.'.$this->asset->get_value('file_type');
+		$file_path = reason_get_asset_filesystem_location($this->asset);
 
 		if (file_exists($file_path))
 		{
