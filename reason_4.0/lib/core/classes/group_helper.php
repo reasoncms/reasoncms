@@ -191,9 +191,10 @@
 		}
 		/**
 		* Determines if a user is authorized
+		*
 		* @access public
 		* @param string user's netID
-		* @return boolean true if user is authorized; otherwise, returns false.
+		* @return boolean | NULL true if user is authorized; otherwise, returns false.
 		*/			
 		function has_authorization($user_netID)
 		{
@@ -207,10 +208,16 @@
 		/**
 		* Helper function to has_authorization()
 		*
-		* Does most of the work
+		* If username given, will return true or false.
+		*
+		* If no username given, this will be interprted as meaning "an anonymous user" and will
+		* return true, false, or NULL. In this case, true indicates the group includes anybody; 
+		* false indicates that it includes nobody; and NULL indicates that the group includes some
+		* people and not others -- identification will be necessary to establish group membership.
+		*
 		* @access private
-		* @param string $user_netID -- username
-		* @return boolean true if user is a member of the authorized group.
+		* @param string $user_netID -- username. Use an empty string to determine if anonymous access is permitted
+		* @return boolean | NULL true if user is a member of the authorized group, false if they are not, NULL if no username passed and access cannot be determined as a result
 		*/			
 		function is_username_member_of_group($user_netID)
 		{
@@ -222,7 +229,7 @@
 				}
 				elseif(empty($user_netID)) // no id provided means that they are not logged in
 				{
-					return false;
+					return NULL;
 				}
 				elseif(array_key_exists($user_netID,$this->permissions)) // have we already determined whether this user has access to this group?
 				{
