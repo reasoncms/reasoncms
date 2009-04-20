@@ -1,95 +1,126 @@
 <?php
 /**
- * This file defines the locations of all of the apps in the Reason package.
- * Alter the constant INCLUDE_PATH to indicate the location of this directory.
- * The constant INCLUDE_PATH should be an absolute path from the root of the server,
- * and the same string should also be set as a php include path.
+ * This file setups the following:
+ *
+ * - settings used globally throughout the applications included within reason_package
+ * - paths used globally throughout the applications included within reason_package
+ * - file system location of binaries that the reason_package requires
+ * - the include path and http_path of applications included within reason_package
+ *
+ * This file should never be included directly, but instead gets included through one of two reason package bootstrap files:
+ *
+ * paths.php - for carl_util functionality when the full reason environment is not needed
+ * reason_header.php - for access to both carl_util and reason libraries
+ *
+ * @require INCLUDE_PATH must have been defined in paths.php
+ * @require SETTINGS_INC must have been defined in paths.php
  */
  
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-// The following constants should be customized for your installation of reason
+// The following constants should be customized for your installation of the reason_package
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Basic information about the organization
-define( 'FULL_ORGANIZATION_NAME','The Full Name of the Organization' );
-define( 'SHORT_ORGANIZATION_NAME', 'Short Org Name' );
-define( 'ORGANIZATION_HOME_PAGE_URI', 'http://www.domain_name.domain' );
-define( 'WEBMASTER_EMAIL_ADDRESS', 'webmaster@domain_name.domain' );
-define( 'WEBMASTER_NAME', 'Joanne Q. Webmaster' );
+domain_define( 'FULL_ORGANIZATION_NAME','The Full Name of the Organization' );
+domain_define( 'SHORT_ORGANIZATION_NAME', 'Short Org Name' );
+domain_define( 'ORGANIZATION_HOME_PAGE_URI', 'http://www.domain_name.domain' );
+domain_define( 'WEBMASTER_EMAIL_ADDRESS', 'webmaster@domain_name.domain' );
+domain_define( 'WEBMASTER_NAME', 'Joanne Q. Webmaster' );
 
-define( 'INCLUDE_PATH','/path/to/the/reason/package/'); // where on the machine is the reason package location?
-define( 'WEB_PATH', '/path/to/the/server/web/root/' ); // where on the machine is the web root of the server?
-define( 'HTTP_HOST_NAME','server.domain_name.domain'); // e.g. www.foobar.com
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// The following constants can be left alone, provided reason_package is OUTSIDE the web tree
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * The location of the database credentials file
+ * 
+ * SECURITY ALERT: this file MUST be outside of the web tree - otherwise your database credentials are accessible to everyone
+ */
+domain_define( 'DB_CREDENTIALS_FILEPATH', SETTINGS_INC. 'dbs.xml' );
 
-define( 'PHP_CLI', '/path/to/your/bin/php' ); // where is a command-line executable version of php?
-define( 'PHP_CLI_ARGS', '-d include_path='.INCLUDE_PATH.':.' ); // what arguments should be passed when executing php at the command line?
+/**
+ * The locations of the http credentials file - this need not be defined unless you have web resources behind https authentication
+ * 
+ * SECURITY ALERT: this file MUST be outside of the web tree - otherwise your database credentials are accessible to everyone
+ */
+domain_define( 'HTTP_CREDENTIALS_FILEPATH', '' );
 
-define( 'HTTP_CREDENTIALS_FILEPATH', '/path/to/your/copy/of/http_creds.php' );
-define( 'DB_CREDENTIALS_FILEPATH', '/path/to/your/copy/of/dbs.xml' );
-
-define('TIDY_EXE', '/usr/bin/tidy' ); // Define the path to tidy
-
-define('IMAGEMAGICK_PATH', '/usr/bin/'); // Define the path to imagemagick files
-
-define('CURL_PATH', '/usr/bin/curl/'); // Define the path to curl - used only if libcurl is not available
-
-define('UNIVERSAL_CSS_PATH', ''); // if you have css that you want included on all pages, enter its url here
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// The following should be reviewed to make sure they are appropriate to your environment
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * HTTPS_AVAILABLE
- * Boolean; lets the package know if this server is configured to serve up pages under https or not
+ * Boolean; lets the package know if the domain is configured to serve up pages under https or not
  */
-define( 'HTTPS_AVAILABLE', true );
+domain_define( 'HTTPS_AVAILABLE', false );
+
+/**
+ * The file system directory that contains imagemagick binaries (such as mogrify)
+ */
+domain_define ('IMAGEMAGICK_PATH', '/usr/bin/');
+
+/**
+ * The command line path used to invoke tidy (eg. /usr/bin/tidy) - optional if libtidy is part of the php install
+ */
+domain_define ('TIDY_EXE', '');
+
+/**
+ * The command line path used to invoke curl (eg. /usr/bin/curl) - optional if libcurl is part of the php install
+ */
+domain_define ('CURL_PATH', '');
+
+/**
+ * An optional path to a CSS file that may be used by various reason_package utilities
+ */
+domain_define( 'UNIVERSAL_CSS_PATH', ''); // Define the path to a CSS file used by various reason_package utilities
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // You shouldn't have to alter any of the constants below in a default install for reason to function
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * The absolute file system directory that is the web root - should include a trailing slash
+ */
+domain_define( 'WEB_PATH', $_SERVER['DOCUMENT_ROOT'] . '/' );
+
+/**
+ * The host name, (eg www.mysite.com)
+ */
+domain_define( 'HTTP_HOST_NAME', $_SERVER['HTTP_HOST'] );
 
 // Define the name of the function which performs html sanitization
+// this should be a specialized settings file probably - only relevant if the cleanup libraries are loaded
 define('HTML_SANITIZATION_FUNCTION','get_safer_html_html_purifier');
 
-// Define the path to the settings files for the various applications in the package
-define('SETTINGS_INC',INCLUDE_PATH.'settings/');
-
-// Define the path to reason files
+// Define the path to the folder that contains Reason's core and local folders
 define('REASON_INC',INCLUDE_PATH.'reason_4.0/');
 
 // Define the path to carl_util files
 define('CARL_UTIL_INC',INCLUDE_PATH.'carl_util/');
 
-// Define the path to tidy.conf
-define('TIDY_CONF', SETTINGS_INC . 'tidy.conf' );
-
 // Define the path to disco files
 define('DISCO_INC',INCLUDE_PATH.'disco/');
 
 // Define the path to flvplayer files
-define('FLVPLAYER_DIRNAME', 'flvplayer');
-define('FLVPLAYER_INC',INCLUDE_PATH.FLVPLAYER_DIRNAME.'/');
-define('FLVPLAYER_HTTP_PATH','/reason_package/'.FLVPLAYER_DIRNAME.'/');
+define('FLVPLAYER_INC',INCLUDE_PATH.'flvplayer/');
+define('FLVPLAYER_HTTP_PATH','flvplayer/');
 
-// Define the path to loki files
-define('LOKI_DIRNAME', 'loki_1.0');
-define('LOKI_INC',INCLUDE_PATH.LOKI_DIRNAME.'/');
-define('LOKI_HTTP_PATH','/reason_package/'.LOKI_DIRNAME.'/');
+// Define the path to loki 1 files
+define('LOKI_INC',INCLUDE_PATH.'loki_1.0/');
+define('LOKI_HTTP_PATH','/loki_1.0/');
 
-// Define the path to loki files
-define('LOKI_2_DIRNAME', 'loki_2.0');
-define('LOKI_2_INC',INCLUDE_PATH.LOKI_2_DIRNAME.'/helpers/php/');
-define('LOKI_2_HTTP_PATH','/reason_package/'.LOKI_2_DIRNAME.'/');
+// Define the path to loki 2 files
+define('LOKI_2_INC',INCLUDE_PATH.'loki_2.0/helpers/php/');
+define('LOKI_2_HTTP_PATH','/loki_2.0/');
 
 // Define the path to tinymce files
-define('TINYMCE_DIRNAME', 'tiny_mce');
-define('TINYMCE_INC',INCLUDE_PATH.TINYMCE_DIRNAME.'/');
-define('TINYMCE_HTTP_PATH','/reason_package/'.TINYMCE_DIRNAME.'/');
+define('TINYMCE_HTTP_PATH','/tiny_mce/');
 
 // Define the path to Magpie RSS files
 define('MAGPIERSS_INC',INCLUDE_PATH.'magpierss/');
 
 // Define the path to Thor files
-define('THOR_DIRNAME', 'thor');
-define('THOR_INC',INCLUDE_PATH.THOR_DIRNAME.'/');
+define('THOR_INC',INCLUDE_PATH.'thor/');
 define('THOR_HTTP_PATH','/thor/');
 
 // Define the path to Tyr files
@@ -100,20 +131,16 @@ define('ADODB_INC',INCLUDE_PATH.'adodb/');
 define('ADODB_DATE_INC',ADODB_INC.'adodb-time.inc.php');
 
 // Define the path to XML Parser files
-define('XML_PARSER_DIRNAME', 'xml');
-define('XML_PARSER_INC',INCLUDE_PATH.XML_PARSER_DIRNAME.'/');
+define('XML_PARSER_INC',INCLUDE_PATH.'xml/');
 
 // Define the path to HTML Purifier
-define('HTML_PURIFIER_DIRNAME', 'htmlpurifier');
-define('HTML_PURIFIER_INC',INCLUDE_PATH.HTML_PURIFIER_DIRNAME.'/');
+define('HTML_PURIFIER_INC',INCLUDE_PATH.'htmlpurifier/');
 
 // Define the path to libcurlemu
-define('LIBCURLEMU_DIRNAME', 'libcurlemu-1.0.4');
-define('LIBCURLEMU_INC',INCLUDE_PATH.LIBCURLEMU_DIRNAME.'/');
+define('LIBCURLEMU_INC',INCLUDE_PATH.'libcurlemu-1.0.4/');
 
 // Define the path to jquery
-define('JQUERY_DIRNAME', 'jquery');
-define('JQUERY_INC',INCLUDE_PATH.JQUERY_DIRNAME.'/');
-define('JQUERY_HTTP_PATH','/reason_package/'.JQUERY_DIRNAME.'/');
+define('JQUERY_INC',INCLUDE_PATH.'jquery/');
+define('JQUERY_HTTP_PATH','/jquery/');
 define('JQUERY_URL',JQUERY_HTTP_PATH.'jquery_latest.js');
 ?>
