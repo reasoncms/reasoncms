@@ -345,7 +345,7 @@ class MinisiteTemplate
 		}
 		// lets check the persistent cache
 		
-		if (empty($this->pages))
+		if (empty($this->pages) || !isset($this->pages->values[$this->page_info->id()]))
 		{
 			// lets setup $this->pages and place in the persistent cache
 			$this->pages = new $this->nav_class;
