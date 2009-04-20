@@ -76,7 +76,7 @@
 					$txt .= '<div class="name">';
 					if($_show_name)
 					{
-						$txt .= '<a href="'.$owner_site->get_value( 'base_url' ) .MINISITE_ASSETS_DIRECTORY_NAME.'/'.$asset->get_value( 'file_name' ).'"><strong>'.$asset->get_value('name').'</strong></a>';
+						$txt .= '<a href="'.htmlspecialchars(reason_get_asset_url($asset, $owner_site), ENT_QUOTES).'"><strong>'.$asset->get_value('name').'</strong></a>';
 					}
 					if( $_show_file_size || $_show_file_type )
 					{
@@ -114,5 +114,34 @@
 		{
 			return '';
 		}
+	}
+	
+	/**
+	 * Get the URL of a Reason asset
+	 *
+	 * Returns a URL relative to the server base.
+	 *
+	 * @param entity $asset
+	 * @param entity $owner_site
+	 * @return string URL
+	 */
+	function reason_get_asset_url($asset, $owner_site = NULL)
+	{
+		if(empty($owner_site))
+			$owner_site = $asset->get_owner();
+		return $owner_site->get_value( 'base_url' ) .MINISITE_ASSETS_DIRECTORY_NAME.'/'.$asset->get_value( 'file_name' );
+	}
+	
+	/**
+	 * Get the filesystem location of a Reason asset
+	 *
+	 * Returns the location of the asset in the filesystem.
+	 *
+	 * @param entity $asset
+	 * @return string filesystem path
+	 */
+	function reason_get_asset_filesystem_location($asset)
+	{
+		return ASSET_PATH.$asset->id().'.'.$asset->get_value('file_type');
 	}
 ?>
