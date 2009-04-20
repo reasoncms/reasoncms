@@ -25,15 +25,13 @@
 
 	/**
 	 * REASON_HTTP_BASE_PATH
-	 * This setting identifies the location of Reason's web-available directory
-	 * If you unpack the Reason package outside your web tree, 
-	 * make an alias to reason_x.x/www somewhere in your web tree and note the location
-	 * of that alias here.
-	 * If you want to have Reason be the primary service on your server,
-	 * you can make your Apache root be the www directory 
-	 * and simply enter a '/' for this setting.
+	 * This setting identifies the location of Reason's web-available directory from the web root
+         * This path should be an alias to the reason_package www folder, which should be 
+	 * located outside the web root. 
+         *
+         * The location of the reason_package www folder is /reason_package/reason_4.0/www/
 	 */
-	define( 'REASON_HTTP_BASE_PATH','/reason_package/reason_'.REASON_VERSION.'/www/');
+	define( 'REASON_HTTP_BASE_PATH','/reason/');
 	
 	/**
 	 * REASON_GLOBAL_FEEDS_PATH
