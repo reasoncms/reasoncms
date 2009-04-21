@@ -330,14 +330,24 @@
 				$class = ($this->assets_by_category) ? "assets assetsByCategory" : "assets";
 				echo '<div class="'.$class.'">'."\n";
 				echo '<h3>Related Documents</h3>'."\n";
-				if($this->params['offer_merged_pdfs'] && $this->_page_contains_entirely_single_file_type('pdf') && $this->_get_pdfs_to_merge())
-				{
-					echo '<p class="downloadMerged"><a href="?asset_view=merged_pdf">Download all documents as a single PDF</a></p>'."\n";
-				}
+				echo $this->_get_pdf_merge_markup();
 				echo $markup;
 				echo '</div>'."\n";
 			}
 		} // }}}
+		
+		function _get_pdf_merge_markup()
+		{
+			if($this->params['offer_merged_pdfs'] && count($this->_get_pdfs_to_merge()) > 1)
+			{
+				if($this->_page_contains_entirely_single_file_type('pdf'))
+				{
+					return '<div class="downloadMerged"><a href="?asset_view=merged_pdf">Download all documents as a single PDF</a></div>'."\n";
+				}
+				return '<div class="downloadMerged"><a href="?asset_view=merged_pdf">Download PDFs on this page as one file</a> <div class="note smallText">Note: only PDFs will be merged.</div></div>'."\n";
+			}
+			return '';
+		}
 		
 		/**
 		 * Get the markup for a list of assets
