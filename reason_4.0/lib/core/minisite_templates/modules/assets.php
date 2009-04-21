@@ -192,7 +192,7 @@
 				}
 				else
 				{
-					if(carl_send_pdf($merged, 'module_test.pdf'))
+					if(carl_send_pdf($merged, $this->cur_page->get_value('url_fragment').'.pdf'))
 						die();
 					else
 						trigger_error('Unable to send PDF');
