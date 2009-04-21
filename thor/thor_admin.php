@@ -127,6 +127,11 @@ class ThorAdmin extends TableAdmin
 	var $default_sort_field;
 	
 	/**
+	 * Whether or not to show thor hidden fields in the edit view
+	 */
+	var $show_hidden_fields_in_edit_view = false;
+	
+	/**
 	 * DiscoThorAdmin requires a reference to a thor_core object to work properly, get display names, etc
 	 */
 	function set_thor_core(&$thor_core)
@@ -217,6 +222,15 @@ class ThorAdmin extends TableAdmin
 		echo '<h3>Editing row id ' . $id . '</h3>';
 		$link = carl_make_link(array('table_row_action' => '', 'table_action_id' => ''));
 		echo '<p><a href="'.$link.'">Return to summary form data</a></p>';
+		if ($this->show_hidden_fields_in_edit_view)
+		{
+			$elements = $this->get_element_names();
+			foreach ($elements as $element_name)
+			{
+				$elm = $this->get_element($element_name);
+				if ($elm->type == 'hidden') $this->change_element_type($element_name, 'text');
+			}
+		}
 	}
 	
 	function on_every_time_delete()
