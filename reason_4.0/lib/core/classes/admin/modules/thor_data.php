@@ -64,6 +64,7 @@
 					$xml = $form->get_value('thor_content');
 					$tc = new ThorCore($xml, 'form_'.$id);
 					$af = new DiscoThorAdmin();
+					$af->show_hidden_fields_in_edit_view = true;
 					$this->_thor_admin = new ThorAdmin();
 					$this->_thor_admin->set_thor_core($tc);
 					$this->_thor_admin->set_admin_form($af);
