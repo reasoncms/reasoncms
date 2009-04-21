@@ -55,8 +55,10 @@ function carl_merge_pdfs($pdffiles, $titles = array(), $metadata = array())
 	
 	$p = PDF_new();
 	
-	// Since this is in the server setup, perhaps it is not necessary?
-	//PDF_set_parameter($p , 'licensefile', '/usr/local/wsg/httpd/conf/pdflib_licensekeys.txt');
+	if(defined('PDFLIB_LICENSE_KEY_FILE'))
+		PDF_set_parameter($p , 'licensefile', PDFLIB_LICENSE_KEY_FILE);
+	else
+		trigger_error('Please define the constant PDFLIB_LICENSE_KEY_FILE with the filesystem location of your PDFlib license keys.');
 	
 	/* This means we must check return values of load_font() etc. */
 	//PDF_set_parameter($p, 'errorpolicy', 'return');
