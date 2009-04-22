@@ -1,5 +1,11 @@
 <?php
 /**
+ * setup.php is used to configure reason and could also be used to check the validity of an existing setup in the case of problems.
+ * 
+ * this script attempts to assume very little and provide useful guidance when it cannot continue to run. it has, however, grown
+ * organically over time and should be replaced with a proper testing and setup suite.
+ *
+ * @author Nathan White
  * @package reason
  */
 $head_content = "
@@ -55,15 +61,16 @@ if (isset($_POST['do_it_pass']) == false)
 	{
 		$included_so_far = get_included_files();
 		$package_settings_path = reset(preg_grep('/package_settings.php/', $included_so_far));
+		echo '<p>...package settings loaded</strong></p>';
+		force_error_handler_configuration();
 		echo '<p><strong>Package settings path</strong>: ' . $package_settings_path . '</p>';
 		echo '<h4>Checking component availability</h4>';
-		if (is_readable(INCLUDE_PATH . 'reason_setup.php'))
+		if (is_readable(INCLUDE_PATH . 'paths.php'))
 		{
 			// verify settings files loaded by header.php before we load the header
 			check_environment_and_trailing_slash(WEB_PATH, 'web path', 'Check the WEB_PATH constant in package_settings.php.</p><p>
 								 The value should probably be</p>
 								 <p><pre>'.$_SERVER['DOCUMENT_ROOT'].'/</pre>');
-			check_environment(CARL_UTIL_INC.'error_handler/error_handler.php', 'error handler', 'Verify the path to CARL_UTIL_INC in package_settings.php');
 			check_environment(DB_CREDENTIALS_FILEPATH, 'db credentials xml file', 'Verify the DB_CREDENTIALS_FILEPATH in package_settings.php and permissions');
 			check_environment(DISCO_INC.'disco.php', 'disco include path', 'Verify the path to DISCO_INC in package_settings.php');
 			check_environment(TYR_INC.'tyr.php', 'tyr include path', 'Verify the path to TYR_INC in package_settings.php');
@@ -232,7 +239,7 @@ function check_php_include_path()
 						  file that dynamically sets the include path. For this to work, AllowOverride Option must be enabled in your httpd.conf file. The .htaccess rule
 						  should read as follows - substitute your path for /path/to/root/of/reason_package/:</p>
 						  <p><pre>php_value include_path ".'.$include_path.$include_path_separator.'/path/to/root/of/reason_package/"</pre></p>
-						  <p>Please run the script again after your include path has been properly setup</p>');
+						  <p>Please run the script again after your include path has been properly setup.</p>');
 	}
 	else
 	{
@@ -304,34 +311,36 @@ function perform_checks()
 							' Also make sure APACHE_MIME_TYPES constant in reason_settings is set to the full path of the mime.types file (include the filename).')) $check_passed++;
 	else $check_failed++;
 	
-	// lets check the thor http file using curl
-	$link = carl_construct_link(array(''), array(''), THOR_HTTP_PATH);
-	$link_with_file = $link . 'getXML.php';
-	if (strpos(get_reason_url_contents($link_with_file), 'tmp_id') !== false)
-	{	
-		msg('<span class="success">thor getXML.php file accessible over http</span> - passed', true);
-		$check_passed++;
-	}
-	else
-	{
-		msg('<span class="error">could not access thor getXML.php over http</span><p>You may need to set THOR_HTTP_PATH equal to "/thor/", and create an alias at ' . WEB_PATH . 'thor/ to ' . THOR_INC.'. 
-		     Future revisions to thor should make this more flexible, but for the moment you need the alias in your web root to the thor directory</p>', false);
-		$check_failed++;
-	}
+	echo '<h3>Performing HTTP Access Checks</h3>';
 	
-	// lets check for loki_2.0 loki.js file using CURL - if not accessible, Loki 2 paths could be a problem
-	$link2 = carl_construct_link(array(''), array(''), LOKI_2_HTTP_PATH);
-	$link2_with_file = $link2 . 'loki.js';
-	if (strpos(get_reason_url_contents($link2_with_file), 'loki') !== false)
-	{
-		msg('<span class="success">Loki 2 loki.js file accessible over http</span> - passed', true);
-		$check_passed++;
-	}
-	else
-	{
-		msg('<span class="error">could not access loki.js in the Loki 2.0 folder over http</span><p>Check the constant LOKI_2_HTTP_PATH, which currently is set to ' . LOKI_2_HTTP_PATH . ' and make sure it correctly references the Loki 2 directory.</p>', false);
-			 $check_failed++;
-	}
+	if (check_accessible_over_http("Thor getXML.php file", 
+								   THOR_HTTP_PATH . 'getXML.php', 
+								   'tmp_id', 
+								   '<p>You may need to set THOR_HTTP_PATH equal to "/thor/", and create an alias at ' . WEB_PATH . 'thor/ to ' . THOR_INC.'. 
+		           					Future revisions to thor should make this more flexible, but for the moment you need the alias in your web root to the 
+		           					thor directory</p>')) $check_passed++;
+	else $check_failed++;
+	
+	if (check_accessible_over_http("Loki", 
+								   LOKI_2_HTTP_PATH . 'loki.js', 
+								   'loki', 
+								   '<p>Check the constant LOKI_2_HTTP_PATH, which currently is set to ' . LOKI_2_HTTP_PATH . ' and make sure it 
+								   	correctly references the Loki 2 directory.</p>')) $check_passed++;
+	else $check_failed++;
+	
+	if (check_accessible_over_http("jQuery", 
+								   JQUERY_URL, 
+								   'John Resig', 
+								   '<p>Check the constant JQUERY_URL, which currently is set to ' . JQUERY_URL . ' and make sure it 
+								   	correctly references the location of jquery.</p>')) $check_passed++;
+	else $check_failed++;
+	
+	if (check_accessible_over_http("FLVPlayer", 
+								   FLVPLAYER_HTTP_PATH . 'playlist.xml', 
+								   'Jeroen Wijering', 
+								   '<p>Check the constant FLVPLAYER_HTTP_PATH, which currently is set to ' . FLVPLAYER_HTTP_PATH . ' and make sure it 
+								   	correctly references the location of flvplayer.</p>')) $check_passed++;
+	else $check_failed++;
 	echo '<h3>Summary</h3>';
 	echo '<ul>';
 	echo '<li class="success">'.$check_passed.' checks were successful</li>';
@@ -339,6 +348,20 @@ function perform_checks()
 	echo '</ul>';
 	if ($check_failed == 0) return true;
 	else return false;
+}
+
+function check_accessible_over_http($name, $path, $search_string, $extra = '')
+{
+		// if the path if not absolute, lets make it so with carl_construct_link
+		if (strpos($path, "://") === false) $path = carl_construct_link(array(''), array(''), $path);
+		if (strpos(get_reason_url_contents($path), $search_string) !== false)
+		{
+			return msg('<span class="success">'.$name.' ('.$path.') is accessible over http</span> - check passed', true);
+		}
+		else
+		{
+			return msg('<span class="error">'.$name.' ('.$path.') is not accessible over http</span>. ' . $extra, false); 
+		}
 }
 
 function verify_mysql($db_conn_name, $constant_name, $constant_location, $check_for_tables = false) // see if we can connect to mysql using the connection parameters specified in REASON_DB
@@ -513,6 +536,35 @@ function check_error_handler_log_file_dir()
 }
 
 /**
+ * this assumes we have loaded package_settings.php but nothing else
+ */
+function force_error_handler_configuration()
+{
+	include_once( SETTINGS_INC . 'error_handler_settings.php');
+	echo '<h4>Error handler setup</h4>';
+	// lets load the error_handler_settings file
+	
+	// make a flat array of IP addresses to easily check
+	$ips = array();
+	foreach( $GLOBALS[ '_DEVELOPER_INFO' ] AS $name => $dev )
+		if( !empty( $dev[ 'ip' ] ) )
+			if( is_array( $dev['ip'] ) )
+				$ips = array_merge( $ips, $dev['ip'] );
+			else
+				$ips[] = $dev[ 'ip' ];
+	//ob_start();
+	if (!in_array($_SERVER['REMOTE_ADDR'], $ips))
+	{
+		die_with_message('<p class="error">Your IP address ('.$_SERVER['REMOTE_ADDR'].') is not listed in the DEVELOPER_INFO array in error_handler_settings.php.</p>  
+						  <p>Please add your IP address to the file according to the instructions in settings/error_handler_settings.php to continue with setup.</p>');
+	}
+	else
+	{	
+		echo '<p>...current ip ('.$_SERVER['REMOTE_ADDR'].') listed as a developer in error handler settings</strong></p>';
+	}
+}
+
+/**
  * This method checks all the paths in the include path for a file with the exception of "." and returns true if it is includeable
  */
 function file_is_includable($file)
@@ -566,5 +618,9 @@ function die_with_message($msg)
 	echo $msg;
 	die;
 }
+
+/**
+ * Setup tests
+ */
 ?>
 
