@@ -1236,10 +1236,12 @@
 			'sidebar' => array('module' => 'image_sidebar', 'num_to_display' => 4, 'caption_flag' => true, 'rand_flag' => true),
 		),
 		'feed_display_full' => array(
-                       'main_post' => 'magpie/magpie_feed_display',
+                       'main_post' => array(
+                            'module' => 'magpie/magpie_feed_display',
+                            'show_entries_lacking_description'=>true,
+                            ),
 					   'pre_sidebar' => 'magpie/magpie_feed_search',
                        'sidebar' => 'magpie/magpie_feed_nav',
-                       'show_entries_lacking_description'=>true,
         ),
 		'feed_display_sidebar' => array(
                        'sidebar' => array(
