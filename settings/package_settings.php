@@ -62,12 +62,12 @@ domain_define ('IMAGEMAGICK_PATH', '/usr/bin/');
 /**
  * The command line path used to invoke tidy (eg. /usr/bin/tidy) - optional if libtidy is part of the php install
  */
-domain_define ('TIDY_EXE', '');
+domain_define ('TIDY_EXE', '/usr/bin/tidy');
 
 /**
  * The command line path used to invoke curl (eg. /usr/bin/curl) - optional if libcurl is part of the php install
  */
-domain_define ('CURL_PATH', '');
+domain_define ('CURL_PATH', '/usr/bin/curl');
 
 /**
  * An optional path to a CSS file that may be used by various reason_package utilities
@@ -103,7 +103,7 @@ define('DISCO_INC',INCLUDE_PATH.'disco/');
 
 // Define the path to flvplayer files
 define('FLVPLAYER_INC',INCLUDE_PATH.'flvplayer/');
-define('FLVPLAYER_HTTP_PATH','flvplayer/');
+define('FLVPLAYER_HTTP_PATH','/flvplayer/');
 
 // Define the path to loki 1 files
 define('LOKI_INC',INCLUDE_PATH.'loki_1.0/');
