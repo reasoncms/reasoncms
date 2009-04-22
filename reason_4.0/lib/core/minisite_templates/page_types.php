@@ -1239,12 +1239,14 @@
                        'main_post' => 'magpie/magpie_feed_display',
 					   'pre_sidebar' => 'magpie/magpie_feed_search',
                        'sidebar' => 'magpie/magpie_feed_nav',
+                       'show_entries_lacking_description'=>true,
         ),
 		'feed_display_sidebar' => array(
                        'sidebar' => array(
 					   		'module'=>'magpie/magpie_feed_display',
 							'num_per_page'=>999,
 							'desc_char_limit'=>25,
+                            'show_entries_lacking_description'=>true,
 						),
         ),
 		'feed_display_sidebar_with_search' => array(
