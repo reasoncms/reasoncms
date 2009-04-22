@@ -67,7 +67,8 @@ class reasonFeedDisplay
 	var $_page_query_string_key = 'view_page';
 	var $_search_query_string_key = 'search';
 	var $_show_descriptions = true;
-    var $_display_timestamp = false ; 
+	var $_title = '';
+    var $_display_timestamp = false ;
     var $_show_entries_lacking_description = false ; 
 	
 	function set_location($location, $remote = true)
@@ -143,23 +144,38 @@ class reasonFeedDisplay
 	{
 		if(is_numeric($num) || $num > 0)
 		{
-			$this->story_per_page = $num;
+			$this->story_per_page = (integer) $num;
 		}
 		else
 		{
 			trigger_error('The number of stories per page must be set to an integer greater than 0');
 		}
 	}
+	function set_num_in_nav($num)
+	{
+		if(is_numeric($num) || $num > 0)
+		{
+			$this->_num_in_nav = (integer) $num;
+		}
+		else
+		{
+			trigger_error('The number of stories in nav must be set to an integer greater than 0');
+		}
+	}
 	function set_description_char_limit($num)
 	{
 		if(is_numeric($num) || $num > 0)
 		{
-			$this->description_char_limit = $num;
+			$this->description_char_limit = (integer) $num;
 		}
 		else
 		{
 			trigger_error('The description character limit must be set to an integer greater than 0');
 		}
+	}
+	function set_title($title)
+	{
+		$this->_title = $title;
 	}
 
 	function display_feed ( $mode="feed" )
@@ -177,7 +193,12 @@ class reasonFeedDisplay
     	$displayed_items = 0 ;                  // count of how many items that have been added to the final output in case there are 0 and we need an error msg.
 		$new_entry_date = '';
     	$last_date = '';                        // tracks when a day has passed between feed items and we need to redisplay the date. 
-
+    	$date_heading_level = 3;
+		if( $mode == 'nav' || !empty($this->_title) )
+		{
+			$date_heading_level = 4;
+		}
+		
     	// if we've got a valid feed, iterate over the items
     	if ( $rss and !$rss->ERROR)
     	{
@@ -231,8 +252,11 @@ class reasonFeedDisplay
                     }
 
                 // add to nav block
-                $nav_block .= '<li><a href="'.$href. '">';
-                $nav_block .= $title . "</a></li>\n"; 
+                if(empty($this->_num_in_nav) ||  $item_count <= $this->_num_in_nav)
+                {
+               		$nav_block .= '<li><a href="'.$href. '">';
+                	$nav_block .= $title . "</a></li>\n";
+                }
 
                 // select which stories to display based on the page number they fall on and which page is selected. 
                 if($this->_page == $current_page){
@@ -244,7 +268,7 @@ class reasonFeedDisplay
 						{
 							$content_block .= '</ul>';
 						}
-                        $content_block .= '<h3>'.$new_entry_date.'</h3><ul>'."\n"; 
+                        $content_block .= '<h3 class="date">'.$new_entry_date.'</h3><ul>'."\n"; 
                         $last_date = $new_entry_date ;
                     }
 					elseif($item_count == 1)
@@ -255,7 +279,7 @@ class reasonFeedDisplay
                     // this is the most expensive part of the code, only do it if we're displaying the feed
                     if($mode == 'feed'){  
                         
-						$content_block .= '<li><h4><a href="'.$href.'">'.$title.'</a></h4>'."\n";
+						$content_block .= '<li><h4 class="postTitle"><a href="'.$href.'">'.$title.'</a></h4>'."\n";
                         // add to content block
 						if($this->_show_descriptions)
 						{
@@ -281,7 +305,7 @@ class reasonFeedDisplay
     // the nav block is the list of available postings sans descriptions. The post links go to anchor tags in the main feed listing
     if($mode == 'nav'){
     	$output .= '<div id="rss_nav">'."\n";
-        $output .= "<h4>Current Items</h4>\n";
+        $output .= "<h4 class=\"feedTitle\">".(!empty($this->_title) ? $this->_title : 'Current Items')."</h4>\n";
         $output .= "<ul>\n"; 
         $output .= $nav_block ; 
         $output .= "</ul>\n";
@@ -299,6 +323,10 @@ class reasonFeedDisplay
        
         // display the feed itself 
         $output .= "<div id='rss_content'>\n"; 
+        if(!empty($this->_title))
+        {
+        	$output .= '<h3 class="feedTitle">'.$this->_title.'</h3>'."\n";
+        }
         $output .= $page_nav ; 
         $output .= $content_block ; 
 

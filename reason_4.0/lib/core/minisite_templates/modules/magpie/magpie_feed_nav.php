@@ -53,6 +53,14 @@
 			{
 				$rfd->set_search_string($this->request['search']);
 			}
+			if(!empty($this->params['num_per_page']))
+			{
+				$rfd->set_num_in_nav($this->params['num_per_page']);
+			}
+			if(!empty($this->params['title']))
+			{
+				$rfd->set_title($this->params['title']);
+			}
        		echo $rfd->display_feed('nav');
 
 		}

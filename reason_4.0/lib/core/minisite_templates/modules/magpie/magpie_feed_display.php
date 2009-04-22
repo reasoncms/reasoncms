@@ -28,6 +28,7 @@
 			'num_per_page'=>0,
 			'desc_char_limit'=>0,
 			'show_descriptions'=>true,
+			'title'=>'',
             'display_timestamp'=>false,
             'show_entries_lacking_description'=>false,
             'disable_cache'=>false,
@@ -138,6 +139,10 @@
 		else
 		{
 			$rfd->hide_descriptions();
+		}
+		if(!empty($this->params['title']))
+		{
+			$rfd->set_title($this->params['title']);
 		}
         echo $rfd->display_feed("feed");
 
