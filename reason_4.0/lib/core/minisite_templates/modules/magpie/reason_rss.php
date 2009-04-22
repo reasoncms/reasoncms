@@ -68,6 +68,7 @@ class reasonFeedDisplay
 	var $_search_query_string_key = 'search';
 	var $_show_descriptions = true;
     var $_display_timestamp = false ; 
+    var $_show_entries_lacking_description = false ; 
 	
 	function set_location($location, $remote = true)
 	{
@@ -88,6 +89,14 @@ class reasonFeedDisplay
         if($show_timestamp == true)
         {
             $this->_display_timestamp = true ; 
+        }
+    }
+
+    function set_show_entries_lacking_description($show_entries_lacking_description = false)
+    {
+        if($show_entries_lacking_description == true)
+        {
+            $this->_show_entries_lacking_description = true ; 
         }
     }
 	
@@ -209,7 +218,10 @@ class reasonFeedDisplay
                 }
  
             // skip events in the future
-            if(($date - $now) < 0 && $search_match && $title != '' && $description != '' && $href != ''){ 
+            // skip events where the title is blank
+            // skip events where the description is blank unless _show_entries_lacking_description is true
+            // skip events where the href is blank
+            if(($date - $now) < 0 && $search_match && $title != '' && ( $description != '' || $this->_show_entries_lacking_description == true) && $href != ''){ 
            
                 // keep track of which item/page we're on. 
                 $item_count++ ; 

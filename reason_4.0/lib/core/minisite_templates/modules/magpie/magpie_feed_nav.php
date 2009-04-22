@@ -33,9 +33,14 @@
                 $rfd->set_cache_disable($this->disable_cache);
             }
             
-            if(isset($this->display_timestamp))
+            if(isset($this->params['display_timestamp']))
             {
-                $rfd->set_display_timestamp($this->display_timestamp);
+                $rfd->set_display_timestamp($this->params['display_timestamp']);
+            }
+
+            if(isset($this->params['show_entries_lacking_description']))
+            {
+                $rfd->set_show_entries_lacking_description($this->params['show_entries_lacking_description']);
             }
 
 			$rfd->set_page_query_string_key('view_page');
