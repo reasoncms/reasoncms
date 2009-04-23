@@ -5,6 +5,10 @@
  * @subpackage classes
  */
  
+ include_once('reason_header.php');
+ reason_include_once('function_libraries/asset_functions.php');
+ reason_include_once('function_libraries/images.php');
+ 
 /**
  * Class for handling standard Reason exports
  *
@@ -119,8 +123,44 @@ class reason_xml_export
 	 */
 	function get_xml_version_point_one($entities)
 	{
+		$gen = new reason_xml_export_generator_version_point_one();
+		return $gen->get_xml($entities);
+	}
+	
+}
+
+/**
+ * An abstract class that defines the API of an XML export generator
+ */
+class reason_xml_export_generator
+{
+	/**
+	 * Get an XML representation for a set of Reason entities
+	 * @param array $entities
+	 * @return string (XML)
+	 */
+	function get_xml($entities)
+	{
+		trigger_error('This method must be overloaded');
+		return '';
+	}
+}
+
+/**
+ * A class that generates the 0.1 version of the Reason XML export data format
+ */
+class reason_xml_export_generator_version_point_one extends reason_xml_export_generator
+{
+	/**
+	 * Get an XML representation for a set of Reason entities
+	 * @access public
+	 * @param array $entities
+	 * @return string (XML)
+	 */
+	function get_xml($entities)
+	{
 		$lines[] = '<'.'?'.'xml version="1.0" encoding="utf-8"'.'?'.'>';
-		$lines[] = '<reason_data version="0.1" from="http://'.REASON_WEB_ADMIN_PATH.'">';
+		$lines[] = '<reason_data version="0.1" from="http://'.REASON_HOST.'/">';
 		foreach($entities as $e)
 		{
 			$type = new entity($e->get_value('type'));
@@ -136,32 +176,28 @@ class reason_xml_export
 			$lines[] = $line;
 			foreach($e->get_values() as $k=>$v)
 			{
-				$lines[] = "\t\t".'<value name="'.$k.'">'.$v.'</value>';
+				$lines[] = "\t\t".'<value name="'.$k.'">'.htmlspecialchars($v).'</value>';
+			}
+			$method = '_get_custom_values_for_'.$type->get_value('unique_name');
+			if(method_exists($this, $method) )
+			{
+				$lines = array_merge($lines, $this->$method($e, "\t\t") );
 			}
 			$lines[] = "\t\t".'<relationships>';
-			foreach($e->get_left_relationships() as $name=>$rels)
+			foreach($e->get_left_relationships() as $alrel_id=>$rels)
 			{
-				if(!is_numeric($name) && !empty($rels))
+				if(is_numeric($alrel_id) && !empty($rels))
 				{
-					$lines[] = "\t\t\t".'<alrel alrel_name="'.$name.'" dir="left">';
-					foreach($rels as $rel)
-					{
-						$lines[] = "\t\t\t\t".'<rel to_entity_id="'.$rel->id().'" site_id="" />';
-					}
-					$lines[] = "\t\t\t".'</alrel>';
+					$lines = array_merge($lines, $this->_get_rel_xml_lines($rels, $alrel_id, 'left', "\t\t\t") );
 				}
 			}
 			
-			foreach($e->get_right_relationships() as $name=>$rels)
+			foreach($e->get_right_relationships() as $alrel_id=>$rels)
 			{
-				if(!is_numeric($name) && !empty($rels))
+				if(is_numeric($alrel_id) && !empty($rels))
 				{
-					$lines[] = "\t\t\t".'<alrel alrel_name="'.$name.'" dir="right">';
-					foreach($rels as $rel)
-					{
-						$lines[] = "\t\t\t\t".'<rel to_entity_id="'.$rel->id().'" />';
-					}
-					$lines[] = "\t\t\t".'</alrel>';
+					
+					$lines = array_merge($lines, $this->_get_rel_xml_lines($rels, $alrel_id, 'right', "\t\t\t") );
 				}
 			}
 			$lines[] = "\t\t".'</relationships>';
@@ -169,6 +205,66 @@ class reason_xml_export
 		}
 		$lines[] = "</reason_data>";
 		return implode("\n",$lines);
+	}
+	
+	/**
+	 * @access private
+	 * @param array $rels
+	 * @param integer $alrel_id
+	 * @param string $dir
+	 * @param string $indent
+	 * @return array lines
+	 */
+	function _get_rel_xml_lines($rels, $alrel_id, $dir, $indent)
+	{
+		$lines = array();
+		$lines[] = $indent.'<alrel name="'.relationship_name_of($alrel_id).'" id="'.$alrel_id.'" dir="'.$dir.'">';
+		foreach($rels as $rel)
+		{
+			$uname = $rel->get_value('unique_name') ? ' to_uname="'.htmlspecialchars($rel->get_value('unique_name')).'"' : '';
+			$lines[] = $indent."\t".'<rel to_entity_id="'.$rel->id().'" '.$uname.'>';
+			if($rel->get_value('_rel_values'))
+			{
+				foreach($rel->get_value('_rel_values') as $key=>$val)
+				{
+					if($key != 'type' && $key != 'entity_a' && $key != 'entity_b')
+						$lines[] = $indent."\t\t".'<attr name="'.$key.'">'.htmlspecialchars($val).'</attr>';
+				}
+			}
+			$lines[] = $indent."\t".'</rel>';
+		}
+		$lines[] = $indent.'</alrel>';
+		return $lines;
+	}
+	
+	/**
+	 * Get custom computed values for an asset
+	 * @access private
+	 * @param object (entity) $e
+	 * @param string $indent
+	 * @return array lines
+	 */
+	function _get_custom_values_for_asset($e,$indent)
+	{
+		$lines = array();
+		$lines[] = $indent.'<value name="url" type="computed">'.htmlspecialchars(reason_get_asset_url($e)).'</value>';
+		$lines[] = $indent.'<value name="filesystem_location" type="computed">'.htmlspecialchars(reason_get_asset_filesystem_location($e)).'</value>';
+		return $lines;
+	}
+	
+	/**
+	 * Get custom computed values for an image
+	 * @access private
+	 * @param object (entity) $e
+	 * @param string $indent
+	 * @return array lines
+	 */
+	function _get_custom_values_for_image($e,$indent)
+	{
+		$lines = array();
+		$lines[] = $indent.'<value name="url" type="computed">'.htmlspecialchars(reason_get_image_url($e)).'</value>';
+		$lines[] = $indent.'<value name="thumb_url" type="computed">'.htmlspecialchars(reason_get_image_url($e,'thumbnail')).'</value>';
+		return $lines;
 	}
 }
 ?>
