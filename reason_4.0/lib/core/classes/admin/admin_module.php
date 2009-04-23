@@ -68,5 +68,6 @@
 		'SortPosts'=>array('file'=>'sort_posts.php','class'=>'SortPostsModule'),
 		'EntityInfo'=>array('file'=>'entity_info.php','class'=>'EntityInfoModule'),
 		'BatchDelete'=>array('file'=>'batch_delete.php','class'=>'BatchDeleteModule'),
+		'Export'=>array('file'=>'export.php','class'=>'ReasonExportModule'),
 	);
 ?>
