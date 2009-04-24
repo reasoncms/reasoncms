@@ -4,6 +4,8 @@
  *
  * @package reason
  * @subpackage scripts
+ *
+ * @todo add links to documentation for major changes and info on upgrading
  */
 
 /**
@@ -18,9 +20,17 @@
 <body>
 <h2>Upgrade Reason from 4.0 Beta 7 to 4.0 Beta 8</h2>
 <h3>Upgrade Notes</h3>
-<p>Reason 4 Beta 8 changes the rel_name field for "owns" and "borrows" allowable relationships to be unique. This allows entity selector queries
-to be a bit simpler, and allows the relationship_id_of method to work for all allowable relationships. This is a major change; code distributed 
-with Reason 4 Beta 8 will be unreliable on a Reason 4 Beta 7 database that has not been upgraded.</p>
+<p>Reason 4 Beta 8 adds experimental support for multi-domain Reason instances, and supports setups in which the entire reason_package exists outside of the web tree. 
+Moving forward, this will be the recommended setup. There are a variety of changes to the setup files distributed with Reason to support this type of setup, and a new 
+setup file called domain_settings.php. Existing installs should continue to function as they did before, but it is recommended (and needed for multi-domain support) that you 
+replace your settings directory with the one distributed in Reason 4 Beta 8. You should also replace your paths.php file with the one disributed in Reason 4 Beta 8.</p>
+<?
+// This change will probably be pushed to Reason 4 Beta 9 or Reason 4 RC 1
+//
+//<p>Reason 4 Beta 8 changes the rel_name field for "owns" and "borrows" allowable relationships to be unique. This allows entity selector queries
+//to be a bit simpler, and allows the relationship_id_of method to work for all allowable relationships. This is a major change; code distributed 
+//with Reason 4 Beta 8 will be unreliable on a Reason 4 Beta 7 database that has not been upgraded.</p>
+?>
 <h3>New Settings</h3>
 <p>Reason 4 Beta 8 introduces two new settings:</p>
 <ol>
@@ -61,7 +71,6 @@ Reason are not inadvertently indexed by Google or other search engines.</p>
 
 <?php
 //<li><a href="allowable_rel_structure.php">Update the allowable relationship table structure</a> <em>(this script may have been autorun already)</em></li>
-echo '<li>Update the allowable relationship table structure (NOT READY YET)</li>';
 ?>
 
 <li><a href="remove_rewrite_finish_actions.php">Remove rewrite finish actions that are no longer needed</a></li>
