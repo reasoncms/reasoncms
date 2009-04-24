@@ -25,8 +25,15 @@ class imageModule extends Generic3Module
 		'limit_to_current_site'=>true,
 		'max_num' => false, // false or integer
 		'sort_order' => 'rel', // Either a sort_order value (like "datetime ASC) or the special value "rel", meaning sort by page relationship
+		'num_per_page' => 0,
 		);
 	
+	function init( $args = array() )
+	{
+		if(!empty($this->params['num_per_page']))
+			$this->num_per_page = (integer) $this->params['num_per_page'];
+		parent::init();
+	}
 	function alter_es() // {{{
 	{
 		if($this->params['sort_order'] == 'rel')
