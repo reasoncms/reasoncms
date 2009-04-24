@@ -838,6 +838,20 @@
 			'main_post' => 'content',
 			'sidebar' => '',
 		),
+		'images_full_size_one_at_a_time' => array(
+			'main_post' => array(
+				'module'=>'images',
+				'num_per_page'=> 1,
+			),
+			'sidebar' => '',
+		),
+		'images_full_size_single_page' => array(
+			'main_post' => array(
+				'module'=>'images',
+				'num_per_page'=> 99999,
+			),
+			'sidebar' => '',
+		),
 		'jobs' => array(
 			'main_post' => 'jobs',
 			'sub_nav' => '',
