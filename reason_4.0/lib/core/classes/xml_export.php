@@ -184,20 +184,21 @@ class reason_xml_export_generator_version_point_one extends reason_xml_export_ge
 				$lines = array_merge($lines, $this->$method($e, "\t\t") );
 			}
 			$lines[] = "\t\t".'<relationships>';
+			$left_rel_info = $e->get_left_relationships_info();
 			foreach($e->get_left_relationships() as $alrel_id=>$rels)
 			{
 				if(is_numeric($alrel_id) && !empty($rels))
 				{
-					$lines = array_merge($lines, $this->_get_rel_xml_lines($rels, $alrel_id, 'left', "\t\t\t") );
+					$lines = array_merge($lines, $this->_get_rel_xml_lines($rels, $left_rel_info[$alrel_id], $alrel_id, 'left', "\t\t\t") );
 				}
 			}
-			
+			$right_rel_info = $e->get_right_relationships_info();
 			foreach($e->get_right_relationships() as $alrel_id=>$rels)
 			{
 				if(is_numeric($alrel_id) && !empty($rels))
 				{
 					
-					$lines = array_merge($lines, $this->_get_rel_xml_lines($rels, $alrel_id, 'right', "\t\t\t") );
+					$lines = array_merge($lines, $this->_get_rel_xml_lines($rels, $right_rel_info[$alrel_id], $alrel_id, 'right', "\t\t\t") );
 				}
 			}
 			$lines[] = "\t\t".'</relationships>';
@@ -210,22 +211,23 @@ class reason_xml_export_generator_version_point_one extends reason_xml_export_ge
 	/**
 	 * @access private
 	 * @param array $rels
+	 * @param array $rels_info
 	 * @param integer $alrel_id
 	 * @param string $dir
 	 * @param string $indent
 	 * @return array lines
 	 */
-	function _get_rel_xml_lines($rels, $alrel_id, $dir, $indent)
+	function _get_rel_xml_lines($rels, $rels_info, $alrel_id, $dir, $indent)
 	{
 		$lines = array();
 		$lines[] = $indent.'<alrel name="'.relationship_name_of($alrel_id).'" id="'.$alrel_id.'" dir="'.$dir.'">';
-		foreach($rels as $rel)
+		foreach($rels as $position=>$rel)
 		{
 			$uname = $rel->get_value('unique_name') ? ' to_uname="'.htmlspecialchars($rel->get_value('unique_name')).'"' : '';
 			$lines[] = $indent."\t".'<rel to_entity_id="'.$rel->id().'" '.$uname.'>';
-			if($rel->get_value('_rel_values'))
+			if(isset($rels_info[$position]))
 			{
-				foreach($rel->get_value('_rel_values') as $key=>$val)
+				foreach($rels_info[$position] as $key=>$val)
 				{
 					if($key != 'type' && $key != 'entity_a' && $key != 'entity_b')
 						$lines[] = $indent."\t\t".'<attr name="'.$key.'">'.htmlspecialchars($val).'</attr>';
