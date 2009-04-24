@@ -33,10 +33,20 @@ if (isset($_GET['curl_test']))
 }
 else echo $head_content;
 
+$fix_mode_enabled = (isset($_GET['fixmode']) && ($_GET['fixmode'] == "true"));
+$fix_mode_link = ($fix_mode_enabled) ? ' Enabled (<a href="?fixmode=false">disable</a>)' : ' Disabled (<a href="?fixmode=true">enable</a>)';
 ?>
+
 <p>This script should be run after you have setup Reason according to the instructions in the <a href="./install.htm">Reason Install Documentation</a>. 
 The script will verify the Reason environment, perform a variety of checks for Reason utilities, confirm file paths and permissions, 
 and then setup the first site and user for your instance.</p>
+<h3>Experimental "Fix" Mode<?php echo $fix_mode_link ?></h3>
+<p>Fix mode will try to resolve easy to fix installation problems. Specifically, it will do the following:
+<ul>
+<li>Create symbolic links for thor, loki, flvplayer, and jquery, from the web tree to the proper locations in reason_package</li>
+<? // <li>Import the reason 4 beta 8 database into mysql IF the current database has no tables</li> ?>
+</ul>
+<hr />
 <?php
 // do what we can to enable error reporting
 ini_set("display_errors","On");
@@ -311,36 +321,33 @@ function perform_checks()
 							' Also make sure APACHE_MIME_TYPES constant in reason_settings is set to the full path of the mime.types file (include the filename).')) $check_passed++;
 	else $check_failed++;
 	
+	if (check_directory_readable(THOR_INC, 'THOR_INC')) $check_passed++;
+	else $check_failed++;
+	
+	if (check_directory_readable(LOKI_2_INC, 'LOKI_2_INC')) $check_passed++;
+	else $check_failed++;
+	
+	if (check_directory_readable(MAGPIERSS_INC, 'MAGPIERSS_INC')) $check_passed++;
+	else $check_failed++;
+	
+	if (check_file_readable(APACHE_MIME_TYPES, 'APACHE_MIME_TYPES', 
+							' Also make sure APACHE_MIME_TYPES constant in reason_settings is set to the full path of the mime.types file (include the filename).')) $check_passed++;
+	else $check_failed++;
+	
 	echo '<h3>Performing HTTP Access Checks</h3>';
 	
-	if (check_accessible_over_http("Thor getXML.php file", 
-								   THOR_HTTP_PATH . 'getXML.php', 
-								   'tmp_id', 
-								   '<p>You may need to set THOR_HTTP_PATH equal to "/thor/", and create an alias at ' . WEB_PATH . 'thor/ to ' . THOR_INC.'. 
-		           					Future revisions to thor should make this more flexible, but for the moment you need the alias in your web root to the 
-		           					thor directory</p>')) $check_passed++;
+	if (check_thor_accessible_over_http()) $check_passed++;
 	else $check_failed++;
 	
-	if (check_accessible_over_http("Loki", 
-								   LOKI_2_HTTP_PATH . 'loki.js', 
-								   'loki', 
-								   '<p>Check the constant LOKI_2_HTTP_PATH, which currently is set to ' . LOKI_2_HTTP_PATH . ' and make sure it 
-								   	correctly references the Loki 2 directory.</p>')) $check_passed++;
+	if (check_loki_accessible_over_http()) $check_passed++;
 	else $check_failed++;
 	
-	if (check_accessible_over_http("jQuery", 
-								   JQUERY_URL, 
-								   'John Resig', 
-								   '<p>Check the constant JQUERY_URL, which currently is set to ' . JQUERY_URL . ' and make sure it 
-								   	correctly references the location of jquery.</p>')) $check_passed++;
+	if (check_jquery_accessible_over_http()) $check_passed++;
 	else $check_failed++;
 	
-	if (check_accessible_over_http("FLVPlayer", 
-								   FLVPLAYER_HTTP_PATH . 'playlist.xml', 
-								   'Jeroen Wijering', 
-								   '<p>Check the constant FLVPLAYER_HTTP_PATH, which currently is set to ' . FLVPLAYER_HTTP_PATH . ' and make sure it 
-								   	correctly references the location of flvplayer.</p>')) $check_passed++;
+	if (check_flvplayer_accessible_over_http()) $check_passed++;
 	else $check_failed++;
+	
 	echo '<h3>Summary</h3>';
 	echo '<ul>';
 	echo '<li class="success">'.$check_passed.' checks were successful</li>';
@@ -350,18 +357,116 @@ function perform_checks()
 	else return false;
 }
 
-function check_accessible_over_http($name, $path, $search_string, $extra = '')
+function check_thor_accessible_over_http()
+{
+	global $fix_mode_enabled;
+	$fixed_str = '';
+	$accessible = check_accessible_over_http(THOR_HTTP_PATH . 'getXML.php', 'tmp_id');
+	if (!$accessible && $fix_mode_enabled) // lets try to repair this
+	{
+		// if THOR_INC is readable
+		if (is_readable(THOR_INC))
+		{
+			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(THOR_HTTP_PATH, "/"));
+			symlink(THOR_INC, $symlink_loc);
+		}
+		$accessible = check_accessible_over_http(THOR_HTTP_PATH . 'getXML.php', 'tmp_id');
+		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
+	}
+	if ($accessible) return msg('<span class="success">thor'.$fixed_str.' is accessible over http</span> - check passed', true);
+	else
+	{
+		return msg('<span class="error">thor'.$fixed_str.' is not accessible over http</span>.<p>You may need to set THOR_HTTP_PATH equal to "/thor/", and create an alias at ' . WEB_PATH . 'thor/ to ' . THOR_INC.'. 
+		           					Future revisions to thor should make this more flexible, but for the moment you need the alias in your web root to the 
+		           					thor directory</p>', false);
+	}
+}
+
+function check_loki_accessible_over_http()
+{
+	global $fix_mode_enabled;
+	$fixed_str = '';
+	$accessible = check_accessible_over_http(LOKI_2_HTTP_PATH . 'loki.js', 'loki');
+	if (!$accessible && $fix_mode_enabled) // lets try to repair this
+	{
+		// if LOKI_2_INC - strip off the helpers/php part
+		if (is_readable(LOKI_2_INC) && ($term = strpos(LOKI_2_INC, 'helpers/php')))
+		{
+			$my_loki_path = substr(LOKI_2_INC, 0, $term);
+			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(LOKI_2_HTTP_PATH, "/"));
+			symlink($my_loki_path, $symlink_loc);
+		}
+		$accessible = check_accessible_over_http(LOKI_2_HTTP_PATH . 'loki.js', 'loki');
+		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
+	}
+	if ($accessible) return msg('<span class="success">loki 2'.$fixed_str.' is accessible over http</span> - check passed', true);
+	else
+	{
+		return msg('<span class="error">loki 2'.$fixed_str.' is not accessible over http</span>.
+					<p>Check the constant LOKI_2_HTTP_PATH, which currently is set to ' . LOKI_2_HTTP_PATH . ' 
+					and make sure it correctly references the Loki 2 directory.</p>', false);
+	}
+}
+
+function check_jquery_accessible_over_http()
+{
+	global $fix_mode_enabled;
+	$fixed_str = '';
+	$accessible = check_accessible_over_http(JQUERY_URL, 'John Resig');
+	if (!$accessible && $fix_mode_enabled) // lets try to repair this
+	{
+		// if JQUERY_INC is readable
+		if (is_readable(JQUERY_INC))
+		{
+			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(JQUERY_HTTP_PATH, "/"));
+			symlink(JQUERY_INC, $symlink_loc);
+		}
+		$accessible = check_accessible_over_http(JQUERY_URL, 'John Resig');
+		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
+	}
+	if ($accessible) return msg('<span class="success">jQuery'.$fixed_str.' is accessible over http</span> - check passed', true);
+	else
+	{
+		return msg('<span class="error">jQuery'.$fixed_str.' is not accessible over http</span>.<p>Check the constant JQUERY_URL, 
+				   which currently is set to ' . JQUERY_URL . ' and make sure it 
+			       correctly references the location of jquery.</p>', false);
+	}
+}
+
+function check_flvplayer_accessible_over_http()
+{
+	global $fix_mode_enabled;
+	$fixed_str = '';
+	$accessible = check_accessible_over_http(FLVPLAYER_HTTP_PATH . 'playlist.xml', 'Jeroen Wijering');
+	if (!$accessible && $fix_mode_enabled) // lets try to repair this
+	{
+		// if FLVPLAYER_INC is readable
+		if (is_readable(FLVPLAYER_INC))
+		{
+			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(FLVPLAYER_HTTP_PATH, "/"));
+			symlink(FLVPLAYER_INC, $symlink_loc);
+		}
+		$accessible = check_accessible_over_http(FLVPLAYER_HTTP_PATH . 'playlist.xml', 'Jeroen Wijering');
+		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
+	}
+	if ($accessible) return msg('<span class="success">flvplayer'.$fixed_str.' is accessible over http</span> - check passed', true);
+	else
+	{
+		return msg('<span class="error">flvplayer'.$fixed_str.' is not accessible over http</span>.
+					<p>Check the constant FLVPLAYER_HTTP_PATH, which currently is set to ' . FLVPLAYER_HTTP_PATH . ' 
+					and make sure it correctly references the location of flvplayer.</p>', false);
+	}
+}
+
+/**
+ * 
+ */
+function check_accessible_over_http($path, $search_string)
 {
 		// if the path if not absolute, lets make it so with carl_construct_link
 		if (strpos($path, "://") === false) $path = carl_construct_link(array(''), array(''), $path);
-		if (strpos(get_reason_url_contents($path), $search_string) !== false)
-		{
-			return msg('<span class="success">'.$name.' ('.$path.') is accessible over http</span> - check passed', true);
-		}
-		else
-		{
-			return msg('<span class="error">'.$name.' ('.$path.') is not accessible over http</span>. ' . $extra, false); 
-		}
+		if (strpos(get_reason_url_contents($path), $search_string) !== false) return true;
+		else return false;
 }
 
 function verify_mysql($db_conn_name, $constant_name, $constant_location, $check_for_tables = false) // see if we can connect to mysql using the connection parameters specified in REASON_DB
@@ -444,8 +549,9 @@ function tidy_check()
 function curl_check()
 {
 	global $curl_test_content;
-	$insecure_link = 'http://'.$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'].'?curl_test=true';
-	$secure_link = 'https://'.$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'].'?curl_test=true';
+	$link = carl_construct_link(array('curl_test' => "true"), array(''));
+	$insecure_link = on_secure_page() ? alter_protocol($link,'https','http') : $link;
+	$secure_link = on_secure_page() ? $link : alter_protocol($link,'http', 'https');
 	$content = get_reason_url_contents( $insecure_link );
 	if ($content != $curl_test_content)
 	{
@@ -485,6 +591,12 @@ function data_dir_writable($dir, $name)
 {
 	if (is_writable($dir)) return msg('<span class="success">'.$name . ' directory is writable</span> - check passed', true);
 	else return msg ('<span class="error">'.$name . ' directory not writable - failed</span>. Make sure apache user has write access to ' . $dir, false);
+}
+
+function check_directory_readable($dir, $name, $extra = '')
+{
+	if (is_readable($dir)) return msg('<span class="success">'.$name . ' dirctory is readable</span> - check passed', true);
+	else return msg ('<span class="error">'.$name . ' directory not readable - failed</span>. Make sure ' .$file. ' exists and apache user has read access to it. '.$extra, false);
 }
 
 function check_file_readable($file, $name, $extra = '')
