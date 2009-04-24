@@ -72,6 +72,26 @@ class entity
 	 */
 	var $_right_relationships = array();
 	/**
+	 * Info about relationships where this element appears on
+	 * left side of relationship (entity_a)
+	 *
+	 * This contains the contents of the relationship table rather than the entities
+	 * ($_left_relationships contains the entities)
+	 *
+	 * @var array
+	 */
+	var $_left_relationships_info = array();
+	/**
+	 * Info about relationships where this element appears on
+	 * left side of relationship (entity_a)
+	 *
+	 * This contains the contents of the relationship table rather than the entities
+	 * ($_right_relationships contains the entities)
+	 *
+	 * @var array
+	 */
+	var $_right_relationships_info = array(); 
+	/**
 	 * Variable to assure caching works properly.  Sometimes an entity will change during the course of 
 	 * loading a page and you need to always make sure you get the updated information
 	 * setting this to false assures that you will always get the more recent info from the DB
@@ -79,7 +99,7 @@ class entity
 	 */
 	var $_cache = true;
 	/**
-	 * Contains the local enviornment
+	 * Contains the local environment
 	 */
 	var $_env = array( 'restrict_site' => true );
 	/**#@-*/
@@ -88,7 +108,7 @@ class entity
 	 * Constructor
 	 *
 	 * Creates a new entity object
-	 * @param int $id the id of the entity
+	 * @param int $id the id of the entity													
 	 * @param boolean $cache set to false if you don't want the entity to cache values
 	 */
 	function entity( $id, $cache = true ) // {{{
@@ -263,8 +283,9 @@ class entity
 	//////////////////////////////////////////////////////
 
 	/**
-	 * Initializes the _left_relationships array
+	 * Initialize the _left_relationships and _left_relationships_info arrays
 	 * @access private
+	 * @todo cache db structure info so it doesn't need to rediscover it every time
 	 */
 	function _init_left_relationships() // {{{
 	{
@@ -287,6 +308,8 @@ class entity
 		{
 			$this->_left_relationships[ $row['id'] ] = array();
 			$this->_left_relationships[ $row['name'] ] = array();
+			$this->_left_relationships_info[ $row['id'] ] = array();
+			$this->_left_relationships_info[ $row['name'] ] = array();
 			$rel_name[ $row['id'] ] = $row['name'];
 		}
 		$dbq = new DBSelector;
@@ -308,12 +331,15 @@ class entity
 			$e = new entity( $r['entity_b'] );
 			$e->set_value('_rel_values',$r);
 			$this->_left_relationships[ $r['type'] ][] = $e;
+			$this->_left_relationships_info[ $r['type'] ][] = $r;
 			$this->_left_relationships[ $rel_name[ $r['type'] ] ][] = $e;
+			$this->_left_relationships_info[ $rel_name[ $r['type'] ] ][] = $r;
 		}
 	} // }}}
 	/**
-	 * Initializes the _right_relationships array
+	 * Initialize the _right_relationships and _right_relationships_info arrays
 	 * @access private
+	 * @todo cache db structure info so it doesn't need to rediscover it every time
 	 */
 	function _init_right_relationships() // {{{
 	{
@@ -335,6 +361,8 @@ class entity
 		{
 			$this->_right_relationships[ $row['id'] ] = array();
 			$this->_right_relationships[ $row['name'] ] = array();
+			$this->_right_relationships_info[ $row['id'] ] = array();
+			$this->_right_relationships_info[ $row['name'] ] = array();
 			$rel_name[ $row['id'] ] = $row['name'];
 		}
 		$dbq = new DBSelector;
@@ -361,9 +389,11 @@ class entity
 			$e = new entity( $r['entity_a'] );
 			$e->set_value('_rel_values',$r);
 			$this->_right_relationships[ $r['type'] ][] = $e;
+			$this->_right_relationships_info[ $r['type'] ][] = $r;
 			if(!empty($rel_name[ $r['type'] ]))
 			{
 				$this->_right_relationships[ $rel_name[ $r['type'] ] ][] = $e;
+				$this->_right_relationships_info[ $rel_name[ $r['type'] ] ][] = $r;
 			}
 		}
 	} // }}}
@@ -524,6 +554,33 @@ class entity
 	{
 		$all = $this->get_relationships();
 		return $all[ $rel_name ];
+	} // }}}
+	
+	/** 
+	 * Get info about the left relationships of the entity
+	 * 
+	 * Note that this returns the values of the relationship table, not the entities themselves
+	 *
+	 * @return array
+	 */
+	function get_left_relationships_info() // {{{
+	{
+		if( !$this->_left_relationships_info )
+			$this->_init_left_relationships();
+		return $this->_left_relationships_info;
+	} // }}}
+	/** 
+	 * Getinfo about the right relationships of the entity
+	 *
+	 * Note that this returns the values of the relationship table, not the entities themselves
+	 *
+	 * @return array
+	 */
+	function get_right_relationships_info() // {{{
+	{
+		if( !$this->_right_relationships_info )
+			$this->_init_right_relationships();
+		return $this->_right_relationships_info;
 	} // }}}
 
 	/**
