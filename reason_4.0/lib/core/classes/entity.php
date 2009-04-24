@@ -329,7 +329,6 @@ class entity
 		while( list( ,$r ) = each( $rels ) )
 		{
 			$e = new entity( $r['entity_b'] );
-			$e->set_value('_rel_values',$r);
 			$this->_left_relationships[ $r['type'] ][] = $e;
 			$this->_left_relationships_info[ $r['type'] ][] = $r;
 			$this->_left_relationships[ $rel_name[ $r['type'] ] ][] = $e;
@@ -387,7 +386,6 @@ class entity
 		foreach( $rels AS $r )
 		{
 			$e = new entity( $r['entity_a'] );
-			$e->set_value('_rel_values',$r);
 			$this->_right_relationships[ $r['type'] ][] = $e;
 			$this->_right_relationships_info[ $r['type'] ][] = $r;
 			if(!empty($rel_name[ $r['type'] ]))
