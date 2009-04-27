@@ -31,7 +31,7 @@
  *
  * @todo Merge document metadata too?
  */
-function carl_merge_pdfs($pdffiles, $titles = array(), $metadata = array())
+function carl_merge_pdfs($pdffiles, $titles = array(), $metadata = array(), $metadata_encoding = 'UTF-8')
 {
 	if(gettype($pdffiles) != 'array')
 	{
@@ -171,9 +171,13 @@ function carl_merge_pdfs($pdffiles, $titles = array(), $metadata = array())
 			if ($pageno == 1)
 			{
 				if(isset($titles[$pdffile]))
+					$bookmark = pack('H*','feff').mb_convert_encoding($titles[$pdffile], 'UTF-16', $metadata_encoding);
+				else
+					$bookmark = pack('H*','feff').mb_convert_encoding($pdffile, 'UTF-16', $metadata_encoding);
+				/* if(isset($titles[$pdffile]))
 					$bookmark = $titles[$pdffile];
 				else
-					$bookmark = $pdffile;
+					$bookmark = $pdffile; */
 				PDF_create_bookmark($p, $bookmark, '');
 			}
 	
