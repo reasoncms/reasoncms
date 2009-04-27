@@ -7,6 +7,7 @@
  *
  * @author Nathan White
  * @package reason
+ *
  */
 $head_content = "
 <html>
@@ -368,7 +369,7 @@ function check_thor_accessible_over_http()
 		if (is_readable(THOR_INC))
 		{
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(THOR_HTTP_PATH, "/"));
-			symlink(THOR_INC, $symlink_loc);
+			if (is_writable(dirname($symlink_loc))) symlink(THOR_INC, $symlink_loc);
 		}
 		$accessible = check_accessible_over_http(THOR_HTTP_PATH . 'getXML.php', 'tmp_id');
 		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
@@ -376,9 +377,11 @@ function check_thor_accessible_over_http()
 	if ($accessible) return msg('<span class="success">thor'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
-		return msg('<span class="error">thor'.$fixed_str.' is not accessible over http</span>.<p>You may need to set THOR_HTTP_PATH equal to "/thor/", and create an alias at ' . WEB_PATH . 'thor/ to ' . THOR_INC.'. 
-		           					Future revisions to thor should make this more flexible, but for the moment you need the alias in your web root to the 
-		           					thor directory</p>', false);
+		$path = carl_construct_link(array(''), array(''), THOR_HTTP_PATH . 'getXML.xml');
+		return msg('<span class="error">thor'.$fixed_str.' is not accessible over http</span>.<p>The URL attempted was ' . $path . '. It should return
+					a page that contains the string "tmp_id." You may need to set THOR_HTTP_PATH equal to "/thor/", and create an alias at ' . WEB_PATH . 
+					'thor/ to ' . THOR_INC.'. Future revisions to thor should make this more flexible, but for the moment you need the alias in your web 
+					root to the thor directory</p>', false);
 	}
 }
 
@@ -386,7 +389,8 @@ function check_loki_accessible_over_http()
 {
 	global $fix_mode_enabled;
 	$fixed_str = '';
-	$accessible = check_accessible_over_http(LOKI_2_HTTP_PATH . 'loki.js', 'loki');
+	$path = carl_construct_link(array(''), array(''), LOKI_2_HTTP_PATH . 'loki.js');
+	$accessible = check_accessible_over_http($path, 'loki');
 	if (!$accessible && $fix_mode_enabled) // lets try to repair this
 	{
 		// if LOKI_2_INC - strip off the helpers/php part
@@ -394,17 +398,18 @@ function check_loki_accessible_over_http()
 		{
 			$my_loki_path = substr(LOKI_2_INC, 0, $term);
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(LOKI_2_HTTP_PATH, "/"));
-			symlink($my_loki_path, $symlink_loc);
+			if (is_writable(dirname($symlink_loc))) symlink($my_loki_path, $symlink_loc);
 		}
-		$accessible = check_accessible_over_http(LOKI_2_HTTP_PATH . 'loki.js', 'loki');
+		$accessible = check_accessible_over_http($path, 'loki');
 		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
 	}
 	if ($accessible) return msg('<span class="success">loki 2'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
 		return msg('<span class="error">loki 2'.$fixed_str.' is not accessible over http</span>.
-					<p>Check the constant LOKI_2_HTTP_PATH, which currently is set to ' . LOKI_2_HTTP_PATH . ' 
-					and make sure it correctly references the Loki 2 directory.</p>', false);
+					<p>The URL attempted to verify loki was ' . $path . '. Check the constant LOKI_2_HTTP_PATH, 
+					which currently is set to ' . LOKI_2_HTTP_PATH . ' and make sure it correctly references the 
+					Loki 2 directory.</p>', false);
 	}
 }
 
@@ -419,7 +424,7 @@ function check_jquery_accessible_over_http()
 		if (is_readable(JQUERY_INC))
 		{
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(JQUERY_HTTP_PATH, "/"));
-			symlink(JQUERY_INC, $symlink_loc);
+			if (is_writable(dirname($symlink_loc))) symlink(JQUERY_INC, $symlink_loc);
 		}
 		$accessible = check_accessible_over_http(JQUERY_URL, 'John Resig');
 		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
@@ -427,9 +432,10 @@ function check_jquery_accessible_over_http()
 	if ($accessible) return msg('<span class="success">jQuery'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
-		return msg('<span class="error">jQuery'.$fixed_str.' is not accessible over http</span>.<p>Check the constant JQUERY_URL, 
-				   which currently is set to ' . JQUERY_URL . ' and make sure it 
-			       correctly references the location of jquery.</p>', false);
+		return msg('<span class="error">jQuery'.$fixed_str.' is not accessible over http</span>.
+				   <p>The URL attempted was ' . JQUERY_URL . ' Check the URL and make sure it exists and is
+				   web accessible. If there is a problem, please modify the JQUERY_URL constant to reference
+				   the correct path for jquery</p>', false);
 	}
 }
 
@@ -444,7 +450,7 @@ function check_flvplayer_accessible_over_http()
 		if (is_readable(FLVPLAYER_INC))
 		{
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(FLVPLAYER_HTTP_PATH, "/"));
-			symlink(FLVPLAYER_INC, $symlink_loc);
+			if (is_writable(dirname($symlink_loc))) symlink(FLVPLAYER_INC, $symlink_loc);
 		}
 		$accessible = check_accessible_over_http(FLVPLAYER_HTTP_PATH . 'playlist.xml', 'Jeroen Wijering');
 		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
@@ -452,9 +458,11 @@ function check_flvplayer_accessible_over_http()
 	if ($accessible) return msg('<span class="success">flvplayer'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
+		$path = carl_construct_link(array(''), array(''), FLVPLAYER_HTTP_PATH . 'playlist.xml');
 		return msg('<span class="error">flvplayer'.$fixed_str.' is not accessible over http</span>.
-					<p>Check the constant FLVPLAYER_HTTP_PATH, which currently is set to ' . FLVPLAYER_HTTP_PATH . ' 
-					and make sure it correctly references the location of flvplayer.</p>', false);
+					<p>The URL attempted was ' . $path . '. Check the URL and made sure it exists and is
+					web accessible. Also check the constant FLVPLAYER_HTTP_PATH, which currently is set to '
+					. FLVPLAYER_HTTP_PATH . ' and make sure it correctly references the location of flvplayer.</p>', false);
 	}
 }
 
