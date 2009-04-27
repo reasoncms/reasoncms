@@ -336,6 +336,9 @@ function perform_checks()
 	else $check_failed++;
 	
 	echo '<h3>Performing HTTP Access Checks</h3>';
+	echo '<p><em>Note these are rather naive checks that just make sure some known file in the directory is web accessible and contains expected content. 
+			  A pass here does not necessarily indicate the reason package components are configured and fully functional, but it does mean that the
+			  basic paths defined in reason_package are setup correctly, and that reason can use curl to request files over http.</em></p>';
 	
 	if (check_thor_accessible_over_http()) $check_passed++;
 	else $check_failed++;
