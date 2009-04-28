@@ -50,6 +50,7 @@ class updateTypes
 		$this->add_field_to_entity_table('media_work', 'rating', 'tinyint');
 		$this->add_new_entity_table_to_type('quote', 'quote_type');
 		$this->add_field_to_entity_table('quote', 'rating', 'tinyint');
+		$this->add_field_to_entity_table('site', 'domain', 'tinytext');
 		
 		// THIS STUFF IS NOT ACTUALLY IN THE CORE!
 		//$this->add_new_entity_table_to_type('course', 'course_type');
@@ -57,6 +58,8 @@ class updateTypes
 		
 		$this->remove_field_from_entity_table('category', 'old_calendar_equivalent');
 		$this->remove_field_from_entity_table('category', 'campus_pipeline_equivalent');
+		$this->remove_field_from_entity_table('site', 'is_incarnate');
+		
 		$this->move_location_field_to_event();
 		$this->modify_allowable_relationship('office_department_to_category', array('display_name' => 'Is Related To Topic / Category',
 					     		  													'display_name_reverse_direction' => 'Is Related To Office / Department',
@@ -252,11 +255,14 @@ class updateTypes
 					
 					$sqler = new SQLER();
 					// populate the values for the new column
-					foreach ($ids as $id => $location)
+					if (isset($ids))
 					{
-						$sqler->update_one( 'event', array('location' => $location), $id );
+						foreach ($ids as $id => $location)
+						{
+							$sqler->update_one( 'event', array('location' => $location), $id );
+						}
 					}
-						
+					
 					// update the entity table for the field_to_entity_table_relationship at hand
 					$q = 'UPDATE relationship SET entity_b=' . $event_result->id();
 					$q .= ' WHERE entity_a='.$field->id().' AND entity_b='.$location_table->id().' AND type='.$field_to_entity_table_id;
