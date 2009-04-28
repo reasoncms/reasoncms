@@ -14,12 +14,12 @@
 	/**
 	 * Content manager for sites
 	 *
-	 * @todo Write an upgrade script to remove the is_incarnate field from the DB, now that it is not used
+	 * @todo remove the _is_element checks prior to Reason 4 RC 1
 	 */
 	class SiteManager extends ContentManager
 	{
 		var $old_entity_values = array();
-
+		
 		function init_head_items()
 		{
 			$this->head_items->add_javascript(JQUERY_URL, true); // uses jquery - jquery should be at top
@@ -29,7 +29,14 @@
 		function alter_data() // {{{
 		{
 			// don't allow the user to see whether the site is new or not
-			$this->remove_element( 'is_incarnate' );
+			if ($this->_is_element('is_incarnate')) $this->remove_element( 'is_incarnate' );
+			
+			if (!$this->_is_element('domain'))
+			{
+				$link = REASON_HTTP_BASE_PATH . 'scripts/upgrade/4.0b7_to_4.0b8/update_types.php';
+				trigger_error('The site type does not have the domain field. Please run the reason 4.0b7_to_4.0b8 upgrade script "<a href="'.$link.'">update_types</a>."');
+			}
+			else $this->setup_multidomain_support();
 			
 			$old_entity = new entity( $this->get_value('id'), false );
 			$this->old_entity_values = $old_entity->get_values();
@@ -97,13 +104,12 @@
 			$this->add_relationship_element('site_type', id_of('site_type_type'), 
 			relationship_id_of('site_to_site_type'));
 
-			
 			// if this is a new site, set the loki buttons to 'no tables'
 			if( $this->is_new_entity() )
 				$this->set_value( 'loki_default','notables' );
 
 			$this->set_comments( 'loki_default',form_comment('The HTML editor options available when editing content on the site.'));
-			$this->set_order(array('name','unique_name','primary_maintainer','base_url','base_breadcrumbs','description','keywords','department','site_state','loki_default','other_base_urls','use_page_caching','theme','allow_site_to_change_theme','site_type','use_custom_footer','custom_footer',));
+			$this->set_order(array('name','unique_name','primary_maintainer','base_url','domain','base_breadcrumbs','description','keywords','department','site_state','loki_default','other_base_urls','use_page_caching','theme','allow_site_to_change_theme','site_type','use_custom_footer','custom_footer',));
 		} // }}}
 		function alter_editor_options_field()
 		{
@@ -119,6 +125,28 @@
 				$this->change_element_type( 'loki_default','hidden');
 			}
 		}
+		function setup_multidomain_support()
+		{
+			// if we have defined multiple domains, present them as a dropdown.
+			// if a domain is set but not defined in _reason_domain_settings, lets call out this situation
+			if (isset($GLOBALS['_reason_domain_settings']) && 
+				!empty($GLOBALS['_reason_domain_settings']) &&
+				isset($GLOBALS['_default_domain_settings']["HTTP_HOST_NAME"]))
+			{
+				foreach ($GLOBALS['_reason_domain_settings'] as $k => $v)
+				{
+					if ($k != $GLOBALS['_default_domain_settings']["HTTP_HOST_NAME"]) $domains[$k] = $k;
+				}
+			}
+			if (isset($domains)) // if there are option other than the default domain, present a choice
+			{
+				$this->change_element_type('domain', 'select', array('options' => $domains));
+				$this->set_display_name('domain', 'Custom Domain');
+				$this->set_comments('domain', form_comment('You should probably leave this alone for now - custom domains are an experimental feature introduced in Reason 4 Beta 8'));
+			}
+			else $this->remove_element('domain');
+		}
+		
 		function run_error_checks() // {{{
 		{
 		
@@ -165,7 +193,15 @@
 					$this->add_comments( 'base_url', form_comment('<span style="color: #f00"><strong>'.$site->get_value('name').'</strong> already has that base url.  Please use another.</span>' ) );
 				}
 			}
-
+			
+			if ($this->_is_element('domain') && !$this->has_error('domain'))
+			{
+				$cur_value = $this->get_value('domain');
+				if ( !empty($cur_value) && !isset($GLOBALS['_reason_domain_settings'][$cur_value]) )
+				{
+					$this->set_error('domain', form_comment('The current value for domain (' . $cur_value . ') is not defined in domain_settings.php. Please choose a new custom domain.'));
+				}
+			}
 		} // }}}
 		
 		function finish() // {{{
