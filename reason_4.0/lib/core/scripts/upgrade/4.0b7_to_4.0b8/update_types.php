@@ -62,6 +62,8 @@ elseif (DISABLE_REASON_ADMINISTRATIVE_INTERFACE == true)
 <li>Add the field "slug" to the category type.</li>
 <li>Add the field "rating" to the media work type.</li>
 <li>Add the field "rating" to the quote type.</li>
+<li>Add the field "domain" to the site type.</li>
+<li>Remove the field "is_incarnate" from the site type.</li>
 <li>Remove the fields old_calendar_equivalent and campus_pipeline_equivalent from the category type.</li>
 <li>Make office/department to category bidirectional, and add a relationship display name.</li>
 <li>Rename the quote_to_category display name reverse direction to "Is Subject of Quote"</li>
