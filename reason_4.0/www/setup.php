@@ -113,7 +113,8 @@ if (isset($_POST['do_it_pass']) == false)
 	{
 		die_with_message('<p>Please address the identified problems and run this script again.</p>');
 	}
-	
+	connectDB(REASON_DB);
+	if (function_exists("reason_upgrade_db_if_needed")) reason_upgrade_db_if_needed(); // forward compatibility for reason 4 beta 9
 	// we only get here if the above was okay ... we need database / credentials / file access for the following to work
 	reason_include_once ('function_libraries/admin_actions.php');
 	reason_include_once ('classes/entity_selector.php');
