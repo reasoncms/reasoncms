@@ -711,6 +711,14 @@ class MinisiteTemplate
 					// compatibility with old modules.
 					$this->_modules[ $sec ]->prep_args( $args );
 					
+					// Pass a reference to the pages object into the module (so the module doesn't have to use the
+					// deprecated reference to the template)
+					$this->_modules[ $sec ]->set_page_nav( $this->pages );
+					
+					// Pass a reference to the head items object into the module (so the module doesn't have to use the
+					// deprecated reference to the template)
+					$this->_modules[ $sec ]->set_head_items( $this->head_items );
+					
 					// send and check parameters gathered above from the page_types
 					$this->_modules[ $sec ]->handle_params( $params );
 					
