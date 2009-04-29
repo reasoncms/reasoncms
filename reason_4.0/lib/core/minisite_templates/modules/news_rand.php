@@ -22,13 +22,21 @@
 	{
 		var $num_per_page = 1;
 		
+		function init ($args = array())
+		{
+			$note = 'Note: the News Rand module is deprecated and will go away in the near future. Use the publications framework instead. If you want this functionality, set this up as a related publication, set num_per_page to 1, and set related_order to "RAND()".';
+			trigger_error($note);
+			echo '<div class="warning">'.$note.'</div>';
+			parent::init($args);
+		}
 		function list_news_no_issue() // {{{
 		{
+			
 			$v = new rand_news_viewer;
 			$v->request = &$this->request;
 			$v->num_per_page = $this->num_per_page;
-			$v->textonly = $this->parent->textonly;
-			$v->init( $this->parent->site_id , id_of( 'news' ) );
+			$v->textonly = $this->textonly;
+			$v->init( $this->site_id , id_of( 'news' ) );
 			$v->do_display();
 		} // }}}
 	}
