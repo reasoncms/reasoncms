@@ -35,14 +35,12 @@
 			$this->es->description = 'Selecting images for sidebar';
 			$this->es->add_type( id_of('image') );
 			$this->es->set_env( 'site' , $this->site_id );
-			$this->es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_image') );
+			$this->es->add_right_relationship( $this->cur_page->id(), relationship_id_of('minisite_page_to_image') );
 			if ($this->params['rand_flag']) $this->es->set_order('rand()');
 			elseif (!empty($this->params['order_by'])) $this->es->set_order($this->params['order_by']);
 			else
 			{
-				//echo $this->parent->cur_page->id();
-				//die;
-				$this->es->add_rel_sort_field( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_image') );
+				$this->es->add_rel_sort_field( $this->cur_page->id(), relationship_id_of('minisite_page_to_image') );
 				$this->es->set_order('rel_sort_order');
 			}
 			if (!empty($this->params['num_to_display'])) $this->es->set_num($this->params['num_to_display']);
@@ -62,7 +60,7 @@
 			$desc = isset( $this->description ) ? $this->description : true;
 			$text = isset( $this->additional_text ) ? $this->additional_text : "";
 			
-			if ( !empty($this->parent->textonly) )
+			if ( !empty($this->textonly) )
 				echo '<h3>Images</h3>'."\n";
 			
 			foreach( $this->images AS $id => $image )
@@ -71,8 +69,10 @@
 				if( !empty( $this->show_size ) )
 					$show_text .= '<br />('.$image->get_value( 'size' ).' kb)';
 				echo "<div class=\"imageChunk\">";
-				if ($this->params['caption_flag']) show_image( $image, $die, $popup, $desc, $show_text, $this->parent->textonly,false );
-				elseif ($this->params['caption_flag'] == false) show_image( $image, $die, $popup, false, $show_text, $this->parent->textonly,false );
+				if ($this->params['caption_flag'] == false)
+					show_image( $image, $die, $popup, false, $show_text, $this->textonly,false );
+				else
+					show_image( $image, $die, $popup, $desc, $show_text, $this->textonly,false );
 				echo "</div>\n";
 			}
 		} // }}}
