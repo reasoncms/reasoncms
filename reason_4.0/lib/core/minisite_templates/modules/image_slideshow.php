@@ -25,22 +25,25 @@
 		function init( $args = array() )
 		{
 			parent::init( $args );
-			$this->parent->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/prototype.lite.js','type'=>'text/javascript' ) );
-			$this->parent->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/moo.fx.js','type'=>'text/javascript' ) );
-			$this->parent->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/moo.fx.pack.js','type'=>'text/javascript' ) );
-			if($this->params['slideshow_type'] == 'auto')
+			if($hi =& $this->get_head_items())
 			{
-				$this->parent->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/timed.slideshow.js','type'=>'text/javascript' ) );
+				$hi->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/prototype.lite.js','type'=>'text/javascript' ) );
+				$hi->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/moo.fx.js','type'=>'text/javascript' ) );
+				$hi->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/moo.fx.pack.js','type'=>'text/javascript' ) );
+				if($this->params['slideshow_type'] == 'auto')
+				{
+					$hi->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/timed.slideshow.js','type'=>'text/javascript' ) );
+				}
+				elseif($this->params['slideshow_type'] == 'manual')
+				{
+					$hi->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/showcase.slideshow.js','type'=>'text/javascript' ) );
+				}
+				else
+				{
+					trigger_error($this->params['slideshow_type'].' is not a valid slideshow type. valid slideshow types are "auto" and "manual"');
+				}
+				$hi->add_stylesheet(REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/css/jd.slideshow.css');
 			}
-			elseif($this->params['slideshow_type'] == 'manual')
-			{
-				$this->parent->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/showcase.slideshow.js','type'=>'text/javascript' ) );
-			}
-			else
-			{
-				trigger_error($this->params['slideshow_type'].' is not a valid slideshow type. valid slideshow types are "auto" and "manual"');
-			}
-			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/css/jd.slideshow.css');
 		}
 		function run() // {{{
 		{
