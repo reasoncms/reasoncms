@@ -109,6 +109,24 @@
 		var $parent;
 		
 		/**
+		 * A reference to the current minisite navigation object
+		 *
+		 * Access through the function $this->get_page_nav()
+		 *
+		 * @var object
+		 */
+		var $_pages;
+		
+		/**
+		 * A reference to the head items object
+		 *
+		 * Access through the function $this->get_head_items()
+		 *
+		 * @var object
+		 */
+		var $_head_items;
+		
+		/**
 		 * convenience method that the template calls. sets up the variables from the template
 		 * @param array $args
 		 * @todo is there anything necessary about this? Shouldn't classes that 
@@ -179,6 +197,84 @@
 				}
 			}
 		} // }}}
+		/**
+		 * Set a reference to the current minisite navigation object
+		 *
+		 * Many modules need a reference to this object, so any module instantiation should create
+		 * a minisite navigation object and pass it into the module using this method.
+		 *
+		 * @param object $pages
+		 */
+		function set_page_nav(&$pages )
+		{
+			$this->_pages =& $pages;
+		}
+		/**
+		 * Get a reference to the current minisite navigation object
+		 *
+		 * This method will trigger an error if there is no page navigation object set, and will
+		 * return a NULL value. Therefore, it is a good idea for code in a module to wrap
+		 * interaction with the page navigation in a conditional, as below.
+		 *
+		 * Example code using this method:
+		 * <code>
+		 * if($pages =& $this->get_page_nav())
+		 * {
+		 * 	$pages->make_current_page_a_link();
+		 * }
+		 * </code>
+		 *
+		 * @return object | NULL
+		 */
+		function &get_page_nav()
+		{
+			if(!empty($this->_pages))
+			{
+				return $this->_pages;
+			}
+			trigger_error('No page navigation object set');
+			return NULL;
+		}
+		/**
+		 * Set a reference to the current head items object
+		 *
+		 * Many modules need a reference to this object, so any module instantiation should create
+		 * a minisite navigation object and pass it into the module using this method. 
+		 *
+		 * @param object $pages
+		 */
+		function set_head_items( &$head_items )
+		{
+			$this->_head_items =& $head_items;
+		}
+		/**
+		 * Get a reference to the current head items object
+		 *
+		 * Note that this method will trigger an error and return NULL if no head items have been
+		 * set on the module.
+		 *
+		 * It is a good idea for modules to not *assume* that they have been given a head items
+		 * object, and wrap interaction with the head items in a conditional, e.g.:
+		 *
+		 * <code>
+		 * if($head_items =& $this->get_head_items())
+		 * {
+		 * 	$head_items->add_stylesheet('/path/to/stylesheet.css');
+		 * }
+		 * </code>
+		 *
+		 * @return object | NULL
+		 */
+		function &get_head_items()
+		{
+			if(!empty($this->_head_items))
+			{
+				return $this->_head_items;
+			}
+			trigger_error('No head items object set');
+			return NULL;
+		}
+		
 		/**
 		 * hook to run some code and load some objects before get_cleanup_rules() is called
 		 */
