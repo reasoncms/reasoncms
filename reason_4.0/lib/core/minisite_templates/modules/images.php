@@ -64,9 +64,9 @@ class imageModule extends Generic3Module
 		}
 		
 		echo '<li>';
-		if ( empty($this->parent->textonly) )
+		if ( empty($this->textonly) )
 		{
-			echo '<img src="'.WEB_PHOTOSTOCK.$item->id().'.'.$item->get_value('image_type').'?cb='.$item->get_value('last_modified').'" width="'.$item->get_value('width').'" height="'.$item->get_value('height').'" alt="'.htmlentities($item->get_value('description')).'" />';
+			echo '<img src="'.WEB_PHOTOSTOCK.$item->id().'.'.$item->get_value('image_type').'?cb='.$item->get_value('last_modified').'" width="'.$item->get_value('width').'" height="'.$item->get_value('height').'" alt="'.htmlspecialchars(strip_tags($item->get_value('description')), ENT_QUOTES).'" />';
 			if($this->params['show_captions'])
 			{
 				echo '<div class="caption">'.$caption.'</div>'."\n";
@@ -79,7 +79,8 @@ class imageModule extends Generic3Module
 		else
 		{
 			echo '<a href="'.WEB_PHOTOSTOCK.$item->id().'.'.$item->get_value('image_type').'" title="View image">'.$caption.'</a>'."\n";
-		}echo '</li>'."\n";
+		}
+		echo '</li>'."\n";
 	}
 }
 ?>
