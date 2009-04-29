@@ -18,12 +18,26 @@
 	{
 		function has_content()
 		{
-			return $this->parent->pages->top_nav_has_content();
+			if($pages =& $this->get_page_nav())
+			{
+				return $pages->top_nav_has_content();
+			}
+			else
+			{
+				return false;
+			}
 		}
 		function run()
 		{
 			echo '<div id="topNavigation">';
-			$this->parent->pages->show_top_nav();
+			if($pages =& $this->get_page_nav())
+			{
+				$pages->show_top_nav();
+			}
+			else
+			{
+				echo 'Not able to show nav; no page nav object provided to module';
+			}
 			echo '</div>';
 		}
 		function get_documentation()
