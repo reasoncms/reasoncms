@@ -8,6 +8,8 @@
  	 */
 	reason_include_once( 'minisite_templates/modules/generic3.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'imageModule';
+	
+	reason_include_once( 'function_libraries/images.php' );
 
 /**
  * A minisite module that displays the normal-sized images attached to the current page
@@ -66,7 +68,7 @@ class imageModule extends Generic3Module
 		echo '<li>';
 		if ( empty($this->textonly) )
 		{
-			echo '<img src="'.WEB_PHOTOSTOCK.$item->id().'.'.$item->get_value('image_type').'?cb='.$item->get_value('last_modified').'" width="'.$item->get_value('width').'" height="'.$item->get_value('height').'" alt="'.htmlspecialchars(strip_tags($item->get_value('description')), ENT_QUOTES).'" />';
+			echo '<img src="'.reason_get_image_url($item).'?cb='.urlencode($item->get_value('last_modified')).'" width="'.$item->get_value('width').'" height="'.$item->get_value('height').'" alt="'.htmlspecialchars(strip_tags($item->get_value('description')), ENT_QUOTES).'" />';
 			if($this->params['show_captions'])
 			{
 				echo '<div class="caption">'.$caption.'</div>'."\n";
@@ -78,7 +80,7 @@ class imageModule extends Generic3Module
 		}
 		else
 		{
-			echo '<a href="'.WEB_PHOTOSTOCK.$item->id().'.'.$item->get_value('image_type').'" title="View image">'.$caption.'</a>'."\n";
+			echo '<a href="'.reason_get_image_url($item).'" title="View image">'.$caption.'</a>'."\n";
 		}
 		echo '</li>'."\n";
 	}
