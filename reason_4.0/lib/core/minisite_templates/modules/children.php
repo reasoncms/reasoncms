@@ -43,7 +43,7 @@
 
 			// find all the children of this page
 			$this->es->add_type( id_of('minisite_page') );
-			$this->es->add_left_relationship( $this->parent->cur_page->id(), relationship_id_of( 'minisite_page_parent' ) );
+			$this->es->add_left_relationship( $this->cur_page->id(), relationship_id_of( 'minisite_page_parent' ) );
 			if($this->params['show_only_pages_in_nav'])
 			{
 				$this->es->add_relation('nav_display = "Yes"');
@@ -64,9 +64,9 @@
 			$this->es->set_order('sortable.sort_order ASC');
 			$this->offspring = $this->es->run_one(); 
 			
-			if(array_key_exists($this->parent->cur_page->id(), $this->offspring))
+			if(array_key_exists($this->cur_page->id(), $this->offspring))
 			{
-				unset($this->offspring[$this->parent->cur_page->id()]);
+				unset($this->offspring[$this->cur_page->id()]);
 			}
 			
 			if(!empty($this->params['provide_az_links']))
@@ -132,7 +132,7 @@
 				
 				foreach( $this->offspring AS $child )
 				{
-					if ( $this->parent->cur_page->id() != $child->id() )
+					if ( $this->cur_page->id() != $child->id() )
 					{
 						/* If the page has a link name, use that; otherwise, use its name */
 						$page_name = $child->get_value( 'link_name' ) ? $child->get_value( 'link_name' ) : $child->get_value('name');
@@ -144,7 +144,7 @@
 						else
 						{
 							$link = $child->get_value( 'url_fragment' ).'/';
-							if (!empty($this->parent->textonly))
+							if (!empty($this->textonly))
 								$link .= '?textonly=1';
 						}
 							
