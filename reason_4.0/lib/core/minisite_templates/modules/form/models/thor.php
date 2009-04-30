@@ -957,23 +957,30 @@ class ThorFormModel extends DefaultFormModel
 		if ($this->get_magic_string_autofill()) // is magic string autofill enabled?
 		{
 			$editable = ($this->get_magic_string_autofill() == 'editable');
-			$methods =& $this->get_magic_transform_methods($disco);
-			$attribute_values =& $this->get_magic_transform_values($disco);
-			if (!empty($methods) && !empty($attribute_values))
-			{
-				foreach ($methods as $k => $v)
-				{
-					if (!empty($v)) // a method that maps to an empty string will not be run (allows one to turn off magic transform for a field)
-					{
-						if (method_exists($disco, $v)) $transform_array[$k] = $disco->$v();
-						elseif (method_exists($this, $v)) $transform_array[$k] = $this->$v();
-						else trigger_error('The magic transform method ' . $v . ' was not defined in the thor model or view - will not transform the field ' . $k);
-					}
-				}
-			}
+			$transform_array = $this->get_magic_transform_array();
 			if (!empty($transform_array)) $this->apply_magic_transform_to_form($disco, $transform_array, $editable); // zap this!
 			return true;
 		}
+	}
+	
+	function get_magic_transform_array()
+	{
+		$disco =& $this->get_view();
+		$methods =& $this->get_magic_transform_methods($disco);
+		$attribute_values =& $this->get_magic_transform_values($disco);
+		if (!empty($methods) && !empty($attribute_values))
+		{
+			foreach ($methods as $k => $v)
+			{
+				if (!empty($v)) // a method that maps to an empty string will not be run (allows one to turn off magic transform for a field)
+				{
+					if (method_exists($disco, $v)) $transform_array[$k] = $disco->$v();
+					elseif (method_exists($this, $v)) $transform_array[$k] = $this->$v();
+					else trigger_error('The magic transform method ' . $v . ' was not defined in the thor model or view - will not transform the field ' . $k);
+				}
+			}
+		}
+		return $transform_array;
 	}
 	
 	function apply_magic_transform_to_form(&$disco_obj, $transform_array, $editable = true)
