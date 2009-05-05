@@ -29,6 +29,7 @@
 			$this->add_element('allow_front_end_posting', 'checkbox');
 
 			$this->add_required('hold_comments_for_review');
+			$this->add_required('hold_posts_for_review');
 			$this->add_required('posts_per_page');
 			$this->add_required('blog_feed_string');
 			
@@ -66,6 +67,10 @@
 			{
 				$this->set_value('hold_comments_for_review', 'no');
 			}
+			if(!$this->get_value('hold_posts_for_review'))
+			{
+				$this->set_value('hold_posts_for_review', 'no');
+			}
 			if(!$this->get_value('has_issues'))
 			{
 				$this->set_value('has_issues', 'no');
@@ -76,7 +81,7 @@
 			}	
 
 			// hide things that do not appear fully implemented
-			$this->change_element_type( 'hold_posts_for_review', 'hidden' );
+			//$this->change_element_type( 'hold_posts_for_review', 'hidden' );
 			if($this->_is_element('commenting_state'))$this->change_element_type( 'commenting_state', 'hidden' );
 			if($this->_is_element('pagination_state')) $this->change_element_type( 'pagination_state', 'hidden' );
 			if($this->_is_element('enable_comment_notification')) $this->change_element_type( 'enable_comment_notification', 'hidden' );
@@ -104,7 +109,7 @@
 			$this->add_element('posting_comment','comment',array('text'=>'<h4>Posting on the public site</h4>'));
 			$this->add_element('issue_section_comment','comment',array('text'=>'<h4>Issues and sections</h4>'));
 			$this->set_order(array('name', 'publication_type', 'posts_per_page', 
-								   'blog_feed_string', 'description', 'date_format', 'posting_comment', 'allow_front_end_posting', 'notify_upon_post',
+								   'blog_feed_string', 'description', 'date_format', 'posting_comment', 'allow_front_end_posting', 'notify_upon_post', 'hold_posts_for_review',
 								   'comment_comment','allow_comments', 'notify_upon_comment', 'hold_comments_for_review', 'issue_section_comment', 'has_issues','has_sections',));
 		}
 
@@ -117,6 +122,7 @@
 		function alter_comments()
 		{
 			$this->set_comments('hold_comments_for_review',form_comment('Choose "yes" to moderate comments; choose "no" to allow comments to be unmoderated. In either case, you will be able to delete comments after they are made.'));
+			$this->set_comments('hold_posts_for_review',form_comment('Choose "yes" to moderate posts submitted from the front end posting interface; choose "no" if you want to moderate these posts.'));
 			$this->add_comments('blog_feed_string',form_comment('The URL snippet that this blog / publication will use for its RSS feed.'));
 			$this->set_comments('date_format',form_comment('Posts on this publication will use the date format that you select to show the date (and/or) time of publication.'));
 			$this->add_comments('notify_upon_post',form_comment('Who should be notified when a post is added to this publication? Enter usernames or email addresses, separated by commas. Leave this field blank if you don\'t want any notification to be sent.'));
@@ -184,7 +190,7 @@
 			}
 		
 			//check to see if posting or commenting have been disabled
-			if(!$this->get_value('allow_front_end_posting')||!$this->get_value('allow_comments'))
+			if(!$this->get_value('allow_front_end_posting') || !$this->get_value('allow_comments'))
 			{		
 				//if they are, check to make sure that we've borrowed or own the nobody group.
 				if(!(site_borrows_entity( $this->get_value('site_id'), id_of('nobody_group')) || site_owns_entity( $this->get_value('site_id'), id_of('nobody_group'))))
