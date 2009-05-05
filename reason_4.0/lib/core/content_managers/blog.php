@@ -122,7 +122,7 @@
 		function alter_comments()
 		{
 			$this->set_comments('hold_comments_for_review',form_comment('Choose "yes" to moderate comments; choose "no" to allow comments to be unmoderated. In either case, you will be able to delete comments after they are made.'));
-			$this->set_comments('hold_posts_for_review',form_comment('Choose "yes" to moderate posts submitted from the front end posting interface; choose "no" if you want to moderate these posts.'));
+			$this->set_comments('hold_posts_for_review',form_comment('Choose "yes" to moderate posts; choose "no" to allow posts to be unmoderated. In either case, you will be able to delete posts after they are made.'));
 			$this->add_comments('blog_feed_string',form_comment('The URL snippet that this blog / publication will use for its RSS feed.'));
 			$this->set_comments('date_format',form_comment('Posts on this publication will use the date format that you select to show the date (and/or) time of publication.'));
 			$this->add_comments('notify_upon_post',form_comment('Who should be notified when a post is added to this publication? Enter usernames or email addresses, separated by commas. Leave this field blank if you don\'t want any notification to be sent.'));
