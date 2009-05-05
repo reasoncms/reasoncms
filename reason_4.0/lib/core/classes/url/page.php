@@ -21,7 +21,8 @@ include_once(CARL_UTIL_INC . 'basic/url_funcs.php');
  *
  * This class only cares about page id. Even if the site id is available we don't care. This is done because
  * ultimately ownership is going to be directly on the entity and will not require a lookup. By only dealing
- * with page_id we keep the API for the class simple.
+ * with page_id we keep the API for the class simple. It is best to always just use get_url, which makes a
+ * "best guess" about protocol.
  *
  * Usage:
  *
@@ -31,7 +32,10 @@ include_once(CARL_UTIL_INC . 'basic/url_funcs.php');
  * $url = $reason_page_url->get_url();
  * </code>
  *
- * One instance can be used for repeated operations - just change the page_id
+ * One instance can be used for repeated operations - just change the page_id.
+ *
+ * One bit of oddness is how to handle pages that aren't really pages, but just containers for URLs. What we do 
+ * is to just return the value in the url field if it is populated regardless of what get_url method is called.
  *
  * @todo modify page tree stuff to use this class
  * @todo make sure ports are properly handled
@@ -61,7 +65,8 @@ class reasonPageURL extends reasonURL
 	function get_url_https()
 	{
 		$page_id = $this->get_id();
-		$page =& $this->_get_page($page_id);
+		$page =& $this->get_page($page_id);
+		if ($page && $page->get_value('url')) return $page->get_value('url');
 		return ($page) ? 'https://' . $page->get_value('domain') . $page->get_value('relative_url') : NULL;
 	}
 	
@@ -71,19 +76,21 @@ class reasonPageURL extends reasonURL
 	function get_url_http()
 	{
 		$page_id = $this->get_id();
-		$page =& $this->_get_page($page_id);
+		$page =& $this->get_page($page_id);
+		if ($page && $page->get_value('url')) return $page->get_value('url');
 		return ($page) ? 'http://' . $page->get_value('domain') . $page->get_value('relative_url') : NULL;
 	}
 	
 	/**
-	 * Does the page we are linking to live on a domain where HTTPS_AVAILABLE is true?
+	 * @return string absolute url with the most secure protocol supported by the domain
 	 */
 	function get_url_most_secure()
 	{
 		$page_id = $this->get_id();
-		$page =& $this->_get_page($page_id);
+		$page =& $this->get_page($page_id);
 		if ($page)
 		{
+			if ($page->get_value('url')) return $page->get_value('url');
 			if (isset($GLOBALS['_reason_domain_settings'][$page->get_value('domain')]['HTTPS_AVAILABLE'])) $secure = $GLOBALS['_reason_domain_settings'][$page->get_value('domain')]['HTTPS_AVAILABLE'];
 			elseif (isset($GLOBALS['_default_domain_settings']['HTTPS_AVAILABLE'])) $secure = $GLOBALS['_default_domain_settings']['HTTPS_AVAILABLE'];
 			else $secure = ($domain == REASON_HOST) ? HTTPS_AVAILABLE : false;
@@ -98,8 +105,8 @@ class reasonPageURL extends reasonURL
 	function get_relative_url()
 	{
 		$page_id = $this->get_id();
-		$page =& $this->_get_page($page_id);
-		$url = $page->get_value('relative_url');
+		$page =& $this->get_page($page_id);
+		if ($page && $page->get_value('url')) return $page->get_value('url');
 		return ($page) ? $page->get_value('relative_url') : NULL;
 	}
 	
@@ -109,6 +116,7 @@ class reasonPageURL extends reasonURL
 	 * - relative_url
 	 * - domain
 	 *
+	 * @return object augmented page entity
 	 */
 	function _build_page($page_id)
 	{
@@ -118,7 +126,7 @@ class reasonPageURL extends reasonURL
 		$es->add_relation("entity.id = " . $page_id);
 		$page_result = $es->run_one();
 		$page = ($page_result) ? reset($page_result) : false;
-		if ($page) // lets populate our custom values
+		if ($page && !$page->get_value('url')) // lets populate our custom values
 		{
 			if ($parent_id = $this->get_parent_id($page_id))
 			{
@@ -144,12 +152,12 @@ class reasonPageURL extends reasonURL
 				}
 				else
 				{
-					$parent =& $this->_get_page($parent_id);
+					$parent =& $this->get_page($parent_id);
 					if ($parent)
 					{
 						$parent_path = $parent->get_value('relative_url');
-						$page_path = $page->get_value('url_fragment');
-						$page->set_value('relative_url', $parent_path . $page_path . '/');
+						$page_path = $parent_path . $page->get_value('url_fragment') . '/';
+						$page->set_value('relative_url', str_replace("//", "/", $page_path));
 						$page->set_value('domain', $parent->get_value('domain'));
 					}
 					else
@@ -165,6 +173,11 @@ class reasonPageURL extends reasonURL
 				return false;
 			}
 		}
+		elseif ($page && $page->get_value('url'))
+		{
+			$page->set_value('relative_url', '');
+			$page->set_value('domain', '');
+		}
 		else
 		{
 			trigger_error('a page with id ' . $page_id . ' could not be found in the reason database.');
@@ -177,6 +190,7 @@ class reasonPageURL extends reasonURL
 	 * Until Reason 4 Beta 9 when we have actual relationship unique names - we have to use relationship finder functions to get
 	 * the correct owns relationship between the site and minisite_page.
 	 *
+	 * @return int site owns minisite page relationship id
 	 * @todo zap me when relationship_id_of('site_to_minisite_page') works as it ought to
 	 */
 	function _get_site_owns_minisite_page_relationship_id()
@@ -198,6 +212,7 @@ class reasonPageURL extends reasonURL
 	 * We use a DBSelector to construct a super basic query to quickly get the parent.
 	 *
 	 * For efficiency sake, we could eliminate this if the parent was stored on the page entity and not across a relationship
+	 * @return int parent entity id for a minisite page
 	 */
 	function get_parent_id($page_id)
 	{
@@ -237,7 +252,10 @@ class reasonPageURL extends reasonURL
 		return $page_to_parent[$page_id];
 	}
 	
-	function &_get_page($page_id)
+	/**
+	 * @return object page entity
+	 */
+	function &get_page($page_id)
 	{
 		static $pages;
 		if (!isset($pages[$page_id]) || !$this->use_static_cache())
