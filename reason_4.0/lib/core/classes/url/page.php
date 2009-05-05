@@ -132,7 +132,7 @@ class reasonPageURL extends reasonURL
 					$site = ($site_result) ? reset($site_result) : false;
 					if ($site)
 					{
-						$domain = ($site->get_value('domain')) ? $site->get_value('domain') : REASON_HOST;
+						$domain = ($site->has_value('domain') && $site->get_value('domain')) ? $site->get_value('domain') : REASON_HOST;
 						$page->set_value('relative_url', str_replace("//", "/", $site->get_value('base_url')));
 						$page->set_value('domain', $domain);
 					}
