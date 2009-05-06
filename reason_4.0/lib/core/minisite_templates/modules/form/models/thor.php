@@ -65,6 +65,8 @@ class ThorFormModel extends DefaultFormModel
 								 		 'your_home_phone' => 'get_home_phone',
 								 		 'your_work_phone' => 'get_work_phone');
 								 		 
+	var $magic_transform_params;
+	
 	var $submitted_data_hidden_fields_submitter_view = array('id', 'submitted_by', 'submitter_ip', 'date_created', 'date_modified');
 	
 	var $submitted_data_hidden_fields = array('id');
@@ -1274,6 +1276,24 @@ class ThorFormModel extends DefaultFormModel
 	}
 
  	/**
+ 	 * @return array magic_transform_attributes from model (and possibly view)
+ 	 * @todo change paramater to &$disco_obj=NULL when php 4 is no longer supported
+ 	 */
+	function &get_magic_transform_params($disco_obj = NULL)
+	{
+		if (!isset($this->_magic_transform_params)) // if internal build hasn't been done then do it - merge methods from view
+ 		{
+ 			if ($disco_obj != NULL)
+ 			{
+ 				$this->_magic_transform_params = ($disco_obj->get_magic_transform_params()) 
+ 											? $disco_obj->get_magic_transform_params() 
+ 											: $this->magic_transform_params; 			}
+ 			else $this->_magic_transform_params = $this->magic_transform_params;
+ 		}
+ 		return $this->_magic_transform_params;
+	}
+
+ 	/**
  	 * @return array magic_transform_values
  	 * @todo change paramater to &$disco_obj=NULL when php 4 is no longer supported
  	 */	
@@ -1282,7 +1302,8 @@ class ThorFormModel extends DefaultFormModel
 		if (!isset($this->_magic_transform_values)) // build internally if necessary
  		{
  			$attributes =& $this->get_magic_transform_attributes($disco_obj);
- 			$this->_magic_transform_values =& $this->get_directory_info($attributes);
+			$params =& $this->get_magic_transform_params($disco_obj);
+ 			$this->_magic_transform_values =& $this->get_directory_info($attributes, $params);
  		}
  		return $this->_magic_transform_values;
 	}
