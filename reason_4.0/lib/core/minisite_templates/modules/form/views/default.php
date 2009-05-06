@@ -96,6 +96,11 @@ class DefaultForm extends Disco
 	var $magic_transform_attributes; // in most cases do not define this - the model has defaults
 
 	/**
+	 * @var array directory service search parameters needed by magic transform methods - if defined, replaces directory service defaults
+	 */
+	var $magic_transform_params; // in most cases do not define this - the directory service has defaults
+
+	/**
 	 * @var array maps normalized element names (lower case, spaces replaced with _) to magic transform methods - if defined, replaces model defaults
 	 */
 	var $magic_transform_methods; // in most cases do not define this - the model has defaults
@@ -268,6 +273,11 @@ class DefaultForm extends Disco
 		return (isset($this->magic_transform_attributes)) ? $this->magic_transform_attributes : false;
 	}
 	
+	function get_magic_transform_params()
+	{
+		return (isset($this->magic_transform_params)) ? $this->magic_transform_params : false;
+	}
+
 	function get_magic_transform_methods()
 	{
 		return (isset($this->magic_transform_methods)) ? $this->magic_transform_methods : false;
