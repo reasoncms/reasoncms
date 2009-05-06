@@ -285,6 +285,23 @@ class directory_service {
 	}
 	
 	/**
+	* Modify a search parameter on a directory service
+	* @access public
+	* @param string $service Name of the affected service
+	* @param array $params Service parameters (see service definitions for details)
+	*/
+	function set_search_params($service, $params) //{{{ 
+	{
+		if (isset($this->serv_inst[$service])) {
+			foreach ($params as $key => $val)
+			{
+				$this->serv_inst[$service]->set_search_param($key, $val);
+			}
+		} else {
+			trigger_error('Attempted to set parameters on non-existant service '.$serv);
+		}
+	}
+	/**
 	* Determine if a search filter is valid
 	* @access public
 	* @param string $filter Search filter to validate
