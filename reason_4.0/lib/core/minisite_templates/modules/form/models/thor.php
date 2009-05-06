@@ -996,7 +996,7 @@ class ThorFormModel extends DefaultFormModel
 			{
 				$value = (isset($transform_array[$label])) ? $transform_array[$label] : $transform_array[$normalized_label];
 				$disco_obj->set_value($key, $value);
-				if (!$editable) $disco_obj->change_element_type($key, 'solidtext');
+				if (!$editable && ($disco_obj->get_element_property($key, 'type') != "hidden")) $disco_obj->change_element_type($key, 'solidtext');
 			}
 		}
 	}
