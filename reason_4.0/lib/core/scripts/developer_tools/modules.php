@@ -16,6 +16,8 @@
  * not that when limited to "core" modules, the actual page when being tested would use the "local" 
  * version of the module if available and the files are titled the same.
  *
+ * updated 5/6/2009 modified to use reasonPageURL class and filter out more invalid pages (ie those with url.url populated)
+ *
  * @author Nathan White
  * @package reason
  * @subpackage scripts
@@ -28,12 +30,12 @@ include_once( 'reason_header.php' );
 reason_include_once( 'function_libraries/user_functions.php' );
 reason_include_once( 'minisite_templates/page_types.php' );
 reason_include_once( 'classes/entity_selector.php');
+reason_include_once( 'classes/url/page.php' );
 
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'."\n";
 echo '<html><head><title>Reason: Modules</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body>';
 
-//xdebug_start_profiling();
-//$s = get_microtime();
+//if (!carl_is_php5()) xdebug_start_profiling();
 $current_user = reason_require_authentication();
 if (!reason_user_has_privs( get_user_id ( $current_user ), 'view_sensitive_data' ) )
 {
@@ -46,13 +48,17 @@ $modules_by_page_type = array();
 
 $es = new entity_selector();
 $es->add_type(id_of('minisite_page'));
-$es->limit_tables('page_node');
-$es->limit_fields('entity.name, page_node.custom_page, page_node.url_fragment');
+$es->limit_tables(array('page_node', 'url'));
+$es->limit_fields('entity.name, page_node.custom_page, page_node.url_fragment, url.url');
 $es->add_right_relationship_field( 'owns', 'entity' , 'id' , 'owner_id' );
 $es->add_right_relationship_field( 'owns', 'entity', 'name', 'site_name' );
 $es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
-$es->add_relation('entity.name != ""');
+// we add some relations so that we grab only valid pages with names that are not custom url pages
+$es->add_relation('(entity.name != "") AND ((url.url = "") OR (url.url IS NULL))');
 $result = $es->run_one();
+
+$builder = new reasonPageURL();
+$builder->provide_page_entities($result);
 
 $detail_mode = (isset($_REQUEST['detail'])) ? ($_REQUEST['detail'] == 'true') : false;
 $module_limiter = (isset($_REQUEST['limit'])) ? conditional_stripslashes(turn_into_string($_REQUEST['limit'])) : '';
@@ -114,7 +120,8 @@ if ($detail_mode)
 		foreach ($pages as $page_id)
 		{
 			$page =& $result[$page_id];
-			$url = build_URL_from_entity_known_parent($page, $result);
+			$builder->set_id($page_id);
+			$url = $builder->get_url();
 			if ($url)
 			{
 				$site_name[] = $page->get_value('site_name');
@@ -200,7 +207,8 @@ else
 			$page_id = array_pop($tmp_pages);
 			if (isset($result[$page_id]))
 			{
-				$url = build_URL_from_entity_known_parent($result[$page_id], $result);
+				$builder->set_id($page_id);
+				$url = $builder->get_url();
 			}
 		}
 		if (!$detail_mode)
@@ -246,6 +254,7 @@ function show_filter($string_limit = '', $location_limit = '')
 	echo '<p><input type="submit" name="submit" value="Search">'.$reset_button.'</p>';
 }
 
+
 //echo 'time taken - ' . (get_microtime() - $s) . ' seconds';
-//xdebug_dump_function_profile(4);
+//if (!carl_is_php5()) xdebug_dump_function_profile(4);
 ?>
