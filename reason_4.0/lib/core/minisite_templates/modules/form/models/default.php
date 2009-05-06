@@ -281,14 +281,21 @@ class DefaultFormModel extends AbstractFormModel
 	/**
 	 * Gets directory information for the current user_netid
 	 *
+	 * @param array attributes - custom attributes to return from search
+	 * @param array params - key value pairs of custom search params (see dir_service for details)
 	 * @todo handle for cases where attribute set requested is different
 	 */
-	function &get_directory_info($attributes = false)
+	function &get_directory_info($attributes = false, $params = false)
 	{
 		$netid = $this->get_user_netid();
 		if ($netid && !isset($this->_directory_info[$netid]))
 		{
 			$dir = new directory_service();
+			if (is_array($params))
+			{
+				list($service, $pars) = each($params);
+				$dir->set_search_params($service, $params);
+			}
 			if ($attributes) $dir->search_by_attribute('ds_username', $netid, $attributes);
 			else $dir->search_by_attribute('ds_username', $netid);
 			$this->_directory_info[$netid] = $dir->get_first_record();
