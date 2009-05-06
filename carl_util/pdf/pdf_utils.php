@@ -228,14 +228,16 @@ function carl_send_pdf($pdf_data, $filename, $allow_caching = false, $dispositio
 	if($allow_caching)
 	{
 		header('Pragma: public');
-		header('Cache-Control: public');
+		//header('Cache-Control: public');
 	}
 	else
 	{
-		header('Pragma: no-cache');
+		//header('Pragma: no-cache');
+		header('Pragma: public');
 		header('Expires: 0');
-		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		//header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 	}
+	header( 'Cache-Control: max-age=0' );
 	header('Content-type: application/pdf');
 	header('Content-Length: '.strlen($pdf_data));
 	header('Content-Disposition: '.$disposition.'; filename='.$filename);
