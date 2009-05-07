@@ -982,7 +982,7 @@ class ThorFormModel extends DefaultFormModel
 				}
 			}
 		}
-		return $transform_array;
+		return (isset($transform_array)) ? $transform_array : array();
 	}
 	
 	function apply_magic_transform_to_form(&$disco_obj, $transform_array, $editable = true)
