@@ -33,6 +33,7 @@
 		{
 			$this->_no_tidy[] = 'ldap_group_filter';
 			$this->_no_tidy[] = 'ldap_group_member_fields';
+			$this->_no_tidy[] = 'arbitrary_ldap_query';
 		}
 		function alter_data() // {{{
 		{
