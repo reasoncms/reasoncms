@@ -12,8 +12,6 @@
  * Only the pages from the imported documents are merged; interactive elements
  * will be ignored.
  *
- * Note that you need PDFlib with pecl version 2.1 or greater to get the "smart" pdf version feature
- *
  * Example:
  *
  * <code>
@@ -68,45 +66,43 @@ function carl_merge_pdfs($pdffiles, $titles = array(), $metadata = array(), $met
 	 * used
 	 * -----------------------------------------------------------------
 	 */
-	if(function_exists('PDF_pcos_get_number'))
+	foreach($pdffiles as $pdffile)
 	{
-		foreach($pdffiles as $pdffile)
-		{
-			/* Open the input PDF */
-			if(function_exists('PDF_open_pdi_document'))
-				$indoc = PDF_open_pdi_document($p, $pdffile, ''); // post-pecl 2.1
-			else
-				$indoc = PDF_open_pdi($p, $pdffile, '', 0); // pre-pecl 2.1
-			if ($indoc < 1) {
-				trigger_error('Error: '.PDF_get_errmsg($p) );
-				continue;
-			}
-			//echo 'indoc:'.$indoc.' ';
-		
-			/* Retrieve the PDF version of the current document. If it is higher 
-			 * than the maximum version retrieved until now make it to be the
-			 * maximum version.
-			 */ 
-			$pdfver = PDF_pcos_get_number($p, $indoc, 'pdfversion')/10;
-			if ($pdfver > $maxpdfver)
-			{
-				$maxpdfver = $pdfver;
-			}
-			
-			/* Close the input document.
-			 * Depending on the number of PDFs and memory strategy, PDI handles
-			 * to all documents could also be kept open between the first and
-			 * second run (requires more memory, but runs faster). We close all
-			 * PDFs after checking the version number, and reopen them in the
-			 * second loop (requires less memory, but is slower).
-			 */
-			if(function_exists('PDF_close_pdi_document'))
-				PDF_close_pdi_document($p, $indoc); // post-pecl 2.1
-			else
-				PDF_close_pdi( $p, $indoc  ); // pre-pecl 2.1
+		/* Open the input PDF */
+		if(function_exists('PDF_open_pdi_document'))
+			$indoc = PDF_open_pdi_document($p, $pdffile, ''); // post-pecl 2.1
+		else
+			$indoc = PDF_open_pdi($p, $pdffile, '', 0); // pre-pecl 2.1
+		if ($indoc < 1) {
+			trigger_error('Error: '.PDF_get_errmsg($p) );
+			continue;
 		}
+	
+		/* Retrieve the PDF version of the current document. If it is higher 
+		 * than the maximum version retrieved until now make it to be the
+		 * maximum version.
+		 */ 
+		if(function_exists('PDF_pcos_get_number'))
+			$pdfver = PDF_pcos_get_number($p, $indoc, 'pdfversion')/10;
+		else
+			$pdfver = PDF_get_pdi_value($p, 'version', $indoc, 0, 0)/10;
+		if ($pdfver > $maxpdfver)
+		{
+			$maxpdfver = $pdfver;
+		}
+		
+		/* Close the input document.
+		 * Depending on the number of PDFs and memory strategy, PDI handles
+		 * to all documents could also be kept open between the first and
+		 * second run (requires more memory, but runs faster). We close all
+		 * PDFs after checking the version number, and reopen them in the
+		 * second loop (requires less memory, but is slower).
+		 */
+		if(function_exists('PDF_close_pdi_document'))
+			PDF_close_pdi_document($p, $indoc); // post-pecl 2.1
+		else
+			PDF_close_pdi( $p, $indoc  ); // pre-pecl 2.1
 	}
-	//echo '3 ';
 	
 	/* ---------------------------------------------------------------
 	 * Open the output document with the maximum PDF version retrieved
@@ -117,7 +113,6 @@ function carl_merge_pdfs($pdffiles, $titles = array(), $metadata = array(), $met
 	else
 		$optlist = '';
 	
-	//die($optlist);
 		 
 	if (PDF_begin_document($p, '', $optlist) == -1)
 		trigger_error('Error: ' . PDF_get_errmsg($p));
@@ -159,8 +154,7 @@ function carl_merge_pdfs($pdffiles, $titles = array(), $metadata = array(), $met
 		for ($pageno = 1; $pageno <= $endpage; $pageno++)
 		{
 			$page = PDF_open_pdi_page($p, $indoc, $pageno, '');
-	
-			if ($page == -1) {
+			if ($page == 0) {
 					trigger_error('Error: ' . PDF_get_errmsg($p));
 					continue;
 			}
@@ -195,7 +189,6 @@ function carl_merge_pdfs($pdffiles, $titles = array(), $metadata = array(), $met
 		else
 			PDF_close_pdi( $p, $indoc  ); // pre-pecl 2.1
 	}
-	//echo '5 ';
 	
 	PDF_end_document($p, '');
 	
