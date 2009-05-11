@@ -116,7 +116,7 @@ function carl_make_redirect ( $new_request_vars, $base_path = '' )
 	return carl_make_link ($new_request_vars, $base_path, '', false, true);
 }
 
-function carl_construct_redirect( $new_request_vars = array(''), $preserve_request_var = array(''), $base_path = '' )
+function carl_construct_redirect( $new_request_vars = array(''), $preserve_request_vars = array(''), $base_path = '' )
 {
 	if (empty($preserve_request_vars))
 	{
@@ -140,9 +140,28 @@ function carl_construct_redirect( $new_request_vars = array(''), $preserve_reque
 	}
 }
 
-function carl_construct_query_string ( $new_request_vars )
+function carl_construct_query_string ( $new_request_vars, $preserve_request_vars = array('') )
 {
-	return carl_make_link ( $new_request_vars, '', 'qs_only', false, false );
+	if (empty($preserve_request_vars))
+	{
+		return carl_make_link( $new_request_vars, '', 'qs_only', true, false );
+	}
+	else
+	{
+		$url = get_current_url();
+		$preserve_array = '';
+		$parts = parse_url($url);
+		if (!empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
+		foreach ($preserve_request_vars as $key)
+		{
+			if (isset($cur_request_vars[$key]))
+			{
+				$preserve_array[$key] = $cur_request_vars[$key];
+			}
+		}
+		$params = (isset($preserve_array)) ? array_merge( (array)$preserve_array, (array)$new_request_vars ) : $new_request_vars;
+		return carl_make_link( $params, '', 'qs_only', true, false );
+	}
 }
 
 function get_current_url( $scheme = '' )
