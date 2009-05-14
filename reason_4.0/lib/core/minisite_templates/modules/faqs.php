@@ -42,7 +42,16 @@
 		} // }}}
 		function alter_es() // {{{
 		{
-			$this->es->set_order( 'entity.last_modified DESC' );
+			if (!$this->params['limit_to_current_site'])
+			{
+				$alias = $this->es->add_right_relationship_field('owns', 'entity', 'name', 'site_name');
+				$site_order_string = $alias['site_name']['table'] . '.' . $alias['site_name']['field'] . ' ASC';
+				$this->es->set_order( $site_order_string . ', entity.last_modified DESC' );
+			}
+			else
+			{
+				$this->es->set_order( 'entity.last_modified DESC' );
+			}
 			if(!empty($this->params['audiences']))
 			{
 				$aud_ids = array();
@@ -64,7 +73,46 @@
 				}
 			}
 		} // }}}
+	
+		//
+		function do_list()
+		{
+			if (!$this->params['limit_to_current_site'])
+			{
+				$site_indexed_items =& $this->get_items_by_site();
+				echo '<h3 id="site_index">Site Index<h3>';
+				echo '<ul>';
+				foreach( $site_indexed_items as $site => $items )
+				{
+					$anchor[$site] = strtolower(htmlspecialchars(str_replace(" ", "_", $site)));
+					echo '<li><a href="#'.$anchor[$site].'">'.$site.'</a></li>';
+				}
+				echo '</ul>';
+				foreach( $site_indexed_items as $site => $items )
+				{
+					echo '<h4 id="'.$anchor[$site].'">'.$site.' (<a href="#site_index">back to index</a>)</h4> ';
+					echo '<ul>'."\n";
+					foreach( $items AS $item )
+					{
+						$this->show_list_item( $item );
+					}
+					echo '</ul>'."\n";
+				}
+			}
+			else parent::do_list();
+		}
 		
+		function &get_items_by_site()
+		{
+			foreach ($this->items as $item)
+			{
+				$item_id = $item->id();
+				$site_name = $item->get_value('site_name');
+				$site_indexed_items[$site_name][$item_id] =& $this->items[$item_id];
+			}
+			return $site_indexed_items;
+		}
+
 		function show_list_item_name( $item )
 		{
 			echo $item->get_value( 'description' );
