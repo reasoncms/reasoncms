@@ -5,6 +5,13 @@
  */
 
 /**
+ * Include dependencies
+ */
+include_once( 'reason_header.php' );
+reason_include_once( 'classes/entity_selector.php' );
+reason_include_once( 'classes/url/page.php' );
+	
+/**
  * Grab contents of a URL.
  *
  * Includes authentication to get at URLs in protected areas.
@@ -176,6 +183,71 @@ function get_potential_sites_from_path($path)
 		$es->set_order('site.base_url DESC');
 		$potential_sites = $es->run_one();
 		return $potential_sites;
+	}
+}
+
+/**
+ * Utility method to get the absolute url of a reason page
+ * 
+ * Provide an entity when possible for a slight performance boost
+ *
+ * @author Nathan White
+ * @param mixed entity or entity_id corresponding to a page or site
+ * @return mixed string absolute url if successful; else null
+ */
+function reason_get_page_url( $page_entity_or_id )
+{
+	static $builder; // lets use a singleton builder instance
+	if (!isset($builder))
+	{
+		$builder = new reasonPageUrl();
+	}
+	if (is_object($page_entity_or_id))
+	{
+		$builder->set_id($page_entity_or_id->id());
+		$builder->provide_page_entity($page_entity_or_id);
+	}
+	elseif (is_numeric($page_entity_or_id))
+	{
+		$builder->set_id($page_entity_or_id);
+	}
+	else
+	{
+		trigger_error('reason_get_page_url was passed a parameter that is not an object or integer - a url cannot be generated');
+		return null;
+	}
+	return $builder->get_url();
+}
+
+/**
+ * Get the absolute url for the site, given a reason entity or id for a site or page.
+ *
+ * @author Nathan White
+ * @param mixed entity or entity_id corresponding to a page or site
+ * @return mixed string absolute url if successful; else null
+ */
+function reason_get_site_url( $page_or_site_entity_or_id )
+{
+	$entity = is_integer($page_or_site_entity_or_id) ? new entity($page_or_site_entity_or_id) : $page_or_site_entity_or_id;
+	$type = $entity->has_value('type') ? $entity->get_value('type') : false;
+	if ( ($type == id_of('minisite_page')) || ($type == id_of('site')) )
+	{
+		$site = ($type == id_of('minisite_page')) ? $entity->get_owner() : $entity;
+		$domain = ($site->has_value('domain') && $site->get_value('domain')) ? $site->get_value('domain') : REASON_HOST;
+		$base_url = $site->get_value('base_url');
+		if (on_secure_page()) // see if the domain has https available
+		{
+			if (isset($GLOBALS['_reason_domain_settings'][$domain]['HTTPS_AVAILABLE'])) $secure = $GLOBALS['_reason_domain_settings'][$domain]['HTTPS_AVAILABLE'];
+			elseif (isset($GLOBALS['_default_domain_settings']['HTTPS_AVAILABLE'])) $secure = $GLOBALS['_default_domain_settings']['HTTPS_AVAILABLE'];
+			else $secure = ($domain == REASON_HOST) ? HTTPS_AVAILABLE : false;
+		}
+		else $secure = false;
+		return ($secure) ? 'https://'.$domain.$base_url : 'http://'.$domain.$base_url;
+	}
+	else
+	{
+		trigger_error('reason_get_site_url was not passed a valid site or page entity (or entity id) - a site url could not be built.');
+		return null;
 	}
 }
 
