@@ -24,30 +24,27 @@ reason_include_once('minisite_templates/page_types.php');
  */
 class PageCacheZap
 {
-	var $server_name;
 	var $site_id;
 	var $page_id;
 	var $modules;
 	var $rebuild_cache = false;
 	var $report = array();
 	
-	function init($site_id = NULL, $page_id = NULL, $server_name = NULL)
+	function init($site_id = NULL, $page_id = NULL)
 	{
 		if ($site_id) $this->set_site_id($site_id);
 		if ($page_id) $this->set_page_id($page_id);
-		if ($server_name) $this->set_server_name($server_name);
-		if (!$this->get_server_name()) $this->set_server_name(REASON_HOST);
 		
-		if ($this->get_site_id() && $this->get_page_id() && $this->get_server_name())
+		if ($this->get_site_id() && $this->get_page_id())
 		{
 			$this->set_modules_to_process();
 		}
-		else trigger_error('The Page Cache Zap class needs a site_id, page_id, and determinable server name in order to init.');
+		else trigger_error('The Page Cache Zap class needs a site_id and page_id in order to init.');
 	}
 	
 	function run()
 	{
-		if ($this->modules && $this->server_name)
+		if ($this->modules)
 		{
 			$keys = array_keys($this->modules);
 			foreach ($keys as $module_key)
@@ -60,14 +57,9 @@ class PageCacheZap
 	
 	function refresh_cache()
 	{
-		$url = "http://" . $this->server_name . build_URL_from_entity($this->get_page());
+		$url = reason_get_page_url($this->get_page());
 		$result = get_reason_url_contents($url);
 		if ($result) $this->report('Rebuilt the cache by hitting ' . $url);
-	}
-
-	function set_server_name($server_name)
-	{
-		$this->server_name = $server_name;
 	}
 	
 	function set_site_id($site_id)
@@ -88,11 +80,6 @@ class PageCacheZap
 	function get_page_id()
 	{
 		return $this->page_id;
-	}
-	
-	function get_server_name()
-	{
-		return $this->server_name;
 	}
 	
 	function &get_page()
