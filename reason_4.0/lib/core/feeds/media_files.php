@@ -76,7 +76,7 @@ class mediaFileFeed extends defaultFeed
 	{
 		if($p = $this->_get_page())
 		{
-			$this->site_link = 'http://'.REASON_HOST.build_url($p->id());
+			$this->site_link = reason_get_page_url($p);
 		}
 		else
 		{
