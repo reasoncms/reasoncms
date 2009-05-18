@@ -31,7 +31,7 @@
 				if(!empty($pages))
 				{
 					$page = current($pages);
-					$url = build_URL( $page->id() ).'?item_id='.$this->_entity->id();
+					$url = reason_get_page_url( $page->id() ).'?item_id='.$this->_entity->id();
 					$this->show_item_default( 'Public View of Project' , '<iframe src="'.$url.'" width="100%" height="400"></iframe>' );
 					$this->show_item_default( 'Link to Public View of Project' , '<a href="'.$url.'">'.$url.'</a>' );
 				}

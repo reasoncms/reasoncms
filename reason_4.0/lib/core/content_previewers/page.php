@@ -22,7 +22,7 @@
 			{
 				// iFrame Preview
 				reason_include_once( 'function_libraries/URL_History.php' );
-				$url = build_URL( $this->_entity->id() );
+				$url = reason_get_page_url( $this->_entity->id() );
 				if ($url)
 				{
 					//$this->show_item_default( 'Public View of Page' , '<iframe src="'.$url.'" width="100%" height="400"></iframe>' );
