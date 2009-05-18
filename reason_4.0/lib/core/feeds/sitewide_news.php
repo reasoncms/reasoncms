@@ -157,8 +157,7 @@ class sitewideNewsFeed extends defaultFeed
 	
 	function get_item_url($k, &$page)
 	{
-		$base_url = 'http://' . REASON_HOST;
-		return $base_url . build_URL_from_entity($page) . '?story_id=' . $k;
+		return reason_get_page_url($page) . '?story_id=' . $k;
 	}
 	
 	function augment_item(&$item, &$page, &$pub_helper)
