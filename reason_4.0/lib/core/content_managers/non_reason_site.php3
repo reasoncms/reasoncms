@@ -30,7 +30,7 @@
 			//$this->add_required( 'site_type' );
 			$this->add_required( 'url' );
 			
-			$this->change_element_type( 'script_url', 'hidden');
+			if ($this->_is_element('script_url')) $this->change_element_type( 'script_url', 'hidden');
 			$this->change_element_type( 'primary_maintainer', 'hidden');
 			$this->change_element_type( 'base_breadcrumbs', 'hidden');
 			$this->change_element_type( 'base_url', 'hidden');
