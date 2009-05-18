@@ -192,7 +192,10 @@ class updateTypes
         			if ($result) echo '<p>Dropped column ' . $field_name . ' from table ' . $table_name .'</p>';
         		}
         	}
-        	echo '<p>Did not drop column ' . $field_name . ' from the table ' . $table_name . ' because the field is not part of the table</p>';
+        	else
+        	{
+        		echo '<p>Did not drop column ' . $field_name . ' from the table ' . $table_name . ' because the field is not part of the table</p>';
+        	}
         }		
 	}
 	
