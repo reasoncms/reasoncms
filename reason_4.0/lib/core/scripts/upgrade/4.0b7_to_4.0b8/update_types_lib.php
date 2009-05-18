@@ -59,6 +59,7 @@ class updateTypes
 		$this->remove_field_from_entity_table('category', 'old_calendar_equivalent');
 		$this->remove_field_from_entity_table('category', 'campus_pipeline_equivalent');
 		$this->remove_field_from_entity_table('site', 'is_incarnate');
+		$this->remove_field_from_entity_table('site', 'script_url');
 		
 		$this->move_location_field_to_event();
 		$this->modify_allowable_relationship('office_department_to_category', array('display_name' => 'Is Related To Topic / Category',
@@ -135,49 +136,64 @@ class updateTypes
 	
 	function remove_field_from_entity_table($table_name, $field_name)
 	{
-		if (!in_array($field_name, get_fields_by_content_table($table_name)))
+		$es = new entity_selector();
+		$es->add_type(id_of('content_table'));
+		$es->add_relation('entity.name = "'.$table_name.'"');
+		$es->set_num(1);
+		$result = $es->run_one();
+		$table = reset($result);
+		
+		if ($table)
 		{
-			echo '<p>The '.$table_name.' entity table does not have the field '.$field_name.' - the script has probably been run.</p>';
-			return false;
+			$es2 = new entity_selector();
+			$es2->add_type(id_of('field'));
+			$es2->add_left_relationship($table->id(), relationship_id_of('field_to_entity_table'));
+			$es2->add_relation('entity.name = "'.$field_name.'"');
+			$es2->set_num(1);
+			$result2 = $es2->run_one();
+			$field = reset($result2);
 		}
-		else // delete field entity with the name that is related to the table requested
+		else $field = false;
+		
+		if ($field && ($this->mode == 'test'))
 		{
-			$es = new entity_selector();
-			$es->add_type(id_of('content_table'));
-			$es->add_relation('entity.name = "'.$table_name.'"');
-			$es->set_num(1);
-			$result = $es->run_one();
-			$table = reset($result);
 			
-			if ($table)
-			{
-				$es2 = new entity_selector();
-				$es2->add_type(id_of('field'));
-				$es2->add_left_relationship($table->id(), relationship_id_of('field_to_entity_table'));
-				$es2->set_num(1);
-				$result2 = $es2->run_one();
-				$field = reset($result2);
-			}
-			else $field = false;
-			
-			$q = 'ALTER TABLE `' . $table_name . '` DROP `' . $field_name . '`';
-			
-			if ($field && ($this->mode == 'test'))
-			{
-				
-				echo '<p>Would delete field ' . $field_name . ' and remove it from entity table ' . $table_name . ' with query ' . $q . '</p>';
-			}
-			elseif ($field && ($this->mode == 'run'))
-			{
-				reason_expunge_entity($field->id(), $this->reason_id);
-                db_query( $q, 'Unable to drop field from table.' );
-                echo '<p>Deleted field ' . $field_name . ' and removed it from entity table ' . $table_name . '</p>';
-			}
-			elseif (!$field)
-			{
-				echo '<p>Could not delete ' . $field_name . ' and remove it from entity table ' . $table_name . ' - check the names.</p>';
-			}
+			echo '<p>Would delete field ' . $field_name . '</p>';
 		}
+		elseif ($field && ($this->mode == 'run'))
+		{
+			reason_expunge_entity($field->id(), $this->reason_id);
+			echo '<p>Deleted field ' . $field_name . '</p>';
+		}
+		elseif (!$field)
+		{
+			echo '<p>Could not delete ' . $field_name . ' - field name not found in the entity table.</p>';
+		}
+		
+		// lets remove the column from the entity table
+		$q = 'SHOW COLUMNS FROM ' . $table_name;
+        $result = db_query($q, 'could not get fields from table ' . $table_name);
+        if ($result)
+        {
+        	while($table = mysql_fetch_assoc($result))
+        	{
+        		$columns[] = $table['Field'];
+        	}
+        	if (in_array($field_name, $columns))
+        	{
+        		if ($this->mode == 'test')
+        		{
+        			echo '<p>Would drop column ' . $field_name . ' from table ' . $table_name .'</p>';
+        		}
+        		elseif ($this->mode == 'run')
+        		{	
+        			$q = 'ALTER TABLE `' . $table_name . '` DROP `' . $field_name . '`';
+        			$result = db_query($q, 'could not drop column ' . $field_name . ' from table ' . $table_name);
+        			if ($result) echo '<p>Dropped column ' . $field_name . ' from table ' . $table_name .'</p>';
+        		}
+        	}
+        	echo '<p>Did not drop column ' . $field_name . ' from the table ' . $table_name . ' because the field is not part of the table</p>';
+        }		
 	}
 	
 	/**
