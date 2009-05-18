@@ -614,9 +614,7 @@
 		} // }}}
 		function _get_minisite_ugly_url( $page ) // {{{
 		{
-			$script_url = $this->site->get_value( 'script_url' );
-			if ( trim($script_url) == '' )
-				$script_url = REASON_HTTP_BASE_PATH.'displayers/generate_page.php';
+			$script_url = REASON_HTTP_BASE_PATH.'displayers/generate_page.php';
 			return $script_url.'?site_id='.$this->site->id().'&page_id='.$page['id'];
 		} // }}}
 		function _update_feeds()
