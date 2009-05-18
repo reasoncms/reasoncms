@@ -86,7 +86,7 @@
 			$this->change_element_type( 'asset_directory','hidden' );
 
 			// get rid of archaic fields
-			$this->remove_element( 'script_url' );
+			if ($this->_is_element('script_url')) $this->remove_element( 'script_url' );
 
 			// check for valid data
 			$this->add_required( 'base_url' );
