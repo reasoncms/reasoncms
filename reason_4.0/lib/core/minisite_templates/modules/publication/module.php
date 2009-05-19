@@ -2089,7 +2089,7 @@ class PublicationModule extends Generic3Module
 				if (!empty($page_array))
 				{
 					$events_page = current($page_array);
-					$this->events_page_url = build_URL($events_page->id());
+					$this->events_page_url = reason_get_page_url($events_page->id());
 				}
 			}
 			return $this->events_page_url;
