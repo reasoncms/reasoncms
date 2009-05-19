@@ -1998,7 +1998,7 @@ class PublicationModule extends Generic3Module
 			$links = $this->get_basic_links_to_current_publications();
 			if(isset($links[$pub_id]))
 			{
-				return carl_construct_link(array( $this->query_string_frag.'_id' => $item->id()), array('textonly'), $links[$pub_id]);
+				return $links[$pub_id] . carl_construct_query_string( array( $this->query_string_frag.'_id' => $item->id()), array('textonly'));
 			}
 			else
 				return '';
@@ -2021,7 +2021,7 @@ class PublicationModule extends Generic3Module
 					$page_id = (is_array($page_id_field)) ? array_shift($page_id_field) : $page_id_field;
 					if($page_id)
 					{
-						$this->related_publications_links[$pub->id()] = build_URL($page_id);
+						$this->related_publications_links[$pub->id()] = reason_get_page_url($page_id);
 					}
 				}
 			}
