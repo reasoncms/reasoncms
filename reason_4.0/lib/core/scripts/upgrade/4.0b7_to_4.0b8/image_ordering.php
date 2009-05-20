@@ -180,7 +180,7 @@ if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 		if(!$equal)
 		{
 			$num++;
-			echo '<li><a href="'.build_URL( $id ).'" target="_new">'.$id.': '.$page->get_value('name').'</a>';
+			echo '<li><a href="'.reason_get_page_url( $id ).'" target="_new">'.$id.': '.$page->get_value('name').'</a>';
 			if($_POST['go'] == 'run')
 			{
 				// 
