@@ -11,6 +11,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'OtherPublic
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'classes/object_cache.php' );
 reason_include_once( 'function_libraries/util.php' );
+reason_include_once( 'classes/url/page.php' );
 
 /**
  * Displays the news items in a publication with links to the news items in another publication.
@@ -132,6 +133,7 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 	 */
 	function augment_entity(&$news_item_entity, &$valid_page_types)
 	{
+		static $url_builder;
 		$site_id = $news_item_entity->get_value('site_id');
 		$site = new entity($site_id);
 		$site_unique_name = $site->get_value('unique_name');
@@ -155,14 +157,17 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 		if ($result)
 		{
 			$my_url = '';
+			if (!isset($url_builder)) $url_builder = new reasonPageUrl();
 			foreach ($result as $k=>$item)
 			{
-				$page_url = build_URL_from_entity($item);
+				$url_builder->set_id($item->id());
+				$url_builder->provide_page_entity($item);
+				$page_url = $url_builder->get_url_most_secure();
 				if (strlen($page_url) > strlen($my_url)) $my_url = $page_url;
 			}
 			$parameters['story_id'] = $news_item_entity->id();
 			$news_item_entity->set_value('source_name', $site->get_value('name'));
-			$news_item_entity->set_value('source_base_url', $site->get_value('base_url'));
+			$news_item_entity->set_value('source_url', reason_get_site_url($site));
 			$news_item_entity->set_value('page_url', $my_url);
 			$news_item_entity->set_value('parameters', $parameters);
 			return true;
@@ -236,10 +241,17 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 		echo '</div>'."\n";
 	}
 	
+	/**
+	 * @todo remove the has_value check before Reason 4 RC 1 comes out - it is only there to catch possible relative urls in the site source
+	 */
 	function show_news_item_source($source_name, &$news_items)
 	{
 		$item = current($news_items); // each set has the same source_base_url for now
-		$source_url = '//' . REASON_HOST . $item->get_value('source_base_url');
+		$source_url = ($item->has_value('source_base_url')) 
+					  ? '//' . REASON_HOST . $item->get_value('source_base_url') 
+					  : $item->get_value('source_url');
+		
+		if (!on_secure_page()) $source_url = alter_protocol($source_url, 'https', 'http');
 		if ($this->textonly) $source_url .= '?textonly=1';
 		echo '<h4><a href="' . $source_url . '">'.$source_name.'</a></h4>';
 	}
@@ -260,8 +272,11 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 	{
 		$title = $news_item->get_value('release_title');
 		$parameters = $news_item->get_value('parameters');
-		$link = '//' . REASON_HOST . $news_item->get_value('page_url');
+		$link = (strpos($news_item->get_value('page_url'), 'http') === false) // if it is not absoulte build the host for backwards compatibility
+				? '//' . REASON_HOST . $news_item->get_value('page_url')
+				: $news_item->get_value('page_url'); // else it is what it is - an absolute multidomain safe URL
 		
+		if (!on_secure_page()) $link = alter_protocol($link, 'https', 'http'); // attempt to link over http if the home page is requested that way
 		if (!empty($parameters))
 		{
 			if ($this->textonly) $parameters['textonly'] = 1;
