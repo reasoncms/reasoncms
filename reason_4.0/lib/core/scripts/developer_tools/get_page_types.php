@@ -1,10 +1,14 @@
 <?php
 /**
- * This script finds a random page for each of the Reason page types and displays links to those pages.
+ * This script shows info on how many page types you have, how many are in use, whether they are core or local, 
+ * and provides a random link for each page type. It uses the db table admin framework to provide basic filtering.
  *
  * It is useful for testing major changes to Reason to make sure they do not affect obscure
- * page types in adverse ways.
+ * page types in adverse ways, or for finding obsolete or little used page types.
  *
+ * -- Updated 5/20/09 integration with table admin, report on #s, reduced false positives, uses entity selector API
+ *
+ * @author Nathan White 
  * @package reason
  * @subpackage scripts
  */
@@ -13,50 +17,131 @@
  * include dependencies
  */
 include_once( 'reason_header.php' );
-reason_include_once('function_libraries/URL_History.php');
 reason_include_once( 'classes/entity_selector.php' );
-connectDB( REASON_DB );
-
 reason_include_once( 'function_libraries/user_functions.php' );
-force_secure_if_available();
-$current_user = check_authentication();
-if (!reason_user_has_privs( get_user_id ( $current_user ), 'view_sensitive_data' ) )
+reason_include_once( 'minisite_templates/page_types.php' );
+include_once( CARL_UTIL_INC . 'db/table_admin.php' );
+
+if (reason_require_authentication() && !reason_check_privs( 'view_sensitive_data' ))
 {
 	die('<h1>Sorry.</h1><p>You do not have permission to view page types.</p></body></html>');
 }
 
-$used_page_types = array();
-$q = 'SELECT DISTINCT(pn.custom_page), e.id FROM page_node pn, entity e WHERE pn.id = e.id and e.state = "Live" ORDER BY RAND(), pn.custom_page ASC';
-$r = db_query( $q, 'unable to retrieve distinct page types' );
-while( $row = mysql_fetch_assoc( $r ) )
+// grab all the pages along with their page type
+$es = new entity_selector();
+$es->add_type(id_of('minisite_page'));
+$es->limit_tables(array('page_node', 'url'));
+$es->limit_fields('entity.name, page_node.custom_page, page_node.url_fragment, url.url');
+$es->add_right_relationship_field( 'owns', 'entity' , 'id' , 'owner_id' );
+$es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
+// we add some relations so that we grab only valid pages with names that are not custom url pages
+$es->add_relation('(entity.name != "") AND ((url.url = "") OR (url.url IS NULL))');
+$result = $es->run_one();
+shuffle($result); // we lose ids due to the shuffle but we don't care
+
+// lets parse the entities and build our data set
+foreach ($result as $page)
 {
-	if(empty($row[ 'custom_page' ]))
+	$page_type = (trim($page->get_value('custom_page'))) ? trim($page->get_value('custom_page')) : 'default'; // no page type is considered default by reason
+	if (!isset($data_pages[$page_type]['page_type'])) $data_pages[$page_type]['page_type'] = $page_type;
+	if (!isset($data_pages[$page_type]['location']))
 	{
-		$page_type = 'no page type specified (default)';
-	}
-	else
-	{
-		$page_type = trim($row[ 'custom_page' ]);
-	}
-	$used_page_types[ $page_type ]  = $row['id'];
+		if (isset($GLOBALS['_reason_page_types_local'][$page_type])) $data_pages[$page_type]['location'] = 'local';
+		elseif (isset($GLOBALS['_reason_page_types'][$page_type])) $data_pages[$page_type]['location'] = 'core';
+		else $data_pages[$page_type]['location'] = '';
+	}	
+	if (!isset($data_pages[$page_type]['url'])) $data_pages[$page_type]['url'] = '<a href="'.reason_get_page_url($page).'">'.reason_get_page_url($page).'</a>';
+	if (!isset($data_pages[$page_type]['count'])) $data_pages[$page_type]['count'] = 1;
+	else $data_pages[$page_type]['count']++;
 }
-ksort($used_page_types);
+
+// lets add page_types that do not exist
+$page_types_no_pages = array_diff(array_keys($GLOBALS['_reason_page_types']), array_keys($data_pages));
+foreach ($page_types_no_pages as $page_type_no_page)
+{
+	$data_pages[$page_type_no_page]['page_type'] = $page_type_no_page;
+	if (isset($GLOBALS['_reason_page_types_local'][$page_type_no_page])) $data_pages[$page_type_no_page]['location'] = 'local';
+	elseif (isset($GLOBALS['_reason_page_types'][$page_type_no_page])) $data_pages[$page_type_no_page]['location'] = 'core';
+	else $data_pages[$page_type_no_page]['location'] = '';
+	$data_pages[$page_type_no_page]['url'] = '';
+	$data_pages[$page_type_no_page]['count'] = 0;
+}
+
+// lets sort our data set
+$sort_field = (isset($_GET['table_sort_field']) && check_against_array($_GET['table_sort_field'], array('page_type', 'count', 'url', 'location')))
+			  ? $_GET['table_sort_field']
+			  : 'count';
+			  
+$sort_order = (isset($_GET['table_sort_order']) && check_against_array($_GET['table_sort_order'], array('desc', 'asc')))
+			  ? $_GET['table_sort_order']
+			  : 'desc';
+
+// do our manual sorting
+$sort_func = "_sort_".$sort_field."_".$sort_order;
+uasort($data_pages, $sort_func);
+
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n";
 echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
 echo '<head>'."\n";
 echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'."\n";
-echo '<title>Reason Page Types</title>'."\n";;
+echo '<title>Reason Page Types</title>'."\n";
+echo '<link rel="stylesheet" type="text/css" href="'.REASON_HTTP_BASE_PATH.'css/forms/form_data.css" />'."\n";
 echo '</head>'."\n";
 echo '<body>'."\n";
-echo '<h1>Sample pages for each page type in Reason</h1>'."\n";
-echo '<ol>'."\n";
-foreach( $used_page_types AS $type => $page_id )
-{
-	$site_id = get_owner_site_id( $page_id );
-	$url = build_URL( $page_id );
-	echo '<li>'.$type.': '.'<a href="http://'.REASON_HOST.$url.'">'.$url.'</a></li>'."\n";
-}
-echo '</ol>'."\n";
-echo '</body></html>';
+echo '<h2>Page Type Information</h2>';
+echo '<p>This table shows information about each page type defined in the Reason instance. For each page type that is assigned to a live page,
+         a random url is generated. This module can help you verify that page types are working properly, or to identify page types that are
+         not being used and should perhaps be deleted.</p>';
 
+$table_admin = new TableAdmin();
+$table_admin->set_show_actions_first_cell(false);
+$table_admin->set_fields_to_entity_convert(array('count','page_type','location'));
+$table_admin->init_from_array( $data_pages, true );
+$table_admin->run();
+
+echo '</body>';
+echo '</html>';
+
+
+function _sort_count_desc($a, $b)
+{
+	if ( $a['count'] == $b['count'] ) return 0;
+	return ( $a['count'] > $b['count'] ) ? -1 : 1;
+}
+
+function _sort_count_asc($a, $b)
+{
+	if ( $a['count'] == $b['count'] ) return 0;
+	return ( $a['count'] < $b['count'] ) ? -1 : 1;
+}
+
+function _sort_url_desc($a, $b)
+{
+	return (strcasecmp($b['url'], $a['url']));
+}
+
+function _sort_url_asc($a, $b)
+{
+	return (strcasecmp($a['url'], $b['url']));
+}
+
+function _sort_page_type_desc($a, $b)
+{
+	return (strcasecmp($b['page_type'], $a['page_type']));
+}
+
+function _sort_page_type_asc($a, $b)
+{	 	
+	return (strcasecmp($a['page_type'], $b['page_type']));
+}
+
+function _sort_location_desc($a, $b)
+{
+	return (strcasecmp($b['location'], $a['location']));
+}
+
+function _sort_location_asc($a, $b)
+{	 	
+	return (strcasecmp($a['location'], $b['location']));
+}
 ?>
