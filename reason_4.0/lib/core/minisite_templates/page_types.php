@@ -553,6 +553,17 @@
 			'main_post' => 'events_archive',
 			'sidebar' => '',
 		),
+		'events_hybrid' => array(
+			'main_post' => 'events_hybrid',
+			'sidebar' => '',
+		),
+		'events_hybrid_verbose' => array(
+			'main_post' => array(
+				'module'=>'events_hybrid',
+				'list_type'=>'verbose',
+			),
+			'sidebar' => '',
+		),
 		'events_archive_verbose' => array(
 			'main_post' => array(
 				'module'=>'events_archive',
