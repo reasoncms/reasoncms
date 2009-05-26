@@ -23,7 +23,19 @@ class miniEventsModule extends EventsModule
 	var $show_months = false;
 	var $snap_to_nearest_view = false;
 	var $events_page;
-	var $events_page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','event_slot_registration','events_archive','events_archive_verbose');
+	/**
+	 * An array of page types that this module should link to
+	 *
+	 * @var array
+	 * @deprecated -- use @var $_events_modules instead.
+	 */
+	var $events_page_types = array();
+	/**
+	 * An array of module names that this module should link to
+	 *
+	 * @var array
+	 */
+	var $_events_modules = array('events','event_registration','event_signup','event_slot_registration','events_archive','events_hybrid','events_verbose',);
 	var $list_date_format = 'D. M. j';
 	var $show_calendar_grid = false;
 	
@@ -55,17 +67,19 @@ class miniEventsModule extends EventsModule
 		$ps = new entity_selector($this->parent->site_id);
 		$ps->add_type( id_of('minisite_page') );
 		$rels = array();
-		foreach($this->events_page_types as $page_type)
+		$page_types = $this->events_page_types;
+		foreach($this->_events_modules as $module_name)
 		{
-			$rels[] = 'page_node.custom_page = "'.$page_type.'"';
+			$page_types = array_merge($page_types, page_types_that_use_module($module_name));
 		}
-		$ps->add_relation('( '.implode(' OR ', $rels).' )');
+		$page_types = array_map('addslashes',array_unique($page_types));
+		$ps->add_relation('page_node.custom_page IN ("'.implode('","', $page_types).'")');
 		$page_array = $ps->run_one();
 		reset($page_array);
 		$this->events_page = current($page_array);
-
 		if (!empty($this->events_page))
 		{
+			echo $this->events_page->get_value('custom_page');
 			$ret = $this->parent->pages->get_full_url($this->events_page->id());
 		}
 		if(!empty($ret))
