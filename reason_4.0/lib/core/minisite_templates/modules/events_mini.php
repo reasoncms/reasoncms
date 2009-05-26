@@ -79,7 +79,6 @@ class miniEventsModule extends EventsModule
 		$this->events_page = current($page_array);
 		if (!empty($this->events_page))
 		{
-			echo $this->events_page->get_value('custom_page');
 			$ret = $this->parent->pages->get_full_url($this->events_page->id());
 		}
 		if(!empty($ret))
