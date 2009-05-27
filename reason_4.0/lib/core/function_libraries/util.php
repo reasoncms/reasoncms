@@ -1307,17 +1307,31 @@
 	/**
 	 * Checks whether or not something is an entity.
 	 *
-	 * Specifically, this checks if an item is an object and has a method called entity (the entity class constructor). There are better 
-	 * ways to do this in php 5, but to maintain cross compatibility with php 4 and php 5 instanceof and is_a are not reliable.
+	 * Specifically, this checks if an item is an object and has a method called entity (the entity class constructor). In addition, you
+	 * can perform extra checks to see if the entity has a type value (any value or a specific value).
 	 *
-	 * Please note this does not ensure an item is a "valid" entity that exists in the database, but simply that it is of the entity class.
+	 * There are better ways to do this in php 5, but to maintain cross compatibility with php 4 and php 5 instanceof and is_a are not reliable,
+	 * and so we do a method_exists check to see if the constructor "entity" is defined.
+	 *
+	 * Please note this in its default behavior this just checks to see if an item is of class entity - that does not mean it has a type or
+	 * or exists in the database.
 	 * 
 	 * @param object
+	 * @param mixed of_type - if "true" makes sure the entity has some value for type, if given a unique name, makes sure the entity is of that type.
 	 * @return boolean
 	 */
-	function reason_is_entity($obj)
+	function reason_is_entity($obj, $of_type = false)
 	{
+		echo $of_type;
 		$is_entity = (is_object($obj) && method_exists($obj, "entity"));
+		if ($is_entity && ($of_type === true))
+		{
+			return $obj->has_value('type') ? ($obj->get_value('type')) : false;
+		}
+		elseif ($is_entity && !empty($of_type) && reason_unique_name_exists($of_type))
+		{
+			return $obj->has_value('type') ? ($obj->get_value('type') == id_of($of_type)) : false;
+		}
 		return $is_entity;
 	}
 ?>
