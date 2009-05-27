@@ -77,6 +77,7 @@ Reason are not inadvertently indexed by Google or other search engines.</p>
 <li><a href="update_types.php">Update several Reason types with new fields / deletes obsolete fields</a></li>
 <li><a href="database_cleanup.php">Perform database cleanup and maintenance</a></li>
 <li><a href="image_ordering.php">Update the sort_order value for the images module</a></li>
+<li><a href="tame_url_history.php">Cleans cruft like external urls from the URL History table</a></li>
 </ul>
 </body>
 </html>
