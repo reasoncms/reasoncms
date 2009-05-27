@@ -1322,7 +1322,6 @@
 	 */
 	function reason_is_entity($obj, $of_type = false)
 	{
-		echo $of_type;
 		$is_entity = (is_object($obj) && method_exists($obj, "entity"));
 		if ($is_entity && ($of_type === true))
 		{
