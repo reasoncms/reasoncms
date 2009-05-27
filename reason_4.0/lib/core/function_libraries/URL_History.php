@@ -46,14 +46,26 @@ $GLOBALS['build_calls'] = 0;
  */
 function update_URL_history( $page_id, $check_children = true )
 {
-	//connectDB( REASON_DB );
 	$found = false;
+	
+	// lets get out of here if this page_id does not correspond to a valid entity WITHOUT a url value
+	$page = new entity($page_id);
+	if ($page->has_value('url') && $page->get_value('url'))
+	{
+		return false;
+	}
+	else
+	{
+		$builder = new reasonPageURL();
+		$builder->provide_page_entity($page);
+		$builder->set_id($page->id());
+		$URL = $builder->get_relative_url();
+	}
 	
 	$query = 'SELECT * FROM URL_history WHERE page_id ="' . $page_id . '" ORDER BY timestamp DESC LIMIT 1';
 	$results = db_query( $query );
 	
 	$current_time = time();    
-	$URL = build_URL( $page_id );    
 	
 	if( mysql_num_rows( $results ) > 0 )
 	{    
@@ -99,6 +111,7 @@ function update_children( $page_id )
 	// find all the children of this page
 	$es->add_type( id_of('minisite_page') );
 	$es->add_left_relationship( $page_id, relationship_id_of( 'minisite_page_parent' ) );
+	$es->add_relation ('((url.url = "") OR (url.url IS NULL))');
 	$es->set_order('sortable.sort_order ASC');
 	$offspring = $es->run_one();
 	
@@ -137,54 +150,22 @@ function check_URL_history( $request_uri )
 	// pages always have a trailing slash in the db
 	$URL = '/'.trim_slashes($url_arr['path']).'/';
 	$URL = str_replace('//','/',$URL);
-	
-	if( !empty( $url_arr['query'] ) )
-	{
-		$query_string = '?'.$url_arr['query'];
-	}
-	else
-	{
-		$query_string = '';
-	}
-	
+	$query_string = (!empty($url_arr['query'])) ? '?'.$url_arr['query'] : '';
 	$query =  'SELECT * FROM URL_history WHERE url ="' . addslashes ( $URL ) . '" AND deleted="no" ORDER BY timestamp DESC';
 	$results = db_query( $query );
-	
 	$num_results = mysql_num_rows( $results );
 	
-	if( $num_results == 0 )
-	{
-		//do normal 404
-		header( 'http/1.1 404 Not Found' );
-	}
+	if( $num_results == 0 ) header( 'http/1.1 404 Not Found' ); // basic 404
 	else
 	{
 		$row = mysql_fetch_array( $results ); // grab the first result (e.g. most recent)
 		$page_id = $row['page_id'];
-		
-		$es = new entity_selector( );
-		$es->add_type( id_of( 'minisite_page') ); //'3317' id_of( 'Page' )
-		$es->add_relation( 'entity.id = "' . $page_id . '"' );
-		$es->add_relation( 'entity.state = "Live"' );
-		$results = $es->run_one();  
-		$path = build_URL( $page_id );     
-		if( !empty($results) && !empty($path) )
+		if ($URL = reason_get_page_url($page_id))
 		{
-			
-			if( empty( $GLOBAL['SSL_SESSION_ID'] ) )
-			{
-				$path = build_URL( $page_id );
-				$URL = 'http://' . REASON_HOST . $path . $query_string;
-			}
-			else
-			{
-				$URL = 'https://' . REASON_HOST . $path . $query_string;
-			}
-			
-			//header( 'http/1.1 301 Moved Permanently' );
+			$URL = $URL . $query_string;
 			header( 'Location: ' . $URL, true, 301 );
 			die();
-		}   
+		}
 	}
 }
 ?>
