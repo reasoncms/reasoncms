@@ -1303,4 +1303,21 @@
 	{
 		return array('allowable_relationship','entity','page_cache_log','page_cache_log_archive','relationship','URL_history',);
 	}
+	
+	/**
+	 * Checks whether or not something is an entity.
+	 *
+	 * Specifically, this checks if an item is an object and has a method called entity (the entity class constructor). There are better 
+	 * ways to do this in php 5, but to maintain cross compatibility with php 4 and php 5 instanceof and is_a are not reliable.
+	 *
+	 * Please note this does not ensure an item is a "valid" entity that exists in the database, but simply that it is of the entity class.
+	 * 
+	 * @param object
+	 * @return boolean
+	 */
+	function reason_is_entity($obj)
+	{
+		$is_entity = (is_object($obj) && method_exists($obj, "entity"));
+		return $is_entity;
+	}
 ?>
