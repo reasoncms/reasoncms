@@ -24,7 +24,7 @@
 Moving forward, this will be the recommended setup. There are a variety of changes to the setup files distributed with Reason to support this type of setup, and a new 
 setup file called domain_settings.php. Existing installs should continue to function as they did before, but it is recommended (and needed for multi-domain support) that you 
 replace your settings directory with the one distributed in Reason 4 Beta 8. You should also replace your paths.php file with the one disributed in Reason 4 Beta 8.</p>
-<?
+<?php
 // This change will probably be pushed to Reason 4 Beta 9 or Reason 4 RC 1
 //
 //<p>Reason 4 Beta 8 changes the rel_name field for "owns" and "borrows" allowable relationships to be unique. This allows entity selector queries
