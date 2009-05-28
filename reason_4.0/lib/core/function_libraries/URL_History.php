@@ -160,11 +160,16 @@ function check_URL_history( $request_uri )
 	{
 		$row = mysql_fetch_array( $results ); // grab the first result (e.g. most recent)
 		$page_id = $row['page_id'];
-		if ($URL = reason_get_page_url($page_id))
+		$page = new entity($page_id);
+		if (reason_is_entity($page, 'minisite_page') && ($page->get_value('state') == 'Live'))
 		{
-			$URL = $URL . $query_string;
-			header( 'Location: ' . $URL, true, 301 );
+			$redir = reason_get_page_url($page);
+			$redir = $redir . $query_string;
+			header( 'Location: ' . $redir, true, 301 );
 			die();
+		}
+		else // we do nothing and the user gets a 404 since the page_id in URL history is not a live minisite_page
+		{
 		}
 	}
 }
