@@ -45,7 +45,7 @@ and then setup the first site and user for your instance.</p>
 <p>Fix mode will try to resolve easy to fix installation problems. Specifically, it will do the following:
 <ul>
 <li>Create symbolic links for thor, loki, flvplayer, and jquery, from the web tree to the proper locations in reason_package</li>
-<? // <li>Import the reason 4 beta 8 database into mysql IF the current database has no tables</li> ?>
+<?php // <li>Import the reason 4 beta 8 database into mysql IF the current database has no tables</li> ?>
 </ul>
 <hr />
 <?php
