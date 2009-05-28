@@ -535,9 +535,9 @@ class MinisiteTemplate
 		// add the charset information
 		$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ) );
 		
-		if(defined('REASON_DEFAULT_FAVICON_PATH') && REASON_DEFAULT_FAVICON_PATH )
+		if($favicon_path = $this->_get_favicon_path() )
 		{
-			$this->head_items->add_head_item('link',array('rel'=>'shortcut icon','href'=>REASON_DEFAULT_FAVICON_PATH, ) );
+			$this->head_items->add_head_item('link',array('rel'=>'shortcut icon','href'=>$favicon_path, ) );
 		}
 		
 		// array of meta tags to search for in the page entity
@@ -563,6 +563,14 @@ class MinisiteTemplate
 		{
 			$this->head_items->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
 		}
+	}
+	function _get_favicon_path()
+	{
+		if(defined('REASON_DEFAULT_FAVICON_PATH') && REASON_DEFAULT_FAVICON_PATH )
+		{
+			return REASON_DEFAULT_FAVICON_PATH;
+		}
+		return NULL;
 	}
 	function run() // {{{
 	{
