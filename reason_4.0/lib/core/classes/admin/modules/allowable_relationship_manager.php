@@ -163,6 +163,18 @@
 			$this->set_order(array('name','description','relationship_a','relationship_b','connections','directionality','required','is_sortable','display_name','display_name_reverse_direction','description_reverse_direction','custom_associator'));
 			parent::on_every_time_default();
 		}
+		
+		/**
+		 * Sets up sensible values in parallel with create_allowable_relationship method
+		 */
+		function on_every_time_new()
+		{
+			if (!$this->get_value('connections')) $this->set_value('connections', 'many_to_many');
+			if (!$this->get_value('directionality')) $this->set_value('directionality', 'unidirectional');
+			if (!$this->get_value('is_sortable')) $this->set_value('is_sortable', 'no');
+			if (!$this->get_value('required')) $this->set_value('required', 'no');
+			$this->on_every_time_default();
+		}
 
 		function transform_data(&$data_row)
 		{
