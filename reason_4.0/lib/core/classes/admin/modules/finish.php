@@ -30,10 +30,7 @@
 				$this->check_required_relationships();
 				
 			
-			//Run any finish actions specified in the content manager
-			if(!empty($this->disco_item))
-				$this->disco_item->run_custom_finish_actions();
-
+			
 			/* the new finish stuff */
 			// new_entity stuff
 			// figure out if the entity is new and store that so we can change the data in the database but still know what's going on
@@ -52,6 +49,7 @@
 				{
 					$q = 'UPDATE entity set state = "Live" where id = ' . $this->admin_page->id;
 					db_query( $q , 'Error finishing' );
+					if(!empty($this->disco_item)) $this->disco_item->set_value('state', "Live");
 				}
 			}
 			// regardless, set the entity to no longer be "new"
@@ -59,6 +57,7 @@
 			{
 				$q = 'UPDATE entity set new = 0 where id = ' . $this->admin_page->id;
 				db_query( $q , 'Error finishing' );
+				if(!empty($this->disco_item)) $this->disco_item->set_value('new', 0);
 			}
 
 			$original = new entity( $this->admin_page->id,false );
@@ -128,8 +127,11 @@
 				$link = $this->admin_page->make_link( array( 'id' => '',/*'new_entity' => '',*/'site_id' => $this->admin_page->site_id , 'type_id' => $this->admin_page->type_id , 'cur_module' => 'Lister', 'state' => $dest_state ) );
 			}
 
-			// before redirecting, check to see if there are any finish actions associated with this type.
+			// before redirecting, check to see if there are any custom finish actions associated with this type.
 			// the entity_type variable is declared earlier in the check_entity_values method.
+			
+			//Run any custom finish actions specified in the content manager
+			if(!empty($this->disco_item)) $this->disco_item->run_custom_finish_actions( $this->new_entity );
 
 			if( $this->entity_type->get_value( 'finish_actions' ) )
 			{
