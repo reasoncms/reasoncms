@@ -243,9 +243,12 @@ class reasonPageURL extends reasonURL
 					if ($site_id = $this->_get_owner_id($page)) // this populates owner_id on the entity
 					{
 						$site =& $this->_get_site_entity($site_id);
-						$domain = ($site->has_value('domain') && $site->get_value('domain')) ? $site->get_value('domain') : REASON_HOST;
-						$page->set_value('relative_url', str_replace("//", "/", $site->get_value('base_url')));
-						$page->set_value('domain', $domain);
+						if ($site)
+						{
+							$domain = ($site->has_value('domain') && $site->get_value('domain')) ? $site->get_value('domain') : REASON_HOST;
+							$page->set_value('relative_url', str_replace("//", "/", $site->get_value('base_url')));
+							$page->set_value('domain', $domain);
+						}
 					}
 					else
 					{
