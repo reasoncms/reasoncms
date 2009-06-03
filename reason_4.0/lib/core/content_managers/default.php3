@@ -353,7 +353,7 @@
 		 * Overload it if you want something special to happen when the entity is finished.
 		 * @return void
 		 */
-		function run_custom_finish_actions() // {{{
+		function run_custom_finish_actions( $new_entity = false ) // {{{
 		{
 		} // }}}
 		/**
