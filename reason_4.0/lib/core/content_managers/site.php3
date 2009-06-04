@@ -247,7 +247,7 @@
 		
 		function finish()
 		{
-			if (!empty($this->old_entity_values['base_url'])) // skip this if this is brand new and never had a url ... will get done by the custom finish action
+			if ($this->get_value('state') == 'Live') // we only want to do this if this is a live entity ... 
 			{
 				if (($this->old_entity_values['domain'] != $this->get_value('domain')) || ($this->old_entity_values['base_url'] != $this->get_value('base_url')))
 				{
