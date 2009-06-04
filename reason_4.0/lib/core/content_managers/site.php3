@@ -10,6 +10,9 @@
 	
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 	reason_include_once('classes/url_manager.php');
+	reason_include_once( 'function_libraries/root_finder.php');
+	reason_include_once( 'function_libraries/URL_History.php');
+			
 	
 	/**
 	 * Content manager for sites
@@ -204,7 +207,7 @@
 			}
 		} // }}}
 		
-		function finish() // {{{
+		function process() // {{{
 		{
 			$first_time = empty($this->old_entity_values['base_url']);
 
@@ -238,18 +241,20 @@
 			elseif( $this->old_entity_values['base_url'] != $this->get_value('base_url') ) // try to move the directory if it has changed
 			{
 				$this->move_base_dir($this->old_entity_values['base_url'], $this->get_value('base_url'));
-			}
-			
-			//update URL history informaiton. 
-			reason_include_once( 'function_libraries/root_finder.php');
-			reason_include_once( 'function_libraries/URL_History.php');
-			$site_id = $this->get_value( 'id' );
-			$page_id = root_finder( $site_id ); 
-			if(!empty($page_id))
-			{
-				update_URL_history( $page_id );
-			}                      
+			}  
+			parent::process();
 		} // }}}
+		
+		function finish()
+		{
+			if (!empty($this->old_entity_values['base_url'])) // skip this if this is brand new and never had a url ... will get done by the custom finish action
+			{
+				if (($this->old_entity_values['domain'] != $this->get_value('domain')) || ($this->old_entity_values['base_url'] != $this->get_value('base_url')))
+				{
+					$this->update_site_url_history();
+				}
+			}
+		}
 		
 		function create_base_dir()
 		{
@@ -317,6 +322,20 @@
 					chmod($old_path.'/.htaccess', 0664);
 				}
 			}
+		}
+		
+		function run_custom_finish_actions( $new_entity = false )
+		{
+			if ($new_entity) // this is the first finish of a new entity - lets create its URL_history
+			{
+				$this->update_site_url_history();	
+			}
+		}
+		
+		function update_site_url_history()
+		{
+			$page_id = root_finder( $this->get_value('id') );
+			update_URL_history($page_id);
 		}
 	}
 ?>
