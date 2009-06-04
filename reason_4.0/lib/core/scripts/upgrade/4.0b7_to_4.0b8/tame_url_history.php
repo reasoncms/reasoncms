@@ -228,7 +228,7 @@ class tameURLHistory
 	 */
 	function clean_duplicate_values()
 	{
-		$num_to_process = 2000;
+		$num_to_process = 500;
 		$query = 'SELECT `id`, `page_id`, `url`, `timestamp`, deleted, COUNT( * ) 
 				FROM `URL_history` 
 				GROUP BY `page_id`, `url`, `timestamp`
