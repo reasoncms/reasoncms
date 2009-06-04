@@ -4,6 +4,8 @@
  *
  * @package reason
  * @subpackage scripts
+ * 
+ * @todo code alter_url_history_table
  */
 
 /**
@@ -25,12 +27,13 @@ reason_include_once('classes/entity_selector.php');
 reason_include_once('function_libraries/util.php');
 reason_include_once('function_libraries/user_functions.php');
 reason_include_once('function_libraries/admin_actions.php');
-
+reason_include_once('function_libraries/URL_History.php');
 
 class tameURLHistory
 {
 	var $mode;
 	var $reason_user_id;
+	var $processed_ids;
 		
 	function do_updates($mode, $reason_user_id)
 	{
@@ -52,7 +55,22 @@ class tameURLHistory
 		
 		// The updates
 		//$this->remove_external_urls_from_url_history();
-		$this->repair_external_url_problem();
+		if ($this->repair_external_url_problem())
+		{
+			if ($this->clean_invalid_values())
+			{
+				if ($this->clean_duplicate_values())
+				{
+					if ($this->check_and_fix_timestamps())
+					{
+						$this->alter_url_history_table();
+						$finished = true;
+					}
+				}
+			}
+		}
+		if (!isset($finished) && $this->mode=='run') echo '<strong><p>You should run this script again it requires multiple runnings to do all its work.</p></strong>';
+		elseif (isset($finished)) echo '<strong>Congrats - it appears you are done with this script and your URL history has been tamed.</strong>';
 	}
 	
 	/**
@@ -165,8 +183,241 @@ class tameURLHistory
 		else
 		{
 			echo '<p>There are no rows in the URL_history table that resolve to external urls - you may have already run this script</p>';
+			return true;
+		}
+		return false;
+	}
+
+	function clean_invalid_values()
+	{
+		$query =  'SELECT * FROM URL_history WHERE url ="" OR url IS NULL 
+														   OR url LIKE "%' .addslashes("//"). '%"
+														   OR url LIKE "%' .addslashes("http:"). '%" 
+														   OR url LIKE "%' .addslashes("https:"). '%" 
+														   ORDER BY timestamp DESC';
+		$result = db_query($query, 'error in query');
+		while ($row = mysql_fetch_assoc($result))
+		{
+			$needs_deletion[] = $row['id'];
+		}
+		if (isset($needs_deletion))
+		{
+			$deleter_sql = 'DELETE FROM URL_history WHERE id IN ("'.implode('","',$needs_deletion).'")';
+			if ($this->mode == 'test')
+			{
+				echo '<p>Would delete ' . count($needs_deletion) . ' rows with this query:</p>';
+				echo $deleter_sql;
+			}
+			if ($this->mode == 'run')
+			{
+				db_query($deleter_sql, 'Could not delete rows from URL_history');
+				echo '<p>Deleted ' . count($needs_deletion) . ' rows with this query:</p>';
+				echo $deleter_sql;
+			}
+		}
+		else
+		{
+			echo '<p>There are no rows with no url in the URL_history table that need deletion - you may have already run this script</p>';
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * We have many many dups ... this is basically because we've been updating ALL the timestamps
+	 */
+	function clean_duplicate_values()
+	{
+		$num_to_process = 2000;
+		$query = 'SELECT `id`, `page_id`, `url`, `timestamp`, deleted, COUNT( * ) 
+				FROM `URL_history` 
+				GROUP BY `page_id`, `url`, `timestamp`
+				HAVING COUNT( * ) >1
+				ORDER BY `id` DESC';
+					                 
+		$result = db_query($query, 'error in query');
+		$mycount = mysql_num_rows($result);
+		if (mysql_num_rows($result) > 0)
+		{
+			if ($this->mode == 'test') echo '<p>Would delete a chunk (maybe all) of the ' . $mycount . ' urls that have duplicate entries in the table.</p>';
+			elseif ($this->mode == 'run')
+			{
+				echo '<p>There are ' . $mycount . ' urls that appear to have duplicate entries. Please keep running this script until the number is 0. We
+			             only process ' . $num_to_process . ' per run to minimize load on the database</p>';
+			    $counter = 0;
+			    while ($row = mysql_fetch_assoc($result))
+			    {
+			    	$counter++;
+			    	if ($counter == $num_to_process) break;
+			    	else
+			    	{
+			    		// lets delete the copies from the DB except for the id we selected
+			    		$id = $row['id'];
+			    		$page_id = $row['page_id'];
+			    		$timestamp = $row['timestamp'];
+			    		$url = addslashes($row['url']);
+			    		$qry = 'SELECT id FROM URL_history where id != '.$id.' AND page_id = '.$page_id.' AND url = "'.$url.'" AND timestamp = '.$timestamp;
+			    		$daresult = db_query($qry);
+			    		if ($daresult) 
+			    		{
+			    			while ($myrow = mysql_fetch_assoc($daresult))
+			    			{
+			    				$todelete[] = $myrow['id'];
+			    			}
+			    		}
+			    	}
+			    }
+			    if (isset($todelete))
+			    {
+			    	$deleter_sql = 'DELETE FROM URL_history WHERE id IN ("'.implode('","',$todelete).'")';
+			    	db_query($deleter_sql, 'Could not delete rows from URL_history');
+			    	echo '<p>Deleted some of the URLs that contain duplicate entries ... more could remain.</p>';
+			    }
+			    
+			}
+		}
+		else
+		{
+			echo '<p>There are not duplicates in the URL_history table that need deletion - you may have already run this script</p>';
+			return true;
+		}
+		return false;
+		
+	}
+	
+	/**
+	 * finds all the pages that are home page owned by a live site and updates their url history
+	 */
+	function check_and_fix_timestamps()
+	{
+		$num_per_run = 50;
+		$count = 0;
+		$site_es = new entity_selector();
+		$site_es->limit_tables();
+		$site_es->limit_fields();
+		$site_es->add_type(id_of('site'));
+		$sites = $site_es->run_one();
+		if ($sites)
+		{
+			$site_ids = array_keys($sites);
+			
+			$es = new entity_selector();
+			$es->limit_tables();
+			$es->limit_fields();
+			$es->add_type(id_of('minisite_page'));
+			$es->add_right_relationship_field( 'owns','entity','id','site_id', $site_ids );
+			$rel = $es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
+			$es->add_relation('entity.id = ' .$rel['parent_id']['table'].'.'.$rel['parent_id']['field']);
+			$result = $es->run_one();
+			if ($result) // result is home pages of live sites
+			{
+				if ($this->mode == 'test')
+				{
+					$processed_ids = $this->_get_processed_page_ids();
+					foreach ($result as $id=>$page)
+					{
+						if (!in_array($id, $processed_ids))
+						{
+							if ($count == $num_per_run) break;
+							$count++;
+						}
+					}
+					$remain  = (count($result) - count($processed_ids));
+					if ($remain < 0) $remain = 0;
+					echo '<p>I would check history for ' . $count . ' home pages. At this point, there are ' . count($processed_ids) . ' home pages checked, and ' . $remain . ' that remain to be checked.</p>';
+					$this->_output_processed_page_ids($processed_ids);
+					if ($remain == 0) return true;
+				}
+				elseif ($this->mode == 'run')
+				{
+					$processed_ids = $this->_get_processed_page_ids();
+					foreach ($result as $id=>$page)
+					{
+						if (!in_array($id, $processed_ids))
+						{
+							if ($count == $num_per_run) break;
+							update_URL_history($id);
+							$processed_ids[] = $id;
+							$count++;
+						}
+					}
+					$remain  = (count($result) - count($processed_ids));
+					if ($remain < 0) $remain = 0;
+					echo '<p>I checked history for ' . $count . ' home pages this time. In total, there are ' . count($processed_ids) . ' home pages checked, and ' . $remain . ' that remain to be checked.</p>';
+					$this->_output_processed_page_ids($processed_ids);
+					if ($remain == 0) return true;
+				}
+			}
 		}
 	}
+	
+	function _get_processed_page_ids()
+	{
+		if (isset($_POST['processed_pages']))
+		{
+			$page_ids = explode("|", $_POST['processed_pages']);			
+		}
+		return (isset($page_ids) && !empty($page_ids)) ? $page_ids : array();
+	}
+	
+	function _output_processed_page_ids($page_ids)
+	{
+		$string = implode("|", $page_ids);
+		echo '<input type="hidden" name="processed_pages" value="'.$string.'" />';
+	}
+	
+	/**
+	 * In some cases, the current URL for a page might not be the one with the latest timestamp. This is especially possible for cases where we
+	 * have modified an external URL to resolve to a page. This method will run update_URL_history on all our URLs to make sure they there is an
+	 * entry reflecting the current location of pages so we have things normalized moving forward.
+	 *
+	 * @todo this is too slow ... and maybe is not important
+	 * @todo we are not getting through this loop ugh
+	 */
+// 	function check_and_fix_timestamps()
+// 	{
+// 		$query = 'SELECT DISTINCT id, page_id, url FROM `URL_history` ORDER BY URL_history.timestamp DESC, URL_history.id DESC'; 
+// 		$result = db_query($query, 'error in query');
+// 		$mycount = mysql_num_rows($result);
+// 		if (mysql_num_rows($result) > 0)
+// 		{	
+// 			if ($this->mode == 'test')
+// 			{
+// 				echo '<p>Would check and update the URL history as needed for ' . $mycount . ' page ids.</p>';
+// 			}
+// 			elseif ($this->mode == 'run')
+// 			{
+// 				$builder = new reasonPageUrl();
+// 				$myupdated = 0;
+// 				while ($row = mysql_fetch_assoc($result))
+// 				{
+// 					$url = $row['url'];
+// 					$page = new entity($row['page_id']);
+// 					if (reason_is_entity($page, 'minisite_page') && ($page->get_value('state') == 'Live'))
+// 					{
+// 						$builder->provide_page_entity($page);
+// 						$builder->set_id($page->id());
+// 						if ($builder->_get_owner_id($page))
+// 						{
+// 							
+// 							$rel_url = @$builder->get_relative_url();
+// 							if ( ($url != $rel_url) && ($rel_url != NULL) )
+// 							{
+// 								$myupdated++;
+// 								//update_URL_history($row['page_id'], false);
+// 							}
+// 						}
+// 					}
+// 				}
+// 				echo '<p>Checked ' . $mycount. ' and updated the URL history for ' . $myupdated . ' page ids.</p>';
+// 			}
+// 		}
+// 	}
+	
+	function alter_url_history_table()
+	{
+	
+	}	
 }
 
 force_secure_if_available();
@@ -182,16 +433,28 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 }
 
 ?>
-<h2>Reason: Database Cleanup and Maintenance</h2>
-<p>The URL history has been creating entries for "pages" that are actually just links. In some cases, theses bogus entries could 
-be used instead of the correct redirect. The URL_History function library has been updated to no longer create these unneeded entries 
-in the table, and this script clears out the ones that were already created.</p>
+<h2>Reason: Clean up the URL history table and upgrade it for multidomain support</h2>
+<p>The URL history table is not pretty and has been creating corrupt entries for awhile. Most notably, it has has been creating entries 
+for "pages" that are actually just links. In some cases, theses bogus entries could be used instead of the correct redirect. 
+The URL_History function library has been updated to no longer create these unneeded entries in the table. This script clears out 
+the ones that were already created, and for those that are the most recent timestamp for a URL, and thus in active use, creates updated 
+entries that reference the parent page of the external URL, (where the external URLs pages had been resolving to anyway prior to this script).
+The script additionally zaps empty entries and those that are duplicates (down to the timestamp.)</p>
 <p><strong>What will this update do?</strong></p>
 <ul>
-<li>Remove all entries from URL_history where the page_id corresponds to a page entity that has a populated url.url field</li>
+<li>Modify all entries from URL_history where the page_id corresponds to a page entity that has a populated url.url field</li>
+<li>Remove all entries where the url field is empty, has multiple slashes, or contains the string "http:" or "https:" - these are invalid and never used to resolve a URL</li>
+<li>Remove all entries that are duplicates of other rows - preserve only the one with the highest id number</li>
+<li>Check all the page ids in URL history - run update_URL_history on each to make sure the current location is the most recent timestamp</li>
+<li>NOT YET IMPLEMENTED - Removed the "deleted column" - which was inaccurate and is no longer needed because of logic changes in check_URL_history()</li>
+<li>NOT YET IMPLEMENTED - Adds a "domain" column and populates it with the REASON_HOST domain (currently set to <?php echo REASON_HOST; ?>)</li>
 </ul>
+<?php
 
-<form method="post"><input type="submit" name="go" value="test" /><input type="submit" name="go" value="run" /></form>
+// lets construct a link to carry our processed ids if there are any
+
+?>
+<form method="post"><input type="submit" name="go" value="test" /><input type="submit" name="go" value="run" />
 <?php
 
 if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
@@ -206,6 +469,7 @@ if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 }
 
 ?>
+</form>
 <p><a href="index.php">Return to Index</a></p>
 </body>
 </html>
