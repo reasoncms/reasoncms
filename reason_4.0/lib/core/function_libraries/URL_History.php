@@ -11,7 +11,7 @@
  *  involves a few steps. 
  *  
  *  1:  A table in the Reason Database will be kept to track the following
- *      bits of information: a fully resolved URL, page_ID, unique_ID and a 
+ *      bits of information: a fully resolved URL, page_ID, unique_ID and a
  *      timestamp. 
  *      
  *  2:  When a page is finished, the above table will be queried. If there
@@ -32,71 +32,73 @@
  * Include dependencies
  */
 include_once( 'reason_header.php' );
+include_once( CARL_UTIL_INC . 'db/sqler.php' );
 reason_include_once( 'classes/entity_selector.php' );
 reason_include_once( 'function_libraries/relationship_finder.php' );
 reason_include_once( 'function_libraries/url_utils.php' );
 
-$GLOBALS['dig_calls'] = 0;
-$GLOBALS['build_calls'] = 0;
-
 /**
+ * Get the most recent entry for the page_id - if its URL does not match the URL of the page now, create a new entry and update
+ * the timestamp of the last location (if it exists).
+ *
+ * @todo consider whether or not there is any utility in checking children if we are not creating an entry for the current
+ *       location the page
+ *
  * @param integer $page_id
  * @param boolean $check_children
- * @return boolean true on success
+ * @return boolean
  */
 function update_URL_history( $page_id, $check_children = true )
 {
-	$found = false;
-	
-	// lets get out of here if this page_id does not correspond to a valid entity WITHOUT a url value
 	$page = new entity($page_id);
-	if ($page->has_value('url') && $page->get_value('url'))
-	{
-		return false;
-	}
-	else
+	if (reason_is_entity($page, 'minisite_page') && !$page->get_value('url'))
 	{
 		$builder = new reasonPageURL();
-		$builder->provide_page_entity($page);
+		$builder->disable_static_cache(); // force a refresh for this instance of the builder in case the URL just changed
 		$builder->set_id($page->id());
-		$URL = $builder->get_relative_url();
-	}
-	
-	$query = 'SELECT * FROM URL_history WHERE page_id ="' . $page_id . '" ORDER BY timestamp DESC LIMIT 1';
-	$results = db_query( $query );
-	
-	$current_time = time();    
-	
-	if( mysql_num_rows( $results ) > 0 )
-	{    
-		while( $row = mysql_fetch_array( $results ) )
+		$url = $builder->get_relative_url();
+		
+		if (!empty($url)) // we only bother if we can get a url
 		{
-			if( in_array( $URL, $row ) )
+			// lets grab the most recent entry for this page_id
+		
+			$d = new DBselector();
+			$d->add_table( 'history', 'URL_history' );
+			$d->add_field( 'history', 'id', 'id' );
+			$d->add_field( 'history', 'url', 'url' );
+			$d->add_field( 'history', 'page_id', 'page_id' );
+			$d->add_field( 'history', 'timestamp', 'timestamp' );
+			$d->add_relation( 'history.page_id = ' . $page_id );
+			$d->set_num(1);
+			$d->set_order( 'history.timestamp DESC, history.id DESC' ); // get highest id of highest timestamp
+			$result = db_query( $d->get_query() , 'Error getting most recent URL_history entry for page '.$page_id );
+			if( $row = mysql_fetch_assoc($result))
 			{
-				$found = true;
-				$query = 'UPDATE URL_history SET timestamp = "' . $current_time . '" WHERE page_id = "' . $page_id . '"';
-				db_query( $query );
+				$create_new = ($row['url'] == $url) ? false : true;
+				$update_old = $create_new; // if we create new in this case we want to update the old as well
 			}
+			else
+			{
+				$create_new = true;
+				$update_old = false;
+			}
+			if ($create_new) // lets use the SQLer to do this
+			{
+				$sqler = new SQLER();
+				$cur_time = time();
+				$values = array('url' => $url, 'page_id' => $page_id, 'timestamp' => $cur_time);
+				$sqler->insert('URL_history', $values);
+				if ($update_old) // the old row is the one we already grabbed - lets update its timestamp to be just before what we just created
+				{
+					$sqler->update_one('URL_history', array('timestamp' => ($cur_time - 1)), $row['id']);
+				}
+			}
+			if( $check_children ) update_children( $page_id );
+			return true;
 		}
 	}
-
-	if( !$found )
-	{
-		$query = 'INSERT INTO URL_history SET ' . 
-						'url = "' . $URL . '", ' .
-						'page_id = "' . $page_id . '", ' .
-						'timestamp = "' . $current_time . '"';
-		
-		$results = mysql_query( $query );
-		
-		if( empty( $results ) )
-			die( '<br />:: ' . $query . '::' . $results );
-	}
-	
-	if( $check_children )
-		update_children( $page_id );
-		
-	return true;
+	trigger_error('update_URL_history called on entity id ' . $page_id . ' which does not appear to be a valid minisite_page entity with a url (is it an external URL?)');
+	return false;
 }
 
 /**
@@ -117,8 +119,7 @@ function update_children( $page_id )
 	
 	foreach( $offspring as $child )
 	{
-		if( $child->id() != $page_id )
-			update_URL_history( $child->id() );
+		if( $child->id() != $page_id ) update_URL_history( $child->id() );
 	}
 }
 
@@ -141,6 +142,8 @@ function update_children( $page_id )
  *
  * @param string $request_uri a URL relative to the host root (e.g. /foo/bar/)
  * @return NULL
+ *
+ * @todo modify to make multidomain safe
  */
 function check_URL_history( $request_uri )
 {
@@ -151,26 +154,25 @@ function check_URL_history( $request_uri )
 	$URL = '/'.trim_slashes($url_arr['path']).'/';
 	$URL = str_replace('//','/',$URL);
 	$query_string = (!empty($url_arr['query'])) ? '?'.$url_arr['query'] : '';
-	$query =  'SELECT * FROM URL_history WHERE url ="' . addslashes ( $URL ) . '" AND deleted="no" ORDER BY timestamp DESC';
+	$query =  'SELECT * FROM URL_history WHERE url ="' . addslashes ( $URL ) . '" ORDER BY timestamp DESC';
 	$results = db_query( $query );
 	$num_results = mysql_num_rows( $results );
 	
-	if( $num_results == 0 ) header( 'http/1.1 404 Not Found' ); // basic 404
-	else
+	if (mysql_num_rows($results) > 0)
 	{
-		$row = mysql_fetch_array( $results ); // grab the first result (e.g. most recent)
-		$page_id = $row['page_id'];
-		$page = new entity($page_id);
-		if (reason_is_entity($page, 'minisite_page') && ($page->get_value('state') == 'Live'))
+		while ($row = mysql_fetch_array( $results )) // grab the first result (e.g. most recent)
 		{
-			$redir = reason_get_page_url($page);
-			$redir = $redir . $query_string;
-			header( 'Location: ' . $redir, true, 301 );
-			die();
-		}
-		else // we do nothing and the user gets a 404 since the page_id in URL history is not a live minisite_page
-		{
+			$page_id = $row['page_id'];
+			$page = new entity($page_id);
+			if (reason_is_entity($page, 'minisite_page') && ($page->get_value('state') == 'Live') && ($redir = reason_get_page_url($page)))
+			{
+				header( 'Location: ' . $redir . $query_string, true, 301 );
+				exit();
+			}
 		}
 	}
+	
+	// if we have gotten this far and not found a URL lets send a 404
+	header( 'http/1.1 404 Not Found' ); // basic 404
 }
 ?>
