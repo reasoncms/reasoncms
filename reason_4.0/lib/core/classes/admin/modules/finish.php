@@ -57,7 +57,7 @@
 			{
 				$q = 'UPDATE entity set new = 0 where id = ' . $this->admin_page->id;
 				db_query( $q , 'Error finishing' );
-				if(!empty($this->disco_item)) $this->disco_item->set_value('new', 0);
+				if(!empty($this->disco_item)) $this->disco_item->set_value('new_entity', 0);
 			}
 
 			$original = new entity( $this->admin_page->id,false );
