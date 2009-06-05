@@ -61,10 +61,13 @@ class tameURLHistory
 			{
 				if ($this->clean_duplicate_values())
 				{
-					if ($this->check_and_fix_timestamps())
+					if ($this->clean_extra_contiguous_values())
 					{
-						$this->alter_url_history_table();
-						$finished = true;
+						//if ($this->check_and_fix_timestamps())
+						//{
+							$this->alter_url_history_table();
+							$finished = true;
+						//}
 					}
 				}
 			}
@@ -110,7 +113,7 @@ class tameURLHistory
 			$unique_urls = array_unique($urls);
 			foreach ($unique_urls as $url) // check URL history table to see if any of these URLs currently resolve to external URL pages
 			{
-				$query =  'SELECT * FROM URL_history WHERE url ="' . addslashes ( $url ) . '" AND deleted="no" ORDER BY timestamp DESC limit 1';
+				$query =  'SELECT * FROM URL_history WHERE url ="' . addslashes ( $url ) . '" ORDER BY timestamp DESC limit 1';
 				$result = db_query($query, 'error in query');
 				$latest_row = ($result) ? mysql_fetch_assoc($result) : false;
 				if ($latest_row)
@@ -191,6 +194,7 @@ class tameURLHistory
 	function clean_invalid_values()
 	{
 		$query =  'SELECT * FROM URL_history WHERE url ="" OR url IS NULL 
+														   OR url = "/" 
 														   OR url LIKE "%' .addslashes("//"). '%"
 														   OR url LIKE "%' .addslashes("http:"). '%" 
 														   OR url LIKE "%' .addslashes("https:"). '%" 
@@ -285,71 +289,122 @@ class tameURLHistory
 		
 	}
 	
-	/**
-	 * finds all the pages that are home page owned by a live site and updates their url history
-	 */
-	function check_and_fix_timestamps()
+	function clean_extra_contiguous_values()
 	{
-		$num_per_run = 50;
-		$count = 0;
-		$site_es = new entity_selector();
-		$site_es->limit_tables();
-		$site_es->limit_fields();
-		$site_es->add_type(id_of('site'));
-		$sites = $site_es->run_one();
-		if ($sites)
+		$dbs = new DBSelector();
+		$dbs->add_table('URL_history', 'URL_history');
+		$dbs->add_field('URL_history', 'page_id');
+		$dbs->add_field('URL_history', 'id');
+		$dbs->add_field('URL_history', 'timestamp');
+		$dbs->add_field('URL_history', 'url');
+		$dbs->set_order('page_id DESC, timestamp DESC');
+		$rows = $dbs->run();
+		$page_id = NULL;
+		$url = NULL;
+		if ($rows) foreach ($rows as $row)
 		{
-			$site_ids = array_keys($sites);
-			
-			$es = new entity_selector();
-			$es->limit_tables();
-			$es->limit_fields();
-			$es->add_type(id_of('minisite_page'));
-			$es->add_right_relationship_field( 'owns','entity','id','site_id', $site_ids );
-			$rel = $es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
-			$es->add_relation('entity.id = ' .$rel['parent_id']['table'].'.'.$rel['parent_id']['field']);
-			$result = $es->run_one();
-			if ($result) // result is home pages of live sites
+			// if the page id is the same as last page id and url is the same as last url - this one gets queued for deletion
+			$last_page_id = $page_id;
+			$page_id = $row['page_id'];
+			$last_url = $url;
+			$url = $row['url'];
+			if ( ($last_page_id == $page_id) && ($last_url == $url) )
 			{
-				if ($this->mode == 'test')
-				{
-					$processed_ids = $this->_get_processed_page_ids();
-					foreach ($result as $id=>$page)
-					{
-						if (!in_array($id, $processed_ids))
-						{
-							if ($count == $num_per_run) break;
-							$count++;
-						}
-					}
-					$remain  = (count($result) - count($processed_ids));
-					if ($remain < 0) $remain = 0;
-					echo '<p>I would check history for ' . $count . ' home pages. At this point, there are ' . count($processed_ids) . ' home pages checked, and ' . $remain . ' that remain to be checked.</p>';
-					$this->_output_processed_page_ids($processed_ids);
-					if ($remain == 0) return true;
-				}
-				elseif ($this->mode == 'run')
-				{
-					$processed_ids = $this->_get_processed_page_ids();
-					foreach ($result as $id=>$page)
-					{
-						if (!in_array($id, $processed_ids))
-						{
-							if ($count == $num_per_run) break;
-							update_URL_history($id);
-							$processed_ids[] = $id;
-							$count++;
-						}
-					}
-					$remain  = (count($result) - count($processed_ids));
-					if ($remain < 0) $remain = 0;
-					echo '<p>I checked history for ' . $count . ' home pages this time. In total, there are ' . count($processed_ids) . ' home pages checked, and ' . $remain . ' that remain to be checked.</p>';
-					$this->_output_processed_page_ids($processed_ids);
-					if ($remain == 0) return true;
-				}
+				$needs_deletion[] = $row['id'];
 			}
 		}
+		if (isset($needs_deletion))
+		{
+			$deleter_sql = 'DELETE FROM URL_history WHERE id IN ("'.implode('","',$needs_deletion).'")';
+			if ($this->mode == 'test')
+			{
+				echo '<p>Would delete ' . count($needs_deletion) . ' unneeded contiguous rows with this query:</p>';
+				echo $deleter_sql;
+			}
+			if ($this->mode == 'run')
+			{
+				db_query($deleter_sql, 'Could not delete rows from URL_history');
+				echo '<p>Deleted ' . count($needs_deletion) . ' unneeded contiguous rows with this query:</p>';
+				echo $deleter_sql;
+			}
+		}
+		else
+		{
+			echo '<p>There are no unneeded contiguous rows in the URL_history table that need deletion - you may have already run this script</p>';
+			return true;
+		}
+		
 	}
+	
+	/**
+	 * finds all the pages that are home page owned by a live site and updates their url history
+	 *
+	 * not currently in use this is really slow and not really needed. it fixes a few edge cases
+	 * where the current page is not the latest entry in the url history. But ... the url history
+	 * will still resolve correctly even if the URL is not listed as the most current.
+	 */
+	// function check_and_fix_timestamps()
+// 	{
+// 		$num_per_run = 50;
+// 		$count = 0;
+// 		$site_es = new entity_selector();
+// 		$site_es->limit_tables();
+// 		$site_es->limit_fields();
+// 		$site_es->add_type(id_of('site'));
+// 		$sites = $site_es->run_one();
+// 		if ($sites)
+// 		{
+// 			$site_ids = array_keys($sites);
+// 			
+// 			$es = new entity_selector();
+// 			$es->limit_tables();
+// 			$es->limit_fields();
+// 			$es->add_type(id_of('minisite_page'));
+// 			$es->add_right_relationship_field( 'owns','entity','id','site_id', $site_ids );
+// 			$rel = $es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
+// 			$es->add_relation('entity.id = ' .$rel['parent_id']['table'].'.'.$rel['parent_id']['field']);
+// 			$result = $es->run_one();
+// 			if ($result) // result is home pages of live sites
+// 			{
+// 				if ($this->mode == 'test')
+// 				{
+// 					$processed_ids = $this->_get_processed_page_ids();
+// 					foreach ($result as $id=>$page)
+// 					{
+// 						if (!in_array($id, $processed_ids))
+// 						{
+// 							if ($count == $num_per_run) break;
+// 							$count++;
+// 						}
+// 					}
+// 					$remain  = (count($result) - count($processed_ids));
+// 					if ($remain < 0) $remain = 0;
+// 					echo '<p>I would check history for ' . $count . ' home pages. At this point, there are ' . count($processed_ids) . ' home pages checked, and ' . $remain . ' that remain to be checked.</p>';
+// 					$this->_output_processed_page_ids($processed_ids);
+// 					if ($remain == 0) return true;
+// 				}
+// 				elseif ($this->mode == 'run')
+// 				{
+// 					$processed_ids = $this->_get_processed_page_ids();
+// 					foreach ($result as $id=>$page)
+// 					{
+// 						if (!in_array($id, $processed_ids))
+// 						{
+// 							if ($count == $num_per_run) break;
+// 							update_URL_history($id);
+// 							$processed_ids[] = $id;
+// 							$count++;
+// 						}
+// 					}
+// 					$remain  = (count($result) - count($processed_ids));
+// 					if ($remain < 0) $remain = 0;
+// 					echo '<p>I checked history for ' . $count . ' home pages this time. In total, there are ' . count($processed_ids) . ' home pages checked, and ' . $remain . ' that remain to be checked.</p>';
+// 					$this->_output_processed_page_ids($processed_ids);
+// 					if ($remain == 0) return true;
+// 				}
+// 			}
+// 		}
+// 	}
 	
 	function _get_processed_page_ids()
 	{
@@ -365,54 +420,6 @@ class tameURLHistory
 		$string = implode("|", $page_ids);
 		echo '<input type="hidden" name="processed_pages" value="'.$string.'" />';
 	}
-	
-	/**
-	 * In some cases, the current URL for a page might not be the one with the latest timestamp. This is especially possible for cases where we
-	 * have modified an external URL to resolve to a page. This method will run update_URL_history on all our URLs to make sure they there is an
-	 * entry reflecting the current location of pages so we have things normalized moving forward.
-	 *
-	 * @todo this is too slow ... and maybe is not important
-	 * @todo we are not getting through this loop ugh
-	 */
-// 	function check_and_fix_timestamps()
-// 	{
-// 		$query = 'SELECT DISTINCT id, page_id, url FROM `URL_history` ORDER BY URL_history.timestamp DESC, URL_history.id DESC'; 
-// 		$result = db_query($query, 'error in query');
-// 		$mycount = mysql_num_rows($result);
-// 		if (mysql_num_rows($result) > 0)
-// 		{	
-// 			if ($this->mode == 'test')
-// 			{
-// 				echo '<p>Would check and update the URL history as needed for ' . $mycount . ' page ids.</p>';
-// 			}
-// 			elseif ($this->mode == 'run')
-// 			{
-// 				$builder = new reasonPageUrl();
-// 				$myupdated = 0;
-// 				while ($row = mysql_fetch_assoc($result))
-// 				{
-// 					$url = $row['url'];
-// 					$page = new entity($row['page_id']);
-// 					if (reason_is_entity($page, 'minisite_page') && ($page->get_value('state') == 'Live'))
-// 					{
-// 						$builder->provide_page_entity($page);
-// 						$builder->set_id($page->id());
-// 						if ($builder->_get_owner_id($page))
-// 						{
-// 							
-// 							$rel_url = @$builder->get_relative_url();
-// 							if ( ($url != $rel_url) && ($rel_url != NULL) )
-// 							{
-// 								$myupdated++;
-// 								//update_URL_history($row['page_id'], false);
-// 							}
-// 						}
-// 					}
-// 				}
-// 				echo '<p>Checked ' . $mycount. ' and updated the URL history for ' . $myupdated . ' page ids.</p>';
-// 			}
-// 		}
-// 	}
 	
 	function alter_url_history_table()
 	{
@@ -443,9 +450,10 @@ The script additionally zaps empty entries and those that are duplicates (down t
 <p><strong>What will this update do?</strong></p>
 <ul>
 <li>Modify all entries from URL_history where the page_id corresponds to a page entity that has a populated url.url field</li>
-<li>Remove all entries where the url field is empty, has multiple slashes, or contains the string "http:" or "https:" - these are invalid and never used to resolve a URL</li>
+<li>Remove all entries where the url field is empty or "/", has multiple slashes, or contains the string "http:" or "https:" - these URLS cannot be used to resolve a URL</li>
 <li>Remove all entries that are duplicates of other rows - preserve only the one with the highest id number</li>
-<li>Check all the page ids in URL history - run update_URL_history on each to make sure the current location is the most recent timestamp</li>
+<li>Remove subsequent entries with the same url and page_id - not needed and should never have been created</li>
+<?php //<li>Check all the page ids in URL history - run update_URL_history on each to make sure the current location is the most recent timestamp</li> ?>
 <li>NOT YET IMPLEMENTED - Removed the "deleted column" - which was inaccurate and is no longer needed because of logic changes in check_URL_history()</li>
 <li>NOT YET IMPLEMENTED - Adds a "domain" column and populates it with the REASON_HOST domain (currently set to <?php echo REASON_HOST; ?>)</li>
 </ul>
