@@ -63,11 +63,14 @@ class tameURLHistory
 				{
 					if ($this->clean_extra_contiguous_values())
 					{
+						if ($this->clean_expunged())
+						{
 						//if ($this->check_and_fix_timestamps())
 						//{
 							$this->alter_url_history_table();
 							$finished = true;
 						//}
+						}
 					}
 				}
 			}
@@ -233,7 +236,7 @@ class tameURLHistory
 	function clean_duplicate_values()
 	{
 		$num_to_process = 500;
-		$query = 'SELECT `id`, `page_id`, `url`, `timestamp`, deleted, COUNT( * ) 
+		$query = 'SELECT `id`, `page_id`, `url`, `timestamp`, `deleted`, COUNT( * ) 
 				FROM `URL_history` 
 				GROUP BY `page_id`, `url`, `timestamp`
 				HAVING COUNT( * ) >1
@@ -333,7 +336,51 @@ class tameURLHistory
 			echo '<p>There are no unneeded contiguous rows in the URL_history table that need deletion - you may have already run this script</p>';
 			return true;
 		}
+	}
+	
+	function clean_expunged()
+	{
+		$es = new entity_selector();
+		$es->add_type(id_of('minisite_page'));
+		$es->limit_tables();
+		$es->limit_fields();
+		$result = $es->run_one('', 'All');
+		$page_ids = array_keys($result);
 		
+		$dbs = new DBSelector();
+		$dbs->add_table('URL_history', 'URL_history');
+		$dbs->add_field('URL_history', 'id');
+		$dbs->add_field('URL_history', 'page_id');
+		$dbs->add_field('URL_history', 'timestamp');
+		$dbs->add_field('URL_history', 'url');
+		$dbs->add_relation('URL_history.page_id NOT IN ("'.implode('","',$page_ids).'")');
+		$rows = $dbs->run();
+		
+		foreach ($rows as $row)
+		{
+			$e = new entity($row['page_id']);
+			if (!reason_is_entity($e, 'minisite_page')) $needs_deletion[] = $row['id'];
+		}
+		if (isset($needs_deletion))
+		{
+			$deleter_sql = 'DELETE FROM URL_history WHERE id IN ("'.implode('","',$needs_deletion).'")';
+			if ($this->mode == 'test')
+			{
+				echo '<p>Would delete ' . count($needs_deletion) . ' rows that reference expunged entities with this query:</p>';
+				echo $deleter_sql;
+			}
+			if ($this->mode == 'run')
+			{
+				db_query($deleter_sql, 'Could not delete rows from URL_history');
+				echo '<p>Deleted ' . count($needs_deletion) . ' rows that reference expunged entities with this query:</p>';
+				echo $deleter_sql;
+			}
+		}
+		else
+		{
+			echo '<p>There are no rows that reference expunged entities in the URL_history table - you may have already run this script</p>';
+			return true;
+		}
 	}
 	
 	/**
@@ -453,6 +500,7 @@ The script additionally zaps empty entries and those that are duplicates (down t
 <li>Remove all entries where the url field is empty or "/", has multiple slashes, or contains the string "http:" or "https:" - these URLS cannot be used to resolve a URL</li>
 <li>Remove all entries that are duplicates of other rows - preserve only the one with the highest id number</li>
 <li>Remove subsequent entries with the same url and page_id - not needed and should never have been created</li>
+<li>Remove rows with page_ids that reference reason pages that do not exist (expunged pages)</li>
 <?php //<li>Check all the page ids in URL history - run update_URL_history on each to make sure the current location is the most recent timestamp</li> ?>
 <li>NOT YET IMPLEMENTED - Removed the "deleted column" - which was inaccurate and is no longer needed because of logic changes in check_URL_history()</li>
 <li>NOT YET IMPLEMENTED - Adds a "domain" column and populates it with the REASON_HOST domain (currently set to <?php echo REASON_HOST; ?>)</li>
