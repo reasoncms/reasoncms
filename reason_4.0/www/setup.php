@@ -142,7 +142,23 @@ if (isset($_POST['do_it_pass']) == false)
 		if (!file_exists($htaccess)) die_with_message('<p>The login site .htaccess rules were not written to ' . $htaccess.'. Checks paths and permissions.</p>');
 		else echo '<p>The .htaccess access rules were written to ' . $htaccess .'.</p>'; 
 	}
-	else echo '<p>The login site appears to be setup</p>';
+	else // lets verify that the .htaccess file is correct and update it if not.
+	{
+		reason_include_once ('classes/url_manager.php');
+		ob_start();
+		$um = new url_manager( $login_site_id, true );
+		$um->update_rewrites();
+		$result = ob_get_contents();
+		ob_end_clean();
+		if (strpos($result, "Updates complete.") !== FALSE)
+		{
+			echo '<p><strong>Updated login site rewrite rules.</strong></p>';
+		}
+		else
+		{
+			echo '<p>The login site appears to be setup.</p>';
+		}
+	}
 }
 
 if (admin_user_exists() == false)
