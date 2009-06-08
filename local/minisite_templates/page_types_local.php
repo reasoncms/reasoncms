@@ -167,6 +167,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'banner_xtra' => '',
 		'navigation' => 'admissions_navigation',	
 		'sub_nav_2' => 'admissions_sub_nav_2',
+        	'main_post' => 'admissions_main_post',	
+		'pre_sidebar' => 'admissions_pre_sidebar',
+		'sidebar' => 'admissions_sidebar',
+		'post_sidebar' => 'admissions_post_sidebar',
 	),
         //-----------------------Steve's EventWithForm Page Begin----------------
         'event_with_form' => array(

@@ -78,21 +78,21 @@ class AdmissionsTemplate extends MinisiteTemplate
         {
                 if($this->has_content( 'pre_sidebar' ))
                 {
-                        echo '<div id="preSidebar">'."\n";
+                        //echo '<div id="preSidebar">'."\n";
                         $this->run_section( 'pre_sidebar' );
-                        echo '</div>'."\n";
+                        //echo '</div>'."\n";
                 }
 		if ($this->has_content( 'sidebar' ))
                 {
-                        echo '<div id="sidebar">'."\n";
+                        //echo '<div id="sidebar">'."\n";
                         $this->run_section( 'sidebar' );
-                        echo '</div>'."\n";
+                        //echo '</div>'."\n";
                 }
                 if($this->has_content( 'post_sidebar' ))
                 {
-                        echo '<div id="postSidebar">'."\n";
+                        //echo '<div id="postSidebar">'."\n";
                         $this->run_section( 'post_sidebar' );
-                        echo '</div>'."\n";
+                        //echo '</div>'."\n";
                 }
 		if ($this->cur_page->get_value( 'custom_page' ) != 'luther_pageLC')
 		{
@@ -113,7 +113,7 @@ class AdmissionsTemplate extends MinisiteTemplate
 	function show_main_content_sections()
         {
 
-                $this->run_section( 'imagetop' );
+                //$this->run_section( 'imagetop' );
 		$this->luther_breadcrumbs();
 
                 if ($this->has_content( 'main_head' ))
@@ -127,13 +127,6 @@ class AdmissionsTemplate extends MinisiteTemplate
 		{
 			echo '<div class="column span-33 append-1">'."\n";
 		}
-		// in two column layout place images just before the main content
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_pageLC' && $this->has_content( 'sidebar' ))
-                {
-               //         echo '<div id="sidebar">'."\n";
-                        $this->run_section( 'sidebar' );
-                //        echo '</div>'."\n";
-                }
 
                 if ($this->has_content( 'main' ))
                 {
