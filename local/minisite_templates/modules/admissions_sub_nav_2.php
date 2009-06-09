@@ -17,6 +17,11 @@
 		{
                         if ($this->cur_page->get_value( 'custom_page' ) == 'admissions_home')
 			{
+                        	echo '<ul class="nav picnav clearfix">'."\n";
+                        	echo '<li id="music"><a href="http://music.luther.edu">Music</a></li>'."\n";
+                        	echo '<li id="sports"><a href="http://sports.luther.edu">Sports</a></li>'."\n";
+                        	echo '</ul>'."\n";
+
                         	echo '<div class="block keydates events">'."\n";
                         	echo '<h2>Key Admission Dates</h2>'."\n";
                         	echo '<dl>'."\n";

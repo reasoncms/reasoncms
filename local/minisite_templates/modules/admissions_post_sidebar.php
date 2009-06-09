@@ -35,6 +35,8 @@
                         	echo '</p>'."\n";
                         	echo '</div>'."\n";
                         	echo '</div class="content clearfix">'."\n";
+                        	echo '</div>'."\n";
+                        	echo '</div>'."\n";
 			}
 
 			return;
