@@ -49,6 +49,14 @@ include_once( DISCO_INC . 'disco_db.php'); // Requires Disco_DB
  * $table_admin->run();
  * </code>
  *
+ * Sample sourced from a data array - note that sorting is done by mysql so will not work properly without some implementation work
+ *
+ * <code>
+ * $table_admin = new TableAdmin();
+ * $table_admin->init_from_array( array(0 => array('color' => 'red', 'shape' => 'square') ) );
+ * $table_admin->run();
+ * </code>
+ *
  * @todo add pagination
  * @todo add more export formats
  * @todo implement archiving
@@ -379,7 +387,7 @@ class TableAdmin
 		if (!empty($va)) $this->cleanup_rules['table_action'] = array('function' => 'check_against_array', 'extra_args' => $va);
 		if (!empty($vra)) $this->cleanup_rules['table_row_action'] = array('function' => 'check_against_array', 'extra_args' => $vra);
 		
-		$this->request = carl_clean_vars($_REQUEST, $this->cleanup_rules);
+		$this->request = carl_clean_vars(conditional_stripslashes($_REQUEST), $this->cleanup_rules);
 		if (isset($this->request['table_action'])) 		 $this->set_action($this->request['table_action']);
 		if (isset($this->request['table_row_action'])) 	 $this->set_row_action($this->request['table_row_action']);
 		if (isset($this->request['table_action_id'])) 	 $this->set_action_id($this->request['table_action_id']);	
@@ -1432,12 +1440,18 @@ class TableAdmin
 	{
 	}
 	
-	function parse_filters_for_url(&$url_array)
+	/**
+	 * Augment an array of key / value pairs intended for $_GET / $_POST to have a set of table filters that will be understood by the class
+	 *  
+	 * @param array url_array array to add table filters to
+	 * @param boolean htmlspecialchars default false - should filter values run through htmlspecialchars ... should be false if the resulting array is going through carl_make_link
+	 */
+	function parse_filters_for_url(&$url_array, $htmlspecialchars = false)
 	{
 		$filters =& $this->get_filters();
 		foreach ($filters as $k => $v)
 		{
-			$url_array['table_filters['.$k.']'] = htmlspecialchars($v['value'],ENT_QUOTES,'UTF-8');
+			$url_array['table_filters['.$k.']'] = ($htmlspecialchars) ? htmlspecialchars($v['value'],ENT_QUOTES,'UTF-8') : $v['value'];
 		}
 	}
 	
