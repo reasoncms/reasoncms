@@ -228,7 +228,7 @@ class ThorAdmin extends TableAdmin
 			foreach ($elements as $element_name)
 			{
 				$elm = $this->get_element($element_name);
-				if ($elm->type == 'hidden') $this->change_element_type($element_name, 'text');
+				if ($elm->type == 'hidden' && (substr($elm->name, 0, 10) != 'transform[')) $this->change_element_type($element_name, 'text');
 			}
 		}
 	}
