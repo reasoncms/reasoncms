@@ -1584,7 +1584,7 @@
 			foreach( $this->options as $key => $val )
 			{
 				$id = 'checkbox_'.$this->name.'_'.$i;
-				$str .= '<tr><td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$i.']" value="'.$key.'"';
+				$str .= '<tr><td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$i.']" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
 				if ( is_array($this->value) ) {
 					if ( array_search($key, $this->value) !== false )
 						$str .= ' checked="checked"';
