@@ -894,6 +894,11 @@ class ThorCore
 		if ( $required ) $d->add_required($id);
 	}
 	
+	/**
+	 * @todo the transform element that is added should be "cloaked" and not hidden - but we need to make sure
+	 *       this change does not break other code. when this is fixed, thor/thor_admin.php should also be updated
+	 *       so that on_every_time_edit does not perform a silly substring search for transform
+	 */
 	function _transform_checkboxgroup($element, &$d) {
 		$id = $element->tagAttrs['id'];
 		$display_name = (!empty($element->tagAttrs['label'])) ? $element->tagAttrs['label'] : '';

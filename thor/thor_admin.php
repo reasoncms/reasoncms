@@ -216,6 +216,9 @@ class ThorAdmin extends TableAdmin
 		$this->show_form = false;
 	}
 	
+	/**
+	 * @todo remove the substring search for transform after thor_core is updated so that checkbox transform fields are cloaked
+	 */
 	function on_every_time_edit()
 	{
 		$id = $this->get_action_id();
