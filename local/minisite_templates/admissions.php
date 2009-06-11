@@ -35,11 +35,12 @@ class AdmissionsTemplate extends MinisiteTemplate
                 //echo '<h1><a href="'.$this->site_info->get_value('base_url').'"><span>'.$this->site_info->get_value('name').'</span></a></h1>'."\n";
                 $this->show_banner_xtra();
                 //echo '</div>'."\n";
+		admissions_banner();
 		if($this->has_content('post_banner'))
                 {
-                 //       echo '<div id="postBanner">'."\n";
+                //       echo '<div id="postBanner">'."\n";
                         $this->run_section('post_banner');
-                  //      echo '</div>'."\n";
+                //      echo '</div>'."\n";
                 }
         }
 
@@ -191,7 +192,6 @@ class AdmissionsTemplate extends MinisiteTemplate
                 }
                 return false;
         }
-
 
 
 }
