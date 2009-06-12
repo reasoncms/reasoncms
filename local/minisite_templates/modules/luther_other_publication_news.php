@@ -118,8 +118,8 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 	{
 		$title = $news_item->get_value('release_title');
 		$parameters = $news_item->get_value('parameters');
-		$link = '//' . REASON_HOST . $news_item->get_value('page_url');
-		
+		//$link = '//' . REASON_HOST . $news_item->get_value('page_url');
+		$link = . $news_item->get_value('page_url');
 		if (!empty($parameters))
 		{
 			if ($this->textonly) $parameters['textonly'] = 1;
