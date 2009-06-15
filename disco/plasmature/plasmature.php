@@ -3266,6 +3266,14 @@
 						$this->set_error( $name.':  Dates after the year '.$this->year_max.' cannot be processed.'  );
 				}
 			}
+			
+			if (($this->month AND !is_numeric($this->month)) || 
+				($this->day AND !is_numeric($this->day)) || 
+					($this->year AND !is_numeric($this->year)) )
+			{
+				$this->set_error(  $name.':  Date values need to be numbers.' );				
+			}
+			
 			if( $this->month AND $this->day AND $this->year )
 			{
 				if( !checkdate( $this->month, $this->day, $this->year ) )
