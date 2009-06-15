@@ -92,8 +92,13 @@ class ds_ldap_luther extends ds_ldap {
 						case 'ds_fullname':
 							$value = $record['displayname'];
 							break;
+						/*
 						case 'ds_phone':
 							$value = $record['telephonenumber'];
+							break;
+						*/
+						case 'ds_phone':
+							$value = $record['officephone'];
 							break;
 						case 'ds_affiliation':
 							// Create a list of affiliations; the primary affiliation is the first entry
