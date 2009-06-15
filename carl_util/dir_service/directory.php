@@ -455,8 +455,8 @@ class directory_service {
 				foreach($results[$set] as $object)
 				{
 					// key on either username or groupname
-					if (isset($object['ds_username'])) $key = $object['ds_username'][0];
-					elseif (isset($object['ds_groupname'])) $key = $object['ds_groupname'][0];
+					if (isset($object['ds_username'][0])) $key = $object['ds_username'][0];
+					elseif (isset($object['ds_groupname'][0])) $key = $object['ds_groupname'][0];
 					$merged[$key] = $object;
 				}
 			}
