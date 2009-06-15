@@ -96,7 +96,7 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 		$item = current($news_items); // each set has the same source_base_url for now
 		$source_url = $item->get_value('source_base_url');
 		//$source_url = '//' . REASON_HOST . $item->get_value('source_base_url');
-		$source_url =  $item->get_value('source_base_url');
+		//$source_url =  $item->get_value('source_base_url');
 		if ($this->textonly) $source_url .= '?textonly=1';
 		echo '<h4><a href="' . $source_url . '">'.$source_name.'</a></h4>';
 	}
