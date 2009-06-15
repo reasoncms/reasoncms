@@ -54,7 +54,8 @@ class ds_ldap_luther extends ds_ldap {
 		'ds_firstname' => array('givenname'),
 		'ds_lastname' => array('sn'),
 		'ds_fullname' => array('displayname'),
-		'ds_phone' => array('telephonenumber'),
+		/*  'ds_phone' => array('telephonenumber'),  */
+		'ds_phone' => array('officephone'),
 		'ds_affiliation' => array('edupersonaffiliation','edupersonprimaryaffiliation'),
 		'ds_groupname' => array('cn'),
 		'ds_member' => array('memberuid'),
