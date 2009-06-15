@@ -100,6 +100,7 @@
 			}
 
 			$this->secure_session_flag = (HTTPS_AVAILABLE) ? 1 : 0;
+			$this->secure_if_available = (!HTTPS_AVAILABLE || on_secure_page());
 		} // }}}
 		function has_started() // {{{
 		{
@@ -107,7 +108,6 @@
 		} // }}}
 		function start() // {{{
 		{
-			$this->secure_if_available = (!HTTPS_AVAILABLE || on_secure_page());
 			if( !$this->secure_if_available )
 			{
 				trigger_error( 'Unable to start session on an insecure page when https is available' );
