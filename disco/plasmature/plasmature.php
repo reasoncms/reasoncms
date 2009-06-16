@@ -3271,7 +3271,8 @@
 				($this->day AND !is_numeric($this->day)) || 
 					($this->year AND !is_numeric($this->year)) )
 			{
-				$this->set_error(  $name.':  Date values need to be numbers.' );				
+				$this->set_error(  $name.':  Date values need to be numbers.' );
+				return;				
 			}
 			
 			if( $this->month AND $this->day AND $this->year )
