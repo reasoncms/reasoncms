@@ -54,7 +54,8 @@ class ds_ldap_luther extends ds_ldap {
 		'ds_firstname' => array('givenname'),
 		'ds_lastname' => array('sn'),
 		'ds_fullname' => array('displayname'),
-		/*  'ds_phone' => array('telephonenumber'),  */
+		/*  'ds_phone' => array('telephonenumber'),  this returns home phone*/
+		'ds_title' => array('title'),
 		'ds_phone' => array('officephone'),
 		'ds_affiliation' => array('edupersonaffiliation','edupersonprimaryaffiliation'),
 		'ds_groupname' => array('cn'),
@@ -91,6 +92,9 @@ class ds_ldap_luther extends ds_ldap {
 							break;
 						case 'ds_fullname':
 							$value = $record['displayname'];
+							break;
+						case 'ds_title':
+							$value = $record['title'];
 							break;
 						/*
 						case 'ds_phone':
