@@ -229,15 +229,17 @@ function luther_google_search()
                         echo '<input type="hidden" value="public_collection" name="site"/>'."\n";
                         echo '<input type="hidden" value="%3CHOME/%3E" name="proxycustom"/>'."\n";
                         echo '</form>'."\n";
+}
+
 function admissions_main_navigation()
 {
         echo '<div class="main-nav">'."\n";
         echo '<div class="wrap clearfix">'."\n";
         echo '<ul class="nav">'."\n";
         echo '<li class="home active"><a href="#">Home</a></li>'."\n";
-        echo '<li class="fastFacts"><a href="fastfacts">Fast Facts</a>'."\n";
+        echo '<li class="fastFacts"><a href="/admissions_new/fastfacts">Fast Facts</a>'."\n";
         	echo '<ul>'."\n";
-        	echo '<li><a href="fastfacts/profilecampus">Campus Profile</a></li>'."\n";
+        	echo '<li><a href="/admissions_new/fastfacts/profilecampus">Campus Profile</a></li>'."\n";
         	echo '<li><a href="#">Profile of 2012 Class</a></li>'."\n";
         	echo '<li><a href="#">Decorah Area</a></li>'."\n";
         	echo '<li><a href="#">Luther at a Glance</a></li>'."\n";
@@ -285,6 +287,7 @@ function admissions_main_navigation()
         	echo '<li><a href="#">Tuition and Fees</a></li>'."\n";
         	echo '</ul></li>'."\n";
         echo '<li class="howToApply"><a href="#">How to Apply</a></li>'."\n";
+        echo '</ul>'."\n";
         echo '<div class="search">'."\n";
         echo '<input type="text" name="search" id="search" />'."\n";
         echo '<button type="submit"name="submit" id="submit"><img src="/stylesheets/admissions/images/search.png" alt="go!" /></button>'."\n";
@@ -295,44 +298,7 @@ function admissions_main_navigation()
         echo '<div class="body wrap clearfix">'."\n";
 
 }
-}
 
-function admissions_main_navigation()
-{
-	echo '<div class="main-nav">'."\n";
-	echo '<div class="wrap clearfix">'."\n";
-	echo '<ul class="nav">'."\n";
-	echo '<li class="home active"><a href="#">Home</a></li>'."\n";
-	echo '<li class="fastFacts"><a href="#">Fast Facts</a></li>'."\n";
-	echo '<li class="academics"><a href="#">Academics</a></li>'."\n";
-	echo '<li class="lifeAtLuther"><a href="#">Life at Luther</a>'."\n";
-	echo '<ul>'."\n";
-	echo '<li><a href="#">Academics</a></li>'."\n";
-	echo '<li><a href="#">Music</a></li>'."\n";
-	echo '<li><a href="#">Athletics</a></li>'."\n";
-	echo '<li><a href="#">Housing and Dining</a></li>'."\n";
-	echo '<li><a href="#">Intramural and Club Sports</a></li>'."\n";
-	echo '<li><a href="#">College Ministries</a></li>'."\n";
-	echo '<li><a href="#">Diversity Center</a></li>'."\n";
-	echo '<li><a href="#">Health Service</a></li>'."\n";
-	echo '<li><a href="#">Wellness Program</a></li>'."\n";
-	echo '<li><a href="#">Student Activities and Organizations</a></li>'."\n";
-	echo '</ul></li>'."\n";
-	echo '<li class="lifeAfterLuther"><a href="#">Life after Luther</a></li>'."\n";
-	echo '<li class="financialAid"><a href="section-landing-page.html">Financial Aid</a></li>'."\n";
-	echo '<li class="howToApply"><a href="#">How to Apply</a></li>'."\n";
-	echo '</ul>'."\n";
-
-	echo '<div class="search">'."\n";
-	echo '<input type="text" name="search" id="search" />'."\n";
-	echo '<button type="submit"name="submit" id="submit"><img src="/stylesheets/admissions/images/search.png" alt="go!" /></button>'."\n";
-	echo '</div>'."\n";
-	echo '</div>'."\n";
-	echo '</div>'."\n";
-
-	echo '<div class="body wrap clearfix">'."\n";
-	
-}
 
 function admissions_banner()
 {

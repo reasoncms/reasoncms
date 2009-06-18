@@ -15,6 +15,23 @@
 		}
 		function run()
 		{
+			//print_r($this);
+			$theme = get_theme($this->site_id);
+			if ($theme->get_value( 'name' ) == 'admissions')
+			{
+                        echo '<div class="footer">'."\n";
+                        echo '<ul class="nav">'."\n";
+                        echo '<li><a href="#">About This Site</a></li>'."\n";
+                        echo '<li><a href="#">Privacy Statement</a></li>'."\n";
+                        echo '<li><a href="#">Contact Us</a></li>'."\n";
+                        echo '</ul>'."\n";
+                        echo '<p>Copyright '.date("Y").' Luther College &bull; 700 College Drive Decorah, Iowa 52101  USA
+        <br />Phone: 563-387-2000 or 800-4 LUTHER (800-458-8437)</p>'."\n";
+                        echo '</div>'."\n";
+
+			}
+			else
+			{
 			echo '<div id="foot">'."\n";
     			echo '<ul><li><a href="http://www.luther.edu/about.aspx">About This Site</a></li>'."\n";
     			echo '<li><a href="http://www.luther.edu/privacy.aspx">Privacy Statement</a></li></ul>'."\n";
@@ -28,6 +45,7 @@
       			echo '<span class="postal-code">52101</span>'."\n";
           		echo '<span class="country-name">USA</span></div>'."\n";
 	                echo 'Phone: 563-387-2000 or 800-4 LUTHER (<span class="tel">800-458-8437</span>)</div></div>'."\n";
+			}
 		}
 	}
 ?>

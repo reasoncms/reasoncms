@@ -17,7 +17,7 @@
 		{
                         if ($this->cur_page->get_value( 'custom_page' ) == 'admissions_home')
 			{
-				// Highlights 
+				// Events 
                         	echo '<div class="supplemental block block-3 events">'."\n";
                         	echo '<h2>Upcoming Events</h2>'."\n";
                         	echo '<dl>'."\n";
