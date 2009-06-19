@@ -168,13 +168,28 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'post_banner' => '',
 		'sub_nav' => '',
 		'sub_nav_2' => 'admissions_sub_nav_2',
+		'sub_nav_3' => 'blurb',
         //	'main_post' => 'admissions_main_post',	
         	'main_post' => '',	
         	'main' => '',	
-		'pre_sidebar' => 'admissions_pre_sidebar',
+	//	'pre_sidebar' => 'admissions_pre_sidebar',
+		'pre_sidebar' => array( // Spotlights
+			'module' => 'publication',
+			'related_publication_unique_names' => array( 'spotlight_archives' ),
+			'related_mode' => 'true',
+			'related_title' => '',
+			'related_order' => 'random',
+			'max_num_items' => 1,
+			'markup_generator_info' => array(
+				'list_item' => array (
+					'classname' => 'SpotlightListItemMarkupGenerator',
+					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/admissions_spotlight.php'
+				),
+			),
+		),
+
 		'sidebar' => 'admissions_sidebar',
-		'post_sidebar' => 'admissions_post_sidebar',
-		//'post_foot' => 'admissions_footer',
+		'post_sidebar' => 'admissions_events_mini',
 	),
         //-----------------------Steve's EventWithForm Page Begin----------------
         'event_with_form' => array(

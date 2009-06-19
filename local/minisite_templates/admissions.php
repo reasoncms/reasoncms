@@ -107,13 +107,22 @@ class AdmissionsTemplate extends MinisiteTemplate
 
                 if ($this->has_content( 'sub_nav_3' ))
                 {
+
+			if ($this->cur_page->get_value( 'custom_page' ) == 'admissions_home')
+			{
+                        	echo '<div class="block keydates events">'."\n";
+                        	echo '<h2>Key Admission Dates</h2>'."\n";
+                        }
+                        //echo '</div class="sidebar">'."\n";
                         $this->run_section( 'sub_nav_3' );
+			//echo '</div>'."\n";
+			if ($this->cur_page->get_value( 'custom_page' ) == 'admissions_home')
+			{
+				echo '</div>'."\n";
+			}
                 }
 
-		if ($this->cur_page->get_value( 'custom_page' ) != 'admissions_home')
-		{
-			echo '</div>'."\n";
-                }
+                echo '</div class="sidebar">'."\n";
 
 
         } 
@@ -154,12 +163,14 @@ class AdmissionsTemplate extends MinisiteTemplate
 			echo '<img src="/images/admissions/5.jpg" class="wide" />'."\n";
 			echo '<img src="/images/admissions/6.jpg" />'."\n";
 			echo '</div>'."\n";
+			echo '</div>'."\n";
 		}
-		else
+		//else
 		{
 			echo '</div>'."\n";
 			echo '</div>'."\n";
 		}
+
         }
 
 	function admissions_timeline()
