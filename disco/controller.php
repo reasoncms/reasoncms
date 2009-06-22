@@ -63,6 +63,7 @@ class FormController
 	 *		'final_step' => true|false,
 	 *		'back_button_text' => 'Go Back',
 	 *		'final_button_text' => 'Submit this form',
+	 *		'display_name' => 'Page One',
 	 *	),
 	 *   * more forms *
 	 * );
@@ -87,10 +88,18 @@ class FormController
 	 * user is on is either a de facto finish state or if the transitions array specifically uses the 'final_step'
 	 * attribute.
 	 *
+	 * The 'display_name' label is used when generating navigation.
+	 *
 	 * @access private
 	 * @var mixed nested array of info
 	 */
 	var $transitions;
+	/**
+	 * Whether or not to show back buttons; if you're allowing linking to arbitrary
+	 * steps in the form, the back buttons will break, so you should turn them off.
+	 * If the back and next buttons are your only navigation, leave this on.
+	 */
+	var $show_back_button = true;
 	/**
 	 * Default text for the next/continue button
 	 */
@@ -106,15 +115,20 @@ class FormController
 	/**
 	 * Message to show user if a session times out.
 	 */
-	var $sess_timeout_msg = '<p>It appears that you have not taken an action in a long enough time to warrant us to reset your session as a security measure.  Sorry for any inconvenience.</p>';
+	var $sess_timeout_msg = '<p class="callOut">You\'ve been returned to the start of the form, probably because your web browser was idle for a long time. Sorry for any inconvenience.</p>';
 	/**
-	 * Message if cookies are not enabled.
+	 * Message if cookies are not enabled. (Not currently used!)
 	 */
-	var $no_cookie_msg = '<p>It appears that you do not have cookies enabled.  Making an online gift requires the use of cookies.  Please enable them and reload this page.</p>';
+	var $no_cookie_msg = '<p class="callOut">It appears that you do not have cookies enabled.  Use of this form requires the use of cookies.  Please enable them and reload this page.</p>';
 	/**
-	 * Session name to be used by PHP's session stuff
+	 * Name of the class to be used for PHP session handling
 	 */
-	var $session_name = 'GiftSID';
+	var $session_class = 'FormControllerSession';
+	/**
+	 * Session object for current session
+	 */
+	var $session;
+
 	/**#@+
 	 * @access private
 	 */
@@ -123,7 +137,7 @@ class FormController
 	 * up to date path of where user has travelled
 	 * @var array
 	 */
-	var $_path;
+	var $_path = array();
 	
 	/**
 	 * has the controller init()ed?
@@ -135,6 +149,11 @@ class FormController
 	 * internal copy of request variables available
 	 */
 	var $_request;
+	
+	/**
+	 * internal copy of session form data
+	 */
+	var $_form_data;
 	
 	/**
 	 * Map of variables to forms
@@ -185,11 +204,17 @@ class FormController
 	var $_step_var_name = '_step';
 	
 	/**
-	 * key for sessioned form data in _SESSION
+	 * key for sessioned form data
 	 * @var string
 	 */
 	var $_data_key = '_fc_data';
 	
+	/**
+	 * key for sessioned path data in
+	 * @var string
+	 */
+	var $_path_key = '_fc_path';
+
 	/**
 	 * determine the base URL for the form once and use at other times
 	 * @var string
@@ -210,6 +235,16 @@ class FormController
 	 * Bool that contains whether a session cookie exists
 	 */
 	var $_session_existed;
+	/**
+	 * Bool that contains whether data should be cleared from the session when the
+	 * final step is submitted,
+	 */
+	var $clear_form_data_on_finish = true;
+	/**
+	 * Bool that contains whether the entire session should be destroyed when the
+	 * final step is submitted,
+	 */
+	var $destroy_session_on_finish = false;
 	
 	/**#@-*/
 	
@@ -227,22 +262,6 @@ class FormController
 	//======== PUBLIC RUNNABLE METHODS ========//
 	//=========================================//
 	
-	/**
-	 * Populates each form step with the data saved in the session
-	 * @access private
-	 * @return void
-	 */
-	function _populate_step_data() // {{{
-	{
-		foreach( $this->_vars AS $var => $form_name )
-		{
-			if( !empty( $_SESSION[ $this->_data_key ][ $var ] ) )
-			{
-				$fref =& $this->forms[ $form_name ];
-				$fref->set_value( $var, $_SESSION[ $this->_data_key ][ $var ] );
-			}
-		}
-	} // }}}
 	/**
 	 * Set up the controller
 	 * @access public
@@ -265,7 +284,7 @@ class FormController
 				{
 					if( !empty( $this->_vars[ $el ] ) )
 					{
-						trigger_error( 'FormController Error: Duplicate variable on two steps' );
+						trigger_error( sprintf('FormController Error: Duplicate variable on two steps (%s)', $el ));
 					}
 					else
 					{
@@ -276,26 +295,35 @@ class FormController
 				}
 			}
 			
+			$this->session = new $this->session_class;
+			
 			// determine if this is a first run or not, start session
-			$this->_session_existed = !empty( $_REQUEST[ $this->session_name ] );
-			session_name( $this->session_name );
-			session_start();
-			if( empty( $_SESSION ) )
+			if (!$this->session->exists())
 			{
-				$this->_first_run = true;
-				$_SESSION[ 'running' ] = true;
-			}
-			else
-			{
-				$this->_first_run = false;
-				$this->_populate_step_data();
-				if( !empty( $_SESSION[ '_path' ] ) )
-					$this->_path =& $_SESSION[ '_path' ];
-				else
-					$this->_path = array();
+				$this->session->start();
 			}
 			
-			$this->_inited = true;
+			if ($this->session->exists())
+			{				
+				if( !$this->session->get('running') )
+				{
+					$this->_first_run = true;
+					$this->session->set('running', true);
+				}
+				else
+				{
+					$this->_first_run = false;
+					$this->_populate_step_data();
+					if( $this->session->get($this->_path_key) )
+						$this->_path = $this->session->get($this->_path_key);
+					else
+						$this->_path = array();
+				}
+				
+				$this->_inited = true;
+			} else {
+				trigger_error( 'FormController Error: Failed to start session');	
+			}
 		}
 	} // }}}
 	/**
@@ -317,8 +345,18 @@ class FormController
 		}
 		else
 		{
+			// If this looks like the first time we've hit the page, but there's a 
+			// request for a form step that isn't the first one, we've probably had
+			// the session expire out from under us.
 			if( $this->_first_run )
 			{
+				if( !empty( $this->_request[ $this->_step_var_name ] ) )
+				{
+					if ($this->_request[ $this->_step_var_name ] != $this->_get_start_step())
+					{
+						$this->session->set( 'timeout_msg' , $this->sess_timeout_msg);		
+					}
+				}
 			}
 			// if not the first time, figure out which step we are on
 			else
@@ -417,6 +455,33 @@ class FormController
 	 * @return void
 	 * @access private
 	 */
+	 
+	/**
+	 * Return the name of the current step
+	 * @access public
+	 * @return string
+	 */
+	function get_current_step() // {{{
+	{
+		if (!isset($this->_current_step))
+			$this->determine_step();
+		return $this->_current_step;
+	}
+
+	/**
+	 * Return the name of the previous step in the path
+	 * @access public
+	 * @return string
+	 */
+	function get_previous_step($back=1) // {{{
+	{
+		if (!empty($this->_path))
+		{
+			if (count( $this->_path ) >= $back)
+				return $this->_path[ count( $this->_path ) - $back ];
+		}
+	}
+
 	function validate_step() // {{{
 	{
 		if( empty( $this->_current_step ) )
@@ -452,10 +517,12 @@ class FormController
 		{
 			if( !in_array( $var, $no_session ) )
 			{
-				$_SESSION[ $this->_data_key ][ $var ] = $this->forms[ $this->_current_step ]->get_value( $var );
+				$this->set_form_data($var,  $this->forms[ $this->_current_step ]->get_value( $var ));
 			}
 		}
 	} // }}}
+
+
 	/**
 	 * Run the Controller
 	 * @access public
@@ -543,9 +610,9 @@ class FormController
 		{
 			$actions[ 'next' ] = $this->default_next_text;
 		}
-		if( !empty( $this->_path ) )
+		if($this->show_back_button && !empty( $this->_path ) )
 		{
-			$s = $this->_path[ count( $this->_path ) - 1 ];
+			$s = $this->get_previous_step();
 			if( !empty( $this->transitions[ $s ][ 'back_button_text' ] ) )
 				$actions[ 'back' ] = $this->transitions[ $s ][ 'back_button_text' ];
 			else
@@ -568,8 +635,10 @@ class FormController
 		{
 			if( $f->chosen_action == 'back' )
 			{
-				$form_jump = array_pop( $this->_path );
+				$form_jump = $this->_remove_last_step_from_path();
 			}
+			// Save the last action; otherwise, it's not available to forms.
+			$this->session->set('chosen_action', $f->chosen_action);
 		}
 		
 		if( empty( $form_jump ) )
@@ -592,9 +661,10 @@ class FormController
 			exit;
 		}
 
-		if( !empty( $_SESSION[ 'timeout_msg' ] ) )
+		$timeout_msg = $this->session->get( 'timeout_msg' );
+		if( !empty( $timeout_msg ) )
 		{
-			$_SESSION[ 'timeout_msg' ] = '';
+			$this->session->set( 'timeout_msg' , '');
 			echo $this->sess_timeout_msg;
 		}
 		
@@ -603,22 +673,20 @@ class FormController
 		if( $final_step AND $f->processed )
 		{
 			$final_where_to = $f->where_to();
-			$this->destroy();
+			if ($this->clear_form_data_on_finish && !$this->destroy_session_on_finish)
+			{
+				$this->destroy_form_data();
+				
+			}
+			if ($this->destroy_session_on_finish)
+			{
+				$this->session->destroy();
+			}
 			if( !empty( $final_where_to ) )
 			{
 				header( 'Location: '.$final_where_to );
 			}
 		}
-	} // }}}
-	/**
-	 * Destroys the session that this controller is using
-	 * @access private
-	 */
-	function destroy() // {{{
-	{
-		setcookie($this->session_name,'');
-		$_SESSION = array();
-		session_destroy();
 	} // }}}
 	
 	//====================================================================//
@@ -774,12 +842,66 @@ class FormController
 		}
 		return $rules;
 	} // }}}
+		
+	function get_form_data($key)
+	{
+		if (!isset($this->_form_data))
+		{
+			$this->_form_data = $this->session->get($this->_data_key);
+		}
+		if (isset($this->_form_data[$key]))
+			return $this->_form_data[$key];
+		else
+			return '';
+	}
 	
-	
+	function set_form_data($key, $val)
+	{
+		if (!isset($this->_form_data))
+		{
+			$this->_form_data = $this->session->get($this->_data_key);
+		}
+		$this->_form_data[$key] = $val;
+		$this->session->set($this->_data_key, $this->_form_data);
+	}
+
+	function destroy_form_data()
+	{
+		$this->session->set($this->_data_key, array());
+		$this->session->set($this->_path_key, array());
+	}
+
+	function set_session_class($class)
+	{
+		if (class_exists($class))
+		{
+			$this->session_class = $class;
+		} else {
+			trigger_error( 'FormController Error: Requested session class does not exist:' . $class);	
+		}
+	}
+
 	//=========================================//
 	//========== PRIVATE METHODS ==============//
 	//=========================================//
 	
+	/**
+	 * Populates each form step with the data saved in the session
+	 * @access private
+	 * @return void
+	 */
+	function _populate_step_data() // {{{
+	{
+		foreach( $this->_vars AS $var => $form_name )
+		{
+			if( $this->get_form_data( $var ) )
+			{
+				$fref =& $this->forms[ $form_name ];
+				$fref->set_value( $var, $this->get_form_data( $var ) );
+			}
+		}
+	} // }}}
+
 	/**
 	 * @access private
 	 */
@@ -839,15 +961,26 @@ class FormController
 					// decision uses a method.
 					elseif( $dec[ 'type' ] == 'method' )
 					{
-						if( !empty( $dec[ 'method' ] ) AND method_exists( $this, $dec[ 'method' ] ) )
+						if( !empty( $dec[ 'method' ] ))
 						{
 							$method = $dec[ 'method' ];
-							// call the method specified
-							$next_step = $this->$method();
+							// call the method specified, either on the step or on the controller
+							if ( method_exists( $this->forms[ $this->_current_step ], $method ) )
+							{
+								$next_step = $this->forms[ $this->_current_step ]->$method();
+							}
+							else if ( method_exists( $this, $method ) )
+							{
+								$next_step = $this->$method();
+							}
+							else
+							{
+								trigger_error('the method '. $method . ' does not exist.');
+							}
 						}
 						else
 						{
-							trigger_error('either no method was specified or the method does not exist.');
+							trigger_error('no method was specified for method transition.');
 						}
 					}
 					else
@@ -894,8 +1027,137 @@ class FormController
 	 */
 	function _add_step_to_path( $step ) // {{{
 	{
-		$_SESSION[ '_path' ][] = $step;
+		$this->_path[] = $step;
+		$this->session->set($this->_path_key, $this->_path);
 	} // }}}
+
+	/**
+	 * @access private
+	 */
+	function _remove_last_step_from_path() // {{{
+	{
+		$step = array_pop($this->_path);
+		$this->session->set($this->_path_key, $this->_path);
+		return $step;
+	} // }}}
+
+}
+
+/**
+ * Multi Page Form Controller Session
+ *
+ * A very minimal session class for standalone use.  For Reason integration, use one of the 
+ * Reason session classes
+ *
+ * @author Mark Heiman
+ * @package disco
+ * @subpackage controller
+ */
+class FormControllerSession
+{
+	var $sess_name = 'DISCO_SESS';
+	var $expires = 600;
+	var $_started = false;
+
+	function Session() {}
+	/**
+	 * @access public
+	 */
+	function start() {
+		//$this->_session_existed = !empty( $_REQUEST[ $this->sess_name ] );
+		session_name( $this->sess_name );
+		$this->_started = true;
+		if (session_id())
+			return true;
+		else
+			return session_start();
+	}
+	/**
+	 * @access public
+	 */
+	function destroy() {
+		setcookie($this->sess_name,'');
+		$_SESSION = array();
+		session_destroy();
+		$this->started = false;
+	}
+	/**
+	 * @access public
+	 */
+	function has_started() // {{{
+	{
+		echo ($this->_started) ? "TRUE" : "FALSE";
+		return $this->_started;
+	} // }}}
+	/**
+	 * @access public
+	 */
+	function exists() {
+		session_name( $this->sess_name );
+		if (session_id())
+		{
+			$this->_started = true;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	/**
+	 * @access public
+	 */
+	function set( $var, $value )
+	{
+		$this->_store( $var, $value );
+	}
+	/**
+	 * @access public
+	 */
+	function get( $var )
+	{
+		return $this->_retrieve( $var );
+	}
+	/**
+	 * @access public
+	 */
+	function is_idle() {}
+	/**
+	 * @access public
+	 */
+	function set_session_name( $name )
+	{
+		$this->sess_name = $name;
+	}
+	/**
+	 * @access public
+	 */
+	function define_vars( $var_array )
+	{
+		if( is_array( $var_array ) )
+		{
+			$this->sess_vars = $var_array;
+			foreach( $var_array AS $key )
+				$this->sess_values[ $key ] = '';
+		}
+	}
+	/**
+	 * This is the implementation-specific method
+	 * @access private
+	 */
+	function _store( $var, $val )
+	{
+		$_SESSION[ $var ] = $val;
+	}
+	/**
+	 * standard retrieve just pulls from the sess_values
+	 * @access private
+	 */
+	function _retrieve( $var )
+	{
+		if (isset($_SESSION[ $var ]))
+			return $_SESSION[ $var ];
+		else
+			return '';
+	}
 }
 
 ?>
