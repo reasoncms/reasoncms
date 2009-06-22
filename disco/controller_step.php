@@ -37,6 +37,14 @@ class FormStep extends Disco
 	 * @var array
 	 */
 	var $no_session;
+	 
+	/**
+	 * Pretty name for this form.   Available for building navigation, etc.
+	 * @access public
+	 * @var string
+	 */
+	var $display_name;
+	
 	/**
 	 * Overloaded method - do nothing by default.  The only time where_to() is ever called by the FormController is on
 	 * the final form once everything is done.  If returning something, return a valid URL to bounce to.
