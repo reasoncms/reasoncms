@@ -303,8 +303,8 @@ class FormController
 				$this->session->start();
 			}
 			
-			if ($this->session->exists())
-			{				
+			if ($this->session->has_started() || $this->session->exists())
+			{	
 				if( !$this->session->get('running') )
 				{
 					$this->_first_run = true;
@@ -1086,7 +1086,6 @@ class FormControllerSession
 	 */
 	function has_started() // {{{
 	{
-		echo ($this->_started) ? "TRUE" : "FALSE";
 		return $this->_started;
 	} // }}}
 	/**
