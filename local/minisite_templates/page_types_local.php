@@ -45,7 +45,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'luther_primaryLRC' => array(
             		'main_post'=>array(  
             			'module' => 'luther_other_publication_news',
-				'max_num_to_show' => 3,
+				'max_num_to_show' => 5,
 				),
 			'pre_banner' => '',
 			'post_banner' => '',
@@ -142,6 +142,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	    'banner_xtra' => 'google_search_appliance',
             'sidebar'=>array(  
             	'module' => 'luther_other_publication_news',
+				'max_num_to_show' => 5,
 				),
             'pre_sidebar' => array( // Spotlights
             	'module' => 'publication',
@@ -187,8 +188,21 @@ $GLOBALS['_reason_page_types_local'] = array(
 				),
 			),
 		),
+		'sidebar' => array( // Highlights
+			'module' => 'publication',
+			'related_publication_unique_names' => array( 'luthernews' ),
+			'related_mode' => 'true',
+			'related_title' => '',
+			'related_order' => 'random',
+			'max_num_items' => 1,
+			'markup_generator_info' => array(
+				'list_item' => array (
+					'classname' => 'HeadlineListItemMarkupGenerator',
+					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/admissions_headline.php'
+				),
+			),
+		),
 
-		'sidebar' => 'admissions_sidebar',
 		'post_sidebar' => 'admissions_events_mini',
 	),
         //-----------------------Steve's EventWithForm Page Begin----------------
