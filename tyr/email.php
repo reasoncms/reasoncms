@@ -144,18 +144,17 @@ class Email
 	 */
 	function mb_mime_header_encode( $string, $encoding = 'UTF-8', $linefeed = "\r\n " )
 	{
-		if(!$encoding) $encoding = mb_internal_encoding();
+		if(!$encoding) $encoding = function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8';
 		$encoded = '';
 		
-		while($length = mb_strlen($string))
+		while($length = carl_strlen($string, $encoding))
 		{
 			$encoded .= '=?'.$encoding.'?B?'
-				. base64_encode(mb_substr($string,0,24,$encoding))
+				. base64_encode(carl_substr($string,0,24,$encoding))
 				. '?='.$linefeed;
 		
-			$string = mb_substr($string,24,$length,$encoding);
-		}
-		
+			$string = carl_substr($string,24,$length,$encoding);
+		}		
 		return trim($encoded);
 	}
 
