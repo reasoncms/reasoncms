@@ -128,6 +128,10 @@ class FormController
 	 * Session object for current session
 	 */
 	var $session;
+	/**
+	 * Session name for current session
+	 */
+	var $session_name = 'DISCO_SESSION';
 
 	/**#@+
 	 * @access private
@@ -296,6 +300,7 @@ class FormController
 			}
 			
 			$this->session = new $this->session_class;
+			$this->session->set_session_name($this->session_name);
 			
 			// determine if this is a first run or not, start session
 			if (!$this->session->exists() && !$this->session->has_started())
@@ -880,6 +885,13 @@ class FormController
 		}
 	}
 
+	function set_session_name($name)
+	{
+		if ($name)
+		{
+			$this->session_name = $name;
+		}
+	}
 	//=========================================//
 	//========== PRIVATE METHODS ==============//
 	//=========================================//
@@ -1058,7 +1070,7 @@ class FormControllerSession
 	var $expires = 600;
 	var $_started = false;
 
-	function Session() {}
+	function FormControllerSession() {}
 	/**
 	 * @access public
 	 */
@@ -1103,6 +1115,13 @@ class FormControllerSession
 	/**
 	 * @access public
 	 */
+	function set_session_name($name)
+	{
+		$this->sess_name = $name;
+	}
+	/**
+	 * @access public
+	 */
 	function set( $var, $value )
 	{
 		$this->_store( $var, $value );
@@ -1118,13 +1137,7 @@ class FormControllerSession
 	 * @access public
 	 */
 	function is_idle() {}
-	/**
-	 * @access public
-	 */
-	function set_session_name( $name )
-	{
-		$this->sess_name = $name;
-	}
+
 	/**
 	 * @access public
 	 */
