@@ -116,7 +116,7 @@
 			}
 			else
 			{
-				if( session_id() OR $this->_started )
+				if( $this->_started )
 				{
 					trigger_error( 'Session PHP trying to start new session when a session is already started. Possible programmer error.', WARNING );
 					$this->error_num = ERR_SESS_DUPLICATE;
@@ -130,7 +130,7 @@
 					}
 					session_name( $this->sess_name );
 					session_set_cookie_params(0, '/', $this->_transform_domain($_SERVER['SERVER_NAME']), $this->secure_session_flag );
-					session_start();
+					if (!session_id()) session_start();
 					
 					$this->__session_ref =& $_SESSION;
 					$this->_sid = session_id();
