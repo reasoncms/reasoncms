@@ -298,7 +298,7 @@ class FormController
 			$this->session = new $this->session_class;
 			
 			// determine if this is a first run or not, start session
-			if (!$this->session->exists())
+			if (!$this->session->exists() && !$this->session->has_started())
 			{
 				$this->session->start();
 			}
@@ -644,7 +644,6 @@ class FormController
 		if( empty( $form_jump ) )
 		{
 			$f->run_process_phase();
-			
 			$this->update_session_form_vars();
 			
 			// $processed was added to FormStep to see if the form is done.  This will be false on first time or in
