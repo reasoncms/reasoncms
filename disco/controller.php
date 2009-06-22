@@ -5,6 +5,7 @@
  * An attempt at creating a multi page form controller.
  *
  * @author Dave Hendler
+ * @author Mark Heiman
  * @since 2005-02-01
  * @package disco
  * @subpackage controller
