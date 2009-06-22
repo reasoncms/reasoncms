@@ -468,5 +468,66 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 		return $is_windows;
 	}
 	
+	/**
+	 * strtolower replacement that uses mb_strtolower where possible
+	 *
+	 * @param string str
+	 * @param string encoding the encoding of the string - defaults to UTF-8, pass a null value to use the current mb_internal_encoding
+	 */
+	function carl_strtolower($str, $encoding = 'UTF-8')
+	{
+		if(!$encoding) $encoding = function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8';
+		return function_exists('mb_strtolower') ? mb_strtolower($str, $encoding) : strtolower($str);
+	}
+
+	/**
+	 * strtoupper replacement that uses mb_strtoupper where possible
+	 *
+	 * @param string str
+	 * @param string encoding the encoding of the string - defaults to UTF-8, pass a null value to use the current mb_internal_encoding
+	 */	
+	function carl_strtoupper($str, $encoding = 'UTF-8')
+	{
+		if(!$encoding) $encoding = function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8';
+		return function_exists('mb_strtoupper') ? mb_strtoupper($str, $encoding) : strtoupper($str);
+	}
+
+	/**
+	 * substr replacement that uses mb_substr where possible
+	 *
+	 * @param string str
+	 * @param string encoding the encoding of the string; pass a null value to use the current mb_internal_encoding
+	 */		
+	function carl_substr($str, $start, $length = NULL, $encoding = 'UTF-8')
+	{
+		if(!$encoding) $encoding = function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8';
+		return function_exists('mb_substr') ? mb_substr($str, $start, ($length) ? $length : mb_strlen($str), $encoding) : substr($str, $start, $length);
+	}
+
+	/**
+	 * strlen replacement that uses mb_strlen where possible
+	 *
+	 * @param string str
+	 * @param string encoding the encoding of the string; pass a null value to use the current mb_internal_encoding
+	 */	
+	function carl_strlen($str, $encoding = 'UTF-8')
+	{
+		if(!$encoding) $encoding = function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8';
+		return function_exists('mb_strlen') ? mb_strlen($str, $encoding) : strlen($str);
+	}
+	
+	/**
+	 * strpos replacement that uses mb_strpos where possible
+	 *
+	 * @param string haystack to search
+	 * @param string needle to find
+	 * @param string offset the search offset
+	 * @param encoding the encoding of the strings; pass a null value to use the current mb_internal_encoding
+	 */	
+	function carl_strpos($haystack, $needle, $offset = NULL, $encoding = 'UTF-8')
+	{
+		if(!$encoding) $encoding = function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8';
+		return function_exists('mb_strpos') ? mb_strpos($haystack, $needle, $offset, $encoding) : strpos($haystack, $needle, $offset);
+	}
 }
 ?>
