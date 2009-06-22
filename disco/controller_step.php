@@ -76,7 +76,7 @@ class FormStep extends Disco
 	 */
 	function set_controller( &$c )
 	{
-		$this->controller = $c;
+		$this->controller =& $c;
 	}
 }
 
