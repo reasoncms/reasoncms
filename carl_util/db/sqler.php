@@ -91,7 +91,7 @@ include_once(CARL_UTIL_INC.'error_handler/error_handler.php');
 			$set_these = '';
 			foreach($data as $key => $val )
 			{
-				$set_these .= $key.' = "'.addslashes( $val ).'",';
+				$set_these .= '`'.$key.'` = "'.addslashes( $val ).'",';
 			}
 			$set_these = substr( $set_these, 0, -1 );
 
