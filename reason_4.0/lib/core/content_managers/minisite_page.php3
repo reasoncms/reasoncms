@@ -398,7 +398,7 @@
 			{
 				// call parent finish function - this changes the parent if there is a new parent
 				$res = parent::finish();
-				if ($this->get_value('state') != 'Pending') update_URL_history( $this->get_value( 'id' ) );
+				if (($this->get_value('state') != 'Pending') && $this->has_url()) update_URL_history( $this->get_value( 'id' ) );
 				
 				// update rewrites if it is not set as a finish action - maintains backwards compatibility in case reason 4 beta 8
 				// upgrade scripts have not been run.
