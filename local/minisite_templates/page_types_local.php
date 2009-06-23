@@ -26,6 +26,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'admissions_account_signup' => array(
 			'main_post' => 'applicant_account',
 		),
+		'faculty' => array(
+			'main_post' => 'luther_faculty'
+		),
 		'luther_news_page' => array(
 			'main_post' => 'publication',
             		'sub_nav_3' => 'quote',

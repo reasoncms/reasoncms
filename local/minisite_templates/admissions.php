@@ -141,7 +141,6 @@ class AdmissionsTemplate extends MinisiteTemplate
                         $this->run_section( 'pre_sidebar' );
                         //echo '</div>'."\n";
                 }
-
 		if ($this->cur_page->get_value( 'custom_page' ) != 'default' && $this->has_content( 'sidebar' ))
                 {
                         //echo '<div id="sidebar">'."\n";
@@ -252,7 +251,6 @@ class AdmissionsTemplate extends MinisiteTemplate
 		//echo '</div>'."\n";
         echo '</div class="highlight clearfix">'."\n";
 	}
-
 
 	function show_main_content_sections()
         {
