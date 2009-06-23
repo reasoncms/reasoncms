@@ -276,6 +276,13 @@ class FormController
 		if( !$this->_inited )
 		{
 			$url_parts = parse_url( get_current_url() );
+			// Use https if possible
+			if (HTTPS_AVAILABLE && $url_parts[ 'scheme' ] != 'https')
+			{
+				header('Location: '.get_current_url( 'https' ) );
+				exit;
+			}
+			
 			$this->_base_url = $url_parts[ 'scheme' ].'://'.$url_parts['host'].$url_parts['path'];
 			
 			// build the master list of form to variable
@@ -535,7 +542,7 @@ class FormController
 	 */
 	function run() // {{{
 	{
-		$this->init();
+		//$this->init();  I think this is redundant
 		
 		$this->determine_step();
 		
