@@ -168,8 +168,8 @@
 			
 			$entity_a_type = new entity($entity_a->get_value( 'type' ));
 			$entity_b_type = new entity($entity_b->get_value( 'type' ));
-			$entity_a_type_name = mb_strtolower($entity_a_type->get_value('name'),'UTF-8');
-			$entity_b_type_name = mb_strtolower($entity_b_type->get_value('name'),'UTF-8');
+			$entity_a_type_name = carl_strtolower($entity_a_type->get_value('name'),'UTF-8');
+			$entity_b_type_name = carl_strtolower($entity_b_type->get_value('name'),'UTF-8');
 			echo '<p>Only one '.$entity_b_type_name.' may be associated with a '.$entity_a_type_name.' in this way.<br />Pressing "Yes" will replace the previously related '.$entity_b_type_name.' with "'.$entity_b->get_value( 'name' ).'"</p>';
 			echo '<p>Would you like to continue?</p>';
 			
