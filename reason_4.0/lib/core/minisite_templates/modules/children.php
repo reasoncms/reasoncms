@@ -74,7 +74,7 @@
 				foreach($this->offspring as $child)
 				{
 					$page_name = $child->get_value( 'link_name' ) ? $child->get_value( 'link_name' ) : $child->get_value('name');
-					$letter = mb_strtoupper(substr($page_name,0,1), 'UTF-8');
+					$letter = carl_strtoupper(substr($page_name,0,1), 'UTF-8');
 					if(!in_array($letter, $this->az))
 					{
 						$this->az[$child->id()] = $letter;
