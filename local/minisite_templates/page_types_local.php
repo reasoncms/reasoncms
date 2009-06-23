@@ -301,7 +301,7 @@ function admissions_main_navigation()
         	echo '</ul></li>'."\n";
         echo '<li class="lifeAfterLuther"><a href="/admissions/lifeafterluther/">Life after Luther</a>'."\n";
 			echo '<ul>'."\n";
-			echo '<li><a href="/admissions/lifeafterluther/center/">Career Center</a></li>'."\n";
+			echo '<li><a href="/admissions/lifeafterluther/careercenter/">Career Center</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeafterluther/major/">Choosing a Major</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeafterluther/internships/">Internships</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeafterluther/services/">Jobs, Graduate School, and Volunteering</a></li>'."\n";
