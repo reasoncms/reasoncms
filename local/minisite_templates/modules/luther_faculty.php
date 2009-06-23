@@ -22,7 +22,7 @@ class LutherFacultyStaffModule extends FacultyStaffModule
                 var $other_affiliation_flag = false;
                 var $affiliations_to_use_other_aff_flag = array();
 */
-                var $required_attributes = array('ds_email','ds_fullname','ds_lastname','ds_affiliation','ds_phone', 'ds_title');
+                var $required_attributes = array('ds_email','ds_fullname','ds_lastname','ds_affiliation','ds_phone', 'ds_title', 'ds_gecos', 'ds_cn');
 
 function show_person( $person ) // {{{
 		{
@@ -31,6 +31,7 @@ function show_person( $person ) // {{{
 			echo '<a name="'.$person['ds_username'][0].'"></a>'."\n";
 			echo '<div class="facStaffName">'.$person['full_name'];
 			echo '</div>'."\n";
+						
 			if( !empty( $person[ 'title' ])
 				|| !empty( $person[ 'ds_phone' ] )
 				|| !empty( $person[ 'mail' ] )
@@ -38,7 +39,7 @@ function show_person( $person ) // {{{
 			{
 				echo '<div class="facStaffInfo">'."\n";
 				if ( !empty( $person['title']))
-					echo '<div class="facStaffTitle">Title:'.$title['title'].'</div>'."\n";
+					echo '<div class="facStaffTitle">Title:'.$person['title'].'</div>'."\n";
 				if ( !empty ( $person['ds_phone'] ))
 					echo '<div class="facStaffPhone">Phone: '.$person['ds_phone'].'</div>'."\n";
 				if ( !empty ( $person['mail'] ))
