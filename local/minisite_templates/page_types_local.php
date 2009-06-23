@@ -265,7 +265,7 @@ function admissions_main_navigation()
         echo '<div class="main-nav">'."\n";
         echo '<div class="wrap clearfix">'."\n";
         echo '<ul class="nav">'."\n";
-        echo '<li class="home active"><a href="#">Home</a></li>'."\n";
+        echo '<li class="home active"><a href="/admissions/">Home</a></li>'."\n";
         echo '<li class="fastFacts"><a href="/admissions/fastfacts/">Fast Facts</a>'."\n";
         	echo '<ul>'."\n";
         	echo '<li><a href="/admissions/fastfacts/profilecampus/">Campus Profile</a></li>'."\n";
