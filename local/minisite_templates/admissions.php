@@ -158,17 +158,15 @@ class AdmissionsTemplate extends MinisiteTemplate
 		if ($this->cur_page->get_value( 'custom_page' ) == 'admissions_home')
 		// music and sports images
 		{
+			$ms = admissions_music_sports_banners();
 			echo '<div class="row3">'."\n";
-			echo '<img src="/images/admissions/5.jpg" class="wide" />'."\n";
-			echo '<img src="/images/admissions/6.jpg" />'."\n";
+			echo '<img src="' . $ms[0] .'" class="wide" />'."\n";
+			echo '<img src="' . $ms[1] .'" />'."\n";
 			echo '</div>'."\n";
 			echo '</div>'."\n";
 		}
-		//else
-		{
-			echo '</div>'."\n";
-			echo '</div>'."\n";
-		}
+		echo '</div>'."\n";
+		echo '</div>'."\n";
 
         }
 
@@ -237,10 +235,14 @@ class AdmissionsTemplate extends MinisiteTemplate
 	//	echo '<div class="content clearfix">'."\n";
 		echo '<div class="highlight clearfix">'."\n";
 		echo '<div class="highlightItem">'."\n";
-		echo '<img src="/images/admissions/baker-village.jpg" />'."\n";
+
+                $dir_of_images = get_directory_images("/var/www/reasondev.luther.edu/htdoc/images/admissions/main315x210");
+                $mi = '/images/admissions/main315x210/'.$dir_of_images[time() % count($dir_of_images)];
+
+		echo '<img src="' . $mi . '" />'."\n";
+		//echo '<img src="/images/admissions/baker-village.jpg" />'."\n";
 		echo '<div class="text">'."\n";
-		echo '<blockquote><p><span class="openingQuote">&#8216;&#8216;</span>Living in Baker Village means doing what it takes to live a green life.&#8221;</p></blockquote>'."\n";
-		echo '<p class="cite">John Thomas Mayer, &#8217;08</p>'."\n";
+		$this->run_section( 'main_post' );
 		echo '</div>'."\n";
 		echo '</div>'."\n";
 		//echo '<div class="highlightItem">'."\n";
@@ -286,7 +288,7 @@ class AdmissionsTemplate extends MinisiteTemplate
                         $this->run_section( 'main' );
                         echo '</div>'."\n";
                 }
-                if ($this->has_content( 'main_post' ))
+		if ($this->cur_page->get_value( 'custom_page' ) != 'admissions_home' && $this->has_content( 'main_post' ))
                 {
                        	echo '<div class="contentPost">'."\n";
                        	$this->run_section( 'main_post' );

@@ -174,8 +174,17 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sub_nav_2' => 'admissions_sub_nav_2',
 		'sub_nav_3' => 'blurb',
         //	'main_post' => 'admissions_main_post',	
-        	'main_post' => '',	
+        //	'main_post' => '',	
         	'main' => '',	
+		'main_post' => array(
+                        'module'=> 'quote',
+			'template' => '<blockquote><p><span class="openingQuote">&#8216;&#8216;</span>[[quote]]</p></blockquote>
+<p class="cite">[[author]]</p>',
+                        //'enable_javascript_refresh' => true,
+                        'prefer_short_quotes' => true,
+                        'num_to_display' => 1,
+                        'rand_flag' => true,
+),
 	//	'pre_sidebar' => 'admissions_pre_sidebar',
 		'pre_sidebar' => array( // Spotlights
 			'module' => 'publication',
@@ -193,7 +202,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
 		'sidebar' => array( // Highlights
 			'module' => 'publication',
-			'related_publication_unique_names' => array( 'luthernews' ),
+			'related_publication_unique_names' => array( 'headlinesarchive' ),
 			'related_mode' => 'true',
 			'related_title' => '',
 			'related_order' => 'random',
@@ -268,7 +277,7 @@ function admissions_main_navigation()
         echo '<div class="main-nav">'."\n";
         echo '<div class="wrap clearfix">'."\n";
         echo '<ul class="nav">'."\n";
-        echo '<li class="home active"><a href="/admissions/">Home</a></li>'."\n";
+        echo '<li class="home"><a href="/admissions/">Home</a></li>'."\n";
         echo '<li class="fastFacts"><a href="/admissions/fastfacts/">Fast Facts</a>'."\n";
         	echo '<ul>'."\n";
         	echo '<li><a href="/admissions/fastfacts/profilecampus/">Campus Profile</a></li>'."\n";
@@ -320,10 +329,13 @@ function admissions_main_navigation()
         	echo '</ul></li>'."\n";
         echo '<li class="howToApply"><a href="/admissions/howtoapply/">How to Apply</a></li>'."\n";
         echo '</ul>'."\n";
-        echo '<div class="search">'."\n";
-        echo '<input type="text" name="search" id="search" />'."\n";
-        echo '<button type="submit"name="submit" id="submit"><img src="/stylesheets/admissions/images/search.png" alt="go!" /></button>'."\n";
-        echo '</div>'."\n";
+
+	luther_google_search();
+
+        //echo '<div class="search">'."\n";
+        //echo '<input type="text" name="search" id="search" />'."\n";
+        //echo '<button type="submit"name="submit" id="submit"><img src="/stylesheets/admissions/images/search.png" alt="go!" /></button>'."\n";
+        //echo '</div>'."\n";
         echo '</div>'."\n";
         echo '</div>'."\n";
 
@@ -331,10 +343,56 @@ function admissions_main_navigation()
 
 }
 
+function get_directory_images($folder)
+// given a folder, returns an array of all image files in the folder
+{
+	$extList = array();
+        $extList['gif'] = 'image/gif';
+        $extList['jpg'] = 'image/jpeg';
+        $extList['jpeg'] = 'image/jpeg';
+        $extList['png'] = 'image/png';
+
+	$handle = opendir($folder);
+        while (false !== ($file = readdir($handle)))
+	{
+                $file_info = pathinfo($file);
+                if (isset($extList[strtolower($file_info['extension'])]))
+                {
+			$fileList[] = $file;
+                }
+        }
+        closedir($handle);
+	return $fileList;
+}
+
+function admissions_get_banner_images()
+// gets random top images for the admissions banner
+// images must be in the appropriate folder below /images/admissions/
+{
+	$image_list = array();	
+
+	// horizontal ministry image
+	$dir_of_images = get_directory_images("/var/www/reasondev.luther.edu/htdoc/images/admissions/ministry208x101");
+	$image_list[0] = '/images/admissions/ministry208x101/'.$dir_of_images[time() % count($dir_of_images)];
+
+	// two global square images
+	$dir_of_images = get_directory_images("/var/www/reasondev.luther.edu/htdoc/images/admissions/global101x101");
+	$i = time() % count($dir_of_images);
+	$image_list[1] = '/images/admissions/global101x101/'.$dir_of_images[$i];
+	while ($i == ($j = time() % count($dir_of_images)));
+	$image_list[2] = '/images/admissions/global101x101/'.$dir_of_images[$j];
+	// global horizontal image
+	$dir_of_images = get_directory_images("/var/www/reasondev.luther.edu/htdoc/images/admissions/global208x101");
+	$image_list[3] = '/images/admissions/global208x101/'.$dir_of_images[time() % count($dir_of_images)];
+
+        //print_r($dir_of_images);
+        //print_r($image_list);
+	return $image_list;
+}
 
 function admissions_banner()
 {
-	
+	$bims = admissions_get_banner_images();
         echo '</div>'."\n";
         echo '</div>'."\n";
         echo '</div>'."\n";
@@ -363,12 +421,12 @@ function admissions_banner()
         echo '</div>'."\n";
         echo '<div class="images">'."\n";
         echo '<div class="row1">'."\n";
-        echo '<img src="/images/admissions/1.jpg" class="wide" />'."\n";
-        echo '<img src="/images/admissions/2.jpg" />'."\n";
+	echo '<img alt="" src="'. $bims[0] .'" class="wide"/>'."\n";
+        echo '<img alt="" src="'. $bims[1] .'" />'."\n";
         echo '</div>'."\n";
         echo '<div class="row2">'."\n";
-        echo '<img src="/images/admissions/3.jpg" />'."\n";
-        echo '<img src="/images/admissions/4.jpg" class="wide" />'."\n";
+        echo '<img src="' . $bims[2] .'" />'."\n";
+	echo '<img alt="" src="' . $bims[3] .'" class="wide"/>'."\n";
         echo '</div>'."\n";
         //echo '<div class="row3">'."\n";
         //echo '<img src="/images/admissions/5.jpg" class="wide" />'."\n";
@@ -379,6 +437,30 @@ function admissions_banner()
         //echo '</div>'."\n";
 }    
 
+function admissions_music_sports_banners()
+{
+	$image_list = array();
+	// horizontal image
+	$music = rand(1,1000) % 2;
+	if ($music == 1)
+	{
+		$dir_of_images = get_directory_images("/var/www/reasondev.luther.edu/htdoc/images/admissions/music208x101");
+		$image_list[0] = '/images/admissions/music208x101/'.$dir_of_images[time() % count($dir_of_images)];
+		$dir_of_images = get_directory_images("/var/www/reasondev.luther.edu/htdoc/images/admissions/sports101x101");
+		$image_list[1] = '/images/admissions/sports101x101/'.$dir_of_images[time() % count($dir_of_images)];
+	}
+	else  // horizontal sports and square music
+	{
+		$dir_of_images = get_directory_images("/var/www/reasondev.luther.edu/htdoc/images/admissions/sports208x101");
+		$image_list[0] = '/images/admissions/sports208x101/'.$dir_of_images[time() % count($dir_of_images)];
+		$dir_of_images = get_directory_images("/var/www/reasondev.luther.edu/htdoc/images/admissions/music101x101");
+		$image_list[1] = '/images/admissions/music101x101/'.$dir_of_images[time() % count($dir_of_images)];
+	
+	}
+
+	return $image_list;
+}
+
 function admissions_logo()
 {
 	echo '<div class="sidebar">'."\n";
@@ -388,5 +470,16 @@ function admissions_logo()
 	echo '</div>'."\n";
 }    
 
+function google_analytics()
+{
+	echo '<script type="text/javascript">'."\n";
+	echo 'var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");'."\n";
+	echo 'document.write(unescape("%3Cscript src=\'" + gaJsHost + "google-analytics.com/ga.js\' type=\'text/javascript\'%3E%3C/script%3E"));'."\n";
+	echo '</script>'."\n";
+	echo '<script type="text/javascript">'."\n";
+	echo 'var pageTracker = _gat._getTracker("UA-129020-8");'."\n";
+	echo 'pageTracker._setDomainName("luther.edu");'."\n";
+	echo 'pageTracker._trackPageview();'."\n";                echo '</script>'."\n";
+}
 
 ?>
