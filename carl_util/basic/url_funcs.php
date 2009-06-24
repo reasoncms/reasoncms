@@ -164,6 +164,11 @@ function carl_construct_query_string ( $new_request_vars, $preserve_request_vars
 	}
 }
 
+function carl_make_query_string ( $new_request_vars )
+{
+	return carl_make_link( $new_request_vars, '', 'qs_only', true, true );
+}
+
 function get_current_url( $scheme = '' )
 {
 	// without $scheme, we figure out whether we're in SSL or not.  Providing a scheme will return the current URI		// with the new scheme
