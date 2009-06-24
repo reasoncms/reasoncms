@@ -41,10 +41,10 @@ function show_person( $person ) // {{{
 				if ( !empty( $person['title']))
 					echo '<div class="facStaffTitle">'.$person['title'].'</div>'."\n";
 				if ( !empty ( $person['ds_phone'] ))
-					echo '<div class="facStaffPhone">Phone: '.$person['ds_phone'].'</div>'."\n";
+					echo '<div class="facStaffPhone">'.$person['ds_phone'].'</div>'."\n";
 				if ( !empty ( $person['mail'] ))
 				{
-					echo '<div class="facStaffEmail">Email: <a href="mailto:'.$person['mail'].'">'.$person['mail'].'</a></div>'."\n";
+					echo '<div class="facStaffEmail"><a href="mailto:'.$person['mail'].'">'.$person['mail'].'</a></div>'."\n";
 				}
 				if (!empty( $person['content' ] ) )
 				{
