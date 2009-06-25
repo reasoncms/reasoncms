@@ -206,7 +206,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
 		'sidebar' => array( // Highlights
 			'module' => 'publication',
-			'related_publication_unique_names' => array( 'headlinesarchives' ),
+			'related_publication_unique_names' => array( 'headlinesarchive' ),
 			'related_mode' => 'true',
 			'related_title' => '',
 			'related_order' => 'random',
