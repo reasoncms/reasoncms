@@ -21,8 +21,8 @@
 			{
                         echo '<div class="footer">'."\n";
                         echo '<ul class="nav">'."\n";
-                        echo '<li><a href="www.luther.edu/siteinfo/">About This Site</a></li>'."\n";
-                        echo '<li><a href="www.luther.edu/privacy/">Privacy Statement</a></li>'."\n";
+                        echo '<li><a href="http://www.luther.edu/siteinfo/">About This Site</a></li>'."\n";
+                        echo '<li><a href="http://www.luther.edu/privacy/">Privacy Statement</a></li>'."\n";
                         echo '<li><a href="mailto:www@luther.edu">Contact Us</a></li>'."\n";
                         echo '</ul>'."\n";
                         echo '<p>Copyright '.date("Y").' Luther College &bull; 700 College Drive Decorah, Iowa 52101  USA
