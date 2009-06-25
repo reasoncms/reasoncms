@@ -21,9 +21,9 @@
 			{
                         echo '<div class="footer">'."\n";
                         echo '<ul class="nav">'."\n";
-                        echo '<li><a href="www.luther.edu/about/">About This Site</a></li>'."\n";
+                        echo '<li><a href="www.luther.edu/siteinfo/">About This Site</a></li>'."\n";
                         echo '<li><a href="www.luther.edu/privacy/">Privacy Statement</a></li>'."\n";
-                        echo '<li><a href="#mailto:www@luther.edu">Contact Us</a></li>'."\n";
+                        echo '<li><a href="mailto:www@luther.edu">Contact Us</a></li>'."\n";
                         echo '</ul>'."\n";
                         echo '<p>Copyright '.date("Y").' Luther College &bull; 700 College Drive Decorah, Iowa 52101  USA
         <br />Phone: 563-387-2000 or 800-4 LUTHER (800-458-8437)</p>'."\n";
@@ -33,7 +33,7 @@
 			else
 			{
 			echo '<div id="foot">'."\n";
-    			echo '<ul><li><a href="http://www.luther.edu/about/">About This Site</a></li>'."\n";
+    			echo '<ul><li><a href="http://www.luther.edu/siteinfo/">About This Site</a></li>'."\n";
     			echo '<li><a href="http://www.luther.edu/privacy/">Privacy Statement</a></li></ul>'."\n";
 
   			echo '<div class="vcard">'."\n";

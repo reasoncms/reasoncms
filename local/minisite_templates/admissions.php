@@ -235,8 +235,9 @@ class AdmissionsTemplate extends MinisiteTemplate
 	//	echo '<div class="content clearfix">'."\n";
 		echo '<div class="highlight clearfix">'."\n";
 		echo '<div class="highlightItem">'."\n";
+		//echo $_SERVER['DOCUMENT_ROOT'] . "\n";
 
-                $dir_of_images = get_directory_images("/var/www/reasondev.luther.edu/htdoc/images/admissions/main315x210");
+                $dir_of_images = get_directory_images($_SERVER['DOCUMENT_ROOT'] . "images/admissions/main315x210");
                 $mi = '/images/admissions/main315x210/'.$dir_of_images[time() % count($dir_of_images)];
 
 		echo '<img src="' . $mi . '" />'."\n";
