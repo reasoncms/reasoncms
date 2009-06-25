@@ -249,6 +249,11 @@ class FormController
 	 * final step is submitted,
 	 */
 	var $destroy_session_on_finish = false;
+	/**
+	 * If you want to allow the form to be entered at any step, rather than requiring
+	 * that the user start from the beginning, set this to true
+	 */
+	var $allow_arbitrary_start = false;
 	
 	/**#@-*/
 	
@@ -360,7 +365,7 @@ class FormController
 			// If this looks like the first time we've hit the page, but there's a 
 			// request for a form step that isn't the first one, we've probably had
 			// the session expire out from under us.
-			if( $this->_first_run )
+			if( $this->_first_run && !$this->allow_arbitrary_start)
 			{
 				if( !empty( $this->_request[ $this->_step_var_name ] ) )
 				{
