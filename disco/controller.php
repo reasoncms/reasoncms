@@ -881,6 +881,15 @@ class FormController
 		$this->session->set($this->_data_key, $this->_form_data);
 	}
 
+	function get_all_form_data()
+	{
+		if (!isset($this->_form_data))
+		{
+			$this->_form_data = $this->session->get($this->_data_key);
+		}
+		return $this->_form_data;
+	}
+	
 	function destroy_form_data()
 	{
 		$this->session->set($this->_data_key, array());
@@ -904,6 +913,22 @@ class FormController
 			$this->session_name = $name;
 		}
 	}
+
+	/**
+	 * Set a prefix on the data containers for this instance so that they
+	 * won't conflict with other applications using the form controller.
+	 * @access public
+	 * @return void
+	 */
+	function set_data_context($text)
+	{
+		if ($text)
+		{
+			$this->_data_key = $text.$this->_data_key;
+			$this->_path_key = $text.$this->_path_key;
+		}
+	}
+
 	//=========================================//
 	//========== PRIVATE METHODS ==============//
 	//=========================================//
