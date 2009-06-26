@@ -28,7 +28,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post' => 'applicant_account',
 		),
 		'directions' => array(
-			'post_sidebar' => 'directions',
+			'main_post' => 'directions',
 		),
 		'faculty' => array(
 			'main_post' => 'luther_faculty'
