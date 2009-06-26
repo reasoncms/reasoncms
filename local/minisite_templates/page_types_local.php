@@ -286,7 +286,7 @@ function admissions_main_navigation()
         	echo '<ul>'."\n";
         	echo '<li><a href="/admissions/fastfacts/luther/">Luther at a Glance</a></li>'."\n";
         	echo '<li><a href="/admissions/fastfacts/profile/">Campus Profile</a></li>'."\n";
-        	echo '<li><a href="/admissions/fastfacts/firstyearprofile/">Profile of Class 2012</a></li>'."\n";
+        	echo '<li><a href="/admissions/fastfacts/firstyearprofile/">Class of 2012 Profile</a></li>'."\n";
         	echo '<li><a href="/admissions/fastfacts/directions/">Driving Directions</a></li>'."\n";
         	echo '<li><a href="/admissions/fastfacts/decorah/">Decorah Area</a></li>'."\n";
         	echo '<li><a href="/admissions/fastfacts/counselors/">Meet Your Counselor</a></li>'."\n";
