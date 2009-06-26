@@ -286,7 +286,7 @@ function admissions_main_navigation()
         	echo '<ul>'."\n";
         	echo '<li><a href="/admissions/fastfacts/luther/">Luther at a Glance</a></li>'."\n";
         	echo '<li><a href="/admissions/fastfacts/profile/">Campus Profile</a></li>'."\n";
-        	echo '<li><a href="/admissions/fastfacts/profilefirstyear/">Profile of Class 2012</a></li>'."\n";
+        	echo '<li><a href="/admissions/fastfacts/firstyearprofile/">Profile of Class 2012</a></li>'."\n";
         	echo '<li><a href="/admissions/fastfacts/directions/">Driving Directions</a></li>'."\n";
         	echo '<li><a href="/admissions/fastfacts/decorah/">Decorah Area</a></li>'."\n";
         	echo '<li><a href="/admissions/fastfacts/counselors/">Meet Your Counselor</a></li>'."\n";
@@ -332,9 +332,10 @@ function admissions_main_navigation()
         echo '<li class="financialAid"><a href="/admissions/financialaid/">Financial Aid</a>'."\n";
 			echo '<ul>'."\n";
         	echo '<li><a href="/admissions/financialaid/tuition/">Tuition & Fees</a></li>'."\n";
-        	echo '<li><a href="/admissions/financialaid/students/">Scholarship & Aid</a></li>'."\n";
+        	echo '<li><a href="/admissions/financialaid/scholarshipsaid/">Scholarship & Aid</a></li>'."\n";
         	echo '<li><a href="/admissions/financialaid/parents/">Parents</a></li>'."\n";
-	       	echo '<li><a href="/admissions/financialaid/staff/">Staff</a></li>'."\n";
+	       	//echo '<li><a href="/admissions/financialaid/staff/">Staff</a></li>'."\n";
+        	echo '<li><a href="http://www.luther.edu/financial-aid/staff/"></a></li>'."\n";
         	echo '<li><a href="/admissions/financialaid/faq/">FAQ</a></li>'."\n";
         	echo '</ul></li>'."\n";
         echo '<li class="howToApply"><a href="/admissions/howtoapply/">How to Apply</a></li>'."\n";
