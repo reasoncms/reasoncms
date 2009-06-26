@@ -67,7 +67,7 @@ class HeadlineListItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 		$id = reset($image)->get_value('id');
 		$imgtype = reset($image)->get_value('image_type');
-		$full_image_name = WEB_PHOTOSTOCK.$id.'.'.$imgtype;	
+		$full_image_name = WEB_PHOTOSTOCK.$id.'_tn.'.$imgtype;	
 			//$markup_string .= '<div class="image">';
 			ob_start();	
 			//reason_get_image_url(reset($image), 'standard');
