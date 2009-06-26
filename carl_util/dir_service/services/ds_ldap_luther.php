@@ -91,9 +91,9 @@ class ds_ldap_luther extends ds_ldap {
 							$value = $record['sn'];
 							break;
 						case 'ds_fullname':
-							if (!empty($record['displayname']))
+							/*if (!empty($record['displayname']))
 								$value = $record['displayname'];
-							else
+							else*/
 								$value = $record['cn'];
 							break;
 						case 'ds_title':
