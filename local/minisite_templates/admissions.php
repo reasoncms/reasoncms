@@ -26,7 +26,7 @@ class AdmissionsTemplate extends MinisiteTemplate
 		{
                 	return '<body class="home">'."\n";
 		}
-		elseif (count($bc) <= 2)  // section
+		elseif (count($bc) <= 2 && $this->admissions_has_related_or_timeline())  // section
 		{
                 	return '<body class="inner narrow">'."\n";
 		}
@@ -219,6 +219,36 @@ class AdmissionsTemplate extends MinisiteTemplate
 			echo $ra_group->get_value('content');
 			echo '</div>'."\n";
                 }
+	}
+
+	function admissions_has_related_or_timeline()
+	// checks if section has related links or timeline
+	// used to set main content display width accordingly
+	{
+		// related
+		$url = $this->page_info->get_value('url_fragment');
+		$s = 'entity.unique_name = "related_'.$url.'"';
+		$es = new entity_selector( $this->site_id );
+		$es->add_type( id_of('text_blurb') );
+		$es->add_relation($s);
+		$ra = $es->run_one();
+		if(!empty($ra))
+		{
+			return true;
+		}
+
+		// timeline
+		$s = 'entity.unique_name = "timeline_'.$url.'"';
+		$es = new entity_selector( $this->site_id );
+		$es->add_type( id_of('text_blurb') );
+		$es->add_relation($s);
+		$ra = $es->run_one();
+		if(!empty($ra))
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	function luther_breadcrumbs()

@@ -96,7 +96,7 @@ class miniEventsModule extends EventsModule
 	function show_event_list_item_standard( $event_id, $day ) // {{{
         {
 	// Override - don't want time on admissions home page
-                if($this->show_times && substr($this->events[$event_id]->get_value( 'datetime' ), 11) != '00:00:00')
+                //if($this->show_times && substr($this->events[$event_id]->get_value( 'datetime' ), 11) != '00:00:00')
                         //echo prettify_mysql_datetime( $this->events[$event_id]->get_value( 'datetime' ), $this->list_time_format ).' - ';
                 echo '<a href="';
                 echo $this->events_page_url;

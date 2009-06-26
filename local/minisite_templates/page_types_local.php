@@ -308,7 +308,8 @@ function admissions_main_navigation()
         	echo '<ul>'."\n";
         	echo '<li><a href="/admissions/academics/">Academics</a></li>'."\n";
         	echo '<li><a href="http://sports.luther.edu/">Athletics</a></li>'."\n";
-        	echo '<li><a href="http://music.luther.edu/">Music</a></li>'."\n";
+        	echo '<li><a href="http://music.luther.edu/">Music</a></li>'."\n";	
+        	echo '<li><a href="/admissions/blogs/">Student Blogs</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeatluther/collegeministries/">College Ministries</a></li>'."\n";        	
         	echo '<li><a href="/admissions/lifeatluther/diversity/">Diversity Center</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeatluther/residencelife/">Residence Life</a></li>'."\n";
@@ -326,7 +327,7 @@ function admissions_main_navigation()
         	echo '<li><a href="/admissions/lifeafterluther/major/">Choosing a Major</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeafterluther/internships/">Internships</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeafterluther/jobs/">Jobs, Graduate School, & Volunteering</a></li>'."\n";
-        	echo '<li><a href="/admissions/lifeafterluther/outcomes/">Outcomes -- Class of 2008</a></li>'."\n";
+        	echo '<li><a href="/admissions/lifeafterluther/outcomes/">Outcomes&mdash;Class of 2008</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeafterluther/reports/">Reports by Class</a></li>'."\n";
         	echo '</ul></li>'."\n";
         echo '<li class="financialAid"><a href="/admissions/financialaid/">Financial Aid</a>'."\n";
@@ -338,7 +339,7 @@ function admissions_main_navigation()
         	echo '<li><a href="http://www.luther.edu/financial-aid/staff/">Staff</a></li>'."\n";
         	echo '<li><a href="/admissions/financialaid/faq/">FAQ</a></li>'."\n";
         	echo '</ul></li>'."\n";
-        echo '<li class="howToApply"><a href="/admissions/howtoapply/">How to Apply</a></li>'."\n";
+        echo '<li class="howToApply"><a href="/admissions/fastfacts/counselors">Staff</a></li>'."\n";
         echo '</ul>'."\n";
 
 	luther_google_search();
@@ -420,7 +421,7 @@ function admissions_banner()
         echo '<h2>Information for&hellip;</h2>'."\n";
         echo '<div class="infonav">'."\n";
         echo '<ul class="nav rowOne hasThree clearfix">'."\n";
-        echo '<li class="applicants"><a href="/admissions/applied/">Applicants</a></li>'."\n";
+        echo '<li class="applicants"><a href="/admissions/applicants/">Applicants</a></li>'."\n";
         echo '<li class="acceptedStudents"><a href="/admissions/accepted/">Accepted Students</a></li>'."\n";
         echo '<li class="parents"><a href="/admissions/parents/">Parents</a></li>'."\n";
         echo '</ul>'."\n";
