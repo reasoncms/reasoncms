@@ -78,7 +78,7 @@ class LutherHomeTemplate extends MinisiteTemplate
 ?>	
 
 
-      		<ul id="navmain"><li class="nm1"><a href="/admissions">Prospective Students</a></li><li class="nm2"><a href="/parents">Parents</a></li><li class="nm3"><a href="/visitors">Visitors</a></li><li class="nm4"><a href="/alumni">Alumni/ Friends</a></li><li class="nm5"><a href="/faculty-staff-students">Faculty/ Staff/ Students</a></li></ul>
+      		<ul id="navmain"><li class="nm1"><a href="/admissions">Prospective Students</a></li><li class="nm2"><a href="http://www.luther.edu/parents">Parents</a></li><li class="nm3"><a href="http://www.luther.edu/visitors">Visitors</a></li><li class="nm4"><a href="http://www.luther.edu/alumni">Alumni/ Friends</a></li><li class="nm5"><a href="http://www.luther.edu/faculty-staff-students">Faculty/ Staff/ Students</a></li></ul>
 
         </div class="column span-60 last">
 	  </div id="logosearch" class="container">
@@ -87,13 +87,13 @@ class LutherHomeTemplate extends MinisiteTemplate
 	<div id="homeglobalimagetop" class="container">
 	  <div class="column span-17">
 	    <ul id="navglobal">
-	    	<li class="ng1"><a href="/academics">Academics</a></li>
+	    	<li class="ng1"><a href="http://www.luther.edu/academics">Academics</a></li>
 	    	<li class="ng2"><a href="/admissions">Admissions</a></li>
-	    	<li class="ng3"><a href="/student-life">Student Life</a></li>
-	    	<li class="ng4"><a href="/news">News & events</a></li>
-	    	<li class="ng5"><a href="/giving">Giving</a></li>
-	    	<li class="ng6"><a href="/about">About Luther</a></li>
-	    	<li class="ng7"><a href="/contact">Contact</a></li>
+	    	<li class="ng3"><a href="http://www.luther.edu/student-life">Student Life</a></li>
+	    	<li class="ng4"><a href="http://www.luther.edu/news">News & events</a></li>
+	    	<li class="ng5"><a href="http://www.luther.edu/giving">Giving</a></li>
+	    	<li class="ng6"><a href="http://www.luther.edu/about">About Luther</a></li>
+	    	<li class="ng7"><a href="http://www.luther.edu/contact">Contact</a></li>
 	    </ul id="navglobal">
 	  </div class="column span-17">
 	  <div class="column span-60 last">
