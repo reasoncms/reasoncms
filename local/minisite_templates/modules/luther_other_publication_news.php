@@ -43,6 +43,7 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 			//$source_name = $news_items[$k]->get_value('source_name');
 			$sorted_and_limited_news_items[$source_name][$k] =& $news_items[$k];
 			if ($index == $this->params['max_num_to_show']) break;
+			
 		}
 		return $sorted_and_limited_news_items;
 	}
