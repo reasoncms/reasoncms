@@ -152,9 +152,9 @@ class LutherHomeTemplate extends MinisiteTemplate
 	            echo '<h2>Features</h2>'."\n";
                 echo '<a href="http://www.luther.edu/academics/study-abroad">'."\n";
                 echo '<img src="/images/luther/banner_study_abroad_216x78.gif" alt=""/></a>'."\n";
-                echo '<a href="http://www.luther.edu/admissions/visit">'."\n";
+                echo '<a href="/admissions/visit">'."\n";
                 echo '<img src="/images/luther/banner_ad_visit_216x78.gif" alt=""/></a>'."\n";
-                echo '<a href="http://www.luther.edu/admissions/apply">'."\n";
+                echo '<a href="/admissions/apply">'."\n";
                 echo '<img src="/images/luther/banner_ad_apply_216x78.gif" alt=""/></a>'."\n";
                 //echo '<a href="http://www.luther.edu/about/video">'."\n";
                 //echo '<img src="/images/luther/banner_ad_video_216x78.gif" alt=""/></a>'."\n";
