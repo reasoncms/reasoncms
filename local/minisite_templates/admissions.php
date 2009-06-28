@@ -367,7 +367,7 @@ html.js' );
 			// test if all sidebar images have keyword 'imagetop'
 			$module =& $this->_get_module( 'sidebar' );
 			foreach( $module->images AS $id => $image )
-                        {
+                       {
                                 if (!preg_match("/imagetop/", $image->get_value('keywords')))
                                 {
                                         return true;
