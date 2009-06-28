@@ -97,7 +97,7 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 	
 	function get_description_markup()
 	{
-
+		$markup_string = '';
 		$item = $this->passed_vars['item'];
 		if($item->get_value('description'))
 			//return '<div class="desc">'.$item->get_value('description').'</div>'."\n";
