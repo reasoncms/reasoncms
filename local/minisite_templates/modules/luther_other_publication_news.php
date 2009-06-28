@@ -54,8 +54,8 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
           $es = new entity_selector($this->site_id);
           $es->add_type(id_of('news'));		
           $es->add_right_relationship($this->get_publication_id(), relationship_id_of('publication_to_featured_post'));
-          $es->add_rel_sort_field();
-	  $es->set_order('relationship.rel_sort_order ASC');
+          $es->add_rel_sort_field($this);
+		  $es->set_order('relationship.rel_sort_order ASC');
           $result = $es->run_one();
           //pray($result);
           return ($result) ? array_keys($result) : array();
