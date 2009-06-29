@@ -3,6 +3,8 @@
 include_once( 'reason_header.php' );
 reason_include_once( 'feeds/default.php' );
 reason_include_once( 'minisite_templates/nav_classes/default.php' );
+reason_include_once( 'function_libraries/url_utils.php' );
+
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'editorPageFeed';
 
 class editorPageFeed extends defaultFeed
@@ -69,11 +71,9 @@ class editorPagesRSS extends ReasonRSS
 			$ret[$id]->set_value('depth',$depth);
 			if(!$ret[$id]->get_value('url'))
 			{
-				$base_url = trim_slashes($this->site->get_value('base_url'));
+				$base_url = rtrim(reason_get_site_url($this->site), '/');
 				$nice_url = $this->tree->get_nice_url($id);
-				$url = (!empty($base_url))
-					   ? 'http://'.REASON_HOST.'/'.$base_url.$nice_url.'/'
-					   : 'http://'.REASON_HOST.$nice_url.'/';
+				$url = $base_url . $nice_url . '/';
 				$ret[$id]->set_value('url',$url);
 			}
 			if(!empty($info['children']))
