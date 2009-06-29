@@ -30,6 +30,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'directions' => array(
 			'main_post' => 'directions',
 		),
+		'events' => array(
+			'main_post' => 'luther_events',
+		),
 		'faculty' => array(
 			'main_post' => 'luther_faculty'
 		),
