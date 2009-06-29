@@ -337,7 +337,7 @@ function admissions_main_navigation()
 			echo '<ul>'."\n";
         	echo '<li><a href="/admissions/financialaid/tuition/">Tuition & Fees</a></li>'."\n";
         	echo '<li><a href="/admissions/financialaid/scholarshipsaid/">Scholarship & Aid</a></li>'."\n";
-        	echo '<li><a href="/admissions/financialaid/parents/">Parents</a></li>'."\n";
+        	//echo '<li><a href="/admissions/financialaid/parents/">Parents</a></li>'."\n";
 	       	//echo '<li><a href="/admissions/financialaid/staff/">Staff</a></li>'."\n";
         	echo '<li><a href="http://www.luther.edu/financial-aid/staff/">Staff</a></li>'."\n";
         	echo '<li><a href="/admissions/financialaid/faq/">FAQ</a></li>'."\n";
