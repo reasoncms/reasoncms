@@ -477,7 +477,7 @@ function admissions_logo()
 {
 	echo '<div class="sidebar">'."\n";
 	echo '<div class="logo">'."\n";
-	echo '<h1><a href="http://www.luther.edu/">Luther College</a></h1>'."\n";
+	echo '<h1><a href="/">Luther College</a></h1>'."\n";
 	echo '<h2><a href="/admissions/">Admissions</a></h2>'."\n";
 	echo '</div>'."\n";
 }    
