@@ -8,6 +8,8 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LutherEvent
 
 class LutherEventsModule extends EventsModule
 {
+	var $list_date_format = 'l, F j';
+	
 	//////////////////////////////////////
 	// For The Events Listing
 	//////////////////////////////////////
@@ -18,16 +20,12 @@ class LutherEventsModule extends EventsModule
 		$this->show_back_link();
 		$this->show_images($e);
 		echo '<h3>'.$e->get_value('name').'</h3>'."\n";
-		if (!empty($this->request['date']) && strstr($e->get_value('dates'), $this->request['date']))
-			echo '<p class="date"><strong>Date:</strong> '.prettify_mysql_datetime( $this->request['date'], "l, F j, Y" ).'</p>'."\n";
-		if(substr($e->get_value( 'datetime' ), 11) != '00:00:00')
-			echo '<p class="time"><strong>Time:</strong> '.prettify_mysql_datetime( $e->get_value( 'datetime' ), "g:i a" ).'</p>'."\n";
-		
-		if ($e->get_value('content'))
-			echo '<div class="eventContent">'.$e->get_value( 'content' ).'</div>'."\n";
 		$this->show_ownership_info($e);
 		if ($e->get_value('description'))
 			echo '<p class="description">'.$e->get_value( 'description' ).'</p>'."\n";
+
+		if ($e->get_value('content'))
+			echo '<div class="eventContent">'.$e->get_value( 'content' ).'</div>'."\n";
 		$this->show_repetition_info($e);
 		if (!empty($this->request['date']) && strstr($e->get_value('dates'), $this->request['date']))
 			echo '<p class="date"><strong>Date:</strong> '.prettify_mysql_datetime( $this->request['date'], "l, F j, Y" ).'</p>'."\n";
