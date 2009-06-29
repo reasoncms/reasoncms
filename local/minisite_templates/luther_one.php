@@ -66,7 +66,7 @@ class LutherOneTemplate extends MinisiteTemplate
 	    <div class="column span-17 ">
 
   	      <div id="logo">
-  <a href="http://www.luther.edu" title="Luther College Home"><span></span>
+  <a href="/" title="Luther College Home"><span></span>
 	  <img alt="Luther College" src="/images/luther/logo.png"  />
 	</a>
 </div>
