@@ -359,22 +359,6 @@ html.js' );
 
 	function has_related_section()
         {
-                if( $this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) )
-                {
-			//print_r($this->cur_page->_values);
-			//print_r($this->cur_page->get_value('name'));
-
-			// test if all sidebar images have keyword 'imagetop'
-			$module =& $this->_get_module( 'sidebar' );
-			foreach( $module->images AS $id => $image )
-                       {
-                                if (!preg_match("/imagetop/", $image->get_value('keywords')))
-                                {
-                                        return true;
-                                }
-                        }
-
-                }
                 return false;
         }
 
