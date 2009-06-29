@@ -21,8 +21,8 @@
 			{
                         echo '<div class="footer">'."\n";
                         echo '<ul class="nav">'."\n";
-                        echo '<li><a href="http://www.luther.edu/siteinfo/">About This Site</a></li>'."\n";
-                        echo '<li><a href="http://www.luther.edu/privacy/">Privacy Statement</a></li>'."\n";
+                        echo '<li><a href="/siteinfo/">About This Site</a></li>'."\n";
+                        echo '<li><a href="/privacy/">Privacy Statement</a></li>'."\n";
                         echo '<li><a href="mailto:www@luther.edu">Contact Us</a></li>'."\n";
                         echo '</ul>'."\n";
                         echo '<p>Copyright '.date("Y").' Luther College &bull; 700 College Drive Decorah, Iowa 52101  USA
@@ -33,8 +33,8 @@
 			else
 			{
 			echo '<div id="foot">'."\n";
-    			echo '<ul><li><a href="http://www.luther.edu/siteinfo/">About This Site</a></li>'."\n";
-    			echo '<li><a href="http://www.luther.edu/privacy/">Privacy Statement</a></li></ul>'."\n";
+    			echo '<ul><li><a href="/siteinfo/">About This Site</a></li>'."\n";
+    			echo '<li><a href="/privacy/">Privacy Statement</a></li></ul>'."\n";
 
   			echo '<div class="vcard">'."\n";
   			echo '<div class="adr">Copyright '.date("Y").' &#8226'."\n";
