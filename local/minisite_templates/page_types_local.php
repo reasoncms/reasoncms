@@ -179,7 +179,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'post_banner' => '',
 		'sub_nav' => '',
 		'sub_nav_2' => 'admissions_sub_nav_2',
-		'sub_nav_3' => 'blurb',
+		'sub_nav_3' => 'admissions_events_mini',
         //	'main_post' => 'admissions_main_post',	
         //	'main_post' => '',	
         	'main' => '',	
@@ -222,7 +222,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			),
 		),
 
-		'post_sidebar' => 'admissions_events_mini',
+		'post_sidebar' => 'blurb',
 	),
         //-----------------------Steve's EventWithForm Page Begin----------------
         'event_with_form' => array(

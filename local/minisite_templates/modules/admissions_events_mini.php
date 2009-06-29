@@ -48,7 +48,7 @@ class miniEventsModule extends EventsModule
 	function run() // {{{
         {
 	echo '<div class="supplemental block block-3 events">'."\n";
-                                echo '<h2>Upcoming Events</h2>'."\n";	
+                               // echo '<h2>Upcoming Events</h2>'."\n";	
                 echo '<div id="'.$this->div_id.'">'."\n";
                 if (empty($this->request['event_id']))
                         $this->list_events();
@@ -83,6 +83,7 @@ class miniEventsModule extends EventsModule
 	} // }}}
 	function show_feed_link()
 	{
+		return;  // don't show all events 
 //		echo '<p class="more"><a href="'.$this->events_page_url.'">More events</a></p>'."\n";
 		echo '<p class="links">'."\n";
 		echo '<a class="all" href="'.$this->events_page_url.'">'."\n";

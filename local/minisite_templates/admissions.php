@@ -147,12 +147,21 @@ class AdmissionsTemplate extends MinisiteTemplate
                         $this->run_section( 'sidebar' );
                         //echo '</div>'."\n";
                 }
+		if ($this->cur_page->get_value( 'custom_page' ) == 'admissions_home')
+		{
+			echo '<div class="supplemental block block-3 events">'."\n";
+                        echo '<h2>Upcoming Events</h2>'."\n";
+		}
                 if($this->has_content( 'post_sidebar' ))
                 {
                         //echo '<div id="postSidebar">'."\n";
                         $this->run_section( 'post_sidebar' );
                         //echo '</div>'."\n";
                 }
+		if ($this->cur_page->get_value( 'custom_page' ) == 'admissions_home')
+		{
+			echo '</div>'."\n";
+		}
 
 		admissions_banner();
 		if ($this->cur_page->get_value( 'custom_page' ) == 'admissions_home')
