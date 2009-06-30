@@ -97,7 +97,7 @@
 	/**
 	 * Moved from reason function_libraries/util.php
 	 */
-	function carl_clean_vars( &$vars, $rules ) // {{{
+	function carl_clean_vars( $vars, $rules ) // {{{
 	// Returns an array which takes the values of the keys in Vars of
 	// the keys set in Settings, and runs the cleaning function
 	// specified in the value of settings
