@@ -217,9 +217,9 @@ function flatten_array_for_url($key, $array)
 	$flat = array_flatten_url($array);
 	foreach($flat as $subkey=>$v)
 	{
-		$ret[] = $key.$subkey.'='.$v;
+		if (strlen($v) > 0) $ret[] = $key.$subkey.'='.$v;
 	}
-	return $ret;
+	return (!empty($ret)) ? $ret : array();
 }
 
 function array_flatten_url(&$a, $pref = '')
