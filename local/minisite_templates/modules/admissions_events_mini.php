@@ -15,7 +15,7 @@
  */
 class miniEventsModule extends EventsModule
 {
-	var $ideal_count = 4;
+	var $ideal_count = 3;
 	var $div_id = 'miniCal';
 	var $show_options = false;
 	var $show_navigation = false;
@@ -55,7 +55,7 @@ class miniEventsModule extends EventsModule
                 else
                         $this->show_event();
                 echo '</div>'."\n";
-                echo '</div>'."\n";
+                //echo '</div>'."\n";
 
         } // }}}
 

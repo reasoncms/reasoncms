@@ -118,6 +118,20 @@ class AdmissionsTemplate extends MinisiteTemplate
 			//echo '</div>'."\n";
 			if ($this->cur_page->get_value( 'custom_page' ) == 'admissions_home')
 			{
+                        	echo '<h2>Contact Info</h2>'."\n";
+				echo '<dl>'."\n";
+				echo '<dt>Admissions Office</dt>'."\n";
+				//echo '<dd>Dahl Centennial Union 204<br />'."\n";
+				echo '<dd>Luther College<br />'."\n";
+				echo '700 College Drive<br />'."\n";
+				echo 'Decorah, Iowa 52101</dd>'."\n";
+				//echo '<dt>Phone: 563-387-1287</dt>'."\n";
+				echo '<dd>800-4 LUTHER</dd>'."\n";
+				echo '<dd>(800-458-8437)</dd>'."\n";
+				echo '<dd><a href="mailto:admissions@luther.edu">admissions@luther.edu</a></dd>'."\n";
+				echo '</dl>'."\n";
+
+				echo '</div>'."\n";
 				echo '</div>'."\n";
 			}
                 }
