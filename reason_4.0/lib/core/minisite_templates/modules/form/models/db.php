@@ -373,7 +373,7 @@ class DBFormModel extends DefaultFormModel
 				// add summary view link if we have an action id selected
 				$admin_obj =& $this->get_admin_object();
 				$action_id = $admin_obj->get_table_action_id();
-				if ($action_id) $link['Show summary view'] = carl_construct_link(array('form_admin_view' => 'true'), array('textonly', 'netid'));
+				if ($action_id) $link['Show summary view'] = carl_make_link(array('table_row_action' => '', 'table_action_id' => ''));
 			}	
 		}
 		else $link = array();
