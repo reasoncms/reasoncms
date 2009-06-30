@@ -394,7 +394,7 @@ class TableAdmin
 		if (isset($this->request['table_sort_order'])) 	 $this->set_sort_order($this->request['table_sort_order']);
 		if (isset($this->request['table_sort_field'])) 	 $this->set_sort_field($this->request['table_sort_field']);
 		if (isset($this->request['table_filters']))		 $this->set_filters($this->request['table_filters']);
-		if (isset($this->request['table_filter_clear'])) $this->set_filters();
+		if (isset($this->request['table_filter_clear'])) $this->clear_filters($this->request['table_filters']);
 	}
 	
 	function _get_valid_actions()
@@ -631,12 +631,22 @@ class TableAdmin
 	
 	function set_filters($filter_array = array())
 	{
-		if (empty($filter_array)) $this->filters = $filter_array;
-		else
+		if (!empty($filter_array))
 		{
 			foreach ($filter_array as $k=>$v)
 			{
 				if (!empty($v)) $this->filters[$k] = array('name' => $k, 'value' => $v);
+			}
+		}
+	}
+	
+	function clear_filters($filter_array = array())
+	{
+		if (!empty($filter_array))
+		{
+			foreach ($filter_array as $k=>$v)
+			{
+				if (!empty($v)) $this->filters[$k] = array('name' => $k, 'value' => '');
 			}
 		}
 	}
@@ -881,6 +891,7 @@ class TableAdmin
 		if (!empty($filter_array) && $this->allow_filters)
 		{
 			$active_filter = array_pop($filter_array);
+			
 			if ($active_filter['name'] == 'id')
 			{
 				foreach ($data as $k => $v)
@@ -895,7 +906,7 @@ class TableAdmin
 					if (!empty($v[$active_filter['name']])) unset ($data[$k]);
 				}
 			}
-			else
+			elseif (strlen($active_filter['value']) > 0)
 			{
 				foreach ($data as $k => $v) 
 				{
@@ -1015,7 +1026,7 @@ class TableAdmin
 			{
 				if (($this->sort_field == $k) && ($this->sort_order == 'asc')) $order = 'desc';
 				else $order = 'asc';
-				$url_array = array('table_sort_field' => $k, 'table_sort_order' => $order, 'table_filters' => '', 'table_export_format' => '', 'table_action' => '', 'table_row_action' => '', 'table_action_id' => '');
+				$url_array = array('table_sort_field' => $k, 'table_sort_order' => $order, 'table_export_format' => '', 'table_action' => '', 'table_row_action' => '', 'table_action_id' => '');
 				$this->parse_filters_for_url($url_array);
 				$url = carl_make_link($url_array);
 			}
@@ -1145,25 +1156,30 @@ class TableAdmin
 	function get_row_actions(&$data_row, $row_id)
 	{
 		$row_actions = array();
-			
+		
 		// view
 		if ($this->allow_view)
 		{
-			$row_actions['View'] = carl_make_link(array('table_row_action' => 'view', 'table_action_id' => $row_id, 'table_action' => ''));
+			$link_params1 = array('table_row_action' => 'view', 'table_action_id' => $row_id, 'table_action' => '');
+			$this->parse_filters_for_url($link_params1);
+			$row_actions['View'] = carl_make_link($link_params1);
 		}
 		
 		// edit
 		if ($this->allow_edit)
 		{
-			$row_actions['Edit'] = carl_make_link(array('table_row_action' => 'edit', 'table_action_id' => $row_id, 'table_action' => ''));
+			$link_params2 = array('table_row_action' => 'edit', 'table_action_id' => $row_id, 'table_action' => '');
+			$this->parse_filters_for_url($link_params2);
+			$row_actions['Edit'] = carl_make_link($link_params2);
 		}
 		
 		// delete
 		if ($this->allow_row_delete)
 		{
-			$row_actions['Delete'] = carl_make_link(array('table_row_action' => 'delete', 'table_action_id' => $row_id, 'table_action' => ''));
+			$link_params3 = array('table_row_action' => 'delete', 'table_action_id' => $row_id, 'table_action' => '');
+			$this->parse_filters_for_url($link_params3);
+			$row_actions['Delete'] = carl_make_link($link_params3);
 		}
-
 		return $row_actions;
 	}
 	
@@ -1451,7 +1467,7 @@ class TableAdmin
 		$filters =& $this->get_filters();
 		foreach ($filters as $k => $v)
 		{
-			$url_array['table_filters['.$k.']'] = ($htmlspecialchars) ? htmlspecialchars($v['value'],ENT_QUOTES,'UTF-8') : $v['value'];
+			$url_array['table_filters'][$k] = ($htmlspecialchars) ? htmlspecialchars($v['value'],ENT_QUOTES,'UTF-8') : $v['value'];
 		}
 	}
 	
