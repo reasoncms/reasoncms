@@ -133,6 +133,7 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 			}
 			$link .= '?' . implode_with_keys('&amp;',$param);
 		}
+                $link = preg_replace("|http(s)?:\/\/\w+\.\w+\.\w+|", "", $link);
 		echo '<a href="'. $link . '">'.$title.'</a>';
 	}
 	

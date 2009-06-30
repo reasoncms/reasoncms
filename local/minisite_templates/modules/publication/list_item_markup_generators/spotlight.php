@@ -111,7 +111,11 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 			//return '<div class="desc">'.$item->get_value('description').'</div>'."\n";
 			$markup_string .= '<div class="desc">'."\n";
 			$markup_string .= $item->get_value('description')."\n";
-			$markup_string .= '<a href ="'.$this->passed_vars['link_to_full_item'].'">read spotlight &gt;</a>'."\n";
+
+	                $full_link = $this->passed_vars['link_to_full_item'];
+       		        $full_link = preg_replace("|http(s)?:\/\/\w+\.\w+\.\w+|", "", $full_link);
+                	$markup_string .= '<a href="'.$full_link.'">read spotlight &gt;</a>'."\n";
+			//$markup_string .= '<a href ="'.$this->passed_vars['link_to_full_item'].'">read spotlight &gt;</a>'."\n";
 			$markup_string .= '</div class="desc">'."\n";
 		return $markup_string;
 	}
