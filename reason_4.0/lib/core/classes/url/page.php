@@ -249,10 +249,15 @@ class reasonPageURL extends reasonURL
 							$page->set_value('relative_url', str_replace("//", "/", $site->get_value('base_url')));
 							$page->set_value('domain', $domain);
 						}
+						else
+						{
+							trigger_error('a live owner site (should have id ' . $site_id . ') could not be found for page_id ' . $page_id);
+							return false;
+						}
 					}
 					else
 					{
-						trigger_error('a site id could not be found for page_id ' . $page_id);
+						trigger_error('an owner site could not be found for page_id ' . $page_id);
 						return false;
 					}
 				}
@@ -275,7 +280,7 @@ class reasonPageURL extends reasonURL
 			}
 			else
 			{
-				trigger_error('a parent id could not be found for page id ' . $page_id);
+				trigger_error('a parent page could not be found for page id ' . $page_id);
 				return false;
 			}
 		}
