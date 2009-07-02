@@ -118,7 +118,7 @@ class SpotlightItemMarkupGenerator extends PublicationMarkupGenerator
         function get_images_section()
         {
                 $markup_string = '';
-                $markup_string .= '<div class="figure"'."\n";
+                $markup_string .= '<div class="figure">'."\n";
                 $image = $this->passed_vars['item_images'];
                 if (!empty($image))
                 {
