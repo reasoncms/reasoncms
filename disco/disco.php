@@ -1,6 +1,9 @@
 <?php
+/**
+ * @package disco
+ */
 	/**
-	 * Include the plasmature widgets
+	 * Include the plasmature widgets and other dependencies
 	 */
 	include_once( 'paths.php');
 	include_once( CARL_UTIL_INC . 'dev/pray.php' );
@@ -41,6 +44,7 @@
 	
 		@author Dave Hendler
 		@author Meg Gibbs
+		@author Matt Ryan
 		@package disco
 	*/
 	
@@ -355,6 +359,26 @@
 		var $_disco_log_date_format = 'r';
 		/**#@-*/
 		
+		/**
+		 * Stores the callbacks registered on a Disco object
+		 * @var array Keys are process points, and values are arrays of php callbacks
+		 * @access private
+		 */
+		var $_callbacks = array(
+				'init'=>array(),
+				'on_first_time'=>array(),
+				'on_every_time'=>array(),
+				'pre_show_form'=>array(),
+				'post_show_form'=>array(),
+				'no_show_form'=>array(),
+				'pre_error_check_actions'=>array(),
+				'run_error_checks'=>array(),
+				'post_error_check_actions'=>array(),
+				'post_error_checks'=>array(),
+				'process'=>array(),
+				'where_to'=>array(),
+		);
+		
 		
 	//////////////////////////////////////////////////
 	// PUBLIC METHODS
@@ -403,11 +427,11 @@
 						$this->chosen_action = preg_replace( '/__button_/' , '' , $key );
 				}
 				// elements should not be empty
-				if ( !$externally_set_up )
+				/* if ( !$externally_set_up )
 				{
 					if(( !isset( $this->elements ) OR empty( $this->elements ) ) AND empty( $this->_elements ))
 					trigger_error( 'Your form needs to have some elements.  Create an elements array. (Ex: var $elements = array( \'item_one\', \'item_two\'); )' );
-				}
+				} */
 				
 				/*if ( !isset( $this->required ) OR !is_array( $this->required ) )
 					$this->required = array();*/
@@ -451,6 +475,7 @@
 					if(!$this->_is_element($element_name) && !$this->_is_element_group($element_name))
 						trigger_error('The field '.$element_name.' is present in your required fields, but it is not a recognized element or element group.' );
 				}
+				$this->_run_callbacks('init');
 				$this->_inited = true;
 			}
 		} // }}}
@@ -467,9 +492,13 @@
 		function run_load_phase() // {{{
 		{
 			if ( $this->_is_first_time() )
+			{
 				$this->on_first_time();
+				$this->_run_callbacks('on_first_time');
+			}
 			
 			$this->on_every_time();
+			$this->_run_callbacks('on_every_time');
 			
 			if ( !$this->_is_first_time() )
 			{
@@ -477,6 +506,7 @@
 			}
 			
 			$this->pre_error_check_actions();
+			$this->_run_callbacks('pre_error_check_actions');
 			
 			//make sure that the element groups have updated references to the disco elements
 			/*this won't be necessary if we ever stop replacing elements in $this->_elements every time that 
@@ -560,11 +590,13 @@
 				if ( !$this->_has_errors() )
 				{
 					$this->process();
+					$this->_run_callbacks('process');
 					$kludge = $this->finish();
 					$this->handle_transition( $kludge );
 				}
 			}
 			$this->post_error_check_actions();
+			$this->_run_callbacks('post_error_check_actions');
 		} // }}}
 		
 		/**
@@ -592,8 +624,9 @@
 				}
 			}
 			
-			//call on hook for custom error checks.
+			//call on hooks for custom error checks.
 			$this->run_error_checks();
+			$this->_run_callbacks('run_error_checks');
 		} // }}}
 		
 		/**
@@ -710,8 +743,13 @@
 		function handle_transition( $kludge ) // {{{
 		{
 			$where_to = $this->where_to();
-			if ( !$where_to )
+			if($callback_where_tos = $this->_run_callbacks('where_to'))
+			{
+				$where_to = array_pop($callback_where_tos);
+			}
+			elseif ( !$where_to )
 				$where_to = $kludge;
+			
 			if ( $where_to )
 			{
 				if ( !$where_to OR !is_string( $where_to ) )
@@ -768,22 +806,51 @@
 			if( $this->show_form )
 			{
 				//show custom content before the form begins
-				$this->pre_show_form();
+				echo $this->pre_show_form();
+				foreach($this->_run_callbacks('pre_show_form') as $str)
+				{
+					echo $str;
+				}
 				//show the form itself
 				$this->show_form();
 				//show custom content after the form buttons
-				$this->post_show_form();
+				echo $this->post_show_form();
+				foreach($this->_run_callbacks('post_show_form') as $str)
+				{
+					echo $str;
+				}
 			}
+			else
+			{
+				echo $this->no_show_form();
+				foreach($this->_run_callbacks('no_show_form') as $str)
+				{
+					echo $str;
+				}
+			}
+			
 		} // }}}
 		
 		/**
 		* Hook for having custom content or HTML before the form
 		* Called by {@link run_display_phase}.
+		* @return string
 		*/
 		function pre_show_form() // {{{
 		{
+			return '';
 		} // }}}
-			
+		
+	 	/**
+		* Hook for having custom content or HTML when the form is not displayed
+		* Called by {@link run_display_phase}.
+		* @return string
+		*/
+		function no_show_form()
+		{
+			return '';
+		}
+		
 		/**
 		* Display all elements in the form as well as buttons, form tags, and all else.
 		* Iterates through the elements and determines which display_style they are.  Each show_ method call then in
@@ -832,7 +899,7 @@
 				$this->show_errors();
 				$this->_form_started = true;
 				$markup = '<form method="'.$this->form_method.'" ';
-				$markup .= 'action="'.conditional_stripslashes($_SERVER['REQUEST_URI']).'" ';
+				$markup .= 'action="'.htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES).'" ';
 				$markup .= 'enctype="'.$this->form_enctype.'" ';
 				$markup .= 'id="'.$this->form_id.'" ';
 				$markup .= 'name="'.$this->form_name.'" ';
@@ -1084,9 +1151,11 @@
 		/**
 		* Hook to add any HTML or text or anything you want after the form
 		* Called by {@link run_display_phase}.
+		* @return string
 		*/
 		function post_show_form() // {{{
 		{
+			return '';
 		} // }}}
 		
 	//////////////////////////////////////////////////
@@ -1710,7 +1779,7 @@
 						unset($this->_order[$element_name]);
 				}
 				else
-					trigger_error($group_name.' is not a recognized element group', WARNING);
+					trigger_error('Cannot add element '.$element_name.' to group '.$group_name.', as '.$group_name.' is not a recognized element group', WARNING);
 			}
 			else
 				trigger_error('Cannot add element '.$element_name.'; element is not a recognized plasmature element', WARNING);
@@ -1737,13 +1806,13 @@
 							$this->_order[$element_name] = $element_name;
 					}
 					else
-						trigger_error($element_name.' is not a member of the element group '.$group_name, WARNING);
+						trigger_error('Cannot remove element '.$element_name.' from '.$group_name.', as '.$element_name.' is not a member of the element group '.$group_name, WARNING);
 				}
 				else
-					trigger_error($group_name.' is not a recognized element_group', WARNING);
+					trigger_error('Cannot remove element '.$element_name.' from group '.$group_name.', as '.$group_name.' is not a recognized element_group', WARNING);
 			}
 			else
-				trigger_error($element_name.' is not a recognized plasmature element', WARNING);
+				trigger_error('Cannot remove '.$element_name.' from group, as it is not a recognized plasmature element', WARNING);
 		}
 		
 		
@@ -1760,7 +1829,7 @@
 			}
 			else
 			{
-				trigger_error($group_name.' is not a recognized element group', WARNING);
+				trigger_error('Cannot get names of member elements from '.$group_name.' as it is not a recognized element group', WARNING);
 				return false;
 			}
 		}
@@ -1814,7 +1883,7 @@
 				}
 			}
 			else
-				trigger_error($element_name.' is not a recognized element');
+				trigger_error('Cannot get group name for '.$element_name.', as '.$element_name.' is not a recognized element');
 			return false;
 		}
 		
@@ -1946,7 +2015,7 @@
 				}
 			}
 			else
-				trigger_error($element_name.' is not a recognized element or element group', WARNING);
+				trigger_error('Cannot set error, as '.$element_name.' is not a recognized element or element group', WARNING);
 		} // }}}
 		
 	//////////////////////////////////////////////////
@@ -1975,6 +2044,8 @@
 		} // }}}			
 				
 		/**
+		* Add attributes to the form element
+		* @param $attr in form 'foo="bar"'. Must be already xhtml encoded.
 		* @access public
 		*/
 		function add_additional_attribute($attr)
@@ -1983,10 +2054,10 @@
 		}
 		
 		/**
+		* spit out all information about the object
 		* @access public
 		*/
 		function debug() // {{{
-		// spit out all information about the object
 		{
 			echo '<pre>';
 			reset( $this );
@@ -2100,7 +2171,18 @@
 			echo '<pre>'.htmlentities( $show ).'</pre>';
 		} // }}}
 		
-		
+		/**
+		 * Determine the appropriate plasmature type to use, given a database field definition
+		 *
+		 * Finds many common MySQL database field types; not tested significantly with other databases.
+		 * Not guranteed to have 100% coverage of all field definitions; does not specify a plasmature
+		 * type if it cannot divine one.
+		 * 
+		 * @param string $name the disco element name -- used mainly to ensure that ID fields are hidden
+		 * @param string $db_type the SQL database type
+		 * @param array $function_args An array of additional parameters.
+		 * 
+		 */
 		function plasmature_type_from_db_type( $name, $db_type, $function_args = array('find_maxlength_of_text_field' => false, 'do_not_sort_enums' => false) ) // {{{
 		{
 			$args = array();
@@ -2135,7 +2217,7 @@
 				$esc_options = array();
 				$options = array();
 				$opts = array();
-				if($function_args['do_not_sort_enums'])
+				if(!empty($function_args['do_not_sort_enums']))
 					$t = 'select_no_sort';
 				else
 					$t = 'select';
@@ -2154,7 +2236,7 @@
 			else
 			{
 				$t = '';
-				if($function_args['find_maxlength_of_text_field'])
+				if(!empty($function_args['find_maxlength_of_text_field']))
 				{
 					//find size of field
 					$maxlength = '';
@@ -2169,5 +2251,134 @@
 			}
 			return array( $t, $args );
 		} // }}}
+	
+		
+	//////////////////////////////////////////////////
+	// CALLBACKS
+	//////////////////////////////////////////////////	
+		
+		/**
+		 * Register a callback with Disco
+		 *
+		 * As an alternative to (or in addition to) Disco's overloadable methods like 
+		 * on_every_time() and process(), you can register callbacks that Disco will
+		 * call when/if those points are reached.
+		 *
+		 * This allows you to run custom code on a disco form without having to extend Disco.
+		 *
+		 * Note that is_callable() is used to validate callbacks, so there may be valid callbacks 
+		 * that don't work because they don't pass is_callable(). If you try to use a callback you
+		 * know will work, please file an issue on Reason's issue tracker.
+		 *
+		 * Disco will submit a reference to itself as the first parameter of the callback.
+		 *
+		 * Most process points, similarly to the functions they augment/replace, do not require a 
+		 * return value from the callback. There are four notable exceptions to this rule:
+		 * 
+		 * "pre_show_form", "post_show_form", and "no_show_form" should return a string for Disco 
+		 * to echo in the appropriate locations
+		 *
+		 * "where_to" should return a URL that Disco will use to send a redirect header. Please note
+		 * that if there are multiple "where_to" callbacks attached to the form, disco will use the
+		 * last one.
+		 *
+		 * Example code (note that the ampersands are not required in php5, but are included here
+		 * for backwards compatibility with php4):
+		 *
+		 * <code>
+		 * function add_foo_element(&$disco)
+		 * {
+		 * 		$disco->add_element('foo','text');
+		 * }
+		 * 
+		 * class where_to
+		 * {
+		 * 		var $_url = 'http://example.com/';
+		 * 		function get_url(&$disco)
+		 * 		{
+		 * 			return $this->_url;
+		 * 		}
+		 * }
+		 *
+		 * $d = new disco();
+		 * $d->set_callback('add_foo_element', 'on_every_time');
+		 * $whereto = new where_to();
+		 * $d->set_callback(array(&$whereto,'get_url'), 'where_to');
+		 * $d->run();
+		 * </code>
+		 *
+		 * @param callback $callback A callback to the function or method 
+		 * @param string $process_point The point where Disco should run the callback. Valid
+		 * process points include all the keys of @_callbacks.
+		 * @access public
+		 * @author Matt Ryan
+		 * @todo Should callbacks be able to be removed?
+		 * 
+		 */
+		function set_callback($callback, $process_point)
+		{
+			if(!isset($this->_callbacks[$process_point]))
+			{
+				trigger_error($process_point.' is not a valid disco callback attachment point');
+				return false;
+			}
+			$this->_callbacks[$process_point][] = $callback;
+			return true;
+		}
+		
+		/**
+		 * Run a callback for a given process point
+		 * 
+		 * @param string $process_point
+		 * @return mixed false if empty, invalid or non-callable process point; otherwise the return value of the callback
+		 * @access private
+		 * @author Matt Ryan
+		 */
+		function _run_callbacks($process_point)
+		{
+			$return_values = array();
+			if(!isset($this->_callbacks[$process_point]))
+			{
+				trigger_error('The process point "'.$process_point.'" is invalid. Valid process points include: '.implode(', ',array_keys($this->_callbacks)));
+				return false;
+			}
+			if(!empty($this->_callbacks[$process_point]))
+			{
+				foreach(array_keys($this->_callbacks[$process_point]) as $key)
+				{
+					if(is_callable($this->_callbacks[$process_point][$key]))
+					{
+						$return_values[] = call_user_func_array($this->_callbacks[$process_point][$key],array(&$this));
+					}
+					else
+					{
+						trigger_error('Callback for process point "'.$process_point.'", #'.$key.' is not callable');
+					}
+				}
+			}
+			return $return_values;
+		}
+		
+		/**
+		 * Set the method used for the form
+		 *
+		 * @param string $method "get" or "post" (lower-case only).
+		 * @return boolean false if an unrecognized method
+		 * @access public
+		 */
+		function set_form_method($method)
+		{
+			if('get' == $method || 'post' == $method)
+			{
+				$this->form_method = $method;
+				return true;
+			}
+			else
+			{
+				trigger_error('Form method must be "get" or "post". Note that this method is case-sensitive.');
+				return false;
+			}
+		}
 	} // }}}
+
 ?>
