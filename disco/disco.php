@@ -15,6 +15,11 @@
 	
 	include_once( 'element_group.php');
 	
+	/**
+	 * Wrap a string in a div, with classes indicating that it is a comment on a form element
+	 * @param string $comment
+	 * @return string
+	 */
 	function form_comment($comment)  // {{{
 	{
 		return ("<div class=\"formComment smallText\">$comment</div>");
