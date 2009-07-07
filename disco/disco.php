@@ -2316,12 +2316,17 @@
 		 *
 		 * This allows you to run custom code on a disco form without having to extend Disco.
 		 *
-		 * Note that is_callable() is used to validate callbacks, so there may be valid callbacks 
-		 * that don't work because they don't pass is_callable(). If you try to use a callback you
-		 * know will work, please file an issue on Reason's issue tracker.
+		 * Notes:
 		 *
 		 * Disco will submit a reference to itself as the first parameter of the callback.
 		 *
+		 * is_callable() is used to validate callbacks, so there may be valid callbacks 
+		 * that don't work because they don't pass is_callable(). If you try to use a callback you
+		 * know will work, please file an issue on Reason's issue tracker.
+		 *
+		 * You can register any number of callbacks for a given process point (though see the note 
+		 * below regarding where_to.) Callbacks are run in the order they were added.
+		 * 
 		 * Most process points, similarly to the functions they augment/replace, do not require a 
 		 * return value from the callback. There are four notable exceptions to this rule:
 		 * 
@@ -2351,9 +2356,9 @@
 		 * }
 		 *
 		 * $d = new disco();
-		 * $d->set_callback('add_foo_element', 'on_every_time');
+		 * $d->add_callback('add_foo_element', 'on_every_time');
 		 * $whereto = new where_to();
-		 * $d->set_callback(array(&$whereto,'get_url'), 'where_to');
+		 * $d->add_callback(array(&$whereto,'get_url'), 'where_to');
 		 * $d->run();
 		 * </code>
 		 *
@@ -2365,7 +2370,7 @@
 		 * @todo Should callbacks be able to be removed?
 		 * 
 		 */
-		function set_callback($callback, $process_point)
+		function add_callback($callback, $process_point)
 		{
 			if(!isset($this->_callbacks[$process_point]))
 			{
