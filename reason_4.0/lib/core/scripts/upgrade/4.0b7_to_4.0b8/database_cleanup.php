@@ -55,6 +55,8 @@ class databaseCleanup
 		$this->change_relationship_terminology('page_to_related_publication', 'Places a related publication on a page', 'Attach a related publication');
 		
 		$this->_update_theme_previewer();
+		
+		$this->provide_entity_info_admin_link();
 	}
 	
 	function change_relationship_terminology($rel_name, $term_search, $term_replace)
@@ -111,6 +113,37 @@ class databaseCleanup
 			echo '<p>Theme type is up to date</p>'."\n";
 		}
 	}
+	
+	function provide_entity_info_admin_link()
+	{
+		// lets try to find if it exists
+		$es = new entity_selector(id_of('master_admin'));
+		$es->add_type(id_of('admin_link'));
+		$es->add_relation('url.url LIKE "%cur_module=EntityInfo%"');
+		$result = $es->run_one();
+		if (!$result)
+		{
+			if($this->mode == 'run')
+			{
+				$values = array('url' => './?cur_module=EntityInfo',
+								'relative_to_reason_http_base' => false,
+								'new' => 0);
+				
+				$id = reason_create_entity(id_of('master_admin'), id_of('admin_link'), $this->reason_user_id, 'Entity Info', $values);
+				create_relationship(id_of('master_admin'), $id, relationship_id_of('site_to_admin_link'));
+				echo '<p>Created and added an administrative link in Master admin to the entity info admin module</p>';
+								
+			}
+			else
+			{
+				echo '<p>Would add an administrative link in Master admin to the entity info admin module</p>';
+			}
+		}
+		else
+		{
+			echo '<p>Your instance already has an administrative link to the EntityInfo admin module</p>';
+		}
+	}
 }
 
 force_secure_if_available();
@@ -133,6 +166,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 <li>Changes "Places blog/publication on a page" to "Place a blog/publication" (addresses <a href="http://code.google.com/p/reason-cms/issues/detail?id=33">issue 33</a>)</li>
 <li>Changes "Places a related publication on a page" to "Attach a related publication" (addresses <a href="http://code.google.com/p/reason-cms/issues/detail?id=33">issue 33</a>)</li>
 <li>Adds the theme previewer to the theme type</li>
+<li>Adds an administrative link in Master Admin to the entity info admin module</li>
 <?php
 /* TODO
 <li>Removes the finish action for sites.</li>
