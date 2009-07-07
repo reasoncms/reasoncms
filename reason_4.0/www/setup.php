@@ -45,6 +45,7 @@ and then setup the first site and user for your instance.</p>
 <p>Fix mode will try to resolve easy to fix installation problems. Specifically, it will do the following:
 <ul>
 <li>Create symbolic links for thor, loki, flvplayer, and jquery, from the web tree to the proper locations in reason_package</li>
+<li>Create data directories in the locations specified in settings files if those directories do not exist</li>
 <?php // <li>Import the reason 4 beta 8 database into mysql IF the current database has no tables</li> ?>
 </ul>
 <hr />
@@ -335,10 +336,6 @@ function perform_checks()
 	if (data_dir_writable($_SERVER[ 'DOCUMENT_ROOT' ].WEB_TEMP, 'WEB_TEMP')) $check_passed++;
 	else $check_failed++;
 	
-	if (check_file_readable(APACHE_MIME_TYPES, 'APACHE_MIME_TYPES', 
-							' Also make sure APACHE_MIME_TYPES constant in reason_settings is set to the full path of the mime.types file (include the filename).')) $check_passed++;
-	else $check_failed++;
-	
 	if (check_directory_readable(THOR_INC, 'THOR_INC')) $check_passed++;
 	else $check_failed++;
 	
@@ -410,7 +407,7 @@ function check_loki_accessible_over_http()
 	global $fix_mode_enabled;
 	$fixed_str = '';
 	$path = carl_construct_link(array(''), array(''), LOKI_2_HTTP_PATH . 'loki.js');
-	$accessible = check_accessible_over_http($path, 'loki');
+	$accessible = check_accessible_over_http($path, 'Loki WYSIWIG Editor');
 	if (!$accessible && $fix_mode_enabled) // lets try to repair this
 	{
 		// if LOKI_2_INC - strip off the helpers/php part
@@ -617,7 +614,15 @@ function imagemagick_check()
 
 function data_dir_writable($dir, $name)
 {
-	if (is_writable($dir)) return msg('<span class="success">'.$name . ' directory is writable</span> - check passed', true);
+	global $fix_mode_enabled;
+	if (!file_exists($dir) && $fix_mode_enabled)
+	{
+		mkdir($dir, 0775);
+		if (file_exists($dir) && is_writable($dir)) return msg('<span class="success">missing data directory ('.$dir.') created using fix mode - '.$name . ' directory is writable</span> - check passed', true);
+		elseif (!file_exists($dir)) return msg('<span class="error">missing data directory ('.$dir.') could not be created using fix mode - '.$name. ' directory does not exist - failed</span>', false);
+		elseif (file_exists($dir) && !is_writable($dir)) return msg('<span class="error">created directory ('.$dir.') with fix mode but ' . $name . ' directory not writable - failed</span>.', false); 
+	}
+	elseif (is_writable($dir)) return msg('<span class="success">'.$name . ' directory is writable</span> - check passed', true);
 	else return msg ('<span class="error">'.$name . ' directory not writable - failed</span>. Make sure apache user has write access to ' . $dir, false);
 }
 
@@ -763,4 +768,3 @@ function die_with_message($msg)
  * Setup tests
  */
 ?>
-
