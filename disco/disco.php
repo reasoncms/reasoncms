@@ -2159,6 +2159,51 @@
 		} // }}}
 		
 		/**
+		* Move a single element or element group to a new location.
+		* Use set_order if you need to do wholesale rearranging.
+		* @param string $element1 Name of element you're moving
+		* @param string $where position relative to element2 ('before' or 'after')
+		* @param string $element2 Name of element to move element1 next to
+		*/
+		function move_element( $element1, $where, $element2)
+		{
+			$old_order = $this->get_order();
+			if (!$this->_is_element($element2))
+			{
+				trigger_error($element2.' is a not an element that move_element() can locate', WARNING);				
+				return;
+			}
+			if(($this->_is_element($element1) && !$this->_element_is_in_group($element1))|| $this->_is_element_group($element1))
+			{
+				foreach($old_order as $name)
+				{
+					if ($name == $element1) continue;
+					if ($name == $element2)
+					{ 
+						if ($where == 'after')
+						{
+							$new_order[$name] = $element2;
+							$new_order[$element1] = $element1;
+						} else {
+							$new_order[$element1] = $element1;
+							$new_order[$name] = $element2;
+						}
+					} else {
+						$new_order[$name] = $name;
+					}
+				}
+				$this->_order = $new_order;
+			}
+			elseif($this->_element_is_in_group($element1))
+			{
+				trigger_error($element1.' is a member of an element group and cannot be moved', WARNING);
+			}
+			else
+				if ($this->full_error_triggers) trigger_error('Cannot move '.$element1.'; '.$element1.' is not a recognized element or element group');
+			
+		}
+		
+		/**
 		* Set the internal copy of the request.
 		* This allows Disco to work with a filtered copy of any request vars.  Generally, this is simply set to
 		* $_REQUEST or $_POST, but this can also be used to automatically test or provide a fake environment for Disco
