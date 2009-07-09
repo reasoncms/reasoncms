@@ -3077,13 +3077,8 @@
 			{
 				if( $this->allow_upload_on_edit )
 				{
-					//echo WEB_PATH . '<br />';
-					//echo $_SERVER['DOCUMENT_ROOT'];
-					//echo $_SERVER['DOCUMENT_ROOT'].$this->existing_file;
-					//die;
-
 					$str .= ($this->file_display_name ? $this->file_display_name : $this->existing_file ).'<br />';
-					$str .= (round( (filesize( $this->existing_file ) / 1024), 0 ) ).'K<br />';
+					$str .= format_bytes_as_human_readable(filesize($this->existing_file))."<br />";
 					$str .= '<br />';
 					$str .= '<span class="smallText">Upload a different file:</span><br />';
 					$str .= $input;
@@ -3150,6 +3145,7 @@
 										#'date_format',
 										'year_max',
 										'year_min', 
+										'use_picker'
 									);
 		
 		var $prepopulate = false;
@@ -3159,6 +3155,7 @@
 		
 		var $year_max;
 		var $year_min;
+		var $use_picker = true; // default to using the JavaScript date picker
 		
 		var $year;
 		var $month;
@@ -3360,6 +3357,23 @@
 			}
 		} // }}}
 		
+		function display()
+		{
+		    if ($this->use_picker && !defined('_PLASMATURE_INCLUDED_DATEPICKER')) {
+		        if (defined("DATE_PICKER_HTTP_PATH"))
+		        {
+		        	echo '<script type="text/javascript" src="'. DATE_PICKER_HTTP_PATH.'/js/datepicker.js"></script>',"\n";
+                	echo '<link href="'.DATE_PICKER_HTTP_PATH. '/css/datepicker.css" rel="stylesheet" type="text/css" />',"\n";
+                	define('_PLASMATURE_INCLUDED_DATEPICKER', true);
+                }
+                else
+                {
+                
+                }
+		    }
+		    parent::display();
+		}
+		
 		function get_display() // {{{
 		{
 			$str = '';
@@ -3411,51 +3425,56 @@
 			$str .= $this->get_hour_display($h);
 		}
 		
+		function _get_display($name, $value, $id_suffix, $separator='', $size=2,
+		    $class=null)
+		{
+		    $class = ($class)
+		        ? ' class="'.$class.'"'
+		        : '';
+		    $id = $this->name;
+		    if ($id_suffix)
+		        $id .= "-$id_suffix";
+		    $value = htmlspecialchars($value, ENT_QUOTES);
+		    return $separator.'<input type="text"'.$class.' size="'.$size.'" '.
+		        'maxlength="'.$size.'" id="'.$id.'" '.
+		        'name="'.$this->name.'['.$name.']" value="'.$value.'" />';
+		}
+		
 		function get_month_display($month_val = '')
 		{
-			$str = '';
-			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'monthElement" name="'.$this->name.'[month]" value="'.htmlspecialchars($month_val, ENT_QUOTES).'" />';
-			return $str;
+		    return $this->_get_display('month', $month_val, 'mm');
 		}
 		
 		function get_day_display($day_val = '')
 		{
-			$str = '';
-			$str .= ' / ';
-			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'dayElement" name="'.$this->name.'[day]" value="'.htmlspecialchars($day_val, ENT_QUOTES).'" />';
-			return $str;
+		    return $this->_get_display('day', $day_val, 'dd', ' / ');
 		}
 		
 		function get_year_display($year_val = '')
 		{
-			$str = '';
-			$str .= ' / ';
-			$str .= '<input type="text" size="4" maxlength="4" id="'.$this->name.'yearElement" name="'.$this->name.'[year]" value="'.htmlspecialchars($year_val, ENT_QUOTES).'" />';
-			return $str;
+		    // The classes on the year display activate the JavaScript
+		    // date picker.
+		    $class = ($this->use_picker)
+		        ? 'split-date fill-grid statusformat-l-cc-sp-d-sp-F-sp-Y'
+		        : null;
+			return $this->_get_display('year', $year_val, null, ' / ', 4,
+			    $class);
 		}
 		
 		function get_hour_display($hour_val = '')
 		{
-			$str = '';
-			$str .= '&nbsp;&nbsp; at ';
-			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'hourElement" name="'.$this->name.'[hour]" value="'.htmlspecialchars($hour_val, ENT_QUOTES).'" />';
-			return $str;
+			return $this->_get_display('hour', $hour_val, 'HH',
+			    '&nbsp;&nbsp; at ');
 		}
 		
 		function get_minute_display($minute_val = '')
 		{
-			$str = '';
-			$str .= ' : ';
-			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'minuteElement" name="'.$this->name.'[minute]" value="'.htmlspecialchars($minute_val, ENT_QUOTES).'" />';	
-			return $str;
+		    return $this->_get_display('minute', $minute_val, 'MM', ' : ');
 		}
 		
 		function get_second_display($second_val = '')
 		{
-			$str = '';
-			$str .= ' : ';
-			$str .= '<input type="text" size="2" maxlength="2" id="'.$this->name.'secondElement" name="'.$this->name.'[second]" value="'.htmlspecialchars($second_val, ENT_QUOTES).'" />';
-			return $str;
+			return $this->_get_display('second', $second_val, 'SS', ' : ');
 		}
 		
 		function get_ampm_display($ampm_val)
