@@ -44,7 +44,7 @@ and then setup the first site and user for your instance.</p>
 <h3>Experimental "Fix" Mode<?php echo $fix_mode_link ?></h3>
 <p>Fix mode will try to resolve easy to fix installation problems. Specifically, it will do the following:
 <ul>
-<li>Create symbolic links for thor, loki, flvplayer, and jquery, from the web tree to the proper locations in reason_package</li>
+<li>Create symbolic links for thor, loki, flvplayer, date picker, and jquery, from the web tree to the proper locations in reason_package</li>
 <li>Create data directories in the locations specified in settings files if those directories do not exist</li>
 <?php // <li>Import the reason 4 beta 8 database into mysql IF the current database has no tables</li> ?>
 </ul>
@@ -365,6 +365,9 @@ function perform_checks()
 	
 	if (check_flvplayer_accessible_over_http()) $check_passed++;
 	else $check_failed++;
+
+	if (check_datepicker_accessible_over_http()) $check_passed++;
+	else $check_failed++;
 	
 	echo '<h3>Summary</h3>';
 	echo '<ul>';
@@ -480,6 +483,33 @@ function check_flvplayer_accessible_over_http()
 					<p>The URL attempted was ' . $path . '. Check the URL and made sure it exists and is
 					web accessible. Also check the constant FLVPLAYER_HTTP_PATH, which currently is set to '
 					. FLVPLAYER_HTTP_PATH . ' and make sure it correctly references the location of flvplayer.</p>', false);
+	}
+}
+
+function check_datepicker_accessible_over_http()
+{
+	global $fix_mode_enabled;
+	$fixed_str = '';
+	$accessible = check_accessible_over_http(DATE_PICKER_HTTP_PATH . 'index.html', 'frequency decoder');
+	if (!$accessible && $fix_mode_enabled) // lets try to repair this
+	{
+		// if FLVPLAYER_INC is readable
+		if (is_readable(DATE_PICKER_HTTP_PATH))
+		{
+			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(DATE_PICKER_HTTP_PATH, "/"));
+			if (is_writable(dirname($symlink_loc))) symlink(DATE_PICKER_HTTP_PATH, $symlink_loc);
+		}
+		$accessible = check_accessible_over_http(DATE_PICKER_HTTP_PATH . 'index.html', 'frequency decoder');
+		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
+	}
+	if ($accessible) return msg('<span class="success">date picker'.$fixed_str.' is accessible over http</span> - check passed', true);
+	else
+	{
+		$path = carl_construct_link(array(''), array(''), DATE_PICKER_HTTP_PATH . 'index.hml');
+		return msg('<span class="error">date picker'.$fixed_str.' is not accessible over http</span>.
+					<p>The URL attempted was ' . $path . '. Check the URL and made sure it exists and is
+					web accessible. Also check the constant DATE_PICKER_HTTP_PATH, which currently is set to '
+					. DATE_PICKER_HTTP_PATH . ' and make sure it correctly references the location of date picker.</p>', false);
 	}
 }
 
