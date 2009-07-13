@@ -131,7 +131,7 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 		if($size == 0) {
 		   return("0 Bytes");
 	   }
-	   $filesizename = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
+	   $filesizename = array(" bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
 	   return round($size/pow(1024, ($i = floor(log($size, 1024)))), $decimal) . $filesizename[$i];
 	
 	}
