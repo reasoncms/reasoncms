@@ -27,6 +27,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'admissions_account_signup' => array(
 			'main_post' => 'applicant_account',
 		),
+		'alumni_auction_registration' => array(
+			'main_post' => 'alumni_auction_pricing',
+		),
 		'directions' => array(
 			'main_post' => 'directions',
 		),
