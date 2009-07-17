@@ -767,7 +767,7 @@
 					if(!empty($errors))
 					{
 						echo '<h3>PHP errors were encountered during the processing of this form.</h3>'."\n";
-						echo '<p>Because you are accessing this form from an IP address listed as a developer\'s, rather than headering your browser to the next step (which would hide the errors) the form is pausing to let you see the errors displayed above.</p>'."\n";
+						echo '<p>Because you are accessing this form from an IP address listed as a developer\'s, rather than redirecting your browser to the next step (which would hide the errors) the form is pausing to let you see the errors displayed above.</p>'."\n";
 						echo '<p><a href="'.htmlspecialchars($where_to).'">Thanks for the info; continue on.</a></p>';
 						exit;
 					}
