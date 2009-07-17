@@ -36,7 +36,7 @@ $(document).ready(function()
  */
 function create_event_handlers()
 {
-	$("a[@class^='sort_switch_']").click(sort);
+	$("a[class^='sort_switch_']").click(sort);
 }
 
 /**
