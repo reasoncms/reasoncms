@@ -15,6 +15,8 @@
  */
 include ('reason_header.php');
 reason_include_once ('function_libraries/reason_session.php');
+
+header('Content-Type: text/javascript');
 ?>
 if (window.attachEvent)
   window.attachEvent('onload', init);
