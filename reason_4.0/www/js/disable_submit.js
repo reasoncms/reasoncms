@@ -21,7 +21,7 @@ $(document).ready(function()
 	var valid_ids = verifyString(queryString( "id", js_src ));
 	var valid_classes = verifyString(queryString( "class", js_src ));
 	var valid_reset_time = parseInt(queryString ('reset_time', js_src), 10);
-	var selector = Array();
+	var selector = [];
 	
 	if (valid_names) selector[selector.length] = $.map(valid_names.split(","), function (item) { return "form[name='" + item + "']"; }).toString();
 	if (valid_ids) selector[selector.length] = $.map(valid_ids.split(","), function (item) { return "form#" + item; }).toString();
@@ -31,33 +31,70 @@ $(document).ready(function()
 	
 	$(selector_string).submit(function() // sets up a submit event for valid forms
 	{
-		var buttons = new Array();
-		buttons["text"] = new Array();
-		buttons["refs"] = new Array();
+		var buttons = $("button[type=submit], input[type=submit], " +
+		    "input[type=image]", this);
+		if (buttons.length <= 0)
+		    return;
 		
-		$("input[type=submit]", this).each(function(index)
-		{
-			buttons["refs"][index] = $(this);
-			buttons["text"][index] = ($(this).attr("value"));
-			if (valid_reset_time) setTimeout( function() { enableSubmit(buttons["refs"][index], buttons["text"][index]); }, valid_reset_time);
-			
-			// we use a timer with no delay - allows original form to be submitted as is but buttons are disabled as soon as possible
-			setTimeout( function() { disableSubmit(buttons["refs"][index], "Please wait..."); }, 0); 
+		var submit_row = null;
+		buttons.each(function() {
+		    var row = $(this).parents('#discoSubmitRow').eq(0);
+		    if (!submit_row && row)
+		        submit_row = row;
+		    else if (!row)
+		        submit_row = null;
 		});
+		
+		var wait_msg = 'Please wait&hellip;';
+		var message;
+		if (submit_row) {
+		    message = $('<span class="submit_waiting">' + wait_msg + '</span>');
+		}
+		
+		if (valid_reset_time) {
+	        setTimeout(function reenable_buttons() {
+	            buttons.each(function() {
+	                var button = $(this);
+	                button.attr("disabled", false);
+	                var original_caption = button.data("original_caption");
+	                if (original_caption) {
+	                    if (this.nodeName == "BUTTON")
+	                        button.html(original_caption);
+	                    else
+	                        button.attr("value", original_caption);
+	                }
+	            });
+	            
+	            if (message)
+	                message.remove();
+	        }, valid_reset_time);
+	    }
+		
+		// Disable the buttons right after the form submit action goes through.
+		setTimeout(function disable_buttons() {
+		    var target;
+		    buttons.attr("disabled", true);
+		    
+		    if (message) {
+		        target = $("td:last", submit_row);
+		        if ($(".submit_waiting, .submitting", target).length <= 0)
+		            target.append(message);
+		    } else {
+		        buttons.each(function change_caption() {
+		            var button = $(this);
+		            button.data('original_caption', (this.nodeName == "BUTTON") ?
+		                button.html() :
+		                button.attr(value));
+		            if (this.nodeName == "BUTTON")
+                        button.html(wait_msg);
+                    else
+                        button.attr("value", wait_msg);
+		        });
+		    }
+		});
+		
 		return true;
 	});
-	
-	function enableSubmit(button, value)
-	{
-		$(button).attr("value",value);
-		$(button).attr("disabled",false);
-	}
-	
-	function disableSubmit(button, value)
-	{
-		$(button).attr("value",value);
-		$(button).attr("disabled",true);
-	}
 	
 	function queryString( key, url )
 	{
