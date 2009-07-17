@@ -42,10 +42,10 @@ $(document).ready(function()
 	// setup locals based upon query string values or defaults
 	var refresh_time = (js_refresh_time) ? js_refresh_time : default_refresh_time;
 	var class_substring = (js_class_substring) ? js_class_substring : default_refresh_class;
-	var src_selector = (js_src_contains) ? ",img[@src*="+js_src_contains+"]" : "";
+	var src_selector = (js_src_contains) ? ",img[src*="+js_src_contains+"]" : "";
 	
 	// select images with the class_substring and set them up to refresh
-	$("img[@class*="+class_substring+"]"+src_selector).each(function()
+	$("img[class*="+class_substring+"]"+src_selector).each(function()
 	{
 		var image = $(this);
 		
