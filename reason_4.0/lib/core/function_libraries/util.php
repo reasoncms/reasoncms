@@ -851,10 +851,10 @@
 	 * <dt>view_sensitive_data</dt><dd>The privilege to view any data in Reason</dd>
 	 * <dt>manage_integration_settings</dt><dd>The privilege to modify or override foreign keys and other values in Reason that pertain to integration with external data sources</dd>
 	 * <dt>edit_raw_ldap_filters</dt><dd>The privilege to write full LDAP filters/queries (e.g. in the construction of dynamic groups)</dd>
-	 * <dt>upload_full_size_image/dt><dd>The privilege to keep images from being resized upon upload, thereby retaining their original dimensions</dd>
-	 * <dt>upgrade/dt><dd>The privilege to run Reason's upgrade scripts</dd>
-	 * <dt>db_maintenance/dt><dd>The privilege to run standard database cleanup and sanity-checking scripts</dd>
-	 * <dt>update_urls/dt><dd>The privilege to run Reason's .htaccess regeneration script</dd>
+	 * <dt>upload_full_size_image</dt><dd>The privilege to keep images from being resized upon upload, thereby retaining their original dimensions</dd>
+	 * <dt>upgrade</dt><dd>The privilege to run Reason's upgrade scripts</dd>
+	 * <dt>db_maintenance</dt><dd>The privilege to run standard database cleanup and sanity-checking scripts</dd>
+	 * <dt>update_urls</dt><dd>The privilege to run Reason's .htaccess regeneration script</dd></dl>
 	 *
 	 * @param integer $user_id The Reason entity id of the user
 	 * @param string $privilege
