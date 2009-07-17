@@ -116,6 +116,9 @@ define('LOKI_2_HTTP_PATH','/loki_2.0/');
 // Define the path to tinymce files
 define('TINYMCE_HTTP_PATH','/tiny_mce/');
 
+// Define the path to Date Picker files
+define('DATE_PICKER_HTTP_PATH', '/date_picker/');
+
 // Define the path to Magpie RSS files
 define('MAGPIERSS_INC',INCLUDE_PATH.'magpierss/');
 
