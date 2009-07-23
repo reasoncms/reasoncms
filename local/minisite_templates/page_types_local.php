@@ -21,8 +21,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'imagetop' => 'luther_imagetop',
 		),
 		'test_page' => array(
+
 			'main' => 'directions',
-			'main_post' => 'test_module',
+			'main_post' => 'content',
 		),
 		'admissions_account_signup' => array(
 			'main_post' => 'applicant_account',
