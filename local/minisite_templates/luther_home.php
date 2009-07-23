@@ -144,6 +144,10 @@ class LutherHomeTemplate extends MinisiteTemplate
 		}
 		//--------------------------Headlines Publication End
 		
+                echo '<div id="headline-archive">'."\n";
+		echo '<a href="/headlines">more news &gt;</a>'."\n";
+                echo '</div>  <!-- id="headline-archive" -->'."\n";
+
                 echo '</div>  <!-- id="headlines" -->'."\n";
                 echo '</div>  <!-- class="column span-21 prepend-1 append-1 borderleft border" -->'."\n";
 
