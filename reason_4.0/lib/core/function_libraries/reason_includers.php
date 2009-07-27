@@ -6,9 +6,52 @@
  * spitting out an error if no file is found.
  * @package reason
  * @subpackage function_libraries
- * @author Matt Ryan
- * @date 2006-05-17
+ * @author Matt Ryan <mryan@carleton.edu>
+ * @author Eric Naeseth <enaeseth+reason@gmail.com>
  */
+
+/**
+ * Gets the path to a Reason file within the core directory.
+ * @param string $path Path inside the core directory
+ * @param string $section Choose between "lib", "www", and "data"; "lib" is the default
+ * @return string the path to the file
+ */
+function reason_get_core_path($path, $section = "lib")
+{
+	return REASON_INC.$section."/core/".$path;
+}
+
+/**
+ * Gets the path to a Reason file within the local directory.
+ * @param string $path Path inside the local directory
+ * @param string $section Choose between "lib", "www", and "data"; "lib" is the default
+ * @return string the path to the file
+ */
+function reason_get_local_path($path, $section = "lib")
+{
+	return REASON_INC.$section."/local/".$path;
+}
+
+/**
+ * Gets the path to a Reason library file.
+ * Returns the path to the file in the local directory if it exists, otherwise
+ * the path to the file in the core directory if that exists, otherwise null.
+ * @param string path inside the local or core directory
+ * @param string $section "lib", "www", or "data"
+ * @return string the path to the file, or NULL if it wasn't found
+ */
+function reason_resolve_path($path, $section = "lib")
+{
+	$resolved = reason_get_local_path($path, $section);
+	if (file_exists($resolved))
+		return $resolved;
+	
+	$resolved = reason_get_core_path($path, $section);
+	if (file_exists($resolved))
+		return $resolved;
+	
+	return null;
+}
  
 /**
  * Reason Includer -- base function that handles all inclusions and requirements
@@ -17,50 +60,36 @@
  * @param string $path Path inside the core and/or local directories
  * @param string $section Choose between "lib", "www", and "data"; "lib" is the default
  * @param string $function Chose type of include: include_once, include, require_once, or require; defaults to include_once
- * @return bool $success
+ * @return bool true if an inclusion was executed (and possibly succeeded); false if otherwise
  */
 function reason_includer($path, $section = 'lib', $function = 'include_once')
 {
-	$localpath = REASON_INC.$section.'/local/'.$path;
-	$corepath = REASON_INC.$section.'/core/'.$path;
-	if($function == 'include_once' || $function == 'require_once')
+	$prefix = REASON_INC.$section;
+	$local = $prefix."/local/".$path;
+	$core = $prefix."/core/".$path;
+	
+	if ($function == 'include_once' || $function == 'require_once')
 	{
-		$included_files = get_included_files();
-		if(in_array($corepath,$included_files) || in_array($localpath,$included_files))
-		{
+		$included = get_included_files();
+		if (in_array($core, $included) || in_array($local, $included))
 			return true;
-		}
 	}
-	if(file_exists($localpath))
+	
+	if (file_exists($local))
 	{
-
-		if($function == 'include_once'){ 	include_once($localpath); 	}
-		elseif($function == 'include'){ 		include($localpath); 		}
-		elseif($function == 'require_once'){ 	require_once($localpath); 	}
-		elseif($function == 'require'){ 		require($localpath); 		}
-		else
-		{
-			trigger_error('reason_includer(): function name passed is not one of the following strings: include_once, include, require_once,require');
-			return false;
-		}
-		return true;
+		return _reason_include_file($function, $local);
 	}
-	elseif(file_exists($corepath))
+	else if (file_exists($core))
 	{
-		if($function == 'include_once'){ 	include_once($corepath); 	}
-		elseif($function == 'include'){ 		include($corepath); 		}
-		elseif($function == 'require_once'){ 	require_once($corepath); 	}
-		elseif($function == 'require'){ 		require($corepath); 		}
-		else
-		{
-			trigger_error('reason_includer(): function name passed is not one of the following strings: include_once, include, require_once,require');
-			return false;
-		}
-		return true;
+		return _reason_include_file($function, $core);
 	}
 	else
 	{
-		trigger_error('reason_includer(): file does not exist at '.$localpath.' or '.$corepath);
+		$level = ($function == 'require' || $function == 'require_once')
+			? E_USER_ERROR
+			: E_USER_WARNING;
+		trigger_error('reason_includer(): file does not exist at '.$local.
+			' or '.$core, $level);
 		return false;
 	}
 }
@@ -108,4 +137,34 @@ function reason_require($path, $section = 'lib')
 {
 	return reason_includer($path, $section, 'require');
 }
-?>
+/**
+ * Low-level function to include a file.
+ * @param string $behavior the name of a PHP inclusion construct (e.g., "include_once")
+ * @param string $file the name of the file to include using the given construct
+ * @return bool true if $behavior was a valid construct name, false if otherwise
+ * @internal
+ */
+function _reason_include_file($behavior, $file)
+{
+	switch ($behavior)
+	{
+		case 'include':
+			include($file);
+			return true;
+		case 'include_once':
+			include_once($file);
+			return true;
+		case 'require':
+			require($file);
+			return true;
+		case 'require_once':
+			require_once($file);
+			return true;
+		default:
+			$behavior_repr = var_export($behavior, true);
+			trigger_error('_reason_include_file(): '.$behavior_repr.
+				' is not the name of a PHP inclusion statement like '.
+				'"include" or "require_once"', E_USER_ERROR);
+			return false;
+	}
+}
