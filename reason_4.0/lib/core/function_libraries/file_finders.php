@@ -35,24 +35,17 @@ function reason_get_merged_fileset($dir_path, $section = 'lib')
 	ksort($files);
 	return $files;
 }
+
 /**
- * Determines if a file exists in either core or local areas
- * @author Matt Ryan
- * @date 2006-05-18
- * @param string $path
- * @param string $section
- * @return bool $file_exists
+ * Checks to make sure the given file exists in either the core or the local
+ * directories.
+ * @param string $path Path inside the local and/or core directories
+ * @param string $section "lib" is the default
+ * @return boolean true if the file exists; false if otherwise
+ * @author Eric Naeseth <enaeseth+reason@gmail.com>
  */
-function reason_file_exists($path, $section = 'lib')
+function reason_file_exists($path, $section = "lib")
 {
-	$areas = array('core','local');
-	foreach($areas as $area)
-	{
-		if(file_exists(REASON_INC.$section.'/'.$area.'/'.$path))
-		{
-			return true;
-		}
-	}
-	return false;
+	return file_exists(reason_get_core_path($path, $section)) ||
+		file_exists(reason_get_local_path($path, $section));
 }
-?>
