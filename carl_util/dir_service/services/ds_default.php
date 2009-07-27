@@ -263,16 +263,14 @@ class ds_default {
 	* Put query results into common format for return.
 	* @access private
 	* @param mixed $results Raw results from service
-	
-	Return structure is:
-	
-	Array[]
-		Record_n[]
-			Attribute_n[]
-				Value_n
-	There may be multiple records, multiple attributes per record, and multiple values per attribute.
-	You must return an array even if your provider only stores single values.
-	
+	* 
+	* Return structure is:
+	* Array[]
+	*   Record_n[]
+	*     Attribute_n[]
+	*       Value_n
+	* There may be multiple records, multiple attributes per record, and multiple values per attribute.
+	* You must return an array even if your provider only stores single values.
 	*/
 	function format_results($results) {
 		return array();
