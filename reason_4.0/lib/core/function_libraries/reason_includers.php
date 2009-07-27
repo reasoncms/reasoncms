@@ -87,7 +87,7 @@ function reason_includer($path, $section = 'lib', $function = 'include_once')
 	{
 		$level = ($function == 'require' || $function == 'require_once')
 			? E_USER_ERROR
-			: E_USER_WARNING;
+			: WARNING;
 		trigger_error('reason_includer(): file does not exist at '.$local.
 			' or '.$core, $level);
 		return false;
