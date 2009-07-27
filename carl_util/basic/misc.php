@@ -441,8 +441,7 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 
 	function securest_available_protocol()
 	{
-		if( HTTPS_AVAILABLE ) return 'https';
-		return 'http';
+		return (HTTPS_AVAILABLE) ? "https" : "http";
 	}
 	
 	/**
@@ -457,7 +456,7 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 	 */
 	function server_is_windows()
 	{
-		static $is_windows;
+		static $is_windows = false;
 		static $tested = false;
 		if(!$tested)
 		{
