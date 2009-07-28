@@ -65,6 +65,10 @@ class blogPostsFeed extends pageTreeFeed
 		{
 			$this->create_page_tree();
 			$this->site_link = get_blog_page_link($this->site, $this->page_tree, $this->page_types, $this->blog);
+			if(empty($this->site_link))
+			{
+				trigger_error('Unable to find a page for the blog "'.$this->blog->get_value('name').'" in the site "'.$this->site->get_value('name').'"');
+			}
 		}
 		else
 			$this->site_link = $this->home_url;
