@@ -18,6 +18,8 @@ if( !defined( '__DB_SELECTOR' ) )
 {
 	define ( '__DB_SELECTOR', true );
 	
+	include_once('db_query.php');
+	
 	/**
 	 * DBSelector class
 	 *
