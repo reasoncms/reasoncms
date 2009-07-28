@@ -76,6 +76,10 @@ if( !defined( '__PRAY' ) )
 							$type=gettype($value);
 							if ($type=="array" || $type == "object")
 							{
+								if($type == 'object')
+								{
+									$type = $type.' - '.get_class($value);
+								}
 								if( $escape )
 								{
 									$type = htmlentities( $type );
