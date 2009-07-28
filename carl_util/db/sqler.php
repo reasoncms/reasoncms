@@ -51,7 +51,7 @@ include_once(CARL_UTIL_INC.'error_handler/error_handler.php');
 			reset( $data );
 			foreach($data as $key => $val )
 			{
-				$fields .= $key.',';
+				$fields .= '`'.$key.'`,';
 				$values .= '"'.addslashes( $val ).'",';
 			}
 			$fields = substr( $fields, 0, -1 );
@@ -105,7 +105,7 @@ include_once(CARL_UTIL_INC.'error_handler/error_handler.php');
 				}
 				else
 				{
-					trigger_error( 'sqler.php :: Unable to update '.$table.' :: '.$q, EMERGENCY );
+					trigger_error( 'sqler.php :: Unable to update '.$table.' :: Error: '.mysql_error().' :: '.$q, EMERGENCY );
 					// if the error level above is EMERGENCY, this script will likely die, but this line is there in case it is not set to die
 					return false;
 				}
