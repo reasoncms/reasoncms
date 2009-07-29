@@ -1,0 +1,74 @@
+/*
+ * jQuery Upload Button Plugin
+ * Copyright © 2009 Carleton College.
+ *
+ * author: Eric Naeseth <enaeseth+reason@gmail.com>
+ * requires: jQuery "swfupload" plugin (jquery.swfupload.js)
+ */
+
+(function upload_button_plugin($) {
+    $.fn.uploadButton = function swf_upload_button(options, target) {
+        this.each(function create_upload_button() {
+            var self = $(this);
+
+            var container = $('<div class="swfupload-container"><span>' +
+                '</span></div>');
+            $(this.ownerDocument.body).append(container);
+            
+            self.data('_swf_upload_actor', container);
+            self.data('_swf_upload_clickable', self);
+
+            var swfupload_options = jQuery.extend({
+                file_types: "*.*",
+                file_types_description: "All Files",
+                file_upload_limit: 0,
+                flash_url: "swfupload.swf",
+
+                button_placeholder: container.children('span')[0],
+                button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+                button_width: "1000",
+                button_height: "1000",
+                button_cursor: SWFUpload.CURSOR.HAND,
+                debug: false
+            }, options);
+
+            (target ? $(target) : self).swfupload(swfupload_options);
+            self.repositionUploadButton();
+        });
+        return this;
+    };
+    
+    $.fn.repositionUploadButton = function reposition_swf_upload_button() {
+        var container = this.data('_swf_upload_actor');
+        var target = this.data('_swf_upload_clickable');
+        if (!container || !target)
+            return this;
+        
+        if (container.css('position') != 'absolute')
+            container.css('position', 'absolute');
+        if (container.css('overflow') != 'hidden')
+            container.css('overflow', 'hidden');
+        
+        var target_pos = target.position();
+        container.css({
+            left: target_pos.left,
+            top: target_pos.top,
+            width: target.outerWidth(),
+            height: target.outerHeight()
+        });
+        
+        container.find('object').attr({
+            width: target.outerWidth(),
+            height: target.outerHeight()
+        });
+        return this;
+    };
+    
+    $.fn.hideUploadButton = function hide_swf_upload_button() {
+        var button = this.data('_swf_upload_actor');
+        if (!button)
+            return this;
+        button.hide();
+        return this;
+    };
+})(jQuery);
