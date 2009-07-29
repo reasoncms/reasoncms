@@ -10,6 +10,7 @@
  * Include necessary info
  */
 include_once('paths.php');
+include_once(CARL_UTIL_INC.'cache/object_cache.php');
 
 
 /**
@@ -108,21 +109,50 @@ class reasonVersionCheck
 		
 		if(empty($version_info))
 		{
-			require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
-			$ch = curl_init();
-			
-			$url = 'https://apps.carleton.edu/opensource/reason/version_check.php?version='.urlencode($this->get_current_version_id());
-
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_HEADER, false);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-
-			$response = curl_exec($ch);
-			list($version_info['code'],$version_info['message'],$version_info['url']) = explode("\n",$response);
-
-			curl_close($ch);
+			$version_info = $this->_get_version_info();
 		}
 		
+		return $version_info;
+	}
+	
+	function _get_version_info()
+	{
+		$version = $this->get_current_version_id();
+		
+		$cache = new ObjectCache();
+		$cache->init('ReasonVersionCheckCache', 86400); // cache for 1 day
+		$obj = $cache->fetch();
+		
+		if(empty($obj) || !$obj->get_data() || $obj->get_version() != $version)
+		{
+			$obj = new ReasonVersionCheckData;
+			$obj->set_data($this->_fetch_response_from_remote_server($version));
+			$obj->set_version($version);
+			$cache->set($obj);
+		}
+		
+		return $obj->get_data();
+	}
+	
+	function _fetch_response_from_remote_server($version)
+	{
+		$url = 'https://ryan.test.carleton.edu/opensource/reason/version_check.php?version='.urlencode($this->get_current_version_id());
+	
+		require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
+		
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_MAXREDIRS, 25);
+		$response = curl_exec($ch);
+		curl_close($ch);
+		
+		$version_info = array();
+		list($version_info['code'],$version_info['message'],$version_info['url']) = explode("\n",$response);
+
 		return $version_info;
 	}
 	
@@ -178,6 +208,28 @@ class reasonVersionCheck
 		$resp = $this->_get_version_response_array($version);
 
 		return array('content'=>$resp['code']."\n".$resp['message']."\n".$resp['url'], 'header'=>$resp['status']);
+	}
+}
+
+class ReasonVersionCheckData
+{
+	var $_data = NULL;
+	var $_version = NULL;
+	function set_version($version)
+	{
+		$this->_version = $version;
+	}
+	function get_version()
+	{
+		return $this->_version;
+	}
+	function set_data($data)
+	{
+		$this->_data = $data;	
+	}
+	function get_data()
+	{
+		return $this->_data;
 	}
 }
 
