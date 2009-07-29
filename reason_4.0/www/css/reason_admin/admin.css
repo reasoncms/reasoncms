@@ -155,3 +155,43 @@ h2.pageTitle {
 	margin-top:0;
 	font-size:1.385em;
 }
+
+.uploaded_file {
+  font-size: 90%;
+  margin-bottom: 0.7em;
+}
+
+.uploaded_file .filename {
+  background: #EEE;
+	color: #333;
+	border: 1px solid #CCC;
+	padding: 2px 4px;
+}
+
+.uploaded_file .size {
+  padding: 3px 0;
+	margin-left: 0.3em;
+	font-size: 90%;
+}
+
+.uploaded_image .size {
+	margin: 0.1em 0 0 0;
+}
+
+.submit_waiting, .submitting {
+	display: inline-block;
+	border-top-width: 2px;
+	border-top-style: solid;
+	padding: 2px 4px;
+	font-size: 90%;
+}
+
+.submit_waiting {
+	background: #FEF5AD;
+	border-top-color: #F4EA53;
+}
+
+.submitting {
+	background: #C1FAB1;
+	border-top: 2px solid #9AE466;
+}
