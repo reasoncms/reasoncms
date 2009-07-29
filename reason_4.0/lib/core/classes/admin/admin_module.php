@@ -69,5 +69,6 @@
 		'EntityInfo'=>array('file'=>'entity_info.php','class'=>'EntityInfoModule'),
 		'BatchDelete'=>array('file'=>'batch_delete.php','class'=>'BatchDeleteModule'),
 		'Export'=>array('file'=>'export.php','class'=>'ReasonExportModule'),
+		'VersionCheck'=>array('file'=>'version_check.php','class'=>'ReasonVersionCheckModule'),
 	);
 ?>
