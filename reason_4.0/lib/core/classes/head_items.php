@@ -106,7 +106,7 @@ class HeadItems
 	 */	
 	function add_javascript( $url, $add_to_top = false )
 	{
-		$attrs = array('type' => 'text/javaScript', 'src' => $url);
+		$attrs = array('type' => 'text/javascript', 'src' => $url);
 		$this->add_head_item('script', $attrs, '', $add_to_top);
 	}
 	
