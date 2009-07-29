@@ -38,7 +38,7 @@
 					die();
 				}
 			}
-			$this->admin_page->title = 'Reason '.REASON_VERSION;
+			$this->admin_page->title = 'Welcome to Reason '.REASON_VERSION.'!';
 		} // }}}
 		
 		function set_head_items(&$head_items)
@@ -55,6 +55,25 @@
 				echo '<h3>Security Notice</h3>'."\n";
 				echo '<p>This instance of Reason is running <strong>without</strong> https/ssl. This means that credentials and other potentially sensitive information are being sent in the clear. To run Reason with greater security -- and to make this notice go away -- 1) make sure your server is set up to run https and 2) change the setting HTTPS_AVAILABLE to true in settings/package_settings.php.</p>'."\n";
 				echo '</div>'."\n";
+			}
+			if((!defined('REASON_DISABLE_AUTO_UPDATE_CHECK') || !REASON_DISABLE_AUTO_UPDATE_CHECK) && reason_user_has_privs($this->admin_page->user_id, 'upgrade'))
+			{
+				reason_include_once('classes/version_check.php');
+				$vc = new reasonVersionCheck;
+				$resp = $vc->check();
+				switch($resp['code'])
+				{
+					case 'version_out_of_date':
+						echo '<div class="versionUpdateNotice">'.htmlspecialchars($resp['message'], ENT_QUOTES);
+						if(!empty($resp['url']))
+							echo ' <a href="'.htmlspecialchars($resp['url'], ENT_QUOTES).'">Link</a>';
+						echo '</div>'."\n";
+						break;
+					case 'no_version_provided':
+					case 'version_not_recognized':
+						trigger_error('Error checking version: '.$resp['message']);
+						break;
+				}
 			}
 			if(reason_unique_name_exists('whats_new_in_reason_blurb'))
 			{
