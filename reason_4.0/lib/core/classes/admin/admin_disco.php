@@ -23,11 +23,17 @@
 		} // }}}
 		function pre_show_form() // {{{
 		{
-			$e = new entity( $this->get_value( 'id' ) );
-			if( $e->get_value( 'state' ) == 'Deleted' )
-				$x = 'expunge';
-			else $x = 'delete';
-			echo '<h3>Do you really want to '.$x.' '.$e->get_value( 'name' ).'?</h3>';
+			$e = new entity($this->get_value('id'));
+			if ($e->get_value('state') == 'Deleted')
+				$action = 'expunge';
+			else
+				$action = 'delete';
+			
+			$name = $e->get_value("name");
+			if (!$name)
+				$name = "<i>(untitled)</i>";
+			
+			echo "<h3>Do you really want to $action $name?</h3>";
 		} // }}}
 		function grab_all_page_requests() // {{{
 		{
