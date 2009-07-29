@@ -136,7 +136,7 @@ class reasonVersionCheck
 	
 	function _fetch_response_from_remote_server($version)
 	{
-		$url = 'https://ryan.test.carleton.edu/opensource/reason/version_check.php?version='.urlencode($this->get_current_version_id());
+		$url = 'https://apps.carleton.edu/opensource/reason/version_check.php?version='.urlencode($this->get_current_version_id());
 	
 		require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
 		
