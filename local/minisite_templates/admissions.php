@@ -19,6 +19,47 @@ class AdmissionsTemplate extends MinisiteTemplate
 	// reorder sections so that navigation is first instead of last
 	var $sections = array('navigation'=>'show_navbar','content'=>'show_main_content','related'=>'show_sidebar');
 
+        function start_page()
+        {
+
+                $this->get_title();
+
+                // start page
+                echo $this->get_doctype()."\n";
+                echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
+                echo '<head>'."\n";
+                //echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' . "\n";
+
+                $this->do_org_head_items();
+
+                echo $this->head_items->get_head_item_markup();
+		
+		$this->admissions_ie_hacks();
+
+                if($this->cur_page->get_value('extra_head_content'))
+                {
+                        echo "\n".$this->cur_page->get_value('extra_head_content')."\n";
+                }
+
+                echo '</head>'."\n";
+
+                echo $this->create_body_tag();
+                echo '<div class="hide"><a href="#content" class="hide">Skip Navigation</a></div>'."\n";
+                if ($this->has_content( 'pre_bluebar' ))
+                        $this->run_section( 'pre_bluebar' );
+                //$this->textonly_toggle( 'hide_link' );
+                if (empty($this->textonly))
+                {
+                        $this->do_org_navigation();
+                // You are here bar
+                        $this->you_are_here();
+                }
+                else
+                {
+                        $this->do_org_navigation_textonly();
+                }
+        }
+
 	function create_body_tag()
         {
 		$bc = $this->_get_breadcrumbs();
@@ -77,7 +118,7 @@ class AdmissionsTemplate extends MinisiteTemplate
 		
                 if ($this->has_content( 'navigation' ) && $this->cur_page->get_value( 'custom_page' ) != 'admissions_home')
                 {
-			echo '</div>'."\n";
+			//echo '</div>'."\n";
 			echo '<div class="block">'."\n";
 			echo '<h2>This Section</h2>'."\n";
                         $this->run_section( 'navigation' );
@@ -101,7 +142,7 @@ class AdmissionsTemplate extends MinisiteTemplate
 			if ($this->cur_page->get_value( 'custom_page' ) != 'admissions_home')
 			{
 				echo '</div>'."\n";
-				echo '</div>'."\n";
+			//	echo '</div>'."\n";
 			}
                 }
 
@@ -132,7 +173,7 @@ class AdmissionsTemplate extends MinisiteTemplate
 				echo '</dl>'."\n";
 
 				echo '</div>'."\n";
-				echo '</div>'."\n";
+			//	echo '</div>'."\n";
 			}
                 }
 
@@ -282,6 +323,44 @@ class AdmissionsTemplate extends MinisiteTemplate
 		echo '</div>'."\n";
 
 	}
+	function admissions_ie_hacks()
+	{
+        	echo '<!--[if lt IE 7]>'."\n";
+        	echo '<style type="text/css">'."\n";
+        	echo '.home .body .content { background-image: none; }'."\n";
+        	echo '</style>'."\n";
+        	echo '<![endif]-->'."\n";
+
+		echo '<!--[if IE]>'."\n";
+		echo '<style type="text/css">'."\n";
+		echo '.body .content .highlight .openingQuote {'."\n";
+		echo 'letter-spacing: -22px;'."\n";
+		echo 'top: 60px;'."\n";
+		echo 'left: 5px;'."\n";
+		echo '}'."\n";
+		echo '</style>'."\n";
+		echo '<![endif]-->'."\n";
+
+		echo '<!--[if IE]>'."\n";
+		echo '<style type="text/css">'."\n";
+		echo '.sidebar { margin-right: 0; }'."\n";
+        	echo '</style>'."\n";
+		echo '<![endif]-->'."\n";
+
+		echo '<!--[if IE]>'."\n";
+		echo '<style type="text/css">'."\n";
+		echo '.body .content .highlight .text { margin-right: 0; }'."\n";
+        	echo '</style>'."\n";
+		echo '<![endif]-->'."\n";
+
+		echo '<!--[if IE]>'."\n";
+		echo '<style type="text/css">'."\n";
+		echo '.body .content ul { margin: 0; }'."\n";
+        	echo '</style>'."\n";
+		echo '<![endif]-->'."\n";
+	}
+
+
 
 	function admissions_home_content()
 	{
