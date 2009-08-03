@@ -53,7 +53,7 @@ class databaseCleanup
 		// The updates
 		$this->change_relationship_terminology('page_to_publication', 'Places a blog / publication on a page', 'Place a blog / publication');
 		$this->change_relationship_terminology('page_to_related_publication', 'Places a related publication on a page', 'Attach a related publication');
-		
+		$this->_check_custom_deleters();
 		$this->_update_theme_previewer();
 		
 		$this->provide_entity_info_admin_link();
@@ -114,6 +114,38 @@ class databaseCleanup
 		}
 	}
 	
+	/**
+	 * Ancient databases (pre reason 4b4 i think) had minisite_page and entity_table deleters that referenced
+	 * minisite_page.php3 and entity_table.php3. Some old database might still point to these files, but they do
+	 * not exist any longer. This method updates those type entities if needed.
+	 */
+	function _check_custom_deleters()
+	{
+		$minisite_page_type = new entity(id_of('minisite_page'));
+		$entity_table_type = new entity(id_of('content_table'));
+		if ($minisite_page_type->get_value('custom_deleter') == 'minisite_page.php3')
+		{
+			if ($this->mode == 'test') echo '<p>Would update minisite_page type to use minisite_page.php custom deleter.</p>';
+			else
+			{
+				reason_update_entity($minisite_page_type->id(), $this->reason_user_id, array('custom_deleter'=>'minisite_page.php'));
+				echo '<p>Updated minisite_page type to use minisite_page.php custom deleter.</p>';
+			}
+			$did_update = true;
+		}
+		if ($entity_table_type->get_value('custom_deleter') == 'entity_table.php3')
+		{
+			if ($this->mode == 'test') echo '<p>Would update entity_table type to use entity_table.php custom deleter.</p>';
+			else
+			{
+				reason_update_entity($entity_table_type->id(), $this->reason_user_id, array('custom_deleter'=>'entity_table.php'));
+				echo '<p>Updated entity_table type to use entity_table.php custom deleter.</p>';
+			}
+			$did_update = true;
+		}
+		if (!isset($did_update)) echo '<p>The custom deleter settings for the minisite_page and entity_table types are properly setup.</p>';
+	}
+	
 	function provide_entity_info_admin_link()
 	{
 		// lets try to find if it exists
@@ -166,6 +198,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 <li>Changes "Places blog/publication on a page" to "Place a blog/publication" (addresses <a href="http://code.google.com/p/reason-cms/issues/detail?id=33">issue 33</a>)</li>
 <li>Changes "Places a related publication on a page" to "Attach a related publication" (addresses <a href="http://code.google.com/p/reason-cms/issues/detail?id=33">issue 33</a>)</li>
 <li>Adds the theme previewer to the theme type</li>
+<li>Makes sure the custom deleter values for the entity_table and minisite_page type are correctly set</li>
 <li>Adds an administrative link in Master Admin to the entity info admin module</li>
 <?php
 /* TODO
