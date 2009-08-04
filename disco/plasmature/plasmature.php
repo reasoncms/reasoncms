@@ -1330,6 +1330,9 @@
 	{
 		var $type = 'checkbox';
 		var $checkbox_id;
+		var $checked_value = 'true';
+		var $type_valid_args = array('checkbox_id', 'checked_value');
+		
 		function grab() // {{{
 		{
 			$HTTP_VARS = $this->get_request();
@@ -1348,7 +1351,7 @@
 		function get_display() // {{{
 		{
 			$this->checkbox_id = 'checkbox_'.$this->name;
-			$str = '<input type="checkbox" id="'.$this->checkbox_id.'" name="'.$this->name.'" value="true"';
+			$str = '<input type="checkbox" id="'.$this->checkbox_id.'" name="'.$this->name.'" value="'.$this->checked_value.'"';
 			if ( $this->value )
 			{
 				$str .= ' checked="checked"';
@@ -1566,6 +1569,82 @@
 		
 	} // }}}
 	
+	/**
+	* Displays {@link options} as radio buttons, adding an "Other" freetext option at the end.
+	* @package disco
+	* @subpackage plasmature
+	*/
+	class radio_with_otherType extends optionType // {{{
+	{
+		var $type = 'radio_with_other';
+		var $other_label = 'Other: ';
+		var $type_valid_args = array( 'other_label' );
+
+		function get_display() // {{{
+		{
+			$i = 0;
+			$str = '<div id="'.$this->name.'_container" class="radioButtons">'."\n";
+			$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
+			$checked = false;
+			foreach( $this->options as $key => $val )
+			{
+				$id = 'radio_'.$this->name.'_'.$i++;
+				$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.$key.'"';
+				if ( $key == $this->value ) {
+					$str .= ' checked="checked"';
+					$checked = true;
+				}
+				$str .= '></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
+			}
+			$id = 'radio_'.$this->name.'_'.$i++;
+			$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="other"';
+			if ( !$checked && $this->value)
+			{
+				$other_value = $this->value;
+				$str .= ' checked="checked"';
+			} else {
+				$other_value = '';
+			}
+			
+			$str .= '></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$this->other_label.'</label>';
+			$str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  /></td>'."\n".'</tr>'."\n";
+			$str .= '</table>'."\n";
+			$str .= '</div>'."\n";
+			return $str;
+		} // }}}
+
+		function grab_value()
+		{
+			$return = NULL;
+			$http_vars = $this->get_request();
+			if ( isset( $http_vars[ $this->name ] ) )
+			{
+				$return = trim($http_vars[ $this->name ]);
+				if ($return == 'other')
+				{
+					if ( isset( $http_vars[ $this->name .'_other' ] ) )
+						$return = trim($http_vars[ $this->name .'_other' ]);
+					else
+						$return = '';
+				}
+			}
+			return $return;
+		}
+
+	} // }}}
+
+	/**
+	* Same as {@link radio_with_otherType}, but doesn't sort {@link options}.
+	* @package disco
+	* @subpackage plasmature
+	*/
+	class radio_with_other_no_sortType extends radio_with_otherType // {{{
+	{
+		var $type = 'radio_with_other_no_sort';
+		var $sort_options = false;
+		
+	} // }}}
+
 	/**
 	* Displays {@link options} as a group of checkboxes.
 	* Use {@link checkboxType} to create a single checkbox.
