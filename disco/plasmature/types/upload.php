@@ -1,0 +1,755 @@
+<?php
+
+/**
+ * File upload type library.
+ *
+ * @package disco
+ * @subpackage plasmature
+ * @author Eric Naeseth <enaeseth+disco@gmail.com>
+ */
+
+require_once CARL_UTIL_INC.'basic/image_funcs.php';
+require_once CARL_UTIL_INC.'basic/mime_types.php';
+require_once CARL_UTIL_INC.'basic/filesystem.php';
+require_once CARL_UTIL_INC.'basic/cleanup_funcs.php';
+require_once CARL_UTIL_INC.'basic/misc.php';
+require_once CARL_UTIL_INC.'cache/object_cache.php';
+
+/**
+ * Generic file upload type.
+ */
+class uploadType extends defaultType
+{
+	/**
+	 * The type name of this type.
+	 * @var string
+	*/
+	var $type = "upload";
+	
+	/**
+	 * An internal representation of the upload state.
+	 * @access protected
+	 * @var string
+	 * @see $state
+	 */
+	var $_state = "ready";
+	
+	/**
+	 * The state of the upload.
+	 * Possible values: "ready", "received", "pending", "existing"
+	 * @var string
+	 * @see $_state
+	 */
+	var $state = "ready";
+	
+	/**
+	 * The path to an existing file occupying this field.
+	 * If this is populated, {@link $existing_file_web} should be, too.
+	 * @var string
+	 */
+	var $existing_file;
+	
+	/**
+	 * The URL of the existing file occupying this field.
+	 * If this is populated, {@link $existing_file} should be, too.
+	 * @var string
+	 */
+	var $existing_file_web;
+	
+	/**
+	 * A value to use as the displayed name of the existing file.
+	 * If empty, the {@link $existing_file real filename} will be used.
+	 * @var string
+	 */
+	var $file_display_name;
+	
+	/**
+	 * An array of acceptable MIME type patterns.
+	 * If empty, all file types will be accepted.
+	 * Examples of patterns: "application/pdf", "image/*".
+	 * @var array
+	 */
+	var $acceptable_types = array();
+	
+	/**
+	 * Whether or not users may upload a new file when editing the entity.
+	 * @var boolean
+	 */
+	var $allow_upload_on_edit;
+	
+	/**
+	 * The maximum-allowed upload size, in bytes.
+	 * @var int
+	 */
+	var $max_file_size = 20971520; // 20 MB
+	
+	/** @access private */
+	var $type_valid_args = array(
+		'existing_file',
+		'existing_file_web',
+		'file_display_name',
+		'acceptable_types',
+		'allow_upload_on_edit',
+		'max_file_size'
+	);
+	
+	/**
+	 * @var array
+	 * @access private
+	 */
+	var $file;
+	/** @access private */
+	var $tmp_web_path;
+	/** @access private */
+	var $tmp_full_path;
+	
+	function additional_init_actions($args=array())
+	{
+		if (!empty($this->existing_file)) {
+			$this->_state = $this->state = 'existing';
+			$this->value = $this->existing_file;
+		}
+	}
+	
+	/**
+	 * Gets information about the uploaded file (if there was one).
+	 * @access protected
+	 * @return array a description of the uploaded file, or NULL if no file
+	 *         was uploaded
+	 */
+	function _get_uploaded_file()
+	{
+		if (empty($_FILES[$this->name]))
+			return null;
+		
+		$file = $_FILES[$this->name];
+		if (empty($file['name']))
+			return null;
+		
+		return array(
+			'name' => basename($file['name']),
+			'path' => $file['tmp_name'],
+			'tmp_name' => $file['tmp_name'], // former name of this field
+			'original_path' => null,
+			'size' => (int) $file['size'],
+			'type' => get_mime_type($file["tmp_name"],
+				"application/octet-stream", $file["name"])
+		);
+	}
+	
+	/**
+	 * Gets a code for the upload error.
+	 * @access protected
+	 * @return mixed the error code, or NULL if there was no error
+	 */
+	function _get_upload_error()
+	{
+		if (empty($_FILES[$this->name]))
+			return null;
+		
+		$file = $_FILES[$this->name];
+		if ($file['error'] === 0 && !is_uploaded_file($file['tmp_name'])) {
+			// Possible file upload attack; return the literal 0.
+			return 0;
+		}
+		
+		return (!empty($file['error'])) ? $file['error'] : null;
+	}
+	
+	/**
+	 * Gets a user-friendly string describing the upload error.
+	 *
+	 * If there was an error, this method will always return some message;
+	 * a generic one will be used if no specific message is relevant.
+	 *
+	 * @access protected
+	 * @return string a description of the error, or NULL if there was no error
+	 */
+	function _get_upload_error_message()
+	{
+		static $messages = null;
+		
+		if ($messages === null) {
+			$symbolic_messages = array(
+				'UPLOAD_ERR_INI_SIZE' => 
+					"The file you are trying to upload is too large.",
+				'UPLOAD_ERR_FORM_SIZE' =>
+					"The file you are trying to upload is too large.",
+				'UPLOAD_ERR_PARTIAL' =>
+					"Only part of the file was uploaded successfully.",
+				'UPLOAD_ERR_NO_FILE' =>
+					"No file was received.",
+				'UPLOAD_ERR_NO_TMP_DIR' =>
+					"Your file was received, but it could not be saved.",
+				'UPLOAD_ERR_CANT_WRITE' =>
+					"Your file was received, but it could not be saved.",
+				'UPLOAD_ERR_EXTENSION' =>
+					"A server component blocked your file upload."
+			);
+		
+			$messages = array();
+			foreach ($symbolic_messages as $constant => $message) {
+				if (defined($constant))
+					$messages[constant($constant)] = $message;
+			}
+		}
+		
+		$error = $this->_get_upload_error();
+		if ($error === null) // why, there's no error at all!
+			return null;
+		
+		return (!empty($messages[$error]))
+			? $messages[$error]
+			: "There was a problem with your upload.";
+	}
+	
+	/**
+	 * Examines the state of the upload and generates relevant PHP warnings.
+	 *
+	 * If there is anything wrong with the upload that should be communicated
+	 * to the site admins, this function should raise that information as PHP
+	 * error messages.
+	 *
+	 * @access protected
+	 * @return void
+	 */
+	function _generate_warnings()
+	{
+		static $admin_warnings = null;
+		
+		if ($admin_warnings === null) {
+			$symbolic_warnings = array(
+				"UPLOAD_ERR_NO_TMP_DIR" =>
+					"PHP has no temporary directory to save the upload to.",
+				"UPLOAD_ERR_CANT_WRITE" =>
+					"PHP could not write the uploaded file to disk.",
+				"UPLOAD_ERR_EXTENSION" =>
+					"The file upload was stopped by a PHP extension."
+			);
+		
+			$admin_warnings = array();
+			foreach ($symbolic_warnings as $constant => $message) {
+				if (defined($constant))
+					$admin_warnings[constant($constant)] = $message;
+			}
+		}
+		
+		$error = $this->_get_upload_error();
+		if (isset($admin_warnings[$error]))
+			trigger_error($admin_warnings[$error], WARNING);
+	}
+	
+	/**
+	 * Populates the {@link $value} field of the upload type.
+	 * @return void
+	 */
+	function grab()
+	{
+		$this->file = $this->_get_uploaded_file();
+		$this->_generate_warnings();
+		$vars = $this->get_request();
+		
+		if ($this->file && !empty($this->file["name"])) {
+			$this->value = $this->_grab_value_from_upload();
+		} else if ($id = @$vars[$this->_get_upload_id_field()]) {
+			$this->value = $this->_grab_value_from_limbo($id);
+		} else if (!empty($this->existing_file)) {
+			$this->value = $this->_grab_value_from_existing_file();
+		}
+		$this->state = $this->_state;
+	}
+	
+	/** @access private */
+	function _grab_value_from_upload()
+	{
+		$error_code = $this->_get_upload_error();
+		if ($error_code !== null) {
+			// There was a problem uploading the file.
+			$this->set_error($this->_get_upload_error_message());
+		}
+		
+		if (!$this->has_error) {
+			// No errors so far; check the size of the uploaded file.
+			
+			$max_size = $this->max_file_size;
+			
+			if ($this->file["size"] <= 0) {
+				$this->set_error("It doesn't look like that file has ".
+					"anything in it.");
+			} else if ($this->file["size"] > $max_size) {
+				$readable_size = format_bytes_as_human_readable($max_size);
+				$filename = strip_tags(htmlspecialchars($this->file["name"]));
+				
+				$this->set_error("The file you want to upload ".
+					"($filename) exceeds the maximum upload size of ".
+					"$readable_size.");
+			}
+		}
+		
+		if (!$this->has_error && !empty($this->acceptable_types)) {
+			$mime_type = get_mime_type($this->file["path"],
+				'application/octet-stream');
+			if (!mime_type_matches($this->acceptable_types, $mime_type)) {
+				$this->set_error("The file you want to upload is not ".
+					"in an acceptable format.");
+			}
+		}
+		$value = null;
+		if (!$this->has_error) {
+			$this->_state = "received";
+			list(, $extension) = get_filename_parts($this->file["name"]);
+			$this->tmp_web_path = WEB_TEMP.sha1(uniqid(mt_rand(), true));
+			if (!empty($extension))
+				$this->tmp_web_path .= ".$extension";
+			$value = $this->tmp_full_path =
+				$_SERVER['DOCUMENT_ROOT'].$this->tmp_web_path;
+			
+			if (!rename($this->file["path"], $value)) {
+				$this->set_error("Your file was received, but could not ".
+					"be saved on the server.");
+			} else {
+			    $this->file["path"] = $this->file["tmp_name"] =
+			        $value;
+				$this->_upload_success($value, $this->tmp_web_path);
+			}
+		}
+		
+		return $value;
+	}
+	
+	/**
+	 * Called when a successfully-uploaded file is first received.
+	 * The default implementation of this callback does nothing.
+	 * @param string $path the filesystem path to the uploaded file
+	 * @param string $url the Web path to the uploaded file
+	 * @return void
+	 * @access protected
+	 */
+	function _upload_success($path, $url)
+	{
+		
+	}
+	
+	/** @access private */
+	function _persist_filename($value, $display_name=null)
+	{
+		$cache_id = uniqid('upload_'.mt_rand().'_', true);
+		$cache = new ObjectCache($cache_id, '360');
+		$store = new stdClass;
+		$store->value = $value;
+		$store->display_name = $display_name;
+		$cache->set($store);
+		return $cache_id;
+	}
+	
+	/** @access private */
+	function _restore_filename($cache_id)
+	{
+		$cache = new ObjectCache($cache_id, '360');
+		$store =& $cache->fetch();
+		if (!$store)
+			return array(null, null);
+		return array($store->value, $store->display_name);
+	}
+	
+	/** @access private */
+	function _get_upload_id_field()
+	{
+		return "{$this->name}_pending_id";
+	}
+	
+	/** @access private */
+	function _grab_value_from_limbo($upload_id)
+	{
+		list($value, $display_name) = $this->_restore_filename($upload_id);
+		if ($value) {
+			$this->tmp_web_path = $value;
+			if ($display_name)
+				$this->file_display_name = $display_name;
+			$this->_state = "pending";
+			$this->tmp_full_path = $_SERVER['DOCUMENT_ROOT'].$value;
+			
+			$filename = ($display_name)
+			    ? $display_name
+			    : basename($this->tmp_full_path);
+			$this->file = array(
+				"name" => $filename,
+				"path" => $this->tmp_full_path,
+				"tmp_name" => $this->tmp_full_path, // old name for this field
+				"original_path" => null,
+				"size" => filesize($this->tmp_full_path),
+				"hash" => sha1_file($this->tmp_full_path),
+    			"type" => get_mime_type($this->tmp_full_path,
+    				"application/octet-stream", $filename)
+			);
+			return $value;
+		}
+		
+		return null;
+	}
+	
+	/** @access private */
+	function _grab_value_from_existing_file()
+	{
+		$this->_state = "existing";
+		return $this->existing_file;
+	}
+	
+	/** @access private */
+	function _can_add_file($current)
+	{
+		return (!$this->existing_file || $this->allow_upload_on_edit);
+	}
+	
+	/**
+	 * Gets information on the current file.
+	 * The "current file" can be an existing file or the file uploaded in the
+	 * current form session.
+	 * @access protected
+	 * @return object path, name, and size of the current file
+	 */
+	function _get_current_file_info()
+	{
+		$info = new stdClass;
+		
+		if (!empty($this->tmp_full_path)) {
+			$info->path = $this->tmp_full_path;
+			$info->uri = $this->tmp_web_path;
+		} else if (!empty($this->existing_file)) {
+			$info->path = $this->existing_file;
+			$info->uri = $this->existing_file_web;
+		} else {
+			return null;
+		}
+		
+		if (!empty($this->file))
+			$info->name = $this->file["name"];
+		else
+			$info->name = basename($info->path);
+		$info->name = $this->_clean_filename($info->name);
+		$info->size = filesize($info->path);
+		return $info;
+	}
+	
+	/**
+	 * Performs any necessary cleanup on a filename to make it safe to use.
+	 * @access protected
+	 * @param string $filename the name of an uploaded file
+	 * @return string the cleaned-up filename
+	 */
+	function _clean_filename($filename)
+	{
+		return sanitize_filename_for_web_hosting($filename);
+	}
+	
+	/**
+	 * Gets the MIME type of the uploaded file.
+	 * @param string $default what to return if the MIME type can not be
+	 *		  determined for any reason
+	 * @return string
+	 */
+	function get_mime_type($default=null)
+	{
+		$current = $this->_get_current_file_info();
+		if (!$current || !is_readable($current->path))
+			return $default;
+		
+		return get_mime_type($current->path, $default);
+	}
+	
+	/**
+	 * Gets the overall display of the upload field.
+	 * This function should not normally be overridden; see
+	 * {@link _get_hidden_display}, {@link _get_current_file_display}, and
+	 * {@link _get_upload_display} instead.
+	 * @return string
+	 */
+	function get_display()
+	{
+		$current = $this->_get_current_file_info();
+		
+		return $this->_get_hidden_display($current).
+			$this->_get_current_file_display($current).
+			$this->_get_upload_display($current);
+	}
+	
+	/**
+	 * Gets any hidden input fields to accompany the upload field.
+	 * Subclasses that override this method should call the parent
+	 * implementation and concatenate the two strings.
+	 * @access protected
+	 * @param object $current information on the current file
+	 * @return string
+	 */
+	function _get_hidden_display($current)
+	{
+		$disp = '';
+		$name = $this->name;
+		$vars = $this->get_request();
+		
+		if ($this->_can_add_file($current)) {
+			$disp .= '<input type="hidden" name="'.$name.'[MAX_FILE_SIZE]" '.
+				'value="'.$this->max_file_size.'" />';
+		}
+		
+		if (in_array($this->_state, array('received', 'pending'))) {
+			$id_field = $this->_get_upload_id_field();
+			// Reuse the ID we received only if the state is "pending";
+			// otherwise we have received a new file and need to save its name
+			// instead (under a new ID).
+			$disp_name = (!empty($this->file_display_name))
+				? $this->file_display_name
+				: @$this->file["name"];
+			$id = ($this->_state == "pending" && !empty($vars[$id_field]))
+				? $vars[$id_field]
+				: $this->_persist_filename($this->tmp_web_path, $disp_name);
+			$disp .= '<input type="hidden" name="'.$id_field.'" '.
+				'value="'.$id.'" />';
+		}
+		
+		return $disp;
+	}
+	
+	/** @access private */
+	function _get_display_filename($current=null)
+	{
+		if (!$current)
+			$current = $this->_get_current_file_info();
+		if (!$current)
+			return null;
+			
+		
+		if ($this->_state != "existing" && $this->_state != "pending")
+			return $current->name;
+		return (!empty($this->file_display_name))
+			? $this->file_display_name
+			: $current->name;
+	}
+	
+	/**
+	 * Gets the display for the current file.
+	 * This method is always called; if there is no current file, $current
+	 * will be NULL, and the method may return an empty string.
+	 * @access protected
+	 * @param object $current information on the current file
+	 * @return string
+	 */
+	function _get_current_file_display($current)
+	{
+		if (!$current)
+			return '';
+		
+		if ($current->path) {
+			$filename = $this->_get_display_filename($current);
+			$size = format_bytes_as_human_readable($current->size);
+			$style = '';
+		} else {
+			$filename = $size = '';
+			$style = ' style="display: none;"';
+		}
+		
+		return '<div class="uploaded_file"'.$style.'>'.
+			'<span class="filename">'.htmlspecialchars($filename).'</span> '.
+			'<span class="size"><span class="filesize">'.$size.
+			'</span></span></div>';
+	}
+	
+	/**
+	 * Gets the actual file upload element.
+	 *
+	 * This method will never directly be called with either the $add_text or 
+	 * $replace_texts arguments populated; subclasses can override this method
+	 * and call the parent with these arguments set to change the label text
+	 * that accompanies the upload element.
+	 * 
+	 * @access protected
+	 * @param object $current information on the current file
+	 * @param string $add_text the text to be shown labeling the upload
+	 *		  field when there is no current file
+	 * @param string $replace_text the text to be shown labeling the upload
+	 *		  field when there is a current file
+	 * @return string
+	 */
+	function _get_upload_display($current, $add_text=null, $replace_text=null)
+	{
+		if (!$this->_can_add_file($current))
+			return '';
+		
+		$label = null;
+		if (!$current && $add_text) {
+			$label = $add_text;
+		} else if ($current) {
+			$label = ($replace_text)
+				? $replace_text
+				: "Upload a different file:";
+		}
+		
+		$upload = '<div class="file_upload">';
+		if ($label) {
+			$upload .= '<span class="smallText">'.$label."</span><br />";
+		}
+		$upload .= '<input type="file" name="'.$this->name.'" /></div>';
+		return $upload;
+	}
+}
+
+/**
+ * An upload type specifically for images.
+ */
+class image_uploadType extends uploadType
+{
+	var $type = 'image_upload';
+	
+	/**
+	 * Default to only accepting certain image types.
+	 * @var array
+	 */
+	var $acceptable_types = array(
+		'image/jpeg',
+		'image/pjpeg', // (Progressive JPEG)
+		'image/gif',
+		'image/png'
+	);
+	
+	/**
+	 * If true, uploaded images will be resized to fit within constraints.
+	 * @var boolean
+	 * @see $max_width
+	 * @see $max_height
+	 */
+	var $resize_image = true;
+	
+	/**
+	 * The maximum allowed width of the image in pixels.
+	 * If {@link $resize_image} is true, uploaded images that are wider than
+	 * the value of this variable will be rescaled to be within this width.
+	 * @var int
+	 */
+	var $max_width = 500;
+	
+	/**
+	 * The maximum allowed height of the image in pixels.
+	 * If {@link $resize_image} is true, uploaded images that are taller than
+	 * the value of this variable will be rescaled to be within this height.
+	 * @var int
+	 */
+	var $max_height = 500;
+	
+	/** @access private */
+	var $type_valid_args = array(
+		'resize_image',
+		'max_width',
+		'max_height'
+	);
+	
+	function _upload_success($image_path, $image_url)
+	{
+		if ($this->_needs_resizing($image_path)) {
+			$this->_resize_image($image_path);
+		}
+		parent::_upload_success($image_path, $image_url);
+	}
+	
+	/**
+	 * Checks to see if the image at the given path should be resized.
+	 * @access protected
+	 * @param string $image_path
+	 * @return boolean
+	 */
+	function _needs_resizing($image_path)
+	{
+		if (!$this->resize_image)
+			return false;
+		
+		$info = getimagesize($image_path);
+		if (!$info)
+			return false;
+		list($width, $height) = $info;
+		return ($width > $this->max_width || $height > $this->max_height);
+	}
+	
+	/**
+	 * Scales the image at the given path in place to fit size constraints.
+	 * @access protected
+	 * @param string $image_path
+	 * @return boolean true if the resize was successful; false if otherwise
+	 */
+	function _resize_image($image_path)
+	{
+		$res = resize_image($image_path, $this->max_width, $this->max_height);
+		if ($res && $this->file) {
+			// file size will have (hopefully) changed
+			$this->file["size"] = filesize($image_path);
+		}
+		return $res;
+	}
+	
+	function _get_current_file_display($current)
+	{
+		if (!$current)
+			return '';
+		
+		if ($current->path && $current->uri) {
+			list($width, $height) = getimagesize($current->path);
+			$disk_size = format_bytes_as_human_readable($current->size);
+			$dimensions = "$width&times;$height";
+			$uri = htmlspecialchars($current->uri).'?_nocache='.time();
+			$img_style = ' style="width: '.$width.'px; '.
+				'height: '.$height.'px;"';
+			$div_style = '';
+		} else {
+			$uri = $img_style = $dimensions = $disk_size = '';
+			$div_style = ' style="display: none;"';
+		}
+		$image_size = '<span class="dimensions">'.$dimensions.'</span> '.
+			'(<span class="filesize">'.$disk_size.'</span>)';
+		
+		return '<div class="uploaded_file uploaded_image"'.$div_style.'>'.
+			'<span class="smallText">Uploaded image:</span><br />'.
+			'<img src="'.$uri.'"'.$img_style.' class="representation" />'.
+			'<br /><span class="size">'.$image_size.'</span></div>';
+	}
+	
+	function _get_upload_display($current, $add_text=null, $replace_text=null)
+	{
+		if (!$replace_text)
+			$replace_text = "Upload a different image:";
+		return parent::_get_upload_display($current, $add_text, $replace_text);
+	}
+}
+
+/**
+ * The old name for a generic file upload.
+ * 
+ * New applications should use the {@link uploadType new generic upload type}
+ * instead.
+ * 
+ * This class will automatically translate the state member variable to
+ * "uploaded" when it is set to "received" for backwards-compatibility.
+ * @deprecated
+ */
+class AssetUploadType extends uploadType
+{
+	var $type = "AssetUpload";
+	
+	function additional_init_actions($args=array())
+	{
+		$error = "The 'AssetUpload' plasmature type is deprecated. Use the ".
+		    "new base 'upload' type ";
+		if (defined("REASON_VERSION")) {
+			$error .= "or the 'ReasonUpload' type ";
+		}
+		$error .= "instead.";
+		
+		trigger_deprecation($error, 3);
+		return parent::additional_init_actions($args);
+	}
+	
+	function grab()
+	{
+		$result = parent::grab();
+		if ($this->state == "received")
+			$this->state = "uploaded"; // old, confusing name
+		return $result;
+	}
+}
