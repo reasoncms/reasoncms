@@ -70,7 +70,7 @@ function mime_type_from_extension($extension, $default=null)
 	if (!defined('APACHE_MIME_TYPES')) {
 		if (!$error_reported) {
 			$error_reported = true;
-			trigger_error('cannot determine MIME type of file based on its '.
+			trigger_warning('cannot determine MIME type of file based on its '.
 				'extension: the APACHE_MIME_TYPES constant is not defined');
 			return $default;
 		}
@@ -79,7 +79,7 @@ function mime_type_from_extension($extension, $default=null)
 	if (!is_file(APACHE_MIME_TYPES)) {
 		if (!$error_reported) {
 			$error_reported = true;
-			trigger_error('cannot determine MIME type of file based on its '.
+			trigger_warning('cannot determine MIME type of file based on its '.
 				'extension: no such file: '.
 				var_export(APACHE_MIME_TYPES, true));
 			return $default;
@@ -112,18 +112,24 @@ function mime_type_from_extension($extension, $default=null)
  * 
  * @param string $path the path to the file whose MIME types is desired
  * @param string $default what to return if the type cannot be determined
+ * @param string $filename if <code>$path</code> does not reflect the actual
+ *        name of the file (e.g., the path has no file extension), pass the
+ *        true filename here
  * @return string the determined MIME type, or <code>$default</code> if the
  *         type could not be determined
  */
-function get_mime_type($path, $default=null)
+function get_mime_type($path, $default=null, $filename=null)
 {
 	$type = _get_mime_type_fileinfo($path);
 
 	if (!$type || $type == 'application/octet-stream')
 		$type = _get_mime_type_unix($path);
 
-	if (!$type || $type == 'application/octet-stream')
-		$type = mime_type_from_extension(strrchr($path, '.'));
+	if (!$type || $type == 'application/octet-stream') {
+		if (!$filename)
+			$filename = $path;
+		$type = mime_type_from_extension(strrchr($filename, '.'));
+	}
 
 	if (!$type || mime_type_matches('image/*', $type)) {
 		// If we detected an image type, verify it using getimageinfo().
