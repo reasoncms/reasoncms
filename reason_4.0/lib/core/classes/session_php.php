@@ -13,7 +13,7 @@
 	reason_include_once( 'function_libraries/user_functions.php' );
 	
 	/**
-	 *	Implementation of the session interface using PHP sesssions
+	 *	Implementation of the session interface using PHP sessions
 	 *
 	 *	THIS A SECURE IMPLEMENTATION.  Uses a second cookie for a number of reasons to be specified later.
 	 *
@@ -27,7 +27,7 @@
 		 */
 		var $secure_if_available = false;
 		/**
-		 * flag passed to session to choose secure (1) /unsecure (0) sessions
+		 * flag passed to session to choose secure (1) / insecure (0) sessions
 		 * @var integer (1 or 0)
 		 */
 		var $secure_session_flag = 1;
@@ -106,7 +106,7 @@
 		{
 			return $this->_started;
 		} // }}}
-		function start() // {{{
+		function start($sid_override=null) // {{{
 		{
 			if( !$this->secure_if_available )
 			{
@@ -130,7 +130,13 @@
 					}
 					session_name( $this->sess_name );
 					session_set_cookie_params(0, '/', $this->_transform_domain($_SERVER['SERVER_NAME']), $this->secure_session_flag );
-					if (!session_id()) session_start();
+					
+					if ($sid_override) {
+						session_id($sid_override);
+						session_start();
+					} else if (!session_id()) {
+						session_start();
+					}
 					
 					$this->__session_ref =& $_SESSION;
 					$this->_sid = session_id();
@@ -187,6 +193,15 @@
 			}
 		}
 		
+		/**
+		 * Returns the opaque ID of this session.
+		 * @return string the session ID
+		 */
+		function get_id()
+		{
+			return $this->_sid;
+		}
+		
 		function error() // {{{
 		{
 			return $this->error_num;
@@ -220,8 +235,7 @@
 		} // }}}
 		function exists() // {{{
 		{
-			$ret = ( !empty( $_COOKIE[ $this->sess_name.'_EXISTS' ] ) );
-			return $ret;
+			return !empty($_COOKIE[$this->sess_name.'_EXISTS']);
 		} // }}}
 		function _store( $var, $val ) // {{{
 		{
