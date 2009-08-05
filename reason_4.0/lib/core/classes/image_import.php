@@ -1,8 +1,8 @@
 <?php
 	/**
-	 *	Image Import Disco Form
-	 *	@package reason
-	 *	@subpackage classes
+	 * Image Import Disco Form
+	 * @package reason
+	 * @subpackage classes
 	 */
 	
 	/**
@@ -13,6 +13,8 @@
 	 * Include disco so we can extend it
 	 */
 	include_once( DISCO_INC .'disco.php' );
+	
+	require_once CARL_UTIL_INC.'basic/image_funcs.php';
 
 	/**
 	 * Form to upload and add bulk metadata to images
@@ -22,45 +24,45 @@
 	class PhotoUploadForm extends disco
 	{
 		var $site_id;
-		var $elements = array (
-														'source_selection_note' => array(
-															'type' => 'comment',
-															'text' => '<h3>Select files to be uploaded</h3><p>Additional upload fields will be added as you progress.</p>',
-														),
-														'metadata_note' => array(
-															'type' => 'comment',
-															'text' => '<h3>Provide some information about the images</h3><p>These values will be applied to all imported images. If you would like to provide more specific information about each image, you may edit the image records in Reason once you have imported them.  Alternately, you may import images one at a time.</p>',
-														),
-														'name' => array(
-															'type' => 'text',
-															'display_name' => 'Name<br /><span class="smallText">(What is the subject of this set of images?)</span>',
-														),
-														'author' => array(
-															'type' => 'text',
-															'display_name' => 'Author<br /><span class="smallText">(Who took these photos?)</span>',
-														),
-														'description' => array(
-															'type' => 'textarea',
-															'display_name' => 'Short Caption<br /><span class="smallText">(A brief description to be used with small versions of the images)</span>',
-														),
-														'content' => array(
-															'type' => 'textarea',
-															'display_name' => 'Long Caption<br /><span class="smallText">(A more detailed description to be used with larger-sized versions of the images)</span>',
-														),
-														'keywords',
-														'datetime' => array(
-															'type' => 'textDateTime',
-															'display_name' => 'Date and Time Photo Taken',
-														),
-														'original_image_format',
-														'exif_override' => array(
-															'type' => 'checkbox',
-															'display_name' => 'Use camera-recorded date if found <span class="smallText">(Leave this checked to make sure that Reason knows when your images were taken)</span>',
-														),
-														'attach_to_gallery'=>array('type'=>'hidden'),
-														'assign_to_categories'=>array('type'=>'hidden'),
-														'no_share'=>array('type'=>'hidden'),
-											);
+		var $elements = array(
+    		'source_selection_note' => array(
+    			'type' => 'comment',
+    			'text' => '<h3>Select files to be uploaded</h3><p>Additional upload fields will be added as you progress.</p>',
+    		),
+    		'metadata_note' => array(
+    			'type' => 'comment',
+    			'text' => '<h3>Provide some information about the images</h3><p>These values will be applied to all imported images. If you would like to provide more specific information about each image, you may edit the image records in Reason once you have imported them.  Alternately, you may import images one at a time.</p>',
+    		),
+    		'name' => array(
+    			'type' => 'text',
+    			'display_name' => 'Name<br /><span class="smallText">(What is the subject of this set of images?)</span>',
+    		),
+    		'author' => array(
+    			'type' => 'text',
+    			'display_name' => 'Author<br /><span class="smallText">(Who took these photos?)</span>',
+    		),
+    		'description' => array(
+    			'type' => 'textarea',
+    			'display_name' => 'Short Caption<br /><span class="smallText">(A brief description to be used with small versions of the images)</span>',
+    		),
+    		'content' => array(
+    			'type' => 'textarea',
+    			'display_name' => 'Long Caption<br /><span class="smallText">(A more detailed description to be used with larger-sized versions of the images)</span>',
+    		),
+    		'keywords',
+    		'datetime' => array(
+    			'type' => 'textDateTime',
+    			'display_name' => 'Date and Time Photo Taken',
+    		),
+    		'original_image_format',
+    		'exif_override' => array(
+    			'type' => 'checkbox',
+    			'display_name' => 'Use camera-recorded date if found <span class="smallText">(Leave this checked to make sure that Reason knows when your images were taken)</span>',
+    		),
+    		'attach_to_gallery'=>array('type'=>'hidden'),
+    		'assign_to_categories'=>array('type'=>'hidden'),
+    		'no_share'=>array('type'=>'hidden'),
+        );
 		var $actions = array( 'Import Photos' );
 		var $files = array();
 		/**
@@ -285,9 +287,7 @@
 					if( $this->get_value( 'exif_override' ) && in_array($type,$ok_types) && function_exists('read_exif_data'))
 					{
 						// read_exif_data() does not obey error supression
-						turn_carl_util_error_logging_off();
 						$exif_data = @read_exif_data( $cur_name );
-						turn_carl_util_error_logging_on();
 						if( $exif_data )
 						{
 							// some photos may have different fields filled in for dates - look through these until one is found
@@ -376,14 +376,14 @@
 						if($width > REASON_STANDARD_MAX_IMAGE_WIDTH || $height > REASON_STANDARD_MAX_IMAGE_HEIGHT)
 						{
 							copy( $new_name, $orig_name );
-							shell_exec( 'mogrify -geometry '.REASON_STANDARD_MAX_IMAGE_WIDTH.'x'.REASON_STANDARD_MAX_IMAGE_HEIGHT.' '.$new_name.'  2>&1' );
+							resize_image($new_name, REASON_STANDARD_MAX_IMAGE_WIDTH, REASON_STANDARD_MAX_IMAGE_HEIGHT);
 						}
 						
 						$thumb_dimensions = get_reason_thumbnail_dimensions($site_id);
 						if($width > $thumb_dimensions['width'] || $height > $thumb_dimensions['height'])
 						{
 							copy( $new_name, $tn_name );
-							shell_exec( 'mogrify -geometry '.$thumb_dimensions['width'].'x'.$thumb_dimensions['height'].' '.$tn_name.' 2>&1' );
+							resize_image($tn_name, $thumb_dimensions['width'], $thumb_dimensions['height']);
 						}
 						// real original
 						if( file_exists( $cur_name.'.orig' ) )
