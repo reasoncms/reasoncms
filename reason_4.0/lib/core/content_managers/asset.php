@@ -8,8 +8,9 @@
  /**
   * Include dependencies
   */
-	reason_include_once( 'classes/url_manager.php' );
-	reason_include_once( 'content_managers/default.php3' );
+	reason_include_once('classes/url_manager.php');
+	reason_include_once('classes/plasmature/upload.php');
+	reason_include_once('content_managers/default.php3');
 
  /**
   * Define the class name so that the admin page can use this content manager
@@ -25,7 +26,22 @@
 
 		function alter_data() // {{{
 		{
-			$this->add_element( 'asset', 'AssetUpload', array('max_file_size'=>$this->get_actual_max_upload_size() ) );
+			$authenticator = array("reason_username_has_access_to_site",
+				$this->get_value("site_id"));
+			
+			$existing_asset_type = $this->get_value("file_type");
+			$full_asset_path = ($this->get_value('file_type')) ? ASSET_PATH.$this->_id.'.'.$this->get_value('file_type') : false;
+			$params = array('authenticator' => $authenticator,
+				'max_file_size' => $this->get_actual_max_upload_size(),
+				'head_items' => &$this->head_items,
+				'file_display_name' => $this->get_value('file_name'));
+			if (!empty($existing_asset_type)) {
+				$params = array_merge($params, array(
+					'existing_entity' => $this->_id,
+					'allow_upload_on_edit' => true));
+			}
+			$this->add_element('asset', 'ReasonUpload', $params);
+			$asset = $this->get_element('asset');
 	
 			$this->set_comments( 'name', form_comment('A name for internal reference.') );
 			$this->set_comments( 'content', form_comment('A long description of the document, if it needs it. This field is not required.') );
@@ -40,35 +56,27 @@
 			$this->set_display_name( 'datetime', 'Publication Date' );
 			
 			$this->change_element_type( 'file_size', 'hidden' );
-			$this->change_element_type( 'file_name', 'hidden' );
+			$this->change_element_type( 'file_name', 'text' );
 			$this->change_element_type( 'file_type', 'hidden' );
 			$this->change_element_type( 'mime_type', 'hidden' );
 		} // }}}
+		
+		// This method is useful for debugging uploads; it maintains the same
+		// upload session when you "Save & Continue Editing".
+		/*
+		function get_continuation_state_parameters()
+		{
+			$asset = $this->get_element("asset");
+			$local = ($asset && $asset->upload_sid)
+				? array('transfer_session' => $asset->upload_sid)
+				: array();
+			return array_merge(parent::get_continuation_state_parameters(),
+				$local);
+		}
+		*/
+
 		function on_every_time() // {{{
 		{
-			// set up existing file.  if it exists.
-			$full_asset_path = ASSET_PATH.$this->_id.'.'.$this->get_value('file_type');
-			if( file_exists( $full_asset_path ) )
-				$this->change_element_type( 'asset','AssetUpload',array('existing_file' => $full_asset_path, 'allow_upload_on_edit' => true, 'file_display_name' => $this->get_value( 'file_name' ), 'max_file_size'=>$this->get_actual_max_upload_size(), ) );
-		} // }}}
-		function pre_error_check_actions() // {{{
-		{
-			// if a file has been uploaded or a file exists, show the file_name field
-			// otherwise, keep it hidden
-			$asset = $this->get_element( 'asset' );
-			if( $asset->state == 'uploaded' OR $asset->state == 'pending' OR $asset->state == 'existing' )
-			{
-				$this->add_required( 'file_name' );
-				$this->change_element_type( 'file_name', 'text' );
-			}
-
-			// on an upload, set the file_name field within Disco to perform error checks.
-			// we also need to make the value isn't already set - we don't want to clobber it.
-			// shit.  or do we?
-			if( $asset->state == 'uploaded' )
-				$this->set_value( 'file_name', $asset->file[ 'name' ] );
-
-
 			$this->set_order(
 				array(
 					'name',
@@ -85,6 +93,48 @@
 				)
 			);
 		} // }}}
+		
+		/**
+		 * Alter and/or hide the file name field depending upon the state of the asset
+		 *
+		 * - if just received, find a safe name, populate the field, and hide it - after the redirect
+		 * - if state is "existing" - don't do anything - the field remains editable
+		 * - if state is "pending" or "ready" (new) hide the field
+		 *
+		 */
+		function pre_error_check_actions() // {{{
+		{
+			$asset = $this->get_element('asset');
+			
+			// on an upload, set the file_name field to a safe value
+			$filename = ($asset->state == 'received') ? $asset->file["name"] : $this->get_value('file_name');
+			if ($filename)
+			{
+				$filename = $this->get_safer_filename($filename);
+				$filename = sanitize_filename_for_web_hosting($filename);
+				$filename = reason_get_unique_asset_filename($filename, $this->get_value("site_id"), $this->_id);
+				$this->set_value('file_name', $filename);
+			}
+			
+			// hide the file_name field unless it is an existing valid asset
+			if ($asset->state != 'existing') $this->change_element_type('file_name', 'hidden');
+			else $this->add_required('file_name');
+		} // }}}
+		
+		/**
+		 * @access private
+		 */
+		function _get_filename_parts($filename)
+		{
+			$parts = explode('.', $filename);
+
+			if (count($parts) <= 1) {
+				return array(basename($filename), '');
+			} else {
+				$extension = array_pop($parts);
+				return array(basename($filename, ".$extension"), $extension);
+			}
+		}
 		
 		function get_safer_filename ($filename)
 		// returns a "safe" filename with .txt added to unsafe extensions - nwhite 12/12/05
@@ -106,30 +156,11 @@
 						'vb' => 'vb.txt',
 						'bat' => 'bat.txt',
 					);
-			$parts = explode('.', $filename);
-			$fext  = array_pop($parts);
-			if ($fext == $filename) $fext = '';
-			$fnamebase = basename($filename, '.'.$fext);
-			if( !empty( $unsafe_to_safer[ $fext ] ) ) $fext = $unsafe_to_safer[$fext];
-			$filename = $fnamebase;
+			list($filename, $fext) = $this->_get_filename_parts($filename);
+			if(!empty($unsafe_to_safer[$fext]))
+				$fext = $unsafe_to_safer[$fext];
 			if (!empty($fext)) $filename .= '.' . $fext;
 			return $filename;
-		}
-
-		function get_unique_filename ($filename, $asset_names)
-		{
-			// returns a unique filename not in array $asset_names - nwhite 11/28/05
-			$fext  = array_pop(explode('.', $filename));
-			if ($fext == $filename) $fext = '';
-			$fnamebase = basename($filename, '.'.$fext);
-			$index = 0;
-			while ( in_array( $filename, $asset_names ) )
-			{
-				$index++;
-				$filename = $fnamebase . $index;
-				if (!empty($fext)) $filename .= '.' . $fext;
-			}
-		return $filename;
 		}
 		
 		function run_error_checks() // {{{
@@ -137,43 +168,12 @@
 			// check to see if an asset has been uploaded
 			$asset = $this->get_element( 'asset' );
 			if( $asset->state == 'ready' )
-				$this->set_error( 'asset', 'You must upload a file' );
-			else
 			{
-				if( !$this->has_error( 'file_name' ) )
-				{
-					// sanitize excutable extensions
-					$safename = $this->get_safer_filename($this->get_value('file_name' ));
-					// convert unpleasant characters to underscores
-					$this->set_value('file_name', sanitize_filename_for_web_hosting($safename));						
-				}
-
-				if( !$this->has_error( 'file_name' ) )
-				{
-					// get all file names of assets except for the file name of the current asset
-					$es = new entity_selector( $this->get_value( 'site_id' ) );
-					$es->add_type( id_of( 'asset' ) );
-					$assets = $es->run_one('', 'All');
-					if(!empty($assets))
-					{
-						$asset_names = array();
-						foreach( $assets AS $asset )
-						{
-							if( $asset->id() != $this->_id )
-								$asset_names[] = $asset->get_value( 'file_name' );
-						}
-	
-						
-						// transparently change filename to something unique
-						if ( in_array( $this->get_value( 'file_name' ), $asset_names ) )
-						{
-							$this->set_value ('file_name', $this->get_unique_filename ( $this->get_value( 'file_name' ), $asset_names ) );
-						}
-					}
-
-				}
+				$this->set_error( 'asset', 'You must upload a file' );
 			}
+			
 		} // }}}
+		
 		function post_error_check_actions() // {{{
 		{
 			// display the URL of the document or a warning if no doc dir is set up.
@@ -200,28 +200,18 @@
 				}
 				$this->add_element( 'doc_url', 'comment', array( 'text' => $text  ) );
 			}
-
-			// something of a kludge.  asset_tmp_file should only be shown by the assetUpload plasmature type.
-			// however, Disco was apparently seeing it in the request variables and thinking of it as
-			// a field of its own and dumping a hidden field in addition to and after the plasmature dump.
-			// so, removing the field here seems to solve the problem.  although, really, the problem it caused
-			// was very minor.  but it should all be good now.
-			$this->remove_element( 'asset_tmp_file' );
 		} // }}}
 		function process() // {{{
 		{
 			$document = $this->get_element( 'asset' );
 
 			// see if document was uploaded successfully
-			if( ($document->state == 'uploaded' OR $document->state == 'pending') AND file_exists( $document->tmp_full_path ) )
+			if( ($document->state == 'received' OR $document->state == 'pending') AND file_exists( $document->tmp_full_path ) )
 			{
 				$path_parts = pathinfo($document->tmp_full_path);
 				$suffix = (!empty($path_parts['extension'])) ? $path_parts['extension'] : '';
 
                 // if there is no extension/suffix, try to guess based on the MIME type of the file
-                // actually, this shouldn't matter.  if there is no suffix, I do not think that a MIME type
-                // will come through.  But, this is something of a safety harness.
-                
                 if( empty( $suffix ) )
                 {
                     $type_to_suffix = array(
@@ -231,9 +221,17 @@
                         'text/plain' => 'txt',
                         'text/html' => 'html',
                      );
-
-                     if( !empty( $type_to_suffix[ $document->file['type'] ] ) )
-                        $suffix = $type_to_suffix[ $document->file['type'] ];
+                     
+                     $type = $document->get_mime_type();
+                     if ($type) {
+                         $m = array();
+                         if (preg_match('#^([\w-.]+/[\w-.]+)#', $type, $m)) {
+                             // strip off any ;charset= crap
+                             $type = $m[1];
+                             if (!empty($type_to_suffix[$type]))
+                                $suffix = $type_to_suffix[$type];
+                         }
+                     }
                 }
                 if(empty($suffix)) 
                 {
@@ -246,7 +244,7 @@
 				$this->set_value('file_size', round(filesize( $document->tmp_full_path ) / 1024) );
 
 				// set mime type
-				$this->set_value('mime_type', $document->file[ 'type' ] );
+				$this->set_value('mime_type', $document->get_mime_type('application/octet-stream'));
 
 				// set file type
 				$this->set_value('file_type', $suffix );
@@ -260,15 +258,6 @@
 
 			// and, call the regular CM process method
 			parent::process();
-
-//			changed to use URL manager directly - this may be the last thing that was using
-//			the update_global_rewrites.php script
-//
-//			include_once( REASON_INC.'micro_scripts/update_global_rewrites.php' );
-
-			$um = new url_manager( $this->get_value( 'site_id') );
-			$um->update_rewrites();
-
 		} // }}}
 		
 		function get_actual_max_upload_size()
