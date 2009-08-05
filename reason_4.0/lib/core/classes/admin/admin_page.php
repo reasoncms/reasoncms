@@ -1267,7 +1267,7 @@
 			foreach ($this->request as $name => $val) {
 				if (substr($name, 0, $prefix_length) == CM_VAR_PREFIX) {
 					if (!empty($val))
-						$old_args[$name] = $value;
+						$old_args[$name] = $val;
 				}
 			}
 	
