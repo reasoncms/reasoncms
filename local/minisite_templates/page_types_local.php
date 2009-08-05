@@ -4,13 +4,14 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'default' => array(
 			'pre_bluebar' => 'textonly_toggle_top',
 			'main' => 'content',
+			'main_post' => 'assets',
 			'main_head' => 'page_title',
 			'edit_link' => 'login_link',
 			'pre_banner' => 'announcements',
 			//'banner_xtra' => 'google_search_appliance',
 			'banner_xtra' => 'nav_search_logo',
 			'post_banner' => 'navigation_top',
-			'pre_sidebar' => 'assets',
+			//'pre_sidebar' => 'assets',
 			'sidebar' => 'luther_image_sidebar',
 			'navigation' => 'navigation',
 			'footer' => 'maintained',
@@ -19,6 +20,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'sub_nav_3' => '',
 			'post_foot' => 'luther_footer',
 			'imagetop' => 'luther_imagetop',
+			//'contact_info' => 'luther_contact_info',
 		),
 		'test_page' => array(
 

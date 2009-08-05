@@ -34,7 +34,7 @@
 			}
 			else
 			{
-				echo '<body id="pageLC>'."\n";
+				echo '<body id="pageLC">'."\n";
 			}
 
                         echo '<div class="container">'."\n";

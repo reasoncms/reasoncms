@@ -64,8 +64,12 @@ class LutherTemplate extends MinisiteTemplate
                         echo '</div>'."\n";
                 }
                 if ($this->has_content( 'sub_nav_2' ))
+		// Contact Information
                 {
+			echo '<div class="contact-info">'."\n";
+			echo '<h3>Contact Information</h3>'."\n";
                         $this->run_section( 'sub_nav_2' );
+                        echo '</div>'."\n";
                 }
 
                 if ($this->has_content( 'sub_nav_3' ))
