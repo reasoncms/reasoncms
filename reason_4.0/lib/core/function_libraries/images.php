@@ -13,27 +13,28 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 	
 	reason_include_once( 'classes/imager.php' );
 	reason_include_once( 'function_libraries/image_tools.php' );
-	
-	function reason_show_image($image) {
-		if( is_array( $image ) )
-		{
-			$id = $image['id'];
-		}
-		else if ( is_object( $image ) )
-		{
-			$values = $image->get_values();
-			$id = $image->id();
-			$image = $values;
-		}
-		else
-		{
-			$id = $image;
-			$image = get_entity_by_id( $id );
-		}
-		
-		reason_render_template("image/thumbnail", array('id' => $id,
-			'image' => $image));
-	}
+
+// not yet implemented and may not be
+// 	function reason_show_image($image) {
+// 		if( is_array( $image ) )
+// 		{
+// 			$id = $image['id'];
+// 		}
+// 		else if ( is_object( $image ) )
+// 		{
+// 			$values = $image->get_values();
+// 			$id = $image->id();
+// 			$image = $values;
+// 		}
+// 		else
+// 		{
+// 			$id = $image;
+// 			$image = get_entity_by_id( $id );
+// 		}
+// 		
+// 		reason_render_template("image/thumbnail", array('id' => $id,
+// 			'image' => $image));
+// 	}
 
 	/**
 	 * Get the markup to show an image thumbnail
