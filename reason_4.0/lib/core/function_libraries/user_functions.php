@@ -9,6 +9,7 @@
  * Include dependencies
  */
 include_once( 'reason_header.php' );
+reason_include_once( 'classes/group_helper.php' );
 reason_include_once( 'function_libraries/admin_actions.php' );
 reason_include_once( 'function_libraries/util.php' );
 
@@ -92,6 +93,45 @@ function reason_check_access_to_site($site_id, $force_refresh = false)
 }
 
 /**
+ * Checks whether the given user is a member of the given group.
+ * @param string $username the username of the user whose group membership is
+ *        in question
+ * @param int|object $group a group entity or the ID of a group entity
+ * @return boolean true if the user was determined to be a member of the group;
+ *         false if otherwise
+ * @since Reason 4.0 beta 8
+ */
+function reason_user_is_in_group($username, $group)
+{	
+	static $error_prefix = "cannot check if user is a member of a group:";	
+	if (!$username)
+	{
+		return false;
+		trigger_error("$error_prefix a username was not provided");
+	}
+	elseif (!$group || (!is_object($group) && !is_numeric($group)))	
+	{
+		trigger_error("$error_prefix an integer (group id) or entity was not provided");
+		return false;
+	}
+	else
+	{
+		$group_entity = is_object($group) ? $group : new entity($group);
+		if (reason_is_entity($group_entity, 'group_type'))
+		{
+			$helper = new group_helper();
+			$helper->set_group_by_entity($group_entity);
+			return $helper->is_username_member_of_group($username);
+		}
+		else
+		{
+			trigger_error("$error_prefix a valid group entity was not provided");
+			return false;
+		}
+	}
+}
+
+/**
  * Combines reason_check_authentication with reason_user_has_privs
  */
 function reason_check_privs($privilege)
@@ -129,7 +169,7 @@ function reason_check_authentication($method  = '')
 	else $username = (get_authentication_from_server()) ? get_authentication_from_server() : get_authentication_from_session();
 	return $username;
 }
-         
+
 /**
  * redirects to the login page with the appropriate return url
  * @param string $msg_uname unique name of text blurb to show on the login page
@@ -213,8 +253,8 @@ function get_authentication_from_session()
 		{
 			$session->start();
 		}
-			$username = $session->get( 'username' );
-			return $username;
+		$username = $session->get( 'username' );
+		return $username;
 	}
 	else
 	{
