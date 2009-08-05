@@ -179,8 +179,12 @@
 			$this->alter_display_names();
 			$this->alter_comments();
 			
-			if( !empty( $this->admin_page->request ) )
-				$this->grab_all_page_requests();
+			/**
+			 * Why do we turn all page requests into hidden elements? If there is not a good reason, don't call this and
+			 * delete the method! It makes it pretty easy to stomp on legitimate hidden elements added by plasmature objects
+			 */
+			if( !empty( $this->admin_page->request ) ) $this->grab_all_page_requests();
+			
 			// if no relationships, don't show the relationship button
 			$rels = $this->admin_page->get_rels();
 			if( empty( $rels ) )
@@ -416,36 +420,49 @@
 		 */
 		function where_to() // {{{
 		{
-			if( $this->chosen_action == 'finish' )
-			{
-				$link = unhtmlentities( $this->admin_page->make_link(  array( 'cur_module' => 'Finish' )/*,true*/ ) );
-			}
-			elseif( $this->chosen_action == 'assoc' )
-			{
-				$links = $this->admin_page->get_main_links();
-				$found = false;
-				foreach( $links AS $ass )
-				{
-					if( isset( $ass[ 'rel_info' ] ) && !$found )
-					{
-						$found = true;
-						$link = unhtmlentities( $ass[ 'link' ] ); 
+			$page =& $this->admin_page;
+			$link = null;
+			
+			if ($this->chosen_action == 'finish') {
+				$link = $page->make_link(array('cur_module' => 'Finish'),
+					false, false);
+			} else if ($this->chosen_action == 'assoc') {
+				foreach ($page->get_main_links() as $ass) {
+					if (isset($ass['rel_info'])) {
+						$link = unhtmlentities($ass['link']);
+						break;
 					}
 				}
+			} else if ($this->chosen_action == 'publish_and_next') {
+				// in pending queue, publish chosen:
+				// transition to finish and make sure finish knows we're in
+				// queue mode so that it can hand off the control to the next
+				// editor
+				$link = $page->make_link(array('cur_module' => 'Finish',
+					'next_entity' => $this->next_entity->id()), false, false);
+			} else {
+				$params = array('id' => $this->_id,
+					'cur_module' => 'Editor', 'submitted' => false,
+					'entity_saved' => true);
+				$params = array_merge($params,
+					$this->get_continuation_state_parameters());
+				
+				$link = $page->make_link($params, false, false);
 			}
-			// in pending queue, publish chosen
-			elseif( $this->chosen_action == 'publish_and_next' )
-			{
-				// transition to finish and make sure finish knows we're in queue mode
-				// so that it can hand off the control to the next editor
-				$link = unhtmlentities( $this->admin_page->make_link( array( 'cur_module' => 'Finish', 'next_entity' => $this->next_entity->id() ) ) );
-			}
-			else
-			{
-				$link = unhtmlentities( $this->admin_page->make_link( array( 'id' => $this->_id , 'cur_module' => 'Editor' , 'submitted' => false , 'entity_saved' => true ) ) );
-			}
+			
 			return $link; 
-		} // }}}
+		} // }}}		
+		
+		/**
+		 * Returns any additional query parameters that should be passed to
+		 * the editing page on a "Save & Continue Editing" event.
+		 * @access protected
+		 * @return array
+		 */
+		function get_continuation_state_parameters()
+		{
+			return array();
+		}
 	
 		/**	
 		 * returns true if entity has associtation
