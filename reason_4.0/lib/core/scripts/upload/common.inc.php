@@ -99,7 +99,8 @@ if (!can_upload($session)) {
 function can_upload($session) {
 	if ($session['authenticator']) {
 		$auth = $session['authenticator'];
-		$username = get_authentication_from_session(true);
+		$reason_session =& get_reason_session();
+		$username = $reason_session->get("username");
 		
 		if ($auth['file'])
 			require_once $auth['file'];
