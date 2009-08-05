@@ -10,6 +10,7 @@
  * Include the Reason libraries & other dependencies
  */
 include_once( 'reason_header.php' );
+require_once CARL_UTIL_INC.'basic/mime_types.php';
 reason_include_once( 'classes/group_helper.php');
 reason_include_once( 'classes/entity_selector.php');
 reason_include_once( 'function_libraries/user_functions.php');
@@ -197,13 +198,13 @@ class ReasonAssetAccess
 			//if (in_array($file_ext, $extensions_to_display_inline)) $file_disposition = 'inline';
 			if (empty($mime_type)) $mime_type = 'application/octet-stream';
 			ob_end_clean();
-			header( 'Pragma: public');
-			header( 'Cache-Control: max-age=0' ); //added to squash weird IE 6 bug where pdfs say that the file is not found
-			header( 'Content-Type: ' . $mime_type );
-			header( 'Content-Disposition: ' . $file_disposition . '; filename="'.$file_name.'"' );
-			header( 'Content-Length: '.$file_size );
-			header( 'Content-Transfer-Encoding: binary');
-			header( 'Expires: 0');
+			header('Pragma: public');
+			header('Cache-Control: max-age=0'); //added to squash weird IE 6 bug where pdfs say that the file is not found
+			header('Content-Type: ' . $mime_type);
+			header('Content-Disposition: ' . $file_disposition . '; filename="'.$file_name.'"');
+			header('Content-Length: '.$file_size);
+			header('Content-Transfer-Encoding: binary');
+			header('Expires: 0');
 			fpassthru($file_handle);
 			exit();
 		}
@@ -212,51 +213,26 @@ class ReasonAssetAccess
 			trigger_error ('The asset at ' . $file_path . ' could not be sent to the user because it does not exist');
 		}
 	}
-
+	
 	/**
-	 * get_mime_type determines the mime type based upon the extension by parsing the apache mime.types file
-	 * it requires APACHE_MIME_TYPES to be a defined constant that contains the pathname to the apache mime.types file
-	 * @author Nathan White
+	 * Determines the MIME type of the asset based on its file extension.
+	 * Requires the {@link APACHE_MIME_TYPES} constant to be properly defined.
 	 * @param string $fileext
-	 * @return string the mime type or an empty string if not found
+	 * @return string the asset's MIME type, or an empty string if it could
+	 *         not be determined
+	 * @uses mime_type_from_extension
 	 */
-	 function get_mime_type($fileext = '')
-	 {
-	 	$fileext = (empty($fileext)) ? $this->asset->get_value( 'file_type' ) : $fileext;
-
-	 	if (empty($fileext)) return '';
-	 	$mime_path = APACHE_MIME_TYPES;
-		if (empty($mime_path))
+	function get_mime_type($fileext = '')
+	{
+		if ($this->asset && is_object($this->asset) && $this->asset->has_value('mime_type'))
 		{
-			trigger_error ('APACHE_MIME_TYPES constant must be defined in the reason settings.php file for
-					asset access to function.');
-			
+		 	return $this->asset->get_value('mime_type');
 		}
-		elseif (!file_exists($mime_path))
-		{
-			trigger_error ('APACHE_MIME_TYPES file ' . APACHE_MIME_TYPES . ' does not exist');
-		}
-	 	else
-		{
-			$myhandle = fopen(APACHE_MIME_TYPES, 'r');
-	 		while (!feof($myhandle))
-	 		{
-	 			$matches = fscanf($myhandle, "%s\t%[^\n]");	
-	 			if (($matches[0][0] != '#') && (!empty($matches[1])))
-	 			{
-	 				foreach (explode(' ', $matches[1]) as $item)
-	 				{
-	 					if (strcasecmp($item, $fileext) == 0) 
-	 					{
-	  						fclose($myhandle);
-	 						return $matches[0];
-	 					}
-	 				}
-	 			}
-	 		}
-	 		fclose($myhandle);
-	 	}
-		return '';
-	 }
+	    
+		$fileext = (empty($fileext))
+			? $this->asset->get_value('file_type')
+			: $fileext;
+		
+		return mime_type_from_extension($fileext, '');
+	}
 }
-?>
