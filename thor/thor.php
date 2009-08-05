@@ -537,7 +537,7 @@ class ThorCore
 		$str = 'SELECT * FROM '.$this->get_thor_table().' WHERE '.$key_column.' = "'.$key.'"';
 		if (!empty($sort_field) && !empty($sort_order))
 		{
-			$str .= ' ORDER BY "' . $sort_field . '" ' . $sort_order; 
+			$str .= ' ORDER BY `' . $sort_field . '` ' . $sort_order; 
 		}
 		return $str;
 	}
@@ -547,7 +547,7 @@ class ThorCore
 		$str = 'SELECT * FROM '.$this->get_thor_table();
 		if (!empty($sort_field) && !empty($sort_order))
 		{
-			$str .= ' ORDER BY "' . $sort_field . '" ' . $sort_order; 
+			$str .= ' ORDER BY `' . $sort_field . '` ' . $sort_order; 
 		}
 		return $str;
 	}
