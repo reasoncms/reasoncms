@@ -35,6 +35,7 @@
 	* Created 2005-10-01
 	* @author Matt Ryan & Meg Gibbs
 	* @version 1.1 revised Nov. 2006 to add nobody group and full directory service support
+	* @see reason_user_is_in_group() for an even simpler interface
 	*/
 	class group_helper
 	{
@@ -100,10 +101,8 @@
 		/**
 		 * Constructor
 		 *
-		 * Leave this empty.
-		 *
+		 * @internal Leave this empty.
 		 * @access public
-		 * @return void
 		 */
 		function group_helper()
 		{
@@ -210,7 +209,7 @@
 		*
 		* If username given, will return true or false.
 		*
-		* If no username given, this will be interprted as meaning "an anonymous user" and will
+		* If no username given, this will be interpreted as meaning "an anonymous user" and will
 		* return true, false, or NULL. In this case, true indicates the group includes anybody; 
 		* false indicates that it includes nobody; and NULL indicates that the group includes some
 		* people and not others -- identification will be necessary to establish group membership.
