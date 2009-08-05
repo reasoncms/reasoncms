@@ -12,9 +12,31 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 	define( 'INC_REASON_MODULES_IMAGES', true );
 	
 	reason_include_once( 'classes/imager.php' );
+	reason_include_once( 'function_libraries/image_tools.php' );
+	
+	function reason_show_image($image) {
+		if( is_array( $image ) )
+		{
+			$id = $image['id'];
+		}
+		else if ( is_object( $image ) )
+		{
+			$values = $image->get_values();
+			$id = $image->id();
+			$image = $values;
+		}
+		else
+		{
+			$id = $image;
+			$image = get_entity_by_id( $id );
+		}
+		
+		reason_render_template("image/thumbnail", array('id' => $id,
+			'image' => $image));
+	}
 
 	/**
-	 * Get the mearkup to show an image thumbnail
+	 * Get the markup to show an image thumbnail
 	 *
 	 * This function is a wrapper for show_image() that returns what show_image() would
 	 * normally simply output.
@@ -214,54 +236,4 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 		$r = mysql_query( $q ) OR die( 'Unable to load image: '.mysql_error() );
 		return mysql_fetch_array( $r, MYSQL_ASSOC );
 	} // }}}
-	
-	/**
-	 * Get the URL of an image
-	 *
-	 * Returns a URL relative to server root, e.g. /path/to/image/1234.jpg
-	 *
-	 * @param integer | object (entity) $image
-	 * @param string $size Currently supports thumbnail/thumb/tn or standard/default
-	 * @return string URL e.g. /path/to/image/1234.jpg
-	 */
-	function reason_get_image_url($image,$size = 'standard')
-	{
-		if(!is_object($image))
-		{
-			$id = (integer) $image;
-			if(empty($id))
-			{
-				trigger_error('get_image_url() needs an entity or an ID passed to it');
-				return NULL;
-			}
-			$image = new entity($id);
-			if(!$image->get_values())
-			{
-				trigger_error('get_image_url() needs an entity or a valid ID passed to it');
-				return NULL;
-			}
-		}
-		if($image->get_value('type') != id_of('image'))
-		{
-			trigger_error('Entity passed to get_image_url() must be an image');
-			return NULL;
-		}
-		
-		switch($size)
-		{
-			case 'thumbnail':
-			case 'thumb':
-			case 'tn':
-				return WEB_PHOTOSTOCK.$image->id().'_tn.'.$image->get_value('image_type');
-				break;
-			case 'standard':
-			case 'default':
-				return WEB_PHOTOSTOCK.$image->id().'.'.$image->get_value('image_type');
-				break;
-			default:
-				trigger_error('Unrecognized size ('.$size.')');
-				return NULL;
-		}
-	}
 }
-?>
