@@ -181,9 +181,9 @@
 			{
 				if( !$this->get_channel_attr( $req ) )
 				{
-					turn_carl_util_error_output_off();
+					$old_mode = error_handler_config('script_mode', true);
 					trigger_error( '"'.$req.'" is a required RSS channel field.  Use set_channel_attribute( "'.$req.'", "blah" ) to set it.' );
-					turn_carl_util_error_output_on();
+					error_handler_config('script_mode', $old_mode);
 					$this->send_internal_error();
 					die();
 				}
