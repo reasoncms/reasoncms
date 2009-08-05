@@ -38,4 +38,66 @@ function mkdir_recursive($dir, $mode = 0775, $recursive = true)
 	return FALSE;
 }
 
+/**
+ * Joins path parts together. Empty parts will be ignored.
+ *
+ * Example:
+ * <code>
+ * path_join('foo', 'bar', 'baz.txt') => 'foo/bar/baz.txt' // on UNIX
+ *                                    => 'foo\\bar\\baz.txt' // on Windows
+ * path_join('foo', null, 'bar', '', 'baz.txt') => 'foo/bar/baz.txt' // (UNIX)
+ * path_join(array('foo', 'bar')) => 'foo/bar' // with an array
+ * </code>
+ *
+ * @see DIRECTORY_SEPARATOR
+ * @param string|array $part,... path parts
+ * @return string the joined path
+ */
+function dir_join($part)
+{
+	$parts = func_get_args();
+	if (is_array($parts[0]))
+		$parts = $parts[0];
+	return implode(DIRECTORY_SEPARATOR,
+		array_filter($parts, '_non_empty_string'));
+}
+
+/**
+ * Splits a filename into its base and extension.
+ * If the file has no extension, the extension field will be an empty string.
+ *
+ * Example:
+ * <code>
+ * get_filename_parts("foo.txt") => array("foo", "txt")
+ * get_filename_parts("bar") => array("bar", "")
+ * get_filename_parts("dir/baz.php") => array("dir/baz", "php")
+ * </code>
+ *
+ * @param string $filename
+ * @return array
+ */
+function get_filename_parts($filename)
+{
+	$parts = explode('.', $filename);
+
+	if (count($parts) <= 1) {
+		return array(basename($filename), '');
+	} else {
+		$extension = array_pop($parts);
+		if (count($parts) > 1 && $parts[count($parts) - 1] == "tar") {
+		    // special case for compressed TAR archives
+		    $extension = array_pop($parts).".$extension";
+		}
+		return array(basename($filename, ".$extension"), $extension);
+	}
+}
+
+/**
+ * @access private
+ */
+function _non_empty_string($string)
+{
+	return 0 !== strlen($string);
+}
+
 ?>
