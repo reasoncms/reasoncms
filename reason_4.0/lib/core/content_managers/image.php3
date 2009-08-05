@@ -6,7 +6,11 @@
 	/**
 	 * Include image library
 	 */
-	reason_include_once( 'function_libraries/images.php' );
+	require_once CARL_UTIL_INC.'basic/image_funcs.php';
+	reason_include_once('classes/plasmature/upload.php');
+	reason_include_once('function_libraries/images.php');
+	reason_include_once('function_libraries/image_tools.php');
+	reason_include_once('content_managers/default.php3');
 	/**
 	 * Register content manager with Reason
 	 */
@@ -28,6 +32,13 @@
 		{
 			$this->thumbnail_size = $size;
 		} // }}}
+		
+		/** @access private */
+		function _get_authenticator()
+		{
+			return array("reason_username_has_access_to_site",
+				$this->get_value("site_id"));
+		}
 
 		function alter_data() // {{{
 		{
@@ -35,9 +46,11 @@
 			$this->thumbnail_height = $thumb_dimensions['height'];
 			$this->thumbnail_width = $thumb_dimensions['width'];
 
-			$this->add_element( 'image', 'image_upload', array('max_width'=>REASON_STANDARD_MAX_IMAGE_WIDTH,'max_height'=>REASON_STANDARD_MAX_IMAGE_HEIGHT,) );
-			$this->add_element( 'thumbnail', 'image_upload' );
-	
+			$this->add_element( 'image', 'ReasonImageUpload', array('obey_no_resize_flag' => true, 'authenticator' => $this->_get_authenticator(), 'max_width' => REASON_STANDARD_MAX_IMAGE_WIDTH, 'max_height' => REASON_STANDARD_MAX_IMAGE_HEIGHT));
+			$this->add_element( 'thumbnail', 'ReasonImageUpload', array('authenticator' => $this->_get_authenticator(), 'max_width' => $this->thumbnail_width, 'max_height' => $this->thumbnail_height));
+			$image = $this->get_element('image');
+			$image->get_head_items($this->head_items);
+		
 			$this->change_element_type( 'width','hidden' );
 			$this->change_element_type( 'height','hidden' );
 			$this->change_element_type( 'size','hidden' );
@@ -66,8 +79,7 @@
 			}
 			if( $full_sizer )
 			{
-				$this->add_element( 'do_not_resize', 'checkbox' );
-				$this->set_comments( 'do_not_resize', form_comment('If checked, This image will be uploaded at full resolution &amp; size.  Use this feature with caution -- you can easily upload an overlarge image accidentally.'));
+				$this->add_element( 'do_not_resize', 'checkbox', array('description' => 'Upload this image at full resolution &amp; size. (Use with caution &ndash; it is easy to accidentally upload an overly-large image.)'));
 			}
 
 			$this->add_required( 'description' );
@@ -75,20 +87,22 @@
 		} // }}}
 		function on_every_time() // {{{
 		{
-			
-			// munge image and thumbnail elements to use image_upload correctly
-			$web_image_path = WEB_PHOTOSTOCK.$this->_id.'.'.$this->get_value('image_type');
-			$full_image_path = PHOTOSTOCK.$this->_id.'.'.$this->get_value('image_type');
-			if( file_exists( $full_image_path ) )
-				$this->change_element_type( 'image','image_upload',array('existing_file' => $full_image_path, 'existing_file_web' => $web_image_path, 'allow_upload_on_edit' => true ) );
+			// munge image and thumbnail elements to use ReasonImageUpload correctly
+			$image_name = reason_format_image_filename($this->_id,
+				$this->get_value('image_type'));
+			$web_image_path = WEB_PHOTOSTOCK.$image_name;
+			$full_image_path = PHOTOSTOCK.$image_name;
+			if (file_exists($full_image_path))
+				$this->change_element_type( 'image','ReasonImageUpload',array('obey_no_resize_flag' => true, 'authenticator' => $this->_get_authenticator(), 'existing_file' => $full_image_path, 'existing_file_web' => $web_image_path, 'allow_upload_on_edit' => true ) );
 
-			$web_tn_path = WEB_PHOTOSTOCK.$this->_id.'_tn.'.$this->get_value('image_type');
-			$full_tn_path = PHOTOSTOCK.$this->_id.'_tn.'.$this->get_value('image_type');
-			if( file_exists( $full_tn_path ) )
+			$tn_name = reason_format_image_filename($this->_id,
+				$this->get_value('image_type'), "thumbnail");
+			$web_tn_path = WEB_PHOTOSTOCK.$tn_name;
+			$full_tn_path = PHOTOSTOCK.$tn_name;
+			if (file_exists($full_tn_path))
 			{
-				$this->change_element_type( 'thumbnail','image_upload',array('existing_file' => $full_tn_path, 'existing_file_web' => $web_tn_path, 'allow_upload_on_edit' => true ) );
-				$this->add_element( 'replace_thumbnail', 'checkbox' );
-				$this->set_comments( 'replace_thumbnail', '<span class="smallText">If checked, a thumbnail will be generated from the image.</span>' );
+				$this->change_element_type( 'thumbnail','ReasonImageUpload',array('authenticator' => $this->_get_authenticator(), 'existing_file' => $full_tn_path, 'existing_file_web' => $web_tn_path, 'allow_upload_on_edit' => true ) );
+				$this->add_element( 'replace_thumbnail', 'checkbox', array('description' => 'Regenerate the thumbnail from the full-size image.'));
 			}
 			
 			$this->set_order(
@@ -108,6 +122,21 @@
 				)
 			);
 		} // }}}
+		
+		// This method is useful for debugging uploads; it maintains the same
+		// upload session when you "Save & Continue Editing".
+		/*
+		function get_continuation_state_parameters()
+		{
+			$asset = $this->get_element("asset");
+			$local = ($asset && $asset->upload_sid)
+				? array('transfer_session' => $asset->upload_sid)
+				: array();
+			return array_merge(parent::get_continuation_state_parameters(),
+				$local);
+		}
+		*/
+		
 		function pre_error_check_actions() // {{{
 		{
 			parent::pre_error_check_actions();
@@ -152,7 +181,11 @@
 				$this->handle_full_size_image($id, $image);
 			}
 			// make thumbnail if no thumbnail exists
-			if( ($this->auto_create_thumbnails AND file_exists(PHOTOSTOCK.$id.'.'.$this->get_value('image_type')) AND !file_exists( PHOTOSTOCK.$id.'_tn.'.$this->get_value('image_type') )) OR $this->get_value('replace_thumbnail') )
+			$full_name = PHOTOSTOCK.reason_format_image_filename($id,
+				$this->get_value("image_type"));
+			$thumb_name = PHOTOSTOCK.reason_format_image_filename($id,
+				$this->get_value("image_type"), "thumbnail");
+			if (($this->auto_create_thumbnails && file_exists($full_name) && !file_exists($thumb_name)) || $this->get_value("replace_thumbnail"))
 			{
 				$this->create_thumbnail($id, $image);
 			}
@@ -164,9 +197,7 @@
 			$info = getimagesize( $thumbnail->tmp_full_path );
 			if(array_key_exists($info[2],$this->image_types) && in_array($this->image_types[ $info[2] ], $this->image_types_with_exif_data) )
 			{
-				turn_carl_util_error_logging_off();
 				$exif_data = @read_exif_data( $thumbnail->tmp_full_path );
-				turn_carl_util_error_logging_on();
 				if( !empty( $exif_data[ 'DateTime' ] ) )
 				{
 					$this->set_value('datetime',$exif_data['DateTime'] );
@@ -184,51 +215,60 @@
 				$this->set_value('image_type', $this->image_types[ $info[2] ] );
 			}
 			$this->set_value('size', round(filesize( $thumbnail->tmp_full_path ) / 1024) );
-			rename( $thumbnail->tmp_full_path, PHOTOSTOCK.$id.'_tn.'.$this->get_value('image_type') );
+			
+			$dest_name = reason_format_image_filename($id,
+				$this->get_value('image_type'), "thumbnail");
+			rename($thumbnail->tmp_full_path, PHOTOSTOCK.$dest_name);
 		}
 		function handle_full_size_image($id, $image)
 		{
+			$info = getimagesize( $image->tmp_full_path );
+			if(array_key_exists($info[2],$this->image_types) && in_array($this->image_types[ $info[2] ], $this->image_types_with_exif_data) )
+			{
+				$exif_data = @read_exif_data( $image->tmp_full_path );
+				if( !empty( $exif_data[ 'DateTime' ] ) )
+				{
+					$this->set_value('datetime',$exif_data['DateTime'] );
+				}
+			}
+			$this->set_value('width', $info[0] );
+			$this->set_value('height', $info[1] );
+			if(array_key_exists($info[2],$this->image_types))
+			{
+				$this->set_value('image_type', $this->image_types[ $info[2] ] );
+			}
+			$this->set_value('size', round(filesize( $image->tmp_full_path ) / 1024) );
 			
-				$info = getimagesize( $image->tmp_full_path );
-				if(array_key_exists($info[2],$this->image_types) && in_array($this->image_types[ $info[2] ], $this->image_types_with_exif_data) )
-				{
-					turn_carl_util_error_logging_off();
-					$exif_data = @read_exif_data( $image->tmp_full_path );
-					turn_carl_util_error_logging_on();
-					if( !empty( $exif_data[ 'DateTime' ] ) )
-					{
-						$this->set_value('datetime',$exif_data['DateTime'] );
-					}
-				}
-				$this->set_value('width', $info[0] );
-				$this->set_value('height', $info[1] );
-				if(array_key_exists($info[2],$this->image_types))
-				{
-					$this->set_value('image_type', $this->image_types[ $info[2] ] );
-				}
-				$this->set_value('size', round(filesize( $image->tmp_full_path ) / 1024) );
-				rename( $image->tmp_full_path, PHOTOSTOCK.$id.'.'.$this->get_value('image_type') );
-				if( file_exists( $image->tmp_full_path.'.orig' ) )
-				{
-					// move the original image into the photostock directory
-					rename( $image->tmp_full_path.'.orig', PHOTOSTOCK.$id.'_orig.'.$this->get_value('image_type') );
-				}
+			$dest_filename = reason_format_image_filename($id,
+				$this->get_value('image_type'));
+			rename($image->tmp_full_path, PHOTOSTOCK.$dest_filename);
+			touch(PHOTOSTOCK.$dest_filename);
+			
+			$orig_dest = PHOTOSTOCK.reason_format_image_filename($id,
+				$this->get_value("image_type"), "full");
+			if ($image->original_path && file_exists($image->original_path)) {
+				// Move the original image into the photostock directory.
+				rename($image->original_path, $orig_dest);
+				touch($orig_dest);
+			} else if (file_exists($orig_dest)) {
+				// Clear out an old high-res file.
+				@unlink($orig_dest);
+			}
 		}
 		function create_thumbnail($id)
 		{
-			list( $tmp_width, $tmp_height ) = getimagesize( PHOTOSTOCK.$id.'.'.$this->get_value('image_type') );
-			if( $tmp_width > $this->thumbnail_width OR $tmp_height > $this->thumbnail_height )
-			{
-				copy( PHOTOSTOCK.$id.'.'.$this->get_value('image_type'), PHOTOSTOCK.$id.'_tn.'.$this->get_value('image_type') );
+			$filename = PHOTOSTOCK.reason_format_image_filename($id,
+				$this->get_value('image_type'));
+			$thumb_filename = PHOTOSTOCK.reason_format_image_filename($id,
+				$this->get_value('image_type'), "thumbnail");
 
-				$exec_output = ""; 
-				$exec_result_code = "";
-				exec( IMAGEMAGICK_PATH . 'mogrify -geometry '.$this->thumbnail_width.'x'.$this->thumbnail_height.' -sharpen 1 '.PHOTOSTOCK.$id.'_tn.'.$this->get_value('image_type'),$exec_output , $exec_result_code );
+			list($width, $height) = getimagesize($filename);
 
-				if($exec_result_code != 0)
-				{
-					trigger_error("mogrify failed: you must have ImageMagick installed for this function to succeed.");
-				}
+			if ($width > $this->thumbnail_width || $height > $this->thumbnail_height) {
+				copy($filename, $thumb_filename);
+				resize_image($thumb_filename, $this->thumbnail_width,
+					$this->thumbnail_height);
+				touch($thumb_filename);
 			}
 		}
 	}
