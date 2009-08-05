@@ -1,11 +1,11 @@
 <?php
 	/**
-	 *	Admin Page
+	 * Admin Page
 	 *
-	 *	Wraps up most of the funcionality of the Reason Admin
+	 * Wraps up most of the functionality of the Reason Admin
 	 *
-	 *	@package reason
-	 *  @subpackage admin
+	 * @package reason
+	 * @subpackage admin
 	 */
 
 	/**
@@ -19,15 +19,15 @@
 	reason_include_once( 'function_libraries/user_functions.php' );
 	
 	/**
-	 *	Admin Page
-	 *
-	 *	Wraps up most of the funcionality of the Reason Admin
-	 *
-	 *	@todo completely overhaul internal workings of this class -- it is a real mess
-	 *	@todo get add'l head items (e.g. css, js, etc) from modules rather than having hard-coded/special-cased ways of including them here
-	 *	@todo separate output and logic -- fold most of html into either a single separate template or into several different templates that work similarly
-	 *
-	 *	@author dave hendler, brendon stanton, matt ryan, nate white, probably others
+	 * Admin Page
+	 * 
+	 * Wraps up most of the functionality of the Reason Admin
+	 * 
+	 * @todo completely overhaul internal workings of this class -- it is a real mess
+	 * @todo get add'l head items (e.g. css, js, etc) from modules rather than having hard-coded/special-cased ways of including them here
+	 * @todo separate output and logic -- fold most of html into either a single separate template or into several different templates that work similarly
+	 * 
+	 * @author Dave Hendler, Brendon Stanton, Matt Ryan, Nate White, probably others
 	 */
 	class AdminPage
 	{
@@ -1099,7 +1099,7 @@
 		}
 		
 		function main_area()
-		//displays the main area of the page.  First does it's own stuff then calls the module to do it's stuff.
+		//displays the main area of the page.  First does its own stuff then calls the module to do its stuff.
 		{
 			echo '<div class="contentArea">';		
 			if( $this->show[ 'title' ] )
@@ -1240,45 +1240,53 @@
 			echo '</td><td valign="top">';
 		}
 
-		function make_link( $params = '', $pass_rest = false ) // {{{
-		//this function should ALWAYS be used when creating a link in the admin site.  
-		//the first parameter should be an array of the form array( id => 4 , lister => 4532 , ... ).  This function 
-		//will make a link out of the these items.  There are some default args set up at the top of this page.  
-		//These links will always be passed through regardless.  All other variables will only be passed if they have a value.
-		//the second parameter determines whether or not to keep the rest of the request variables (those that are not 
-		//in default) as well.  Using this function guarantees that you will keep all essential info from page to page.
+		/**
+		 * Create a link within the admin site.
+		 *
+		 * Passes through the default args defined at the top of this file,
+		 * other parameters if they have values, and all of the remaining
+		 * request variables if $pass_rest is true.
+		 * 
+		 * @param array $params associative array of query parameters
+		 * @param boolean $pass_rest if true, all remaining request variables
+		 *        will be included
+		 * @param boolean $html if true, use "&amp;" as the parameter
+		 *        separator; if false, use "&"
+		 */
+		function make_link($params = array(), $pass_rest = false, $html = true)
 		{
 			$default_args = array();
-			foreach( $this->default_args AS $arg )
-				$default_args[ $arg ] = isset( $this->request[ $arg ] ) ? $this->request[ $arg ] : '';
-
+			foreach ($this->default_args as $arg) {
+				$default_args[$arg] = (isset($this->request[$arg]))
+					? (string) $this->request[$arg]
+					: "";
+			}
+	
 			$old_args = array();
-			foreach( $this->request AS $k => $v )
-			{
-				if( substr( $k , 0 , strlen( CM_VAR_PREFIX ) ) == CM_VAR_PREFIX ) 
-				{
-					if( !empty( $v ) )
-						$old_args[ $k ] = $v;
+			$prefix_length = strlen(CM_VAR_PREFIX);
+			foreach ($this->request as $name => $val) {
+				if (substr($name, 0, $prefix_length) == CM_VAR_PREFIX) {
+					if (!empty($val))
+						$old_args[$name] = $value;
 				}
 			}
-								  
-			$params = array_merge( $default_args, $old_args , $params );
-			if( $pass_rest )
-				$params = array_merge( $this->request, $params );
-			if( empty( $params ) )
-				$params = array();
-
-			$link = '';
-			foreach( $params AS $key => $val )
-			{
-				if( isset( $default_args[ $key ] ) OR !empty( $val ) ) //we need to get anything through that is in default args or has a value
-				{
-					$link .= '&amp;'.urlencode($key).'='.urlencode($val);
-				}
+	
+			$params = array_merge($default_args, $old_args, $params);
+			if ($pass_rest)
+				$params = array_merge($this->request, $params);
+	
+			$parts = array();
+			foreach ($params as $key => $val) {
+				// We need to include anything that is in default args or has a
+				// value.
+				if (isset($default_args[$key]) || !empty($val))
+					$parts[] = urlencode($key).'='.urlencode($val);
 			}
-			$link = substr( $link, strlen( '&amp;' ) );
-			return $_SERVER['PHP_SELF'].'?'.$link;
-		} // }}}
+	
+			$separator = ($html) ? "&amp;" : "&";
+			return $_SERVER['PHP_SELF']."?".implode($separator, $parts);
+		}
+		
 		/**
 		 * Initializes the admin page.
 		 * 
@@ -1479,7 +1487,7 @@
 		} // }}}
 		
 		function run() // {{{
-		//does it's thang
+		//does its thang
 		{
 			$this->head();
 		
