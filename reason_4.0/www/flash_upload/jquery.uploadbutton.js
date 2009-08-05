@@ -41,7 +41,7 @@
     $.fn.repositionUploadButton = function reposition_swf_upload_button() {
         var container = this.data('_swf_upload_actor');
         var target = this.data('_swf_upload_clickable');
-        if (!container || !target)
+        if (!container || !target || target.outerWidth() <= 0)
             return this;
         
         if (container.css('position') != 'absolute')
@@ -61,6 +61,7 @@
             width: target.outerWidth(),
             height: target.outerHeight()
         });
+        
         return this;
     };
     

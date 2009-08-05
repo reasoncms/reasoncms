@@ -4,7 +4,7 @@
  */
 
 // Convert a human-readable size into a number of bytes.
-var _size_pattern = /(\d+(?:\.\d+)?)\s*(b|[kmgp]b?)$/;
+var _size_pattern = /(\d+(?:\.\d+)?)\s*(b(?:ytes)?|[kmgp]b?)$/i;
 function parse_file_size(size) {
     var raw = Number(size);
     if (!isNaN(raw)) {
@@ -35,7 +35,7 @@ function parse_file_size(size) {
 }
 window.parse_file_size = parse_file_size;
 
-var _size_suffixes = ['B', 'KB', 'MB', 'GB', 'PB'];
+var _size_suffixes = ['bytes', 'KB', 'MB', 'GB', 'PB'];
 function format_size(size) {
     var i = 0;
     while (size > 1024 && i < _size_suffixes.length) {
@@ -44,7 +44,7 @@ function format_size(size) {
     }
     
     var rounded = /^\d+(\.\d{1,2})?/.exec(size);
-    return rounded[0] + _size_suffixes[i];
+    return rounded[0] + " " + _size_suffixes[i];
 }
 window.format_size = format_size;
 
@@ -89,3 +89,39 @@ String.prototype.interpolate = function str_interpolate(vars) {
     parts.push(this.substring(pos));
     return parts.join('');
 };
+
+function get_flash_version() {
+    function get_from_plugins() {
+        if (!navigator.plugins)
+            return null;
+        
+        var plugin = navigator.plugins["Shockwave Flash 2.0"] ||
+            navigator.plugins["Shockwave Flash"];
+        if (!plugin)
+            return null;
+        
+        var match = /(\d+)\.(\d+)\s*[\.rd](\d+)/.exec(plugin.description);
+        return (match) ?
+            [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])] :
+            null;
+    }
+    
+    function get_from_control() {
+        var control;
+        var version;
+        var match;
+        
+        try {
+            control = new ActiveXObject("ShockwaveFlash.ShockwaveFlash.7");
+            version = control.GetVariable("$version");
+            match = /(\d+),(\d+),(\d+)/.exec(version);
+            return (match) ?
+                [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])] :
+                null;
+        } catch (e) {
+            return null;
+        }
+    }
+    
+    return get_from_plugins() || get_from_control();
+}

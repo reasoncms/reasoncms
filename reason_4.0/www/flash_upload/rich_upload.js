@@ -43,7 +43,7 @@ var _swfupload_uri;
         var source = upload_container.prevAll('.uploaded_file').eq(0);
         var info = {};
         
-        if (!source.length)
+        if (!source.length || source.css("display") == "none")
             return null;
         
         function get_value(class_name, attribute) {
@@ -56,7 +56,7 @@ var _swfupload_uri;
             if (!repr.length)
                 return null;
             repr = repr.get(0);
-            return repr.href || repr.src;
+            return repr.getAttribute("href") || repr.getAttribute("src");
         }
         
         info.filename = get_value('filename');
@@ -368,6 +368,10 @@ jQuery(function get_swfupload_uri() {
 });
 
 jQuery(function process_file_uploads() {
+    var flash = get_flash_version();
+    if (!flash || flash[0] < 9)
+        return;
+    
     $('.file_upload').richFileUpload();
     
     $("#imageRow .file_upload").bind('uploadSuccess', function() {

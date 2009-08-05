@@ -1,21 +1,3 @@
-.uploaded_file_info {
-  font-size: 90%;
-  margin-bottom: 0.5em;
-}
-
-.uploaded_file_info .filename {
-  background: #EEE;
-  color: #333;
-  border: 1px solid #CCC;
-  padding: 2px;
-}
-
-.uploaded_file_info .size {
-  padding: 3px 0;
-	margin-left: 0.5em;
-	font-size: 90%;
-}
-
 div.actions {
   font-size: 85%;
 }
