@@ -633,7 +633,17 @@
 			$this->request_has_been_set = true;
 		} // }}}
 		
-#  I'm not sure what this is, so I won't try to document it.  -- MG
+		/**
+		 * The names of elements that this plasmature object manages internally.
+		 *
+		 * When plasmature is being used with Reason, the default Reason content
+		 * manager automatically creates hidden plasmature elements for values
+		 * that are in a form's POST data that do not already have elements
+		 * defined. Adding a field name to the array returned by this function
+		 * suppresses this behavior for that field.
+		 *
+		 * @return array
+		 */
 		function register_fields() // {{{
 		{
 			return array();
@@ -1330,8 +1340,9 @@
 	{
 		var $type = 'checkbox';
 		var $checkbox_id;
+		var $description;
 		var $checked_value = 'true';
-		var $type_valid_args = array('checkbox_id', 'checked_value');
+		var $type_valid_args = array('checkbox_id', 'checked_value', 'description');
 		
 		function grab() // {{{
 		{
@@ -1357,6 +1368,11 @@
 				$str .= ' checked="checked"';
 			}
 			$str .= '>';
+			
+			if (!empty($this->description)) {
+				$str .= ' <label class="smallText" for="'.$this->checkbox_id.'">'.$this->description.'</label>';
+			}
+			
 			return $str;
 		} // }}}
 	} // }}}
@@ -2837,340 +2853,9 @@
 		} // }}}
 	} // }}}
 	
-	/**
-	* Very simple upload type for images.  
-	* Doesn't handle the file at all - leaves the variables for the coder to decide what to do in disco's process().  Or somewhere else.
-	* @package disco
-	* @subpackage plasmature
-	*/
-	class image_uploadType extends defaultType // {{{
-	{
-		var $type = 'image_upload';
-		var $state = 'ready';
-		var $acceptable_types = array('image/jpeg','image/gif','image/pjpeg','image/png');
-		var $existing_file;
-		var $existing_file_web;
-		var $allow_upload_on_edit;
-		var $replacement_text = 'Replace image:';
-		var $resize_image = true;
-		var $max_width = 500;
-		var $max_height = 500;
-		
-		var $type_valid_args = array( 'existing_file',
-							 		  'existing_file_web',
-									  'allow_upload_on_edit',
-									  'max_height',
-									  'max_width',
-									  'resize_image',
-									  'replacement_text',
-									 ); 
-		
-		function additional_init_actions($args = array())
-		{
-			if(!empty($this->existing_file))
-			{
-				$this->state = 'existing';
-				$this->value = $this->existing_file;
-			}
-		}
-			
-		function do_image_resize( $image ) // {{{
-		{
-			list($w,$h,$type) = getimagesize( $image );
-			$num_to_type = array(
-				1 => 'gif',
-				2 => 'jpg',
-				3 => 'png'
-			);
-			$cmd = IMAGEMAGICK_PATH . 'mogrify -geometry '.$this->max_width.'x'.$this->max_height.' -format '.$num_to_type[ $type ].' '.$image.' 2>&1';
-			clearstatcache();
-			echo exec( $cmd, $results, $return_var );
-		} // }}}
-		function need_to_resize( $image ) // {{{
-		{
-			// This is slightly hacky.
-			// We're checking to see if the Do Not Resize element was checked, and, if it was, returning false.
-			// There's probably a way to do this without checking the post variables, but it would require a significant
-			// update to Disco, which I'm not ready to attempt right now. -- MR
-			
-			if(empty($_POST['do_not_resize']))
-			{
-				list( $width, $height ) = getimagesize( $image );
-				if( $this->resize_image AND ( $width > $this->max_width OR $height > $this->max_height ) )
-					return true;
-				else
-					return false;
-			}
-			else
-				return false;
-		} // }}}
-		function grab() // {{{
-		{
-			$this->file = $_FILES[ $this->name ];
-
-			// image has just been uploaded
-			if( !empty( $this->file[ 'name' ] ) )
-			{
-				// image not uploaded correctly
-				if( !is_uploaded_file( $this->file['tmp_name'] ) )
-				{
-					// code grabbed from comments on http://us2.php.net/is_uploaded_file
-					switch($this->file['error'])
-					{
-						case 0: //no error; possible file attack!
-							$err = "There was a problem with your upload.";
-							break;
-						case 1: //uploaded file exceeds the upload_max_filesize directive in php.ini
-							$err = "The file you are trying to upload is too big.";
-							break;
-						case 2: //uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form
-							$err = "The file you are trying to upload is too big.";
-							break;
-						case 3: //uploaded file was only partially uploaded
-							$err = "The file you are trying upload was only partially uploaded.";
-							break;
-						case 4: //no file was uploaded
-							$err = "You must select an image for upload.";
-							break;
-						default:
-							$err = "There was a problem with your upload.";
-							break;
-					}
-					if( !$this->has_error )
-						$this->set_error($err);
-				}
-				// make sure image is in the acceptable types
-				if(!file_exists($this->file['tmp_name']))
-				{
-					if( !$this->has_error )
-						$this->set_error( 'The upload for ('.$this->file[ 'name' ].') did not work. Please try again.');
-				}
-				elseif( in_array( $this->file[ 'type' ], $this->acceptable_types ) )
-				{
-					$this->state = 'uploaded';
-					$this->base_path = '';
-					list(,,$type) = getimagesize( $this->file['tmp_name'] );
-					$num_to_type = array( 1 => 'gif', 2 => 'jpg', 3 => 'png' );
-					$this->tmp_web_path = WEB_TEMP.uniqid( 'uptmp_' ).'.'.$num_to_type[ $type ];
-					$this->value = $this->tmp_full_path = $_SERVER[ 'DOCUMENT_ROOT' ].$this->tmp_web_path;
-					
-					move_uploaded_file( $this->file[ 'tmp_name' ], $this->tmp_full_path );
-					if( $this->need_to_resize( $this->tmp_full_path ) )
-					{
-						// copy the original to the temp directory so that the content manager can grab the original hires later
-						copy( $this->tmp_full_path, $this->tmp_full_path.'.orig' );
-						$this->do_image_resize( $this->tmp_full_path );
-					}
-				}
-				// unacceptable image type
-				else
-				{
-					if( !$this->has_error )
-						$this->set_error( 'The file that you uploaded was not an acceptable type ('.$this->file[ 'name' ].'). Acceptable types include: '.implode(', ',$this->acceptable_types) );
-				}
-			}
-			// image has been uploaded and moved to temp directory - waiting for form to finish
-			else if ( isset( $this->_request[ $this->name ][ 'tmp_file' ] ) )
-			{
-				$this->state = 'uploaded';
-				$this->value = $this->tmp_web_path = $this->_request[ $this->name ][ 'tmp_file' ];
-				$this->tmp_full_path = $_SERVER[ 'DOCUMENT_ROOT' ].$this->tmp_web_path;
-			}
-			// existing image
-			else if ( isset( $this->existing_file ) AND !empty( $this->existing_file ) )
-			{
-				$this->state = 'existing';
-				$this->value = $this->existing_file;
-			}
-		} // }}}
-		function get_display() // {{{
-		{
-			$str = '';
-			$input = '<input type="file" name="'.$this->name.'" id="'.$this->name.'Element"><input type="hidden" name="'.$this->name.'[MAX_FILE_SIZE]" value="100000">';
-			if( $this->state == 'ready' )
-			{
-				return $input;
-			}
-			else if ( $this->state == 'uploaded' )
-			{
-				list( $w, $h ) = getimagesize( $this->tmp_full_path );
-				$disk_size = round(filesize( $this->tmp_full_path )/1024, 1);
-				$image_size = $w.'x'.$h.' ('.$disk_size.' Kb)';
-				$str = '<span class="smallText">Uploaded Image:</span><br />';
-				$str .= '<img src="'.$this->tmp_web_path.'?cb='.filemtime( $this->tmp_full_path ).'" width="'.$w.'" height="'.$h.'" /><br />';
-				$str .= $image_size.'<br />';
-				$str .= '<br />';
-				$str .= '<div class="imageReplace"><label for="'.$this->name.'Element"><span class="smallText">'.$this->replacement_text.'</span></label><br />';
-				$str .= $input;
-				$str .= '<input type="hidden" name="'.$this->name.'[tmp_file]" value="'.$this->tmp_web_path.'" /></div>';
-				return $str;
-			}
-			else if ( $this->state == 'existing' )
-			{
-				list( $w, $h ) = getimagesize( $this->existing_file );
-				$disk_size = round(filesize( $this->existing_file )/1024, 1);
-				$image_size = $w.'x'.$h.' ('.$disk_size.' Kb)';
-				if( $this->allow_upload_on_edit )
-				{
-					$str .= '<img src="'.$this->existing_file_web.'?cb='.filemtime( $this->existing_file ).'" width="'.$w.'" height="'.$h.'" /><br />';
-					$str .= $image_size.'<br />';
-					$str .= '<br />';
-					$str .= '<div class="imageReplace"><label for="'.$this->name.'Element"><span class="smallText">'.$this->replacement_text.'</span></label><br />';
-					$str .= $input;
-					$str .= '</div>';
-				}
-				else
-				{
-					$str = '<img src="'.$this->existing_file_web.'?cb='.filemtime( $this->existing_file ).'" width="'.$w.'" height="'.$h.'" /><br />';
-					$str .= $image_size.'<br />';
-				}
-
-				return $str;
-			}
-		} // }}}
-	} // }}}
-	/**
-	* @package disco
-	* @subpackage plasmature
-	*/
-	class AssetUploadType extends defaultType // {{{
-	{
-		var $type = 'AssetUpload';
-		// possible states: ready, uploaded, existing
-		var $state = 'ready';
-		var $existing_file;
-		var $acceptable_types = array();
-		var $file_display_name;
-		var $allow_upload_on_edit;
-		var $max_file_size = 20971520; // max size in bytes
-										// 10485760 = 10 MB
-		var $type_valid_args = array( 'existing_file',
-							 		  'file_display_name',
-									  'allow_upload_on_edit',
-									  'max_file_size',
-									 );
-
-		function additional_init_actions($args = array())
-		{
-			if( !empty( $this->existing_file ) )
-			{
-				$this->state = 'existing';
-				$this->value = $this->existing_file;
-			}
-		} // }}}
-		
-		function grab() // {{{
-		{
-			$this->file = $_FILES[ $this->name ];
-			// asset has just been uploaded
-			if( !empty( $this->file[ 'name' ] ) )
-			{
-				// asset not uploaded correctly
-				if( !is_uploaded_file( $this->file['tmp_name'] ) )
-				{	
-				// asset not uploaded correctly
-				// code grabbed from comments on http://us2.php.net/is_uploaded_file
-					switch($this->file['error'])
-					{
-						case 0: //no error; possible file attack!
-							$err = "There was a problem with your upload.";
-							break;
-						case 1: //uploaded file exceeds the upload_max_filesize directive in php.ini
-							$err = "The file you are trying to upload is too big.";
-							break;
-						case 2: //uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form
-							$err = "The file you are trying to upload is too big.";
-							break;
-						case 3: //uploaded file was only partially uploaded
-							$err = "The file you are trying to upload was only partially uploaded.";
-							break;
-						case 4: //no file was uploaded
-							$err = "You must select a file for upload.";
-							break;
-						default:
-							$err = "There was a problem with your upload.";
-							break;
-					}
-					if( !$this->has_error ) $this->set_error($err);
-				}
-				
-				if( !$this->has_error )
-				{
-				// check if asset is empty
-					if ($this->file['size'] == 0) 
-					{
-						$this->set_error('The file you want to upload does not appear to have any contents.');
-					}
-					elseif($this->file['size'] > $this->max_file_size)
-					{
-						$this->set_error('The file you want to upload ( '.strip_tags(htmlspecialchars($this->file['name'])).' ) is too big ( Maximum file size: '.format_bytes_as_human_readable($this->max_file_size).')');
-					}
-				}
-
-				if (!$this->has_error)
-				{
-					$this->state = 'uploaded';
-					$this->base_path = '';
-					$this->tmp_web_path = WEB_TEMP.$this->file['name'];
-					$this->value = $this->tmp_full_path = $_SERVER[ 'DOCUMENT_ROOT' ].$this->tmp_web_path;
-
-					move_uploaded_file( $this->file[ 'tmp_name' ], $this->tmp_full_path );
-				}
-			}
-			// asset has been uploaded and moved to temp directory - waiting for form to finish
-			else if ( isset( $_REQUEST[ $this->name.'_tmp_file' ] ) )
-			{
-				$this->state = 'pending';
-				$this->value = $this->tmp_web_path = $_REQUEST[ $this->name.'_tmp_file' ];
-				$this->tmp_full_path = $_SERVER[ 'DOCUMENT_ROOT' ].$this->tmp_web_path;
-			}
-			// existing image
-			else if ( isset( $this->existing_file ) AND !empty( $this->existing_file ) )
-			{
-				$this->state = 'existing';
-				$this->value = $this->existing_file;
-			}
-		} // }}}
-		function get_display() // {{{
-		{
-			$str = '';
-			$input = '<input type="file" name="'.$this->name.'"><input type="hidden" name="'.$this->name.'[MAX_FILE_SIZE]" value="'.$this->max_file_size.'">';
-			if( $this->state == 'ready' )
-			{
-				return $input;
-			}
-			else if ( $this->state == 'uploaded' OR $this->state == 'pending' )
-			{
-				
-				$str = '<span class="smallText">Uploaded File:</span> ('.$this->state.', '.$this->tmp_web_path.')<br />';
-				$str .= (round( (filesize( $_SERVER['DOCUMENT_ROOT'].$this->tmp_web_path ) / 1024), 0 ) ).'K<br />';
-				// get rid of the WEB_TEMP string from the web path to show the nice name of the file
-				$str .= str_replace( WEB_TEMP, '', $this->tmp_web_path).'<br />';
-				$str .= '<br />';
-				$str .= '<span class="smallText">Upload a different file:</span><br />';
-				$str .= $input;
-				$str .= '<input type="hidden" name="'.$this->name.'_tmp_file" value="'.$this->tmp_web_path.'" />';
-				return $str;
-			}
-			else if ( $this->state == 'existing' )
-			{
-				if( $this->allow_upload_on_edit )
-				{
-					$str .= ($this->file_display_name ? $this->file_display_name : $this->existing_file ).'<br />';
-					$str .= format_bytes_as_human_readable(filesize($this->existing_file))."<br />";
-					$str .= '<br />';
-					$str .= '<span class="smallText">Upload a different file:</span><br />';
-					$str .= $input;
-				}
-				else
-				{
-					$str = $this->existing_file.'<br />';
-				}
-
-				return $str;
-			}
-		} // }}}
-	} // }}}
+	// File upload types.
+	require_once (DISCO_INC . 'plasmature/types/upload.php');
+	
 	/**
 	* @package disco
 	* @subpackage plasmature
