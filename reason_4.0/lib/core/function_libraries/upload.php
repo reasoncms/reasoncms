@@ -139,9 +139,9 @@ function reason_add_async_upload_constraints($session_id, $field, $options)
 	$key = _async_upload_session_key($session_id);
 	$async_session = $reason_session->get($key);
 	if (!$async_session) {
-		trigger_error("cannot add asynchronous upload constraints to field ".
+		trigger_fatal_error("cannot add asynchronous upload constraints to ".
 			var_export($field, true).": ".var_export($session_id, true).
-			" is not a valid asynchronous upload session ID", FATAL);
+			" is not a valid asynchronous upload session ID");
 	}
 	
 	$constraints = array();
@@ -154,41 +154,40 @@ function reason_add_async_upload_constraints($session_id, $field, $options)
 			? (int) $size
 			: _parse_size_string($size);
 		if ($size !== 0 && !$size) {
-			trigger_error("cannot add asynchronous upload constraints: ".
-				"invalid maximum size ".var_export($options['max_size']),
-				FATAL);
+			trigger_fatal_error("cannot add asynchronous upload constraints: ".
+				"invalid maximum size ".var_export($options['max_size']));
 		}
 		$constraints['max_size'] = $size;
 	}
 	if (!empty($options['max_dimensions'])) {
 		$dims = $options['max_dimensions'];
 		if (!is_array($dims) || count($dims) != 2) {
-			trigger_error("cannot add asynchronous upload constraints: ".
+			trigger_fatal_error("cannot add asynchronous upload constraints: ".
 				"invalid dimensions; they should be given as a two-element ".
 				"array as described in the API documentation; instead got: ".
-				var_export($dims, true), FATAL);
+				var_export($dims, true));
 		}
 		list($max_width, $max_height) = $dims;
 		if (!is_int($max_width) || !is_int($max_height)) {
-			trigger_error("cannot add asynchronous upload constraints: ".
-				"both the maximum width and height must be integers", FATAL);
+			trigger_fatal_error("cannot add asynchronous upload constraints: ".
+				"both the maximum width and height must be integers");
 		}
 		$constraints['max_dimensions'] = $dims;
 	}
 	if (!empty($options['validator'])) {
 		$validator = $options['validator'];
 		if (!is_array($validator) || count($validator) != 2) {
-			trigger_error("cannot add asynchronous upload constraints: ".
+			trigger_fatal_error("cannot add asynchronous upload constraints: ".
 				"invalid validator; it should be a two-element array as ".
 				"described in the API documentation; instead got: ".
-				var_export($validator, true), FATAL);
+				var_export($validator, true));
 		}
 		
 		list($file, $callback) = $validator;
 		if (!reason_file_exists($file)) {
-			trigger_error("cannot add asynchronous upload constraints: ".
+			trigger_fatal_error("cannot add asynchronous upload constraints: ".
 				"validator file ".var_export($file, true)." does not exist ".
-				"in Reason's core or local lib directories", FATAL);
+				"in Reason's core or local lib directories");
 		}
 		$constraints['validator'] = $validator;
 	}
@@ -284,9 +283,9 @@ function reason_get_uploaded_files($async_session_id=null)
 				}
 			}
 		} else {
-			trigger_error('tried to get the files from asynchronous upload '.
+			trigger_warning('tried to get the files from asynchronous upload '.
 				'session '.var_export($async_session_id, true).', but no '.
-				'such session exists', WARNING);
+				'such session exists');
 		}
 	}
 	
@@ -332,22 +331,21 @@ function reason_get_uploaded_file($name, $async_session_id=null, $clear=false)
 					$key = $keys[count($keys) - 1];
 					$async_file = $records[$key];
 					$file = _uploaded_file_from_async($async_file);
-					if ($file) {
-						if ($clear) {
-							unset($async_session['files'][$name][$key]);
-							$session =& get_reason_session();
-							$id = $async_session_id;
-							$session->set(_async_upload_session_key($id),
-								$async_session);
-						}
-						return $file;
+					if (!$file || $clear) {
+						unset($async_session['files'][$name][$key]);
+						$session =& get_reason_session();
+						$id = $async_session_id;
+						$session->set(_async_upload_session_key($id),
+							$async_session);
 					}
+					if ($file)
+						return $file;
 				}
 			}
 		} else {
-			trigger_error("tried to get the file $name from asynchronous ".
+			trigger_warning("tried to get the file $name from asynchronous ".
 				'upload session '.var_export($async_session_id, true).', but '.
-				'no such session exists', WARNING);
+				'no such session exists');
 		}
 	}
 	
@@ -393,8 +391,8 @@ function _parse_size_string($size)
 {
 	$size = strtolower($size);
 	if (!preg_match('/(\d+(?:\.\d+)?)\s*([kmg])b?$/', $size, $m)) {
-		trigger_error('invalid size string '.var_dump($size)."; valid ".
-			"strings look like '2M', '4K', etc.", E_USER_ERROR);
+		trigger_fatal_error('invalid size string '.var_export($size, true).
+			"; valid strings look like '2M', '4K', etc.", 2);
 		return null;
 	}
 	
@@ -415,9 +413,9 @@ function _parse_size_string($size)
 function _parse_async_upload_authenticator($auth)
 {
 	if (!is_array($auth) || empty($auth)) {
-		trigger_error("upload authenticator must be specified as an array ".
-			"as per the reason_create_async_upload_session API docs; instead ".
-			"got ".var_export($auth, true), FATAL);
+		trigger_fatal_error("upload authenticator must be specified as an ".
+			"array as per the reason_create_async_upload_session API docs; ".
+			"instead got ".var_export($auth, true), 2);
 	}
 	
 	$callback = array_shift($auth);
@@ -430,13 +428,13 @@ function _parse_async_upload_authenticator($auth)
 	
 	if ($filename) {
 		if ($inc_type == "absolute" && !file_exists($filename)) {
-			trigger_error("upload authenticator file ".
-				var_export($filename, true)." does not exist", FATAL);
+			trigger_fatal_error("upload authenticator file ".
+				var_export($filename, true)." does not exist", 2);
 		} else if ($inc_type == "relative") {
 			if (!reason_file_exists($filename)) {
-				trigger_error("upload authenticator file ".
+				trigger_fatal_error("upload authenticator file ".
 					var_export($filename, true)." does not exist in either ".
-					"the local or the core Reason lib directory", FATAL);
+					"the local or the core Reason lib directory", 2);
 			}
 			$filename = reason_resolve_path($filename);
 		}
