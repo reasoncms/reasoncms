@@ -520,9 +520,10 @@ function carl_util_handle_error($level, $message, $file, $line, $context)
 	return true;
 }
 
+/** @access private */
 function _carl_util_trigger_error($message, $level, $stack_offset)
 {
-	static $inc_pattern = '/^(?:include_require)(?:_once)?$/';
+	static $inc_pattern = '/^(?:include|require)(?:_once)?$/';
 	$stack_offset++; // skip over _trigger_error itself
 	
 	$stack = debug_backtrace();
@@ -556,7 +557,7 @@ function _carl_util_trigger_error($message, $level, $stack_offset)
  *        called the function that called trigger_fatal_error()
  * @return void
  */
-function trigger_fatal_error($message, $stack_offset)
+function trigger_fatal_error($message, $stack_offset=1)
 {
 	_carl_util_trigger_error($message, FATAL, $stack_offset);
 }
@@ -570,14 +571,14 @@ function trigger_fatal_error($message, $stack_offset)
  *        called the function that called trigger_high_error()
  * @return void
  */
-function trigger_high_error($message, $stack_offset)
+function trigger_high_error($message, $stack_offset=1)
 {
 	_carl_util_trigger_error($message, HIGH, $stack_offset);
 }
 
 /**
  * Triggers a {@link WARNING}.
- * @see trigger_warning()
+ * @see trigger_error()
  * @see trigger_deprecation()
  * @param string $message the message to accompany the triggered error
  * @param int $stack_offset the relative stack position of the code that is the
@@ -585,7 +586,7 @@ function trigger_high_error($message, $stack_offset)
  *        called the function that called trigger_warning()
  * @return void
  */
-function trigger_warning($message, $stack_offset)
+function trigger_warning($message, $stack_offset=1)
 {
 	_carl_util_trigger_error($message, WARNING, $stack_offset);
 }
