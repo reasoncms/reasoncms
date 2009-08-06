@@ -124,19 +124,19 @@ function get_mime_type($path, $default=null, $filename=null)
 
 	if (!$type || $type == 'application/octet-stream')
 		$type = _get_mime_type_unix($path);
-
+	
 	if (!$type || $type == 'application/octet-stream') {
 		if (!$filename)
 			$filename = $path;
 		$type = mime_type_from_extension(strrchr($filename, '.'));
 	}
-
+	
 	if (!$type || mime_type_matches('image/*', $type)) {
 		// If we detected an image type, verify it using getimageinfo().
 		// If the image was not valid, the type will be reset to NULL.
 		$type = _get_mime_type_image($path);
 	}
-
+	
 	return ($type) ? $type : $default;
 }
 
@@ -162,12 +162,19 @@ function _get_mime_type_fileinfo($path)
  */
 function _get_mime_type_unix($path)
 {
-	$command = "file -bi ".escapeshellarg($path);
+	$command = "file -Lbi ".escapeshellarg($path);
 	$output = array();
 	$ret = null;
 	$result = exec($command, $output, $ret);
 	
-	return ($result && $ret === 0) ? $result : false;
+	if ($ret !== 0 || !$result)
+		return false;
+	
+	// file(1) may output multiple media types; let's just take the first one
+	$m = array();
+	if (!preg_match('/([\w\.-]+\/[\w\.-]+)(;\s*\w+=[\w\.\-]+)*/', $result, $m))
+		return false;
+	return $m[0];
 }
 
 /**
