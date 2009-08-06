@@ -87,6 +87,7 @@ class uploadType extends defaultType
 	var $type_valid_args = array(
 		'existing_file',
 		'existing_file_web',
+		'original_path',
 		'file_display_name',
 		'acceptable_types',
 		'allow_upload_on_edit',
@@ -94,14 +95,48 @@ class uploadType extends defaultType
 	);
 	
 	/**
+	 * Information on the uploaded file.
+	 * Compatible with an entry in the PHP $_FILES array, but with some extra
+	 * elements possibly added.
 	 * @var array
-	 * @access private
 	 */
 	var $file;
-	/** @access private */
+	
+	/**
+	 * The temporary URL of the uploaded file.
+	 * @var string
+	 */
 	var $tmp_web_path;
-	/** @access private */
+	
+	/**
+	 * The temporary full filesystem path of the uploaded file.
+	 * 
+	 * Code using this element in a form is responsible for moving the uploaded
+	 * file from this location to somewhere permanent.
+	 * 
+	 * @var string
+	 */
 	var $tmp_full_path;
+	
+	/**
+	 * The temporary full filesystem path of an original version of the file.
+	 * 
+	 * If the uploaded file is modified somehow in the process (e.g. rescaled
+	 * to some maximum size), a copy of the original file may be preserved. The
+	 * base upload type performs no modifications; if you are using a subclass,
+	 * check its documentation to see what modifications it can perform and if
+	 * there is any way to get it to preserve the original file.
+	 * 
+	 * If no modifications have been made to the uploaded file, or no original
+	 * copy was preserved, the value of <code>original_path</code> will be
+	 * <code>NULL</code>.
+	 * 
+	 * Code using this element in a form is responsible for moving the uploaded
+	 * file from this location to somewhere permanent.
+	 *
+	 * @var string
+	 */
+	var $original_path;
 	
 	function additional_init_actions($args=array())
 	{
@@ -236,7 +271,7 @@ class uploadType extends defaultType
 		
 		$error = $this->_get_upload_error();
 		if (isset($admin_warnings[$error]))
-			trigger_error($admin_warnings[$error], WARNING);
+			trigger_warning($admin_warnings[$error], 2);
 	}
 	
 	/**
@@ -297,10 +332,8 @@ class uploadType extends defaultType
 		$value = null;
 		if (!$this->has_error) {
 			$this->_state = "received";
-			list(, $extension) = get_filename_parts($this->file["name"]);
-			$this->tmp_web_path = WEB_TEMP.sha1(uniqid(mt_rand(), true));
-			if (!empty($extension))
-				$this->tmp_web_path .= ".$extension";
+			$filename = $this->file["name"];
+			$this->tmp_web_path = $this->_generate_temp_name($filename);
 			$value = $this->tmp_full_path =
 				$_SERVER['DOCUMENT_ROOT'].$this->tmp_web_path;
 			
@@ -308,6 +341,25 @@ class uploadType extends defaultType
 				$this->set_error("Your file was received, but could not ".
 					"be saved on the server.");
 			} else {
+				if (!empty($this->file["modified_path"])) {
+					if ($this->file["path"] != $this->file["modified_path"]) {
+						// We used the original file, so we remove the
+						// modified (e.g., rescaled) file.
+						// TAKE NOTE: This removal is not optional!
+						if (@unlink($this->file["modified_path"])) {
+							unset($this->file["modified_path"]);
+						}
+					}
+				} else if (!empty($this->file["original_path"])) {
+					if ($this->file["path"] != $this->file["original_path"]) {
+						// Bring the original file along for the ride as well.
+						$new_orig = $this->_generate_temp_name($filename,
+							"-original");
+						if (rename($this->file["original_path"], $new_orig)) {
+							$this->file["original_path"] = $new_orig;
+						}
+					}
+				}
 			    $this->file["path"] = $this->file["tmp_name"] =
 			        $value;
 				$this->_upload_success($value, $this->tmp_web_path);
@@ -315,6 +367,16 @@ class uploadType extends defaultType
 		}
 		
 		return $value;
+	}
+	
+	/** @access private */
+	function _generate_temp_name($filename, $suffix='')
+	{
+		$id = sha1(uniqid(mt_rand(), true));
+		list(, $extension) = get_filename_parts($filename);
+		if (!empty($extension))
+			$extension = strtolower(".$extension");
+		return WEB_TEMP."{$id}{$suffix}{$extension}";
 	}
 	
 	/**
@@ -331,12 +393,13 @@ class uploadType extends defaultType
 	}
 	
 	/** @access private */
-	function _persist_filename($value, $display_name=null)
+	function _persist_filename($value, $original=null, $display_name=null)
 	{
 		$cache_id = uniqid('upload_'.mt_rand().'_', true);
 		$cache = new ObjectCache($cache_id, '360');
 		$store = new stdClass;
 		$store->value = $value;
+		$store->path_to_original = $original;
 		$store->display_name = $display_name;
 		$cache->set($store);
 		return $cache_id;
@@ -348,8 +411,9 @@ class uploadType extends defaultType
 		$cache = new ObjectCache($cache_id, '360');
 		$store =& $cache->fetch();
 		if (!$store)
-			return array(null, null);
-		return array($store->value, $store->display_name);
+			return array(null, null, null);
+		return array($store->value, $store->path_to_original,
+			$store->display_name);
 	}
 	
 	/** @access private */
@@ -361,13 +425,15 @@ class uploadType extends defaultType
 	/** @access private */
 	function _grab_value_from_limbo($upload_id)
 	{
-		list($value, $display_name) = $this->_restore_filename($upload_id);
+		list($value, $original, $display_name) =
+			$this->_restore_filename($upload_id);
 		if ($value) {
 			$this->tmp_web_path = $value;
 			if ($display_name)
 				$this->file_display_name = $display_name;
 			$this->_state = "pending";
 			$this->tmp_full_path = $_SERVER['DOCUMENT_ROOT'].$value;
+			$this->original_path = $original;
 			
 			$filename = ($display_name)
 			    ? $display_name
@@ -376,9 +442,8 @@ class uploadType extends defaultType
 				"name" => $filename,
 				"path" => $this->tmp_full_path,
 				"tmp_name" => $this->tmp_full_path, // old name for this field
-				"original_path" => null,
+				"original_path" => $original,
 				"size" => filesize($this->tmp_full_path),
-				"hash" => sha1_file($this->tmp_full_path),
     			"type" => get_mime_type($this->tmp_full_path,
     				"application/octet-stream", $filename)
 			);
@@ -502,7 +567,8 @@ class uploadType extends defaultType
 				: @$this->file["name"];
 			$id = ($this->_state == "pending" && !empty($vars[$id_field]))
 				? $vars[$id_field]
-				: $this->_persist_filename($this->tmp_web_path, $disp_name);
+				: $this->_persist_filename($this->tmp_web_path,
+					$this->original_path, $disp_name);
 			$disp .= '<input type="hidden" name="'.$id_field.'" '.
 				'value="'.$id.'" />';
 		}
@@ -635,6 +701,14 @@ class image_uploadType extends uploadType
 	 */
 	var $max_height = 500;
 	
+	/**
+	 * Whether or not to preserve the original (unscaled) image.
+	 * If true and {@link $resize_image} is also true, the original image will
+	 * be copied to a new location before it is rescaled. The path to this
+	 * original will be stored in the {@link $original_path} instance variable.
+	 */
+	var $preserve_original = true;
+	
 	/** @access private */
 	var $type_valid_args = array(
 		'resize_image',
@@ -670,15 +744,35 @@ class image_uploadType extends uploadType
 	
 	/**
 	 * Scales the image at the given path in place to fit size constraints.
+	 * 
+	 * If the {@link $preserve_original} instance variable is set to true, a
+	 * copy of the image will be made before scaling, and the path to the copy
+	 * will be saved in {@link $original_path}.
+	 * 
 	 * @access protected
 	 * @param string $image_path
 	 * @return boolean true if the resize was successful; false if otherwise
 	 */
 	function _resize_image($image_path)
 	{
+		if ($this->preserve_original) {
+			// Preserve the unscaled image.
+			
+			$path_parts = pathinfo($image_path);
+			$ext = ".{$path_parts['extension']}";
+			$ext_pattern = "/".preg_quote($ext, '/')."$/";
+			$orig_path = preg_replace($ext_pattern, "-unscaled{$ext}",
+				$image_path);
+			if ($orig_path == $image_path) // in case the replace doesn't work
+				$orig_path .= ".unscaled";
+			if (copy($image_path, $orig_path)) {
+				$this->original_path = $orig_path;
+			}
+		}
+		
 		$res = resize_image($image_path, $this->max_width, $this->max_height);
 		if ($res && $this->file) {
-			// file size will have (hopefully) changed
+			// file size will have (hopefully) changed after the resize
 			$this->file["size"] = filesize($image_path);
 		}
 		return $res;
