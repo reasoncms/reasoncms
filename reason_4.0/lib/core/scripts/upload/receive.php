@@ -69,7 +69,7 @@ foreach (array_keys($_FILES) as $name) {
 	
 	$m = array();
 	if (preg_match('/((?:\.tar)?\.[a-zA-Z0-9]+)$/', $filename, $m)) {
-		$extension = $m[0];
+		$extension = strtolower($m[0]);
 	} else {
 		$extension = '';
 	}
