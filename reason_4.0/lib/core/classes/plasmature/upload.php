@@ -106,8 +106,8 @@ class ReasonUploadType extends uploadType
 class ReasonImageUploadType extends image_uploadType
 {
 	var $type = "ReasonImageUpload";
-	var $type_valid_args = array('authenticator', 'original_path',
-		'existing_entity', 'head_items', 'obey_no_resize_flag');
+	var $type_valid_args = array('authenticator', 'existing_entity',
+		'head_items', 'obey_no_resize_flag');
 	
 	/**
 	 * Set this flag to true if this upload type should obey the
@@ -118,8 +118,6 @@ class ReasonImageUploadType extends image_uploadType
 	
 	/** @access private */
 	var $upload_sid = null;
-	/** @access private */
-	var $original_path;
 	/** @access private */
 	var $head_items;
 	/** @access private */
@@ -181,22 +179,6 @@ class ReasonImageUploadType extends image_uploadType
 		return (isset($vars['do_not_resize']))
 			? false
 			: parent::_needs_resizing($image_path);
-	}
-	
-	function _resize_image($image_path)
-	{
-		// Preserve the unscaled image.
-		$path_parts = pathinfo($image_path);
-		$ext = ".{$path_parts['extension']}";
-		$ext_pattern = "/".preg_quote($ext, '/')."$/";
-		$orig_path = preg_replace($ext_pattern, "-unscaled{$ext}",
-			$image_path);
-		if ($orig_path == $image_path) // in case the replace doesn't work
-			$orig_path .= ".orig";
-		if (copy($image_path, $orig_path)) {
-			$this->original_path = $orig_path;
-		}
-		return parent::_resize_image($image_path);
 	}
 	
 	function get_head_items(&$head)
@@ -372,6 +354,7 @@ function _reason_get_disco_uploaded_file($name, $async_sid,
 		"path" => $path,
 		"tmp_name" => $path, // former name
 		"original_path" => $upload->get_original_path(),
+		"modified_path" => $upload->get_temporary_path(),
 		"size" => filesize($path),
 		"type" => $upload->get_mime_type("application/octet-stream")
 	);
