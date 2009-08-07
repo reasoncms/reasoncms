@@ -63,10 +63,12 @@
 			$this->set_display_name( 'author', 'Photographer' );
 
 			$this->set_comments( 'name', form_comment("A name for internal reference") );
-			$this->set_comments( 'content', form_comment("This will appear under the full-sized image. If you don't provide a long caption, the short caption will be used instead.") );
-			$this->set_comments( 'description', form_comment("This will appear under the thumbnail. If you don't enter a long caption, it will also be used under the full-sized image.") );
-			$this->set_comments( 'keywords', form_comment("A few words to aid in searching for the image") );
-			$this->set_comments( 'datetime', form_comment('This will often automatically be determined from the image file.') );
+			$this->set_comments( 'content', form_comment("The long caption will appear with the full-sized image.") );
+			$this->set_comments( 'description', form_comment("The short caption will go along with the thumbnail. It will also be used under the full-sized image if there is no long caption.") );
+			$this->set_comments( 'keywords', form_comment('Use commas to separate terms, like this: "Fall, Campus, Sunny, Scenic, Orange, Leaves, Bicycle Ride"') );
+			
+			if(!$this->get_value('datetime'))
+				$this->set_comments( 'datetime', form_comment('This may be automatically determined from the image file.') );
 			//determine if user should be able to upload full-sized images
 			if( user_is_a($this->admin_page->user_id, id_of('admin_role'))
 				|| user_is_a($this->admin_page->user_id, id_of('power_user_role') ) )
