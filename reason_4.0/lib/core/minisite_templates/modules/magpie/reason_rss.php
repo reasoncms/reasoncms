@@ -47,12 +47,14 @@ include_once(CARL_UTIL_INC . 'tidy/tidy.php');
 define('MAGPIE_OUTPUT_ENCODING', 'UTF-8');
 //define('MAGPIE_INPUT_ENCODING', 'UTF-8');
 //define('MAGPIE_DETECT_ENCODING', false);
+define('MAGPIE_CACHE_DIR',REASON_CACHE_DIR);
 
 //define('MAGPIE_CACHE_ON', false);
 //define('MAGPIE_CACHE_DIR', '/tmp/magpie_cache');
 
 require_once(MAGPIERSS_INC . 'rss_fetch.inc');
 require_once(MAGPIERSS_INC . 'rss_parse.inc');
+
 
 
 class reasonFeedDisplay
