@@ -1,0 +1,180 @@
+<?php
+reason_include_once( 'minisite_templates/modules/default.php' );
+reason_include_once( 'classes/event_helper.php' );
+$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsUpcomingModule';
+	
+/**
+ * This module displays a minimal calendar view of upcoming events, drawn from a cache for performance
+ *
+ * @package reason
+ * @subpackage minisite_modules
+ * 
+ * @author Mark Heiman
+ */
+	class EventsUpcomingModule extends DefaultMinisiteModule
+	{
+		var $events;
+		var $acceptable_params = array ('page_category_mode' => false,
+						'cache_lifespan' => 0,
+						'num_to_display' => NULL,
+						'limit_to_audience' => NULL,
+						'limit_to_category' => NULL,
+						'lookahead_minutes' => 60,
+						'show_today_header' => true,
+						'title' => '',
+						'foot' => '',
+						);
+		
+		var $cleanup_rules = 	array(	
+			'date' => array( 'function' => 'turn_into_date'),
+			'time' => array( 'function' => 'turn_into_string'),
+					);
+		var $link_str = '';
+
+		
+		
+		function init( $args = array() )
+		{	
+			if( isset( $this->parent->textonly ) && $this->parent->textonly == 1 )
+			{
+				$this->link_str = '&textonly=1';
+			}
+		
+			$eh = new EventHelper($this->site_id, $this->page_id);
+			if ($this->params['cache_lifespan'] > 0) $eh->set_cache_lifespan($this->params['cache_lifespan']);
+			if ($this->params['page_category_mode']) $eh->set_page_category_mode($this->params['page_category_mode']);
+			if ($this->params['num_to_display']) $eh->set_optimal_event_count($this->params['num_to_display']);
+			if ($this->params['lookahead_minutes']) $eh->set_lookahead_minutes($this->params['lookahead_minutes']);
+			if ($this->params['limit_to_audience']) 
+			{
+				if (is_array($this->params['limit_to_audience']))
+					$eh->set_audience_limit($this->params['limit_to_audience']);
+				else
+					$eh->set_audience_limit(array($this->params['limit_to_audience']));
+			}
+			if ($this->params['limit_to_category']) 
+			{
+				if (is_array($this->params['limit_to_category']))
+					$eh->set_category_limit($this->params['limit_to_category']);
+				else
+					$eh->set_category_limit(array($this->params['limit_to_category']));
+			}
+
+			if (isset($this->request['date'])) 
+			{
+				$eh->set_startdate($this->request['date']);
+				$eh->set_cache_lifespan(0);
+			}
+			if (isset($this->request['time'])) 
+			{
+				$eh->set_starttime($this->request['time']);
+				$eh->set_cache_lifespan(0);
+			}
+			$eh->init();
+			$this->events =& $eh->get_events();
+		}
+		
+		
+		function has_content()
+		{
+			if( !empty($this->events) )
+				return true;
+			else
+				return false;
+		}
+		
+		function run()
+		{
+			// If any of the events occur on dates other than today, we need to show the dates
+			$date = (isset($this->request['date'])) ? $this->request['date'] : date('Y-m-d');
+			$show_dates = (count($this->events) > 1);
+
+			echo '<div id="upcomingEvents">'."\n";
+			if(!empty($this->params['title']))
+			{
+				echo '<h3>'.$this->params['title'].'</h3>'."\n";
+			}
+
+			echo '<div class="list">'."\n";
+			foreach($this->events as $event_date=>$events)
+			{
+				$first = reset($events);
+				if ($first->get_value('date') == $date)
+				{
+					if ($show_dates || $this->params['show_today_header'])
+						echo '<h4>Today ('.$first->get_value('display_date').')</h4>'."\n";
+				} else if ($show_dates) {
+					echo '<h4>'.$first->get_value('display_date').'</h4>'."\n";
+				}
+				echo '<ul>'."\n";
+				foreach($events as $event)
+				{
+					echo '<li>'."\n";
+					if ($time = $this->get_event_time_html($event))
+						echo $time.' ';
+					echo $this->get_event_name_html($event);
+					if($location = $this->get_event_location_html($event))
+						echo ' '.$location ."\n";
+					echo '</li>'."\n";
+				}
+				echo '</ul>'."\n";
+			}
+			echo '</div>'."\n";
+			if(!empty($this->params['foot']))
+			{
+				echo '<div class="foot">'.$this->params['foot'].'</div>'."\n";
+			}
+			echo '</div>'."\n";
+		}
+				
+		function get_event_name_html(&$event)
+		{
+			$html = '<span class="name">';
+			if ($url = $event->get_value('url'))
+			{
+				if (strpos($url,'http') !== false)
+					$html .= '<a href="'.htmlspecialchars($url,ENT_QUOTES,'UTF-8') . $this->link_str . '">';
+				else
+					$html .= '<a href="//'.REASON_HOST.htmlspecialchars($url,ENT_QUOTES,'UTF-8') . $this->link_str . '">';
+				$html .= $event->get_value('name') . '</a>';
+			}
+			else
+				$html .= $event->get_value('name');
+			$html .= '</span>';
+			return $html;
+		}
+		
+		function get_event_time_html(&$event)
+		{
+			if ($event->get_value('time') == '00:00:00') return false;
+			$html = '<span class="time">';
+			$html .= $event->get_value('display_time');
+			$html .= '</span>';
+			return $html;
+		}
+		
+		function get_event_location_html(&$event)
+		{
+			if (!$event->get_value('location')) return false;
+			$html = '<span class="location">';
+			$html .= $event->get_value('location');
+			$html .= '</span>';
+			return $html;
+		}
+				
+		/**
+		 * This method will clear the event cache generated by this module for the site and page
+		 * @todo implement something to call this
+		 */
+		function clear_cache($site_id = '', $page_id = '')
+		{
+			$site_id = ($site_id) ? $site_id : $this->site_id;
+			$page_id = ($page_id) ? $page_id : $this->page_id;
+			if ($site_id && $page_id)
+			{
+				$qh = new EventHelper($site_id, $page_id);
+			}
+			$qh->clear_cache();
+		}
+	}
+?>
