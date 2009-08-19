@@ -519,18 +519,26 @@ class FormController
 	{
 	} // }}}
 	/**
-	 * Updates the session with all new/changed data from form steps
-	 * @access private
+	 * Updates the session with all new/changed data from the current form step.
+	 * You can pass your own set of form var names, for cases where you have dynamic
+	 * elements on the form.
+	 * @access public
 	 * @return void
 	 */
-	function update_session_form_vars() // {{{
+	function update_session_form_vars($vars = null) // {{{
 	{
 		$no_session = array();
 		foreach( $this->forms AS $f )
 		{
 			$no_session = array_merge( (array) $no_session, (array) $f->no_session );
 		}
-		foreach( $this->_form_vars[ $this->_current_step ] AS $var )
+		
+		if (!is_array($vars))
+		{
+			$vars = $this->_form_vars[ $this->_current_step ];
+		}
+		
+		foreach( $vars AS $var )
 		{
 			if( !in_array( $var, $no_session ) )
 			{
@@ -548,6 +556,7 @@ class FormController
 	function run() // {{{
 	{
 		//$this->init();  I think this is redundant
+		if (empty($this->_request)) $this->set_request();
 		
 		$this->determine_step();
 		
@@ -611,6 +620,7 @@ class FormController
 						break;
 					
 					case 'method':
+						$actions[ 'next' ] = $this->default_next_text;
 						break;
 					
 					default:
