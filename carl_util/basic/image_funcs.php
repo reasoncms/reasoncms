@@ -11,7 +11,7 @@ require_once 'filesystem.php';
 require_once 'misc.php';
 
 /**
- * Resize an image using ImageMagick's mogrify tool.
+ * Scale an image to meet a maximum width and height.
  * 
  * The image will be resized in place; to avoid this, make a {@link copy} of
  * the original image first, and resize the copy.
@@ -22,7 +22,7 @@ require_once 'misc.php';
  * @param int $width desired width
  * @param int $height desired height
  * @param boolean $sharpen if true, the resized image will be sharpened
- * @return true if the image was resized successfully; false if otherwise
+ * @return boolean true if the image was resized successfully; false if not
  */
 function resize_image($path, $width, $height, $sharpen=true)
 {
@@ -31,16 +31,23 @@ function resize_image($path, $width, $height, $sharpen=true)
             '('.var_export($path, true).')', WARNING);
         return false;
     }
-    
+
+    $perms = substr(sprintf('%o', fileperms($path)), -4);
     if (imagemagick_available()) {
-        return _imagemagick_resize($path, $width, $height, $sharpen);
+        $result = _imagemagick_resize($path, $width, $height, $sharpen);
     } else if (function_exists('imagecreatetruecolor')) {
-        return _gd_resize($path, $width, $height, $sharpen);
+        $result = _gd_resize($path, $width, $height, $sharpen);
     } else {
-        trigger_error('neither ImageMagick nor GD are available; cannot '.
+	trigger_error('neither ImageMagick nor GD are available; cannot '.
             'resize image', WARNING);
         return false;
     }
+
+    // Prevent the transformation from changing the file permissions.
+    clearstatcache();
+    $newperms = substr(sprintf('%o', fileperms($path)), -4);
+    if ($perms != $newperms) @chmod($path, $perms);
+    return $result;
 }
 
 /**
