@@ -74,9 +74,10 @@ function dir_join($part)
  * </code>
  *
  * @param string $filename
+ * @param boolean $include_dot if true, the extension will be returned as (e.g.) ".txt", not "txt"
  * @return array
  */
-function get_filename_parts($filename)
+function get_filename_parts($filename, $include_dot=false)
 {
 	$parts = explode('.', $filename);
 
@@ -88,7 +89,7 @@ function get_filename_parts($filename)
 		    // special case for compressed TAR archives
 		    $extension = array_pop($parts).".$extension";
 		}
-		return array(basename($filename, ".$extension"), $extension);
+		return array(basename($filename, ".$extension"), ($include_dot) ? ".$extension" : $extension);
 	}
 }
 
