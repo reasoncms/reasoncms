@@ -41,6 +41,20 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'faculty' => array(
 			'main_post' => 'luther_faculty'
 		),
+		'standalone_login_page' => array(
+			'main_post' => 'login',
+		),
+		'standalone_login_page_stripped' => array(
+			'main_head' => '',
+			'edit_link' => '',
+			'banner_xtra' => 'nav_search_logo',
+			'navigation' => '',
+			'sub_nav' => '',
+			'sub_nav_2' => '',
+//			'post_foot' => 'textonly_toggle',
+			'main' => 'login',
+			'sidebar' => 'blurb',
+		),
 		'luther_news_page' => array(
 			'main_post' => 'publication',
             		'sub_nav_3' => 'quote',
