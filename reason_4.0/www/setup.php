@@ -329,6 +329,9 @@ function perform_checks()
 	if (data_dir_writable(REASON_TEMP_DIR, 'REASON_TEMP_DIR')) $check_passed++;
 	else $check_failed++;
 	
+	if (data_dir_writable(REASON_CACHE_DIR, 'REASON_CACHE_DIR')) $check_passed++;
+	else $check_failed++;
+	
 	// In our default config if this path is not writable then uploads should fail. Probably it would be better to distribute the package with 
 	// the /www/tmp directory being an alias to the file system location of REASON_TEMP_DIR. Until this is done, we are leaving it like this. 
 	// We may want to do something to check the validity of those aliases, such as writing a file then trying to access it via curl. The same 
