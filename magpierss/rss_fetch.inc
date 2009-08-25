@@ -225,7 +225,7 @@ function fetch_rss ($url) {
     Purpose:    set MAGPIE_ERROR, and trigger error
 \*=======================================================================*/
 
-function error ($errormsg, $lvl=E_USER_WARNING) {
+function error ($errormsg, $lvl=E_USER_NOTICE) {
         global $MAGPIE_ERROR;
         
         // append PHP's error message if track_errors enabled
