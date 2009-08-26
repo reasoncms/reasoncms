@@ -7,7 +7,7 @@
 /**
  * Include all needed functions
  */
-include ('paths.php');
+include_once('paths.php');
 include_once( CARL_UTIL_INC . 'pdf/htmlparser.inc' );
 include_once( CARL_UTIL_INC . 'tidy/tidy.php' );
 
