@@ -601,6 +601,13 @@
 			'sidebar' => 'events_mini',
 			'main_post' => 'children',
 		),
+		'events_sidebar_show_nav_children' => array(
+			'sidebar' => 'events_mini',
+			'main_post' => array(
+				'module'=>'children',
+				'show_only_pages_in_nav' => true,
+			),
+		),
 		'events_sidebar_show_children_random_images_in_subnav' => array(
 			'sidebar' => 'events_mini',
 			'main_post' => 'children',
