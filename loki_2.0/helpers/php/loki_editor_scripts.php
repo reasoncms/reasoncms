@@ -11,7 +11,6 @@
  * all JavaScript files that are depended on by others are included first.
  *
  * @author Eric Naeseth
- * @package loki
  */
 
 error_reporting(0);

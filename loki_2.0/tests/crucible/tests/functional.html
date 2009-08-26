@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Crucible Functional Tests</title>
+	<script src="../crucible.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+		var runner = new Crucible.PrettyRunner('itself'), fixture;
+		var pr = runner;
+		
+		fixture = new Crucible.Fixture('Runner');
+		fixture.setUp = function set_up_runner() {
+			this.runner = new Crucible.Runner();
+		};
+		fixture.tearDown = function tear_down_runner() {
+			delete this.runner;
+		};
+		
+		fixture.add('Test units get Runner reference', function(passed) {
+			this.assertSame(runner, passed);
+		});
+		
+		function test_response(name, expected_result, test_code, ex) {
+			var test = null;
+			
+			function evaluate_result(internal_test, result) {
+				var desc = null;
+				
+				try {
+					switch (expected_result) {
+						case 'pass':
+							if (result === true) {
+								pr.report(test, true);
+								return;
+							}
+						case 'fail':
+							if (/^Crucible\.\w*Failure$/.test(result.name)) {
+								pr.report(test, true);
+								return;
+							}
+						case 'error':
+							if (result.name == 'Crucible.UnexpectedError') {
+								pr.report(test, true);
+								return;
+							}
+					}
+
+					if (result === true)
+						desc = 'pass';
+					else if (/^Crucible\.\w*Failure$/.test(result.name))
+						desc = 'fail';
+					else if (result.name == 'Crucible.UnexpectedError')
+						desc = 'error';
+						
+					pr.report(test, new Crucible.Failure(test,
+						'Expected test to ' + expected_result + ', but it ' +
+						'actually ' + desc + 'ed.'));
+				} catch (e) {
+					pr.report(test, new Crucible.UnexpectedError(test, e));
+				}
+			}
+			
+			function tester() {
+				var test = new Crucible.Test('Internal', test_code, ex || null);
+				runner = this.runner;
+				this.runner.add(test);
+				this.runner.doneAdding();
+				this.runner.testFinished.add(evaluate_result);
+				this.runner.run();
+				
+				this.forked();
+			}
+			
+			test = new Crucible.Test(name, tester);
+			fixture.add(test);
+			return test;
+		}
+		
+		test_response('Successful test', 'pass', Crucible.emptyFunction);
+		test_response('Failed test', 'fail', function() {
+			this.fail();
+		});
+		test_response('Error-throwing test', 'error', function() {
+			throw new Error();
+		});
+		test_response('Expected error-throwing test', 'pass', function() {
+			throw new Error();
+		}, true);
+		test_response('Expecting a specific error', 'pass', function() {
+			throw new TypeError();
+		}, 'TypeError');
+		test_response('Getting a specifically-unexpected error', 'error', function() {
+			throw new Error();
+		}, 'TypeError');
+		
+		test_response('assert with true value', 'pass', function() {
+			this.assert(true);
+		});
+		
+		test_response('assert with false value', 'fail', function() {
+			this.assert(false);
+		});
+		
+		test_response('assertFalse with true value', 'fail', function() {
+			this.assertFalse(true);
+		});
+		
+		test_response('assertFalse with false value', 'pass', function() {
+			this.assertFalse(false);
+		});
+		
+		test_response('assertEqual with equal scalars', 'pass', function() {
+			function foo() { }
+			this.assertEqual(2, 2);
+			this.assertEqual('foo', 'foo');
+			this.assertEqual(true, true);
+			this.assertEqual(foo, foo);
+		});
+		
+		test_response('assertEqual with equal scalars of different types', 'pass', function() {
+			this.assertEqual(2, '2');
+		});
+		
+		test_response('assertEqual with equal objects', 'pass', function() {
+			this.assertEqual({foo: 'bar', bar: 42}, {bar: 42, foo: 'bar'});
+		});
+		
+		test_response('assertEqual with different scalars', 'fail', function() {
+			this.assertEqual(2, false);
+		});
+		
+		test_response('assertEqual with distinct objects', 'fail', function() {
+			this.assertEqual({foo: 'bar', bar: 42}, {bar: false, foo: 'bar'});
+		});
+		
+		test_response('assertEqual with different objects', 'fail', function() {
+			this.assertEqual({foo: 'bar'}, {bar: 42});
+		});
+		
+		test_response('assertEqual with object and scalar', 'fail', function() {
+			this.assertEqual({foo: 'bar'}, 888);
+		});
+		
+		test_response('assertSame with identical objects', 'pass', function() {
+			var obj = {foo: 'bar', baz: 'quux'};
+			this.assertSame(2, 2);
+			this.assertSame('foo', 'foo');
+			this.assertSame(true, true);
+			this.assertSame(foo, foo);
+			this.assertSame(obj, obj);
+		});
+		
+		test_response('assertSame with equivalent scalars', 'fail', function() {
+			this.assertSame(2, '2');
+		});
+		
+		test_response('assertSame with equivalent objects', 'fail', function() {
+			this.assertSame({foo: 'bar', bar: 42}, {bar: 42, foo: 'bar'});
+		});
+		
+		test_response('assertType with correct type', 'pass', function() {
+			this.assertType('number', 12);
+			this.assertType('number', 3.14159);
+			this.assertType('string', "foo");
+			this.assertType('boolean', true);
+			this.assertType('boolean', false);
+			this.assertType('function', function() { return 2; });
+			this.assertType('object', null);
+			this.assertType('object', {x: 3});
+		});
+		
+		test_response('assertType with wrong type', 'fail', function() {
+			this.assertType('number', false);
+		});
+		
+		test_response('assertDefined with defined object', 'pass', function() {
+			this.assertDefined(true);
+		});
+		
+		test_response('assertDefined with undefined variable', 'fail', function() {
+			var x;
+			this.assertDefined(x);
+		});
+		
+		test_response('assertNull with null object', 'pass', function() {
+			this.assertNull(null);
+		});
+		
+		test_response('assertNull with non-null object', 'fail', function() {
+			this.assertNull(true);
+		});
+		
+		test_response('assertNotNull with null object', 'fail', function() {
+			this.assertNotNull(null);
+		});
+		
+		test_response('assertNotNull with non-null object', 'pass', function() {
+			this.assertNotNull(true);
+		});
+		
+		test_response('fail', 'fail', function() {
+			this.fail();
+		});
+		
+		runner.add(fixture);
+		runner.doneAdding();
+	</script>
+	<style type="text/css" media="screen">
+		body {
+			background: black;
+		}
+		
+		p.explanation {
+			font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, sans-serif;
+			color: white;
+		}
+	</style>
+</head>
+<body>
+	<p class="explanation">
+		Run the Crucible instance at the bottom of the screen to run functional
+		tests on the entirety of Crucible.
+	</p>
+</body>
+</html>

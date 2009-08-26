@@ -8,7 +8,7 @@
 	background-color: #e2e2e2;
 }
 
-.loki table.iframe_wrapper, .loki textarea
+.loki div.iframe_wrapper, .loki textarea
 {
 	width: 100%;
 	height: 276px;

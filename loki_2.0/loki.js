@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0.3-b2
+// Loki WYSIWIG Editor 2.0.4
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2009-03-25 13:33:59 
+// Compiled 2009-08-26 16:23:26 
 // http://loki-editor.googlecode.com/
 
 
@@ -7799,13 +7799,13 @@ Util.Range.insert_node = function insert_node_in_range(rng, node)
 {
 	var bounds;
 	var point;
+	var target;
 	
 	if (rng.insertNode) {
 		// W3C range
 		rng.insertNode(node);
 	} else {
 		// Internet Explorer range
-		
 		bounds = Util.Range.get_boundaries(rng);
 		
 		if (bounds.start.container.nodeType == Util.Node.TEXT_NODE) {
@@ -7815,12 +7815,20 @@ Util.Range.insert_node = function insert_node_in_range(rng, node)
 			point = bounds.start.container.nextSibling;
 			
 			// Now the node can be inserted between the two text nodes.
-			bounds.start.container.parentNode.insertBefore(node, point);
+			target = bounds.start.container.parentNode;
 		} else {
 			point = (bounds.start.container.hasChildNodes())
 				? bounds.start.container.childNodes[bounds.start.offset]
 				: null;
-			bounds.start.container.insertBefore(node, point);
+			target = bounds.start.container;
+		}
+		
+		// Don't remove this split; insertBefore SHOULD work with a null
+		// second argument, but IE8 doesn't accept it.
+		if (point) {
+			target.insertBefore(node, point);
+		} else {
+			target.appendChild(node);
 		}
 	}
 };
@@ -10227,6 +10235,7 @@ Util.Window.prototype.open = function(uri, window_name, window_options, force_sy
 							'<div id="util_window_error">You tried to reload a dialog page that exists only ephemerally. Please close the dialog and open it again.</div>' +
 							// for debugging; turn off when live (make sure to get the event listener below, too):
 							//'<div><a id="util_window_alert" href="#" onclick="return false;">View virtual source</a></div><hr />' + // the event which pops up the source is added below
+							'<script type="text/javascript">if (window.opener) window.opener._loki_dialog_postback(window);</script>' +
 							'</body></html>');
 		this.document.close();
 
@@ -10992,7 +11001,9 @@ UI.Anchor_Masseuse = function()
 		}
 		
 		expected_id = placeholder.getAttribute('loki:anchor_id');
-		actual_id = placeholder.nextSibling.id;
+		actual_id = (placeholder.nextSibling) ?
+		    placeholder.nextSibling.id :
+		    null;
 		self.remove_fake_id(anchor);
 		if (actual_id == expected_id) {
 			// Relative position has not changed. Simple.
@@ -13195,9 +13206,9 @@ UI.Delete_Element_Keybinding = function()
  * <pre>
  * var dialog = new UI.Image_Dialog;   <br />
  * dialog.init({ data_source : '/fillmorn/feed.rss',   <br />
- *               submit_listener : this._insert_image,  <br />
- *               selected_item : { link : '/global_stock/images/1234.jpg' }   <br />
- * });   <br />
+ *               submit_listener : this._insert_image,	<br />
+ *               selected_item : { link : '/global_stock/images/1234.jpg' }	  <br />
+ * });	 <br />
  * dialog.display();
  * </pre>
  */
@@ -13217,15 +13228,15 @@ UI.Dialog = function()
 	/**
 	 * Initializes the dialog.
 	 *
-	 * @param	params	object containing the following named paramaters:
+	 * @param   params  object containing the following named parameters:
 	 *                  <ul>
 	 *                  <li>data_source - the RSS feed from which to read this file</li>
 	 *                  <li>submit_listener - the function which will be called when
-	 *					the dialog's submit button is pressed</li>
+	 *                  the dialog's submit button is pressed</li>
 	 *                  <li>selected_item - an object with the same properties as
 	 *                  the object passed by this._internal_submit_handler (q.v.) to
 	 *                  submit_handler (i.e., this._external_submit_handler). Used e.g. to
-	 *					determine which if any image is initially selected.</li>
+	 *                  determine which if any image is initially selected.</li>
 	 *                  </ul>
 	 */
 	this.init = function init_dialog(params)
@@ -13241,32 +13252,34 @@ UI.Dialog = function()
 
 	this.open = function open_dialog()
 	{
+		var self = this;
+		
 		function populate_dialog() {
-			if (this._dialog_window._dialog_populated)
+			if (self._dialog_window._dialog_populated)
 				return;
 			
-			this._dialog_window._dialog_populated = true;
+			self._dialog_window._dialog_populated = true;
 			
-			this._doc = this._dialog_window.window.document;
-			this._dialog_window.document = this._doc;
-			this._udoc = new Util.Document(this._doc);
+			self._doc = self._dialog_window.window.document;
+			self._dialog_window.document = self._doc;
+			self._udoc = new Util.Document(self._doc);
 			
-			this._root =
-				this._doc.body.appendChild(this._doc.createElement('DIV'));
+			self._root =
+				self._doc.body.appendChild(self._doc.createElement('DIV'));
 			
 			// Work around an IE display glitch: don't render until the document
 			// has been built.
 			if (Util.Browser.IE)
-				this._doc.body.style.display = 'none';
+				self._doc.body.style.display = 'none';
 			try {
-				this._dialog_window.body = this._doc.body;
-				this._set_title();
-				this._append_style_sheets();
-				this._add_dialog_listeners();
-				this._append_main_chunk();
-				this._apply_initially_selected_item();
+				self._dialog_window.body = self._doc.body;
+				self._set_title();
+				self._append_style_sheets();
+				self._add_dialog_listeners();
+				self._append_main_chunk();
+				self._apply_initially_selected_item();
 			} finally {
-				this._doc.body.style.display = '';
+				self._doc.body.style.display = '';
 			}
 		}
 		
@@ -13286,9 +13299,9 @@ UI.Dialog = function()
 			
 			if (!window_opened) // popup blocker
 				return false;
-			
+			_loki_enqueue_dialog(this._dialog_window.window, populate_dialog);
 			Util.Event.observe(this._dialog_window.window, 'load',
-				populate_dialog.bind(this));
+				populate_dialog);
 		}
 	};
 	
@@ -13450,7 +13463,7 @@ UI.Dialog = function()
 	 *
 	 * @param	horizontal	(boolean) Sometimes we don't want to resize horizontally 
 	 *						to the content, because since the content is not fixed-width, 
-	 * 						it will expand to take up the whole screen, which is ugly. So
+	 *						it will expand to take up the whole screen, which is ugly. So
 	 *						false here disables horiz resize.
 	 * @param	vertical	(boolean) same thing
 	 *						
@@ -13470,17 +13483,17 @@ UI.Dialog = function()
 		var win = this._dialog_window.window;
 		var doc = this._dialog_window.document;
 
-		if (win.sizeToContent)  // Gecko
+		if (win.sizeToContent)	// Gecko
 		{
 			var w = win.outerWidth;
 			var h = win.outerHeight;
 
-            //win.resizeBy(win.innerWidth * 2, win.innerHeight * 2);
-			//win.sizeToContent();  
-			//win.sizeToContent();  
+			//win.resizeBy(win.innerWidth * 2, win.innerHeight * 2);
+			//win.sizeToContent();	
+			//win.sizeToContent();	
 			//win.resizeBy(win.innerWidth + 10, win.innerHeight + 10);
 			win.resizeBy(doc.documentElement.clientWidth + 10 + (win.outerWidth - win.innerWidth) - win.outerWidth, 
-					     doc.documentElement.clientHeight + 20 + (win.outerHeight - win.innerHeight) - win.outerHeight);
+						 doc.documentElement.clientHeight + 20 + (win.outerHeight - win.innerHeight) - win.outerHeight);
 			//win.resizeBy(this._root.clientWidth + 10 - win.outerWidth, 
 			//			 this._root.clientHeight + 10 - win.outerHeight);
 			//win.resizeBy(win.innerWidth + 10 - win.outerWidth, 
@@ -13550,6 +13563,46 @@ UI.Dialog = function()
 		// Close dialog window
 		this._dialog_window.window.close();
 	};
+};
+
+var _loki_dialog_queue = [];
+var _loki_unmatched_dialogs = [];
+
+function _loki_enqueue_dialog(dialog_window, onload) {
+	var i;
+	
+	for (i = 0; i < _loki_unmatched_dialogs.length; i++) {
+		if (_loki_unmatched_dialogs[i] === dialog_window) {
+			_loki_unmatched_dialogs.splice(i, 1);
+			onload();
+			return;
+		}
+	}
+	
+	_loki_dialog_queue.push({window: dialog_window, onload: onload});
+}
+
+window._loki_dialog_postback = function(dialog_window) {
+	var i, callback, called = false;
+	
+	console.log(dialog_window);
+	
+	for (i = 0; i < _loki_dialog_queue.length; i++) {
+		if (_loki_dialog_queue[i].window === dialog_window) {
+			console.info('Found!');
+			callback = _loki_dialog_queue[i].onload;
+			_loki_dialog_queue.splice(i, 1);
+			
+			if (!called) {
+				callback();
+				called = true;
+			}
+		}
+	}
+	
+	if (!called) {
+		_loki_unmatched_dialogs.push(dialog_window);
+	}
 };
 
 // file UI.Double_Click.js
@@ -21877,21 +21930,14 @@ UI.Loki = function Loki()
 	 */
 	var _create_iframe = function()
 	{
-		// EN: why wrap it in a table?
-		_iframe_wrapper = _owner_document.createElement('TABLE');
-		var tbody = _owner_document.createElement('TBODY');
-		var tr = _owner_document.createElement('TR');
-		var td = _owner_document.createElement('TD');
-		tr.appendChild(td);
-		tbody.appendChild(tr);
-		_iframe_wrapper.appendChild(tbody);
+		_iframe_wrapper = _owner_document.createElement('DIV');
 		Util.Element.add_class(_iframe_wrapper, 'iframe_wrapper');
 
 		_iframe = _owner_document.createElement('IFRAME');
 		_iframe.src = 'javascript:""';
 		_iframe.frameBorder = '0'; // otherwise, IE puts an extra border around the iframe that css cannot erase
 
-		td.appendChild(_iframe);
+		_iframe_wrapper.appendChild(_iframe);
 
 		// Take styles from textarea
 		var h = _textarea.clientHeight;
@@ -22855,7 +22901,7 @@ UI.Loki = function Loki()
 		}
 	};
 };
-UI.Loki.prototype.version = "2.0.3-b2";
+UI.Loki.prototype.version = "2.0.4";
 
 UI.Loki.Options = new Util.Chooser();
 UI.Loki.Options._add_bundled = function add_bundled_loki_options() {
@@ -23091,7 +23137,7 @@ var Loki = {
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0.3-b2",
+	version: "2.0.4",
 	
 	/** @private */
 	_pending: [],

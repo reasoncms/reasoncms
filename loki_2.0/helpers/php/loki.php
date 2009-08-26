@@ -1,7 +1,4 @@
 <?php
-/**
- * @package loki
- */
 
 if (!defined('DIRECTORY_SEPARATOR'))
 	define('DIRECTORY_SEPARATOR', '/');
@@ -194,7 +191,6 @@ class Loki2
 
 		<!--div><a href="javascript:void(0);" onclick="Util.Window.alert(document.body.innerHTML);">View virtual source</a></div-->
 		<script type="text/javascript" language="javascript">
-		//<![CDATA[
 		//document.domain = 'carleton.edu'; /// XXX: for testing; maybe remove later if not necessary
 		var <?php echo $id ?>;
 		function <?php echo $onload ?>()
@@ -232,7 +228,6 @@ class Loki2
 				throw new Error("No known modern event API is available.");
 			}
 		}
-		//]]>
 		</script>
 		<?php /* we htmlspecialchars because Mozilla converts all greater and less than signs in the textarea to entities, but doesn't convert amperstands to entities. When the value of the textarea is copied into the iframe, these entities are resolved, so as to create tags ... but then so are greater and less than signs that were originally entity'd. This is not desirable, and in particular allows people to add their own HTML tags, which is bad bad bad. */ ?>
 		<textarea name="<?php echo $this->_field_name; ?>" rows="20" cols="80" id="loki__<?php echo $this->_field_name; ?>__textarea"><?php echo htmlentities($this->_field_value, ENT_QUOTES, 'UTF-8'); ?></textarea>

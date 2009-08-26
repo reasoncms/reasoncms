@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Crucible</title>
+    <script src="../build/crucible.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        Crucible.settings.autorun = false;
+        Crucible.product = 'Example';
+        Crucible.add('crucible.example', {
+            'one: One': function() {
+                this.assertFalse(true);
+            },
+            two: function() {}
+        });
+        Crucible.doneAdding();
+    </script>
+</head>
+<body id="index">
+    
+</body>
+</html>
