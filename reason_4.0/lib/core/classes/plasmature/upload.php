@@ -261,11 +261,15 @@ function _reason_upload_handle_entity(&$element, $expected_type,
 /** @access private */
 function _get_disco_async_upload_session($authenticator)
 {
+	$sid = null;
 	if (!empty($_REQUEST['_reason_upload_transfer_session'])) {
-		return $_REQUEST['_reason_upload_transfer_session'];
+		$sid = $_REQUEST['_reason_upload_transfer_session'];
 	} else if (!empty($_REQUEST['transfer_session'])) {
-		return $_REQUEST['transfer_session'];
+		$sid = $_REQUEST['transfer_session'];
 	}
+	
+	if ($sid && reason_async_upload_session_exists($sid))
+		return $sid;
 	
 	// We need to generate a new upload session if: none has yet been
 	// created (obviously), or if the upload session was already sent in
