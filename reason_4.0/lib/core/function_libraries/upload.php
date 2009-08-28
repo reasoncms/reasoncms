@@ -90,6 +90,24 @@ function reason_create_async_upload_session($authenticator=null)
 }
 
 /**
+ * Checks to see if a background upload session with the given ID exists in
+ * the user's Reason session.
+ * 
+ * @param string $session_id a Reason asynchronous upload session ID, as
+ *        returned from {@link reason_create_async_upload_session}
+ * @return boolean true if an upload session with that ID exists; false if
+ *         otherwise
+ */
+function reason_async_upload_session_exists($session_id)
+{
+	$reason_session =& get_reason_session();
+	$key = _async_upload_session_key($session_id);
+	$async_session = $reason_session->get($key);
+	return (!empty($async_session) && is_array($async_session) &&
+		isset($async_session['files']));
+}
+
+/**
  * Place constraints on the files that will be accepted as background uploads.
  * 
  * If no upload session exists with that ID, or any of the constraints are
