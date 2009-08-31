@@ -1574,6 +1574,32 @@
 	} // }}}
 	
 	/**
+	* Same as {@link radioType} radio buttons, but inline.
+	* @package disco
+	* @subpackage plasmature
+	*/
+	class radio_inlineType extends optionType // {{{
+	{
+		var $type = 'radio_inline';
+
+		function get_display() // {{{
+		{
+			$i = 0;
+			$str = '<div id="'.$this->name.'_container" class="radioButtons inlineRadioButtons">'."\n";
+			foreach( $this->options as $key => $val )
+			{
+				$id = 'radio_'.$this->name.'_'.$i++;
+				$str .= '<span class="radioItem"><span class="radioButton"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.$key.'"';
+				if ( $key == $this->value )
+					$str .= ' checked="checked"';
+				$str .= '></span> <label for="'.$id.'">'.$val.'</label></span> '."\n";
+			}
+			$str .= '</div>'."\n";
+			return $str;
+		} // }}}
+	} // }}}
+	
+	/**
 	* Same as {@link radioType}, but doesn't sort {@link options}.
 	* @package disco
 	* @subpackage plasmature
@@ -1581,6 +1607,18 @@
 	class radio_no_sortType extends radioType // {{{
 	{
 		var $type = 'radio_no_sort';
+		var $sort_options = false;
+		
+	} // }}}
+	
+	/**
+	* Same as {@link radio_inlineType}, but doesn't sort {@link options}.
+	* @package disco
+	* @subpackage plasmature
+	*/
+	class radio_inline_no_sortType extends radio_inlineType // {{{
+	{
+		var $type = 'radio_inline_no_sort';
 		var $sort_options = false;
 		
 	} // }}}
