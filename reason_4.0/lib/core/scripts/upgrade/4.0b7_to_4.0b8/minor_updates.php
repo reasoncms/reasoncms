@@ -46,7 +46,8 @@ class addIssuesSectionsViewUpdater
 		{
 			if('test' == $mode)
 			{
-				echo '<p>Would have added the view type sections_and_issues.php</p>'."\n";
+				echo '<p>Would have added the view type sections_and_issues.php and the Sections and Issues view</p>'."\n";
+				return;
 			}
 			else
 			{
@@ -80,7 +81,7 @@ class addIssuesSectionsViewUpdater
 				
 				$es = new entity_selector(id_of('master_admin'));
 				$es->add_type('field');
-				$es->add_relation('name = "status"');
+				$es->add_relation('entity.name = "status"');
 				$es->set_num(1);
 				$fields = $es->run_one();
 				if(!empty($fields))
