@@ -20,20 +20,29 @@
 	{
 		var $default_text;
 		var $header_text;
-		var $acceptable_params = array('header_text' => NULL, 'default_text' => NULL);
+		var $acceptable_params = array('header_text' => NULL, 'default_text' => NULL, 'site_unique_name'=> NULL);
+		var $_search_site;
 		
 		function init( $args = array() )
 		{
+			if(isset($this->params['site_unique_name']))
+			{
+				$this->_search_site = new entity(id_of($this->params['site_unique_name']));
+			}
+			else
+			{
+				$this->_search_site = $this->parent->site_info;
+			}
 			$this->default_text = (isset($this->params['default_text'])) 
 								  ? $this->params['default_text'] 
-								  : 'Search ' . reason_htmlspecialchars(strip_tags($this->parent->site_info->get_value('name')));
+								  : 'Search ' . reason_htmlspecialchars(strip_tags($this->_search_site->get_value('name')));
 			
 			$this->header_text = (isset($this->params['header_text'])) ? $this->params['header_text'] : '';
 		}
 		
 		function has_content()
 		{
-			if( $this->parent->site_info->get_value('base_url') 
+			if( $this->_search_site->get_value('base_url') 
 				&& defined('REASON_SEARCH_ENGINE_URL') 
 				&& REASON_SEARCH_ENGINE_URL != '')
 				return true;
@@ -73,7 +82,7 @@
 		
 		function run_restrict()
 		{
-			echo '<input type="hidden" name="'.REASON_SEARCH_FORM_RESTRICTION_FIELD_NAME.'" value="http://'.REASON_HOST . $this->parent->site_info->get_value('base_url').'" />'."\n";
+			echo '<input type="hidden" name="'.REASON_SEARCH_FORM_RESTRICTION_FIELD_NAME.'" value="http://'.REASON_HOST . $this->_search_site->get_value('base_url').'" />'."\n";
 		}
 		function run_form_hidden_fields()
 		{
