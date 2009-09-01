@@ -298,6 +298,7 @@ div.datePicker tfoot th
         border:0 none;
         background:#fff;
         height:2.8em;
+        font-size: 80%;
         }
 /* TD cell that is _not_ used to display a day of the month */
 div.datePicker table tbody td.date-picker-unused
