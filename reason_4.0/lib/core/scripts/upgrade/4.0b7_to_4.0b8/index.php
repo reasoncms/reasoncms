@@ -32,7 +32,7 @@ replace your settings directory with the one distributed in Reason 4 Beta 8. You
 //with Reason 4 Beta 8 will be unreliable on a Reason 4 Beta 7 database that has not been upgraded.</p>
 ?>
 <h3>New Settings</h3>
-<p>Reason 4 Beta 8 introduces three new settings:</p>
+<p>Reason 4 Beta 8 introduces four new settings:</p>
 <ol>
 <li>DISABLE_REASON_ADMINISTRATIVE_INTERFACE. You should make sure the setting is defined in the
 reason_settings.php used in your reason instance. You can copy and paste the following:<br />
@@ -59,6 +59,18 @@ reason_settings.php used in your reason instance. You can copy and paste the fol
 define( 'REASON_ASSET_MAX_UPLOAD_SIZE_MEGS',  50 );
 </textarea>
 </li>
+<li>REASON_DISABLE_AUTO_UPDATE_CHECK. You should make sure the setting is defined in the
+reason_settings.php used in your reason instance. You can copy and paste the following:<br />
+<textarea rows="4" cols="100">
+/**
+ * REASON_DISABLE_AUTO_UPDATE_CHECK
+ *
+ * If you want Reason to stop checking for updates, set this to true. (Not recommended... but if
+ * you don't want Reason phoning home to check for updates, this setting is for you.)
+ */
+define('REASON_DISABLE_AUTO_UPDATE_CHECK', false);
+</textarea>
+</li>
 <li>DATE_PICKER_HTTP_PATH. This setting should be defined in package_settings.php. You can copy and paste the following:<br />
 <textarea rows="4" cols="100">
 /**
@@ -70,6 +82,7 @@ define('DATE_PICKER_HTTP_PATH', '/date_picker/');
 to the file system location of reason_package/date_picker/ (or <a href="<?php echo REASON_HTTP_BASE_PATH . 'setup.php?fix_mode=true'; ?>">
 rerun setup.php with fix mode enabled</a>) which will attempt to make the symlink for you.</p>
 </li>
+
 </ol>
 <h3>Additional Notes</h3>
 <p>Starting with this release, it is especially important to ensure that the setting THIS_IS_A_DEVELOPMENT_REASON_INSTANCE is properly defined
@@ -89,6 +102,7 @@ Reason are not inadvertently indexed by Google or other search engines.</p>
 <li><a href="database_cleanup.php">Perform database cleanup and maintenance</a></li>
 <li><a href="image_ordering.php">Update the sort_order value for the images module</a></li>
 <li><a href="tame_url_history.php">Cleans cruft like external urls from the URL History table</a></li>
+<li><a href="minor_updates.php">Additional minor updates</a></li>
 </ul>
 </body>
 </html>
