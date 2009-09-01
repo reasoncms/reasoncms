@@ -75,21 +75,24 @@ class addIssuesSectionsViewUpdater
 			}
 			else
 			{
+				$es = new entity_selector(id_of('master_admin'));
+				$es->add_type(id_of('field'));
+				$es->add_relation('entity.name = "status"');
+				$es->set_num(1);
+				$fields = $es->run_one();
+				
 				$view_id = reason_create_entity( id_of('master_admin'), id_of('view'), $reason_user_id, 'News Sections and Issues', array('display_name'=>'Sections and Issues'));
 				create_relationship( $view_id, $view_type->id(), relationship_id_of('view_to_view_type'));
 				create_relationship( $view_id, id_of('news'), relationship_id_of('view_to_type'));
 				
-				$es = new entity_selector(id_of('master_admin'));
-				$es->add_type('field');
-				$es->add_relation('entity.name = "status"');
-				$es->set_num(1);
-				$fields = $es->run_one();
 				if(!empty($fields))
 				{
 					$field = current($fields);
 					create_relationship( $view_id, $field->id(), relationship_id_of('view_columns'));
 					create_relationship( $view_id, $field->id(), relationship_id_of('view_searchable_fields'));
 				}
+				
+				echo '<p>Added sections and issue view</p>';
 			}
 		}
 		else
