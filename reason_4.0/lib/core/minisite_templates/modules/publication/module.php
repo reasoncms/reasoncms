@@ -1298,8 +1298,12 @@ class PublicationModule extends Generic3Module
 		function get_most_recent_issue()
 		{
 			$issues =& $this->get_visible_issues();
-			reset($issues); // make sure pointer is at first element		
-			return current($issues);
+			if ($issues)
+			{
+				reset($issues); // make sure pointer is at first element		
+				return current($issues);
+			}
+			else return false;
 		}
 		
 		/**
