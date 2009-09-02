@@ -242,23 +242,28 @@
 				//set issue value, if it exists - don't need to worry about setting value if there's only one, since we're using a select
 				if(!empty($this->issues[$pub_id]) && !empty($left_relationships['news_to_issue']))
 				{
+					$issue_options = array();
 					foreach($left_relationships['news_to_issue'] as $related_issue)
 					{
 						if(array_key_exists($related_issue->id(), $this->issues[$pub_id]))
 						{
-							if(isset($issue_select_value))
-							{
-								$this->change_element_type($pub_id.'-issues', 'hidden');
-								$this->add_element($pub_id.'more_than_one_issue_comment', 'comment', array('text'=>'This news item is currently associated with more than one issue of this publication.  If you would like to edit this association, please use the workflow space.'));			
-								break;
-							}
-							else
-								$issue_select_value = $related_issue->id();
+							
+								$issue_options[] = $related_issue->id();
 						}
 					}
-					if(isset($issue_select_value))
+					if(count($issue_options) > 1)
 					{
-						$this->set_value($pub_id.'-issues', $issue_select_value);
+						$issue_names = array();
+						foreach($issue_options as $issue_id)
+						{
+							$issue_names[] = $this->issues[$pub_id][$issue_id]->get_value('name');
+						}
+						$this->change_element_type($pub_id.'-issues', 'hidden');
+						$this->add_element($pub_id.'more_than_one_issue_comment', 'comment', array('text'=>'<strong>Issues:</strong> '.implode(', ',$issue_names).'<br />To change this post\'s issues, use the "Assign this story to an issue" link at the top of the page.'));			
+					}
+					else
+					{
+						$this->set_value($pub_id.'-issues', current($issue_options));
 					}
 				}
 				//if we've selected a publication that only has one section, select that section
@@ -270,23 +275,27 @@
 				//otherewise set the section value if a relationship exists
 				elseif(!empty($this->sections[$pub_id]) && !empty($left_relationships['news_to_news_section']))
 				{
+					$section_options = array(); 
 					foreach($left_relationships['news_to_news_section'] as $related_section)
 					{
 						if(array_key_exists($related_section->id(), $this->sections[$pub_id]))
 						{
-							if(isset($section_select_value))
-							{
-								$this->change_element_type($pub_id.'-sections', 'hidden');
-								$this->add_element($pub_id.'more_than_one_section_comment', 'comment', array('text'=>'This news item is currently associated with more than one section of this publication.  If you would like to edit this association, please use the workflow space.'));			
-								break;
-							}
-							else
-								$section_select_value = $related_section->id();
+							$section_options[] = $related_section->id();
 						}
 					}
-					if(isset($section_select_value))
+					if(count($section_options) > 1)
 					{
-						$this->set_value($pub_id.'-sections', $section_select_value);
+						$section_names = array();
+						foreach($section_options as $section_id)
+						{
+							$section_names[] = $this->sections[$pub_id][$section_id]->get_value('name');
+						}
+						$this->change_element_type($pub_id.'-sections', 'hidden');
+						$this->add_element($pub_id.'more_than_one_section_comment', 'comment', array('text'=>'<strong>Sections:</strong> '.implode(', ',$section_names).'<br />To change this post\'s sections, use the "Assign to a News Section" link at the top of the page.'));
+					}
+					else
+					{
+						$this->set_value($pub_id.'-sections', current($section_options));
 					}
 				}
 			}
