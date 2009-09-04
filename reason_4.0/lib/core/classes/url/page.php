@@ -97,7 +97,7 @@ class reasonPageURL extends reasonURL
 			if ($page->get_value('url')) return $page->get_value('url');
 			if (isset($GLOBALS['_reason_domain_settings'][$page->get_value('domain')]['HTTPS_AVAILABLE'])) $secure = $GLOBALS['_reason_domain_settings'][$page->get_value('domain')]['HTTPS_AVAILABLE'];
 			elseif (isset($GLOBALS['_default_domain_settings']['HTTPS_AVAILABLE'])) $secure = $GLOBALS['_default_domain_settings']['HTTPS_AVAILABLE'];
-			else $secure = ($domain == REASON_HOST) ? HTTPS_AVAILABLE : false;
+			else $secure = ($page->get_value('domain') == REASON_HOST) ? HTTPS_AVAILABLE : false;
 			return ($secure) ? $this->get_url_https() : $this->get_url_http();
 		}
 		else return NULL;
