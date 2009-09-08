@@ -71,11 +71,12 @@ reason_settings.php used in your reason instance. You can copy and paste the fol
 define('REASON_DISABLE_AUTO_UPDATE_CHECK', false);
 </textarea>
 </li>
-<li>DATE_PICKER_HTTP_PATH. This setting should be defined in package_settings.php. You can copy and paste the following:<br />
-<textarea rows="4" cols="100">
+<li>DATE_PICKER_INC and DATE_PICKER_HTTP_PATH. These settings should be defined in package_settings.php. You can copy and paste the following:<br />
+<textarea rows="5" cols="100">
 /**
  * Define the path to Date Picker files
  */
+define('DATE_PICKER_INC', INCLUDE_PATH.'date_picker/');
 define('DATE_PICKER_HTTP_PATH', '/date_picker/');
 </textarea>
 <p>Note that if you use the default value for DATE_PICKER_HTTP_PATH, you should also create a symbolic link from /date_picker/ 
