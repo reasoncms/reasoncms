@@ -497,10 +497,10 @@ function check_datepicker_accessible_over_http()
 	if (!$accessible && $fix_mode_enabled) // lets try to repair this
 	{
 		// if FLVPLAYER_INC is readable
-		if (is_readable(DATE_PICKER_HTTP_PATH))
+		if (is_readable(DATE_PICKER_INC))
 		{
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(DATE_PICKER_HTTP_PATH, "/"));
-			if (is_writable(dirname($symlink_loc))) symlink(DATE_PICKER_HTTP_PATH, $symlink_loc);
+			if (is_writable(dirname($symlink_loc))) symlink(DATE_PICKER_INC, $symlink_loc);
 		}
 		$accessible = check_accessible_over_http(DATE_PICKER_HTTP_PATH . 'index.html', 'frequency decoder');
 		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
