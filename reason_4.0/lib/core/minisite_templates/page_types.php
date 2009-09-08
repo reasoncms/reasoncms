@@ -148,6 +148,11 @@
 			'pre_sidebar' => 'image_sidebar',
 			'sidebar' => 'av',
 		),
+		'audio_video_sidebar_show_children' => array(
+			'pre_sidebar' => 'av',
+			'sidebar' => 'assets',
+			'main_post' => 'children',
+		),
 		'basic_tabs' => array(
 			'main_head' => 'basic_tabs',
 		),
