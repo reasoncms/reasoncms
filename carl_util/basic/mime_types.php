@@ -121,14 +121,19 @@ function mime_type_from_extension($extension, $default=null)
 function get_mime_type($path, $default=null, $filename=null)
 {
 	$type = _get_mime_type_fileinfo($path);
-
+	
 	if (!$type || $type == 'application/octet-stream')
 		$type = _get_mime_type_unix($path);
+	
+	if (!$filename)
+		$filename = basename($path);
+	$extension = strtolower(ltrim(strrchr($filename, '.'), '.'));
+	$type = _sanity_check_mime_type($extension, $type);
 	
 	if (!$type || $type == 'application/octet-stream') {
 		if (!$filename)
 			$filename = $path;
-		$type = mime_type_from_extension(strrchr($filename, '.'));
+		$type = mime_type_from_extension($extension);
 	}
 	
 	if (!$type || mime_type_matches('image/*', $type)) {
@@ -178,12 +183,40 @@ function _get_mime_type_unix($path)
 }
 
 /**
+ * Fixes stupid results from file(1).
+ * 
+ * On some systems, the file command can return some results that we really
+ * don't want. For example, some assume that the presence of a C-style comment
+ * start token (/*) means that the file is a C source or header file
+ * (text/x-c). This is bad when it is given (for example) a CSS file that has
+ * any comments in it.
+ * 
+ * @param string $file_extension
+ * @param string $mime_type
+ * @return string a maybe-fixed MIME type
+ * @access private
+ */
+function _sanity_check_mime_type($file_extension, $mime_type)
+{
+	if ($file_extension == 'css') {
+		// We're just going to assume it's CSS.
+		
+		$m = array();
+		return (preg_match('/;\s*charset=(\S+)/', $mime_type, $m))
+			? "text/css; charset={$m[1]}"
+			: "text/css";
+	}
+	
+	return $mime_type;
+}
+
+/**
  * @access private
  */
 function _get_mime_type_image($path)
 {
 	$result = @getimagesize($path);
 	if (!$result)
-		return false;
+		return null;
 	return @$result['mime'];
 }
