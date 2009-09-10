@@ -287,7 +287,7 @@
 	}
 
 	/**
-	 * Returns directory service records for a group
+	 * Returns directory service records for a group. Use with caution - if a user sets up a group incorrectly this method could return a huge set of records.
 	 *
 	 * @param array optional array specifying which attributes are desired for the directory service records
 	 *
@@ -337,6 +337,28 @@
 		return false;
 	}
 
+	/**
+	 * Returns directory service records ONLY for the authorized usernames field of a group.
+	 *
+	 * @param array optional array specifying which attributes are desired for the directory service records
+	 * @author Nathan White
+	 * @return array directory service records
+	 * @access public
+	 */
+	function get_records_for_authorized_usernames_field($return_attr = array())
+	{
+		$authorized_usernames_block = $this->get_block_authorized_usernames();
+		if (!empty($authorized_usernames_block))
+		{
+			$filter = '(|'.$authorized_usernames_block.')';
+			$dir = new directory_service();
+			$dir->search_by_filter($filter, $return_attr);
+			$result = $dir->get_records();
+			if (!empty($result)) return $result;
+		}
+		return false;
+	}
+	
 	/**
 	 * Returns the directory service-style array that represents the group
 	 *
