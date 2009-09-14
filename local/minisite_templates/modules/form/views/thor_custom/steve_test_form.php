@@ -41,7 +41,6 @@ class SteveTestThorForm extends DefaultThorForm
 	
 		$food_stuff_field_name = $this->get_element_name_from_label('Food Stuff');
 		$this->set_comments($food_stuff_field_name, '<p>The list of foods has been carefully selected.</p>');
-		
 		$this->change_element_type('extra_field', 'textarea');
 		$this->add_required($this->get_element_name_from_label('Last Name'));
 	}	
