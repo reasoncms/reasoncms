@@ -224,25 +224,29 @@ reason_include_once( 'function_libraries/util.php' );
  
 	function set_page_link(&$e)
 	{
-		$owner_site = $e->get_owner();	
-		$ps = new entity_selector($owner_site->id());
-		$ps->add_type( id_of('minisite_page') );
-		$rels = array();
-		foreach($this->get_events_page_types() as $page_type)
+		$owner_site = $e->get_owner();
+		if ($owner_site)
 		{
-			$rels[] = 'page_node.custom_page = "'.$page_type.'"';
+			$ps = new entity_selector($owner_site->id());
+			$ps->add_type( id_of('minisite_page') );
+			$rels = array();
+			foreach($this->get_events_page_types() as $page_type)
+			{
+				$rels[] = 'page_node.custom_page = "'.$page_type.'"';
+			}
+			$ps->add_relation('( '.implode(' OR ', $rels).' )');
+			$page_array = $ps->run_one();
+			reset($page_array);
+			$events_page = current($page_array);
+	
+			if (!empty($events_page))
+			{
+				$ret = reason_get_page_url($events_page->id());
+			}
+			if(!empty($ret))
+				$e->set_value('url', sprintf('%s?event_id=%d&date=%s', $ret, $e->id(), $e->get_value('date')));
 		}
-		$ps->add_relation('( '.implode(' OR ', $rels).' )');
-		$page_array = $ps->run_one();
-		reset($page_array);
-		$events_page = current($page_array);
-
-		if (!empty($events_page))
-		{
-			$ret = reason_get_page_url($events_page->id());
-		}
-		if(!empty($ret))
-			$e->set_value('url', sprintf('%s?event_id=%d&date=%s', $ret, $e->id(), $e->get_value('date')));
+		else trigger_error('set_page_link called on an event (id '.$e->id().') that does not have an owner site id - a url could not be set');
 	}
 
 	function get_events_page_types()
