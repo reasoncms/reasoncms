@@ -28,6 +28,8 @@
 	 *        like a possibly insecure implementation?
 	 *
 	 *	@author Dave Hendler, 7/28/04
+	 *
+	 * @deprecated use php session instead this has never been fully implemented
 	 */
 	class Session_Cookie extends Session  /* interface */
 	{
