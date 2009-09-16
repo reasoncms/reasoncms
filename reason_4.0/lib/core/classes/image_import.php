@@ -370,32 +370,29 @@
 						{
 							copy( $cur_name, $new_name );
 						}
-						//copy( $orig_name, $new_name );
+						
+						// create a thumbnail if need be
 						list($width, $height, $type, $attr) = getimagesize($new_name);
-						
-						if($width > REASON_STANDARD_MAX_IMAGE_WIDTH || $height > REASON_STANDARD_MAX_IMAGE_HEIGHT)
-						{
-							copy( $new_name, $orig_name );
-							resize_image($new_name, REASON_STANDARD_MAX_IMAGE_WIDTH, REASON_STANDARD_MAX_IMAGE_HEIGHT);
-						}
-						
 						$thumb_dimensions = get_reason_thumbnail_dimensions($site_id);
+						
 						if($width > $thumb_dimensions['width'] || $height > $thumb_dimensions['height'])
 						{
 							copy( $new_name, $tn_name );
 							resize_image($tn_name, $thumb_dimensions['width'], $thumb_dimensions['height']);
 						}
+						
 						// real original
-						if( file_exists( $cur_name.'.orig' ) )
+						$my_orig_name = $this->add_name_suffix($cur_name, '-unscaled');
+						if( file_exists( $my_orig_name ) )
 						{
 							// move the original image into the photostock directory
-							if( is_writable( $cur_name.'.orig' ) )
+							if( is_writable( $my_orig_name ) )
 							{
-								rename( $cur_name.'.orig', $orig_name);
+								rename( $my_orig_name, $orig_name);
 							}
 							else
 							{
-								copy( $cur_name.'.orig', $orig_name);
+								copy( $my_orig_name, $orig_name);
 							}
 						}
 						
@@ -471,5 +468,15 @@
 			}
 			return 0;
 		}
-	}
+	
+		function add_name_suffix($path, $suffix)
+		{
+			$parts = explode('.', $path);
+			$length = count($parts);
+			$target = ($length > 1) ? ($length - 2) : 0;
+	
+			$parts[$target] .= $suffix;
+			return implode('.', $parts);
+		}
+}
 ?>
