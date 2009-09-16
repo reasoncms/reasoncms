@@ -373,6 +373,13 @@
 						
 						// create a thumbnail if need be
 						list($width, $height, $type, $attr) = getimagesize($new_name);
+						
+						if($width > REASON_STANDARD_MAX_IMAGE_WIDTH || $height > REASON_STANDARD_MAX_IMAGE_HEIGHT)
+						{
+							copy( $new_name, $orig_name );
+							resize_image($new_name, REASON_STANDARD_MAX_IMAGE_WIDTH, REASON_STANDARD_MAX_IMAGE_HEIGHT);
+						}
+						
 						$thumb_dimensions = get_reason_thumbnail_dimensions($site_id);
 						
 						if($width > $thumb_dimensions['width'] || $height > $thumb_dimensions['height'])
