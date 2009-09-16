@@ -206,7 +206,10 @@ function _sanity_check_mime_type($file_extension, $mime_type)
 			? "text/css; charset={$m[1]}"
 			: "text/css";
 	}
-	
+	if ($file_extension == 'xls') {
+		// We're just going to assume it's Excel.
+		return "application/excel";
+	}
 	return $mime_type;
 }
 
