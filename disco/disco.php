@@ -957,7 +957,7 @@
 						
 						$err_fields[] = '<a href="#'.$name.'_error">'.$display_name.'</a>';
 					}
-					echo '<li>'.($num_errors == 1 ? 'This field is ' : 'These fields are' ).' required: '.join(', ',$err_fields).'</li>'."\n";
+					echo '<li>'.($num_errors == 1 ? 'This field is' : 'These fields are' ).' required: '.join(', ',$err_fields).'</li>'."\n";
 				}
 				// display the messages for custom error checks - iterate through $_order so that error messages occur in a sort of logical order.
 				$order = $this->get_order();
