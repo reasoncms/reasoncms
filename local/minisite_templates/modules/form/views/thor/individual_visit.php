@@ -37,12 +37,10 @@ class IndividualVisitForm extends DefaultThorForm
 	var $elements = array(
 	'academic_interests_comment' => array(
 		'type' => 'comment',
-		'text' => '<strong>Please choose up to 3 academic areas you are interested in studying.</strong>',
+		'text' => '<h3>Please choose up to 3 academic areas you are interested in studying.</h3>',
 		),
 	'academic_interests' => array(
 		'type' => 'select',
-		'colspan' => 1,
-		'display_style' => 'normal',
 		'options' => array(
 			'Accounting'=>'Accounting',
 			'Africana Studies'=>'Africana Studies',
@@ -104,7 +102,6 @@ class IndividualVisitForm extends DefaultThorForm
 		),
 		'academic_interests_2' => array(
 		'type' => 'select',
-		'colspan' => 1,
 		'options' => array(
 			'Accounting'=>'Accounting',
 			'Africana Studies'=>'Africana Studies',
@@ -165,7 +162,6 @@ class IndividualVisitForm extends DefaultThorForm
 		),	
 		'academic_interests_3' => array(
 		'type' => 'select',
-		'colspan' => 1,
 		'options' => array(
 			'Accounting'=>'Accounting',
 			'Africana Studies'=>'Africana Studies',
@@ -227,6 +223,8 @@ class IndividualVisitForm extends DefaultThorForm
 	'participate_varsity_sport' => array(
 		'type' => 'checkboxgroup',
 		'display_name' => 'Do you plan to participate in a varsity sport?',
+//		'display_style' => 'normal',
+		'colspan' => '3',
 		'options' => array(
 			'Baseball'=>'Baseball',
 			'Basketball'=>'Basketball',
@@ -243,7 +241,8 @@ class IndividualVisitForm extends DefaultThorForm
 			),
 		), 
 	'participate_music?' => array(
-		'type' => 'checkboxgroup',
+		'type' => 'radio_inline_no_sort',
+		'display_style' => '4',
 		'display_name' => 'Do you plan to participate in music?',
 		'options' => array(
 			'Band'=>'Band',
@@ -254,30 +253,31 @@ class IndividualVisitForm extends DefaultThorForm
 			'Orchestra'=>'Orchestra',
 			)
 		),
-
 	'visit_activities' => array(
 		'type' => 'comment',
-		'text' => '<strong>Please check any of the following activities 
+		'text' => '<h3>Please check any of the following activities 
 					that you would like to do as part of your campus visit.
 					We will try to accommodate as many of your requests as 
-					possible.</strong>',
+					possible.</h3>',
 		),
 	'meet_counselor' => array(
 		'type' => 'checkboxfirst',
 		'colspan' => 1,
 		'display_name' => 'Meet with an Admissions Counselor',
 		'display_style'=>'normal',
+ 		'comments' => '<small>  (30 min)</small>', 
 		),
 	'tour' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Take a campus tour',
-		'comments' => '<p>60 min</p>',
 		'display_style'=>'normal',
+		'comments' => '<small>  (60 min)</small>',
 		),
 	'meet_faculty' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Meet with a faculty member',
 		'display_style' => 'normal',
+		'comments' => '<small>  (30 min)</small>',
 		),
 	'meet_faculty_details' => array(
 		'type' => 'select',
@@ -389,20 +389,19 @@ class IndividualVisitForm extends DefaultThorForm
 		'type' => 'checkboxfirst',
 		'colspan' => 2,
 		'display_style' => 'normal',
-		//'display_name' => 'Chapel',
-		'comments' => '10:30 daily (30 min)',
+		'comments' => '<small>  (30 min) daily at 10:30</small>',
 		),
 	'lunch' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Lunch',
 		'display_style' => 'normal',
-		'comments' => '30-60 min',
+		'comments' => '<small>  (30-60 min)</small>',
 		),
 	'meet_coach' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Conversation with a coach',
 		'display_style' => 'normal',
-		'comments' => '30 min',
+		'comments' => '<small>  30 min</small>',
 		),
 	'meet_coach_details' => array(
 		'type' => 'select',
@@ -427,25 +426,25 @@ class IndividualVisitForm extends DefaultThorForm
 		'type' => 'checkboxfirst',
 		'display_name' => 'Observe a choir rehearsal, if available',
 		'display_style' => 'normal',
-		'comments' => 'MWF 1:30 (60 min)',
+		'comments' => '<small>  MWF 1:30 (60 min)</small>',
 		),
 	'band' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Observe a band rehearsal, if available',
 		'display_style' => 'normal',
-		'comments' => 'MWF 12:15 (60 min)',
+		'comments' => '<small>  MWF 12:15 (60 min)</small>',
 		),
 	'orchestra' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Observe a orchestra rehearsal, if available',
 		'display_style' => 'normal',
-		'comments' => 'MTWTHF 4:00 (60 min)',
+		'comments' => '<small>  MTWTHF 4:00 (60 min)</small>',
 		),
 	'music_audition' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Perform a music audition for scholarship',
 		'display_style' => 'normal',
-		'comments' => 'Seniors Only (30 min)',
+		'comments' => '<small>  Seniors Only (30 min)</small>',
 		),
 	'music_audition_details' => array(
 		'type' => 'select_no_sort_js',
@@ -479,6 +478,7 @@ class IndividualVisitForm extends DefaultThorForm
 		'type' => 'checkboxfirst',
 		'display_style' => 'normal',
 		'display_name' => 'Conversation with music faculty',
+		'comments' => '<small>  (30 min)</small>',
 		),
 	'meet_music_faculty_details' => array(
 		'type' => 'select_no_sort',
@@ -522,21 +522,22 @@ class IndividualVisitForm extends DefaultThorForm
 		'rows' => 2,
 		'cols' => 35,
 		'display_name' =>'Additional Request',
-		//'commments' => '30 min',
+//		'comments' => '<small>  30 min</small>',
 		),
 	'housing_note' => array(
 		'type' => 'comment',
-		'text' => '<strong>Overnight Housing</strong> (Seniors Only)',
-		//'comments_pre' => 'Please provide two weeks notice',
+		'text' => '<h3>Overnight Housing</h3> (Seniors Only - Please provide two weeks notice)',
 		),
 	'overnight_housing' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'I would like to request overnight housing 
 						with a current Luther student',
-		'display_style' => 'normal',
+//		'display_style' => 'normal',
 		),
 	'overnight_date_time' => array(
 		'type' => 'textdatetime',
+//		'year_max' => '2011',
+//		'second' => 0,
 		'display_name' => 'Please indicate date. If requesting the night
 						 prior to your visit day, please indicate arrival 
 						 time as well',
@@ -556,6 +557,10 @@ class IndividualVisitForm extends DefaultThorForm
 	{
 		$state_field = $this->get_element_name_from_label('State/Province');
 		$this->change_element_type($state_field, 'state_province');
+		
+		$gender_field_name = $this->get_element_name_from_label('Gender');
+		$this->change_element_type($gender_field_name, 'radio_inline');
+		
 	}
 	//////////////////////////////////////
 	/*
