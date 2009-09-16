@@ -35,6 +35,31 @@ class IndividualVisitForm extends DefaultThorForm
 	*/
 	
 	var $elements = array(
+	'first_name' => 'text',
+	'last_name' => 'text',
+	'gender' => array(
+		'type' => 'radio_inline',
+		'options' => array('Female'=>'Female','Male'=>'Male',),
+		),
+	'address' => 'text',
+	'city' => 'text',
+	'state/province' => 'state_province',
+	'zip' => 'text',
+	'home_phone' => 'text',
+	'cell_phone' => 'text',
+	'high_school' => 'text',
+	'graduation_year' => array(
+		'type' => 'year',
+		),
+	'transfer' => array(
+		'type' => 'radio_inline_no_sort',
+		'display_name' => 'Are you a transfer student?',
+		'options' => array('Yes' => 'Yes', 'No' => 'No',),
+		),
+	'transfer_college' => array(
+		'type' => 'textarea',
+		'display_name' => 'If yes, what is the name and address of the school you previously attended?'
+		),
 	'academic_interests_comment' => array(
 		'type' => 'comment',
 		'text' => '<h3>Please choose up to 3 academic areas you are interested in studying.</h3>',
@@ -536,8 +561,6 @@ class IndividualVisitForm extends DefaultThorForm
 		),
 	'overnight_date_time' => array(
 		'type' => 'textdatetime',
-//		'year_max' => '2011',
-//		'second' => 0,
 		'display_name' => 'Please indicate date. If requesting the night
 						 prior to your visit day, please indicate arrival 
 						 time as well',
@@ -555,11 +578,11 @@ class IndividualVisitForm extends DefaultThorForm
 
 	function on_every_time()
 	{
-		$state_field = $this->get_element_name_from_label('State/Province');
-		$this->change_element_type($state_field, 'state_province');
+		//$state_field = $this->get_element_name_from_label('State/Province');
+	//	$this->change_element_type($state_field, 'state_province');
 		
-		$gender_field_name = $this->get_element_name_from_label('Gender');
-		$this->change_element_type($gender_field_name, 'radio_inline');
+		//$gender_field_name = $this->get_element_name_from_label('Gender');
+		//$this->change_element_type($gender_field_name, 'radio_inline');
 		
 	}
 	//////////////////////////////////////
