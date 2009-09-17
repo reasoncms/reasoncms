@@ -395,6 +395,7 @@ class AdmissionsTemplate extends MinisiteTemplate
 
                 if ($this->cur_page->get_value( 'custom_page' ) != 'admissions_home' && $this->has_content( 'main_head' ))
                 {
+			$this->run_section( 'imagetop' );
 			echo '<div class="content-inner clearfix">'."\n";
 			$this->luther_breadcrumbs();
 			echo '<div class="contentHead">'."\n";
@@ -428,7 +429,7 @@ class AdmissionsTemplate extends MinisiteTemplate
                        	echo '</div>'."\n";
                 }
 
-		if ($this->cur_page->get_value( 'custom_page' ) != 'admissions_home' && $this->has_related_section() == false)
+		if ($this->cur_page->get_value( 'custom_page' ) != 'admissions_home' /*&& $this->has_related_section() == false*/)
 		{
 			echo '</div>'."\n";
                 }
@@ -461,8 +462,25 @@ html.js' );
 
 	function has_related_section()
         {
+                if( $this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) )
+                {
+                        //print_r($this->cur_page->_values);
+                        //print_r($this->cur_page->get_value('name'));
+
+                        // test if all sidebar images have keyword 'imagetop'
+                        $module =& $this->_get_module( 'sidebar' );
+                        foreach( $module->images AS $id => $image )
+                        {
+                                if (!preg_match("/imagetop/", $image->get_value('keywords')))
+                                {
+                                        return true;
+                                }
+                        }
+
+                }
                 return false;
         }
+
 
 
 }
