@@ -17,7 +17,7 @@
 	{
 		function post_show_entity()
 		{
-			echo '<h3>Cookie Cutter</h3>';
+			echo '<h3>Tables and Fields</h3>';
 
 			// the name is the only relevant field included by default, so it is hard-coded
 			echo "\n".'<table border="0" cellpadding="2" cellspacing="0"><tr><th class="listRow1" align="right">entity table:</th><th class="listRow1" align="left">field &lt;database type&gt;</th></tr><tr><td class="listRow2" align="right">&nbsp;<strong>default:</strong></td><td class="listRow2" align="left"><table border="0" cellpadding="2" cellspacing="0"><tr><td class="listRow2" align="right">name</td><td class="listRow2">&nbsp;&nbsp;</td><td class="listRow2" align="left">&lt;tinytext&gt;</td></tr></table></td></tr>';
@@ -50,7 +50,25 @@
 				echo '</table></tr>';
 				$a++;
 			}
-			echo '<br />';
+			echo '</table>';
+			
+			if($rels = get_allowable_relationships_for_type($this->_entity->id()))
+			{
+				echo '<h3>Allowable Relationships</h3>'."\n";
+				echo '<table border="0" cellpadding="4" cellspacing="0">'."\n";
+				echo '<thead><tr><th>A Side</th><th>B Side</th><th>Name</th></tr></thead>'."\n";
+				echo '<tbody>'."\n";
+				$n = 1;
+				foreach($rels as $rel)
+				{
+					$a_entity = new entity($rel['relationship_a']);
+					$b_entity = new entity($rel['relationship_b']);
+					echo '<tr class="listRow'.($n%2).'"><td>'.$a_entity->get_value('name').'</td><td>'.$b_entity->get_value('name').'</td><td>'.$rel['name'].'</td></tr>'."\n";
+					$n++;
+				}
+				echo '</tbody>'."\n";
+				echo '</table>'."\n";
+			}
 
 			/*echo '<h3>Right Relationships</h3>';
 			$right_rels = $this->_entity->get_right_relationships(); 
