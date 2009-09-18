@@ -58,13 +58,11 @@
 	 */
 	function id_of( $unique_name, $cache = true, $report_not_found_error = true )// {{{
 	{
-		static $retrieved = false;
-
-		if( !$retrieved )
-			$retrieved = array();
+		static $retrieved = array();
 
 		if( !$cache || empty( $retrieved ) )
 		{
+			$retrieved = array();
 			$q = "SELECT id, unique_name FROM entity WHERE unique_name IS NOT NULL AND unique_name != '' AND (state = 'Live' OR state = 'Pending')";
 			$r = db_query( $q , "Error getting unique_names" );
 			while( $row = mysql_fetch_array( $r ))
@@ -179,6 +177,25 @@
 		if(relationship_id_of($relationship_name, $cache, false))
 			return true;
 		return false;
+	}
+	
+	/**
+	 * Get all the allowable relationships that feature a given type
+	 * @param integer $type_id
+	 * @return array of type row arrays (fieldname=>fieldvalue)
+	 * @author Matt Ryan
+	 */
+	function get_allowable_relationships_for_type($type_id)
+	{
+		$ret = array();
+		$q = 'SELECT * FROM allowable_relationship WHERE (relationship_a = "' . addslashes($type_id) . '" OR relationship_b = "'.addslashes($type_id).'")';
+		$r = db_query( $q , "Error getting relationships for type: $type_id" );
+		while( $row = mysql_fetch_assoc( $r ))
+		{
+			$ret[$row['id']] = $row;
+		}
+		mysql_free_result( $r );
+		return $ret;
 	}
 	
 	/**
