@@ -20,7 +20,7 @@
 			echo '<h3>Tables and Fields</h3>';
 
 			// the name is the only relevant field included by default, so it is hard-coded
-			echo "\n".'<table border="0" cellpadding="2" cellspacing="0"><tr><th class="listRow1" align="right">entity table:</th><th class="listRow1" align="left">field &lt;database type&gt;</th></tr><tr><td class="listRow2" align="right">&nbsp;<strong>default:</strong></td><td class="listRow2" align="left"><table border="0" cellpadding="2" cellspacing="0"><tr><td class="listRow2" align="right">name</td><td class="listRow2">&nbsp;&nbsp;</td><td class="listRow2" align="left">&lt;tinytext&gt;</td></tr></table></td></tr>';
+			echo "\n".'<table border="0" cellpadding="0" cellspacing="0"><tr class="listRow1"><td align="right">&nbsp;<strong>default</strong></td><td align="left"><ul><li>name &lt;tinytext&gt;</li></ul></td></tr>';
 
 			// get all of this type's entity tables
 			$ets = new entity_selector( $this->admin_page->site_id );
@@ -29,7 +29,7 @@
 			$ets->add_right_relationship($this->_entity->id(), relationship_id_of('type_to_table') );
 			$entities = $ets->run_one();
 
-			$a = 0;
+			$n = 2;
 			// get the fields of each entity table
 			foreach( $entities AS $entity )
 			{
@@ -39,18 +39,19 @@
 				$fs->add_left_relationship( $entity->id(), relationship_id_of('field_to_entity_table') );
 				$fields = $fs->run_one();
 
-				echo '<tr><td class="listRow'.($a%2+1).'" align="right">&nbsp;<strong>'.$entity->get_value('name').':</strong></td><td class="listRow'.($a%2+1).'" align="left"><table border="0" cellpadding="2" cellspacing="0">';
+				echo '<tr class="listRow'.($n%2).'"><td align="right">&nbsp;<strong>'.$entity->get_value('name').'</strong></td><td align="left"><ul>';
 				$b = 0;
 				// output each field and its database type
 				foreach( $fields AS $field )
 				{
-					echo '<tr><td class="listRow'.($b%2+1).'" align="right">'.$field->get_value('name').'</td><td class="listRow'.($b%2+1).'" align="left">&lt;'.$field->get_value('db_type').'&gt;</td></tr>';
+					echo '<li>'.$field->get_value('name').' &lt;'.$field->get_value('db_type').'&gt;</li>';
 					$b++;
 				}
-				echo '</table></tr>';
-				$a++;
+				echo '</ul></td></tr>';
+				$n++;
 			}
 			echo '</table>';
+			
 			
 			if($rels = get_allowable_relationships_for_type($this->_entity->id()))
 			{
