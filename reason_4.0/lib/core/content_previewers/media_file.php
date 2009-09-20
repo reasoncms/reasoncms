@@ -28,10 +28,14 @@
 			if(!empty($embed_markup))
 			{
 				$this->show_item_default( 'File Preview' , $embed_markup );
-				/* if($embed_markup == strip_tags($embed_markup, REASON_DEFAULT_ALLOWED_TAGS) )
+				if($embed_markup == strip_tags($embed_markup, REASON_DEFAULT_ALLOWED_TAGS) )
 				{
-					$this->show_item_default( 'Embed Code', htmlspecialchars($embed_markup) );
-				} */
+					$this->show_item_default( 'Embed Code', '<textarea>'.htmlspecialchars($embed_markup).'</textarea>' );
+				}
+				else
+				{
+					$this->show_item_default( 'Embed Code', 'Not available<div class="smallText">(The code used to embed '.$this->_entity->get_value('media_format').' files may not be accepted in a Reason content area.)</div>' );
+				}
 			}
 			
 			// Everything Else
