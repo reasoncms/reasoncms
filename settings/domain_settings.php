@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Domain settings are experimental in Reason 4 Beta 8
  * 
@@ -45,3 +45,4 @@ if (!empty($GLOBALS['_reason_domain_settings']) && (isset($_SERVER['HTTP_HOST'])
 		}
 	}
 }
+?>
