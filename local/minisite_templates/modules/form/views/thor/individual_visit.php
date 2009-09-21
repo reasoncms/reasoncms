@@ -1,7 +1,7 @@
 <?
 include_once('reason_header.php');
 reason_include_once('minisite_templates/modules/form/views/thor/default.php');
-include_once('disco/boxes/boxes.php');
+//include_once('disco/boxes/boxes.php');
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'IndividualVisitForm';
 
 /**
@@ -11,30 +11,21 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'Individua
  * @author Steve Smith
  */
 
+
 class IndividualVisitForm extends DefaultThorForm
 {
-	//$box = new Box;
-	//$box->head();
-	/*
-	 $box = new Box;
- $box->head();
- //To display a normal (two-column) element:
- $box->row($label, $content, $required, $error, $key);
- //Alternative way to display a two-column element:
- $box->row_open($label, $required, $error, $key);
- echo 'Content';
- $box->row_close();
- //To display a spanning element:
- $box->row_text_span($content, $colspan, $error, $key);
- //To end the box class:
- $box->foot( $buttons );
-
-	//$box = new Box;
-	//$box -> head();
-	//$box->row_text_span();
-	*/
 	
 	var $elements = array(
+/*
+	'visit_date_comments' => array(
+		'type' => 'comment',
+		'text' => '<h3>Please use the calendar to select a date to visit. Available dates are in green. Please include an arrival time so we know when to expect you.</h3>',
+		),
+	'visit_date_and_time' => array(
+		'type' => 'textdatetime_js',
+		'script_url' => 'http://www.luther.edu/scripts/datetime.js',
+		),
+
 	'first_name' => 'text',
 	'last_name' => 'text',
 	'gender' => array(
@@ -45,11 +36,18 @@ class IndividualVisitForm extends DefaultThorForm
 	'city' => 'text',
 	'state/province' => 'state_province',
 	'zip' => 'text',
+	'email' => 'text',
 	'home_phone' => 'text',
 	'cell_phone' => 'text',
-	'high_school' => 'text',
+*/
+	'high_school' => array(
+		'type' => 'text',
+		'display_style' => 'normal',
+		),
 	'graduation_year' => array(
 		'type' => 'year',
+		'num_years_after_today' => 3,
+		'num_years_before_today' => 4,
 		),
 	'transfer' => array(
 		'type' => 'radio_inline_no_sort',
@@ -59,224 +57,6 @@ class IndividualVisitForm extends DefaultThorForm
 	'transfer_college' => array(
 		'type' => 'textarea',
 		'display_name' => 'If yes, what is the name and address of the school you previously attended?'
-		),
-	'academic_interests_comment' => array(
-		'type' => 'comment',
-		'text' => '<h3>Please choose up to 3 academic areas you are interested in studying.</h3>',
-		),
-	'academic_interests' => array(
-		'type' => 'select',
-		'options' => array(
-			'Accounting'=>'Accounting',
-			'Africana Studies'=>'Africana Studies',
-			'Art'=>'Art',
-			'Athletic Training'=>'Athletic Training',
-			'Biblical Languages'=>'Biblical Languages',
-			'Biology'=>'Biology',
-			'Business'=>'Business',
-			'Chemistry'=>'Chemistry',
-			'Classical Studies'=>'Classical Studies',
-			'Classics'=>'Classics',
-			'Communication Studies'=>'Communication Studies',
-			'Computer Science'=>'Computer Science',
-			'Economics'=>'Economics',
-			'Education'=>'Education',
-			'English'=>'English',
-			'Environmental Studies'=>'Environmental Studies',
-			'French'=>'French',
-			'German'=>'German',
-			'Health'=>'Health',
-			'History'=>'History',
-			'International Studies'=>'International Studies',
-			'Management'=>'Management',
-			'Management Information Systems'=>'Management Information Systems',
-			'Mathematics'=>'Mathematics',
-			'Mathematics/Statistics'=>'Mathematics/Statistics',
-			'Museum Studies'=>'Museum Studies',
-			'Music'=>'Music',
-			'Nursing'=>'Nursing',
-			'Philosophy'=>'Philosophy',
-			'Physical Education'=>'Physical Education',
-			'Physics'=>'Physics',
-			'Political Science'=>'Political Science',
-			'Psychology'=>'Psychology',
-			'Religion'=>'Religion',
-			'Russian Studies'=>'Russian Studies',
-			'Scandinavian Studies'=>'Scandinavian Studies',
-			'Social Welfare'=>'Social Welfare',
-			'Social Work'=>'Social Work',
-			'Sociology'=>'Sociology',
-			'Spanish'=>'Spanish',
-			'Speech and Theatre'=>'Speech and Theatre',
-			'Theatre/Dance'=>'Theatre/Dance',
-			'Undecided' => 'Undecided',
-			'Women\'s and Gender Studies'=>'Women\'s and Gender Studies',
-			'Arts Management'=>'Arts Management (Preprofessional Program)',
-			'International Management Studies'=>'International Management Studies (Preprofessional Program)',
-			'Predentistry'=>'Predentistry (Preprofessional Program)',
-			'Preengineering'=>'Preengineering (Preprofessional Program)',
-			'Prelaw'=>'Prelaw (Preprofessional Program)',
-			'Premedicine'=>'Premedicine (Preprofessional Program)',
-			'Preoptometry'=>'Preoptometry (Preprofessional Program)',
-			'Prepharmacy'=>'Prepharmacy (Preprofessional Program)',
-			'Prephysical Therapy'=>'Prephysical Therapy (Preprofessional Program)',
-			'Preseminary'=>'Preseminary (Preprofessional Program)',
-			'Preveterinary Medicine'=>'Preveterinary Medicine (Preprofessional Program)',
-			'Sports Management'=>'Sports Management (Preprofessional Program)',
-			),
-		),
-		'academic_interests_2' => array(
-		'type' => 'select',
-		'options' => array(
-			'Accounting'=>'Accounting',
-			'Africana Studies'=>'Africana Studies',
-			'Art'=>'Art',
-			'Athletic Training'=>'Athletic Training',
-			'Biblical Languages'=>'Biblical Languages',
-			'Biology'=>'Biology',
-			'Business'=>'Business',
-			'Chemistry'=>'Chemistry',
-			'Classical Studies'=>'Classical Studies',
-			'Classics'=>'Classics',
-			'Communication Studies'=>'Communication Studies',
-			'Computer Science'=>'Computer Science',
-			'Economics'=>'Economics',
-			'Education'=>'Education',
-			'English'=>'English',
-			'Environmental Studies'=>'Environmental Studies',
-			'French'=>'French',
-			'German'=>'German',
-			'Health'=>'Health',
-			'History'=>'History',
-			'International Studies'=>'International Studies',
-			'Management'=>'Management',
-			'Management Information Systems'=>'Management Information Systems',
-			'Mathematics'=>'Mathematics',
-			'Mathematics/Statistics'=>'Mathematics/Statistics',
-			'Museum Studies'=>'Museum Studies',
-			'Music'=>'Music',
-			'Nursing'=>'Nursing',
-			'Philosophy'=>'Philosophy',
-			'Physical Education'=>'Physical Education',
-			'Physics'=>'Physics',
-			'Political Science'=>'Political Science',
-			'Psychology'=>'Psychology',
-			'Religion'=>'Religion',
-			'Russian Studies'=>'Russian Studies',
-			'Scandinavian Studies'=>'Scandinavian Studies',
-			'Social Welfare'=>'Social Welfare',
-			'Social Work'=>'Social Work',
-			'Sociology'=>'Sociology',
-			'Spanish'=>'Spanish',
-			'Speech and Theatre'=>'Speech and Theatre',
-			'Theatre/Dance'=>'Theatre/Dance',
-			'Women\'s and Gender Studies'=>'Women\'s and Gender Studies',
-			'Arts Management'=>'Arts Management (Preprofessional Program)',
-			'International Management Studies'=>'International Management Studies (Preprofessional Program)',
-			'Predentistry'=>'Predentistry (Preprofessional Program)',
-			'Preengineering'=>'Preengineering (Preprofessional Program)',
-			'Prelaw'=>'Prelaw (Preprofessional Program)',
-			'Premedicine'=>'Premedicine (Preprofessional Program)',
-			'Preoptometry'=>'Preoptometry (Preprofessional Program)',
-			'Prepharmacy'=>'Prepharmacy (Preprofessional Program)',
-			'Prephysical Therapy'=>'Prephysical Therapy (Preprofessional Program)',
-			'Preseminary'=>'Preseminary (Preprofessional Program)',
-			'Preveterinary Medicine'=>'Preveterinary Medicine (Preprofessional Program)',
-			'Sports Management'=>'Sports Management (Preprofessional Program)',
-			),
-		),	
-		'academic_interests_3' => array(
-		'type' => 'select',
-		'options' => array(
-			'Accounting'=>'Accounting',
-			'Africana Studies'=>'Africana Studies',
-			'Art'=>'Art',
-			'Athletic Training'=>'Athletic Training',
-			'Biblical Languages'=>'Biblical Languages',
-			'Biology'=>'Biology',
-			'Business'=>'Business',
-			'Chemistry'=>'Chemistry',
-			'Classical Studies'=>'Classical Studies',
-			'Classics'=>'Classics',
-			'Communication Studies'=>'Communication Studies',
-			'Computer Science'=>'Computer Science',
-			'Economics'=>'Economics',
-			'Education'=>'Education',
-			'English'=>'English',
-			'Environmental Studies'=>'Environmental Studies',
-			'French'=>'French',
-			'German'=>'German',
-			'Health'=>'Health',
-			'History'=>'History',
-			'International Studies'=>'International Studies',
-			'Management'=>'Management',
-			'Management Information Systems'=>'Management Information Systems',
-			'Mathematics'=>'Mathematics',
-			'Mathematics/Statistics'=>'Mathematics/Statistics',
-			'Museum Studies'=>'Museum Studies',
-			'Music'=>'Music',
-			'Nursing'=>'Nursing',
-			'Philosophy'=>'Philosophy',
-			'Physical Education'=>'Physical Education',
-			'Physics'=>'Physics',
-			'Political Science'=>'Political Science',
-			'Psychology'=>'Psychology',
-			'Religion'=>'Religion',
-			'Russian Studies'=>'Russian Studies',
-			'Scandinavian Studies'=>'Scandinavian Studies',
-			'Social Welfare'=>'Social Welfare',
-			'Social Work'=>'Social Work',
-			'Sociology'=>'Sociology',
-			'Spanish'=>'Spanish',
-			'Speech and Theatre'=>'Speech and Theatre',
-			'Theatre/Dance'=>'Theatre/Dance',
-			'Women\'s and Gender Studies'=>'Women\'s and Gender Studies',
-			'Arts Management'=>'Arts Management (Preprofessional Program)',
-			'International Management Studies'=>'International Management Studies (Preprofessional Program)',
-			'Predentistry'=>'Predentistry (Preprofessional Program)',
-			'Preengineering'=>'Preengineering (Preprofessional Program)',
-			'Prelaw'=>'Prelaw (Preprofessional Program)',
-			'Premedicine'=>'Premedicine (Preprofessional Program)',
-			'Preoptometry'=>'Preoptometry (Preprofessional Program)',
-			'Prepharmacy'=>'Prepharmacy (Preprofessional Program)',
-			'Prephysical Therapy'=>'Prephysical Therapy (Preprofessional Program)',
-			'Preseminary'=>'Preseminary (Preprofessional Program)',
-			'Preveterinary Medicine'=>'Preveterinary Medicine (Preprofessional Program)',
-			'Sports Management'=>'Sports Management (Preprofessional Program)',
-			),
-		),
-	'participate_varsity_sport' => array(
-		'type' => 'checkboxgroup',
-		'display_name' => 'Do you plan to participate in a varsity sport?',
-//		'display_style' => 'normal',
-		'colspan' => '3',
-		'options' => array(
-			'Baseball'=>'Baseball',
-			'Basketball'=>'Basketball',
-			'Cross Country'=>'Cross Country',
-			'Football'=>'Football',
-			'Golf'=>'Golf',
-			'Soccer'=>'Soccer',
-			'Softball'=>'Softball',
-			'Swimming & Diving'=>'Swimming & Diving',
-			'Tennis'=>'Tennis',
-			'Track & Field'=>'Track & Field',
-			'Volleyball'=>'Volleyball',		
-			'Wrestling'=>'Wrestling',
-			),
-		), 
-	'participate_music?' => array(
-		'type' => 'radio_inline_no_sort',
-		'display_style' => '4',
-		'display_name' => 'Do you plan to participate in music?',
-		'options' => array(
-			'Band'=>'Band',
-			'Choir'=>'Choir',
-			'Composition'=>'Composition',
-			'Early Music Ensemble'=>'Early Music Ensemble',
-			'Jazz Band'=>'Jazz Band',
-			'Orchestra'=>'Orchestra',
-			)
 		),
 	'visit_activities' => array(
 		'type' => 'comment',
@@ -354,6 +134,62 @@ class IndividualVisitForm extends DefaultThorForm
 			'Women\'s and Gender Studies'=>'Women\'s and Gender Studies',
 			),
 		),
+		'meet_second_faculty' => array(
+		'type' => 'checkboxfirst',
+		'display_name' => 'Meet with a second faculty member',
+		'display_style' => 'normal',
+		'comments' => '<small>  (30 min)</small>',
+		),
+	'meet__second_faculty_details' => array(
+		'type' => 'select',
+		'add_null_value_to_top' => true,
+		'display_name' =>'Select Department',
+		'options' => array(
+			'Accounting'=>'Accounting',
+			'Africana Studies'=>'Africana Studies',
+			'Art'=>'Art',
+			'Athletic Training'=>'Athletic Training',
+			'Biblical Languages'=>'Biblical Languages',
+			'Biology'=>'Biology',
+			'Business'=>'Business',
+			'Chemistry'=>'Chemistry',
+			'Classical Studies'=>'Classical Studies',
+			'Classics'=>'Classics',
+			'Communication Studies'=>'Communication Studies',
+			'Computer Science'=>'Computer Science',
+			'Economics'=>'Economics',
+			'Education'=>'Education',
+			'English'=>'English',
+			'Environmental Studies'=>'Environmental Studies',
+			'French'=>'French',
+			'German'=>'German',
+			'Health'=>'Health',
+			'History'=>'History',
+			'International Studies'=>'International Studies',
+			'Management'=>'Management',
+			'Management Information Systems'=>'Management Information Systems',
+			'Mathematics'=>'Mathematics',
+			'Mathematics/Statistics'=>'Mathematics/Statistics',
+			'Museum Studies'=>'Museum Studies',
+			'Music'=>'Music',
+			'Nursing'=>'Nursing',
+			'Philosophy'=>'Philosophy',
+			'Physical Education'=>'Physical Education',
+			'Physics'=>'Physics',
+			'Political Science'=>'Political Science',
+			'Psychology'=>'Psychology',
+			'Religion'=>'Religion',
+			'Russian Studies'=>'Russian Studies',
+			'Scandinavian Studies'=>'Scandinavian Studies',
+			'Social Welfare'=>'Social Welfare',
+			'Social Work'=>'Social Work',
+			'Sociology'=>'Sociology',
+			'Spanish'=>'Spanish',
+			'Speech and Theatre'=>'Speech and Theatre',
+			'Theatre/Dance'=>'Theatre/Dance',
+			'Women\'s and Gender Studies'=>'Women\'s and Gender Studies',
+			),
+		),	
 	'observe_class' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Sit in on a class',
@@ -426,7 +262,7 @@ class IndividualVisitForm extends DefaultThorForm
 		'type' => 'checkboxfirst',
 		'display_name' => 'Conversation with a coach',
 		'display_style' => 'normal',
-		'comments' => '<small>  30 min</small>',
+		'comments' => '<small>  (30 min)</small>',
 		),
 	'meet_coach_details' => array(
 		'type' => 'select',
@@ -559,17 +395,32 @@ class IndividualVisitForm extends DefaultThorForm
 						with a current Luther student',
 //		'display_style' => 'normal',
 		),
-	'overnight_date_time' => array(
-		'type' => 'textdatetime',
-		'display_name' => 'Please indicate date. If requesting the night
-						 prior to your visit day, please indicate arrival 
-						 time as well',
+	'overnight_note' => array(
+		'type' => 'comment',
+		'text' => '<strong>Please indicate arrival date. If requesting the night prior to your visit day, please indicate arrival time as well</strong>',
+		),
+	'overnight_date_and_time' => array(
+		'type' => 'textdatetimenoseconds',
+		//'script_url' => 'http://reasondev.luther.edu/javascripts/individual_visit.js',
 		), 	
 	);
 	
+
+	var $required = array(
+//		'first_name',
+//		'last_name',
+//		'gender',
+		'high_school',
+		'graduation_year',
+//		'email',
+//		'visit_date_and_time'
+//		'arrival_time'
+	);
+
+
 	// if defined none of the default actions will be run (such as email_form_data) and you need to define the custom method and a
 	// should_custom_method in the view (if they are not in the model).
-	var $process_actions = array('my_custom_process');
+//	var $process_actions = array('my_custom_process');
 	
 	function custom_init()
 	{
@@ -578,38 +429,73 @@ class IndividualVisitForm extends DefaultThorForm
 
 	function on_every_time()
 	{
-		//$state_field = $this->get_element_name_from_label('State/Province');
-	//	$this->change_element_type($state_field, 'state_province');
+		$visitdatetime_field = $this->get_element_name_from_label('Visit Date and Time');
+		$this->change_element_type($visitdatetime_field, 'textdatetime_js');
 		
+		$gender = $this->get_element_name_from_label('Gender');
+		$this->change_element_type($gender, 'radio_inline_no_sort');
+		
+		$state_field = $this->get_element_name_from_label('State/Province');
+		$this->change_element_type($state_field, 'state_province');
+
+//		$this->set_element_properties($grad_year, 'num_years_after_today' => 3, 'num_years_before_today' => 4);
+
+
 		//$gender_field_name = $this->get_element_name_from_label('Gender');
 		//$this->change_element_type($gender_field_name, 'radio_inline');
 		
 	}
-	//////////////////////////////////////
-	/*
-	function on_every_time()
-	{
-		$username = reason_check_authentication();
-		
-		if ($username)
-		{
-			echo '<p>Your username is ' . $username . '</p>';
-			$user_id = get_user_id($username);
-			$user_entity = new entity($user_id);
-			pray ($user_entity);
-			$your_name = $user_entity->get_value('user_given_name');
-			
-			echo '<p>Welcome to the form ' . $your_name . '</p>';
-		}
 	
-		$food_stuff_field_name = $this->get_element_name_from_label('Food Stuff');
-		$this->set_comments($food_stuff_field_name, '<p>The list of foods has been carefully selected.</p>');
+	
+	function email_form_data_to_submitter()
+	{
+		$model =& $this->get_model();
 		
-		$this->change_element_type('extra_field', 'textarea');
-		$this->add_required($this->get_element_name_from_label('Last Name'));
-	}	
-	//////////////////////////////////////
-	*/
+		// Figure out who would get an email confirmation (either through a 
+		// Your Email field or by knowing the netid of the submitter
+		if (!$recipient = $this->get_value_from_label('Email'))
+		{
+			if ($submitter = $model->get_email_of_submitter())
+				$recipient = $submitter.'@luther.edu';
+		}
+		
+		// If we're supposed to send a confirmation and we have an address...
+		if ($recipient)
+		{
+			// Use the (first) form recipient as the return address if available
+			if ($senders = $model->get_email_of_recipient())
+			{
+				list($sender) = explode(',',$senders, 1);
+				if (strpos($sender, '@') === FALSE)
+					$sender .= '@luther.edu';
+			} else {
+				$sender = 'auto-form-process@luther.edu';
+			}
+			
+			$thank_you = $model->get_thank_you_message();
+			
+			$email_values = $model->get_values_for_email_submitter_view();
+	
+			if (!($subject = $this->get_value_from_label('Confirmation Subject')))
+				$subject = 'Thank you for requesting a visit';
+			
+			$values = "\n";
+			if ($model->should_email_data())
+			{
+				foreach ($email_values as $key => $val)
+				{
+					$values .= sprintf("\n%s:\n   %s\n", $val['label'], $val['value']);
+				}
+			}
+			
+			$html_body = $thank_you . nl2br($values);
+			$txt_body = html_entity_decode(strip_tags($html_body));
+			
+			$mailer = new Email($recipient, $sender, $sender, $subject, $txt_body, $html_body);
+			$mailer->send();
+		}		
+	}
+	
 	
 	function run_error_checks()
 	{
@@ -628,10 +514,12 @@ class IndividualVisitForm extends DefaultThorForm
 		///echo $food_stuff_value;
 	}
 	
+/*
 	function should_my_custom_process()
 	{
 		return true;
 	}
+
 	
 	function my_custom_process()
 	{
@@ -642,5 +530,6 @@ class IndividualVisitForm extends DefaultThorForm
 	{
 		return false;
 	}
+*/
 }
 ?>
