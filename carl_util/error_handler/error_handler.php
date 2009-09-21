@@ -51,10 +51,9 @@ function error_handler_config($name, $value=null)
 	
 	$current_value = (isset($config[$name])) ? $config[$name] : null;
 	
-	if ($value) {
+	if ($value !== null) {
 		$config[$name] = $value;
 	}
-	
 	return $current_value;
 }
 
@@ -64,6 +63,7 @@ error_handler_config('from_email', 'errors@'._get_error_host());
 // Set defaults for error handler mode settings.
 error_handler_config('log_errors', true);
 error_handler_config('display_errors', true);
+error_handler_config('display_context', true);
 error_handler_config('script_mode', false);
 error_handler_config('send_emails', false);
 error_handler_config('send_pages', false);
@@ -144,6 +144,28 @@ function turn_carl_util_error_output_on()
 function turn_carl_util_error_output_off()
 {
     error_handler_config("display_errors", false);
+}
+
+/**
+ * Enables context output.
+ * @return void
+ * @see error_handler_config the "display_context" setting
+ * @see turn_carl_util_error_context_off
+ */
+function turn_carl_util_error_context_on()
+{
+    error_handler_config("display_context", true);
+}
+
+/**
+ * Disables context output.
+ * @return void
+ * @see error_handler_config the "display_context" setting
+ * @see turn_carl_util_error_context_on
+ */
+function turn_carl_util_error_context_off()
+{
+    error_handler_config("display_context", false);
 }
 
 /**
@@ -345,7 +367,7 @@ function _carl_util_display_error($level, $message, $file, $line, $context)
 		}
 	}
 	
-	if (level_is_terminal($level)) {
+	if (level_is_terminal($level) && error_handler_config('display_context') ) {
 		$escaped_context = htmlspecialchars(sprint_r($context), ENT_QUOTES,
 			'UTF-8');
 		$err .= '<br />';
