@@ -8,6 +8,7 @@
 	include_once( 'paths.php');
 	include_once( CARL_UTIL_INC . 'dev/pray.php' );
 	include_once( CARL_UTIL_INC . 'basic/misc.php' );
+	include_once( CARL_UTIL_INC . 'basic/cleanup_funcs.php' );
 	include_once( CARL_UTIL_INC . 'dev/debug.php' );
 	include_once( CARL_UTIL_INC . 'error_handler/error_handler.php' );
 	include_once( DISCO_INC . 'plasmature/plasmature.php' );
@@ -554,6 +555,7 @@
 		function _grab_messages() // {{{
 		{
 			$element_names = $this->get_element_names();
+			
 			foreach($element_names as $element_name)
 			{
 				//make sure you modify the element itself rather than replacing it with a copy
@@ -1462,6 +1464,12 @@
 		*/
 		function add_element( $element_name, $type = '', $args = '',$db_type = '' ) // {{{
 		{
+			if ($element_name != request_key_convert($element_name))
+			{
+				trigger_error('Not able to use element name: "'.$element_name.'". PHP mangles request keys with certain characters -- see http://us.php.net/manual/en/language.variables.external.php#81080 for more information.');
+				return false;
+			}
+			
 			// convert the type to the corresponding plasmature type, defaulting to text
 			if ( empty( $type ) )
 				$type = 'textType';
@@ -1489,9 +1497,13 @@
 				$this->_errors[ $element_name ] = false;
 				//add to the form order
 				$this->_order[$element_name] = $element_name;
+				return true;
 			}
 			else
+			{
 				trigger_error('Could not instantiate new element '.$element_name.'; '.$type.' is not a valid plasmature type.', WARNING);
+				return false;
+			}
 		 } // }}}	 
 		 
 		/**
