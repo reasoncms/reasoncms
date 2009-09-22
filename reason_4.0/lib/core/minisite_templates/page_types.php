@@ -708,6 +708,13 @@
 			'sub_nav' => 'assets',
 			'pre_sidebar' => 'image_sidebar',
 		),
+		'form_sidebar_blurbs_if_logged_in' => array(
+			'main' => 'form_content',
+			'main_post' => 'form',
+			'sidebar' => 'blurbs_if_logged_in',
+			'sub_nav' => 'assets',
+			'pre_sidebar' => 'image_sidebar',
+		),
 		'gallery' => array(
 			'main_post' => array(
 				'module'=>'gallery2',
