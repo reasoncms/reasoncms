@@ -166,6 +166,21 @@
 	} // }}}
 	
 	/**
+	 * Find out if a given table name exists in reason
+	 *
+	 * @param string $table_name The table you want to test
+	 * @return boolean true if found, otherwise false
+	 */
+	function reason_table_exists($table_name)
+	{
+		$es = new entity_selector();
+		$es->add_type(id_of('content_table'));
+		$es->add_relation('entity.name = "'.$table_name.'"');
+		$results = $es->run_one();
+		return (!empty($results));
+	}
+	
+	/**
 	 * Find out if a given relationship name exists in the allowable relationships table
 	 *
 	 * @param string $relationship_name The name we want to test
