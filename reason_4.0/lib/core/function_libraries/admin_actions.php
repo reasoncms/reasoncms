@@ -123,6 +123,17 @@
 				}
 			}
 		}
+		
+		// If the newly-created entity has a unique_name and is live or pending,
+		// let's refresh the cache on the id_of function by calling it for
+		// 'site' with caching off.
+		// Note: If you ever expunge the 'site' entity. This will cause an
+		// error. Everywhere.
+		if (isset($values['entity']) && isset($values['entity']['unique_name']) && (!isset($value['entity']['state']) || $values['entity']['state'] == 'Live' || $values['entity']['state'] == 'Pending'))
+		{
+			id_of('site',false);
+		}
+		
 		// return the id of the new entity
 		return $entity_id;
 	} // }}}
@@ -391,6 +402,16 @@
 		foreach( $archives AS $archive )
 			reason_expunge_entity( $archive, $user_id );
 
+		// If the recently-expunged entity had a unique_name, let's
+		// refresh the cache on the id_of function by calling it for 'site'
+		// with caching off.
+		// Note: If you ever expunge the 'site' entity. This will cause an
+		// error. Everywhere.
+		if (!empty($entity['unique_name']))
+		{
+			id_of('site',false);
+		}
+
 		return $entity;
 	} //
 
@@ -447,6 +468,18 @@
 				
 				// actually create the relationship
 				create_relationship( $id, $archived_id, $rel_id );
+			}
+			
+			// If the unique_name changes on the updated entity, let's
+			// refresh the cache on the id_of function by calling it for 'site'
+			// with caching off.
+			// Note: If you ever expunge the 'site' entity. This will cause an
+			// error. Everywhere.
+			if ($updated_entity->get_value('unique_name') != $original->get_value('unique_name') ||
+				($original->get_value('state') != 'Deleted' && $updated_entity->get_value('state') == 'Deleted' && $original->get_value('unique_name')) ||
+				($original->get_value('state') == 'Deleted' && $updated_entity->get_value('state') != 'Deleted' && $updated_entity->get_value('unique_name')))
+			{
+				id_of('site',false);
 			}
 
 			return true;
@@ -724,12 +757,14 @@
 						$user_id = get_user_id($username);
 					$id = reason_create_entity(id_of('master_admin'), id_of('content_table'), $user_id, $table_name, array('new' => 0));
 					create_relationship( $type_id, $id, relationship_id_of('type_to_table'));
-					trigger_error( 'The table ' . $table_name . ' was created and added to the type ' . $type_unique_name);
+					// Trigger error on normal behavior? No thanks.
+					//trigger_error( 'The table ' . $table_name . ' was created and added to the type ' . $type_unique_name);
 					return $id;
 				}
 			}
 		}
 	}
+		
 	
 	/**
 	 * Create a new allowable relationship
