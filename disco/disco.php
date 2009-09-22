@@ -1456,10 +1456,16 @@
 		
 		/**
 		* Adds an element to the form.
+		*
+		* Note that not all strings can be valid element names, as element names are used as request
+		* keys. See http://us.php.net/manual/en/language.variables.external.php#81080 for an
+		* explanation of what constitutes valid and invalid request keys.
+		*
 		* @param string $element_name Name of the element
 		* @param string $type Name of the Plasmature type to use
 		* @param array $args Array of custom arguments/parameters for the plasmature type
 		* @param string $db_type Database field type that this element corresponds to
+		* @return boolean success -- may not add element if invalid name or plasmature type is specified
 		* @access public
 		*/
 		function add_element( $element_name, $type = '', $args = '',$db_type = '' ) // {{{
