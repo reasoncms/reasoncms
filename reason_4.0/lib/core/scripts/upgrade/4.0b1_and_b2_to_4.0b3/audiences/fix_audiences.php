@@ -146,6 +146,7 @@ elseif(!empty($_REQUEST['do_it']))
 		$table_id = create_reason_table('audience_integration', $audience_type_id, 'root');
 		if(!empty($table_id))
 		{
+			$out[] = 'The table audience_integration was created and added to the type audience_type';
 			reason_include_once('classes/field_to_entity_table_class.php');
 			reason_include_once('classes/amputee_fixer.php');
 			$fields = array('directory_service_value' => array('db_type' => 'tinytext'),

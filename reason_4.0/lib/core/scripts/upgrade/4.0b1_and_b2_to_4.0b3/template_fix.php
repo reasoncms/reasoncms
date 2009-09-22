@@ -75,10 +75,11 @@ $es->set_num(1);
 $tables = $es->run_one(id_of('content_table'));
 if(empty($tables))
 {
-	echo 'no "external_css" content table entity exists';
+	echo 'no "external_css" content table entity exists<br />';
 	$table_id = create_reason_table('external_css', 'css', $current_user);
 	if(!empty($table_id))
 	{
+		echo 'Created external_css table for the css type<br />';
 		reason_include_once('classes/field_to_entity_table_class.php');
 		reason_include_once('classes/amputee_fixer.php');
 		$fields = array('css_relative_to_reason_http_base' => array('db_type' => "enum('true','false')"));
