@@ -1,44 +1,27 @@
-function init() {
-	try {
-		if (document.getElementById) {
-			/* If it's not reason managed, attach appropriate functions to the file select element */
-			/* Set up the parts toggle */
-			var aSel = document.getElementById('user_authoritative_sourceElement');
-			var curSel = aSel.options[aSel.selectedIndex].index;
-			if(curSel == 1)
-			{
-				document.getElementById('usersurnameRow').style.display="none";
-				document.getElementById('usergivennameRow').style.display="none";
-				document.getElementById('useremailRow').style.display="none";
-				document.getElementById('userphoneRow').style.display="none";
-				document.getElementById('passwordRow').style.display="none";
-				document.getElementById('confirmpasswordRow').style.display="none";
-			}
-			aSel.onchange=function() {
-				var nSel = this.options[this.selectedIndex].index;
-				if(nSel == 0) {
-					document.getElementById('usersurnameRow').style.display="";
-					document.getElementById('usergivennameRow').style.display="";
-					document.getElementById('useremailRow').style.display="";
-					document.getElementById('userphoneRow').style.display="";
-					document.getElementById('passwordRow').style.display="";
-					document.getElementById('confirmpasswordRow').style.display="";
-				}
-				else
-				{
-					document.getElementById('usersurnameRow').style.display="none";
-					document.getElementById('usergivennameRow').style.display="none";
-					document.getElementById('useremailRow').style.display="none";
-					document.getElementById('userphoneRow').style.display="none";
-					document.getElementById('passwordRow').style.display="none";
-					document.getElementById('confirmpasswordRow').style.display="none";
-				}
-			}
+/**
+ * If the authoritative source is Reason, we want to show all the user information fields, otherwise we do not.
+ *
+ * @author Nathan White
+ * @requires jQuery
+ */
+ 
+$(document).ready(function()
+{
+	var authoritative_source_element = "#user_authoritative_sourceElement";
+	var visibility_toggle_rows = new Array("#usersurnameRow",
+											   "#usergivennameRow",
+											   "#useremailRow",
+											   "#userphoneRow",
+											   "#passwordRow",
+											   "#confirmpasswordRow");
+	function toggleVisibility()
+	{
+		if ($(authoritative_source_element).val().toLowerCase() == "reason")
+		{
+			$(visibility_toggle_rows.join(",")).show();
 		}
-	} catch(e) {}
-}
-
-if (window.addEventListener)
-  window.addEventListener("load", init, true);
-else if (window.attachEvent)
-  window.attachEvent("onload", init);
+		else $(visibility_toggle_rows.join(",")).hide();
+	}
+	toggleVisibility(); // run it once to hide or show fields as appropriate
+	$(authoritative_source_element).change(toggleVisibility); // run it again when value changes
+});
