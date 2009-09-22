@@ -287,5 +287,21 @@
 		$parser->attributes = array('dynsrc');
 		return $parser->parse($string);
 	}
+	
+	/**
+	 * Converts certain characters in a string to underscores, returning the same string that
+	 * php would use as a key in the request
+	 * see: http://us.php.net/manual/en/language.variables.external.php#81080 
+	 */
+	function request_key_convert($string)
+	{
+		static $find;
+		if (empty($find))
+		{
+			$find = array(' ','.','[');
+			for($i = 128; $i<=159; $i++) $find[] = chr($i);
+		}
+		return str_replace($find, '_', $string);
+	}
 
 ?>
