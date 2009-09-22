@@ -79,6 +79,8 @@ else {
 	} else {
 		echo 'Creating new classified entity table<br/>';
 		$table = create_reason_table('classified_table', 'classified_type', $user);
+		if($table)
+			echo 'The table classified_table was created and added to the type classified_type<br />';
 		echo 'Populating the entity table<br/>';
 		$fields = array(
 			'location' => 'tinytext',
