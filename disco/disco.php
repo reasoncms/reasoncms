@@ -1472,8 +1472,9 @@
 		{
 			if ($element_name != request_key_convert($element_name))
 			{
-				trigger_error('Not able to use element name: "'.$element_name.'". PHP mangles request keys with certain characters -- see http://us.php.net/manual/en/language.variables.external.php#81080 for more information.');
-				return false;
+				trigger_error('Use of an element name like "'.$element_name.'" is deprecated. Why? PHP mangles request keys with certain characters -- see http://us.php.net/manual/en/language.variables.external.php#81080 for more information.');
+				// When we are confident that our identification is 100% accurate, we will reject. For now, let things through.
+				// return false;
 			}
 			
 			// convert the type to the corresponding plasmature type, defaulting to text
