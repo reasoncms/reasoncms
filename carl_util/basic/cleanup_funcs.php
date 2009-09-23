@@ -291,14 +291,23 @@
 	/**
 	 * Converts certain characters in a string to underscores, returning the same string that
 	 * php would use as a key in the request
-	 * see: http://us.php.net/manual/en/language.variables.external.php#81080 
+	 * see: http://us.php.net/manual/en/language.variables.external.php#81080
+	 *
+	 * Note that single, unmatched square brackets will be passed through, even though php will
+	 * convert them to underscores (since a key can be a square-bracket-based array, and we
+	 * want to leave that construct as-is... and this function is not yet smart enough to identify
+	 * matched vs. unmatched square brackets).
+	 *
+	 * @param string $string
+	 * @return string key converted as PHP does on request/post
+	 * @todo find non-matched square brackets and also replace them with underscores
 	 */
 	function request_key_convert($string)
 	{
 		static $find;
 		if (empty($find))
 		{
-			$find = array(' ','.','[');
+			$find = array(' ','.');
 			for($i = 128; $i<=159; $i++) $find[] = chr($i);
 		}
 		return str_replace($find, '_', $string);
