@@ -38,9 +38,9 @@ $fix_mode_enabled = (isset($_GET['fixmode']) && ($_GET['fixmode'] == "true"));
 $fix_mode_link = ($fix_mode_enabled) ? ' Enabled (<a href="?fixmode=false">disable</a>)' : ' Disabled (<a href="?fixmode=true">enable</a>)';
 ?>
 
-<p>This script should be run after you have setup Reason according to the instructions in the <a href="./install.htm">Reason Install Documentation</a>. 
-The script will verify the Reason environment, perform a variety of checks for Reason utilities, confirm file paths and permissions, 
-and then setup the first site and user for your instance.</p>
+<p>This script will verify the Reason environment, perform a variety of checks for Reason utilities, confirm file paths and permissions, 
+and then setup the first site and user for your instance. While the script may provide enough help to get you going, you may also consult 
+the <a href="./install.htm">Reason Install Documentation</a>.</p>
 <h3>Experimental "Fix" Mode<?php echo $fix_mode_link ?></h3>
 <p>Fix mode will try to resolve easy to fix installation problems. Specifically, it will do the following:
 <ul>
@@ -73,9 +73,16 @@ if (isset($_POST['do_it_pass']) == false)
 	{
 		$included_so_far = get_included_files();
 		$package_settings_path = reset(preg_grep('/package_settings.php/', $included_so_far));
-		echo '<p>...package settings loaded</strong></p>';
+		echo '<p><strong>...loaded package settings</strong> ('.realpath(SETTINGS_INC.'package_settings.php').')</p>';
 		force_error_handler_configuration();
-		echo '<p><strong>Package settings path</strong>: ' . $package_settings_path . '</p>';
+		check_error_handler_log_file_dir();	
+		include_once(CARL_UTIL_INC . 'error_handler/error_handler.php'); 
+		$found = array_search(realpath(CARL_UTIL_INC . 'error_handler/error_handler.php'), get_included_files());
+		if ($found !== false)
+		{
+			echo '<p><strong>...loaded error handler</strong> (' . CARL_UTIL_INC . 'error_handler/error_handler.php' . ')</p>';
+		}
+			
 		echo '<h4>Checking component availability</h4>';
 		if (is_readable(INCLUDE_PATH . 'paths.php'))
 		{
@@ -89,16 +96,48 @@ if (isset($_POST['do_it_pass']) == false)
 			check_environment(THOR_INC.'thor.php', 'thor include path ', 'Verify the path to THOR_INC in package_settings.php');
 			check_environment(XML_PARSER_INC.'xmlparser.php', 'xml parser', 'Verify the path to XML_PARSER_INC in package_settings.php');
 			check_environment(HTML_PURIFIER_INC.'htmlpurifier.php', 'html purifier', 'Verify the path to HTML_PURIFIER_INC in package_settings.php');
-			check_environment(SETTINGS_INC.'reason_settings.php', 'reason settings', 'Verify the path stored in the constant SETTINGS_INC in package_settings.php');
 			check_environment(REASON_INC.'header.php', 'reason header', 'Verify the path stored in the constant REASON_INC in package_settings.php');
-			include_once( REASON_INC.'header.php' );
-			$found = array_search(SETTINGS_INC.'reason_settings.php', get_included_files());
+			
+			echo '<h4>Bootstrapping</h4>';
+
+			
+			include_once(SETTINGS_INC . 'reason_settings.php');
+			$found = array_search(realpath(SETTINGS_INC.'reason_settings.php'), get_included_files());
 			if ($found !== false)
 			{
-				echo '<p><strong>Reason settings path</strong>: ' . SETTINGS_INC.'reason_settings.php' . '</p>';
+				echo '<p><strong>...loaded reason settings</strong> (' . SETTINGS_INC.'reason_settings.php' . ')</p>';
 			}
-			check_error_handler_log_file_dir();
-			echo '<p style="color: green;"><strong>...the Reason environment has been loaded</strong></p>';
+			
+			// connect to Reason DB - we do this right here to make sure we can load the reason_db
+			include_once(CARL_UTIL_INC . 'db/connectDB.php');
+			if ($db_info = get_db_credentials(REASON_DB, false))
+			{
+				echo '<p><strong>...loaded db credentials</strong> (the connection name is ' . REASON_DB . ')</p>';
+				$db = mysql_connect($db_info['host'], $db_info['user'], $db_info['password']);
+				if (empty($db))
+				{
+					$msg = '<div class="error">';
+					$msg .= '<p>mysql connection ' . $db_conn_name . ' check failed</span> - count not connect to server - could be one of the following</p>';
+					$msg .= '<ul>';
+					$msg .= '<li>Improper username and/or password in the db credentials file</li>';
+					$msg .= '<li>Improper mysql hostname - currently set to ' .$db_info['host'].'</li>';
+					$msg .= '<li>The user ' . $db_info['user'] . ' needs to have been granted permission to connect to ' . $db_info['host'] . ' from the web server</li>';
+					$msg .= '</ul>';
+					die_with_message($msg);
+				}
+				else
+				{
+					echo '<p><strong>...connected to reason_db</strong>';
+					include_once(REASON_INC.'header.php');
+					echo '<p style="color: green;"><strong>...the Reason environment has been loaded.</strong></p>';
+				}
+			}
+			else
+			{
+				die_with_message('<p class="error">Please make sure that your database crendentials file ('.DB_CREDENTIALS_FILEPATH.') has an entry for '.REASON_DB.'. If
+								  not, please add it. If the connection name '.REASON_DB.' is wrong, please update the constant REASON_DB in reason_settings.php with the 
+								  proper connection name in your database credentials file.</p>');
+			}
 		}
 		else die_with_message('<p class="error">ERROR: The INCLUDE_PATH constant ('.INCLUDE_PATH.') appears to be invalid.</p>
 							   <p>Check package_settings.php to make sure the value is correct - it should probably be set to:</p>
@@ -296,7 +335,7 @@ function perform_checks()
 	
 	if (verify_mysql(THOR_FORM_DB_CONN, 'THOR_FORM_DB_CONN', 'thor_settings.php', false)) $check_passed++;
 	else $check_failed++;
-	
+
 	if (http_host_check()) $check_passed++;
 	else $check_failed++;
 	
@@ -370,6 +409,10 @@ function perform_checks()
 	else $check_failed++;
 
 	if (check_datepicker_accessible_over_http()) $check_passed++;
+	else $check_failed++;
+	
+	echo '<h3>Checking for Apache mod_rewrite support</h3>';	
+	if (mod_rewrite_check()) $check_passed++;
 	else $check_failed++;
 	
 	echo '<h3>Summary</h3>';
@@ -645,6 +688,59 @@ function imagemagick_check()
 	else return msg('<span class="error">imagemagick check failed</span> - ' .IMAGEMAGICK_PATH.'mogrify not found - check the IMAGEMAGICK_PATH constant in package_settings.php, and php permissions.', false);
 }
 
+/**
+ * Is mod rewrite available and working? We check like this:
+ *
+ * 1. create an .htaccess file
+ * 2. create an .html file
+ * 3. test the rewrite with curl
+ * 4. cleanup
+ * 5. return true or false
+ *
+ */
+function mod_rewrite_check()
+{
+	$test_string = 'reason_rocks'; // randomize me
+	$dir_name = 'mod_rewrite_check/';
+	$dir_url = $path = carl_construct_link(array(''), array(''), WEB_TEMP.$dir_name);
+	$dir_path = $_SERVER[ 'DOCUMENT_ROOT' ].WEB_TEMP.$dir_name;
+	$file_content = "<?php\nif (isset(\$_GET['zzz']))\n{\necho ('".$test_string."');\n}\n?>";
+	$file_name = 'test_file.php';
+	$file_path = $dir_path . $file_name;
+	$file_url = $dir_url . $file_name;
+	$htaccess_path = $dir_path . '.htaccess';
+	$htaccess_content = 'RewriteEngine ON' . "\n" . 'RewriteRule ^$ ' . WEB_TEMP.$dir_name.$file_name.'?zzz=1';
+	
+	mkdir($dir_path, 0777);
+	$h = fopen($file_path,"x+");
+	fwrite($h,$file_content);
+	fclose($h);
+	
+	$h2 = fopen($htaccess_path,"x+");
+	fwrite($h2,$htaccess_content);
+	fclose($h2);
+	
+	$test = (trim(get_reason_url_contents($dir_url)) == $test_string);
+	
+	// cleanup
+	unlink($file_path);
+	unlink($htaccess_path);
+	rmdir($dir_path);
+	
+	if ($test) return msg('<span class="success">Apache mod_rewrite appears to be functional</span> - check passed', true);
+	else
+	{	
+		$msg = '<span class="error">Apache mod_rewrite is not working</span> - check failed';
+		$msg .= '<p>You need to make sure that mod_rewrite is an installed module in your apache configuration, and that it is functioning properly. Please note:</p>';
+		$msg .= '<ul>';
+		$msg .= '<li>mod_rewrite is not necessarily enabled in a default apache install. Check your apache config file (probably httpd.conf) for a line like "LoadModule rewrite_module modules/mod_rewrite.so" and make sure it is uncommented.</li>';
+		$msg .= '<li>mod_rewrite requires AllowOverride at a minimum be set to FileInfo Options in your apache config files.</li>';
+		$msg .= '<li>Remember to restart apache to reload any updates to the config.</li>';
+		$msg .= '</ul>';
+		return msg($msg, false);
+	}
+}
+
 function data_dir_writable($dir, $name)
 {
 	global $fix_mode_enabled;
@@ -674,7 +770,7 @@ function check_file_readable($file, $name, $extra = '')
 function check_environment($path, $check_name, $error_msg)
 {
 	if (file_exists($path)) return msg($check_name . ' found', true);
-	else die_with_message('<p class="error">ERROR: '.$check_name . ' not found</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
+	else die_with_message('<p class="error">ERROR: '.$check_name . ' ('.$path.') not found</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
 }
 
 function check_environment_and_trailing_slash($path, $check_name, $error_msg)
@@ -685,7 +781,7 @@ function check_environment_and_trailing_slash($path, $check_name, $error_msg)
 		if (substr($path, -1) != '/') die_with_message('<p class="error">ERROR: '.$check_name . ' missing trailing slash.</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
 		return msg($check_name . ' found', true);
 	}
-	else die_with_message('<p class="error">ERROR: '.$check_name . ' not found</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
+	else die_with_message('<p class="error">ERROR: '.$check_name . ' ('.$path.') not found</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
 }
 
 function check_error_handler_log_file_dir()
@@ -734,7 +830,7 @@ function force_error_handler_configuration()
 	if (!in_array($_SERVER['REMOTE_ADDR'], $ips))
 	{
 		die_with_message('<p class="error">Your IP address ('.$_SERVER['REMOTE_ADDR'].') is not listed in the DEVELOPER_INFO array in error_handler_settings.php.</p>  
-						  <p>Please add your IP address to the file according to the instructions in settings/error_handler_settings.php to continue with setup.</p>');
+						  <p>Please add your IP address to the DEVELOPER_INFO array in error_handler_settings.php ('.realpath(SETTINGS_INC.'error_handler_settings.php').') to continue with setup.</p>');
 	}
 	else
 	{	
