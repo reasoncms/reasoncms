@@ -56,7 +56,7 @@ function connectDB($dbName, $dbuser = '', $dbpasswd = '', $dbhost='')
 	if( !$db )
 	{
 		$db_info['password'] = '*************'; // replace password so it will not be exposed onscreen - nwhite
-		trigger_error('Unable to connect to database (Error #'.mysql_errno().':'.mysql_error().')', EMERGENCY);
+		trigger_fatal_error('Unable to connect to database (Error #'.mysql_errno().':'.mysql_error().')');
 	}
 	elseif( $tries > 1 )
 	{
@@ -65,7 +65,10 @@ function connectDB($dbName, $dbuser = '', $dbpasswd = '', $dbhost='')
 
 	// select database
 	if( !mysql_select_db($db_info[ 'db' ], $db) )
+	{
+		$db_info['password'] = '*************'; // replace password so it will not be exposed onscreen - nwhite
 		trigger_error( 'Unable to select database ('.mysql_error().')', EMERGENCY );
+	}
 	$GLOBALS['_current_db_connection_name'] = $dbName;
 	return $db;
 }
@@ -92,62 +95,91 @@ function get_database_name()
 
 /**
  * Return authentication credentials for the specified database connection.
- * Internally, parse the database connection definition XML file.
- * You can define DB_CREDENTIALS_FILEPATH if you want to overload the default path to the XML file containing the database
- * connector information.
  *
  * @param string $conn_name The name of the db connection you want to retrieve
+ * @param boolean $lack_of_creds_is_fatal defaults to true for historical purposes
  * @return array Array with all the db connection info defined for the specified named connection.
  */
-function get_db_credentials( $conn_name )
+function get_db_credentials( $conn_name, $lack_of_creds_is_fatal = true )
 {
-	static $db_info = array();
-	// if db_info is empty, this is the first time this function has been run.
-	if( empty( $db_info ) )
+	static $db_info;
+	// if db_info has not been set, this is the first time this function has been run.
+	if( !isset($db_info) )
 	{
-		if( defined( 'DB_CREDENTIALS_FILEPATH' ) )
-			$db_file = DB_CREDENTIALS_FILEPATH;
-		else
-			$db_file = '/usr/local/etc/php3/dbs.xml';
-		if( !is_file( $db_file ) )
-		{
-			trigger_error( 'Unable to get db connection info', FATAL );
-		}
-
-	require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
-        $xml = file_get_contents($db_file);
-        if(!empty($xml))
+		if( !defined( 'DB_CREDENTIALS_FILEPATH' ) ) trigger_fatal_error('The DB_CREDENTIALS_FILEPATH constant is not defined.');
+		$db_info = array();
+		require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
+        if(file_exists(DB_CREDENTIALS_FILEPATH) && ($xml = trim(file_get_contents(DB_CREDENTIALS_FILEPATH))))
         {
         	$xml_parse = new XMLParser($xml);
-        	$xml_parse->Parse();
-        	foreach ($xml_parse->document->database as $database)
-  	 	    {
-  	 	     	$tmp = array();
-  	 	     	$tmp['db'] = $database->db[0]->tagData;
-   	    	 	$tmp['user'] = $database->user[0]->tagData;
-   	    	 	$tmp['password'] = $database->password[0]->tagData;
-   	    	 	$tmp['host'] = $database->host[0]->tagData;
-   	    	 	$db_info[$database->connection_name[0]->tagData] = $tmp;
+        	$parse = $xml_parse->Parse();
+        	if (isset($xml_parse->document->database))
+        	{
+        		foreach ($xml_parse->document->database as $database)
+  	 	    	{
+  	 	     		$tmp = array();
+  	 	     		$db_conn_name = (isset($database->connection_name[0]->tagData)) ? $database->connection_name[0]->tagData : false;
+  	 	     		$tmp['db'] = (isset($database->db[0]->tagData)) ? $database->db[0]->tagData : false;
+   	    	 		$tmp['user'] = (isset($database->user[0]->tagData)) ? $database->user[0]->tagData : false;
+   	    	 		$tmp['password'] = (isset($database->password[0]->tagData)) ? $database->password[0]->tagData : false;
+   	    	 		$tmp['host'] = (isset($database->host[0]->tagData)) ? $database->host[0]->tagData : false;
+   	    	 		if ($db_conn_name && ($tmp['db'] !== false)
+   	    	 						  && ($tmp['user'] !== false)
+   	    	 						  && ($tmp['password'] !== false)
+   	    	 						  && ($tmp['host'] !== false))
+   	    	 		{
+   	    	 			$db_info[$db_conn_name] = $tmp;
+   	    	 		}
+   	    	 		else
+   	    	 		{
+   	    	 			$invalid_entries[] = $db_conn_name;
+   	    	 		}
+        		}
         	}
+        	if (isset($invalid_entries))
+        	{
+        		$invalid_str = ($invalid_entries == 1) ? $invalid_entries . ' entry appears' : $invalid_entries . ' entries appear'; 
+        		turn_carl_util_error_context_off();
+        		foreach ($invalid_entries as $conn_name)
+        		{
+        			if (!empty($conn_name))
+        			{
+        				trigger_error('The connection ' . $conn_name . ' in the db credentials XML file ('.DB_CREDENTIALS_FILEPATH.') appears to have missing or invalid values.', WARNING);
+        			}
+        			else trigger_error('An entry without a connection name is defined in the db credentials XML file ('.DB_CREDENTIALS_FILEPATH.')', WARNING);
+        		}
+        		turn_carl_util_error_context_on();
+        	}
+        	if (empty($db_info)) trigger_error('Check the xml in the db credentials XML file ('.DB_CREDENTIALS_FILEPATH.') - no valid database connection information could be built.', WARNING);
 		}
 		else
 		{
-			trigger_error('Unable to parse db credentials XML file', FATAL);
+			trigger_fatal_error('The DB_CREDENTIALS_FILEPATH ('.DB_CREDENTIALS_FILEPATH.') refers to a file that is missing or does not have any content.');
 		}
 	}
 
 	// if this was the first time, the code above should have run successfully so db_info is populated.
 	// if this is not the first time, then the code above should have been skipped since it was populated the first
 	// run of the function.
-	if( !empty( $db_info[ $conn_name ] ) )
+	if( isset( $db_info[ $conn_name ] ) )
 	{
 		return $db_info[ $conn_name ];
 	}
 	else
 	{
-		array_walk($db_info, create_function('&$x', '$x["password"] = "**********";')); // replace password so it will not be exposed onscreen - nwhite
-		trigger_error('Unable to use database connection '.$conn_name.' - No credential information found in database credential file', FATAL);
+		// disable context display so we do not show passwords on screen.
+		turn_carl_util_error_context_off();
+		if ($lack_of_creds_is_fatal)
+		{
+			trigger_fatal_error('Unable to use database connection '.$conn_name.' - No credential information found for the conneciton named ' . $conn_name . ' in database credential file ('.DB_CREDENTIALS_FILEPATH.').', 2);
+		}
+		else
+		{
+			trigger_warning('Unable to use database connection '.$conn_name.' - No credential information found for the connection named ' . $conn_name . ' in database credential file ('.DB_CREDENTIALS_FILEPATH.').', 2);
+		}
+		turn_carl_util_error_context_on();
 	}
+	return false;
 }
 
 ?>
