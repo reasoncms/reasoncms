@@ -52,6 +52,7 @@ class IndividualVisitForm extends DefaultThorForm
 	'transfer' => array(
 		'type' => 'radio_inline_no_sort',
 		'display_name' => 'Are you a transfer student?',
+		'display_style' => 'normal',
 		'options' => array('Yes' => 'Yes', 'No' => 'No',),
 		),
 	'transfer_college' => array(
@@ -140,7 +141,7 @@ class IndividualVisitForm extends DefaultThorForm
 		'display_style' => 'normal',
 		'comments' => '<small>  (30 min)</small>',
 		),
-	'meet__second_faculty_details' => array(
+	'meet_second_faculty_details' => array(
 		'type' => 'select',
 		'add_null_value_to_top' => true,
 		'display_name' =>'Select Department',
@@ -297,7 +298,7 @@ class IndividualVisitForm extends DefaultThorForm
 		),
 	'orchestra' => array(
 		'type' => 'checkboxfirst',
-		'display_name' => 'Observe a orchestra rehearsal, if available',
+		'display_name' => 'Observe an orchestra rehearsal, if available',
 		'display_style' => 'normal',
 		'comments' => '<small>  MTWTHF 4:00 (60 min)</small>',
 		),
@@ -400,7 +401,7 @@ class IndividualVisitForm extends DefaultThorForm
 		'text' => '<strong>Please indicate arrival date. If requesting the night prior to your visit day, please indicate arrival time as well</strong>',
 		),
 	'overnight_date_and_time' => array(
-		'type' => 'textdatetimenoseconds',
+		'type' => 'textdatetime',
 		//'script_url' => 'http://reasondev.luther.edu/javascripts/individual_visit.js',
 		), 	
 	);
@@ -420,7 +421,7 @@ class IndividualVisitForm extends DefaultThorForm
 
 	// if defined none of the default actions will be run (such as email_form_data) and you need to define the custom method and a
 	// should_custom_method in the view (if they are not in the model).
-//	var $process_actions = array('my_custom_process');
+	var $process_actions = array('email_form_data_to_submitter',);
 	
 	function custom_init()
 	{
@@ -475,7 +476,7 @@ class IndividualVisitForm extends DefaultThorForm
 			$thank_you = $model->get_thank_you_message();
 			
 			$email_values = $model->get_values_for_email_submitter_view();
-	
+				
 			if (!($subject = $this->get_value_from_label('Confirmation Subject')))
 				$subject = 'Thank you for requesting a visit';
 			
@@ -484,17 +485,105 @@ class IndividualVisitForm extends DefaultThorForm
 			{
 				foreach ($email_values as $key => $val)
 				{
-					$values .= sprintf("\n%s:\n   %s\n", $val['label'], $val['value']);
+					$values .= sprintf("\n%s:   %s\n", $val['label'], $val['value']);
 				}
+				
+				$high_school = $this->get_value('high_school');
+				if ($high_school)
+					$values .= "\n High School: " . $high_school;
+					
+				$graduation_year = $this->get_value('graduation_year');
+				if ($graduation_year) 
+					$values .= "\t Graduation Year: " . $graduation_year . "\n";
+					
+				$transfer = $this->get_value('transfer');
+				$transfer_college = $this->get_value('transfer_college');
+				if ($transfer_college || $transfer) 
+					$values .= "\n Transfer College: " . $transfer_college . "\n";
+					
+				$meet_counselor = $this->get_value('meet_counselor');
+				if ($meet_counselor) 
+					$values .= "\n Meet with admissions counselor: Yes \n";
+				
+				$tour = $this->get_value('tour');
+				if ($tour) 
+					$values .= "\n Take campus tour: Yes \n";
+				
+				$meet_faculty = $this->get_value('meet_faculty');
+				$meet_faculty_details = $this->get_value('meet_faculty_details');
+				if($meet_faculty || $meet_faculty_details) 
+					$values .= "\n Meet with faculty from: " .$meet_faculty_details."\n";
+
+				$meet_second_faculty = $this->get_value('meet_second_faculty');
+				$meet_second_faculty_details = $this->get_value('meet_second_faculty_details');
+				if($meet_second_faculty || $meet_second_faculty_details) 
+					$values .= "\n Meet with second faculty from: " . $meet_second_faculty_details ."\n";
+					
+				$observe_class = $this->get_value('observe_class');
+				$observe_class_details = $this->get_value('observe_class_details');
+				if($observe_class || $observe_class_details) 
+					$values .= "\n Observe class: " .$observe_class_details."\n";
+				
+				$chapel = $this->get_value('chapel');
+				if($chapel) 
+					$values .= "\n Attend chapel: Yes \n";
+					
+				$lunch = $this->get_value('lunch');
+				if($lunch) 
+					$values .= "\n Eat lunch: Yes \n";
+				
+				$meet_coach = $this->get_value('meet_coach');
+				$meet_coach_details = $this->get_value('meet_coach_details');
+				if($meet_coach || $meet_coach_details) 
+					$values .= "\n Meet with coach from: " .$meet_coach_details."\n";
+								
+				$choir = $this->get_value('choir');
+				if($choir) 
+					$values .= "\n Observe a choir rehearsal: Yes \n";
+					
+				$band = $this->get_value('band');
+				if($band) 
+					$values .= "\n Observe a band rehearsal: Yes \n";
+
+				$orchestra = $this->get_value('orchestra');
+				if($orchestra) 
+					$values .= "\n Observe an orchestra rehearsal: Yes \n";
+				
+				$music_audition = $this->get_value('music_audition');
+				$music_audition_details = $this->get_value('music_audition_details');
+				if($music_audition || $music_audition_details) 
+					$values .= "\n Perform a music audition for: " .$music_audition_details."\n";
+					
+				$meet_music_faculty = $this->get_value('meet_music_faculty');
+				$meet_music_faculty_details = $this->get_value('meet_music_faculty_details');
+				if($meet_music_faculty || $meet_music_faculty_details) 
+					$values .= "\n Meet with music faculty from: " .$meet_music_faculty_details."\n";
+				
+				$additional_request = $this->get_value('additional_request');
+				if($additional_request) 
+					$values .= "\n Additional request: " .$additional_request. "\n";
+					
+				$overnight_housing = $this->get_value('overnight_housing');	
+				$overnight_date_and_time = $this->get_value('overnight_date_and_time');
+				if ($overnight_housing)
+				$values .= "\n Overnight housing arrival information: ".$this->get_value('overnight_date_and_time');
 			}
 			
 			$html_body = $thank_you . nl2br($values);
 			$txt_body = html_entity_decode(strip_tags($html_body));
-			
-			$mailer = new Email($recipient, $sender, $sender, $subject, $txt_body, $html_body);
-			$mailer->send();
-		}		
-	}
+
+			// Send thank you message and details of request to the requestor	
+			$recipient_mailer = new Email($recipient, $sender, $sender, $subject, $txt_body, $html_body);
+			$recipient_mailer->send();
+
+			// Send details of the request to the administrator listed as recipient on the form builder
+			$html_body2 = nl2br($values);	
+			$txt_body2 = html_entity_decode(strip_tags($html_body2));		
+			$admin_mailer = new Email($sender, $sender, $sender, "Individual Visit Request", $txt_body2, $html_body2);
+			$admin_mailer->send();
+		}
+	}		
+	
 	
 	
 	function run_error_checks()
@@ -507,29 +596,35 @@ class IndividualVisitForm extends DefaultThorForm
 	{
 		// getting value from a disco field
 		///$field_value = $this->get_value('extra_field');
-		
+//		foreach ($elements as $key => $val)
+//		{
+//			$extra_values = $this->get_value($elements)
+//		}
 		// getting disco field name from thor
 		///$food_stuff_field_name = $this->get_element_name_from_label('Food Stuff');
 		///$food_stuff_value = $this->get_value($food_stuff_field_name);
 		///echo $food_stuff_value;
+/*
+		echo $this->get_value('high_school') . "\n";
+		echo $this->get_element_name_from_label('graduation_year') . "\n";
+		echo $this->get_value('graduation_year');
+		echo $this->get_value('meet_faculty');
+		echo $this->get_value('meet_faculty_details');
+		echo 'blah';
+*/
 	}
 	
-/*
+
 	function should_my_custom_process()
 	{
 		return true;
 	}
 
 	
-	function my_custom_process()
-	{
-		echo 'hello';
-	}
-	
 	function where_to()
 	{
 		return false;
 	}
-*/
+	
 }
 ?>
