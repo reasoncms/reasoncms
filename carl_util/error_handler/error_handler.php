@@ -547,8 +547,12 @@ function _carl_util_trigger_error($message, $level, $stack_offset)
 {
 	static $inc_pattern = '/^(?:include|require)(?:_once)?$/';
 	$stack_offset++; // skip over _trigger_error itself
-	
 	$stack = debug_backtrace();
+	$stack_offset_max = max(array_keys($stack));
+	
+	// make sure our offset exists ... bring it down if not
+	$stack_offset = ($stack_offset > max(array_keys($stack))) ? max(array_keys($stack)) : $stack_offset;
+	
 	$location = sprintf("%s:%d",
 		_clean_filename($stack[$stack_offset]["file"]),
 		$stack[$stack_offset]["line"]);
