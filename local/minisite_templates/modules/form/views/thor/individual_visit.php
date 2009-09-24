@@ -436,7 +436,7 @@ class IndividualVisitForm extends DefaultThorForm
 		$gender = $this->get_element_name_from_label('Gender');
 		$this->change_element_type($gender, 'radio_inline_no_sort');
 		
-		$state_field = $this->get_element_name_from_label('State/Province');
+		$state_field = $this->get_element_name_from_label('State');
 		$this->change_element_type($state_field, 'state_province');
 
 //		$this->set_element_properties($grad_year, 'num_years_after_today' => 3, 'num_years_before_today' => 4);
