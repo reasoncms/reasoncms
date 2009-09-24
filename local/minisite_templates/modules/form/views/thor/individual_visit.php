@@ -50,7 +50,7 @@ class IndividualVisitForm extends DefaultThorForm
 		'num_years_before_today' => 4,
 		),
 	'transfer' => array(
-		'type' => 'radio_inline_no_sort',
+		'type' => 'radio_no_sort',
 		'display_name' => 'Are you a transfer student?',
 		'options' => array('Yes' => 'Yes', 'No' => 'No',),
 		),
@@ -434,7 +434,6 @@ class IndividualVisitForm extends DefaultThorForm
 		
 		$gender = $this->get_element_name_from_label('Gender');
 		$this->change_element_type($gender, 'radio_inline_no_sort');
-		
 		
 		$state_field = $this->get_element_name_from_label('State/Province');
 		$this->change_element_type($state_field, 'state_province');
