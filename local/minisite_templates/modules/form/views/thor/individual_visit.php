@@ -52,7 +52,6 @@ class IndividualVisitForm extends DefaultThorForm
 	'transfer' => array(
 		'type' => 'radio_inline_no_sort',
 		'display_name' => 'Are you a transfer student?',
-		'display_style' => 'normal',
 		'options' => array('Yes' => 'Yes', 'No' => 'No',),
 		),
 	'transfer_college' => array(
