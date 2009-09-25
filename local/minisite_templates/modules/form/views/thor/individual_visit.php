@@ -46,7 +46,7 @@ class IndividualVisitForm extends DefaultThorForm
 		),
 	'graduation_year' => array(
 		'type' => 'year',
-		'num_years_after_today' => 3,
+		'num_years_after_today' => 4,
 		'num_years_before_today' => 4,
 		),
 	'transfer' => array(
@@ -85,7 +85,7 @@ class IndividualVisitForm extends DefaultThorForm
 		'comments' => '<small>  (30 min)</small>',
 		),
 	'meet_faculty_details' => array(
-		'type' => 'select',
+		'type' => 'select_no_sort',
 		'add_null_value_to_top' => true,
 		'display_name' =>'Select Department',
 		'options' => array(
@@ -132,6 +132,19 @@ class IndividualVisitForm extends DefaultThorForm
 			'Speech and Theatre'=>'Speech and Theatre',
 			'Theatre/Dance'=>'Theatre/Dance',
 			'Women\'s and Gender Studies'=>'Women\'s and Gender Studies',
+			'--' => '--',
+			'PreProfessional Programs' => 'PreProfessional Programs',
+			'Arts Management' => '--Arts Management',
+			'International Management Studies' => '--International Management Studies',
+			'Predentistry' => '--Predentistry',
+			'Preengineering' => '--Preengineering',
+			'Prelaw' => '--Prelaw',
+			'Premedicine' => '--Premedicine',
+			'Preoptometry' => '--Preoptometry',
+			'Prepharmacy' => '--Prepharmacy',
+			'Prephysical Therapy' => '--Prephysical Therapy',
+			'Preveterinary Medicine' => '--Preveterinary Medicine',
+			'Sports Management' => '--Sports Management'
 			),
 		),
 		'meet_second_faculty' => array(
@@ -141,7 +154,7 @@ class IndividualVisitForm extends DefaultThorForm
 		'comments' => '<small>  (30 min)</small>',
 		),
 	'meet_second_faculty_details' => array(
-		'type' => 'select',
+		'type' => 'select_no_sort',
 		'add_null_value_to_top' => true,
 		'display_name' =>'Select Department',
 		'options' => array(
@@ -188,6 +201,19 @@ class IndividualVisitForm extends DefaultThorForm
 			'Speech and Theatre'=>'Speech and Theatre',
 			'Theatre/Dance'=>'Theatre/Dance',
 			'Women\'s and Gender Studies'=>'Women\'s and Gender Studies',
+			'--' => '--',
+			'PreProfessional Programs' => 'PreProfessional Programs',
+			'Arts Management' => '--Arts Management',
+			'International Management Studies' => '--International Management Studies',
+			'Predentistry' => '--Predentistry',
+			'Preengineering' => '--Preengineering',
+			'Prelaw' => '--Prelaw',
+			'Premedicine' => '--Premedicine',
+			'Preoptometry' => '--Preoptometry',
+			'Prepharmacy' => '--Prepharmacy',
+			'Prephysical Therapy' => '--Prephysical Therapy',
+			'Preveterinary Medicine' => '--Preveterinary Medicine',
+			'Sports Management' => '--Sports Management'
 			),
 		),	
 	'observe_class' => array(
@@ -197,7 +223,7 @@ class IndividualVisitForm extends DefaultThorForm
 		'comments' => '<small>  Seniors Only - MWF (60 min) T Th (90 min)</small>',
 		),
 	'observe_class_details' => array(
-		'type' => 'select',
+		'type' => 'select_no_sort',
 		'add_null_value_to_top' => true,
 		'display_name' => 'Select Department',
 		'options' => array(
@@ -244,6 +270,19 @@ class IndividualVisitForm extends DefaultThorForm
 			'Speech and Theatre'=>'Speech and Theatre',
 			'Theatre/Dance'=>'Theatre/Dance',
 			'Women\'s and Gender Studies'=>'Women\'s and Gender Studies',
+			'--' => '--',
+			'PreProfessional Programs' => 'PreProfessional Programs',
+			'Arts Management' => '--Arts Management',
+			'International Management Studies' => '--International Management Studies',
+			'Predentistry' => '--Predentistry',
+			'Preengineering' => '--Preengineering',
+			'Prelaw' => '--Prelaw',
+			'Premedicine' => '--Premedicine',
+			'Preoptometry' => '--Preoptometry',
+			'Prepharmacy' => '--Prepharmacy',
+			'Prephysical Therapy' => '--Prephysical Therapy',
+			'Preveterinary Medicine' => '--Preveterinary Medicine',
+			'Sports Management' => '--Sports Management'
 			),		
 		),
 	'chapel' => array(
@@ -325,10 +364,7 @@ class IndividualVisitForm extends DefaultThorForm
 			'Percussion'=>'Percussion',
 			'Piano'=>'Piano',
 			'Harp'=>'Harp',
-			'Soprano'=>'Soprano',
-			'Alto'=>'Alto',
-			'Tenor'=>'Tenor',
-			'Bass'=>'Bass',
+			'Voice' => 'Voice',
 			'Violin'=>'Violin',
 			'Viola'=>'Viola',
 			'Cello'=>'Cello',
@@ -342,7 +378,7 @@ class IndividualVisitForm extends DefaultThorForm
 		'comments' => '<small>  (30 min)</small>',
 		),
 	'meet_music_faculty_details' => array(
-		'type' => 'select_no_sort',
+		'type' => 'select',
 		'display_name' => 'Select Discipline',
 		'display_style' => 'right',
 		'add_null_value_to_top' => true,
@@ -368,10 +404,7 @@ class IndividualVisitForm extends DefaultThorForm
 			'Percussion'=>'Percussion',
 			'Piano'=>'Piano',
 			'Harp'=>'Harp',
-			'Soprano'=>'Soprano',
-			'Alto'=>'Alto',
-			'Tenor'=>'Tenor',
-			'Bass'=>'Bass',
+			'Voice' => 'Voice',
 			'Violin'=>'Violin',
 			'Viola'=>'Viola',
 			'Cello'=>'Cello',
@@ -397,10 +430,29 @@ class IndividualVisitForm extends DefaultThorForm
 		),
 	'overnight_note' => array(
 		'type' => 'comment',
-		'text' => '<strong>Please indicate arrival date. If requesting the night prior to your visit day, please indicate arrival time as well</strong>',
+		'text' => '<strong>Please indicate whether you\'d like to stay with a student on the day of your visit or on the night prior.</strong>',
 		),
-	'overnight_date_and_time' => array(
-		'type' => 'textdatetime',
+	'overnight_day' => array(
+		'type' => 'radio_no_sort',
+		'display_name' => '',
+		'options' => array('Day of visit' => 'Day of visit', 'Night prior to visit' => 'Night prior to visit',),
+		),
+	'overnight_prior_arrival_time' => array(
+		'type' => 'select_no_sort',
+		'display_name' => 'If arriving the night prior, please indicate arrival time',
+		'add_null_value_to_top' => true,
+		'options' => array(
+			'5:00' => '5:00 p.m.',
+			'5:30' => '5:30 p.m.',
+			'6:00' => '6:00 p.m.',
+			'6:30' => '6:30 p.m.',
+			'7:00' => '7:00 p.m.',
+			'7:30' => '7:30 p.m.',
+			'8:00' => '8:00 p.m.',
+			'8:30' => '8:30 p.m.',
+			'9:00' => '9:00 p.m.',
+			),
+			
 		//'script_url' => 'http://reasondev.luther.edu/javascripts/individual_visit.js',
 		), 	
 	);
@@ -437,6 +489,10 @@ class IndividualVisitForm extends DefaultThorForm
 		
 		$state_field = $this->get_element_name_from_label('State/Province');
 		$this->change_element_type($state_field, 'state_province');
+		
+		
+		$this->change_element_type('transfer', 'radio_inline_no_sort');
+		
 
 //		$this->set_element_properties($grad_year, 'num_years_after_today' => 3, 'num_years_before_today' => 4);
 
@@ -563,9 +619,12 @@ class IndividualVisitForm extends DefaultThorForm
 					$values .= "\n Additional request: " .$additional_request. "\n";
 					
 				$overnight_housing = $this->get_value('overnight_housing');	
-				$overnight_date_and_time = $this->get_value('overnight_date_and_time');
+				$overnight_day = $this->get_value('overnight_day');
 				if ($overnight_housing)
-				$values .= "\n Overnight housing arrival information: ".$this->get_value('overnight_date_and_time');
+					$values .= "\n Overnight housing arrival information: ".$this->get_value('overnight_day');
+					
+				if ($overnight_day == "Night prior to visit")
+					$values .= "  Arrival time: ".$this->get_value('overnight_prior_arrival_time');	
 			}
 			
 			$html_body = $thank_you . nl2br($values);
@@ -577,8 +636,9 @@ class IndividualVisitForm extends DefaultThorForm
 
 			// Send details of the request to the administrator listed as recipient on the form builder
 			$html_body2 = nl2br($values);	
-			$txt_body2 = html_entity_decode(strip_tags($html_body2));		
-			$admin_mailer = new Email($sender, $sender, $sender, "Individual Visit Request", $txt_body2, $html_body2);
+			$txt_body2 = html_entity_decode(strip_tags($html_body2));	
+			$subject2 = "IndividualVisitRequest".date(ymd);
+			$admin_mailer = new Email($sender, $sender, $sender, $subject2, $txt_body2, $html_body2);
 			$admin_mailer->send();
 		}
 	}		
@@ -620,10 +680,10 @@ class IndividualVisitForm extends DefaultThorForm
 	}
 
 	
-	function where_to()
-	{
-		return false;
-	}
+//	function where_to()
+//	{
+//		return false;
+//	}
 	
 }
 ?>
