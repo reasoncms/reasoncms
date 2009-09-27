@@ -210,14 +210,14 @@
 			{
 				if($this->params['limit_to_current_site'])
 				{
-					$this->es = new entity_selector( $this->parent->site_id );
+					$this->es = new entity_selector( $this->site_id );
 				}
 				else
 				{
 					$this->es = new entity_selector();
 				}
 				$this->es->add_type( $this->type );
-				$this->es->set_env('site_id',$this->parent->site_id);
+				$this->es->set_env('site_id',$this->site_id);
 				$this->alter_es();
 				
 				// We want to "archive" a version of the entity selector
@@ -303,9 +303,11 @@
 					$this->make_current_page_link_in_nav_when_on_item
 					&&
 					!empty($this->current_item_id)
+					&&
+					$pages_object =& $this->get_page_nav()
 				)
 				{
-					$this->parent->pages->make_current_page_a_link();
+					$pages_object->make_current_page_a_link();
 				}
 				if($this->has_feed)
 				{
