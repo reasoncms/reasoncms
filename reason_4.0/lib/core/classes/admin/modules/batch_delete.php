@@ -62,7 +62,12 @@
 				$es->add_type($this->admin_page->type_id);
 				$es->set_sharing( 'owns' );
 				$es->set_order('entity.last_modified DESC');
-				$this->_items = $es->run_one();
+				pray($this->admin_page->request);
+				if(isset($this->admin_page->request['state']) && $this->admin_page->request['state'] == 'pending')
+					$status = 'Pending';
+				else
+					$status = 'Live';
+				$this->_items = $es->run_one('',$status);
 				foreach(array_keys($this->_items) as $id)
 				{
 					if(!$this->admin_page->is_deletable($id))
