@@ -43,11 +43,20 @@
 				$this->admin_page->title = 'Data Manager for Form "' . $form->get_value('name').'"';
 			}
 			$ta =& $this->get_thor_admin();
+			
+			// biobooks use a non-standard thor db structure ... until this is fixed we want to disable
+			// row creation and editing for bio book thor forms. After this is fixed this check should 
+			// be zapped for a little performance boost.
 			if ($ta)
 			{
-				$ta->set_allow_edit(true);
+				$tc = $ta->get_thor_core();
+				$allow_edit_and_new = ($tc->column_exists('formkey')) ? false : true;
 				$ta->set_allow_delete(true);
-				$ta->set_allow_new(true);
+				if ($allow_edit_and_new)
+				{
+					$ta->set_allow_edit(true);
+					$ta->set_allow_new(true); // can we make sure its valid first?
+				}
 				$ta->set_allow_row_delete(true);
 				$ta->init_thor_admin();
 			}
