@@ -520,6 +520,11 @@ class ThorCore
 	{
 		return 'SHOW TABLES LIKE "'.$this->get_thor_table().'"';
 	}
+
+	function get_column_exists_sql($column)
+	{
+		return 'SHOW COLUMNS FROM '.$this->get_thor_table().' LIKE "'.$column.'"';
+	}
 	
 	/**
 	 * Maybe limit to one???
@@ -579,6 +584,33 @@ class ThorCore
   			}
   		}
   		return $this->_table_exists;
+	}
+	
+	/**
+	 * Useful for sanity checking
+	 */ 
+	function column_exists($column)
+	{
+		if (!isset($this->_column_exists[$column]))
+		{
+			$table = $this->get_thor_table();
+			if ($this->get_thor_table())
+			{
+				$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
+				if ($reconnect_db) connectDB($this->get_db_conn());
+  				$q = $this->get_column_exists_sql($column);
+  				$res = mysql_query($q);
+  				if (mysql_num_rows($res) > 0) $this->_column_exists[$column] = true;
+  				else $this->_column_exists[$column] = false;
+  				if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
+  			}
+  			else
+  			{
+  				trigger_error('column_exists called but no table has been defined via the thorCore set_thor_table method');
+  				return NULL;
+  			}
+  		}
+  		return $this->_column_exists[$column];
 	}
 	
 	function create_table()
