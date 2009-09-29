@@ -435,7 +435,9 @@ class IndividualVisitForm extends DefaultThorForm
 	'overnight_day' => array(
 		'type' => 'radio_no_sort',
 		'display_name' => '',
-		'options' => array('Day of visit' => 'Day of visit', 'Night prior to visit' => 'Night prior to visit',),
+		'options' => array(
+			'Day of visit' => 'Day of visit', 
+			'Night prior to visit' => 'Night prior to visit',),
 		),
 	'overnight_prior_arrival_time' => array(
 		'type' => 'select_no_sort',
@@ -452,9 +454,10 @@ class IndividualVisitForm extends DefaultThorForm
 			'8:30' => '8:30 p.m.',
 			'9:00' => '9:00 p.m.',
 			),
-			
-		//'script_url' => 'http://reasondev.luther.edu/javascripts/individual_visit.js',
-		), 	
+		),
+	'test_date' => array(
+		'type' => 'textdatetime',
+		),
 	);
 	
 
@@ -480,10 +483,15 @@ class IndividualVisitForm extends DefaultThorForm
 	}
 
 	function on_every_time()
-	{
+	{	
+		$visitdatetime_properties = array(
+			'date_format' => 'Y-m-d H:i',
+			'use_fields' => array('month','day','year','hour','minute','ampm'),
+			);
 		$visitdatetime_field = $this->get_element_name_from_label('Visit Date and Time');
-		$this->change_element_type($visitdatetime_field, 'textdatetime_js');
-		
+		$this->change_element_type($visitdatetime_field, 'textdatetime');
+		$this->set_element_properties($visitdatetime_field, $visitdatetime_properties);
+			
 		$gender = $this->get_element_name_from_label('Gender');
 		$this->change_element_type($gender, 'radio_inline_no_sort');
 		
@@ -492,6 +500,7 @@ class IndividualVisitForm extends DefaultThorForm
 		
 		
 		$this->change_element_type('transfer', 'radio_inline_no_sort');
+		$this->set_element_properties('test_date', $visitdatetime_properties);
 		
 
 //		$this->set_element_properties($grad_year, 'num_years_after_today' => 3, 'num_years_before_today' => 4);
