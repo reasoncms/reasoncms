@@ -234,6 +234,14 @@
 		}
 		function run()
 		{
+			if (DISABLE_REASON_LOGIN)
+			{
+				echo '<div id="login">'."\n";
+				echo '<h4 class="msg">Reason login is currently disabled</h4>'."\n";
+				echo '<div class="msg_extra">Please try again later.</div>'."\n";
+				echo '</div>'."\n";
+				return false;
+			}
 			if ($this->close_window)
 			{
 				?>
