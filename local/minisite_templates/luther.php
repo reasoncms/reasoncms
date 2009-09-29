@@ -63,6 +63,9 @@ class LutherTemplate extends MinisiteTemplate
                         $this->run_section( 'sub_nav' );
                         echo '</div>'."\n";
                 }
+
+                $this->run_section( 'bannerad' );
+
                 if ($this->has_content( 'sub_nav_2' ))
 		// Contact Information
                 {
@@ -199,7 +202,7 @@ html.js' );
 			$module =& $this->_get_module( 'sidebar' );
 			foreach( $module->images AS $id => $image )
                         {
-                                if (!preg_match("/imagetop/", $image->get_value('keywords')))
+                                if (!preg_match("/imagetop|bannerad/", $image->get_value('keywords')))
                                 {
                                         return true;
                                 }
