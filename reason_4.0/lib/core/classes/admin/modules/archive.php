@@ -228,33 +228,38 @@
 			else
 				$compare_or_comparing = 'Comparing';
 
-			$select_form_a = '<form name="form2" action="'.htmlspecialchars(get_current_url(), ENT_QUOTES).'">'.$compare_or_comparing.'
-				<select name="menu2" onchange="MM_jumpMenu(\'parent\',this,0)" class="siteMenu">
+			$select_form_a = '<form action="?" class="jumpNavigation" name="archive_a_switch" method="get">'.$compare_or_comparing.'
+				<select name="archive_a" class="jumpDestination siteMenu" id="archive_a_switch_select">
 					';
-			$select_form_b = '<form name="form3" action="'.htmlspecialchars(get_current_url(), ENT_QUOTES).'">with
-				<select name="menu3" onchange="MM_jumpMenu(\'parent\',this,0)" class="siteMenu">
-					<option value="'.$this->admin_page->make_link( array( 'archive_b' => '' ), true ).'"'.(empty( $b_id ) ? ' selected="selected"' : '' ).'>--</option>';
+			$select_form_b = '<form action="?" class="jumpNavigation" name="archive_b_switch" method="get">with
+				<select name="archive_b" class="jumpDestination siteMenu" id="archive_b_switch_select">
+					<option value="--"'.(empty( $b_id ) ? ' selected="selected"' : '' ).'>--</option>';
 			
 			foreach( $this->history AS $h )
 			{
-				$select_form_a .= '<option value="' . $this->admin_page->make_link( array( 'archive_a' => $h->id() ) , true );
-				if( $a->id() == $h->id() )
-					$select_form_a .= '" selected="selected';
+				$select_form_a .= '<option value="'.$h->id();
+				if( $a->id() == $h->id() ) $select_form_a .= '" selected="selected';
 				$select_form_a .= '">'. $this->get_archive_name( $h->id() ) . "</option>\n";
 				
 				
-				$select_form_b .= '<option value="' . $this->admin_page->make_link( array( 'archive_b' => $h->id() ) , true );
-				if( !empty( $b_id ) AND $b->id() == $h->id() )
-					$select_form_b .= '" selected="selected';
+				$select_form_b .= '<option value="'.$h->id();
+				if( !empty( $b_id ) AND $b->id() == $h->id() ) $select_form_b .= '" selected="selected';
 				$select_form_b .= '">'. $this->get_archive_name( $h->id() ) . "</option>\n";
 				
 			}
-			$select_form_a .=
-				'</select>
-				</form>';
-			$select_form_b .=
-				'</select>
-				</form>';
+			
+			ob_start();
+			$this->admin_page->echo_hidden_fields('archive_a');
+			$archive_a_fields = ob_get_contents();
+			ob_end_clean();
+			
+			ob_start();
+			$this->admin_page->echo_hidden_fields('archive_b');
+			$archive_b_fields = ob_get_contents();
+			ob_end_clean();
+			
+			$select_form_a .='</select>'.$archive_a_fields.'<input type="submit" class="jumpNavigationGo" value="go"></form>';
+			$select_form_b .= '</select>'.$archive_b_fields.'<input type="submit" class="jumpNavigationGo" value="go"></form>';
 				
 
 			echo '<table border="0" cellspacing="0" cellpadding="4">';
