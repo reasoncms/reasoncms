@@ -14,7 +14,7 @@ class textDateTimeNoSecondsType extends textDateTimeType
 	var $type = 'textDateTimeNoSeconds';
 	var $date_format = 'Y-m-d H:i';
 	var $type_valid_args = array(   'prepopulate',
-									'date_format',
+									#'date_format',
 									'year_max',
 									'year_min',
 									'use_picker',
