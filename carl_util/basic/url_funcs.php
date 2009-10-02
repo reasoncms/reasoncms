@@ -244,4 +244,40 @@ function alter_protocol($url,$current_protocol,$new_protocol)
 {
 	return preg_replace("/^".$current_protocol.":\/\//" , $new_protocol."://" , $url, 1);
 }
+
+/**
+ * Grab contents of a URL.
+ *
+ * @param string url fully qualified url to grab
+ * @param boolean verify_ssl whether or not to require a valid certificate for an https connection default false
+ * @param string http_auth_username Absolute URL
+ * @return mixed a string or false on error
+ */
+function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_username = '', $http_auth_password = '')
+{
+	require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
+	$ch = curl_init( $url );
+	$useragent = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : false; // grab the current browser user agent is possible
+	if ($useragent) curl_setopt( $ch, CURLOPT_USERAGENT, $useragent); // we spoof the browsers user agent if possible - some servers reject the default
+	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+	curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
+	curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
+	if (!empty($http_authentication_username) || !empty($http_authentication_password))
+	{
+		curl_setopt( $ch, CURLOPT_USERPWD, $http_authentication_username.':'.$http_authentication_password);
+	}
+	if (!$verify_ssl)
+	{
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false);
+	}
+	$page = curl_exec( $ch );
+	// check for errors
+	if( empty( $page ) )
+	{
+		trigger_error( 'CURL: '.curl_error( $ch ) );
+	}
+	curl_close( $ch );
+	return $page;
+}
 ?>
