@@ -194,6 +194,14 @@
 			'sidebar'=>'',
 			'pre_sidebar' => '',
 		),
+		'publication_no_nav' => array(
+			'main_post'=>'publication',
+			'main_head' => 'publication/title',
+			'main'=>'publication/description',
+			'navigation' => '',
+			'sidebar'=>'',
+			'pre_sidebar' => '',
+		),
 		'publication_related' => array(
 			'main_post'=>array(
 				'module'=>'publication',
