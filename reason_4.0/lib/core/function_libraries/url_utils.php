@@ -8,6 +8,7 @@
  * Include dependencies
  */
 include_once( 'reason_header.php' );
+include_once( CARL_UTIL_INC . 'basic/url_funcs.php' );
 reason_include_once( 'classes/entity_selector.php' );
 reason_include_once( 'classes/url/page.php' );
 	
@@ -21,34 +22,9 @@ reason_include_once( 'classes/url/page.php' );
  */
 function get_reason_url_contents( $url )
 {
-	require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
-	
-	// Includes the variables $http_authentication_username and $http_authentication_password
 	if (defined('HTTP_CREDENTIALS_FILEPATH') && file_exists(HTTP_CREDENTIALS_FILEPATH)) include( HTTP_CREDENTIALS_FILEPATH );
 	else $http_authentication_username = $http_authentication_password = '';
-	$ch = curl_init( $url );
-	$useragent = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : false; // grab the current browser user agent is possible
-	if ($useragent) curl_setopt( $ch, CURLOPT_USERAGENT, $useragent); // we spoof the browsers user agent if possible - some servers reject the default
-	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-	curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
-	curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
-	if (!empty($http_authentication_username) || !empty($http_authentication_password))
-	{
-		curl_setopt( $ch, CURLOPT_USERPWD, $http_authentication_username.':'.$http_authentication_password);
-	}
-	if (!REASON_HOST_HAS_VALID_SSL_CERTIFICATE)
-	{
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false);
-	}
-	$page = curl_exec( $ch );
-	// check for errors
-	if( empty( $page ) )
-	{
-		trigger_error( 'CURL: '.curl_error( $ch ) );
-	}
-	curl_close( $ch );
-	return $page;
+	return carl_util_get_url_contents( $url, REASON_HOST_HAS_VALID_SSL_CERTIFICATE, $http_authentication_username, $http_authentication_password );
 }
 
 /**
