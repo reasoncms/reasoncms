@@ -20,6 +20,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'sub_nav_3' => '',
 			'post_foot' => 'luther_footer',
 			'imagetop' => 'luther_imagetop',
+			'bannerad' => 'luther_bannerad',
+                        'sbvideo' => 'luther_sbvideo'
 		),
 		'admissions_account_signup' => array(
 			'main_post' => 'applicant_account',
