@@ -1,5 +1,6 @@
 <?
 include_once('reason_header.php');
+//include('/usr/local/webapps/reason/reason_package_local/disco/plasmature/types/datetime.php');
 reason_include_once('minisite_templates/modules/form/views/thor/default.php');
 //include_once('disco/boxes/boxes.php');
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'IndividualVisitForm';
@@ -455,9 +456,8 @@ class IndividualVisitForm extends DefaultThorForm
 			'9:00' => '9:00 p.m.',
 			),
 		),
-	'test_date' => array(
-		'type' => 'textdatetime',
-		),
+	'test_date' => 'textdatetime',
+		
 	);
 	
 
@@ -500,7 +500,7 @@ class IndividualVisitForm extends DefaultThorForm
 		
 		
 		$this->change_element_type('transfer', 'radio_inline_no_sort');
-		$this->set_element_properties('test_date', $visitdatetime_properties);
+		//$this->set_element_properties('test_date', $visitdatetime_properties);
 		
 
 //		$this->set_element_properties($grad_year, 'num_years_after_today' => 3, 'num_years_before_today' => 4);

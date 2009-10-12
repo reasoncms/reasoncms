@@ -18,6 +18,7 @@ class LutherTemplate extends MinisiteTemplate
 {
 	// reorder sections so that navigation is first instead of last
 	var $sections = array('navigation'=>'show_navbar','content'=>'show_main_content','related'=>'show_sidebar');
+	public $luther_add_this_complete = FALSE;
 
 	function show_banner_tableless()
         {
@@ -125,6 +126,20 @@ class LutherTemplate extends MinisiteTemplate
 
 	}
 
+	function luther_add_this()
+	// insert "add this" capability to luther pages linking to facebook,
+	// twitter, delicious, etc.
+	{
+		echo '<!-- AddThis Button BEGIN -->'."\n";
+		echo '<div class="addthis_toolbox addthis_default_style">'."\n";
+		echo '<a href="http://www.addthis.com/bookmark.php?v=250&amp;pub=lutheraddthis" class=
+"addthis_button_compact">Share</a>'."\n";
+		echo '</div>'."\n";
+		echo '<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pub=lutheraddthis"></script>'."\n";
+		echo '<!-- AddThis Button END -->'."\n";
+		$luther_add_this_complete = TRUE;
+	}
+
 	function show_main_content_sections()
         {
 		echo '<div class="column span-50 prepend-1 last">'."\n";
@@ -155,6 +170,10 @@ class LutherTemplate extends MinisiteTemplate
                 {
                         echo '<div class="contentMain">'."\n";
                         $this->run_section( 'main' );
+			if (!$luther_add_this_complete)
+			{
+				$this->luther_add_this();
+			}
                         echo '</div>'."\n";
                 }
                 if ($this->has_content( 'main_post' ))
@@ -165,8 +184,13 @@ class LutherTemplate extends MinisiteTemplate
 			}
                         echo '<div class="contentPost">'."\n";
                         $this->run_section( 'main_post' );
+			if (!$luther_add_this_complete)
+			{
+				$this->luther_add_this();
+			}
                         echo '</div>'."\n";
                 }
+
 
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_pageLC')
 		{
