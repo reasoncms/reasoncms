@@ -1,6 +1,10 @@
 <?
 include_once('reason_header.php');
+<<<<<<< .mine
+include_once('/usr/local/webapps/reason/reason_package_local/disco/plasmature/types/datetime.php');
+=======
 //include('/usr/local/webapps/reason/reason_package_local/disco/plasmature/types/datetime.php');
+>>>>>>> .r124
 reason_include_once('minisite_templates/modules/form/views/thor/default.php');
 //include_once('disco/boxes/boxes.php');
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'IndividualVisitForm';
@@ -51,8 +55,9 @@ class IndividualVisitForm extends DefaultThorForm
 		'num_years_before_today' => 4,
 		),
 	'transfer' => array(
-		'type' => 'radio_no_sort',
+		'type' => 'radio_inline_no_sort',
 		'display_name' => 'Are you a transfer student?',
+		'display_style' => 'normal',
 		'options' => array('Yes' => 'Yes', 'No' => 'No',),
 		),
 	'transfer_college' => array(
@@ -435,7 +440,7 @@ class IndividualVisitForm extends DefaultThorForm
 		),
 	'overnight_day' => array(
 		'type' => 'radio_no_sort',
-		'display_name' => '',
+		'display_style' => 'normal',
 		'options' => array(
 			'Day of visit' => 'Day of visit', 
 			'Night prior to visit' => 'Night prior to visit',),
@@ -443,6 +448,7 @@ class IndividualVisitForm extends DefaultThorForm
 	'overnight_prior_arrival_time' => array(
 		'type' => 'select_no_sort',
 		'display_name' => 'If arriving the night prior, please indicate arrival time',
+		'display_style' => 'normal',
 		'add_null_value_to_top' => true,
 		'options' => array(
 			'5:00' => '5:00 p.m.',
@@ -456,8 +462,11 @@ class IndividualVisitForm extends DefaultThorForm
 			'9:00' => '9:00 p.m.',
 			),
 		),
+<<<<<<< .mine
+=======
 	'test_date' => 'textdatetime',
 		
+>>>>>>> .r124
 	);
 	
 
@@ -485,11 +494,10 @@ class IndividualVisitForm extends DefaultThorForm
 	function on_every_time()
 	{	
 		$visitdatetime_properties = array(
-			'date_format' => 'Y-m-d H:i',
-			'use_fields' => array('month','day','year','hour','minute','ampm'),
+			'datepicker_arg' => 'split-date fill-grid-no-select disable-days-7 statusformat-l-cc-sp-d-sp-F-sp-Y opacity-99 disable-20091126 disable-20091127 disable-20091128 disable-20091212 disable-20091219 disable-xxxx1224 disable-xxxx1225 disable-xxxx1226 disable-xxxx1231 disable-xxxx0101 disable-xxxx0102 disable-20100130 disable-20100320 disable-20100327 disable-20100402 disable-20100403 disable-20100531 disable-20100603 disable-20100515 disable-20100522 disable-20100529 disable-20100605 disable-20100612 disable-20100619 disable-20100626 disable-20100703 disable-20100710 disable-20100717 disable-20100724 disable-20100731 disable-20100807 disable-20100814 disable-20100821 disable-20100828 disable-20100904 disable-20100911 range-low-today range-high-20100912',
 			);
 		$visitdatetime_field = $this->get_element_name_from_label('Visit Date and Time');
-		$this->change_element_type($visitdatetime_field, 'textdatetime');
+		$this->change_element_type($visitdatetime_field, 'textdatetimepublic');
 		$this->set_element_properties($visitdatetime_field, $visitdatetime_properties);
 			
 		$gender = $this->get_element_name_from_label('Gender');
@@ -499,16 +507,20 @@ class IndividualVisitForm extends DefaultThorForm
 		$this->change_element_type($state_field, 'state_province');
 		
 		
+<<<<<<< .mine
+		//$this->change_element_type('transfer', 'radio_inline_no_sort');
+		//$this->set_element_properties('test_date', $visitdatetime_properties);
+=======
 		$this->change_element_type('transfer', 'radio_inline_no_sort');
 		//$this->set_element_properties('test_date', $visitdatetime_properties);
+>>>>>>> .r124
 		
 
 //		$this->set_element_properties($grad_year, 'num_years_after_today' => 3, 'num_years_before_today' => 4);
 
 
 		//$gender_field_name = $this->get_element_name_from_label('Gender');
-		//$this->change_element_type($gender_field_name, 'radio_inline');
-		
+		//$this->change_element_type($gender_field_name, 'radio_inline');	
 	}
 	
 	
