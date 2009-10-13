@@ -21,6 +21,7 @@ reason_include_once( 'function_libraries/user_functions.php' );
 	{
 		var $user_netid;
 		var $edit_link;
+		var $login_url = REASON_LOGIN_URL;
 		
 		/**
 		 * Tells the template that this module always contains content
@@ -59,13 +60,13 @@ reason_include_once( 'function_libraries/user_functions.php' );
 			}
 			echo '<p id="footerLoginLink">';
 			echo ($this->user_netid) ? 'Logged in as ' . $this->user_netid . '. ' : '';
-			echo ($this->user_netid) ? '<a href="'.REASON_LOGIN_URL.'?logout=1">Logout</a>' : '<a href="'.REASON_LOGIN_URL.'">Login</a>';
+			echo ($this->user_netid) ? '<a href="'. $this->login_url.'?logout=1">Logout</a>' : '<a href="'.$this->login_url.'">Login</a>';
 			echo '</p>';	
 		}
 
 		function get_documentation()
 		{
-			return '<p>Provies a link to log in and log out of Reason. If you are logged in and have access to administer this site, this module provides a link to edit the current page.</p>';
+			return '<p>Provides a link to log in and log out of Reason. If you are logged in and have access to administer this site, this module provides a link to edit the current page.</p>';
 		}
 	}
 
