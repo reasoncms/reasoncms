@@ -462,11 +462,6 @@ class IndividualVisitForm extends DefaultThorForm
 			'9:00' => '9:00 p.m.',
 			),
 		),
-<<<<<<< .mine
-=======
-	'test_date' => 'textdatetime',
-		
->>>>>>> .r124
 	);
 	
 
@@ -507,13 +502,13 @@ class IndividualVisitForm extends DefaultThorForm
 		$this->change_element_type($state_field, 'state_province');
 		
 		
-<<<<<<< .mine
+
 		//$this->change_element_type('transfer', 'radio_inline_no_sort');
 		//$this->set_element_properties('test_date', $visitdatetime_properties);
-=======
-		$this->change_element_type('transfer', 'radio_inline_no_sort');
+
+		//$this->change_element_type('transfer', 'radio_inline_no_sort');
 		//$this->set_element_properties('test_date', $visitdatetime_properties);
->>>>>>> .r124
+
 		
 
 //		$this->set_element_properties($grad_year, 'num_years_after_today' => 3, 'num_years_before_today' => 4);
