@@ -3,7 +3,7 @@ include_once('paths.php');
 include_once(DISCO_INC.'plasmature/plasmature.php');
 /**
  *	Extension of the textDateTime type that pretties up the time format for the public-facing forms. 
- *	This type also allows the passing of $datepicker_arg which is a class argument for the JavaScript datepicker
+ *	This type also allows the passing of $datepicker_arg which overwrites the default class argument for the JavaScript datepicker
  **/
 
 class textDateTimePublicType extends textDateTimeType
@@ -17,9 +17,6 @@ class textDateTimePublicType extends textDateTimeType
 	{
 	    // The classes on the year display activate the JavaScript
 	    // date picker.
-	    
-	    
-	    
 	    $class = ($this->use_picker) ? $this->datepicker_arg : null;
 		return $this->_get_display('year', $year_val, null, ' / ', 4,
 		    $class);
