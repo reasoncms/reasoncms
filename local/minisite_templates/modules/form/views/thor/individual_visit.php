@@ -17,30 +17,6 @@ class IndividualVisitForm extends DefaultThorForm
 {
 	
 	var $elements = array(
-/*
-	'visit_date_comments' => array(
-		'type' => 'comment',
-		'text' => '<h3>Please use the calendar to select a date to visit. Available dates are in green. Please include an arrival time so we know when to expect you.</h3>',
-		),
-	'visit_date_and_time' => array(
-		'type' => 'textdatetime_js',
-		'script_url' => 'http://www.luther.edu/scripts/datetime.js',
-		),
-
-	'first_name' => 'text',
-	'last_name' => 'text',
-	'gender' => array(
-		'type' => 'radio_inline',
-		'options' => array('Female'=>'Female','Male'=>'Male',),
-		),
-	'address' => 'text',
-	'city' => 'text',
-	'state/province' => 'state_province',
-	'zip' => 'text',
-	'email' => 'text',
-	'home_phone' => 'text',
-	'cell_phone' => 'text',
-*/
 	'high_school' => array(
 		'type' => 'text',
 		'display_style' => 'normal',
@@ -418,7 +394,6 @@ class IndividualVisitForm extends DefaultThorForm
 		'rows' => 2,
 		'cols' => 35,
 		'display_name' =>'Additional Request',
-//		'comments' => '<small>  30 min</small>',
 		),
 	'housing_note' => array(
 		'type' => 'comment',
@@ -428,7 +403,6 @@ class IndividualVisitForm extends DefaultThorForm
 		'type' => 'checkboxfirst',
 		'display_name' => 'I would like to request overnight housing 
 						with a current Luther student',
-//		'display_style' => 'normal',
 		),
 	'overnight_note' => array(
 		'type' => 'comment',
@@ -460,16 +434,9 @@ class IndividualVisitForm extends DefaultThorForm
 		),
 	);
 	
-
 	var $required = array(
-//		'first_name',
-//		'last_name',
-//		'gender',
 		'high_school',
 		'graduation_year',
-//		'email',
-//		'visit_date_and_time'
-//		'arrival_time'
 	);
 
 
@@ -496,25 +463,7 @@ class IndividualVisitForm extends DefaultThorForm
 		
 		$state_field = $this->get_element_name_from_label('State/Province');
 		$this->change_element_type($state_field, 'state_province');
-		
-		
-
-		//$this->change_element_type('transfer', 'radio_inline_no_sort');
-		//$this->set_element_properties('test_date', $visitdatetime_properties);
-
-		//$this->change_element_type('transfer', 'radio_inline_no_sort');
-		//$this->set_element_properties('test_date', $visitdatetime_properties);
-
-		
-
-//		$this->set_element_properties($grad_year, 'num_years_after_today' => 3, 'num_years_before_today' => 4);
-
-
-		//$gender_field_name = $this->get_element_name_from_label('Gender');
-		//$this->change_element_type($gender_field_name, 'radio_inline');	
-	}
-	
-	
+	}	
 	function email_form_data_to_submitter()
 	{
 		$model =& $this->get_model();
@@ -659,30 +608,10 @@ class IndividualVisitForm extends DefaultThorForm
 	
 	function run_error_checks()
 	{
-		//$val = $this->get_value('extra_field');
-		//if (empty($val)) $this->set_error('extra_field', 'The field must have content');
 	}
 	
 	function process()
 	{
-		// getting value from a disco field
-		///$field_value = $this->get_value('extra_field');
-//		foreach ($elements as $key => $val)
-//		{
-//			$extra_values = $this->get_value($elements)
-//		}
-		// getting disco field name from thor
-		///$food_stuff_field_name = $this->get_element_name_from_label('Food Stuff');
-		///$food_stuff_value = $this->get_value($food_stuff_field_name);
-		///echo $food_stuff_value;
-/*
-		echo $this->get_value('high_school') . "\n";
-		echo $this->get_element_name_from_label('graduation_year') . "\n";
-		echo $this->get_value('graduation_year');
-		echo $this->get_value('meet_faculty');
-		echo $this->get_value('meet_faculty_details');
-		echo 'blah';
-*/
 	}
 	
 
