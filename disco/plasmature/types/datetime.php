@@ -1,39 +1,29 @@
 <?php
+include_once('paths.php');
+include_once(DISCO_INC.'plasmature/plasmature.php');
+/**
+ *	Extension of the textDateTime type that pretties up the time format for the public-facing forms. 
+ *	This type also allows the passing of $datepicker_arg which is a class argument for the JavaScript datepicker
+ **/
 
-//include_once('paths.php');
-include_once('/usr/local/webapps/reason/reason_package/disco/plasmature/plasmature.php');
-include_once(PLASMATURE_TYPES_INC . "datetime.php");
-//////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////
-class textDateTimeVisitType extends textDateTimeType
+class textDateTimePublicType extends textDateTimeType
 {
-	var $type = 'textDateTimeVisit';
-	var $date_format = 'Y-m-d H:i';
-	var $use_fields = array( 'month', 'day', 'year','hour','minute','ampm',);
-	var $datepicker_arg = 'split-date fill-grid-no-select disable-days-7 statusformat-l-cc-sp-d-sp-F-sp-Y opacity-99 disable-20091126 disable-20091127 disable-20091128 disable-20091212 disable-20091219 disable-xxxx1224 disable-xxxx1225 disable-xxxx1226 disable-xxxx1231 disable-xxxx0101 disable-xxxx0102 disable-20100130 disable-20100320 disable-20100327 disable-20100402 disable-20100403 disable-20100531 disable-20100603 disable-20100515 disable-20100522 disable-20100529 disable-20100605 disable-20100612 disable-20100619 disable-20100626 disable-20100703 disable-20100710 disable-20100717 disable-20100724 disable-20100731 disable-20100807 disable-20100814 disable-20100821 disable-20100828 disable-20100904 disable-20100911 range-low-today range-high-20100912'; //the class argument for the JavaScript datepicker
-	var $type_valid_args = array(   'prepopulate',
-									#'date_format',
-									'year_max',
-									'year_min',
-									'use_picker',
-									'datepicker_arg',
-								);
-
-
+	public $type = 'textDateTimeVisit';
+	public $use_fields = array( 'month', 'day', 'year','hour','minute','ampm',);
+	public $datepicker_arg = 'split-date fill-grid statusformat-l-cc-sp-d-sp-F-sp-Y';
+	public $type_valid_args = array('prepopulate', 'use_picker', 'datepicker_arg',);
 	
-
 	function get_year_display($year_val = '')
 	{
 	    // The classes on the year display activate the JavaScript
 	    // date picker.
-	    $class = ($this->use_picker)
-	        ? 'split-date fill-grid-no-select disable-days-7 statusformat-l-cc-sp-d-sp-F-sp-Y opacity-99 disable-20091126 disable-20091127 disable-20091128 disable-20091212 disable-20091219 disable-xxxx1224 disable-xxxx1225 disable-xxxx1226 disable-xxxx1231 disable-xxxx0101 disable-xxxx0102 disable-20100130 disable-20100320 disable-20100327 disable-20100402 disable-20100403 disable-20100531 disable-20100603 disable-20100515 disable-20100522 disable-20100529 disable-20100605 disable-20100612 disable-20100619 disable-20100626 disable-20100703 disable-20100710 disable-20100717 disable-20100724 disable-20100731 disable-20100807 disable-20100814 disable-20100821 disable-20100828 disable-20100904 disable-20100911 range-low-today range-high-20100912'
-	        : null;
+	    
+	    
+	    
+	    $class = ($this->use_picker) ? $this->datepicker_arg : null;
 		return $this->_get_display('year', $year_val, null, ' / ', 4,
 		    $class);
 	}
-
-
 	function get_hour_display($hour_val = '')
 	{
 		$str = ' at ';
@@ -52,11 +42,8 @@ class textDateTimeVisitType extends textDateTimeType
 		$str .= '<option value="11"'.($hour_val == '11' ? ' selected="selected"': '').'>11</option>';
 		$str .= '<option value="12"'.($hour_val == '12' ? ' selected="selected"': '').'>12</option>';
 		$str .= '</select>';
-		return $str;
-		//return $this->_get_display($str, $hour_val, 'HH',
-		 //   '&nbsp;&nbsp; at ');
+		return $str. ' : ';
 	}
-	
 	function get_minute_display($minute_val = '')
 	{
 	    $str = ' ';
@@ -80,7 +67,4 @@ class textDateTimeVisitType extends textDateTimeType
 		return $str;
 	}
 }
-///////////////////////////////////////////////// 
-//////////////////////////////////////////////////////////////////////////////////////////////////
- 
 ?>
