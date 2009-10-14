@@ -389,7 +389,7 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 		{
 			if($this->manages_media)
 			{
-					$this->add_element( 'upload_file', 'upload', array('max_file_size'=>$this->actual_max_upload_size_bytes,) );
+					$this->add_element( 'upload_file', 'assetUpload', array('max_file_size'=>$this->actual_max_upload_size_bytes,) );
 					$this->add_comments('upload_file',form_comment('If the file is on your computer, browse to it here.') );
 					$this->add_comments('upload_file',form_comment('Maximum file size for uploading is '.format_bytes_as_human_readable($this->actual_max_upload_size_bytes)));
 					$this->add_comments('upload_file',form_comment('File must have one of the following extensions: .'.implode(', .', $this->recognized_extensions) ) );
