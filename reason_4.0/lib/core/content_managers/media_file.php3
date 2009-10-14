@@ -136,8 +136,30 @@
 			
 			$this->add_parts_toggler();
 
-			$this -> set_order (array ( 'file_preview', 'name', 'link', 'replacement_header', 'upload_file','import_file_as_alternate','import_file', 'url', 'file_info_header', 'delivery_methods', 'default_media_delivery_method', 'media_format', 'av_type', 'media_duration', 'media_size','media_quality', 'width', 'height','parts_hr_1','parts','is_part','av_part_number', 'av_part_total', 'description','parts_hr_2', ));
+			if ($this->get_element('caption_url') && $this->get_element('audio_description_url'))
+			{
+				$this->modify_caption_url_field();
+				$this->modify_audio_description_field();
+			}
+			else
+			{
+				$script_link = carl_construct_link(array(''), array(''), REASON_HTTP_BASE_PATH . 'scripts/upgrade/4.0b7_to_4.0b8/update_types.php');
+				trigger_error('The media file type is missing fields for captioning and audio description. Please run the Reason 4 Beta 8 upgrade types script ('.$script_link.').');
+			}
+			
+			$this -> set_order (array ( 'file_preview', 'name', 'link', 'replacement_header', 'upload_file','import_file_as_alternate','import_file', 'url', 'caption_url', 'audio_description_url', 'file_info_header', 'delivery_methods', 'default_media_delivery_method', 'media_format', 'av_type', 'media_duration', 'media_size','media_quality', 'width', 'height','parts_hr_1','parts','is_part','av_part_number', 'av_part_total', 'description','parts_hr_2', ));
 		}
+		
+		function modify_caption_url_field()
+		{
+			$this->change_element_type('caption_url', 'hidden');
+		}
+		
+		function modify_audio_description_field()
+		{
+			$this->change_element_type('audio_description_url', 'hidden');
+		}
+		
 		/**
 		 * Puts the javascript tag on the page 
 		 */
@@ -367,7 +389,7 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 		{
 			if($this->manages_media)
 			{
-					$this->add_element( 'upload_file', 'AssetUpload', array('max_file_size'=>$this->actual_max_upload_size_bytes,) );
+					$this->add_element( 'upload_file', 'upload', array('max_file_size'=>$this->actual_max_upload_size_bytes,) );
 					$this->add_comments('upload_file',form_comment('If the file is on your computer, browse to it here.') );
 					$this->add_comments('upload_file',form_comment('Maximum file size for uploading is '.format_bytes_as_human_readable($this->actual_max_upload_size_bytes)));
 					$this->add_comments('upload_file',form_comment('File must have one of the following extensions: .'.implode(', .', $this->recognized_extensions) ) );
