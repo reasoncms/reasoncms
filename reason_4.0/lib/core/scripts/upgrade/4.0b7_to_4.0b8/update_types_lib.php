@@ -51,6 +51,8 @@ class updateTypes
 		$this->add_new_entity_table_to_type('quote', 'quote_type');
 		$this->add_field_to_entity_table('quote', 'rating', 'tinyint');
 		$this->add_field_to_entity_table('site', 'domain', 'tinytext');
+		$this->add_field_to_entity_table('av', 'caption_url', 'tinytext');
+		$this->add_field_to_entity_table('av', 'audio_description_url', 'tinytext');
 		
 		// THIS STUFF IS NOT ACTUALLY IN THE CORE!
 		//$this->add_new_entity_table_to_type('course', 'course_type');

@@ -69,6 +69,8 @@ elseif (DISABLE_REASON_ADMINISTRATIVE_INTERFACE == true)
 <li>Make office/department to category bidirectional, and add a relationship display name.</li>
 <li>Rename the quote_to_category display name reverse direction to "Is Subject of Quote"</li>
 <li>Move the field location.location to event.location</li>
+<li>Add the field "caption_url" to the media file type.</li>
+<li>Add the field "audio_description_url" to the media file type.</li>
 <?php
 //<li>Create/update the address type</li>*/
 ?>
