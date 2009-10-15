@@ -432,7 +432,6 @@ class IndividualVisitForm extends DefaultThorForm
 			'9:00' => '9:00 p.m.',
 			),
 		),
-	'testdate' => 'textdatetime',
 	);
 	
 	var $required = array(
