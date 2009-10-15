@@ -8,7 +8,7 @@ include_once(DISCO_INC.'plasmature/plasmature.php');
 
 class textDateTimePublicType extends textDateTimeType
 {
-	public $type = 'textDateTimeVisit';
+	public $type = 'textDateTimePublic';
 	public $use_fields = array( 'month', 'day', 'year','hour','minute','ampm',);
 	public $datepicker_arg = 'split-date fill-grid statusformat-l-cc-sp-d-sp-F-sp-Y';
 	public $type_valid_args = array('prepopulate', 'use_picker', 'datepicker_arg',);
