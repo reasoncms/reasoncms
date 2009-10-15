@@ -598,7 +598,7 @@ class IndividualVisitForm extends DefaultThorForm
 			// Send details of the request to the administrator listed as recipient on the form builder
 			$html_body2 = nl2br($values);	
 			$txt_body2 = html_entity_decode(strip_tags($html_body2));	
-			$subject2 = "IndividualVisitRequest".date(ymd);
+			$subject2 = "IndividualVisitRequest".date('ymd');
 			$admin_mailer = new Email($sender, $sender, $sender, $subject2, $txt_body2, $html_body2);
 			$admin_mailer->send();
 		}
