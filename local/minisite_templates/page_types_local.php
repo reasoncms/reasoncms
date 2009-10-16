@@ -245,7 +245,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'sub_nav_3'=> 'twitter',
 		),
 		'twitter' => array(
-			'sub_nav_3'=> 'twitter',
+			'sub_nav'=> 'twitter',
+			'sub_nav_2' => 'luther_username',
+			'sub_nav_3' => 'blurb',
 		),
 );
 
