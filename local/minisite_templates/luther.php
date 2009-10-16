@@ -18,7 +18,7 @@ class LutherTemplate extends MinisiteTemplate
 {
 	// reorder sections so that navigation is first instead of last
 	var $sections = array('navigation'=>'show_navbar','content'=>'show_main_content','related'=>'show_sidebar');
-	public $luther_add_this_complete = FALSE;
+	public $luther_add_this_complete = false;
 
 	function show_banner_tableless()
         {
@@ -130,6 +130,10 @@ class LutherTemplate extends MinisiteTemplate
 	// insert "add this" capability to luther pages linking to facebook,
 	// twitter, delicious, etc.
 	{
+		if ($this->cur_page->get_value( 'custom_page' ) != 'publication'&& $this->cur_page->get_value('custom_page') != 'default')
+		{
+			return;
+		}
 		echo '<!-- AddThis Button BEGIN -->'."\n";
 		echo '<div class="addthis_toolbox addthis_default_style">'."\n";
 		echo '<a href="http://www.addthis.com/bookmark.php?v=250&amp;pub=lutheraddthis" class=
@@ -137,7 +141,7 @@ class LutherTemplate extends MinisiteTemplate
 		echo '</div>'."\n";
 		echo '<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pub=lutheraddthis"></script>'."\n";
 		echo '<!-- AddThis Button END -->'."\n";
-		$luther_add_this_complete = TRUE;
+		$this->luther_add_this_complete = true;
 	}
 
 	function show_main_content_sections()
@@ -170,7 +174,7 @@ class LutherTemplate extends MinisiteTemplate
                 {
                         echo '<div class="contentMain">'."\n";
                         $this->run_section( 'main' );
-			if (!$luther_add_this_complete)
+			if (!$this->luther_add_this_complete)
 			{
 				$this->luther_add_this();
 			}
@@ -184,7 +188,7 @@ class LutherTemplate extends MinisiteTemplate
 			}
                         echo '<div class="contentPost">'."\n";
                         $this->run_section( 'main_post' );
-			if (!$luther_add_this_complete)
+			if (!$this->luther_add_this_complete)
 			{
 				$this->luther_add_this();
 			}
@@ -205,11 +209,18 @@ class LutherTemplate extends MinisiteTemplate
 	function do_org_head_items()
         {
                 // Just here as a hook for branding head items (js/css/etc.)
-            $this->head_items->add_javascript( '/javascripts/highslide/highslide-with-
-html.js' );
-            $this->head_items->add_javascript( '/javascripts/highslide/highslide-full.js' );
-            $this->head_items->add_javascript( '/javascripts/highslide/highslide-overrides.js' );
+		//$this->head_items->add_javascript( '/javascripts/highslide/highslide-with-html.js' );
 
+		$this->head_items->add_javascript( '/javascripts/highslide/highslide-full.js' );
+		if ($this->cur_page->get_value('custom_page') != 'image_slideshow')
+		{
+			$this->head_items->add_javascript( '/javascripts/highslide/highslide-overrides.js' );
+		}
+		if ($this->cur_page->get_value('custom_page') == 'image_slideshow')
+		{
+			$this->head_items->add_javascript( '/javascripts/highslide/highslide-gallery-overrides.js' );
+			$this->head_items->add_stylesheet('/javascripts/highslide/highslide-gallery-overrides.css');
+		}
         }
 
 	function has_related_section()
