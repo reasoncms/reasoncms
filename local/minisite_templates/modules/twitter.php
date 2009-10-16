@@ -15,7 +15,6 @@
 		}
 		function run()
 		{
-			echo '<div class="test">Hello World</div>'."\n";
 			echo '<div id="twtr-profile-widget"></div>'."\n";
 			echo '<script src="http://widgets.twimg.com/j/1/widget.js"></script>'."\n";
 			echo '<link href="http://widgets.twimg.com/j/1/widget.css" type="text/css" rel="stylesheet">'."\n";
