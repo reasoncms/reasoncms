@@ -60,6 +60,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			),
 			'sidebar' => array( // Highlights
 				'module' => 'publication',
+				//'module' => 'luther_other_publication_news',
 				'related_publication_unique_names' => array( 'headlinesarchive' ),
 				'related_mode' => 'true',
 				'related_title' => '',

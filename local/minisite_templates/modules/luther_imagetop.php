@@ -11,7 +11,7 @@
 		var $acceptable_params = array(
 		'num_to_display' => '',
 		'caption_flag' => true,
-		'rand_flag' => false,
+		'rand_flag' => true,
 		'order_by' => '' );
 
 		function init( $args = array() )
