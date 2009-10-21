@@ -1,4 +1,6 @@
-ckage reason
+<?php
+/**
+ * @package reason
  * @subpackage minisite_modules
  */
 
@@ -6,12 +8,12 @@ ckage reason
  * Include dependencies
  */
 include_once('reason_header.php');
-reason_include_once('minisite_templates/modules/form/views/default.php');
+reason_include_once('minisite_templates/modules/form/views/thor/default.php');
 
 /**
  * Register form with Reason
  */
-$GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultThorForm';
+$GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'LutherDefaultThorForm';
 
 /**
  * DefaultThorForm is an extension of the DefaultForm used for Thor
@@ -23,20 +25,16 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'DefaultTh
  * @author Nathan White
  */
 
-class DefaultThorForm extends DefaultForm
+class LutherDefaultThorForm extends DefaultThorForm
 {
-	var $show_submitted_data_dynamic_fields = false;
-	
-	function get_thank_you_html()
+	function on_every_time()
 	{
-		$model =& $this->get_model();
-		$form =& $model->get_form_entity();
-		return $form->get_value('thank_you_message');
-	}
-	
-	function get_show_submitted_data_dynamic_fields()
-	{
-		return (isset($this->show_submitted_data_dynamic_fields)) ? $this->show_submitted_data_dynamic_fields : false;
+		$state_field = $this->get_element_name_from_label('State');
+		$this->change_element_type($state_field, 'state');
+		
+		$state_province_field = $this->get_element_name_from_label('State/Province');
+		$this->change_element_type($state_province_field, 'state_province');
+
 	}
 }
 ?>
