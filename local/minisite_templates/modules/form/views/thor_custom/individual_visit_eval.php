@@ -20,7 +20,7 @@ class IndividualVisitEvalForm extends DefaultThorForm
 	function on_every_time()
 	{	
 		$date_time = $this->get_element_name_from_label('Date and Time of Visit');
-		$this->change_element_type($first_impression, 'textdatetimepublic');
+		$this->change_element_type($date_time, 'textdatetimepublic');
 		
 		$first_impression = $this->get_element_name_from_label('First Impression of Campus');
 		$this->change_element_type($first_impression, 'radio_inline_no_sort');
