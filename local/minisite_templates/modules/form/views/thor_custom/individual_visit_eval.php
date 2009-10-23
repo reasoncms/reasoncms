@@ -1,6 +1,6 @@
 <?
 include_once('reason_header.php');
-//include_once('/usr/local/webapps/reason/reason_package_local/disco/plasmature/types/datetime.php');
+include_once('/usr/local/webapps/reason/reason_package_local/disco/plasmature/types/datetime.php');
 reason_include_once('minisite_templates/modules/form/views/thor/default.php');
 include_once(DISCO_INC.'disco.php');
 include_once(DISCO_INC.'plasmature/plasmature.php');
@@ -19,6 +19,9 @@ class IndividualVisitEvalForm extends DefaultThorForm
 {
 	function on_every_time()
 	{	
+		$date_time = $this->get_element_name_from_label('Date and Time of Visit');
+		$this->change_element_type($first_impression, 'textdatetimepublic');
+		
 		$first_impression = $this->get_element_name_from_label('First Impression of Campus');
 		$this->change_element_type($first_impression, 'radio_inline_no_sort');
 		
