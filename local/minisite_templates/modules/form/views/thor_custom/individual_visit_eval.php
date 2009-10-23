@@ -84,7 +84,7 @@ class IndividualVisitEvalForm extends DefaultThorForm
 				'display_name' => '<strong>Overall Experience</strong>'
 				));
 		
-		$state_province = $this->get_element_name_from_label('State?Province');
+		$state_province = $this->get_element_name_from_label('State/Province');
 		$this->change_element_type($state_province, 'state_province');
 }
 }
