@@ -97,11 +97,14 @@
 			{
 				if( $this->is_open( $item ) AND !empty( $children ) )
 				{
+					$i = 0;
 					foreach($children as $child_id )
 					{
 						$c = $this->values[ $child_id ];
 						if( $c->get_value( 'nav_display' ) == 'Yes' )
-							$this->make_tree( $child_id , $root, $depth +1);
+						{
+							$this->make_tree( $child_id , $root, $depth +1, ++$i);
+						}
 					}
 				}
 			}
@@ -124,6 +127,8 @@
 				$class .= ' item'.$counter;
 			if(isset($this->values[$id]) && $this->values[$id]->get_value( 'url' ))
 				$class .= ' jump';
+			if($this->values[ $id ]->get_value( 'unique_name'))
+				$class .= ' uname-'.htmlspecialchars($this->values[ $id ]->get_value( 'unique_name'), ENT_QUOTES);
 			return $class;
 		}
 		
@@ -374,6 +379,7 @@
 		{
 			if(!isset($this->values[ $page_id ]))
 			{
+				trigger_error('Page id '.$page_id.' not in site');
 				return array();
 			}
 			$chain = array($page_id);
