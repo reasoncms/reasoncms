@@ -88,7 +88,7 @@ class IndividualVisitEvalForm extends DefaultThorForm
 		$this->change_element_type($state_province, 'state_province');
 		
 		$country = $this->get_element_name_from_label('Country');
-		$this->change_element_type($country, 'state_province');
+		$this->change_element_type($country, 'country');
 }
 }
 ?>
