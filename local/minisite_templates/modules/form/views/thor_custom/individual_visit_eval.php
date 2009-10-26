@@ -17,9 +17,6 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'Individua
 
 class IndividualVisitEvalForm extends DefaultThorForm
 {
-	var $required = array(
-	);
-
 	function on_every_time()
 	{	
 		$date = $this->get_element_name_from_label('Date of Visit');
@@ -30,55 +27,126 @@ class IndividualVisitEvalForm extends DefaultThorForm
 		
 		$first_impression = $this->get_element_name_from_label('First Impression of Campus');
 		$this->change_element_type($first_impression, 'radio_inline_no_sort', array('options' => array(
-					'Excellent' => 'Excellent',
-					'Good' => 'Good',
-					'Fair' => 'Fair',
-					'Poor' => 'Poor',
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
 					'NA' => 'NA'),
 					'display_style' => 'normal','display_name' => '<strong>First Impression of Campus</strong>'));
 		
 		$welcome = $this->get_element_name_from_label('Welcome at Visit Center');
-		$this->change_element_type($welcome, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Welcome at Visit Center</strong>'));
+		$this->change_element_type($welcome, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Welcome at Visit Center</strong>',
+				'options' => array(
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
+					'NA' => 'NA'),));
 		
 		$counselor_meeting = $this->get_element_name_from_label('Meeting with Admission Counselor');
-		$this->change_element_type($counselor_meeting, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Meeting with Admission Counselor</strong>'));
+		$this->change_element_type($counselor_meeting, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Meeting with Admission Counselor</strong>', 				'options' => array(
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
+					'NA' => 'NA'),));
 		
 		$campus_tour = $this->get_element_name_from_label('Campus Tour');
-		$this->change_element_type($campus_tour, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Campus Tour</strong>'));
+		$this->change_element_type($campus_tour, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Campus Tour</strong>',
+				'options' => array(
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
+					'NA' => 'NA'),));
 		
 		$first_faculty_meet = $this->get_element_name_from_label('Meeting with First Faculty Member');
-		$this->change_element_type($first_faculty_meet, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Meeting with First Faculty Member</strong>'));
+		$this->change_element_type($first_faculty_meet, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Meeting with First Faculty Member</strong>',
+				'options' => array(
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
+					'NA' => 'NA'),));
 		
 		$second_faculty_meet = $this->get_element_name_from_label('Meeting with Second Faculty Member');
-		$this->change_element_type($second_faculty_meet, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Meeting with Second Faculty Member</strong>'));
+		$this->change_element_type($second_faculty_meet, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Meeting with Second Faculty Member</strong>',
+				'options' => array(
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
+					'NA' => 'NA'),));
 		
 		$coach_meet = $this->get_element_name_from_label('Meeting with Coach');
-		$this->change_element_type($coach_meet, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Meeting with Coach</strong>'));
+		$this->change_element_type($coach_meet, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Meeting with Coach</strong>',
+				'options' => array(
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
+					'NA' => 'NA'),));
 		
 		$music_meet = $this->get_element_name_from_label('Meeting with Music Department Faculty');
-		$this->change_element_type($music_meet, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Meeting with Music Department Faculty</strong>'));
+		$this->change_element_type($music_meet, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Meeting with Music Department Faculty</strong>',
+				'options' => array(
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
+					'NA' => 'NA'),));
 		
 		$audition = $this->get_element_name_from_label('Did you audition?');
-		$this->change_element_type($audition, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Did you audition?</strong>'));
+		$this->change_element_type($audition, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Did you audition?</strong>',
+				'options' => array(
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
+					'NA' => 'NA'),));
 		
 		$classroom_visit = $this->get_element_name_from_label('Classroom Visit');
-		$this->change_element_type($classroom_visit, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Classroom Visit</strong>'));
+		$this->change_element_type($classroom_visit, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Classroom Visit</strong>',
+				'options' => array(
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
+					'NA' => 'NA'),));
 		$lunch = $this->get_element_name_from_label('Lunch/Dinner');
-		$this->change_element_type($lunch, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>First Impression of Campus</strong>'));
+		$this->change_element_type($lunch, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>First Impression of Campus</strong>',
+				'options' => array(
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
+					'NA' => 'NA'),));
 
 		$overnight = $this->get_element_name_from_label('Overnight Experience');
-		$this->change_element_type($overnight, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Overnight Experience</strong>'));
+		$this->change_element_type($overnight, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Overnight Experience</strong>',
+				'options' => array(
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
+					'NA' => 'NA'),));
 
 		$other = $this->get_element_name_from_label('Other (please list what you are rating in the comment section below)');
-		$this->change_element_type($other, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Other (please list what you are rating in the comment section below)</strong>'));
+		$this->change_element_type($other, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Other (please list what you are rating in the comment section below)</strong>',
+				'options' => array(
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
+					'NA' => 'NA'),));
 
 		$overall = $this->get_element_name_from_label('Overall Experience');
 		$this->change_element_type($overall, 'radio_inline_no_sort', array(
 				'options' => array(
-					'Excellent' => 'Excellent',
-					'Good' => 'Good',
-					'Fair' => 'Fair',
-					'Poor' => 'Poor',
+					'Excellent' => '1',
+					'Good' => '2 ',
+					'Fair' => '3 ',
+					'Poor' => '4 ',
 					'NA' => 'NA'),
 				'display_style' => 'normal',
 				'display_name' => '<strong>Overall Experience</strong>'
