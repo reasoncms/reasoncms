@@ -22,8 +22,8 @@ class IndividualVisitEvalForm extends DefaultThorForm
 		$date = $this->get_element_name_from_label('Date of Visit');
 		$this->change_element_type($date, 'textdate', array('display_style' => 'normal','display_name' => '<strong>Date of Visit</strong>'));
 		
-		$time = $this->get_element_name_from_label('Time of Visit');
-		$this->change_element_type($time, 'texttimepublic', array('display_style' => 'normal','display_name' => '<strong>Time of Visit</strong>'));
+		$time = $this->get_element_name_from_label('Arrival Time');
+		$this->change_element_type($time, 'texttimepublic', array('display_style' => 'normal','display_name' => '<strong>Arrival Time</strong>'));
 		
 		$first_impression = $this->get_element_name_from_label('First Impression of Campus');
 		$this->change_element_type($first_impression, 'radio_inline_no_sort', array('options' => array(
@@ -96,8 +96,8 @@ class IndividualVisitEvalForm extends DefaultThorForm
 					'Poor' => '4 ',
 					'NA' => 'NA'),));
 		
-		$audition = $this->get_element_name_from_label('Did you audition?');
-		$this->change_element_type($audition, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Did you audition?</strong>',
+		$audition = $this->get_element_name_from_label('Did You Audition for a Music Scholarship?');
+		$this->change_element_type($audition, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Did You Audition for a Music Scholarship?</strong>',
 				'options' => array(
 					'Excellent' => '1',
 					'Good' => '2 ',
@@ -131,14 +131,8 @@ class IndividualVisitEvalForm extends DefaultThorForm
 					'Poor' => '4 ',
 					'NA' => 'NA'),));
 
-		$other = $this->get_element_name_from_label('Other (please list what you are rating in the comment section below)');
-		$this->change_element_type($other, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Other (please list what you are rating in the comment section below)</strong>',
-				'options' => array(
-					'Excellent' => '1',
-					'Good' => '2 ',
-					'Fair' => '3 ',
-					'Poor' => '4 ',
-					'NA' => 'NA'),));
+		$other = $this->get_element_name_from_label('Other Comments About Your Visit');
+		$this->change_element_type($other, 'textarea', array('display_style' => 'normal','display_name' => '<strong>Other Comments About Your Visit</strong>',));
 
 		$overall = $this->get_element_name_from_label('Overall Experience');
 		$this->change_element_type($overall, 'radio_inline_no_sort', array(
