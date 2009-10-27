@@ -43,8 +43,8 @@ class IndividualVisitEvalForm extends DefaultThorForm
 					'Poor' => '4 ',
 					'NA' => 'NA'),));
 		
-		$counselor_meeting = $this->get_element_name_from_label('Meeting with Admission Counselor');
-		$this->change_element_type($counselor_meeting, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Meeting with Admission Counselor</strong>', 				'options' => array(
+		$counselor_meeting = $this->get_element_name_from_label('Meeting with Admissions Counselor');
+		$this->change_element_type($counselor_meeting, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Meeting with Admissions Counselor</strong>', 				'options' => array(
 					'Excellent' => '1',
 					'Good' => '2 ',
 					'Fair' => '3 ',
