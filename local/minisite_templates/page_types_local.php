@@ -95,6 +95,16 @@ $GLOBALS['_reason_page_types_local'] = array(
                         'main_post' => 'luther_image_slideshow',
                         'sidebar' => '',
                 ),
+	'audio_video' => array(
+			'main_post' => 'luther_av',
+		),
+	'audio_video_on_current_site' => array(
+			'main_post' => 'luther_av',
+		),
+        'audio_video_sidebar' => array(
+                        'sidebar' => 'luther_av',
+                ),
+
 
         //-----------------------Steve's Homepage Begin---------------
         'homepage' => array(

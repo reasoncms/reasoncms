@@ -84,24 +84,35 @@
 			}
 			return $ret;
 		}
+
+		function do_list()
+                {
+                        echo '<ul>'."\n";
+                        foreach( $this->items AS $item )
+                        {
+                                $this->show_list_item( $item );
+                        }
+                        echo '</ul>'."\n";
+                }
+
                 function show_list_item( $item ) 
                 {
-                        echo '<li class="item number'.$this->item_counter.'">';
+                        //echo '<li class="item number'.$this->item_counter.'">';
+                        echo '<li>';
                         $this->show_list_item_pre( $item );
                         //$this->show_list_item_date( $item );
-                        echo '<strong>';
-                        if(empty($this->current_item_id) || $this->current_item_id != $item->id() )
-                        {
-                                echo '<a href="' . $this->construct_link($item) . '">';
-                                $this->show_list_item_name( $item );
-                                echo '</a>';
-                        }
-                        else
-                                $this->show_list_item_name( $item );
-                        echo '</strong>';
-                        //if(empty($this->current_item_id))
-                        $this->show_list_item_desc( $item );
+                        if ($this->cur_page->get_value('custom_page') != 'audio_video_sidebar')
+			{
+				echo '<h4>';
+                        	$this->show_list_item_name( $item );
+				echo '</h4>';
+                        	$this->show_list_item_desc( $item );
+			}
                         echo '</li>'."\n";
+                        if ($this->cur_page->get_value('custom_page') != 'audio_video_sidebar')
+			{
+                        	echo '<hr>'."\n";
+			}
                         $this->item_counter++;
                 }
 
@@ -109,6 +120,8 @@
 		function show_list_item_pre( $item ) // {{{
 		{
 			$pi = $this->get_primary_image( $item );
+			//echo $pi;
+			//echo preg_replace("|(\<img src=\".*?\").*?\/\>|", "\\1 />", $pi);
 			$avfilelist = $this->get_av_files($item);
 			//echo "media works id = ".$item->id()."   ";
 			//foreach( $avfilelist as $av_file )
@@ -122,10 +135,26 @@
 			//print(current($avfilelist)->get_value('height'));
 			//print(current($avfilelist)->get_value('width'));
 			$vurl = preg_replace("|(.*?)&.*?$|", "\\1", current($avfilelist)->get_value('url'));
-			//print(current($avfilelist)->get_value('media_format'));
-			//echo preg_replace("|(\<img src=\".*?\").*? \/\>|", "\\1 />", $pi);
-
-			echo '<a href="' . $vurl . '&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1" onclick="return hs.htmlExpand(this, { objectType: \'swf\', width: ' . current($avfilelist)->get_value('width') . ', objectWidth: ' . current($avfilelist)->get_value('width') . ', objectHeight: ' . current($avfilelist)->get_value('height') . ', preserveContent: false, outlineType: \'rounded=white\', wrapperClassName: \'draggable-header no-footer\', maincontentText: \'You need to upgrade your Flash player\', swfOptions: { version: \'7\' } } )" class="highslide"><img src="http://i1.ytimg.com/vi/lWd_yG_a-CQ/default.jpg" /></a>';
+			if (current($avfilelist)->get_value('media_format') == 'Flash')
+			{
+				if (preg_match("/(^http:\/\/www\.youtube\.com\/)(\w+)(\/(.*?)$)/", $vurl, $m ))
+				{
+				echo "<a href=\"" . $vurl . "&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1\" onclick=\"return hs.htmlExpand(this, { objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\"><img src=\"http://img.youtube.com/vi" . $m[3] . "/default.jpg\" /></a>";
+				//print("m[0] = $m[0]<br />\n");
+				//print("m[1] = $m[1]<br />\n");
+				//print("m[2] = $m[2]<br />\n");
+				//print("m[3] = $m[3]<br />\n");
+				}
+				else
+				{
+echo "<a href=\"" . current($avfilelist)->get_value('url') . "\" onclick=\"return hs.htmlExpand(this, { objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\"><img src=\"" . preg_replace("|(\<img src=\".*?\").*?\/\>|", "\\1 />", $pi) . "\" /></a>";
+				}
+				//print(current($avfilelist)->get_value('media_format'));
+			}
+			else
+			{
+				echo "<a href=\"" . current($avfilelist)->get_value('url') . "\">" . preg_replace("|(\<img src=\".*?\").*?\/\>|", "\\1 />", $pi) . "</a>";
+			}
 
 	//		print_r($avfilelist);
 		}
@@ -374,18 +403,18 @@
 			parent::list_items();
 			$media_file_type = new entity(id_of('av_file'));
 			$feed_link = $this->parent->site_info->get_value('base_url').MINISITE_FEED_DIRECTORY_NAME.'/'.$media_file_type->get_value('feed_url_string');
-			if($this->params['limit_to_current_page'])
-			{
-				$feed_link .= '?page_id='.$this->parent->cur_page->id();
-			}
-			echo '<p class="podcast">';
-			echo '<a href="'.$feed_link.'" class="feedLink">Podcast Feed</a>';
-			echo ' <a href="itpc://'.HTTP_HOST_NAME.$feed_link.'" class="subscribe">Subscribe in iTunes</a>';
-			echo '</p>'."\n";
-			if(defined('REASON_URL_FOR_PODCAST_HELP'))
-			{
-				echo '<p class="smallText podcastHelp"><a href="'.REASON_URL_FOR_PODCAST_HELP.'">What\'s a podcast, and how does this work?</a></p>';
-			}
+		//	if($this->params['limit_to_current_page'])
+		//	{
+		//		$feed_link .= '?page_id='.$this->parent->cur_page->id();
+		//	}
+			//echo '<p class="podcast">';
+			//echo '<a href="'.$feed_link.'" class="feedLink">Podcast Feed</a>';
+			//echo ' <a href="itpc://'.HTTP_HOST_NAME.$feed_link.'" class="subscribe">Subscribe in iTunes</a>';
+			//echo '</p>'."\n";
+			//if(defined('REASON_URL_FOR_PODCAST_HELP'))
+		//	{
+		//		echo '<p class="smallText podcastHelp"><a href="'.REASON_URL_FOR_PODCAST_HELP.'">What\'s a podcast, and how does this work?</a></p>';
+		//	}
 		}
 	}
 ?>

@@ -225,6 +225,12 @@ class LutherTemplate extends MinisiteTemplate
 			$this->head_items->add_javascript( '/javascripts/highslide/highslide-gallery-overrides.js' );
 			$this->head_items->add_stylesheet('/javascripts/highslide/highslide-gallery-overrides.css');
 		}
+		if ($this->cur_page->get_value('custom_page') == 'audio_video' ||
+			$this->cur_page->get_value('custom_page') == 'audio_video_on_current_site' ||
+			$this->cur_page->get_value('custom_page') == 'audio_video_sidebar')
+		{
+			$this->head_items->add_javascript( 'http://ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js');
+		}
         }
 
 	function has_related_section()
