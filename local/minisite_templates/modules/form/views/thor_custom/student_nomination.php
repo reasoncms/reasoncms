@@ -25,10 +25,8 @@ class IndividualVisitForm extends DefaultThorForm
 		$state_province_field = $this->get_element_name_from_label('State');
 		$this->change_element_type('id_9765x1CI8m', 'state');
 		
-		//$grad_year = $this->get_element_name_from_label('High School Graduation Year');
-		//$this->change_element_type($grad_year, 'year');
-		//$grad_year_properties = array('num_years_before_today' => 4, 'num_years_after_today' => 4,);
-		//$this->set_element_properties($grad_year, $grad_year_properties);
+		$grad_year = $this->get_element_name_from_label('High School Graduation Year');
+		$this->change_element_type($grad_year, 'year', array('num_years_before_today' => 4, 'num_years_after_today' => 4,));
 	}
 }
 ?>
