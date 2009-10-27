@@ -115,7 +115,7 @@ class IndividualVisitEvalForm extends DefaultThorForm
 					'NA' => 'NA'),));
 					
 		$classes = $this->get_element_name_from_label('Class(es) visited');
-		$this->change_element_type($$classes, 'textarea');
+		$this->change_element_type($classes, 'textarea');
 		
 		$lunch = $this->get_element_name_from_label('Lunch/Dinner');
 		$this->change_element_type($lunch, 'radio_inline_no_sort', array('display_style' => 'normal','display_name' => '<strong>Lunch/Dinner</strong>',
