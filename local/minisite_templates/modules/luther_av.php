@@ -134,12 +134,14 @@
 			//print(current($avfilelist)->get_value('url'));
 			//print(current($avfilelist)->get_value('height'));
 			//print(current($avfilelist)->get_value('width'));
-			$vurl = preg_replace("|(.*?)&.*?$|", "\\1", current($avfilelist)->get_value('url'));
+			//$vurl = preg_replace("|(.*?)&.*?$|", "\\1", current($avfilelist)->get_value('url'));
 			if (current($avfilelist)->get_value('media_format') == 'Flash')
 			{
-				if (preg_match("/(^http:\/\/www\.youtube\.com\/)(\w+)(\/(.*?)$)/", $vurl, $m ))
+			//	if (preg_match("/(^http:\/\/www\.youtube\.com\/)(\w+)(\/(.*?)$)/", $vurl, $m ))
+				if (preg_match("/(^http:\/\/www\.youtube\.com\/)(watch\?v\=)((.*?)$)/", current($avfilelist)->get_value('url'), $m ))
 				{
-				echo "<a href=\"" . $vurl . "&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1\" onclick=\"return hs.htmlExpand(this, { objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\"><img src=\"http://img.youtube.com/vi" . $m[3] . "/default.jpg\" /></a>";
+				echo "<a href=\"" . $m[1] . "v/" . $m[3] . "&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1\" onclick=\"return hs.htmlExpand(this, { objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\"><img src=\"http://img.youtube.com/vi/" . $m[3] . "/default.jpg\" /></a>";
+				//echo "<a href=\"" . $vurl . "&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1\" onclick=\"return hs.htmlExpand(this, { objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\"><img src=\"http://img.youtube.com/vi" . $m[3] . "/default.jpg\" /></a>";
 				//print("m[0] = $m[0]<br />\n");
 				//print("m[1] = $m[1]<br />\n");
 				//print("m[2] = $m[2]<br />\n");

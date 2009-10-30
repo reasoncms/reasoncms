@@ -249,6 +249,12 @@ class LutherTemplate extends MinisiteTemplate
                                         return true;
                                 }
                         }
+			if ($this->cur_page->get_value('custom_page') == 'audio_video_sidebar')
+			{
+				return true;
+
+			}
+			
 
                 }
                 return false;
