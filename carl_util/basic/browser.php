@@ -53,7 +53,7 @@
 		if( empty( $no_cookie_msg ) )
 			$no_cookie_msg = 'Cookies are not currently enabled in your browser.';
 		?>
-		<script language="JavaScript">
+		<script language="JavaScript" type="text/javascript">
 		<!--
 		function ReadCookie(cookieName) {
 		 var theCookie=""+document.cookie;
