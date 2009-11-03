@@ -395,11 +395,11 @@ class AdmissionsTemplate extends MinisiteTemplate
 
                 if ($this->cur_page->get_value( 'custom_page' ) != 'admissions_home' && $this->has_content( 'main_head' ))
                 {
-			$this->run_section( 'imagetop' );
 			echo '<div class="content-inner clearfix">'."\n";
 			$this->luther_breadcrumbs();
 			echo '<div class="contentHead">'."\n";
 			$this->run_section( 'main_head' );
+			$this->run_section( 'imagetop' );
 			echo '</div>'."\n";
                 }
 
