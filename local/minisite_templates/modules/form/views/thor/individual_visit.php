@@ -12,6 +12,47 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'Individua
  * @author Steve Smith
  */
 
+class textDateTimeIndividualVisitType extends textDateTimePublicType
+{
+	public $type = 'textDateTimeIndividualVisit';
+	
+
+	function get_time_display($hour_val = '')
+	{
+		$str = ' at ';
+		$str .= '<select id="'.$this->name.'hourElement" name="'.$this->name.'[hour]">';
+		$str .= '<option value="--"'.($hour_val == '--' ? ' selected="selected"': '').'>--</option>';
+		$str .= '<option value="8:30 a.m."'.($hour_val == '8:30 a.m.' ? ' selected="selected"': '').'>8:30 a.m.</option>';
+		$str .= '<option value="9:00 a.m."'.($hour_val == '9:00 a.m.' ? ' selected="selected"': '').'>9:00 a.m.</option>';
+		$str .= '<option value="9:30 a.m."'.($hour_val == '9:30 a.m.' ? ' selected="selected"': '').'>9:30 a.m.</option>';
+		$str .= '<option value="10:00 a.m."'.($hour_val == '10:00 a.m.' ? ' selected="selected"': '').'>10:00 a.m.</option>';
+		$str .= '<option value="10:30 a.m."'.($hour_val == '10:30 a.m.' ? ' selected="selected"': '').'>10:30 a.m.</option>';
+		$str .= '<option value="11:00 a.m."'.($hour_val == '11:00 a.m.' ? ' selected="selected"': '').'>11:00 a.m.</option>';
+		$str .= '<option value="11:30 a.m."'.($hour_val == '11:30 a.m.' ? ' selected="selected"': '').'>11:30 a.m.</option>';
+		$str .= '<option value="12:00 p.m."'.($hour_val == '12:00 p.m.' ? ' selected="selected"': '').'>12:00 p.m.</option>';
+		$str .= '<option value="12:30 p.m."'.($hour_val == '12:30 p.m.' ? ' selected="selected"': '').'>12:30 p.m.</option>';
+		$str .= '<option value="1:00 p.m."'.($hour_val == '1:00 p.m.' ? ' selected="selected"': '').'>1:00 p.m.</option>';
+		$str .= '<option value="1:30 p.m."'.($hour_val == '1:30 p.m.' ? ' selected="selected"': '').'>1:30 p.m.</option>';
+		$str .= '<option value="2:00 p.m."'.($hour_val == '2:00 p.m.' ? ' selected="selected"': '').'>2:00 p.m.</option>';
+		$str .= '<option value="2:30 p.m."'.($hour_val == '2:30 p.m.' ? ' selected="selected"': '').'>2:30 p.m.</option>';
+		$str .= '<option value="3:00 p.m."'.($hour_val == '3:00 p.m.' ? ' selected="selected"': '').'>3:00 p.m.</option>';
+		$str .= '<option value="3:30 p.m."'.($hour_val == '3:30 p.m.' ? ' selected="selected"': '').'>3:30 p.m.</option>';
+		$str .= '</select>';
+		return $str. ' : ';
+	}
+	function get_hour_display($hour_val = '')
+	{
+		return false;
+	}
+	function get_minute_display($minute_val = '')
+	{
+	   return false;
+	}
+	function get_ampm_display($ampm_val)
+	{
+		return false;
+	}
+}
 
 class IndividualVisitForm extends DefaultThorForm
 {
@@ -451,12 +492,38 @@ class IndividualVisitForm extends DefaultThorForm
 
 	function on_every_time()
 	{	
-		$visitdatetime_properties = array(
-			'datepicker_class_arg' => 'split-date fill-grid-no-select disable-days-7 statusformat-l-cc-sp-d-sp-F-sp-Y opacity-99 disable-20091017 disable-20091126 disable-20091127 disable-20091128 disable-20091212 disable-20091219 disable-xxxx1224 disable-xxxx1225 disable-xxxx1226 disable-xxxx1231 disable-xxxx0101 disable-xxxx0102 disable-20100130 disable-20100320 disable-20100327 disable-20100402 disable-20100403 disable-20100531 disable-20100603 disable-20100515 disable-20100522 disable-20100529 disable-20100605 disable-20100612 disable-20100619 disable-20100626 disable-20100703 disable-20100710 disable-20100717 disable-20100724 disable-20100731 disable-20100807 disable-20100814 disable-20100821 disable-20100828 disable-20100904 disable-20100911 range-low-today range-high-20100912',
-			);
-		$visitdatetime_field = $this->get_element_name_from_label('Visit Date and Time');
-		$this->change_element_type($visitdatetime_field, 'textdatetimepublic');
-		$this->set_element_properties($visitdatetime_field, $visitdatetime_properties);
+		$visitdate_properties = array(
+			'datepicker_class_arg' => 'split-date fill-grid-no-select disable-days-67 statusformat-l-cc-sp-d-sp-F-sp-Y opacity-99 disable-20091017 disable-20091126 disable-20091127 disable-20091128 disable-20091212 disable-20091219 disable-xxxx1224 disable-xxxx1225 disable-xxxx1226 disable-xxxx1231 disable-xxxx0101 disable-xxxx0102 disable-20100130 disable-20100320 disable-20100327 disable-20100402 disable-20100403 disable-20100531 disable-20100603 disable-20100515 disable-20100522 disable-20100529 disable-20100605 disable-20100612 disable-20100619 disable-20100626 disable-20100703 disable-20100710 disable-20100717 disable-20100724 disable-20100731 disable-20100807 disable-20100814 disable-20100821 disable-20100828 disable-20100904 disable-20100911 range-low-today range-high-20100912',
+		);
+			
+			
+		$visitdate_field = $this->get_element_name_from_label('Visit Date');
+		$this->change_element_type($visitdate_field, 'textdatepublic');
+		$this->set_element_properties($visitdate_field, $visitdate_properties);
+		
+		$visittime_field = $this->get_element_name_from_label('Visit Time');
+		$this->change_element_type($visittime_field, 'select_no_sort', array(
+			'display_style' => 'normal',
+			'add_null_value_to_top' => true,
+			'options' => array(
+				'8:30' => '8:30 a.m.',
+				'9:00' => '9:00 a.m.',
+				'9:30' => '9:30 a.m.',
+				'10:00' => '10:00 a.m.',
+				'10:30' => '10:30 a.m.',
+				'11:00' => '11:00 a.m.',
+				'11:30' => '11:30 a.m.',
+				'12:00' => '12:00 p.m.',
+				'12:30' => '12:30 p.m.',
+				'1:00' => '1:00 p.m.',
+				'1:30' => '1:30 p.m.',
+				'2:00' => '2:00 p.m.',
+				'2:30' => '2:30 p.m.',
+				'3:00' => '3:00 p.m.',
+				'3:30' => '3:30 p.m.',
+				),
+			)
+		);
 			
 		$gender = $this->get_element_name_from_label('Gender');
 		$this->change_element_type($gender, 'radio_inline_no_sort');
