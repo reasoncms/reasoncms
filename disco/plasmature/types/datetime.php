@@ -65,6 +65,14 @@ class textDateTimePublicType extends textDateTimeType
 	}
 }
 
+class textDatePublicType extends textDateTimePublicType
+{
+	public $type = 'textDateTimePublic';
+	public $date_format = 'Y-m-d';
+	public $use_fields = array( 'month', 'day', 'year',);
+}
+
+
 class textTimePublicType extends textDateTimePublicType
 {
 	public $type = 'textTimePublic';
