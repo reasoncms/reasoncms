@@ -32,15 +32,15 @@ $(document).ready(function()
 		update_radio_buttons();
 	});
 	
-	$("input#datetimemonthElement").change(function()
+	$("input[name='datetime[month]']").change(function()
 	{
 		update_radio_buttons();
 	});
-	$("input#datetimedayElement").change(function()
+	$("input[name='datetime[day]']").change(function()
 	{
 		update_radio_buttons();
 	});
-	$("input#datetimeyearElement").change(function()
+	$("input[name='datetime[year]']").change(function()
 	{
 		update_radio_buttons();
 	});
@@ -79,9 +79,9 @@ function update_display(selectElement)
 // jQuerified, Feb 1, 2008 - Nathan White
 function update_radio_buttons()
 {
-	var day = $("input#datetimedayElement").val();
-	var month = $("input#datetimemonthElement").val();
-	var year = $("input#datetimeyearElement").val();
+	var day = $("input[name='datetime[day]']").val();
+	var month = $("input[name='datetime[month]']").val();
+	var year = $("input[name='datetime[year]']").val();
 	var wom = Math.floor(day/7)+1;
 	var dow = ymd_to_dow( year,month,day );	
 	$("div#monthly_repeat_container label[for='radio_monthly_repeat_0']").text("On the "+wom+suffix( wom )+" "+dow+" of the month");
