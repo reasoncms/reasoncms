@@ -33,7 +33,7 @@ class CourseReviewForm extends DefaultThorForm
 		
 		$date = getdate();
 		$year = $this->get_element_name_from_label('Beginning year');
-		$this->change_element_type($year, 'radio_inline', array('options' => array($date['year'], ($date['year']+1))));
+		$this->change_element_type($year, 'radio_inline', array('options' => array($date['year'], ($date['year']+1),($date['year']+2),($date['year']+3))));
 		
 		$applicant_type = $this->get_element_name_from_label('Applicant type');
 		$this->change_element_type($applicant_type, 'radio_inline_no_sort');
