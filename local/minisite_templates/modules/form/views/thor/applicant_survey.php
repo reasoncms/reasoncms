@@ -25,7 +25,7 @@ class ApplicantSurveyForm extends DefaultThorForm
 		$chronicle = $this->get_element_name_from_label('The Chronicle of Higher Education');
 		$this->change_element_type($chronicle, 'checkboxfirst');
 		
-		$decorah_newspaper = $this->get_element_name_from_label('Decorah Newspaper');		
+		$decorah_newspaper = $this->get_element_name_from_label('Decorah Newspapers');		
 		$this->change_element_type($decorah_newspaper, 'checkboxfirst');
 		
 		$gazette = $this->get_element_name_from_label('Cedar Rapids Gazette');
@@ -46,10 +46,10 @@ class ApplicantSurveyForm extends DefaultThorForm
 		$cfd = $this->get_element_name_from_label('Consortium for Faculty Diversity (CFD)');
 		$this->change_element_type($cfd, 'checkboxfirst');
 		
-		$journal = $this->get_element_name_from_label('Professional Journal/website');
+		$journal = $this->get_element_name_from_label('Professional journal/website');
 		$this->change_element_type($journal, 'checkboxfirst');
 
-		$grad = $this->get_element_name_from_label('Graduate Program Advisor/Office');
+		$grad = $this->get_element_name_from_label('Graduate program advisor/office');
 		$this->change_element_type($grad, 'checkboxfirst');
 	}	
 }
