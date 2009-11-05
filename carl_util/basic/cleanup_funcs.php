@@ -257,20 +257,24 @@
 		require_once( HTML_PURIFIER_INC . 'htmlpurifier.php' );
 		$config = HTMLPurifier_Config::createDefault();
 
-		$config->set('HTML', 'DefinitionID', 'allow_anchors_transform_em_and_strong');
-		$config->set('HTML', 'DefinitionRev', 1);
+		if (carl_is_php5())
+		{
+			$config->set('HTML.DefinitionID', 'allow_anchors_transform_em_and_strong');
+			$config->set('HTML.DefinitionRev', 1);
+			$config->set('Attr.EnableID', true);
+			$def = $config->getHTMLDefinition(true);
+		}
+		else
+		{
+			$config->set('HTML', 'DefinitionID', 'allow_anchors_transform_em_and_strong');
+			$config->set('HTML', 'DefinitionRev', 1);
+			$config->set('Attr', 'EnableID', true);
+			$def =& $config->getDefinition('HTML');
+		}
 
 		// lets transform b to strong and i to em
-		if (carl_is_php5()) $def = $config->getDefinition('HTML');
-		else $def =& $config->getDefinition('HTML');
 		$def->info_tag_transform['b'] = new HTMLPurifier_TagTransform_Simple('strong');
 		$def->info_tag_transform['i'] = new HTMLPurifier_TagTransform_Simple('em');
-
-		// lets add support for named anchors		
-		if (carl_is_php5()) $def2 = $config->getHTMLDefinition(true);
-		else $def2 =& $config->getHTMLDefinition(true);
-		$def2->addAttribute('a', 'name', new HTMLPurifier_AttrDef_HTML_Nmtokens);
-
 		$purifier = new HTMLPurifier($config);
 		return $purifier->purify( $string );
 	}
