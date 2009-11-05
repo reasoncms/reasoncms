@@ -47,7 +47,7 @@
 			$this->thumbnail_width = $thumb_dimensions['width'];
 
 			$this->add_element( 'image', 'ReasonImageUpload', array('obey_no_resize_flag' => true, 'authenticator' => $this->_get_authenticator(), 'max_width' => REASON_STANDARD_MAX_IMAGE_WIDTH, 'max_height' => REASON_STANDARD_MAX_IMAGE_HEIGHT));
-			$this->add_element( 'thumbnail', 'ReasonImageUpload', array('authenticator' => $this->_get_authenticator(), 'max_width' => $this->thumbnail_width, 'max_height' => $this->thumbnail_height));
+			$this->add_element( 'thumbnail', 'ReasonImageUpload', array('authenticator' => $this->_get_authenticator()) );
 			$image = $this->get_element('image');
 			$image->get_head_items($this->head_items);
 		
@@ -197,7 +197,7 @@
 		function handle_thumbnail($id, $thumbnail)
 		{
 			$info = getimagesize( $thumbnail->tmp_full_path );
-			if(array_key_exists($info[2],$this->image_types) && in_array($this->image_types[ $info[2] ], $this->image_types_with_exif_data) )
+			if(array_key_exists($info[2],$this->image_types) && in_array($this->image_types[ $info[2] ], $this->image_types_with_exif_data) && function_exists('read_exif_data') )
 			{
 				$exif_data = @read_exif_data( $thumbnail->tmp_full_path );
 				if( !empty( $exif_data[ 'DateTime' ] ) )
@@ -225,7 +225,7 @@
 		function handle_full_size_image($id, $image)
 		{
 			$info = getimagesize( $image->tmp_full_path );
-			if(array_key_exists($info[2],$this->image_types) && in_array($this->image_types[ $info[2] ], $this->image_types_with_exif_data) )
+			if(array_key_exists($info[2],$this->image_types) && in_array($this->image_types[ $info[2] ], $this->image_types_with_exif_data) && function_exists('read_exif_data') )
 			{
 				$exif_data = @read_exif_data( $image->tmp_full_path );
 				if( !empty( $exif_data[ 'DateTime' ] ) )
