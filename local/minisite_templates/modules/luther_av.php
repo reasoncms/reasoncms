@@ -30,7 +30,7 @@
 		var $item_counter = 1;
 		var $acceptable_params = array(
 			'limit_to_current_site'=>true,
-			'limit_to_current_page'=>false,
+			'limit_to_current_page'=>true,
 			'sort_direction'=>'DESC', // Normally this page shows items in reverse chronological order, but you can change this to ASC for formward chronological order
 			'sort_field'=>'dated.datetime',
 		);
@@ -101,7 +101,7 @@
                         echo '<li>';
                         $this->show_list_item_pre( $item );
                         //$this->show_list_item_date( $item );
-                        if ($this->cur_page->get_value('custom_page') != 'audio_video_sidebar')
+                        if ($this->cur_page->get_value('custom_page') != 'audio_video_sidebar' && $this->cur_page->get_value('custom_page') != 'default')
 			{
 				echo '<h4>';
                         	$this->show_list_item_name( $item );
@@ -109,7 +109,7 @@
                         	$this->show_list_item_desc( $item );
 			}
                         echo '</li>'."\n";
-                        if ($this->cur_page->get_value('custom_page') != 'audio_video_sidebar')
+                        if ($this->cur_page->get_value('custom_page') != 'audio_video_sidebar' && $this->cur_page->get_value('custom_page') != 'default')
 			{
                         	echo '<hr>'."\n";
 			}

@@ -134,7 +134,8 @@ class LutherTemplate extends MinisiteTemplate
 	// insert "add this" capability to luther pages linking to facebook,
 	// twitter, delicious, etc.
 	{
-		if ($this->cur_page->get_value( 'custom_page' ) != 'publication'&& $this->cur_page->get_value('custom_page') != 'default')
+		if ($this->cur_page->get_value( 'custom_page' ) != 'publication'			&& $this->cur_page->get_value('custom_page') != 'default'
+			&& $this->cur_page->get_value('custom_page') != 'audio_video')
 		{
 			return;
 		}
@@ -177,11 +178,11 @@ class LutherTemplate extends MinisiteTemplate
                 if ($this->has_content( 'main' ))
                 {
                         echo '<div class="contentMain">'."\n";
-                        $this->run_section( 'main' );
 			if (!$this->luther_add_this_complete)
 			{
 				$this->luther_add_this();
 			}
+                        $this->run_section( 'main' );
                         echo '</div>'."\n";
                 }
                 if ($this->has_content( 'main_post' ))
@@ -191,11 +192,11 @@ class LutherTemplate extends MinisiteTemplate
 				echo '<p><b>Luther College News</b></p>'."\n";
 			}
                         echo '<div class="contentPost">'."\n";
-                        $this->run_section( 'main_post' );
 			if (!$this->luther_add_this_complete)
 			{
 				$this->luther_add_this();
 			}
+                        $this->run_section( 'main_post' );
                         echo '</div>'."\n";
                 }
 
@@ -225,12 +226,7 @@ class LutherTemplate extends MinisiteTemplate
 			$this->head_items->add_javascript( '/javascripts/highslide/highslide-gallery-overrides.js' );
 			$this->head_items->add_stylesheet('/javascripts/highslide/highslide-gallery-overrides.css');
 		}
-		if ($this->cur_page->get_value('custom_page') == 'audio_video' ||
-			$this->cur_page->get_value('custom_page') == 'audio_video_on_current_site' ||
-			$this->cur_page->get_value('custom_page') == 'audio_video_sidebar')
-		{
-			$this->head_items->add_javascript( 'http://ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js');
-		}
+		$this->head_items->add_javascript( 'http://ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js');
         }
 
 	function has_related_section()
@@ -249,13 +245,18 @@ class LutherTemplate extends MinisiteTemplate
                                         return true;
                                 }
                         }
+			if ($this->cur_page->get_value('custom_page') == 'audio_video')
+			{
+				return false;
+			}
 			if ($this->cur_page->get_value('custom_page') == 'audio_video_sidebar')
 			{
 				return true;
-
 			}
-			
-
+			if ($this->cur_page->get_value('custom_page') == 'default' && $this->has_content('pre_sidebar'))
+			{
+				return true;
+			}
                 }
                 return false;
         }

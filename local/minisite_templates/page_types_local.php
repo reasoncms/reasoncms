@@ -11,7 +11,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			//'banner_xtra' => 'google_search_appliance',
 			'banner_xtra' => 'nav_search_logo',
 			'post_banner' => 'navigation_top',
-			//'pre_sidebar' => 'assets',
+			'pre_sidebar' => 'luther_av',
 			'sidebar' => 'luther_image_sidebar',
 			'navigation' => 'navigation',
 			'footer' => 'maintained',
@@ -58,6 +58,11 @@ $GLOBALS['_reason_page_types_local'] = array(
 					),
 				),
 			),
+			            'sidebar'=>array(  
+            	'module' => 'luther_other_publication_news',
+				'max_num_to_show' => 1,
+				),
+/*
 			'sidebar' => array( // Highlights
 				'module' => 'publication',
 				//'module' => 'luther_other_publication_news',
@@ -73,6 +78,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 					),
 				),
 			),
+*/
 			'post_sidebar' => 'blurb',	
 		),
 		'alumni_auction_registration' => array(
@@ -97,12 +103,17 @@ $GLOBALS['_reason_page_types_local'] = array(
                 ),
 	'audio_video' => array(
 			'main_post' => 'luther_av',
+                        'sidebar' => '',
+                        'pre_sidebar' => '',
 		),
 	'audio_video_on_current_site' => array(
 			'main_post' => 'luther_av',
+                        'sidebar' => '',
+                        'pre_sidebar' => '',
 		),
         'audio_video_sidebar' => array(
                         'sidebar' => 'luther_av',
+			'pre_sidebar' => 'luther_image_sidebar',
                 ),
 
 
@@ -176,6 +187,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 					 ),
 				   ),
 		),
+/*
 		'luther_home_page' => array(
             		'main_post'=>'',
             		'main_head' => '',
@@ -202,6 +214,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 					 ),
 				   ),
 		),
+*/
 		'onecard' => array(
             'main_post'=>'onecard_dashboard',
             'sidebar'=>'',
