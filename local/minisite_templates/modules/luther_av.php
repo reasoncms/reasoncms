@@ -35,7 +35,7 @@
 			'sort_field'=>'dated.datetime',
 		);
 		var $make_current_page_link_in_nav_when_on_item = true;
-		var $no_items_text = 'There is no audio or video attached to this page yet.';
+		var $no_items_text = '';
 		var $media_format_overrides = array('Flash Video'=>'Flash');
 		
 		function alter_es() // {{{
