@@ -237,6 +237,7 @@ class LutherTemplate extends MinisiteTemplate
 			//print_r($this->cur_page->get_value('name'));
 
 			// test if all sidebar images have keyword 'imagetop'
+			// bannerad, or video.
 			$module =& $this->_get_module( 'sidebar' );
 			foreach( $module->images AS $id => $image )
                         {
@@ -253,14 +254,19 @@ class LutherTemplate extends MinisiteTemplate
 			{
 				return true;
 			}
-			if ($this->cur_page->get_value('custom_page') == 'default' && $this->has_content('pre_sidebar'))
+			// return true if media works has been attached to page.
+			$es = new entity_selector();
+			$es->add_type(id_of('av'));
+			$es->add_right_relationship($this->page_id, relationship_id_of('minisite_page_to_av'));
+			$result = $es->run_one(); 
+			if ($result != false)
 			{
 				return true;
-			}
+			}	
+			
                 }
                 return false;
         }
-
 
 
 }
