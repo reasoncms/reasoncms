@@ -1272,6 +1272,16 @@
 			else
 				return false;
 		} // }}}
+
+		/**
+	    * @param string $element_name Name of a potential field
+		* @return bool true if this is the name of a valid element
+		* @access public
+		*/
+		function is_element( $element_name )
+		{
+			return $this->_is_element($element_name);
+		}
 		
 		/**
     	* Returns a copy of the plasmature element for a field.  
@@ -1870,6 +1880,16 @@
 				return true;
 			else
 				return false;
+		}
+
+		/**
+		* @param string $group_name Name of the element group
+		* @return boolean true if string is the name of an element group
+		* @access public
+		*/
+		function is_element_group ($group_name)
+		{
+			return $this->_is_element_group($group_name);
 		}
 		
 		/**
