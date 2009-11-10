@@ -1365,4 +1365,30 @@
 		}
 		return $is_entity;
 	}
+	
+	/**
+	 * In a multidomain reason install the web path for a site might not be the web path for the current domain - this returns the 
+	 * correct webpath for a given reason site.
+	 *
+	 * @author Nathan White
+	 * @return string absolute file system directory that is the web root for a site - includes a trailing slash
+	 */
+	function reason_get_site_web_path($site_id_or_entity)
+	{
+		$site = (is_numeric($site_id_or_entity)) ? new entity($site_id_or_entity) : $site_id_or_entity;
+		if (reason_is_entity($site, 'site'))
+		{
+			$domain = $site->get_value('domain');
+			if (!empty($domain) && isset($GLOBALS['_reason_domain_settings'][$domain]['WEB_PATH']))
+			{
+				return $GLOBALS['_reason_domain_settings'][$domain]['WEB_PATH'];
+			}
+			else return WEB_PATH;
+		}
+		else
+		{
+			trigger_error('reason_get_site_web_path passed a value that is not a site_id or site entity');
+			return false;
+		}
+	}
 ?>
