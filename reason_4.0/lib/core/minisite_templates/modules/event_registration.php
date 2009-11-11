@@ -52,8 +52,8 @@ class EventRegistrationModule extends EventsModule
 		echo '<div id="eventRegistration">'."\n";
 		echo '<h3>Register for '.$this->event->get_value('name').'</h3>'."\n";
 		echo '<form method="POST">'."\n";
-		echo '<p><strong>Name:</strong> '.$fullname.'<input type="hidden" name="name" id="name" value="'.$fullname.'"></p>'."\n";
-		echo '<p><strong>E-mail address:</strong> '.$email.'<input type="hidden" name="email" id="email" value="'.$email.'"></p>'."\n";
+		echo '<p><strong>Name:</strong> '.htmlspecialchars($fullname, ENT_QUOTES).'<input type="hidden" name="name" id="name" value="'.htmlspecialchars($fullname, ENT_QUOTES).'"></p>'."\n";
+		echo '<p><strong>E-mail address:</strong> '.htmlspecialchars($email, ENT_QUOTES).'<input type="hidden" name="email" id="email" value="'.htmlspecialchars($email, ENT_QUOTES).'"></p>'."\n";
 		echo '<input type="submit" name="submit" id="submit" value="Register">'."\n";
 		echo '</form>'."\n";
 		echo '</div>'."\n";
@@ -79,8 +79,8 @@ class EventRegistrationModule extends EventsModule
 	}
 	function show_registration_thanks()
 	{
-		echo '<h3>Thanks for registering, '.$_POST["name"].'!</h3>'."\n";
-		echo '<p>An email copy of your registration request will be sent to '.$_POST['email'].'.</p>'."\n";
+		echo '<h3>Thanks for registering, '.htmlspecialchars($_POST["name"], ENT_QUOTES).'!</h3>'."\n";
+		echo '<p>An email copy of your registration request will be sent to '.htmlspecialchars($_POST['email'], ENT_QUOTES).'.</p>'."\n";
 	}
 }
 ?>
