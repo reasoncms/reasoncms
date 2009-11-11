@@ -228,8 +228,8 @@ class defaultFilterDisplay
 		$ret .= '<form method="get" action="?">'."\n";
 		foreach($this->filters as $key=>$vals)
 		{
-			$ret .= '<input type="hidden" name="filters['.$key.'][type]" value="'.$vals['type'].'">';
-			$ret .= '<input type="hidden" name="filters['.$key.'][id]" value="'.$vals['id'].'">';
+			$ret .= '<input type="hidden" name="filters['.htmlspecialchars($key,ENT_QUOTES, 'UTF-8').'][type]" value="'.htmlspecialchars($vals['type'],ENT_QUOTES, 'UTF-8').'">';
+			$ret .= '<input type="hidden" name="filters['.htmlspecialchars($key,ENT_QUOTES, 'UTF-8').'][id]" value="'.htmlspecialchars($vals['id'],ENT_QUOTES, 'UTF-8').'">';
 		}
 		if (!empty($this->textonly))
 			$ret .= '<input type="hidden" name="textonly" value="1">';
@@ -338,7 +338,7 @@ class defaultFilterDisplay
 						$link .= $combined_other_filter_links.'&amp;';
 					if(!empty($this->search_value))
 						$link .= 'search='.urlencode($this->search_value).'&amp;';
-					$link .= 'filters['.$key.'][type]='.$filter_name.'&amp;filters['.$key.'][id]='.$entity->id();
+					$link .= 'filters['.htmlspecialchars($key,ENT_QUOTES,'UTF-8').'][type]='.htmlspecialchars($filter_name,ENT_QUOTES,'UTF-8').'&amp;filters['.htmlspecialchars($key,ENT_QUOTES,'UTF-8').'][id]='.htmlspecialchars($entity->id(),ENT_QUOTES,'UTF-8');
 					if (!empty($this->textonly))
 						$link .= '&amp;textonly=1';
 					if(!empty($this->filters[$key]) && $this->filters[$key]['type'] == $filter_name && $this->filters[$key]['id'] == $entity->id())
