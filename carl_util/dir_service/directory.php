@@ -200,6 +200,13 @@ class directory_service {
 	var $_debug = FALSE;
 
 	/**
+	* Array list of attributes for sort function
+	* @access private
+	* @var array
+	*/
+	var $sort_attrs = array();
+
+	/**
 	* Constructor; load configuration settings, instantiate services
 	* @access private
 	* @param array $pref_services Optional list of services to load for this instance
@@ -452,7 +459,7 @@ class directory_service {
 		{
 			if(!empty($results[$set]))
 			{
-				foreach($results[$set] as $object)
+				foreach($results[$set] as $key => $object)
 				{
 					// key on either username or groupname
 					if (isset($object['ds_username'][0])) $key = $object['ds_username'][0];
@@ -581,6 +588,32 @@ class directory_service {
 	{
 		$this->merge_results = false;
 	}
+
+	/**
+	* Sort a result set according to a list of attributes.
+	* @param $attrs Attribute list (in order of importance)
+	*/
+	function sort_records( $attrs )
+	{
+		if (isset($this->search_result))
+		{
+			$this->sort_attrs = $attrs;
+			uasort( $this->search_result, array($this, '_sort_function') );
+		}
+	}
+	
+	/**
+	* Internal sorting function for sort_records()
+	*/
+	function _sort_function( $a, $b )
+	{
+		foreach( $this->sort_attrs as $f )
+		{
+			$strc = strcasecmp( $a[$f][0], $b[$f][0] );
+			if ( $strc != 0 ) return $strc;
+		}
+		return 0;
+	}	
 	
 }
 
