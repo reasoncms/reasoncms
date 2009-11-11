@@ -1034,7 +1034,8 @@
 		//called on by show_filtering()		
 		function build_default_links($key)
 		{
-			$this->default_links[$key] = 'filters['.$key.'][type]='.$this->filters[$key]['type'].'&amp;filters['.$key.'][id]='.$this->filters[$key]['id'];
+			$keyquot = htmlspecialchars($key,ENT_QUOTES,'UTF-8');
+			$this->default_links[$key] = 'filters['.$keyquot.'][type]='.htmlspecialchars($this->filters[$key]['type'],ENT_QUOTES,'UTF-8').'&amp;filters['.$keyquot.'][id]='.htmlspecialchars($this->filters[$key]['id'],ENT_QUOTES,'UTF-8');
 		}
 		
 		function show_feed_link()
