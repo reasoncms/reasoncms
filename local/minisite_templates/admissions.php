@@ -112,13 +112,9 @@ class AdmissionsTemplate extends MinisiteTemplate
 		{
 			// section navigation
 			$bc = $this->_get_breadcrumbs();
-			// shorten title if necessary
 			$sbtitle = $bc[1]["page_name"];	
-			if (strlen($sbtitle) > 42)
-			{
-				for ($i = 42; $sbtitle[$i] != ' '; $i--);
-				$sbtitle = substr($sbtitle, 0, $i) . '...';
-			}
+			// shorten title if necessary
+			$sbtitle = luther_shorten_string($sbtitle, 42, " ...");
 			echo '<div id="sidebar_title"><h2><a href="'.$bc[1]["link"].'">'.$sbtitle.'</a></h2></div>'."\n";
 			//print_r($this->_get_breadcrumbs());
 		}

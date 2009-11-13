@@ -540,4 +540,16 @@ function google_analytics()
 	echo 'pageTracker._trackPageview();'."\n";                echo '</script>'."\n";
 }
 
+function luther_shorten_string($text, $length, $append)
+// shorten a string called $text to a word boundary if longer than $length.
+// append a string to the end (like " ..." or "Read more...")
+{
+	if (strlen($text) > $length)
+	{
+		for ($i = $length; $text[$i] != ' '; $i--);
+		$text = substr($text, 0, $i) . $append;
+	}
+	return $text;
+}
+
 ?>
