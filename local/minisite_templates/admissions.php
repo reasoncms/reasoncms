@@ -193,7 +193,7 @@ class AdmissionsTemplate extends MinisiteTemplate
 
 		$this->admissions_related_links();
 		$this->admissions_timeline();
-                if($this->has_content( 'pre_sidebar' ))
+                if($this->cur_page->get_value( 'custom_page' ) != 'default' && $this->has_content( 'pre_sidebar' ))
                 {
                         //echo '<div id="preSidebar">'."\n";
                         $this->run_section( 'pre_sidebar' );
@@ -411,6 +411,11 @@ class AdmissionsTemplate extends MinisiteTemplate
 			$this->admissions_home_content();
 		}
 
+		if ($this->cur_page->get_value( 'custom_page' ) == 'default' && $this->has_content( 'pre_sidebar' ))
+                {
+			$this->run_section( 'pre_sidebar' );
+                }
+
 		if ($this->cur_page->get_value( 'custom_page' ) == 'default' && $this->has_content( 'sidebar' ))
                 {
 			// put sidebar image in main post
@@ -445,16 +450,29 @@ class AdmissionsTemplate extends MinisiteTemplate
 	function do_org_head_items()
         {
                 // Just here as a hook for branding head items (js/css/etc.)
-		$this->head_items->add_javascript( '/javascripts/highslide/highslide-with-
-html.js' );
+                $this->head_items->add_stylesheet('/stylesheets/admissions/reset.css');
+                $this->head_items->add_stylesheet('/stylesheets/admissions/styles.css');
+                $this->head_items->add_stylesheet('/javascripts/highslide/highslide.css');
+                $this->head_items->add_stylesheet('/stylesheets/admissions/reason.css');
 		$this->head_items->add_javascript( '/javascripts/highslide/highslide-full.js' );
-		$this->head_items->add_javascript( '/javascripts/highslide/highslide-overrides.js' );
-
+                if ($this->cur_page->get_value('custom_page') != 'image_slideshow')
+                {
+                        $this->head_items->add_javascript( '/javascripts/highslide/highslide-overrides.js' );
+                }
+                if ($this->cur_page->get_value('custom_page') == 'image_slideshow')
+                {
+                        $this->head_items->add_javascript( '/javascripts/highslide/highslide-gallery-overrides.js' );
+                        $this->head_items->add_stylesheet('/javascripts/highslide/highslide-gallery-overrides.css');
+                }
+                $this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js');
+ 
 		$this->head_items->add_javascript( '/javascripts/jquery-1.3.2.min.js' );
 		$this->head_items->add_javascript( '/javascripts/jquery.superfish.js' );
 		$this->head_items->add_javascript( '/javascripts/jquery.cycle.min.js' );
 		$this->head_items->add_javascript( '/javascripts/scripts.js' );
 		$this->head_items->add_javascript( '/javascripts/lawlor.js' );
+
+
 
         }
 
@@ -479,7 +497,23 @@ html.js' );
                                         return true;
                                 }
                         }
-
+                        if ($this->cur_page->get_value('custom_page') == 'audio_video')
+                        {
+                                return false;
+                        }
+                        if ($this->cur_page->get_value('custom_page') == 'audio_video_sidebar')
+                        {
+                                return true;
+                        }
+                        // return true if media works has been attached to page.
+                        $es = new entity_selector();
+                        $es->add_type(id_of('av'));
+                        $es->add_right_relationship($this->page_id, relationship_id_of('minisite_page_to_av'));
+                        $result = $es->run_one();
+                        if ($result != false)
+                        {
+                                return true;
+                        }
                 }
                 return false;
         }
