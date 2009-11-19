@@ -85,7 +85,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post' => 'alumni_auction_pricing',
 		),
 		'directions' => array(
-			'main_post' => 'directions',
+			'main' => 'directions',
+			'main_post' => 'content',
 		),
 		'events' => array(
 			'main_post' => 'luther_events',
