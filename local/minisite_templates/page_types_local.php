@@ -58,11 +58,11 @@ $GLOBALS['_reason_page_types_local'] = array(
 					),
 				),
 			),
-			            'sidebar'=>array(  
+/*			            'sidebar'=>array(  
             	'module' => 'luther_other_publication_news',
 				'max_num_to_show' => 1,
 				),
-/*
+*/
 			'sidebar' => array( // Highlights
 				'module' => 'publication',
 				//'module' => 'luther_other_publication_news',
@@ -78,15 +78,14 @@ $GLOBALS['_reason_page_types_local'] = array(
 					),
 				),
 			),
-*/
+
 			'post_sidebar' => 'blurb',	
 		),
 		'alumni_auction_registration' => array(
 			'main_post' => 'alumni_auction_pricing',
 		),
 		'directions' => array(
-			'main' => 'directions',
-			'main_post' => 'content',
+			'main_post' => 'directions',
 		),
 		'events' => array(
 			'main_post' => 'luther_events',
