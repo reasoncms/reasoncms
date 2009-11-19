@@ -44,7 +44,7 @@ class HeadItems
 	var $_to_remove = array();
 	
 	var $allowable_elements = array('base','link','meta','script','style','title');
-	var $elements_that_may_have_content = array('meta','script','style','title');
+	var $elements_that_may_have_content = array('script','style','title');
 	var	$elements_that_may_not_self_close = array('script','title');
 	
 	function HeadItems()
