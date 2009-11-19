@@ -81,7 +81,7 @@ domain_define( 'UNIVERSAL_CSS_PATH', ''); // Define the path to a CSS file used 
 /**
  * The absolute file system directory that is the web root - should include a trailing slash
  */
-domain_define( 'WEB_PATH', $_SERVER['DOCUMENT_ROOT'] . '/' );
+domain_define( 'WEB_PATH', rtrim($_SERVER['DOCUMENT_ROOT'], "/") . '/' );
 
 /**
  * The host name, (eg www.mysite.com)
