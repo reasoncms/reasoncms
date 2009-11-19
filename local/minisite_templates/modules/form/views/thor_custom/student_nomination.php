@@ -28,7 +28,7 @@ class IndividualVisitForm extends DefaultThorForm
 		$date = getdate();
 		$grad_year = $this->get_element_name_from_label('High School Graduation Year');
 		//$this->change_element_type($grad_year, 'year', array('num_years_before_today' => 0, 'num_years_after_today' => 2,));
-		$this->change_element_type($grad_year, 'radio_inline', array('options' => array($date['year'], ($date['year']+1))));
+		$this->change_element_type($grad_year, 'radio_inline', array('options' => array($date['year']+1, ($date['year']+2))));
 	}
 }
 ?>
