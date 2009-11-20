@@ -307,7 +307,22 @@
 				$um->update_rewrites();
 				if($old_path != $new_path)
 				{
-					$file_contents = '# reason-auto-rewrite-begin !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'."\n";
+					// we also leave any custom .htaccess rules in the new file we are generating since we do not know if they are
+					// related to the site or not ... for instance the base directory might have rules for the whole server that
+					// we do not want to lost because the site at the server root gets a new location.
+					$file_contents = '';
+					$orig = (file_exists($new_path.'/.htaccess')) ? file($new_path.'/.htaccess') : false;
+					if( !empty( $orig ) )
+					{
+						reset( $orig );
+						while( list(,$line) = each( $orig ) )
+						{
+							if( preg_match('/reason-auto-rewrite-begin/', $line) )
+								break;
+							$file_contents .= $line;
+						}
+					}
+					$file_contents .= '# reason-auto-rewrite-begin !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'."\n";
 					$file_contents .= '# THIS SECTION IS AUTO-GENERATED - DO NOT TOUCH'."\n";
 					$file_contents .= '#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'."\n\n";
 
