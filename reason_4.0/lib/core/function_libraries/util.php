@@ -1367,11 +1367,12 @@
 	}
 	
 	/**
-	 * In a multidomain reason install the web path for a site might not be the web path for the current domain - this returns the 
-	 * correct webpath for a given reason site.
+	 * In a multidomain reason install the web path for a site might not be the web path for the current domain.
+	 *
+	 * This function returns the correct webpath for a given reason site or false if a site with a custom domain setting is not defined in domain_settings.php
 	 *
 	 * @author Nathan White
-	 * @return string absolute file system directory that is the web root for a site - includes a trailing slash
+	 * @return string absolute file system directory that is the web root for a site
 	 */
 	function reason_get_site_web_path($site_id_or_entity)
 	{
@@ -1383,12 +1384,34 @@
 			{
 				return $GLOBALS['_reason_domain_settings'][$domain]['WEB_PATH'];
 			}
-			else return WEB_PATH;
+			elseif (!empty($domain))
+			{
+				trigger_error('reason_get_site_web_path called on site id ' . $site->id() . ' with domain value ' . $domain . ' that is not defined in domain_settings.php');
+				return false;
+			}
+			return reason_get_default_web_path();
 		}
 		else
 		{
 			trigger_error('reason_get_site_web_path passed a value that is not a site_id or site entity');
 			return false;
+		}
+	}
+	
+	/**
+	 * Returns the default webpath when the setting is not derived from a domain defined in domain_settings.php
+	 */
+	function reason_get_default_web_path()
+	{
+		if (isset($GLOBALS['_default_domain_settings']['WEB_PATH']))
+		{
+			return $GLOBALS['_default_domain_settings']['WEB_PATH'];
+		}
+		else
+		{
+			trigger_error('A default domain setting is not defined for this Reason instance. Please update package_settings.php to use domain_define 
+						  instead of define when setting the WEB_PATH constant.');
+			return WEB_PATH;
 		}
 	}
 ?>
