@@ -185,7 +185,7 @@ class LutherHomeTemplate extends MinisiteTemplate
                 echo '</div> <!-- class="column span-15" -->'."\n";
                 echo '<div class="column span-15">'."\n";
 		echo '<div class="imagesideframe">'."\n";
-		echo '<a href="http://lutherbookshop.com">';
+		echo '<a href="http://lutherbookshop.com" onClick="javascript:pageTracker._trackPageview(\'/lutherbookshop\'); ">';
 		echo '<img src="/images/luther/homepage/subsite_nav/bookshop_banner.gif" alt="Bookshop"/></a>';
 		echo '</div> <!-- class="imagesideframe" -->'."\n";
                 echo '</div> <!-- class="column span-15" -->'."\n";
