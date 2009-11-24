@@ -57,6 +57,8 @@ class PublicationModule extends Generic3Module
 	var $date_format = 'F j, Y \a\t g:i a';		//will be replaced if 'date_format' field for publication is set
 	var $num_per_page = 12;	
 	var $max_num_items = '';
+	var $minimum_date_strtotime_format;
+	var $minimum_date;
 	
 	// Filter settings
 	var $use_filters = true;
@@ -211,6 +213,7 @@ class PublicationModule extends Generic3Module
 	{
 		$this->set_defaults_from_parameters($this->params);
 		$this->set_show_featured_items();
+		$this->set_minimum_date();
 		if ($this->related_mode) $this->init_related( $args );
 		elseif (!empty($this->publication)) parent::init( $args );
 		else
@@ -248,6 +251,29 @@ class PublicationModule extends Generic3Module
 		}
 	}
 	
+	function set_minimum_date()
+	{
+		if (isset($this->params['minimum_date_strtotime_format']))
+		{
+			// minimum_date_strtotime_format should be a string usable to strtotime and also in the past not the future - trigger an error if not.
+			$cur_timestamp = get_unix_timestamp(get_mysql_datetime());
+			$min_date = strtotime($this->params['minimum_date_strtotime_format']);
+			if ($min_date && ($min_date != -1) && ($min_date < $cur_timestamp))
+			{
+				$this->minimum_date = get_mysql_datetime($min_date);
+			}
+			elseif (!$min_date || ($min_date == -1))
+			{
+				trigger_error('A minimum date value was not set as the value of minimum_date_strtime_format 
+							  ('.$this->params['minimum_date_strtotime_format'].') is not a valid argument for strtotime.');
+			}
+			elseif ($min_date > $cur_timestamp)
+			{
+				trigger_error('A minimum date value was not set. The value of minimum_date_strtime_format 
+							  ('.$this->params['minimum_date_strtotime_format'].') must reference a date in the past.');
+			}
+		}
+	}
 	/**
 	 * Init when publication is in related_mode
 	 * @author Nathan White
@@ -359,7 +385,7 @@ class PublicationModule extends Generic3Module
 		$this->base_params['limit_to_current_site'] = false;
 		
 		// all params that could be provided in page_types
-		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'show_login_link', 
+		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'minimum_date_strtotime_format', 'show_login_link', 
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
 		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css',
 		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization');
@@ -704,6 +730,10 @@ class PublicationModule extends Generic3Module
 			{
 				$this->es->add_left_relationship( $this->request['section_id'], relationship_id_of('news_to_news_section') );
 			}
+			if (!empty($this->minimum_date))
+			{
+				$this->es->add_relation('dated.datetime > "' . $this->minimum_date . '"');
+			}
 		}
 		$this->es->add_relation( 'status.status = "published"' );	
 		$this->further_alter_es();
@@ -723,8 +753,13 @@ class PublicationModule extends Generic3Module
 		{
 			$this->es->add_left_relationship( array_keys($this->related_categories), relationship_id_of('news_to_category'));
 		}
+		if (!empty($this->minimum_date))
+		{
+			$this->es->add_relation('dated.datetime > "' . $this->minimum_date . '"');
+		}
 		$this->related_issue_limit($this->es);
-		$this->related_order_and_limit($this->es, array('status'));
+		$table_limit_array = (!empty($this->minimum_date)) ? array('status', 'dated') : array('status');
+		$this->related_order_and_limit($this->es, $table_limit_array);
 	}
 	
 	/**
@@ -767,7 +802,7 @@ class PublicationModule extends Generic3Module
 		}
 		else
 		{
-			$table_limit_array[] = 'dated';
+			if (!is_array($table_limit_array) || !in_array('dated', $table_limit_array)) $table_limit_array[] = 'dated';
 			$order_string = 'dated.datetime DESC';
 		}
 		$es->limit_tables($table_limit_array);
