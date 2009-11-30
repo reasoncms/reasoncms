@@ -1,7 +1,7 @@
 // Loki WYSIWIG Editor 2.0.4
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2009-08-26 16:23:26 
+// Compiled 2009-11-30 17:26:39 
 // http://loki-editor.googlecode.com/
 
 
@@ -1084,7 +1084,7 @@ var Util = {
 	{
 		for (var i = 0; i < arguments.length; i++) {
 			var o = arguments[i];
-			if (typeof(o) != 'object' || typeof(o.length) != 'number')
+			if (!o || typeof(o.length) != 'number')
 				return false;
 		}
 		
@@ -5438,6 +5438,14 @@ Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
 		? (/[\x00-\x1F\x80-\uFFFF&<>"]/g)
 		: (/[\x00-\x1F&<>"]/g);
 	
+	function is_relevant(node) {
+		if (!node)
+			return false;
+		return (node.nodeType == Util.Node.ELEMENT_NODE || 
+			node.nodeType == Util.Node.TEXT_NODE &&
+			/\S/.test(node.nodeValue));
+	}
+	
 	function clean_text(text, in_attribute) {
 		function html_escape(txt) {
 			var c = txt.charCodeAt(0);
@@ -5461,12 +5469,13 @@ Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
 		
 		if (parent_is_block) {
 			if (node == node.parentNode.firstChild)
-				results[0] == true;
+				results[0] = true;
 			if (node == node.parentNode.lastChild)
-				results[1] == true;
+				results[1] = true;
 			
-			if (results[0] && results[1])
+			if (results[0] && results[1]) {
 				return results;
+			}
 		}
 		
 		if (node.previousSibling && Util.Block.is_block(node.previousSibling))
@@ -5560,6 +5569,17 @@ Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
 		make_close_tag(buffer, element);
 	}
 	
+	function is_indented_block(element) {
+		if (!Util.Block.is_block(element))
+			return false;
+		
+		function is_block(node) {
+			return Util.Block.is_block(node);
+		}
+		
+		return (Util.Node.find_children(element, is_block).length > 0);
+	}
+	
 	function make_block_element(buffer, element) {
 		if (!Util.Node.is_element(element))
 			throw new TypeError();
@@ -5573,15 +5593,13 @@ Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
 			buffer.end_line();
 		}
 		
-		var block_children = Util.Node.find_children(element, function(node) {
-			return Util.Block.is_block(node);
-		}).length > 0;
+		var block_children = is_indented_block(element);
 		var child_buffer;
 		
+		buffer.end_line(true);
 		make_open_tag(buffer, element);
 		
 		if (block_children) {
-			//buffer.end_line(true);
 			child_buffer = buffer.spawn();
 			make_nodes(child_buffer, element.childNodes);
 			child_buffer.close();
@@ -5610,6 +5628,12 @@ Util.HTML_Generator.prototype.generate = function generate_html(nodes) {
 		if (!Util.Node.is_element(element)) {
 			throw new TypeError("Tried to make a non-element as an element: " +
 				element);
+		}
+		
+		if (is_relevant(element.previousSibling) && is_indented_block(element)) {
+			if (!buffer.flagged('after_indented_block')) {
+				buffer.end_line();
+			}
 		}
 			
 		if (Util.Node.is_tag(element, 'PRE'))
@@ -9048,9 +9072,18 @@ Util.Selection.select_node = function(sel, node)
  */
 Util.Selection.select_node_contents = function(sel, node)
 {
-	var rng = Util.Range.create_range(sel);
-	Util.Range.select_node_contents(rng, node);
-	Util.Selection.select_range(sel, rng);
+	var range;
+	try {
+		range = Util.Range.create_range(sel);
+	} catch (e) {
+		if (e.name == 'Util.Unsupported_Error' && /collapsed/.test(e.message))
+			range = Util.Document.create_range(node.ownerDocument);
+		else
+			throw e;
+	}
+	
+	Util.Range.select_node_contents(range, node);
+	Util.Selection.select_range(sel, range);
 };
 
 /**
@@ -10136,9 +10169,10 @@ Util.URI.protocol_host_pattern =
  */
 Util.Unsupported_Error = function UnsupportedError(call)
 {
-	Util.OOP.inherits(this, Error, 'No known implementation of ' + call +
+	var error = new Error('No known implementation of ' + call +
 		' is available from this browser.');
-	this.name = 'Util.Unsupported_Error';
+	error.name = 'Util.Unsupported_Error';
+	return error;
 } 
 // file Util.Window.js
 /**
@@ -11907,6 +11941,7 @@ UI.Clean = new Object;
  */
 UI.Clean.clean = function(root, settings, live, block_settings)
 {
+	
 	/**
 	 * Removes the given node from the tree.
 	 */
@@ -13585,11 +13620,8 @@ function _loki_enqueue_dialog(dialog_window, onload) {
 window._loki_dialog_postback = function(dialog_window) {
 	var i, callback, called = false;
 	
-	console.log(dialog_window);
-	
 	for (i = 0; i < _loki_dialog_queue.length; i++) {
 		if (_loki_dialog_queue[i].window === dialog_window) {
-			console.info('Found!');
 			callback = _loki_dialog_queue[i].onload;
 			_loki_dialog_queue.splice(i, 1);
 			
@@ -21650,6 +21682,12 @@ UI.Loki = function Loki()
 				'a form.');
 		}
 		
+		if (settings.options && Util.Browser.WebKit) {
+			// WebKit doesn't implement underlining in a way that works for us,
+			// and our clipboard support is currently IE only.
+			settings.options += ' -underline -clipboard';
+		}
+		
 		_settings = (settings) ? Util.Object.clone(settings) : {};
 		self.options = _options = UI.Loki.Options.get(_settings.options || 'default', true);
 		_settings.options = _options;
@@ -22350,102 +22388,102 @@ UI.Loki = function Loki()
 		var mod_key_pressed = null;
 		
 		function move_past_nbsp(direction) {
-		    var sel = Util.Selection.get_selection(self.window);
-    		var range = Util.Range.create_range(sel);
-    		
-    		if (!Util.Range.is_collapsed(range))
-    		    return false;
-    		
-    		var bounds = Util.Range.get_boundaries(range);
-    		var node, pos, must_move = false, value;
-    		
-    		function is_at_edge() {
-    		    if (pos <= 1)
-    		        return true;
-    		    
-    		    if (node.nodeType == Util.Node.TEXT_NODE) {
-    		        return (pos >= node.nodeValue.length - 1);
-    		    } else {
-    		        return (pos >= node.childNodes.length - 1);
-    		    }
-    		}
-    		
-    		if (bounds.start.container.nodeType == Util.Node.TEXT_NODE) {
-    		    node = bounds.start.container;
-    		    value = node.nodeValue;
-    		    if ((direction < 0 && bounds.start.offset > 0) || (direction > 0 && bounds.end.offset < value.length)) {
-    		        pos = bounds.start.offset;
-    		        if (direction < 0)
-    		            pos--;
-    		        if (node.nodeValue.charCodeAt(pos) != 160 || !is_at_edge())
-    		            return false;
-    		        else
-    		            must_move = true;
-    		    }
-    		}
-    		
-    		if (!must_move) {
-    		    if (bounds.start.container.nodeType == Util.Node.TEXT_NODE) {
-    		        node = bounds.start.container;
-    		        node = (direction < 0) ? node.previousSibling : node.nextSibling;
-    		    } else {
-    		        node = bounds.start.container.childNodes[bounds.start.offset]
-    		    }
-        		if (!node)
-        		    return false;
-        		    
-        		while (true) {
-        		    if (!node)
-        		        return false;
-        		    if (node.nodeType != Util.Node.TEXT_NODE)
-        		        return false;
-        		    value = node.nodeValue;
-        		    if (value.length == 0) {
-        		        // try the neighboring node
-        		        node = (direction < 0) ?
-            		        node.previousSibling :
-            		        node.nextSibling;
-        		        continue;
-        		    }
-    		    
-        		    pos = (direction < 0) ? value.length - 1 : 0;
-        		    if (value.charCodeAt(pos) != 160 || !is_at_edge())
-        		        return false;
-        		    break;
-    		    }
-    		}
-    		
-    		if (direction > 0 && node.nodeType == Util.Node.TEXT_NODE) {
-    		    node = Util.Node.next_element_sibling(node.parentNode);
-    		    if (!node)
-    		        return false;
-    		    pos = 0;
-    		}
-    		
-    		range = Util.Document.create_range(self.document);
-    		try {
-        		Util.Range.set_start(range, node, pos);
-        		range.collapse(true /* to start */);
-        		Util.Selection.select_range(sel, range);
-        	} catch (e) {
-        	    return false;
-        	}
-    		return true;
+			var sel = Util.Selection.get_selection(self.window);
+			var range = Util.Range.create_range(sel);
+			
+			if (!Util.Range.is_collapsed(range))
+				return false;
+			
+			var bounds = Util.Range.get_boundaries(range);
+			var node, pos, must_move = false, value;
+			
+			function is_at_edge() {
+				if (pos <= 1)
+					return true;
+				
+				if (node.nodeType == Util.Node.TEXT_NODE) {
+					return (pos >= node.nodeValue.length - 1);
+				} else {
+					return (pos >= node.childNodes.length - 1);
+				}
+			}
+			
+			if (bounds.start.container.nodeType == Util.Node.TEXT_NODE) {
+				node = bounds.start.container;
+				value = node.nodeValue;
+				if ((direction < 0 && bounds.start.offset > 0) || (direction > 0 && bounds.end.offset < value.length)) {
+					pos = bounds.start.offset;
+					if (direction < 0)
+						pos--;
+					if (node.nodeValue.charCodeAt(pos) != 160 || !is_at_edge())
+						return false;
+					else
+						must_move = true;
+				}
+			}
+			
+			if (!must_move) {
+				if (bounds.start.container.nodeType == Util.Node.TEXT_NODE) {
+					node = bounds.start.container;
+					node = (direction < 0) ? node.previousSibling : node.nextSibling;
+				} else {
+					node = bounds.start.container.childNodes[bounds.start.offset]
+				}
+				if (!node)
+					return false;
+					
+				while (true) {
+					if (!node)
+						return false;
+					if (node.nodeType != Util.Node.TEXT_NODE)
+						return false;
+					value = node.nodeValue;
+					if (value.length == 0) {
+						// try the neighboring node
+						node = (direction < 0) ?
+							node.previousSibling :
+							node.nextSibling;
+						continue;
+					}
+				
+					pos = (direction < 0) ? value.length - 1 : 0;
+					if (value.charCodeAt(pos) != 160 || !is_at_edge())
+						return false;
+					break;
+				}
+			}
+			
+			if (direction > 0 && node.nodeType == Util.Node.TEXT_NODE) {
+				node = Util.Node.next_element_sibling(node.parentNode);
+				if (!node)
+					return false;
+				pos = 0;
+			}
+			
+			range = Util.Document.create_range(self.document);
+			try {
+				Util.Range.set_start(range, node, pos);
+				range.collapse(true /* to start */);
+				Util.Selection.select_range(sel, range);
+			} catch (e) {
+				return false;
+			}
+			return true;
 		}
 		
 		Util.Event.add_event_listener(_document, 'mouseup', function() {
-		    move_past_nbsp(-1);
+			move_past_nbsp(-1);
 		});
 		Util.Event.add_event_listener(_document, 'keyup', function(ev) {
-		    if (ev.keyCode == 37)
-		        move_past_nbsp(-1);
+			if (ev.keyCode == 37)
+				move_past_nbsp(-1);
 		});
 		Util.Event.add_event_listener(_document, 'keydown', function(ev) {
-		    if (ev.keyCode == 39) {
-		        if (move_past_nbsp(1)) {
-		            return Util.Event.prevent_default(ev);
-		        }
-		    }
+			if (ev.keyCode == 39) {
+				if (move_past_nbsp(1)) {
+					return Util.Event.prevent_default(ev);
+				}
+			}
 		});
 
 		var paragraph_helper = (new UI.Paragraph_Helper).init(self);
@@ -22599,7 +22637,7 @@ UI.Loki = function Loki()
 					"\n\nTechnical details:\n" +
 					self.describe_error(ex));
 				
-				if (typeof(console) == 'object' && console.firebug) {
+				if (typeof(console) == 'object' && 'error' in console) {
 					console.error('Failed to generate HTML:',
 						ex);
 				}
@@ -22753,7 +22791,7 @@ UI.Loki = function Loki()
 			try {
 				menuitems = _menugroups[i].get_contextual_menuitems();
 			} catch (e) {
-				if (typeof(console) == 'object' && console.firebug) {
+				if (typeof(console) == 'object' && 'warn' in console) {
 					console.warn('Failed to add menugroup', i, '.', e);
 				}
 			}
@@ -22819,7 +22857,7 @@ UI.Loki = function Loki()
 		// behind the editor's containing window.
 		//_window.focus();
 		var value = _document.queryCommandValue(command);
-
+		
 		if ( command == 'FormatBlock' )
 		{
 			var mappings = 
@@ -22836,11 +22874,39 @@ UI.Loki = function Loki()
 				'Preformatted' : 'pre',
 				'Address' : 'address'
 			};
-			if ( mappings[value] != null )
+			
+			if (value === false) {
+				// WebKit doesn't appear to implement querying FormatBlock,
+				// so we'll do it ourselves.
+				var ancestry = get_selection_ancestry();
+				value = ancestry.find(function(value) {
+					var key;
+					for (key in mappings) {
+						if (mappings[key] == value)
+							 return true;
+					}
+				});
+			} else if (value in mappings) {
 				value = mappings[value];
+			}
 		}
-
+		
 		return value;
+	}
+	
+	function get_selection_ancestry() {
+		var sel = Util.Selection.get_selection(self.window);
+		var range = Util.Range.create_range(sel);
+		var ancestor = Util.Range.get_common_ancestor(range);
+		
+		var ancestry = [];
+		var node;
+		for (node = ancestor; node; node = node.parentNode) {
+			if (node.nodeType == Util.Node.ELEMENT_NODE)
+				ancestry.push(node.nodeName.toLowerCase());
+		}
+		
+		return ancestry;
 	}
 
 	/**
@@ -22952,7 +23018,7 @@ UI.Loki.Options._add_bundled = function add_bundled_loki_options() {
 	});
 	this.add('lists', {
 		buttons: [UI.OL_Button, UI.UL_Button, UI.Indent_Button, UI.Outdent_Button],
-		masseuses: [UI.UL_OL_Masseuse]
+		// masseuses: [UI.UL_OL_Masseuse]
 	});
 	this.add('find', {
 		buttons: [UI.Find_Button],
