@@ -256,7 +256,7 @@ class PublicationModule extends Generic3Module
 		if (isset($this->params['minimum_date_strtotime_format']))
 		{
 			// minimum_date_strtotime_format should be a string usable to strtotime and also in the past not the future - trigger an error if not.
-			$cur_timestamp = get_unix_timestamp(get_mysql_datetime());
+			$cur_timestamp = time();
 			$min_date = strtotime($this->params['minimum_date_strtotime_format']);
 			if ($min_date && ($min_date != -1) && ($min_date < $cur_timestamp))
 			{
