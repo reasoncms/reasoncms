@@ -32,18 +32,53 @@ if (!function_exists('json_encode')) {
 		} else if (is_int($data) || is_float($data)) {
 			return (string) $data;
 		} else if (is_string($data)) {
-			return '"'.addslashes($data).'"';
+			return _json_encode_string($data);
 		} else if (is_object($data)) {
 			return _json_encode_object($data);
 		} else if (is_array($data)) {
+			$expected = 0;
 			foreach (array_keys($data) as $key) {
-				if (!is_numeric($key))
+				if (!is_numeric($key) || $key != $expected++)
 					return _json_encode_object($data);
 			}
 			return _json_encode_array($data);
 		} else {
 			return '';
 		}
+	}
+	
+	/**
+	 * Returns the JSON encoding of the given string.
+	 * @access private
+	 * @param string $data
+	 * @return string
+	 */
+	function _json_encode_string($value)
+	{
+		static $patterns = array(
+			'/\\\\/',
+			'/"/',
+			'@/@',
+			"/\x08/",
+			"/\x0c/",
+			"/\n/",
+			"/\r/",
+			"/\t/",
+			'/[\x00-\x1F]/e',
+		);
+		static $replacements = array(
+			"\\\\\\",
+			'\"',
+			'\/',
+			'\b',
+			'\f',
+			'\n',
+			'\r',
+			'\t',
+			'sprintf("\\u%04x", ord("$0"))'
+		);
+		
+		return '"'.preg_replace($patterns, $replacements, $value).'"';
 	}
 
 	/**
@@ -54,7 +89,7 @@ if (!function_exists('json_encode')) {
 	 */
 	function _json_encode_array($data)
 	{
-		return "[".implode(', ', array_map('json_encode', $data))."]";
+		return "[".implode(',', array_map('json_encode', $data))."]";
 	}
 
 	/**
@@ -67,8 +102,8 @@ if (!function_exists('json_encode')) {
 	{
 		$pairs = array();
 		foreach ((array) $object as $key => $value) {
-			$pairs[] = json_encode((string) $key).': '.json_encode($value);
+			$pairs[] = json_encode((string) $key).':'.json_encode($value);
 		}
-		return "{".implode(', ', $pairs)."}";
+		return "{".implode(',', $pairs)."}";
 	}
 }
