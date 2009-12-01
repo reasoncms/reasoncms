@@ -38,7 +38,7 @@ $fix_mode_enabled = (isset($_GET['fixmode']) && ($_GET['fixmode'] == "true"));
 $fix_mode_link = ($fix_mode_enabled) ? ' Enabled (<a href="?fixmode=false">disable</a>)' : ' Disabled (<a href="?fixmode=true">enable</a>)';
 ?>
 
-<p>This script will verify the Reason environment, perform a variety of checks for Reason utilities, confirm file paths and permissions, 
+<p>This script should be run after you have configured your server. It will verify the Reason environment, perform a variety of checks for Reason utilities, confirm file paths and permissions, 
 and then setup the first site and user for your instance. While the script may provide enough help to get you going, you may also consult 
 the <a href="./install.htm">Reason Install Documentation</a>.</p>
 <h3>Experimental "Fix" Mode<?php echo $fix_mode_link ?></h3>
@@ -198,6 +198,45 @@ if (isset($_POST['do_it_pass']) == false)
 		{
 			echo '<p>The login site appears to be setup.</p>';
 		}
+	}
+	setup_www_local_support();
+}
+
+function setup_www_local_support()
+{
+	// lets setup an .htacces file in www to enable the www/local/ directory
+	$www_local_htaccess = REASON_INC . 'www/.htaccess';
+	$www_local_dir = REASON_INC . 'www/local/';
+	
+	echo '<h3>Checking for WWW Local Support</h3>';
+	if (file_exists($www_local_dir) && file_exists($www_local_htaccess))
+	{
+		echo '<p>An .htaccess file and a local folder exist within the reason www folder.</p>';
+		// should we do an actual test - probably but we won't 
+	}
+	elseif (file_exists($www_local_htaccess))
+	{
+		echo '<p>An .htaccess file exists, but not a folder called local within www. You may have manually setup
+		         your custom www local folder, or you may be using an .htaccess file in the www folder for other 
+		         purposes. While a www/local folder is technically optional, we recommend setting one up. Please
+		         consult the documentation to manually setup the folder and the accompanying .htaccess rule.</p>';
+	}
+	else
+	{
+		if (!file_exists($www_local_dir))
+		{
+			mkdir($www_local_dir, 0775);
+			chmod($www_local_dir, 0775);
+			echo '<p>Created www/local directory at ' . $www_local_dir . ' </p>';
+		}
+		$str = 'RewriteEngine On' . "\n";
+		$str .= 'RewriteRule ^(.*)$ $1'. "\n";
+		$str .= 'RewriteCond ' . $www_local_dir . '$1 -F' . "\n";
+		$str .= 'RewriteRule ^(.*)$ ./local/$1' ."\n";
+		$h = fopen($www_local_htaccess,"x+");
+		fwrite($h,$str);
+		fclose($h);
+		echo '<p>Created .htaccess file to support the www/local directory</p>';
 	}
 }
 
@@ -432,7 +471,7 @@ function check_thor_accessible_over_http()
 	if (!$accessible && $fix_mode_enabled) // lets try to repair this
 	{
 		// if THOR_INC is readable
-		if (is_readable(THOR_INC))
+		if (is_readable(THOR_INC) && function_exists('symlink'))
 		{
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(THOR_HTTP_PATH, "/"));
 			if (is_writable(dirname($symlink_loc))) symlink(THOR_INC, $symlink_loc);
@@ -447,7 +486,7 @@ function check_thor_accessible_over_http()
 		return msg('<span class="error">thor'.$fixed_str.' is not accessible over http</span>.<p>The URL attempted was ' . $path . '. It should return
 					a page that contains the string "tmp_id." You may need to set THOR_HTTP_PATH equal to "/thor/", and create an alias at ' . WEB_PATH . 
 					'thor/ to ' . THOR_INC.'. Future revisions to thor should make this more flexible, but for the moment you need the alias in your web 
-					root to the thor directory</p>', false);
+					root to the thor directory. Fix mode may have failed because PHP was unable to create symlinks. Consult the install documentation for more details.</p>', false);
 	}
 }
 
@@ -460,7 +499,7 @@ function check_loki_accessible_over_http()
 	if (!$accessible && $fix_mode_enabled) // lets try to repair this
 	{
 		// if LOKI_2_INC - strip off the helpers/php part
-		if (is_readable(LOKI_2_INC) && ($term = strpos(LOKI_2_INC, 'helpers/php')))
+		if (is_readable(LOKI_2_INC) && ($term = strpos(LOKI_2_INC, 'helpers/php') && function_exists('symlink')))
 		{
 			$my_loki_path = substr(LOKI_2_INC, 0, $term);
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(LOKI_2_HTTP_PATH, "/"));
@@ -475,7 +514,7 @@ function check_loki_accessible_over_http()
 		return msg('<span class="error">loki 2'.$fixed_str.' is not accessible over http</span>.
 					<p>The URL attempted to verify loki was ' . $path . '. Check the constant LOKI_2_HTTP_PATH, 
 					which currently is set to ' . LOKI_2_HTTP_PATH . ' and make sure it correctly references the 
-					Loki 2 directory.</p>', false);
+					Loki 2 directory. Fix mode may have failed because PHP was unable to create symlinks. Consult the install documentation for more details.</p>', false);
 	}
 }
 
@@ -487,7 +526,7 @@ function check_jquery_accessible_over_http()
 	if (!$accessible && $fix_mode_enabled) // lets try to repair this
 	{
 		// if JQUERY_INC is readable
-		if (is_readable(JQUERY_INC))
+		if (is_readable(JQUERY_INC) && function_exists('symlink'))
 		{
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(JQUERY_HTTP_PATH, "/"));
 			if (is_writable(dirname($symlink_loc))) symlink(JQUERY_INC, $symlink_loc);
@@ -501,7 +540,7 @@ function check_jquery_accessible_over_http()
 		return msg('<span class="error">jQuery'.$fixed_str.' is not accessible over http</span>.
 				   <p>The URL attempted was ' . JQUERY_URL . ' Check the URL and make sure it exists and is
 				   web accessible. If there is a problem, please modify the JQUERY_URL constant to reference
-				   the correct path for jquery</p>', false);
+				   the correct path for jquery. Fix mode may have failed because PHP was unable to create symlinks. Consult the install documentation for more details.</p>', false);
 	}
 }
 
@@ -513,7 +552,7 @@ function check_flvplayer_accessible_over_http()
 	if (!$accessible && $fix_mode_enabled) // lets try to repair this
 	{
 		// if FLVPLAYER_INC is readable
-		if (is_readable(FLVPLAYER_INC))
+		if (is_readable(FLVPLAYER_INC) && function_exists('symlink'))
 		{
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(FLVPLAYER_HTTP_PATH, "/"));
 			if (is_writable(dirname($symlink_loc))) symlink(FLVPLAYER_INC, $symlink_loc);
@@ -528,7 +567,7 @@ function check_flvplayer_accessible_over_http()
 		return msg('<span class="error">flvplayer'.$fixed_str.' is not accessible over http</span>.
 					<p>The URL attempted was ' . $path . '. Check the URL and made sure it exists and is
 					web accessible. Also check the constant FLVPLAYER_HTTP_PATH, which currently is set to '
-					. FLVPLAYER_HTTP_PATH . ' and make sure it correctly references the location of flvplayer.</p>', false);
+					. FLVPLAYER_HTTP_PATH . ' and make sure it correctly references the location of flvplayer. Fix mode may have failed because PHP was unable to create symlinks. Consult the install documentation for more details.</p>', false);
 	}
 }
 
@@ -540,7 +579,7 @@ function check_datepicker_accessible_over_http()
 	if (!$accessible && $fix_mode_enabled) // lets try to repair this
 	{
 		// if FLVPLAYER_INC is readable
-		if (is_readable(DATE_PICKER_INC))
+		if (is_readable(DATE_PICKER_INC) && function_exists('symlink'))
 		{
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(DATE_PICKER_HTTP_PATH, "/"));
 			if (is_writable(dirname($symlink_loc))) symlink(DATE_PICKER_INC, $symlink_loc);
@@ -555,7 +594,7 @@ function check_datepicker_accessible_over_http()
 		return msg('<span class="error">date picker'.$fixed_str.' is not accessible over http</span>.
 					<p>The URL attempted was ' . $path . '. Check the URL and made sure it exists and is
 					web accessible. Also check the constant DATE_PICKER_HTTP_PATH, which currently is set to '
-					. DATE_PICKER_HTTP_PATH . ' and make sure it correctly references the location of date picker.</p>', false);
+					. DATE_PICKER_HTTP_PATH . ' and make sure it correctly references the location of date picker. Fix mode may have failed because PHP was unable to create symlinks. Consult the install documentation for more details.</p>', false);
 	}
 }
 
@@ -678,11 +717,10 @@ function imagemagick_check()
 	$mogrify_filename = (server_is_windows()) ? 'mogrify.exe' : 'mogrify';
 	if (file_exists(IMAGEMAGICK_PATH.$mogrify_filename))
 	{
-		$cmd = IMAGEMAGICK_PATH . 'mogrify -version 2>&1';
+		$cmd = "\"" . IMAGEMAGICK_PATH . "mogrify\" -version 2>&1";
 		$output = shell_exec($cmd);
-		
 		// see if the string imagemagick exists in the output - if not it did not work properly
-		if (strpos(strtolower($output), 'imagemagick') === false) return msg('<span class="error">imagemagick check failed</span> - mogrify exists but does not appear to function properly when invoked via php...your php install should not be running in safe mode and needs to be able to use exec and shell_exec functions', false);
+		if (strpos(strtolower($output), 'imagemagick') === false) return msg('<span class="error">imagemagick check failed</span> - mogrify exists but does not appear to function properly when invoked via php...your php install should not be running in safe mode and needs to be able to use exec and shell_exec functions. Error is as follows:' . $output, false);
 		else return msg('<span class="success">imagemagick check passed</span>', true);
 	}
 	else return msg('<span class="error">imagemagick check failed</span> - ' .IMAGEMAGICK_PATH.'mogrify not found - check the IMAGEMAGICK_PATH constant in package_settings.php, and php permissions.', false);
@@ -712,6 +750,7 @@ function mod_rewrite_check()
 	$htaccess_content = 'RewriteEngine ON' . "\n" . 'RewriteRule ^$ ' . WEB_TEMP.$dir_name.$file_name.'?zzz=1';
 	
 	mkdir($dir_path, 0777);
+	chmod($dir_path, 0777);
 	$h = fopen($file_path,"x+");
 	fwrite($h,$file_content);
 	fclose($h);
@@ -747,6 +786,7 @@ function data_dir_writable($dir, $name)
 	if (!file_exists($dir) && $fix_mode_enabled)
 	{
 		mkdir($dir, 0775);
+		chmod($dir, 0755);
 		if (file_exists($dir) && is_writable($dir)) return msg('<span class="success">missing data directory ('.$dir.') created using fix mode - '.$name . ' directory is writable</span> - check passed', true);
 		elseif (!file_exists($dir)) return msg('<span class="error">missing data directory ('.$dir.') could not be created using fix mode - '.$name. ' directory does not exist - failed</span>', false);
 		elseif (file_exists($dir) && !is_writable($dir)) return msg('<span class="error">created directory ('.$dir.') with fix mode but ' . $name . ' directory not writable - failed</span>.', false); 
@@ -779,6 +819,7 @@ function check_environment_and_trailing_slash($path, $check_name, $error_msg)
 	{
 		// lets make sure the last character of the path is a trailing slash
 		if (substr($path, -1) != '/') die_with_message('<p class="error">ERROR: '.$check_name . ' missing trailing slash.</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
+		elseif (substr($path, -2) == '//') die_with_message('<p class="error">ERROR: '.$check_name . ' extra trailing slash.</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
 		return msg($check_name . ' found', true);
 	}
 	else die_with_message('<p class="error">ERROR: '.$check_name . ' ('.$path.') not found</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
