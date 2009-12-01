@@ -1,0 +1,98 @@
+WebServer Configuration
+
+The following configuration defines two Apache Virtual Host entries for Reason, one is for HTTP connections 
+and the other is for HTTPS connections. The only difference between the two entries are the redirects to 
+HTTPS for secure authentication and the SSL key/cert information.
+
+In the following example we have used values specific to our site. The values for your installation will be different.
+
+IP address for apps.carleton.edu:
+192.168.0.100
+
+Hostname from which Reason pages will be served:
+apps.carleton.edu
+
+Location of reason_package directory:
+/usr/local/webapps/reason
+
+Location of custom log files:
+/var/log/httpd/reason_access.log
+/var/log/httpd/reason_error.log
+
+Include path to the base of the reason_package:
+php_value include_path .:/usr/local/webapps/reason/reason_package/
+
+SSL certificate information:
+SSLCertificateFile /path/to/your/server.crt
+SSLCertificateKeyFile /path/to/your/server.key
+SSLCACertificateFile /path/to/your/certificate.authority.crt
+
+The following is a sample virtual host:
+#---VirtualHost.reason-Start----------------------------------------------------------------------------
+
+Listen 192.168.0.100:80
+Listen 192.168.0.100:443
+
+<VirtualHost 192.168.0.100:80>
+DocumentRoot /usr/local/webapps/reason
+ServerName apps.carleton.edu
+php_value include_path .:/usr/local/webapps/reason/reason_package/
+
+<Directory /usr/local/webapps/reason>
+AllowOverride All
+Order deny,allow
+Allow from all
+</Directory>
+
+# enables PHP for these extensions
+AddHandler application/x-httpd-php .php .php3 .php4 .phtml .php.xml .php.html .php.csv .php.css
+
+# prevents a script from running > 60 seconds
+php_value max_execution_time 60
+
+# data/assets should not be executable
+<DirectoryMatch data/assets>
+php_admin_value engine Off
+</DirectoryMatch>
+
+CustomLog /var/log/httpd/reason_access.log combined
+ErrorLog /var/log/httpd/reason_error.log
+</VirtualHost>
+
+<VirtualHost 192.168.0.100:443>
+DocumentRoot /usr/local/webapps/reason
+ServerName apps.carleton.edu
+php_value include_path .:/usr/local/webapps/reason/reason_package/
+
+<Directory /usr/local/webapps/reason>
+AllowOverride All
+Order deny,allow
+Allow from all
+</Directory>
+
+# enables PHP for these extensions
+AddHandler application/x-httpd-php .php .php3 .php4 .phtml .php.xml .php.html .php.csv .php.css
+
+# prevents a script from running > 60 seconds
+php_value max_execution_time 60
+
+# data/assets should not be executable
+<DirectoryMatch data/assets>
+php_admin_value engine Off
+</DirectoryMatch>
+
+SSLEngine on
+SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
+SSLCertificateFile /path/to/your/server.crt
+SSLCertificateKeyFile /path/to/your/server.key
+SSLCACertificateFile /path/to/your/certificate.authority.crt
+
+<Files ~ "\.(cgi|shtml|phtml|php3?|php4)$">
+SSLOptions +StdEnvVars
+</Files>
+
+CustomLog /var/log/httpd/reason_access.log combined
+ErrorLog /var/log/httpd/reason_error.log
+</VirtualHost>
+
+#---VirtualHost.reason-End------------------------------------------------------------------------------
