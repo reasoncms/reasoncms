@@ -1,7 +1,7 @@
 // Loki WYSIWIG Editor 2.0.4
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2009-11-30 17:26:39 
+// Compiled 2009-12-01 13:26:11 
 // http://loki-editor.googlecode.com/
 
 
@@ -23017,8 +23017,8 @@ UI.Loki.Options._add_bundled = function add_bundled_loki_options() {
 		buttons: [UI.Blockquote_Button]
 	});
 	this.add('lists', {
-		buttons: [UI.OL_Button, UI.UL_Button, UI.Indent_Button, UI.Outdent_Button],
-		// masseuses: [UI.UL_OL_Masseuse]
+		// masseuses: [UI.UL_OL_Masseuse],
+		buttons: [UI.OL_Button, UI.UL_Button, UI.Indent_Button, UI.Outdent_Button]
 	});
 	this.add('find', {
 		buttons: [UI.Find_Button],
