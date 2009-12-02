@@ -157,7 +157,7 @@ function _get_mime_type_fileinfo($path)
 	if (!$fidb)
 		return false;
 	
-	$type = finfo_file($path);
+	$type = finfo_file($fidb,$path);
 	finfo_close($fidb);
 	return $type;
 }
