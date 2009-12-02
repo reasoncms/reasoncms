@@ -267,75 +267,54 @@
 			$um = new url_manager( $this->get_value( 'id'));
 			$um->update_rewrites();
 		}
-		// This function does not truly move the base dir
-		// it actually makes a new dir and moves the .htaccess file from the old dir
-		// otherwise we might accidentally move other sites that are inside the old dir
-		// we might want to delete the old dir (recursively?) if it's empty after the .htaccess move
-		// Otherwise the filesystem gets ugly
-		// We're not doing this yet because svn might get unhappy
+		
+		/**
+		 * This function does not truly move the base dir - here is what it does do
+		 *
+		 * - makes a directory at the new location if it does not exist
+		 * - rewrites the .htaccess file at the current location to have any original custom .htaccess stuff plus the reason push_moved_site stuff
+		 * - adds a callback so after the entity is saved the rewrites are created at the new base url
+		 *
+		 */
 		function move_base_dir($old_base_dir, $new_base_dir)
 		{
 			if(!empty($old_base_dir) && !empty($new_base_dir))
 			{
-				$old_path = WEB_PATH.trim_slashes($old_base_dir);
-				$new_path = WEB_PATH.trim_slashes($new_base_dir);
+				$old_path = reason_get_site_web_path( $this->get_value('id') ).trim_slashes($old_base_dir);
+				$new_path = reason_get_site_web_path( $this->get_value('id') ).trim_slashes($new_base_dir);
 				if(!is_dir($new_path))
 				{
 					include_once(CARL_UTIL_INC.'basic/filesystem.php');
-					if( mkdir_recursive($new_path, 0775) )
-					{
-						// we don't want to move the entire directory because other reason sites
-						// might live in the directory, which we may not want to move
-						// instead, we just move the .htaccess file.
-						// This ensures that we won't lose any custom rules
-						// that have been added to the .htaccess file.
-						if(file_exists($old_path.'/.htaccess') && !file_exists($new_path.'/.htaccess'))
-						{
-							rename($old_path.'/.htaccess',$new_path.'/.htaccess');
-						}
-					}
+					mkdir_recursive($new_path, 0775);
 				}
-				else
+				
+				// lets add the push_moved_site stuff to the current .htaccess file
+				$file_contents = '';
+				$orig = file($old_path.'/.htaccess');
+				if( !empty( $orig ) )
 				{
-					// see above
-					if(file_exists($old_path.'/.htaccess') && !file_exists($new_path.'/.htaccess'))
+					reset( $orig );
+					while( list(,$line) = each( $orig ) )
 					{
-						rename($old_path.'/.htaccess',$new_path.'/.htaccess');
+						if( preg_match('/reason-auto-rewrite-begin/', $line) )
+							break;
+						$file_contents .= $line;
 					}
 				}
-				$um = new url_manager( $this->get_value( 'id'));
-				$um->update_rewrites();
-				if($old_path != $new_path)
-				{
-					// we also leave any custom .htaccess rules in the new file we are generating since we do not know if they are
-					// related to the site or not ... for instance the base directory might have rules for the whole server that
-					// we do not want to lost because the site at the server root gets a new location.
-					$file_contents = '';
-					$orig = (file_exists($new_path.'/.htaccess')) ? file($new_path.'/.htaccess') : false;
-					if( !empty( $orig ) )
-					{
-						reset( $orig );
-						while( list(,$line) = each( $orig ) )
-						{
-							if( preg_match('/reason-auto-rewrite-begin/', $line) )
-								break;
-							$file_contents .= $line;
-						}
-					}
-					$file_contents .= '# reason-auto-rewrite-begin !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'."\n";
-					$file_contents .= '# THIS SECTION IS AUTO-GENERATED - DO NOT TOUCH'."\n";
-					$file_contents .= '#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'."\n\n";
-
-					$file_contents .= 'RewriteEngine On'."\n\n";
-					$file_contents .= 'RewriteRule ^$ '.REASON_HTTP_BASE_PATH.'displayers/push_moved_site.php?id='.$this->get_value('id')."\n\n";
+				$file_contents .= '# reason-auto-rewrite-begin !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'."\n";
+				$file_contents .= '# THIS SECTION IS AUTO-GENERATED - DO NOT TOUCH'."\n";
+				$file_contents .= '#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'."\n\n";
+				$file_contents .= 'RewriteEngine On'."\n\n";
+				$file_contents .= 'RewriteRule ^$ '.REASON_HTTP_BASE_PATH.'displayers/push_moved_site.php?id='.$this->get_value('id')."\n\n";
+				$file_contents .= '# reason-auto-rewrite-end !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'."\n";
 					
-					$file_contents .= '# reason-auto-rewrite-end !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'."\n";
-					
-					$handle = fopen($old_path.'/.htaccess', 'w');
-					fputs($handle, $file_contents);
-					fclose($handle);
-					chmod($old_path.'/.htaccess', 0664);
-				}
+				$handle = fopen($old_path.'/.htaccess', 'w');
+				fputs($handle, $file_contents);
+				fclose($handle);
+				chmod($old_path.'/.htaccess', 0664);
+				
+				// lets throw down a process callback method to update the urls (that way it happens AFTER entity save)
+				$this->add_callback(array($this, 'update_rewrites'),'process');
 			}
 		}
 		
@@ -345,6 +324,12 @@
 			{
 				$this->update_site_url_history();	
 			}
+		}
+
+		function update_rewrites()
+		{
+			$um = new url_manager( $this->get_value( 'id'));
+			$um->update_rewrites();
 		}
 		
 		function update_site_url_history()
