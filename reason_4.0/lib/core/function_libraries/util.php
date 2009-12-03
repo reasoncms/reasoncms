@@ -1397,6 +1397,45 @@
 			return false;
 		}
 	}
+	/**
+	 * Get the url of an icon for a given type
+	 *
+	 * Note that this only supports .png icons at the moment.
+	 * If someone wants to use other file types, feel free to add support and contribute back. :)
+	 *
+	 * @param mixed $type id, unique name, or entity (entity will offer best performance in tight loops)
+	 * @param boolean $use_default Provide the url of a default icon if none available
+	 * @return string URL of the icon (html encoded), or an empty string if none found and $use_default set to false
+	 * @todo add support for image types other than .png (will need some sort of hierarchy of formats)
+	 */
+	function reason_get_type_icon_url($type,$use_default = true)
+	{
+		if(!is_object($type))
+		{
+			if(is_numeric($type))
+				$type = new entity($type);
+			elseif(is_string($type))
+				$type = new entity(id_of($type));
+			else
+			{
+				trigger_error('$type not an object, integer, or string');
+				$type = NULL;
+			}
+		}
+		if(isset($type) && $type->get_values() && $type->get_value('unique_name') && (file_exists(REASON_INC.'www/ui_images/types/'.$type->get_value('unique_name').'.png') || file_exists(REASON_INC.'www/local/ui_images/types/'.$type->get_value('unique_name').'.png') ) )
+		{
+			return REASON_HTTP_BASE_PATH.'ui_images/types/'.reason_htmlspecialchars($type->get_value('unique_name')).'.png';
+		}
+		elseif($use_default)
+		{
+			return REASON_HTTP_BASE_PATH.'ui_images/types/default.png';
+		}
+		else
+		{
+			return '';
+		}
+		
+	}
 	
 	/**
 	 * Returns the default webpath when the setting is not derived from a domain defined in domain_settings.php
