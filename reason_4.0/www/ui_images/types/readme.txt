@@ -28,4 +28,9 @@ registration_slot_type.png
 The following icons are by Matt Ryan at Carleton College and are licensed under a Creative Commons Attribution 3.0 License:
 
 classified_type.png
+
+------------------------------------
+
+The following icons are by Marcis Gasuns and are part of the free led24 icon set; for more information see http://led24.de/iconset/
+
 news.png
