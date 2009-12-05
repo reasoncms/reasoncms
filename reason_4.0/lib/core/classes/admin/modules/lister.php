@@ -28,6 +28,7 @@
 		
 		function list_header( ) // {{{
 		{
+			echo $this->_produce_borrowing_nav();
 			echo '<table border="0" cellpadding="0" cellspacing="0">'."\n".'<tr>';
 			$this->show_filters();
 			echo '<td valign="top">'."\n";
@@ -43,16 +44,40 @@
 			}
 			echo '</td>'."\n".'</tr>'."\n".'</table>'."\n";
 		} // }}}
+		function _produce_borrowing_nav()
+		{
+			$ret = '';
+			if(reason_user_has_privs($this->admin_page->user_id,'borrow'))
+			{
+				$sharables = $this->admin_page->get_sharable_relationships();
+				if(isset($sharables[$this->admin_page->type_id]))
+				{
+					/* $type = new entity($this->admin_page->type_id);
+					$name = $type->get_value('plural_name') ? $type->get_value('plural_name') : $type->get_value('name');
+					if(function_exists('mb_strtolower'))
+						$name = mb_strtolower($name);
+					else
+						$name = strtolower($name); */
+					$ret .= '<div class="borrowNav">'."\n";
+					$ret .= '<ul>';
+					$ret .= '<li class="current addEdit"><strong><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/bullet_edit.png" alt="" /> Add &amp; edit</strong></li>';
+						$ret .= '<li class="borrow"><a href="'.$this->admin_page->get_borrowed_list_link($this->admin_page->type_id).'"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/car.png" alt="" /> Borrow</a></li>';
+					$ret .= '</ul>'."\n";
+					$ret .= '</div>'."\n";
+				}
+			}
+			return $ret;
+		}
 		function show_filters() // {{{
 		{
-			echo '<td valign="top">'."\n".'<div class="viewFilter">'."\n".'<div class="roundedTop">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent">'."\n";
+			echo '<td valign="top">'."\n".'<div class="viewFilter">'."\n".'<div class="roundedTop">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent">'."\n";
 			echo '<h4>Search</h4>';
 			$this->filter->run();
 			echo "\n".'</div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n".'</td>'."\n";
 		} // }}}
 		function show_add() // {{{
 		{
-			echo '<div class="addLink">'."\n".'<div class="roundedTop">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent">'."\n";
+			echo '<div class="addLink">'."\n".'<div class="roundedTop">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent">'."\n";
 			$type = new entity($this->admin_page->type_id);
 			echo '<a href="'. $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => '', 'new_entity' => 1) ).'">Add '.$type->get_value( 'name' ).'</a>'."\n";
 			if(array_key_exists($type->get_value('unique_name'),$this->import_modules))
@@ -60,15 +85,15 @@
 				$import_module = $this->import_modules[$type->get_value('unique_name')];
 				echo '<div class="smallText importBlock"><a href="'.$this->admin_page->make_link(  array( 'cur_module' => $import_module , 'id' => '') ).'">Batch Import '.( $type->get_value( 'plural_name' ) ? $type->get_value( 'plural_name' ) : $type->get_value('name') ).'</a></div>'."\n";
 			}
-			echo '</div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n";
+			echo '</div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n";
 		} // }}}
 		function show_other() // {{{
 		{
-			echo '<div class="viewInfo"><div class="roundedTop"> <img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" /></div><div class="roundedContent">';
+			echo '<div class="viewInfo"><div class="roundedTop"> <img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div><div class="roundedContent">';
 			$this->show_live();
 			$this->show_deleted( $this->admin_page->site_id, $this->admin_page->type_id );
 			$this->show_pending( $this->admin_page->site_id, $this->admin_page->type_id );
-			echo '</div><div class="roundedBottom"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" /></div></div><br />';
+			echo '</div><div class="roundedBottom"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div></div><br />';
 		} // }}}
 		function show_view_box() // {{{
 		{
@@ -76,7 +101,7 @@
 				$this->get_views();
 			if(count( $this->views ) > 1)
 			{
-				echo '<div class="viewInfo"><div class="roundedTop"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" /></div><div class="roundedContent">';
+				echo '<div class="viewInfo"><div class="roundedTop"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div><div class="roundedContent">';
 				if( !empty( $this->views ) )
 				{
 					echo '<form name="form2"><select name="menu2" onChange="MM_jumpMenu(\'parent\',this,0)" class="viewMenu">';
@@ -89,7 +114,7 @@
 					}
 					echo '</select></form>';
 				}
-				echo '</div><div class="roundedBottom"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" /></div></div><br />';
+				echo '</div><div class="roundedBottom"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div></div><br />';
 			}
 		} // }}}
 		function show_deleted() // {{{
@@ -156,9 +181,9 @@
 			$fields = get_fields_by_type( $this->admin_page->type_id );
 			if( is_array($fields) && in_array( 'sort_order' , $fields ) )
 			{
-				echo '<div class="viewInfo"><div class="roundedTop"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" /></div><div class="roundedContent">';
+				echo '<div class="viewInfo"><div class="roundedTop"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div><div class="roundedContent">';
 				$link = $this->admin_page->make_link( array( 'cur_module' => 'Sorting' , 'default_sort' => true ) );
-				echo '<a href="'.$link.'">Sort these items</a></div><div class="roundedBottom"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" /></div></div><br />';
+				echo '<a href="'.$link.'">Sort these items</a></div><div class="roundedBottom"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div></div><br />';
 			}
 		} // }}}
 		function set_session_vars() // {{{
@@ -228,7 +253,11 @@
 
 			$this->set_session_vars();
 			$type = new entity( $this->admin_page->type_id );
-			$this->admin_page->title = 'Add/Edit ' . ( $type->get_value( 'plural_name' ) ? $type->get_value( 'plural_name' ) : $type->get_value('name') );
+			$this->admin_page->title = ( $type->get_value( 'plural_name' ) ? $type->get_value( 'plural_name' ) : $type->get_value('name') );
+			if($icon_url = reason_get_type_icon_url($type,false))
+			{
+				$this->admin_page->title = '<img src="'.$icon_url.'" alt="" /> '.$this->admin_page->title;
+			}
 			$lister = isset($this->admin_page->request[ 'lister' ]) ? $this->admin_page->request[ 'lister' ] : '';
 			if( !isset( $state ) OR !$state OR $state == 'live' )// actually listing entities{{{
 			{
