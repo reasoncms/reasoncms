@@ -51,6 +51,7 @@
 
 		// current AdminModule
 		var $module;
+		var $module_name;
 
 		var $head_items; //head items object
 		
@@ -210,14 +211,15 @@
 			}
 			if(!empty($this->site_id))
 			{
+				echo $this->_get_site_name_block();
 				if( $this->show[ 'types' ] )
 				{
 					$this->types();
 				}
-				if( $this->show[ 'sharing' ] && reason_user_has_privs($this->user_id, 'borrow') )
+				/* if( $this->show[ 'sharing' ] && reason_user_has_privs($this->user_id, 'borrow') )
 				{
 					$this->sharing();
-				}
+				} */
 				if( $this->show[ 'leftbar_other' ] )
 				{
 					$this->leftbar_other();
@@ -235,7 +237,7 @@
 		//leftbar if id is present
 		{
 			echo '<div class="managerNav">';
-			echo '<div class="roundedTop"> <img src="'. REASON_ADMIN_IMAGES_DIRECTORY .'nw.gif" alt="" class="roundedCorner" />';
+			echo '<div class="roundedTop"> <img src="'. REASON_ADMIN_IMAGES_DIRECTORY .'trans.gif" alt="" class="roundedCorner" />';
 			echo '</div>'. "\n";
 			echo '<div class="managerList">';
 			if( !empty( $this->request[ CM_VAR_PREFIX . 'id' ] ) )
@@ -246,7 +248,7 @@
 			$name = isset( $old_name ) ? $old_name->get_value( 'name' ) : $item->get_value( 'name' );
 			$name = ($name OR (strlen($name) > 0)) ? $name : '<em>New Item</em>';
 			echo '<strong>' . $name . '</strong><br />';
-			echo '<ul class="leftList">';
+			echo '<ul class="leftList'. ( isset( $old_name ) ? ' outer' : '' ) .'">';
 			if(	site_owns_entity( $this->site_id , $this->id ) )
 			{
 				$this->show_owns_links();
@@ -260,7 +262,7 @@
 				echo '</ul>';
 			}
 			echo '</div>';
-			echo '<div class="roundedBottom"> <img src="'. REASON_ADMIN_IMAGES_DIRECTORY .'sw.gif" alt="" class="roundedCorner" />'; 
+			echo '<div class="roundedBottom"> <img src="'. REASON_ADMIN_IMAGES_DIRECTORY .'trans.gif" alt="" class="roundedCorner" />'; 
 			echo '</div>';	
 			echo '</div>';
 		}
@@ -812,6 +814,21 @@
 			trigger_error('admin_page->user_has_site_admin_privileges() is DEPRECATED. Please use reason_user_has_privs() function instead!');
 			return true; 
 		} // }}}
+		function _get_site_name_block()
+		{
+			$site = new entity($this->site_id);
+			if('SiteModule' == $this->module_name)
+			{
+				
+				return '<h1 class="siteName"><strong>'.$site->get_value( 'name' ).'</strong></h1>'."\n";
+			}
+			$link = $this->make_link( array( 
+					'site_id' => $this->site_id,
+					'type_id' => '',
+					'user_id' => $this->user_id, 
+					'cur_module' => '', ) );
+			return '<h1 class="siteName"><a href="'.$link.'">'.$site->get_value( 'name' ).'</a></h1>'."\n";
+		}
 		// IN_MODULE
 		function types() // {{{
 		//shows a list of types for a current site.  is called in leftbar_normal().
@@ -828,14 +845,18 @@
 			$nes->add_right_relationship( $this->site_id, relationship_id_of( 'site_cannot_edit_type' ) );
 			$remove = $nes->run_one();
 			
+			$sharables = $this->get_sharable_relationships();
+			
+			$can_borrow = reason_user_has_privs($this->user_id, 'borrow');
 			foreach($remove as $id=>$vals)
 			{
-				unset($types[$id]);
+				if(!$can_borrow || !isset($sharables[$id]))
+					unset($types[$id]);
 			}
 
 			if( $types )
 			{
-				echo '<div class="typeNav"><strong>Add/Edit</strong>';
+				echo '<div class="typeNav">'."\n";
 				echo '<ul class="leftList">' . "\n";
 				$mpid = id_of('minisite_page');
 				if(array_key_exists($mpid,$types))
@@ -845,10 +866,9 @@
 					$types = array_merge($page_type_array, $types);
 				}
 				
-				reset( $types );
-				while( list( ,$type ) = each( $types ) )
+				foreach( $types as $type )
 				{
-					if( $type->id() == $this->type_id && $this->cur_module != 'Sharing' )
+					if( $type->id() == $this->type_id )
 					{
 						$cur_type = true;
 					}
@@ -861,17 +881,42 @@
 					echo ' uid_'.$type->get_value('unique_name');
 					echo '">';
 
-					if(empty($_SESSION[ 'listers' ][ $this->site_id ][ $type->id() ]) )
-						$_SESSION[ 'listers' ][ $this->site_id ][ $type->id() ] = $this->make_link( array( 
-									'site_id' => $this->site_id, 
-									'type_id' => $type->id() ,
-									'cur_module' => 'Lister' ) );
-					echo '<a href="'.$_SESSION[ 'listers' ][ $this->site_id ][ $type->id()  ].
-						'" class="nav">'.($type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' )).'</a></li>' . "\n";
+					
+					if(isset($remove[$type->id()]) )
+					{
+						$link_url = $this->get_borrowed_list_link($type->id());
+					}
+					else
+					{
+						$link_url = $this->get_owned_list_link($type->id());
+					}
+					echo '<a href="'.$link_url.'" class="nav">';
+					echo '<img src="'.reason_get_type_icon_url($type).'" alt="" />';
+					echo '<span class="typeName">' . $type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' ) . '</span>';
+					echo '</a></li>' . "\n";
 				}
 				echo '</ul></div>';
 			}
 		} // }}}
+		function get_borrowed_list_link($type_id)
+		{
+			if(empty($_SESSION[ 'sharing_main' ][ $this->site_id ][ $type_id ]))
+				$_SESSION[ 'sharing_main' ][ $this->site_id ][ $type_id ] = $this->make_link( array( 
+					'site_id' => $this->site_id, 
+					'type_id' => $type_id ,
+					'user_id' => $this->user_id,
+					'cur_module' => 'Sharing' ) );
+			return $_SESSION[ 'sharing_main' ][ $this->site_id ][ $type_id  ];
+		}
+		function get_owned_list_link($type_id)
+		{
+			if(empty($_SESSION[ 'listers' ][ $this->site_id ][ $type_id ]) )
+				$_SESSION[ 'listers' ][ $this->site_id ][ $type_id ] = $this->make_link( array( 
+					'site_id' => $this->site_id, 
+					'type_id' => $type_id ,
+					'cur_module' => 'Lister' ) );
+			return $_SESSION[ 'listers' ][ $this->site_id ][ $type_id  ];
+		}
 		// IN_MANAGER
 		function leftbar_other() // {{{
 		//other links for a current site.  The main ones appear in master admin, but there are some in other sites as well.
@@ -909,16 +954,16 @@
 					echo '<li class="navItem';
 					if( $this->cur_module == 'ChooseTheme' )
 						echo ' navSelect';
-					echo '"><a href="'.$l.'" class="nav">Themes</a></li>'."\n";
+					echo '"><a href="'.$l.'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'ui_images/types/theme_type.png" alt="" />Themes</a></li>'."\n";
 				}	
 				if( $stats_link AND $this->show[ 'stats' ] )
 				{
-					echo '<li class="navItem"><a href="'.$stats_link.'" class="nav">Statistics</a></li>'."\n";
+					echo '<li class="navItem"><a href="'.$stats_link.'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_bar.png" alt="" />Statistics</a></li>'."\n";
 				}
 				echo '<li class="navItem';
 				if( $this->cur_module == 'ViewUsers' )
 					echo ' navSelect';
-				echo '"><a href="'.$this->make_link( array( 'cur_module' => 'ViewUsers', 'type_id' => '' ) ).'" class="nav">Users</a></li>'."\n";
+				echo '"><a href="'.$this->make_link( array( 'cur_module' => 'ViewUsers', 'type_id' => '' ) ).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'ui_images/types/user.png" alt="" />Users</a></li>'."\n";
 				echo '</ul></div>'."\n";
 			//}
 		} // }}}
@@ -1354,6 +1399,7 @@
 			}
 			if(class_exists( $module_name ) )
 			{
+				$this->module_name = $module_name;
 				$this->module = new $module_name( $this );
 				$this->module->set_head_items($this->head_items);
 				$this->module->init();
