@@ -49,7 +49,11 @@
 				else
 					$lister = '';
 			}	
-			$this->admin_page->title = 'Borrowing ' . $type->get_value('name');
+			$this->admin_page->title = ( $type->get_value( 'plural_name' ) ? $type->get_value( 'plural_name' ) : $type->get_value('name') );
+			if($icon_url = reason_get_type_icon_url($type,false))
+			{
+				$this->admin_page->title = '<img src="'.$icon_url.'" alt="" /> '.$this->admin_page->title;
+			}
 			if( $this->admin_page->is_second_level() )
 				$this->admin_page->set_show( 'leftbar' , false );
 
@@ -63,6 +67,40 @@
 			$this->filter->grab_fields( $this->viewer->filters );
 
 		} // }}}
+		function run() {
+			echo $this->_produce_borrowing_nav();
+			parent::run();
+		}
+		
+		function _produce_borrowing_nav()
+		{
+			$ret = '';
+			$nes = new entity_selector( );
+			$nes->add_type( id_of('type') );
+			$nes->add_right_relationship( $this->admin_page->site_id, relationship_id_of( 'site_cannot_edit_type' ) );
+			$nes->add_relation('`entity`.`id` = "'.addslashes($this->admin_page->type_id).'"');
+			$nes->set_num(1);
+			$nes->limit_tables();
+			$nes->limit_fields();
+			$ns = $nes->run_one();
+			$show_edit = (reason_user_has_privs($this->admin_page->user_id,'edit') && empty($ns));
+			
+			/* $type = new entity($this->admin_page->type_id);
+			$name = $type->get_value('plural_name') ? $type->get_value('plural_name') : $type->get_value('name');
+			if(function_exists('mb_strtolower'))
+				$name = mb_strtolower($name);
+			else
+				$name = strtolower($name); */
+			$ret .= '<div class="borrowNav">'."\n";
+			$ret .= '<ul>';
+			if($show_edit)
+				$ret .= '<li><a href="'.$this->admin_page->get_owned_list_link($this->admin_page->type_id).'"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/bullet_edit.png" alt="" /> Add &amp; edit</a></li>';
+			$ret .= '<li class="current"><strong><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/car.png" alt="" /> Borrow</strong></li>';
+			$ret .= '</ul>'."\n";
+			$ret .= '</div>'."\n";
+			// if(reason_user_has_privs($this->admin_page->user_id,'edit'))
+			return $ret;
+		}
 		function set_session_vars() // {{{
 		{
 			//if (isset($this->admin_page->request['__old_cur_module']) && $this->admin_page->request['__old_cur_module'] == 'Associator') 
