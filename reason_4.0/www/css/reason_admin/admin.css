@@ -63,13 +63,9 @@ form {
 }
 .navSelect {
 	font-weight: bold;
-	list-style-type: square;
 }
 .typeNav {
 	margin-bottom: 20px;
-}
-.navItem {
-	margin-top: 5px;
 }
 .contentArea {
 	padding: 20px;
