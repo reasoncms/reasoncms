@@ -263,7 +263,7 @@
 				<?php
 						$type_name = $this->rel_type->get_value( 'name' );
 						$new_vars = $this->get_second_level_vars();
-						echo '<a href="'.$this->admin_page->make_link( $new_vars ).'">Add '.$type_name.'</a><br />';
+						echo '<a href="'.$this->admin_page->make_link( $new_vars ).'">Add '.$type_name.'</a>';
                   ?>
 				  </div>
 					<div class="roundedBottom">
