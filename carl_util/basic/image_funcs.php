@@ -159,7 +159,7 @@ function _gd_resize($path, $width, $height, $sharpen)
 	}
 	
 	// Output
-	$success = $save($image_dest, $dest_path);
+	$success = $save($image_dest, $path);
 	imagedestroy($image_dest);
 	return $success;
 }
