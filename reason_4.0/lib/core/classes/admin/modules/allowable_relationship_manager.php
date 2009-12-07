@@ -195,12 +195,23 @@
 			$data_row['relationship_b'] = isset($types[$data_row['relationship_b']]) ? $types[$data_row['relationship_b']] : 'No Type';
 		}
 		
+		function run_error_checks_new()
+		{
+			$this->run_validation_checks();
+			parent::run_error_checks_edit();
+		}
+		
 		function run_error_checks_edit()
+		{
+			$this->run_validation_checks();
+			parent::run_error_checks_edit();
+		}
+		
+		function run_validation_checks()
 		{
 			if (!$this->dir_validation()) $this->set_error('directionality', 'One To Many and Many to One relationships cannot be bidirectional');
 			if (!$this->name_validation()) $this->set_error('name', 'Names must contain only letters, numbers, and/or underscores.  Please make sure the name doesn\'t contain any other characters.');
 			if (!$this->name_uniqueness_check()) $this->set_error('name', 'The name of the allowable relationship must be unique.');
-			parent::run_error_checks_edit();
 		}
 		
 		function where_to()
@@ -221,7 +232,7 @@
 		
 		function name_validation()
 		{
-			if(!eregi( "^[0-9a-z_]*$" , $this->get_value('name') ) )
+			if(!preg_match( "|^[0-9a-z_]*$|i" , $this->get_value('name') ) )
 			{
 				return false;
 			}
