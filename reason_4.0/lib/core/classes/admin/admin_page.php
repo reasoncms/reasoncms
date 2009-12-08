@@ -1376,13 +1376,15 @@
 					{
 						if( $this->id OR $this->cur_module == 'Editor')
 						{
-							reason_include_once( 'classes/admin/modules/'.$GLOBALS['_reason_admin_modules']['Editor']['file'] );
-							$module_name = $GLOBALS['_reason_admin_modules']['Editor']['class'];
+							$redirect = carl_make_redirect(array('cur_module' => 'Editor'));
+							header('Location: ' . $redirect);
+							die;
 						}
 						else
 						{
-							reason_include_once( 'classes/admin/modules/'.$GLOBALS['_reason_admin_modules']['Lister']['file'] );
-							$module_name = $GLOBALS['_reason_admin_modules']['Lister']['class'];
+							$redirect = carl_make_redirect(array('cur_module' => 'Lister'));
+							header('Location: ' . $redirect);
+							die;
 						}
 					}
 					else
@@ -1406,7 +1408,7 @@
 			}
 			else
 			{
-				trigger_error('Class '.$module_name.' not found', HIGH);
+				trigger_error('Could not determine a module to run in the admin page init method.', HIGH);
 			}
 			return true;
 		} // }}}
