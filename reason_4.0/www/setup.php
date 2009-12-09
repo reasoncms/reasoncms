@@ -207,7 +207,6 @@ function setup_www_local_support()
 	// lets setup an .htacces file in www to enable the www/local/ directory
 	$www_local_htaccess = REASON_INC . 'www/.htaccess';
 	$www_local_dir = REASON_INC . 'www/local/';
-	
 	echo '<h3>Checking for WWW Local Support</h3>';
 	if (file_exists($www_local_dir) && file_exists($www_local_htaccess))
 	{
@@ -229,9 +228,11 @@ function setup_www_local_support()
 			chmod($www_local_dir, 0775);
 			echo '<p>Created www/local directory at ' . $www_local_dir . ' </p>';
 		}
+		//if this is windows lets remove backslashes from the path
+		$www_local_dir = (server_is_windows()) ? str_replace("\\", "/", $www_local_dir) : $www_local_dir;		
 		$str = 'RewriteEngine On' . "\n";
 		$str .= 'RewriteRule ^(.*)$ $1'. "\n";
-		$str .= 'RewriteCond ' . $www_local_dir . '$1 -F' . "\n";
+		$str .= 'RewriteCond ' . $www_local_dir . '$1 -f' . "\n";
 		$str .= 'RewriteRule ^(.*)$ ./local/$1' ."\n";
 		$h = fopen($www_local_htaccess,"x+");
 		fwrite($h,$str);
