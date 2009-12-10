@@ -49,7 +49,7 @@ class lokiType extends defaultType
 			}
 			else
 			{
-				$val = eregi_replace("</table>\n\n<br />\n<br />\n","</table>\n", $val);
+				$val = preg_replace("|</table>\n\n<br />\n<br />\n|i","</table>\n", $val);
 				$this->set( $val );
 			}
 		}
