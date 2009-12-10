@@ -154,7 +154,7 @@
 		{
 			if( !$this->has_error( 'blog_feed_string' ) )
 			{
-				if( !ereg( "^[0-9a-z_]*$" , $this->get_value('blog_feed_string') ) )
+				if( !preg_match( "|^[0-9a-z_]*$|" , $this->get_value('blog_feed_string') ) )
 				{
 					$this->set_error( 'blog_feed_string', 'The RSS feed URL may only contain lowercase letters, numbers, and underscores.  Please edit to remove other characters.' );
 				}
