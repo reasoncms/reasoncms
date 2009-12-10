@@ -78,7 +78,7 @@
 		 */
 		function _table_name_meets_specs($name)
 		{
-			if( eregi( "^[0-9a-z_]*$" , $name ) )
+			if( preg_match( "|^[0-9a-z_]*$|i" , $name ) )
 				return true;
 			else
 				return false;
