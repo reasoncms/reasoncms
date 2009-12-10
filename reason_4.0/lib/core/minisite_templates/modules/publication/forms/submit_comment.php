@@ -112,10 +112,13 @@
 						$params['widgets'] = array('strong','em');
 					else
 						$params['widgets'] = array('strong','em','blockquote');
-					unset($params['paths']['site_feed']);
-					unset($params['paths']['finder_feed']);
-					unset($params['paths']['default_site_regexp']);
-					unset($params['paths']['default_type_regexp']);
+					if (isset($params['paths']))
+					{
+						unset($params['paths']['site_feed']);
+						unset($params['paths']['finder_feed']);
+						unset($params['paths']['default_site_regexp']);
+						unset($params['paths']['default_type_regexp']);
+					}
 				}
 			}
 			$this->change_element_type('comment_content',$editor_name,$params);
