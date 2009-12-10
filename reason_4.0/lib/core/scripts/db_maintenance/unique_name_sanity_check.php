@@ -67,7 +67,7 @@
 		{
 			$bad_string = false;
 			$multiples = false;
-			if(!eregi( "^[0-9a-z_]*$" , $uname ))
+			if(!preg_match( "|^[0-9a-z_]*$|i" , $uname ))
 			{
 				$bad_string = true;
 			}
