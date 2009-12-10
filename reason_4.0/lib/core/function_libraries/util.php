@@ -102,7 +102,7 @@
 	 */
 	function reason_unique_name_valid_string($string)
 	{
-		if(!empty($string) && eregi( "^[0-9a-z_]*$", $string))
+		if(!empty($string) && preg_match( "|^[0-9a-z_]*$|i", $string))
 			return true;
 		return false;
 	}
