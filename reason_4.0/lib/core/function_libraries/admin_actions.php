@@ -833,7 +833,7 @@
 			trigger_error('$name must be a string in create_allowable_relationship()');
 			return false;
 		}
-		if( !eregi( "^[0-9a-z_]*$" , $name ) )
+		if( !preg_match( "|^[0-9a-z_]*$|i" , $name ) )
 		{
 			trigger_error('$name must only contain numbers, letters, and underscores');
 			return false;
