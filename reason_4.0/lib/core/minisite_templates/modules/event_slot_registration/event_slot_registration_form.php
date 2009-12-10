@@ -67,8 +67,8 @@ class EventSlotRegistrationForm extends Disco{
 	
 	function email_is_correctly_formatted()
 	{
-		// Taken from http://us2.php.net/eregi
-		if( !eregi('^[A-Z0-9._%-]+@[A-Z0-9._%-]+\.[A-Z]{2,6}$',$this->get_value('email')))
+		// Taken from http://us2.php.net/eregi, adapted for preg_match
+		if( !preg_match('|^[A-Z0-9._%-]+@[A-Z0-9._%-]+\.[A-Z]{2,6}$|i',$this->get_value('email')))
 		{
 			return false;
 		}
