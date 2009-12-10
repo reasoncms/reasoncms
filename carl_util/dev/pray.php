@@ -89,7 +89,7 @@ if( !defined( '__PRAY' ) )
 								printf ("(%s)<strong>%s</strong>:\n",$type, $key);
 								pray ($value,$escape,$sf,$level + 1);
 							}
-							elseif (eregi ("function", $type))
+							elseif (preg_match ("/function/i", $type))
 							{
 								if ($sf) 
 								{

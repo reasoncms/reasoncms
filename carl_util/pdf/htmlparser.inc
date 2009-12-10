@@ -159,7 +159,7 @@ class HtmlParser {
     }
 
     function isValidTagIdentifier ($name) {
-        return ereg ("[A-Za-z0-9]+", $name);
+        return preg_match ("/[A-Za-z0-9]+/", $name);
     }
     
     function skipBlanksInTag() {
