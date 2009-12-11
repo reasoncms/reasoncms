@@ -79,7 +79,7 @@ domain_define( 'UNIVERSAL_CSS_PATH', ''); // Define the path to a CSS file used 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * The absolute file system directory that is the web root - should include a trailing slash
+ * The absolute file system directory that is the default web root - should include a trailing slash
  */
 domain_define( 'WEB_PATH', rtrim($_SERVER['DOCUMENT_ROOT'], "/") . '/' );
 
@@ -92,7 +92,7 @@ domain_define( 'HTTP_HOST_NAME', $_SERVER['HTTP_HOST'] );
 // this should be a specialized settings file probably - only relevant if the cleanup libraries are loaded
 define('HTML_SANITIZATION_FUNCTION','get_safer_html_html_purifier');
 
-// Define the path to the folder that contains Reason's core and local folders
+// Define the path to the folder that contains Reason's lib and www folder
 define('REASON_INC',INCLUDE_PATH.'reason_4.0/');
 
 // Define the path to carl_util files
