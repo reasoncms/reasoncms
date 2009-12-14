@@ -162,7 +162,10 @@ class ReasonAssetAccess
 		$gh = new group_helper();
 		$gh->set_group_by_entity($group);
 		
-		$access = $gh->is_username_member_of_group( $this->get_username() );
+		$access = ($gh->is_username_member_of_group("")) // test if anonymous access is allowed
+		          ? true // if so return true
+		          : $gh->is_username_member_of_group( $this->get_username()); // else discover and check username
+		
 		if($access === NULL) // unknown due to non-logged-in-user
 		{
 			reason_require_authentication('login_to_access_file');
