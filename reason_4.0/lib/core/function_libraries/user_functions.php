@@ -160,10 +160,16 @@ function reason_require_authentication($msg_uname = '', $method = '')
 /**
  * checks whether the user is authenticated - returns username or boolean false
  * @param string $method optional - can specify whether to check server variables or session - both are checked by default
+ * @param boolean $disable_redirect - defaults to false - if true, disables redirect to secure version of page for logged in users
  * @return mixed $username or false
  */
-function reason_check_authentication($method  = '')
+function reason_check_authentication($method  = '', $disable_redirect = false)
 {
+	if (!$disable_redirect && ($method == '' || $method == 'session'))
+	{
+		$session =& get_reason_session();
+		if ($session->exists() && !$session->has_started() && !$session->secure_if_available) force_secure_if_available();
+	}
 	if ($method == 'server') $username = get_authentication_from_server();
 	elseif ($method == 'session') $username = get_authentication_from_session();
 	else $username = (get_authentication_from_server()) ? get_authentication_from_server() : get_authentication_from_session();
