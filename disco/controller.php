@@ -290,6 +290,15 @@ class FormController
 			
 			$this->_base_url = $url_parts[ 'scheme' ].'://'.$url_parts['host'].$url_parts['path'];
 			
+			$this->session = new $this->session_class;
+			$this->session->set_session_name($this->session_name);
+			
+			// determine if this is a first run or not, start session
+			if (!$this->session->exists() && !$this->session->has_started())
+			{
+				$this->session->start();
+			}
+
 			// build the master list of form to variable
 			foreach( array_keys( $this->forms ) AS $name )
 			{
@@ -310,16 +319,7 @@ class FormController
 					}
 				}
 			}
-			
-			$this->session = new $this->session_class;
-			$this->session->set_session_name($this->session_name);
-			
-			// determine if this is a first run or not, start session
-			if (!$this->session->exists() && !$this->session->has_started())
-			{
-				$this->session->start();
-			}
-			
+						
 			if ($this->session->has_started() || $this->session->exists())
 			{	
 				if( !$this->session->get('running') )
@@ -336,7 +336,6 @@ class FormController
 					else
 						$this->_path = array();
 				}
-				
 				$this->_inited = true;
 			} else {
 				trigger_error( 'FormController Error: Failed to start session');	
