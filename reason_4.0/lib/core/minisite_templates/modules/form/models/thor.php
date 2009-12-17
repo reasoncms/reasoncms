@@ -83,7 +83,6 @@ class ThorFormModel extends DefaultFormModel
 			$form =& $this->get_form_entity();
 			if (!$form)
 			{
-				trigger_error('The thor form model is not usable because it is being invoked on a page that does not contain a thor form.');
 				$this->_is_usable = false;
 			}
 			elseif (!array_key_exists('thor_view', $form->get_values()))
