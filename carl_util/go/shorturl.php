@@ -447,7 +447,7 @@ class ShortURL
     {
         //$method = $_POST['method'] ;
         
-        $this->set_created_method( $_POST['method'] );
+        if (isset( $_POST['method']) ) $this->set_created_method( $_POST['method'] );
         
         if( isset( $_POST['longURL'] ) )
         {
