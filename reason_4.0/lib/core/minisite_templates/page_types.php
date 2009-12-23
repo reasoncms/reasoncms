@@ -610,6 +610,15 @@
 				'limit_to_page_categories'=>true,
 			),
 		),
+		'events_sidebar_grouped_by_category' => array(
+			'sidebar' => 'events_mini_grouped_by_category',
+		),
+		'events_sidebar_grouped_by_page_categories' => array(
+			'sidebar' => array(
+				'module' => 'events_mini_grouped_by_category',
+				'mode' => 'page',
+			),
+		),
 		'events_sidebar_show_children' => array(
 			'sidebar' => 'events_mini',
 			'main_post' => 'children',
