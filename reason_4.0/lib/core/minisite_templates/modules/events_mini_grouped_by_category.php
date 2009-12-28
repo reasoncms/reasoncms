@@ -74,6 +74,11 @@ class miniEventsGroupedByCategoryModule extends DefaultMinisiteModule
 	 */
 	var $_categories;
 	/**
+	 * The date & time of the most recently modified item
+	 * @var string MySQL datetime
+	 */
+	 var $_last_modified = '0000-00-00 00:00:00';
+	/**
 	 * get the url of the events page
 	 * @return string
 	 */
@@ -259,6 +264,7 @@ class miniEventsGroupedByCategoryModule extends DefaultMinisiteModule
 				echo '<li>'."\n";
 				echo $output;
 				echo '</li>'."\n";
+				$this->_last_mod_reg($category);
 			}
 		}
 		echo '</ul>'."\n";
@@ -311,6 +317,7 @@ class miniEventsGroupedByCategoryModule extends DefaultMinisiteModule
 					else
 						$event_url = $event_page_url.'?event_id='.$event->id();
 					$items[] = '<a href="'.$event_url.'">'.$event->get_value('name').'</a>'."\n";
+					$this->_last_mod_reg($event);
 				}
 			}
 			if($this->params['show_archive_links'])
@@ -321,4 +328,32 @@ class miniEventsGroupedByCategoryModule extends DefaultMinisiteModule
 		}
 		return $ret;
 	}
+	/**
+	 * Register an item in the last modified store
+	 *
+	 * If the item is more recently modified than the current value of @var $_last_modified,
+	 * this method will update @var $_last_modfified to match the item's value.
+	 *
+	 * @param entity object
+	 * @return void 
+	 */
+	function _last_mod_reg($entity)
+	{
+		if($entity->get_value('last_modified') > $this->_last_modified)
+		{
+			$this->_last_modified = $entity->get_value('last_modified');
+		}
+	}
+	
+	/**
+	 *  Template calls this function to figure out the most recently last modified item on page
+	 * This function uses the most recently modified category or event
+	 * @return mixed last modified value or false
+	 */
+	function last_modified() // {{{
+	{
+		if($this->_last_modified == '0000-00-00 00:00:00')
+			return false;
+		return $this->_last_modified;
+	} // }}}
 }
