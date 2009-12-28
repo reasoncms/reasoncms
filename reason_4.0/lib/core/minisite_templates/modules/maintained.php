@@ -21,13 +21,16 @@
 	 *
 	 * This cache is renewed each day at 7:00 am, so if the underlying directory information changes during the day,
 	 * it won't show up until 7:00 am the next morning.
+	 *
+	 * @todo Rework to remove reference to the template
+	 * @todo Figure out how to reliably report on last modified times if this module is not run last
 	 */
 	class MaintainedModule extends DefaultMinisiteModule
 	{
 		var $last_mod_date_format = 'j F Y';
 		var $_content;
 
-		function init($args = array())
+		function _get_content()
 		{
 			$format = $this->_get_format();
 			if(!empty($format))
@@ -44,12 +47,13 @@
 						$replacements[$search] = $this->$replacements[$search]();
 					}
 				}
-				$this->_content = str_replace(array_keys($replacements),array_values($replacements),$format);
+				return str_replace(array_keys($replacements),array_values($replacements),$format);
 			}
+			return '';
 		}
 		function has_content()
 		{
-			if( !empty($this->_content) )
+			if( $this->_get_format() )
 				return true;
 			else
 				return false;
@@ -58,10 +62,11 @@
 		// [updated by footeb on 7/2/03]
 		function run()
 		{
-			if(!empty($this->_content))
+			$content = $this->_get_content();
+			if(!empty($content))
 			{
 				echo '<div id="maintained">'."\n";
-				echo $this->_content;
+				echo $content;
 				echo '</div>'."\n";
 			}
 		}
@@ -164,7 +169,7 @@
 		{
 			// munge date into a good looking format
 			$date = $this->parent->cur_page->get_value('last_modified');
-
+			
 			// ask each module when the entities is contains were most recently modified
 			foreach( array_keys($this->parent->_modules) as $key )
 			{
