@@ -560,7 +560,7 @@
 			{
 				reset($tables);
 				while( list($pat, $rep) = each($tables))
-					$value = ereg_replace('^'.$pat.'\.' , $rep.'.' , $value );
+					$value = preg_replace('|^'.$pat.'\.|' , $rep.'.' , $value );
 				
 				$this->fields[] = $value;
 			}
@@ -574,8 +574,8 @@
 				reset($tables);
 				while( list($pat, $rep) = each($tables))
 				{
-					$value = ereg_replace('^'.$pat.'\.' , ' '.$rep.'.' , $value );
-					$value = ereg_replace('[ \f\r\t\n,=]'.$pat.'\.' , ' '.$rep.'.' , $value );
+					$value = preg_replace('|^'.$pat.'\.|' , ' '.$rep.'.' , $value );
+					$value = preg_replace('|[ \f\r\t\n,=]'.$pat.'\.|' , ' '.$rep.'.' , $value );
 				}
 				$this->relations[] = $value;
 			}
@@ -614,8 +614,8 @@
 					reset($tables);
 					while( list($pat, $rep) = each($tables))
 					{
-						$value = ereg_replace('^'.$pat.'\.' , ' '.$rep.'.' , $value );
-						$value = ereg_replace('[ \f\r\t\n,=]'.$pat.'\.' , ' '.$rep.'.' , $value );
+						$value = preg_replace('|^'.$pat.'\.|' , ' '.$rep.'.' , $value );
+						$value = preg_replace('|[ \f\r\t\n,=]|'.$pat.'\.|' , ' '.$rep.'.' , $value );
 					}
 					$this->orderby = $this->orderby . ', ' . $value;
 				}
