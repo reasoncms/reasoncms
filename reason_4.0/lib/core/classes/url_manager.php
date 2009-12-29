@@ -486,7 +486,7 @@
 			foreach( $tmp AS $page )
 			{
 				// we want to exclude pages whose parents are not part of the tree
-				if($page->get_value('parent_state') == 'Live')
+				if( ($page->get_value('parent_state') == 'Live') && isset($tmp[$page->get_value('parent')]))
 				{
 					$pages[ $page->id() ][ 'parent' ] = $page->get_value( 'parent' );
 					$pages[ $page->id() ][ 'url_fragment' ] = $page->get_value( 'url_fragment' );
