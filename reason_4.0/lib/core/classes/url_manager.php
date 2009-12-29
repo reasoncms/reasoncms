@@ -483,15 +483,15 @@
 			$es->add_left_relationship_field( 'minisite_page_parent','entity','state','parent_state');
 			$tmp =  $es->run_one();
 		
-			foreach( $tmp AS $page )
+			foreach( $tmp AS $id => $page )
 			{
 				// we want to exclude pages whose parents are not part of the tree
-				if( ($page->get_value('parent_state') == 'Live') && isset($tmp[$page->get_value('parent')]))
+				if( ($page->get_value('parent_state') == 'Live') && $this->_verify_parentage($id, $tmp, $this->site_id))
 				{
-					$pages[ $page->id() ][ 'parent' ] = $page->get_value( 'parent' );
-					$pages[ $page->id() ][ 'url_fragment' ] = $page->get_value( 'url_fragment' );
-					$pages[ $page->id() ][ 'id' ] = $page->id();
-					$pages[ $page->id() ][ 'url' ] = $page->get_value( 'url' );
+					$pages[ $id ][ 'parent' ] = $page->get_value( 'parent' );
+					$pages[ $id ][ 'url_fragment' ] = $page->get_value( 'url_fragment' );
+					$pages[ $id ][ 'id' ] = $id;
+					$pages[ $id ][ 'url' ] = $page->get_value( 'url' );
 				}
 			}
 
@@ -530,6 +530,26 @@
 					}
 				}
 		} // }}}
+		
+		function _verify_parentage($page_id, &$pages, $site_id)
+		{
+			static $cache;
+			if (isset($cache[$site_id][$page_id])) return $cache[$site_id][$page_id];
+			else
+			{
+				$parent_id = $pages[$page_id]->get_value('parent');
+				if (!isset($pages[$parent_id]))
+				{
+					$cache[$site_id][$page_id] = false;
+				}
+				elseif ($parent_id == $page_id)
+				{
+					$cache[$site_id][$page_id] = true;
+				}
+				return (isset($cache[$site_id][$page_id])) ? $cache[$site_id][$page_id] : $this->_verify_parentage($parent_id, $pages, $site_id);
+			}
+		}
+		
 		function _update_assets() // {{{
 		{
 			$this->debug( 'updating assets' );
