@@ -568,7 +568,7 @@ class FormController
 		{
 			// session timed out.  we know this because the cookie or SID exists but PHP could not find a
 			// session file.
-			trigger_error('Session has expired');
+			trigger_error('Session has expired', E_USER_NOTICE);
 			$_SESSION[ 'timeout_msg' ] = true;
 			header('Location: '.$this->_base_url.'?'.$this->_step_var_name.'='.$this->_get_start_step());
 			die();
@@ -576,7 +576,7 @@ class FormController
 		elseif ($this->_request[ $this->_step_var_name ] != $this->_current_step )
 		{
 			// Dave -- I changed this so that the form is not left in a bizarre place.  -- matt
-			trigger_error( 'Strange behavior: requested multipage form step not the same as the actual step being displayed. Probably due to session timeout. Client browser headered to start of form.' );
+			trigger_error( 'Strange behavior: requested multipage form step not the same as the actual step being displayed. Probably due to session timeout. Client browser headered to start of form.',E_USER_NOTICE );
 			header('Location: '.$this->_base_url.'?'.$this->_step_var_name.'='.$this->_get_start_step() );
 			exit;
 		}
