@@ -74,6 +74,7 @@ function reason_username_has_access_to_site($username, $site_id, $force_refresh 
 	static $user;
 	static $has_access_to_site;
 	
+	if (empty($username)) return false;
  	if (!isset($has_access_to_site[$username][$site_id]) || $force_refresh)
  	{
  		reason_include_once('classes/user.php');
