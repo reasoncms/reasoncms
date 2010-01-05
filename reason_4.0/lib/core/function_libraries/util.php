@@ -1359,9 +1359,9 @@
 		{
 			return $obj->has_value('type') ? ($obj->get_value('type')) : false;
 		}
-		elseif ($is_entity && !empty($of_type) && reason_unique_name_exists($of_type))
+		elseif ($is_entity && !empty($of_type))
 		{
-			return $obj->has_value('type') ? ($obj->get_value('type') == id_of($of_type)) : false;
+			return (reason_unique_name_exists($of_type) && $obj->has_value('type')) ? ($obj->get_value('type') == id_of($of_type)) : false;
 		}
 		return $is_entity;
 	}
