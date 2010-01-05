@@ -37,7 +37,7 @@
 				if (preg_match("/bannerad\s(.*?)$/", $image->get_value('keywords'), $matches))
 				{
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
-					echo '<a href="' . $matches[1] . '"><img src="' . $url . '" alt="' . $image->get_value('description') . '" "width=100%"/></a>';
+					echo '<a href="' . $matches[1] . '"><img src="' . $url . '" alt="' . $image->get_value('description') . '" width="100%" /></a>';
 					//break;
 				}
 			}
