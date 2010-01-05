@@ -487,6 +487,7 @@ class PublicationModule extends Generic3Module
 			}
 			
 			$this->_handle_authorization();
+			$this->_add_facebook_friendly_meta_tags();
 		}
 	}
 	
@@ -532,6 +533,25 @@ class PublicationModule extends Generic3Module
 		}
 	}
 
+	function _add_facebook_friendly_meta_tags()
+	{
+		if (!empty($this->current_item_id)) // we have an item lets add our meta tags if this is a request from facebook
+		{
+			if (strrpos($_SERVER['HTTP_USER_AGENT'], "facebookexternalhit") !== false)
+			{
+				$item = new entity($this->current_item_id);
+				if (reason_is_entity($item, 'news'))
+				{	
+					$title = $item->get_value('release_title');
+					$description = $item->get_value('description');
+					$head_items =& $this->get_head_items();
+					$head_items->add_head_item('meta',array( 'name' => 'title', 'content' => htmlspecialchars(strip_tags($title),ENT_QUOTES,'UTF-8')));
+					$head_items->add_head_item('meta',array( 'name' => 'description', 'content' => htmlspecialchars(strip_tags($description),ENT_QUOTES,'UTF-8')));
+				}
+			}
+		}
+	}
+	
 	/**
 	 * init_issue_for_item checks the item and any issue id it was passed - if an issue does not exist or is
 	 * invalid, the user is redirected to a url with the most recent valid issue for the item
