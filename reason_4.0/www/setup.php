@@ -231,9 +231,8 @@ function setup_www_local_support()
 		//if this is windows lets remove backslashes from the path
 		$www_local_dir = (server_is_windows()) ? str_replace("\\", "/", $www_local_dir) : $www_local_dir;		
 		$str = 'RewriteEngine On' . "\n";
-		$str .= 'RewriteRule ^(.*)$ $1'. "\n";
-		$str .= 'RewriteCond ' . $www_local_dir . '$1 -f' . "\n";
-		$str .= 'RewriteRule ^(.*)$ ./local/$1' ."\n";
+		$str .= 'RewriteCond ' . $www_local_dir . '$0 -f' . "\n";
+		$str .= 'RewriteRule ^(.*)$ ./local/$0' ."\n";
 		$h = fopen($www_local_htaccess,"x+");
 		fwrite($h,$str);
 		fclose($h);
