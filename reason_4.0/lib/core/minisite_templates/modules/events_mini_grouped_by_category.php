@@ -303,9 +303,9 @@ class miniEventsGroupedByCategoryModule extends DefaultMinisiteModule
 			}
 			$ret .= '<h3>';
 			if($url)
-				$ret .= '<a href="'.$url.'">'.$name.'</a>';
+				$ret .= '<a href="'.$url.'"><span class="categoryName">'.$name.'</span></a>';
 			else
-				$ret .= $name;
+				$ret .= '<span class="categoryName">'.$name.'</span>';
 			$ret .= '</h3>'."\n";
 			$items = array();
 			foreach($days as $day=>$events)
@@ -322,7 +322,7 @@ class miniEventsGroupedByCategoryModule extends DefaultMinisiteModule
 			}
 			if($this->params['show_archive_links'])
 			{
-				$items[] = '<a href="'.$event_page_url.'?view=all&amp;start_date=1970-01-01&amp;category='.$category->id().'">Archive</a>'."\n";
+				$items[] = '<a href="'.$event_page_url.'?view=all&amp;start_date=1970-01-01&amp;category='.$category->id().'" class="archive">Archive</a>'."\n";
 			}
 			$ret .= '<div class="items">'.implode($this->params['item_separator'],$items).'</div>'."\n";
 		}
