@@ -537,7 +537,7 @@ class PublicationModule extends Generic3Module
 	{
 		if (!empty($this->current_item_id)) // we have an item lets add our meta tags if this is a request from facebook
 		{
-			if (strrpos($_SERVER['HTTP_USER_AGENT'], "facebookexternalhit") !== false)
+			if (isset($_SERVER['HTTP_USER_AGENT']) && strrpos($_SERVER['HTTP_USER_AGENT'], "facebookexternalhit") !== false)
 			{
 				$item = new entity($this->current_item_id);
 				if (reason_is_entity($item, 'news'))
