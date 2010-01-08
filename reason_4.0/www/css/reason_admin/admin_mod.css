@@ -59,6 +59,7 @@
 .leftList a img {
 	border:0;
 	margin:0 4px 0;
+	vertical-align:top;
 }
 .navSelect a {
 }
@@ -420,8 +421,17 @@ div.versionUpdateNotice {
 	list-style:none;
 	padding:0;
 	margin:0;
-	float:left;
-	width:100%;
+	display:inline-block;
+}
+.borrowNav, .borrowNav ul {
+	display:block;
+}
+.borrowNav:after, .borrowNav ul:after {
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:both;
+    height:0;
 }
 .borrowNav {
 	margin-bottom:0.85em;
