@@ -110,6 +110,8 @@
 			$e = new entity( $this->admin_page->site_id);
 			$e->set_env( 'site' , $this->admin_page->site_id);
 			$site_types = $e->get_left_relationship( 'site_to_site_type' );
+			if(empty($site_types))
+				return array();
 			
 			$site_type_ids = array();
 			foreach( $site_types AS $st )
