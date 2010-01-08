@@ -27,8 +27,25 @@ class IndividualVisitForm extends DefaultThorForm
 		
 		$date = getdate();
 		$grad_year = $this->get_element_name_from_label('High School Graduation Year');
-		//$this->change_element_type($grad_year, 'year', array('num_years_before_today' => 0, 'num_years_after_today' => 2,));
-		$this->change_element_type($grad_year, 'radio_inline', array('options' => array($date['year']+1, ($date['year']+2))));
+		
+		// If the date is before February 2, let submitters choose the current year.
+		// Otherwise, just the next two years
+		$feb2 = 32;  // the numeric representation (yday) of February 2nd
+		if ($date['yday'] <= $feb2) {
+			$this->change_element_type($grad_year, 'radio_inline', array(
+				'options' => array(
+					$date['year'], 
+					$date['year']+1, 
+					($date['year']+2)
+					)));
+		}else{
+			$this->change_element_type($grad_year, 'radio_inline', array(
+				'options' => array( 
+					$date['year']+1, 
+					($date['year']+2)
+					)));
+		
+		}
 	}
 }
 ?>
