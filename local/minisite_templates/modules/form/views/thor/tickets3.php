@@ -143,6 +143,8 @@ class CreditCardThorForm extends DefaultThorForm
 			exit;
 		}
 		
+		$this->change_element_type($this->get_element_name_from_label('State'),'state');
+		
 		// SLS - 1/08/10 
 		// Take the Payment Amount element and hardcode in prices
 		// todo - make Ticket Cost and Number of Tickets a field in the a new Ecommerce 
