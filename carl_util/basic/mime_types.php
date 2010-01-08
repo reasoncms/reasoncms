@@ -210,6 +210,10 @@ function _sanity_check_mime_type($file_extension, $mime_type)
 		// We're just going to assume it's Excel.
 		return "application/excel";
 	}
+	if ($file_extension == 'mp4') {
+		// We're just going to assume it's video/mp4.
+		return "video/mp4";
+	}
 	return $mime_type;
 }
 
