@@ -10,6 +10,7 @@
  * Include the Reason libraries
  */
   include_once('reason_header.php');
+  include_once(CARL_UTIL_INC.'basic/cleanup_funcs.php');
   
 /**
  * A class for creating iCalendar-formatted data from Reason event entities
@@ -147,6 +148,10 @@
     {
       $text = str_replace("\n", '\n', $text);
       $text = strip_tags($text);
+      if(carl_is_php5())
+        $text = html_entity_decode($text,ENT_QUOTES,'UTF-8');
+      else //even though php4 implements html_entity_decode, it does not handle multibyte encodings.
+      	$text = unhtmlentities($text);
       $folded_text = "";
       while (strlen($text) > 75)
       {
