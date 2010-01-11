@@ -436,6 +436,9 @@ div.eventDetails p.back {
 	margin: 0px 10px 10px;
 	border: 1px solid #92AAD6;
 }
+div#calendar div.eventDetails div.export {
+	margin:1em 0;
+}
 div#calendar div.nav {
 	/* background-color: #C8D5EF;
 	border:1px solid #748FC2; */
