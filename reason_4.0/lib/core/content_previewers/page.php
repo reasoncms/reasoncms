@@ -18,7 +18,7 @@
 			$this->start_table();
 			
 			// iFrame Preview
-			if( !$this->_entity->get_value( 'url' ) )
+			if( !$this->_entity->get_value( 'url' ) && $this->_entity->get_value( 'state' ) == 'Live' )
 			{
 				// iFrame Preview
 				reason_include_once( 'function_libraries/URL_History.php' );
