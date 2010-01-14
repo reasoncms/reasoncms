@@ -26,19 +26,19 @@
 class HeadItems
 {
 	/**
-	 * @var array _head_items
+	 * @var array
 	 * @access private
 	 */
 	var $_head_items = array();
 
 	/**
-	 * @var array _top_head_items
+	 * @var array
 	 * @access private
 	 */
 	var $_top_head_items = array();
 	
 	/**
-	 * @var array _to_remove
+	 * @var array
 	 * @access private
 	 */
 	var $_to_remove = array();
@@ -53,7 +53,7 @@ class HeadItems
 	
 	/**
 	 * Adds a head item to the internal head items array
-	 * @param string $element name of element to add (ie. link or script)
+	 * @param string $element name of element to add (i.e. link or script)
 	 * @param array $attributes element attributes
 	 * @param string $content content to appear between element open and close tags
 	 * @param boolean $add_to_top if true, places element at start of array rather than end
@@ -211,7 +211,7 @@ class HeadItems
 	}
 	
 	/**
-	 * Modifes the html items array to remove exact duplicates - "add to top" items remain at the top when duplicates are found,
+	 * Modifies the html items array to remove exact duplicates - "add to top" items remain at the top when duplicates are found,
 	 * while the last instance of regular items is preserved. This is important because while javascript files such as jquery
 	 * may need to be at the top of the head items, when CSS duplicates are found the last instance will override rules in previous files.
 	 * @param array html_items
