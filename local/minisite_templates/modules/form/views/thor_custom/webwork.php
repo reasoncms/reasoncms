@@ -23,7 +23,8 @@ class WebworkForm extends DefaultThorForm
 		$date = $this->get_element_name_from_label('Date needed');
 		$this->change_element_type($date, 'textdate', array('display_name'=>'Desired "go live" date',));
 		$url_field = $this->get_element_name_from_label('Your website URL');
-		$this->add_comments($url_field, '<br />e.g. <em>www.luther.edu/page/to/work/on</em>');
+		$plain = 'www.luther.edu/page/to/work/on';
+		$this->add_comments($url_field, '<br />e.g. <em>'.$plain.'</em>');
 
 /*
 		$username = reason_check_authentication();
