@@ -13,7 +13,8 @@ $GLOBALS[ '_reason_editor_integration_classes' ][ basename( __FILE__) ] = 'reaso
 
 /**
  * An editor integration class for Loki 2
- * 
+ * @package reason
+ * @subpackage html_editors
  */
 class reasonLoki2Integration extends reasonEditorIntegrationBase
 {
