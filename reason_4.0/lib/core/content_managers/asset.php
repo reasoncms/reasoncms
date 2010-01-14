@@ -11,6 +11,8 @@
 	reason_include_once('classes/url_manager.php');
 	reason_include_once('classes/plasmature/upload.php');
 	reason_include_once('content_managers/default.php3');
+	
+	require_once CARL_UTIL_INC.'basic/mime_types.php';
 
  /**
   * Define the class name so that the admin page can use this content manager
@@ -244,7 +246,7 @@
 				$this->set_value('file_size', round(filesize( $document->tmp_full_path ) / 1024) );
 
 				// set mime type
-				$this->set_value('mime_type', $document->get_mime_type('application/octet-stream'));
+				$this->set_value('mime_type', get_mime_type($document->tmp_full_path, 'application/octet-stream'));
 
 				// set file type
 				$this->set_value('file_type', $suffix );
