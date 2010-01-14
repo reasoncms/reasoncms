@@ -142,7 +142,7 @@ function reason_require($path, $section = 'lib')
  * @param string $behavior the name of a PHP inclusion construct (e.g., "include_once")
  * @param string $file the name of the file to include using the given construct
  * @return bool true if $behavior was a valid construct name, false if otherwise
- * @internal
+ * @access private
  */
 function _reason_include_file($behavior, $file)
 {
