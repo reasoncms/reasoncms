@@ -5,6 +5,7 @@ reason_include_once('minisite_templates/modules/form/views/thor/default.php');
 //include_once(DISCO_INC.'disco.php');
 //include_once(DISCO_INC.'plasmature/plasmature.php');
 reason_include_once('classes/user.php');
+reason_include_once('classes/admin/admin_page.php');
               
 
 
@@ -21,28 +22,33 @@ class WebworkForm extends DefaultThorForm
 	{	
 		$date = $this->get_element_name_from_label('Date needed');
 		$this->change_element_type($date, 'textdate', array('display_name'=>'Desired "go live" date',));
+		$url_field = $this->get_element_name_from_label('Your website URL');
+		$this->add_comments($url_field, '<br />e.g. <em>www.luther.edu/page/to/work/on</em>');
 
-//		$username = reason_check_authentication();
-//
-//		reason_include_once('classes/user.php');
-//		$tempuser = new user;
-//		$tempuser2 = $tempuser->get_user('smitst01');
-//		pray($tempuser2);
-
+/*
+		$username = reason_check_authentication();
 		
-//		echo($tempuser->get_user_sites($username));
-
-
-//		echo $username;
-//		$user_id = get_user_id($username);
-//		$user_entity = new entity($user_id);
-//		pray ($user_entity);
-//		$your_name = $user_entity->get_value('user_given_name');
 		
-//		$sites = $user_entity->get_values();	
-//		pray ($sites);
+		$es = new entity_selector($username);
+		$es->add_type( id_of( 'site' ) );
+		//$es->set_sharing( 'owns' ); //only get owned items
+		$sites = $es->run_one();	
+		//$site_names = $sites->get_value('name');	
+		//pray($sites);
 		
+		echo 'lala';
+		$z = new user();		
+//		$x = get_user_sites($username);
+		$s = $z->is_site_user($username);
+		
+		pray($s);
+		echo 'lala';
+		
+*/
+		
+		//echo $sites->get_value('name');
 
+ 
 		
 //		$site = $this->get_element_name_from_label('Your website URL');
 	}
