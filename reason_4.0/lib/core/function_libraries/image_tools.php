@@ -117,7 +117,11 @@ function reason_get_image_path($image, $size='standard')
 }
 
 /**
+ * Returns a canonical variant of the given image size name.
  * @access private
+ * @param string $size_name an image size name
+ * @return string the canonical version of $size_name, or NULL if $size_name
+ *         was not a valid size name
  */
 function _normalize_image_size_name($size_name)
 {
@@ -127,6 +131,7 @@ function _normalize_image_size_name($size_name)
 		'tn' => 'tn',
 		'standard' => '',
 		'default' => '',
+		'scaled' => '',
 		'original' => 'orig',
 		'orig' => 'orig',
 		'full' => 'orig'
