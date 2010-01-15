@@ -1248,6 +1248,14 @@
 				echo ': '.strip_tags($this->title);
 			echo '</title>'."\n";
 			echo $this->head_items->get_head_item_markup();
+			echo '<script language="JavaScript" type="text/JavaScript">' . "\n";
+			echo '<!--' . "\n";
+			echo 'function MM_jumpMenu(targ,selObj,restore){ //v3.0' . "\n";
+		  	echo 'eval(targ+".location=\'"+selObj.options[selObj.selectedIndex].value+"\'");' . "\n";
+		 	echo 'if (restore) selObj.selectedIndex=0;' . "\n";
+			echo '}' . "\n";
+			echo '//-->' . "\n";
+			echo '</script>' . "\n";
 			echo '</head>' . "\n";
 			echo '<body>' . "\n";
 			echo '<div id="wrapper">'."\n";
