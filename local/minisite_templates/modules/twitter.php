@@ -15,7 +15,7 @@
 		}
 		function run()
 		{
-			echo '<div id="twtr-profile-widget"></div>'."\n";
+			echo '<div id="twtr-profile-widget">'."\n";
 			echo '<script src="http://widgets.twimg.com/j/2/widget.js"></script>'."\n";
 			//echo '<link href="http://widgets.twimg.com/j/1/widget.css" type="text/css" rel="stylesheet">'."\n";
 			echo '<script>'."\n";
@@ -47,7 +47,7 @@
 			    behavior: \'default\'
 			  }
 			}).render().setUser(\'lutherultimate\').start();
-			</script>';
+			</script></div>';
 		}
 	}
 ?>
