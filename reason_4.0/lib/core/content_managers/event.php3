@@ -170,6 +170,10 @@
 			$this->set_comments(	 'frequency', ' <span id="frequencyComment">day(s)</span> ' );
 			$this->set_comments(	 'month_day_of_week', ' of the month' );
 			$this->set_display_name( 'monthly_repeat',' ' );
+			if($this->_should_offer_split())
+			{
+				$this->set_comments('dates',form_comment('<a href="'.$this->admin_page->make_link( array( 'cur_module' => 'EventSplit' )).'" class="eventSplitLink">Split into separate event items</a>'));
+			}
 
 			// set requirements
 			$this->add_required( 'datetime' );
@@ -230,6 +234,15 @@
 		function set_event_field_order()
 		{
 			$this->set_order (array ('this_event_is_comment','this_event_is', 'date_and_time', 'datetime', 'hours', 'minutes', 'recurrence', 'frequency', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'monthly_repeat', 'week_of_month', 'month_day_of_week', 'end_date', 'term_only', 'dates', 'hr1', 'info_head', 'name', 'description', 'location', 'sponsor', 'contact_username', 'contact_organization', 'url', 'content', 'keywords', 'categories', 'hr2', 'audiences_heading','audiences',  'show_hide', 'no_share', 'hr3', 'registration',  ));
+		}
+		
+		function _should_offer_split()
+		{
+			if($this->get_value('recurrence') == 'none')
+				return false;
+			if(!reason_user_has_privs($this->admin_page->user_id, 'add' ) || !reason_user_has_privs($this->admin_page->user_id, 'edit' ))
+				return false;
+			return true;
 		}
 		
 		function run_error_checks() // {{{
