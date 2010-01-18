@@ -70,5 +70,6 @@
 		'BatchDelete'=>array('file'=>'batch_delete.php','class'=>'BatchDeleteModule'),
 		'Export'=>array('file'=>'export.php','class'=>'ReasonExportModule'),
 		'VersionCheck'=>array('file'=>'version_check.php','class'=>'ReasonVersionCheckModule'),
+		'EventSplit'=>array('file'=>'event_split.php','class'=>'ReasonEventSplitModule'),
 	);
 ?>
