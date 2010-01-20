@@ -759,12 +759,18 @@ class image_uploadType extends uploadType
 			// Preserve the unscaled image.
 			
 			$path_parts = pathinfo($image_path);
-			$ext = ".{$path_parts['extension']}";
-			$ext_pattern = "/".preg_quote($ext, '/')."$/";
-			$orig_path = preg_replace($ext_pattern, "-unscaled{$ext}",
-				$image_path);
-			if ($orig_path == $image_path) // in case the replace doesn't work
-				$orig_path .= ".unscaled";
+			if (isset($path_parts['extension']))
+			{
+				$ext = ".{$path_parts['extension']}";
+				$ext_pattern = "/".preg_quote($ext, '/')."$/";
+				$orig_path = preg_replace($ext_pattern, "-unscaled{$ext}",
+					$image_path);
+				if ($orig_path == $image_path) // in case the replace doesn't work
+					$orig_path .= '.unscaled';
+			} else {
+				$orig_path = $image_path . '.unscaled';
+			}
+				
 			if (copy($image_path, $orig_path)) {
 				$this->original_path = $orig_path;
 			}
