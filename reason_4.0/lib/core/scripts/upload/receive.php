@@ -85,20 +85,23 @@ foreach (array_keys($_FILES) as $name) {
 	}
 	
 	$img_info = @getimagesize($temp_path);
-	if ($constraints && $img_info && !empty($constraints['max_dimensions'])) {
-		list($max_width, $max_height) = $constraints['max_dimensions'];
+	if ($img_info)
+	{
 		list($width, $height) = $img_info;
-		
-		if ($width > $max_width || $height > $max_height) {
-			$unscaled_path = add_name_suffix($temp_path, '-unscaled');
-			if (@copy($temp_path, $unscaled_path)) {
-				if (resize_image($temp_path, $max_width, $max_height)) {
-					list($width, $height) = getimagesize($temp_path);
-					clearstatcache();
-					$filesize = filesize($temp_path);
-				} else {
-					@unlink($unscaled_path);
-					$unscaled_path = null;
+		if ($constraints && !empty($constraints['max_dimensions'])) {
+			list($max_width, $max_height) = $constraints['max_dimensions'];
+			
+			if ($width > $max_width || $height > $max_height) {
+				$unscaled_path = add_name_suffix($temp_path, '-unscaled');
+				if (@copy($temp_path, $unscaled_path)) {
+					if (resize_image($temp_path, $max_width, $max_height)) {
+						list($width, $height) = getimagesize($temp_path);
+						clearstatcache();
+						$filesize = filesize($temp_path);
+					} else {
+						@unlink($unscaled_path);
+						$unscaled_path = null;
+					}
 				}
 			}
 		}
