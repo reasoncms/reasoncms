@@ -193,13 +193,13 @@ class AdmissionsTemplate extends MinisiteTemplate
 
 		$this->admissions_related_links();
 		$this->admissions_timeline();
-                if($this->cur_page->get_value( 'custom_page' ) != 'default' && $this->cur_page->get_value( 'custom_page' ) != 'show_children' && $this->has_content( 'pre_sidebar' ))
+                if($this->cur_page->get_value( 'custom_page' ) != 'default' && $this->has_content( 'pre_sidebar' ))
                 {
                         //echo '<div id="preSidebar">'."\n";
                         $this->run_section( 'pre_sidebar' );
                         //echo '</div>'."\n";
                 }
-		if ($this->cur_page->get_value( 'custom_page' ) != 'default' && $this->cur_page->get_value( 'custom_page' ) != 'show_children' && $this->has_content( 'sidebar' ))
+		if ($this->cur_page->get_value( 'custom_page' ) != 'default' && $this->has_content( 'sidebar' ))
                 {
                         //echo '<div id="sidebar">'."\n";
                         $this->run_section( 'sidebar' );
@@ -411,12 +411,12 @@ class AdmissionsTemplate extends MinisiteTemplate
 			$this->admissions_home_content();
 		}
 
-		if (($this->cur_page->get_value( 'custom_page' ) == 'default' || $this->cur_page->get_value( 'custom_page' ) == 'show_children') && $this->has_content( 'pre_sidebar' ))
+		if ($this->cur_page->get_value( 'custom_page' ) == 'default' && $this->has_content( 'pre_sidebar' ))
                 {
 			$this->run_section( 'pre_sidebar' );
                 }
 
-		if (($this->cur_page->get_value( 'custom_page' ) == 'default' || $this->cur_page->get_value( 'custom_page' ) == 'show_children') && $this->has_content( 'sidebar' ))
+		if ($this->cur_page->get_value( 'custom_page' ) == 'default' && $this->has_content( 'sidebar' ))
                 {
 			// put sidebar image in main post
 			//echo '<div id="sidebar">'."\n";
