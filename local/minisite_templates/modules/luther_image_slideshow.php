@@ -60,30 +60,44 @@
 			//echo '<script type="text/javascript">'."\n";
 			//echo 'countArticle = 0;'."\n";
 			//echo 'var mySlideData = new Array();'."\n";
-			echo '<div class="hidden-container">'."\n";
+			//echo '<div class="hidden-container">'."\n";
 			$i = 0;
+			echo "<div id=\"gallery\">\n";
+                        echo "<div class=\"gallery-info\">\n";
+
+			echo "<div id=\"gallerycontainer\">\n";
+                        echo "<ul id=\"galleryimages\">\n";
 			foreach( $this->images AS $id => $image )
 			{
 				$show_text = $text;
+				echo "<li><div class=\"file_iframe_image\">\n";
 
-				if ($i == 0)
-				{
-					echo '<a id="thumb1" class="highslide" href="'; 
-				}
-				else
-				{
+				//if ($i == 0)
+				//{
+			//		echo '<a id="thumb1" class="highslide" href="'; 
+			//	}
+			//	else
+			//	{
 					echo '<a class="highslide" href="'; 
-				}
+			//	}
+
+
 				echo WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
-				echo '" onclick="return hs.expand(this, inPageOptions)"><img src="';
+				//echo '" onclick="return hs.expand(this, inPageOptions)"><img src="';
+				echo '" onclick="return hs.expand(this, {dimmingOpacity: 0.8, slideshowGroup: 1})"><img src="';
 				echo WEB_PHOTOSTOCK . $id . '_tn.' .$image->get_value('image_type');
 				echo '" alt="';
 				echo htmlspecialchars( strip_tags($image->get_value('description')),ENT_QUOTES,'UTF-8' );
 				echo '"/></a>'."\n";
+				echo "</div class=\"file_iframe_image\"></li>\n";
 				$i++;
 			}
-			echo '</div>'."\n";
-			echo '<div id="gallery-area" ></div>'."\n";
+                        echo "</ul id=\"galleryimages\">\n";
+			echo "</div id=\"gallerycontainer\">\n";
+                        echo "</div class=\"gallery-info\">\n";
+			echo "</div id=\"gallery\">\n";
+			//echo '</div>'."\n";
+			//echo '<div id="gallery-area" ></div>'."\n";
 		}
 		
 		function get_max_dimensions()

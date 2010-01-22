@@ -20,6 +20,8 @@
 			$es->add_rel_sort_field($this->cur_page->id(), relationship_id_of('page_to_flickr_slideshow'));
 			$es->set_order('rel_sort_order'); 
 			$posts = $es->run_one();
+			echo "<div id=\"gallery\">\n";
+			echo "<div class=\"gallery-info\">\n";
 			foreach( $posts AS $post )
 			{
     				echo $post->get_value( 'flickr_username' ).'<br />';
@@ -35,12 +37,24 @@
 					echo "farm: " . $pinfo['farm'] . "<br />";
 					//print_r($pinfo);
 				}
+				echo "<div id=\"gallerycontainer\">\n";
+				echo "<ul id=\"galleryimages\">\n";
 				foreach ((array)$photos['photoset']['photo'] as $photo)
 				{
+					//echo "<li><div class=\"file_iframe_image\">\n";
+					echo "<li>\n";
 					$pinfo = $f->photos_getInfo($photo['id']);
-					echo "<img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_s." . $pinfo['originalformat']  . "\"/>"; 
+//					echo "<img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_s." . $pinfo['originalformat']  . "\"/>"; 
+					echo "<a class=\"highslide\" href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "." . $pinfo['originalformat']  . "\" onclick=\"return hs.expand(this, {dimmingOpacity: 0.8, slideshowGroup: 1})\"> <img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_s." . $pinfo['originalformat']  . "\" title=\"Click to open gallery\" alt=\"" . $photo['title'] . "\" /></a>"; 
+
+					//echo "</div class=\"file_iframe_image\"></li>\n";
+					echo "</li>\n";
 				}
+				echo "</ul id=\"galleryimages\">\n";
+				echo "</div id=\"gallerycontainer\">\n";
 			}
+			echo "</div class=\"gallery-info\">\n";
+			echo "</div id=\"gallery\">\n";
 
 
 		}
