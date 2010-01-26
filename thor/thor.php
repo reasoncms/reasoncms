@@ -600,7 +600,7 @@ class ThorCore
 				if ($reconnect_db) connectDB($this->get_db_conn());
   				$q = $this->get_column_exists_sql($column);
   				$res = mysql_query($q);
-  				if (mysql_num_rows($res) > 0) $this->_column_exists[$column] = true;
+  				if ($res && (mysql_num_rows($res) > 0)) $this->_column_exists[$column] = true;
   				else $this->_column_exists[$column] = false;
   				if ($reconnect_db) connectDB($reconnect_db); // reconnect to default DB
   			}
