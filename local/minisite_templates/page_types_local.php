@@ -66,7 +66,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'sidebar' => array( // Highlights
 				'module' => 'publication',
 				//'module' => 'luther_other_publication_news',
-//				'related_publication_unique_names' => array( 'headlinesarchive' ),
+			//	'related_publication_unique_names' => array( 'headlinesarchive' ),
 				'related_mode' => 'true',
 				'related_title' => '',
 				'related_order' => 'random',
@@ -99,6 +99,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post' => 'luther_faculty'
 		),
 	'image_slideshow' => array(
+			'main' => 'luther_flickr_slideshow',
                         'main_post' => 'luther_image_slideshow',
                         'sidebar' => '',
                 ),
