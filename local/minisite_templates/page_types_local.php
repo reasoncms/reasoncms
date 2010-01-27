@@ -306,7 +306,7 @@ function luther_global_navigation()
 
 function luther_google_search()
 {
-                        echo '<form id="search" action="http://find.luther.edu/search" method="get" name="gs">'."\n";
+                        echo '<form id="search" action="http://find-2.luther.edu/search" method="get" name="gs">'."\n";
                         echo '<input type="text" value="" maxlength="256" size="32" name="q" />'."\n";
                         echo '<input id="searchButton" class="button" type="submit" value="Search" name="btnG" />'."\n";
                         echo '<input type="hidden" value="0" name="entqr"/>'."\n";
@@ -380,12 +380,16 @@ function admissions_main_navigation()
         	echo '</ul></li>'."\n";
         echo '<li class="financialAid"><a href="/admissions/financialaid/">Financial Aid</a>'."\n";
 			echo '<ul>'."\n";
-        	echo '<li><a href="/admissions/financialaid/tuition/">Tuition & Fees</a></li>'."\n";
-        	echo '<li><a href="/admissions/financialaid/scholarshipsaid/">Scholarship & Aid</a></li>'."\n";
+        	echo '<li><a href="/admissions/financialaid/current/apply/">How to Apply for Aid</a></li>'."\n";
+        	echo '<li><a href="/admissions/financialaid/scholarshipsawards/">Scholarship & Awards</a></li>'."\n";
+        	echo '<li><a href="/admissions/financialaid/needbased/">Need-Based Assistance</a></li>'."\n";
+        	echo '<li><a href="/admissions/financialaid/current/workstudy/">Work-Study Opportunities</a></li>'."\n";
+        	echo '<li><a href="/admissions/financialaid/tuition/">Tuition & Aid</a></li>'."\n";
         	//echo '<li><a href="/admissions/financialaid/parents/">Parents</a></li>'."\n";
+       	 	echo '<li><a href="http://www.fafsa.gov/">Free Application for Federal Student Aid (FAFSA)</a></li>'."\n";
+       	 	echo '<li><a href="/admissions/financialaid/scholarshipsaid/forms/">Forms</a></li>'."\n";
         	echo '<li><a href="/admissions/financialaid/faq/">FAQ</a></li>'."\n";
         	echo '<li><a href="http://www.luther.edu/financial-aid/staff/">Staff</a></li>'."\n";
-        	echo '<li><a href="/admissions/financialaid/scholarshipsaid/forms/">Forms</a></li>'."\n";
         	echo '</ul></li>'."\n";
         echo '<li class="howToApply"><a href="/admissions/fastfacts/counselors">Staff</a></li>'."\n";
         echo '</ul>'."\n";
