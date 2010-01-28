@@ -380,11 +380,11 @@ function admissions_main_navigation()
         	echo '</ul></li>'."\n";
         echo '<li class="financialAid"><a href="/admissions/financialaid/">Financial Aid</a>'."\n";
 			echo '<ul>'."\n";
-        	echo '<li><a href="/admissions/financialaid/current/apply/">How to Apply for Aid</a></li>'."\n";
+        	echo '<li><a href="/financialaid/current/apply/">How to Apply for Aid</a></li>'."\n";
         	echo '<li><a href="/admissions/financialaid/scholarshipsawards/">Scholarship & Awards</a></li>'."\n";
         	echo '<li><a href="/admissions/financialaid/needbased/">Need-Based Assistance</a></li>'."\n";
-        	echo '<li><a href="/admissions/financialaid/current/workstudy/">Work-Study Opportunities</a></li>'."\n";
-        	echo '<li><a href="/admissions/financialaid/tuition/">Tuition & Aid</a></li>'."\n";
+        	echo '<li><a href="/financialaid/current/workstudy/">Work-Study Opportunities</a></li>'."\n";
+        	echo '<li><a href="/financialaid/tuition/">Tuition & Aid</a></li>'."\n";
         	//echo '<li><a href="/admissions/financialaid/parents/">Parents</a></li>'."\n";
        	 	echo '<li><a href="http://www.fafsa.gov/">Free Application for Federal Student Aid (FAFSA)</a></li>'."\n";
        	 	echo '<li><a href="http://www.luther.edu/financialaid/forms/">Forms</a></li>'."\n";
