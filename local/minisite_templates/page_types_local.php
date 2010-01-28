@@ -306,7 +306,7 @@ function luther_global_navigation()
 
 function luther_google_search()
 {
-                        echo '<form id="search" action="http://find-2.luther.edu/search" method="get" name="gs">'."\n";
+                        echo '<form id="search" action="http://find.luther.edu/search" method="get" name="gs">'."\n";
                         echo '<input type="text" value="" maxlength="256" size="32" name="q" />'."\n";
                         echo '<input id="searchButton" class="button" type="submit" value="Search" name="btnG" />'."\n";
                         echo '<input type="hidden" value="0" name="entqr"/>'."\n";
