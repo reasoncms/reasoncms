@@ -200,6 +200,11 @@ class LutherTemplate extends MinisiteTemplate
                         echo '</div>'."\n";
                 }
 
+                if ($this->has_content( 'flickr_slideshow' ))
+                {
+			$this->run_section( 'flickr_slideshow' );
+                }
+
 
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_pageLC')
 		{
