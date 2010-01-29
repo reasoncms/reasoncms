@@ -21,6 +21,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'post_foot' => 'luther_footer',
 			'imagetop' => 'luther_imagetop',
 			'bannerad' => 'luther_bannerad',
+			'flickr_slideshow' => 'luther_flickr_slideshow',
                         'sbvideo' => 'luther_sbvideo'
 		),
 		'admissions_account_signup' => array(
@@ -99,7 +100,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post' => 'luther_faculty'
 		),
 	'image_slideshow' => array(
-			'main' => 'luther_flickr_slideshow',
+			//'main' => 'luther_flickr_slideshow',
                         'main_post' => 'luther_image_slideshow',
                         'sidebar' => '',
                 ),
