@@ -31,7 +31,7 @@ class IndividualVisitForm extends DefaultThorForm
 		// If the date is before February 2, let submitters choose the current year.
 		// Otherwise, just the next two years
 		$feb2 = 32;  // the numeric representation (yday) of February 2nd
-		if ($date['yday'] <= $feb2) {
+		if ($date['yday'] < $feb2) {
 			$this->change_element_type($grad_year, 'radio_inline', array(
 				'options' => array(
 					$date['year'], 
