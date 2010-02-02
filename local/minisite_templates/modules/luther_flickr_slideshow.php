@@ -1,6 +1,5 @@
 <?php
 	reason_include_once( 'minisite_templates/modules/default.php' );
-       	require_once("phpFlickr/phpFlickr.php");
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LutherFlickrSlideshow';
 	
@@ -12,8 +11,10 @@
 		
 		function run()
 		{
-		// flickr username, api key, and secret must be included in array below:
-		$flickr_account = array("luthercollegemedia" => array("5b298e650817ac77f14054abfc722b01", "f8a94f21e063f110"));
+       			require("phpFlickr/phpFlickr.php");
+
+			// flickr username, api key, and secret must be included in array below:
+			$flickr_account = array("luthercollegemedia" => array("5b298e650817ac77f14054abfc722b01", "f8a94f21e063f110"));
 
 			$site_id = $this->site_id;
 			$es = new entity_selector( $site_id );
@@ -31,9 +32,9 @@
     				//echo $post->get_value( 'flickr_photoset_id' ).'<br />';
     				//echo $post->get_value( 'description' ).'<br />';
     				//echo $post->get_value( 'keywords' ).'<br />';
-				if ($flickr_account[$post->get_value( 'flickr_username' )] != null)
+				if (array_key_exists($post->get_value('flickr_username'), $flickr_account))
 				{
-				$f = new phpFlickr("5b298e650817ac77f14054abfc722b01", "f8a94f21e063f110");
+				$f = new phpFlickr($flickr_account[$post->get_value('flickr_username')][0], $flickr_account[$post->get_value('flickr_username')][1]);
 				$f->enableCache("fs", "/var/www/phpFlickrCache"); 
 				$photos = $f->photosets_getPhotos($post->get_value('flickr_photoset_id'));
 				//foreach ((array)$photos['photoset']['photo'] as $photo)
