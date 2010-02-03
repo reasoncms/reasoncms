@@ -38,7 +38,7 @@ class imagesFeed extends defaultFeed
 		}
 		$this->feed->es->set_num( $num );
 		$this->feed->es->set_start( $start );
-		$this->feed->es->set_order( 'dated.datetime DESC' );
+		$this->feed->es->set_order( 'entity.last_modified DESC, dated.datetime DESC, entity.name ASC' );
 	}
 }
 
