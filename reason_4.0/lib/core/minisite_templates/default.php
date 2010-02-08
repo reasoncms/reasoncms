@@ -421,7 +421,7 @@ class MinisiteTemplate
 				if (USE_JS_LOGOUT_TIMER)
 				{
 					$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/timer.css');
-					$this->head_items->add_head_item('script',array( 'language' => 'JavaScript', 'type' => 'text/javaScript',  'src' => WEB_JAVASCRIPT_PATH.'timer/timer.js.php'));
+					$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'timer/timer.js');
 				}
 				
 				// we know that someone is logged in if the session exists
