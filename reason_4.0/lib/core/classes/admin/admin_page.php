@@ -1226,7 +1226,7 @@
 			if (!isset($_SERVER['REMOTE_USER']) && USE_JS_LOGOUT_TIMER) // if we are not logged in via http authentication
 			{
 				$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/timer.css');
-				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'timer/timer.js.php');
+				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'timer/timer.js');
 			}
 			
 			// add collapse javasript (should be moved to module method
