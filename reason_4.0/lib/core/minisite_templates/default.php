@@ -421,6 +421,7 @@ class MinisiteTemplate
 				if (USE_JS_LOGOUT_TIMER)
 				{
 					$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/timer.css');
+					$this->head_items->add_javascript(JQUERY_URL, true);
 					$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'timer/timer.js');
 				}
 				
