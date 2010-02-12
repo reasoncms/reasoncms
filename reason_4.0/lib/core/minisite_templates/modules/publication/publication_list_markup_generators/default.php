@@ -1,12 +1,18 @@
 <?php
+/**
+ *  @package reason
+ *  @subpackage minisite_modules
+ */
+
+/**
+ * Include the parent class
+ */
 reason_include_once( 'minisite_templates/modules/publication/markup_generator.php' );
 	
 /**
 *  Generates the markup to display a list of news items or blog posts.  
 *  Helper class to the publication minisite module.  
 *
-*  @package reason
-*  @subpackage minisite_modules
 *  @author Meg Gibbs
 *
 *  @todo Make this more easily extensible.  What that may mean will become more clear when we actually start writing extensions,
@@ -321,21 +327,18 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		if(!empty($this->passed_vars['sections']))
 		{
 			$markup_string .= '<div class="sectionMenu">'."\n";
-			$markup_string .= '<h4>Sections</h4>'."\n";
-			$markup_string .= '<ul>'."\n";
+			$markup_string .= '<h4 class="sectionMenuHead">Sections</h4>'."\n";
+			$markup_string .= '<ul class="sections">'."\n";
 			foreach($this->passed_vars['sections'] as $section_id => $section)
 			{
-				$name = $section->get_value('name');
-				$markup_string .= '<li>';
 				if(!empty($this->passed_vars['current_section']) && $this->passed_vars['current_section']->id() == $section_id)
 				{
-					$markup_string .= '<strong>'.$name.'</strong>';
+					$markup_string .= '<li class="current"><strong>'.$section->get_value('name').'</strong></li>';
 				}
 				else
 				{
-					$markup_string .=  '<a href="'.$this->passed_vars['links_to_sections'][$section_id].'">'.$name.'</a>';
+					$markup_string .=  '<li><a href="'.$this->passed_vars['links_to_sections'][$section_id].'">'.$section->get_value('name').'</a></li>';
 				}
-				$markup_string .= '</li>'."\n";
 			}
 			$markup_string .= '</ul>'."\n";	
 			$markup_string .= '</div>'."\n";
