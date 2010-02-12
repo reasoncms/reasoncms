@@ -80,6 +80,7 @@ class PublicationModule extends Generic3Module
 	var $all_issues = array();
 	var $issues = array();					// $issue_id => $issue_entity
 	var $sections = array();				// $section_id => $section_entity
+	var $sections_by_issue = array();				// $issue_id => array($section_id => $section_entity)
 	var $no_section_key = 'no_section';		//key to be used in the items_by_section array when there are no sections.
 	var $group_by_section = true;			//whether or not items should be grouped by section when displayed
 	var $show_module_title = false; // page title module generally handles this
@@ -165,7 +166,7 @@ class PublicationModule extends Generic3Module
 									   'issue_blurbs' => 'get_current_issue_blurbs',
 									   //sections
 									   'current_section' => 'get_current_section',
-									   'sections' => 'get_sections',
+									   'sections' => 'get_sections_issue_aware',
 									   'group_by_section' => 'use_group_by_section_view',
 									   'items_by_section' => 'get_items_by_section', 
 									   'links_to_sections' => 'get_links_to_sections',
@@ -388,7 +389,7 @@ class PublicationModule extends Generic3Module
 		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'minimum_date_strtotime_format', 'show_login_link', 
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
 		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css',
-		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization');
+		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization','comment_form_file_location','post_form_file_location',);
 		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info, 
 							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
 							      'variables_to_pass' => $this->variables_to_pass);
@@ -592,6 +593,17 @@ class PublicationModule extends Generic3Module
 			{
 				$this->issue_id = $requested_issue; // requested issue verified
 				$this->_add_css_urls_to_head($this->_get_issue_css($this->issue_id));
+				//if(empty($this->request[$this->query_string_frag.'_id']))
+				//{
+					$issue_link = $this->get_links_to_issues();
+					$issue = new entity($this->issue_id);
+					$this->parent->add_crumb( $issue->get_value( 'name' ), $this->get_link_to_issue($issue) );
+					if($requested_section)
+					{
+						$section = new entity($this->request['section_id']);
+						$this->parent->add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
+					}
+				//}
 				return true;
 			}
 			elseif (in_array($requested_issue, $all_issue_keys))
@@ -1324,10 +1336,22 @@ class PublicationModule extends Generic3Module
 				$issues =& $this->get_issues();
 				foreach($issues as $issue_id => $issue_entity)
 				{
-					$links[$issue_entity->id()] = $this->construct_link(NULL, array( 'issue_id'=>$issue_id, 'page'=> '1'  ) );
+					$links[$issue_entity->id()] = $this->get_link_to_issue($issue_id);
 				}
 			}
 			return $links;
+		}
+		
+		function get_link_to_issue($issue)
+		{
+			if(is_object($issue))
+			{
+				return $this->construct_link(NULL, array( 'issue_id'=>$issue->id(), 'page'=> '1'  ) );
+			}
+			else
+			{
+				return $this->construct_link(NULL, array( 'issue_id'=>$issue, 'page'=> '1'  ) );
+			}
 		}
 		
 		/**
@@ -1404,6 +1428,38 @@ class PublicationModule extends Generic3Module
 			return false;
 		}
 		
+		/**
+		*  Returns an array of the news sections associated with this publication. If there is a current issue selected, only return those sections that have posts in the current issue.
+		*  Format: $section_id => $section_entity
+		*  @return array Array of the news sections for the publication
+		*/
+		function get_sections_issue_aware()
+		{
+			if($this->publication->get_value('has_issues') == 'yes' && $issue = $this->get_current_issue())
+			{
+				if(!isset($this->sections_by_issue[$issue->id()]))
+				{
+					$this->sections_by_issue[$issue->id()] = array();
+					$es = new entity_selector();
+					$es->add_type( id_of('news'));
+					$es->add_left_relationship( $issue->id(), relationship_id_of('news_to_issue') );
+					$es->add_left_relationship_field('news_to_news_section','entity','id','section_id');
+					$es->add_left_relationship_field('news_to_news_section','sortable','sort_order','section_order');
+					$es->set_order('section_order ASC');
+					$posts = $es->run_one();
+					foreach($posts as $post)
+					{
+						if(!isset($this->sections_by_issue[$issue->id()][$post->get_value('section_id')]))
+							$this->sections_by_issue[$issue->id()][$post->get_value('section_id')] = new entity($post->get_value('section_id'));
+					}
+				}
+				return $this->sections_by_issue[$issue->id()];
+			}
+			else
+			{
+				return $this->get_sections();
+			}
+		}
 		/**
 		*  Returns an array of the news sections associated with this publication.
 		*  Format: $section_id => $section_entity
@@ -1485,12 +1541,20 @@ class PublicationModule extends Generic3Module
 			{
 				foreach($sections as $section_id => $section)
 				{
-					$link_args = $this->get_query_string_values(array('issue_id', 'page'=> 1));
-					$link_args['section_id'] = $section->id();
-					$links[$section->id()] = $this->construct_link(NULL, $link_args );
+					$links[$section->id()] = $this->get_link_to_section($section);
 				}
 			}
 			return $links;
+		}
+		function get_link_to_section($section)
+		{
+			if(is_object($section))
+				$section_id = $section->id();
+			else
+				$section_id = $section;
+			$link_args = $this->get_query_string_values(array('issue_id', 'page'=> 1));
+			$link_args['section_id'] = $section_id;
+			return $this->construct_link(NULL, $link_args );
 		}
 		
 		/**
