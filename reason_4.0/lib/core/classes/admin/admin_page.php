@@ -892,7 +892,8 @@
 					}
 					echo '<a href="'.$link_url.'" class="nav">';
 					echo '<img src="'.reason_get_type_icon_url($type).'" alt="" />';
-					echo '<span class="typeName">' . $type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' ) . '</span>';
+					$type_name = $type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' );
+					echo '<span class="typeName">' . $type_name . '</span>';
 					echo '</a></li>' . "\n";
 				}
 				echo '</ul></div>';
