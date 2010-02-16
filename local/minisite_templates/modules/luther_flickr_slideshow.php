@@ -14,7 +14,8 @@
        			require("phpFlickr/phpFlickr.php");
 
 			// flickr username, api key, and secret must be included in array below:
-			$flickr_account = array("luthercollegemedia" => array("5b298e650817ac77f14054abfc722b01", "f8a94f21e063f110"));
+			$flickr_account = array("luthercollegemedia" => array("5b298e650817ac77f14054abfc722b01", "f8a94f21e063f110"),
+			"lc.anthrolab" => array("6725551efcba6082283094d49a0c807f", "3dff123f2a053c3a"));
 
 			$site_id = $this->site_id;
 			$es = new entity_selector( $site_id );
