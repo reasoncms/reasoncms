@@ -58,6 +58,9 @@ class ds_ldap extends ds_default {
 		'ds_fullname' => array('cn','givenname','sn','edupersonnickname'),
 		'ds_phone' => array('telephonenumber'),
 		'ds_affiliation' => array('edupersonaffiliation','edupersonprimaryaffiliation'),
+		'ds_groupid' => array('gidnumber'),
+		'ds_groupname' => array('cn'),
+		'ds_member' => array('memberuid'),
 		);
 
 	/**
@@ -310,6 +313,19 @@ class ds_ldap extends ds_default {
 								}
 							}
 							break;
+						case 'ds_groupid':
+							$value = (isset($record['gidnumber'])) ? $record['gidnumber'] : array();
+							break;
+						case 'ds_groupname':
+							$value = $record['cn'];
+							break;
+						case 'ds_member':
+							$value = array();
+							if (!empty($record['memberuid'])) 
+							{
+								$value = $record['memberuid'];
+							}
+							break;
 					}
 					$record[$attr] = $value;
 				}	
@@ -422,6 +438,15 @@ class ds_ldap extends ds_default {
 					break;
 				case 'ds_affiliation':
 					$attr = 'edupersonaffiliation';
+					break;
+				case 'ds_groupname':
+					$attr = 'cn';
+					break;
+				case 'ds_groupid':
+					$attr = 'gidnumber';
+					break;
+				case 'ds_member':
+					$attr = 'memberuid';
 					break;
 			}
 		}
