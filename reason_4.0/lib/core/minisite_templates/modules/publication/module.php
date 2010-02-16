@@ -315,7 +315,11 @@ class PublicationModule extends Generic3Module
 			$pub_es->limit_fields();
 			$pub_es->add_right_relationship_field('page_to_publication', 'entity', 'id', 'page_id');	
 			$publications = $pub_es->run_one();
-		}	
+		}
+		if (!empty($publications)) // lets make sure the pages are live
+		{
+			$publications = $this->_filter_non_live_related_ids($publications, 'minisite_page', 'page_id');
+		}
 		if (!empty($publications))
 		{
 			$this->related_publications = $publications;
@@ -343,10 +347,56 @@ class PublicationModule extends Generic3Module
 		}
 		else
 		{
-			trigger_error('No publications are placed on a page on this site -- cannot find any eligible news items for related news');
+			trigger_error('No related publications are placed on a live page -- cannot find any eligible news items for related news');
 		}
 	}
-
+		
+	/**
+	 * Crawl through a set of entites and look at a related_id_field - this is needed because there is not a reliable way to
+	 * add an entity id through add_right_relationship_field or add_left_relationship_field in a manner that ensures the entity
+	 * id added corresponds to a live entity. This is an issue for pages in particular that have become pending but hold a publication.
+	 *
+	 * - if any related_ids are not live, filter them out.
+	 * - If none are live, remove the entity from the set
+	 */
+	function _filter_non_live_related_ids($entities, $related_id_type_unique_name, $related_id_field)
+	{
+		$all_entity_ids = array();
+		foreach($entities as $entity)
+		{
+			$entity_ids = $entity->get_value($related_id_field);
+			$entity_array = (is_array($entity_ids)) ? $entity_ids : array($entity_ids);
+			$all_entity_ids = array_merge($all_entity_ids, $entity_array);
+		}
+		$all_entity_ids = array_unique($all_entity_ids);
+		$es = new entity_selector();
+		$es->add_type(id_of($related_id_type_unique_name));
+		$es->limit_tables();
+		$es->limit_fields();
+		$es->add_relation('entity.id IN (' . implode(",", $all_entity_ids) . ')');
+		$es->add_relation('entity.state != "Live"');
+		$result = $es->run_one("", "All");		
+		if ($result) // we have non live entities that we need to filter out
+		{
+			$filtered_entities = array();
+			$ids_to_filter = array_keys($result);
+			foreach ($entities as $id => $entity)
+			{
+				$entity_ids = $entity->get_value($related_id_field);
+				$entity_array = (is_array($entity_ids)) ? $entity_ids : array($entity_ids);
+				$remaining_values = array_values(array_diff($entity_array, $ids_to_filter));
+				if (!empty($remaining_values))
+				{
+					$remaining_values = (count($remaining_values) == 1) ? $remaining_values[0] : $remaining_values;
+					$entity->set_value($related_id_field, $remaining_values);
+					$filtered_entities[$id] = $entity;
+				}
+			}
+			return $filtered_entities;
+		}
+		else return $entities;
+	}
+	
 	/**
 	 * Build array of entities from an array of unique_names (or a string with one unique name)
 	 */
