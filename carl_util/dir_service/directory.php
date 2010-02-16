@@ -134,6 +134,7 @@
 * <i>Group generic attributes:</i>
 *
 * - ds_member (username(s) of member(s) of the group),
+* - ds_groupid (unique ID of group),
 * - ds_groupname (human-readable name of group),
 * - ds_owner (username(s) of owner(s) of the group)
 *
@@ -461,8 +462,9 @@ class directory_service {
 			{
 				foreach($results[$set] as $key => $object)
 				{
-					// key on either username or groupname
+					// key on either username or groupid or groupname
 					if (isset($object['ds_username'][0])) $key = $object['ds_username'][0];
+					elseif (isset($object['ds_groupid'][0])) $key = $object['ds_groupid'][0];
 					elseif (isset($object['ds_groupname'][0])) $key = $object['ds_groupname'][0];
 					$merged[$key] = $object;
 				}
