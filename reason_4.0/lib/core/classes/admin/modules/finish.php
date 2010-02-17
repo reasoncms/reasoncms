@@ -67,7 +67,6 @@
 			$q = 'SELECT id FROM allowable_relationship WHERE name LIKE "%archive%" AND relationship_a = '.$this->admin_page->type_id.' AND relationship_b = '.$this->admin_page->type_id;
 			$r = db_query( $q, 'Unable to get archive relationship.' );
 			$row = mysql_fetch_array( $r, MYSQL_ASSOC );
-			mysql_free_result( $r );
 			$this->rel_id = $row['id'];
 
 			// get archives
@@ -192,7 +191,6 @@
 			$q = 'DELETE FROM relationship WHERE entity_a = ' . $this->admin_page->request[ CM_VAR_PREFIX.'id'] . 
 				 ' AND type = ' . $this->admin_page->request[ CM_VAR_PREFIX.'rel_id'];
 			$r = db_query( $q , 'Error deleting existing relationships in FinishModule::delete_existing_relationships()' );
-			mysql_free_result( $r );
 		} // }}}
 		function get_required_relationships() // {{{
 		{
@@ -224,9 +222,6 @@
 			$return_me = array();
 			while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
 				$return_me[ $row[ 'id' ] ] = $row;
-
-			mysql_free_result( $r );
-
 			$this->req_rels = $return_me;
 		} // }}}
 		function check_required_relationships() // {{{
@@ -245,12 +240,10 @@
 				$r = db_query( $d->get_query() , "Can't do query in FinishModule::check_required_relationships()" );
 				if( !( $row = mysql_fetch_array( $r ) ) )
 				{
-					mysql_free_result( $r );
 					$link = $this->admin_page->make_link( array( 'cur_module' => 'Associator' , 'rel_id' => $rel[ 'id' ] , 'error_message' => 1 ) );
 					header( 'Location: ' . unhtmlentities( $link ) );
 					die( '' );
 				}
-				mysql_free_result( $r );
 			}
 		} // }}}
 		function check_entity_values() // {{{
