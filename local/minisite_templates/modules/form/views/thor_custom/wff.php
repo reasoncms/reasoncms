@@ -150,14 +150,11 @@ class CreditCardThorForm extends DefaultThorForm
 		// todo - make Ticket Cost and Number of Tickets a field in the a new Ecommerce 
 		// thor content_manager
 		$this->change_element_type($this->get_element_name_from_label('payment_amount'),'select',array(
-			'display_name'=>'tickets',
+			'display_name'=>'Registration Amount',
 			'options'=>array(
-				'$20'=>'1 ticket, $20',
-				'$40'=>'2 tickets, $40',
-				'$60'=>'3 tickets, $60',
-				'$80'=>'4 tickets, $80',
-				'$100'=>'5 tickets, $100',
-				'$120'=>'6 tickets, $120',
+				'$25'=>'$25 - individual registrant',
+				'$40'=>'$40 - yourself and a guest',
+				'$60'=>'$60 - yourself and two guests',
 				),
 			));
 
