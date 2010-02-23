@@ -145,17 +145,36 @@ class CreditCardThorForm extends DefaultThorForm
 		
 		$this->change_element_type($this->get_element_name_from_label('State'),'state');
 		
-		$this->change_element_type($this->get_element_name_from_label('Guest 1 Name'),'state', array(
+		$this->change_element_type($this->get_element_name_from_label('Guest 1 Name'),'text', array(
 			'display_name' => 'Name',));
-		$this->change_element_type($this->get_element_name_from_label('Guest 1 State'),'state', array(
+		$this->change_element_type($this->get_element_name_from_label('Guest 1 Address'),'text', array(
 			'display_name' => 'Address',));
-		$this->change_element_type($this->get_element_name_from_label('Guest 1 State'),'state', array(
-			'display_name' => 'State',));
-		
-		$this->change_element_type($this->get_element_name_from_label('Guest 2 State'),'state', array(
-			'display_name' => 'State',
-			));
+		$this->change_element_type($this->get_element_name_from_label('Guest 1 City'),'text', array(
+			'display_name' => 'City',));
+		$this->change_element_type($this->get_element_name_from_label('Guest 1 Zip Code'),'text', array(
+			'display_name' => 'Zip Code',));
+		$this->change_element_type($this->get_element_name_from_label('Guest 1 Phone'),'text', array(
+			'display_name' => 'Phone',
+			'comments' => '<br /><small>with area code, please</small>',));
+		$this->change_element_type($this->get_element_name_from_label('Guest 1 Email'),'text', array(
+			'display_name' => 'E-mail Address',
+			'comments' => '<br /><small>Confirmation will be sent via e-mail when possible</small>',));
 
+		
+		$this->change_element_type($this->get_element_name_from_label('Guest 2 Name'),'text', array(
+			'display_name' => 'Name',));
+		$this->change_element_type($this->get_element_name_from_label('Guest 2 Address'),'text', array(
+			'display_name' => 'Address',));
+		$this->change_element_type($this->get_element_name_from_label('Guest 2 City'),'text', array(
+			'display_name' => 'City',));
+		$this->change_element_type($this->get_element_name_from_label('Guest 2 Zip Code'),'text', array(
+			'display_name' => 'Zip Code',));
+		$this->change_element_type($this->get_element_name_from_label('Guest 2 Phone'),'text', array(
+			'display_name' => 'Phone',
+			'comments' => '<br /><small>with area code, please</small>',));
+		$this->change_element_type($this->get_element_name_from_label('Guest 2 Email'),'text', array(
+			'display_name' => 'E-mail Address',
+			'comments' => '<br /><small>Confirmation will be sent via e-mail when possible</small>',));
 		
 		// SLS - 1/08/10 
 		// Take the Payment Amount element and hardcode in prices
