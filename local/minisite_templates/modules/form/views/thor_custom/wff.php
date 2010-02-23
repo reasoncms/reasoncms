@@ -196,14 +196,14 @@ class CreditCardThorForm extends DefaultThorForm
 		// Turn on test mode when appropriate
 		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
 		{
-			//$this->is_in_testing_mode = true;
-			$this->is_in_testing_mode = false;
+			$this->is_in_testing_mode = true;
+			//$this->is_in_testing_mode = false;
 
 		}
 		else
 		{
-			//$this->is_in_testing_mode = false;
-			$this->is_in_testing_mode = true;
+			$this->is_in_testing_mode = false;
+			//$this->is_in_testing_mode = true;
 
 		}
 		
