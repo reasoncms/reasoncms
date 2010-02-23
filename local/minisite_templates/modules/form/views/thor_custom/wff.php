@@ -157,7 +157,7 @@ class CreditCardThorForm extends DefaultThorForm
 			'display_name' => 'Zip Code',));
 		$this->change_element_type($this->get_element_name_from_label('Guest 1 Phone'),'text', array(
 			'display_name' => 'Phone',
-			'comments' => '<br /><small>with area code, please</small>',));
+			'comments' => '<br /><small>With area code, please</small>',));
 		$this->change_element_type($this->get_element_name_from_label('Guest 1 Email'),'text', array(
 			'display_name' => 'E-mail Address',
 			'comments' => '<br /><small>Confirmation will be sent via e-mail when possible</small>',));
@@ -171,11 +171,11 @@ class CreditCardThorForm extends DefaultThorForm
 			'display_name' => 'City',));
 		$this->change_element_type($this->get_element_name_from_label('Guest 2 State'),'state', array(
 			'display_name' => 'State',));
-		$this->change_element_type($this->get_element_name_from_label('Guest 2 Zip '),'text', array(
+		$this->change_element_type($this->get_element_name_from_label('Guest 2 Zip'),'text', array(
 			'display_name' => 'Zip Code',));
 		$this->change_element_type($this->get_element_name_from_label('Guest 2 Phone'),'text', array(
 			'display_name' => 'Phone',
-			'comments' => '<br /><small>with area code, please</small>',));
+			'comments' => '<br /><small>With area code, please</small>',));
 		$this->change_element_type($this->get_element_name_from_label('Guest 2 Email'),'text', array(
 			'display_name' => 'E-mail Address',
 			'comments' => '<br /><small>Confirmation will be sent via e-mail when possible</small>',));
@@ -196,14 +196,14 @@ class CreditCardThorForm extends DefaultThorForm
 		// Turn on test mode when appropriate
 		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
 		{
-			$this->is_in_testing_mode = true;
-			//$this->is_in_testing_mode = false;
+			//$this->is_in_testing_mode = true;
+			$this->is_in_testing_mode = false;
 
 		}
 		else
 		{
-			$this->is_in_testing_mode = false;
-			//$this->is_in_testing_mode = true;
+			//$this->is_in_testing_mode = false;
+			$this->is_in_testing_mode = true;
 
 		}
 		
