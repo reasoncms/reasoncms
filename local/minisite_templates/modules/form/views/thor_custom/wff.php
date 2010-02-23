@@ -151,6 +151,8 @@ class CreditCardThorForm extends DefaultThorForm
 			'display_name' => 'Address',));
 		$this->change_element_type($this->get_element_name_from_label('Guest 1 City'),'text', array(
 			'display_name' => 'City',));
+		$this->change_element_type($this->get_element_name_from_label('Guest 1 State'),'state', array(
+			'display_name' => 'State',));
 		$this->change_element_type($this->get_element_name_from_label('Guest 1 Zip Code'),'text', array(
 			'display_name' => 'Zip Code',));
 		$this->change_element_type($this->get_element_name_from_label('Guest 1 Phone'),'text', array(
@@ -167,7 +169,9 @@ class CreditCardThorForm extends DefaultThorForm
 			'display_name' => 'Address',));
 		$this->change_element_type($this->get_element_name_from_label('Guest 2 City'),'text', array(
 			'display_name' => 'City',));
-		$this->change_element_type($this->get_element_name_from_label('Guest 2 Zip Code'),'text', array(
+		$this->change_element_type($this->get_element_name_from_label('Guest 2 State'),'state', array(
+			'display_name' => 'State',));
+		$this->change_element_type($this->get_element_name_from_label('Guest 2 Zip '),'text', array(
 			'display_name' => 'Zip Code',));
 		$this->change_element_type($this->get_element_name_from_label('Guest 2 Phone'),'text', array(
 			'display_name' => 'Phone',
