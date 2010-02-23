@@ -145,11 +145,23 @@ class CreditCardThorForm extends DefaultThorForm
 		
 		$this->change_element_type($this->get_element_name_from_label('State'),'state');
 		
+		$this->change_element_type($this->get_element_name_from_label('Guest 1 Name'),'state', array(
+			'display_name' => 'Name',));
+		$this->change_element_type($this->get_element_name_from_label('Guest 1 State'),'state', array(
+			'display_name' => 'Address',));
+		$this->change_element_type($this->get_element_name_from_label('Guest 1 State'),'state', array(
+			'display_name' => 'State',));
+		
+		$this->change_element_type($this->get_element_name_from_label('Guest 2 State'),'state', array(
+			'display_name' => 'State',
+			));
+
+		
 		// SLS - 1/08/10 
 		// Take the Payment Amount element and hardcode in prices
 		// todo - make Ticket Cost and Number of Tickets a field in the a new Ecommerce 
 		// thor content_manager
-		$this->change_element_type($this->get_element_name_from_label('payment_amount'),'select',array(
+		$this->change_element_type($this->get_element_name_from_label('payment_amount'),'radio_no_sort',array(
 			'display_name'=>'Registration Amount',
 			'options'=>array(
 				'$25'=>'$25 - individual registrant',
