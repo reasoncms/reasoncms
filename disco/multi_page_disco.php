@@ -113,7 +113,7 @@
 				parent::show_form();
 		} // }}}
 
-		function init() // {{{
+		function init($externally_set_up = false) // {{{
 		{
 			// make sure init() only gets run once.  This allows a script to init the form before running.
 			if ( !isset( $this->_inited ) OR empty( $this->_inited ))
@@ -183,8 +183,13 @@
 							$element = $key;
 							if ( is_array( $value ) )
 							{
-								$type = $value['type'];
-								unset($value['type']);
+								if (isset($value['type']))
+								{
+									$type = $value['type'];
+									unset($value['type']);
+								} else {
+									$type = '';
+								}
 								$args = $value;
 							}
 							else
