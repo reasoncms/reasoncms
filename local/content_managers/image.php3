@@ -86,7 +86,7 @@
 //			$kt = array_search(preg_match("/imagetop/", 
 			$this->set_value('keywords', implode(", ", $ka));
 
-			$this->add_element( 'top_image', 'checkbox', array('description' => 'Should be at least as wide as the column in which it resides.  Be sure to check "Do Not Resize."'));
+			$this->add_element( 'top_image', 'checkbox', array('description' => 'Should be at least as wide as the column in which it resides.  Be sure to check "Do Not Resize."<br /><small>The dimensions for a top image are 530 x 215. An image outside these dimensions will be stretched or cropped.'));
 			$this->set_value('top_image', $check_imagetop);
 			//$this->add_element( 'banner_ad', 'checkbox', array('description' => 'Use image as an advertisement to generate click through traffic.'));
 			$this->add_element( 'banner_ad_url', 'text');
@@ -109,6 +109,7 @@
 			{
 				$this->add_element( 'do_not_resize', 'checkbox', array('description' => 'Upload this image at full resolution &amp; size. (Use with caution &ndash; it is easy to accidentally upload an overly-large image.)'));
 			}
+			
 
 			$this->add_required( 'description' );
 
@@ -144,9 +145,11 @@
 					'datetime',
 					'original_image_format',
 					'image',
+					'top_image',
 					'do_not_resize',
 					'replace_thumbnail',
-					'thumbnail'
+					'thumbnail',
+					'banner_ad_url',
 				)
 			);
 		} // }}}
