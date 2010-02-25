@@ -263,7 +263,7 @@ class LutherTemplate extends MinisiteTemplate
 			{
 				return false;
 			}
-			if ($this->cur_page->get_value('custom_page') == 'audio_video_sidebar')
+			if ($this->cur_page->get_value('custom_page') == 'audio_video_sidebar' || $this->cur_page->get_value('custom_page') == 'feed_display_sidebar')
 			{
 				return true;
 			}

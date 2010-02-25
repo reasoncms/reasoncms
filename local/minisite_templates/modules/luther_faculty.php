@@ -53,5 +53,29 @@ function show_person( $person ) // {{{
 				echo '</div>'."\n";
 			}
 		}
+
+
+                function show_image( $person )
+                {
+                        $image_id = '';
+                        if( !empty( $this->reason_netids[ $person[ 'ds_username' ][0] ] ) )
+                                $image_id = $this->grab_faculty_image( $this->reason_netids[ $person[ 'ds_username' ][0] ] );
+                        if (!empty($image_id))
+                        {
+                                echo "\t<div class='facStaffImage'>";
+				$image = get_entity_by_id($image_id);
+				$url = WEB_PHOTOSTOCK . $image_id . '.' . $image['image_type'];
+				$thumb = WEB_PHOTOSTOCK . $image_id . '_tn.' . $image['image_type'];
+				$d = max($image['width'], $image['height']) / 125.0;
+				echo '<div class="figure" style="width:' . intval($image['width']/$d) .'px;">';
+				echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
+                                echo '<img src="' . $thumb . '" border="0" alt="" title="Click to enlarge" />';
+                                echo '</a>';
+				
+                                //show_image( $image_id, false,true,false );
+                                echo "</div>\n";
+                                echo "</div>\n";
+                        }
+                }
 }
 ?>
