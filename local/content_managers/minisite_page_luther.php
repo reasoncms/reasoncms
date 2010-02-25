@@ -10,7 +10,8 @@
 		{
 			$basic_options = array( 
 				"default" => "Normal Page",
-				"gallery" => 'Photo Gallery <span class="smallText">(Shows associated images in a gallery format)</span>',
+				//"gallery" => 'Photo Gallery <span class="smallText">(Shows associated images in a gallery format)</span>',
+				"image_slideshow" => 'Image Slideshow <span class="smallText">(Shows associated images in a slideshow format after page content)</span>',
 				'show_children' => 'Shows children <span class="smallText">(Shows child pages in a list with their descriptions. Note: this includes pages not shown in navigation.)</span>',
 				'show_siblings' => 'Shows siblings <span class="smallText">(Shows this page\'s sibling pages after the content of the page. Note: this includes pages not shown in navigation.)</span>',
 			);
