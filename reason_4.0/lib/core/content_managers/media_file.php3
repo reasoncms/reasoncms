@@ -1,11 +1,15 @@
 <?php
 
 /**
- * Nates todos on this file
+ * Content manager for Audio/Video/Multimedia Files
+ * @package reason
+ * @subpackage content_managers
  *
  * @todo Restrict file type to the extensions indicated ... right now .jpgs can be uploaded.
  * @todo make sure errors are properly handled
  * @todo make sure junk is not left behind in tmp directory
+ * @todo add ability to store media on same server as Reason (e.g. just move file rather than ssh transferring it somewhere)
+ * @todo remove constants from this file and move into Reason settings -- this belt-and-suspenders approach is just too confusing.
  */
 
 /**
@@ -20,17 +24,20 @@ include_once(CARL_UTIL_INC . 'basic/mime_types.php');
 /**
  * Define the class name so that the admin page can use this content manager
  */
-$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'AssetManager';
-	
+$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'avFileManager';
+
+ /**
+  * Make sure constants are defined before progressing
+  */
 if(!defined('REASON_AV_TRANSFER_UTILITY_LOCATION')) define('REASON_AV_TRANSFER_UTILITY_LOCATION','');
 if(!defined('REASON_AV_TRANSFER_UTILITY_CLASS_NAME')) define('REASON_AV_TRANSFER_UTILITY_CLASS_NAME','');
 if(!defined('REASON_MANAGES_MEDIA')) define('REASON_MANAGES_MEDIA',false);
 if(!defined('NOTIFY_WHEN_MEDIA_IS_IMPORTED')) define('NOTIFY_WHEN_MEDIA_IS_IMPORTED',false);
 if(!defined('MEDIA_FILESIZE_NOTIFICATION_THRESHOLD')) define('MEDIA_FILESIZE_NOTIFICATION_THRESHOLD',0);
 if(!defined('MEDIA_ALLOW_DIRECT_UPLOAD')) define('MEDIA_ALLOW_DIRECT_UPLOAD',true);
-if(!defined('MEDIA_ALLOW_IMPORT_FROM_FILESYSTEM')) define('MEDIA_ALLOW_IMPORT_FROM_FILESYSTEM',true);
+if(!defined('MEDIA_ALLOW_IMPORT_FROM_FILESYSTEM')) define('MEDIA_ALLOW_IMPORT_FROM_FILESYSTEM',false);
 if(!defined('MEDIA_MAX_UPLOAD_FILESIZE_MEGS')) define('MEDIA_MAX_UPLOAD_FILESIZE_MEGS',50);
-	
+
 /**
  * Include the file identified in the settings as being the file transfer handler
  * constant name: REASON_AV_TRANSFER_UTILITY_LOCATION
@@ -42,8 +49,11 @@ if(defined('REASON_AV_TRANSFER_UTILITY_LOCATION') && REASON_AV_TRANSFER_UTILITY_
 
 /**
  * Content manager for Audio/Video/Multimedia Files
+ *
  * Handles importing of media if Reason is set up for it
- * @author Matt Ryan mryan@acs.carleton.edu
+ *
+ * @author Matt Ryan mryan@carleton.edu
+ * @author Nate White nwhite@carleton.edu
  */
 class avFileManager extends ContentManager
 {
