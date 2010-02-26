@@ -528,5 +528,32 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 		if(!$encoding) $encoding = function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8';
 		return function_exists('mb_strpos') ? mb_strpos($haystack, $needle, $offset, $encoding) : strpos($haystack, $needle, $offset);
 	}
+	
+	/**
+	 * Return unicode char by its code
+	 *
+	 * @param int $u
+	 * @return char
+	 */
+	function carl_unichr($u)
+	{
+		if(function_exists('mb_convert_encoding'))
+		{
+			return mb_convert_encoding('&#' . intval($u) . ';', 'UTF-8', 'HTML-ENTITIES');
+		}
+		else
+		{
+			if ($u <= 0x7F)
+				return chr($u);
+			else if ($u <= 0x7FF)
+				return chr(0xC0 | $u >> 6) . chr(0x80 | $u & 0x3F);
+			else if ($u <= 0xFFFF)
+				return chr(0xE0 | $u >> 12) . chr(0x80 | $u >> 6 & 0x3F) . chr(0x80 | $u & 0x3F);
+			else if ($u <= 0x10FFFF)
+				return chr(0xF0 | $u >> 18) . chr(0x80 | $u >> 12 & 0x3F) . chr(0x80 | $u >> 6 & 0x3F) . chr(0x80 | $u & 0x3F);
+			else
+				return false;
+		}
+	}
 }
 ?>
