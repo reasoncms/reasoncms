@@ -66,6 +66,10 @@ function show_person( $person ) // {{{
 				$image = get_entity_by_id($image_id);
 				$url = WEB_PHOTOSTOCK . $image_id . '.' . $image['image_type'];
 				$thumb = WEB_PHOTOSTOCK . $image_id . '_tn.' . $image['image_type'];
+				if (!file_exists($thumb))
+				{
+					$thumb = $url;
+				}
 				$d = max($image['width'], $image['height']) / 125.0;
 				echo '<div class="figure" style="width:' . intval($image['width']/$d) .'px;">';
 				echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
