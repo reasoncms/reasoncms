@@ -1,14 +1,53 @@
 <?php
+/**
+ * @package carl_util
+ * @subpackage basic
+ */
+ 
+ /**
+  * Include the misc functions
+  */
+  include_once('misc.php');
 
-	function unhtmlentities( $entities ) // {{{
+ /**
+  * Translate HTML entities back into their raw UTF-8 character values
+  *
+  * Note that in php4 this function only converts named entities in the html 
+  * translation table. This does not include some entities, like &euro;, 
+  * &trade;, &mdash;, etc.
+  *
+  * @param string $str html encoded string (named edities and/or utf-8 decimal or hex encoding)
+  * @return string (plain utf-8, no html encoding)
+  */
+	function unhtmlentities( $str ) // {{{
 	{
-		static $trans;
-		if(!$trans)
+		if(carl_is_php5())
 		{
-			$trans = array_flip( get_html_translation_table( HTML_ENTITIES ) );
+			return html_entity_decode($str, ENT_QUOTES, 'UTF-8');
 		}
-		return strtr( $entities, $trans );
+		else // php4's html_entity_decode doesn't do utf-8 properly.
+		{
+			static $utf8_trans;
+			if(!$utf8_trans)
+			{
+				$utf8_trans = array();
+				foreach(get_html_translation_table( HTML_ENTITIES ) as $k=>$v)
+				{
+					$utf8_trans[$v] = utf8_encode($k);
+				}
+			}
+			$str = preg_replace('~&#x([0-9a-f]+);~ei', 'carl_unichr(hexdec("\\1"))', $str);
+			$str = preg_replace('~&#([0-9]+);~e', 'carl_unichr("\\1")', $str);
+			return strtr( $str, $utf8_trans );
+		}
 	} // }}}
+	
+	/**
+	 * Remove initial slash (if present) from the beginning of a string
+	 *
+	 * @param string $str
+	 * @return string $str_with_first_slash_trimmed
+	 */
 	function strip_first_slash( $str ) // {{{
 	{
 		if( substr( $str, 0, 1 ) == '/' )
