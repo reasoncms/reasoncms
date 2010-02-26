@@ -1,6 +1,9 @@
 <?php
 /**
  * A collection of generally useful functions
+ *
+ * Includes string, array, object, and date/time manipulation functions.
+ *
  * @package carl_util
  * @subpackage basic
  */
@@ -39,7 +42,13 @@ if( !defined( '__INC_DAVE_MISC' ) )
         	}
         	return implode($glue, $output);
 	}
-
+	
+	/**
+	 * Get a request variable if it exists.
+	 *
+	 * @param $key
+	 * @return request value for that key, if provided in request. Otherwise will return an empty string.
+	 */
 	function localize( $var ) // {{{
 	{
 		return isset( $_REQUEST[$var] ) ? $_REQUEST[ $var ] : '';
@@ -48,8 +57,23 @@ if( !defined( '__INC_DAVE_MISC' ) )
 	
 if (!function_exists('html_entity_decode')) {
 
+	/**
+	 * html_entity_decode replacement
+	 *
+	 * This function has a number of significant problems:
+	 *
+	 * 1. It does not translate into UTF-8, but into ISO-8859-1
+	 *
+	 * 2. It should only be defined prior to php 4.3. Since it is likely that 
+	 * no Reason installs are running a version this old, and since Reason is 
+	 * soon to be php5+, this function definition is therefore deprecated.
+	 *
+	 * @deprecated
+	 * @todo remove this function once php4 support goes away
+	 */
 	function html_entity_decode ($string, $opt = ENT_COMPAT)
 	{
+		trigger_error('Running reason on php older than 4.3 is deprecated. Newer versions of Reason will not work under <4.3; please upgrade your php version.');
 		$trans_tbl = get_html_translation_table (HTML_ENTITIES);
 		$trans_tbl = array_flip ($trans_tbl);
 		
