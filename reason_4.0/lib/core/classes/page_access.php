@@ -59,13 +59,21 @@ class reasonPageAccess
 				return array();
 			}
 			$chain = $this->_page_tree->get_id_chain($page_id);
-			$es = new entity_selector();
-			$es->add_type(id_of('group_type'));
-			$es->limit_tables();
-			$es->limit_fields();
-			$es->add_right_relationship($chain, $alrel_id);
-			$es->set_num(count($chain));
-			$this->_pages_to_groups[$page_id] = $es->run_one();
+			if(empty($chain))
+			{
+				trigger_error('Page '.$page_id.'does not appear to be in site.');
+				$this->_pages_to_groups[$page_id] = array();
+			}
+			else
+			{
+				$es = new entity_selector();
+				$es->add_type(id_of('group_type'));
+				$es->limit_tables();
+				$es->limit_fields();
+				$es->add_right_relationship($chain, $alrel_id);
+				$es->set_num(count($chain));
+				$this->_pages_to_groups[$page_id] = $es->run_one();
+			}
 		}
 		return $this->_pages_to_groups[$page_id];
 	}
