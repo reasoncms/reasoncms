@@ -195,13 +195,13 @@
 		* @param string user's netID
 		* @return boolean | NULL true if user is authorized; otherwise, returns false.
 		*/			
-		function has_authorization($user_netID)
+		function has_authorization($user_netID, $assume_netid_is_in_directory = false)
 		{
 			if(empty($user_netID) && $this->requires_login())
 			{
 				return false;
 			}
-			return $this->is_username_member_of_group($user_netID);
+			return $this->is_username_member_of_group($user_netID, $assume_netid_is_in_directory);
 		}
 		
 		/**
@@ -218,7 +218,7 @@
 		* @param string $user_netID -- username. Use an empty string to determine if anonymous access is permitted
 		* @return boolean | NULL true if user is a member of the authorized group, false if they are not, NULL if no username passed and access cannot be determined as a result
 		*/			
-		function is_username_member_of_group($user_netID)
+		function is_username_member_of_group($user_netID, $assume_netid_is_in_directory = false)
 		{
 			if($this->group_has_members())
 			{
@@ -274,10 +274,30 @@
 					$this->permissions[$user_netID] = false;
 					return false;
 				}
-				else // all individuals who can log in are part of this group, so return true
+				else // if we are not assuming the netid is in the directory check whether the person is in the directory service at all
 				{
-					$this->permissions[$user_netID] = true;
-					return true;
+					if ($assume_netid_is_in_directory || (reason_check_authentication() == $user_netID)) // is authenticated user
+					{
+						$this->permissions[$user_netID] = true;
+						return true;
+					}
+					else
+					{
+						if(!empty($dir_array['directory_services'])) $dir = new directory_service($dir_array['directory_services']);
+						else $dir = new directory_service();
+						$dir->search_by_filter('(ds_username='.ldap_escape($user_netID).')');
+						$member = $dir->get_records();
+						if (!empty($member))
+						{
+							$this->permissions[$user_netID] = true;
+							return true;
+						}
+						else
+						{
+							$this->permissions[$user_netID] = false;
+							return false;
+						}
+					}
 				}
 			}
 			else // group doesn't have any members, so it always returns false
