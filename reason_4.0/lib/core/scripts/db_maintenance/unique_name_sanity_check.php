@@ -114,7 +114,7 @@
 		}
 		if(empty($uniques))
 		{
-			echo '<h3>There are no bad unique names in the Reason db.</h3>';
+			echo '<h3>Yay! There are no bad unique names in the Reason db.</h3>';
 		}
 	}
 
