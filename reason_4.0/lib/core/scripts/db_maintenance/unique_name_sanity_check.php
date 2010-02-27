@@ -1,6 +1,7 @@
 <?php
 /**
  * Script that helps find conflicting and/or badly formatted unique names
+ * @todo add to master admin links
  * @package reason
  * @subpackage scripts
  */
