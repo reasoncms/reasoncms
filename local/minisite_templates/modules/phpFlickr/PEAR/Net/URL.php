@@ -103,10 +103,12 @@ class Net_URL
     *
     * @see __construct()
     */
-    function Net_URL($url = null, $useBrackets = true)
-    {
-        $this->__construct($url, $useBrackets);
-    }
+
+// B.J. Mar 2010 -- commented out next four lines to prevent warning 
+    //function Net_URL($url = null, $useBrackets = true)
+    //{
+     //   $this->__construct($url, $useBrackets);
+    //}
 
     /**
     * PHP5 Constructor
