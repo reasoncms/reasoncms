@@ -127,6 +127,15 @@
 		var $_head_items;
 		
 		/**
+		 * A reference to the breadcrumbs object
+		 *
+		 * Access through the function $this->get_crumbs()
+		 *
+		 * @var object
+		 */
+		var $_crumbs;
+		
+		/**
 		 * convenience method that the template calls. sets up the variables from the template
 		 * @param array $args
 		 * @todo is there anything necessary about this? Shouldn't classes that 
@@ -272,6 +281,43 @@
 				return $this->_head_items;
 			}
 			trigger_error('No head items object set');
+			return NULL;
+		}
+		
+		/**
+		 * Set a reference to the current breadcrumbs object
+		 *
+		 * @param object $crumbs
+		 */
+		function set_crumbs( &$crumbs )
+		{
+			$this->_crumbs =& $crumbs;
+		}
+		/**
+		 * Get a reference to the current breadcrumbs object
+		 *
+		 * Note that this method will trigger an error and return NULL if no breadcrumbs have been
+		 * set on the module.
+		 *
+		 * It is a good idea for modules to not *assume* that they have been given a breadcrumbs
+		 * object, and wrap interaction with the crumbs in a conditional, e.g.:
+		 *
+		 * <code>
+		 * if($crumbs =& $this->get_crumbs())
+		 * {
+		 * 	$crumbs->add_crumbs('Link Name','/link/url/');
+		 * }
+		 * </code>
+		 *
+		 * @return object | NULL
+		 */
+		function &get_crumbs()
+		{
+			if(!empty($this->_crumbs))
+			{
+				return $this->_crumbs;
+			}
+			trigger_error('No breadcrumbs object set');
 			return NULL;
 		}
 		
