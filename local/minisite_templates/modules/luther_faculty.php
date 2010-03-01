@@ -66,7 +66,7 @@ function show_person( $person ) // {{{
 				$image = get_entity_by_id($image_id);
 				$url = WEB_PHOTOSTOCK . $image_id . '.' . $image['image_type'];
 				$thumb = WEB_PHOTOSTOCK . $image_id . '_tn.' . $image['image_type'];
-				if (!file_exists($thumb))
+				if (!file_exists(preg_replace("|/$|", "", $_SERVER['DOCUMENT_ROOT']) . $thumb))
 				{
 					$thumb = $url;
 				}
