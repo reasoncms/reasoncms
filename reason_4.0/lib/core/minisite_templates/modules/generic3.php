@@ -332,9 +332,9 @@
 		
 		function add_crumb()
 		{
-			if( !empty( $this->items ) && !empty( $this->current_item_id ) && !empty($this->items[$this->current_item_id]) )
+			if( !empty( $this->items ) && !empty( $this->current_item_id ) && !empty($this->items[$this->current_item_id]) && $crumbs = &$this->get_crumbs() )
 			{
-				$this->parent->add_crumb( $this->get_crumb_text($this->items[$this->current_item_id]) );
+				$crumbs->add_crumb( $this->get_crumb_text($this->items[$this->current_item_id]) );
 			}
 		}
 		function get_crumb_text(&$item)
