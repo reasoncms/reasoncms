@@ -55,9 +55,6 @@
                     if( !empty( $this->request[ 'policy_id' ] ) )
                     {
                         $policy = new entity( $this->request[ 'policy_id' ] );
-                        // I took this out so page name remains the same across policies -- mr
-                        //$this->parent->title = $this->policy->get_value( 'name' );
-                        //$this->parent->add_crumb( $this->policy->get_value( 'name' ) , '?policy_id=' . $this->request[ 'policy_id' ] );
                         $this->pages->show_item( $policy );
                     }
                     else
