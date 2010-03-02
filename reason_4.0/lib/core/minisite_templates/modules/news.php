@@ -275,7 +275,7 @@
 				$this->get_issue_id();
 				if($this->add_breadcrumbs)
 				{
-					$this->parent->add_crumb( $this->current_issue->get_value( 'name' ) , '?issue_id=' . $this->current_issue->id() );
+					$this->_add_crumb( $this->current_issue->get_value( 'name' ) , '?issue_id=' . $this->current_issue->id() );
 				}
 				//$this->parent->title = $this->current_issue->get_value( 'name' );
 			}
@@ -283,7 +283,7 @@
 			{
 				$e = new entity( $this->request[ 'story_id' ] );
 				$this->validate_story_entity($e);
-				$this->parent->add_crumb( $e->get_value( 'release_title' ) , '');	
+				$this->_add_crumb( $e->get_value( 'release_title' ) , '');	
 				//$this->parent->title = $e->get_value( 'name' );
 
 				$es = new entity_selector();
