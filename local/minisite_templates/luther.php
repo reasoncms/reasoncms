@@ -71,10 +71,7 @@ class LutherTemplate extends MinisiteTemplate
                 if ($this->has_content( 'sub_nav_2' ))
 		// Contact Information
                 {
-			echo '<div class="contact-info">'."\n";
-			echo '<h3>Contact Information</h3>'."\n";
                         $this->run_section( 'sub_nav_2' );
-                        echo '</div>'."\n";
                 }
 
                 if ($this->has_content( 'sub_nav_3' ))
@@ -177,32 +174,37 @@ class LutherTemplate extends MinisiteTemplate
 
                 if ($this->has_content( 'main' ))
                 {
-                        echo '<div class="contentMain">'."\n";
-			if (!$this->luther_add_this_complete)
-			{
-				$this->luther_add_this();
-			}
-                        $this->run_section( 'main' );
-                        echo '</div>'."\n";
+                    echo '<div class="contentMain">'."\n";
+					if (!$this->luther_add_this_complete)
+					{
+						$this->luther_add_this();
+					}
+                    $this->run_section( 'main' );
+                    echo '</div>'."\n";
                 }
                 if ($this->has_content( 'main_post' ))
                 {
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther_primaryLRC')
-			{
-				echo '<p><b>Luther College News</b></p>'."\n";
-			}
-                        echo '<div class="contentPost">'."\n";
-			if (!$this->luther_add_this_complete)
-			{
-				$this->luther_add_this();
-			}
-                        $this->run_section( 'main_post' );
-                        echo '</div>'."\n";
+				{
+					echo '<p><b>Luther College News</b></p>'."\n";
+				}
+                echo '<div class="contentPost">'."\n";
+				if (!$this->luther_add_this_complete)
+				{
+					$this->luther_add_this();
+				}
+                $this->run_section( 'main_post' );
+                echo '</div>'."\n";
+              	}
+            if ($this->has_content( 'content_blurb' ))
+                {
+                	$this->run_section( 'content_blurb' );
                 }
 
-                if ($this->has_content( 'flickr_slideshow' ))
+
+            if ($this->has_content( 'flickr_slideshow' ))
                 {
-			$this->run_section( 'flickr_slideshow' );
+					$this->run_section( 'flickr_slideshow' );
                 }
 
 
