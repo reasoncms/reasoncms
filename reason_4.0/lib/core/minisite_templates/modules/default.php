@@ -129,7 +129,7 @@
 		/**
 		 * A reference to the breadcrumbs object
 		 *
-		 * Access through the function $this->get_crumbs()
+		 * Access through the function $this->_get_crumbs()
 		 *
 		 * @var object
 		 */
@@ -287,6 +287,7 @@
 		/**
 		 * Set a reference to the current breadcrumbs object
 		 *
+		 * @access public
 		 * @param object $crumbs
 		 */
 		function set_crumbs( &$crumbs )
@@ -303,15 +304,18 @@
 		 * object, and wrap interaction with the crumbs in a conditional, e.g.:
 		 *
 		 * <code>
-		 * if($crumbs =& $this->get_crumbs())
+		 * if($crumbs =& $this->_get_crumbs())
 		 * {
 		 * 	$crumbs->add_crumb('Link Name','/link/url/');
 		 * }
 		 * </code>
 		 *
+		 * Alternately (and more conveniently,) you can just use $this->_add_crumb().
+		 *
+		 * @access private
 		 * @return object | NULL
 		 */
-		function &get_crumbs()
+		function &_get_crumbs()
 		{
 			if(!empty($this->_crumbs))
 			{
@@ -319,6 +323,26 @@
 			}
 			trigger_error('No breadcrumbs object set');
 			return NULL;
+		}
+		
+		/**
+		 * Add a breadcrumb to the crumbs object
+		 *
+		 * While you can use the _get_crumbs() method and interact directly with
+		 * it to add crumbs, approx. 99% of the time you will be simply adding
+		 * a breadcrumb to the crumbs object. Hence, this convenience method.
+		 *
+		 * @access private
+		 * @param string $name The text of the breadcrumb link
+		 * @param string $url the url of the breadcrumb link
+		 * @return void
+		 */
+		function _add_crumb($name, $url = '')
+		{
+			if($crumbs =& $this->_get_crumbs())
+		 	{
+		 		$crumbs->add_crumb($name,$url);
+		 	}
 		}
 		
 		/**
