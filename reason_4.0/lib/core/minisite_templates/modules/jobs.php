@@ -76,10 +76,7 @@ class JobsModule extends DefaultMinisiteModule
 		$this->jobs = $es->run_one();
 		if(!empty($this->request['job_id']) && !empty($this->jobs[$this->request['job_id']]) )
 		{
-			if($crumbs = &$this->get_crumbs())
-			{
-				$crumbs->add_crumb( $this->jobs[$this->request['job_id']]->get_value('name') );
-			}
+			$this->_add_crumb( $this->jobs[$this->request['job_id']]->get_value('name') );
 		}
 	} // }}}
 	function show_job()
