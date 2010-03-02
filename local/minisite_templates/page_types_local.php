@@ -23,7 +23,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'bannerad' => 'luther_bannerad',
 			'flickr_slideshow' => 'luther_flickr_slideshow',
             'sbvideo' => 'luther_sbvideo',
-            'content_blurb' => 'main_blurb',
+            'content_blurb' => 'main_blurb', 
 		),
 		'admissions_account_signup' => array(
 			'main_post' => 'applicant_account',
