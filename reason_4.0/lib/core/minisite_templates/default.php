@@ -31,6 +31,7 @@ reason_include_once( 'content_listers/tree.php3' );
 reason_include_once( 'minisite_templates/nav_classes/default.php' );
 reason_include_once( 'classes/head_items.php' );
 reason_include_once( 'classes/page_access.php' );
+reason_include_once( 'classes/crumbs.php' );
 include_once( CARL_UTIL_INC . 'dev/timer.php' );
 
 /**
@@ -154,10 +155,21 @@ class MinisiteTemplate
 	 *
 	 * Do not address this array directly to set crumbs; use the method add_crumb() instead.
 	 *
+	 * @deprecated Use the _get_crumbs_object() instead
 	 * @access private
 	 * @var array
 	 */
 	var $additional_crumbs = array();
+	/**
+	 * The breadcrumbs object
+	 *
+	 * It's best practice to access this via the _get_crumbs_object() method,
+	 * as this object is created lazily and may not exist here yet.
+	 *
+	 * @var object
+	 * @access private
+	 */
+	 var $_crumbs;
 	/**
 	 * @deprecated
 	 * @access private
@@ -323,6 +335,17 @@ class MinisiteTemplate
 	 */
 	function initialize( $site_id, $page_id = '' ) // {{{
 	{
+		
+		$this->sess =& get_reason_session();
+		if( $this->sess->exists() )
+		{
+			// if a session exists and we're on a secure page, pop over to the secure
+			// site so we have access to the secure session information
+			force_secure_if_available();
+			if(!$this->sess->has_started())
+				$this->sess->start();
+		}
+	
 		$this->site_id = $site_id;
 		$this->page_id = $page_id;
 		$this->site_info = new entity( $site_id );
@@ -363,16 +386,6 @@ class MinisiteTemplate
 			$this->pages->grab_request();
 			$this->pages->site_info =& $this->site_info;
 			$this->pages->order_by = 'sortable.sort_order'; // in case it was changed in the request
-		}
-		
-		$this->sess =& get_reason_session();
-		if( $this->sess->exists() )
-		{
-			// if a session exists and we're on a secure page and this site has site users, pop over to the secure
-			// site so we have access to the secure session information
-			force_secure_if_available();
-			if(!$this->sess->has_started())
-				$this->sess->start();
 		}
 		
 		$this->_handle_access_auth_check();
@@ -728,6 +741,10 @@ class MinisiteTemplate
 					// deprecated reference to the template)
 					$this->_modules[ $sec ]->set_head_items( $this->head_items );
 					
+					// Pass a reference to the head items object into the module (so the module doesn't have to use the
+					// deprecated reference to the template)
+					$this->_modules[ $sec ]->set_crumbs( $this->_get_crumbs_object() );
+					
 					// send and check parameters gathered above from the page_types
 					$this->_modules[ $sec ]->handle_params( $params );
 					
@@ -886,13 +903,12 @@ class MinisiteTemplate
 		{
 			$ret .= ": " . $this->title;
 		}
-			
+		$crumbs = &$this->_get_crumbs_object();
 		// Take the last-added crumb and add it to the page title
-		if(!empty( $this->additional_crumbs ))
+		if($last_crumb = $crumbs->get_last_crumb() )
 		{
-			$last_crumb = end( $this->additional_crumbs);
-			reset( $this->additional_crumbs );
-			$ret .= ': '.$last_crumb['page_name'];
+			if($last_crumb['page_name'] != $this->title)
+				$ret .= ': '.$last_crumb['page_name'];
 		}
 		if (!empty ($this->textonly) )
 		{
@@ -902,7 +918,13 @@ class MinisiteTemplate
 		$this->head_items->add_head_item('title',array(),$ret, true);
 		//return $ret;
 	}
-
+	
+	/**
+	 * Produce the breadcrumbs ("you are here") block
+	 *
+	 * @param string $delimiter (X)HTML to place between auto-generated crumbs
+	 * @return void
+	 */
 	function you_are_here($delimiter = ' &gt; ') // {{{
 	{
 		echo '<div id="breadcrumbs" class="locationBarText">';
@@ -911,6 +933,14 @@ class MinisiteTemplate
 		echo '</div>'."\n";
 	} // }}}
 	
+	/**
+	 * Generate the markup for the breadcrumbs portion of the page
+	 *
+	 * @param array $breadcrumb_array in form array(0=>array('link'=>'/foo/bar/','page_name'=>'Some Name'),2=>array(etc...))
+	 * @param string $base (X)HTML to place before auto-generated crumbs
+	 * @param string $delimiter (X)HTML to place between auto-generated crumbs
+	 * @return string (X)HTML breadcrumbs markup
+	 */
 	function _get_breadcrumb_markup($breadcrumb_array, $base = '', $delimiter = ' &gt; ')
 	{
 		$pieces = array();
@@ -924,34 +954,72 @@ class MinisiteTemplate
 		$pieces[] = $last['page_name'];
 		return implode($delimiter,$pieces);
 	}
-	
 	/**
-	 * array(0=>array('link'=>'/foo/bar/','page_name'=>'Some Name'),2=>array(etc...))
+	 * Create a breadcrumbs object to pass to modules
+	 *
+	 * For use specifically by _get_crumbs_object().
+	 *
+	 * @return object reasonCrumbs
 	 */
-	function _get_breadcrumbs()
+	function _initialize_crumbs_object()
 	{
-		$page_ids = $this->pages->get_id_chain($this->cur_page->id());
+		$crumbs = new reasonCrumbs();
+		$page_ids = $this->pages->get_id_chain($this->page_info->id());
 		$root_page_id = array_pop($page_ids);
-		$breadcrumbs = array();
-		
-		// home page
-		$breadcrumbs[] = array('link'=>$this->pages->get_full_url( $root_page_id ),'page_name'=>$this->site_info->get_value('name'));
-		
+		$crumbs->add_crumb( $this->site_info->get_value('name'), $this->pages->get_full_url( $root_page_id ) );
 		$page_ids = array_reverse($page_ids);
 		foreach( $page_ids as $page_id )
 		{
 			$page = $this->pages->values[ $page_id ];
-			$breadcrumbs[] = array(
-				'link' => $this->pages->get_full_url( $page_id ),
-				'page_name' => ( $page->get_value('link_name') ? $page->get_value( 'link_name' ) : $page->get_value ( 'name' ) )
-			);
+			$page_name = $page->get_value('link_name') ? $page->get_value( 'link_name' ) : $page->get_value ( 'name' );
+			$crumbs->add_crumb( $page_name, $this->pages->get_full_url( $page_id ) );
 		}
-		if(!empty($this->additional_crumbs))
-		{
-			$breadcrumbs = array_merge($breadcrumbs, $this->additional_crumbs);
-		}
-		return $breadcrumbs;
+		return $crumbs;
 	}
+	
+	/**
+	 * Get the crumbs object
+	 *
+	 * Use this method to access the crumbs rather than the member variable
+	 *
+	 * @return object reasonCrumbs
+	 */
+	function &_get_crumbs_object()
+	{
+		if(!is_object($this->_crumbs))
+		{
+			$this->_crumbs = $this->_initialize_crumbs_object();
+		}
+		return $this->_crumbs;
+	}
+	
+	/**
+	 * Get the array of breadcrumbs from the breadcrumbs object
+	 *
+	 * @return array array(0=>array('link'=>'/foo/bar/','page_name'=>'Some Name'),2=>array(etc...))
+	 */
+	function _get_breadcrumbs()
+	{
+		$crumbs = &$this->_get_crumbs_object();
+		return $crumbs->get_crumbs();
+	}
+
+	/**
+	 * Add a breadcrumb to the set of crumbs
+	 *
+	 * Note: Use of this function by modules is deprecated. Modules should use their _get_crumbs() 
+	 * method to access the shared breadcrumbs object instead.
+	 *
+	 * @param string $name
+	 * @param string $link
+	 * @return void
+	 */
+	function add_crumb( $name , $link = '' ) // {{{
+	{
+		$crumbs = &$this->_get_crumbs_object();
+		$crumbs->add_crumb( $name, $link );
+	} // }}}
+	
 	function show_body()
 	{
 		if($this->use_tables)
@@ -1005,8 +1073,8 @@ class MinisiteTemplate
 		echo '</body>'."\n";
 		echo '</html>'."\n";
 	} // }}}
-	
-	/* function _do_testing_form()
+	/*
+	function _do_testing_form()
 	{
 		echo '<form name="testing123" action="?">';
 		$keys = array();
@@ -1018,7 +1086,8 @@ class MinisiteTemplate
 		foreach($keys as $key)
 			echo '<input type="hidden" name="'.htmlspecialchars($key,ENT_QUOTES).'" value="" />';
 		echo '</form>';
-	} */
+	}
+	*/
 	
 	function show_banner()
 	{
@@ -1392,6 +1461,7 @@ class MinisiteTemplate
 		{
 			$this->show_footer_tableless();
 		}
+		// $this->_do_testing_form();
 	}
 	function show_footer_tableless() // {{{
 	{
@@ -1424,15 +1494,10 @@ class MinisiteTemplate
 	{
 		echo '<div class="poweredBy">Powered by <a href="http://reason.carleton.edu" title="Reason Content Management System">Reason CMS</a></div>';
 	}
-
-	function add_crumb( $name , $link = '' ) // {{{
-	{
-		$x = array( 'page_name' => $name , 'link' => $link );
-		$this->additional_crumbs[] = $x;
-	} // }}}
 	
 	
-	/** This function allows modules to add head items. They must add any head items during their init process.
+	/**
+	 * This function allows modules to add head items. They must add any head items during their init process.
 	 * @deprecated method should be called on the head_items object
 	 */
 	function add_head_item( $element, $attributes, $content = '', $add_to_top = false )
@@ -1448,7 +1513,8 @@ class MinisiteTemplate
 		$this->head_items->add_stylesheet( $url, $media, $add_to_top );
 	}
 	
-	/** this function assembles the head items from the data provided by the modules and handles some basic checking
+	/**
+	 * This function assembles the head items from the data provided by the modules and handles some basic checking
 	 * @deprecated method should be called on the head_items object
 	 */
 	function get_head_item_markup()
