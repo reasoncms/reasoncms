@@ -907,7 +907,7 @@ class MinisiteTemplate
 		// Take the last-added crumb and add it to the page title
 		if($last_crumb = $crumbs->get_last_crumb() )
 		{
-			if($last_crumb['page_name'] != $this->title)
+			if($last_crumb['page_name'] != $this->title && $last_crumb['page_name'] != $this->cur_page->get_value('link_name'))
 				$ret .= ': '.$last_crumb['page_name'];
 		}
 		if (!empty ($this->textonly) )
