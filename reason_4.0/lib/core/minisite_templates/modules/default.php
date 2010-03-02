@@ -305,7 +305,7 @@
 		 * <code>
 		 * if($crumbs =& $this->get_crumbs())
 		 * {
-		 * 	$crumbs->add_crumbs('Link Name','/link/url/');
+		 * 	$crumbs->add_crumb('Link Name','/link/url/');
 		 * }
 		 * </code>
 		 *
