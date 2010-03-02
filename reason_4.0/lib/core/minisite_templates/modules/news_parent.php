@@ -43,13 +43,13 @@
 			if( !empty($this->issues) )
 			{
 				$this->get_issue_id();
-				$this->parent->add_crumb( $this->current_issue->get_value( 'name' ) , '?issue_id=' . $this->current_issue->id() );
+				$this->_add_crumb( $this->current_issue->get_value( 'name' ) , '?issue_id=' . $this->current_issue->id() );
 				//$this->parent->title = $this->current_issue->get_value( 'name' );
 			}
 			if( !empty( $this->request[ 'story_id' ] ) )
 			{
 				$e = new entity( $this->request[ 'story_id' ] );
-				$this->parent->add_crumb( $e->get_value( 'name' ) , '');	
+				$this->_add_crumb( $e->get_value( 'name' ) , '');	
 				//$this->parent->title = $e->get_value( 'name' );
 
 				$es = new entity_selector();
