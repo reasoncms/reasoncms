@@ -419,9 +419,9 @@ class PublicationModule extends Generic3Module
 	{
 		foreach( $this->items AS $item )
         {
-	       	if( $item->id() == $this->request[ $this->query_string_frag.'_id' ] && $crumbs = &$this->get_crumbs() )
+	       	if( $item->id() == $this->request[ $this->query_string_frag.'_id' ] )
            	{
-           		$crumbs->add_crumb( $item->get_value( 'release_title' ) );
+           		$this->_add_crumb( $item->get_value( 'release_title' ) );
           	}
         }
 	}
@@ -647,13 +647,11 @@ class PublicationModule extends Generic3Module
 				//{
 					$issue_link = $this->get_links_to_issues();
 					$issue = new entity($this->issue_id);
-					if($crumbs = &$this->get_crumbs())
-						$crumbs->add_crumb( $issue->get_value( 'name' ), $this->get_link_to_issue($issue) );
+					$this->_add_crumb( $issue->get_value( 'name' ), $this->get_link_to_issue($issue) );
 					if($requested_section)
 					{
 						$section = new entity($this->request['section_id']);
-						if($crumbs)
-							$crumbs->add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
+						$this->_add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
 					}
 				//}
 				return true;
