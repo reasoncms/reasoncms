@@ -647,11 +647,13 @@ class PublicationModule extends Generic3Module
 				//{
 					$issue_link = $this->get_links_to_issues();
 					$issue = new entity($this->issue_id);
-					$this->parent->add_crumb( $issue->get_value( 'name' ), $this->get_link_to_issue($issue) );
+					if($crumbs = &$this->get_crumbs())
+						$crumbs->add_crumb( $issue->get_value( 'name' ), $this->get_link_to_issue($issue) );
 					if($requested_section)
 					{
 						$section = new entity($this->request['section_id']);
-						$this->parent->add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
+						if($crumbs)
+							$crumbs->add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
 					}
 				//}
 				return true;
