@@ -1469,7 +1469,7 @@ class EventsModule extends DefaultMinisiteModule
 			}
 			else
 			{
-				$this->parent->add_crumb( $this->event->get_value( 'name' ) );
+				$this->_add_crumb( $this->event->get_value( 'name' ) );
 				$this->parent->pages->make_current_page_a_link();
 				if($this->event->get_value('keywords'))
 				{
