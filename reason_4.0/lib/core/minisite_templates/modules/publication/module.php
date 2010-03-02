@@ -419,9 +419,9 @@ class PublicationModule extends Generic3Module
 	{
 		foreach( $this->items AS $item )
         {
-	       	if( $item->id() == $this->request[ $this->query_string_frag.'_id' ] )
+	       	if( $item->id() == $this->request[ $this->query_string_frag.'_id' ] && $crumbs = &$this->get_crumbs() )
            	{
-           		$this->parent->add_crumb( $item->get_value( 'release_title' ) );
+           		$crumbs->add_crumb( $item->get_value( 'release_title' ) );
           	}
         }
 	}
