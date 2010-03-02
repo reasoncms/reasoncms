@@ -222,7 +222,7 @@ class LutherTemplate extends MinisiteTemplate
 		//$this->head_items->add_javascript( '/javascripts/highslide/highslide-with-html.js' );
 
 		$this->head_items->add_javascript( '/javascripts/highslide/highslide-full.js' );
-			$this->head_items->add_javascript( '/javascripts/highslide/highslide-overrides.js' );
+		$this->head_items->add_javascript( '/javascripts/highslide/highslide-overrides.js' );
 		if ($this->cur_page->get_value('custom_page') != 'image_slideshow')
 		{
 			//$this->head_items->add_javascript( '/javascripts/highslide/highslide-overrides.js' );
@@ -240,6 +240,7 @@ class LutherTemplate extends MinisiteTemplate
 			//$this->head_items->add_javascript( '/javascripts/application.js' );
 			//$this->head_items->add_javascript( '/javascripts/scriptaculous.js' );
 		$this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js');
+		$this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js' );
         }
 
 	function has_related_section()
