@@ -56,7 +56,10 @@ class RelatedPolicyModule extends PolicyModule
 			if(array_key_exists($this->request[ 'policy_id' ], $this->values))
 			{
 				$this->policy = new entity( $this->request[ 'policy_id' ] );
-				$this->parent->add_crumb( $this->policy->get_value( 'name' ) , '?policy_id=' . $this->request[ 'policy_id' ] );
+				if($crumbs = &$this->get_crumbs())
+				{
+					$crumbs->add_crumb( $this->policy->get_value( 'name' ) , '?policy_id=' . $this->request[ 'policy_id' ] );
+				}
 			}
 			else
 			{
