@@ -435,10 +435,20 @@
 			return $this->_state_has_changed;
 		}
 		
+		/**
+		 * @todo remove support for relative fromweb value in Reason 4 RC1
+		 */
 		function where_to() // {{{
 		{
 			if( $this->chosen_action == 'finish' && $this->get_value( 'fromweb' ) )
-				return 'http://'.$_SERVER['HTTP_HOST'].$this->get_value( 'fromweb' );
+			{
+				$fromweb = $this->get_value('fromweb');
+				if ( (strpos($fromweb, 'http://') === FALSE) && (strpos($fromweb, 'https://') === FALSE) ) // is fromweb relative?
+				{
+					return 'http://'.$_SERVER['HTTP_HOST'].$this->get_value( 'fromweb' );
+				}
+				else return $this->get_value('fromweb');
+			}
 			else
 				return parent::where_to();
 		} // }}}
