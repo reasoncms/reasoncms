@@ -19,11 +19,12 @@
 		 * Add a breadcrumb to the end of the set of breadcrumbs
 		 * @param string $name
 		 * @param string $link
+		 * @param integer $entity_id
 		 * @return void
 		 */
-		function add_crumb( $name , $link = '' )
+		function add_crumb( $name , $link = '', $entity_id = NULL )
 		{
-			$this->_crumbs[] = array( 'page_name' => $name , 'link' => $link );
+			$this->_crumbs[] = array( 'page_name' => $name , 'link' => $link, 'id' => $entity_id );
 		}
 		
 		/**
@@ -32,9 +33,9 @@
 		 * @param string $link
 		 * @return void
 		 */
-		function add_crumb_to_top( $name , $link = '' )
+		function add_crumb_to_top( $name , $link = '', $entity_id = NULL )
 		{
-			array_unshift($this->_crumbs, array('page_name' => $name , 'link' => $link));
+			array_unshift($this->_crumbs, array('page_name' => $name , 'link' => $link, 'id' => $entity_id));
 		}
 		
 		/**
@@ -43,8 +44,8 @@
 		 * Format:
 		 * <code>
 		 * array( 
-		 * 		array('page_name'=>'Name of page','link'=>'/url/of/page/'),
-		 * 		array('page_name'=>'Name of page','link'=>'/url/of/page/'),
+		 * 		array('page_name'=>'Name of page','link'=>'/url/of/page/','id'=>1234),
+		 * 		array('page_name'=>'Name of page','link'=>'/url/of/page/','id'=>1234),
 		 * 		...
 		 * );
 		 * </code>
@@ -60,7 +61,7 @@
 		 *
 		 * Array format:
 		 * <code>
-		 * array('page_name'=>'Name of page','link'=>'/url/of/page/');
+		 * array('page_name'=>'Name of page','link'=>'/url/of/page/','id'=>1234);
 		 * </code>
 		 * @return array | NULL
 		 */
