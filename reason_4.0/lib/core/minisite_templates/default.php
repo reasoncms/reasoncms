@@ -899,7 +899,7 @@ class MinisiteTemplate
 		}
 		$ret .= $this->site_info->get_value('name');
 		
-		if($this->site_info->get_value('name') != $this->title)
+		if(carl_strtolower($this->site_info->get_value('name')) != carl_strtolower($this->title))
 		{
 			$ret .= ": " . $this->title;
 		}
@@ -907,8 +907,10 @@ class MinisiteTemplate
 		// Take the last-added crumb and add it to the page title
 		if($last_crumb = $crumbs->get_last_crumb() )
 		{
-			if($last_crumb['page_name'] != $this->title && $last_crumb['page_name'] != $this->cur_page->get_value('link_name'))
+			if(empty($last_crumb['id']) || $last_crumb['id'] != $this->page_id)
+			{
 				$ret .= ': '.$last_crumb['page_name'];
+			}
 		}
 		if (!empty ($this->textonly) )
 		{
@@ -966,13 +968,13 @@ class MinisiteTemplate
 		$crumbs = new reasonCrumbs();
 		$page_ids = $this->pages->get_id_chain($this->page_info->id());
 		$root_page_id = array_pop($page_ids);
-		$crumbs->add_crumb( $this->site_info->get_value('name'), $this->pages->get_full_url( $root_page_id ) );
+		$crumbs->add_crumb( $this->site_info->get_value('name'), $this->pages->get_full_url( $root_page_id ), $root_page_id );
 		$page_ids = array_reverse($page_ids);
 		foreach( $page_ids as $page_id )
 		{
 			$page = $this->pages->values[ $page_id ];
 			$page_name = $page->get_value('link_name') ? $page->get_value( 'link_name' ) : $page->get_value ( 'name' );
-			$crumbs->add_crumb( $page_name, $this->pages->get_full_url( $page_id ) );
+			$crumbs->add_crumb( $page_name, $this->pages->get_full_url( $page_id ), $page_id );
 		}
 		return $crumbs;
 	}
@@ -1014,10 +1016,10 @@ class MinisiteTemplate
 	 * @param string $link
 	 * @return void
 	 */
-	function add_crumb( $name , $link = '' ) // {{{
+	function add_crumb( $name , $link = '', $entity_id = NULL ) // {{{
 	{
 		$crumbs = &$this->_get_crumbs_object();
-		$crumbs->add_crumb( $name, $link );
+		$crumbs->add_crumb( $name, $link, $entity_id );
 	} // }}}
 	
 	function show_body()
