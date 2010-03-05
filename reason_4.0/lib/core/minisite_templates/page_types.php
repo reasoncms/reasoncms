@@ -1130,6 +1130,21 @@
 			'main_head' => '',
 			'main_post' => 'children',
 		),
+		'show_children_no_nav' => array(
+			'main_post' => 'children',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+		),
+		'show_children_no_nav_no_title' => array(
+			'main_post' => 'children',
+			'main_head' => '',
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle',
+		),
 		'show_children_with_az_list' => array(
 			'main_post' => array(
 				'module'=>'children',
