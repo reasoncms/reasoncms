@@ -247,7 +247,7 @@ class LutherTemplate extends MinisiteTemplate
 
 	function has_related_section()
         {
-                if( $this->has_content( 'pre_sidebar' ) || $this->has_content( 'sidebar' ) )
+                if((($this->has_content('pre_sidebar') || $this->has_content('sidebar')) && $this->cur_page->get_value('custom_page') != 'standalone_login_page_stripped'))
                 {
 			//print_r($this->cur_page->_values);
 			//print_r($this->cur_page->get_value('name'));
