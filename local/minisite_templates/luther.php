@@ -198,7 +198,9 @@ class LutherTemplate extends MinisiteTemplate
               	}
             if ($this->has_content( 'content_blurb' ))
                 {
+			echo '<div class="contact-info">'."\n";
                 	$this->run_section( 'content_blurb' );
+                	echo '</div>'."\n";
                 }
 
 
