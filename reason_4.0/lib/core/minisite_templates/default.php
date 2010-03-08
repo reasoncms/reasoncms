@@ -177,14 +177,11 @@ class MinisiteTemplate
 	var $last_modified;
 	/**
 	 * Is there a current user logged in?
+	 * @todo deprecate me
 	 * @var boolean
 	 */
 	var $logged_in = false;
-	/**
-	 * Is the current user in editing mode?
-	 * @var boolean
-	 */
-	var $editing = false;
+	
 	/**
 	 * An array that maps section names to module names
 	 *
@@ -419,18 +416,6 @@ class MinisiteTemplate
 			
 			if( $this->sess->exists() )
 			{
-				if( !empty( $this->pages->request[ 'editing' ] ) )
-				{
-					if( $this->pages->request[ 'editing' ] == 'off' )
-					{
-						$this->sess->set( 'editing', 'off' );
-					}
-					else
-					{
-						$this->sess->set( 'editing', 'on' );
-					}
-				}
-				
 				if (USE_JS_LOGOUT_TIMER)
 				{
 					$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/timer.css');
@@ -440,10 +425,6 @@ class MinisiteTemplate
 				
 				// we know that someone is logged in if the session exists
 				$this->logged_in = true;
-				$this->editing = true;
-				
-				//if( $this->sess->get( 'editing' ) != 'off' )
-				//	$this->editing = true;
 			}
 
 			// hook for any actions to take prior to loading modules
@@ -762,13 +743,6 @@ class MinisiteTemplate
 					// init takes $args as a backwards compatibility feature.  otherwise, everything should be handled
 					// in prep_args
 					$this->_modules[ $sec ]->init( $args );
-					
-					// editing is defined in the templates init() method.  if it is true, we want to also run the front
-					// end editing specific module initialization code.
-					if( $this->editing )
-					{
-						$this->_modules[ $sec ]->init_editable( $this->sess );
-					}
 				}
 				else
 					trigger_error( 'Badly formatted module ('.$module_name.') - $module_class not set ' );
@@ -802,10 +776,6 @@ class MinisiteTemplate
 			if($this->in_documentation_mode())
 			{
 				$this->run_documentation($sec);
-			}
-			elseif( $this->editing AND $module->can_edit() )
-			{
-				$module->run_editable();
 			}
 			else
 			{
@@ -1149,22 +1119,6 @@ class MinisiteTemplate
 			echo '<tr>'."\n";
 			echo '<td class="bannerCol1">'."\n";
 		}
-		/*
-		if( $this->sess->get('username') )
-		{
-			echo '<p>You are logged in as '.$this->sess->get('username').'</p>';
-			echo '<p>';
-			if( $this->editing )
-			{
-				echo '<a href="'.$_SERVER['SCRIPT_NAME'].'?editing=off">See this site as a normal user</a>';
-			}
-			else
-			{
-				echo '<a href="">Edit this site</a>';
-			}
-			echo '</p>';
-		}
-		*/
 		echo '<div class="bannerInfo">'."\n";
 		if($this->should_show_parent_sites())
 		{
