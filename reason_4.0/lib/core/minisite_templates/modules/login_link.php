@@ -10,6 +10,7 @@
 include_once( 'reason_header.php' );
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'function_libraries/user_functions.php' );
+reason_include_once( 'classes/inline_editing.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EditLinkModule';
 	
@@ -19,9 +20,10 @@ reason_include_once( 'function_libraries/user_functions.php' );
 	 */
 	class EditLinkModule extends DefaultMinisiteModule
 	{
+		var $login_url;
 		var $user_netid;
-		var $edit_link;
-		var $login_url = REASON_LOGIN_URL;
+		
+		var $cleanup_rules = array('inline_editing_availability' => array('function' => 'check_against_array', 'extra_args' => array('enable', 'disable')));
 		
 		/**
 		 * Tells the template that this module always contains content
@@ -32,19 +34,62 @@ reason_include_once( 'function_libraries/user_functions.php' );
 		}
 		
 		/**
-		 * Check whether or not the logged in user (if any) has the right privileges to edit the current page.
+		 * Check to see if user requested inline editing to be off or on - if so - perform the change and redirect back to the page
+		 *
+		 * @todo consider making this standalone - it occurs after navigation has been determined and many modules inited -
+		 *       not a huge deal since enabling / disabled inline editing is not done very often and an extra page hit does not come
+		 *       at a high cost, but it is not the most efficient way to do things.
 		 */
 		function init( $args = array() ) 
 		{
 			$this->user_netid = reason_check_authentication();
-			if( ($this->user_netid) && user_has_access_to_site($this->site_id) && reason_user_has_privs(get_user_id($this->user_netid), 'edit') )
+			if (isset($this->request['inline_editing_availability'])) $this->set_inline_editing_availability();
+		}
+		
+		/**
+		 * Set the inline editing status in the session and redirect
+		 */
+		function set_inline_editing_availability()
+		{
+			$inline_edit =& get_reason_inline_editing($this->page_id);
+			if ($this->request['inline_editing_availability'] == 'enable') $inline_edit->enable_inline_editing();
+			else $inline_edit->disable_inline_editing();
+			$redirect = carl_make_redirect(array('inline_editing_availability' => ''));
+            header('Location: ' . $redirect);
+            exit();
+		}
+		
+		function get_edit_link()
+		{
+			$type_id = id_of('minisite_page');
+			$qs = carl_construct_query_string(array('site_id' => $this->site_id, 'type_id' => $type_id, 'id' => $this->page_id, 'cur_module' => 'Editor', 'fromweb' => get_current_url()));
+			return securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . $qs;	
+		}
+		
+		/**
+		 * @return boolean
+		 */
+		function has_admin_edit_privs()
+		{
+			return (reason_check_access_to_site($this->site_id) && reason_check_privs('edit'));
+		}
+		
+		function get_user_netid()
+		{
+			if (!isset($this->user_netid))
 			{
-				$type_id = id_of('minisite_page');
-				$fromweb = carl_make_link(array(), '', 'relative');
-				$qs_array = array('site_id' => $this->site_id, 'type_id' => $type_id, 'id' => $this->page_id, 'cur_module' => 'Editor', 'fromweb' => $fromweb);
-				$qs = carl_make_link($qs_array, '', 'qs_only', true, false);
-				$this->edit_link = securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . $qs;	
+				$this->user_netid = reason_check_authentication();
 			}
+			return $this->user_netid;
+		}
+		
+		function get_login_url()
+		{
+			if (!isset($this->login_url))
+			{
+				$this->login_url = REASON_LOGIN_URL;
+			}
+			return $this->login_url;
 		}
 		
 		/*
@@ -52,16 +97,33 @@ reason_include_once( 'function_libraries/user_functions.php' );
 		 */
 		function run() // {{{
 		{
-			if (!empty($this->edit_link))
+			$inline_edit =& get_reason_inline_editing($this->page_id);
+			if ($this->has_admin_edit_privs())
 			{
 				echo '<div class="editDiv">'."\n";
-				echo $this->user_netid . ': You may <a href="'.$this->edit_link.'" class="editLink">edit this page</a>'."\n";
+				echo '<a href="'.$this->get_edit_link().'" class="editLink">Edit page in Reason Admin</a>'."\n";
+				echo '</div>';
+			}
+			if ($inline_edit->reason_allows_inline_editing() && ($inline_edit->has_inline_edit_privs() || $inline_edit->is_inline_editing_enabled()))
+			{
+				if ($inline_edit->is_inline_editing_enabled())
+				{
+					$link =  carl_make_link(array('inline_editing_availability' => 'disable'));
+					$link_text = 'Disable inline editing';
+				}
+				else
+				{
+					$link = carl_make_link(array('inline_editing_availability' => 'enable'));
+					$link_text = 'Enable inline editing';
+				}
+				echo '<div class="inlineEditDiv">'."\n";
+				echo '<a href="'.$link.'" class="inlineEditLink">'.$link_text.'</a>'."\n";
 				echo '</div>';
 			}
 			echo '<p id="footerLoginLink">';
-			echo ($this->user_netid) ? 'Logged in as ' . $this->user_netid . '. ' : '';
-			echo ($this->user_netid) ? '<a href="'. $this->login_url.'?logout=1">Logout</a>' : '<a href="'.$this->login_url.'">Login</a>';
-			echo '</p>';	
+			echo ($this->get_user_netid()) ? $this->get_user_netid() . ': ' : '';
+			echo ($this->get_user_netid()) ? '<a href="'. $this->get_login_url().'?logout=1">Logout</a>' : '<a href="'.$this->get_login_url().'">Login</a>';
+			echo '</p>';
 		}
 
 		function get_documentation()
