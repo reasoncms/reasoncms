@@ -159,14 +159,14 @@
 	 *
 	 * Determines how long a Reason session lasts, in minutes.
 	 */
-    	define('REASON_SESSION_TIMEOUT', 60);
+	define('REASON_SESSION_TIMEOUT', 60);
 	
 	/**
 	 * REASON_SESSION_TIMEOUT_WARNING
 	 *
 	 * Determines how long before the end of a Reason session the user is notified, in minutes.
 	 */
-    	define('REASON_SESSION_TIMEOUT_WARNING', 5);
+	define('REASON_SESSION_TIMEOUT_WARNING', 5);
 	
 	/**
 	 * REASON_DEFAULT_HTML_EDITOR
@@ -416,6 +416,15 @@
 	 * basis in a mixed environment; this constant simply sets the default value.
 	 */
 	define('REASON_USERS_DEFAULT_TO_AUTHORITATIVE', true);
+	
+	/**
+	 * REASON_ALLOWS_INLINE_EDITING
+	 *
+	 * This constant determines whether a Reason instance exposes inline editing features to users with
+	 * proper privileges (determined on a module to module basis). It defaults to true and should be 
+	 * left as true to take advantage of inline editing features provided by Reason modules.
+	 */
+	define('REASON_ALLOWS_INLINE_EDITING', true);
 	
 	////////////////////////////////////////////////////////////
 	//
