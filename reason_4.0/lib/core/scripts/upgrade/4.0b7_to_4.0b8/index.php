@@ -20,10 +20,13 @@
 <body>
 <h2>Upgrade Reason from 4.0 Beta 7 to 4.0 Beta 8</h2>
 <h3>Upgrade Notes</h3>
-<p>Reason 4 Beta 8 adds experimental support for multi-domain Reason instances, and supports setups in which the entire reason_package exists outside of the web tree. 
-Moving forward, this will be the recommended setup. There are a variety of changes to the setup files distributed with Reason to support this type of setup, and a new 
-setup file called domain_settings.php. Existing installs should continue to function as they did before, but it is recommended (and needed for multi-domain support) that you 
-replace your settings directory with the one distributed in Reason 4 Beta 8. You should also replace your paths.php file with the one disributed in Reason 4 Beta 8.</p>
+<p>Reason 4 Beta 8 supports and encourages setups in which the entire reason_package exists outside of the web tree. Moving forward, this will be the recommended setup. 
+There are a variety of changes to the setup files distributed with Reason to support this type of setup. Existing installs should continue to function as they did before, 
+but it is recommended that you replace your settings directory with the one distributed in Reason 4 Beta 8. You should also replace your paths.php file with the one distributed 
+in Reason 4 Beta 8.</p>
+<p>The settings directory in Reason 4 Beta 8 also includes a new settings file, domain_settings.php. This release includes highly experimental (and partial) support for 
+multi-domain Reason instances. Show stopping issues remain with .htaccess rewrites and url history features. Do not attempt to configure domain_settings.php in a production 
+instance at this point, and if you do, don't expect anything will go smoothly!</p>
 <?php
 // This change will probably be pushed to Reason 4 Beta 9 or Reason 4 RC 1
 //
@@ -32,7 +35,7 @@ replace your settings directory with the one distributed in Reason 4 Beta 8. You
 //with Reason 4 Beta 8 will be unreliable on a Reason 4 Beta 7 database that has not been upgraded.</p>
 ?>
 <h3>New Settings</h3>
-<p>Reason 4 Beta 8 introduces four new settings:</p>
+<p>Reason 4 Beta 8 introduces six new settings:</p>
 <ol>
 <li>DISABLE_REASON_ADMINISTRATIVE_INTERFACE. You should make sure the setting is defined in the
 reason_settings.php used in your reason instance. You can copy and paste the following:<br />
@@ -83,7 +86,19 @@ define('DATE_PICKER_HTTP_PATH', '/date_picker/');
 to the file system location of reason_package/date_picker/ (or <a href="<?php echo REASON_HTTP_BASE_PATH . 'setup.php?fix_mode=true'; ?>">
 rerun setup.php with fix mode enabled</a>) which will attempt to make the symlink for you.</p>
 </li>
-
+<li>REASON_ALLOWS_INLINE_EDITING. This settings should be defined in reason_settings.php. You can copy and paste the following:<br />
+<textarea rows="5" cols="100">
+/**
+ * REASON_ALLOWS_INLINE_EDITING
+ *
+ * This constant determines whether a Reason instance exposes inline editing features to users with
+ * proper privileges (determined on a module to module basis). It defaults to true and should be 
+ * left as true to take advantage of inline editing features provided by Reason modules.
+ */
+define('REASON_ALLOWS_INLINE_EDITING', true);
+</textarea>
+<p>The implications of this setting and the inline editing framework are explained in more detail in a <a href="https://apps.carleton.edu/opensource/reason/developers/changes/?story_id=613674">reason change log post</a>.</p>
+</li>
 </ol>
 <h3>Additional Notes</h3>
 <p>Starting with this release, it is especially important to ensure that the setting THIS_IS_A_DEVELOPMENT_REASON_INSTANCE is properly defined
