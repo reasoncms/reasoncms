@@ -248,9 +248,9 @@
 		 * Set a reference to the current head items object
 		 *
 		 * Many modules need a reference to this object, so any module instantiation should create
-		 * a minisite navigation object and pass it into the module using this method. 
+		 * a head items object and pass it into the module using this method. 
 		 *
-		 * @param object $pages
+		 * @param object $head_items
 		 */
 		function set_head_items( &$head_items )
 		{
@@ -367,9 +367,11 @@
 		/**
 		 * called when editing is available for any specific editable needs
 		 * @param object $session
+		 * @deprecated since reason 4 beta 8
 		 */
 		function init_editable( $session ) // {{{
 		{
+			trigger_error('can_edit is deprecated and no longer called by the default template.');
 			$this->session = $session;
 		} // }}}
 		/**
@@ -383,9 +385,11 @@
 		 * special actions for a module that doesn't use the usual method of authentication.
 		 *
 		 * @return boolean
+		 * @deprecated since reason 4 beta 8
 		 */
 		function can_edit() // {{{
 		{
+			trigger_error('can_edit is deprecated and no longer called by the default template.');
 			return false;
 		} // }}}
 		/**
@@ -421,11 +425,15 @@
 		 *
 		 * there is a good chance that this method will handle all states of
 		 * an editable form
+		 *
+		 * @deprecated since reason 4 beta 8
 		 */
-		function run_editable() // {{{
+		function run_editable()
 		{
+			trigger_error('run_editable is deprecated and no longer called by the default template.');
 			$this->run();
-		} // }}}
+		}
+		
 		/**
 		 * Get the datetime of the most recently modified displayed item
 		 *
