@@ -7,7 +7,7 @@
 	/**
 	 * Include base class & register module with Reason
 	 */
-	reason_include_once( 'minisite_templates/modules/content_base.php' );
+	reason_include_once( 'minisite_templates/modules/content.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ContentConditionalModule';
 	/**
@@ -27,7 +27,7 @@
 	 * @todo consider handling 0 values in a better way - probably requires changes to acceptable_params handling
 	 * @todo handle arrays of conditions
 	 */
-	class ContentConditionalModule extends ContentModule
+	class ContentConditionalModule extends EditableContentModule
 	{
 		/**
 		 * Defines acceptable parameters passed by the page type definition file
@@ -63,13 +63,6 @@
 				trigger_error('Content conditional module called without "parameter" defined - the default setting ' . $this->params['default'] . ' will be used and the parameter ignored');
 				$valid = false;
 			}
-
-			// This code block stops empty values from being used in comparisons and is thus commented out
-			//if (empty($this->params['comparison']))
-			//{
-			//	trigger_error('Content conditional module called with "comparison" undefined or a zero value - the default setting ' . $this->params['default'] . ' will be used and the parameter ignored');
-			//	$valid = false;
-			//}
 			if (empty($this->params['conditional']) || check_against_array($this->params['conditional'], array('<', '<=', '>', '>=', '==', '!=')) == false)
 			{
 				trigger_error('Content conditional module called with invalid conditional - the default setting ' . $this->params['default'] . ' will be used and the parameter ignored');
@@ -103,12 +96,12 @@
 			if (isset($this->param))
 			{
 				$condition_test = $this->check_conditional($this->params['conditional'], $this->param, $this->params['comparison']);
-				if (($this->params['default'] == 'show_content') && (!empty($this->content)) && !$condition_test) return true;
-				elseif (($this->params['default'] == 'hide_content') && (!empty($this->content)) && $condition_test) return true;
+				if (($this->params['default'] == 'show_content') && (!empty($this->content)) && !$condition_test)  return parent::has_content();
+				elseif (($this->params['default'] == 'hide_content') && (!empty($this->content)) && $condition_test)  return parent::has_content();
 			}
 			else
 			{
-				if (($this->params['default'] == 'show_content') && (!empty($this->content))) return true;
+				if ($this->params['default'] == 'show_content') return parent::has_content();
 			}
 			return false;
 		}
