@@ -72,5 +72,6 @@
 		'VersionCheck'=>array('file'=>'version_check.php','class'=>'ReasonVersionCheckModule'),
 		'EventSplit'=>array('file'=>'event_split.php','class'=>'ReasonEventSplitModule'),
 		'ActiveUsers'=>array('file'=>'active_users.php','class'=>'ReasonActiveUsersModule'),
+		'SitePages'=>array('file'=>'site_pages.php','class'=>'ReasonSitePagesModule'),
 	);
 ?>
