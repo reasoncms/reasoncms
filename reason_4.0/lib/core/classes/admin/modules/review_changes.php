@@ -14,8 +14,6 @@
 	
 	/**
 	 * An administrative module for reviewing edits and deletions
-	 *
-	 * This module limits its access to users who have the privilege to view sensitive data.
 	 */
 	class ReasonReviewChangesModule extends DefaultModule// {{{
 	{
@@ -58,12 +56,13 @@
 		 */
 		function run() // {{{
 		{
-			echo '<div id="reviewChangesModule">'."\n";
-			if(!reason_user_has_privs($this->admin_page->user_id, 'view_sensitive_data'))
+			$sites = $this->_get_sites();
+			if(empty($sites))
 			{
-				echo '<p>Sorry; use of this module is restricted.</p></div>'."\n";
+				echo '<p>You must have editing access to at least one live Reason site for this module to work</p>'."\n";
 				return;
 			}
+			echo '<div id="reviewChangesModule">'."\n";
 			
 			$d = new disco();
 			$d->add_element('start_date','textdate', array('prepopulate'=>true,'year_max'=>carl_date('Y'),'year_min'=>'1000'));
@@ -73,7 +72,7 @@
 			$d->add_element('type','select',array('options'=>$this->_prep_for_disco($this->_get_types()) ) );
 			if(!empty($this->admin_page->request['type_id']))
 				$d->set_value('type',$this->admin_page->request['type_id']);
-			$d->add_element('site','select',array('options'=>$this->_prep_for_disco($this->_get_sites()) ) );
+			$d->add_element('site','select',array('options'=>$this->_prep_for_disco($sites) ) );
 			if(!empty($this->admin_page->request['site_id']))
 				$d->set_value('site',$this->admin_page->request['site_id']);
 			$d->set_actions( array('review'=>'Review') );
@@ -132,6 +131,10 @@
 				$es = new entity_selector();
 				$es->add_type(id_of('site'));
 				$es->add_relation('site.site_state = "Live"');
+				if(!reason_user_has_privs($this->admin_page->user_id, 'view_sensitive_data'))
+				{
+					$es->add_left_relationship($this->admin_page->user_id,relationship_id_of('site_to_user'));
+				}
 				$this->_sites = $es->run_one();
 			}
 			return $this->_sites;
@@ -162,6 +165,10 @@
 				$link_parts['archive_a'] = $archives['start']->id();
 			if($archives['end'])
 				$link_parts['archive_b'] = $archives['end']->id();
+			if(reason_user_has_privs($this->admin_page->user_id, 'pose_as_other_user') && !user_can_edit_site($this->admin_page->user_id, $owner->id()) )
+			{
+				$link_parts['user_id'] = $this->_get_id_of_user_who_can_edit_site($owner->id());
+			}
 			return $this->admin_page->make_link($link_parts);
 		}
 		
@@ -179,7 +186,40 @@
 								'id' => $item->id(),
 								'cur_module' => 'Preview',
 							);
+			if(reason_user_has_privs($this->admin_page->user_id, 'pose_as_other_user') && !user_can_edit_site($this->admin_page->user_id, $owner->id()) )
+			{
+				$link_parts['user_id'] = $this->_get_id_of_user_who_can_edit_site($owner->id());
+			}
 			return $this->admin_page->make_link($link_parts);
+		}
+		
+		/**
+		 * Find an arbitrary user who can edit a given site
+		 *
+		 * @param integer $site_id
+		 * @return integer user_id
+		 */
+		function _get_id_of_user_who_can_edit_site($site_id)
+		{
+			static $cache = array();
+			if(!isset($cache[$site_id]))
+			{
+				$es = new entity_selector();
+				$es->add_type(id_of('user'));
+				$es->add_right_relationship( (integer) $site_id,relationship_id_of('site_to_user'));
+				$es->limit_tables();
+				$es->limit_fields();
+				$es->set_num(1);
+				$users = $es->run_one();
+				if(!empty($users))
+				{
+					$user = current($users);
+					$cache[$site_id] = $user->id();
+				}
+				else
+					$cache[$site_id] = false;
+			}
+			return $cache[$site_id];
 		}
 		
 		/**
