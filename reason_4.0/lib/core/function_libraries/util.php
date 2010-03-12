@@ -1438,7 +1438,9 @@
 	}
 	
 	/**
-	 * Returns the default webpath when the setting is not derived from a domain defined in domain_settings.php
+	 * Get the default webpath when the setting is not derived from a domain defined in 
+	 * domain_settings.php
+	 * @return string the file system path to the web root
 	 */
 	function reason_get_default_web_path()
 	{
@@ -1452,5 +1454,34 @@
 						  instead of define when setting the WEB_PATH constant.');
 			return WEB_PATH;
 		}
+	}
+	
+	/**
+	 * Get the relationship id for archived entities for a given type
+	 * @param integer $type_id
+	 * @return mixed integer relationship id if success; false if no success
+	 */
+	function reason_get_archive_relationship_id($type_id)
+	{
+		static $cache = array();
+		$type_id = (integer) $type_id;
+		if(empty($type_id))
+		{
+			trigger_error('Type ID must be an integer in reason_archive_relationship_id()');
+			return false;
+		}
+		
+		if(!isset($cache[$type_id]))
+		{
+			$q = 'SELECT id FROM allowable_relationship WHERE name LIKE "%archive%" AND relationship_a = '.$type_id.' AND relationship_b = '.$type_id.' LIMIT 0,1';
+			$r = db_query( $q, 'Unable to get archive relationship.' );
+			$row = mysql_fetch_array( $r, MYSQL_ASSOC );
+			mysql_free_result( $r );
+			if(!empty($row))
+				$cache[$type_id] = $row['id'];
+			else
+				$cache[$type_id] = false;
+		}
+		return $cache[$type_id];
 	}
 ?>
