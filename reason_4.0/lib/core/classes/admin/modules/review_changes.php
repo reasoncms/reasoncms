@@ -85,10 +85,15 @@
 				if($end_date < $d->get_value('start_date'))
 					echo 'Please pick a end date on or after the start date.';
 				else
-					echo $this->_get_changes($d->get_value('start_date'),$end_date,$d->get_value('type'),$d->get_value('site'));
+					echo $this->_get_changes_markup($d->get_value('start_date'),$end_date,$d->get_value('type'),$d->get_value('site'));
 			}
 		} // }}}
 		
+		/**
+		 * Take a bunch of entities and transform into an id => name array for a select element in disco
+		 * @param array $entities
+		 * @return array form: array(id => name,id => name,...)
+		 */
 		function _prep_for_disco($entities)
 		{
 			$ret = array();
@@ -99,6 +104,10 @@
 			return $ret;
 		}
 		
+		/**
+		 * Get all Reason types
+		 * @return array reason type entities
+		 */
 		function _get_types()
 		{
 			if(empty($this->_types))
@@ -110,6 +119,10 @@
 			return $this->_types;
 		}
 		
+		/**
+		 * Get all live Reason sites
+		 * @return array reason site entities
+		 */
 		function _get_sites()
 		{
 			if(empty($this->_sites))
@@ -122,11 +135,17 @@
 			return $this->_sites;
 		}
 		
-		function _produce_change_report($changes, $start_date, $end_date, $type_id = '',$site_id = '')
-		{
-			
-		}
-		
+		/**
+		 * Get a link to the archive/history module for an item, given a start and end date
+		 *
+		 * This function will return a link to the archive module, with the entities found by
+		 * _get_archived_entities() for the given start and end dates highlighted.
+		 *
+		 * @param object $item reason entity
+		 * @param string $start_date
+		 * @param string $end_date
+		 * @return string html encoded link
+		 */
 		function _get_archive_link($item, $start_date, $end_date)
 		{
 			$archives = $this->_get_archived_entities($item,$start_date,$end_date);
@@ -144,6 +163,11 @@
 			return $this->admin_page->make_link($link_parts);
 		}
 		
+		/**
+		 * Get a link to the preview module for a given item
+		 * @param object $item reason entity
+		 * @return string html encoded link
+		 */
 		function _get_preview_link($item)
 		{
 			$owner = $item->get_owner();
@@ -156,7 +180,16 @@
 			return $this->admin_page->make_link($link_parts);
 		}
 		
-		function _get_changes($start_date, $end_date, $type_id = '',$site_id = '')
+		/**
+		 * Get the markup for a given date range, type (optional) and site (optional)
+		 *
+		 * @param string $start_date
+		 * @param string $end_date
+		 * @param integer $type_id
+		 * @param integer $site_id
+		 * @return string markup
+		 */
+		function _get_changes_markup($start_date, $end_date, $type_id = '',$site_id = '')
 		{
 			if($start_date == $end_date)
 				echo '<p>Items added or edited on '.prettify_mysql_datetime($start_date).'</p>'."\n";
@@ -225,6 +258,15 @@
 			}
 		}
 		
+		/**
+		 * Get the archived entities that represent the state of the item at
+		 * the beginning of a given start date and at the end of a given end date
+		 *
+		 * @param object $item reason entity
+		 * @param string $start_date
+		 * @param string $end_date
+		 * @return array form: array('start'=>entity,'end'=>entity)
+		 */
 		function _get_archived_entities($item,$start_date,$end_date)
 		{
 			//echo $start_date.'.'.$end_date;
