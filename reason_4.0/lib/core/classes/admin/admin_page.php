@@ -591,6 +591,8 @@
 					$page_name = 'Delete';
 					if( $this->cur_module == 'Delete' )
 						echo '<strong>'.$page_name.'</strong>';
+					elseif($item->get_value('state') == 'Deleted')
+						echo '<a href="' . $this->make_link( array( 'cur_module' => 'Undelete' ) ) . '" class="nav">Undelete</a>';
 					else
 						echo '<a href="' . $this->make_link( array( 'cur_module' => 'Delete' ) ) . '" class="nav">'.$page_name.'</a>';
 					echo '</li>' . "\n";
@@ -635,11 +637,7 @@
 		
 		function _get_archived_item_count($id, $type_id)
 		{
-			$q = 'SELECT id FROM allowable_relationship WHERE name LIKE "%archive%" AND relationship_a = '.$type_id.' AND relationship_b = '.$type_id.' LIMIT 0,1';
-			$r = db_query( $q, 'Unable to get archive relationship.' );
-			$row = mysql_fetch_array( $r, MYSQL_ASSOC );
-			mysql_free_result( $r );
-			$rel_id = $row['id'];
+			$rel_id = reason_get_archive_relationship_id($type_id);
 
 			$es = new entity_selector();
 			$es->add_type( $type_id );
@@ -1245,7 +1243,7 @@
 			echo '<title>Reason';
 			if( !empty( $this->site_id ) )
 				echo ': '.strip_tags( $this->get_name( $this->site_id ) );
-			if( !empty( $this->title ) AND !empty( $this->site_id ) AND $this->title != $this->get_name( $this->site_id ) )
+			if( !empty( $this->title ) AND ( empty( $this->site_id ) || $this->title != $this->get_name( $this->site_id ) ) )
 				echo ': '.strip_tags($this->title);
 			echo '</title>'."\n";
 			echo $this->head_items->get_head_item_markup();
