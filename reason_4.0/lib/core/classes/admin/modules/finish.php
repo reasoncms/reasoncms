@@ -42,7 +42,7 @@
 			
 			// Set the entity live if the user has rights to publish
 			$user_can_publish = reason_user_has_privs( $this->admin_page->user_id, 'publish' );
-			if($temp->get_value('state') != 'Live' && $user_can_publish )
+			if($temp->get_value('state') == 'Pending' && $user_can_publish )
 			{
 				// Leave the state of pages alone so that people can hide them if they want to, but otherwise set the object live
 				if( $this->admin_page->type_id != id_of( 'minisite_page' ) )
