@@ -230,11 +230,13 @@
 							if($item->get_value('creation_date') > $start_date && $item->get_value('creation_date') <= $end_date.' 23:59:59')
 								$change_type = 'addition';
 							echo '<li class="'.$change_type.'">';
-							
 							if($change_type == 'change')
 								echo '<a href="'.$this->_get_archive_link($item, $start_date, $end_date).'">'.$item->get_display_name().'</a>';
 							else
 								echo '<a href="'.$this->_get_preview_link($item).'">'.$item->get_display_name().'</a> (new)';
+							
+							if(empty($site_id) && $owner = $item->get_owner())
+								echo '<div class="owner">Site: '.$owner->get_value('name').'</div>'."\n";
 							echo '</li>'."\n";
 						}
 						echo '</ul>'."\n";
