@@ -194,3 +194,6 @@ h2.pageTitle {
 .eventSplitLink {
 	color:#777;
 }
+
+/* Change review module */
+#reviewChangesModule div.owner { font-size:0.85em; color:#555; }
