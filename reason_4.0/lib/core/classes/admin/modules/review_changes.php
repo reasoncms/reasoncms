@@ -58,9 +58,10 @@
 		 */
 		function run() // {{{
 		{
+			echo '<div id="reviewChangesModule">'."\n";
 			if(!reason_user_has_privs($this->admin_page->user_id, 'view_sensitive_data'))
 			{
-				echo '<p>Sorry; use of this module is restricted.</p>'."\n";
+				echo '<p>Sorry; use of this module is restricted.</p></div>'."\n";
 				return;
 			}
 			
@@ -87,6 +88,7 @@
 				else
 					echo $this->_get_changes_markup($d->get_value('start_date'),$end_date,$d->get_value('type'),$d->get_value('site'));
 			}
+			echo '</div>'."\n";
 		} // }}}
 		
 		/**
@@ -236,7 +238,7 @@
 								echo '<a href="'.$this->_get_preview_link($item).'">'.$item->get_display_name().'</a> (new)';
 							
 							if(empty($site_id) && $owner = $item->get_owner())
-								echo '<div class="owner">Site: '.$owner->get_value('name').'</div>'."\n";
+								echo '<div class="owner">'.$owner->get_value('name').'</div>'."\n";
 							echo '</li>'."\n";
 						}
 						echo '</ul>'."\n";
@@ -250,6 +252,8 @@
 							echo '<li class="deletion">';
 							
 							echo '<a href="'.$this->_get_preview_link($item).'">'.$item->get_display_name().'</a>';
+							if(empty($site_id) && $owner = $item->get_owner())
+								echo '<div class="owner">'.$owner->get_value('name').'</div>'."\n";
 							echo '</li>'."\n";
 						}
 						echo '</ul>'."\n";
