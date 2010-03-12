@@ -59,6 +59,8 @@ class databaseCleanup
 		$this->provide_entity_info_admin_link();
 		
 		$this->provide_version_check_admin_link();
+		
+		$this->provide_review_changes_admin_link();
 	}
 	
 	function change_relationship_terminology($rel_name, $term_search, $term_replace)
@@ -209,6 +211,37 @@ class databaseCleanup
 			echo '<p>Your instance already has an administrative link to the version check admin module</p>';
 		}
 	}
+	
+	function provide_review_changes_admin_link()
+	{
+		// lets try to find if it exists
+		$es = new entity_selector(id_of('master_admin'));
+		$es->add_type(id_of('admin_link'));
+		$es->add_relation('url.url LIKE "%cur_module=ReviewChanges%"');
+		$result = $es->run_one();
+		if (!$result)
+		{
+			if($this->mode == 'run')
+			{
+				$values = array('url' => './?cur_module=ReviewChanges',
+								'relative_to_reason_http_base' => false,
+								'new' => 0);
+				
+				$id = reason_create_entity(id_of('master_admin'), id_of('admin_link'), $this->reason_user_id, 'Review Changes', $values);
+				create_relationship(id_of('master_admin'), $id, relationship_id_of('site_to_admin_link'));
+				echo '<p>Created and added an administrative link in Master admin to the "review changes" admin module</p>';
+								
+			}
+			else
+			{
+				echo '<p>Would add an administrative link in Master admin to the "review changes" admin module</p>';
+			}
+		}
+		else
+		{
+			echo '<p>Your instance already has an administrative link to the "review changes" admin module</p>';
+		}
+	}
 }
 
 force_secure_if_available();
@@ -234,6 +267,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 <li>Makes sure the custom deleter values for the entity_table and minisite_page type are correctly set</li>
 <li>Adds an administrative link in Master Admin to the entity info admin module</li>
 <li>Adds an administrative link in Master Admin to the version check admin module</li>
+<li>Adds an administrative link in Master Admin to the "review changes" admin module</li>
 <?php
 /* TODO
 <li>Removes the finish action for sites.</li>
