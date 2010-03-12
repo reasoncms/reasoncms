@@ -296,6 +296,14 @@
 		 * @access private
 		 */ 
 		 /**
+		  * Is this the first time the form has been generated?
+		  *
+		  * Set to false in the init phase if there is any data posted to form.
+		  * 
+		  * @var boolean
+		  */
+		 var $_first_time = true;
+		 /**
 		 * The internal array of plasmature elements.
 		 * This is where the actual plasmature objects are stored. 
 		 * Format: $element_name => $element_object
@@ -1967,6 +1975,28 @@
 		function _has_errors() // {{{
 		{
 			return $this->_error_flag;
+		} // }}}
+		
+		/**
+		* Returns if the form has any errors at all
+		* @return bool true if the form has errors.
+		* @access private
+		*/
+		function has_errors() // {{{
+		{
+			return $this->_has_errors();
+		} // }}}
+		
+		/**
+		* Returns if the form has any errors at all
+		* @return bool true if the form has errors.
+		* @access private
+		*/
+		function successfully_submitted() // {{{
+		{
+			if(!$this->_is_first_time() && !$this->_has_errors())
+				return true;
+			return false;
 		} // }}}
 
 		/**
