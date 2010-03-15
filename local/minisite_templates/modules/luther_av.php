@@ -130,7 +130,7 @@
 			//	echo $av_file->get_value( 'media_format' )."\n";
 			//}
 			reset($avfilelist);
-			$vn = $_SERVER['REQUEST_URI'] . "video_" . strtolower(preg_replace('| |', '_', current($avfilelist)->get_value('name'))); 
+			$vn = $_SERVER['REQUEST_URI'] . "video_" . strtolower(preg_replace('|\'|', '', preg_replace('| |', '_', current($avfilelist)->get_value('name')))); 
 			//print($vn);
 			//print(current($avfilelist)->get_value('name'));
 			//print(current($avfilelist)->get_value('url'));
