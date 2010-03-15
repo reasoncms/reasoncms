@@ -66,7 +66,6 @@ class languageType extends select_no_sortType
 							'mar' => 'Marathi',
 							'mol' => 'Moldavian',
 							'nor' => 'Norwegian',
-							'xxx' => 'Other',
 							'per' => 'Persian',
 							'pol' => 'Polish',
 							'por' => 'Portuguese',
@@ -86,6 +85,7 @@ class languageType extends select_no_sortType
 							'ukr' => 'Ukrainian',
 							'urd' => 'Urdu',
 							'vie' => 'Vietnamese',
+							'xxx' => 'Other',
 		);
 		foreach( $languages as $key => $val )
 		{
