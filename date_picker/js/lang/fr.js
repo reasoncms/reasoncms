@@ -45,9 +45,9 @@ var fdLocale = {
                 "Nov",
                 "D\u00E9c"
                 ],
-        /* Only stipulate the firstDayOfWeek should the first day not be Monday */             
-        firstDayOfWeek:3,        
-               
+        /* Only stipulate the firstDayOfWeek should the first day not be Monday           
+        firstDayOfWeek:1,        
+         */         
         titles:[
                 "Mois pr\u00E9cedent",
                 "Mois suivant",

@@ -9,23 +9,21 @@
 <script type="text/javascript">
 // <![CDATA[     
 
-// A quick test of the setGlobalVars method 
+// A quick test of the setGlobalVars method - remember, the "lang" attribute will NOT work when passed to this method
 datePickerController.setGlobalVars({"split":["-dd","-mm"]});
 
 /* 
-
-   The following function dynamically calculates Easter Monday's date.
-   It is used as the "redraw" callback function for the second last calendar on the page
-   and returns an empty object.
+        The following function dynamically calculates Easter Monday's date.
+        It is used as the "redraw" callback function for the second last calendar on the page
+        and returns an empty object.
    
-   It dynamically calculates Easter Monday for the year in question and uses
-   the "adddisabledDates" method of the datePickercontroller Object to
-   disable the date in question.
+        It dynamically calculates Easter Monday for the year in question and uses
+        the "adddisabledDates" method of the datePickercontroller Object to
+        disable the date in question.
    
-   NOTE: This function is not needed, it is only present to show you how you
-   might use this callback function to disable dates dynamically!
-   
-*/
+        NOTE: This function is not needed, it is only present to show you how you
+        might use this callback function to disable dates dynamically!   
+*/            
 function disableEasterMonday(argObj) { 
         // Dynamically calculate Easter Monday - I've forgotten where this code 
         // was originally found and I don't even know if it returns a valid
@@ -49,22 +47,22 @@ function disableEasterMonday(argObj) {
 
 /* 
 
-   The following functions updates a span with an "English-ised" version of the
-   currently selected date for the last datePicker on the page. 
+        The following functions updates a span with an "English-ised" version of the
+        currently selected date for the last datePicker on the page. 
    
-   NOTE: These functions are not needed, they are only present to show you how you
-   might use callback functions to use the selected date in other ways!
+        NOTE: These functions are not needed, they are only present to show you how you
+        might use callback functions to use the selected date in other ways!
    
 */
 function createSpanElement(argObj) {
         // Make sure the span doesn't exist already
-        if(document.getElementById("EnglishDate")) return;
+        if(document.getElementById("EnglishDate-" + argObj.id)) return;
 
         // create the span node dynamically...
         var spn = document.createElement('span');
             p   = document.getElementById(argObj.id).parentNode;
             
-        spn.id = "EnglishDate";
+        spn.id = "EnglishDate-" + argObj.id;
         p.parentNode.appendChild(spn);
         
         // Remove the bottom margin on the input's wrapper paragraph
@@ -76,13 +74,13 @@ function createSpanElement(argObj) {
 
 function showEnglishDate(argObj) {
         // Grab the span & get a more English-ised version of the selected date
-        var spn = document.getElementById("EnglishDate"),
+        var spn = document.getElementById("EnglishDate-" + argObj.id),
             formattedDate = datePickerController.printFormattedDate(argObj.date, "l-cc-sp-d-S-sp-F-sp-Y", false);
         
         // Make sure the span exists before attempting to use it!
         if(!spn) {
                 createSpanElement(argObj); 
-                spn = document.getElementById("EnglishDate");
+                spn = document.getElementById("EnglishDate-" + argObj.id);
         };
         
         // Note: The 3rd argument to printFormattedDate is a Boolean value that 
@@ -98,6 +96,73 @@ function showEnglishDate(argObj) {
         // Add a new text node containing our formatted date
         spn.appendChild(document.createTextNode(formattedDate));
 };
+
+      
+/* 
+ 
+        Create a datepicker using Javascript and not classNames
+        -------------------------------------------------------
+      
+        datePickerController.createDatePicker has to be called onload as we need 
+        the locale file to have loaded before we can create a datepicker.
+      
+        The only way to get around using an onload event is to 
+        explicitly set the language by adding it before the datepicker script e.g:
+      
+        <script type="text/javascript" src="/the/path/to/the/language/file.js"></ script>
+        <script type="text/javascript" src="/the/path/to/the/datepicker/file.js"></ script>
+     
+*/
+            
+datePickerController.addEvent(window, "load", function() {
+      var opts = {
+        // The ID of the associated form element
+        id:"dp-js1",
+        // The date format to use
+        format:"d-sl-m-sl-Y",
+        // Days to highlight (starts on Monday)
+        highlightDays:[0,0,0,0,0,1,1],
+        // Days of the week to disable (starts on Monday)
+        disabledDays:[0,0,0,0,0,0,0],
+        // Dates to disable (YYYYMMDD format, "*" wildcards excepted)
+        disabledDates:{
+                "20090601":"20090612", // Range of dates
+                "20090622":"1",        // Single date
+                "****1225":"1"         // Wildcard example 
+                },
+        // Date to always enable
+        enabledDates:{},
+        // Don't fade in the datepicker
+        // NOTE: Only relevant if "staticPos" is set to false
+        noFadeEffect:false,
+        // Is it inline or popup
+        staticPos:false,
+        // Do we hide the associated form element on create
+        hideInput:false,
+        // Do we hide the today button
+        noToday:true,
+        // Do we show weeks along the left hand side
+        showWeeks:true,
+        // Is it drag disabled
+        // NOTE: Only relevant if "staticPos" is set to false
+        dragDisabled:true,
+        // Positioned the datepicker within a wrapper div of your choice (requires the ID of the wrapper element)
+        // NOTE: Only relevant if "staticPos" is set to true
+        positioned:"",
+        // Do we fill the entire grid with dates
+        fillGrid:true,
+        // Do we constrain dates not within the current month so that they cannot be selected
+        constrainSelection:true,
+        // Callback Object
+        callbacks:{"create":[createSpanElement], "dateselect":[showEnglishDate]},
+        // Do we create the button within a wrapper element of your choice (requires the ID of the wrapper element)
+        // NOTE: Only relevant if staticPos is set to false
+        buttonWrapper:"",
+        // Do we start the cursor on a specific date (YYYYMMDD format string)
+        cursorDate:""      
+      };
+      datePickerController.createDatePicker(opts);
+});
 
 // ]]>
 </script>
@@ -163,7 +228,7 @@ function showEnglishDate(argObj) {
       <p>A simple datePicker <em>(don&#8217;t be scared of the <code>dateformat</code> class, it&#8217;s easier to create than you think)</em> :</p>
       <p><code>class=&#8220;dateformat-d-sl-m-sl-Y&#8221;</code></p>
       <label for="dp-1">Date</label> :
-      <p><input type="text" class="w16em dateformat-d-sl-m-sl-Y" id="dp-1" name="dp-1" value="" /></p>
+      <p><input type="text" class="w16em dateformat-d-sl-m-sl-Y" id="dp-1" name="dp-1" value="13/03/2009" /></p>
     
       <p class="fauxhr">OK, the same datepicker as above but now let&#8217;s show some week numbers and change the date format slightly in order to display two figure years:</p>
       <p><code>class=&#8220;dateformat-d-sl-m-sl-<strong>y show-weeks</strong>&#8221;</code></p>
@@ -219,6 +284,11 @@ function showEnglishDate(argObj) {
       <p><code>class=&#8220;w16em dateformat-d-sl-m-sl-Y show-weeks statusformat-l-cc-sp-d-sp-F-sp-Y disable-xxxx1225 disable-20070201-20070222 <strong>enable-20070205-20070209</strong>&#8221;</code></p>
       <label for="dp-12">Date :</label>
       <p><input type="text" class="w16em w16em dateformat-d-sl-m-sl-Y show-weeks statusformat-l-cc-sp-d-sp-F-sp-Y disable-xxxx1225 disable-20070201-20070222 enable-20070205-20070209" id="dp-12" name="dp-12" value="" /></p>
+
+      <p class="fauxhr">Now we&#8217;ll disable all Sundays and enable a range of dates that includes four Sundays (enabled dates take preference over disabled days) and set the cursor to start on the 1<sup>st</sup> February 2009:</p>
+      <p><code>class=&#8220;w16em dateformat-d-sl-m-sl-Y show-weeks statusformat-l-cc-sp-d-sp-F-sp-Y <strong>disable-days-7</strong> enable-20090201-20090222 cursor-20090201&#8221;</code></p>
+      <label for="dp-14">Date :</label>
+      <p><input type="text" class="w16em w16em dateformat-d-sl-m-sl-Y show-weeks statusformat-l-cc-sp-d-sp-F-sp-Y disable-days-7 enable-20090201-20090222 cursor-20090201" id="dp-14" name="dp-14" value="" /></p>
 
       <p class="fauxhr">Now we&#8217;ll set a more complicated dateformat (which you probably wouldn&#8217;t use in a real life situation but it will at least test the script&#8217;s ability to parse complicated dates):</p>
       <p><code>class=&#8220;<strong>dateformat-l-cc-sp-d-sp-F-sp-Y</strong> show-weeks statusformat-l-cc-sp-d-sp-F-sp-Y&#8221;</code></p>
@@ -438,6 +508,12 @@ function showEnglishDate(argObj) {
       <p><input type="text" class="w16em dateformat-d-sl-m-sl-Y cb_create_createSpanElement cb_dateselect_showEnglishDate" id="dp-cb2" name="dp-cb2" value="" /></p>      
     </fieldset>
     
+    <fieldset>
+      <legend>Create using Javascript</legend>       
+      <p>A simple datePicker created using a JavaScript call that defines the same two callback functions <code>createSpanElement</code> (defined for the create event) and <code>showEnglishDate</code> (defined for the dateselect event) that were used above:</p>
+      <label for="dp-js1" id="l-dp-js1">Date</label> :
+      <p><input type="text" class="w16em" id="dp-js1" name="dp-js1" value="" /></p>   
+    </fieldset>
     <p class="al-center">View the related &#8220;<a href="http://www.frequency-decoder.com/2009/02/03/unobtrusive-date-picker-widget-v4/">language in the lab</a>&#8221; post for this demo.</p>
 </form>
 </body>

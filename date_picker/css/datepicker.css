@@ -48,7 +48,7 @@ div.datePicker
         text-align:center;
 
         /* Change the font-size to suit your design's CSS. The following line is for the demo that has a 12px font-size defined on the body tag */
-        font:900 0.8em/1em Verdana, sans-serif;
+        font:900 0.8em/1em Verdana, Sans-Serif;
 
         /* For Example: If using the YUI font CSS, uncomment the following line to get a 10px font-size within the datePicker */
         /* font:900 77%/77% Verdana, sans-serif; */
@@ -241,9 +241,7 @@ div.datePicker table tbody th
         cursor:pointer;
         background:#fff url(../media/gradient-e5e5e5-ffffff.gif) repeat-x 0 -40px;
         width:3em;
-        height:3em;
-        font-size: 0.8em;
-        line-height: 1.0em;
+        height:3em;   
         overflow:hidden;      
         outline:transparent none 0px;        
         border:1px solid #ccc;
@@ -298,7 +296,6 @@ div.datePicker tfoot th
         border:0 none;
         background:#fff;
         height:2.8em;
-        font-size: 80%;
         }
 /* TD cell that is _not_ used to display a day of the month */
 div.datePicker table tbody td.date-picker-unused
