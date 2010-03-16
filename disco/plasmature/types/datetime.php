@@ -323,18 +323,35 @@ class textDateTimeType extends textType
 				echo $var.' = '.$value.'<br />';
 		}
 	}
+	
+	/**
+	 * Augment a head items object to insert the date_picker head items
+	 *
+	 * @todo standardize a mechanism for this to be handled in plasmature objects
+	 */
+	function augment_head_items(&$head_items)
+	{
+		if (!defined("DATE_PICKER_HEAD_ITEMS_LOADED"))
+		{
+			define("DATE_PICKER_HEAD_ITEMS_LOADED", true);
+			$head_items->add_javascript(DATE_PICKER_HTTP_PATH.'js/datepicker.js');
+			$head_items->add_stylesheet(DATE_PICKER_HTTP_PATH. 'css/datepicker.css');
+		}
+	}
+	
 	function display()
 	{
-	    if ($this->use_picker && !defined('_PLASMATURE_INCLUDED_DATEPICKER')) {
-	        if (defined("DATE_PICKER_HTTP_PATH"))
-	        {
-	        	echo '<script type="text/javascript" src="'. DATE_PICKER_HTTP_PATH.'/js/datepicker.js"></script>',"\n";
-            	echo '<link href="'.DATE_PICKER_HTTP_PATH. '/css/datepicker.css" rel="stylesheet" type="text/css" />',"\n";
-            	define('_PLASMATURE_INCLUDED_DATEPICKER', true);
-            }
-            else
-            {
-            }
+	    if ($this->use_picker && !defined("DATE_PICKER_HEAD_ITEMS_LOADED") && !defined('_PLASMATURE_INCLUDED_DATEPICKER'))
+	    {
+	        /**
+	         * We specify the english datepicker .js file ... the dynamic mechanism to pick the language
+	         * file that is built into the datepicker does not appear to work reliably when the date_picker is
+	         * added inline instead of into the head items
+	         */
+	        echo '<script type="text/javascript" src="'. DATE_PICKER_HTTP_PATH.'js/lang/en.js"></script>'."\n";
+	       	echo '<script type="text/javascript" src="'. DATE_PICKER_HTTP_PATH.'js/datepicker.js"></script>'."\n";
+           	echo '<link href="'.DATE_PICKER_HTTP_PATH. 'css/datepicker.css" rel="stylesheet" type="text/css" />'."\n";
+           	define('_PLASMATURE_INCLUDED_DATEPICKER', true);
 	    }
 	    parent::display();
 	}
