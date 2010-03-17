@@ -10887,8 +10887,8 @@ UI.Anchor_Helper = function()
 		if (selected) {
 			self._masseuse.update_name(selected, anchor_info.name);
 		} else {
-			anchor = self._loki.document.createElement('A');
-			anchor.name = anchor_info.name;
+			anchor = Util.Document.create_element(self._loki.document,
+				'a', {name: anchor_info.name});
 			
 			sel = Util.Selection.get_selection(self._loki.window);
 			Util.Selection.collapse(sel, true); // to beginning
