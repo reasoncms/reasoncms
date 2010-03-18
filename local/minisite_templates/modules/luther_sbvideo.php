@@ -4,6 +4,7 @@
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LutherSbvideoModule';
 	
 	class LutherSbvideoModule extends ImageSidebarModule
+	// includes videos and maps in left sidebar
 	{
 		var $es;
 		var $images;
@@ -33,11 +34,25 @@
 			echo '<div id="bannerleft">'."\n";
 			foreach( $this->images AS $id => $image )
 			{
+				// video in sidebar
 				if (preg_match("/video/", $image->get_value('keywords')))
 				{
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
 					echo $image->get_value("content");
 					//break;
+				}
+				// map in sidebar
+				if (preg_match("/map/", $image->get_value('keywords')))
+				{
+					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
+					echo '<div id="imageside">'."\n";
+					echo '<div class="imagesideframe">'."\n";
+                                        echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
+                                        echo '<img src="' . $url . '" style="border:0" alt="' . $image->get_value('description') . '" title="Click to enlarge" />';
+                                        echo '</a>';
+					echo '</div class="imagesideframe">'."\n";
+					echo '</div id="imageside">'."\n";
+
 				}
 			}
 			echo "</div>\n";

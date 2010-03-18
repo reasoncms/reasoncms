@@ -32,7 +32,7 @@
 			
 			foreach( $this->images AS $id => $image )
 			{
-				if (!preg_match("/imagetop|bannerad|video/", $image->get_value('keywords')))
+				if (!preg_match("/imagetop|bannerad|video|map/", $image->get_value('keywords')))
 				{
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
 					$thumb = WEB_PHOTOSTOCK . $id . '_tn.' . $image->get_value('image_type');
