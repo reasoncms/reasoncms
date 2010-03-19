@@ -8,8 +8,6 @@ class lutherAvFileManager extends avFileManager
 	function alter_data()
 	{
 		parent::alter_data();
-		
-		
 		$this->add_comments('media_format', form_comment('Note: <img src="/images/youtube_16.jpg"/> videos are Flash Multimedia (.swf) format.'));
 	}
 }
