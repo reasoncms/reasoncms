@@ -15,21 +15,20 @@
 	{
 		function alter_data()
 		{
+			$this->set_display_name('name', 'Twitter Username');
+			$this->set_comments('name', form_comment('Enter username used to access Twitter account.'));
+			$this->set_display_name('twitter_posts', 'Recent Posts?');
+			$this->set_comments('twitter_posts', form_comment('How many recent posts should rotate through the scroll.
+				<br />Enter 0 for a random display of all posts.'));
+			$this->add_required('twitter_posts');
 			
-		$this->set_comments('twitter_username', form_comment('Enter username used to access Twitter account.'));
-		$ths->set_display_name('twitter_posts', 'Recent Posts?')
-		$this->set_comments('twitter_posts', form_comment('How many recent posts should rotate through the scroll.'));
-		$this->add_required('twitter_username');
-		$this->add_required('twitter_posts');
-		
-		$this->set_order(array(
-			'name',
-			'twitter_username',
-			'twitter_posts',
-			)
+			$this->set_order(
+				array(
+					'name',
+					'twitter_username',
+					'twitter_posts',
+				)
 		);
-
-
 		}
 	}
 ?>
