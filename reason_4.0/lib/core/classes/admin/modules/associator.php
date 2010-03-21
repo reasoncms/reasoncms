@@ -249,8 +249,8 @@
 		} // }}}
 		function do_add_link() // {{{
 		{
-			$site = new entity($this->admin_page->site_id);
-			if(!$site->has_left_relation_with_entity( $this->rel_type, relationship_id_of( 'site_cannot_edit_type' )))
+			$type = new entity($this->admin_page->type_id);
+			if(!$type->has_right_relation_with_entity( $this->admin_page->site_id, relationship_id_of( 'site_cannot_edit_type' )))
 			{
 			?>
 			<table border="0" cellpadding="0" cellspacing="0"><tr><td>
@@ -272,6 +272,7 @@
                 </div>
 			</td></tr></table>
 			<?php
+			
 			}
 		} // }}}
 		function do_sharing_link() // {{{
@@ -321,6 +322,7 @@
 				$this->do_add_link();
 				echo '</td></tr>';
 			}
+			
 			$assoc_ok = !$this->admin_page->is_second_level() && $this->admin_page->cur_module == 'Associator' && $this->some_site_shares_type();
 			$sharing_ok = $this->admin_page->is_second_level() && $this->admin_page->cur_module == 'Sharing';
 			if( reason_user_has_privs($this->admin_page->user_id, 'borrow') && ( $assoc_ok || $sharing_ok ) )
