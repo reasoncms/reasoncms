@@ -716,7 +716,8 @@ class ClassifiedView extends Disco
 		if ($this->chosen_action == 'submit')
 		{
 			$this->classified_save_item();
-			$this->classified_email_notification();
+			if ($this->model->send_posting_notification || $this->model->classified_requires_approval)
+				$this->classified_email_notification();
 		}
 		$this->classified_post_process();
 	}
