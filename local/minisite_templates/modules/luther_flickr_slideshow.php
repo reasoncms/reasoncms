@@ -66,6 +66,14 @@
 				{
 					// see /javascripts/highslide/highslide-overrides.js for gallery declaration
 					$pinfo = $f->photos_getInfo($photo['id']);
+					if (preg_match("/[A-Za-z0-9]+/", $pinfo['description']))
+					{
+						$description = "<b>" .$photo['title'] . "</b><br/> " . preg_replace("|\"|", "&quot;", $pinfo['description']);
+					}
+					else
+					{
+						$description = $photo['title'];
+					}
 					if ($number_slideshows == 1)
 					{
 						echo "<li>\n";
@@ -79,7 +87,7 @@
 						echo "<div class=\"hidden-container\">\n";
 					}
 					echo "<a class=\"highslide\" href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "." . $pinfo['originalformat']  . "\" onclick=\"return hs.expand(this, galleryOptions[" . $slideshowGroup . "])\">\n";
-					echo "<img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_s." . $pinfo['originalformat']  . "\" title=\"Click to open gallery\" alt=\"" . $photo['title'] . "\" />\n";
+					echo "<img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_s." . $pinfo['originalformat']  . "\" title=\"Click to open gallery\" alt=\"" . $description . "\" />\n";
 					echo "</a>\n";
 
 					if ($number_slideshows == 1)
