@@ -31,6 +31,14 @@ class ClassifiedModel
 	var $classified_requires_approval = false;
 	
 	/**
+	 * If notification is required, notice of new postings will be sent to the 
+	 * recipient designated by the view. $classified_requires_approval will override
+	 * this and always send a notification.
+	 * @var boolean
+	 */
+	var $send_posting_notification = true;
+	
+	/**
 	 * Limit availability of items to a certain number of days
 	 * @var int
 	 */
