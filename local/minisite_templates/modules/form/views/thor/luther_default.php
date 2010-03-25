@@ -30,16 +30,20 @@ class LutherDefaultForm extends DefaultThorForm
 	function on_every_time()
 	{
 		$gender = $this->get_element_name_from_label('Gender');
-		$this->change_element_type($gender, 'radio_inline');
+		if ($gender)
+			$this->change_element_type($gender, 'radio_inline');
 		
 		$sex = $this->get_element_name_from_label('Sex');
-		$this->change_element_type($sex, 'radio_inline');
+		if ($sex)
+			$this->change_element_type($sex, 'radio_inline');
 		
 		$state = $this->get_element_name_from_label('State');
-		$this->change_element_type($state, 'state');
+		if ($state)
+			$this->change_element_type($state, 'state');
 		
 		$state_province = $this->get_element_name_from_label('State/Province');
-		$this->change_element_type($state_province, 'state_province');
+		if ($state_province)
+			$this->change_element_type($state_province, 'state_province');
 		
 	}	
 }
