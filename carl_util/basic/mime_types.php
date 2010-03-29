@@ -218,6 +218,10 @@ function _sanity_check_mime_type($file_extension, $mime_type)
 		// We're just going to assume it's video/x-flv.
 		return "video/x-flv";
 	}
+	if ($file_extension == 'wmv') {
+		// We're just going to assume it's video/x-ms-wmv.
+		return "video/x-ms-wmv";
+	}
 	return $mime_type;
 }
 
