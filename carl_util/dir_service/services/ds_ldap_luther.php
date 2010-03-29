@@ -39,8 +39,8 @@ class ds_ldap_luther extends ds_ldap {
 	*/
 	var $_search_params = array(
 		'base_attrs' => array('uid','mail','edupersonprimaryaffiliation','edupersonaffiliation','ds_username'),
-		'subtree_search' => true,
-		'base_dn' => 'dc=luther,dc=edu',
+		'subtree_search' => false,
+		'base_dn' => 'ou=People,dc=luther,dc=edu',
 		);
 		
 	/**
