@@ -109,12 +109,12 @@ reason_include_once( 'classes/inline_editing.php' );
 				if ($inline_edit->is_inline_editing_enabled())
 				{
 					$link =  carl_make_link(array('inline_editing_availability' => 'disable'));
-					$link_text = 'Disable inline editing';
+					$link_text = 'Turn off inline editing';
 				}
 				else
 				{
 					$link = carl_make_link(array('inline_editing_availability' => 'enable'));
-					$link_text = 'Enable inline editing';
+					$link_text = 'Turn on inline editing';
 				}
 				echo '<div class="inlineEditDiv">'."\n";
 				echo '<a href="'.$link.'" class="inlineEditLink">'.$link_text.'</a>'."\n";
