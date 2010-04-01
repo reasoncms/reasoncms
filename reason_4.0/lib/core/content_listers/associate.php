@@ -496,11 +496,11 @@
 				$edit_link[ 'id' ] = $row->id();
 				$edit_link[ 'cur_module' ] = 'Edit';
 				echo ' | <a href="'.$this->admin_page->make_link( $preview_link ).'">Preview</a>';
-				if( $row->get_value( 'sharing' ) == 'owns' )
+				if( ($row->get_value( 'sharing' ) == 'owns') && reason_site_can_edit_type($this->site_id, $this->rel_type) )
 					echo ' | <a href="'.$this->admin_page->make_link( $edit_link ).'">Edit</a>';
 				elseif ($row->get_value( 'sharing' ) == 'borrows')
 					echo ' | Borrowed';
-				else
+				elseif ( ($row->get_value( 'sharing' ) != 'owns') && ($row->get_value( 'sharing' ) != 'borrows') )
 				{
 					echo '<p><strong>Note: </strong><em>Item is not currently owned or borrowed by the site.</em></p>';
 				}
