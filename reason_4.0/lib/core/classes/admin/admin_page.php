@@ -446,8 +446,8 @@
 			$links = array();
 			$entity = new entity($this->id);
 			$links[ 'Preview' ] = array( 'title' => 'Preview' , 'link' => $this->make_link( array( 'cur_module' => 'Preview' ) ) );
-			$can_edit = $entity->get_value('state') == 'Pending' ? reason_user_has_privs($this->user_id, 'edit_pending') : reason_user_has_privs($this->user_id, 'edit');
-			if($can_edit)
+			$can_edit = ($entity->get_value('state') == 'Pending') ? reason_user_has_privs($this->user_id, 'edit_pending') : reason_user_has_privs($this->user_id, 'edit');
+			if($can_edit && reason_site_can_edit_type($this->site_id, $this->type_id))
 			{
 				$links[ 'Edit' ] = array( 'title' => 'Edit' , 'link' => $this->make_link( array( 'cur_module' => 'Editor' ) ) );
 				if( $second )
