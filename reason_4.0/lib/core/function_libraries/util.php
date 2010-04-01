@@ -1484,4 +1484,38 @@
 		}
 		return $cache[$type_id];
 	}
+	
+	/**
+	 * Can a given site edit a type? Check the site_cannot_edit_type relationship for a pair of entities.
+	 *
+	 * @param mixed $site_entity_or_id
+	 * @param mixed $type_entity_or_id
+	 * @return boolean
+	 */
+	function reason_site_can_edit_type($site_entity_or_id, $type_entity_or_id)
+	{
+		static $cache = array();
+		$site_id = (is_object($site_entity_or_id)) ? $site_id_or_entity->id() : $site_entity_or_id;
+		$type_id = (is_object($type_entity_or_id)) ? $type_entity_or_id->id() : $type_entity_or_id;
+		if (!empty($site_id) && !empty($type_id))
+		{
+			if (!isset($cache[$site_id][$type_id]))
+			{
+				$es = new entity_selector();
+				$es->limit_tables();
+				$es->limit_fields();
+				$es->add_type(id_of('type'));
+				$es->add_right_relationship($site_id, relationship_id_of('site_cannot_edit_type'));
+				$es->add_relation('entity.id = "'.$type_id.'"');
+				$result = $es->run_one();
+				$cache[$site_id][$type_id] = (empty($result));
+			}
+		}
+		else
+		{
+			trigger_error('reason_site_can_edit_type was provided invalid parameters and will return false');
+			return false;
+		}
+		return $cache[$site_id][$type_id];
+	}
 ?>
