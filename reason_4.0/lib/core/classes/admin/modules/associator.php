@@ -249,9 +249,8 @@
 		} // }}}
 		function do_add_link() // {{{
 		{
-			$type = new entity($this->admin_page->type_id);
 			$site = new entity($this->admin_page->site_id);
-			if(!$type->has_right_relation_with_entity($site, relationship_id_of( 'site_cannot_edit_type' )))
+			if(!$this->rel_type->has_right_relation_with_entity($site, relationship_id_of( 'site_cannot_edit_type' )))
 			{
 			?>
 			<table border="0" cellpadding="0" cellspacing="0"><tr><td>
