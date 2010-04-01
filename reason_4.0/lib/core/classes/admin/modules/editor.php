@@ -24,6 +24,11 @@
 		function init() // {{{
 		{
 			$this->type_entity = new entity( $this->admin_page->type_id );
+			if (!$this->_site_can_edit_type())
+			{
+				echo 'This site does not have permission to edit '.$this->type_entity->get_value('plural_name').'.';
+				die();
+			}
 			if( empty( $this->admin_page->id ) )
 			{
 				if(reason_user_has_privs($this->admin_page->user_id, 'add' ))
@@ -50,7 +55,16 @@
 			
 		} // }}}
 		
-		
+		function _site_can_edit_type()
+		{
+			$type_id = (int) $this->admin_page->type_id;
+			$es = new entity_selector();
+			$es->add_type(id_of('type'));
+			$es->add_right_relationship($this->admin_page->site_id, relationship_id_of('site_cannot_edit_type'));
+			$es->add_relation('entity.id = "'.$type_id.'"');
+			$result = $es->run_one();
+			return (empty($result));
+		}
 		
 		function _cm_ok_to_run()
 		{
