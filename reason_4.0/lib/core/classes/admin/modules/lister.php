@@ -77,15 +77,25 @@
 		} // }}}
 		function show_add() // {{{
 		{
-			echo '<div class="addLink">'."\n".'<div class="roundedTop">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent">'."\n";
-			$type = new entity($this->admin_page->type_id);
-			echo '<a href="'. $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => '', 'new_entity' => 1) ).'">Add '.$type->get_value( 'name' ).'</a>'."\n";
-			if(array_key_exists($type->get_value('unique_name'),$this->import_modules))
+			// lets make sure permissions allow this
+			if (reason_site_can_edit_type($this->admin_page->site_id, $this->admin_page->type_id))
 			{
-				$import_module = $this->import_modules[$type->get_value('unique_name')];
-				echo '<div class="smallText importBlock"><a href="'.$this->admin_page->make_link(  array( 'cur_module' => $import_module , 'id' => '') ).'">Batch Import '.( $type->get_value( 'plural_name' ) ? $type->get_value( 'plural_name' ) : $type->get_value('name') ).'</a></div>'."\n";
+				echo '<div class="addLink">'."\n".'<div class="roundedTop">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent">'."\n";
+				$type = new entity($this->admin_page->type_id);
+				echo '<a href="'. $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => '', 'new_entity' => 1) ).'">Add '.$type->get_value( 'name' ).'</a>'."\n";
+				if(array_key_exists($type->get_value('unique_name'),$this->import_modules))
+				{
+					$import_module = $this->import_modules[$type->get_value('unique_name')];
+					echo '<div class="smallText importBlock"><a href="'.$this->admin_page->make_link(  array( 'cur_module' => $import_module , 'id' => '') ).'">Batch Import '.( $type->get_value( 'plural_name' ) ? $type->get_value( 'plural_name' ) : $type->get_value('name') ).'</a></div>'."\n";
+				}
+				echo '</div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n";
 			}
-			echo '</div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n";
+			else
+			{
+				echo '<div class="addLink">'."\n".'<div class="roundedTop">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent">'."\n";
+				echo '<strong>Warning</strong><p>The site is not allowed to add or edit items of this type.</p><p>If this is unexpected, contact an administrator.</p>';
+				echo '</div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n";
+			}
 		} // }}}
 		function show_other() // {{{
 		{
