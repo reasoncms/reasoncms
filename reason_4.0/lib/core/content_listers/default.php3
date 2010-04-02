@@ -309,7 +309,11 @@
 				echo '<strong>';
 				$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
 				$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
-			echo '<a href="' . $preview_link . '">'. 'Preview</a> | <a href="' . $edit_link . '">Edit</a>';
+				if (reason_site_can_edit_type($this->admin_page->site_id, $this->admin_page->type_id))
+				{
+					echo '<a href="' . $preview_link . '">'. 'Preview</a> | <a href="' . $edit_link . '">Edit</a>';
+				}
+				else echo '<a href="' . $preview_link . '">'. 'Preview</a>';
 				echo '</strong>';
 			}
 			else
@@ -326,7 +330,11 @@
 				echo '<strong>';
 				$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
 				$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
-			echo '<a href="' . $preview_link . '">'. 'Preview</a> | <a href="' . $edit_link . '">Edit</a>';
+				if (reason_site_can_edit_type($this->admin_page->site_id, $this->admin_page->type_id))
+				{
+					echo '<a href="' . $preview_link . '">'. 'Preview</a> | <a href="' . $edit_link . '">Edit</a>';
+				}
+				else echo '<a href="' . $preview_link . '">'. 'Preview</a>';
 				echo '</strong>';
 			}
 			else
