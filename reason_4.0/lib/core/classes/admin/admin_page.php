@@ -577,8 +577,9 @@
 			{
 				return;
 			}
-			echo '<p class="otherActionItems"><strong>Other Action Items</strong></p>';
-			echo '<ul class="leftList">';
+			echo '<div class="otherActionItems">'."\n";
+			echo '<p class="otherActionItems"><strong>Other Action Items</strong></p>'."\n";
+			echo '<ul class="leftList">'."\n";
 			
 			if($show_delete)
 			{
@@ -605,7 +606,7 @@
 					echo '">';
 					$link = $this->make_link( array( 'cur_module' => 'NoDelete' ) );
 					if( $this->cur_module != 'NoDelete' )
-						echo 'Deletion Not Available <span class="smallText">(<a href="' . $link . '">Explain</a>)</span>';
+						echo 'Deletion Not Available <span class="smallText">(<a href="' . $link . '"  class="inline">Explain</a>)</span>';
 					else echo 'Deletion Not Available';
 					echo '</li>' . "\n";
 				}
@@ -632,7 +633,8 @@
 				else
 					echo '<li class="navItem">No Edits</li>' . "\n";
 			}
-			echo '</ul>';
+			echo '</ul>'."\n";
+			echo '</div>'."\n";
 		} // }}}
 		
 		function _get_archived_item_count($id, $type_id)
