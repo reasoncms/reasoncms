@@ -56,6 +56,11 @@
 .leftList a:hover {
 	background-color:#f1f4fb;
 }
+.leftList a.inline {
+	display:inline;
+	padding:0;
+	vertical-align:baseline;
+}
 .leftList a img {
 	border:0;
 	margin:0 4px 0;
