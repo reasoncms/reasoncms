@@ -51,6 +51,12 @@
 				$this->_not_deletable_reason = 'no_id_provided';
 				return false;
 			}
+			if(!reason_site_can_edit_type($this->admin_page->site_id, $this->admin_page->type_id))
+			{
+				$this->_not_deletable_reason = 'reason_site_cannot_edit_type';
+				return false;
+			}
+			
 			$item = new entity($this->admin_page->id);
 			if($item->get_value('state') == 'Deleted')
 			{
@@ -118,6 +124,9 @@
 				{
 					case 'no_id_provided':
 						echo '<p>Unable to delete item. Item may already have been deleted (sometimes this happens if you click twice on the delete button)</p>';
+						return false;
+					case 'reason_site_cannot_edit_type':
+						echo '<p>Unable to delete item. The site is restricted from adding / editing / or deleting items of this type. If this is unexpected, contact the administrator.</p>';
 						return false;
 					case 'insufficient_privileges':
 						echo '<p>You do not have the privileges to delete this item.</p>';
