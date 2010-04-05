@@ -20,6 +20,13 @@ $(document).ready(function()
 	var CLOSE_TOGGLER = webPath + "/ui_images/item_closed.gif";
 	var OPEN_TOGGLER = webPath + "/ui_images/item_open.gif";
 	var tree;
+
+	//IE doesn't have this object, which is needed, so we are just creating what we need
+	if (!window.Node) {
+		Node = new Object();
+		Node.ELEMENT_NODE = 1;
+	}
+
 	
 	// run the thing
 	init();
@@ -303,10 +310,5 @@ $(document).ready(function()
 			}
 	}
 	
-	//IE doesn't have this object, which is needed, so we are just creating what we need
-	if (!window.Node) {
-		Node = new Object();
-		Node.ELEMENT_NODE = 1;
-	}
 
 });
