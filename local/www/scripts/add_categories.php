@@ -7,10 +7,10 @@ reason_include_once('function_libraries/admin_actions.php');
 // this code causes each site to borrow all categories from the Luther Home site
 $es = new entity_selector();
 $es->add_type(id_of('site'));
-$es->add_relation('entity.id != ' . id_of('luther_home'));
+$es->add_relation('entity.id != ' . id_of('home'));
 $sites = $es->run_one();
 
-$cat_es = new entity_selector(id_of('luther_home'));
+$cat_es = new entity_selector(id_of('home'));
 $cat_es->add_type(id_of('category_type'));
 $cat_result = $cat_es->run_one();
 $cats = array_keys($cat_result);
