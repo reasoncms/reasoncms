@@ -54,6 +54,7 @@ class ds_ldap_luther extends ds_ldap {
 		'ds_firstname' => array('givenname'),
 		'ds_lastname' => array('sn'),
 		'ds_fullname' => array('displayname','cn'),
+		//Steve changes
 		/*  'ds_phone' => array('telephonenumber'),  this returns home phone*/
 		'ds_title' => array('title'),
 		'ds_phone' => array('officephone'),
