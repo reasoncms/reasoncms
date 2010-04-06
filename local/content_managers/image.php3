@@ -69,6 +69,7 @@
 			$ka = explode(',', $this->get_value('keywords'));
 			$check_imagetop = false;
 			$ba_url = "";
+			$check_hide_caption = false;
 			foreach($ka as $key => $value)
 			{
 				$ka[$key] = trim($value);
@@ -82,11 +83,22 @@
 					$ba_url = $matches[1];
 					unset($ka[$key]);
 				}
+				if (preg_match("/hide_caption/", $value))
+				{
+					unset($ka[$key]);
+					$check_hide_caption = true;
+				}
 			}
 //			$kt = array_search(preg_match("/imagetop/", 
 			$this->set_value('keywords', implode(", ", $ka));
 
+<<<<<<< .mine
+			$this->add_element( 'hide_caption', 'checkbox', array('description' => 'Do not show caption on thumbnail or full resolution image.'));
+			$this->set_value('hide_caption', $check_hide_caption);
 			$this->add_element( 'top_image', 'checkbox', array('description' => 'Should be at least as wide as the column in which it resides.  Be sure to check "Do Not Resize."<br /><small>The dimensions for a top image are 530 x 215 pixels. An image outside these dimensions will be stretched or cropped.'));
+=======
+			$this->add_element( 'top_image', 'checkbox', array('description' => 'Should be at least as wide as the column in which it resides.  Be sure to check "Do Not Resize."<br /><small>The dimensions for a top image are 530 x 215 pixels. An image outside these dimensions will be stretched or cropped.'));
+>>>>>>> .r313
 			$this->set_value('top_image', $check_imagetop);
 			//$this->add_element( 'banner_ad', 'checkbox', array('description' => 'Use image as an advertisement to generate click through traffic.'));
 			$this->add_element( 'banner_ad_url', 'text');
@@ -141,6 +153,7 @@
 					'author_description',
 					'description',
 					'content',
+					'hide_caption',
 					'keywords',
 					'datetime',
 					'original_image_format',
@@ -238,6 +251,14 @@
 					$kw = $kw . ', ';
 				}
 				$kw = $kw . 'bannerad ' . $this->get_value("banner_ad_url");
+			}
+			if ($this->get_value("hide_caption"))
+			{
+				if ($kw != "")
+				{
+					$kw = $kw . ', ';
+				}
+				$kw = $kw . 'hide_caption';
 			}
 			$this->set_value('keywords', $kw); 
 			parent::process();
