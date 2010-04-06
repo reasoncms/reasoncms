@@ -499,8 +499,9 @@ function check_loki_accessible_over_http()
 	if (!$accessible && $fix_mode_enabled) // lets try to repair this
 	{
 		// if LOKI_2_INC - strip off the helpers/php part
-		if (is_readable(LOKI_2_INC) && ($term = strpos(LOKI_2_INC, 'helpers/php') && function_exists('symlink')))
+		if (is_readable(LOKI_2_INC) && (strpos(LOKI_2_INC, 'helpers/php') !== FALSE) && function_exists('symlink'))
 		{
+			$term = strpos(LOKI_2_INC, 'helpers/php');
 			$my_loki_path = substr(LOKI_2_INC, 0, $term);
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(LOKI_2_HTTP_PATH, "/"));
 			if (is_writable(dirname($symlink_loc))) symlink($my_loki_path, $symlink_loc);
