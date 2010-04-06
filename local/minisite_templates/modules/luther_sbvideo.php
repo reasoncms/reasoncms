@@ -44,11 +44,19 @@
 				// map in sidebar
 				if (preg_match("/map/", $image->get_value('keywords')))
 				{
+					if (preg_match("/hide_caption/", $image->get_value('keywords')))
+					{
+						$caption = "";
+					}
+					else
+					{
+						$caption = $image->get_value('description');
+					}
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
 					echo '<div id="imageside">'."\n";
 					echo '<div class="imagesideframe">'."\n";
                                         echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
-                                        echo '<img src="' . $url . '" style="border:0" alt="' . $image->get_value('description') . '" title="Click to enlarge" />';
+                                        echo '<img src="' . $url . '" style="border:0" alt="' . $caption . '" title="Click to enlarge" />';
                                         echo '</a>';
 					echo '</div class="imagesideframe">'."\n";
 					echo '</div id="imageside">'."\n";

@@ -37,7 +37,11 @@
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
 					$thumb = WEB_PHOTOSTOCK . $id . '_tn.' . $image->get_value('image_type');
 					$d = max($image->get_value('width'), $image->get_value('height')) / 125.0;
-					if (preg_match("/[A-Za-z0-9]+/", $image->get_value('content')))
+					if (preg_match("/hide_caption/", $image->get_value('keywords')))
+					{
+						$caption = "";
+					}
+					elseif (preg_match("/[A-Za-z0-9]+/", $image->get_value('content')))
 					{
 						$caption = $image->get_value('content');
 					}
@@ -54,7 +58,7 @@
 					echo '</a>';
 				
 					// show caption if flag is true
-					if ($this->params['caption_flag']) echo $image->get_value('description') ;
+					if ($this->params['caption_flag'] && $caption != "") echo $image->get_value('description') ;
 					echo "</div>\n";
 				}
 			}
