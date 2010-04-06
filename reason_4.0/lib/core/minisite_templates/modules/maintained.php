@@ -125,7 +125,8 @@
 					{
 						$email = $dir->get_first_value('ds_email');
 						$full_name = $dir->get_first_value('ds_fullname');
-					
+						// lets fall back to the maintainer username if a valid full name is not found for the user
+						$full_name = (!carl_empty_html($full_name)) ? $full_name : trim(strip_tags($maintainer));
 						$values = array('email_cache'=>$email, 'name_cache'=>$full_name, 'cache_last_updated'=>date('Y-m-d H:i:s'), 'username_cache'=>$maintainer);
 						$update_vals = array('ldap_cache'=>$values);
 						
