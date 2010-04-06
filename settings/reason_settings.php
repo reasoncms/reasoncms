@@ -847,4 +847,11 @@
 	 */
 	define('REASON_DELETED_ITEM_EXPUNGEMENT_WAIT_DAYS', 14);
 	
+	/**
+	 * REASON_DISABLE_AUTO_UPDATE_CHECK
+	 *
+	 * If you want Reason to stop checking for updates, set this to true. (Not recommended... but if
+	 * you don't want Reason phoning home to check for updates, this setting is for you.)
+	 */
+	define('REASON_DISABLE_AUTO_UPDATE_CHECK', false);
 ?>
