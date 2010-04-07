@@ -90,7 +90,7 @@ if (isset($_POST['do_it_pass']) == false)
 			check_environment_and_trailing_slash(WEB_PATH, 'web path', 'Check the WEB_PATH constant in package_settings.php.</p><p>
 								 The value should probably be</p>
 								 <p><pre>'.$_SERVER['DOCUMENT_ROOT'].'/</pre>');
-			check_environment(DB_CREDENTIALS_FILEPATH, 'db credentials xml file', 'Verify the DB_CREDENTIALS_FILEPATH in package_settings.php and permissions');
+			check_environment_must_be_outside_of_web_tree(DB_CREDENTIALS_FILEPATH, 'db credentials xml file', 'Verify that DB_CREDENTIALS_FILEPATH in package_settings.php is correct and points to a readable file outside the web tree');
 			check_environment(DISCO_INC.'disco.php', 'disco include path', 'Verify the path to DISCO_INC in package_settings.php');
 			check_environment(TYR_INC.'tyr.php', 'tyr include path', 'Verify the path to TYR_INC in package_settings.php');
 			check_environment(THOR_INC.'thor.php', 'thor include path ', 'Verify the path to THOR_INC in package_settings.php');
@@ -822,6 +822,18 @@ function check_environment_and_trailing_slash($path, $check_name, $error_msg)
 		if (substr($path, -1) != '/') die_with_message('<p class="error">ERROR: '.$check_name . ' missing trailing slash.</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
 		elseif (substr($path, -2) == '//') die_with_message('<p class="error">ERROR: '.$check_name . ' extra trailing slash.</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
 		return msg($check_name . ' found', true);
+	}
+	else die_with_message('<p class="error">ERROR: '.$check_name . ' ('.$path.') not found</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
+}
+
+function check_environment_must_be_outside_of_web_tree($path, $check_name, $error_msg)
+{
+	if (file_exists($path))
+	{
+		// lets make sure file is outside of the web tree
+		$in_web_tree = (strpos($path, WEB_PATH) === 0) ? true : false;
+		if ($in_web_tree) die_with_message('<p class="error">ERROR: '.$check_name . ' must be outside the web tree!</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
+		return msg($check_name . ' found and appears to be outside the web tree', true);
 	}
 	else die_with_message('<p class="error">ERROR: '.$check_name . ' ('.$path.') not found</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
 }
