@@ -1529,7 +1529,10 @@
 	}
 	
 	/**
-	 * Can a given site edit a type? Check the site_cannot_edit_type relationship for a pair of entities.
+	 * Can a given site edit a type? If so, the following are true:
+	 *
+	 * 1. There is a relationship over the site_to_type for the pair of entities.
+	 * 2. There is not a relationships across the site_cannot_edit_type relationship for a pair of entities.
 	 *
 	 * @param mixed $site_entity_or_id
 	 * @param mixed $type_entity_or_id
@@ -1538,7 +1541,7 @@
 	function reason_site_can_edit_type($site_entity_or_id, $type_entity_or_id)
 	{
 		static $cache = array();
-		$site_id = (is_object($site_entity_or_id)) ? $site_id_or_entity->id() : $site_entity_or_id;
+		$site_id = (is_object($site_entity_or_id)) ? $site_entity_or_id->id() : $site_entity_or_id;
 		$type_id = (is_object($type_entity_or_id)) ? $type_entity_or_id->id() : $type_entity_or_id;
 		if (!empty($site_id) && !empty($type_id))
 		{
@@ -1548,10 +1551,19 @@
 				$es->limit_tables();
 				$es->limit_fields();
 				$es->add_type(id_of('type'));
-				$es->add_right_relationship($site_id, relationship_id_of('site_cannot_edit_type'));
+				$es->add_right_relationship($site_id, relationship_id_of('site_to_type'));
 				$es->add_relation('entity.id = "'.$type_id.'"');
 				$result = $es->run_one();
-				$cache[$site_id][$type_id] = (empty($result));
+				
+				$es2 = new entity_selector();
+				$es2->limit_tables();
+				$es2->limit_fields();
+				$es2->add_type(id_of('type'));
+				$es2->add_right_relationship($site_id, relationship_id_of('site_cannot_edit_type'));
+				$es2->add_relation('entity.id = "'.$type_id.'"');
+				$result2 = $es2->run_one();
+				
+				$cache[$site_id][$type_id] = (!empty($result) && empty($result2));
 			}
 		}
 		else
