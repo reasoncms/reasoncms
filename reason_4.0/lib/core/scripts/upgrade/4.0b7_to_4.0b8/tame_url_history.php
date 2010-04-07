@@ -487,7 +487,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 }
 
 ?>
-<h2>Reason: Clean up the URL history table and upgrade it for multidomain support</h2>
+<h2>Reason: Clean up the URL history table</h2>
 <p>The URL history table is not pretty and has been creating corrupt entries for awhile. Most notably, it has has been creating entries 
 for "pages" that are actually just links. In some cases, theses bogus entries could be used instead of the correct redirect. 
 The URL_History function library has been updated to no longer create these unneeded entries in the table. This script clears out 
@@ -502,8 +502,8 @@ The script additionally zaps empty entries and those that are duplicates (down t
 <li>Remove subsequent entries with the same url and page_id - not needed and should never have been created</li>
 <li>Remove rows with page_ids that reference reason pages that do not exist (expunged pages)</li>
 <?php //<li>Check all the page ids in URL history - run update_URL_history on each to make sure the current location is the most recent timestamp</li> ?>
-<li>NOT YET IMPLEMENTED - Removed the "deleted column" - which was inaccurate and is no longer needed because of logic changes in check_URL_history()</li>
-<li>NOT YET IMPLEMENTED - Adds a "domain" column and populates it with the REASON_HOST domain (currently set to <?php echo REASON_HOST; ?>)</li>
+<?php //<li>NOT YET IMPLEMENTED - Removed the "deleted column" - which was inaccurate and is no longer needed because of logic changes in check_URL_history()</li> ?>
+<?php //<li>NOT YET IMPLEMENTED - Adds a "domain" column and populates it with the REASON_HOST domain </li>?>
 </ul>
 <?php
 
