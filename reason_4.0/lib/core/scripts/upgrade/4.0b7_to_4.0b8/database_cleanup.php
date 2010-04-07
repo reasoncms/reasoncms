@@ -55,6 +55,7 @@ class databaseCleanup
 		$this->change_relationship_terminology('page_to_related_publication', 'Places a related publication on a page', 'Attach a related publication');
 		$this->_check_custom_deleters();
 		$this->_update_theme_previewer();
+		$this->_fix_unbranded_basic_blue_theme();
 		
 		$this->provide_entity_info_admin_link();
 		
@@ -116,6 +117,30 @@ class databaseCleanup
 		{
 			echo '<p>Theme type is up to date</p>'."\n";
 		}
+	}
+	
+	function _fix_unbranded_basic_blue_theme()
+	{
+		$es = new entity_selector(id_of('master_admin'));
+		$es->add_type(id_of('css'));
+		$es->add_relation('url.url = "/global_stock/css/default_styles.css"');
+		$es->add_relation('entity.name = "New Default Minisite CSS"');
+		$es->set_num(1);
+		$result = $es->run_one();
+		if (!empty($result))
+		{
+			$entity = reset($result);
+			if ($this->mode == 'test') echo '<p>Would update CSS used by Unbranded Basic Blue theme to correct URL</p>';
+			else
+			{
+				$values = array('css_relative_to_reason_http_base' => "true",
+								'url' => "css/default_styles.css");
+				reason_update_entity($entity->id(), $this->reason_user_id, $values);
+				echo '<p>Updated CSS used by Unbranded Basic Blue theme to correct URL.</p>';
+			}
+			$did_update = true;
+		}
+		if (!isset($did_update)) echo '<p>The URL for the CSS used by Unbranded Basic Blue theme is up to date.</p>';
 	}
 	
 	/**
@@ -264,6 +289,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 <li>Changes "Places blog/publication on a page" to "Place a blog/publication" (addresses <a href="http://code.google.com/p/reason-cms/issues/detail?id=33">issue 33</a>)</li>
 <li>Changes "Places a related publication on a page" to "Attach a related publication" (addresses <a href="http://code.google.com/p/reason-cms/issues/detail?id=33">issue 33</a>)</li>
 <li>Adds the theme previewer to the theme type</li>
+<li>Fixes incorrect CSS URL for unbranded basic blue (login site default) theme</li>
 <li>Makes sure the custom deleter values for the entity_table and minisite_page type are correctly set</li>
 <li>Adds an administrative link in Master Admin to the entity info admin module</li>
 <li>Adds an administrative link in Master Admin to the version check admin module</li>
