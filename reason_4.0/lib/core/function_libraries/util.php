@@ -1486,49 +1486,6 @@
 	}
 	
 	/**
-	 * Get the relationship id for a given type
-	 * @param mixed $type entity or id
-	 * @return mixed integer relationship id if found; false if not found
-	 *
-	 */
-	function reason_get_owns_relationship_id($type)
-	{
-		static $cache = array();
-		$type_id = is_object($type) ? $type->id() : $type;
-		$type_id = (integer) $type_id;
-		if(empty($type_id))
-		{
-			trigger_error('Type ID must be an integer in reason_get_owns_relationship_id()');
-			return false;
-		}
-		
-		
-		if(!isset($cache[$type_id]))
-		{
-			$q = new DBSelector;
-			$q->add_table('ar','allowable_relationship');
-			$q->add_relation( 'ar.relationship_a = "'.id_of('site').'"' );
-			$q->add_field( 'ar','id' );
-			$q->add_relation( 'ar.relationship_b = "'.$type_id.'"' );
-			$q->add_relation( 'ar.name = "owns"' );
-			$q->set_num(1);
-			$tmp = $q->run();
-			if( $tmp )
-			{
-				$rel = current( $tmp );
-				$cache[$type_id] = (integer) $rel['id'];
-			}
-			if( empty( $tmp ) OR empty( $cache[$type_id] ) )
-			{
-				$cache[$type_id] = false;
-				trigger_error('No ownership relation exists for type:' . $type_id . '.');
-			}
-		}
-		
-		return $cache[$type_id];
-	}
-	
-	/**
 	 * Can a given site edit a type? If so, the following are true:
 	 *
 	 * 1. There is a relationship over the site_to_type for the pair of entities.
