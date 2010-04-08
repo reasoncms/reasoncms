@@ -64,23 +64,29 @@ function find_relationship_name( $entity_a, $entity_b )
  *  gives you:
  *  78
  *
- * @param string $entity_a The unique name of the type on the "A" side of the relationship
- * @param string $entity_b The unique name of the type on the "B" side of the relationship
+ * @param mixed $entity_a The unique name, id, or entity of the type on the "A" side of the relationship
+ * @param mixed $entity_b The unique name, id, or entity of the type on the "B" side of the relationship
+ * @param string $name the name of the relationship
  * @return mixed The ID of the allowable relationship or NULL if not found
  */
 function relationship_finder( $entity_a, $entity_b, $name = 'owns' )
 {
-	$entity_a = (string) $entity_a;
-	$entity_b = (string) $entity_b;
+	if(is_object($entity_a))
+		$a_id = $entity_a->id();
+	elseif(is_numeric($entity_a))
+		$a_id = (integer) $entity_a;
+	else
+		$a_id = id_of($entity_a);
+		
+	if(is_object($entity_b))
+		$b_id = $entity_b->id();
+	elseif(is_numeric($entity_b))
+		$b_id = (integer) $entity_b;
+	else
+		$b_id = id_of($entity_b);
+		
 	$name = (string) $name;
 	
-    if( empty( $entity_a ) || empty( $entity_b ) || empty($name) )
-    {
-        trigger_error( '$entity_a, $entity_b, and $name are all required for relationship_finder() to work');
-        return;
-    }
-    $a_id = id_of( $entity_a );
-    $b_id = id_of( $entity_b );
     if( empty($a_id))
     {
         trigger_error( '$entity_a ('.$entity_a.') is not a valid unique name');
@@ -89,6 +95,11 @@ function relationship_finder( $entity_a, $entity_b, $name = 'owns' )
     if( empty($b_id))
     {
         trigger_error( '$entity_b ('.$entity_b.') is not a valid unique name');
+        return;
+    }
+    if(empty($name))
+    {
+        trigger_error( 'An entity name must be provided for relationship_finder to work');
         return;
     }
 	$query = 'SELECT id FROM allowable_relationship WHERE ' . 
@@ -105,7 +116,16 @@ function relationship_finder( $entity_a, $entity_b, $name = 'owns' )
 	elseif( $num > 1 )
 	{
 		 //Relationship finder returned too many results!
-		trigger_error('Multiple relationships exist for "'.$entity_a.'" to "'.$entity_b.'" under name "'.$name.'"; returning only first result.');
+		 if(is_object($entity_a))
+		 	$a_name = $entity_a->get_value('name');
+		 else
+		 	$a_name = $entity_a;
+		 
+		 if(is_object($entity_b))
+		 	$b_name = $entity_b->get_value('name');
+		 else
+		 	$b_name = $entity_b;
+		trigger_error('Multiple relationships exist for "'.$a_name.'" to "'.$b_name.'" under name "'.$name.'"; returning only first result.');
 	}
 	$results = mysql_fetch_array( $results );
 	return (integer) $results['id'];
