@@ -14,10 +14,10 @@ div.callOut {
 <body>
 <div class="contentHead">
 <h1 class="pageTitle"><span>Reason Install Documentation</span></h1>
+<p><em>Current for Reason 4 Beta 8 - Updated April 8, 2010</em></p>
 </div>
 <div class="contentMain">
 <div id="pageContent">
-<p><em>This documentation is in a transitionary stage as it is updated for Reason 4 Beta 8. If you are using a nightly build it may not be fully accurate.</em></p>
 <h3>Index</h3>
 <ul>
 	<li><a href="#installation">Installation</a>
@@ -39,7 +39,7 @@ div.callOut {
 <h3><a name="intro" id="intro"></a>Introduction</h3>
 <p>Reason is a web content management system designed for educational institutions. It was created by the Web Services Group at Carleton College. The installation process outlined below assumes you have some basic skills with PHP, MySQL, and server administration.</p>
 
-<p>We are eager to help you get Reason installed on your system. If you run into trouble or have any questions please do not hesitate to contact us at reason-support@lists.carleton.edu.</p>
+<p>If you run into trouble or have any questions please <a href="http://groups.google.com/group/reason-discussion">join our google discussion group</a>. Questions are often answered quickly by the Reason community.</p>
 <h3><a name="requirements" id="requirements"></a>Requirements</h3>
 <p>Reason requires the following packages:</p>
 <ul>
@@ -68,7 +68,7 @@ div.callOut {
 <li>output_buffer = 4096 (or greater) so that reason is able to send appropriate headers for asset downloads (such as .pdf &amp; .doc files)</li>
 <li>memory_limit set to 64MB or greater</li>
 <li>mbstring extension is installed</li>
-<li>ctype extension is installed (required by HTML Purifier)</li>
+<li>ctype extension is installed (almost always the case since php 4.2.0 unless you explicitly disabled it)</li>
 </ol>
 <p>We recommend the following:</p>
 <ol>
@@ -119,9 +119,9 @@ are setting up a production instance of Reason.</p>
 <li>cat reason4_b8.sql | mysql -u reason_user --password=some_password -h your.mysql.hostname.or.ip.address reason</li>
 </ul>
 </div>
-<p>The database connection information to connect to the databases you just created must be defined in a simple XML file. The location of this file can be specified by the DB_CREDENTIALS_FILEPATH constant in the reason_package/settings/package_settings.php file.</p>
-<p>The location should not be web accessible as it will contain the account credentials for your database. It's also sensible to make it readable only by the account your web server runs under.</p>
-<p>Create the file with information specific to your site, and set the DB_CREDENTIALS_FILEPATH to reference the location. We recommend using the connection names reason_connection and thor_connection, so that you don't need to change the values in the default settings files.</p>
+<p>The database connection information to connect to the databases you just created must be defined in a simple XML file. By default, this file is called dbs.xml and resides in the Reason settings directory.</p>
+<p>As long as the reason_package/settings/ directory is outside of the web tree, you can simply edit the dbs.xml file to reflect your mysql host and credential information. It is also sensible to verify that the permissions of this file are as restricted as possible.</p>
+<p>If your reason_package/settings directory is not outside the web tree, move the dbs.xml file outside the web tree and modify DB_CREDENTIALS_FILEPATH to reference the correct location of dbs.xml.</p>
 <p>Here is the format for the credentials XML file:</p>
 <div class="callOut">
 <p>&lt;databases&gt;<br />
@@ -145,34 +145,31 @@ are setting up a production instance of Reason.</p>
 &lt;/databases&gt;</p>
 </div>
 <h3><a name="settings" id="settings"></a>Configuring Reason Settings</h3>
-<p>To properly set up reason, you'll need to configure the following:</p>
+<p>We recommend copying the distributed settings to a backup folder so that you can revert and/or refer to them later.</p>
+<p>To initially setup Reason, you'll need to configure the error handler:</p>
+<h4>reason_package/settings/error_handler_settings.php</h4>
+<p>Near the top of the file, an array specifies Reason developer e-mail and IP addresses. Set this up with your own local information, so that developers see onscreen warning, and are properly notified via e-mail of more serious errors. You will not see useful error messages or be able to setup Reason until you setup $GLOBALS['DEVELOPER_INFO'] in this file with your own IP address.</p>
+</ul>
+<p>You can optionally configure these files after installation:</p>
 <ul>
 <li>reason_package/settings/package_settings.php</li>
 <li>reason_package/settings/reason_settings.php</li>
-<li>reason_package/settings/error_handler_settings.php</li>
-</ul>
-<p>You can configure these files after installation:</p>
-<ul>
 <li>reason_package/settings/thor_settings.php</li>
 <li>reason_package/settings/tyr_settings.php</li>
 <li>reason_package/settings/dir_service_config.php</li>
 </ul>
-<p>We recommend copying the distributed settings to a backup folder so that you can revert and/or refer to them later.</p>
 <h4>reason_package/settings/package_settings.php</h4>
-<p>The package_settings.php needs to be edited in order to setup paths specific to your instance of Reason. You can also setup the organization name, webmaster e-mail address, and other basic information in this file.</p>
-<p>The following constants need to be verified/setup for Reason to function:</p>
+<p>Defines constants for the utilities in the reason_package folder, and provides a place to customize information specific to your organization. Each constant is documented within the file. The constants you'll want to configure include:</p>
 <ul>
-<li><strong>INCLUDE_PATH</strong> - location of the reason_package directory</li>
-<li><strong>WEB_PATH</strong> - file system path of the web root directory</li>
-<li><strong>HTTP_HOST_NAME</strong> - host-name (or IP) which hits WEB_PATH directory</li>
-<li><strong>PHP_CLI</strong> - file system path of the php binary to be used for command line operations</li>
-<li><strong>DB_CREDENTIALS FILEPATH</strong> - file system location of .xml file which defines database connections</li>
-<li><strong>IMAGEMAGICK_PATH</strong> - file system path to imagemagick functions</li>
-<li><strong>TIDY_EXE</strong> - location of the tidy binary (needed only if libtidy is not available)</li>
-<li><strong>CURL_PATH</strong> - location of the curl binary (needed only if libcurl is not available)</li>
-<li><strong>HTTPS_AVAILABLE</strong> - whether or not the server is capable of serving pages over https</li>
+<li>FULL_ORGANIZATION_NAME</li>
+<li>SHORT_ORGANIZATION_NAME</li>
+<li>ORGANIZATION_HOME_PAGE_URI</li>
+<li>WEBMASTER_EMAIL_ADDRESS</li>
+<li>WEBMASTER_NAME</li>
 </ul>
-<p>If reason sites are going to be placed behind areas that require http authentication, then the <strong>HTTP_CREDENTIALS_FILEPATH</strong> constant must be defined. The constant should reference a file outside the web tree which defines $http_authentication_username and $http_authentication_password. These variables are used by curl to access areas behind http authentication.</p>
+<p>In some cases, you may need to alter other constants defined in package_settings.php as part of the setup process. These include DB_CREDENTIALS_FILEPATH, HTTP_CREDENTIALS_FILEPATH, IMAGEMAGICK_PATH, TIDY_EXE, CURL_PATH, and HTTPS_AVAILABLE.</p>
+<p>For a production instance of Reason, we recommend you setup SSL and set HTTPS_AVAILABLE to true.</p>
+<p>If Reason sites are going to be placed behind areas that require http authentication, then the <strong>HTTP_CREDENTIALS_FILEPATH</strong> constant must be defined. The constant should reference a file outside the web tree which defines $http_authentication_username and $http_authentication_password. These variables are used by curl to access areas behind http authentication.</p>
 <h4><strong>reason_package/settings/reason_settings.php</strong></h4>
 <p>The reason_settings.php file is well-commented and should be configured according to your reason setup.</p>
 <p>The following constants should be verified for accuracy - if they are incorrect Reason may not properly function:</p>
@@ -181,8 +178,6 @@ are setting up a production instance of Reason.</p>
 <li><strong>REASON_DB</strong> - The connection name specified in your XML credentials file</li>
 <li><strong>REASON_SITE_DIRECTORY_OWNER</strong> - Should be the user/group that Apache runs as</li>
 </ul>
-<h4>reason_package/settings/error_handler_settings.php</h4>
-<p>Near the top of the file, an array specifies Reason developer e-mail and IP addresses. Set this up with your own local information, so that developers see onscreen warning, and are properly notified via e-mail of more serious errors. You will not see useful error messages until you customize this file with your own IP address. Please see the notes included in the file.</p>
 <h4>reason_package/settings/thor_settings.php</h4>
 <p>Defines the connection name in your specified in the XML credentials file for Thor connections. If you named the connection thor_connection in the XML credentials file you do not need to edit this file.</p>
 <h4>reason_package/settings/tyr_settings.php</h4>
@@ -211,7 +206,7 @@ are setting up a production instance of Reason.</p>
 </div>
 <p>Note that you must create the folder /tmp/reason_garbage. In addition, make sure to substitute values specific to your site for the /path/to/ values.</p>
 <h3><a name="final_setup" id="final_setup"></a>Final setup</h3>
-<p>The <a href="./setup.php">setup script</a>, after it is able to verify reason is setup properly, will create a login site, and an administrative user with username "admin" and a random password.</p>
+<p>The <a href="./setup.php">setup script</a>, after it is able to verify Reason is setup properly, will create a login site, and an administrative user with username "admin" and a random password.</p>
 <p><strong>Write down the password!</strong></p>
 <p>The user created by the script has a unique name and will only be created once. For extra security, delete or move the script from the web tree after it has been run.</p>
 <p>Once everything is configured the setup script will provide you with a link to sign in to the Reason administrative interface. Enjoy.</p>
