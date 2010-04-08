@@ -41,7 +41,8 @@ $fix_mode_link = ($fix_mode_enabled) ? ' Enabled (<a href="?fixmode=false">disab
 <p>This script should be run after you have configured your server. It will verify the Reason environment, perform a variety of checks for Reason utilities, confirm file paths and permissions, 
 and then setup the first site and user for your instance. While the script may provide enough help to get you going, you may also consult 
 the <a href="./install.htm">Reason Install Documentation</a>.</p>
-<h3>Experimental "Fix" Mode<?php echo $fix_mode_link ?></h3>
+<h3>"Fix" Mode is <?php echo $fix_mode_link ?></h3>
+<hr />
 <p>Fix mode will try to resolve easy to fix installation problems. Specifically, it will do the following:
 <ul>
 <li>Create symbolic links for thor, loki, flvplayer, date picker, and jquery, from the web tree to the proper locations in reason_package</li>
@@ -482,11 +483,14 @@ function check_thor_accessible_over_http()
 	if ($accessible) return msg('<span class="success">thor'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
+		$fix_mode_str = ($fix_mode_enabled) 
+				? ' Fix mode may have failed because PHP was unable to create symlinks.'
+				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
 		$path = carl_construct_link(array(''), array(''), THOR_HTTP_PATH . 'getXML.xml');
 		return msg('<span class="error">thor'.$fixed_str.' is not accessible over http</span>.<p>The URL attempted was ' . $path . '. It should return
-					a page that contains the string "tmp_id." You may need to set THOR_HTTP_PATH equal to "/thor/", and create an alias at ' . WEB_PATH . 
-					'thor/ to ' . THOR_INC.'. Future revisions to thor should make this more flexible, but for the moment you need the alias in your web 
-					root to the thor directory. Fix mode may have failed because PHP was unable to create symlinks. Consult the install documentation for more details.</p>', false);
+					a page that contains the string "tmp_id." You may need to set THOR_HTTP_PATH equal to "/thor/", and create a symlink at ' . WEB_PATH . 
+					'thor/ to ' . THOR_INC.'. Future revisions to thor should make this more flexible, but for the moment you need the symlink in your web 
+					root to the thor directory.' . $fix_mode_str . ' Consult the install documentation for more details.</p>', false);
 	}
 }
 
@@ -512,10 +516,13 @@ function check_loki_accessible_over_http()
 	if ($accessible) return msg('<span class="success">loki 2'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
+		$fix_mode_str = ($fix_mode_enabled) 
+				? ' Fix mode may have failed because PHP was unable to create symlinks.'
+				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
 		return msg('<span class="error">loki 2'.$fixed_str.' is not accessible over http</span>.
 					<p>The URL attempted to verify loki was ' . $path . '. Check the constant LOKI_2_HTTP_PATH, 
 					which currently is set to ' . LOKI_2_HTTP_PATH . ' and make sure it correctly references the 
-					Loki 2 directory. Fix mode may have failed because PHP was unable to create symlinks. Consult the install documentation for more details.</p>', false);
+					Loki 2 directory.' . $fix_mode_str . ' Consult the install documentation for more details.</p>', false);
 	}
 }
 
@@ -538,10 +545,13 @@ function check_jquery_accessible_over_http()
 	if ($accessible) return msg('<span class="success">jQuery'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
+		$fix_mode_str = ($fix_mode_enabled) 
+				? ' Fix mode may have failed because PHP was unable to create symlinks.'
+				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
 		return msg('<span class="error">jQuery'.$fixed_str.' is not accessible over http</span>.
 				   <p>The URL attempted was ' . JQUERY_URL . ' Check the URL and make sure it exists and is
 				   web accessible. If there is a problem, please modify the JQUERY_URL constant to reference
-				   the correct path for jquery. Fix mode may have failed because PHP was unable to create symlinks. Consult the install documentation for more details.</p>', false);
+				   the correct path for jquery.'.$fix_mode_str.' Consult the install documentation for more details.</p>', false);
 	}
 }
 
@@ -565,10 +575,13 @@ function check_flvplayer_accessible_over_http()
 	else
 	{
 		$path = carl_construct_link(array(''), array(''), FLVPLAYER_HTTP_PATH . 'playlist.xml');
+		$fix_mode_str = ($fix_mode_enabled) 
+				? ' Fix mode may have failed because PHP was unable to create symlinks.'
+				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
 		return msg('<span class="error">flvplayer'.$fixed_str.' is not accessible over http</span>.
 					<p>The URL attempted was ' . $path . '. Check the URL and made sure it exists and is
 					web accessible. Also check the constant FLVPLAYER_HTTP_PATH, which currently is set to '
-					. FLVPLAYER_HTTP_PATH . ' and make sure it correctly references the location of flvplayer. Fix mode may have failed because PHP was unable to create symlinks. Consult the install documentation for more details.</p>', false);
+					. FLVPLAYER_HTTP_PATH . ' and make sure it correctly references the location of flvplayer.'.$fix_mode_str.' Consult the install documentation for more details.</p>', false);
 	}
 }
 
@@ -592,10 +605,13 @@ function check_datepicker_accessible_over_http()
 	else
 	{
 		$path = carl_construct_link(array(''), array(''), DATE_PICKER_HTTP_PATH . 'index.hml');
+		$fix_mode_str = ($fix_mode_enabled) 
+				? ' Fix mode may have failed because PHP was unable to create symlinks.'
+				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
 		return msg('<span class="error">date picker'.$fixed_str.' is not accessible over http</span>.
 					<p>The URL attempted was ' . $path . '. Check the URL and made sure it exists and is
 					web accessible. Also check the constant DATE_PICKER_HTTP_PATH, which currently is set to '
-					. DATE_PICKER_HTTP_PATH . ' and make sure it correctly references the location of date picker. Fix mode may have failed because PHP was unable to create symlinks. Consult the install documentation for more details.</p>', false);
+					. DATE_PICKER_HTTP_PATH . ' and make sure it correctly references the location of date picker.'.$fix_mode_str.' Consult the install documentation for more details.</p>', false);
 	}
 }
 
