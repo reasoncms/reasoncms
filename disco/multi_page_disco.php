@@ -122,7 +122,11 @@
 				if( empty( $this->_request ) ) $this->_request = $_REQUEST;
 				$HTTP_VARS = $this->_request;
 				$this->_first_time = (isset( $HTTP_VARS[ 'submitted' ] ) AND !empty( $HTTP_VARS[ 'submitted' ] )) ? false : true;
-				$this->page = isset( $HTTP_VARS[ 'page' ] ) ? $HTTP_VARS[ 'page' ] : $this->start_page;	
+				if (isset( $HTTP_VARS[ 'page' ] ) && isset($this->page_elements[ $HTTP_VARS[ 'page' ]]))
+					$this->page = $HTTP_VARS[ 'page' ];
+				else
+					$this->page = $this->start_page;
+					
 				if( empty( $this->page ) )
 					$this->_internal_error( 'The current page is not set properly, make sure var $start_page is defined' );
 				$this->set_page_actions();
