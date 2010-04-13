@@ -144,6 +144,12 @@
 		{
 			$rfd->set_title($this->params['title']);
 		}
+
+        if(isset($this->disable_cache))
+        {
+            $rfd->set_cache_disable($this->disable_cache);
+        }
+
         echo $rfd->display_feed("feed");
 
 		}

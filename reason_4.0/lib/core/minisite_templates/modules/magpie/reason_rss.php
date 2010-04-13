@@ -44,10 +44,12 @@ include_once(CARL_UTIL_INC . 'tidy/tidy.php');
 //define('PLANET_RSS_FILE', WEB_PATH . 'planets/carlplanet/rss20.xml'); 
 
 // magpie fails to detect UTF-8, we force it. 
-define('MAGPIE_OUTPUT_ENCODING', 'UTF-8');
+//define('MAGPIE_OUTPUT_ENCODING', 'UTF-8');
+if(!defined('MAGPIE_OUTPUT_ENCODING')){ define('MAGPIE_OUTPUT_ENCODING', 'UTF-8'); }
 //define('MAGPIE_INPUT_ENCODING', 'UTF-8');
 //define('MAGPIE_DETECT_ENCODING', false);
-define('MAGPIE_CACHE_DIR',REASON_CACHE_DIR);
+//define('MAGPIE_CACHE_DIR',REASON_CACHE_DIR);
+if(!defined('MAGPIE_CACHE_DIR')){ define('MAGPIE_CACHE_DIR',REASON_CACHE_DIR); }
 
 //define('MAGPIE_CACHE_ON', false);
 //define('MAGPIE_CACHE_DIR', '/tmp/magpie_cache');
@@ -83,7 +85,8 @@ class reasonFeedDisplay
     {
         if($disabled == true)
         {
-            define('MAGPIE_CACHE_ON', false);
+            //define('MAGPIE_CACHE_ON', false);
+			if(!defined('MAGPIE_CACHE_ON')){ define('MAGPIE_CACHE_ON', false); }
         }
     }
 
