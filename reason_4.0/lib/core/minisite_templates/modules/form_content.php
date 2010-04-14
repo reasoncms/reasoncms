@@ -20,7 +20,7 @@
 	 * @todo use cleanup rules instead of directly looking at $_REQUEST
 	 * @todo report has_content state
 	 */
-	class FormContentModule extends ContentModule
+	class FormContentModule extends EditableContentModule
 	{
 		function run()
 		{
