@@ -290,6 +290,8 @@ class FormController
 			
 			$this->_base_url = $url_parts[ 'scheme' ].'://'.$url_parts['host'].$url_parts['path'];
 			
+			if (empty($this->_request)) $this->set_request();
+			
 			$this->session = new $this->session_class;
 			$this->session->set_session_name($this->session_name);
 			
@@ -466,11 +468,6 @@ class FormController
 		}
 		return $this->_final_step;
 	} // }}}
-	/**
-	 * Make sure that _current_step is a valid form and that it makes sense in the flow of the form.
-	 * @return void
-	 * @access private
-	 */
 	 
 	/**
 	 * Return the name of the current step
@@ -498,6 +495,11 @@ class FormController
 		}
 	}
 
+	/**
+	 * Make sure that _current_step is a valid form and that it makes sense in the flow of the form.
+	 * @return void
+	 * @access private
+	 */
 	function validate_step() // {{{
 	{
 		if( empty( $this->_current_step ) )
@@ -553,10 +555,7 @@ class FormController
 	 * @return void
 	 */
 	function run() // {{{
-	{
-		//$this->init();  I think this is redundant
-		if (empty($this->_request)) $this->set_request();
-		
+	{		
 		$this->determine_step();
 		
 		if( empty( $this->_request[ $this->_step_var_name ] ) )
