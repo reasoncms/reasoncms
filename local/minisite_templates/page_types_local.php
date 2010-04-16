@@ -16,6 +16,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'navigation' => 'navigation',
 			'footer' => 'maintained',
 			'sub_nav' => 'luther_username',
+			'twitter_sub_nav' => 'twitter',
 			'sub_nav_2' => 'contact_blurb',
 			'sub_nav_3' => '',
 			'post_foot' => 'luther_footer',
@@ -280,11 +281,6 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'test_page' => array(
 			'main_post' => 'content',
 			'sub_nav_3'=> 'twitter',
-		),
-		'twitter' => array(
-			'sub_nav'=> 'twitter',
-			'sub_nav_2' => 'contact_blurb',
-			//'sub_nav_3' => 'blurb',
 		),
 );
 
