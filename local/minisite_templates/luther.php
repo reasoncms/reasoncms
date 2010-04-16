@@ -67,7 +67,10 @@ class LutherTemplate extends MinisiteTemplate
 
 		$this->run_section( 'bannerad' );
                 $this->run_section( 'sbvideo' );
-
+                if ($this->has_content( 'twitter_sub_nav' ))
+                {
+                        $this->run_section( 'twitter_sub_nav' );
+                }
                 if ($this->has_content( 'sub_nav_2' ))
 		// Contact Information
                 {
@@ -78,6 +81,7 @@ class LutherTemplate extends MinisiteTemplate
                 {
                         $this->run_section( 'sub_nav_3' );
                 }
+
 
 		echo '</div class="column span-24 append-1 ">'."\n";
 
