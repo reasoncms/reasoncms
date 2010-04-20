@@ -34,15 +34,15 @@ class IndividualVisitForm extends DefaultThorForm
 		if ($date['yday'] < $feb2) {
 			$this->change_element_type($grad_year, 'radio_inline', array(
 				'options' => array(
-					$date['year'], 
-					$date['year']+1, 
-					($date['year']+2)
+					$date['year'] => $date['year'], 
+					$date['year']+1 => $date['year']+1, 
+					($date['year']+2) => ($date['year']+2)
 					)));
 		}else{
 			$this->change_element_type($grad_year, 'radio_inline', array(
 				'options' => array( 
-					$date['year']+1, 
-					($date['year']+2)
+					$date['year']+1 => $date['year']+1, 
+					($date['year']+2) => ($date['year']+2)
 					)));
 		
 		}
