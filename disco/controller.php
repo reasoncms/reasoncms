@@ -654,8 +654,6 @@ class FormController
 		
 		$f->run_load_phase();
 		
-		$this->update_session_form_vars();
-		
 		if( !empty( $f->chosen_action ) )
 		{
 			if( $f->chosen_action == 'back' )
@@ -669,18 +667,21 @@ class FormController
 		if( empty( $form_jump ) )
 		{
 			$f->run_process_phase();
-			$this->update_session_form_vars();
 			
-			// $processed was added to FormStep to see if the form is done.  This will be false on first time or in
-			// error checking
+			// $processed was added to FormStep to see if the form is done.  
+			// This will be false on first time or in error checking. We
+			// don't want to load the form values into the session until
+			// the form has passed error checking.
 			if( $f->processed )
 			{
+				$this->update_session_form_vars();
 				$this->_add_step_to_path( $this->_current_step );
 				$form_jump = $this->_determine_next_step();
 			}
 		}
 		if( !empty( $form_jump ) )
 		{
+			$this->update_session_form_vars();
 			header('Location: '.$this->_base_url.'?'.$this->_step_var_name.'='.$form_jump);
 			exit;
 		}
@@ -937,6 +938,24 @@ class FormController
 		}
 	}
 
+	/**
+	 * Run the error check phase on a given step to determine if it has been
+	 * successfully submitted.
+	 * @access public
+	 * @return boolean
+	 */
+	function get_step_is_complete($step)
+	{
+		if (isset ($this->forms[ $step ]))
+		{
+			$this->forms[ $step ]->_run_all_error_checks();
+			return !$this->forms[ $step ]->_has_errors();
+		} else {
+			trigger_error( 'FormController Error: get_step_is_complete called on nonexistent step:' . $step);	
+			return false;
+		}			
+	}	
+	
 	//=========================================//
 	//========== PRIVATE METHODS ==============//
 	//=========================================//
