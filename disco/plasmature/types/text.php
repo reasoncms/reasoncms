@@ -36,7 +36,7 @@ class textType extends defaultType
 	
 	function get_display()
 	{
-		return '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" />';
+		return '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->name.'Element" />';
 	}
 }
 
@@ -64,7 +64,7 @@ class solidtextType extends defaultType
 	function get_display()
 	{
 		$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
-		$str .= "\n".'<div class="solidText">' . $this->get(). '</div>';
+		$str .= "\n".'<div class="solidText">' . htmlspecialchars($this->get(),ENT_QUOTES). '</div>';
 		return $str;
 	}
 }
@@ -89,7 +89,7 @@ class plainTextType extends defaultType
 	}
 	function get_display()
 	{
-		$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" />'.$this->get();
+		$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'" />'.htmlspecialchars($this->get(),ENT_QUOTES);
 		return $str;
 	}
 }
