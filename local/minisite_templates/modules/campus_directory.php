@@ -1019,11 +1019,18 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 	*/
 	function get_search_results($querystring) //{{{
 	{
-		$attributes = array('dn','carlnetid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
-			'eduPersonPrimaryAffiliation','carlOfficeLocation','carlCampusPostalAddress','telephoneNumber','carlSpouse','carlHideInfo',
-			'homePostalAddress', 'carlStudentPermanentAddress', 'homePhone', 'carlMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
-			'eduPersonAffiliation','carlStudentStatus','carlGraduationYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
-			'eduPersonEntitlement','mobile');
+		$attributes = array('dn','uid','ou','cn','sn','givenname','edupersonnickname','displayname','mail','title',
+			'edupersonprimaryaffiliation','carlOfficeLocation','carlCampusPostalAddress','officephone','spouse',
+			'address', 'major', 'edupersonprimaryaffiliation',
+			'edupersonaffiliation',
+			'edupersonentitlement','mobile');
+
+		/*$attributes = array('dn','carlnetid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+		*	'eduPersonPrimaryAffiliation','carlOfficeLocation','carlCampusPostalAddress','telephoneNumber','carlSpouse','carlHideInfo',
+		*	'homePostalAddress', 'carlStudentPermanentAddress', 'homePhone', 'carlMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
+		*	'eduPersonAffiliation','carlStudentStatus','carlGraduationYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
+		*	'eduPersonEntitlement','mobile');
+		*/
 
 		$dir = new directory_service('ldap_carleton');
 		$dir->search_by_filter($querystring, $attributes);
