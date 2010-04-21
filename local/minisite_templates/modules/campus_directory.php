@@ -376,13 +376,13 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 						echo '<li class="personStatus">'. $this->format_leave($data) . '</li>';
 					echo '</ul>';
 				}
-				if (isset($data['carlofficelocation']))
+				if (isset($data['officelocation']))
 				{
 					echo '<ul class="personCampusAddress">';
-					foreach ($data['carlofficelocation'] as $loc)
+					foreach ($data['officelocation'] as $loc)
 						echo '<li class="personOffice">'.$loc.'</li>';
-					if (isset($data['carlcampuspostaladdress']))
-						foreach ($data['carlcampuspostaladdress'] as $loc)
+					if (isset($data['campuspostaladdress']))
+						foreach ($data['campuspostaladdress'] as $loc)
 							echo '<li class="personMailstop">Mail stop: '.$loc.'</li>';
 					echo '</ul>';
 				}
@@ -492,7 +492,7 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 			{
 				$row[] = (isset($data['homepostaladdress'])) ? join(' / ', $this->format_postal_address($data['homepostaladdress'][0], false)) : '';
 			} else {
-				$row[] = (isset($data['carlofficelocation'])) ? join(' / ', $data['carlofficelocation']): '';				
+				$row[] = (isset($data['officelocation'])) ? join(' / ', $data['officelocation']): '';				
 			}
 			$output[] = $row;
 		}		
@@ -521,14 +521,14 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 			$row['email'] = (isset($data['mail'])) ? $data['mail'][0] : '';
 			$row['phone'] = $this->format_phone($data);
 			$row['dept'] = (isset($data['ou'])) ? join(' / ', $data['ou']): '';
-			$row['po'] = (isset($data['carlcampuspostaladdress'])) ? $data['carlcampuspostaladdress'][0] : '';
+			$row['po'] = (isset($data['campuspostaladdress'])) ? $data['campuspostaladdress'][0] : '';
 			if ($data['edupersonprimaryaffiliation'][0] == 'student')
 			{
 				$row['address'] = (isset($data['homepostaladdress'])) ? join(' / ', $this->format_postal_address($data['homepostaladdress'][0], false)) : '';
 				$row['major'] = (isset($data['carlmajor'])) ? $data['carlmajor'][0] : '';
 				$row['class'] = (isset($data['carlgraduationyear'])) ? $data['carlgraduationyear'][0] : '';
 			} else {
-				$row['address'] = (isset($data['carlofficelocation'])) ? join(' / ', $data['carlofficelocation']): '';				
+				$row['address'] = (isset($data['officelocation'])) ? join(' / ', $data['officelocation']): '';				
 			}
 			$output[] = $row;
 		}		
@@ -555,7 +555,7 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 	function scrub_results(&$results)
 	{
 		// Attributes which should be hidden from the external view
-		$ext_suppress = array('carlofficelocation','carlcampuspostaladdress', 'homepostaladdress',
+		$ext_suppress = array('officelocation','campuspostaladdress', 'homepostaladdress',
 			'carlstudentpermanentaddress', 'homephone', 'carlmajor', 'carlconcentration',
 			'carlhomeemail','carlspouse','carlgraduationyear','carlcohortyear','mobile',
 			'carlstudentstatus');
@@ -830,7 +830,7 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 		{
 			echo '<div id="campusDirHelp">';
 			if ($this->context == 'external')
-				echo '<p><strong>Off-campus users:</strong> If you have a Carleton account, you can <a href="/login/">log in for full directory access.</a></p>';
+				echo '<p><strong>Off-campus users:</strong> If you have a NorseKey, you can <a href="/login/">log in for full directory access.</a></p>';
 			echo get_text_blurb_content('campus_directory_corrections_blurb');
 			echo $blurb;
 			echo '</div>';
@@ -883,8 +883,10 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 		// discarding filters with only 3 elements
 		$filter[] = '(!(ou=Null temporary OU))'; // exclude temporary accounts
 		$filter[] = '(!(description=Left feed*))'; // exclude expired accounts
-		$filter[] = '(eduPersonEntitlement=urn:mace:carleton.edu:entl:whitepages)';
+		//$filter[] = '(eduPersonEntitlement=urn:mace:carleton.edu:entl:whitepages)';
+		$filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
 		if(!empty($id_number)) { 
+			//$filter[] = "(carlColleagueid$cmp$id_number)";
 			$filter[] = "(carlColleagueid$cmp$id_number)";
 			$filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
 		}
@@ -916,7 +918,7 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 		}
 		if(!empty($building)) {
 			$room = (!empty($room)) ? ' '.$room : '';
-			$filter[] = "(|(carlOfficeLocation$cmp$building$room$post)(carlStudentCampusAddress$cmp$building$room$post))";
+			$filter[] = "(|(officelocation$cmp$building$room$post)(carlStudentCampusAddress$cmp$building$room$post))";
 			$filter_desc[] = 'who live or work in '. $this->format_search_key($building . ' ' . $room);
 		}
 		if(!empty($major)) {
@@ -1020,7 +1022,7 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 	function get_search_results($querystring) //{{{
 	{
 		$attributes = array('dn','uid','ou','cn','sn','givenname','edupersonnickname','displayname','mail','title',
-			'edupersonprimaryaffiliation','carlOfficeLocation','carlCampusPostalAddress','officephone','spouse',
+			'edupersonprimaryaffiliation','officelocation','campuspostaladdress','officephone','spouse',
 			'address', 'major', 'edupersonprimaryaffiliation',
 			'edupersonaffiliation',
 			'edupersonentitlement','mobile');
@@ -1032,7 +1034,8 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 		*	'eduPersonEntitlement','mobile');
 		*/
 
-		$dir = new directory_service('ldap_carleton');
+		//$dir = new directory_service('ldap_carleton');
+		$dir = new directory_service('ldap_luther');
 		$dir->search_by_filter($querystring, $attributes);
 		$dir->sort_records(array('sn','givenname'));
 		$entries = $dir->get_records();
@@ -1143,10 +1146,12 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 	**/
 	function rebuild_menu_data()
 	{
-		$dir = new directory_service('ldap_carleton');
+		//$dir = new directory_service('ldap_carleton');
+		$dir = new directory_service('ldap_luther');
 		
 		// Get the full set of possible academic depts (not all have people)
-		$dir->set_search_params('ldap_carleton',array('base_dn' => 'dc=carleton,dc=edu'));
+		$dir->set_search_params('ldap_luther',array('base_dn' => 'dc=luther,dc=edu'));
+		//$dir->set_search_params('ldap_carleton',array('base_dn' => 'dc=carleton,dc=edu'));
 		$dir->search_by_filter('(businessCategory=ACADEMIC)', array('ou','description'));
 		$result = $dir->get_records();
 		foreach ($result as $dept)
@@ -1154,11 +1159,12 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 		asort($acad_all);
 		$acad_all_by_name = array_flip($acad_all);
 		
-		$dir->set_search_params('ldap_carleton',array('base_dn' => 'ou=people,dc=carleton,dc=edu'));
+		//$dir->set_search_params('ldap_carleton',array('base_dn' => 'ou=people,dc=carleton,dc=edu'));
+		$dir->set_search_params('ldap_luther',array('base_dn' => 'ou=people,dc=luther,dc=edu'));
 		
 		// Academic Departments
 		$filter = '(& (objectClass=carlPerson) (eduPersonAffiliation=faculty) (!(eduPersonAffiliation=staff)) (ou = *))';
-		if ($dir->search_by_filter($filter, array('ou','carlofficelocation')))
+		if ($dir->search_by_filter($filter, array('ou','officelocation')))
 		{
 			$faculty = $dir->get_records();
 			$menu_data['acad'] = $this->parse_attribute_data($faculty,'ou');
@@ -1168,8 +1174,8 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 		}
 
 		// Administrative Offices
-		$filter = '(& (objectClass=carlPerson) (eduPersonAffiliation=staff) (ou = *))';
-		if ($dir->search_by_filter($filter, array('ou','carlofficelocation')))
+		$filter = '(& (objectClass=eduperson) (edupersonaffiliation=staff) (ou = *))';
+		if ($dir->search_by_filter($filter, array('ou','officelocation')))
 		{
 			$staff = $dir->get_records();
 			$menu_data['admin'] = $this->parse_attribute_data($staff,'ou');
@@ -1222,8 +1228,8 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 		{
 			if (isset($val['carlstudentcampusaddress']))
 				$result[$key]['location'] = $val['carlstudentcampusaddress'];
-			else if (isset($val['carlofficelocation']))
-				$result[$key]['location'] = $val['carlofficelocation'];
+			else if (isset($val['officelocation']))
+				$result[$key]['location'] = $val['officelocation'];
 			else
 				continue;
 			
@@ -1317,7 +1323,8 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 		$this->pdf_fonts['helv'] = pdf_load_font($pdf, 'Helvetica', 'host', '');
 		$this->pdf_fonts['helvb'] = pdf_load_font($pdf, 'Helvetica-Bold', 'host', '');
 		$this->pdf_fonts['helvi'] = pdf_load_font($pdf, 'Helvetica-Oblique', 'host', '');
-		pdf_set_info($pdf, 'Author', 'Carleton College');
+		//pdf_set_info($pdf, 'Author', 'Carleton College');
+		pdf_set_info($pdf, 'Author', 'Luther College');
 		pdf_set_info($pdf, 'Title', 'Campus Directory');	
 		return $pdf;
 	}
@@ -1332,7 +1339,8 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 		{
 			if ($this->pdf_fonts['helvb']) pdf_setfont($f_pdf, $this->pdf_fonts['helvb'], 12);
 			pdf_setcolor($f_pdf, 'both', 'gray', .6, 0, 0, 0);
-			pdf_show_xy($f_pdf,'Printed '.date('M j, Y').'. For current directory information go to www.carleton.edu/campus/directory', 35, 765);
+			//pdf_show_xy($f_pdf,'Printed '.date('M j, Y').'. For current directory information go to www.carleton.edu/campus/directory', 35, 765);
+			pdf_show_xy($f_pdf,'Printed '.date('M j, Y').'. For current directory information go to www.luther.edu/directory', 35, 765);
 			pdf_setcolor($f_pdf, 'both', 'gray', 0, 0, 0, 0);
 		}
 		if ($page)
@@ -1531,7 +1539,8 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 					{
 						if ($this->pdf_fonts['helvb']) pdf_setfont($pdf, $this->pdf_fonts['helvb'], 11);
 						pdf_setcolor($pdf, 'both', 'gray', .6, 0, 0, 0);
-						pdf_show_xy($pdf,'Printed '.date('F j, Y').'. For current directory information go to www.carleton.edu/campus/directory',40, 765);
+						//pdf_show_xy($pdf,'Printed '.date('F j, Y').'. For current directory information go to www.carleton.edu/campus/directory',40, 765);
+						pdf_show_xy($pdf,'Printed '.date('F j, Y').'. For current directory information go to www.luther.edu/directory',40, 765);
 						pdf_setcolor($pdf, 'both', 'gray', 0, 0, 0, 0);
 						pdf_end_page($pdf);
 						pdf_begin_page($pdf, 612, 792);
@@ -1643,12 +1652,12 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 				}
 
 
-				if (isset($data['carlofficelocation']))
+				if (isset($data['officelocation']))
 				{
-					if (isset($data['carlcampuspostaladdress']))
-						$address = $data['carlofficelocation'][0] . '('. $data['carlcampuspostaladdress'][0] .')';
+					if (isset($data['campuspostaladdress']))
+						$address = $data['officelocation'][0] . '('. $data['campuspostaladdress'][0] .')';
 					else
-						$address = $data['carlofficelocation'][0];
+						$address = $data['officelocation'][0];
 					$address = str_replace('Language and Dining Center', 'LDC', $address);
 					$address = str_replace('Center for Math & Computing', 'CMC', $address);
 					$address = str_replace('Music & Drama Center', 'Music & Drama', $address);
