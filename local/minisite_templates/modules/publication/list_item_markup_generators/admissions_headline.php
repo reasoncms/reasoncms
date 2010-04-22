@@ -43,7 +43,6 @@ class HeadlineListItemMarkupGenerator extends PublicationMarkupGenerator
 
 
                 $this->markup_string .= '<p class="links">'."\n";
-//			$markup_string .= '<a href ="'.$this->passed_vars['link_to_full_item'].'">read spotlight &gt;</a>'."\n";
                 $full_link = $this->passed_vars['link_to_full_item'];
 		$full_link = preg_replace("|http(s)?:\/\/\w+\.\w+\.\w+|", "", $full_link);
 		$full_link = preg_replace("|admissions|", "headlines", $full_link);
