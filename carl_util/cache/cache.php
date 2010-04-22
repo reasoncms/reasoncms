@@ -13,6 +13,12 @@
 	 * @author Dave Hendler
 	 */
 	
+	/** 
+	 * require dependencies
+	 */
+	include_once('paths.php');
+	include_once( CARL_UTIL_INC . 'basic/url_funcs.php' );
+	
 	/**
 	 * Set up necessary constants
 	 */
@@ -40,7 +46,7 @@
 		var $dir = '/tmp';
 		var $instance = '';
 		var $log_file = '';
-		var $_logging = true;
+		var $_logging = false;
 		var $page_gen_time = 0;
 		
 		function PageCache() // {{{
@@ -81,28 +87,36 @@
 		} // }}}
 		function store( $key, $cache_val ) // {{{
 		{
-			$tmpfile = $this->dir.'/'.uniqid('reason_cache_');
+			$url = get_current_url();
+			$tmpfile = $this->dir.'/'.uniqid('reason_cache_'.md5($url), true);
 			$fp = fopen( $tmpfile, 'w' ) OR die( 'unable to open cache tmp' );
 			fwrite( $fp, $cache_val, strlen( $cache_val ) ) OR die( 'unable to write to cache tmp' );
 			fclose( $fp ) OR die( 'unable to close cache tmp' );
-			// _log() does check the _logging variable, but check it again here so we don't needlessly run the diff
-			if( $this->_logging )
+			if (file_exists($tmpfile))
 			{
-				$cmd = 'diff '.$tmpfile.' '.$this->_get_cache_file( $key );
+				rename( $tmpfile, $this->_get_cache_file( $key ) ) OR trigger_error( 'unable to rename cache file');
+				// _log() does check the _logging variable, but check it again here so we don't needlessly run the diff
+				if( $this->_logging )
+				{
+					$cmd = 'diff '.$tmpfile.' '.$this->_get_cache_file( $key );
 				
-                if(file_exists( $this->_get_cache_file( $key ) ) ){ 
-                    $diff = shell_exec( $cmd );
-                    }
-                else { 
-                    $diff = true ; // if the cache file does not exist, difference is inherent.
-                    }
-				
-				// DH 5/6/2005
-				// we're not using the diff stored in the table.  it's only taking up time and space right now.
-				$this->_log( $key, CACHE_LOG_MSG_STORE, $diff ? CACHE_LOG_MSG_STORE_DIFF : CACHE_LOG_MSG_STORE_NOT_DIFF );
-				//$this->_log( $key, CACHE_LOG_MSG_STORE, $diff ? CACHE_LOG_MSG_STORE_DIFF : CACHE_LOG_MSG_STORE_NOT_DIFF, $diff );
+					if(file_exists( $this->_get_cache_file( $key ) ) ){ 
+						$diff = shell_exec( $cmd );
+						}
+					else { 
+						$diff = true ; // if the cache file does not exist, difference is inherent.
+						}
+					
+					// DH 5/6/2005
+					// we're not using the diff stored in the table.  it's only taking up time and space right now.
+					$this->_log( $key, CACHE_LOG_MSG_STORE, $diff ? CACHE_LOG_MSG_STORE_DIFF : CACHE_LOG_MSG_STORE_NOT_DIFF );
+					//$this->_log( $key, CACHE_LOG_MSG_STORE, $diff ? CACHE_LOG_MSG_STORE_DIFF : CACHE_LOG_MSG_STORE_NOT_DIFF, $diff );
+				}
 			}
-			rename( $tmpfile, $this->_get_cache_file( $key ) ) OR trigger_error( 'unable to rename cache file',ERROR );
+			else
+			{
+				trigger_error( 'unable to rename cache file ' . $tmpfile . ' - the file does not exist' );
+			}	
 		} // }}}
 		function clear( $key ) // {{{
 		{
