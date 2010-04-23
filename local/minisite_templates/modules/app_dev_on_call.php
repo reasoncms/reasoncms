@@ -1,17 +1,8 @@
-<?php 
+<?php
+reason_include_once( 'minisite_templates/modules/default.php' );
 set_include_path('/usr/local/webapps/reason/reason_package/ZendGdata-1.10.3/library');
-echo 'begin';
-
-/**
-unset($CFG);
-// This file has all the site settings, such
-// as domain, admin user, password, and preferences
-include 'google-config.php';
-*/
-
-/**
- * @see Zend_Loader
- */
+$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'AppDevOnCallModule';
+//reason_include_once(DISCO.INC.'disco.php');
 require_once 'Zend/Loader.php';
 
 /**
@@ -34,6 +25,21 @@ Zend_Loader::loadClass('Zend_Gdata_ClientLogin');
  */
 Zend_Loader::loadClass('Zend_Gdata_Calendar');
 Zend_Loader::loadClass('Zend_Gdata_Extension_Visibility');
+
+
+class AppDevOnCallModule extends DefaultMinisiteModule
+{
+  function init( $args = array() )
+  {
+
+  }
+  
+  function has_content()
+  {
+    return true;
+  }
+
+   
 
 /**
  * Returns a HTTP client object with the appropriate headers for communicating
@@ -58,7 +64,7 @@ function getClientLoginHttpClient($user, $pass) {
  * @param  Zend_Http_Client $client The authenticated client object
  * @return void
  */
-function outputCalendar($client, $startDate='2010-04-22', $endDate='2010-04-23')
+function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute)
 {
   $gdataCal = new Zend_Gdata_Calendar($client);
   $query = $gdataCal->newEventQuery();
@@ -70,28 +76,53 @@ function outputCalendar($client, $startDate='2010-04-22', $endDate='2010-04-23')
   $query->setStartMax($endDate);
   $query->setFutureevents(false);
   $query->setSingleevents(true);
+  $query->setSortorder('a');
   $eventFeed = $gdataCal->getCalendarEventFeed($query);
-  // option 2
-  // $eventFeed = $gdataCal->getCalendarEventFeed($query->getQueryUrl());
-  echo "<ul>\n";
   foreach ($eventFeed as $event) {
-    echo "\t<li>" . $event->title->text;
-    // Zend_Gdata_App_Extensions_Title->__toString() is defined, so the
-    // following will also work on PHP >= 5.2.0
-    //echo "\t<li>" . $event->title .  " (" . $event->id . ")\n";
-    echo "\t\t<ul>\n";
     foreach ($event->when as $when) {
-      echo "\t\t\t<li>Starts: " . $when->startTime . "</li>\n";
-      echo "\t\t\t<li>Ends:  " . $when->endTime . "</li>\n";
+       $endTime =  split("T", $when->endTime);
+       $endTime = split(":", $endTime[1]);
+       $endHour = $endTime[0];
+       $endMinute = $endTime[1];
+       // if we haven't reached the end hour or we are currently living the end hour
+       if ($endHour >= $currentHour) {
+           //  if the end hour is the current hour we better check minutes
+           if ($endHour == $currentHour) {
+               //  if the ending minute has passed this is not the event we want
+               if ($endMinute >= $currentMinute) {
+                   //echo $event->title->text;
+                   return $event->title->text;
+               }
+           }
+           //  if the end hours do not match we know we haven't reached that time yet
+           else {
+               //echo $event->title->text;
+               return $event->title->text;
+           }
+       }
     }
-    echo "\t\t</ul>\n";
-    echo "\t</li>\n";
   }
-  echo "</ul>\n";
 }
 
-// log in 
-$client = getClientLoginHttpClient('google_api_user@luther.edu', "bTI1'+'9scGSkeORU";
+ function run()
+  { 
+        $today = date("Y-m-d");
+        $tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
+        $tomorrow = date("Y-m-d", $tomorrow_temp);
+        $day_after_tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+2, date("Y"));
+        $day_after_tomorrow = date("Y-m-d", $day_after_tomorrow_temp);
 
-outputCalendar($client);
+        $client = $this->getClientLoginHttpClient('google_api_user@luther.edu', 'bTI1+9scGSkeORU');
+        $currentHour = date("H");
+        $currentMinute = date("i");
+
+        $onCall = $this->getPerson($client, $today, $tomorrow, $currentHour, $currentMinute);
+        if ($onCall != '') {
+             echo "The on call person for today is: ".$onCall;
+        }
+         else {
+             echo "nobody is on call at the current time";
+        }    
+  }
+}
 ?>
