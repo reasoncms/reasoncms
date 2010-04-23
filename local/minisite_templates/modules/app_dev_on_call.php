@@ -117,7 +117,7 @@ function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute)
         $currentMinute = date("i");
 
         $onCall = $this->getPerson($client, $today, $tomorrow, $currentHour, $currentMinute);
-        if (($onCall != '') {
+        if ($onCall != '') {
              // this is where we should send a text message and probably an email to the on-call person
              echo "The on call person for today is ".$onCall.".";
         }
