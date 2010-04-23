@@ -92,7 +92,7 @@ function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute)
        
        // if we haven't reached the end hour or we are currently living the end hour
        //echo '</br>' . $event->title->text . ' ' . $startHour . ' ' . $endHour . ' ' . $currentHour;
-       echo 'current hour: '.$currentHour;
+       //echo 'current hour: '.$currentHour;
        if (($endHour >= $currentHour) and ($startHour <= $currentHour)) {
            //  if the end hour is the current hour we better check minutes
            if ($endHour == $currentHour) {
