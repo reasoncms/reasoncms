@@ -109,19 +109,23 @@ function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute)
         $today = date("Y-m-d");
         $tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
         $tomorrow = date("Y-m-d", $tomorrow_temp);
-        $day_after_tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+2, date("Y"));
-        $day_after_tomorrow = date("Y-m-d", $day_after_tomorrow_temp);
+        $next_week_temp = mktime(0, 0, 0, date("m")  , date("d")+7, date("Y"));
+        $next_week = date("Y-m-d", $next_week_temp);
 
         $client = $this->getClientLoginHttpClient('google_api_user@luther.edu', 'bTI1+9scGSkeORU');
         $currentHour = date("H");
         $currentMinute = date("i");
 
         $onCall = $this->getPerson($client, $today, $tomorrow, $currentHour, $currentMinute);
-        if ($onCall != '') {
+        if (($onCall != '') {
+             // this is where we should send a text message and probably an email to the on-call person
              echo "The on call person for today is ".$onCall.".";
         }
          else {
-             echo "nobody is on call at the current time";
+             // this is where we would let the HD/requestor know that nobody is on-call at this time and
+             //   send an email to the next available on call person (next available)
+             $next_available = $onCall = $this->getPerson($client, $today, $next_week, $currentHour, $currentMinute);
+             echo "Nobody is on call at the current time, but " . $next_available . " is next in line";
         }    
   }
 }
