@@ -84,12 +84,18 @@ function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute)
        $endTime = split(":", $endTime[1]);
        $endHour = $endTime[0];
        $endMinute = $endTime[1];
+       
+       $startTime =  split("T", $when->startTime);
+       $startTime = split(":", $startTime[1]);
+       $startHour = $startTime[0];
+       $startMinute = $startTime[1];
+       
        // if we haven't reached the end hour or we are currently living the end hour
-       if ($endHour >= $currentHour) {
+       if (($endHour >= $currentHour) and ($startHour <= $currentHour)) {
            //  if the end hour is the current hour we better check minutes
            if ($endHour == $currentHour) {
                //  if the ending minute has passed this is not the event we want
-               if ($endMinute >= $currentMinute) {
+               if (($endMinute >= $currentMinute) and ($startMinute <= $currentMinute)) {
                    //echo $event->title->text;
                    return $event->title->text;
                }
