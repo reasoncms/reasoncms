@@ -118,7 +118,7 @@ function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute)
 
         $onCall = $this->getPerson($client, $today, $tomorrow, $currentHour, $currentMinute);
         if ($onCall != '') {
-             echo "The on call person for today is: ".$onCall;
+             echo "The on call person for today is ".$onCall.".";
         }
          else {
              echo "nobody is on call at the current time";
