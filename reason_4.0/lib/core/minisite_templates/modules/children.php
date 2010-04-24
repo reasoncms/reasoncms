@@ -136,7 +136,11 @@
 					{
 						/* If the page has a link name, use that; otherwise, use its name */
 						$page_name = $child->get_value( 'link_name' ) ? $child->get_value( 'link_name' ) : $child->get_value('name');
-						
+						$title_attr = '';
+						if( $page_name != $child->get_value('name') )
+						{
+							$title_attr = ' title="'.reason_htmlspecialchars(strip_tags($child->get_value('name')),ENT_QUOTES).'"';
+						}
 						$page_name = strip_tags($page_name,'<span><strong><em>');
 						/* Check for a url (that is, the page is an external link); otherwise, use its relative address */
 						if( $child->get_value( 'url' ) )
@@ -165,7 +169,7 @@
 						if($this->params['description_part_of_link'])
 						{
 							// needs somewhat different html since inline elements cannot contain block elements
-							echo '<a href="'.$link.'"><strong>'.$page_name.'</strong><br />';
+							echo '<a href="'.$link.'"'.$title_attr.'><strong>'.$page_name.'</strong><br />';
 							if ( $child->get_value( 'description' ))
 							{
 								echo "\n".'<span class="childDesc">'.$child->get_value( 'description' ).'</span>';
@@ -174,7 +178,7 @@
 						}
 						else
 						{
-							echo '<h4><a href="'.$link.'">'.$page_name.'</a></h4>';
+							echo '<h4><a href="'.$link.'"'.$title_attr.'>'.$page_name.'</a></h4>';
 							if ( $child->get_value( 'description' ))
 							{
 								echo "\n".'<div class="childDesc">'.$child->get_value( 'description' ).'</div>';
