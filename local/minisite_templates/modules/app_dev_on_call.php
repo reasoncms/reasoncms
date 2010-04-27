@@ -91,7 +91,7 @@ function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute, 
        $startMinute = $startTime[1];
        
        // if findNext is true then we don't care about times, we just want to find the next appointment in the future
-       if $findNext {
+       if ($findNext) {
           return $event->title->text;
        }
        // if we haven't reached the end hour or we are currently living the end hour
