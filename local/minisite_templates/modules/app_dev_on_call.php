@@ -91,7 +91,7 @@ function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute, 
        $startMinute = $startTime[1];
        
        // if findNext is true then we don't care about times, we just want to find the next appointment in the future
-       if ($findNext) {
+       if ($findNext == 1) {
           return $event->title->text;
        }
        // if we haven't reached the end hour or we are currently living the end hour
@@ -128,7 +128,7 @@ function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute, 
         $currentHour = date("H");
         $currentMinute = date("i");
 
-        $onCall = $this->getPerson($client, $today, $tomorrow, $currentHour, $currentMinute, false);
+        $onCall = $this->getPerson($client, $today, $tomorrow, $currentHour, $currentMinute, 0);
         if ($onCall != '') {
              // this is where we should send a text message and probably an email to the on-call person
              echo "The on call person for today is ".$onCall.".";
@@ -136,7 +136,7 @@ function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute, 
          else {
              // this is where we would let the HD/requestor know that nobody is on-call at this time and
              //   send an email to the next available on call person (next available)
-             $next_available = $this->getPerson($client, $today, $next_week, $currentHour, $currentMinute, true);
+             $next_available = $this->getPerson($client, $today, $next_week, $currentHour, $currentMinute, 1);
              echo "Nobody is on call at the current time, but " . $next_available . " is next in line";
         }    
   }
