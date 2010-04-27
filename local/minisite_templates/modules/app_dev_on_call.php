@@ -132,7 +132,7 @@ function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute)
          else {
              // this is where we would let the HD/requestor know that nobody is on-call at this time and
              //   send an email to the next available on call person (next available)
-             $next_available = $onCall = $this->getPerson($client, $today, $next_week, $currentHour, $currentMinute);
+             $next_available = $this->getPerson($client, $today, $next_week, $currentHour, $currentMinute);
              echo "Nobody is on call at the current time, but " . $next_available . " is next in line";
         }    
   }
