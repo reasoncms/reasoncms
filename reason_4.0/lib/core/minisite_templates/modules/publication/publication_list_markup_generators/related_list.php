@@ -33,8 +33,15 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 	function run()
 	{	
 		$this->markup_string .= $this->get_featured_items_markup();
+		$this->markup_string .= $this->get_pre_list_markup();
 		$this->markup_string .= $this->get_list_markup();
 		$this->markup_string .= $this->get_post_list_markup();
+	}
+	
+	function get_pre_list_markup()
+	{
+		$markup_string = '';
+		return $markup_string;
 	}
 	
 	function get_post_list_markup()
