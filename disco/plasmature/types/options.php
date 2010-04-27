@@ -546,6 +546,7 @@ class numrangeType extends selectType
 								  );
 	function load_options( $args = array() )
 	{
+		$this->options = array();
 		$this->add_numrange_to_options();
 	}
 	function add_numrange_to_options()
