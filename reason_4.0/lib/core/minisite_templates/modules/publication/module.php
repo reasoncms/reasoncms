@@ -1981,6 +1981,7 @@ class PublicationModule extends Generic3Module
 				$alias['pub_id'] = current($es->add_left_relationship_field( 'news_to_publication', 'entity', 'id', 'publication_id' ));
 				$es->add_relation($alias['rel_pub_id']['table'] . '.id IN ('.$related_pub_ids.')');
 				$es->add_relation($alias['rel_pub_id']['table'] . '.id = '.$alias['pub_id']['table'] . '.id');
+				$es->add_relation('status.status = "published"');
 				$es->set_order('dated.datetime DESC');
 				$fi = $es->run_one();
 				if (!empty($fi))
