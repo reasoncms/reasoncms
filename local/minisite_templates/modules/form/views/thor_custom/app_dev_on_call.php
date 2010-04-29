@@ -65,7 +65,7 @@ class AppDevOnCallForm extends DefaultThorForm
 	 * @param  Zend_Http_Client $client The authenticated client object
 	 * @return void
 	 */
-	function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute, $findNext)
+	function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute)
 	{
 	  $gdataCal = new Zend_Gdata_Calendar($client);
 	  $query = $gdataCal->newEventQuery();
@@ -81,38 +81,7 @@ class AppDevOnCallForm extends DefaultThorForm
 	  $eventFeed = $gdataCal->getCalendarEventFeed($query);
 	  foreach ($eventFeed as $event) {
 	    foreach ($event->when as $when) {
-	       $endTime =  split("T", $when->endTime);
-	       $endTime = split(":", $endTime[1]);
-	       $endHour = $endTime[0];
-	       $endMinute = $endTime[1];
-	       
-	       $startTime =  split("T", $when->startTime);
-	       $startTime = split(":", $startTime[1]);
-	       $startHour = $startTime[0];
-	       $startMinute = $startTime[1];
-	       
-	       // if findNext is true then we don't care about times, we just want to find the next appointment in the future
-	       if ($findNext) {
-	          return $event->title->text;
-	       }
-	       // if we haven't reached the end hour or we are currently living the end hour
-	       //echo '</br>' . $event->title->text . ' ' . $startHour . ' ' . $endHour . ' ' . $currentHour;
-	       //echo 'current hour: '.$currentHour;
-	       if (($endHour >= $currentHour) and ($startHour <= $currentHour)) {
-	           //  if the end hour is the current hour we better check minutes
-	           if ($endHour == $currentHour) {
-	               //  if the ending minute has passed this is not the event we want
-	               if (($endMinute >= $currentMinute) and ($startMinute <= $currentMinute)) {
-	                   //echo $event->title->text;
-	                   return $event->title->text;
-	               }
-	           }
-	           //  if the end hours do not match we know we haven't reached that time yet
-	           else {
-	               //echo $event->title->text;
 	               return $event->title->text;
-	           }
-	       }
 	    }
 	  }
 	}
@@ -157,17 +126,15 @@ class AppDevOnCallForm extends DefaultThorForm
 		if ($username = 'steve')
 			$this -> set_error('username', 'invalid username');
 
-		$today = date("Y-m-d");
+		$now = date("c");
 		$tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
 		$tomorrow = date("Y-m-d", $tomorrow_temp);
 		$next_week_temp = mktime(0, 0, 0, date("m")  , date("d")+7, date("Y"));
 		$next_week = date("Y-m-d", $next_week_temp);
 		
 		$client = $this->getClientLoginHttpClient('google_api_user@luther.edu', 'bTI1+9scGSkeORU');
-		$currentHour = date("H");
-		$currentMinute = date("i");
 		
-		$onCall = $this->getPerson($client, $today, $tomorrow, $currentHour, $currentMinute, false);
+		$onCall = $this->getPerson($client, $now, $tomorrow, $currentHour, $currentMinute);
 		if ($onCall != '') {
 		     // this is where we should send a text message and probably an email to the on-call person
 		     echo "The on call person for today is ".$onCall.".";
@@ -177,7 +144,7 @@ class AppDevOnCallForm extends DefaultThorForm
 		 else {
 		     // this is where we would let the HD/requestor know that nobody is on-call at this time and
 		     //   send an email to the next available on call person (next available)
-		     $next_available = $this->getPerson($client, $tomorrow, $next_week, $currentHour, $currentMinute, true);
+		     $next_available = $this->getPerson($client, $now, $next_week, $currentHour, $currentMinute);
 		     //echo "Nobody is on call at the current time, but " . $next_available . " is next in line";
 		     //echo $next_available.'<br />';
 		      $t = $this->get_developer_info($next_available);
