@@ -1030,16 +1030,22 @@ echo '<p>how about them Cubbies</a></p>';
 	*/
 	function get_search_results($querystring) //{{{
 	{
-		$attributes = array('dn','uid','ou','cn','sn','givenname','eduPersonNickname','displayName','mail','title',
-			'eduPersonPrimaryAffiliation','studentPostOffice','officephone','officeBldg','spouseName',
-			'address', 'studentMajor', 'edupersonprimaryaffiliation', 'departmentName', 'studentMinor',
-			'eduPersonAffiliation',
-			'edupersonentitlement','mobile');
+		$attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+			'eduPersonPrimaryAffiliation','officeBldg','studentPostOffice','officephone','spouseName',
+			'address', /*'carlStudentPermanentAddress', 'homePhone'*/'studentMajor','studentSpecialization',
+                        'edupersonprimaryaffiliation',
+                        'eduPersonAffiliation','studentStatus', 'alumclassyear',
+                        /*'carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',*/
+                        'departmentName', 'studentMinor',
+			'eduPersonEntitlement','mobile');
 
 		/*$attributes = array('dn','carlnetid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
-		*	'eduPersonPrimaryAffiliation','carlOfficeLocation','carlCampusPostalAddress','telephoneNumber','carlSpouse','carlHideInfo',
-		*	'homePostalAddress', 'carlStudentPermanentAddress', 'homePhone', 'carlMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
-		*	'eduPersonAffiliation','carlStudentStatus','carlGraduationYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
+		*	'eduPersonPrimaryAffiliation','carlOfficeLocation','carlCampusPostalAddress','telephoneNumber','carlSpouse',
+                *       'carlHideInfo',
+		*	'homePostalAddress', 'carlStudentPermanentAddress', 'homePhone', 'carlMajor', 'carlConcentration',
+                *       'eduPersonPrimaryAffiliation',
+		*	'eduPersonAffiliation','carlStudentStatus','carlGraduationYear',
+                *       'carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
 		*	'eduPersonEntitlement','mobile');
 		*/
 
