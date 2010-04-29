@@ -122,11 +122,21 @@ class AppDevOnCallForm extends DefaultThorForm
 		$developer = strtolower($developer);
 		switch ($developer)
 		{
+			/*
+			US Cellular: 	phonenumber@email.uscc.net
+			SunCom: 		phonenumber@tms.suncom.com
+			Powertel: 		phonenumber@ptel.net	
+			AT&T: 			phonenumber@txt.att.net
+			Alltel: 		phonenumber@message.alltel.com
+			Metro PCS: 		phonenumber@MyMetroPcs.com
+			Verizon:		phonenumber@vtext.com
+			*/
+
 			case "ben": $dev = array('email' => 'wilbbe01@luther.edu', 'sms' => '5074290136@vtext.com');
 				break;
 			case "bob": $dev = array('email' => 'puffro01@luther.edu', 'sms' => '');
 				break;
-			case "cindy": $dev = array('email' => 'goede@luther.edu', 'sms' => '');
+			case "cindy": $dev = array('email' => 'goede@luther.edu', 'sms' => '5633808899@email.uscc.net');
 				break;
 			case "jean": $dev = array('email' => 'gehlje01@luther.edu', 'sms' => '');
 				break;
