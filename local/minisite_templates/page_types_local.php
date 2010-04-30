@@ -87,6 +87,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'alumni_auction_registration' => array(
 			'main_post' => 'alumni_auction_pricing',
 		),
+		'app_dev_on_call' => array(
+			'main_post' => 'app_dev_on_call',
+		),
 		'directions' => array(
 			'main' => 'directions',
 			'main_post' => 'content',
@@ -105,7 +108,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'faculty' => array(
 			'main_post' => 'luther_faculty'
 		),
-	'image_slideshow' => array(
+		'gift_page_engine' => array(
+            'main_post' => 'gift_form',
+        ),
+		'image_slideshow' => array(
 			//'main' => 'luther_flickr_slideshow',
                         'main_post' => 'luther_image_slideshow',
                         'sidebar' => '',
@@ -380,7 +386,7 @@ function admissions_main_navigation()
         	echo '<li><a href="/admissions/lifeafterluther/outcomes/">Outcomes&mdash;Class of 2008</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeafterluther/reports/">Reports by Class</a></li>'."\n";
         	echo '</ul></li>'."\n";
-        echo '<li class="financialAid"><a href="/admissions/financialaid/">Financial Aid</a>'."\n";
+        echo '<li class="financialAid"><a href="/financialaid/">Financial Aid</a>'."\n";
 			echo '<ul>'."\n";
         	echo '<li><a href="/financialaid/applying/">How to Apply for Aid</a></li>'."\n";
         	echo '<li><a href="/financialaid/current/scholarships/">Scholarship & Awards</a></li>'."\n";
@@ -390,6 +396,7 @@ function admissions_main_navigation()
         	echo '<li><a href="/financialaid/news/">What\'s New</a></li>'."\n";
        	 	echo '<li><a href="http://www.fafsa.gov/">Free Application for Federal Student Aid (FAFSA)</a></li>'."\n";
        	 	echo '<li><a href="/financialaid/forms/">Forms</a></li>'."\n";
+       	 	echo '<li><a href="/financialaid/consumer/">Consumer Information</a></li>'."\n";
         	echo '<li><a href="/financialaid/faq/">FAQ</a></li>'."\n";
         	echo '<li><a href="/financialaid/staff/">Staff</a></li>'."\n";
         	echo '</ul></li>'."\n";
