@@ -1,5 +1,5 @@
 <?php
-set_include_path('/usr/local/webapps/reason/reason_package/ZendGdata-1.10.3/library');
+//set_include_path('/usr/local/webapps/reason/reason_package/ZendGdata-1.10.3/library');
 /**
  * Zend Framework
  *
