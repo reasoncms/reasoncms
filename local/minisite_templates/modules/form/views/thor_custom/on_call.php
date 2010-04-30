@@ -185,24 +185,10 @@ class AppDevOnCallForm extends DefaultThorForm
 		$subject = $problem;
 		$html_body = '';
 		
-		$model =& $this->get_model();
-		$email_values = $model->get_values_for_email_submitter_view();
-		$values = "\n";
-			if ($model->should_email_data())
-			{
-				foreach ($email_values as $key => $val)
-				{
-					$values .= sprintf("\n%s:\n   %s\n", $val['label'], $val['value']);
-				}
-			}
-			
+
 		$txt_body = $this->get_value_from_label('Username')."\n";
 		$txt_body .= $info['officephone'][0]."\n";
 		if (isset($info['officephone'][1])) $txt_body .= $info['officephone'][1];
-		
-		$other = $this->get_value_from_label('Other');
-		if ($other != '');
-			$txt_body .= $other;
 		
 		$mailer = new Email($recipient, $sender, $sender, $subject, $txt_body, $html_body);
 		$mailer->send();
@@ -210,11 +196,11 @@ class AppDevOnCallForm extends DefaultThorForm
 	
 	function on_every_time()
 	{	
-		//$date = $this->get_element_name_from_label('Date needed');
-		//$this->change_element_type($date, 'textdate', array('display_name'=>'Desired "go live" date',));
-		//$url_field = $this->get_element_name_from_label('Your website URL');
-		//$plain = 'www.luther.edu/page/to/work/on';
-		//$this->add_comments($url_field, '<br />e.g. <em>'.$plain.'</em>');
+		$username_field = $this->get_element_name_from_label('Username');
+		$emergency_field = $this->get_element_name_from_label('Emergency'); 
+		
+		$this->set_comments($username_field, '<br />The username of the user having the problem<br />');
+		$this->change_element_type($emergency_field, 'radio_with_other_no_sort');
 
 	}
 }
