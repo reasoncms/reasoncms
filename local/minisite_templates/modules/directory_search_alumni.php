@@ -1035,7 +1035,9 @@ echo '<p>how about them Cubbies</a></p>';
 			'address','ocPostalAddress', 'ocPhone','studentMajor','studentSpecialization',
                         'edupersonprimaryaffiliation',
                         'eduPersonAffiliation','studentStatus','alumclassyear',
-                        /*'carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',*/
+                        
+                        '2012'=>'carlCohortYear','home_email'=>'carlHomeEmail','Spring'=>'carlFacultyLeaveTerm','true'=>'carlHidePersonalInfo',
+                        
 			'eduPersonEntitlement','mobile');
 
 		/*$attributes = array('dn','carlnetid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
@@ -1050,7 +1052,12 @@ echo '<p>how about them Cubbies</a></p>';
 
 		//$dir = new directory_service('ldap_carleton');
 		$dir = new directory_service('ldap_luther');
-		$dir->search_by_filter($querystring, $attributes);
+		//$dir->search_by_filter($querystring, $attributes);  ///ORIGINAL LINE
+		$dir->search_by_filter($first_name, $attributes);
+	//$temp = $this->get_value('first_name');
+		//echo $temp;
+		//$dir->search_by_attribute('uid', 'smitst01', $attributes);
+		pray($dir);
 		$dir->sort_records(array('sn','givenname'));
 		$entries = $dir->get_records();
 		return $entries;
@@ -1162,7 +1169,7 @@ echo '<p>how about them Cubbies</a></p>';
 	{
 		//$dir = new directory_service('ldap_carleton');
 		$dir = new directory_service('ldap_luther');
-		
+		pray($dir);
 		// Get the full set of possible academic depts (not all have people)
 		$dir->set_search_params('ldap_luther',array('base_dn' => 'dc=luther,dc=edu'));
 		//$dir->set_search_params('ldap_carleton',array('base_dn' => 'dc=carleton,dc=edu'));
