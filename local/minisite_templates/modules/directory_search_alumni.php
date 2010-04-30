@@ -1032,9 +1032,9 @@ echo '<p>how about them Cubbies</a></p>';
 	{
 		$attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
 			'eduPersonPrimaryAffiliation','officeBldg','studentPostOffice','officephone','spouseName',
-			'address', ocPostalAddress', 'ocPhone','studentMajor','studentSpecialization',
+			'address','ocPostalAddress', 'ocPhone','studentMajor','studentSpecialization',
                         'edupersonprimaryaffiliation',
-                        'eduPersonAffiliation','studentStatus', 'alumclassyear',
+                        'eduPersonAffiliation','studentStatus','alumclassyear',
                         /*'carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',*/
 			'eduPersonEntitlement','mobile');
 
