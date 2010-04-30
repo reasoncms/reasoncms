@@ -337,21 +337,21 @@ echo '<p>how about them Cubbies</a></p>';
 			if ($this->form->get_value('pictures') != false)
 			{	
 				echo '<div class="personPhoto">';
-				echo '<img src="/stock/ldapimage.php?id='.$data['carlnetid'][0].'">';
+				echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
 				echo '</div>';
 			}
 			echo '<div class="personBody '.$image_class.'">';
 			echo '<div class="personHeader">';
 			echo '<ul>';
 			echo '<li class="personName">' . $this->format_name($data) . '</li>';
-			if (isset($data['carlgraduationyear']))
+			if (isset($data['alumclassyear']))
 			{
-				echo '<li class="personYear">'.$data['carlgraduationyear'][0].'</li>';
+				echo '<li class="personYear">'.$data['alumclassyear'][0].'</li>';
 			} else {
 				if ($affil = $this->format_affiliation($data))
 					echo '<li class="personAffil">'.$affil.'</li>';
 			}
-			if (isset($data['carlmajor']) && $data['edupersonprimaryaffiliation'][0] == 'student')
+			if (isset($data['studentMajor']) && $data['edupersonprimaryaffiliation'][0] == 'student')
 			{
 				echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
 			}
@@ -393,23 +393,23 @@ echo '<p>how about them Cubbies</a></p>';
 							echo '<li class="personMailstop">Mail stop: '.$loc.'</li>';
 					echo '</ul>';
 				}
-				if (isset($data['homepostaladdress']) && !isset($data['carlhidepersonalinfo']))
+				if (isset($data['address']) && !isset($data['carlhidepersonalinfo']))
 				{
 					echo '<ul class="personHomeAddress">';
-					echo $this->format_postal_address($data['homepostaladdress'][0]);
+					echo $this->format_postal_address($data['address'][0]);
 					if (isset($data['homephone']))
 						echo '<li class="personHomePhone">'.$data['homephone'][0].'</li>';
-					if (isset($data['carlspouse']))
-						echo '<li class="personSpouse">'.$data['carlspouse'][0].'</li>';
+					if (isset($data['spousename']))
+						echo '<li class="personSpouse">'.$data['spousename'][0].'</li>';
 				}
 				
 			}
 			else // if this is a student
 			{
 				echo '<ul class="personCampusAddress">';
-				if (isset($data['homepostaladdress']))
+				if (isset($data['address']))
 				{
-					echo $this->format_postal_address($data['homepostaladdress'][0]);
+					echo $this->format_postal_address($data['address'][0]);
 				}
 				if ($status = $this->format_status($data))
 					echo '<li class="personStatus">'.$status.'</li>';
@@ -451,19 +451,19 @@ echo '<p>how about them Cubbies</a></p>';
 		foreach ($people as $data) {			
 			echo '<div class="person">';
 			echo '<div class="personPhoto">';
-			echo '<img src="/stock/ldapimage.php?id='.$data['carlnetid'][0].'">';
+			echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
 			echo '</div>';
 			echo '<div class="personInfo">';
 			echo '<ul>';
-			echo '<li class="personName">' . $this->make_search_link($this->format_name($data),'netid[]',$data['carlnetid'][0]);
-			if (isset($data['carlgraduationyear']))
+			echo '<li class="personName">' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]);
+			if (isset($data['alumclassyear']))
 			{
-				echo ', '.$data['carlgraduationyear'][0];
+				echo ', '.$data['alumclassyear'][0];
 			}
 			echo '</li>';
 			if ($data['edupersonprimaryaffiliation'][0] == 'student')
 			{
-				if (isset($data['carlmajor']))
+				if (isset($data['studentMajor']))
 				{
 					echo '<li>'.$this->format_majors($data).'</li>';
 				}				
@@ -497,7 +497,7 @@ echo '<p>how about them Cubbies</a></p>';
 			$row[] = (isset($data['ou'])) ? join(' / ', $data['ou']): '';
 			if ($data['edupersonprimaryaffiliation'][0] == 'student')
 			{
-				$row[] = (isset($data['homepostaladdress'])) ? join(' / ', $this->format_postal_address($data['homepostaladdress'][0], false)) : '';
+				$row[] = (isset($data['address'])) ? join(' / ', $this->format_postal_address($data['address'][0], false)) : '';
 			} else {
 				$row[] = (isset($data['officelocation'])) ? join(' / ', $data['officelocation']): '';				
 			}
@@ -520,7 +520,7 @@ echo '<p>how about them Cubbies</a></p>';
 		$output = array();
 		foreach ($people as $data) {			
 			$row = array();
-			$row['netid'] = $data['carlnetid'][0];
+			$row['netid'] = $data['uid'][0];
 			$row['fullname'] = $this->format_name($data);
 			$row['lastname'] = $data['sn'][0];
 			$row['firstname'] = $data['givenname'][0];
@@ -531,9 +531,9 @@ echo '<p>how about them Cubbies</a></p>';
 			$row['po'] = (isset($data['campuspostaladdress'])) ? $data['campuspostaladdress'][0] : '';
 			if ($data['edupersonprimaryaffiliation'][0] == 'student')
 			{
-				$row['address'] = (isset($data['homepostaladdress'])) ? join(' / ', $this->format_postal_address($data['homepostaladdress'][0], false)) : '';
-				$row['major'] = (isset($data['carlmajor'])) ? $data['carlmajor'][0] : '';
-				$row['class'] = (isset($data['carlgraduationyear'])) ? $data['carlgraduationyear'][0] : '';
+				$row['address'] = (isset($data['address'])) ? join(' / ', $this->format_postal_address($data['address'][0], false)) : '';
+				$row['major'] = (isset($data['studentMajor'])) ? $data['StudentMajor'][0] : '';
+				$row['class'] = (isset($data['alumclassyear'])) ? $data['alumclassyear'][0] : '';
 			} else {
 				$row['address'] = (isset($data['officelocation'])) ? join(' / ', $data['officelocation']): '';				
 			}
@@ -562,10 +562,10 @@ echo '<p>how about them Cubbies</a></p>';
 	function scrub_results(&$results)
 	{
 		// Attributes which should be hidden from the external view
-		$ext_suppress = array('officelocation','campuspostaladdress', 'homepostaladdress',
-			'carlstudentpermanentaddress', 'homephone', 'carlmajor', 'carlconcentration',
-			'carlhomeemail','carlspouse','carlgraduationyear','carlcohortyear','mobile',
-			'carlstudentstatus');
+		$ext_suppress = array('officelocation','campuspostaladdress', 'address',
+			'carlstudentpermanentaddress', 'homephone', 'studentMajor', 'studentspecialization',
+			'carlhomeemail','spousename','alumclassyear','carlcohortyear','mobile',
+			'studentstatus');
 		
 		foreach ($results as $key => $data)
 		{
@@ -578,9 +578,9 @@ echo '<p>how about them Cubbies</a></p>';
 
 			if (isset($data['carlhidepersonalinfo']))
 			{
-				unset($results[$key]['homepostaladdress']);
+				unset($results[$key]['address']);
 				unset($results[$key]['homephone']);
-				unset($results[$key]['carlspouse']);
+				unset($results[$key]['spousename']);
 			}
 			
 			if ($this->context == 'external')
@@ -637,8 +637,8 @@ echo '<p>how about them Cubbies</a></p>';
 			if (isset($data['homephone']))
 				$phones = $data['homephone'];
 		} else {
-			if (isset($data['telephonenumber']))
-				$phones = $data['telephonenumber'];
+			if (isset($data['officephone']))
+				$phones = $data['officephone'];
 		}
 		
 		foreach ($phones as $phone)
@@ -648,8 +648,8 @@ echo '<p>how about them Cubbies</a></p>';
 			// who need full numbers listed.
 			if ($this->context <> 'external' && 
 			     !($data['edupersonprimaryaffiliation'][0] == 'student' &&
-			     isset($data['homepostaladdress']) &&
-			     stristr($data['homepostaladdress'][0],'Northfield')) && 
+			     isset($data['address']) &&
+			     stristr($data['address'][0],'Northfield')) && 
 			       strpos($phone, '+1 507 222') !== FALSE) 
 			{ 
 				$phonetemp = str_replace('+1 507 222 ', '', $phone);
@@ -797,8 +797,8 @@ echo '<p>how about them Cubbies</a></p>';
 		$statusFlag['X'] = 'Early Finish';
 		$statusFlag['O'] = 'Off Campus Program';
 		
-		if (isset($data['carlstudentstatus']))
-			return $statusFlag[$data['carlstudentstatus'][0]];
+		if (isset($data['studentstatus']))
+			return $statusFlag[$data['studentstatus'][0]];
 		else
 			return false;
 	}
@@ -918,7 +918,7 @@ echo '<p>how about them Cubbies</a></p>';
 			}
 		}
 		if(!empty($phone_number)) {
-			$filter[] = "(|(homePhone$cmp$post$phone_number)(telephoneNumber$cmp$post$phone_number))";
+			$filter[] = "(|(homePhone$cmp$post$phone_number)(officephone$cmp$post$phone_number))";
 			$filter_desc[] = 'whose phone number is '. $this->format_search_key($phone_number);
 		}
 		if(!empty($email_address)) {
@@ -935,13 +935,13 @@ echo '<p>how about them Cubbies</a></p>';
 //			$filter_string = '(|';
 //			foreach ($majors as $maj)
 //			{
-//				$filter_string .= "(carlMajor$cmp$maj)(carlConcentration$cmp$maj)";
+//				$filter_string .= "(carlMajor$cmp$maj)(studentSpecialization$cmp$maj)";
 //			}
 //			$filter[] = $filter_string . ')';
 //			$filter_desc[] = 'whose major or concentration is '. $this->format_search_key($this->majors[$maj]) ;
 //		}
 		if(!empty($year)) {
-			$filter[] = "(|(carlGraduationYear=$year)(carlCohortYear=$year))";
+			$filter[] = "(|(alumclassyear=$year)(carlCohortYear=$year))";
 			$filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
 		}
 		if(!empty($department)) {
@@ -960,14 +960,14 @@ echo '<p>how about them Cubbies</a></p>';
 		{
 			$netid_filter = '(|';
 			foreach($netid as $id)
-				$netid_filter .= "(carlNetId=$id)";
+				$netid_filter .= "(uid=$id)";
 			$netid_filter .= ')';
 			$filter[] = $netid_filter;
 		}
 		if (isset($exclude) && !empty($exclude)) {
 			$exfilter = '(&';
 			$exlist = preg_split('/\W+/', $exclude);
-			foreach ($exlist as $ex) $exfilter .= "(!(carlnetid=$ex))";
+			foreach ($exlist as $ex) $exfilter .= "(!(uid=$ex))";
 			$exfilter .= ')';
 			$filter[] = $exfilter;
 		}
@@ -1032,11 +1032,10 @@ echo '<p>how about them Cubbies</a></p>';
 	{
 		$attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
 			'eduPersonPrimaryAffiliation','officeBldg','studentPostOffice','officephone','spouseName',
-			'address', /*'carlStudentPermanentAddress', 'homePhone'*/'studentMajor','studentSpecialization',
+			'address', ocPostalAddress', 'ocPhone','studentMajor','studentSpecialization',
                         'edupersonprimaryaffiliation',
                         'eduPersonAffiliation','studentStatus', 'alumclassyear',
                         /*'carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',*/
-                        'departmentName', 'studentMinor',
 			'eduPersonEntitlement','mobile');
 
 		/*$attributes = array('dn','carlnetid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
@@ -1202,14 +1201,14 @@ echo '<p>how about them Cubbies</a></p>';
 		
 		// Majors
 		$filter = '(& (objectClass=carlPerson) (eduPersonPrimaryAffiliation=student))';
-		if ($dir->search_by_filter($filter, array('ou','carlstudentcampusaddress','carlmajor','carlconcentration')))
+		if ($dir->search_by_filter($filter, array('ou','carlstudentcampusaddress','studentMajor','carlconcentration')))
 		{
 			$students = $dir->get_records();
 			$values = $counts = array();
 			foreach ($students as $entry)
 			{
-				if (isset($entry['carlmajor']))
-					$values = array_merge($values,$entry['carlmajor']);
+				if (isset($entry['studentMajor']))
+					$values = array_merge($values,$entry['studentMajor']);
 				if (isset($entry['carlconcentration']))
 					$values = array_merge($values,$entry['carlconcentration']);
 			}
@@ -1421,7 +1420,7 @@ echo '<p>how about them Cubbies</a></p>';
 				$ypos = 630;
 			}
 			
-			$photostring = $idb->get_image($data['carlnetid'][0]);
+			$photostring = $idb->get_image($data['uid'][0]);
 			$pvf = PDF_create_pvf($pdf , 'temp_image' , $photostring , '');
 			$pim = pdf_open_image_file ( $pdf, 'jpeg' , 'temp_image' , '', 0 );
 			$pvf = PDF_delete_pvf($pdf , 'temp_image');
@@ -1432,8 +1431,8 @@ echo '<p>how about them Cubbies</a></p>';
 			$name = $this->format_name($data);
 			if (isset($data['title'])) $namelist[$name] = $data['title'][0];
 		
-			if ($data['edupersonprimaryaffiliation'][0] == 'student' && isset($data['carlgraduationyear'])) {
-				$name .= ', '. $data['carlgraduationyear'][0];
+			if ($data['edupersonprimaryaffiliation'][0] == 'student' && isset($data['alumclassyear'])) {
+				$name .= ', '. $data['alumclassyear'][0];
 			}
 			if ($this->pdf_fonts['helv']) pdf_setfont($pdf, $this->pdf_fonts['helv'], 10);
 			pdf_fit_textline($pdf, $name, $xcol + 5, $ypos - 10, 'boxsize {90 15} fitmethod auto position {50 0}');		
@@ -1543,7 +1542,7 @@ echo '<p>how about them Cubbies</a></p>';
 	   
 			if ($data['edupersonprimaryaffiliation'][0] == 'student') 
 			{
-				$name .= ' '. $data['carlgraduationyear'][0];
+				$name .= ' '. $data['alumclassyear'][0];
 				$ypos = pdf_get_value($pdf, 'texty', 0);
 				$ypos = $ypos - 15;
 				if ($ypos < 45)
@@ -1579,9 +1578,9 @@ echo '<p>how about them Cubbies</a></p>';
 					pdf_continue_text($pdf,$status);
 					if ($this->pdf_fonts['helv']) pdf_setfont($pdf, $this->pdf_fonts['helv'], 8.5);
 				}
-				if (isset($data['homepostaladdress']))
+				if (isset($data['address']))
 				{
-					$home = $this->format_postal_address($data['homepostaladdress'][0], false);
+					$home = $this->format_postal_address($data['address'][0], false);
 					foreach ($home as $line)
 						pdf_continue_text($pdf, $line);
 				}
@@ -1680,15 +1679,15 @@ echo '<p>how about them Cubbies</a></p>';
 					if ($sort != 'dept') pdf_continue_text($pdf, $address);
 				}
 				if ($this->pdf_fonts['helv']) pdf_setfont($pdf, $this->pdf_fonts['helv'], 7.5);
-				if (isset($data['homepostaladdress']))
+				if (isset($data['address']))
 				{
-					$address = $this->format_postal_address($data['homepostaladdress'][0], false);
+					$address = $this->format_postal_address($data['address'][0], false);
 					foreach ($address as $line)
 						if ($line <> 'Northfield MN 55057') pdf_continue_text($pdf, $line);
 				}
 				if (isset($data['homephone'])) pdf_continue_text($pdf, str_replace('+1 ', '', $data['homephone'][0]));
 				if ($this->pdf_fonts['helvi']) pdf_setfont($pdf, $this->pdf_fonts['helvi'], 7.5);
-				if (isset($data['carlspouse'])) pdf_continue_text($pdf, $data['carlspouse'][0]);
+				if (isset($data['spousename'])) pdf_continue_text($pdf, $data['spousename'][0]);
 			}	
 		}  
 
