@@ -1,11 +1,7 @@
 <?
 include_once('reason_header.php');
-//include_once('/usr/local/webapps/reason/reason_package_local/disco/plasmature/types/datetime.php');
 reason_include_once('minisite_templates/modules/form/views/thor/default.php');
-//include_once(DISCO_INC.'disco.php');
-//include_once(DISCO_INC.'plasmature/plasmature.php');
-reason_include_once('classes/user.php');
-reason_include_once('classes/admin/admin_page.php');
+
 
 require_once 'Zend/Loader.php';
 
@@ -41,6 +37,8 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'AppDevOnC
  */
 class AppDevOnCallForm extends DefaultThorForm
 {
+
+	var $info;
 	/**
 	* Returns a HTTP client object with the appropriate headers for communicating
 	* with Google using the ClientLogin credentials supplied.
@@ -65,7 +63,7 @@ class AppDevOnCallForm extends DefaultThorForm
 	 * @param  Zend_Http_Client $client The authenticated client object
 	 * @return void
 	 */
-	function getPerson($client, $startDate, $endDate, $currentHour, $currentMinute)
+	function getPerson($client, $startDate, $endDate)
 	{
 	  $gdataCal = new Zend_Gdata_Calendar($client);
 	  $query = $gdataCal->newEventQuery();
@@ -85,6 +83,19 @@ class AppDevOnCallForm extends DefaultThorForm
 	    }
 	  }
 	}
+	
+	function get_user_info($username)
+	{	
+		//query ldap ou=People to get the user info for the user having the problem
+		$attributes = array('uid','cn','sn','officePhone');
+		
+		$dir = new directory_service('ldap_luther');
+		$dir->search_by_attribute('uid', $username, $attributes);
+		$record = $dir->get_first_record();
+				
+		return $record;
+	}
+
 	
 	function get_developer_info($developer)
 	{
@@ -107,25 +118,36 @@ class AppDevOnCallForm extends DefaultThorForm
 				break;
 			case "cindy": $dev = array('email' => 'goede@luther.edu', 'sms' => '5633808899@email.uscc.net');
 				break;
-			case "jean": $dev = array('email' => 'gehlje01@luther.edu', 'sms' => '');
+			case "jean": $dev = array('email' => 'gehlje01@luther.edu', 'sms' => '5633805445@email.uscc.net');
 				break;
-			case "lucas": $dev = array('email' => 'welplu01@luther.edu', 'sms' => 'lucas\'s sms address');
+			case "lane": $dev = array('email' => 'schwla01@luther.edu', 'sms' => '');
 				break;
-			case "marcia": $dev = array('email' => 'gullick@luther.edu', 'sms' => '');
+			case "lucas": $dev = array('email' => 'welplu01@luther.edu', 'sms' => '5074506939@vtext.com');
 				break;
-			case "steve": $dev = array('email' => 'steve.smith@luther.edu', 'sms' => '563-419-1556@vtext.com');
+			case "marcia": $dev = array('email' => 'gullick@luther.edu', 'sms' => '5633808127@email.uscc.net');
+				break;
+			case "steve": $dev = array('email' => 'steve.smith@luther.edu', 'sms' => '5634191556@vtext.com');
 	  	}
 	  	return $dev;
 	}
 
-	// check username
-	// return google calendar information here if nothing is returned throw an error
+	// check for username in ldap if nonexistent, throw an error
 	function run_error_checks()
 	{ 
-		$username = $this->get_value_from_label('username');
-		if ($username = 'steve')
-			$this -> set_error('username', 'invalid username');
+		$username_field = $this->get_element_name_from_label('Username');
+		$username = $this->get_value_from_label('Username');
 
+		
+		$user_info = $this->get_user_info($username);
+		
+		if (!$user_info)
+			$this -> set_error($username_field, 'Username does not exist.');
+		global $info;
+		$info = $user_info;
+	}
+	
+	function process()
+	{
 		$now = date("c");
 		$tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
 		$tomorrow = date("Y-m-d", $tomorrow_temp);
@@ -134,22 +156,56 @@ class AppDevOnCallForm extends DefaultThorForm
 		
 		$client = $this->getClientLoginHttpClient('google_api_user@luther.edu', 'bTI1+9scGSkeORU');
 		
-		$onCall = $this->getPerson($client, $now, $tomorrow, $currentHour, $currentMinute);
+		$onCall = $this->getPerson($client, $now, $now);
 		if ($onCall != '') {
 		     // this is where we should send a text message and probably an email to the on-call person
-		     echo "The on call person for today is ".$onCall.".";
-		     echo $onCall.'<br />';
-		     $this->get_developer_info($onCall);
+		     $developer_info = $this->get_developer_info($onCall);
+		     $this->notify_developer($developer_info, 'sms');		     
+		     
 		}
 		 else {
 		     // this is where we would let the HD/requestor know that nobody is on-call at this time and
 		     //   send an email to the next available on call person (next available)
-		     $next_available = $this->getPerson($client, $now, $next_week, $currentHour, $currentMinute);
-		     //echo "Nobody is on call at the current time, but " . $next_available . " is next in line";
-		     //echo $next_available.'<br />';
-		      $t = $this->get_developer_info($next_available);
-		     print_r($t);
+		     $next_available = $this->getPerson($client, $now, $next_week);
+		   
+		     $developer_info = $this->get_developer_info($next_available);
+		     $this->notify_developer($developer_info, 'email');			
 		}    
+	}
+	
+	
+	function notify_developer($developer_info, $type)
+	{
+		global $info;
+		
+		$problem = $this->get_value_from_label('Emergency');
+		
+		$recipient = $developer_info[$type];
+		$sender = 'AppDevOnCall@luther.edu';
+		$subject = $problem;
+		$html_body = '';
+		
+		$model =& $this->get_model();
+		$email_values = $model->get_values_for_email_submitter_view();
+		$values = "\n";
+			if ($model->should_email_data())
+			{
+				foreach ($email_values as $key => $val)
+				{
+					$values .= sprintf("\n%s:\n   %s\n", $val['label'], $val['value']);
+				}
+			}
+			
+		$txt_body = $this->get_value_from_label('Username')."\n";
+		$txt_body .= $info['officephone'][0]."\n";
+		if (isset($info['officephone'][1])) $txt_body .= $info['officephone'][1];
+		
+		$other = $this->get_value_from_label('Other');
+		if ($other != '');
+			$txt_body .= $other;
+		
+		$mailer = new Email($recipient, $sender, $sender, $subject, $txt_body, $html_body);
+		$mailer->send();
 	}
 	
 	function on_every_time()
