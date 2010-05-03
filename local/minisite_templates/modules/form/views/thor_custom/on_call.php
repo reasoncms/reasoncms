@@ -74,14 +74,31 @@ class AppDevOnCallForm extends DefaultThorForm
 	  $query->setStartMin($startDate);
 	  $query->setStartMax($endDate);
 	  $query->setFutureevents(false);
-	  $query->setSingleevents(true);
+	  $query->setSingleevents(false);
 	  $query->setSortorder('a');
 	  $eventFeed = $gdataCal->getCalendarEventFeed($query);
+
 	  foreach ($eventFeed as $event) {
 	    foreach ($event->when as $when) {
+	    	echo $when->startTime.'<br />'; 
 	               return $event->title->text;
 	    }
 	  }
+
+/*
+  foreach ($eventFeed as $event) {
+    echo "\t<li>" . $event->title->text .  " (" . $event->id->text . ")\n";
+    // Zend_Gdata_App_Extensions_Title->__toString() is defined, so the
+    // following will also work on PHP >= 5.2.0
+    //echo "\t<li>" . $event->title .  " (" . $event->id . ")\n";
+    echo "\t\t<ul>\n";
+    foreach ($event->when as $when) {
+      echo "\t\t\t<li>Starts: " . $when->startTime . "</li>\n";
+       echo "\t\t\t<li>Starts: " . $when->endTime . "</li>\n";
+       return $event;
+    }
+    }
+*/
 	}
 	
 	function get_user_info($username)
@@ -99,6 +116,7 @@ class AppDevOnCallForm extends DefaultThorForm
 	
 	function get_developer_info($developer)
 	{
+		$dev ='';
 		$developer = strtolower($developer);
 		switch ($developer)
 		{
@@ -149,6 +167,7 @@ class AppDevOnCallForm extends DefaultThorForm
 	function process()
 	{
 		$now = date("c");
+		echo $now.' ReasonBOX<br />';
 		$tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
 		$tomorrow = date("Y-m-d", $tomorrow_temp);
 		$next_week_temp = mktime(0, 0, 0, date("m")  , date("d")+7, date("Y"));
@@ -158,12 +177,14 @@ class AppDevOnCallForm extends DefaultThorForm
 		
 		$onCall = $this->getPerson($client, $now, $now);
 		if ($onCall != '') {
+		echo 'if';
 		     // this is where we should send a text message and probably an email to the on-call person
 		     $developer_info = $this->get_developer_info($onCall);
 		     $this->notify_developer($developer_info, 'sms');		     
 		     
 		}
 		 else {
+		 echo 'else';
 		     // this is where we would let the HD/requestor know that nobody is on-call at this time and
 		     //   send an email to the next available on call person (next available)
 		     $next_available = $this->getPerson($client, $now, $next_week);
