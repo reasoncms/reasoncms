@@ -16,6 +16,7 @@
 			// flickr username, api key, and secret must be included in array below:
 			$flickr_account = array("luthercollegemedia" => array("5b298e650817ac77f14054abfc722b01", "f8a94f21e063f110"),
 			"lc.anthrolab" => array("6725551efcba6082283094d49a0c807f", "3dff123f2a053c3a"),
+			"jonebr01" => array("f51fc3cd22d8ad3fc999211292bf8ad3", "3e07d79ff9de0688"),
 			"luthercollegechemistry" => array("4fe2ce650080400958007a505b980522", "cef37676c4424ae1"));
 
 			$site_id = $this->site_id;
@@ -67,6 +68,11 @@
 				{
 					// see /javascripts/highslide/highslide-overrides.js for gallery declaration
 					$pinfo = $f->photos_getInfo($photo['id']);
+					// free accounts don't fill in $pinfo['originalformat']
+					if ($pinfo['originalformat'] == null)
+					{
+						$pinfo['originalformat'] = 'jpg';
+					}
 					if (preg_match("/[A-Za-z0-9]+/", $pinfo['description']))
 					{
 						$description = "<b>" .$photo['title'] . "</b><br/> " . preg_replace("|\"|", "&quot;", $pinfo['description']);
