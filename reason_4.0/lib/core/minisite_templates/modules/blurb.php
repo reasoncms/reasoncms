@@ -71,7 +71,12 @@
 			$count = 0;
 			foreach($blurb_unique_name_array as $blurb_unique_name)
 			{
-				$blurb_id = id_of($blurb_unique_name);
+				$blurb_id = id_of($blurb_unique_name, true, false);
+				if(!$blurb_id)
+				{
+					trigger_error('Unable to find blurb with unique name '.$blurb_unique_name);
+					continue;
+				}
 				if ($this->params['exclude_shown_blurbs'])
 				{
 					if (!isset($used_blurbs)) $used_blurbs = $this->used_blurbs();
