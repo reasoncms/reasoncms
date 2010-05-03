@@ -119,7 +119,6 @@ class AppDevOnCallForm extends DefaultThorForm
 	{
 		$dev ='';
 		$developer = strtolower($developer);
-		$developer = 'ben'
 		switch ($developer)
 		{
 			/*
