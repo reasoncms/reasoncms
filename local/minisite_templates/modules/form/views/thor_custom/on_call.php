@@ -73,7 +73,7 @@ class AppDevOnCallForm extends DefaultThorForm
 	  $query->setOrderby('starttime');
 	  $query->setStartMin($startDate);
 	  $query->setStartMax($endDate);
-	  $query->setFutureevents(false);
+	  $query->setFutureevents(true);
 	  $query->setSingleevents(false);
 	  $query->setSortorder('a');
 	  $eventFeed = $gdataCal->getCalendarEventFeed($query);
