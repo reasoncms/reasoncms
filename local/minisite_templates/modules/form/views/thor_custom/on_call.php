@@ -81,6 +81,7 @@ class AppDevOnCallForm extends DefaultThorForm
 	  foreach ($eventFeed as $event) {
 	    foreach ($event->when as $when) {
 	    	echo $when->startTime . '<br />'; 
+	    	echo $when->endTime . '<br />';
 	    }
 	  }
 	  #return $event->title->text;
@@ -118,7 +119,8 @@ class AppDevOnCallForm extends DefaultThorForm
 	{
 		$dev ='';
 		$developer = strtolower($developer);
-		switch ("ben")
+		$developer = 'ben'
+		switch ($developer)
 		{
 			/*
 			US Cellular: 	phonenumber@email.uscc.net
