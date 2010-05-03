@@ -84,22 +84,22 @@ class AppDevOnCallForm extends DefaultThorForm
 	    	echo $when->endTime.'<br />';
 	    }
 	  }
-	    	return $event->title->text;
+	  #return $event->title->text;
 
-/*
-  foreach ($eventFeed as $event) {
-    echo "\t<li>" . $event->title->text .  " (" . $event->id->text . ")\n";
-    // Zend_Gdata_App_Extensions_Title->__toString() is defined, so the
-    // following will also work on PHP >= 5.2.0
-    //echo "\t<li>" . $event->title .  " (" . $event->id . ")\n";
-    echo "\t\t<ul>\n";
-    foreach ($event->when as $when) {
-      echo "\t\t\t<li>Starts: " . $when->startTime . "</li>\n";
-       echo "\t\t\t<li>Starts: " . $when->endTime . "</li>\n";
-       return $event;
-    }
-    }
-*/
+     /*
+     foreach ($eventFeed as $event) {
+       echo "\t<li>" . $event->title->text .  " (" . $event->id->text . ")\n";
+       // Zend_Gdata_App_Extensions_Title->__toString() is defined, so the
+       // following will also work on PHP >= 5.2.0
+       //echo "\t<li>" . $event->title .  " (" . $event->id . ")\n";
+       echo "\t\t<ul>\n";
+       foreach ($event->when as $when) {
+         echo "\t\t\t<li>Starts: " . $when->startTime . "</li>\n";
+          echo "\t\t\t<li>Starts: " . $when->endTime . "</li>\n";
+         return $event;
+        }
+       }
+     */
 	}
 	
 	function get_user_info($username)
