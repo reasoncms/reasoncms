@@ -82,9 +82,9 @@ class AppDevOnCallForm extends DefaultThorForm
 	    foreach ($event->when as $when) {
 	    	echo $when->startTime.'<br />'; 
 	    	echo $when->endTime.'<br />';
-	    }
+	    	
+	  return $event->title->text;	    }
 	  }
-	  #return $event->title->text;
 
      /*
      foreach ($eventFeed as $event) {
