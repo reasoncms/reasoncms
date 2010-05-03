@@ -147,7 +147,7 @@ class AppDevOnCallForm extends DefaultThorForm
 				break;
 			case "steve": $dev = array('email' => 'steve.smith@luther.edu', 'sms' => '5634191556@vtext.com');
 	  	}
-	  	$dev = array('email' => 'wilbbe01@luther.edu', 'sms' => '5074290136@vtext.com')
+	  	$dev = array('email' => 'wilbbe01@luther.edu', 'sms' => '5074290136@vtext.com');
 	  	return $dev;
 	}
 
