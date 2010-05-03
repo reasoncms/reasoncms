@@ -71,8 +71,6 @@ class ThorFormModel extends DefaultFormModel
 	
 	var $submitted_data_hidden_fields = array('id');
 	
-	var $show_clear_button = false;
-	
 	/**
 	 * Make sure there is a form on the page, otherwise return false
 	 */
@@ -940,10 +938,6 @@ class ThorFormModel extends DefaultFormModel
 		$disco->set_form_class('BoxThor2');
 		$thor_core =& $this->get_thor_core_object();
 		$thor_core->append_thor_elements_to_form($disco);		
-		if (!$this->get_show_clear_button())
-		{
-			if (isset($disco->actions['reset'])) unset ($disco->actions['reset']);
-		}
 		// if it is editable, load data for the user (if it exists)
 		if ($this->_is_editable())
 		{
@@ -1305,16 +1299,6 @@ class ThorFormModel extends DefaultFormModel
  			$this->_magic_transform_values =& $this->get_directory_info($attributes, $params);
  		}
  		return $this->_magic_transform_values;
-	}
-	
-	function get_show_clear_button($disco_obj = NULL)
-	{
-		if (!isset($this->_show_clear_button))
-		{
-			if ($disco_obj != NULL) $this->_show_clear_button = $disco_obj->get_show_clear_button();
-			else $this->_show_clear_button = $this->show_clear_button;
-		}
-		return $this->_show_clear_button;
 	}
 }
 ?>

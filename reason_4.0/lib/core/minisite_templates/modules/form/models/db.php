@@ -83,8 +83,6 @@ class DBFormModel extends DefaultFormModel
 	
 	var $submitted_data_hidden_fields = array('id');
 	
-	var $show_clear_button = false;
-	
 	/**
 	 * Make sure the model can get its connection params, otherwise return false
 	 */
@@ -737,10 +735,6 @@ class DBFormModel extends DefaultFormModel
 	function transform_form()
 	{
 		$disco =& $this->get_view();
-		if (!$this->get_show_clear_button())
-		{
-			if (isset($disco->actions['reset'])) unset ($disco->actions['reset']);
-		}
 		$this->_setup_elements($disco);
 		$editable = true;
 		$methods =& $this->get_magic_transform_methods($disco);
@@ -1002,16 +996,6 @@ class DBFormModel extends DefaultFormModel
  			$this->_magic_transform_values =& $this->get_directory_info($attributes);
  		}
  		return $this->_magic_transform_values;
-	}
-	
-	function get_show_clear_button($disco_obj = NULL)
-	{
-		if (!isset($this->_show_clear_button))
-		{
-			if ($disco_obj != NULL) $this->_show_clear_button = $disco_obj->get_show_clear_button();
-			else $this->_show_clear_button = $this->show_clear_button;
-		}
-		return $this->_show_clear_button;
 	}
 	
 	// SQL METHODS - These should really be abstracted out of this

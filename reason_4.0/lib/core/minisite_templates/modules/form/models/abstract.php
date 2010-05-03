@@ -13,6 +13,7 @@ $GLOBALS[ '_form_model_class_names' ][ basename( __FILE__, '.php') ] = 'Abstract
  * The AbstractFormModel
  *
  * @author Nathan White
+ * @todo instead of the parallelism here we ought to have an array of available views - one would likely be the admin view
  */
 class AbstractFormModel
 {
