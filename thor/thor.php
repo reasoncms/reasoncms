@@ -963,8 +963,7 @@ class ThorCore
 	function _transform_submit($element_attributes, &$d)
 	{
 		$submit = (!empty($element_attributes['submit'])) ? $element_attributes['submit'] : '';
-		$reset = (!empty($element_attributes['reset'])) ? $element_attributes['reset'] : '';
-		$d->actions = Array( 'submit' => $submit, 'reset' => $reset);
+		$d->actions = Array( 'submit' => $submit);
 	}
 }
 
@@ -1382,8 +1381,7 @@ class Thor
 	function _transform_submit($element_attributes)
 	{
 		$submit = (!empty($element_attributes['submit'])) ? $element_attributes['submit'] : '';
-		$reset = (!empty($element_attributes['reset'])) ? $element_attributes['reset'] : '';
-		$this->_d->actions = Array( 'submit' => $submit, 'reset' => $reset);
+		$this->_d->actions = Array( 'submit' => $submit );
 	}
 	
 	function set_form_title($form_title) {
