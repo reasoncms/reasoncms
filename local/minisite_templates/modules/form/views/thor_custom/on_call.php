@@ -80,8 +80,6 @@ class AppDevOnCallForm extends DefaultThorForm
 
 	  foreach ($eventFeed as $event) {
 	    foreach ($event->when as $when) {
-	    	echo $when->startTime.'<br />'; 
-	    	echo $when->endTime.'<br />';
 	    	
 	  return $event->title->text;	    }
 	  }
@@ -147,7 +145,6 @@ class AppDevOnCallForm extends DefaultThorForm
 				break;
 			case "steve": $dev = array('email' => 'steve.smith@luther.edu', 'sms' => '5634191556@vtext.com');
 	  	}
-	  	$dev = array('email' => 'wilbbe01@luther.edu', 'sms' => '5074290136@vtext.com');
 	  	return $dev;
 	}
 
@@ -169,7 +166,7 @@ class AppDevOnCallForm extends DefaultThorForm
 	function process()
 	{
 		$now = date("c");
-		echo $now.' ReasonBOX<br />';
+		
 		$tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
 		$tomorrow = date("Y-m-d", $tomorrow_temp);
 		$next_week_temp = mktime(0, 0, 0, date("m")  , date("d")+7, date("Y"));
