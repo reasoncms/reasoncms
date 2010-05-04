@@ -24,7 +24,7 @@ class CampusDirectoryModule extends DefaultMinisiteModule
 	var $view;
 	var $context;
 	var $menu_data;
-	//var $majors;
+	var $majors;
 	var $pdf_fonts;
 	var $user_netid;
 	var $photos;	
