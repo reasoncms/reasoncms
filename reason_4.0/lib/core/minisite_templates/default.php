@@ -742,7 +742,9 @@ class MinisiteTemplate
 					
 					// init takes $args as a backwards compatibility feature.  otherwise, everything should be handled
 					// in prep_args
+					if ($this->should_benchmark()) $this->benchmark_start('init module ' . $module_name);
 					$this->_modules[ $sec ]->init( $args );
+					if ($this->should_benchmark()) $this->benchmark_stop('init module ' . $module_name);
 				}
 				else
 					trigger_error( 'Badly formatted module ('.$module_name.') - $module_class not set ' );
@@ -770,6 +772,7 @@ class MinisiteTemplate
 	function run_section( $sec ) // {{{
 	{
 		$module =& $this->_get_module( $sec );
+		$module_name = $this->section_to_module[$sec];
 		if( $module )
 		{
 			echo "\n\n";
@@ -779,7 +782,9 @@ class MinisiteTemplate
 			}
 			else
 			{
+				if ($this->should_benchmark()) $this->benchmark_start('run module ' . $module_name);
 				$module->run();
+				if ($this->should_benchmark()) $this->benchmark_stop('run module ' . $module_name);
 			}
 			echo "\n\n";
 		}
@@ -1586,6 +1591,87 @@ class MinisiteTemplate
 			$this->queried_for_parent_sites = true;
 		}
 		return $this->parent_sites;
+	}
+	
+	/**
+	 * Return a reference to a singleton Timer class
+	 *
+	 * @return object Timer
+	 */
+	function &_get_timer()
+	{
+		if (!isset($this->_timer))
+		{
+			$this->_timer = new Timer();
+		}
+		return $this->_timer;
+	}
+
+	/**
+	 * Start timing a named benchmark
+	 *
+	 * @param string name of benchmark to start
+	 * @return void
+	 */	
+	function benchmark_start($name)
+	{
+		$timer =& $this->_get_timer();
+		$timer->start($name);
+	}
+	
+	/**
+	 * Stop timing a named benchmark
+	 *
+	 * @param string name of benchmark to stop
+	 * @return void
+	 */
+	function benchmark_stop($name)
+	{
+		$timer =& $this->_get_timer();
+		$timer->stop($name);
+	}
+
+	/**
+	 * Returns true if benchmarks_available() and benchmarks_enabled() return true;
+	 * @return boolean
+	 */		
+	function should_benchmark()
+	{
+		if (!isset($this->_should_benchmark))
+		{
+			$benchmarks_requested = (isset($_REQUEST['reason_benchmark']) && ($_REQUEST['reason_benchmark'] == 1));
+			$this->_should_benchmark = ($benchmarks_requested && is_developer());
+		}
+		return $this->_should_benchmark;
+	}
+	
+	/**
+	 * Show a link to enable benchmarks, or if enabled, the benchmarks themselves with a link to turn them off
+	 * 
+	 * This is called by generate_page.php after page generation if is_developer returns true.
+	 */
+	function display_benchmark_section()
+	{
+		if ($this->should_benchmark())
+		{
+			$timer =& $this->_get_timer();
+			$timer->report_all();
+			$link = carl_make_link(array('reason_benchmark' => ""));
+			echo '<p><a href="'. $link . '">disable benchmarks</a></p>';
+		}
+		else
+		{
+			$link = carl_make_link(array('reason_benchmark' => 1));
+			echo '<p><a href="'. $link . '">enable benchmarks</a></p>';
+		}
+	}
+	
+	/**
+	 * Generate page runs this method when it generates a page footer with developer information.
+	 */
+	function display_developer_section()
+	{
+		$this->display_benchmark_section();
 	}
 }
 ?>
