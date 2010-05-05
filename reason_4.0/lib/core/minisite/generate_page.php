@@ -296,6 +296,10 @@
 			
 			echo "\n".'<div style="background-color:#ddd;color:#555;font-size:0.75em;padding:1px 1em;">';
 			echo '<p>'.$str.'</p>';
+			if (isset($t) && method_exists($t, 'display_developer_section'))
+			{	
+				$t->display_developer_section();
+			}
 			if(defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE)
 			{
 				echo '<p style="color:#777;">This instance of Reason is set up as a development/testing instance. As a result, this page is hidden from search engines. If this is an error, modify the setting THIS_IS_A_DEVELOPMENT_REASON_INSTANCE.</p>';
