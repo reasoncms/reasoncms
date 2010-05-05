@@ -57,43 +57,58 @@
 		}
 		function report_all()
 		{
-			echo '<table width="500" border="1" cellspacing="0" cellpadding="4">';
-			foreach( $this->_start AS $timer => $start )
+			if (!empty($this->_timers))
 			{
+				echo '<table id="timerReportAll" width="500" border="1" cellspacing="0" cellpadding="4">';
 				echo '<tr>';
-				echo '<td align="left">';
-				echo $timer;
-				echo '</td>';
-				echo '<td align="right">';
-				$elapsed = $this->elapsed( $timer );
-				if( $elapsed > 20 ) $elapsed = '<strong>'.$elapsed.'</strong>';
-				echo $elapsed.' ms</td>';
+				echo '<th>Timer Name</th>';
+				echo '<th>Elapsed Time</th>';
 				echo '</tr>';
+				foreach( $this->_start AS $timer => $start )
+				{
+					echo '<tr>';
+					echo '<td align="left">';
+					echo $timer;	
+					echo '</td>';
+					echo '<td align="right">';
+					$elapsed = $this->elapsed( $timer );
+					if( $elapsed > 20 ) $elapsed = '<strong>'.$elapsed.'</strong>';
+					echo $elapsed.' ms</td>';
+					echo '</tr>';
+				}
+				echo '</table>';
 			}
-			echo '</table><br/>';
 		}
 		function report_stack()
 		{
-			echo '<table border="1" cellspacing="0" cellpadding="4">';
-			foreach( $this->_timers AS $timer => $info )
+			if (!empty($this->_timers))
 			{
-				$elapsed = $this->elapsed( $timer );
-				$long = $elapsed > $this->long_time;
+				echo '<table id="timerReportStack" border="1" cellspacing="0" cellpadding="4">';
 				echo '<tr>';
-				echo '<td>';
-				if( $long ) echo '<strong>';
-				for( $i = 0; $i < $info['level']; $i++ )
-					echo '---';
-				echo $timer;
-				if( $long ) echo '</strong>';
-				echo '</td>';
-				echo '<td align="right">';
-				if( $long ) echo '<strong>';
-				echo $this->elapsed( $timer );
-				echo ' ms';
-				if( $long ) echo '</strong>';
-				echo '</td>';
+				echo '<th>Timer Name</th>';
+				echo '<th>Elapsed Time</th>';
 				echo '</tr>';
+				foreach( $this->_timers AS $timer => $info )
+				{
+					$elapsed = $this->elapsed( $timer );
+					$long = $elapsed > $this->long_time;
+					echo '<tr>';
+					echo '<td align="left">';
+					if( $long ) echo '<strong>';
+					for( $i = 0; $i < $info['level']; $i++ )
+						echo '---';
+					echo $timer;
+					if( $long ) echo '</strong>';
+					echo '</td>';
+					echo '<td align="right">';
+					if( $long ) echo '<strong>';
+					echo $this->elapsed( $timer );
+					echo ' ms';
+					if( $long ) echo '</strong>';
+					echo '</td>';
+					echo '</tr>';
+				}
+				echo '</table>';
 			}
 		}
 		// put microtime() output into usable format
