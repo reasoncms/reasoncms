@@ -53,7 +53,6 @@
 			// iphone support; scales to screen and disables zooming
 			$head_items->add_head_item('meta', array('name'=>'viewport','content'=>'width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'));
 		}
-// echo '<p>how about them Cubbies</a></p>';
 		
 		// Allow any of the form elements (old or new) to be set from the URL or POST, and look like a submission
 		foreach ($_REQUEST as $key => $val)
@@ -113,7 +112,7 @@
 			if (in_array($name,$not_sufficient)) continue;
 			if (isset($this->request[$name])) return true;
 		}
-		$form->set_error('first_name','You did not specify anything to search for.');
+		$form->set_error('name_or_username','You did not specify anything to search for.');
 	}
 	
 	
@@ -131,11 +130,13 @@
 		{
 			if (isset($this->request[$name]))
 				$q[$name] = $this->request[$name];
+								pray($q);
 		}
 		$query_parts = $this->build_query($q);
+echo 'QueryParts<br />';		pray($query_parts);
 		if (!$query_parts)
 		{
-			$form->set_error('first_name', 'You do not appear to be searching for anything.  Please try again.');
+			$form->set_error('name_or_username', 'You do not appear to be searching for anything.  Please try again.');
 			return;
 		}
 		// Get results from the Telecomm database
@@ -178,14 +179,13 @@
 			}
 			$form->show_form = false;
 		} else {
-			$form->set_error('first_name', 'Your search for '.$query_desc.' did not find any matches.  Please try again.');
+			$form->set_error('name_or_username', 'Your search for '.$query_desc.' did not find any matches.  Please try again.');
 		}
 	}
 
 	function display_form() //{{{
 	{
 		echo '<div id="campusDirForm">';
-// echo '<p>how about them Cubbies</a></p>'; 	
 		$this->form->run();
 		echo '</div>';	
 
@@ -808,13 +808,13 @@
 		//$filter[] = '(eduPersonEntitlement=urn:mace:carleton.edu:entl:whitepages)';
 		$filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
 		if(!empty($id_number)) { 
-			//$filter[] = "(carlColleagueid$cmp$id_number)";
+// look look		//$filter[] = "(carlColleagueid$cmp$id_number)";
 			$filter[] = "(carlColleagueid$cmp$id_number)";
 			$filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
 		}
-		if(!empty($first_name)) {
+		if(!empty($name_or_username)) {
 			$filter[] = "(|(givenName$cmp$pre$first_name$post)(eduPersonNickname$cmp$pre$first_name$post))";
-			$filter_desc[] = 'whose first name is ' . $this->format_search_key($first_name);
+			$filter_desc[] = 'whose first name is ' . $this->format_search_key($name_or_username);
 		}
 		if(!empty($last_name)) {
 			$filter[] = "(sn$cmp$pre$last_name$post)";
@@ -967,7 +967,9 @@
 		$dir = new directory_service('ldap_luther');
 		//$dir->search_by_filter($querystring, $attributes);  ///ORIGINAL LINE
 		//$dir->search_by_filter($first_name, $attributes);
-		$temp = $this->get_value('name_or_username');
+		$temp = get_value('name_or_username');
+		echo $temp.'<br />';
+		pray($dir);
 		$dir->search_by_attribute('uid', $temp, $attributes);
 		
 		pray($dir);
