@@ -5,7 +5,6 @@
  * @package carl_util
  * @subpackage basic
  * @todo document these functions
- * @todo check to make sure these work correctly with magic_quotes on - i think we need to wrap parse_url with conditional_stripslashes
  */
 
 /**
