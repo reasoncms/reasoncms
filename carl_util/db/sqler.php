@@ -67,7 +67,7 @@ include_once(CARL_UTIL_INC.'error_handler/error_handler.php');
 				}
 				else
 				{
-					trigger_error( 'sqler.php :: Unable to insert data into '.$table.' :: '.$q, EMERGENCY );
+					trigger_error( 'sqler.php :: Unable to insert data into '.$table.'; error message: "'.mysql_error().'" :: query: '.$q, EMERGENCY );
 					
 					// if the error level above is EMERGENCY, this script will likely die, but this line is there in case it is not
 					return false;
