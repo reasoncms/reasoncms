@@ -56,7 +56,7 @@ function connectDB($dbName, $dbuser = '', $dbpasswd = '', $dbhost='')
 	if( !$db )
 	{
 		$db_info['password'] = '*************'; // replace password so it will not be exposed onscreen - nwhite
-		trigger_fatal_error('Unable to connect to database (Error #'.mysql_errno().':'.mysql_error().')');
+		trigger_fatal_error('Unable to connect to database using connection "'.$dbName.'" (Error #'.mysql_errno().':'.mysql_error().')');
 	}
 	elseif( $tries > 1 )
 	{
@@ -67,7 +67,7 @@ function connectDB($dbName, $dbuser = '', $dbpasswd = '', $dbhost='')
 	if( !mysql_select_db($db_info[ 'db' ], $db) )
 	{
 		$db_info['password'] = '*************'; // replace password so it will not be exposed onscreen - nwhite
-		trigger_error( 'Unable to select database ('.mysql_error().')', EMERGENCY );
+		trigger_error( 'Unable to select database "'.$db_info[ 'db' ].'" ('.mysql_error().')', EMERGENCY );
 	}
 	$GLOBALS['_current_db_connection_name'] = $dbName;
 	return $db;
@@ -171,7 +171,7 @@ function get_db_credentials( $conn_name, $lack_of_creds_is_fatal = true )
 		turn_carl_util_error_context_off();
 		if ($lack_of_creds_is_fatal)
 		{
-			trigger_fatal_error('Unable to use database connection '.$conn_name.' - No credential information found for the conneciton named ' . $conn_name . ' in database credential file ('.DB_CREDENTIALS_FILEPATH.').', 2);
+			trigger_fatal_error('Unable to use database connection '.$conn_name.' - No credential information found for the connection named ' . $conn_name . ' in database credential file ('.DB_CREDENTIALS_FILEPATH.').', 2);
 		}
 		else
 		{
