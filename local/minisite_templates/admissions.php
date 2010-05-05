@@ -111,11 +111,23 @@ class AdmissionsTemplate extends MinisiteTemplate
                 if ($this->cur_page->get_value( 'custom_page' ) != 'admissions_home')
 		{
 			// section navigation
+			$bbc = $this->site_info->get_value('base_breadcrumbs');
 			$bc = $this->_get_breadcrumbs();
-			$sbtitle = $bc[1]["page_name"];	
+			//print_r($bc);
+			if ($bc[0]["page_name"] == "Student Blogs")
+			{
+				$sbtitle = "Life at Luther";
+				$sblink = "/admissions/lifeatluther/";
+			}
+			else
+			{
+				$sbtitle = $bc[1]["page_name"];	
+				$sblink = $bc[1]["link"];
+
+			}
 			// shorten title if necessary
 			$sbtitle = luther_shorten_string($sbtitle, 42, " ...");
-			echo '<div id="sidebar_title"><h2><a href="'.$bc[1]["link"].'">'.$sbtitle.'</a></h2></div>'."\n";
+			echo '<div id="sidebar_title"><h2><a href="'.$sblink.'">'.$sbtitle.'</a></h2></div>'."\n";
 			//print_r($this->_get_breadcrumbs());
 		}
 		
