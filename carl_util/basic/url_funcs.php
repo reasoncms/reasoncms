@@ -5,6 +5,7 @@
  * @package carl_util
  * @subpackage basic
  * @todo document these functions
+ * @todo check to make sure these work correctly with magic_quotes on - i think we need to wrap parse_url with conditional_stripslashes
  */
 
 /**
@@ -26,6 +27,7 @@ function carl_make_link( $new_request_vars = array(''), $base_path = '', $type =
 	$parts = parse_url($url);
 	if ($maintain_original && !empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
 	else $cur_request_vars = array();
+	$cur_request_vars = (!empty($cur_request_vars)) ? conditional_stripslashes($cur_request_vars) : $cur_request_vars;
 	if (empty($base_path)) $base_path = $parts['path'];
 	
 	if ($type == 'qs_only')
@@ -75,6 +77,7 @@ function carl_construct_link ( $new_request_vars = array(''), $preserve_request_
 		$preserve_array = '';
 		$parts = parse_url($url);
 		if (!empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
+		if (isset($cur_request_vars)) $cur_request_vars = conditional_stripslashes($cur_request_vars);
 		foreach ($preserve_request_vars as $key)
 		{
 			if (isset($cur_request_vars[$key]))
@@ -99,6 +102,7 @@ function carl_construct_relative_link ( $new_request_vars = array(''), $preserve
 		$preserve_array = '';
 		$parts = parse_url($url);
 		if (!empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
+		if (isset($cur_request_vars)) $cur_request_vars = conditional_stripslashes($cur_request_vars);
 		foreach ($preserve_request_vars as $key)
 		{
 			if (isset($cur_request_vars[$key]))
@@ -128,6 +132,7 @@ function carl_construct_redirect( $new_request_vars = array(''), $preserve_reque
 		$preserve_array = '';
 		$parts = parse_url($url);
 		if (!empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
+		if (isset($cur_request_vars)) $cur_request_vars = conditional_stripslashes($cur_request_vars);
 		foreach ($preserve_request_vars as $key)
 		{
 			if (isset($cur_request_vars[$key]))
@@ -152,6 +157,7 @@ function carl_construct_query_string ( $new_request_vars, $preserve_request_vars
 		$preserve_array = '';
 		$parts = parse_url($url);
 		if (!empty($parts['query'])) parse_str($parts['query'], $cur_request_vars);
+		if (isset($cur_request_vars)) $cur_request_vars = conditional_stripslashes($cur_request_vars);
 		foreach ($preserve_request_vars as $key)
 		{
 			if (isset($cur_request_vars[$key]))
