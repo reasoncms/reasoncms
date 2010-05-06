@@ -99,6 +99,13 @@
 				}
 			}
 			
+			if(!class_exists($content_handler))
+			{
+				$filename = $this->type_entity->get_value( 'custom_content_handler' ) ? $this->type_entity->get_value( 'custom_content_handler' ) : 'default.php3';
+				trigger_error('Content manager class name provided for '.$filename.' ('.$content_handler.') not found', HIGH);
+				die();
+			}
+			
 			$disco_item = new $content_handler;
 			$disco_item->admin_page =& $this->admin_page;
 			$disco_item->set_head_items( $this->head_items );
