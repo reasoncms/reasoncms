@@ -33,11 +33,7 @@
 			$this->ignore_fields = array( 'id', 'last_edited_by', 'last_modified', 'creation_date', 'type', 'created_by', 'new', 'state' );
 
 			// get archive relationship id
-			$q = 'SELECT id FROM allowable_relationship WHERE name LIKE "%archive%" AND relationship_a = '.$this->admin_page->type_id.' AND relationship_b = '.$this->admin_page->type_id;
-			$r = db_query( $q, 'Unable to get archive relationship.' );
-			$row = mysql_fetch_array( $r, MYSQL_ASSOC );
-			mysql_free_result( $r );
-			$this->rel_id = $row['id'];
+			$this->rel_id = reason_get_archive_relationship_id($this->admin_page->type_id);
 
 			$es = new entity_selector();
 			$es->add_type( $this->admin_page->type_id );
