@@ -53,14 +53,8 @@ echo '<form method="post" action="' . REASON_HTTP_BASE_PATH . 'scripts/move/move
 // 1. Get $allowable_relationship_id where relationship_a =
 // id_of('site') and relationship_b = $type_id (if there's not one,
 // die)
-$dbs = new DBSelector();
-$dbs->add_table('allowable_relationship');
-$dbs->add_relation('relationship_a = "' . id_of('site') . '"');
-$dbs->add_relation('relationship_b = "' . addslashes($type_id) . '"');
-$dbs->add_relation('name = "owns"');
-$dbs->set_num(1);
-$allowable_relationships = $dbs->run();
-$allowable_relationship_id = $allowable_relationships[0]['id'];
+reason_include_once('function_libraries/relationship_finder.php');
+$allowable_relationship_id = relationship_finder('site',$type_id);
 
 // 2. Get list of entity_bs of relationships whose entity_a = $site_id
 // and whose type = $allowable_relationship_id;
