@@ -245,7 +245,7 @@
 			if ($this->close_window)
 			{
 				?>
-				<script language="JavaScript">
+				<script language="JavaScript" type="text/javascript">
 				window.close();
 				</script>
 				<?php
