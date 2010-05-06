@@ -444,9 +444,13 @@ class DBFormModel extends DefaultFormModel
 	
 	function get_values_for_save_extra_fields()
 	{
-		$submitted_by = $this->get_user_netid();
-		$submitter_ip = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : '';
-		return array('submitted_by' => $submitted_by, 'submitter_ip' => $submitter_ip);
+		$ret = array();
+		$columns = $this->get_database_columns();
+		if(isset($columns['submitted_by']))
+			$ret['submitted_by'] = $this->get_user_netid();
+		if(isset($columns['submitter_ip']))
+			$ret['submitter_ip'] = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : '';
+		return $ret;
 	}
 	
 	function get_values_for_email_extra_fields()
