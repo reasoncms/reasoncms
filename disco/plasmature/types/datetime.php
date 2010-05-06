@@ -53,7 +53,9 @@ class monthType extends selectType
 	{
 		for($month = 1; $month <= 12; $month++)
 		{
-			$this->options[ $month ] = carl_date($this->date_format,carl_mktime(0,0,0,$month,1,1970));
+			/* Note the use of mktime instead of carl_mktime. This is to avoid a strict notice in php 5 regarding is_dst, and
+			should not cause any problems as we are fixing the year inside the Unix era */
+			$this->options[ $month ] = carl_date($this->date_format,mktime(0,0,0,$month,1,1970));
 		}
 	}
 }
