@@ -29,7 +29,7 @@
 		function list_header( ) // {{{
 		{
 			echo $this->_produce_borrowing_nav();
-			echo '<table border="0" cellpadding="0" cellspacing="0">'."\n".'<tr>';
+			echo '<table border="0" cellpadding="0" cellspacing="0" class="listTools" summary="Tools for managing this list">'."\n".'<tr>';
 			$this->show_filters();
 			echo '<td valign="top">'."\n";
 			if(reason_user_has_privs($this->admin_page->user_id,'add'))
