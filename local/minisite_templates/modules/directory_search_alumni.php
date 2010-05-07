@@ -1050,18 +1050,21 @@ echo '<p>how about them Cubbies</a></p>';
 		*	'eduPersonEntitlement','mobile');
 		*/
 
-		//$dir = new directory_service('ldap_carleton');
-		$dir = new directory_service('ldap_luther');
-		//$dir->search_by_filter($querystring, $attributes);  ///ORIGINAL LINE
-		$dir->search_by_filter($first_name, $attributes);
-	//$temp = $this->get_value('first_name');
-		//echo $temp;
-		//$dir->search_by_attribute('uid', 'smitst01', $attributes);
-		pray($dir);
-		$dir->sort_records(array('sn','givenname'));
-		$entries = $dir->get_records();
-		return $entries;
-	} //}}}
+			$dir = new directory_service('ldap_luther');
+			$dir->search_by_filter($first_name, $attributes);
+                        pray($dir);
+                        $dir->sort_records(array('sn','givenname'));
+                        $entries = $dir->get_records();
+                        return $entries;
+	
+//              $dir = new directory_service('ldap_carleton');
+//		$dir = new directory_service('ldap_luther');
+//		$dir->search_by_filter($querystring, $attributes);
+//		$dir->sort_records(array('sn','givenname'));
+//		$entries = $dir->get_records();
+//		return $entries;
+//               
+        } //}}}
 		
 	/** Query the Telecommunications database for data relevant to the requested office or dept
 	*/
@@ -1169,7 +1172,6 @@ echo '<p>how about them Cubbies</a></p>';
 	{
 		//$dir = new directory_service('ldap_carleton');
 		$dir = new directory_service('ldap_luther');
-		pray($dir);
 		// Get the full set of possible academic depts (not all have people)
 		$dir->set_search_params('ldap_luther',array('base_dn' => 'dc=luther,dc=edu'));
 		//$dir->set_search_params('ldap_carleton',array('base_dn' => 'dc=carleton,dc=edu'));
