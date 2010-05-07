@@ -894,11 +894,13 @@ echo '<p>how about them Cubbies</a></p>';
 		$filter[] = '(!(description=Left feed*))'; // exclude expired accounts
 		//$filter[] = '(eduPersonEntitlement=urn:mace:carleton.edu:entl:whitepages)';
 		$filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
-		if(!empty($id_number)) { 
-			//$filter[] = "(carlColleagueid$cmp$id_number)";
-			$filter[] = "(carlColleagueid$cmp$id_number)";
-			$filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
-		}
+		/*if(!empty($id_number)) {
+		*	//$filter[] = "(carlColleagueid$cmp$id_number)";
+		*	$filter[] = "(carlColleagueid$cmp$id_number)";
+		*	$filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
+		*}
+                 *
+                 */
 		if(!empty($first_name)) {
 			$filter[] = "(|(givenName$cmp$pre$first_name$post)(eduPersonNickname$cmp$pre$first_name$post))";
 			$filter_desc[] = 'whose first name is ' . $this->format_search_key($first_name);
@@ -1035,9 +1037,6 @@ echo '<p>how about them Cubbies</a></p>';
 			'address','ocPostalAddress', 'ocPhone','studentMajor','studentSpecialization',
                         'edupersonprimaryaffiliation',
                         'eduPersonAffiliation','studentStatus','alumclassyear',
-                        
-                        '2012'=>'carlCohortYear','home_email'=>'carlHomeEmail','Spring'=>'carlFacultyLeaveTerm','true'=>'carlHidePersonalInfo',
-                        
 			'eduPersonEntitlement','mobile');
 
 		/*$attributes = array('dn','carlnetid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
