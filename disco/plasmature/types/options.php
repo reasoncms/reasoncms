@@ -142,7 +142,7 @@ class radioType extends optionType
 			$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.$key.'"';
 			if ( $key == $this->value )
 				$str .= ' checked="checked"';
-			$str .= '></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
+			$str .= ' /></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
 		}
 		$str .= '</table>'."\n";
 		$str .= '</div>'."\n";
@@ -169,7 +169,7 @@ class radio_inlineType extends optionType
 			$str .= '<span class="radioItem"><span class="radioButton"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.$key.'"';
 			if ( $key == $this->value )
 				$str .= ' checked="checked"';
-			$str .= '></span> <label for="'.$id.'">'.$val.'</label></span> '."\n";
+			$str .= ' /></span> <label for="'.$id.'">'.$val.'</label></span> '."\n";
 		}
 		$str .= '</div>'."\n";
 		return $str;
@@ -223,7 +223,7 @@ class radio_with_otherType extends optionType
 				$str .= ' checked="checked"';
 				$checked = true;
 			}
-			$str .= '></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
+			$str .= ' /></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
 		}
 		$id = 'radio_'.$this->name.'_'.$i++;
 		$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="other"';
