@@ -215,6 +215,7 @@ class PublicationModule extends Generic3Module
 		$this->set_defaults_from_parameters($this->params);
 		$this->set_show_featured_items();
 		$this->set_minimum_date();
+	
 		if ($this->related_mode) $this->init_related( $args );
 		elseif (!empty($this->publication)) parent::init( $args );
 		else
@@ -512,10 +513,13 @@ class PublicationModule extends Generic3Module
 				$publication_descriptor = 'newsletter';
 				$news_item_descriptor = 'articles';
 			}
-			
 			if($this->publication->get_value('has_issues') == 'yes')
 			{
 				$this->init_issue();
+			}
+			if($this->publication->get_value('has_sections') == 'yes')
+			{
+				$this->init_section();
 			}
 			if(!empty($this->issue_id)) // means publication is set to use issues and the publication has related issues
 			{
@@ -604,6 +608,76 @@ class PublicationModule extends Generic3Module
 	}
 	
 	/**
+	 * Makes sure the section id is okay - intelligently redirects if not.
+	 *
+	 * Case 1 - we have a section id and item id
+	 *
+	 * - if the section id is not valid for the item but a single valid section id does exist, redirect to that section
+	 * - if the section id is not valid for the item and multiple section ids (or none) exist, redirect without the section
+	 *
+	 * Case 2 - we have a section id but not item id
+	 *
+	 * - if the section id is not valid, but a single valid section id is available, redirect to that section
+	 * - if the section id is not valid, and multiple section ids (or none) exist, redirect without the section
+	 *
+	 * @return void
+	 */	
+	function init_section()
+	{
+		$requested_section = (!empty($this->request['section_id'])) ? $this->request['section_id'] : false;
+		if ($requested_section)
+		{
+			if ($this->current_item_id)
+			{
+				// lets make sure the item is in the requested section
+				$item = new entity($this->current_item_id);
+				$sections_for_item = $this->find_sections_for_this_item($item);
+				$sections_for_item_keys = (!empty($sections_for_item)) ? array_keys($sections_for_item) : array();
+				$available_sections = $this->get_sections_issue_aware();
+				$available_section_keys = (!empty($available_sections)) ? array_keys($available_sections) : array();
+				if (!in_array($requested_section, $sections_for_item_keys) || !in_array($requested_section, $available_section_keys))
+				{
+					// is the union of section_for_item_keys and available_section_keys a single section? If so - redirect to it
+					$intersection = array_intersect($sections_for_item_keys, $available_section_keys);
+					if (count($intersection) == 1)
+					{
+						$redirect = carl_make_redirect(array('section_id' => array_shift($intersection)));
+						header('Location: '.$redirect);
+						exit;
+					}
+					else
+					{
+						$redirect = carl_make_redirect(array('section_id' => ''));
+						header('Location: '.$redirect);
+						exit;
+					}
+				}
+			}
+			else
+			{
+				// we do not have an item but want to still verify that the section is valid - if not, lets redirect
+				$available_sections = $this->get_sections_issue_aware();
+				$available_section_keys = (!empty($available_sections)) ? array_keys($available_sections) : array();
+				if (!in_array($requested_section, $available_section_keys))
+				{
+					if (count($available_section_keys) == 1)
+					{
+						$redirect = carl_make_redirect(array('section_id' => array_shift($available_section_keys)));
+						header('Location: '.$redirect);
+						exit;
+					}
+					else
+					{
+						$redirect = carl_make_redirect(array('section_id' => ''));
+						header('Location: '.$redirect);
+						exit;
+					}
+				}
+			}
+		}
+	}
+	
+	/**
 	 * init_issue_for_item checks the item and any issue id it was passed - if an issue does not exist or is
 	 * invalid, the user is redirected to a url with the most recent valid issue for the item
 	 */
@@ -650,8 +724,11 @@ class PublicationModule extends Generic3Module
 					$this->_add_crumb( $issue->get_value( 'name' ), $this->get_link_to_issue($issue) );
 					if($requested_section)
 					{
-						$section = new entity($this->request['section_id']);
-						$this->_add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
+						$section = $this->get_current_section();
+						if ($section)
+						{
+							$this->_add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
+						}
 					}
 				//}
 				return true;
@@ -1163,22 +1240,28 @@ class PublicationModule extends Generic3Module
 		}
 		
 		/**
-		*  Checks to make sure that the given news item is OK to display.
-		*  @param entity $entity News item entity
-		*  @return boolean True if OK
-		*/
+		 * Checks to make sure that the given news item is OK to display.
+		 * 
+		 * This should return true if the entity looks OK to be shown and false if it does not.
+		 *
+		 * It also does some checks and may redirect to make URLs sane (IE link given with wrong section).
+		 *
+		 * @param entity $entity News item entity
+		 * @return boolean True if OK
+		 */
 		function further_checks_on_entity( $entity )
 		{
-			// make sure the blog being requested actually belongs to the blog;
-			// we don't want people mucking with the query strings with the effect that
-			// something one person said is attributed to someone else
-			// This  should return true if the entity looks OK to be shown and false if it does not.
 			if(empty($this->items[$entity->id()]))
 			{
 				if($entity->get_value('status') == 'pending' && !user_has_access_to_site($this->site_id) )
 					return false;
 				$publication_check = ($entity->has_left_relation_with_entity($this->publication, 'news_to_publication'));
-				if ($this->has_issues()) $issue_check = in_array($this->current_item_id, $this->get_issues_for_item());
+				if ($this->has_issues())
+				{
+					$issues_for_item =& $this->get_issues_for_item();
+					$issue_ids = array_keys($issues_for_item);
+					$issue_check = in_array($this->issue_id, $issue_ids);
+				}
 				else $issue_check = true;
 				if ($publication_check && $issue_check) return true;
 				else return false;
@@ -1336,7 +1419,7 @@ class PublicationModule extends Generic3Module
 		}
 			
 		/**
-		* Returns an array of the issues associated with this publication.
+		* Returns an array of the issues associated with the current item id.
 		* Format: $issue_id => $issue_entity
 		* @return array array of the issues for this publication
 		*/
@@ -1623,7 +1706,6 @@ class PublicationModule extends Generic3Module
 				$link_args['section_id'] = $section->id();
 				$section_links[$section->id()]['url'] = $this->construct_link(NULL, $link_args );
 				$section_links[$section->id()]['section_name'] = $section->get_value('name');
-				#$section_links[$section->id()] = '<a href = "'.$url.'">'.$section->get_value('name').'</a>';
 			}
 			return $section_links;
 		}
@@ -1656,33 +1738,6 @@ class PublicationModule extends Generic3Module
 		}
 		
 		/**
-		* Returns array containing the issues of this publication that this news item is associated with.
-		* @param object $item A news item entity
-		* @return array issue entitities indexed by id
-		*/
-		function find_issues_for_this_item($item)
-		{
-			$es = new entity_selector($this->site_id);
-			
-			$all_related_sections = $item->get_left_relationship( 'news_to_news_section' );
-			if(!empty($all_related_sections))
-			{
-				foreach($all_related_sections as $section)
-				{
-					$sections = $this->get_sections();
-					
-					//check to make sure that this section is associated with this publication
-					if(array_key_exists($section->id(), $sections))	
-					{
-						$related_sections_for_this_pub[$section->id()] = $section;
-					}
-				}
-			}
-			return $related_sections_for_this_pub;
-		}
-
-		
-		/**
 		* Returns a copy of the news section entity that's currently being viewed.
 		* @return object the news section entity that's currently being viewed.
 		*/
@@ -1691,7 +1746,7 @@ class PublicationModule extends Generic3Module
 			$sections = $this->get_sections();
 			if(!empty($sections) && !empty($this->request['section_id']))
 			{
-				return $sections[$this->request['section_id']];
+				return (isset($sections[$this->request['section_id']])) ? $sections[$this->request['section_id']] : false;
 			}
 			else
 				return false;
