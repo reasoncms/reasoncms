@@ -1,7 +1,16 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'UserManager';
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
+	/**
+	 * The content manager form used to edit Reason user entities
+	 */
 	class UserManager extends ContentManager
 	{
 		var $nice_labels = array(
@@ -36,7 +45,7 @@
 			
 			$this->add_element('password', 'password');	
 			$this->add_element('confirm_password', 'password');
-			$this->change_element_type('user_password_hash', 'cloaked', array('display_style'=>'hidden'));
+			$this->change_element_type('user_password_hash', 'cloaked');
 			if($this->get_value('user_password_hash'))
 			{
 				$this->set_display_name('password','Change Password');
