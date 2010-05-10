@@ -371,6 +371,7 @@
 		*/
 		var $_log_errors = false;
 		var $_disco_log_date_format = 'r';
+		var $_hidden_element_ordering = 'bottom';
 		/**#@-*/
 		
 		/**
@@ -868,7 +869,7 @@
 		
 		/**
 		* Display all elements in the form as well as buttons, form tags, and all else.
-		* Iterates through the elements and determines which display_style they are.  Each show_ method call then in
+		* Iterates through the elements and displays them.  Each show_ method call then in
 		* turns calls plasmatures's display() method.
 		* Called by {@link run_display_phase}.
 		*/
@@ -876,32 +877,78 @@
 		{
 			$this->start_form();
 			$box_object = new $this->box_class;
-			$box_object->head();
+
 			$order = $this->get_order();
-			foreach($order as $name)
+			$hidden_elements = array();
+			
+			if($this->_hidden_element_ordering != 'inline' && $this->_hidden_element_ordering != 'top' && $this->_hidden_element_ordering != 'bottom')
 			{
-				if($this->_is_element($name))
-				{
-					$type = $this->get_element_property($name, 'type');
-					$display_style = $this->get_element_property($name, 'display_style');
-					if( $type == 'hidden' OR $type == 'protected' OR $display_style == 'hidden' )
-						$this->show_hidden_element( $name, $this->get_element($name), $box_object );
-					elseif( $type == 'hr' OR $type == 'comment' OR $display_style == 'text_span' )
-						$this->show_text_span_element( $name, $this->get_element($name), $box_object );
-					else
-						$this->show_normal_element($name, $this->get_element($name), $box_object );
-				}
-				elseif($this->_is_element_group($name))
-				{
-					$this->show_element_group($name, $this->get_element_group($name), $box_object );
-				}
-				else
-					trigger_error($name.' is not a defined plasmature element or element group', WARNING);
+				trigger_error('Hidden element ordering (set to "'.$this->_hidden_element_ordering.'") must be set to one of "inline", "top", or "bottom". Resetting to default (bottom)');
+				$this->_hidden_element_ordering = 'bottom';
 			}
+			
+			if($this->_hidden_element_ordering != 'inline')
+			{
+				foreach($order as $key=>$name)
+				{
+					if( $this->_is_element($name) && $this->element_is_hidden($name) )
+					{
+						$hidden_elements[] = $name;
+						unset($order[$key]);
+					}
+				}
+			}
+			//pray($hidden_elements);
+			
+			if($this->_hidden_element_ordering == 'top')
+			{
+				$this->_show_elements($hidden_elements, $box_object);
+			}
+			
+			$box_object->head();
+			
+			$this->_show_elements($order, $box_object);
+			
 			$actions = $this->make_buttons( $this->actions );
+			
 			$box_object->foot( $actions );
+			
+			if($this->_hidden_element_ordering == 'bottom')
+			{
+				$this->_show_elements($hidden_elements, $box_object);
+			}
 			$this->close_form();
 		} // }}}
+		
+		function _show_elements($names, &$box_object)
+		{
+			foreach($names as $name)
+			{
+				$this->_show_element($name, $box_object);
+			}
+		}
+		
+		function _show_element($name, &$box_object)
+		{
+			if($this->_is_element($name))
+			{
+				
+				if($this->element_is_hidden($name))
+					$this->show_hidden_element( $name, $this->get_element($name), $box_object );
+				elseif(!$this->element_is_labeled($name))
+					$this->show_unlabeled_element( $name, $this->get_element($name), $box_object );
+				else
+					$this->show_normal_element($name, $this->get_element($name), $box_object );
+			}
+			elseif($this->_is_element_group($name))
+			{
+				$this->show_element_group($name, $this->get_element_group($name), $box_object );
+			}
+			else
+			{
+				trigger_error($name.' is not a defined plasmature element or element group', WARNING);
+			}
+		}
 		
 		/**
 		* Handles the form tag and error display
@@ -1057,20 +1104,35 @@
 		} // }}}
 		
 		/**
-		 * Print the HTML for a spanning element.
-		 * text_span elements do not use the normal 2 column display style.  Instead, they span the whole table.
+		 * Print the HTML for a spanning element (deprecated)
+		 * @param string $key Name of the element
+		 * @param defaultType $element The actual element object
+		 * @param mixed $b box class (passed by reference)
+		 * @deprecated Replaced by {@link show_unlabeled_element}
+		 */
+		function show_text_span_element( $key , $element , &$b) // {{{
+		{
+			trigger_error('show_text_span_element() is deprecated. Please use show_unlabeled_element() instead');
+			$this->show_unlabeled_element( $key , $element , $b);
+		} // }}}
+		
+		/**
+		 * Print the HTML for an element with no label
+		 *
+		 * Replaces {@link show_text_span_element}
+		 *
 		 * Called by {@link show_form}.  Part of the display phase
 		 * @param string $key Name of the element
 		 * @param defaultType $element The actual element object
 		 * @param mixed $b box class (passed by reference)
+		 * 
 		 */
-		function show_text_span_element( $key , $element , &$b) // {{{
+		function show_unlabeled_element( $key , $element , &$b) // {{{
 		{
 			$anchor = '<a name="'.$key.'_error"></a>';
-			$content = $anchor."\n".$element->get_display()."\n";
-
-			$colspan = isset( $element->colspan ) ? $element->colspan : 2 ;
-			$b->row_text_span( $content, $colspan, $this->has_error($key), $key );
+			$content = $anchor."\n".$element->get_comments('before').$element->get_display().$element->get_comments()."\n";
+			
+			$b->box_item_no_label( $content, $this->has_error($key), $key );
 		} // }}}
 		
 		/**
@@ -1115,12 +1177,12 @@
 					$name = $element_group->get_display_name();
 					if($group_is_required)
 						$name .= '*';
-					$b->row_text_span( $anchor.prettify_string($name),2,$this->has_error($element_group_name), $element_group_name );
+					$b->box_item_no_label( $anchor.prettify_string($name),$this->has_error($element_group_name), $element_group_name );
 					$anchor = '';
 				}
 				
 				$content = $anchor."\n".$element_group->get_display()."\n".$element_group->get_comments()."\n";
-				$b->row_text_span($content, 2, $this->has_error($element_group_name), $element_group_name);
+				$b->box_item_no_label($content, $this->has_error($element_group_name), $element_group_name);
 			}
 			else
 			{
@@ -1343,8 +1405,9 @@
 	
 		/**
 	    * Adds a comment to the existing comments of an element or element group.
-		* @param $element string Name of the element or element group
-		* @param $value string Comments for the field.
+		* @param string $element Name of the element or element group
+		* @param string $value Comments for the field.
+		* @param string $position 'before' or 'after'
 		*/
 		function add_comments( $element, $value, $position = 'after' ) // {{{
 		{
@@ -1610,6 +1673,32 @@
 			}
 			else
 				trigger_error('Cannot set option order for element '.$element_name.'; element is not defined', WARNING);
+		}
+		
+		function element_is_hidden($element_name)
+		{
+			if($this->_is_element($element_name))
+			{
+				$element_object = $this->get_element($element_name);
+				return $element_object->is_hidden();
+			}
+			else
+			{
+				trigger_error('Could not determine whether element is hidden, as "'.$element_name.'" is not a defined form element.');
+			}
+		}
+		
+		function element_is_labeled($element_name)
+		{
+			if($this->_is_element($element_name))
+			{
+				$element_object = $this->get_element($element_name);
+				return $element_object->is_labeled();
+			}
+			else
+			{
+				trigger_error('Could not determine whether element is labeled, as "'.$element_name.'" is not a defined form element.');
+			}
 		}
 		
 		/**
@@ -2370,7 +2459,35 @@
 			}
 			return array( $t, $args );
 		} // }}}
-	
+		
+		/**
+		 * Select a method for Disco's handling of hidden fields
+		 *
+		 * Possible values for $order:
+		 * - "top" -- places the hidden elements at the top of the form
+		 * - "bottom" -- places the hidden elements at the bottom of the form
+		 * - "inline" -- allows the hidden elements to appear intermixed with non-hidden elements.
+		 * 
+		 * The inline setting is not recommended for table-based disco forms, as it creates invalid
+		 * (X)HTML.
+		 *
+		 * @param string $order
+		 * @return boolean True if set; false if invalid $order is given
+		 */
+		function set_hidden_element_ordering($order)
+		{
+			switch($order)
+			{
+				case 'top':
+				case 'bottom':
+				case 'inline':
+					$this->_hidden_element_ordering = $order;
+					return true;
+				default:
+					trigger_error('Order value given not one of "top","bottom", or "inline". Unable to set the hidden element ordering method.');
+					return false;
+			}
+		}
 		
 	//////////////////////////////////////////////////
 	// CALLBACKS

@@ -50,6 +50,12 @@
 */
 	class Box // {{{
 	{
+		var $_has_required_fields = false;
+		
+		function has_required_fields()
+		{
+			$this->_has_required_fields = true;
+		}
 		/**
 		* Begins the form table.
 		*/
@@ -100,7 +106,7 @@
 					$markup .= '*';
 			}
 			$markup .= '</td>'."\n";
-			$markup .= '<td align="left">'."\n";
+			$markup .= '<td align="left" class="element">'."\n";
 			echo $markup;		
 		}
 		
@@ -142,14 +148,35 @@
 		* @param int $colspan The number of columns this element should span (default 2)
 		* @param boolean $error Whether or not this element has an error (optional)
 		* @param string $key The id of this row (optional)
-		* @todo Add the ability to label a spanning element and to indicate when it is required.
+		* @deprecated
+		* @todo Add error when called
 		*/
 		function row_text_span( $content, $colspan = 2, $error = false,  $key = false ) // {{{
 		{
-			$this->box_item_text_span( $content, $colspan, $error,  $key );
+			// trigger_error('row_text_span() is deprecated. Please use box_item_no_label() instead.');
+			$this->box_item_no_label($content, $error, $key);
 		} // }}}
 		
-		function box_item_text_span( $content, $colspan, $error,  $key ) // {{{
+		/**
+		 * @deprecated
+		 * @todo Add error when called
+		 */
+		function box_item_text_span( $content, $colspan, $error = false,  $key = false ) // {{{
+		{
+			// trigger_error('box_item_text_span() is deprecated. Please use box_item_no_label() instead.');
+			$this->box_item_no_label($content, $error, $key);
+		} // }}}
+		
+		/**
+		 * Produce a box item without a label
+		 *
+		 * This method replaces row_text_span() and box_item_text_span()
+		 *
+		 * @param string $content The markup for the element
+		 * @param boolean $error Does this element have an error?
+		 * @param string $key The key for the element
+		 */
+		function box_item_no_label($content, $error, $key)
 		{
 			if (!empty($key))
 				$id = str_replace("_", "", $key);
@@ -158,12 +185,12 @@
 				$markup .= 'class="error" '; 
 			if(!empty($id)) 
 				$markup .= 'id="'.$id.'Row">'."\n";
-			$markup .= '<td colspan="'.$colspan.'" class="words">'."\n";
+			$markup .= '<td colspan="2" class="words">'."\n";
 			$markup .= $content."\n";
 			$markup .= '</td>'."\n";
 			$markup .= '</tr>'."\n"."\n";
 			echo $markup;
-		} // }}}
+		}
 		
 		/**
 		* Displays the buttons for this form and closes the form table.
@@ -181,7 +208,7 @@
 					$buttons[$tmp] = $tmp;
 				}
 				
-				$markup .= '<tr id="discoSubmitRow">'."\n".'<td align="right">&nbsp;</td>'."\n".'<td align="left">'."\n";
+				$markup .= '<tr id="discoSubmitRow">'."\n".'<td align="right">&nbsp;</td>'."\n".'<td align="left" class="element">'."\n";
 				
 				foreach($buttons as $name => $value)
 				{

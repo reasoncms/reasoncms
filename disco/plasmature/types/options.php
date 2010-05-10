@@ -449,6 +449,15 @@ class select_no_sortType extends selectType
 	var $type = 'select_no_sort';
 	var $add_null_value_to_top = false;
 	var $sort_options = false;
+}	
+	 
+/**
+ * @package disco
+ * @subpackage plasmature
+ */
+class select_no_labelType extends selectType // {{{
+{
+	var $_labeled = false;
 }
 
 /**

@@ -39,6 +39,15 @@ class textType extends defaultType
 		return '<input type="text" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'" size="'.$this->size.'" maxlength="'.$this->maxlength.'" id="'.$this->name.'Element" />';
 	}
 }
+	
+/**
+ * @package disco
+ * @subpackage plasmature
+ */
+class text_no_labelType extends textType // {{{
+{
+	var $_labeled = false;
+}
 
 /**
  * Prints out value of item without allowing you to edit it.
@@ -192,4 +201,13 @@ class textareaType extends defaultType
 			}
 		}
 	}
+}
+	 
+/**
+ * @package disco
+ * @subpackage plasmature
+ */
+class textarea_no_labelType extends textareaType // {{{
+{
+	var $_labeled = false;
 }

@@ -18,8 +18,8 @@ class commentType extends defaultType
 {
 	var $type = 'comment';
 	var $text = 'Comment';
-	var $colspan = 2;
 	var $type_valid_args = array( 'text' );
+	var $_labeled = false;
 	function grab()
 	{
 	}
@@ -35,8 +35,8 @@ class commentType extends defaultType
  * @subpackage plasmature
  */
 class commentWithLabelType extends commentType {
-	var $colspan = null;
 	var $type = 'commentWithLabel';
+	var $_labeled = true;
 }
 
 /**
@@ -47,6 +47,7 @@ class commentWithLabelType extends commentType {
 class hrType extends defaultType
 {
 	var $type = 'hr';
+	var $_labeled = false;
 	function get_display()
 	{
 		return '<hr />';

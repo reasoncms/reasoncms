@@ -661,6 +661,8 @@ class uploadType extends defaultType
 
 /**
  * An upload type specifically for images.
+ * @package disco
+ * @subpackage plasmature
  */
 class image_uploadType extends uploadType
 {
@@ -816,6 +818,15 @@ class image_uploadType extends uploadType
 			$replace_text = "Upload a different image:";
 		return parent::_get_upload_display($current, $add_text, $replace_text);
 	}
+}
+
+/**
+ * @package disco
+ * @subpackage plasmature
+ */
+class image_upload_no_labelType extends image_uploadType
+{
+        var $_labeled = false;
 }
 
 /**

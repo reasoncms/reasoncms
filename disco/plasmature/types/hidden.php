@@ -17,6 +17,7 @@ require_once PLASMATURE_TYPES_INC."default.php";
 class hiddenType extends defaultType
 {
 	var $type = 'hidden';
+	var $_hidden = true;
 	
 	function grab()
 	{
@@ -55,7 +56,6 @@ class protectedType extends hiddenType
 class cloakedType extends hiddenType
 {
 	var $type = 'cloaked';
-	var $display_style = 'hidden';
 	function grab()
 	{
 	}

@@ -67,8 +67,7 @@ class checkboxType extends defaultType
  */
 class checkboxfirstType extends checkboxType {
 	var $type = 'checkboxfirst';
-	var $display_style = 'text_span';
-	var $colspan = 2;
+	var $_labeled = false;
 	
 	/**
 	 * Set to false because {@link get_display()} includes the markup for the display name.

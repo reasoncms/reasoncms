@@ -127,21 +127,6 @@ class defaultType
 	 */
 	var $use_display_name = true;
 	
-#		What is the point of this?  aren't hidden elements a particular type? and colspan has a variable?
-	/** 
-	 * Indicates special display instructions to Disco.
-	 * For example, indicates if this element is a hidden element or if it spans columns.
-	 * @var string
-	 */
-	var $display_style = 'normal';
-	
-	/** 
-	 * Number of columns which this element spans in the form. 
-	 * This is basically information for the box class.
-	 * @var int
-	 */
-	var $colspan;
-	
 	/** 
 	 * Comments to be displayed after this element.
 	 * @var string
@@ -167,11 +152,11 @@ class defaultType
 	 * @var array
 	 */
 	var $_valid_args = array( 'display_name',
-								'display_style',
-							  'colspan',
 							  'comments',
 							  'value' =>'default',
-							  'db_type');
+							  'db_type',
+							  'display_style', // deprecated
+							  );
 							  
 	/**
 	 * Contains the names of properties specific to  this type that may be externally set using the parameter $args for the {@link init()}
@@ -187,6 +172,26 @@ class defaultType
 	 * @var boolean
 	 */
 	var $_valid_args_inited = false;
+		
+	/**
+	 * Indicates whether the plasmature element is hidden.
+	 *
+	 * Access via _is_hidden() method
+	 *
+	 * @var boolean
+	 * @access private
+	 */
+	var $_hidden = false;
+		
+	/**
+	 * Indicates whether the plasmature element should have a label
+	 *
+	 * Access via _is_labeled() method
+	 *
+	 * @var boolean
+	 * @access private
+	 */
+	var $_labeled = true;
 	
 
 	/////////////////////////
@@ -494,6 +499,7 @@ class defaultType
 	/**
 	 * Appends the given string to this element's {@link comments}.
 	 * @param string $content The text to be added to the comments.
+	 * @param string $position 'before' or 'after'
 	 * @todo Add a check to make sure that $content is a string.
 	 */
 	function add_comments( $content, $position = 'after' )
@@ -607,5 +613,37 @@ class defaultType
 	function register_fields()
 	{
 		return array();
+	}
+		
+	/**
+	 * Is this element hidden?
+	 * @return boolean
+	 * @todo Remove backwards-compatibility hack to support display_style
+	 */
+	function is_hidden()
+	{
+		// backwards compatibility hack. This will go away later on. */
+		if(!empty($this->display_style) && 'hidden' == $this->display_style)
+		{
+			trigger_error('Using display_style to hide an element is deprecated in plasmature. Set var $_hidden = true instead.');
+			return true;
+		}
+		return $this->_hidden;
+	}
+	
+	/**
+	 * Is this element labeled?
+	 * @return boolean
+	 * @todo Remove backwards-compatibility hack to support display_style
+	 */
+	function is_labeled()
+	{
+		// backwards compatibility hack. This will go away later on. */
+		if(!empty($this->display_style) && 'text_span' == $this->display_style)
+		{
+			trigger_error('Using text_span to hide an element\'s label is deprecated in plasmature. Use a "_no_label" version of the plasmature type if available; otherwise create your own by extending it and setting var $_labeled = false instead.');
+			return false;
+		}
+		return $this->_labeled;
 	}
 }
