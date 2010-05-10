@@ -1,6 +1,16 @@
 <?php
+/**
+ * @package reason
+ * @subpackage content_managers
+ */
+	/**
+	 * Register the content manager with Reason
+	 */
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'news_handler';
 	
+	/**
+	 * A content manager for posts
+	 */
 	class news_handler extends ContentManager 
 	{
 		var $publications; //pub_id=>pub_entity
