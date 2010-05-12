@@ -55,6 +55,7 @@ class DatabasesModule extends Generic3Module
 	{
 		$this->es->set_order( 'entity.name ASC' );
 		$this->es->add_left_relationship_field( 'db_to_primary_external_url', 'external_url' , 'url' , 'primary_url' );
+		$this->es->optimize('STRAIGHT_JOIN');
 		$this->db_alter_es($this->es);
 		
 	} // }}}
