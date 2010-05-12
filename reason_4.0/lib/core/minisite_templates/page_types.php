@@ -300,6 +300,13 @@
 			),
 			'main_post' => 'blurb',
 		),
+		'blurb_no_demotion_of_headings' => array(
+			'main_post' => array(
+				'module' => 'blurb',
+				'demote_headings' => 0,
+			),
+			'sub_nav' => '',
+		),
 		'blurb_no_nav' => array(
 			'navigation' => '',
 			'sub_nav_2' => '',
