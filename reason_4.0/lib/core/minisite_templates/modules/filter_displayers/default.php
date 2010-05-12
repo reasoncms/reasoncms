@@ -293,7 +293,7 @@ class defaultFilterDisplay
 			else
 				$top_filter_key = 0;
 			$next_filter_key = $top_filter_key + 1;
-			$ret .= $this->_build_filter_set($next_filter_key);
+			if (isset($this->module_ref->items) && !empty($this->module_ref->items)) $ret .= $this->_build_filter_set($next_filter_key);
 			$ret .= '</form>'."\n";
 		}
 		return $ret;
