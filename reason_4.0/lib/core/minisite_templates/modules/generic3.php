@@ -159,6 +159,7 @@
 			'filter_displayer'=>'default.php',
 			'pagination_displayer'=>'window.php',
 			'wrapper_id_string'=>'',
+			'straight_join_filter_threshold' => 3,
 		);
 		var $jump_to_item_if_only_one_result = true;
 		var $has_feed = false;
@@ -261,7 +262,13 @@
 					// in some extremely long load times. Forcing a straight join appears to address this issue.
 					if ($this->use_filters && !empty($this->request['filters']))
 					{
-						//$this->es->optimize('STRAIGHT_JOIN'); 
+						if (isset($this->params['straight_join_filter_threshold']) && is_numeric($this->params['straight_join_filter_threshold']))
+						{
+							if (count($this->request['filters']) >= $this->params['straight_join_filter_threshold'])
+							{
+								$this->es->optimize('STRAIGHT_JOIN');
+							}
+						}
 					}									  
 					
 					// If we have a list, either below an item or by itself, and also
