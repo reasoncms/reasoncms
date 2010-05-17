@@ -2338,7 +2338,7 @@ class EventsModule extends DefaultMinisiteModule
 			foreach($keys as $key)
 			{
 				$key = trim(strip_tags($key));
-				$parts[] = '<a href="'.$this->construct_link(array('search'=>urlencode($key),'no_search'=>'1'),false).'">'.$key.'</a>';
+				$parts[] = '<a href="'.$this->construct_link(array('search'=>$key,'no_search'=>'1'),false).'">'.$key.'</a>';
 			}
 			echo implode(', ',$parts);
 			echo '</p>';
