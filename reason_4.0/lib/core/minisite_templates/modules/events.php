@@ -1,4 +1,12 @@
-<?php 
+<?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
+ 
+ /**
+  * include the base class & dependencies, and register the module with Reason
+  */
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'classes/calendar.php' );
 reason_include_once( 'classes/calendar_grid.php' );
@@ -6,54 +14,349 @@ reason_include_once( 'classes/icalendar.php' );
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsModule';
 
+/**
+ * A minisite module that presents a calendar of events
+ *
+ * By default, this module shows upcoming events on the current site,
+ * and proves an interface to see past events
+ *
+ * @todo develop a templating system to make it easier to customize the output of this module
+ */
 class EventsModule extends DefaultMinisiteModule
 {
+	/**
+	 * The number of events that the calendar attempts to display if there is no
+	 * duration specified. Note that the actual number may be larger or smaller
+	 * due to the calendar "snapping" to full days.
+	 * @var integer
+	 */
 	var $ideal_count;
+	/**
+	 * The id of the wrapper class around the module
+	 * @var string
+	 * @access public
+	 */
 	var $div_id = 'calendar';
+	/**
+	 * Should the module display options (e.g. categories, audiences, etc.)?
+	 * @var boolean
+	 */
 	var $show_options = true;
+	/**
+	 * Should the module display navigation (e.g. next/previous links)?
+	 * @var boolean
+	 */
 	var $show_navigation = true;
+	/**
+	 * Should the module display available views (e.g. all/year/month/day)?
+	 * @var boolean
+	 */
 	var $show_views = true;
+	/**
+	 * Should the module display a month-grid date picker?
+	 * @var boolean
+	 */
 	var $show_calendar_grid = true;
+	/**
+	 * Should the module display event times?
+	 * @var boolean
+	 */
 	var $show_times = true;
+	/**
+	 * The request keys that represent persistent state.
+	 *
+	 * The module ought to include these request variables in links if they are present.
+	 *
+	 * @var array
+	 * @access private
+	 */
 	var $passables = array('start_date','textonly','view','category','audience','end_date','search');
+	
+	/**
+	 * Should the module limit events to the current site?
+	 *
+	 * @deprecated Use additional_sites and sharing_mode parameters instead
+	 * @var boolean
+	 */
 	var $limit_to_current_site = true;
+	/**
+	 * Key-value pairs (from the request) that should be included in links
+	 * unless explicitly cleared.
+	 *
+	 * These are determined by @passables and represent state that should persist among
+	 * distinct page views (again, unless explicitly changed or cleared by the user).
+	 *
+	 * @var array
+	 * @access private
+	 */
 	var $pass_vars = array();
+	/**
+	 * Does the module have content to display?
+	 *
+	 * This should be set in the init phase, as the has_content function needs it to respond correctly.
+	 * @var boolean
+	 * @access private
+	 */
 	var $has_content = true;
-	var $calendar; // A reasonCalendar object
-	var $start_date; // A mysql-formatted date
+	/**
+	 * The reasonCalendar object that represents the primary set of events being displayed
+	 *
+	 * @var object
+	 * @access private
+	 */
+	var $calendar;
+	/**
+	 * The beginning date for events being displayed
+	 *
+	 * This is populated during init phase.
+	 *
+	 * @var string A MySQL-formatted date (e.g. YYYY-MM-DD)
+	 * @access private
+	 */
+	var $start_date;
+	/**
+	 * When calculating the window of time to display (if not given),
+	 * should the calendar limit itself to defined views (e.g. day/week/monthyear)?
+	 *
+	 * @var boolean true to limit to defined views; false to select arbitrary date range
+	 */
 	var $snap_to_nearest_view = true;
+	/**
+	 * Events to display
+	 *
+	 * This is populated during init phase.
+	 *
+	 * Note that these are date entities, not individual occurrences. Do not iterate through
+	 * this array to build the calendar, as you will not handle repeating events correctly.
+	 *
+	 * @var array of Reason entities
+	 * @access private
+	 */
 	var $events = array();
+	/**
+	 * Event ids to display, organized by date
+	 *
+	 * This is populated during init phase.
+	 *
+	 * @var array in form array('YYYY-MM-DD'=>array('1','2',3'),'YYYY-MM-DD'=>array(...),...)
+	 * @access private
+	 */
 	var $events_by_date = array();
-	var $show_months = true; // boolean
+	/**
+	 * Should the calendar show months?
+	 *
+	 * This may be dynamically set in init for certain views (e.g. daily & weekly)
+	 *
+	 * @var boolean
+	 */
+	var $show_months = true;
+	/**
+	 * Place to store the most recent month in which item has been displayed
+	 *
+	 * This var is what allows the code that lists items to display a month if the month changes.
+	 *
+	 * @var string in form MM (Jan = '01'; Dec = '12')
+	 * @access private
+	 */
 	var $prev_month;
+	/**
+	 * Place to store the most recent year in which item has been displayed
+	 *
+	 * This var is what allows the code that lists items to display a year if the year changes.
+	 *
+	 * @var string in form YYYY
+	 * @access private
+	 */
 	var $prev_year;
+	/**
+	 * HTML for the next and previous links
+	 *
+	 * It turns out that generating these links is surprisingly expensive, so we only do it once, and store the resuts here.
+	 *
+	 * @var string HTML
+	 * @access private
+	 */
 	var $next_and_previous_links;
+	/**
+	 * HTML for the calendar grid
+	 *
+	 * Since generating the grid can be expensive, we store the results here so we don't have to
+	 * do it twice.
+	 *
+	 * @var string HTML
+	 * @access private
+	 */
 	var $calendar_grid_markup = '';
+	/**
+	 * HTML for the options bar (e.g. categories/audiences/etc.)
+	 *
+	 * Since generating the options bar can be expensive, we store the results here 
+	 * so we don't have to do it twice.
+	 *
+	 * @var string HTML
+	 * @access private
+	 */
 	var $options_bar;
-	var $today; // A mysql-formatted date
-	var $tomorrow; // A mysql-formatted date
-	var $yesterday; // A mysql-formatted date
-	var $event; // An event entity
-	var $events_page_url; // this is left empty, to be filled by child classes
+	/**
+	 * Today's date, in MySQL format (YYYY-MM-DD)
+	 *
+	 * This is set in init.
+	 *
+	 * @var string HTML
+	 * @access private
+	 */
+	var $today;
+	/**
+	 * Tomorrow's date, in MySQL format (YYYY-MM-DD)
+	 *
+	 * This is set in init.
+	 *
+	 * @var string HTML
+	 * @access private
+	 */
+	var $tomorrow;
+	/**
+	 * Yesterday's date, in MySQL format (YYYY-MM-DD)
+	 *
+	 * This is set in init.
+	 *
+	 * @var string HTML
+	 * @access private
+	 */
+	var $yesterday;
+	
+	/**
+	 * The current event (if viewing an individual event)
+	 *
+	 * This is set in init.
+	 *
+	 * @var mixed a Reason event entity or NULL
+	 * @access private
+	 */
+	var $event;
+	
+	/**
+	 * The URL of the events page
+	 *
+	 * In the base events module, this is empty, but in sidebar-style modules this should be
+	 * populated in the init phase with the proper URL.
+	 *
+	 * @var mixed URL string or NULL
+	 */
+	var $events_page_url;
+	/**
+	 * The format for the display of time information in the listing
+	 * @var string
+	 */
 	var $list_time_format = 'g:i a';
+	/**
+	 * The format for the display of date information in the listing
+	 * @var string
+	 */
 	var $list_date_format = 'l, F jS';
+	/**
+	 * The audiences that should be available as filters on this calendar
+	 * 
+	 * This is set in the init phase.
+	 *
+	 * @var array of reason entities
+	 * @access private
+	 */
 	var $audiences = array();
+	/**
+	 * Should this calendar show the most recent event if no future events are found?
+	 * @var boolean
+	 */
 	var $rerun_if_empty = true;
+	/**
+	 * Should this calendar report date of the current event (or event being shown) when
+	 * asked for last modified information?
+	 * @var boolean
+	 */
 	var $report_last_modified_date = true;
+	/**
+	 * HTML markup for the view navigation (e.g. day/week/etc.)
+	 *
+	 * In order to avoid generating the view navigation twice, it gets stored here
+	 * @var string
+	 * @access private
+	 */
 	var $view_markup = '';
+	/**
+	 * The year that has the earliest calendar item
+	 *
+	 * This should not be accessed directly; instead use the method get_min_year()
+	 *
+	 * @var string YYYY
+	 * @access private
+	 */
 	var $min_year;
+	/**
+	 * The year that has the last calendar item
+	 *
+	 * This should not be accessed directly; instead use the method get_max_year()
+	 *
+	 * @var string YYYY
+	 * @access private
+	 */
 	var $max_year;
+	/**
+	 * The parameters that page types can set on the module.
+	 *
+	 * 'view' (string) forces a specific view. Possible values: daily, weekly, monthly, yearly, all
+	 *
+	 * 'limit_to_page_categories' (boolen) determines if the module will display all events on site
+	 * or just those with a category matching one on current page
+	 *
+	 * 'list_type' (string) can be 'standard' or 'verbose'
+	 *
+	 * 'additional_sites' (string) Sites other than the current one to pull events from.
+	 * This can be a comma-separated set of site and/or site type unique names OR the keywords 'k_parent_sites', 'k_child_sites', or 'k_sharing_sites'
+	 *
+	 * 'sharing_mode' (string) can be 'all' (e.g. both shared and private) or 'shared_only'
+	 *
+	 * 'show_images' (boolean) determines if teaser images are displayed in list
+	 *
+	 * 'ideal_count' (integer) sets the @ideal_count value for dynamic view selection
+	 *
+	 * 'default_view_min_days' (integer) sets a smallest number of days the dynamically selected view can have.
+	 * 
+	 *
+	 * @var array
+	 * @access private
+	 * @todo review current default default_view_min_days value for sanity
+	 */
 	var $acceptable_params = array(
 	 						'view'=>'',
 							'limit_to_page_categories'=>false,
 							'list_type'=>'standard',
+							'additional_sites'=>'',
+							'sharing_mode'=>'all',
+							'show_images'=>false,
+							'ideal_count'=>NULL,
+							'default_view_min_days'=>1, // Is this really what we want here???
 						);
-	
+	/**
+	 * Views that should not be indexed by search engines
+	 *
+	 * The idea is that this keeps search engines from indexing pages that are redundant 
+	 * with other pages. Note that these pages should still allow robots to follow links, just
+	 * not to index the pages.
+	 * @var array
+	 * @access private
+	 */
 	var $views_no_index = array('daily','weekly','monthly');
+	/**
+	 * Sites that should be queried for events
+	 * @access private
+	 * @var array
+	 */
+	var $event_sites;
 	/**
 	 * Toggles on and off the links to iCalendar-formatted data.
 	 *
 	 * Set to true to turn on the links; false to turn them off
+	 * @var boolean
 	 */
 	var $show_icalendar_links = true;
 	
@@ -61,6 +364,9 @@ class EventsModule extends DefaultMinisiteModule
 	// General Functions
 	//////////////////////////////////////
 	
+	/**
+	 * Initialize the module
+	 */
 	function init( $args = array() ) // {{{
 	{
 		parent::init( $args );
@@ -80,6 +386,10 @@ class EventsModule extends DefaultMinisiteModule
 			$this->init_event();
 	} // }}}
 
+	/**
+	 * Get the set of cleanup rules for user input
+	 * @return array
+	 */
 	function get_cleanup_rules()
 	{
 		if (!isset($this->calendar)) $this->calendar = new reasonCalendar;
@@ -137,6 +447,11 @@ class EventsModule extends DefaultMinisiteModule
 		);
 	}
 	
+	/**
+	 * Redirect to well-constructed start_date variable when presented with the separate 
+	 * start_year/start_day/start_month fields in the date-choosing form.
+	 * @return void
+	 */
 	function handle_jump()
 	{
 		if(!empty($this->request['start_year']))
@@ -160,6 +475,9 @@ class EventsModule extends DefaultMinisiteModule
 		}
 	}
 
+	/**
+	 * Makes sure the input from userland is sanitized
+	 */
 	function validate_inputs()
 	{
 		if (!isset($this->calendar)) $this->calendar = new reasonCalendar;
@@ -237,6 +555,163 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		
 	}
+	function _get_sites()
+	{
+		if(empty($this->params['additional_sites']))
+		{
+			return new entity($this->site_id);
+		}
+		if(!empty($this->event_sites))
+		{
+			return $this->event_sites;
+		}
+		$sites = array();
+		$sites[$this->site_id] = new entity($this->site_id);
+		$site_strings = explode(',',$this->params['additional_sites']);
+		foreach($site_strings as $site_string)
+		{
+			$site_string = trim($site_string);
+			switch($site_string)
+			{
+				case 'k_parent_sites':
+					$psites = $this->_get_parent_sites($this->site_id);
+					if(!empty($psites))
+						$sites = $sites + $psites;
+					break;
+				case 'k_child_sites':
+					$csites = $this->_get_child_sites($this->site_id);
+					if(!empty($csites))
+						$sites = $sites + $csites;
+					break;
+				case 'k_sharing_sites':
+					$ssites = $this->_get_sharing_sites($this->site_id);
+					if(!empty($ssites))
+						$sites = $sites + $ssites;
+					break;
+				default:
+					$usites = $this->_get_sites_by_unique_name($site_string, $this->site_id);
+					if(!empty($usites))
+						$sites = $sites + $usites;
+			}
+		}
+		$this->event_sites = $sites;
+		return $this->event_sites;
+	}
+	function _get_parent_sites($site_id)
+	{
+		$es = new entity_selector();
+		$es->add_type(id_of('site'));
+		$es->add_right_relationship( $site_id, relationship_id_of( 'parent_site' ) );
+		
+		$site = new entity($site_id);
+		if($site->get_value('site_state') == 'Live')
+		{
+			$es->limit_tables('site');
+			$es->limit_fields('site_state');
+			$es->add_relation('site_state="Live"');
+		}
+		else
+		{
+			$es->limit_tables();
+			$es->limit_fields();
+		}
+		
+		return $es->run_one();
+	}
+	function _get_child_sites($site_id)
+	{
+		$es = new entity_selector();
+		$es->add_type(id_of('site'));
+		$es->add_left_relationship( $site_id, relationship_id_of( 'parent_site' ) );
+		
+		$site = new entity($site_id);
+		if($site->get_value('site_state') == 'Live')
+		{
+			$es->limit_tables('site');
+			$es->limit_fields('site_state');
+			$es->add_relation('site_state="Live"');
+		}
+		else
+		{
+			$es->limit_tables();
+			$es->limit_fields();
+		}
+		
+		return $es->run_one();
+	}
+	/**
+	 * Returns an array of site entities keyed by site id
+	 *
+	 * If a site unique name is given, this function will return a single-member array of that site
+	 *
+	 * If a site type unique name is given, this function will return all the sites that are of that site type.
+	 * If the context site is live, only live sites will be returned.
+	 *
+	 * @param string $unique_name the unique anem of a site or a site type entity
+	 * @param integer $context_site_id the id of the context site
+	 * @access private
+	 */
+	function _get_sites_by_unique_name($unique_name, $context_site_id)
+	{
+		$return = array();
+		if($id = id_of($unique_name))
+		{
+			$entity = new entity($id);
+		
+			switch($entity->get_value('type'))
+			{
+				case id_of('site'):
+					$return[$id] = $entity;
+					break;
+				case id_of('site_type_type'):
+					$es = new entity_selector();
+					$es->add_type(id_of('site'));
+					$es->add_left_relationship( $id, relationship_id_of( 'site_to_site_type' ) );
+					$context_site = new entity($context_site_id);
+					if($context_site->get_value('site_state') == 'Live')
+					{
+						$es->limit_tables('site');
+						$es->limit_fields('site_state');
+						$es->add_relation('site_state="Live"');
+					}
+					else
+					{
+						$es->limit_tables();
+						$es->limit_fields();
+					}
+					$return = $es->run_one();
+					break;
+				default:
+					trigger_error('Unique name "'.$unique_name.'" passed to events module in additional_sites parameter does not correspond to a Reason site or site type. Not included in sites shown.');
+			}
+		}
+		else
+		{
+			trigger_error($unique_name.' is not a unique name of any Reason entity. Site(s) will not be included.');
+		}
+		return $return;
+	}
+	function _get_sharing_sites($site_id)
+	{
+		$es = new entity_selector();
+		$es->add_type(id_of('site'));
+		$es->add_left_relationship( id_of('event_type'), relationship_id_of('site_shares_type'));
+		
+		$site = new entity($site_id);
+		if($site->get_value('site_state') == 'Live')
+		{
+			$es->limit_tables('site');
+			$es->limit_fields('site_state');
+			$es->add_relation('site_state="Live"');
+		}
+		else
+		{
+			$es->limit_tables();
+			$es->limit_fields();
+		}
+		
+		return $es->run_one();
+	}
 	function init_and_run_ical_calendar()
 	{
 		$start_date = !empty($this->request['start_date']) ? $this->request['start_date'] : $this->today;
@@ -272,7 +747,6 @@ class EventsModule extends DefaultMinisiteModule
 			elseif(!empty($this->params['view']))
 				$view = $this->params['view'];
 		}
-		
 		$init_array = $this->make_reason_calendar_init_array($start_date, $end_date, $view);
 		$this->calendar = new reasonCalendar($init_array);
 		
@@ -436,7 +910,6 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		return $ret;
 	}
-	
 	function rerun_calendar()
 	{
 		//trigger_error('get_max_date called');
@@ -569,7 +1042,7 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		if($this->show_months == true && ($this->prev_month != substr($day,5,2) || $this->prev_year != substr($day,0,4) ) )
 		{
-			echo '<h3>'.prettify_mysql_datetime( $day, 'F Y' ).'</h3>'."\n";
+			echo '<h3 class="day">'.prettify_mysql_datetime( $day, 'F Y' ).'</h3>'."\n";
 			$this->prev_month = substr($day,5,2);
 			$this->prev_year = substr($day,0,4);
 		}
@@ -578,11 +1051,11 @@ class EventsModule extends DefaultMinisiteModule
 			$today = ' (Today)';
 		else
 			$today = '';
-		echo '<h4>'.prettify_mysql_datetime( $day, $this->list_date_format ).$today.'</h4>'."\n";
+		echo '<h4 class="day">'.prettify_mysql_datetime( $day, $this->list_date_format ).$today.'</h4>'."\n";
 		echo '<ul>';
 		foreach ($this->events_by_date[$day] as $event_id)
 		{
-			echo '<li>';
+			echo '<li class="event">';
 			$this->show_event_list_item( $event_id, $day );
 			echo '</li>'."\n";
 		}
@@ -599,20 +1072,21 @@ class EventsModule extends DefaultMinisiteModule
 	
 	function show_event_list_item_standard( $event_id, $day ) // {{{
 	{
+		$link = $this->events_page_url.$this->construct_link(array('event_id'=>$this->events[$event_id]->id(),'date'=>$day));
+		if($this->params['show_images'])
+			$this->_show_teaser_image($event_id, $link);
 		if($this->show_times && substr($this->events[$event_id]->get_value( 'datetime' ), 11) != '00:00:00')
 			echo prettify_mysql_datetime( $this->events[$event_id]->get_value( 'datetime' ), $this->list_time_format ).' - ';
-		echo '<a href="';
-		echo $this->events_page_url;
-		echo $this->construct_link(array('event_id'=>$this->events[$event_id]->id(),'date'=>$day ));
-		echo '">';
+		echo '<a href="'.$link.'">';
 		echo $this->events[$event_id]->get_value( 'name' );
 		echo '</a>';
 	} // }}}
 	
 	function show_event_list_item_verbose( $event_id, $day ) // {{{
 	{
-		$link = $this->construct_link(array('event_id'=>$this->events[$event_id]->id(),'date'=>$day,'view'=>$this->calendar->get_view()));
-		//echo '<p class="name">';
+		$link = $this->events_page_url.$this->construct_link(array('event_id'=>$this->events[$event_id]->id(),'date'=>$day));
+		if($this->params['show_images'])
+			$this->_show_teaser_image($event_id, $link);
 		echo '<a href="'.$link.'">';
 		echo $this->events[$event_id]->get_value( 'name' );
 		echo '</a>';
@@ -636,6 +1110,32 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		echo '</ul>'."\n";
 	} // }}}
+	
+	function _show_teaser_image($event_id, $link)
+	{
+		static $image_cache = array();
+		if(!array_key_exists($event_id, $image_cache))
+		{
+			$es = new entity_selector();
+        	$es->description = 'Selecting images for event';
+        	$es->add_type( id_of('image') );
+        	$es->add_right_relationship( $event_id, relationship_id_of('event_to_image') );
+        	$es->set_num(1);
+        	$images = $es->run_one();
+        	if(!empty($images))
+        	{
+        		$image_cache[$event_id] = current($images);
+        	}
+        	else
+        	{
+        		$image_cache[$event_id] = NULL;
+        	}
+        }
+        if(!empty($image_cache[$event_id]))
+        {
+        	show_image( $image_cache[$event_id], true, false, false, '', $this->textonly, false, $link );
+        }
+	}
 	
 	function show_navigation() // {{{
 	{
@@ -735,6 +1235,7 @@ class EventsModule extends DefaultMinisiteModule
 			$ret .= '<li><strong>'.$this->get_scope('-').'</strong></li>'."\n";
 		}
 		$ret .= '</ul>'."\n";
+	//	$ret .= '<div style="clear:both;border:1px solid #f00;"></div>'."\n"; //ie7 fix??
 		$ret .= '</div>'."\n";
 		return $ret;
 	} // }}}
@@ -749,6 +1250,8 @@ class EventsModule extends DefaultMinisiteModule
 		$cs->set_order('entity.name ASC');
 		$cats = $cs->run_one();
 		$cats = $this->check_categories($cats);
+		if(empty($cats))
+			return '';
 		$ret .= '<div class="categories';
 		if ($this->calendar->get_view() == "all")
 			$ret .= ' divider';
@@ -768,7 +1271,7 @@ class EventsModule extends DefaultMinisiteModule
 			if (array_key_exists($cat->id(), $this->calendar->get_categories()))
 				$ret .= '<strong>'.$cat->get_value('name').'</strong>';
 			else
-				$ret .= '<a href="'.$this->construct_link(array('category'=>$cat->id(),'view'=>'','no_search'=>'1')).'" title="'.ucfirst(strtolower($cat->get_value('name'))).' events">'.$cat->get_value('name').'</a>';
+				$ret .= '<a href="'.$this->construct_link(array('category'=>$cat->id(),'view'=>'','no_search'=>'1')).'" title="'.reason_htmlspecialchars(strip_tags($cat->get_value('name'))).' events">'.$cat->get_value('name').'</a>';
 			$ret .= '</li>';
 		}
 		$ret .= '</ul>'."\n";
@@ -817,6 +1320,10 @@ class EventsModule extends DefaultMinisiteModule
 		return $es;
 	}
 	
+	/**
+	 * Populate $audiences class variable
+	 * @todo Remove use of $limit_to_current_site class var, which is deprecated
+	 */
 	function init_audiences()
 	{
 		if(REASON_USES_DISTRIBUTED_AUDIENCE_MODEL)
@@ -1356,14 +1863,17 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		return $ret;
 	}
+	function _get_sharing_mode()
+	{
+		return $this->params['sharing_mode'];
+	}
 	
 	function make_reason_calendar_init_array($start_date, $end_date = '', $view = '')
 	{
 		$init_array = array();
-		if($this->limit_to_current_site)
-		{
-			$init_array['site'] = $this->parent->site_info;
-		}
+		$init_array['context_site'] = $this->parent->site_info;
+		$init_array['site'] = $this->_get_sites();
+		$init_array['sharing_mode'] = $this->_get_sharing_mode();
 		if(!empty($start_date))
 			$init_array['start_date'] = $start_date;
 		if(!empty($end_date))
@@ -1397,16 +1907,20 @@ class EventsModule extends DefaultMinisiteModule
 				$init_array['or_categories'] = $cats;
 			}
 		}
-		if(!empty($this->ideal_count))
+		if($this->params['ideal_count'])
+			$init_array['ideal_count'] = $this->params['ideal_count'];
+		elseif(!empty($this->ideal_count))
 			$init_array['ideal_count'] = $this->ideal_count;
-			
+		
+		if($this->params['default_view_min_days']) 
+			$init_array['default_view_min_days'] = $this->params['default_view_min_days'];
+		
 		$init_array['automagic_window_snap_to_nearest_view'] = $this->snap_to_nearest_view;
 		
 		if(!empty($this->request['search']))
 		{
 			$init_array['simple_search'] = $this->request['search'];
 		}
-		
 		return $init_array;
 	}
 	
@@ -1516,12 +2030,20 @@ class EventsModule extends DefaultMinisiteModule
 	} // }}}
 	function event_ok_to_show($event)
 	{
-		if ($event->get_values() 
-		&& ($event->get_value('type') == id_of('event_type')) 
-		&& ($event->get_value('show_hide') == 'show') 
-		&& $event->get_value('state') == 'Live'
-		&& ( !$this->limit_to_current_site || site_owns_entity( $this->site_id, $event->id() ) || site_borrows_entity( $this->site_id, $event->id() ) )
-		)
+		$sites = $this->_get_sites();
+		if(is_array($sites))
+			$es = new entity_selector(array_keys($sites));
+		else
+			$es = new entity_selector($sites->id());
+		$es->add_type(id_of('event_type'));
+		$es->add_relation('entity.id = "'.$event->id().'"');
+		$es->add_relation('show_hide.show_hide = "show"');
+		$es->set_num(1);
+		$es->limit_tables(array('show_hide'));
+		$es->limit_fields();
+		if($this->_get_sharing_mode() == 'shared_only')
+			$es->add_relation('entity.no_share != 1');
+		if($es->run_one())
 			return true;
 		else
 			return false;
@@ -1878,10 +2400,9 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$link_vars[$key] = $vars[$key];
 		}
-		
 		foreach(array_keys($link_vars) as $key)
 		{
-			$link_vars[$key] = htmlspecialchars($link_vars[$key]);
+			$link_vars[$key] = urlencode($link_vars[$key]);
 		}
 		return '?'.implode_with_keys('&amp;',$link_vars);
 	} // }}}
