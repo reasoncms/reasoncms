@@ -97,10 +97,16 @@ class reasonCalendar
 	 * if a key-value pair is passed to the object that is not in this array, it is ignored
 	 * @var array
 	 */
-	var $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search');
+	var $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','default_view_min_days');
 	/**
 	 * site entity that we are looking at
-	 * @var object site entity
+	 *
+	 * note: when using this variable you should test to see if it is an array or object before proceeding
+	 * Errors will otherwise occur.
+	 *
+	 * NOT populating this value will be constued as equivalent to entering all live sites that share events and setting the sharing_mode to 'shared_only'.
+	 *
+	 * @var mixed either an array of sites or a site entity object
 	 */
 	var $site;
 	/**
@@ -210,13 +216,68 @@ class reasonCalendar
 	 */
 	var $automagic_window_snap_to_nearest_view = true;
 	
+	/**
+	 * A lower bound on the number of days that the calendar will default to
+	 *
+	 * If you are not setting a given view or number of days (and thereby relying on the calendar to use
+	 * the ideal_count parameter to select a view and/or number of days to display) you can force the
+	 * calendar to select a view or number of days that contains at least this many days.
+	 *
+	 * Concrete example: I have a calendar that sometimes has lots of events and sometimes only a few.
+	 * However, even when it has lots of events, I want to make sure that the default view is at least 
+	 * one week out. Therefore, I can set the default_view_min_days to be 7; even if there are 50
+	 * events today, the calendar will still show the entire week starting with today.
+	 *
+	 * @var integer
+	 */
+	var $default_view_min_days = 1;
+	
+	/**
+	 * The site that this calendar is being displayed within, if applicable
+	 * @var object Reason entity
+	 */
+	var $context_site;
+	
+	/**
+	 * Should the calendar include all items, or just those that are shared?
+	 *
+	 * Possible values: 'all' means they are selected regardless of sharing status;
+	 * 'shared_only' means that only shared items are selected.
+	 *
+	 * Future enhancements to this module could include adding another
+	 * sharing mode that only includes private items, or which includes all
+	 * items in current site and shared items from other sites
+	 *
+	 * @var string 'all' or 'shared_only'
+	 * @access private
+	 */
+	var $sharing_mode = 'all'; // other possible value: 'shared_only'
+	
+	/**
+	 * The entity selector used by the calendar to select the events
+	 * @var object entity_selector
+	 */
 	var $base_es;
 	
+	/**
+	 * Place to record if any events are in calendar at all.
+	 *
+	 * This can be expensive to figure out, so we store in in the init phase
+	 * and refer to it later by accessing this variable.
+	 *
+	 * External access is through the method contains_any_events()
+	 *
+	 * @var boolean
+	 * @access private
+	 */
 	var $events_exist_in_calendar = true;
 	
 	var $known_upper_limit;
+	
 	var $known_closest_date_beyond;
+	
 	var $known_lower_limit;
+	
 	var $known_closest_date_before;
 	
 	/**
@@ -252,7 +313,9 @@ class reasonCalendar
 		{
 			$this->end_date_supplied = true;
 		}
-		$this->add_cats_and_auds_to_rels();
+		$this->_add_or_rels(relationship_id_of('event_to_event_category'), $this->or_categories);
+		$this->_add_rels(relationship_id_of('event_to_event_category'), $this->categories);
+		$this->_add_rels(relationship_id_of('event_to_audience'), $this->audiences);
 		$this->build_es();
 	}
 	/**
@@ -263,19 +326,35 @@ class reasonCalendar
 	{
 		if(!empty($this->site))
 		{
-			$this->es = new entity_selector( $this->site->id() );
-			$this->es->add_type( id_of('event_type') );
-			$this->es->description = 'Selecting all events on '.$this->site->get_value('name');
+			if(is_array($this->site))
+			{
+				$site_ids = array();
+				foreach($this->site as $site)
+				{
+					$site_ids[] = $site->id();
+				}
+				$this->es = new entity_selector( $site_ids );
+				$this->es->description = 'Selecting events on multiple sites ';
+			}
+			else
+			{
+				$this->es = new entity_selector( $this->site->id() );
+				$this->es->description = 'Selecting events on '.$this->site->get_value('name');
+			}
 		}
 		else
 		{
-			$this->es = new entity_selector();
-			$this->es->add_type( id_of('event_type') );
-			$this->es->description = 'Selecting all events';
+			$this->es = new entity_selector( array_keys( $this->_get_sharing_sites() ) );
+			$this->es->description = 'Selecting events on all sharing sites';
+		}
+		if( $this->sharing_mode == 'shared_only' || empty($this->site) )
+		{
 			$this->es->add_relation( 'entity.no_share != 1');
-			$this->es->add_right_relationship_field( 'owns' , 'site' , 'site_state' , 'owner_site_state' );
-			$this->es->add_relation('site.site_state = "Live"');
-			$this->es->optimize('STRAIGHT_JOIN');
+		}
+		$this->es->add_type( id_of('event_type') );
+		if(!empty($this->context_site))
+		{
+			$this->es->set_env('site',$this->context_site->id());
 		}
 		$this->es->add_relation( 'show_hide.show_hide = "show"' );
 		
@@ -327,7 +406,7 @@ class reasonCalendar
 			// -- mr
 			
 			/* if(!empty($this->site))
-				$es = new entity_selector($this->site->id());
+				$es = new entity_selector($this->site->id()); // this is deprecated since there might be multiple sites
 			else
 				$es = new entity_selector();
 			$es->add_type(id_of('category_type'));
@@ -369,33 +448,69 @@ class reasonCalendar
 		}
 		
 	}
-	function add_cats_and_auds_to_rels()
+	/**
+	 * Get the set of sites that share events
+	 * @return array site entities keyed on Reason id
+	 * @access private
+	 */
+	function _get_sharing_sites()
 	{
-		if(!empty($this->or_categories))
+		static $sharing_sites = array();
+		if(empty($sharing_sites))
 		{
-			$or_cat_ids = array();
-			foreach($this->or_categories as $or_cat)
-			{
-				$or_cat_ids[] = $or_cat->id();
-			}
-			$this->rels[] = array('rel_id'=>relationship_id_of('event_to_event_category'),'entity_ids'=>$or_cat_ids);
+			$es = new entity_selector();
+			$es->add_type(id_of('site'));
+			$es->add_left_relationship( id_of('event_type'), relationship_id_of('site_shares_type'));
+			$es->limit_tables('site');
+			$es->limit_fields('site_state');
+			$es->add_relation('site_state="Live"');
+			$sharing_sites = $es->run_one();
 		}
-		if(!empty($this->categories))
+		return $sharing_sites;
+	}
+	/**
+	 * Add a set of relationships (AND-style)
+	 *
+	 * All events in calendar will have a relationship of the given relationship type with _all_
+	 * of the given entities
+	 *
+	 * @param integer $relationship_id
+	 * @param array $entities
+	 * @access private
+	 */
+	function _add_rels($relationship_id, $entities)
+	{
+		if(!empty($entities))
 		{
-			$rel_id = relationship_id_of('event_to_event_category');
-			foreach($this->categories as $category)
+			foreach($entities as $entity)
 			{
-				$this->rels[] = array('rel_id'=>$rel_id,'entity_ids'=>array($category->id()));
+				$this->rels[] = array('rel_id' => $relationship_id, 'entity_ids' => array($entity->id()));
 			}
+			
 		}
-		if(!empty($this->audiences))
+	}
+	/**
+	 * Add a set of relationships (OR-style)
+	 *
+	 * All events in calendar will have a relationship of the given relationship type with 
+	 * _at least one_ of the given entities
+	 *
+	 * @param integer $relationship_id
+	 * @param array $entities
+	 * @access private
+	 */
+	function _add_or_rels($relationship_id, $entities)
+	{
+		if(!empty($entities))
 		{
-			$rel_id = relationship_id_of('event_to_audience');
-			foreach($this->audiences as $audience)
+			$ids = array();
+			foreach($entities as $entity)
 			{
-				$this->rels[] = array('rel_id'=>$rel_id,'entity_ids'=>array($audience->id()));
+				$ids[] = $entity->id();
 			}
+			$this->rels[] = array('rel_id' => $relationship_id, 'entity_ids' => $ids);
 		}
+		
 	}
 	/**
 	 * Do the necessary queries and assemble the calendar of events
@@ -883,7 +998,7 @@ class reasonCalendar
 			$this->default_end_date = $this->get_max_date(); */
 			$this->default_end_date = '9999-12-31';
 		}
-		$this->end_date = $this->default_end_date;
+		
 		if ($this->default_end_date == $this->start_date)
 			$this->view = 'daily';
 		elseif ($this->default_end_date == $out['week'])
@@ -897,6 +1012,50 @@ class reasonCalendar
 		{
 			$this->view = 'all';
 		}
+		
+		if($this->default_view_min_days > 1)
+		{
+			$date_array = explode('-',$this->start_date);
+		
+			$year = $date_array[0];
+			$month = $date_array[1];
+			$day = $date_array[2];
+			$min_last_date = carl_date('Y-m-d',carl_mktime('','','',$month,($day + $this->default_view_min_days - 1),$year));
+			
+			if($this->default_end_date < $min_last_date)
+			{
+				if($this->automagic_window_snap_to_nearest_view)
+				{
+					// find the smallest view that goes out far enough
+					if($this->view == 'daily' && $this->start_date < $min_last_date)
+					{
+						$this->view = 'weekly';
+						$this->default_end_date = $out['week'];
+					}
+					if($this->view == 'weekly' && $out['week'] < $min_last_date)
+					{
+						$this->view = 'monthly';
+						$this->default_end_date = $out['month'];
+					}
+					if($this->view == 'monthly' && $out['month'] < $min_last_date)
+					{
+						$this->view = 'yearly';
+						$this->default_end_date = $out['year'];
+					}
+					if($this->view == 'yearly' && $out['year'] < $min_last_date)
+					{
+						$this->view = 'all';
+						$this->default_end_date = '9999-12-31';
+					}
+				}
+				else
+				{
+					$this->default_end_date = $min_last_date;
+				}
+			}
+		}
+		
+		$this->end_date = $this->default_end_date;
 	} // }}}
 	
 	/**
