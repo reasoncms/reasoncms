@@ -870,6 +870,21 @@
 			'sidebar' => '',
 			'post_foot' => 'textonly_toggle',
 		),
+		'image_slideshow_before_content_publication_sidebar' => array(
+			'main' => 'image_slideshow',
+			'main_post' => 'content',
+			'sidebar' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' =>
+				array('list_item' => array(
+									'classname' => 'MinimalListItemMarkupGenerator', 
+									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+									)
+					 ),
+				'max_num_items' => 5,
+			),
+		),
 		'image_slideshow_manual' => array(
 			'main_post' => array('module'=>'image_slideshow','slideshow_type'=>'manual'),
 			'sidebar' => '',
