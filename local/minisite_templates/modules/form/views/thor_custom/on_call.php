@@ -80,7 +80,6 @@ class AppDevOnCallForm extends DefaultThorForm
 
 	  foreach ($eventFeed as $event) {
 	    foreach ($event->when as $when) {
-	    	
 	      $eventStatusUrl = $event->getEventStatus();
               list($trash, $eventStatus) = split('#', $eventStatusUrl);
               if ($eventStatus == 'event.confirmed') {
@@ -166,7 +165,7 @@ class AppDevOnCallForm extends DefaultThorForm
 		
 		$client = $this->getClientLoginHttpClient('google_api_user@luther.edu', 'bTI1+9scGSkeORU');
 		
-		$onCall = $this->getPerson($client, $now, $now);
+		$onCall = $this->getPerson($client, $now, $tomorrow);
 		if ($onCall != '') {
 		echo 'if';
 		     // this is where we should send a text message and probably an email to the on-call person
