@@ -17,6 +17,7 @@
 			$flickr_account = array("luthercollegemedia" => array("5b298e650817ac77f14054abfc722b01", "f8a94f21e063f110"),
 			"lc.anthrolab" => array("6725551efcba6082283094d49a0c807f", "3dff123f2a053c3a"),
 			"luthertkd" => array("2e80ed6a3ce811d45607da933862c0e5", "140daaf7539dd293"),
+			"luthercollegebookshop" => array("72d5d704e16ae8cefcfab73e046d9129", "30fd8bc6d7fb815c"),
 			"luthercollegechemistry" => array("4fe2ce650080400958007a505b980522", "cef37676c4424ae1"));
 
 			$site_id = $this->site_id;

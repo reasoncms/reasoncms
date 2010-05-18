@@ -475,7 +475,7 @@ class IndividualVisitForm extends DefaultThorForm
 		),
 	);
 	
-	var $required = array(
+	var $required = array( 
 		'high_school',
 		'graduation_year',
 	);
