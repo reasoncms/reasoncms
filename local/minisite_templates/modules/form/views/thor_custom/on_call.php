@@ -74,30 +74,21 @@ class AppDevOnCallForm extends DefaultThorForm
 	  $query->setStartMin($startDate);
 	  $query->setStartMax($endDate);
 	  $query->setFutureevents(false);
-	  $query->setSingleevents(true);
+	  $query->setSingleevents(false);
 	  $query->setSortorder('a');
 	  $eventFeed = $gdataCal->getCalendarEventFeed($query);
 
 	  foreach ($eventFeed as $event) {
 	    foreach ($event->when as $when) {
-	    	
-	  return $event->title->text;	    }
+	      $eventStatusUrl = $event->getEventStatus();
+              list($trash, $eventStatus) = split('#', $eventStatusUrl);
+              if ($eventStatus == 'event.confirmed') {
+                //echo $event->title->text;
+                //echo "<br>";
+	        return $event->title->text;
+              }	    
+            }
 	  }
-
-     /*
-     foreach ($eventFeed as $event) {
-       echo "\t<li>" . $event->title->text .  " (" . $event->id->text . ")\n";
-       // Zend_Gdata_App_Extensions_Title->__toString() is defined, so the
-       // following will also work on PHP >= 5.2.0
-       //echo "\t<li>" . $event->title .  " (" . $event->id . ")\n";
-       echo "\t\t<ul>\n";
-       foreach ($event->when as $when) {
-         echo "\t\t\t<li>Starts: " . $when->startTime . "</li>\n";
-          echo "\t\t\t<li>Starts: " . $when->endTime . "</li>\n";
-         return $event;
-        }
-       }
-     */
 	}
 	
 	function get_user_info($username)
