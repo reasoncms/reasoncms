@@ -86,7 +86,7 @@ class AppDevOnCallForm extends DefaultThorForm
                 //echo $event->title->text;
                 //echo "<br>";
 	        return $event->title->text;
-              }	    
+              }
             }
 	  }
 	}
