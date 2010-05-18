@@ -10,7 +10,23 @@ div#wrapper.fullGraphicsView div#content div#calendar div.gridAndOptions
 {
 	background: #464646;
 	border: 1px solid white;
+	color: #AAAAAA;
+}
+
+div#wrapper.fullGraphicsView div#content div#calendar div.gridAndOptions a
+{
 	color: white;
+}
+
+div#wrapper.fullGraphicsView div#content div#calendar div.gridAndOptions div.calendarGrid
+{
+	background: #white;
+	color: #666666;
+}
+
+div#wrapper.fullGraphicsView div#content div#calendar div.gridAndOptions div.calendarGrid a
+{
+	color: #6e0404;
 }
 
 /* ================= pictures ================= */
