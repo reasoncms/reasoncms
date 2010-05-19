@@ -66,6 +66,10 @@ class AppDevOnCallForm extends DefaultThorForm
 	 */
 	function getPerson($client, $startDate, $endDate)
 	{
+          $startDate = date("c");	
+          $tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
+          $endDate = date("Y-m-d", $tomorrow_temp);
+
           $gdataCal = new Zend_Gdata_Calendar($client);
           $query = $gdataCal->newEventQuery();
           $query->setUser('luther.edu_39333139333636353730@resource.calendar.google.com');
@@ -81,15 +85,13 @@ class AppDevOnCallForm extends DefaultThorForm
           $eventFeed = $gdataCal->getCalendarEventFeed($query);
           foreach ($eventFeed as $event) {
             foreach ($event->when as $when) {
-    	      //echo $event.Status.Value==EventEntry.EventStatus.CANCELED_VALUE
-              //echo $event->Status->Value;
-              $eventStatusUrl = $event->getEventStatus();
-              list($trash, $eventStatus) = explode('#', $eventStatusUrl);
-              if ($eventStatus == 'event.confirmed') {
-                return $event->title->text;
-              }
-            }
-          }
+            $eventStatusUrl = $event->getEventStatus();
+            list($trash, $eventStatus) = explode('#', $eventStatusUrl); //
+            if ($eventStatus == 'event.confirmed') {
+              return $event->title->text;
+         }
+    }
+  }
 	}
 	
 	function get_user_info($username)
