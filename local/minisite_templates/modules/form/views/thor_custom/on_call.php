@@ -67,29 +67,37 @@ class AppDevOnCallForm extends DefaultThorForm
 	{
 	  $gdataCal = new Zend_Gdata_Calendar($client);
 	  $query = $gdataCal->newEventQuery();
-	  //$query->setUser('luther.edu_39333139333636353730@resource.calendar.google.com');
-          $query->setUser('luther.edu_9530n4c10faloia8q6ov32ddek@group.calendar.google.com');
+	  $query->setUser('luther.edu_39333139333636353730@resource.calendar.google.com');
 	  $query->setVisibility('private');
 	  $query->setProjection('full');
 	  $query->setOrderby('starttime');
 	  $query->setStartMin($startDate);
 	  $query->setStartMax($endDate);
 	  $query->setFutureevents(false);
-	  $query->setSingleevents(false);
+	  $query->setSingleevents(true);
 	  $query->setSortorder('a');
 	  $eventFeed = $gdataCal->getCalendarEventFeed($query);
 
 	  foreach ($eventFeed as $event) {
 	    foreach ($event->when as $when) {
-	      $eventStatusUrl = $event->getEventStatus();
-              list($trash, $eventStatus) = split('#', $eventStatusUrl);
-              if ($eventStatus == 'event.confirmed') {
-                //echo $event->title->text;
-                //echo "<br>";
-	        return $event->title->text;
-              }
-            }
+	    	
+	  return $event->title->text;	    }
 	  }
+
+     /*
+     foreach ($eventFeed as $event) {
+       echo "\t<li>" . $event->title->text .  " (" . $event->id->text . ")\n";
+       // Zend_Gdata_App_Extensions_Title->__toString() is defined, so the
+       // following will also work on PHP >= 5.2.0
+       //echo "\t<li>" . $event->title .  " (" . $event->id . ")\n";
+       echo "\t\t<ul>\n";
+       foreach ($event->when as $when) {
+         echo "\t\t\t<li>Starts: " . $when->startTime . "</li>\n";
+          echo "\t\t\t<li>Starts: " . $when->endTime . "</li>\n";
+         return $event;
+        }
+       }
+     */
 	}
 	
 	function get_user_info($username)
@@ -166,7 +174,7 @@ class AppDevOnCallForm extends DefaultThorForm
 		
 		$client = $this->getClientLoginHttpClient('google_api_user@luther.edu', 'bTI1+9scGSkeORU');
 		
-		$onCall = $this->getPerson($client, $now, $tomorrow);
+		$onCall = $this->getPerson($client, $now, $now);
 		if ($onCall != '') {
 		echo 'if';
 		     // this is where we should send a text message and probably an email to the on-call person
