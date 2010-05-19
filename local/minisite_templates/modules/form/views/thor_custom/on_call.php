@@ -152,9 +152,20 @@ class AppDevOnCallForm extends DefaultThorForm
 		$username_field = $this->get_element_name_from_label('Username');
 		$username = $this->get_value_from_label('Username');
 
+                // some testing stuff follows
+                $now = date("c");
 		
+		$tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
+		$tomorrow = date("Y-m-d", $tomorrow_temp);
+		$next_week_temp = mktime(0, 0, 0, date("m")  , date("d")+7, date("Y"));
+		$next_week = date("Y-m-d", $next_week_temp);
+		$client = $this->getClientLoginHttpClient('google_api_user@luther.edu', 'bTI1+9scGSkeORU');
+		
+		$onCall = $this->getPerson($client, $now, $now);
+                // end my testing stuff		
+
 		$user_info = $this->get_user_info($username);
-		
+
 		if (!$user_info)
 			$this -> set_error($username_field, 'Username does not exist.');
 		global $info;
