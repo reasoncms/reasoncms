@@ -66,21 +66,17 @@ class AppDevOnCallForm extends DefaultThorForm
 	 */
 	function getPerson($client, $startDate, $endDate)
 	{
-	  $startDate = date("c");	
-          $tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
-          $endDate = date("Y-m-d", $tomorrow_temp);
-
           $gdataCal = new Zend_Gdata_Calendar($client);
           $query = $gdataCal->newEventQuery();
-          //$query->setUser('luther.edu_39333139333636353730@resource.calendar.google.com');
-          $query->setUser('luther.edu_9530n4c10faloia8q6ov32ddek@group.calendar.google.com');
+          $query->setUser('luther.edu_39333139333636353730@resource.calendar.google.com');
+          //$query->setUser('luther.edu_9530n4c10faloia8q6ov32ddek@group.calendar.google.com'); // TEST CALENDAR
           $query->setVisibility('private');
           $query->setProjection('full');
           $query->setOrderby('starttime');
           $query->setStartMin($startDate);
           $query->setStartMax($startDate);
           $query->setFutureevents(false);
-          $query->setSingleevents(true);
+          $query->setSingleevents(false);
           $query->setSortorder('a');
           $eventFeed = $gdataCal->getCalendarEventFeed($query);
           foreach ($eventFeed as $event) {
@@ -88,7 +84,7 @@ class AppDevOnCallForm extends DefaultThorForm
     	      //echo $event.Status.Value==EventEntry.EventStatus.CANCELED_VALUE
               //echo $event->Status->Value;
               $eventStatusUrl = $event->getEventStatus();
-              list($trash, $eventStatus) = explode('#', 'Lucas#event.confirmed'); //$eventStatusUrl
+              list($trash, $eventStatus) = explode('#', $eventStatusUrl);
               if ($eventStatus == 'event.confirmed') {
                 return $event->title->text;
               }
@@ -181,7 +177,7 @@ class AppDevOnCallForm extends DefaultThorForm
 		$next_week = date("Y-m-d", $next_week_temp);
 		$client = $this->getClientLoginHttpClient('google_api_user@luther.edu', 'bTI1+9scGSkeORU');
 		
-		$onCall = $this->getPerson($client, $now, $now);
+		$onCall = $this->getPerson($client, $now, $tomorrow);
 		if ($onCall != '') {
 		echo 'if';
 		     // this is where we should send a text message and probably an email to the on-call person
