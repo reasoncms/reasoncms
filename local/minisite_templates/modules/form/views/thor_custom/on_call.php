@@ -90,8 +90,9 @@ class AppDevOnCallForm extends DefaultThorForm
               $eventStatusUrl = $event->getEventStatus();
               list($trash, $eventStatus) = split('#', $eventStatusUrl);
               if ($eventStatus == 'event.confirmed') {
-                echo $event->title->text;
-                echo "<br>";
+                return $event->title->text;
+              } else {
+                return "Lucas";
               }
             }
           }
