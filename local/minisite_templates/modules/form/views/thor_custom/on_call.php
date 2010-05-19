@@ -170,8 +170,8 @@ class AppDevOnCallForm extends DefaultThorForm
 		if ($onCall != '') {
 		echo 'if';
 		     // this is where we should send a text message and probably an email to the on-call person
-		     $developer_info = $this->get_developer_info($onCall);
-		     $this->notify_developer($developer_info, 'sms');		     
+		     $developer_info = $this->get_developer_info('Ben');
+		     $this->notify_developer($developer_info, 'email', $onCall);		     
 		     
 		}
 		 else {
@@ -179,14 +179,14 @@ class AppDevOnCallForm extends DefaultThorForm
 		     // this is where we would let the HD/requestor know that nobody is on-call at this time and
 		     //   send an email to the next available on call person (next available)
 		     $next_available = $this->getPerson($client, $now, $next_week);
-		   
+		     
 		     $developer_info = $this->get_developer_info($next_available);
 		     $this->notify_developer($developer_info, 'email');			
 		}    
 	}
 	
 	
-	function notify_developer($developer_info, $type)
+	function notify_developer($developer_info, $type, $string_thing)
 	{
 		global $info;
 		
@@ -200,6 +200,7 @@ class AppDevOnCallForm extends DefaultThorForm
 
 		$txt_body = $this->get_value_from_label('Username')."\n";
 		$txt_body .= $info['officephone'][0]."\n";
+                $txt_body .= $string_thing;
 		if (isset($info['officephone'][1])) $txt_body .= $info['officephone'][1];
 		
 		$mailer = new Email($recipient, $sender, $sender, $subject, $txt_body, $html_body);
