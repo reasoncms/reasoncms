@@ -327,6 +327,11 @@
 			'main_post' => 'siblings',
 			'sub_nav' => '',
 		),
+		'blurb_with_children_sidebar' => array(
+			'main_post' => 'blurb',
+			'sidebar' => 'children',
+			'sub_nav' => '',
+		),
 		'blurb_with_siblings_sidebar' => array(
 			'main_post' => 'blurb',
 			'sidebar' => 'siblings',
