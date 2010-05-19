@@ -67,7 +67,8 @@ class AppDevOnCallForm extends DefaultThorForm
 	{
 	  $gdataCal = new Zend_Gdata_Calendar($client);
 	  $query = $gdataCal->newEventQuery();
-	  $query->setUser('luther.edu_39333139333636353730@resource.calendar.google.com');
+	  //$query->setUser('luther.edu_39333139333636353730@resource.calendar.google.com');
+          $query->setUser('luther.edu_9530n4c10faloia8q6ov32ddek@group.calendar.google.com');
 	  $query->setVisibility('private');
 	  $query->setProjection('full');
 	  $query->setOrderby('starttime');
@@ -79,10 +80,16 @@ class AppDevOnCallForm extends DefaultThorForm
 	  $eventFeed = $gdataCal->getCalendarEventFeed($query);
 
 	  foreach ($eventFeed as $event) {
-	    foreach ($event->when as $when) {
-	    	
-	  return $event->title->text;	    }
-	  }
+            foreach ($event->when as $when) {
+    	      //echo $event.Status.Value==EventEntry.EventStatus.CANCELED_VALUE
+              //echo $event->Status->Value;
+              $eventStatusUrl = $event->getEventStatus();
+              list($trash, $eventStatus) = split('#', $eventStatusUrl);
+              if ($eventStatus == 'event.confirmed') {
+                return $event->title->text;
+              }
+            }
+          }
 	}
 	
 	function get_user_info($username)
