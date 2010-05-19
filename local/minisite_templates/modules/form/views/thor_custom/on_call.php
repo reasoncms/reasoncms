@@ -88,8 +88,7 @@ class AppDevOnCallForm extends DefaultThorForm
     	      //echo $event.Status.Value==EventEntry.EventStatus.CANCELED_VALUE
               //echo $event->Status->Value;
               $eventStatusUrl = $event->getEventStatus();
-              $eventStatusList = split('#', $eventStatusUrl);
-              $eventStatus = $eventStatusList[1];
+              list($trash, $eventStatusList) = split('#', 'Lucas#event.confirmed'); //$eventStatusUrl
               if ($eventStatus == 'event.confirmed') {
                 return $event->title->text;
               }
