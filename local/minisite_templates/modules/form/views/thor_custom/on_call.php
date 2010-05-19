@@ -162,7 +162,7 @@ class AppDevOnCallForm extends DefaultThorForm
 		$client = $this->getClientLoginHttpClient('google_api_user@luther.edu', 'bTI1+9scGSkeORU');
 		
 		$onCall = $this->getPerson($client, $now, $now);
-                echo "end of test error code"
+                echo "end of test error code";
                 // end my testing stuff		
 
 		$user_info = $this->get_user_info($username);
