@@ -74,7 +74,7 @@ class AppDevOnCallForm extends DefaultThorForm
           $query->setProjection('full');
           $query->setOrderby('starttime');
           $query->setStartMin($startDate);
-          $query->setStartMax($startDate);
+          $query->setStartMax($endDate);
           $query->setFutureevents(false);
           $query->setSingleevents(false);
           $query->setSortorder('a');
