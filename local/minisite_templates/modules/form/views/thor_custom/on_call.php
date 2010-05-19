@@ -85,7 +85,7 @@ class AppDevOnCallForm extends DefaultThorForm
           $eventFeed = $gdataCal->getCalendarEventFeed($query);
           foreach ($eventFeed as $event) {
             foreach ($event->when as $when) {
-              $eventStatusUrl = (string)$event->getEventStatus();
+              $eventStatusUrl = $event->getEventStatus()."testing";
               return $eventStatusUrl;
               list($trash, $eventStatus) = explode('#', 'BLABLA#event.confirmed'); //$eventStatusUrl
               if ($eventStatus == 'event.confirmed') {
