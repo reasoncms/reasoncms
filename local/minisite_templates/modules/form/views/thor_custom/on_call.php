@@ -67,7 +67,8 @@ class AppDevOnCallForm extends DefaultThorForm
 	{
 	  $gdataCal = new Zend_Gdata_Calendar($client);
 	  $query = $gdataCal->newEventQuery();
-	  $query->setUser('luther.edu_39333139333636353730@resource.calendar.google.com');
+	  //$query->setUser('luther.edu_39333139333636353730@resource.calendar.google.com');
+          $query->setUser('luther.edu_9530n4c10faloia8q6ov32ddek@group.calendar.google.com');
 	  $query->setVisibility('private');
 	  $query->setProjection('full');
 	  $query->setOrderby('starttime');
