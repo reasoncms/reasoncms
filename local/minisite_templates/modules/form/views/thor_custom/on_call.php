@@ -86,6 +86,7 @@ class AppDevOnCallForm extends DefaultThorForm
           foreach ($eventFeed as $event) {
             foreach ($event->when as $when) {
               $eventStatusUrl = $event->getEventStatus();
+              return 'wtf';
               return $eventStatusUrl;
               list($trash, $eventStatus) = explode('#', 'BLABLA#event.confirmed'); //$eventStatusUrl
               if ($eventStatus == 'event.confirmed') {
