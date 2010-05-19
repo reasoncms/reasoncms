@@ -61,34 +61,37 @@ class AppDevOnCallForm extends DefaultThorForm
 	 * events occurring in the future.
 	 *
 	 * @param  Zend_Http_Client $client The authenticated client object
+         * return $event->title->text;
 	 * @return void
 	 */
 	function getPerson($client, $startDate, $endDate)
 	{
-	  $gdataCal = new Zend_Gdata_Calendar($client);
-	  $query = $gdataCal->newEventQuery();
-	  //$query->setUser('luther.edu_39333139333636353730@resource.calendar.google.com');
-          $query->setUser('luther.edu_9530n4c10faloia8q6ov32ddek@group.calendar.google.com');
-	  $query->setVisibility('private');
-	  $query->setProjection('full');
-	  $query->setOrderby('starttime');
-	  $query->setStartMin($startDate);
-	  $query->setStartMax($endDate);
-	  $query->setFutureevents(false);
-	  $query->setSingleevents(true);
-	  $query->setSortorder('a');
-	  $eventFeed = $gdataCal->getCalendarEventFeed($query);
+	  $startDate = date("c");	
+          $tomorrow_temp = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
+          $endDate = date("Y-m-d", $tomorrow_temp);
 
-	  foreach ($eventFeed as $event) {
+          $gdataCal = new Zend_Gdata_Calendar($client);
+          $query = $gdataCal->newEventQuery();
+          //$query->setUser('luther.edu_39333139333636353730@resource.calendar.google.com');
+          $query->setUser('luther.edu_9530n4c10faloia8q6ov32ddek@group.calendar.google.com');
+          $query->setVisibility('private');
+          $query->setProjection('full');
+          $query->setOrderby('starttime');
+          $query->setStartMin($startDate);
+          $query->setStartMax($startDate);
+          $query->setFutureevents(false);
+          $query->setSingleevents(false);
+          $query->setSortorder('a');
+          $eventFeed = $gdataCal->getCalendarEventFeed($query);
+          foreach ($eventFeed as $event) {
             foreach ($event->when as $when) {
     	      //echo $event.Status.Value==EventEntry.EventStatus.CANCELED_VALUE
               //echo $event->Status->Value;
               $eventStatusUrl = $event->getEventStatus();
               list($trash, $eventStatus) = split('#', $eventStatusUrl);
               if ($eventStatus == 'event.confirmed') {
-                return $event->title->text;
-              } else {
-                return 'Lucas';
+                echo $event->title->text;
+                echo "<br>";
               }
             }
           }
