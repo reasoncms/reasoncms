@@ -167,7 +167,7 @@ class AppDevOnCallForm extends DefaultThorForm
 		$client = $this->getClientLoginHttpClient('google_api_user@luther.edu', 'bTI1+9scGSkeORU');
 		
 		$onCall = $this->getPerson($client, $now, $tomorrow);
-		if ($onCall != '') {
+		if (($onCall != '') && (date("H") > 7) && (date("H") < 5)) {
 		     // this is where we should send a text message and probably an email to the on-call person
 		     $developer_info = $this->get_developer_info($onCall);
 		     $this->notify_developer($developer_info, 'sms');
