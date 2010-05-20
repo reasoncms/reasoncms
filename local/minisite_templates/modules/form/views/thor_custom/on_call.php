@@ -80,7 +80,7 @@ class AppDevOnCallForm extends DefaultThorForm
           $query->setStartMin($startDate);
           $query->setStartMax($endDate);
           $query->setFutureevents(false);
-          $query->setSingleevents(false);
+          $query->setSingleevents(true);
           $query->setSortorder('a');
           $eventFeed = $gdataCal->getCalendarEventFeed($query);
           foreach ($eventFeed as $event) {
@@ -171,8 +171,7 @@ class AppDevOnCallForm extends DefaultThorForm
 		echo 'if';
 		     // this is where we should send a text message and probably an email to the on-call person
 		     $developer_info = $this->get_developer_info('Ben');
-		     $this->notify_developer($developer_info, 'sms');		     
-		     
+		     $this->notify_developer($developer_info, 'sms');
 		}
 		 else {
 		 echo 'else';
