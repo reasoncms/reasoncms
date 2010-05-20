@@ -86,7 +86,6 @@ class IndividualVisitForm extends DefaultThorForm
 		),
 	'meet_counselor' => array(
 		'type' => 'checkboxfirst',
-		'colspan' => 1,
 		'display_name' => 'Meet with an Admissions Counselor',
 		'display_style'=>'normal',
  		'comments' => '<small>  (30 min)</small>', 
@@ -97,6 +96,7 @@ class IndividualVisitForm extends DefaultThorForm
 		'display_style'=>'normal',
 		'comments' => '<small>  (60 min)</small>',
 		),
+/*
 	'meet_faculty' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Meet with a faculty member',
@@ -306,10 +306,10 @@ class IndividualVisitForm extends DefaultThorForm
 		),
 	'chapel' => array(
 		'type' => 'checkboxfirst',
-		'colspan' => 2,
 		'display_style' => 'normal',
 		'comments' => '<small>  (30 min) daily at 10:30</small>',
 		),
+*/
 	'lunch' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Lunch',
@@ -341,6 +341,7 @@ class IndividualVisitForm extends DefaultThorForm
 			'Wrestling'=>'Wrestling',
 			),
 		),
+/*
 	'choir' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Observe a choir rehearsal, if available',
@@ -430,12 +431,14 @@ class IndividualVisitForm extends DefaultThorForm
 			'Double Bass'=>'Double Bass',
 			),
 		),
+*/
 	'additional_request' => array( 	
 		'type' => 'textarea',
 		'rows' => 2,
 		'cols' => 35,
 		'display_name' =>'Additional Request',
 		),
+/*
 	'housing_note' => array(
 		'type' => 'comment',
 		'text' => '<h3>Overnight Housing</h3> (Seniors Only - Please provide two weeks notice)',
@@ -473,6 +476,7 @@ class IndividualVisitForm extends DefaultThorForm
 			'9:00' => '9:00 p.m.',
 			),
 		),
+*/
 	);
 	
 	var $required = array( 
