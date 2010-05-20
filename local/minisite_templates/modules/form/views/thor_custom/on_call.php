@@ -80,7 +80,7 @@ class AppDevOnCallForm extends DefaultThorForm
           $query->setStartMin($startDate);
           $query->setStartMax($endDate);
           $query->setFutureevents(false);
-          $query->setSingleevents(true);
+          $query->setSingleevents(false);
           $query->setSortorder('a');
           $eventFeed = $gdataCal->getCalendarEventFeed($query);
           foreach ($eventFeed as $event) {
@@ -168,13 +168,11 @@ class AppDevOnCallForm extends DefaultThorForm
 		
 		$onCall = $this->getPerson($client, $now, $tomorrow);
 		if ($onCall != '') {
-		echo 'if';
 		     // this is where we should send a text message and probably an email to the on-call person
-		     $developer_info = $this->get_developer_info('Ben');
+		     $developer_info = $this->get_developer_info($onCall);
 		     $this->notify_developer($developer_info, 'sms');
 		}
 		 else {
-		 echo 'else';
 		     // this is where we would let the HD/requestor know that nobody is on-call at this time and
 		     //   send an email to the next available on call person (next available)
 		     $next_available = $this->getPerson($client, $now, $next_week);
