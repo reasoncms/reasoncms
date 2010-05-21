@@ -1255,7 +1255,7 @@
 		function remove_required( $name ) // {{{
 		{
 			$key = array_search($name, $this->required);
-			if (!empty($key)) unset( $this->required[ $key ] );
+			if ($key !== FALSE) unset( $this->required[ $key ] );
 			else
 			{
 				if ($this->full_error_triggers) trigger_error('Cannot remove element from required array; element '.$name.' is not present in required array');
