@@ -153,7 +153,8 @@ class moneyType extends textType
 {
 	var $type = 'money';
 	var $currency_symbol = '$';
-	var $type_valid_args = array( 'currency_symbol' );
+	var $decimal_symbol = '.';
+	var $type_valid_args = array( 'currency_symbol','decimal_symbol' );
 	function get_display()
 	{
 		$field = parent::get_display();
@@ -162,9 +163,14 @@ class moneyType extends textType
 	function grab()
 	{
 		parent::grab();
-		$this->value = str_replace( ',','',$this->value );
-		if( !empty($this->value) && !is_numeric( $this->value ) )
-			$this->set_error( 'Please express monetary amounts in numbers. Use a period (.) to indicate the decimal place.' );
+		// strip out everything but numbers and decimal symbols
+		$this->value = preg_replace('/[^\d\\'.$this->decimal_symbol.']/', '', $this->value);
+		// complain if multiple decimal symbols
+		if (!empty($this->value) && !is_numeric($this->value))
+			$this->set_error('Please check the format of the amount you entered.');
+		// If it's a valid number with a decimal, round it to two digits after the decimal
+		else if (strpos($this->value, $this->decimal_symbol) !== false)
+			$this->value = sprintf('%.2F',$this->value);
 	}
 }
 
