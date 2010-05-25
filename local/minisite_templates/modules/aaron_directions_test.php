@@ -1,8 +1,8 @@
 <?php
 reason_include_once( 'minisite_templates/modules/default.php' );
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'DirectionsModule';
+$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'MobileDirectionsModule';
 
-class DirectionsModule extends DefaultMinisiteModule {
+class MobileDirectionsModule extends DefaultMinisiteModule {
     function init( $args = array() ) {
 
     }
