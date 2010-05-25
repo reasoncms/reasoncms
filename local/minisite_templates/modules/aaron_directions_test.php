@@ -23,7 +23,26 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
 	echo '</div>'; */
 
         echo '<div id="GeoAPI"></div>';
-        echo '<script type="text/javascript" src="/javascripts/mobile_directions.js"></script>';
+        echo '<script language="Javascript">'."\n";
+        echo 'if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(function(position) {
+  doStuff(position.coords.latitude, position.coords.longitude);
+  });
+}
+else {
+  if (document.getElementById(\"GeoAPI\")) {
+    document.getElementById(\"GeoAPI\").innerHTML = \"I\'m sorry but geolocation services are not supported by your browser";
+    document.getElementById("GeoAPI").style.color = "#FF0000";
+  }
+}
+
+function doStuff(mylat, mylong) {
+  if (document.getElementById("GeoAPI")) {
+    document.getElementById("GeoAPI").innerHTML = "<iframe style=\"width: 320px; height: 400px\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"http://maps.google.com/maps?f=d&source=s_d&saddr=" + mylat + "," + mylong + "&daddr=43.315921,-91.802895&output=embed\"></iframe>";
+  }
+}';
+
+        echo '</script>';
 
     }
 }
