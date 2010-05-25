@@ -80,13 +80,15 @@ class ClassifiedModule extends Generic3Module
 	function get_cleanup_rules()
 	{
 		$cleanup_rules = array('classified_mode' => array('function' => 'check_against_array',
-														  'extra_args' => array('add_item', 'submit_success')));
+														  'extra_args' => array('add_item', 'submit_success','delete_item')));
 		
 		return array_merge(parent::get_cleanup_rules(), $cleanup_rules);
 	}
 
 	function init( $options = array() )
 	{
+		if (isset($this->request['item_id'])) $this->model->set_classified_id($this->request['item_id']);
+
 		if (empty($this->request['classified_mode']))
 		{
 			$this->view->init_view();
@@ -102,6 +104,10 @@ class ClassifiedModule extends Generic3Module
 			$this->view->init_view_and_form();
 		}
 		elseif ($this->request['classified_mode'] == 'submit_success')
+		{
+			$this->view->init_view();
+		}
+		elseif ($this->request['classified_mode'] == 'delete_item')
 		{
 			$this->view->init_view();
 		}
@@ -127,6 +133,20 @@ class ClassifiedModule extends Generic3Module
 		{
 			$this->view->show_return_to_listing_text();
 			$this->view->show_successful_submit_text();
+		}
+		elseif ($this->request['classified_mode'] == 'delete_item')
+		{
+			$this->view->show_return_to_listing_text();
+			if ($this->model->get_user_can_delete($this->model->get_classified_id()))
+			{
+				$this->model->delete_classified($this->model->get_classified_id());
+				$this->view->show_successful_delete_text();
+			} else {
+				$this->view->show_submit_classified_text();
+				$this->view->show_header_text();
+				parent::run();
+				$this->view->show_footer_text();
+			}				
 		}
 	}
 
