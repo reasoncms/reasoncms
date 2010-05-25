@@ -21,29 +21,29 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
 	echo '<div id="getDirections">'.'<input type="submit" value="Get directions" />'.'</div>'."\n";
 	echo '</form>';
 	echo '</div>'; */
+        ?>
+<div id="GeoAPI"></div>
+<script language="Javascript">
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            doStuff(position.coords.latitude, position.coords.longitude);
+        });
+    }
+    else {
+        if (document.getElementById("GeoAPI")) {
+            document.getElementById("GeoAPI").innerHTML = "I'm sorry but geolocation services are not supported by your browser";
+            document.getElementById("GeoAPI").style.color = "#FF0000";
+        }
+    }
 
-        echo '<div id="GeoAPI"></div>';
-        echo '<script language="Javascript">'."\n";
-        echo 'if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(function(position) {
-  doStuff(position.coords.latitude, position.coords.longitude);
-  });
-}
-else {
-  if (document.getElementById(\"GeoAPI\")) {
-    document.getElementById(\"GeoAPI\").innerHTML = \"I\'m sorry but geolocation services are not supported by your browser";
-    document.getElementById("GeoAPI").style.color = "#FF0000";
-  }
-}
+    function doStuff(mylat, mylong) {
+        if (document.getElementById("GeoAPI")) {
+            document.getElementById("GeoAPI").innerHTML = "<iframe style=\"width: 320px; height: 400px\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"http://maps.google.com/maps?f=d&source=s_d&saddr=" + mylat + "," + mylong + "&daddr=43.315921,-91.802895&output=embed\"></iframe>";
+        }
+    }
 
-function doStuff(mylat, mylong) {
-  if (document.getElementById("GeoAPI")) {
-    document.getElementById("GeoAPI").innerHTML = "<iframe style=\"width: 320px; height: 400px\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"http://maps.google.com/maps?f=d&source=s_d&saddr=" + mylat + "," + mylong + "&daddr=43.315921,-91.802895&output=embed\"></iframe>";
-  }
-}';
-
-        echo '</script>';
-
+</script>
+        <?php
     }
 }
 ?>
