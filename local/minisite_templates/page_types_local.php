@@ -26,9 +26,9 @@ $GLOBALS['_reason_page_types_local'] = array(
             'sbvideo' => 'luther_sbvideo',
             'content_blurb' => 'main_blurb', 
 		),
-	'admissions_account_signup' => array(
-		'main_post' => 'applicant_account',
-	),
+		'admissions_account_signup' => array(
+			'main_post' => 'applicant_account',
+		),
         'admissions_home' => array(
 			'banner_xtra' => '',
 			'post_banner' => '',
@@ -94,6 +94,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main' => 'directions',
 			'main_post' => 'content',
 		),
+		'directory_simple_campus' => array(
+			'main' => 'directory_campus_simple',
+		),
 		'directory_alumni' => array(
 			'main' => 'directory_search_alumni',
 			'sidebar' => 'login_link',
@@ -110,6 +113,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
 		'gift_page_engine' => array(
             'main_post' => 'gift_form',
+        ),
+        'homecoming_registration' => array(
+        	'main_post' => 'homecoming_registration',
         ),
 		'image_slideshow' => array(
 			//'main' => 'luther_flickr_slideshow',
