@@ -44,6 +44,13 @@ class ClassifiedModel
 	 */
 	var $classified_duration_days;
 	
+	/**
+	 * Whether or not front-end deletion of ads is available to the person listed in the
+	 * contact email. Requires that contact email and email of authenticated user match.
+	 * @var int
+	 */
+	var $allow_contact_to_delete = false;
+	
 	function ClassifiedModel()
 	{
 	}
@@ -167,6 +174,11 @@ class ClassifiedModel
 		return carl_make_link(array_merge($empty_request, array('classified_mode' => 'add_item')));
 	}
 	
+	function get_delete_link()
+	{
+		return carl_make_link(array('classified_mode' => 'delete_item'));
+	}
+	
 	function get_return_to_listing_link()
 	{
 		$empty_request =& $this->get_empty_request_array();
@@ -188,6 +200,25 @@ class ClassifiedModel
 	function get_classified_requires_approval()
 	{
 		return $this->classified_requires_approval;
+	}
+	
+	function get_user_can_delete($id)
+	{
+		if ($id && $this->allow_contact_to_delete)
+		{
+			if ($item = new entity($id))
+			{
+				if ($user_netid = reason_check_authentication())
+				{
+					$dir = new directory_service();
+					$dir->search_by_attribute( 'ds_username', $user_netid, array('ds_email'));
+					$record = $dir->get_first_record();
+					if (in_array($item->get_value('classified_contact_email'), $record['ds_email']))
+						return true;					
+				}
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -226,6 +257,14 @@ class ClassifiedModel
 		create_relationship($entity_id, $category, relationship_id_of('classified_to_classified_category'));
 		
 		$this->set_classified_id($entity_id);
+	}
+
+	function delete_classified($id)
+	{
+		$user_netid = reason_check_authentication();
+		$user = get_user_id($user_netid ? $user_netid : 'classified_user');		
+		$q = 'UPDATE entity SET state = "Deleted", last_edited_by = "'.$user.'" where id = ' . $id;
+		db_query( $q , 'Error deleting classified' );
 	}
 
 	function email_classified($email_info)
