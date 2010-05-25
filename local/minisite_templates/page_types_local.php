@@ -26,6 +26,10 @@ $GLOBALS['_reason_page_types_local'] = array(
             'sbvideo' => 'luther_sbvideo',
             'content_blurb' => 'main_blurb', 
 		),
+		'aaron_test_page' => array(
+			'main' => 'mobile_directions',
+			'main_post' => 'content',
+		),
 		'admissions_account_signup' => array(
 			'main_post' => 'applicant_account',
 		),
