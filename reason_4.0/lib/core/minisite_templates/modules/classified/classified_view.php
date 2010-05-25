@@ -424,6 +424,13 @@ class ClassifiedView extends Disco
 		echo '</div>';
 	}
 	
+	function show_delete_classified_text()
+	{
+		echo '<div class="classifiedDeleteLink">';
+		echo '<p><a href="'.$this->model->get_delete_link().'">Delete This Ad</a></p>';
+		echo '</div>';
+	}
+	
 	function show_header_text()
 	{
 		if (!empty($this->header_text_string))
@@ -478,6 +485,13 @@ class ClassifiedView extends Disco
 		echo '</div>';
 	}
 
+	function show_successful_delete_text()
+	{
+		echo '<div class="classifiedSuccessfulDeleteText">';
+		echo '<p>Your classified ad was successfully deleted.</p>';
+		echo '</div>';
+	}
+
 	// Overloadable methods for item preview
 	function show_preview()
 	{
@@ -494,6 +508,10 @@ class ClassifiedView extends Disco
 		echo '<ul id="classifiedView">';
 		$this->show_item_values($item);
 		echo '</ul>';
+		if ($this->model->get_user_can_delete($item->id()))
+		{
+			$this->show_delete_classified_text();
+		}
 	}
 
 	function show_item_value_default($display_name, $display_value)
