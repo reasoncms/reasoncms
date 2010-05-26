@@ -49,7 +49,7 @@
 				echo '<ul>'."\n";
 				foreach($parents[$root_page_id] as $page)
 				{
-					$link = $base_url.$page->get_value('url_fragment').'/';
+					$link = $page->get_value('url') ? $page->get_value('url') : $base_url.$page->get_value('url_fragment').'/';
 					if($page->get_value('link_name'))
 						$name = $page->get_value('link_name');
 					else
