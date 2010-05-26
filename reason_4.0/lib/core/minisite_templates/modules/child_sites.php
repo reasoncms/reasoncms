@@ -19,23 +19,45 @@
 	class ChildSitesModule extends DefaultMinisiteModule
 	{
 		var $child_sites = array();
+		var $acceptable_params = array(
+			'sites' => NULL, // can be an array of site unique names, which will override normal site-grabbing and show those sites
+		);
 		
 		function init( $args = array() ) // {{{
 		{
 			parent::init( $args );
-
+			
 			$site = new entity( $this->parent->site_id );
 
-			$es = new entity_selector();
-			$es->description = 'Getting child sites of this site';
-			$es->add_type( id_of( 'site' ) );
-			$es->add_left_relationship( $this->parent->site_id, relationship_id_of( 'parent_site' ) );
-			$es->set_order( 'entity.name' );
-			if($site->get_value('site_state') == 'Live')
+			if(!empty($this->params['sites']))
 			{
-				$es->add_relation('site_state="Live"');
+				$this->child_sites = array();
+				foreach($this->params['sites'] as $unique_name)
+				{
+					if($id = id_of($unique_name))
+					{
+						$e = new entity($id);
+						if($e->get_value('type') == id_of('site') && ($site->get_value('site_state') != 'Live' || $e->get_value('site_state') == 'Live') )
+						{
+							$this->child_sites[$id] = $e;
+						}
+					}
+				}
 			}
-			$this->child_sites = $es->run_one();
+			else
+			{
+	
+				$es = new entity_selector();
+				$es->description = 'Getting child sites of this site';
+				$es->add_type( id_of( 'site' ) );
+				$es->add_left_relationship( $this->parent->site_id, relationship_id_of( 'parent_site' ) );
+				$es->set_order( 'entity.name' );
+				if($site->get_value('site_state') == 'Live')
+				{
+					$es->add_relation('site_state="Live"');
+				}
+				$this->child_sites = $es->run_one();
+			}
 		} // }}}
 		function has_content() // {{{
 		{
