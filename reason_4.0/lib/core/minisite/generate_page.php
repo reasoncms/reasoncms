@@ -294,7 +294,7 @@
 			else
 				$str .= 'caching is OFF: '.implode(', ',$no_cache_reasons);
 			
-			echo "\n".'<div style="background-color:#ddd;color:#555;font-size:0.75em;padding:1px 1em;">';
+			echo "\n".'<div id="reasonDeveloper" style="background-color:#ddd;color:#555;font-size:0.75em;padding:1px 1em;">';
 			echo '<p>'.$str.'</p>';
 			if (isset($t) && method_exists($t, 'display_developer_section'))
 			{	
