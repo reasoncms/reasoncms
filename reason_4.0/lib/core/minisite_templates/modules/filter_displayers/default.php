@@ -235,7 +235,7 @@ class defaultFilterDisplay
 			$ret .= '<input type="hidden" name="textonly" value="1">';
 		$id = 'filterSearch'.$this->counter();
 		$ret .= '<label for="'.$id.'">Search:</label> <input name="search" value="'.$v.'" size="'.$this->search_field_size.'" class="search" id="'.$id.'" />'."\n";
-		$ret .= ' <input name="go" type="submit" value="Go" />'."\n";
+		$ret .= ' <input class="submit" name="go" type="submit" value="Go" />'."\n";
 		if(!empty($this->search_value))
 		{
 			$link = '?';
@@ -276,7 +276,7 @@ class defaultFilterDisplay
 				}
 			//-->
 			</script>';
-			$ret .= '<form method="get" action="?">'."\n";
+			$ret .= '<form method="get" action="?" class="relFilters">'."\n";
 			if(count($this->filter_types) != 1)
 				$ret .= 'Browse by '.implode('/',array_keys($this->filter_types)).':'."\n";
 			foreach($this->filters as $key=>$values)
@@ -310,7 +310,7 @@ class defaultFilterDisplay
 		unset($other_filter_links[$key]);
 		$combined_other_filter_links = implode('&amp;',$other_filter_links);
 	
-		$ret .= '<div>';
+		$ret .= '<div class="filterSet"">';
 		$ret .= '<select name="filter_'.$key.'" onChange="MM_jumpMenu(\'parent\',this,0)">'."\n";
 		if(empty($this->filters[$key]))
 		{
