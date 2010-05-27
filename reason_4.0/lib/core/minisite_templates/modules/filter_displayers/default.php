@@ -225,7 +225,7 @@ class defaultFilterDisplay
 		else
 			$v = '';
 		$ret = '';
-		$ret .= '<form method="get" action="?">'."\n";
+		$ret .= '<form method="get" action="?" class="searchForm" >'."\n";
 		foreach($this->filters as $key=>$vals)
 		{
 			$ret .= '<input type="hidden" name="filters['.htmlspecialchars($key,ENT_QUOTES, 'UTF-8').'][type]" value="'.htmlspecialchars($vals['type'],ENT_QUOTES, 'UTF-8').'">';
