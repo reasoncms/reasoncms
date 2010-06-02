@@ -659,6 +659,10 @@
 			'main_post' => 'events_verbose',
 			'sidebar' => '',
 		),	
+		'events_schedule' => array(
+			'main_post' => 'events_schedule',
+			'sidebar' => '',
+		),	
 		'events_verbose_nonav' => array(
 			'main_post' => 'events_verbose',
 			'navigation' => '',
