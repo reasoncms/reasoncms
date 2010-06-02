@@ -144,6 +144,7 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         //echo '<tr>';
         //echo '<td valign="top">';
         echo '<br/>';
+        echo 'Hello World';
         echo '<div id="directions" style="width: 100%"></div>';
         //echo '<td>';
         //echo '</tr>';
