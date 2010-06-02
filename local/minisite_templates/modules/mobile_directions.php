@@ -107,12 +107,12 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         echo '<form action="#" onsubmit="setDirections(this.from.value, this.to.value, this.locale.value); return false">';
         echo '<table>';
         echo '<tr>';
-        echo '<th>From:&nbsp;</th>';
+        echo '<th align="Left">From:&nbsp;</th>';
         echo '<td><input type="text" size="25" id="fromAddress" name="from" value=""/>';
         echo '<td>';
         echo '</tr>';
         echo '<tr>';
-        echo '<th>&nbsp;&nbsp;To:&nbsp;</th>';
+        echo '<th align="Left">To:&nbsp;</th>';
         echo '<td><input type="text" size="25" id="toAddress" name="to" value="Luther College" />';
         echo '<td>';
         echo '</tr>';
