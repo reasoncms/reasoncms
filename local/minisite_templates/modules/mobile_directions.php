@@ -24,7 +24,7 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         echo 'margin: 2px;';
         echo '}';
         echo 'table.directions th {';
-        echo 'background-color:#EEEEEE;';
+        echo 'background-color:#000000;';
         echo '}';
 
         echo 'img {';
