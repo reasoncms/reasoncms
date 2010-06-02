@@ -1052,9 +1052,10 @@ class EventsModule extends DefaultMinisiteModule
 			$today = ' (Today)';
 		else
 			$today = '';
-		echo '<div class="dayblock" id="dayblock_'.$day.'"/>'."\n";
-		echo '<a name="'.$day.'"/>';
+		echo '<div class="dayblock" id="dayblock_'.$day.'">'."\n";
+		echo '<a name="'.$day.'">';
 		echo '<h4 class="day">'.prettify_mysql_datetime( $day, $this->list_date_format ).$today.'</h4>'."\n";
+		echo '</a>'."\n";
 		echo '<ul>';
 		foreach ($this->events_by_date[$day] as $event_id)
 		{
