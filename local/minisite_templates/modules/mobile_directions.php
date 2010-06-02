@@ -22,10 +22,9 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         echo 'font-family: Verdana, Arial, sans serif;';
         echo 'font-size: 11px;';
         echo 'margin: 2px;';
-        echo 'background-color: #ccdeea;';
         echo '}';
         echo 'table.directions th {';
-        echo 'background-color:#000000;';
+        echo 'background-color:#EEEEEE;';
         echo '}';
 
         echo 'img {';
@@ -105,16 +104,15 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         echo '  </script>';
         echo ' </head>';
         echo '<body onload="initialize()" onunload="GUnload()" style="font-family: Arial;border: 0 none;">';
-        echo '<h2>Directions to Luther College</h2>';
         echo '<form action="#" onsubmit="setDirections(this.from.value, this.to.value, this.locale.value); return false">';
         echo '<table>';
         echo '<tr>';
-        echo '<th align="Left">From:&nbsp;</th>';
+        echo '<th>From:&nbsp;</th>';
         echo '<td><input type="text" size="25" id="fromAddress" name="from" value=""/>';
         echo '<td>';
         echo '</tr>';
         echo '<tr>';
-        echo '<th align="Left">&nbsp;&nbsp;To:&nbsp;</th>';
+        echo '<th>&nbsp;&nbsp;To:&nbsp;</th>';
         echo '<td><input type="text" size="25" id="toAddress" name="to" value="Luther College" />';
         echo '<td>';
         echo '</tr>';
@@ -140,7 +138,7 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         echo '<table class="directions">';
         echo '<tr>';
         echo '<td valign="top">';
-        echo '<div id="map_canvas" style="width: 250px; height: 400px"></div>';
+        echo '<div id="map_canvas" style="width: 100%; height: 400px; float: left;"></div>';
         echo '<td>';
         echo '</tr>';
         echo '<tr>';
