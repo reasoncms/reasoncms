@@ -138,13 +138,13 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         //echo '<table class="directions">';
         //echo '<tr>';
         //echo '<td valign="top">';
-        echo '<div id="map_canvas" style="width: 100%; height: 400px; float: left;"></div>';
+        echo '<tr><div id="map_canvas" style="width: 100%; height: 400px; float: left;"></div></tr>';
         //echo '<td>';
         //echo '</tr>';
         //echo '<tr>';
         //echo '<td valign="top">';
         echo '<br/>';
-        echo '<div id="directions" style="width: 100%"></div>';
+        echo '<tr><div id="directions" style="width: 100%"></div></tr>';
         //echo '<td>';
         //echo '</tr>';
         echo '</table>';
