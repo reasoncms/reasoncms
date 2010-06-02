@@ -228,7 +228,11 @@ class ClassifiedModel
 	 */
 	function save_classified($values)
 	{
-		$user_netid = reason_check_authentication();
+		if ($user_netid = reason_check_authentication())
+			$user = get_user_id($user_netid);
+		if (!isset($user) || !$user)
+			$user = get_user_id('classified_user');
+			
 		$user = get_user_id($user_netid ? $user_netid : 'classified_user');		
 		$name = trim(strip_tags($values['name']));
 		$category = turn_into_int($values['category']);
