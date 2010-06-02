@@ -135,17 +135,17 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
 
         echo '<tr><a href="" onclick="geolocate(); return false">From Current Location</a> (not all browsers support)</tr>';
         //echo '<br/>'
-        echo '<table class="directions">';
-        echo '<tr>';
-        echo '<td valign="top">';
+        //echo '<table class="directions">';
+        //echo '<tr>';
+        //echo '<td valign="top">';
         echo '<div id="map_canvas" style="width: 100%; height: 400px; float: left;"></div>';
-        echo '<td>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<td valign="top">';
+        //echo '<td>';
+        //echo '</tr>';
+        //echo '<tr>';
+        //echo '<td valign="top">';
         echo '<div id="directions" style="width: 100%"></div>';
-        echo '<td>';
-        echo '</tr>';
+        //echo '<td>';
+        //echo '</tr>';
         echo '</table>';
         echo '</body>';
     }
