@@ -350,7 +350,7 @@ class textDateTimeType extends textType
 	         * file that is built into the datepicker does not appear to work reliably when the date_picker is
 	         * added inline instead of into the head items
 	         */
-	        echo '<script type="text/javascript" src="'. DATE_PICKER_HTTP_PATH.'js/lang/en.js"></script>'."\n";
+	        echo '<script type="text/javascript" src="'. DATE_PICKER_HTTP_PATH.'js/lang/en-us.js"></script>'."\n";
 	       	echo '<script type="text/javascript" src="'. DATE_PICKER_HTTP_PATH.'js/datepicker.js"></script>'."\n";
            	echo '<link href="'.DATE_PICKER_HTTP_PATH. 'css/datepicker.css" rel="stylesheet" type="text/css" />'."\n";
            	define('_PLASMATURE_INCLUDED_DATEPICKER', true);
