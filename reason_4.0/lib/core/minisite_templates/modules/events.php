@@ -8,6 +8,7 @@
   * include the base class & dependencies, and register the module with Reason
   */
 reason_include_once( 'minisite_templates/modules/default.php' );
+//reason_include_once( 'classes/calendar_new.php' );
 reason_include_once( 'classes/calendar.php' );
 reason_include_once( 'classes/calendar_grid.php' );
 reason_include_once( 'classes/icalendar.php' );
@@ -1051,21 +1052,44 @@ class EventsModule extends DefaultMinisiteModule
 			$today = ' (Today)';
 		else
 			$today = '';
+		echo '<div class="dayblock" id="dayblock_'.$day.'"/>'."\n";
+		echo '<a name="'.$day.'"/>';
 		echo '<h4 class="day">'.prettify_mysql_datetime( $day, $this->list_date_format ).$today.'</h4>'."\n";
 		echo '<ul>';
 		foreach ($this->events_by_date[$day] as $event_id)
 		{
+			if ($this->params['list_type'] == 'schedule')
+			{
+				if (!isset($last_time) || $this->events[$event_id]->get_value( 'datetime' ) != $last_time)
+				{
+					if(substr($this->events[$event_id]->get_value( 'datetime' ), 11) != '00:00:00')
+						$time_string = prettify_mysql_datetime( $this->events[$event_id]->get_value( 'datetime' ), $this->list_time_format );
+					else
+						$time_string = 'Today';
+					if (isset($last_time)) echo '</ul></li>';
+					echo '<li class="time_block">';
+					echo '<h5 class="time">'.$time_string.'</h5>';
+					echo '<ul>';
+				} 
+					
+				$last_time = $this->events[$event_id]->get_value( 'datetime' );
+			}	
 			echo '<li class="event">';
 			$this->show_event_list_item( $event_id, $day );
 			echo '</li>'."\n";
+			
 		}
+		if ($this->params['list_type'] == 'schedule') echo '</ul></li>'."\n";
 		echo '</ul>'."\n";
+		echo '</div>'."\n";
 	} // }}}
 	
 	function show_event_list_item( $event_id, $day )
 	{
 		if($this->params['list_type'] == 'verbose')
 			$this->show_event_list_item_verbose( $event_id, $day );
+		else if($this->params['list_type'] == 'schedule')
+			$this->show_event_list_item_schedule( $event_id, $day );
 		else
 			$this->show_event_list_item_standard( $event_id, $day );
 	}
@@ -1111,6 +1135,30 @@ class EventsModule extends DefaultMinisiteModule
 		echo '</ul>'."\n";
 	} // }}}
 	
+	function show_event_list_item_schedule( $event_id, $day ) // {{{
+	{
+		$link = $this->events_page_url.$this->construct_link(array('event_id'=>$this->events[$event_id]->id(),'date'=>$day));
+		if($this->params['show_images'])
+			$this->_show_teaser_image($event_id, $link);
+		echo '<a href="'.$link.'">';
+		echo $this->events[$event_id]->get_value( 'name' );
+		echo '</a>';
+		if ($duration = $this->prettify_duration($this->events[$event_id]))
+			echo ' <span class="duration">('.$duration.')</span>';
+		echo '<ul>'."\n";
+		if($this->events[$event_id]->get_value( 'description' ))
+		{
+			echo '<li>';
+			echo $this->events[$event_id]->get_value( 'description' );
+			echo '</li>'."\n";
+		}
+		$time_loc = array();
+		if($this->events[$event_id]->get_value( 'location' ))
+			$loc = $this->events[$event_id]->get_value( 'location' );
+		if (!empty($loc)) echo '<li>'.$loc.'</li>'."\n";
+		echo '</ul>'."\n";
+	} // }}}
+
 	function _show_teaser_image($event_id, $link)
 	{
 		static $image_cache = array();
@@ -1131,6 +1179,7 @@ class EventsModule extends DefaultMinisiteModule
         		$image_cache[$event_id] = NULL;
         	}
         }
+
         if(!empty($image_cache[$event_id]))
         {
         	show_image( $image_cache[$event_id], true, false, false, '', $this->textonly, false, $link );
@@ -2093,23 +2142,31 @@ class EventsModule extends DefaultMinisiteModule
 		if ($e->get_value( 'hours' ) || $e->get_value( 'minutes' ))
 		{
 			echo '<p class="duration"><strong>Duration:</strong> ';
-			if ($e->get_value( 'hours' ))
-			{
-				if ( $e->get_value( 'hours' ) > 1 )
-					$hour_word = 'hours';
-				else
-					$hour_word = 'hour';
-				echo $e->get_value( 'hours' ).' '.$hour_word;
-				if ($e->get_value( 'minutes' ))
-					echo ', ';
-			}
-			if ($e->get_value( 'minutes' ))
-			{
-				echo $e->get_value( 'minutes' ).' minutes';
-			}
+			echo $this->prettify_duration($e);
 			echo '</p>'."\n";
 		}
 	} // }}}
+	
+	function prettify_duration(&$e)
+	{
+		$duration = '';
+		if ($e->get_value( 'hours' ))
+		{
+			if ( $e->get_value( 'hours' ) > 1 )
+				$hour_word = 'hours';
+			else
+				$hour_word = 'hour';
+			$duration .= $e->get_value( 'hours' ).' '.$hour_word;
+			if ($e->get_value( 'minutes' ))
+				$duration .= ', ';
+		}
+		if ($e->get_value( 'minutes' ))
+		{
+			$duration .= $e->get_value( 'minutes' ).' minutes';
+		}
+		return $duration;
+	}
+	
 	function show_ownership_info(&$e)
 	{
 		$owner_site = $e->get_owner();
