@@ -24,7 +24,7 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         echo 'margin: 2px;';
         echo '}';
         echo 'table.directions th {';
-        echo 'background-color:#000000;';
+        echo 'background-color:#EEEEEE;';
         echo '}';
 
         echo 'img {';
@@ -106,17 +106,17 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         echo '<body onload="initialize()" onunload="GUnload()" style="font-family: Arial;border: 0 none;">';
         echo '<form action="#" onsubmit="setDirections(this.from.value, this.to.value, this.locale.value); return false">';
         echo '<table>';
-        echo '<tr>';
+        //echo '<tr>';
         echo '<th align="Left">From:&nbsp;</th>';
         echo '<td><input type="text" size="25" id="fromAddress" name="from" value=""/>';
         echo '<td>';
-        echo '</tr>';
-        echo '<tr>';
+        //echo '</tr>';
+        //echo '<tr>';
         echo '<th align="Left">To:&nbsp;</th>';
         echo '<td><input type="text" size="25" id="toAddress" name="to" value="Luther College" />';
         echo '<td>';
-        echo '</tr>';
-        echo '<tr>';
+        //echo '</tr>';
+        //echo '<tr>';
         echo '<th align="Left">Language:&nbsp;</th>';
         echo '<td colspan="3">';
         echo '<select id="locale" name="locale">';
@@ -128,7 +128,7 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         echo '</select>';
         echo '<input name="submit" type="submit" value="Get Directions" />';
         echo '<td>';
-        echo '</tr>';
+        //echo '</tr>';
         echo '</table>';
         echo '</form>';
         echo '<br/>';
