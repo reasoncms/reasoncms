@@ -146,6 +146,7 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         //echo '<br/>';
         echo 'Proof';
         echo '<div id="directions" style="width: 100%"></div>';
+        echo 'Proof23';
         //echo '<td>';
         //echo '</tr>';
         echo '</table>';
