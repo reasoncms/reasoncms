@@ -23,6 +23,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'imagetop' => 'luther_imagetop',
 			'bannerad' => 'luther_bannerad',
 			'flickr_slideshow' => 'luther_flickr_slideshow',
+			'norse_calendar' => 'norse_calendar',
             'sbvideo' => 'luther_sbvideo',
             'content_blurb' => 'main_blurb', 
 		),
