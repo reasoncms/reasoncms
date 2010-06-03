@@ -19,7 +19,7 @@ class norseCalendarModule extends DefaultMinisiteModule {
 
         foreach ($norse_calendar_info as $info) {
             echo '<meta name = "viewport" content = "width = device-width, height = device-height" />';
-            echo '<iframe src="https://www.google.com/calendar/hosted/luther.edu/embed?height=400&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='. $info->get_value('name') .'%40luther.edu&amp;color=%23A32929&amp;ctz=America%2FChicago" style=" border-width:0 " width="100%" height="100%" frameborder="0" scrolling="no"></iframe>';
+            echo '<iframe src="https://www.google.com/calendar/hosted/luther.edu/embed?height=400&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='. $info->get_value('name') .'%40luther.edu&amp;color=%23A32929&amp;ctz=America%2FChicago" style=" border-width:0 " width="100%" height="400" frameborder="0" scrolling="no"></iframe>';
             
         }
     }
