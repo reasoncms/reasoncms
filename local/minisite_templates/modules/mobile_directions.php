@@ -103,7 +103,7 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
 
         echo '  </script>';
         echo ' </head>';
-        echo '<body onload="initialize()" onunload="GUnload()" style="font-family: Arial;border: 10px none;">';
+        echo '<body onload="initialize()" onunload="GUnload()" style="font-family: Arial;border: 0 none;">';
         echo '<form action="#" onsubmit="setDirections(this.from.value, this.to.value, this.locale.value); return false">';
         echo '<table>';
         echo '<tr>';
