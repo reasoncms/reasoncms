@@ -218,6 +218,11 @@ class LutherTemplate extends MinisiteTemplate
                 {
 					$this->run_section( 'flickr_slideshow' );
                 }
+                
+             if ($this->has_content( 'norse_calendar' ))
+                {
+					$this->run_section( 'norse_calendar' );
+                }
 
 
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_pageLC')
