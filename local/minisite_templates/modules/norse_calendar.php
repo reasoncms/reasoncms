@@ -1,61 +1,26 @@
 <?php
-	reason_include_once( 'minisite_templates/modules/default.php' );
+reason_include_once( 'minisite_templates/modules/default.php' );
 
-	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'norseCalendarModule';
+$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'norseCalendarModule';
 
-	class norseCalendarModule extends DefaultMinisiteModule
-	{
-		function init( $args = array() )
-		{
+class norseCalendarModule extends DefaultMinisiteModule {
+    function init( $args = array() ) {
 
-		}
-		function has_content()
-		{
-			return true;
-		}
-		function run()
-		{
-			$site_id = $this->site_id;
+    }
+    function has_content() {
+        return true;
+    }
+    function run() {
+        $site_id = $this->site_id;
 
-			$es = new entity_selector( $site_id );
-			$es->add_type( id_of( 'twitter_feed_type' ) );
-			$twitter_info = $es->run_one();
+        $es = new entity_selector( $site_id );
+        $es->add_type( id_of( 'norse_calendar_type' ) );
+        $norse_calendar_info = $es->run_one();
 
-			foreach ($twitter_info as $info)
-			{
-				echo '<div id="twtr-profile-widget">'."\n";
-				echo '<script src="http://widgets.twimg.com/j/2/widget.js"></script>'."\n";
-				echo '<script>'."\n";
-				echo 'new TWTR.Widget({
-	  				version: 2,
-				  	type: \'profile\',
-					rpp: ' . $info->get_value('twitter_posts') . ',
-					interval: 6000,
-					width: 239,
-					height: 200,
-					theme: {
-					    shell: {
-					      background: \'#ffffff\',
-					      color: \'#b4bec9\'
-					    },
-					    tweets: {
-					      background: \'#ffffff\',
-					      color: \'#000000\',
-					      links: \'#1985b5\'
-	    				}
-				  },
-				  features: {
-				    scrollbar: false,
-				    loop: true,
-				    live: true,
-				    hashtags: true,
-				    timestamp: true,
-				    avatars: false,
-				    behavior: \'default\'
-				  }
-				}).render().setUser(\'' . $info->get_value('name') . '\').start();
-				</script></div>';
-			}
-		}
-	}
+        foreach ($norse_calendar_info as $info) {
+            echo '<iframe src="https://www.google.com/calendar/hosted/luther.edu/embed?height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='. $info->get_value('name') .'%40luther.edu&amp;color=%23A32929&amp;ctz=America%2FChicago" style=" border-width:0 " width="800" height="600" frameborder="0" scrolling="no"></iframe>';
+            
+        }
+    }
+}
 ?>
