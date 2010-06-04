@@ -21,7 +21,7 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         echo '<style type="text/css">';
         echo 'body {';
         echo 'font-family: Verdana, Arial, sans serif;';
-        echo 'font-size: 11px;';
+       // echo 'font-size: 11px;';
         echo 'margin: 2px;';
         echo '}';
         echo 'table.directions th {';
