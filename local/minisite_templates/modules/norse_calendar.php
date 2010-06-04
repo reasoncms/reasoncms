@@ -15,6 +15,7 @@ class norseCalendarModule extends DefaultMinisiteModule {
 
         $es = new entity_selector( $site_id );
         $es->add_type( id_of( 'norse_calendar_type' ) );
+        $es->add_right_relationship($this->cur_page->id(), relationship_id_of('page_to_norse_calendar'));
         $norse_calendar_info = $es->run_one();
 
         foreach ($norse_calendar_info as $info) {
@@ -25,3 +26,4 @@ class norseCalendarModule extends DefaultMinisiteModule {
     }
 }
 ?>
+
