@@ -241,6 +241,35 @@ $GLOBALS['_reason_page_types_local'] = array(
 				   ),
 		),
 */
+		'mobile_home' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main_head' => '',
+			'footer' => '',
+		),
+		'mobile_directions' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main' => 'content',
+			'main_post' => 'mobile_directions',
+			'footer' => '',			
+		),
+		'mobile_directory' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main_head' => '',
+			'main' => 'content',
+			'main_post' => 'directory_campus_simple',
+			'footer' => '',			
+		),
+		'mobile_map' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main_head' => '',
+			'main' => 'content',
+			'main_post' => 'PUT_YOUR_MAP_MODULE_HERE',
+			'footer' => '',			
+		),
 		'onecard' => array(
             'main_post'=>'onecard_dashboard',
             'sidebar'=>'',
