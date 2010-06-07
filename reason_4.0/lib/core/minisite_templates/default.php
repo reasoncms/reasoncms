@@ -703,6 +703,8 @@ class MinisiteTemplate
 					$args[ 'page_id' ] = $this->page_id;
 					$args[ 'site_id' ] = $this->site_id;
 					$args[ 'cur_page' ] = $this->cur_page;
+					// we set the module identifier as a hash of the section - should be unique
+					$args[ 'identifier' ] = md5($sec);
 					//$args[ 'nav_pages' ] =& $this->pages;
 					$args[ 'textonly' ] = $this->textonly;
 					
