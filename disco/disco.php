@@ -1855,7 +1855,14 @@
 				trigger_error( "Element '$element' is not defined.", WARNING );
 		} // }}}
 		
-		
+		/**
+		 * Return the name of the element that submitted the form
+		 * @return string
+		 */
+		function get_chosen_action()
+		{
+			return $this->chosen_action;
+		}
 	//////////////////////////////////////////////////
 	// METHODS FOR ELEMENT GROUPS ONLY
 	//////////////////////////////////////////////////
