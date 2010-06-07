@@ -1088,17 +1088,17 @@ div#login h4 {
 }
 
 /* Editable Content */
-div#pageContent.editable div.iframe.editorData {
+.editable div.iframe.editorData {
 	width:100%;
 }
-div#pageContent.editable table#discoTable {
+.editable table#discoTable {
 	width:100%;
 }
-div#pageContent.editable div.editRegion {
+.editable div.editRegion {
 	border:1px dotted #aaa;
 	padding:0 .65em;
 }
-div#pageContent.editable div.editRegion a.editThis {
+.editable div.editRegion a.editThis {
 	padding:.3em;
 	border:1px dotted #748FC2;
 	background-color:#F0F5FF;
