@@ -41,12 +41,17 @@
 		 */
 		var $site_id;
 		/**
+		 * identifier as assigned by the template
+		 * @var string
+		 */
+		var $identifier;
+		/**
 		 * current page entity (this is the cur_page object from the pages collection from the template
 		 * @var object (entity)
 		 */
 		var $cur_page;
 		/**
-		 * Reason_Session object passed if this module is editable
+		 * @deprecated since reason 4 beta 8
 		 * @var object
 		 */
 		var $session = null;
@@ -55,7 +60,6 @@
 		 * @var mixed (null until set as boolean value)
 		 */
 		var $textonly = null;
-		
 		/**
 		 * allowable parameters for this module
 		 *
@@ -134,7 +138,6 @@
 		 * @var object
 		 */
 		var $_crumbs;
-		
 		/**
 		 * convenience method that the template calls. sets up the variables from the template
 		 * @param array $args
@@ -371,7 +374,7 @@
 		 */
 		function init_editable( $session ) // {{{
 		{
-			trigger_error('can_edit is deprecated and no longer called by the default template.');
+			trigger_error('init_editable is deprecated and no longer called by the default template.');
 			$this->session = $session;
 		} // }}}
 		/**
