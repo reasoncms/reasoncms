@@ -15,15 +15,14 @@
 	 */
 	class sidebar_feature_manager extends ContentManager 
 	{
-		trigger_error('sidebar_feature_manager is deprecated.');
 		function alter_data() {
+			trigger_error('sidebar_feature_manager is deprecated.');
 			$this -> add_required ("description");
 			$this -> add_required ("show_hide");
 			$this -> set_comments ("name", form_comment("For your reference only"));
 			$this -> set_display_name ("description", "Sidebar Feature Text");
 			$this -> set_display_name ("show_hide", "Show/Hide");
 			$this -> set_comments ("show_hide", form_comment('This allows you to toggle a feature on &amp; off'));
-		}
-		
+		}	
 	}
 ?>
