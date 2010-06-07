@@ -52,8 +52,8 @@ reason_include_once( 'classes/inline_editing.php' );
 		function set_inline_editing_availability()
 		{
 			$inline_edit =& get_reason_inline_editing($this->page_id);
-			if ($this->request['inline_editing_availability'] == 'enable') $inline_edit->enable_inline_editing();
-			else $inline_edit->disable_inline_editing();
+			if ($this->request['inline_editing_availability'] == 'enable') $inline_edit->enable();
+			else $inline_edit->disable();
 			$redirect = carl_make_redirect(array('inline_editing_availability' => ''));
             header('Location: ' . $redirect);
             exit();
@@ -104,9 +104,9 @@ reason_include_once( 'classes/inline_editing.php' );
 				echo '<a href="'.$this->get_edit_link().'" class="editLink">Edit page in Reason Admin</a>'."\n";
 				echo '</div>';
 			}
-			if ($inline_edit->reason_allows_inline_editing() && ($inline_edit->has_inline_edit_privs() || $inline_edit->is_inline_editing_enabled()))
+			if ($inline_edit->reason_allows_inline_editing() && ($inline_edit->is_available() || $inline_edit->is_enabled()))
 			{
-				if ($inline_edit->is_inline_editing_enabled())
+				if ($inline_edit->is_enabled())
 				{
 					$link =  carl_make_link(array('inline_editing_availability' => 'disable'));
 					$link_text = 'Turn off inline editing';
