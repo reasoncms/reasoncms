@@ -79,6 +79,33 @@ div.facStaffName span.degrees {
 .blurb {
 	margin-top: 15px;
 }
+.blurbs .editing td {
+	padding:0;
+}
+.blurbs .editable {
+	border:1px dotted #aaa;
+}
+.blurbs .editable .edit {
+	margin-top:1em;
+	text-align:right;
+}
+.blurbs .editable .edit a {
+	padding:0.3em 0.5em;
+	border:1px dotted #aaa;
+	background-color:#eee;
+	text-decoration:none;
+}
+.blurbs .editable .edit a:hover {
+	background-color:#ddd;
+}
+.blurbs .editing {
+	border:1px solid #666;
+	padding:0.5em 0;
+}
+.blurbs .editing td.words {
+	width:0;
+	overflow:hidden;
+}
 
 /* News Module */
 
