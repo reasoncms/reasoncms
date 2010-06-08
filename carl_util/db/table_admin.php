@@ -1741,7 +1741,7 @@ class TableAdmin
 		function process_edit() { $this->process_default(); }
 		function process_delete()
 		{
-			if ($this->chosen_action == 'delete')
+			if ($this->get_chosen_action() == 'delete')
 			{
 				$id_to_delete = $this->get_id();
 				$qry = 'DELETE FROM ' . $this->get_table_name() . ' WHERE '.$this->id_column_name.' = '.$id_to_delete;
@@ -1895,7 +1895,7 @@ class TableAdmin
 		function process()
 		{
 			$this->show_form = false;
-			if ($this->chosen_action == 'disco_confirm_delete_forever')
+			if ($this->get_chosen_action() == 'disco_confirm_delete_forever')
 			{
 				$this->status = 'delete_forever';
 			}
