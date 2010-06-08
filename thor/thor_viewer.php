@@ -233,7 +233,7 @@ class DiscoThorAdmin extends DiscoDefaultAdmin
 	
 	function process_delete()
 	{
-		if ($this->chosen_action == 'delete')
+		if ($this->get_chosen_action() == 'delete')
 		{
 			$id_to_delete = $this->get_id();
 			$qry = 'DELETE FROM ' . $this->get_table_name() . ' WHERE '.$this->id_column_name.' = '.$id_to_delete;

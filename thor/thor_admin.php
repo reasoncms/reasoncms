@@ -302,7 +302,7 @@ class ThorAdmin extends TableAdmin
 	 */
 	function process_delete()
 	{
-		if ($this->chosen_action == 'delete')
+		if ($this->get_chosen_action() == 'delete')
 		{
 			$tc = $this->get_thor_core();
 			$tc->delete_by_primary_key($this->get_action_id());
