@@ -321,6 +321,8 @@ class EventsModule extends DefaultMinisiteModule
 	 * 'ideal_count' (integer) sets the @ideal_count value for dynamic view selection
 	 *
 	 * 'default_view_min_days' (integer) sets a smallest number of days the dynamically selected view can have.
+	 *
+	 * 'start_date' (string) forces the calendar to use as its default start date a date other than the current one
 	 * 
 	 *
 	 * @var array
@@ -335,7 +337,8 @@ class EventsModule extends DefaultMinisiteModule
 							'sharing_mode'=>'all',
 							'show_images'=>false,
 							'ideal_count'=>NULL,
-							'default_view_min_days'=>1, // Is this really what we want here???
+							'default_view_min_days'=>1,
+	 						'start_date'=>'',
 						);
 	/**
 	 * Views that should not be indexed by search engines
@@ -713,10 +716,19 @@ class EventsModule extends DefaultMinisiteModule
 		
 		return $es->run_one();
 	}
+	function _get_start_date()
+	{
+		if(!empty($this->request['start_date']))
+			return $this->request['start_date'];
+		
+		if(!empty($this->params['start_date']))
+			return $this->params['start_date'];
+
+		return $this->today;
+	}
 	function init_and_run_ical_calendar()
 	{
-		$start_date = !empty($this->request['start_date']) ? $this->request['start_date'] : $this->today;
-		$init_array = $this->make_reason_calendar_init_array($start_date, '', 'all');
+		$init_array = $this->make_reason_calendar_init_array($this->_get_start_date(), '', 'all');
 		
 		$this->calendar = new reasonCalendar($init_array);
 		
@@ -737,8 +749,6 @@ class EventsModule extends DefaultMinisiteModule
 			$this->parent->head_items->add_head_item('meta', array('name'=>'robots','content'=>'noindex,follow'));
 		}
 		
-		if(!empty($this->pass_vars['start_date']))
-			$start_date = $this->pass_vars['start_date'];
 		if(!empty($this->pass_vars['end_date']))
 			$end_date = $this->pass_vars['end_date'];
 		else
@@ -748,7 +758,7 @@ class EventsModule extends DefaultMinisiteModule
 			elseif(!empty($this->params['view']))
 				$view = $this->params['view'];
 		}
-		$init_array = $this->make_reason_calendar_init_array($start_date, $end_date, $view);
+		$init_array = $this->make_reason_calendar_init_array($this->_get_start_date(), $end_date, $view);
 		$this->calendar = new reasonCalendar($init_array);
 		
 		$this->calendar->run();
@@ -1053,10 +1063,8 @@ class EventsModule extends DefaultMinisiteModule
 		else
 			$today = '';
 		echo '<div class="dayblock" id="dayblock_'.$day.'">'."\n";
-		echo '<a name="'.$day.'">';
-		echo '<h4 class="day">'.prettify_mysql_datetime( $day, $this->list_date_format ).$today.'</h4>'."\n";
-		echo '</a>'."\n";
-		echo '<ul>';
+		echo '<h4 class="day"><a name="'.$day.'"></a>'.prettify_mysql_datetime( $day, $this->list_date_format ).$today.'</h4>'."\n";
+		echo '<ul class="dayEvents">';
 		foreach ($this->events_by_date[$day] as $event_id)
 		{
 			if ($this->params['list_type'] == 'schedule')
@@ -1070,7 +1078,7 @@ class EventsModule extends DefaultMinisiteModule
 					if (isset($last_time)) echo '</ul></li>';
 					echo '<li class="time_block">';
 					echo '<h5 class="time">'.$time_string.'</h5>';
-					echo '<ul>';
+					echo '<ul class="time_events">';
 				} 
 					
 				$last_time = $this->events[$event_id]->get_value( 'datetime' );
@@ -1141,23 +1149,26 @@ class EventsModule extends DefaultMinisiteModule
 		$link = $this->events_page_url.$this->construct_link(array('event_id'=>$this->events[$event_id]->id(),'date'=>$day));
 		if($this->params['show_images'])
 			$this->_show_teaser_image($event_id, $link);
-		echo '<a href="'.$link.'">';
+		echo '<a href="'.$link.'" class="name">';
 		echo $this->events[$event_id]->get_value( 'name' );
 		echo '</a>';
 		if ($duration = $this->prettify_duration($this->events[$event_id]))
 			echo ' <span class="duration">('.$duration.')</span>';
-		echo '<ul>'."\n";
-		if($this->events[$event_id]->get_value( 'description' ))
+		if($this->events[$event_id]->get_value( 'description' ) || $this->events[$event_id]->get_value( 'location' ) )
 		{
-			echo '<li>';
-			echo $this->events[$event_id]->get_value( 'description' );
-			echo '</li>'."\n";
+			echo '<ul>'."\n";
+			if($this->events[$event_id]->get_value( 'description' ))
+			{
+				echo '<li class="description">';
+				echo $this->events[$event_id]->get_value( 'description' );
+				echo '</li>'."\n";
+			}
+			if($this->events[$event_id]->get_value( 'location' ))
+			{
+				echo '<li class="location">'.$this->events[$event_id]->get_value( 'location' ).'</li>'."\n";
+			}
+			echo '</ul>'."\n";
 		}
-		$time_loc = array();
-		if($this->events[$event_id]->get_value( 'location' ))
-			$loc = $this->events[$event_id]->get_value( 'location' );
-		if (!empty($loc)) echo '<li>'.$loc.'</li>'."\n";
-		echo '</ul>'."\n";
 	} // }}}
 
 	function _show_teaser_image($event_id, $link)
@@ -1989,7 +2000,7 @@ class EventsModule extends DefaultMinisiteModule
 			If they are looking at an archive view, start date should be pinned to the start date they are currently viewing */
 		
 		$start_date = $this->today;
-		if(!empty($this->request['start_date']) && $this->request['start_date'] < $this->today)
+		if($this->_get_start_date() < $this->today)
 		{
 			$start_date = $this->request['start_date'];
 		}
