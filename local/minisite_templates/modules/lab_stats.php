@@ -1,8 +1,8 @@
 <?php
 reason_include_once( 'minisite_templates/modules/default.php' );
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'MobileIconHome';
+$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LabStatsModule';
 
-class MobileIconHomeModule extends DefaultMinisiteModule {
+class LabStatsModule extends DefaultMinisiteModule {
     function init( $args = array() ) {
 
     }
