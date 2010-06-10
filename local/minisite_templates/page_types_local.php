@@ -241,7 +241,6 @@ $GLOBALS['_reason_page_types_local'] = array(
 				   ),
 		),
 */
-<<<<<<< .mine
 		'mobile_home' => array(
 			'banner_xtra' => '',
 			'post_banner' => '',
@@ -262,7 +261,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'post_banner' => '',
 			'main_head' => '',
 			'main' => 'content',
-			'main_post' => 'directory_campus_simple',
+			'main_post' => 'directory_campus_simple_old',
 			'footer' => '',			
 		),
 		'mobile_map' => array(
@@ -273,37 +272,6 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post' => 'PUT_YOUR_MAP_MODULE_HERE',
 			'footer' => '',			
 		),
-=======
-		'mobile_home' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main_head' => '',
-			'footer' => '',
-		),
-		'mobile_directions' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main' => 'content',
-			'main_post' => 'mobile_directions',
-			'footer' => '',			
-		),
-		'mobile_directory' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main_head' => '',
-			'main' => 'content',
-			'main_post' => 'directory_campus_simple',
-			'footer' => '',			
-		),
-		'mobile_map' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main_head' => '',
-			'main' => 'content',
-			'main_post' => 'PUT_YOUR_MAP_MODULE_HERE',
-			'footer' => '',			
-		),
->>>>>>> .r530
 		'onecard' => array(
             'main_post'=>'onecard_dashboard',
             'sidebar'=>'',
