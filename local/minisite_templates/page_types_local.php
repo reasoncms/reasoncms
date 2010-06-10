@@ -241,6 +241,39 @@ $GLOBALS['_reason_page_types_local'] = array(
 				   ),
 		),
 */
+<<<<<<< .mine
+		'mobile_home' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main_head' => '',
+                        'main' => 'content',
+                        'main_post' => 'mobile_icon_home',
+			'footer' => '',
+		),
+		'mobile_directions' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main' => 'content',
+			'main_post' => 'mobile_directions',
+			'footer' => '',			
+		),
+		'mobile_directory' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main_head' => '',
+			'main' => 'content',
+			'main_post' => 'directory_campus_simple',
+			'footer' => '',			
+		),
+		'mobile_map' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main_head' => '',
+			'main' => 'content',
+			'main_post' => 'PUT_YOUR_MAP_MODULE_HERE',
+			'footer' => '',			
+		),
+=======
 		'mobile_home' => array(
 			'banner_xtra' => '',
 			'post_banner' => '',
@@ -270,6 +303,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post' => 'PUT_YOUR_MAP_MODULE_HERE',
 			'footer' => '',			
 		),
+>>>>>>> .r530
 		'onecard' => array(
             'main_post'=>'onecard_dashboard',
             'sidebar'=>'',
@@ -340,6 +374,16 @@ function luther_audience_navigation()
         echo '<li class="nm5"><a href="http://www.luther.edu/faculty-staff-students">Faculty/ Staff/ Students</a></li></ul>'."\n";
 }
 
+function luther2010_audience_navigation()
+{
+        echo '<ul id="navmain">'."\n";
+        echo '<li class="nm1"><a href="/admissions">Prospective Students</a></li>'."\n";
+        echo '<li class="nm2"><a href="/parents">Parents</a></li>'."\n";
+        echo '<li class="nm3"><a href="/alumni">Alumni/ Friends</a></li>'."\n";
+        echo '<li class="nm4"><a href="http://www.luther.edu/faculty-staff-students">Faculty & Staff</a></li>'."\n";
+        echo '<li class="nm5"><a href="http://www.luther.edu/faculty-staff-students">Current Students</a></li></ul>'."\n";
+}
+
 function luther_global_navigation()
 {
         echo '<ul id="navglobal">'."\n";
@@ -350,6 +394,20 @@ function luther_global_navigation()
         echo '<li class="ng5"><a href="http://www.luther.edu/giving">Giving</a></li>'."\n";
         echo '<li class="ng6"><a href="http://www.luther.edu/about">About Luther</a></li>'."\n";
         echo '<li class="ng7"><a href="http://www.luther.edu/contact">Contact</a></li></ul>'."\n";
+}
+
+function luther2010_global_navigation()
+{
+        echo '<ul id="navglobal">'."\n";
+        echo '<li class="ng1"><a href="/admissions">Admissions</a></li>'."\n";
+        echo '<li class="ng2"><a href="/academics">Academics</a></li>'."\n";
+        echo '<li class="ng3"><a href="http://lis.luther.edu">Library & Technology</a></li>'."\n";
+        echo '<li class="ng4"><a href="/studentlife">Student Life</a></li>'."\n";
+        echo '<li class="ng5"><a href="http://sports.luther.edu">Athletics</a></li>'."\n";
+        echo '<li class="ng6"><a href="http://music.luther.edu">Music</a></li>'."\n";
+        echo '<li class="ng7"><a href="/giving">Giving</a></li>'."\n";
+        echo '<li class="ng8"><a href="http://www.luther.edu/about/decorah">Decorah</a></li>'."\n";
+        echo '<li class="ng9"><a href="http://www.luther.edu/about">About Luther</a></li></ul>'."\n";
 }
 
 function luther_google_search()
