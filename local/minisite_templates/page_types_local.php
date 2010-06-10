@@ -261,7 +261,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'post_banner' => '',
 			'main_head' => '',
 			'main' => 'content',
-			'main_post' => 'directory_campus_simple_old',
+			'main_post' => 'directory_campus_simple',
 			'footer' => '',			
 		),
 		'mobile_map' => array(
