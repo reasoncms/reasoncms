@@ -115,6 +115,8 @@
 			// we received a URL from the form.  decode and store.
 			else
 			{
+				// Search engines should not be indexing versions of the index page with specific destinations
+				$head_items->add_head_item('meta', array('name'=>'robots','content'=>'none'));
 				$this->dest_page = urldecode($this->request['dest_page']);
 			}
 			if ( !empty($this->request ['redir_link_text']))
