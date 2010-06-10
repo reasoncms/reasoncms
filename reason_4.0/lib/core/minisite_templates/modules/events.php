@@ -744,9 +744,9 @@ class EventsModule extends DefaultMinisiteModule
 		$end_date = '';
 		$view = '';
 		
-		if( empty($this->request['no_search']) && empty($this->request['textonly']) && ( !empty($this->request['start_date']) || !empty($this->request['end_date']) || !empty($this->request['view']) || !empty($this->request['audience']) || !empty($this->request['view']) || !empty($this->request['nav_date']) || !empty($this->request['category']) ) )
+		if( empty($this->request['no_search']) && empty($this->request['textonly']) && ( !empty($this->request['start_date']) || !empty($this->request['end_date']) || !empty($this->request['view']) || !empty($this->request['audience']) || !empty($this->request['view']) || !empty($this->request['nav_date']) || !empty($this->request['category']) ) && $head_items =& $this->get_head_items() )
 		{
-			$this->parent->head_items->add_head_item('meta', array('name'=>'robots','content'=>'noindex,follow'));
+			$head_items->add_head_item('meta', array('name'=>'robots','content'=>'noindex,follow'));
 		}
 		
 		if(!empty($this->pass_vars['end_date']))
@@ -2079,7 +2079,12 @@ class EventsModule extends DefaultMinisiteModule
 		
 		$calendar = new reason_iCalendar();
   		$calendar -> set_events($events);
-		
+		if (count($events) > 1)
+		{
+			$site = new entity($this->site_id);
+			$site_name = $site->get_value('name');
+			$calendar->set_title($site_name);
+		}
   		return $calendar -> get_icalendar_events();
 	}
 	function show_event() // {{{
