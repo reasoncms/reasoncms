@@ -248,6 +248,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                         'main' => 'content',
                         'main_post' => 'mobile_icon_home',
 			'footer' => '',
+                        'post_foot' => 'mobile_footer',
 		),
 		'mobile_directions' => array(
 			'banner_xtra' => '',
