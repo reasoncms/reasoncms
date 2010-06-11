@@ -255,7 +255,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'post_banner' => '',
 			'main' => 'content',
 			'main_post' => 'mobile_directions',
-			'footer' => '',			
+			'footer' => '',
+                        'post_foot' => 'mobile_footer',
 		),
 		'mobile_directory' => array(
 			'banner_xtra' => '',
@@ -263,7 +264,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_head' => '',
 			'main' => 'content',
 			'main_post' => 'directory_campus_simple',
-			'footer' => '',			
+			'footer' => '',
+                        'post_foot' => 'mobile_footer',
 		),
 		'mobile_map' => array(
 			'banner_xtra' => '',
@@ -271,7 +273,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_head' => '',
 			'main' => 'content',
 			'main_post' => 'PUT_YOUR_MAP_MODULE_HERE',
-			'footer' => '',			
+			'footer' => '',
+                        'post_foot' => 'mobile_footer',
 		),
 		'onecard' => array(
             'main_post'=>'onecard_dashboard',
