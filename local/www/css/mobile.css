@@ -1,0 +1,116 @@
+body {
+    background-color: #e2ecf5;
+}
+
+div#myBanner {
+    background-image: url('/images/luther2010/mobile/mobile_header_grad.gif');
+    background-repeat: repeat-x;
+}
+
+div#content {
+    color:#0b2345; 
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 1px;
+    margin: 0px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+
+div#footer {
+    font-size: 10px;
+}
+
+/*.button {
+    position: absolute;
+    overflow: hidden;
+    top: 8px;
+    right: 6px;
+    margin: 0;
+    border-width: 0 5px;
+    padding: 0 3px;
+    width: auto;
+    height: 30px;
+    line-height: 30px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: bold;
+    color: #0b2345;
+    text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    white-space: nowrap;
+    background: none;
+}*/
+
+ol.icon-menu {
+    list-style:none;
+    margin: 0;
+    padding:5px;
+}
+ol.icon-menu li {
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-position:center 10px;
+    vertical-align:top;
+}
+ol.icon-menu li a {
+    width: 60px;
+    height:2em;
+    padding:4px;
+    padding-top: 75px;
+    text-align:center;
+    font-size: 10px;
+    font-family: Helvetica;
+    font-weight: bold;
+    display:block;
+    text-decoration:none;
+    color: #0b2345;
+}
+li#menu-home {background-image:url('/images/luther2010/mobile/full_site_mobile_icon.png');}
+
+li#menu-directions {background-image:url('/images/luther2010/mobile/directions_mobile_icon.png');}
+
+li#menu-mail {background-image:url('/images/luther2010/mobile/norse_mail_mobile_icon.png');}
+
+li#menu-map {background-image:url('/images/luther2010/mobile/campus_map_mobile_icon.png');}
+
+li#menu-directory {background-image:url('/images/luther2010/mobile/directory_mobile_icon.png');}
+
+li#menu-cafcam {background-image:url('/images/luther2010/mobile/caf_cam_mobile_icon.png');}
+
+
+li#menu-labstat {background-image:url('/images/luther2010/mobile/lab_availability_mobile_icon.png');}
+
+/*
+
+<div class="center">
+    <ol class="icon-menu">
+
+        <li id="menu-home">
+            <a accesskey="2" href="http://www.luther.edu/">Full Site</a>
+        </li>
+
+    </ol>
+
+
+</div>
+
+*/
+
+div#map_canvas {
+ 
+}
+
+div#directions {
+    -moz-border-radius-bottomleft:4px;
+    -moz-border-radius-bottomright:4px;
+    -moz-border-radius-topleft:4px;
+    -moz-border-radius-topright:4px;
+    background-color:#FFFFFF;
+    color:#0B2345;
+    margin:0;
+    padding-bottom:1px;
+    padding-left:8px;
+    padding-right:8px;
+}
