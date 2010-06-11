@@ -271,7 +271,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'post_banner' => '',
 			'main' => 'content',
 			'main_post' => 'lab_stats',
-			'footer' => '',			
+			'footer' => '',
+                        'post_foot' => 'mobile_footer',
 		),
 		'mobile_map' => array(
 			'banner_xtra' => '',
