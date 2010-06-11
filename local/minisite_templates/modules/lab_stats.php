@@ -15,2344 +15,721 @@ class LabStatsModule extends DefaultMinisiteModule {
 ?>
 <script type="text/javascript" src="http://labstats.luther.edu/public/data2.jsp">
 </script>
-<p><b>Available</b> = Computer turned on, not logged in.<br /><b>Offline</b> = Computer turned off.<br /><b>In Use</b> = User logged in.</p>
-Last Updated: Thursday, June 10, 2010, 10:50 am<table border="2" cellspacing="6" cellpadding="6">
-  <tr>
-    <td><b>Lab Name </b></td>
 
-    <td><b>Available</b></td>
-
-    <td><b>Offline</b></td>
-    <td><b>In Use </b></td>
-    <td><b>Total</b></td>
-  </tr>
-  <tr>
-
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 30;
-
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 30 ;
-
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 30 ;
-
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 30 ;
-
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 30 ;
-
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 39;
-
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 39 ;
-
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 39 ;
-
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 39 ;
-
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 39 ;
-
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 44;
-
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 44 ;
-
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 44 ;
-
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 44 ;
-
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 44 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 31;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 31 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 31 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 31 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 31 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 26;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 26 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 26 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 26 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 26 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 20;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 20 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 20 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 20 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 20 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 37;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 37 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 37 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 37 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 37 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 28;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 28 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 28 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 28 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 28 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 27;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 27 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 27 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 27 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 27 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 11;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 11 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 11 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 11 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 11 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 10;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 10 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 10 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 10 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 10 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 21;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 21 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 21 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 21 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 21 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 22;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 22 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 22 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 22 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 22 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 19;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 19 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 19 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 19 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 19 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 12;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 12 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 12 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 12 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 12 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 13;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 13 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 13 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 13 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 13 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 14;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 14 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 14 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 14 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 14 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 15;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 15 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 15 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 15 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 15 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 32;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 32 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 32 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 32 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 32 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 38;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 38 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 38 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 38 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-//substitute the number below with the lab ID you want to use for the query
-//if the lab ID you use is not valid, this function will not print anything to your page
-var lab_id = 38 ;
-
-//substitute the string below with the lab property you wish to retrieve.
-
-//valid values are:
-//   'lab_name'     -> returns the lab name
-//   'lab_id'       -> returns the lab ID
-//   'lab_inuse'    -> returns the number of computers In Use
-//   'lab_available'-> returns the number of computers Available
-//   'lab_offline'  -> returns the number of computers Offline
-//   'lab_total'    -> returns the Total number of computers in the lab
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 16;
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 16 ;
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 16 ;
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 16 ;
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 16 ;
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 34;
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 34 ;
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 34 ;
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 34 ;
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 34 ;
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 33;
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 33 ;
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 33 ;
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 33 ;
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 33 ;
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 35;
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 35 ;
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 35 ;
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 35 ;
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 35 ;
-
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-<tr>
-<td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 36;
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 36 ;
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 36 ;
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 36 ;
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 36 ;
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-  </tr>
-
-<tr>
-<td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-var lab_id = 29;
-var lab_property = 'lab_name';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 29 ;
-
-var lab_property = 'lab_available';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 29 ;
-
-var lab_property = 'lab_offline';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-
-</SCRIPT>
-</td>
-    <td>
-
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 29 ;
-
-var lab_property = 'lab_inuse';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-    <td>
-	<SCRIPT TYPE="TEXT/JAVASCRIPT">
-
-var lab_id = 29 ;
-
-var lab_property = 'lab_total';
-
-var text = lookup(lab_id,lab_property)
-document.write (text);
-</SCRIPT>
-	</td>
-
-  </tr>
+<SCRIPT>
+    Stamp = new Date();
+    year = Stamp.getYear();
+    if (year < 2000) year = 1900 + year;
+    var Hours;
+    var Mins;
+    var Time;
+    var timeFormat;
+    Hours = Stamp.getHours();
+    if (Hours >= 12) {
+        Time = "pm";
+    }
+    else {
+        Time = "am";
+    }
+    if (Hours > 12) {
+        Hours -= 12;
+    }
+    if (Hours == 0) {
+        Hours = 12;
+    }
+    Mins = Stamp.getMinutes();
+    if (Mins < 10) {
+        Mins = "0" + Mins;
+    }
+    timeFormat = Hours+':'+Mins+Time
+    document.write('Last Updated on '+(Stamp.getMonth() + 1) +"/"+Stamp.getDate()+ "/"+ year+' at '+timeFormat.bold());
+
+</SCRIPT>
+<p></p><i>(Refresh to Update)</i>
+<!--<p><b>In Use</b> = User logged in.</p>-->
+
+<table border="1" cellspacing="3" cellpadding="3">
+    <tr>
+        <td><b>Lab Name </b></td>
+        <td><b>In Use </b></td>
+        <td><b>Total</b></td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 30;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 30 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 30 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 39;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 39 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 39 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 44;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 44 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 44 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 31;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 31 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 31 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 26;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 26 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 26 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 20;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 20 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 20 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 37;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 37 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 37 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 28;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 28 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 28 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 27;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 27 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 27 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 11;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 11 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 11 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 10;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 10 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 10 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 21;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 21 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 21 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 22;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 22 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 22 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 19;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 19 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 19 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 12;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 12 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 12 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 13;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 13 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 13 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 14;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 14 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 14 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 15;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 15 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 15 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 32;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 32 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 32 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 38;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 38 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 38 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 16;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 16 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 16 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 34;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 34 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 34 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 33;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 33 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 33 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 35;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 35 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 35 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 36;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 36 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 36 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 29;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 29 ;
+                var lab_property = 'lab_inuse';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 29 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
 
 </table>
 <?php
