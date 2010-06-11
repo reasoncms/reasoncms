@@ -13,6 +13,8 @@ class LabStatsModule extends DefaultMinisiteModule {
 
     function run() {
 ?>
+
+
 <script type="text/javascript" src="http://labstats.luther.edu/public/data2.jsp">
 </script>
 
