@@ -13,7 +13,7 @@ table.directions {
 div#myBanner {
     background-image: url('/images/luther2010/mobile/mobile_header_grad.gif');
     background-repeat: repeat-x;
-    padding: 0px;
+    padding-right: 0cm;
 }
 
 div#content {
