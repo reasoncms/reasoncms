@@ -135,7 +135,7 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         echo '<br/>';
 
         //echo '<tr><a href="" onclick="geolocate(); return false">From Current Location</a> (not all browsers support)</tr>';
-        echo '<a href="" onclick="geolocate(); return false">From Current Location</a> (not all browsers support)';
+        echo '<span style="font-size:11px"><a href="" onclick="geolocate(); return false">From Current Location</a> (not all browsers support)</span>';
         echo '<table class="directions">';
         //echo '<tr>';
         //echo '<td valign="top">';
