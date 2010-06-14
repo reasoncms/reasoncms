@@ -19,7 +19,8 @@ div#content {
 }
 
 div#footer {
-    font-size: 10px;
+    font-size: 11px;
+    color: #0B2345;
 }
 
 /*for mobile news footer not to show ---*/
