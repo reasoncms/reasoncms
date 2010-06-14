@@ -1,5 +1,6 @@
 body {
     background-color: #e2ecf5;
+    margin: 0px;
 }
 
 div#myBanner {
@@ -71,7 +72,7 @@ li#menu-labstat {background-image:url('/images/luther2010/mobile/lab_availabilit
 li#menu-news {background-image:url('/images/luther2010/mobile/news_mobile_icon.png');}
 
 /* DIRECTIONS STYLE
-div#map_canvas {*/
+*/
 
 table.directions {
     padding-right: 1cm;
