@@ -21,7 +21,12 @@ div#footer {
     font-size: 10px;
 }
 
+/*for mobile news footer not to show ---*/
 div#foot ul {
+    display: none;
+}
+
+div#foot div.vcard {
     display: none;
 }
 
