@@ -79,7 +79,6 @@ li#menu-directory {background-image:url('/images/luther2010/mobile/directory_mob
 
 li#menu-cafcam {background-image:url('/images/luther2010/mobile/caf_cam_mobile_icon.png');}
 
-
 li#menu-labstat {background-image:url('/images/luther2010/mobile/lab_availability_mobile_icon.png');}
 
 /*
@@ -99,7 +98,7 @@ li#menu-labstat {background-image:url('/images/luther2010/mobile/lab_availabilit
 */
 
 div#map_canvas {
- 
+    padding-right: 2cm;
 }
 
 div#directions {
