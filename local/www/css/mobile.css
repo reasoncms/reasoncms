@@ -107,6 +107,6 @@ table.directions {
 /* NEWS STYLE
 */
 
-div#desc {
+div.desc {
     visibility: hidden;
 }
