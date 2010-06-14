@@ -136,7 +136,7 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
 
         //echo '<tr><a href="" onclick="geolocate(); return false">From Current Location</a> (not all browsers support)</tr>';
         echo '<a href="" onclick="geolocate(); return false">From Current Location</a> (not all browsers support)';
-        //echo '<table class="directions">';
+        echo '<table class="directions">';
         //echo '<tr>';
         //echo '<td valign="top">';
         echo '<div id="map_canvas" style="width: 100%; height: 400px; float: left;"></div>';
@@ -147,7 +147,7 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         echo '<div id="directions" style="width: 100%; float: left;"></div>';
         //echo '<td>';
         //echo '</tr>';
-        //echo '</table>';
+        echo '</table>';
         echo '</body>';
     }
 }
