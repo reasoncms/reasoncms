@@ -107,6 +107,10 @@ table.directions {
 /* NEWS STYLE
 */
 
-div.desc {
+div#blog.desc {
+    display: none;
+}
+
+div#blog.persistent {
     display: none;
 }
