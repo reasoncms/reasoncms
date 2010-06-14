@@ -110,3 +110,11 @@ div.pagination.above {
 div#maintainer {
     display: none;
 }
+
+div.feedInfo {
+    text-align: left;
+}
+
+div.fullPost.date {
+    display: none;
+}
