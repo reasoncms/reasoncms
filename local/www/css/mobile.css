@@ -21,30 +21,8 @@ div#footer {
     font-size: 10px;
 }
 
-div#foot {
+/*div#foot {
     display: none;
-}
-
-/*.button {
-    position: absolute;
-    overflow: hidden;
-    top: 8px;
-    right: 6px;
-    margin: 0;
-    border-width: 0 5px;
-    padding: 0 3px;
-    width: auto;
-    height: 30px;
-    line-height: 30px;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: bold;
-    color: #0b2345;
-    text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
-    text-overflow: ellipsis;
-    text-decoration: none;
-    white-space: nowrap;
-    background: none;
 }*/
 
 ol.icon-menu {
