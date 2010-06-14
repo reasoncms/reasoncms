@@ -12,8 +12,8 @@ class LutherFooterModule extends DefaultMinisiteModule {
     }
     function run() {
         echo '<div id="foot">'."\n";
-        echo '<center><p><br /><br /></p><p></p><hr></hr><p></p>'."\n";
-        echo '<div>&#169 '.date("Y").' Luther College 563-387-2000 or 800-458-8437'."\n".'</div>';
+        echo '<center><p><br /></p><p><br /></p><hr></hr><p></p>'."\n";
+        echo '<div><p></p>&#169 '.date("Y").' Luther College 563-387-2000 or 800-458-8437'."\n".'</div>';
         echo '<div><i>Email burkaa01@luther.edu with questions, comments, concerns</i></div></center>'."\n";
         google_analytics();
     }
