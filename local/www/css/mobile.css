@@ -114,3 +114,7 @@ div.desc {
 div.persistent {
     display: none;
 }
+
+div.pagination above {
+    display: none;
+}
