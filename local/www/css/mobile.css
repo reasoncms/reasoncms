@@ -102,7 +102,7 @@ table.directions {
     padding-right: 1cm;
 }
 
-div#directions {
+/*div#directions {
     -moz-border-radius-bottomleft:4px;
     -moz-border-radius-bottomright:4px;
     -moz-border-radius-topleft:4px;
@@ -113,4 +113,4 @@ div#directions {
     padding-bottom:1px;
     padding-left:8px;
     padding-right:8px;
-}
+}*/
