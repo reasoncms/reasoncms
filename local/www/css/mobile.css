@@ -97,8 +97,9 @@ li#menu-labstat {background-image:url('/images/luther2010/mobile/lab_availabilit
 
 */
 
-div#map_canvas {
-    padding-right: 2cm;
+/*div#map_canvas {*/
+table.directions {
+    padding-right: 1cm;
 }
 
 div#directions {
