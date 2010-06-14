@@ -108,5 +108,5 @@ table.directions {
 */
 
 div.desc {
-    visibility: hidden;
+    display: none;
 }
