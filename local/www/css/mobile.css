@@ -85,22 +85,6 @@ li#menu-cafcam {background-image:url('/images/luther2010/mobile/caf_cam_mobile_i
 
 li#menu-labstat {background-image:url('/images/luther2010/mobile/lab_availability_mobile_icon.png');}
 
-/*
-
-<div class="center">
-    <ol class="icon-menu">
-
-        <li id="menu-home">
-            <a accesskey="2" href="http://www.luther.edu/">Full Site</a>
-        </li>
-
-    </ol>
-
-
-</div>
-
-*/
-
 /* DIRECTIONS STYLE
 div#map_canvas {*/
 
@@ -120,5 +104,9 @@ div.persistent {
 }
 
 div.pagination.above {
+    display: none;
+}
+
+div#maintainer {
     display: none;
 }
