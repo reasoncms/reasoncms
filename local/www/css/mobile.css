@@ -21,6 +21,10 @@ div#footer {
     font-size: 10px;
 }
 
+div#foot {
+    display: none;
+}
+
 /*.button {
     position: absolute;
     overflow: hidden;
