@@ -8,7 +8,7 @@ div#myBanner {
 }
 
 div#content {
-    color:#0b2345; 
+    color:#0b2345;
     padding-left: 8px;
     padding-right: 8px;
     padding-bottom: 1px;
@@ -97,20 +97,16 @@ li#menu-labstat {background-image:url('/images/luther2010/mobile/lab_availabilit
 
 */
 
-/*div#map_canvas {*/
+/* DIRECTIONS STYLE
+div#map_canvas {*/
+
 table.directions {
     padding-right: 1cm;
 }
 
-/*div#directions {
-    -moz-border-radius-bottomleft:4px;
-    -moz-border-radius-bottomright:4px;
-    -moz-border-radius-topleft:4px;
-    -moz-border-radius-topright:4px;
-    background-color:#FFFFFF;
-    color:#0B2345;
-    margin:0;
-    padding-bottom:1px;
-    padding-left:8px;
-    padding-right:8px;
-}*/
+/* NEWS STYLE
+*/
+
+div#desc {
+    visibility: hidden;
+}
