@@ -118,3 +118,7 @@ div.feedInfo {
 div.fullPost.date {
     display: none;
 }
+
+h3.postTitle {
+    display: none;
+}
