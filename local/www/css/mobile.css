@@ -3,6 +3,13 @@ body {
     margin: 0px;
 }
 
+/* DIRECTIONS STYLE
+*/
+
+table.directions {
+    padding-right: 1cm;
+}
+
 div#myBanner {
     background-image: url('/images/luther2010/mobile/mobile_header_grad.gif');
     background-repeat: repeat-x;
@@ -73,12 +80,6 @@ li#menu-labstat {background-image:url('/images/luther2010/mobile/lab_availabilit
 
 li#menu-news {background-image:url('/images/luther2010/mobile/news_mobile_icon.png');}
 
-/* DIRECTIONS STYLE
-*/
-
-table.directions {
-    padding-right: 1cm;
-}
 
 /* NEWS STYLE
 */
