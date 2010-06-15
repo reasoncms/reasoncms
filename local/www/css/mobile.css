@@ -31,7 +31,7 @@ div#footer {
     color: #0B2345;
 }
 
-/*for mobile news footer not to show ---*/
+/*(for mobile news footer not to show) ---*/
 div#foot ul {
     display: none;
 }
@@ -110,4 +110,8 @@ div.fullPost div.date {
 
 h3.postTitle {
     display: none;
+}
+
+.highslide {
+    visibility: hidden;
 }
