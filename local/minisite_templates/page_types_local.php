@@ -245,10 +245,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'banner_xtra' => '',
 			'post_banner' => '',
 			'main_head' => '',
-                        'main' => 'content',
-                        'main_post' => 'mobile_icon_home',
+            'main' => 'content',
+            'main_post' => 'mobile_icon_home',
 			'footer' => '',
-                        'post_foot' => 'mobile_footer',
+            'post_foot' => 'mobile_footer',
 		),
 		'mobile_directions' => array(
 			'banner_xtra' => '',
@@ -256,7 +256,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main' => 'content',
 			'main_post' => 'mobile_directions',
 			'footer' => '',
-                        'post_foot' => 'mobile_footer',
+            'post_foot' => 'mobile_footer',
 		),
 		'mobile_directory' => array(
 			'banner_xtra' => '',
@@ -264,7 +264,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main' => 'content',
 			'main_post' => 'campus_directory',
 			'footer' => '',
-                        'post_foot' => 'mobile_footer',
+            'post_foot' => 'mobile_footer',
 		),
 		'mobile_labstats' => array(
 			'banner_xtra' => '',
@@ -272,7 +272,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main' => 'content',
 			'main_post' => 'lab_stats',
 			'footer' => '',
-                        'post_foot' => 'mobile_footer',
+            'post_foot' => 'mobile_footer',
 		),
 		'mobile_map' => array(
 			'banner_xtra' => '',
@@ -280,8 +280,17 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main' => 'content',
 			'main_post' => 'PUT_YOUR_MAP_MODULE_HERE',
 			'footer' => '',
-                        'post_foot' => 'mobile_footer',
+            'post_foot' => 'mobile_footer',
 		),
+		'mobile_news' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main' => '',
+			'main_post' => 'publication',
+			'footer' => '',
+            'post_foot' => 'mobile_footer',
+		),
+
 		'onecard' => array(
             'main_post'=>'onecard_dashboard',
             'sidebar'=>'',
