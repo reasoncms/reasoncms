@@ -12,7 +12,6 @@ class LibrarySearchModule extends DefaultMinisiteModule {
     }
 
     function run() {
-        echo '<i>(Redirects to \'http://books.luther.edu/airpac/search\')</i>';
 ?>
         <i>(Redirects to 'http://books.luther.edu/airpac/search')</i>
         <p style="margin-top:5px;">Search the Preus Library Catalog</p>
