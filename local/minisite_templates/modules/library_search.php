@@ -2,7 +2,7 @@
 reason_include_once( 'minisite_templates/modules/default.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LibrarySearchModule';
 
-class LibrarySearchModule extends LibrarySearchModule {
+class LibrarySearchModule extends DefaultMinisiteModule {
     function init( $args = array() ) {
 
     }
