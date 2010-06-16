@@ -123,7 +123,7 @@
 			if($is_a_module)
 			{
 				$xtra = '';
-				if(isset($GLOBALS['_reason_deprecated_page_types']) && in_array($module_name,$GLOBALS['_reason_deprecated_page_types']))
+				if(isset($GLOBALS['_reason_deprecated_modules']) && in_array($module_name,$GLOBALS['_reason_deprecated_modules']))
 					$xtra = ' (deprecated)';
 				$module_name = '<strong>'.$module_name.'</strong>'.$xtra;
 			}
