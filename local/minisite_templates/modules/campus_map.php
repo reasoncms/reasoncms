@@ -18,7 +18,7 @@ class CampusMapModule extends DefaultMinisiteModule {
     <title>Switch menu</title>
     <style type="text/css">
         table.selections th {
-            background-color:#EEEEEE;
+            background-color:#FFFFFF;
         }
         #wrapper {
             text-align:left;
