@@ -90,7 +90,7 @@ class CampusMapModule extends DefaultMinisiteModule {
                         <option value="sampson">Sampson Hoffland Laboratories</option>
                     </select>
                 </td>
-                <br />
+                <p></p>
                 <th>Departments:</th>
                 <td valign="top">
                     <select id="departments" name="departments" default="0" onchange="switchMenu(this.options[this.selectedIndex].value); buildingReset()">
