@@ -286,7 +286,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'banner_xtra' => '',
 			'post_banner' => '',
 			'main' => 'content',
-			'main_post' => 'PUT_YOUR_MAP_MODULE_HERE',
+			'main_post' => 'campus_map',
 			'footer' => '',
             'post_foot' => 'mobile_footer',
 		),
