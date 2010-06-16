@@ -53,9 +53,9 @@ ol.icon-menu li {
 }
 
 .pageTitle{
-    margin-top: 0;
-    margin-bottom: 5px;
-    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 20px;
 }
 
 ol.icon-menu li a {
