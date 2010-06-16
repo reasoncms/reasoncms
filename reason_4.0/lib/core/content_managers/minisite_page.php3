@@ -93,8 +93,8 @@
 		
 		function _get_deprecated_modules()
 		{
-			if(isset($GLOBALS['_reason_deprecated_page_types']))
-				return $GLOBALS['_reason_deprecated_page_types'];
+			if(isset($GLOBALS['_reason_deprecated_modules']))
+				return $GLOBALS['_reason_deprecated_modules'];
 			else
 				return array();
 		}
