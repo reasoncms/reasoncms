@@ -12,8 +12,8 @@ class LibrarySearchModule extends LibrarySearchModule {
     }
 
     function run() {
+        echo '<i>(Redirects to \'http://books.luther.edu/airpac/search\')</i>';
 ?>
-<body>
         <i>(Redirects to 'http://books.luther.edu/airpac/search')</i>
         <p style="margin-top:5px;">Search the Preus Library Catalog</p>
         <p></p>
@@ -71,7 +71,6 @@ class LibrarySearchModule extends LibrarySearchModule {
             <p style="margin:0;padding:0;">Enter 'shakespeare, william'</p>
             <p style="margin:0;padding:0;">Limit collection to 'eBooks'</p>
         </div>-->
-    </body>
 <?php
     }
 }
