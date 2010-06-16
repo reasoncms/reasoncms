@@ -122,7 +122,7 @@ class CampusMapModule extends DefaultMinisiteModule {
             <p style="font-size:12px; margin-top:0;padding-top:0;">Luther College Wi-Fi Map <a onclick="show('wifi');">Show</a> <a onclick="hide('wifi');">Hide</a></p>
         
             <div id="wifi">
-                <img class="cornerimage" border="0" src="/images/luther2010/map/wifi_map_over.gif" width="400"></img>
+                <img class="cornerimage" border="0" src="/images/luther2010/map/wifi_map_over.gif" width="100%"></img>
             </div>
             <div id="olin">
                 <img class="cornerimage" border="0" src="/images/luther2010/map/olin_map_over.gif" width="400"></img>
