@@ -119,16 +119,16 @@ class CampusMapModule extends DefaultMinisiteModule {
         
         <div class="containerdiv">
             <!--blank map-->
-            <img border="0" src="file:///C:/Users/burkaa01/Documents/Luther%20Maps/redone_luther_map.gif" width="400" alt=""></img>
+            <img border="0" src="/images/luther2010/map/redone_luther_map.gif" width="400" alt=""></img>
             <p></p>
         
             <p style="font-size:12px;">Luther College Wi-Fi Map <a onclick="show('wifi');">Show</a> <a onclick="hide('wifi');">Hide</a></p>
         
             <div id="wifi">
-                <img class="cornerimage" border="0" src="file:///C:/Users/burkaa01/Documents/Luther%20Maps/wifi_map_over.gif" width="400"></img>
+                <img class="cornerimage" border="0" src="/images/luther2010/map/wifi_map_over.gif" width="400"></img>
             </div>
             <div id="olin">
-                <img class="cornerimage" border="0" src="file:///C:/Users/burkaa01/Documents/Luther%20Maps/olin_map_over.gif" width="400"></img>
+                <img class="cornerimage" border="0" src="/images/luther2010/map/olin_map_over.gif" width="400"></img>
                 <p></p>
                 <img src="http://www.luther.edu/system/imagetops/about/campus/tour/olin/Olin20090217104751.jpg?1234889393" width="400"></img>
                 <h2>Olin</h2>
@@ -136,7 +136,7 @@ class CampusMapModule extends DefaultMinisiteModule {
                 <p>It is a 43,000 square-foot building which contains 33 faculty offices, four networked computer labs, 10 computer classrooms, a 137-seat auditorium/lecture hall, a large seminar room, a student study center, and conference/interview rooms.</p>
             </div>
             <div id="koren">
-                <img class="cornerimage" border="0" src="file:///C:/Users/burkaa01/Documents/Luther%20Maps/koren_map_over.gif" width="400"></img>
+                <img class="cornerimage" border="0" src="/images/luther2010/map/koren_map_over.gif" width="400"></img>
                 <p></p>
                 <img src="http://www.luther.edu/system/imagetops/about/campus/tour/koren/Koren20090217110153.jpg?1234890113" width="400"></img>
                 <h2>Koren</h2>
@@ -144,7 +144,7 @@ class CampusMapModule extends DefaultMinisiteModule {
                 <p>Its third-floor archaeology resource center is the largest archaeology lab in Iowa. Listed on the National Register of Historic Places, Koren was originally Luther's library.</p>
             </div>
             <div id="sampson">
-                <img class="cornerimage" border="0" src="file:///C:/Users/burkaa01/Documents/Luther%20Maps/sampson_map_over.gif" width="400"></img>
+                <img class="cornerimage" border="0" src="/images/luther2010/map/sampson_map_over.gif" width="400"></img>
                 <p></p>
                 <img src="http://www.luther.edu/system/imagetops/about/campus/tour/sampson/Sampson120090217105554.jpg?1234889754" width="400"></img>
                 <h2>Sampson Hoffland Laboratories</h2>
