@@ -21,7 +21,7 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         echo '<a accesskey="3" href="https://reasondev.luther.edu/mobile/comingsoon/">Caf Cam</a>';
         echo '</li>';
         echo '<li id="menu-map">';
-        echo '<a accesskey="4" href="https://reasondev.luther.edu/mobile/comingsoon/">Campus Map</a>';
+        echo '<a accesskey="4" href="https://reasondev.luther.edu/mobile/map/">Campus Map</a>';
         echo '</li>';
         echo '<li id="menu-directions">';
         echo '<a accesskey="5" href="http://reasondev.luther.edu/mobile/directions/">Directions</a>';
