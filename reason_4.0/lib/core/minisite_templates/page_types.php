@@ -1400,7 +1400,7 @@
         ),
 	);
 	
-	$GLOBALS['_reason_deprecated_page_types'] = array(
+	$GLOBALS['_reason_deprecated_modules'] = array(
 				'news_via_categories',
 				'news2_mini_random',
 				'news_mini',
@@ -1416,6 +1416,9 @@
 				'news_top',
 				'news2_mini',
 				'news2',
+				'form_custom/form_custom',
+				'gallery_single_page',
+				'gallery_entire_site',
 	);
 	
 	if (reason_file_exists('minisite_templates/page_types_local.php'))
@@ -1424,6 +1427,10 @@
 		if(!empty($GLOBALS['_reason_page_types_local']))
 		{
 			$GLOBALS['_reason_page_types'] = array_merge($GLOBALS['_reason_page_types'],$GLOBALS['_reason_page_types_local']);
+		}
+		if(!empty($GLOBALS['_reason_deprecated_modules_local']))
+		{
+			$GLOBALS['_reason_deprecated_modules'] = array_merge($GLOBALS['_reason_deprecated_modules'],$GLOBALS['_reason_deprecated_modules_local']);
 		}
 	}
 ?>
