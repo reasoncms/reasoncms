@@ -78,10 +78,7 @@ class CampusMapModule extends DefaultMinisiteModule {
         
     <div id="wrapper">
         
-        <table class="selections">
-
                 <th>Buildings:</th>
-
                 <td valign="top">
                     <select id="buildings" name="buildings" default="0" onchange="switchMenu(this.options[this.selectedIndex].value); departmentReset()">
                         <option value="blank" selected></option>
@@ -90,7 +87,6 @@ class CampusMapModule extends DefaultMinisiteModule {
                         <option value="sampson">Sampson Hoffland Laboratories</option>
                     </select>
                 </td>
-                <p>blah</p>
                 <th>Departments:</th>
                 <td valign="top">
                     <select id="departments" name="departments" default="0" onchange="switchMenu(this.options[this.selectedIndex].value); buildingReset()">
@@ -111,8 +107,6 @@ class CampusMapModule extends DefaultMinisiteModule {
                         <option value="koren">Women's and Gender Studies</option>
                     </select>
                 </td>
-
-        </table>
         <p></p>
         
         <div class="containerdiv">
