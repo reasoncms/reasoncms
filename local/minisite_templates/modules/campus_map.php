@@ -17,9 +17,6 @@ class CampusMapModule extends DefaultMinisiteModule {
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>Switch menu</title>
     <style type="text/css">
-        table.selections th {
-            background-color:#FFFFFF;
-        }
         #wrapper {
             text-align:left;
             margin:0 auto;
