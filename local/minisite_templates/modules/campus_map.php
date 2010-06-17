@@ -78,18 +78,18 @@ class CampusMapModule extends DefaultMinisiteModule {
         
     <div id="wrapper">
         
-                <th>Buildings:</th>
-                <td style="float:right;"valign="top">
+                <th align="Left">Buildings:</th>
+                <td valign="top">
                     <select id="buildings" name="buildings" default="0" onchange="switchMenu(this.options[this.selectedIndex].value); departmentReset()">
                         <option value="blank" selected></option>
                         <option value="olin">Olin</option>
                         <option value="koren">Koren</option>
-                        <option value="sampson">Sampson Hoffland Laboratories</option>
+                        <option value="sampson">Sampson Hoffland</option>
                     </select>
                 </td>
                 <br />
                 <th>Departments:</th>
-                <td style="float:right;"valign="top">
+                <td valign="top">
                     <select id="departments" name="departments" default="0" onchange="switchMenu(this.options[this.selectedIndex].value); buildingReset()">
                         <option value="blank" selected></option>
                         <option value="koren">Africana Studies</option>
@@ -121,25 +121,25 @@ class CampusMapModule extends DefaultMinisiteModule {
                 <img class="cornerimage" border="0" src="/images/luther2010/map/wifi_map_over.gif" width="100%"></img>
             </div>
             <div id="olin">
-                <img class="cornerimage" border="0" src="/images/luther2010/map/olin_map_over.gif" width="400"></img>
+                <img class="cornerimage" border="0" src="/images/luther2010/map/olin_map_over.gif" width="100%"></img>
                 <p></p>
-                <img src="http://www.luther.edu/system/imagetops/about/campus/tour/olin/Olin20090217104751.jpg?1234889393" width="400"></img>
+                <img src="http://www.luther.edu/system/imagetops/about/campus/tour/olin/Olin20090217104751.jpg?1234889393" width="100%"></img>
                 <h2>Olin</h2>
                 <p>Departments: Business, Computer Science, Economics, Math</p>
                 <p>It is a 43,000 square-foot building which contains 33 faculty offices, four networked computer labs, 10 computer classrooms, a 137-seat auditorium/lecture hall, a large seminar room, a student study center, and conference/interview rooms.</p>
             </div>
             <div id="koren">
-                <img class="cornerimage" border="0" src="/images/luther2010/map/koren_map_over.gif" width="400"></img>
+                <img class="cornerimage" border="0" src="/images/luther2010/map/koren_map_over.gif" width="100%"></img>
                 <p></p>
-                <img src="http://www.luther.edu/system/imagetops/about/campus/tour/koren/Koren20090217110153.jpg?1234890113" width="400"></img>
+                <img src="http://www.luther.edu/system/imagetops/about/campus/tour/koren/Koren20090217110153.jpg?1234890113" width="100%"></img>
                 <h2>Koren</h2>
                 <p>Departments: Africana Studies, Anthropology, Archaeology, Education, Political Science, Sociology, Social Work, Women's and Gender Studies</p>
                 <p>Its third-floor archaeology resource center is the largest archaeology lab in Iowa. Listed on the National Register of Historic Places, Koren was originally Luther's library.</p>
             </div>
             <div id="sampson">
-                <img class="cornerimage" border="0" src="/images/luther2010/map/sampson_map_over.gif" width="400"></img>
+                <img class="cornerimage" border="0" src="/images/luther2010/map/sampson_map_over.gif" width="100%"></img>
                 <p></p>
-                <img src="http://www.luther.edu/system/imagetops/about/campus/tour/sampson/Sampson120090217105554.jpg?1234889754" width="400"></img>
+                <img src="http://www.luther.edu/system/imagetops/about/campus/tour/sampson/Sampson120090217105554.jpg?1234889754" width="100%"></img>
                 <h2>Sampson Hoffland Laboratories</h2>
                 <p>Departments: Biology, Chemistry</p>
                 <p>Built to environmentally sound LEED standards, Sampson Hoffland is the college's newest building. A special emphasis was placed on creating space for student/faculty research.</p>
