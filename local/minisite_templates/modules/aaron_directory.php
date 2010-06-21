@@ -1035,7 +1035,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 
                 //burkaa - ldap_carleton to ldap_luther
 		$dir = new directory_service('ldap_luther');
-		$dir->search_by_filter($querystring, $attributes);
+		//$dir->search_by_filter($querystring, $attributes);
+                $dir->search_by_attribute('uid', 'smitst01', $attributes);
                 // burkaa - added this to test
                 pray($dir);
                 // done
