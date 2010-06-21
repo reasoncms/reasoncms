@@ -124,7 +124,7 @@ class HomecomingRegistrationTwoForm extends FormStep
 	function on_every_time()
 	{
 		$first_page_amout = $this->controller->get('amount');
-		die('The amount= ' $first_page_amout);
+		die('The amount= ' .$first_page_amout);
 		
 		if( !$this->controller->get('amount'))
 		{
