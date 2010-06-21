@@ -565,10 +565,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	function scrub_results(&$results)
 	{
 		// Attributes which should be hidden from the external view
-		$ext_suppress = array('officeBldg','studentPostOffice', 'homepostaladdress',
+                //burkaa - (hide) nothing is hidden for now
+		/*$ext_suppress = array('officeBldg','studentPostOffice', 'homepostaladdress',
 			'carlstudentpermanentaddress', 'telephoneNumber', 'studentMajor', 'carlconcentration',
 			'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
-			'carlstudentstatus');
+			'carlstudentstatus');*/
 		
 		foreach ($results as $key => $data)
 		{
@@ -895,10 +896,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		$filter[] = '(!(description=Left feed*))'; // exclude expired accounts
 		// burkaa - $filter[] = '(eduPersonEntitlement=urn:mace:carleton.edu:entl:whitepages)';
                 $filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
-		/*burkaa - if(!empty($id_number)) {
+		if(!empty($id_number)) {
 			$filter[] = "(carlColleagueid$cmp$id_number)";
 			$filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
-		}*/
+		}
 		if(!empty($first_name)) {
 			$filter[] = "(|(givenName$cmp$pre$first_name$post)(eduPersonNickname$cmp$pre$first_name$post))";
 			$filter_desc[] = 'whose first name is ' . $this->format_search_key($first_name);
