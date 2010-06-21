@@ -1040,7 +1040,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule
                 pray($dir);
                 // done
 		$dir->sort_records(array('sn','givenname'));
-                pray
 		$entries = $dir->get_records();
 		return $entries;
 	} //}}}
