@@ -336,21 +336,22 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			if ($this->form->get_value('pictures') != false)
 			{	
 				echo '<div class="personPhoto">';
-				echo '<img src="/stock/ldapimage.php?id='.$data['carlnetid'][0].'">';
+				// burkaa - echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
+                                echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
 				echo '</div>';
 			}
 			echo '<div class="personBody '.$image_class.'">';
 			echo '<div class="personHeader">';
 			echo '<ul>';
 			echo '<li class="personName">' . $this->format_name($data) . '</li>';
-			if (isset($data['carlgraduationyear']))
+			if (isset($data['alumClassYear']))
 			{
-				echo '<li class="personYear">'.$data['carlgraduationyear'][0].'</li>';
+				echo '<li class="personYear">'.$data['alumClassYear'][0].'</li>';
 			} else {
 				if ($affil = $this->format_affiliation($data))
 					echo '<li class="personAffil">'.$affil.'</li>';
 			}
-			if (isset($data['carlmajor']) && $data['edupersonprimaryaffiliation'][0] == 'student')
+			if (isset($data['studentMajor']) && $data['edupersonprimaryaffiliation'][0] == 'student')
 			{
 				echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
 			}
@@ -378,17 +379,19 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 							echo ' <a class="officeSite" href="'.$sites[$dept]['url'].'">[web site]</a>';
 						echo '</li>';
 					}
+                                        // burkaa - IDK a facultyleaveterm does not exist in ldap for us
 					if (isset($data['carlfacultyleaveterm']))
 						echo '<li class="personStatus">'. $this->format_leave($data) . '</li>';
 					echo '</ul>';
 				}
-				if (isset($data['carlofficelocation']))
+				if (isset($data['officeBldg']))
 				{
 					echo '<ul class="personCampusAddress">';
-					foreach ($data['carlofficelocation'] as $loc)
+					foreach ($data['officeBldg'] as $loc)
 						echo '<li class="personOffice">'.$loc.'</li>';
-					if (isset($data['carlcampuspostaladdress']))
-						foreach ($data['carlcampuspostaladdress'] as $loc)
+                                        // burkaa - IDK not sure there is one for faculty
+					if (isset($data['studentPostOffice']))
+						foreach ($data['studentPostOffice'] as $loc)
 							echo '<li class="personMailstop">Mail stop: '.$loc.'</li>';
 					echo '</ul>';
 				}
@@ -396,10 +399,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 				{
 					echo '<ul class="personHomeAddress">';
 					echo $this->format_postal_address($data['homepostaladdress'][0]);
-					if (isset($data['homephone']))
-						echo '<li class="personHomePhone">'.$data['homephone'][0].'</li>';
-					if (isset($data['carlspouse']))
-						echo '<li class="personSpouse">'.$data['carlspouse'][0].'</li>';
+					if (isset($data['telephoneNumber']))
+						echo '<li class="persontelephoneNumber">'.$data['telephoneNumber'][0].'</li>';
+					if (isset($data['spouseName']))
+						echo '<li class="personSpouse">'.$data['spouseName'][0].'</li>';
 				}
 				
 			}
@@ -413,6 +416,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 				if ($status = $this->format_status($data))
 					echo '<li class="personStatus">'.$status.'</li>';
 				echo '</ul>';
+                                // burkaa - not sure we have one IDK
 				if (isset($data['carlstudentpermanentaddress']))
 				{
 					echo '<ul class="personHomeAddress">';
@@ -450,19 +454,19 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		foreach ($people as $data) {			
 			echo '<div class="person">';
 			echo '<div class="personPhoto">';
-			echo '<img src="/stock/ldapimage.php?id='.$data['carlnetid'][0].'">';
+			echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
 			echo '</div>';
 			echo '<div class="personInfo">';
 			echo '<ul>';
-			echo '<li class="personName">' . $this->make_search_link($this->format_name($data),'netid[]',$data['carlnetid'][0]);
-			if (isset($data['carlgraduationyear']))
+			echo '<li class="personName">' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]);
+			if (isset($data['alumClassYear']))
 			{
-				echo ', '.$data['carlgraduationyear'][0];
+				echo ', '.$data['alumClassYear'][0];
 			}
 			echo '</li>';
 			if ($data['edupersonprimaryaffiliation'][0] == 'student')
 			{
-				if (isset($data['carlmajor']))
+				if (isset($data['studentMajor']))
 				{
 					echo '<li>'.$this->format_majors($data).'</li>';
 				}				
@@ -498,7 +502,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			{
 				$row[] = (isset($data['homepostaladdress'])) ? join(' / ', $this->format_postal_address($data['homepostaladdress'][0], false)) : '';
 			} else {
-				$row[] = (isset($data['carlofficelocation'])) ? join(' / ', $data['carlofficelocation']): '';				
+				$row[] = (isset($data['officeBldg'])) ? join(' / ', $data['officeBldg']): '';
 			}
 			$output[] = $row;
 		}		
@@ -519,7 +523,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		$output = array();
 		foreach ($people as $data) {			
 			$row = array();
-			$row['netid'] = $data['carlnetid'][0];
+			$row['netid'] = $data['uid'][0];
 			$row['fullname'] = $this->format_name($data);
 			$row['lastname'] = $data['sn'][0];
 			$row['firstname'] = $data['givenname'][0];
@@ -527,14 +531,14 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			$row['email'] = (isset($data['mail'])) ? $data['mail'][0] : '';
 			$row['phone'] = $this->format_phone($data);
 			$row['dept'] = (isset($data['ou'])) ? join(' / ', $data['ou']): '';
-			$row['po'] = (isset($data['carlcampuspostaladdress'])) ? $data['carlcampuspostaladdress'][0] : '';
+			$row['po'] = (isset($data['studentPostOffice'])) ? $data['studentPostOffice'][0] : '';
 			if ($data['edupersonprimaryaffiliation'][0] == 'student')
 			{
 				$row['address'] = (isset($data['homepostaladdress'])) ? join(' / ', $this->format_postal_address($data['homepostaladdress'][0], false)) : '';
-				$row['major'] = (isset($data['carlmajor'])) ? $data['carlmajor'][0] : '';
-				$row['class'] = (isset($data['carlgraduationyear'])) ? $data['carlgraduationyear'][0] : '';
+				$row['major'] = (isset($data['studentMajor'])) ? $data['studentMajor'][0] : '';
+				$row['class'] = (isset($data['alumClassYear'])) ? $data['alumClassYear'][0] : '';
 			} else {
-				$row['address'] = (isset($data['carlofficelocation'])) ? join(' / ', $data['carlofficelocation']): '';				
+				$row['address'] = (isset($data['officeBldg'])) ? join(' / ', $data['officeBldg']): '';
 			}
 			$output[] = $row;
 		}		
@@ -561,9 +565,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	function scrub_results(&$results)
 	{
 		// Attributes which should be hidden from the external view
-		$ext_suppress = array('carlofficelocation','carlcampuspostaladdress', 'homepostaladdress',
-			'carlstudentpermanentaddress', 'homephone', 'carlmajor', 'carlconcentration',
-			'carlhomeemail','carlspouse','carlgraduationyear','carlcohortyear','mobile',
+		$ext_suppress = array('officeBldg','studentPostOffice', 'homepostaladdress',
+			'carlstudentpermanentaddress', 'telephoneNumber', 'studentMajor', 'carlconcentration',
+			'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
 			'carlstudentstatus');
 		
 		foreach ($results as $key => $data)
@@ -578,8 +582,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			if (isset($data['carlhidepersonalinfo']))
 			{
 				unset($results[$key]['homepostaladdress']);
-				unset($results[$key]['homephone']);
-				unset($results[$key]['carlspouse']);
+				unset($results[$key]['telephoneNumber']);
+				unset($results[$key]['spouseName']);
 			}
 			
 			if ($this->context == 'external')
@@ -618,7 +622,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	
 	function format_majors($data)
 	{
-		foreach ($data['carlmajor'] as $major)
+		foreach ($data['studentMajor'] as $major)
 			$majors[] = $this->make_search_link('<span class="major">'.$this->majors[$major].'</span>', 'major', $major);
 		if (isset($data['carlconcentration']))
 		{
@@ -633,8 +637,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		$phones = array();
 		if ($data['edupersonprimaryaffiliation'][0] == 'student')
 		{
-			if (isset($data['homephone']))
-				$phones = $data['homephone'];
+			if (isset($data['telephoneNumber']))
+				$phones = $data['telephoneNumber'];
 		} else {
 			if (isset($data['telephonenumber']))
 				$phones = $data['telephonenumber'];
@@ -680,7 +684,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		{
 			foreach ($data['mobile'] as $cell)
 			{
-				if (isset($data['homephone']) && in_array($cell, $data['homephone']))
+				if (isset($data['telephoneNumber']) && in_array($cell, $data['telephoneNumber']))
 					continue;
 				else
 					$cells[] = str_replace('+1 ', '', $cell);
@@ -913,7 +917,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			}
 		}
 		if(!empty($phone_number)) {
-			$filter[] = "(|(homePhone$cmp$post$phone_number)(telephoneNumber$cmp$post$phone_number))";
+			$filter[] = "(|(telephoneNumber$cmp$post$phone_number)(telephoneNumber$cmp$post$phone_number))";
 			$filter_desc[] = 'whose phone number is '. $this->format_search_key($phone_number);
 		}
 		if(!empty($email_address)) {
@@ -922,7 +926,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		}
 		if(!empty($building)) {
 			$room = (!empty($room)) ? ' '.$room : '';
-			$filter[] = "(|(carlOfficeLocation$cmp$building$room$post)(carlStudentCampusAddress$cmp$building$room$post))";
+			$filter[] = "(|(officeBldg$cmp$building$room$post)(carlStudentCampusAddress$cmp$building$room$post))";
 			$filter_desc[] = 'who live or work in '. $this->format_search_key($building . ' ' . $room);
 		}
 		if(!empty($major)) {
@@ -930,13 +934,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			$filter_string = '(|';
 			foreach ($majors as $maj)
 			{
-				$filter_string .= "(carlMajor$cmp$maj)(carlConcentration$cmp$maj)";
+				$filter_string .= "(studentMajor$cmp$maj)(carlConcentration$cmp$maj)";
 			}
 			$filter[] = $filter_string . ')';
 			$filter_desc[] = 'whose major or concentration is '. $this->format_search_key($this->majors[$maj]) ;
 		}
 		if(!empty($year)) {
-			$filter[] = "(|(carlGraduationYear=$year)(carlCohortYear=$year))";
+			$filter[] = "(|(alumClassYear=$year)(carlCohortYear=$year))";
 			$filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
 		}
 		if(!empty($department)) {
@@ -955,14 +959,14 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		{
 			$netid_filter = '(|';
 			foreach($netid as $id)
-				$netid_filter .= "(carlNetId=$id)";
+				$netid_filter .= "(uid=$id)";
 			$netid_filter .= ')';
 			$filter[] = $netid_filter;
 		}
 		if (isset($exclude) && !empty($exclude)) {
 			$exfilter = '(&';
 			$exlist = preg_split('/\W+/', $exclude);
-			foreach ($exlist as $ex) $exfilter .= "(!(carlnetid=$ex))";
+			foreach ($exlist as $ex) $exfilter .= "(!(uid=$ex))";
 			$exfilter .= ')';
 			$filter[] = $exfilter;
 		}
@@ -1025,10 +1029,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	*/
 	function get_search_results($querystring) //{{{
 	{       //burkaa -
-		/*$attributes = array('dn','carlnetid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
-			'eduPersonPrimaryAffiliation','carlOfficeLocation','carlCampusPostalAddress','telephoneNumber','carlSpouse','carlHideInfo',
-			'homePostalAddress', 'carlStudentPermanentAddress', 'homePhone', 'carlMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
-			'eduPersonAffiliation','carlStudentStatus','carlGraduationYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
+		/*$attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+			'eduPersonPrimaryAffiliation','officeBldg','studentPostOffice','telephoneNumber','spouseName','carlHideInfo',
+			'homePostalAddress', 'carlStudentPermanentAddress', 'telephoneNumber', 'studentMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
+			'eduPersonAffiliation','carlStudentStatus','alumClassYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
 			'eduPersonEntitlement','mobile');*/
 
                 $attributes = array('uid');
@@ -1168,7 +1172,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		
 		// Academic Departments
 		$filter = '(& (objectClass=carlPerson) (eduPersonAffiliation=faculty) (!(eduPersonAffiliation=staff)) (ou = *))';
-		if ($dir->search_by_filter($filter, array('ou','carlofficelocation')))
+		if ($dir->search_by_filter($filter, array('ou','officeBldg')))
 		{
 			$faculty = $dir->get_records();
 			$menu_data['acad'] = $this->parse_attribute_data($faculty,'ou');
@@ -1179,7 +1183,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 
 		// Administrative Offices
 		$filter = '(& (objectClass=carlPerson) (eduPersonAffiliation=staff) (ou = *))';
-		if ($dir->search_by_filter($filter, array('ou','carlofficelocation')))
+		if ($dir->search_by_filter($filter, array('ou','officeBldg')))
 		{
 			$staff = $dir->get_records();
 			$menu_data['admin'] = $this->parse_attribute_data($staff,'ou');
@@ -1191,14 +1195,14 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		
 		// Majors
 		$filter = '(& (objectClass=carlPerson) (eduPersonPrimaryAffiliation=student))';
-		if ($dir->search_by_filter($filter, array('ou','carlstudentcampusaddress','carlmajor','carlconcentration')))
+		if ($dir->search_by_filter($filter, array('ou','carlstudentcampusaddress','studentMajor','carlconcentration')))
 		{
 			$students = $dir->get_records();
 			$values = $counts = array();
 			foreach ($students as $entry)
 			{
-				if (isset($entry['carlmajor']))
-					$values = array_merge($values,$entry['carlmajor']);
+				if (isset($entry['studentMajor']))
+					$values = array_merge($values,$entry['studentMajor']);
 				if (isset($entry['carlconcentration']))
 					$values = array_merge($values,$entry['carlconcentration']);
 			}
@@ -1232,8 +1236,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		{
 			if (isset($val['carlstudentcampusaddress']))
 				$result[$key]['location'] = $val['carlstudentcampusaddress'];
-			else if (isset($val['carlofficelocation']))
-				$result[$key]['location'] = $val['carlofficelocation'];
+			else if (isset($val['officeBldg']))
+				$result[$key]['location'] = $val['officeBldg'];
 			else
 				continue;
 			
@@ -1408,7 +1412,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 				$ypos = 630;
 			}
 			
-			$photostring = $idb->get_image($data['carlnetid'][0]);
+			$photostring = $idb->get_image($data['uid'][0]);
 			$pvf = PDF_create_pvf($pdf , 'temp_image' , $photostring , '');
 			$pim = pdf_open_image_file ( $pdf, 'jpeg' , 'temp_image' , '', 0 );
 			$pvf = PDF_delete_pvf($pdf , 'temp_image');
@@ -1419,8 +1423,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			$name = $this->format_name($data);
 			if (isset($data['title'])) $namelist[$name] = $data['title'][0];
 		
-			if ($data['edupersonprimaryaffiliation'][0] == 'student' && isset($data['carlgraduationyear'])) {
-				$name .= ', '. $data['carlgraduationyear'][0];
+			if ($data['edupersonprimaryaffiliation'][0] == 'student' && isset($data['alumClassYear'])) {
+				$name .= ', '. $data['alumClassYear'][0];
 			}
 			if ($this->pdf_fonts['helv']) pdf_setfont($pdf, $this->pdf_fonts['helv'], 10);
 			pdf_fit_textline($pdf, $name, $xcol + 5, $ypos - 10, 'boxsize {90 15} fitmethod auto position {50 0}');		
@@ -1530,7 +1534,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	   
 			if ($data['edupersonprimaryaffiliation'][0] == 'student') 
 			{
-				$name .= ' '. $data['carlgraduationyear'][0];
+				$name .= ' '. $data['alumClassYear'][0];
 				$ypos = pdf_get_value($pdf, 'texty', 0);
 				$ypos = $ypos - 15;
 				if ($ypos < 45)
@@ -1653,12 +1657,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 				}
 
 
-				if (isset($data['carlofficelocation']))
+				if (isset($data['officeBldg']))
 				{
-					if (isset($data['carlcampuspostaladdress']))
-						$address = $data['carlofficelocation'][0] . '('. $data['carlcampuspostaladdress'][0] .')';
+					if (isset($data['studentPostOffice']))
+						$address = $data['officeBldg'][0] . '('. $data['studentPostOffice'][0] .')';
 					else
-						$address = $data['carlofficelocation'][0];
+						$address = $data['officeBldg'][0];
 					$address = str_replace('Language and Dining Center', 'LDC', $address);
 					$address = str_replace('Center for Math & Computing', 'CMC', $address);
 					$address = str_replace('Music & Drama Center', 'Music & Drama', $address);
@@ -1672,9 +1676,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 					foreach ($address as $line)
 						if ($line <> 'Northfield MN 55057') pdf_continue_text($pdf, $line);
 				}
-				if (isset($data['homephone'])) pdf_continue_text($pdf, str_replace('+1 ', '', $data['homephone'][0]));
+				if (isset($data['telephoneNumber'])) pdf_continue_text($pdf, str_replace('+1 ', '', $data['telephoneNumber'][0]));
 				if ($this->pdf_fonts['helvi']) pdf_setfont($pdf, $this->pdf_fonts['helvi'], 7.5);
-				if (isset($data['carlspouse'])) pdf_continue_text($pdf, $data['carlspouse'][0]);
+				if (isset($data['spouseName'])) pdf_continue_text($pdf, $data['spouseName'][0]);
 			}	
 		}  
 
