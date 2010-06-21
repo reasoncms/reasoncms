@@ -92,3 +92,6 @@
 	top: 0;
 	background: url('img/fleche2.gif') no-repeat top right;
 }
+.timedSlideshow a.global {
+	cursor:auto;
+}
