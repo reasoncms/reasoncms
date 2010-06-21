@@ -25,9 +25,9 @@ class CampusMapModule extends DefaultMinisiteModule {
             z-index: 1;
         }
         
-        a { color: blue; cursor:pointer; }
+        #link a { color: blue; cursor:pointer; }
         
-        a:hover {
+        #link a:hover {
             color: black;
             background-color: #def ;
         }
@@ -118,7 +118,7 @@ class CampusMapModule extends DefaultMinisiteModule {
             <!--blank map-->
             <img border="0" src="/images/luther2010/map/redone_luther_map.gif" width="100%" alt=""></img>
         
-            <span style="font-size: 12px; padding:0; margin:0;">Luther College Wi-Fi Map <a onclick="show('wifi');">Show</a> <a onclick="hide('wifi');">Hide</a></span>
+            <span style="font-size: 12px; padding:0; margin:0;">Luther College Wi-Fi Map <a id="link" onclick="show('wifi');">Show</a> <a id="link" onclick="hide('wifi');">Hide</a></span>
             <p></p>
             <div id="wifi">
                 <img class="cornerimage" border="0" src="/images/luther2010/map/wifi_map_over.gif" width="100%"></img>
