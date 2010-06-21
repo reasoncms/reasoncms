@@ -120,9 +120,6 @@ class HomecomingRegistrationOneForm extends FormStep
 	// style up the form and add comments et al	
 	function on_every_time()
 	{
-		pray($_POST);
-		pray($_REQUEST);
-		
 		$date = getdate();
 		$this->change_element_type( 
 			'class_year', 'year', array('start' => ($date['year'] - 75), 'end' => ($date['year']-1)));
