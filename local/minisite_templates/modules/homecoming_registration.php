@@ -1,6 +1,6 @@
 <?php
 /**
- * Online Gift Module
+ * Homecoming Registration Module
  *
  * @author Steve Smith 
  * @since 2010-05-07
@@ -213,6 +213,7 @@ function display_form() //{{{
 			$gc = new HomecomingConfirmation;
 			$gc->set_ref_number( $this->request[ 'r' ] );
 			$gc->set_hash( $this->request[ 'h' ] );
+			
 			if( $gc->validates() )
 			{
 				echo $gc->get_confirmation_text();
