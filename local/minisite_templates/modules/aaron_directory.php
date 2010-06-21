@@ -12,7 +12,8 @@
 class AaronDirectoryModule extends DefaultMinisiteModule
 {
 	// Allowed addresses for Post Office non-FERPA-restricted view:
-	var $po = array('137.22.133.68','137.22.133.85','137.22.133.96');
+	// burkaa01 - var $po = array('137.22.133.68','137.22.133.85','137.22.133.96');
+        var $po = array('10.10.190.34','10.22.2.234'/*'192.203.196.2','192.203.196.3','192.203.196.4'*/);
 
 	var $cleanup_rules = array(
 		'view' => array('function' => 'turn_into_string'),
@@ -100,7 +101,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	{		
 		// If the IP address isn't local and there's no user, then we get the 
 		// restricted off-campus view.
-		$this->context = (strncmp('137.22.',$_SERVER['REMOTE_ADDR'],7) <> 0) ? 'external' : 'internal';
+                // burkaa changed 137.22. to 192.203.
+		$this->context = (strncmp('192.203.',$_SERVER['REMOTE_ADDR'],7) <> 0) ? 'external' : 'internal';
 		if ($this->user_netid = reason_check_authentication()) $this->context = 'internal';
 		if (isset($this->request['context']) && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE) $this->context = $this->request['context'];
 		
@@ -1034,7 +1036,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule
                 //burkaa - ldap_carleton to ldap_luther
 		$dir = new directory_service('ldap_luther');
 		$dir->search_by_filter($querystring, $attributes);
+                // burkaa - added this to test
+                pray($dir);
+                // done
 		$dir->sort_records(array('sn','givenname'));
+                pray
 		$entries = $dir->get_records();
 		return $entries;
 	} //}}}
