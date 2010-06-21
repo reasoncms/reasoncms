@@ -868,7 +868,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	/** Construct the query for searching for people, as well as the text description of the query.
 	*/
 	function build_query($q, $style = 'equal') //{{{
-	{
+	{       echo "build_query was called!";
 		extract($this->clean_input($q));
 		$filter = array();
 		$filter_desc = array();
@@ -904,7 +904,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			$filter_desc[] = 'whose first name is ' . $this->format_search_key($first_name);
 		}
 		if(!empty($last_name)) {
-                        pray($last_name);
+                        echo "$last_name";
 			$filter[] = "(sn$cmp$pre$last_name$post)";
 			$filter_desc[] = 'whose last name is ' . $this->format_search_key($last_name);
 		}
@@ -1037,12 +1037,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			'eduPersonAffiliation','carlStudentStatus','alumClassYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
 			'eduPersonEntitlement','mobile');*/
 
-                $attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
-			'eduPersonPrimaryAffiliation','officeBldg','studentPostOffice','officephone','spouseName',
-			'address','ocPostalAddress', 'ocPhone','studentMajor','studentSpecialization',
-                        'edupersonprimaryaffiliation',
-                        'eduPersonAffiliation','studentStatus','alumclassyear',
-			'eduPersonEntitlement','mobile');
+                $attributes = array('dn','uid','ou','cn','sn','givenName','mail','title','officeBldg','studentPostOffice','spouseName',
+                        'studentStatus');
 
                 //burkaa - ldap_carleton to ldap_luther
 		$dir = new directory_service('ldap_luther');
