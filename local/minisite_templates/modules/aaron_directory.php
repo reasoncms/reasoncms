@@ -1030,18 +1030,23 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	*/
 	function get_search_results($querystring) //{{{
 	{       //burkaa -
-		$attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+		/*$attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
 			'eduPersonPrimaryAffiliation','officeBldg','studentPostOffice','telephoneNumber','spouseName','carlHideInfo',
 			'homePostalAddress', 'carlStudentPermanentAddress', 'telephoneNumber', 'studentMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
 			'eduPersonAffiliation','carlStudentStatus','alumClassYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
-			'eduPersonEntitlement','mobile');
+			'eduPersonEntitlement','mobile');*/
 
-                //$attributes = array('uid','sn');
+                $attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+			'eduPersonPrimaryAffiliation','officeBldg','studentPostOffice','officephone','spouseName',
+			'address','ocPostalAddress', 'ocPhone','studentMajor','studentSpecialization',
+                        'edupersonprimaryaffiliation',
+                        'eduPersonAffiliation','studentStatus','alumclassyear',
+			'eduPersonEntitlement','mobile');
 
                 //burkaa - ldap_carleton to ldap_luther
 		$dir = new directory_service('ldap_luther');
 		//$dir->search_by_filter($querystring, $attributes);
-                $dir->search_by_attribute('sn', 'smith', $attributes);
+                $dir->search_by_attribute('uid', 'burkaa01', $attributes);
 		$dir->sort_records(array('sn','givenname'));
 		$entries = $dir->get_records();
 		return $entries;
