@@ -3,7 +3,7 @@
     reason_include_once( 'minisite_templates/modules/default.php' );
     reason_include_once( 'classes/object_cache.php' );
     
-    // was told to include
+    // burkaa - was told to include
     include_once(DISCO_INC.'disco.php');
     // done
 
@@ -1022,14 +1022,17 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	/** Perform an LDAP search based on the provided LDAP filter
 	*/
 	function get_search_results($querystring) //{{{
-	{
-		$attributes = array('dn','carlnetid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+	{       //burkaa -
+		/*$attributes = array('dn','carlnetid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
 			'eduPersonPrimaryAffiliation','carlOfficeLocation','carlCampusPostalAddress','telephoneNumber','carlSpouse','carlHideInfo',
 			'homePostalAddress', 'carlStudentPermanentAddress', 'homePhone', 'carlMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
 			'eduPersonAffiliation','carlStudentStatus','carlGraduationYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
-			'eduPersonEntitlement','mobile');
+			'eduPersonEntitlement','mobile');*/
 
-		$dir = new directory_service('ldap_carleton');
+                $attributes = array('uid');
+
+                //burkaa - ldap_carleton to ldap_luther
+		$dir = new directory_service('ldap_luther');
 		$dir->search_by_filter($querystring, $attributes);
 		$dir->sort_records(array('sn','givenname'));
 		$entries = $dir->get_records();
@@ -1123,7 +1126,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
                 // Load external list of majors
 		if (empty($this->majors))
 		{
-			include(WEB_PATH . 'campus/directory/majors.php');
+                        //burkaa - comment out for now
+			//include(WEB_PATH . 'campus/directory/majors.php');
 			$this->majors =& $majors;
 		}
 		if ($this->menu_data) return $this->menu_data;
@@ -1140,18 +1144,21 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	**/
 	function rebuild_menu_data()
 	{
-		$dir = new directory_service('ldap_carleton');
+                //burkaa - carleton to luther
+		$dir = new directory_service('ldap_luther');
 		
 		// Get the full set of possible academic depts (not all have people)
-		$dir->set_search_params('ldap_carleton',array('base_dn' => 'dc=carleton,dc=edu'));
+                //burkaa - carleton to luther
+		$dir->set_search_params('ldap_luther',array('base_dn' => 'dc=luther,dc=edu'));
 		$dir->search_by_filter('(businessCategory=ACADEMIC)', array('ou','description'));
 		$result = $dir->get_records();
 		foreach ($result as $dept)
 			$acad_all[$dept['description'][0]] = $dept['ou'][0];
 		asort($acad_all);
 		$acad_all_by_name = array_flip($acad_all);
-		
-		$dir->set_search_params('ldap_carleton',array('base_dn' => 'ou=people,dc=carleton,dc=edu'));
+
+                //burkaa - carleton to luther
+		$dir->set_search_params('ldap_luther',array('base_dn' => 'ou=people,dc=luther,dc=edu'));
 		
 		// Academic Departments
 		$filter = '(& (objectClass=carlPerson) (eduPersonAffiliation=faculty) (!(eduPersonAffiliation=staff)) (ou = *))';
