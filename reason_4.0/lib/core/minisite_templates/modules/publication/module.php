@@ -320,6 +320,7 @@ class PublicationModule extends Generic3Module
 		if (!empty($publications)) // lets make sure the pages are live
 		{
 			$publications = $this->_filter_non_live_related_ids($publications, 'minisite_page', 'page_id');
+			$publications = $this->_filter_pubs_with_improper_page_types($publications);
 		}
 		if (!empty($publications))
 		{
@@ -348,7 +349,7 @@ class PublicationModule extends Generic3Module
 		}
 		else
 		{
-			trigger_error('No related publications are placed on a live page -- cannot find any eligible news items for related news');
+			trigger_error('None of the related publications on this page are placed on a live page that runs the publication module in non-related mode.');
 		}
 	}
 		
@@ -396,6 +397,49 @@ class PublicationModule extends Generic3Module
 			return $filtered_entities;
 		}
 		else return $entities;
+	}
+	
+	/**
+	 * Checks to make sure the page_id for a publication runs the publication module in a region and it is not set to related mode.
+	 * @param array publication entities with page_id populated
+	 */
+	function _filter_pubs_with_improper_page_types($publications)
+	{
+		if (!empty($publications))
+		{
+			$filtered_publications = array();
+			foreach ($publications as $pub_id => $publication)
+			{
+				$page_ids = $publication->get_value('page_id');
+				$page_ids_array = (is_array($page_ids)) ? $page_ids : array($page_ids);
+				foreach ($page_ids_array as $page_id)
+				{
+					// does the page id have a page type with a valid publications module?
+					if (!empty($page_id))
+					{
+						$page = new entity($page_id);
+						$page_type_name = $page->get_value('custom_page');
+						$page_type = $GLOBALS['_reason_page_types'][$page_type_name];
+						if (!empty($page_type))
+						foreach ($page_type as $region => $module)
+						{
+							$valid = (is_array($module)) 
+									 ? ($module['module'] == 'publication' && !(isset($module['related_mode']) && ( ($module['related_mode'] == "true") || ($module['related_mode'] == true) )))
+									 : ($module == 'publication');
+						    if ($valid) $valid_page_ids[$pub_id][] = $page_id;
+						}
+					}
+				}
+				if (!empty($valid_page_ids[$pub_id]))
+				{
+					$filtered_publications[$pub_id] = $publication;
+					$filtered_page_ids = (count($valid_page_ids[$pub_id]) == 1) ? $valid_page_ids[$pub_id][0] : $valid_page_ids[$pub_id];
+					$filtered_publications[$pub_id]->set_value('page_id', $filtered_page_ids);
+				}
+			}
+			return $filtered_publications;
+		}
+		return $publications;
 	}
 	
 	/**
