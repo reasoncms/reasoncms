@@ -1,10 +1,10 @@
 <?php
 ////////////////////////////////////////////////////////////////////////////////
 //
-//    Matt Ryan
-//    2005-02-17
+//    Steve Smith
+//    2010-06-15 (very early in the morning)
 //
-//    Work on the second page of the giving form
+//    Work on the second page of the homecoming registration form
 //
 ////////////////////////////////////////////////////////////////////////////////
 #####test
@@ -20,7 +20,7 @@ class HomecomingRegistrationTwoForm extends FormStep
 	var $budget_number = '10-0000-0000-1307';
 	var $expense_budget_number = '10-202-60201-51331';
 	var $revenue_budget_number = '10-000-60201-44906-UHOMP';
-	var $transaction_comment = 'Online gift';
+	var $transaction_comment = 'Homecoming Registration';
 	var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
 	
 	// the usual disco member data
@@ -32,6 +32,9 @@ class HomecomingRegistrationTwoForm extends FormStep
 		'payment_note' => array(
 			'type' => 'comment',
 			'text' => '<h3>Payment Method</h3>',
+		),
+		'payment_amount' => array(
+			'type' => 'solidtext',
 		),
 		'credit_card_type' => array(
 			'type' => 'radio_no_sort',
@@ -84,8 +87,8 @@ class HomecomingRegistrationTwoForm extends FormStep
 			'size'=>35,
 		),
 		'billing_country' => array(
-			'type' => 'text',
-			'size'=>35,
+			'type' => 'country',
+//			'size'=>35,
 			'display_name' => 'Country',
 		),
 		'confirmation_text' => array(
@@ -120,13 +123,15 @@ class HomecomingRegistrationTwoForm extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
-/*################
 		if( !$this->controller->get('amount'))
 		{
 			echo '<div id="giftFormSetupError">You can\'t complete this step without having set up a gift; please go back to <a href="?_step=GiftPageOneForm">Gift Info</a> and provide a gift amount.</div>';
 			$this->show_form = false;
 			return;
 		}
+
+		$this->set_value('payment_amount', '$'.number_format($this->controller->get('amount'),2,'.',','));
+/*################
 		if($this->controller->get('installment_type') == 'Onetime')
 		{
 			$this->remove_element('installment_notification_note_1');
@@ -140,7 +145,7 @@ class HomecomingRegistrationTwoForm extends FormStep
 		}
 		else
 		{
-			$this->is_in_testing_mode = true;
+			$this->is_in_testing_mode = false;
 		}
 		
 		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
@@ -158,7 +163,7 @@ class HomecomingRegistrationTwoForm extends FormStep
 				$text .= build_gift_review_detail_output( $this->helper, $this->date_format );
 			}
 */
-			$text .= '<p class="changeGiftButton"><a href="?_step=GiftPageOneForm">Change Gift Setup</a></p>'."\n";
+			$text .= '<p class="changeRegistrationButton"><a href="?_step=HomecomingRegistrationOneForm">Change Registration Information</a></p>'."\n";
 			$this->change_element_type( 'review_note', 'comment', array('text'=>$text) );
 
 		}
@@ -209,14 +214,14 @@ if ($this->controller->get('installment_type') == 'Onetime')
 		$txt .= '<p class="printConfirm">Print this confirmation for your records.</p>'."\n";
 		$txt .= '<ul>'."\n";
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
-		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('current_name').'</li>'."\n";
+		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('current_first_name').' '.$this->controller->get('current_last_name').'</li>'."\n";
 		$txt .= '<li><strong>Class Year:</strong> '.$this->controller->get('class_year').'</li>'."\n";
 		$txt .= '<li><strong>Graduation Name:</strong> '.$this->controller->get('graduation_name').'</li>'."\n";
-		if ($this->controller->get('preferred_name'))
+		if ($this->controller->get('preferred_first_name'))
 		{
-			$txt .= '<li><strong>Preferred First Name:</strong> '.$this->controller->get('preferred_name').'</li>'."\n";
+			$txt .= '<li><strong>Preferred First Name:</strong> '.$this->controller->get('preferred_first_name').'</li>'."\n";
 		}
-		$txt .= '<li><strong>Address:</strong><br />'."\n".$this->controller->get('address').'<br />'."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip').'<br />'."\n".$this->controller->get('country').'</li>'."\n";
+		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address')."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip')./*$this->controller->get('country').*/'</li>'."\n";
 		if ($this->controller->get('home_phone'))
 		{
 			$txt .= '<li><strong>Home Phone:</strong> '.$this->controller->get('home_phone').'</li>'."\n";
@@ -225,7 +230,7 @@ if ($this->controller->get('installment_type') == 'Onetime')
 		{
 			$txt .= '<li><strong>Cell Phone:</strong> '.$this->controller->get('cell_phone').'</li>'."\n";
 		}
-		$txt .= '<li><strong>Email:</strong> '.$this->controller->get('email').'</li>'."\n";
+		$txt .= '<li><strong>Email:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
 		if ($this->controller->get('guest_name'))
 		{
 			$txt .= '<li><strong>Spouse/Guest Name:</strong> '.$this->controller->get('guest_name').'</li>'."\n";
@@ -234,30 +239,32 @@ if ($this->controller->get('installment_type') == 'Onetime')
 		{
 			$txt .= '<li><strong>Guest Class Year:</strong> '.$this->controller->get('attended_luther').'</li>'."\n";
 		}		
-		if($this->controller->get('program') )
+		if($this->controller->get('attend_program') )
 		{
-			$txt .= '<li><strong>Tickets for Alumni Program:</strong> '.($this->controller->get('additional_instructions')).'</li>'."\n";
+			$txt .= '<li><strong>Tickets for Alumni Program:</strong> '.($this->controller->get('attend_program')).'</li>'."\n";
 		}
-		if($this->get_value('attend_luncheon'))
+		if($this->controller->get('attend_luncheon'))
 		{
-			$txt .= '<li><strong>Attend 75-50 Year Reunion Luncheon :</strong> '.$this->get_value('attend_luncheon').'</li>'."\n";
+			$txt .= '<li><strong>Attend 75-50 Year Reunion Luncheon :</strong> '.$this->controller->get('attend_luncheon').'</li>'."\n";
 		}
-		if($this->get_value('attend_dinner_50_to_25'))
+		if($this->controller->get('attend_dinner_50_to_25'))
 		{
-			$txt .= '<li><strong>Attend 50-25 Year Reunion Dinner:</strong> '.$this->get_value('attend_dinner_50_to_25').'</li>'."\n";
+			$txt .= '<li><strong>Attend 50-25 Year Reunion Dinner:</strong> '.$this->controller->get('attend_dinner_50_to_25').'</li>'."\n";
 		}
-		if($this->get_value('attend_dinner_20_to_10'))
+		if($this->controller->get('attend_dinner_20_to_10'))
 		{
-			$txt .= '<li><strong>Attend 20-10 Year Reunion Reception:</strong> '.$this->get_value('attend_dinner_20_to_10').'</li>'."\n";
+			$txt .= '<li><strong>Attend 20-10 Year Reunion Reception:</strong> '.$this->controller->get('attend_dinner_20_to_10').'</li>'."\n";
 		}
-		if($this->get_value('attend_dinner_5'))
+		if($this->controller->get('attend_dinner_5'))
 		{
-			$txt .= '<li><strong>Attend 5 Year Reunion Reception:</strong> '.$this->get_value('attend_dinner_5').'</li>'."\n";
+			$txt .= '<li><strong>Attend 5 Year Reunion Reception:</strong> '.$this->controller->get('attend_dinner_5').'</li>'."\n";
 		}
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
+		$this->set_value('confirmation_text', $txt); 
 		return $txt;
 	}
+	
 
 	function run_error_checks()
 	{
@@ -320,10 +327,11 @@ if( $this->controller->get('installment_type') == 'Onetime')
 				$this->controller->get('amount'),
 				$this->get_value('credit_card_number'),
 				$expiration_mmyy,
-				$this->budget_number,
-//				$this->revenue_budget_number,
+				//$this->budget_number,
+				$this->revenue_budget_number,
 //				$this->income_budget_number,
 				$this->get_value('credit_card_name'),
+				$this->expense_budget_number,
 				$this->transaction_comment
 			);
 			
@@ -413,15 +421,18 @@ if( $this->controller->get('installment_type') == 'Onetime')
 										'</h3>'=>'',
 										'<br />'=>"\n",
 									);
-				if (reason_unique_name_exists('giving_form_thank_you_blurb'))
-					$confirm_text = get_text_blurb_content('giving_form_thank_you_blurb') . $confirm_text;
+				if (reason_unique_name_exists('homecoming_thank_you_blurb'))
+					$confirm_text_with_blurb = get_text_blurb_content('homecoming_thank_you_blurb') . $confirm_text;
 				else
-					$confirm_text = '<p><strong>Thank you for your gift to Carleton!</strong></p>' . $confirm_text;
-				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
-				$add_headers = 'Content-Type: text/plain; charset="utf-8"'."\r\n".'From: "Carleton College Gift Accounting" <giftaccounting@carleton.edu>' . "\r\n" .
-'Reply-To: "Carleton College Gift Accounting" <giftaccounting@carleton.edu>';
-				mail($this->controller->get('email'),'Carleton College Gift Confirmation',strip_tags($mail_text),$add_headers);
+					$confirm_text_with_blurb = '<p><strong>Thank you for registering for Homecoming!</strong></p>' . $confirm_text;
+				
 				//}
+				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
+				$mail = new Email($this->controller->get('e-mail'),'alumni@luther.edu','alumni@luther.edu','Luther College Homecoming Registration Confirmation',strip_tags($confirm_text_with_blurb),$confirm_text_with_blurb);
+				$mail->send();
+				
+				$mail2 = new Email('smitst01@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Homecoming Registration '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
+				$mail2->send();
 			}
 		}
 	}
