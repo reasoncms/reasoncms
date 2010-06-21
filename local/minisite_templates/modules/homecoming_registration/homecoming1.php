@@ -262,36 +262,6 @@ class HomecomingRegistrationOneForm extends FormStep
 		}else{
 			return 'HomecomingRegistrationTwoForm';
 		}
-/*  	
-	  	if ($this->get_value('attend_program'))
-	  	{
-			$amount = $amount + $this->get_value('attend_program');
-		}
-		if ($this->get_value('attend_dinner_50_to_25'))
-		{
-			$amount = $amount + $this->get_value('attend_dinner_50_to_25');
-			//echo $amount;
-		}
-		if ($this->get_value('attend_dinner_20_to_10'))
-		{
-			$amount = $amount + $this->get_value('attend_dinner_20_to_10');
-			//echo $amount;
-		}
-		if ($this->get_value('attend_dinner_5'))
-		{
-			$amount = $amount + $this->get_value('attend_dinner_5');
-			//echo $amount;
-		}
-
-		$this->set_value('amount', $amount);
-		
-		if ($amount == 0)
-		{
-			return 'HomecomingRegistrationConfirmation';
-		}else{
-			return 'HomecomingRegistrationTwoForm';
-		}
-*/
 	}
 }
 
