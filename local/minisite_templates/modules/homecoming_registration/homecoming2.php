@@ -123,8 +123,9 @@ class HomecomingRegistrationTwoForm extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
+		$f_name = $this->controller->get('first_name');
 		$first_page_amout = $this->controller->get('amount');
-		die('The amount= ' .$first_page_amout);
+		die('The amount= ' .$first_page_amout. 'FirstName= '.$f_name);
 		
 		if( !$this->controller->get('amount'))
 		{
