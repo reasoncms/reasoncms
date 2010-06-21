@@ -89,12 +89,12 @@ class HomecomingRegistrationOneForm extends FormStep
 			'comments' => '<br />$20/person',
 			'options' => array(
 				'--'=>'--', 
-				'20'=>'1 ticket, $20',
-				'40'=>'2 tickets, $40',
-				'60'=>'3 tickets, $60',
-				'80'=>'4 tickets, $80',
-				'100'=>'5 tickets, $100',
-				'120'=>'6 tickets, $120',
+				'1'=>'1 ticket, $20',
+				'2'=>'2 tickets, $40',
+				'3'=>'3 tickets, $60',
+				'4'=>'4 tickets, $80',
+				'5'=>'5 tickets, $100',
+				'6'=>'6 tickets, $120',
 			),
 		),
 		'luncheon_header' => array(
@@ -117,15 +117,19 @@ class HomecomingRegistrationOneForm extends FormStep
 	var $display_name = 'Homecoming Info';
 	var $error_header_text = 'Please check your form.';
 
-	// style up the form and add comments et al
+	// style up the form and add comments et al	
 	function on_every_time()
 	{
+		pray($_POST);
+		pray($_REQUEST);
+		
 		$date = getdate();
 		$this->change_element_type( 
 			'class_year', 'year', array('start' => ($date['year'] - 75), 'end' => ($date['year']-1)));
 		$this->change_element_type( 
 			'guest_class', 'year', array('start' => ($date['year'] - 75), 'end' => ($date['year']-1)));
 
+		
 		// Set years and cost for luncheon
 		$classes_string_75_to_50 = 'for Classes ';
 		for ($i = 75; $i >= 55; $i -= 5){
@@ -134,15 +138,15 @@ class HomecomingRegistrationOneForm extends FormStep
 		}
 		$classes_string_75_to_50 .= $date['year'] - 50;
 		$this->change_element_type(
-			'attend_luncheon', 'select_no_sort', array(
+			'attend_luncheon', 'select', array(
 				'display_name' => 'Tickets for Luncheon',
 				'comments' => '<br />'.$classes_string_75_to_50.'<br />No Cost',
-				'options' => array(
-					'--' => '--', 
+				'options' => array( 
 					'1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 
 					'6' => '6', '7' => '7', '8' => '8', '9' => '9',	'10' => '10',),
 				)
 			);
+			
 
 		// Set years and ticket cost for 45 to 25 year reunions
 		$classes_string_45_to_25 = 'for Classes ';
@@ -157,12 +161,12 @@ class HomecomingRegistrationOneForm extends FormStep
 				'comments' => '<br />'.$classes_string_45_to_25.'<br />$20/person',
 				'options' => array(
 					'--'=>'--', 
-					'20'=>'1 ticket, $20',
-					'40'=>'2 tickets, $40',
-					'60'=>'3 tickets, $60',
-					'80'=>'4 tickets, $80',
-					'100'=>'5 tickets, $100',
-					'120'=>'6 tickets, $120',
+					'1'=>'1 ticket, $20',
+					'2'=>'2 tickets, $40',
+					'3'=>'3 tickets, $60',
+					'4'=>'4 tickets, $80',
+					'5'=>'5 tickets, $100',
+					'6'=>'6 tickets, $120',
 				),
 			));
 		// Set years and ticket cost for 20 to 10 year reunions		
@@ -178,12 +182,12 @@ class HomecomingRegistrationOneForm extends FormStep
 				'comments' => '<br />'.$classes_string_20_to_10.'<br />$15/person',
 				'options' => array(
 					'--'=>'--', 
-					'15'=>'1 ticket, $15',
-					'30'=>'2 tickets, $30',
-					'45'=>'3 tickets, $45',
-					'60'=>'4 tickets, $60',
-					'75'=>'5 tickets, $75',
-					'90'=>'6 tickets, $90',
+					'1'=>'1 ticket, $15',
+					'2'=>'2 tickets, $30',
+					'3'=>'3 tickets, $45',
+					'4'=>'4 tickets, $60',
+					'5'=>'5 tickets, $75',
+					'6'=>'6 tickets, $90',
 				),
 			));
 			
@@ -194,12 +198,12 @@ class HomecomingRegistrationOneForm extends FormStep
 				'comments' => '<br />for Class of '. ($date['year']-5) .'<br />$10/person',
 				'options' => array(
 					'--'=>'--', 
-					'10'=>'1 ticket, $10',
-					'20'=>'2 tickets, $20',
-					'30'=>'3 tickets, $30',
-					'40'=>'4 tickets, $40',
-					'50'=>'5 tickets, $50',
-					'60'=>'6 tickets, $60',
+					'1'=>'1 ticket, $10',
+					'2'=>'2 tickets, $20',
+					'3'=>'3 tickets, $30',
+					'4'=>'4 tickets, $40',
+					'5'=>'5 tickets, $50',
+					'6'=>'6 tickets, $60',
 
 					),
 				)
@@ -227,6 +231,41 @@ class HomecomingRegistrationOneForm extends FormStep
 	function needs_payment()
 	{
 	  	$amount = 0;
+	  	$program_tix = $this->get_value('attend_program');
+	  	$dinner_tix_50_to_25 = $this->get_value('attend_dinner_50_to_25');
+	  	$dinner_tix_20_to_10 = $this->get_value('attend_dinner_20_to_10');
+	  	$dinner_tix_5 = $this->get_value('attend_dinner_5');
+
+		if (isset($program_tix))
+	  	{
+			$amount = $amount + ($program_tix * 20);
+		}
+		
+		if (isset($dinner_tix_50_to_25))
+	  	{
+			$amount = $amount + ($dinner_tix_50_to_25 * 20);
+		}
+		
+		if (isset($dinner_tix_20_to_10))
+	  	{
+			$amount = $amount + ($dinner_tix_20_to_10 * 15);
+		}
+		
+		if (isset($dinner_tix_5))
+	  	{
+			$amount = $amount + ($dinner_tix_5 * 10);
+		}
+		$this->set_value('amount', $amount);
+		
+		$tix = $program_tix + $dinner_tix_50_to_25 + $dinner_tix_20_to_10 + $dinner_tix_5;
+		//die('The amount = '.$amount.'::The number of tix is/are '.$tix);
+		if ($amount == 0)
+		{
+			return 'HomecomingRegistrationConfirmation';
+		}else{
+			return 'HomecomingRegistrationTwoForm';
+		}
+/*  	
 	  	if ($this->get_value('attend_program'))
 	  	{
 			$amount = $amount + $this->get_value('attend_program');
@@ -255,6 +294,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		}else{
 			return 'HomecomingRegistrationTwoForm';
 		}
+*/
 	}
 }
 
