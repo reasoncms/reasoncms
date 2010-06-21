@@ -3,6 +3,10 @@
     reason_include_once( 'minisite_templates/modules/default.php' );
     reason_include_once( 'classes/object_cache.php' );
     
+    // was told to include
+    include_once(DISCO_INC.'disco.php');
+    // done
+
     define ('MAX_RESULTS', 100);
 
 class AaronDirectoryModule extends DefaultMinisiteModule
