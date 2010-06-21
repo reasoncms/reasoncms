@@ -1040,8 +1040,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 
                 //burkaa - ldap_carleton to ldap_luther
 		$dir = new directory_service('ldap_luther');
-		$dir->search_by_filter($querystring, $attributes);
-                //$dir->search_by_attribute('sn', 'smith', $attributes);
+		//$dir->search_by_filter($querystring, $attributes);
+                $dir->search_by_attribute('sn', 'smith', $attributes);
 		$dir->sort_records(array('sn','givenname'));
 		$entries = $dir->get_records();
 		return $entries;
