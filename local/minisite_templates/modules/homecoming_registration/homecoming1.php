@@ -255,7 +255,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		$this->set_value('amount', $amount);
 		
 		$tix = $program_tix + $dinner_tix_50_to_25 + $dinner_tix_20_to_10 + $dinner_tix_5;
-		die('The amount = '.$amount.'::The number of tix is/are '.$tix);
+		//die('The amount = '.$amount.'::The number of tix is/are '.$tix);
 		if ($amount == 0)
 		{
 			return 'HomecomingRegistrationConfirmation';
