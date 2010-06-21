@@ -123,6 +123,9 @@ class HomecomingRegistrationTwoForm extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
+		$first_page_amout = $this->controller->get('amount');
+		die('The amount= ' $first_page_amout);
+		
 		if( !$this->controller->get('amount'))
 		{
 			echo '<div id="giftFormSetupError">You can\'t complete this step without having set up a gift; please go back to <a href="?_step=GiftPageOneForm">Gift Info</a> and provide a gift amount.</div>';
