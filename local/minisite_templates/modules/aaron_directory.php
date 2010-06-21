@@ -1,11 +1,11 @@
 <?php
-    $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'CampusDirectoryModule';
+    $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'AaronDirectoryModule';
     reason_include_once( 'minisite_templates/modules/default.php' );
     reason_include_once( 'classes/object_cache.php' );
     
     define ('MAX_RESULTS', 100);
 
-class CampusDirectoryModule extends DefaultMinisiteModule
+class AaronDirectoryModule extends DefaultMinisiteModule
 {
 	// Allowed addresses for Post Office non-FERPA-restricted view:
 	var $po = array('137.22.133.68','137.22.133.85','137.22.133.96');
