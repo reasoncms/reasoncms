@@ -106,6 +106,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main' => 'directory_search_alumni',
 			'sidebar' => 'login_link',
 		),
+    		'directory_aaron' => array(
+			'main' => 'aaron_directory',
+			'sidebar' => 'login_link',
+		),
 		'events' => array(
 			'main_post' => 'luther_events',
 		),
