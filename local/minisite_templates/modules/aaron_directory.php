@@ -840,7 +840,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		{
 			echo '<div id="campusDirHelp">';
 			if ($this->context == 'external')
-				echo '<p><strong>Off-campus users:</strong> If you have a Carleton account, you can <a href="/login/">log in for full directory access.</a></p>';
+				echo '<p><strong>Off-campus users:</strong> If you have a Luther account, you can <a href="/login/">log in for full directory access.</a></p>';
 			echo get_text_blurb_content('campus_directory_corrections_blurb');
 			echo $blurb;
 			echo '</div>';
@@ -893,11 +893,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		// discarding filters with only 3 elements
 		$filter[] = '(!(ou=Null temporary OU))'; // exclude temporary accounts
 		$filter[] = '(!(description=Left feed*))'; // exclude expired accounts
-		$filter[] = '(eduPersonEntitlement=urn:mace:carleton.edu:entl:whitepages)';
-		if(!empty($id_number)) { 
+		// burkaa - $filter[] = '(eduPersonEntitlement=urn:mace:carleton.edu:entl:whitepages)';
+                $filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
+		/*burkaa - if(!empty($id_number)) {
 			$filter[] = "(carlColleagueid$cmp$id_number)";
 			$filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
-		}
+		}*/
 		if(!empty($first_name)) {
 			$filter[] = "(|(givenName$cmp$pre$first_name$post)(eduPersonNickname$cmp$pre$first_name$post))";
 			$filter_desc[] = 'whose first name is ' . $this->format_search_key($first_name);
@@ -1331,7 +1332,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		$this->pdf_fonts['helv'] = pdf_load_font($pdf, 'Helvetica', 'host', '');
 		$this->pdf_fonts['helvb'] = pdf_load_font($pdf, 'Helvetica-Bold', 'host', '');
 		$this->pdf_fonts['helvi'] = pdf_load_font($pdf, 'Helvetica-Oblique', 'host', '');
-		pdf_set_info($pdf, 'Author', 'Carleton College');
+		pdf_set_info($pdf, 'Author', 'Luther College');
 		pdf_set_info($pdf, 'Title', 'Campus Directory');	
 		return $pdf;
 	}
