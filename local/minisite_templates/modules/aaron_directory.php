@@ -565,11 +565,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	function scrub_results(&$results)
 	{
 		// Attributes which should be hidden from the external view
-                //burkaa - (hide) nothing is hidden for now
-		/*$ext_suppress = array('officeBldg','studentPostOffice', 'homepostaladdress',
+                $ext_suppress = array('officeBldg','studentPostOffice', 'homepostaladdress',
 			'carlstudentpermanentaddress', 'telephoneNumber', 'studentMajor', 'carlconcentration',
 			'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
-			'carlstudentstatus');*/
+			'carlstudentstatus');
 		
 		foreach ($results as $key => $data)
 		{
@@ -905,6 +904,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			$filter_desc[] = 'whose first name is ' . $this->format_search_key($first_name);
 		}
 		if(!empty($last_name)) {
+                        pray($last_name);
 			$filter[] = "(sn$cmp$pre$last_name$post)";
 			$filter_desc[] = 'whose last name is ' . $this->format_search_key($last_name);
 		}
@@ -1046,8 +1046,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 
                 //burkaa - ldap_carleton to ldap_luther
 		$dir = new directory_service('ldap_luther');
-		//$dir->search_by_filter($querystring, $attributes);
-                $dir->search_by_attribute('uid', 'burkaa01', $attributes);
+		$dir->search_by_filter($querystring, $attributes);
+                //$dir->search_by_attribute('uid', 'burkaa01', $attributes);
                 pray($dir);
 		$dir->sort_records(array('sn','givenname'));
 		$entries = $dir->get_records();
