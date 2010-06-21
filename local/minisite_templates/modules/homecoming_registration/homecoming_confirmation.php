@@ -87,7 +87,7 @@ class HomecomingConfirmation
 	* Available to scripts that use this class by calling get_error_message()
 	* @var string
 	*/
-	var $error_message = 'We\'re sorry.  Your homecoming registration was successfully processed, but there appears to have been an error generating your confirmation information.  Please contact Alumni Office for assistance.';
+	var $error_message = 'We\'re sorry.  Your homecoming registration was successfully processed, but there appears to have been an error generating your confirmation information.  Please contact the Alumni Office for assistance.';
 	
 	/**
 		* Setter for PayFlowPro transaction reference number
@@ -124,6 +124,10 @@ class HomecomingConfirmation
 				{
 					if($this->hash == $this->make_hash($confirm_text))
 					{
+						if (reason_unique_name_exists('homecoming_thank_you_blurb'))
+							$confirm_text = get_text_blurb_content('homecoming_thank_you_blurb') . $confirm_text;
+						else
+							$confirm_text = '<p><strong>Thank you for registering for Homecoming!</strong></p>' . $confirm_text;
 						$this->_confirm_text = $confirm_text;
 						$this->_confirm_text .= '<p>A copy of this confirmation has been sent to your email address.</p>';
 						$this->_validation_has_run = true;
@@ -131,6 +135,7 @@ class HomecomingConfirmation
 					}
 					else
 					{	
+					echo 'The confirmation_text is empty.<br />';
 						unset($confirm_text);
 						unset($homecomingPF);
 						$this->_validation_has_run = true;
