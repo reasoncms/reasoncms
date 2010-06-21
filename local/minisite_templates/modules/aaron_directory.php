@@ -1036,7 +1036,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			'eduPersonAffiliation','carlStudentStatus','alumClassYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
 			'eduPersonEntitlement','mobile');*/
 
-                $attributes = array('uid');
+                $attributes = array('uid','sn');
 
                 //burkaa - ldap_carleton to ldap_luther
 		$dir = new directory_service('ldap_luther');
