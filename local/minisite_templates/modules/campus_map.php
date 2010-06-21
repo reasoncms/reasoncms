@@ -25,9 +25,9 @@ class CampusMapModule extends DefaultMinisiteModule {
             z-index: 1;
         }
         
-        #link a { color: blue; cursor:pointer; }
+        #link { color: blue; cursor:pointer; }
         
-        #link a:hover {
+        #link:hover {
             color: black;
             background-color: #def ;
         }
