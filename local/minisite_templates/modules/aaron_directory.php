@@ -895,7 +895,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		// If you add something here, be sure to update the check at the bottom that's 
 		// discarding filters with only 3 elements
 		$filter[] = '(!(ou=Null temporary OU))'; // exclude temporary accounts
-		$filter[] = '(!(description=Left feed*))'; // exclude expired accounts
+		//$filter[] = '(!(description=Left feed*))'; // exclude expired accounts
 		// burkaa - $filter[] = '(eduPersonEntitlement=urn:mace:carleton.edu:entl:whitepages)';
                 $filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
 		if(!empty($id_number)) {
