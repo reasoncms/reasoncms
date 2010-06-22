@@ -202,6 +202,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		// Build and execute an LDAP query
 		list($query, $query_desc) = $query_parts;
 		$entries = $this->get_search_results($query);
+                echo "entries!!!: $entries";
 
 		// If there aren't any results, try again with similarity searching
 		if (!count($entries))
@@ -909,8 +910,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule
                         //echo "this is the filter: ";
                         //pray($filter);
 			$filter_desc[] = 'whose last name is ' . $this->format_search_key($last_name);
-                        echo "FILTER_DESC ";
-                        pray($filter_desc);
 		}
 		if(!empty($search_for) && $search_for != 'anyone') {
 			if ($search_for == 'facstaff')
