@@ -906,9 +906,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		if(!empty($last_name)) {
                         echo "$last_name";
 			$filter[] = "(sn$cmp$pre$last_name$post)";
-                        echo "this is the filter: ";
-                        pray($filter);
+                        //echo "this is the filter: ";
+                        //pray($filter);
 			$filter_desc[] = 'whose last name is ' . $this->format_search_key($last_name);
+                        echo "FILTER_DESC ";
 		}
 		if(!empty($search_for) && $search_for != 'anyone') {
 			if ($search_for == 'facstaff')
