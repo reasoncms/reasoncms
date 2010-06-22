@@ -202,7 +202,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		// Build and execute an LDAP query
 		list($query, $query_desc) = $query_parts;
                 echo "QUERY: $query";
-                pray($query);
 		$entries = $this->get_search_results($query);
                 echo "ENTRIES: ";
                 pray($entries);
@@ -1052,6 +1051,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
                 //$dir->search_by_attribute('uid', 'burkaa01', $attributes);
                 //pray($dir);
 		$dir->sort_records(array('sn','givenname'));
+                echo "DIR $dir";
+                pray($dir);
 		$entries = $dir->get_records();
 		return $entries;
 	} //}}}
