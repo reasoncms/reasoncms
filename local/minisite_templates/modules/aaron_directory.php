@@ -981,7 +981,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			$filter[] = "(|(givenName$cmp$pre$free$post)(eduPersonNickname$cmp$pre$free$post)(sn$cmp$pre$free$post)(title$cmp$pre$free$post)(ou$cmp$pre$free$post))";
 			$filter_desc[] = 'like ' . $this->format_search_key($free);
 		}
-		if (count($filter) > 3)
+		if (count($filter) > 0)
 		{		
 			$querystring = '(&'.join($filter, '').')';
 			$querytext = (count($filter_desc)) ? 'people ' : '';
