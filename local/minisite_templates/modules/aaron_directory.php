@@ -897,7 +897,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		$filter[] = '(!(ou=Null temporary OU))'; // exclude temporary accounts
 		$filter[] = '(!(description=Left feed*))'; // exclude expired accounts
 		// burkaa - $filter[] = '(eduPersonEntitlement=urn:mace:carleton.edu:entl:whitepages)';
-                $filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
+                //burkaa - $filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
 		if(!empty($id_number)) {
 			$filter[] = "(carlColleagueid$cmp$id_number)";
 			$filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
@@ -1049,13 +1049,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		$dir = new directory_service('ldap_luther');
                 $dir2 = new directory_service('ldap_luther');
 		$dir->search_by_filter($querystring, $attributes);
-                $dir2->search_by_attribute('sn', 'burk', $attributes);
+                //$dir2->search_by_attribute('sn', 'burk', $attributes);
                 //pray($dir);
 		$dir->sort_records(array('sn','givenname'));
-                echo "DIR ----------------------- ";
+                echo "DIR ";
                 pray($dir);
-                echo "DIR -- 2222 --------------- ";
-                pray($dir2);
+                //echo "DIR -- 2222 --------------- ";
+                //pray($dir2);
 		$entries = $dir->get_records();
 		return $entries;
 	} //}}}
