@@ -202,7 +202,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		// Build and execute an LDAP query
 		list($query, $query_desc) = $query_parts;
 		$entries = $this->get_search_results($query);
-                echo "entries!!!: $entries";
+                echo "ENTRIES:"; 
+                pray($entries);
 
 		// If there aren't any results, try again with similarity searching
 		if (!count($entries))
