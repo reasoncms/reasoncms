@@ -201,8 +201,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		
 		// Build and execute an LDAP query
 		list($query, $query_desc) = $query_parts;
-                echo "QUERY_PARTS: ";
-                pray($query_parts);
+                echo "QUERY: ";
+                pray($query);
 		$entries = $this->get_search_results($query);
                 echo "ENTRIES: ";
                 pray($entries);
