@@ -910,6 +910,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
                         //pray($filter);
 			$filter_desc[] = 'whose last name is ' . $this->format_search_key($last_name);
                         echo "FILTER_DESC ";
+                        pray($filter_desc);
 		}
 		if(!empty($search_for) && $search_for != 'anyone') {
 			if ($search_for == 'facstaff')
