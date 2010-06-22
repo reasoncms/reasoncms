@@ -246,9 +246,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	function display_form() //{{{
 	{
 		$this->form->change_element_type( 'building', 'select', array('options' => $this->menu_data['buildings']) );
-		$this->form->change_element_type( 'major', 'select', array('options' => $this->menu_data['majors']) );
-		$this->form->change_element_type( 'department', 'select', array('options' => $this->menu_data['acad']) );
-		$this->form->change_element_type( 'office', 'select', array('options' => $this->menu_data['admin']) );
+		//$this->form->change_element_type( 'major', 'select', array('options' => $this->menu_data['majors']) );
+		//$this->form->change_element_type( 'department', 'select', array('options' => $this->menu_data['acad']) );
+		//$this->form->change_element_type( 'office', 'select', array('options' => $this->menu_data['admin']) );
 		$this->form->set_value('pictures', true);
 		$this->form->set_value('exact', true);
 		
