@@ -1049,7 +1049,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		$dir = new directory_service('ldap_luther');
                 $dir2 = new directory_service('ldap_luther');
 		$dir->search_by_filter($querystring, $attributes);
-                $dir2->search_by_attribute('sn', 'burk*', $attributes);
+                $dir2->search_by_attribute('sn', 'burk', $attributes);
                 //pray($dir);
 		$dir->sort_records(array('sn','givenname'));
                 echo "DIR ----------------------- ";
