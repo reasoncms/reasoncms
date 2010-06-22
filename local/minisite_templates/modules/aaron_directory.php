@@ -897,7 +897,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		$filter[] = '(!(ou=Null temporary OU))'; // exclude temporary accounts
 		$filter[] = '(!(description=Left feed*))'; // exclude expired accounts
 		// burkaa - $filter[] = '(eduPersonEntitlement=urn:mace:carleton.edu:entl:whitepages)';
-                $filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
+                //$filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
 		if(!empty($id_number)) {
 			$filter[] = "(carlColleagueid$cmp$id_number)";
 			$filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
