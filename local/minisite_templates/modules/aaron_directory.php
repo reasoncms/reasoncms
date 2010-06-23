@@ -329,11 +329,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 if ($affil = $this->format_affiliation($data))
                     echo '<li class="personAffil">'.$affil.'</li>';
             }
-            echo "Major (test): {$data['studentMajor'][0]}";
-            //if (isset($data['studentMajor']) && $data['edupersonprimaryaffiliation'][0] == 'Student')
-            if (isset($data['studentMajor'])) {
+            if (isset($data['studentmajor']) && $data['edupersonprimaryaffiliation'][0] == 'Student')
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
-                echo '<li class="personMajor">'. $data['studentMajor'][0] .'</li>';
+                echo '<li class="personMajor">'. $data['studentmajor'][0] .'</li>';
             }
             if (isset($data['mail'])) {
                 echo '<li class="personEmail">'. $this->format_email($data['mail'][0]) .'</li>';
@@ -361,15 +359,15 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                     echo '</ul>';
                 }
                 if (isset($data['officebldg'])) {
-                    echo '<ul class="personCampusAddress">';
+                    /*echo '<ul class="personCampusAddress">';
                     foreach ($data['officebldg'] as $loc)
                         echo '<li class="personOffice">'.$loc.'</li>';
                     // studentPostOffice may not exist in ldap for faculty or staff at luther - burkaa
                     if (isset($data['studentPostOffice']))
                         foreach ($data['studentPostOffice'] as $loc)
                             echo '<li class="personMailstop">Mail stop: '.$loc.'</li>';
-                    echo '</ul>';
-                    //echo '<li class="personOffice">'.$data['officebldg'][0].'</li>';
+                    echo '</ul>';*/
+                    echo '<li class="personOffice">'.$data['officebldg'][0].'</li>';
 
                 }
                 if (isset($data['homepostaladdress']) && !isset($data['carlhidepersonalinfo'])) {
@@ -438,7 +436,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
             echo '</li>';
             if ($data['edupersonprimaryaffiliation'][0] == 'student') {
-                if (isset($data['studentMajor'])) {
+                if (isset($data['studentmajor'])) {
                     echo '<li>'.$this->format_majors($data).'</li>';
                 }
             } else {
@@ -501,7 +499,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $row['po'] = (isset($data['studentPostOffice'])) ? $data['studentPostOffice'][0] : '';
             if ($data['edupersonprimaryaffiliation'][0] == 'student') {
                 $row['address'] = (isset($data['homepostaladdress'])) ? join(' / ', $this->format_postal_address($data['homepostaladdress'][0], false)) : '';
-                $row['major'] = (isset($data['studentMajor'])) ? $data['studentMajor'][0] : '';
+                $row['major'] = (isset($data['studentmajor'])) ? $data['studentmajor'][0] : '';
                 $row['class'] = (isset($data['alumClassYear'])) ? $data['alumClassYear'][0] : '';
             } else {
                 $row['address'] = (isset($data['officebldg'])) ? join(' / ', $data['officebldg']): '';
@@ -531,7 +529,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
     function scrub_results(&$results) {
         // Attributes which should be hidden from the external view
         /*$ext_suppress = array('officebldg','studentPostOffice', 'homepostaladdress',
-                'address', 'telephoneNumber', 'studentMajor', 'carlconcentration',
+                'address', 'telephoneNumber', 'studentmajor', 'carlconcentration',
                 'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
                 'studentStatus');*/
 
@@ -585,7 +583,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
     }
 
     function format_majors($data) {
-        foreach ($data['studentMajor'] as $major)
+        foreach ($data['studentmajor'] as $major)
             $majors[] = $this->make_search_link('<span class="major">'.$this->majors[$major].'</span>', 'major', $major);
         if (isset($data['carlconcentration'])) {
             foreach ($data['carlconcentration'] as $major)
@@ -887,7 +885,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $majors = split(',',$major); // majors can be a comma separated list
             $filter_string = '(|';
             foreach ($majors as $maj) {
-                $filter_string .= "(studentMajor$cmp$maj)(carlConcentration$cmp$maj)";
+                $filter_string .= "(studentmajor$cmp$maj)(carlConcentration$cmp$maj)";
             }
             $filter[] = $filter_string . ')';
             $filter_desc[] = 'whose major or concentration is '. $this->format_search_key($this->majors[$maj]) ;
@@ -978,12 +976,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
     function get_search_results($querystring) {
         /*$attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
 			'eduPersonPrimaryAffiliation','officebldg','studentPostOffice','telephoneNumber','spouseName','carlHideInfo',
-			'homePostalAddress', 'carlStudentPermanentAddress', 'telephoneNumber', 'studentMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
+			'homePostalAddress', 'carlStudentPermanentAddress', 'telephoneNumber', 'studentmajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
 			'eduPersonAffiliation','studentStatus','alumClassYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
 			'eduPersonEntitlement','mobile');*/
         $attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
                 'eduPersonPrimaryAffiliation','officebldg','studentPostOffice','telephoneNumber','spouseName',
-                'homePostalAddress', 'address', 'telephoneNumber', 'studentMajor', 'eduPersonPrimaryAffiliation',
+                'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'eduPersonPrimaryAffiliation',
                 'eduPersonAffiliation','studentStatus','alumClassYear',
                 'eduPersonEntitlement','mobile');
 
@@ -1125,12 +1123,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
         // Majors
         $filter = '(& (objectClass=carlPerson) (eduPersonPrimaryAffiliation=student))';
-        if ($dir->search_by_filter($filter, array('ou','carlstudentcampusaddress','studentMajor','carlconcentration'))) {
+        if ($dir->search_by_filter($filter, array('ou','carlstudentcampusaddress','studentmajor','carlconcentration'))) {
             $students = $dir->get_records();
             $values = $counts = array();
             foreach ($students as $entry) {
-                if (isset($entry['studentMajor']))
-                    $values = array_merge($values,$entry['studentMajor']);
+                if (isset($entry['studentmajor']))
+                    $values = array_merge($values,$entry['studentmajor']);
                 if (isset($entry['carlconcentration']))
                     $values = array_merge($values,$entry['carlconcentration']);
             }
