@@ -896,7 +896,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		// discarding filters with only 3 elements
 		$filter[] = '(!(ou=Null temporary OU))'; // exclude temporary accounts
 		$filter[] = '(!(description=Left feed*))'; // exclude expired accounts
-		// burkaa - $filter[] = '(eduPersonEntitlement=urn:mace:carleton.edu:entl:whitepages)';
+		// Where it reads 'luther.edu' it used to read 'carleton.edu' but removing this
+                // in general fixes things because I am not sure we set up anything like this (whitepages?) - burkaa
                 //$filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
 		if(!empty($id_number)) {
 			$filter[] = "(carlColleagueid$cmp$id_number)";
@@ -907,10 +908,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			$filter_desc[] = 'whose first name is ' . $this->format_search_key($first_name);
 		}
 		if(!empty($last_name)) {
-                        echo "$last_name";
+                        //echo "$last_name";
 			$filter[] = "(sn$cmp$pre$last_name$post)";
-                        //echo "this is the filter: ";
-                        //pray($filter);
 			$filter_desc[] = 'whose last name is ' . $this->format_search_key($last_name);
 		}
 		if(!empty($search_for) && $search_for != 'anyone') {
@@ -1034,8 +1033,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 
 	/** Perform an LDAP search based on the provided LDAP filter
 	*/
-	function get_search_results($querystring) //{{{
-	{       //burkaa -
+	function get_search_results($querystring) {
 		/*$attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
 			'eduPersonPrimaryAffiliation','officeBldg','studentPostOffice','telephoneNumber','spouseName','carlHideInfo',
 			'homePostalAddress', 'carlStudentPermanentAddress', 'telephoneNumber', 'studentMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
@@ -1058,7 +1056,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
                 //pray($dir2);
 		$entries = $dir->get_records();
 		return $entries;
-	} //}}}
+	}
 		
 	/** Query the Telecommunications database for data relevant to the requested office or dept
 	*/
