@@ -355,7 +355,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
                         echo "{$data['edupersonprimaryaffiliation'][0]}";
 			if (isset($data['studentMajor']) && $data['edupersonprimaryaffiliation'][0] == 'Student')
 			{
-				echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
+				//echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
+                                echo '<li class="personMajor">'. $data['studentMajor'] .'</li>';
 			}
 			if (isset($data['mail']))
 			{
