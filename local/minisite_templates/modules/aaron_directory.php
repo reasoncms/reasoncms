@@ -202,9 +202,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		// Build and execute an LDAP query
 		list($query, $query_desc) = $query_parts;
 		$entries = $this->get_search_results($query);
-                echo "Start of entries: "; // - burkaa
+                echo "\n Start of entries: "; // - burkaa
                 pray($entries);
-                echo "End of entries "; // - burkaa
+                echo " End of entries \n"; // - burkaa
 
 		// If there aren't any results, try again with similarity searching
 		if (!count($entries))
@@ -871,7 +871,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	/** Construct the query for searching for people, as well as the text description of the query.
 	*/
 	function build_query($q, $style = 'equal') //{{{
-	{       echo "build_query was called!";
+	{
 		extract($this->clean_input($q));
 		$filter = array();
 		$filter_desc = array();
