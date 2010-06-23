@@ -416,11 +416,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 				if ($status = $this->format_status($data))
 					echo '<li class="personStatus">'.$status.'</li>';
 				echo '</ul>';
-                                // carlstudentpermanentaddress does not exist in ldap for luther - burkaa
-				if (isset($data['carlstudentpermanentaddress']))
+                                // carlstudentpermanentaddress does not exist in ldap for luther (changed to address - burkaa
+				if (isset($data['address']))
 				{
 					echo '<ul class="personHomeAddress">';
-					echo $this->format_postal_address($data['carlstudentpermanentaddress'][0]);
+					echo $this->format_postal_address($data['address'][0]);
 					echo '</ul>';
 				}
 					
@@ -566,9 +566,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	{
 		// Attributes which should be hidden from the external view
                 $ext_suppress = array('officeBldg','studentPostOffice', 'homepostaladdress',
-			'carlstudentpermanentaddress', 'telephoneNumber', 'studentMajor', 'carlconcentration',
+			'address', 'telephoneNumber', 'studentMajor', 'carlconcentration',
 			'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
-			'carlstudentstatus');
+			'studentStatus');
 		
 		foreach ($results as $key => $data)
 		{
@@ -800,8 +800,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		$statusFlag['X'] = 'Early Finish';
 		$statusFlag['O'] = 'Off Campus Program';
 		
-		if (isset($data['carlstudentstatus']))
-			return $statusFlag[$data['carlstudentstatus'][0]];
+		if (isset($data['studentStatus']))
+			return $statusFlag[$data['studentStatus'][0]];
 		else
 			return false;
 	}
@@ -1034,11 +1034,16 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		/*$attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
 			'eduPersonPrimaryAffiliation','officeBldg','studentPostOffice','telephoneNumber','spouseName','carlHideInfo',
 			'homePostalAddress', 'carlStudentPermanentAddress', 'telephoneNumber', 'studentMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
-			'eduPersonAffiliation','carlStudentStatus','alumClassYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
+			'eduPersonAffiliation','studentStatus','alumClassYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
 			'eduPersonEntitlement','mobile');*/
 
                 $attributes = array('dn','uid','ou','cn','sn','givenName','mail','title','officeBldg','studentPostOffice','spouseName',
                         'studentStatus');
+                $attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+			'eduPersonPrimaryAffiliation','officeBldg','studentPostOffice','telephoneNumber','spouseName',
+			'homePostalAddress', 'address', 'telephoneNumber', 'studentMajor', 'eduPersonPrimaryAffiliation',
+			'eduPersonAffiliation','studentStatus','alumClassYear',
+			'eduPersonEntitlement','mobile');
 
 		$dir = new directory_service('ldap_luther');
 		$dir->search_by_filter($querystring, $attributes);
@@ -1571,10 +1576,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 					foreach ($home as $line)
 						pdf_continue_text($pdf, $line);
 				}
-				if (isset($data['carlstudentpermanentaddress']))
+				if (isset($data['address']))
 				{
 					if ($this->pdf_fonts['helv']) pdf_setfont($pdf, $this->pdf_fonts['helv'], 7.5);
-					$home = $this->format_postal_address($data['carlstudentpermanentaddress'][0], false);
+					$home = $this->format_postal_address($data['address'][0], false);
 					foreach ($home as $line)
 						pdf_continue_text($pdf, $line);
 				}	
