@@ -13,12 +13,12 @@ reason_include_once( 'minisite_templates/default.php' );
 /**
  * Register this new template with Reason
  */
-$GLOBALS[ '_minisite_template_class_names' ][ basename( __FILE__) ] = 'MobileLutherTemplate';
+$GLOBALS[ '_minisite_template_class_names' ][ basename( __FILE__) ] = 'MobileTemplate';
 
 /**
  * A sample Reason template that completely overloads the run method -- full XHTML
  */
-class MobileLutherTemplate extends MinisiteTemplate
+class MobileTemplate extends MinisiteTemplate
 {
 	/**
 	 * Do the markup for the whole page
@@ -33,11 +33,11 @@ class MobileLutherTemplate extends MinisiteTemplate
 		// NOTE: don't add your theme-specific CSS here.
 		// By adding it to the theme in Reason rather than here you 
 		// can reuse this template across multiple themes.
-		$this->head_items->add_stylesheet('/stylesheets/luther/mobile/screen.css');
 		$this->head_items->add_javascript('/javascripts/modernizr-1.1.min.js');
 		
 		echo '<!DOCTYPE html>'."\n";
 		echo '<html lang="en" class="no-js">'."\n";
+		echo '<meta name = "viewport" content = "width = device-width, height = device-height" />';
 		echo '<head>'."\n";
 		echo $this->head_items->get_head_item_markup();
 		
@@ -53,7 +53,7 @@ class MobileLutherTemplate extends MinisiteTemplate
 		
 		// Here's the organization-specific banner
 		echo '<div id="myBanner">';
-		echo '<a href="http://m.luther.edu"><img src="/images/luther2010/mobile/luther_mobile_header_beta.png" alt="Home" /></a>';
+		echo '<a href="http://m.luther.edu/"><img src="/images/luther2010/mobile/luther_mobile_header_beta.png" alt="Home" /></a>';
 		echo '</div>'."\n";
 		
 		echo '<div id="wrapper">'."\n";
