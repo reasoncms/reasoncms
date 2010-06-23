@@ -131,8 +131,4 @@ h3.postTitle {
 
 div#luther_search {
     float: right;
-    margin-top: 10px;
-    z-index: 1;
-    position: absolute;
-    top: 0; 
 }
