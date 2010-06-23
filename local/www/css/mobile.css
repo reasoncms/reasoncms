@@ -17,7 +17,7 @@ div#myBanner {
 }
 
 div#luther_search {
-    padding-left: 10px;
+    float: right;
 }
 
 div#content {
