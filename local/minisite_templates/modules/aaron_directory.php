@@ -760,12 +760,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
     function format_affiliation($data) {
         // define the default sort order for affiliations
         $stat['Faculty'] = 1;
-        $stat['staff'] = 2;
+        $stat['Staff'] = 2;
         $stat['Alumni'] = 3;
-        $stat['parent'] = 4;
-        $stat['student'] = 5;
-        $stat['trustee'] = 6;
-        $stat['affiliate'] = 7;
+        $stat['Staff Spouse'] = 4;
+        $stat['parent'] = 5;
+        $stat['student'] = 6;
+        $stat['trustee'] = 7;
+        $stat['affiliate'] = 8;
 
         $affils = array();
         foreach ($data['edupersonaffiliation'] as $affil) {
