@@ -55,6 +55,9 @@ class MobileTemplate extends MinisiteTemplate
 		echo '<div id="myBanner">';
 		echo '<a href="http://m.luther.edu/"><img src="/images/luther2010/mobile/luther_mobile_header_beta.png" alt="Home" /></a>';
 		echo '</div>'."\n";
+		echo '<div id="luther_search">';
+		luther_google_search();
+		echo '</div>';
 		
 		echo '<div id="wrapper">'."\n";
 		echo '<div id="bannerAndMeat">'."\n";
