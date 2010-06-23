@@ -22,6 +22,7 @@ div#luther_search {
 }
 
 div#absolute_search {
+    z-index: 1;
     position: absolute;
     top: 0;
 }
