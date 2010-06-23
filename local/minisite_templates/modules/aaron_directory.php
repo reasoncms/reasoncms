@@ -1036,9 +1036,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			'homePostalAddress', 'carlStudentPermanentAddress', 'telephoneNumber', 'studentMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
 			'eduPersonAffiliation','studentStatus','alumClassYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
 			'eduPersonEntitlement','mobile');*/
-
-                $attributes = array('dn','uid','ou','cn','sn','givenName','mail','title','officeBldg','studentPostOffice','spouseName',
-                        'studentStatus');
                 $attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
 			'eduPersonPrimaryAffiliation','officeBldg','studentPostOffice','telephoneNumber','spouseName',
 			'homePostalAddress', 'address', 'telephoneNumber', 'studentMajor', 'eduPersonPrimaryAffiliation',
