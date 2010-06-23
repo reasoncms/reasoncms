@@ -360,7 +360,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                         echo '<li class="personStatus">'. $this->format_leave($data) . '</li>';
                     echo '</ul>';
                 }
-                echo "Building waaa {$data['officeBldg'][0]}";
+                echo "Building waaa {$data['title']}";
                 if (isset($data['officeBldg'])) {
                     echo "BUILDING WAAAA";
                     /*echo '<ul class="personCampusAddress">';
