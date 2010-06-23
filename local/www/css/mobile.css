@@ -130,7 +130,5 @@ h3.postTitle {
 */
 
 div#luther_search {
-    position: absolute;
-    top: 0;
-    left: 0;
+    margin-left: 10px;
 }
