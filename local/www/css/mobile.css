@@ -128,3 +128,11 @@ h3.postTitle {
     visibility: hidden;
 }
 */
+
+div#luther_search {
+    float: right;
+    margin-top: 10px;
+    z-index: 1;
+    position: absolute;
+    top: 0; 
+}
