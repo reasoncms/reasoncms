@@ -362,7 +362,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 }
                 if (isset($data['officebldg'])) {
                     /*echo '<ul class="personCampusAddress">';
-                    foreach ($data['officeBldg'] as $loc)
+                    foreach ($data['officebldg'] as $loc)
                         echo '<li class="personOffice">'.$loc.'</li>';
                     // studentPostOffice may not exist in ldap for faculty or staff at luther - burkaa
                     if (isset($data['studentPostOffice']))
@@ -470,7 +470,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if ($data['edupersonprimaryaffiliation'][0] == 'student') {
                 $row[] = (isset($data['homepostaladdress'])) ? join(' / ', $this->format_postal_address($data['homepostaladdress'][0], false)) : '';
             } else {
-                $row[] = (isset($data['officeBldg'])) ? join(' / ', $data['officeBldg']): '';
+                $row[] = (isset($data['officebldg'])) ? join(' / ', $data['officebldg']): '';
             }
             $output[] = $row;
         }
@@ -504,7 +504,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $row['major'] = (isset($data['studentMajor'])) ? $data['studentMajor'][0] : '';
                 $row['class'] = (isset($data['alumClassYear'])) ? $data['alumClassYear'][0] : '';
             } else {
-                $row['address'] = (isset($data['officeBldg'])) ? join(' / ', $data['officeBldg']): '';
+                $row['address'] = (isset($data['officebldg'])) ? join(' / ', $data['officebldg']): '';
             }
             $output[] = $row;
         }
@@ -530,12 +530,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
      **/
     function scrub_results(&$results) {
         // Attributes which should be hidden from the external view
-        /*$ext_suppress = array('officeBldg','studentPostOffice', 'homepostaladdress',
+        /*$ext_suppress = array('officebldg','studentPostOffice', 'homepostaladdress',
                 'address', 'telephoneNumber', 'studentMajor', 'carlconcentration',
                 'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
                 'studentStatus');*/
 
-        $ext_suppress = array('officeBldg','studentPostOffice', 'homepostaladdress',
+        $ext_suppress = array('officebldg','studentPostOffice', 'homepostaladdress',
                 'address', 'telephoneNumber', 'carlconcentration',
                 'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
                 'studentStatus');
@@ -880,7 +880,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         }
         if(!empty($building)) {
             $room = (!empty($room)) ? ' '.$room : '';
-            $filter[] = "(|(officeBldg$cmp$building$room$post)(carlStudentCampusAddress$cmp$building$room$post))";
+            $filter[] = "(|(officebldg$cmp$building$room$post)(carlStudentCampusAddress$cmp$building$room$post))";
             $filter_desc[] = 'who live or work in '. $this->format_search_key($building . ' ' . $room);
         }
         if(!empty($major)) {
@@ -977,7 +977,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
      */
     function get_search_results($querystring) {
         /*$attributes = array('dn','uid','ou','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
-			'eduPersonPrimaryAffiliation','officeBldg','studentPostOffice','telephoneNumber','spouseName','carlHideInfo',
+			'eduPersonPrimaryAffiliation','officebldg','studentPostOffice','telephoneNumber','spouseName','carlHideInfo',
 			'homePostalAddress', 'carlStudentPermanentAddress', 'telephoneNumber', 'studentMajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
 			'eduPersonAffiliation','studentStatus','alumClassYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
 			'eduPersonEntitlement','mobile');*/
@@ -1104,7 +1104,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
         // Academic Departments
         $filter = '(& (objectClass=carlPerson) (eduPersonAffiliation=faculty) (!(eduPersonAffiliation=staff)) (ou = *))';
-        if ($dir->search_by_filter($filter, array('ou','officeBldg'))) {
+        if ($dir->search_by_filter($filter, array('ou','officebldg'))) {
             $faculty = $dir->get_records();
             $menu_data['acad'] = $this->parse_attribute_data($faculty,'ou');
             // remove any that aren't in the list of all acad depts (e.g. Library)
@@ -1114,7 +1114,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
         // Administrative Offices
         $filter = '(& (objectClass=carlPerson) (eduPersonAffiliation=staff) (ou = *))';
-        if ($dir->search_by_filter($filter, array('ou','officeBldg'))) {
+        if ($dir->search_by_filter($filter, array('ou','officebldg'))) {
             $staff = $dir->get_records();
             $menu_data['admin'] = $this->parse_attribute_data($staff,'ou');
             // remove any that are in the list of all acad depts
@@ -1160,8 +1160,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         foreach ($result as $key => $val) {
             if (isset($val['carlstudentcampusaddress']))
                 $result[$key]['location'] = $val['carlstudentcampusaddress'];
-            else if (isset($val['officeBldg']))
-                $result[$key]['location'] = $val['officeBldg'];
+            else if (isset($val['officebldg']))
+                $result[$key]['location'] = $val['officebldg'];
             else
                 continue;
 
@@ -1552,11 +1552,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 }
 
 
-                if (isset($data['officeBldg'])) {
+                if (isset($data['officebldg'])) {
                     if (isset($data['studentPostOffice']))
-                        $address = $data['officeBldg'][0] . '('. $data['studentPostOffice'][0] .')';
+                        $address = $data['officebldg'][0] . '('. $data['studentPostOffice'][0] .')';
                     else
-                        $address = $data['officeBldg'][0];
+                        $address = $data['officebldg'][0];
                     $address = str_replace('Language and Dining Center', 'LDC', $address);
                     $address = str_replace('Center for Math & Computing', 'CMC', $address);
                     $address = str_replace('Music & Drama Center', 'Music & Drama', $address);
