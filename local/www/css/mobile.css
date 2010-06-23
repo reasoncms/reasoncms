@@ -17,7 +17,13 @@ div#myBanner {
 }
 
 div#luther_search {
+    position: relative;
     float: right;
+}
+
+div#absolute_search {
+    position: absolute;
+    top: 0;
 }
 
 div#content {
