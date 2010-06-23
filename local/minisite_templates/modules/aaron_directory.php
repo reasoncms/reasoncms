@@ -351,7 +351,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 				if ($affil = $this->format_affiliation($data))
 					echo '<li class="personAffil">'.$affil.'</li>';
 			}
-                        echo "SUPPOSED TO EQUAL STUDENT: $data['edupersonprimaryaffiliation'][0]";
+                        echo "SUPPOSED TO EQUAL STUDENT: ";
+                        pray($data['edupersonprimaryaffiliation'][0]);
 			if (isset($data['studentMajor']) && $data['edupersonprimaryaffiliation'][0] == 'student*')
 			{
 				echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
