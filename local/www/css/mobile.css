@@ -16,6 +16,10 @@ div#myBanner {
     padding-right: 0cm;
 }
 
+div#luther_search {
+    padding-left: 10px;
+}
+
 div#content {
     color:#0b2345;
     padding-left: 8px;
@@ -128,7 +132,3 @@ h3.postTitle {
     visibility: hidden;
 }
 */
-
-div.luther_search {
-    margin-left: 10px;
-}
