@@ -759,9 +759,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
     function format_affiliation($data) {
         // define the default sort order for affiliations
-        $stat['faculty'] = 1;
+        $stat['Faculty'] = 1;
         $stat['staff'] = 2;
-        $stat['alum'] = 3;
+        $stat['Alumni'] = 3;
         $stat['parent'] = 4;
         $stat['student'] = 5;
         $stat['trustee'] = 6;
