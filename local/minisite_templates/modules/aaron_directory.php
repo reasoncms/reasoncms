@@ -534,10 +534,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
                 'studentStatus');*/
 
-        $ext_suppress = array('officeBldg','studentPostOffice', 'homepostaladdress',
-                'address', 'telephoneNumber', 'carlconcentration',
-                'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
-                'studentStatus');
+
 
         foreach ($results as $key => $data) {
             // Remove the people who should be gone completely.
