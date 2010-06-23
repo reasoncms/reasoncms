@@ -445,8 +445,7 @@ function admissions_main_navigation()
         	echo '</ul></li>'."\n";
         	echo '<li class="academics"><a href="/admissions/academics/">Academics</a>'."\n";
         	echo '<ul>'."\n";
-        	echo '<li><a href="/admissions/academics/majors/">Majors & Minors</a></li>'."\n";
-        	echo '<li><a href="/admissions/academics/preprofessional/">Preprofessional & Special Programs</a></li>'."\n";
+        	echo '<li><a href="/academics/majors/">Majors & Minors</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/calendars/">Academic Calendars</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/curriculum/">Curriculum & Graduation Requirements</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/honors/">Honors Program</a></li>'."\n";
