@@ -343,7 +343,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             echo '<div class="personAddresses">';
 
             // If this is faculty or staff
-            echo "AHHHHHHHH: {$data['edupersonprimaryaffiliation'][0]}";
             if ($data['edupersonprimaryaffiliation'][0] == 'Faculty' || $data['edupersonprimaryaffiliation'][0] == 'Staff') {
                 if (isset($data['title'])) {
                     echo '<ul class="personPosition">';
@@ -362,6 +361,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                     echo '</ul>';
                 }
                 if (isset($data['officeBldg'])) {
+                    echo "BUILDING WAAAA";
                     /*echo '<ul class="personCampusAddress">';
                     foreach ($data['officeBldg'] as $loc)
                         echo '<li class="personOffice">'.$loc.'</li>';
