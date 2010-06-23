@@ -343,7 +343,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             echo '<div class="personAddresses">';
 
             // If this is faculty or staff
-            if ($data['edupersonprimaryaffiliation'][0] == 'faculty' || $data['edupersonprimaryaffiliation'][0] == 'staff') {
+            if ($data['edupersonprimaryaffiliation'][0] == 'Faculty' || $data['edupersonprimaryaffiliation'][0] == 'Staff') {
                 if (isset($data['title'])) {
                     echo '<ul class="personPosition">';
                     foreach ($data['title'] as $title)
@@ -771,6 +771,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $stat['trustee'] = 10;
         $stat['affiliate'] = 11;
         $stat['Employee Child'] = 12;
+        $stat['Former Employee Child'] = 13;
 
         $affils = array();
         foreach ($data['edupersonaffiliation'] as $affil) {
