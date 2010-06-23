@@ -329,8 +329,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 if ($affil = $this->format_affiliation($data))
                     echo '<li class="personAffil">'.$affil.'</li>';
             }
-            echo "SUPPOSED TO EQUAL STUDENT: ";
-            echo "{$data['edupersonprimaryaffiliation'][0]}";
+            echo "Major (test): {$data['studentMajor']}";
             //if (isset($data['studentMajor']) && $data['edupersonprimaryaffiliation'][0] == 'Student')
             if (isset($data['studentMajor'])) {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
@@ -534,7 +533,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
                 'studentStatus');*/
 
-
+        $ext_suppress = array('officeBldg','studentPostOffice', 'homepostaladdress',
+                'address', 'telephoneNumber', 'carlconcentration',
+                'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
+                'studentStatus');
 
         foreach ($results as $key => $data) {
             // Remove the people who should be gone completely.
