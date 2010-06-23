@@ -3,16 +3,14 @@
     reason_include_once( 'minisite_templates/modules/default.php' );
     reason_include_once( 'classes/object_cache.php' );
     
-    // burkaa - was told to include
+    // was told to include this DISCO_INC - burkaa
     include_once(DISCO_INC.'disco.php');
-    // done
 
     define ('MAX_RESULTS', 100);
 
 class AaronDirectoryModule extends DefaultMinisiteModule
 {
 	// Allowed addresses for Post Office non-FERPA-restricted view:
-	// burkaa01 - var $po = array('137.22.133.68','137.22.133.85','137.22.133.96');
         var $po = array('10.10.190.34','10.22.2.234'/*'192.203.196.2','192.203.196.3','192.203.196.4'*/);
 
 	var $cleanup_rules = array(
