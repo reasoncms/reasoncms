@@ -329,11 +329,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 if ($affil = $this->format_affiliation($data))
                     echo '<li class="personAffil">'.$affil.'</li>';
             }
-            echo "Major (test): {$data['studentMajor']}";
+            echo "Major (test): {$data['studentMajor'][0]}";
             //if (isset($data['studentMajor']) && $data['edupersonprimaryaffiliation'][0] == 'Student')
             if (isset($data['studentMajor'])) {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
-                echo '<li class="personMajor">'. $data['studentMajor'] .'</li>';
+                echo '<li class="personMajor">'. $data['studentMajor'][0] .'</li>';
             }
             if (isset($data['mail'])) {
                 echo '<li class="personEmail">'. $this->format_email($data['mail'][0]) .'</li>';
