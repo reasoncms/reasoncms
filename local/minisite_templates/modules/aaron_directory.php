@@ -353,7 +353,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			}
                         echo "SUPPOSED TO EQUAL STUDENT: ";
                         echo "{$data['edupersonprimaryaffiliation'][0]}";
-			if (isset($data['studentMajor']) && $data['edupersonprimaryaffiliation'][0] == 'Student')
+			//if (isset($data['studentMajor']) && $data['edupersonprimaryaffiliation'][0] == 'Student')
+                        if (isset($data['studentMajor']))
 			{
 				//echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
                                 echo '<li class="personMajor">'. $data['studentMajor'] .'</li>';
