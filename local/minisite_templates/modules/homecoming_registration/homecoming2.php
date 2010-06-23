@@ -17,7 +17,7 @@ class HomecomingRegistrationTwoForm extends FormStep
 	var $_log_errors = true;
 	var $no_session = array( 'credit_card_number' );
 	var $error;
-	var $budget_number = '10-0000-0000-1307';
+	//var $budget_number = '10-0000-0000-1307';
 	var $expense_budget_number = '10-202-60201-51331';
 	var $revenue_budget_number = '10-000-60201-44906-UHOMP';
 	var $transaction_comment = 'Homecoming Registration';
@@ -175,6 +175,8 @@ class HomecomingRegistrationTwoForm extends FormStep
 	
 	function pre_show_form()
 	{
+	pray($_POST);
+	pray($_REQUEST);
 		echo '<div id="homecomingForm" class="pageTwo">'."\n";
 		if( $this->is_in_testing_mode )
 		{
