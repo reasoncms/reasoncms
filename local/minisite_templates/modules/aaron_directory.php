@@ -360,9 +360,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                         echo '<li class="personStatus">'. $this->format_leave($data) . '</li>';
                     echo '</ul>';
                 }
-                echo "Building waaa {$data['officebldg'][0]}";
-                if (isset($data['officeBldg'])) {
-                    echo "BUILDING WAAAA";
+                if (isset($data['officebldg'])) {
                     /*echo '<ul class="personCampusAddress">';
                     foreach ($data['officeBldg'] as $loc)
                         echo '<li class="personOffice">'.$loc.'</li>';
@@ -371,7 +369,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                         foreach ($data['studentPostOffice'] as $loc)
                             echo '<li class="personMailstop">Mail stop: '.$loc.'</li>';
                     echo '</ul>';*/
-                    echo '<li class="personOffice">'.$data['officeBldg'].'</li>';
+                    echo '<li class="personOffice">'.$data['officebldg'][0].'</li>';
 
                 }
                 if (isset($data['homepostaladdress']) && !isset($data['carlhidepersonalinfo'])) {
