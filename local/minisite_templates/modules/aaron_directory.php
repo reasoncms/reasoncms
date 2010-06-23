@@ -762,11 +762,15 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $stat['Faculty'] = 1;
         $stat['Staff'] = 2;
         $stat['Alumni'] = 3;
-        $stat['Staff Spouse'] = 4;
-        $stat['parent'] = 5;
-        $stat['student'] = 6;
-        $stat['trustee'] = 7;
-        $stat['affiliate'] = 8;
+        $stat['Faculty Spouse'] = 4;
+        $stat['Staff Spouse'] = 5;
+        $stat['parent'] = 6;
+        $stat['Student'] = 7;
+        $stat['Student - Not Enrolled this Term'] = 8;
+        $stat['Student - Not Planning to Enroll'] = 9;
+        $stat['trustee'] = 10;
+        $stat['affiliate'] = 11;
+        $stat['Employee Child'] = 12;
 
         $affils = array();
         foreach ($data['edupersonaffiliation'] as $affil) {
