@@ -219,6 +219,7 @@ class HomecomingRegistrationOneForm extends FormStep
 	function pre_show_form()
 	{
 		echo '<div id="homecomingForm" class="pageOne">'."\n";
+		pray($_REQUEST);
 	}
 	function post_show_form()
 	{
