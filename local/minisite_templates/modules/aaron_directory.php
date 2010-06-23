@@ -201,10 +201,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		
 		// Build and execute an LDAP query
 		list($query, $query_desc) = $query_parts;
-                echo "QUERY: $query";
 		$entries = $this->get_search_results($query);
-                echo "ENTRIES: ";
+                echo "Start of entries: "; // - burkaa
                 pray($entries);
+                echo "End of entries "; // - burkaa
 
 		// If there aren't any results, try again with similarity searching
 		if (!count($entries))
@@ -1049,9 +1049,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule
                 //$dir->search_by_attribute('sn', 'burk', $attributes);
 		$dir->sort_records(array('sn','givenname'));
 		$entries = $dir->get_records();
-                echo "Start of Entries: <br />";
-                pray(entries);
-                echo "End of Entries <br />";
 		return $entries;
 	}
 		
