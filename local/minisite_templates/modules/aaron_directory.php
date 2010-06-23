@@ -99,7 +99,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	{		
 		// If the IP address isn't local and there's no user, then we get the 
 		// restricted off-campus view.
-                // burkaa changed 137.22. to 192.203.
+                // changed carleton 137.22. to luther 192.203. - burkaa
 		$this->context = (strncmp('192.203.',$_SERVER['REMOTE_ADDR'],7) <> 0) ? 'external' : 'internal';
 		if ($this->user_netid = reason_check_authentication()) $this->context = 'internal';
 		if (isset($this->request['context']) && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE) $this->context = $this->request['context'];
@@ -337,7 +337,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 			if ($this->form->get_value('pictures') != false)
 			{	
 				echo '<div class="personPhoto">';
-				// burkaa - echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
                                 echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
 				echo '</div>';
 			}
@@ -380,7 +379,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 							echo ' <a class="officeSite" href="'.$sites[$dept]['url'].'">[web site]</a>';
 						echo '</li>';
 					}
-                                        // burkaa - IDK a facultyleaveterm does not exist in ldap for us
+                                        // facultyleaveterm does not exist in ldap for luther - burkaa
 					if (isset($data['carlfacultyleaveterm']))
 						echo '<li class="personStatus">'. $this->format_leave($data) . '</li>';
 					echo '</ul>';
@@ -390,7 +389,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 					echo '<ul class="personCampusAddress">';
 					foreach ($data['officeBldg'] as $loc)
 						echo '<li class="personOffice">'.$loc.'</li>';
-                                        // burkaa - IDK not sure there is one for faculty
+                                        // studentPostOffice may not exist in ldap for faculty or staff at luther - burkaa
 					if (isset($data['studentPostOffice']))
 						foreach ($data['studentPostOffice'] as $loc)
 							echo '<li class="personMailstop">Mail stop: '.$loc.'</li>';
@@ -417,7 +416,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 				if ($status = $this->format_status($data))
 					echo '<li class="personStatus">'.$status.'</li>';
 				echo '</ul>';
-                                // burkaa - not sure we have one IDK
+                                // carlstudentpermanentaddress does not exist in ldap for luther - burkaa
 				if (isset($data['carlstudentpermanentaddress']))
 				{
 					echo '<ul class="personHomeAddress">';
@@ -1041,7 +1040,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule
                 $attributes = array('dn','uid','ou','cn','sn','givenName','mail','title','officeBldg','studentPostOffice','spouseName',
                         'studentStatus');
 
-                //burkaa - ldap_carleton to ldap_luther
 		$dir = new directory_service('ldap_luther');
 		$dir->search_by_filter($querystring, $attributes);
                 //$dir->search_by_attribute('sn', 'burk', $attributes);
@@ -1137,7 +1135,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule
                 // Load external list of majors
 		if (empty($this->majors))
 		{
-                        //burkaa - comment out for now
+                        //comment out for now - burkaa
 			//include(WEB_PATH . 'campus/directory/majors.php');
 			$this->majors =& $majors;
 		}
@@ -1155,11 +1153,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 	**/
 	function rebuild_menu_data()
 	{
-                //burkaa - carleton to luther
 		$dir = new directory_service('ldap_luther');
 		
 		// Get the full set of possible academic depts (not all have people)
-                //burkaa - carleton to luther
 		$dir->set_search_params('ldap_luther',array('base_dn' => 'dc=luther,dc=edu'));
 		$dir->search_by_filter('(businessCategory=ACADEMIC)', array('ou','description'));
 		$result = $dir->get_records();
@@ -1168,7 +1164,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule
 		asort($acad_all);
 		$acad_all_by_name = array_flip($acad_all);
 
-                //burkaa - carleton to luther
 		$dir->set_search_params('ldap_luther',array('base_dn' => 'ou=people,dc=luther,dc=edu'));
 		
 		// Academic Departments
