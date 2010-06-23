@@ -125,7 +125,7 @@ class HomecomingRegistrationTwoForm extends FormStep
 	{
 		$f_name = $this->controller->get('current_first_name');
 		$first_page_amout = $this->controller->get('amount');
-		die('The amount= ' .$first_page_amout. 'FirstName= '.$f_name);
+		die('The amount= ' .$first_page_amout. '  FirstName= '.$f_name);
 		
 		if( !$this->controller->get('amount'))
 		{
