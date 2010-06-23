@@ -361,15 +361,15 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                     echo '</ul>';
                 }
                 if (isset($data['officebldg'])) {
-                    /*echo '<ul class="personCampusAddress">';
+                    echo '<ul class="personCampusAddress">';
                     foreach ($data['officebldg'] as $loc)
                         echo '<li class="personOffice">'.$loc.'</li>';
                     // studentPostOffice may not exist in ldap for faculty or staff at luther - burkaa
                     if (isset($data['studentPostOffice']))
                         foreach ($data['studentPostOffice'] as $loc)
                             echo '<li class="personMailstop">Mail stop: '.$loc.'</li>';
-                    echo '</ul>';*/
-                    echo '<li class="personOffice">'.$data['officebldg'][0].'</li>';
+                    echo '</ul>';
+                    //echo '<li class="personOffice">'.$data['officebldg'][0].'</li>';
 
                 }
                 if (isset($data['homepostaladdress']) && !isset($data['carlhidepersonalinfo'])) {
