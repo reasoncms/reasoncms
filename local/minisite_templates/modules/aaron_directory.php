@@ -241,10 +241,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $this->form->remove_element('building');
             $this->form->remove_element('room');
             $this->form->remove_element('student_comment');
-            $this->form->remove_element('major');
-            $this->form->remove_element('year');
+            //$this->form->remove_element('major');
+            //$this->form->remove_element('year');
             $this->form->remove_element('faculty_comment');
-            $this->form->remove_element('pictures');
+            //$this->form->remove_element('pictures');
             $this->form->remove_element('display_as');
         }
 
