@@ -344,6 +344,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
             // If this is faculty or staff
             if ($data['edupersonprimaryaffiliation'][0] == 'Faculty' || $data['edupersonprimaryaffiliation'][0] == 'Staff') {
+                echo "Staff or Fac YOYO";
                 if (isset($data['title'])) {
                     echo '<ul class="personPosition">';
                     foreach ($data['title'] as $title)
