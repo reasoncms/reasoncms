@@ -17,7 +17,6 @@ class HomecomingRegistrationConfirmation extends FormStep
 	function on_first_time()
 	{
 		$this->show_form = false;
-		pray($_REQUEST);
 		$blurb = $this->get_thank_you_blurb();
 		echo '<div id="thankYouBlurb">' . $blurb . '</div>';
 		
