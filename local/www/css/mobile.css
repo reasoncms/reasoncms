@@ -18,13 +18,13 @@ div#myBanner {
 
 div#luther_search {
     position: relative;
-    float: right;
 }
 
 div#absolute_search {
     z-index: 1;
     position: absolute;
     top: 0;
+    right: 0;
 }
 
 div#content {
