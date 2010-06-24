@@ -16,8 +16,8 @@ class MobileDirectionsModule extends DefaultMinisiteModule {
         echo '<meta http-equiv="content-type" content="text/html; charset=utf-8"/>';
         echo '<meta name = "viewport" content = "width = device-width, height = device-height" />';
         echo '<title>Directions to Luther College</title>';
-        //echo '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAA7xtXgBQ5h5ZMJwpZo5P3IxReGjaPQmjUbZCiiQGpR0ykuFwG0RRv9w8afWTI_k0B8Dgc7TVg2bQ7og"></script>';
-        echo '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAA19OJ4bGvkrXOC6rnLil7NBSAyM1u6fbi_hQ4-2bmFQwsz5cTxBStrHHccc-7QU5bAKBVhU5mqEw4Sg"></script>';
+        echo '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAA7xtXgBQ5h5ZMJwpZo5P3IxReGjaPQmjUbZCiiQGpR0ykuFwG0RRv9w8afWTI_k0B8Dgc7TVg2bQ7og"></script>';
+        //echo '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAA19OJ4bGvkrXOC6rnLil7NBSAyM1u6fbi_hQ4-2bmFQwsz5cTxBStrHHccc-7QU5bAKBVhU5mqEw4Sg"></script>';
         echo '<style type="text/css">';
         echo 'body {';
         echo 'font-family: Verdana, Arial, sans serif;';
