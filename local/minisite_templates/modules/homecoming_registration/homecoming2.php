@@ -171,8 +171,6 @@ class HomecomingRegistrationTwoForm extends FormStep
 	
 	function pre_show_form()
 	{
-	pray($_POST);
-	pray($_REQUEST);
 		echo '<div id="homecomingForm" class="pageTwo">'."\n";
 		if( $this->is_in_testing_mode )
 		{
