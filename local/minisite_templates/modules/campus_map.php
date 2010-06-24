@@ -119,11 +119,11 @@ class CampusMapModule extends DefaultMinisiteModule {
             <img border="0" src="/images/luther2010/map/redone_luther_map.gif" width="100%" alt=""></img>
         
             <span style="font-size: 12px; padding:0; margin:0;">Luther College Wi-Fi Map <a id="link" onclick="show('wifi');">Show</a> <a id="link" onclick="hide('wifi');">Hide</a></span>
-            <p></p>
             <div id="wifi">
                 <img class="cornerimage" border="0" src="/images/luther2010/map/wifi_map_over.gif" width="100%"></img>
                 <p style="font-size: 12px; padding:0; margin:0;"><span style="color: green;">(Green) 802.11G</span> - Speeds up to 54Mbps</p>
                 <p style="font-size: 12px; padding:0; margin:0;"><span style="color: purple;">(Purple) 802.11N</span> - Speeds up to 300Mbps</p>
+                <p></p>
             </div>
             <div id="olin">
                 <img class="cornerimage" border="0" src="/images/luther2010/map/olin_map_over.gif" width="100%"></img>
