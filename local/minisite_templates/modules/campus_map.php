@@ -149,7 +149,7 @@ class CampusMapModule extends DefaultMinisiteModule {
                 <p>Departments: Biology, Chemistry</p>
                 <p>Built to environmentally sound LEED standards, Sampson Hoffland is the college's newest building. A special emphasis was placed on creating space for student/faculty research.</p>
             </div>
-        
+            <p></p>
         </div>
     </div>
 </body>
