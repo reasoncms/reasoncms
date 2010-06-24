@@ -122,6 +122,8 @@ class CampusMapModule extends DefaultMinisiteModule {
             <p></p>
             <div id="wifi">
                 <img class="cornerimage" border="0" src="/images/luther2010/map/wifi_map_over.gif" width="100%"></img>
+                <p><span style="color: green;">(Green) 802.11G</span> - Speeds up to 54Mbps</p>
+                <p><span style="color: purple;">(Purple) 802.11N</span> - Speeds up to 300Mbps</p>
             </div>
             <div id="olin">
                 <img class="cornerimage" border="0" src="/images/luther2010/map/olin_map_over.gif" width="100%"></img>
