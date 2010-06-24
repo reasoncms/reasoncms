@@ -427,6 +427,24 @@ function luther_google_search()
                         echo '</form>'."\n";
 }
 
+function luther_mobile_google_search()
+{
+                        echo '<form id="search" action="http://find.luther.edu/search" method="get" name="gs">'."\n";
+                        echo '<input type="text" value="" maxlength="256" size="15" name="q" />'."\n";
+                        echo '<input id="searchButton" class="button" type="submit" value="Search" name="btnG" />'."\n";
+                        echo '<input type="hidden" value="0" name="entqr"/>'."\n";
+                        echo '<input type="hidden" value="xml_no_dtd" name="output"/>'."\n";
+                        echo '<input type="hidden" value="date:D:L:d1" name="sort"/>'."\n";
+                        echo '<input type="hidden" value="public_frontend" name="client"/>'."\n";
+                        echo '<input type="hidden" value="1" name="ud"/>'."\n";
+                        echo '<input type="hidden" value="UTF-8" name="oe"/>'."\n";
+                        echo '<input type="hidden" value="UTF-8" name="ie"/>'."\n";
+                        echo '<input type="hidden" value="public_frontend" name="proxystylesheet"/>'."\n";
+                        echo '<input type="hidden" value="public_collection" name="site"/>'."\n";
+                        echo '<input type="hidden" value="%3CHOME/%3E" name="proxycustom"/>'."\n";
+                        echo '</form>'."\n";
+}
+
 function admissions_main_navigation()
 {
         echo '<div class="main-nav">'."\n";
