@@ -263,10 +263,6 @@ class HomecomingRegistrationOneForm extends FormStep
 			return 'HomecomingRegistrationTwoForm';
 		}
 	}
-	function run_error_checks()
-	{
-		die($this->get_value('p_amount'));
-	}
 }
 
 ?>
