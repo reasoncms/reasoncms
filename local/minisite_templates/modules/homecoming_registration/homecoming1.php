@@ -14,7 +14,7 @@ class HomecomingRegistrationOneForm extends FormStep
 	var $error;
 	
 	var $elements = array(
-		'p_amount' => 'cloaked',
+		'amount' => 'cloaked',
 		'your_information_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Your Information</h3>',
@@ -252,7 +252,7 @@ class HomecomingRegistrationOneForm extends FormStep
 	  	{
 			$amount = $amount + ($dinner_tix_5 * 10);
 		}
-		$this->set_value('p_amount', $amount);
+		$this->set_value('amount', $amount);
 		
 		$tix = $program_tix + $dinner_tix_50_to_25 + $dinner_tix_20_to_10 + $dinner_tix_5;
 		//die('The amount = '.$amount.'::The number of tix is/are '.$tix);
