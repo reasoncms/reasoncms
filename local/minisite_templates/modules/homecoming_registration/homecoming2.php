@@ -122,14 +122,10 @@ class HomecomingRegistrationTwoForm extends FormStep
 										);
 	// style up the form and add comments et al
 	function on_every_time()
-	{
-		$f_name = $this->controller->get('current_first_name');
-		$first_page_amout = $this->controller->get('p_amount');
-		die('The amount= ' .$first_page_amout. '  FirstName= '.$f_name);
-		
+	{	
 		if( !$this->controller->get('amount'))
 		{
-			echo '<div id="giftFormSetupError">You can\'t complete this step without having set up a gift; please go back to <a href="?_step=GiftPageOneForm">Gift Info</a> and provide a gift amount.</div>';
+			echo '<div id="homecomingSetupError">Sorry. There was a problem setting up payment for your form. Please return to <a href="?_step=HomecomingRegistrationOneForm">Homecoming Registration</a> and try again.</div>';
 			$this->show_form = false;
 			return;
 		}
