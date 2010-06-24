@@ -246,8 +246,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
 */
 		'mobile_home' => array(
-			'banner_xtra' => 'nav_search_logo',
-			//'banner_xtra' => '',
+			'banner_xtra' => '',
 			'post_banner' => '',
 			'main_head' => '',
             'main' => 'content',
