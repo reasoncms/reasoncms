@@ -27,6 +27,14 @@ div#absolute_search {
     right: 2px;
 }
 
+#searchButton {
+    padding: 0; margin: 0;
+}
+
+#search {
+    padding: 0; margin: 0;
+}
+
 div#content {
     color:#0b2345;
     padding-left: 8px;
