@@ -58,7 +58,7 @@ class MobileTemplate extends MinisiteTemplate
 		luther_google_search();
                 echo '</div>';
 		echo '</div>';
-		echo '<a href="http://m.luther.edu/"><img src="/images/luther2010/mobile/luther_mobile_header_beta.png" alt="Home" /></a>';
+		echo '<a href="http://m.luther.edu/"><img src="/images/luther2010/mobile/luther_mobile_header_beta.png" alt="Home" width="145px" /></a>';
 		echo '</div>'."\n";
 		
 		echo '<div id="wrapper">'."\n";
