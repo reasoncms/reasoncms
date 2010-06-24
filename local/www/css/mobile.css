@@ -23,8 +23,8 @@ div#luther_search {
 div#absolute_search {
     z-index: 1;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 15px;
+    right: 2px;
 }
 
 div#content {
