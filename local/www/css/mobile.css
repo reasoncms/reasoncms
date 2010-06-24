@@ -27,6 +27,7 @@ div#absolute_search {
     right: 2px;
 }
 
+/* these next two (searchButton and search) may not do anything */
 #searchButton {
     padding: 0; margin: 0;
 }
