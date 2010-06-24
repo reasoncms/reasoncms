@@ -24,13 +24,13 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         echo '<a accesskey="4" href="http://reasondev.luther.edu/mobile/directions/">Directions</a>';
         echo '</li>';
         echo '<li id="menu-directory">';
-        echo '<a accesskey="5" href="http://www.luther.edu/mobile/directory/">Directory</a>';
+        echo '<a accesskey="5" href="/mobile/directory/">Directory</a>';
         echo '</li>';
         //echo '<li id="menu-find">';
         //echo '<a accesskey="7" href="https://find.luther.edu/">Find</a>';
         //echo '</li>';
         echo '<li id="menu-labstat">';
-        echo '<a accesskey="6" href="http://reasondev.luther.edu/mobile/labs/">Lab Availability</a>';
+        echo '<a accesskey="6" href="labs/">Lab Availability</a>';
         echo '</li>';
         echo '<li id="menu-library_search">';
         echo '<a accesskey="7" href="http://reasondev.luther.edu/mobile/librarysearch/">Library Search</a>';
