@@ -87,7 +87,7 @@ function imagemagick_available($utility='mogrify')
  */
 function _imagemagick_resize($path, $width, $height, $sharpen)
 {
-    if (defined(IMAGEMAGICK_PATH)) {
+    if (defined('IMAGEMAGICK_PATH')) {
 		$exec = (substr(IMAGEMAGICK_PATH, -1) == DIRECTORY_SEPARATOR)
 			? IMAGEMAGICK_PATH.'mogrify'
 			: IMAGEMAGICK_PATH.DIRECTORY_SEPARATOR."mogrify";
