@@ -146,7 +146,7 @@ class HomecomingRegistrationConfirmation extends FormStep
 	
 	function email_alumni($text)
 	{
-		$mail = new Email('smitst01@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Homecoming Registration '.date('mdY H:i:s'),strip_tags($text), $text);
+		$mail = new Email('alumni@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Homecoming Registration '.date('mdY H:i:s'),strip_tags($text), $text);
 		$mail->send();
 	}
 	function email_registrant($text)
