@@ -108,7 +108,16 @@ class HomecomingRegistrationOneForm extends FormStep
 		),
 		'attend_dinner_50_to_25' => 'text',
 		'attend_dinner_20_to_10' => 'text',
-		'attend_dinner_5' => 'text',	
+		'attend_dinner_5' => 'text',
+		'ride_in_parade' => array(
+			'type' => 'radio_inline_no_sort',
+			'display_name' => 'Will you ride in the parade?',
+			'comments' => 'class of 1960 only',
+			'options' => array(
+				'Yes'=>'Yes',
+				'No'=>'No',
+			),
+		),
 	);
 	
 	var $required = array(
