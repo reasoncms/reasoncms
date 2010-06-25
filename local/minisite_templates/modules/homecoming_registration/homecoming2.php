@@ -240,6 +240,10 @@ if ($this->controller->get('installment_type') == 'Onetime')
 		{
 			$txt .= '<li><strong>Attend 5 Year Reunion Reception:</strong> '.$this->controller->get('attend_dinner_5').'</li>'."\n";
 		}
+		if ($this->controller->get('ride_in_parade'))
+		{
+			$txt .= '<li><strong>Ride in the Parade:</strong> '.$this->controller->get('ride_in_parade').'</li>'."\n";
+		}
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
 		$this->set_value('confirmation_text', $txt); 
