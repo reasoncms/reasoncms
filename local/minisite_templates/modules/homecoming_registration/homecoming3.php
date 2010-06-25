@@ -40,6 +40,7 @@ class HomecomingRegistrationConfirmation extends FormStep
 		$attend_dinner_50_to_25 = $this->controller->get('attend_dinner_50_to_25');
 		$attend_dinner_20_to_10 = $this->controller->get('attend_dinner_20_to_10');
 		$attend_dinner_5 = $this->controller->get('attend_dinner_5');
+		$ride_in_parade = $this->controller->get('ride_in_parade'); 
 		
 		$txt = '<div id="reviewHomecomingRegistration">'."\n";			
 		$txt .= '<ul>'."\n";
@@ -89,6 +90,10 @@ class HomecomingRegistrationConfirmation extends FormStep
 		{
 			$txt .= '<li><strong>Attend 5 Year Reunion Reception:</strong> '.$attend_dinner_5.'</li>'."\n";
 		}
+		if ($this->controller->get('ride_in_parade'))
+		{
+			$txt .= '<li><strong>Ride in the Parade:</strong> '.$ride_in_parade.'</li>'."\n";
+		}
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
 /*
@@ -124,7 +129,8 @@ class HomecomingRegistrationConfirmation extends FormStep
 		attend_luncheon=".((!empty($attend_luncheon)) ? addslashes($attend_luncheon) : 'NULL').",
 		attend_dinner_50_to_25=".((!empty($attend_dinner_50_to_25)) ? addslashes($attend_dinner_50_to_25) : 'NULL').",
 		attend_dinner_20_to_10=".((!empty($attend_dinner_20_to_10)) ? addslashes($attend_dinner_20_to_10) : 'NULL').",
-		attend_dinner_5=".((!empty($attend_dinner_5)) ? addslashes($attend_dinner_5) : 'NULL')." ";
+		attend_dinner_5=".((!empty($attend_dinner_5)) ? addslashes($attend_dinner_5) : 'NULL').",;
+		ride_in_parade=".((!empty($ride_in_parade)) ? addslashes($ride_in_parade) : 'NULL')." ";
 		
 		
 		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) ){
