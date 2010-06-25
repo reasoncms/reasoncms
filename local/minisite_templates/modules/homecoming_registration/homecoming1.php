@@ -204,16 +204,7 @@ class HomecomingRegistrationOneForm extends FormStep
 
 					),
 				)
-			);
-			
-/*
-		foreach($this->element_group_info as $name => $info)
-		{
-			$this->add_element_group( $info['type'], $name, $info['elements'], $info['args']);
-		}
-
-*/
-		
+			);				
 	}
 
 	function pre_show_form()
@@ -254,8 +245,6 @@ class HomecomingRegistrationOneForm extends FormStep
 		}
 		$this->set_value('amount', $amount);
 		
-		$tix = $program_tix + $dinner_tix_50_to_25 + $dinner_tix_20_to_10 + $dinner_tix_5;
-		//die('The amount = '.$amount.'::The number of tix is/are '.$tix);
 		if ($amount == 0)
 		{
 			return 'HomecomingRegistrationConfirmation';
