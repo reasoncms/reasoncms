@@ -17,7 +17,7 @@ class HomecomingRegistrationTwoForm extends FormStep
 	var $error;
 	var $expense_budget_number = '10-202-60201-51331';
 	var $revenue_budget_number = '10-000-60201-44906-UHOMP';
-	var $transaction_comment = 'Homecoming Registration';
+	var $transaction_comment = 'Homecoming Reg';
 	var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
 	
 	// the usual disco member data
