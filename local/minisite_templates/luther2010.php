@@ -18,7 +18,48 @@ class LutherTemplate2010 extends MinisiteTemplate
 {
 	// reorder sections so that navigation is first instead of last
 	var $sections = array('navigation'=>'show_navbar','content'=>'show_main_content','related'=>'show_sidebar');
+	var $doctype = '<!DOCTYPE html">';
 	public $luther_add_this_complete = false;
+
+        function start_page() 
+        {
+
+                $this->get_title();
+
+                // start page
+                echo $this->get_doctype()."\n";
+		echo '<html lang="en">'."\n";
+                echo '<head>'."\n";
+                //echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' . "\n";
+
+                $this->do_org_head_items();
+
+                echo $this->head_items->get_head_item_markup();
+
+                if($this->cur_page->get_value('extra_head_content'))
+                {
+                        echo "\n".$this->cur_page->get_value('extra_head_content')."\n";
+                }
+
+                echo '</head>'."\n";
+
+                echo $this->create_body_tag();
+                echo '<div class="hide"><a href="#content" class="hide">Skip Navigation</a></div>'."\n";
+                if ($this->has_content( 'pre_bluebar' ))
+                        $this->run_section( 'pre_bluebar' );
+                //$this->textonly_toggle( 'hide_link' );
+                if (empty($this->textonly))
+                {
+                        $this->do_org_navigation();
+                // You are here bar
+                        $this->you_are_here();
+                }
+                else
+                {
+                        $this->do_org_navigation_textonly();
+                }
+        } 
+
 
 	function show_banner_tableless()
         {
@@ -45,8 +86,15 @@ class LutherTemplate2010 extends MinisiteTemplate
         }
 
 	function show_navbar_tableless()
+	// left column navigation
         {
-		echo '<div class="span-24 append-1 ">'."\n";
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
+		{
+			$this->home_topimage_quote();
+			return;
+		}
+
+		echo '<div class="span-24">'."\n";
         	echo '<div id="nav">'."\n";
                 // Navigation area
                 echo '<div id="navigation">'."\n";
@@ -83,18 +131,14 @@ class LutherTemplate2010 extends MinisiteTemplate
                 }
 
 
-		echo '</div class="span-24 append-1 ">'."\n";
+		echo '</div class="span-24">'."\n";
 
         } 
 
 	function show_sidebar_tableless()
+	// right column
         {
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_pageLC')
-		{
-			return;
-		}
-
-		echo '<div class="span-13 prepend-2 last">'."\n";
+		echo '<div class="span-24 last">'."\n";
                 if($this->has_content( 'pre_sidebar' ))
                 {
                         echo '<div id="preSidebar">'."\n";
@@ -113,12 +157,9 @@ class LutherTemplate2010 extends MinisiteTemplate
                         $this->run_section( 'post_sidebar' );
                         echo '</div>'."\n";
                 }
-		echo '</div> <!--  class="span-13 prepend-2 last" -->'."\n";
-		if ($this->cur_page->get_value( 'custom_page' ) != 'luther_pageLC')
-		{
-			echo '</div>'."\n";
-			echo '</div class="span-50 prepend-1 last">'."\n";
-		}
+		echo '</div> <!--  class="span-24 last" -->'."\n";
+		echo '</div>'."\n";
+		echo '</div class="span-48 last">'."\n";
 
         }
 
@@ -156,7 +197,13 @@ class LutherTemplate2010 extends MinisiteTemplate
 
 	function show_main_content_sections()
         {
-		echo '<div class="span-50 prepend-1 last">'."\n";
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
+		{
+			$this->home_events_news_spotlight();
+			return;
+		}
+
+		echo '<div class="span-48 last">'."\n";
 
                 $this->run_section( 'imagetop' );
 		$this->luther_breadcrumbs();
@@ -172,17 +219,10 @@ class LutherTemplate2010 extends MinisiteTemplate
                         echo '</div>'."\n";
                 }
 
-		if ($this->has_related_section() && $this->cur_page->get_value( 'custom_page' ) != 'luther_pageLC' && $this->cur_page->get_value( 'custom_page' ) != 'spotlight_archive' && $this->cur_page->get_value( 'custom_page' ) != 'luther_publication')
+		if ($this->cur_page->get_value( 'custom_page' ) != 'spotlight_archive' && $this->cur_page->get_value( 'custom_page' ) != 'luther_publication')
 		{
-			echo '<div class="span-33 append-1">'."\n";
+			echo '<div class="span-48">'."\n";
 		}
-		// in two column layout place images just before the main content
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_pageLC' && $this->has_content( 'sidebar' ))
-                {
-               //         echo '<div id="sidebar">'."\n";
-                        $this->run_section( 'sidebar' );
-                //        echo '</div>'."\n";
-                }
 
                 if ($this->has_content( 'main' ))
                 {
@@ -196,17 +236,13 @@ class LutherTemplate2010 extends MinisiteTemplate
                 }
                 if ($this->has_content( 'main_post' ))
                 {
-			if ($this->cur_page->get_value( 'custom_page' ) == 'luther_primaryLRC')
-				{
-					echo '<p><b>Luther College News</b></p>'."\n";
-				}
-                echo '<div class="contentPost">'."\n";
-				if (!$this->luther_add_this_complete)
-				{
-					$this->luther_add_this();
-				}
-                $this->run_section( 'main_post' );
-                echo '</div>'."\n";
+               		echo '<div class="contentPost">'."\n";
+			if (!$this->luther_add_this_complete)
+			{
+				$this->luther_add_this();
+			}
+                	$this->run_section( 'main_post' );
+                	echo '</div>'."\n";
               	}
             if ($this->has_content( 'content_blurb' ))
                 {
@@ -224,11 +260,6 @@ class LutherTemplate2010 extends MinisiteTemplate
 					$this->run_section( 'norse_calendar' );
                 }
 
-
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_pageLC')
-		{
-			echo '</div> <!-- class="span..."-->'."\n";
-		}
 		// rough-in right column if there is no content
 		if ($this->has_related_section() == false) {
 			$this->show_sidebar_tableless();	
@@ -301,6 +332,45 @@ class LutherTemplate2010 extends MinisiteTemplate
                 return false;
         }
 
+	function home_topimage_quote()
+	// contains top image carousel and text blurb on the home page
+	{
+
+		echo '<div class="span-72">'."\n";
+                $this->run_section( 'navigation' );
+		echo '</div class="span-72">'."\n";
+
+		echo '<div class="span-24 last">'."\n";
+                $this->run_section( 'sub_nav' );
+		echo '</div class="span-24 last">'."\n";
+		
+	}
+
+	function home_events_news_spotlight()
+	// contains events, news, and spotlight in fold of home page
+	{
+
+		echo '<div class="span-24">'."\n";
+                $this->run_section( 'main_head');
+		echo '</div class="span-24">'."\n";
+
+		echo '<div class="span-24">'."\n";
+                $this->run_section( 'main');
+		echo '</div class="span-24">'."\n";
+		
+		echo '<div class="span-48 last">'."\n";
+                $this->run_section( 'main_post');
+		echo '</div class="span-48 last">'."\n";
+	}
+
+	function home_bannerads()
+	// contains bottom 4 bannerads on home page
+	{
+		echo '<div class="span-96 last">'."\n";
+                $this->run_section( 'sidebar');
+		echo '</div class="span-96 last">'."\n";
+
+	}
 
 }
 
