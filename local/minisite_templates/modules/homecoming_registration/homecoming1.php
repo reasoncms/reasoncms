@@ -114,8 +114,8 @@ class HomecomingRegistrationOneForm extends FormStep
 			'display_name' => 'Will you ride in the parade?',
 			'comments' => 'class of 1960 only',
 			'options' => array(
-				'Yes'=>'Yes',
-				'No'=>'No',
+				'yes' => 'Yes',
+				'no' => 'No',
 			),
 		),
 	);
