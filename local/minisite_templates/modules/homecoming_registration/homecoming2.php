@@ -7,17 +7,14 @@
 //    Work on the second page of the homecoming registration form
 //
 ////////////////////////////////////////////////////////////////////////////////
-#####test
-##################include_once(WEB_PATH.'stock/giftclass.php');
+
 include_once(WEB_PATH.'stock/homecomingPFclass.php');
-################## reason_include_once( 'classes/repeat_transaction_helper.php' );
 
 class HomecomingRegistrationTwoForm extends FormStep
 {
 	var $_log_errors = true;
 	var $no_session = array( 'credit_card_number' );
 	var $error;
-	//var $budget_number = '10-0000-0000-1307';
 	var $expense_budget_number = '10-202-60201-51331';
 	var $revenue_budget_number = '10-000-60201-44906-UHOMP';
 	var $transaction_comment = 'Homecoming Registration';
@@ -113,7 +110,6 @@ class HomecomingRegistrationTwoForm extends FormStep
 		'previous_step'=>'Make Changes To Your Weekend',
 		'next_step'=>'Submit Your Gift For Processing',
 	);
-#########	var $helper;
 	var $date_format = 'j F Y';
 	var $display_name = 'Homecoming Review / Card Info';
 	var $error_header_text = 'Please check your form.';
@@ -131,14 +127,7 @@ class HomecomingRegistrationTwoForm extends FormStep
 		}
 
 		$this->set_value('payment_amount', '$'.number_format($this->controller->get('amount'),2,'.',','));
-/*################
-		if($this->controller->get('installment_type') == 'Onetime')
-		{
-			$this->remove_element('installment_notification_note_1');
-			$this->remove_element('installment_notification_note_2');
-			$this->remove_element('installment_notification');
-		}
-*/
+
 		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
 		{
 			$this->is_in_testing_mode = true;
@@ -155,17 +144,9 @@ class HomecomingRegistrationTwoForm extends FormStep
 	{
 		if ($this->show_form)
 		{
-####################			$this->instantiate_helper();
 			$text = $this->get_brief_review_text();
-/*##################
-			if(!$this->_has_errors() && $this->controller->get('installment_type') != 'Onetime')
-			{
-				$text .= build_gift_review_detail_output( $this->helper, $this->date_format );
-			}
-*/
 			$text .= '<p class="changeRegistrationButton"><a href="?_step=HomecomingRegistrationOneForm">Change Registration Information</a></p>'."\n";
 			$this->change_element_type( 'review_note', 'comment', array('text'=>$text) );
-
 		}
 	}
 	
@@ -278,16 +259,6 @@ if ($this->controller->get('installment_type') == 'Onetime')
 		if( !$this->_has_errors() )
 		{
 			$pf = new homecomingPF;
-/*#####################
-if( $this->controller->get('installment_type') == 'Onetime')
-			{
-				$immediate_amount = $this->controller->get('gift_amount');
-			}
-			else
-			{
-				$immediate_amount = 0;
-			}
-*/
 			$expiration_mm = str_pad($this->get_value('credit_card_expiration_month'), 2, '0', STR_PAD_LEFT);
 			$expiration_yy = substr($this->get_value('credit_card_expiration_year'), 2, 2);
 			$expiration_mmyy = $expiration_mm.$expiration_yy;
@@ -327,50 +298,12 @@ if( $this->controller->get('installment_type') == 'Onetime')
 				$this->controller->get('amount'),
 				$this->get_value('credit_card_number'),
 				$expiration_mmyy,
-				//$this->budget_number,
 				$this->revenue_budget_number,
-//				$this->income_budget_number,
 				$this->get_value('credit_card_name'),
 				$this->expense_budget_number,
 				$this->transaction_comment
 			);
 			
-#############			$this->instantiate_helper();
-#############			$this->helper->build_transactions_array();
-			
-/*###################
-			if($this->controller->get('installment_type') != 'Onetime')
-			{
-				// A value of zero for $installment_quantity indicates no end date.
-				if($this->controller->get('installment_end_date') == 'indefinite')
-				{
-					$installment_quantity = 0;
-				}
-				else
-				{
-					$installment_quantity = $this->helper->get_repeat_quantity();
-				}
-				
-				// PayPeriod is one of WEEK, BIWK, SMMO, FRWK, MONT, QTER, SMYR, QTER.
-				$repeat_types = array('Monthly'=>'MONT','Quarterly'=>'QTER','Yearly'=>'YEAR');
-				$pf_repeat_type = $repeat_types[$this->controller->get('installment_type')];
-				if($this->get_value('installment_notification') == 'yes')
-				{
-					$email = $this->controller->get('email');
-				}
-				else
-				{
-					$email = '';
-				}
-				$pf->set_recur(
-					$this->controller->get('gift_amount'),
-					date('mdY',strtotime($this->controller->get('installment_start_date'))),
-					$installment_quantity,
-					$pf_repeat_type,
-					$email
-				);
-			}
-*/
 			/* THIS IS WHERE THE TRANSACTION TAKES PLACE */
 			// Test mode: $result = $pf->transact('test');
 			// Live mode: $result = $pf->transact();
@@ -401,7 +334,6 @@ if( $this->controller->get('installment_type') == 'Onetime')
 				$this->set_value( 'result_authcode', $result['AUTHCODE'] );
 				
 				$confirm_text = $this->get_confirmation_text();
-###########			$confirm_text .= build_gift_review_detail_output( $this->helper, $this->date_format );
 				
 				$this->set_value( 'confirmation_text', $confirm_text );
 				$pf->set_confirmation_text( $confirm_text );
@@ -450,124 +382,6 @@ if( $this->controller->get('installment_type') == 'Onetime')
 		return $url;
 	}
 }
-
-/*######################
-function build_gift_transaction_helper( $params_array )
-{
-	$helper = new repeatTransactionHelper();
-		
-	if($params_array['installment_type'] == 'Onetime')
-	{
-		$helper->set_single_time_amount( $params_array['gift_amount'] );
-		$helper->set_single_time_date( date('Y-m-d') );
-	} else {
-		$helper->set_repeat_amount( $params_array['gift_amount'] );
-		$helper->set_repeat_type( $params_array['installment_type'] );
-		$helper->set_repeat_start_date( $params_array['installment_start_date'] );
-		$helper->set_end_date( $params_array['installment_end_date'] );
-	}
-	return $helper;
-}
-
-function build_gift_review_detail_output($helper, $date_format = 'j F Y')
-{
-		// A yearly totals disclose link is inserted here by JS
-		$txt = '<div id="reviewGiftDetails">'."\n";
-		$txt .= '<h3 id="yearlyTotalsHeading">Yearly Totals for This Gift</h3>'."\n\n";
-		$txt .= '<h4>Per calendar year:</h4>';
-		$txt .= '<table cellpadding="0" cellspacing="0" border="0" summary="Total amounts given, by calendar year">'."\n";
-		$txt .= '<tr><th class="col1">Year</th><th>Amount</th></tr>'."\n";
-		$cy_gifts = $helper->get_calendar_year_totals();
-		if( $helper->repeats_indefinitely() )
-		{
-			$break = false;
-			$previous_amount_text = '';
-			$i = 0;
-			foreach($cy_gifts as $year=>$amount)
-			{
-				$amount_text = number_format( $amount*.01, 2, '.', ',' );
-				if( empty($previous_amount_text) || $previous_amount_text != $amount_text )
-				{
-					$year_text = $year;
-					$amount_post = '';
-				}
-				else
-				{
-					$year_text = 'Subsequently';
-					$amount_post = ' per calendar year';
-					$break = true;
-				}
-				$txt .= '<tr><td class="col1">'.$year_text.'</td><td>$'.$amount_text.$amount_post.'</td></tr>'."\n";
-				if($break || $i > 500 ) // second part is to avoid any possibility of an infinite loop
-				{
-					break;
-				}
-				$previous_amount_text = $amount_text;
-				$i++;
-			}
-		}
-		else // definite gift
-		{
-			foreach($cy_gifts as $year=>$amount)
-			{
-				$txt .= '<tr><td class="col1">'.$year.'</td><td>$'. number_format( $amount*.01, 2, '.', ',' ) .'</td></tr>'."\n";
-			}
-		}
-		$txt .= '</table>'."\n";
-		$txt .= '<h4>Per Carleton fiscal year:</h4>';
-		$txt .= '<table cellpadding="0" cellspacing="0" border="0" summary="Total amounts given, by Carleton fiscal year">'."\n";
-		$txt .= '<tr><th class="col1">Year</th><th>Amount</th></tr>'."\n";
-		$fy_gifts = $helper->get_fiscal_year_totals();
-		
-		if( $helper->repeats_indefinitely() )
-		{
-			$break = false;
-			$previous_amount_text = '';
-			$i = 0;
-			foreach($fy_gifts as $start_year=>$amount)
-			{
-				$amount_text = number_format( $amount*.01, 2, '.', ',' );
-				if( empty($previous_amount_text) || $previous_amount_text != $amount_text )
-				{
-					$year_text = 'July ';
-					$year_text .= $start_year;
-					$year_text .= ' &#8211; June ';
-					$year_text .= $start_year + 1;
-					$amount_post = '';
-				}
-				else
-				{
-					$year_text = 'Subsequently';
-					$amount_post = ' per Carleton fiscal year';
-					$break = true;
-				}
-				$txt .= '<tr><td class="col1">'.$year_text.'</td><td>$'.$amount_text.$amount_post.'</td></tr>'."\n";
-				if($break || $i > 500 ) // second part is to avoid any possibility of an infinite loop
-				{
-					break;
-				}
-				$previous_amount_text = $amount_text;
-				$i++;
-			}
-		}
-		else
-		{
-			foreach($fy_gifts as $start_year=>$amount)
-			{
-				$txt .= '<tr><td class="col1">';
-				$txt .= 'July ';
-				$txt .= $start_year;
-				$txt .= ' Ñ June ';
-				$txt .= $start_year + 1;
-				$txt .= '</td><td>$'. number_format( $amount*.01, 2, '.', ',' ) .'</td></tr>'."\n";
-			}
-		}
-		$txt .= '</table>'."\n";
-		$txt .= '<p class="givingTotalsDisclaimer">Amounts listed above reflect <em>this gift only</em>, not your overall giving history. Please contact us for giving history information.</p>';
-		$txt .= '</div>'."\n";
-		return $txt;
-}
-*/
 
 function obscure_credit_card_number ( $cc_num )
 {
