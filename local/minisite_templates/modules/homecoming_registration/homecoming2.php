@@ -363,7 +363,7 @@ if ($this->controller->get('installment_type') == 'Onetime')
 				$mail = new Email($this->controller->get('e-mail'),'alumni@luther.edu','alumni@luther.edu','Luther College Homecoming Registration Confirmation',strip_tags($confirm_text_with_blurb),$confirm_text_with_blurb);
 				$mail->send();
 				
-				$mail2 = new Email('smitst01@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Homecoming Registration '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
+				$mail2 = new Email('alumni@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Homecoming Registration '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
 				$mail2->send();
 			}
 		}
