@@ -92,24 +92,16 @@ ol.icon-menu li a {
     color: #0b2345;
 }
 li#menu-home {background-image:url('/images/luther2010/mobile/full_site_mobile_icon.png');}
-
 li#menu-directions {background-image:url('/images/luther2010/mobile/directions_mobile_icon.png');}
-
 li#menu-mail {background-image:url('/images/luther2010/mobile/norse_mail_mobile_icon.png');}
-
 li#menu-map {background-image:url('/images/luther2010/mobile/campus_map_mobile_icon.png');}
-
 li#menu-directory {background-image:url('/images/luther2010/mobile/find_mobile_icon.png');}
-
 li#menu-cafcam {background-image:url('/images/luther2010/mobile/caf_cam_mobile_icon.png');}
-
 li#menu-labstat {background-image:url('/images/luther2010/mobile/lab_availability_mobile_icon.png');}
-
 li#menu-library_search {background-image:url('/images/luther2010/mobile/library_search_mobile_icon.png');}
-
 li#menu-news {background-image:url('/images/luther2010/mobile/blue_news_mobile_icon.png');}
-
 li#menu-find {background-image:url('/images/luther2010/mobile/find_mobile_icon.png');}
+li#menu-find {background-image:url('/images/luther2010/mobile/calendar_mobile_icon.png');}
 
 
 /* NEWS STYLE
