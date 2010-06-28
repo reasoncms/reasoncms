@@ -176,6 +176,9 @@ $GLOBALS['_reason_page_types_local'] = array(
             ),
          ),
         //-----------------------Steve's Homepage End-----------------
+		'lfw_registration' => array(
+        	'main_post' => 'lfw_form',
+        ),
 		'luther_news_page' => array(
 			'main_post' => 'publication',
             		'sub_nav_3' => 'quote',
