@@ -17,6 +17,9 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         //echo '<li id="menu-cafcam">';
         //echo '<a accesskey="3" href="https://reasondev.luther.edu/mobile/comingsoon/">Caf Cam</a>';
         //echo '</li>';
+        echo '<li id="menu-calendar">';
+        echo '<a accesskey="2" href="calendar/">Calendar</a>';
+        echo '</li>';
         echo '<li id="menu-map">';
         echo '<a accesskey="3" href="map/">Campus Map</a>';
         echo '</li>';
@@ -42,7 +45,7 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         echo '<a accesskey="9" href="http://mail.luther.edu/">Norse Mail</a>';
         echo '</li>';
         echo '<li id="menu-home">';
-        echo '<a accesskey="2" href="http://www.luther.edu/">Full Site</a>';
+        echo '<a accesskey="10" href="http://www.luther.edu/">Full Site</a>';
         echo '</li>';
         echo '</ol>';
         echo '</div>';
