@@ -135,6 +135,14 @@ h3.postTitle {
     display: none;
 }
 
+/* campus tour */
+
+div#lastUpdated {
+    display: none;
+}
+
+
+
 /*
 .highslide {
     visibility: hidden;
