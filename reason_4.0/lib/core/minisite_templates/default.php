@@ -726,7 +726,8 @@ class MinisiteTemplate
 					
 					// Pass a reference to the head items object into the module (so the module doesn't have to use the
 					// deprecated reference to the template)
-					$this->_modules[ $sec ]->set_crumbs( $this->_get_crumbs_object() );
+					$breadcrumbs_obj =& $this->_get_crumbs_object();
+					$this->_modules[ $sec ]->set_crumbs( $breadcrumbs_obj );
 					
 					// send and check parameters gathered above from the page_types
 					$this->_modules[ $sec ]->handle_params( $params );
