@@ -91,12 +91,24 @@ class MobileTemplate extends MinisiteTemplate
 		}
 		echo '<div id="meat">'."\n";
 		
+		// Sidebar area
+		echo '<div id="sidebar">'."\n";
+		if ($this->has_content( 'sidebar' )) 
+		{
+			echo '<div class="sidebar">'."\n";
+			$this->run_section( 'sidebar' );
+			echo '</div>'."\n";
+		}
+		echo '</div>'."\n";
+		
+		
 		// Main content area
 		echo '<div id="content">'."\n";
 		if ($this->has_content( 'main_head' )) 
 		{
 			echo '<div class="contentHead">'."\n";
 			$this->run_section( 'main_head' );
+						                $this->run_section( 'imagetop' );
 			echo '</div>'."\n";
 		}
 		if ($this->has_content( 'main' )) 
