@@ -34,7 +34,6 @@
 			foreach( $this->images AS $id => $image )
 			{
                             if ($site_id == '276256'){
-                                $unique_name = $image->unique_name;
                                 if (preg_match("/mobilecampustour/", $image->get_value('keywords'))){
                                     $url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
 					$thumb = WEB_PHOTOSTOCK . $id . '_tn.' . $image->get_value('image_type');
