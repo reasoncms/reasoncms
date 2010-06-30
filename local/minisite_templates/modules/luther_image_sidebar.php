@@ -35,10 +35,10 @@
 			{
                             if ($site_id == '276256'){
                                 $unique_name = $image->unique_name;
-                                if ($unique_name == 'blah'){
+                                if (preg_match("/mobilecampustour/", $image->get_value('keywords'))){
                                     return;
                                 }
-                                if (!preg_match("/imagetop|bannerad|video|map/", $image->get_value('keywords')))
+                                if (!preg_match("/imagetop|bannerad|video|map|mobilecampustour/", $image->get_value('keywords')))
 				{
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
 					$thumb = WEB_PHOTOSTOCK . $id . '_tn.' . $image->get_value('image_type');
@@ -55,7 +55,6 @@
 					{
 						$caption = $image->get_value('description');
 					}
-                                        echo 'uniiiiique: '. $unique_name . ' done';
                                         echo '<a href="'. $url .'"><img src="'. $url .'" alt="" width=100% border=0></a>';
 				}
                             }
