@@ -141,7 +141,10 @@ h3.postTitle {
     display: none;
 }
 
-
+ul.childrenList img {
+    float:left;
+    margin:0;
+}
 
 /*
 .highslide {
