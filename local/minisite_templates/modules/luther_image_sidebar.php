@@ -36,7 +36,22 @@
                             if ($site_id == '276256'){
                                 $unique_name = $image->unique_name;
                                 if (preg_match("/mobilecampustour/", $image->get_value('keywords'))){
-                                    return;
+                                    $url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
+					$thumb = WEB_PHOTOSTOCK . $id . '_tn.' . $image->get_value('image_type');
+					$d = max($image->get_value('width'), $image->get_value('height')) / 125.0;
+					if (preg_match("/hide_caption/", $image->get_value('keywords')))
+					{
+						$caption = "";
+					}
+					elseif (preg_match("/[A-Za-z0-9]+/", $image->get_value('content')))
+					{
+						$caption = $image->get_value('content');
+					}
+					else
+					{
+						$caption = $image->get_value('description');
+					}
+                                        echo '<a href="'. $url .'"><img src="'. $url .'" alt="" width=100% border=0></a>';
                                 }
                                 if (!preg_match("/imagetop|bannerad|video|map|mobilecampustour/", $image->get_value('keywords')))
 				{
@@ -55,7 +70,7 @@
 					{
 						$caption = $image->get_value('description');
 					}
-                                        echo '<a href="'. $url .'"><img src="'. $url .'" alt="" width=100% border=0></a>';
+                                        echo '<a href="'. $url .'"><img src="'. $url .'" alt="" width=100px border=0></a>';
 				}
                             }
                             else {
