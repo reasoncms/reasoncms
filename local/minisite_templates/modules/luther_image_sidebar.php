@@ -54,7 +54,7 @@
 					}
 					//echo "<div class=\"imageChunk\">";
 					//echo '<div class="imageChunk" style="width:' . $image->get_value('width')/4 .'px;">';
-					echo '<div class="figure" style="width:' . intval($image->get_value('width')/$d) .'px;">';
+					//echo '<div class="figure" style="width:' . intval($image->get_value('width')/$d) .'px;">';
                                         echo '<div class="figure" style="width:100%;">';
 					// show href to full size image with class and onclick for highslide
                                         //showing site id: echo 'site id is this: '. $site_id . ' end';
