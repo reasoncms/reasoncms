@@ -146,6 +146,13 @@ ul.childrenList img {
     margin:0 8px 0 0;
 }
 
+.childrenList h4 {
+    margin:0;
+    padding:0;
+    font-weight: normal;
+    
+}
+
 /*
 .highslide {
     visibility: hidden;
