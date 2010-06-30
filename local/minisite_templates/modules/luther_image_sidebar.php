@@ -50,7 +50,8 @@
 					{
 						$caption = $image->get_value('description');
 					}
-                                        echo '<a href="'. $url .'"><img src="'. $url .'" alt="" width=100% border=0></a>';
+                                        //echo '<a href="'. $url .'"><img src="'. $url .'" alt="" width=100% border=0></a>';
+                                        echo '<img src="'. $url .'" alt="" width=100% border=0>';
                                 }
                                 if (!preg_match("/imagetop|bannerad|video|map|mobilecampustour/", $image->get_value('keywords')))
 				{
