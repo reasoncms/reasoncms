@@ -33,8 +33,11 @@
 			
 			foreach( $this->images AS $id => $image )
 			{
-
                             if ($site_id == '276256'){
+                                $unique_name = $this->unique_name;
+                                if ($unique_name == 'blah'){
+                                    return;
+                                }
                                 if (!preg_match("/imagetop|bannerad|video|map/", $image->get_value('keywords')))
 				{
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
@@ -52,7 +55,7 @@
 					{
 						$caption = $image->get_value('description');
 					}
-
+                                        echo 'uniiiiique: '. $unique_name . ' done';
                                         echo '<a href="'. $url .'"><img src="'. $url .'" alt="" width=100% border=0></a>';
 				}
                             }
