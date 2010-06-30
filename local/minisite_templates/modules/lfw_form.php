@@ -49,7 +49,7 @@ class LfwFormModule extends DefaultMinisiteModule
 					'LFWFormPageTwo' => array(
 						'label' => 'Come on',
 					),
-					'LFWConfirmation' => array(
+					'LFWRegistrationConfirmation' => array(
 						'label' => 'Lutheran Festival of Writing Confirmation',
 					),
 				),
@@ -65,7 +65,7 @@ class LfwFormModule extends DefaultMinisiteModule
 				'final_step' => true,
 				'final_button_text' => 'Register',
 			),
-			'LFWConfirmation' => array(
+			'LFWREgistrationConfirmation' => array(
 				'display_name' => 'Lutheran Festival of Writing Confirmation',
 			),
 		);
