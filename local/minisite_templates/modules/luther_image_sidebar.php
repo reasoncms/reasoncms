@@ -52,20 +52,8 @@
 					{
 						$caption = $image->get_value('description');
 					}
-					//echo "<div class=\"imageChunk\">";
-					//echo '<div class="imageChunk" style="width:' . $image->get_value('width')/4 .'px;">';
-                                        //
-					//echo '<div class="figure" style="width:' . intval($image->get_value('width')/$d) .'px;">';
-					// show href to full size image with class and onclick for highslide
-                                        //showing site id: echo 'site id is this: '. $site_id . ' end';
-					//echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
-					//echo '<img src="' . $thumb . '" border="0" alt="" title="Click to enlarge" />';
-					//echo '</a>';
-                                        echo '<a href="'. $url .'"><img src="'. $url .'" alt="" width=300 border=0></a>';
-					// show caption if flag is true
-					//if ($this->params['caption_flag'] && $caption != "") echo $image->get_value('description') ;
-                                        //
-					//echo "</div>\n";
+
+                                        echo '<a href="'. $url .'"><img src="'. $url .'" alt="" width=100% border=0></a>';
 				}
                             }
                             else {
