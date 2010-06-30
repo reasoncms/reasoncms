@@ -63,7 +63,7 @@
 					echo '</a>';
 
 					// show caption if flag is true
-					if ($this->params['caption_flag'] && $caption != "") echo $image->get_value('description') ;
+					//if ($this->params['caption_flag'] && $caption != "") echo $image->get_value('description') ;
 					echo "</div>\n";
 				}
                             }
