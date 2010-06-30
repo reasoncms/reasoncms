@@ -39,6 +39,7 @@ class MobileTemplate extends MinisiteTemplate
 		echo '<html lang="en" class="no-js">'."\n";
 		echo '<meta name = "viewport" content = "width = device-width, height = device-height" />';
 		echo '<head>'."\n";
+                echo '<script> window.resizeTo(320px, 480px); </script> ';
 		echo $this->head_items->get_head_item_markup();
 		
 		if($this->cur_page->get_value('extra_head_content'))
