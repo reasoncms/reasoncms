@@ -34,7 +34,7 @@
 			foreach( $this->images AS $id => $image )
 			{
 
-                            if ($site_id == '276257'){
+                            if ($site_id == '276256'){
                                 return;
                             }
                             else {
