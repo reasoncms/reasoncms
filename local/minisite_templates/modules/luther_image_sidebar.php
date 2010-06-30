@@ -26,12 +26,18 @@
 			$popup = isset( $this->show_popup_link ) ? $this->show_popup_link : true;
 			$desc = isset( $this->description ) ? $this->description : true;
 			$text = isset( $this->additional_text ) ? $this->additional_text : "";
+                        $site_id = $this->site_id;
 			
 			if ( !empty($this->parent->textonly) )
 				echo '<h3>Images</h3>'."\n";
 			
 			foreach( $this->images AS $id => $image )
 			{
+
+                            if ($site_id == '276257'){
+                                return;
+                            }
+                            else {
 				if (!preg_match("/imagetop|bannerad|video|map/", $image->get_value('keywords')))
 				{
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
@@ -61,6 +67,7 @@
 					if ($this->params['caption_flag'] && $caption != "") echo $image->get_value('description') ;
 					echo "</div>\n";
 				}
+                            }
 			}
 		}
 	}
