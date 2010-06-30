@@ -59,6 +59,7 @@
 					//echo '<div class="imageChunk" style="width:' . $image->get_value('width')/4 .'px;">';
 					echo '<div class="figure" style="width:' . intval($image->get_value('width')/$d) .'px;">';
 					// show href to full size image with class and onclick for highslide
+                                        echo 'site id is this: '. $site_id . ' end';
 					echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
 					echo '<img src="' . $thumb . '" border="0" alt="' . $caption . '" title="Click to enlarge" />';
 					echo '</a>';
