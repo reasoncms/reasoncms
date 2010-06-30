@@ -21,6 +21,7 @@ class LFWFormPageOne extends FormStep
 		),
 		'title' => array(
 			'type' => 'select_no_sort',
+			'add_null_value_to_top' => true,
 			'options' => array('Mr.'=>'Mr.', 'Ms.'=>'Ms.', 'Mrs.'=>'Mrs.', 'Prof.'=>'Prof.','Dr.'=>'Dr.','Pastor'=>'Pastor'
 			)
 		),
@@ -59,9 +60,9 @@ class LFWFormPageOne extends FormStep
 			'display_name' => 'E-mail Address'
 		),
 		'phone_note' => array(
-			'type' => 'comment'
+			'type' => 'comment',
 			'text' => '*Phone (please include at least one number of a daytime phone or phone with voicemail)'
-		)
+		),
 		'home_phone' => array(
 			'type' => 'text',
 			'size'=>20,
@@ -76,16 +77,17 @@ class LFWFormPageOne extends FormStep
 		),
 		'institution' => array(
 			'type' => 'text',
-			'comment' => 'college, church, company, etc. If applicable',
+			'comments' => '<br />college, church, company, etc. If applicable',
 			'size' => 35,
 		),
 		'position_title' => array(
 			'type' => 'text',
-			'comment' => 'If applicable',
+			'comments' => '<br />If applicable',
 			'size' => 35,
 		),
 		'profession' => array(
 			'type' => 'select_no_sort',
+			'add_null_value_to_top' => true,
 			'options' => array(
 				'Faculty'=>'Faculty',
 				'Staff'=>'Staff',
@@ -103,14 +105,14 @@ class LFWFormPageOne extends FormStep
 			'options' => array(
 				'95'=>'General Public, $95',
 				'25'=>'Non-Luther Student, $25',
-				'0'=>'Luther Faculty and Staff, $0',
-				'0'=>'Luther Student, $0',
+				'-'=>'Luther Faculty and Staff, $0',
+				'--'=>'Luther Student, $0',
 			),
 		),
 		'attend_banquet' => array(
 			'type' => 'radio_inline_no_sort',
-			'display_name' => 'Banquet',
-			'comments' => '<br />$25',
+			'display_name' => 'Attend Saturday evening banquet?',
+			'comments' => 'cost $25',
 			'options' => array(
 				'Yes'=>'Yes',
 				'No'=>'No',
@@ -118,9 +120,7 @@ class LFWFormPageOne extends FormStep
 		),
 		'dietary_needs'=> array(
 			'type' => 'textarea',
-			'diplay_name' => 'Please list any special dietary needs',
-			'rows' => 3,
-			'cols' => 35,
+			'display_name' => 'Please list any special dietary needs',
 		),
 		'lodging_header' => array(
 			'type' => 'comment',
@@ -153,6 +153,7 @@ class LFWFormPageOne extends FormStep
 		),
 		'housing_student_type' => array(
 			'type' => 'select_no_sort',
+			'add_null_value_to_top' => true,
 			'display_name' => 'Type of Student',
 			'options' => array(
 				'HS'=>'High School',
@@ -190,13 +191,13 @@ class LFWFormPageOne extends FormStep
 	  	$amount = 0;
 	  	$conf_fee = $this->get_value('conference_fee');
 	  	$banq_fee = $this->get_value('attend_banquet');
-	  	
+	  		  	
 		if (isset($conf_fee))
 	  	{
 			$amount = $amount + $conf_fee;
 		}
 		
-		if (isset($banq_fee))
+		if ($banq_fee == 'Yes')
 	  	{
 			$amount = $amount + 25;
 		}
@@ -205,7 +206,7 @@ class LFWFormPageOne extends FormStep
 		
 		if ($amount == 0)
 		{
-			return 'LFWConfirmation';
+			return 'LFWRegistrationConfirmation';
 		}else{
 			return 'LFWFormPageTwo';
 		}

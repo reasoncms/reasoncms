@@ -1,6 +1,6 @@
 <?php
 /**
-* This file contains the HomecomingConfirmation class
+* This file contains the LFWConfirmation class
 * @author Matt Ryan <mryan@acs.carleton.edu>
 */
 
@@ -8,7 +8,7 @@
 * Include necessary stuff
 */
 include_once('reason_header.php');
-include_once(WEB_PATH.'stock/homecomingPFclass.php');
+include_once(WEB_PATH.'stock/lfwPFclass.php');
 
 /**
 * HomecomingConfirmation, Steve Smith, 02 June 2010
@@ -42,7 +42,7 @@ include_once(WEB_PATH.'stock/homecomingPFclass.php');
 * }
 * </code>
 */
-class LFWConfirmation
+class LfwConfirmation
 {
 	/**
 	* Reference number from PayFlowPro
@@ -109,7 +109,7 @@ class LFWConfirmation
 		* Checks validation against results from DB query
 		* Compares the hash provided in set_hash() with an md5 of the confirmation text
 		* get_confirmation_text() checks with this function before returning confirmation text.
-		* This function does the actual instantiation of a homecomingPF class, which does the direct DB query
+		* This function does the actual instantiation of a lfwPF class, which does the direct DB query
 		* @return bool true value indicates that things are OK; false indicates that things are not OK
 	*/
 	function validates()
