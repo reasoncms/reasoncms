@@ -34,7 +34,7 @@
 			foreach( $this->images AS $id => $image )
 			{
                             if ($site_id == '276256'){
-                                $unique_name = $this->unique_name;
+                                $unique_name = $image->unique_name;
                                 if ($unique_name == 'blah'){
                                     return;
                                 }
