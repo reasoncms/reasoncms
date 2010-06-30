@@ -116,7 +116,7 @@ class LFWFormPageTwo extends FormStep
 	{	
 		if( !$this->controller->get('amount'))
 		{
-			echo '<div id="homecomingSetupError">Sorry. There was a problem setting up payment for your form. Please return to <a href="?_step=LFWFormPageOne">Lutheran Festival of Writing form </a> and try again.</div>';
+			echo '<div id="lfwSetupError">Sorry. There was a problem setting up payment for your form. Please return to <a href="?_step=LFWFormPageOne">Lutheran Festival of Writing form </a> and try again.</div>';
 			$this->show_form = false;
 			return;
 		}
@@ -164,12 +164,12 @@ class LFWFormPageTwo extends FormStep
 	function get_brief_review_text()
 	{
 		$txt = '<div id="reviewOverview">'."\n";
-		if ($this->controller->get('conference_fee') && $this->controller->get('attend_banquet')){
+		if ($this->controller->get('conference_fee') && ($this->controller->get('attend_banquet')=='Yes')){
 			$txt .= '<p>You have indicated that you would like the Conference and the Saturday evening Banquet.</p>'."\n";
 		}else{ 
 			$txt .= '<p>You have indicated that you would like the Conference only.</p>'."\n";
 		}
-		$txt .= '<p>Cost: $'.number_format( $this->controller->get('amount'), 2, '.', ',' ).'</p>'."\n"
+		$txt .= '<p>Cost: $'.number_format( $this->controller->get('amount'), 2, '.', ',' ).'</p>'."\n";
 		$txt .= '</div>'."\n";
 		return $txt;
 	}
@@ -238,7 +238,7 @@ class LFWFormPageTwo extends FormStep
 		if($this->controller->get('student_housing') == 'Yes')
 		{
 			$txt .= '<li><strong>Student Housing Needs:</strong> '.$this->controller->get('housing_gender').', '.$this->controller->get('housing_student_type').' for '.
-			$this->controller->get('housing_student_type').'</li>'."\n";
+			$this->controller->get('housing_nights').'</li>'."\n";
 		}
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
@@ -258,7 +258,7 @@ class LFWFormPageTwo extends FormStep
 		// Process credit card
 		if( !$this->_has_errors() )
 		{
-			$pf = new homecomingPF;
+			$pf = new lfwPF;
 			$expiration_mm = str_pad($this->get_value('credit_card_expiration_month'), 2, '0', STR_PAD_LEFT);
 			$expiration_yy = substr($this->get_value('credit_card_expiration_year'), 2, 2);
 			$expiration_mmyy = $expiration_mm.$expiration_yy;
@@ -360,10 +360,10 @@ class LFWFormPageTwo extends FormStep
 				
 				//}
 				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
-				$mail = new Email($this->controller->get('e-mail'),'alumni@luther.edu','alumni@luther.edu','Luther College Homecoming Registration Confirmation',strip_tags($confirm_text_with_blurb),$confirm_text_with_blurb);
+				$mail = new Email($this->controller->get('e-mail'),'alumni@luther.edu','alumni@luther.edu','Lutheran Festival of Writing Registration Confirmation',strip_tags($confirm_text_with_blurb),$confirm_text_with_blurb);
 				$mail->send();
 				
-				$mail2 = new Email('gilbertc@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Homecoming Registration '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
+				$mail2 = new Email('slylth@gmail.com', 'noreply@luther.edu','noreply@luther.edu', 'New LFW Registration '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
 				$mail2->send();
 			}
 		}
@@ -372,8 +372,8 @@ class LFWFormPageTwo extends FormStep
 	{
 		$refnum = $this->get_value( 'result_refnum' );
 		$text = $this->get_value( 'confirmation_text' );
-		reason_include_once( 'minisite_templates/modules/homecoming_registration/lfw_confirmation.php' );
-		$gc = new LFWConfirmation;
+		reason_include_once( 'minisite_templates/modules/lfw/lfw_confirmation.php' );
+		$gc = new LfwConfirmation;
 		$hash = $gc->make_hash( $text );
 		connectDB( REASON_DB );
 		$url = get_current_url();
@@ -399,5 +399,4 @@ function trim_hours_from_datetime( $datetime )
 {
 	return substr( $datetime, 0, 10 );
 }
-
 ?>
