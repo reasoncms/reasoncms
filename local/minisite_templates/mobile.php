@@ -38,7 +38,7 @@ class MobileTemplate extends MinisiteTemplate
 		echo '<!DOCTYPE html>'."\n";
 		echo '<html lang="en" class="no-js">'."\n";
 		echo '<meta name = "viewport" content = "width = device-width, height = device-height" />';
-                echo '<link rel="apple-touch-icon" href="/images/luther2010/mobile/luther_apple_touch_icon.png" />';
+                echo '<link rel="apple-touch-icon" href="/images/luther2010/mobile/small_luther_apple_touch_icon.png" />';
 		echo '<head>'."\n";
 		echo $this->head_items->get_head_item_markup();
 		
