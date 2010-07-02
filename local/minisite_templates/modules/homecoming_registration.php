@@ -99,8 +99,8 @@ class HomecomingRegistrationModule extends DefaultMinisiteModule
 		parent::init( $args );
 		if($head_items =& $this->get_head_items())
 		{
-			//$head_items->add_stylesheet('/css/form/homecoming_reg.css');
-			$head_items->add_javascript('http://reasondev.luther.edu/javascripts/form/homecoming_reg.js');
+			$head_items->add_stylesheet('/javascripts/form/form.css');
+			$head_items->add_javascript('/javascripts/form/homecoming_reg.js');
 		}
 	}//}}}
 	
