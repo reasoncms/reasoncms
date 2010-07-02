@@ -65,7 +65,7 @@ class LfwFormModule extends DefaultMinisiteModule
 				'final_step' => true,
 				'final_button_text' => 'Register',
 			),
-			'LFWREgistrationConfirmation' => array(
+			'LFWRegistrationConfirmation' => array(
 				'display_name' => 'Lutheran Festival of Writing Confirmation',
 			),
 		);
@@ -99,8 +99,8 @@ class LfwFormModule extends DefaultMinisiteModule
 		parent::init( $args );
 		if($head_items =& $this->get_head_items())
 		{
-			//$head_items->add_stylesheet('/css/form/homecoming_reg.css');
-			$head_items->add_javascript('http://reasondev.luther.edu/javascripts/form/lfw_form.js');
+			$head_items->add_stylesheet('/javascripts/form/lfw.css');
+			$head_items->add_javascript('/javascripts/form/lfw.js');
 		}
 	}//}}}
 	

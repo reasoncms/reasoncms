@@ -182,8 +182,9 @@ class LFWFormPageTwo extends FormStep
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
 		//Format the name
 		$txt .= '<li>';
+		$txt .= '<strong>Name:</strong> ';
 		if ($this->controller->get('title')){
-			$txt .= '<strong>Name:</strong> '.$this->controller->get('title').' ';
+			$txt .= $this->controller->get('title').' ';
 		}
 		$txt .= $this->controller->get('first_name').' ';
 		if ($this->controller->get('middle_initial')){ 
