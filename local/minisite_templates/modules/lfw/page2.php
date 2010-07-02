@@ -361,10 +361,10 @@ class LFWFormPageTwo extends FormStep
 				
 				//}
 				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
-				$mail = new Email($this->controller->get('e-mail'),'alumni@luther.edu','alumni@luther.edu','Lutheran Festival of Writing Registration Confirmation',strip_tags($confirm_text_with_blurb),$confirm_text_with_blurb);
+				$mail = new Email($this->controller->get('e-mail'),'luthfestreg@gmail.edu','lutherfestreg@gmail.edu,eicnkmic@luther.edu','Lutheran Festival of Writing Registration Confirmation',strip_tags($confirm_text_with_blurb),$confirm_text_with_blurb);
 				$mail->send();
 				
-				$mail2 = new Email('slylth@gmail.com', 'noreply@luther.edu','noreply@luther.edu', 'New LFW Registration '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
+				$mail2 = new Email('luthfestreg@gmail.com,einckmic@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New LFW Registration '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
 				$mail2->send();
 			}
 		}
