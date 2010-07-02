@@ -124,7 +124,7 @@ class LFWRegistrationConfirmation extends FormStep
 		cell_phone = '".((!empty($cell_phone)) ? addslashes($cell_phone) : 'NULL')."',
 		email = '".addslashes($email)."', 
 		institution='".((!empty($institution)) ? addslashes($institution) : 'NULL')."',
-		institution_title='".((!empty($position_title)) ? addslashes($position_title) : 'NULL')."',
+		position_title='".((!empty($position_title)) ? addslashes($position_title) : 'NULL')."',
 		profession='".((!empty($profession)) ? addslashes($profession) : 'NULL')."', 
 		conference_fee='".((!empty($conference_fee)) ? addslashes($conference_fee) : 'NULL')."', 
 		attend_banquet='".((!empty($attend_banquet)) ? addslashes($attend_banquet) : 'NULL')."',
