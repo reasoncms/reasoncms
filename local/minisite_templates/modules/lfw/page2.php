@@ -148,7 +148,7 @@ class LFWFormPageTwo extends FormStep
 	
 	function pre_show_form()
 	{
-		echo '<div id="LFWForm" class="pageTwo">'."\n";
+		echo '<div id="lfwForm" class="pageTwo">'."\n";
 		if( $this->is_in_testing_mode )
 		{
 			echo '<div class="announcement">';

@@ -99,7 +99,7 @@ class LfwFormModule extends DefaultMinisiteModule
 		parent::init( $args );
 		if($head_items =& $this->get_head_items())
 		{
-			$head_items->add_stylesheet('/javascripts/form/lfw.css');
+			$head_items->add_stylesheet('/javascripts/form/form.css');
 			$head_items->add_javascript('/javascripts/form/lfw.js');
 		}
 	}//}}}

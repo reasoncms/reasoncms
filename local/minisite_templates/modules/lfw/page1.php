@@ -81,12 +81,10 @@ class LFWFormPageOne extends FormStep
 		),
 		'institution' => array(
 			'type' => 'text',
-			'comments' => '<br />college, church, company, etc. If applicable',
 			'size' => 35,
 		),
 		'position_title' => array(
 			'type' => 'text',
-			'comments' => '<br />If applicable',
 			'size' => 35,
 		),
 		'profession' => array(
@@ -195,7 +193,8 @@ class LFWFormPageOne extends FormStep
 
 	function on_every_time()
 	{
-		$this->set_comments('profession',form_comment('lalalalal lal'));	
+		$this->set_comments('position_title',form_comment('If applicable'));
+		$this->set_comments('institution',form_comment('college, church, company, etc. If applicable'));
 	}
 	function pre_show_form()
 	{
