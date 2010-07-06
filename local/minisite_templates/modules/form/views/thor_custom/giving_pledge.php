@@ -51,7 +51,7 @@ class GivingPledgeForm extends DefaultThorForm
 				'Volleyball'=>'Volleyball',		
 				'Wrestling'=>'Wrestling',
 				),
-			),
+			)
 		);
 		
 		$hon_mem_details = $this->get_element_name_from_label('honor_memory_details');
