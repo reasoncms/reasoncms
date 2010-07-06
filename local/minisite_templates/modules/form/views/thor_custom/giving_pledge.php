@@ -29,7 +29,7 @@ class GivingPledgeForm extends DefaultThorForm
 		$this->change_element_type($designation, 'radio_with_other_no_sort');
 		
 		$sports_designation = $this->get_element_name_from_label('Select a sports designation, if desired');
-		$this->change_element_type($sports_designation, 'select_no_sort'
+		$this->change_element_type($sports_designation, 'select_no_sort',
 			'options' => array(
 				'Baseball'=>'Baseball',
 				'Basketball, men\'s'=>'Basketball, men\'s',
@@ -50,7 +50,7 @@ class GivingPledgeForm extends DefaultThorForm
 				'Track & Field, women\'s'=>'Track & Field, women\'s',
 				'Volleyball'=>'Volleyball',		
 				'Wrestling'=>'Wrestling',
-			)
+			),
 		);
 		
 		$hon_mem_details = $this->get_element_name_from_label('honor_memory_details');
