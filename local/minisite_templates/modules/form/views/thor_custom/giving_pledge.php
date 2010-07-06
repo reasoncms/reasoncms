@@ -61,6 +61,33 @@ class GivingPledgeForm extends DefaultThorForm
 		
 		$connection = $this->get_element_name_from_label('Tell us about your connection to Luther');
 		$this->change_element_type($connection, 'radio_with_other_no_sort');	
+		
+		$alum = $this->get_element_name_from_label('Alum');
+		$this->change_element_type($alum, 'checkboxfirst');
+		
+		$class_year = $this->get_element_name_from_label('Class Year');
+		$this->change_element_type($class_year, 'numrange', array('start'=>1924,'end'=>date('Y')));
+		
+		$alum_spouse = $this->get_element_name_from_label('Alum Spouse');
+		$this->change_element_type($alum_spouse, 'checkboxfirst');		
+		
+		$alum_child = $this->get_element_name_from_label('Alum Child');
+		$this->change_element_type($alum_child, 'checkboxfirst');		
+
+		$friend = $this->get_element_name_from_label('Friend');
+		$this->change_element_type($friend, 'checkboxfirst');		
+
+		$current_parent = $this->get_element_name_from_label('Current Parent');
+		$this->change_element_type($current_parent, 'checkboxfirst');		
+		
+		$alum_parent = $this->get_element_name_from_label('Parent of an Alum');
+		$this->change_element_type($alum_Parent, 'checkboxfirst');		
+		
+		$other = $this->get_element_name_from_label('Other');
+		$this->change_element_type($other, 'checkboxfirst');
+		
+		$other_connection_details = $this->get_element_name_from_label('other_connection_details');
+		$this->change_element_type($other_connection_details, 'checkboxfirst');
 	}
 }
 ?>
