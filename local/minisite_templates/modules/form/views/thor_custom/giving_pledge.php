@@ -30,6 +30,7 @@ class GivingPledgeForm extends DefaultThorForm
 		
 		$sports_designation = $this->get_element_name_from_label('Select a sports designation, if desired');
 		$this->change_element_type($sports_designation, 'select_no_sort', array(
+			'add_null_value_to_top' => true,
 			'options' => array(
 				'Baseball'=>'Baseball',
 				'Basketball, men\'s'=>'Basketball, men\'s',
@@ -82,7 +83,7 @@ class GivingPledgeForm extends DefaultThorForm
 		$this->change_element_type($current_parent, 'checkboxfirst');		
 		
 		$alum_parent = $this->get_element_name_from_label('Parent of an Alum');
-		$this->change_element_type($alum_Parent, 'checkboxfirst');		
+		$this->change_element_type($alum_parent, 'checkboxfirst');		
 		
 		$other = $this->get_element_name_from_label('Other');
 		$this->change_element_type($other, 'checkboxfirst');
