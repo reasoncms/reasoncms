@@ -56,13 +56,15 @@ class GivingPledgeForm extends DefaultThorForm
 		);
 		
 		$hon_mem_details = $this->get_element_name_from_label('honor_memory_details');
-		$this->change_element_type($hon_mem_details, 'text', array('display_name'=>'nbsp;'));
+		$this->change_element_type($hon_mem_details, 'text', array('display_name'=>"nbsp;"));
 		
-		$prompt = $this->get_element_name_from_label('What prompted you to make this pledge');
+		$prompt = $this->get_element_name_from_label('What prompted you to make this pledge?');
 		$this->change_element_type($prompt, 'radio_with_other_no_sort');
 		
+/*
 		$connection = $this->get_element_name_from_label('Tell us about your connection to Luther');
 		$this->change_element_type($connection, 'radio_with_other_no_sort');	
+*/
 		
 		$alum = $this->get_element_name_from_label('Alum');
 		$this->change_element_type($alum, 'checkboxfirst');
