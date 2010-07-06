@@ -91,7 +91,7 @@ class GivingPledgeForm extends DefaultThorForm
 		$this->change_element_type($other, 'checkboxfirst');
 		
 		$other_connection_details = $this->get_element_name_from_label('other_connection_details');
-		$this->change_element_type($other_connection_details, 'checkboxfirst');
+		$this->change_element_type($other_connection_details, 'text', array('display_name'=>'nbsp;'));
 	}
 }
 ?>
