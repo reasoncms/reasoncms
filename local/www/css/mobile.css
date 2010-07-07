@@ -155,6 +155,10 @@ ul.childrenList img {
     
 }
 
+div#eventCal {
+    width: 100%;
+}
+
 /*
 .highslide {
     visibility: hidden;
