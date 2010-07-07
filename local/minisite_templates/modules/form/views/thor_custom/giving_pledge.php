@@ -26,7 +26,7 @@ class GivingPledgeForm extends DefaultThorForm
 		$this->change_element_type($amount, 'money');
 		
 		$designation = $this->get_element_name_from_label('Designation');
-		$this->change_element_type($designation, 'radio_with_other_no_sort', array('comments_pre'=>'If more than one designation is specified, your gift will be divided equally unless you indicate otherwise in the comments section below.'));
+		$this->change_element_type($designation, 'radio_with_other_no_sort', array('comments'=>'If more than one designation is specified, your gift will be divided equally unless you indicate otherwise in the comments section below.'));
 		
 		$sports_designation = $this->get_element_name_from_label('Select a sports designation, if desired');
 		$this->change_element_type($sports_designation, 'select_no_sort', array(
