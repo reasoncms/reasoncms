@@ -26,7 +26,7 @@ class GivingPledgeForm extends DefaultThorForm
 		$this->change_element_type($amount, 'money');
 		
 		$designation = $this->get_element_name_from_label('Designation');
-		$this->change_element_type($designation, 'radio_with_other_no_sort', array('comments'=>'If more than one designation is specified, your gift will be divided equally unless you indicate otherwise in the comments section below.'));
+		$this->change_element_type($designation, 'radio_with_other_no_sort', array('comments_pre'=>'If more than one designation is specified, your gift will be divided equally unless you indicate otherwise in the comments section below.'));
 		
 		$sports_designation = $this->get_element_name_from_label('Select a sports designation, if desired');
 		$this->change_element_type($sports_designation, 'select_no_sort', array(
@@ -55,9 +55,6 @@ class GivingPledgeForm extends DefaultThorForm
 			)
 		);
 		
-		$hon_mem_details = $this->get_element_name_from_label('honor_memory_details');
-		$this->change_element_type($hon_mem_details, 'text', array('display_name'=>"nbsp;"));
-
 		$more_info = $this->get_element_name_from_label('Please send additional information regarding');
 		$this->change_element_type($more_info, 'checkboxgroup');
 		
@@ -68,7 +65,7 @@ class GivingPledgeForm extends DefaultThorForm
 		$this->set_display_name($connection, 'Please check all that apply');
 		
 		$class_year = $this->get_element_name_from_label('Class Year');
-		$this->change_element_type($class_year, 'numrange', array('start'=>1924,'end'=>date('Y'), 'comments' => 'if Alum'));		
+		$this->change_element_type($class_year, 'numrange', array('start'=>1924,'end'=>date('Y'), 'comments' => '<br />if Alum'));		
 
 	}
 }
