@@ -14,7 +14,7 @@ class MobileEventCalModule extends DefaultMinisiteModule {
 ?>
 
 <div id="eventCal">
-<iframe scrolling="no" height="600px" frameborder="0" width="200px" style="border-width: 0pt;" src="https://www.google.com/calendar/hosted/luther.edu/embed?showTitle=0&amp;showTabs=0&amp;showPrint=0&amp;showCalendars=0&amp;mode=AGENDA&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=luther.edu_7c6m91gqfh995svsqo7bqkvrf0%40group.calendar.google.com&amp;color=%232952A3&amp;ctz=America%2FChicago"></iframe>
+<iframe scrolling="no" height="600px" frameborder="0" width="300px" style="border-width: 0pt;" src="https://www.google.com/calendar/hosted/luther.edu/embed?showTitle=0&amp;showTabs=0&amp;showPrint=0&amp;showCalendars=0&amp;mode=AGENDA&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=luther.edu_7c6m91gqfh995svsqo7bqkvrf0%40group.calendar.google.com&amp;color=%232952A3&amp;ctz=America%2FChicago"></iframe>
 </div>
 
 <?php
