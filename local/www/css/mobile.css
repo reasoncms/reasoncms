@@ -159,6 +159,10 @@ div#eventCal {
     width: 100%;
 }
 
+table#footer1{
+    display: none;
+}
+
 /*
 .highslide {
     visibility: hidden;
