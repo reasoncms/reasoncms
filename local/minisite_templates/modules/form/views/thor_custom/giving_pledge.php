@@ -64,12 +64,13 @@ class GivingPledgeForm extends DefaultThorForm
 		$prompt = $this->get_element_name_from_label('What prompted you to make this pledge?');
 		$this->change_element_type($prompt, 'radio_with_other_no_sort');
 		
-		$alum = $this->get_element_name_from_label('Alum');
-		$this->change_element_type($alum, 'checkboxfirst');
+		$connection = $this->get_element_name_from_label('Luther Connection');
+		$this->set_display_name($connection, 'Please check all that apply');
 		
 		$class_year = $this->get_element_name_from_label('Class Year');
-		$this->change_element_type($class_year, 'numrange', array('start'=>1924,'end'=>date('Y')));
+		$this->change_element_type($class_year, 'numrange', array('start'=>1924,'end'=>date('Y'), 'comments' => 'if Alum'));
 		
+/*
 		$alum_spouse = $this->get_element_name_from_label('Alum Spouse');
 		$this->change_element_type($alum_spouse, 'checkboxfirst');		
 		
@@ -90,6 +91,7 @@ class GivingPledgeForm extends DefaultThorForm
 		
 		$other_connection_details = $this->get_element_name_from_label('other_connection_details');
 		$this->change_element_type($other_connection_details, 'text', array('display_name'=>'nbsp;'));
+*/
 	}
 }
 ?>
