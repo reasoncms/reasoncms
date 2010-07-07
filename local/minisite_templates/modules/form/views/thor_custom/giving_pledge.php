@@ -65,13 +65,13 @@ class GivingPledgeForm extends DefaultThorForm
 		$this->change_element_type($prompt, 'radio_with_other_no_sort');
 		
 		$alum = $this->get_element_name_from_label('Alum');
-		$this->change_element_type($alum, 'checkbox');
+		$this->change_element_type($alum, 'checkboxgroup');
 		
 		$class_year = $this->get_element_name_from_label('Class Year');
 		$this->change_element_type($class_year, 'numrange', array('start'=>1924,'end'=>date('Y')));
 		
 		$alum_spouse = $this->get_element_name_from_label('Alum Spouse');
-		$this->change_element_type($alum_spouse, 'checkbox');		
+		$this->change_element_type($alum_spouse, 'checkboxgroup');		
 		
 		$alum_child = $this->get_element_name_from_label('Alum Child');
 		$this->change_element_type($alum_child, 'checkboxfirst');		
