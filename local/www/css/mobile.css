@@ -94,8 +94,8 @@ ol.icon-menu li a {
 li#menu-home {background-image:url('/images/luther2010/mobile/full_site_mobile_icon.png');}
 li#menu-directions {background-image:url('/images/luther2010/mobile/directions_mobile_icon.png');}
 li#menu-mail {background-image:url('/images/luther2010/mobile/norse_mail_mobile_icon.png');}
-li#menu-map {background-image:url('/images/luther2010/mobile/campus_map_mobile_icon.png');}
-li#menu-directory {background-image:url('/images/luther2010/mobile/find_mobile_icon.png');}
+li#menu-map {background-image:url('https://reason.luther.edu/images/luther2010/mobile/campus_map_2_mobile_icon.png');}
+li#menu-directory {background-image:url('https://reason.luther.edu/images/luther2010/mobile/directory_2_mobile_icon.png');}
 li#menu-cafcam {background-image:url('/images/luther2010/mobile/caf_cam_mobile_icon.png');}
 li#menu-labstat {background-image:url('/images/luther2010/mobile/lab_availability_mobile_icon.png');}
 li#menu-library_search {background-image:url('/images/luther2010/mobile/library_search_mobile_icon.png');}
