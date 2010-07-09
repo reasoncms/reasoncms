@@ -203,8 +203,8 @@ class LutherHomeTemplate extends MinisiteTemplate
                 echo '</div> <!-- class="column span-15" -->'."\n";
                 echo '<div class="column span-15">'."\n";
 		echo '<div class="imagesideframe">'."\n";
-		echo '<a href="http://www.luther.edu/about/campus/tour">';
-		echo '<img src="/images/luther/homepage/subsite_nav/photo_tour.gif" alt="Apply for Admission"/></a>';
+		echo '<a href="http://www.luther.edu/about/campus/virtualtour">';
+		echo '<img src="/images/luther/homepage/subsite_nav/virtual_tour.gif" alt="Virtual Tour"/></a>';
 		echo '</div> <!-- class="imagesideframe" -->'."\n";
                 echo '</div> <!-- class="column span-15" -->'."\n";
 		echo '</div> <!-- id="imageside" -->'."\n";
