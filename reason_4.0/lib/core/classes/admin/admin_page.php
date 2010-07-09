@@ -1214,8 +1214,6 @@
 		
 		function set_head_items()
 		{
-			// add the charset information
-			$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ) );
 			
 			// add universal css path
 			if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '') $this->head_items->add_stylesheet(UNIVERSAL_CSS_PATH);
@@ -1234,6 +1232,8 @@
 			$this->head_items->add_javascript(JQUERY_URL, true);
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'jump_navigation.js');
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'disable_submit.js?id=disco_form&reset_time=60000');
+			// add the charset information - this should maybe just be in the head function code since we really want it on top
+			$this->head_items->add_head_item('meta',array('http-equiv'=>'Content-Type','content'=>'text/html; charset=UTF-8' ), '', true );
 		}
 		
 		function head()
