@@ -46,7 +46,7 @@ function resize_image($path, $width, $height, $sharpen=true)
     // Prevent the transformation from changing the file permissions.
     clearstatcache();
     $newperms = substr(sprintf('%o', fileperms($path)), -4);
-    if ($perms != $newperms) @chmod($path, $perms);
+    if ($perms != $newperms) @chmod($path, octdec($perms));
     return $result;
 }
 
