@@ -597,7 +597,7 @@ function admissions_banner()
 
         echo '<div class="banner">'."\n";
         echo '<ul class="nav picnav">'."\n";
-        echo '<li id="photoTour"><a href="http://www.luther.edu/about/campus/tour">Photo Tour</a></li>'."\n";
+        echo '<li id="photoTour"><a href="http://www.luther.edu/about/campus/virtualtour">Virtual Tour</a></li>'."\n";
         echo '<li id="visitLuther"><a href="/admissions/visit/">Visit Luther</a></li>'."\n";
         echo '<li id="getInfo"><a href="/admissions/getinfo/">Get Info</a></li>'."\n";
         echo '<li id="applyNow"><a href="/admissions/apply/">Apply Now</a></li>'."\n";
