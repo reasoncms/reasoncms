@@ -17,10 +17,10 @@
  */
 
 /**
- * changed to document.load instead of document.ready as this was causing jquery errors in IE - maybe because the JSON
+ * changed to window.load instead of document.ready as this was causing jquery errors in IE - maybe because the JSON
  * request was going out too fast??
  */
-$(document).load(function()
+$(window).load(function()
 {	
 	/**
 	 * enable me if you are working on this and want to see a live view of the important variables
