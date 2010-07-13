@@ -34,7 +34,7 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         echo '<a accesskey="5" href="directions/">Directions</a>';
         echo '</li>';
         echo '<li id="menu-directory">';
-        echo '<a accesskey="6" href="https://www.luther.edu/directory/">Directory</a>';
+        echo '<a accesskey="6" href="https://www.luther.edu/directory/m.directory/">Directory</a>';
         echo '</li>';
         //echo '<li id="menu-find">';
         //echo '<a accesskey="7" href="https://find.luther.edu/">Find</a>';
