@@ -12,11 +12,11 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
     }
 
     function run() {
-        echo '<div class="center">';
 ?>
-<p style="color: red;"> New to Luther College? Check out the <a href="http://reasondev.luther.edu/mobile/visitor">Visitors Section</a></p>
+<p style=" margin:0; padding:0;text-align: center; color: red;"> New to Luther College? Check out the <a style="color: red;"href="http://reasondev.luther.edu/mobile/visitor">Visitors Section</a></p>
 
 <?php
+        echo '<div class="center">';
         echo '<ol class="icon-menu">';
         //echo '<li id="menu-cafcam">';
         //echo '<a accesskey="3" href="https://reasondev.luther.edu/mobile/comingsoon/">Caf Cam</a>';
