@@ -13,7 +13,7 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
 
     function run() {
 ?>
-<p style=" margin:0; padding:0;font-size:10px;font-family:Helvetica;font-weight:bold;text-align:center;color:red;"><a style="color: red;"href="http://reasondev.luther.edu/mobile/visitor">New to Luther College? Check out the Visitors Section</a></p>
+<p style=" margin:0; padding:5px 0 0 0;font-size:11px;font-family:Helvetica;font-weight:bold;text-align:center;color:red;"><a style="color: red;"href="http://reasondev.luther.edu/mobile/visitor">Click for Visitor Experience</a></p>
 
 <?php
         echo '<div class="center">';
