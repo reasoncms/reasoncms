@@ -1,8 +1,8 @@
 <?php
 reason_include_once( 'minisite_templates/modules/default.php' );
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'MobileIconHomeModule';
+$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'MobileVisitorHomeModule';
 
-class MobileIconHomeModule extends DefaultMinisiteModule {
+class MobileVisitorHomeModule extends DefaultMinisiteModule {
     function init( $args = array() ) {
 
     }
@@ -27,11 +27,14 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         echo '<li id="menu-tour">';
         echo '<a accesskey="4" href="tour/">Campus Tour</a>';
         echo '</li>';
+        echo '<li id="menu-contact">';
+        echo '<a accesskey="5" href="map/">Contact</a>';
+        echo '</li>';
         echo '<li id="menu-directions">';
-        echo '<a accesskey="5" href="directions/">Directions</a>';
+        echo '<a accesskey="6" href="directions/">Directions</a>';
         echo '</li>';
         echo '<li id="menu-home">';
-        echo '<a accesskey="11" href="/mobile/">Full Mobile</a>';
+        echo '<a accesskey="7" href="/mobile/">Full Mobile</a>';
         echo '</li>';
         echo '</ol>';
         echo '</div>';
