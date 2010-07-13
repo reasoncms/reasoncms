@@ -31,7 +31,7 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         echo '<a accesskey="5" href="directions/">Directions</a>';
         echo '</li>';
         echo '<li id="menu-home">';
-        echo '<a accesskey="11" href="/">Full Mobile</a>';
+        echo '<a accesskey="11" href="/mobile/">Full Mobile</a>';
         echo '</li>';
         echo '</ol>';
         echo '</div>';
