@@ -28,7 +28,7 @@ class MobileVisitorHomeModule extends DefaultMinisiteModule {
         echo '<a accesskey="4" href="tour/">Campus Tour</a>';
         echo '</li>';
         echo '<li id="menu-contact">';
-        echo '<a accesskey="5" href="map/">Contact</a>';
+        echo '<a accesskey="5" href="contact/">Contact</a>';
         echo '</li>';
         echo '<li id="menu-directions">';
         echo '<a accesskey="6" href="directions/">Directions</a>';
