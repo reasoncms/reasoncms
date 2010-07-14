@@ -59,7 +59,7 @@
     			'type' => 'checkbox',
     			'display_name' => 'Use camera-recorded date if found <span class="smallText">(Leave this checked to make sure that Reason knows when your images were taken)</span>',
     		),
-    		'attach_to_gallery'=>array('type'=>'hidden'),
+    		'attach_to_page'=>array('type'=>'hidden'),
     		'assign_to_categories'=>array('type'=>'hidden'),
     		'no_share'=>array('type'=>'hidden'),
         );
@@ -81,37 +81,62 @@
 		}
 		function get_available_image_galleries($site_id)
 		{
-			reason_include_once( 'minisite_templates/page_types.php' );
-			$gallery_modules = array('gallery', 'alumni_gallery', 'gallery_horizons', 'gallery_vote');
-			foreach($GLOBALS['_reason_page_types'] as $page_type_name => $page_type_values)
+			$page_types = $this->get_image_related_page_types();
+			$pages = array();
+			if(!empty($page_types))
 			{
-				if(!in_array($page_type_name, $gallery_modules))
+				$es = new entity_selector($site_id);
+				$es->add_type( id_of( 'minisite_page' ) );
+				$es->add_relation( 'page_node.custom_page IN (\''.implode('\', \'', $page_types).'\')' );
+				$pages = $es->run_one();
+			}
+			return $pages;
+		}
+		function get_image_related_page_types()
+		{
+			static $page_types;
+			if(!is_array($page_types))
+			{
+				$modules = array('gallery', 'alumni_gallery', 'gallery_horizons', 'gallery_vote','image_slideshow','gallery2');
+				$page_types = array();
+				foreach($modules as $module)
 				{
-					foreach($page_type_values as $value)
-					{
-						if(is_array($value))
-						{
-							foreach($value as $nested_value)
-							{								
-								if(is_string($nested_value) && in_array($nested_value, $gallery_modules))
-								{
-									$gallery_modules[] = $page_type_name;
-								}
-							}
-						}
-						elseif(is_string($value) && in_array($value, $gallery_modules))
-						{
-							$gallery_modules[] = $page_type_name;
-						}
-					}
+					$page_types = array_merge($page_types,page_types_that_use_module($module));
 				}
 			}
-						
-			$es = new entity_selector($site_id);
-			$es->add_type( id_of( 'minisite_page' ) );
-			$es->add_relation( 'page_node.custom_page IN (\''.implode('\', \'', $gallery_modules).'\')' );
-			$pages = $es->run_one();
-			return $pages;
+			return $page_types;
+		}
+		
+		function get_selection_page_set($site_id)
+		{
+			reason_include_once( 'minisite_templates/nav_classes/default.php' );
+			$pages = new MinisiteNavigation();
+			$site = new entity($site_id);
+			$pages->site_info = $site;
+			$pages->init( $site_id, id_of('minisite_page'));
+			return $this->flatten_page_tree($pages->get_tree_data());
+		}
+		function flatten_page_tree($tree,$depth = 0)
+		{
+			$ret = array();
+			foreach($tree as $id=>$info)
+			{
+				$ret[$id] = '';
+				for($i = 0; $i < $depth; $i++)
+				{
+					$ret[$id] .= '---';
+				}
+				$ret[$id] .= $info['item']->get_value('name');
+				if(in_array($info['item']->get_value('custom_page'),$this->get_image_related_page_types()))
+				{
+					$ret[$id] .= ' *';
+				}
+				if(!empty($info['children']))
+				{
+					$ret = $ret + $this->flatten_page_tree($info['children'],$depth + 1);
+				}
+			}
+			return $ret;
 		}
 		
 		function on_every_time()
@@ -144,16 +169,11 @@
 		}
 		function on_every_time_galleries()
 		{	
-			//find available galleries
-			$this->galleries = $this->get_available_image_galleries($this->site_id);
-			$gallery_args = array();
-			foreach($this->galleries  as $gallery_id => $gallery)
+			$page_options = $this->get_selection_page_set($this->site_id);
+			if(!empty($page_options))
 			{
-				$gallery_args[$gallery_id] = $gallery->get_value('name');
-			}
-			if(!empty($gallery_args))
-			{
-				$this->change_element_type('attach_to_gallery','select', array( 'options' => $gallery_args ) );
+				$this->change_element_type('attach_to_page','select_no_sort', array( 'options' => $page_options, 'add_null_value_to_top' => true ) );
+				$this->add_comments('attach_to_page',form_comment('* Photo gallery/slideshow pages'));
 			}
 		}
 		
@@ -261,7 +281,7 @@
 			
 			if( count( $this->files ) )
 			{
-				$page_id = (integer) $this->get_value('attach_to_gallery');
+				$page_id = (integer) $this->get_value('attach_to_page');
 				$max_sort_order_value = 0;
 				if($page_id)
 				{
