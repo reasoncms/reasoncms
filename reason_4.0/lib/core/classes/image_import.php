@@ -129,7 +129,7 @@
 				$ret[$id] .= $info['item']->get_value('name');
 				if(in_array($info['item']->get_value('custom_page'),$this->get_image_related_page_types()))
 				{
-					$ret[$id] .= ' *';
+					$ret[$id] .= ' &#9671;';
 				}
 				if(!empty($info['children']))
 				{
@@ -173,7 +173,8 @@
 			if(!empty($page_options))
 			{
 				$this->change_element_type('attach_to_page','select_no_sort', array( 'options' => $page_options, 'add_null_value_to_top' => true ) );
-				$this->add_comments('attach_to_page',form_comment('* Photo gallery/slideshow pages'));
+				$this->add_comments('attach_to_page',form_comment('&#9671;: Photo gallery/slideshow pages'));
+				$this->set_display_name('attach_to_page','Place imported images on page');
 			}
 		}
 		
