@@ -154,7 +154,7 @@ class LFWRegistrationConfirmation extends FormStep
 	
 	function email_alumni($text)
 	{
-		$mail = new Email('slylth@gmail.com', 'noreply@luther.edu','noreply@luther.edu', 'New Homecoming Registration '.date('mdY H:i:s'),strip_tags($text), $text);
+		$mail = new Email('luthfestreg@gmail.com,einckmic@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New LFW Registration '.date('mdY H:i:s'),strip_tags($text), $text);
 		$mail->send();
 	}
 	function email_registrant($text)
@@ -171,7 +171,7 @@ class LFWRegistrationConfirmation extends FormStep
 		);
 		
 		$mail_text = str_replace(array_keys($replacements),$replacements,$text);
-		$mail = new Email($this->controller->get('e-mail'),'alumni@luther.edu','alumni@luther.edu','Luther College Homecoming Registration Confirmation',strip_tags($mail_text),$mail_text);
+		$mail = new Email($this->controller->get('e-mail'),'luthfestreg@gmail.edu','lutherfestreg@gmail.edu,eicnkmic@luther.edu','Lutheran Festival of Writing Registration Confirmation',strip_tags($mail_text),$mail_text);
 		$mail->send();
 	}
 }
