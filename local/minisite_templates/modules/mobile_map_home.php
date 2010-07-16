@@ -70,6 +70,7 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
         
 <body onload="buildingReset();departmentReset()">
 
+<th>Buildings:</th>
 <form name="redirect1">
 <select id="buildings" name="buildings">
   <option value="blank" selected></option>
@@ -78,6 +79,7 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
 </select>
 <input type=button value="Go" onClick="WinOpen();">
 </form>
+<th>Departments:</th>
 <form name="redirect2">
 <select id="departments" name="departments">
   <option value="blank" selected></option>
