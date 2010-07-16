@@ -73,8 +73,8 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
 </head>
 
 <body onload="buildingReset();departmentReset()">
-
-<th>Buildings:</th>
+<p>Select a building or a department to display on map.</p>
+<th style="font-weight: bold;">Buildings:</th>
 <form name="redirect1">
     <select id="buildings" name="buildings" onchange="departmentReset()">
         <option value=" " selected></option>
@@ -85,10 +85,10 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
     <input type=button value="Go" onClick="WinOpen1();">
 </form>
 <p></p>
-<th>Departments:</th>
+<th style="font-weight: bold;">Departments:</th>
 <form name="redirect2">
     <select id="departments" name="departments" onchange="buildingReset()">
-        <option value="blank" selected></option>
+        <option value=" " selected></option>
         <option value="koren/">Africana Studies</option>
         <option value="koren/">Anthropology</option>
         <option value="koren/">Archaeology</option>
