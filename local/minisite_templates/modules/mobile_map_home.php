@@ -90,18 +90,37 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
     <select id="departments" name="departments" onchange="buildingReset()">
         <option value=" " selected></option>
         <option value="koren/">Africana Studies</option>
+        <option value="cfa/">Art</option>
         <option value="koren/">Anthropology</option>
-        <option value="koren/">Archaeology</option>
+        <!--<option value="koren/">Archaeology</option>-->
         <option value="sampson/">Biology</option>
-        <option value="olin/">Business</option>
+        <!--<option value="olin/">Business</option>-->
         <option value="sampson/">Chemistry</option>
+        <option value="main/">Classics</option>
+        <option value="campushouse/">Communication Studies</option>
         <option value="olin/">Computer Science</option>
-        <option value="olin/">Economics</option>
+        <option value="olin/">Economics and Business</option>
         <option value="koren/">Education</option>
-        <option value="olin/">Math</option>
+        <option value="main/">English</option>
+        <option value="valders/">Environmental Studies</option>
+        <option value="regents/">Health and Physical Education</option>
+        <option value="koren/">History</option>
+        <option value="larsen/">International Studies</option>
+        <option value="preus/">Library Information Studies</option>
+        <option value="olin/">Mathematics</option>
+        <option value="main/">Modern Languages and Literatures</option>
+        <option value="koren/">Museum Studies</option>
+        <option value="jenson/">Music</option>
+        <option value="valders/">Nursing</option>
+        <option value="main/">Paideia</option>
+        <option value="ockham/">Philosophy</option>
+        <option value="valders/">Physics</option>
         <option value="koren/">Political Science</option>
+        <option value="valders/">Psychology</option>
+        <option value="main/">Religion</option>
         <option value="koren/">Sociology</option>
         <option value="koren/">Social Work</option>
+        <option value="cfa/">Theatre/Dance</option>
         <option value="koren/">Women's and Gender Studies</option>
     </select>
     <input type=button value="Go" onClick="WinOpen2();">
