@@ -322,6 +322,14 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'footer' => '',
             'post_foot' => 'mobile_footer',
 		),
+		'mobile_map_home' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main' => 'content',
+			'main_post' => 'mobile_map_home',
+			'footer' => '',
+            'post_foot' => 'mobile_footer',
+		),
 		'mobile_news' => array(
 			'banner_xtra' => '',
 			'post_banner' => '',
