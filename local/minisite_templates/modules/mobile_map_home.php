@@ -77,7 +77,7 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
 <th>Buildings:</th>
 <form name="redirect1">
     <select id="buildings" name="buildings" onchange="departmentReset()">
-        <option value="blank" selected></option>
+        <option value=" " selected></option>
         <option value="olin/">Olin</option>
         <option value="koren/">Koren</option>
         <option value="sampson/">Sampson Hoffland</option>
