@@ -81,7 +81,7 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
   <option value="olin/">Olin</option>
   <option value="m.luther.edu">Test</option>
 </select>
-<input type=button value="Go" onClick="WinOpen();">
+<input type=button value="Go" onClick="WinOpen1();">
 </form>
 <th>Departments:</th>
 <form name="redirect2">
@@ -90,7 +90,7 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
   <option value="http://www.java2s.com">Hi</option>
   <option value="http://www.java2s.com">Bye</option>
 </select>
-<input type=button value="Go" onClick="WinOpen();">
+<input type=button value="Go" onClick="WinOpen2();">
 </form>
 
 </body>
