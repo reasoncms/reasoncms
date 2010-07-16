@@ -73,7 +73,7 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
 </head>
 
 <body onload="buildingReset();departmentReset()">
-<p>Select a building or a department to display on map.</p>
+<p><i>Select a building or a department to display on map.</i></p>
 <th style="font-weight: bold;">Buildings:</th>
 <form name="redirect1">
     <select id="buildings" name="buildings" onchange="departmentReset()">
