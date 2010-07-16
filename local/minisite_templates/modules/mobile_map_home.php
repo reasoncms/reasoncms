@@ -59,10 +59,14 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
             o.style.display = 'none';
         }
 
-        function WinOpen() {
-            var url=document.redirect.selection.value
+        function WinOpen1() {
+            var url=document.redirect1.buildings.value
             document.location.href=url
+        }
 
+        function WinOpen2() {
+            var url=document.redirect2.departments.value
+            document.location.href=url
         }
         
     </script>
