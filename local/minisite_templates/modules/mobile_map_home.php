@@ -45,6 +45,10 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
             document.getElementById("departments").selectedIndex = document.getElementById("departments").getAttribute("default");
         }
 
+        function officeReset() {
+            document.getElementById("offices").selectedIndex = document.getElementById("offices").getAttribute("default");
+        }
+
         function switchMenu(obj) {
             hideAll();
             var o = document.getElementById(obj);
@@ -69,14 +73,19 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
             document.location.href=url
         }
 
+        function WinOpen3() {
+            var url=document.redirect3.departments.value
+            document.location.href=url
+        }
+
     </script>
 </head>
 
 <body onload="buildingReset();departmentReset()">
 <p><i>Select a building or a department to display on map.</i></p>
-<th style="font-weight: bold;">Buildings:</th>
+<th><b>Buildings:</b> <i>(Main, Olin, etc.)</i></th>
 <form name="redirect1">
-    <select id="buildings" name="buildings" onchange="departmentReset()">
+    <select id="buildings" name="buildings" onchange="officeReset(); departmentReset()">
         <option value=" " selected></option>
         <option value="olin/">Olin</option>
         <option value="koren/">Koren</option>
@@ -85,9 +94,9 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
     <input type=button value="Go" onClick="WinOpen1();">
 </form>
 <p></p>
-<th><b>Departments:</b> (Biology, Music, etc.)</th>
+<th><b>Departments:</b> <i>(Biology, Music, etc.)</i></th>
 <form name="redirect2">
-    <select id="departments" name="departments" onchange="buildingReset()">
+    <select id="departments" name="departments" onchange="buildingReset(); officeReset()">
         <option value=" " selected></option>
         <option value="koren/">Africana Studies</option>
         <option value="cfa/">Art</option>
@@ -124,6 +133,17 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
         <option value="koren/">Women's and Gender Studies</option>
     </select>
     <input type=button value="Go" onClick="WinOpen2();">
+</form>
+<p></p>
+<th><b>Offices:</b> <i>(etc.)</i></th>
+<form name="redirect3">
+    <select id="offices" name="offices" onchange="buildingReset(); departmentReset()">
+        <option value=" " selected></option>
+        <option value="olin/">Olin</option>
+        <option value="koren/">Koren</option>
+        <option value="sampson/">Sampson Hoffland</option>
+    </select>
+    <input type=button value="Go" onClick="WinOpen3();">
 </form>
 
 </body>
