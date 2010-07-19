@@ -87,9 +87,41 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
 <form name="redirect1">
     <select id="buildings" name="buildings" onchange="officeReset(); departmentReset()">
         <option value=" " selected></option>
-        <option value="olin/">Olin</option>
+        <option value="ashmore/">Ashmore-Jewell Barn</option>
+        <option value="brandt/">Brandt Hall</option>
+        <option value="campushouse/">Campus House</option>
+        <option value="carlson/">Carlson Stadium</option>
+        <option value="cfa/">Center for the Arts</option>
+        <option value="cfl/">Center for Faith and Life</option>
+        <option value="apts/">College Apartments</option>
+        <option value="union/">Dahl Centennial Union</option>
+        <option value="dieseth/">Dieseth Hall</option>
+        <option value="facilities/">Facilities Services</option>
+        <option value="farwell/">Farwell Hall</option>
+        <option value="gjerset/">Gjerset House</option>
+        <option value="jefferson/">Jefferson Prairie House</option>
+        <option value="jenson/">Jenson-Noble Hall of Music</option>
         <option value="koren/">Koren</option>
+        <option value="korsrud/">Korsrud Heating Plant</option>
+        <option value="larsen/">Larsen Hall</option>
+        <option value="loyalty/">Loyalty Hall</option>
+        <option value="main/">Main Building</option>
+        <option value="miller/">Miller Hall</option>
+        <option value="norby/">Norby House</option>
+        <option value="ockham/">Ockham House</option>
+        <option value="olin/">Franklin W. Olin Building</option>
+        <option value="olson/">Olson Hall</option>
+        <option value="president/">President's Residence</option>
+        <option value="preus/">Preus Library</option>
+        <option value="regents/">Regents Center</option>
+        <option value="rock/">Rock Prairie House</option>
         <option value="sampson/">Sampson Hoffland</option>
+        <option value="sperati/">Sperati Guest House</option>
+        <option value="spring/">Spring Prairie House</option>
+        <option value="storre/">Storre</option>
+        <option value="sustainability/">Sustainability House</option>
+        <option value="valders/">Valders Hall of Science</option>
+        <option value="ylvisaker/">Ylvisaker Hall</option>
     </select>
     <input type=button value="Go" onClick="WinOpen1();">
 </form>
