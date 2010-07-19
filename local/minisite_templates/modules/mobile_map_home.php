@@ -74,7 +74,7 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
         }
 
         function WinOpen3() {
-            var url=document.redirect3.departments.value
+            var url=document.redirect3.offices.value
             document.location.href=url
         }
 
