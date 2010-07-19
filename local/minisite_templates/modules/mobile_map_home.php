@@ -108,7 +108,7 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
         <option value="larsen/">International Studies</option>
         <option value="preus/">Library Information Studies</option>
         <option value="olin/">Mathematics</option>
-        <option value="main/">Modern Languages and Literatures</option>
+        <option value="main/">Modern Languages/Literatures</option>
         <option value="koren/">Museum Studies</option>
         <option value="jenson/">Music</option>
         <option value="valders/">Nursing</option>
