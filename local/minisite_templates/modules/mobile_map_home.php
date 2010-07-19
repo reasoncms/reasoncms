@@ -85,7 +85,7 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
     <input type=button value="Go" onClick="WinOpen1();">
 </form>
 <p></p>
-<th style="font-weight: bold;">Departments:</th>
+<th><h3>Departments:</h3> (Biology, Music, etc.)</th>
 <form name="redirect2">
     <select id="departments" name="departments" onchange="buildingReset()">
         <option value=" " selected></option>
