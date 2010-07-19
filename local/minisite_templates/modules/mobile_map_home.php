@@ -88,7 +88,9 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
     <select id="buildings" name="buildings" onchange="officeReset(); departmentReset()">
         <option value=" " selected></option>
         <option value="ashmore/">Ashmore-Jewell Barn</option>
+        <option value="brandt/">Baker Village</option>
         <option value="brandt/">Brandt Hall</option>
+        <option value="bergen/">Bergen</option>
         <option value="campushouse/">Campus House</option>
         <option value="carlson/">Carlson Stadium</option>
         <option value="cfa/">Center for the Arts</option>
@@ -104,6 +106,7 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
         <option value="koren/">Koren</option>
         <option value="korsrud/">Korsrud Heating Plant</option>
         <option value="larsen/">Larsen Hall</option>
+        <option value="lillehammer/">Lillehammer</option>
         <option value="loyalty/">Loyalty Hall</option>
         <option value="main/">Main Building</option>
         <option value="miller/">Miller Hall</option>
@@ -111,15 +114,18 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
         <option value="ockham/">Ockham House</option>
         <option value="olin/">Franklin W. Olin Building</option>
         <option value="olson/">Olson Hall</option>
+        <option value="oslo/">Oslo</option>
         <option value="president/">President's Residence</option>
         <option value="preus/">Preus Library</option>
         <option value="regents/">Regents Center</option>
         <option value="rock/">Rock Prairie House</option>
         <option value="sampson/">Sampson Hoffland</option>
+        <option value="shirley/">Shirley Baker Commons</option>
         <option value="sperati/">Sperati Guest House</option>
         <option value="spring/">Spring Prairie House</option>
         <option value="storre/">Storre</option>
         <option value="sustainability/">Sustainability House</option>
+        <option value="trondheim/">Trondheim</option>
         <option value="valders/">Valders Hall of Science</option>
         <option value="ylvisaker/">Ylvisaker Hall</option>
     </select>
