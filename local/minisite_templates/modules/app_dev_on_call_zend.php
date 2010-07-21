@@ -1,7 +1,4 @@
 <?php 
-set_include_path('/usr/local/webapps/reason/reason_package/ZendGdata-1.10.3/library');
-echo 'begin';
-
 /**
 unset($CFG);
 // This file has all the site settings, such
