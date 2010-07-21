@@ -88,7 +88,7 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
     <select id="buildings" name="buildings" onchange="officeReset(); departmentReset()">
         <option value=" " selected></option>
         <option value="ashmore/">Ashmore-Jewell Barn</option>
-        <option value="brandt/">Baker Village</option>
+        <option value="baker/">Baker Village</option>
         <option value="brandt/">Brandt Hall</option>
         <option value="bergen/">Bergen</option>
         <option value="campushouse/">Campus House</option>
@@ -141,7 +141,6 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
         <option value="koren/">Anthropology</option>
         <!--<option value="koren/">Archaeology</option>-->
         <option value="sampson/">Biology</option>
-        <!--<option value="olin/">Business</option>-->
         <option value="sampson/">Chemistry</option>
         <option value="main/">Classics</option>
         <option value="campushouse/">Communication Studies</option>
@@ -173,7 +172,7 @@ class MobileMapHomeModule extends DefaultMinisiteModule {
     <input type=button value="Go" onClick="WinOpen2();">
 </form>
 <p></p>
-<th><b>Offices and Other Areas:</b> <i>(etc.)</i></th>
+<th><b>Offices and Other Areas:</b> <i>(Admissions, Book Shop, etc.)</i></th>
 <form name="redirect3">
     <select id="offices" name="offices" onchange="buildingReset(); departmentReset()">
         <option value=" " selected></option>
