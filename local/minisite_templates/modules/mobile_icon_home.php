@@ -20,12 +20,9 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
  */
         echo '<div class="center">';
         echo '<ol class="icon-menu">';
-        //echo '<li id="menu-cafcam">';
-        //echo '<a accesskey="3" href="https://reasondev.luther.edu/mobile/comingsoon/">Caf Cam</a>';
-        //echo '</li>';
-        //echo '<li id="menu-admissions">';
-        //echo '<a accesskey="1" href="admissions/">Admissions</a>';
-        //echo '</li>';
+        echo '<li id="menu-admissions">';
+        echo '<a accesskey="1" href="admissions/">Admissions</a>';
+        echo '</li>';
         echo '<li id="menu-visitors">';
         echo '<a accesskey="2" href="visitor/">Visitors</a>';
         echo '</li>';
@@ -33,6 +30,9 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         echo '<a accesskey="3" href="calendar/">Calendar</a>';
         echo '</li>';
         echo '<li id="menu-map">';
+        echo '<li id="menu-cafcam">';
+        echo '<a accesskey="3" href="cafcam/">Caf Cam</a>';
+        echo '</li>';
         echo '<a accesskey="4" href="map/">Campus Map</a>';
         echo '</li>';
         echo '<li id="menu-tour">';
