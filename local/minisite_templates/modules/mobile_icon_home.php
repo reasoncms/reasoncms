@@ -29,10 +29,10 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         echo '<li id="menu-calendar">';
         echo '<a accesskey="3" href="calendar/">Calendar</a>';
         echo '</li>';
-        echo '<li id="menu-map">';
         echo '<li id="menu-cafcam">';
         echo '<a accesskey="3" href="cafcam/">Caf Cam</a>';
         echo '</li>';
+        echo '<li id="menu-map">';
         echo '<a accesskey="4" href="map/">Campus Map</a>';
         echo '</li>';
         echo '<li id="menu-tour">';
