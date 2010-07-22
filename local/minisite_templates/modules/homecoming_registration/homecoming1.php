@@ -154,17 +154,17 @@ class HomecomingRegistrationOneForm extends FormStep
 			);
 			
 
-		// Set years and ticket cost for 45 to 25 year reunions
-		$classes_string_45_to_25 = 'for Classes ';
-		for ($j = 45; $j >= 30; $j -= 5){
-			$classes_string_45_to_25 .= ($date['year'] -$j);
-			$classes_string_45_to_25 .= ', ';
+		// Set years and ticket cost for 55 to 25 year reunions
+		$classes_string_55_to_25 = 'for Classes ';
+		for ($j = 55; $j >= 30; $j -= 5){
+			$classes_string_55_to_25 .= ($date['year'] -$j);
+			$classes_string_55_to_25 .= ', ';
 		}
-		$classes_string_45_to_25 .= $date['year'] - 25;
+		$classes_string_55_to_25 .= $date['year'] - 25;
 		$this->change_element_type(
 			'attend_dinner_50_to_25', 'select_no_sort', array(
 				'display_name' => 'Attend Dinner', 
-				'comments' => '<br />'.$classes_string_45_to_25.'<br />$20/person',
+				'comments' => '<br />'.$classes_string_55_to_25.'<br />$20/person',
 				'options' => array(
 					'--'=>'--', 
 					'1'=>'1 ticket, $20',
