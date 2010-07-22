@@ -28,7 +28,7 @@ function refreshIt() {
 
 <body onLoad=" setTimeout('refreshIt()',10000)">
 
-<img src="http://webcam.luther.edu/cafcam/image.jpg" name="cafcam">
+<img style="width:100%;" src="http://webcam.luther.edu/cafcam/image.jpg" name="cafcam">
 
 </body>
 
