@@ -290,6 +290,14 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'footer' => '',
             'post_foot' => 'mobile_footer',
 		),
+    		'mobile_caf_cam' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main' => 'content',
+			'main_post' => 'mobile_caf_cam',
+			'footer' => '',
+            'post_foot' => 'mobile_footer',
+		),
 		'mobile_labstats' => array(
 			'banner_xtra' => '',
 			'post_banner' => '',
