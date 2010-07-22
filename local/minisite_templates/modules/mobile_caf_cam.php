@@ -27,7 +27,7 @@ function refreshIt() {
 </head>
 
 <body onLoad=" setTimeout('refreshIt()',10000)">
-<p><i>(image refreshes automatically)</i></p>
+<p style="margin-top: 0;padding-top: 0;"><i>(image refreshes automatically)</i></p>
 <img style="width:100%;" src="http://webcam.luther.edu/cafcam/image.jpg" name="cafcam">
 
 </body>
