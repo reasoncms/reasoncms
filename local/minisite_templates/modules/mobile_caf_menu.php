@@ -25,21 +25,21 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         }
         fclose ($file);
 
-        //$homepage = file_get_contents('https://reasondev.luther.edu/images/luther2010/mobile/WeeklyMenu_old.htm');
-        echo "<p><b>Start</b><p>";
+        $monday='<!-- MONDAY -->';
+        $tuesday='<!-- TUESDAY -->';
+        $wednesday='<!-- WEDNESDAY -->';
+        $thursday='<!-- THURSDAY -->';
+        $friday='<!-- FRIDAY -->';
+        $saterday='<!-- SATURDAY -->';
+        $sunday='<!-- SUNDAY -->';
 
-        $word1='<!-- MONDAY -->';
-        $word2='<!-- TUESDAY -->';
+        //$handle = fopen($file, "r");
+        //$contents = fread($handle, filesize($file));
+        //fclose($handle);
 
-
-        $handle = fopen($file, "r");
-        $contents = fread($handle, filesize($file));
-        fclose($handle);
-
-        $between=substr($output, strpos($output, $word1), strpos($output, $word2) - strpos($output, $word1));
+        $between=substr($output, strpos($output, $monday), strpos($output, $tuesday) - strpos($output, $monday));
 
         echo $between;
-        echo "<p><b>End</b><p>";
 
         /**
 
