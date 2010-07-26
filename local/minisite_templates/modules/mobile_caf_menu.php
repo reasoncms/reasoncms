@@ -13,11 +13,31 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
 
     function run() {
 
-        
-        
-?>
 
-<?php
+        // file example 1: read a text file into a string with fgets
+        $filename="https://reasondev.luther.edu/images/luther2010/mobile/WeeklyMenu_old.htm";
+        $output="";
+        $file = fopen($filename, "r");
+        while(!feof($file)) {
+
+            //read file line by line into variable
+            $output = $output . fgets($file, 4096);
+
+        }
+        fclose ($file);
+        //echo $output;
+        // striping text
+        //$text = '<p>Test paragraph.</p><!-- Comment --> <a href="#fragment">Other text</a>';
+        echo strip_tags($output);
+        echo "\n";
+
+        // Allow <p> and <a>
+        //echo strip_tags($text, '<p><a>');
+
+
+        ?>
+
+        <?php
     }
 }
 ?>
