@@ -12,7 +12,7 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
     }
 
     function run() {
-
+        /**
 
         // file example 1: read a text file into a string with fgets
         $filename="https://reasondev.luther.edu/images/luther2010/mobile/WeeklyMenu_old.htm";
@@ -29,21 +29,37 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         // striping text
         //$text = '<p>Test paragraph.</p><!-- Comment --> <a href="#fragment">Other text</a>';
         // Example string
-        $str = "Let's find the stuff <bla>in between</bla> these two previous brackets";
+        
+         * 
+         * 
+         */
+        //First, open the file. Change your filename
+        $file = "https://reasondev.luther.edu/images/luther2010/mobile/WeeklyMenu_old.htm";
+        $word1='<!-- MONDAY -->';
+        $word2='<!-- TUESDAY -->';
 
-        // Let's perform the regex
-        echo $output;
+
+        $handle = fopen($file, "r");
+        $contents = fread($handle, filesize($file));
+        fclose($handle);
+
+        $between=substr($contents, strpos($contents, $word1), strpos($contents, $word2) - strpos($contents, $word1));
+
+        echo $between;
+
+        /**
+
         $do = preg_match("/<!-- MONDAY -->(.*)<!-- TUESDAY -->/", $output, $matches);
 
         // Check if regex was successful
         if ($do = true) {
-        // Matched something, show the matched string
+            // Matched something, show the matched string
             echo htmlentities($matches['0']);
 
-        // Also how the text in between the tags
+            // Also how the text in between the tags
             echo '<br />' . $matches['1'];
         } else {
-        // No Match
+            // No Match
             echo "Couldn't find a match";
         }
         //echo strip_tags($output);
@@ -52,6 +68,8 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         // Allow <p> and <a>
         //echo strip_tags($text, '<p><a>');
 
+         *
+         */
 
         ?>
 
