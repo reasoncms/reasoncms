@@ -45,7 +45,7 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         // No Match
             echo "Couldn't find a match";
         }
-        echo strip_tags($output);
+        //echo strip_tags($output);
         echo "<p><b>Done</b></p>";
 
         // Allow <p> and <a>
