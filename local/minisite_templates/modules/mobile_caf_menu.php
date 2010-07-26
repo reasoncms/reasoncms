@@ -35,8 +35,8 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
          */
         //First, open the file. Change your filename
         $file = "https://reasondev.luther.edu/images/luther2010/mobile/WeeklyMenu_old.htm";
-        $word1='<!-- MONDAY -->';
-        $word2='<!-- TUESDAY -->';
+        $word1='<';
+        $word2='>';
 
 
         $handle = fopen($file, "r");
