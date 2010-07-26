@@ -183,6 +183,7 @@ img.keyall {
 td.mealname {
    font-weight: bold;
    font-size: 18px;
+   text-decoration: underline;
 }
 
 td.station {
