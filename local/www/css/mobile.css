@@ -180,6 +180,18 @@ img.keyall {
     display: none;
 }
 
+td.mealname {
+   font-weight: bold;
+   font-size: 18px;
+}
+
+td.station {
+    font-weight: bold;
+}
+
+img.nav {
+    display: none;
+}
 
 
 /*
