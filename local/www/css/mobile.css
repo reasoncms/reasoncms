@@ -170,6 +170,18 @@ table#footer1{
     display: none;
 }
 
+/* Caf Menu Stuff */
+
+input.chk {
+    display: none;
+}
+
+img.keyall {
+    display: none;
+}
+
+
+
 /*
 .highslide {
     visibility: hidden;
