@@ -25,7 +25,7 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         }
         fclose ($file);
 
-        $dontwant = array("&#0149;");
+        $dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>");
         $output = str_replace($dontwant, "", $output1);
 
 
