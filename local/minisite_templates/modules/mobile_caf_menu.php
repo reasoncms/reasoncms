@@ -32,6 +32,7 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         $str = "Let's find the stuff <bla>in between</bla> these two previous brackets";
 
         // Let's perform the regex
+        echo $output;
         $do = preg_match("/<!-- MONDAY -->(.*)<!-- TUESDAY -->/", $output, $matches);
 
         // Check if regex was successful
