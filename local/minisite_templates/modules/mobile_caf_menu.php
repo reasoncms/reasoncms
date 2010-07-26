@@ -12,7 +12,6 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
     }
 
     function run() {
-        /**
 
         // file example 1: read a text file into a string with fgets
         $filename="https://reasondev.luther.edu/images/luther2010/mobile/WeeklyMenu_old.htm";
@@ -25,25 +24,16 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
 
         }
         fclose ($file);
-        //echo $output;
-        // striping text
-        //$text = '<p>Test paragraph.</p><!-- Comment --> <a href="#fragment">Other text</a>';
-        // Example string
-        
-         * 
-         * 
-         */
-        //First, open the file. Change your filename
-        $file = "https://reasondev.luther.edu/images/luther2010/mobile/WeeklyMenu_old.htm";
-        $word1='<';
-        $word2='>';
+
+        $word1='<!-- MONDAY -->';
+        $word2='<!-- TUESDAY -->';
 
 
         $handle = fopen($file, "r");
         $contents = fread($handle, filesize($file));
         fclose($handle);
 
-        $between=substr($contents, strpos($contents, $word1), strpos($contents, $word2) - strpos($contents, $word1));
+        $between=substr($output, strpos($contents, $word1), strpos($output, $word2) - strpos($output, $word1));
 
         echo $between;
 
