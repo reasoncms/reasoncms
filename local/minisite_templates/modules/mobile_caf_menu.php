@@ -15,15 +15,19 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
 
         // file example 1: read a text file into a string with fgets
         $filename="https://reasondev.luther.edu/images/luther2010/mobile/WeeklyMenu_old.htm";
-        $output="";
+        $output1="";
         $file = fopen($filename, "r");
         while(!feof($file)) {
 
             //read file line by line into variable
-            $output = $output . fgets($file, 4096);
+            $output1 = $output1 . fgets($file, 4096);
 
         }
         fclose ($file);
+
+        $dontwant = array("&#0149;");
+        $output = str_replace($dontwant, "", $output1);
+
 
         $monday='<!-- MONDAY -->';
         $tuesday='<!-- TUESDAY -->';
