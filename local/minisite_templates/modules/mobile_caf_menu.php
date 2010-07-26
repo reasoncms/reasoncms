@@ -25,6 +25,11 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         }
         fclose ($file);
 
+        $homepage = file_get_contents('https://reasondev.luther.edu/images/luther2010/mobile/WeeklyMenu_old.htm');
+        echo "<p><b>Start</b><p>";
+        echo $homepage;
+        echo "<p><b>End</b><p>";
+
         $word1='<!-- MONDAY -->';
         $word2='<!-- TUESDAY -->';
 
