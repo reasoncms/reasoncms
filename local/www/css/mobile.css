@@ -194,6 +194,10 @@ img.nav {
     display: none;
 }
 
+img.icon {
+    display: none;
+}
+
 
 /*
 .highslide {
