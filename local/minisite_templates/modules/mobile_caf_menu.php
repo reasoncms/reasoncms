@@ -32,14 +32,27 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         $friday='<!-- FRIDAY -->';
         $saterday='<!-- SATURDAY -->';
         $sunday='<!-- SUNDAY -->';
+        $end='<!-- END DAY DATA -->';
 
         //$handle = fopen($file, "r");
         //$contents = fread($handle, filesize($file));
         //fclose($handle);
 
-        $between=substr($output, strpos($output, $monday), strpos($output, $tuesday) - strpos($output, $monday));
+        $betweenmon=substr($output, strpos($output, $monday), strpos($output, $tuesday) - strpos($output, $monday));
+        $betweentues=substr($output, strpos($output, $tuesday), strpos($output, $wednesday) - strpos($output, $tuesday));
+        $betweenwed=substr($output, strpos($output, $wednesday), strpos($output, $thursday) - strpos($output, $wednesday));
+        $betweenthurs=substr($output, strpos($output, $thursday), strpos($output, $friday) - strpos($output, $thursday));
+        $betweenfri=substr($output, strpos($output, $friday), strpos($output, $saterday) - strpos($output, $friday));
+        $betweensat=substr($output, strpos($output, $saterday), strpos($output, $sunday) - strpos($output, $saterday));
+        $betweensun=substr($output, strpos($output, $sunday), strpos($output, $end) - strpos($output, $sunday));
 
-        echo $between;
+        echo $betweenmon;
+        echo $betweentues;
+        echo $betweenwed;
+        echo $betweenthurs;
+        echo $betweenfri;
+        echo $betweensat;
+        echo $betweensun;
 
         /**
 
