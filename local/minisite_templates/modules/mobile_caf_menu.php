@@ -29,7 +29,7 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         // striping text
         //$text = '<p>Test paragraph.</p><!-- Comment --> <a href="#fragment">Other text</a>';
         echo strip_tags($output);
-        echo "<p></p>";
+        echo "<p><b>TEST THIS IS A NEW LINE!!!!!!!</b></p>";
 
         // Allow <p> and <a>
         //echo strip_tags($text, '<p><a>');
