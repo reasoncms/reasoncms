@@ -128,8 +128,8 @@ function &reason_get_module_sets()
 	if(empty($ms))
 	{
 		$ms = new module_sets('This setup string should only be in the factory function');
-		if(reason_file_exists('minisite_templates/module_sets.php'))
-			reason_include_once('minisite_templates/module_sets.php');
+		if(reason_file_exists('config/module_sets/setup.php'))
+			reason_include_once('config/module_sets/setup.php');
 	}
 	return $ms;
 }
