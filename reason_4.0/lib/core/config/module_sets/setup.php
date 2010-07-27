@@ -23,7 +23,7 @@ $ms->add(
 	'event_display'
 );
 
-if(reason_file_exists('minisite_templates/module_sets_local.php'))
-	reason_include_once('minisite_templates/module_sets_local.php');
+if(reason_file_exists('config/module_sets/setup_local.php'))
+	reason_include_once('config/module_sets/setup_local.php');
 
 ?>
