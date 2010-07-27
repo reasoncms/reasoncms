@@ -31,11 +31,11 @@ class miniEventsModule extends EventsModule
 	 */
 	var $events_page_types = array();
 	/**
-	 * An array of module names that this module should link to
+	 * An array of additional module names that this module should link to
 	 *
 	 * @var array
 	 */
-	var $_events_modules = array('events','event_registration','event_signup','event_slot_registration','events_archive','events_hybrid','events_verbose',);
+	var $_events_modules = array();
 	var $list_date_format = 'D. M. j';
 	var $show_calendar_grid = false;
 	
@@ -61,14 +61,21 @@ class miniEventsModule extends EventsModule
 	{
 		echo '<h3><a href="'.$this->events_page_url.'">'.$this->events_page->get_value('name').'</a></h3>'."\n";
 	}
+	function _get_events_module_names()
+	{
+		reason_include_once( 'classes/module_sets.php' );
+		$ms =& reason_get_module_sets();
+		return array_unique(array_merge($ms->get('event_display'),$this->_events_modules));
+	}
 	function find_events_page() // {{{
 	{
+		$module_names = $this->_get_events_module_names();
 		reason_include_once( 'minisite_templates/nav_classes/default.php' );
 		$ps = new entity_selector($this->parent->site_id);
 		$ps->add_type( id_of('minisite_page') );
 		$rels = array();
 		$page_types = $this->events_page_types;
-		foreach($this->_events_modules as $module_name)
+		foreach($module_names as $module_name)
 		{
 			$page_types = array_merge($page_types, page_types_that_use_module($module_name));
 		}
