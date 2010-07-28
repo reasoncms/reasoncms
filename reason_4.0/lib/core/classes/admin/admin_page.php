@@ -14,7 +14,7 @@
 	include_once( 'reason_header.php' );
 	reason_include_once( 'classes/viewer.php' );
 	reason_include_once( 'classes/entity_selector.php' );
-	reason_include_once( 'classes/admin/admin_module.php' );
+	reason_include_once( 'config/admin_modules/setup.php' );
 	reason_include_once( 'classes/head_items.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
 	
