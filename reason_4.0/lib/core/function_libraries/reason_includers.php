@@ -13,7 +13,7 @@
 /**
  * Gets the path to a Reason file within the core directory.
  * @param string $path Path inside the core directory
- * @param string $section Choose between "lib", "www", and "data"; "lib" is the default
+ * @param string $section "lib" is the default and nothing else is supported right now
  * @return string the path to the file
  */
 function reason_get_core_path($path, $section = "lib")
@@ -24,7 +24,7 @@ function reason_get_core_path($path, $section = "lib")
 /**
  * Gets the path to a Reason file within the local directory.
  * @param string $path Path inside the local directory
- * @param string $section Choose between "lib", "www", and "data"; "lib" is the default
+ * @param string $section "lib" is the default and nothing else is supported right now
  * @return string the path to the file
  */
 function reason_get_local_path($path, $section = "lib")
@@ -37,7 +37,7 @@ function reason_get_local_path($path, $section = "lib")
  * Returns the path to the file in the local directory if it exists, otherwise
  * the path to the file in the core directory if that exists, otherwise null.
  * @param string path inside the local or core directory
- * @param string $section "lib", "www", or "data"
+ * @param string $section "lib" is the default and nothing else is supported right now
  * @return string the path to the file, or NULL if it wasn't found
  */
 function reason_resolve_path($path, $section = "lib")
@@ -58,7 +58,7 @@ function reason_resolve_path($path, $section = "lib")
  * First checks to see if the file exists in the local directory, then in the core
  * directory.
  * @param string $path Path inside the core and/or local directories
- * @param string $section Choose between "lib", "www", and "data"; "lib" is the default
+ * @param string $section "lib" is the default and nothing else is supported right now
  * @param string $function Chose type of include: include_once, include, require_once, or require; defaults to include_once
  * @return bool true if an inclusion was executed (and possibly succeeded); false if otherwise
  */
@@ -97,7 +97,7 @@ function reason_includer($path, $section = 'lib', $function = 'include_once')
  * Reason Include Once -- a wrapper for Reason Includer that replaces include_once()
  * Simpler interface that should generally only require a single parameter -- the path
  * @param string $path Path inside the core and/or local directories
- * @param string $section Choose between "lib", "www", and "data"; "lib" is the default
+ * @param string $section "lib" is the default and nothing else is supported right now
  * @return bool $success
  */
 function reason_include_once($path, $section = 'lib')
@@ -108,7 +108,7 @@ function reason_include_once($path, $section = 'lib')
  * Reason Include -- a wrapper for Reason Includer that replaces include()
  * Simpler interface that should generally only require a single parameter -- the path
  * @param string $path Path inside the core and/or local directories
- * @param string $section Choose between "lib", "www", and "data"; "lib" is the default
+ * @param string $section "lib" is the default and nothing else is supported right now
  * @return bool $success
  */
 function reason_include($path, $section = 'lib')
@@ -119,7 +119,7 @@ function reason_include($path, $section = 'lib')
  * Reason Require Once -- a wrapper for Reason Includer that replaces require_once()
  * Simpler interface that should generally only require a single parameter -- the path
  * @param string $path Path inside the core and/or local directories
- * @param string $section Choose between "lib", "www", and "data"; "lib" is the default
+ * @param string $section "lib" is the default and nothing else is supported right now
  * @return bool $success
  */
 function reason_require_once($path, $section = 'lib')
@@ -130,7 +130,7 @@ function reason_require_once($path, $section = 'lib')
  * Reason Require -- a wrapper for Reason Includer that replaces require()
  * Simpler interface that should generally only require a single parameter -- the path
  * @param string $path Path inside the core and/or local directories
- * @param string $section Choose between "lib", "www", and "data"; "lib" is the default
+ * @param string $section "lib" is the default and nothing else is supported right now
  * @return bool $success
  */
 function reason_require($path, $section = 'lib')
