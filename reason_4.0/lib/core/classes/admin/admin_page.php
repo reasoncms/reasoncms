@@ -14,7 +14,26 @@
 	include_once( 'reason_header.php' );
 	reason_include_once( 'classes/viewer.php' );
 	reason_include_once( 'classes/entity_selector.php' );
-	reason_include_once( 'config/admin_modules/setup.php' );
+	
+	/**
+	 * We check for the old style admin_module.php file and trigger an error if it is still being used
+	 * @todo remove this backwards compatibility check by Reason 4 RC 1
+	 */
+	if (reason_file_exists('classes/admin/admin_module.php'))
+	{
+		trigger_error('You are using an admin_module.php file to define administrative modules. 
+					   The classes/admin/admin_module.php file should be removed from the core and local classes/admin/ directories, 
+					   and config/admin_modules/setup.php and config/admin_module/setup_local.php used instead. 
+					   You may need to create a config/admin_modules/setup_local.php file in the local side of the core/local 
+					   split if you have made any changes or additions to the now deprecated admin_module.php file. 
+					   See this changelog post for further information: 
+					   https://apps.carleton.edu/opensource/reason/developers/changes/?story_id=652065');
+		reason_include_once( 'classes/admin/admin_module.php' );
+	}
+	else
+	{
+		reason_include_once( 'config/admin_modules/setup.php' );
+	}
 	reason_include_once( 'classes/head_items.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
 	
