@@ -517,6 +517,7 @@ function admissions_main_navigation()
         	echo '<ul>'."\n";
         	echo '<li><a href="/academics/majors/">Majors & Minors</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/calendars/">Academic Calendars</a></li>'."\n";
+        	echo '<li><a href="/admissions/academics/requirements/">Admissions Requirements</a></li>'."\n";        	
         	echo '<li><a href="/admissions/academics/curriculum/">Curriculum & Graduation Requirements</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/honors/">Honors Program</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/studyabroad/">Study Abroad</a></li>'."\n";
@@ -556,7 +557,7 @@ function admissions_main_navigation()
 			echo '<ul>'."\n";
         	echo '<li><a href="/financialaid/applying/">How to Apply for Aid</a></li>'."\n";
         	echo '<li><a href="/financialaid/current/scholarships/">Scholarship & Awards</a></li>'."\n";
-        	echo '<li><a href="/admissions/financialaid/needbased/">Need-Based Assistance</a></li>'."\n";
+        	echo '<li><a href="/financialaid/prospective/need/">Need-Based Assistance</a></li>'."\n";
         	echo '<li><a href="/financialaid/current/workstudy/">Work-Study Opportunities</a></li>'."\n";
         	echo '<li><a href="/financialaid/tuition/">Tuition & Fees</a></li>'."\n";
         	echo '<li><a href="/financialaid/news/">What\'s New</a></li>'."\n";
