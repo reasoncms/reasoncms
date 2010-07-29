@@ -7,12 +7,22 @@
 /*
  * Rules for inclusion of admin modules
  *
- * This file sets up the array $GLOBALS['_reason_admin_modules'].
+ * This file sets up the array $GLOBALS['_reason_admin_modules']. This file defines the "core" admin
+ * modules. If you have local admin modules, you should define $GLOBALS['_reason_admin_modules_local'] 
+ * in a file called setup_local.php and place it here:
+ *
+ * reason_package/reason_4.0/lib/local/config/admin_modules/setup_local.php
  * 
- * This array identifues the filename and class name for each admin module.
- * Each key of this array corresponds to a string identified in the request as "cur_module"
- * reason compares the requested module to this keys in this array. If it finds a matching key
- * (case-sensitive) it includes the file identified by the key "file" in the value array of the cur_module key in the classes/admin/modules directory.
+ * Modules defined in $GLOBALS['_reason_admin_modules_local'] will be merged into the available set
+ * of admin modules defined in $GLOBALS['_reason_admin_modules']. 
+ * 
+ * The $GLOBALS['_reason_admin_modules'] array identifues the filename and class name for each admin module.
+ * Each key of this array corresponds to a string identified in the request as "cur_module." 
+ *
+ * Reason compares the requested module to this keys in this array. If it finds a matching key
+ * (case-sensitive) it includes the file identified by the key "file" in the value array of the cur_module 
+ * key in the classes/admin/modules directory.
+ *
  * Reason then instantiates the class identified by the key "class" in the value array.
  *
  * A brief schematic of the $GLOBALS['_reason_admin_modules'] array:
@@ -24,15 +34,15 @@
  * );
  * </pre>
  *
- * To create a new admin module, add a file to classes/admin/modules. In this file, define a 
- * class that extends the DefaultModule. Overload the various methods as needed. Add a line to this 
- * file (actually, it's probably best to duplicate this file and place it in your local area first)
- * identifying the filename and class name of your new module. Now the new module should be 
- * available simply by altering the cur_module request element to match the key you used in 
- * this array.
+ * To create a new admin module, add a file to reason_package/reason_4.0/lib/local/classes/admin/modules/.
  *
+ * In this file, define a class that extends the DefaultModule. Overload the various methods as needed.
+ *
+ * Add a line to the $GLOBALS['_reason_admin_modules_local'] which identifies the filename and class name 
+ * of your new module. Now the new module should be available simply by altering the cur_module request element to 
+ * match the key you used in this array.
  */
- 	$GLOBALS['_reason_admin_modules'] = array(
+ $GLOBALS['_reason_admin_modules'] = array(
 		'Default'=>array('file'=>'default.php','class'=>'DefaultModule'),
 		'DoBorrow'=>array('file'=>'doBorrow.php','class'=>'DoBorrowModule'),
 		'DoAssociate'=>array('file'=>'doAssociate.php','class'=>'DoAssociateModule'),
@@ -74,5 +84,14 @@
 		'ActiveUsers'=>array('file'=>'active_users.php','class'=>'ReasonActiveUsersModule'),
 		'ReviewChanges'=>array('file'=>'review_changes.php','class'=>'ReasonReviewChangesModule'),
 		'SitePages'=>array('file'=>'site_pages.php','class'=>'ReasonSitePagesModule'),
-	);
+);
+
+if (reason_file_exists('config/admin_modules/setup_local.php'))
+{
+	reason_include_once('config/admin_modules/setup_local.php');
+	if(!empty($GLOBALS['_reason_admin_modules_local']))
+	{
+		$GLOBALS['_reason_admin_modules'] = array_merge($GLOBALS['_reason_admin_modules'],$GLOBALS['_reason_admin_modules_local']);
+	}
+}
 ?>
