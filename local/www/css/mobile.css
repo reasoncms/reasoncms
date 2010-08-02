@@ -176,6 +176,11 @@ input.chk {
     display: none;
 }
 
+div.daytitles {
+   font-weight: bold;
+   font-size: 18px;
+}
+
 img.keyall {
     display: none;
 }
@@ -196,11 +201,6 @@ img.nav {
 
 img.icon {
     display: none;
-}
-
-div#daytitles {
-   font-weight: bold;
-   font-size: 18px;
 }
 
 /*
