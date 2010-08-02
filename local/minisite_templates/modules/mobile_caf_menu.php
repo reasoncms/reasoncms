@@ -25,7 +25,7 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         }
         fclose ($file);
 
-        $dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>", "M<br>O<br>N<br>D<br>A<br>Y<br>", "T<br>U<br>E<br>S<br>D<br>A<br>Y<br>",
+        $dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>",
             "W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "F<br>R<br>I<br>D<br>A<br>Y<br>", "S<br>A<br>T<br>U<br>R<br>D<br>A<br>Y<br>",
             "S<br>U<br>N<br>D<br>A<br>Y<br>");
         $output2 = str_replace($dontwant, "", $output1);
@@ -41,8 +41,8 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         $m= "<!-- MONDAY --><div id=daytitles>Monday</div>";
         $tu="<!-- TUESDAY --><div id=daytitles>Tuesday</div>";
 
-        $moutput = str_replace($monday, $m, $output2);
-        $output = str_replace($tuesday, $tu, $moutput);
+        $moutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<div id=daytitles>Monday</div>", $output2);
+        $output = str_replace("T<br>U<br>E<br>S<br>D<br>A<br>Y<br>", "<div id=daytitles>Tuesday</div>", $moutput);
 
         //$handle = fopen($file, "r");
         //$contents = fread($handle, filesize($file));
