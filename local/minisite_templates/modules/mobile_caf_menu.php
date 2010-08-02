@@ -25,8 +25,8 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         }
         fclose ($file);
 
-        $dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>");
-        $removedoutput = str_replace($dontwant, "", $output1);
+        //$dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>");
+        //$removedoutput = str_replace($dontwant, "", $output1);
 
         $monday='<!-- MONDAY -->';
         $tuesday='<!-- TUESDAY -->';
@@ -37,13 +37,15 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         $sunday='<!-- SUNDAY -->';
         $end='<!-- END DAY DATA -->';
 
-        $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<div class=daytitles>Monday</div>", $removedoutput);
+        $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<div class=daytitles>Monday</div>", $output1);
         $tueoutput = str_replace("T<br>U<br>E<br>S<br>D<br>A<br>Y<br>", "<div class=daytitles>Tuesday</div>", $monoutput);
         $wedoutput = str_replace("W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "<div class=daytitles>Wednesday</div>", $tueoutput);
         $thuoutput = str_replace("T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "<div class=daytitles>Thursday</div>", $wedoutput);
         $frioutput = str_replace("F<br>R<br>I<br>D<br>A<br>Y<br>", "<div class=daytitles>Friday</div>", $thuoutput);
         $satoutput = str_replace("S<br>A<br>T<br>U<br>R<br>D<br>A<br>Y<br>", "<div class=daytitles>Saturday</div>", $frioutput);
-        $output = str_replace("S<br>U<br>N<br>D<br>A<br>Y<br>", "<div class=daytitles>Sunday</div>", $satoutput);
+        $sunoutput = str_replace("S<br>U<br>N<br>D<br>A<br>Y<br>", "<div class=daytitles>Sunday</div>", $satoutput);
+        $dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>", "<br>");
+        $output = str_replace($dontwant, "", $sunoutput);
 
         //$handle = fopen($file, "r");
         //$contents = fread($handle, filesize($file));
