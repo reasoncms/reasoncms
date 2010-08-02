@@ -37,8 +37,8 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         $sunday='<!-- SUNDAY -->';
         $end='<!-- END DAY DATA -->';
 
-        $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<div class=daytitles>Monday</div>", $output1);
-        $tueoutput = str_replace("T<br>U<br>E<br>S<br>D<br>A<br>Y<br>", "<div class=daytitles>Tuesday</div>", $monoutput);
+        $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Monday</div><br>", $output1);
+        $tueoutput = str_replace("T<br>U<br>E<br>S<br>D<br>A<br>Y<br>", "<br><hr><div class=daytitles>Tuesday</div>", $monoutput);
         $wedoutput = str_replace("W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "<div class=daytitles>Wednesday</div>", $tueoutput);
         $thuoutput = str_replace("T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "<div class=daytitles>Thursday</div>", $wedoutput);
         $frioutput = str_replace("F<br>R<br>I<br>D<br>A<br>Y<br>", "<div class=daytitles>Friday</div>", $thuoutput);
