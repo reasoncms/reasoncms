@@ -39,11 +39,11 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
 
         $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<div id=daytitles>Monday</div>", $removedoutput);
         $tueoutput = str_replace("T<br>U<br>E<br>S<br>D<br>A<br>Y<br>", "<div id=daytitles>Tuesday</div>", $monoutput);
-        $wedoutput = str_replace("W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "<div id=daytitles>Monday</div>", $tueoutput);
-        $thuoutput = str_replace("T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "<div id=daytitles>Tuesday</div>", $wedoutput);
-        $frioutput = str_replace("F<br>R<br>I<br>D<br>A<br>Y<br>", "<div id=daytitles>Monday</div>", $thuoutput);
-        $satoutput = str_replace("S<br>A<br>T<br>U<br>R<br>D<br>A<br>Y<br>", "<div id=daytitles>Tuesday</div>", $frioutput);
-        $output = str_replace("S<br>U<br>N<br>D<br>A<br>Y<br>", "<div id=daytitles>Monday</div>", $satoutput);
+        $wedoutput = str_replace("W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "<div id=daytitles>Wednesday</div>", $tueoutput);
+        $thuoutput = str_replace("T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "<div id=daytitles>Thursday</div>", $wedoutput);
+        $frioutput = str_replace("F<br>R<br>I<br>D<br>A<br>Y<br>", "<div id=daytitles>Friday</div>", $thuoutput);
+        $satoutput = str_replace("S<br>A<br>T<br>U<br>R<br>D<br>A<br>Y<br>", "<div id=daytitles>Saturday</div>", $frioutput);
+        $output = str_replace("S<br>U<br>N<br>D<br>A<br>Y<br>", "<div id=daytitles>Sunday</div>", $satoutput);
 
         //$handle = fopen($file, "r");
         //$contents = fread($handle, filesize($file));
