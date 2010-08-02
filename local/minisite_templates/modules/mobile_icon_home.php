@@ -12,12 +12,12 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
     }
 
     function run() {
-/*
+        /*
  * ?>
  * <p style=" margin:0; padding:5px 0 0 0;font-size:11px;font-family:Helvetica;font-weight:bold;text-align:center;color:red;"><a style="color: red;"href="http://reasondev.luther.edu/mobile/visitor">Click for Visitor Experience</a></p>
  *
  * <?php
- */
+        */
         echo '<div class="center">';
         echo '<ol class="icon-menu">';
         echo '<li id="menu-admissions">';
@@ -31,6 +31,9 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         echo '</li>';
         echo '<li id="menu-cafcam">';
         echo '<a accesskey="3" href="cafcam/">Caf Cam</a>';
+        echo '</li>';
+        echo '<li id="menu-cafmenu">';
+        echo '<a accesskey="3" href="menu/">Caf Menu</a>';
         echo '</li>';
         echo '<li id="menu-map">';
         echo '<a accesskey="4" href="map/">Campus Map</a>';
