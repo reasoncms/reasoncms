@@ -39,11 +39,11 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
 
         $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Monday</div><br>", $output1);
         $tueoutput = str_replace("T<br>U<br>E<br>S<br>D<br>A<br>Y<br>", "<br><hr><div class=daytitles>Tuesday</div>", $monoutput);
-        $wedoutput = str_replace("W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "<div class=daytitles>Wednesday</div>", $tueoutput);
-        $thuoutput = str_replace("T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "<div class=daytitles>Thursday</div>", $wedoutput);
-        $frioutput = str_replace("F<br>R<br>I<br>D<br>A<br>Y<br>", "<div class=daytitles>Friday</div>", $thuoutput);
-        $satoutput = str_replace("S<br>A<br>T<br>U<br>R<br>D<br>A<br>Y<br>", "<div class=daytitles>Saturday</div>", $frioutput);
-        $sunoutput = str_replace("S<br>U<br>N<br>D<br>A<br>Y<br>", "<div class=daytitles>Sunday</div>", $satoutput);
+        $wedoutput = str_replace("W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Wednesday</div>", $tueoutput);
+        $thuoutput = str_replace("T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Thursday</div>", $wedoutput);
+        $frioutput = str_replace("F<br>R<br>I<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Friday</div>", $thuoutput);
+        $satoutput = str_replace("S<br>A<br>T<br>U<br>R<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Saturday</div>", $frioutput);
+        $sunoutput = str_replace("S<br>U<br>N<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Sunday</div>", $satoutput);
         $dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>", "<br>");
         $output = str_replace($dontwant, "", $sunoutput);
 
