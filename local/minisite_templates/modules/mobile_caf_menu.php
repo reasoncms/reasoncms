@@ -25,10 +25,8 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         }
         fclose ($file);
 
-        $dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>",
-            "W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "F<br>R<br>I<br>D<br>A<br>Y<br>", "S<br>A<br>T<br>U<br>R<br>D<br>A<br>Y<br>",
-            "S<br>U<br>N<br>D<br>A<br>Y<br>");
-        $output2 = str_replace($dontwant, "", $output1);
+        $dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>");
+        $removedoutput = str_replace($dontwant, "", $output1);
 
         $monday='<!-- MONDAY -->';
         $tuesday='<!-- TUESDAY -->';
@@ -38,11 +36,14 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         $saterday='<!-- SATURDAY -->';
         $sunday='<!-- SUNDAY -->';
         $end='<!-- END DAY DATA -->';
-        $m= "<!-- MONDAY --><div id=daytitles>Monday</div>";
-        $tu="<!-- TUESDAY --><div id=daytitles>Tuesday</div>";
 
-        $moutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<div id=daytitles>Monday</div>", $output2);
-        $output = str_replace("T<br>U<br>E<br>S<br>D<br>A<br>Y<br>", "<div id=daytitles>Tuesday</div>", $moutput);
+        $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<div id=daytitles>Monday</div>", $removedoutput);
+        $tueoutput = str_replace("T<br>U<br>E<br>S<br>D<br>A<br>Y<br>", "<div id=daytitles>Tuesday</div>", $monoutput);
+        $wedoutput = str_replace("W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "<div id=daytitles>Monday</div>", $tueoutput);
+        $thuoutput = str_replace("T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "<div id=daytitles>Tuesday</div>", $wedoutput);
+        $frioutput = str_replace("F<br>R<br>I<br>D<br>A<br>Y<br>", "<div id=daytitles>Monday</div>", $thuoutput);
+        $satoutput = str_replace("S<br>A<br>T<br>U<br>R<br>D<br>A<br>Y<br>", "<div id=daytitles>Tuesday</div>", $frioutput);
+        $output = str_replace("S<br>U<br>N<br>D<br>A<br>Y<br>", "<div id=daytitles>Monday</div>", $satoutput);
 
         //$handle = fopen($file, "r");
         //$contents = fread($handle, filesize($file));
