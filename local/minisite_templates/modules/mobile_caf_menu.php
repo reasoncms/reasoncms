@@ -25,7 +25,9 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         }
         fclose ($file);
 
-        $dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>");
+        $dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>", "M<br>O<br>N<br>D<br>A<br>Y<br>", "T<br>U<br>E<br>S<br>D<br>A<br>Y<br>",
+            "W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "F<br>R<br>I<br>D<br>A<br>Y<br>", "S<br>A<br>T<br>U<br>R<br>D<br>A<br>Y<br>",
+            "S<br>U<br>N<br>D<br>A<br>Y<br>");
         $output = str_replace($dontwant, "", $output1);
 
 
