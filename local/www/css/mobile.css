@@ -198,6 +198,10 @@ img.icon {
     display: none;
 }
 
+div#daytitles {
+   font-weight: bold;
+   font-size: 18px;
+}
 
 /*
 .highslide {
