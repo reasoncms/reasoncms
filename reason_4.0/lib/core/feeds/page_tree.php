@@ -11,6 +11,7 @@ include_once( 'reason_header.php' );
 reason_include_once( 'feeds/default.php' );
 reason_include_once( 'minisite_templates/nav_classes/default.php' );
 reason_include_once('function_libraries/url_utils.php');
+reason_include_once('classes/page_types.php');
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'pageTreeFeed';
 
 /**
@@ -18,6 +19,7 @@ $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'pageTreeFeed'
  */
 class pageTreeFeed extends defaultFeed
 {
+
 	var $page_tree;
 	var $feed_class = 'pageTreeRSS';
 	var $page_types = array();
@@ -33,15 +35,13 @@ class pageTreeFeed extends defaultFeed
 	{
 		if(!empty($this->modules))
 		{
-			foreach($this->modules as $module)
+			$rpts =& get_reason_page_types();
+			$page_types = $rpts->get_page_type_names_that_use_module($this->modules);
+			foreach($page_types as $pt)
 			{
-				$page_types = page_types_that_use_module($module);
-				foreach($page_types as $pt)
+				if(!in_array($pt,$this->page_types))
 				{
-					if(!in_array($pt,$this->page_types))
-					{
-						$this->page_types[] = $pt;
-					}
+					$this->page_types[] = $pt;
 				}
 			}
 		}
