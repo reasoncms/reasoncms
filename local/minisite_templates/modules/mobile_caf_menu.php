@@ -14,7 +14,7 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
     function run() {
 
         // file example 1: read a text file into a string with fgets
-        $filename="https://reasondev.luther.edu/images/luther2010/mobile/WeeklyMenu_old.htm";
+        $filename="http://www.luther.edu/caf/locations/WeeklyMenu.htm";
         $output1="";
         $file = fopen($filename, "r");
         while(!feof($file)) {
