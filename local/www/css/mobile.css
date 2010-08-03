@@ -205,6 +205,19 @@ img.icon {
     display: none;
 }
 
+td.chkbr {
+    display: none;
+}
+td.chklu {
+    display: none;
+}
+td.chkdi {
+    display: none;
+}
+td.chkla {
+    display: none;
+}
+
 /*
 .highslide {
     visibility: hidden;
