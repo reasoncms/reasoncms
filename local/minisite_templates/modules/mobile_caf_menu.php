@@ -37,21 +37,18 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         $sunday='<!-- SUNDAY -->';
         $end='<!-- END DAY DATA -->';
         $dateof='<!-- WEEK OF START -->';
-        $enddateof='<!-- WEEK OF END -->';
+        $enddateof='</span>';
 
         $dateoutput = str_replace("Week of", "<!-- WEEK OF START --><span class=weekof>Week of", $output1);
-        $dateoutput2 = str_replace('<a class="jumpto" href="#sunday">Sunday</a><br>
-   <span style="line-height: 8px;"><br></span>', '<a class="jumpto" href="#sunday">Sunday</a><br>
-   <span style="line-height: 8px;"><br></span><!-- WEEK OF END -->', $dateoutput);
 
-        $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Monday</div><br>", $dateoutput2);
+        $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Monday</div><br>", $dateoutput);
         $tueoutput = str_replace("T<br>U<br>E<br>S<br>D<br>A<br>Y<br>", "<br><hr><div class=daytitles>Tuesday</div>", $monoutput);
         $wedoutput = str_replace("W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Wednesday</div>", $tueoutput);
         $thuoutput = str_replace("T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Thursday</div>", $wedoutput);
         $frioutput = str_replace("F<br>R<br>I<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Friday</div>", $thuoutput);
         $satoutput = str_replace("S<br>A<br>T<br>U<br>R<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Saturday</div>", $frioutput);
         $sunoutput = str_replace("S<br>U<br>N<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Sunday</div>", $satoutput);
-        $dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>", "<br>");
+        $dontwant = array("&#0149;", "<td colspan=\"3\" bgcolor=\"#c0c0c0\" style=\"height:1px;\"></td>", "<br>", "Meal(s) to Display:&nbsp;&nbsp;");
         $output = str_replace($dontwant, "", $sunoutput);
 
         //$handle = fopen($file, "r");
