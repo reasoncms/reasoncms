@@ -37,7 +37,7 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         $sunday='<!-- SUNDAY -->';
         $end='<!-- END DAY DATA -->';
         $dateof='<!-- WEEK OF START -->';
-        $enddateof='</span>';
+        $enddateof='<td style="padding-top:2px;">Meal(s) to Display:&nbsp;&nbsp;</td>';
 
         $dateoutput = str_replace("Week of", "<!-- WEEK OF START --><span class=weekof>Week of", $output1);
 
