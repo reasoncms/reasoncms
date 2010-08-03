@@ -1174,7 +1174,6 @@
 				$fired = true;
 			$return .= $el;
 		}
-		
 		return $return;
 	}
 	
@@ -1186,29 +1185,12 @@
 	 */
 	function page_types_that_use_module($module_name)
 	{
-		static $modules_to_page_types = array();
-		if(empty($modules_to_page_types))
-		{
-			reason_include_once('minisite_templates/page_types.php');
-			foreach($GLOBALS['_reason_page_types'] as $page_type => $type )
-			{
-				if( $page_type != 'default' )
-				{
-					$type = array_merge( $GLOBALS['_reason_page_types'][ 'default' ], $type  );
-				}
-				foreach( $type AS $section => $module_info )
-				{
-					$module = is_array( $module_info ) ? $module_info[ 'module' ] : $module_info;
-					$modules_to_page_types[$module][] = $page_type;
-				}
-			}
-		}
-		if(array_key_exists($module_name,$modules_to_page_types))
-		{
-			return $modules_to_page_types[$module_name];
-		}
-		return array();
+		reason_include_once('classes/page_types.php');
+		$rpts =& get_reason_page_types();
+		$pt_using_module = $rpts->get_page_type_names_that_use_module($module_name);
+		return $pt_using_module;
 	}
+
 	/**
 	 * Find a template entity given a template name
 	 *
