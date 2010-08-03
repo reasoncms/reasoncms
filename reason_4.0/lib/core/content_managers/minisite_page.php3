@@ -8,6 +8,8 @@
 	 */
 	reason_include_once( 'content_managers/parent_child.php3' );
 	reason_include_once('classes/url_manager.php');
+	reason_include_once('classes/page_types.php');
+	reason_include_once('minisite_templates/page_types.php');
 	
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'MinisitePageManager';
 
@@ -99,25 +101,6 @@
 				return array();
 		}
 		
-		function _page_type_has_one_of_modules($page_type, $modules)
-		{
-			foreach($page_type as $k=>$v)
-			{
-				if(is_array($v))
-				{
-					if(isset($v['module']) && in_array($v['module'], $modules))
-					{
-						return $v['module'];
-					}
-				}
-				else
-				{
-					if(in_array($v, $modules))
-						return $v;
-				}
-			}
-			return false;
-		}
 		
 		function alter_data() // {{{
 		{
@@ -212,13 +195,19 @@
 				{
 					reason_require_once( 'minisite_templates/page_types.php' );
 					$options = array();
-					foreach( $GLOBALS['_reason_page_types'] AS $k => $page_type )
+					$rpts =& get_reason_page_types();
+					$pts = $rpts->get_page_types();
+					$deprecated_mods = $this->_get_deprecated_modules();
+						
+					foreach( $pts AS $pt) 
 					{
-						$options[ $k ] = prettify_string( $k );
-						if($dep = $this->_page_type_has_one_of_modules($page_type, $this->_get_deprecated_modules() ) )
+						$options[ $pt->get_name() ] = prettify_string( $pt->get_name() );
+						
+						if ($pt->has_module($deprecated_mods))
 						{
-							$options[ $k ] .= ' (deprecated)';
+							$options[$pt->get_name()] .= ' (deprecated)';
 						}
+
 					}
 					$this->change_element_type( 'custom_page' , 'select' , array( 'options' => $options ) );
 					$this->set_comments( 'custom_page', form_comment('<a href="'.REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php">Page type definitions</a>.') );
