@@ -36,8 +36,12 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         $saterday='<!-- SATURDAY -->';
         $sunday='<!-- SUNDAY -->';
         $end='<!-- END DAY DATA -->';
+        $dateof='<!-- WEEK OF START -->';
+        $enddateof='</span>';
 
-        $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Monday</div><br>", $output1);
+        $dateoutput = str_replace("Week of", "<!-- WEEK OF START --><span class=weekof>Week of", $output1);
+
+        $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Monday</div><br>", $dateoutput);
         $tueoutput = str_replace("T<br>U<br>E<br>S<br>D<br>A<br>Y<br>", "<br><hr><div class=daytitles>Tuesday</div>", $monoutput);
         $wedoutput = str_replace("W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Wednesday</div>", $tueoutput);
         $thuoutput = str_replace("T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Thursday</div>", $wedoutput);
@@ -51,6 +55,8 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         //$contents = fread($handle, filesize($file));
         //fclose($handle);
 
+        $betweendateof=substr($output, strpos($output, $dateof), strpos($output, $enddateof) - strpos($output, $dateof));
+
         $betweenmon=substr($output, strpos($output, $monday), strpos($output, $tuesday) - strpos($output, $monday));
         $betweentues=substr($output, strpos($output, $tuesday), strpos($output, $wednesday) - strpos($output, $tuesday));
         $betweenwed=substr($output, strpos($output, $wednesday), strpos($output, $thursday) - strpos($output, $wednesday));
@@ -59,6 +65,7 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         $betweensat=substr($output, strpos($output, $saterday), strpos($output, $sunday) - strpos($output, $saterday));
         $betweensun=substr($output, strpos($output, $sunday), strpos($output, $end) - strpos($output, $sunday));
 
+        echo $betweendateof;
         echo $betweenmon;
         echo $betweentues;
         echo $betweenwed;
