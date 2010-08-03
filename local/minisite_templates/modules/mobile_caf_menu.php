@@ -37,11 +37,14 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
         $sunday='<!-- SUNDAY -->';
         $end='<!-- END DAY DATA -->';
         $dateof='<!-- WEEK OF START -->';
-        $enddateof='</span>';
+        $enddateof='<!-- WEEK OF END -->';
 
         $dateoutput = str_replace("Week of", "<!-- WEEK OF START --><span class=weekof>Week of", $output1);
+        $dateoutput2 = str_replace('<a class="jumpto" href="#sunday">Sunday</a><br>
+   <span style="line-height: 8px;"><br></span>', '<a class="jumpto" href="#sunday">Sunday</a><br>
+   <span style="line-height: 8px;"><br></span><!-- WEEK OF END -->', $dateoutput);
 
-        $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Monday</div><br>", $dateoutput);
+        $monoutput = str_replace("M<br>O<br>N<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Monday</div><br>", $dateoutput2);
         $tueoutput = str_replace("T<br>U<br>E<br>S<br>D<br>A<br>Y<br>", "<br><hr><div class=daytitles>Tuesday</div>", $monoutput);
         $wedoutput = str_replace("W<br>E<br>D<br>N<br>E<br>S<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Wednesday</div>", $tueoutput);
         $thuoutput = str_replace("T<br>H<br>U<br>R<br>S<br>D<br>A<br>Y<br>", "<hr><div class=daytitles>Thursday</div>", $wedoutput);
