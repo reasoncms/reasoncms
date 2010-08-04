@@ -198,7 +198,8 @@ class LutherHomeTemplate extends MinisiteTemplate
                 echo '</div> <!-- class="column span-15" -->'."\n";
                 echo '<div class="column span-15">'."\n";
 		echo '<div class="imagesideframe">'."\n";
-		echo '<a href="http://eventcentral.myxa.com/cgi-bin/display_results.fcg?style=luther&amp;amp;amp;group=LUTHER&amp;amp;amp;restrict_group=LUTHER&amp;amp;amp;start_date=today&amp;amp;amp;search=perfs&amp;amp;amp;file=lc_eventsummary.ttml&amp;amp;amp;allow_session=1">';
+		echo '<a href="/programming/calendar/">';
+		//echo '<a href="http://eventcentral.myxa.com/cgi-bin/display_results.fcg?style=luther&amp;amp;amp;group=LUTHER&amp;amp;amp;restrict_group=LUTHER&amp;amp;amp;start_date=today&amp;amp;amp;search=perfs&amp;amp;amp;file=lc_eventsummary.ttml&amp;amp;amp;allow_session=1">';
 		echo '<img src="/images/luther/homepage/subsite_nav/events_banner.gif" alt="Events Calendar"/></a>';
 		echo '</div> <!-- class="imagesideframe" -->'."\n";
                 echo '</div> <!-- class="column span-15" -->'."\n";
