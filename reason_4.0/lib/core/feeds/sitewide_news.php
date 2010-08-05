@@ -13,6 +13,7 @@ include_once( 'reason_header.php' );
 reason_include_once( 'feeds/default.php' );
 reason_include_once( 'helpers/publication_helper.php');
 reason_include_once( 'classes/object_cache.php' );
+reason_include_once('classes/page_types.php');
 
 /* This is the sitewide news feed, which displays news across publications on a site. 
  *
@@ -174,17 +175,29 @@ class sitewideNewsFeed extends defaultFeed
 		}
 	}
 	
-	// grab all the publications on the site that are placed on a page owned by the site with page type publication
+	// grab all the publications on the site that are placed on a page owned by the site with page type publication that is NOT in related mode.
 	function &_get_site_pages_with_valid_publications()
 	{
-		foreach ($this->publication_modules as $module)
+		$rpts =& get_reason_page_types();
+		$page_types = $rpts->get_page_type_names_that_use_module($this->publication_modules);
+		
+		// this logic to exclude publication page types with related mode set to true is a bit silly.
+		// perhaps we should have in the page types class something that lets us filter a set of page types according to parameter values or something
+		foreach ($page_types as $page_type_name)
 		{
-			$valid_page_types = (isset($valid_page_types))
-								? array_unique(array_merge($valid_page_types, page_types_that_use_module($module)))
-								: page_types_that_use_module($module);
+			$pt = $rpts->get_page_type($page_type_name);
+			$pt_props = $pt->get_properties();
+			foreach ($pt_props as $region => $region_info)
+			{
+				if (($region_info['module_name'] == 'publication' && !(isset($region_info['module_params']['related_mode'])	&& ( ($region_info['module_params']['related_mode'] == "true") || ($region_info['module_params']['related_mode'] == true)))))
+				{
+					$valid_page_types[] = $page_type_name;
+				}
+			}
 		}
-		if ($valid_page_types)
+		if (isset($valid_page_types))
 		{
+			// check each page type to make sure publication is NOT in related mode
 			foreach (array_keys($valid_page_types) as $k) quote_walk($valid_page_types[$k], NULL);
 			$es = new entity_selector($this->site->id());
 			$es->add_type(id_of('minisite_page'));
