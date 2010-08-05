@@ -15,8 +15,7 @@ $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'eventsFeed';
 class eventsFeed extends pageTreeFeed
 {
 	var $home_url = REASON_PRIMARY_EVENTS_PAGE_URI;
-	var $page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','events_verbose_nonav','event_slot_registration',);
-	var $modules = array('events','events_verbose','events_archive','event_slot_registration','event_registration','event_signup','events_hybrid',);
+	var $module_sets = array('event_display');
 	var $query_string = 'event_id';
 	var $feed_class = 'eventsRSS';
 	

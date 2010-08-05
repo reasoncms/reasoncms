@@ -13,7 +13,8 @@ include_once( 'reason_header.php' );
 reason_include_once( 'feeds/default.php' );
 reason_include_once( 'helpers/publication_helper.php');
 reason_include_once( 'classes/object_cache.php' );
-reason_include_once('classes/page_types.php');
+reason_include_once( 'classes/page_types.php');
+reason_include_once( 'classes/module_sets.php');
 
 /* This is the sitewide news feed, which displays news across publications on a site. 
  *
@@ -38,11 +39,6 @@ class sitewideNewsFeed extends defaultFeed
 	 */
 	var $cache_lifespan = 0; // seconds that cache should live - set to 0 to disable caching entirely
 
-	/**
-	 * @var name of modules that display publications - used to find valid publication page types on the site
-	 */
-	var $publication_modules = array ('publication');
-	
 	/**
 	 * @var array news item entities
 	 * @access private	
@@ -179,7 +175,9 @@ class sitewideNewsFeed extends defaultFeed
 	function &_get_site_pages_with_valid_publications()
 	{
 		$rpts =& get_reason_page_types();
-		$page_types = $rpts->get_page_type_names_that_use_module($this->publication_modules);
+		$ms =& reason_get_module_sets();
+		$publication_modules = $ms->get('publication_item_display');
+		$page_types = $rpts->get_page_type_names_that_use_module($publication_modules);
 		
 		// this logic to exclude publication page types with related mode set to true is a bit silly.
 		// perhaps we should have in the page types class something that lets us filter a set of page types according to parameter values or something
@@ -189,7 +187,7 @@ class sitewideNewsFeed extends defaultFeed
 			$pt_props = $pt->get_properties();
 			foreach ($pt_props as $region => $region_info)
 			{
-				if (($region_info['module_name'] == 'publication' && !(isset($region_info['module_params']['related_mode'])	&& ( ($region_info['module_params']['related_mode'] == "true") || ($region_info['module_params']['related_mode'] == true)))))
+				if ( (in_array($region_info['module_name'], $publication_modules) && !(isset($region_info['module_params']['related_mode']) && ( ($region_info['module_params']['related_mode'] == "true") || ($region_info['module_params']['related_mode'] == true)))))
 				{
 					$valid_page_types[] = $page_type_name;
 				}

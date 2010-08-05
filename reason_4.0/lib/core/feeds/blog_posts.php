@@ -11,18 +11,17 @@
  */
 include_once( 'reason_header.php' );
 reason_include_once( 'feeds/page_tree.php' );
+reason_include_once( 'classes/page_types.php' );
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'blogPostsFeed';
 
 /**
  * Generates feed for a particular publication
- *
- * @todo figure out how local page types can be added without having to be in this file; remove the carleton-specific page types
  */
 class blogPostsFeed extends pageTreeFeed
 {
 	var $query_string = 'story_id';
 	var $blog; // entity
-	var $modules = array('publication','athletics/athletics_publication','athletics/athletics_sports_page');
+	var $module_sets = array('publication_item_display');
 	
 	function grab_blog()
 	{
@@ -139,7 +138,25 @@ function get_blog_page_link( $site, $tree, $page_types, $blog ) // {{{
 	$relations = array();
 	$es = new entity_selector($site->id());
 	$es->add_type( id_of( 'minisite_page' ) );
-	foreach($page_types as $page_type)
+	
+	$rpts =& get_reason_page_types();
+	$ms =& reason_get_module_sets();
+	$publication_modules = $ms->get('publication_item_display');
+		
+	foreach ($page_types as $page_type_name)
+	{
+		$pt = $rpts->get_page_type($page_type_name);
+		$pt_props = $pt->get_properties();
+		foreach ($pt_props as $region => $region_info)
+		{
+			if ( (in_array($region_info['module_name'], $publication_modules) && !(isset($region_info['module_params']['related_mode']) && ( ($region_info['module_params']['related_mode'] == "true") || ($region_info['module_params']['related_mode'] == true)))))
+			{
+				$valid_page_types[] = $page_type_name;
+			}
+		}
+	}
+	
+	foreach($valid_page_types as $page_type)
 	{
 		$relations[] = 'page_node.custom_page = "'.$page_type.'"';
 	}
