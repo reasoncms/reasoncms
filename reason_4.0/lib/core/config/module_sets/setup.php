@@ -23,6 +23,11 @@ $ms->add(
 	'event_display'
 );
 
+/**
+ * Create a set publication_item_display which holds module names that display publication items
+ */
+$ms->add('publication', 'publication_item_display');
+
 if(reason_file_exists('config/module_sets/setup_local.php'))
 	reason_include_once('config/module_sets/setup_local.php');
 
