@@ -241,9 +241,8 @@ class ThorCore
 					$value = $disco_obj->get_value($key);
 					foreach ($node->tagChildren as $child_key => $child_node)
 					{
-						$key2 = $child_node->tagAttrs['id'];
-						$child_value = (isset($value[$child_key])) ? $value[$child_key] : '';
-						$thor_values[$key2] = $child_value;
+						$child_value = (in_array($child_node->tagAttrs['value'], $value)) ? $child_node->tagAttrs['value'] : '';
+						$thor_values[$child_node->tagAttrs['id']] = $child_value;
 					}
 				}
 			}
