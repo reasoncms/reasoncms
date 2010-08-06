@@ -9,6 +9,7 @@
  */
 reason_include_once('classes/head_items.php');
 reason_include_once('classes/entity_selector.php');
+reason_include_once('classes/page_types.php');
 reason_include_once('function_libraries/user_functions.php');
 reason_include_once('scripts/developer_tools/publication_migrator/migrator_screen.php');
 reason_include_once('scripts/developer_tools/publication_migrator/migrator_screen_1.php');
@@ -227,15 +228,21 @@ class PublicationMigratorHelper
 	
 	function get_allowable_relationship_for_page_type($page_type)
 	{
-		$pt = ($GLOBALS['_reason_page_types'][$page_type]);
-		foreach ($pt as $section)
+		$rpt =& get_reason_page_types();
+		$pt = $rpt->get_page_type($page_type);
+		if ($pt)
 		{
-			if (is_array($section))
+			$regions = $pt->get_region_names();
+			foreach ($regions as $region)
 			{
-				if (isset($section['related_mode']) && ($section['related_mode'] == true)) return 'page_to_related_publication';
+				$region_info = $pt->get_region($region);
+				if (isset($region_info['module_params']['related_mode']) && $region_info['module_params']['related_mode'] == true)
+				{
+					return 'page_to_related_publication';
+				}
 			}
+			return 'page_to_publication';
 		}
-		return 'page_to_publication';
 	}
 	
 	/**
@@ -536,14 +543,15 @@ class PublicationMigratorHelper
 	
 	function &get_pages_using_news_modules()
 	{
+		$rpts =& get_reason_page_types();
 		static $pages_using_news_modules;
 		if (!isset($pages_using_news_modules))
 		{
 			foreach ($this->news_modules as $module)
 			{
 				$valid_page_types = (isset($valid_page_types))
-									? array_unique(array_merge($valid_page_types, page_types_that_use_module($module)))
-									: page_types_that_use_module($module);
+									? array_unique(array_merge($valid_page_types, $rpts->get_page_type_names_that_use_module($module)))
+									: $rpts->get_page_type_names_that_use_module($module);
 			}
 			foreach (array_keys($valid_page_types) as $k) quote_walk($valid_page_types[$k], NULL);
 		
@@ -558,14 +566,15 @@ class PublicationMigratorHelper
 	
 	function &get_publication_module_page_types()
 	{
+		$rpts =& get_reason_page_types();
 		static $publication_module_page_types;
 		if (!isset($publication_module_page_types))
 		{
 			foreach ($this->publication_modules as $module)
 			{
 				$valid_page_types = (isset($valid_page_types))
-									? array_unique(array_merge($valid_page_types, page_types_that_use_module($module)))
-									: array_unique(page_types_that_use_module($module));
+									? array_unique(array_merge($valid_page_types, $rpts->get_page_type_names_that_use_module($module)))
+									: array_unique($rpts->get_page_type_names_that_use_module($module));
 			}
 			foreach ($valid_page_types as $page_type)
 			{
@@ -580,23 +589,27 @@ class PublicationMigratorHelper
 	 */
 	function &get_page_types_with_main_post_news()
 	{
+		$rpts =& get_reason_page_types();
 		static $page_types_with_main_post_news;
 		if (!isset($page_types_with_main_post_news))
 		{
 			foreach ($this->news_modules as $module)
 			{
 				$candidate_page_types = (isset($candidate_page_types))
-									  ? array_unique(array_merge($candidate_page_types, page_types_that_use_module($module)))
-									  : array_unique(page_types_that_use_module($module));
+									  ? array_unique(array_merge($candidate_page_types, $rpts->get_page_type_names_that_use_module($module)))
+									  : array_unique($rpts->get_page_type_names_that_use_module($module));
 			}
+			//!working
 			foreach ($candidate_page_types as $page_type_name)
 			{
 				// we need to make sure one of the news modules is assigned to the main_post area
-				$page_type = ($GLOBALS['_reason_page_types'][$page_type_name]);
-				if (isset($page_type['main_post']))
+				$page_type = $rpts->get_page_type($page_type_name);
+				if (in_array('main_post', $page_type->get_region_names()))
 				{
-					$main_post_module = (is_array($page_type['main_post'])) ? $page_type['main_post']['module'] : $page_type['main_post'];
-					if (in_array($main_post_module, $this->news_modules)) $page_types_with_main_post_news[$page_type_name] = $page_type_name;
+					$region_info = $page_type->get_region('main_post');
+					$main_post_module = $region_info['module_name'];
+					if (in_array($main_post_module, $this->news_modules))
+						$page_types_with_main_post_news[$page_type_name] = $page_type_name;
 				}
 			}
 		}
