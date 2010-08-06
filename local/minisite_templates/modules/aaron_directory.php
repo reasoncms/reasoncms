@@ -467,7 +467,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             echo '<div class="personBody '.$image_class.'">';
             echo '<div class="personHeader">';
             //echo '<ul>';
-            echo '<li class="personName">' . $this->format_name($data) . '</li>';
+            //echo '<li class="personName">' . $this->format_name($data) . '</li>';
             if (isset($data['alumClassYear'])) {
                 echo '<li class="personYear">'.$data['alumClassYear'][0].'</li>';
             } else {
