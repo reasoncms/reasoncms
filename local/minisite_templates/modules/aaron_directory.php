@@ -466,7 +466,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
             echo '<div class="personBody '.$image_class.'">';
             echo '<div class="personHeader">';
-            echo '<ul>';
+            //echo '<ul>';
             echo '<li class="personName">' . $this->format_name($data) . '</li>';
             if (isset($data['alumClassYear'])) {
                 echo '<li class="personYear">'.$data['alumClassYear'][0].'</li>';
@@ -487,7 +487,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if (isset($data['mail'])) {
                 echo '<li class="personEmail">'. $this->format_email($data['mail'][0]) .'</li>';
             }
-            echo '</ul>';
+            //echo '</ul>';
             echo '</div>'; //personHeader
             echo '<div class="personAddresses">';
 
