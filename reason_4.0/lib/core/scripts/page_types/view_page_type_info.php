@@ -12,7 +12,8 @@
  */
 	include_once( 'reason_header.php' );
 	reason_require_once( 'minisite_templates/page_types.php' );
-	$page_types = $GLOBALS['_reason_page_types'];
+	reason_include_once( 'classes/page_types.php' );
+	$rpts =& get_reason_page_types();
 	reason_include_once( 'classes/entity.php' );
 	connectDB( REASON_DB );
 	reason_include_once( 'function_libraries/images.php' );
@@ -71,11 +72,11 @@
 	
 	//generate alphabetical links at top of page
 	$alphabet = array();	//non-repeating array of the first letters of the keys of $page_types
-	$chr = 1;	
-	foreach($page_types as $key=>$value)
+	$chr = 1;
+	foreach($rpts->get_page_type_names() as $name)
 	{
-		if($chr != strtoupper($key{0}) && !in_array(strtoupper($key{0}), $alphabet)){
-			$chr = strtoupper($key{0});
+		if($chr != strtoupper($name{0}) && !in_array(strtoupper($name{0}), $alphabet)){
+			$chr = strtoupper($name{0});
 			$alphabet[] = $chr;
 		}
 	}
@@ -87,68 +88,56 @@
 	echo '<em>Jump to:</em> '.implode(' | ',$alphabet_links);
 	
 	//display relevant $page_type values
-	natksort($page_types);
+	$pts = $rpts->get_page_types();
+	$default_pt = $rpts->get_page_type('default');
+	natksort($pts);
 	$chr1 = 1;
-	foreach($page_types as $key=>$value)
+	foreach($pts as $page_type)
 	{
-		if($chr1 != strtolower($key{0}))
+		$page_type_name = $page_type->get_name();
+		if($chr1 != strtolower($page_type_name{0}))
 		{
 			if($chr1 != 1)
 			{
 				echo $top_link;
 			}
-			$chr1 = strtolower($key{0});
+			$chr1 = strtolower($page_type_name{0});
 			echo '<h2><a name = "'.$chr1.'">'.strtoupper($chr1).'</a></h2>';
 		}
-		echo '<h3><a name="'.$key.'">'.prettify_string($key).'</a></h3>';
+		echo '<h3><a name="'.$page_type_name.'">'.prettify_string($page_type_name).'</a></h3>';
 		echo '<ul>';
-		foreach( $value as $key2=>$value2 )
+		foreach ($page_type->get_region_names() as $region)
 		{
-			if(is_array($value2))
+			$region_info = $page_type->get_region($region);
+			$default_region_info = $default_pt->get_region($region);
+			// (If the page is not default, then (if a region def differs from the default, then show it))
+			// If the page is default, show all region defs.
+			if (($page_type_name != 'default' && ($region_info['module_name'] != $default_region_info['module_name'] || $region_info['module_params'] != $default_region_info['module_params'])) || $page_type_name == 'default')
 			{
-				$module_name = $value2['module'];
-				$is_a_module = true;
-			}
-			elseif(empty($value2))
-			{
-				$module_name = '[empty]';
-				$is_a_module = false;
-			}
-			else
-			{
-				$module_name = $value2;
-				$is_a_module = true;
-			}
+			$xtra = '';
+			if(isset($GLOBALS['_reason_deprecated_modules']) && @in_array($region_info['module_name'],$GLOBALS['_reason_deprecated_modules']))
+				$xtra = ' (deprecated)';
 			
-			if($is_a_module)
-			{
-				$xtra = '';
-				if(isset($GLOBALS['_reason_deprecated_modules']) && in_array($module_name,$GLOBALS['_reason_deprecated_modules']))
-					$xtra = ' (deprecated)';
-				$module_name = '<strong>'.$module_name.'</strong>'.$xtra;
+				echo '<li>'.prettify_string($region).': '.(!empty($region_info['module_name']) ? str_replace('_',' ',"<strong>".$region_info['module_name'])."</strong>".$xtra."</li>" : "[empty]</li>");
 			}
-			echo '<li>'.prettify_string($key2).': '.str_replace('_',' ',$module_name).'</li>';
-			
-			if(is_array($value2))
+			if (!empty($region_info['module_params']))
 			{
-				echo 'Parameters: <ul>';
-					while (list ($key3,$value3) = each ($value2))
+				echo "Parameters: <ul>";
+				foreach ($region_info['module_params'] as $param => $value)
+				{
+					if (!empty($value))
 					{
-						if($key3 != 'module' && !empty($value3) )
+						echo "<li>".$param.": ";
+						if (is_array($value))
 						{
-							echo '<li>'.$key3.': ';
-							if(is_array($value3))
-							{
-								pray($value3);
-							}
-							else
-							{
-								echo $value3;
-							}
-							echo '</li>';
+							pray($value);
+						} else {
+							echo $value;
 						}
+						echo("</li>");
 					}
-				echo '</ul>';
+				}
+				echo "</ul>";
 			}
 		}
 		echo '</ul>' ;
