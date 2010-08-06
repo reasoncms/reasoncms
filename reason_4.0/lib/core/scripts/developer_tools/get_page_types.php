@@ -20,6 +20,7 @@ include_once( 'reason_header.php' );
 reason_include_once( 'classes/entity_selector.php' );
 reason_include_once( 'function_libraries/user_functions.php' );
 reason_include_once( 'minisite_templates/page_types.php' );
+reason_include_once( 'classes/page_types.php' );
 include_once( CARL_UTIL_INC . 'db/table_admin.php' );
 
 if (reason_require_authentication() && !reason_check_privs( 'view_sensitive_data' ))
@@ -39,6 +40,8 @@ $es->add_relation('(entity.name != "") AND ((url.url = "") OR (url.url IS NULL))
 $result = $es->run_one();
 shuffle($result); // we lose ids due to the shuffle but we don't care
 
+$rpt =& get_reason_page_types();
+
 // lets parse the entities and build our data set
 foreach ($result as $page)
 {
@@ -46,9 +49,8 @@ foreach ($result as $page)
 	if (!isset($data_pages[$page_type]['page_type'])) $data_pages[$page_type]['page_type'] = $page_type;
 	if (!isset($data_pages[$page_type]['location']))
 	{
-		if (isset($GLOBALS['_reason_page_types_local'][$page_type])) $data_pages[$page_type]['location'] = 'local';
-		elseif (isset($GLOBALS['_reason_page_types'][$page_type])) $data_pages[$page_type]['location'] = 'core';
-		else $data_pages[$page_type]['location'] = '';
+		$pt = @$rpt->get_page_type($page_type);
+		$data_pages[$page_type]['location'] = (is_object($pt) ? $pt->get_location() : "");
 	}	
 	if (!isset($data_pages[$page_type]['url'])) $data_pages[$page_type]['url'] = '<a href="'.reason_get_page_url($page).'">'.reason_get_page_url($page).'</a>';
 	if (!isset($data_pages[$page_type]['count'])) $data_pages[$page_type]['count'] = 1;
@@ -56,18 +58,17 @@ foreach ($result as $page)
 }
 
 // lets add page_types that do not exist
-$page_types_no_pages = array_diff(array_keys($GLOBALS['_reason_page_types']), array_keys($data_pages));
+$page_types_no_pages = array_diff(array_values($rpt->get_page_type_names()), array_keys($data_pages));
 foreach ($page_types_no_pages as $page_type_no_page)
 {
 	$data_pages[$page_type_no_page]['page_type'] = $page_type_no_page;
-	if (isset($GLOBALS['_reason_page_types_local'][$page_type_no_page])) $data_pages[$page_type_no_page]['location'] = 'local';
-	elseif (isset($GLOBALS['_reason_page_types'][$page_type_no_page])) $data_pages[$page_type_no_page]['location'] = 'core';
-	else $data_pages[$page_type_no_page]['location'] = '';
+	$pt = @$rpt->get_page_type($page_type_no_page);
+	$data_pages[$page_type_no_page]['location'] = (is_object($pt) ? $pt->get_location() : "");
 	$data_pages[$page_type_no_page]['url'] = '';
 	$data_pages[$page_type_no_page]['count'] = 0;
 }
 
-// lets sort our data set
+// let's sort our data set
 $sort_field = (isset($_GET['table_sort_field']) && check_against_array($_GET['table_sort_field'], array('page_type', 'count', 'url', 'location')))
 			  ? $_GET['table_sort_field']
 			  : 'count';
