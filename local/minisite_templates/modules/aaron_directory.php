@@ -500,8 +500,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
             if (isset($data['studentmajor'])) {
                 echo "<tr valign=top><td align=right><b>Major(s): </b></td><td>";
-                if ($maj = $this->format_majors($data['studentmajor']))
-                    echo $maj;
+                //if ($maj = $this->format_majors($data['studentmajor']))
+                //    echo $maj;
                 echo $this->format_majors($data)."</td></tr>";
             }
             if (isset($data['studentpostoffice'])) {
@@ -761,13 +761,16 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
     }
 
     function format_majors($data) {
-        foreach ($data['studentmajor'] as $major)
-            $majors[] = $this->make_search_link('<span class="major">'.$this->majors[$major].'</span>', 'major', $major);
-        if (isset($data['carlconcentration'])) {
-            foreach ($data['carlconcentration'] as $major)
-                $majors[] = $this->make_search_link('<span class="concentration">'.$this->majors[$major].'</span>', 'major', $major);
+        foreach ($data['studentmajor'] as $major) {
+            echo $major;
         }
-        return '('.join(' / ', $majors).')';
+        //foreach ($data['studentmajor'] as $major)
+        //    $majors[] = $this->make_search_link('<span class="major">'.$this->majors[$major].'</span>', 'major', $major);
+        //if (isset($data['carlconcentration'])) {
+        //    foreach ($data['carlconcentration'] as $major)
+        //        $majors[] = $this->make_search_link('<span class="concentration">'.$this->majors[$major].'</span>', 'major', $major);
+        //}
+        //return '('.join(' / ', $majors).')';
     }
 
     function format_phone($data) {
