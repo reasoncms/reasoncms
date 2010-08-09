@@ -506,6 +506,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 echo "<tr valign=top><td align=right><b>Minor(s): </b></td><td>";
                 echo $this->format_minors($data)."</td></tr>";
             }
+            if (isset($data['studentspecialization'])) {
+                echo "<tr valign=top><td align=right><b>Specialization: </b></td><td>".$data['studentspecialization'][0]."</td></tr>";
+            }
+            if (isset($data['studentyearinschool'])) {
+                echo "<tr valign=top><td align=right><b>Year In School: </b></td><td>".$data['studentyearinschool'][0]."</td></tr>";
+            }
             if (isset($data['studentpostoffice'])) {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
                 echo "<tr valign=top><td align=right><b>SPO: </b></td><td>".$data['studentpostoffice'][0]."</td></tr>";
