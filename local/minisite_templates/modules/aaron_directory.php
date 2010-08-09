@@ -766,7 +766,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $count = 0;
         foreach ($data['studentminor'] as $m) {
             if ($count > 0) {
-                echo "and ".major;
+                echo "and ".$m;
             }
             else {echo $m. " "; }
             $count = 1;
@@ -774,8 +774,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
     }
 
     function format_majors($data) {
-        foreach ($data['studentmajor'] as $major) {
-            echo $major. " ";
+        $count = 0;
+        foreach ($data['studentmajor'] as $m) {
+            if ($count > 0) {
+                echo "and ".$m;
+            }
+            else {echo $m. " "; }
+            $count = 1;
         }
         //foreach ($data['studentmajor'] as $major)
         //    $majors[] = $this->make_search_link('<span class="major">'.$this->majors[$major].'</span>', 'major', $major);
