@@ -500,7 +500,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
             if (isset($data['studentmajor'])) {
                 echo "<tr valign=top><td align=right><b>Major(s): </b></td><td>";
-                if ($maj = $this->format_majors($data))
+                if ($maj = $this->format_majors($data['studentmajor']))
                     echo $maj;
                 echo $this->format_majors($data)."</td></tr>";
             }
