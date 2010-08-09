@@ -466,18 +466,18 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
 
 
-            echo '<li class="personName">' . $this->format_name($data) . '</li>';
-            if (isset($data['alumClassYear'])) {
-                echo '<li class="personYear">'.$data['alumClassYear'][0].'</li>';
-            } else {
-                if ($affil = $this->format_affiliation($data))
-                    echo '<li class="personAffil">'.$affil.'</li>';
-            }
+            //echo '<li class="personName">' . $this->format_name($data) . '</li>';
+            //if (isset($data['alumClassYear'])) {
+            //    echo '<li class="personYear">'.$data['alumClassYear'][0].'</li>';
+            //} else {
+            //    if ($affil = $this->format_affiliation($data))
+            //        echo '<li class="personAffil">'.$affil.'</li>';
+            //}
             //if (isset($data['studentmajor']) && $data['edupersonprimaryaffiliation'][0] == 'Student*') {
-            if (isset($data['studentmajor'])) {
+            //if (isset($data['studentmajor'])) {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
-                echo '<li class="personMajor">'. $data['studentmajor'][0] .'</li>';
-            }
+            //    echo '<li class="personMajor">'. $data['studentmajor'][0] .'</li>';
+            //}
             // test area START -------------------------------------------
             echo '<td><table cellspacing="0" cellpadding="3" border="0"><tbody><tr valign="top">';
             if (isset($data['cn'])) {
@@ -618,81 +618,25 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
             echo '</tr></tbody></table></td>';
             // test area END ---------------------------------------------
-            if (isset($data['mail'])) {
-                echo '<li class="personEmail">'. $this->format_email($data['mail'][0]) .'</li>';
-            }
+            //if (isset($data['mail'])) {
+            //    echo '<li class="personEmail">'. $this->format_email($data['mail'][0]) .'</li>';
+            //}
             //echo '</ul>';
             echo '</div>'; //personHeader
-            echo '<div class="personAddresses">';
 
-            // If this is faculty or staff
-            if ($data['edupersonprimaryaffiliation'][0] == 'Faculty' || $data['edupersonprimaryaffiliation'][0] == 'Staff') {
-                if (isset($data['title'])) {
-                    echo '<ul class="personPosition">';
-                    foreach ($data['title'] as $title)
-                        echo '<li class="personTitle">'.$title.'</li>';
-                    foreach ($data['ou'] as $dept) {
-                        if ($dept == 'No Department') continue;
-                        echo '<li class="personOu">'.$this->make_search_link($dept,'department',$dept);
-                        if (isset($sites[$dept]))
-                            echo ' <a class="officeSite" href="'.$sites[$dept]['url'].'">[web site]</a>';
-                        echo '</li>';
-                    }
-                    // facultyleaveterm does not exist in ldap for luther - burkaa
-                    if (isset($data['carlfacultyleaveterm']))
-                        echo '<li class="personStatus">'. $this->format_leave($data) . '</li>';
-                    echo '</ul>';
-                }
-                if (isset($data['officebldg'])) {
-                    /*echo '<ul class="personCampusAddress">';
-                    foreach ($data['officebldg'] as $loc)
-                        echo '<li class="personOffice">'.$loc.'</li>';
-                    // studentPostOffice may not exist in ldap for faculty or staff at luther - burkaa
-                    if (isset($data['studentPostOffice']))
-                        foreach ($data['studentPostOffice'] as $loc)
-                            echo '<li class="personMailstop">Mail stop: '.$loc.'</li>';
-                    echo '</ul>';*/
-                    echo '<li class="personOffice">'.$data['officebldg'][0].'</li>';
+            // If this is faculty or staff - DELETED
+            
 
-                }
-                if (isset($data['homepostaladdress']) && !isset($data['carlhidepersonalinfo'])) {
-                    echo '<ul class="personHomeAddress">';
-                    echo $this->format_postal_address($data['homepostaladdress'][0]);
-                    if (isset($data['telephoneNumber']))
-                        echo '<li class="persontelephoneNumber">'.$data['telephoneNumber'][0].'</li>';
-                    if (isset($data['spouseName']))
-                        echo '<li class="personSpouse">'.$data['spouseName'][0].'</li>';
-                }
-
-            }
-            else // if this is a student
-            {
-                echo '<ul class="personCampusAddress">';
-                if (isset($data['homepostaladdress'])) {
-                    echo $this->format_postal_address($data['homepostaladdress'][0]);
-                }
-                if ($status = $this->format_status($data))
-                    echo '<li class="personStatus">'.$status.'</li>';
-                echo '</ul>';
-                // carlstudentpermanentaddress does not exist in ldap for luther (changed to address - burkaa
-                if (isset($data['address'])) {
-                    echo '<ul class="personHomeAddress">';
-                    echo $this->format_postal_address($data['address'][0]);
-                    echo '</ul>';
-                }
-
-            }
-            echo '</div>'; //personAddresses
-
-            echo '<div class="personContacts">';
-            echo '<ul class="personPhones">';
-            if ($phone = $this->format_phone($data))
-                echo '<li class="personCampusPhone">'.$phone.'</li>';
-            if ($cells = $this->format_cell($data))
-                foreach ($cells as $cell)
-                    echo '<li class="personCellPhone">cell: '.$cell.'</li>';
-            echo '</ul>';
-            echo '</div>';
+            //echo '<div class="personContacts">';
+            //PHONES
+            //echo '<ul class="personPhones">';
+            //if ($phone = $this->format_phone($data))
+            //    echo '<li class="personCampusPhone">'.$phone.'</li>';
+            //if ($cells = $this->format_cell($data))
+             //   foreach ($cells as $cell)
+            //        echo '<li class="personCellPhone">cell: '.$cell.'</li>';
+            //echo '</ul>';
+            //echo '</div>';
             echo '</div>'; // personBody
             echo '</div>'; // person
 
