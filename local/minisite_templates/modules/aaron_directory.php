@@ -494,12 +494,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
             if (isset($data['edupersonaffiliation'])) {
                 echo "<tr valign=top><td align=right><b>All Affiliations: </b></td><td>";
-                //for ($i = 0; $i < count($data['edupersonaffiliation']); $i++) {
-                    //echo $data['edupersonprimaryaffiliation'][$i]."<br>";
-                //}
                 if ($affil = $this->format_affiliation($data))
                     echo $affil;
                 echo "</td></tr>";
+            }
+            if (isset($data['studentmajor'])) {
+                echo "<tr valign=top><td align=right><b>Major(s): </b></td><td>".$this->format_majors($data)."</td></tr>";
             }
             if (isset($data['studentpostoffice'])) {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
