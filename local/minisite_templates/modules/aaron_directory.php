@@ -512,11 +512,38 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if (isset($data['studentyearinschool'])) {
                 echo "<tr valign=top><td align=right><b>Year In School: </b></td><td>".$data['studentyearinschool'][0]."</td></tr>";
             }
+            if (isset($data['studentadvisor'])) {
+                echo "<tr valign=top><td align=right><b>Advisor: </b></td><td>".$data['studentadvisor'][0]."</td></tr>";
+            }
             if (isset($data['studentpostoffice'])) {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
                 echo "<tr valign=top><td align=right><b>SPO: </b></td><td>".$data['studentpostoffice'][0]."</td></tr>";
                 //echo '<li class="personMajor">'. $data['studentpostoffice'][0] .'</li>';
             }
+            if (isset($data['title'])) {
+                echo "<tr valign=top><td align=right><b>Title: </b></td><td>".$data['title'][0]."</td></tr>";
+            }
+            if (isset($data['officebldg'])) {
+                echo "<tr valign=top><td align=right><b>Office Location: </b></td><td>".$data['officebldg'][0]."</td></tr>";
+            }
+            if (isset($data['officephone'])) {
+                echo "<tr valign=top><td align=right><b>Office Phone: </b></td><td>".$data['officephone'][0]."</td></tr>";
+            }
+            if (isset($data['postaladdress'])) {
+                echo "<tr valign=top><td align=right><b>Home Address: </b></td><td>"
+                .$data['postaladdress'][0].
+                "<br>"
+                .$data['l'][0].
+                ", "
+                .$data['st'][0].
+                "<br>"
+                .$data['postalcode'][0].
+                "<br>"
+                .$data['c'][0].
+                "</td></tr>";
+            }
+
+
             echo '</tr></tbody></table></td>';
             // test area END ---------------------------------------------
             if (isset($data['mail'])) {
@@ -774,7 +801,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if ($count > 0) {
                 echo "and ".$m;
             }
-            else {echo $m. " "; }
+            else {
+                echo $m. " ";
+            }
             $count = 1;
         }
     }
@@ -785,7 +814,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if ($count > 0) {
                 echo "and ".$m;
             }
-            else {echo $m. " "; }
+            else {
+                echo $m. " ";
+            }
             $count = 1;
         }
         //foreach ($data['studentmajor'] as $major)
