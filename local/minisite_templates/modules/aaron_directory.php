@@ -1303,7 +1303,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
                 'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization','studentyearinschool','studentadvisor',
                 'eduPersonAffiliation','studentStatus','alumClassYear','postaladdress','l','st','postalcode','c',
-                'eduPersonEntitlement','mobile', 'termenrolled');
+                'eduPersonEntitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
+                'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
+                'programstartdate','programenddate','lastupdate');
 
         $dir = new directory_service('ldap_luther');
         $dir->search_by_filter($querystring, $attributes);
