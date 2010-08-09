@@ -494,9 +494,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
             if (isset($data['edupersonaffiliation'])) {
                 echo "<tr valign=top><td align=right><b>All Affiliations: </b></td><td>";
-                for ($i = 0; $i < count($data['edupersonaffiliation']); $i++) {
-                    echo $data['edupersonprimaryaffiliation'][$i]."<br>";
-                }
+                //for ($i = 0; $i < count($data['edupersonaffiliation']); $i++) {
+                    //echo $data['edupersonprimaryaffiliation'][$i]."<br>";
+                //}
+                if ($affil = $this->format_affiliation($data))
+                    echo '<li class="personAffil">'.$affil.'</li>';
                 echo "</td></tr>";
             }
             if (isset($data['studentpostoffice'])) {
