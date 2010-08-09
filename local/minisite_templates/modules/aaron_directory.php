@@ -542,6 +542,27 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 .$data['c'][0].
                 "</td></tr>";
             }
+            if (isset($data['telephonenumber'])) {
+                echo "<tr valign=top><td align=right><b>Home Phone: </b></td><td>".$data['telephonenumber'][0]."</td></tr>";
+            }
+            if (isset($data['spousename'])) {
+                echo "<tr valign=top><td align=right><b>Spouse: </b></td><td>".$data['spousename'][0]."</td></tr>";
+            }
+            if (isset($data['childname'])) {
+                echo "<tr valign=top><td align=right><b>Children: </b></td><td>".$data['childname'][0]."</td></tr>";
+            }
+            if (isset($data['employeenumber'])) {
+                echo "<tr valign=top><td align=right><b>Luther ID: </b></td><td>".$data['employeenumber'][0]."</td></tr>";
+            }
+            if (isset($data['prno'])) {
+                echo "<tr valign=top><td align=right><b>PRNO: </b></td><td>".$data['prno'][0]."</td></tr>";
+            }
+            if (isset($data['studentstatus'])) {
+                echo "<tr valign=top><td align=right><b>Student Status: </b></td><td>".$data['studentstatus'][0]."</td></tr>";
+            }
+            if (isset($data['departmentname'])) {
+                echo "<tr valign=top><td align=right><b>Department: </b></td><td>".$data['studentstatus'][0]."</td></tr>";
+            }
 
 
             echo '</tr></tbody></table></td>';
