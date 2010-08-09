@@ -763,8 +763,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
     }
 
     function format_minors($data) {
-        foreach ($data['studentminor'] as $major) {
-            echo $major. " ";
+        $count = 0;
+        foreach ($data['studentminor'] as $m) {
+            if ($count > 0) {
+                echo "and ".major;
+            }
+            else {echo $m. " "; }
+            $count = 1;
         }
     }
 
