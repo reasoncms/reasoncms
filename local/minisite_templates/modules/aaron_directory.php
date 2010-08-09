@@ -869,7 +869,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $count = 0;
         foreach ($data['studentminor'] as $m) {
             if ($count > 0) {
-                echo "and ".$m;
+                echo "<br>".$m;
             }
             else {
                 echo $m. " ";
@@ -882,7 +882,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $count = 0;
         foreach ($data['studentmajor'] as $m) {
             if ($count > 0) {
-                echo "and ".$m;
+                echo "<br>".$m;
             }
             else {
                 echo $m. " ";
