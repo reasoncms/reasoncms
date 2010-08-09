@@ -500,8 +500,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
             if (isset($data['studentmajor'])) {
                 echo "<tr valign=top><td align=right><b>Major(s): </b></td><td>";
-                //if ($maj = $this->format_majors($data['studentmajor']))
-                //    echo $maj;
                 echo $this->format_majors($data)."</td></tr>";
             }
             if (isset($data['studentpostoffice'])) {
@@ -762,7 +760,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
     function format_majors($data) {
         foreach ($data['studentmajor'] as $major) {
-            echo $major;
+            echo "(".$major. ") ";
         }
         //foreach ($data['studentmajor'] as $major)
         //    $majors[] = $this->make_search_link('<span class="major">'.$this->majors[$major].'</span>', 'major', $major);
