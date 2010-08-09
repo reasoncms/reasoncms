@@ -494,7 +494,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
             if (isset($data['edupersonaffiliation'])) {
                 echo "<tr valign=top><td align=right><b>All Affiliations: </b></td><td>";
-                for ($i = 0; $i < $data['edupersonaffiliation']['count']; $i++) {
+                for ($i = 0; $i < $data['edupersonaffiliation']; $i++) {
                     echo $data['edupersonprimaryaffiliation'][$i]."<br>";
                 }
                 echo "</td></tr>";
