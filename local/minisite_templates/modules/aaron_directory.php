@@ -549,7 +549,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 echo "<tr valign=top><td align=right><b>Spouse: </b></td><td>".$data['spousename'][0]."</td></tr>";
             }
             if (isset($data['childname'])) {
-                echo "<tr valign=top><td align=right><b>Children: </b></td><td>".$data['childname'][0]."</td></tr>";
+                echo "<tr valign=top><td align=right><b>Children: </b></td><td>";
+                echo $this->format_misc($data['childname'][0])."</td></tr>";
             }
             if (isset($data['employeenumber'])) {
                 echo "<tr valign=top><td align=right><b>Luther ID: </b></td><td>".$data['employeenumber'][0]."</td></tr>";
@@ -567,7 +568,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 echo "<tr valign=top><td align=right><b>Gender: </b></td><td>".$data['gender'][0]."</td></tr>";
             }
             if (isset($data['termenrolled'])) {
-                echo "<tr valign=top><td align=right><b>Terms Enrolled: </b></td><td>".$data['termenrolled'][0]."</td></tr>";
+                echo "<tr valign=top><td align=right><b>Terms Enrolled: </b></td><td>";
+                echo $this->format_misc($data['termenrolled'][0])."</td></tr>";
             }
             if (isset($data['ocpostaladdress'])) {
                 echo "<tr valign=top><td align=right><b>Off Campus Address: </b></td><td>"
