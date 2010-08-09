@@ -489,6 +489,16 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if (isset($data['mail'])) {
                 echo "<tr valign=top><td align=right><b>E-mail: </b></td><td>".$data['mail'][0]."</td></tr>";
             }
+            if (isset($data['edupersonprimaryaffiliation'])) {
+                echo "<tr valign=top><td align=right><b>Affiliation: </b></td><td>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
+            }
+            if (isset($data['edupersonaffiliation'])) {
+                echo "<tr valign=top><td align=right><b>All Affiliations: </b></td><td>";
+                for ($i = 0; $i < $data['edupersonaffiliation']['count']; $i++) {
+                    echo $data['edupersonprimaryaffiliation'][$i]."<br>";
+                }
+                echo "</td></tr>";
+            }
             if (isset($data['studentpostoffice'])) {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
                 echo "<tr valign=top><td align=right><b>SPO: </b></td><td>".$data['studentpostoffice'][0]."</td></tr>";
@@ -1748,6 +1758,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         exit; // End page processing
     }
 }
+
 
 
 
