@@ -499,7 +499,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 echo "</td></tr>";
             }
             if (isset($data['studentmajor'])) {
-                echo "<tr valign=top><td align=right><b>Major(s): </b></td><td>".$this->format_majors($data)."</td></tr>";
+                echo "<tr valign=top><td align=right><b>Major(s): </b></td><td>";
+                if ($maj = $this->format_majors($data))
+                    echo $maj;
+                echo $this->format_majors($data)."</td></tr>";
             }
             if (isset($data['studentpostoffice'])) {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
