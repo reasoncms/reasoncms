@@ -865,6 +865,19 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         return $name;
     }
 
+    function format_misc($data) {
+        $count = 0;
+        foreach ($data as $m) {
+            if ($count > 0) {
+                echo "<br>".$m;
+            }
+            else {
+                echo $m. " ";
+            }
+            $count = 1;
+        }
+    }
+
     function format_minors($data) {
         $count = 0;
         foreach ($data['studentminor'] as $m) {
@@ -1290,7 +1303,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
                 'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization','studentyearinschool','studentadvisor',
                 'eduPersonAffiliation','studentStatus','alumClassYear','postaladdress','l','st','postalcode','c',
-                'eduPersonEntitlement','mobile');
+                'eduPersonEntitlement','mobile', 'termenrolled');
 
         $dir = new directory_service('ldap_luther');
         $dir->search_by_filter($querystring, $attributes);
