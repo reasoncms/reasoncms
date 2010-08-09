@@ -563,6 +563,55 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if (isset($data['departmentname'])) {
                 echo "<tr valign=top><td align=right><b>Department: </b></td><td>".$data['studentstatus'][0]."</td></tr>";
             }
+            if (isset($data['gender'])) {
+                echo "<tr valign=top><td align=right><b>Gender: </b></td><td>".$data['gender'][0]."</td></tr>";
+            }
+            if (isset($data['termenrolled'])) {
+                echo "<tr valign=top><td align=right><b>Terms Enrolled: </b></td><td>".$data['termenrolled'][0]."</td></tr>";
+            }
+            if (isset($data['ocpostaladdress'])) {
+                echo "<tr valign=top><td align=right><b>Off Campus Address: </b></td><td>"
+                .$data['ocpostaladdress'][0].
+              "<br>"
+              .$data['ocl'][0].
+              ", "
+              .$data['ocst'][0].
+              "<br>"
+              .$data['ocpostalcode'][0].
+              "<br>"
+              .$data['occ'][0].
+              "</td></tr>";
+            }
+            if (isset($data['ocphone'])) {
+                echo "<tr valign=top><td align=right><b>Off Campus Phone: </b></td><td>".$data['ocphone'][0]."</td></tr>";
+            }
+            if (isset($data['privacyflag'])) {
+                echo "<tr valign=top><td align=right><b>Privacy Flag: </b></td><td>".$data['privacyflag'][0]."</td></tr>";
+            }
+            if (isset($data['creationdate'])) {
+                echo "<tr valign=top><td align=right><b>Creation Date: </b></td><td>".$data['creationdate'][0]."</td></tr>";
+            }
+            if (isset($data['deleteafterdate'])) {
+                echo "<tr valign=top><td align=right><b>Delete After Date: </b></td><td>".$data['deleteafterdate'][0]."</td></tr>";
+            }
+            if (isset($data['birthdate'])) {
+                echo "<tr valign=top><td align=right><b>Birth Date: </b></td><td>".$data['birthdate'][0]."</td></tr>";
+            }
+            if (isset($data['lasttermattended'])) {
+                echo "<tr valign=top><td align=right><b>Last Term Attended: </b></td><td>".$data['lasttermattended'][0]."</td></tr>";
+            }
+            if (isset($data['programstartdate'])) {
+                echo "<tr valign=top><td align=right><b>Program Start Date: </b></td><td>".$data['programstartdate'][0]."</td></tr>";
+            }
+            if (isset($data['programenddate'])) {
+                echo "<tr valign=top><td align=right><b>Program End Date: </b></td><td>".$data['programenddate'][0]."</td></tr>";
+            }
+            if (isset($data['studentstatusdate'])) {
+                echo "<tr valign=top><td align=right><b>Student Status Date: </b></td><td>".$data['studentstatusdate'][0]."</td></tr>";
+            }
+            if (isset($data['lastupdate'])) {
+                echo "<tr valign=top><td align=right><b>Last Updated: </b></td><td>".$data['lastupdate'][0]."</td></tr>";
+            }
 
 
             echo '</tr></tbody></table></td>';
