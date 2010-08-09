@@ -502,6 +502,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 echo "<tr valign=top><td align=right><b>Major(s): </b></td><td>";
                 echo $this->format_majors($data)."</td></tr>";
             }
+            if (isset($data['studentminor'])) {
+                echo "<tr valign=top><td align=right><b>Minor(s): </b></td><td>";
+                echo $this->format_minors($data)."</td></tr>";
+            }
             if (isset($data['studentpostoffice'])) {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
                 echo "<tr valign=top><td align=right><b>SPO: </b></td><td>".$data['studentpostoffice'][0]."</td></tr>";
@@ -758,9 +762,15 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         return $name;
     }
 
+    function format_minors($data) {
+        foreach ($data['studentminor'] as $major) {
+            echo $major. " ";
+        }
+    }
+
     function format_majors($data) {
         foreach ($data['studentmajor'] as $major) {
-            echo "(".$major. ") ";
+            echo $major. " ";
         }
         //foreach ($data['studentmajor'] as $major)
         //    $majors[] = $this->make_search_link('<span class="major">'.$this->majors[$major].'</span>', 'major', $major);
