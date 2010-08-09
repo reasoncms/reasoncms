@@ -498,7 +498,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                     //echo $data['edupersonprimaryaffiliation'][$i]."<br>";
                 //}
                 if ($affil = $this->format_affiliation($data))
-                    echo '<li class="personAffil">'.$affil.'</li>';
+                    echo $affil;
                 echo "</td></tr>";
             }
             if (isset($data['studentpostoffice'])) {
