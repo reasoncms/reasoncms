@@ -274,7 +274,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $status .= ' <a class="newSearch" href="'.$this->search_url.'">Search Again</a></p>';
         return $status;
     }
-/*
+    /*
     function display_results($people, $desc, $telecomm) //{{{
     {
         $depts = $this->find_depts_in_result_set($people);
@@ -422,11 +422,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
     function display_results($people, $desc, $telecomm) //{{{
     {
-        $depts = $this->find_depts_in_result_set($people);
-        if (count($depts))
-            $sites = $this->get_reason_sites($depts);
-        else
-            $sites = array();
         echo $this->get_search_status($people, $desc);
         $image_class = ($this->form->get_value('pictures')) ? '' : 'noImage';
         echo '<p class="personPager"></p>';
@@ -459,15 +454,19 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         // Show all of the people results
         foreach ($people as $data) {
             echo '<div class="person">';
-            if ($this->form->get_value('pictures') != false) {
-                echo '<div class="personPhoto">';
-                echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
-                echo '</div>';
-            }
+            //not how we do images, look at img.php
+            //if ($this->form->get_value('pictures') != false) {
+            //echo '<div class="personPhoto">';
+            //echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
+            //echo '</div>';
+            //}
             echo '<div class="personBody '.$image_class.'">';
             echo '<div class="personHeader">';
             //echo '<ul>';
-            //echo '<li class="personName">' . $this->format_name($data) . '</li>';
+
+
+
+            echo '<li class="personName">' . $this->format_name($data) . '</li>';
             if (isset($data['alumClassYear'])) {
                 echo '<li class="personYear">'.$data['alumClassYear'][0].'</li>';
             } else {
@@ -479,11 +478,22 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
                 echo '<li class="personMajor">'. $data['studentmajor'][0] .'</li>';
             }
+            // test area START -------------------------------------------
+            if (isset($data['cn'])) {
+                echo "<tr valign=top><td align=right><b>Name:</b></td><td>".$data['cn'][0]."</td></tr>";
+            }
+            if (isset($data['uid'])) {
+                echo "<tr valign=top><td align=right><b>Username:</b></td><td>".$data['uid'][0]."</td></tr>";
+            }
+            if (isset($data['mail'])) {
+                echo "<tr valign=top><td align=right><b>E-mail:</b></td><td>".$data['mail'][0]."</td></tr>";
+            }
             if (isset($data['studentpostoffice'])) {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
                 echo "<tr valign=top><td align=right><b>SPO:</b></td><td>".$data['studentpostoffice'][0]."</td></tr>";
                 //echo '<li class="personMajor">'. $data['studentpostoffice'][0] .'</li>';
             }
+            // test area END ---------------------------------------------
             if (isset($data['mail'])) {
                 echo '<li class="personEmail">'. $this->format_email($data['mail'][0]) .'</li>';
             }
