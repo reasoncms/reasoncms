@@ -615,10 +615,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 echo "<tr valign=top><td align=right><b>Last Updated: </b></td><td>".$data['lastupdate'][0]."</td></tr>";
             }
             if (isset($data['mobile'])) {
-                echo "<tr valign=top><td align=right><b>Cell Phone: </b></td><td>";
-                $cells = $this->format_cell($data);
-                format_misc($cells);
-                echo "</td></tr>";
+                //echo "<tr valign=top><td align=right><b>Cell Phone: </b></td><td>";
+                //$cells = $this->format_cell($data);
+                //format_misc($cells);
+                //echo "</td></tr>";
+                echo "<tr valign=top><td align=right><b>Cell Phone: </b></td><td>".$data['mobile'][0]."</td></tr>";
             }
 
 
