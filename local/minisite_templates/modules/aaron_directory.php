@@ -482,56 +482,56 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             // test area START -------------------------------------------
             echo '<table cellspacing="0" cellpadding="3" border="0"><tbody>';
             if (isset($data['cn'])) {
-                echo "<tr valign=top><td align=right><b>Name: </b></td><td>".$data['cn'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Name: </b></td><td>".$data['cn'][0]."</td></tr>";
             }
             if (isset($data['uid'])) {
-                echo "<tr valign=top><td align=right><b>Username: </b></td><td>".$data['uid'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Username: </b></td><td>".$data['uid'][0]."</td></tr>";
             }
             if (isset($data['mail'])) {
-                echo "<tr valign=top><td align=right><b>E-mail: </b></td><td>".$data['mail'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>E-mail: </b></td><td>".$data['mail'][0]."</td></tr>";
             }
             if (isset($data['edupersonprimaryaffiliation'])) {
-                echo "<tr valign=top><td align=right><b>Affiliation: </b></td><td>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Affiliation: </b></td><td>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
             }
             if (isset($data['edupersonaffiliation'])) {
-                echo "<tr valign=top><td align=right><b>All Affiliations: </b></td><td>";
+                echo "<tr valign=top><td align=left><b>All Affiliations: </b></td><td>";
                 if ($affil = $this->format_affiliation($data))
                     echo $affil;
                 echo "</td></tr>";
             }
             if (isset($data['studentmajor'])) {
-                echo "<tr valign=top><td align=right><b>Major(s): </b></td><td>";
+                echo "<tr valign=top><td align=left><b>Major(s): </b></td><td>";
                 echo $this->format_majors($data)."</td></tr>";
             }
             if (isset($data['studentminor'])) {
-                echo "<tr valign=top><td align=right><b>Minor(s): </b></td><td>";
+                echo "<tr valign=top><td align=left><b>Minor(s): </b></td><td>";
                 echo $this->format_minors($data)."</td></tr>";
             }
             if (isset($data['studentspecialization'])) {
-                echo "<tr valign=top><td align=right><b>Specialization: </b></td><td>".$data['studentspecialization'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Specialization: </b></td><td>".$data['studentspecialization'][0]."</td></tr>";
             }
             if (isset($data['studentyearinschool'])) {
-                echo "<tr valign=top><td align=right><b>Year In School: </b></td><td>".$data['studentyearinschool'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Year In School: </b></td><td>".$data['studentyearinschool'][0]."</td></tr>";
             }
             if (isset($data['studentadvisor'])) {
-                echo "<tr valign=top><td align=right><b>Advisor: </b></td><td>".$data['studentadvisor'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Advisor: </b></td><td>".$data['studentadvisor'][0]."</td></tr>";
             }
             if (isset($data['studentpostoffice'])) {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
-                echo "<tr valign=top><td align=right><b>SPO: </b></td><td>".$data['studentpostoffice'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>SPO: </b></td><td>".$data['studentpostoffice'][0]."</td></tr>";
                 //echo '<li class="personMajor">'. $data['studentpostoffice'][0] .'</li>';
             }
             if (isset($data['title'])) {
-                echo "<tr valign=top><td align=right><b>Title: </b></td><td>".$data['title'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Title: </b></td><td>".$data['title'][0]."</td></tr>";
             }
             if (isset($data['officebldg'])) {
-                echo "<tr valign=top><td align=right><b>Office Location: </b></td><td>".$data['officebldg'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Office Location: </b></td><td>".$data['officebldg'][0]."</td></tr>";
             }
             if (isset($data['officephone'])) {
-                echo "<tr valign=top><td align=right><b>Office Phone: </b></td><td>".$data['officephone'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Office Phone: </b></td><td>".$data['officephone'][0]."</td></tr>";
             }
             if (isset($data['postaladdress'])) {
-                echo "<tr valign=top><td align=right><b>Home Address: </b></td><td>"
+                echo "<tr valign=top><td align=left><b>Home Address: </b></td><td>"
                 .$data['postaladdress'][0].
                 "<br>"
                 .$data['l'][0].
@@ -544,36 +544,36 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 "</td></tr>";
             }
             if (isset($data['telephonenumber'])) {
-                echo "<tr valign=top><td align=right><b>Home Phone: </b></td><td>".$data['telephonenumber'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Home Phone: </b></td><td>".$data['telephonenumber'][0]."</td></tr>";
             }
             if (isset($data['spousename'])) {
-                echo "<tr valign=top><td align=right><b>Spouse: </b></td><td>".$data['spousename'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Spouse: </b></td><td>".$data['spousename'][0]."</td></tr>";
             }
             if (isset($data['childname'])) {
-                echo "<tr valign=top><td align=right><b>Children: </b></td><td>";
+                echo "<tr valign=top><td align=left><b>Children: </b></td><td>";
                 echo $this->format_misc($data['childname'])."</td></tr>";
             }
             if (isset($data['employeenumber'])) {
-                echo "<tr valign=top><td align=right><b>Luther ID: </b></td><td>".$data['employeenumber'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Luther ID: </b></td><td>".$data['employeenumber'][0]."</td></tr>";
             }
             if (isset($data['prno'])) {
-                echo "<tr valign=top><td align=right><b>PRNO: </b></td><td>".$data['prno'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>PRNO: </b></td><td>".$data['prno'][0]."</td></tr>";
             }
             if (isset($data['studentstatus'])) {
-                echo "<tr valign=top><td align=right><b>Student Status: </b></td><td>".$data['studentstatus'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Student Status: </b></td><td>".$data['studentstatus'][0]."</td></tr>";
             }
             if (isset($data['departmentname'])) {
-                echo "<tr valign=top><td align=right><b>Department: </b></td><td>".$data['departmentname'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Department: </b></td><td>".$data['departmentname'][0]."</td></tr>";
             }
             if (isset($data['gender'])) {
-                echo "<tr valign=top><td align=right><b>Gender: </b></td><td>".$data['gender'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Gender: </b></td><td>".$data['gender'][0]."</td></tr>";
             }
             if (isset($data['termenrolled'])) {
-                echo "<tr valign=top><td align=right><b>Terms Enrolled: </b></td><td>";
+                echo "<tr valign=top><td align=left><b>Terms Enrolled: </b></td><td>";
                 echo $this->format_misc($data['termenrolled'])."</td></tr>";
             }
             if (isset($data['ocpostaladdress'])) {
-                echo "<tr valign=top><td align=right><b>Off Campus Address: </b></td><td>"
+                echo "<tr valign=top><td align=left><b>Off Campus Address: </b></td><td>"
                 .$data['ocpostaladdress'][0].
               "<br>"
               .$data['ocl'][0].
@@ -586,41 +586,41 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
               "</td></tr>";
             }
             if (isset($data['ocphone'])) {
-                echo "<tr valign=top><td align=right><b>Off Campus Phone: </b></td><td>".$data['ocphone'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Off Campus Phone: </b></td><td>".$data['ocphone'][0]."</td></tr>";
             }
             if (isset($data['privacyflag'])) {
-                echo "<tr valign=top><td align=right><b>Privacy Flag: </b></td><td>".$data['privacyflag'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Privacy Flag: </b></td><td>".$data['privacyflag'][0]."</td></tr>";
             }
             if (isset($data['creationdate'])) {
-                echo "<tr valign=top><td align=right><b>Creation Date: </b></td><td>".$data['creationdate'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Creation Date: </b></td><td>".$data['creationdate'][0]."</td></tr>";
             }
             if (isset($data['deleteafterdate'])) {
-                echo "<tr valign=top><td align=right><b>Delete After Date: </b></td><td>".$data['deleteafterdate'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Delete After Date: </b></td><td>".$data['deleteafterdate'][0]."</td></tr>";
             }
             if (isset($data['birthdate'])) {
-                echo "<tr valign=top><td align=right><b>Birth Date: </b></td><td>".$data['birthdate'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Birth Date: </b></td><td>".$data['birthdate'][0]."</td></tr>";
             }
             if (isset($data['lasttermattended'])) {
-                echo "<tr valign=top><td align=right><b>Last Term Attended: </b></td><td>".$data['lasttermattended'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Last Term Attended: </b></td><td>".$data['lasttermattended'][0]."</td></tr>";
             }
             if (isset($data['programstartdate'])) {
-                echo "<tr valign=top><td align=right><b>Program Start Date: </b></td><td>".$data['programstartdate'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Program Start Date: </b></td><td>".$data['programstartdate'][0]."</td></tr>";
             }
             if (isset($data['programenddate'])) {
-                echo "<tr valign=top><td align=right><b>Program End Date: </b></td><td>".$data['programenddate'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Program End Date: </b></td><td>".$data['programenddate'][0]."</td></tr>";
             }
             if (isset($data['studentstatusdate'])) {
-                echo "<tr valign=top><td align=right><b>Student Status Date: </b></td><td>".$data['studentstatusdate'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Student Status Date: </b></td><td>".$data['studentstatusdate'][0]."</td></tr>";
             }
             if (isset($data['lastupdate'])) {
-                echo "<tr valign=top><td align=right><b>Last Updated: </b></td><td>".$data['lastupdate'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Last Updated: </b></td><td>".$data['lastupdate'][0]."</td></tr>";
             }
             if (isset($data['mobile'])) {
                 //echo "<tr valign=top><td align=right><b>Cell Phone: </b></td><td>";
                 //$cells = $this->format_cell($data);
                 //format_misc($cells);
                 //echo "</td></tr>";
-                echo "<tr valign=top><td align=right><b>Cell Phone: </b></td><td>".$data['mobile'][0]."</td></tr>";
+                echo "<tr valign=top><td align=left><b>Cell Phone: </b></td><td>".$data['mobile'][0]."</td></tr>";
             }
 
 
