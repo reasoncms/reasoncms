@@ -769,10 +769,14 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
                 'studentStatus');*/
 
-        $ext_suppress = array('officebldg','studentPostOffice', 'homepostaladdress',
-                'address', 'telephoneNumber', 'carlconcentration',
-                'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
-                'studentStatus');
+        $ext_suppress = array('dn','ou','count','employeenumber','prno','sn','givenName','eduPersonNickname','displayName','title',
+                'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName',
+                'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
+                'studentresidencehallroom','studentspecialization','studentyearinschool','studentadvisor',
+                'studentStatus','alumClassYear','postaladdress','l','st','postalcode','c',
+                'eduPersonEntitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
+                'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
+                'programstartdate','programenddate');
 
         foreach ($results as $key => $data) {
             // Remove the people who should be gone completely.
