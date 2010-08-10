@@ -482,16 +482,16 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             // test area START -------------------------------------------
             echo '<table cellspacing="0" cellpadding="3" border="0"><tbody>';
             if (isset($data['cn'])) {
-                echo "<tr valign=top><td align=right><b>Name: </b></td><td>".$data['cn'][0]."</td></tr>";
+                echo "<tr valign=top><td align=right><b>Name: </b></td><td align=right>".$data['cn'][0]."</td></tr>";
             }
             if (isset($data['uid'])) {
-                echo "<tr valign=top><td align=right><b>Username: </b></td><td>".$data['uid'][0]."</td></tr>";
+                echo "<tr valign=top><td align=right><b>Username: </b></td><td align=right>".$data['uid'][0]."</td></tr>";
             }
             if (isset($data['mail'])) {
-                echo "<tr valign=top><td align=right><b>E-mail: </b></td><td>".$data['mail'][0]."</td></tr>";
+                echo "<tr valign=top><td align=right><b>E-mail: </b></td><td align=right>".$data['mail'][0]."</td></tr>";
             }
             if (isset($data['edupersonprimaryaffiliation'])) {
-                echo "<tr valign=top><td align=right><b>Affiliation: </b></td><td>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
+                echo "<tr valign=top><td align=right><b>Affiliation: </b></td><td align=right>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
             }
             if (isset($data['edupersonaffiliation'])) {
                 echo "<tr valign=top><td align=right><b>All Affiliations: </b></td><td>";
