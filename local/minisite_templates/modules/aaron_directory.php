@@ -562,7 +562,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 echo "<tr valign=top><td align=right><b>Student Status: </b></td><td>".$data['studentstatus'][0]."</td></tr>";
             }
             if (isset($data['departmentname'])) {
-                echo "<tr valign=top><td align=right><b>Department: </b></td><td>".$data['studentstatus'][0]."</td></tr>";
+                echo "<tr valign=top><td align=right><b>Department: </b></td><td>".$data['departmentname'][0]."</td></tr>";
             }
             if (isset($data['gender'])) {
                 echo "<tr valign=top><td align=right><b>Gender: </b></td><td>".$data['gender'][0]."</td></tr>";
