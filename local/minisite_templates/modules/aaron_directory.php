@@ -770,11 +770,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'studentStatus');*/
 
         $ext_suppress = array('dn','ou','count','employeenumber','prno','sn','givenname','edupersonnickname','displayname','title',
-                'officebldg','officephone','studentpostoffice','telephoneNumber','spouseName',
+                'officebldg','officephone','studentpostoffice','telephoneNumber','spousename',
                 'homepostaladdress', 'address', 'telephonenumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
                 'studentresidencehallroom','studentspecialization','studentyearinschool','studentadvisor',
                 'studentstatus','alumclassyear','postaladdress','l','st','postalcode','c',
-                'eduPersonEntitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
+                'edupersonentitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
                 'programstartdate','programenddate');
 
