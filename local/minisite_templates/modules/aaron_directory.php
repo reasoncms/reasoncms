@@ -614,6 +614,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if (isset($data['lastupdate'])) {
                 echo "<tr valign=top><td align=right><b>Last Updated: </b></td><td>".$data['lastupdate'][0]."</td></tr>";
             }
+            if (isset($data['personcellphone'])) {
+                echo "<tr valign=top><td align=right><b>Cell Phone: </b></td><td>";
+                $cells = $this->format_cell($data);
+                format_misc($cells);
+                echo "</td></tr>";
+            }
 
 
             echo '</tr></tbody></table></td>';
