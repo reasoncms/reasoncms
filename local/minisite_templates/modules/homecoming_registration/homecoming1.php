@@ -85,7 +85,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		),
 		'attend_program' => array(
 			'type' => 'select_no_sort',
-			'display_name' => 'Tickets for the Alumni Program',
+			'display_name' => 'Tickets for Friday\'s Alumni Program',
 			'comments' => '<br />$20/person',
 			'options' => array(
 				'--'=>'--', 
@@ -163,7 +163,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		$classes_string_55_to_25 .= $date['year'] - 25;
 		$this->change_element_type(
 			'attend_dinner_50_to_25', 'select_no_sort', array(
-				'display_name' => 'Attend Dinner', 
+				'display_name' => 'Tickets for Saturday\'s Reunion Dinner', 
 				'comments' => '<br />'.$classes_string_55_to_25.'<br />$20/person',
 				'options' => array(
 					'--'=>'--', 
@@ -184,7 +184,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		$classes_string_20_to_10 .= $date['year'] - 10;
 		$this->change_element_type(
 			'attend_dinner_20_to_10', 'select_no_sort', array(
-				'display_name' => 'Attend Reception', 
+				'display_name' => 'Tickets for Saturday\'s Reunion Reception', 
 				'comments' => '<br />'.$classes_string_20_to_10.'<br />$15/person',
 				'options' => array(
 					'--'=>'--', 
@@ -200,7 +200,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		// Set cost for 5 year reunion
 		$this->change_element_type(
 			'attend_dinner_5', 'select_no_sort', array(
-				'display_name' => 'Attend Reception',
+				'display_name' => 'Tickets for Saturday\'s Reunion Reception',
 				'comments' => '<br />for Class of '. ($date['year']-5) .'<br />$10/person',
 				'options' => array(
 					'--'=>'--', 
