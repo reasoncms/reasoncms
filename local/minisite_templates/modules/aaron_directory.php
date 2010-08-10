@@ -453,15 +453,16 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         }
         // Show all of the people results
         foreach ($people as $data) {
-            echo '<div class="person">';
+            // person, personBody, personHeader
+            //echo '<div class="person">';
             //not how we do images, look at img.php
             //if ($this->form->get_value('pictures') != false) {
             //echo '<div class="personPhoto">';
             //echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
             //echo '</div>';
             //}
-            echo '<div class="personBody '.$image_class.'">';
-            echo '<div class="personHeader">';
+            //echo '<div class="personBody '.$image_class.'">';
+            //echo '<div class="personHeader">';
             //echo '<ul>';
 
 
@@ -629,7 +630,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             //    echo '<li class="personEmail">'. $this->format_email($data['mail'][0]) .'</li>';
             //}
             //echo '</ul>';
-            echo '</div>'; //personHeader
+            //echo '</div>'; //personHeader
 
             // If this is faculty or staff - DELETED
             
@@ -644,8 +645,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             //        echo '<li class="personCellPhone">cell: '.$cell.'</li>';
             //echo '</ul>';
             //echo '</div>';
-            echo '</div>'; // personBody
-            echo '</div>'; // person
+            //echo '</div>'; // personBody
+            //echo '</div>'; // person
 
         } /* endforeach */
         echo '</div>'; // searchResults
