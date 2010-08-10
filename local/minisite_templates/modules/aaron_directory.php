@@ -480,7 +480,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             //    echo '<li class="personMajor">'. $data['studentmajor'][0] .'</li>';
             //}
             // test area START -------------------------------------------
-            //echo '<td><table cellspacing="0" cellpadding="3" border="0"><tbody><tr valign="top">';
+            echo '<table cellspacing="0" cellpadding="3" border="0"><tbody>';
             if (isset($data['cn'])) {
                 echo "<tr valign=top><td align=right><b>Name: </b></td><td>".$data['cn'][0]."</td></tr>";
             }
@@ -624,7 +624,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
 
 
-            //echo '</tr></tbody></table></td>';
+            echo '</tbody></table>';
             // test area END ---------------------------------------------
             //if (isset($data['mail'])) {
             //    echo '<li class="personEmail">'. $this->format_email($data['mail'][0]) .'</li>';
