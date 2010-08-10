@@ -224,7 +224,6 @@ class LutherTemplate extends MinisiteTemplate
 					$this->run_section( 'norse_calendar' );
                 }
 
-
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_pageLC')
 		{
 			echo '</div> <!-- class="column span..."-->'."\n";
@@ -233,6 +232,7 @@ class LutherTemplate extends MinisiteTemplate
 		if ($this->has_related_section() == false) {
 			$this->show_sidebar_tableless();	
 		}
+
         }
 
 	function do_org_head_items()

@@ -76,7 +76,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$this->markup_string .= '<div class="addCommentForm">'.$this->get_comment_adder_section().'</div>'."\n";
 		}
-		$this->markup_string .= '</div>'."\n";
+		//$this->markup_string .= '</div>'."\n";
 		if($this->should_show_related_events_section() || $this->should_show_images_section() || $this->should_show_assets_section() || $this->should_show_categories_section())
 		{
 	//		$this->markup_string .= '<div class="relatedItems">'."\n";
@@ -98,7 +98,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 			}
 			$this->markup_string .= '</div>'."\n";
 		}
-		$this->markup_string .= '</div>';
+		//$this->markup_string .= '</div>';
 	}
 	
 	/**

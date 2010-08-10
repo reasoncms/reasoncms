@@ -46,7 +46,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		$this->markup_string .= $this->get_pre_list_markup();
 		$this->markup_string .= $this->get_list_markup();
 		$this->markup_string .= $this->get_post_list_markup();
-		$this->markup_string .= '</div>'."\n";
+		//$this->markup_string .= '</div>'."\n";
 
 	}
 
