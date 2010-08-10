@@ -85,7 +85,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		),
 		'attend_program' => array(
 			'type' => 'select_no_sort',
-			'display_name' => 'Tickets for Friday\'s Alumni Program',
+			'display_name' => 'Tickets for Friday\'s Alumni Dinner',
 			'comments' => '<br />$20/person',
 			'options' => array(
 				'--'=>'--', 
