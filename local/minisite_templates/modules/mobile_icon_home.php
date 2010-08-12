@@ -66,7 +66,7 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         echo '<a accesskey="11" href="http://mail.luther.edu/">Norse Mail</a>';
         echo '</li>';
         echo '<li id="menu-home">';
-        echo '<a accesskey="12" href="http://www.luther.edu/">Full Site</a>';
+        echo '<a accesskey="12" href="http://www.luther.edu/">Luther Website</a>';
         echo '</li>';
         echo '</ol>';
         echo '</div>';
