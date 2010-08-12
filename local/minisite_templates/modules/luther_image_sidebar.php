@@ -2,7 +2,7 @@
 	reason_include_once( 'minisite_templates/modules/image_sidebar.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LutherImageSidebarModule';
-	
+
 	class LutherImageSidebarModule extends ImageSidebarModule
 	{
 		var $es;
@@ -19,7 +19,7 @@
 			parent::init( $args );
 			$head_items =& $this->parent->head_items;
 		}
-		
+
 		function run()
 		{
 			$die = isset( $this->die_without_thumbmail ) ? $this->die_without_thumbnail : false;
@@ -27,10 +27,10 @@
 			$desc = isset( $this->description ) ? $this->description : true;
 			$text = isset( $this->additional_text ) ? $this->additional_text : "";
                         $site_id = $this->site_id;
-			
+
 			if ( !empty($this->parent->textonly) )
 				echo '<h3>Images</h3>'."\n";
-			
+
 			foreach( $this->images AS $id => $image )
 			{
                             echo $site_id;
@@ -100,7 +100,7 @@
 					echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
 					echo '<img src="' . $thumb . '" border="0" alt="' . $caption . '" title="Click to enlarge" />';
 					echo '</a>';
-				
+
 					// show caption if flag is true
 					if ($this->params['caption_flag'] && $caption != "") echo $image->get_value('description') ;
 					echo "</div>\n";
