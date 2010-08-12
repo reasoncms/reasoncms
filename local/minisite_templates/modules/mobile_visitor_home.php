@@ -34,9 +34,9 @@ class MobileVisitorHomeModule extends DefaultMinisiteModule {
         echo '<li id="menu-directions">';
         echo '<a accesskey="4" href="/mobile/directions/">Directions</a>';
         echo '</li>';
-        echo '<li id="menu-fullmobile">';
-        echo '<a accesskey="5" href="/mobile/">Full Mobile</a>';
-        echo '</li>';
+        //echo '<li id="menu-fullmobile">';
+        //echo '<a accesskey="5" href="/mobile/">Full Mobile</a>';
+        //echo '</li>';
         echo '</ol>';
         echo '</div>';
     }
