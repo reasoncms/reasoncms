@@ -14,7 +14,7 @@ class LutherFooterModule extends DefaultMinisiteModule {
         echo '<div id="foot">';
         echo '<center><p><br /></p><p></p><p></p>'."\n";
         echo '<div><p></p>&#169 '.date("Y").'• Luther College • 700 College Dr • Decorah, IA 52101 USA'."\n".'</div>';
-        echo '<div> Phone: 563-387-2000 or or 800-4 LUTHER (800-458-8437) <p></p></div>';
+        echo '<div> Phone: 563-387-2000 or 800-4 LUTHER (800-458-8437) <p></p></div>';
         //echo '<div><i>Email burkaa01@luther.edu with questions, comments, concerns</i></div></center>'."\n";
         google_analytics();
     }
