@@ -266,6 +266,15 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'footer' => '',
             'post_foot' => 'mobile_footer',
 		),
+    		'mobile_admissions' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main_head' => '',
+            'main' => 'content',
+            'main_post' => 'mobile_admissions_home',
+			'footer' => '',
+            'post_foot' => 'mobile_footer',
+		),
         		'mobile_blank' => array(
 			'banner_xtra' => '',
 			'post_banner' => '',
