@@ -33,7 +33,7 @@
 
 			foreach( $this->images AS $id => $image )
 			{
-                            echo $site_id;
+                            //echo $site_id;
                             if ($site_id == '285264'){
                                 if (preg_match("/mobilecampustour/", $image->get_value('keywords'))){
                                     $url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
