@@ -38,13 +38,13 @@ class MobileAdmissionsHomeModule extends DefaultMinisiteModule {
         //echo '<a accesskey="5" href="/mobile/">Full Mobile</a>';
         //echo '</li>';
         echo '</ol>';
-        echo '<p><strong>Admissions Office</strong><br />
+        echo '<div style="text-align: center;"><p><strong>Admissions Office</strong><br />
 Luther College<br />
 700 College Drive<br />
 Decorah, Iowa 52101<br />
 800-4 LUTHER<br />
 (800-458-8437)<br />
-admissions@luther.edu</p>';
+admissions@luther.edu</p></div>';
         echo '</div>';
     }
 }
