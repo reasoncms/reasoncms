@@ -71,7 +71,7 @@
 					{
 						$caption = $image->get_value('description');
 					}
-                                        echo '<a href="'. $url .'"><img src="'. $url .'" alt="" width=100px border=0></a>';
+                                        echo '<a href="'. $url .'"><img src="'. $url .'" alt="" width=95px border=0></a>';
 				}
                             }
                             else {
