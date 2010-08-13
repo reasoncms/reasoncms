@@ -38,7 +38,7 @@ class MobileAdmissionsHomeModule extends DefaultMinisiteModule {
         echo '<a accesskey="4" href="https://www.luther.edu/directory/m.directory/">Directory</a>';
         echo '</li>';
         echo '<li id="menu-news">';
-        echo '<a accesskey="5" href="news/">News</a>';
+        echo '<a accesskey="5" href="/mobile/news/">News</a>';
         echo '</li>';
         //echo '<li id="menu-fullmobile">';
         //echo '<a accesskey="5" href="/mobile/">Full Mobile</a>';
