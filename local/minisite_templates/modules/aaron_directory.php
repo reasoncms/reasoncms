@@ -502,6 +502,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                     echo $affil;
                 echo "</td></tr>";
             }
+            if (isset($data['studentresidencehallbldg'])) {
+                echo "<tr valign=top><td><b>Housing: </b></td><td>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
+            }
+            if (isset($data['studentresidencehallphone'])) {
+                echo "<tr valign=top><td><b>Campus Phone: </b></td><td>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
+            }
             if (isset($data['studentmajor'])) {
                 echo "<tr valign=top><td><b>Major(s): </b></td><td>";
                 echo $this->format_majors($data)."</td></tr>";
