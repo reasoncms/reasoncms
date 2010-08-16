@@ -699,14 +699,14 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         echo '<div id="searchResults" class="photoBook">';
         foreach ($people as $data) {
             echo '<div class="person">';
-            echo '<div class="personPhoto">';
-            echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
-            echo '</div>';
+            // photo doesnt work
+            //echo '<div class="personPhoto">';
+            //echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
+            //echo '</div>';
             echo '<div class="personInfo">';
-            echo '<ul>';
             echo '<li class="personName">' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]);
-            if (isset($data['alumClassYear'])) {
-                echo ', '.$data['alumClassYear'][0];
+            if (isset($data['edupersonprimaryaffiliation'])) {
+                echo "<tr valign=top><td><b>Affiliation: </b></td><td>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
             }
             echo '</li>';
             if ($data['edupersonprimaryaffiliation'][0] == 'student') {
