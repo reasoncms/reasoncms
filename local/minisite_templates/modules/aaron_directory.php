@@ -708,17 +708,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if (isset($data['edupersonprimaryaffiliation'])) {
                 echo "<tr valign=top><td> (</td><td>".$data['edupersonprimaryaffiliation'][0].") </td></tr>";
             }
-            echo '</li>';
-            if ($data['edupersonprimaryaffiliation'][0] == 'student') {
-                if (isset($data['studentmajor'])) {
-                    echo '<li>'.$this->format_majors($data).'</li>';
-                }
-            } else {
-                if (isset($data['title'])) {
-                    foreach ($data['title'] as $title)
-                        echo '<li class="personTitle">'.$title.'</li>';
-                }
+            if (isset($data['mail'])) {
+                echo "<tr valign=top><td> - </td><td>".$data['mail'][0]."</td></tr>";
             }
+            echo '</li>';
             echo '</div>'; // personInfo
             echo '</div>'; // person
         }
