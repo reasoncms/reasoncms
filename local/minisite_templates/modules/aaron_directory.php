@@ -245,7 +245,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $this->form->remove_element('year');
             $this->form->remove_element('faculty_comment');
             $this->form->remove_element('pictures');
-            $this->form->remove_element('display_as');
+            //$this->form->remove_element('display_as');
         }
 
         echo '<div id="campusDirForm">';
