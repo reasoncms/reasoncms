@@ -706,7 +706,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             echo '<div class="personInfo">';
             echo '<li class="personName">' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]);
             if (isset($data['edupersonprimaryaffiliation'])) {
-                echo "<tr valign=top><td><b>Affiliation: </b></td><td>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
+                echo "<tr valign=top><td><b> - </b></td><td>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
             }
             echo '</li>';
             if ($data['edupersonprimaryaffiliation'][0] == 'student') {
