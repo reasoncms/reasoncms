@@ -689,7 +689,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         }
         echo '</div>'; // searchResults
         echo '<p class="personPager"></p>';
-        echo $this->build_printable_link();
+        //echo $this->build_printable_link();
     }//}}}
 
     /** dump search results as a tab-delimited file
