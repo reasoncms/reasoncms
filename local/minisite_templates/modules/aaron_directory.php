@@ -660,6 +660,39 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
     }//}}}
 
     function display_results_photobook($people, $desc) //{{{
+    /*{
+        echo $this->get_search_status($people, $desc);
+        echo '<p class="personPager"></p>';
+        echo '<div id="searchResults" class="photoBook">';
+        foreach ($people as $data) {
+            echo '<div class="person">';
+            echo '<div class="personPhoto">';
+            echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
+            echo '</div>';
+            echo '<div class="personInfo">';
+            echo '<ul>';
+            echo '<li class="personName">' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]);
+            if (isset($data['alumClassYear'])) {
+                echo ', '.$data['alumClassYear'][0];
+            }
+            echo '</li>';
+            if ($data['edupersonprimaryaffiliation'][0] == 'student') {
+                if (isset($data['studentmajor'])) {
+                    echo '<li>'.$this->format_majors($data).'</li>';
+                }
+            } else {
+                if (isset($data['title'])) {
+                    foreach ($data['title'] as $title)
+                        echo '<li class="personTitle">'.$title.'</li>';
+                }
+            }
+            echo '</div>'; // personInfo
+            echo '</div>'; // person
+        }
+        echo '</div>'; // searchResults
+        echo '<p class="personPager"></p>';
+        //echo $this->build_printable_link();
+    }//}}}*/
     {
         echo $this->get_search_status($people, $desc);
         echo '<p class="personPager"></p>';
