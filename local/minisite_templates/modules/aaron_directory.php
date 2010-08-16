@@ -704,14 +704,15 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             //echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
             //echo '</div>';
             echo '<div class="personInfo">';
-            echo '<li class="personName">' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]);
+            //echo '<li class="personName">' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]);
+            echo $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]);
             if (isset($data['edupersonprimaryaffiliation'])) {
                 echo "<tr valign=top><td> (</td><td>".$data['edupersonprimaryaffiliation'][0].") </td></tr>";
             }
             if (isset($data['mail'])) {
                 echo "<tr valign=top><td> - </td><td>".$data['mail'][0]."</td></tr>";
             }
-            echo '</li>';
+            //echo '</li>';
             echo '</div>'; // personInfo
             echo '</div>'; // person
         }
