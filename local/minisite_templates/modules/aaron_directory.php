@@ -76,7 +76,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             //'pictures' => array(
             //                'display_name' => 'Show pictures',
             //                'type' => 'checkboxfirst',
-            ),
+            //),
             'display_as' => array(
                             'display_name' => 'Display as',
                             'type' => 'select_no_sort',
