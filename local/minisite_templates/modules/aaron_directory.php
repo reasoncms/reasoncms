@@ -61,8 +61,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             'year' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. 2012<span>'),
             'faculty_comment' => array('type' => 'comment','text' => '<h3>Faculty/Staff</h3>'),
-            'department' => array('type' => 'text','size' => '15'),
-            'office' => array('type' => 'text','size' => '15'),
+            // these don't work for now, so removing for now
+            //'department' => array('type' => 'text','size' => '15'),
+            //'office' => array('type' => 'text','size' => '15'),
             'title' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. dean<span>'),
 
@@ -79,8 +80,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             'type' => 'select_no_sort',
                             //'options' => array('list'=>'Directory Listing',
                             //                'book'=>'Photo Book',
-                            'options' => array('book'=>'Links   ',
-                                            'list'=>'Lists   ',
+                            'options' => array('book'=>'Links',
+                                            'list'=>'Lists',
                             ),
             ),
     );
