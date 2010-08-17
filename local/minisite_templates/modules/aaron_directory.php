@@ -1194,6 +1194,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $filter[] = "(|(studentresidencehallphone$cmp$post$phone_number)(officephone$cmp$post$phone_number))";
             $filter_desc[] = 'whose phone number is '. $this->format_search_key($phone_number);
         }
+        if(!empty($major)) {
+            $filter[] = "(|(studentmajor$cmp$pre$major$post)(studentminor$cmp$pre$major$post))";
+            $filter_desc[] = 'whose major or minor is '. $this->format_search_key($major);
+        }
         if(!empty($email_address)) {
             $filter[] = "(|(mail$cmp$pre$email_address$post)(carlHomeEmail$cmp$pre$email_address$post))";
             $filter_desc[] = 'whose email is '. $this->format_search_key($email_address);
@@ -1203,7 +1207,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $filter[] = "(|(officebldg$cmp$building$room$post)(carlStudentCampusAddress$cmp$building$room$post))";
             $filter_desc[] = 'who live or work in '. $this->format_search_key($building . ' ' . $room);
         }
-        if(!empty($major)) {
+        /*if(!empty($major)) {
             $majors = split(',',$major); // majors can be a comma separated list
             $filter_string = '(|';
             foreach ($majors as $maj) {
@@ -1211,7 +1215,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
             $filter[] = $filter_string . ')';
             $filter_desc[] = 'whose major or concentration is '. $this->format_search_key($this->majors[$maj]) ;
-        }
+        }*/
         if(!empty($year)) {
             $filter[] = "(|(alumClassYear=$year)(carlCohortYear=$year))";
             $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
