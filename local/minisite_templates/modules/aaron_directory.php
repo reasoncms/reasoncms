@@ -825,8 +825,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 continue;
             }
 
-            $logged_user = check_authentication();
-            echo "look this IS THE LOGGED USER: ".$logged_user. " (there it was boi)";
+            $logged_user = reason_check_authentication();
+            echo $logged_user;
 
             if (isset($data['carlhidepersonalinfo'])) {
                 unset($results[$key]['homepostaladdress']);
