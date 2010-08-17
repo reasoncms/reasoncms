@@ -79,8 +79,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             'type' => 'select_no_sort',
                             //'options' => array('list'=>'Directory Listing',
                             //                'book'=>'Photo Book',
-                            'options' => array('book'=>'Links',
-                                            'list'=>'Lists',
+                            'options' => array('book'=>'Links   ',
+                                            'list'=>'Lists   ',
                             ),
             ),
     );
