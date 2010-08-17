@@ -48,12 +48,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             'comments' => '<span class="formComment">e.g. 4444<span>'),
             'email_address' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. mheiman<span>'),
-            'building' => array('type' => 'text','size' => '15'),
-            'room' => array(
-                            'type' => 'text',
-                            'size' => '15',
-                            'display_name' => 'Office / Room',
-            ),
+        // doesn't work for now, so removing for now
+            //'building' => array('type' => 'text','size' => '15'),
+            //'room' => array(
+            //                'type' => 'text',
+            //                'size' => '15',
+            //                'display_name' => 'Office / Room',
+            //),
             'student_comment' => array('type' => 'comment','text' => '<h3>Students</h3>'),
             'major' => array(
                             'display_name' => 'Major / Concentration',
@@ -61,7 +62,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             'year' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. 2012<span>'),
             'faculty_comment' => array('type' => 'comment','text' => '<h3>Faculty/Staff</h3>'),
-            // these don't work for now, so removing for now
+        // doesn't work for now, so removing for now
             //'department' => array('type' => 'text','size' => '15'),
             //'office' => array('type' => 'text','size' => '15'),
             'title' => array('type' => 'text','size' => '15',
@@ -71,9 +72,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             'display_name' => 'Find matches only at the beginning of fields.',
                             'type' => 'checkboxfirst',
             ),
-            'pictures' => array(
-                            'display_name' => 'Show pictures',
-                            'type' => 'checkboxfirst',
+        // doesn't work for now, so removing for now
+            //'pictures' => array(
+            //                'display_name' => 'Show pictures',
+            //                'type' => 'checkboxfirst',
             ),
             'display_as' => array(
                             'display_name' => 'Display as',
