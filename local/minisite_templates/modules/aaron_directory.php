@@ -70,7 +70,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
             'exact' => array(
                             'display_name' => 'Find matches only at the beginning of fields.',
-                            'type' => 'checkboxfirst', 'checked' => 'unchecked', 'value'='false'
+                            'type' => 'checkboxfirst', 'checked' => 'unchecked', 'value'=> 'false'
             ),
         // doesn't work for now, so removing for now
             //'pictures' => array(
