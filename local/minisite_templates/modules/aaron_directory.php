@@ -1191,7 +1191,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
         }
         if(!empty($phone_number)) {
-            $filter[] = "(|(studentresidencehallphone$cmp$post$phone_number)(studentresidencehallphone$cmp$post$phone_number))";
+            $filter[] = "(|(studentresidencehallphone$cmp$post$phone_number)(officephone$cmp$post$phone_number))";
             $filter_desc[] = 'whose phone number is '. $this->format_search_key($phone_number);
         }
         if(!empty($email_address)) {
