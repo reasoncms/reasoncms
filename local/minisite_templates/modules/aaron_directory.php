@@ -1195,7 +1195,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $filter_desc[] = 'whose phone number is '. $this->format_search_key($phone_number);
         }
         if(!empty($major)) {
-            $filter[] = "(|(studentmajor$cmp$pre$major$post)(studentminor$cmp$pre$major$post))";
+            $filter[] = "(|(studentmajor$cmp$major)(studentminor$cmp$major))";
             $filter_desc[] = 'whose major or minor is '. $this->format_search_key($major);
         }
         if(!empty($email_address)) {
