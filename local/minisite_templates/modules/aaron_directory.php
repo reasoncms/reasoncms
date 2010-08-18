@@ -1202,20 +1202,20 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $filter_desc[] = 'whose phone number is '. $this->format_search_key($phone_number);
         }
         if(!empty($year) && $year != 'any') {
-            if ($year == 'fy') {
-                $filter[] = "(|(studentyearinschool=FY))";
+            if ($year == 'FY') {
+                $filter[] = "(|(studentyearinschool=fy))";
                 $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
             }
-            if ($year == 'so') {
-                $filter[] = "(|(studentyearinschool=SO))";
+            if ($year == 'SO') {
+                $filter[] = "(|(studentyearinschool=so))";
                 $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
             }
-            if ($year == 'jr') {
-                $filter[] = "(|(studentyearinschool=JR))";
+            if ($year == 'JR') {
+                $filter[] = "(|(studentyearinschool=jr))";
                 $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
             }
-            if ($year == 'sr') {
-                $filter[] = "(|(studentyearinschool=SR))";
+            if ($year == 'SR') {
+                $filter[] = "(|(studentyearinschool=sr))";
                 $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
             }
         }
