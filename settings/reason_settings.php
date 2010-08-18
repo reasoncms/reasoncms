@@ -854,4 +854,12 @@
 	 * you don't want Reason phoning home to check for updates, this setting is for you.)
 	 */
 	define('REASON_DISABLE_AUTO_UPDATE_CHECK', false);
+
+        /**
+         * REASON_LOG_LOGINS
+         *
+         * The Reason login module can log all login and logout actions.  If you set this value to true,
+         * a log file will be populated at REASON_LOG_DIR/reason_login.log
+         */
+        define('REASON_LOG_LOGINS', false);
 ?>
