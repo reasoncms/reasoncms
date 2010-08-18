@@ -134,8 +134,10 @@
 				// user is logging out
 				if( !empty( $this->request[ 'logout' ] ) )
 				{
+					$username = $this->sess->get( 'username' );
 					$this->sess->destroy();
 					$this->msg = 'You are now logged out';
+					$this->log_authentication_event('logout succeeded', $username);
 					if( empty( $this->request[ 'noredirect' ] ) )
 					{
 						$parts = parse_url( $this->dest_page );
@@ -184,6 +186,7 @@
 							$this->sess->start();
 							$this->logged_in = true;
 							$this->sess->set( 'username', trim($this->request['username']) );
+							$this->log_authentication_event('login succeeded', $this->request['username']);
 							
 							// pop user back to the top of the page.  this makes sure that the session
 							// info is available to all modules
@@ -205,6 +208,7 @@
 						// failed login
 						else
 						{
+							$this->log_authentication_event('login failed', $this->request['username']);
 							$this->msg = 'The username and password you provided do not match.  Please try again.';
 						}
 					}
@@ -354,6 +358,22 @@
 				$port = (isset($parts['port']) && !empty($parts['port'])) ? ":".$parts['port'] : '';
 				$query = (isset($parts['query']) && !empty($parts['query'])) ? '?'.$parts['query'] : '';
 				return securest_available_protocol() . '://'.$current_parts['host'].$port.$parts['path'].$query;
+			}
+		}
+		
+		function log_authentication_event($event, $username)
+		{
+			if (defined('REASON_LOG_LOGINS') && REASON_LOG_LOGINS)
+			{
+				$logtext = sprintf('%s - %s [%s] "%s" - - "%s" "%s"', 
+					$_SERVER['REMOTE_ADDR'], 
+					trim($username), 
+					date('d/M/Y:H:i:s O'), 
+					$event,
+					$_SERVER['HTTP_REFERER'],
+					$_SERVER['HTTP_USER_AGENT']
+					);
+				dlog($logtext, 	REASON_LOG_DIR.'reason_login.log');
 			}
 		}
 	}
