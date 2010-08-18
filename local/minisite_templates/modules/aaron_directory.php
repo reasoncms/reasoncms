@@ -61,10 +61,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             'type' => 'text','size' => '15'),
             'year' => array(//'type' => 'text','size' => '15',
                             'type' => 'select_no_sort',
-                            'options' => array('any'=>'Any', 'fy'=>'Freshman',
-                                            'so'=>'Sophomore',
-                                            'jr'=>'Junior',
-                                            'sr'=>'Senior',
+                            'options' => array('any'=>'Any', 'FY'=>'First-Year',
+                                            'SO'=>'Sophomore',
+                                            'JR'=>'Junior',
+                                            'SR'=>'Senior',
                             ),
                             //'comments' => '<span class="formComment">e.g. FY, SO, JR, SR<span>'
                             ),
@@ -207,7 +207,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         if (!count($entries)) {
             list($query, $query_desc) = $this->build_query($q, 'approx');
             $entries = $this->get_search_results($query);
-            $this->result_comment = '<br /><strong>Note:</strong> No exact matches were found; these are entries similar to what you searched for.';
+            $this->result_comment = '<p></p><strong style="color:red">Note:</strong> No exact matches were found; these are entries similar to what you searched for.';
         }
 
         // If we have some results, call the appropriate display method
@@ -1203,19 +1203,19 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         }
         if(!empty($year) && $year != 'any') {
             if ($year == 'fy') {
-                $filter[] = "(|(studentyearinschool=fy))";
+                $filter[] = "(|(studentyearinschool=FY))";
                 $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
             }
             if ($year == 'so') {
-                $filter[] = "(|(studentyearinschool=so))";
+                $filter[] = "(|(studentyearinschool=SO))";
                 $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
             }
             if ($year == 'jr') {
-                $filter[] = "(|(studentyearinschool=jr))";
+                $filter[] = "(|(studentyearinschool=JR))";
                 $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
             }
             if ($year == 'sr') {
-                $filter[] = "(|(studentyearinschool=sr))";
+                $filter[] = "(|(studentyearinschool=SR))";
                 $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
             }
         }
