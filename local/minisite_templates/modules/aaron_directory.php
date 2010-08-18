@@ -73,7 +73,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             //'department' => array('type' => 'text','size' => '15'),
             'depart' => array(
                             'display_name' => 'Department',
-                            'type' => 'text','size' => '15'),
+                            'type' => 'text','size' => '15',
+                            'comments' => '<span class="formComment">e.g. english<span>'),
             //'office' => array('type' => 'text','size' => '15'),
             'title' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. dean<span>'),
