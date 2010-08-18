@@ -48,13 +48,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             'comments' => '<span class="formComment">e.g. 4444<span>'),
             'email_address' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. mheiman<span>'),
-        // doesn't work for now, so removing for now
+            // room now searches for buildings (like residence halls and offices)
             //'building' => array('type' => 'text','size' => '15'),
             'room' => array(
                             'type' => 'text',
                             'size' => '15',
-                            'display_name' => 'Building (Office / Room)',
-            ),
+                            'display_name' => 'Building (Office / Residence)',
+                            'comments' => '<span class="formComment">e.g. miller<span>'),
             'student_comment' => array('type' => 'comment','text' => '<h3>Students</h3>'),
             'major' => array(
                             'display_name' => 'Major / Minor',
@@ -70,7 +70,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             ),
             'faculty_comment' => array('type' => 'comment','text' => '<h3>Faculty/Staff</h3>'),
         // doesn't work for now, so removing for now
-            //'department' => array('type' => 'text','size' => '15'),
+            'department' => array('type' => 'text','size' => '15'),
             //'office' => array('type' => 'text','size' => '15'),
             'title' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. dean<span>'),
@@ -1246,7 +1246,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
         }*/
         if(!empty($department)) {
-            $filter[] = "(ou=$department)";
+            $filter[] = "(departmentname$cmp$pre$department$post)";
             $filter_desc[] = 'who work in '. $this->format_search_key($department) ;
         }
         if(!empty($office)) {
