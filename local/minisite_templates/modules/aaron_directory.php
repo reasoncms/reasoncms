@@ -59,7 +59,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             'major' => array(
                             'display_name' => 'Major / Minor',
                             'type' => 'text','size' => '15'),
-            'year' => array('type' => 'text','size' => '15',
+            'year' => array(//'type' => 'text','size' => '15',
+                            'type' => 'select_no_sort',
+                            'options' => array('any'=>' ', 'fy'=>'Freshman',
+                                            'so'=>'Sophomore',
+                                            'jr'=>'Junior',
+                                            'sr'=>'Senior',
+                            ),
                             'comments' => '<span class="formComment">e.g. FY, SO, JR, SR<span>'),
             'faculty_comment' => array('type' => 'comment','text' => '<h3>Faculty/Staff</h3>'),
         // doesn't work for now, so removing for now
@@ -1194,6 +1200,24 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $filter[] = "(|(studentresidencehallphone$cmp$post$phone_number)(officephone$cmp$post$phone_number))";
             $filter_desc[] = 'whose phone number is '. $this->format_search_key($phone_number);
         }
+        if(!empty($year) && $year != 'any') {
+            if ($year == 'fy') {
+                $filter[] = "(|(studentyearinschool=fy))";
+                $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
+            }
+            if ($year == 'so') {
+                $filter[] = "(|(studentyearinschool=so))";
+                $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
+            }
+            if ($year == 'jr') {
+                $filter[] = "(|(studentyearinschool=jr))";
+                $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
+            }
+            if ($year == 'sr') {
+                $filter[] = "(|(studentyearinschool=sr))";
+                $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
+            }
+        }
         if(!empty($major)) {
             $filter[] = "(|(studentmajor$cmp$major)(studentminor$cmp$major))";
             $filter_desc[] = 'whose major or minor is '. $this->format_search_key($major);
@@ -1216,10 +1240,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $filter[] = $filter_string . ')';
             $filter_desc[] = 'whose major or concentration is '. $this->format_search_key($this->majors[$maj]) ;
         }*/
-        if(!empty($year)) {
+        /*if(!empty($year)) {
             $filter[] = "(|(studentyearinschool=$year))";
             $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
-        }
+        }*/
         if(!empty($department)) {
             $filter[] = "(ou=$department)";
             $filter_desc[] = 'who work in '. $this->format_search_key($department) ;
