@@ -207,7 +207,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         if (!count($entries)) {
             list($query, $query_desc) = $this->build_query($q, 'approx');
             $entries = $this->get_search_results($query);
-            $this->result_comment = '<p></p><strong style="color:red">Note:</strong> No exact matches were found; these are entries similar to what you searched for.';
+            $this->result_comment = '<p></p><div style="color:red"><strong>Note:</strong> No exact matches were found; these are entries similar to what you searched for.</div>';
         }
 
         // If we have some results, call the appropriate display method
