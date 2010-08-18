@@ -70,7 +70,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             ),
             'faculty_comment' => array('type' => 'comment','text' => '<h3>Faculty/Staff</h3>'),
         // doesn't work for now, so removing for now
-            'department' => array('type' => 'text','size' => '15'),
+            //'department' => array('type' => 'text','size' => '15'),
+            'depart' => array(
+                            'display_name' => 'Department',
+                            'type' => 'text','size' => '15'),
             //'office' => array('type' => 'text','size' => '15'),
             'title' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. dean<span>'),
@@ -1245,9 +1248,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $filter[] = "(|(studentyearinschool=$year))";
             $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
         }*/
-        if(!empty($department)) {
-            $filter[] = "(departmentname$cmp$pre$department$post)";
-            $filter_desc[] = 'who work in '. $this->format_search_key($department) ;
+        if(!empty($depart)) {
+            $filter[] = "(departmentname$cmp$pre$depart$post)";
+            $filter_desc[] = 'who work in '. $this->format_search_key($depart) ;
         }
         if(!empty($office)) {
             $filter[] = "(ou=$office)";
