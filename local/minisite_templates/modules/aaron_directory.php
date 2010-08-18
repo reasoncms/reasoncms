@@ -57,7 +57,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             //),
             'student_comment' => array('type' => 'comment','text' => '<h3>Students</h3>'),
             'major' => array(
-                            'display_name' => 'Major / Concentration',
+                            'display_name' => 'Major / Minor',
                             'type' => 'text','size' => '15'),
             'year' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. FY, SO, JR, SR<span>'),
