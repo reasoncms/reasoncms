@@ -60,7 +60,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             'display_name' => 'Major / Concentration',
                             'type' => 'text','size' => '15'),
             'year' => array('type' => 'text','size' => '15',
-                            'comments' => '<span class="formComment">e.g. 2012<span>'),
+                            'comments' => '<span class="formComment">e.g. FY, SO, JR, SR<span>'),
             'faculty_comment' => array('type' => 'comment','text' => '<h3>Faculty/Staff</h3>'),
         // doesn't work for now, so removing for now
             //'department' => array('type' => 'text','size' => '15'),
@@ -1217,7 +1217,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $filter_desc[] = 'whose major or concentration is '. $this->format_search_key($this->majors[$maj]) ;
         }*/
         if(!empty($year)) {
-            $filter[] = "(|(alumClassYear=$year)(carlCohortYear=$year))";
+            $filter[] = "(|(studentyearinschool=$year))";
             $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
         }
         if(!empty($department)) {
