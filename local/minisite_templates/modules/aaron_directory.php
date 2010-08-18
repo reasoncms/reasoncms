@@ -49,7 +49,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             'email_address' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. mheiman<span>'),
         // doesn't work for now, so removing for now
-            'building' => array('type' => 'text','size' => '15'),
+            //'building' => array('type' => 'text','size' => '15'),
             'room' => array(
                             'type' => 'text',
                             'size' => '15',
@@ -1227,9 +1227,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $filter[] = "(|(mail$cmp$pre$email_address$post)(carlHomeEmail$cmp$pre$email_address$post))";
             $filter_desc[] = 'whose email is '. $this->format_search_key($email_address);
         }
-        if(!empty($building)) {
+        if(!empty($room)) {
             $room = (!empty($room)) ? ' '.$room : '';
-            $filter[] = "(|(officebldg$cmp$building$room$post)(carlStudentCampusAddress$cmp$building$room$post))";
+            $filter[] = "(|(officebldg$cmp$room$post)(studentresidencehallbldg$cmp$room$post))";
             $filter_desc[] = 'who live or work in '. $this->format_search_key($building . ' ' . $room);
         }
         /*if(!empty($major)) {
