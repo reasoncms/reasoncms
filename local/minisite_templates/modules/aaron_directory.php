@@ -61,12 +61,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             'type' => 'text','size' => '15'),
             'year' => array(//'type' => 'text','size' => '15',
                             'type' => 'select_no_sort',
-                            'options' => array('any'=>' ', 'fy'=>'Freshman',
+                            'options' => array('any'=>'Any', 'fy'=>'Freshman',
                                             'so'=>'Sophomore',
                                             'jr'=>'Junior',
                                             'sr'=>'Senior',
                             ),
-                            'comments' => '<span class="formComment">e.g. FY, SO, JR, SR<span>'),
+                            //'comments' => '<span class="formComment">e.g. FY, SO, JR, SR<span>'
+                            ),
             'faculty_comment' => array('type' => 'comment','text' => '<h3>Faculty/Staff</h3>'),
         // doesn't work for now, so removing for now
             //'department' => array('type' => 'text','size' => '15'),
