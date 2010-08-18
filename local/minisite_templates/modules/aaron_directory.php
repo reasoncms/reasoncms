@@ -49,12 +49,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             'email_address' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. mheiman<span>'),
         // doesn't work for now, so removing for now
-            //'building' => array('type' => 'text','size' => '15'),
-            //'room' => array(
-            //                'type' => 'text',
-            //                'size' => '15',
-            //                'display_name' => 'Office / Room',
-            //),
+            'building' => array('type' => 'text','size' => '15'),
+            'room' => array(
+                            'type' => 'text',
+                            'size' => '15',
+                            'display_name' => 'Building (Office / Room)',
+            ),
             'student_comment' => array('type' => 'comment','text' => '<h3>Students</h3>'),
             'major' => array(
                             'display_name' => 'Major / Minor',
