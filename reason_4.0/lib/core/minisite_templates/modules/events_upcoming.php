@@ -14,12 +14,13 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsUpcom
 	class EventsUpcomingModule extends DefaultMinisiteModule
 	{
 		var $events;
-		var $acceptable_params = array ('page_category_mode' => false,
+		var $acceptable_params = array (
 						'cache_lifespan' => 0,
 						'num_to_display' => NULL,
 						'limit_to_audience' => NULL,
 						'limit_to_category' => NULL,
 						'lookahead_minutes' => 60,
+						'set_or_categories' => false,
 						'show_today_header' => true,
 						'title' => '',
 						'foot' => '',
@@ -42,7 +43,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsUpcom
 		
 			$eh = new EventHelper($this->site_id, $this->page_id);
 			if ($this->params['cache_lifespan'] > 0) $eh->set_cache_lifespan($this->params['cache_lifespan']);
-			if ($this->params['page_category_mode']) $eh->set_page_category_mode($this->params['page_category_mode']);
+			if ($this->params['set_or_categories']) $eh->set_or_categories($this->params['set_or_categories']);
 			if ($this->params['num_to_display']) $eh->set_optimal_event_count($this->params['num_to_display']);
 			if ($this->params['lookahead_minutes']) $eh->set_lookahead_minutes($this->params['lookahead_minutes']);
 			if ($this->params['limit_to_audience']) 
