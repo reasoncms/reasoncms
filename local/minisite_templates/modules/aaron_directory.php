@@ -58,7 +58,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             'student_comment' => array('type' => 'comment','text' => '<h3>Students</h3>'),
             'major' => array(
                             'display_name' => 'Major / Minor',
-                            'type' => 'text','size' => '15'),
+                            //'type' => 'text','size' => '15'),
+                            'options' => array('any'=>'Any', 'acctg'=>'Accounting',
+                                            'afrs'=>'Africana Studies',
+                                            'anth'=>'Anthropology',
+                                            'art'=>'Art',
+                            )),
             'year' => array(//'type' => 'text','size' => '15',
                             'type' => 'select_no_sort',
                             'options' => array('any'=>'Any', 'FY'=>'First-Year',
@@ -1223,9 +1228,30 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $filter_desc[] = 'whose class year is '.$this->format_search_key( $year );
             }
         }
+    // working
+//        if(!empty($major)) {
+//            $filter[] = "(|(studentmajor$cmp$major)(studentminor$cmp$major))";
+//            $filter_desc[] = 'whose major or minor is '. $this->format_search_key($major);
+//        }
         if(!empty($major)) {
             $filter[] = "(|(studentmajor$cmp$major)(studentminor$cmp$major))";
-            $filter_desc[] = 'whose major or minor is '. $this->format_search_key($major);
+        if(!empty($major) && $major != 'any') {
+            if ($major == 'acctg') {
+                $filter[] = "(|(studentmajor=Accounting)(studentminor=Accounting))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'afrs') {
+                $filter[] = "(|(studentmajor=Africana Studies)(studentminor=Africana Studies))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'anth') {
+                $filter[] = "(|(studentmajor=Anthropology)(studentminor=Anthropology))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'art') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
         }
         if(!empty($email_address)) {
             $filter[] = "(|(mail$cmp$pre$email_address$post)(carlHomeEmail$cmp$pre$email_address$post))";
