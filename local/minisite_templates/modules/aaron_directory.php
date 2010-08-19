@@ -1233,8 +1233,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 //            $filter[] = "(|(studentmajor$cmp$major)(studentminor$cmp$major))";
 //            $filter_desc[] = 'whose major or minor is '. $this->format_search_key($major);
 //        }
-        if(!empty($major)) {
-            $filter[] = "(|(studentmajor$cmp$major)(studentminor$cmp$major))";
         if(!empty($major) && $major != 'any') {
             if ($major == 'acctg') {
                 $filter[] = "(|(studentmajor=Accounting)(studentminor=Accounting))";
