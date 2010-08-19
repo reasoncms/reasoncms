@@ -64,6 +64,43 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                                             'afrs'=>'Africana Studies',
                                             'anth'=>'Anthropology',
                                             'art'=>'Art',
+                                            'athtr'=>'Athletic Training',
+                                            'bibl'=>'Biblical Languages',
+                                            'bio'=>'Biology',
+                                            'chem'=>'Chemistry',
+                                            'clas'=>'Classics',
+                                            'coms'=>'Communication Studies',
+                                            'cs'=>'Computer Science',
+                                            'econ'=>'Economics',
+                                            'eled'=>'Elementary Education',
+                                            'eng'=>'English',
+                                            'envs'=>'Environmental Studies',
+                                            'fren'=>'French',
+                                            'ger'=>'German',
+                                            'hist'=>'History',
+                                            'hlth'=>'Health',
+                                            'indiv'=>'Individualized Interdis.',
+                                            'math'=>'Mathematics',
+                                            'mgt'=>'Management',
+                                            'mis'=>'Management Info Systems',
+                                            'mus'=>'Music',
+                                            'nurs'=>'Nursing',
+                                            'pe'=>'Physical Education',
+                                            'phil'=>'Philosophy',
+                                            'phys'=>'Physics',
+                                            'pols'=>'Political Science',
+                                            'psyc'=>'Psychology',
+                                            'rel'=>'Religion',
+                                            'rust'=>'Russian Studies',
+                                            'scst'=>'Scandinavian Studies',
+                                            'sw'=>'Social Work',
+                                            'soc'=>'Sociology',
+                                            'span'=>'Spanish',
+                                            'spth'=>'Speech/Theatre',
+                                            'mstat'=>'Statistics',
+                                            'thd'=>'Theatre/Dance',
+                                            'und'=>'Undecided',
+                                            'wgst'=>'Women and Gender Studies',
                             )),
             'year' => array(//'type' => 'text','size' => '15',
                             'type' => 'select_no_sort',
@@ -1248,6 +1285,154 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'art') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'athtr') {
+                $filter[] = "(|(studentmajor=Athletic Training)(studentminor=Athletic Training))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'bibl') {
+                $filter[] = "(|(studentmajor=Biblical Languages)(studentminor=Biblical Languages))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'bio') {
+                $filter[] = "(|(studentmajor=Biology)(studentminor=Biology)(studentmajor=Biology (plan 1))(studentminor=Biology (plan 1))(studentmajor=Biology (plan 2))(studentminor=Biology (plan 2)))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'chem') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'clas') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'coms') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'cs') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'econ') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'eled') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'eng') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'envs') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'fren') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'ger') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'hist') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'hlth') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'indiv') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'math') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'mgt') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'mis') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'mstat') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'mus') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'nurs') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'pe') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'phil') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'phys') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'pols') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'psyc') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'rel') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'rust') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'scst') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'soc') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'span') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'spth') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'sw') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'thd') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'und') {
+                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            }
+            if ($major == 'wgst') {
                 $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
