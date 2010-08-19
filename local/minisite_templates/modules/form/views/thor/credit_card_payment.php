@@ -15,6 +15,8 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCar
  *
  * - Budget Number
  *    (required)  Must be present and preset to a 10-0000-0000-0000 format budget number
+ *****Changed Budget Number to two seperate numbers, expense and revenue, for Luther specific billing needs
+ *****0818201 Steve Smith
  *
  * - Confirmation Sender
  *    (optional)  If present, the contents of this field will be used as the sender for the 
@@ -45,7 +47,11 @@ class CreditCardThorForm extends DefaultThorForm
 	var $database_transformations = array('credit_card_number'=>'obscure_credit_card_number',);
 	var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
 	var $payment_element;
-	var $budget_number_element;
+	//var $budget_number_element; 
+	var $expense_budget_number;
+	var $revenue_budget_number;
+	var $transaction_comment;
+
 	
 	var $elements = array(
 		'payment_note' => array(
@@ -234,18 +240,32 @@ class CreditCardThorForm extends DefaultThorForm
 			$this->payment_element = 'payment_amount';
 		}
 		
-		// Make sure the form creator has included a Budget Number field, and that it contains a 
-		// properly formatted budget number.
-		if ($this->budget_number_element = $this->get_element_name_from_label('Budget Number'))
+		// Make sure the form creator has included an expense_budget_number and a revenue_budget_number field, and that they contain 
+		// properly formatted budget numbers.
+		// Modified by SLS
+		
+		if ($this->expense_budget_number = $this->get_element_name_from_label('Expense Budget Number'))
 		{
 			// scott 9/4/2009 - Chuck Rhia says we want to use open text on some of the Budget Numbers.... 
 			// if (!preg_match('/\d{2}-\d{4}-\d{4}-\d{4}/', $this->get_value($this->budget_number_element)))
-			if ( strlen( $this->get_value( $this->budget_number_element) ) <1 )
+			if ( strlen( $this->get_value( $this->expense_budget_number) ) <1 )
 			{
-				$this->set_error('credit_card_type','Form Setup Error: Hidden "Budget Number" field must contain a number in the form: 10-0000-0000-0000');
+				$this->set_error('credit_card_type','Form Setup Error: Hidden "Expense Budget Number" field must contain a number in the form: 10-0000-0000-0000');
 			}
 		} else {
-			$this->set_error('credit_card_type','Form Setup Error: Hidden "Budget Number" field is required in Reason form.');		
+			$this->set_error('credit_card_type','Form Setup Error: Hidden "Expense Budget Number" field is required in Reason form.');		
+		}
+		
+		if ($this->revenue_budget_number = $this->get_element_name_from_label('Revenue Budget Number'))
+		{
+			// scott 9/4/2009 - Chuck Rhia says we want to use open text on some of the Budget Numbers.... 
+			// if (!preg_match('/\d{2}-\d{4}-\d{4}-\d{4}/', $this->get_value($this->budget_number_element)))
+			if ( strlen( $this->get_value( $this->revenue_budget_number) ) <1 )
+			{
+				$this->set_error('credit_card_type','Form Setup Error: Hidden "Revenue Budget Number" field must contain a number in the form: 10-0000-0000-0000');
+			}
+		} else {
+			$this->set_error('credit_card_type','Form Setup Error: Hidden "Revenue Budget Number" field is required in Reason form.');		
 		}
 
 		// Make the date range for card expiration sane
@@ -307,8 +327,9 @@ class CreditCardThorForm extends DefaultThorForm
 				$payment_amount,
 				$this->get_value('credit_card_number'),
 				$expiration_mmyy,
-				$this->get_value($this->budget_number_element),
+				$this->get_value($this->revenue_budget_number),
 				$this->get_value('credit_card_name'),
+				$this->get_value($this->expense_budget_number),
 				$model->get_form_name()
 			);
 						
