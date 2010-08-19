@@ -8,7 +8,11 @@
  * Feature type details:
  *
  * - New Reason type (We'll call it "Feature" for the purposes of this document)
+ * - unique name should be feature_type
  *
+ * Entity Table:
+ * feature
+ * 
  * Fields:
  * feature.title (tinytext) required
  * feature.text (text)
@@ -55,19 +59,60 @@ class updateTypes
 {
 	var $mode;
 	var $reason_id;
+/*
+ * feature.title (tinytext) required
+ * feature.text (text)
+ * feature.destination_url (URL)
+ * feature.show_text (boolean) required
+ * feature.crop_style (enum("fill","fit")) required
+ * feature.bg_color (6-char hex string)	
+*/
+	var $feature_type_details = array (
+		'new'=>0,
+		'unique_name'=>'feature_type',
+//		'custom_content_handler'=>'feature.php',
+		'plural_name'=>'Features');
 		
-	function do_updates($mode, $reason_user_id = NULL)
-	{
-		if($mode != 'run' && $mode != 'test')
-		{
-			trigger_error('$mode most be either "run" or "test"');
-			return;
-		}
-		
-		$this->mode = $mode;
-		$this->reason_id = $reason_user_id;
-		$this->fix_amputees();
-	}
+	var $feature_table_fields = array(
+		'title'=>'tinytext',
+		'text'=> 'text',
+		'destination_url'=>'tinytext',
+		'show_text'=>'boolean',
+		'crop_style'=>'enum("fill","fit")',
+		'bg_color'=>'varchar(6)'
+		);
+
+	var $feature_to_image_details = array (
+		'description'=>'Feature to Image',
+		'directionality'=>'bidirectional',
+		'connections'=>'many_to_many',
+		'required'=>'no',
+		'is_sortable'=>'no',
+		'display_name'=>'Attach Image',
+		'display_name_reverse_direction'=>'Add to feature',
+		'description_reverse_direction'=>'Features using this image');		
+
+	var $feature_to_media_work_details = array (
+		'description'=>'Feature to Media Work',
+		'directionality'=>'bidirectional',
+		'connections'=>'many_to_many',
+		'required'=>'no',
+		'is_sortable'=>'no',
+		'display_name'=>'Attach to Media Work',
+		'display_name_reverse_direction'=>'Add to feature',
+		'description_reverse_direction'=>'Features using this media work');		
+
+ // page_to_feature (many_to_many, sortable)
+	var $page_to_feature_details = array (
+		'description'=>'Page to Feature',
+		'directionality'=>'bidirectional',
+		'connections'=>'many_to_many',
+		'required'=>'no',
+		'is_sortable'=>'yes',
+		'display_name'=>'Attach Feature',
+		'display_name_reverse_direction'=>'Place feature on page',
+		'description_reverse_direction'=>'Featured on pages');		
+			
 	
 	function create_feature_type($mode, $reason_user_id = NULL)
 	{
@@ -80,15 +125,36 @@ class updateTypes
 		$this->mode = $mode;
 		$this->reason_id = $reason_user_id;
 		
+		//create feature type entity
 		$this->create_feature_type_entity();
+		
 		// create feature entity table
-		// add fields to the feature entity table
+		$table='feature';
+		$type_unique_name=$this->feature_type_details['unique_name'];
+		$this->add_new_entity_table_to_type($table, $type_unique_name);
+		
 		// add the entity table to the feature type
+		
+		// add fields to the feature entity table
+		foreach($this->feature_table_fields as $fname=>$ftype)
+		{
+			$this->add_field_to_entity_table($table, $fname, $ftype);
+		}
+		
 		// create all the necessary relationships for the feature type
+			// feature_to_image (many-to-many -- module will pick image at random)
+			 $this-> add_allowable_relationship('feature_type','image','feature_to_image',$this->feature_to_image_details);
+			
+	 		// feature_to_media_work (many-to-many -- module will pick media work at random)
+			 $this-> add_allowable_relationship('feature_type','av','feature_to_media_work',$this->feature_to_media_work_details);
+
+	 		// page_to_feature (many_to_many, sortable)
+			 $this-> add_allowable_relationship('minisite_page','feature_type','page_to_feature',$this->page_to_feature_details);
+
 	}
 	
 	/**
-	 * Write me - use reason_create_entity()
+	 * Add Feature to Type table
 	 */
 	function create_feature_type_entity()
 	{
@@ -103,8 +169,47 @@ class updateTypes
 		elseif ($this->mode == 'run')
 		{
 			// do it
+			echo "Created feature type";
+			$feature_id=reason_create_entity(id_of('master_admin'), id_of('type'), $this->reason_id, 'Feature', $this->feature_type_details);
+				create_default_rels_for_new_type($feature_id, $this->feature_type_details ['unique_name']);
+//			reason_expunge_entity( $feature_id, $this->reason_id );
 		}
 	}
+	
+	function add_allowable_relationship($a_side,$b_side,$name,$other_data = array())
+	{
+		if (reason_relationship_name_exists($name, false))
+		{
+			echo '<p>'.$name.' already exists. No need to update.</p>'."\n";
+			return false;
+		}
+		if($this->mode == 'run')
+		{
+			$r_id = create_allowable_relationship(id_of($a_side), id_of($b_side), $name, $other_data);
+			if($r_id)
+			{
+				echo '<p>'.$name.' allowable relationship successfully created</p>'."\n";
+			}
+			else
+			{
+				echo '<p>Unable to create '.$name.' allowable relationship</p>';
+				echo '<p>You might try creating the relationship '.$name.' yourself in the reason administrative interface'; 
+				echo '- it should include the following characteristics:</p>';
+				pray ($other_data);
+			}
+		}
+		else
+		{
+			echo '<p>Would have created '.$name.' allowable relationship.</p>'."\n";
+		}
+	}
+	
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+	The following methods are generic, and so are not specific to creating a feature type.
+*/
+////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	function fix_amputees()
 	{
