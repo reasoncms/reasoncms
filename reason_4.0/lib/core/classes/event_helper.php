@@ -35,6 +35,7 @@ reason_include_once( 'function_libraries/util.php' );
 	var $page_id;
 	var $audience_limit = array();
 	var $category_limit = array();
+	var $or_categories;
 	var $cache_lifespan = 0;
 	var $optimal_event_count = 5;
 	var $lookahead_minutes = 60;
@@ -101,7 +102,12 @@ reason_include_once( 'function_libraries/util.php' );
 				if ($cat_id) $cat_array[] = new entity($cat_id);
 			}
 			if (count($cat_array))
-				$init_array['categories'] = $cat_array;
+				if ($this->or_categories) {
+					$init_array['or_categories'] = $cat_array;
+				} else {
+					$init_array['categories'] = $cat_array;
+				}
+			
 		}
 		
 		$this->calendar = new reasonCalendar( $init_array );
@@ -291,6 +297,11 @@ reason_include_once( 'function_libraries/util.php' );
  	function set_category_limit($category_limit)
  	{
  		$this->category_limit = $category_limit;
+ 	}
+
+ 	function set_or_categories($or_categories)
+ 	{
+ 		$this->or_categories = $or_categories;
  	}
 
 	function set_startdate($start)
