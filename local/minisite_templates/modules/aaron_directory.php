@@ -59,6 +59,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             'major' => array(
                             'display_name' => 'Major / Minor',
                             //'type' => 'text','size' => '15'),
+                            'type' => 'select_no_sort',
                             'options' => array('any'=>'Any', 'acctg'=>'Accounting',
                                             'afrs'=>'Africana Studies',
                                             'anth'=>'Anthropology',
