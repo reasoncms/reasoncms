@@ -1298,7 +1298,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
             if ($major == 'bio') {
                 //$filter[] = "(|(studentmajor=Biology)(studentminor=Biology)(studentmajor=Biology (plan 1))(studentminor=Biology (plan 1))(studentmajor=Biology (plan 2))(studentminor=Biology (plan 2)))";
-                $filter[] = "(|(studentmajor=Biology &#40;plan 1&#41;)(studentminor=Biology))";
+                $filter[] = "(|(studentmajor=Biology &#40;plan 1&#41;))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'chem') {
