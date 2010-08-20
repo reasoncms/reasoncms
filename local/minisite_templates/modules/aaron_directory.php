@@ -1307,19 +1307,19 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'clas') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Classics)(studentminor=Classics))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'coms') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Communication Studies)(studentminor=Communication Studies))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'cs') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Computer Science)(studentminor=Computer Science))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'econ') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Economics \(plan 1\))(studentminor=Economics))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'eled') {
