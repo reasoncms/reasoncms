@@ -1335,7 +1335,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'fren') {
-                $filter[] = "(|(studentmajor=French \(plan 1\))(studentminor=French))";
+                $filter[] = "(|(studentmajor=French)(studentminor=French))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'ger') {
