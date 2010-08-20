@@ -1359,11 +1359,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'mgt') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Management)(studentminor=Management))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'mis') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Management Info Systems)(studentminor=Management Info Systems))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'mstat') {
