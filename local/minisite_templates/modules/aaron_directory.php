@@ -1331,11 +1331,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'envs') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Environmental Studies)(studentminor=Environmental Studies))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'fren') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=French \(plan 1\))(studentminor=French))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'ger') {
