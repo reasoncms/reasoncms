@@ -79,7 +79,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                                             'ger'=>'German',
                                             'hist'=>'History',
                                             'hlth'=>'Health',
-                                            'indiv'=>'Individualized Interdis.',
+                                            'indiv'=>'Individualized Interdisciplinary',
                                             'math'=>'Mathematics',
                                             'mgt'=>'Management',
                                             'mis'=>'Management Info Systems',
@@ -1351,7 +1351,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'indiv') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Individualized Interdis.)(studentminor=Individualized Interdis.))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'math') {
