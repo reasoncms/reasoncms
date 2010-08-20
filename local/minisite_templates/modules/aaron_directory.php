@@ -1387,55 +1387,55 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'phys') {
-                $filter[] = "(|(studentmajor=Physics \(plan 1\))(studentminor=Physics))";
+                $filter[] = "(|(studentmajor=Physics)(studentminor=Physics))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'pols') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Political Science \(plan 1\))(studentminor=Political Science)(studentmajor=Political Science \(plan 2\))(studentmajor=Political Science))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'psyc') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Psychology)(studentminor=Psychology))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'rel') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Religion)(studentminor=Religion))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'rust') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Russian Studies)(studentminor=Russian Studies))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'scst') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Scandinavian Studies)(studentminor=Scandinavian Studies))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'soc') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Sociology)(studentminor=Sociology))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'span') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Spanish)(studentminor=Spanish))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'spth') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Speech/Theatre)(studentminor=Speech/Theatre))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'sw') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Social Work)(studentminor=Social Work))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'thd') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Theatre/Dance)(studentminor=Theatre/Dance))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'und') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Undecided)(studentminor=Undecided))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
             if ($major == 'wgst') {
-                $filter[] = "(|(studentmajor=Art)(studentminor=Art))";
+                $filter[] = "(|(studentmajor=Women and Gender Studies)(studentminor=Women and Gender Studies))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
         }
