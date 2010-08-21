@@ -22,7 +22,6 @@ class norseCalendarModule extends DefaultMinisiteModule {
 		$default_view = $info->get_value('default_view');
 		$names = str_replace(' ','',$info->get_value('name'));
 		$name_array = explode(',',$names);
-		pray($name_array);
 	}
 		
 	
@@ -40,7 +39,7 @@ class norseCalendarModule extends DefaultMinisiteModule {
 		
 		$i--;
 	}
-	echo $source_string;
+
 	echo '<div class="norseCalendar">'."\n"; 
 	echo '<meta name = "viewport" content = "width = device-width, height = device-height" />';
 	echo '<iframe src="https://www.google.com/calendar/hosted/luther.edu/embed?showTitle=0&amp;mode='. $default_view .'&ampheight=400&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;' . $source_string . 'ctz=America%2FChicago;" style=" border-width:0 " width="100%" height="600" frameborder="0" scrolling="no"></iframe>';
