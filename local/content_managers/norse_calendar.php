@@ -29,7 +29,7 @@
 		function alter_data()
 		{
 			$this->set_display_name('name', 'Norsekey Username');
-			$this->set_comments('name', form_comment('Enter up to 10 usernames to display their Norse Calendars.'));
+			$this->set_comments('name', form_comment('Enter up to 10 comma-delimited usernames to display their Norse Calendars.'));
 			$this->add_required('default_view');
 			$this->change_element_type('default_view', 'radio_inline');
 			
