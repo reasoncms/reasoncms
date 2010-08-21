@@ -22,7 +22,7 @@ class norseCalendarModule extends DefaultMinisiteModule {
 		$default_view = $info->get_value('default_view');
 		$names = str_replace(' ','',$info->get_value('name'));
 		$name_array = explode(',',$names);
-	}
+	
 		
 	
 	$calendar_color = array('23711616','230D7813','237A367A','238C500B','23AB8B00','234E5D6C','23865A5A','232952A3','23B1365F','23BE6D00');
@@ -47,7 +47,7 @@ class norseCalendarModule extends DefaultMinisiteModule {
 	
 	
 	
-
+	}
 	
 	
 	
