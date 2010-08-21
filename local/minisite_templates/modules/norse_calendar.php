@@ -18,13 +18,57 @@ class norseCalendarModule extends DefaultMinisiteModule {
         $es->add_right_relationship($this->cur_page->id(), relationship_id_of('page_to_norse_calendar'));
         $norse_calendar_info = $es->run_one();
 		
-       	echo '<div class="norseCalendar">'."\n";
+	 foreach ($norse_calendar_info as $info) {
+		$default_view = $info->get_value('default_view');
+		$names = str_replace(' ','',$info->get_value('name'));
+		$name_array = explode(',',$names);
+		pray($name_array);
+	}
+		
+	
+	$calendar_color = array('23711616','230D7813','237A367A','238C500B','23AB8B00','234E5D6C','23865A5A','232952A3','23B1365F','23BE6D00');
+
+	$i = sizeof($name_array);
+	$source_string = '';
+	while ($i >= 1){ 
+
+		$source_string .= 'src='. $name_array[$i-1];
+		$source_string .= '%40luther.edu&amp;color=%';
+		$source_string .= $calendar_color[$i-1];
+		$source_string .= '&amp;';
+	
+		
+		$i--;
+	}
+	echo $source_string;
+	echo '<div class="norseCalendar">'."\n"; 
+	echo '<meta name = "viewport" content = "width = device-width, height = device-height" />';
+	echo '<iframe src="https://www.google.com/calendar/hosted/luther.edu/embed?showTitle=0&amp;mode='. $default_view .'&ampheight=400&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;' . $source_string . 'ctz=America%2FChicago;" style=" border-width:0 " width="100%" height="600" frameborder="0" scrolling="no"></iframe>';
+	echo '</div>'."\n";
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+
+   
+    /*
+	echo '<div class="norseCalendar">'."\n";
         foreach ($norse_calendar_info as $info) {
             echo '<meta name = "viewport" content = "width = device-width, height = device-height" />';
             echo '<iframe src="https://www.google.com/calendar/hosted/luther.edu/embed?showTitle=0&amp;mode='. $info->get_value('default_view') .'&ampheight=400&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='. $info->get_value('name') .'%40luther.edu&amp;color=%232952A3&amp;ctz=America%2FChicago" style=" border-width:0 " width="100%" height="400" frameborder="0" scrolling="no"></iframe>';
             
         }
         echo '</div>'."\n";
+*/
+
     }
 }
 ?>
