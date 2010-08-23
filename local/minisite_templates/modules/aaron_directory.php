@@ -542,9 +542,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             //if ($this->form->get_value('pictures') != false) {
                 echo '<div class="personPhoto">';
                 echo 'Image Testing';
-                header("Content-type: image/jpg");
-                readfile($photo_dir.$_GET[$data['uid'][0]].".jpg");
-                $_SESSION['load_img'] = 0;
+                //header("Content-type: image/jpg");
+                //readfile($photo_dir.$_GET[$data['uid'][0]].".jpg");
+                //$_SESSION['load_img'] = 0;
                 echo '</div>';
             //}
             echo '<td>';
