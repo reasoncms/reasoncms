@@ -79,7 +79,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                                             'ger'=>'German',
                                             'hist'=>'History',
                                             'hlth'=>'Health',
-                                            'indiv'=>'Individualized Interdisciplinary',
+                                            //'indiv'=>'Individualized Interdisciplinary',
                                             'math'=>'Mathematics',
                                             'mgt'=>'Management',
                                             'mis'=>'Management Info Systems',
@@ -1350,10 +1350,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $filter[] = "(|(studentmajor=Health \(plan 1\))(studentminor=Health)(studentmajor=Health \(plan 2\))(studentmajor=Health))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
             }
-            if ($major == 'indiv') {
-                $filter[] = "(|(studentmajor=Individualized Interdis.)(studentminor=Individualized Interdis.))";
-                $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
-            }
+            //if ($major == 'indiv') {
+            //    $filter[] = "(|(studentmajor=Individualized Interdis.)(studentminor=Individualized Interdis.))";
+            //    $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
+            //}
             if ($major == 'math') {
                 $filter[] = "(|(studentmajor=Mathematics \(plan 1\))(studentminor=Mathematics)(studentmajor=Mathematics \(plan 2\))(studentmajor=Mathematics \(plan 3\))(studentmajor=Mathematics))";
                 $filter_desc[] = 'whose class major or minor is '.$this->format_search_key( $major );
