@@ -539,6 +539,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             //    echo '<li class="personMajor">'. $data['studentmajor'][0] .'</li>';
             //}
             // test area START -------------------------------------------
+            //if ($this->form->get_value('pictures') != false) {
+                echo '<div class="personPhoto">';
+                echo 'Image Testing';
+                echo '<img src="https://www.luther.edu/directory/img.php?user='.$data['uid'][0].'">';
+                echo '</div>';
+            //}
             echo '<td>';
             echo '<table cellspacing="0" cellpadding="3" border="0"><tbody>';
             if (isset($data['cn'])) {
