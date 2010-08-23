@@ -171,7 +171,7 @@ function get_unix_timestamp( $value ) // {{{
  */
 function get_mysql_datetime($timestamp = false)
 {
-	return carl_date("Y-m-d G:i:s", $timestamp);
+	return carl_date("Y-m-d H:i:s", $timestamp);
 }
 
 /**
