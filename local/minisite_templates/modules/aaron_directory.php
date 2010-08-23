@@ -892,6 +892,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
             $logged_user = reason_check_authentication();
             //echo $logged_user;
+            //burkaa01
 
             if (isset($data['carlhidepersonalinfo'])) {
                 unset($results[$key]['homepostaladdress']);
