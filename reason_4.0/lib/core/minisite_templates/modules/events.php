@@ -12,6 +12,7 @@ reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'classes/calendar.php' );
 reason_include_once( 'classes/calendar_grid.php' );
 reason_include_once( 'classes/icalendar.php' );
+reason_include_once('classes/page_types.php');
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsModule';
 
@@ -2188,21 +2189,18 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		$owner_site = $e->get_owner();
 		if($owner_site->id() != $this->parent->site_info->id())
-		{
-			$modules = array('events','events_verbose','events_archive');
-			$page_types = array();
-			foreach($modules as $module)
+		{	
+			reason_include_once( 'classes/module_sets.php' );
+			$ms =& reason_get_module_sets();
+			$modules = $ms->get('event_display');
+			$rpts =& get_reason_page_types();
+			$page_types = $rpts->get_page_type_names_that_use_module($modules);
+			if (!empty($page_types))
 			{
-				$pts = page_types_that_use_module($module);
-				foreach($pts as $pt)
-				{
-					if(!in_array($pt,$page_types))
-						$page_types[] = $pt;
-				}
+				$tree = NULL;
+				$link = get_page_link($owner_site, $tree, $page_types, true);
+				echo '<p>From site: <a href="'.$link.'">'.$owner_site->get_value('name').'</a></p>'."\n";
 			}
-			$tree = NULL;
-			$link = get_page_link($owner_site, $tree, $page_types, true);
-			echo '<p>From site: <a href="'.$link.'">'.$owner_site->get_value('name').'</a></p>'."\n";
 		}
 	}
 	function show_contact_info(&$e) // {{{
