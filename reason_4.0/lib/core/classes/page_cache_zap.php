@@ -10,6 +10,7 @@
 include_once('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('minisite_templates/page_types.php');
+reason_include_once('classes/page_types.php');
 
 /**
  * When given a site_id and page_id, this class will check all modules on the page to see if they define a method clear_cache.
@@ -95,22 +96,23 @@ class PageCacheZap
 	function set_modules_to_process()
 	{
 		$modules = false;
-		$page_type = $GLOBALS['_reason_page_types']['default'];
+		$rpts =& get_reason_page_types();
 		$page =& $this->get_page();
-		$page_type = $page->get_value('custom_page');
+		$page_type_name = $page->get_value('custom_page');
+		$page_type = $rpts->get_page_type($page_type_name);
+		$regions = $page_type->get_region_names();
 		
-		foreach ($GLOBALS['_reason_page_types'][$page_type] as $section=>$module)
+		foreach ($regions as $region)
 		{
-			//$page_type[$section] = $module;
-			$module_name = is_array($module) ? $module['module'] : $module;
-			if ($module_name && reason_file_exists( 'minisite_templates/modules/'.$module_name.'.php' ))
+			$region_info = $page_type->get_region($region);
+			if (!empty($region_info['module_name']) && !empty($region_info['module_filename']) && reason_file_exists($region_info['module_filename']))
 			{
-				reason_include_once( 'minisite_templates/modules/'.$module_name.'.php' );
-				$module_class = $GLOBALS[ '_module_class_names' ][ $module_name ];
+				reason_include_once($region_info['module_filename']);
+				$module_class = $GLOBALS['_module_class_names'][$region_info['module_name']];
 				$module_obj = new $module_class;
 				if (method_exists($module_obj, 'clear_cache'))
 				{
-					$modules[$module_name] = $module_obj;
+					$modules[$region_info['module_name']] = $module_obj; 
 				}
 			}
 		}
