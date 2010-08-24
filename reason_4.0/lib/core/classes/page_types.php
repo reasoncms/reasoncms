@@ -786,7 +786,6 @@ class ReasonPageTypes
 			return array_unique($result_array);
 		} elseif (is_string($module_name))
 		{		
-			pray ($modules_to_page_types);
 			if(array_key_exists($module_name,$modules_to_page_types))
 			{
 				return $modules_to_page_types[$module_name];
