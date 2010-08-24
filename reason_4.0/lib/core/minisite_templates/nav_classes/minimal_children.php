@@ -9,6 +9,7 @@
   */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'minisite_templates/nav_classes/default.php' );
+	reason_include_once( 'classes/page_types.php' );
 
 	/**
 	 * A nav class that does not show child pages in the nav if the page contains 
@@ -26,9 +27,9 @@
 			}
 			if($id != $this->root_id && $this->cur_page_id == $id)
 			{
-				if(empty($this->page_types))
-					$this->page_types = page_types_that_use_module('children');
-				if(in_array($this->values[$id]->get_value('custom_page'),$this->page_types))
+				$rpts =& get_reason_page_types();
+				$pt = $rpts->get_page_type($this->values[$id]->get_value('custom_page'));
+				if ($pt->has_module('children'))
 				{
 					return false;
 				}
