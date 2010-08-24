@@ -10,6 +10,7 @@
 include_once('reason_header.php');
 reason_include_once( 'classes/entity_selector.php' );
 reason_include_once( 'classes/object_cache.php' );
+reason_include_once( 'classes/page_types.php' );
 
 /**
  * Quote helper
@@ -128,25 +129,26 @@ reason_include_once( 'classes/object_cache.php' );
  	{
  		$page = new entity($this->page_id);
  		$page_type = $page->get_value('custom_page');
- 		if (!isset($GLOBALS['_reason_page_types']))
+
+ 		$rpts =& get_reason_page_types();
+
+ 		if ($pt = $rpts->get_page_type($page->get_value('custom_page')))
  		{
- 			reason_include_once( 'minisite_templates/page_types.php' );
- 		}
- 		if (isset($GLOBALS['_reason_page_types'][$page_type]))
- 		{
- 			foreach($GLOBALS['_reason_page_types'][$page_type] as $k => $v)
+ 			foreach($pt->get_region_names() as $region)
  			{
- 				if (is_array($v) && (isset($v['module'])) && ($v['module'] == 'quote')) // must be the quote module in an instance with parameters
+ 				$region_info = $pt->get_region($region);
+ 				if ($region_info['module_name'] == "quote") // must be the quote module in an instance with parameters
  				{
- 					if (isset($v['quote_divider']))
+ 					if (isset($region_info['module_params']['quote_divider']))
  					{
- 						$this->set_quote_divider($v['quote_divider']);
+ 						$this->set_quote_divider($region_info['module_params']['quote_divider']);
  						break;
  					}
  				}
  			}
  		}
  		if (empty($this->quote_divider)) $this->set_quote_divider($this->quote_divider_default);
+
  	}
  	
  	function add_quote_divider_value(&$quote_pool)
