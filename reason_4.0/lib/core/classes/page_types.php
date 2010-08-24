@@ -765,7 +765,7 @@ class ReasonPageTypes
 				foreach( $type AS $section => $module_info )
 				{
 					$module = is_array( $module_info ) ? $module_info[ 'module' ] : $module_info;
-					$modules_to_page_types[$module][] = $page_type;
+					if ($module) $modules_to_page_types[$module][] = $page_type;
 				}
 			}
 		}
@@ -786,6 +786,7 @@ class ReasonPageTypes
 			return array_unique($result_array);
 		} elseif (is_string($module_name))
 		{		
+			pray ($modules_to_page_types);
 			if(array_key_exists($module_name,$modules_to_page_types))
 			{
 				return $modules_to_page_types[$module_name];
