@@ -419,14 +419,14 @@ class PublicationModule extends Generic3Module
 					{
 						$page = new entity($page_id);
 						$page_type_name = $page->get_value('custom_page');
-						$page_type = $GLOBALS['_reason_page_types'][$page_type_name];
-						if (!empty($page_type))
-						foreach ($page_type as $region => $module)
+						$rpts =& get_reason_page_types();
+						$pt = $rpts->get_page_type($page_type_name);
+						$regions = $pt->get_region_names();
+						foreach ($regions as $region)
 						{
-							$valid = (is_array($module)) 
-									 ? ($module['module'] == 'publication' && !(isset($module['related_mode']) && ( ($module['related_mode'] == "true") || ($module['related_mode'] == true) )))
-									 : ($module == 'publication');
-						    if ($valid) $valid_page_ids[$pub_id][] = $page_id;
+							$region_info = $pt->get_region($region);
+							$valid = ($region_info['module_name'] == 'publication' && !(isset($region_info['module_params']['related_mode'])	&& ( ($region_info['module_params']['related_mode'] == "true") || ($region_info['module_params']['related_mode'] == true))));
+							if ($valid == true) $valid_page_ids[$pub_id][] = $page_id;
 						}
 					}
 				}
@@ -2343,12 +2343,11 @@ class PublicationModule extends Generic3Module
 		{
 			if(!$this->queried_for_events_page_url)
 			{
-				$modules = array('events','events_archive','events_verbose','events_academic_calendar','event_registration','event_slot_registration', 'event_signup','athletics/schedule');
-				$events_page_types = array();
-				foreach($modules as $module_name)
-				{
-					$events_page_types += page_types_that_use_module($module_name);
-				}
+				reason_include_once('classes/module_sets.php');
+				$ms =& reason_get_module_sets();
+				$modules = $ms->get('event_display');
+				$rpts =& get_reason_page_types();
+				$events_page_types = $rpts->get_page_type_names_that_use_module($modules);
 				$ps = new entity_selector($this->site_id );
 				$ps->add_type( id_of('minisite_page') );
 				$ps->set_num(1);
