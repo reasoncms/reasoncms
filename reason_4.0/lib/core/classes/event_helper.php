@@ -6,6 +6,7 @@ reason_include_once( 'classes/calendar.php' );
 //reason_include_once( 'minisite_templates/nav_classes/default.php' );
 reason_include_once( 'function_libraries/url_utils.php' );
 reason_include_once( 'function_libraries/util.php' );
+reason_include_once('classes/page_types.php');
 
 /**
  * Event helper
@@ -260,11 +261,8 @@ reason_include_once( 'function_libraries/util.php' );
 		// Based on the list of modules that show events, figure out which page types use them
 		if (empty($this->events_page_types))
 		{
-			$this->events_page_types = array();
-			foreach ($this->events_modules as $mod)
-			{
-				$this->events_page_types = array_merge($this->events_page_types, page_types_that_use_module($mod));
-			}
+			$rpts =& get_reason_page_types();
+			$this->events_page_types = $rpts->get_page_type_names_that_use_module($this->events_modules);
 		}
 		return $this->events_page_types;
 	}
