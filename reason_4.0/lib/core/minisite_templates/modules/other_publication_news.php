@@ -12,6 +12,7 @@ reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'classes/object_cache.php' );
 reason_include_once( 'function_libraries/util.php' );
 reason_include_once( 'classes/url/page.php' );
+reason_include_once('classes/page_types.php');
 
 /**
  * Displays the news items in a publication with links to the news items in another publication.
@@ -84,12 +85,8 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 			if (!empty($result))
 			{
 				$result_keys = array_keys($result);
-				foreach ($this->publication_modules as $module)
-				{
-					$valid_page_types = (isset($valid_page_types))
-										? array_unique(array_merge($valid_page_types, page_types_that_use_module($module)))
-										: page_types_that_use_module($module);
-				}
+				$rpts =& get_reason_page_types();
+				$valid_page_types = $rpts->get_page_type_names_that_use_module($this->publication_modules);
 				foreach (array_keys($valid_page_types) as $k) quote_walk($valid_page_types[$k], NULL);
 				foreach ($result_keys as $key)
 				{
@@ -103,6 +100,7 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 				}
 			}
 			$news_items =& $this->set_order_and_limits($result);
+			
 		}
 		else
 		{
