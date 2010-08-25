@@ -15,7 +15,20 @@
 		}
 		function run()
 		{
+			$theme = get_theme( $this->site_id );
+			if ($theme->get_value('name') == 'luther') 
+			{
+				$this->luther_theme();
+			}
+			elseif ($theme->get_value('name') == 'luther2010') 
+			{
+				$this->luther2010_theme();
+			}
+			return;
+		}
 
+		function luther_theme()
+		{
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther_pageLC')
 			{
 				echo '<body id="pageLC">'."\n";
@@ -63,7 +76,38 @@
                         echo '</div class="column span-77 last">'."\n";
     		//	echo '</div id="head">'."\n";
 
-			return;
+		}
+
+		function luther2010_theme()
+		{
+			echo '<body>'."\n";
+
+                        echo '<div class="container">'."\n";
+                        echo '<div id="body" class="container">'."\n";
+                        echo '<div id="head">'."\n";
+                        echo '<div class="column span-36">'."\n";
+
+                        echo '<div id="logo">'."\n";
+                        echo '<a href="http://www.luther.edu" title="Luther College Home"><span></span>'."\n";
+                        echo '<img alt="Luther College" src="/images/luther/logo.png"  /></a></div>'."\n";
+                        echo '</div class="column span-36">'."\n";
+                        echo '<div id="logosearch" class="container">'."\n";
+                        echo '<div class="column span-62 last">'."\n";
+
+			luther_google_search();
+                        luther2010_audience_navigation();
+
+            		echo '</div class="column span-62 last">'."\n";
+          		echo '</div id="logosearch" class="container">'."\n";
+                        echo '<div class="column span-98 last">'."\n";
+
+                        echo '</div class="column span-98 last">'."\n";
+          		echo '<div class="column span-98 last">'."\n";
+			luther2010_global_navigation();
+
+                        echo '</div class="column span-98 last">'."\n";
+
+
 		}
 	}
 ?>
