@@ -272,13 +272,16 @@ class LutherTemplate extends MinisiteTemplate
 			// test if all sidebar images have keyword 'imagetop'
 			// bannerad, or video.
 			$module =& $this->_get_module( 'sidebar' );
-			foreach( $module->images AS $id => $image )
-                        {
-                                if (!preg_match("/imagetop|bannerad|video/", $image->get_value('keywords')))
-                                {
-                                        return true;
-                                }
-                        }
+			if ($module != null)
+			{
+				foreach( $module->images AS $id => $image )
+                        	{
+                                	if (!preg_match("/imagetop|bannerad|video/", $image->get_value('keywords')))
+                                	{
+                                        	return true;
+                                	}
+                        	}
+			}
 			if ($this->cur_page->get_value('custom_page') == 'audio_video')
 			{
 				return false;
