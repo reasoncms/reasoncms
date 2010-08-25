@@ -29,9 +29,9 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         echo '<li id="menu-cafcam">';
         echo '<a accesskey="3" href="cafcam/">Caf Cam</a>';
         echo '</li>';
-        //echo '<li id="menu-cafmenu">';
-        //echo '<a accesskey="3" href="menu/">Caf Menu</a>';
-        //echo '</li>';
+        echo '<li id="menu-cafmenu">';
+        echo '<a accesskey="3" href="menu/">Caf Menu</a>';
+        echo '</li>';
         echo '<li id="menu-calendar">';
         echo '<a accesskey="4" href="calendar/">Calendar</a>';
         echo '</li>';
