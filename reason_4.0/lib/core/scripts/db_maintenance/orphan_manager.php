@@ -8,6 +8,7 @@
  */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
+	reason_include_once( 'function_libraries/relationship_finder.php' );
 	
 	class reason_orphan_manager
 	{
@@ -252,7 +253,7 @@
 					if(!empty($sites))
 						$options .= '<option value="move">Move</option>';
 					echo '<table summary="Orphans of type '.htmlspecialchars($type->get_value('name'), ENT_QUOTES).'" class="orphans" cellpadding="0" cellspacing="0" border="0">';
-					$header_row = '<tr><th>Do Nothing</th><th>Delete</th><th>Move</th><th>Name</th></tr>';
+					$header_row = '<tr><th>Do Nothing</th><th>Delete</th><th>Move</th><th>Name</th><th>Entity ID</th></tr>';
 					echo '<thead>'.$header_row.'</thead>'."\n";
 					echo '<tbody>';
 					$i = 0;
@@ -260,10 +261,12 @@
 					{
 						if( $i && !( $i % 16 ) )
 							echo $header_row."\n";
+						$display_name = ($orphan->get_display_name()) ? $orphan->get_display_name() : '&nbsp;';
 						echo '<tr><td><input type="radio" name="orphan_'.$oid.'" value="" checked="checked" /></td>';
 						echo '<td><input type="radio" name="orphan_'.$oid.'" value="delete" /></td>';
 						echo '<td><input type="radio" name="orphan_'.$oid.'" value="move" /></td>';
-						echo '<td>'.$orphan->get_display_name().'</td></tr>'."\n";
+						echo '<td>'.$display_name.'</td>'."\n";
+						echo '<td>'.$oid.'</td></tr>'."\n";
 						$i++;
 					}
 					echo '</tbody></table>'."\n";
