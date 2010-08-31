@@ -327,11 +327,12 @@ class ReasonPageType
 	/**
 	 * Returns the contents of a page type region as an associative array with four keys:
 	 * region_name, module_name, module_filename (relative to /reason_package/reason_4.0/), and module_params.
-	 * 
+	 * for_each_region('page_type_name', 'func_name');
+	 *
 	 * <code>
 	 * $rpts =& get_reason_page_types();
 	 * $pt = $rpts->get_page_type('default');
-	 * $regions = $pt->get_regions();
+	 * $regions = $pt->get_region_names();
 	 * foreach ($regions as $region)
 	 * {
 	 * 	$region_info = $pt->get_region($region);
@@ -456,7 +457,7 @@ class ReasonPageType
 	 * <code>
 	 * $rpts =& get_reason_page_types();
 	 * $pt = $rpts->get_page_type('default');
-	 * $regions = $pt->get_regions();
+	 * $regions = $pt->get_region_names();
 	 * foreach ($regions as $region)
 	 * {
 	 * 	$region_info = $pt->get_region($region);
@@ -511,9 +512,9 @@ class ReasonPageType
 						}
 						if( $escape )
 						{
-							$type = htmlentities( $type );
+							$type = htmlspecialchars( $type );
 							$type = get_class( $value );
-							$key = htmlentities( $key );
+							$key = htmlspecialchars( $key );
 						}
 						printf ("<strong>%s</strong>:\n", $key);
 						$this->get_as_html ($value, $escape);
@@ -544,9 +545,9 @@ class ReasonPageType
 							$value = 'true';
 						if( $escape )
 						{
-							$type = htmlentities( $type );
-							$key = htmlentities( $key );
-							$value = nl2br(htmlentities( $value ));
+							$type = htmlspecialchars( $type );
+							$key = htmlspecialchars( $key );
+							$value = nl2br(htmlspecialchars( $value ));
 						}
 						printf ("<strong>%s</strong> = %s", $key, $value);
 					}
@@ -802,6 +803,7 @@ class ReasonPageTypes
 	 */
 	function get_page_type_names()
 	{
+		reason_include_once('minisite_templates/page_types.php');
 		$page_type_names = array();
 		foreach ($GLOBALS['_reason_page_types'] as $page_type_name => $info)
 		{
@@ -818,6 +820,7 @@ class ReasonPageTypes
 	{
 		if (!isset($this->_reason_page_types))
 		{
+			reason_include_once('minisite_templates/page_types.php');
 			$this->_reason_page_types = array();
 			foreach ($GLOBALS['_reason_page_types'] as $page_type_name => $info)
 			{
@@ -827,6 +830,5 @@ class ReasonPageTypes
 		}
 		return $this->_reason_page_types;
 	}
-	
 }
 ?>
