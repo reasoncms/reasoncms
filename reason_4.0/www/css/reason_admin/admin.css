@@ -12,6 +12,10 @@
 	background-color: #748FC2;
 }
 
+.hidden {
+	display: none;
+}
+
 table.banner {
 	width: 100%;
 	border: 0px;
