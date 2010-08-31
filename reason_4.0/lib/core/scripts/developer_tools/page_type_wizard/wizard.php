@@ -53,6 +53,11 @@ reason_include_once('minisite_templates/page_types.php');
 reason_include_once('classes/session_php.php');
 include_once(DISCO_INC . 'controller.php');
 
+if (!carl_is_php5())
+{
+	echo '<p>Sorry this requires php 5 for now</p>';
+	die;
+}
 // Require that whomever is using the form have access.
 reason_require_authentication('','session');
 // Include all of the forms.
