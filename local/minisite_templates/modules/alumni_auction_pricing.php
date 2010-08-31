@@ -130,16 +130,31 @@
 			$total = 0;
 			$textout = '';
 
-			if ( $ticket40 > 0 ) { $textout = $textout . 'Tickets at $30: ' . $ticket40 . '<br>'; $total = $total + $ticket40 * 40; }
-			if ( $ticket75 > 0 ) { $textout = $textout . 'Tickets at $50: ' . $ticket75 . '<br>'; $total = $total + $ticket75 * 75; }
-			if ( $ticket100 > 0 ) { $textout = $textout . 'Tickets at $100: ' . $ticket100 . '<br>'; $total = $total + $ticket100 * 100; }
-			if ( $ticket200 > 0 ) { $textout = $textout . 'Tickets at $200: ' . $ticket200 . '<br>'; $total = $total + $ticket200 * 200; }
-			if ( $donation > 0 ) { $textout = $textout . 'Donation: $' . $donation . '<br>'; $total = $total + $donation; }
+			if ( $ticket40 > 0 ) { 
+				$textout .= 'Tickets at $40: ' . $ticket40 . '<br>';
+				$total = $total + $ticket40 * 40; 
+			}
+			if ( $ticket75 > 0 ) { 
+				$textout .= 'Tickets at $75: ' . $ticket75 . '<br>'; 
+				$total = $total + $ticket75 * 75; 
+			}
+			if ( $ticket100 > 0 ) { 
+				$textout .= 'Tickets at $100: ' . $ticket100 . '<br>'; 
+				$total = $total + $ticket100 * 100; 
+			}
+			if ( $ticket200 > 0 ) { 
+				$textout .= 'Tickets at $200: ' . $ticket200 . '<br>'; 
+				$total = $total + $ticket200 * 200; 
+			}
+			if ( $donation > 0 ) { 
+				$textout .= 'Donation: $' . $donation . '<br>'; 
+				$total = $total + $donation; 
+			}
 
 			if ( strlen($textout) > 0 )
 			{
-			$textout = $textout . '<br>';
-			$textout = $textout . 'Total Amount $' . $total . '<br>';
+			$textout .= '<br>';
+			$textout .= 'Total Amount $' . $total . '<br>';
 			echo '<hr height="2">';
 			echo $textout;
 			echo '<br>';
