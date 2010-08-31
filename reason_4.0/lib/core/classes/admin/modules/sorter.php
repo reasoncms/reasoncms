@@ -195,7 +195,8 @@
 				$args['display_name'] = "$counter. " . strip_tags( $v->get_display_name() );
 				$args['options'] = $options;
 				$counter++;
-				$element_name = "sortOrder_{$v->get_value('id')}";
+				$myid = $v->get_value('id');
+				$element_name = "sortOrder_{$myid}";
 				$this->add_element($element_name, 'select_no_sort', $args);
 				$this->set_value($element_name, $default);
 			}
