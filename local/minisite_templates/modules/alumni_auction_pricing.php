@@ -30,16 +30,16 @@
 		
 		function show_form()
 		{
-			//$ticket30 = $this->request['ticket30'];
-			//$ticket50 = $this->request['ticket50'];
+			//$ticket40 = $this->request['ticket40'];
+			//$ticket75 = $this->request['ticket75'];
 			//$ticket100 = $this->request['ticket100'];
-			//$table1000 = $this->request['table1000'];
+			//$ticket200 = $this->request['ticket200'];
 
 
-			if ( isset( $_POST['ticket30'] ) ) { @$ticket30 = $_POST['ticket30']; } else { $ticket30='';}
-			if ( isset( $_POST['ticket50'] ) ) { @$ticket50 = $_REQUEST['ticket50']; } else { $ticket50='';}
+			if ( isset( $_POST['ticket40'] ) ) { @$ticket40 = $_POST['ticket40']; } else { $ticket40='';}
+			if ( isset( $_POST['ticket75'] ) ) { @$ticket75 = $_REQUEST['ticket75']; } else { $ticket75='';}
 			if ( isset( $_POST['ticket100'] ) ) { @$ticket100 = $_REQUEST['ticket100']; } else { $ticket100='';}
-			//if ( isset( $_POST['table1000'] ) ) { @$table1000 = $_REQUEST['table1000']; } else { $table1000='';}
+			if ( isset( $_POST['ticket200'] ) ) { @$ticket200 = $_REQUEST['ticket200']; } else { $ticket200='';}
 			if ( isset( $_POST['donation'] ) ) { @$donation = $_REQUEST['donation']; }  else { $donation='';}
 
 			$donation = str_replace( '$' , '' ,  $donation );
@@ -58,33 +58,35 @@
 			echo '<form method="post" action="?">';
 			echo '<table width="400" border="1" >';
 			echo '  <tr>';
-			echo '    <td>Tickets at $30 (admission only)</td>';
+			echo '    <td>Tickets at $40 <br>(Includes admission and a $5 tax-deductible gift to the TCYA scholarship)</td>';
 			echo '    <td>';
-			echo '      <select name="ticket30">';
+			echo '      <select name="ticket40">';
 			echo '        <option value="0">None</option>';
 			for ( $counter = 1; $counter <= 20; $counter += 1) 
 			{
 				echo '        <option';
-					if ( $ticket30 == $counter ) { echo ' selected '; }
+					if ( $ticket40 == $counter ) { echo ' selected '; }
 				echo '>' . $counter . '</option>';
 			}
 			echo '      </select>';
 			echo '    </td>';
 			echo '  </tr>';
+			
 			echo '  <tr>';
-			echo '    <td>Tickets at $50 (admission, valet, parking, and a $10 tax deductible gift to the TCYA scholarship)<br><br></td>';
-			echo '    <td><select name="ticket50">';
+			echo '    <td>Tickets at $75 <br>(Includes admission and a $40 tax-deductible gift to the TCYA scholarship)<br><br></td>';
+			echo '    <td><select name="ticket75">';
 			echo '      <option value="0">None</option>';
 			for ( $counter = 1; $counter <= 20; $counter += 1) 
 			{
 				echo '        <option';
-					if ( $ticket50 == $counter ) { echo ' selected '; }
+					if ( $ticket75 == $counter ) { echo ' selected '; }
 				echo '>' . $counter . '</option>';
 			}
 			echo '    </select></td>';
 			echo '  </tr>';
+			
 			echo '  <tr>';
-			echo '    <td>Tickets at $100 (admission, valet, parking, and a $60 gift tax deductible gift to the TCYA scholarship)<br><br></td>';
+			echo '    <td>Tickets at $100 <br>(Includes admission and a $65 tax-deductible gift to the TCYA scholarship)<br><br></td>';
 			echo '    <td><select name="ticket100">';
 			echo '      <option value="0">None</option>';
 			for ( $counter = 1; $counter <= 20; $counter += 1) 
@@ -95,19 +97,20 @@
 			}
 			echo '    </select></td>';
 			echo '  </tr>';
-			/*echo '  <tr>';
-			echo '    <td>Table at $1000 </td>';
-			echo '    <td><select name="table1000">';
+			
+			echo '  <tr>';
+			echo '    <td>Tickets at $200 <br>(Includes admission and a $165 tax-deductible gift to the TCYA scholarship)<br><br></td>';
+			echo '    <td><select name="ticket200">';
 			echo '      <option value="0">None</option>';
-			for ( $counter = 1; $counter <= 4; $counter += 1) 
+			for ( $counter = 1; $counter <= 20; $counter += 1) 
 			{
 				echo '        <option';
-					if ( $table1000 == $counter ) { echo ' selected '; }
+					if ( $ticket200 == $counter ) { echo ' selected '; }
 				echo '>' . $counter . '</option>';
 			}
 			echo '    </select></td>';
 			echo '  </tr>';
-			*/
+			
 			echo '  <tr>';
 			echo '    <td>Additional outright gift to the <br>Twin Cities Young Alumni Scholarship Fund<br>Thank You for Your Support!<br><br></td>';
 			echo '    <td><nobr>$<input name="donation" type="text" size="8" value=' . $donation . '></nobr></td>';
@@ -127,10 +130,10 @@
 			$total = 0;
 			$textout = '';
 
-			if ( $ticket30 > 0 ) { $textout = $textout . 'Tickets at $30: ' . $ticket30 . '<br>'; $total = $total + $ticket30 * 30; }
-			if ( $ticket50 > 0 ) { $textout = $textout . 'Tickets at $50: ' . $ticket50 . '<br>'; $total = $total + $ticket50 * 50; }
+			if ( $ticket40 > 0 ) { $textout = $textout . 'Tickets at $30: ' . $ticket40 . '<br>'; $total = $total + $ticket40 * 40; }
+			if ( $ticket75 > 0 ) { $textout = $textout . 'Tickets at $50: ' . $ticket75 . '<br>'; $total = $total + $ticket75 * 75; }
 			if ( $ticket100 > 0 ) { $textout = $textout . 'Tickets at $100: ' . $ticket100 . '<br>'; $total = $total + $ticket100 * 100; }
-			//if ( $table1000 > 0 ) { $textout = $textout . 'Table at $1000: ' . $table1000 . '<br>'; $total = $total + $table1000 * 1000; }
+			if ( $ticket200 > 0 ) { $textout = $textout . 'Tickets at $200: ' . $ticket200 . '<br>'; $total = $total + $ticket200 * 200; }
 			if ( $donation > 0 ) { $textout = $textout . 'Donation: $' . $donation . '<br>'; $total = $total + $donation; }
 
 			if ( strlen($textout) > 0 )
