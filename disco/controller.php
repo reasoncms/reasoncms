@@ -226,6 +226,13 @@ class FormController
 	var $_base_url;
 	
 	/**
+	 * Without this, the start of a form will clobber the text of a query string on $form->run();
+	 * @var boolean
+	 * @access public
+	 */
+	var $preserve_query_string = true;
+	
+	/**
 	 * Used to store the name of the first step
 	 * @var string
 	 */
@@ -289,7 +296,7 @@ class FormController
 			}
 			
 			$this->_base_url = $url_parts[ 'scheme' ].'://'.$url_parts['host'].$url_parts['path'];
-			
+
 			if (empty($this->_request)) $this->set_request();
 			
 			$this->session = new $this->session_class;
@@ -324,10 +331,10 @@ class FormController
 						
 			if ($this->session->has_started() || $this->session->exists())
 			{	
-				if( !$this->session->get('running') )
+				if( !$this->session->get($this->_data_key . '_running') )
 				{
 					$this->_first_run = true;
-					$this->session->set('running', true);
+					$this->session->set($this->_data_key . '_running', true);
 				}
 				else
 				{
@@ -477,7 +484,9 @@ class FormController
 	function get_current_step() // {{{
 	{
 		if (!isset($this->_current_step))
+		{
 			$this->determine_step();
+		}
 		return $this->_current_step;
 	}
 
@@ -519,6 +528,8 @@ class FormController
 	function intercept_post() // {{{
 	{
 	} // }}}
+
+	
 	/**
 	 * Updates the session with all new/changed data from the current form step.
 	 * You can pass your own set of form var names, for cases where you have dynamic
@@ -555,13 +566,20 @@ class FormController
 	 * @return void
 	 */
 	function run() // {{{
-	{		
+	{	
 		$this->determine_step();
-		
+
 		if( empty( $this->_request[ $this->_step_var_name ] ) )
 		{
-			header('Location: '.$this->_base_url.'?'.$this->_step_var_name.'='.$this->_current_step);
-			exit;
+			if ($this->preserve_query_string)
+			{
+				$redirect = carl_make_redirect(array($this->_step_var_name => $this->_current_step));
+				header('Location: ' . $redirect);
+				exit;
+			} else {
+				header('Location: ' . $this->_base_url . '?' . $this->_step_var_name . '=' . $this->_current_step);
+				exit;
+			}
 		}
 		elseif( !empty( $this->_session_existed ) AND $this->_first_run )
 		{
@@ -569,6 +587,8 @@ class FormController
 			// session file.
 			trigger_error('Session has expired', E_USER_NOTICE);
 			$_SESSION[ 'timeout_msg' ] = true;
+			
+			//! This should be a little more descriptive if we're going to be timing out more often, don't you think? Maybe preserve cur_module? Or site_id if they exist?
 			header('Location: '.$this->_base_url.'?'.$this->_step_var_name.'='.$this->_get_start_step());
 			die();
 		}
@@ -682,8 +702,16 @@ class FormController
 		if( !empty( $form_jump ) )
 		{
 			$this->update_session_form_vars();
-			header('Location: '.$this->_base_url.'?'.$this->_step_var_name.'='.$form_jump);
-			exit;
+			if ($this->preserve_query_string)
+			{
+				$redirect = carl_make_redirect(array($this->_step_var_name => $form_jump));
+				header('Location: ' . $redirect);
+				exit;
+			} else
+			{
+				header('Location: ' . $this->_base_url . '?' . $this->_step_var_name . '=' . $form_jump);
+				exit;
+			}
 		}
 
 		$timeout_msg = $this->session->get( 'timeout_msg' );
@@ -903,6 +931,7 @@ class FormController
 	{
 		$this->session->set($this->_data_key, array());
 		$this->session->set($this->_path_key, array());
+		$this->session->set($this->_data_key . '_running', '');
 	}
 
 	function set_session_class($class)
