@@ -139,6 +139,7 @@ function check_constraints($constraints, $file) {
 	
 	if (!empty($constraints['mime_types'])) {
 		if (!$file->mime_type_matches($constraints['mime_types'])) {
+			error_log('Upload reject for file "'.$file->get_filename().'" of MIME type "'. $file->get_mime_type() .'"');
 			final_response(415, "File is not of an allowed type.");
 		}
 	}
