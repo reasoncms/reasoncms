@@ -233,7 +233,6 @@ class ClassifiedModel
 		if (!isset($user) || !$user)
 			$user = get_user_id('classified_user');
 			
-		$user = get_user_id($user_netid ? $user_netid : 'classified_user');		
 		$name = trim(strip_tags($values['name']));
 		$category = turn_into_int($values['category']);
 		$duration_days = $this->get_classified_duration_days();
