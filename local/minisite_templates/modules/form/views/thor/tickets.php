@@ -155,7 +155,16 @@ class CreditCardThorForm extends DefaultThorForm
 		// Take the Payment Amount element and calculate ticket prices
 		// todo - make Ticket Cost and Number of Tickets a field in the a new Ecommerce 
 		// thor content_manager
-		
+
+		if ($this->get_element_name_from_label('State/Province'))
+		{
+			$this->change_element_type($this->get_element_name_from_label('State/Province'), 'state_province');
+		}
+		if ($this->get_element_name_from_label('State'))
+		{
+			$this->change_element_type($this->get_element_name_from_label('State'), 'state');
+		}
+
 
 		$x = $this->get_value_from_label('payment_amount');
 		preg_match('/([\d\.,]+)/',$x, $ticket_cost);
