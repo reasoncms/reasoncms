@@ -24,7 +24,8 @@ class ds_ldap_luther extends ds_ldap {
 	* @var array
 	*/
 	var $_conn_params = array(
-	  	'host' => 'replica-1.luther.edu',
+//	  	'host' => 'replica-1.luther.edu',
+	  	'host' => 'ldap.luther.edu',
         	'port' => 389,
 		'ldap_version' => 3,
 		'use_tls' => false,
