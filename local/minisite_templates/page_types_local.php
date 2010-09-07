@@ -363,6 +363,13 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'footer' => '',
             'post_foot' => 'mobile_footer',
 		),
+                'webcams' => array(
+			'banner_xtra' => '',
+			'post_banner' => '',
+			'main' => 'content',
+			'main_post' => 'webcams',
+			'footer' => '',
+		),
 
 		'onecard' => array(
             'main_post'=>'onecard_dashboard',
