@@ -17,7 +17,7 @@ class WebcamsModule extends DefaultMinisiteModule
   function run()
   {
         echo 'Caf Cam';
-	echo '<img src="https://reasondev.luther.edu/images/luther2010/webcams/caf_cam_link.png"/>';
+	echo '<a href="https://reasondev.luther.edu/x/webcam/"><img src="https://reasondev.luther.edu/images/luther2010/webcams/caf_cam_link.png"/></a>';
   }
 }
 ?>
