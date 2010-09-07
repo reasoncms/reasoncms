@@ -24,12 +24,16 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'bannerad' => 'luther_bannerad',
 			'flickr_slideshow' => 'luther_flickr_slideshow',
 			'norse_calendar' => 'norse_calendar',
-                        'webcams' => 'webcams',
+
             'sbvideo' => 'luther_sbvideo',
             'content_blurb' => 'main_blurb', 
 		),
 		'aaron_test_page' => array(
 			'main' => 'mobile_directions',
+			'main_post' => 'content',
+		),
+                'webcams' => array(
+			'main' => 'webcams',
 			'main_post' => 'content',
 		),
 		'admissions_account_signup' => array(
