@@ -24,6 +24,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'bannerad' => 'luther_bannerad',
 			'flickr_slideshow' => 'luther_flickr_slideshow',
 			'norse_calendar' => 'norse_calendar',
+                        'webcams' => 'webcams',
             'sbvideo' => 'luther_sbvideo',
             'content_blurb' => 'main_blurb', 
 		),
@@ -362,13 +363,6 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post' => 'publication',
 			'footer' => '',
             'post_foot' => 'mobile_footer',
-		),
-                'webcams' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main' => 'content',
-			'main_post' => 'webcams',
-			'footer' => '',
 		),
 
 		'onecard' => array(
