@@ -16,15 +16,7 @@ class WebcamsModule extends DefaultMinisiteModule
 
   function run()
   {
-	echo '<div class="googleMapsForm">'."\n";
-	echo '<form action="http://maps.google.com/maps" method="get"	target="_blank">';
-	echo '<div id="address">'.'Starting address:'.'</div>'."\n";
-	echo '<div id="input">'.'<input type="text" name="saddr" />'.'</div>'."\n";
-	echo '<input type="hidden" name="daddr" value="700 College Dr. Decorah, IA 52101-1041 (Luther College)" />';
-	//	43.315921;-91.802895
-	echo '<div id="getDirections">'.'<input type="submit" value="get directions" />'.'</div>'."\n";
-	echo '</form>';
-	echo '</div>';
+	echo '<a href="https://reasondev.luther.edu/webcam/"><img src="https://reason.luther.edu/images/luther2010/webcams/caf_cam_link.png" width="300" height="225" /></a>';
   }
 }
 ?>
