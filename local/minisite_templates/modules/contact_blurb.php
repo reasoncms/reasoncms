@@ -14,7 +14,7 @@
 	
 				if (preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name'))){
 					echo '<div class="contact-info">'."\n";
-					echo '<h3>Contact Information</h3>'."\n";
+					echo '<h2>Contact Information</h2>'."\n";
 					echo $blurb->get_value('content');
 				}
 			}
