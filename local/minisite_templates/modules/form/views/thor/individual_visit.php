@@ -549,7 +549,7 @@ class IndividualVisitForm extends DefaultThorForm
 		// Your Email field or by knowing the netid of the submitter
 		if (!$recipient = $this->get_value_from_label('Email'))
 		{
-			if ($submitter == $model->get_email_of_submitter())
+			if ($submitter = $model->get_email_of_submitter())
 				$recipient = $submitter.'@luther.edu';
 		}
 		
@@ -557,7 +557,7 @@ class IndividualVisitForm extends DefaultThorForm
 		if ($recipient)
 		{
 			// Use the (first) form recipient as the return address if available
-			if ($senders == $model->get_email_of_recipient())
+			if ($senders = $model->get_email_of_recipient())
 			{
 				list($sender) = explode(',',$senders, 1);
 				if (strpos($sender, '@') === FALSE)
@@ -693,7 +693,7 @@ class IndividualVisitForm extends DefaultThorForm
 			return true;
 		}elseif (in_array($splitDate[0] . $splitDate[1] . $splitDate[2], $this->disabled_dates)){
 			return true;
-		}elseif ($day == 'Sun'||'Sat'){
+		}elseif (($day == 'Sun')||($day == 'Sat')){
 			return true;
 		}else{
 			return false;
