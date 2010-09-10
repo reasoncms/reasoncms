@@ -12,6 +12,7 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'Individua
  * @author Steve Smith
  */
 
+/*
 class textDateTimeIndividualVisitType extends textDateTimePublicType
 {
 	public $type = 'textDateTimeIndividualVisit';
@@ -53,9 +54,11 @@ class textDateTimeIndividualVisitType extends textDateTimePublicType
 		return false;
 	}
 }
+*/
 
 class IndividualVisitForm extends DefaultThorForm
 {
+	var $disabled_dates = array('20101016', '20101125', '20101126', '20101127', '20101211', '20101218', 'xxxx1223', 'xxxx1224', 'xxxx1225', '20101230', 'xxxx1231', 'xxxx0101', '20110129', '20110212', '20110226', '20110319', '20110326', '20110422', '20110423', '20110514', '20110521', '20110528', '20110530', '20110604');
 	
 	var $elements = array(
 	'high_school' => array(
@@ -96,7 +99,7 @@ class IndividualVisitForm extends DefaultThorForm
 		'display_style'=>'normal',
 		'comments' => '<small>  (60 min)</small>',
 		),
-/*
+
 	'meet_faculty' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Meet with a faculty member',
@@ -309,7 +312,6 @@ class IndividualVisitForm extends DefaultThorForm
 		'display_style' => 'normal',
 		'comments' => '<small>  (30 min) daily at 10:30</small>',
 		),
-*/
 	'lunch' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Lunch',
@@ -341,7 +343,6 @@ class IndividualVisitForm extends DefaultThorForm
 			'Wrestling'=>'Wrestling',
 			),
 		),
-/*
 	'choir' => array(
 		'type' => 'checkboxfirst',
 		'display_name' => 'Observe a choir rehearsal, if available',
@@ -431,14 +432,12 @@ class IndividualVisitForm extends DefaultThorForm
 			'Double Bass'=>'Double Bass',
 			),
 		),
-*/
 	'additional_request' => array( 	
 		'type' => 'textarea',
 		'rows' => 2,
 		'cols' => 35,
 		'display_name' =>'Additional Request',
 		),
-/*
 	'housing_note' => array(
 		'type' => 'comment',
 		'text' => '<h3>Overnight Housing</h3> (Seniors Only - Please provide two weeks notice)',
@@ -476,7 +475,6 @@ class IndividualVisitForm extends DefaultThorForm
 			'9:00' => '9:00 p.m.',
 			),
 		),
-*/
 	);
 	
 	var $required = array( 
@@ -496,9 +494,9 @@ class IndividualVisitForm extends DefaultThorForm
 
 	function on_every_time()
 	{	
+		
 		$visitdate_properties = array(
-			'datepicker_class_arg' => 'split-date fill-grid-no-select disable-days-67 statusformat-l-cc-sp-d-sp-F-sp-Y opacity-99 disable-20091017 disable-20091126 disable-20091127 disable-20091128 disable-20091212 disable-20091219 disable-xxxx1224 disable-xxxx1225 disable-xxxx1226 disable-20091228 disable-20091229 disable-20091230 disable-xxxx1231 disable-xxxx0101 disable-xxxx0102 disable-20100130 disable-20100201 disable-20100202 disable-20100301 disable-20100320 disable-20100322-20100327 disable-20100402 disable-20100403 disable-20100405 disable-20100531 disable-20100603 disable-20100515 disable-20100522 disable-20100524 disable-20100525 disable-20100529 disable-20100605 disable-20100612 disable-20100619 disable-20100626 disable-20100703 disable xxxx0704 disable-20100705 disable-20100710 disable-20100717 disable-20100724 disable-20100731 disable-20100807 disable-20100811 disable-20100814 disable-20100821 disable-20100828 disable-20100904 disable-20100911 range-low-today range-high-20100912',
-		);
+			'datepicker_class_arg' => 'split-date fill-grid-no-select disable-days-67 statusformat-l-cc-sp-d-sp-F-sp-Y opacity-99 range-low-today range-high-20110912' . $this->disabled_dates . '',);
 			
 			
 		$visitdate_field = $this->get_element_name_from_label('Visit Date');
@@ -535,6 +533,7 @@ class IndividualVisitForm extends DefaultThorForm
 		$state_field = $this->get_element_name_from_label('State/Province');
 		$this->change_element_type($state_field, 'state_province');
 	}	
+	
 	function email_form_data_to_submitter()
 	{
 		$model =& $this->get_model();
@@ -675,10 +674,47 @@ class IndividualVisitForm extends DefaultThorForm
 		}
 	}		
 	
+
+	function is_date_disabled()
+	{
+		
+		$enteredDate = $this->get_value_from_label('Visit Date');
+		$day = date('D', strtotime($enteredDate));
+		$splitDate = explode('-', $enteredDate);
+
+		if (in_array('xxxx' . $splitDate[1] . $splitDate[2], $this->disabled_dates))
+		{
+			return true;
+		} 
+		elseif (in_array($splitDate[0] . $splitDate[1] . $splitDate[2], $this->disabled_dates))
+		{
+			return true;
+		}
+		elseif ($day == 'Sun')
+		{
+			die("it's Sunday");
+		}
+		else
+		{
+			return false;
+		}
+		
+		
+		
+	}
 	
-	
+
 	function run_error_checks()
 	{
+		$enteredDate = $this->get_value_from_label('Visit Date');
+		$date =	strtotime($this->get_value_from_label('Visit Date'));
+		$day = date('D', $date);
+		echo $date . ' ' . $day;
+		
+		if ($this->is_date_disabled())
+		{
+			$this->set_error($this->get_element_name_from_label('Visit Date'), 'This date is not available, check the calendar to the right for available dates' . $enteredDate);
+		}		
 	}
 	
 	function process()
