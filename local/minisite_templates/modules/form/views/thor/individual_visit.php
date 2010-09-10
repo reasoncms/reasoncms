@@ -58,7 +58,18 @@ class textDateTimeIndividualVisitType extends textDateTimePublicType
 
 class IndividualVisitForm extends DefaultThorForm
 {
-	var $disabled_dates = array('20101016', '20101125', '20101126', '20101127', '20101211', '20101218', 'xxxx1223', 'xxxx1224', 'xxxx1225', '20101230', 'xxxx1231', 'xxxx0101', '20110129', '20110212', '20110226', '20110319', '20110326', '20110422', '20110423', '20110514', '20110521', '20110528', '20110530', '20110604');
+	var $disabled_dates = array(
+            '20101016',
+            '20101125', '20101126', '20101127',
+            '20101211', '20101218',
+            'xxxx1223', 'xxxx1224', 'xxxx1225', '20101230', 'xxxx1231',
+            'xxxx0101', '20110129',
+            '20110212', '20110226',
+            '20110319', '20110326',
+            '20110422', '20110423',
+            '20110514', '20110521', '20110528', '20110530',
+            '20110604'
+            );
 	
 	var $elements = array(
 	'high_school' => array(
@@ -487,10 +498,6 @@ class IndividualVisitForm extends DefaultThorForm
 	// should_custom_method in the view (if they are not in the model).
 	var $process_actions = array('email_form_data_to_submitter',);
 	
-	function custom_init()
-	{
-	
-	}
 
 	function on_every_time()
 	{	
@@ -542,7 +549,7 @@ class IndividualVisitForm extends DefaultThorForm
 		// Your Email field or by knowing the netid of the submitter
 		if (!$recipient = $this->get_value_from_label('Email'))
 		{
-			if ($submitter = $model->get_email_of_submitter())
+			if ($submitter == $model->get_email_of_submitter())
 				$recipient = $submitter.'@luther.edu';
 		}
 		
@@ -550,7 +557,7 @@ class IndividualVisitForm extends DefaultThorForm
 		if ($recipient)
 		{
 			// Use the (first) form recipient as the return address if available
-			if ($senders = $model->get_email_of_recipient())
+			if ($senders == $model->get_email_of_recipient())
 			{
 				list($sender) = explode(',',$senders, 1);
 				if (strpos($sender, '@') === FALSE)
@@ -682,25 +689,15 @@ class IndividualVisitForm extends DefaultThorForm
 		$day = date('D', strtotime($enteredDate));
 		$splitDate = explode('-', $enteredDate);
 
-		if (in_array('xxxx' . $splitDate[1] . $splitDate[2], $this->disabled_dates))
-		{
+		if (in_array('xxxx' . $splitDate[1] . $splitDate[2], $this->disabled_dates)){
 			return true;
-		} 
-		elseif (in_array($splitDate[0] . $splitDate[1] . $splitDate[2], $this->disabled_dates))
-		{
+		}elseif (in_array($splitDate[0] . $splitDate[1] . $splitDate[2], $this->disabled_dates)){
 			return true;
-		}
-		elseif ($day == 'Sun')
-		{
-			die("it's Sunday");
-		}
-		else
-		{
+		}elseif ($day == 'Sun'||'Sat'){
+			return true;
+		}else{
 			return false;
 		}
-		
-		
-		
 	}
 	
 
@@ -709,29 +706,17 @@ class IndividualVisitForm extends DefaultThorForm
 		$enteredDate = $this->get_value_from_label('Visit Date');
 		$date =	strtotime($this->get_value_from_label('Visit Date'));
 		$day = date('D', $date);
-		echo $date . ' ' . $day;
 		
 		if ($this->is_date_disabled())
 		{
-			$this->set_error($this->get_element_name_from_label('Visit Date'), 'This date is not available, check the calendar to the right for available dates' . $enteredDate);
+			$this->set_error($this->get_element_name_from_label(
+                                'Visit Date'), 'This date is not available, check the calendar to the right for available dates' . $enteredDate);
 		}		
 	}
-	
-	function process()
-	{
-	}
-	
 
 	function should_my_custom_process()
 	{
 		return true;
 	}
-
-	
-//	function where_to()
-//	{
-//		return false;
-//	}
-	
 }
 ?>
