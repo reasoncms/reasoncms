@@ -710,7 +710,7 @@ class IndividualVisitForm extends DefaultThorForm
 		if ($this->is_date_disabled())
 		{
 			$this->set_error($this->get_element_name_from_label(
-                                'Visit Date'), 'This date is not available, check the calendar to the right for available dates' . $enteredDate);
+                                'Visit Date'), 'This date is not available, check the calendar to the right for available dates');
 		}		
 	}
 
