@@ -38,7 +38,7 @@ class DorianBandModule extends DefaultMinisiteModule
 		$this->controller->set_session_class('Session_PHP');
 		$this->controller->set_session_name('REASON_SESSION');
 		$this->controller->set_data_context('dorian_band');
-		$this->controller->show_back_button = false;
+		$this->controller->show_back_button = true;
 		$this->controller->clear_form_data_on_finish = true;
 		$this->controller->allow_arbitrary_start = false;
 		//*
@@ -49,12 +49,12 @@ class DorianBandModule extends DefaultMinisiteModule
 						'label' => 'Nominate Students',
 					),
 				),
+                                'start_step' => true,
+                                'back_button_text' => 'Back',
 				'step_decision' => array(
 					'type' => 'user',
 				),
-				'back_button_text' => 'Back',
 				'display_name' => 'Yo',
-
 			),
 			'StudentInfoForm' => array(
                                 'next_steps' => array(
