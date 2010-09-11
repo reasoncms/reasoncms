@@ -19,6 +19,7 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 		'item_images',
 		'teaser_image',
 		'cur_page',
+		'site_id',
 		);
 
 	function MinimalListItemMarkupGenerator ()
@@ -26,27 +27,47 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 	}
 	
 	function run ()
-	{	
-                $this->markup_string .= '<div id="spotlight">'."\n";
-		if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) != 'luther_primaryLRC')
+	{
+		if (get_theme($this->passed_vars['site_id'])->get_value('name') == 'luther2010')
 		{
-
-			$this->markup_string .= '<div class="column span-17">'."\n";
-			//$this->markup_string .= $this->get_date_markup();
+			$this->markup_string .= '<article class="highlight">'."\n";
+			//$this->markup_string .= $this->get_title_markup();
+			$this->markup_string .= $this->get_description_markup();
 			$this->markup_string .= $this->get_image_markup();
-			//$this->markup_string .= $this->get_pre_markup();
-                	$this->markup_string .= '</div class="column span-17">'."\n";
-                	$this->markup_string .= '<div class="column span-12 append-1">'."\n";
-	 		//$this->markup_string .= $this->get_title_markup();
-	 		$this->markup_string .= $this->get_description_markup();
-                	$this->markup_string .= '</div class="column span-12 append-1">'."\n";
+			$full_link = $this->passed_vars['link_to_full_item'];
+			$full_link = preg_replace("|http(s)?:\/\/\w+\.\w+\.\w+|", "", $full_link);
+			$this->markup_string .= '<nav class="button read-more">'."\n";
+			$this->markup_string .= '<ul><li><a href="'.$full_link.'">Read more &gt;</a></li></ul>'."\n";
+			$this->markup_string .= '</nav>'."\n";
+			$this->markup_string .= '</article>'."\n";
+			$this->markup_string .= '<nav class="button view-all">'."\n";
+			$this->markup_string .= '<ul><li><a href="/spotlightarchives">View all spotlights &gt;</a></li></ul>'."\n";
+			$this->markup_string .= '</nav>'."\n";
+			
 		}
 		else
 		{
-	 		$this->markup_string .= $this->get_description_markup();
-			$this->markup_string .= $this->get_image_markup();
+			$this->markup_string .= '<div id="spotlight">'."\n";
+			if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) != 'luther_primaryLRC')
+			{
+	
+				$this->markup_string .= '<div class="column span-17">'."\n";
+				//$this->markup_string .= $this->get_date_markup();
+				$this->markup_string .= $this->get_image_markup();
+				//$this->markup_string .= $this->get_pre_markup();
+	                	$this->markup_string .= '</div class="column span-17">'."\n";
+	                	$this->markup_string .= '<div class="column span-12 append-1">'."\n";
+		 		//$this->markup_string .= $this->get_title_markup();
+		 		$this->markup_string .= $this->get_description_markup();
+	                	$this->markup_string .= '</div class="column span-12 append-1">'."\n";
+			}
+			else
+			{
+		 		$this->markup_string .= $this->get_description_markup();
+				$this->markup_string .= $this->get_image_markup();
+			}
+			$this->markup_string .= '</div id="spotlight">'."\n";
 		}
-                $this->markup_string .= '</div id="spotlight">'."\n";
 	}
 	
 /////
@@ -70,7 +91,14 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 			ob_start();	
 			//reason_get_image_url(reset($image), 'standard');
 			//print_r(array_values( $image));
-                        echo '<img src="'.$full_image_name.'"/>';
+			if (get_theme($this->passed_vars['site_id'])->get_value('name') == 'luther2010')
+			{
+				echo '<figure><img src="'.$full_image_name.'" width="235"/></figure>';
+			}
+			else
+			{
+				echo '<img src="'.$full_image_name.'"/>';
+			}
 			//show_image( reset($image), true,true,false );
 			$markup_string .= ob_get_contents();
 			ob_end_clean();
@@ -97,26 +125,61 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 	
 	function get_description_markup()
 	{
-		if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther_primaryLRC')
+		$markup_string = '';
+		if (get_theme($this->passed_vars['site_id'])->get_value('name') == 'luther2010')
 		{
-			$markup_string = '<h2>Luther<br/>Spotlight</h2>'."\n";
+			$item = $this->passed_vars['item'];
+			if ($s = $item->get_value('description'))
+			{
+				$s = preg_replace("|\\n|", "", $s);  // remove any line breaks
+				$s = preg_replace("|</?strong>|", "", $s);
+				$markup_string .= '<header>'."\n";
+				$markup_string .= '<hgroup>'."\n";
+				preg_match_all("|<p>(.*?)</p>|", $s, $match, PREG_SET_ORDER);
+				
+				if ($match[0][1])
+				{
+					$markup_string .= '<h1 class="name">' . $match[0][1] . '</h1>'."\n";	
+				}
+				if ($match[1][1])
+				{
+					$markup_string .= '<h2 class="adr">' . $match[1][1] . '</h2>'."\n";	
+				}
+				$markup_string .= '</hgroup>'."\n";
+				$markup_string .= '</header>'."\n";
+				
+				$markup_string .= '<div class="profile">'."\n";
+				if ($match[2][1])
+				{
+					$markup_string .= $match[2][1]."\n";	
+				}
+				$markup_string .= '</div>'."\n";
+			}	
+			
 		}
 		else
 		{
-			$markup_string = '<h2>Luther Spotlight</h2>'."\n";
-		}
-
-		$item = $this->passed_vars['item'];
-		if($item->get_value('description'))
-			//return '<div class="desc">'.$item->get_value('description').'</div>'."\n";
-			$markup_string .= '<div class="desc">'."\n";
+			if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther_primaryLRC')
+			{
+				$markup_string .= '<h2>Luther<br/>Spotlight</h2>'."\n";
+			}
+			else
+			{
+				$markup_string .= '<h2>Luther Spotlight</h2>'."\n";
+			}
+	
+			$item = $this->passed_vars['item'];
+			if($item->get_value('description'))
+				//return '<div class="desc">'.$item->get_value('description').'</div>'."\n";
+				$markup_string .= '<div class="desc">'."\n";
 			$markup_string .= $item->get_value('description')."\n";
-
-	                $full_link = $this->passed_vars['link_to_full_item'];
-       		        $full_link = preg_replace("|http(s)?:\/\/\w+\.\w+\.\w+|", "", $full_link);
-                	$markup_string .= '<a href="'.$full_link.'">read spotlight &gt;</a>'."\n";
+	
+			$full_link = $this->passed_vars['link_to_full_item'];
+			$full_link = preg_replace("|http(s)?:\/\/\w+\.\w+\.\w+|", "", $full_link);
+			$markup_string .= '<a href="'.$full_link.'">read spotlight &gt;</a>'."\n";
 			//$markup_string .= '<a href ="'.$this->passed_vars['link_to_full_item'].'">read spotlight &gt;</a>'."\n";
 			$markup_string .= '</div class="desc">'."\n";
+		}
 		return $markup_string;
 	}
 	

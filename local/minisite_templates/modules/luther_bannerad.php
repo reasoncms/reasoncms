@@ -26,20 +26,52 @@
 			$popup = isset( $this->show_popup_link ) ? $this->show_popup_link : true;
 			$desc = isset( $this->description ) ? $this->description : true;
 			$text = isset( $this->additional_text ) ? $this->additional_text : "";
-			
 			if ( !empty($this->parent->textonly) )
 				echo '<p>Banner ads</p>'."\n";
 			
-			echo '<div id="bannerleft">'."\n";
+			$theme = get_theme($this->site_id);
+			if ($theme->get_value( 'name' ) == 'luther2010')
+			{
+				echo '<aside class="banners">'."\n";
+				echo '<ul>'."\n";
+			}
+			else
+			{
+				echo '<div id="bannerleft">'."\n";
+			}
 
+			$i = 0;
 			foreach( $this->images AS $id => $image )
 			{
 				if (preg_match("/bannerad\s(.*?)$/", $image->get_value('keywords'), $matches))
 				{
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
-					echo '<a href="' . $matches[1] . '"><img src="' . $url . '" alt="' . $image->get_value('description') . '" width="100%" /></a>';
-					//break;
+					if ($theme->get_value( 'name' ) == 'luther2010')
+					{
+						echo '<li>'."\n";
+						echo '<a href="' . $matches[1] . '"><img src="' . $url . '" alt="' . $image->get_value('description') . '" width="235" height="90"/></a>';
+						echo '</li>'."\n";
+					}
+					else
+					{
+						echo '<a href="' . $matches[1] . '"><img src="' . $url . '" alt="' . $image->get_value('description') . '" width="100%" /></a>';
+					}
+					$i++;
 				}
+				if ($theme->get_value( 'name' ) == 'luther2010' && $i >= 4)
+				{
+					break;
+				} 
+			}
+			
+			if ($theme->get_value( 'name' ) == 'luther2010')
+			{
+				echo '</ul>'."\n";
+				echo '</aside> <!--class="banners"-->'."\n";
+			}
+			else
+			{
+				echo '</div> <!--id="bannerleft"-->'."\n";
 			}
 			echo "</div>\n";
 		}

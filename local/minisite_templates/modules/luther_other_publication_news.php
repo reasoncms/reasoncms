@@ -54,15 +54,13 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
           $es = new entity_selector($this->site_id);
           $es->add_type(id_of('news'));		
           $es->add_right_relationship($this->get_publication_id(), relationship_id_of('publication_to_featured_post'));
-          $es->add_rel_sort_field($this);
+          //$es->add_rel_sort_field($this);
+          $es->add_rel_sort_field($this->get_publication_id(), relationship_id_of('publication_to_featured_post'));
 		  $es->set_order('relationship.rel_sort_order ASC');
           $result = $es->run_one();
           //pray($result);
           return ($result) ? array_keys($result) : array();
         }
-	
-	
-		
 	
 	function run()
 	{
@@ -75,21 +73,31 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 	
 	function show_news_listing()
 	{
-		//echo '<div class="list">'."\n";
-		echo '<div id="headline-list">'."\n";
-		//echo '<ul>';
-		foreach ($this->news_items as $source_name => $news_items)
+		if (get_theme($this->site_id)->get_value('name') == 'luther2010')
 		{
-		//	echo '<li>';
-	//		echo '<p>';
-			//$this->show_news_item_source($source_name, $news_items);
-			$this->show_news_items($news_items);
-			//echo '</li>';
-	//		echo '</p>';
+			echo '<ul class="hfeed">'."\n";	
+			foreach ($this->news_items as $source_name => $news_items)
+			{
+				$this->show_news_items($news_items);	
+			}
+			echo '</ul>'."\n";
+			
+			echo '<nav class="button view-all">'."\n";
+			echo '<ul>'."\n";
+			echo '<li><a href="/headlines">View all news &gt;</a></li>'."\n";
+			echo '</ul>'."\n";
+			echo '</nav>'."\n";
 		}
-		//echo '</ul>';
-		//echo '</div>'."\n";
-		echo '</div <!-- id="headline-list" -->'."\n";
+		else
+		{
+			echo '<div id="headline-list">'."\n";
+			foreach ($this->news_items as $source_name => $news_items)
+			{
+				//$this->show_news_item_source($source_name, $news_items);
+				$this->show_news_items($news_items);
+			}
+			echo '</div> <!-- id="headline-list" -->'."\n";
+		}
 	}
 	
 	function show_news_item_source($source_name, &$news_items)
@@ -103,16 +111,27 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 	
 	function show_news_items(&$news_items)
 	{
-		//echo '<ul>';
-		foreach ($news_items as $news_item)
+		if (get_theme($this->site_id)->get_value('name') == 'luther2010')
 		{
-		//	echo '<li>';
-			echo '<p>';
-			$this->show_news_item($news_item);
-			echo '</p>';
-	//		echo '</li>';
+			foreach ($news_items as $news_item)
+			{
+				echo '<li>';
+				echo '<article role="article">'."\n";
+				$this->show_news_item($news_item);
+				echo '</article>'."\n";	
+				echo '</li>';
+			}
 		}
-		//echo '</ul>';
+		else
+		{
+
+			foreach ($news_items as $news_item)
+			{
+				echo '<p>';
+				$this->show_news_item($news_item);
+				echo '</p>';
+			}
+		}
 	}
 	
 	function show_news_item(&$news_item)
@@ -133,8 +152,17 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 			}
 			$link .= '?' . implode_with_keys('&amp;',$param);
 		}
-                $link = preg_replace("|http(s)?:\/\/\w+\.\w+\.\w+|", "", $link);
-		echo '<a href="'. $link . '">'.$title.'</a>';
+		$link = preg_replace("|http(s)?:\/\/\w+\.\w+\.\w+|", "", $link);
+		
+		if (get_theme($this->site_id)->get_value('name') == 'luther2010')
+		{
+			echo '<a href="'. $link . '" title="Read more...">'."\n";
+			echo '<div><header><h1 class="entry-title">'. $title. '</h1></header></div></a>'."\n";
+		}
+		else
+		{
+			echo '<a href="'. $link . '">'.$title.'</a>';
+		}
 	}
 	
 }

@@ -17,7 +17,33 @@
 		{
 			//print_r($this);
 			$theme = get_theme($this->site_id);
-			if ($theme->get_value( 'name' ) == 'admissions')
+			if ($theme->get_value( 'name' ) == 'luther2010')
+			{	
+				echo '<footer class="site-info">'."\n";
+    			echo '<nav class="site-info"><ul><li class="about"><a href="/siteinfo/">About This Site</a></li><li><a href="/privacy/">Privacy Statement</a></li></ul></nav>'."\n";
+
+				echo '<div class="vcard">'."\n";
+				echo '<span class="copyright">Copyright '.date("Y").' </span> &#8226;'."\n";
+     			echo '<span class="fn org">Luther College</span> &#8226;'."\n";
+     			echo '<span class="adr">'."\n";
+      			echo '<span class="street-address">700 College Drive</span> &#8226;'."\n";
+				echo '<span class="locality">Decorah</span>,'."\n";
+				echo '<span class="region">Iowa</span>'."\n";
+
+				echo '<span class="postal-code">52101</span>'."\n";
+				echo '<span class="country-name">USA</span>'."\n";
+				echo '</span>'."\n";
+				echo '<div>Phone: 563-387-2000 or 800-4 LUTHER (<span class="tel">800-458-8437</span>)</div>'."\n";
+				echo '</div>'."\n";
+				echo '</footer>'."\n";
+				
+				echo '<script src="/javascripts/jquery-1.4.2.min.js" type="text/javascript"></script>'."\n";
+				echo '<script src="/javascripts/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>'."\n";
+				echo '<script src="/javascripts/jquery.tmpl.js" type="text/javascript"></script>'."\n";
+				echo '<script src="/javascripts/jquery.init.js" type="text/javascript"></script>'."\n";
+				
+			}
+			elseif ($theme->get_value( 'name' ) == 'admissions')
 			{
                         echo '<div class="footer">'."\n";
                         echo '<ul class="nav">'."\n";
@@ -32,6 +58,7 @@
 			}
 			else
 			{
+				
 			echo '<div id="foot">'."\n";
     			echo '<ul><li><a href="/siteinfo/">About This Site</a></li>'."\n";
     			echo '<li><a href="/privacy/">Privacy Statement</a></li></ul>'."\n";
@@ -46,7 +73,7 @@
           		echo '<span class="country-name">USA</span></div>'."\n";
 	                echo 'Phone: 563-387-2000 or 800-4 LUTHER (<span class="tel">800-458-8437</span>)</div></div>'."\n";
 			}
-			google_analytics();
+			//google_analytics();
 		}
 	}
 ?>

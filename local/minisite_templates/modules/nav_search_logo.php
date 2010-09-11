@@ -80,34 +80,24 @@
 
 		function luther2010_theme()
 		{
-			echo '<body>'."\n";
-
-                        echo '<div class="container">'."\n";
-                        echo '<div id="body" class="container">'."\n";
-                        echo '<div id="head">'."\n";
-                        echo '<div class="column span-36">'."\n";
-
-                        echo '<div id="logo">'."\n";
-                        echo '<a href="http://www.luther.edu" title="Luther College Home"><span></span>'."\n";
-                        echo '<img alt="Luther College" src="/images/luther/logo.png"  /></a></div>'."\n";
-                        echo '</div class="column span-36">'."\n";
-                        echo '<div id="logosearch" class="container">'."\n";
-                        echo '<div class="column span-62 last">'."\n";
-
-			luther_google_search();
-                        luther2010_audience_navigation();
-
-            		echo '</div class="column span-62 last">'."\n";
-          		echo '</div id="logosearch" class="container">'."\n";
-                        echo '<div class="column span-98 last">'."\n";
-
-                        echo '</div class="column span-98 last">'."\n";
-          		echo '<div class="column span-98 last">'."\n";
+			echo '<header class="global" role="banner">'."\n";
+			echo '<h1 id="luther-logo"><img alt="luther College" height="54" src="/images/luther2010/luther-college.png" width="289" /></h1>'."\n";
+			echo '<nav id="nav-search" role="navigation">'."\n";
+			echo '<ul>'."\n";
+			echo '<li class="directory"><a href="/directory/">Directory</a></li>'."\n";
+			echo '<li class="index"><a href="#">A-Z Index</a></li>'."\n";
+			echo '<li class="search">'."\n";
+			luther2010_google_search();			
+			echo '</li>'."\n";
+			echo '</ul>'."\n";  
+			echo '</nav>'."\n";
+			echo '<nav id="nav-audience" role="navigation">'."\n";			
+			luther2010_audience_navigation();
+			echo '</nav>'."\n";  
+			echo '</header>'."\n";
+			echo '<nav id="nav-content" role="navigation">'."\n";
 			luther2010_global_navigation();
-
-                        echo '</div class="column span-98 last">'."\n";
-
-
+			echo '</nav>'."\n";
 		}
 	}
 ?>
