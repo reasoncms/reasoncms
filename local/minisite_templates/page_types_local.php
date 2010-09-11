@@ -115,6 +115,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main' => 'aaron_directory',
 			'sidebar' => 'login_link',
 		),
+                'dorian_band_nomination' => array(
+                       'main_post' => 'dorian_band',
+                ),
 		'events' => array(
 			'main_post' => 'luther_events',
 		),
