@@ -4,11 +4,12 @@
 //    Steve Smith
 //    2010-05-18
 //
-//    Work on the first page of the homecoming form
+//    Work on the first page of the dorian band nomination form
+//    which collects Director Info
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-class HomecomingRegistrationOneForm extends FormStep
+class DirectorInfoForm extends FormStep
 {
 	var $_log_errors = true;
 	var $error;
@@ -20,7 +21,6 @@ class HomecomingRegistrationOneForm extends FormStep
 		),
 		'director_first_name' => array(
 			'type' => 'text',
-			'size' => 15,
                 ),
                 'director_last_name' => array(
                         'type' => 'text',
