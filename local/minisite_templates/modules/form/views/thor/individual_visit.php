@@ -688,14 +688,14 @@ class IndividualVisitForm extends DefaultThorForm
 		$enteredDate = $this->get_value_from_label('Visit Date');
 		$day = date('D', strtotime($enteredDate));
 		$splitDate = explode('-', $enteredDate);
-
+           
 		if (in_array('xxxx' . $splitDate[1] . $splitDate[2], $this->disabled_dates)){
 			return true;
 		}elseif (in_array($splitDate[0] . $splitDate[1] . $splitDate[2], $this->disabled_dates)){
-			return true;
+                        return true;
 		}elseif (($day == 'Sun')||($day == 'Sat')){
 			return true;
-		}else{
+		}else{                  
 			return false;
 		}
 	}
