@@ -13,6 +13,10 @@ reason_include_once('classes/page_types.php');
  *
  * Retrieve and cache a set of upcoming events
  *
+ * NOTE: The functionality of this class related to retrieving events from the database
+ * is geared towards grabbing events from all live, event-sharing sites in a Reason instance.
+ * It is not designed to grab events for a specific site or set of sites, despite the existence
+ * of $site_id parameters and a set_site_id() method.
  *
  * Utilized by the events_upcoming module.
  *
@@ -256,13 +260,19 @@ reason_include_once('classes/page_types.php');
 		else trigger_error('set_page_link called on an event (id '.$e->id().') that does not have an owner site id - a url could not be set');
 	}
 
+	function get_events_modules()
+	{
+		reason_include_once('classes/module_sets.php');
+		$ms =& reason_get_module_sets();
+		return array_unique(array_merge($ms->get('event_display'),$this->events_modules));
+	}
 	function get_events_page_types()
 	{
 		// Based on the list of modules that show events, figure out which page types use them
 		if (empty($this->events_page_types))
 		{
 			$rpts =& get_reason_page_types();
-			$this->events_page_types = $rpts->get_page_type_names_that_use_module($this->events_modules);
+			$this->events_page_types = $rpts->get_page_type_names_that_use_module($this->get_events_modules());
 		}
 		return $this->events_page_types;
 	}
