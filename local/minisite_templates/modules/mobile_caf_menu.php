@@ -13,6 +13,8 @@ class MobileCafMenuModule extends DefaultMinisiteModule {
 
     function run() {
 
+        echo '<a href="http://www.luther.edu/mobile/menu/hours/">Hours of Operation</a><br></br>';
+
         // file example 1: read a text file into a string with fgets
         $filename="http://www.luther.edu/caf/locations/WeeklyMenu.htm";
         $output1="";
