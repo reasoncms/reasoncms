@@ -308,6 +308,26 @@ class FormController
 				$this->session->start();
 			}
 
+			if ($this->session->has_started() || $this->session->exists())
+			{	
+				if( !$this->session->get($this->_data_key . '_running') )
+				{
+					$this->_first_run = true;
+					$this->session->set($this->_data_key . '_running', true);
+				}
+				else
+				{
+					$this->_first_run = false;
+					if( $this->session->get($this->_path_key) )
+						$this->_path = $this->session->get($this->_path_key);
+					else
+						$this->_path = array();
+				}
+				$this->_inited = true;
+			} else {
+				trigger_error( 'FormController Error: Failed to start session');	
+			}
+
 			// build the master list of form to variable
 			foreach( array_keys( $this->forms ) AS $name )
 			{
@@ -328,27 +348,7 @@ class FormController
 					}
 				}
 			}
-						
-			if ($this->session->has_started() || $this->session->exists())
-			{	
-				if( !$this->session->get($this->_data_key . '_running') )
-				{
-					$this->_first_run = true;
-					$this->session->set($this->_data_key . '_running', true);
-				}
-				else
-				{
-					$this->_first_run = false;
-					$this->_populate_step_data();
-					if( $this->session->get($this->_path_key) )
-						$this->_path = $this->session->get($this->_path_key);
-					else
-						$this->_path = array();
-				}
-				$this->_inited = true;
-			} else {
-				trigger_error( 'FormController Error: Failed to start session');	
-			}
+			$this->_populate_step_data();
 		}
 	} // }}}
 	/**
@@ -590,7 +590,7 @@ class FormController
 			
 			//! This should be a little more descriptive if we're going to be timing out more often, don't you think? Maybe preserve cur_module? Or site_id if they exist?
 			header('Location: '.$this->_base_url.'?'.$this->_step_var_name.'='.$this->_get_start_step());
-			die();
+			exit;
 		}
 		elseif ($this->_request[ $this->_step_var_name ] != $this->_current_step )
 		{
