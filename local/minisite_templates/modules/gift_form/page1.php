@@ -6,6 +6,10 @@
 //
 //    Work on the first page of the giving form
 //
+//    Modified for Luther - Steve Smith
+//    search for SLS to find modifications
+//    2010-09-13
+//
 ////////////////////////////////////////////////////////////////////////////////
 
 class GiftPageOneForm extends FormStep
@@ -39,15 +43,15 @@ class GiftPageOneForm extends FormStep
 			'display_name' => 'Ending',
 			'options' => array('indefinite'=>'No end date'),
 		),
-/*
+                // SLS - changed url to luther's matchinggifts.com url
 		'matching_gift_note' => array(
 			'type' => 'comment',
 			'text' => '<h3>Will your gift be matched by your employer?</h3>
-				  <p><a href="http://www.matchinggifts.com/carleton/" 
+				  <p><a href="http://www.matchinggifts.com/luther/"
 				  title="Matching Gift Search Site" target="_new"
 				  >Click to see if your employer has a matching program.</a></p>',
 		),
-*/
+
 		'match_gift' => array(
 			'type' => 'checkboxfirst',
 			'display_name' => 'My (or my spouse\'s) employer will match my gift',
@@ -58,19 +62,99 @@ class GiftPageOneForm extends FormStep
 			'display_name'=>'&nbsp;',
 			'comments'=>'<div class="smallText comment">Employer name</div>',
 		),
-		'additional_instructions_note' => array(
-			'type' => 'comment',
-			'text' => '<h3>Additional Gift Instructions</h3>
-				   <p>Please indicate any special instructions for handling your gift.
-				   Include joint giving information, alternate designations, or whether your gift is 
-				   in memory or in honor of someone.</p>',
-		),
-		'additional_instructions' => array(
-			'type' => 'textarea',
+                // SLS - added textbox for gift prompt
+                'gift_prompt_note' => array(
+                        'type' => 'comment',
+                        'text' => '<h3>What prompted you to make this gift?</h3>'
+                ),
+                'gift_prompt' => array(
+                	'type' => 'textarea',
 			'rows' => 5,
 			'cols' => 35,
 			'display_name' => '&nbsp;',
+                ),
+                'designation_header' => array(
+			'type' => 'comment',
+			'text' => '<h3>Designation</h3>',
 		),
+		'annual_fund_designation' => array(
+			'type' => 'checkboxfirst',
+			'display_name' => 'Annual Fund (please use my gift where it is needed most)',
+		),
+                'specific_fund_designation' => array(
+			'type' => 'checkboxfirst',
+			'display_name' => 'Designated Giving',
+		),
+                'designation_note' => array(
+                        'type' => 'comment',
+                        'text' => 'If more than one designation is specified, your gift
+                                   will be divided equally unless you indicate otherwise
+                                   in the comments section below.'
+                ),
+//                'specific_fund_details' => array(
+//                        'type' => 'checkboxgroup_no_sort',
+//                        'display_name' => '&nbsp;',
+//                        'options' => array(
+//                            'The Aquatic Center' => 'The Aquatic Center',
+//                            'The Sesquicentennial Scholarship Fund' => 'The Sesquicentennial Scholarship Fund',
+//                            'The Sesquicentennial Study Abroad Scholarship Fund' => 'The Sesquicentennial Study Abroad Scholarship Fund',
+//                            'The Fund for Transformational Teaching and Learning' => 'The Fund for Transformational Teaching and Learning',
+//                            'Luther Center for Sustainable Communities' => 'Luther Center for Sustainable Communities',
+//                            'Norse Athletic Association' => 'Norse Athletic Association',
+//                        ),
+//                ),
+
+                'aquatic_center' => 'checkboxfirst',
+                'sesq_scholarship_fund' => array(
+                        'type' => 'checkboxfirst',
+                        'display_name' => 'The Sesquicentennial Scholarship Fund',
+                ),
+                'sesq_study_abroad_fund' => array(
+                        'type' => 'checkboxfirst',
+                        'display_name' => 'The Sesquicentennial Study Abroad Scholarship Fund',
+                ),
+                'transform_teaching_fund' => array(
+                        'type' => 'checkboxfirst',
+                        'display_name' => 'The Fund for Transformational Teaching and Learning',
+                ),
+                'sustainable_communities' => array(
+                        'type' => 'checkboxfirst',
+                        'display_name' => 'Luther Center for Sustainable Communities',
+                ),
+                'norse_athletic_association' => 'checkboxfirst',
+                'naa_designation_details' => array(
+                        'type' => 'select_no_sort',
+                        'display_name' => '&nbsp;',
+                        'add_null_value_to_top' => true,
+                        'options' => array(
+                            'Baseball' => 'Baseball',
+                            'Basketball, men\'s' => 'Basketball, men\'s',
+                            'Basketball, women\'s' => 'Basketball, women\'s',
+                            'Cross Country, men\'s' => 'Cross Country, men\'s',
+                            'Cross Country, women\'s' => 'Cross Country, women\'s',
+                            'Football' => 'Football',
+                            'Golf, men\'s' => 'Golf, men\'s', 
+                            'Golf, women\'s' => 'Golf, women\'s',
+                            'Soccer, men\'s' => 'Soccer, men\'s',
+                            'Soccer, women\'s' => 'Soccer, women\'s',
+                            'Softball' => 'Softball',
+                            'Swimming & Diving, men\'s' => 'Swimming & Diving, men\'s',
+                            'Swimming & Diving, women\'s' => 'Swimming & Diving, women\'s',
+                            'Tennis, men\'s' => 'Tennis, men\'s',
+                            'Tennis, women\'s' => 'Tennis, women\'s',
+                            'Track & Field, men\'s' => 'Track & Field, men\'s',
+                            'Track & Field, women\'s' => 'Track & Field, women\'s',
+                            'Volleyball' => 'Volleyball',
+                            'Wrestling' => 'Wrestling',
+                        ),
+                ),
+                'other_designation' => array(
+                        'type' => 'checkboxfirst',
+                ),
+                'other_designation_details' => array(
+                        'type' => 'text',
+                        'display_name' => '&nbsp;',
+                ),
 		'refby'=>array(
 			'type'=>'hidden',
 		),
@@ -88,7 +172,16 @@ class GiftPageOneForm extends FormStep
 							'use_group_display_name' => false,
 							'rows' => array('','')
 							),
-			),
+                    ),
+                'other_desig_group' => array('type' => 'inline',
+                                        'elements' => array('other_designation', 'other_designation_details'),
+                                        'args' => array('use_group_display_name' => false, 'use_element_labels' => false),
+                    ),
+                'naa_desig_group' => array('type' => 'inline',
+                                        'elements' => array('norse_athletic_association', 'naa_designation_details'),
+                                        'args' => array('use_group_display_name' => false, 'use_element_labels' => false),
+                    ),
+             
 	/*	'phone_group' => array ('type' => 'inline',
 					'elements' =>  array( 'phone', 'phone_type' ),
 					'args' => array('use_element_labels' => false,
