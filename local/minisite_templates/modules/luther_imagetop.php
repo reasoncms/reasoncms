@@ -30,14 +30,32 @@
 			if ( !empty($this->parent->textonly) )
 				echo '<h3>Images</h3>'."\n";
 			
+			$theme = get_theme($this->site_id);
 			foreach( $this->images AS $id => $image )
 			{
 				if (preg_match("/imagetop/", $image->get_value('keywords')))
 				{
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
-					echo '<div id="imagetopframe">'."\n";
+					
+					if ($theme->get_value( 'name' ) == 'luther2010')
+					{
+						echo '<figure id="imagetopframe">'."\n";
+					}
+					else
+					{
+						echo '<div id="imagetopframe">'."\n";
+					}
+					
 					echo '<img src="' . $url . '" alt="' . $image->get_value('description') . '"/>';
-					echo "</div>\n";
+					if ($theme->get_value( 'name' ) == 'luther2010')
+					{
+						echo '</figure>'."\n";
+					}
+					else
+					{
+						echo '</div>'."\n";
+					}
+					
 					break;
 				}
 			}

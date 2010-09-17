@@ -18,8 +18,9 @@ class LutherTemplate2010 extends MinisiteTemplate
 {
 	// reorder sections so that navigation is first instead of last
 	var $sections = array('navigation'=>'show_navbar','content'=>'show_main_content','related'=>'show_sidebar');
-	var $doctype = '<!DOCTYPE html">';
+	var $doctype = '<!DOCTYPE html>';
 	public $luther_add_this_complete = false;
+	var $include_modules_css = false;
 
 	function start_page() 
 	{
@@ -71,16 +72,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 		echo '<div id="wrapper" class="'.$class.'">'."\n";
 		echo '<div id="bannerAndMeat">'."\n";
-		$this->show_banner();
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
-		{
-			echo '<div class="container group">'."\n";
-		}
-		$this->show_meat();
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
-		{
-			echo '</div> <!-- class="container group" -->'."\n";
-		}
+		$this->show_banner();		
+		echo '<div class="container group">'."\n";		
+		$this->show_meat();		
+		echo '</div> <!-- class="container group" -->'."\n";
 		echo '</div> <!-- id="bannerAndMeat" -->'."\n";
 		$this->show_footer();
 		echo '</div> <!-- id="wrapper" class="'.$class.'" -->'."\n";
@@ -123,39 +118,44 @@ class LutherTemplate2010 extends MinisiteTemplate
 
 		echo '<div class="content content-secondary">'."\n";
 		
-                // Navigation area
-                echo '<nav id="nav-section" role="navigation">'."\n";
-                if ($this->has_content( 'navigation' ))
-                {
-                        $this->run_section( 'navigation' );
-                }
-				echo '</nav> <!-- id="nav-section" role="navigation" -->'."\n";
+		// Navigation area
+		echo '<nav id="nav-section" role="navigation">'."\n";
+		if ($this->has_content( 'navigation' ))
+		{
+			$this->run_section( 'navigation' );
+		}
+		echo '</nav> <!-- id="nav-section" role="navigation" -->'."\n";
+	
+		/*// Username
+		if ($this->has_content( 'sub_nav' ))
+		{
+			echo '<div id="subNav">'."\n";
+			$this->run_section( 'sub_nav' );
+			echo '</div>'."\n";
+		}
+
 		
-
-                if ($this->has_content( 'sub_nav' ))
-                {
-                        echo '<div id="subNav">'."\n";
-                        $this->run_section( 'sub_nav' );
-                        echo '</div>'."\n";
-                }
-
-		$this->run_section( 'bannerad' );
-                $this->run_section( 'sbvideo' );
-                if ($this->has_content( 'twitter_sub_nav' ))
-                {
-                        $this->run_section( 'twitter_sub_nav' );
-                }
-                if ($this->has_content( 'sub_nav_2' ))
+		$this->run_section( 'sbvideo' );
+		
+		if ($this->has_content( 'twitter_sub_nav' ))
+		{
+			$this->run_section( 'twitter_sub_nav' );
+		}*/
+		
 		// Contact Information
-                {
-                        $this->run_section( 'sub_nav_2' );
-                }
+		echo '<section class="contact-information">'."\n";		
+		if ($this->has_content( 'sub_nav_2' ))
+		{
+			$this->run_section( 'sub_nav_2' );
+		}
+		echo '</section> <!-- class="contact-information" -->'."\n";
+		
+		$this->run_section( 'bannerad' );
 
-                if ($this->has_content( 'sub_nav_3' ))
-                {
-                        $this->run_section( 'sub_nav_3' );
-                }
-
+		if ($this->has_content( 'sub_nav_3' ))
+		{
+			$this->run_section( 'sub_nav_3' );
+		}
 
 		echo '</div> <!-- class="content content-secondary" -->'."\n";
 
@@ -170,7 +170,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$this->run_section( 'bannerad');
 			return;
 		}
-		echo '<div class="span-24 last">'."\n";
+		echo '<div class="content content-tertiary">'."\n";
                 if($this->has_content( 'pre_sidebar' ))
                 {
                         echo '<div id="preSidebar">'."\n";
@@ -189,7 +189,7 @@ class LutherTemplate2010 extends MinisiteTemplate
                         $this->run_section( 'post_sidebar' );
                         echo '</div>'."\n";
                 }
-		echo '</div> <!--  class="span-24 last" -->'."\n";
+		echo '</div> <!-- class="content content-tertiary" -->'."\n";
 		echo '</div>'."\n";
 		echo '</div class="span-48 last">'."\n";
 
@@ -198,9 +198,9 @@ class LutherTemplate2010 extends MinisiteTemplate
 
 	function luther_breadcrumbs()
 	{
-		echo '<div id="crumbs">'."\n";
+		echo '<nav id="breadcrumbs">'."\n";
 		echo $this->_get_breadcrumb_markup($this->_get_breadcrumbs(), $this->site_info->get_value('base_breadcrumbs'), '&nbsp;&#187;&nbsp;');
-		echo '</div>'."\n";
+		echo '</nav>'."\n";
 
 	}
 
@@ -228,79 +228,81 @@ class LutherTemplate2010 extends MinisiteTemplate
 	}
 
 	function show_main_content_sections()
-        {
+	{
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
 		{
 			return;
 		}
 
-		echo '<div class="span-48 last">'."\n";
-
-                $this->run_section( 'imagetop' );
+		echo '<div class="content content-primary">'."\n";
+		
 		$this->luther_breadcrumbs();
-					if (!$this->luther_add_this_complete)
-					{
-						$this->luther_add_this();
-					}
-
-                if ($this->has_content( 'main_head' ))
-                {
-                        echo '<div class="contentHead">'."\n";
-                        $this->run_section( 'main_head' );
-                        echo '</div>'."\n";
-                }
-
-		if ($this->cur_page->get_value( 'custom_page' ) != 'spotlight_archive' && $this->cur_page->get_value( 'custom_page' ) != 'luther_publication')
+		
+		if (!$this->luther_add_this_complete)
 		{
-			echo '<div class="span-48">'."\n";
+			$this->luther_add_this();
+		}
+		
+		// page title
+		if ($this->has_content( 'main_head' ))
+		{			
+			$this->run_section( 'main_head' );			
 		}
 
-                if ($this->has_content( 'main' ))
-                {
-                    echo '<div class="contentMain">'."\n";
-					if (!$this->luther_add_this_complete)
-					{
-						$this->luther_add_this();
-					}
-                    $this->run_section( 'main' );
-                    echo '</div>'."\n";
-                }
-                if ($this->has_content( 'main_post' ))
-                {
-               		echo '<div class="contentPost">'."\n";
+		$this->run_section( 'imagetop' );
+		
+		if ($this->has_content( 'main' ))
+		{
+			echo '<div class="contentMain">'."\n";
 			if (!$this->luther_add_this_complete)
 			{
 				$this->luther_add_this();
 			}
-                	$this->run_section( 'main_post' );
-                	echo '</div>'."\n";
-              	}
-            if ($this->has_content( 'content_blurb' ))
-                {
-                	$this->run_section( 'content_blurb' );
-                }
+			$this->run_section( 'main' );
+			echo '</div>'."\n";
+		}
+		
+		if ($this->has_content( 'main_post' ))
+		{
+			echo '<div class="contentPost">'."\n";
+			if (!$this->luther_add_this_complete)
+			{
+				$this->luther_add_this();
+			}
+			$this->run_section( 'main_post' );
+			echo '</div>'."\n";
+		}
+	
+		if ($this->has_content( 'content_blurb' ))
+		{
+			$this->run_section( 'content_blurb' );
+		}
 
-
-            if ($this->has_content( 'flickr_slideshow' ))
-                {
-					$this->run_section( 'flickr_slideshow' );
-                }
+		if ($this->has_content( 'flickr_slideshow' ))
+		{
+			$this->run_section( 'flickr_slideshow' );
+		}
                 
-             if ($this->has_content( 'norse_calendar' ))
-                {
-					$this->run_section( 'norse_calendar' );
-                }
-
-		// rough-in right column if there is no content
-		if ($this->has_related_section() == false) {
+		if ($this->has_content( 'norse_calendar' ))
+		{
+			$this->run_section( 'norse_calendar' );
+		}
+		
+		echo '</div> <!-- class="content content-primary" -->'."\n";        
+                // rough-in right column if there is no content
+		if ($this->has_related_section() == false)
+		{
 			$this->show_sidebar_tableless();	
 		}
-        }
+	}
 
 	function do_org_head_items()
 	{
 		// Just here as a hook for branding head items (js/css/etc.)
-		echo '<link href="/stylesheets/luther2010/master.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";  
+		echo '<link rel="stylesheet" type="text/css" href="/reason/css/modules.css" />'."\n";
+		echo '<link href="/javascripts/highslide/highslide.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
+		echo '<link href="/stylesheets/luther2010/master.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
+		echo '<link href="/stylesheets/luther2010/reason.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";  
   		echo '<script src="/javascripts/modernizr-1.1.min.js" type="text/javascript"></script>'."\n";
 		echo '<!--[if lt IE 9]><link href="/stylesheets/luther2010/ie8.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";  
   		echo '<!--[if lt IE 8]><link href="/stylesheets/luther2010/ie7.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
@@ -358,11 +360,14 @@ class LutherTemplate2010 extends MinisiteTemplate
 			// test if all sidebar images have keyword 'imagetop'
 			// bannerad, or video.
 			$module =& $this->_get_module( 'sidebar' );
-			foreach( $module->images AS $id => $image )
+			if ($module != null)
 			{
-				if (!preg_match("/imagetop|bannerad|video/", $image->get_value('keywords')))
+				foreach( $module->images AS $id => $image )
 				{
-					return true;
+					if (!preg_match("/imagetop|bannerad|video/", $image->get_value('keywords')))
+					{
+						return true;
+					}
 				}
 			}
 
