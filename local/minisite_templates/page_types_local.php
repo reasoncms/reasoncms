@@ -187,6 +187,36 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'lfw_registration' => array(
         	'main_post' => 'lfw_form',
         ),
+        'luther2010_home' => array(
+            'main_post'=>'',
+            'main_head' => '',
+            'main'=>'',
+			'navigation' => 'luther_carousel',
+	    	'banner_xtra' => 'nav_search_logo',
+			//'pre_sidebar' => 'events',
+			'pre_sidebar' => 'luther_events_mini',
+            'sidebar'=>array( // News  
+            	'module' => 'luther_other_publication_news',
+				'max_num_to_show' => 3,
+				),
+            'post_sidebar' => array( // Spotlights
+            	'module' => 'publication',
+				'related_publication_unique_names' => array( 'spotlight_archives' ),
+				'related_mode' => 'true',
+				'related_title' => '',
+				'related_order' => 'random',
+				'max_num_items' => 1,
+				'markup_generator_info' =>
+				   array(
+				     'list_item' =>
+				 	array (
+					  'classname' => 'SpotlightListItemMarkupGenerator',
+				          'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+					      ),
+					 ),
+            	
+            ),
+         ),
 		'luther_news_page' => array(
 			'main_post' => 'publication',
             		'sub_nav_3' => 'quote',
@@ -379,7 +409,7 @@ $GLOBALS['_reason_page_types_local'] = array(
          ),
 		'publication' => array(
 			'main_post'=>'publication',
-            		'main_head' => 'publication/luther_title',
+            'main_head' => 'publication/luther_title',
 			'main'=>'publication/description',
 			'pre_banner' => '',
 			'post_banner' => '',
@@ -444,12 +474,13 @@ function luther_audience_navigation()
 
 function luther2010_audience_navigation()
 {
-        echo '<ul id="navmain">'."\n";
-        echo '<li class="nm1"><a href="/admissions">Prospective Students</a></li>'."\n";
-        echo '<li class="nm2"><a href="/parents">Parents</a></li>'."\n";
-        echo '<li class="nm3"><a href="/alumni">Alumni/ Friends</a></li>'."\n";
-        echo '<li class="nm4"><a href="http://www.luther.edu/faculty-staff-students">Faculty & Staff</a></li>'."\n";
-        echo '<li class="nm5"><a href="http://www.luther.edu/faculty-staff-students">Current Students</a></li></ul>'."\n";
+        echo '<ul>'."\n";
+        echo '<li><a href="/admissions">Prospective Students</a></li>'."\n";
+        echo '<li><a href="/parents">Parents</a></li>'."\n";
+        echo '<li><a href="/alumni">Alumni & Friends</a></li>'."\n";
+        echo '<li><a href="http://www.luther.edu/faculty-staff-students">Faculty & Staff</a></li>'."\n";
+        echo '<li><a href="http://www.luther.edu/faculty-staff-students">Current Students</a></li>'."\n";
+        echo '</ul>'."\n";
 }
 
 function luther_global_navigation()
@@ -466,16 +497,16 @@ function luther_global_navigation()
 
 function luther2010_global_navigation()
 {
-        echo '<ul id="navglobal">'."\n";
-        echo '<li class="ng1"><a href="/admissions">Admissions</a></li>'."\n";
-        echo '<li class="ng2"><a href="/academics">Academics</a></li>'."\n";
-        echo '<li class="ng3"><a href="http://lis.luther.edu">Library & Technology</a></li>'."\n";
-        echo '<li class="ng4"><a href="/studentlife">Student Life</a></li>'."\n";
-        echo '<li class="ng5"><a href="http://sports.luther.edu">Athletics</a></li>'."\n";
-        echo '<li class="ng6"><a href="http://music.luther.edu">Music</a></li>'."\n";
-        echo '<li class="ng7"><a href="/giving">Giving</a></li>'."\n";
-        echo '<li class="ng8"><a href="http://www.luther.edu/about/decorah">Decorah</a></li>'."\n";
-        echo '<li class="ng9"><a href="http://www.luther.edu/about">About Luther</a></li></ul>'."\n";
+        echo '<ul>'."\n";
+        echo '<li class="admissions"><a href="/admissions">Admissions</a></li>'."\n";
+        echo '<li class="academics"><a href="/academics">Academics</a></li>'."\n";
+        echo '<li class="library-Technology"><a href="http://lis.luther.edu">Library & Technology</a></li>'."\n";
+        echo '<li class="student-life"><a href="/studentlife">Student Life</a></li>'."\n";
+        echo '<li class="athletics"><a href="http://sports.luther.edu">Athletics</a></li>'."\n";
+        echo '<li class="music"><a href="http://music.luther.edu">Music</a></li>'."\n";
+        echo '<li class="giving"><a href="/giving">Giving</a></li>'."\n";
+        echo '<li class="decorah"><a href="http://www.luther.edu/about/decorah">Decorah</a></li>'."\n";
+        echo '<li class="about-luther"><a href="http://www.luther.edu/about">About Luther</a></li></ul>'."\n";
 }
 
 function luther_google_search()
@@ -493,6 +524,26 @@ function luther_google_search()
                         echo '<input type="hidden" value="public_frontend" name="proxystylesheet"/>'."\n";
                         echo '<input type="hidden" value="public_collection" name="site"/>'."\n";
                         echo '<input type="hidden" value="%3CHOME/%3E" name="proxycustom"/>'."\n";
+                        echo '</form>'."\n";
+}
+function luther2010_google_search()
+{
+                        echo '<form id="search" action="http://find.luther.edu/search" method="get" name="gs">'."\n";
+                        echo '<fieldset>'."\n";
+                        echo '<label for="search-input">Search</label>'."\n";
+                        echo '<input id="search-input" type="text" maxlength="256" size="32" name="q" />'."\n";
+                        echo '<button type="submit" name="btnG">Search</button>'."\n";
+                        echo '<input type="hidden" value="0" name="entqr"/>'."\n";
+                        echo '<input type="hidden" value="xml_no_dtd" name="output"/>'."\n";
+                        echo '<input type="hidden" value="date:D:L:d1" name="sort"/>'."\n";
+                        echo '<input type="hidden" value="public_frontend" name="client"/>'."\n";
+                        echo '<input type="hidden" value="1" name="ud"/>'."\n";
+                        echo '<input type="hidden" value="UTF-8" name="oe"/>'."\n";
+                        echo '<input type="hidden" value="UTF-8" name="ie"/>'."\n";
+                        echo '<input type="hidden" value="public_frontend" name="proxystylesheet"/>'."\n";
+                        echo '<input type="hidden" value="public_collection" name="site"/>'."\n";
+                        echo '<input type="hidden" value="%3CHOME/%3E" name="proxycustom"/>'."\n";
+                        echo '</fieldset>'."\n";
                         echo '</form>'."\n";
 }
 
