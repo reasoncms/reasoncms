@@ -73,7 +73,7 @@
 			{
 				echo '</div> <!--id="bannerleft"-->'."\n";
 			}
-			echo "</div>\n";
+			//echo "</div>\n";
 		}
 	}
 ?>
