@@ -6,10 +6,16 @@
 //
 //    Work on the first page of the giving form
 //
+//    Modified for Luther - Steve Smith
+//    search for SLS to find modifications
+//    2010-09-13
+//
+//
 ////////////////////////////////////////////////////////////////////////////////
 
 class GiftPageTwoForm extends FormStep
 {
+    //SLS - changed all references of Carleton to Luther
 	var $_log_errors = true;
 	var $error;
 	
@@ -24,10 +30,11 @@ class GiftPageTwoForm extends FormStep
 			'display_name' => 'Last Name or Family Name',
 			'size'=>20,
 		),
-		'carleton_affiliation' => array(
-			'display_name' => 'I am a Carleton',
+		'luther_affiliation' => array(
+			'display_name' => 'I am a Luther',
 			'type' => 'checkboxgroup_no_sort',
-			'options' => array('Alumnus'=>'Alumnus/a','Parent'=>'Parent','Friend'=>'Friend','Student'=>'Student','Faculty'=>'Faculty','Staff'=>'Staff',),
+                        // SLS - changed options per Development request
+			'options' => array('Alumnus/Spouse'=>'Alumnus/a or Spouse','Parent'=>'Parent','Friend'=>'Friend','Student'=>'Student','Faculty/Staff'=>'Faculty/Staff',),
 		),
 		'class_year' => array(
 			'type' => 'numrange',
@@ -40,11 +47,11 @@ class GiftPageTwoForm extends FormStep
 		),
 		'estate_included' => array(
 			'type' => 'checkboxfirst',
-			'display_name' => 'I\'ve included Carleton in my estate plans.',
+			'display_name' => 'I\'ve included Luther in my estate plans.',
 		),
 		'estate_send' => array(
 			'type' => 'checkboxfirst',
-			'display_name' => 'Please send me information about including Carleton in my estate plans.',
+                        'display_name' => 'Please send me information about including Luther in my estate plans.',
 		),
 		'address_note' => array(
 			'type' => 'comment',
@@ -55,11 +62,7 @@ class GiftPageTwoForm extends FormStep
 			'options' => array('Home'=>'Home','Business'=>'Business'),
 			'default' => 'Home',
 		),
-		'street_address' => array(
-			'type' => 'textarea',
-			'rows' => 3,
-			'cols' => 35,
-		),
+		'street_address' => 'textarea',
 		'city' => array(
 			'type' => 'text',
 			'size'=>35,
@@ -84,7 +87,8 @@ class GiftPageTwoForm extends FormStep
 		),
 		'phone_type' => array(
 			'type' => 'select_no_sort',
-			'options' => array('Home'=>'Home','Business'=>'Business','Cell'=>'Cell'),
+                        // SLS - flipped cell and business per Development request
+			'options' => array('Home'=>'Home', 'Cell'=>'Cell','Business'=>'Business',),
 			'default' => 'Home',
 		),
 		'email' => array(
@@ -120,7 +124,7 @@ class GiftPageTwoForm extends FormStep
 	var $required = array(
 		'first_name',
 		'last_name',
-		'carleton_affiliation',
+		'luther_affiliation',
 		'address_type',
 		'street_address',
 		'city',
@@ -141,7 +145,7 @@ class GiftPageTwoForm extends FormStep
 	var $form_to_person_key = array(
 		'first_name'=>array('src'=>'ldap_info','field'=>'givenname'),
 		'last_name'=>array('src'=>'ldap_info','field'=>'sn'),
-		'carleton_affiliation'=>array('function'=>'get_affiliations'),
+		'luther_affiliation'=>array('function'=>'get_affiliations'),
 		'class_year'=>array('src'=>'ldap_info','field'=>'carlcohortyear'),
 		'street_address'=>array('function'=>'get_street_address'),
 		'city'=>array('function'=>'get_home_city'),
@@ -165,7 +169,7 @@ class GiftPageTwoForm extends FormStep
 		{
 			$this->add_element_group( $info['type'], $name, $info['elements'], $info['args']);
 		}
-		$this->move_element('name_group','before','carleton_affiliation');
+		$this->move_element('name_group','before','luther_affiliation');
 		$this->move_element('phone_group','before','email');
 		$this->add_comments('email','<div class="smallText comment">A confirmation email will be sent to this address.</div>');
 		$this->change_element_type('class_year','numrange',array('start'=>1924,'end'=>(date('Y')+5)));
@@ -450,13 +454,13 @@ class GiftPageTwoForm extends FormStep
 	}
 	function run_error_checks()
 	{
-		if($this->get_value('carleton_affiliation') && in_array('Alumnus', $this->get_value('carleton_affiliation')) && !$this->get_value('class_year') )
+		if($this->get_value('luther_affiliation') && in_array('Alumnus', $this->get_value('luther_affiliation')) && !$this->get_value('class_year') )
 		{
 			$this->set_error('class_year','Please enter your class year if you are an alumnus/a');
 		}
-		if($this->get_value('carleton_affiliation') && in_array('Student', $this->get_value('carleton_affiliation')) && !$this->get_value('class_year') )
+		if($this->get_value('luther_affiliation') && in_array('Student', $this->get_value('luther_affiliation')) && !$this->get_value('class_year') )
 		{
-			$this->set_error('class_year','Please enter your class year if you are a current Carleton student');
+			$this->set_error('class_year','Please enter your class year if you are a current Luther student');
 		}
 		// Taken from http://us2.php.net/eregi
 		if( !eregi('^[A-Z0-9._%-]+@[A-Z0-9._%-]+\.[A-Z]{2,6}$',$this->get_value('email')))
