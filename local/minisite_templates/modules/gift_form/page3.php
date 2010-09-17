@@ -6,6 +6,11 @@
 //
 //    Work on the second page of the giving form
 //
+//    Modified for Luther - Steve Smith
+//    search for SLS to find modifications
+//    2010-09-13
+//
+//
 ////////////////////////////////////////////////////////////////////////////////
 
 include_once(WEB_PATH.'stock/giftclass.php');
@@ -28,7 +33,7 @@ class GiftPageThreeForm extends FormStep
 		),
 		'installment_notification_note_1' => array(
 			'type' => 'comment',
-			'text' => '<h3>Receipts</h3><p>Carleton will send you printed receipt(s) via U.S. Mail for your tax records each year in January.</p>',
+			'text' => '<h3>Receipts</h3><p>Luther will send you printed receipt(s) via U.S. Mail for your tax records each year in January.</p>',
 		),
 		'installment_notification_note_2' => array(
 			'type' => 'comment',
@@ -434,11 +439,11 @@ class GiftPageThreeForm extends FormStep
 				if (reason_unique_name_exists('giving_form_thank_you_blurb'))
 					$confirm_text = get_text_blurb_content('giving_form_thank_you_blurb') . $confirm_text;
 				else
-					$confirm_text = '<p><strong>Thank you for your gift to Carleton!</strong></p>' . $confirm_text;
+					$confirm_text = '<p><strong>Thank you for your gift to Luther College!</strong></p>' . $confirm_text;
 				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
-				$add_headers = 'Content-Type: text/plain; charset="utf-8"'."\r\n".'From: "Carleton College Gift Accounting" <giftaccounting@carleton.edu>' . "\r\n" .
-'Reply-To: "Carleton College Gift Accounting" <giftaccounting@carleton.edu>';
-				mail($this->controller->get('email'),'Carleton College Gift Confirmation',strip_tags($mail_text),$add_headers);
+				$add_headers = 'Content-Type: text/plain; charset="utf-8"'."\r\n".'From: "Luther College Giving" <giving@luther.edu>' . "\r\n" .
+'Reply-To: "Luther College Giving" <giving@luther.edu>';
+				mail($this->controller->get('email'),'Luther College Gift Confirmation',strip_tags($mail_text),$add_headers);
 				//}
 			}
 		}
@@ -520,8 +525,8 @@ function build_gift_review_detail_output($helper, $date_format = 'j F Y')
 			}
 		}
 		$txt .= '</table>'."\n";
-		$txt .= '<h4>Per Carleton fiscal year:</h4>';
-		$txt .= '<table cellpadding="0" cellspacing="0" border="0" summary="Total amounts given, by Carleton fiscal year">'."\n";
+		$txt .= '<h4>Per Luther fiscal year:</h4>';
+		$txt .= '<table cellpadding="0" cellspacing="0" border="0" summary="Total amounts given, by Luther fiscal year">'."\n";
 		$txt .= '<tr><th class="col1">Year</th><th>Amount</th></tr>'."\n";
 		$fy_gifts = $helper->get_fiscal_year_totals();
 		
@@ -544,7 +549,7 @@ function build_gift_review_detail_output($helper, $date_format = 'j F Y')
 				else
 				{
 					$year_text = 'Subsequently';
-					$amount_post = ' per Carleton fiscal year';
+					$amount_post = ' per Luther fiscal year';
 					$break = true;
 				}
 				$txt .= '<tr><td class="col1">'.$year_text.'</td><td>$'.$amount_text.$amount_post.'</td></tr>'."\n";
