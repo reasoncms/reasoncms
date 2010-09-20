@@ -1,0 +1,20 @@
+#discoTable textarea {
+	height: 50%;
+	width: 75%;
+}
+
+#discoTable tr td  {
+	font-size: 1em;
+}
+
+#discoTable tr td ul {
+	font-size: 1em;
+}
+
+#disco_form{
+	background-color: white;
+}
+
+#discoTable tbody{
+	background-color: white;
+}
