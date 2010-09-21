@@ -62,7 +62,11 @@ class DorianVocalModule extends DefaultMinisiteModule
                                             'label' => 'Nominate Another Student',
                                         ),
                                 ),
-				'final_step' => true,
+                                'step_decision' => array(
+					'type' => 'user',
+				),
+                                'back_button_text' => 'Back',
+				//'final_step' => true,
 				'final_button_text' => 'I\'m Finished Nominating Students',
 			),
 		);

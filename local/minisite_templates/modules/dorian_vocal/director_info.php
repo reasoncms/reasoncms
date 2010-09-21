@@ -24,34 +24,27 @@ class DirectorInfoForm extends FormStep
                 ),
                 'director_last_name' => array(
                         'type' => 'text',
-			'size' => 15,
                 ),
                 'director_email' => array(
                         'type' => 'text',
-                        'size' => 15,
-                        'display_name' => 'Your email',
+                        'display_name' => 'Your E-mail',
                 ),
                 'school_name' => array(
                         'type' => 'text',
-                        'size' => 15,
                 ),
                 'school_phone' => array(
                         'type' => 'text',
-                        'size' => 15,
                 ),
                 'school_street_address' => array(
                         'type' => 'text',
-                        'size' => 15,
-                        'comment' => 'no PO boxes, please'
+                        'comments' => '<br>no PO boxes, please'
                 ),
                 'school_city' => array(
                         'type' => 'text',
-                        'size' => 15,
                 ),
                 'school_state' => 'state',
                 'school_zip' => array(
                         'type' => 'text',
-                        'size' => 15,
                 ),
             );
 
