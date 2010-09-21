@@ -260,7 +260,11 @@ class Tyr
 		
 		if ( $add_disclaimer )
 		{
-			$message .= "\n\n\n\n-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\nThis message was automatically generated when someone submitted a form to you from the ".FULL_ORGANIZATION_NAME." website. Please direct problems or questions about this service to ".$this->admin_email." .\n";
+			if (isset($_SERVER['SERVER_NAME']) && isset($_SERVER['REQUEST_URI']))
+				$where = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+			else
+				$where = "the ".FULL_ORGANIZATION_NAME." website";
+			$message .= "\n\n\n\n-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\nThis message was automatically generated when someone submitted a form to you from ".$where.". Please direct problems or questions about this service to ".$this->admin_email." .\n";
 		}
 		return $message;
 	}
@@ -302,7 +306,11 @@ class Tyr
 
 		if ( $add_disclaimer )
 		{
-			$message .= '<p>This message was automatically generated when someone submitted a form to you from the '.FULL_ORGANIZATION_NAME.' website. Please direct problems or questions about this service to <a href="mailto:'.$this->admin_email.'">'.$this->admin_email.'</a>.</p>'."\n";
+			if (isset($_SERVER['SERVER_NAME']) && isset($_SERVER['REQUEST_URI']))
+				$where = "the <a href='http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."'>".FULL_ORGANIZATION_NAME." website</a>";
+			else
+				$where = "the ".FULL_ORGANIZATION_NAME." website";
+			$message .= '<p>This message was automatically generated when someone submitted a form to you from '.$where.'. Please direct problems or questions about this service to <a href="mailto:'.$this->admin_email.'">'.$this->admin_email.'</a>.</p>'."\n";
 		}
 		$message .= '</body></html>'."\n";
 	
