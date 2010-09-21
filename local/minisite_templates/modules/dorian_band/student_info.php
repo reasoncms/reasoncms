@@ -15,44 +15,55 @@ class StudentInfoForm extends FormStep
 	var $error;
         var $display_name = 'Dorian Nomination Director Information';
 	var $elements = array(
-		'director_information_header' => array(
+		'student_information_header' => array(
 			'type' => 'comment',
-			'text' => '<h3>Director Information</h3>',
+			'text' => '<h3>Student Information</h3>',
 		),
-		'director_first_name' => array(
+		'student_first_name' => array(
 			'type' => 'text',
-			'size' => 15,
                 ),
-                'director_last_name' => array(
+                'student_last_name' => array(
                         'type' => 'text',
-			'size' => 15,
                 ),
-                'director_email' => array(
+                'student_street_address' => array(
                         'type' => 'text',
-                        'size' => 15,
-                        'display_name' => 'Your email',
                 ),
-                'school_name' => array(
+                'student_city' => array(
                         'type' => 'text',
-                        'size' => 15,
                 ),
-                'school_phone' => array(
+                'student_state' => 'state',
+                'student_zip' => array(
                         'type' => 'text',
-                        'size' => 15,
                 ),
-                'school_street_address' => array(
+                'student_phone_number' => array(
                         'type' => 'text',
-                        'size' => 15,
-                        'comment' => 'no PO boxes, please'
                 ),
-                'school_city' => array(
+                'student_gender' => array(
                         'type' => 'text',
-                        'size' => 15,
                 ),
-                'school_state' => 'state',
-                'school_zip' => array(
+                'student_email_address' => array(
                         'type' => 'text',
-                        'size' => 15,
+                ),
+                'student_instrument' => array(
+                        'type' => 'text',
+                ),
+                'student_experience' => array(
+                        'type' => 'text',
+                ),
+                'student_year_in_school' => array(
+                        'type' => 'text',
+                ),
+                'student_graduation_year' => array(
+                        'type' => 'text',
+                ),
+                'student_position' => array(
+                        'type' => 'text',
+                ),
+                'student_number_in_section' => array(
+                        'type' => 'text',
+                ),
+                'student_desired_participation' => array(
+                        'type' => 'text',
                 ),
             );
 
@@ -68,5 +79,27 @@ class StudentInfoForm extends FormStep
 	{
 		echo '</div>'."\n";
 	}
+        function post_error_check_actions()
+        {
+            $stud_count = $_SESSION['student_count'];
+            if (isset($stud_count)){
+                $stud_count = 1;
+            }else{
+                $stud_count += 1;
+                $_SESSION['student_count'] = $stud_count;
+            }
+            $session_string = 'student'.$stud_count;
+
+            echo($session_string);
+
+            foreach($this->elements as $key)
+            {
+                $_SESSION[$session_string][$key] = $this->get_value($key);
+            }
+
+            
+            pray($_SESSION[$session_string]);
+        }
+        
 }
 ?>
