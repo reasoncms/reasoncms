@@ -501,10 +501,17 @@ class IndividualVisitForm extends DefaultThorForm
 
 	function on_every_time()
 	{	
-		
+		$disabled_dates_string = '';
+                foreach ($this->disabled_dates as $date){
+                    $disabled_dates_string .= 'disable-';
+                    $disabled_dates_string .= $date;
+                    $disabled_dates_string .= ' ';
+                }
+
 		$visitdate_properties = array(
-			'datepicker_class_arg' => 'split-date fill-grid-no-select disable-days-67 statusformat-l-cc-sp-d-sp-F-sp-Y opacity-99 range-low-today range-high-20110912' . $this->disabled_dates . '',);
-			
+			'datepicker_class_arg' => 'split-date fill-grid-no-select disable-days-67
+                            statusformat-l-cc-sp-d-sp-F-sp-Y opacity-99 range-low-today
+                            range-high-20110912 ' . $disabled_dates_string . '',);
 			
 		$visitdate_field = $this->get_element_name_from_label('Visit Date');
 		$this->change_element_type($visitdate_field, 'textdatepublic');
