@@ -21,7 +21,8 @@
 			"lcnorsesports" => array("2bb970a9274d898fd71b221853b6329a", "f872cd98ea82f335"),
 			"lutherfinearts" => array("e0b84ec8f5c4cdee13dbe0c6eab3c516", "5aba74ac9fb733c1"),
 			"Luther_College_Alumni_Office" => array("d97a9bcb0bef39692eb8b0ac97c8887f", "b0d82d76b43bc6d6"),
-			"luthercollegechemistry" => array("4fe2ce650080400958007a505b980522", "cef37676c4424ae1"));
+			"luthercollegechemistry" => array("4fe2ce650080400958007a505b980522", "cef37676c4424ae1"),
+                        "luthersustainability" => array("32deae8d61a176ea73d561995d903426", "d5805fcf8d221869"));
 
 			$site_id = $this->site_id;
 			$es = new entity_selector( $site_id );
