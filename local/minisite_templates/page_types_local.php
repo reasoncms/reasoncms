@@ -216,9 +216,56 @@ $GLOBALS['_reason_page_types_local'] = array(
 					  'classname' => 'SpotlightListItemMarkupGenerator',
 				          'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
 					      ),
-					 ),
-            	
+					 ), 	
             ),
+         ),
+         'luther2010_alumni' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+			),
+            'pre_sidebar' => array( // Spotlights
+            	'module' => 'publication',
+				'related_publication_unique_names' => array( 'spotlight_archives' ),
+				'related_mode' => 'true',
+				'related_title' => '',
+				'related_order' => 'random',
+				'max_num_items' => 1,
+				'markup_generator_info' =>
+				   array(
+				     'list_item' =>
+				 	array (
+					  'classname' => 'SpotlightListItemMarkupGenerator',
+				          'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+					      ),
+					 ),
+            ),
+            'sidebar' => '',
+            'post_sidebar' => 'luther_events_mini',            
+         ),
+         'luther2010_music' => array(
+			'main' => 'content',
+         	'main_post' => 'luther_events_mini',
+			'content_blurb' => array( // Spotlights
+            	'module' => 'publication',
+				'related_publication_unique_names' => array( 'spotlight_archives' ),
+				'related_mode' => 'true',
+				'related_title' => '',
+				'related_order' => 'random',
+				'max_num_items' => 1,
+				'markup_generator_info' =>
+				   array(
+				     'list_item' =>
+				 	array (
+					  'classname' => 'SpotlightListItemMarkupGenerator',
+				          'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+					      ),
+					 ),
+            ),
+			'imagetop' => 'luther_carousel',
+            'pre_sidebar' => 'blurb',
+            'sidebar' => '',
+            'post_sidebar' => '',            
          ),
 		'luther_news_page' => array(
 			'main_post' => 'publication',

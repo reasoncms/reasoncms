@@ -135,12 +135,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 
 		
-		$this->run_section( 'sbvideo' );
+		$this->run_section( 'sbvideo' );*/
 		
-		if ($this->has_content( 'twitter_sub_nav' ))
-		{
-			$this->run_section( 'twitter_sub_nav' );
-		}*/
 		
 		// Contact Information
 		echo '<section class="contact-information">'."\n";		
@@ -170,28 +166,75 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$this->run_section( 'bannerad');
 			return;
 		}
+		
 		echo '<div class="content content-tertiary">'."\n";
-                if($this->has_content( 'pre_sidebar' ))
-                {
-                        echo '<div id="preSidebar">'."\n";
-                        $this->run_section( 'pre_sidebar' );
-                        echo '</div>'."\n";
-                }
+		
+		if ($this->has_content( 'twitter_sub_nav' ) && $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
+			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music')
+		{
+			$this->run_section( 'twitter_sub_nav' );
+		}
+		
+		if ($this->has_content( 'pre_sidebar' ) && $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
+			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music')
+		{
+			echo '<div id="preSidebar">'."\n";
+			$this->run_section( 'pre_sidebar' );
+			echo '</div>'."\n";
+		}
+		elseif ($this->has_content( 'pre_sidebar' ) && $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+		{
+			echo '<section class="spotlight" role="group">'."\n";
+			echo '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+			$this->run_section( 'pre_sidebar');
+			echo '</section> <!-- class="spotlight" role="group" -->'."\n";
+		}
+		elseif ($this->has_content( 'pre_sidebar' ) && $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
+		{
+			echo '<aside class="quote">'."\n";
+			echo '<blockquote>'."\n";
+			$this->run_section( 'pre_sidebar');
+			echo '</blockquote>'."\n";
+			echo '</aside>'."\n";
+		}
+		
+		if ($this->has_content( 'twitter_sub_nav' ) && $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+		{
+			$this->run_section( 'twitter_sub_nav' );
+		}
+		
 		if ($this->has_content( 'sidebar' ))
-                {
-                        echo '<div id="sidebar">'."\n";
-                        $this->run_section( 'sidebar' );
-                        echo '</div>'."\n";
-                }
-                if($this->has_content( 'post_sidebar' ))
-                {
-                        echo '<div id="postSidebar">'."\n";
-                        $this->run_section( 'post_sidebar' );
-                        echo '</div>'."\n";
-                }
+		{
+			echo '<div id="sidebar">'."\n";
+			$this->run_section( 'sidebar' );
+			echo '</div>'."\n";
+		}
+				
+		if ($this->has_content( 'post_sidebar' ) && $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
+			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music')
+		{
+			echo '<div id="postSidebar">'."\n";
+			$this->run_section( 'post_sidebar' );
+			echo '</div>'."\n";
+		}
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+		{
+			echo '<section class="events" role="group">'."\n";
+			echo '<header class="blue-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
+			$this->run_section( 'post_sidebar');
+			echo '</section> <!-- class="events" role="group" -->'."\n";
+		}
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music' && $this->has_content( 'flickr_slideshow' ))
+		{
+			echo '<aside class="gallery group">'."\n";
+			echo '<header class="blue-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";			
+			$this->run_section( 'flickr_slideshow' );
+			echo '</aside> <!-- class="gallery group" -->'."\n";
+		}
+		
 		echo '</div> <!-- class="content content-tertiary" -->'."\n";
-		echo '</div>'."\n";
-		echo '</div class="span-48 last">'."\n";
+		//echo '</div>'."\n";
+		//echo '</div class="span-48 last">'."\n";
 
         }
 
@@ -208,8 +251,9 @@ class LutherTemplate2010 extends MinisiteTemplate
 	// insert "add this" capability to luther pages linking to facebook,
 	// twitter, delicious, etc.
 	{
-		if ($this->cur_page->get_value( 'custom_page' ) != 'publication'			&& $this->cur_page->get_value('custom_page') != 'default'
-			&& $this->cur_page->get_value('custom_page') != 'audio_video')
+		if ($this->cur_page->get_value( 'custom_page' ) != 'publication' && $this->cur_page->get_value('custom_page') != 'default'
+			&& $this->cur_page->get_value('custom_page') != 'audio_video' && $this->cur_page->get_value('custom_page') != 'luther2010_alumni'
+			&& $this->cur_page->get_value('custom_page') != 'luther2010_music')
 		{
 			return;
 		}
@@ -233,6 +277,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 		{
 			return;
 		}
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
+		{
+			$this->music_main_content();
+			return;
+		}
 
 		echo '<div class="content content-primary">'."\n";
 		
@@ -250,7 +299,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 
 		$this->run_section( 'imagetop' );
-		
+
 		if ($this->has_content( 'main' ))
 		{
 			echo '<div class="contentMain">'."\n";
@@ -262,6 +311,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			echo '</div>'."\n";
 		}
 		
+
 		if ($this->has_content( 'main_post' ))
 		{
 			echo '<div class="contentPost">'."\n";
@@ -286,6 +336,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if ($this->has_content( 'norse_calendar' ))
 		{
 			$this->run_section( 'norse_calendar' );
+		}
+		
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
+		{
+			echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";
 		}
 		
 		echo '</div> <!-- class="content content-primary" -->'."\n";        
@@ -336,6 +391,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 		{
 			return '<body id="home" class="style-00">'."\n";
 		}
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
+		{
+			return '<body class="style-home-01 main " id="home">'."\n";
+		}
 		elseif (count($bc) <= 2 /*&& $this->admissions_has_related_or_timeline()*/)  // section
 		{
 			return '<body id="home" class="style-home-01 main">'."\n";
@@ -347,16 +406,17 @@ class LutherTemplate2010 extends MinisiteTemplate
     }
 
 	function has_related_section()
-        {
-	        if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
-			{
-				return true;
-			}
-			if((($this->has_content('pre_sidebar') || $this->has_content('sidebar')) && $this->cur_page->get_value('custom_page') != 'standalone_login_page_stripped'))
-			{
+	{
+        if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home' || $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
+		{
+			return true;
+		}
+		
+		if ((($this->has_content('pre_sidebar') || $this->has_content('sidebar')) && $this->cur_page->get_value('custom_page') != 'standalone_login_page_stripped'))
+		{
 			//print_r($this->cur_page->_values);
 			//print_r($this->cur_page->get_value('name'));
-
+	
 			// test if all sidebar images have keyword 'imagetop'
 			// bannerad, or video.
 			$module =& $this->_get_module( 'sidebar' );
@@ -389,9 +449,9 @@ class LutherTemplate2010 extends MinisiteTemplate
 				return true;
 			}	
 			
-                }
-                return false;
-        }
+		}
+		return false;
+	}
 
 	function home_topimage_quote()
 	// contains top image carousel and text blurb on the home page
@@ -427,6 +487,39 @@ class LutherTemplate2010 extends MinisiteTemplate
 			
 		echo '</div> <!-- class="container-events-news-and-spotlight" -->'."\n";
 	}
+	
+	function music_main_content()
+	// contains carousel, title, breadcrumbs, add-this, events, and spotlight on music site
+	{
+		$this->run_section( 'imagetop' );
+		
+		echo '<div class="content content-primary">'."\n";
+		
+		$this->luther_breadcrumbs();
+		
+		// page title
+		if ($this->has_content( 'main_head' ))
+		{			
+			$this->run_section( 'main_head' );			
+		}
+		
+		echo '<section class="events group with-calendar" role="group">'."\n";
+		echo '<header class="red-stripe"><h1><span>Upcoming Music Events</span></h1></header>'."\n";
+		$this->run_section( 'main_post' );		
+		echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";
+		
+		echo '<section class="spotlight" role="group">'."\n";
+     	echo '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+		if ($this->has_content( 'content_blurb' ))
+		{
+			$this->run_section( 'content_blurb' );
+		}
+     	echo '</section> <!-- class="spotlight" role="group" -->'."\n";
+     	
+     	$this->luther_add_this();
+     	
+     	echo '</div> <!-- class="content content-primary" -->'."\n";
+	}	
 
 }
 
