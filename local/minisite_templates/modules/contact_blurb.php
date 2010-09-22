@@ -5,7 +5,7 @@
 	
 	class ContactBlurbModule extends BlurbModule
 	{
-		function run() // {{{
+		function run()
 		{
 			$i = 0;
 			foreach( $this->blurbs as $blurb )
@@ -16,9 +16,10 @@
 					echo '<div class="contact-info">'."\n";
 					echo '<h2>Contact Information</h2>'."\n";
 					echo $blurb->get_value('content');
+					echo '</div>'."\n";
 				}
 			}
-			echo '</div>'."\n";
+			//echo '</div>'."\n";
 		} 
 	}
 ?>

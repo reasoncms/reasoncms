@@ -30,20 +30,35 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 	{
 		if (get_theme($this->passed_vars['site_id'])->get_value('name') == 'luther2010')
 		{
-			$this->markup_string .= '<article class="highlight">'."\n";
-			//$this->markup_string .= $this->get_title_markup();
-			$this->markup_string .= $this->get_description_markup();
-			$this->markup_string .= $this->get_image_markup();
-			$full_link = $this->passed_vars['link_to_full_item'];
-			$full_link = preg_replace("|http(s)?:\/\/\w+\.\w+\.\w+|", "", $full_link);
-			$this->markup_string .= '<nav class="button read-more">'."\n";
-			$this->markup_string .= '<ul><li><a href="'.$full_link.'">Read more &gt;</a></li></ul>'."\n";
-			$this->markup_string .= '</nav>'."\n";
-			$this->markup_string .= '</article>'."\n";
-			$this->markup_string .= '<nav class="button view-all">'."\n";
-			$this->markup_string .= '<ul><li><a href="/spotlightarchives">View all spotlights &gt;</a></li></ul>'."\n";
-			$this->markup_string .= '</nav>'."\n";
-			
+			if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_home'
+				|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_music')
+			{
+				$this->markup_string .= '<article class="highlight">'."\n";
+				//$this->markup_string .= $this->get_title_markup();
+				$this->markup_string .= $this->get_description_markup();
+				$this->markup_string .= $this->get_image_markup();
+				$full_link = $this->passed_vars['link_to_full_item'];
+				$full_link = preg_replace("|http(s)?:\/\/\w+\.\w+\.\w+|", "", $full_link);
+				$this->markup_string .= '<nav class="button read-more">'."\n";
+				$this->markup_string .= '<ul><li><a href="'.$full_link.'">Read more &gt;</a></li></ul>'."\n";
+				$this->markup_string .= '</nav>'."\n";
+				$this->markup_string .= '</article>'."\n";
+				$this->markup_string .= '<nav class="button view-all">'."\n";
+				$this->markup_string .= '<ul><li><a href="/spotlightarchives">View all spotlights &gt;</a></li></ul>'."\n";
+				$this->markup_string .= '</nav>'."\n";
+			}
+			else 
+			{
+				$this->markup_string .= '<article class="highlight">'."\n";
+				$this->markup_string .= $this->get_description_markup();
+				$this->markup_string .= $this->get_teaser_image_markup();
+				$full_link = $this->passed_vars['link_to_full_item'];
+				$full_link = preg_replace("|http(s)?:\/\/\w+\.\w+\.\w+|", "", $full_link);
+				$this->markup_string .= '<nav class="button read-more">'."\n";
+				$this->markup_string .= '<ul><li><a href="'.$full_link.'">Read more &gt;</a></li></ul>'."\n";
+				$this->markup_string .= '</nav>'."\n";
+				$this->markup_string .= '</article>'."\n";
+			}		
 		}
 		else
 		{
@@ -107,18 +122,28 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 		return $markup_string;
 	}
 	
-	function get_teaser_image_markup() // {{{
+	function get_teaser_image_markup()
 	{
 		$markup_string = '';
-		$image = $this->passed_vars['teaser_image'];
+		$image = $this->passed_vars['item_images'];
 		if (!empty($image))
 		{
-			$markup_string .= '<div class="teaserImage">';
-			ob_start();	
-			show_image( reset($image), true,false,false );
+			$id = reset($image)->get_value('id');
+			$imgtype = reset($image)->get_value('image_type');
+			$thumbnail_image_name = WEB_PHOTOSTOCK.$id.'_tn.'.$imgtype;
+			//$markup_string .= '<div class="teaserImage">';
+			ob_start();
+			if (get_theme($this->passed_vars['site_id'])->get_value('name') == 'luther2010')
+			{
+				echo '<figure><img src="'.$thumbnail_image_name.'" width="83"/></figure>';
+			}
+			else	
+			{
+				show_image( reset($image), true,false,false );
+			}
 			$markup_string .= ob_get_contents();
 			ob_end_clean();
-			$markup_string .= '</div>';
+			//$markup_string .= '</div>';
 		} 
 		return $markup_string;
 	}
@@ -128,7 +153,7 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 		$markup_string = '';
 		if (get_theme($this->passed_vars['site_id'])->get_value('name') == 'luther2010')
 		{
-			$item = $this->passed_vars['item'];
+			$item = $this->passed_vars['item'];				
 			if ($s = $item->get_value('description'))
 			{
 				$s = preg_replace("|\\n|", "", $s);  // remove any line breaks
@@ -154,8 +179,7 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 					$markup_string .= $match[2][1]."\n";	
 				}
 				$markup_string .= '</div>'."\n";
-			}	
-			
+			}			
 		}
 		else
 		{
