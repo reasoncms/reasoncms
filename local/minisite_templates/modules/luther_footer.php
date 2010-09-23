@@ -73,7 +73,7 @@
           		echo '<span class="country-name">USA</span></div>'."\n";
 	                echo 'Phone: 563-387-2000 or 800-4 LUTHER (<span class="tel">800-458-8437</span>)</div></div>'."\n";
 			}
-			//google_analytics();
+			google_analytics();
 		}
 	}
 ?>
