@@ -101,13 +101,42 @@ class StudentInfoForm extends FormStep
                 'student_school_name', 'student_phone', 'student_street_address', 'student_city',
                 'student_state', 'student_zip', 'student_gender');
 
+        function on_every_time()
+        {
+            $this->set_value('student_school_name', $this->controller->get('school_name'));
+        }
+
         function pre_show_form()
 	{
+            pray($_SESSION);
 		echo '<div id="dorianBandForm" class="studentForm">'."\n";
 	}
+
 	function post_show_form()
 	{
 		echo '</div>'."\n";
 	}
+
+        function post_error_check_actions()
+        {
+            $stud_count = $_SESSION['student_count'];
+            if (isset($stud_count)){
+                $stud_count = 1;
+            }else{
+                $stud_count += 1;
+                $_SESSION['student_count'] = $stud_count;
+            }
+            $session_string = 'student'.$stud_count;
+
+            echo($session_string);
+
+            foreach($this->elements as $key => $value)
+            {
+                $_SESSION[$session_string][$key] = $this->get_value($key);
+            }
+
+
+            pray($_SESSION[$session_string]);
+        }
 }
 ?>
