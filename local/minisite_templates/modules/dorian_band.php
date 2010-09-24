@@ -33,12 +33,13 @@ class DorianBandModule extends DefaultMinisiteModule
 		include_once( DISCO_INC.'controller.php' );
 		reason_include_once( 'minisite_templates/modules/dorian_band/director_info.php' );
 		reason_include_once( 'minisite_templates/modules/dorian_band/student_info.php' );
+                reason_include_once( 'minisite_templates/modules/dorian_band/confirmation.php' );
 
 		$this->controller = new FormController;
 		$this->controller->set_session_class('Session_PHP');
 		$this->controller->set_session_name('REASON_SESSION');
 		$this->controller->set_data_context('dorian_band');
-		$this->controller->show_back_button = true;
+		$this->controller->show_back_button = false;
 		$this->controller->clear_form_data_on_finish = true;
 		$this->controller->allow_arbitrary_start = false;
 		//*
@@ -50,7 +51,6 @@ class DorianBandModule extends DefaultMinisiteModule
 					),
 				),
                                 'start_step' => true,
-                                'back_button_text' => 'Back',
 				'step_decision' => array(
 					'type' => 'user',
 				),
@@ -61,10 +61,20 @@ class DorianBandModule extends DefaultMinisiteModule
                                         'StudentInfoForm' => array(
                                             'label' => 'Nominate Another Student',
                                         ),
+                                        'ConfirmationForm' => array(
+                                            'label' => 'Finish',
+                                        ),
                                 ),
-				'final_step' => true,
+                                'step_decision' => array(
+					'type' => 'user',
+				),
+                                //'back_button_text' => 'Back',
+				//'final_step' => true,
 				'final_button_text' => 'I\'m Finished Nominating Students',
 			),
+                        'ConfirmationForm' => array(
+                                'display_name' => 'Dorian Band Nomination Details',
+                        ),
 		);
 		$this->controller->add_forms( $forms );
 		// */
