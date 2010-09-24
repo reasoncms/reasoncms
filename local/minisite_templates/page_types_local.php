@@ -33,8 +33,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post' => 'content',
 		),
                 'webcams' => array(
-			'main' => 'webcams',
-			'main_post' => 'content',
+			'main' => 'content',
+                        'main_post' => 'webcams',
 		),
 		'admissions_account_signup' => array(
 			'main_post' => 'applicant_account',
