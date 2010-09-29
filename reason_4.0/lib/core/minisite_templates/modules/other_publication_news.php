@@ -41,7 +41,7 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 	
 	function init( $args = array() )
 	{
-		if (false && $this->params['cache_lifespan'] > 0)
+		if ($this->params['cache_lifespan'] > 0)
 		{
 			$news_item_cache = new ReasonObjectCache($this->get_cache_id(), $this->params['cache_lifespan']);
 			$this->news_items =& $news_item_cache->fetch();
