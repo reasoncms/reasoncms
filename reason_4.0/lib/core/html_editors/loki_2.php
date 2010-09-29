@@ -141,7 +141,7 @@ class reasonLoki2Integration extends reasonEditorIntegrationBase
 		if(!empty($site_id))
 		{
 			$paths['image_feed'] = FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('image').'&feed=images&site_id='.$site_id;
-			$paths['default_site_regexp'] = $loki_obj->js_regexp_quote('//'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('type').'&site_id='.$site_id);
+			$paths['default_site_regexp'] = $loki_obj->js_regexp_quote('//'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('type').'&site_id='.$site_id).'[$&]';
 		}
 		else
 		{
