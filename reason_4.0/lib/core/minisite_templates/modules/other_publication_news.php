@@ -41,7 +41,7 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 	
 	function init( $args = array() )
 	{
-		if ($this->params['cache_lifespan'] > 0)
+		if (false && $this->params['cache_lifespan'] > 0)
 		{
 			$news_item_cache = new ReasonObjectCache($this->get_cache_id(), $this->params['cache_lifespan']);
 			$this->news_items =& $news_item_cache->fetch();
@@ -73,12 +73,13 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 			$es = new entity_selector(); // try without site_id for now ... allows this to be used anywhere with a unique publication name
 			$es->add_type(id_of('news'));
 			$es->enable_multivalue_results();
-			$es->limit_tables(array('press_release', 'dated'));
-			$es->limit_fields(array('press_release.release_title', 'dated.datetime'));
+			$es->limit_tables(array('press_release', 'dated', 'status'));
+			$es->limit_fields(array('press_release.release_title', 'dated.datetime', 'status.status'));
 			$es->add_left_relationship($pub_id, relationship_id_of('news_to_publication'));
 			$alias = $es->add_left_relationship_field('news_to_publication', 'entity', 'id', 'pub_id');
 			$es->add_relation($alias['pub_id']['table'] . '.' . $alias['pub_id']['field'] . " != " . $pub_id);
 			$es->add_right_relationship_field('owns', 'entity', 'id', 'site_id');
+			$es->add_relation('status.status = "published"');
 			$es->set_order('dated.datetime DESC');
 			$result = $es->run_one();
 			
@@ -107,20 +108,49 @@ class OtherPublicationNewsModule extends DefaultMinisiteModule
 			trigger_error('The module needs a publication unique name or a page associated with a publication to select borrowed news items');
 			$news_items = array();
 		}
+		
+		
 		return $news_items;
+	}
+	
+	function _get_featured_news_item_ids($pub_id)
+	{
+		$es = new entity_selector(); // try without site_id for now ... allows this to be used anywhere with a unique publication name
+		$es->add_type(id_of('news'));
+		$es->limit_tables('status');
+		$es->limit_fields('status.status');
+		$es->add_right_relationship($pub_id, relationship_id_of('publication_to_featured_post'));
+		$es->add_rel_sort_field($pub_id, relationship_id_of('publication_to_featured_post'), 'featured_sort_order' );
+		$es->set_order('featured_sort_order ASC');
+		$es->add_relation('status.status = "published"');
+		return array_keys( $es->run_one() );
 	}
 	
 	function &set_order_and_limits(&$news_items)
 	{
-		$sorted_and_limited_news_items = array();
 		$index = 0;
+		$sorted_and_limited_news_items = array();
+		
+		$featured_ids = $this->_get_featured_news_item_ids($this->get_publication_id());
+		foreach( $featured_ids as $featured_id)
+		{
+			if(isset($news_items[$featured_id]))
+			{
+				$source_name = $news_items[$featured_id]->get_value('source_name');
+				$sorted_and_limited_news_items[$source_name][$featured_id] =& $news_items[$featured_id];
+				$index++;
+			}
+		}
+		
 		$ids = array_keys($news_items);
 		foreach ($ids as $k)
 		{
+			if ($this->params['max_num_to_show'] != 0 && $index > $this->params['max_num_to_show']) break;
+			if(in_array($k,$featured_ids))
+				continue;
 			$index++;
 			$source_name = $news_items[$k]->get_value('source_name');
 			$sorted_and_limited_news_items[$source_name][$k] =& $news_items[$k];
-			if ($index == $this->params['max_num_to_show']) break;
 		}
 		return $sorted_and_limited_news_items;
 	}
