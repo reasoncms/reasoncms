@@ -1564,9 +1564,15 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
                 'programstartdate','programenddate','lastupdate');
 
+        $username = '';
+        $password = '';
+        $lookup_login = 'cn='.$username.'ou=People,dc=luther,dc=edu'; /// username is get login norsekey
+        $lookup_pass = $password; /// get login password
         $dir = new directory_service('ldap_luther');
+        $dir->set_search_params('ldap_luther', array('lookup_dn' => $lookup_login, 'lookup_password' => $lookup_pass));
         $dir->search_by_filter($querystring, $attributes);
         //$dir->search_by_attribute('sn', 'burk', $attributes);
+
         $dir->sort_records(array('sn','givenname'));
         $entries = $dir->get_records();
         return $entries;
