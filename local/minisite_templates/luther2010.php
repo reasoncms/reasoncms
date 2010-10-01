@@ -538,7 +538,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		$bc = $this->_get_breadcrumbs();	
 		$sbtitle = $bc[0]["page_name"];
 		$sblink = $bc[0]["link"];
-		echo '<a class="blue" href="' . $sblink . '" id="section-sign"'."\n";
+		echo '<a class="blue" href="' . $sblink . '" id="section-sign">'."\n";
 		echo '<div><header><h2>' . $sbtitle . '</h2></header></div></a>'."\n";
 		
 	}
