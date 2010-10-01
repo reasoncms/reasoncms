@@ -54,7 +54,11 @@ if( !defined( '__INC_DAVE_MISC' ) )
 		return isset( $_REQUEST[$var] ) ? $_REQUEST[ $var ] : '';
 	} // }}}
 	
-	
+// Just to be safe ;o)
+if (!defined("ENT_COMPAT")) define("ENT_COMPAT", 2);
+if (!defined("ENT_NOQUOTES")) define("ENT_NOQUOTES", 0);
+if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
+
 if (!function_exists('html_entity_decode')) {
 
 	/**
@@ -96,10 +100,15 @@ if (!function_exists('html_entity_decode')) {
 	}
 }
 
-// Just to be safe ;o)
-if (!defined("ENT_COMPAT")) define("ENT_COMPAT", 2);
-if (!defined("ENT_NOQUOTES")) define("ENT_NOQUOTES", 0);
-if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
+if(!function_exists('htmlspecialchars_decode'))
+{
+	function htmlspecialchars_decode($string,$style=ENT_COMPAT)
+    {
+        $translation = array_flip(get_html_translation_table(HTML_SPECIALCHARS,$style));
+        if($style === ENT_QUOTES){ $translation['&#039;'] = '\''; }
+        return strtr($string,$translation);
+    }
+}
 
 	/**
 	 *	Log a line to a file
