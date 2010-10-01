@@ -124,6 +124,17 @@ class reasonAVDisplay
 		return $this->_displayer->enable_automatic_play_start();
 	}
 	/**
+	 * Sets the dimensions to be used by the class when generating markup for an video item
+	 *
+	 * @param string $width Width of the video in pixels
+	 * @param string $height Height of the video in pixels
+	 */
+	function set_video_dimensions($width, $height)
+	{
+		if(!$this->_displayer_is_set_up()) return;
+		return $this->_displayer->set_video_dimensions($width, $height);
+	}
+	/**
 	 * Sets the dimensions to be used by the class when generating markup for an audio item
 	 *
 	 * @param string $width Width of the player widget in pixels
