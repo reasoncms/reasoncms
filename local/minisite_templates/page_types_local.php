@@ -241,7 +241,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 					 ),
             ),
             'sidebar' => '',
-            'post_sidebar' => 'luther_events_mini',            
+            'post_sidebar' => 'luther_events_mini',
          ),
          'luther2010_music' => array(
 			'main' => 'content',

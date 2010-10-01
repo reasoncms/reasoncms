@@ -19,7 +19,7 @@ class miniEventsModule extends EventsModule
 	var $show_options = false;
 	var $show_navigation = false;
 	var $show_views = false;
-	var $show_calendar_grid = false;
+	var $show_calendar_grid = true;
 	var $show_months = false;
 	var $snap_to_nearest_view = false;
 	var $events_page;
@@ -57,6 +57,12 @@ class miniEventsModule extends EventsModule
 		//echo '</div>'."\n";
 		echo '</ol>'."\n";
 		
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
+		{
+			//echo '<nav id="calendar">'."\n";
+			$this->show_calendar_grid();
+			//echo '</nav>  <!-- id="calendar" -->'."\n";
+		}
 		$this->show_feed_link();
         }
 
@@ -113,6 +119,7 @@ class miniEventsModule extends EventsModule
 	{
 		foreach ($this->events_by_date[$day] as $event_id)
 		{
+			
 			$this->show_event_list_item( $event_id, $day );
 		}		
 	}
@@ -120,17 +127,25 @@ class miniEventsModule extends EventsModule
 	function show_event_list_item_standard( $event_id, $day )
 	{
 		echo '<li class="vevent">'."\n";
-		$l = $this->construct_link(array('event_id'=>$this->events[$event_id]->id(),'date'=>$day ));
-		echo '<a href="'.$l.'">'."\n";
+		if (!empty($this->events_page_url))
+		{
+			echo '<a href="'.$this->events_page_url.'?event_id='.$this->events[$event_id]->id().'&date='.$day.'">'."\n";
+		}
+			
 		echo '<div>'."\n";
 		$d = mktime(0, 0, 0, substr($day, 5, 2), substr($day, 8, 2), substr($day, 0, 4));
 		echo '<time class="dtstart" datetime="'.$day.'"><span class="month">'.date('M', $d).'</span><span class="day">'.date('d', $d).'</span></time>'."\n";
 		echo '<h1 class="summary">'.$this->events[$event_id]->get_value( 'name' ).'</h1>'."\n";
 		echo '</div>'."\n";
-		echo '</a>'."\n";
+		if (!empty($this->events_page_url))
+		{
+			echo '</a>'."\n";
+		}
 		echo '</li>'."\n";
 		
-		//print_r( $this->events[$event_id])."\n";
+		//print_r( $this->events[$event_id]->get_values())."\n";
+
+		
 
 	}
 

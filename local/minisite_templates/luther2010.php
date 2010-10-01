@@ -8,6 +8,7 @@
  * Include the base template so we can extend it
  */
 reason_include_once( 'minisite_templates/default.php' );
+reason_include_once( 'minisite_templates/nav_classes/no_root.php' ); 
 
 /**
  * Register this new template with Reason
@@ -21,6 +22,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 	var $doctype = '<!DOCTYPE html>';
 	public $luther_add_this_complete = false;
 	var $include_modules_css = false;
+	var $nav_class = 'NoRootNavigation'; 
+	
 
 	function start_page() 
 	{
@@ -117,6 +120,9 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 
 		echo '<div class="content content-secondary">'."\n";
+		
+		// Section
+		$this->section();
 		
 		// Navigation area
 		echo '<nav id="nav-section" role="navigation">'."\n";
@@ -519,7 +525,23 @@ class LutherTemplate2010 extends MinisiteTemplate
      	$this->luther_add_this();
      	
      	echo '</div> <!-- class="content content-primary" -->'."\n";
-	}	
+	}
+
+	function section()
+	// section link with styling at top of left navigation column
+	{		
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
+		{
+			return;
+		}
+		
+		$bc = $this->_get_breadcrumbs();	
+		$sbtitle = $bc[0]["page_name"];
+		$sblink = $bc[0]["link"];
+		echo '<a class="blue" href="' . $sblink . '" id="section-sign"'."\n";
+		echo '<div><header><h2>' . $sbtitle . '</h2></header></div></a>'."\n";
+		
+	}
 
 }
 
