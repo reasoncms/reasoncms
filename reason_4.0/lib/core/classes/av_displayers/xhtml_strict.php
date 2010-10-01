@@ -70,7 +70,6 @@ class xhtmlStrictReasonAVDisplay
 										'ShowDisplay'=>'false',
 										),
 							'flv'=>array(
-										'wmode'=>'transparent',
 										'autostart'=>'true',
 										),
 							'swf'=>array(
@@ -86,6 +85,14 @@ class xhtmlStrictReasonAVDisplay
 	 */	
 	var $audio_dimensions = array('width'=>'300','height'=>'0');
 	var $default_video_dimensions = array('width'=>'360','height'=>'240');
+	/**
+	 * Video dimensions to override those on the entity
+	 *
+	 * Set via set_video_dimensions()
+	 *
+	 * @var array 'width'=>$width_in_pixels,'height'=>$height_in_pixels
+	 */
+	var $video_dimensions;
 	
 	/**
 	 * Maps the format specified in the entity's media_format field to a string used to display browser requirements and (where needed) tech credits
@@ -95,7 +102,7 @@ class xhtmlStrictReasonAVDisplay
 	var $formats_to_tech_notes = array(
 										'Quicktime'=>'Not seeing the file? <a href="http://www.apple.com/quicktime/download/">Get Quicktime player.</a>',
 										'Real'=>'Not seeing the file? <a href="http://www.real.com/player/">Get Realplayer.</a>',
-										'MP3'=>'Not seeing the file? <a href="http://www.apple.com/quicktime/download/">Get Quicktime player.</a>',
+										'MP3'=>'Not seeing the file? <a href="http://www.macromedia.com/go/getflashplayer">Get Flash.</a> Flash video player by <a href="http://www.jeroenwijering.com/" title="Jeroen Wijering\'s website">Jeroen Wijering</a>',
 										'Windows Media'=>'Not seeing the file? <a href="http://microsoft.com/windows/mediaplayer/en/download/">Get Windows Media Player.</a>',
 										'Flash Video'=>'Not seeing the file? <a href="http://www.macromedia.com/go/getflashplayer">Get Flash.</a> Flash video player by <a href="http://www.jeroenwijering.com/" title="Jeroen Wijering\'s website">Jeroen Wijering</a>',
 										'Flash'=>'Not seeing the file? <a href="http://www.macromedia.com/go/getflashplayer">Get Flash.</a>',
@@ -132,6 +139,25 @@ class xhtmlStrictReasonAVDisplay
 		$this->set_parameter( 'real', 'autostart', 'true' );
 		$this->set_parameter( 'wmv', 'autostart', 'true' );
 		$this->set_parameter( 'flv', 'autostart', 'true' );
+	}
+	/**
+	 * Sets the dimensions to be used by the class when generating markup for a video item
+	 *
+	 * @param string $width Width of the video in pixels
+	 * @param string $height Height of the video in pixels
+	 */
+	function set_video_dimensions($width, $height)
+	{
+		if(!is_array($this->video_dimensions))
+			$this->video_dimensions = array();
+		if(!empty($width))
+		{
+			$this->video_dimensions['width'] = $width;
+		}
+		if(!empty($height))
+		{
+			$this->video_dimensions['height'] = $height;
+		}
 	}
 	/**
 	 * Sets the dimensions to be used by the class when generating markup for an audio item
@@ -338,10 +364,20 @@ class xhtmlStrictReasonAVDisplay
 		$ret = array();
 		$dimensions_attrs = '';
 		$dimensions = $this->get_dimensions($entity);
-		$dimensions['height'] = $dimensions['height'] + 20;
+		if(isset($this->parameters['flv']['controlbar']))
+		{
+			if(is_numeric($this->parameters['flv']['controlbar']))
+				$dimensions['height'] = $dimensions['height'] + $this->parameters['flv']['controlbar'];
+		}
+		else
+		{
+			$dimensions['height'] = $dimensions['height'] + 20;
+		}
 		$dimensions_attrs = 'width="'.$dimensions['width'].'" height="'.$dimensions['height'].'"';
 		
 		$url = REASON_FLASH_VIDEO_PLAYER_URI.'?file='.$entity->get_value('url').'&amp;autostart='.$this->parameters['flv']['autostart'];
+		if(isset($this->parameters['flv']['controlbar']))
+			$url .= '&amp;controlbar='.$this->parameters['flv']['controlbar'];
 		
 		$ret[] = '<object type="application/x-shockwave-flash" data="'.$url.'" '.$dimensions_attrs.' id="flashVideoWidget'.$entity->id().'">';
 		$ret[] = '<param name="movie" value="'.$url.'" />';
@@ -401,16 +437,27 @@ class xhtmlStrictReasonAVDisplay
 	 */
 	function get_dimensions($entity)
 	{
+		$ret = array();
+		
 		if($entity->get_value('av_type') == 'Audio')
 		{
 			$ret = $this->audio_dimensions;
 		}
-		else // Video
+		else // Video, etc.
 		{
-			$ret = array(
-				'height'=>$entity->get_value('height') ? $entity->get_value('height') : $this->default_video_dimensions['height'],
-				'width'=>$entity->get_value('width') ? $entity->get_value('width') : $this->default_video_dimensions['width'],
-			);
+			if(!empty($this->video_dimensions['height']))
+				$ret['height'] = $this->video_dimensions['height'];
+			elseif($entity->get_value('height'))
+				$ret['height'] = $entity->get_value('height');
+			else
+				$ret['height'] = $this->default_video_dimensions['height'];
+				
+			if(!empty($this->video_dimensions['width']))
+				$ret['width'] = $this->video_dimensions['width'];
+			elseif($entity->get_value('width'))
+				$ret['width'] = $entity->get_value('width');
+			else
+				$ret['width'] = $this->default_video_dimensions['width'];
 		}
 		return $ret;
 	}
