@@ -117,7 +117,7 @@
 			{
 				// Search engines should not be indexing versions of the index page with specific destinations
 				$head_items->add_head_item('meta', array('name'=>'robots','content'=>'none'));
-				$this->dest_page = urldecode($this->request['dest_page']);
+				$this->dest_page = urldecode($this->request['dest_page']); //why are we urldecoding here? PHP should handle it for us; this seems to force a double url decode, which could cause problems
 			}
 			if ( !empty($this->request ['redir_link_text']))
 			{
@@ -143,7 +143,8 @@
 						$parts = parse_url( $this->dest_page );
 						$port = (isset($parts['port']) && !empty($parts['port'])) ? ":".$parts['port'] : '';
 						$query = (isset($parts['query']) && !empty($parts['query'])) ? '?'.$parts['query'] : '';
-						$loc = 'http://'.$parts['host'].$port.$parts['path'].$query;
+						$fragment = (isset($parts['fragment']) ? '#' . $parts['fragment'] : '');
+						$loc = 'http://'.$parts['host'].$port.$parts['path'].$query.$fragment;
 						header( 'Location: '.$loc);
 						exit;
 					}
@@ -195,7 +196,8 @@
 								$parts = parse_url( $this->dest_page );
 								$port = (isset($parts['port']) && !empty($parts['port'])) ? ":".$parts['port'] : '';
 								$query = (isset($parts['query']) && !empty($parts['query'])) ? '?'.$parts['query'] : '';
-								$loc = securest_available_protocol() . '://'.$parts['host'].$port.$parts['path'].$query;
+								$fragment = (isset($parts['fragment']) ? '#' . $parts['fragment'] : '');
+								$loc = securest_available_protocol() . '://'.$parts['host'].$port.$parts['path'].$query.$fragment;
 								header( 'Location: '.$loc);
 								exit;
 							}
@@ -357,7 +359,8 @@
 				$parts = parse_url( $this->dest_page );
 				$port = (isset($parts['port']) && !empty($parts['port'])) ? ":".$parts['port'] : '';
 				$query = (isset($parts['query']) && !empty($parts['query'])) ? '?'.$parts['query'] : '';
-				return securest_available_protocol() . '://'.$current_parts['host'].$port.$parts['path'].$query;
+				$fragment = (isset($parts['fragment']) ? '#' . $parts['fragment'] : '');
+				return securest_available_protocol() . '://'.$current_parts['host'].$port.$parts['path'].$query.$fragment;
 			}
 		}
 		
