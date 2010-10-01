@@ -107,6 +107,7 @@ class PublicationModule extends Generic3Module
 	var $_unauthorized_message = NULL;
 	var $_items_by_section = array(); // a place to cache items organized by section
 	var $_blurbs_by_issue; // a place to cache blurbs organized by issue
+	var $_comment_group_helper; // The helper for the publication's comment group
 		
 	/** 
 	* Stores the default class names and file names of the markup generator classes used by the module.  
@@ -1834,16 +1835,22 @@ class PublicationModule extends Generic3Module
 		*  Returns the group helper object for the group of users who can comment in this publication.
 		*  @return object The group helper for users who can comment in this publication.
 		*/
-		function get_comment_group_helper()
+		function &get_comment_group_helper()
 		{
-			$group = $this->get_comment_group();
-			if (!empty($group))
+			if(!isset($this->_comment_group_helper))
 			{
-				$comment_group_helper = new group_helper();
-				$comment_group_helper->set_group_by_entity($group);
-				return $comment_group_helper;
+				$group = $this->get_comment_group();
+				if (!empty($group))
+				{
+					$this->_comment_group_helper = new group_helper();
+					$this->_comment_group_helper->set_group_by_entity($group);
+				}
+				else
+				{
+					$this->_comment_group_helper = false;
+				}
 			}
-			return false;
+			return $this->_comment_group_helper;
 		}
 		
 		/**
@@ -2467,7 +2474,7 @@ class PublicationModule extends Generic3Module
 		}
 		function get_commentability_status_full_check($item)
 		{
-			$group_helper = $this->get_comment_group_helper();
+			$group_helper = &$this->get_comment_group_helper();
 			
 			if(!$group_helper->group_has_members())
 			{
