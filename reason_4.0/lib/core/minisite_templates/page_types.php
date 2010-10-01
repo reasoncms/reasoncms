@@ -772,6 +772,20 @@
 			'main_post'=>'content',
 			'sidebar' => '',
 		),
+		'gallery_chronological' => array(
+			'main_post' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'dated.datetime ASC, entity.id ASC',
+			),
+			'sidebar' => '',
+		),
+		'gallery_reverse_chronological' => array(
+			'main_post' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'dated.datetime DESC, entity.id DESC',
+			),
+			'sidebar' => '',
+		),
 		'gallery_entire_site' => array(
 			'main_post' => array(
 				'module' => 'gallery2',
