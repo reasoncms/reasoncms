@@ -137,5 +137,22 @@
 			echo "</div id=\"gallery\">\n";
 
 		}
+		
+		function has_content()
+		{
+			$site_id = $this->site_id;
+			$es = new entity_selector( $site_id );
+			$es->add_type( id_of( 'flickr_slideshow_type' ) );
+			$es->add_right_relationship($this->cur_page->id(), relationship_id_of('page_to_flickr_slideshow'));
+			$es->add_rel_sort_field($this->cur_page->id(), relationship_id_of('page_to_flickr_slideshow'));
+			$es->set_order('rel_sort_order'); 
+			$posts = $es->run_one();
+			if (count($posts) > 0)
+			{
+				return true;
+			}
+			return false;
+		}
+		
 	}
 ?>
