@@ -356,7 +356,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 				break;
 			case 'open_comments':
 			case 'user_has_permission':
-				$ret .= '<h4>Add a comment</h4>'."\n";
+				$ret .= '<a name="addComment"></a><h4>Add a comment</h4>'."\n";
 				$ret .= $this->passed_vars['comment_form_markup'];
 				break;
 			default:
