@@ -8,6 +8,7 @@
 /**
  * include the URL utils and parent class
  */
+include_once('reason_header.php');
 reason_include_once( 'function_libraries/url_utils.php' );
 reason_include_once( 'classes/av_displayers/xhtml_strict.php' );
 
@@ -178,10 +179,20 @@ class classicReasonAVDisplay extends xhtmlStrictReasonAVDisplay
 		$ret = array();
 		$dimensions_attrs = '';
 		$dimensions = $this->get_dimensions($entity);
-		$dimensions['height'] = $dimensions['height'] + 20;
+		if(isset($this->parameters['flv']['controlbar']))
+		{
+			if(is_numeric($this->parameters['flv']['controlbar']))
+				$dimensions['height'] = $dimensions['height'] + $this->parameters['flv']['controlbar'];
+		}
+		else
+		{
+			$dimensions['height'] = $dimensions['height'] + 20;
+		}
 		$dimensions_attrs = 'width="'.$dimensions['width'].'" height="'.$dimensions['height'].'"';
 		
 		$url = REASON_FLASH_VIDEO_PLAYER_URI.'?file='.$entity->get_value('url').'&amp;autostart='.$this->parameters['flv']['autostart'];
+		if(isset($this->parameters['flv']['controlbar']))
+			$url .= '&amp;controlbar='.$this->parameters['flv']['controlbar'];
 		
 		$ret[] = '<object id="flashVideoWidget'.$entity->id().'" '.$dimensions_attrs.' classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" type="application/x-shockwave-flash" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab">';
 		$ret[] = '<param name="movie" value="'.$url.'" />';
