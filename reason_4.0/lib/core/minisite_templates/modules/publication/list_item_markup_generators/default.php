@@ -30,6 +30,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 									//'section_links', you can turn this on if show_section_name is true
 									'teaser_image',
 									'current_issue',
+								  	'commenting_status',
 									);
 									
 	//methods to run, in the order that they should be run.  This should be moved up to the higher level. 
@@ -148,8 +149,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string .= $this->get_more_link_markup();
 		if(!empty($this->passed_vars['permalink']))
 			$markup_string .= $this->get_permalink_markup();
-		if(!empty($this->passed_vars['item_comment_count']))
-			$markup_string .= $this->get_comment_link_markup();
+		$markup_string .= $this->get_comment_link_markup();
 		$markup_string .= '</ul>'."\n";
 		return $markup_string;
 	}
@@ -192,25 +192,39 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 	function get_comment_link_markup()
 	{
 		$item = $this->passed_vars['item'];
-		if(isset($this->passed_vars['item_comment_count']) && !empty($this->passed_vars['item_comment_count']))
+		$comment_count = isset($this->passed_vars['item_comment_count']) ? $this->passed_vars['item_comment_count'] : 0;
+		/* we've changed this so that the link to the comments only shows up if there actually are comments.  Previously, it would have a link to take you to the form to add
+		  a comment if there weren't any comments yet.  This would be very silly if commenting was disabled for the post or the blog, and annoying if it made you log in only 
+		  to tell you that YOU weren't allowed to comment.  So now, if there aren't any comments, you'll just have to go to the full article to be able to comment on it. */
+		$link_to_item = $this->passed_vars['link_to_full_item'];
+		if($comment_count > 0)
 		{
-			$comment_count = $this->passed_vars['item_comment_count'];
-			/* we've changed this so that the link to the comments only shows up if there actually are comments.  Previously, it would have a link to take you to the form to add
-			  a comment if there weren't any comments yet.  This would be very silly if commenting was disabled for the post or the blog, and annoying if it made you log in only 
-			  to tell you that YOU weren't allowed to comment.  So now, if there aren't any comments, you'll just have to go to the full article to be able to comment on it. */
-			if($comment_count > 0)
-			{
-				$markup_string = '';
-				$markup_string .= '<li class="comments">';
-				$view_comments_text = 'View comments ('.$comment_count.')';
-				$link_to_item = $this->passed_vars['link_to_full_item'];
-				$markup_string .= '<a href="'.$link_to_item.'#comments">'.$view_comments_text.'</a>';
-				$markup_string .= '</li>'."\n";	
-				return $markup_string;
-			}
+			$markup_string = '<li class="comments">';
+			$view_comments_text = 'View comments ('.$comment_count.')';
+			$link_to_item = $this->passed_vars['link_to_full_item'];
+			$markup_string .= '<a href="'.$link_to_item.'#comments">'.$view_comments_text.'</a>';
+			$markup_string .= '</li>'."\n";
 		}
 		else
-			trigger_error('Could not generate comment link markup; index '.$item->id().' is empty or undefined', WARNING);
+		{
+			switch($this->passed_vars['commenting_status'])
+			{
+				case 'login_required':
+					$markup_string = '<li class="comments noComments">';
+					$markup_string .= '<a href="'.REASON_LOGIN_URL.'?dest_page='.urlencode(carl_make_link( array(), '', '', false, false).htmlspecialchars_decode($link_to_item).'#addComment').'">Leave a comment (Login required)</a>';
+					$markup_string .= '</li>'."\n";
+					break;
+				case 'open_comments':
+				case 'user_has_permission':
+					$markup_string = '<li class="comments noComments">';
+					$markup_string .= '<a href="'.$link_to_item.'#addComment">Leave a comment</a>';
+					$markup_string .= '</li>'."\n";
+					break;
+				default:
+					$markup_string = '';
+			}
+		}
+		return $markup_string;
 	}
 
 }
