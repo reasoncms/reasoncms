@@ -34,7 +34,11 @@
 			echo "<div id=\"gallery\">\n";
 			echo "<div class=\"gallery-info\">\n";
 			echo "<div id=\"gallerycontainer\">\n";
-			echo "<hr>\n";
+			if ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
+					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni')
+			{
+				echo "<hr>\n";
+			}
 			$slideshowGroup = 0;
 			$number_slideshows = count($posts);
 			foreach( $posts AS $post )
@@ -56,7 +60,8 @@
 				//	echo "farm: " . $pinfo['farm'] . "<br />";
 				//	//print_r($pinfo);
 				//}
-				if ($number_slideshows == 1)
+				if ($number_slideshows == 1 && $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
+					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni')
 				{
 					echo "<h3>" . $post->get_value('name') . "</h3>" . "\n";
 				}

@@ -47,6 +47,14 @@ class miniEventsModule extends EventsModule
 	}
 	function run()
 	{
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+		{
+			echo '<section class="events" role="group">'."\n";
+			echo '<header class="blue-stripe"><h1><span>Browse Events</span></h1></header>'."\n";
+			$this->show_calendar_grid();
+			echo '<header class="blue-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
+		}
+		
 		echo '<ol class="hfeed">'."\n";
 	
 		//echo '<div id="'.$this->div_id.'">'."\n";
@@ -56,6 +64,11 @@ class miniEventsModule extends EventsModule
 			$this->show_event();
 		//echo '</div>'."\n";
 		echo '</ol>'."\n";
+		
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+		{
+			echo '</section> <!-- class="events" role="group" -->'."\n";
+		}
 		
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 		{

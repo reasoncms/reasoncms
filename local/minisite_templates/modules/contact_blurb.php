@@ -19,11 +19,7 @@
 					echo '</div>'."\n";
 				}
 			}
-			$theme = get_theme($this->site_id);
-			if ($theme->get_value( 'name' ) != 'luther2010')
-			{
-				echo '</div>'."\n";
-			}
+			// echo '</div>'."\n";
 		} 
 	}
 ?>

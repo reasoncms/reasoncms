@@ -204,9 +204,12 @@ class LutherTemplate2010 extends MinisiteTemplate
 			echo '</aside>'."\n";
 		}
 		
-		if ($this->has_content( 'twitter_sub_nav' ) && $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni' && $this->has_content( 'flickr_slideshow' ))
 		{
-			$this->run_section( 'twitter_sub_nav' );
+			echo '<aside class="gallery group">'."\n";
+			echo '<header class="blue-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";			
+			$this->run_section( 'flickr_slideshow' );
+			echo '</aside> <!-- class="gallery group" -->'."\n";
 		}
 		
 		if ($this->has_content( 'sidebar' ))
@@ -215,21 +218,27 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$this->run_section( 'sidebar' );
 			echo '</div>'."\n";
 		}
+		
+		if ($this->has_content( 'twitter_sub_nav' ) && ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'))
+		{
+			$this->run_section( 'twitter_sub_nav' );
+		}
 				
-		if ($this->has_content( 'post_sidebar' ) && $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
+		if ($this->has_content( 'post_sidebar' ) //&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music')
 		{
 			echo '<div id="postSidebar">'."\n";
 			$this->run_section( 'post_sidebar' );
 			echo '</div>'."\n";
 		}
-		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
-		{
-			echo '<section class="events" role="group">'."\n";
-			echo '<header class="blue-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
-			$this->run_section( 'post_sidebar');
-			echo '</section> <!-- class="events" role="group" -->'."\n";
-		}
+		//elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+		//{
+		//	echo '<section class="events" role="group">'."\n";
+		//	echo '<header class="blue-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
+		//	$this->run_section( 'post_sidebar');
+		//	echo '</section> <!-- class="events" role="group" -->'."\n";
+		//}
 		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music' && $this->has_content( 'flickr_slideshow' ))
 		{
 			echo '<aside class="gallery group">'."\n";
@@ -334,7 +343,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$this->run_section( 'content_blurb' );
 		}
 
-		if ($this->has_content( 'flickr_slideshow' ))
+		if ($this->has_content( 'flickr_slideshow' ) && $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni')
 		{
 			$this->run_section( 'flickr_slideshow' );
 		}
@@ -342,11 +351,6 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if ($this->has_content( 'norse_calendar' ))
 		{
 			$this->run_section( 'norse_calendar' );
-		}
-		
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
-		{
-			echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";
 		}
 		
 		echo '</div> <!-- class="content content-primary" -->'."\n";        
@@ -395,19 +399,27 @@ class LutherTemplate2010 extends MinisiteTemplate
 		
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
 		{
-			return '<body id="home" class="style-00">'."\n";
+			return '<body id="home" class="style-home-00">'."\n";
 		}
 		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 		{
-			return '<body class="style-home-01 main " id="home">'."\n";
+			return '<body id="home" class="style-home-01" >'."\n";
 		}
-		elseif (count($bc) <= 2 /*&& $this->admissions_has_related_or_timeline()*/)  // section
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
 		{
-			return '<body id="home" class="style-home-01 main">'."\n";
+			return '<body id="home" class="style-home-02" >'."\n";
 		}
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'events')
+		{
+			return '<body class="style-one-column" >'."\n";
+		}
+		//elseif (count($bc) <= 2 /*&& $this->admissions_has_related_or_timeline()*/)  // section
+		//{
+		//	return '<body id="home" class="style-home-01">'."\n";
+		//}
 		else
 		{
-			return '<body class="style-one-column-narrow ">'."\n";
+			return '<body class="style-two-columns">'."\n";
 		}
     }
 
