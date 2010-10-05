@@ -21,12 +21,12 @@ class CafCamModule extends DefaultMinisiteModule {
 function refreshIt() {
    if (!document.images) return;
    document.images['cafcam'].src = 'http://webcam.luther.edu/cafcam/image-hq.jpg?' + Math.random();
-   setTimeout('refreshIt()',10000); // refresh every 5 secs
+   setTimeout('refreshIt()',2000); // refresh every 2 secs
 }
 </script>
 </head>
 
-<body onLoad=" setTimeout('refreshIt()',10000)">
+<body onLoad=" setTimeout('refreshIt()',2000)">
 <p style="margin-top: 0;padding-top: 0;"><i>(image refreshes automatically)</i></p>
 <img style="width:100%;" src="http://webcam.luther.edu/cafcam/image-hq.jpg" name="cafcam">
 
