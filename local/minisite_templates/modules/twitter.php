@@ -29,8 +29,16 @@
 			$site_id = $this->site_id;
 			$theme = get_theme($this->site_id);
 			
+			//$es = new entity_selector( $site_id );
+			//$es->add_type( id_of( 'twitter_feed_type' ) );
+			//$twitter_info = $es->run_one();
+			
+			$site_id = $this->site_id;
 			$es = new entity_selector( $site_id );
 			$es->add_type( id_of( 'twitter_feed_type' ) );
+			$es->add_right_relationship($this->cur_page->id(), relationship_id_of('page_to_twitter_feed'));
+			$es->add_rel_sort_field($this->cur_page->id(), relationship_id_of('page_to_twitter_feed'));
+			$es->set_order('rel_sort_order'); 
 			$twitter_info = $es->run_one();
 
 			foreach ($twitter_info as $info)
@@ -109,5 +117,6 @@
 				}
 			}
 		}
+		
 	}
 ?>

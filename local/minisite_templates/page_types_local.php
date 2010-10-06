@@ -265,7 +265,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 					 ),
             ),
 			'imagetop' => 'luther_carousel',
-            'pre_sidebar' => 'blurb',
+            'pre_sidebar' => 'main_blurb',
             'sidebar' => '',
             'post_sidebar' => '',            
          ),
