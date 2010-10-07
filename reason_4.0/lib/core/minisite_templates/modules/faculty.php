@@ -227,7 +227,7 @@
 				if(!empty($people))
 				{
 					if(!empty($this->heads))
-						echo '<h3 class="facStaffHead">'.ucwords($this->affiliations[$affiliation]).'</h3>'."\n";
+						echo '<h3 class="facStaffHead"><a name="'.preg_replace('/\s+/','_', $affiliation).'">'.ucwords($this->affiliations[$affiliation]).'</a></h3>'."\n";
 					$this->list_people( $people );
 				}
 			}
