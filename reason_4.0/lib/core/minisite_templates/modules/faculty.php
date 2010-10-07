@@ -194,9 +194,7 @@
 					{
 						$directory_aff = $this->reason_netids[ $person[ 'ds_username' ][0] ]->get_value( 'affiliation' );	
 					}
-					elseif(isset($person[ 'ds_affiliation' ]))
-						$directory_aff = $person[ 'ds_affiliation' ][0];
-					else
+					elseif(!($directory_aff = $this->get_affiliation($person)))
 						$directory_aff = 'other';
 					
 					if (($this->affiliation_from_directory[$person['ds_username'][0]] == false) && 
@@ -308,6 +306,18 @@
 				}
 			}
 			return $person;
+		} // }}}
+		/**
+		* Allows extending code to determine affiliations in ways beyond returning the raw directory data
+		* @return mixed affiliation or false
+		*/
+		function get_affiliation( $person ) // {{{
+		{
+			if (!empty( $person['ds_affiliation'] ))
+			{
+				return $person['ds_affiliation'][0];
+			}
+			return false;
 		} // }}}
 		function show_image( $person ) // {{{
 		{
