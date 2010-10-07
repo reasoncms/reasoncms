@@ -477,6 +477,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 
 		echo '<div class="container-carousel-and-attribute">'."\n";
 		$this->run_section( 'navigation');
+		$this->run_section( 'sub_nav');
 		echo '</div> <!-- class="container-carousel-and-attribute" -->'."\n";         
 
 		

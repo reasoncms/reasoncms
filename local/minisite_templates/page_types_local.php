@@ -195,10 +195,11 @@ $GLOBALS['_reason_page_types_local'] = array(
             'main_head' => '',
             'main'=>'',
 			'navigation' => 'luther_carousel',
+			'sub_nav' => 'luther_image_quote',
 	    	'banner_xtra' => 'nav_search_logo',
 			//'pre_sidebar' => 'events',
 			'pre_sidebar' => 'luther_events_mini',
-            'sidebar'=>array( // News  
+            'sidebar'=> array( // News  
             	'module' => 'luther_other_publication_news',
 				'max_num_to_show' => 3,
 				),
