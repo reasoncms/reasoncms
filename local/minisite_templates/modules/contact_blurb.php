@@ -8,13 +8,17 @@
 		function run()
 		{
 			$i = 0;
+			$theme = get_theme($this->site_id);
 			foreach( $this->blurbs as $blurb )
 			{
 				$i++;
 	
 				if (preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name'))){
 					echo '<div class="contact-info">'."\n";
+				if ($theme->get_value( 'name' ) != 'admissions')
+				{
 					echo '<h2>Contact Information</h2>'."\n";
+				}
 					echo $blurb->get_value('content');
 					echo '</div>'."\n";
 				}
