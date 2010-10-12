@@ -36,6 +36,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main' => 'content',
                         'main_post' => 'webcams',
 		),
+                'caf_cam' => array(
+			'main' => 'content',
+                        'main_post' => 'caf_cam',
+		),
 		'admissions_account_signup' => array(
 			'main_post' => 'applicant_account',
 		),
@@ -227,8 +231,33 @@ $GLOBALS['_reason_page_types_local'] = array(
 			),
             'pre_sidebar' => array( // Spotlights
             	'module' => 'publication',
-				'related_publication_unique_names' => array( 'spotlight_archives' ),
-				//'related_publication_unique_names' => array( 'spotlights_alumni' ),
+				//'related_publication_unique_names' => array( 'spotlight_archives' ),
+				'related_publication_unique_names' => array( 'spotlights_alumni' ),
+				'related_mode' => 'true',
+				'related_title' => '',
+				'related_order' => 'random',
+				'max_num_items' => 1,
+				'markup_generator_info' =>
+				   array(
+				     'list_item' =>
+				 	array (
+					  'classname' => 'SpotlightListItemMarkupGenerator',
+				          'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+					      ),
+					 ),
+            ),
+            'sidebar' => '',
+            'post_sidebar' => 'luther_events_mini',
+         ),
+         'luther2010_giving' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+			),
+            'pre_sidebar' => array( // Spotlights
+            	'module' => 'publication',
+				//'related_publication_unique_names' => array( 'spotlight_archives' ),
+				'related_publication_unique_names' => array( 'spotlights_giving' ),
 				'related_mode' => 'true',
 				'related_title' => '',
 				'related_order' => 'random',
@@ -250,8 +279,8 @@ $GLOBALS['_reason_page_types_local'] = array(
          	'main_post' => 'luther_events_mini',
 			'content_blurb' => array( // Spotlights
             	'module' => 'publication',
-				'related_publication_unique_names' => array( 'spotlight_archives' ),
-         		//'related_publication_unique_names' => array( 'spotlight_music' ),
+			//	'related_publication_unique_names' => array( 'spotlight_archives' ),
+         		'related_publication_unique_names' => array( 'spotlights_music' ),
 				'related_mode' => 'true',
 				'related_title' => '',
 				'related_order' => 'random',
