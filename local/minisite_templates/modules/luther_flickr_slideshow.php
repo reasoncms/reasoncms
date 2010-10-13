@@ -51,7 +51,7 @@
 				{
 				$f = new phpFlickr($flickr_account[$post->get_value('flickr_username')][0], $flickr_account[$post->get_value('flickr_username')][1]);
 				// 30 day cache expiration
-				//$f->enableCache("fs", "/var/www/phpFlickrCache", 2580000); 
+				$f->enableCache("fs", "/var/www/phpFlickrCache", 2580000); 
 				$photos = $f->photosets_getPhotos($post->get_value('flickr_photoset_id'));
 				//foreach ((array)$photos['photoset']['photo'] as $photo)
 				//{
