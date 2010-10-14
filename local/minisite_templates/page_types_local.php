@@ -229,6 +229,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				'module'=>'children',
 				'provide_images' => true,
 			),
+			'imagetop' => 'luther_carousel',
             'pre_sidebar' => array( // Spotlights
             	'module' => 'publication',
 				//'related_publication_unique_names' => array( 'spotlight_archives' ),

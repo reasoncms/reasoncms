@@ -302,6 +302,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$this->music_main_content();
 			return;
 		}
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+		{
+			$this->alumni_main_content();
+			return;
+		}
 
 		echo '<div class="content content-primary">'."\n";
 		
@@ -406,11 +411,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 		{
 			return '<body id="home" class="style-home-00">'."\n";
 		}
-		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music' || $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
 		{
 			return '<body id="home" class="style-home-01" >'."\n";
 		}
-		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni' || $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving')
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving')
 		{
 			return '<body id="home" class="style-home-02" >'."\n";
 		}
@@ -430,7 +435,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 
 	function has_related_section()
 	{
-        if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home' || $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
+        if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home' || $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
+        	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
 		{
 			return true;
 		}
@@ -539,6 +545,48 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$this->run_section( 'content_blurb' );
 		}
      	echo '</section> <!-- class="spotlight" role="group" -->'."\n";
+     	
+     	$this->luther_add_this();
+     	
+     	echo '</div> <!-- class="content content-primary" -->'."\n";
+	}
+	
+	function alumni_main_content()
+	// contains carousel, title, breadcrumbs, add-this, and main content on the alumni site
+	{
+		$this->run_section( 'imagetop' );
+		
+		echo '<div class="content content-primary">'."\n";
+		
+		$this->luther_breadcrumbs();
+		
+		// page title
+		if ($this->has_content( 'main_head' ))
+		{			
+			$this->run_section( 'main_head' );			
+		}
+		
+		if ($this->has_content( 'main' ))
+		{
+			echo '<div class="contentMain">'."\n";
+			
+			$this->run_section( 'main' );
+			echo '</div>'."\n";
+		}
+		
+
+		if ($this->has_content( 'main_post' ))
+		{
+			echo '<div class="contentPost">'."\n";
+
+			$this->run_section( 'main_post' );
+			echo '</div>'."\n";
+		}
+	
+		if ($this->has_content( 'content_blurb' ))
+		{
+			$this->run_section( 'content_blurb' );
+		}
      	
      	$this->luther_add_this();
      	
