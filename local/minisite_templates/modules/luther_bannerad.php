@@ -58,7 +58,7 @@
 					}
 					$i++;
 				}
-				if ($theme->get_value( 'name' ) == 'luther2010' && $i >= 4)
+				if ($theme->get_value( 'name' ) == 'luther2010' && $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home' && $i >= 4)
 				{
 					break;
 				} 
