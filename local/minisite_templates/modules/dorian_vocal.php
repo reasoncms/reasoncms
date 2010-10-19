@@ -33,12 +33,13 @@ class DorianVocalModule extends DefaultMinisiteModule
 		include_once( DISCO_INC.'controller.php' );
 		reason_include_once( 'minisite_templates/modules/dorian_vocal/director_info.php' );
 		reason_include_once( 'minisite_templates/modules/dorian_vocal/student_info.php' );
-
+		reason_include_once( 'minisite_templates/modules/dorian_vocal/confirmation.php' );
+		
 		$this->controller = new FormController;
 		$this->controller->set_session_class('Session_PHP');
 		$this->controller->set_session_name('REASON_SESSION');
 		$this->controller->set_data_context('dorian_vocal');
-		$this->controller->show_back_button = true;
+		$this->controller->show_back_button = false;
 		$this->controller->clear_form_data_on_finish = true;
 		$this->controller->allow_arbitrary_start = false;
 		//*
@@ -61,13 +62,20 @@ class DorianVocalModule extends DefaultMinisiteModule
                                         'StudentInfoForm' => array(
                                             'label' => 'Nominate Another Student',
                                         ),
+                                        'ConfirmationForm' => array(
+											'label' => 'I\'m Finished Nominating Students',
+										),
                                 ),
                                 'step_decision' => array(
 					'type' => 'user',
 				),
                                 'back_button_text' => 'Back',
 				//'final_step' => true,
-				'final_button_text' => 'I\'m Finished Nominating Students',
+				//'final_button_text' => 'I\'m Finished Nominating Students',
+			),
+			'ConfirmationForm' => array(
+				//'final_step' => true,
+				'display_name' => 'Dorian Vocal Nomination Details',
 			),
 		);
 		$this->controller->add_forms( $forms );
