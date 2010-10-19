@@ -304,7 +304,7 @@
 					 ),
 				'max_num_items' => 4,
 			),
-			'main_post' => 'show_children',
+			'main_post' => 'children',
 		),
         
 		'blurb' => array(
