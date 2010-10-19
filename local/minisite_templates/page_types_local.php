@@ -225,10 +225,12 @@ $GLOBALS['_reason_page_types_local'] = array(
             ),
          ),
          'luther2010_alumni' => array(
-			'main_post' => array(
-				'module'=>'children',
-				'provide_images' => true,
-			),
+			'main' => 'content',
+			'main_post' => 'luther_events_mini',
+			//'main_post' => array(
+		//		'module'=>'children',
+		//		'provide_images' => true,
+		//	),
 			'imagetop' => 'luther_carousel',
             'pre_sidebar' => array( // Spotlights
             	'module' => 'publication',
@@ -248,13 +250,18 @@ $GLOBALS['_reason_page_types_local'] = array(
 					 ),
             ),
             'sidebar' => '',
-            'post_sidebar' => 'luther_events_mini',
+            'post_sidebar'=> array( // News  
+            	'module' => 'luther_other_publication_news',
+				'max_num_to_show' => 3,
+				),
+            //'post_sidebar' => 'luther_events_mini',
          ),
          'luther2010_giving' => array(
 			'main_post' => array(
 				'module'=>'children',
 				'provide_images' => true,
 			),
+			'imagetop' => 'luther_carousel',
             'pre_sidebar' => array( // Spotlights
             	'module' => 'publication',
 				//'related_publication_unique_names' => array( 'spotlight_archives' ),
