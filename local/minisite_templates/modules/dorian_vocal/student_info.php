@@ -77,11 +77,13 @@ class StudentInfoForm extends FormStep
                     'options' => array(11 => 'Junior', 12 => 'Senior'),
                 ),
                 'years_of_singing_experience' => 'text',
+                'desired_participation_text' => array(
+                    'type' => 'comment',
+                    'text' => '<br />In addition to being considered for the Festival Choir, check boxes if the student should be considered for Chamber Choir membership or a mini-lesson.  <b>Check all that apply</b>.',
+                ),
                 'desired_participation' => array(
-
-
-
-
+                    'type' => 'checkboxgroup_no_sort',
+                    'options' => array('cc' => 'Chamber Choir', 'ml' => 'Mini-lesson'),
                 ),
                 'housing_header' => array(
                     'type' => 'comment',
@@ -99,7 +101,8 @@ class StudentInfoForm extends FormStep
 
         var $required = array('student_first_name','student_last_name', 'student_email',
                 'student_school_name', 'student_phone', 'student_street_address', 'student_city',
-                'student_state', 'student_zip', 'student_gender');
+                'student_state', 'student_zip', 'student_gender', 'voice_part', 'rank', 'year_in_school',
+                'years_of_singing_experience', 'housing_needed', 'director_comments');
 
         function on_every_time()
         {
@@ -108,7 +111,7 @@ class StudentInfoForm extends FormStep
 
         function pre_show_form()
 	{
-            pray($_SESSION);
+            //pray($_SESSION);
 		echo '<div id="dorianBandForm" class="studentForm">'."\n";
 	}
 
@@ -117,26 +120,28 @@ class StudentInfoForm extends FormStep
 		echo '</div>'."\n";
 	}
 
-        function post_error_check_actions()
-        {
-            $stud_count = $_SESSION['student_count'];
-            if (isset($stud_count)){
-                $stud_count = 1;
-            }else{
-                $stud_count += 1;
-                $_SESSION['student_count'] = $stud_count;
+    function run_error_checks() {
+
+        if($this->has_errors() <> true){
+
+            if (isset($_SESSION['student_count'])) {
+                $_SESSION['student_count'] += 1;
+            } else {
+                $_SESSION['student_count'] = 1;
             }
-            $session_string = 'student'.$stud_count;
+            $session_string = 'student' . $_SESSION['student_count'];
 
-            echo($session_string);
-
-            foreach($this->elements as $key => $value)
-            {
+            //save form fields to array in _SESSION
+            foreach ($this->elements as $key => $value) {
                 $_SESSION[$session_string][$key] = $this->get_value($key);
             }
 
+            //clear form fields
+            foreach ($this->elements as $key => $value) {
+                $this->set_value($key, '');
+            }
 
-            pray($_SESSION[$session_string]);
         }
+    }
 }
 ?>

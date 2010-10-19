@@ -15,6 +15,10 @@ class DirectorInfoForm extends FormStep
 	var $error;
         var $display_name = 'Dorian Vocal Festival Nomination Director Information';
 	var $elements = array(
+                'director_information_header2' => array(
+                        'type' => 'comment',
+                        'text' => '<h4>Nomination Form</h4>',
+                ),
 		'director_information_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Director Information</h3>',
