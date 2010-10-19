@@ -288,6 +288,24 @@
 				'max_num_items' => 4,
 			),
 		),
+        'events_and_publication_sidebar_show_children' => array(
+			'pre_sidebar' => array(
+				'module' => 'events_mini',
+				'view' => 'monthly',
+			),
+			'sidebar' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' =>
+				array('list_item' => array(
+									'classname' => 'MinimalListItemMarkupGenerator', 
+									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+									)
+					 ),
+				'max_num_items' => 4,
+			),
+			'main_post' => 'show_children',
+		),
         
 		'blurb' => array(
 			'main_post' => 'blurb',
