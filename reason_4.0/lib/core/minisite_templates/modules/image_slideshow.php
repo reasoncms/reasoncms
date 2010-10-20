@@ -89,8 +89,8 @@
 				echo 'mySlideData[countArticle++] = new Array('."\n";
 				echo "'".WEB_PHOTOSTOCK.$id.'.'.$image->get_value('image_type')."',\n";
 				echo "'#',\n";
-				echo "'".htmlspecialchars( strip_tags($image->get_value('description')),ENT_QUOTES,'UTF-8' )."',\n";
-				echo "'".htmlspecialchars( strip_tags($image->get_value('content')),ENT_QUOTES,'UTF-8' )."'\n";
+				echo "'".$this->sanitize_for_js($image->get_value('description'))."',\n";
+				echo "'".$this->sanitize_for_js($image->get_value('content'))."'\n";
 				echo ');'."\n";
 			}
 			?>function addLoadEvent(func) {
@@ -114,7 +114,7 @@ addLoadEvent(startSlideshow);
 			echo '<ul>';
 			foreach( $this->images AS $id => $image )
 			{
-				echo '<li><img src="'.WEB_PHOTOSTOCK.$id.'.'.$image->get_value('image_type').'" alt="'.htmlspecialchars( strip_tags($image->get_value('description')),ENT_QUOTES,'UTF-8' ).'" /><div>'.$image->get_value('description').'</div></li>';
+				echo '<li><img src="'.WEB_PHOTOSTOCK.$id.'.'.$image->get_value('image_type').'" alt="'.$this->sanitize_for_js($image->get_value('description')).'" /><div>'.$image->get_value('description').'</div></li>';
 			}
 			echo '</ul>';
 			echo '</noscript>'."\n";
@@ -137,6 +137,14 @@ addLoadEvent(startSlideshow);
 			if($height == 0)
 				$height = 500;
 			return array('height'=>$height,'width'=>$width);
+		}
+		
+		function sanitize_for_js($text)
+		{
+			$text = str_replace(array("\r", "\r\n", "\n"), '', $text);
+			$text = strip_tags($text);
+			$text = htmlspecialchars( $text,ENT_QUOTES,'UTF-8' );
+			return $text;
 		}
 	}
 ?>
