@@ -394,6 +394,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '<!--[if lt IE 9]><link href="/stylesheets/luther2010/ie8.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";  
   		echo '<!--[if lt IE 8]><link href="/stylesheets/luther2010/ie7.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
   		echo '<!--[if lt IE 7]><link href="/stylesheets/luther2010/ie6.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
+		echo '<!--[if (gte IE 6)&  (lte IE 8)]>'."\n";
+		echo '<script type="text/javascript" src="/javascripts/nwmatcher/nwmatcher-1.2.3.js"></script>'."\n";
+		echo '<script type="text/javascript" src="/javascripts/selectivizr/selectivizr-1.0.0.js"></script>'."\n";
+		echo '<![endif]-->'."\n";
   		
 		echo '<meta property="og:title" content="Luther College" />'."\n";
 		echo '<meta property="og:type" content="university" />'."\n";
