@@ -85,7 +85,7 @@
 			echo '<nav id="nav-search" role="navigation">'."\n";
 			echo '<ul>'."\n";
 			echo '<li class="directory"><a href="/directory/">Directory</a></li>'."\n";
-			echo '<li class="index"><a href="#">A-Z Index</a></li>'."\n";
+			echo '<li class="index"><a href="/azindex/">A-Z Index</a></li>'."\n";
 			echo '<li class="search">'."\n";
 			luther2010_google_search();			
 			echo '</li>'."\n";

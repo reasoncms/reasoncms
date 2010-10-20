@@ -569,8 +569,8 @@ function luther2010_audience_navigation()
         echo '<li><a href="/admissions">Prospective Students</a></li>'."\n";
         echo '<li><a href="/parents">Parents</a></li>'."\n";
         echo '<li><a href="/alumni">Alumni & Friends</a></li>'."\n";
-        echo '<li><a href="http://www.luther.edu/faculty-staff-students">Faculty & Staff</a></li>'."\n";
-        echo '<li><a href="http://www.luther.edu/faculty-staff-students">Current Students</a></li>'."\n";
+        echo '<li><a href="/facultystaff">Faculty & Staff</a></li>'."\n";
+        echo '<li><a href="/students">Current Students</a></li>'."\n";
         echo '</ul>'."\n";
 }
 
@@ -596,8 +596,8 @@ function luther2010_global_navigation()
         echo '<li class="athletics"><a href="http://sports.luther.edu">Athletics</a></li>'."\n";
         echo '<li class="music"><a href="http://music.luther.edu">Music</a></li>'."\n";
         echo '<li class="giving"><a href="/giving">Giving</a></li>'."\n";
-        echo '<li class="decorah"><a href="http://www.luther.edu/about/decorah">Decorah</a></li>'."\n";
-        echo '<li class="about-luther"><a href="http://www.luther.edu/about">About Luther</a></li></ul>'."\n";
+        echo '<li class="decorah"><a href="/about/decorah">Decorah</a></li>'."\n";
+        echo '<li class="about-luther"><a href="/about">About Luther</a></li></ul>'."\n";
 }
 
 function luther_google_search()
