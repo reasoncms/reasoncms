@@ -88,7 +88,7 @@ class StudentInfoForm extends FormStep
                 ),
                 'desired_participation_note' => array(
                     'type' => 'comment',
-                    'text' => '<br /><b>PLEASE NOTE:</b> To be considered for the Chamber Choir, a student must <b>either</b>:<br />1) be a member of their respective All-State Choir<br />2) have earned “ Superior” ratings on a contest solo for two years in a row at the highest level of contest in which the school participates<br />3) submit a recorded audition of one contest-level piece.<br /><b>The student must also be able to be at Luther on Saturday, January 8 for rehearsals</b>… a day earlier than the rest of the Festival students.',
+                    'text' => '<b>PLEASE NOTE:</b> To be considered for the Chamber Choir, a student must <b>either</b>:<br />1) be a member of their respective All-State Choir<br />2) have earned “ Superior” ratings on a contest solo for two years in a row at the highest level of contest in which the school participates<br />3) submit a recorded audition of one contest-level piece.<br /><b>The student must also be able to be at Luther on Saturday, January 8 for rehearsals</b>… a day earlier than the rest of the Festival students.<br />&nbsp;',
                 ),
                 'housing_header' => array(
                     'type' => 'comment',
