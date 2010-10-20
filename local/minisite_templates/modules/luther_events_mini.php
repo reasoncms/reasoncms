@@ -106,7 +106,8 @@ class miniEventsModule extends EventsModule
 	{
 		echo '<nav class="button view-all">'."\n";
 		echo '<ul>'."\n";
-		echo '<li><a href="/programming/calendar">View all events &gt;</a></li>'."\n";
+		//echo '<li><a href="/programming/calendar">View all events &gt;</a></li>'."\n";
+		echo '<li><a href="'.$this->events_page_url.'">View all events &gt;</a></li>'."\n";
 		echo '</ul>'."\n";
 		echo '</nav>'."\n"; 
 
