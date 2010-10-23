@@ -17,7 +17,7 @@ class LFWFormPageOne extends FormStep
 		'amount' => 'cloaked',
 		'deadline_note' => array(
 			'type' => 'comment',
-			'text' => 'Application deadline is <strong>October 22, 2010</strong>',
+			'text' => 'Priority registration ended October 22; if you wish to submit a late registration, the late registration conference fee is $120 plus $ 25 (optional) for the banquet.',
 		),
 		'your_information_header' => array(
 			'type' => 'comment',
@@ -110,7 +110,7 @@ class LFWFormPageOne extends FormStep
 			'type' => 'radio_no_sort',
 			'display_name' => '&nbsp;',
 			'options' => array(
-				'95'=>'General Public, $95',
+				'120'=>'General Public, $120',
 				'25'=>'Non-Luther Student, $25',
 				'-'=>'Luther Faculty and Staff, $0',
 				'--'=>'Luther Student, $0',
