@@ -81,7 +81,7 @@
 		function luther2010_theme()
 		{
 			echo '<header class="global" role="banner">'."\n";
-			echo '<h1 id="luther-logo"><img alt="luther College" height="54" src="/images/luther2010/luther-college.png" width="289" /></h1>'."\n";
+			echo '<h1 id="luther-logo"><a href="http://www.luther.edu" title="Luther College Home"><img alt="luther College" height="54" src="/images/luther2010/luther-college.png" width="289" /></a></h1>'."\n";
 			echo '<nav id="nav-search" role="navigation">'."\n";
 			echo '<ul>'."\n";
 			echo '<li class="directory"><a href="/directory/">Directory</a></li>'."\n";

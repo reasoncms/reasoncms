@@ -44,6 +44,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 			echo "\n".$this->cur_page->get_value('extra_head_content')."\n";
 		}
 
+		echo '<!--[if (gte IE 6)&  (lte IE 8)]>'."\n";
+		echo '<script type="text/javascript" src="/javascripts/nwmatcher/nwmatcher-1.2.3.js"></script>'."\n";
+		echo '<script type="text/javascript" src="/javascripts/selectivizr/selectivizr-1.0.0.js"></script>'."\n";
+		echo '<![endif]-->'."\n";
+
 		echo '</head>'."\n";
 
 		echo $this->create_body_tag();
@@ -394,10 +399,6 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '<!--[if lt IE 9]><link href="/stylesheets/luther2010/ie8.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";  
   		echo '<!--[if lt IE 8]><link href="/stylesheets/luther2010/ie7.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
   		echo '<!--[if lt IE 7]><link href="/stylesheets/luther2010/ie6.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
-		echo '<!--[if (gte IE 6)&  (lte IE 8)]>'."\n";
-		echo '<script type="text/javascript" src="/javascripts/nwmatcher/nwmatcher-1.2.3.js"></script>'."\n";
-		echo '<script type="text/javascript" src="/javascripts/selectivizr/selectivizr-1.0.0.js"></script>'."\n";
-		echo '<![endif]-->'."\n";
   		
 		echo '<meta property="og:title" content="Luther College" />'."\n";
 		echo '<meta property="og:type" content="university" />'."\n";
@@ -438,6 +439,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 		elseif ($this->cur_page->get_value( 'custom_page' ) == 'events')
 		{
 			return '<body class="style-one-column" >'."\n";
+		}
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'spotlight_archive')
+		{
+			return '<body class="style-two-columns spotlight-archive" >'."\n";
 		}
 		//elseif (count($bc) <= 2 /*&& $this->admissions_has_related_or_timeline()*/)  // section
 		//{
