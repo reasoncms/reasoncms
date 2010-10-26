@@ -19,10 +19,11 @@ $(document).ready(function() {
 	// Set the initial state for employer name field
 	$("input#checkbox_match_gift").change();
 
-	$("div#giftForm div#matchingFrame").addClass("matchingGiftsIframeFloat").hide();
+/*	$("div#giftForm div#matchingFrame").addClass("matchingGiftsIframeFloat").hide();
+
 	if ($.browser.msie)
 	{
-	        $("div#giftForm tr#matchgiftRow td.words").append('<p><a href="https://apps.carleton.edu/giving/now/match/" target="_blank">Not sure? Click to find out.</a></p>'); 
+	        $("div#giftForm tr#matchgiftRow td.words").append('<p><a href="https://www.matchinggifts.com/luther/" target="_blank">Not sure? Click to find out.</a></p>'); 
 	} else {
 		$("div#giftForm div#matchingFrame").append(' <a id="closeMatchingFrame" href="#">Close</a>')
 		$("div#giftForm tr#matchgiftRow td.words").append(' <div id="matchingFrameInvoke"><a id="showMatchingFrame" href="#">Not sure? Click to find out.</a></div>');
@@ -43,6 +44,7 @@ $(document).ready(function() {
 	$("div#matchingGiftsBackground").click(function(){
 		$("div#matchingFrame a#closeMatchingFrame").click();
 	});
+*/
 	
 	// Set the initail state for specific designations
 	$("tr#designationnoteRow").hide();
