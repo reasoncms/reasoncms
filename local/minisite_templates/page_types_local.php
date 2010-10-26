@@ -596,7 +596,7 @@ function luther2010_global_navigation()
         echo '<li class="athletics"><a href="http://sports.luther.edu">Athletics</a></li>'."\n";
         echo '<li class="music"><a href="http://music.luther.edu">Music</a></li>'."\n";
         echo '<li class="giving"><a href="/giving">Giving</a></li>'."\n";
-        echo '<li class="decorah"><a href="/about/decorah">Decorah</a></li>'."\n";
+        echo '<li class="decorah"><a href="/decorah">Decorah</a></li>'."\n";
         echo '<li class="about-luther"><a href="/about">About Luther</a></li></ul>'."\n";
 }
 
