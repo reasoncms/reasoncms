@@ -89,8 +89,12 @@ class ConfirmationForm extends FormStep
                 for($count = $this->studentCount; $count > 0; $count--){
 
                         $currentStudent = 'student'.$count;
-                        $part1 = $_SESSION[$currentStudent]['desired_participation'][0];
-                        $part2 = $_SESSION[$currentStudent]['desired_participation'][1];
+                        //$part1 = $_SESSION[$currentStudent]['desired_participation'][0];
+                        //$part2 = $_SESSION[$currentStudent]['desired_participation'][1];
+
+                        $part1 = (in_array('ml', $_SESSION[$currentStudent]['desired_participation']) ? 'ml' : '');
+                        $part2 = (in_array('cc', $_SESSION[$currentStudent]['desired_participation']) ? 'cc' : '');
+                        $accompanist = in_array('ac', $_SESSION[$currentStudent]['desired_participation']) ? 'Y' : 'N';
 
                         $qstring = "INSERT INTO `students` SET ";
                         $qstring .= "director_id=".$this->directorId.", ";
@@ -109,6 +113,7 @@ class ConfirmationForm extends FormStep
                         $qstring .= "year_in_school='".addslashes($_SESSION[$currentStudent]['year_in_school'])."', ";
                         $qstring .= "years_singing_exp='".addslashes($_SESSION[$currentStudent]['years_of_singing_experience'])."', ";
                         $qstring .= "desired_part='".addslashes(($part1 ? $part1 : '') . ($part1 && $part2 ? ',' : '') . ($part2 ? $part2 : ''))."', ";
+                        $qstring .= "accompanist='".addslashes($accompanist)."', ";
                         $qstring .= "overnight_housing='".addslashes($_SESSION[$currentStudent]['housing_needed'])."', ";
                         $qstring .= "comment='".addslashes($_SESSION[$currentStudent]['director_comments'])."' ";
                         $qstring .= ";";
@@ -164,12 +169,15 @@ class ConfirmationForm extends FormStep
                 for($count = $this->studentCount; $count > 0; $count--)
                 {
                     $currentStudent = 'student'.$count;
-                    $part1 = $_SESSION[$currentStudent]['desired_participation'][0];
-                    $part2 = $_SESSION[$currentStudent]['desired_participation'][1];
+                    //$part1 = $_SESSION[$currentStudent]['desired_participation'][0];
+                    //$part2 = $_SESSION[$currentStudent]['desired_participation'][1];
+                    $part1 = (in_array('ml', $_SESSION[$currentStudent]['desired_participation']) ? 'ml' : '');
+                    $part2 = (in_array('cc', $_SESSION[$currentStudent]['desired_participation']) ? 'cc' : '');
+                    $accompanist = in_array('ac', $_SESSION[$currentStudent]['desired_participation']) ? 'Y' : 'N';
                     if($part1=='cc'){$part1 = 'Chamber Choir';}
                     if($part2=='cc'){$part2 = 'Chamber Choir';}
-                    if($part1=='ml'){$part1 = 'Mini-Lesson';}
-                    if($part2=='ml'){$part2 = 'Mini-Lesson';}
+                    if($part1=='ml'){$part1 = 'Mini-Lesson'.($accompanist == 'Y' ? ' (/w accomp.)' : '');}
+                    if($part2=='ml'){$part2 = 'Mini-Lesson'.($accompanist == 'Y' ? ' (/w accomp.)' : '');}
 
                     $text .= "<tr>"."\n";
                     $text .= "<td colspan='4'><b>Name:&nbsp;".$_SESSION[$currentStudent]['student_first_name'] . " " . $_SESSION[$currentStudent]['student_last_name']."</b></td>"."\n";

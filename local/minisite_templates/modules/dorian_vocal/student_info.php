@@ -84,7 +84,7 @@ class StudentInfoForm extends FormStep
                 'desired_participation' => array(
                     'type' => 'checkboxgroup_no_sort',
                     'display_name' => ' ',
-                    'options' => array('ml' => 'Mini-lesson', 'cc' => 'Chamber Choir'),
+                    'options' => array('ml' => 'Mini-lesson', 'ac' => 'If you are signing up for a mini-lesson, do you need to hire a Luther student accompanist?   The fee is $15.00<br />(Accompaniment is not required, even for a scholarship audition.)' , 'cc' => 'Chamber Choir'),
                 ),
                 'desired_participation_note' => array(
                     'type' => 'comment',
@@ -130,6 +130,14 @@ class StudentInfoForm extends FormStep
 	}
 
     function run_error_checks() {
+
+        $temp = $this->get_value('desired_participation');
+
+        if(in_array('ac', $temp)){
+            if(in_array('ml', $temp) == false){
+                $this->set_error('desired_participation', 'Accompanist should only be checked if requesting a Mini-lesson.');
+            }
+        }
 
         if($this->has_errors() <> true){
 
