@@ -102,6 +102,10 @@ class StudentInfoForm extends FormStep
                 'director_comments' => array(
                     'type' => 'textarea',
                 ),
+                'submit_note' => array(
+                    'type' => 'comment',
+                    'text' => '<br /><b>NOTE:</b> Press the \'I\'m finishined nominating students\' button to submit your completed nominations.',
+                ),
             );
 
         var $required = array('student_first_name','student_last_name', 'student_email',
