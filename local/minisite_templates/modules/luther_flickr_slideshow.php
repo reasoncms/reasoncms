@@ -22,6 +22,8 @@
 			"lutherfinearts" => array("e0b84ec8f5c4cdee13dbe0c6eab3c516", "5aba74ac9fb733c1"),
 			"Luther_College_Alumni_Office" => array("d97a9bcb0bef39692eb8b0ac97c8887f", "b0d82d76b43bc6d6"),
 			"luthercollegechemistry" => array("4fe2ce650080400958007a505b980522", "cef37676c4424ae1"),
+			// environmental outreach
+			"nealem01" => array("d76f4769f09cc708389538ffe0d82733", "27e40ea372ece10c"),
                         "luthersustainability" => array("32deae8d61a176ea73d561995d903426", "d5805fcf8d221869"));
 
 			$site_id = $this->site_id;
