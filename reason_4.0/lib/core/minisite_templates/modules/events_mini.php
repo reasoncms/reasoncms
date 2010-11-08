@@ -39,6 +39,28 @@ class miniEventsModule extends EventsModule
 	var $list_date_format = 'D. M. j';
 	var $show_calendar_grid = false;
 	
+	 /**
+	 * Accept the params from the page type, with local additions to acceptable params
+	 *
+	 * THis method is overloaded so that we can add an additional acceptable parameter:
+	 *
+	 * 'no_content_message' (string) A message to be used if the module has 
+	 * no content to display. Note that the default events module *always* 
+	 * has content, so it will only have effect in a subclass that may or
+	 * may not have content to display.
+	 *
+	 * The message string can be in one of two formats: plain string message,
+	 * or a uniquely named text blurb identified in this format: 
+	 * 'unique_name:text_blurb_unique_name' (case sensitive).
+	 * @param array $params
+	 **/
+	function handle_params( $params )
+	{
+		if(!isset($this->acceptable_params['no_content_message']))
+			$this->acceptable_params['no_content_message'] = '';
+		
+		parent::handle_params( $params );
+	}
 	function init( $args = array() ) // {{{
 	{
 		parent::init( $args );
@@ -47,16 +69,52 @@ class miniEventsModule extends EventsModule
 	} // }}}
 	function has_content() // {{{
 	{
+		if($this->_has_content_to_display())
+			return true;
+		elseif($this->_get_no_content_message())
+			return true;
+		return false;
+	} // }}}
+	function _has_content_to_display() // {{{
+	{
 		if(!empty($this->events_page_url) && !empty($this->calendar))
 		{
 			$events = $this->calendar->get_all_events();
-			if(empty($events))
-				return false;
-			else
+			if(!empty($events))
 				return true;
 		}
 		return false;
 	} // }}}
+	
+	function _get_no_content_message()
+	{
+		if(!empty($this->params['no_content_message']))
+		{
+			$indicator = 'unique_name:';
+			if(strpos($this->params['no_content_message'],$indicator) === 0)
+			{
+				$uname = substr($this->params['no_content_message'],strlen($indicator));
+				if(!empty($uname) && reason_unique_name_exists($uname))
+				{
+					return get_text_blurb_content( $uname );
+				}
+			}
+			else
+				return $this->params['no_content_message'];
+		}
+		return '';
+	}
+	function run()
+	{
+		if($this->_has_content_to_display())
+		{
+			parent::run();
+		}
+		elseif($msg = $this->_get_no_content_message())
+		{
+			echo '<div class="eventsNoContentMessage">'.$msg.'</div>'."\n";
+		}
+	}
 	function display_list_title()
 	{
 		echo '<h3><a href="'.$this->events_page_url.'">'.$this->events_page->get_value('name').'</a></h3>'."\n";
