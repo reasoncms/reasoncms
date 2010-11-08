@@ -7,7 +7,10 @@ $(document).ready(function() {
 	toggle_recur_fields();
 	
 	$("input[name='installment_type']").change(function(){toggle_recur_fields()});
-		
+
+	// Set the initial state for employer name field
+	$("tr#employernameRow").hide();
+	
 	// Show/hide employer name based on match status
 	$("input#checkbox_match_gift").change(function(){
 			if ($("input#checkbox_match_gift:checked").val())
@@ -16,19 +19,31 @@ $(document).ready(function() {
 			$("tr#employernameRow").hide();
 	});
 	
-	// Set the initial state for employer name field
-	$("input#checkbox_match_gift").change();
+	//$("input#checkbox_match_gift").change();
+	$("input#checkbox_annual_fund").change();
+	
+	//$("div#giftForm div#matchingFrame").addClass("matchingGiftsIframeFloat").hide();
+	//$("div#giftForm div#annualfundFrame").addClass("annualFundIframeFloat").hide();
 
-/*	$("div#giftForm div#matchingFrame").addClass("matchingGiftsIframeFloat").hide();
-
+	/*
 	if ($.browser.msie)
 	{
-	        $("div#giftForm tr#matchgiftRow td.words").append('<p><a href="https://www.matchinggifts.com/luther/" target="_blank">Not sure? Click to find out.</a></p>'); 
+	    $("div#giftForm tr#matchgiftRow td.words").append('<p><a href="https://www.matchinggifts.com/luther/" target="_blank">Not sure? Click to find out.</a></p>'); 
 	} else {
 		$("div#giftForm div#matchingFrame").append(' <a id="closeMatchingFrame" href="#">Close</a>')
 		$("div#giftForm tr#matchgiftRow td.words").append(' <div id="matchingFrameInvoke"><a id="showMatchingFrame" href="#">Not sure? Click to find out.</a></div>');
 	}
 
+	if ($.browser.msie)
+	{
+		$("label:contains('Annual Fund')").html('<a href="/giving/annual/" target="_blank">Annual Fund</a>');
+	} else {
+		//$("label:contains('Annual Fund')").html('<a href="/giving/annual/" target="_blank">Annual Fund</a>');
+		$("label:contains('Annual Fund')").html('<a id="showMatchingFrame" href="#">Annual Fund</a></div>');
+		$("div#giftForm tr#annualfundRow td.words").append('<a id=""closeMatchingFrame" href="#">Close</a>');
+		$("div#giftForm tr#annualfundRow td.words").append(' <div id="matchingFrameInvoke"><a id="showMatchingFrame" href="#">Not sure? Click to find out.</a></div>');
+	}
+	
 	$("a#showMatchingFrame").click(function(event){
 		$("div#matchingFrame").fadeIn();
 		$("div#matchingGiftsBackground").fadeIn();
@@ -44,8 +59,8 @@ $(document).ready(function() {
 	$("div#matchingGiftsBackground").click(function(){
 		$("div#matchingFrame a#closeMatchingFrame").click();
 	});
-*/
-	
+
+	*/
 	// Set the initail state for specific designations
 	$("tr#designationnoteRow").hide();
 	$("tr#aquaticcenterRow").hide();
@@ -84,6 +99,7 @@ $(document).ready(function() {
 	
 	// Set the initial state for the Country field
 	$("select#state_provinceElement").change();
+	$("#countryRow").hide();
 	
 	/** PageThree **/
 	
@@ -92,7 +108,7 @@ $(document).ready(function() {
 	{
 		$("div#giftForm div#reviewGiftDetails").hide();
 		
-		$("div#giftForm div#reviewGiftOverview p").append(' <a id="showGiftDetails" href="#">Yearly totals for this gift</a>');
+		$("div#giftForm div#reviewGiftOverview p").append('<p><a id="showGiftDetails" href="#">Yearly totals for this gift</a></p>');
 		$("div#giftForm h3#yearlyTotalsHeading").append('<a id="hideGiftDetails" href="#">Close</a>');
 
 		$("a#showGiftDetails").click(function(event){
@@ -137,6 +153,16 @@ function set_name_field_prompt()
 	{
 		$("input[name='last_name']").addClass("unfocused_label").val('Last');		
 	}
+	
+	if ($("input[name='spouse_first_name']").val() == '')
+	{
+		$("input[name='spouse_first_name']").addClass("unfocused_label").val('First');		
+	}
+	if ($("input[name='spouse_last_name']").val() == '')
+	{
+		$("input[name='spouse_last_name']").addClass("unfocused_label").val('Last');		
+	}
+
 }
 
 function clear_name_field_prompt(field)
@@ -162,19 +188,18 @@ function toggle_country_field(stateElementSelector, countryRowSelector)
 	// If not US or Canada, show the Country field
 	if ($(stateElementSelector).val() == "XX")
 	{
-	    $(countryRowSelector).show();
-	    $(countryRowSelector + " input").val('');
+   	    $(countryRowSelector + " select").val('');
 	}
 	// If US or Canada, populate Country but hide it
 	else
 	{
-	    $(countryRowSelector).hide();
+	    //$(countryRowSelector).hide();
 	    // If a Canadian province...
 	    if (/^(?:AB|BC|MB|NB|NL|NT|NS|NU|ON|PE|QC|SK|YT)$/.test($(stateElementSelector).val())) 
-		$(countryRowSelector + " input").val('Canada');
+		$(countryRowSelector + " select").val("CAN");
 	    // If anything else (other than unset)
 	    else if ($(stateElementSelector).val() != "")
-		$(countryRowSelector + " input").val('United States');
+		$(countryRowSelector + " select").val('USA');
 	}
 }
 
