@@ -6,21 +6,27 @@
     overflow:hidden;
 }
 #formNavigation .formSteps li {
+    margin-right: 5px;
     float:left;
-    margin-right:5px;
 }
 #formNavigation .formSteps li a {
+
+    background-repeat: no-repeat;
+    color: black;
+    letter-spacing: 3px;
+    text-shadow: 0px 0px;
+    font-style: normal;
+    font-weight: normal;
     display:block;
-    background-color:#dae1e9;
+    background-color:#ccdeeb;
     text-decoration:none;
-    color:#000;
     padding:5px 9px 6px 9px;
-    border-bottom:8px solid #fff;
+    border-bottom:8px;
 }
 #formNavigation .formSteps li.current a {
-    background:#afc0cf url(images/formnav_current.gif) no-repeat bottom center;
+    color: #000;
+	background: url("formnav_current.gif") no-repeat scroll center bottom #95b3cd;
     padding-bottom:14px;
-    border-bottom:none;
 }
 
 /* Placeholder text */
@@ -29,27 +35,11 @@ input.unfocused_label {
 }
 
 /* Inline elements */
-#giftForm span.inlineElement {
+div#giftForm span.inlineElement {
     margin-right:0.33em;
 }
 
 /* Gift Info Step */
-#giftForm #installment_type_container {
-    margin-left:0.5em;
-}
-div#giftForm div.warningNote {
-    color:#b00;
-}
-#giftForm tr#installmentstartdateRow td.element, #giftForm tr#installmentenddateRow td.element {
-    padding-left:3em;
-}
-#giftForm tr#matchinggiftnoteRow p {
-    font-size:0.9em;
-    margin:0.3em 0 0 0;
-}
-#giftForm tr#matchgiftRow td {
-    padding-left:2em;
-}
 .matchingGiftsIframe {
     height:35em;
 }
@@ -92,7 +82,6 @@ a#closeMatchingFrame {
     top:-1em;
     padding:0.3em 0.5em 0.3em 22px;
     color:#000;
-    background:#ddc9c9 url(/global_stock/images/silk_icons/cross.png) no-repeat 4px center;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius:4px;
@@ -104,61 +93,41 @@ a#closeMatchingFrame:hover, a#closeMatchingFrame:focus, a#closeMatchingFrame:act
     text-decoration:underline;
     color:#000;
 }
-#additionalinstructionsnoteRow p, #additionalinstructionsnoteRow ul  {
-    margin:0.5em 0;
-}
-#additionalinstructionsnoteRow ul.designationExamples {
-    font-size:0.88em;
-    color:#444;
-}
-
 
 /* Personal Info Step */
-#giftForm tr#estatenoteRow em {
-    color:#666;
-    font-weight:normal;
-}
-#giftForm #estateincludedRow td, #giftForm #estatesendRow td {
-    font-size:0.9em;
-    padding-top:0;
-    padding-bottom:1em;
-    text-indent: -2em;
-    padding-left: 2.5em;
-}
-#giftForm #estateincludedRow td em.note {
-    color:#666;
-}
-#giftForm #estateincludedRow td {
-    padding-bottom:0.5em;
-}
-#giftForm tr#streetaddressRow textarea {
+div#giftForm tr#streetaddressRow textarea {
     height:3.25em;
+    vertical-align: top;
 }
+
 
 /* Gift Review Step */
 
-#giftForm p.changeGiftButton {
+div#giftForm p.changeGiftButton {
     margin:1.75em 0 1.25em 0;
 }
-#giftForm p.changeGiftButton a {
-    background-color:#831619;
+div#giftForm p.changeGiftButton a {
+    background-color:#aa1111;
     padding:0.3em 0.4em 0.4em 0.4em;
     color:#fff;
-    display:inline;
+    display:normal;
     text-decoration:none;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius:4px;
 }
-#giftForm p.changeGiftButton a:hover {
-    color:#fff;
-    background-color:#a51c1f;
+div#giftForm p.changeGiftButton a:hover {
+    color: white;
+    background-color: #d5242b;
 }
-#giftForm #installmentnotificationnote2Row p, #giftForm #installmentnotificationnote1Row p {
+div#giftForm #installmentnotificationnote2Row p, div#giftForm #installmentnotificationnote1Row p {
     margin:0;
 }
 div#reviewGiftOverview p {
     margin-top:0;
+}
+div#reviewGiftOverview li {
+	margin-left: 15px;
 }
 div#reviewGiftDetails {
     background-color:#eaeff5;
@@ -167,11 +136,40 @@ div#reviewGiftDetails {
 div#reviewGiftDetails h3 {
     margin-top:0;
 }
+div#reviewGiftOverview a#showGiftDetails {
+	font-style:normal;
+    font-weight:normal;
+    font-size:normal;
+    background-color:#004789;
+    padding:0.3em 0.4em 0.4em 0.4em;
+    color:#fff;
+    display:inline;
+    text-decoration:none;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius:4px;
+}
+div#reviewGiftOverview a#showGiftDetails:hover {
+	color: white;
+	background-color: #2561A8;
+}
 div#reviewGiftDetails a#hideGiftDetails {
     font-style:normal;
     font-weight:normal;
     font-size:0.8em;
     float:right;
+    background-color:#AA1111;
+    padding:0.3em 0.4em 0.4em 0.4em;
+    color:#fff;
+    display:inline;
+    text-decoration:none;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius:4px;
+}
+div#reviewGiftDetails a#hideGiftDetails:hover {
+	color: white;
+    background-color: #d5242b;
 }
 div#reviewGiftDetails .givingTotalsDisclaimer {
     font-size:0.9em;
@@ -182,7 +180,11 @@ div#reviewGiftDetails h4 {
     border-bottom:1px solid #afc0cf;
 }
 div#reviewGiftDetails table {
+
+    display: table;
     margin:0 0 0.5em 2em;
+    border-style: none;
+    background: transparent;
 }
 div#reviewGiftDetails td, div#reviewGiftDetails th {
     padding:.15em .5em .15em .5em;
@@ -196,8 +198,9 @@ div#reviewGiftDetails th {
     text-align:left;
 }
 div#reviewGiftDetails td.col1, div#reviewGiftDetails th.col1 {
-    text-align:right;
+    text-align: left;
 }
 div#reviewGiftDetails td.col1 {
+    text-align: left;
     font-weight:bold;
 }
