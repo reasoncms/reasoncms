@@ -60,7 +60,7 @@ class IndividualVisitForm extends DefaultThorForm
 {
 	var $disabled_dates = array(
             '20101016',
-            '20101125', '20101126', '20101127',
+            '20101119', '20101125', '20101126', '20101127',
             '20101211', '20101218',
             'xxxx1223', 'xxxx1224', 'xxxx1225', '20101230', 'xxxx1231',
             'xxxx0101', '20110129',
