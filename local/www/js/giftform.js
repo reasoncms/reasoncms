@@ -22,58 +22,10 @@ $(document).ready(function() {
 	//$("input#checkbox_match_gift").change();
 	$("input#checkbox_annual_fund").change();
 	
-	//$("div#giftForm div#matchingFrame").addClass("matchingGiftsIframeFloat").hide();
-	//$("div#giftForm div#annualfundFrame").addClass("annualFundIframeFloat").hide();
-
-	/*
-	if ($.browser.msie)
-	{
-	    $("div#giftForm tr#matchgiftRow td.words").append('<p><a href="https://www.matchinggifts.com/luther/" target="_blank">Not sure? Click to find out.</a></p>'); 
-	} else {
-		$("div#giftForm div#matchingFrame").append(' <a id="closeMatchingFrame" href="#">Close</a>')
-		$("div#giftForm tr#matchgiftRow td.words").append(' <div id="matchingFrameInvoke"><a id="showMatchingFrame" href="#">Not sure? Click to find out.</a></div>');
-	}
-
-	if ($.browser.msie)
-	{
-		$("label:contains('Annual Fund')").html('<a href="/giving/annual/" target="_blank">Annual Fund</a>');
-	} else {
-		//$("label:contains('Annual Fund')").html('<a href="/giving/annual/" target="_blank">Annual Fund</a>');
-		$("label:contains('Annual Fund')").html('<a id="showMatchingFrame" href="#">Annual Fund</a></div>');
-		$("div#giftForm tr#annualfundRow td.words").append('<a id=""closeMatchingFrame" href="#">Close</a>');
-		$("div#giftForm tr#annualfundRow td.words").append(' <div id="matchingFrameInvoke"><a id="showMatchingFrame" href="#">Not sure? Click to find out.</a></div>');
-	}
-	
-	$("a#showMatchingFrame").click(function(event){
-		$("div#matchingFrame").fadeIn();
-		$("div#matchingGiftsBackground").fadeIn();
-		event.preventDefault();
-	});
-
-	$("div#matchingFrame a#closeMatchingFrame").click(function(event){
-		$("div#matchingGiftsBackground").fadeOut();
-		$("div#matchingFrame").fadeOut();
-		event.preventDefault();
-	}); 
-	
-	$("div#matchingGiftsBackground").click(function(){
-		$("div#matchingFrame a#closeMatchingFrame").click();
-	});
-
-	*/
-	// Set the initail state for specific designations
-	$("tr#designationnoteRow").hide();
-	$("tr#aquaticcenterRow").hide();
-	$("tr#sesqscholarshipfundRow").hide();
-	$("tr#sesqstudyabroadfundRow").hide();
-	$("tr#transformteachingfundRow").hide();
-	$("tr#sustainablecommunitiesRow").hide();
-	$("tr#naadesiggroupRow").hide();
-	$("tr#otherdesiggroupRow").hide();
-	
 	// Show/hide specific designations
 	toggle_specific_designations();
 	$("input#checkbox_specific_fund").change(function(){toggle_specific_designations()});
+	$("input#checkbox_norse_athletic_association").change(function(){toggle_specific_designations()});
 	
 	
 	/** PageTwo **/
@@ -92,6 +44,7 @@ $(document).ready(function() {
 		
 	$("input#checkbox_luther_affiliation_0").change(function(){toggle_class_year()});
 	$("input#checkbox_luther_affiliation_3").change(function(){toggle_class_year()});
+	
 
 	// Show/hide and populate Country field based on state/province choice
 	$("select#state_provinceElement").change(function()
@@ -182,6 +135,21 @@ function toggle_class_year()
                 $("tr#classyearRow").hide();
 }
 
+/*
+function toggle_class_year_note()
+{
+	if (($("input[name='spouse_first_name']").val() == "First" ||
+		$("input[name='spouse_last_name']").val() == "Last") &&
+		$("input#checkbox_luther_affilation_0:checked").val() ||
+		$("input#checkbox_luther_affilation_3:checked").val())
+	{
+		$("tr#classyearnoteRow").hide();
+	} else {
+		$("tr#classyearnoteRow").show();
+	}
+}
+*/
+
 function toggle_country_field(stateElementSelector, countryRowSelector)
 {
 	// Show/hide and populate Country field based on state/province choice
@@ -260,8 +228,9 @@ function toggle_specific_designations()
 			$("tr#sesqstudyabroadfundRow").show();
 			$("tr#transformteachingfundRow").show();
 			$("tr#sustainablecommunitiesRow").show();
-			$("tr#naadesiggroupRow").show();
-			$("tr#otherdesiggroupRow").show();
+			$("tr#norseathleticassociationRow").show();
+			$("tr#otherdesignationnoteRow").show();
+			$("tr#otherdesignationdetailsRow").show();
 		}
 		else
 		{
@@ -271,7 +240,16 @@ function toggle_specific_designations()
 			$("tr#sesqstudyabroadfundRow").hide();
 			$("tr#transformteachingfundRow").hide();
 			$("tr#sustainablecommunitiesRow").hide();
-			$("tr#naadesiggroupRow").hide();
-			$("tr#otherdesiggroupRow").hide();
+			$("tr#norseathleticassociationRow").hide();
+			$("tr#otherdesignationnoteRow").hide();
+			$("tr#otherdesignationdetailsRow").hide();			
+		}
+		
+	if ($("input#checkbox_norse_athletic_association:checked").val()||
+		$("input#checkbox_norse_athletic_association:checked").val() == "entered")
+		{
+			$("tr#naadesignationdetailsRow").show();
+		} else {
+			$("tr#naadesignationdetailsRow").hide();
 		}
 }
