@@ -274,24 +274,6 @@ class GiftPageOneForm extends FormStep
 			$this->set_error('match_gift','Please enter the name of your employer if you would like it to match your gift');
 		}
 	}
-	
-	function generate_fund_iframes()
-	{
-		$output = '<div id="fundIframes" class="fundContainer">';
-		//Aquatic Center
-		$url = "/giving/sesquicentennialfund/?story_id=268591";
-//		$raw = file_get_contents($url);
-		$dom = new DomDocument;
-		//@$dom->loadHTMLFile($url);
-		$description = $dom->getElementsById("blogDescription"); //blog
-		
-		$output .= '<iframe src="'.$description.'" width="100%" heigth="30%" name="boogie">Aquatic Center</iframe>';
-		//$output .= '<iframe src="/giving/sesquicentennialfund/?story_id=284434" width="100%" heigth="30%">';
-		$output .= '<p>Your browser does not support iFrames</p>';
-		$output .= '</div>';
-		
-		return $output;
-	}
 }
 
 ?>
