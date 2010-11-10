@@ -257,7 +257,8 @@ class repeatTransactionHelper
 	}
 	function calculate_fiscal_year_totals()
 	{
-		$this->fiscal_year_total_cents = $this->get_arbitrary_year_totals( '1970-07-01' );
+	//SLS - changed date to 1970-06-01 for Luther's fiscal year (Carleton's starts in 1970-07-01
+		$this->fiscal_year_total_cents = $this->get_arbitrary_year_totals( '1970-06-01' );
 	}
 	function get_arbitrary_year_totals( $date )
 	{
