@@ -239,7 +239,6 @@ class GiftPageOneForm extends FormStep
 	function post_show_form()
 	{
 		echo '</div>'."\n";
-		echo $this->generate_fund_iframes();
 	}
 	function run_error_checks()
 	{
