@@ -30,26 +30,42 @@ class GiftPageTwoForm extends FormStep
 			'display_name' => 'Last Name or Family Name',
 			'size'=>20,
 		),
+		'spouse_first_name' => array(
+			'type' => 'text',
+			'size' => 15,
+		),
+		'spouse_last_name' => array(
+			'type' => 'text',
+			'size' => 20,
+			'comments' => '<br>if applicable',
+		),
 		'luther_affiliation' => array(
 			'display_name' => 'I am a Luther',
 			'type' => 'checkboxgroup_no_sort',
                         // SLS - changed options per Development request
 			'options' => array('Alumnus/Spouse'=>'Alumnus/a or Spouse','Parent'=>'Parent','Friend'=>'Friend','Student'=>'Student','Faculty/Staff'=>'Faculty/Staff',),
 		),
+/*
+		'class_year_note' => array(
+			'type' => 'comment',
+			'text' => 'Choose either your spouse\'s or your class year',
+		),
+*/
 		'class_year' => array(
 			'type' => 'numrange',
 			'start' => 1924,
 			'end' => 2010,
+			'comments' => '<br>Choose either your class or your spouse\'s class',
 		),
 		'estate_note' => array(
 			'type' => 'comment',
 			'text' => '<h3>Estate Planning <em>(optional)</em></h3>',
 		),
-		'estate_included' => array(
+		'estate_plans' => array(
 			'type' => 'checkboxfirst',
 			'display_name' => 'I\'ve included Luther in my estate plans.',
 		),
-		'estate_send' => array(
+		'estate_info' => array(
 			'type' => 'checkboxfirst',
                         'display_name' => 'Please send me information about including Luther in my estate plans.',
 		),
@@ -78,8 +94,7 @@ class GiftPageTwoForm extends FormStep
 			'size'=>35,
 		),
 		'country' => array(
-			'type' => 'text',
-			'size'=>35,
+			'type' => 'country',
 		),
 		'phone' => array(
 			'type' => 'text',
@@ -94,6 +109,7 @@ class GiftPageTwoForm extends FormStep
 		'email' => array(
 			'type' => 'text',
 			'size'=>35,
+			'display_name' => 'E-mail',
 		),
 		'advance_id'=>array(
 			'type' => 'hidden',
@@ -114,6 +130,11 @@ class GiftPageTwoForm extends FormStep
 					'args' => array('use_element_labels' => false,
 							'display_name' => 'Name',),
 			),
+		'spouse_name_group' => array ( 'type' => 'inline',
+					'elements' => array( 'spouse_first_name', 'spouse_last_name'),
+					'args' => array('use_element_labels' => false,
+							'display_name' => 'Spouse&nbsp;Name'),
+					),
 		'phone_group' => array ('type' => 'inline',
 					'elements' =>  array( 'phone', 'phone_type' ),
 					'args' => array('use_element_labels' => false,
@@ -170,8 +191,9 @@ class GiftPageTwoForm extends FormStep
 			$this->add_element_group( $info['type'], $name, $info['elements'], $info['args']);
 		}
 		$this->move_element('name_group','before','luther_affiliation');
+		$this->move_element('spouse_name_group','before','luther_affiliation');
 		$this->move_element('phone_group','before','email');
-		$this->add_comments('email','<div class="smallText comment">A confirmation email will be sent to this address.</div>');
+		$this->add_comments('email','<div class="smallText comment">A confirmation e-mail will be sent to this address.</div>');
 		$this->change_element_type('class_year','numrange',array('start'=>1924,'end'=>(date('Y')+5)));
 		$this->pre_fill_form();
 	}

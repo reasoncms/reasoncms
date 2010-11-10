@@ -116,8 +116,8 @@ class OnlineGiftModule extends DefaultMinisiteModule
 		
 		if($head_items =& $this->get_head_items())
 		{
-			$head_items->add_stylesheet('/global_stock/css/gift_form.css');
-			$head_items->add_javascript('/global_stock/js/gift_form.js');
+			$head_items->add_stylesheet('/reason/css/giftform.css');
+			$head_items->add_javascript('/reason/js/giftform.js');
 		}
 		// Insert refresh headers when in kiosk mode
 		if ($this->params['kiosk_mode'])
@@ -144,7 +144,7 @@ class OnlineGiftModule extends DefaultMinisiteModule
 	{
 		if( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
 		{
-			reason_include_once( 'minisite_templates/modules/gift_work/gift_confirmation.php' );
+			reason_include_once( 'minisite_templates/modules/gift_form/gift_confirmation.php' );
 			$gc = new GiftConfirmation;
 			$gc->set_ref_number( $this->request[ 'r' ] );
 			$gc->set_hash( $this->request[ 'h' ] );
@@ -156,12 +156,13 @@ class OnlineGiftModule extends DefaultMinisiteModule
 			{
 				echo $gc->get_error_message();
 			}
-			// MUST reconnect to Reason database.  GiftConfirmation connects to AAF for info.
+			// MUST reconnect to Reason database.  GiftConfirmation connects to reason_gifts for info.
 			connectDB( REASON_DB );
 		}
 		else
 		{
 			echo $this->generate_navigation();
+			
 			$this->controller->set_request( $this->request );
 			$this->controller->run();
 		}
@@ -184,6 +185,6 @@ class OnlineGiftModule extends DefaultMinisiteModule
 		}
 		$output .= '</ul></div>';
 		return $output;
-	}
+	}	
 }
 ?>
