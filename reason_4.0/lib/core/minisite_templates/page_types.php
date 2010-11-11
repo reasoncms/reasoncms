@@ -773,6 +773,16 @@
 			),
 			'sidebar' => '',
 		),
+		'gallery_above_assets' => array(
+			'main' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',//'meta.description ASC',
+			),
+			'main_post' => 'assets',
+			'pre_sidebar' => '',
+			'sidebar' => '',
+			'sub_nav' => 'content',
+		),
 		'gallery_above_blurbs' => array(
 			'main' => array(
 				'module'=>'gallery2',
