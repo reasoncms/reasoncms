@@ -99,20 +99,27 @@
                 {
                         //echo '<li class="item number'.$this->item_counter.'">';
                         echo '<li>';
-                        $this->show_list_item_pre( $item );
-                        //$this->show_list_item_date( $item );
-                        if ($this->cur_page->get_value('custom_page') != 'audio_video_sidebar' && $this->cur_page->get_value('custom_page') != 'default' && $this->cur_page->get_value('custom_page') != 'show_children')
-			{
-				echo '<h4>';
+                        if ($this->cur_page->get_value('custom_page') != 'audio_video')
+                        {
+                        	echo '<div class="figure" style="width: 125px">'."\n";
+                        	$this->show_list_item_pre( $item );
                         	$this->show_list_item_name( $item );
-				echo '</h4>';
+                        	echo '</div>'."\n";      	
+                        }
+                        else
+                        {
+	                        $this->show_list_item_pre( $item );
+	                        //$this->show_list_item_date( $item );
+							echo '<h4>';
+                        	$this->show_list_item_name( $item );
+							echo '</h4>';
                         	$this->show_list_item_desc( $item );
-			}
+                        }
                         echo '</li>'."\n";
-                        if ($this->cur_page->get_value('custom_page') != 'audio_video_sidebar' && $this->cur_page->get_value('custom_page') != 'default' && $this->cur_page->get_value('custom_page') != 'show_children')
-			{
+                        if ($this->cur_page->get_value('custom_page') == 'audio_video')
+						{
                         	echo '<hr>'."\n";
-			}
+						}
                         $this->item_counter++;
                 }
 
