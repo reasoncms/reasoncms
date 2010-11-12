@@ -137,7 +137,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		}
 		// put Read more... at end of teaser
 //		$markup_string = preg_replace("|\<\/p\>\s?\<\/div\>\s?.*?\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?<\/ul\>\s?|", "&nbsp;&nbsp;\\1 Read more...</a></p></div>", $markup_string);
-		$markup_string = preg_replace("|(\<\/p\>)?\s?\<\/div\>\s?.*?\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?(\<li class\=\"comments\"\>\s?\<a href\=\".*?View comments \(\d+\).*?\<\/a\>\<\/li\>\s?)?<\/ul\>\s?|", "&nbsp;&nbsp;\\2 Read more...</a></p></div>", $markup_string);
+		$markup_string = preg_replace("|(\<\/p\>)?\s?\<\/div\>\s?.*?\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?(\<li class\=\"comments\"\>\s?\<a href\=\".*?View comments \(\d+\).*?\<\/a\>\<\/li\>\s?)?<\/ul\>\s?|", "&nbsp;&nbsp;\\2Read more...</a></p></div>", $markup_string);
 		// remove permalink on pages with no posts
 		$markup_string = preg_replace("|\<ul class\=\"links\"\>\s?\<li class\=\"permalink\"\>\s?\<a href\=\".*?Permalink\<\/a\>\<\/li\>\s?\<\/ul\>\s?|", "", $markup_string);
 		// remove permalink on news posts with no description
@@ -214,7 +214,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string .= '</div>'."\n";
 		}
 		// put Read more... at end of teaser
-		$markup_string = preg_replace("|\<\/p\>\s?\<\/div\>\s?.*?\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?<\/ul\>\s?|", "&nbsp;&nbsp;\\1 Read more...</a></p></div>", $markup_string);
+		$markup_string = preg_replace("|\<\/p\>\s?\<\/div\>\s?.*?\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?<\/ul\>\s?|", "&nbsp;&nbsp;\\1Read more...</a></p></div>", $markup_string);
 		return $markup_string;
 	}
 	
