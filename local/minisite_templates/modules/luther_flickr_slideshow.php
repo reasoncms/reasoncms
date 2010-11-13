@@ -65,14 +65,10 @@
 				//	echo "farm: " . $pinfo['farm'] . "<br />";
 				//	//print_r($pinfo);
 				//}
-				if ($number_slideshows == 1 && $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
-					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni')
-				{
-					echo "<h3>" . $post->get_value('name') . "</h3>" . "\n";
-				}
-				
+
 				if ($number_slideshows == 1)
 				{
+					echo "<h3>" . $post->get_value('name') . "</h3>" . "\n";
 					echo "<ul id=\"galleryimages\">\n";
 				}
 				elseif ($number_slideshows > 1)
