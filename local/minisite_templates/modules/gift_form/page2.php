@@ -7,7 +7,6 @@
 //    Work on the first page of the giving form
 //
 //    Modified for Luther - Steve Smith
-//    search for SLS to find modifications
 //    2010-09-13
 //
 //
@@ -15,7 +14,6 @@
 
 class GiftPageTwoForm extends FormStep
 {
-    //SLS - changed all references of Carleton to Luther
 	var $_log_errors = true;
 	var $error;
 	
@@ -42,15 +40,8 @@ class GiftPageTwoForm extends FormStep
 		'luther_affiliation' => array(
 			'display_name' => 'I am a Luther',
 			'type' => 'checkboxgroup_no_sort',
-                        // SLS - changed options per Development request
 			'options' => array('Alumnus/Spouse'=>'Alumnus/a or Spouse','Parent'=>'Parent','Friend'=>'Friend','Student'=>'Student','Faculty/Staff'=>'Faculty/Staff',),
 		),
-/*
-		'class_year_note' => array(
-			'type' => 'comment',
-			'text' => 'Choose either your spouse\'s or your class year',
-		),
-*/
 		'class_year' => array(
 			'type' => 'numrange',
 			'start' => 1924,
@@ -102,7 +93,6 @@ class GiftPageTwoForm extends FormStep
 		),
 		'phone_type' => array(
 			'type' => 'select_no_sort',
-                        // SLS - flipped cell and business per Development request
 			'options' => array('Home'=>'Home', 'Cell'=>'Cell','Business'=>'Business',),
 			'default' => 'Home',
 		),
