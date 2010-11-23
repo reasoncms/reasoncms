@@ -675,14 +675,14 @@ function admissions_main_navigation()
         	echo '<li class="academics"><a href="/admissions/academics/">Academics</a>'."\n";
         	echo '<ul>'."\n";
         	echo '<li><a href="/academics/majors/">Majors & Minors</a></li>'."\n";
-        	echo '<li><a href="/admissions/academics/calendars/">Academic Calendars</a></li>'."\n";
+        	echo '<li><a href="/academics/calendars/">Academic Calendars</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/requirements/">Admissions Requirements</a></li>'."\n";        	
         	echo '<li><a href="/admissions/academics/curriculum/">Curriculum & Graduation Requirements</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/honors/">Honors Program</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/studyabroad/">Study Abroad</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/lis/">Library & Information Services</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/sasc/">Student Academic Support Center</a></li>'."\n";
-        	echo '<li><a href="/admissions/academics/sss/">Student Support Services</a></li>'."\n";
+        	echo '<li><a href="/sss/">Student Support Services</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/undergrad/">Undergraduate Research</a></li>'."\n";
         	echo '</ul></li>'."\n";        	
         echo '<li class="lifeAtLuther"><a href="/admissions/lifeatluther/">Life at Luther</a>'."\n";
