@@ -14,6 +14,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 include_once(WEB_PATH.'stock/giftclass.php');
+include_once(TYR_INC . 'tyr.php');
 reason_include_once( 'classes/repeat_transaction_helper.php' );
 
 class GiftPageThreeForm extends FormStep
@@ -228,13 +229,26 @@ class GiftPageThreeForm extends FormStep
 	
 		$txt .= '<p class="printConfirm">Print this confirmation for your records.</p>'."\n";
 		$txt .= '<h3>Thank you for your gift to Luther College</h3>';
+		if (reason_unique_name_exists('giving_form_thank_you_blurb'))
+			$txt .= '<p>' . get_text_blurb_content('giving_form_thank_you_blurb'). '</p>';
 		$txt .= '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>'."\n";
 		$txt .= '<p>If you have questions about the giving process or experience technical problems using 
 			the online giving form, please contact the Luther College Development Office.</p>'."\n";
 		$txt .= '<ul>'."\n";
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
 		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('first_name').' '.$this->controller->get('last_name').'</li>'."\n";
-		$txt .= '<li><strong>Spouse Name:</strong> '.$this->controller->get('spouse_first_name').' '.$this->controller->get('spouse_last_name').'</li>'."\n";
+		if (($this->controller->get('spouse_first_name') != 'First') || ($this->controller->get('spouse_last_name') != 'Last'))
+		{
+			$txt .= '<li><strong>Spouse Name:</strong> ';
+		}
+		if ($this->controller->get('spouse_first_name') != 'First')
+		{ 
+			$txt .= $this->controller->get('spouse_first_name') . ' ';
+		}
+		if ($this->controller->get('spouse_last_name') != 'Last')
+		{
+			$txt .= $this->controller->get('spouse_last_name').'</li>'."\n";
+		}
 		$txt .= '<li><strong>'.$this->controller->get('address_type').' Address:</strong>'."\n".$this->controller->get('street_address')."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip')."\n".$this->controller->get('country').'</li>'."\n";
 		$txt .= '<li><strong>'.$this->controller->get('phone_type').' Phone:</strong> '.$this->controller->get('phone').'</li>'."\n";
 		$txt .= '<li><strong>E-mail:</strong> '.$this->controller->get('email').'</li>'."\n";
@@ -506,19 +520,30 @@ class GiftPageThreeForm extends FormStep
 										'<th>Amount</th>'=>'',
 										'</td><td>'=>': ',
 										'–'=>'-',
-										'<h3>'=>'--------------------'."\n\n",
-										'</h3>'=>'',
+										//'<h3>'=>'--------------------'."\n\n",
+										//'</h3>'=>'',
 										'<br />'=>"\n",
 									);
-				if (reason_unique_name_exists('giving_form_thank_you_blurb'))
+				/*
+if (reason_unique_name_exists('giving_form_thank_you_blurb'))
 					$confirm_text = get_text_blurb_content('giving_form_thank_you_blurb') . $confirm_text;
 				else
 					$confirm_text = '<p><strong>Thank you for your gift to Luther College!</strong></p>' . $confirm_text;
+*/
 				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
-				$add_headers = 'Content-Type: text/plain; charset="utf-8"'."\r\n".'From: "Luther College Giving" <giving@luther.edu>' . "\r\n" .
+				$email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Online Gift '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
+				$email_to_development->send();
+				$email_to_giver = new Email($this->controller->get('email'),'giving@luther.edu','giving@luther.edu','Luther College Online Gift Confirmation',strip_tags($mail_text),$mail_text);
+				$email_to_giver->send();
+
+//				$add_headers = 'Content-Type: text/plain; charset="utf-8"'."\r\n".'From: "Luther College Giving" <giving@luther.edu>' . "\r\n" .
+//'Reply-To: "Luther College Giving" <giving@luther.edu>';
+				/*
+$add_headers = 'MIME-Version: 1.0' . "\r\n" . 'Content-Type: text/html; charset="utf-8"'."\r\n".'From: "Luther College Giving" <giving@luther.edu>' . "\r\n" .
 'Reply-To: "Luther College Giving" <giving@luther.edu>';
-				mail($this->controller->get('email'),'Luther College Gift Confirmation',strip_tags($mail_text),$add_headers);
+				mail($this->controller->get('email'),'Luther College Gift Confirmation', $mail_text, $add_headers);
 				mail('waskni01@luther.edu', 'New Online Gift', strip_tags($mail_text), $add_headers);
+*/
 				//}
 			}
 		}
