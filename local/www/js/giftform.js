@@ -157,6 +157,8 @@ function toggle_country_field(stateElementSelector, countryRowSelector)
 	if ($(stateElementSelector).val() == "XX")
 	{
    	    $(countryRowSelector + " select").val('');
+    	$("#countryRow").show();
+   		$("tr#billingcountryRow").show();
 	}
 	// If US or Canada, populate Country but hide it
 	else
