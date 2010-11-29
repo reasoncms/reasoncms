@@ -33,9 +33,10 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 		$sorted_and_limited_news_items = array();
 		$index = 0;
 		$ids = array_keys($news_items);
-                $source_name = 'news';
-                $featured_ids = $this->get_featured_ids();
-                shuffle($ids);
+		$source_name = 'news';
+		$featured_ids = $this->get_featured_ids();
+		print_r($featured_ids);
+		shuffle($ids);
 		$ids = array_unique(array_merge($featured_ids, $ids));
 		foreach ($ids as $k)
 		{
@@ -51,7 +52,8 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
         // custom method
         function get_featured_ids()
         {
-          $es = new entity_selector($this->site_id);
+          //$es = new entity_selector($this->site_id);  // removed $this->site_id: featured news items were not showing on borrowed publications
+          $es = new entity_selector();
           $es->add_type(id_of('news'));		
           $es->add_right_relationship($this->get_publication_id(), relationship_id_of('publication_to_featured_post'));
           //$es->add_rel_sort_field($this);
