@@ -35,7 +35,6 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 		$ids = array_keys($news_items);
 		$source_name = 'news';
 		$featured_ids = $this->get_featured_ids();
-		print_r($featured_ids);
 		shuffle($ids);
 		$ids = array_unique(array_merge($featured_ids, $ids));
 		foreach ($ids as $k)
