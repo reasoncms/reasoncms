@@ -20,3 +20,4 @@ class SwimmingCampThorForm extends CreditCardThorForm
 		);
 	}
 }
+?>
