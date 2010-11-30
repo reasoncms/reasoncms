@@ -400,7 +400,7 @@ class CreditCardThorForm extends DefaultThorForm
 				if (strpos($sender, '@') === FALSE)
 					$sender .= '@luther.edu';
 			} else {
-				$sender = 'auto-form-process@luther.edu';
+				$sender = 'noreply@luther.edu';
 			}
 			
 			$thank_you = $model->get_thank_you_message();
