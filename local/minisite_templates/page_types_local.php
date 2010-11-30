@@ -551,6 +551,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post' => 'content',
 			'sub_nav_3'=> 'twitter',
 		),
+		'transcript_request' => array(
+			'main_post' => 'transcript_request',
+		),
 );
 
 function luther_audience_navigation()
