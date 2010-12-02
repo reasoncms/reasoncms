@@ -198,6 +198,8 @@ class PublicationModule extends Generic3Module
 													 'item_comments' => 'get_item_comments',
 													 'comment_form_markup'=>'get_comment_form_markup',
 													 'commenting_status' => 'commentability_status',
+													 'previous_post' => 'get_next_post',
+													 'next_post' => 'get_previous_post',
 												);
 											   
 
@@ -2255,8 +2257,9 @@ class PublicationModule extends Generic3Module
 	
 		function get_teaser_image($item)
 		{
-			$es = new entity_selector( $this->site_id );
+			$es = new entity_selector();
 			$es->description = 'Finding teaser image for news item';
+			$es->set_env( 'site' , $this->site_id );
 			$es->add_type( id_of('image') );
 			$es->add_right_relationship( $item->id(), relationship_id_of('news_to_teaser_image') );
 			$es->set_num (1);
@@ -2544,6 +2547,21 @@ class PublicationModule extends Generic3Module
 		function get_text_only_state()
 		{
 			return $this->textonly;
+		}
+		
+		function get_previous_post($entity)
+		{
+			$p = $this->get_previous_item($entity->id());
+			if(!empty($p))
+				$p->set_value('link_url',$this->get_link_to_full_item($p));
+			return $p;
+		}
+		function get_next_post($entity)
+		{
+			$p = $this->get_next_item($entity->id());
+			if(!empty($p))
+				$p->set_value('link_url',$this->get_link_to_full_item($p));
+			return $p;
 		}
 	}
 ?>
