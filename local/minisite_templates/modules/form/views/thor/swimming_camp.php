@@ -27,8 +27,9 @@ class SwimmingCampThorForm extends CreditCardThorForm
 
 			)
 	 	);
-	 	
-	}	
+
 	$this->is_in_testing_mode = true;
+	}	
+	
 }
 ?>
