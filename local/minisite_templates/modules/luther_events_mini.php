@@ -47,11 +47,15 @@ class miniEventsModule extends EventsModule
 	}
 	function run()
 	{
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving')
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa')
 		{
 			echo '<section class="events" role="group">'."\n";
-			echo '<header class="blue-stripe"><h1><span>Browse Events</span></h1></header>'."\n";
-			$this->show_calendar_grid();
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving')
+			{
+				echo '<header class="blue-stripe"><h1><span>Browse Events</span></h1></header>'."\n";
+				$this->show_calendar_grid();
+			}
 			echo '<header class="blue-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
 		}
 		
@@ -65,7 +69,8 @@ class miniEventsModule extends EventsModule
 		//echo '</div>'."\n";
 		echo '</ol>'."\n";
 		
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving')
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa')
 		{
 			echo '</section> <!-- class="events" role="group" -->'."\n";
 		}

@@ -307,6 +307,20 @@ $GLOBALS['_reason_page_types_local'] = array(
             'sidebar' => '',
             'post_sidebar' => '',            
          ),
+         'luther2010_naa' => array(
+			'main' => 'content',
+         	'main_post' => array(
+            	'module' => 'publication',
+         		'related_publication_unique_names' => array('naa_news'),
+         		'related_mode' => 'true',
+         		'max_num_items' => 2,
+         	),
+			'imagetop' => 'luther_carousel',
+         	'content_blurb' => '',
+         	'pre_sidebar' => 'main_blurb',
+            'sidebar' => '',
+         	'post_sidebar' => 'luther_events_mini',         
+         ),
 		'luther_news_page' => array(
 			'main_post' => 'publication',
             		'sub_nav_3' => 'quote',
