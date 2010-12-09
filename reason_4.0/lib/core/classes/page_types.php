@@ -590,7 +590,8 @@ function &get_reason_page_types()
  * You should get a ReasonPageTypes object using the singleton function {@link get_reason_page_types() get_reason_page_types()}.
  * 
  * You should use ReasonPageTypes to:
- * <ul><li>Get a list of page types ({@link ReasonPageTypes::get_page_type_names()})</li>
+ * <ul>
+ * <li>Get a list of page types ({@link ReasonPageTypes::get_page_type_names()})</li>
  * <li>Get an array of all page type objects ({@link ReasonPageTypes::get_page_types()})</li>
  * <li>Get an array of names of page types that use a module ({@link ReasonPageTypes::get_page_type_names_that_use_module()})</li>
  * <li>Get a named page type object ({@link ReasonPageTypes::get_page_type()})</li>
@@ -829,6 +830,33 @@ class ReasonPageTypes
 			}
 		}
 		return $this->_reason_page_types;
+	}
+	
+	function get_params_of_page_types_that_use_module($module_name)
+	{
+		$ret=array();
+		$rpts =& get_reason_page_types();
+		$page_types=$rpts->get_page_type_names_that_use_module($module_name);
+		foreach($page_types as $page_type)
+		{
+			$pts=$rpts->get_page_type($page_type);
+			$tmps=$pts->get_properties();
+			$d=array();
+			foreach($tmps as $key=>$tmp)
+			{
+				if($tmp['module_name']==$module_name)
+				{
+					if(is_array($tmp['module_params']))
+					{
+						$d['params']=$tmp['module_params'];
+					}
+					$d['page_type']=$page_type;
+					$d['location']=$key;
+					$ret[]=$d;
+				}
+			}
+		}
+		return $ret;
 	}
 }
 ?>
