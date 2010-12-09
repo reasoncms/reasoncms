@@ -93,3 +93,5 @@ require_once PLASMATURE_TYPES_INC."world.php";
 require_once PLASMATURE_TYPES_INC."datetime.php";
 require_once PLASMATURE_TYPES_INC."upload.php";
 require_once PLASMATURE_TYPES_INC."group.php";
+require_once PLASMATURE_TYPES_INC."colorpicker.php";
+
