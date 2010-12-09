@@ -720,6 +720,36 @@
 		'faqs' => array(
 			'main_post' => 'faqs',
 		),
+		'feature' => array(
+			'main_post' => 'feature/feature',
+		),
+		'feature_shuffled' => array(
+			'main_post' => array(
+				'module' => 'feature/feature',
+				'shuffle' => true,
+				'width'=>500,
+				'height'=>300
+			),
+		),
+		'feature_av' => array(
+			'main_post' => array(
+				'module' => 'feature/feature',
+				'shuffle' => false,
+				'width'=>300,
+				'height'=>200,
+				'view'=>'av_view'
+			),
+		),
+		
+		'feature_autoplay' => array(
+			'main_post' => array(
+				'module' => 'feature/feature',
+				'shuffle' => false,
+				'autoplay_timer' => 3,
+				'width'=>500,
+				'height'=>300
+			),
+		),
 		'feedback' => array(
 			'main_post' => 'feedback',
 		),
