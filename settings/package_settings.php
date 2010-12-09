@@ -84,6 +84,16 @@ domain_define( 'UNIVERSAL_CSS_PATH', ''); // Define the path to a CSS file used 
 domain_define( 'WEB_PATH', rtrim($_SERVER['DOCUMENT_ROOT'], "/") . '/' );
 
 /**
+ * REASON_PACKAGE_HTTP_BASE_PATH
+ * This setting identifies the location of the reason_package web-available directory from the web root
+ * This path should be an alias to the reason_package www folder, which should be 
+ * located outside the web root. 
+ *
+ * The location of the reason_package www folder is /reason_package/www/
+ */
+domain_define( 'REASON_PACKAGE_HTTP_BASE_PATH','/reason_package/');
+
+/**
  * The host name, (eg www.mysite.com)
  */
 domain_define( 'HTTP_HOST_NAME', $_SERVER['HTTP_HOST'] );
