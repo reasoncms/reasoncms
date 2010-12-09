@@ -9,6 +9,7 @@
  * include the URL utils
  */
 reason_include_once( 'function_libraries/url_utils.php' );
+reason_include_once( 'function_libraries/image_tools.php' );
 
 /**
  * Register the class
@@ -27,6 +28,8 @@ $GLOBALS['reason_av_displayers'][ basename( __FILE__, '.php') ] = 'xhtmlStrictRe
  *
  * @todo Either figure out how to embed everything without conditional comments, or
  * figure out how HTML comments can survive Tidy
+ *
+ * @todo add placard image to all players that support it
  *
  * @author Matt Ryan
  */
@@ -95,6 +98,13 @@ class xhtmlStrictReasonAVDisplay
 	var $video_dimensions;
 	
 	/**
+	 * The placard image to be used (only some media formats suport this)
+	 *
+	 * @var string URL
+	 */
+	var $placard_image_url;
+	
+	/**
 	 * Maps the format specified in the entity's media_format field to a string used to display browser requirements and (where needed) tech credits
 	* Do not access directly; use the get_tech_note() function
 	 * @var array keys are the entity values in media_format; values are the strings returned
@@ -121,6 +131,21 @@ class xhtmlStrictReasonAVDisplay
 		$this->parameters[$player][$param] = $value;
 	}
 	/**
+	 * Clears a parameter
+	 *
+	 * @param string $player name of the player parameter applies to ('qt'=Quicktime,'real'=Real Player)
+	 * @param string $param Name of the parameter being cleared
+	 */
+	function clear_parameter( $player, $param )
+	{
+		if(isset($this->parameters[$player][$param]))
+		{
+			unset($this->parameters[$player][$param]);
+			return true;
+		}
+		return false;
+	}
+	/**
 	 * Wraps up the various parameter modifications needed to disable automatic play in the various players
 	 */
 	function disable_automatic_play_start()
@@ -139,6 +164,28 @@ class xhtmlStrictReasonAVDisplay
 		$this->set_parameter( 'real', 'autostart', 'true' );
 		$this->set_parameter( 'wmv', 'autostart', 'true' );
 		$this->set_parameter( 'flv', 'autostart', 'true' );
+	}
+	/**
+	 * Wraps up the various parameter modifications needed to disable the controller in the various players
+	 *
+	 * @todo add support for real player?
+	 */
+	function disable_controller()
+	{
+		$this->set_parameter( 'flv', 'controlbar', '0' );
+		$this->set_parameter( 'qt', 'controller', 'false' );
+		$this->set_parameter( 'wmv', 'ShowControls', 'false' );
+	}
+	/**
+	 * Wraps up the various parameter modifications needed to enable the controller in the various players
+	 *
+	 * @todo add support for real player?
+	 */
+	function enable_controller()
+	{
+		$this->clear_parameter( 'flv', 'controlbar' );
+		$this->set_parameter( 'qt', 'controller', 'true' );
+		$this->set_parameter( 'wmv', 'ShowControls', 'true' );
 	}
 	/**
 	 * Sets the dimensions to be used by the class when generating markup for a video item
@@ -175,6 +222,34 @@ class xhtmlStrictReasonAVDisplay
 		{
 			$this->audio_dimensions['height'] = $height;
 		}
+	}
+	
+	/**
+	 * Assign an image to be used as the placard image
+	 * @param mixed $image An image URL, id, or entity
+	 */
+	function set_placard_image($image)
+	{
+		if(is_numeric($image) || is_object($image))
+		{
+			$this->placard_image_url = reason_get_image_url($image);
+		}
+		elseif(is_string($image))
+		{
+			$this->placard_image_url = $image;
+		}
+		else
+		{
+			trigger_error('Placard image must be an image id, url, or entity');
+		}
+	}
+	
+	/**
+	 * Clear a preview image, if any
+	 */
+	function clear_placard_image()
+	{
+		$this->placard_image_url = null;
 	}
 	
 	/**
@@ -377,8 +452,9 @@ class xhtmlStrictReasonAVDisplay
 		
 		$url = REASON_FLASH_VIDEO_PLAYER_URI.'?file='.$entity->get_value('url').'&amp;autostart='.$this->parameters['flv']['autostart'];
 		if(isset($this->parameters['flv']['controlbar']))
-			$url .= '&amp;controlbar='.$this->parameters['flv']['controlbar'];
-		
+			$url .= '&amp;controlbar='.htmlspecialchars($this->parameters['flv']['controlbar']);
+		if(!empty($this->placard_image_url))
+			$url .= '&amp;image='.htmlspecialchars($this->placard_image_url);
 		$ret[] = '<object type="application/x-shockwave-flash" data="'.$url.'" '.$dimensions_attrs.' id="flashVideoWidget'.$entity->id().'">';
 		$ret[] = '<param name="movie" value="'.$url.'" />';
 		if($entity->get_value('av_type') != 'Audio')
@@ -424,7 +500,8 @@ class xhtmlStrictReasonAVDisplay
 		
 		$ret[] = '<object id="flashWidget'.$entity->id().'" '.$dimensions_attrs.' classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" type="application/x-shockwave-flash" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab">';
 		$ret[] = '<param name="movie" value="'.$entity->get_value('url').'" />';
-		$ret[] = '<param name="wmode" value="'.$this->parameters['flv']['wmode'].'" />';
+		if(!empty($this->parameters['swf']['wmode']))
+			$ret[] = '<param name="wmode" value="'.$this->parameters['swf']['wmode'].'" />';
 		$ret[] = '<embed type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" src="'.$entity->get_value('url').'" '.$dimensions_attrs.'></embed>';
 		$ret[] = '</object>';
 		return implode("\n",$ret);
