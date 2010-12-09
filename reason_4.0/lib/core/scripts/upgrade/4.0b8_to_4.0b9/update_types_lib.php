@@ -98,7 +98,7 @@ class updateTypes
 		'connections'=>'many_to_many',
 		'required'=>'no',
 		'is_sortable'=>'no',
-		'display_name'=>'Attach to Media Work',
+		'display_name'=>'Attach Media Work',
 		'display_name_reverse_direction'=>'Add to feature',
 		'description_reverse_direction'=>'Features using this media work');		
 
