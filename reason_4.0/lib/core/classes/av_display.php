@@ -108,6 +108,21 @@ class reasonAVDisplay
 		return $this->_displayer->set_parameter( $player, $param, $value );
 	}
 	/**
+	 * Clears a parameter
+	 *
+	 * @param string $player name of the player parameter applies to ('qt'=Quicktime,'real'=Real Player)
+	 * @param string $param Name of the parameter being cleared
+	 */
+	function clear_parameter( $player, $param )
+	{
+		if(isset($this->parameters[$player][$param]))
+		{
+			unset($this->parameters[$player][$param]);
+			return true;
+		}
+		return false;
+	}
+	/**
 	 * Wraps up the various parameter modifications needed to disable automatic play in the various players
 	 */
 	function disable_automatic_play_start()
@@ -122,6 +137,22 @@ class reasonAVDisplay
 	{
 		if(!$this->_displayer_is_set_up()) return;
 		return $this->_displayer->enable_automatic_play_start();
+	}
+	/**
+	 * Wraps up the various parameter modifications needed to disable the controller in the various players
+	 */
+	function disable_controller()
+	{
+		if(!$this->_displayer_is_set_up()) return;
+		return $this->_displayer->disable_controller();
+	}
+	/**
+	 * Wraps up the various parameter modifications needed to enable the controller in the various players
+	 */
+	function enable_controller()
+	{
+		if(!$this->_displayer_is_set_up()) return;
+		return $this->_displayer->enable_controller();
 	}
 	/**
 	 * Sets the dimensions to be used by the class when generating markup for an video item
@@ -144,6 +175,23 @@ class reasonAVDisplay
 	{
 		if(!$this->_displayer_is_set_up()) return;
 		return $this->_displayer->set_audio_dimensions($width, $height);
+	}
+	/**
+	 * Assign an image to be used as the placard image
+	 * @param mixed $image An image URL, id, or entity
+	 */
+	function set_placard_image($entity)
+	{
+		if(!$this->_displayer_is_set_up()) return;
+		return $this->_displayer->set_placard_image($entity);
+	}
+	/**
+	 * Clear a preview image, if any
+	 */
+	function clear_placard_image()
+	{
+		if(!$this->_displayer_is_set_up()) return;
+		return $this->_displayer->clear_placard_image();
 	}
 	
 	/**
