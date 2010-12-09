@@ -26,10 +26,10 @@
 	/**
 	 * REASON_HTTP_BASE_PATH
 	 * This setting identifies the location of Reason's web-available directory from the web root
-         * This path should be an alias to the reason_package www folder, which should be 
+	 * This path should be an alias to the reason www folder, which should be 
 	 * located outside the web root. 
-         *
-         * The location of the reason_package www folder is /reason_package/reason_4.0/www/
+	 *
+	 * The location of the reason www folder is /reason_package/reason_4.0/www/
 	 */
 	define( 'REASON_HTTP_BASE_PATH','/reason/');
 	
