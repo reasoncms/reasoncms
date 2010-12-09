@@ -1,0 +1,23 @@
+<?php
+include_once("reason_header.php");
+include_once(CARL_UTIL_INC.'basic/cleanup_funcs.php');
+reason_include_once( 'classes/feature_helper.php' );
+
+$media_works_id=clean_up_data($_GET['media_works_id']);
+
+$fh=new Feature_Helper();
+$av_html_str=$fh->get_av_html($media_works_id);
+
+echo $av_html_str;
+
+/**
+* removes any tags that might have been passed in
+*/
+function clean_up_data($val)
+{
+	$clean_val =strip_tags( $val );
+	return $clean_val;
+}
+
+
+?>
