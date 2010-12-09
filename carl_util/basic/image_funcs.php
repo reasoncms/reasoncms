@@ -31,7 +31,6 @@ function resize_image($path, $width, $height, $sharpen=true)
             '('.var_export($path, true).')', WARNING);
         return false;
     }
-
     $perms = substr(sprintf('%o', fileperms($path)), -4);
     if (imagemagick_available()) {
         $result = _imagemagick_resize($path, $width, $height, $sharpen);
@@ -48,6 +47,576 @@ function resize_image($path, $width, $height, $sharpen=true)
     $newperms = substr(sprintf('%o', fileperms($path)), -4);
     if ($perms != $newperms) @chmod($path, octdec($perms));
     return $result;
+}
+
+/**
+* crop an image while preserving aspect ratio
+*
+* @param int $nw the new width of the image
+* @param int $nh the new height of the image
+* @param string $source the path and file of the image to be cropped
+* @param string $dest the path and file of the cropped image
+* @return boolean true on success
+*
+*/
+function crop_image($nw, $nh, $source, $dest, $sharpen=true)
+{
+    if (!is_file($source) || !is_readable($source)) {
+        trigger_error('cannot resize image; no file exists at the given path '.
+            '('.var_export($source, true).')', WARNING);
+        return false;
+    }
+    $perms = substr(sprintf('%o', fileperms($source)), -4);
+    if (imagemagick_available()) {
+        $result = _imagemagick_crop_image($nw, $nh, $source,$dest,$sharpen);
+    } else if (function_exists('imagecreatetruecolor')) {
+        $result = _gd_crop_image($nw, $nh, $source, $dest, $sharpen);
+    } else {
+	trigger_error('neither ImageMagick nor GD are available; cannot '.
+            'crop image', WARNING);
+        return false;
+    }
+
+    // Prevent the transformation from changing the file permissions.
+    clearstatcache();
+    $newperms = substr(sprintf('%o', fileperms($dest)), -4);
+    if ($perms != $newperms) @chmod($dest, octdec($perms));
+    return $result;
+}
+
+/**
+* Crop the image using the Imagemagick library
+* See crop_image for an explanation of the parameters
+* and return value
+*/
+function _imagemagick_crop_image($nw,$nh,$source,$target,$sharpen)
+{
+	$info = getimagesize($source);
+	$ow=$info[0];
+	$oh=$info[1];
+	
+	$or=$ow/$oh;
+	$nr=$nw/$nh;
+	
+	$x=0;
+	$y=0;
+	
+//	pray($info);
+
+	$resize_str="";
+	if($nw<=$nh && $or>=$nr)
+	{
+
+		$resize_str=" -resize x".$nh." ";
+
+	}
+	elseif($nw<=$nh && $or<$nr)
+	{
+		$resize_str=" -resize ".$nw."x ";
+	}
+	elseif($nw>$nh && $or<$nr)
+	{
+		$resize_str=" -resize ".$nw."x ";
+	}
+	elseif($nw>$nh && $or>$nr)
+	{
+		$resize_str=" -resize x".$nh." ";;
+	}
+	else
+	{
+		$resize_str=" -resize ".$nw."x ";
+
+	}
+	$sharpen_str="";
+	if($sharpen)
+	{
+		$sharpen_str=" -sharpen 1";
+	}
+	
+	$repage=" -repage ".$nw."x".$nh;
+
+	$exec="convert ".$resize_str.$sharpen_str."-gravity Center +repage  -crop ".$nw."x".$nh."+".$x."+".$y."! ".$source."  ".$target;
+
+	$output = array();
+	$exit_status = -1;
+	exec($exec, $output, $exit_status);
+	if ($exit_status != 0) {
+		trigger_error('image crop failed: '.implode('; ', $output), WARNING);
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+/**
+* Crop the image using the GD library
+* See crop_image for an explanation of the parameters
+* and return value
+*/
+function _gd_crop_image($nw, $nh, $source,$dest,$sharpen) 
+{
+	$details=_gd_get_image($source);
+	$w=$details['width'];
+	$h=$details['height'];
+	$simg=$details['image'];
+  	$dimg = imagecreatetruecolor($nw, $nh);
+
+	$transindex = imagecolortransparent($simg);
+	if($transindex >= 0) {
+	  $transcol = imagecolorsforindex($simg, $transindex);
+	  $transindex = imagecolorallocatealpha($dimg, $transcol['red'], $transcol['green'], $transcol['blue'], 127);
+	  imagefill($dimg, 0, 0, $transindex);
+	}
+
+
+  	$wm = $w/$nw;
+  	$hm = $h/$nh;
+  	$h_height = $nh/2;
+  	$w_height = $nw/2;
+
+	$ow=$w;
+	$oh=$h;
+	$or=$ow/$oh;
+	$nr=$nw/$nh;
+
+	$success=true;
+  	if($nw<=$nh && $ow>$oh) 
+  	{
+  		$adjusted_width = $w/ $hm;
+  		$half_width = $adjusted_width / 2;
+  		$int_width = $half_width - $w_height;
+  		$success=imagecopyresampled($dimg,$simg,-$int_width,0,0,0,$adjusted_width,$nh,$w,$h);
+  	}
+	elseif($nw<=$nh && $ow<$oh && $or<=$nr)
+	{
+		$adjusted_height = $h/ $wm;
+		$half_height = $adjusted_height / 2;
+		$int_height = $half_height - $h_height;
+		$success=imagecopyresampled($dimg,$simg,0,-$int_height,0,0,$nw,$adjusted_height,$w,$h);
+	}
+	elseif($nw<=$nh && $ow<$oh && $or>$nr)
+  	{
+  		$adjusted_width = $w/ $hm;
+  		$half_width = $adjusted_width / 2;
+  		$int_width = $half_width - $w_height;
+  		$success=imagecopyresampled($dimg,$simg,-$int_width,0,0,0,$adjusted_width,$nh,$w,$h);
+  	}
+	elseif($nw>=$nh && $ow<$oh)
+	{
+		$adjusted_height = $h/ $wm;
+		$half_height = $adjusted_height / 2;
+		$int_height = $half_height - $h_height;
+		$success=imagecopyresampled($dimg,$simg,0,-$int_height,0,0,$nw,$adjusted_height,$w,$h);
+	}
+	elseif($nw>$nh && $ow>=$oh && $or>=$nr)
+	{
+		$adjusted_height = $h/ $wm;
+		$half_height = $adjusted_height / 2;
+		$int_height = $half_height - $h_height;
+		$success=imagecopyresampled($dimg,$simg,0,-$int_height,0,0,$nw,$adjusted_height,$w,$h);
+	}
+	elseif($nw>$nh && $ow>=$oh && $or<$nr)
+	{
+  		$adjusted_width = $w/ $hm;
+  		$half_width = $adjusted_width / 2;
+  		$int_width = $half_width - $w_height;
+  		$success=imagecopyresampled($dimg,$simg,-$int_width,0,0,0,$adjusted_width,$nh,$w,$h);
+	}
+	else 
+	{
+		$success=imagecopyresampled($dimg,$simg,0,0,0,0,$nw,$nh,$w,$h);
+	}
+	if(!$success)
+	{
+		trigger_error("imagecopyresampled failed");
+	}
+	
+	// Sharpen
+	if ($sharpen) 
+	{
+	    $dimg = sharpen_image($image_dest, 80, 0.5, 3);
+	}
+	
+	switch($stype)
+	{
+  		case 'gif':
+  			$ret=imagegif($dimg,$dest,100);
+  		break;
+  		case 'jpg':
+  			$ret=imagejpeg($dimg,$dest,100);
+  		break;
+  		case 'png':
+  			$ret=imagepng($dimg,$dest,0);
+  		break;
+		
+	}
+	
+
+    imagedestroy($dimg);
+	imagedestroy($simg);
+	return $ret;
+}	
+
+
+/*
+function _gd_crop_image($nw, $nh, $source,$dest,$sharpen) 
+{
+  	$size = getimagesize($source);
+  	$w = $size[0];
+  	$h = $size[1];
+
+	$stype="";
+ 	$type=strtolower(substr($source,-3));
+	if($type=="gif" || $type=="jpg" || $type=="png")
+	{
+		$stype=$type;
+	}
+	else
+	{
+		trigger_error("$type is not a supported image type file name must have suffix 'gif', 'jpg' or 'png");
+	}
+
+  	switch($stype) 
+	{
+  		case 'gif':
+  			$simg = imagecreatefromgif($source);
+  		break;
+  		case 'jpg':
+  			$simg = imagecreatefromjpeg($source);
+  		break;
+  		case 'png':
+  			$simg = imagecreatefrompng($source);
+  		break;
+  	}
+  	$dimg = imagecreatetruecolor($nw, $nh);
+  	$wm = $w/$nw;
+  	$hm = $h/$nh;
+  	$h_height = $nh/2;
+  	$w_height = $nw/2;
+  	if($w> $h) 
+  	{
+  		$adjusted_width = $w/ $hm;
+  		$half_width = $adjusted_width / 2;
+  		$int_width = $half_width - $w_height;
+  		imagecopyresampled($dimg,$simg,-$int_width,0,0,0,$adjusted_width,$nh,$w,$h);
+  	} 
+	elseif(($w <$h) || ($w == $h)) 
+	{
+  		$adjusted_height = $h/ $wm;
+  		$half_height = $adjusted_height / 2;
+  		$int_height = $half_height - $h_height;
+  		imagecopyresampled($dimg,$simg,0,-$int_height,0,0,$nw,$adjusted_height,$w,$h);
+  	} 
+	else 
+	{
+		imagecopyresampled($dimg,$simg,0,0,0,0,$nw,$nh,$w,$h);
+	}
+	// Sharpen
+	if ($sharpen) 
+	{
+	    $dimg = sharpen_image($image_dest, 80, 0.5, 3);
+	}
+	
+	switch($stype)
+	{
+  		case 'gif':
+  			$ret=imagegif($dimg,$dest,100);
+  		break;
+  		case 'jpg':
+  			$ret=imagejpeg($dimg,$dest,100);
+  		break;
+  		case 'png':
+  			$ret=imagepng($dimg,$dest,100);
+  		break;
+		
+	}
+	
+
+    imagedestroy($dimg);
+	imagedestroy($simg);
+	return $ret;
+}	
+*/
+
+/**
+* copies one image over another
+* makes sure the option array is populated with default values if
+* it has not been set
+* determines if Imagemagick is install, and calls the _imagemagick_blit_image function
+* if Imagemagick is not installed it looks to see if GD is available and
+* calls _gd_blit_image if it is
+* whimpers and cries if neither Imagemagick or GD are available.
+*
+* NOTE: paths are absolute paths on the server
+*
+* @param $source is the path and file of the image to
+*        on the bottom, (The Background) (Note that $source
+*        does not get rewritten in this operation.) 
+* @param $dest is the path and file of the final result
+*        after copying
+* @param $watermarak is the path and file of the image on top
+* @param $option gives the origin of the coordinate system to 
+*        be used when blitting
+*
+*        $options['horizontal']= "left", "right", or "center"
+*        $options['vertical']="top", "bottom" or "center"
+*        $options['horizontal_offset]= number of pixels to move horizontally before beginning to blit
+*        $options['vertical_offset']= number of pixels to move vertically before beginning to blit
+*		 default values are ("left","top",0,0) if you do not set the options array
+*
+* @return returns true upon success and false otherwise. (There is no room for failure!)
+*/
+function blit_image($source,$dest,$watermark,$options=array())
+{
+	//process the options
+	if(!isset($options['horizontal']))
+	{
+		$options['horizontal']="left";
+	}
+	if(!isset($options['horizontal_offset']))
+	{
+		$options['horizontal_offset']=0;
+	}
+	if(!isset($options['vertical']))
+	{
+		$options['vertical']="top";
+	}
+	if(!isset($options['vertical_offset']))
+	{
+		$options['vertical_offset']=0;
+	}
+	if(!isset($options['destination_image_type']))
+	{
+		$options['destination_image_type']="jpg";
+	}
+
+    if (!is_file($source) || !is_readable($source)) {
+        trigger_error('cannot resize image; no file exists at the given path '.
+            '('.var_export($source, true).')', WARNING);
+        return false;
+    }
+    $perms = substr(sprintf('%o', fileperms($source)), -4);
+    if (imagemagick_available()) {
+        $result = _imagemagick_blit_image($source, $dest, $watermark,$options);
+    } else if (function_exists('imagecreatetruecolor')) {
+        $result = _gd_blit_image($source, $dest, $watermark,$options);
+    } else {
+	trigger_error('neither ImageMagick nor GD are available; cannot '.
+            'blit image', WARNING);
+        return false;
+    }
+
+    // Prevent the transformation from changing the file permissions.
+    clearstatcache();
+    $newperms = substr(sprintf('%o', fileperms($dest)), -4);
+    if ($perms != $newperms) @chmod($dest, octdec($perms));
+    return $result;
+}
+
+
+/**
+* Uses Imagemagick to blit $watermark on top of $source in $dest
+* See blit_image for parameter and return details
+*/
+function _imagemagick_blit_image($source,$dest,$watermark,$options)
+{
+	
+	$details=_gd_get_image($source,false);
+	$w=$details['width'];
+	$h=$details['height'];
+	$background="";
+
+	$x=0;
+	$y=0;
+	$details=_gd_get_image($watermark,false);
+	$insert_w=$details['width'];
+	$insert_h=$details['height'];
+	$insert=$details['image'];
+
+	$xy=_get_x_and_y($source,$watermark,$options);
+	$x=$xy['x'];
+	$y=$xy['y'];
+	
+	$convert="convert -size ".$w."x".$h." xc:skyblue ";
+	$background="  ".$source." -geometry  +0+0 -composite ";
+	$insert="  ".$watermark." -geometry  +".$x."+".$y." -composite ";
+
+	$exec=$convert.$background.$insert.$dest;
+	$output = array();
+	$exit_status = -1;
+	exec($exec, $output, $exit_status);
+	if ($exit_status != 0) {
+		trigger_error('Imagemagick Version 6 is required. Blit image failed: '.implode('; ', $output), WARNING);
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+	
+}
+
+/**
+* Uses GD to blit $watermark on top of $source in $dest
+* See blit_image for parameter and return details
+*/
+function _gd_blit_image($source,$dest,$watermark,$options)
+{
+	
+	$details=_gd_get_image($source);
+	$w=$details['width'];
+	$h=$details['height'];
+	$background=$details['image'];
+	
+    $img   = imagecreatetruecolor( $w, $h );
+
+	$details=_gd_get_image($watermark);
+	$insert_w=$details['width'];
+	$insert_h=$details['height'];
+	$insert=$details['image'];
+
+	$xy=_get_x_and_y($source,$watermark,$options);
+	$x=$xy['x'];
+	$y=$xy['y'];
+	
+	imagecopy($img,$background,0,0,0,0,$w,$h);
+	imagecopy($img,$insert,$x,$y,0,0,$insert_w,$insert_h);
+	
+	$details=_gd_get_image($dest,false);
+	switch($details['type'])
+	{
+  		case 'gif':
+  			$ret=imagegif($img,$dest,100);
+  		break;
+  		case 'jpg':
+  			$ret=imagejpeg($img,$dest,100);
+  		break;
+  		case 'png':
+  			$ret=imagepng($img,$dest,0);
+  		break;
+		
+	}
+
+	//clean up your mess
+	imagedestroy($img);
+	imagedestroy($background);
+	imagedestroy($insert);
+	
+	return $ret;
+}
+
+/**
+* Used by the blit_image functions to determine
+* where to start blitting $watermark onto $source
+* See blit_image for an explanation of the params
+* @return an array of the coordinates to start blitting
+*         Keys are 'x' and 'y' in the return array
+*/
+function _get_x_and_y($source,$watermark,$options)
+{
+	$details=_gd_get_image($source,false);
+	$w=$details['width'];
+	$h=$details['height'];
+
+	$details=_gd_get_image($watermark,false);
+
+	$insert_w=$details['width'];
+	$insert_h=$details['height'];
+	$x=0;
+	$y=0;
+	
+	if($options['horizontal']=="left")
+	{
+		$x=0+$options['horizontal_offset'];
+	}
+	elseif($options['horizontal']=="center")
+	{
+		$x=($w- $insert_w)*0.5+$options['horizontal_offset'];
+	}
+	elseif($options['horizontal']=="right")
+	{
+		$x=($w- $insert_w)+$options['horizontal_offset'];
+	}
+	else
+	{
+		$x=0;
+	}
+	
+	if($options['vertical']=="left")
+	{
+		$y=0+$options['vertical_offset'];
+	}
+	elseif($options['vertical']=="center")
+	{
+		$y=($h- $insert_h)*0.5+$options['vertical_offset'];
+	}
+	elseif($options['vertical']=="bottom")
+	{
+		$y=($h- $insert_h)+$options['vertical_offset'];
+	}
+	else
+	{
+		$y=0;
+	}
+	$ret=array('x'=>$x,'y'=>$y);
+	return $ret;
+	
+}
+
+/**
+* used by the blit_image functions to retrieve information
+* about an image
+* @param $source is the path and file we want to know about
+* @param $return_image is a boolean, if true it returns a GD image
+*        object with the return array
+* @return an array with the following keys:
+*         'width' the width of the image in pixels
+*         'height' the height of the image in pixels
+*         'image' a GD image object if $return_image is true, null otherwise
+*         'type' the type image $source is
+*/
+function _gd_get_image($source,$return_image=true)
+{
+  	$size = getimagesize($source);
+  	$w = $size[0];
+  	$h = $size[1];
+
+	$stype="";
+ 	$type=strtolower(substr($source,-3));
+	if($type=="gif" || $type=="jpg" || $type=="png")
+	{
+		$stype=$type;
+	}
+	else
+	{
+		trigger_error("$type is not a supported image type file name must have suffix 'gif', 'jpg' or 'png");
+	}
+	
+	$img=null;
+	if($return_image)
+	{
+  		switch($stype) 
+		{
+  			case 'gif':
+  				$img = imagecreatefromgif($source);
+  			break;
+  			case 'jpg':
+  				$img = imagecreatefromjpeg($source);
+  			break;
+  			case 'png':
+  				$img = imagecreatefrompng($source);
+  			break;
+  		}
+	}
+	$details=array();
+	$details['width']=$w;
+	$details['height']=$h;
+	$details['image']=$img;
+	$details['type']=$stype;
+	
+	return $details;
 }
 
 /**
@@ -157,7 +726,6 @@ function _gd_resize($path, $width, $height, $sharpen)
 	if ($sharpen) {
 	    $image_dest = sharpen_image($image_dest, 80, 0.5, 3);
 	}
-	
 	// Output
 	$success = $save($image_dest, $path);
 	imagedestroy($image_dest);
