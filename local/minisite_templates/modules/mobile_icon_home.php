@@ -68,8 +68,11 @@ class MobileIconHomeModule extends DefaultMinisiteModule {
         echo '<li id="menu-watchsports">';
         echo '<a accesskey="12" href="http://client.stretchinternet.com/client/luther.portal">Watch Sports</a>';
         echo '</li>';
+        echo '<li id="menu-christmascard">';
+        echo '<a accesskey="13" href="http://www.luther.edu/christmascard2010/luther_christmas_2010.m4v">Merry Christmas</a>';
+        echo '</li>';
         echo '<li id="menu-home">';
-        echo '<a accesskey="13" href="http://www.luther.edu/">Luther Website</a>';
+        echo '<a accesskey="14" href="http://www.luther.edu/">Luther Website</a>';
         echo '</li>';
         echo '</ol>';
         echo '</div>';
