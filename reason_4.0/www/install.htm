@@ -51,11 +51,15 @@ div.callOut {
 </ul>
 <p>Reason has been installed under Linux, Mac OS X, and Windows. If you're attempting to install Reason under Windows, please read <a href="#windows">Windows-Specific Issues</a>.</p>
 <h3><a name="server_configuration" id="server_configuration"></a>Server Configuration</h3>
-<p>When you unpack the Reason distribution you should place the 'reason_package' outside of the web tree. You should then create a symlink pointing from the web root/reason/ to reason_package/reason_4.0/www/. </p>
+<p>When you unpack the Reason distribution you should place the 'reason_package' outside of the web tree. You should then create two symlinks in order to make the www folder for the reason_package and the www folder for reason web accessible.</p>
 <div class="callOut">
-<p><strong>Create a symbolic link from within your web tree to /reason_package/reason_4.0/www/</strong></p>
+<p><strong>Create a symbolic link called reason from within your web tree to /reason_package/reason_4.0/www/</strong></p>
 <ul>
 <li>ln -s /path/to/reason_package/reason_4.0/www/ /path/to/web/root/reason</li>
+</ul>
+<p><strong>Create a symbolic link called reason_package from within your web tree to /reason_package/www/</strong></p>
+<ul>
+<li>ln -s /path/to/reason_package/www/ /path/to/web/root/reason_package</li>
 </ul>
 <p>If you are attempting to install Reason on Windows, please see <a href="#windows">Windows-Specific Issues</a></p>
 </div>
@@ -221,6 +225,7 @@ are setting up a production instance of Reason.</p>
  <p><strong>A reason install on Windows should have junctions that look similar to those below: </strong></p>
 	<ul>
 		<li>htdocs/reason -> reason_package/reason_4.0/www</li>
+		<li>htdocs/reason_package -> reason_package/www</li>
 		<li>htdocs/loki_2.0 -> reason_package/loki_2.0</li>
 		<li>htdocs/jquery -> reason_package/jquery</li>
 		<li>htdocs/flvplayer -> reason_package/flvplayer</li>
