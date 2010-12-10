@@ -70,7 +70,7 @@ class updateTypes
 	var $feature_type_details = array (
 		'new'=>0,
 		'unique_name'=>'feature_type',
-//		'custom_content_handler'=>'feature.php',
+		'custom_content_handler'=>'feature.php',
 		'plural_name'=>'Features');
 		
 	var $feature_table_fields = array(
@@ -142,15 +142,14 @@ class updateTypes
 		}
 		
 		// create all the necessary relationships for the feature type
-			// feature_to_image (many-to-many -- module will pick image at random)
-			 $this-> add_allowable_relationship('feature_type','image','feature_to_image',$this->feature_to_image_details);
-			
-	 		// feature_to_media_work (many-to-many -- module will pick media work at random)
-			 $this-> add_allowable_relationship('feature_type','av','feature_to_media_work',$this->feature_to_media_work_details);
+		// feature_to_image (many-to-many -- module will pick image at random)
+		$this-> add_allowable_relationship('feature_type','image','feature_to_image',$this->feature_to_image_details);
+		
+	 	// feature_to_media_work (many-to-many -- module will pick media work at random)
+		$this-> add_allowable_relationship('feature_type','av','feature_to_media_work',$this->feature_to_media_work_details);
 
-	 		// page_to_feature (many_to_many, sortable)
-			 $this-> add_allowable_relationship('minisite_page','feature_type','page_to_feature',$this->page_to_feature_details);
-
+	 	// page_to_feature (many_to_many, sortable)
+		$this-> add_allowable_relationship('minisite_page','feature_type','page_to_feature',$this->page_to_feature_details);
 	}
 	
 	/**
