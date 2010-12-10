@@ -19,6 +19,7 @@ the point release after the one you are currently using and upgrade incrementall
 <p><a href="http://apps.carleton.edu/opensource/reason/download/">Reason download page</a></p>
 <h2>Reason Upgrade Scripts</h2>
 <ul>
+<li><a href="./scripts/upgrade/4.0b7_to_4.0b8/index.php">Reason 4.0 Beta 8 to Beta 9</a></li>
 <li><a href="./scripts/upgrade/4.0b7_to_4.0b8/index.php">Reason 4.0 Beta 7 to Beta 8</a></li>
 <li><a href="./scripts/upgrade/4.0b6_to_4.0b7/index.php">Reason 4.0 Beta 6 to Beta 7</a></li>
 <li><a href="./scripts/upgrade/4.0b5_to_4.0b6/index.php">Reason 4.0 Beta 5 to Beta 6</a></li>
