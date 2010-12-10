@@ -14,6 +14,11 @@ The syntax on unix / linux / mac os x should look like this:
 
 ln -s /path/to/reason_package/reason_4.0/www/ /path/to/web/root/reason
 
+You also should make a symbolic link within the base directory of your web tree called 
+reason_package that links to the reason_package/www/ directory
+
+ln -s /path/to/reason_package/www/ /path/to/web/root/reason_package
+
 Full instructions which explain how to manually setup reason are located here:
 http://your.web.server/reason/install.htm
 
