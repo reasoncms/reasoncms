@@ -20,18 +20,34 @@
 <h2>Upgrade Reason from 4.0 Beta 8 to 4.0 Beta 9</h2>
 
 <h3>New Settings</h3>
-<p>Reason 4 Beta 9 introduces new settings:</p>
+<p>Reason 4 Beta 9 introduces new settings - if you manually maintain your settings files you'll need to add them:</p>
 <ol>
-<li>REASON_LOG_LOGINS. You should make sure the setting is defined in the
-reason_settings.php used in your reason instance. You can copy and paste the following:<br />
-<textarea rows="8" cols="100">
+<li><strong>REASON_LOG_LOGINS</strong><p>You should make sure the setting is defined in the
+reason_settings.php used in your reason instance. You can copy and paste the following:</p>
+<textarea rows="8" cols="105">
 /**
  * REASON_LOG_LOGINS
  *
  * The Reason login module can log all login and logout actions.  If you set this value to true,
  * a log file will be populated at REASON_LOG_DIR/reason_login.log
  */
-define('REASON_LOG_LOGINS', true);</textarea>
+define('REASON_LOG_LOGINS', true);</textarea><br/><br/>
+</li>
+<li><strong>REASON_PACKAGE_HTTP_BASE_PATH</strong><p>This identifies an alias in the web root that links to the new
+reason_package/www/ folder. This folder should contain items associated with the reason_package
+that need to be web accessible (such as the colorpicker javascript and css files used by the colorpicker
+plasmature object). You can copy and paste the following:</p>
+<textarea rows="10" cols="105">
+/**
+ * REASON_PACKAGE_HTTP_BASE_PATH
+ * This setting identifies the location of the reason_package web-available directory from the web root
+ * This path should be an alias to the reason_package www folder, which should be 
+ * located outside the web root. 
+ *
+ * The location of the reason_package www folder is /reason_package/www/
+ */
+domain_define( 'REASON_PACKAGE_HTTP_BASE_PATH','/reason_package/');
+</textarea>
 </li>
 </ol>
 
