@@ -318,8 +318,25 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'imagetop' => 'luther_carousel',
          	'content_blurb' => '',
          	'pre_sidebar' => 'main_blurb',
+            'sidebar' => 'luther_events_mini',
+         	'post_sidebar' => '',         
+         ),
+         'luther2010_public_information' => array(
+			'main' => 'content',
+         	'main_post' => array(
+            	'module' => 'publication',
+         		'related_publication_unique_names' => array('headlinesarchive'),
+         		'related_mode' => 'true',
+         		'max_num_items' => 7,
+         	),
+			'imagetop' => 'luther_carousel',
+         	//'content_blurb' => 'luther_events_mini',
+         	'content_blurb' => array(
+         		'module' => 'luther_events_mini',
+         		'additional_sites' => 'luther2010'),
+         	'pre_sidebar' => '',
             'sidebar' => '',
-         	'post_sidebar' => 'luther_events_mini',         
+         	'post_sidebar' => 'main_blurb',         
          ),
 		'luther_news_page' => array(
 			'main_post' => 'publication',

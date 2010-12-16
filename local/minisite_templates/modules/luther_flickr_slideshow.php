@@ -37,7 +37,9 @@
 			echo "<div class=\"gallery-info\">\n";
 			echo "<div id=\"gallerycontainer\">\n";
 			if ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
-					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni')
+					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
+					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_naa'
+					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information')
 			{
 				echo "<hr>\n";
 			}

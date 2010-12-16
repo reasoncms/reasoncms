@@ -75,14 +75,16 @@ class miniEventsModule extends EventsModule
 			echo '</section> <!-- class="events" role="group" -->'."\n";
 		}
 		
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music' || $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
 		{
 			//echo '<nav id="calendar">'."\n";
 			$this->show_calendar_grid();
 			//echo '</nav>  <!-- id="calendar" -->'."\n";
 		}
 		$this->show_feed_link();
-        }
+	}
 
 	function find_events_page()
 	{
@@ -98,7 +100,6 @@ class miniEventsModule extends EventsModule
 		$page_array = $ps->run_one();
 		reset($page_array);
 		$this->events_page = current($page_array);
-
 		if (!empty($this->events_page))
 		{
 			$ret = $this->parent->pages->get_full_url($this->events_page->id());
@@ -114,8 +115,7 @@ class miniEventsModule extends EventsModule
 		//echo '<li><a href="/programming/calendar">View all events &gt;</a></li>'."\n";
 		echo '<li><a href="'.$this->events_page_url.'">View all events &gt;</a></li>'."\n";
 		echo '</ul>'."\n";
-		echo '</nav>'."\n"; 
-
+		echo '</nav>'."\n";
 	}
 
 	function list_events()
