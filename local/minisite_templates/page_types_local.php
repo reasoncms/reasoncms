@@ -330,10 +330,11 @@ $GLOBALS['_reason_page_types_local'] = array(
          		'max_num_items' => 7,
          	),
 			'imagetop' => 'luther_carousel',
+		'content_blurb' => '',
          	//'content_blurb' => 'luther_events_mini',
-         	'content_blurb' => array(
-         		'module' => 'luther_events_mini',
-         		'additional_sites' => 'luther2010'),
+         	//'content_blurb' => array(
+         //		'module' => 'luther_events_mini',
+         //		'additional_sites' => 'luther_home'),
          	'pre_sidebar' => '',
             'sidebar' => '',
          	'post_sidebar' => 'main_blurb',         
