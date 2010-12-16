@@ -20,7 +20,7 @@
 			if ($theme->get_value( 'name' ) == 'luther2010')
 			{	
 				echo '<footer class="site-info">'."\n";
-    			echo '<nav class="site-info"><ul><li class="about"><a href="/siteinfo/">About This Site</a></li><li class="about"><a href="/privacy/">Privacy Statement</a></li><li><a href="/contact/">Contact</a></li> </ul></nav>'."\n";
+    			echo '<nav class="site-info"><ul><li class="about"><a href="/siteinfo/">About This Site</a></li><li class="about"><a href="http://emergency.luther.edu">Emergency Info</a></li><li class="about"><a href="/privacy/">Privacy Statement</a></li><li><a href="/contact/">Contact</a></li> </ul></nav>'."\n";
 
 				echo '<div class="vcard">'."\n";
 				echo '<span class="copyright">Copyright '.date("Y").' </span> &#8226;'."\n";
