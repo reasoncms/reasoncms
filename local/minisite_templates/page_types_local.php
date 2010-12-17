@@ -160,6 +160,14 @@ $GLOBALS['_reason_page_types_local'] = array(
                         'sidebar' => 'luther_av',
 			'pre_sidebar' => 'luther_image_sidebar',
                 ),
+		'audio_video_full_size' => array(   // one large video in main content area
+                'main_post' => array(
+                	'module' => 'luther_av',
+					'full_size' => true,
+                ),
+                //'sidebar' => '',
+				'pre_sidebar' => '',
+		),
 
 
         //-----------------------Steve's Homepage Begin---------------
@@ -332,9 +340,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'imagetop' => 'luther_carousel',
 		'content_blurb' => '',
          	//'content_blurb' => 'luther_events_mini',
-         	//'content_blurb' => array(
-         //		'module' => 'luther_events_mini',
-         //		'additional_sites' => 'luther_home'),
+         	'content_blurb' => array(
+         		'module' => 'luther_events_mini',
+         		'additional_sites' => 'luther2010'),
          	'pre_sidebar' => '',
             'sidebar' => '',
          	'post_sidebar' => 'main_blurb',         

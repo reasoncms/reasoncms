@@ -33,6 +33,7 @@
 			'limit_to_current_page'=>true,
 			'sort_direction'=>'DESC', // Normally this page shows items in reverse chronological order, but you can change this to ASC for formward chronological order
 			'sort_field'=>'dated.datetime',
+			'full_size'=>false,   // audio_video_full_size page type sets this to true
 		);
 		var $make_current_page_link_in_nav_when_on_item = true;
 		var $no_items_text = '';
@@ -99,7 +100,14 @@
                 {
                         //echo '<li class="item number'.$this->item_counter.'">';
                         echo '<li>';
-                        if ($this->cur_page->get_value('custom_page') != 'audio_video')
+                		if ($this->params['full_size'])
+                        {
+                        	echo '<div class="video fullsize">'."\n";
+                        	$this->show_list_item_pre( $item );
+                        	//$this->show_list_item_name( $item );
+                        	echo '</div>'."\n";
+                        }
+                        else if ($this->cur_page->get_value('custom_page') != 'audio_video')
                         {
                         	echo '<div class="figure" style="width: 125px">'."\n";
                         	$this->show_list_item_pre( $item );
@@ -116,7 +124,8 @@
                         	$this->show_list_item_desc( $item );
                         }
                         echo '</li>'."\n";
-                        if ($this->cur_page->get_value('custom_page') == 'audio_video')
+                        if ($this->cur_page->get_value('custom_page') == 'audio_video'
+                        	|| $this->cur_page->get_value('custom_page') == 'audio_video_full_size')
 						{
                         	echo '<hr>'."\n";
 						}
@@ -156,7 +165,14 @@
 			//	if (preg_match("/(^http:\/\/www\.youtube\.com\/)(\w+)(\/(.*?)$)/", $vurl, $m ))
 				if (preg_match("/(^http:\/\/www\.youtube\.com\/)(watch\?v\=)((.*?)$)/", current($avfilelist)->get_value('url'), $m ))
 				{
-					echo "<a href=\"" . $m[1] . "v/" . $m[3] . "&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1\" onclick=\"javascript:pageTracker._trackPageview('" . $vn ."');return hs.htmlExpand(this, { objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\"><img src=\"http://img.youtube.com/vi/" . $m[3] . "/default.jpg\" /><img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
+					if (!$this->params['full_size'])
+					{
+						echo "<a href=\"" . $m[1] . "v/" . $m[3] . "&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1\" onclick=\"javascript:pageTracker._trackPageview('" . $vn ."');return hs.htmlExpand(this, { objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\"><img src=\"http://img.youtube.com/vi/" . $m[3] . "/default.jpg\" /><img class=\"av-play\" title=\"Play Video: " . preg_replace('|\"|', '&quot;', $item->get_value( 'name' )) . "\" src=\"/images/play_44.png\" /></a>";
+					}
+					else
+					{
+						echo '<object width="444" height="356"><param name="movie" value="' . $m[1] . 'v/' . $m[3] . '?fs=1&amp;hl=en_US&amp;rel=0"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="' .$m[1] . 'v/' . $m[3] . '?fs=1&amp;hl=en_US&amp;rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="444" height="356"></embed></object>'."\n";
+					}
 				//echo "<a href=\"" . $vurl . "&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1\" onclick=\"return hs.htmlExpand(this, { objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\"><img src=\"http://img.youtube.com/vi" . $m[3] . "/default.jpg\" /></a>";
 				//print("m[0] = $m[0]<br />\n");
 				//print("m[1] = $m[1]<br />\n");
