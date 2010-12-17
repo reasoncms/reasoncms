@@ -165,8 +165,14 @@ $(document).ready(function()
 		$('#feature-'+feature_id+':first').each(function()
 		{
 			$("ul.features li.feature").normalize_z_index($(this));
-			$(this).siblings().stop(true).fadeTo(600, 0).removeClass('active').addClass('inactive');
-			$(this).stop(true).fadeTo(600, 1).removeClass('inactive').addClass('active');
+			$(this).siblings().stop(true).fadeTo(600, 0, function()
+			{
+				$(this).removeClass('active').addClass('inactive');
+			});
+			$(this).stop(true).fadeTo(600, 1, function()
+			{
+				$(this).removeClass('inactive').addClass('active');
+			});
 		});
 	}
 	
@@ -276,8 +282,10 @@ $(document).ready(function()
 	{
 		$("ul.features").css("position: relative");
 		$("ul.features li.feature").normalize_z_index($("ul.features li.feature.active")).css('position', 'absolute');
+		$("ul.features li.feature.active").css('opacity', '1'); // set the initial opacity otherwise first transition is not smooth
+		$("ul.features li.feature.inactive").css('opacity', '0'); // set the initial opacity otherwise first transition is not smooth
 		features= $("ul.features li.feature");	
-
+		
 		//get the value of autoplay
 		//then  set the global ids array
 		//then set the callback to play
