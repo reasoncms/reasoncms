@@ -1,20 +1,71 @@
 /**
 * This file is used to control the feature navigtion
 * There are slide show controls as well as next and prev controls
+*
+* @author Frank McQuarry
+*
+* @author Nathan White
+*
+* - Added proper z-index handling and modified peekaboo to handle multiple clicks.
+* - Established relative positioning for the container ul to handle page resize better.
+* - Fixed first feature bug (no transition)
+*
+* @todo the use of "curr" seems confusing and ids - why do we need a special mapping??
 */
+
+/**
+ * Little plug-in to normalize or establish (ordered going down to 1) the z-index on a set of elements
+ *
+ * - You can optionally specify an element to go to the top
+ * - Indexing starts at the lowest existing value in the set, or if there are no values, 1
+ *
+ * @author Nathan White
+ */
+(function($)
+{
+	$.fn.normalize_z_index = function( top_element )
+	{
+		var zindex = new Array();
+		var baseline = 1;
+		var $this = $(this);
+		
+		// force our element to the top immediately with a huge z-index value
+		if (top_element)
+		{
+			element_index = $($this).index(top_element)
+			if (element_index != -1) $($this[element_index]).css('z-index', 999999)
+		}
+		
+		// build zindex - reduce baseline if necessary
+		$($this).each(function(index)
+		{
+			if (!isNaN(parseInt($(this).css('z-index'), 10)))
+			{
+				zindex[index] = $(this).css('z-index');
+				if (zindex[index] < baseline) baseline = zindex[index];
+			}
+			else zindex[index] = (index * -1);
+		});
+		
+		/// iterate through a sorted copy of zindex
+		$.each(zindex.slice(0).sort(function(a,b){return a - b}), function(i, z)
+		{
+			$($this[$.inArray(z,zindex)]).css('z-index', (baseline*1+i*1));
+		});
+		return this;
+	};
+})(jQuery); 
+	
 $(document).ready(function()
 {
-	
 	var curr=0; //the current feature being played in the slide show
 	var ids= new Array(); //an array to hold the ids of features.
 	var timeInterval=-1; //-1 means that autoplay is not running.
 	var autoplay_timer; //how long in seconds to play each feature
-	var top; //the y coordinate of features
-	var left; //the x coordinate of features
 	var looping; //determines if slides loop or not
 	var arrows_toggle=false; //if it doesn't loop then show > on first slide
 		                     // < on last slide, and <> inbetween
-	
+		                     
 	init_features();
 	
 	
@@ -22,17 +73,16 @@ $(document).ready(function()
 	* grabs the links in the feature navigation and 
 	* implements showing the selected feature
 	*/
-	$("div.featureNav > span.navBlock > a").click(function(event){
+	$("div.featureNav > span.navBlock > a").click(function(event)
+	{
 		event.preventDefault();
 		
 		//get the feature id encoded in the url
-		var url=$(this).attr('href');
-		var id=_queryString("feature",url);
-		var new_feature=true;
+		var url = $(this).attr('href');
+		var id = _queryString("feature",url);
+		var new_feature = true;
 		
-//		alert($(this).attr('class'));
-//		alert(id+" "+ids[curr]);
- 		if(id!=null)
+ 		if (id != null)
 		{
 			//turn off autoplay if its running
 			if(timeInterval!=-1)
@@ -45,29 +95,28 @@ $(document).ready(function()
 			{
 				if(!$(this).hasClass('prev') && !$(this).hasClass('next'))
 				{
-					new_feature=false;
+					new_feature = false;
 				}
 			}	
 
-				//find the current feature
-				n=ids.length;
-				for(i=0;i<n;i++)
+			//find the current feature
+			n=ids.length;
+			for(i=0;i<n;i++)
+			{
+				if(ids[i]==id)
 				{
-					if(ids[i]==id)
-					{
-						curr=i;
-						break;
-					}
+					curr=i;
+					break;
 				}
-
-
-				//show the selected feature	
-				if(new_feature)
-				{
-					peekaboo(id);
-				}
+			}
+			
+			//show the selected feature	
+			if(new_feature)
+			{
+				peekaboo(id);
+			}
 		}
-		else if(id==null)
+		else if (id == null)
 		{
 			if($(this).hasClass('play'))
 			{
@@ -82,7 +131,6 @@ $(document).ready(function()
 				clearInterval(timeInterval);
 				timeInterval=-1;
 			}			
-				
 		}
 		if(arrows_toggle)
 		{
@@ -108,40 +156,18 @@ $(document).ready(function()
 		}			
 	
 	});
+	
 	/**
-	* display the feature with the given feature_id
-	*/
+	 * display the feature with the given feature_id - fade out all others
+	 */
 	function peekaboo(feature_id)
 	{
-		var features;
-		var current_feature;
-		features=$("li[class*=active]");
-
-		//make the old feature disappear slowly
-		features.fadeOut(600, function()
+		$('#feature-'+feature_id+':first').each(function()
 		{
-		    // Animation complete.
-			features=$("li[class*=active]");
-			if(features.hasClass('active'))
-			{
-				features.removeClass('active');
-				features.addClass('inactive');
-			}
+			$("ul.features li.feature").normalize_z_index($(this));
+			$(this).siblings().stop(true).fadeTo(600, 0).removeClass('active').addClass('inactive');
+			$(this).stop(true).fadeTo(600, 1).removeClass('inactive').addClass('active');
 		});
-		
-		//now make the new feature appear slowly
-		current_feature=$('#feature-'+feature_id);
-		current_feature.fadeIn(600, function()
-		{
-    		// Animation complete.
-			current_feature=$('#feature-'+feature_id);
-			if(current_feature.hasClass('inactive'))
-			{
-				current_feature.removeClass('inactive');
-				current_feature.addClass('active');
-			}
-  		});
-		
 	}
 	
 	/**
@@ -169,8 +195,7 @@ $(document).ready(function()
 				curr=(n-1);
 			}
 			
-		}
-		
+		}	
 	}
 	
 	/**
@@ -243,40 +268,15 @@ $(document).ready(function()
 		if ( (url.search( RegExp( "[?&]" + key + "=([^&$]*)", "i" ) )) > -1 ) return RegExp.$1;
 		else return null;
 	}
-	/**
-	* sets the css position so that each feature
-	* is on a different layer
-	*/
-	function set_features_position()
-	{
-		features=$("li[class*=active]");
-		var num=features.length+1;
-		if(num>2)
-		{
-			features.each(function(index){
-				$(this).css('position','absolute');
-				$(this).css('top',top);
-				$(this).css('left',left);
-				$(this).css('z-index',num-index);
-								   });
-		}
-	}
 	
 	/**
 	* initializes features slide show
 	*/
 	function init_features()
 	{
-		features=$("li[class*=active]");
-		
-		
-		var pos=$("li[class~=active]").offset();
-		top=pos.top;
-		left=pos.left;
-		//set the css positioning so that
-		//each feature is on a different 
-		//layer
-		set_features_position();	
+		$("ul.features").css("position: relative");
+		$("ul.features li.feature").normalize_z_index($("ul.features li.feature.active")).css('position', 'absolute');
+		features= $("ul.features li.feature");	
 
 		//get the value of autoplay
 		//then  set the global ids array
@@ -284,7 +284,6 @@ $(document).ready(function()
 		//the slide show--0 means no slideshow
 		if(features.length>=2)//no need to bother for only 1 feature
 		{
-
 			autoplay=$("div[class*=autoplay]");
 			//get the value of class out as a string
 			temp1=autoplay.attr('class');
@@ -295,7 +294,7 @@ $(document).ready(function()
 			//now get the value of autoplay
 			autoplay_timer= +temp3[1];
 			/* autoplay_timer is in seconds */
-			//alert('foo');
+			
 			//determine whether looping is turned on
 			temp3=temp2[2].split('-');
 			looping=temp3[1];
@@ -303,7 +302,6 @@ $(document).ready(function()
 			{
 				arrows_toggle=true;
 			}
-			
 			
 			features.each(function(index){
 				var tmp=$(this).attr('id');
@@ -323,7 +321,6 @@ $(document).ready(function()
 				toggle_play_pause("pause");
 				curr=1;
 				timeInterval=setInterval(play_feature_slideshow,autoplay_timer*1000);
-				
 			}
 			else if(autoplay_timer==0)
 			{
@@ -353,22 +350,14 @@ $(document).ready(function()
 					prev.show();
 					next.show();
 				}
-			}
-
-			//alert(nav_block.width());
-//			alert(features.width()+" "+nav_block.width());
-			
+			}			
 		}	
-	}//end init_features
+	} //end init_features
 	
 	function size_modal_window(settings)
 	{
-//		alert('here');
 		settings.height=700;
 		$('#nyroModalWrapper').css('height','700px');
-//	        $.nyroModalSettings({
-//	          height: 555,
-//	        });
 	}
 	
 	var box=$('div.featureImage > a, h3.featureTitle > a, div.featureText > a');
@@ -388,31 +377,4 @@ $(document).ready(function()
 			processHandler:size_modal_window
 		});
 	}
-
-/*
-	var box1=$('div.featureImage > a');
-//	alert(box.length);
-	if(box1.length>0)
-	{
-		box1.nyroModal({
-			bgColor:'#000000'
-		});
-	}
-	 
-	var box2=$('h3.featureTitle > a')
-	if(box2.length>0)
-	{
-		box2.nyroModal({
-			bgColor:'#000000'
-		})
-	}
-
-	var box3=$('div.featureText > a')
-	if(box3.length>0)
-	{
-		box3.nyroModal({
-			bgColor:'#000000'
-		})
-	}
-*/	
 });
