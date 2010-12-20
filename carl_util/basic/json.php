@@ -1,4 +1,14 @@
 <?php
+/**
+ * JSON encoding.
+ * 
+ * This file ensures that a working version of
+ * {@link http://www.php.net/json_encode json_encode()} is available, even when
+ * running under PHP versions that do not include it.
+ * 
+ * @package carl_util
+ * @subpackage basic
+ */
 if (!function_exists('json_encode')) {
 	 /*
 	 * @param mixed $data PHP value to encode
