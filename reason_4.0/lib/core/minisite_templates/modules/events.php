@@ -1127,18 +1127,18 @@ class EventsModule extends DefaultMinisiteModule
 		echo '<ul>'."\n";
 		if($this->events[$event_id]->get_value( 'description' ))
 		{
-			echo '<li>';
+			echo '<li class="description">';
 			echo $this->events[$event_id]->get_value( 'description' );
 			echo '</li>'."\n";
 		}
 		$time_loc = array();
 		if(substr($this->events[$event_id]->get_value( 'datetime' ), 11) != '00:00:00')
-			$time_loc[] = prettify_mysql_datetime( $this->events[$event_id]->get_value( 'datetime' ), $this->list_time_format );
+			$time_loc[] = '<span class="time">'.prettify_mysql_datetime( $this->events[$event_id]->get_value( 'datetime' ), $this->list_time_format ).'</span>';
 		if($this->events[$event_id]->get_value( 'location' ))
-			$time_loc[] = $this->events[$event_id]->get_value( 'location' );
+			$time_loc[] = '<span class="location">'.$this->events[$event_id]->get_value( 'location' ).'</span>';
 		if (!empty($time_loc))
 		{
-			echo '<li>';
+			echo '<li class="timeLocation">';
 			echo implode(', ',$time_loc);
 			echo '</li>'."\n";
 		}
