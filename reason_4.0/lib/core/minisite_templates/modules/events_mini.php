@@ -59,6 +59,9 @@ class miniEventsModule extends EventsModule
 		if(!isset($this->acceptable_params['no_content_message']))
 			$this->acceptable_params['no_content_message'] = '';
 		
+		if(!isset($this->acceptable_params['title']))
+			$this->acceptable_params['title'] = '';
+		
 		parent::handle_params( $params );
 	}
 	function init( $args = array() ) // {{{
@@ -115,9 +118,16 @@ class miniEventsModule extends EventsModule
 			echo '<div class="eventsNoContentMessage">'.$msg.'</div>'."\n";
 		}
 	}
+	function _get_list_title()
+	{
+		if(!empty($this->params['title']))
+			return $this->params['title'];
+		else
+			return $this->events_page->get_value('name');
+	}
 	function display_list_title()
 	{
-		echo '<h3><a href="'.$this->events_page_url.'">'.$this->events_page->get_value('name').'</a></h3>'."\n";
+		echo '<h3><a href="'.$this->events_page_url.'">'.$this->_get_list_title().'</a></h3>'."\n";
 	}
 	function _get_events_module_names()
 	{
