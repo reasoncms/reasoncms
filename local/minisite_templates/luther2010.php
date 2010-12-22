@@ -773,10 +773,13 @@ class LutherTemplate2010 extends MinisiteTemplate
 			echo '</div>'."\n";
 		}
 		
-		echo '<section class="events group with-calendar" role="group">'."\n";
-		echo '<header class="red-stripe"><h1><span>Events Calendar</span></h1></header>'."\n";
-		$this->run_section( 'content_blurb' );		
-		echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";    
+		if ($this->has_content( 'content_blurb' ))
+		{
+			echo '<section class="events group with-calendar" role="group">'."\n";
+			echo '<header class="red-stripe"><h1><span>Events Calendar</span></h1></header>'."\n";
+			$this->run_section( 'content_blurb' );		
+			echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";
+		}    
      	
      	$this->luther_add_this();
      	

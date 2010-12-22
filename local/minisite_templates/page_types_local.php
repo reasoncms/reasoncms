@@ -338,11 +338,11 @@ $GLOBALS['_reason_page_types_local'] = array(
          		'max_num_items' => 7,
          	),
 			'imagetop' => 'luther_carousel',
-		'content_blurb' => '',
+			'content_blurb' => '',
          	//'content_blurb' => 'luther_events_mini',
-         	'content_blurb' => array(
-         		'module' => 'luther_events_mini',
-         		'additional_sites' => 'luther2010'),
+         	//'content_blurb' => array(
+         	//	'module' => 'luther_events_mini',
+         	//	'additional_sites' => 'luther2010'),
          	'pre_sidebar' => '',
             'sidebar' => '',
          	'post_sidebar' => 'main_blurb',         
@@ -922,6 +922,21 @@ function google_analytics()
 	echo 'var pageTracker = _gat._getTracker("UA-129020-8");'."\n";
 	echo 'pageTracker._setDomainName("luther.edu");'."\n";
 	echo 'pageTracker._trackPageview();'."\n";                echo '</script>'."\n";
+}
+
+function luther_social_media()
+// links to luther social media pages (facebook, twitter, delicious, etc.)	
+{
+	echo '<!-- Luther Social Media BEGIN -->'."\n";
+	echo '<div class="luther-social-media">'."\n";
+	echo '<a href="/socialmedia/facebook" title="Luther Facebook pages"><img src="/images/facebook_32.png"/></a>'."\n";
+	echo '<a href="/socialmedia/twitter" title="Luther Twitter feeds"><img src="/images/twitter_32.png"/></a>'."\n";
+	echo '<a href="/socialmedia/flickr_photobureau" title ="Luther Flickr galleries"><img src="/images/flickr_32.png"/></a>'."\n";
+	echo '<a href="/socialmedia/youtube" title="Luther YouTube videos"><img src="/images/youtube_32.png"/></a>'."\n";
+	echo '<a href="/socialmedia/linkedin" title="Luther LinkedIn info"><img src="/images/linkedin_32.png"/></a>'."\n";
+	echo '</div>'."\n";
+	echo '<!-- Luther Social Media END -->'."\n";
+
 }
 
 function luther_shorten_string($text, $length, $append)

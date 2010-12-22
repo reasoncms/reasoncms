@@ -35,6 +35,7 @@
 				echo '</span>'."\n";
 				echo '<div>Phone: 563-387-2000 or 800-4 LUTHER (<span class="tel">800-458-8437</span>)</div>'."\n";
 				echo '</div>'."\n";
+				//luther_social_media();
 				echo '</footer>'."\n";
 				
 				echo '<script src="/javascripts/jquery-1.4.2.min.js" type="text/javascript"></script>'."\n";
