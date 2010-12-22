@@ -274,7 +274,6 @@
         'events_and_publication_sidebar' => array(
 			'pre_sidebar' => array(
 				'module' => 'events_mini',
-				'view' => 'monthly',
 			),
 			'sidebar' => array(
 				'module' => 'publication',
@@ -291,7 +290,6 @@
         'events_and_publication_sidebar_show_children' => array(
 			'pre_sidebar' => array(
 				'module' => 'events_mini',
-				'view' => 'monthly',
 			),
 			'sidebar' => array(
 				'module' => 'publication',
