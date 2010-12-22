@@ -436,6 +436,9 @@ function perform_checks()
 			  A pass here does not necessarily indicate the reason package components are configured and fully functional, but it does mean that the
 			  basic paths defined in reason_package are setup correctly, and that reason can use curl to request files over http.</em></p>';
 	
+	if (check_reason_package_http_base_path()) $check_passed++;
+	else $check_failed++;
+	
 	if (check_thor_accessible_over_http()) $check_passed++;
 	else $check_failed++;
 	
@@ -462,6 +465,35 @@ function perform_checks()
 	echo '</ul>';
 	if ($check_failed == 0) return true;
 	else return false;
+}
+
+function check_reason_package_http_base_path()
+{
+	global $fix_mode_enabled;
+	$fixed_str = '';
+	$accessible = check_accessible_over_http(REASON_PACKAGE_HTTP_BASE_PATH . 'colorpicker/README.html', 'Farbtastic');
+	if (!$accessible && $fix_mode_enabled) // lets try to repair this
+	{
+		// if INCLUDE_PATH/www is readable
+		if (is_readable(INCLUDE_PATH.'www/') && function_exists('symlink'))
+		{
+			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(REASON_PACKAGE_HTTP_BASE_PATH, "/"));
+			if (is_writable(dirname($symlink_loc))) symlink(INCLUDE_PATH.'www/', $symlink_loc);
+		}
+		$accessible = check_accessible_over_http(REASON_PACKAGE_HTTP_BASE_PATH . 'colorpicker/README.html', 'Farbtastic');
+		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
+	}
+	if ($accessible) return msg('<span class="success">the reason_package_http_base_path '.$fixed_str.' is accessible over http</span> - check passed', true);
+	else
+	{
+		$fix_mode_str = ($fix_mode_enabled) 
+				? ' Fix mode may have failed because PHP was unable to create symlinks.'
+				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
+		$path = carl_construct_link(array(''), array(''), REASON_PACKAGE_HTTP_BASE_PATH . 'colorpicker/README.html');
+		return msg('<span class="error">the reason_package_http_base_path '.$fixed_str.' is not accessible over http</span>.<p>The URL attempted was ' . $path . '. It should return
+					a page that contains the string "Farbtastic." You may need to set REASON_PACKAGE_HTTP_BASE_PATH equal to "/reason_package/", and create a symlink at ' . WEB_PATH . 
+					'reason_package/ to ' . INCLUDE_PATH.'www/.' . $fix_mode_str . ' Consult the install documentation for more details.</p>', false);
+	}
 }
 
 function check_thor_accessible_over_http()
