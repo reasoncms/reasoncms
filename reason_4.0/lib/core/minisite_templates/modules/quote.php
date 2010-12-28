@@ -66,9 +66,17 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 							  '&prefer_short_quotes='.$prefer_short_quotes;
 				
 				$head_items =& $this->parent->head_items;
-				$head_items->add_javascript('//' . REASON_HOST . JQUERY_URL);
-				$head_items->add_javascript('//' . REASON_HOST . REASON_HTTP_BASE_PATH . 'js/quote/quote_retrieve.js'.$qry_string); // pass params in qry string
+				$head_items->add_javascript($this->get_head_item_base_path() . JQUERY_URL);
+				$head_items->add_javascript($this->get_head_item_base_path() . REASON_HTTP_BASE_PATH . 'js/quote/quote_retrieve.js'.$qry_string); // pass params in qry string
 			}
+		}
+		
+		/**
+		 * For most instances we don't want a base path so this returns an empty string in the base module.
+		 */
+		function get_head_item_base_path()
+		{	
+			return '';
 		}
 		
 		function has_content()
