@@ -34,6 +34,9 @@ if (!defined("REASON_SIZED_IMAGE_DIR_WEB_PATH"))
 /**
  * reasonSizedImage create sized image files (if needed) and returns a filename string for them.
  *
+ * If you set only a width or height, the other dimension will be automatically picked based upon the aspect
+ * ratio of the original image.
+ *
  * Typical use case:
  *
  * $rsi = new reasonSizedImage();
@@ -42,8 +45,6 @@ if (!defined("REASON_SIZED_IMAGE_DIR_WEB_PATH"))
  * $image_url = $rsi->get_url();
  *
  * @todo integrate REASON_SIZED_IMAGE_DIR and REASON_SIZED_IMAGE_DIR_WEB_PATH into reason_settings.php - use a better spot than loose in WEB_PATH/WEB_TEMP
- * @todo modify get_dimensions to set height and or width dynamically based on aspect ratio of the image
- * @todo implement resizing behavior appropriate to crop style
  * @todo what should we do if we want to resize to a larger size than the original
  *
  * @author Nathan White
@@ -61,18 +62,19 @@ class reasonSizedImage
 	var $width;
 	
 	/**
-	* @var string image type: 'gif', 'jpg' or 'png'
-	*/
-	var $image_type;
-	/**
 	 * @var int height in pixels
 	 */
 	var $height;
-	
+
 	/**
-	 * @var string "fill" or "fit" currently supported
+	 * @var string
 	 */
 	var $crop_style = "fill"; // fill or fit
+	
+	/**
+	 * $var array supported crop styles
+	 */
+	var $available_crop_styles = array('fill', 'fit');
 	
 	/**
 	 * File system path to the directory where images are stored - apache needs write and read access to this directory, and it should probably be web accessible.
@@ -129,8 +131,16 @@ class reasonSizedImage
 	 */
 	function exists()
 	{
-		$path = $this->_get_path();
-		return file_exists($path);
+		if ($this->_verify_user_params())
+		{
+			$path = $this->_get_path();
+			return file_exists($path);
+		}
+		else
+		{
+			trigger_error('Cannot check for existence - make sure you have specified a valid entity and at least one dimension.');
+			return false;
+		}
 	}
 	
 	/**
@@ -139,8 +149,16 @@ class reasonSizedImage
 	 */
 	function get_url()
 	{
-		if (!$this->exists()) $this->_make();
-		return $this->_get_url();
+		if ($this->_verify_user_params())
+		{
+			if (!$this->exists()) $this->_make();
+			return $this->_get_url();
+		}
+		else
+		{
+			trigger_error('Cannot get URL - make sure you have specified a valid entity and at least one dimension.');
+			return false;
+		}
 	}
 	
 	/**
@@ -149,14 +167,34 @@ class reasonSizedImage
 	*/
 	function get_url_and_alt()
 	{
-		$url=$this->get_url();
-		$image=$this->_get_entity();
-		$alt=$image->get_value('description');
-		$ret=array('url'=>$url,'alt'=>$alt);
-		return $ret;
+		if ($this->_verify_user_params())
+		{
+			$url=$this->get_url();
+			$image=$this->_get_entity();
+			$alt=$image->get_value('description');
+			$ret=array('url'=>$url,'alt'=>$alt);
+			return $ret;
+		}
+		else
+		{
+			trigger_error('Cannot get URL and alt - make sure you have specified a valid entity and at least one dimension.');
+			return false;
+		}
 	}
 	
 	/** private methods **/
+	
+	/**
+	 * Are all the user params provided?
+	 *
+	 * @access private
+	 * @todo we currently are not checking blit stuff at all ... should we?
+	 * @return boolean true / false
+	 */
+	function _verify_user_params()
+	{
+		return ($this->get_id() && $this->get_width() && $this->get_height() && $this->get_crop_style());
+	}
 	
 	/** 
 	 * @access private
@@ -219,13 +257,7 @@ class reasonSizedImage
 		if (!isset($this->_entity))
 		{
 			$id = $this->get_id();
-			$image = new entity($id);
-			if (!reason_is_entity($image, 'image'))
-			{
-				trigger_error('reasonSizedImage class is being used with an id ('.$id.') that does not appear to be an image.');
-				return false;
-			}
-			else $this->_entity = $image;
+			$this->_entity = new entity($id);
 		}
 		return $this->_entity;
 	}
@@ -233,37 +265,39 @@ class reasonSizedImage
 	/**
 	 * Returns a string describing the width / height (ie 300x200).
 	 *
-	 * If neither a width nor height has been provided, the return is empty.
-	 *
 	 * @return string
-	 * @todo dynamically populate a missing dimension when the other is provided
 	 */
 	function _get_dimensions()
 	{
 		if (!isset($this->_dimensions))
 		{
-			$width = $this->get_width();
-			$height = $this->get_height();
-			if (!isset($width) && !isset($height))
-			{
-				trigger_error('reasonSizedImage class requires that you set the desired width or height of the image to output.');
-				$this->_dimensions = false;
-				
-			}
-			else
-			{
-				if (!isset($width)) // populate width by checking aspect ratio!!
-				{
-					
-				}
-				if (!isset($height)) // populate height by checking aspect ratio!!
-				{
-					
-				}
-				$this->_dimensions = $width .'x'. $height;
-			}
+			$this->_dimensions = ($this->get_width() && $this->get_height()) ? $this->get_width() .'x'. $this->get_height() : false;
 		}
 		return $this->_dimensions;
+	}
+	
+	function _set_width_from_height()
+	{
+		if ( ($entity = $this->_get_entity()) && ($height = $this->get_height(false)) )
+		{
+			$path = reason_get_image_path($entity);
+			$info = getimagesize($path);
+			$ar = $info[1] / $info[0];
+			$width = (int) ($ar * $height);
+			$this->set_width($width);
+		}
+	}
+	
+	function _set_height_from_width()
+	{
+		if ( ($entity = $this->_get_entity()) && ($width = $this->get_width(false)) )
+		{
+			$path = reason_get_image_path($entity);
+			$info = getimagesize($path);
+			$ar = $info[1] / $info[0];
+			$height = (int) ($ar * $width);
+			$this->set_height($height);
+		}
 	}
 	
 	/**
@@ -287,8 +321,6 @@ class reasonSizedImage
 				$path = reason_get_image_path($entity, 'original'); // we want to copy our original image to our destination and resize in place
 				if (!file_exists($path)) $path = reason_get_image_path($entity); // we get the standard size
 				$newpath = $this->_get_path();
-//				echo $path."<br />";
-//				echo $newpath."<br />";
 				$width = $this->get_width();
 				$height = $this->get_height();
 				$crop_style=$this->get_crop_style();
@@ -368,27 +400,74 @@ class reasonSizedImage
 	}
 	
 	
-	/** Getters ... boring **/
-	/**No, no, Nate, Getters are exciting! **/
+	/** Getters **/
 	function get_id() { return $this->id; }
-	function get_width() { return $this->width; }
-	function get_height() { return $this->height; }
+	function get_width( $lookup_from_aspect_ratio = true )
+	{
+		if (!isset($this->width) && $lookup_from_aspect_ratio) $this->_set_width_from_height();
+		return $this->width;
+	}
+	function get_height( $lookup_from_aspect_ratio = true )
+	{
+		if (!isset($this->height) && $lookup_from_aspect_ratio) $this->_set_height_from_width();
+		return $this->height;
+	}
+	
 	function get_image_dir() { return $this->image_dir; }
 	function get_image_dir_web_path() { return $this->image_dir_web_path; }
 	function get_crop_style() { return $this->crop_style; }
 	function get_file_system_path_and_file_of_dest(){ return ($this->_get_path());}
 	function get_image_type(){
 		$entity=$this->_get_entity();
-		$this->image_type=$entity->get_value('image_type');
-		return $this->image_type; 
+		return $entity->get_value('image_type');
 	}
-	/** Setters ... boring **/
-	/**No, no, Nate, Setters set trends! **/
-	function set_id($id) { $this->id = $id; }
-	function set_width($width) { $this->width = $width; }
-	function set_height($height) { $this->height = $height; }
+	
+	/** Setters **/
+	function set_id($id)
+	{
+		$my_id = (int) $id;
+		if ( empty($id) || ( $my_id != $id) || (strlen($my_id) != strlen($id)))
+		{
+			trigger_error('ID parameter provided ('.$id.') is invalid. Please provide the id as a postive integer.');
+		}
+		elseif (!reason_is_entity(new entity($my_id), 'image'))
+		{
+			trigger_error('ID parameter provided ('.$id.') does not correspond to a reason image.');
+		}
+		else $this->id = $my_id;
+	}
+	
+	function set_width($width)
+	{
+		$width_int = (int) $width;	
+		if ( empty($width) || ( $width_int != $width) || (strlen($width_int) != strlen($width)) )
+		{
+			trigger_error('Width parameter provided ('.$width.') is invalid. Please provide the width as a positive number of pixels in integer format.');
+		}
+		else $this->width = (int) $width;
+	}
+	
+	function set_height($height)
+	{
+		$height_int = (int) $height;	
+		if ( empty($height) || ( $height_int != $height) || (strlen($height_int) != strlen($height)) )
+		{
+			trigger_error('Height parameter provided ('.$height.') is invalid. Please provide the height as a positive number of pixels in integer format.');
+		}
+		else $this->height = (int) $height;
+	}
+	
+	function set_crop_style($crop_style)
+	{
+		if (!in_array($crop_style, $this->available_crop_styles))
+		{
+			trigger_error('Crop style parameter provided ('.$crop_style.') is invalid. Valid styles are ('.implode(", ",$this->available_crop_styles).').');
+		}
+		else $this->crop_style = $crop_style;
+	}
+	
 	function set_image_dir($image_dir) { $this->image_dir = $image_dir; }
 	function set_image_dir_web_path($image_dir_web_path) { $this->image_web_path = $image_dir_web_path; }
-	function set_crop_style($crop_style) { $this->crop_style = $crop_style; }
+	
 }
 ?>
