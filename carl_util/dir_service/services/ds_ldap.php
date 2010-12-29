@@ -236,28 +236,31 @@ class ds_ldap extends ds_default {
 		$results = ldap_get_entries( $this->_conn, $result );
 		$nice_entries = array();
 	
-		// get rid of leading count index
-		array_shift( $results );
-	
-		// loop through all real entries
-		foreach( $results AS $entry )
+		if (is_array($results))
 		{
-			$nice_entry = array();
-			// loop through all attributes of entry
-			foreach( $entry AS $attr_key => $attributes )
+			// get rid of leading count index
+			array_shift( $results );
+		
+			// loop through all real entries
+			foreach( $results AS $entry )
 			{
-				// all attributes we want to look at are arrays
-				if( is_array( $attributes ) )
+				$nice_entry = array();
+				// loop through all attributes of entry
+				foreach( $entry AS $attr_key => $attributes )
 				{
-					// again, nix the count index
-					array_shift( $attributes );
-	
-					foreach( $attributes AS $value )
-						$nice_entry[strtolower($attr_key) ][] = $value;
+					// all attributes we want to look at are arrays
+					if( is_array( $attributes ) )
+					{
+						// again, nix the count index
+						array_shift( $attributes );
+		
+						foreach( $attributes AS $value )
+							$nice_entry[strtolower($attr_key) ][] = $value;
+					}
 				}
+				$nice_entries[] = $nice_entry;
 			}
-			$nice_entries[] = $nice_entry;
-		}	
+		}
 		return $nice_entries;
 	}
 
