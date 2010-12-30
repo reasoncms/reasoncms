@@ -212,7 +212,6 @@ function _populate_flash_upload_head_items(&$head)
 	
 	$flash_uri = REASON_FLASH_UPLOAD_URI.'swfupload.swf';
     $scripts = array(
-		JQUERY_URL,
 		'swfupload.js',
 		'upload_support.js',
 		'jquery.swfupload.js',
@@ -220,7 +219,8 @@ function _populate_flash_upload_head_items(&$head)
 		'jquery.uploadqueue.js',
 		'rich_upload.js?swf='.urlencode($flash_uri)
 	);
-
+	
+	$head->add_javascript(JQUERY_URL);
 	$head->add_stylesheet(REASON_FLASH_UPLOAD_URI.'rich_upload.css');
 	foreach ($scripts as $script) {
 		$head->add_javascript(REASON_FLASH_UPLOAD_URI.$script);
