@@ -236,6 +236,7 @@ class GiftPageThreeForm extends FormStep
 			the online giving form, please contact the Luther College Development Office.</p>'."\n";
 		$txt .= '<ul>'."\n";
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
+		$txt .= '<h4>Your Information</h4>';
 		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('first_name').' '.$this->controller->get('last_name').'</li>'."\n";
 		if (($this->controller->get('spouse_first_name') != 'First') || ($this->controller->get('spouse_last_name') != 'Last'))
 		{
@@ -252,6 +253,28 @@ class GiftPageThreeForm extends FormStep
 		$txt .= '<li><strong>'.$this->controller->get('address_type').' Address:</strong>'."\n".$this->controller->get('street_address')."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip')."\n".$this->controller->get('country').'</li>'."\n";
 		$txt .= '<li><strong>'.$this->controller->get('phone_type').' Phone:</strong> '.$this->controller->get('phone').'</li>'."\n";
 		$txt .= '<li><strong>E-mail:</strong> '.$this->controller->get('email').'</li>'."\n";
+		$txt .= '<li><strong>Luther Affiliation:</strong> ';
+		foreach($this->controller->get('luther_affiliation') as $affiliation)
+		{
+			$txt .= $affiliation . ', ';
+		}
+		if ($this->controller->get('class_year'))
+		{
+			$txt .= ' class of ' .$this->controller->get('class_year'). '</li>'."\n";
+		}
+		else
+		{
+			$txt .= '</li>'."\n";
+		}
+		if ($this->controller->get('estate_plans'))
+		{
+			$txt .= '<li><strong>Estate Plans:</strong> I\'ve included Luther in my estate plans</li>'."\n";
+		}
+		if ($this->controller->get('estate_info'))
+		{
+			$txt .= '<li><strong>Estate Information:</strong> I would like information about including Luther in my estate planning</li>'."\n";
+		}
+		$txt .= '<h4>Gift Details</h4>';
 		if ($this->controller->get('installment_type') == 'Onetime')
 		{
 			$txt .= '<li><strong>One time gift:</strong> $'.number_format( $this->controller->get('gift_amount'), 2, '.', ',' ).'</li>'."\n";
@@ -317,7 +340,11 @@ class GiftPageThreeForm extends FormStep
 			$txt .= '</ul>'; // Designated specifics end
 			$txt .= '</li>'; //Designated giving end
 		}
-		if($this->controller->get('dedication') && $this->controller->get('dedication_details'))
+		if ($this->controller->get('gift_prompt'))
+		{
+			$txt .= '<li><strong>Gift Prompt:</strong> ' .strip_tags($this->controller->get('gift_prompt'))."\n";
+		}
+		if ($this->controller->get('dedication') && $this->controller->get('dedication_details'))
 		{
 			$txt .= '<li><strong>Dedication:</strong> This gift is in ';
 			if ($this->controller->get('dedication') == 'Memory')
@@ -331,11 +358,11 @@ class GiftPageThreeForm extends FormStep
 			$txt .= ' of ' . $this->controller->get('dedication_details').'</li>'."\n";
 		}
 
-		if($this->get_value('result_refnum'))
+		if ($this->get_value('result_refnum'))
 		{
 			$txt .= '<li><strong>Transaction Reference Number:</strong> '.$this->get_value('result_refnum').'</li>'."\n";
 		}
-		if($this->get_value('result_authcode'))
+		if ($this->get_value('result_authcode'))
 		{
 			$txt .= '<li><strong>Transaction Authorization Code:</strong> '.$this->get_value('result_authcode').'</li>'."\n";
 		}
