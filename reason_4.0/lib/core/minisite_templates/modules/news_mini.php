@@ -16,9 +16,32 @@
 	 */
 	class mini_no_issue_news_viewer extends no_issue_news_viewer
 	{
-		function show_item( $item ) // {{{
+		function show_item( &$item, $options = false ) // {{{
 		{
-			mini_news_viewer::show_item( $item );
+			$content = $item->get_value( 'content' );
+			$desc = strip_tags( $item->get_value( 'description' ), "<strong><b><em><i><a><span>" );
+			echo "\n<p class='newsItem'>\n";
+			echo '<div class="smallText newsItemDate">' . prettify_mysql_datetime( $item->get_value( 'datetime' ), "F jS, Y" ) . "</div>\n";
+			echo '<div class="newsItemName">';
+			/* if ( !empty( $content ) )
+			{ */
+				echo '<a href="'.$this->news_page_link.'?';
+				if (!empty($this->current_issue))
+					echo 'issue_id='.$this->current_issue->id().'&amp;';
+				echo 'story_id=' . $item->id();
+				if ( !empty( $this->request[ 'page' ] ) )
+					echo '&amp;page=' . $this->request[ 'page' ];
+				if (!empty($this->textonly))
+					echo '&amp;textonly=1';
+				echo '" class="newsItemLink">';
+			// }
+			echo $item->get_value( 'release_title' );
+			/* if ( !empty( $content ) ) */
+				echo "</a>";
+			echo "</div>\n";
+			/* if ( !empty( $desc ) )
+				echo "<div class='newsItemDesc'>" . $desc . "</div>\n"; */
+			echo "</p>\n";
 		} // }}}
 		
 		function display() // {{{
@@ -44,7 +67,7 @@
 	 */
 	class mini_news_viewer extends issue_news_viewer
 	{
-		function show_item( $item ) // {{{
+		function show_item( &$item, $options = false ) // {{{
 		{
 			$content = $item->get_value( 'content' );
 			$desc = strip_tags( $item->get_value( 'description' ), "<strong><b><em><i><a><span>" );
@@ -121,7 +144,7 @@
 			return $link;
 		}
 
-		function init( $args ) // {{{
+		function init( $args = array() ) // {{{
 		{
 			parent::init( $args );
 			$this->issues = $this->get_issues();
