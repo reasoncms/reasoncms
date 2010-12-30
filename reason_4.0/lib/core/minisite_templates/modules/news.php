@@ -44,10 +44,37 @@
 			return $this->num;
 		} // }}}
 		
-		//overloads viewer function
-		function show_item( $item ) // {{{
-		{              
-			issue_news_viewer::show_item( $item );
+		//overloads viewer function; this function is also used by no_issues_news_viewer
+		function show_item( &$item, $options = false ) // {{{
+		{        
+			$content = $item->get_value( 'content' );
+			$desc = strip_tags( $item->get_value( 'description' ), '<strong><b><em><i><a><span><ul><ol><li>' );
+			echo "\n".'<p class="newsItem">'."\n";
+			$this->show_item_pre( $item );
+			
+			echo '<div class="smallText newsItemDate">' . prettify_mysql_datetime( $item->get_value( 'datetime' ), "F jS, Y" ) . '</div>'."\n";
+			echo '<div class="newsItemName">';
+			if ( !empty( $content ) )
+			{
+				echo '<a href="?';
+				if (!empty($this->current_issue))
+					echo 'issue_id='.$this->current_issue->id().'&amp;';
+				echo 'story_id=' . $item->id();
+				if ( !empty( $this->request[ 'page' ] ) )
+					echo '&amp;page=' . $this->request[ 'page' ];
+				if (!empty($this->textonly))
+					echo '&amp;textonly=1';
+				echo '" class="newsItemLink">';
+			}
+			echo $item->get_value( 'release_title' );
+			if ( !empty( $content ) )
+				echo "</a>";
+			echo "</div>\n";
+			if ( !empty( $desc ) )
+				echo '<div class="newsItemDesc">' . $desc . '</div>'."\n";
+			if($this->show_author_with_summary && $item->get_value('author') )
+				echo "<div class='author'>--" . $item->get_value('author') . "</div>\n";
+			echo "</p>\n";
 		} // }}}
 		
 		//overloads viewer hook
@@ -132,8 +159,8 @@
 			return $this->es->get_one_count();
 		} // }}}
 		
-		//overloads viewer function; this function is also used by no_issues_news_viewer
-		function show_item( $item ) // {{{
+		//overloads viewer function
+		function show_item( &$item, $options = false ) // {{{
 		{        
 			$content = $item->get_value( 'content' );
 			$desc = strip_tags( $item->get_value( 'description' ), '<strong><b><em><i><a><span><ul><ol><li>' );
@@ -265,7 +292,7 @@
 		var $queried_for_issues = false;
 		var $issues = array();
 
-		function init( $args ) // {{{
+		function init( $args = array() ) // {{{
 		{
 			parent::init( $args );
 			trigger_error('NewsMinisiteModule is deprecated and will be removed from the Reason Core before RC1. Transition pages using this module to use publications instead - a migrator is available in /scripts/developer_tools/publication_migrator.php');
