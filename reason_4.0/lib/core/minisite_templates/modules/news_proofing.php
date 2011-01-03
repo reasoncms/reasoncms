@@ -14,9 +14,35 @@
      */
     class NewsProofingNoIssueViewer extends AllNewsNoIssueViewer
     {
-		function show_item( $item ) 
+		function show_item( &$item, $options = false ) 
         {              
-            NewsProofingModule::show_story($item);
+            echo "<h3 class='newsTitle'>".strip_tags( $item->get_value( 'release_title' ) )."</h3>\n";
+            
+            if( $item->get_value( 'datetime' ) )
+				echo '<p class="smallText newsDate">'.prettify_mysql_datetime( $item->get_value( 'datetime' ), "F jS, Y" )."</p>\n";
+            if( $item->get_value( 'author' ) )
+				echo "<p class='smallText newsAuthor'>By ".$item->get_value( 'author' )."</p>\n";
+            
+            $owner = $item->get_owner();			
+            
+            if ( $owner->get_value('id') != $this->site_id )
+            {
+                echo '<p class="smallText newsProvider">This story is provided by ';
+                $base_url = $owner->get_value('base_url');
+                if (!empty($base_url))
+                        echo '<a href="'. $base_url . '">'. $owner->get_value('name') . '</a>';
+                else echo $owner->get_value('name');
+                echo "</p>\n";
+            }
+        
+			echo '<h4>Description</h4>'."\n";
+			echo $item->get_value( 'description' );
+			
+            if ( $item->get_value( 'content' ) )
+			{
+				echo '<h4>Content</h4>'."\n";
+				echo $item->get_value( 'content' );
+			}
         }
     }
 
@@ -25,12 +51,38 @@
      */
     class NewsProofingIssueViewer extends AllNewsIssueViewer
     {
-        function show_item( $item ) 
-        {
-            NewsProofingModule::show_story($item);
+		function show_item( &$item, $options = false ) 
+        {              
+            echo "<h3 class='newsTitle'>".strip_tags( $item->get_value( 'release_title' ) )."</h3>\n";
+            
+            if( $item->get_value( 'datetime' ) )
+				echo '<p class="smallText newsDate">'.prettify_mysql_datetime( $item->get_value( 'datetime' ), "F jS, Y" )."</p>\n";
+            if( $item->get_value( 'author' ) )
+				echo "<p class='smallText newsAuthor'>By ".$item->get_value( 'author' )."</p>\n";
+            
+            $owner = $item->get_owner();			
+            
+            if ( $owner->get_value('id') != $this->site_id )
+            {
+                echo '<p class="smallText newsProvider">This story is provided by ';
+                $base_url = $owner->get_value('base_url');
+                if (!empty($base_url))
+                        echo '<a href="'. $base_url . '">'. $owner->get_value('name') . '</a>';
+                else echo $owner->get_value('name');
+                echo "</p>\n";
+            }
+        
+			echo '<h4>Description</h4>'."\n";
+			echo $item->get_value( 'description' );
+			
+            if ( $item->get_value( 'content' ) )
+			{
+				echo '<h4>Content</h4>'."\n";
+				echo $item->get_value( 'content' );
+			}
         }
         
-        function show_owner( $item ) 
+        function show_owner( $item, $site_id ) 
 		{
 		} 
     }
@@ -68,8 +120,9 @@
             $v->textonly = $this->parent->textonly;
             $v->do_display();
         }
-        function show_story( $story )
+        function show_story()
         {
+        	$story = new entity( $this->request[ 'story_id' ] );
             echo "<h3 class='newsTitle'>".strip_tags( $story->get_value( 'release_title' ) )."</h3>\n";
             
             if( $story->get_value( 'datetime' ) )
@@ -77,7 +130,7 @@
             if( $story->get_value( 'author' ) )
 				echo "<p class='smallText newsAuthor'>By ".$story->get_value( 'author' )."</p>\n";
             
-            NewsProofingModule::show_owner( $story );
+           $this->show_owner( $story );
         
 			echo '<h4>Description</h4>'."\n";
 			echo $story->get_value( 'description' );
@@ -89,6 +142,22 @@
 			}
 
         }
+        
+        function show_owner( $e )  // {{{
+		{
+            $owner = $e->get_owner();			
+            
+#            if ( $owner->get_value('id') != $this->parent->site_id )
+            if ( $owner->get_value('id') != $this->site_id )
+            {
+                echo '<p class="smallText newsProvider">This story is provided by ';
+                $base_url = $owner->get_value('base_url');
+                if (!empty($base_url))
+                        echo '<a href="'. $base_url . '">'. $owner->get_value('name') . '</a>';
+                else echo $owner->get_value('name');
+                echo "</p>\n";
+            }
+		} // }}}
     }
 
     
