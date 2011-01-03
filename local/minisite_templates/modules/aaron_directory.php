@@ -1564,19 +1564,27 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
                 'programstartdate','programenddate','lastupdate');
 
-        $username = '';
-        $password = '';
-        echo "test1";
-        $lookup_login = 'cn='.$username.'ou=People,dc=luther,dc=edu'; /// username is get login norsekey
+        $password = 'dickens333';
+
+        $logged_user = reason_check_authentication();
+        echo $logged_user;
+
+        $lookup_login = 'uid='.$logged_user.',ou=People,dc=luther,dc=edu'; /// username is get login norsekey
         $lookup_pass = $password; /// get login password
+
         $dir = new directory_service('ldap_luther');
-        //$dir->set_search_param('ldap_luther', array('lookup_dn' => $lookup_login, 'lookup_password' => $lookup_pass));
-        //$dir->set_conn_param('lookup_dn', 'cn=user,ou=People,dc=luther,dc=edu');
-        $par = 'lookup_dn';
-        $val = 'cn=webauth,dc=luther,dc=edu';
-        //$dir->set_conn_param($par, $val);
-        echo "test2";
+        $dir->serv_inst['ldap_luther']->set_conn_param('lookup_dn',$lookup_login);
+        $dir->serv_inst['ldap_luther']->set_conn_param('lookup_password',$lookup_pass);
+
+        echo $lookup_login;
+        echo "\n";
+        echo $lookup_pass;
+        
+        //$dir->serv_inst['ldap_luther']->set_conn_param('lookup_dn','cn=webauth,dc=luther,dc=edu');
+        //$dir->serv_inst['ldap_luther']->set_conn_param('lookup_password','daewoo$friendly$$cow');
+
         $dir->search_by_filter($querystring, $attributes);
+        //just by a sinlge attribute
         //$dir->search_by_attribute('sn', 'burk', $attributes);
 
         $dir->sort_records(array('sn','givenname'));
