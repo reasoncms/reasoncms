@@ -205,7 +205,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string .= '<a href="'.$link_to_item.'#comments">'.$view_comments_text.'</a>';
 			$markup_string .= '</li>'."\n";
 		}
-		else
+		elseif (isset($this->passed_vars['commenting_status']))
 		{
 			switch($this->passed_vars['commenting_status'])
 			{
@@ -224,6 +224,7 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 					$markup_string = '';
 			}
 		}
+		else $markup_string = '';
 		return $markup_string;
 	}
 
