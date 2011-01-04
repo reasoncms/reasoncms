@@ -2110,7 +2110,7 @@
 				$parts = parse_url( get_current_url() );
 				$err[] = $parts['host'];
 				$err[] = $parts['path'];
-				$err[] = $parts['query'];
+				if (isset($parts['query'])) $err[] = $parts['query'];
 				$err[] = get_class( $this );
 				$err[] = $el;
 				if( empty( $this->no_session ) OR !in_array( $el, $this->no_session ) )
