@@ -171,6 +171,7 @@
 			$es = new entity_selector();
 			$es->add_type( $this->admin_page->type_id );
 			$limiter = (!empty($this->admin_page->request['search_site'])) ? $this->admin_page->request['search_site'] : array_keys($this->sites_that_borrow_type);
+			if (empty($limiter)) $limiter = array("-1"); // no sites share type lets limit to site_id = -1, which will be no sites - this avoids a crash.
 			$es->add_right_relationship_field('owns', 'entity', 'id', 'site_id', $limiter);
 			$es->add_right_relationship_field('owns', 'entity', 'name', 'site');
 			$this->apply_order_and_limits($es);
