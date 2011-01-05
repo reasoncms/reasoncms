@@ -28,6 +28,18 @@ $ms->add(
  */
 $ms->add('publication', 'publication_item_display');
 
+$ms->add(
+	array(
+		'gallery',
+		'gallery2',
+		'images',
+		'image_slideshow',
+		'gallery_vote',
+		'gallery_single_page',
+	),
+	'image_display'
+);
+
 if(reason_file_exists('config/module_sets/setup_local.php'))
 	reason_include_once('config/module_sets/setup_local.php');
 
