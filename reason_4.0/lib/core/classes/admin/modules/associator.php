@@ -213,24 +213,8 @@
 		
 		function some_site_shares_type() // {{{
 		{
-			$d = new DBSelector;
-			$d->add_table( 'ar' , 'allowable_relationship' );
-			$d->add_table( 'r' , 'relationship' );
-
-			$d->add_table( 'ar2' , 'allowable_relationship' );
-
-			$d->add_relation( 'ar2.id = ' . $this->admin_page->rel_id );
-
-			$d->add_relation( 'ar.name = "site_shares_type"' );
-			$d->add_relation( 'ar.id = r.type' );
-			$d->add_relation( 'r.entity_a != ' . $this->admin_page->site_id );
-			$d->add_relation( 'r.entity_b = ar2.relationship_b' );
-
-			$r = db_query( $d->get_query() , 'Error checking for shared entities in AssociatorModule::some_site_shares_type()' );
-			if( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
-				return true;
-			else 
-				return false;
+			$sharables = $this->admin_page->get_sharable_relationships();
+			return(isset($sharables[$this->rel_type->id()]));
 		} // }}}
 		function get_second_level_vars() // {{{
 		{
@@ -325,6 +309,7 @@
 			
 			$assoc_ok = !$this->admin_page->is_second_level() && $this->admin_page->cur_module == 'Associator' && $this->some_site_shares_type();
 			$sharing_ok = $this->admin_page->is_second_level() && $this->admin_page->cur_module == 'Sharing';
+			
 			if( reason_user_has_privs($this->admin_page->user_id, 'borrow') && ( $assoc_ok || $sharing_ok ) )
 			{
 			echo '<tr><td>';
