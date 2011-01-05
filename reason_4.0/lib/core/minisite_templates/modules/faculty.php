@@ -43,7 +43,8 @@
 		var $reason_netids = array();
 		var $reason_people_dir_info = array();
 		var $all_people = array();
-		var $affiliations = array();
+		var $affiliations = array(); // defines optional affiliation display order and naming
+		var $affiliation_nav_names = array(); // defines optional affiliation names for use in navigation
 		var $affiliation_from_directory = array();
 		var $sorted_people = array();
 		var $heads = true;
@@ -222,14 +223,44 @@
 
 			$this->clean_sorted_people();
 			$this->determine_heads_use();
+			if($this->heads) $this->show_section_links();
 			foreach($this->sorted_people as $affiliation=>$people)
 			{
 				if(!empty($people))
 				{
-					if(!empty($this->heads))
-						echo '<h3 class="facStaffHead"><a name="'.preg_replace('/\s+/','_', $affiliation).'">'.ucwords($this->affiliations[$affiliation]).'</a></h3>'."\n";
+					if($this->heads)
+					{
+						if (isset($this->affiliations[$affiliation]))
+							$display = $this->affiliations[$affiliation];
+						else
+							$display = ucwords($affiliation);
+
+						echo '<h3 class="facStaffHead"><a name="'.preg_replace('/\s+/','_', $affiliation).'">'.$display.'</a></h3>'."\n";
+					}
 					$this->list_people( $people );
 				}
+			}
+		} // }}}
+
+		function show_section_links() // {{{
+		{
+			$affiliations = array_keys($this->sorted_people);
+			if (count($affiliations) > 1)
+			{
+				echo '<div class="facStaffNavLinks">';
+				foreach($affiliations as $aff)
+				{
+					if (isset($this->affiliation_nav_names[$aff]))
+						$display = $this->affiliation_nav_names[$aff];
+					else if (isset($this->affiliations[$aff]))
+						$display = $this->affiliations[$aff];
+					else
+						$display = ucwords($aff);
+						
+					$links[] = '<a class="facStaffNavLink" href="#'.preg_replace('/\s+/','_', $aff).'">'.$display.'</a>';
+				}
+				echo join(' | ', $links);
+				echo '</div>'."\n";
 			}
 		} // }}}
 		function clean_sorted_people() // {{{
