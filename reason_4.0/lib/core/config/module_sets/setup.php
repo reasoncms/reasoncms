@@ -40,6 +40,15 @@ $ms->add(
 	'image_display'
 );
 
+$ms->add(
+	array(
+		'av',
+		'av_filejump',
+		'av_with_filters',
+	),
+	'media_display'
+);
+
 if(reason_file_exists('config/module_sets/setup_local.php'))
 	reason_include_once('config/module_sets/setup_local.php');
 
