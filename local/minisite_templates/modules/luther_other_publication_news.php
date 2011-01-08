@@ -137,10 +137,6 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 	
 	function show_news_item(&$news_item)
 	{
-		if ($news_item == null)
-		{
-			return;
-		}
 		$title = $news_item->get_value('release_title');
 		$parameters = $news_item->get_value('parameters');
 

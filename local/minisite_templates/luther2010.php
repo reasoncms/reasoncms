@@ -80,7 +80,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 		echo '<div id="wrapper" class="'.$class.'">'."\n";
 		echo '<div id="bannerAndMeat">'."\n";
-		$this->show_banner();		
+		$this->show_banner();
+		$this->emergency_preempt();		
 		echo '<div class="container group">'."\n";		
 		$this->show_meat();		
 		echo '</div> <!-- class="container group" -->'."\n";
@@ -800,6 +801,31 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '<a class="blue" href="' . $sblink . '" id="section-sign">'."\n";
 		echo '<div><header><h2>' . $sbtitle . '</h2></header></div></a>'."\n";
 		
+	}
+	
+	function emergency_preempt()
+	// Display one or more site-wide preemptive emergency messages
+	// if one or more text blurbs are placed on the page /preempt
+	{
+		$site_id = get_site_id_from_url("/preempt");
+		$page_id = $site_id + 1;   // root page id is one greater than the site id
+		
+		$es = new entity_selector();
+		$es->add_type(id_of('text_blurb'));
+		$es->add_right_relationship($page_id, relationship_id_of('minisite_page_to_text_blurb'));
+		$result = $es->run_one();
+		
+		if ($result == null)
+		{
+			return;
+		}
+		
+		echo '<div class="emergency">'."\n";	
+		foreach( $result AS $id => $page )
+		{
+			echo $page->get_value('content')."\n";
+		}
+		echo '</div>  <!-- class="emergency"-->'."\n";			
 	}
 
 }
