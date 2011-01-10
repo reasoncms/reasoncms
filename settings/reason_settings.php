@@ -868,7 +868,7 @@
 	 *
 	 * Full path to the directory where Reason's sized image class (sized_image.php) should store sized images.
 	 */
-	define('REASON_SIZED_IMAGE_DIR', REASON_INC.'/www/sized_images/');
+	define('REASON_SIZED_IMAGE_DIR', REASON_INC.'www/sized_images/');
 	
 	/**
 	 * REASON_SIZED_IMAGE_DIR_WEB_PATH
