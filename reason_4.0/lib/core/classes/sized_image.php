@@ -324,7 +324,6 @@ class reasonSizedImage
 				$width = $this->get_width();
 				$height = $this->get_height();
 				$crop_style=$this->get_crop_style();
-//				echo "w= ".$width." h=".$height." crop=".$crop_style."<br />";
 				if (empty($path)) trigger_error('reasonSizedImage could not determine the path of the original image - did not make a sized image');
 				elseif (empty($newpath)) trigger_error('reasonSizedImage could not determine the proper destination for the sized image');
 				elseif (empty($width) && empty($height)) trigger_error('reasonSizedImage needs to be provided a non-empty width or height value to create a sized image');
@@ -337,7 +336,6 @@ class reasonSizedImage
 					$info = getimagesize($path);
 					$width_src=$info[0];
 					$height_src=$info[1];
-//					echo "w= ".$width_src." h=".$height_src." crop-".$this->get_crop_style()."<br />";
 					$r= ($width*$height)/($width_src*$height_src);//r is for ratio
 					if( $r >= 0.5  )
 					{
@@ -466,8 +464,31 @@ class reasonSizedImage
 		else $this->crop_style = $crop_style;
 	}
 	
-	function set_image_dir($image_dir) { $this->image_dir = $image_dir; }
-	function set_image_dir_web_path($image_dir_web_path) { $this->image_web_path = $image_dir_web_path; }
+	/**
+	 * Provide the file system and web path to use - the file system path is used to output images and the web path is used to construct URLs to those images.
+	 *
+	 * @param string image_dir - the absolute file system path to the output directory - should begin and end with a "/"
+	 * @param string web_path - the path from the web server root directory to the directory where images can be accessed via http - should begin and end with a "/"
+	 */
+	function set_paths($image_dir, $web_path)
+	{
+		if (!empty($image_dir) && !empty($web_path))
+		{
+			if (!is_writable($image_dir))
+			{
+				trigger_error('The method set_paths failed - the image directory provided ('.$image_dir.') is not writable by apache.');
+			}
+			else
+			{	
+				$this->_set_image_dir($image_dir);
+				$this->_set_image_dir_web_path($web_path);
+			}
+		}
+		else trigger_error('The method set_paths requires an absolute file system path AND the web path to setup the sized image output directory');
+	}
 	
+	/** Private Setters **/
+	function _set_image_dir($image_dir) { $this->image_dir = $image_dir; }
+	function _set_image_dir_web_path($image_dir_web_path) { $this->image_dir_web_path = $image_dir_web_path; }
 }
 ?>
