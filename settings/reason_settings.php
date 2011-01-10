@@ -855,11 +855,25 @@
 	 */
 	define('REASON_DISABLE_AUTO_UPDATE_CHECK', false);
 
-        /**
-         * REASON_LOG_LOGINS
-         *
-         * The Reason login module can log all login and logout actions.  If you set this value to true,
-         * a log file will be populated at REASON_LOG_DIR/reason_login.log
-         */
-        define('REASON_LOG_LOGINS', false);
+	/**
+	 * REASON_LOG_LOGINS
+	 *
+	 * The Reason login module can log all login and logout actions.  If you set this value to true,
+	 * a log file will be populated at REASON_LOG_DIR/reason_login.log
+	 */
+	define('REASON_LOG_LOGINS', false);
+	
+	/**
+	 * REASON_SIZED_IMAGE_DIR
+	 *
+	 * Full path to the directory where Reason's sized image class (sized_image.php) should store sized images.
+	 */
+	define('REASON_SIZED_IMAGE_DIR', REASON_INC.'/www/sized_images/');
+	
+	/**
+	 * REASON_SIZED_IMAGE_DIR_WEB_PATH
+	 *
+	 * Full path to the directory where Reason's sized image class (sized_image.php) should store sized images.
+	 */
+	define('REASON_SIZED_IMAGE_DIR_WEB_PATH', REASON_HTTP_BASE_PATH.'sized_images/');
 ?>
