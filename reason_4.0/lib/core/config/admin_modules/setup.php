@@ -84,6 +84,8 @@
 		'ActiveUsers'=>array('file'=>'active_users.php','class'=>'ReasonActiveUsersModule'),
 		'ReviewChanges'=>array('file'=>'review_changes.php','class'=>'ReasonReviewChangesModule'),
 		'SitePages'=>array('file'=>'site_pages.php','class'=>'ReasonSitePagesModule'),
+		
+		'ImageSizer'=>array('file'=>'image_sizer.php','class'=>'ImageSizerModule'),
 );
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))
