@@ -45,6 +45,8 @@
 				}
 			}
 			
+			$this->show_item_default( 'Custom sizes' , '<a href="'.carl_make_link(array('cur_module'=>'ImageSizer')).'">Get this image at a custom size</a>' );
+			
 			// Everything Else
 			$this->show_all_values( $this->_entity->get_values() );
 			
