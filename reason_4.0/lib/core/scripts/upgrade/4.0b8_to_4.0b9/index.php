@@ -57,7 +57,7 @@ reason_settings.php used in your reason instance. You can copy and paste the fol
  *
  * Full path to the directory where Reason's sized image class (sized_image.php) should store sized images.
  */
-define('REASON_SIZED_IMAGE_DIR', REASON_INC.'/www/sized_images/');</textarea><br/><br/>
+define('REASON_SIZED_IMAGE_DIR', REASON_INC.'www/sized_images/');</textarea><br/><br/>
 </li>
 <li><strong>REASON_SIZED_IMAGE_DIR_WEB_PATH</strong><p>You should make sure the setting is defined in the
 reason_settings.php used in your reason instance. You can copy and paste the following:</p>
