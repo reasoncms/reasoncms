@@ -282,7 +282,7 @@ class reasonSizedImage
 		{
 			$path = reason_get_image_path($entity);
 			$info = getimagesize($path);
-			$ar = $info[1] / $info[0];
+			$ar = $info[0] / $info[1];
 			$width = (int) ($ar * $height);
 			$this->set_width($width);
 		}
