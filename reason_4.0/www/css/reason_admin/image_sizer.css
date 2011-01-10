@@ -1,0 +1,17 @@
+#imageSizerModule .preview {
+	margin-bottom:2em;
+}
+#imageSizerModule .image {
+	margin-bottom:1em;
+}
+#imageSizerModule .preview .url input {
+	width:90%;
+}
+#imageSizerModule h4.tryAgainHeading {
+	padding-top:1em;
+	border-top:1px solid #aaa;
+	margin-top:3em;
+}
+#imageSizerModule .normalSizeNotice, #imageSizerModule .max {
+	color:#666;
+}
