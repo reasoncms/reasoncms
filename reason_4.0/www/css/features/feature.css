@@ -55,7 +55,7 @@
 }
 .featuresModule .feature .featureTitle a.dest, .featuresModule .feature .featureTitle span.noLink, .featuresModule .feature .featureText a.dest, .featuresModule .feature .featureText span.noLink {
 	display:block;
-	padding:0.5em 0.75em 0.25em 0.75em;
+	padding:8px 12px 0 12px;
 }
 .featuresModule .feature .featureText a.dest, .featuresModule .feature .featureText span.noLink {
 	padding-top:0;
