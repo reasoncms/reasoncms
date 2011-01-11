@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
 
 //$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'DefaultView';
 
