@@ -1,7 +1,19 @@
 <?php
 
+/**
+ * A full-featured feature item view that can be used as a default
+ * @package reason
+ * @subpackage minisite_modules
+ */
+
+/**
+ * Include the abstract class this view will inherit from
+ */
 reason_include_once( 'minisite_templates/modules/feature/views/default_view.php' );
 
+/**
+ * A full-featured feature item view that can be used as a default
+ */
 class DefaultFeatureView extends DefaultView
 {
 
@@ -265,10 +277,11 @@ class DefaultFeatureView extends DefaultView
 		if($view_data['destination_url']==null){$has_anchor=false;}
 
 		$height=$this->_view_params['height'];
-		$anchor_start="";
-		$image_anchor_start="";
-		$anchor_end="";
-		$image_anchor_end="";
+		
+		$anchor_start='<span class="noLink">';
+		$image_anchor_start='<span class="noLink">';
+		$anchor_end='</span>';
+		$image_anchor_end='</span>';
 
 		if($has_anchor)
 		{
@@ -320,8 +333,6 @@ class DefaultFeatureView extends DefaultView
 			$title_str="<h3 class=\"featureTitle\">".$anchor_start.$view_data['title'].$anchor_end."</h3>\n";
 			$text_str="<div class=\"featureText\">".$anchor_start.$view_data['text'].$anchor_end."</div>\n";
 		}
-
-
 
 		$str ="<li id=\"feature-".$view_data['id']."\" class=\"feature ".$view_data['active']." sizable\"
 		 		style=\"background-color:#".$view_data['bg_color'].";\" >\n";
