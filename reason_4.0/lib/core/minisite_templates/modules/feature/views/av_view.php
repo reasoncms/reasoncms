@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * A view that plays media in place instead of launching a modal window
+ * @package reason
+ * @subpackage minisite_modules
+ */
 reason_include_once( 'minisite_templates/modules/feature/views/default_view.php' );
 
 /**
