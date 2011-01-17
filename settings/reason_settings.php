@@ -506,7 +506,7 @@
 	 * This setting identifies the directory used to store cache files.
 	 * This directory will have to have permissions that allow Apache/php to write to it
 	 */
-	define( 'REASON_CACHE_DIR', REASON_INC.'data/cache' );
+	define( 'REASON_CACHE_DIR', REASON_INC.'data/cache/' );
 
 	/**
 	 * CM_VAR_PREFIX
