@@ -30,10 +30,10 @@ auth_site_to_user( id_of('master_admin'), $authenticated_user_netid );
 
 $user_id = get_user_id( $authenticated_user_netid );
 
-//if(!reason_user_has_privs( $user_id, 'minimize_db' ) )
-//{
-//	die('you must have minimize_db privileges to view this page. NOTE: For security reasons, admin users DO NOT have minimize_db privileges. If you are an admin user, you must add minimize_db privs to the admin role in this Reason instance, or set up a minimize-db-specific role and assume it.');
-//}
+if(!reason_user_has_privs( $user_id, 'minimize_db' ) )
+{
+	die('you must have minimize_db privileges to view this page. NOTE: For security reasons, admin users DO NOT have minimize_db privileges. If you are an admin user, you must add minimize_db privs to the admin role in this Reason instance, or set up a minimize-db-specific role and assume it.');
+}
 
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
