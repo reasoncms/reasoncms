@@ -37,7 +37,7 @@ class CacheTypeSettings
 		static $settings;
 		if (!isset($settings))
 		{
-			$cache_dir = (defined('REASON_CACHE_DIR')) ? REASON_CACHE_DIR : '/tmp';
+			$cache_dir = (defined('REASON_CACHE_DIR')) ? REASON_CACHE_DIR : '/tmp/';
 			$settings = array ('file' => 	array('path' => CARL_UTIL_INC . 'cache/cache_types/file.php',
 												  'constants' => array('OBJECT_CACHE_DIR' => $cache_dir)),
 							 						 
