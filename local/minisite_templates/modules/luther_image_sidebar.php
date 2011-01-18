@@ -79,6 +79,7 @@
 				{
 					$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
 					$thumb = WEB_PHOTOSTOCK . $id . '_tn.' . $image->get_value('image_type');
+					$orig = WEB_PHOTOSTOCK . $id . '_orig.' . $image->get_value('image_type');
 					$d = max($image->get_value('width'), $image->get_value('height')) / 125.0;
 					if (preg_match("/hide_caption/", $image->get_value('keywords')))
 					{
@@ -98,12 +99,20 @@
 					// show href to full size image with class and onclick for highslide
                                         //showing site id: echo 'site id is this: '. $site_id . ' end';
 					echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
-					echo '<img src="' . $thumb . '" border="0" alt="' . $caption . '" title="Click to enlarge" />';
+					//echo '<img src="' . $thumb . '" border="0" alt="' . $caption . '" title="Click to enlarge" />';
+					echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" />';
 					echo '</a>';
+					echo '<div class="highslide-caption" >'."\n";
+					echo $caption ."\n";
+					if (file_exists($_SERVER['DOCUMENT_ROOT'] . $orig))
+					{
+						echo '<a href="' . $orig . '" title="High res">&prop;</a>'."\n"; 
+					}
+					echo "</div>   <!--- class=\"highslide-caption\" -->\n";  
 
 					// show caption if flag is true
 					if ($this->params['caption_flag'] && $caption != "") echo $image->get_value('description') ;
-					echo "</div>\n";
+					echo "</div>   <!-- class=\"figure\" -->\n";
 				}
                             }
 			}
