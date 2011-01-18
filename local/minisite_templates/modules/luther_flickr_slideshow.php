@@ -53,91 +53,100 @@
     				//echo $post->get_value( 'keywords' ).'<br />';
 				if (array_key_exists($post->get_value('flickr_username'), $flickr_account))
 				{
-				$f = new phpFlickr($flickr_account[$post->get_value('flickr_username')][0], $flickr_account[$post->get_value('flickr_username')][1]);
-				if (HTTP_HOST_NAME != 'localhost')
-				{
-					// 30 day cache expiration
-					$f->enableCache("fs", "/var/www/phpFlickrCache", 2580000); 
-				}
-				$photos = $f->photosets_getPhotos($post->get_value('flickr_photoset_id'));
-				//foreach ((array)$photos['photoset']['photo'] as $photo)
-				//{
-    				//	echo $photo['id'] . ": " . $photo['title'] . " (" . $photo['isprimary'] . ")<br />";
-				//	$pinfo = $f->photos_getInfo($photo['id']);
-				//	echo "farm: " . $pinfo['farm'] . "<br />";
-				//	//print_r($pinfo);
-				//}
-
-				if ($number_slideshows == 1)
-				{
-					echo "<h3>" . $post->get_value('name') . "</h3>" . "\n";
-					echo "<ul id=\"galleryimages\">\n";
-				}
-				elseif ($number_slideshows > 1)
-				{
-					echo "<div class=\"flickr-set-container\">\n";
-				}
-				foreach ((array)$photos['photoset']['photo'] as $photo)
-				{
-					// see /javascripts/highslide/highslide-overrides.js for gallery declaration
-					$pinfo = $f->photos_getInfo($photo['id']);
-					// free accounts don't fill in $pinfo['originalformat']
-					if ($pinfo['originalformat'] == null)
+					$f = new phpFlickr($flickr_account[$post->get_value('flickr_username')][0], $flickr_account[$post->get_value('flickr_username')][1]);
+					if (HTTP_HOST_NAME != 'localhost')
 					{
-						$pinfo['originalformat'] = 'jpg';
+						// 30 day cache expiration
+						$f->enableCache("fs", "/var/www/phpFlickrCache", 2580000); 
 					}
-					if (preg_match("/[A-Za-z0-9]+/", $pinfo['description']))
+					$photos = $f->photosets_getPhotos($post->get_value('flickr_photoset_id'));
+					//foreach ((array)$photos['photoset']['photo'] as $photo)
+					//{
+	    			//		echo $photo['id'] . ": " . $photo['title'] . " (" . $photo['isprimary'] . ")<br />";
+					//	$pinfo = $f->photos_getInfo($photo['id']);
+					//	echo "farm: " . $pinfo['farm'] . "<br />";
+					//	print_r($pinfo);
+					//}
+	
+					if ($number_slideshows == 1)
 					{
-						$description = "<b>" .$photo['title'] . "</b><br/> " . preg_replace("|\"|", "&quot;", $pinfo['description']);
+						echo "<h3>" . $post->get_value('name') . "</h3>" . "\n";
+						echo "<ul id=\"galleryimages\">\n";
 					}
-					else
+					elseif ($number_slideshows > 1)
 					{
-						$description = $photo['title'];
+						echo "<div class=\"flickr-set-container\">\n";
+					}
+					foreach ((array)$photos['photoset']['photo'] as $photo)
+					{
+						// see /javascripts/highslide/highslide-overrides.js for gallery declaration
+						$pinfo = $f->photos_getInfo($photo['id']);
+						// free accounts don't fill in $pinfo['originalformat']
+						if ($pinfo['originalformat'] == null)
+						{
+							$pinfo['originalformat'] = 'jpg';
+						}
+						if (preg_match("/[A-Za-z0-9]+/", $pinfo['description']))
+						{
+							$description = "<b>" .$photo['title'] . "</b><br/> " . preg_replace("|\"|", "&quot;", $pinfo['description']);
+						}
+						else
+						{
+							$description = $photo['title'];
+						}
+						if ($number_slideshows == 1)
+						{
+							echo "<li>\n";
+						}
+						elseif ($number_slideshows > 1 && $photo['isprimary']) 
+						{
+							echo "<div class=\"flickr-set\">\n";
+						}
+						else
+						{
+							echo "<div class=\"hidden-container\">\n";
+						}
+						echo "<a class=\"highslide\" href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "." . $pinfo['originalformat']  . "\" onclick=\"return hs.expand(this, galleryOptions[" . $slideshowGroup . "])\">\n";
+						echo "<img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_s." . $pinfo['originalformat']  . "\" title=\"Click to open gallery\"  />\n";
+						echo "</a>\n";
+						echo '<div class="highslide-caption" >'."\n";
+						echo $description ."\n";
+						// link to original image
+						echo "<a href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $pinfo['originalsecret'] . "_o." . $pinfo['originalformat'] . "\" title=\"High res\">&prop;</a>\n"; 
+						echo "</div>   <!--- class=\"highslide-caption\" -->\n"; 
+	
+						if ($number_slideshows == 1)
+						{
+							echo "</li>\n";
+						}
+						elseif ($number_slideshows > 1 && $photo['isprimary']) 
+						{
+							echo "</div class=\"flickr-set\">\n";
+						}
+						else
+						{
+							echo "</div class=\"hidden-container\">\n";
+						}
 					}
 					if ($number_slideshows == 1)
 					{
-						echo "<li>\n";
+						echo "</ul id=\"galleryimages\">\n";
 					}
-					elseif ($number_slideshows > 1 && $photo['isprimary']) 
+					elseif ($number_slideshows > 1)
 					{
-						echo "<div class=\"flickr-set\">\n";
+						echo "<h4>" . $post->get_value('name') . "</h4>" . "\n";
+						echo "</div class=\"flickr-set-container\">\n";
 					}
-					else
+					$slideshowGroup++;
+					if ($slideshowGroup % 3 == 0)
 					{
-						echo "<div class=\"hidden-container\">\n";
+						echo "<hr>\n";
 					}
-					echo "<a class=\"highslide\" href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "." . $pinfo['originalformat']  . "\" onclick=\"return hs.expand(this, galleryOptions[" . $slideshowGroup . "])\">\n";
-					echo "<img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_s." . $pinfo['originalformat']  . "\" title=\"Click to open gallery\" alt=\"" . $description . "\" />\n";
-					echo "</a>\n";
-
-					if ($number_slideshows == 1)
+					// max gallery size is declared in /javascript/highslide/highslide-overrides.js
+					if ($slideshowGroup > 49)
 					{
-						echo "</li>\n";
+						break;
 					}
-					elseif ($number_slideshows > 1 && $photo['isprimary']) 
-					{
-						echo "</div class=\"flickr-set\">\n";
-					}
-					else
-					{
-						echo "</div class=\"hidden-container\">\n";
-					}
-				}
-				if ($number_slideshows == 1)
-				{
-					echo "</ul id=\"galleryimages\">\n";
-				}
-				elseif ($number_slideshows > 1)
-				{
-					echo "<h4>" . $post->get_value('name') . "</h4>" . "\n";
-					echo "</div class=\"flickr-set-container\">\n";
-				}
-				$slideshowGroup++;
-				// max gallery size is declared in /javascript/highslide/highslide-overrides.js
-				if ($slideshowGroup > 49)
-				{
-					break;
-				}
 				}
 			}
 			echo "</div id=\"gallerycontainer\">\n";
