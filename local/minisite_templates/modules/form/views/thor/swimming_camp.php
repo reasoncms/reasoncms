@@ -12,7 +12,7 @@ class SwimmingCampThorForm extends CreditCardThorForm
 
 		
 		$this->change_element_type($this->get_element_name_from_label('Gender'), 'radio_inline_no_sort');
-		$this->change_element_type($this->get_element_name_from_label('Birth date'), 'date');
+		$this->change_element_type($this->get_element_name_from_label('Birth date'), 'textDate');
 		$this->change_element_type($this->get_element_name_from_label('State'), 'state');
 		
 
