@@ -93,10 +93,6 @@ $p_element = $this->get_element_name_from_label('payment_amount');
                             $mailer2->send();
                         }
 		}
-	}
-
-
-}
-	
+	}	
 }
 ?>
