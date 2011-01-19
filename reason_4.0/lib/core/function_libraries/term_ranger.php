@@ -36,8 +36,8 @@ function term_range( $termlist )
 function termCmp( $a, $b ) 
 {
     // sort an array of terms in 00/TT format
-    list($aYear,$aTerm) = split("/",$a);
-    list($bYear,$bTerm) = split("/",$b);
+    list($aYear,$aTerm) = explode("/",$a);
+    list($bYear,$bTerm) = explode("/",$b);
     $term["FA"] = 3;
     $term["SU"] = 3;
     $term["SP"] = 2;
@@ -75,8 +75,8 @@ function termRange($termlist)
 
     for ($i=0; $i<(sizeof($termlist)-1); $i++) 
     {
-        list($aYear,$aTerm) = split("/",$termlist[$i]);
-        list($bYear,$bTerm) = split("/",$termlist[$i+1]);
+        list($aYear,$aTerm) = explode("/",$termlist[$i]);
+        list($bYear,$bTerm) = explode("/",$termlist[$i+1]);
         // if the year is the same, see if the terms are sequential
         if ($aYear == $bYear) 
         {
@@ -119,9 +119,9 @@ function termRange($termlist)
     {
         
         // convert to Term Year format for display
-        list($lyear,$lterm) = split("/", $start[$i]);
+        list($lyear,$lterm) = explode("/", $start[$i]);
         $start[$i] = $termName[$lterm]." 20".$lyear;
-        list($lyear,$lterm) = split("/", $end[$i]);
+        list($lyear,$lterm) = explode("/", $end[$i]);
         $end[$i] = $termName[$lterm]." 20".$lyear;
         $range[] .= ($start[$i] == $end[$i]) ? $start[$i] : 
         $start[$i]." through ".$end[$i];
