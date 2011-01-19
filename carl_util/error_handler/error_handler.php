@@ -368,8 +368,7 @@ function _carl_util_display_error($level, $message, $file, $line, $context)
 	}
 	
 	if (level_is_terminal($level) && error_handler_config('display_context') ) {
-		$escaped_context = htmlspecialchars(sprint_r($context), ENT_QUOTES,
-			'UTF-8');
+		$escaped_context = spray($context);
 		$err .= '<br />';
 		$err .= '<b style="font-size: 90%; margin-top: 0.3em;">Context:</b>'.
 			"\n\n<pre>$escaped_context</pre>";
