@@ -133,7 +133,7 @@ reason_include_once('classes/page_types.php');
 			{
 				if ($full_event_pool[$event]->get_value('dates') != $full_event_pool[$event]->get_value('last_occurence'))
 				{
-					foreach (split(',', $full_event_pool[$event]->get_value('dates')) as $occurence)
+					foreach (explode(',', $full_event_pool[$event]->get_value('dates')) as $occurence)
 					{
 						if ($occurence != $date && $occurence >= $this->startdate)
 							$this->calendar->events_by_date[$occurence][] = $event;
@@ -152,7 +152,7 @@ reason_include_once('classes/page_types.php');
 				$event_pool[$date][$event] = carl_clone($full_event_pool[$event]);
 				$event_pool[$date][$event]->set_value('date', $date);
 				$event_pool[$date][$event]->set_value('display_date', date('l, F jS', strtotime($date)));
-				list($d, $t) = split(' ' , $event_pool[$date][$event]->get_value('datetime'));
+				list($d, $t) = explode(' ' , $event_pool[$date][$event]->get_value('datetime'));
 				$event_pool[$date][$event]->set_value('time', $t); 
 				$event_pool[$date][$event]->set_value('display_time', date('g:ia', strtotime($event_pool[$date][$event]->_values['datetime'])));
 				$this->set_range_timestamps($event_pool[$date][$event]);
