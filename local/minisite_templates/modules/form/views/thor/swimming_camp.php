@@ -12,7 +12,7 @@ class SwimmingCampThorForm extends CreditCardThorForm
 
 		
 		$this->change_element_type($this->get_element_name_from_label('Gender'), 'radio_inline_no_sort');
-		$this->change_element_type($this->get_element_name_from_label('Birth Date'), 'date');
+		$this->change_element_type($this->get_element_name_from_label('Birth date'), 'date');
 		$this->change_element_type($this->get_element_name_from_label('State'), 'state');
 		
 
@@ -86,12 +86,6 @@ $p_element = $this->get_element_name_from_label('payment_amount');
 
 			$mailer = new Email($recipient, $sender, $sender, $subject, $txt_body, $html_body);
 			$mailer->send();
-                        // Send an e-mail to the camper if their address is supplied
-                        if($recipient2 = $this->get_value_from_label('Camper\'s e-mail'))
-                        {
-                            $mailer2 = new Email($recipent2, $sender, $sender, $subject, $txt_body, $html_body);
-                            $mailer2->send();
-                        }
 		}
 	}	
 }
