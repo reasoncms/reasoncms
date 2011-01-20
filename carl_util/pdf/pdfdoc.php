@@ -93,7 +93,7 @@ class PDFDoc
             $this->story = tidy( $this->story );
 
             $this->pdf = pdf_new();
-            PDF_set_parameter($this->pdf , 'licensefile', '/usr/local/wsg/httpd/conf/pdflib_licensekeys.txt');
+            PDF_set_parameter($this->pdf , 'licensefile', $_SERVER['PDFLIBLICENSEFILE']);
             PDF_begin_document($this->pdf , "", "");
             #pdf_open_file($this->pdf);
             pdf_set_border_style( $this->pdf, 'solid', 0 );
