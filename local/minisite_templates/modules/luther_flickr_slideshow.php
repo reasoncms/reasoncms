@@ -24,6 +24,7 @@
 			"luthercollegechemistry" => array("4fe2ce650080400958007a505b980522", "cef37676c4424ae1"),
 			// environmental outreach
 			"nealem01" => array("d76f4769f09cc708389538ffe0d82733", "27e40ea372ece10c"),
+			"LutherMinistry" => array("524ba8e86f00754ce5216cf02345125e", "48a2c6cb8df8ca1f"),
                         "luthersustainability" => array("32deae8d61a176ea73d561995d903426", "d5805fcf8d221869"));
 
 			$site_id = $this->site_id;
