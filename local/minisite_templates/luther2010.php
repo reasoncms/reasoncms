@@ -9,6 +9,8 @@
  */
 reason_include_once( 'minisite_templates/default.php' );
 reason_include_once( 'minisite_templates/nav_classes/no_root.php' ); 
+reason_include_once( 'function_libraries/root_finder.php');
+reason_include_once( 'function_libraries/relationship_finder.php');
 
 /**
  * Register this new template with Reason
@@ -808,7 +810,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 	// if one or more text blurbs are placed on the page /preempt
 	{
 		$site_id = get_site_id_from_url("/preempt");
-		$page_id = $site_id + 1;   // root page id is one greater than the site id
+		$page_id = root_finder( $site_id );   // see 'lib/core/function_libraries/root_finder.php'
 		
 		$es = new entity_selector();
 		$es->add_type(id_of('text_blurb'));
