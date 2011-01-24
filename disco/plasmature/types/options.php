@@ -139,7 +139,7 @@ class radioType extends optionType
 		foreach( $this->options as $key => $val )
 		{
 			$id = 'radio_'.$this->name.'_'.$i++;
-			$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.$key.'"';
+			$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
 			if ( $key == $this->value )
 				$str .= ' checked="checked"';
 			$str .= ' /></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
@@ -166,7 +166,7 @@ class radio_inlineType extends optionType
 		foreach( $this->options as $key => $val )
 		{
 			$id = 'radio_'.$this->name.'_'.$i++;
-			$str .= '<span class="radioItem"><span class="radioButton"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.$key.'"';
+			$str .= '<span class="radioItem"><span class="radioButton"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
 			if ( $key == $this->value )
 				$str .= ' checked="checked"';
 			$str .= ' /></span> <label for="'.$id.'">'.$val.'</label></span> '."\n";
@@ -218,7 +218,7 @@ class radio_with_otherType extends optionType
 		foreach( $this->options as $key => $val )
 		{
 			$id = 'radio_'.$this->name.'_'.$i++;
-			$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.$key.'"';
+			$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
 			if ( $key == $this->value ) {
 				$str .= ' checked="checked"';
 				$checked = true;
@@ -422,7 +422,7 @@ class selectType extends optionType
 			}
 			else
 			{
-				$str .= '<option value="'.$key.'"';
+				$str .= '<option value="'.htmlspecialchars($key, ENT_QUOTES).'"';
 				if ( is_array($this->value) ) {
 					if ( array_search($key, $this->value) !== false )
 						$str .= ' selected="selected"';
@@ -632,10 +632,10 @@ class select_multipleType extends selectType
 		{
 			foreach( $this->options as $key => $val )
 			{
-				$str .= "\n".'<input type="checkbox" id="'.$this->name.'-'.$key.'" name="'.$this->name.'[]" value="'.$key.'"';
+				$str .= "\n".'<input type="checkbox" id="'.$this->name.'-'.htmlspecialchars($key, ENT_QUOTES).'" name="'.$this->name.'[]" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
 				if( $this->array_contains( $this->value,$key ) )
 					$str .= ' checked="checked"';
-				$str .= ' />'."\n".'<label for="'.$this->name.'-'.$key.'">'.$val.'</label><br />';
+				$str .= ' />'."\n".'<label for="'.$this->name.'-'.htmlspecialchars($key, ENT_QUOTES).'">'.$val.'</label><br />';
 			}
 			$str .= "\n";
 		}
@@ -645,7 +645,7 @@ class select_multipleType extends selectType
 			//$str .= '<option value="">*none*</option>'."\n";
 			foreach( $this->options as $key => $val )
 			{
-				$str .= '<option value="'.$key.'"';
+				$str .= '<option value="'.htmlspecialchars($key, ENT_QUOTES).'"';
 				if ( $this->array_contains( $this->value, $key) )
 					$str .= ' selected="selected"';
 				$str .= '>'.$val.'</option>'."\n";
@@ -710,7 +710,7 @@ class sidebar_selectType extends selectType
 			+ this.form.'.$this->name.'.options[this.form.'.$this->name.'.selectedIndex].value">'."\n";
 		foreach( $this->options as $key => $val )
 		{
-			$str .= '<option value="'.$key.'"';
+			$str .= '<option value="'.htmlspecialchars($key, ENT_QUOTES).'"';
 			if ( $key == $this->value )
 				$str .= ' selected="selected"';
 			$str .= '>'.$val.'</option>'."\n";
