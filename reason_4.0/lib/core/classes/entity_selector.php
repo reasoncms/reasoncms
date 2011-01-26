@@ -927,6 +927,49 @@
 		} // }}}
 		
 		/**
+		 * Get ids - same args as run_one, but does the query and returns an array of the ids that match.
+		 *
+		 * <code>
+		 * $my_ids = $es->get_ids();
+		 * </code>
+		 *
+		 * Basically - this a low memory alternative to this:
+		 *
+		 * <code>
+		 * $my_entities = $es->run_one();
+		 * $my_ids = array_keys($my_entities);
+		 * </code>
+		 *
+		 * @param int $type type_id (or blank for default)
+		 * @param string $status Either Live, Pending, Archived... (optional)
+		 * @param string $error optional error message
+		 * @return array
+		 */
+		function get_ids($type = '', $status = 'Live', $error = 'get_ids_error')
+		{
+			$ids = array();
+			if( !$type )
+			{
+				if( isset($this->type[0]) && $this->type[0] )
+				{
+					$type = $this->type[0] ;
+				}
+				else
+				{
+					trigger_error('Entity Selector: No type available. Try using the method add_type($type_id) before calling get_ids(), or call get_ids() with the type id as the first argument.');
+					return array();
+				}
+			}
+			$r = db_query( $this->get_one_query( $type , $status) , $this->description.': '.$error );
+			while($row = mysql_fetch_assoc($r))
+			{
+				$ids[] = $row['id'];
+			}
+			mysql_free_result( $r );
+			return $ids;
+		}
+		
+		/**
 		 * Runs one query for the ES.  If type is empty, it uses the first type by default.
 		 * This is often called without paramaters in code for front end stuff.
 		 * <code>
