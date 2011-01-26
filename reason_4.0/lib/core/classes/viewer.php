@@ -489,20 +489,20 @@
 			 * Sets up appropriate variables if not already set
 			 * @return void
 			 */
-			function &check_bounds(&$es) // {{{
+			function &check_bounds(&$es)
 			{
 				$clone_es = carl_clone($es);
 				$clone_es->optimize('distinct');
 				$clone_es->limit_fields(); // we limit fields since mostly we want a count and will perform another select in load_values;
-				$clone_es->run_one();
-				$result = $clone_es->run_one($this->type_id, $this->state);
-				$this->real_count = count($result);
+				$ids = $clone_es->get_ids($this->type_id, $this->state);
+				$this->real_count = count($ids);
 				if( empty( $this->page ) ) $this->page = 1;
 				$max_page = ceil( $this->real_count / $this->num_per_page );
 				if( $this->page > $max_page ) $this->page = $max_page;
 				if( $this->page < 1 ) $this->page = 1;
-				return $result;
-			} // }}}
+				return $ids;	
+			}
+			
 			/**
 			 * Runs the es and stores the values in $this->values
 			 * @return void
@@ -514,7 +514,7 @@
 				{
 					$result =& $this->check_bounds($es);
 					$slice_start = ( ($this->page - 1 ) * ( $this->num_per_page ) );
-					$keys = array_slice(array_keys($result), $slice_start, $this->num_per_page);
+					$keys = array_slice($result, $slice_start, $this->num_per_page);
 					if (!empty($keys)) $es->add_relation('entity.id IN ('.implode(",",$keys).')');
 					else 
 					{
