@@ -136,6 +136,10 @@
 				$this->init_global();
 			}
 		} // }}}
+		function trim_str($str,$line)
+		{
+			return trim($str);
+		}
 		function refresh_localhost_limiter_rule()
 		{
 			if(!empty($_SERVER['SERVER_ADDR']))
@@ -151,11 +155,33 @@
 				}
 				
 				$hta_path = $this->test_full_base_url.'.htaccess';
-				$fh = fopen($hta_path,'w');
-				flock($fh, LOCK_EX);
-				fwrite($fh, $hta);
-				flock($fh, LOCK_UN);
-				fclose($fh);
+				
+				if(file_exists($hta_path))
+				{
+					$current_contents = file_get_contents($hta_path);
+					$current_contents = explode("\n",trim($current_contents));
+					$new_contents = explode("\n",trim($hta));
+					array_walk($current_contents, array($this,'trim_str'));
+					array_walk($new_contents, array($this,'trim_str'));
+					$diff = array_diff($current_contents,$new_contents);
+					if(empty($diff))
+					{
+						return;
+					}
+				}
+				
+				$fh = @fopen($hta_path,'w');
+				if($fh)
+				{
+					flock($fh, LOCK_EX);
+					fwrite($fh, $hta);
+					flock($fh, LOCK_UN);
+					fclose($fh);
+				}
+				else
+				{
+					trigger_error('File at '.$hta_path.' is not writable by apache. Rewrites may not be able to be validated.');
+				}
 			}
 		}
 		function init_site($site_id)
