@@ -18,6 +18,7 @@
 	 */
 	include_once('paths.php');
 	include_once( CARL_UTIL_INC . 'basic/url_funcs.php' );
+	include_once( CARL_UTIL_INC . 'basic/cleanup_funcs.php' );
 	
 	/**
 	 * Set up necessary constants
@@ -43,7 +44,8 @@
 	{
 		// time to regen a page, in seconds
 		var $timeout = 1800;
-		var $dir = '/tmp';
+		// full path starts and ends with a / character
+		var $dir = '/tmp/';
 		var $instance = '';
 		var $log_file = '';
 		var $_logging = false;
@@ -56,7 +58,7 @@
 			else
 				$this->log_file = PAGE_CACHE_LOG;
 		} // }}}
-		function fetch( $key ) // {{{
+		public function fetch( $key ) // {{{
 		{
 			if( $this->is_cached( $key ) )
 			{
@@ -85,10 +87,10 @@
 				return false;
 			}
 		} // }}}
-		function store( $key, $cache_val ) // {{{
+		public function store( $key, $cache_val ) // {{{
 		{
 			$url = get_current_url();
-			$tmpfile = $this->dir.'/'.uniqid('reason_cache_'.md5($url), true);
+			$tmpfile = $this->get_dir().uniqid('reason_cache_'.md5($url), true);
 			$fp = fopen( $tmpfile, 'w' ) OR die( 'unable to open cache tmp' );
 			fwrite( $fp, $cache_val, strlen( $cache_val ) ) OR die( 'unable to write to cache tmp' );
 			fclose( $fp ) OR die( 'unable to close cache tmp' );
@@ -118,7 +120,33 @@
 				trigger_error( 'unable to rename cache file ' . $tmpfile . ' - the file does not exist' );
 			}	
 		} // }}}
-		function clear( $key ) // {{{
+		
+		/**
+		 * @param dir string absolute path to cache directory (must be writable by web server, include trailing slash)
+		 */
+		public function set_cache_dir( $dir )
+		{
+			$this->dir = '/' . trim_slashes($dir) . '/';
+		}
+		
+		public function get_cache_dir()
+		{
+			return $this->dir;
+		}
+		
+		/**
+		 * Allows extensions to utilize additional organizational schemes for cached files.
+		 */
+		protected function get_dir()
+		{
+			return $this->get_cache_dir();
+		}
+		
+		function set_page_generation_time( $time )
+		{
+			$this->page_gen_time = $time;
+		}
+		public function clear( $key ) // {{{
 		{
 			$f = $this->_get_cache_file( $key );
 			if( file_exists( $f ) )
@@ -129,8 +157,17 @@
 		{
 			$this->_log( '*', CACHE_LOG_MSG_CLEAR_ALL );
 		} // }}}
-		// determines both a) if a page has a cache and b) if that cache is still valid (meaning, it has not timed out)
-		function is_cached( $key ) // {{{
+		
+		/**
+		 * Determines a couple things about a page:
+		 * 
+		 * - if a page has a cache
+		 * - if that cache is still valid (meaning, it has not timed out)
+		 *
+		 * @param string cache key
+		 * @param boolean logging_enabled - defaults to true, will not call _log if false
+		 */
+		function is_cached( $key, $logging_enabled = true )
 		{
 			$f = $this->_get_cache_file( $key );
 			if( file_exists( $f ) )
@@ -138,26 +175,24 @@
 				$age = time() - filemtime( $f );
 				if( $age < $this->timeout )
 				{
-					$this->_log( $key, CACHE_LOG_MSG_HIT );
+					if ($logging_enabled) $this->_log( $key, CACHE_LOG_MSG_HIT );
 					return true;
 				}
 				else
 				{
-					$this->_log( $key, CACHE_LOG_MSG_MISS, CACHE_LOG_MSG_MISS_AGE  );
-					//dlog('Cache file is too old.');
+					if ($logging_enabled) $this->_log( $key, CACHE_LOG_MSG_MISS, CACHE_LOG_MSG_MISS_AGE  );
 				}
 			}
 			else
 			{
-				$this->_log( $key, CACHE_LOG_MSG_MISS, CACHE_LOG_MSG_MISS_NO_CACHE );
-				//dlog('Cache file does not exist');
+				if ($logging_enabled) $this->_log( $key, CACHE_LOG_MSG_MISS, CACHE_LOG_MSG_MISS_NO_CACHE );
 			}
 			return false;
-		} // }}}
+		}
+		
 		function _get_cache_file( $key ) // {{{
 		{
-			$file = $this->dir.'/'.md5($key).'.cache';
-			//echo '<!-- key = '.$key.' file = '.$file.'-->';
+			$file = $this->get_dir().md5($key).'.cache';
 			return $file;
 		} // }}}
 		function _clean_key( $key )
@@ -169,7 +204,7 @@
 		}
 		function _check_dir() // {{{
 		{
-			if( !is_writable( $this->dir ) )
+			if( !is_writable( $this->get_dir() ) )
 			{
 				trigger_error( 'Cache directory is not writable so caching is not available' );
 			}
