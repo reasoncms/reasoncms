@@ -30,6 +30,7 @@ class DorianJHCampsModule extends DefaultMinisiteModule
 		reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page1.php' );
 		reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page2.php' );
 		reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page3.php' );
+                reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page3.php' );
 
 		$this->controller = new FormController;
 		$this->controller->set_session_class('Session_PHP');
@@ -40,10 +41,10 @@ class DorianJHCampsModule extends DefaultMinisiteModule
 		$this->controller->allow_arbitrary_start = true;
 		//*
 		$forms = array(
-			'DorainJHCampsOneForm' => array(
+			'DorianJHCampsOneForm' => array(
 				'next_steps' => array(
 					'DorianJHCampsTwoForm' => array(
-						'label' => 'Come on',
+						'label' => 'Next',
 					),
 					'DorianJHCampsConfirmation' => array(
 						'label' => 'Dorian Junior High Camp Confirmation',
@@ -104,11 +105,11 @@ class DorianJHCampsModule extends DefaultMinisiteModule
 	 * Set up the request for the controller and run the sucker
 	 * @return void
 	 */
-	function run() // {{{
+	function run() 
 	{
 		if( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
 		{
-			reason_include_once( 'minisite_templates/modules/dorian_jh_camp/dorian_jh_camp_confirmation.php' );
+			reason_include_once( 'minisite_templates/modules/dorian_jh_camps/dorian_jh_camp_confirmation.php' );
 			$tc = new DorianCampConfirmation;
 			$tc->set_ref_number( $this->request[ 'r' ] );
 			$tc->set_hash( $this->request[ 'h' ] );
@@ -130,6 +131,24 @@ class DorianJHCampsModule extends DefaultMinisiteModule
 			$this->controller->set_request( $this->request );
 			$this->controller->run();
 		}
-	} // }}}
+	}
+        function generate_navigation()
+	{
+		$output = '<div id="formNavigation">';
+		$output .= '<ul class="formSteps">';
+		foreach ($this->controller->forms as $name => $form)
+		{
+			$class = 'formStep';
+			if (isset($form->display_name))
+			{
+				if ($this->controller->get_current_step() == $name)
+					$class .= ' current';
+
+				$output .= '<li class="'.$class.'"><a href="?_step='.$name.'">'.htmlspecialchars($form->display_name).'</a></li>';
+			}
+		}
+		$output .= '</ul></div>';
+		return $output;
+	}	
 }
 ?>
