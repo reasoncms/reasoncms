@@ -84,7 +84,14 @@
 				$this->show_item( $this->values[ $item  ] );
 			}
 			$children = $this->children( $item );
-			if( $children )
+			foreach($children as $key=>$child_id)
+			{
+				if($this->values[ $child_id ]->get_value('show_hide') == 'hide')
+				{
+					unset($children[$key]);
+				}
+			}
+			if( !empty($children) )
 			{
 				$style = isset( $this->ns_to_class[ $this->values[ $item ]->get_value( 'numbering_scheme' ) ] ) ?
 				$this->ns_to_class[ $this->values[ $item ]->get_value( 'numbering_scheme' ) ] :
