@@ -47,7 +47,6 @@ class DorianJHCampsOneForm extends FormStep
 		),
 		'zip' => array(
 			'type' => 'text',
-			'display_name' => 'Zip/Postal Code',
 			'size' => 35,
 		),
 		'home_phone' => array(
@@ -67,7 +66,7 @@ class DorianJHCampsOneForm extends FormStep
                 'roomate_requested' => array(
                     'type' => 'text',
                     'comments' => 'Males, one name, Females, one or two names',
-                   // 'display_name' => 'Roomate&nbsp;Requested',
+                   'display_name' => 'Roomate(s)&nbsp;Requested',
                 ),
                 'submitter_ip' => 'hidden',
 	);
