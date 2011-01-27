@@ -69,14 +69,17 @@ class DorianJHCampsOneForm extends FormStep
                     'comments' => 'Males, one name, Females, one or two names',
                    // 'display_name' => 'Roomate&nbsp;Requested',
                 ),
+                'submitter_ip' => 'hidden',
 	);
 
-	//var $required = array('first_name', 'last_name', 'daytime_phone', 'e-mail', 'address', 'city', 'state_province', 'zip', 'delivery');
+	var $required = array('first_name', 'last_name', 'gender', 'home_phone', 'e-mail', 'address', 'city', 'state_province', 'zip', 'school', 'grade');
 
 	var $error_header_text = 'Please check your form.';
 
-
-
+        function on_every_time()
+        {
+            $this->set_value('submitter_ip', $_SERVER[ 'REMOTE_ADDR' ]);
+        }
 	// style up the form and add comments et al
 	function pre_show_form()
 	{
