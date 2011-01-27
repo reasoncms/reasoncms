@@ -1,6 +1,6 @@
 <?php
 /**
-* This file contains the GiftConfirmation class
+* This file contains the DorianJHCampConfirmation class
 * @author Matt Ryan <mryan@acs.carleton.edu>
 */
 
@@ -8,7 +8,7 @@
 * Include necessary stuff
 */
 include_once('reason_header.php');
-include_once(WEB_PATH.'stock/dorianjhcamps.php');
+include_once(WEB_PATH.'stock/dorian_jh_camps.php');
 
 /**
 * GiftConfirmation, Matt Ryan, 29 March 2005
@@ -41,7 +41,7 @@ include_once(WEB_PATH.'stock/dorianjhcamps.php');
 * }
 * </code>
 */
-class DorianJHCampsConfirmation
+class DorianJHCampConfirmation
 {
 	/**
 	* Reference number from PayFlowPro
@@ -118,7 +118,7 @@ class DorianJHCampsConfirmation
 			if(!empty($this->reference_number))
 			{
 				$camp = new dorian_jh;
-				$confirm_text = $gift->get_confirmation_text($this->reference_number);
+				$confirm_text = $camp->get_confirmation_text($this->reference_number);
 				if(!empty($confirm_text))
 				{
 					if($this->hash == $this->make_hash($confirm_text))
