@@ -153,7 +153,7 @@ function _get_mime_type_fileinfo($path)
 	if (!function_exists('finfo_open'))
 		return false;
 	
-	$fidb = finfo_open(FILEINFO_MIME);
+	$fidb = finfo_open( (defined("FILEINFO_MIME_TYPE") ? FILEINFO_MIME_TYPE : FILEINFO_MIME ) );
 	if (!$fidb)
 		return false;
 	
