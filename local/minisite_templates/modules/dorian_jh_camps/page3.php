@@ -23,15 +23,19 @@ class DorianJHCampsThreeForm extends FormStep
 	var $no_session = array( 'credit_card_number' );
 	var $error;
 	var $expense_budget_number = '10-202-60500-51111';
-	var $revenue_budget_number = 'Online Giving';
-	var $transaction_comment = 'Online gift';
+        // $expense_budget_number stays the same, per Renee Lillibridge and Karen Dallenbach (1/27/11)
+	var $revenue_budget_number = '10-000-08520-22000';
+        // $revenue_budget_number  before June 1, 10-000-08520-22000
+        // $revenue_budget_number on or after June 1, 10-000-08520-40221
+
+	var $transaction_comment = 'Dorian Camps';
 	var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
 	
 	// the usual disco member data
 	var $elements = array(
 		'review_note' => array(
 			'type' => 'comment',
-			'text' => 'Gift overview',
+			'text' => '<h3>Camp overview</h3>',
 		),
 		'installment_notification_note_1' => array(
 			'type' => 'comment',
@@ -225,175 +229,69 @@ class DorianJHCampsThreeForm extends FormStep
 	function get_confirmation_text()
 	{
 
-		$txt = '<div id="reviewGiftOverview">'."\n";			
+		$txt = '<div id="campOverview">'."\n";			
 	
 		$txt .= '<p class="printConfirm">Print this confirmation for your records.</p>'."\n";
-		$txt .= '<h3>Thank you for your gift to Luther College</h3>';
-		if (reason_unique_name_exists('giving_form_thank_you_blurb'))
-			$txt .= '<p>' . get_text_blurb_content('giving_form_thank_you_blurb'). '</p>';
+		$txt .= '<h3>Thank you for registering for Dorain Camp</h3>';
+		if (reason_unique_name_exists('dorian_jh_thank_you_blurb'))
+			$txt .= '<p>' . get_text_blurb_content('dorian_jh_thank_you_blurb'). '</p>';
 		$txt .= '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>'."\n";
-		$txt .= '<p>If you have questions about the giving process or experience technical problems using 
-			the online giving form, please contact the Luther College Development Office.</p>'."\n";
+		$txt .= '<p>If you experience technical problems using the registration form, please contact the Luther College Music Office.</p>'."\n";
 		$txt .= '<ul>'."\n";
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
 		$txt .= '<h4>Your Information</h4>';
 		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('first_name').' '.$this->controller->get('last_name').'</li>'."\n";
-		if (($this->controller->get('spouse_first_name') != 'First') || ($this->controller->get('spouse_last_name') != 'Last'))
+		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address')."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip').'</li>'."\n";
+		$txt .= '<li><strong>Phone:</strong> '.$this->controller->get('phone').'</li>'."\n";
+		$txt .= '<li><strong>E-mail:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
+                $txt .= '<li><strong>School:</strong> '.$this->controller->get('school').'</li>'."\n";
+                $txt .= '<li><strong>Grade:</strong> '.$this->controller->get('grade').'</li>'."\n";
+                if ($this->controller->get('roomate_requested'))
+                {
+                    $txt .= '<li><strong>School:</strong> '.$this->controller->get('roomate_requested').'</li>'."\n";
+                }
+		$txt .= '<h4>Participation</h4>';
+		if ($this->controller->get('band_participant'))
 		{
-			$txt .= '<li><strong>Spouse Name:</strong> ';
+			$txt .= '<li>You\'ll play ' .$this->controller->get('band_instrument'). ' in band.</li>'."\n";
 		}
-		if ($this->controller->get('spouse_first_name') != 'First')
-		{ 
-			$txt .= $this->controller->get('spouse_first_name') . ' ';
-		}
-		if ($this->controller->get('spouse_last_name') != 'Last')
+		if ($this->controller->get('orchestra_participant'))
 		{
-			$txt .= $this->controller->get('spouse_last_name').'</li>'."\n";
+			$txt .= $txt .= '<li>You\'ll play ' .$this->controller->get('orchestra_instrument'). ' in orchestra.</li>'."\n";
 		}
-		$txt .= '<li><strong>'.$this->controller->get('address_type').' Address:</strong>'."\n".$this->controller->get('street_address')."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip')."\n".$this->controller->get('country').'</li>'."\n";
-		$txt .= '<li><strong>'.$this->controller->get('phone_type').' Phone:</strong> '.$this->controller->get('phone').'</li>'."\n";
-		$txt .= '<li><strong>E-mail:</strong> '.$this->controller->get('email').'</li>'."\n";
-		$txt .= '<li><strong>Luther Affiliation:</strong> ';
-		foreach($this->controller->get('luther_affiliation') as $affiliation)
+                if ($this->controller->get('jazz_band_participant'))
 		{
-			$txt .= $affiliation . ', ';
+			$txt .= $txt .= '<li>You\'ll play ' .$this->controller->get('jazz_band_instrument'). ' in jazz band.</li>'."\n";
 		}
-		if ($this->controller->get('class_year'))
+                if ($this->controller->get('wind_choir_participant'))
 		{
-			$txt .= ' class of ' .$this->controller->get('class_year'). '</li>'."\n";
+			$txt .= $txt .= '<li>You\'ll play ' .$this->controller->get('wind_choir_instrument'). ' in wind choir.</li>'."\n";
 		}
-		else
+                if ($this->controller->get('brass_choir_participant'))
 		{
-			$txt .= '</li>'."\n";
+			$txt .= $txt .= '<li>You\'ll play ' .$this->controller->get('brass_choir_instrument'). ' in brass choir.</li>'."\n";
 		}
-		if ($this->controller->get('estate_plans'))
+                if ($this->controller->get('private_lessons'))
 		{
-			$txt .= '<li><strong>Estate Plans:</strong> I\'ve included Luther in my estate plans</li>'."\n";
-		}
-		if ($this->controller->get('estate_info'))
-		{
-			$txt .= '<li><strong>Estate Information:</strong> I would like information about including Luther in my estate planning</li>'."\n";
-		}
-		$txt .= '<h4>Gift Details</h4>';
-		if ($this->controller->get('installment_type') == 'Onetime')
-		{
-			$txt .= '<li><strong>One time gift:</strong> $'.number_format( $this->controller->get('gift_amount'), 2, '.', ',' ).'</li>'."\n";
-		}
-		else
-		{
-			$txt .= '<li><strong>Installment gifts:</strong> $'.number_format( $this->controller->get('gift_amount'), 2, '.', ',' ).' per '.$this->installment_type_to_word[$this->controller->get('installment_type')].', starting on '.prettify_mysql_datetime($this->controller->get('installment_start_date'), $this->date_format);
-			if(!$this->helper->repeats_indefinitely() )
-			{
-				$txt .= ' and ending on '.date($this->date_format, $this->helper->get_last_repeat_timestamp());
-			}
-			$txt .= '.</li>'."\n";
-		}
-		if($this->controller->get('match_gift') && $this->controller->get('employer_name'))
-		{
-			$txt .= '<li><strong>Employer Matching:</strong> My employer, '.strip_tags($this->controller->get('employer_name')).', will match my gift.</li>'."\n";
-		}
-		if($this->controller->get('existing_pledge'))
-		{
-			$txt .= '<li><strong>This is a payment on an existing pledge:</strong> ' .strip_tags($this->controller->get('existing_pledge')).'</li>'."\n";
-		}
-		if(($this->controller->get('annual_fund')||($this->controller->get('specific_fund'))))
-		{
-			$txt .= '<li><strong>Designation</strong> '."\n";
-			$txt .= '<ul>';
-			if ($this->controller->get('annual_fund'))
-			{
-				$txt .= '<li>The Annual Fund</li>'."\n";
-			}
-			if ($this->controller->get('aquatic_center'))
-			{
-				$txt .= '<li>Aquatic Center</li>'."\n";
-			}
-			if ($this->controller->get('sesq_scholarship_fund'))
-			{
-				$txt .= '<li>The Sesquicentennial Scholarship Fund</li>'."\n";
-			}
-			if ($this->controller->get('sesq_study_abroad_fund'))
-			{
-				$txt .= '<li>The Sesquicentennial Study Abroad Scholarship Fund</li>'."\n";
-			}
-			if ($this->controller->get('transform_teaching_fund'))
-			{
-				$txt .= '<li>The Fund for Transformational Teaching and Learning</li>'."\n";
-			}
-			if ($this->controller->get('sustainable_communities'))
-			{
-				$txt .= '<li>Luther Center for Sustainable Communities</li>'."\n";
-			}
-			if ($this->controller->get('norse_athletic_association'))
-			{
-				$txt .= '<li>The Norse Athletic Association';
-				if ($this->controller->get('naa_designation_details'));
-				{
-					$txt .= ': ' . strip_tags($this->controller->get('naa_designation_details'));
-				}
-				$txt .= '</li>'."\n";
-			}
-			if ($this->controller->get('other_designation_details'))
-			{
-				$txt .= '<li>Comments/Other Designation: ' .strip_tags($this->controller->get('other_designation_details'))."\n";
-			}				
-			$txt .= '</ul>'; // Designated specifics end
-			$txt .= '</li>'; //Designated giving end
-		}
-		if ($this->controller->get('gift_prompt'))
-		{
-			$txt .= '<li><strong>Gift Prompt:</strong> ' .strip_tags($this->controller->get('gift_prompt'))."\n";
-		}
-		if ($this->controller->get('dedication') && $this->controller->get('dedication_details'))
-		{
-			$txt .= '<li><strong>Dedication:</strong> This gift is in ';
-			if ($this->controller->get('dedication') == 'Memory')
-			{
-				$txt .= 'memory';
-			}
-			if ($this->controller->get('dedication') == 'Honor')
-			{
-				$txt .= 'honor';
-			}
-			$txt .= ' of ' . $this->controller->get('dedication_details').'</li>'."\n";
+			$txt .= '<li>You\'d like ' .$this->controller->get('private_lessons'). ' set(s) of private lessons for '
+                                . $this->controller->get('private_instrument_1');
+                                if ($this->controller->get('private_instrument_2'))
+                                {
+                                    $txt .= ' and ' . $this->controller->get('private_instrument_2');
+                                }
+                                $txt .= '</li>'."\n";
 		}
 
-		if ($this->get_value('result_refnum'))
-		{
-			$txt .= '<li><strong>Transaction Reference Number:</strong> '.$this->get_value('result_refnum').'</li>'."\n";
-		}
-		if ($this->get_value('result_authcode'))
-		{
-			$txt .= '<li><strong>Transaction Authorization Code:</strong> '.$this->get_value('result_authcode').'</li>'."\n";
-		}
-		if ($this->controller->get('installment_type') != 'Onetime')
-		{
-			if($this->get_value('installment_notification') == false)
-			{
-				$insert_txt = 'not ';
-			}
-			else
-			{
-				$insert_txt = '';
-			}
-			$txt .= '<li><strong>Transaction Notifications:</strong> You will '.$insert_txt.'receive email notifications when installments occur on this gift</li>';
-		}
+		$txt .= '<li><strong>Period 1:</strong>'.$this->controller->get('period_1').'</li>'."\n";
+                $txt .= '<li><strong>Period 2:</strong>'.$this->controller->get('period_2').'</li>'."\n";
+                $txt .= '<li><strong>Period 3:</strong>'.$this->controller->get('period_3').'</li>'."\n";
+                $txt .= '<li><strong>Period 4:</strong>'.$this->controller->get('period_4').'</li>'."\n";
+                $txt .= '<li><strong>Period 5:</strong>'.$this->controller->get('period_5').'</li>'."\n";
+                $txt .= '<li><strong>Period 6:</strong>'.$this->controller->get('period_6').'</li>'."\n";
+		
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
 		return $txt;
-	}
-	function instantiate_helper()
-	{
-		$pass_vals = array('gift_amount','installment_type','installment_start_date','installment_end_date');
-		$params_array = array();
-		foreach($pass_vals as $val)
-		{
-			if($this->controller->get($val))
-			{
-				$params_array[$val] = $this->controller->get($val);
-			}
-		}
-		$this->helper = build_gift_transaction_helper( $params_array );
 	}
 	function run_error_checks()
 	{
@@ -401,27 +299,13 @@ class DorianJHCampsThreeForm extends FormStep
 		{
 			$this->set_error('billing_address','Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
 		}
-		if ($this->controller->get('installment_type') != 'Onetime')
-		{
-			$expire_timestamp = mktime(0,0,0,$this->get_value('credit_card_expiration_month')+1,1,$this->get_value('credit_card_expiration_year'));
-			if( $expire_timestamp < strtotime($this->controller->get('installment_start_date')))
-			{
-				$this->set_error('credit_card_expiration_month','The expiration date you entered is before the first installment of your gift. Please use a credit card that will be valid as of the first installment.');
-			}
-		}
+		
 		
 		// Process credit card
 		if( !$this->_has_errors() )
 		{
-			$pf = new gift;
-			if( $this->controller->get('installment_type') == 'Onetime')
-			{
-				$immediate_amount = $this->controller->get('gift_amount');
-			}
-			else
-			{
-				$immediate_amount = 0;
-			}
+			$pf = new dorian_jh;
+			
 			$expiration_mm = str_pad($this->get_value('credit_card_expiration_month'), 2, '0', STR_PAD_LEFT);
 			$expiration_yy = substr($this->get_value('credit_card_expiration_year'), 2, 2);
 			$expiration_mmyy = $expiration_mm.$expiration_yy;
@@ -467,40 +351,9 @@ class DorianJHCampsThreeForm extends FormStep
 				$this->expense_budget_number
 			);
 			
-			$this->instantiate_helper();
 			$this->helper->build_transactions_array();
 			
-			if($this->controller->get('installment_type') != 'Onetime')
-			{
-				// A value of zero for $installment_quantity indicates no end date.
-				if($this->controller->get('installment_end_date') == 'indefinite')
-				{
-					$installment_quantity = 0;
-				}
-				else
-				{
-					$installment_quantity = $this->helper->get_repeat_quantity();
-				}
-				
-				// PayPeriod is one of WEEK, BIWK, SMMO, FRWK, MONT, QTER, SMYR, QTER.
-				$repeat_types = array('Monthly'=>'MONT','Quarterly'=>'QTER','Yearly'=>'YEAR');
-				$pf_repeat_type = $repeat_types[$this->controller->get('installment_type')];
-				if($this->get_value('installment_notification') == true)
-				{
-					$email = $this->controller->get('email');
-				}
-				else
-				{
-					$email = '';
-				}
-				$pf->set_recur(
-					$this->controller->get('gift_amount'),
-					date('mdY',strtotime($this->controller->get('installment_start_date'))),
-					$installment_quantity,
-					$pf_repeat_type,
-					$email
-				);
-			}
+			
 			/* THIS IS WHERE THE TRANSACTION TAKES PLACE */
 			// Test mode: $result = $pf->transact('test');
 			// Live mode: $result = $pf->transact();
@@ -558,9 +411,9 @@ if (reason_unique_name_exists('giving_form_thank_you_blurb'))
 					$confirm_text = '<p><strong>Thank you for your gift to Luther College!</strong></p>' . $confirm_text;
 */
 				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
-				$email_to_development = new Email('waskni01@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Online Gift '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
+				$email_to_development = new Email('dorian@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Dorian Camper '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
 				$email_to_development->send();
-				$email_to_giver = new Email($this->controller->get('email'),'giving@luther.edu','giving@luther.edu','Luther College Online Gift Confirmation',strip_tags($mail_text),$mail_text);
+				$email_to_giver = new Email($this->controller->get('e-mail'),'dorian@luther.edu','dorian@luther.edu','Luther College Dorian Camp Confirmation',strip_tags($mail_text),$mail_text);
 				$email_to_giver->send();
 
 //				$add_headers = 'Content-Type: text/plain; charset="utf-8"'."\r\n".'From: "Luther College Giving" <giving@luther.edu>' . "\r\n" .
@@ -579,8 +432,8 @@ $add_headers = 'MIME-Version: 1.0' . "\r\n" . 'Content-Type: text/html; charset=
 	{
 		$refnum = $this->get_value( 'result_refnum' );
 		$text = $this->get_value( 'confirmation_text' );
-		reason_include_once( 'minisite_templates/modules/gift_form/gift_confirmation.php' );
-		$gc = new GiftConfirmation;
+		reason_include_once( 'minisite_templates/modules/dorian_jh_camps/dorian_jh_camps_confirmation.php' );
+		$gc = new DorianJHCampConfirmation;
 		$hash = $gc->make_hash( $text );
 		connectDB( REASON_DB );
 		$url = get_current_url();
@@ -588,23 +441,6 @@ $add_headers = 'MIME-Version: 1.0' . "\r\n" . 'Content-Type: text/html; charset=
 		$url = $parts['scheme'].'://'.$parts['host'].$parts['path'].'?r='.$refnum.'&h='.$hash;
 		return $url;
 	}
-}
-
-function build_gift_transaction_helper( $params_array )
-{
-	$helper = new repeatTransactionHelper();
-		
-	if($params_array['installment_type'] == 'Onetime')
-	{
-		$helper->set_single_time_amount( $params_array['gift_amount'] );
-		$helper->set_single_time_date( date('Y-m-d') );
-	} else {
-		$helper->set_repeat_amount( $params_array['gift_amount'] );
-		$helper->set_repeat_type( $params_array['installment_type'] );
-		$helper->set_repeat_start_date( $params_array['installment_start_date'] );
-		$helper->set_end_date( $params_array['installment_end_date'] );
-	}
-	return $helper;
 }
 
 function build_gift_review_detail_output($helper, $date_format = 'j F Y')
