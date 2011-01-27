@@ -173,7 +173,7 @@ class submodule
 	{
 		$this->additional_vars = $vars;
 	}
-	function init($request)
+	function init($request, $news_item = NULL)
 	{
 		if(!empty($request))
 		{
@@ -196,7 +196,7 @@ class news_content extends submodule
 {
 	var $item;
 	var $params = array('date_format'=>'j F Y');
-	function init($request, $news_item)
+	function init($request, $news_item = NULL)
 	{
 		parent::init($request);
 		$this->item = $news_item;
@@ -247,7 +247,7 @@ class news_images extends submodule
 	var $additional_text = '';
 	var $textonly = false;
 	
-	function init($request, $news_item)
+	function init($request, $news_item = NULL)
 	{
 		parent::init($request);
 		$es = new entity_selector();
@@ -299,7 +299,7 @@ class news_assets extends submodule
 {
 	var $assets = array();
 	var $params = array( 'title'=>'Assets', 'title_tag'=>'h4' );
-	function init($request, $news_item)
+	function init($request, $news_item = NULL)
 	{
 		$es = new entity_selector();
 		$es->description = 'Selecting assets for news item';
@@ -334,7 +334,7 @@ class news_related extends submodule // ummm there is not even a news_to_news re
 {
 	var $related = array();
 	var $params = array( 'title'=>'Related News Items', 'title_tag'=>'h4' );
-	function init($request, $news_item)
+	function init($request, $news_item = NULL)
 	{
 		// uncomment if news_to_news relationship is created
 		//$es = new entity_selector();
@@ -380,7 +380,7 @@ class news_categories_submodule extends submodule
 	var $params = array( 'title'=>'Categories', 'title_tag'=>'h4' );
 	var $textonly = false;
 	
-	function init($request, $news_item)
+	function init($request, $news_item = NULL)
 	{
 		parent::init($request);
 		$es = new entity_selector();
