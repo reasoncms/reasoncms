@@ -10,9 +10,9 @@
 	
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 	reason_include_once('classes/url_manager.php');
+	reason_include_once('classes/page_cache.php');
 	reason_include_once( 'function_libraries/root_finder.php');
 	reason_include_once( 'function_libraries/URL_History.php');
-			
 	
 	/**
 	 * Content manager for sites
@@ -241,7 +241,23 @@
 			elseif( $this->old_entity_values['base_url'] != $this->get_value('base_url') ) // try to move the directory if it has changed
 			{
 				$this->move_base_dir($this->old_entity_values['base_url'], $this->get_value('base_url'));
-			}  
+			}
+			
+			$page_cache = $this->get_value('use_page_caching');
+			
+			if (empty($page_cache))
+			{
+				$rpc = new ReasonPageCache();
+				$rpc->set_site_id($this->get_value('id'));
+				if ($rpc->site_cache_exists())
+				{
+					$attempt_delete = $rpc->delete_site_cache();
+					if (!$attempt_delete)
+					{
+						trigger_error('A cache exists for the site and Reason cannot delete it. You should manually delete the folder ' . $rpc->get_site_cache_directory());
+					}
+				}
+			}
 			parent::process();
 		} // }}}
 		
