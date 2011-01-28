@@ -204,7 +204,7 @@ function reason_get_page_url( $page_entity_or_id )
  */
 function reason_get_site_url( $page_or_site_entity_or_id )
 {
-	$entity = is_integer($page_or_site_entity_or_id) ? new entity($page_or_site_entity_or_id) : $page_or_site_entity_or_id;
+	$entity = is_numeric($page_or_site_entity_or_id) ? new entity($page_or_site_entity_or_id) : $page_or_site_entity_or_id;	
 	$type = $entity->has_value('type') ? $entity->get_value('type') : false;
 	if ( ($type == id_of('minisite_page')) || ($type == id_of('site')) )
 	{
