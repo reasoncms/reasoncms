@@ -300,6 +300,7 @@ class ThorCore
 		{
 			$this->create_table_if_needed(); // create the table if it does not exist
 			if (!isset($values['date_created'])) $values['date_created'] = get_mysql_datetime();
+			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
   			$GLOBALS['sqler']->mode = 'get_query';
@@ -329,6 +330,7 @@ class ThorCore
 	{
 		if ($this->get_thor_table() && !empty($values) && ($primary_key > 0))
 		{
+			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
   			$GLOBALS['sqler']->mode = 'get_query';
@@ -376,6 +378,7 @@ class ThorCore
 		$table = $this->get_thor_table();
 		if ($this->get_thor_table() && (strlen($key) > 0) )
 		{
+			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
 			$q = $this->get_select_by_key_sql($key, $key_column, $sort_field, $sort_order);
@@ -407,6 +410,7 @@ class ThorCore
 		$table = $this->get_thor_table();
 		if ($this->get_thor_table())
 		{
+			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
 			$q = $this->get_rows_sql($sort_field, $sort_order);
@@ -434,6 +438,7 @@ class ThorCore
 		$table = $this->get_thor_table();
 		if ($this->get_thor_table())
 		{
+			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
 			$q = $this->get_row_count_sql();
@@ -457,6 +462,7 @@ class ThorCore
 		$table = $this->get_thor_table();
 		if ($this->get_thor_table() && (strlen($primary_key) > 0) )
 		{
+			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
 			$q = $this->get_delete_by_key_sql($primary_key, 'id');
@@ -568,6 +574,7 @@ class ThorCore
 			$table = $this->get_thor_table();
 			if ($this->get_thor_table())
 			{
+				if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 				$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 				if ($reconnect_db) connectDB($this->get_db_conn());
   				$q = $this->get_table_exists_sql();
@@ -595,6 +602,7 @@ class ThorCore
 			$table = $this->get_thor_table();
 			if ($this->get_thor_table())
 			{
+				if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 				$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 				if ($reconnect_db) connectDB($this->get_db_conn());
   				$q = $this->get_column_exists_sql($column);
@@ -617,6 +625,7 @@ class ThorCore
 		if ($this->get_thor_table() && !$this->table_exists())
 		{
 			$sql = $this->get_create_table_sql();
+			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
 			$res = db_query($sql);
@@ -650,6 +659,7 @@ class ThorCore
 		if ($this->get_thor_table() && $this->table_exists())
 		{
 			$sql = $this->get_delete_table_sql();
+			if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 			$reconnect_db = (get_current_db_connection_name() != $this->get_db_conn()) ? get_current_db_connection_name() : false;
 			if ($reconnect_db) connectDB($this->get_db_conn());
 			$res = db_query($sql);
