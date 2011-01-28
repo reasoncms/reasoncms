@@ -11,6 +11,8 @@ function toggle_fields(trigger, element)
 {
         element = element.replace("_","");
 
+        alert(trigger + " " + element);
+
         if ($("input#"+trigger+":checked").val()){
             $("tr#"+element+"Row").show();
         }else{
