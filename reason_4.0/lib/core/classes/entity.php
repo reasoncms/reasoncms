@@ -8,16 +8,18 @@
 /**
  * Include the reason libraries
  */
- include_once('reason_header.php');
+include_once('reason_header.php');
 /**
  * Include database management stuff
  */
 include_once( CARL_UTIL_INC . 'db/db.php' );
 
 /**
- * connect to Reason
+ * Set a global that will be used in the first run of db_query in the absence of an explicitly set connection name
+ *
+ * This approach replaces an unfortunate direct call to connectDB.
  */
-connectDB(REASON_DB);
+$GLOBALS['_db_query_first_run_connection_name'] = REASON_DB;
 
 /**
  * A basic class that abstracts away everything difficult about getting data from an entity
