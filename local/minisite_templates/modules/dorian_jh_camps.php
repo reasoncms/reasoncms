@@ -30,7 +30,7 @@ class DorianJHCampsModule extends DefaultMinisiteModule
 		reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page1.php' );
 		reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page2.php' );
 		reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page3.php' );
-                reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page3.php' );
+                reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page4.php' );
 
 		$this->controller = new FormController;
 		$this->controller->set_session_class('Session_PHP');
@@ -44,26 +44,28 @@ class DorianJHCampsModule extends DefaultMinisiteModule
 			'DorianJHCampsOneForm' => array(
 				'next_steps' => array(
 					'DorianJHCampsTwoForm' => array(
-						'label' => 'Next',
-					),
-					'DorianJHCampsConfirmation' => array(
-						'label' => 'Dorian Junior High Camp Confirmation',
-					),
+						'label' => 'Next'),
+//					'DorianJhCampConfirmation' => array(
+//						'label' => 'Dorian Junior High Camp Confirmation',
+//					),
 				),
-				'step_decision' => array(
-					'type' => 'user',
-				),
+				'step_decision' => array('type'=>'user'),
 				'back_button_text' => 'Back',
-				'display_name' => 'Yo',
-
 			),
 			'DorianJHCampsTwoForm' => array(
-				'final_step' => true,
-				'final_button_text' => 'Finish and Pay',
+                            'next_steps' => array(
+                                'DorianJHCampsThreeForm' => array(
+                                    'label' => 'Payment Information'
+                                ),
+                            ),
 			),
-			'DorianJHCampsConfirmation' => array(
-				'display_name' => 'Dorian Junior High Camp Confirmation',
-			),
+                        'DorianJHCampsThreeForm' => array(
+                            'final_step' => true,
+                            'final_button_text' => 'Finish and Pay',
+                        ),
+//			'DorianJhCampConfirmation' => array(
+//				'display_name' => 'Dorian Junior High Camp Confirmation',
+//			),
 		);
 		$this->controller->add_forms( $forms );
 		// */
@@ -110,7 +112,7 @@ class DorianJHCampsModule extends DefaultMinisiteModule
 		if( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
 		{
 			reason_include_once( 'minisite_templates/modules/dorian_jh_camps/dorian_jh_camp_confirmation.php' );
-			$tc = new DorianCampConfirmation;
+			$tc = new DorianJhCampConfirmation;
 			$tc->set_ref_number( $this->request[ 'r' ] );
 			$tc->set_hash( $this->request[ 'h' ] );
 
