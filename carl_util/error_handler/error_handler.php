@@ -395,19 +395,19 @@ function _carl_util_escape_error_part($part)
 /** @access private */
 function _carl_util_log_error($level, $message, $file, $line, $context)
 {
-	$referrer = (!empty($_SERVER['HTTP_REFERER']))
-		? $_SERVER['HTTP_REFERER']
-		: '';
-	
+	$referrer = (!empty($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : '';
+	$uri = (isset($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : '';
+	$ip = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : '';
+	$ua = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';
 	$error = array(
 		'type' => strtoupper(error_level_name($level)),
 		'time' => carl_date('r'),
 		'msg' => $message,
 		'line' => $line,
 		'file' => $file,
-		'uri' => $_SERVER['REQUEST_URI'],
-		'ip' => $_SERVER['REMOTE_ADDR'],
-		'ua' => $_SERVER['HTTP_USER_AGENT'],
+		'uri' => $uri,
+		'ip' => $ip,
+		'ua' => $ua,
 		'errno' => $level,
 		'referrer' => $referrer
 	);
