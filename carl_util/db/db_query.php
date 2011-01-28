@@ -1,6 +1,6 @@
 <?php
 /**
- * Wrapper function for querying the database
+ * Wrapper function for querying a database
  * @package carl_util
  * @subpackage db
  */
@@ -10,6 +10,7 @@
  */
 include_once( 'paths.php' );
 include_once( CARL_UTIL_INC . 'error_handler/error_handler.php' );
+include_once( CARL_UTIL_INC . 'db/connectDB.php' );
 
 /** db_query( $query, $error_message = '', $die_on_error = true ) {{{
  *	Wrapper function for querying the database
@@ -24,13 +25,24 @@ include_once( CARL_UTIL_INC . 'error_handler/error_handler.php' );
  *	@param	$die_on_error	boolean variable that determines whether to die on an error
  *	@return	query result if query succeeds or false if query fails.
  */
+
 function db_query( $query, $error_message = '', $die_on_error = true )
 {
 	// keep track of all queries
 	static $queries;
 	static $distinct_queries;
 	static $distinct_errors;
-
+	static $first_run = true;
+	
+	if ($first_run)
+	{
+		if (isset($GLOBALS['_db_query_first_run_connection_name']) && !get_current_db_connection_name())
+		{
+			connectDB($GLOBALS['_db_query_first_run_connection_name']);
+		}
+		$first_run = false;
+	}
+	
 	if( !isset( $queries ) OR empty( $queries ) )
 		$queries = array();
 	if( !isset( $distinct_errors ) OR empty( $distinct_errors ) )
@@ -98,7 +110,6 @@ function db_query( $query, $error_message = '', $die_on_error = true )
 				return false;
 			}
 			break;
-			
 	}
 } // }}}
 
