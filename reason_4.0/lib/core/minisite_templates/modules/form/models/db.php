@@ -1055,6 +1055,7 @@ class DBFormModel extends DefaultFormModel
 	 */
 	function perform_query($qry)
 	{
+		if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 		$restore_conn = ($this->get_db_conn() != get_current_db_connection_name()) ? get_current_db_connection_name() : false;
 		if ($restore_conn) connectDB($this->get_db_conn());
 		$result = db_query($qry);
@@ -1064,6 +1065,7 @@ class DBFormModel extends DefaultFormModel
 	
 	function perform_insert($values)
 	{
+		if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 		$restore_conn = ($this->get_db_conn() != get_current_db_connection_name()) ? get_current_db_connection_name() : false;
 		if ($restore_conn) connectDB($this->get_db_conn());
 		$result = $GLOBALS['sqler']->insert( $this->get_table_name(), $values );
@@ -1074,6 +1076,7 @@ class DBFormModel extends DefaultFormModel
 	
 	function perform_update($id, $values)
 	{
+		if (!get_current_db_connection_name()) connectDB($this->get_db_conn());
 		$restore_conn = ($this->get_db_conn() != get_current_db_connection_name()) ? get_current_db_connection_name() : false;
 		if ($restore_conn) connectDB($this->get_db_conn());
 		$result = $GLOBALS['sqler']->update_one( $this->get_table_name(), $values, $id );
