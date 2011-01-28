@@ -276,7 +276,7 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 		//if ($requested_identifier) $t->set_requested_identifier($requested_identifier);
 		$t->template_id = $template->id();
 		$t->set_theme( $theme );
-		$t->initialize($site->id(),$page_id);
+		$t->initialize($site_id,$page_id);
 		//if ($requested_api) $t->run_api();
 		//else $t->run();
 		$t->run();
