@@ -36,23 +36,8 @@ class DorianJHCampsThreeForm extends FormStep
 		'review_note' => array(
 			'type' => 'comment',
 			'text' => '<h3>Camp overview</h3>',
-		),
-		'installment_notification_note_1' => array(
-			'type' => 'comment',
-			'text' => '<h3>Receipts</h3><p>Luther will send you printed receipt(s) via U.S. Mail for your tax records each year in January.</p>',
-		),
-		'installment_notification_note_1a' => array(
-			'type' => 'comment',
-			'text' => '<h3>Receipts</h3><p>Luther will send you printed receipt via U.S. Mail for your tax records within one week of this gift.</p>',
-		),
-		'installment_notification_note_2' => array(
-			'type' => 'comment',
-			'text' => '<h3>Notification</h3><p>We will notify you via email after you successfully submit this form. Check the box below if you also want email confirmations for each future installment.</p>',
-		),
-		'installment_notification' => array(
-			'type' => 'checkboxfirst',
-			'display_name' => 'Email me each time my card is charged.',
-		),
+                 ),
+                'payment_amount' => 'hidden',
 		'payment_note' => array(
 			'type' => 'comment',
 			'text' => '<h3>Payment Method</h3>',
@@ -129,38 +114,45 @@ class DorianJHCampsThreeForm extends FormStep
 		'credit_card_name',
 		'billing_address',
 	);
-	var $actions = array(
-		'previous_step'=>'Make Changes To Your Gift',
-		'next_step'=>'Submit Your Gift For Processing',
-	);
-	var $helper;
+	
 	var $date_format = 'j F Y';
-	var $display_name = 'Gift Review / Card Info';
+	var $display_name = 'Camp Review / Card Info';
 	var $error_header_text = 'Please check your form.';
-	var $installment_type_to_word = array( 'Monthly'=>'month','Quarterly'=>'quarter','Yearly'=>'year' );
-	var $database_transformations = array(
-											'credit_card_number'=>'obscure_credit_card_number',
-											'installment_start_date'=>'trim_hours_from_datetime',
-										);
+	var $database_transformations = array('credit_card_number'=>'obscure_credit_card_number');
+
 	// style up the form and add comments et al
 	function on_every_time()
 	{
-		if( !$this->controller->get('gift_amount'))
-		{
-			echo '<div id="giftFormSetupError">You can\'t complete this step without having set up a gift; please go back to <a href="?_step=GiftPageOneForm">Gift Info</a> and provide a gift amount.</div>';
-			$this->show_form = false;
-			return;
-		}
-		if($this->controller->get('installment_type') == 'Onetime')
-		{
-			$this->remove_element('installment_notification_note_1');
-			$this->remove_element('installment_notification_note_2');
-			$this->remove_element('installment_notification');
-		}
-		if ($this->controller->get('installment_type') != 'Onetime')
-		{
-			$this->remove_element('installment_notification_note_1a');
-		}
+                // determine which revenue_budget_number to use
+                // $revenue_budget_number  before June 1, 10-000-08520-22000
+                // $revenue_budget_number on or after June 1, 10-000-08520-40221
+
+                $june1 = 151; // June 1 == day 151 (152 on a leap year) on a 0 - 364 scale
+                if (date('L')) // if this year is a leap year
+                    $june1 = 152;
+                $date = getdate();
+                if ($date['yday'] >= $june1){
+                    $this->revenue_budget_number = '10-000-08520-40221';
+                }
+                else {
+                    $this->revenue_budget_number = '10-000-08520-22000';
+                }
+
+                // calculate the total_cost of the camp by adding lesson_cost (if present) to the camp_cost
+                $camp_cost = 433;
+                $lesson_cost = 0;
+                if ($this->controller->get('private_lessons'))
+                {
+                    $lesson_cost = 35 * $this->controller->get('private_lessons');
+                }
+                $total_cost = $camp_cost + $lesson_cost;
+                $this->change_element_type('payment_amount', 'radio_no_sort', array(
+                        'options' => array(
+                            '40' => '$40 - Deposit only',
+                            $total_cost => '$' . $total_cost . ' - Total cost'
+                        )
+                    )
+                );
 		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
 		{
 			$this->is_in_testing_mode = true;
@@ -173,25 +165,9 @@ class DorianJHCampsThreeForm extends FormStep
 		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
 	
-	function post_error_check_actions()
-	{
-		if ($this->show_form)
-		{
-			$this->instantiate_helper();
-			$text = $this->get_brief_review_text();
-			if(!$this->_has_errors() && $this->controller->get('installment_type') != 'Onetime')
-			{
-				$text .= build_gift_review_detail_output( $this->helper, $this->date_format );
-			}
-			$text .= '<p class="changeGiftButton"><a href="?_step=GiftPageOneForm">Change Gift Setup</a></p>'."\n";
-			$this->change_element_type( 'review_note', 'comment', array('text'=>$text) );
-
-		}
-	}
-	
 	function pre_show_form()
 	{
-		echo '<div id="giftForm" class="pageTwo">'."\n";
+		echo '<div id="campForm" class="pageTwo">'."\n";
 		if( $this->is_in_testing_mode )
 		{
 			echo '<div class="announcement">';
@@ -204,28 +180,6 @@ class DorianJHCampsThreeForm extends FormStep
 	{
 		echo '</div>'."\n";
 	}
-	function get_brief_review_text()
-	{
-		$txt = '<div id="reviewGiftOverview">'."\n";
-		if ($this->controller->get('installment_type') == 'Onetime')
-		{
-			$txt .= '<p>You have indicated that you would like to make a one time gift of $'.number_format( $this->controller->get('gift_amount'), 2, '.', ',' ).'</p>'."\n";
-		}
-		else
-		{
-			$txt .= '<p>You have indicated that you would like to make a recurring gift of $'.number_format( $this->controller->get('gift_amount'), 2, '.', ',' ).' per '.$this->installment_type_to_word[$this->controller->get('installment_type')].', starting on '.prettify_mysql_datetime($this->controller->get('installment_start_date'), $this->date_format);
-			if($this->controller->get('installment_end_date') != 'indefinite' )
-			{
-				$txt .= ' and ending on '.date($this->date_format, $this->helper->get_last_repeat_timestamp());
-			} else {
-				$txt .= ' with no designated end date';	
-			}
-			$txt .= '.</p>'."\n";
-		}
-		$txt .= '</div>'."\n";
-		return $txt;
-	}
-	
 	function get_confirmation_text()
 	{
 
@@ -295,9 +249,15 @@ class DorianJHCampsThreeForm extends FormStep
 	}
 	function run_error_checks()
 	{
-		if($this->get_value('billing_address') == 'new' && (!$this->get_value('billing_street_address') || !$this->get_value('billing_city') || !$this->get_value('billing_state_province') || !$this->get_value('billing_zip') || !$this->get_value('billing_country') ) )
+		if($this->get_value('billing_address') == 'new'
+                        && (!$this->get_value('billing_street_address')
+                        || !$this->get_value('billing_city')
+                        || !$this->get_value('billing_state_province')
+                        || !$this->get_value('billing_zip')
+                        || !$this->get_value('billing_country') ) )
 		{
-			$this->set_error('billing_address','Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
+			$this->set_error('billing_address', 'Please enter your full billing address if the address
+                            you entered on the previous page was not the billing address for your credit card.');
 		}
 		
 		
@@ -411,8 +371,8 @@ if (reason_unique_name_exists('giving_form_thank_you_blurb'))
 					$confirm_text = '<p><strong>Thank you for your gift to Luther College!</strong></p>' . $confirm_text;
 */
 				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
-				$email_to_development = new Email('dorian@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Dorian Camper '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
-				$email_to_development->send();
+				$email_to_music = new Email(array('dorian@luther.edu', 'buzzja01@luther.edu'), 'noreply@luther.edu','noreply@luther.edu', 'New Dorian Camper '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
+				$email_to_music->send();
 				$email_to_giver = new Email($this->controller->get('e-mail'),'dorian@luther.edu','dorian@luther.edu','Luther College Dorian Camp Confirmation',strip_tags($mail_text),$mail_text);
 				$email_to_giver->send();
 
@@ -441,105 +401,6 @@ $add_headers = 'MIME-Version: 1.0' . "\r\n" . 'Content-Type: text/html; charset=
 		$url = $parts['scheme'].'://'.$parts['host'].$parts['path'].'?r='.$refnum.'&h='.$hash;
 		return $url;
 	}
-}
-
-function build_gift_review_detail_output($helper, $date_format = 'j F Y')
-{
-		// A yearly totals disclose link is inserted here by JS
-		$txt = '<div id="reviewGiftDetails">'."\n";
-		$txt .= '<h3 id="yearlyTotalsHeading">Yearly Totals for This Gift</h3>'."\n\n";
-		$txt .= '<h4>Per calendar year:</h4>';
-		$txt .= '<table cellpadding="0" cellspacing="0" border="0" summary="Total amounts given, by calendar year">'."\n";
-		$txt .= '<tr><th class="col1">Year</th><th>Amount </th></tr>'."\n";
-		$cy_gifts = $helper->get_calendar_year_totals();
-		if( $helper->repeats_indefinitely() )
-		{
-			$break = false;
-			$previous_amount_text = '';
-			$i = 0;
-			foreach($cy_gifts as $year=>$amount)
-			{
-				$amount_text = number_format( $amount*.01, 2, '.', ',' );
-				if( empty($previous_amount_text) || $previous_amount_text != $amount_text )
-				{
-					$year_text = $year;
-					$amount_post = '';
-				}
-				else
-				{
-					$year_text = 'Subsequently';
-					$amount_post = ' per calendar year';
-					$break = true;
-				}
-				$txt .= '<tr><td class="col1">'.$year_text.'</td><td>$'.$amount_text.$amount_post.'</td></tr>'."\n";
-				if($break || $i > 500 ) // second part is to avoid any possibility of an infinite loop
-				{
-					break;
-				}
-				$previous_amount_text = $amount_text;
-				$i++;
-			}
-		}
-		else // definite gift
-		{
-			foreach($cy_gifts as $year=>$amount)
-			{
-				$txt .= '<tr><td class="col1">'.$year.'</td><td>$'. number_format( $amount*.01, 2, '.', ',' ) .'</td></tr>'."\n";
-			}
-		}
-		$txt .= '</table>'."\n";
-		$txt .= '<h4>Per Luther fiscal year:</h4>';
-		$txt .= '<table cellpadding="0" cellspacing="0" border="0" summary="Total amounts given, by Luther fiscal year">'."\n";
-		$txt .= '<tr><th class="col1">Year</th><th>Amount</th></tr>'."\n";
-		$fy_gifts = $helper->get_fiscal_year_totals();
-		
-		if( $helper->repeats_indefinitely() )
-		{
-			$break = false;
-			$previous_amount_text = '';
-			$i = 0;
-			foreach($fy_gifts as $start_year=>$amount)
-			{
-				$amount_text = number_format( $amount*.01, 2, '.', ',' );
-				if( empty($previous_amount_text) || $previous_amount_text != $amount_text )
-				{
-					$year_text = 'June ';
-					$year_text .= $start_year;
-					$year_text .= ' &#8211; May ';
-					$year_text .= $start_year + 1;
-					$amount_post = '';
-				}
-				else
-				{
-					$year_text = 'Subsequently';
-					$amount_post = ' per Luther fiscal year';
-					$break = true;
-				}
-				$txt .= '<tr><td class="col1">'.$year_text.'</td><td>$'.$amount_text.$amount_post.'</td></tr>'."\n";
-				if($break || $i > 500 ) // second part is to avoid any possibility of an infinite loop
-				{
-					break;
-				}
-				$previous_amount_text = $amount_text;
-				$i++;
-			}
-		}
-		else
-		{
-			foreach($fy_gifts as $start_year=>$amount)
-			{
-				$txt .= '<tr><td class="col1">';
-				$txt .= 'June ';
-				$txt .= $start_year;
-				$txt .= ' — May ';
-				$txt .= $start_year + 1;
-				$txt .= '</td><td>$'. number_format( $amount*.01, 2, '.', ',' ) .'</td></tr>'."\n";
-			}
-		}
-		$txt .= '</table>'."\n";
-		$txt .= '<p class="givingTotalsDisclaimer">Amounts listed above reflect <em>this gift only</em>, not your overall giving history. Please contact us for giving history information.</p>';
-		$txt .= '</div>'."\n";
-		return $txt;
 }
 function obscure_credit_card_number ( $cc_num )
 {

@@ -36,21 +36,12 @@ class DorianJHCampsTwoForm extends FormStep
                     'type' => 'text',
                     'display_name' => '&nbsp;',
                     'comments'=>'<div class="smallText comment">Instrument</div>',
-                    ),
+                ),
                 'jazz_participant' => array(
 			'type' => 'checkboxfirst',
 			'display_name' => 'Will you play in jazz band?',
 		),
 		'jazz_instrument' => array(
-                    'type' => 'text',
-                    'display_name' => '&nbsp;',
-                    'comments'=>'<div class="smallText comment">Instrument</div>',
-                ),
-                'orchestra_participant' => array(
-			'type' => 'checkboxfirst',
-			'display_name' => 'Will you play in band?',
-		),
-		'orchestra_instrument' => array(
                     'type' => 'text',
                     'display_name' => '&nbsp;',
                     'comments'=>'<div class="smallText comment">Instrument</div>',
@@ -75,11 +66,23 @@ class DorianJHCampsTwoForm extends FormStep
                 ),
                 'private_lessons_header' => array(
                      'type' => 'comment',
-                     'text' => '<h3>Private Lessons</h3>',
+                     'text' => '<h3>Sets of Private Lessons</h3>',
                 ),
-                 'private_lesson_sets' => array(
+                 'private_lessons' => array(
                      'type' => 'radio_inline_no_sort',
-                     'options' => array(1,2),
+                     'display_name' => '&nbsp;',
+                     'options' => array(0 => 'None', 1 => 1 ,2 => 2),
+                     'comments' => 'One set equals two half-hour lessons'
+                ),
+                'lesson_instrument_1' => array(
+                    'type' => 'text',
+                    'display_name' => '&nbsp;',
+                    'comments' => 'Instrument'
+                ),
+                'lesson_instrument_2' => array(
+                    'type' => 'text',
+                    'display_name' => '&nbsp;',
+                    'comments' => 'Instrument 2'
                 ),
                 'period_one_header' => array(
                         'type' => 'comment',
@@ -229,7 +232,7 @@ class DorianJHCampsTwoForm extends FormStep
 
 	var $required = array();
 
-	var $display_name = 'Dorian Junior High Camp Registration';
+	var $display_name = 'Participation';
 	var $error_header_text = 'Please check your form.';
 
 

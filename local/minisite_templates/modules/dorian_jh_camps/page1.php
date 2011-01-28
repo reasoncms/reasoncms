@@ -16,7 +16,6 @@ class DorianJHCampsOneForm extends FormStep
         var $display_name = 'Camper Information';
 
 	var $elements = array(
-		'amount' => 'cloaked',
 		'camper_information_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Camper Information</h3>',
@@ -65,7 +64,7 @@ class DorianJHCampsOneForm extends FormStep
                 ),
                 'roomate_requested' => array(
                     'type' => 'text',
-                    'comments' => 'Males, one name, Females, one or two names',
+                    'comments' => 'Males, one name <br>Females, one or two names',
                    'display_name' => 'Roomate(s)&nbsp;Requested',
                 ),
                 'submitter_ip' => 'hidden',
