@@ -60,6 +60,7 @@ elseif (DISABLE_REASON_ADMINISTRATIVE_INTERFACE == true)
 <p>What will this update do?</p>
 <ul>
 <li>Add the feature type to Reason</li>
+<li>Fix the content sorter for the policy type</li>
 </ul>
 
 <form method="post">
@@ -84,6 +85,7 @@ if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 	{
 		$update = new updateTypes($mode, $reason_user_id);
 		$update->create_feature_type($mode, $reason_user_id);
+		$update->fix_policy_content_sorter($mode, $reason_user_id);
 	}
 }
 

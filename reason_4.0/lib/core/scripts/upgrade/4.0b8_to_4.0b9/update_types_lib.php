@@ -152,6 +152,44 @@ class updateTypes
 		$this-> add_allowable_relationship('minisite_page','feature_type','page_to_feature',$this->page_to_feature_details);
 	}
 	
+	function fix_policy_content_sorter($mode, $reason_user_id = NULL)
+	{
+		if($mode != 'run' && $mode != 'test')
+		{
+			trigger_error('$mode most be either "run" or "test"');
+			return;
+		}
+		
+		$this->mode = $mode;
+		$this->reason_id = $reason_user_id;
+		
+		$policy_type_id = (reason_unique_name_exists('policy_type')) ? id_of('policy_type') : false;
+		if ($policy_type_id)
+		{
+			$policy_type = new entity($policy_type_id);
+			$sorter = $policy_type->get_value('custom_sorter');
+			
+			if (reason_file_exists('content_sorters/policy.php'))
+			{
+				if ($sorter == 'policy.php')
+				{
+					echo '<p>The policy type is using the correct content sorter.</p>';
+				}
+				elseif ($this->mode == 'test')
+				{
+					echo '<p>Would update the policy type to use the correct content sorter.</p>';
+				}
+				elseif ($this->mode == 'run')
+				{
+					reason_update_entity($policy_type_id, $this->reason_id, array('custom_sorter' => 'policy.php'));
+					echo '<p>Updated policy type to use the correct content sorter.</p>';
+				}
+			}
+			else echo '<p>The policy.php content sorter was not found in the file system - make sure you have updated all files before running this script.</p>';
+		}
+		else echo '<p>Your reason instance does not appear to have the policy type so we are not doing anything with it.</p>';
+	}
+	
 	/**
 	 * Add Feature to Type table
 	 */
