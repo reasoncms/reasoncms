@@ -30,7 +30,7 @@ class DorianJHCampsModule extends DefaultMinisiteModule
 		reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page1.php' );
 		reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page2.php' );
 		reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page3.php' );
-                reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page4.php' );
+                //reason_include_once( 'minisite_templates/modules/dorian_jh_camps/page4.php' );
 
 		$this->controller = new FormController;
 		$this->controller->set_session_class('Session_PHP');
