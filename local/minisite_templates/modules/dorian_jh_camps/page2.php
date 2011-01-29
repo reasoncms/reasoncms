@@ -48,7 +48,7 @@ class DorianJHCampsTwoForm extends FormStep
                 ),
                 'wind_choir_participant' => array(
 			'type' => 'checkboxfirst',
-			'display_name' => 'Will you play in wind choir?',
+			'display_name' => 'Will you play in woodwind choir?',
 		),
 		'wind_choir_instrument' => array(
                     'type' => 'text',

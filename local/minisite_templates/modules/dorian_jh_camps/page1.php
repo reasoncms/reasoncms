@@ -65,7 +65,7 @@ class DorianJHCampsOneForm extends FormStep
                 'roomate_requested' => array(
                     'type' => 'text',
                     'comments' => 'Males, one name <br>Females, one or two names',
-                   'display_name' => 'Roomate(s)&nbsp;Requested',
+                   'display_name' => 'Requested&nbsp;Roomate',
                 ),
                 'submitter_ip' => 'hidden',
 	);

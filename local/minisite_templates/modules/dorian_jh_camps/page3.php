@@ -15,7 +15,7 @@
 
 include_once(WEB_PATH.'stock/dorian_jh_camps.php');
 include_once(TYR_INC . 'tyr.php');
-reason_include_once( 'classes/repeat_transaction_helper.php' );
+//reason_include_once( 'classes/repeat_transaction_helper.php' );
 
 class DorianJHCampsThreeForm extends FormStep
 {
@@ -148,8 +148,8 @@ class DorianJHCampsThreeForm extends FormStep
                 $total_cost = $camp_cost + $lesson_cost;
                 $this->change_element_type('payment_amount', 'radio_no_sort', array(
                         'options' => array(
-                            '40' => '$40 - Deposit only',
-                            $total_cost => '$' . $total_cost . ' - Total cost'
+                            '$40' => '$40 - Deposit only',
+                            '$' . $total_cost => '$' . $total_cost . ' - Total cost'
                         )
                     )
                 );
@@ -302,7 +302,7 @@ class DorianJHCampsThreeForm extends FormStep
 			$pf->set_params( $pass_info );
 			
 			$pf->set_info(
-				$immediate_amount,
+				$this->get_value('payment_amount'),
 				$this->get_value('credit_card_number'),
 				$expiration_mmyy,
 				$this->revenue_budget_number,
@@ -311,7 +311,7 @@ class DorianJHCampsThreeForm extends FormStep
 				$this->expense_budget_number
 			);
 			
-			$this->helper->build_transactions_array();
+			//$this->helper->build_transactions_array();
 			
 			
 			/* THIS IS WHERE THE TRANSACTION TAKES PLACE */
@@ -344,7 +344,7 @@ class DorianJHCampsThreeForm extends FormStep
 				$this->set_value( 'result_authcode', $result['AUTHCODE'] );
 				
 				$confirm_text = $this->get_confirmation_text();
-				$confirm_text .= build_gift_review_detail_output( $this->helper, $this->date_format );
+				//$confirm_text .= build_gift_review_detail_output( $this->helper, $this->date_format );
 				
 				$this->set_value( 'confirmation_text', $confirm_text );
 				$pf->set_confirmation_text( $confirm_text );
