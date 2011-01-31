@@ -98,6 +98,14 @@ domain_define( 'REASON_PACKAGE_HTTP_BASE_PATH','/reason_package/');
  */
 domain_define( 'HTTP_HOST_NAME', $_SERVER['HTTP_HOST'] );
 
+/**
+ * Make sure that your locale settings use UTF-8.
+ *
+ * If your server is not set to use utf-8, and you cannot change it at the server level, uncomment
+ * the line below and use your appropriate language/country information
+ */
+//setlocale(LC_ALL, 'en_US.UTF-8');
+
 // Define the name of the function which performs html sanitization
 // this should be a specialized settings file probably - only relevant if the cleanup libraries are loaded
 define('HTML_SANITIZATION_FUNCTION','get_safer_html_html_purifier');
