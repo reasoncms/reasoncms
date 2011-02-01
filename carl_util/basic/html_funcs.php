@@ -135,7 +135,7 @@ function expand_all_links_in_html($html, $scheme = 'http', $host = '', $relative
 	$pattern = '/(<[^\/][^>]*?(?:src|href|data|action)\s?=\s?([\'"]?))([^>\s\2]*)(\2(?:\s|[^>]*>))/';
 	
 	$html = preg_replace_callback($pattern,array($absolutifier, 'expand_link'),$html);
-	
+
 	return $html;
 }
 
@@ -178,6 +178,12 @@ class absolutify_class
 		}
 		
 		$url = str_replace('&amp;','&',$matches[3]);
+		
+		if(strpos($url,'//') === 0)
+		{
+			$scheme = $this->scheme ? $this->scheme : 'http';
+			$url = $scheme.':'.$url;
+		}
 		
 		// If we can't parse it, it could be due to the face that we
 		// have a url with no server and a query string containg "http://"
