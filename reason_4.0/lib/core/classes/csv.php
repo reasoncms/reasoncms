@@ -32,16 +32,17 @@ class CSV {
 	var $head; // should there be a header row?
 
 	/**
-	* Delimiter used to separate values
+	* Delimiter used to separate values; fgetcsv/fputcsv require this to be an actual
+	* character if it's passed to the functions, so we set them to the empty character.
 	* @var string
 	*/	
-	var $delim; // delimiter character
+	var $delim = '\0'; // delimiter character
 	
 	/**
-	* Enclose character to surround fields with spaces
+	* Enclose character to surround fields with spaces (see note above)
 	* @var string
 	*/	
-	var $enclos; // enclosure character
+	var $enclos = '\0'; // enclosure character
 
 	/**
 	* Maximum line length to consider per line
