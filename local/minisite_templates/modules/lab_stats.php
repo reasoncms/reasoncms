@@ -53,7 +53,7 @@ class LabStatsModule extends DefaultMinisiteModule {
 <table border="1" cellspacing="3" cellpadding="3">
     <tr>
         <td><b>Lab Name </b></td>
-        <td><b>In Use </b></td>
+        <td><b>Available </b></td>
         <td><b>Total</b></td>
     </tr>
     <tr>
@@ -69,7 +69,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 30 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -95,7 +98,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 39 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -121,7 +127,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 44 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -147,7 +156,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 31 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -173,7 +185,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 26 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -199,7 +214,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 20 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -225,7 +243,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 37 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -251,7 +272,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 28 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -277,7 +301,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 27 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -303,7 +330,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 11 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -329,7 +359,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 10 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -355,7 +388,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 21 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -381,7 +417,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 22 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -407,7 +446,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 19 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -433,7 +475,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 12 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -459,7 +504,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 13 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -485,7 +533,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 14 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -511,7 +562,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 15 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -537,7 +591,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 32 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -563,7 +620,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 38 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -589,7 +649,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 16 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -615,7 +678,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 34 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -641,7 +707,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 33 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -667,7 +736,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 35 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -693,7 +765,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 36 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
@@ -719,7 +794,10 @@ class LabStatsModule extends DefaultMinisiteModule {
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 29 ;
                 var lab_property = 'lab_inuse';
-                var text = lookup(lab_id,lab_property)
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
                 document.write (text);
             </SCRIPT>
         </td>
