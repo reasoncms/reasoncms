@@ -124,12 +124,13 @@ class DorianJHCampsModule extends DefaultMinisiteModule
 			{
 				echo $tc->get_error_message();
 			}
-			// MUST reconnect to Reason database.  TranscriptConfirmation connects to transcript_request for info.
+			// MUST reconnect to Reason database.
+                        // DorianJHCampConfirmation connects to dorian_jh_camp for info.
 			connectDB( REASON_DB );
 		}
 		else
 		{
-//			echo $this->generate_navigation();
+			echo $this->generate_navigation();
 			$this->controller->set_request( $this->request );
 			$this->controller->run();
 		}
