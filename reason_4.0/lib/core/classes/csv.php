@@ -80,9 +80,9 @@ class CSV {
 			$handle = fopen($this->file_path, "r");
 			if ($this->head) 
 			{
-				$header = fgetcsv($handle, $this->len, $this->delim, $this->enclos);
+				$header = $this->my_fgetcsv($handle, $this->len, $this->delim, $this->enclos);
 			}
-			while (($data = fgetcsv($handle, $this->len, $this->delim, $this->enclos)) !== FALSE)
+			while (($data = $this->my_fgetcsv($handle, $this->len, $this->delim, $this->enclos)) !== FALSE)
 			{
 				if ($this->head AND isset($header))
 				{
@@ -213,6 +213,32 @@ class CSV {
 		$html .= "\t".'</tbody>'."\n";
 		$html .= '</table>' . "\n";
 		return $html;
+	}
+
+	function my_fgetcsv($handle, $length = 0, $delimiter = '\0', $enclosure = '\0', $escape = '')
+	{
+		if (empty($escape))
+		{
+			if(empty($enclosure) || $enclosure == '\0')
+			{
+				if(empty($delimiter) || $delimiter == '\0')
+				{
+					return fgetcsv($handle, $length);
+				}
+				else
+				{
+					return fgetcsv($handle, $length, $delimiter);
+				}
+			}
+			else
+			{
+				return fgetcsv($handle, $length, $delimiter, $enclosure);
+			}
+		}
+		else
+		{
+			return fgetcsv($handle, $length, $delimiter, $enclosure, $escape);
+		}
 	}
 }
 
