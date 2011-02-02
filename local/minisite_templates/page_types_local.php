@@ -122,6 +122,12 @@ $GLOBALS['_reason_page_types_local'] = array(
                 'dorian_band_nomination' => array(
                        'main_post' => 'dorian_band',
                 ),
+                'dorian_jh_camp' => array(
+                        'main_post' => 'dorian_jh_camps',
+                 ),
+                'dorian_sh_camp' => array(
+                        'main_post' => 'dorian_sh_camps',
+                 ),
                 'dorian_vocal_nomination' => array(
                        'main_post' => 'dorian_vocal',
                 ),
@@ -135,7 +141,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'faculty' => array(
 			'main_post' => 'luther_faculty'
 		),
-		'gift_page_engine' => array(
+	'gift_page_engine' => array(
             'main_post' => 'gift_form',
         ),
         'homecoming_registration' => array(
