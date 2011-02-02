@@ -120,12 +120,12 @@ class CSV {
 			if ($this->head)
 			{
 				$headings = array_keys(reset($arr));
-				$result = fputcsv($handle, $headings, $this->delim, $this->enclos);
+				$result = $this->my_fputcsv($handle, $headings, $this->delim, $this->enclos);
 				$success = $success && $result;
 			}
 			foreach ($arr as $row)
 			{
-				$result = fputcsv($handle, $row, $this->delim, $this->enclos);
+				$result = $this->my_fputcsv($handle, $row, $this->delim, $this->enclos);
 				$success = $success && $result;
 			}
 			flock($handle, LOCK_UN);
@@ -215,6 +215,14 @@ class CSV {
 		return $html;
 	}
 
+	/**
+	 * fgetcsv is very particular about the delimiter, enclosure, and escape being single characters -- 
+	 * if you try to pass an empty string, you'll get a warning. The only way to get the default 
+	 * behavior is to not pass a parameter. So we have this strange method that builds up a valid fgetcsv 
+	 * call based on the parameters you're passing.
+	 *
+	 * @return boolean success
+	 */
 	function my_fgetcsv($handle, $length = 0, $delimiter = '\0', $enclosure = '\0', $escape = '')
 	{
 		if (empty($escape))
@@ -240,6 +248,34 @@ class CSV {
 			return fgetcsv($handle, $length, $delimiter, $enclosure, $escape);
 		}
 	}
+
+	/**
+	 * fputcsv is very particular about the delimiter and enclosure being single characters -- 
+	 * if you try to pass an empty string, you'll get a warning. The only way to get the default 
+	 * behavior is to not pass a parameter. So we have this strange method that builds up a valid fputcsv 
+	 * call based on the parameters you're passing.
+	 *
+	 * @return boolean success
+	 */
+	function my_fputcsv($handle, $fields, $delimiter = '\0', $enclosure = '\0')
+	{
+		if(empty($enclosure) || $enclosure == '\0')
+		{
+			if(empty($delimiter) || $delimiter == '\0')
+			{
+				return fputcsv($handle, $fields);
+			}
+			else
+			{
+				return fputcsv($handle, $fields, $delimiter);
+			}
+		}
+		else
+		{
+			return fputcsv($handle, $fields, $delimiter, $enclosure);
+		}
+	}
+
 }
 
 if (!function_exists('fputcsv')) {
