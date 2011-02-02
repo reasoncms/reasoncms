@@ -1,13 +1,9 @@
 <?php
 ////////////////////////////////////////////////////////////////////////////////
 //
-//    Matt Ryan
-//    2005-02-17
-//
 //    Work on the second page of the giving form
 //
-//    Modified for Luther - Steve Smith & Lucas Welper
-//    search for SLS to find modifications
+//   Steve Smith & Lucas Welper
 //    2011-01-26
 //
 //
@@ -161,7 +157,9 @@ class DorianJHCampsThreeForm extends FormStep
 		{
 			$this->is_in_testing_mode = false;
 		}
-		
+		//for testing on live/remove later
+                $this->is_in_testing_mode =true;
+                
 		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
 	
@@ -189,20 +187,19 @@ class DorianJHCampsThreeForm extends FormStep
 		$txt .= '<h3>Thank you for registering for Dorain Camp</h3>';
 		if (reason_unique_name_exists('dorian_jh_thank_you_blurb'))
 			$txt .= '<p>' . get_text_blurb_content('dorian_jh_thank_you_blurb'). '</p>';
-		$txt .= '<p>Luther College is, for tax deduction purposes, a 501(c)(3) organization.</p>'."\n";
 		$txt .= '<p>If you experience technical problems using the registration form, please contact the Luther College Music Office.</p>'."\n";
 		$txt .= '<ul>'."\n";
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
 		$txt .= '<h4>Your Information</h4>';
 		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('first_name').' '.$this->controller->get('last_name').'</li>'."\n";
 		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address')."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip').'</li>'."\n";
-		$txt .= '<li><strong>Phone:</strong> '.$this->controller->get('phone').'</li>'."\n";
+		$txt .= '<li><strong>Home Phone:</strong> '.$this->controller->get('home_phone').'</li>'."\n";
 		$txt .= '<li><strong>E-mail:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
                 $txt .= '<li><strong>School:</strong> '.$this->controller->get('school').'</li>'."\n";
                 $txt .= '<li><strong>Grade:</strong> '.$this->controller->get('grade').'</li>'."\n";
                 if ($this->controller->get('roomate_requested'))
                 {
-                    $txt .= '<li><strong>School:</strong> '.$this->controller->get('roomate_requested').'</li>'."\n";
+                    $txt .= '<li><strong>Requested Roomate(s) :</strong> '.$this->controller->get('roomate_requested').'</li>'."\n";
                 }
 		$txt .= '<h4>Participation</h4>';
 		if ($this->controller->get('band_participant'))
@@ -213,9 +210,9 @@ class DorianJHCampsThreeForm extends FormStep
 		{
 			$txt .= $txt .= '<li>You\'ll play ' .$this->controller->get('orchestra_instrument'). ' in orchestra.</li>'."\n";
 		}
-                if ($this->controller->get('jazz_band_participant'))
+                if ($this->controller->get('jazz_participant'))
 		{
-			$txt .= $txt .= '<li>You\'ll play ' .$this->controller->get('jazz_band_instrument'). ' in jazz band.</li>'."\n";
+			$txt .= $txt .= '<li>You\'ll play ' .$this->controller->get('jazz_instrument'). ' in jazz band.</li>'."\n";
 		}
                 if ($this->controller->get('wind_choir_participant'))
 		{
@@ -228,20 +225,28 @@ class DorianJHCampsThreeForm extends FormStep
                 if ($this->controller->get('private_lessons'))
 		{
 			$txt .= '<li>You\'d like ' .$this->controller->get('private_lessons'). ' set(s) of private lessons for '
-                                . $this->controller->get('private_instrument_1');
-                                if ($this->controller->get('private_instrument_2'))
+                                . $this->controller->get('lesson_instrument_1');
+                                if ($this->controller->get('lesson_instrument_2'))
                                 {
-                                    $txt .= ' and ' . $this->controller->get('private_instrument_2');
+                                    $txt .= ' and ' . $this->controller->get('lesson_instrument_2');
                                 }
                                 $txt .= '</li>'."\n";
 		}
 
-		$txt .= '<li><strong>Period 1:</strong>'.$this->controller->get('period_1').'</li>'."\n";
-                $txt .= '<li><strong>Period 2:</strong>'.$this->controller->get('period_2').'</li>'."\n";
-                $txt .= '<li><strong>Period 3:</strong>'.$this->controller->get('period_3').'</li>'."\n";
-                $txt .= '<li><strong>Period 4:</strong>'.$this->controller->get('period_4').'</li>'."\n";
-                $txt .= '<li><strong>Period 5:</strong>'.$this->controller->get('period_5').'</li>'."\n";
-                $txt .= '<li><strong>Period 6:</strong>'.$this->controller->get('period_6').'</li>'."\n";
+		$txt .= '<li><strong>Period 1:</strong>'.$this->controller->get('period_one').'</li>'."\n";
+                $txt .= '<li><strong>Period 2:</strong>'.$this->controller->get('period_two').'</li>'."\n";
+                $txt .= '<li><strong>Period 3:</strong></li>'."\n";
+                    $txt .= '<ul>';
+                    $txt .= '<li>'.$this->controller->get('period_three_first').' (first choice)'.'</li>'."\n";
+                    $txt .= '<li>'.$this->controller->get('period_three_second').' (second choice)'.'</li>'."\n";
+                    $txt .= '</ul>';
+                $txt .= '<li><strong>Period 4:</strong></li>'."\n";
+                    $txt .= '<ul>';
+                    $txt .= '<ul><li>'.$this->controller->get('period_four_first').' (first choice)'.'</li>'."\n";
+                    $txt .= '<li>'.$this->controller->get('period_four_second').' (second choice)'.'</li></ul>'."\n";
+                    $txt .= '</ul>';
+                $txt .= '<li><strong>Period 5:</strong>'.$this->controller->get('period_five').'</li>'."\n";
+                $txt .= '<li><strong>Period 6:</strong>'.$this->controller->get('period_six').'</li>'."\n";
 		
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
@@ -270,7 +275,7 @@ class DorianJHCampsThreeForm extends FormStep
 			$expiration_yy = substr($this->get_value('credit_card_expiration_year'), 2, 2);
 			$expiration_mmyy = $expiration_mm.$expiration_yy;
 			
-			foreach($this->controller->get_element_names() as $element_name)
+			foreach ($this->controller->get_element_names() as $element_name)
 			{
 				if($this->controller->get($element_name))
 				{
@@ -392,9 +397,9 @@ $add_headers = 'MIME-Version: 1.0' . "\r\n" . 'Content-Type: text/html; charset=
 	{
 		$refnum = $this->get_value( 'result_refnum' );
 		$text = $this->get_value( 'confirmation_text' );
-		reason_include_once( 'minisite_templates/modules/dorian_jh_camps/dorian_jh_camps_confirmation.php' );
-		$gc = new DorianJHCampConfirmation;
-		$hash = $gc->make_hash( $text );
+		reason_include_once( 'minisite_templates/modules/dorian_jh_camps/dorian_jh_camp_confirmation.php' );
+		$camp_confirmation = new DorianJHCampConfirmation;
+		$hash = $camp_confirmation->make_hash( $text );
 		connectDB( REASON_DB );
 		$url = get_current_url();
 		$parts = parse_url( $url );
