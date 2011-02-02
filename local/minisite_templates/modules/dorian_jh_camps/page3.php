@@ -31,8 +31,13 @@ class DorianJHCampsThreeForm extends FormStep
 	var $elements = array(
 		'review_note' => array(
 			'type' => 'comment',
-			'text' => '<h3>Camp overview</h3>',
+			'text' => '<h3>Payment Information</h3>',
                  ),
+                'deposit_note' => array(
+                    'type' => 'comment',
+                    'text' => 'Please choose your payment amount. If you choose to only pay the deposit, the balance is due on registration day.
+                        No refund of deposit after June 4. More information will follow.'
+                ),
                 'payment_amount' => 'hidden',
 		'payment_note' => array(
 			'type' => 'comment',
@@ -112,7 +117,7 @@ class DorianJHCampsThreeForm extends FormStep
 	);
 	
 	var $date_format = 'j F Y';
-	var $display_name = 'Camp Review / Card Info';
+	var $display_name = 'Payment';
 	var $error_header_text = 'Please check your form.';
 	var $database_transformations = array('credit_card_number'=>'obscure_credit_card_number');
 
@@ -165,7 +170,7 @@ class DorianJHCampsThreeForm extends FormStep
 	
 	function pre_show_form()
 	{
-		echo '<div id="campForm" class="pageTwo">'."\n";
+		echo '<div id="campForm" class="pageThree">'."\n";
 		if( $this->is_in_testing_mode )
 		{
 			echo '<div class="announcement">';
@@ -208,19 +213,19 @@ class DorianJHCampsThreeForm extends FormStep
 		}
 		if ($this->controller->get('orchestra_participant'))
 		{
-			$txt .= $txt .= '<li>You\'ll play ' .$this->controller->get('orchestra_instrument'). ' in orchestra.</li>'."\n";
+			$txt .= '<li>You\'ll play ' .$this->controller->get('orchestra_instrument'). ' in orchestra.</li>'."\n";
 		}
                 if ($this->controller->get('jazz_participant'))
 		{
-			$txt .= $txt .= '<li>You\'ll play ' .$this->controller->get('jazz_instrument'). ' in jazz band.</li>'."\n";
+			$txt .= '<li>You\'ll play ' .$this->controller->get('jazz_instrument'). ' in jazz band.</li>'."\n";
 		}
                 if ($this->controller->get('wind_choir_participant'))
 		{
-			$txt .= $txt .= '<li>You\'ll play ' .$this->controller->get('wind_choir_instrument'). ' in wind choir.</li>'."\n";
+			$txt .= '<li>You\'ll play ' .$this->controller->get('wind_choir_instrument'). ' in wind choir.</li>'."\n";
 		}
                 if ($this->controller->get('brass_choir_participant'))
 		{
-			$txt .= $txt .= '<li>You\'ll play ' .$this->controller->get('brass_choir_instrument'). ' in brass choir.</li>'."\n";
+			$txt .= '<li>You\'ll play ' .$this->controller->get('brass_choir_instrument'). ' in brass choir.</li>'."\n";
 		}
                 if ($this->controller->get('private_lessons'))
 		{
@@ -242,8 +247,8 @@ class DorianJHCampsThreeForm extends FormStep
                     $txt .= '</ul>';
                 $txt .= '<li><strong>Period 4:</strong></li>'."\n";
                     $txt .= '<ul>';
-                    $txt .= '<ul><li>'.$this->controller->get('period_four_first').' (first choice)'.'</li>'."\n";
-                    $txt .= '<li>'.$this->controller->get('period_four_second').' (second choice)'.'</li></ul>'."\n";
+                    $txt .= '<li>'.$this->controller->get('period_four_first').' (first choice)'.'</li>'."\n";
+                    $txt .= '<li>'.$this->controller->get('period_four_second').' (second choice)'.'</li>'."\n";
                     $txt .= '</ul>';
                 $txt .= '<li><strong>Period 5:</strong>'.$this->controller->get('period_five').'</li>'."\n";
                 $txt .= '<li><strong>Period 6:</strong>'.$this->controller->get('period_six').'</li>'."\n";

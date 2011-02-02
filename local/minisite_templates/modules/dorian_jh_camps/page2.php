@@ -245,7 +245,7 @@ class DorianJHCampsTwoForm extends FormStep
 
 	function pre_show_form()
 	{
-		echo '<div id="transcriptRequestForm" class="pageOne">'."\n";
+		echo '<div id="campForm" class="pageTwo">'."\n";
 	}
 	function post_show_form()
 	{
