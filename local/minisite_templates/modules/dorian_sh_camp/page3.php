@@ -162,9 +162,7 @@ class DorianSHCampThreeForm extends FormStep
 		{
 			$this->is_in_testing_mode = false;
 		}
-		//for testing on live/remove later
-                $this->is_in_testing_mode =true;
-
+		
 		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
 
@@ -227,6 +225,10 @@ class DorianSHCampThreeForm extends FormStep
 		{
 			$txt .= '<li>You\'ll play ' .$this->controller->get('brass_choir_instrument'). ' in brass choir.</li>'."\n";
 		}
+                if ($this->controller->get('workshops'))
+                {
+                    $txt .= '<li><strong>Workshops:</strong> '.$this->controller->get('workshops').'</li>'."\n";
+                }
                 if ($this->controller->get('private_lessons'))
 		{
 			$txt .= '<li>You\'d like ' .$this->controller->get('private_lessons'). ' set(s) of private lessons for '
