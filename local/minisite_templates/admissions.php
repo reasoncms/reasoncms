@@ -167,7 +167,7 @@ class AdmissionsTemplate extends MinisiteTemplate
 			if ($this->cur_page->get_value( 'custom_page' ) == 'admissions_home')
 			{
                         	echo '<div class="block keydates events">'."\n";
-                        	echo '<h2>Key Admission Dates</h2>'."\n";
+                        	echo '<a href="/admissions/visit/events/"><h2>Key Admission Dates</h2></a>'."\n";
                         }
                         //echo '</div class="sidebar">'."\n";
                         $this->run_section( 'sub_nav_3' );
