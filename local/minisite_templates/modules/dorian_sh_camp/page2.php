@@ -64,6 +64,21 @@ class DorianSHCampTwoForm extends FormStep
                     'display_name' => '&nbsp;',
                     'comments'=>'<div class="smallText comment">Instrument</div>',
                 ),
+                'workshops_header' => array(
+                    'type' => 'comment',
+                    'text' => '<h3>Workshops</h3>',
+                ),
+                'workshops' => array(
+                    'type' => 'radio_no_sort',
+                    'display_name' => '&nbsp;',
+                    'options' => array(
+                        'Music Theatre' => 'Music Theatre Workshop',
+                        'Keyboard' => 'Keyboard Workshop',
+                        'Harp' => 'Harp Workshop',
+                    ),
+                    'comments' => 'Music Theater and Keyboard workshops require audition recordings postmarked
+                        by 5/17/11',
+                ),
                 'private_lessons_header' => array(
                      'type' => 'comment',
                      'text' => '<h3>Sets of Private Lessons</h3>',
@@ -84,6 +99,18 @@ class DorianSHCampTwoForm extends FormStep
                     'display_name' => '&nbsp;',
                     'comments' => 'Instrument 2'
                 ),
+                 'period_header' => array(
+                    'type' => 'comment',
+                    'text' => '<br /><br /><h4>Registration guidelines for the scheduling choices below</h4>',
+                ),
+                'period_header_1' => array(
+                    'type' => 'comment',
+                    'text' => '1) You may choose to leave one period free each day.  You may not leave more than two free.',
+                ),
+                'period_header_2' => array(
+                    'type' => 'comment',
+                    'text' => '2) Ensembles and workshops meet more than one period per day (as noted in each selection);  register for each session of these multipart activities.',
+                ),
                 'period_one_header' => array(
                         'type' => 'comment',
                         'text' => '<h4>Period 1 - 8:00-9:15</h4>',
@@ -92,9 +119,12 @@ class DorianSHCampTwoForm extends FormStep
                     'type' => 'select_no_sort',
                     'add_null_value_to_top' => true,
                     'options' => array(
-                            '1'=>'Orchestra (Strings - periods 4 & 5 also)',
-                            '2'=>'Concert Band (with period 5)',
-                            '3'=>'Dance 1',
+                            'music_theatre' => 'Music Theatre Workshop (requires periods 1, 2, 4, 5, & 6)',
+                            'keyboard_workshop' => 'Keyboard Workshop (with periods 4 & 5)',
+                            'orchestra'=>'Orchestra (Strings - periods 4 & 5 also)',
+                            'concert_band'=>'Concert Band (with period 5)',
+                            'dance_1'=>'Dance 1',
+                            'mixed_media' => 'Mixed Media Art/Dance Workshop (with period 5)'
                      ),
                     'display_name' => '&nbsp;',
                 ),
@@ -107,7 +137,8 @@ class DorianSHCampTwoForm extends FormStep
                     'add_null_value_to_top' => true,
                     'display_name' => '&nbsp;',
                     'options' => array(
-                            '1'=>'Choir (with period 6)',
+                            'music_theatre' => 'Music Theatre Workshop (requires periods 1, 2, 4, 5, & 6)',
+                            'choir'=>'Choir (with period 6)',
                     ),
                 ),
                 'period_three_header' => array(
@@ -118,21 +149,20 @@ class DorianSHCampTwoForm extends FormStep
                     'type' => 'select_no_sort',
                     'add_null_value_to_top' => true,
                     'options' => array(
-                            '1'=>'Composition',
-                            '2'=>'Elements of Music',
-                            '3'=>'Girls Vocal Ensemble',
-                            '4'=>'Dance 2',
-                            '5'=>'Jazz Band Blue (or Jazz Class)',
-                            '6'=>'Art 1 (Mask Making)',
-                            '7'=>'Art 2 (Process of Design)',
-                            '8'=>'Art 3 (Mixed Media)',
-                            '9'=>'Percussuion Ensemble A',
-                            '10'=>'Keyboard Workshop A',
-                            '11'=>'Vocal Performance A',
-                            '12'=>'Guitar Workshop',
-                            '13'=>'Woodwind Choir',
-                            '14'=>'Harp Workshop',
-                            '15'=>'Multimedia Computing (Computer Graphics)',
+                            'chamber_choir' => 'Chamber Choir',
+                            'woodwind_choir'=>'Woodwind Choir',
+                            'jazz_band'=>'Jazz Band',
+                            'percussion_ensemble' => 'Percussion Ensemble',
+                            'music_theory' => 'Music Theory',
+                            'conducting' => 'Conducting',
+                            'dance_2'=>'Dance 2 (10:50 - 12:10)',
+                            'guitar_workshop' => 'Guitar Workshop (with period 4)',
+                            'composition'=>'Composition',
+                            'art_1'=>'Art 1 (Mask Making)',
+                            'art_2'=>'Art 2 (Clay Sculpture)',
+                            'art_3'=>'Art 3 (Mixed Media)',
+                            'harp_workshop' => 'Harp Workshop (with period 5)',
+                            'multimedia_computing'=>'Multimedia Computing (Computer Graphics)',
                     ),
                     'display_name' => '(first&nbsp;choice)',
                 ),
@@ -140,21 +170,20 @@ class DorianSHCampTwoForm extends FormStep
                     'type' => 'select_no_sort',
                     'add_null_value_to_top' => true,
                     'options' => array(
-                            '1'=>'Composition',
-                            '2'=>'Elements of Music',
-                            '3'=>'Girls Vocal Ensemble',
-                            '4'=>'Dance 2',
-                            '5'=>'Jazz Band Blue (or Jazz Class)',
-                            '6'=>'Art 1 (Mask Making)',
-                            '7'=>'Art 2 (Process of Design)',
-                            '8'=>'Art 3 (Mixed Media)',
-                            '9'=>'Percussuion Ensemble A',
-                            '10'=>'Keyboard Workshop A',
-                            '11'=>'Vocal Performance A',
-                            '12'=>'Guitar Workshop',
-                            '13'=>'Woodwind Choir',
-                            '14'=>'Harp Workshop',
-                            '15'=>'Multimedia Computing (Computer Graphics)',
+                            'chamber_choir' => 'Chamber Choir',
+                            'woodwind_choir'=>'Woodwind Choir',
+                            'jazz_band'=>'Jazz Band',
+                            'percussion_ensemble' => 'Percussion Ensemble',
+                            'music_theory' => 'Music Theory',
+                            'conducting' => 'Conducting',
+                            'dance_2'=>'Dance 2 (10:50 - 12:10)',
+                            'guitar_workshop' => 'Guitar Workshop (with period 4)',
+                            'composition'=>'Composition',
+                            'art_1'=>'Art 1 (Mask Making)',
+                            'art_2'=>'Art 2 (Clay Sculpture)',
+                            'art_3'=>'Art 3 (Mixed Media)',
+                            'harp_workshop' => 'Harp Workshop (with period 5)',
+                            'multimedia_computing'=>'Multimedia Computing (Computer Graphics)',
                     ),
                     'display_name' => '(second&nbsp;choice)',
                 ),
@@ -167,19 +196,19 @@ class DorianSHCampTwoForm extends FormStep
                     'add_null_value_to_top' => true,
                     'display_name' => '(first&nbsp;choice)',
                     'options' => array(
-                            '1'=>'Orchestra (1:00-2:30; Strings-periods 1 & 5 also)',
-                            '2'=>'Boys Vocal Ensemble',
-                            '3'=>'Flute Choir',
-                            '4'=>'Jazz Band White (or Jazz Class)',
-                            '5'=>'Art 4 (Mask Making)',
-                            '6'=>'Art 5 (Process of Design)',
-                            '7'=>'Art 6 (Mixed Media)',
-                            '8'=>'Percussuion Ensemble B',
-                            '9'=>'Keyboard Workshop B',
-                            '10'=>'Vocal Performance B',
-                            '11'=>'Brass Choir',
-                            '12'=>'Enjoyment of Music',
-                            '13'=>'Electronic Music',
+                            'music_theatre' => 'Music Theatre Workshop (requires periods 1, 2, 4, 5, & 6)',
+                             'keyboard_workshop' => 'Keyboard Workshop (with periods 1 & 5)',
+                             'intermediate_jazz_improv' => 'Intermediate Jazz Improvisation',
+                            'orchestra'=>'Orchestra (Winds & Percussion with period 1; Strings with periods 1 & 5)',
+                            'vocal_performance'=>'Vocal Performance',
+                            'guitar_workshop' => 'Guitar Workshop (1:00-2:30; with period 3)',
+                            'electronic_music'=>'Electronic Music',
+                            'art_4'=>'Art 4 (Mask Making)',
+                            'art_5'=>'Art 5 (Clay Sculpture)',
+                            'art_6'=>'Art 6 (Mixed Media)',
+                            'improv' => 'Improvisation',
+                            'musical_styles' => 'Musical Styles',
+                            'flute_choir'=>'Flute Choir',
                     ),
                 ),
                 'period_four_second' => array(
@@ -187,19 +216,19 @@ class DorianSHCampTwoForm extends FormStep
                     'add_null_value_to_top' => true,
                     'display_name' => '(second&nbsp;choice)',
                     'options' => array(
-                            '1'=>'Orchestra (1:00-2:30; Strings-periods 1 & 5 also)',
-                            '2'=>'Boys Vocal Ensemble',
-                            '3'=>'Flute Choir',
-                            '4'=>'Jazz Band White (or Jazz Class)',
-                            '5'=>'Art 4 (Mask Making)',
-                            '6'=>'Art 5 (Process of Design)',
-                            '7'=>'Art 6 (Mixed Media)',
-                            '8'=>'Percussuion Ensemble B',
-                            '9'=>'Keyboard Workshop B',
-                            '10'=>'Vocal Performance B',
-                            '11'=>'Brass Choir',
-                            '12'=>'Enjoyment of Music',
-                            '13'=>'Electronic Music',
+                            'music_theatre' => 'Music Theatre Workshop (requires periods 1, 2, 4, 5, & 6)',
+                             'keyboard_workshop' => 'Keyboard Workshop (with periods 1 & 5)',
+                             'intermediate_jazz_improv' => 'Intermediate Jazz Improvisation',
+                            'orchestra'=>'Orchestra (Winds & Percussion with period 1; Strings with periods 1 & 5)',
+                            'vocal_performance'=>'Vocal Performance',
+                            'guitar_workshop' => 'Guitar Workshop (1:00-2:30; with period 3)',
+                            'electronic_music'=>'Electronic Music',
+                            'art_4'=>'Art 4 (Mask Making)',
+                            'art_5'=>'Art 5 (Clay Sculpture)',
+                            'art_6'=>'Art 6 (Mixed Media)',
+                            'improv' => 'Improvisation',
+                            'musical_styles' => 'Musical Styles',
+                            'flute_choir'=>'Flute Choir',
                     ),
                 ),
                 'period_five_header' => array(
@@ -211,9 +240,13 @@ class DorianSHCampTwoForm extends FormStep
                     'add_null_value_to_top' => true,
                     'display_name' => '&nbsp;',
                     'options' => array(
-                            '1'=>'Orchestra String Sectionals (with periods 1 & 4)',
-                            '2'=>'Concert Band (with period 1)',
-                            '3'=>'Dance 3',
+                            'music_theatre' => 'Music Theatre Workshop (requires periods 1, 2, 4, 5, & 6)',
+                            'keyboard_workshop' => 'Keyboard Workshop (with periods 1 & 4)',
+                            'orchestra'=>'Orchestra String Sectionals (with periods 1 & 4)',
+                            'concert_band'=>'Concert Band (with period 1)',
+                            'dance_3'=>'Dance 3',
+                            'harp_workshop' => 'Harp Workshop (with period 3)',
+                            'mixed_media' => 'Mixed Media Art/Dance Workshop (with period 1)',
                     ),
                 ),
                 'period_six_header' => array(
@@ -225,7 +258,8 @@ class DorianSHCampTwoForm extends FormStep
                     'add_null_value_to_top' => true,
                     'display_name' => '&nbsp;',
                     'options' => array(
-                            '1'=>'Choir (with period 2)',
+                            'music_theatre' => 'Music Theatre Workshop (requires periods 1, 2, 4, 5, & 6)',
+                            'choir'=>'Choir (with period 2)',
                     ),
                 ),
 	);
@@ -252,24 +286,64 @@ class DorianSHCampTwoForm extends FormStep
 		echo '</div>'."\n";
 	}
 
-        function  run_error_checks()
+         function  run_error_checks()
         {
                 //check orchestra requirements
-                if (($this->get_value('period_one') == 1) || ($this->get_value('period_four_first') == 1) || ($this->get_value('period_five') == 1)){
-                    if (($this->get_value('period_one') <> 1) || ($this->get_value('period_four_first') <> 1) || ($this->get_value('period_five') <> 1)){
+                if (($this->get_value('period_one') == 'orchestra') || ($this->get_value('period_four_first') == 'orchestra') || ($this->get_value('period_five') == 'orchestra')){
+                    if (($this->get_value('period_one') != 'orchestra') || ($this->get_value('period_four_first') != 'orchestra') || ($this->get_value('period_five') != 'orchestra')){
                         $this->set_error('period_one', 'Orchestra requires periods 1, 4 and 5.');
                     }
                 }
                 //check concert band requirements
-                if(($this->get_value('period_one') == 2) || ($this->get_value('period_five') == 2)){
-                    if(($this->get_value('period_one') <> 2) || ($this->get_value('period_five') <> 2)){
-                        $this->set_error('period_one', 'Conert Band requires periods 2 and 5.');
+                if(($this->get_value('period_one') == 'concert_band') || ($this->get_value('period_five') == 'concert_band')){
+                    if(($this->get_value('period_one') != 'concert_band') || ($this->get_value('period_five') != 'concert_band')){
+                        $this->set_error('period_one', 'Conert Band requires periods 1 and 5.');
                     }
                 }
                 //check choir requirements
-                if(($this->get_value('period_two') == 1) || ($this->get_value('period_six') == 1)){
-                    if(($this->get_value('period_two') <> 1) || ($this->get_value('period_six') <> 1)){
+                if(($this->get_value('period_two') == 'choir') || ($this->get_value('period_six') == 'choir')){
+                    if(($this->get_value('period_two') != 'choir') || ($this->get_value('period_six') != 'choir' )){
                         $this->set_error('period_two', 'Choir requires periods 2 and 6.');
+                    }
+                }
+                //check music theatre requirements
+                if (($this->get_value('period_one') == 'music_theatre')
+                        || ($this->get_value('period_two') == 'music_theatre')
+                        || ($this->get_value('period_four_first') == 'music_theatre')
+                        || ($this->get_value('period_five') == 'music_theatre')
+                        || ($this->get_value('period_six') == 'music_theatre') ){
+                    if (($this->get_value('period_one') != 'music_theatre')
+                            || ($this->get_value('period_two') != 'music_theatre')
+                            || ($this->get_value('period_four_first') != 'music_theatre')
+                            || ($this->get_value('period_five') != 'music_theatre')
+                            || ($this->get_value('period_six') != 'music_theatre')){
+                        $this->set_error('period_one', 'Music Theatre requires periods 1, 2, 4, 5, & 6.');
+                    }
+                }
+                //check keyboard workshop requirements
+                if (($this->get_value('period_one') == 'keyboard_workshop') || ($this->get_value('period_four_first') == 'keyboard_workshop') || ($this->get_value('period_five') == 'keyboard_workshop')){
+                    if (($this->get_value('period_one') != 'keyboard_workshop') || ($this->get_value('period_four_first') != 'keyboard_workshop') || ($this->get_value('period_five') != 'keyboard_workshop')){
+                        $this->set_error('period_one', 'Keyboard Workshop requires periods 1, 4 and 5.');
+                    }
+                }
+                //check mixed media requirements
+                if(($this->get_value('period_one') == 'mixed_media') || ($this->get_value('period_five') == 'mixed_media')){
+                    if(($this->get_value('period_one') != 'mixed_media') || ($this->get_value('period_five') != 'mixed_media')){
+                        $this->set_error('period_one', 'Mixed Media Art/Dance Workshop requires periods 1 and 5.');
+                    }
+                }
+                //check guitar workshop requirements
+                if(($this->get_value('period_three_first') == 'guitar_workshop') || ($this->get_value('period_three_second') == 'guitar_workshop')
+                        ||($this->get_value('period_four_first') == 'guitar_workshop') || ($this->get_value('period_four_second') == 'guitar_workshop')){
+                    if(($this->get_value('period_three_first') != 'guitar_workshop') || ($this->get_value('period_four_first') != 'guitar_workshop')){
+                        $this->set_error('period_three_first', 'Guitar Workshop requires periods 3 and 4.');
+                    }
+                }
+                //check harp workshop requirements
+                if(($this->get_value('period_three_first') == 'harp_workshop') || ($this->get_value('period_three_second') == 'harp_workshop')
+                        ||($this->get_value('period_five') == 'harp_workshop')){
+                    if(($this->get_value('period_three_first') != 'harp_workshop') || ($this->get_value('period_four_first') != 'harp_workshop')){
+                        $this->set_error('period_three_first', 'Harp Workshop requires periods 3 and 5.');
                     }
                 }
         }
