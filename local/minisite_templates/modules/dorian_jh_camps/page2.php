@@ -267,20 +267,20 @@ class DorianJHCampsTwoForm extends FormStep
         function  run_error_checks()
         {
                 //check orchestra requirements
-                if (($this->get_value('period_one') == 1) || ($this->get_value('period_four_first') == 1) || ($this->get_value('period_five') == 1)){
-                    if (($this->get_value('period_one') <> 1) || ($this->get_value('period_four_first') <> 1) || ($this->get_value('period_five') <> 1)){
+                if (($this->get_value('period_one') == 'orchestra') || ($this->get_value('period_four_first') == 'orchestra') || ($this->get_value('period_five') == 'orchestra')){
+                    if (($this->get_value('period_one') != 'orchestra') || ($this->get_value('period_four_first') != 'orchestra') || ($this->get_value('period_five') != 'orchestra')){
                         $this->set_error('period_one', 'Orchestra requires periods 1, 4 and 5.');
                     }
                 }
                 //check concert band requirements
-                if(($this->get_value('period_one') == 2) || ($this->get_value('period_five') == 2)){
-                    if(($this->get_value('period_one') <> 2) || ($this->get_value('period_five') <> 2)){
+                if(($this->get_value('period_one') == 'concert_band') || ($this->get_value('period_five') == 'concert_band')){
+                    if(($this->get_value('period_one') != 'concert_band') || ($this->get_value('period_five') != 'concert_band')){
                         $this->set_error('period_one', 'Conert Band requires periods 2 and 5.');
                     }
                 }
                 //check choir requirements
-                if(($this->get_value('period_two') == 1) || ($this->get_value('period_six') == 1)){
-                    if(($this->get_value('period_two') <> 1) || ($this->get_value('period_six') <> 1)){
+                if(($this->get_value('period_two') == 'choir') || ($this->get_value('period_six') == 'choir')){
+                    if(($this->get_value('period_two') != 'choir') || ($this->get_value('period_six') != 'choir' )){
                         $this->set_error('period_two', 'Choir requires periods 2 and 6.');
                     }
                 }
