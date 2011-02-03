@@ -275,7 +275,7 @@ class DorianJHCampsTwoForm extends FormStep
                 //check concert band requirements
                 if(($this->get_value('period_one') == 'concert_band') || ($this->get_value('period_five') == 'concert_band')){
                     if(($this->get_value('period_one') != 'concert_band') || ($this->get_value('period_five') != 'concert_band')){
-                        $this->set_error('period_one', 'Conert Band requires periods 2 and 5.');
+                        $this->set_error('period_one', 'Conert Band requires periods 1 and 5.');
                     }
                 }
                 //check choir requirements
