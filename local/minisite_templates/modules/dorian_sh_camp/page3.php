@@ -221,10 +221,6 @@ class DorianSHCampThreeForm extends FormStep
 		{
 			$txt .= '<li>You\'ll play ' .$this->controller->get('wind_choir_instrument'). ' in wind choir.</li>'."\n";
 		}
-                if ($this->controller->get('brass_choir_participant'))
-		{
-			$txt .= '<li>You\'ll play ' .$this->controller->get('brass_choir_instrument'). ' in brass choir.</li>'."\n";
-		}
                 if ($this->controller->get('workshops'))
                 {
                     $txt .= '<li><strong>Workshops:</strong> '.$this->controller->get('workshops').'</li>'."\n";
