@@ -70,10 +70,10 @@ function toggle_fields(trigger, element)
                 if(checked){ chooseJazz(); }else{ clearJazz(); }
                 break;
             case 'wind_choir_participant':
-                if(checked){ chooseChoir(); }else{ clearChoir(); }
+                if(checked){ chooseWoodwindChoir(); }else{ clearWoodwindChoir(); }
                 break;
             case 'brass_choir_participant':
-                if(checked){ chooseChoir(); }else{ clearChoir(); }
+                if(checked){ chooseBrassChoir(); }else{ clearBrassChoir(); }
                 break;
         }
 }
@@ -223,7 +223,6 @@ function chooseNone(period)
             break;
     }
 }
-
 function chooseLessons()
 {
     var id = $("input[@name=testGroup]:checked").attr('id');
@@ -242,5 +241,24 @@ function chooseLessons()
             show_field('lesson_instrument_2');
             break;
     }
-
-}
+ }
+ function chooseWoodwindChoir()
+    {
+        $("#period_three_firstElement").val('woodwind_choir').attr('selected',true);
+    }
+    function clearWoodwindChoir()
+    {
+            if($("#period_three_firstElement option[value='woodwind_choir']").attr('selected')){
+                $("#period_three_firstElement").get(0).selectedIndex = 0;
+            }
+    }
+    function chooseBrassChoir()
+    {
+        $("#period_four_firstElement").val('brass_choir').attr('selected',true);
+    }
+    function clearBrassChoir()
+    {
+            if($("#period_four_firstElement option[value='brass_choir']").attr('selected')){
+                $("#period_four_firstElement").get(0).selectedIndex = 0;
+            }
+    }
