@@ -238,8 +238,8 @@ class DorianSHCampThreeForm extends FormStep
                                 $txt .= '</li>'."\n";
 		}
 
-		$txt .= '<li><strong>Period 1:</strong>'.$this->controller->get('period_one').'</li>'."\n";
-                $txt .= '<li><strong>Period 2:</strong>'.$this->controller->get('period_two').'</li>'."\n";
+		$txt .= '<li><strong>Period 1:</strong> '.$this->controller->get('period_one').'</li>'."\n";
+                $txt .= '<li><strong>Period 2:</strong> '.$this->controller->get('period_two').'</li>'."\n";
                 $txt .= '<li><strong>Period 3:</strong></li>'."\n";
                     $txt .= '<ul>';
                     $txt .= '<li>'.$this->controller->get('period_three_first').' (first choice)'.'</li>'."\n";
@@ -250,8 +250,8 @@ class DorianSHCampThreeForm extends FormStep
                     $txt .= '<li>'.$this->controller->get('period_four_first').' (first choice)'.'</li>'."\n";
                     $txt .= '<li>'.$this->controller->get('period_four_second').' (second choice)'.'</li>'."\n";
                     $txt .= '</ul>';
-                $txt .= '<li><strong>Period 5:</strong>'.$this->controller->get('period_five').'</li>'."\n";
-                $txt .= '<li><strong>Period 6:</strong>'.$this->controller->get('period_six').'</li>'."\n";
+                $txt .= '<li><strong>Period 5:</strong> '.$this->controller->get('period_five').'</li>'."\n";
+                $txt .= '<li><strong>Period 6:</strong> '.$this->controller->get('period_six').'</li>'."\n";
 
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
