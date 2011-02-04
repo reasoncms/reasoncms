@@ -33,6 +33,10 @@ $(document).ready(function() {
         $("#radio_private_lessons_0").click(function(){chooseLessons();});
         $("#radio_private_lessons_1").click(function(){chooseLessons();});
         $("#radio_private_lessons_2").click(function(){chooseLessons();});
+
+        toggle_billing_address();
+
+	$("input[name='billing_address']").change(function(){toggle_billing_address()});
 });
 
 function hide_field(element)
@@ -262,3 +266,22 @@ function chooseLessons()
                 $("#period_four_firstElement").get(0).selectedIndex = 0;
             }
     }
+    function toggle_billing_address()
+{
+	if (!$("input[name='billing_address']:checked").val() ||
+	     $("input[name='billing_address']:checked").val() == 'entered')
+	{
+		$("tr#billingstreetaddressRow").hide();
+		$("tr#billingcityRow").hide();
+		$("tr#billingstateprovinceRow").hide();
+		$("tr#billingzipRow").hide();
+		$("tr#billingcountryRow").hide();
+	} else {
+		$("tr#billingstreetaddressRow").show();
+		$("tr#billingcityRow").show();
+		$("tr#billingstateprovinceRow").show();
+		$("tr#billingzipRow").show();
+		$("tr#billingcountryRow").show();
+		$("select#billing_state_provinceElement").change();
+	}
+}
