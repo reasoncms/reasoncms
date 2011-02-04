@@ -324,7 +324,7 @@ hel.prototype.insert_hr = function()
 };
 
 // Opens a modal window with the specified location.
-// The modal window will have access to this object via opener.<?php echo $_REQUEST['editor_id'] ?>,
+// The modal window will have access to this object via opener.<?php echo (isset($_REQUEST['editor_id'])) ? $_REQUEST['editor_id'] : 'editor_id'; ?>,
 // and it should call the appropriate method to pass back variables and do other interesting things.
 hel.prototype.open_modal_window = function(modal_url, width, height)
 {
