@@ -98,7 +98,7 @@ class DorianSHCampModule extends DefaultMinisiteModule
 		if($head_items =& $this->get_head_items())
 		{
 			$head_items->add_stylesheet('/reason/css/giftform.css');
-			$head_items->add_javascript('/reason/js/dorian_jh_camps.js');
+			$head_items->add_javascript('/reason/js/dorian_sh_camp.js');
 		}
 	}//}}}
 
