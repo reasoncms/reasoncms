@@ -121,42 +121,43 @@ function checkRequirements(element)
         switch(element){
             case 'period_one':
                     selected = $("select#period_oneElement").val();
+                    chooseNone('period_one');
                     switch(selected){
                         case 'orchestra': chooseOrchestra(); break;
                         case 'concert_band': chooseBand(); break;
                         case 'music_theatre': chooseMusicTheatre(); break;
                         case 'keyboard_workshop': chooseKeyboardWorkshop(); break;
                         case 'mixed_media': chooseMixedMedia(); break;
-                        default: chooseNone('period_one');
                     }
                     break;
             case 'period_two':
                     selected = $("select#period_twoElement").val();
+                    chooseNone('period_two');
                     switch(selected){
                         case 'music_theatre': chooseMusicTheatre(); break;
                         case 'choir': chooseChoir(); break;
-                        default: chooseNone('period_two');
                     }
                     break;
             case 'period_three':
                     selected = $("select#period_three_firstElement").val();
+                    chooseNone('period_three');
                     switch(selected){
                         case 'guitar_workshop': chooseGuitarWorkshop(); break;
                         case 'harp_workshop': chooseHarpWorkshop(); break;
-                        default: chooseNone('period_three');
                     }
             case 'period_four':
                     selected = $("select#period_four_firstElement").val();
+                    chooseNone('period_four');
                     switch(selected){
                         case 'music_theatre': chooseMusicTheatre(); break;
                         case 'keyboard_workshop': chooseKeyboardWorkshop(); break;
                         case 'orchestra': chooseOrchestra(); break;
                         case 'guitar_workshop': chooseGuitarWorkshop(); break;
-                        default: chooseNone('period_four');
                     }
                     break;
             case 'period_five':
                     selected = $("select#period_fiveElement").val();
+                    chooseNone('period_five');
                     switch(selected){
                         case 'music_theatre': chooseMusicTheatre(); break;
                         case 'keyboard_workshop': chooseKeyboardWorkshop(); break;
@@ -164,15 +165,14 @@ function checkRequirements(element)
                         case 'concert_band': chooseBand(); break;
                         case 'harp_workshop': chooseHarpWorkshop(); break;
                         case 'mixed_media': chooseMixedMedia(); break;
-                        default: chooseNone('period_five');
                     }
                     break;
             case 'period_six':
                     selected = $("select#period_sixElement").val();
+                    chooseNone('period_six');
                     switch(selected){
                         case 'music_theatre': chooseMusicTheatre(); break;
                         case 'choir': chooseChoir(); break;
-                        default: chooseNone('period_six');
                     }
                     break;
         }
@@ -240,44 +240,93 @@ function chooseNone(period)
 {
     switch(period){
         case 'period_one':
-            if($("#period_four_firstElement option[value='orchestra']").attr('selected')){
+            if($("#period_twoElement option[value='music_theatre']").attr('selected')){
+                $("#period_twoElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_four_firstElement option[value='music_theatre']").attr('selected') || $("#period_four_firstElement option[value='keyboard_workshop']").attr('selected') || $("#period_four_firstElement option[value='orchestra']").attr('selected')){
                 $("#period_four_firstElement").get(0).selectedIndex = 0;
             }
-            if($("#period_fiveElement option[value='orchestra']").attr('selected') || $("#period_fiveElement option[value='concert_band']").attr('selected')){
+            if($("#period_fiveElement option[value='music_theatre']").attr('selected') || $("#period_fiveElement option[value='keyboard_workshop']").attr('selected') || $("#period_fiveElement option[value='orchestra']").attr('selected')){
                 $("#period_fiveElement").get(0).selectedIndex = 0;
             }
-            break;
-        case 'period_two':
-            if($("#period_sixElement option[value='choir']").attr('selected')){
+            if($("#period_sixElement option[value='music_theatre']").attr('selected')){
                 $("#period_sixElement").get(0).selectedIndex = 0;
             }
             break;
-        case 'period_four':
-            if($("#period_oneElement option[value='orchestra']").attr('selected')){
+        case 'period_two':
+            if($("#period_oneElement option[value='music_theatre']").attr('selected')){
                 $("#period_oneElement").get(0).selectedIndex = 0;
             }
-            if($("#period_fiveElement option[value='orchestra']").attr('selected') || $("#period_fiveElement option[value='concert_band']").attr('selected')){
+            if($("#period_four_firstElement option[value='music_theatre']").attr('selected')){
+                $("#period_four_firstElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_fiveElement option[value='music_theatre']").attr('selected')){
                 $("#period_fiveElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_sixElement option[value='music_theatre']").attr('selected') || $("#period_sixElement option[value='choir']").attr('selected')){
+                $("#period_sixElement").get(0).selectedIndex = 0;
+            }
+            break;
+        case 'period_three':
+            if($("#period_four_firstElement option[value='guitar_workshop']").attr('selected')){
+                $("#period_four_firstElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_fiveElement option[value='harp_workshop']").attr('selected')){
+                $("#period_fiveElement").get(0).selectedIndex = 0;
+            }
+        case 'period_four':
+            if($("#period_oneElement option[value='music_theatre']").attr('selected') || $("#period_oneElement option[value='keyboard_workshop']").attr('selected') || $("#period_oneElement option[value='orchestra']").attr('selected')){
+                $("#period_oneElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_twoElement option[value='music_theatre']").attr('selected')){
+                $("#period_twoElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_three_firstElement option[value='guitar_workshop']").attr('selected')){
+                $("#period_three_firstElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_fiveElement option[value='music_theatre']").attr('selected') || $("#period_fiveElement option[value='keyboard_workshop']").attr('selected')){
+                $("#period_fiveElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_sixElement option[value='music_theatre']").attr('selected')){
+                $("#period_sixElement").get(0).selectedIndex = 0;
             }
             break;
         case 'period_five':
-            if($("#period_oneElement option[value='orchestra']").attr('selected') || $("#period_oneElement option[value='concert_band']").attr('selected')){
+            if($("#period_oneElement option[value='music_theatre']").attr('selected') || $("#period_oneElement option[value='keyboard_workshop']").attr('selected') || $("#period_oneElement option[value='concert_band']").attr('selected') || $("#period_oneElement option[value='mixed_media']").attr('selected')){
                 $("#period_oneElement").get(0).selectedIndex = 0;
             }
-            if($("#period_four_firstElement option[value='orchestra']").attr('selected')){
+            if($("#period_twoElement option[value='music_theatre']").attr('selected')){
+                $("#period_twoElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_three_firstElement option[value='harp_workshop']").attr('selected')){
+                $("#period_three_firstElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_four_firstElement option[value='music_theatre']").attr('selected') || $("#period_four_firstElement option[value='keyboard_workshop']").attr('selected')){
                 $("#period_four_firstElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_sixElement option[value='music_theatre']").attr('selected')){
+                $("#period_sixElement").get(0).selectedIndex = 0;
             }
             break;
         case 'period_six':
-            if($("#period_twoElement option[value='choir']").attr('selected')){
+            if($("#period_oneElement option[value='music_theatre']").attr('selected')){
+                $("#period_oneElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_twoElement option[value='music_theatre']").attr('selected') || $("#period_twoElement option[value='choir']").attr('selected')){
                 $("#period_twoElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_four_firstElement option[value='music_theatre']").attr('selected')){
+                $("#period_four_firstElement").get(0).selectedIndex = 0;
+            }
+            if($("#period_fiveElement option[value='music_theatre']").attr('selected')){
+                $("#period_fiveElement").get(0).selectedIndex = 0;
             }
             break;
     }
 }
 function chooseLessons()
 {
-    var id = $("input[@name=private_lessons]:checked").attr('id');
+    var id = $("input[name=private_lessons]:checked").attr('id');
 
     switch(id){
         case 'radio_private_lessons_0':
