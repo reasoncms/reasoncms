@@ -55,15 +55,16 @@ class DorianSHCampTwoForm extends FormStep
                     'display_name' => '&nbsp;',
                     'comments'=>'<div class="smallText comment">Instrument</div>',
                 ),
-                'brass_choir_participant' => array(
-			'type' => 'checkboxfirst',
-			'display_name' => 'Will you play in brass choir?',
-		),
-		'brass_choir_instrument' => array(
-                    'type' => 'text',
-                    'display_name' => '&nbsp;',
-                    'comments'=>'<div class="smallText comment">Instrument</div>',
-                ),
+// removed due to lack of participants, per jim buzza
+//                'brass_choir_participant' => array(
+//			'type' => 'checkboxfirst',
+//			'display_name' => 'Will you play in brass choir?',
+//		),
+//		'brass_choir_instrument' => array(
+//                    'type' => 'text',
+//                    'display_name' => '&nbsp;',
+//                    'comments'=>'<div class="smallText comment">Instrument</div>',
+//                ),
                 'workshops_header' => array(
                     'type' => 'comment',
                     'text' => '<h3>Workshops</h3>',
@@ -72,12 +73,14 @@ class DorianSHCampTwoForm extends FormStep
                     'type' => 'radio_no_sort',
                     'display_name' => '&nbsp;',
                     'options' => array(
-                        'Music Theatre' => 'Music Theatre Workshop',
-                        'Keyboard' => 'Keyboard Workshop',
-                        'Harp' => 'Harp Workshop',
+                        'music_theatre' => 'Music Theatre Workshop**',
+                        'keyboard_workshop' => 'Keyboard Workshop**',
+                        'harp_workshop' => 'Harp Workshop',
+                        'none' => 'none',
                     ),
-                    'comments' => 'Music Theater and Keyboard workshops require audition recordings postmarked
-                        by 5/17/11',
+                    'comments' => '**Music Theater and Keyboard workshops require audition recordings<br>
+                        postmarked by 5/17/11 or attach an mp3 to an e-mail to
+                        <a href="mailto:dorian@luther.edu?Subject=Dorian%20Audition">dorian@luther.edu</a>',
                 ),
                 'private_lessons_header' => array(
                      'type' => 'comment',
