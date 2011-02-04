@@ -89,7 +89,7 @@ function toggle_fields(trigger, element)
 }
 function chooseWorkshops()
 {
-    var id = $("input[@name=workshops]:checked").attr('id');
+    var id = $("input[name=workshops]:checked").attr('id');
 
     switch(id){
         case 'radio_workshops_0':
