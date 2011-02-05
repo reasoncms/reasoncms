@@ -48,6 +48,7 @@ class miniEventsModule extends EventsModule
 	function run()
 	{
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
+		|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_live_at_luther'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa')
 		{
 			echo '<section class="events" role="group">'."\n";
@@ -70,6 +71,7 @@ class miniEventsModule extends EventsModule
 		echo '</ol>'."\n";
 		
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_live_at_luther'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa')
 		{
 			echo '</section> <!-- class="events" role="group" -->'."\n";

@@ -353,6 +353,12 @@ $GLOBALS['_reason_page_types_local'] = array(
             'sidebar' => '',
          	'post_sidebar' => 'main_blurb',         
          ),
+         'luther2010_live_at_luther' => array(
+			'imagetop' => 'luther_carousel',
+         	'content_blurb' => '',
+            'sidebar' => 'luther_events_mini',
+         	'post_sidebar' => '',         
+         ),
 		'luther_news_page' => array(
 			'main_post' => 'publication',
             		'sub_nav_3' => 'quote',
