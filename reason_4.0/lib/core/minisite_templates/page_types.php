@@ -1254,7 +1254,7 @@
 		'show_children_no_nav_hide_non_nav' => array(
 			'main_post' => array(
 				'module'=>'children',
-				'show_only_pages_in_nva' => true,
+				'show_only_pages_in_nav' => true,
 			),
 			'navigation' => '',
 			'sub_nav_2' => '',
