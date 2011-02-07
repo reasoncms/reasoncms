@@ -1251,6 +1251,16 @@
 			'sub_nav' => '',
 			'post_foot' => 'textonly_toggle',
 		),
+		'show_children_no_nav_hide_non_nav' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'show_only_pages_in_nva' => true,
+			),
+			'navigation' => '',
+			'sub_nav_2' => '',
+			'sub_nav' => '',
+			'post_foot' => 'textonly_toggle'
+		),
 		'show_children_no_nav_no_title' => array(
 			'main_post' => 'children',
 			'main_head' => '',
