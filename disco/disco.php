@@ -375,6 +375,12 @@
 		/**#@-*/
 		
 		/**
+		* Element names that may not be used because Disco needs them
+		* @var array
+		*/		
+		var $_reserved = array('submitted');
+		
+		/**
 		 * Stores the callbacks registered on a Disco object
 		 * @var array Keys are process points, and values are arrays of php callbacks
 		 * @access private
@@ -1558,6 +1564,16 @@
 				// return false;
 			}
 			
+			if ($this->_is_element($element_name))
+			{
+				trigger_error('An element named "'.$element_name.'" already exists on this form and will be overwritten.');
+			}
+
+			if (in_array($element_name, $this->_reserved))
+			{
+				trigger_error('The element name "'.$element_name.'" is reserved for internal Disco use.');
+			}
+
 			// convert the type to the corresponding plasmature type, defaulting to text
 			if ( empty( $type ) )
 				$type = 'textType';
