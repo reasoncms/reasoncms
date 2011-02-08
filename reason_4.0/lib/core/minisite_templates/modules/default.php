@@ -25,6 +25,7 @@
 	class DefaultMinisiteModule
 	{
 		var $cleanup_rules = array();
+	
 		/**
 		 * the cleaned up array of request variables
 		 * @var array
@@ -45,6 +46,11 @@
 		 * @var string
 		 */
 		var $identifier;
+		/**
+		 * api that the module is running or false if no api is running - assigned by the template
+		 * @var mixed string or false if no active api
+		 */
+		var $api;
 		/**
 		 * current page entity (this is the cur_page object from the pages collection from the template
 		 * @var object (entity)
@@ -145,6 +151,14 @@
 		 *       instantiate modules just call something like set_site, set_page, etc?
 		 *       This seems unnecessarily dangerous and complex.
 		 */
+		
+		/**
+		 * We need this because late static binding is not supported until PHP 5.3
+		 *
+		 * @todo eliminate me when we require PHP 5.3 or above.
+		 */
+		protected static $classname = NULL;
+		
 		function prep_args( $args = array() ) // {{{
 		{
 			// only run this method once.  for compatibility, it is called by init().
@@ -209,6 +223,108 @@
 				}
 			}
 		} // }}}
+		
+		/**
+		 * Return an array of APIs supported by the class tree.
+		 *
+		 * We require class_name and use reflection for now since only php 5.3 and above supports late static binding.
+		 */
+		static final function get_supported_apis($class_name)
+		{
+			static $supported_apis;
+			if (empty($class_name) || !class_exists($class_name))
+			{
+				trigger_error('get_supported_apis must be provided the name of a defined class.');
+			}
+			elseif (!isset($supported_apis[$class_name]))
+			{
+				self::$classname = $class_name; // providing context for add_api
+				while ($class = (isset($class)) ? $class->getParentClass() : new ReflectionClass($class_name))
+				{
+					if ($class->getMethod('setup_supported_apis')->getDeclaringClass()->getName() == $class->getName())
+					{
+						$class->getMethod('setup_supported_apis')->invoke(NULL);
+					}
+				}
+				$supported_apis[$class_name] = self::_api_helper('get');
+				self::$classname = NULL;
+			}			
+			return $supported_apis[$class_name];
+		}
+		
+		/**
+		 * _api_helper is used to get and set arrays of ReasonModuleAPI objects for a module.
+		 *
+		 * Since we cannot rely on late static binding, we utilize the static classname if available.
+		 *
+		 * @param string action - should be "set" or "get"
+		 * @param string name - name of api
+		 * @param object api - ReasonModuleAPI object
+		 */
+		static private final function _api_helper($action = 'set', $name = NULL, $api = NULL)
+		{
+			static $apis;
+			$context = (isset(self::$classname)) ? self::$classname : __CLASS__;
+			if ($action == 'get')
+			{
+				return $apis[$context];
+			}
+			elseif ($action == 'set' && !empty($name) && !empty($api))
+			{
+				$apis[$context][$name] = $api;
+			}
+		}
+		
+		/**
+		 * Modules should use this method to add any APIs they support as follows:
+		 *
+		 * - Instantiate the API(s)
+		 * - Call self::add_api with the API name and API object as parameters.
+		 *
+		 * Example:
+		 * 
+		 * <code>
+		 * $standalone_api = new ReasonModuleAPI('html');
+		 * self::add_api('standalone', $standalone_api);
+		 * </code>
+		 */
+		static function setup_supported_apis()
+		{
+			self::add_api('standalone', new ReasonModuleAPI('html'));
+		}
+		
+		/**
+		 * Can I reliable find out who called me without late static binding - no ...
+		 */
+		static protected final function add_api($api_name, $api)
+		{
+			self::_api_helper('set', $api_name, $api);
+		}	
+		
+		/**
+		 * Return a string suitable for inclusion in a class declaration - the string includes:
+		 *
+		 * - module_api-moduleapi strings for each supported api
+		 * - module_identifier-identifier string
+		 */
+		final function get_api_class_string()
+		{
+			$module_identifier = 'module_identifier-' . $this->identifier;
+			$supported_apis = $this->get_supported_apis(get_class($this));
+			$api_string = (!empty($supported_apis)) ? "module_api-" . implode(" module_api-", array_keys($supported_apis)) : '';
+			$api_class_string = (!empty($api_string)) ? $module_identifier . " " . $api_string : $module_identifier;
+			return htmlspecialchars($api_class_string,ENT_QUOTES,'UTF-8');
+		}
+		
+		/**
+		 * Return the active api or false
+		 * @return mixed string or false
+		 */
+		function get_api()
+		{
+			return $this->api;
+		}
+		
 		/**
 		 * Set a reference to the current minisite navigation object
 		 *
@@ -423,6 +539,24 @@
 		{
 			echo 'I am the default minisite frontend module<br />';
 		} // }}}
+		
+		/**
+		 * We implement an api "standalone" which just runs the run method and outputs the content.
+		 */
+		function run_api()
+		{
+			$api = $this->get_api();
+			if ($api->get_name() == 'standalone')
+			{
+				ob_start();
+				$this->run();
+				$content = ob_get_contents();
+				ob_end_clean();
+				$api->set_content($content);
+			}
+			$api->run();
+		}
+		
 		/**
 		 * displays the editable version of the page.
 		 *
