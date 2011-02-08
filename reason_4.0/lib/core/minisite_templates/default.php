@@ -32,6 +32,7 @@ reason_include_once( 'minisite_templates/nav_classes/default.php' );
 reason_include_once( 'classes/head_items.php' );
 reason_include_once( 'classes/page_access.php' );
 reason_include_once( 'classes/crumbs.php' );
+reason_include_once( 'classes/api/module_api.php' );
 include_once( CARL_UTIL_INC . 'dev/timer.php' );
 
 /**
@@ -44,7 +45,7 @@ include_once( CARL_UTIL_INC . 'dev/timer.php' );
  *
  * 2. Producing and assembling the HTML of the page. Note that modules typically handle their own
  *    markup generation, so the template is only responsible for the markup *outside* the modules'
- *    output. Altering the oputput of modules can be done in some cases by extending the module,
+ *    output. Altering the output of modules can be done in some cases by extending the module,
  *    or in more advanced cases by using a view/markup_generation/templating system implemented by
  *    the module itself. This can vary from module-to-module.
  *
@@ -332,11 +333,10 @@ class MinisiteTemplate
 	 */
 	function initialize( $site_id, $page_id = '' ) // {{{
 	{
-		
 		$this->sess =& get_reason_session();
 		if( $this->sess->exists() )
 		{
-			// if a session exists and we're on a secure page, pop over to the secure
+			// if a session exists and the server supports https, pop over to the secure
 			// site so we have access to the secure session information
 			force_secure_if_available();
 			if(!$this->sess->has_started())
@@ -455,7 +455,6 @@ class MinisiteTemplate
 			}
 			else
 			{
-				
 				header('Location: '.REASON_LOGIN_URL.'?dest_page='.urlencode(get_current_url()));
 				die();
 			}
@@ -573,7 +572,45 @@ class MinisiteTemplate
 		$this->show_body();
 		$this->end_page();
 	} // }}}
-
+	
+	/**
+	 * Run by generate_page.php if module_api is defined in the request.
+	 *
+	 * What if nothing has content?
+	 */
+	function run_api()
+	{
+		if (!empty($this->section_to_module))
+		{	
+			foreach ($this->section_to_module as $section => $module)
+			{
+				$module =& $this->_get_module( $section );
+				$module->run_api();
+			}
+		}
+		else // LETS DO A 404 with text/html
+		{
+			$api = new ReasonAPI('html');
+			$api->run();
+		}
+	}
+	
+	/**
+	 * @return mixed string requested_api name or false
+	 */
+	function get_requested_api()
+	{
+		return (!empty($this->requested_api)) ? $this->requested_api : false;
+	}
+	
+	/**
+	 * @return mixed string requested_module_identified name or false
+	 */
+	function get_requested_identifier()
+	{
+		return (!empty($this->requested_identifier)) ? $this->requested_identifier : false;
+	}
+	
 	function change_module( $page_type, $section, $new_module ) // {{{
 	// allows runtime modification of module to use for a given
 	// type-section pair.
@@ -591,166 +628,165 @@ class MinisiteTemplate
 	{
 		trigger_error('alter_modules() is deprecated. Please use alter_page_type() instead');
 	} // }}}
+	
+	/**
+	 * @deprecated
+	 */
 	function alter_page_type($page_type)
 	{
 		return $page_type;
 	}
+	
+	/**
+	 * If the instantiated module extends alter_page_type - do our legacy work and throw an error.
+	 *
+	 * @todo We use reflection here and should make sure performance is okay... it might be possible without reflection.
+	 * @todo make sure equivalency check of page_type_oldformat_altered and page_type_oldformat is correct.
+	 */
+	final protected function _legacy_alter_page_type($page_type, $page_type_name)
+	{
+		// if my instance has parents
+		if ($parents = class_parents($this))
+		{
+			$r = new ReflectionClass(get_class($this));
+			$alter_page_type_method = $r->getMethod('alter_page_type');
+			if ($alter_page_type_method->class != array_pop($parents))
+			{
+				// we need to call alter_page_type with the old style array and trigger a warning
+				//trigger_error('The template object ' . $alter_page_type_method->class . ' extends alter_page_type, which is deprecated. Use reason_alter_page_type instead.');
+				$page_type_oldformat = $page_type->export("reasonPTArray_var");
+				$page_type_oldformat_altered = $this->alter_page_type($page_type_oldformat);
+				if ($page_type_oldformat_altered != $page_type_oldformat)
+				{
+					$rpt =& get_reason_page_types();
+					$page_type = $rpt->get_page_type($page_type_name, $page_type_oldformat_altered);
+				};
+			}
+		}
+		return $page_type;
+	}
+
+	/**
+	 * Hook in load modules which allows modification of the page_type object.
+	 *
+	 * This is often a bad idea because a page type ought to work consistently across templates.
+	 *
+	 * @param object reference to the page type object
+	 */
+	function alter_reason_page_type(&$page_type)
+	{
+	}
+	
 	function additional_args( &$args ) // {{{
 	//if a module needs additional args
 	{
 	} // }}}
+	
 	function load_modules() // {{{
 	{
-		//for page_types variables, defines the setup of the page
-		reason_include_once( 'minisite_templates/page_types.php' );
+		reason_include_once( 'classes/page_types.php');
+		$requested_page_type_name = $this->cur_page->get_value( 'custom_page' );
 		
-		if( $this->cur_page->get_value( 'custom_page' ) )
-			$type = $this->cur_page->get_value( 'custom_page' );
-		else
-			$type = 'default';
-		
-		// get the section to module relationships
-		// note:: i merge the default set with the chosen set to simplify
-		// changing defaults.  So, in the page_types file included above,
-		// you only have to change what you want to change.  All other
-		// settings are maintained.
-		
-		// this code is a little muddled because of the structure of the page_types array.  as of 11/04, the page_types
-		// array can either be a simple list of section to module name or it can be more complex with extra arguments
-		// for the module itself.  hence the checks to see if the $module variable is an array or not.  if it is an
-		// array, the page_type MUST have a key within that second array with the name 'module' and a value which
-		// corresponds to the name of the module.
-		// $page_type = array_merge( $GLOBALS['_reason_page_types'][ 'default' ], $GLOBALS['_reason_page_types'][ $type ] );
-		// We used the code below instead of array_merge to allow the page_type definition to control the initialization
-		// order of the modules.
-		$page_type = $GLOBALS['_reason_page_types'][ 'default' ];
-		if (isset( $GLOBALS['_reason_page_types'][ $type ] ) && is_array( $GLOBALS['_reason_page_types'][ $type ] ) )
+		// get the fully composed page type - make sure to support legacy alter_page_type operations
+		$rpt =& get_reason_page_types();
+		$page_type = ($requested_page_type = $rpt->get_page_type($requested_page_type_name)) ? $requested_page_type : $rpt->get_page_type();
+		$page_type = $this->_legacy_alter_page_type($page_type, $requested_page_type_name);
+		$this->alter_reason_page_type($page_type);
+
+		// if an api was requested lets identify the region to run
+		if ($requested_api = $this->get_requested_api())
 		{
-			foreach ( $GLOBALS['_reason_page_types'][ $type ] as $key => $value )
+			$module_api = ReasonModuleAPI::get_requested_api($page_type, $requested_api, $this->get_requested_identifier());
+			if ($module_api) $this->section_to_module[$module_api['module_region']] = $module_api['module_name'];
+			else $this->section_to_module = null;
+		}
+		else
+		{
+			foreach ($page_type->get_region_names() as $region)
 			{
-				if (isset( $page_type[$key] ) )
-					unset($page_type[$key]);
-				$page_type[$key] = $value;
+				$region_info = $page_type->get_region($region);
+				$module_name = $region_info['module_name'];
+				$module_filename = $region_info['module_filename'];
+				if ($module_filename && reason_file_exists($module_filename)) reason_include_once( $module_filename );
+				$this->section_to_module[$region] = $module_name;
 			}
 		}
-		else
+		
+		if (!empty($this->section_to_module))
 		{
-			trigger_error('Page type specified ('.htmlspecialchars($type,ENT_QUOTES,'UTF-8').') is not listed in the page_types.php file. You should either reinstate or change the page type.');
-		}
-		
-		$page_type = $this->alter_page_type($page_type);
-		
-		foreach( $page_type AS $sec => $module )
-		{
-			if( is_array( $module ) )
-				$module_name = $module[ 'module' ];
-			else
-				$module_name = $module;
-			$this->section_to_module[ $sec ] = $module_name;
-		}
-		
-		$prepped_request = conditional_stripslashes($_REQUEST);
-		
-		foreach( $this->section_to_module AS $sec => $module )
-		{
-			if( !empty( $module ) )
+			foreach( $this->section_to_module AS $region => $module_name )
 			{
-				$module_name = $module;
-				
-				// collect params from page types
-				if( is_array( $page_type[ $sec ] ) )
+				if( !empty( $module_name ) )
 				{
-					$params = $page_type[ $sec ];
-					unset( $params[ 'module' ] );
+					$region_info = $page_type->get_region($region);				
+					$params = ($region_info['module_params'] != null) ? $region_info['module_params'] : array();
+					$module_class = (!empty($GLOBALS[ '_module_class_names' ][ $module_name ])) ? $GLOBALS[ '_module_class_names' ][ $module_name ] : '';
+					if( !empty( $module_class ) )
+					{
+						$this->_modules[ $region ] = new $module_class;
+						$prepped_request = conditional_stripslashes($_REQUEST);
+						$args = array();
+						// set up a reference instead of a copy
+						// dh - I really want to get rid of this.  For now, it stays.  However, I'm adding a number
+						// of other parameters that a module will take by default so that we can rely on some important
+						// data coming in.  9/15/04
+						$args[ 'parent' ] =& $this; // pass this object to the module
+						$args[ 'page_id' ] = $this->page_id;
+						$args[ 'site_id' ] = $this->site_id;
+						$args[ 'cur_page' ] = $this->cur_page;
+						// we set the module identifier as a hash of the section - should be unique
+						$args[ 'identifier' ] = ReasonModuleAPI::get_identifier_for_module($page_type, $region);
+						//$args[ 'nav_pages' ] =& $this->pages;
+						$args[ 'textonly' ] = $this->textonly;
+						$args[ 'api' ] = (!empty($module_api)) ? $module_api['api'] : false;
+						
+						// this is used by a few templates to add some arguments.  leaving it in for backwards
+						// compatibility.  i believe that any usage of this can be done with page type parameteres now.
+						$this->additional_args( $args );
+						
+						// localizes the args array inside the module class.  this is basically another layer of backwards
+						// compatibility with old modules.
+						$this->_modules[ $region ]->prep_args( $args );
+						
+						// Pass a reference to the pages object into the module (so the module doesn't have to use the
+						// deprecated reference to the template)
+						$this->_modules[ $region ]->set_page_nav( $this->pages );
+						
+						// Pass a reference to the head items object into the module (so the module doesn't have to use the
+						// deprecated reference to the template)
+						$this->_modules[ $region ]->set_head_items( $this->head_items );
+						
+						// Pass a reference to the head items object into the module (so the module doesn't have to use the
+						// deprecated reference to the template)
+	
+						$breadcrumbs_obj =& $this->_get_crumbs_object();
+						$this->_modules[ $region ]->set_crumbs( $breadcrumbs_obj );
+						
+						// send and check parameters gathered above from the page_types
+						$this->_modules[ $region ]->handle_params( $params );
+						
+						// hook to run code before grabbing and sanitizing the _REQUEST.  this is important for something
+						// that might not know what variables will be coming through until a Disco class or some such thing
+						// has been loaded.
+						$this->_modules[ $region ]->pre_request_cleanup_init();
+						
+						// it's a little ugly, but i'm setting the request variable directly here.  other method used to
+						// do this, but i wanted to have a few more hooks above that would allow a module to do some work
+						// before get_cleanup_rules was called.  obviously, the request variables are unavailable to those
+						// modules.
+						$this->_modules[ $region ]->request = $this->clean_vars( $prepped_request, $this->_modules[$region]->get_cleanup_rules() );
+						
+						// init takes $args as a backwards compatibility feature.  otherwise, everything should be handled
+						// in prep_args
+						if ($this->should_benchmark()) $this->benchmark_start('init module ' . $module_name);
+						$this->_modules[ $region ]->init( $args );
+						if ($this->should_benchmark()) $this->benchmark_stop('init module ' . $module_name);
+					}
+					else
+					{
+						trigger_error( 'Badly formatted module ('.$module_name.') - $module_class not set ' );
+					}
 				}
-				else
-					$params = array();
-					
-				$module_class = '';
-				
-				// this is where the template automatically loads up the PHP files with the module classes.  The 'name'
-				// of a module determines the location of the file in the modules/ directory.  To make sure we're not
-				// doing something insane, we make sure the file exists first before include()ing it.  Additionally, if
-				// a specific file is not found, it looks in a directory of the module name to see if there is a
-				// module.php file in that directory.  This serves to collect a group of files that a module might use
-				// into one directory.
-
-				if (reason_file_exists( 'minisite_templates/modules/'.$module_name.'.php' ))
-				{
-					reason_include_once( 'minisite_templates/modules/'.$module_name.'.php' );
-				}
-				elseif (reason_file_exists( 'minisite_templates/modules/'.$module_name.'/module.php' ))
-				{
-					reason_include_once( 'minisite_templates/modules/'.$module_name.'/module.php' );
-				}
-				else
-				{
-					trigger_error('The minisite module class file for "'.$module_name.'" cannot be found',WARNING);
-				}
-
-				// grab the class name as defined by the include file
-				$module_class = $GLOBALS[ '_module_class_names' ][ $module_name ];
-				
-				if( !empty( $module_class ) )
-				{
-					$this->_modules[ $sec ] = new $module_class;
-					$args = array();
-					// set up a reference instead of a copy
-					// dh - I really want to get rid of this.  For now, it stays.  However, I'm adding a number
-					// of other parameters that a module will take by default so that we can rely on some important
-					// data coming in.  9/15/04
-					$args[ 'parent' ] =& $this; // pass this object to the module
-					$args[ 'page_id' ] = $this->page_id;
-					$args[ 'site_id' ] = $this->site_id;
-					$args[ 'cur_page' ] = $this->cur_page;
-					// we set the module identifier as a hash of the section - should be unique
-					$args[ 'identifier' ] = md5($sec);
-					//$args[ 'nav_pages' ] =& $this->pages;
-					$args[ 'textonly' ] = $this->textonly;
-					
-					// this is used by a few templates to add some arguments.  leaving it in for backwards
-					// compatibility.  i believe that any usage of this can be done with page type parameteres now.
-					$this->additional_args( $args );
-					
-					// localizes the args array inside the module class.  this is basically another layer of backwards
-					// compatibility with old modules.
-					$this->_modules[ $sec ]->prep_args( $args );
-					
-					// Pass a reference to the pages object into the module (so the module doesn't have to use the
-					// deprecated reference to the template)
-					$this->_modules[ $sec ]->set_page_nav( $this->pages );
-					
-					// Pass a reference to the head items object into the module (so the module doesn't have to use the
-					// deprecated reference to the template)
-					$this->_modules[ $sec ]->set_head_items( $this->head_items );
-					
-					// Pass a reference to the head items object into the module (so the module doesn't have to use the
-					// deprecated reference to the template)
-					$breadcrumbs_obj =& $this->_get_crumbs_object();
-					$this->_modules[ $sec ]->set_crumbs( $breadcrumbs_obj );
-					
-					// send and check parameters gathered above from the page_types
-					$this->_modules[ $sec ]->handle_params( $params );
-					
-					// hook to run code before grabbing and sanitizing the _REQUEST.  this is important for something
-					// that might not know what variables will be coming through until a Disco class or some such thing
-					// has been loaded.
-					$this->_modules[ $sec ]->pre_request_cleanup_init();
-					
-					// it's a little ugly, but i'm setting the request variable directly here.  other method used to
-					// do this, but i wanted to have a few more hooks above that would allow a module to do some work
-					// before get_cleanup_rules was called.  obviously, the request variables are unavailable to those
-					// modules.
-					$this->_modules[ $sec ]->request = $this->clean_vars( $prepped_request, $this->_modules[$sec]->get_cleanup_rules() );
-					
-					// init takes $args as a backwards compatibility feature.  otherwise, everything should be handled
-					// in prep_args
-					if ($this->should_benchmark()) $this->benchmark_start('init module ' . $module_name);
-					$this->_modules[ $sec ]->init( $args );
-					if ($this->should_benchmark()) $this->benchmark_stop('init module ' . $module_name);
-				}
-				else
-					trigger_error( 'Badly formatted module ('.$module_name.') - $module_class not set ' );
 			}
 		}
 	} // }}}
@@ -823,9 +859,7 @@ class MinisiteTemplate
 	
 	function start_page() // {{{
 	{
-	
 		$this->get_title();
-		
 		// start page
 		echo $this->get_doctype()."\n";
 		echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
@@ -1643,7 +1677,7 @@ class MinisiteTemplate
 		if (!isset($this->_should_benchmark))
 		{
 			$benchmarks_requested = (isset($_REQUEST['reason_benchmark']) && ($_REQUEST['reason_benchmark'] == 1));
-			$this->_should_benchmark = ($benchmarks_requested && is_developer());
+			$this->_should_benchmark = ($benchmarks_requested && is_developer() && !$this->get_requested_api());
 		}
 		return $this->_should_benchmark;
 	}
