@@ -190,8 +190,8 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 	//  - ** future ** if a module tells us not to use caching
 	//-----------------------------------------------------------
 	$sess = get_reason_session();
-	//$requested_api = (!empty($_REQUEST['module_api']) && check_against_regexp($_REQUEST['module_api'], array('safechars'))) ? $_REQUEST['module_api'] : false;
-	//$requested_identifier = (!empty($_REQUEST['module_identifier']) && check_against_regexp($_REQUEST['module_identifier'], array('safechars'))) ? $_REQUEST['module_identifier'] : false;
+	$requested_api = (!empty($_REQUEST['module_api']) && check_against_regexp($_REQUEST['module_api'], array('safechars'))) ? $_REQUEST['module_api'] : false;
+	$requested_identifier = (!empty($_REQUEST['module_identifier']) && check_against_regexp($_REQUEST['module_identifier'], array('safechars'))) ? $_REQUEST['module_identifier'] : false;
 
 	if( is_developer() && (empty($_REQUEST['test_cache'])) )
 	{
@@ -203,11 +203,11 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 		$use_cache = false;
 		$no_cache_reasons[] = '_POST';
 	}
-	//if ($requested_api)
-	//{
-	//	$use_cache = false;
-	//	$no_cache_reasons[] = 'api_request';
-	//}
+	if ($requested_api)
+	{
+		$use_cache = false;
+		$no_cache_reasons[] = 'api_request';
+	}
 	if ( $sess->exists() )
 	{
 		$use_cache = false;
@@ -270,16 +270,14 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 			$minisite_template = $GLOBALS[ '_minisite_template_class_names' ][ $filename ];
 		}
 		
-		// API stuff is commented out - not quite ready to go.
 		$t = new $minisite_template;
-		//if ($requested_api) $t->set_requested_api($requested_api);
-		//if ($requested_identifier) $t->set_requested_identifier($requested_identifier);
+		if ($requested_api) $t->requested_api = $requested_api;
+		if ($requested_identifier) $t->requested_identifier = $requested_identifier;
 		$t->template_id = $template->id();
 		$t->set_theme( $theme );
 		$t->initialize($site_id,$page_id);
-		//if ($requested_api) $t->run_api();
-		//else $t->run();
-		$t->run();
+		if ($requested_api && method_exists($t, 'run_api')) $t->run_api();
+		else $t->run();
 		$page = ob_get_contents();
 		ob_end_clean();
 		// if we are a developer lets turn back on the error_handler on screen output
@@ -302,8 +300,7 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 		$cache->set_page_generation_time($page_gen_time);
 		$cache->store( get_current_url(), $page );
 	}
-	//if( is_developer() && empty($_REQUEST['module_api']))
-	if( is_developer() )
+	if( is_developer() && !$requested_api )
 	{
 		$str = $page_gen_time.' ms | ';
 		if( $use_cache )
@@ -329,7 +326,6 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 		}
 		echo '</div>';
 	}
-	//if (empty($_REQUEST['module_api'])) reason_log_page_generation_time($page_gen_time);
-	reason_log_page_generation_time($page_gen_time);
+	if (!$requested_api) reason_log_page_generation_time($page_gen_time);
 }
 ?>
