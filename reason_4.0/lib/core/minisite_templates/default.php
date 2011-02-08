@@ -653,7 +653,7 @@ class MinisiteTemplate
 			if ($alter_page_type_method->class != array_pop($parents))
 			{
 				// we need to call alter_page_type with the old style array and trigger a warning
-				//trigger_error('The template object ' . $alter_page_type_method->class . ' extends alter_page_type, which is deprecated. Use reason_alter_page_type instead.');
+				//trigger_error('The template object ' . $alter_page_type_method->class . ' extends alter_page_type, which is deprecated. Use alter_reason_page_type instead.');
 				$page_type_oldformat = $page_type->export("reasonPTArray_var");
 				$page_type_oldformat_altered = $this->alter_page_type($page_type_oldformat);
 				if ($page_type_oldformat_altered != $page_type_oldformat)
@@ -673,7 +673,7 @@ class MinisiteTemplate
 	 *
 	 * @param object reference to the page type object
 	 */
-	function alter_reason_page_type(&$page_type)
+	function alter_reason_page_type($page_type)
 	{
 	}
 	
@@ -685,7 +685,7 @@ class MinisiteTemplate
 	function load_modules() // {{{
 	{
 		reason_include_once( 'classes/page_types.php');
-		$requested_page_type_name = $this->cur_page->get_value( 'custom_page' );
+		$requested_page_type_name = ($this->cur_page->get_value('custom_page') !== FALSE) ? $this->cur_page->get_value('custom_page') : null;
 		
 		// get the fully composed page type - make sure to support legacy alter_page_type operations
 		$rpt =& get_reason_page_types();
