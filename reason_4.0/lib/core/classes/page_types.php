@@ -608,7 +608,7 @@ class ReasonPageTypes
 	 * Used in {@link ReasonPageTypes::get_page_type() get_page_type()}.
 	 * 
 	 * @param string $module_name The name of the module whose filename will be determined.
-	 * @return mixed the filename of $module_name or null.
+	 * @return mixed the filename of $module_name or false if it cannot be found.
 	 */
 	function resolve_filename($module_name)
 	{
@@ -627,28 +627,35 @@ class ReasonPageTypes
 				else
 				{
 					trigger_error('The minisite module class file for "'.$module_name.'" cannot be found',WARNING);
-					$cachedModules[$module_name] = null;
+					$cachedModules[$module_name] = false;
 				}
 			}
 			return $cachedModules[$module_name];
-		} else
+		}
+		else
 		{
-			return null;
+			return false;
 		}
 	}
 	
-	
 	/** 
-	 * Returns a ReasonPageType object of the given $page_type_name. 
+	 * Returns a ReasonPageType object of the given $page_type_name.
+	 *
 	 * If no $page_type_name is given, returns the 'default' page type.
-	 * 
-	 * If only given a name, looks it up as usual in page_types.php array.
+	 *
+	 * If given no argument, returns the default page type - uses caching.
 	 * <code>
 	 * $rpts =& get_reason_page_types();
-	 * $pt = $rpts->get_page_type('default');
+	 * $pt = $rpts->get_page_type();
+	 * </code>
+	 *
+	 * If only given a name, looks it up as usual in page_types.php array - uses caching.
+	 * <code>
+	 * $rpts =& get_reason_page_types();
+	 * $pt = $rpts->get_page_type('blurb');
 	 * </code>
 	 * 
-	 * If given a name and an array, it ignores the cache and makes a new PT with name, array as def. 
+	 * If given a name and an array, make a new page type with name and use the array as definition. Caching is not available.  
 	 * <code>
 	 * $pageTypeArray = array(
 	 * 	'main_post' => 'publication',
@@ -660,90 +667,139 @@ class ReasonPageTypes
 	 * $rpts =& get_reason_page_types();
 	 * $pt = $rpts->get_page_type('monkey_page_type', $pageTypeArray);
 	 * </code>
-	 * 
+	 *
+	 * If asked for a named page type that does not exist, will return false
+	 *
 	 * @param string $page_type_name The name of the page type you want to get from the global.
-	 * @param array $old_type_array An old-style array containing the definition for the page type to be created. 
-	 * @return object ReasonPageType object
+	 * @param array $dynamic_page_type_array An array containing a region to section mapping. 
+	 * @return mixed ReasonPageType object or false if the page type requested does not exist
 	 * @todo add a caching scheme
 	 */
 
-	function get_page_type($page_type_name = null, $old_type_array = null)
+	function get_page_type($page_type_name = null, $dynamic_page_type_array = null, $use_cache = null)
 	{
-		$page_type_name = (!empty($page_type_name)) ? $page_type_name : 'default';
-		// static $page_type_definitions;
-		$pt = new ReasonPageType;
-		$pt->set_name($page_type_name);
-
-		if ($old_type_array == null)
+		//lets do some validation and setup defaults
+		static $page_type_definitions;
+		if (($page_type_name !== null) && (!is_string($page_type_name) || (is_string($page_type_name) && empty($page_type_name))))
 		{
-			reason_include_once('minisite_templates/page_types.php');
-			if (!isset($page_type_definitions[$page_type_name]))
+			trigger_error('The page_type_name parameter cannot be used. When provided, it must be a non empty string - ');
+			$page_type_name = null;
+		}
+		if (($dynamic_page_type_array !== null) && (!is_array($dynamic_page_type_array) || (is_array($dynamic_page_type_array) && (array_values($dynamic_page_type_array) === $dynamic_page_type_array))))
+		{
+			trigger_error('The dynamic_page_type_array parameter cannot be used. When provided, it must be a non empty associative array.');
+			$dynamic_page_type_array = null;
+		}
+		if (($use_cache !== null) && (!is_bool($use_cache)))
+		{
+			trigger_error('The use_cache parameter cannot be used. When provided, must be a boolean.');
+			$use_cache = null;
+		}
+		elseif ( ($use_cache === true) && is_array($dynamic_page_type_array) )
+		{
+			trigger_error('The use_cache parameter is set to true, but will be ignored - virtual page types cannot be cached.');
+		}
+		
+		$page_type_name = ($page_type_name !== null) ? $page_type_name : 'default';
+		$dynamic_page_type_array = ($dynamic_page_type_array !== null) ? $dynamic_page_type_array : false;
+		
+		// if a cache default provided, use it as long as we haven't also specified a virtual page type.
+		$use_cache = (($use_cache !== null) && !$dynamic_page_type_array ) ? $use_cache : !is_array($dynamic_page_type_array);
+	
+		// we always save to cache unless this is dynamic.
+		$save_to_cache = (!$dynamic_page_type_array) ? true : false;
+		
+		if ($use_cache && isset($page_type_definitions[$page_type_name]))
+		{
+			$pt = $page_type_definitions[$page_type_name];
+		}
+		else // we create a new ReasonPageType
+		{
+			$pt = new ReasonPageType;
+			$pt->set_name($page_type_name);
+			$page_type_array = (!$dynamic_page_type_array) ? $this->_get_page_type_array($page_type_name) : $dynamic_page_type_array;
+			if ($page_type_array)
 			{
-				$reason_page_types = $GLOBALS['_reason_page_types'];
-				if (isset($GLOBALS['_reason_page_types_local'][$page_type_name]))
+				foreach ($page_type_array as $region_name => $module)
 				{
-					$pt->set_location("local");
-				} else
-				{
-					$pt->set_location("core");
-				}
-				if (isset($reason_page_types[$page_type_name]))
-				{
-					if ($page_type_name != 'default')
+					if (!is_array($module))
 					{
-						$default_page_type = $reason_page_types['default'];
-						$specific_page_type = $reason_page_types[$page_type_name];
-						$merged_page_type = $default_page_type;
-						foreach ($specific_page_type as $region => $info) {
-							if (isset($merged_page_type[$region]))
-								unset($merged_page_type[$region]);
-							$merged_page_type[$region] = $info;
+						if (empty($module))
+						{
+							$module_name = NULL;
+							$module_filename = '';
 						}
-					} else {
-						$merged_page_type = $reason_page_types['default'];
+						else
+						{
+							$module_name = $module;
+							$module_filename = $this->resolve_filename($module);
+						}
+						$pt->set_region($region_name, $module_name, $module_filename, null);
 					}
-					$array_to_parse = $merged_page_type;
-				}  else {
-					trigger_error('Page type specified ('.htmlspecialchars($page_type_name,ENT_QUOTES,'UTF-8').') does not exist. You should either reinstate or change the page type.');
-					return false;
+					elseif (is_array($module))
+					{
+						$module_name = $module['module'];
+						$module_filename = $this->resolve_filename($module['module']);
+						unset($module['module']);
+						$module_params = $module;
+						$pt->set_region($region_name, $module_name, $module_filename, $module_params);
+						}
+					if ($module_name && !$dynamic_page_type_array && $this->_is_module_deprecated($module_name)) $pt->set_deprecated(true);
 				}
-			} else
-			{
-				return $page_type_definitions[$page_type_name];
+				if (!$dynamic_page_type_array && ($location = $this->_get_page_type_location($page_type_name))) $pt->set_location($location);
 			}
-		} else
-		{
-			$array_to_parse = $old_type_array;
+			else $pt = false; // if there is no array dynamic or lookup up we set $pt to false;
+			if ($save_to_cache) $page_type_definitions[$page_type_name] = $pt;
 		}
-		foreach ($array_to_parse as $region_name => $module)
-		{
-			if (!is_array($module)) {
-				if (empty($module))
-				{
-					$module_name = NULL;
-					$module_filename = '';
-				} else {
-					$module_name = $module;
-					$module_filename = $this->resolve_filename($module);
-				}
-				$pt->set_region($region_name, $module_name, $module_filename, null);
-			} elseif (is_array($module)) {
-				$module_name = $module['module'];
-				$module_filename = $this->resolve_filename($module['module']);
-				unset($module['module']);
-				$module_params = $module;
-				$pt->set_region($region_name, $module_name, $module_filename, $module_params);
-			}
-			if (in_array($module_name, $GLOBALS['_reason_deprecated_modules'])) {
-				$pt->set_deprecated(true);
-			} elseif ($pt->get_deprecated() != true) {
-				$pt->set_deprecated(null);
-			}
-		}
-		$page_type_definitions[$page_type_name] = $pt;
 		return $pt;
 	}
 
+	private function _get_page_type_array($page_type_name)
+	{
+		reason_include_once('minisite_templates/page_types.php');
+		if (isset($GLOBALS['_reason_page_types'][$page_type_name]))
+		{
+			$page_type = $GLOBALS['_reason_page_types']['default'];
+			if ($page_type_name != 'default')
+			{
+				$specific_page_type = $GLOBALS['_reason_page_types'][$page_type_name];
+				foreach ($specific_page_type as $region => $info)
+				{
+					if (isset($page_type[$region])) unset($page_type[$region]);
+					$page_type[$region] = $info;
+				}
+			} 
+		}
+		else trigger_warning('Page type specified ('.htmlspecialchars($page_type_name,ENT_QUOTES,'UTF-8').') does not exist. You should either reinstate or change the page type.', 1);
+		return (isset($page_type)) ? $page_type : false;
+	}
+			
+	private function _get_page_type_location($page_type_name)
+	{
+		reason_include_once('minisite_templates/page_types.php');
+		$reason_page_types = $GLOBALS['_reason_page_types'];
+		if (isset($GLOBALS['_reason_page_types_local'][$page_type_name]))
+		{
+			return 'local';
+		}
+		elseif (isset($GLOBALS['_reason_page_types'][$page_type_name]))
+		{
+			return 'core';
+		}
+		return false;
+	}
+	
+	private function _is_module_deprecated($module_name)
+	{
+		static $is_deprecated;
+		if (!isset($is_deprecated[$module_name]))
+		{
+			reason_include_once('minisite_templates/page_types.php');
+			$is_deprecated[$module_name] = (in_array($module_name, $GLOBALS['_reason_deprecated_modules']));
+		}
+		return $is_deprecated[$module_name];
+	}
+	
 	/**
 	 * Returns the <i>names</i> of page types that use $module_name, <i>not</i> ReasonPageType objects.
 	 * Does not create pt objects in order to get the names (faster).
@@ -815,6 +871,9 @@ class ReasonPageTypes
 	
 	/**
 	 * Gets an array of ReasonPageType objects, one object for each page type in the $GLOBALS var.
+	 *
+	 * If you don't need all the page type objects you should use get_page_type($name) to just grab a single page type object.
+	 *
 	 * @return array an array of ReasonPageType objects
 	 */
 	function get_page_types()
