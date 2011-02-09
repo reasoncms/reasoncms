@@ -11,50 +11,52 @@
  * @version .002
  * @date 01.31.2006
  *
- * Manages the transfer of media files from a user's 'streaming_media' folder on HOME to a streamed folder on REASON_BASE_STREAM_URL via ssh.
+ * Manages the transfer of media files from a user's 'reason_import_only' folder on HOME/webpub to a streamed folder on REASON_BASE_STREAM_URL via ssh.
  *
- *  NOTE: this class requires a passwordless private key be in the userid's .ssh directory. Otherwise these functions will fail.
+ * NOTE: this class requires a passwordless private key be in the userid's .ssh directory. Otherwise these functions will fail.
  *
  * Usage: 
  *
- *      Initialize the object with the user's netid, host and user (for the remote ssh connection) are optional.
- *      $stream = new streaming_server( $netid , [ local_media_file , streaming_host , streaming_user ]) ; 
+ * Initialize the object with the user's netid, host and user (for the remote ssh connection) are optional.
+ * $stream = new streaming_server( $netid , [ local_media_file , streaming_host , streaming_user ]) ; 
  * 
- *      The array contains all the available files in the users streaming_media directory
- *      $file_array = $stream->view_available_files();
+ * The array contains all the available files in the users streaming_media directory
+ * $file_array = $stream->view_available_files();
  *
- *      Get the MD5SUM of the source file
- *      $md5sum = $stream->get_source_md5sum($media_file); 
+ * Get the MD5SUM of the source file
+ * $md5sum = $stream->get_source_md5sum($media_file); 
  *
- *      Transfer the media into the heirarchy under the Content/reason directory on the streaming server
- *      $stream->place_media($entity_id , $media_file); 
+ * Transfer the media into the heirarchy under the Content/reason directory on the streaming server
+ * $stream->place_media($entity_id , $media_file); 
  * 
- *			Transfer a locally uploaded media file into the heirarchy under the Content/reason directory on the streaming server
- *			$stream->place_local_media($entity_id , $full_path_to_media_file);
+ * Transfer a locally uploaded media file into the heirarchy under the Content/reason directory on the streaming server
+ * $stream->place_local_media($entity_id , $full_path_to_media_file);
  *
- *      Get the url (sans protocol) of the entities media file
- *      $streamable_url = "rtsp://" . $stream->get_media_url($entity_id); 
+ * Get the url (sans protocol) of the entities media file
+ * $streamable_url = "rtsp://" . $stream->get_media_url($entity_id); 
  *
- *      Get entity's meta info
- *      $string = get_meta_info($entity_id)
+ * Get entity's meta info
+ * $string = get_meta_info($entity_id)
  *
- *      Set entity's meta info
- *      set_meta_info($entity_id, $meta_info) // where meta_info is a string
+ * Set entity's meta info
+ * set_meta_info($entity_id, $meta_info) // where meta_info is a string
  *      
- *      Get the media file size in bytes
- *      $string = get_media_size_bytes($entity_id) // returns the value in bytes
+ * Get the media file size in bytes
+ * $string = get_media_size_bytes($entity_id) // returns the value in bytes
  * 
- *      Get the media length ( only works with quicktime files, returns null if it can't get the duration ) 
- *      $string = get_media_duration($entity_id) // returns the value in seconds (145.02s = 145 seconds, 02 1/100ths of a second)
+ * Get the media length ( only works with quicktime files, returns null if it can't get the duration ) 
+ * $string = get_media_duration($entity_id) // returns the value in seconds (145.02s = 145 seconds, 02 1/100ths of a second)
  *
- *      Returns the full remote path to an entity's media
- *      $string = media_file_path($entity_id)
+ * Returns the full remote path to an entity's media
+ * $string = media_file_path($entity_id)
  *
- *      Returns the remote host storing the media file
- *      $string = media_host()
+ * Returns the remote host storing the media file
+ * $string = media_host()
  * 
- *      returns the path to the user's source file (their $HOME/streaming_server/ folder) 
- *      $string = get_source_path()
+ * returns the path to the user's source file (their $HOME/streaming_server/ folder) 
+ * $string = get_source_path()
+ * 
+ * @todo this is really Carleton specific and should be generalized or moved to local 
  */
  
 include_once('reason_header.php');
@@ -85,7 +87,7 @@ function streaming_server($source_netid="" , $local_file="" , $streaming_server=
     $this->netid = $source_netid ; 
 
     // define the path to the user's streaming media folder for later use
-    $this->source_media_path = REASON_REMOTE_HOME_PATH . $this->netid . "/streaming_media/" ;
+    $this->source_media_path = REASON_REMOTE_HOME_PATH . $this->netid . "/WebPub/reason_import_only/" ;
 
 		// a "local file" is one which has been uploaded to the apps server rather than existing in the netware mount on the streaming server.
 		// it will need to be moved to the streaming server via scp and the source_media_path changed to see it
@@ -394,12 +396,10 @@ function media_host(){
 	
 	}
 
-function get_source_path(){
- 
-	return $this->source_media_path ;
-	
-	
-	}
+function get_source_path()
+{
+ 	return $this->source_media_path ;
+}
 
 
 // return the first file in the entites directory
