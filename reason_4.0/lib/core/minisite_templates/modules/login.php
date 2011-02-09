@@ -91,7 +91,7 @@
 					if (empty($this->request['popup']))
 					{
 						// we have a referer.  remember for later.
-						if( !empty( $_SERVER['HTTP_REFERER'] ) )
+						if( isset( $_SERVER['HTTP_REFERER'] ) && !empty( $_SERVER['HTTP_REFERER'] ) )
 						{
 							$this->dest_page = $_SERVER['HTTP_REFERER'];
 						}
