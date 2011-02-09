@@ -360,15 +360,15 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 			
 			if(!empty($media_files))
 			{
-				$this -> add_comments ('import_file', form_comment('Files in your "home/streaming_media" folder. To update the list of available files, add or remove files from your "home/streaming_media" folder and refresh this page.'));
+				$this -> add_comments ('import_file', form_comment('Media files in your "home/webpub/reason_import_only" folder. To update the list of available files, add or remove files from your "home/webpub/reason_import_only" folder and refresh this page.'));
 			}
 			else
 			{
-				$this -> add_comments ('import_file', form_comment('To import a media file, create a folder named "streaming_media" in your home directory, place the file in it, and then refresh this page.'));
+				$this -> add_comments ('import_file', form_comment('To import a media file, create a folder named "reason_import_only" in your home/webpub directory, place the file in it, and then refresh this page.'));
 			}
 			if(MEDIA_ALLOW_DIRECT_UPLOAD)
 			{
-				$this->add_element('import_file_as_alternate', 'comment', array('text'=>'If your file is larger than '.format_bytes_as_human_readable($this->get_actual_max_upload_size()).', you can import the file from your home folder.'));
+				$this->add_element('import_file_as_alternate', 'comment', array('text'=>'If your file is larger than '.format_bytes_as_human_readable($this->get_actual_max_upload_size()).', you can import the file from your home/webpub folder.'));
 			}
 		}
 	}
@@ -434,8 +434,8 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 	}
 	
 	/**
-	 * Uses the file transfer utility class to grab a list of media filenames
-	 * Checks against the recognized extensions so we don't import arbitrary file types
+	 * Uses the file transfer utility class to grab a list of filenames
+	 * Checks against the recognized extensions to assemble our list of media files
 	 * @return array keys = values = filenames
 	 */
 	function grab_media_files_for_import()
@@ -457,10 +457,6 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 						if(in_array($extension, $this->recognized_extensions))
 						{
 							$media_files[$file] = $file;
-						}
-						else
-						{
-							trigger_error('Unrecognized media extension: '.$stream->media_host().$stream->get_source_path().$file );
 						}
 					}
 				}
