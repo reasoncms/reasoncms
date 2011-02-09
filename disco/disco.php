@@ -1566,7 +1566,7 @@
 			
 			if ($this->_is_element($element_name))
 			{
-				trigger_error('An element named "'.$element_name.'" already exists on this form and will be overwritten.');
+			//	trigger_error('An element named "'.$element_name.'" already exists on this form and will be overwritten.');
 			}
 
 			if (in_array($element_name, $this->_reserved))
