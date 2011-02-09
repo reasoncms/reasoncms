@@ -4,48 +4,15 @@
  * @package reason
  * @subpackage scripts
  */
-?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Reason Upgrade Scripts</title>
-</head>
 
-<body>
-<?php
-include ('reason_header.php');
-reason_include_once('function_libraries/user_functions.php');
-force_secure_if_available();
-$user_netID = check_authentication();
-
-$directory = dirname($_SERVER['SCRIPT_FILENAME']);
-$dirs = array();
-if(is_dir( $directory ) )
-{
-	$handle = opendir( $directory );
-	while( $entry = readdir( $handle ) )
-	{
-		if( is_dir( $directory.'/'.$entry ) && substr($entry, 0, 1) != '.' )
-		{
-			$dirs[] = $entry;
-		}
-	}
-}
-if(!empty($dirs))
-{
-	echo '<h1>Reason upgrade scripts</h1>'."\n";
-	echo '<ul>'."\n";
-	foreach($dirs as $dir)
-	{
-		echo '<li><a href="'.$dir.'/">'.prettify_string($dir).'</a></li>'."\n";
-	}
-	echo '</ul>'."\n";
-}
-else
-{
-	echo '<h1>No upgrade scripts found</h1>'."\n";;
-}
-
+/** 
+ * The old code for this produced an automatic listing, but not a pretty one - also not in the right order.
+ * 
+ * In any case, we now maintain an upgrade page manually ... lets just use it.
+ */
+ 
+include_once('reason_header.php');
+$path = securest_available_protocol() . '://' . REASON_HOST . REASON_HTTP_BASE_PATH . 'upgrade.php';
+header("Location: " . $path);
+exit();
 ?>
-</body>
-</html>
