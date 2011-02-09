@@ -368,12 +368,13 @@
 		{
 			if (defined('REASON_LOG_LOGINS') && REASON_LOG_LOGINS)
 			{
+				$refer = (isset($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : '-';
 				$logtext = sprintf('%s - %s [%s] "%s" - - "%s" "%s"', 
 					$_SERVER['REMOTE_ADDR'], 
 					trim($username), 
 					date('d/M/Y:H:i:s O'), 
 					$event,
-					$_SERVER['HTTP_REFERER'],
+					$refer,
 					$_SERVER['HTTP_USER_AGENT']
 					);
 				dlog($logtext, 	REASON_LOG_DIR.'reason_login.log');
