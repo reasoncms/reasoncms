@@ -229,7 +229,7 @@ function chooseNone(period)
 }
 function chooseLessons()
 {
-    var id = $("input[@name=testGroup]:checked").attr('id');
+    var id = $("input[name=testGroup]:checked").attr('id');
 
     switch(id){
         case 'radio_private_lessons_0':
