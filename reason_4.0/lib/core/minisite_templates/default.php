@@ -32,7 +32,7 @@ reason_include_once( 'minisite_templates/nav_classes/default.php' );
 reason_include_once( 'classes/head_items.php' );
 reason_include_once( 'classes/page_access.php' );
 reason_include_once( 'classes/crumbs.php' );
-reason_include_once( 'classes/api/module_api.php' );
+reason_include_once( 'classes/api/factory.php' );
 include_once( CARL_UTIL_INC . 'dev/timer.php' );
 
 /**
@@ -696,7 +696,7 @@ class MinisiteTemplate
 		// if an api was requested lets identify the region to run
 		if ($requested_api = $this->get_requested_api())
 		{
-			$module_api = ReasonModuleAPI::get_requested_api($page_type, $requested_api, $this->get_requested_identifier());
+			$module_api = ReasonAPIFactory::get_requested_api($page_type, $requested_api, $this->get_requested_identifier());
 			if ($module_api) $this->section_to_module[$module_api['module_region']] = $module_api['module_name'];
 			else $this->section_to_module = null;
 		}
@@ -735,7 +735,7 @@ class MinisiteTemplate
 						$args[ 'site_id' ] = $this->site_id;
 						$args[ 'cur_page' ] = $this->cur_page;
 						// we set the module identifier as a hash of the section - should be unique
-						$args[ 'identifier' ] = ReasonModuleAPI::get_identifier_for_module($page_type, $region);
+						$args[ 'identifier' ] = ReasonAPIFactory::get_identifier_for_module($page_type, $region);
 						//$args[ 'nav_pages' ] =& $this->pages;
 						$args[ 'textonly' ] = $this->textonly;
 						$args[ 'api' ] = (!empty($module_api)) ? $module_api['api'] : false;
