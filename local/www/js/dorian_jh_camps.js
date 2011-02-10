@@ -14,8 +14,9 @@ $(document).ready(function() {
         hide_field('jazz_instrument');
         hide_field('wind_choir_instrument');
         hide_field('brass_choir_instrument');
-        hide_field('lesson_instrument_1');
-        hide_field('lesson_instrument_2');
+//        hide_field('lesson_instrument_1');
+//        hide_field('lesson_instrument_2');
+        chooseLessons();
 	$("input[name='band_participant']").change(function(){toggle_fields('band_participant','band_instrument'); });
         $("input[name='orchestra_participant']").change(function(){toggle_fields('orchestra_participant','orchestra_instrument'); });
         $("input[name='jazz_participant']").change(function(){toggle_fields('jazz_participant','jazz_instrument')});
