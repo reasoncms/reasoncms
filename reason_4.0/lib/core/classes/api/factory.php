@@ -4,50 +4,13 @@ reason_include_once('classes/api/api.php');
 reason_include_once('classes/page_types.php');
 
 /**
- * Reason Module API contains application logic specific to providing APIs for Reason modules.
+ * Provides methods to get ReasonAPI objects, and several convenience methods.
  *
  * - Determines which region to run based upon a request for an API and (optional) module identifier.
- * - Provides a static method to get a unique identifier for a module on its params.
- * - Sets content type according to $_REQUEST['format'] in the constructor.
- *
- * NOTE: Module APIs are very new to Reason, considered beta, and subject to change.
- *
- * @version .1 
- * @author Nathan White
+ * - Provides a static method to get a unique identifier for a module on its params.  
  */
-class ReasonModuleAPI extends ReasonAPI
+class ReasonAPIFactory
 {
-	private $identifier_key_map =  array('module_class' => 'mcla-',
-					 					 'module_location' => '-mloc-',
-					 					 'module_params' => '-mpar-');
-	/**
-	 * This is a static constructor of sorts that finds the correct API on a page type and returns an array with these components:
-	 *
-	 * - module_name string
-	 * - module_region string
-	 * - api ReasonModuleAPI object
-	 *
-	 * @param mixed array or string
-	 * @return array
-	 */
-	function __construct($support_types = NULL)
-	{
-		static $validated_format_request;
-		parent::__construct($support_types);
-		if (!isset($validated_format_request))
-		{
-			$validated_format_request = '';
-			if (isset($_REQUEST['format']) && check_against_regexp($_REQUEST['format'], array('safechars')))
-			{
-				$validated_format_request = $_REQUEST['format'];
-			}
-		}
-		if (!empty($validated_format_request))
-		{
-			$this->set_content_type($validated_format_request);
-		}
-	}
-
 	/**
 	 * This is a factory of sorts that finds the correct API on a page type and returns an array with these components:
 	 *
