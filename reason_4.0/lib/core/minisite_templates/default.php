@@ -590,7 +590,7 @@ class MinisiteTemplate
 		}
 		else // LETS DO A 404 with text/html
 		{
-			$api = new ReasonAPI('html');
+			$api = new CarlUtilAPI('html');
 			$api->run();
 		}
 	}
