@@ -141,16 +141,27 @@ class DorianJHCampsThreeForm extends FormStep
 
                 // calculate the total_cost of the camp by adding lesson_cost (if present) to the camp_cost
                 $camp_cost = 433;
+                $per_lesson_cost = 35;
                 $lesson_cost = 0;
                 if ($this->controller->get('private_lessons'))
                 {
-                    $lesson_cost = 35 * $this->controller->get('private_lessons');
+                    $lesson_cost = $per_lesson_cost * $this->controller->get('private_lessons');
+                    switch($this->controller->get('private_lessons')){
+                        case '1':
+                            $lesson_msg = '<br />(camp, plus $' . $per_lesson_cost . ' for 1 lesson)';
+                            break;
+                        case '2':
+                            $lesson_msg = '<br />(camp, plus $' . $per_lesson_cost*2 . ' for 2 lessons)';
+                            break;
+                        default:
+                            $lesson_msg = '';
+                    }
                 }
                 $total_cost = $camp_cost + $lesson_cost;
                 $this->change_element_type('payment_amount', 'radio_no_sort', array(
                         'options' => array(
                             '$40' => '$40 - Deposit only',
-                            '$' . $total_cost => '$' . $total_cost . ' - Total cost'
+                            '$' . $total_cost => '$' . $total_cost . ' - Total cost' . $lesson_msg
                         )
                     )
                 );
