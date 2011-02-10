@@ -14,46 +14,148 @@ class DorianSHCampTwoForm extends FormStep
 	var $_log_errors = true;
 	var $error;
 
+        var $band_instruments_array = array(
+                'Piccolo'               => 'Piccolo',
+                'Flute'                 => 'Flute',
+                'Oboe'                  => 'Oboe',
+                'Bassoon'               => 'Bassoon',
+                'Clarinet'              => 'Clarinet',
+                'Bass Clarinet'         => 'Bass Clarinet',
+                'Alto Sax'              => 'Alto Sax',
+                'Tenor Sax'             => 'Tenor Sax',
+                'Baritone Sax'          => 'Baritone Sax',
+                'Horn'                  => 'Horn',
+                'Trumpet'               => 'Trumpet',
+                'Trombone'              => 'Trombone',
+                'Euphonium/Baritone BC' => 'Euphonium/Baritone BC',
+                'Euphonium/Baritone TC' => 'Euphonium/Baritone TC',
+                'Tuba'                  => 'Tuba',
+                'Percussion'            => 'Percussion',
+        );
+        var $orchestra_instruments_array = array(
+                'Violin'    => 'Violin',
+                'Viola'     => 'Viola',
+                'Cello'     => 'Cello',
+                'Bass'      => 'Bass',
+                'Harp'      => 'Harp',
+                'Flute'     => 'Flute',
+                'Oboe'      => 'Oboe',
+                'Bassoon'   => 'Bassoon',
+                'Clarinet'  => 'Clarinet',
+                'Horn'      => 'Horn',
+                'Trumpet'   => 'Trumpet',
+                'Trombone'  => 'Trombone',
+                'Tuba'      => 'Tuba',
+                'Percussion'=> 'Percussion',
+        );
+        var $woodwind_choir_instruments_array = array(
+                'Flute'         => 'Flute',
+                'Oboe'          => 'Oboe',
+                'Bassoon'       => 'Bassoon',
+                'Clarinet'      => 'Clarinet',
+                'Bass Clarinet' => 'Bass Clarinet',
+                'Alto Sax'      => 'Alto Sax',
+                'Tenor Sax'     => 'Tenor Sax',
+                'Baritone Sax'  => 'Baritone Sax',
+        );
+        var $brass_choir_instruments_array = array(
+                'Trumpet'               => 'Trumpet',
+                'Horn'                  => 'Horn',
+                'Trombone'              => 'Trombone',
+                'Euphonium/Baritone BC' => 'Euphonium/Baritone BC',
+                'Euphonium TC'          => 'Euphonium TC',
+                'Tuba'                  => 'Tuba',
+        );
+        var $jazz_band_instruments_array = array(
+                'Alto Sax'      => 'Alto Sax',
+                'Tenor Sax'     => 'Tenor Sax',
+                'Baritone Sax'  => 'Baritone Sax',
+                'Trumpet'       => 'Trumpet',
+                'Trombone'      => 'Trombone',
+                'Guitar'        => 'Guitar',
+                'Bass'          => 'Bass',
+                'Percussion'    => 'Percussion',
+                'Piano'         => 'Piano',
+        );
+        var $lesson_instruments_array = array(
+                'Voice' => 'Voice',
+                'Dance' => 'Dance',
+                'Flute' => 'Flute',
+                'Oboe' => 'Oboe',
+                'Clarinet' => 'Clarinet',
+                'A. Sax' => 'A. Sax',
+                'T. Sax' => 'T. Sax',
+                'B. Sax' => 'B. Sax',
+                'Horn' => 'Horn',
+                'Trumpet' => 'Trumpet',
+                'Trombone' => 'Trombone',
+                'Euphonium/Baritone' => 'Euphonium/Baritone',
+                'Tuba' => 'Tuba',
+                'Percussion' => 'Percussion',
+                'Violin' => 'Violin',
+                'Viola' => 'Viola',
+                'Cello' => 'Cello',
+                'String Bass' => 'String Bass',
+                'Harp' => 'Harp',
+                'Piano' => 'Piano',
+                'Organ' => 'Organ',
+                'Harpsichord' => 'Harpsichord',
+                'Classical guitar' => 'Classical guitar',
+                'Bass Guitar' => 'Bass Guitar (if a teacher is available)',
+        );
+
 	var $elements = array(
                 'participation_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Participation</h3>',
 		),
+                'participation_header_2' => array(
+                        'type' => 'comment',
+                        'text' => 'Check which you will be participating in:'
+                ),
 		'band_participant' => array(
 			'type' => 'checkboxfirst',
-			'display_name' => 'Will you play in band?',
+			'display_name' => 'Band',
 		),
 		'band_instrument' => array(
-                    'type' => 'text',
-                    'display_name' => '&nbsp;',
-                    'comments'=>'<div class="smallText comment">Instrument</div>',
+                        'display_name' => '&nbsp;',
+                        'comments'=>'<div class="smallText comment">Instrument</div>',
+                        'type' => 'select_no_sort',
+                        'add_null_value_to_top' => true,
+                        'options' => array(),
                 ),
                 'orchestra_participant' => array(
 			'type' => 'checkboxfirst',
-			'display_name' => 'Will you play in orchestra?',
+			'display_name' => 'Orchestra',
 		),
 		'orchestra_instrument' => array(
-                    'type' => 'text',
-                    'display_name' => '&nbsp;',
-                    'comments'=>'<div class="smallText comment">Instrument</div>',
+                        'display_name' => '&nbsp;',
+                        'comments'=>'<div class="smallText comment">Instrument</div>',
+                        'type' => 'select_no_sort',
+                        'add_null_value_to_top' => true,
+                        'options' => array(),
                 ),
                 'jazz_participant' => array(
 			'type' => 'checkboxfirst',
-			'display_name' => 'Will you play in jazz band?',
+			'display_name' => 'Jazz Band',
 		),
 		'jazz_instrument' => array(
-                    'type' => 'text',
-                    'display_name' => '&nbsp;',
-                    'comments'=>'<div class="smallText comment">Instrument</div>',
+                        'display_name' => '&nbsp;',
+                        'comments'=>'<div class="smallText comment">Instrument</div>',
+                        'type' => 'select_no_sort',
+                        'add_null_value_to_top' => true,
+                        'options' => array(),
                 ),
                 'wind_choir_participant' => array(
 			'type' => 'checkboxfirst',
-			'display_name' => 'Will you play in woodwind choir?',
+			'display_name' => 'Woodwind Choir',
 		),
 		'wind_choir_instrument' => array(
-                    'type' => 'text',
-                    'display_name' => '&nbsp;',
-                    'comments'=>'<div class="smallText comment">Instrument</div>',
+                        'display_name' => '&nbsp;',
+                        'comments'=>'<div class="smallText comment">Instrument</div>',
+                        'type' => 'select_no_sort',
+                        'add_null_value_to_top' => true,
+                        'options' => array(),
                 ),
 // removed due to lack of participants, per jim buzza
 //                'brass_choir_participant' => array(
@@ -84,23 +186,27 @@ class DorianSHCampTwoForm extends FormStep
                 ),
                 'private_lessons_header' => array(
                      'type' => 'comment',
-                     'text' => '<h3>Sets of Private Lessons</h3>',
+                     'text' => '<h3>Sets of Private Lessons</h3>- Each lesson costs $35<br />- One set equals two half-hour lessons',
                 ),
                  'private_lessons' => array(
                      'type' => 'radio_inline_no_sort',
                      'display_name' => '&nbsp;',
                      'options' => array(0 => 'None', 1 => 1 ,2 => 2),
-                     'comments' => 'One set equals two half-hour lessons'
+//                     'comments' => 'One set equals two half-hour lessons'
                 ),
                 'lesson_instrument_1' => array(
-                    'type' => 'text',
+                    'type' => 'select_no_sort',
                     'display_name' => '&nbsp;',
-                    'comments' => 'Instrument'
+                    'comments' => '<br />Instrument',
+                    'add_null_value_to_top' => true,
+                    'options' => array(),
                 ),
                 'lesson_instrument_2' => array(
-                    'type' => 'text',
+                    'type' => 'select_no_sort',
                     'display_name' => '&nbsp;',
-                    'comments' => 'Instrument 2'
+                    'comments' => '<br />Instrument&nbsp;2',
+                    'add_null_value_to_top' => true,
+                    'options' => array(),
                 ),
                  'period_header' => array(
                     'type' => 'comment',
@@ -277,7 +383,13 @@ class DorianSHCampTwoForm extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
-
+                $this->change_element_type('band_instrument', 'select_no_sort', array('options' => $this->band_instruments_array));
+                $this->change_element_type('orchestra_instrument', 'select_no_sort', array('options' => $this->orchestra_instruments_array));
+                $this->change_element_type('jazz_instrument', 'select_no_sort', array('options' => $this->jazz_band_instruments_array));
+                $this->change_element_type('wind_choir_instrument', 'select_no_sort', array('options' => $this->woodwind_choir_instruments_array));
+                $this->change_element_type('brass_choir_instrument', 'select_no_sort', array('options' => $this->brass_choir_instruments_array));
+                $this->change_element_type('lesson_instrument_1', 'select_no_sort', array('options' => $this->lesson_instruments_array));
+                $this->change_element_type('lesson_instrument_2', 'select_no_sort', array('options' => $this->lesson_instruments_array));
 	}
 
 	function pre_show_form()
