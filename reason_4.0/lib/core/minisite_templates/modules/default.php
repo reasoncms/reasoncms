@@ -253,13 +253,13 @@
 		}
 		
 		/**
-		 * _api_helper is used to get and set arrays of ReasonModuleAPI objects for a module.
+		 * _api_helper is used to get and set arrays of ReasonAPI objects for a module.
 		 *
 		 * Since we cannot rely on late static binding, we utilize the static classname if available.
 		 *
 		 * @param string action - should be "set" or "get"
 		 * @param string name - name of api
-		 * @param object api - ReasonModuleAPI object
+		 * @param object api - ReasonAPI object
 		 */
 		static private final function _api_helper($action = 'set', $name = NULL, $api = NULL)
 		{
@@ -284,13 +284,13 @@
 		 * Example:
 		 * 
 		 * <code>
-		 * $standalone_api = new ReasonModuleAPI('html');
+		 * $standalone_api = new ReasonAPI('html');
 		 * self::add_api('standalone', $standalone_api);
 		 * </code>
 		 */
 		static function setup_supported_apis()
 		{
-			self::add_api('standalone', new ReasonModuleAPI('html'));
+			self::add_api('standalone', new ReasonAPI('html'));
 		}
 		
 		/**
