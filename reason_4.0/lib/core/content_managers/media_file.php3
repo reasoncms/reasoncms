@@ -368,7 +368,7 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 			}
 			if(MEDIA_ALLOW_DIRECT_UPLOAD)
 			{
-				$this->add_element('import_file_as_alternate', 'comment', array('text'=>'If your file is larger than '.format_bytes_as_human_readable($this->get_actual_max_upload_size()).', you can import the file from your home/webpub folder.'));
+				$this->add_element('import_file_as_alternate', 'comment', array('text'=>'If your file is larger than '.format_bytes_as_human_readable($this->get_actual_max_upload_size()).', you can import the file from your home/webpub/reason_import_only folder. <p style="color: red">NOTE - this import folder (home/webpub/reason_import_only) is a new location - Reason no longer looks for media in the streaming_media folder.</p>'));
 			}
 		}
 	}
