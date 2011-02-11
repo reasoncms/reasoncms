@@ -143,6 +143,7 @@ class DorianSHCampThreeForm extends FormStep
                 $camp_cost = 433;
                 $per_lesson_cost = 35;
                 $lesson_cost = 0;
+                $lesson_msg = '';
                 if ($this->controller->get('private_lessons'))
                 {
                     $lesson_cost = $per_lesson_cost * $this->controller->get('private_lessons');
