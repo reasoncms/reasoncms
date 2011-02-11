@@ -28,7 +28,8 @@
 			if($id != $this->root_id && $this->cur_page_id == $id)
 			{
 				$rpts =& get_reason_page_types();
-				$pt = $rpts->get_page_type($this->values[$id]->get_value('custom_page'));
+				$page_type_name = $this->values[$id]->get_value('custom_page');
+				$pt = ($page_type_name) ? $rpts->get_page_type($page_type_name) : $rpts->get_page_type();
 				if ($pt->has_module('children'))
 				{
 					return false;
