@@ -883,6 +883,15 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
                 'programstartdate','programenddate');
 
+        $nr_suppress = array('dn','uid','ou','count','employeenumber','prno','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+                'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName',
+                'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
+                'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization','studentyearinschool','studentadvisor',
+                'eduPersonAffiliation','studentStatus','alumClassYear','postaladdress','l','st','postalcode','c',
+                'eduPersonEntitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
+                'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
+                'programstartdate','programenddate','lastupdate');
+
         foreach ($results as $key => $data) {
             // Remove the people who should be gone completely.
             if ($this->view != 'po' && isset($data['carlhideinfo']) && $data['carlhideinfo'][0] == 'TRUE') {
@@ -890,19 +899,21 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 continue;
             }
 
-            $logged_user = reason_check_authentication();
-            //echo $logged_user;
-            //burkaa01
-
-            if (isset($data['carlhidepersonalinfo'])) {
-                unset($results[$key]['homepostaladdress']);
-                unset($results[$key]['telephoneNumber']);
-                unset($results[$key]['spouseName']);
-            }
+//            if (isset($data['carlhidepersonalinfo'])) {
+//                unset($results[$key]['homepostaladdress']);
+//                unset($results[$key]['telephoneNumber']);
+//                unset($results[$key]['spouseName']);
+//            }
 
             if ($this->context == 'external') {
                 foreach ($ext_suppress as $attr)
                     unset($results[$key][$attr]);
+            }
+
+            // Hiding No Release students for Luther
+            if (isset($data['privacyflag'])) {
+                foreach ($nr_suppress as $attr)
+                    $results[$key] = null;
             }
         }
     }
@@ -1564,21 +1575,34 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
                 'programstartdate','programenddate','lastupdate');
 
-        $password = 'dickens333';
-
-        $logged_user = reason_check_authentication();
-        echo $logged_user;
+        $logged_user = reason_check_authentication();        
+        
+        pray($logged_user);
+        $password = $_SESSION['password'];
+        //$password = $user->get_value('user_password_hash');
+        
 
         $lookup_login = 'uid='.$logged_user.',ou=People,dc=luther,dc=edu'; /// username is get login norsekey
         $lookup_pass = $password; /// get login password
 
-        $dir = new directory_service('ldap_luther');
-        $dir->serv_inst['ldap_luther']->set_conn_param('lookup_dn',$lookup_login);
-        $dir->serv_inst['ldap_luther']->set_conn_param('lookup_password',$lookup_pass);
 
-        echo $lookup_login;
-        echo "\n";
-        echo $lookup_pass;
+        $dir = new directory_service('ldap_luther_directory');
+        $dir->authenticate($logged_user,$password);
+
+//		$dir->serv_inst['ldap_luther']->set_conn_param('lookup_dn', $lookup_login);
+//        $dir->serv_inst['ldap_luther']->set_conn_param('lookup_password',$lookup_pass);
+
+
+/*
+        $dir = new directory_service('ldap_luther_directory');
+        echo 'Here';
+		$dir->serv_inst['ldap_luther_directory']->set_params($logged_user,$lookup_pass);
+
+        $dir->serv_inst['ldap_luther_directory']->set_conn_param('lookup_dn',$lookup_login);
+        $dir->serv_inst['ldap_luther_directory']->set_conn_param('lookup_password',$lookup_pass);
+*/
+
+
         
         //$dir->serv_inst['ldap_luther']->set_conn_param('lookup_dn','cn=webauth,dc=luther,dc=edu');
         //$dir->serv_inst['ldap_luther']->set_conn_param('lookup_password','daewoo$friendly$$cow');
