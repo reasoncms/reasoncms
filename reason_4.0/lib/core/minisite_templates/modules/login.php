@@ -80,8 +80,7 @@
             $head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'login/focus.js');
 			$this->current_url = get_current_url();
 			$this->on_secure_page_if_available = (!HTTPS_AVAILABLE || on_secure_page());
-			// this should catch when there is no dest page being passed in.  there is the possibility that a dest_page
-			// var on the GET line can override this.
+			
 			if( empty( $this->request[ 'dest_page' ] ) )
 			{
 				// in standalone mode, once the user has successfully logged in, they will be bounced back to the page
@@ -117,7 +116,7 @@
 			{
 				// Search engines should not be indexing versions of the index page with specific destinations
 				$head_items->add_head_item('meta', array('name'=>'robots','content'=>'none'));
-				$this->dest_page = urldecode($this->request['dest_page']); //why are we urldecoding here? PHP should handle it for us; this seems to force a double url decode, which could cause problems
+				$this->dest_page = $this->request['dest_page'];
 			}
 			if ( !empty($this->request ['redir_link_text']))
 			{
@@ -289,14 +288,14 @@
 					{
 						$uname = $this->request['username'];
 					}
+					$current_url = (!empty($this->dest_page)) ? carl_make_link(array('dest_page' => $this->dest_page)) : get_current_url(); // carl_make_link also runs htmlspecialchars
 					?>
-					<form action="<?php echo get_current_url(); ?>" method="post">
+					<form action="<?php echo $current_url; ?>" method="post">
 						<table cellpadding="4" cellspacing="2" summary="Login Form">
 							<tr><td style="text-align:right;">Username:</td><td><input type="text" name="username" value="<?php echo htmlspecialchars($uname); ?>" /></td></tr>
 							<tr><td style="text-align:right;">Password:</td><td><input type="password" name="password" /></td></tr>
 							<tr><td></td><td><input type="submit" value="Log In" /></td></tr>
 						</table>
-						<input type="hidden" name="dest_page" value="<?php echo urlencode($this->dest_page); ?>"/>
 					</form>
 					<?php
 					show_cookie_capability('<p class="smallText">You must have cookies enabled to login.  You do not have cookies enabled.</p>');
