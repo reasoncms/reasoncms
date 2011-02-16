@@ -10,7 +10,7 @@
 //require_once( '/usr/local/webapps/reason/reason_package/carl_util/db/db.php' );
 include_once(TYR_INC . 'tyr.php');
 include_once('paths.php');
-class TranscriptConfirmation extends FormStep
+class TranscriptRequestConfirmation extends FormStep
 {
 	var $date_format = 'F, j Y';
 
@@ -20,9 +20,10 @@ class TranscriptConfirmation extends FormStep
 		$blurb = $this->get_thank_you_blurb();
 		echo '<div id="thankYouBlurb">' . $blurb . '</div>';
 		
-		$first_name = $this->controller->get('first_name');
-		$last_name = $this->controller->get('last_name');
-		$previous_name = $this->controller->get('previous_name');
+		$name = $this->controller->get('name');
+//                $middle_initial = $this->controller->get('middle_initial');
+//		$last_name = $this->controller->get('last_name');
+//		$previous_name = $this->controller->get('previous_name');
 		$daytime_phone = $this->controller->get('daytime_phone');
 		$email = $this->controller->get('e-mail');
 		$address = $this->controller->get('address');
@@ -30,44 +31,71 @@ class TranscriptConfirmation extends FormStep
 		$state_province = $this->controller->get('state_province');
 		$zip = $this->controller->get('zip');
 		$country = $this->controller->get('country');
-		$official = $this->controller->get('official');
 		$unofficial = $this->controller->get('unofficial');
-		$delivery = $this->controller->get('delivery');
+                $official_type = $this->controller->get('official_type');
+                $number_of_official = $this->controller->get('number_of_official');
+		$deliver_to = $this->controller->get('deliver_to');
+                $institution_name = $this->controller->get('institution_name');
+                $institution_attn = $this->controller->get('institution_attn');
+                $institution_email = $this->controller->get('institution_email');
+                $delivery_time = $this->controller->get('delivery_time');
+                $submitter_ip = $this->controller->get('submitter_ip');
 		
 		$txt = '<div id="reviewTranscriptRequest">'."\n";			
 		$txt .= '<ul>'."\n";
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
-		$txt .= '<li><strong>Name:</strong> '.$first_name.' '.$last_name.'</li>'."\n";
-		if ($previous_name)
-		{
-			$txt .= '<li><strong>Previous Name:</strong> '.$previous_name.'</li>'."\n";
-		}
+		$txt .= '<li><strong>Name:</strong> '.$name.'</li>'."\n";
+//		if ($previous_name)
+//		{
+//			$txt .= '<li><strong>Previous Name:</strong> '.$previous_name.'</li>'."\n";
+//		}
 		$txt .= '<li><strong>Daytime Phone:</strong> '.$daytime_phone.'</li>'."\n";
 		$txt .= '<li><strong>Email:</strong> '.$email.'</li>'."\n";
-		$txt .= '<li><strong>Address:</strong><br />'.$address.'<br />'.$city.' '.$state_province.' '.$zip. ' '.$country.'</li>'."\n";
-		if($official)
-		{
-			$txt .= '<li><strong>Official transcripts requested:</strong> '.$official.'</li>'."\n";
-		}		
-		if($unofficial)
-		{
+                if($unofficial){
 			$txt .= '<li><strong>Unofficial transcripts requested:</strong> '.$unofficial.'</li>'."\n";
-		}		
-		$txt .= '<li><strong>Deliver:</strong> '.$delivery.'</li>'."\n";
+		}
+		if($official_type == 'paper'){
+			$txt .= '<li><strong>Official paper transcripts requested:</strong> '.$number_of_official.'</li>'."\n";
+                        $txt .= '<li><strong>Delivery Information:</strong> '.$deliver_to.'</li>'."\n";
+                        $txt .= '<ul>'."\n";
+                        if ($deliver_to == 'institution'){
+                            $txt .= '<li><strong>Institution/Company:</strong><br>'.
+                                $institution_name.'<br>'.
+                                'Attn: '. $institution_attn .'<br>';
+                        }
+                        $txt .= '<li><strong>Address:</strong><br />'.$address.'<br />'.$city.' '.$state_province.' '.$zip. ' '.$country.'</li>'."\n";
+                        $txt .= '<li><strong>Delivery Timeline: </strong>'.$delivery_time.'</li>'."\n";
+                        $txt .= '</ul>'."\n";
+		}
+                if($official_type == 'eScrip'){
+			$txt .= '<li><strong>Official eScrip-Safe transcripts requested:</strong> '.$number_of_official.'</li>'."\n";
+                        $txt .= '<li><strong>Delivery Information</strong></li>'."\n";
+                        $txt .= '<ul>'."\n";
+                        if ($deliver_to == 'institution'){
+                            $txt .= '<li><strong>Institution/Company:</strong><br>'.
+                                $institution_name.'<br>'.
+                                'Attn: '. $institution_attn .'<br>'.
+                                $institution_email.'</li>'."\n";
+                        }else{ //deliver to requestor
+                            $txt .= '<li><strong>Your E-mail Address:</strong>'.$email.'</li>'."\n";
+                        }
+                        $txt .= '<li><strong>Delivery Timeline: </strong>'.$delivery_time.'</li>'."\n";
+                        $txt .= '</ul>'."\n";
+		}
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
-
 		echo $txt;
-		$this->email_alumni($txt);
+
+		$this->email_registrar($txt);
 		$this->email_requestor($blurb . $txt);
-		echo 'A copy of this confirmation has been sent to your email address.'."\n";
-				
+		
+                echo 'A copy of this confirmation has been sent to your email address.'."\n";
+			
 		connectDB('transcript_connection');
 		
-		$qstring = "INSERT INTO `requestors` SET
-		first_name='".addslashes($first_name)."', 
-		last_name='".addslashes($last_name)."', 
-		previous_name='".((!empty($previous_name)) ? addslashes($previous_name) : 'NULL')."', 
+		$qstring = "INSERT INTO `requestor` SET
+                submitter_ip='".addslashes($submitter_ip)."',
+		name='".addslashes($name)."',
 		address='".((!empty($address)) ? addslashes($address) : 'NULL')."', 
 		city='".((!empty($city)) ? addslashes($city) : 'NULL')."', 
 		state_province = '".((!empty($state_province)) ? addslashes($state_province) : 'NULL')."', 
@@ -75,11 +103,13 @@ class TranscriptConfirmation extends FormStep
 		country = '".((!empty($coumtry)) ? addslashes($country) : 'NULL')."', 		 
 		daytime_phone = '".((!empty($home_phone)) ? addslashes($home_phone) : 'NULL')."',
 		email = '".((!empty($email)) ? addslashes($email) : 'NULL')."',
-		official=".((!empty($official)) ? addslashes($official) : 'NULL').",
-		unofficial=".((!empty($unofficial)) ? addslashes($unofficial) : 'NULL').",
-		delivery='".((!empty($delivery)) ? addslashes($delivery) : 'NULL')."' ";
-		
-		
+		official_type='".((!empty($official_type)) ? addslashes($official_type) : 'NULL')."',
+                number_of_official='".((!empty($number_of_official)) ? addslashes($number_of_official) : 'NULL')."',
+		unofficial='".((!empty($unofficial)) ? addslashes($unofficial) : 'NULL')."',
+                deliver_to='".addslashes($deliver_to)."',
+		delivery_time='".((!empty($delivery_time)) ? addslashes($delivery_time) : 'NULL')."' ";
+
+               
 		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) ){
 			$qstring .= ", status = 'TEST' ";
 		}
@@ -97,7 +127,7 @@ class TranscriptConfirmation extends FormStep
 		return $blurb;
 	}
 	
-	function email_alumni($text)
+	function email_registrar($text)
 	{
 		$mail = new Email('slylth@gmail.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Transcript Request '.date('mdY H:i:s'),strip_tags($text), $text);
 		$mail->send();

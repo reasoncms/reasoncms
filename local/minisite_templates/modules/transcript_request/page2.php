@@ -115,7 +115,7 @@ class TranscriptPageTwoForm extends FormStep
 	var $database_transformations = array('credit_card_number'=>'obscure_credit_card_number',);
 	// style up the form and add comments et al
 	function on_every_time()
-	{	
+	{             
 		if( !$this->controller->get('amount'))
 		{
 			echo '<div id="transcriptSetupError">Sorry. There was a problem setting up payment for your form. Please return to <a href="?_step=TranscriptPageOneForm">Transcript Request Form</a> and try again.</div>';
@@ -171,33 +171,47 @@ class TranscriptPageTwoForm extends FormStep
 	
 	function get_confirmation_text()
 	{
-		$txt = '<div id="reviewTranscriptRequest">'."\n";			
-		$txt .= '<p class="printConfirm">Print this confirmation for your records.</p>'."\n";
+		$txt = '<div id="reviewTranscriptRequest">'."\n";
 		$txt .= '<ul>'."\n";
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
-		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('first_name').' '. $this->controller->get('last_name').'</li>'."\n";
-		if ($this->controller->get('previous_name'))
-		{
-			$txt .= '<li><strong>Previous Name:</strong> '.$this->controller->get('previous_name').'</li>'."\n";
-		}
-		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address')."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip').' ' . $this->controller->get('country') . '</li>'."\n";
+		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('name').' '.
 		$txt .= '<li><strong>Daytime Phone:</strong> '.$this->controller->get('daytime_phone').'</li>'."\n";
-		$txt .= '<li><strong>E-mail:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
-		if ($this->controller->get('official'))
-		{
-			$txt .= '<li><strong>Official transcripts requested:</strong> '.$this->controller->get('official').'</li>'."\n";
+		$txt .= '<li><strong>Email:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
+                if($this->controller->get('unofficial')){
+			$txt .= '<li><strong>Unofficial transcripts requested:</strong> '.$this->controller->get('unofficial').'</li>'."\n";
 		}
-		if($this->controller->get('unofficial'))
-		{
-			$txt .= '<li><strong>Unofficial transcript requested:</strong> '.$this->controller->get('unofficial').'</li>'."\n";
-		}		
-		if($this->controller->get('delivery'))
-		{
-			$txt .= '<li><strong>Delivery timeline:</strong> '.($this->controller->get('delivery')).'</li>'."\n";
+		if($this->controller->get('official_type') == 'paper'){
+			$txt .= '<li><strong>Official paper transcripts requested:</strong> '.$this->controller->get('official_type').'</li>'."\n";
+                        $txt .= '<li><strong>Delivery Information:</strong> '.$this->controller->get('deliver_to').'</li>'."\n";
+                        $txt .= '<ul>'."\n";
+                        if ($this->controller->get('deliver_to') == 'institution'){
+                            $txt .= '<li><strong>Institution/Company:</strong><br>'.
+                                $this->controller->get('institution_name').'<br>'.
+                                'Attn: '. $this->controller->get('institution_attn') .'<br>';
+                        }
+                        $txt .= '<li><strong>Address:</strong><br />'.$this->controller->get('address').'<br />'
+                                .$this->controller->get('city').' '.$this->controller->get('state_province').' '
+                                .$this->controller->get('zip'). ' '.$this->controller->get('country').'</li>'."\n";
+                        $txt .= '<li><strong>Delivery Timeline: </strong>'.$this->controller->get('delivery_time').'</li>'."\n";
+                        $txt .= '</ul>'."\n";
+		}
+                if($this->controller->get('official_type') == 'eScrip'){
+			$txt .= '<li><strong>Official eScrip-Safe transcripts requested:</strong> '.$this->controller->get('number_of_official').'</li>'."\n";
+                        $txt .= '<li><strong>Delivery Information</strong></li>'."\n";
+                        $txt .= '<ul>'."\n";
+                        if ($this->controller->get('deliver_to') == 'institution'){
+                            $txt .= '<li><strong>Institution/Company:</strong><br>'.
+                                $this->controller->get('institution_name').'<br>'.
+                                'Attn: '. $this->controller->get('institution_attn') .'<br>'.
+                                $this->controller->get('institution_email').'</li>'."\n";
+                        }else{ //deliver to requestor
+                            $txt .= '<li><strong>Your E-mail Address:</strong>'.$this->controller->get('email').'</li>'."\n";
+                        }
+                        $txt .= '<li><strong>Delivery Timeline:</strong>'.$this->controller->get('delivery_time').'</li>'."\n";
+                        $txt .= '</ul>'."\n";
 		}
 		$txt .= '</ul>'."\n";
-		$txt .= '</div>'."\n";
-		$this->set_value('confirmation_text', $txt); 
+		$txt .= '</div>'."\n"; 
 
 		return $txt;
 	}
@@ -214,7 +228,7 @@ class TranscriptPageTwoForm extends FormStep
 		// Process credit card
 		if( !$this->_has_errors() )
 		{
-			$pf = new homecomingPF;
+			$pf = new transcriptPF;
 			$expiration_mm = str_pad($this->get_value('credit_card_expiration_month'), 2, '0', STR_PAD_LEFT);
 			$expiration_yy = substr($this->get_value('credit_card_expiration_year'), 2, 2);
 			$expiration_mmyy = $expiration_mm.$expiration_yy;
@@ -304,13 +318,13 @@ class TranscriptPageTwoForm extends FormStep
 										'<th class="col1">Year</th>'=>'',
 										'<th>Amount</th>'=>'',
 										'</td><td>'=>': ',
-										'Ð'=>'-',
+										'ï¿½'=>'-',
 										'<h3>'=>'--------------------'."\n\n",
 										'</h3>'=>'',
 										'<br />'=>"\n",
 									);
-				if (reason_unique_name_exists('homecoming_thank_you_blurb'))
-					$confirm_text_with_blurb = get_text_blurb_content('homecoming_thank_you_blurb') . $confirm_text;
+				if (reason_unique_name_exists('transcript_thank_you_blurb'))
+					$confirm_text_with_blurb = get_text_blurb_content('transcript_thank_you_blurb') . $confirm_text;
 				else
 					$confirm_text_with_blurb = '<p><strong>Your transcript request has been made.</strong></p>' . $confirm_text;
 				

@@ -1,6 +1,6 @@
 <?php
 /**
-* This file contains the HomecomingConfirmation class
+* This file contains the transcriptConfirmation class
 * @author Matt Ryan <mryan@acs.carleton.edu>
 */
 
@@ -52,7 +52,7 @@ class TranscriptConfirmation
 	var $reference_number;
 	
 	/**
-	* A hash value that the HomecomingConfirmation object will use to validate the request for the confirmation text
+	* A hash value that the transcriptConfirmation object will use to validate the request for the confirmation text
 	* It will be compared against an md5 of the confirmation text if the reference number exists in the db
 	* @var string
 	*/
@@ -109,7 +109,7 @@ class TranscriptConfirmation
 		* Checks validation against results from DB query
 		* Compares the hash provided in set_hash() with an md5 of the confirmation text
 		* get_confirmation_text() checks with this function before returning confirmation text.
-		* This function does the actual instantiation of a homecomingPF class, which does the direct DB query
+		* This function does the actual instantiation of a transcriptPF class, which does the direct DB query
 		* @return bool true value indicates that things are OK; false indicates that things are not OK
 	*/
 	function validates()
@@ -118,8 +118,8 @@ class TranscriptConfirmation
 		{
 			if(!empty($this->reference_number))
 			{
-				$homecomingPF = new homecomingPF;
-				$confirm_text = $homecomingPF->get_confirmation_text($this->reference_number);
+				$transcriptPF = new transcriptPF;
+				$confirm_text = $transcriptPF->get_confirmation_text($this->reference_number);
 				if(!empty($confirm_text))
 				{
 					if($this->hash == $this->make_hash($confirm_text))
@@ -130,6 +130,9 @@ class TranscriptConfirmation
 							$confirm_text = '<p><strong>Your transcript request has been processed.</strong></p>' . $confirm_text;
 						$this->_confirm_text = $confirm_text;
 						$this->_confirm_text .= '<p>A copy of this confirmation has been sent to your email address.</p>';
+                                                $this->_confirm_text .=  '<div id="requestMore">'."\n";
+                                                $this->_confirm_text .=  '<a href ="/registrar/transcript/">Request more transcripts</a>';
+                                                $this->_confirm_text .=  '</div>'."\n";
 						$this->_validation_has_run = true;
 						$this->_validates = true;
 					}
@@ -137,7 +140,7 @@ class TranscriptConfirmation
 					{	
 					echo 'The confirmation_text is empty.<br />';
 						unset($confirm_text);
-						unset($homecomingPF);
+						unset($transcriptPF);
 						$this->_validation_has_run = true;
 						$this->_validates = false;
 					}
