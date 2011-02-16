@@ -15,6 +15,7 @@
 
 			// flickr username, api key, and secret must be included in array below:
 			$flickr_account = array("luthercollegemedia" => array("5b298e650817ac77f14054abfc722b01", "f8a94f21e063f110"),
+			"lcphotobureau" => array("0538a1c1ff66f69bb09e9ba0e863fb90", "f1c35e7ef5c4ac85"),
 			"lc.anthrolab" => array("6725551efcba6082283094d49a0c807f", "3dff123f2a053c3a"),
 			"luthertkd" => array("2e80ed6a3ce811d45607da933862c0e5", "140daaf7539dd293"),
 			"lutherbookshop" => array("72d5d704e16ae8cefcfab73e046d9129", "30fd8bc6d7fb815c"),
