@@ -23,6 +23,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'TranscriptR
  * @author Steve Smith
  * @package MinisiteModule
  */
+//class TranscriptRequestModule extends DefaultMinisiteWithAuthModule
 class TranscriptRequestModule extends DefaultMinisiteModule
 {
 	/**
@@ -49,7 +50,7 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 					'TranscriptPageTwoForm' => array(
 						'label' => 'Come on',
 					),
-					'TranscriptConfirmation' => array(
+					'TranscriptRequestConfirmation' => array(
 						'label' => 'Transcript Confirmation',
 					),
 				),
@@ -65,7 +66,7 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 				'final_step' => true,
 				'final_button_text' => 'Finish and Pay',
 			),
-			'TranscriptConfirmation' => array(
+			'TranscriptRequestConfirmation' => array(
 				'display_name' => 'Transcript Confirmation',
 			),
 		);
@@ -97,14 +98,14 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 	function init( $args = array() ) //{{{
 	{	
 		parent::init( $args );
-		
-                $user = reason_check_authentication();
-                echo $user;
-			
+
+                //$this->msg_uname = reason_unique_name_exists('transcript_login_blurb');
+                //$this->user = reason_check_authentication();
+
 		if($head_items =& $this->get_head_items())
 		{
 			//$head_items->add_stylesheet('/reason/css/form.css');
-			//$head_items->add_javascript('/reason/js/homecoming_reg.js');
+			$head_items->add_javascript('/reason/js/transcripts.js');
 		}
 	}//}}}
 	
