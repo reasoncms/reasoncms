@@ -748,7 +748,7 @@ function admissions_main_navigation()
         	echo '<li><a href="http://sports.luther.edu/">Athletics</a></li>'."\n";
         	echo '<li><a href="http://music.luther.edu/">Music</a></li>'."\n";	
         	echo '<li><a href="/admissions/lifeatluther/blogs/">Student Blogs</a></li>'."\n";
-        	echo '<li><a href="http://www.youtube.com/user/MartinLutherII" target="_blank">Luther Videos</a></li>'."\n";
+        	echo '<li><a href="/videos/">Luther Videos</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeatluther/collegeministries/">College Ministries</a></li>'."\n";        	
         	echo '<li><a href="/admissions/lifeatluther/diversity/">Diversity Center</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeatluther/residencelife/">Residence Life</a></li>'."\n";
