@@ -50,6 +50,16 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '<script type="text/javascript" src="/javascripts/nwmatcher/nwmatcher-1.2.3.js"></script>'."\n";
 		echo '<script type="text/javascript" src="/javascripts/selectivizr/selectivizr-1.0.0.js"></script>'."\n";
 		echo '<![endif]-->'."\n";
+		
+		// tracking for YouTube video that uses highslide to view
+		// uses "a name=" field for the video page name in analytics
+		echo '<script type="text/javascript">'."\n";
+		echo 'hs.Expander.prototype.onAfterExpand = function(sender) {
+				if (this.a.name != "") {
+					pageTracker._trackPageview(this.a.name);
+				}
+			}'."\n";
+		echo '</script>'."\n";
 
 		echo '</head>'."\n";
 
