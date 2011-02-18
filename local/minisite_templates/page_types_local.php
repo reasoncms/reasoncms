@@ -1,5 +1,4 @@
 <?php
-
 $GLOBALS['_reason_page_types_local'] = array(
 		'default' => array(
 			'pre_bluebar' => 'textonly_toggle_top',
@@ -24,589 +23,525 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'bannerad' => 'luther_bannerad',
 			'flickr_slideshow' => 'luther_flickr_slideshow',
 			'norse_calendar' => 'norse_calendar',
-
-            'sbvideo' => 'luther_sbvideo',
-            'content_blurb' => 'main_blurb', 
+                        'sbvideo' => 'luther_sbvideo',
+                        'content_blurb' => 'main_blurb',
 		),
 		'aaron_test_page' => array(
 			'main' => 'mobile_directions',
 			'main_post' => 'content',
 		),
-                'webcams' => array(
-			'main' => 'content',
-                        'main_post' => 'webcams',
-		),
-                'caf_cam' => array(
-			'main' => 'content',
-                        'main_post' => 'caf_cam',
-		),
 		'admissions_account_signup' => array(
 			'main_post' => 'applicant_account',
 		),
-        'admissions_home' => array(
+                'admissions_home' => array(
 			'banner_xtra' => '',
 			'post_banner' => '',
 			'sub_nav' => '',
 			'sub_nav_2' => 'admissions_sub_nav_2',
 			'sub_nav_3' => 'admissions_events_mini',
-	        //	'main_post' => 'admissions_main_post',	
-    	    //	'main_post' => '',	
-        	'main' => '',	
+	               	'main' => '',	
 			'main_post' => array(
-                        'module'=> 'quote',
-						'template' => '<blockquote><p><span class="openingQuote">&#8216;&#8216;</span>[[quote]]</p></blockquote><p class="cite">[[author]]</p>',
-                        //'enable_javascript_refresh' => true,
-                        'prefer_short_quotes' => true,
-                        'num_to_display' => 1,
-                        'rand_flag' => true,
-			),
-			//	'pre_sidebar' => 'admissions_pre_sidebar',
+                            'module'=> 'quote',
+                            'template' => '<blockquote><p><span class="openingQuote">&#8216;&#8216;</span>[[quote]]</p></blockquote><p class="cite">[[author]]</p>',
+                            'prefer_short_quotes' => true,
+                            'num_to_display' => 1,
+                            'rand_flag' => true,
+    			),
 			'pre_sidebar' => array( // Spotlights
-				'module' => 'publication',
-				'related_publication_unique_names' => array( 'spotlight_archives' ),
-				'related_mode' => 'true',
-				'related_title' => '',
-				'related_order' => 'random',
-				'max_num_items' => 1,
-				'markup_generator_info' => array(
-					'list_item' => array (
-						'classname' => 'SpotlightListItemMarkupGenerator',
-						'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/admissions_spotlight.php'
-					),
-				),
+                            'module' => 'publication',
+                            'related_publication_unique_names' => array( 'spotlight_archives' ),
+                            'related_mode' => 'true',
+                            'related_title' => '',
+                            'related_order' => 'random',
+                            'max_num_items' => 1,
+                            'markup_generator_info' => array(
+                                'list_item' => array (
+                                    'classname' => 'SpotlightListItemMarkupGenerator',
+                                    'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/admissions_spotlight.php'
+                                ),
+                            ),
 			),
-/*			            'sidebar'=>array(  
-            	'module' => 'luther_other_publication_news',
-				'max_num_to_show' => 1,
-				),
-*/
 			'sidebar' => array( // Highlights
-				'module' => 'publication',
-				//'module' => 'luther_other_publication_news',
-			//	'related_publication_unique_names' => array( 'headlinesarchive' ),
-				'related_mode' => 'true',
-				'related_title' => '',
-				'related_order' => 'random',
-				'max_num_items' => 1,
-				'markup_generator_info' => array(
-					'list_item' => array (
-						'classname' => 'HeadlineListItemMarkupGenerator',
-						'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/admissions_headline.php'
-					),
-				),
+                            'module' => 'publication',
+                            'related_mode' => 'true',
+                            'related_title' => '',
+                            'related_order' => 'random',
+                            'max_num_items' => 1,
+                            'markup_generator_info' => array(
+                                'list_item' => array (
+                                    'classname' => 'HeadlineListItemMarkupGenerator',
+                                    'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/admissions_headline.php'
+                                ),
+                            ),
 			),
 
 			'post_sidebar' => 'blurb',	
 		),
 		'alumni_auction_registration' => array(
-			'main_post' => 'alumni_auction_pricing',
+                    'main_post' => 'alumni_auction_pricing',
 		),
 		'app_dev_on_call' => array(
-			'main_post' => 'app_dev_on_call',
+                    'main_post' => 'app_dev_on_call',
 		),
-		'directions' => array(
-			'main' => 'directions',
-			'main_post' => 'content',
+                'audio_video' => array(
+                    'main_post' => 'luther_av',
+                    'sidebar' => '',
+                    'pre_sidebar' => '',
 		),
-		'directory_simple_campus' => array(
-			'main' => 'directory_campus_simple',
+                'audio_video_on_current_site' => array(
+                    'main_post' => 'luther_av',
+                    'sidebar' => '',
+                    'pre_sidebar' => '',
 		),
-		'directory_alumni' => array(
-			'main' => 'directory_search_alumni',
-			'sidebar' => 'login_link',
-		),
-    		'directory_aaron' => array(
-			'main' => 'aaron_directory',
-			'sidebar' => 'login_link',
-		),
-                'dorian_band_nomination' => array(
-                       'main_post' => 'dorian_band',
-                ),
-                'dorian_jh_camp' => array(
-                        'main_post' => 'dorian_jh_camps',
-                 ),
-                'dorian_sh_camp' => array(
-                        'main_post' => 'dorian_sh_camp',
-                 ),
-                'dorian_vocal_nomination' => array(
-                       'main_post' => 'dorian_vocal',
-                ),
-		'events' => array(
-			'main_post' => 'luther_events',
-		),
-        'event_with_form' => array(
-        	'main' => 'events',
-        	'main_post' => 'form',	
-        ),
-		'faculty' => array(
-			'main_post' => 'luther_faculty'
-		),
-	'gift_page_engine' => array(
-            'main_post' => 'gift_form',
-        ),
-        'homecoming_registration' => array(
-        	'main_post' => 'homecoming_registration',
-        ),
-		'image_slideshow' => array(
-			//'main' => 'luther_flickr_slideshow',
-                        'main_post' => 'luther_image_slideshow',
-                        'sidebar' => '',
-                ),
-	'audio_video' => array(
-			'main_post' => 'luther_av',
-                        'sidebar' => '',
-                        'pre_sidebar' => '',
-		),
-	'audio_video_on_current_site' => array(
-			'main_post' => 'luther_av',
-                        'sidebar' => '',
-                        'pre_sidebar' => '',
-		),
-        'audio_video_sidebar' => array(
-                        'sidebar' => 'luther_av',
-			'pre_sidebar' => 'luther_image_sidebar',
+                'audio_video_sidebar' => array(
+                    'sidebar' => 'luther_av',
+                    'pre_sidebar' => 'luther_image_sidebar',
                 ),
 		'audio_video_full_size' => array(   // one large video in main content area
-                'main_post' => array(
+                    'main_post' => array(
                 	'module' => 'luther_av',
-					'full_size' => true,
-                ),
-                //'sidebar' => '',
-				'pre_sidebar' => '',
+                        'full_size' => true,
+                    ),
+                    'pre_sidebar' => '',
 		),
-
-
-        //-----------------------Steve's Homepage Begin---------------
-        'homepage' => array(
-            'main_post'=>'',
-            'main_head' => '',
-            'main'=>'',
-	    	'banner_xtra' => 'google_search_appliance',
-            'sidebar'=>array(  
-            	'module' => 'luther_other_publication_news',
-				'max_num_to_show' => 5,
-				),
-            'pre_sidebar' => array( // Spotlights
-            	'module' => 'publication',
-				'related_publication_unique_names' => array( 'spotlight_archives' ),
-				'related_mode' => 'true',
-				'related_title' => '',
-				'related_order' => 'random',
-				'max_num_items' => 1,
-				'markup_generator_info' =>
-				   array(
-				     'list_item' =>
-				 	array (
-					  'classname' => 'SpotlightListItemMarkupGenerator',
-				          'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
-					      ),
-					 ),
-            //'post_sidebar' => 'bannerAds',
-            ),
-         ),
-        //-----------------------Steve's Homepage End-----------------
-		'lfw_registration' => array(
-        	'main_post' => 'lfw_form',
-        ),
-        'luther2010_home' => array(
-            'main_post'=>'',
-            'main_head' => '',
-            'main'=>'',
-			'navigation' => 'luther_carousel',
-			'sub_nav' => 'luther_image_quote',
-	    	'banner_xtra' => 'nav_search_logo',
-			//'pre_sidebar' => 'events',
-			'pre_sidebar' => 'luther_events_mini',
-            'sidebar'=> array( // News  
-            	'module' => 'luther_other_publication_news',
-				'max_num_to_show' => 3,
-				),
-            'post_sidebar' => array( // Spotlights
-            	'module' => 'publication',
-				'related_publication_unique_names' => array( 'spotlight_archives' ),
-				'related_mode' => 'true',
-				'related_title' => '',
-				'related_order' => 'random',
-				'max_num_items' => 1,
-				'markup_generator_info' =>
-				   array(
-				     'list_item' =>
-				 	array (
-					  'classname' => 'SpotlightListItemMarkupGenerator',
-				          'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
-					      ),
-					 ), 	
-            ),
-         ),
-         'luther2010_alumni' => array(
+                'caf_cam' => array(
 			'main' => 'content',
-			'main_post' => 'luther_events_mini',
-			//'main_post' => array(
-		//		'module'=>'children',
-		//		'provide_images' => true,
-		//	),
-			'imagetop' => 'luther_carousel',
-            'pre_sidebar' => array( // Spotlights
-            	'module' => 'publication',
-				//'related_publication_unique_names' => array( 'spotlight_archives' ),
-				'related_publication_unique_names' => array( 'spotlights_alumni' ),
-				'related_mode' => 'true',
-				'related_title' => '',
-				'related_order' => 'random',
-				'max_num_items' => 1,
-				'markup_generator_info' =>
-				   array(
-				     'list_item' =>
-				 	array (
-					  'classname' => 'SpotlightListItemMarkupGenerator',
-				          'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
-					      ),
-					 ),
-            ),
-            'sidebar' => '',
-            'post_sidebar'=> array( // News  
-            	'module' => 'luther_other_publication_news',
-				'max_num_to_show' => 3,
-				),
-            //'post_sidebar' => 'luther_events_mini',
-         ),
-         'luther2010_giving' => array(
-			'main_post' => array(
-				'module'=>'children',
-				'provide_images' => true,
-			),
-			'imagetop' => 'luther_carousel',
-            'pre_sidebar' => array( // Spotlights
-            	'module' => 'publication',
-				//'related_publication_unique_names' => array( 'spotlight_archives' ),
-				'related_publication_unique_names' => array( 'spotlights_giving' ),
-				'related_mode' => 'true',
-				'related_title' => '',
-				'related_order' => 'random',
-				'max_num_items' => 1,
-				'markup_generator_info' =>
-				   array(
-				     'list_item' =>
-				 	array (
-					  'classname' => 'SpotlightListItemMarkupGenerator',
-				          'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
-					      ),
-					 ),
-            ),
-            'sidebar' => '',
-            'post_sidebar' => 'luther_events_mini',
-         ),
-         'luther2010_music' => array(
-			'main' => 'content',
-         	'main_post' => 'luther_events_mini',
-			'content_blurb' => array( // Spotlights
-            	'module' => 'publication',
-			//	'related_publication_unique_names' => array( 'spotlight_archives' ),
-         		'related_publication_unique_names' => array( 'spotlights_music' ),
-				'related_mode' => 'true',
-				'related_title' => '',
-				'related_order' => 'random',
-				'max_num_items' => 1,
-				'markup_generator_info' =>
-				   array(
-				     'list_item' =>
-				 	array (
-					  'classname' => 'SpotlightListItemMarkupGenerator',
-				          'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
-					      ),
-					 ),
-            ),
-			'imagetop' => 'luther_carousel',
-            'pre_sidebar' => 'main_blurb',
-            'sidebar' => '',
-            'post_sidebar' => '',            
-         ),
-         'luther2010_naa' => array(
-			'main' => 'content',
-         	'main_post' => array(
-            	'module' => 'publication',
+                        'main_post' => 'caf_cam',
+		),
+		'directions' => array(
+                    'main' => 'directions',
+                    'main_post' => 'content',
+		),
+		'directory_simple_campus' => array(
+                    'main' => 'directory_campus_simple',
+		),
+		'directory_alumni' => array(
+                    'main' => 'directory_search_alumni',
+                    'sidebar' => 'login_link',
+		),
+    		'directory_aaron' => array(
+                    'main' => 'aaron_directory',
+                    'sidebar' => 'login_link',
+		),
+                'dorian_band_nomination' => array(
+                   'main_post' => 'dorian_band',
+                ),
+                'dorian_jh_camp' => array(
+                    'main_post' => 'dorian_jh_camps',
+                 ),
+                'dorian_sh_camp' => array(
+                    'main_post' => 'dorian_sh_camp',
+                 ),
+                'dorian_vocal_nomination' => array(
+                   'main_post' => 'dorian_vocal',
+                ),
+		'events' => array(
+                    'main_post' => 'luther_events',
+		),
+                'event_with_form' => array(
+                    'main' => 'events',
+                    'main_post' => 'form',
+                ),
+		'faculty' => array(
+                    'main_post' => 'luther_faculty'
+		),
+                'gift_page_engine' => array(
+                    'main_post' => 'gift_form',
+                ),
+                'homecoming_registration' => array(
+                    'main_post' => 'homecoming_registration',
+                ),
+		 //-----------------------Steve's Homepage Begin---------------
+                'homepage' => array(
+                    'main_post'=>'',
+                    'main_head' => '',
+                    'main'=>'',
+                    'banner_xtra' => 'google_search_appliance',
+                    'sidebar'=>array(
+                        'module' => 'luther_other_publication_news',
+                        'max_num_to_show' => 5,
+                    ),
+                    'pre_sidebar' => array( // Spotlights
+                        'module' => 'publication',
+                        'related_publication_unique_names' => array( 'spotlight_archives' ),
+                        'related_mode' => 'true',
+                        'related_title' => '',
+                        'related_order' => 'random',
+                        'max_num_items' => 1,
+                        'markup_generator_info' =>array(
+                             'list_item' =>array (
+                                  'classname' => 'SpotlightListItemMarkupGenerator',
+                                  'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+                              ),
+                         ),
+                        //'post_sidebar' => 'bannerAds',
+                    ),
+                ),//-----------------------Steve's Homepage End-----------------
+                'image_slideshow' => array(
+                    'main_post' => 'luther_image_slideshow',
+                    'sidebar' => '',
+                ),
+                'lfw_registration' => array(
+                    'main_post' => 'lfw_form',
+                ),
+               'luther2010_alumni' => array(
+                    'main' => 'content',
+                    'main_post' => 'luther_events_mini',
+                    'imagetop' => 'luther_carousel',
+                    'pre_sidebar' => array( // Spotlights
+                        'module' => 'publication',
+                        'related_publication_unique_names' => array( 'spotlights_alumni' ),
+                        'related_mode' => 'true',
+                        'related_title' => '',
+                        'related_order' => 'random',
+                        'max_num_items' => 1,
+                        'markup_generator_info' =>array(
+                             'list_item' =>array (
+                                  'classname' => 'SpotlightListItemMarkupGenerator',
+                                  'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+                              ),
+                         ),
+                    ),
+                    'sidebar' => '',
+                    'post_sidebar'=> array( // News
+                        'module' => 'luther_other_publication_news',
+                        'max_num_to_show' => 3,
+                    ),
+                ),
+                 'luther2010_giving' => array(
+                    'main_post' => array(
+                        'module'=>'children',
+                        'provide_images' => true,
+                    ),
+                    'imagetop' => 'luther_carousel',
+                    'pre_sidebar' => array( // Spotlights
+                        'module' => 'publication',
+                        //'related_publication_unique_names' => array( 'spotlight_archives' ),
+                        'related_publication_unique_names' => array( 'spotlights_giving' ),
+                        'related_mode' => 'true',
+                        'related_title' => '',
+                        'related_order' => 'random',
+                        'max_num_items' => 1,
+                        'markup_generator_info' =>array(
+                             'list_item' =>array (
+                                  'classname' => 'SpotlightListItemMarkupGenerator',
+                                  'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+                              ),
+                         ),
+                    ),
+                    'sidebar' => '',
+                    'post_sidebar' => 'luther_events_mini',
+                ),
+                 'luther2010_home' => array(
+                    'main_post'=>'',
+                    'main_head' => '',
+                    'main'=>'',
+                    'navigation' => 'luther_carousel',
+                    'sub_nav' => 'luther_image_quote',
+                    'banner_xtra' => 'nav_search_logo',
+                    //'pre_sidebar' => 'events',
+                    'pre_sidebar' => 'luther_events_mini',
+                    'sidebar'=> array( // News  
+                        'module' => 'luther_other_publication_news',
+                        'max_num_to_show' => 3,
+                    ),
+                    'post_sidebar' => array( // Spotlights
+                        'module' => 'publication',
+                        'related_publication_unique_names' => array( 'spotlight_archives' ),
+                        'related_mode' => 'true',
+                        'related_title' => '',
+                        'related_order' => 'random',
+                        'max_num_items' => 1,
+                        'markup_generator_info' =>array(
+                            'list_item' =>array (
+                                  'classname' => 'SpotlightListItemMarkupGenerator',
+                                  'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+                              ),
+                         ), 	
+                    ),
+                ),
+                 'luther2010_live_at_luther' => array(
+                    'imagetop' => 'luther_carousel',
+                    'content_blurb' => '',
+                    'sidebar' => 'luther_events_mini',
+                    'post_sidebar' => '',
+                ),
+                'luther2010_music' => array(
+                    'main' => 'content',
+                    'main_post' => 'luther_events_mini',
+                    'content_blurb' => array( // Spotlights
+                        'module' => 'publication',
+			'related_publication_unique_names' => array( 'spotlights_music' ),
+                        'related_mode' => 'true',
+                        'related_title' => '',
+                        'related_order' => 'random',
+                        'max_num_items' => 1,
+                        'markup_generator_info' =>array(
+                             'list_item' =>array (
+                                  'classname' => 'SpotlightListItemMarkupGenerator',
+                                  'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+                              ),
+                         ),
+                    ),
+                    'imagetop' => 'luther_carousel',
+                    'pre_sidebar' => 'main_blurb',
+                    'sidebar' => '',
+                    'post_sidebar' => '',
+                ),
+                'luther2010_naa' => array(
+                    'main' => 'content',
+                    'main_post' => array(
+                        'module' => 'publication',
          		'related_publication_unique_names' => array('naa_news'),
          		'related_mode' => 'true',
          		'max_num_items' => 2,
-         	),
-			'imagetop' => 'luther_carousel',
-         	'content_blurb' => '',
-         	'pre_sidebar' => 'main_blurb',
-            'sidebar' => 'luther_events_mini',
-         	'post_sidebar' => '',         
-         ),
-         'luther2010_public_information' => array(
-			'main' => 'content',
-         	'main_post' => array(
-            	'module' => 'publication',
+                    ),
+                    'imagetop' => 'luther_carousel',
+                    'content_blurb' => '',
+                    'pre_sidebar' => 'main_blurb',
+                    'sidebar' => 'luther_events_mini',
+                    'post_sidebar' => '',
+                ),
+                'luther2010_public_information' => array(
+                    'main' => 'content',
+                    'main_post' => array(
+                        'module' => 'publication',
          		'related_publication_unique_names' => array('headlinesarchive'),
          		'related_mode' => 'true',
          		'max_num_items' => 7,
-         	),
-			'imagetop' => 'luther_carousel',
-			'content_blurb' => '',
-         	//'content_blurb' => 'luther_events_mini',
-         	//'content_blurb' => array(
-         	//	'module' => 'luther_events_mini',
-         	//	'additional_sites' => 'luther2010'),
-         	'pre_sidebar' => '',
-            'sidebar' => '',
-         	'post_sidebar' => 'main_blurb',         
-         ),
-         'luther2010_live_at_luther' => array(
-			'imagetop' => 'luther_carousel',
-         	'content_blurb' => '',
-            'sidebar' => 'luther_events_mini',
-         	'post_sidebar' => '',         
-         ),
-		'luther_news_page' => array(
-			'main_post' => 'publication',
-            		'sub_nav_3' => 'quote',
+                    ),
+                    'imagetop' => 'luther_carousel',
+                    'content_blurb' => '',
+                    //'content_blurb' => 'luther_events_mini',
+                    //'content_blurb' => array(
+                    //	'module' => 'luther_events_mini',
+                    //	'additional_sites' => 'luther2010'),
+                    'pre_sidebar' => '',
+                    'sidebar' => '',
+                    'post_sidebar' => 'main_blurb',
+                ),
+//		'luther_news_page' => array(
+//                    'main_post' => 'publication',
+//                    'sub_nav_3' => 'quote',
+//		),
+//		'luther_static_page' => array(
+//                    'pre_banner' => '',
+//                    'post_banner' => '',
+//		),
+//		'luther_pageLC' => array(
+//			'pre_banner' => '',
+//			'post_banner' => '',
+//		),
+//		'luther_pageLRC' => array(
+//			'pre_banner' => '',
+//			'post_banner' => '',
+//		),
+//		'luther_primaryLRC' => array(
+//            		'main_post'=>array(
+//            			'module' => 'luther_other_publication_news',
+//				'max_num_to_show' => 5,
+//				),
+//			'pre_banner' => '',
+//			'post_banner' => '',
+//            		'sub_nav_3' => array( // Spotlights
+//            			'module' => 'publication',
+//				'related_publication_unique_names' => array( 'spotlight_archives' ),
+//				'related_mode' => 'true',
+//				'related_title' => '',
+//				'related_order' => 'random',
+//				'max_num_items' => 1,
+//				'markup_generator_info' =>
+//				   array(
+//				     'list_item' =>
+//				 	array (
+//					  'classname' => 'SpotlightListItemMarkupGenerator',
+//				          'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+//
+//					      ),
+//					 ),
+//				   ),
+//		),
+                'mobile_admissions' => array(
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main_head' => '',
+                    'main' => 'content',
+                    'main_post' => 'mobile_admissions_home',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
-		'luther_static_page' => array(
-			'pre_banner' => '',
-			'post_banner' => '',
+                'mobile_blank' => array(
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main' => 'content',
+                    'main_post' => 'mobile_blank',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
-		'luther_pageLC' => array(
-			'pre_banner' => '',
-			'post_banner' => '',
+                'mobile_caf_cam' => array(
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main' => 'content',
+                    'main_post' => 'mobile_caf_cam',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
-		'luther_pageLRC' => array(
-			'pre_banner' => '',
-			'post_banner' => '',
-		),
-		'luther_primaryLRC' => array(
-            		'main_post'=>array(  
-            			'module' => 'luther_other_publication_news',
-				'max_num_to_show' => 5,
-				),
-			'pre_banner' => '',
-			'post_banner' => '',
-            		'sub_nav_3' => array( // Spotlights
-            			'module' => 'publication',
-				'related_publication_unique_names' => array( 'spotlight_archives' ),
-				'related_mode' => 'true',
-				'related_title' => '',
-				'related_order' => 'random',
-				'max_num_items' => 1,
-				'markup_generator_info' =>
-				   array(
-				     'list_item' =>
-				 	array (
-					  'classname' => 'SpotlightListItemMarkupGenerator',
-				          'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
-
-					      ),
-					 ),
-				   ),
-		),
-/*
-		'luther_home_page' => array(
-            		'main_post'=>'',
-            		'main_head' => '',
-            		'main'=>'',
-            		'sidebar'=>array(  
-            			'module' => 'luther_other_publication_news',
-				'max_num_to_show' => 5,
-				),
-            		'pre_sidebar' => array( // Spotlights
-            		'module' => 'publication',
-				'related_publication_unique_names' => array( 'spotlight_archives' ),
-				'related_mode' => 'true',
-				'related_title' => '',
-				'link_to_full_item' => 'true',
-				'related_order' => 'random',
-				'max_num_items' => 1,
-				'markup_generator_info' =>
-				   array(
-				     'list_item' =>
-				 	array (
-					  'classname' => 'SpotlightListItemMarkupGenerator',
-				          'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
-					      ),
-					 ),
-				   ),
-		),
-*/
-		'mobile_home' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main_head' => '',
-            'main' => 'content',
-            'main_post' => 'mobile_icon_home',
-			'footer' => '',
-            'post_foot' => 'mobile_footer',
-		),
-    		'mobile_visitor' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main_head' => '',
-            'main' => 'content',
-            'main_post' => 'mobile_visitor_home',
-			'footer' => '',
-            'post_foot' => 'mobile_footer',
-		),
-    		'mobile_admissions' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main_head' => '',
-            'main' => 'content',
-            'main_post' => 'mobile_admissions_home',
-			'footer' => '',
-            'post_foot' => 'mobile_footer',
-		),
-        		'mobile_blank' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-            'main' => 'content',
-            'main_post' => 'mobile_blank',
-			'footer' => '',
-            'post_foot' => 'mobile_footer',
+                'mobile_caf_menu' => array(
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main' => 'content',
+                    'main_post' => 'mobile_caf_menu',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
 		'mobile_directions' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main' => 'content',
-			'main_post' => 'mobile_directions',
-			'footer' => '',
-            'post_foot' => 'mobile_footer',
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main' => 'content',
+                    'main_post' => 'mobile_directions',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
 		'mobile_directory' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main' => 'content',
-			'main_post' => 'aaron_directory',
-			'footer' => '',
-            'post_foot' => 'mobile_footer',
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main' => 'content',
+                    'main_post' => 'aaron_directory',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
-    		'mobile_caf_menu' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main' => 'content',
-			'main_post' => 'mobile_caf_menu',
-			'footer' => '',
-            'post_foot' => 'mobile_footer',
+    		'mobile_event_cal' => array(
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main' => 'content',
+                    'main_post' => 'mobile_event_cal',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
-    		'mobile_caf_cam' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main' => 'content',
-			'main_post' => 'mobile_caf_cam',
-			'footer' => '',
-            'post_foot' => 'mobile_footer',
+                'mobile_home' => array(
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main_head' => '',
+                    'main' => 'content',
+                    'main_post' => 'mobile_icon_home',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
-		'mobile_labstats' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main' => 'content',
-			'main_post' => 'lab_stats',
-			'footer' => '',
-            'post_foot' => 'mobile_footer',
+                'mobile_labstats' => array(
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main' => 'content',
+                    'main_post' => 'lab_stats',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
-        		'mobile_librarysearch' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main' => 'content',
-			'main_post' => 'library_search',
-			'footer' => '',
-                        'post_foot' => 'mobile_footer',
-		),
-        		'mobile_event_cal' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main' => 'content',
-			'main_post' => 'mobile_event_cal',
-			'footer' => '',
-                        'post_foot' => 'mobile_footer',
+                'mobile_librarysearch' => array(
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main' => 'content',
+                    'main_post' => 'library_search',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
 		'mobile_map' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main' => 'content',
-			'main_post' => 'campus_map',
-			'footer' => '',
-            'post_foot' => 'mobile_footer',
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main' => 'content',
+                    'main_post' => 'campus_map',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
 		'mobile_map_home' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main' => 'content',
-			'main_post' => 'mobile_map_home',
-			'footer' => '',
-            'post_foot' => 'mobile_footer',
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main' => 'content',
+                    'main_post' => 'mobile_map_home',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
 		'mobile_news' => array(
-			'banner_xtra' => '',
-			'post_banner' => '',
-			'main' => '',
-			'main_post' => 'publication',
-			'footer' => '',
-            'post_foot' => 'mobile_footer',
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main' => '',
+                    'main_post' => 'publication',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
 		),
-
-		'onecard' => array(
-            'main_post'=>'onecard_dashboard',
-            'sidebar'=>'',
-            'pre_sidebar' => '',
-         ),
+                'mobile_visitor' => array(
+                    'banner_xtra' => '',
+                    'post_banner' => '',
+                    'main_head' => '',
+                    'main' => 'content',
+                    'main_post' => 'mobile_visitor_home',
+                    'footer' => '',
+                    'post_foot' => 'mobile_footer',
+		),
+                'norge_conference' => array(
+                    'main_post' => 'norge_form',
+                ),
+                'onecard' => array(
+                    'main_post'=>'onecard_dashboard',
+                    'sidebar'=>'',
+                    'pre_sidebar' => '',
+                ),
 		'publication' => array(
-			'main_post'=>'publication',
-            'main_head' => 'publication/luther_title',
-			'main'=> array(
-				'module' => 'publication/description',
-         		'hide_on_item' => true),
-			'pre_banner' => '',
-			'post_banner' => '',
-			'sidebar'=>'',
-			'pre_sidebar' => '',
-        ),        
-         'spotlight_archive' => array(
-            'main_post' => array( // Spotlights
-            	'module' => 'publication',
-				'related_title' => '',
-				//'link_to_full_item' => 'true',
-				'markup_generator_info' =>
-				   array(
-				     'item' =>
-				 	array (
-					  'classname' => 'SpotlightItemMarkupGenerator',
-				          'filename' =>'minisite_templates/modules/publication/item_markup_generators/spotlight.php'
-					      ),
-				     'list' =>
-				 	array (
-					  'classname' => 'SpotlightPublicationListMarkupGenerator',
-				          'filename' =>'minisite_templates/modules/publication/publication_list_markup_generators/spotlight.php'
-					      ),
-				),
-        	),     
-            'main_head' => 'publication/luther_title',
-            'main'=>'publication/description',
-			'pre_banner' => '',
-			'post_banner' => '',
-            'sidebar'=>'',
-            //'pre_sidebar' => '',
+                    'main_post'=>'publication',
+                    'main_head' => 'publication/luther_title',
+                    'main'=> array(
+                        'module' => 'publication/description',
+         		'hide_on_item' => true
+                    ),
+                    'pre_banner' => '',
+                    'post_banner' => '',
+                    'sidebar'=>'',
+                    'pre_sidebar' => '',
+                ),
+                'spotlight_archive' => array(
+                    'main_post' => array( // Spotlights
+                        'module' => 'publication',
+                        'related_title' => '',
+                        'markup_generator_info' =>array(
+                             'item' =>array (
+                                  'classname' => 'SpotlightItemMarkupGenerator',
+                                  'filename' =>'minisite_templates/modules/publication/item_markup_generators/spotlight.php'
+                              ),
+                             'list' =>array (
+                                  'classname' => 'SpotlightPublicationListMarkupGenerator',
+                                  'filename' =>'minisite_templates/modules/publication/publication_list_markup_generators/spotlight.php'
+                              ),
+                        ),
+                    ),
+                    'main_head' => 'publication/luther_title',
+                    'main'=>'publication/description',
+                    'pre_banner' => '',
+                    'post_banner' => '',
+                    'sidebar'=>'',
+                    //'pre_sidebar' => '',
 		),
 		'standalone_login_page' => array(
-			'main_post' => 'login',
+                    'main_post' => 'login',
 		),
 		'standalone_login_page_stripped' => array(
-			'main_head' => '',
-			'edit_link' => '',
-			'banner_xtra' => 'nav_search_logo',
-			'navigation' => '',
-			'sub_nav' => '',
-			'sub_nav_2' => '',
-//			'post_foot' => 'textonly_toggle',
-			'main' => 'login',
-			'sidebar' => 'blurb',
+                    'main_head' => '',
+                    'edit_link' => '',
+                    'banner_xtra' => 'nav_search_logo',
+                    'navigation' => '',
+                    'sub_nav' => '',
+                    'sub_nav_2' => '',
+                    'main' => 'login',
+                    'sidebar' => 'blurb',
 		),
 		'test_page' => array(
-			'main' => 'steve_module',
-			'main_post' => 'content',
-			'sub_nav_3'=> 'twitter',
+                    'main' => 'steve_module',
+                    'main_post' => 'content',
+                    'sub_nav_3'=> 'twitter',
 		),
 		'transcript_request' => array(
-			'main_post' => 'transcript_request',
+                    'main_post' => 'transcript_request',
+		),
+                'webcams' => array(
+			'main' => 'content',
+                        'main_post' => 'webcams',
 		),
 );
 
