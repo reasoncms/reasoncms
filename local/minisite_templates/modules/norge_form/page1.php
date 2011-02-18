@@ -1,0 +1,144 @@
+<?php
+////////////////////////////////////////////////////////////////////////////////
+//
+//    Steve Smith
+//    2011-02-16
+//
+//    Work on the first page of the NAHA Norge form
+//
+////////////////////////////////////////////////////////////////////////////////
+
+class NorgeFormOne extends FormStep
+{
+	var $_log_errors = true;
+	var $error;
+        var $display_name = 'Your Information';
+
+	var $elements = array(
+		'information_header' => array(
+			'type' => 'comment',
+			'text' => '<h3>Your Information</h3>',
+		),
+		'first_name' => array(
+			'type' => 'text',
+			'size' => 35,
+		),
+		'last_name' => array(
+			'type' => 'text',
+			'size'=> 35,
+		),
+                'institution' => array(
+                    'type' => 'text',
+                    'size' => 45,
+                ),
+		'address_1' => array(
+			'type' => 'text',
+			'size' => 35,
+		),
+                'address_2' => array(
+			'type' => 'text',
+			'size' => 35,
+		),
+		'city' => array(
+			'type' => 'text',
+			'size' => 35,
+		),
+		'state_province' => array(
+			'type' => 'state_province',
+			'display_name' => 'State/Province',
+		),
+		'zip_postal' => array(
+			'type' => 'text',
+			'size' => 35,
+                        'display_name' => 'Zip/Postal Code'
+		),
+                'country' => 'country',
+		'phone' => array(
+			'type' => 'text',
+			'size' => 20,
+		),
+                'e-mail' => array(
+			'type' => 'text',
+			'size' => 35,
+		),
+                'registration_header' => array(
+                    'type' => 'comment',
+                    'text' => '<h3>Registration Information</h3>',
+                ),
+                'registration_type' => array(
+                    'type' => 'radio_no_sort',
+                    'options' => array(
+                        'Regular' => 'Regular - $150 usd',
+                        'Senior' => 'Senior (over age 65) -$125 usd',
+                        'Student' => 'Student - $100 usd'
+                    )
+                ),
+                'school' => 'text',
+                'attend_banquet' => array(
+                    'type' => 'radio_in_line_no_sort',
+                    'display_name' => 'Will you attend the banquet?',
+                    'options' => array('yes' => 'Yes', 'no' => 'No'),
+                    'comment' => 'Banquet ticket $35'
+                ),
+                'housing_header' => array(
+                    'type' => 'comment',
+                    'text' => '<h3>Baker Village Housing Requests</h3>',
+                ),
+                'housing_comment' => array(
+                    'type' => 'comment',
+                    'text' => 'Please see the <a href="http://www.luther.edu/150/events/conference/housing/" target=_blank>accommodations</a>
+                        page for housing options and descriptions'
+                ),
+                'room_type' => array(
+                    'type' => 'radio_in_line_no_sort',
+                    'comment' => '$32 per bed <br>
+                        Single - one twin bed<br>
+                        Double - two twin beds',
+                    'options' => array('single' => 'Single', 'double' => 'Double')
+                ),
+                'housemates_requested' => array(
+                    'type' => 'textarea',
+                   'display_name' => 'If possible, please house me with',
+                ),
+                'additional_meal_header' => array(
+                    'text' => '<h3>Additional Meal Tickets</h3>',
+                    'type' => 'comment',
+                ),
+                'additional_meal_comment' => array(
+                    'type' => 'comment',
+                    'text' => 'If you would like to bring a guest to '
+                ),
+                'additional_meal_tickets' => array(
+                    'type' => 'checkboxgroup',
+                    'options' => array(
+                        'Reception' => 'Reception - $15',
+                        'Barbecue' => 'Barbecue - $25',
+                        'Banquet' => 'Banquet - $35',
+                    )
+                ),
+                'dietary_needs' => array(
+                    'type' => 'textarea',
+                    'display_name' => 'Please list any dietary restrictions or needs for you or your guest',
+                ),
+                'submitter_ip' => 'hidden',
+	);
+
+	var $required = array('first_name', 'last_name', 'phone', 'e-mail', 'address_1', 'city',  'registration_type');
+
+	var $error_header_text = 'Please check your form.';
+
+        function on_every_time()
+        {
+            $this->set_value('submitter_ip', $_SERVER[ 'REMOTE_ADDR' ]);
+        }
+	// style up the form and add comments et al
+	function pre_show_form()
+	{
+		echo '<div id="norgeForm" class="pageOne">'."\n";
+	}
+	function post_show_form()
+	{
+		echo '</div>'."\n";
+	}
+}
+?>
