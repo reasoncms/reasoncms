@@ -8,8 +8,7 @@ $(document).ready(function() {
 
         //show school field
         showSchool();
-        $("#radio_registration_type_2").change(function(){showSchool();});
-
+        $("#radio_registration_type_2").change(function(){showSchool()});
 
         toggle_billing_address();
 	$("input[name='billing_address']").change(function(){toggle_billing_address()});
@@ -27,10 +26,11 @@ function show_field(element)
 }
 function showSchool()
 {
-    var id = $("input[name=registration_type]:checked").attr('id');
-
-    if (id == 'Student') {show_field('school');}
-    else {hide_field('school'); }
+    if ($("input[name=registration_type]:checked").val() == 'Student'){
+        show_field('school');
+    } else {
+        hide_field('school');
+    }
  }
 function toggle_billing_address()
 {
