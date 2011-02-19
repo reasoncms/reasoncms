@@ -208,6 +208,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                         'max_num_to_show' => 3,
                     ),
                 ),
+                'luther2010_carousel' => array (
+                	'imagetop' => 'luther_carousel',
+                ),
                  'luther2010_giving' => array(
                     'main_post' => array(
                         'module'=>'children',
