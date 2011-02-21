@@ -38,8 +38,7 @@
 			$post = '';
 			if(!empty($info))
 			{
-				$this->add_element('directory_info','solidtext');
-				$this->set_value('directory_info',$info);
+				$this->add_element('directory_info','commentWithLabel',array('text'=>$info));
 				$pre = 'Additional ' ;
 				$post = '<br /><span class="smallText">(This will appear below directory info)</span>';
 			}
@@ -105,12 +104,12 @@
 			}
 			else
 			{
-				return $value;
+				return htmlspecialchars($value, ENT_QUOTES);
 			}
 		}
 		function make_email_link($email) //{{{
 		{
-			return '<a href="mailto:'.$email.'">'.$email.'</a>';
+			return '<a href="mailto:'.urlencode($email).'">'.htmlspecialchars($email, ENT_QUOTES).'</a>';
 		} // }}}
 		
 		function run_error_checks()
