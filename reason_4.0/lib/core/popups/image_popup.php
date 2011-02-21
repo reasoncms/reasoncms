@@ -33,13 +33,9 @@
 	{
 		header('HTTP/1.0 404 Not Found');
 		$title = 'No image found';
-		if(!empty($_SERVER['HTTP_REFERER'])) // only trigger an error if there is a referer (e.g. we can do something about it)
+		if(!empty($_SERVER['HTTP_REFERER']) && !empty($id) ) // only trigger an error if there is a referer (e.g. we can do something about it)
 		{
-			if(empty($id))
-			{
-				$xtra = 'Invalid id passed to script';
-			}
-			elseif(!$image->get_values())
+			if(!$image->get_values())
 			{
 				$xtra = 'id passed to script is not the id of a Reason entity';
 			}
