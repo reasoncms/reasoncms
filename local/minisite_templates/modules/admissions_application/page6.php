@@ -20,7 +20,7 @@
  *          Criminal History
  *          More????
  */
-class ApplicationPageOne extends FormStep
+class ApplicationPageSix extends FormStep
 {
 	var $_log_errors = true;
 	var $error;

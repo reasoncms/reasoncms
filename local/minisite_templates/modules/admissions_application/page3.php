@@ -20,7 +20,7 @@
  *      Siblings
  *
  */
-class ApplicationPageOne extends FormStep
+class ApplicationPageThree extends FormStep
 {
 	var $_log_errors = true;
 	var $error;

@@ -17,7 +17,7 @@
  *      Previous Colleges
  *      Test Scores
  */
-class ApplicationPageOne extends FormStep
+class ApplicationPageFour extends FormStep
 {
 	var $_log_errors = true;
 	var $error;
