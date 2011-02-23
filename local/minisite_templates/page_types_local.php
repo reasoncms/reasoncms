@@ -33,6 +33,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'admissions_account_signup' => array(
 			'main_post' => 'applicant_account',
 		),
+                'admissions_application' => array(
+			'main_post' => 'admissions_application',
+		),
                 'admissions_home' => array(
 			'banner_xtra' => '',
 			'post_banner' => '',
