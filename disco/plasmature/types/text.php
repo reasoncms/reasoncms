@@ -103,6 +103,7 @@ class plainTextType extends defaultType
 	}
 }
 
+
 /**
  * Disabled Text -- shows a disabled form element
  * Changing of this value in userland is now deprecated; in future releases it will not be possible.
@@ -216,4 +217,61 @@ class textareaType extends defaultType
 class textarea_no_labelType extends textareaType // {{{
 {
 	var $_labeled = false;
+}
+
+/**
+ * Prints out value of item without allowing you to edit it.
+ *
+ * Changing of this value in userland is not possible.
+ *
+ * Note that the wysiwyg aspect of this element requires jquery
+ * to work -- if you are seeing a normal text area, you need to
+ * include jquery.
+ *
+ * @package disco
+ * @subpackage plasmature
+ */
+class wysiwyg_disabledType extends textareaType
+{
+	var $type = 'wysiwyg_disabled';
+	
+	function grab()
+	{
+		// intentionally left blank -- nothing should come in from userland
+	}
+	
+	
+	function get_display()
+	{
+		$element_id = $this->name.'_"_area';
+		$str  = '<textarea name="'.htmlspecialchars($this->name, ENT_QUOTES).'" rows="'.$this->rows.'" cols="'.$this->cols.'" id="'.htmlspecialchars($element_id, ENT_QUOTES).'" disabled="disabled" >'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';
+		$str .= $this->_get_javascript_block($element_id);
+		return $str;
+	}
+	
+	function _get_javascript_block($element_id)
+	{
+		include_once(CARL_UTIL_INC.'basic/json.php');
+		$prepped_id = trim(json_encode($element_id),'"');
+		$html_prepped_id = trim(json_encode(htmlspecialchars($element_id,ENT_QUOTES)),'"');
+		
+		return '<script type="text/javascript">
+		// <![CDATA[
+		if (jQuery) {
+		$(function() {
+		var $frame = $("<iframe id=\"'.$html_prepped_id.'_replacement\" style=\"border:1px solid #ccc;\" />");
+		$frame.height($("#'.$prepped_id.'").height());
+		$frame.width($("#'.$prepped_id.'").width());
+		$frame.insertAfter($("#'.$prepped_id.'"));
+		setTimeout( function() {
+			var doc = $frame[0].contentWindow.document;
+			$("body",doc).html($("#'.$prepped_id.'").text());
+			$("body",doc).css("color","#666");
+			$("#'.$prepped_id.'").remove();
+		}, 1 );
+		});
+		}
+		// ]]>
+		</script>';
+	}
 }
