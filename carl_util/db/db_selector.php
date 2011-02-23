@@ -61,13 +61,16 @@ if( !defined( '__DB_SELECTOR' ) )
 			$this->start = 0;
 			$this->num = -1;
 		} // }}}
-		function run( $error_message = '' ) // runs query and returns array of results {{{
+		function run( $error_message = '', $die_on_error = true ) // runs query and returns array of results {{{
 		{
 			$results = array();
-			$r = db_query( $this->get_query(),$error_message );
-			while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
-				$results[] = $row;
-			mysql_free_result( $r );
+			$r = db_query( $this->get_query(),$error_message, $die_on_error );
+			if($r)
+			{
+				while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
+					$results[] = $row;
+				mysql_free_result( $r );
+			}
 			return $results;
 		} // }}}
 		function get_query($merged = false)  //  returns the query (will build query if not already built ){{{
