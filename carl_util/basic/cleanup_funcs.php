@@ -7,7 +7,7 @@
  /**
   * Include the misc functions
   */
-  include_once('misc.php');
+  include_once(dirname(__FILE__).'/misc.php');
 
  /**
   * Translate HTML entities back into their raw UTF-8 character values
