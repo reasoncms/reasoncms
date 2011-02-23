@@ -520,7 +520,9 @@ class MinisiteTemplate
 				{
 					$url = $css->get_value( 'url' );
 				}
-				$this->head_items->add_stylesheet( $url );
+				$media = $css->has_value('css_media') ? $css->get_value('css_media') : '';
+				
+				$this->head_items->add_stylesheet( $url, $media );
 			}
 		}
 	}
@@ -1694,13 +1696,15 @@ class MinisiteTemplate
 			$timer =& $this->_get_timer();
 			$timer->report_all();
 			$link = carl_make_link(array('reason_benchmark' => ""));
-			echo '<p><a href="'. $link . '">disable benchmarks</a></p>';
+			echo '<p><a href="'. $link . '">disable benchmarks</a></p>'."\n";
 		}
 		else
 		{
 			$link = carl_make_link(array('reason_benchmark' => 1));
-			echo '<p><a href="'. $link . '">enable benchmarks</a></p>';
+			echo '<p><a href="'. $link . '">enable benchmarks</a></p>'."\n";
 		}
+		//$encoded_target = urlencode(carl_make_link(array('_force_mime_type'=>'xhtml'),'','',false));
+		//echo '<p>Validate Markup: <a href="http://validator.w3.org/check?verbose=1&amp;uri='.$encoded_target.'">W3C</a> | <a href="http://html5.validator.nu/?doc='.$encoded_target.'">validator.nu</a></p>'."\n";
 	}
 	
 	/**
