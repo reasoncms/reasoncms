@@ -89,7 +89,7 @@ Complete documentation of class
  * Most read access handled through the entity class itself.
  *
  * Programmers should only need to interact directly with the locks object
- * if they need to write locks.
+ * if they need to add or delete locks.
  *
  * @author Matt Ryan
  * @todo add logging to lock removal operations
@@ -163,6 +163,36 @@ class ReasonEntityLocks
 	}
 	
 	/**
+	 * Set up locks functionality in Reason
+	 *
+	 * This method creates the appropriate table(s) in Reason
+	 * so that locks functionality can work.
+	 *
+	 * @return boolean success
+	 */
+	public function enable_locks()
+	{
+		static $lock_table_exists = false;
+		if(!$lock_table_exists)
+		{
+			$q = 'CREATE TABLE IF NOT EXISTS `entity_lock` (
+ 				`id` int(10) unsigned NOT NULL auto_increment,
+ 				`entity_id` int(10) unsigned NOT NULL,
+ 				`field_name` tinytext NOT NULL,
+ 				`allowable_relationship_id` int(11) NOT NULL,
+ 				`allowable_relationship_direction` enum(\'left\',\'right\') default NULL,
+ 				`date_last_edited` timestamp NOT NULL,
+ 				`last_edited_by` int(10) unsigned NOT NULL,
+ 				PRIMARY KEY (`id`),
+ 				KEY `entity_id` (`entity_id`)
+			) TYPE=MyISAM;';
+			if(db_query($q, 'Error creating entity_lock table'))
+				$locks_table_exists = true;
+		}
+		return $locks_table_exists;
+	}
+	
+	/**
 	 * Refresh the in-memory cache of lock information
 	 *
 	 * @return void
@@ -172,7 +202,7 @@ class ReasonEntityLocks
 		$dbs = new DBSelector();
 		$dbs->add_table('entity_lock');
 		$dbs->add_relation('`entity_id` = "'.addslashes($this->_entity->id()).'"');
-		self::$_raw_locks[$this->_entity->id()] = $dbs->run();
+		self::$_raw_locks[$this->_entity->id()] = $dbs->run('Error getting locks for entity '.$this->_entity->id().'.', false);
 	}
 	
 	/**
@@ -750,7 +780,7 @@ class ReasonEntityLocks
 				$this->remove_all_field_locks();
 			}
 			
-			if($GLOBALS['sqler']->insert('entity_lock',array('entity_id' =>$this->_entity->id(),'field_name'=>$field_name,'last_edited_by'=>$user->id(),)))
+			if($GLOBALS['sqler']->insert('entity_lock',array('entity_id' =>$this->_entity->id(),'field_name'=>$field_name,'last_edited_by'=>$user->id(),), false))
 			{
 				$this->_refresh_locks_cache();
 				return true;
@@ -792,7 +822,7 @@ class ReasonEntityLocks
 				trigger_error('"'.$relationship_id.'" is not a lockable relationship on entity id '.$this->_entity->id().'. Unable to lock.');
 				return false;
 			}
-			if($GLOBALS['sqler']->insert('entity_lock',array('entity_id' =>$this->_entity->id(),'allowable_relationship_id'=>$relationship_id,'allowable_relationship_direction'=>$direction,'last_edited_by'=>$user->id(), )))
+			if($GLOBALS['sqler']->insert('entity_lock',array('entity_id' =>$this->_entity->id(),'allowable_relationship_id'=>$relationship_id,'allowable_relationship_direction'=>$direction,'last_edited_by'=>$user->id(),), false))
 			{
 				$this->_refresh_locks_cache();
 				return true;
@@ -828,7 +858,7 @@ class ReasonEntityLocks
 			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.addslashes($this->_entity->id()).'" AND `field_name` = "'.addslashes($field_name).'"';
 			
 			// execute
-			if( db_query( $sql, 'Error removing field lock for entity '.$this->_entity->id() ) )
+			if( db_query( $sql, 'Error removing field lock for entity '.$this->_entity->id(), false ) )
 			{
 				// log?
 			
@@ -874,7 +904,7 @@ class ReasonEntityLocks
 			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.addslashes($this->_entity->id()).'" AND `allowable_relationship_id` = "'.addslashes($relationship_id).'" AND `allowable_relationship_direction` = "'.addslashes($direction).'"';
 			
 			// execute
-			if( db_query( $sql, 'Error removing relationship lock for entity '.$this->_entity->id() ) )
+			if( db_query( $sql, 'Error removing relationship lock for entity '.$this->_entity->id(), false ) )
 			{
 				// log?
 			
@@ -919,7 +949,7 @@ class ReasonEntityLocks
 		{
 			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.addslashes($this->_entity->id()).'" AND `field_name` != ""';
 			// execute
-			if( db_query( $sql, 'Error removing all field locks for entity '.$this->_entity->id() ) )
+			if( db_query( $sql, 'Error removing all field locks for entity '.$this->_entity->id(), false ) )
 			{
 				// log?
 			
@@ -963,7 +993,7 @@ class ReasonEntityLocks
 		{
 			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.addslashes($this->_entity->id()).'" AND `allowable_relationship_id` != "0"';
 			// execute
-			if( db_query( $sql, 'Error removing all relationship locks for entity '.$this->_entity->id() ) )
+			if( db_query( $sql, 'Error removing all relationship locks for entity '.$this->_entity->id(), false ) )
 			{
 				// log?
 			
@@ -1009,7 +1039,7 @@ class ReasonEntityLocks
 			$sql = 'DELETE FROM `entity_lock` WHERE `entity_id` = "'.addslashes($this->_entity->id()).'"';
 			
 			// execute
-			if( db_query( $sql, 'Error removing all locks for entity '.$this->_entity->id() ) )
+			if( db_query( $sql, 'Error removing all locks for entity '.$this->_entity->id(), false ) )
 			{
 				// log?
 			
