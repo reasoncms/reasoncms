@@ -246,51 +246,6 @@
 				{
 					$f = mysql_field_name($fields, $i) OR $this->_internal_error( 'um ... something is wrong. you should check me. and someone should write a more descriptive error message.' );
 					$db_type = mysql_result($types, $i,'Type' )  OR $this->_internal_error( 'um ... something is wrong. you should check me. and someone should write a more descriptive error message.' );
-
-/*  Deprecated in favor of $this->plasmature_type_from_db_type*()
-					$args = array();
-					// show correct form element based on field type from DB
-					// ids are protected
-					if ( $f == 'id' )
-						$t = 'hidden';
-					// date types
-					else if ( preg_match( '/^date/i', $t ) )
-						$t = 'textDate';
-					// timestamp or datetime
-					else if( preg_match( '/^(timestamp|datetime)/i', $t ) )
-						// at some point, make a make_datetime function
-						$t = 'textDateTime';
-					// textarea types - big blobs
-					else if( preg_match( '/^(text|blob|mediumblob|mediumtext|longblob|longtext)/i', $t ) )
-						$t = 'textarea';
-					// automatically link tables if field name ends in _id
-					else if ( preg_match( '/(.*)_id$/i', $f, $matches ) )
-					{
-						$t = 'tablelinker';
-						$args[ 'table' ] = $matches[1];
-						$args[ 'display_name' ] = $matches[1];
-					}
-					// enumerated types - make a select
-					else if ( preg_match( "/^enum\((.*)\)$/", $t, $matches ) )
-					{
-						$options = array();
-						$opts = array();
-						$t = 'select';
-						// explode on the commas
-						$options = explode( ',', $matches[1] );
-						// get rid of the single quotes at the beginning and end of the string
-						// MySQL also escapes single quotes with single quotes, so if we see two single quotes, replace those two with one
-						reset( $options );
-						while( list( $key,$val ) = each ( $options ) )
-							$options[ $key ] = str_replace("''","'",substr( $val,1,-1 ));
-						reset( $options );
-						while( list( ,$val ) = each( $options ) )
-							$opts[ $val ] = $val;
-						$args['options'] = $opts;
-					}
-					// default type
-					else
-						$t = ''; */
 						
 					list( $type, $args ) = $this->plasmature_type_from_db_type( $f, $db_type, array('find_maxlength_of_text_field' => true, 'do_not_sort_enums' => true));
 					$args['db_type'] = $db_type;
