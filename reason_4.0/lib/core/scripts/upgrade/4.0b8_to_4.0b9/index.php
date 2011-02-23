@@ -74,6 +74,7 @@ define('REASON_SIZED_IMAGE_DIR_WEB_PATH', REASON_HTTP_BASE_PATH.'sized_images/')
 <h3>Scripts to Run</h3>
 <ul>
 <li><a href="feature.php">Add the feature type to Reason, fix the policy content sorter</a></li>
+<li><a href="misc.php">Makes miscellaneous minor upgrades to Reason</a></li>
 </ul>
 </body>
 </html>
