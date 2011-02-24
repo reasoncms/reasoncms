@@ -11,7 +11,7 @@ include_once('paths.php');
  * Right now outputs a 404 if content is not set ... we likely need something more robust.
  *
  * // output json with the application/json content type
- * $api = new API('json');
+ * $api = new CarlUtilAPI('json');
  * $api->set_content( json_encode(array('text' => 'hello world')));
  * $api->run();
  *
@@ -22,20 +22,30 @@ include_once('paths.php');
  * @author Nathan White
  */
 class CarlUtilAPI
-{	
+{
+	/**
+	 * @var array supported_content_types
+	 */
+	protected $supported_content_types = array();
+
+	/**
+	 * If set to a string, we will look for this in request and set the content type to its value.
+	 * @var mixed string content_type_request_key or boolean FALSE to disable.
+	 */
+	protected $content_type_request_key = FALSE;
+	
 	/**
 	 * Define the content types to use for all formats that an API could support.
 	 */
-	protected $content_type_map = array(
+	private $content_type_map = array(
 		'json' => 'application/json',
 		'html' => 'text/html',
 		'xml' => 'text/xml'
 	);
 			
-	protected $supported_content_types = array();
-	protected $content_type;
-	protected $api_name;
-	protected $content;
+	private $content_type;
+	private $api_name;
+	private $content;
 	
 	/**
 	 * Constructor allows specification of supported content types. The first listed type is considered the "default" content type.
@@ -47,20 +57,48 @@ class CarlUtilAPI
 		if (isset($support_types))
 		{
 			if (is_string($support_types)) $support_types = array($support_types);
-			foreach ($support_types as $type)
-			{
-				$this->set_supported_content_type($type);
-				if (!$this->get_content_type()) $this->set_content_type($type);
-			}
+			$this->set_supported_content_types($support_types);
 		}
+		if ($supported_types = $this->get_supported_content_types())
+		{
+			$type = reset($supported_types);
+			$this->set_content_type($type);
+		}
+		if ($this->get_content_type_request_key() && (isset($_REQUEST['format']) && check_against_regexp($_REQUEST['format'], array('safechars'))))
+		{
+			$this->set_content_type($_REQUEST['format']);
+		}
+		$this->setup_api();
 	}
 
+	/**
+	 * Setup api is called at the end of __construct - it provides a way to dynamically setup parameters.
+	 */
+	protected function setup_api()
+	{
+	}
+	
+	/**
+	 * Setup content is called first thing in the run method - it provides a way to dynamically set content.
+	 */
+	protected function setup_content()
+	{
+	}
+
+	/** 
+	 * @return mixed array setup_method_names or boolean FALSE
+	 */
+	final function get_content_type_request_key()
+	{
+		return (!empty($this->content_type_request_key)) ? $this->content_type_request_key : FALSE;
+	}
+	
 	/**
 	 * @param array array of content types - replaces anything that may already be set!
 	 */	
 	final function set_supported_content_types($array)
 	{
-		unset ($this->supported_content_types);
+		$this->supported_content_types = array();
 		foreach ($array as $content_type)
 		{
 			$this->set_supported_content_type($content_type);
@@ -123,7 +161,7 @@ class CarlUtilAPI
 	 */
 	final function get_supported_content_types()
 	{
-		return (!empty($this->supported_content_types)) ? $this->supported_content_types : FALSE;
+		return (!empty($this->supported_content_types) && is_array($this->supported_content_types)) ? $this->supported_content_types : FALSE;
 	}
 	
 	/**
@@ -163,6 +201,7 @@ class CarlUtilAPI
 	 */
 	final function run()
 	{
+		$this->setup_content();
 		$content = $this->get_content();
 		$content_type = $this->get_content_type();
 		$content_type_header = $this->get_content_type_header();
