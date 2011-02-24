@@ -257,9 +257,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $this->result_comment = '<p></p><div style="color:red"><strong>Note:</strong> No exact matches were found; these are entries similar to what you searched for.</div><p></p>';
         }
 
+        // Preformed scrub_entries before the count returned is taken so that flagged
+        // students do not appear on count of results
+        $this->scrub_results($entries);
+
         // If we have some results, call the appropriate display method
         if (count($entries) ) {
-            $this->scrub_results($entries);
+            //$this->scrub_results($entries);
             switch ($this->view) {
                 case 'pdf':
                     if ($form->get_value('display_as') == 'book')
@@ -913,7 +917,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             // Hiding No Release students for Luther
             if (isset($data['privacyflag'])) {
                 foreach ($nr_suppress as $attr)
-                    $results[$key] = null;
+                    unset($results[$key]);
             }
         }
     }
