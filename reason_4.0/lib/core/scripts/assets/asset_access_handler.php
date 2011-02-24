@@ -22,14 +22,25 @@ else
 	$asset_access = new ReasonAssetAccess($id);
 	if (!$asset_access->run())
 	{
-		trigger_error('asset_access_handler.php was run at url ' . get_current_url() . ' but was given an entity id ' . $id . ' that is not an asset! ');
+		trigger_error('asset_access_handler.php was run at url ' . get_current_url() . ' but was given an entity id ' . $id . ' that is not an asset. Rewrite rules may need to be run for this site.');
 	}
 }
 	
-if (!defined('ERROR_404_PAGE'))
+if(defined('ERROR_404_PATH') && defined('WEB_PATH') && file_exists(WEB_PATH.ERROR_404_PATH) && is_readable(WEB_PATH.ERROR_404_PATH))
 {
-	echo '<h2>Not Found</h2>';
-	echo '<p>The resource you are trying to access could not be located</p>';
+	header('HTTP/1.0 404 Not Found');
+	include(WEB_PATH.ERROR_404_PATH);
 }
-else header ( 'Location: '.ERROR_404_PAGE );
+else
+{
+	header('HTTP/1.0 404 Not Found');
+	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n";
+	echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
+	echo '<head><title>File Not Found (HTTP 404)</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head>'."\n";
+	echo '<body>'."\n";
+	echo '<h2>File Not Found (HTTP 404)</h2>'."\n";;
+	echo '<p>The file you are trying to access is not available.</p>'."\n";
+	echo '</body>'."\n";
+	echo '</html>'."\n";
+}
 ?>
