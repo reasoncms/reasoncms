@@ -594,6 +594,7 @@ class MinisiteTemplate
 		{
 			$api = new CarlUtilAPI('html');
 			$api->run();
+			exit();
 		}
 	}
 	
