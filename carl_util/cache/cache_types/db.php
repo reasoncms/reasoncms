@@ -21,14 +21,16 @@ include_once(CARL_UTIL_INC . 'db/db_query.php');
  *	A drawback of this using mysql is that large caches may not work well, particularly if the amount of data mysql will accept
  *  in a single transcation is set at a low value. It is preferably to get memcached up and running or to use file system caching.
  *
- *	@package carl_util
- * 	@subpackage cache
- *  @author Nathan White
+ * @package carl_util
+ * @subpackage cache
+ * @author Nathan White
+ * @todo support multiple databases
  */
 
 class DbObjectCache extends DefaultObjectCache
 {	
-	var $error_msg = ' make sure that the OBJECT_CACHE_DB_CONN and OBJECT_CACHE_DB_TABLE constants are properly setup in object_cache_settings.php.';
+	private $db_table;
+	private $db_conn;
 	
 	function &fetch()
 	{
@@ -37,15 +39,14 @@ class DbObjectCache extends DefaultObjectCache
 		$lifespan = $this->get_cache_lifespan();
 		
 		$this->_cache_conn(true);
-		$qry = 'SELECT * from ' . OBJECT_CACHE_DB_TABLE . ' WHERE id="'.$cache_id.'"';
-		$result = db_query($qry, 'Select query failed -' . $this->error_msg, false);
+		$qry = 'SELECT * from ' . $this->get_db_table() . ' WHERE id="'.$cache_id.'"';
+		$result = db_query($qry, 'Select query failed.', false);
 		$this->_cache_conn(false);
-		
 		if ($result)
 		{
 			$row = mysql_fetch_assoc($result);
 			$created = get_unix_timestamp($row['date_created']);
-			$ret = ((time() - $created) < $lifespan)
+			$ret = (($lifespan == -1) || ((time() - $created) < $lifespan))
 				   ? unserialize($row['content']) 
 				   : false;
 		}
@@ -56,9 +57,9 @@ class DbObjectCache extends DefaultObjectCache
 	{
 		$cache_id = $this->get_cache_id();
 		$content = mysql_real_escape_string(serialize($object));
-		$qry = 'INSERT INTO ' . OBJECT_CACHE_DB_TABLE . ' (id, content) VALUES ("'.$cache_id.'", "'.$content.'") ON DUPLICATE KEY UPDATE content="'.$content.'";';
+		$qry = 'INSERT INTO ' . $this->get_db_table() . ' (id, content) VALUES ("'.$cache_id.'", "'.$content.'") ON DUPLICATE KEY UPDATE content="'.$content.'", date_created="'.get_mysql_datetime().'";';
 		$this->_cache_conn(true);
-		$result = db_query($qry, 'Insert failed -' . $this->error_msg, false);
+		$result = db_query($qry, 'Insert failed.', false);
 		$this->_cache_conn(false);
 		return ($result);
 	}
@@ -66,9 +67,9 @@ class DbObjectCache extends DefaultObjectCache
 	function clear()
 	{
 		$cache_id = $this->get_cache_id();
-		$qry = 'DELETE FROM ' . OBJECT_CACHE_DB_TABLE . ' WHERE id = "'.$cache_id.'" LIMIT 1';
+		$qry = 'DELETE FROM ' . $this->get_db_table() . ' WHERE id = "'.$cache_id.'" LIMIT 1';
 		$this->_cache_conn(true);
-		$result = db_query($qry, 'Delete failed -' . $this->error_msg, false);
+		$result = db_query($qry, 'Delete failed.', false);
 		$this->_cache_conn(false);
 		return ($result);
 	}
@@ -78,11 +79,38 @@ class DbObjectCache extends DefaultObjectCache
 	 */
 	function validate()
 	{
-		$db_conn_test = (defined('OBJECT_CACHE_DB_CONN') && OBJECT_CACHE_DB_CONN );
-		$db_table_test = (defined('OBJECT_CACHE_DB_TABLE') && OBJECT_CACHE_DB_TABLE );
-		if (!$db_conn_test) trigger_error('You need to populate OBJECT_CACHE_DB_CONN in object_cache_settings.php to use database caching');
-		if (!$db_table_test) trigger_error('You need to populate OBJECT_CACHE_DB_TABLE in object_cache_settings.php to use database caching');
-		return ($db_conn_test && $db_table_test);
+		if (!$this->get_db_conn() || !$this->get_db_table())
+		{
+			if (!$this->get_db_conn()) trigger_error('You need to set the instance param db_conn OR populate OBJECT_CACHE_DB_CONN in object_cache_settings.php to use database caching.');
+			if (!$this->get_db_table()) trigger_error('You need to set the instance param db_table OR populate OBJECT_CACHE_DB_TABLE in object_cache_settings.php to use database caching.');
+		}
+		else return true;
+	}
+	
+	/**
+	 * The DB Cache class will accept these params:
+	 *
+	 * - db_conn
+	 * - get_db_table
+	 */
+	function setup_params($params)
+	{
+		if (isset($params['db_conn'])) $this->db_conn = $params['db_conn'];
+		if (isset($params['db_table'])) $this->db_table = $params['db_table'];
+	}
+	
+	function get_db_conn()
+	{
+		if (isset($this->db_conn)) return $this->db_conn;
+		elseif (defined("OBJECT_CACHE_DB_CONN")) return OBJECT_CACHE_DB_CONN;
+		else return false;
+	}
+	
+	function get_db_table()
+	{
+		if (isset($this->db_table)) return $this->db_table;
+		elseif (defined("OBJECT_CACHE_DB_TABLE")) return OBJECT_CACHE_DB_TABLE;
+		else return false;
 	}
 	
 	/**
@@ -94,10 +122,10 @@ class DbObjectCache extends DefaultObjectCache
 		static $orig;
 		static $curr;
 		if (empty($orig)) $orig = $curr = get_current_db_connection_name();
-		if ($bool && ($curr != OBJECT_CACHE_DB_CONN))
+		if ($bool && ($curr != $this->get_db_conn()))
 		{
-			connectDB(OBJECT_CACHE_DB_CONN);
-			$curr = OBJECT_CACHE_DB_CONN;
+			connectDB($this->get_db_conn());
+			$curr = $this->get_db_conn();
 		}
 		elseif (!$bool && ($curr != $orig))
 		{

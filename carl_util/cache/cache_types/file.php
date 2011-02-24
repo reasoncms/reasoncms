@@ -20,7 +20,7 @@ class FileObjectCache extends DefaultObjectCache
 		if (file_exists($cache_file))
 		{
 			$last_modified = filemtime($cache_file);
-			$ret = ((time() - $last_modified) < $lifespan) 
+			$ret = (($lifespan == -1) || ((time() - $last_modified) < $lifespan))
 				   ? unserialize(file_get_contents($cache_file)) 
 				   : false;
 		}

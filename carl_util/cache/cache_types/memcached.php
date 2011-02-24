@@ -18,7 +18,7 @@ class MemcachedObjectCache extends DefaultObjectCache
 	function &fetch()
 	{
 		$cache_id = $this->get_cache_id();
-		$lifespan = ($this->get_cache_lifespan()) ? $this->get_cache_lifespan() : 0;
+		$lifespan = ($this->get_cache_lifespan() && ($this->get_cache_lifespan() != -1)) ? $this->get_cache_lifespan() : 0;
 		$memcached =& $this->_get_memcached_conn();	
 		$ret = $memcached->get($cache_id, $lifespan);
 		return $ret;
@@ -30,7 +30,7 @@ class MemcachedObjectCache extends DefaultObjectCache
 	function set(&$object)
 	{
 		$cache_id = $this->get_cache_id();
-		$lifespan = ($this->get_cache_lifespan()) ? $this->get_cache_lifespan() : 0;
+		$lifespan = ($this->get_cache_lifespan() && ($this->get_cache_lifespan() != -1)) ? $this->get_cache_lifespan() : 0;
 		$memcached =& $this->_get_memcached_conn();
 		return $memcached->set($cache_id, $object, MEMCACHE_COMPRESSED, $lifespan);
 	}

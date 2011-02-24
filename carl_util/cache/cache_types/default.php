@@ -1,23 +1,36 @@
 <?php
+/**
+ * @package carl_util
+ * @subpackage cache
+ */
 
 /**
- * Defines the interface for object cache types
+ * Include dependencies
+ */
+require_once( 'paths.php');
+require_once(CARL_UTIL_INC.'cache/object_cache.php');
+
+/**
+ * Defines the interface for object cache types - these should not be instantiated directly, but rather through the object_cache.php class.
  *
- * Any object cache type should define these methods
+ * Any object cache type should define these methods.
  *
  * -fetch
  * -set
  * -clear
  * -validate
  *
- * A method setup_custom can be used to refer to additional settings for the type present in the object_cache_settings.php file
+ * Settings for an object cache type should be defined in SETTINGS_INC/object_cache_settings.php.
  *
+ * A method setup_custom can be defined to provide additional setup based on settings in the object_cache_settings.php file
+ *
+ * A method setup_params can be defined to handle user params and is run by each instance of the cache type.
  * @package carl_util
  * @subpackage cache
  * @author Nathan White
  */
 
-class DefaultObjectCache
+abstract class DefaultObjectCache
 {
 
 	/**
@@ -30,59 +43,68 @@ class DefaultObjectCache
 	 */
 	var $cache_id;
 
+	final function __construct($dumb_key, $settings = NULL)
+	{
+		if ($dumb_key == 'do_not_instantiate_me_directly')
+		{
+			if (isset($settings['constants']))
+			{
+				foreach ($settings['constants'] as $k=>$v) if (!defined($k)) define($k, $v);
+			}
+			if (isset($settings)) $this->setup_custom($settings);
+			$this->validated = $this->validate();
+		}
+		else
+		{
+			trigger_warning('A cache type cannot be instantiated directly - instantiate an ObjectCache object, and set its type appropriately.', 1);
+		}
+	}
+	
 	/**
 	 * Fetches an object or array from the cache
 	 * @return mixed object/array from cache or false if it was not found
 	 */	
-	function &fetch()
-	{
-	}
+	abstract public function &fetch();
 
 	/**
 	 * Saves an object or array to the cache
 	 * @param object or array to cache
 	 * @return boolean success or failure
 	 */
-	function set(&$object)
-	{
-	}
+	abstract public function set(&$object);
 	
 	/**
 	 * Removes an object or array from the cache
 	 * @return boolean success or failure
 	 */
-	function clear()
-	{
-	}
-	
+	abstract public function clear();
+
 	/**
-	 * Run once per page load to setup constants needed by the class
+	 * Run once per page load to verify settings, constants, and the basic cache type setup.
+	 *
+	 * Note this runs before any user params are provided for a type.
+	 *
+	 * @return boolean true or false;
 	 */
-	function setup_constants(&$constants)
-	{
-		foreach ($constants as $k=>$v)
-		{
-			if (!defined($k)) define($k, $v);
-		}
-	}
+	abstract protected function validate();
 	
 	/**
-	 * Run once per page load - custom setup based upon the object_cache_settings settings for a type
+	 * Runs once per page load - custom setup based upon the object_cache_settings settings for a type
+	 * @param 
 	 */
-	function setup_custom(&$settings)
+	protected function setup_custom($settings)
 	{
 	}
 	
 	/**
-	 * Run once per page load to verify settings and the basic cache type setup
+	 * Runs once for any instance of a cache - allows arbitrary user params for a cache type
 	 */
-	function validate()
-	{
-		return true;
+	protected function setup_params($params)
+	{	
 	}
 	
 	/**
-	 * @return int cache lifespan in seconds
+	 * @return int cache lifespan in seconds - -1 means forever
 	 */
 	function get_cache_lifespan()
 	{

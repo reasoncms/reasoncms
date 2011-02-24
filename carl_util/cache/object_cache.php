@@ -12,24 +12,32 @@ require_once(SETTINGS_INC.'object_cache_settings.php');
 require_once(CARL_UTIL_INC.'basic/misc.php');
 
 /**
- *  Object cache system that fetches and sets serialized objects by id
+ * Object cache system that fetches and sets serialized objects by id
  * 
- *  Details:
- *  - provides user configurable lifespan for cached objects
- *  - saves and fetches cached objects
- *  - supports creation of additional cache types
- *  - configure default caching type or reference custom caching types in object_cache_settings.php
+ * Details:
+ * - provides user configurable lifespan for cached objects
+ * - saves and fetches cached objects
+ * - supports creation of additional cache types
+ * - configure default caching type or reference custom caching types in object_cache_settings.php
  *
- *  Sample usage - $obj will equal false or the cache object with id $unique_id that is not more than one hour old
+ * Sample usage - $obj will equal false or the cache object with id $unique_id that is not more than one hour old
  *
- *  <code>
- *  	$cache = new ObjectCache();
- *  	$cache->init($unique_id, 3600);
- *  	$obj =& $cache->fetch();
- *  </code>
+ * <code>
+ *	$cache = new ObjectCache($unique_id, 3600);
+ * 	$obj =& $cache->fetch();
+ * </code>
  *
- *  @author Nathan White
- *  @todo implement smart fallbacks so that alternate caching can be used if the specified type fails
+ * More advanced usage - setup a mysql database cache (with connection params) for use by another object.
+ *
+ * <code>
+ * $cache = new ObjectCache();
+ * $cache->set_cache_type('db');
+ * $cache->set_cache_params(array('db_conn' => 'my_db_conn', 'db_table' => 'my_db_table'));
+ * $cache->set_default_lifespan(-1); // last forever
+ * $otherObj->cache = $cache;
+ * </code>
+ *
+ * @author Nathan White
  */
 
 class ObjectCache
@@ -40,11 +48,21 @@ class ObjectCache
 	 * @var string defines which cache type to use - defaults to file
 	 */
 	var $cache_type = OBJECT_CACHE_DEFAULT_TYPE;
-	
+
 	/**
 	 * @var object cache type object
 	 */
 	var $_cache = false;
+		
+	/**
+	 * User params for a cache - will be consulted during setup.
+	 */
+	var $cache_params;
+	
+	/**
+	 * You can optionally set a default lifespan for the cache which will be used by the cache type when it is not otherwise specified.
+	 */
+	var $default_lifespan;
 	
 	/**
 	 * @param string $id unique identifier for cache object
@@ -62,7 +80,9 @@ class ObjectCache
 		if ($id && $cache)
 		{
 			$cache->set_cache_id(md5($id));
-			if ($lifespan) $cache->set_cache_lifespan($lifespan);
+			if ( !empty($lifespan) || ($lifespan = $this->get_default_lifespan())) $cache->set_cache_lifespan($lifespan);
+			if ($params = $this->get_cache_params()) $cache->setup_params($params);
+			if (!$cache->validate()) $this->_cache = false;
 		}
 		elseif (!$id) trigger_error('You must provide an id in order to init the cache');
 	}
@@ -77,6 +97,26 @@ class ObjectCache
 		}
 	}
 	
+	function set_cache_params($params)
+	{
+		$this->cache_params = $params;
+	}
+
+	function get_cache_params()
+	{
+		return (isset($this->cache_params)) ? $this->cache_params : FALSE;
+	}
+	
+	function set_default_lifespan($lifespan)
+	{
+		$this->default_lifespan = $lifespan;
+	}
+	
+	function get_default_lifespan()
+	{
+		return (isset($this->default_lifespan)) ? $this->default_lifespan : FALSE;
+	}
+	
 	function get_cache_type()
 	{
 		return $this->cache_type; 
@@ -88,7 +128,6 @@ class ObjectCache
 		{
 			$this->_cache = carl_clone($cache_class); // localize a clone of the cache_class
 		}
-		elseif ($cache_class === NULL) trigger_error('The cache type you requested (' . $this->get_cache_type() . ') in not defined in object_cache_settings.php');
 		return $this->_cache;
 	}
 	
@@ -109,7 +148,7 @@ class ObjectCache
 			}
 			$is_defined = (isset($settings[$type]));
 			$file_path = (isset($settings[$type]['path'])) ? ($settings[$type]['path']) : false;
-			if ($is_defined && $file_path)
+			if ($is_defined && file_exists($file_path))
 			{
 				include_once($file_path);
 				$cache_class_name[$type] = (isset($settings[$type]['classname'])) 
@@ -117,13 +156,16 @@ class ObjectCache
 							   			 : ucfirst(basename($file_path, ".php")) .'ObjectCache';
 							 	   
 				// create an instance and run setup methods
-				$cache = new $cache_class_name[$type];
-				$cache->setup_constants($settings[$type]['constants']);
-				$cache->setup_custom($settings[$type]);
+				$class[$type] = (isset($settings[$type])) 
+					   ? new $cache_class_name[$type]('do_not_instantiate_me_directly', $settings[$type]) 
+					   : new $cache_class_name[$type]('do_not_instantiate_me_directly');
 			}
-			if (!$is_defined) $class[$type] = NULL;
-			elseif ($file_path && $cache->validate()) $class[$type] =& $cache;
-			else $class[$type] = false;
+			else
+			{
+				if (!$is_defined) trigger_error('The cache type you requested (' . $this->get_cache_type() . ') in not defined in object_cache_settings.php. The cache will not be used.');	
+				else trigger_error('The cache type file (' . $file_path . ') could not be found object_cache_settings.php. The cache will not be used.');
+				$class[$type] = false;
+			}
 		}
 		return $class[$type];
 	}
