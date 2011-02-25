@@ -23,19 +23,7 @@ class TranscriptPageOneForm extends FormStep
 			'type' => 'text',
 			'size' => 35,
 		),
-//		'middle_initial' =>  array(
-//			'type' => 'text',
-//			'size'=> 2,
-//                ),
-//		'last_name' => array(
-//			'type' => 'text',
-//			'size'=> 35,
-//		),
-//		'previous_name' => array(
-//			'type' => 'text',
-//			'size' => 35,
-//		),
-		'daytime_phone' => array(
+                'daytime_phone' => array(
 			'type' => 'text',
 			'size' => 20,
 		),
@@ -48,11 +36,15 @@ class TranscriptPageOneForm extends FormStep
 			'text' => '<h3>Unofficial transcripts</h3>',
 		),
 		'unofficial' => array(
-			'type' => 'radio_inline_no_sort',
-			'display_name' => '&nbsp;',
-			'options' => array('yes' => 'Yes', 'no' => 'No'),
-                        'comments' => '<em>Unofficial</em> transcript are sent to your address via postal mail',
+			'type' => 'checkboxfirst',
+			'display_name' => 'Check here if you would like an unofficial transcript sent to your home address via postal mail',
+			//'options' => array('yes' => 'Yes', 'no' => 'No'),
+                        //'comments' => '<em>Unofficial</em> transcript are sent to your address via postal mail',
 		),
+                'unofficial_address' => array(
+                        'type' => 'textarea',
+                        'display_name' => 'Address',
+                ),
                 'official_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Official transcripts</h3>',
@@ -67,17 +59,9 @@ class TranscriptPageOneForm extends FormStep
                     'options' => array('paper'=>'Paper', 'eScrip' => 'eScrip-Safe'),
                     'comments' => '<br><a href="http://www.scrip-safe.com/" target=__blank>What is an eScrip-Safe transcript?</a>',
                 ),
-                'official_paper_comment' => array(
-                        'type' => 'comment',
-                        'text' => 'Number of <em>official</em> paper transcripts',
-                ),		
-                'official_escrip_comment' => array(
-                        'type' => 'comment',
-                        'text' => 'Number of <em>official</em> eScrip-Safe transcripts',
-                ),
                 'number_of_official' => array(
 			'type' => 'text',
-			'display_name' => '&nbsp;',
+			'display_name' => 'Number of <em>official</em> paper transcripts',
 			'size' => 3,
 		),
                 'delivery_header' => array(
@@ -102,8 +86,7 @@ class TranscriptPageOneForm extends FormStep
                         'display_name' => 'Institution/Company E-mail'
                 ),
                 'address' => array(
-			'type' => 'text',
-			'size' => 35,
+			'type' => 'textarea',
 		),
 		'city' => array(
 			'type' => 'text',
@@ -135,7 +118,7 @@ class TranscriptPageOneForm extends FormStep
                 'submitter_ip' => 'hidden',
 	);
 	
-	var $required = array('daytime_phone', 'e-mail');
+	var $required = array('daytime_phone', 'e-mail', 'deliver_to', 'delivery_time');
 	
 	var $display_name = 'Transcript Request Info';
 	var $error_header_text = 'Please check your form.';
@@ -248,6 +231,10 @@ class TranscriptPageOneForm extends FormStep
             if ($this->get_value('number_of_official') && (!preg_match('/^\d+$/', $this->get_value('number_of_official'))))
             {
                 $this-> set_error('number_of_official', "Please enter a whole number");
+            }
+            if ($this->get_value('official_type') == 'paper' && (!$this->get_value('number_of_official')))
+            {
+                $this-> set_error('number_of_official', 'Since you chose to send paper transcripts, please tell us how many to send.');
             }
         }
 }

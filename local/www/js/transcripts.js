@@ -6,6 +6,7 @@ $(document).ready(function() {
         //hide  fields
         hide_field('official_paper_comment');
         hide_field('official_escrip_comment');
+        hide_field('unofficial_address');
         hide_field('number_of_official');
         hide_field('institution_name');
         hide_field('institution_attn');
@@ -24,6 +25,9 @@ $(document).ready(function() {
         showDeliveryInfo();
         $("#radio_deliver_to_0").change(function(){showDeliveryInfo();});
         $("#radio_deliver_to_1").change(function(){showDeliveryInfo();});
+
+        toggle_unofficial_address();
+        $("input[name='unofficial']").change(function(){toggle_unofficial_address()});
         
         toggle_billing_address();
 	$("input[name='billing_address']").change(function(){toggle_billing_address()});
@@ -47,7 +51,6 @@ function showTranscriptTypeBoxes()
         case 'radio_official_type_0': //
             show_field('number_of_official');
             show_field('official_paper_comment');
-            hide_field('official_escrip_comment');
             showDeliveryInfo();
             break;
 
@@ -55,8 +58,7 @@ function showTranscriptTypeBoxes()
             // if sending eScrip show only Institution name and email address fields
             // else show physical address fields and no email address field           
             hide_field('official_paper_comment');
-            show_field('number_of_official');
-            show_field('official_escrip_comment');
+            hide_field('number_of_official');
             showDeliveryInfo();
             break;
     }
@@ -119,6 +121,14 @@ function showDeliveryInfo()
             break;
     }
  }
+function toggle_unofficial_address()
+{
+    if ($("input[name='unofficial']:checked").val()) {
+        show_field('unofficial_address');
+    } else {
+        hide_field('unofficial_address');
+    }
+}
 function toggle_billing_address()
 {
 	if (!$("input[name='billing_address']:checked").val() ||
