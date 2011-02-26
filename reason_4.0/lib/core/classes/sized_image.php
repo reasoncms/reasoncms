@@ -42,10 +42,17 @@ if (!defined("REASON_SIZED_IMAGE_DIR_WEB_PATH"))
  * $rsi = new reasonSizedImage();
  * $rsi->set_id(23423);
  * $rsi->set_width(400);
+ * $rsi->set_crop_style('fill');
  * $image_url = $rsi->get_url();
  *
  * @todo integrate REASON_SIZED_IMAGE_DIR and REASON_SIZED_IMAGE_DIR_WEB_PATH into reason_settings.php - use a better spot than loose in WEB_PATH/WEB_TEMP
  * @todo what should we do if we want to resize to a larger size than the original
+ * @todo Add a quality setting so code can choose between "fast" and "good" --
+ * the main difference being that "fast" will resize from the full-sized image
+ * and "good" will resize from the original image (the current behavior).
+ * @todo Use the last modified time of the image on the filesystem instead of
+ * the last modified time of the entity (this will reduce unneccessary
+ * image regeneration when an image's metadata changes).
  *
  * @author Nathan White
  */
