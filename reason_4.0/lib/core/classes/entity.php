@@ -16,6 +16,7 @@ include_once('reason_header.php');
  * This approach replaces an unfortunate direct call to connectDB.
  */
 if (defined("REASON_DB")) $GLOBALS['_db_query_first_run_connection_name'] = REASON_DB;
+reason_include_once('classes/locks.php');
 
 /**
  * Include database management stuff
@@ -105,6 +106,14 @@ class entity
 	 * Contains the local environment
 	 */
 	var $_env = array( 'restrict_site' => true );
+	/**
+	 * The entity locks object
+	 *
+	 * This class var is lazy-loaded; access it via get_locks().
+	 *
+	 * @var boolean
+	 */
+	protected $_locks = false;
 	/**#@-*/
 
 	/**
@@ -434,6 +443,19 @@ class entity
 	 */
 	function has_left_relation_with_entity( $e , $type = false) // {{{
 	{
+		if(!is_object($e))
+		{
+			$id = (integer) $e;
+		}
+		elseif(!method_exists($e, 'id'))
+		{
+			trigger_error('The first parameter of has_left_relation_with_entity() must be a Reason entity or id');
+			return;
+		}
+		else
+		{
+			$id = $e->id();
+		}
 		if( empty( $this->_left_relationships ) )
 			$this->_init_left_relationships();
 		foreach( $this->_left_relationships AS $name => $relate )
@@ -442,7 +464,7 @@ class entity
 			{
 				foreach( $relate AS $item )
 				{
-					if($e->id() == $item->id() )
+					if($id == $item->id() )
 						return true;
 				}
 			}
@@ -457,6 +479,19 @@ class entity
 	 */
 	function has_right_relation_with_entity( $e , $type = false) // {{{
 	{
+		if(!is_object($e))
+		{
+			$id = (integer) $e;
+		}
+		elseif(!method_exists($e, 'id'))
+		{
+			trigger_error('The first parameter of has_right_relation_with_entity() must be a Reason entity or id');
+			return;
+		}
+		else
+		{
+			$id = $e->id();
+		}
 		if( empty( $this->_right_relationships ) )
 			$this->_init_right_relationships();
 		foreach( $this->_right_relationships AS $name => $relate )
@@ -465,7 +500,7 @@ class entity
 			{
 				foreach( $relate AS $item )
 				{
-					if($e->id() == $item->id() )
+					if($id == $item->id() )
 						return true;
 				}
 			}
@@ -614,5 +649,176 @@ class entity
 			return false;
 		}
 	} // }}}
+	
+	
+	/*
+	  Locks Section
+	 */
+	
+	/**
+	 * Get the locks object
+	 * 
+	 * @return object
+	 */
+	function get_locks()
+	{
+		if(!is_object($this->_locks))
+		{
+			$this->_locks = new ReasonEntityLocks($this);
+		}
+		return $this->_locks;
+	}
+	
+	/**
+	 * Does the entity have any locks?
+	 *
+	 * return boolean
+	 */
+	function has_lock()
+	{
+		$locks = $this->get_locks();
+		return $locks->has_lock();
+	}
+	
+	/**
+	 * Does the entity have an "all fields" lock?
+	 *
+	 * @return boolean
+	 */
+	function has_all_fields_lock()
+	{
+		$locks = $this->get_locks();
+		return $locks->has_all_fields_lock();
+	}
+	
+	/**
+	 * Does the entity have an "all relationships" lock for the given direction?
+	 *
+	 * @param string $direction 'left' or 'right'
+	 * @return boolean
+	 */
+	function has_all_relationships_lock($direction)
+	{
+		$locks = $this->get_locks();
+		return $locks->has_all_relationships_lock($direction);
+	}
+	
+	/**
+	 * Does the given field have a lock?
+	 *
+	 * Note that this will return true if the field is specifically locked
+	 * or if there is an "all fields lock" on the entity.
+	 *
+	 * @param string $field_name
+	 * @return boolean
+	 */
+	function field_has_lock($field_name)
+	{
+		$locks = $this->get_locks();
+		return $locks->field_has_lock($field_name);
+	}
+	
+	/**
+	 * Does the given relationship have a lock in the direction specified?
+	 *
+	 * Note that this will return true if the relationship/direction is specifically locked
+	 * or if there is an "all relationships lock" on that direction.
+	 *
+	 * @param mixed $relationship
+	 * @param string $direction 'left' or 'right'
+	 * @return boolean
+	 */
+	function relationship_has_lock($relationship, $direction)
+	{
+		$locks = $this->get_locks();
+		return $locks->relationship_has_lock($relationship, $direction);
+	}
+	
+	/**
+	 * Could an unidentified user of the given role edit this entity?
+	 *
+	 * Note that without a given user, this function cannot check
+	 * site membership or other important aspects of privilege-granting.
+	 * Therefore, this method should only be used for informational
+	 * purposes, not to grant privileges, unless other checks are done.
+	 *
+	 * @param string $role_name
+	 * @param string $fields_or_rels 'fields','relationships', or 'all'
+	 * @return boolean
+	 */
+	function role_could_edit($role_name, $fields_or_rels = 'all')
+	{
+		$locks = $this->get_locks();
+		return $locks->role_could_edit($role_name, $fields_or_rels);
+	}
+	
+	/**
+	 * Could the given role edit the given field on this entity?
+	 *
+	 * @param string $field_name Name of field
+	 * @param string $role_name Unique name of role
+	 * @return boolean
+	 * @access public
+	 */
+	function role_could_edit_field($field_name, $role_name)
+	{
+		$locks = $this->get_locks();
+		return $locks->role_could_edit_field($field_name, $role_name);
+	}
+	
+	/**
+	 * Could the given role edit the given relationship on this entity?
+	 *
+	 * @param integer $relationship ID of allowable relationship
+	 * @param string $role_name Unique name of role
+	 * @param string $direction 'left' or 'right'
+	 * @return boolean
+	 * @access public
+	 */
+	function role_could_edit_relationship($relationship, $role_name, $direction)
+	{
+		$locks = $this->get_locks();
+		return $locks->role_could_edit_relationship($relationship, $role_name, $direction);
+	}
+	
+	/**
+	 * Can a given user edit at least one field or relationship of this entity?
+	 *
+	 * @param mixed $user user entity or null for currently logged-in user
+	 * @return boolean
+	 */
+	function user_can_edit($user = null, $fields_or_rels = 'all')
+	{
+		$locks = $this->get_locks();
+		return $locks->user_can_edit( $user, $fields_or_rels );
+	}
+	
+	/**
+	 * Can a given user edit a given field on this entity?
+	 *
+	 * @param string $field_name
+	 * @param mixed $user A user entity or null for the currently-logged-in user
+	 * @return boolean
+	 */
+	function user_can_edit_field($field_name, $user = null)
+	{
+		$locks = $this->get_locks();
+		return $locks->user_can_edit_field( $field_name, $user );
+	}
+	
+	/**
+	 * Can a given user edit a given relationship on thie entity?
+	 *
+	 * @param string $field_name
+	 * @param mixed $user A user entity or null for the currently-logged-in user
+	 * @param string $direction 'left' or 'right' -- 'left' if this entity is on the right side of the relationship, 'right' if it is on the left (e.g. on which side of the entity is the relationship on?)
+	 * @return boolean
+	 */
+	function user_can_edit_relationship($relationship, $user = null, $direction)
+	{
+		$locks = $this->get_locks();
+		return $locks->user_can_edit_relationship($relationship, $user, $direction);
+	}
 }
+
 ?>
