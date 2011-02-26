@@ -37,6 +37,9 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule
 		reason_include_once( 'minisite_templates/modules/admissions_application/page1.php' );
 		reason_include_once( 'minisite_templates/modules/admissions_application/page2.php' );
 		reason_include_once( 'minisite_templates/modules/admissions_application/page3.php' );
+                reason_include_once( 'minisite_templates/modules/admissions_application/page4.php' );
+                reason_include_once( 'minisite_templates/modules/admissions_application/page5.php' );
+                reason_include_once( 'minisite_templates/modules/admissions_application/page6.php' );
 
 		$this->controller = new FormController;
 		$this->controller->set_session_class('Session_PHP');
@@ -70,9 +73,30 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule
 				'back_button_text' => 'Change Personal Info',
 			),
 			'ApplicationPageThree' => array(
-				'final_step' => true,
-				'final_button_text' => 'Submit Your Gift!',
+				'next_steps' => array(
+					'ApplicationPageFour' => array(
+						'label' => 'Next Step: Gift Review / Payment Info',
+                                        ),
+                                ),
 			),
+                        'ApplicationPageFour' => array(
+				'next_steps' => array(
+					'ApplicationPageFive' => array(
+						'label' => 'Next Step: Gift Review / Payment Info',
+                                        ),
+                                ),
+			),
+                        'ApplicationPageFive' => array(
+				'next_steps' => array(
+					'ApplicationPageSix' => array(
+						'label' => 'Next Step: Gift Review / Payment Info',
+                                        ),
+                                ),
+			),
+                        'ApplicationPageSix' => array(
+                                    'final_step' => true,
+                                    'final_button_text' => 'Submit Your Application!',
+                        ),
 		);
 		$this->controller->add_forms( $forms );
 		// */
@@ -117,8 +141,9 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule
 
 		if($head_items =& $this->get_head_items())
 		{
-			$head_items->add_stylesheet('/reason/css/admissions_app.css');
-			$head_items->add_javascript('/reason/js/admissions_app.js');
+                    $head_items->add_stylesheet('/reason/css/giftform.css');
+                    $head_items->add_stylesheet('/reason/css/admissions_app.css');
+                    $head_items->add_javascript('/reason/js/admissions_app.js');
 		}
 		// Insert refresh headers when in kiosk mode
 		if ($this->params['kiosk_mode'])
