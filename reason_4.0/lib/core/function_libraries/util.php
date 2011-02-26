@@ -860,33 +860,62 @@
 	 * Note: This function is *fast*. There's no need to carefully store and pass around its results -- just call it again.
 	 *
 	 * Privileges:
-	 * <dl>
-	 * <dt>add</dt><dd>The privilege to create new (pending) entities.</dd>
-	 * <dt>edit_pending</dt><dd>The privilege to edit pending entities</dd>
-	 * <dt>delete_pending</dt><dd>The privilege to delete pending entities (e.g. mark them as "deleted")</dd>
-	 * <dt>edit</dt><dd>The privilege to edit live entities</dd>
-	 * <dt>delete</dt><dd>The privilege to delete live entities (e.g. mark them as "deleted")</dd>
-	 * <dt>publish</dt><dd>The privilege to publish entities (e.g. change their state from pending to live)</dd>
-	 * <dt>borrow</dt><dd>The privilege to borrow entities from other sites</dd>
-	 * <dt>expunge</dt><dd>The privilege to expunge deleted entities from the Reason database (That, is remove them forever)</dd>
-	 * <dt>duplicate</dt><dd>The privilege to duplicate entities (By default, limited to admins as of 3/08, as this is a experimental feature of Reason)</dd>
-	 * <dt>edit_html</dt><dd>The privilege to switch between WYSIWYG view and HTML view in the HTML editor</dd>
-	 * <dt>switch_theme</dt><dd>The privilege to change the site's theme (if the site's theme is not locked by an administrator)</dd>
-	 * <dt>pose_as_other_user</dt><dd>The privilege to interact with the Reason edministrative interface as if they were someone else. NOTE: This is a *very* powerful privilege, as it amounts to superuser rights!</dd>
-	 * <dt>assign_any_page_type</dt><dd>The privilege to choose from all Reason page types, rather than a select few</dd>
-	 * <dt>edit_head_items</dt><dd>The privilege to insert arbitrary HTML into the page head (css, scripts, meta tags, etc.)</dd>
-	 * <dt>edit_unique_names</dt><dd>The privilege to give Reason entities unique names. This is necessary for creating sites and types.</dd>
-	 * <dt>edit_fragile_slugs</dt><dd>The privilege to modify a slug that may cause broken links if changed (e.g. publication feed URL slugs)</dd>
-	 * <dt>edit_home_page_nav_link</dt><dd>The privilege to insert a custom link to site home pages in the navigation (instead of the standard "Sitename Home")</dd>
-	 * <dt>edit_form_advanced_options</dt><dd>The privilege to edit advanced options in the thor form content manager</dd>
-	 * <dt>manage_allowable_relationships</dt><dd>The privilege to modify, create, and delete the set of relationships can be made between Reason entities. NOTE: This is very powerful, and should only be given to highly trustworthy individuals</dd>
-	 * <dt>view_sensitive_data</dt><dd>The privilege to view any data in Reason</dd>
-	 * <dt>manage_integration_settings</dt><dd>The privilege to modify or override foreign keys and other values in Reason that pertain to integration with external data sources</dd>
-	 * <dt>edit_raw_ldap_filters</dt><dd>The privilege to write full LDAP filters/queries (e.g. in the construction of dynamic groups)</dd>
-	 * <dt>upload_full_size_image</dt><dd>The privilege to keep images from being resized upon upload, thereby retaining their original dimensions</dd>
-	 * <dt>upgrade</dt><dd>The privilege to run Reason's upgrade scripts</dd>
-	 * <dt>db_maintenance</dt><dd>The privilege to run standard database cleanup and sanity-checking scripts</dd>
-	 * <dt>update_urls</dt><dd>The privilege to run Reason's .htaccess regeneration script</dd></dl>
+	 * - add
+	 *   - The privilege to create new (pending) entities.
+	 * - edit_pending
+	 *   - The privilege to edit pending entities
+	 * - delete_pending
+	 *   - The privilege to delete pending entities (e.g. mark them as "deleted")
+	 * - edit
+	 *   - The privilege to edit live entities
+	 * - delete
+	 *   - The privilege to delete live entities (e.g. mark them as "deleted")
+	 * - publish
+	 *   - The privilege to publish entities (e.g. change their state from pending to live)
+	 * - borrow
+	 *   - The privilege to borrow entities from other sites
+	 * - expunge
+	 *   - The privilege to expunge deleted entities from the Reason database (That, is remove them forever)
+	 * - duplicate
+	 *   - The privilege to duplicate entities (By default, limited to admins as of 3/08, as this is a experimental feature of Reason)
+	 * - edit_html
+	 *   - The privilege to switch between WYSIWYG view and HTML view in the HTML editor
+	 * - switch_theme
+	 *   - The privilege to change the site's theme (if the site's theme is not locked by an administrator)
+	 * - pose_as_other_user
+	 *   - The privilege to interact with the Reason edministrative interface as if they were someone else. NOTE: This is a *very* powerful privilege, as it amounts to superuser rights!
+	 * - assign_any_page_type
+	 *   - The privilege to choose from all Reason page types, rather than a select few
+	 * - edit_head_items
+	 *   - The privilege to insert arbitrary HTML into the page head (css, scripts, meta tags, etc.)
+	 * - edit_unique_names
+	 *   - The privilege to give Reason entities unique names. This is necessary for creating sites and types.
+	 * edit_fragile_slugs
+	 *   - The privilege to modify a slug that may cause broken links if changed (e.g. publication feed URL slugs)
+	 * edit_home_page_nav_link
+	 *   - The privilege to insert a custom link to site home pages in the navigation (instead of the standard "Sitename Home")
+	 * - edit_form_advanced_options
+	 *   - The privilege to edit advanced options in the thor form content manager
+	 * - manage_allowable_relationships
+	 *   - The privilege to modify, create, and delete the set of relationships can be made between Reason entities. NOTE: This is very powerful, and should only be given to highly trustworthy individuals
+	 * - view_sensitive_data
+	 *   - The privilege to view any data in Reason (like a fulltext search of the entire Reason db)
+	 * - manage_integration_settings
+	 *   - The privilege to modify or override foreign keys and other values in Reason that pertain to integration with external data sources
+	 * - edit_raw_ldap_filters
+	 *   - The privilege to write full LDAP filters/queries (e.g. in the construction of dynamic groups)
+	 * - upload_full_size_image
+	 *   - The privilege to keep images from being resized upon upload, thereby retaining their original dimensions
+	 * - upgrade
+	 *   - The privilege to run Reason's upgrade scripts
+	 * - db_maintenance
+	 *   - The privilege to run standard database cleanup and sanity-checking scripts
+	 * - update_urls
+	 *   - The privilege to run Reason's .htaccess regeneration script
+	 * - bypass_locks
+	 *   - The privilege edit any locked field or relationship
+	 * - manage_locks
+	 *   - The privilege edit any locked field or relationship
 	 *
 	 * @param integer $user_id The Reason entity id of the user
 	 * @param string $privilege
@@ -897,30 +926,19 @@
 		$user_id = (integer) $user_id;
 		if(empty($user_id))
 			return false;
-		static $roles_cache = array();
 		static $privs_cache = array();
 		if(empty($cache[$user_id]))
 		{
-			reason_include_once('classes/entity_selector.php');
-			$es = new entity_selector();
-			$es->add_type(id_of('user_role'));
-			$es->limit_tables();
-			$es->limit_fields(array('unique_name'));
-			$es->add_right_relationship($user_id, relationship_id_of( 'user_to_user_role' ));
-			$roles_cache[$user_id] = $es->run_one();
-			if(empty($roles_cache[$user_id]))
-			{
-				$roles_cache[$user_id][id_of('editor_user_role')] = new entity(id_of('editor_user_role'));
-			}
+			$roles = reason_user_roles($user_id);
 		}
 		elseif(isset($privs_cache[$user_id][$privilege]))
 		{
 			return $privs_cache[$user_id][$privilege];
 		}
 		$privs = reason_get_privs_table();
-		foreach($roles_cache[$user_id] as $role)
+		foreach($roles as $role)
 		{
-			if(isset($privs[$role->get_value('unique_name')]) && in_array($privilege,$privs[$role->get_value('unique_name')]))
+			if(isset($privs[$role]) && in_array($privilege,$privs[$role]))
 			{
 				$privs_cache[$user_id][$privilege] = true;
 				return true;
@@ -930,13 +948,75 @@
 		return false;
 	}
 	
+	/**
+	 * Get the user roles for a given user id
+	 * @param integer $user_id
+	 * @return array of user role entities
+	 */
+	function reason_user_roles($user_id)
+	{
+		static $roles_cache = array();
+		if(empty($roles_cache[$user_id]))
+		{
+			$roles_cache[$user_id] = array();
+			
+			reason_include_once('classes/entity_selector.php');
+			$es = new entity_selector();
+			$es->add_type(id_of('user_role'));
+			$es->limit_tables();
+			$es->limit_fields(array('unique_name'));
+			$es->add_right_relationship($user_id, relationship_id_of( 'user_to_user_role' ));
+			$roles = $es->run_one();
+			
+			if(!empty($roles))
+			{
+				foreach($roles as $role)
+				{
+					if($role->get_value('unique_name'))
+						$roles_cache[$user_id][] = $role->get_value('unique_name');
+				}
+			}
+			if(empty($roles_cache[$user_id]))
+				$roles_cache[$user_id][] = 'editor_user_role';
+		}
+		return $roles_cache[$user_id];
+	}
+	
+	/**
+	 * Determine if a given role has a given privilege
+	 *
+	 * @param string $role_name The unique name of the role entity
+	 * @param string $privilege The priv identifier string
+	 * @return boolean
+	 */
+	function reason_role_has_privs($role_name,$privilege)
+	{
+		$privs = reason_get_privs_table();
+		if(isset($privs[$role_name]) && in_array($privilege,$privs[$role_name]))
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	/**
+	 * Get the way user privileges are assigned to roles
+	 *
+	 * Returns an array in this format:
+	 *
+	 * array( 'role_unique_name_1' => array( 'privilege_1', 'privilege_2', ... ), 'role_unique_name_2' => array( 'privilege_2', 'privilege_3', ... ), ...);
+	 *
+	 * @return array
+	 */
 	function reason_get_privs_table()
 	{
 		return array(
 				'contribute_only_role'=>array('add','edit_pending','delete_pending',),
 				'editor_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme',),
 				'power_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme','edit_html','upload_full_size_image',),
-				'admin_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','duplicate','edit_html','switch_theme','pose_as_other_user','assign_any_page_type','edit_head_items','edit_unique_names','edit_fragile_slugs','edit_home_page_nav_link','edit_form_advanced_options','manage_allowable_relationships','view_sensitive_data','manage_integration_settings','edit_raw_ldap_filters','upload_full_size_image','upgrade','db_maintenance','update_urls',),
+				'admin_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','duplicate','edit_html','switch_theme','pose_as_other_user','assign_any_page_type','edit_head_items','edit_unique_names','edit_fragile_slugs','edit_home_page_nav_link','edit_form_advanced_options','manage_allowable_relationships','view_sensitive_data','manage_integration_settings','edit_raw_ldap_filters','upload_full_size_image','upgrade','db_maintenance','update_urls','bypass_locks','manage_locks',),
 		);
 	}
 
