@@ -28,18 +28,17 @@ class ApplicationPageOne extends FormStep
             ),
             'student_type' => array(
                     'type' => 'radio_no_sort',
-                    'display_name' => '&nbsp;',
+                    'display_name' => 'What type of student will you be enrolling as?',
                     'options' => array('FR'=>'First Year', 'TR'=>'Transfer'),
-                    'default' => 'FR',
             ),
             'enrollment_term' => array(
-                    'display_name' => 'When do you plan to enroll?',
+                    'display_name' => 'When do you wish to enroll at Luther?',
                     'type' => 'text',
             ),
             'submitter_ip'=>'hidden',
 	);
 
-        var $required = array('student_type', 'enrollment_type');
+        var $required = array('student_type', 'enrollment_term');
 	var $display_name = 'Enrollment Info';
 	var $error_header_text = 'Please check your form.';
 
@@ -49,9 +48,16 @@ class ApplicationPageOne extends FormStep
             $this->set_value('submitter_ip', $_SERVER[ 'REMOTE_ADDR' ]);
 
             $date = getdate();
-            pray($date);
+            
+            if ($date['mon'] <= 5){
+                $year = $date['year'];
+            } else {
+                $year = $date['year'] +1;
+            }
+
             $this->change_element_type('enrollment_term', 'radio_no_sort', array(
-                'options' => array('Fall' => 'Fall', 'Spring' => 'Spring')));
+                'options' => array('FA'.$year => 'Fall ' . $year, 'SP'.$year => 'Spring '.$year),
+                'comments' => '<em>Show some year logic here</em>'));
 	}
 
 	function pre_show_form()

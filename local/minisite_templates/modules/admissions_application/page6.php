@@ -26,7 +26,7 @@ class ApplicationPageSix extends FormStep
 	var $error;
 
 	var $elements = array(
-            'college_plan_note' => array(
+            'college_plan_comment' => array(
                     'type' => 'comment',
                     'text' => '<h3>College Plan</h3>',
             ),
@@ -192,7 +192,7 @@ class ApplicationPageSix extends FormStep
                         'WOMS' => 'Women\'s Studies',
                     ),
             ),
-            'music_audition_note' => array(
+            'music_audition_comment' => array(
                 'type' => 'comment',
                 'text' => 'Do you intend to audition for a music scholarship?',
             ),
@@ -205,7 +205,7 @@ class ApplicationPageSix extends FormStep
                 'type' => 'text',
                 'size' => 15,
             ),
-            'financial_aid_note' => array(
+            'financial_aid_comment' => array(
                 'type' => 'comment',
                 'text' => 'Do you plan to apply for financial aid?',
             ),
@@ -233,7 +233,7 @@ class ApplicationPageSix extends FormStep
               'type' => 'comment',
               'text' => '<h3>Disciplinary History</h3>',
           ),
-          'conviction_history_note' => array(
+          'conviction_history_comment' => array(
               'type' => 'comment',
               'text' => 'Have you ever been convicted of a misdemeanor, felony, or other crime?',
           ),
@@ -246,7 +246,7 @@ class ApplicationPageSix extends FormStep
               'type' => 'textarea',
               'display_name' => 'If yes, please describe',
           ),
-          'hs_discipline_note' => array(
+          'hs_discipline_comment' => array(
               'type' => 'comment',
               'text' => 'Have you ever been found responsible for a discplinary violation while attending high school that resulted in probation,
                   suspension, dismissal, or expulsion?',

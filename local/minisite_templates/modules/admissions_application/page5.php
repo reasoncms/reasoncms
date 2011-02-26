@@ -21,26 +21,21 @@ class ApplicationPageFive extends FormStep
 	var $error;
 
 	var $elements = array(
-		'gift_note' => array(
-			'type' => 'comment',
-			'text' => '<h3>Gift Amount</h3>',
-		),
-		'gift_amount' => array(
-			'type' => 'money',
-			'display_name' => '&nbsp;',
-			'size'=>12,
-		),
-		'installment_type' => array(
-			'type' => 'radio_no_sort',
-			'display_name' => '&nbsp;',
-			'options' => array('Onetime'=>'One time','Monthly'=>'Every month','Quarterly'=>'Every quarter','Yearly'=>'Every year'),
-			'default' => 'Onetime',
-			),
-		'installment_start_date' => array(
-			'display_name' => 'Starting',
-			'type' => 'textDate',
-			'prepopulate'=>false,
-		),
+            'activities_header' => array(
+                    'type' => 'comment',
+                    'text' => '<h3>Activities</h3>'
+            ),
+            'activities_comment' => array(
+                'type' => 'comment',
+                'text' => 'Please list your high school activities in order of their importance to you
+                    (sports, service projects, clubs, special interests, etc.)'
+            ),
+########################
+########################
+            'activity_1' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => 'My (or my spouse\'s) employer will match my gift',
+            ),
 		'installment_end_date' => array(
 			'type' => 'select_no_sort',
 			'display_name' => 'Ending',
@@ -175,7 +170,6 @@ class ApplicationPageFive extends FormStep
 		'refby'=>array(
 			'type'=>'hidden',
 		),
-		'submitter_ip'=>'hidden',
 	);
 
 	/**
@@ -198,7 +192,7 @@ class ApplicationPageFive extends FormStep
 */
    	);
 
-	var $display_name = 'Gift Info';
+	var $display_name = 'Activities & Honors';
 	var $error_header_text = 'Please check your form.';
 
 	// style up the form and add comments et al

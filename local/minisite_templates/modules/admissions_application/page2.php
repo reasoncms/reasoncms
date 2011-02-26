@@ -26,94 +26,186 @@ class ApplicationPageTwo extends FormStep
 	
 	// the usual disco member data
 	var $elements = array(
+                'your_information_header' => array(
+                    'type' => 'comment',
+                    'text' => '<h3>Your Information</h3>'
+                ),
+                'name_comment' => array(
+                    'type' =>'comment',
+                    'text' => 'Please enter your name <strong>exactly</strong> as it appears on official documents.'
+                ),
 		'first_name' => array(
 			'type' => 'text',
 			'size'=>15,
 		),
+                'middle_name' => array(
+                        'type' => 'text',
+                        'size' => 15,
+                ),
 		'last_name' => array(
 			'type' => 'text',
 			'display_name' => 'Last Name or Family Name',
 			'size'=>20,
 		),
-		'spouse_first_name' => array(
+		'preferred_first_name' => array(
 			'type' => 'text',
 			'size' => 15,
 		),
-		'spouse_last_name' => array(
-			'type' => 'text',
-			'size' => 20,
-			'comments' => '<br>if applicable',
+		'gender' => array(
+			'type' => 'radio_inline',
+			'options' => array('F' => 'Female', 'M' => 'Male'),
 		),
-		'luther_affiliation' => array(
-			'display_name' => 'I am a Luther',
-			'type' => 'checkboxgroup_no_sort',
-			'options' => array('Alumnus/Spouse'=>'Alumnus/a or Spouse','Parent'=>'Parent','Friend'=>'Friend','Student'=>'Student','Faculty/Staff'=>'Faculty/Staff',),
-		),
-		'class_year' => array(
-			'type' => 'numrange',
-			'start' => 1924,
-			'end' => 2010,
-			'comments' => '<br>Choose either your class or your spouse\'s class',
-		),
-		'estate_note' => array(
-			'type' => 'comment',
-			'text' => '<h3>Estate Planning <em>(optional)</em></h3>',
-		),
-		'estate_plans' => array(
-			'type' => 'checkboxfirst',
-			'display_name' => 'I\'ve included Luther in my estate plans.',
-		),
-		'estate_info' => array(
-			'type' => 'checkboxfirst',
-                        'display_name' => 'Please send me information about including Luther in my estate plans.',
-		),
-		'address_note' => array(
-			'type' => 'comment',
-			'text' => '<h3>Address and Contact Information</h3>',
-		),
-		'address_type' => array(
-			'type' => 'radio_no_sort',
-			'options' => array('Home'=>'Home','Business'=>'Business'),
-			'default' => 'Home',
-		),
-		'street_address' => 'textarea',
-		'city' => array(
-			'type' => 'text',
-			'size'=>35,
-		),
-		'state_province' => array(
-			'type' => 'state_province',
-			'display_name' => 'State/Province',
-			'include_military_codes' => true,
-		),
-		'zip' => array(
-			'type' => 'text',
-			'display_name' => 'Zip/Postal Code',
-			'size'=>35,
-		),
-		'country' => array(
-			'type' => 'country',
-		),
-		'phone' => array(
-			'type' => 'text',
-			'size'=>20,
-		),
-		'phone_type' => array(
-			'type' => 'select_no_sort',
-			'options' => array('Home'=>'Home', 'Cell'=>'Cell','Business'=>'Business',),
-			'default' => 'Home',
+		'date_of_birth' => array(
+			'type' => 'textdate',
 		),
 		'email' => array(
 			'type' => 'text',
 			'size'=>35,
-			'display_name' => 'E-mail',
+			'display_name' => 'E-mail Address',
 		),
-		'advance_id'=>array(
-			'type' => 'hidden',
+                'home_phone' => array(
+			'type' => 'text',
+			'size'=>20,
 		),
-		'user_id'=>array(
-			'type'=>'hidden',
+                'cell_phone' => array(
+			'type' => 'text',
+			'size'=>20,
 		),
+		'address_header' => array(
+			'type' => 'comment',
+			'text' => '<h3>Address Information</h3>',
+		),
+		'permanent_address' => 'text',
+                'permanent_apartment_number' => array(
+                    'type' => 'text',
+                    'size' => 4,
+                    'display_name' => 'Apt. #'
+                ),
+                'permanent_city' => array(
+			'type' => 'text',
+			'size'=>35,
+		),
+		'permanent_state_province' => array(
+			'type' => 'state_province',
+			'display_name' => 'State/Province',
+			'include_military_codes' => true,
+		),
+		'permanent_zip_postal' => array(
+			'type' => 'text',
+			'display_name' => 'Zip/Postal Code',
+			'size'=>8,
+		),
+		'permanent_country' => array(
+			'type' => 'country',
+		),
+                'mailing_address_comment' => array(
+                    'type' => 'comment',
+                    'text' => 'Is your mailing address different from your permanent address?'
+                ),
+                'different_mailing_address' => array(
+                    'type' => 'radio_inline_no_sort',
+                    'display_name' => '&nbsp;',
+                    'options' => array('Yes'=>'Yes', 'No'=>'No'),
+                ),
+                'mailing_address' => 'text',
+                'mailing_apartment_number' => array(
+                    'type' => 'text',
+                    'size' => 4,
+                    'display_name' => 'Apt. #'
+                ),
+                'mailing_city' => array(
+			'type' => 'text',
+			'size'=>35,
+		),
+		'mailing_state_province' => array(
+			'type' => 'state_province',
+			'display_name' => 'State/Province',
+			'include_military_codes' => true,
+		),
+		'mailing_zip_postal' => array(
+			'type' => 'text',
+			'display_name' => 'Zip/Postal Code',
+			'size'=>8,
+		),
+		'mailing_country' => array(
+			'type' => 'country',
+		),
+		'additional_information_header' => array(
+                        'type' => 'comment',
+                        'text' => '<h3>Additional Information</h3>'
+		),
+                'citizenship_status' => array(
+                    'type' => 'radio_no_sort',
+                    'options' => array(
+                        'citizen' => 'U.S. Citizen',
+                        'resident' => 'Permanent Resident',
+                        'not a citizen' => 'Not a U.S, citizen or permanent resident')
+                ),
+                'heritage_comment' => array(
+                    'text' => 'If you wish to be identified with a particular ethnic group,
+                        please select the choice that most accurately describes your heritge.',
+                    'type' => 'comment'
+                ),
+                'heritage' => array(
+                    'type' => 'radio_inline_no_sort',
+                    'display_name' => 'Are you Hispanic or Latino?',
+                    'options' => array('HI'=>'Yes', 'No'=>'No'),
+                ),
+                'race_comment' => array(
+                    'type' => 'comment',
+                    'text' => 'In addition, select one or more of the following racial categories to describe yourself.'
+                ),
+                'race' => array(
+                    'type' => 'radio_no_sort',
+                    'display_name' => '&nbsp;',
+                    'options' => array(
+                        'AN' => 'American Indian or Alaska Native',
+                        'AS' => 'Asian',
+                        'BL' => 'Black or African American',
+                        'HP' => 'Native Hawaiian or Other Pacific Islander',
+                        'WH' => 'White'
+                    ),
+                ),
+                'your_faith_header' => array(
+                    'type' => 'comment',
+                    'text' => '<h3>Your Faith</h3>'
+		),
+                'faith_comment' => array(
+                    'type' => 'comment',
+                    'text' => '<a href="/financialaid/prospective/scholarships/epic/" target=__blank>Why is this information important?</a>'
+                ),
+                'church_name' => 'text',
+                'church_city' => array(
+                    'type' => 'text',
+                    'size' => 15,
+                ),
+                'church_state' => 'state_province',
+                'religion' => array(
+                    'type' => 'select',
+                    'add_null_value_to_top' => true,
+                    'options' => array(
+                        'CR' => 'Roman Catholic',
+                        'LE' => 'Lutheran ELCA',
+                        'LL' => 'Lutheran LC-MS',
+                        'LO' => 'Lutheran Other',
+                        'LU' => 'Lutheran Unknown',
+                        'LW' => 'Lutheran Wisconsin',
+                        'NB' => 'Buddhist',
+                        'NH' => 'Hindu',
+                        'NJ' => 'Jewish',
+                        'NM' => 'Muslim',
+                        'NO' => 'Non-Christian Other',
+                        'NU' => 'Non-Christian Unknown',
+                        'PA' => 'Assemblies of God',
+                        'PB' => 'Baptist',
+                        'PC' => 'Covenant',
+                        'PE' => 'Episcopal',
+                        'PK' => 'Christian Unknown',
+                        'PL' => 'Latter Day Saints/Mormon',
+                        'PM' => 'Methodist',
+                        'PO' => 'Christian Other'
+                    )
+                )
 	);
 
 	/**
@@ -122,35 +214,28 @@ class ApplicationPageTwo extends FormStep
 	* @var array
 	*/
 	var $element_group_info = array(	
-		'name_group' => array (	'type' => 'inline',
-					'elements' =>  array( 'first_name', 'last_name' ),
-					'args' => array('use_element_labels' => false,
-							'display_name' => 'Name',),
-			),
-		'spouse_name_group' => array ( 'type' => 'inline',
-					'elements' => array( 'spouse_first_name', 'spouse_last_name'),
-					'args' => array('use_element_labels' => false,
-							'display_name' => 'Spouse&nbsp;Name'),
-					),
-		'phone_group' => array ('type' => 'inline',
-					'elements' =>  array( 'phone', 'phone_type' ),
-					'args' => array('use_element_labels' => false,
-							'display_name' => 'Phone',),
-			),
-		);
+            'name_group' => array (
+                'type' => 'inline',
+                'elements' =>  array( 'first_name', 'middle_name', 'last_name' ),
+                'args' => array('use_element_labels' => false,  'display_name' => 'Name')
+            ),
+            'church_group' => array(
+                'type' => 'inline',
+                'elements' => array('church_city', 'church_state'),
+                'args' => array('use_element_labels' => false, 'display_name' => 'City/State')
+            )
+        );
 
 	var $required = array(
 		'first_name',
+                'middle_name',
 		'last_name',
-		'luther_affiliation',
-		'address_type',
-		'street_address',
-		'city',
-		'state_province',
-		'zip',
-		'country',
+		'permanent_address',
+		'permanent_city',
+		'permanent_state_province',
+		'permanent_zip',
+		'permanent_country',
 		'phone', 
-		'phone_type',
 		'email',
 	);
 	var $error_checks = array(
@@ -160,57 +245,27 @@ class ApplicationPageTwo extends FormStep
 	);
 	var $display_name = 'Personal Info';
 	var $error_header_text = 'Please check your form.';
-	var $form_to_person_key = array(
-		'first_name'=>array('src'=>'ldap_info','field'=>'givenname'),
-		'last_name'=>array('src'=>'ldap_info','field'=>'sn'),
-		'luther_affiliation'=>array('function'=>'get_affiliations'),
-		'class_year'=>array('src'=>'ldap_info','field'=>'carlcohortyear'),
-		'street_address'=>array('function'=>'get_street_address'),
-		'city'=>array('function'=>'get_home_city'),
-		'state_province'=>array('function'=>'get_home_state'),
-		'zip'=>array('function'=>'get_home_zip'),
-		'country'=>array('function'=>'get_home_country'),
-		'phone'=>array('function'=>'get_home_phone'),
-		'email'=>array('function'=>'get_email_address'),
-		'advance_id'=>array('src'=>'ldap_info','field'=>'carladvanceid'),
-		'user_id'=>array('src'=>'ldap_info','field'=>'carlnetid'),
-								);
+	
 	function is_phone_number( $num )
 	{
-		return true;
+            return true;
 	}
 	// style up the form and add comments et al
 	function on_every_time()
 	{
-		//add element groups
-		foreach($this->element_group_info as $name => $info)
-		{
-			$this->add_element_group( $info['type'], $name, $info['elements'], $info['args']);
-		}
-		$this->move_element('name_group','before','luther_affiliation');
-		$this->move_element('spouse_name_group','before','luther_affiliation');
-		$this->move_element('phone_group','before','email');
-		$this->add_comments('email','<div class="smallText comment">A confirmation e-mail will be sent to this address.</div>');
-		$this->change_element_type('class_year','numrange',array('start'=>1924,'end'=>(date('Y')+5)));
-		$this->pre_fill_form();
+            //add element groups
+            foreach($this->element_group_info as $name => $info){
+                $this->add_element_group( $info['type'], $name, $info['elements'], $info['args']);
+            }
+            
+            $this->move_element('name_group','before','preferred_first_name');
+            $this->pre_fill_form();
 	}
 	function pre_fill_form()
 	{
-		//$userid = 'polgreet_1976'; // An alumnus
-		//$userid = 'adicoffc_1978'; // Another alumnus
-		//$userid = 'perkinsb_1995'; // int'l alumnus - Czech Republic
-		//$userid = 'mehtan_1936'; // int'l alumnus - India
-		//$userid = 'mryan'; // An alumnus and staff member
-		//$userid = 'jlawrenc'; // A staff member
-		//$userid = 'syoon'; // A faculty member
-		//$userid = 'blahat'; // A student
-		//$userid = 'peiz'; // An international student - China
-		//$userid = 'yadavp'; // int'l student - India
-		//$userid = 'nogawac'; // int'l student - Japan
-		//$userid = 'hongj'; // int'l student - South Korea
-		//$userid = 'mccullom'; // int'l student - Canada
-		//$userid = 'holmesw'; // int'l student - UK
-		//$userid = 'ngoa'; // int'l student - Vietnam
+
+            //use this to fill form pages for users returning to fill out the form
+            //
 		if( $userid = reason_check_authentication() )
 		{
 			$person = get_individual_alum_info( $userid );
