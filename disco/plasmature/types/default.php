@@ -148,7 +148,7 @@ class defaultType
 	 * Usually the name of each valid argument should be the same as the class variable it corresponds to.. If it is different, set the key 
 	 * of the array to the name of the class variable and the value to the name of the argument. Please do not create new valid arguments
 	 * that have a different name than their corresponding class var - this functionality only exists for historical purposees.
-	 * @access private
+	 * @access protected
 	 * @var array
 	 */
 	var $_valid_args = array( 'display_name',
@@ -179,7 +179,7 @@ class defaultType
 	 * Access via _is_hidden() method
 	 *
 	 * @var boolean
-	 * @access private
+	 * @access protected
 	 */
 	var $_hidden = false;
 		
@@ -189,9 +189,16 @@ class defaultType
 	 * Access via _is_labeled() method
 	 *
 	 * @var boolean
-	 * @access private
+	 * @access protected
 	 */
 	var $_labeled = true;
+	
+	/**
+	 * A record of which args have been set (as opposed to simply having their default state)
+	 *
+	 * @var array
+	 */
+	protected $_set_args = array();
 	
 
 	/////////////////////////
@@ -406,6 +413,7 @@ class defaultType
 	 *  in child classes to {@link _valid_args} by overloading {@link type_valid_args}.
 	 *  @param string $var_name Name of the variable to be set.
 	 *  @param string $var_value Value that the variable should be set to.
+	 *	@todo make class vars protected so this is the only way to set them
 	 */
 	function set_class_var($var_name, $var_value)
 	{
@@ -422,6 +430,7 @@ class defaultType
 				$var_name = $key;
 			
 			$this->$var_name = $var_value;
+			$this->_register_set_arg($var_name);
 			return true;
 		}
 		else
@@ -456,6 +465,46 @@ class defaultType
 			$this->_valid_args_inited = true;
 		}
 		return $this->_valid_args;
+	}
+	
+	/**
+	 * Get the names of the args that have been set on this element
+	 * @return array format: array('argname1','argname2',...)
+	 */
+	function get_set_args()
+	{
+		return array_keys($this->_set_args);
+	}
+	
+	/**
+	 * Get the args that should be transferred if the element type is changed
+	 *
+	 * This method passes only those args that have been set on the element, not
+	 * including the args that have simply retained their default value.
+	 *
+	 * Note that if even if an arg is set to its default value it will be included
+	 * in this array -- what matters is the setting action.
+	 *
+	 * @return array format: array('argname1'=>'argval1','argname2'=>'argval2',...)
+	 */
+	function get_args_to_transfer()
+	{
+		$ret = array();
+		foreach(array_keys($this->_set_args) as $arg_name)
+		{
+			$ret[$arg_name] = $this->get_class_var($arg_name);
+		}
+		return $ret;
+	}
+	
+	/**
+	 * Register an argument/class var as having been set.
+	 * @param string $arg_name
+	 * @return void
+	 */
+	protected function _register_set_arg($arg_name)
+	{
+		$this->_set_args[$arg_name] = 1;
 	}
 	
 	/**
