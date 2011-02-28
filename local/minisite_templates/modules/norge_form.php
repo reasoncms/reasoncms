@@ -75,20 +75,29 @@ class NorgeFormModule extends DefaultMinisiteModule
 		$rules = array_merge( $rules, $this->controller->get_cleanup_rules() );
 		return $rules;
 	}
+        function init( $args = array() ) //{{{
+	{
+		parent::init( $args );
+
+		if($head_items =& $this->get_head_items())
+		{
+                    $head_items->add_javascript('/reason/js/norge_form.js');
+		}
+	}
 	/**
 	 * Set up the request for the controller and run the sucker
 	 * @return void
 	 */
 	function run()
 	{
-		if( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
+		if ( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
 		{
 			reason_include_once( 'minisite_templates/modules/norge_form/norge_confirmation.php' );
 			$nc = new NorgeConfirmation;
 			$nc->set_ref_number( $this->request[ 'r' ] );
 			$nc->set_hash( $this->request[ 'h' ] );
 
-			if( $nc->validates() )
+			if ( $nc->validates() )
 			{
 				echo $nc->get_confirmation_text();
 			}
@@ -102,28 +111,9 @@ class NorgeFormModule extends DefaultMinisiteModule
 		}
 		else
 		{
-			echo $this->generate_navigation();
 			$this->controller->set_request( $this->request );
 			$this->controller->run();
 		}
-	}
-        function generate_navigation()
-	{
-		$output = '<div id="formNavigation">';
-		$output .= '<ul class="formSteps">';
-		foreach ($this->controller->forms as $name => $form)
-		{
-			$class = 'formStep';
-			if (isset($form->display_name))
-			{
-				if ($this->controller->get_current_step() == $name)
-					$class .= ' current';
-
-				$output .= '<li class="'.$class.'"><a href="?_step='.$name.'">'.htmlspecialchars($form->display_name).'</a></li>';
-			}
-		}
-		$output .= '</ul></div>';
-		return $output;
 	}
 }
 ?>
