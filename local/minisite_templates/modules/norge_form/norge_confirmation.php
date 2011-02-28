@@ -8,7 +8,7 @@
 * Include necessary stuff
 */
 include_once('reason_header.php');
-include_once(WEB_PATH.'stock/norge_form.php');
+include_once(WEB_PATH.'stock/norgePFclass.php');
 
 /**
 * GiftConfirmation, Matt Ryan, 29 March 2005
@@ -117,8 +117,8 @@ class NorgeConfirmation
 		{
 			if(!empty($this->reference_number))
 			{
-				$camp = new dorian_sh;
-				$confirm_text = $camp->get_confirmation_text($this->reference_number);
+				$npf = new norgePF;
+				$confirm_text = $npf->get_confirmation_text($this->reference_number);
 				if(!empty($confirm_text))
 				{
 					if($this->hash == $this->make_hash($confirm_text))
@@ -131,7 +131,7 @@ class NorgeConfirmation
 					else
 					{
 						unset($confirm_text);
-						unset($gift);
+						unset($npf);
 						$this->_validation_has_run = true;
 						$this->_validates = false;
 					}

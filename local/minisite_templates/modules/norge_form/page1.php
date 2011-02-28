@@ -67,18 +67,19 @@ class NorgeFormOne extends FormStep
                 ),
                 'registration_type' => array(
                     'type' => 'radio_no_sort',
+                    'display_name' => 'Registration&nbsp;Type',
                     'options' => array(
                         'Regular' => 'Regular - $150 usd',
-                        'Senior' => 'Senior (over age 65) -$125 usd',
+                        'Senior' => 'Senior (over age 65) -$140 usd',
                         'Student' => 'Student - $100 usd'
                     )
                 ),
                 'school' => 'text',
                 'attend_banquet' => array(
-                    'type' => 'radio_in_line_no_sort',
+                    'type' => 'radio_inline_no_sort',
                     'display_name' => 'Will you attend the banquet?',
-                    'options' => array('yes' => 'Yes', 'no' => 'No'),
-                    'comment' => 'Banquet ticket $35'
+                    'options' => array('Yes' => 'Yes', 'No' => 'No'),
+                    'comments' => 'Banquet ticket $35'
                 ),
                 'housing_header' => array(
                     'type' => 'comment',
@@ -90,15 +91,21 @@ class NorgeFormOne extends FormStep
                         page for housing options and descriptions'
                 ),
                 'room_type' => array(
-                    'type' => 'radio_in_line_no_sort',
-                    'comment' => '$32 per bed <br>
+                    'type' => 'radio_inline_no_sort',
+                    'comments' => '$32 per bed <br>
                         Single - one twin bed<br>
                         Double - two twin beds',
                     'options' => array('single' => 'Single', 'double' => 'Double')
                 ),
+                'arrival_date' => 'textdate',
+                'departure_date' => 'textdate',
+                'housemates_comment' => array(
+                    'type' => 'comment',
+                    'text' => 'If possible, please house me with'
+                ),
                 'housemates_requested' => array(
                     'type' => 'textarea',
-                   'display_name' => 'If possible, please house me with',
+                   'display_name' => '&nbsp;',
                 ),
                 'additional_meal_header' => array(
                     'text' => '<h3>Additional Meal Tickets</h3>',
@@ -106,19 +113,28 @@ class NorgeFormOne extends FormStep
                 ),
                 'additional_meal_comment' => array(
                     'type' => 'comment',
-                    'text' => 'If you would like to bring a guest to '
+                    'text' => 'If you would like to bring a guest, who is not attending the conference, to meals, please indicate below',
                 ),
                 'additional_meal_tickets' => array(
                     'type' => 'checkboxgroup',
+                    'display_name' => '&nbsp;',
                     'options' => array(
                         'Reception' => 'Reception - $15',
                         'Barbecue' => 'Barbecue - $25',
                         'Banquet' => 'Banquet - $35',
                     )
                 ),
+                'dietary_header' => array(
+                    'type' => 'comment',
+                    'text' => '<h3>Dietary Needs</h3>'
+                ),
+                'dietary_comment' => array(
+                    'type' => 'comment',
+                    'text' => 'Please list any dietary restrictions or needs for you or your guest'
+                ),
                 'dietary_needs' => array(
                     'type' => 'textarea',
-                    'display_name' => 'Please list any dietary restrictions or needs for you or your guest',
+                    'display_name' => '&nbsp;',
                 ),
                 'submitter_ip' => 'hidden',
 	);

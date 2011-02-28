@@ -1,9 +1,9 @@
 <?php
 ////////////////////////////////////////////////////////////////////////////////
 //
-//    Work on the second page of the giving form
+//    Work on the second page of the NAHA Norway form
 //
-//   Steve Smith & Lucas Welper
+//   Steve Smith
 //    2011-01-26
 //
 //
@@ -117,6 +117,57 @@ class NorgeFormTwo extends FormStep
 	var $error_header_text = 'Please check your form.';
 	var $database_transformations = array('credit_card_number'=>'obscure_credit_card_number');
 
+        function get_total_cost()
+        {
+            // calculate the total_cost of conference by adding registration_type, room_type, and additional_meal_tickets
+                switch($this->controller->get('registration_type')){
+                    case 'Regular':
+                        $reg_cost = 150;
+                        break;
+                    case 'Senior':
+                        $reg_cost = 140;
+                        break;
+                    case 'Student':
+                        $reg_cost = 100;
+                        break;
+                }
+
+                // calculate room costs if set
+                switch ($this->controller->get('room_type')){
+                    case 'single':
+                        $room_cost = 32;
+                        break;
+                    case 'double':
+                        $room_cost = 64;
+                        break;
+                    default:
+                        $room_cost = 0;
+                }
+
+                // calculate cost of attend_banquet
+                if ($this->controller->get('attend_banquet') == 'Yes'){
+                    $banq_cost = 35;
+                } else {
+                    $banq_cost = 0;
+                }
+
+                // calculate additional meal ticket costs
+                $additional_meals = $this->controller->get('additional_meal_tickets');
+                $meal_cost = 0;
+                if ($additional_meals){
+                    foreach ($additional_meals as $key => $value) {
+                        if ($value == 'Banquet')
+                            $meal_cost = $meal_cost + 35;
+                        if ($value == 'Barbecue')
+                            $meal_cost = $meal_cost + 25;
+                        if ($value == 'Reception')
+                            $meal_cost = $meal_cost + 15;
+                    }
+                }
+
+                return $reg_cost + $room_cost + $banq_cost +$meal_cost;
+
+        }
 	// style up the form and add comments et al
 	function on_every_time()
 	{
@@ -139,42 +190,9 @@ class NorgeFormTwo extends FormStep
                     $this->expense_budget_number = '10-000-33700-12100';
                 }
 
-                // calculate the total_cost of conference by adding registration_type, room_type, and additional_meal_tickets
-                switch($this->controller->get('registration_type')){
-                    case 'Regular':
-                        $reg_cost = 150;
-                        break;
-                    case 'Senior':
-                        $reg_cost = 125;
-                        break;
-                    case 'Student':
-                        $reg_cost = 100;
-                        break;
-                }
-
-                // calculate room costs if set
-                switch ($this->controller->get('room_type')){
-                    case 'single':
-                        $room_cost = 32;
-                        break;
-                    case 'double':
-                        $room_cost = 64;
-                        break;
-                    default:
-                        $room_cost = 0;
-                }
-
-                // calculate cost of attend_banquet
-                if ($this->controller->get('attend_banquet')){
-                    $banq_cost = 35;
-                }
-
-                // calculate additional meal ticket costs
-                $meal_cost = $this->controller->get('additional_meal_tickets');
-                echo $meal_cost;
-
-                $total_cost = $reg_cost + $room_cost + $banq_cost + $meal_cost;
-                $this->change_element_type('payment_amount', 'solidtext', array('value' => $total_cost));
+                $this->change_element_type('payment_amount', 'solidtext');
+                $this->set_value('payment_amount', '$'.$this->get_total_cost());
+                
 
 		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
 		{
@@ -186,6 +204,7 @@ class NorgeFormTwo extends FormStep
 		}
 
                 if (reason_check_authentication() == 'smitst01'){
+                    echo 'you are steve';
                     $this->is_in_testing_mode = true;
                 }
 
@@ -216,14 +235,14 @@ class NorgeFormTwo extends FormStep
 		$txt .= '<h3>Thank you for registering for the NAHA Norway Conference</h3>';
 //		if (reason_unique_name_exists('dorian_sh_thank_you_blurb'))
 //			$txt .= '<p>' . get_text_blurb_content('dorian_sh_thank_you_blurb'). '</p>';
-		$txt .= '<p>If you experience technical problems using the registration form, please contact <a href="mailto:vagtsrac@luther.edu">Rachel Vagts, Luther College Archivist</a>.</p>'."\n";
+		$txt .= '<p>If you experience technical problems using the registration form, please contact <a href="mailto:vagtsrac@luther.edu">Rachel Vagts</a>, Luther College Archivist.</p>'."\n";
 		$txt .= '<ul>'."\n";
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
 		$txt .= '<h4>Your Information</h4>';
 		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('first_name').' '.$this->controller->get('last_name').'</li>'."\n";
 		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address_1')."\n";
                 if ($this->controller->get('address_2')){
-                    $txt .= $this->controller->get('address2')."\n";
+                    $txt .= $this->controller->get('address_2')."\n";
                 }
                 $txt .= $this->controller->get('city').' ';
                 if ($this->controller->get('state_province')){
@@ -244,14 +263,33 @@ class NorgeFormTwo extends FormStep
                 if ($this->controller->get('room_type')){
                     $txt .= '<li><strong>Requested Room Type :</strong> '.$this->controller->get('room_type').'</li>'."\n";
                 }
-                if ($this->controller->get('roomate_requested')){
-                    $txt .= '<li><strong>Requested Housemate(s) :</strong> '.$this->controller->get('housemates_requested').'</li>'."\n";
+                if ($this->controller->get('housemates_requested')){
+                    $txt .= '<li><strong>Requested Housemate(s):</strong> '.$this->controller->get('housemates_requested').'</li>'."\n";
+                }
+                if ($this->controller->get('arrival_date')){
+                    $txt .= '<li><strong>Arrival Date:</strong> '.$this->controller->get('arrival_date').'</li>'."\n";
+                }
+                if ($this->controller->get('departure_date')){
+                    $txt .= '<li><strong>Departure Date:</strong> '.$this->controller->get('departure_date').'</li>'."\n";
                 }
 		if ($this->controller->get('additional_meal_tickets'))
 		{
-			$txt .= '<strong><li>Additional Meal Tickets</strong> ' .$this->controller->get('additional_meal_tickets'). '</li>'."\n";
+                    $tix_txt = '';
+                    $tix_array =$this->controller->get('additional_meal_tickets');
+                    foreach ($tix_array as $key => $value) {
+                       if ($value != 'Reception'){
+                           $tix_txt .= $value . ', ';
+                       } else {
+                           $tix_txt .= $value;
+                       }
+                    }
+                    $txt .= '<strong><li>Additional Meal Tickets:</strong> ' .$tix_txt. '</li>'."\n";
 		}
-		$txt .= '<li><strong>Total Amount Charged:</strong> '.$total_cost.'</li>'."\n";
+                if ($this->controller->get('dietary_needs'))
+		{
+			$txt .= '<strong><li>Dietary Restrictions/Needs:</strong> ' .$this->controller->get('dietary_needs'). '</li>'."\n";
+		}
+		$txt .= '<li><strong>Total Amount Charged:</strong> $'.$this->get_total_cost().'</li>'."\n";
                 
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
