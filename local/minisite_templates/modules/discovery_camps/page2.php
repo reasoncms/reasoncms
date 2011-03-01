@@ -4,7 +4,7 @@
 //    Steve Smith
 //    2011-02-28
 //
-//    Work on the first page of the discovery camp form
+//    Work on the second page of the discovery camp form
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -16,13 +16,10 @@ class DiscoveryCampsTwo extends FormStep
 	var $_log_errors = true;
 	var $no_session = array( 'credit_card_number' );
 	var $error;
-	var $expense_budget_number = '10-202-60500-51111';
-        // $expense_budget_number stays the same, per Renee Lillibridge and Karen Dallenbach (1/27/11)
-	var $revenue_budget_number = '10-000-08520-22000';
-        // $revenue_budget_number  before June 1, 10-000-08520-22000
-        // $revenue_budget_number on or after June 1, 10-000-08520-40221
-
-	var $transaction_comment = 'Dorian Camp';
+	var $expense_budget_number = '13-102-01808-51111';
+        var $revenue_budget_number = '13-000-01808-40220';
+        
+	var $transaction_comment = 'Discovery Camps';
 	var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
 
 	// the usual disco member data
@@ -122,58 +119,70 @@ class DiscoveryCampsTwo extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
-                // determine which revenue_budget_number to use
-                // $revenue_budget_number  before June 1, 10-000-08520-22000
-                // $revenue_budget_number on or after June 1, 10-000-08520-40221
+            // calculate the total_cost of the camps
+            $camp_1 = 85;
+            $camp_2 = 95;
+            $camp_3 = 170;
+            $camp_4 = 145;
+            $camp_5 = 170;
+            $camp_6 = 150;
+            $camp_7 = 145;
+            $camp_8 = 170;
+            $camp_9 = 150;
+            $late_fee = 15; // after April 15, charge a late fee
 
-                $june1 = 151; // June 1 == day 151 (152 on a leap year) on a 0 - 364 scale
-                if (date('L')) // if this year is a leap year
-                    $june1 = 152;
-                $date = getdate();
-                if ($date['yday'] >= $june1){
-                    $this->revenue_budget_number = '10-000-08520-40221';
-                }
-                else {
-                    $this->revenue_budget_number = '10-000-08520-22000';
-                }
+            $april15 = 104; // April 15 == day 104 (105 on a leap year) on a 0 - 364 scale
+            if (date('L')) {// if this year is a leap year
+                $june1 = 105;
+            }
 
-                // calculate the total_cost of the camp by adding lesson_cost (if present) to the camp_cost
-                $camp_cost = 433;
-                $per_lesson_cost = 35;
-                $lesson_cost = 0;
-                $lesson_msg = '';
-                if ($this->controller->get('private_lessons'))
-                {
-                    $lesson_cost = $per_lesson_cost * $this->controller->get('private_lessons');
-                    switch($this->controller->get('private_lessons')){
-                        case '1':
-                            $lesson_msg = '<br />(camp, plus $' . $per_lesson_cost . ' for 1 lesson)';
-                            break;
-                        case '2':
-                            $lesson_msg = '<br />(camp, plus $' . $per_lesson_cost*2 . ' for 2 lessons)';
-                            break;
-                        default:
-                            $lesson_msg = '';
-                    }
-                }
-                $total_cost = $camp_cost + $lesson_cost;
-                $this->change_element_type('payment_amount', 'radio_no_sort', array(
-                        'options' => array(
-                            '$40' => '$40 - Deposit only',
-                            '$' . $total_cost => '$' . $total_cost . ' - Total cost' . $lesson_msg
-                        )
-                    )
-                );
-		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
-		{
-			$this->is_in_testing_mode = true;
-		}
-		else
-		{
-			$this->is_in_testing_mode = false;
-		}
+            $date = getdate();
+            if ($date['yday'] > $april15){
+                $camp_1 = $camp_1 + $late_fee;
+                $camp_2 = $camp_2 + $late_fee;
+                $camp_3 = $camp_3 + $late_fee;
+                $camp_4 = $camp_4 + $late_fee;
+                $camp_5 = $camp_5 + $late_fee;
+                $camp_6 = $camp_6 + $late_fee;
+                $camp_7 = $camp_7 + $late_fee;
+                $camp_8 = $camp_8 + $late_fee;
+                $camp_9 = $camp_9 + $late_fee;
+            }
 
-		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
+            $total_cost = 0;
+            if ($this->controller->get('camp_1'))
+                    $total_cost = $total_cost + $camp_1;
+            if ($this->controller->get('camp_2'))
+                    $total_cost = $total_cost + $camp_2;
+            if ($this->controller->get('camp_3'))
+                    $total_cost = $total_cost + $camp_3;
+            if ($this->controller->get('camp_4'))
+                    $total_cost = $total_cost + $camp_4;
+            if ($this->controller->get('camp_5'))
+                    $total_cost = $total_cost + $camp_5;
+            if ($this->controller->get('camp_6'))
+                    $total_cost = $total_cost + $camp_6;
+            if ($this->controller->get('camp_7'))
+                    $total_cost = $total_cost + $camp_7;
+            if ($this->controller->get('camp_8'))
+                    $total_cost = $total_cost + $camp_8;
+            if ($this->controller->get('camp_9'))
+                    $total_cost = $total_cost + $camp_9;
+
+            
+            $this->change_element_type('payment_amount', 'solidtext');
+            $this->set_value('payment_amount', '$'.$total_cost);
+
+            if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
+            {
+                    $this->is_in_testing_mode = true;
+            }
+            else
+            {
+                    $this->is_in_testing_mode = false;
+            }
+
+            $this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
 
 	function pre_show_form()
@@ -197,69 +206,53 @@ class DiscoveryCampsTwo extends FormStep
 		$txt = '<div id="campOverview">'."\n";
 
 		$txt .= '<p class="printConfirm">Print this confirmation for your records.</p>'."\n";
-		$txt .= '<h3>Thank you for registering for Dorain Camp</h3>';
-		if (reason_unique_name_exists('dorian_sh_thank_you_blurb'))
-			$txt .= '<p>' . get_text_blurb_content('dorian_sh_thank_you_blurb'). '</p>';
-		$txt .= '<p>If you experience technical problems using the registration form, please contact the Luther College Music Office.</p>'."\n";
+		$txt .= '<h3>Thank you for registering for Discovery Camps</h3>';
+		if (reason_unique_name_exists('discovery_camps_thank_you_blurb'))
+			$txt .= '<p>' . get_text_blurb_content('discovery_camps_thank_you_blurb'). '</p>';
+		$txt .= '<p>If you experience technical problems using the registration form, please contact Emily Neal, Coordinator of School Outreach,
+                     Sustainability, Wellness, and the Environment.</p>'."\n";
 		$txt .= '<ul>'."\n";
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
-		$txt .= '<h4>Your Information</h4>';
+		$txt .= '<h4>Camper Information</h4>';
 		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('first_name').' '.$this->controller->get('last_name').'</li>'."\n";
-		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address')."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip').'</li>'."\n";
-		$txt .= '<li><strong>Home Phone:</strong> '.$this->controller->get('home_phone').'</li>'."\n";
-		$txt .= '<li><strong>E-mail:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
-                $txt .= '<li><strong>School:</strong> '.$this->controller->get('school').'</li>'."\n";
+                $txt .= '<li><strong>Gender:</strong> '.$this->controller->get('gender').'</li>'."\n";
                 $txt .= '<li><strong>Grade:</strong> '.$this->controller->get('grade').'</li>'."\n";
-                if ($this->controller->get('roomate_requested'))
-                {
-                    $txt .= '<li><strong>Requested Roomate(s) :</strong> '.$this->controller->get('roomate_requested').'</li>'."\n";
+                $txt .= '<li><strong>Current Age:</strong> '.$this->controller->get('age').'</li>'."\n";
+		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address')."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip').'</li>'."\n";
+		$txt .= '<li><strong>T-shirt Size:</strong> '.$this->controller->get('t-shirt_size').'</li>'."\n";
+                $txt .= '<h4>Parent/Guardian Information</h4>';
+                $txt .= '<li><strong>Name:</strong> '.$this->controller->get('parent_guardian_name').'</li>'."\n";
+                $txt .= '<li><strong>Home Phone:</strong> '.$this->controller->get('home_phone').'</li>'."\n";
+                $txt .= '<li><strong>Work Phone:</strong> '.$this->controller->get('work_phone').'</li>'."\n";
+		$txt .= '<li><strong>E-mail:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
+                $txt .= '<h4>Camps</h4>';
+                if ($this->controller->get('camp_1')) {
+                    $txt .= '<li>June 6-7 Grade 1</li>'."\n";
                 }
-		$txt .= '<h4>Participation</h4>';
-		if ($this->controller->get('band_participant'))
-		{
-			$txt .= '<li>You\'ll play ' .$this->controller->get('band_instrument'). ' in band.</li>'."\n";
+		if ($this->controller->get('camp_2')) {
+			$txt .= '<li>June 8-10 Grade 2</li>'."\n";
 		}
-		if ($this->controller->get('orchestra_participant'))
-		{
-			$txt .= '<li>You\'ll play ' .$this->controller->get('orchestra_instrument'). ' in orchestra.</li>'."\n";
+		if ($this->controller->get('camp_3')) {
+			$txt .= '<li>June 6-10 Grades 7-9</li>'."\n";
 		}
-                if ($this->controller->get('jazz_participant'))
-		{
-			$txt .= '<li>You\'ll play ' .$this->controller->get('jazz_instrument'). ' in jazz band.</li>'."\n";
+                if ($this->controller->get('camp_4')) {
+			$txt .= '<li>June 13-17 Grades 3-6</li>'."\n";
 		}
-                if ($this->controller->get('wind_choir_participant'))
-		{
-			$txt .= '<li>You\'ll play ' .$this->controller->get('wind_choir_instrument'). ' in wind choir.</li>'."\n";
+                if ($this->controller->get('camp_5')) {
+			$txt .= '<li>June 20-24 Grades 5-8</li>'."\n";
 		}
-                if ($this->controller->get('workshops'))
-                {
-                    $txt .= '<li><strong>Workshops:</strong> '.$this->controller->get('workshops').'</li>'."\n";
+                if ($this->controller->get('camp_6')) {
+                    $txt .= '<li>June 27-July 1 Grades 9-12</li>'."\n";
                 }
-                if ($this->controller->get('private_lessons'))
-		{
-			$txt .= '<li>You\'d like ' .$this->controller->get('private_lessons'). ' set(s) of private lessons for '
-                                . $this->controller->get('lesson_instrument_1');
-                                if ($this->controller->get('lesson_instrument_2'))
-                                {
-                                    $txt .= ' and ' . $this->controller->get('lesson_instrument_2');
-                                }
-                                $txt .= '</li>'."\n";
-		}
-
-		$txt .= '<li><strong>Period 1:</strong> '.$this->controller->get('period_one').'</li>'."\n";
-                $txt .= '<li><strong>Period 2:</strong> '.$this->controller->get('period_two').'</li>'."\n";
-                $txt .= '<li><strong>Period 3:</strong></li>'."\n";
-                    $txt .= '<ul>';
-                    $txt .= '<li>'.$this->controller->get('period_three_first').' (first choice)'.'</li>'."\n";
-                    $txt .= '<li>'.$this->controller->get('period_three_second').' (second choice)'.'</li>'."\n";
-                    $txt .= '</ul>';
-                $txt .= '<li><strong>Period 4:</strong></li>'."\n";
-                    $txt .= '<ul>';
-                    $txt .= '<li>'.$this->controller->get('period_four_first').' (first choice)'.'</li>'."\n";
-                    $txt .= '<li>'.$this->controller->get('period_four_second').' (second choice)'.'</li>'."\n";
-                    $txt .= '</ul>';
-                $txt .= '<li><strong>Period 5:</strong> '.$this->controller->get('period_five').'</li>'."\n";
-                $txt .= '<li><strong>Period 6:</strong> '.$this->controller->get('period_six').'</li>'."\n";
+                if ($this->controller->get('camp_7')) {
+                    $txt .= '<li>July 11-15 Grades 3-6</li>'."\n";
+                }
+                if ($this->controller->get('camp_8')) {
+                    $txt .= '<li>July 18-22 Grades 3-6</li>'."\n";
+                }
+                if ($this->controller->get('camp_9')) {
+                    $txt .= '<li>July 18-22 Grades 6-9</li>'."\n";
+                }
 
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
@@ -267,7 +260,7 @@ class DiscoveryCampsTwo extends FormStep
 	}
 	function run_error_checks()
 	{
-		if($this->get_value('billing_address') == 'new'
+                    if($this->get_value('billing_address') == 'new'
                         && (!$this->get_value('billing_street_address')
                         || !$this->get_value('billing_city')
                         || !$this->get_value('billing_state_province')
@@ -282,7 +275,7 @@ class DiscoveryCampsTwo extends FormStep
 		// Process credit card
 		if( !$this->_has_errors() )
 		{
-			$pf = new dorian_sh;
+			$pf = new discovery_campsPF;
 
 			$expiration_mm = str_pad($this->get_value('credit_card_expiration_month'), 2, '0', STR_PAD_LEFT);
 			$expiration_yy = substr($this->get_value('credit_card_expiration_year'), 2, 2);
@@ -382,36 +375,26 @@ class DiscoveryCampsTwo extends FormStep
 										//'</h3>'=>'',
 										'<br />'=>"\n",
 									);
-				/*
-if (reason_unique_name_exists('giving_form_thank_you_blurb'))
-					$confirm_text = get_text_blurb_content('giving_form_thank_you_blurb') . $confirm_text;
-				else
-					$confirm_text = '<p><strong>Thank you for your gift to Luther College!</strong></p>' . $confirm_text;
-*/
-				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
-				$email_to_music = new Email(array('dorian@luther.edu', 'buzzja01@luther.edu'), 'noreply@luther.edu','noreply@luther.edu', 'New Dorian Camper '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
-				$email_to_music->send();
-				$email_to_giver = new Email($this->controller->get('e-mail'),'dorian@luther.edu','dorian@luther.edu','Luther College Dorian Camp Confirmation',strip_tags($mail_text),$mail_text);
-				$email_to_giver->send();
 
-//				$add_headers = 'Content-Type: text/plain; charset="utf-8"'."\r\n".'From: "Luther College Giving" <giving@luther.edu>' . "\r\n" .
-//'Reply-To: "Luther College Giving" <giving@luther.edu>';
-				/*
-$add_headers = 'MIME-Version: 1.0' . "\r\n" . 'Content-Type: text/html; charset="utf-8"'."\r\n".'From: "Luther College Giving" <giving@luther.edu>' . "\r\n" .
-'Reply-To: "Luther College Giving" <giving@luther.edu>';
-				mail($this->controller->get('email'),'Luther College Gift Confirmation', $mail_text, $add_headers);
-				mail('waskni01@luther.edu', 'New Online Gift', strip_tags($mail_text), $add_headers);
-*/
-				//}
-			}
+                                if (reason_unique_name_exists('discovery_camps_thank_you_blurb'))
+                                    $confirm_text = get_text_blurb_content('discovery_camps_thank_you_blurb') . $confirm_text;
+				else
+                                    $confirm_text = '<p><strong>Thank you for your payment to Luther College!</strong></p>' . $confirm_text;
+
+				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
+				$email_to_emily = new Email('nealem01@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Discovery Camper '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
+				$email_to_emily->send();
+				$email_to_camper = new Email($this->controller->get('e-mail'),'nealem01@luther.edu','nealem01@luther.edu','Luther College Discovery Camps Confirmation',strip_tags($mail_text),$mail_text);
+				$email_to_camper->send();
+                    }
 		}
 	}
 	function where_to()
 	{
 		$refnum = $this->get_value( 'result_refnum' );
 		$text = $this->get_value( 'confirmation_text' );
-		reason_include_once( 'minisite_templates/modules/dorian_sh_camp/dorian_sh_camp_confirmation.php' );
-		$camp_confirmation = new DorianSHCampConfirmation;
+		reason_include_once( 'minisite_templates/modules/discovery_camps/confirmation.php' );
+		$camp_confirmation = new DiscoveryCampsConfirmation;
 		$hash = $camp_confirmation->make_hash( $text );
 		connectDB( REASON_DB );
 		$url = get_current_url();
@@ -436,5 +419,4 @@ function trim_hours_from_datetime( $datetime )
 {
 	return substr( $datetime, 0, 10 );
 }
-
 ?>

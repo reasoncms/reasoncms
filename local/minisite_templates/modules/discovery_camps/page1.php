@@ -48,10 +48,24 @@ class DiscoveryCampsOne extends FormStep
             'state_province' => array(
                 'type' => 'state_province',
                 'display_name' => 'State/Province',
+                'default' => 'IA'
             ),
             'zip' => array(
                 'type' => 'text',
                 'size' => 35,
+            ),
+            't-shirt_size' => array(
+                'type' => 'select_no_sort',
+                'add_null_value_to_top' => true,
+                'options' => array(
+                    'YS' =>'Youth - Small',
+                    'YM' => 'Youth - Medium',
+                    'YL' => 'Youth - Large',
+                    'AS' => 'Adult - Small',
+                    'AM' => 'Adult - Medium',
+                    'AL' => 'Adult - Large',
+                    'AXL' => 'Adult - X-large',
+                )
             ),
             'parent_information_header' => array(
                 'type' => 'comment',
@@ -73,65 +87,85 @@ class DiscoveryCampsOne extends FormStep
                 'type' => 'text',
                 'size' => 35,
             ),
-            't-shirt_size' => array(
-                'type' => 'select_no_sort',
-                'add_null_value_to_top' => true,
-                'options' => array(
-                    'YS' =>'Youth - Small',
-                    'YM' => 'Youth - Medium',
-                    'YL' => 'Youth - Large',
-                    'AS' => 'Adult - Small',
-                    'AM' => 'Adult - Medium',
-                    'AL' => 'Adult - Large',
-                    'AXL' => 'Adult - X-large',
-                )
-            ),
             'camp_information_header' => array(
                 'type' => 'comment',
                 'text' => '<h3>Camps</h3>',
             ),
-            'june_6-7' => array(
-                'type' => 'checkbox_first',
+            'camp_1' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => "June 6 - 7   Grade 1     $85",
             ),
-            'june_8-10' => array(
-                'type' => 'checkbox_first',
+           'camp_2' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => "June 8 - 10  Grade 2   $95"
             ),
-            'june_6-10' => array(
-                'type' => 'checkbox_first',
+            'camp_3' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => "June 6 - 10  Grades 7-9     $170",
+                'comments' => '<br><em>Adventure Hunt</em>'
             ),
-            'june_13-17' => array(
-                'type' => 'checkbox_first',
+            'camp_4' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => "June 13 - 17 Grades 3-6  $145"
             ),
-            'june_20-24' => array(
-                'type' => 'checkbox_first',
+            'camp_5' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => "June 20 - 24 Grades 5-8  $170",
+                'comments' => '<br><em>Survival Camp</em>'
             ),
-            'june_27-july_1' => array(
-                'type' => 'checkbox_first',
+            'camp_6' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => "June 27 - July 1 Grades 9-12 $150",
+                'comments' => '<br><em>Local Food Warriors</em>'
             ),
-            'july_11-15' => array(
-                'type' => 'checkbox_first',
+            'camp_7' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => "July 11 - 15 Grades 3-6 $145",
             ),
-            'july_18-22_a' => array(
-                'type' => 'checkbox_first',
+            'camp_8' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => "July 18 - 22 Grades 6-9 $170",
+                'comments' => '<br><em>Expeditioners</em>'
             ),
-            'july_18-22_b' => array(
-                'type' => 'checkbox_first',
+            'camp_9' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => "July 18 - 22 Grades 6-9 $150",
+                'comments' => '<br><em>The Edible Earth</em>'
             ),
             'submitter_ip' => 'hidden',
 	);
 
-	var $required = array('first_name', 'last_name', 'gender', 'home_phone', 'e-mail', 'address', 'city', 'state_province', 'zip', 'school', 'grade');
+	var $required = array('first_name', 'last_name', 'gender', 'home_phone', 'e-mail', 
+            'address', 'city', 'state_province', 'zip', 'age', 'grade', 't-shirt_size', 'parent_guardian_name',
+            'work_phone');
 
 	var $error_header_text = 'Please check your form.';
 
         function on_every_time()
         {
             $this->set_value('submitter_ip', $_SERVER[ 'REMOTE_ADDR' ]);
+
+             $april15 = 104; // April 15 == day 104 (105 on a leap year) on a 0 - 364 scale
+                if (date('L')) // if this year is a leap year
+                    $june1 = 105;
+                $date = getdate();
+                
+                if ($date['yday'] > $april15){
+                    $this->set_display_name('camp_1', "June 6-7   Grade 1     $100");
+                    $this->set_display_name('camp_2', "June 8-10  Grade 2   $110");
+                    $this->set_display_name('camp_3', "June 6-10  Grades 7-9     $185");
+                    $this->set_display_name('camp_4', "June 13-17 Grades 3-6  $160");
+                    $this->set_display_name('camp_5', "June 20-24 Grades 5-8  $185");
+                    $this->set_display_name('camp_6', "June 27-July 1 Grades 9-12 $165");
+                    $this->set_display_name('camp_7', "July 11-15 Grades 3-6 $160");
+                    $this->set_display_name('camp_8', "July 18-22 Grades 6-9 $185");
+                    $this->set_display_name('camp_9', "July 18-22 Grades 6-9 $165");
+                }
         }
 	// style up the form and add comments et al
 	function pre_show_form()
 	{
-		echo '<div id="dorianSHCampForm" class="pageOne">'."\n";
+		echo '<div id="discoveryCampsForm" class="pageOne">'."\n";
 	}
 	function post_show_form()
 	{

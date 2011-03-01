@@ -117,7 +117,7 @@ class DiscoveryCampsConfirmation
 		{
 			if(!empty($this->reference_number))
 			{
-				$camp = new dorian_sh;
+				$camp = new discovery_campsPF;
 				$confirm_text = $camp->get_confirmation_text($this->reference_number);
 				if(!empty($confirm_text))
 				{

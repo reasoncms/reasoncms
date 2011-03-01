@@ -33,19 +33,18 @@ class DiscoveryCampsModule extends DefaultMinisiteModule
 		$this->controller->set_session_class('Session_PHP');
 		$this->controller->set_session_name('REASON_SESSION');
 		$this->controller->set_data_context('discovery_camps');
-		$this->controller->show_back_button = true;
+		$this->controller->show_back_button = false;
 		$this->controller->clear_form_data_on_finish = true;
 		$this->controller->allow_arbitrary_start = true;
 		//*
 		$forms = array(
                     'DiscoveryCampsOne' => array(
-                        'next_steps' => array(
-                            'DorianSHCampTwoForm' => array('label' => 'Next'),
+                        'next_steps' => array('DiscoveryCampsTwo' => array('label' => 'Next'),
                         ),
                         'step_decision' => array('type'=>'user'),
-                        'back_button_text' => 'Back',
                     ),
                     'DiscoveryCampsTwo' => array(
+                        'back_button_text' => 'Back',
                         'final_step' => true,
                         'final_button_text' => 'Finish and Pay',
                     ),
