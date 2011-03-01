@@ -396,6 +396,7 @@ class ReasonEntityLocks
 	 *
 	 * @param string $role_name
 	 * @param string $fields_or_rels 'fields','relationships', or 'all'
+	 * @return boolean
 	 */
 	public function role_could_edit($role_name, $fields_or_rels = 'all')
 	{
@@ -581,6 +582,7 @@ class ReasonEntityLocks
 	 *
 	 * @param string $field_name
 	 * @param mixed $user A user entity or null for the currently-logged-in user
+	 * @return boolean
 	 */
 	public function user_can_edit_field($field_name, $user = null)
 	{
@@ -614,6 +616,8 @@ class ReasonEntityLocks
 	 * @param string $field_name
 	 * @param mixed $user A user entity or null for the currently-logged-in user
 	 * @param string $direction 'left' or 'right' -- 'left' if this entity is on the right side of the relationship, 'right' if it is on the left (e.g. on which side of the entity is the relationship on?)
+	 *
+	 * @return boolean
 	 *
 	 * @todo check to make sure the requested relationship a) exists, and b) is available on this
 	 * type
