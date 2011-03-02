@@ -112,10 +112,18 @@ class miniEventsModule extends EventsModule
 	
 	function show_feed_link()
 	{
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
+		{
+			$viewAllLink = "/programming/events/";
+		}
+		else
+		{
+			$viewAllLink = $this->events_page_url;
+		}
 		echo '<nav class="button view-all">'."\n";
 		echo '<ul>'."\n";
 		//echo '<li><a href="/programming/calendar">View all events &gt;</a></li>'."\n";
-		echo '<li><a href="'.$this->events_page_url.'">View all events &gt;</a></li>'."\n";
+		echo '<li><a href="'.$viewAllLink.'">View all events &gt;</a></li>'."\n";
 		echo '</ul>'."\n";
 		echo '</nav>'."\n";
 	}
