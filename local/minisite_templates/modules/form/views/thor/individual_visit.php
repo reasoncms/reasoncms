@@ -65,7 +65,7 @@ class IndividualVisitForm extends DefaultThorForm
             'xxxx1223', 'xxxx1224', 'xxxx1225', '20101227', '20101228', '20101229', '20101230', 'xxxx1231',
             'xxxx0101', '20110129',
             '20110212', '20110226',
-            '20110314', '20110319', '20110326',
+            '20110314', '20110319-20110326',
             '20110411', '20110422', '20110423',
             '20110514', '20110521', '20110528', '20110530',
             '20110604'
@@ -516,6 +516,9 @@ class IndividualVisitForm extends DefaultThorForm
 		$visitdate_field = $this->get_element_name_from_label('Visit Date');
 		$this->change_element_type($visitdate_field, 'textdatepublic');
 		$this->set_element_properties($visitdate_field, $visitdate_properties);
+
+                $this->set_comments($visitdate_field, '<br>March 19-26 is our spring break. If you would like to schedule a visit
+                    during this time, please call <br>800-4 LUTHER', 'after');
 		
 		$visittime_field = $this->get_element_name_from_label('Visit Time');
 		$this->change_element_type($visittime_field, 'select_no_sort', array(
