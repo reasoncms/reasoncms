@@ -518,7 +518,7 @@ class IndividualVisitForm extends DefaultThorForm
 		$this->set_element_properties($visitdate_field, $visitdate_properties);
 
                 $this->set_comments($visitdate_field, '<br>March 19-26 is our spring break. If you would like to schedule a visit
-                    during this time, please call <br>800-4 LUTHER', 'after');
+                    during this time, please call 800-4 LUTHER', 'after');
 		
 		$visittime_field = $this->get_element_name_from_label('Visit Time');
 		$this->change_element_type($visittime_field, 'select_no_sort', array(
