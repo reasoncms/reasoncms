@@ -203,7 +203,7 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule
 		{
                     $head_items->add_stylesheet('/reason/css/giftform.css');
                     $head_items->add_stylesheet('/reason/css/admissions_app.css');
-                    $head_items->add_javascript('/reason/js/admissions_app.js');
+                    $head_items->add_javascript('/reason/js/admissions_application.js');
 		}
 		// Insert refresh headers when in kiosk mode
 		if ($this->params['kiosk_mode'])
