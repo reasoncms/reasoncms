@@ -464,34 +464,34 @@ class ApplicationPageThree extends FormStep
                 'size' => 20,
                 'display_name' => 'Degree earned or expected',
             ),
-            'sibling_1_college_start_month' => array(
-                'type' => 'text',
-                'size' => 2,
-            ),
-            'sibling_1_dateslash_1' => array(
-                'type' => 'comment',
-                'text' => '/'
-            ),
-            'sibling_1_college_start_year' => array(
-                'type' => 'text',
-                'size' => 4,
+//            'sibling_1_college_start_month' => array(
+//                'type' => 'text',
+//                'size' => 2,
+//            ),
+//            'sibling_1_dateslash_1' => array(
+//                'type' => 'comment',
+//                'text' => '/'
+//            ),
+            'sibling_1_college_start' => array(
+                'type' => 'selectMonthYear',
+                'year_args' => array('start' => 1977, 'end' => 2011)
             ),
             'sibling_1_college_date_dash' => array(
                 'type' => 'comment',
                 'text' => '&mdash;'
             ),
-            'sibling_1_college_end_month' => array(
-                'type' => 'text',
-                'size' => 2,
+            'sibling_1_college_end' => array(
+                'type' => 'selectMonthYear',
+                'year_args' => array('start' => 1977, 'end' => 2011)
             ),
-            'sibling_1_dateslash_2' => array(
-                'type' => 'comment',
-                'text' => '/'
-            ),
-            'sibling_1_college_end_year' => array(
-                'type' => 'text',
-                'size' => 4,
-            ),
+//            'sibling_1_dateslash_2' => array(
+//                'type' => 'comment',
+//                'text' => '/'
+//            ),
+//            'sibling_1_college_end_year' => array(
+//                'type' => 'text',
+//                'size' => 4,
+//            ),
             'siblings_2_header' => array(
                     'type' => 'comment',
                     'text' => '<h4>Sibling 2</h4>',
@@ -528,34 +528,30 @@ class ApplicationPageThree extends FormStep
                 'size' => 20,
                 'display_name' => 'Degree earned or expected',
             ),
-            'sibling_2_college_start_month' => array(
-                'type' => 'text',
-                'size' => 2,
-            ),
-            'sibling_2_dateslash_1' => array(
-                'type' => 'comment',
-                'text' => '/'
-            ),
-            'sibling_2_college_start_year' => array(
-                'type' => 'text',
-                'size' => 4,
+            'sibling_2_college_start' => array(
+                'type' => 'selectMonthYear',
+                'year_args' => array('start' => 1977, 'end' => 2011)
             ),
             'sibling_2_college_date_dash' => array(
                 'type' => 'comment',
                 'text' => ' &mdash;',
             ),
-            'sibling_2_college_end_month' => array(
-                'type' => 'text',
-                'size' => 2,
+            'sibling_2_college_end' => array(
+                'type' => 'selectMonthYear',
+                'year_args' => array('start' => 1977, 'end' => 2011)
             ),
-            'sibling_2_dateslash_2' => array(
-                'type' => 'comment',
-                'text' => '/'
-            ),
-            'sibling_2_college_end_year' => array(
-                'type' => 'text',
-                'size' => 4,
-            ),
+//            'sibling_2_college_end_month' => array(
+//                'type' => 'text',
+//                'size' => 2,
+//            ),
+//            'sibling_2_dateslash_2' => array(
+//                'type' => 'comment',
+//                'text' => '/'
+//            ),
+//            'sibling_2_college_end_year' => array(
+//                'type' => 'text',
+//                'size' => 4,
+//            ),
             'legacy_comment' => array(
                 'type' => 'comment',
                 'text' => 'Do you have any immediate family who have attended or currently attend Luther College?,'
@@ -646,8 +642,7 @@ class ApplicationPageThree extends FormStep
             ),
             'sibling_1_college_group' => array(
                 'type' => 'inline',
-                'elements' =>  array( 'sibling_1_college_start_month', 'sibling_1_dateslash_1', 'sibling_1_college_start_year',
-                    'sibling_1_college_date_dash', 'sibling_1_college_end_month', 'sibling_1_dateslash_2', 'sibling_1_college_end_year'),
+                'elements' =>  array( 'sibling_1_college_start', 'sibling_1_college_date_dash', 'sibling_1_college_end'),
                 'args' => array('use_element_labels' => false ,'display_name' => 'Dates'),
             ),
             'sibling_2_name_group' => array(
@@ -662,8 +657,7 @@ class ApplicationPageThree extends FormStep
             ),
             'sibling_2_college_group' => array(
                 'type' => 'inline',
-                'elements' =>  array( 'sibling_2_college_start_month', 'sibling_2_dateslash_1', 'sibling_2_college_start_year',
-                    'sibling_2_college_date_dash', 'sibling_2_college_end_month', 'sibling_2_dateslash_2', 'sibling_2_college_end_year'),
+                'elements' =>  array( 'sibling_2_college_start', 'sibling_2_college_date_dash', 'sibling_2_college_end'),
                 'args' => array('use_element_labels' => false ,'display_name' => 'Dates'),
             ),
    	);

@@ -233,9 +233,9 @@ class ApplicationPageTwo extends FormStep
 		'permanent_address',
 		'permanent_city',
 		'permanent_state_province',
-		'permanent_zip',
+		'permanent_zip_postal',
 		'permanent_country',
-		'phone', 
+		'home_phone',
 		'email',
 	);
 	var $error_checks = array(

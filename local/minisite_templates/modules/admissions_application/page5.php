@@ -33,14 +33,17 @@ class ApplicationPageFive extends FormStep
 ########################
 ########################
             'activity_1' => array(
-                'type' => 'checkboxfirst',
+                'type' => 'select',
                 'display_name' => 'My (or my spouse\'s) employer will match my gift',
             ),
-		'installment_end_date' => array(
-			'type' => 'select_no_sort',
-			'display_name' => 'Ending',
-			'options' => array('indefinite'=>'No end date'),
-		),
+            'activity_1_years' => array(
+                'type' => ''
+            )
+            'installment_end_date' => array(
+                    'type' => 'select_no_sort',
+                    'display_name' => 'Ending',
+                    'options' => array('indefinite'=>'No end date'),
+            ),
 		        'designation_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Designation</h3>',

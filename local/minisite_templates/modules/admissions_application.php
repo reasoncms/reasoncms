@@ -53,7 +53,19 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule
 			'ApplicationPageOne' => array(
 				'next_steps' => array(
 					'ApplicationPageTwo' => array(
-						'label' => 'Next Step: Personal Information',
+						'label' => 'Personal Information',
+					),
+                                        'ApplicationPageThree' => array(
+						'label' => 'Family',
+					),
+                                        'ApplicationPageFour' => array(
+						'label' => 'Education',
+					),
+                                        'ApplicationPageFive' => array(
+						'label' => 'Activities',
+					),
+                                        'ApplicationPageSix' => array(
+						'label' => 'Statements',
 					),
 				),
 				'step_decision' => array(
@@ -63,8 +75,20 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule
 			),
 			'ApplicationPageTwo' => array(
 				'next_steps' => array(
-					'ApplicationPageThree' => array(
-						'label' => 'Next Step: Gift Review / Payment Info',
+					'ApplicationPageOne' => array(
+						'label' => 'Enrollment Info',
+					),
+                                        'ApplicationPageThree' => array(
+						'label' => 'Family',
+					),
+                                        'ApplicationPageFour' => array(
+						'label' => 'Education',
+					),
+                                        'ApplicationPageFive' => array(
+						'label' => 'Activities',
+					),
+                                        'ApplicationPageSix' => array(
+						'label' => 'Statements',
 					),
 				),
 				'step_decision' => array(
@@ -74,23 +98,59 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule
 			),
 			'ApplicationPageThree' => array(
 				'next_steps' => array(
-					'ApplicationPageFour' => array(
-						'label' => 'Next Step: Gift Review / Payment Info',
-                                        ),
+					'ApplicationPageOne' => array(
+						'label' => 'Enrollment info',
+					),
+                                        'ApplicationPageTwo' => array(
+						'label' => 'Personal Information',
+					),
+                                        'ApplicationPageFour' => array(
+						'label' => 'Education',
+					),
+                                        'ApplicationPageFive' => array(
+						'label' => 'Activities',
+					),
+                                        'ApplicationPageSix' => array(
+						'label' => 'Statements',
+					),
                                 ),
 			),
                         'ApplicationPageFour' => array(
 				'next_steps' => array(
-					'ApplicationPageFive' => array(
-						'label' => 'Next Step: Gift Review / Payment Info',
-                                        ),
+					'ApplicationPageOne' => array(
+						'label' => 'Enrollment info',
+					),
+                                        'ApplicationPageTwo' => array(
+						'label' => 'Personal Information',
+					),
+                                        'ApplicationPageThree' => array(
+						'label' => 'Family',
+					),
+                                        'ApplicationPageFive' => array(
+						'label' => 'Activities',
+					),
+                                        'ApplicationPageSix' => array(
+						'label' => 'Statements',
+					),
                                 ),
 			),
                         'ApplicationPageFive' => array(
 				'next_steps' => array(
-					'ApplicationPageSix' => array(
-						'label' => 'Next Step: Gift Review / Payment Info',
-                                        ),
+					'ApplicationPageOne' => array(
+						'label' => 'Enrollment info',
+					),
+                                        'ApplicationPageTwo' => array(
+						'label' => 'Personal Information',
+					),
+                                        'ApplicationPageThree' => array(
+						'label' => 'Family',
+					),
+                                        'ApplicationPageFour' => array(
+						'label' => 'Education',
+					),
+                                        'ApplicationPageSix' => array(
+						'label' => 'Statements',
+					),
                                 ),
 			),
                         'ApplicationPageSix' => array(

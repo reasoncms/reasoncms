@@ -56,7 +56,7 @@ class ApplicationPageOne extends FormStep
             }
 
             $this->change_element_type('enrollment_term', 'radio_no_sort', array(
-                'options' => array('FA'.$year => 'Fall ' . $year, 'SP'.$year => 'Spring '.$year),
+                'options' => array($year.'FA' => 'Fall ' . $year, $year.'SP' => 'Spring '.$year),
                 'comments' => '<em>Show some year logic here</em>'));
 	}
 
