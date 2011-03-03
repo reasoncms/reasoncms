@@ -6,7 +6,8 @@
 $(document).ready(function() {
         $("div[id='formNavigation']").children()[0].children()[0].click(
                 function(){
-                        $("input[name='__button_ApplicationPageTwo']").click()
+                        alert('testing');
+                        $("input[name='__button_ApplicationPageTwo']").click();
                 }
         )
 })
