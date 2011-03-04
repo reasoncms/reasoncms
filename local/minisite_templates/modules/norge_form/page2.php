@@ -144,6 +144,22 @@ class NorgeFormTwo extends FormStep
                         $room_cost = 0;
                 }
 
+                // multiply room_cost times # of nights staying
+                if ($this->controller->get('arrival_date')) {
+                    $arrival_date = $this->controller->get('arrival_date');
+                    $datetime1 = new DateTime($arrival_date);
+                }
+                if ($this->controller->get('departure_date')) {
+                    $departure_date = $this->controller->get('departure_date');
+                    $datetime2 = new DateTime($departure_date);
+                }
+                $interval = $datetime1->diff($datetime2);
+                $nights = $interval->format('%a') . '<br>';
+
+                $room_cost = $room_cost * $nights;
+                
+                
+
                 // calculate cost of attend_banquet
                 if ($this->controller->get('attend_banquet') == 'Yes'){
                     $banq_cost = 35;
@@ -171,7 +187,7 @@ class NorgeFormTwo extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
-                // determine which budget numbers to use
+               // determine which budget numbers to use
                 // $revenue_budget_number before June 1, 10-000-33700-22000
                 // $revenue_budget_number on or after June 1, 10-000-33700-45900
                 // $expense_budget_number before June 1, 10-000-33700-12100
