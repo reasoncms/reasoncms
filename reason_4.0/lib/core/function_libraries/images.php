@@ -85,42 +85,72 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 	 */
 	function show_image( $image, $die_without_thumbnail = false, $show_popup_link = true, $show_description = true, $other_text = '' , $textonly = false, $show_author = false, $link_with_url = '' ) // {{{
 	{
+		
 		if( is_array( $image ) )
 		{
 			$id = $image['id'];
 		}
-		else if ( is_object( $image ) )
+		elseif( is_object( $image ) )
 		{
-			$values = $image->get_values();
-			$id = $image->id();
-			$image = $values;
+			if ('reasonSizedImage' == get_class($image) )
+			{
+				$sizedImageObject = $image;
+				$image_entity = $sizedImageObject->get_entity();
+				$values = $image_entity->get_values();
+				$id = $image_entity->id();
+				$image = $values;
+			}
+			else
+			{
+				$values = $image->get_values();
+				$id = $image->id();
+				$image = $values;
+			}
 		}
 		else
 		{
 			$id = $image;
 			$image = get_entity_by_id( $id );
 		}
-
-		$tn_name = PHOTOSTOCK.$id.'_tn'.'.'.$image['image_type'];
-		$full_image_name = PHOTOSTOCK.$id.'.'.$image['image_type'];
 		
-		if( file_exists( $tn_name ) )
+		if(isset($sizedImageObject))
 		{
 			$tn = true;
-			$image_name = $id.'_tn.'.$image['image_type'];
+			$width = $sizedImageObject->get_image_width();
+			$height = $sizedImageObject->get_image_height();
+			$image_path = $sizedImageObject->get_file_system_path_and_file_of_dest();
+			$mod_time = filemtime($image_path);
+			$image_url = $sizedImageObject->get_URL().'?cb='.$mod_time;
 		}
 		else
-		{
-			if( $die_without_thumbnail )
-				return;
-			$tn = false;
-			$image_name = $id.'.'.$image['image_type'];
-		}
-		if( file_exists( PHOTOSTOCK.$image_name ) )
-		{
+		{ 
+			$tn_name = PHOTOSTOCK.$id.'_tn'.'.'.$image['image_type'];
+			if( file_exists( $tn_name ) )
+			{
+				$tn = true;
+				$image_name = $id.'_tn.'.$image['image_type'];
+			}
+			else
+			{
+				if( $die_without_thumbnail )
+					return;
+				$tn = false;
+				$image_name = $id.'.'.$image['image_type'];
+				
+			}
+			$image_path = PHOTOSTOCK.$id.'.'.$image['image_type'];
 			list($width,$height) = getimagesize( PHOTOSTOCK.$image_name );
-
-			$full_image_exists = file_exists( $full_image_name );
+			$mod_time = filemtime($image_path);
+			$image_url = WEB_PHOTOSTOCK.$image_name.'?cb='.$mod_time;
+			
+		
+		}
+	
+	
+		if( file_exists($image_path) )
+		{
+			
+			$full_image_exists = file_exists(PHOTOSTOCK.$id.'.'.$image['image_type']);
 
 			if( !$image['description'] )
 				if( $image['keywords'] )
@@ -128,14 +158,13 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 				else
 					$image['description'] = $image['name'];
 
-			$mod_time = filemtime( PHOTOSTOCK.$image_name );
-
+			
 			$window_width = $image['width'] < 340 ? 340 : 40 + $image['width'];
 			$window_height = 170 + $image['height']; // formerly 130 // 96 works on Mac IE 5
 			if (empty($link_with_url))
 			{
 				if (empty($textonly))
-					$pre_link = "<a onmouseover=\"window.status = 'view larger image'; return true;\" onmouseout=\"window.status = ''; return true;\" onclick=\"this.href='javascript:void(window.open(\'".REASON_IMAGE_VIEWER."?id=".$image['id']."\', \'PopupImage\', \'menubar,scrollbars,resizable,width=".$window_width.",height=".$window_height."\'))'\" href=\"".WEB_PHOTOSTOCK.$id.'.'.$image['image_type']."?cb=".filemtime(PHOTOSTOCK.$image_name)."\">";
+					$pre_link = "<a onmouseover=\"window.status = 'view larger image'; return true;\" onmouseout=\"window.status = ''; return true;\" onclick=\"this.href='javascript:void(window.open(\'".REASON_IMAGE_VIEWER."?id=".$image['id']."\', \'PopupImage\', \'menubar,scrollbars,resizable,width=".$window_width.",height=".$window_height."\'))'\" href=\"".WEB_PHOTOSTOCK.$id.'.'.$image['image_type']."?cb=".filemtime($image_path)."\">";
 					else
 						$pre_link = '<a href="'.WEB_PHOTOSTOCK.$id.'.'.$image['image_type'].'?cb='.filemtime(PHOTOSTOCK.$image_name).'">';
 			}
@@ -151,7 +180,8 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 					echo $pre_link;
 						
 				// show photo
-				echo '<img src="'.WEB_PHOTOSTOCK.$image_name.'?cb='.$mod_time.'" width="'.$width.'" height="'.$height.'" alt="'.reason_htmlspecialchars( $image['description'] ).'" class="thumbnail" border="0"/>';
+				echo '<img src="'.$image_url.'" width="'.$width.'" height="'.$height.'" alt="'.reason_htmlspecialchars( $image['description'] ).'" class="thumbnail" border="0"/>';
+
 				if( ($tn AND $show_popup_link AND  $full_image_exists) || ($tn && !empty($link_with_url) ) )
 				{
 					echo '</a>';
@@ -166,7 +196,7 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 				if (empty($textonly))
 					echo '<div class="tnDesc smallText">';
 				else
-					echo'<div class="tnDesc">';
+					echo '<div class="tnDesc">';
 				if( $tn AND $show_popup_link AND $full_image_exists )
 				{
 					echo $pre_link.$desc.'</a>';
