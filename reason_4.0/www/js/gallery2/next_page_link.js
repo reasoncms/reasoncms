@@ -1,10 +1,17 @@
-if (window.attachEvent)
-  window.attachEvent('onload', checkNumItems);
+
+
+/*if (window.attachEvent)
+  window.attachEvent('onLoad', checkNumItems);
 else
   window.addEventListener('load', checkNumItems, false);
+*/
+
+$(document).ready(function()
+{
+	checkNumItems();
+});
 
 var numItems = 0;
-
 
 function checkNumItems() {
   if (document.getElementById("imageGalleryNextPageItem"))
