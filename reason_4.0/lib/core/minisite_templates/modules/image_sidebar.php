@@ -7,6 +7,7 @@
  	 * Include parent class and register module with Reason
  	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
+    reason_include_once( 'classes/sized_image.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ImageSidebarModule';
 	
@@ -26,7 +27,11 @@
 		'num_to_display' => '',
 		'caption_flag' => true,
 		'rand_flag' => false,
-		'order_by' => '' );
+		'order_by' => '',
+		'thumbnail_width' => 0,
+		'thumbnail_height' => 0,
+		'thumbnail_crop' => ''
+		);
 
 		function init( $args = array() ) // {{{
 		{
@@ -55,7 +60,7 @@
 		} // }}}
 		function run() // {{{
 		{
-			$die = isset( $this->die_without_thumbmail ) ? $this->die_without_thumbnail : false;
+			$die = isset( $this->die_without_thumbnail ) ? $this->die_without_thumbnail : false;
 			$popup = isset( $this->show_popup_link ) ? $this->show_popup_link : true;
 			$desc = isset( $this->description ) ? $this->description : true;
 			$text = isset( $this->additional_text ) ? $this->additional_text : "";
@@ -69,10 +74,36 @@
 				if( !empty( $this->show_size ) )
 					$show_text .= '<br />('.$image->get_value( 'size' ).' kb)';
 				echo "<div class=\"imageChunk\">";
+				
+				if($this->params['thumbnail_width'] != 0 or $this->params['thumbnail_height'] != 0)
+				{
+					$rsi = new reasonSizedImage();
+					if(!empty($rsi))
+					{
+						$rsi->set_id($image->id());
+						if($this->params['thumbnail_width'] != 0)
+						{
+							$rsi->set_width($this->params['thumbnail_width']);
+						}
+						if($this->params['thumbnail_height'] != 0)
+						{
+							$rsi->set_height($this->params['thumbnail_height']);
+						}
+						if($this->params['thumbnail_crop'] != '')
+						{
+							$rsi->set_crop_style($this->params['thumbnail_crop']);
+						}
+						$image = $rsi;
+					}
+				}
+				
+				
 				if ($this->params['caption_flag'] == false)
 					show_image( $image, $die, $popup, false, $show_text, $this->textonly,false );
 				else
 					show_image( $image, $die, $popup, $desc, $show_text, $this->textonly,false );
+					
+					
 				echo "</div>\n";
 			}
 		} // }}}
