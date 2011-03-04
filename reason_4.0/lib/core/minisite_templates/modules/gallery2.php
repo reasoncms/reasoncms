@@ -9,6 +9,10 @@
  */
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'Gallery2Module';
 reason_include_once( 'minisite_templates/modules/generic3.php' );
+reason_include_once( 'classes/sized_image.php' );
+reason_include_once( 'function_libraries/image_tools.php' );
+
+
 
 /**
  * New image gallery. Based on Generic3, gets rid of pop-ups for images
@@ -125,6 +129,12 @@ class Gallery2Module extends Generic3Module
 		'show_descriptions_in_list' => true,
 		'date_format' => 'j F Y',
 		'min_num_to_show_search' => 12,
+		'thumbnail_height' => 0,
+		'thumbnail_width' => 0,
+		'thumbnail_crop' => '',
+		'height' => 0,
+		'width' => 0,
+		'crop' => 0,
 	);
 	
 	/**
@@ -162,7 +172,7 @@ class Gallery2Module extends Generic3Module
 		$this->parent->head_items->add_stylesheet( REASON_HTTP_BASE_PATH.'css/gallery2/gallery2.css', '', true );
 		$this->parent->head_items->add_javascript(JQUERY_URL, true);
 		$this->parent->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/gallery2/next_page_link.js');
-		$this->parent->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/gallery2/adjust_dimensions.js');
+		if( !isset($this->request['image_id']) ) $this->parent->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/gallery2/adjust_dimensions.js');
 		$this->use_pagination = ($this->params['use_pagination']) ? true : false;
 		$this->num_per_page = $this->params['number_per_page'];
 		$this->use_dates_in_list = ($this->params['show_dates_in_list']) ? true : false;
@@ -205,6 +215,18 @@ class Gallery2Module extends Generic3Module
 		}
 	}
 	
+	function calculate_height($image_height,$desc_length,$max_width)
+	{
+		if ($this->use_desc_in_list)
+		{
+			$desc_length = $desc_length*13/($max_width/7) + 6;
+			if ($desc_length <= 45) $image_height += $desc_length;
+			else $image_height += 45;
+		}
+		if ($this->use_dates_in_list) $image_height += 13;
+		return $image_height;
+	}
+	
 	/**
 	 * Goes through the images that are selected by the es,
 	 * gets data for them such as height, width, url, etc.
@@ -214,64 +236,76 @@ class Gallery2Module extends Generic3Module
 	 */
 	function post_es_additional_init_actions()
 	{
-		foreach ($this->items as $image)
-		{
-			$this->image_array[$image->id()] = $this->get_image_data($image);
-		}
 		
 		
 		$largest_width = 0;
 		$largest_height = 0;
-		foreach ($this->image_array as $image)
+		if(0 != $this->params['thumbnail_height'] or 0 != $this->params['thumbnail_width'])
 		{
-			if (!empty($image['thumb']))
-				if ($image['thumb']['width'] > $largest_width)
-					$largest_width = $image['thumb']['width'];
-
-		}
-		
-		if ($largest_width == 0) $largest_width = 125;
-
-		$largest_width_with_padding = $largest_width + 20;
-		$largest_height = 0;
-		$largest_height_with_text = 0;
-		foreach ($this->image_array as $image)
-		{
-			if (empty($image['thumb']))
-				$temp_height = 0;
-			else
-				$temp_height = $image['thumb']['height'];
-			
-			if ($temp_height > $largest_height)
-				$largest_height = $temp_height;
-			
-			if ($this->use_desc_in_list)
+			foreach ($this->items as $image)
 			{
-				$desc_length = strlen($image['description'])*13/($largest_width_with_padding/7) + 6;
-
-				if ($desc_length <= 45)
-					$temp_height += $desc_length;
-				else
-					$temp_height += 45;
+				$rsi = new reasonSizedImage;
+				$rsi->set_id($image->id());
+				if(0 != $this->params['thumbnail_height']) $rsi->set_height($this->params['thumbnail_height']);
+				if(0 != $this->params['thumbnail_width']) $rsi->set_width($this->params['thumbnail_width']);
+				if('' != $this->params['thumbnail_crop']) $rsi->set_crop_style($this->params['thumbnail_crop']);
+				$width = $rsi->get_image_width();
+				if($width > $largest_width) $largest_width = $width;
+			}
+		}
+		else
+		{
+			foreach ($this->items as $image)
+			{
+				$this->image_array[$image->id()] = $this->get_image_data($image);
 			}
 			
-			// Add in an extra line of text for the date if it's shown
-			if ($this->use_dates_in_list)
-				$temp_height += 13;
-				
-			if ($temp_height > $largest_height)
-				$largest_height_with_text = $temp_height;
+			
+			foreach ($this->image_array as $image)
+			{
+				if (!empty($image['thumb']))
+					if ($image['thumb']['width'] > $largest_width)
+						$largest_width = $image['thumb']['width'];
+	
+			}
+		}
+		if ($largest_width == 0) $largest_width = 125;
+		$largest_width_with_padding = $largest_width + 20;
+		
+		$largest_height_with_text = 0;
+		
+		if(0 != $this->params['thumbnail_height'] or 0 != $this->params['thumbnail_width'])
+		{
+			foreach ($this->items as $image)
+			{
+				$rsi = new reasonSizedImage;
+				$rsi->set_id($image->id());
+				if(0 != $this->params['thumbnail_height']) $rsi->set_height($this->params['thumbnail_height']);
+				if(0 != $this->params['thumbnail_width']) $rsi->set_width($this->params['thumbnail_width']);
+				if('' != $this->params['thumbnail_crop']) $rsi->set_crop_style($this->params['thumbnail_crop']);
+				$height_with_text = $this->calculate_height($rsi->get_image_height(),strlen($image->get_value('description')),$largest_width_with_padding);
+				if($height_with_text > $largest_height_with_text) $largest_height_with_text = $height_with_text;
+			}
+		}
+		else
+		{
+			
+			foreach ($this->items as $image)
+			{
+				$this->image_array[$image->id()] = $this->get_image_data($image);
+			}
+			
+			foreach ($this->image_array as $image)
+			{
+				$height_with_text = $this->calculate_height($image['thumb']['height'],strlen($image['description']),$largest_width_with_padding);
+				if($height_with_text > $largest_height_with_text) $largest_height_with_text = $height_with_text;
+			}
 			
 		}
-		if ($largest_height_with_text == 0) $largest_height_with_text = $largest_height;
-		$largest_height_with_text = round($largest_height_with_text) + 15;
 		
+		if ($largest_height == 0) $largest_height= 125;
+		$largest_height_with_text = round($largest_height_with_text) + 15;		
 		
-		if ($largest_height == 0)
-		{
-			$largest_height = 90;
-			$largest_height_with_text = $largest_height + $largest_height_with_text;
-		}
 		
 		$css =  "\n\t".'#imageGalleryItemList li.item, li#imageGalleryNextPageItem {';
 		$css .= "\n\t\t".'width: '.$largest_width_with_padding.'px;';
@@ -303,6 +337,7 @@ class Gallery2Module extends Generic3Module
 				echo '<li id="imageGalleryNextPageItem"><a href="'.$pages[$this->request['page'] + 1]['url'].'" title="Page '.($this->request['page'] + 1).'">Next Page</a></li>'."\n";
 		}
 		echo '</ul>'."\n";
+		
 	}
 	
 	//Called on by list_items()
@@ -535,7 +570,86 @@ class Gallery2Module extends Generic3Module
 	 *
 	 * Also should be replaced by a new image class.
 	 */
+	
+	function show_image_markup($image_url,$height,$width,$alt,$class,$mod_time)
+	{
+		return '<img src="'.$image_url.'?'.$mod_time.'" width="'.$width.'" height="'.$height.'" alt="'.htmlentities($alt).'" class="'.$class.'" />';
+	}
+	
 	function show_image($image, $thumbnail = true)
+	{
+		if($thumbnail)
+		{
+			if(0 != $this->params['thumbnail_height'] or 0 != $this->params['thumbnail_width'])
+			{
+				$rsi = new reasonSizedImage;
+				$rsi->set_id($image->id());
+				if(0 != $this->params['thumbnail_height']) $rsi->set_height($this->params['thumbnail_height']);
+				if(0 != $this->params['thumbnail_width']) $rsi->set_width($this->params['thumbnail_width']);
+				if('' != $this->params['thumbnail_crop']) $rsi->set_crop_style($this->params['thumbnail_crop']);
+
+				$width = $rsi->get_image_width();
+				$height = $rsi->get_image_height();
+				$image_url = $rsi->get_url();
+				$image_path = $rsi->get_file_system_path_and_file_of_dest();
+			}
+			else
+			{
+				$image_path = reason_get_image_path($image,'tn');
+				list($width,$height) = getimagesize($image_path);
+				$image_url = reason_get_image_url($image);
+			}
+			$class = 'thumbnail';
+			
+		}
+		elseif(!$thumbnail)
+		{
+			if(0 != $this->params['height'] or 0 != $this->params['width'])
+			{
+				$rsi = new reasonSizedImage;
+				$rsi->set_id($image->id());
+				if(0 != $this->params['height']) $rsi->set_height($this->params['height']);
+				if(0 != $this->params['width']) $rsi->set_width($this->params['width']);
+				if('' != $this->params['crop']) $rsi->set_crop_style($this->params['crop']);
+
+				$width = $rsi->get_image_width();
+				$height = $rsi->get_image_height();
+				$image_url = $rsi->get_url();
+				$image_path = $rsi->get_file_system_path_and_file_of_dest();
+
+				
+			}
+			else
+			{
+				$image_path = reason_get_image_path($image);
+				list($width,$height) = getimagesize($image_path);
+				$image_url = reason_get_image_url($image);
+			}
+			$class = 'mainImage';
+			
+		}
+	
+		if(file_exists($image_path))
+		{
+			$alt = $image->get_value('description');
+			if(!$alt)
+			{
+				$alt = $image->get_value('keywords');
+				if(!$alt) $alt = $image->get_value('name');
+			}
+			
+			$mod_time = filemtime($image_path);
+			return $this->show_image_markup($image_url,$height,$width,$alt,$class,$mod_time);
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	
+	
+	function show_image2($image, $thumbnail = true)
 	{
 		$values = $image->get_values();
 		$id = $image->id();
