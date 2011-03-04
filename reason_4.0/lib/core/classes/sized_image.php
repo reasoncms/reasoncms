@@ -83,6 +83,7 @@ class reasonSizedImage
 	 */
 	var $available_crop_styles = array('fill', 'fit');
 	
+	
 	/**
 	 * File system path to the directory where images are stored - apache needs write and read access to this directory, and it should probably be web accessible.
 	 *
@@ -119,6 +120,14 @@ class reasonSizedImage
 	* @var string
 	*/
 	var $blit_file=null;
+	
+	/**
+	* when true, setters return an error. set to true by the make() function.
+	* meant to avoid setting width, height, crop and path after resized image has already
+	* been created and expecting a changed image.
+	* @var boolean
+	*/
+	var $locked=false;
 	
 	/** public methods **/
 	
@@ -159,6 +168,7 @@ class reasonSizedImage
 		if ($this->_verify_user_params())
 		{
 			if (!$this->exists()) $this->_make();
+			$this->locked = true;
 			return $this->_get_url();
 		}
 		else
@@ -177,8 +187,8 @@ class reasonSizedImage
 		if ($this->_verify_user_params())
 		{
 			$url=$this->get_url();
-			$image=$this->_get_entity();
-			$alt=$image->get_value('description');
+			$image=$this->get_entity();
+			$alt=$image->get_value('description') ? $image->get_value('description') : $image->get_value('name');
 			$ret=array('url'=>$url,'alt'=>$alt);
 			return $ret;
 		}
@@ -188,7 +198,7 @@ class reasonSizedImage
 			return false;
 		}
 	}
-	
+
 	/** private methods **/
 	
 	/**
@@ -200,7 +210,7 @@ class reasonSizedImage
 	 */
 	function _verify_user_params()
 	{
-		return ($this->get_id() && $this->get_width() && $this->get_height() && $this->get_crop_style());
+		return ($this->get_id() && $this->_get_width() && $this->_get_height() && $this->get_crop_style());
 	}
 	
 	/** 
@@ -210,7 +220,7 @@ class reasonSizedImage
 	{
 		if (!isset($this->_url))
 		{
-			$entity = $this->_get_entity();
+			$entity = $this->get_entity();
 			$filename = $this->_get_filename();
 			$this->_url = $this->get_image_dir_web_path() . $entity->id() . '/' . $filename . '.' . $entity->get_value('image_type');	
 		}
@@ -224,7 +234,7 @@ class reasonSizedImage
 	{
 		if (!isset($this->_path))
 		{
-			$entity = $this->_get_entity();
+			$entity = $this->get_entity();
 			$filename = $this->_get_filename();
 			$this->_path = $this->get_image_dir() . $entity->id() . '/' . $filename . '.' . $entity->get_value('image_type');
 		}
@@ -239,8 +249,8 @@ class reasonSizedImage
 			$image_type=$this->get_image_type();
 			$last_modified = $this->_get_last_modified();
 			$dimensions = $this->_get_dimensions();
-			$width=$this->get_width();
-			$height=$this->get_height();
+			$width=$this->_get_width();
+			$height=$this->_get_height();
 			$crop_style = $this->get_crop_style();
 			if ($last_modified && $dimensions && $crop_style) // if we have all the ingredients
 			{
@@ -255,11 +265,11 @@ class reasonSizedImage
 	
 	function _get_last_modified()
 	{
-		$entity = $this->_get_entity();
+		$entity = $this->get_entity();
 		return $entity->get_value('last_modified');
 	}
 	
-	function _get_entity()
+	function get_entity()
 	{
 		if (!isset($this->_entity))
 		{
@@ -278,14 +288,14 @@ class reasonSizedImage
 	{
 		if (!isset($this->_dimensions))
 		{
-			$this->_dimensions = ($this->get_width() && $this->get_height()) ? $this->get_width() .'x'. $this->get_height() : false;
+			$this->_dimensions = ($this->_get_width() && $this->_get_height()) ? $this->_get_width() .'x'. $this->_get_height() : false;
 		}
 		return $this->_dimensions;
 	}
 	
 	function _set_width_from_height()
 	{
-		if ( ($entity = $this->_get_entity()) && ($height = $this->get_height(false)) )
+		if ( ($entity = $this->get_entity()) && ($height = $this->_get_height(false)) )
 		{
 			$path = reason_get_image_path($entity);
 			$info = getimagesize($path);
@@ -297,7 +307,7 @@ class reasonSizedImage
 	
 	function _set_height_from_width()
 	{
-		if ( ($entity = $this->_get_entity()) && ($width = $this->get_width(false)) )
+		if ( ($entity = $this->get_entity()) && ($width = $this->_get_width(false)) )
 		{
 			$path = reason_get_image_path($entity);
 			$info = getimagesize($path);
@@ -320,7 +330,7 @@ class reasonSizedImage
 	 */
 	function _make()
 	{
-		$entity = $this->_get_entity();
+		$entity = $this->get_entity();
 		if ($entity)
 		{
 			if ($this->_make_sure_entity_directory_exists($entity->id()) && is_writable($this->get_image_dir() . $entity->id() . '/'))
@@ -328,8 +338,8 @@ class reasonSizedImage
 				$path = reason_get_image_path($entity, 'original'); // we want to copy our original image to our destination and resize in place
 				if (!file_exists($path)) $path = reason_get_image_path($entity); // we get the standard size
 				$newpath = $this->_get_path();
-				$width = $this->get_width();
-				$height = $this->get_height();
+				$width = $this->_get_width();
+				$height = $this->_get_height();
 				$crop_style=$this->get_crop_style();
 				if (empty($path)) trigger_error('reasonSizedImage could not determine the path of the original image - did not make a sized image');
 				elseif (empty($newpath)) trigger_error('reasonSizedImage could not determine the proper destination for the sized image');
@@ -351,7 +361,7 @@ class reasonSizedImage
 					
 					if($this->get_crop_style()=="fit")
 					{
-						$success=resize_image($newpath, $this->get_width(), $this->get_height(),$sharpen);
+						$success=resize_image($newpath, $this->_get_width(), $this->_get_height(),$sharpen);
 					}
 					elseif($this->get_crop_style()=="fill")
 					{
@@ -407,15 +417,41 @@ class reasonSizedImage
 	
 	/** Getters **/
 	function get_id() { return $this->id; }
-	function get_width( $lookup_from_aspect_ratio = true )
+	function _get_width( $lookup_from_aspect_ratio = true )
 	{
 		if (!isset($this->width) && $lookup_from_aspect_ratio) $this->_set_width_from_height();
 		return $this->width;
 	}
-	function get_height( $lookup_from_aspect_ratio = true )
+	function _get_height( $lookup_from_aspect_ratio = true )
 	{
 		if (!isset($this->height) && $lookup_from_aspect_ratio) $this->_set_height_from_width();
 		return $this->height;
+	}
+	function get_image_dimensions()
+	{
+		if(!isset($this->image_dimensions))
+		{
+			$this->get_url();
+			$path = $this->_get_path();
+			$this->image_dimensions = getimagesize($path);
+			return $this->image_dimensions;
+		}
+		else
+		{
+			return $this->image_dimensions;
+		}
+	}
+	
+	function get_image_height()
+	{
+		$image_dimensions = $this->get_image_dimensions();
+		return $image_dimensions['1'];
+	}
+	
+	function get_image_width()
+	{
+		$image_dimensions = $this->get_image_dimensions();
+		return $image_dimensions['0'];
 	}
 	
 	function get_image_dir() { return $this->image_dir; }
@@ -423,7 +459,7 @@ class reasonSizedImage
 	function get_crop_style() { return $this->crop_style; }
 	function get_file_system_path_and_file_of_dest(){ return ($this->_get_path());}
 	function get_image_type(){
-		$entity=$this->_get_entity();
+		$entity=$this->get_entity();
 		return $entity->get_value('image_type');
 	}
 	
@@ -439,6 +475,10 @@ class reasonSizedImage
 		{
 			trigger_error('ID parameter provided ('.$id.') does not correspond to a reason image.');
 		}
+		elseif($this->locked)
+		{
+			trigger_error('Image ID already defined. Create a new sized image object to use a different image.');
+		}
 		else $this->id = $my_id;
 	}
 	
@@ -448,6 +488,10 @@ class reasonSizedImage
 		if ( empty($width) || ( $width_int != $width) || (strlen($width_int) != strlen($width)) )
 		{
 			trigger_error('Width parameter provided ('.$width.') is invalid. Please provide the width as a positive number of pixels in integer format.');
+		}
+		elseif($this->locked)
+		{
+			trigger_error('Image box width already defined. Create a new sized image object to use a different width.');
 		}
 		else $this->width = (int) $width;
 	}
@@ -459,6 +503,10 @@ class reasonSizedImage
 		{
 			trigger_error('Height parameter provided ('.$height.') is invalid. Please provide the height as a positive number of pixels in integer format.');
 		}
+		elseif($this->locked)
+		{
+			trigger_error('Image box height already defined. Create a new sized image object to use a different height.');
+		}
 		else $this->height = (int) $height;
 	}
 	
@@ -467,6 +515,10 @@ class reasonSizedImage
 		if (!in_array($crop_style, $this->available_crop_styles))
 		{
 			trigger_error('Crop style parameter provided ('.$crop_style.') is invalid. Valid styles are ('.implode(", ",$this->available_crop_styles).').');
+		}
+		elseif($this->locked)
+		{
+			trigger_error('Crop style already defined. Create a new sized image object to use a different crop style.');
 		}
 		else $this->crop_style = $crop_style;
 	}
@@ -484,6 +536,10 @@ class reasonSizedImage
 			if (!is_writable($image_dir))
 			{
 				trigger_error('The method set_paths failed - the image directory provided ('.$image_dir.') is not writable by apache.');
+			}
+			elseif($this->locked)
+			{
+				trigger_error('Image path already defined. Create a new sized image object to use a different path.');
 			}
 			else
 			{	
