@@ -72,6 +72,27 @@
 			'post_foot' => 'textonly_toggle',
 			'sidebar' => 'blurb',
 		),	
+		'image_sidebar_100x100' => array(
+			'sidebar' => array(
+				'module' => 'image_sidebar',
+				'thumbnail_width' => 100,
+				'thumbnail_height' => 100,
+				)
+		),	
+		'image_sidebar_150x150' => array(
+			'sidebar' => array(
+				'module' => 'image_sidebar',
+				'thumbnail_width' => 150,
+				'thumbnail_height' => 150,
+				)
+		),	
+		'image_sidebar_200x200' => array(
+			'sidebar' => array(
+				'module' => 'image_sidebar',
+				'thumbnail_width' => 200,
+				'thumbnail_height' => 200,
+				)
+		),	
 		'all_related_policies' => array(
 			'main_post' => 'policy_related_all',
 		),
@@ -103,6 +124,27 @@
 		),
 		'audio_video' => array(
 			'main_post' => 'av',
+		),
+		'audio_video_100x100_thumbnails' => array(
+			'main_post' => array(
+				'module' =>'av',
+				'thumbnail_width' => 100,
+				'thumbnail_height' => 100,
+				),
+		),
+		'audio_video_150x150_thumbnails' => array(
+			'main_post' => array(
+				'module' =>'av',
+				'thumbnail_width' => 150,
+				'thumbnail_height' => 150,
+				),
+		),
+		'audio_video_200x200_thumbnails' => array(
+			'main_post' => array(
+				'module' =>'av',
+				'thumbnail_width' => 200,
+				'thumbnail_height' => 200,
+				),
 		),
 		'audio_video_sidebar_blurbs' => array(
 			'main_post' => 'av',
@@ -907,6 +949,34 @@
 			),
 			'sidebar' => '',
 		),
+		
+		'gallery_100x100_thumbnails' => array(
+			'main_post' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',//'meta.description ASC',
+				'thumbnail_width'=>100,
+				'thumbnail_height'=>100,
+			),
+			'sidebar' => '',
+		),
+		'gallery_150x150_thumbnails' => array(
+			'main_post' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',//'meta.description ASC',
+				'thumbnail_width'=>150,
+				'thumbnail_height'=>150,
+			),
+			'sidebar' => '',
+		),
+		'gallery_200x200_thumbnails' => array(
+			'main_post' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',//'meta.description ASC',
+				'thumbnail_width'=>200,
+				'thumbnail_height'=>200,
+			),
+			'sidebar' => '',
+		),
 		'GoModule' => array( 
 			'sub_nav_2' => '',
 			'banner_xtra' => '',
@@ -928,6 +998,14 @@
 		),
 		'image_slideshow' => array(
 			'main_post' => 'image_slideshow',
+			'sidebar' => '',
+		),
+		'image_slideshow_500x375' => array(
+			'main_post' => array(
+				'module' => 'image_slideshow',
+				'width' => 500,
+				'height' => 375,
+				),
 			'sidebar' => '',
 		),
 		'image_slideshow_before_content' => array(
@@ -966,6 +1044,15 @@
 		),
 		'image_slideshow_manual' => array(
 			'main_post' => array('module'=>'image_slideshow','slideshow_type'=>'manual'),
+			'sidebar' => '',
+		),
+		'image_slideshow_manual_500x375' => array(
+			'main_post' => array(
+				'module'=>'image_slideshow',
+				'slideshow_type'=>'manual',
+				'width' => 500,
+				'height' => 375,
+			),
 			'sidebar' => '',
 		),
 		'images_full_size' => array(
@@ -1281,6 +1368,30 @@
 				'provide_images' => true,
 			),
 		),
+		'show_children_with_first_images_100x100' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'thumbnail_height' => 100,
+				'thumbnail_width' => 100,
+			),
+		),
+		'show_children_with_first_images_150x150' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'thumbnail_height' => 150,
+				'thumbnail_width' => 150,
+			),
+		),
+		'show_children_with_first_images_200x200' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'thumbnail_height' => 200,
+				'thumbnail_width' => 200,
+			),
+		),
 		'show_children_with_first_images_no_nav' => array(
 			'navigation' => '',
 			'main_post' => array(
@@ -1293,6 +1404,33 @@
 				'module'=>'children',
 				'provide_images' => true,
 				'randomize_images' => true,
+			),
+		),
+		'show_children_with_random_images_100x100' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'randomize_images' => true,
+				'thumbnail_height' => 100,
+				'thumbnail_width' => 100,
+			),
+		),
+		'show_children_with_random_images_150x150' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'randomize_images' => true,
+				'thumbnail_height' => 150,
+				'thumbnail_width' => 150,
+			),
+		),
+		'show_children_with_random_images_200x200' => array(
+			'main_post' => array(
+				'module'=>'children',
+				'provide_images' => true,
+				'randomize_images' => true,
+				'thumbnail_height' => 200,
+				'thumbnail_width' => 200,
 			),
 		),
 		'siblings_and_children' => array(
