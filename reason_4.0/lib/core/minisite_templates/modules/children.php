@@ -10,6 +10,7 @@
 	 */
 
 	reason_include_once( 'minisite_templates/modules/default.php' );
+    reason_include_once( 'classes/sized_image.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ChildrenModule';
 	
@@ -31,6 +32,9 @@
 										'show_external_links' => true,
 										'exclude' => array(),
 										'limit_to' => array(),
+										'thumbnail_width' => 0,
+										'thumbnail_height' => 0,
+										'thumbnail_crop' => ''
 									);
 		var $offspring = array();
 		var $az = array();
@@ -161,9 +165,34 @@
 						if($this->params['provide_images'])
 						{
 							$image = $this->get_page_image($child->id());
+							
 							if(!empty($image))
 							{
+								if($this->params['thumbnail_width'] != 0 or $this->params['thumbnail_height'] != 0)
+								{
+									$rsi = new reasonSizedImage();
+									if(!empty($rsi))
+									{
+										$rsi->set_id($image->id());
+										if($this->params['thumbnail_width'] != 0)
+										{
+											$rsi->set_width($this->params['thumbnail_width']);
+										}
+										if($this->params['thumbnail_height'] != 0)
+										{
+											$rsi->set_height($this->params['thumbnail_height']);
+										}
+										if($this->params['thumbnail_crop'] != '')
+										{
+											$rsi->set_crop_style($this->params['thumbnail_crop']);
+										}
+										show_image($rsi, true, false, false, '' , '', false, $link);
+									}
+								}
+								else
+								{
 								show_image( $image->id(), true, false, false, '' , '', false, $link );
+								}
 							}
 						}
 						if($this->params['description_part_of_link'])
