@@ -20,6 +20,9 @@
 		function handle_params( $params )
 		{
 			$this->acceptable_params['slideshow_type'] = 'auto';
+			$this->acceptable_params['height'] = 0;
+			$this->acceptable_params['width'] = 0;
+			$this->acceptable_params['crop'] = '';
 			parent::handle_params($params);
 		}
 		function init( $args = array() )
@@ -73,9 +76,46 @@
 			$popup = isset( $this->show_popup_link ) ? $this->show_popup_link : true;
 			$desc = isset( $this->description ) ? $this->description : true;
 			$text = isset( $this->additional_text ) ? $this->additional_text : "";
+			$objects = array();
 			
-			$max_dimensions = $this->get_max_dimensions();
-			
+			if(0 != $this->params['height'] or 0 != $this->params['width'])
+			{
+				$max_image_width = 0;
+				$max_image_height = 0;
+				foreach($this->images as $id => $image)
+				{
+					$objects[$id] = new reasonSizedImage();
+					$objects[$id]->set_id($image->id());
+					if($this->params['width'] != 0)
+					{
+						$objects[$id]->set_width($this->params['width']);
+					}
+					if($this->params['height'] != 0)
+					{
+						$objects[$id]->set_height($this->params['height']);
+					}
+					if($this->params['crop'] != '')
+					{
+						$objects[$id]->set_crop_style($this->params['crop']);
+					}
+					if($objects[$id]->get_crop_style() == 'fill')
+					{
+						$max_image_width = $objects[$id]->get_image_width();
+						$max_image_height = $objects[$id]->get_image_height();
+					}
+					elseif($objects[$id]->get_crop_style() == 'fit')
+					{
+						if($objects[$id]->get_image_width() > $max_image_width) $max_image_width = $$new_object_name->get_image_width();
+						if($objects[$id]->get_image_height() > $max_image_height) $max_image_height = $$new_object_name->get_image_height();
+					}
+				}
+				$max_dimensions = array('height'=>$max_image_height,'width'=>$max_image_width);
+			}
+			else
+			{
+				$max_dimensions = $this->get_max_dimensions();
+			}
+
 			echo '<div class="imageSlideshow">'."\n";
 			echo '<div class="timedSlideshow" id="mySlideshow" style="height:'.$max_dimensions['height'].'px;width:'.$max_dimensions['width'].'px;"></div>'."\n";
 			echo '<script type="text/javascript">'."\n";
@@ -84,10 +124,21 @@
 			foreach( $this->images AS $id => $image )
 			{
 				$show_text = $text;
+				
+				if(isset($objects[$id]))
+ 				{					
+					$image_url = $objects[$id]->get_url();
+ 			
+ 				}
+ 				else
+ 				{
+					$image_url = WEB_PHOTOSTOCK.$id.'.'.$image->get_value('image_type');
+				}
+				
 				if( !empty( $this->show_size ) )
 					$show_text .= '<br />('.$image->get_value( 'size' ).' kb)';
 				echo 'mySlideData[countArticle++] = new Array('."\n";
-				echo "'".WEB_PHOTOSTOCK.$id.'.'.$image->get_value('image_type')."',\n";
+				echo "'".$image_url."',\n";
 				echo "'#',\n";
 				echo "'".$this->sanitize_for_js($image->get_value('description'))."',\n";
 				echo "'".$this->sanitize_for_js($image->get_value('content'))."'\n";
@@ -114,17 +165,27 @@ addLoadEvent(startSlideshow);
 			echo '<ul>';
 			foreach( $this->images AS $id => $image )
 			{
-				echo '<li><img src="'.WEB_PHOTOSTOCK.$id.'.'.$image->get_value('image_type').'" alt="'.$this->sanitize_for_js($image->get_value('description')).'" /><div>'.$image->get_value('description').'</div></li>';
+				if(isset($objects[$id]))
+ 				{					
+					$image_url = $objects[$id]->get_url();
+ 			
+ 				}
+ 				else
+ 				{
+					$image_url = WEB_PHOTOSTOCK.$id.'.'.$image->get_value('image_type');
+				}
+				echo '<li><img src="'.$image_url.'" alt="'.htmlspecialchars(strip_tags($image->get_value('description'))).'" /><div class="description">'.$image->get_value('description').'</div></li>';
 			}
 			echo '</ul>';
 			echo '</noscript>'."\n";
 			echo '</div>'."\n";
 		} // }}}
 		
-		function get_max_dimensions()
+		function get_max_dimensions( $crop = 'none')
 		{
 			$width = 0;
 			$height = 0;
+			
 			foreach( $this->images AS $image )
 			{
 				if($image->get_value('height') > $height)
@@ -132,6 +193,7 @@ addLoadEvent(startSlideshow);
 				if($image->get_value('width') > $width)
 					$width = $image->get_value('width');
 			}
+			
 			if($width == 0)
 				$width = 500;
 			if($height == 0)
