@@ -33,6 +33,9 @@
 			'limit_to_current_page'=>true,
 			'sort_direction'=>'DESC', // Normally this page shows items in reverse chronological order, but you can change this to ASC for formward chronological order
 			'sort_field'=>'dated.datetime',
+			'thumbnail_width'=>0,
+			'thumbnail_height'=>0,
+			'thumbnail_crop'=>''
 		);
 		var $make_current_page_link_in_nav_when_on_item = true;
 		var $no_items_text = 'There is no audio or video attached to this page yet.';
@@ -111,6 +114,28 @@
 				if(!empty($images))
 				{
 					$image = current($images);
+					if($this->params['thumbnail_width'] != 0 or $this->params['thumbnail_height'] != 0)
+					{
+						$rsi = new reasonSizedImage();
+						if(!empty($rsi))
+						{
+							$rsi->set_id($image->id());
+							if($this->params['thumbnail_width'] != 0)
+							{
+								$rsi->set_width($this->params['thumbnail_width']);
+							}
+							if($this->params['thumbnail_height'] != 0)
+							{
+								$rsi->set_height($this->params['thumbnail_height']);
+							}
+							if($this->params['thumbnail_crop'] != '')
+							{
+								$rsi->set_crop_style($this->params['thumbnail_crop']);
+							}
+							$image = $rsi;
+						}
+					}
+					
 					$die_without_thumbnail = true;
 					$show_popup_link = false;
 					$show_description = false;
@@ -123,6 +148,7 @@
 					{
 						$link = '';
 					}
+					
 					show_image( $image, $die_without_thumbnail, $show_popup_link, $show_description, $additional_text, $this->parent->textonly, false, $link );
 				}
 			}
