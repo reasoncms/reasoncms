@@ -1000,7 +1000,7 @@
 
 					foreach( $this->_error_required AS $name )
 					{						
-						$err_fields[] = '<a href="#'.$name.'_error">'.$this->get_display_name($name).'</a>';
+						$err_fields[] = '<a href="#'.$name.'_error">'.$this->get_display_name($name,false).'</a>';
 					}
 					echo '<li>'.($num_errors == 1 ? 'This field is' : 'These fields are' ).' required: '.join(', ',$err_fields).'</li>'."\n";
 				}
@@ -1270,8 +1270,10 @@
 		/**
 		 * Get the display name for a given element or element group
 		 * @param string $element_name
+		 * @param boolean $empty_ok
+		 * @return string
 		 */
-		public function get_display_name($element_name)
+		public function get_display_name($element_name,$empty_ok = true)
 		{
 			$display_name = prettify_string($element_name);
 						
@@ -1280,14 +1282,14 @@
 			{
 				$element_object = $this->get_element($element_name);
 				$element_display_name = trim($element_object->display_name);
-				if(!empty($element_display_name))
+				if($empty_ok || !empty($element_display_name))
 					$display_name = prettify_string($element_display_name);
 			}
 			elseif($this->_is_element_group($element_name))
 			{
 				$element_group_object = $this->get_element_group($element_name);
 				$group_display_name = trim($element_group_object->display_name);
-				if(!empty($group_display_name))
+				if($empty_ok || !empty($group_display_name))
 					$display_name = prettify_string($group_display_name);
 			}
 			
