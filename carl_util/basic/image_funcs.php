@@ -14,13 +14,17 @@ require_once 'misc.php';
  * Scale an image to meet a maximum width and height.
  * 
  * The image will be resized in place; to avoid this, make a {@link copy} of
- * the original image first, and resize the copy.
+ * the original image first, and resize the copy. 
+ * 
+ * Note that the image will maintain its aspect ratio and be fitted to a box of the given width and height.
+ *
+ * @todo check whether gd_image is working properly 
  *
  * Raises a {@link WARNING} if no image resize method is available.
  * 
  * @param string $path filesystem path to the image to be resized
- * @param int $width desired width
- * @param int $height desired height
+ * @param int $width desired maximum width
+ * @param int $height desired maximum height
  * @param boolean $sharpen if true, the resized image will be sharpened
  * @return boolean true if the image was resized successfully; false if not
  */
@@ -67,7 +71,7 @@ function crop_image($nw, $nh, $source, $dest, $sharpen=true)
         return false;
     }
     $perms = substr(sprintf('%o', fileperms($source)), -4);
-    if (imagemagick_available()) {
+   if (imagemagick_available()) {
         $result = _imagemagick_crop_image($nw, $nh, $source,$dest,$sharpen);
     } else if (function_exists('imagecreatetruecolor')) {
         $result = _gd_crop_image($nw, $nh, $source, $dest, $sharpen);
