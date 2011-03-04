@@ -647,60 +647,6 @@ class Gallery2Module extends Generic3Module
 		}
 	}
 	
-	
-	
-	function show_image2($image, $thumbnail = true)
-	{
-		$values = $image->get_values();
-		$id = $image->id();
-		$image = $values;
-		
-		$tn_name = PHOTOSTOCK.$id.'_tn'.'.'.$image['image_type'];
-		$full_image_name = PHOTOSTOCK.$id.'.'.$image['image_type'];
-		
-		if ($thumbnail && file_exists( $tn_name ))
-		{
-			if( file_exists( $tn_name ) )
-			{
-				$tn = true;
-				$image_name = $id.'_tn.'.$image['image_type'];
-			}
-		}
-		else
-		{
-			$tn = false;
-			$image_name = $id.'.'.$image['image_type'];
-		}
-		
-		
-		if( file_exists( PHOTOSTOCK.$image_name ) )
-		{
-			list($width,$height) = getimagesize( PHOTOSTOCK.$image_name );
-
-			$full_image_exists = file_exists( $full_image_name );
-
-			if( !$image['description'] )
-				if( $image['keywords'] )
-					$image['description'] = $image['keywords'];
-				else
-					$image['description'] = $image['name'];
-
-			$mod_time = filemtime( PHOTOSTOCK.$image_name );
-
-			$window_width = $image['width'] < 340 ? 340 : 40 + $image['width'];
-			$window_height = 170 + $image['height']; // formerly 130 // 96 works on Mac IE 5
-			
-			
-			if ($thumbnail) $class = "thumbnail";
-			else $class = "mainImage";
-			return '<img src="'.WEB_PHOTOSTOCK.$image_name.'?cb='.$mod_time.'" width="'.$width.'" height="'.$height.'" alt="'.htmlentities( $image['description'] ).'" class="'.$class.'" border="0" />';
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
 	/**
 	 * Makes sure the selected entity id would turn up
 	 * in the list of this entity selector.
