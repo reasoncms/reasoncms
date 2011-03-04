@@ -999,26 +999,8 @@
 					$err_fields = array();
 
 					foreach( $this->_error_required AS $name )
-					{
-						$display_name = prettify_string($name);
-						
-						//find the real display name, if one exists.
-						if($this->_is_element($name))
-						{
-							$element_object = $this->get_element($name);
-							$element_display_name = trim($element_object->display_name);
-							if(!empty($element_display_name))
-								$display_name = prettify_string($element_display_name);
-						}
-						elseif($this->_is_element_group($name))
-						{
-							$element_group_object = $this->get_element_group($name);
-							$group_display_name = trim($element_group_object->display_name);
-							if(!empty($group_display_name))
-								$display_name = prettify_string($group_display_name);
-						}
-						
-						$err_fields[] = '<a href="#'.$name.'_error">'.$display_name.'</a>';
+					{						
+						$err_fields[] = '<a href="#'.$name.'_error">'.$this->get_display_name($name).'</a>';
 					}
 					echo '<li>'.($num_errors == 1 ? 'This field is' : 'These fields are' ).' required: '.join(', ',$err_fields).'</li>'."\n";
 				}
@@ -1065,12 +1047,7 @@
 		*/
 		function show_normal_element( $element_name , $element , &$b) // {{{
 		{
-			if($element->display_name)
-				$name = $element->display_name;
-			else
-				$name = $element_name;
-				
-			$b->row_open( prettify_string( $name ), 
+			$b->row_open( $this->get_display_name($element_name), 
 						  $this->is_required( $element_name ), 
 						  $this->has_error( $element_name ), 
 						  $element_name, 
@@ -1291,10 +1268,38 @@
 		} // }}}
 		
 		/**
+		 * Get the display name for a given element or element group
+		 * @param string $element_name
+		 */
+		public function get_display_name($element_name)
+		{
+			$display_name = prettify_string($element_name);
+						
+			//find the real display name, if one exists.
+			if($this->_is_element($element_name))
+			{
+				$element_object = $this->get_element($element_name);
+				$element_display_name = trim($element_object->display_name);
+				if(!empty($element_display_name))
+					$display_name = prettify_string($element_display_name);
+			}
+			elseif($this->_is_element_group($element_name))
+			{
+				$element_group_object = $this->get_element_group($element_name);
+				$group_display_name = trim($element_group_object->display_name);
+				if(!empty($group_display_name))
+					$display_name = prettify_string($group_display_name);
+			}
+			
+			return $display_name;
+		}
+		
+		/**
 		* Set comments on an element or on an element group.  
 		* Generally form_comment() is used to format the string.
-		* @param $element string Name of the element or element group
-		* @param $value string Comments for the field.
+		* @param string $element Name of the element or element group
+		* @param string $value Comments for the field.
+		* @param string $position 'before' or 'after'
 		*/
 		function set_comments( $element_name, $value, $position = 'after' ) // {{{
 		{
@@ -1466,11 +1471,14 @@
 					$new_element_object->display_name = $element_object->display_name ;
 					$new_element_object->set_request($this->_request);
 					
-					$new_valid_args = $new_element_object->get_valid_args(); 
+					$new_valid_args = $new_element_object->get_valid_args();
+					
+					$args_to_transfer = $element_object->get_args_to_transfer();
+					
 					foreach($element_object->get_valid_args() as $key => $arg_name)
 					{
 						//check to make sure we're not stomping on an arg passed by the user
-						if(!isset($args[$arg_name]))
+						if(!isset($args[$arg_name]) )
 						{
 							//check sure that we won't trigger errors by trying to pass an arg that's not valid in the new element.
 							if(in_array($arg_name, $new_valid_args) && (!is_string($key) || array_key_exists($key, $new_valid_args)))
@@ -1480,15 +1488,15 @@
 								if(is_string($key) || is_string($key_for_new_object))
 								{
 									//make sure that the keys are the same - otherwise we're not dealing with the same var
-									if($key_for_new_object === $key)
+									if($key_for_new_object === $key && isset($args_to_transfer[$key]) )
 									{
-										$args[$arg_name] = $element_object->get_class_var($key);
+										$args[$arg_name] = $args_to_transfer[$key];
 									}
 								}
 								//usually, though, the arg_name is the name of the class var.
-								else
+								elseif(isset($args_to_transfer[$arg_name]))
 								{
-									$args[$arg_name] = $element_object->get_class_var($arg_name);
+									$args[$arg_name] = $args_to_transfer[$arg_name];
 								}
 							}
 						}
@@ -2431,16 +2439,6 @@
 			// textarea types - big blobs
 			else if( preg_match( '/^(text|blob|mediumblob|mediumtext|longblob|longtext)/i', $db_type ) )
 				$t = 'textarea';
-			
-			/* THIS IS A LITTLE TOO MAGICAL AND DOES NOT APPEAR TO BE USED - COMMENTING IT OUT
-			// automatically link tables if field name ends in _id
-			else if ( preg_match( '/(.*)_id$/i', $name, $matches ) )
-			{
-				$t = 'tablelinker';
-				$args[ 'table' ] = $matches[1];
-				$args[ 'display_name' ] = $matches[1];
-			}
-			*/
 			
 			// enumerated types - make a select
 			else if ( preg_match( "/^enum\((.*)\).*$/", $db_type, $matches ) )
