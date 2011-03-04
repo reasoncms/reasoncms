@@ -7,43 +7,58 @@
 
 $(document).ready(function()
 {
-	var row_number = 0;
-	var row_position;
-	var item_to_row = new Array();
-	var row_to_size_original = new Array();
-	var row_to_size_new = new Array();
+
 	
-	init();
-	run();
-	
-	function init()
+	function adjustHeights()
 	{
-		$("ul#imageGalleryItemList li.item").each(function(index)
+		var row_number = 0;
+		var row_position;
+		var row_number = 1;
+		var row_max = 0;
+		var regex = /row[0-9]/;
+		
+		
+		
+		$('ul#imageGalleryItemList li').each(function() {
+			class_str = $(this).attr('class');
+			$(this).attr('class', class_str.replace( regex, '' ) );
+        });
+        
+		$("ul#imageGalleryItemList li").each(function(index)
 		{
-			var scrollHeight = $(this).attr('scrollHeight');
-			var actualHeight = $(this).height();
-			var new_row = (row_position != undefined) ? (row_position != $(this).position().top) : false;
+			$(this).height('auto');
+			if(row_position != undefined && (row_position != $(this).position().top))
+			{
+				$('ul#imageGalleryItemList li.row' + row_number).height(row_max);
+				row_number++;
+				row_max = 0;
+			}
 			
-			row_number = (new_row) ? (row_number + 1) : row_number;
+			$(this).addClass('row' + row_number);
 			row_position = $(this).position().top;
-			item_to_row[index] = row_number;
-			row_to_size_original[row_number] = (row_to_size_original[row_number] == undefined) 
-											 ? actualHeight 
-											 : row_to_size_original[row_number];
-			row_to_size_new[row_number] = (row_to_size_new[row_number] == undefined) 
-										? scrollHeight 
-										: Math.max(scrollHeight, row_to_size_new[row_number]);
+			
+			row_max = Math.max($(this).attr('scrollHeight'),row_max);
 		});
-	}
+		$('ul#imageGalleryItemList li.row' + row_number).height(row_max);
+	};
 	
-	function run()
+	function calculateColumns()
 	{
-		$("ul#imageGalleryItemList li.item").each(function(index)
+		item_width = $("ul#imageGalleryItemList li").outerWidth(true);
+		gallery_width = $("ul#imageGalleryItemList").width();
+		return Math.floor(gallery_width / item_width);
+	};
+	
+	adjustHeights();
+	
+	current_columns = calculateColumns();
+	
+	$(window).resize(function() {
+		new_columns = calculateColumns();
+		if(new_columns != current_columns)
 		{
-			var row = item_to_row[index];
-			var original_size = row_to_size_original[row];
-			var new_size = row_to_size_new[row];
-			if (original_size != new_size) $(this).height(new_size);
-		});
-	}
+			adjustHeights();
+			current_columns = new_columns;
+		}
+	});
 });
