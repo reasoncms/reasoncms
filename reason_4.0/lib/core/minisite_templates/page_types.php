@@ -1059,6 +1059,28 @@
 			'main_post' => 'images',
 			'sidebar' => '',
 		),
+		'images_800w' => array(
+			'main_post' => array(
+				'module' => 'images',
+				'width' => 800,
+			),
+			'sidebar' => '',
+		),
+		'images_640w' => array(
+			'main_post' => array(
+				'module' => 'images',
+				'width' => 640,
+			),
+			'sidebar' => '',
+		),
+		'images_640x480' => array(
+			'main_post' => array(
+				'module' => 'images',
+				'width' => 640,
+				'height' => 480,
+			),
+			'sidebar' => '',
+		),
 		'images_full_size_before_content' => array(
 			'main' => 'images',
 			'main_post' => 'content',
