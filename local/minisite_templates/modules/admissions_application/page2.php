@@ -226,7 +226,7 @@ class ApplicationPageTwo extends FormStep
             )
         );
 
-	var $required = array(
+/*	var $required = array(
 		'first_name',
                 'middle_name',
 		'last_name',
@@ -237,7 +237,8 @@ class ApplicationPageTwo extends FormStep
 		'permanent_country',
 		'home_phone',
 		'email',
-	);
+	); */
+        
 	var $error_checks = array(
 		'phone' => array(
 			'is_phone_number' => 'Invalid Phone Number',
