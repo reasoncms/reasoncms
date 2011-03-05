@@ -130,7 +130,7 @@ class NorgeFormOne extends FormStep
                 ),
                 'shuttle_comment' => array(
                     'type' => 'comment',
-                'text' => 'Please indicate if you need <a href="/150/events/conference/travel/" target=__blank>shuttle service</a>
+                'text' => 'Please indicate if you need round trip<a href="/150/events/conference/travel/" target=__blank>shuttle service</a>
                     from Minneapolis, MN.'
                 ),
                 'shuttle_tickets' => array(
