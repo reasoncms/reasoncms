@@ -147,14 +147,22 @@ class NorgeFormTwo extends FormStep
                 // multiply room_cost times # of nights staying
                 if ($this->controller->get('arrival_date')) {
                     $arrival_date = $this->controller->get('arrival_date');
-                    $datetime1 = new DateTime($arrival_date);
+                    //$datetime1 = new DateTime($arrival_date);
+                    $arrival_date = str_replace('-', '', $arrival_date);
+                    $arrival_date = (int)$arrival_date;
+                    
+
                 }
                 if ($this->controller->get('departure_date')) {
                     $departure_date = $this->controller->get('departure_date');
-                    $datetime2 = new DateTime($departure_date);
+                    //$datetime2 = new DateTime($departure_date);
+                    $departure_date = str_replace('-', '', $departure_date);
+                    $departure_date = (int)$departure_date;
                 }
-                $interval = $datetime1->diff($datetime2);
-                $nights = $interval->format('%a') . '<br>';
+                //$interval = $datetime1->diff($datetime2);
+                //$nights = $interval->format('%a') . '<br>';
+                $nights = $departure_date - $arrival_date;
+                
 
                 $room_cost = $room_cost * $nights;
                 
