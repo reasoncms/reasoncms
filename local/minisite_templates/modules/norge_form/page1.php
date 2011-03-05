@@ -124,6 +124,23 @@ class NorgeFormOne extends FormStep
                         'Banquet' => 'Banquet - $35',
                     )
                 ),
+                'shuttle_header' => array(
+                    'type' => 'comment',
+                    'text' => '<h3>Shuttle</h3>'
+                ),
+                'shuttle_comment' => array(
+                    'type' => 'comment',
+                'text' => 'Please indicate if you need <a href="/150/events/conference/travel/" target=__blank>shuttle service</a>
+                    from Minneapolis, MN.'
+                ),
+                'shuttle_tickets' => array(
+                    'type' => 'radio_no_sort',
+                    'display_name' => '&nbsp;',
+                    'options' => array(
+                        1 => 'One ticket - $50',
+                        2 => 'Two tickets - $100',
+                    )
+                ),
                 'dietary_header' => array(
                     'type' => 'comment',
                     'text' => '<h3>Dietary Needs</h3>'

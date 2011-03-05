@@ -158,7 +158,6 @@ class NorgeFormTwo extends FormStep
 
                 $room_cost = $room_cost * $nights;
                 
-                
 
                 // calculate cost of attend_banquet
                 if ($this->controller->get('attend_banquet') == 'Yes'){
@@ -170,7 +169,7 @@ class NorgeFormTwo extends FormStep
                 // calculate additional meal ticket costs
                 $additional_meals = $this->controller->get('additional_meal_tickets');
                 $meal_cost = 0;
-                if ($additional_meals){
+                if ($additional_meals) {
                     foreach ($additional_meals as $key => $value) {
                         if ($value == 'Banquet')
                             $meal_cost = $meal_cost + 35;
@@ -181,7 +180,12 @@ class NorgeFormTwo extends FormStep
                     }
                 }
 
-                return $reg_cost + $room_cost + $banq_cost +$meal_cost;
+                // calculate shuttle costs
+                if ($this ->controller->get('shuttle_tickets')) {
+                    $shuttle_tix = (int)$this ->controller->get('shuttle_tickets');
+                    $shuttle_cost = $shuttle_tix * 50;
+                }
+                return $reg_cost + $room_cost + $banq_cost +$meal_cost + $shuttle_cost;
 
         }
 	// style up the form and add comments et al
@@ -300,6 +304,10 @@ class NorgeFormTwo extends FormStep
                        }
                     }
                     $txt .= '<strong><li>Additional Meal Tickets:</strong> ' .$tix_txt. '</li>'."\n";
+		}
+                if ($this->controller->get('shuttle_tickets'))
+		{
+                        $txt .= '<strong><li>Shuttle Tickets:</strong> '.$this->controller->get('shuttle_tickets').'</li>'."\n";
 		}
                 if ($this->controller->get('dietary_needs'))
 		{
