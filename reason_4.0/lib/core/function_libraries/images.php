@@ -124,26 +124,29 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 		}
 		else
 		{ 
-			$tn_name = PHOTOSTOCK.$id.'_tn'.'.'.$image['image_type'];
-			if( file_exists( $tn_name ) )
+			$tn_name = $id.'_tn'.'.'.$image['image_type'];
+			$fs_name = $id.'.'.$image['image_type'];
+			if( file_exists( PHOTOSTOCK.$tn_name ) )
 			{
 				$tn = true;
-				$image_name = $id.'_tn.'.$image['image_type'];
+				$image_name = $tn_name;
 			}
-			else
+			elseif(file_exists( PHOTOSTOCK.$fs_name ) )
 			{
 				if( $die_without_thumbnail )
 					return;
 				$tn = false;
-				$image_name = $id.'.'.$image['image_type'];
-				
+				$image_name = $fs_name;
 			}
-			$image_path = PHOTOSTOCK.$id.'.'.$image['image_type'];
-			list($width,$height) = getimagesize( PHOTOSTOCK.$image_name );
+			else
+			{
+				trigger_error('No thumbail or full sized image found for image id '.$id);
+				return;
+			}
+			$image_path = PHOTOSTOCK.$image_name;
+			list($width,$height) = getimagesize( $image_path );
 			$mod_time = filemtime($image_path);
 			$image_url = WEB_PHOTOSTOCK.$image_name.'?cb='.$mod_time;
-			
-		
 		}
 	
 	
