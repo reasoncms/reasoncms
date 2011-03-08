@@ -102,43 +102,43 @@ class DiscoveryCampsOne extends FormStep
             ),
             'camp_1' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => "June 6-7   Grade 1     $85",
+                'display_name' => 'June 6-7   Grade 1     $85',
             ),
            'camp_2' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => "June 8-10  Grade 2   $95"
+                'display_name' => 'June 8-10  Grade 2   $95'
             ),
             'camp_3' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => "June 6-10  Grades 7-9     $170",
+                'display_name' => 'June 6-10  Grades 7-9     $170',
                 'comments' => '<br><em>Adventure Hunt</em>'
             ),
             'camp_4' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => "June 13-17 Grades 3-6  $145"
+                'display_name' => 'June 13-17 Grades 3-6  $145'
             ),
             'camp_5' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => "June 20-24 Grades 5-8  $170",
+                'display_name' => 'June 20-24 Grades 5-8  $170',
                 'comments' => '<br><em>Survival Camp</em>'
             ),
             'camp_6' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => "June 27-July 1 Grades 9-12 $150",
+                'display_name' => 'June 27-July 1 Grades 9-12 $150',
                 'comments' => '<br><em>Local Food Warriors</em>'
             ),
             'camp_7' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => "July 11-15 Grades 3-6 $145",
+                'display_name' => 'July 11-15 Grades 3-6 $145',
             ),
             'camp_8' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => "July 18-22** Grades 6-9 $170",
+                'display_name' => 'July 18-22** Grades 6-9 $170',
                 'comments' => '<br><em>Expeditioners</em>'
             ),
             'camp_9' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => "July 18-22** Grades 6-9 $150",
+                'display_name' => 'July 18-22** Grades 6-9 $150',
                 'comments' => '<br><em>The Edible Earth</em>'
             ),
             'shuttle_comment' => array(
