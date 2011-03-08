@@ -126,6 +126,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'main' => 'aaron_directory',
                     'sidebar' => 'login_link',
 		),
+                'discovery_camps' => array(
+                    'main_post' => 'discovery_camps',
+                ),
                 'dorian_band_nomination' => array(
                    'main_post' => 'dorian_band',
                 ),
@@ -501,6 +504,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'post_banner' => '',
                     'sidebar'=>'',
                     'pre_sidebar' => '',
+                ),
+                'sports_roster' => array(
+                    'main' => 'sports_rosters_test',
                 ),
                 'spotlight_archive' => array(
                     'main_post' => array( // Spotlights
