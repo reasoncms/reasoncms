@@ -1,6 +1,6 @@
 <?php
 /**
-* This file contains the DorianSHCampConfirmation class
+* This file contains the DiscoveryCampsConfirmation class
 * @author Matt Ryan <mryan@acs.carleton.edu>
 */
 
