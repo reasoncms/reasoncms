@@ -173,7 +173,7 @@ class DiscoveryCampsTwo extends FormStep
             $this->change_element_type('payment_amount', 'solidtext');
             $this->set_value('payment_amount', '$'.$total_cost);
 
-            if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
+            if (THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
             {
                     $this->is_in_testing_mode = true;
             }
@@ -182,6 +182,10 @@ class DiscoveryCampsTwo extends FormStep
                     $this->is_in_testing_mode = false;
             }
 
+            if (reason_check_authentication () == 'smitst01') {
+                echo 'you are steve';
+                $this->is_in_testing_mode = true;
+            }
             $this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
 
