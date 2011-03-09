@@ -30,7 +30,7 @@ $(window).load(function()
 	/**
 	 * script paths grab dynamically from src attribute
 	 */
-	var js_src = $('script[src*=timer.js]:first').attr("src");
+	var js_src = $('script[src*="timer.js"]:first').attr("src");
 	var js_php_src = js_src.replace("timer.js", "timer.php");
 	
 	/**
