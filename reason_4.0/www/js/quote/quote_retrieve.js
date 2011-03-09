@@ -8,8 +8,7 @@ pending_divider = '';
 
 $(document).ready(function()
 {
-	var js_src = $('script[src*=quote_retrieve]:first').attr("src");
-	
+	var js_src = $('script[src*="quote_retrieve.js"]:first').attr("src");
 	// define the filepath to which we will post data
 	js_post_path = getRelativeDirectory(js_src)+"quote_retrieve.php";
 	
