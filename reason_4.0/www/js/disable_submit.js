@@ -13,7 +13,7 @@
  */ 
 
 jQuery(function($) {
-	var js_src = $('script[src*=disable_submit]:first').attr("src");
+	var js_src = $('script[src*="disable_submit.js"]:first').attr("src");
 	
 	// we grab and validate user input
 	var valid_names = verifyString(queryString( "name", js_src ));
