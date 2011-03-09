@@ -20,7 +20,7 @@ $(document).ready(function()
 	/**
 	 * @var src attribute which contains script parameters
 	 */
-	var js_src = $('script[src*=element_group_row_clone.js]:first').attr("src");
+	var js_src = $('script[src*="element_group_row_clone.js"]:first').attr("src");
 	
 	/**
 	 * @var string the name of the disco element group
