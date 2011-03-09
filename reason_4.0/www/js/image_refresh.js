@@ -32,7 +32,7 @@ $(document).ready(function()
 	var default_refresh_time = 30;
 	var default_refresh_class = "refresh";
 	
-	var js_src = $('script[src*=image_refresh]:first').attr("src");
+	var js_src = $('script[src*="image_refresh.js"]:first').attr("src");
 	
 	// grab variables from query string
 	var js_refresh_time = parseInt(_queryString('refresh_time', js_src), 10);
