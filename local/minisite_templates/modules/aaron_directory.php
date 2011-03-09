@@ -551,8 +551,21 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 //$_SESSION['load_img'] = 0;
                 //echo '</div>';
             //}
+
+            //image testing burkaa
+
             echo '<td>';
             echo '<table cellspacing="0" cellpadding="3" border="0"><tbody>';
+            if ($data['uid'][0] == "burkaa01") {
+                echo "<tr valign=top><td><b>Photo: </b></td><td>";
+                //readfile("/var/person_photos/burkaa01.jpg")
+                //header("Content-type: image/jpg");
+                echo "<img src='".readfile("/var/person_photos/burkaa01.jpg")."' width=141>";
+                //readfile("/var/person_photos/burkaa01.jpg");
+                /////echo "<img src='dir_img.php?image=".$data['uid'][0]."'>";
+                //echo "<img src='minisite_templates/modules/dir_img.php?image=burkaa01'>";
+                echo "</td></tr>";
+            }
             if (isset($data['cn'])) {
                 echo "<tr valign=top><td><b>Name: </b></td><td>".$data['cn'][0]."</td></tr>";
             }
@@ -1706,7 +1719,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $cache = new ReasonObjectCache('campus_directory_menu_data', 86400);
         $this->menu_data = $cache->fetch();
         if (!$this->menu_data) {
-            $this->menu_data = $this->rebuild_menu_data();
+            // burkaa01 test to see if we even use the below function, and we don't
+            //$this->menu_data = $this->rebuild_menu_data();
             $cache->set($this->menu_data);
         }
     }
@@ -1717,6 +1731,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $dir = new directory_service('ldap_luther');
 
         // Get the full set of possible academic depts (not all have people)
+        /*
+         * produced error commenting out, because i believe this is unused
         $dir->set_search_params('ldap_luther',array('base_dn' => 'dc=luther,dc=edu'));
         $dir->search_by_filter('(businessCategory=ACADEMIC)', array('ou','description'));
         $result = $dir->get_records();
@@ -1726,6 +1742,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $acad_all_by_name = array_flip($acad_all);
 
         $dir->set_search_params('ldap_luther',array('base_dn' => 'ou=people,dc=luther,dc=edu'));
+         * */
 
         // Academic Departments
         $filter = '(& (objectClass=carlPerson) (eduPersonAffiliation=faculty) (!(eduPersonAffiliation=staff)) (ou = *))';
