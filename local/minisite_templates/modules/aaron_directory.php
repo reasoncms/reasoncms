@@ -558,12 +558,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             echo '<table cellspacing="0" cellpadding="3" border="0"><tbody>';
             if ($data['uid'][0] == "burkaa01") {
                 echo "<tr valign=top><td><b>Photo: </b></td><td>";
-                //readfile("/var/person_photos/burkaa01.jpg")
-                //header("Content-type: image/jpg");
-                echo "<img src='".readfile("/var/person_photos/burkaa01.jpg")."' width=141>";
-                //readfile("/var/person_photos/burkaa01.jpg");
-                /////echo "<img src='dir_img.php?image=".$data['uid'][0]."'>";
-                //echo "<img src='minisite_templates/modules/dir_img.php?image=burkaa01'>";
+                echo "<img src='http://reasondev.luther.edu/stock/dir_img.php?image=".$data['uid'][0]."' width=141>";
+                echo "<img src='http://reasondev.luther.edu/stock/dir_img.php?image=burkaa01' width=77 height=100>";
                 echo "</td></tr>";
             }
             if (isset($data['cn'])) {
@@ -2228,9 +2224,4 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         exit; // End page processing
     }
 }
-
-
-
-
-
 ?>
