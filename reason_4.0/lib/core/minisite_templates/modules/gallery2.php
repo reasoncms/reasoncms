@@ -171,8 +171,12 @@ class Gallery2Module extends Generic3Module
 		$this->next_arrow_url = REASON_HTTP_BASE_PATH.'css/gallery2/image_gallery_arrow_next.gif';
 		$this->parent->head_items->add_stylesheet( REASON_HTTP_BASE_PATH.'css/gallery2/gallery2.css', '', true );
 		$this->parent->head_items->add_javascript(JQUERY_URL, true);
-		$this->parent->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/gallery2/next_page_link.js');
-		if( !isset($this->request['image_id']) ) $this->parent->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/gallery2/adjust_dimensions.js');
+		
+		if( !isset($this->request['image_id']) )
+		{
+			$this->parent->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/gallery2/next_page_link.js');
+			$this->parent->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/gallery2/adjust_dimensions.js');
+		}
 		$this->use_pagination = ($this->params['use_pagination']) ? true : false;
 		$this->num_per_page = $this->params['number_per_page'];
 		$this->use_dates_in_list = ($this->params['show_dates_in_list']) ? true : false;
@@ -236,8 +240,10 @@ class Gallery2Module extends Generic3Module
 	 */
 	function post_es_additional_init_actions()
 	{
+		if( isset($this->request['image_id']) )
+			return;
 		
-		
+		// The rest of this only applies if we are in list mode
 		$largest_width = 0;
 		$largest_height = 0;
 		if(0 != $this->params['thumbnail_height'] or 0 != $this->params['thumbnail_width'])
@@ -263,9 +269,8 @@ class Gallery2Module extends Generic3Module
 			
 			foreach ($this->image_array as $image)
 			{
-				if (!empty($image['thumb']))
-					if ($image['thumb']['width'] > $largest_width)
-						$largest_width = $image['thumb']['width'];
+				if (!empty($image['thumb']) && $image['thumb']['width'] > $largest_width)
+					$largest_width = $image['thumb']['width'];
 	
 			}
 		}
@@ -297,7 +302,20 @@ class Gallery2Module extends Generic3Module
 			
 			foreach ($this->image_array as $image)
 			{
-				$height_with_text = $this->calculate_height($image['thumb']['height'],strlen($image['description']),$largest_width_with_padding);
+				if(!empty($image['thumb']))
+				{
+					$image_details = $image['thumb'];
+				}
+				elseif(!empty($image['full']))
+				{
+					$image_details = $image['full'];
+				}
+				else
+				{
+					trigger_error('Image has no thumb or full-sized image.');
+					continue;
+				}
+				$height_with_text = $this->calculate_height($image_details['height'],strlen($image['description']),$largest_width_with_padding);
 				if($height_with_text > $largest_height_with_text) $largest_height_with_text = $height_with_text;
 			}
 			
@@ -596,6 +614,8 @@ class Gallery2Module extends Generic3Module
 			else
 			{
 				$image_path = reason_get_image_path($image,'tn');
+				if(!file_exists($image_path));
+					$image_path = reason_get_image_path($image);
 				list($width,$height) = getimagesize($image_path);
 				$image_url = reason_get_image_url($image);
 			}
