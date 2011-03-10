@@ -614,7 +614,7 @@ class Gallery2Module extends Generic3Module
 			else
 			{
 				$image_path = reason_get_image_path($image,'tn');
-				if(!file_exists($image_path));
+				if(!file_exists($image_path))
 					$image_path = reason_get_image_path($image);
 				list($width,$height) = getimagesize($image_path);
 				$image_url = reason_get_image_url($image);
