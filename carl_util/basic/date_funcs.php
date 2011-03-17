@@ -66,7 +66,7 @@ function carl_mktime($hr,$min,$sec,$month=false,$day=false,$year=false,$is_dst=f
 	if( $int_year == 0 )
 	{
 		//return mktime($hr,$min,$sec,$month,$day,$year,$is_dst); // $is_dst param is deprecated in php 5
-		return mktime($hr,$min,$sec,$month,$day,$year);
+		return mktime((int)$hr,(int)$min,(int)$sec,(int)$month,(int)$day);
 	}
 	else
 	{
