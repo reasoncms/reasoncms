@@ -53,18 +53,21 @@ include_once '/usr/local/webapps/reason/reason_package_local/disco/plasmature/ty
 			$this->set_display_name('athlete_class_year', 'Class Year');
 
 			$this->set_display_name('athlete_hometown_city', 'Hometown City');
+			$st = $this->get_value('athlete_hometown_state');
 			$this->add_element('athlete_hometown_state', 'state_province', array('display_name' => 'Hometown State')); 
+			$this->set_value('athlete_hometown_state', $st);
 			//$this->set_comments('athlete_hometown', form_comment('Enter City, State (Use AP abbreviation for state. E.g. Iowa, Minn., Wis.)'));
 			$this->set_display_name('athlete_high_school', 'High School');
-			$this->add_element('athlete_letter', 'checkbox', array('display_name' => 'Letter', 'description' => 'check if letter winner'));
-			$this->add_element('athlete_captain', 'checkbox', array('display_name' => 'Captain', 'description' => 'check if team captain'));
-			$this->add_element('athlete_hide', 'checkbox', array('display_name' => 'Hide', 'description' => 'check if suspended or graduated'));
+			$this->set_display_name('athlete_letter', 'Letter');
+			$this->set_display_name('athlete_captain', 'Captain');
+			$this->set_display_name('athlete_hide', 'Hide');
 
 			if ($site_name == 'sport_baseball_men' || $site_name == 'sport_basketball_men' ||
 				$site_name == 'sport_football_men' || $site_name == 'sport_soccer_men' ||
 				$site_name == 'sport_basketball_women' || $site_name == 'sport_soccer_women' || 
 				$site_name == 'sport_softball_women' || $site_name == 'sport_volleyball_women')
 			{
+				$pe = $this->get_value('athlete_position_event');
 				if ($site_name == 'sport_baseball_men' || $site_name == 'sport_softball_women')
 				{
 					$this->add_element('athlete_position_event', 'baseball_softball_positions', array('display_name' => 'Position'));
@@ -93,6 +96,7 @@ include_once '/usr/local/webapps/reason/reason_package_local/disco/plasmature/ty
 				{
 					$this->add_element('athlete_position_event', 'track_events', array('display_name' => 'Event'));
 				}
+				$this->set_value('athlete_position_event', $pe);
 			}
 			else
 			{
@@ -102,7 +106,12 @@ include_once '/usr/local/webapps/reason/reason_package_local/disco/plasmature/ty
 			if ($site_name == 'sport_basketball_men' || $site_name == 'sport_football_men' ||
 				$site_name == 'sport_basketball_women' || $site_name == 'sport_volleyball_women')
 			{
-				$this->set_display_name('athlete_height', 'Height');
+				$this->change_element_type('athlete_height', 'hidden');
+				$h = $this->get_value('athlete_height');
+				$this->add_element('athlete_height_text', 'text', array('display_name' => 'Height'));//, 'form_comment' => 'Height in feet and inches. e.g. 5 10, 6 0, 6 7'));
+				$this->set_value('athlete_height_text', (string)((int)($h / 12) . ' ' . $h % 12));
+				$this->set_comments('athlete_height_text', form_comment('In feet and inches. (e.g. 5 10, 6 0, 6 7)'));
+				//$this->set_display_name('athlete_height', 'Height');
 			}
 			else
 			{
@@ -147,9 +156,36 @@ include_once '/usr/local/webapps/reason/reason_package_local/disco/plasmature/ty
 					'athlete_class_year',
 					'athlete_hometown_city',
 					'athlete_hometown_state',
+					'athlete_high_school',
+					'athlete_letter',
+					'athlete_captain',
+					'athlete_hide',
+					'athlete_position_event',
+					'athlete_height_text',
+					'athlete_weight',
+					'athlete_bat',
+					'athlete_throw',
+					'athlete_content',
 				)
 			);
 
+		}
+
+		function process()
+		{
+			// convert text field for height in feet and inches to an integer value in inches
+			if (preg_match("/(\d+)[\s\"',\-fet\.]*(\d*)/", $this->get_value('athlete_height_text'), $matches))
+			{
+				if ($matches[2] == '' && (int)$matches[1] > 10)
+				{
+					$this->set_value('athlete_height', (int)$matches[1]);
+				}
+				else if (sizeof($matches) == 3)
+				{
+					$this->set_value('athlete_height', (int)$matches[1] * 12 + (int)$matches[2]);
+				}
+			}
+			parent::process();
 		}
 	}
 ?>
