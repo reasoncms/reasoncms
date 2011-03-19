@@ -253,7 +253,7 @@ class IndividualVisitForm extends DefaultThorForm
 		'type' => 'checkboxfirst',
 		'display_name' => 'Sit in on a class',
 		'display_style' => 'normal',
-		'comments' => '<small>  Seniors Only - MWF (60 min) T Th (90 min)</small>',
+		'comments' => '<small> MWF (60 min) T Th (90 min)</small>',
 		),
 	'observe_class_details' => array(
 		'type' => 'select_no_sort',
