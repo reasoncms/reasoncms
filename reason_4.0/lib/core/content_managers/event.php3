@@ -14,23 +14,81 @@
   */
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 	reason_include_once('classes/event.php');
+	reason_include_once('classes/api/geocoder.php');
 	
 	/**
 	 * A content manager for event entities
 	 *
 	 * Provides a custom interface for adding and editing events in Reason
+	 *
+	 * @todo support google maps premiere keys
 	 */
 	class event_handler extends ContentManager 
 	{
-	
 		var $years_out = 3;
 		var $sync_vals = array();
 		var $registration_page_types = array('event_registration','event_signup',);
+		
+		function should_run_api()
+		{
+			return ( ($this->geolocation_enabled() && isset($_REQUEST['module_api']) && ($_REQUEST['module_api'] == 'geocoder') ) );
+		}
+		
+		function run_api()
+		{
+			if ($this->geolocation_enabled())
+			{
+				$geocoderAPI = new ReasonGeocoderAPI();
+				$geocoderAPI->run();
+			}
+		}
+		
+		/**
+		 * geolocation is currently not enabled in the core - but we still want to see if the upgrade script has been run and
+		 * prompt the user to run it if not. once the core events module and others are updated to use the geolocation info
+		 * we will enable it in the content manager.
+		 * 
+		 * @todo fix to have value based upon the constant once we are ready with modules
+		 */
+		function geolocation_enabled()
+		{
+			if (!isset($this->_geolocation_enabled))
+			{
+				if (!$this->_event_type_supports_geolocation())
+				{
+					trigger_error('The Reason 4 Beta 8 to Beta 9 event location upgrade script has not been run. Please run it so that once geolocation features
+					               are available to Reason event modules the geolocation interface will be exposed in the content manager.');
+					$this->_geolocation_enabled = false;
+				}
+				else
+				{
+					// $this->_geolocation_enabled = (defined("REASON_EVENT_GEOLOCATION_ENABLED")) ? constant("REASON_EVENT_GEOLOCATION_ENABLED") : false;
+					$this->_geolocation_enabled = false; // geolocation is not yet enabled - waiting on core event module implementation
+				}
+			}
+			return $this->_geolocation_enabled;
+		}
+		
+		function _event_type_supports_geolocation()
+		{
+			if (!isset($this->_event_type_supports_geolocation))
+			{
+				$this->_event_type_supports_geolocation = ($this->is_element('latitude') &&  $this->is_element('longitude') && $this->is_element('address'));
+			}
+			return $this->_event_type_supports_geolocation;
+		}
 		
 		function init_head_items()
 		{
 			$this->head_items->add_javascript(JQUERY_URL, true); // uses jquery - jquery should be at top
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'event.js');
+			if ($this->geolocation_enabled())
+			{
+				$base_gmap_url = (HTTPS_AVAILABLE) ? 'https://maps-api-ssl.google.com/maps/api/js' : 'http://maps.google.com/maps/api/js';
+				$this->head_items->add_javascript($base_gmap_url . '?v=3&libraries=geometry&sensor=false', true);
+				$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.js');
+				$this->head_items->add_stylesheet(WEB_JAVASCRIPT_PATH . 'content_managers/event/geo.css');
+			}
 		}
 		
 		function check_for_recurrence_field_existence()
@@ -88,7 +146,8 @@
 			}
 			
 			$this->add_element('date_and_time', 'comment', array('text'=>'<h4>Date, Time, and Duration of Event</h4>'));
-			$this->add_element('info_head', 'comment', array('text'=>'<h4>General Information</h4>'));
+			$this->add_element('info_head', 'comment', array('text'=>'<h4>Title and Description</h4>'));
+			$this->add_element('other_info_head', 'comment', array('text'=>'<h4>Other Information</h4>'));
 
 			// change element types if necessary
 			$hours = array();
@@ -226,14 +285,89 @@
 			$this->add_element('this_event_is','hidden');
 			$this->add_element('this_event_is_comment','hidden');
 			
+			$this->setup_location_fields();
 			
 			//pray($this);
 			$this->set_event_field_order();
 		} // }}}
+
+		/**
+		 * We really only want to do this if geolocation is "on".
+		 */
+		function setup_location_fields()
+		{
+			if ($this->geolocation_enabled())
+			{
+				$this->add_element('location_head', 'comment', array('text'=>'<h4>Where is this event?</h4>'));
+				$this->set_display_name('location', 'Location Name');
+				$this->add_element('auto_update_coordinates', 'checkbox');
+			
+				// the value of auto_update_coordinates should depend on whether or not they are currently in sync.
+				// if they are in sync - then leave it checked.
+				// if they are not in sync - uncheck it.
+				$auto_update_value = ($this->entity_uses_custom_coordinates()) ? "0" : "1";
+				
+				$this->set_value('auto_update_coordinates', $auto_update_value);
+				$this->set_comments('auto_update_coordinates', form_comment('If checked, the latitude and longitude will be automatically updated on save according to the address of the event.'));
+				
+				// lets set comments on the address field
+				if ($auto_update_value)
+				{
+					$id = $this->admin_page->id;
+					$e = new entity($id);
+					$addy = $e->get_value('address');
+					if ($addy) $this->set_comments('address', form_comment('This address matches the map coordinates that are currently set.'));
+					else $this->set_comments('address', form_comment('Please enter a complete address so that we can accurately determine the coordinates for this event.'));
+				}
+				else $this->set_comments('address', form_comment('This address does not match the coordinates that are saved for this event.'));
+			}
+			else // lets remove them if they exist
+			{
+				if ($this->is_element('latitude')) $this->remove_element('latitude');
+				if ($this->is_element('longitude')) $this->remove_element('longitude');
+				if ($this->is_element('address')) $this->remove_element('address');
+			}
+		}
+		
+		/**
+		 * Check whether the saved entity values are using custom coordinates - this is used to initally set auto update.
+		 */
+		function entity_uses_custom_coordinates()
+		{
+			if ($this->geolocation_enabled())
+			{
+				$id = $this->admin_page->id;
+				$e = new entity($id);
+				$addy = $e->get_value('address');
+				$lat = $e->get_value('latitude');
+				$lng = $e->get_value('longitude');
+				if ($lat && $lng && $addy) // geocode to find out
+				{
+					$geocoder = new geocoder($addy);
+					$geocode = $geocoder->get_geocode();
+					if ($geocode['latitude'] != $lat || $geocode['longitude'] != $lng) return true;	
+				}
+				elseif ($lat && $lng && !$addy) return true;
+				else return false;
+			}
+			return false;
+		}
+		
+		/**
+		 * We perform geocoding as needed here - this ensures the map and lat / lon get updated even if there are other errors on the form.
+		 */
+		function pre_error_check_actions()
+		{
+			$auto_update = $this->get_value('auto_update_coordinates');
+			if ($auto_update)
+			{
+				$this->do_geolocation();
+			}
+		}
 		
 		function set_event_field_order()
 		{
-			$this->set_order (array ('this_event_is_comment','this_event_is', 'date_and_time', 'datetime', 'hours', 'minutes', 'recurrence', 'frequency', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'monthly_repeat', 'week_of_month', 'month_day_of_week', 'end_date', 'term_only', 'dates', 'hr1', 'info_head', 'name', 'description', 'location', 'sponsor', 'contact_username', 'contact_organization', 'url', 'content', 'keywords', 'categories', 'hr2', 'audiences_heading','audiences',  'show_hide', 'no_share', 'hr3', 'registration',  ));
+			$this->set_order (array ('this_event_is_comment','this_event_is', 'date_and_time', 'datetime', 'hours', 'minutes', 'recurrence', 'frequency', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'monthly_repeat', 'week_of_month', 'month_day_of_week', 'end_date', 'term_only', 'dates', 'hr1', 'info_head', 'name', 'description', 'location_head', 'location', 'address', 'auto_update_coordinates', 'latitude', 'longitude', 'other_info_head', 'sponsor', 'contact_username', 'contact_organization', 'url', 'content', 'keywords', 'categories', 'hr2', 'audiences_heading','audiences',  'show_hide', 'no_share', 'hr3', 'registration',  ));
 		}
 		
 		function _should_offer_split()
@@ -318,5 +452,36 @@
 			$this->do_event_processing();
 			parent::process();
 		} // }}}
+		
+		/**
+		 * If auto update is on and the address has changed, geolocate the IP
+		 */
+		function do_geolocation()
+		{
+			if ($this->geolocation_enabled())
+			{
+				$eid = $this->admin_page->id;
+				$e = new entity($eid);
+				$o_address = $e->get_value('address');
+				$n_address = $this->get_value('address');
+				//$auto_update = $this->get_value('auto_update_coordinates');
+				$lat = $this->get_value('latitude');
+				$lng = $this->get_value('longitude');
+				
+				// if update is on lets always do the geolocation.
+				$this->set_value('latitude', "");
+				$this->set_value('longitude', "");
+				if (!empty($n_address))
+				{
+					$geocoder = new geocoder($n_address);
+					$geocode = $geocoder->get_geocode();
+					if ($geocode)
+					{
+						$this->set_value('latitude', $geocode['latitude']);
+						$this->set_value('longitude', $geocode['longitude']);
+					}
+				}
+			}
+		}
 	}	
 ?>

@@ -21,6 +21,7 @@
 	reason_include_once( 'classes/disco.php' );
 	reason_include_once( 'classes/entity.php');
 	reason_include_once( 'function_libraries/admin_actions.php' );
+	include_once(CARL_UTIL_INC . 'api/api.php');
 
 	//Form comment function
 	//moved to disco.php3
@@ -57,6 +58,26 @@
 				$this->_inited_head_items = true;
 			}
 			parent::init();
+		}
+		
+		/**
+		 * The editor module will ask the content manager about whether to call run() or run_api()
+		 *
+		 * @return boolean default false
+		 */
+		function should_run_api()
+		{
+			return false;
+		}
+		
+		/**
+		 * By default we run an API and do not set any content which should return a 404.
+		 */
+		function run_api()
+		{
+			$api = new CarlUtilAPI('html');
+			$api->run();
+			exit();
 		}
 		
 		/**
