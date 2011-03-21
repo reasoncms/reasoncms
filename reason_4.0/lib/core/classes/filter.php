@@ -1,6 +1,6 @@
 <?php
 /**
- * A disco box class for Reason admin filter forms
+ * A disco class for Reason admin filter forms
  * @package reason
  * @subpackage classes
  */
@@ -12,62 +12,6 @@
 	reason_include_once( 'classes/entity.php' );
 	reason_include_once( 'classes/admin/admin_page.php' );
 	include_once( DISCO_INC . 'disco.php' );
-
-	/**
-	 * An extension of the basic box class, designed specifically for reason.
-	 * @author Brendon Stanton
-	 */
-	class filter_box extends Box //{{{
-	{
-	/**
-	 * Prints the end of the form
-	 * @param mixed $buttons doesn't do anything in this inherited version :-0
-	 */
-		function foot( $buttons = '' ) // {{{
-		{
-				?>
-				<tr class="submitRow">
-					<td>&nbsp;</td>
-					<td>
-					<input type="submit" value="Search" class="submit" />
-					<?php
-						if( $this->has_filters() )
-						{
-							echo '<input type="submit" name="__button_clear" value="Clear" class="clear" />';
-						}
-					?>
-					</td>
-				</tr>
-			</table>
-			<?php
-		} // }}}
-	/**
-	 * Checks the page to see if any search values have already been submitted
-	 * @return bool
-	 */
-		function has_filters() // {{{
-		{
-			foreach( $_REQUEST AS $k => $r )
-			{
-				if( preg_match( '/^search_/' , $k ) && !$this->is_search_type( $k ) && !empty( $r ) )
-					return true;
-			}
-			return false;
-		} // }}}
-	/**
-	 * Returns true if the name of a variable is a search type
-	 * @return bool
-	 */
-		function is_search_type( $name ) // {{{
-		{
-			if( preg_match( '/^search_exact_/' , $name ) ) return true;
-			if( preg_match( '/^search_less_than_/' , $name ) ) return true;
-			if( preg_match( '/^search_less_than_equal_/' , $name ) ) return true;
-			if( preg_match( '/^search_greater_than_/' , $name ) ) return true;
-			if( preg_match( '/^search_greater_than_equal_/' , $name ) ) return true;
-			return false;
-		} // }}}
-	} // }}}
 
 	/**
 	 * This class works as a filter for the list_content page.  Prints out all the pre stuff
@@ -83,7 +27,7 @@
 		 * @access private
 		 * @var array
 		 */
-		var $actions = array( 'submit' => 'Filter' );
+		var $actions = array( 'submit' => 'Search', 'clear' => 'Clear' );
 	 	/**
 		 * The admin page class passed in as a paramater.  This way, the form can access
 		 * anything it needs from the class
@@ -91,12 +35,6 @@
 		 * @var AdminPage
 		 */
 		var $page;
-		/**
-		 * Sets the box class to filter_box, overloading from Disco's default
-		 * @access private
-		 * @var string
-		 */
-		var $box_class = 'filter_box';
 
 		/**
 		 * Sets page to bet the admin page.  Should get called before doing anything else
@@ -112,15 +50,11 @@
 		 * @param Viewer $viewer The viewer that we are a part of
 		 * @return void
 		 */
-		function grab_fields( $viewer ) // {{{
+		function grab_fields( $viewer )
 		{
-			$HTTP_VARS = $this->page->request;
-			$this->add_element( 'search_id' );
-			$this->set_display_name( 'search_id' , 'id' );
+			if( !$this->has_filters() ) unset($this->actions['clear']); // remove filter if we have no search fields
 			$this->add_element( 'search_exact_id' , 'hidden' );
 			$this->set_value( 'search_exact_id' , true );
-			$this->add_element( 'search_name' );			
-			$this->set_display_name( 'search_name' , 'name' );
 			if( $viewer )
 			{
 				$this->get_db_fields( $viewer );
@@ -128,34 +62,48 @@
 				while( list( $field , ) = each( $viewer ) )
 				{
 					$key = 'search_' . $field;
-
+					
 					//add fields in different ways
 					if( !empty( $this->fields[ $field ] ) && preg_match( "/^enum\((.*)\)$/" , $this->fields[ $field ][ 'db_type' ] ) )
 						$this->add_enum_element( $field );
 					else
 						$this->add_element( $key , 'text' , array( 'size' => 20 ) );
 					
-					if( isset( $HTTP_VARS[ $key ] ) AND $HTTP_VARS[ $key ] )
-						$this->set_value( $key , $HTTP_VARS[ $key ] );
+					if( isset( $this->page->request[ $key ] ) AND $this->page->request[ $key ] )
+						$this->set_value( $key , $this->page->request[ $key ] );
 					$this->set_display_name( $key , $field );
 				}
 			}
-			reset ( $HTTP_VARS );
-			while( list( $key , $value) = each( $HTTP_VARS ) )
+		}
+		
+		/**
+	 	 * Checks the page to see if any search values have already been submitted
+		 * @return bool
+		 */
+		function has_filters() // {{{
+		{
+			foreach( $_REQUEST AS $k => $r )
 			{
-#				if(!isset($this->_elements[ $key ] ) )
-				if(!$this->_is_element($key))
-				{
-					if( !preg_match( '/search_/' , $key )) //some times search elements are in one list, but not the other...
-									       //this assures we won't get an extra one
-					{
-						$this->add_element( $key , 'hidden' );
-						$this->set_value( $key , $value );
-					}
-				}
-
+				if( preg_match( '/^search_/' , $k ) && !$this->is_search_type( $k ) && !empty( $r ) )
+					return true;
 			}
+			return false;
 		} // }}}
+
+		/**
+	 	 * Returns true if the name of a variable is a search type
+	 	 * @return bool
+	 	 */
+		function is_search_type( $name ) // {{{
+		{
+			if( preg_match( '/^search_exact_/' , $name ) ) return true;
+			if( preg_match( '/^search_less_than_/' , $name ) ) return true;
+			if( preg_match( '/^search_less_than_equal_/' , $name ) ) return true;
+			if( preg_match( '/^search_greater_than_/' , $name ) ) return true;
+			if( preg_match( '/^search_greater_than_equal_/' , $name ) ) return true;
+			return false;
+		} // }}}
+		
 		/**
 		 * This adds a field as an enum element.  $field must be a field in reason
 		 * @param string $field Name of the enum field
@@ -238,9 +186,9 @@
 		 */
 		function finish() // {{{
 		{
-			if( preg_match( '/clear/' , $this->chosen_action ) )
+			if( preg_match( '/clear/' , $this->get_chosen_action() ) )
 			{
-				$array = array('page' => false , 'submitted' => '' );
+				$array = array('page' => false , 'submitted' => '', 'submit' => '', 'clear' => '');
 				if( !empty( $this->page->request[ 'order_by' ] ) )
 					$array[ 'order_by' ] = $this->page->request[ 'order_by' ];
 				if( !empty( $this->page->request[ 'dir' ] ) )
@@ -251,7 +199,9 @@
 		    	$link =  unhtmlentities( $this->page->make_link( $array ) );
 			}
 			else
-		    	$link =  unhtmlentities( $this->page->make_link( array('page' => false , 'submitted' => '' ) , true ) );
+			{
+		    	$link =  unhtmlentities( $this->page->make_link( array('page' => false , 'submitted' => '', 'submit' => '', 'clear' => '' ) , true ) );
+			}
 			return $link;
 		} // }}}		
 	}
