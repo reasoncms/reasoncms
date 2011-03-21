@@ -71,7 +71,12 @@
 	if ($authenticated)
 	{
 		$f->init(); // init returns false if the user cannot be authentication
-		$f->run();
+		if ($f->should_run_api())
+		{
+			$f->run_api();
+			exit();
+		}
+		else $f->run();
 	}
 	else
 	{
