@@ -876,4 +876,27 @@
 	 * Full path to the directory where Reason's sized image class (sized_image.php) should store sized images.
 	 */
 	define('REASON_SIZED_IMAGE_DIR_WEB_PATH', REASON_HTTP_BASE_PATH.'sized_images/');
+	
+	/**
+	 * REASON_EVENT_GEOLOCATION_ENABLED
+	 *
+	 * Reason event geolocation adds mapping features to the event content manager and to Reason event modules.
+	 * These features use the free version of google maps, and are enabled by default. Google provides info on
+	 * the terms and conditions of their mapping service here:
+	 *
+	 * http://code.google.com/apis/maps/terms.html
+	 * 
+	 * If you are using Reason in an environment that does not quality for free use of Google maps you should
+	 * disable event geolocation.
+	 */
+	define('REASON_EVENT_GEOLOCATION_ENABLED', true);
+	
+	/**
+	 * REASON_IPINFODB_API_KEY
+	 *
+	 * Optionally provide your api key for the api.ipinfodb.com ip address geolocation service.
+	 *
+	 * With an API key, Reason can provide superior ip geolocation results.
+	 */
+	define('REASON_IPINFODB_API_KEY', '');
 ?>
