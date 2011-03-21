@@ -107,7 +107,7 @@ img.roundedCorner {width: 6px; height: 6px; border: none; display: block; }
 	margin:0;
 	font-size:1em;
 }
-.viewFilter tr.submitRow input {
+.viewFilter tr.submitRow input, .viewFilter tr#discoSubmitRow input {
 	background-color:#e9eef8;
 	border:1px solid #385790;
 	padding:3px 5px;
@@ -118,13 +118,13 @@ img.roundedCorner {width: 6px; height: 6px; border: none; display: block; }
 	font-size:0.9em;
 	letter-spacing:0.05em;
 }
-.viewFilter tr.submitRow input:hover {
+.viewFilter tr.submitRow input:hover, .viewFilter tr#discoSubmitRow input:hover {
 	background-color:#fff;
 }
-.viewFilter tr.submitRow input.clear {
+.viewFilter tr.submitRow input.clear, .viewFilter tr#discoSubmitRow input[name="clear"] {
 	background-color:#c5d2eb;
 }
-.viewFilter tr.submitRow input.clear:hover {
+.viewFilter tr.submitRow input.clear:hover, .viewFilter tr#discoSubmitRow input[name="clear"]:hover {
 	background-color:#e9eef8;
 }
 .addLink {
