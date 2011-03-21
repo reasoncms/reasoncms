@@ -1,0 +1,60 @@
+#staticMapContainer
+{
+	width: 300px;
+	height: 300px;
+	border: 1px solid black;
+}
+#gmapContainer
+{
+	width: 99%;
+	height: 400px;
+	border: 1px solid black;
+}
+#gmapOptionsContainer
+{
+	margin-top: 4px;
+	margin-bottom: 6px;
+	text-align: left;
+}
+
+#gmapOptionsContainer img.mapLoading
+{
+	height: 16px;
+	margin-bottom: -6px;
+}
+
+#gmapOptionsContainer a {
+	padding:3px 5px 3px 18px;
+	background-color:#ddd;
+	background-repeat:no-repeat;
+	background-position:left center;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	border:1px solid #ccc;
+	text-decoration:none;
+	color:#006;
+	border-bottom-color:#999;
+	border-right-color:#aaa;
+	outline:0;
+	margin-right: 5px;
+	width: auto;
+}
+#gmapOptionsContainer a.addMarker {
+	background-image:url(../../../ui_images/bullet_map_pin.png);
+}
+#gmapOptionsContainer a.removeMarker {
+	background-image:url(../../../silk_icons/companion/bullet_cross.png);
+}
+#gmapOptionsContainer a.generateMarker {
+	background-image:url(../../../ui_images/bullet_arrow_down.png);
+}
+#gmapOptionsContainer a:hover {
+	background-color:#eee;
+}
+#gmapOptionsContainer a:active {
+	border-top-color:#aaa;
+	border-bottom-color:#ccc;
+	border-right-color:#ccc;
+	border-left-color:#999;
+}
