@@ -81,6 +81,11 @@ class updateTypes
 		'crop_style'=>'enum("fill","fit")',
 		'bg_color'=>'varchar(6)'
 		);
+	var $new_event_fields = array(
+		'address'=>'tinytext',
+		'latitude'=>'double',
+		'longitude'=>'double',
+		);
 
 	var $feature_to_image_details = array (
 		'description'=>'Feature to Image',
@@ -150,6 +155,24 @@ class updateTypes
 
 	 	// page_to_feature (many_to_many, sortable)
 		$this-> add_allowable_relationship('minisite_page','feature_type','page_to_feature',$this->page_to_feature_details);
+	}
+	
+	function upgrade_event_type($mode, $reason_user_id = NULL)
+	{
+		if($mode != 'run' && $mode != 'test')
+		{
+			trigger_error('$mode most be either "run" or "test"');
+			return;
+		}
+		
+		$this->mode = $mode;
+		$this->reason_id = $reason_user_id;
+		
+		$table = 'event';
+		foreach ($this->new_event_fields as $fname=>$ftype)
+		{
+			$this->add_field_to_entity_table($table, $fname, $ftype);
+		}
 	}
 	
 	function fix_policy_content_sorter($mode, $reason_user_id = NULL)
