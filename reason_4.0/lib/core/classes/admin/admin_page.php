@@ -1554,6 +1554,16 @@
 			return true;
 		} // }}}
 		
+		function should_run_api()
+		{
+			return $this->module->should_run_api();
+		}
+		
+		function run_api()
+		{
+			$this->module->run_api();
+		}
+		
 		function run() // {{{
 		//does its thang
 		{
