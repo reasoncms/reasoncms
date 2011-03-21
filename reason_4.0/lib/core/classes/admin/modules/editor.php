@@ -136,6 +136,31 @@
 				}
 			}
 		} // }}}
+		
+		function should_run_api()
+		{
+			return $this->disco_item->should_run_api();
+		}
+		
+		/**
+		 * We will enforce the same basic rules in _cm_ok_to_run() but return generic API mode errors.
+		 *
+		 * @todo we should return a 403 when this capability is implemented in CarlUtilAPI
+		 */
+		function run_api()
+		{
+			if($this->_cm_ok_to_run())
+			{
+				$this->disco_item->run_api();
+			}
+			else
+			{
+				// this will spit out a 404 - we should actually do a 403.
+				$api = new CarlUtilAPI('html');
+				$api->run();
+			}
+			exit();
+		}
 	} // }}}
 
 ?>

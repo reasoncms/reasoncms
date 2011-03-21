@@ -46,6 +46,28 @@
 			$this->head_items =& $head_items;
 		}
 		
+		/**
+		 * If true, the admin_page will call run_api instead of the normal run methods.
+		 *
+		 * Typically this method would examine the request to decide if the API should be run.
+		 *
+		 * @return boolean default false
+		 */
+		function should_run_api()
+		{
+			return false;
+		}
+		
+		/**
+		 * By default we run an API and do not set any content which should return a 404.
+		 */
+		function run_api()
+		{
+			$api = new CarlUtilAPI('html');
+			$api->run();
+			exit();
+		}
+		
 		function run() // {{{
 		{
 			echo '<div class="oldBrowserAlert">Notice: Reason works with all browsers.  However, it will look and feel quite a lot nicer if you can use it with a modern, standards-based browser such as Internet Explorer 6+, Mozilla 1.5+, Firefox, Netscape 7, Safari, or Opera.</div>'."\n";
