@@ -108,8 +108,11 @@ include_once '/usr/local/webapps/reason/reason_package_local/disco/plasmature/ty
 			{
 				$this->change_element_type('athlete_height', 'hidden');
 				$h = $this->get_value('athlete_height');
-				$this->add_element('athlete_height_text', 'text', array('display_name' => 'Height'));//, 'form_comment' => 'Height in feet and inches. e.g. 5 10, 6 0, 6 7'));
-				$this->set_value('athlete_height_text', (string)((int)($h / 12) . ' ' . $h % 12));
+				$this->add_element('athlete_height_text', 'text', array('display_name' => 'Height'));
+				if ($h > 0)
+				{
+					$this->set_value('athlete_height_text', (string)((int)($h / 12) . ' ' . $h % 12));
+				}
 				$this->set_comments('athlete_height_text', form_comment('In feet and inches. (e.g. 5 10, 6 0, 6 7)'));
 				//$this->set_display_name('athlete_height', 'Height');
 			}
