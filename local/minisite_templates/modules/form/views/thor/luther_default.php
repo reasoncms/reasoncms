@@ -1,6 +1,6 @@
 <?php
 /**
- * @package reason
+ * @package reason_package_local
  * @subpackage minisite_modules
  */
 
@@ -13,38 +13,34 @@ reason_include_once('minisite_templates/modules/form/views/thor/default.php');
 /**
  * Register form with Reason
  */
-$GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'LutherDefaultForm';
+$GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'LutherDefaultThorForm';
 
 /**
- * DefaultThorForm is an extension of the DefaultForm used for Thor
- *
- * 1. Uses the custom HTML from the thor form instead of the controller default.
- * 2. Adds show_submitted_data_dynamic_fields and a method get_show_submitted_data_dynamic_fields.
- *    If set to true, elements added by the custom form (and not in the thor data) are included in e-mails and the confirmation data
- *
- * @author Nathan White
+ * LutherDefaultThorForm is an extension of the DefaultThorForm
+ * 
+ * @author Steve Smith
  */
 
-class LutherDefaultForm extends DefaultThorForm
+class LutherDefaultThorForm extends DefaultThorForm
 {
 	function on_every_time()
-	{
-		$gender = $this->get_element_name_from_label('Gender');
-		if ($gender)
-			$this->change_element_type($gender, 'radio_inline');
+	{   
+		if ($this->get_element_name_from_label('Gender'))
+			$this->change_element_type($this->get_element_name_from_label('Gender'), 'radio_inline',
+				array('options' => array('m' => 'Male', 'f'=>'Female')));
 		
-		$sex = $this->get_element_name_from_label('Sex');
-		if ($sex)
-			$this->change_element_type($sex, 'radio_inline');
+		if ($this->get_element_name_from_label('Sex'))
+			$this->change_element_type($this->get_element_name_from_label('Sex'), 'radio_inline',
+				array('options' => array('m' => 'Male', 'f'=>'Female')));
 		
-		$state = $this->get_element_name_from_label('State');
-		if ($state)
-			$this->change_element_type($state, 'state');
+		if ($this->get_element_name_from_label('State'))
+			$this->change_element_type($this->get_element_name_from_label('State'), 'state');
 		
-		$state_province = $this->get_element_name_from_label('State/Province');
-		if ($state_province)
-			$this->change_element_type($state_province, 'state_province');
-		
+		if ($this->get_element_name_from_label('State/Province'))
+			$this->change_element_type($this->get_element_name_from_label('State/Province'), 'state_province');
+
+        if ($this->get_element_name_from_label('Country'))
+            $this->change_element_type ($this->get_element_name_from_label('Country'), 'country', array('default' => 'United States'));
 	}	
 }
-?>
+?>                      
