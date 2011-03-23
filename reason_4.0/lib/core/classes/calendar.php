@@ -43,7 +43,8 @@ function compare_times( $a,$b ) // {{{
 } // }}}
 
 /**
- * reasonCalendar
+ * Reason Calendar Class
+ *
  * A class that handles the complex logic of extracting events for the Reason database,
  * figuring out what dates they fall on, and returning them in an easy-to-use array
  *
@@ -69,6 +70,75 @@ function compare_times( $a,$b ) // {{{
  * 	}
  * }
  * </code>
+ *
+ * Getting events from multiple sites
+ *
+ * It is possible to use this class to get events belonging to more than one site.
+ * There are two ways to do this:
+ *
+ * 1. Don't provide a site parameter. In this case, the class will return all events shared by
+ * Reason sites.
+ *
+ * 2. Provide an array of sites instead of a single site as the site parameter. In this case
+ * the class will return events from the sites specified. Whether the events retrieved are just the
+ * shared ones or will include private events can be controlled via the sharing_mode parameter, 
+ * which has three possible values:
+ *
+ * "shared_only" will retrieve just events shared by the sites provided.
+ *
+ * "all" will retrieve all events, both shared and private.
+ *
+ * "hybrid" will pay attention to the context_site parameter and, if it is provided, include all
+ * events from the context_site (if it is in the list of sites to pull from) and only shared events
+ * from all other sites.
+ *
+ * If you do not specify a sharing_mode, the calendar class will make an educated guess regarding
+ * which mode makes sense given how many sites you have provided and whether you have set a context
+ * site.
+ *
+ * Categories
+ *
+ * By default the Calendar class retrieves events without regard to categories. There are two
+ * parameters that allow you to limit events based on which categories they belong to:
+ *
+ * If you provide an array of category entities via the "categories" parameter, the calendar class
+ * will retrieve events assigned to *all* the categories provided.
+ *
+ * If you provide an array of category entities via the "or_categories" parameter, the calendar
+ * class will retrieve events assigned to *any* of the categories provided.
+ *
+ * It is possible to combine these parameters to retrieve even more sophisticated sets of events.
+ *
+ * Audiences
+ *
+ * If you provide an array of audience entities in the "audiences" parameter, the calendar will
+ * retrieve events that are assigned to *all* the audiences provided. There is not currently an 
+ * "or_audiences" parameter.
+ *
+ * Views
+ *
+ * There are two ways to select a set of events based on a time span rather than a count:
+ *
+ * 1. Specify a view: Pass one of the following strings as the "view" parameter: 
+ * 'daily','weekly','monthly','yearly','all'.
+ *
+ * 2. Specify an end_date parameter, formatted as "YYYY-MM-DD".
+ *
+ * Searches
+ *
+ * You can set the calendar to return a set of results matching a search phrase via the 
+ * "simple_search" parameter. Just pass a string in and the Calendar will find events that contain
+ * that exact phrase, or which occur on a given date if the searched phase is a parseable date.
+ *
+ * Even more sophisticated usage
+ *
+ * If you want to use the calendar class in an even more sophisticated way, you can use the 
+ * "es_callback" parameter. Just pass in a PHP callback via this parameter, and the calendar 
+ * will, when it builds its entity selector, call the callback function with a reference to the
+ * entity selector as the first parameter. It is possible, in this manner, to make any complicated
+ * restrictions you want. You only want events that have photos attached? That have the word 
+ * "monkey" in their title? All this an more is possible with the es_callback parameter.
+ *
  *
  * General scheme for internal workings of the class:
  *
@@ -97,7 +167,7 @@ class reasonCalendar
 	 * if a key-value pair is passed to the object that is not in this array, it is ignored
 	 * @var array
 	 */
-	var $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','default_view_min_days');
+	var $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','default_view_min_days', 'es_callback');
 	/**
 	 * site entity that we are looking at
 	 *
@@ -243,15 +313,30 @@ class reasonCalendar
 	 *
 	 * Possible values: 'all' means they are selected regardless of sharing status;
 	 * 'shared_only' means that only shared items are selected.
+	 * 'hybrid' means that private events from the context site are included (if given); all other sites only include shared items
+	 *
+	 * If not set, an appropriate default will be selected, based on
+	 * how many sites given/context site/etc.
 	 *
 	 * Future enhancements to this module could include adding another
-	 * sharing mode that only includes private items, or which includes all
-	 * items in current site and shared items from other sites
+	 * sharing mode that only includes private items
 	 *
-	 * @var string 'all' or 'shared_only'
+	 * @var string 'all', 'shared_only', 'hybrid'
 	 * @access private
 	 */
-	var $sharing_mode = 'all'; // other possible value: 'shared_only'
+	var $sharing_mode; // Possible values: 'all', 'shared_only', 'hybrid'
+	
+	/**
+	 * A php callback that can be set to modify the entity selector of the calendar
+	 *
+	 * The callback should take a reference to an entity selector as its first parameter.
+	 *
+	 * This callback can then modify the entity selector as needed.
+	 *
+	 * @var callback
+	 * @access protected
+	 */
+	protected $es_callback;
 	
 	/**
 	 * The entity selector used by the calendar to select the events
@@ -313,10 +398,34 @@ class reasonCalendar
 		{
 			$this->end_date_supplied = true;
 		}
+		$this->_standardize_sharing_mode();
 		$this->_add_or_rels(relationship_id_of('event_to_event_category'), $this->or_categories);
 		$this->_add_rels(relationship_id_of('event_to_event_category'), $this->categories);
 		$this->_add_rels(relationship_id_of('event_to_audience'), $this->audiences);
 		$this->build_es();
+	}
+	function _standardize_sharing_mode()
+	{
+		if(!empty($this->sharing_mode) && !in_array($this->sharing_mode,array('all','shared_only','hybrid')))
+		{
+			trigger_error('The reasonCalendar class only supports three sharing modes: "all","shared_only", and "hybrid"; "'.$this->sharing_mode.'" is not recognized. Falling back to automatic selection of sharing mode.');
+			$this->sharing_mode = '';
+		}
+		if(empty($this->sharing_mode))
+		{
+			if(empty($this->site) || empty($this->context_site) && is_array($this->site))
+			{
+				$this->sharing_mode = 'shared_only';
+			}
+			elseif(!empty($this->context_site) && is_array($this->site))
+			{
+				$this->sharing_mode = 'hybrid';
+			}
+			else
+			{
+				$this->sharing_mode = 'all';
+			}
+		}
 	}
 	/**
 	 * Assembles main entity selector
@@ -338,6 +447,7 @@ class reasonCalendar
 			}
 			else
 			{
+				$site_ids = array($this->site->id());
 				$this->es = new entity_selector( $this->site->id() );
 				$this->es->description = 'Selecting events on '.$this->site->get_value('name');
 			}
@@ -347,9 +457,26 @@ class reasonCalendar
 			$this->es = new entity_selector( array_keys( $this->_get_sharing_sites() ) );
 			$this->es->description = 'Selecting events on all sharing sites';
 		}
-		if( $this->sharing_mode == 'shared_only' || empty($this->site) )
+		if( $this->sharing_mode == 'shared_only' )
 		{
 			$this->es->add_relation( 'entity.no_share != 1');
+		}
+		elseif( $this->sharing_mode == 'hybrid' )
+		{
+			if(!empty($this->context_site) && in_array($this->context_site->id(),$site_ids) )
+			{
+				$es = new entity_selector($this->context_site->id());
+				$es->add_type( id_of('event_type') );
+				// $es->add_relation( 'show_hide.show_hide = "show"' );
+				$es->limit_tables();
+				$es->limit_fields();
+				$tmp = $es->run_one();
+				$this->es->add_relation('(`entity`.`id` IN ("'.implode('","',array_keys($tmp)).'") OR entity.no_share != 1 )');
+			}
+			else
+			{
+				$this->es->add_relation( 'entity.no_share != 1');
+			}
 		}
 		$this->es->add_type( id_of('event_type') );
 		if(!empty($this->context_site))
@@ -357,6 +484,13 @@ class reasonCalendar
 			$this->es->set_env('site',$this->context_site->id());
 		}
 		$this->es->add_relation( 'show_hide.show_hide = "show"' );
+		
+		if(!empty($this->es_callback))
+		{
+			$callback_array = array();
+			$callback_array[] =& $this->es;
+			call_user_func_array($this->es_callback, $callback_array);
+		}
 		
 		$this->base_es = carl_clone($this->es);
 		
@@ -958,12 +1092,33 @@ class reasonCalendar
 		}
 
 		/* now compare the view that has enough with the one before it and use a
-		   logarithmic scale to determine which is more appropriate */
+		   logarithmic scale to determine which is more appropriate
+		   
+		   Why is a logarithmic scale used?
+		   
+		   This is guesswork after the fact, but it appears that the goal is to choose the view
+		   that is closest in *scale* to the ideal count rather than the view that is linearly
+		   closest. For example, if the daily view has 1 event, the weekly view has 100 events,
+		   and the ideal count is 50, we want to choose the weekly view, as it is only 2x the ideal
+		   (whereas the ideal is 50x the daily view). If we just picked the closest number on a
+		   linear scale, we would choose the daily view in this case, which is not as good a result.
+		   */
 		if(!empty($big))
 		{
-			if( $big == 'daily' )
+			if( $big == 'daily' ) // pick the daily view
 				$this->default_end_date = $this->start_date;
-			elseif( $big == 'weekly' )
+			elseif( 1 == $this->ideal_count ) // just pick the first view with any events
+			{
+				if($event_count['daily'] > 0)
+					$this->default_end_date = $this->start_date;
+				elseif($event_count['weekly'] > 0)
+					$this->default_end_date = $out['week'];
+				elseif($event_count['monthly'] > 0)
+					$this->default_end_date = $out['month'];
+				elseif($event_count['yearly'] > 0)
+					$this->default_end_date = $out['year'];
+			}
+			elseif( $big == 'weekly' ) // choose between daily and weekly views
 			{
 				$x1 = log( $event_count['daily'] ) / log( $this->ideal_count );
 				$x2 = log( $event_count['weekly'] ) / log( $this->ideal_count );
@@ -972,7 +1127,7 @@ class reasonCalendar
 				else
 					$this->default_end_date = $out['week'];
 			}
-			elseif( $big == 'monthly' )
+			elseif( $big == 'monthly' ) // choose between weekly and monthly views
 			{
 				$x1 = log( $event_count['weekly'] ) / log( $this->ideal_count );
 				$x2 = log( $event_count['monthly'] ) / log( $this->ideal_count );
@@ -981,7 +1136,7 @@ class reasonCalendar
 				else
 					$this->default_end_date = $out['month'];
 			}
-			elseif( $big == 'yearly' )
+			elseif( $big == 'yearly' ) // choose between monthly and yearly views
 			{
 				$x1 = log( $event_count['monthly'] ) / log( $this->ideal_count );
 				$x2 = log( $event_count['yearly'] ) / log( $this->ideal_count );
