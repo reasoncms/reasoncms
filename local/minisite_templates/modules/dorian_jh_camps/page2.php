@@ -104,6 +104,10 @@ class DorianJHCampsTwoForm extends FormStep
                         'type' => 'comment',
                         'text' => 'Check which you will be participating in:'
                 ),
+                'choir_participant' => array(
+                        'type' => 'checkboxfirst',
+                        'display_name' => 'Choir',
+                ),
 		'band_participant' => array(
 			'type' => 'checkboxfirst',
 			'display_name' => 'Band',
