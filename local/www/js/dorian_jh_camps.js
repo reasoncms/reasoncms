@@ -17,6 +17,7 @@ $(document).ready(function() {
 //        hide_field('lesson_instrument_1');
 //        hide_field('lesson_instrument_2');
         chooseLessons();
+        $("input[name='choir_participant']").change(function(){toggle_fields('choir_participant',''); });
 	$("input[name='band_participant']").change(function(){toggle_fields('band_participant','band_instrument'); });
         $("input[name='orchestra_participant']").change(function(){toggle_fields('orchestra_participant','orchestra_instrument'); });
         $("input[name='jazz_participant']").change(function(){toggle_fields('jazz_participant','jazz_instrument')});
@@ -58,13 +59,16 @@ function toggle_fields(trigger, element)
 
         var checked = $(trigger_element).val();
 
-        if (checked){
+        if (checked && element){
             $(element_row).show();
         }else{
             $(element_row).hide();
         }
 
         switch(trigger){
+            case 'choir_participant':
+                if(checked){ chooseChoir(); }else{ clearChoir(); }
+                break;
             case 'band_participant':
                 if(checked){ chooseBand(); }else{ clearBand(); }
                 break;
