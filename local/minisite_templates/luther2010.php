@@ -479,6 +479,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '<meta property="og:email" content="www@luther.edu"/>'."\n";
 		echo '<meta property="og:phone_number" content="563-387-2000"/>'."\n";
 
+		echo '<link rel="icon" href="favicon.ico" type="image/x-icon">'."\n";
+		echo '<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">'."\n"; 
 		$this->head_items->add_javascript( '/javascripts/highslide/highslide-full.js' );
 		$this->head_items->add_javascript( '/javascripts/highslide/highslide-overrides.js' );
 
