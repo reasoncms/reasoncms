@@ -1,7 +1,13 @@
 <?
-reason_include_once('minisite_templates/modules/form/views/thor/default.php');
+reason_include_once('minisite_templates/modules/form/views/thor/luther_default.php');
 include_once(WEB_PATH.'stock/pfproclass.php'); //<<<< Change this
 $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCardThorForm';
+
+
+/**
+ * @todo  ! take out Scott's code regarding Item List, etc. If this is done take change how
+ * getdowngiveback is handles
+  * /
 
 /**
  * CreditCardThorForm provides a simple method for adding credit card processing to a Thor form
@@ -38,9 +44,11 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCar
  * @package reason_package_local
  * @subpackage thor_view
  * @author Mark Heiman
+ * @author Steve Smith
+ * 
  */
 
-class CreditCardThorForm extends DefaultThorForm
+class CreditCardThorForm extends LutherDefaultThorForm
 {
 	var $_log_errors = true;
 	var $no_session = array( 'credit_card_number' );
@@ -141,7 +149,8 @@ class CreditCardThorForm extends DefaultThorForm
 	function on_every_time()
 	{
 		
-
+		parent :: on_every_time();
+		
 		// Don't take credit cards on an unencrypted connection!+
 		if( !on_secure_page() )
 		{		
@@ -202,21 +211,23 @@ class CreditCardThorForm extends DefaultThorForm
 		if(THIS_IS_A_DEVELOPMENT_REASON_INSTANCE || !empty( $this->_request[ 'tm' ] ) )
 		{
 			$this->is_in_testing_mode = true;
-			//$this->is_in_testing_mode = false;
-
 		}
 		else
 		{
 			$this->is_in_testing_mode = false;
-			//$this->is_in_testing_mode = true;
-
 		}
-		
+
+
+
 		// If the form creator added a visible Payment Amount field of their own, remove the
 		// placeholder field from the payment section.  If they added a hidden field to
 		// pass a single payment amount, make that the value of the placeholder field,
 		// rename it, and make it uneditable. If they didn't add a Payment
 		// Amount field, rename and use the placeholder one.
+		
+		/**
+		 * @todo  ! ignore case when looking for payment amount
+		 */
 		if ($this->payment_element = $this->get_element_name_from_label('Payment Amount'))
 		{
 			$type = $this->get_element_property($this->payment_element, 'type');
@@ -243,6 +254,10 @@ class CreditCardThorForm extends DefaultThorForm
 		// Make sure the form creator has included an expense_budget_number and a revenue_budget_number field, and that they contain 
 		// properly formatted budget numbers.
 		// Modified by SLS
+		
+		/**
+		 * @todo  ! ignore case when looking for expense and revenue budget numbers
+		 */
 		
 		if ($this->expense_budget_number = $this->get_element_name_from_label('Expense Budget Number'))
 		{
@@ -285,7 +300,7 @@ class CreditCardThorForm extends DefaultThorForm
 	function run_error_checks()
 	{
 		// Validate the e-mail address field if used
-		if (($email_name = $this->get_element_name_from_label('Your Email')) && $this->get_value($email_name))
+		if (($email_name = $this->get_element_name_from_label('Your Email')) && $this->get_value($email_name)) 
 			if (!check_against_regexp($this->get_value($email_name), array('email'))) $this->set_error($email_name, 'Please enter a valid email address.');
 
 		// Make sure we have a payment amount; look for a dollar sign first, then any number
@@ -323,14 +338,20 @@ class CreditCardThorForm extends DefaultThorForm
 			}
 			
 			$model =& $this->get_model();
-			$pf->set_info(
+
+                        $pf->set_info(
 				$payment_amount,
 				$this->get_value('credit_card_number'),
 				$expiration_mmyy,
 				$this->get_value($this->revenue_budget_number),
 				$this->get_value('credit_card_name'),
 				$this->get_value($this->expense_budget_number),
-				$model->get_form_name()
+				$model->get_form_name(),
+                                $this->get_value('billing_street_address'),
+                                $this->get_value('billing_city'),
+                                $this->get_value('billing_state_province'),
+                                $this->get_value('billing_zip'),
+                                $this->get_value($email_name)
 			);
 						
 			/* THIS IS WHERE THE TRANSACTION TAKES PLACE */
