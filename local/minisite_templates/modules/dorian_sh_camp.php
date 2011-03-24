@@ -103,7 +103,7 @@ class DorianSHCampModule extends DefaultMinisiteModule
 		*/
 
 		if (isset($this->request[ '_step' ]) && $this->request[ '_step' ] == 'DorianJHCampsOneForm' || 'DorianJHCampsTwoForm')
-			$seconds = 30;
+			$seconds = 3000;
 		elseif ( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
 			$seconds = 60;
 		else
