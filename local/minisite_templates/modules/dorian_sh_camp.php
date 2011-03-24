@@ -44,9 +44,6 @@ class DorianSHCampModule extends DefaultMinisiteModule
 				'next_steps' => array(
 					'DorianSHCampTwoForm' => array(
 						'label' => 'Next'),
-//					'DorianShCampConfirmation' => array(
-//						'label' => 'Dorian Junior High Camp Confirmation',
-//					),
 				),
 				'step_decision' => array('type'=>'user'),
 				'back_button_text' => 'Back',
@@ -62,12 +59,8 @@ class DorianSHCampModule extends DefaultMinisiteModule
                             'final_step' => true,
                             'final_button_text' => 'Finish and Pay',
                         ),
-//			'DorianShCampConfirmation' => array(
-//				'display_name' => 'Dorian Junior High Camp Confirmation',
-//			),
 		);
 		$this->controller->add_forms( $forms );
-		// */
 		$this->controller->init();
 	}
 
@@ -94,12 +87,29 @@ class DorianSHCampModule extends DefaultMinisiteModule
 	function init( $args = array() ) //{{{
 	{
 		parent::init( $args );
+		$url = get_current_url();
+		$parts = parse_url( $url );
+		$url = $parts['scheme'].'://'.$parts['host'].$parts['path'];
 
 		if($head_items =& $this->get_head_items())
 		{
-			$head_items->add_stylesheet('/reason/css/giftform.css');
+			$head_items->add_stylesheet('/reason/css/form.css');
 			$head_items->add_javascript('/reason/js/dorian_sh_camp.js');
 		}
+
+		/** reload pages to save session variables after 50 minutes (3000 seconds)
+		* 	of no activity.
+		*	This will delete the current info on the page.
+		*/
+
+		if (isset($this->request[ '_step' ]) && $this->request[ '_step' ] == 'DorianJHCampsOneForm' || 'DorianJHCampsTwoForm')
+			$seconds = 30;
+		elseif ( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
+			$seconds = 60;
+		else
+			return $url;
+
+			$this->parent->add_head_item('meta', array('http-equiv' => 'refresh', 'content' => $seconds . ';URL='.$url.'?ds=1' ));
 	}//}}}
 
 	/**
@@ -146,7 +156,9 @@ class DorianSHCampModule extends DefaultMinisiteModule
 				if ($this->controller->get_current_step() == $name)
 					$class .= ' current';
 
-				$output .= '<li class="'.$class.'"><a href="?_step='.$name.'">'.htmlspecialchars($form->display_name).'</a></li>';
+//				$output .= '<li class="'.$class.'"><a href="?_step='.$name.'">'.htmlspecialchars($form->display_name).'</a></li>';
+				$output .= '<li class="'.$class.'">'.$form->display_name.'</a></li>';
+
 			}
 		}
 		$output .= '</ul></div>';
