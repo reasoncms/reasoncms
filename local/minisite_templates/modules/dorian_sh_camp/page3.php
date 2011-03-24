@@ -269,7 +269,7 @@ class DorianSHCampThreeForm extends FormStep
 	}
 	function run_error_checks()
 	{
-		if($this->get_value('billing_address') == 'new'
+		if ($this->get_value('billing_address') == 'new'
                         && (!$this->get_value('billing_street_address')
                         || !$this->get_value('billing_city')
                         || !$this->get_value('billing_state_province')
@@ -279,6 +279,12 @@ class DorianSHCampThreeForm extends FormStep
 			$this->set_error('billing_address', 'Please enter your full billing address if the address
                             you entered on the previous page was not the billing address for your credit card.');
 		}
+                if ($this->get_value('billing_address') == 'entered') {
+                    $this->set_value('billing_street_address', $this->controller->get('address'));
+                    $this->set_value('billing_city', $this->controller->get('city'));
+                    $this->set_value('billing_state_province', $this->controller->get('state_province'));
+                    $this->set_value('billing_zip', $this->controller->get('zip'));
+                }
 
 
 		// Process credit card
@@ -327,8 +333,14 @@ class DorianSHCampThreeForm extends FormStep
 				$expiration_mmyy,
 				$this->revenue_budget_number,
 				$this->get_value('credit_card_name'),
-				$this->transaction_comment,
-				$this->expense_budget_number
+				$this->expense_budget_number,
+                                $this->transaction_comment,
+                                $this->get_value('billing_street_address'),
+                                $this->get_value('billing_city'),
+                                $this->get_value('billing_state_province'),
+                                $this->get_value('billing_zip'),
+                                $this->controller->get('e-mail'),
+                                $this->controller->get('home_phone')
 			);
 
 			//$this->helper->build_transactions_array();
