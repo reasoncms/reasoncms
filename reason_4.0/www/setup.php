@@ -54,6 +54,7 @@ the <a href="./install.htm">Reason Install Documentation</a>.</p>
 // do what we can to enable error reporting
 ini_set("display_errors","On");
 error_reporting (E_ALL);
+
 // Environmental checks - include path and basic location of files needed to perform other checks
 if (isset($_POST['do_it_pass']) == false)
 {
@@ -64,22 +65,27 @@ if (isset($_POST['do_it_pass']) == false)
 	include_once('paths.php'); // paths loads the package_settings file
 	if (!defined('REASON_INC'))
 	{
+		$probable_path = get_reason_package_absolute_path();
+		if ($probable_path)
+		{
+			$probable_path .= 'settings/package_settings.php';
+			$xtra = '<p>Unless you are placing your settings files in a different location than the default, the absolute path of the package_settings.php file should probably resolve to or be set to this:</p>';
+			$xtra .= '<p><pre>'.$probable_path.'</pre></p>';
+		}
+		else $xtra = '';
 		die_with_message('<p class="error">ERROR: The file paths.php was included, but did not properly include the package_settings.php file. Modify the require_once statement in paths.php
-						  to include an absolute file system path reference to package_settings.php</p>
-						  <p>Unless you are placing your settings files in a different location than the default, the absolute path of the package_settings.php file 
-						  should probably look like this:</p>
-						  <p><pre>'.$_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) .'settings/package_settings.php</pre></p>');
+						  to include an absolute file system path reference to package_settings.php</p>'.$xtra);
 	}
 	else
 	{
-		$included_so_far = get_included_files();
-		$package_settings_path = reset(preg_grep('/package_settings.php/', $included_so_far));
-		echo '<p><strong>...loaded package settings</strong> ('.realpath(SETTINGS_INC.'package_settings.php').')</p>';
+		if (file_is_included(SETTINGS_INC.'package_settings.php'))
+		{
+			echo '<p><strong>...loaded package settings</strong> (' . SETTINGS_INC . 'package_settings.php' . ')</p>';
+		}
 		force_error_handler_configuration();
 		check_error_handler_log_file_dir();	
 		include_once(CARL_UTIL_INC . 'error_handler/error_handler.php'); 
-		$found = array_search(realpath(CARL_UTIL_INC . 'error_handler/error_handler.php'), get_included_files());
-		if ($found !== false)
+		if (file_is_included(CARL_UTIL_INC . 'error_handler/error_handler.php'))
 		{
 			echo '<p><strong>...loaded error handler</strong> (' . CARL_UTIL_INC . 'error_handler/error_handler.php' . ')</p>';
 		}
@@ -89,8 +95,8 @@ if (isset($_POST['do_it_pass']) == false)
 		{
 			// verify settings files loaded by header.php before we load the header
 			check_environment_and_trailing_slash(WEB_PATH, 'web path', 'Check the WEB_PATH constant in package_settings.php.</p><p>
-								 The value should probably be</p>
-								 <p><pre>'.$_SERVER['DOCUMENT_ROOT'].'/</pre>');
+								 The value should resolve to (or be set explicitly to)</p>
+								 <p><pre>'.rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR.'</pre>');
 			check_environment_must_be_outside_of_web_tree(DB_CREDENTIALS_FILEPATH, 'db credentials xml file', 'Verify that DB_CREDENTIALS_FILEPATH in package_settings.php is correct and points to a readable file outside the web tree');
 			check_environment(DISCO_INC.'disco.php', 'disco include path', 'Verify the path to DISCO_INC in package_settings.php');
 			check_environment(TYR_INC.'tyr.php', 'tyr include path', 'Verify the path to TYR_INC in package_settings.php');
@@ -103,8 +109,7 @@ if (isset($_POST['do_it_pass']) == false)
 
 			
 			include_once(SETTINGS_INC . 'reason_settings.php');
-			$found = array_search(realpath(SETTINGS_INC.'reason_settings.php'), get_included_files());
-			if ($found !== false)
+			if (file_is_included(SETTINGS_INC . 'reason_settings.php'))
 			{
 				echo '<p><strong>...loaded reason settings</strong> (' . SETTINGS_INC.'reason_settings.php' . ')</p>';
 			}
@@ -140,9 +145,12 @@ if (isset($_POST['do_it_pass']) == false)
 								  proper connection name in your database credentials file.</p>');
 			}
 		}
-		else die_with_message('<p class="error">ERROR: The INCLUDE_PATH constant ('.INCLUDE_PATH.') appears to be invalid.</p>
-							   <p>Check package_settings.php to make sure the value is correct - it should probably be set to:</p>
-							   <p><pre>'.$_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) .'/</pre></p>');
+		else
+		{
+			die_with_message('<p class="error">ERROR: The INCLUDE_PATH constant ('.INCLUDE_PATH.') appears to be invalid.</p>
+							   <p>Check paths.php to make sure the value is correct - it should probably resolve to or be set to:</p>
+							   <p><pre>'.get_reason_package_absolute_path().'</pre></p>');
+		}
 	}
 }
 else include_once('reason_header.php');
@@ -209,9 +217,12 @@ function setup_www_local_support()
 	$www_local_htaccess = REASON_INC . 'www/.htaccess';
 	$www_local_dir = REASON_INC . 'www/local/';
 	echo '<h3>Checking for WWW Local Support</h3>';
+	ob_start();
 	if (file_exists($www_local_dir) && file_exists($www_local_htaccess))
 	{
-		echo '<p>An .htaccess file and a local folder exist within the reason www folder.</p>';
+		echo '<p>An .htaccess file and a local folder exist within the reason www folder. Things are probably okay. If they are not ';
+		echo 'working as expected, you might remove the file ' . $www_local_htaccess . ' and run this script again - it will generate ';
+		echo 'a new .htaccess file or output to screen the appropriate rules if apache does not have write privileges to that directory.</p>';
 		// should we do an actual test - probably but we won't 
 	}
 	elseif (file_exists($www_local_htaccess))
@@ -220,25 +231,57 @@ function setup_www_local_support()
 		         your custom www local folder, or you may be using an .htaccess file in the www folder for other 
 		         purposes. While a www/local folder is technically optional, we recommend setting one up. Please
 		         consult the documentation to manually setup the folder and the accompanying .htaccess rule.</p>';
+		$alarm = true;
 	}
 	else
 	{
+		// lets make sure that have the correct privileges
 		if (!file_exists($www_local_dir))
 		{
-			mkdir($www_local_dir, 0775);
-			chmod($www_local_dir, 0775);
-			echo '<p>Created www/local directory at ' . $www_local_dir . ' </p>';
+			 if (!is_writable($www_local_dir))
+			 {
+			 	echo '<p>The folder "local" does not exists at ' . $www_local_dir . ' and cannot be created by apache.</p>';
+			 	echo '<p>You should manually create the folder and rerun this script</p>';
+			 	$alarm = true;
+			 }
+			 else
+			 {
+			 	mkdir($www_local_dir, 0775);
+				chmod($www_local_dir, 0775);
+				echo '<p>Created www/local directory at ' . $www_local_dir . ' </p>';
+			 }
 		}
-		//if this is windows lets remove backslashes from the path
-		$www_local_dir = (server_is_windows()) ? str_replace("\\", "/", $www_local_dir) : $www_local_dir;		
-		$str = 'RewriteEngine On' . "\n";
-		$str .= 'RewriteCond ' . $www_local_dir . '$0 -f' . "\n";
-		$str .= 'RewriteRule ^(.*)$ ./local/$0' ."\n";
-		$h = fopen($www_local_htaccess,"x+");
-		fwrite($h,$str);
-		fclose($h);
-		echo '<p>Created .htaccess file to support the www/local directory</p>';
+		if (!file_exists($www_local_htaccess))
+		{
+			$www_local_dir = (server_is_windows()) ? str_replace("\\", "/", $www_local_dir) : $www_local_dir;		
+			$str = 'RewriteEngine On' . "\n";
+			$str .= 'RewriteCond ' . $www_local_dir . '$0 -f' . "\n";
+			$str .= 'RewriteRule ^(.*)$ ./local/$0' ."\n";
+			if (!is_writable(dirname($www_local_htaccess)))
+			{
+				echo '<p>The .htaccess file ' . $www_local_htaccess . ' does not exists and cannot be created by apache.</p>';
+			 	echo '<p>You should manually create the .htaccess file with these contents:</p>';
+			 	echo '<pre>';
+			 	echo $str;
+			 	echo '</pre>';
+			 	$alarm = true;
+			}
+			else
+			{
+				$h = fopen($www_local_htaccess,"x+");
+				fwrite($h,$str);
+				fclose($h);
+				echo '<p>Created .htaccess file to support the www/local directory</p>';
+			}
+		}
 	}
+	$mybuf = ob_get_contents();
+	ob_end_clean();
+	if (isset($alarm) && $alarm)
+	{
+		echo '<p class="error">Warning: The .htaccess setup for the local version of your www folder may be improperly setup</p>';
+	}
+	echo $mybuf;
 }
 
 if (admin_user_exists() == false)
@@ -336,17 +379,16 @@ function check_php_include_path()
 	$include_path = ini_get('include_path');
 	if ($failure)
 	{
-		$include_path_separator = (setup_check_is_windows()) ? ';' : ':';
 		die_with_message('<p class="error">The files paths.php and reason_header.php, inside the reason_package, must be accessible through the php include path.</p>
 						  <p>Your current include path is:</p>
 						  <p><pre>'.$include_path.'</pre></p>
 						  <p>Please modify the include path line in your php.ini file so that it reads as follows - substitute your path for /path/to/root/of/reason_package/</p>
-						  <p><pre>include_path = "'.$include_path.$include_path_separator.'/path/to/root/of/reason_package/"</pre></p>
+						  <p><pre>include_path = "'.$include_path.PATH_SEPARATOR.'/path/to/root/of/reason_package/"</pre></p>
 						  <p>Alternatively, you can create aliases within the include path that reference the paths.php and reason_header.php files in the reason_package folder (experimental)</p>
 						  <p>If you do not have access to modify php.ini and cannot create aliases within the include path, you may be able to create an .htaccess 
 						  file that dynamically sets the include path. For this to work, AllowOverride Option must be enabled in your httpd.conf file. The .htaccess rule
 						  should read as follows - substitute your path for /path/to/root/of/reason_package/:</p>
-						  <p><pre>php_value include_path ".'.$include_path.$include_path_separator.'/path/to/root/of/reason_package/"</pre></p>
+						  <p><pre>php_value include_path ".'.$include_path.PATH_SEPARATOR.'/path/to/root/of/reason_package/"</pre></p>
 						  <p>Please run the script again after your include path has been properly setup.</p>');
 	}
 	else
@@ -415,7 +457,7 @@ function perform_checks()
 	// the /www/tmp directory being an alias to the file system location of REASON_TEMP_DIR. Until this is done, we are leaving it like this. 
 	// We may want to do something to check the validity of those aliases, such as writing a file then trying to access it via curl. The same 
 	// thing could be done for assets.
-	if (data_dir_writable($_SERVER[ 'DOCUMENT_ROOT' ].WEB_TEMP, 'WEB_TEMP')) $check_passed++;
+	if (data_dir_writable(rtrim($_SERVER[ 'DOCUMENT_ROOT' ], DIRECTORY_SEPARATOR).WEB_TEMP, 'WEB_TEMP')) $check_passed++;
 	else $check_failed++;
 	
 	if (check_directory_readable(THOR_INC, 'THOR_INC')) $check_passed++;
@@ -790,7 +832,7 @@ function mod_rewrite_check()
 	$test_string = 'reason_rocks'; // randomize me
 	$dir_name = 'mod_rewrite_check/';
 	$dir_url = $path = carl_construct_link(array(''), array(''), WEB_TEMP.$dir_name);
-	$dir_path = $_SERVER[ 'DOCUMENT_ROOT' ].WEB_TEMP.$dir_name;
+	$dir_path = rtrim($_SERVER[ 'DOCUMENT_ROOT' ], DIRECTORY_SEPARATOR).WEB_TEMP.$dir_name;
 	$file_content = "<?php\nif (isset(\$_GET['zzz']))\n{\necho ('".$test_string."');\n}\n?>";
 	$file_name = 'test_file.php';
 	$file_path = $dir_path . $file_name;
@@ -867,8 +909,8 @@ function check_environment_and_trailing_slash($path, $check_name, $error_msg)
 	if (file_exists($path))
 	{
 		// lets make sure the last character of the path is a trailing slash
-		if (substr($path, -1) != '/') die_with_message('<p class="error">ERROR: '.$check_name . ' missing trailing slash.</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
-		elseif (substr($path, -2) == '//') die_with_message('<p class="error">ERROR: '.$check_name . ' extra trailing slash.</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
+		if (substr($path, -1) != DIRECTORY_SEPARATOR) die_with_message('<p class="error">ERROR: '.$check_name . ' missing trailing slash.</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
+		elseif (substr($path, -2) == DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR) die_with_message('<p class="error">ERROR: '.$check_name . ' extra trailing slash.</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
 		return msg($check_name . ' found', true);
 	}
 	else die_with_message('<p class="error">ERROR: '.$check_name . ' ('.$path.') not found</p><p>'.$error_msg.'</p><p>Please fix the problem and run this script again.</p>');
@@ -995,6 +1037,25 @@ function die_with_message($msg)
 	die;
 }
 
+// little test function makes sure a file was included
+function file_is_included($path)
+{
+	return array_search(realpath($path), get_included_files());
+}
+
+function get_reason_package_absolute_path()
+{
+	static $rpap;
+	if (!isset($rpap))
+	{
+		$included_so_far = get_included_files();
+		$paths_php_array = preg_grep('/paths.php/', $included_so_far);
+		if ($paths_php_array) $paths_php_path = reset($paths_php_array);
+		if ($paths_php_path) $rpap = dirname(realpath($paths_php_path)).DIRECTORY_SEPARATOR;
+		else return false;
+	}
+	return $rpap;
+}
 /**
  * Setup tests
  */
