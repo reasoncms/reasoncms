@@ -65,7 +65,9 @@ include_once '/usr/local/webapps/reason/reason_package_local/disco/plasmature/ty
 			if ($site_name == 'sport_baseball_men' || $site_name == 'sport_basketball_men' ||
 				$site_name == 'sport_football_men' || $site_name == 'sport_soccer_men' ||
 				$site_name == 'sport_basketball_women' || $site_name == 'sport_soccer_women' || 
-				$site_name == 'sport_softball_women' || $site_name == 'sport_volleyball_women')
+				$site_name == 'sport_softball_women' || $site_name == 'sport_volleyball_women' ||
+				$site_name == 'sport_swimmingdiving_men' || $site_name == 'sport_swimmingdiving_women' ||
+				$site_name == 'sport_trackfield_men' || $site_name == 'sport_trackfield_women')
 			{
 				$pe = $this->get_value('athlete_position_event');
 				if ($site_name == 'sport_baseball_men' || $site_name == 'sport_softball_women')
@@ -88,11 +90,11 @@ include_once '/usr/local/webapps/reason/reason_package_local/disco/plasmature/ty
 				{
 					$this->add_element('athlete_position_event', 'volleyball_positions', array('display_name' => 'Position'));
 				}
-				else if ($site_name == 'sport_swimming_men' || $site_name == 'sport_swimming_women')
+				else if ($site_name == 'sport_swimmingdiving_men' || $site_name == 'sport_swimmingdiving_women')
 				{
 					$this->add_element('athlete_position_event', 'swimming_events', array('display_name' => 'Event'));
 				}
-				else if ($site_name == 'sport_track_men' || $site_name == 'sport_track_women')
+				else if ($site_name == 'sport_trackfield_men' || $site_name == 'sport_trackfield_women')
 				{
 					$this->add_element('athlete_position_event', 'track_events', array('display_name' => 'Event'));
 				}
