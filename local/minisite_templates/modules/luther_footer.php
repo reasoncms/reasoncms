@@ -75,7 +75,26 @@
           		echo '<span class="country-name">USA</span></div>'."\n";
 	                echo 'Phone: 563-387-2000 or 800-4 LUTHER (<span class="tel">800-458-8437</span>)</div></div>'."\n";
 			}
-			google_analytics();
+			if (!preg_match("/^localhost$/", REASON_HOST, $matches))
+			{
+				if ($this->site_id == id_of('registrar') || $this->site_id == id_of('publication_brian'))
+                        	{
+                                echo '<script type="text/javascript">'."\n";
+                                echo 'var _gaq = _gaq || [];'."\n";
+                                echo "_gaq.push(['_setAccount', 'UA-129020-8']);"."\n";
+                                echo "_gaq.push(['_trackPageview']);"."\n";
+                                echo '(function() {'."\n";
+                                echo "var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;"."\n";
+                                echo "ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';"."\n";
+                                echo "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);"."\n";
+                                echo '})();'."\n";
+                                echo '</script>'."\n";
+                        	}
+                        	else
+                        	{
+                                google_analytics();
+                        	}
+			}
 		}
 	}
 ?>
