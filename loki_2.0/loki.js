@@ -1,7 +1,7 @@
-// Loki WYSIWIG Editor 2.0.4
+// Loki WYSIWIG Editor 2.0.4-reason
 // Copyright (c) 2006 Carleton College
 
-// Compiled 2009-12-01 13:26:11 
+// Compiled 2011-03-29 15:27:18 
 // http://loki-editor.googlecode.com/
 
 
@@ -2305,7 +2305,11 @@ Util.Node.is_leftmost_descendent = function(node, ref)
  */
 Util.Node.insert_after = function(new_node, ref_node)
 {
-	ref_node.parentNode.insertBefore(new_node, ref_node.nextSibling);
+	var parent = ref_node.parentNode;
+	if (ref_node.nextSibling)
+		parent.insertBefore(new_node, ref_node.nextSibling);
+	else
+		parent.appendChild(new_node);
 };
 
 /**
@@ -8592,7 +8596,8 @@ Util.Range.set_end_after = function set_range_end_after(rng, node)
 		// Fake it
 		Util.Range.set_end(node.parentNode, Util.Node.get_offset(node) + 1);
 	}
-} 
+}
+
 // file Util.Request.js
 /**
  * @class  Asynchronus HTTP requests (an XMLHttpRequest wrapper).
@@ -8949,12 +8954,20 @@ Util.Selection.paste_node = function paste_node_at_selection(sel, new_node)
 	rng = Util.Range.create_range(sel);
 	Util.Range.insert_node(rng, new_node);
 
-	// IE
 	if ( Util.Browser.IE )
 	{
-		rng.collapse(false);
-		rng.select();
+		// We only want to do this pre IE 9 so we add this hack.
+		if (parseInt(Util.Browser.get_version()) < 9)
+		{
+			rng.collapse(false);
+			rng.select();
+		}
+		else
+		{
+			Util.Selection.collapse(sel, false);
+		}
 	}
+	else
 	// In Gecko, move selection after node
 	{
 		// Select all first, to avoid the annoying Gecko
@@ -10173,7 +10186,8 @@ Util.Unsupported_Error = function UnsupportedError(call)
 		' is available from this browser.');
 	error.name = 'Util.Unsupported_Error';
 	return error;
-} 
+}
+
 // file Util.Window.js
 /**
  * Declares instance variables. <code>this.window</code>,
@@ -11941,7 +11955,6 @@ UI.Clean = new Object;
  */
 UI.Clean.clean = function(root, settings, live, block_settings)
 {
-	
 	/**
 	 * Removes the given node from the tree.
 	 */
@@ -16073,10 +16086,10 @@ UI.Link_Helper = function()
 						tag.removeAttribute(name);
 				}
 				
-				set_attribute('href', uri);
 				set_attribute('target', (new_window) ? '_blank' : null);
 				set_attribute('title', title);
 				set_attribute('loki:onclick', onclick);
+				set_attribute('href', uri);
 			});
 			
 			// Collapse selection to end so people can see the link and
@@ -21608,7 +21621,8 @@ UI.Loki = function Loki()
 	 */
 	this.textarea_to_iframe = function()
 	{
-		self.set_html(_textarea.value);
+		// this line crashes IE9 and i am not convinced it is needed since it gets called in _init_async()
+		// self.set_html(_textarea.value);
 		_root.replaceChild(_iframe_wrapper, _textarea);
 		_root.appendChild(_hidden);
 		_init_async();
@@ -22627,28 +22641,32 @@ UI.Loki = function Loki()
 		function submit_handler(ev)
 		{
 			try {
-				self.copy_iframe_to_hidden();
-			} catch (ex) {
-				Util.Event.prevent_default(ev);
-				var sent = self.crashed(ex);
-				alert("An error occurred that prevented your document from " +
-					"being safely submitted." +
-					(sent ? " A report of this error has been sent." : "") +
-					"\n\nTechnical details:\n" +
-					self.describe_error(ex));
-				
-				if (typeof(console) == 'object' && 'error' in console) {
-					console.error('Failed to generate HTML:',
-						ex);
-				}
-				
-				throw ex;
-				return false;
+				self.copy_iframe_to_hidden(); // IE9 will fail here if currently in source view
 			}
-			
-			return true;
-		}
-		
+			catch (e) {
+				try {
+					if (_is_textarea_active()) self.textarea_to_iframe();
+					self.copy_iframe_to_hidden();
+				}
+				catch (f)
+				{
+					Util.Event.prevent_default(ev);
+					var sent = self.crashed(e);
+					alert("An error occurred that prevented your document from " + "being safely submitted." +
+                    (sent ? " A report of this error has been sent." : "") +
+                    "\n\nTechnical details:\n" +
+                    self.describe_error(e));
+                    
+                    if (typeof(console) == 'object' && 'error' in console)
+                    {
+                    	console.error('Failed to generate HTML:', e);
+                    }
+                    throw e;
+                }
+                return false;
+            }
+            return true;
+        }
 		
 		// this copies the changes made in the iframe back to the hidden form element
 		Util.Event.add_event_listener(_hidden.form, 'submit',
@@ -22967,7 +22985,7 @@ UI.Loki = function Loki()
 		}
 	};
 };
-UI.Loki.prototype.version = "2.0.4";
+UI.Loki.prototype.version = "2.0.4-reason";
 
 UI.Loki.Options = new Util.Chooser();
 UI.Loki.Options._add_bundled = function add_bundled_loki_options() {
@@ -23203,7 +23221,7 @@ var Loki = {
 	 * The Loki version.
 	 * @type string
 	 */
-	version: "2.0.4",
+	version: "2.0.4-reason",
 	
 	/** @private */
 	_pending: [],
