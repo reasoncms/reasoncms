@@ -138,7 +138,7 @@ class DiscoveryCampsOne extends FormStep
             ),
             'camp_9' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => 'July 18-22** Grades 6-9 $150',
+                'display_name' => 'July 18-22** Grades 2-5 $150',
                 'comments' => '<br><em>The Edible Earth</em>'
             ),
             'shuttle_comment' => array(
