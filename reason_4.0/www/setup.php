@@ -584,7 +584,7 @@ function check_loki_accessible_over_http()
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(LOKI_2_HTTP_PATH, "/"));
 			if (is_writable(dirname($symlink_loc))) symlink($my_loki_path, $symlink_loc);
 		}
-		$accessible = check_accessible_over_http($path, 'loki');
+		$accessible = check_accessible_over_http($path, 'Loki WYSIWYG Editor');
 		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
 	}
 	if ($accessible) return msg('<span class="success">loki 2'.$fixed_str.' is accessible over http</span> - check passed', true);
