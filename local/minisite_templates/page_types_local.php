@@ -506,7 +506,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'pre_sidebar' => '',
                 ),
                 'sports_roster' => array(
-                    'main' => 'sports_rosters_test',
+                    'main' => 'luther_sports_roster',
                 ),
                 'spotlight_archive' => array(
                     'main_post' => array( // Spotlights

@@ -42,6 +42,8 @@
 				//echo '<script src="/javascripts/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>'."\n";
 				echo '<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>'."\n";
 				echo '<script src="/javascripts/jquery.tmpl.js" type="text/javascript"></script>'."\n";
+				echo '<script src="/javascripts/jquery.metadata.js" type="text/javascript"></script>'."\n";
+				echo '<script src="/javascripts/tablesorter.min.js" type="text/javascript"></script>'."\n";
 				echo '<script src="/javascripts/jquery.init.js" type="text/javascript"></script>'."\n";
 				
 			}
