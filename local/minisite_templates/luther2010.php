@@ -53,13 +53,28 @@ class LutherTemplate2010 extends MinisiteTemplate
 		
 		// tracking for YouTube video that uses highslide to view
 		// uses "a name=" field for the video page name in analytics
-		echo '<script type="text/javascript">'."\n";
-		echo 'hs.Expander.prototype.onAfterExpand = function(sender) {
-				if (this.a.name != "") {
-					pageTracker._trackPageview(this.a.name);
-				}
-			}'."\n";
-		echo '</script>'."\n";
+		if (!preg_match("/^localhost$/", REASON_HOST, $matches))
+		{
+			echo '<script type="text/javascript">'."\n";
+			if ($this->site_id == id_of('registrar') || $this->site_id == id_of('publication_brian'))
+			{
+				echo 'hs.Expander.prototype.onAfterExpand = function(sender) {
+					if (this.a.name != "") {
+						_gaq.push[\'_trackEvent\', \'Videos\', \'Play\', this.a.name];
+					}
+				}'."\n";
+				
+			}
+			else
+			{
+			echo 'hs.Expander.prototype.onAfterExpand = function(sender) {
+					if (this.a.name != "") {
+						pageTracker._trackPageview(this.a.name);
+					}
+				}'."\n";
+			}
+			echo '</script>'."\n";
+		}
 
 		echo '</head>'."\n";
 
