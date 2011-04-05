@@ -60,7 +60,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			{
 				echo 'hs.Expander.prototype.onAfterExpand = function(sender) {
 					if (this.a.name != "") {
-						_gaq.push[\'_trackEvent\', \'Videos\', \'Play\', this.a.name];
+						_gaq.push([\'_trackEvent\', \'video\', \'click\', this.a.name]);
 					}
 				}'."\n";
 				
