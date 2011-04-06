@@ -95,6 +95,44 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 	}
 
+	function get_title()
+	{
+		$ret = '';
+		if($this->use_default_org_name_in_page_title)
+		{
+			$ret .= FULL_ORGANIZATION_NAME.': ';
+		}
+		if ($this->site_id == id_of('luther_home'))
+		{
+			$ret .= "Luther Home";
+		}
+		else
+		{
+			$ret .= $this->site_info->get_value('name');
+		}
+		
+		if(carl_strtolower($this->site_info->get_value('name')) != carl_strtolower($this->title))
+		{
+			$ret .= ": " . $this->title;
+		}
+		$crumbs = &$this->_get_crumbs_object();
+		// Take the last-added crumb and add it to the page title
+		if($last_crumb = $crumbs->get_last_crumb() )
+		{
+			if(empty($last_crumb['id']) || $last_crumb['id'] != $this->page_id)
+			{
+				$ret .= ': '.$last_crumb['page_name'];
+			}
+		}
+		if (!empty ($this->textonly) )
+		{
+			$ret .= ' (Text Only)';
+		}
+		$ret = reason_htmlspecialchars(strip_tags($ret));
+		$this->head_items->add_head_item('title',array(),$ret, true);
+		//return $ret;
+	}
+
 	function show_body_tableless()
 	{
 		if (!empty($this->textonly))
