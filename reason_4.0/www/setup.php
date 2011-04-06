@@ -573,7 +573,7 @@ function check_loki_accessible_over_http()
 	global $fix_mode_enabled;
 	$fixed_str = '';
 	$path = carl_construct_link(array(''), array(''), LOKI_2_HTTP_PATH . 'loki.js');
-	$accessible = check_accessible_over_http($path, 'Loki WYSIWIG Editor');
+	$accessible = check_accessible_over_http($path, 'loki-editor');
 	if (!$accessible && $fix_mode_enabled) // lets try to repair this
 	{
 		// if LOKI_2_INC - strip off the helpers/php part
@@ -584,7 +584,7 @@ function check_loki_accessible_over_http()
 			$symlink_loc = str_replace("//", "/", WEB_PATH . rtrim(LOKI_2_HTTP_PATH, "/"));
 			if (is_writable(dirname($symlink_loc))) symlink($my_loki_path, $symlink_loc);
 		}
-		$accessible = check_accessible_over_http($path, 'Loki WYSIWYG Editor');
+		$accessible = check_accessible_over_http($path, 'loki-editor');
 		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
 	}
 	if ($accessible) return msg('<span class="success">loki 2'.$fixed_str.' is accessible over http</span> - check passed', true);
