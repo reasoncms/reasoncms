@@ -78,7 +78,7 @@ class geocoder
 	 * 
 	 * @todo ip6?
 	 * @todo somehow utilize a curl timeout?
-	 * @return boolean true / false
+	 * @return mixed array of values or false on failure 
 	 */
 	function set_address_from_ip($ip)
 	{
@@ -91,44 +91,68 @@ class geocoder
 			$address = $cache->fetch();
 			if ($address === FALSE)
 			{
-				$address = '';
-				if (!empty($ip) && defined("REASON_IPINFODB_API_KEY") && constant("REASON_IPINFODB_API_KEY"))
+				$address = array();
+				if (defined("REASON_IPINFODB_API_KEY") && constant("REASON_IPINFODB_API_KEY"))
 				{
-					$ip = urlencode($ip);
-					$response = carl_util_get_url_contents('http://api.ipinfodb.com/v3/ip-city/?key='.REASON_IPINFODB_API_KEY.'&ip='.$ip.'&format=json');
+					$request = 'http://api.ipinfodb.com/v3/ip-city/?key='.REASON_IPINFODB_API_KEY.'&ip='.urlencode($ip).'&format=json';
+					$response = carl_util_get_url_contents($request);
 					$decoded = json_decode($response, true);
 					$pieces = array();
-					if (!empty($decoded['cityName'])) array_push($pieces, $decoded['cityName']);
-					if (!empty($decoded['regionName'])) array_push($pieces, $decoded['regionName']);
-					if (!empty($decoded['countryName'])) array_push($pieces, $decoded['countryName']);
-					
-					// only return result if we have more than just country.
-					if (!empty($decoded['cityName']) || !empty($decoded['regionName']))
-					{
-						$address = implode(", ", $pieces);
-					}
+					if (!empty($decoded['cityName'])) $address['city'] = ucwords(strtolower($decoded['cityName']));
+					if (!empty($decoded['regionName'])) $address['region'] = ucwords(strtolower($decoded['regionName']));
+					if (!empty($decoded['countryName'])) $address['country'] = ucwords(strtolower($decoded['countryName']));
+					if (!empty($decoded['zipCode'])) $address['zip'] = $decoded['zipCode'];
+					if (!empty($decoded['latitude'])) $address['geocoord']['lat'] = $decoded['latitude'];
+					if (!empty($decoded['longitude'])) $address['geocoord']['lon'] = $decoded['longitude'];
 				}
-				elseif (!empty($ip)) // we'll use the free service api.hostip.info - only return a result if we determine a city and country
+				
+				if (empty($address)) // fall back to the free service api.hostip.info
 				{
-					$ip = urlencode($ip);
-					$response = carl_util_get_url_contents('http://api.hostip.info/?ip='.$ip);
-					// api.hostip.info returns XML - lets parse with simplexml
+					$request = 'http://api.hostip.info/?position=true&ip='.urlencode($ip);
+					$response = carl_util_get_url_contents($request);
+					// api.hostip.info returns XML - let's parse with simplexml
 					if ($response && $xml = simplexml_load_string($response))
 					{
-						$city = $xml->children('gml', TRUE)->featureMember->children('', TRUE)->Hostip->children('gml', TRUE)->name;
+						$citystate = $xml->children('gml', TRUE)->featureMember->children('', TRUE)->Hostip->children('gml', TRUE)->name;
 						$country = $xml->children('gml', TRUE)->featureMember->children('', TRUE)->Hostip->countryName;
-						if (strtolower($city) == '(unknown city)') $city = false;
-						if ( !empty($city) && !empty($country))
+						if ($xml->children('gml', TRUE)->featureMember->children('', TRUE)->Hostip->ipLocation)
+							$coord = $xml->children('gml', TRUE)->featureMember->children('', TRUE)->Hostip->ipLocation->children('gml', TRUE)->pointProperty->children('gml', TRUE)->Point->children('gml', TRUE)->coordinates;
+						// city typically returns "City, State/Region"
+						if (strtolower($citystate) != '(unknown city)')
 						{
-							$address = $city . ', ' . $country;
+							$cityparts = preg_split('/,\s+/', $citystate, 2);
+							$address['city'] = $cityparts[0];
+							if (isset($cityparts[1])) $address['region'] = $cityparts[1];
+						}
+						if ($country) $address['country'] = ucwords(strtolower($country));
+						// coord looks like -88.4588,41.7696
+						if (isset($coord)) 
+						{
+							$coords = preg_split('/[,\s]+/', $coord, 2);
+							if (count($coords) == 2)
+							{
+								$address['geocoord']['lat']= $coords[0];
+								$address['geocoord']['lon']= $coords[1];
+							}
 						}
 					}
 				}
 				 
-				// save the result to the cache - even if it is the empty string.
+				// save the result to the cache - even if it is the empty array.
 				$cache->set($address);
 			}
-			if (!empty($address)) $this->set_address($address);
+			
+			// If we have some data, set an address string that can be used for additional geocoding if needed
+			if (count($address)) 
+			{
+				$parts = array();
+				if (isset($address['city'])) $parts[] = $address['city'];
+				if (isset($address['region'])) $parts[] = $address['region'];
+				if (isset($address['zip'])) $parts[] = $address['zip'];
+				if (isset($address['country'])) $parts[] = $address['country'];
+
+				$this->set_address(join(', ', $parts));
+			}
 			return ($address);
 		}
 		return false;
