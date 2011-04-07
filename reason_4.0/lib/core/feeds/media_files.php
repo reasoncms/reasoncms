@@ -242,7 +242,7 @@ class mediaFileRSS extends ReasonRSS
 			if (!empty($url))
 			{
 				$ext = strtolower(substr($url, -4));
-				if ($ext == '.mp4') $return[] = 'type="'.$valid_formats['Quicktime'].'"';
+				if ($ext == '.mp4') $return[] = 'type="'.$valid_formats['MP4'].'"';
 			}
 		}
 		return $return;
@@ -306,6 +306,6 @@ function validate_media_format_for_rss_enclosure( $id )
  */
 function reason_get_valid_formats_for_podcasting()
 {
-	return array('Quicktime'=>'video/quicktime','MP3'=>'audio/mpeg');
+	return array('Quicktime'=>'video/quicktime','MP3'=>'audio/mpeg','MP4'=>'video/mp4');
 }
 ?>
