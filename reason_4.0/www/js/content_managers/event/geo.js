@@ -606,7 +606,7 @@ $(document).ready(function()
     		},
     		success: function(myjson)
     		{
-    			if (myjson.latitute && myjson.longitude)
+    			if (myjson.latitude && myjson.longitude)
     			{
     				loc = new google.maps.LatLng(myjson.latitude, myjson.longitude);
     			}
