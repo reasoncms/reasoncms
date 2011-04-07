@@ -108,9 +108,11 @@ class mediaFileFeed extends defaultFeed
 		$this->feed->es->add_relation('url.url != ""');
 		$this->feed->es->add_relation('av.media_is_progressively_downloadable != "false"');
 		$this->feed->es->set_order('av.av_part_number ASC');
+		
 		$ok_formats = array_keys(reason_get_valid_formats_for_podcasting());
 		$ok_formats = array_map('addslashes',$ok_formats);
-		$this->feed->es->add_relation('av.media_format IN ("'.implode('","',$ok_formats).'")');
+		// this is a hack because .mp4s should be included even if the media_format field is "invalid".
+		$this->feed->es->add_relation('((av.media_format IN ("'.implode('","',$ok_formats).'")) OR (url.url LIKE "%.mp4"))');
 		$this->feed->es->set_site(NULL);
 		$this->feed->es->set_num(-1);
 
@@ -234,6 +236,15 @@ class mediaFileRSS extends ReasonRSS
 		{
 			$return[] = 'type="'.$valid_formats[$item->get_value('media_format')].'"';
 		}
+		else // this is a hack because .mp4s should be included even if the media_format field is "invalid".
+		{
+			$url = $item->get_value('url');
+			if (!empty($url))
+			{
+				$ext = strtolower(substr($url, -4));
+				if ($ext == '.mp4') $return[] = 'type="'.$valid_formats['Quicktime'].'"';
+			}
+		}
 		return $return;
 	}
 	function make_title( $id )
@@ -277,8 +288,15 @@ function validate_media_format_for_rss_enclosure( $id )
 	}
 	else
 	{
-		return false;
+		// this is a hack because .mp4s should be included even if the media_format field is "invalid".
+		$url = $entity->get_value('url');
+		if (!empty($url))
+		{
+			$ext = strtolower(substr($url, -4));
+			if ($ext == '.mp4') return true;
+		}
 	}
+	return false;
 }
 /**
  * Get an array of formats considered acceptable to place in a podcast
