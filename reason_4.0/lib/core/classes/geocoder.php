@@ -74,8 +74,6 @@ class geocoder
 	 * - api.ipinfodb.com
 	 * - api.hostip.info
 	 *
-	 * We will only set the address if we get a level of specificity beyond the country from our ip geocode attempt.
-	 * 
 	 * @todo ip6?
 	 * @todo somehow utilize a curl timeout?
 	 * @return mixed array of values or false on failure 
