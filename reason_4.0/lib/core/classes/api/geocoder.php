@@ -20,6 +20,10 @@ reason_include_once('classes/geocoder.php');
  * - Empty JSON object {} if the location could not be determined.
  * - 404 if called but not setup properly.
  *
+ * A few notes
+ *
+ * - When using ip address as the source, the location is only populated if the ip can be geocoded to the city level.
+ *
  * @version .1 
  * @author Nathan White
  */
@@ -125,8 +129,20 @@ class ReasonGeocoderAPI extends CarlUtilAPI
 				elseif ($this->get_source() == 'ip')
 				{
 					$ip = ($this->get_value()) ? $this->get_value() : $_SERVER['REMOTE_ADDR'];
-					$success = $geo_coder->set_address_from_ip($ip);
-					if ($success) $results = $geo_coder->get_geocode();
+					$result = $geo_coder->set_address_from_ip($ip);
+					
+					if ($result && is_string($result)) // leave string handling in case we have cached results that come as string.
+					{
+						$results = $geo_coder->get_geocode();
+					}
+					elseif ($result && is_array($result)) // result is now an array - if we have a city, save the result.
+					{
+						if (isset($result['city'])) // we have sufficient specificity
+						{
+							$results = $geo_coder->get_geocode();
+						}
+						else $results = false;
+					}
 					else $results = false;
 				}
 				if ($results)
