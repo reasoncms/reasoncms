@@ -85,6 +85,59 @@
 			'left' => 'L',
 			'right' => 'R',
 		);
+	var $statesAP = array(
+                       'AL' => 'Ala.',
+                       'AK' => 'Alaska',
+                       'AZ' => 'Ariz.',
+                       'AR' => 'Ark.',
+                       'CA' => 'Calif.',
+                       'CO' => 'Colo.',
+                       'CT' => 'Conn.',
+                       'DE' => 'Del.',
+                       'DC' => 'D.C.',
+                       'FL' => 'Fla.',
+                       'GA' => 'Ga.',
+                       'HI' => 'Hawaii',
+                       'ID' => 'Idaho',
+                       'IL' => 'Ill.',
+                       'IN' => 'Ind.',
+                       'IA' => 'Iowa',
+                       'KS' => 'Kan.',
+                       'KY' => 'Ky.',
+                       'LA' => 'La.',
+                       'ME' => 'Maine',
+                       'MD' => 'Md.',
+                       'MA' => 'Mass.',
+                       'MI' => 'Mich.',
+                       'MN' => 'Minn.',
+                       'MS' => 'Miss.',
+                       'MO' => 'Mo.',
+                       'MT' => 'Mont.',
+                       'NE' => 'Neb.',
+                       'NV' => 'Nev.',
+                       'NH' => 'N.H.',
+                       'NJ' => 'N.J.',
+                       'NM' => ' N.M.',
+                       'NY' => 'N.Y.',
+                       'NC' => 'N.C.',
+                       'ND' => ' N.D.',
+                       'OH' => 'Ohio',
+                       'OK' => ' Okla.',
+                       'OR' => 'Ore.',
+                       'PA' => 'Pa.',
+                       'RI' => 'R.I.',
+                       'SC' => 'S.C.',
+                       'SD' => 'S.D.',
+                       'TN' => 'Tenn.',
+                       'TX' => 'Texas',
+                       'UT' => 'Utah',
+                       'VT' => 'Vt.',
+                       'VA' => 'Va.',
+                       'WA' => 'Wash.',
+                       'WV' => 'W.Va.',
+                       'WI' => 'Wis.',
+                       'WY' => 'Wyo.',
+               );
 
 	var $_columns = array();
 
@@ -257,6 +310,10 @@
 							{
 								//$str .= (string)((int)($player[$col] / 12) . '\' ' . str_pad($player[$col] % 12, 2, '0', STR_PAD_LEFT) . '"');
 								$str .= (string)((int)($player[$col] / 12) . '\' ' . $player[$col] % 12 . '"');
+							}
+							else if ($col == 'athlete_hometown_state' && $this->statesAP[$player[$col]] != '')
+							{
+								$str .= $this->statesAP[$player[$col]];
 							}
 							else
 							{
