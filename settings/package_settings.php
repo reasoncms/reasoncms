@@ -165,4 +165,6 @@ define('LIBCURLEMU_INC',INCLUDE_PATH.'libcurlemu-1.0.4/');
 define('JQUERY_INC',INCLUDE_PATH.'jquery/');
 define('JQUERY_HTTP_PATH','/jquery/');
 define('JQUERY_URL',JQUERY_HTTP_PATH.'jquery_latest.js');
+define('JQUERY_UI_URL',JQUERY_HTTP_PATH.'jquery_ui_latest.js');
+define('JQUERY_UI_CSS_URL',JQUERY_HTTP_PATH.'css/smoothness/jquery-ui.css');
 ?>
