@@ -99,6 +99,18 @@ reason_settings.php used in your Reason instance. You can copy and paste the fol
  */
 define('REASON_IPINFODB_API_KEY', '');</textarea>
 </li>
+
+<li><strong>JQUERY_UI_URL</strong><p>You should make sure the setting is defined in the
+package_settings.php file used in your Reason instance. You can copy and paste the following:</p>
+<textarea rows="2" cols="110">
+define('JQUERY_UI_URL',JQUERY_HTTP_PATH.'jquery_ui_latest.js');</textarea>
+</li>
+
+<li><strong>JQUERY_UI_CSS_URL</strong><p>You should make sure the setting is defined in the
+package_settings.php file used in your Reason instance. You can copy and paste the following:</p>
+<textarea rows="2" cols="110">
+define('JQUERY_UI_CSS_URL',JQUERY_HTTP_PATH.'css/smoothness/jquery-ui.css');</textarea>
+</li>
 </ol>
 
 
