@@ -27,12 +27,6 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 	 * @var string
 	 */
 	var $delimiter2 = '|';
-	/**
-	 * The username of the currently logged-in user
-	 * @var string
-	 */
-	var $user_netID;
-	var $session;
 	var $admin_messages;
 
 	var $extra_params = array('form_include' => 'minisite_templates/modules/event_slot_registration/event_slot_registration_form.php' );
@@ -41,9 +35,29 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 	{
  		parent::init($args);
   		$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/events/event_slot.css');
+  		$this->verify_slot_if_provided();
 		reason_include_once($this->params['form_include']);
 	}
 
+	/**
+	 * We do some verification of inputs throughout - but lets make sure a legitimate slot is being requested
+	 */
+	function verify_slot_if_provided()
+	{
+		if (!empty($this->request['slot_id']))
+		{
+			$slot = new entity($this->request['slot_id']);
+			$ok = reason_is_entity($slot, 'registration_slot_type');
+			if (!$ok)
+			{
+				$redir = carl_make_redirect(array('slot_id' => ''));
+				header("Location: " . $redir );
+				exit;
+			}
+		}
+		return true;
+	}
+	
 	function handle_params($params)
 	{
 		$this->acceptable_params += $this->extra_params;
@@ -54,7 +68,7 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 	{
 		$cleanup_rules = parent::get_cleanup_rules();
 		$cleanup_rules['slot_id'] = array('function' => 'turn_into_int');
-		$cleanup_rules['admin_id'] = array('function' => 'turn_into_int');
+		$cleanup_rules['admin_view'] = array('function' => 'check_against_array', 'extra_args' => array('true'));
 		$cleanup_rules['delete_registrant'] = array('function' => 'turn_into_string');
 		return $cleanup_rules;
 	}
@@ -64,8 +78,7 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		if (($this->event->get_values() && $this->event->get_value('type') == id_of('event_type')) && ($this->event->get_value('show_hide') == 'show'))
 		{
 			$this->show_event_details();
-			$this->registration_logic();
-			echo $this->get_login_logout_link();				
+			$this->registration_logic();			
 		}
 		else
 			$this->show_event_error();
@@ -76,12 +89,12 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		echo '<div id="slotInfo">'."\n";
 		if(!($this->event->get_value('last_occurence') < date('Y-m-d')))
 		{
-			if(!empty($this->request['delete_registrant']) && $this->request['admin_id'] == $this->user_is_admin() )
+			if(!empty($this->request['delete_registrant']) && $this->user_is_admin() )
 			{
 				$this->delete_registrant();
 			}
 		
-			if(!empty($this->request['admin_id']) && $this->request['admin_id'] == $this->user_is_admin() && $this->validate_date() )
+			if(!empty($this->request['admin_view']) && $this->validate_date() && $this->user_is_admin())
 			{
 				$this->show_admin_view();
 			}
@@ -118,7 +131,6 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 			}
 			else
 			{
-				carl_make_redirect(array('date' => ''));
 				header("Location: " . carl_make_redirect(array('date' => '')));
 				exit;
 			}
@@ -168,10 +180,9 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 					echo '<li><a href="'.$this->construct_link($link_vars).'" title = "Register for '.htmlspecialchars($slot->get_value('name'), ENT_QUOTES).'">Register Now</a></li>'."\n";;
 				}
 				//if user is admin of slot, display admin link
-				$admin_id = $this->user_is_admin();
-				if($admin_id)
+				if($this->user_is_admin(false))
 				{
-					$link_vars = array('event_id'=>$this->request['event_id'], 'date'=>$this->request['date'], 'slot_id'=>$slot->id(), 'admin_id'=>$admin_id);
+					$link_vars = array('event_id'=>$this->request['event_id'], 'date'=>$this->request['date'], 'slot_id'=>$slot->id(), 'admin_view'=>'true');
 					echo '<li><a href="'.$this->construct_link($link_vars).'" title = "Administer '.htmlspecialchars($slot->get_value('name'), ENT_QUOTES).'">Administer '.$slot->get_value('name').'</a></li>'."\n";;
 				}
 				echo '</ul>'."\n";
@@ -233,7 +244,12 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		$slot_entity = get_entity_by_id($this->request['slot_id']);
 		echo '<div class="form">'."\n";
 		echo '<h3>Register for '.$this->event->get_value('name').' ('.$slot_entity['name'].')'.'</h3>'."\n";
-		$form = new EventSlotRegistrationForm($this->event, $this->request, $this->delimiter1, $this->delimiter2, $this->gen_cancel_link());
+		
+		$class_name = (isset($GLOBALS[ '_slot_registration_view_class_names' ][ basename( $this->params['form_include'], '.php') ]))
+					? $GLOBALS[ '_slot_registration_view_class_names' ][ basename( $this->params['form_include'], '.php') ]
+					: 'EventSlotRegistrationForm';
+		
+		$form = new $class_name($this->event, $this->request, $this->delimiter1, $this->delimiter2, $this->gen_cancel_link());
 		$possible_date =& $this->get_possible_registration_dates();
 		if (count($possible_date) > 1)
 		{
@@ -274,7 +290,7 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 				echo '<td>'.htmlspecialchars($registrant_pieces[1], ENT_QUOTES).'</td>'."\n";
 				echo '<td>'.htmlspecialchars($registrant_pieces[2], ENT_QUOTES).'</td>'."\n";
 				echo '<td>'.date('m/d/Y', $registrant_pieces[3]).'</td>'."\n";
-				$link_vars = array('event_id'=>$this->request['event_id'], 'date'=>$this->request['date'], 'slot_id'=>$slot['id'], 'admin_id'=>$this->request['admin_id'], 'delete_registrant'=>md5($registrant));
+				$link_vars = array('event_id'=>$this->request['event_id'], 'date'=>$this->request['date'], 'slot_id'=>$slot['id'], 'admin_view'=>'true', 'delete_registrant'=>md5($registrant));
 				echo '<td><a href="'.$this->construct_link($link_vars).'" title = "Delete '.htmlspecialchars($registrant_pieces[1], ENT_QUOTES).'">Delete this registrant</a></td>'."\n";
 				echo '</tr>'."\n";
 				$thisrow = ($thisrow == 'odd') ? 'even' : 'odd';
@@ -283,7 +299,9 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 			echo '</div>';
 			echo $this->admin_messages;
 		}
-		else echo '<p>There are currently no registrations for this event</p>';
+		else echo '<p>There are currently no registrations for this event.</p>';
+		$link = carl_make_link(array('admin_view' => ''));
+		echo '<p><a href="'.$link.'">Leave administrative view</a></p>';
 		echo '</div>'."\n";
 	}
 
@@ -338,25 +356,14 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		return $registrants; 				
 	}
 	
-	function user_is_admin()
+	function user_is_admin($force_login = true)
 	{
-		if($this->get_authentication())
+		if ($force_login)
 		{
-			$es = new entity_selector();
-			$es->add_type( id_of( 'user' ) );
-			$es->add_right_relationship( $this->site_id , relationship_id_of( 'site_to_user' ) );
-			$admins = $es->run_one();
-			foreach($admins as $user_entity)
-			{
-				if($user_entity->get_value('name') == $this->user_netID)
-				{
-					return $user_entity->id();
-				}
-			}
-			return false;
+			$netid = reason_require_authentication();
+			return reason_username_has_access_to_site($netid, $this->site_id);
 		}
-		else
-			return false;
+		else return reason_check_access_to_site($this->site_id);
 	}
  	
 	function delete_registrant()
@@ -399,71 +406,6 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 		else
 			$this->admin_messages .=  '<h4>Sorry</h4><p>Could not find registrant to delete - most likely they were already deleted.</p>';
 
-	}
-
-
-	
-	/**	
-	* Returns the current user's netID, or false if the user is not logged in.
-	* @return string user's netID
-	*/	
-	function get_authentication()
-	{
-		if(empty($this->user_netID))
-		{
-			if(!empty($_SERVER['REMOTE_USER']))
-			{
-				$this->user_netID = $_SERVER['REMOTE_USER'];
-				return $this->user_netID;
-			}
-			else
-			{
-				return $this->get_authentication_from_session();
-			}
-		}
-		else
-		{
-			return $this->user_netID;
-		}
-	}
-	function get_authentication_from_session()
-	{
-		$this->session =& get_reason_session();
-		if($this->session->exists())
-		{
-			force_secure_if_available();
-			if( !$this->session->has_started() )
-			{
-				$this->session->start();
-			}
-			$this->user_netID = $this->session->get( 'username' );
-			return $this->user_netID;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
-	function get_login_logout_link()
-	{
-		$sess_auth = $this->get_authentication_from_session();
-		$auth = $this->get_authentication();
-		$ret = '<div class="loginlogout">';
-		if(!empty($sess_auth))
-		{
-			$ret .= 'Logged in: '.$sess_auth.' <a href="'.REASON_LOGIN_URL.'?logout=true">Log Out</a>';
-		}
-		elseif(!empty($auth))
-		{
-			$ret .= 'Logged in as '.$auth;
-		}
-		else
-		{
-			$ret .= '<a href="'.REASON_LOGIN_URL.'">Log In</a>';
-		}
-		$ret .= '</div>'."\n";
-		return $ret;
 	}
 	
 	function send_delete_error_message($registrant_data)

@@ -17,6 +17,9 @@ include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
  */
 reason_include_once( 'function_libraries/user_functions.php');
 reason_include_once( 'classes/user.php');
+
+$GLOBALS[ '_slot_registration_view_class_names' ][ basename( __FILE__, '.php') ] = 'EventSlotRegistrationForm';
+
 /**
  * A form by which people can register for an event's registration slot
  */
@@ -54,9 +57,11 @@ class EventSlotRegistrationForm extends Disco{
 	var $event;
 	var $request_array;
 	var $cancel_link;
-	var $show_date_change_link = false;
 	
-	function EventSlotRegistrationForm($event_entity, $request_array, $delimiter1, $delimiter2, $cancel_link)
+	var $show_date_change_link = false;
+	var $include_time_in_email = true;
+	
+	function __construct($event_entity, $request_array, $delimiter1, $delimiter2, $cancel_link)
 	{
 		$this->event = $event_entity;
 		$this->request_array = $request_array;
@@ -138,16 +143,20 @@ class EventSlotRegistrationForm extends Disco{
 		$dir->search_by_attribute('ds_username', $this->event->get_value('contact_username'), array('ds_email','ds_fullname','ds_phone',));
 		$to = $dir->get_first_value('ds_email');
 
-		$subject='Event Registration: '.$this->get_value('name').' for '.$this->event->get_value('name');
+		$subject = 'Event Registration: '.$this->get_value('name').' for '.$this->event->get_value('name');
 		$body = $this->get_value('name').' has registered for '.$this->event->get_value('name')."\n\n";
-		$body.='Name: '.$this->get_value('name')."\n";
-		$body.="E-mail Address: ".$this->get_value('email')."\n";
+		$body .= 'Name: '.$this->get_value('name')."\n";
+		$body .= "E-mail Address: ".$this->get_value('email')."\n";
 		$body .= 'Date: '.prettify_mysql_datetime($this->request_array['date'], 'm/d/Y')."\n";
-		$time = $this->event->get_value('datetime');
-		$time_parts = explode(' ',$time);
-		if($time_parts[1] != '00:00:00')
+		
+		if ($this->include_time_in_email)
 		{
-			$body.= 'Time: '.prettify_mysql_datetime($time,'g:i a')."\n";
+			$time = $this->event->get_value('datetime');
+			$time_parts = explode(' ',$time);
+			if($time_parts[1] != '00:00:00')
+			{
+				$body .= 'Time: '.prettify_mysql_datetime($time,'g:i a')."\n";
+			}
 		}
 		$location = $this->event->get_value('location');
 		if(!empty($location))
@@ -184,10 +193,10 @@ class EventSlotRegistrationForm extends Disco{
 	{
 		echo '<div class="formResponse">'."\n";
 		echo '<h4>Sorry.</h4>'."\n";
-		echo '<p>We were unable to process your registration at this time. The Web Services Group has been notified of the error and will investigate the cause. Please try again later.</p>';
+		echo '<p>We were unable to process your registration at this time. The webmaster ('.WEBMASTER_NAME.') has been notified. Please try again later.</p>';
 		echo '</div>'."\n";
 		
-		$to = 'nwhite@acs.carleton.edu';
+		$to = WEBMASTER_EMAIL_ADDRESS;
 		$subject = 'Slot registration error';
 		$body = "There was an error with slot registration for ".$this->event->get_value('name').'.'."\n\n";
 		$body = "The following person was not successfully registered\n\n";
