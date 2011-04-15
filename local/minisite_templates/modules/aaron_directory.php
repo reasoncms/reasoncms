@@ -42,6 +42,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                                             'student'=>'Students only',
                                             'faculty'=>'Faculty only',
                                             'staff'=>'Staff only',
+                                            'alumni'=>'Alumni only',
                             ),
             ),
             'phone_number' => array('type' => 'text','size' => '15',
@@ -131,13 +132,14 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             //                'display_name' => 'Show pictures',
             //                'type' => 'checkboxfirst',
             //),
+        //removing display_as, and chnaged below so that it would default display as: book (not list)
             'display_as' => array(
                             'display_name' => 'Display as',
                             'type' => 'select_no_sort',
                             //'options' => array('list'=>'Directory Listing',
                             //                'book'=>'Photo Book',
                             'options' => array('book'=>'Links',
-                                            'list'=>'Lists',
+                                               'list'=>'Lists',
                             ),
             ),
     );
@@ -169,6 +171,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         parent::init( $args );
         if($head_items =& $this->get_head_items()) {
             $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
+            $head_items->add_javascript('/reason/js/tableSorter.js');
             // iphone support; scales to screen and disables zooming
             $head_items->add_head_item('meta', array('name'=>'viewport','content'=>'width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'));
         }
@@ -264,6 +267,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         // If we have some results, call the appropriate display method
         if (count($entries) ) {
             //$this->scrub_results($entries);
+            //commenting out list to use only book
             switch ($this->view) {
                 case 'pdf':
                     if ($form->get_value('display_as') == 'book')
@@ -298,6 +302,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $this->form->set_value('pictures', true);
         $this->form->set_value('exact', true);
 
+        //$this->form->set_value('display_as', 'book');
         if ($this->context == 'external') {
             $this->form->remove_element('phone_number');
             $this->form->remove_element('email_address');
@@ -558,7 +563,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             echo '<table cellspacing="0" cellpadding="3" border="0"><tbody>';
             $logged_user = reason_check_authentication();
             //if ($data['uid'][0] == "burkaa01") {
-            if ($logged_user != "") {
+            //if(!empty($search_for) && $search_for != 'anyone')
+            if ($logged_user != "" && $data['edupersonprimaryaffiliation'][0] != 'Alumni') {
                 echo "<tr valign=top><td><b>Photo: </b></td><td>";
                 //readfile("/var/person_photos/burkaa01.jpg")
                 //header("Content-type: image/jpg");
@@ -580,6 +586,14 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if (isset($data['edupersonprimaryaffiliation'])) {
                 echo "<tr valign=top><td><b>Affiliation: </b></td><td>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
             }
+            //alumni additions
+            if (isset($data['alumClassYear'])) {
+                echo "<tr valign=top><td><b>Class Year: </b></td><td>".$data['alumClassYear'][0]."</td></tr>";
+            }
+            if (isset($data['alumOccupation'])) {
+                echo "<tr valign=top><td><b>Class Year: </b></td><td>".$data['alumOccupation'][0]."</td></tr>";
+            }
+
             if (isset($data['edupersonaffiliation'])) {
                 echo "<tr valign=top><td><b>All Affiliations: </b></td><td>";
                 if ($affil = $this->format_affiliation($data))
@@ -784,33 +798,73 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         //echo $this->build_printable_link();
     }//}}}*/
     {
+//        echo $this->get_search_status($people, $desc);
+//        echo '<p class="personPager"></p>';
+//        echo '<div id="searchResults" class="photoBook">';
+//        foreach ($people as $data) {
+//            echo '<div class="person">';
+//            // photo doesnt work
+//            //echo '<div class="personPhoto">';
+//            //echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
+//            //echo '</div>';
+//            echo '<div class="personInfo">';
+//            echo '<p style="text-indent: 20px;">';
+//            //echo '<li class="personName">' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]);
+//            echo $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]);
+//            if (isset($data['edupersonprimaryaffiliation'])) {
+//                echo "<tr valign=top><td> (</td><td>".$data['edupersonprimaryaffiliation'][0].") </td></tr>";
+//            }
+//            if (isset($data['mail'])) {
+//                echo "<tr valign=top><td> - </td><td>".$data['mail'][0]."</td></tr>";
+//            }
+//            //echo '</li>';
+//            echo '</p>';
+//            echo '</div>'; // personInfo
+//            echo '</div>'; // person
+//        }
+//        echo '</div>'; // searchResults
+//        echo '<p class="personPager"></p>';
+        //echo $this->build_printable_link();
+
         echo $this->get_search_status($people, $desc);
-        echo '<p class="personPager"></p>';
-        echo '<div id="searchResults" class="photoBook">';
-        foreach ($people as $data) {
-            echo '<div class="person">';
-            // photo doesnt work
-            //echo '<div class="personPhoto">';
-            //echo '<img src="/stock/ldapimage.php?id='.$data['uid'][0].'">';
-            //echo '</div>';
-            echo '<div class="personInfo">';
-            echo '<p style="text-indent: 20px;">';
-            //echo '<li class="personName">' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]);
-            echo $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]);
-            if (isset($data['edupersonprimaryaffiliation'])) {
-                echo "<tr valign=top><td> (</td><td>".$data['edupersonprimaryaffiliation'][0].") </td></tr>";
-            }
-            if (isset($data['mail'])) {
-                echo "<tr valign=top><td> - </td><td>".$data['mail'][0]."</td></tr>";
-            }
-            //echo '</li>';
-            echo '</p>';
-            echo '</div>'; // personInfo
-            echo '</div>'; // person
-        }
+        $str = '';
+        $str .= '<p class="personPager"></p>';
+        $str .= '<div id="searchResults" class="photoBook">';
+        $str .= '<table class="athleticsRoster"><tr>';
+
+
+        $str .= '<table id="test1" class="sortable-onload-3-reverse rowstyle-alt no-arrow" border="0" cellpadding="0" cellspacing="0">';
+            $str .= '<thead>';
+                $str .= '<tr>';
+                    $str .= '<th style="-moz-user-select: none;" class="fd-column-0 sortable-text reverseSort"><a title="Sort by "Name" href="#">Name</a></th>';
+                    $str .= '<th style="-moz-user-select: none;" class="fd-column-1 sortable-text reverseSort"><a title="Sort by "Affiliation" href="#">Affiliation</a></th>';
+                    $str .= '<th style="-moz-user-select: none;" class="fd-column-2 sortable-text reverseSort"><a title="Sort by "E-mail" href="#">E-mail</a></th>';
+                    $str .= '<th style="-moz-user-select: none;" class="fd-column-3 sortable-text reverseSort"><a title="Sort by "Campus Phone" href="#">Campus Phone</a></th>';
+//                    $str .= '<th style="-moz-user-select: none;" class="sortable-currency fd-column-4"><a title="Sort on "Weekly Gross" href="#">Weekly Gross</a></th>';
+//                    $str .= '<th style="-moz-user-select: none;" class="sortable-numeric fd-column-5"><a title="Sort on "Change" href="#">Change</a></th>';
+//                    $str .= '<th style="-moz-user-select: none;" class="sortable-numeric fd-column-6"><a title="Sort on "Theaters" href="#">Theaters</a></th>';
+//                    $str .= '<th style="-moz-user-select: none;" class="sortable-currency fd-column-7"><a title="Sort on "Per Theater" href="#">Per Theater</a></th>';
+//                    $str .= '<th style="-moz-user-select: none;" class="sortable-currency fd-column-8"><a title="Sort on "Gross" href="#">Gross</a></th>';
+                $str .= '</tr>';
+            $str .= '</thead>';
+        $str .= '<tbody>';
+        foreach($people as $data) {
+          $str .= '<tr class="">';
+          $str .= '<td>' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]) .'</td>';
+          $str .= '<td>' .$data['edupersonprimaryaffiliation'][0] . '</td>';
+          $str .= '<td>'.$data['mail'][0] . '</td>';
+          if (isset ($data['officephone'][0])) {
+              $str .= '<td>'.$data['officephone'][0].'</td>';
+          }
+          $str .= '</tr>';
+          }
+        $str .= '</table>';
+        
+        echo $str;
         echo '</div>'; // searchResults
         echo '<p class="personPager"></p>';
-        //echo $this->build_printable_link();
+
+
     }//}}}
 
     /** dump search results as a tab-delimited file
@@ -1592,11 +1646,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'eduPersonAffiliation','studentStatus','alumClassYear','postaladdress','l','st','postalcode','c',
                 'eduPersonEntitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
-                'programstartdate','programenddate','lastupdate');
+                'programstartdate','programenddate','lastupdate', 'alumClassYear', 'alumOccupation');
 
         $logged_user = reason_check_authentication();        
         
-        pray($logged_user);
+        //pray($logged_user);
         $password = $_SESSION['password'];
         //$password = $user->get_value('user_password_hash');
         
