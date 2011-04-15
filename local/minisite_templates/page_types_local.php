@@ -23,8 +23,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'bannerad' => 'luther_bannerad',
 			'flickr_slideshow' => 'luther_flickr_slideshow',
 			'norse_calendar' => 'norse_calendar',
-                        'sbvideo' => 'luther_sbvideo',
-                        'content_blurb' => 'main_blurb',
+			'sbvideo' => 'luther_sbvideo',
+			'content_blurb' => 'main_blurb',
 		),
 		'aaron_test_page' => array(
 			'main' => 'mobile_directions',
@@ -280,7 +280,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'main_post' => 'luther_events_mini',
                     'content_blurb' => array( // Spotlights
                         'module' => 'publication',
-			'related_publication_unique_names' => array( 'spotlights_music' ),
+						'related_publication_unique_names' => array( 'spotlights_music' ),
                         'related_mode' => 'true',
                         'related_title' => '',
                         'related_order' => 'random',
@@ -328,6 +328,37 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'pre_sidebar' => '',
                     'sidebar' => '',
                     'post_sidebar' => 'main_blurb',
+                ),
+                'luther2010_sports' => array(
+                	'sub_nav_2' => 'luther_events_mini',
+                    'main' => 'content',
+                	'main_post' => array(
+                    	'module' => 'publication',
+                		'related_publication_unique_names' => array('headlines_football'),
+						'related_mode' => 'true',
+						'related_title' => '',
+                        'max_num_items' => 5,
+					),
+                    'imagetop' => 'luther_carousel',
+                    'content_blurb' => '',
+                    'pre_sidebar' => 'main_blurb',
+					'bannerad' => '',
+					'sub_nav_3' => 'luther_bannerad',
+					'sidebar' => array( // Spotlights
+                        'module' => 'publication',
+                        'related_publication_unique_names' => array( 'spotlights_football' ),
+                        'related_mode' => 'true',
+                        'related_title' => '',
+                        'related_order' => 'random',
+                        'max_num_items' => 1,
+                        'markup_generator_info' =>array(
+							'list_item' =>array (
+								'classname' => 'SpotlightListItemMarkupGenerator',
+								'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+							),
+						),
+					),
+                    'post_sidebar' => '',
                 ),
 //		'luther_news_page' => array(
 //                    'main_post' => 'publication',
@@ -507,6 +538,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                 ),
                 'sports_roster' => array(
                     'main' => 'luther_sports_roster',
+					'pre_sidebar' => '',
+					'sidebar' => '',
+                	'post_sidebar' => '',
                 ),
                 'spotlight_archive' => array(
                     'main_post' => array( // Spotlights

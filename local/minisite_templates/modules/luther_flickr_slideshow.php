@@ -42,7 +42,8 @@
 			if ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
 					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
 					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_naa'
-					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information')
+					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information'
+					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_sports')
 			{
 				echo "<hr>\n";
 			}
