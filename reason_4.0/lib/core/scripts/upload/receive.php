@@ -87,6 +87,9 @@ foreach (array_keys($_FILES) as $name) {
 	$img_info = @getimagesize($temp_path);
 	if ($img_info)
 	{
+		// fix a permission idiosyncrasy so the permissions are consistent
+		@copy($temp_path, $temp_path.".tmp");
+		@rename($temp_path.".tmp", $temp_path);
 		list($width, $height) = $img_info;
 		if ($constraints && !empty($constraints['max_dimensions'])) {
 			list($max_width, $max_height) = $constraints['max_dimensions'];
