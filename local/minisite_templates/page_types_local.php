@@ -80,6 +80,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 
 			'post_sidebar' => 'blurb',	
 		),
+                'all_band' => array(
+                    'main_post' => 'all_band',
+                ),
 		'alumni_auction_registration' => array(
                     'main_post' => 'alumni_auction_pricing',
 		),
