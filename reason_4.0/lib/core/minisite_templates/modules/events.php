@@ -1734,7 +1734,7 @@ class EventsModule extends DefaultMinisiteModule
 		substr($max,0,4); */
 		$max_year = $this->get_max_year();
 		echo '<div class="dateJump">'."\n";
-		echo '<form action="'.get_current_url().'" method="post">'."\n";
+		echo '<form action="'.$this->construct_link().'" method="post">'."\n";
 		echo '<h4>Select date:</h4>';
 		echo '<span style="white-space:nowrap;">'."\n";
 		echo '<select name="start_month">'."\n";
