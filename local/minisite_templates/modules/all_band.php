@@ -33,14 +33,14 @@ class AllBandModule extends DefaultMinisiteModule
 		$this->controller->set_session_class('Session_PHP');
 		$this->controller->set_session_name('REASON_SESSION');
 		$this->controller->set_data_context('all_band');
-		$this->controller->show_back_button = true;
+		$this->controller->show_back_button = false;
 		$this->controller->clear_form_data_on_finish = true;
-		$this->controller->allow_arbitrary_start = true;
+		$this->controller->allow_arbitrary_start = false;
 		//*
 		$forms = array(
 			'AllBandOne' => array(
 				'next_steps' => array(
-					'AllBandOne' => array(
+					'AllBandTwo' => array(
 						'label' => 'Next'),
 				),
 				'step_decision' => array('type'=>'user'),

@@ -1,7 +1,7 @@
 <?php
 ////////////////////////////////////////////////////////////////////////////////
 //
-//    Work on the second page of the NAHA Norway form
+//    Work on the second page of the All Band form
 //
 //   Steve Smith
 //    2011-01-26
@@ -18,14 +18,12 @@ class AllBandTwo extends FormStep
 	var $_log_errors = true;
 	var $no_session = array( 'credit_card_number' );
 	var $error;
-	var $expense_budget_number = '10-000-33700-12100';
-        // $expense_budget_number before June 1, 10-000-33700-12100
-        // $expense_budget_number on or after June 1, 10-131-33700-51191
-	var $revenue_budget_number = '10-000-33700-22000';
-        // $revenue_budget_number before June 1, 10-000-33700-22000
-        // $revenue_budget_number on or after June 1, 10-000-33700-45900
+	var $expense_budget_number = '10-202-60200-51331';
+	var $revenue_budget_number = '10-000-60200-44906';
+        // $revenue_budget_number before June 1, 10-000-60200-44906
+        // $revenue_budget_number on or after June 1, 10-000-60200-22000
 
-	var $transaction_comment = 'NAHA Norge Conference';
+	var $transaction_comment = 'All Band Alumni Reunion';
 	var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
 
 	// the usual disco member data
@@ -121,79 +119,76 @@ class AllBandTwo extends FormStep
         {
             // calculate the total_cost of conference by adding registration_type, room_type, and additional_meal_tickets
                 switch($this->controller->get('registration_type')){
-                    case 'Regular':
-                        $reg_cost = 150;
+                    case 'Participant':
+                        $reg_cost = 75;
                         break;
-                    case 'Senior':
-                        $reg_cost = 140;
-                        break;
-                    case 'Student':
-                        $reg_cost = 100;
+                    case 'Participant&Guest':
+                        $reg_cost = 110;
                         break;
                 }
 
                 // calculate room costs if set
                 switch ($this->controller->get('room_type')){
                     case 'single':
-                        $room_cost = 32;
+                        $room_cost = 72;
                         break;
                     case 'double':
-                        $room_cost = 64;
+                        $room_cost = 124;
                         break;
                     default:
                         $room_cost = 0;
                 }
 
                 // multiply room_cost times # of nights staying
-                if ($this->controller->get('arrival_date')) {
-                    $arrival_date = $this->controller->get('arrival_date');
-                    //$datetime1 = new DateTime($arrival_date);
-                    $arrival_date = str_replace('-', '', $arrival_date);
-                    $arrival_date = (int)$arrival_date;
+//                if ($this->controller->get('arrival_date')) {
+//                    $arrival_date = $this->controller->get('arrival_date');
+//                    //$datetime1 = new DateTime($arrival_date);
+//                    $arrival_date = str_replace('-', '', $arrival_date);
+//                    $arrival_date = (int)$arrival_date;
+//
+//
+//                }
+//                if ($this->controller->get('departure_date')) {
+//                    $departure_date = $this->controller->get('departure_date');
+//                    //$datetime2 = new DateTime($departure_date);
+//                    $departure_date = str_replace('-', '', $departure_date);
+//                    $departure_date = (int)$departure_date;
+//                }
+//                //$interval = $datetime1->diff($datetime2);
+//                //$nights = $interval->format('%a') . '<br>';
+//                $nights = $departure_date - $arrival_date;
+//
+//
+//                $room_cost = $room_cost * $nights;
 
-
-                }
-                if ($this->controller->get('departure_date')) {
-                    $departure_date = $this->controller->get('departure_date');
-                    //$datetime2 = new DateTime($departure_date);
-                    $departure_date = str_replace('-', '', $departure_date);
-                    $departure_date = (int)$departure_date;
-                }
-                //$interval = $datetime1->diff($datetime2);
-                //$nights = $interval->format('%a') . '<br>';
-                $nights = $departure_date - $arrival_date;
-
-
-                $room_cost = $room_cost * $nights;
-
-
-                // calculate cost of attend_banquet
-                if ($this->controller->get('attend_banquet') == 'Yes'){
-                    $banq_cost = 35;
-                } else {
-                    $banq_cost = 0;
-                }
-
-                // calculate additional meal ticket costs
-                $additional_meals = $this->controller->get('additional_meal_tickets');
-                $meal_cost = 0;
-                if ($additional_meals) {
-                    foreach ($additional_meals as $key => $value) {
-                        if ($value == 'Banquet')
-                            $meal_cost = $meal_cost + 35;
-                        if ($value == 'Barbecue')
-                            $meal_cost = $meal_cost + 25;
-                        if ($value == 'Reception')
-                            $meal_cost = $meal_cost + 15;
-                    }
-                }
-
-                // calculate shuttle costs
-                if ($this ->controller->get('shuttle_tickets')) {
-                    $shuttle_tix = (int)$this ->controller->get('shuttle_tickets');
-                    $shuttle_cost = $shuttle_tix * 50;
-                }
-                return $reg_cost + $room_cost + $banq_cost +$meal_cost + $shuttle_cost;
+//
+//                // calculate cost of attend_banquet
+//                if ($this->controller->get('attend_banquet') == 'Yes'){
+//                    $banq_cost = 35;
+//                } else {
+//                    $banq_cost = 0;
+//                }
+//
+//                // calculate additional meal ticket costs
+//                $additional_meals = $this->controller->get('additional_meal_tickets');
+//                $meal_cost = 0;
+//                if ($additional_meals) {
+//                    foreach ($additional_meals as $key => $value) {
+//                        if ($value == 'Banquet')
+//                            $meal_cost = $meal_cost + 35;
+//                        if ($value == 'Barbecue')
+//                            $meal_cost = $meal_cost + 25;
+//                        if ($value == 'Reception')
+//                            $meal_cost = $meal_cost + 15;
+//                    }
+//                }
+//
+//                // calculate shuttle costs
+//                if ($this ->controller->get('shuttle_tickets')) {
+//                    $shuttle_tix = (int)$this ->controller->get('shuttle_tickets');
+//                    $shuttle_cost = $shuttle_tix * 50;
+//                }
+                return $reg_cost + $room_cost /*+ $banq_cost +$meal_cost + $shuttle_cost*/;
 
         }
 	// style up the form and add comments et al
@@ -210,12 +205,10 @@ class AllBandTwo extends FormStep
                     $june1 = 152;
                 $date = getdate();
                 if ($date['yday'] >= $june1){
-                    $this->revenue_budget_number = '10-000-33700-45900';
-                    $this->expense_budget_number = '10-131-33700-51191';
+                    $this->revenue_budget_number = '10-000-60200-22000';
                 }
                 else {
                     $this->revenue_budget_number = '10-000-33700-22000';
-                    $this->expense_budget_number = '10-000-33700-12100';
                 }
 
                 $this->change_element_type('payment_amount', 'solidtext');
@@ -241,7 +234,7 @@ class AllBandTwo extends FormStep
 
 	function pre_show_form()
 	{
-		echo '<div id="norgeForm" class="pageTwo">'."\n";
+		echo '<div id="allBandForm" class="pageTwo">'."\n";
 		if( $this->is_in_testing_mode )
 		{
 			echo '<div class="announcement">';
@@ -257,21 +250,21 @@ class AllBandTwo extends FormStep
 	function get_confirmation_text()
 	{
 
-		$txt = '<div id="conferenceOverview">'."\n";
+		$txt = '<div id="reunionOverview">'."\n";
 
 		$txt .= '<p class="printConfirm">Print this confirmation for your records.</p>'."\n";
-		$txt .= '<h3>Thank you for registering for the NAHA Norway Conference</h3>';
+		$txt .= '<h3>Thank you for registering for the All Band Alumni Reunion</h3>';
 //		if (reason_unique_name_exists('dorian_sh_thank_you_blurb'))
 //			$txt .= '<p>' . get_text_blurb_content('dorian_sh_thank_you_blurb'). '</p>';
-		$txt .= '<p>If you experience technical problems using the registration form, please contact <a href="mailto:vagtsrac@luther.edu">Rachel Vagts</a>, Luther College Archivist.</p>'."\n";
+		$txt .= '<p>If you experience technical problems using the registration form, please contact the<a href="mailto:alumni@luther.edu">Alumni Office</a><p>'."\n";
 		$txt .= '<ul>'."\n";
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
 		$txt .= '<h4>Your Information</h4>';
 		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('first_name').' '.$this->controller->get('last_name').'</li>'."\n";
-		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address_1')."\n";
-                if ($this->controller->get('address_2')){
-                    $txt .= $this->controller->get('address_2')."\n";
+		if ($this->controller->get('graduation_name')){
+                    $txt .= '<li><strong>Graduation Name:</strong> '.$this->controller->get('graduation_name').'</li>'."\n";
                 }
+		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address')."\n";
                 $txt .= $this->controller->get('city').' ';
                 if ($this->controller->get('state_province')){
                     $txt .= $this->controller->get('state_province').' ';
@@ -280,47 +273,54 @@ class AllBandTwo extends FormStep
                     $this->controller->get('zip_postal').'</li>'."\n";
                 }
                 $txt .= '<li><strong>Phone:</strong> '.$this->controller->get('phone').'</li>'."\n";
+                if ($this->controller->get('cell_phone')){
+                    $txt .= '<li><strong>Cell Phone:</strong> '.$this->controller->get('cell_phone').'</li>'."\n";
+                }
 		$txt .= '<li><strong>E-mail:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
+                $txt .= '<li><strong>T-shirt Size:</strong> '.$this->controller->get('t-shirt_size').'</li>'."\n";
+                $txt .= '<li><strong>Instrument:</strong> '.$this->controller->get('instrument').'</li>'."\n";
+                if ($this->controller->get('guest_first_name')){
+                    $txt .= '<li><strong>Guest Name:</strong> '.$this->controller->get('guest_first_name').' '.$this->controller->get('guest_last_name').'</li>'."\n";
+                    if ($this->controller->get('guest_graduation_name')) {
+                        $txt .= '<li><strong>Guest Graduation Name:</strong> '.$this->controller->get('guest_graduation_name').'</li>'."\n";
+                    }
+                }
                 $txt .= '<li><strong>Registration Type:</strong> '.$this->controller->get('registration_type').'</li>'."\n";
-                if ($this->controller->get('school')){
-                    $txt .= '<li><strong>School:</strong> '.$this->controller->get('school').'</li>'."\n";
-                }
-                if ($this->controller->get('attend_banquet')){
-                    $txt .= '<li><strong>Attend Banquet:</strong> '.$this->controller->get('attend_banquet').'</li>'."\n";
-                }
                 if ($this->controller->get('room_type')){
                     $txt .= '<li><strong>Requested Room Type :</strong> '.$this->controller->get('room_type').'</li>'."\n";
                 }
-                if ($this->controller->get('housemates_requested')){
-                    $txt .= '<li><strong>Requested Housemate(s):</strong> '.$this->controller->get('housemates_requested').'</li>'."\n";
+                if ($this->controller->get('roommate_name')){
+                    $txt .= '<li><strong>Requested Roommate:</strong> '.$this->controller->get('roommate_name').'</li>'."\n";
                 }
-                if ($this->controller->get('arrival_date')){
-                    $txt .= '<li><strong>Arrival Date:</strong> '.$this->controller->get('arrival_date').'</li>'."\n";
-                }
-                if ($this->controller->get('departure_date')){
-                    $txt .= '<li><strong>Departure Date:</strong> '.$this->controller->get('departure_date').'</li>'."\n";
-                }
-		if ($this->controller->get('additional_meal_tickets'))
-		{
-                    $tix_txt = '';
-                    $tix_array =$this->controller->get('additional_meal_tickets');
-                    foreach ($tix_array as $key => $value) {
-                       if ($value != 'Reception'){
-                           $tix_txt .= $value . ', ';
-                       } else {
-                           $tix_txt .= $value;
-                       }
-                    }
-                    $txt .= '<strong><li>Additional Meal Tickets:</strong> ' .$tix_txt. '</li>'."\n";
-		}
-                if ($this->controller->get('shuttle_tickets'))
-		{
-                        $txt .= '<strong><li>Shuttle Tickets:</strong> '.$this->controller->get('shuttle_tickets').'</li>'."\n";
-		}
-                if ($this->controller->get('dietary_needs'))
-		{
-			$txt .= '<strong><li>Dietary Restrictions/Needs:</strong> ' .$this->controller->get('dietary_needs'). '</li>'."\n";
-		}
+                ##############################################
+                ##############################################
+//                if ($this->controller->get('arrival_date')){
+//                    $txt .= '<li><strong>Arrival Date:</strong> '.$this->controller->get('arrival_date').'</li>'."\n";
+//                }
+//                if ($this->controller->get('departure_date')){
+//                    $txt .= '<li><strong>Departure Date:</strong> '.$this->controller->get('departure_date').'</li>'."\n";
+//                }
+//		if ($this->controller->get('additional_meal_tickets'))
+//		{
+//                    $tix_txt = '';
+//                    $tix_array =$this->controller->get('additional_meal_tickets');
+//                    foreach ($tix_array as $key => $value) {
+//                       if ($value != 'Reception'){
+//                           $tix_txt .= $value . ', ';
+//                       } else {
+//                           $tix_txt .= $value;
+//                       }
+//                    }
+//                    $txt .= '<strong><li>Additional Meal Tickets:</strong> ' .$tix_txt. '</li>'."\n";
+//		}
+//                if ($this->controller->get('shuttle_tickets'))
+//		{
+//                        $txt .= '<strong><li>Shuttle Tickets:</strong> '.$this->controller->get('shuttle_tickets').'</li>'."\n";
+//		}
+//                if ($this->controller->get('dietary_needs'))
+//		{
+//			$txt .= '<strong><li>Dietary Restrictions/Needs:</strong> ' .$this->controller->get('dietary_needs'). '</li>'."\n";
+//		}
 		$txt .= '<li><strong>Total Amount Charged:</strong> $'.$this->get_total_cost().'</li>'."\n";
 
 		$txt .= '</ul>'."\n";
@@ -340,7 +340,7 @@ class AllBandTwo extends FormStep
                             you entered on the previous page was not the billing address for your credit card.');
 		}
                 if ($this->get_value('billing_address') == 'entered') {
-                    $this->set_value('billing_street_address', $this->controller->get('address_1'));
+                    $this->set_value('billing_street_address', $this->controller->get('address'));
                     $this->set_value('billing_city', $this->controller->get('city'));
                     $this->set_value('billing_state_province', $this->controller->get('state_province'));
                     $this->set_value('billing_zip', $this->controller->get('zip_postal'));
@@ -350,7 +350,7 @@ class AllBandTwo extends FormStep
 		// Process credit card
 		if( !$this->_has_errors() )
 		{
-			$pf = new norgePF;
+			$pf = new allBandPF;
 
 			$expiration_mm = str_pad($this->get_value('credit_card_expiration_month'), 2, '0', STR_PAD_LEFT);
 			$expiration_yy = substr($this->get_value('credit_card_expiration_year'), 2, 2);
@@ -456,9 +456,10 @@ class AllBandTwo extends FormStep
 										'<br />'=>"\n",
 									);
 				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
-				$email_to_rachel = new Email(array('vagtsrac@luther.edu'), 'noreply@luther.edu','noreply@luther.edu', 'New NAHA Registration '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
-				$email_to_rachel->send();
-				$email_to_registrant = new Email($this->controller->get('e-mail'),'vagtsrac@luther.edu','vagtsrac@luther.edu','NAHA Norway Conference Confirmation',strip_tags($mail_text),$mail_text);
+				$email_to_alumni = new Email(array('ferrka01@luther.edu, rihajudy@luther.edu', 'rohershr@luther.edu'),
+                                        'noreply@luther.edu','noreply@luther.edu', 'New All Band Registration '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
+				$email_to_alumni->send();
+				$email_to_registrant = new Email($this->controller->get('e-mail'),'alumni@luther.edu','alumni@.edu','All Band Alumni Reunion Confirmation',strip_tags($mail_text),$mail_text);
 				$email_to_registrant->send();
 
 			}
@@ -468,8 +469,8 @@ class AllBandTwo extends FormStep
 	{
 		$refnum = $this->get_value( 'result_refnum' );
 		$text = $this->get_value( 'confirmation_text' );
-		reason_include_once( 'minisite_templates/modules/norge_form/norge_confirmation.php' );
-		$confirmation = new NorgeConfirmation;
+		reason_include_once( 'minisite_templates/modules/all_band/all_band_confirmation.php' );
+		$confirmation = new AllBandConfirmation;
 		$hash = $confirmation->make_hash( $text );
 		connectDB( REASON_DB );
 		$url = get_current_url();
@@ -494,5 +495,4 @@ function trim_hours_from_datetime( $datetime )
 {
 	return substr( $datetime, 0, 10 );
 }
-
 ?>

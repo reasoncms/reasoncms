@@ -16,52 +16,52 @@ class AllBandOne extends FormStep
 
 	var $elements = array(
 		'information_header' => array(
-			'type' => 'comment',
-			'text' => '<h3>Your Information</h3>',
+                    'type' => 'comment',
+                    'text' => '<h3>Your Information</h3>',
 		),
 		'first_name' => array(
-			'type' => 'text',
-			'size' => 35,
+                    'type' => 'text',
+                    'size' => 35,
 		),
 		'last_name' => array(
-			'type' => 'text',
-			'size'=> 35,
+                    'type' => 'text',
+                    'size'=> 35,
 		),
-                'graduation_name ' => array(
-			'type' => 'text',
+                'graduation_name' => array(
+                    'type' => 'text',
 		),
                 'class_year' => array(
                     'type' => 'text',
                     'size' => 4,
                 ),
 		'address' => array(
-			'type' => 'text',
-			'size' => 35,
+                    'type' => 'text',
+                    'size' => 35,
 		),
 		'city' => array(
-			'type' => 'text',
-			'size' => 35,
+                    'type' => 'text',
+                    'size' => 35,
 		),
 		'state_province' => array(
-			'type' => 'state_province',
-			'display_name' => 'State/Province',
+                    'type' => 'state_province',
+                    'display_name' => 'State/Province',
 		),
 		'zip_postal' => array(
-			'type' => 'text',
-			'size' => 35,
-                        'display_name' => 'Zip'
+                    'type' => 'text',
+                    'size' => 35,
+                    'display_name' => 'Zip'
 		),
 		'phone' => array(
-			'type' => 'text',
-			'size' => 20,
+                    'type' => 'text',
+                    'size' => 20,
 		),
                 'cell_phone' => array(
-			'type' => 'text',
-			'size' => 20,
+                    'type' => 'text',
+                    'size' => 20,
 		),
                 'e-mail' => array(
-			'type' => 'text',
-			'size' => 35,
+                    'type' => 'text',
+                    'size' => 35,
 		),
                 't-shirt_size' => array(
                     'type' => 'radio_no_sort',
@@ -78,19 +78,24 @@ class AllBandOne extends FormStep
                     'size' => 20,
                 ),
                 'guest_information_header' => array(
-			'type' => 'comment',
-			'text' => '<h3>Guest Information</h3>',
+                    'type' => 'comment',
+                    'text' => '<h3>Guest Information</h3>',
 		),
+                'guest_comment' => array(
+                    'type' => 'comment',
+                    'text' => 'If you are bringing one non-participant guest, please fill in the following information'
+                ),
 		'guest_first_name' => array(
-			'type' => 'text',
-			'size' => 35,
+                    'type' => 'text',
+                    'size' => 35,
 		),
 		'guest_last_name' => array(
-			'type' => 'text',
-			'size'=> 35,
+                    'type' => 'text',
+                    'size'=> 35,
 		),
-                'guest_graduation_name ' => array(
-			'type' => 'text',
+                'guest_graduation_name' => array(
+                    'type' => 'text',
+                    'comments' => 'if applicable'
 		),
                 'registration_header' => array(
                     'type' => 'comment',
@@ -100,94 +105,89 @@ class AllBandOne extends FormStep
                     'type' => 'radio_no_sort',
                     'display_name' => 'Registration&nbsp;Type',
                     'options' => array(
-                        'Regular' => 'Regular - $150 usd',
-                        'Senior' => 'Senior (over age 65) -$140 usd',
-                        'Student' => 'Student - $100 usd'
+                        'Participant' => 'Participant - $75',
+                        'Participant&Guest' => 'Participant & guest - $110',
                     )
-                ),
-                'school' => 'text',
-                'attend_banquet' => array(
-                    'type' => 'radio_inline_no_sort',
-                    'display_name' => 'Will you attend the banquet?',
-                    'options' => array('Yes' => 'Yes', 'No' => 'No'),
-                    'comments' => 'Banquet ticket $35'
                 ),
                 'housing_header' => array(
                     'type' => 'comment',
-                    'text' => '<h3>Baker Village Housing Requests</h3>',
+                    'text' => '<h3>Residence Hall Accommodations Fees</h3>',
                 ),
                 'housing_comment' => array(
                     'type' => 'comment',
-                    'text' => 'Please see the <a href="http://www.luther.edu/150/events/conference/housing/" target=_blank>accommodations</a>
-                        page for housing options and descriptions'
+                    'text' => '(nights of Friday, July 29, and Saturday, July 30)'
+                ),
+                'housing_comment_2' => array(
+                    'type' => 'comment',
+                    'text' => '<em>Accomodations are limited, please make your reservations as soon as possible and before Monday, May 9. First-come, first served.</em>'
                 ),
                 'room_type' => array(
-                    'type' => 'radio_inline_no_sort',
-                    'comments' => '$32 per bed <br>
-                        Single - one twin bed<br>
-                        Double - two twin beds',
-                    'options' => array('single' => 'Single', 'double' => 'Double')
-                ),
-                'arrival_date' => 'textdate',
-                'departure_date' => 'textdate',
-                'housemates_comment' => array(
-                    'type' => 'comment',
-                    'text' => 'If possible, please house me with'
-                ),
-                'housemates_requested' => array(
-                    'type' => 'textarea',
-                   'display_name' => '&nbsp;',
-                ),
-                'additional_meal_header' => array(
-                    'text' => '<h3>Additional Meal Tickets</h3>',
-                    'type' => 'comment',
-                ),
-                'additional_meal_comment' => array(
-                    'type' => 'comment',
-                    'text' => 'If you would like to bring a guest, who is not attending the conference, to meals, please indicate below',
-                ),
-                'additional_meal_tickets' => array(
-                    'type' => 'checkboxgroup',
-                    'display_name' => '&nbsp;',
-                    'options' => array(
-                        'Reception' => 'Reception - $15',
-                        'Barbecue' => 'Barbecue - $25',
-                        'Banquet' => 'Banquet - $35',
-                    )
-                ),
-                'shuttle_header' => array(
-                    'type' => 'comment',
-                    'text' => '<h3>Shuttle</h3>'
-                ),
-                'shuttle_comment' => array(
-                    'type' => 'comment',
-                'text' => 'Please indicate if you need round trip <a href="/150/events/conference/travel/" target=__blank>shuttle service</a>
-                    from Minneapolis, MN.'
-                ),
-                'shuttle_tickets' => array(
                     'type' => 'radio_no_sort',
-                    'display_name' => '&nbsp;',
+//                    'comments' => '$32 per bed <br>
+//                        Single - one twin bed<br>
+//                        Double - two twin beds',
                     'options' => array(
-                        1 => 'One ticket - $50',
-                        2 => 'Two tickets - $100',
-                    )
+                        'single' => 'Single room <br>(one person/one bed), $72',
+                        'double' => 'Double room <br>(two persons/two beds), $124 ($62/person)')
                 ),
-                'dietary_header' => array(
+                'roommate_name' => array(
+                    'type' => 'text',
+                ),
+                'housing_comment_3' => array(
                     'type' => 'comment',
-                    'text' => '<h3>Dietary Needs</h3>'
+                    'text' => 'If you have special accommodation needs, call Jud Barclay in the Summer Conferences Office for assistance, 563-387-1538'
                 ),
-                'dietary_comment' => array(
-                    'type' => 'comment',
-                    'text' => 'Please list any dietary restrictions or needs for you or your guest'
-                ),
-                'dietary_needs' => array(
-                    'type' => 'textarea',
-                    'display_name' => '&nbsp;',
-                ),
+//                'additional_meal_header' => array(
+//                    'text' => '<h3>Additional Meal Tickets</h3>',
+//                    'type' => 'comment',
+//                ),
+//                'additional_meal_comment' => array(
+//                    'type' => 'comment',
+//                    'text' => 'If you would like to bring a guest, who is not attending the conference, to meals, please indicate below',
+//                ),
+//                'additional_meal_tickets' => array(
+//                    'type' => 'checkboxgroup',
+//                    'display_name' => '&nbsp;',
+//                    'options' => array(
+//                        'Reception' => 'Reception - $15',
+//                        'Barbecue' => 'Barbecue - $25',
+//                        'Banquet' => 'Banquet - $35',
+//                    )
+//                ),
+//                'shuttle_header' => array(
+//                    'type' => 'comment',
+//                    'text' => '<h3>Shuttle</h3>'
+//                ),
+//                'shuttle_comment' => array(
+//                    'type' => 'comment',
+//                'text' => 'Please indicate if you need round trip <a href="/150/events/conference/travel/" target=__blank>shuttle service</a>
+//                    from Minneapolis, MN.'
+//                ),
+//                'shuttle_tickets' => array(
+//                    'type' => 'radio_no_sort',
+//                    'display_name' => '&nbsp;',
+//                    'options' => array(
+//                        1 => 'One ticket - $50',
+//                        2 => 'Two tickets - $100',
+//                    )
+//                ),
+//                'dietary_header' => array(
+//                    'type' => 'comment',
+//                    'text' => '<h3>Dietary Needs</h3>'
+//                ),
+//                'dietary_comment' => array(
+//                    'type' => 'comment',
+//                    'text' => 'Please list any dietary restrictions or needs for you or your guest'
+//                ),
+//                'dietary_needs' => array(
+//                    'type' => 'textarea',
+//                    'display_name' => '&nbsp;',
+//                ),
                 'submitter_ip' => 'hidden',
 	);
 
-	var $required = array('first_name', 'last_name', 'phone', 'e-mail', 'address_1', 'city',  'registration_type');
+	var $required = array('first_name', 'last_name', 'phone', 'e-mail', 'address', 'city',
+                't-shirt_size', 'instrument', 'registration_type');
 
 	var $error_header_text = 'Please check your form.';
 

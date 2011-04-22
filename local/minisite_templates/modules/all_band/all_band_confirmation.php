@@ -117,7 +117,7 @@ class AllBandConfirmation
 		{
 			if(!empty($this->reference_number))
 			{
-				$npf = new norgePF;
+				$npf = new allBandPF;
 				$confirm_text = $npf->get_confirmation_text($this->reference_number);
 				if(!empty($confirm_text))
 				{
