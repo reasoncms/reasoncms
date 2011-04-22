@@ -264,6 +264,9 @@ class AllBandTwo extends FormStep
 		if ($this->controller->get('graduation_name')){
                     $txt .= '<li><strong>Graduation Name:</strong> '.$this->controller->get('graduation_name').'</li>'."\n";
                 }
+                if ($this->controller->get('class_year')){
+                    $txt .= '<li><strong>Class:</strong> '.$this->controller->get('class_year').'</li>'."\n";
+                }
 		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address')."\n";
                 $txt .= $this->controller->get('city').' ';
                 if ($this->controller->get('state_province')){
