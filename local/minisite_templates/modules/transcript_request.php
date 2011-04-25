@@ -32,6 +32,7 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 	function pre_request_cleanup_init()
 	{
 		include_once( DISCO_INC.'controller.php' );
+//                reason_include_once( 'minisite_templates/modules/transcript_request/pre.php' );
 		reason_include_once( 'minisite_templates/modules/transcript_request/page1.php' );
 		reason_include_once( 'minisite_templates/modules/transcript_request/page2.php' );
 		reason_include_once( 'minisite_templates/modules/transcript_request/page3.php' );
@@ -42,9 +43,21 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 		$this->controller->set_data_context('transcript_request');
 		$this->controller->show_back_button = false;
 		$this->controller->clear_form_data_on_finish = true;
-		$this->controller->allow_arbitrary_start = true;
+		$this->controller->allow_arbitrary_start = false;
 		//*
 		$forms = array(
+//                        'TranscriptPreForm' => array(
+//				'next_steps' => array(
+//					'TranscriptPageOneForm' => array(
+//						'label' => 'Come on',
+//					),
+//				),
+//				'step_decision' => array(
+//					'type' => 'user',
+//				),
+//				'back_button_text' => 'Back',
+//				'display_name' => 'Yo',
+//			),
 			'TranscriptPageOneForm' => array(
 				'next_steps' => array(
 					'TranscriptPageTwoForm' => array(

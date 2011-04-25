@@ -180,8 +180,10 @@ class TranscriptPageTwoForm extends FormStep
                 if($this->controller->get('unofficial')){
 			$txt .= '<li><strong>Unofficial transcripts requested:</strong> '.$this->controller->get('unofficial').'</li>'."\n";
 		}
-		if($this->controller->get('official_type') == 'paper'){
-			$txt .= '<li><strong>Official paper transcripts requested:</strong> '.$this->controller->get('official_type').'</li>'."\n";
+		//if ($this->controller->get('official_type') == 'paper'){
+		if ($this->controller->get('number_of_official')){
+			//$txt .= '<li><strong>Official paper transcripts requested:</strong> '.$this->controller->get('official_type').'</li>'."\n";
+			$txt .= '<li><strong>Official paper transcripts requested:</strong> '.$this->controller->get('number_of_official').'</li>'."\n";
                         $txt .= '<li><strong>Delivery Information:</strong> '.$this->controller->get('deliver_to').'</li>'."\n";
                         $txt .= '<ul>'."\n";
                         if ($this->controller->get('deliver_to') == 'institution'){
@@ -195,21 +197,21 @@ class TranscriptPageTwoForm extends FormStep
                         $txt .= '<li><strong>Delivery Timeline: </strong>'.$this->controller->get('delivery_time').'</li>'."\n";
                         $txt .= '</ul>'."\n";
 		}
-                if($this->controller->get('official_type') == 'eScrip'){
-			$txt .= '<li><strong>Official eScrip-Safe transcripts requested:</strong> '.$this->controller->get('number_of_official').'</li>'."\n";
-                        $txt .= '<li><strong>Delivery Information</strong></li>'."\n";
-                        $txt .= '<ul>'."\n";
-                        if ($this->controller->get('deliver_to') == 'institution'){
-                            $txt .= '<li><strong>Institution/Company:</strong><br>'.
-                                $this->controller->get('institution_name').'<br>'.
-                                'Attn: '. $this->controller->get('institution_attn') .'<br>'.
-                                $this->controller->get('institution_email').'</li>'."\n";
-                        }else{ //deliver to requestor
-                            $txt .= '<li><strong>Your E-mail Address:</strong>'.$this->controller->get('email').'</li>'."\n";
-                        }
-                        $txt .= '<li><strong>Delivery Timeline:</strong>'.$this->controller->get('delivery_time').'</li>'."\n";
-                        $txt .= '</ul>'."\n";
-		}
+//                if($this->controller->get('official_type') == 'eScrip'){
+//			$txt .= '<li><strong>Official eScrip-Safe transcripts requested:</strong> '.$this->controller->get('number_of_official').'</li>'."\n";
+//                        $txt .= '<li><strong>Delivery Information</strong></li>'."\n";
+//                        $txt .= '<ul>'."\n";
+//                        if ($this->controller->get('deliver_to') == 'institution'){
+//                            $txt .= '<li><strong>Institution/Company:</strong><br>'.
+//                                $this->controller->get('institution_name').'<br>'.
+//                                'Attn: '. $this->controller->get('institution_attn') .'<br>'.
+//                                $this->controller->get('institution_email').'</li>'."\n";
+//                        }else{ //deliver to requestor
+//                            $txt .= '<li><strong>Your E-mail Address:</strong>'.$this->controller->get('email').'</li>'."\n";
+//                        }
+//                        $txt .= '<li><strong>Delivery Timeline:</strong>'.$this->controller->get('delivery_time').'</li>'."\n";
+//                        $txt .= '</ul>'."\n";
+//		}
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n"; 
 
@@ -219,7 +221,12 @@ class TranscriptPageTwoForm extends FormStep
 	
 	function run_error_checks()
 	{
-		if($this->get_value('billing_address') == 'new' && (!$this->get_value('billing_street_address') || !$this->get_value('billing_city') || !$this->get_value('billing_state_province') || !$this->get_value('billing_zip') || !$this->get_value('billing_country') ) )
+		if ($this->get_value('billing_address') == 'new'
+                        && (!$this->get_value('billing_street_address')
+                        || !$this->get_value('billing_city')
+                        || !$this->get_value('billing_state_province')
+                        || !$this->get_value('billing_zip')
+                        || !$this->get_value('billing_country') ) )
 		{
 			$this->set_error('billing_address','Please enter your full billing address if the address you entered on the previous page was not the billing address for your credit card.');
 		}
