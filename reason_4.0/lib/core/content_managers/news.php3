@@ -85,6 +85,16 @@
 			}		
 			$publication_elements[] = 'pubs_last_hr';
 	
+			// does the site have categories? if so, lets make it easy to associate a post with categories.
+			$cat_es = new entity_selector($this->get_value('site_id'));
+			$cat_es->description = 'Finding the categories on this site';
+			$cat_es->add_type(id_of('category_type'));
+			$categories = $cat_es->run_one();
+			if (!empty($categories))
+			{	
+				$this->add_relationship_element('choose_categories', id_of('category_type'), relationship_id_of('news_to_category'), 'right', 'checkbox');
+			}
+			
 			$order = array ('name', 
 							'release_title', 
 							'subtitle', 
@@ -94,7 +104,8 @@
 							'location', 
 							'datetime', 
 							'description', 
-							'content', 
+							'content',
+							'choose_categories',
 							'keywords', 
 							'names', 
 							'contact_name', 
