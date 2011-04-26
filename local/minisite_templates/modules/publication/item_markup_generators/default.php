@@ -30,6 +30,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 								  'comment_form_markup',
 								  'commenting_status',
 								  'permalink',
+								  'site_id',
 								);
 
 
@@ -56,10 +57,11 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$this->markup_string .= '<div class="author">'.$this->get_author_section().'</div>'."\n";
 		}
-			if($this->should_show_images_section())
-			{
-				$this->markup_string .= '<div class="images">'.$this->get_images_section().'</div>'."\n";
-			}
+		if (get_theme($this->passed_vars['site_id'])->get_value('name') != 'luther2010' && $this->should_show_images_section())
+		// luther2010 images are rendered in the luther_publication_image_sidebar module
+		{
+			$this->markup_string .= '<div class="images">'.$this->get_images_section().'</div>'."\n";
+		}
 		if($this->should_show_content_section())
 		{
 			$this->markup_string .= '<div class="text">'.$this->get_content_section().'</div>'."\n";

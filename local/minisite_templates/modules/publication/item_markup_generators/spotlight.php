@@ -30,6 +30,7 @@ class SpotlightItemMarkupGenerator extends PublicationMarkupGenerator
 								  'comment_form_markup',
 								  'commenting_status',
 								  'permalink',
+									'site_id',
 								);
 
 
@@ -45,7 +46,7 @@ class SpotlightItemMarkupGenerator extends PublicationMarkupGenerator
 		//$this->markup_string .= '<div class="primaryContent">'."\n";
 		$this->markup_string .= '<div id="spotlightcontent">'."\n";
 		//$this->markup_string .= $this->get_title_section();
-		if($this->should_show_images_section())
+		if (get_theme($this->passed_vars['site_id'])->get_value('name') != 'luther2010' && $this->should_show_images_section())
 		{
 			$this->markup_string .= '<div class="images">'.$this->get_images_section().'</div>'."\n";
 		}

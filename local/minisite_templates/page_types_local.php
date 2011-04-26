@@ -536,7 +536,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                     ),
                     'pre_banner' => '',
                     'post_banner' => '',
-                    'sidebar'=>'',
+                    'sidebar'=>'luther_publication_image_sidebar',
                     'pre_sidebar' => '',
                 ),
                 'sports_roster' => array(
@@ -564,8 +564,8 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'main'=>'publication/description',
                     'pre_banner' => '',
                     'post_banner' => '',
-                    'sidebar'=>'',
-                    //'pre_sidebar' => '',
+                    'sidebar'=>'luther_publication_image_sidebar',
+                    'pre_sidebar' => 'luther_image_sidebar',
 		),
 		'standalone_login_page' => array(
                     'main_post' => 'login',
