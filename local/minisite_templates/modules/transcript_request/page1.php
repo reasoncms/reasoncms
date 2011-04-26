@@ -264,8 +264,7 @@ class TranscriptPageOneForm extends FormStep {
                     $this->set_error('address', 'Please enter the full delivery address.');
         }
         if ($this->get_value('number_of_official') && $this->get_value('deliver_to') == 'institution'
-            && (!$this->get_value('institution_name')
-                || !$this->get_value('address')
+            && !$this->get_value('institution_name') && (!$this->get_value('address')
                 || !$this->get_value('city')
                 || !$this->get_value('state_province')
                 || !$this->get_value('zip_postal')
