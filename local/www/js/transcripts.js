@@ -44,12 +44,13 @@ $(document).ready(function() {
         });
 
     // Show/hide and populate Country field based on state/province choice
-    $("select#state_provinceElement").change(function()
-        {toggle_country_field("select#state_provinceElement","tr#countryRow" )});
+    $("select#state_provinceElement").change(function(){
+        toggle_country_field("select#state_provinceElement","tr#countryRow" )});
+
 
     // Set the initial state for the Country field
-	$("select#state_provinceElement").change();
-	$("#countryRow").hide();
+    $("select#state_provinceElement").change();
+    $("#countryRow").hide();
 });
 
 function hide_field(element)
