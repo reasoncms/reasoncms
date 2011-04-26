@@ -128,7 +128,7 @@ class TranscriptPageOneForm extends FormStep {
         ),
         'submitter_ip' => 'hidden',
     );
-    var $required = array('daytime_phone', 'e-mail', 'deliver_to', 'delivery_time');
+    var $required = array('daytime_phone', 'e-mail', 'deliver_to', 'delivery_time', 'student_status');
     var $display_name = 'Transcript Request Info';
     var $error_header_text = 'Please check your form.';
 
