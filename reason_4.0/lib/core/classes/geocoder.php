@@ -179,7 +179,7 @@ class geocoder
 		{
 			return $result;
 		}
-		if ($this->get_results_from_service())
+		if ($this->get_results_from_service() === true)
 		{
 			if ($result = $this->parse_results_from_service())
 			{
@@ -230,7 +230,7 @@ class geocoder
 						return true;
 						break;
 					case 'ZERO_RESULTS':
-						return false;
+						return 0;
 						break;
 					case 'OVER_QUERY_LIMIT':
 						trigger_error('Currently over query limit for Google geocoding.');
