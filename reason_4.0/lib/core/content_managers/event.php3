@@ -269,10 +269,15 @@
 					$this->set_value( 'sponsor', $site->get_value('name') );
 				}
 			}
+			// If there is no username & this is a perfectly new entity (e.g. not edited once), pre-fill the username
 			if( !$this->get_value('contact_username') )
 			{
-					$user = new entity( $this->admin_page->user_id );
-					$this->set_value( 'contact_username', $user->get_value('name') );
+					$e = new entity($this->get_value('id'));
+					if(1 == $e->get_value('new') && $e->get_value('last_modified') == $e->get_value('creation_date'))
+					{
+						$user = new entity( $this->admin_page->user_id );
+						$this->set_value( 'contact_username', $user->get_value('name') );
+					}
 			}
 			if( !$this->get_value('recurrence') )
 				$this->set_value( 'recurrence', 'none' );
