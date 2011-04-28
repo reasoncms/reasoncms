@@ -459,7 +459,7 @@ class AllBandTwo extends FormStep
 										'<br />'=>"\n",
 									);
 				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
-				$email_to_alumni = new Email(array('ferrka01@luther.edu, rihajudy@luther.edu', 'rohershr@luther.edu'),
+				$email_to_alumni = new Email(array('ferrka01@luther.edu', 'rihajudy@luther.edu', 'rohershr@luther.edu'),
                                         'noreply@luther.edu','noreply@luther.edu', 'New All Band Registration '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
 				$email_to_alumni->send();
 				$email_to_registrant = new Email($this->controller->get('e-mail'),'alumni@luther.edu','alumni@.edu','All Band Alumni Reunion Confirmation',strip_tags($mail_text),$mail_text);
