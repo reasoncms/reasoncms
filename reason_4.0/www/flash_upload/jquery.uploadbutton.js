@@ -39,7 +39,12 @@
             }, options);
 
             (target ? $(target) : self).swfupload(swfupload_options);
-            self.repositionUploadButton();
+            reposition = function ()
+            {
+            	self.repositionUploadButton();
+            	setTimeout(reposition, 500)
+            }
+            reposition();
         });
         return this;
     };
