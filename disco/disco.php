@@ -1160,7 +1160,7 @@
 					$name = $element_group->get_display_name();
 					if($group_is_required)
 						$name .= '*';
-					$b->box_item_no_label( $anchor.prettify_string($name),$this->has_error($element_group_name), $element_group_name );
+					$b->box_item_no_label( $anchor.prettify_string($name),$this->has_error($element_group_name), $element_group_name.'_label' );
 					$anchor = '';
 				}
 				
