@@ -385,7 +385,17 @@ class LutherTemplate2010 extends MinisiteTemplate
 	function luther_breadcrumbs()
 	{
 		echo '<nav id="breadcrumbs">'."\n";
-		echo $this->_get_breadcrumb_markup($this->_get_breadcrumbs(), $this->site_info->get_value('base_breadcrumbs'), '&nbsp;&#187;&nbsp;');
+		$b = $this->_get_breadcrumb_markup($this->_get_breadcrumbs(), $this->site_info->get_value('base_breadcrumbs'), '&nbsp;&#187;&nbsp;');
+		
+		$url = get_current_url();
+		if (preg_match("/story_id=\d+$/", $url))
+		// publication inserts link to story as well as the story itself so remove the link
+		{
+			$ba = explode('&nbsp;&#187;&nbsp;', $b);
+			array_splice($ba, -2, 1);
+			$b = implode('&nbsp;&#187;&nbsp;', $ba);
+		}
+		echo $b;
 		echo '</nav>'."\n";
 
 	}
