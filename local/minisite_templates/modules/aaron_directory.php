@@ -32,9 +32,15 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
     var $search_url;
     var $result_comment;
     var $elements = array(
-            'first_name' => array('type' => 'text','size' => '15'),
-            'last_name' => array('type' => 'text','size' => '15'),
-            'more_comment' => array('type' => 'comment','text' => '<h3>More options</h3>'),
+            'first_name' => array(
+                'display_name' => 'Name or Username',
+                'comments' => '<span class="formComment">e.g. john, smitjo, or smith <span>',
+                'type' => 'text',
+                'size' => '15'
+             ),
+            /*'last_name' => array('type' => 'text','size' => '15'),*/
+            //'more_comment' => array('type' => 'comment','text' => '<h3>More options</h3>'),
+            'more_comment' => array('type' => 'comment','text' => '<a onclick="ShowHide(); return false;" href="#">More options</a>'),
             'search_for' => array(
                             'display_name' => 'Search for',
                             'type' => 'select_no_sort',
@@ -47,8 +53,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             ),
             'phone_number' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. 4444<span>'),
-            'email_address' => array('type' => 'text','size' => '15',
-                            'comments' => '<span class="formComment">e.g. mheiman<span>'),
+            /*fist_name now does all types of names, including user name so email should go with that
+             * 'email_address' => array('type' => 'text','size' => '15',
+                            'comments' => '<span class="formComment">e.g. mheiman<span>'),*/
             // room now searches for buildings (like residence halls and offices)
             //'building' => array('type' => 'text','size' => '15'),
             'room' => array(
@@ -123,25 +130,28 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             'title' => array('type' => 'text','size' => '15',
                             'comments' => '<span class="formComment">e.g. dean<span>'),
 
-            'exact' => array(
+            /*'exact' => array(
                             'display_name' => 'Find matches only at the beginning of fields.',
                             'type' => 'checkboxfirst'
             ),
+             * commenting this out so that middle names and such work out
+             */
+
         // doesn't work for now, so removing for now
             //'pictures' => array(
             //                'display_name' => 'Show pictures',
             //                'type' => 'checkboxfirst',
             //),
-        //removing display_as, and chnaged below so that it would default display as: book (not list)
+
             'display_as' => array(
                             'display_name' => 'Display as',
                             'type' => 'select_no_sort',
                             //'options' => array('list'=>'Directory Listing',
                             //                'book'=>'Photo Book',
-                            'options' => array('book'=>'Links',
-                                               'list'=>'Lists',
+                            'options' => array('book'=>'Sortable Table of Search Results',
+                                               'list'=>'List of Individual Entries  (Not Recommended) ',),
                             ),
-            ),
+            'hide_comment' => array('type' => 'comment','text' => '<a onclick="ShowHide(); return false;" href="#">Hide "More options"</a>'),
     );
     // These are fields from the old directory form that people might try to pass in a URL,
     // mapped to the appropriate field in the new form.
@@ -172,6 +182,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         if($head_items =& $this->get_head_items()) {
             $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
             $head_items->add_javascript('/reason/js/tableSorter.js');
+            $head_items->add_javascript('/reason/js/directory.js');
             // iphone support; scales to screen and disables zooming
             $head_items->add_head_item('meta', array('name'=>'viewport','content'=>'width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'));
         }
@@ -206,6 +217,30 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
     function run()//{{{
     {
+        // Below ends the PHP for now, to add some javascript that allows a div to show and hide a section when clicked.
+        ?>
+        <script type="text/javascript">
+        //<![CDATA[
+        function ShowHide(){
+            $("#searchforRow").animate({"height": "toggle"}, { duration: 1000 });
+            $("#departRow").animate({"height": "toggle"}, { duration: 1000 });
+            $("#titleRow").animate({"height": "toggle"}, { duration: 1000 });
+            $("#displayasRow").animate({"height": "toggle"}, { duration: 1000 });
+            $("#hidecommentRow").animate({"height": "toggle"}, { duration: 1000 });
+            //table data shown only when logged in
+            $("#phonenumberRow").animate({"height": "toggle"}, { duration: 1000 });
+            $("#roomRow").animate({"height": "toggle"}, { duration: 1000 });
+            $("#studentcommentRow").animate({"height": "toggle"}, { duration: 1000 });
+            $("#majorRow").animate({"height": "toggle"}, { duration: 1000 });
+            $("#yearRow").animate({"height": "toggle"}, { duration: 1000 });
+            $("#facultycommentRow").animate({"height": "toggle"}, { duration: 1000 });
+	}
+
+        window.onload = ShowHide;
+
+	//]]>
+	</script>
+        <?php
         $this->get_menu_data();
         $this->display_form();
     } //}}}
@@ -720,7 +755,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 echo "<tr valign=top><td><b>Student Status Date: </b></td><td>".$data['studentstatusdate'][0]."</td></tr>";
             }
             if (isset($data['lastupdate'])) {
-                echo "<tr valign=top><td><b>Last Updated: </b></td><td>".$data['lastupdate'][0]."</td></tr>";
+                echo "<tr valign=top><td><b>Refreshed Date: </b></td><td>".$data['lastupdate'][0]."</td></tr>";
             }
             if (isset($data['mobile'])) {
                 //echo "<tr valign=top><td><b>Cell Phone: </b></td><td>";
@@ -839,7 +874,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                     $str .= '<th style="-moz-user-select: none;" class="fd-column-0 sortable-text reverseSort"><a title="Sort by "Name" href="#">Name</a></th>';
                     $str .= '<th style="-moz-user-select: none;" class="fd-column-1 sortable-text reverseSort"><a title="Sort by "Affiliation" href="#">Affiliation</a></th>';
                     $str .= '<th style="-moz-user-select: none;" class="fd-column-2 sortable-text reverseSort"><a title="Sort by "E-mail" href="#">E-mail</a></th>';
-                    $str .= '<th style="-moz-user-select: none;" class="fd-column-3 sortable-text reverseSort"><a title="Sort by "Campus Phone" href="#">Campus Phone</a></th>';
+                    $str .= '<th style="-moz-user-select: none;" class="fd-column-3 sortable-numeric reverseSort"><a title="Sort by "Campus Phone" href="#">Campus Phone</a></th>';
+                    if (reason_check_authentication()) {
+                        $str .= '<th style="-moz-user-select: none;" class="fd-column-4 sortable-text reverseSort"><a title="Sort on "Year in School" href="#">Year in School</a></th>';
+                    }
 //                    $str .= '<th style="-moz-user-select: none;" class="sortable-currency fd-column-4"><a title="Sort on "Weekly Gross" href="#">Weekly Gross</a></th>';
 //                    $str .= '<th style="-moz-user-select: none;" class="sortable-numeric fd-column-5"><a title="Sort on "Change" href="#">Change</a></th>';
 //                    $str .= '<th style="-moz-user-select: none;" class="sortable-numeric fd-column-6"><a title="Sort on "Theaters" href="#">Theaters</a></th>';
@@ -850,11 +888,35 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $str .= '<tbody>';
         foreach($people as $data) {
           $str .= '<tr class="">';
-          $str .= '<td>' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]) .'</td>';
-          $str .= '<td>' .$data['edupersonprimaryaffiliation'][0] . '</td>';
-          $str .= '<td>'.$data['mail'][0] . '</td>';
+          if (isset ($data['uid'][0])) {
+              $str .= '<td>' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]) .'</td>';
+          } else {
+              $str .= '<td>&nbsp;</td>';
+          }
+          if (isset ($data['edupersonprimaryaffiliation'][0])) {
+              $str .= '<td>' .$data['edupersonprimaryaffiliation'][0] . '</td>';
+          } else {
+              $str .= '<td>&nbsp;</td>';
+          }
+          if (isset ($data['mail'][0])) {
+              $str .= '<td>'.$data['mail'][0] . '</td>';
+          } else {
+              $str .= '<td>&nbsp;</td>';
+          }
+
           if (isset ($data['officephone'][0])) {
               $str .= '<td>'.$data['officephone'][0].'</td>';
+          } elseif (isset ($data['studentresidencehallphone'][0])) {
+              $str .= '<td>'.$data['studentresidencehallphone'][0].'</td>';
+          } else {
+              $str .= '<td>&nbsp;</td>';
+          }
+          if (reason_check_authentication()) {
+          if (isset ($data['studentyearinschool'][0])) {
+              $str .= '<td>'.$data['studentyearinschool'][0] . '</td>';
+          } else {
+              $str .= '<td>&nbsp;</td>';
+          }
           }
           $str .= '</tr>';
           }
@@ -954,7 +1016,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'studentstatus','alumclassyear','postaladdress','l','st','postalcode','c',
                 'edupersonentitlement','mobile', 'termenrolled', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
-                'programstartdate','programenddate');
+                'programstartdate','programenddate', 'lastupdate');
 
         $nr_suppress = array('dn','uid','ou','count','employeenumber','prno','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
                 'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName',
@@ -1319,9 +1381,15 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $filter[] = "(carlColleagueid$cmp$id_number)";
             $filter_desc[] = 'whose ID Number is ' . $this->format_search_key($id_number);
         }
-        if(!empty($first_name)) {
+        /*
+         * old name search
+         * if(!empty($first_name)) {
             $filter[] = "(|(givenName$cmp$pre$first_name$post)(eduPersonNickname$cmp$pre$first_name$post))";
             $filter_desc[] = 'whose first name is ' . $this->format_search_key($first_name);
+        }*/
+        if(!empty($first_name)) {
+            $filter[] = "(|(cn$cmp$pre$first_name$post)(uid$cmp$pre$first_name$post))";
+            $filter_desc[] = 'whose name is ' . $this->format_search_key($first_name);
         }
         if(!empty($last_name)) {
             //echo "$last_name";
