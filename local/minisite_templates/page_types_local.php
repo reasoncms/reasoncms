@@ -1,4 +1,5 @@
 <?php
+
 $GLOBALS['_reason_page_types_local'] = array(
 		'default' => array(
 			'pre_bluebar' => 'textonly_toggle_top',
@@ -337,7 +338,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'main' => 'content',
                 	'main_post' => array(
                     	'module' => 'publication',
-                		'related_publication_unique_names' => array('headlines_football_men'),
+                		'related_publication_unique_names' => array(luther_sports_get_publication_unique_name("headlines")),
 						'related_mode' => 'true',
 						'related_title' => '',
                         'max_num_items' => 5,
@@ -349,7 +350,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 					'sub_nav_3' => 'luther_bannerad',
 					'sidebar' => array( // Spotlights
                         'module' => 'publication',
-                        'related_publication_unique_names' => array( 'spotlights_football_men' ),
+						'related_publication_unique_names' => array(luther_sports_get_publication_unique_name("spotlights")),
                         'related_mode' => 'true',
                         'related_title' => '',
                         'related_order' => 'random',
@@ -948,5 +949,23 @@ function luther_shorten_string($text, $length, $append)
 	}
 	return $text;
 }
+
+function luther_sports_get_publication_unique_name($s)
+// fill in appropriate headline or spotlight unique publication name
+// given the url for a particular sports landing page
+// $s is either "headlines" or "spotlights"
+// e.g. /sports/men/football becomes "headlines_football_men" or "spotlights_football_men"
+{
+	$url = get_current_url();
+	if (preg_match("/sports\/?$/", $url))
+	{
+		return $s . "_sports";
+	}
+	else if (preg_match("/\/([A-Za-z0-9_]+)\/([A-Za-z0-9_]+)\/?$/", $url, $matches))
+	{
+		return $s . "_" . $matches[2] . "_" . $matches[1];
+	}
+}
+
 
 ?>

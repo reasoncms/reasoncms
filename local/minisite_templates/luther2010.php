@@ -33,8 +33,14 @@ class LutherTemplate2010 extends MinisiteTemplate
 		$this->get_title();
 
 		// start page
+		$s = "";
+		$url = get_current_url();
+		if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url))
+		{
+			$s = 'sports';
+		}
 		echo $this->get_doctype()."\n";
-		echo '<html  class="no-js" id="luther-edu" lang="en">'."\n";
+		echo '<html  class="no-js ' . $s .'" id="luther-edu" lang="en">'."\n";
 		echo '<head>'."\n";
 
 		$this->do_org_head_items();
@@ -561,7 +567,13 @@ class LutherTemplate2010 extends MinisiteTemplate
 
 	function create_body_tag()
 	{
+		$s = "";
 		$bc = $this->_get_breadcrumbs();
+		$url = get_current_url();
+		if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url))
+		{
+			$s = 'sports';
+		}
 		
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
 		{
@@ -576,7 +588,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 		{
-			return '<body id="home" class="style-home-01" >'."\n";
+			return '<body id="home" class="style-home-01 ' . $s . '">'."\n";
 		}
 		//elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving')
 		//{
@@ -585,11 +597,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 		elseif ($this->cur_page->get_value( 'custom_page' ) == 'events'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'sports_roster')
 		{
-			return '<body class="style-one-column" >'."\n";
+			return '<body class="style-one-column ' . $s . '">'."\n";
 		}
 		elseif ($this->cur_page->get_value( 'custom_page' ) == 'spotlight_archive')
 		{
-			return '<body class="style-two-columns spotlight-archive" >'."\n";
+			return '<body class="style-two-columns spotlight-archive ' . $s . '">'."\n";
 		}
 		//elseif (count($bc) <= 2 /*&& $this->admissions_has_related_or_timeline()*/)  // section
 		//{
@@ -597,7 +609,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//}
 		else
 		{
-			return '<body class="style-two-columns">'."\n";
+			return '<body class="style-two-columns ' . $s . '">'."\n";
 		}
     }
 
