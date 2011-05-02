@@ -53,12 +53,19 @@ class miniEventsModule extends EventsModule
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 		{
 			echo '<section class="events" role="group">'."\n";
-			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving')
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{
-				echo '<header class="blue-stripe"><h1><span>Browse Events</span></h1></header>'."\n";
-				$this->show_calendar_grid();
+				echo '<header class="blue-stripe"><h1><span>Schedule</span></h1></header>'."\n";
 			}
-			echo '<header class="blue-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
+			else
+			{
+				if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving')
+				{
+					echo '<header class="blue-stripe"><h1><span>Browse Events</span></h1></header>'."\n";
+					$this->show_calendar_grid();
+				}
+				echo '<header class="blue-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
+			}
 		}
 		
 		echo '<ol class="hfeed">'."\n";
@@ -124,8 +131,15 @@ class miniEventsModule extends EventsModule
 		}
 		echo '<nav class="button view-all">'."\n";
 		echo '<ul>'."\n";
-		//echo '<li><a href="/programming/calendar">View all events &gt;</a></li>'."\n";
-		echo '<li><a href="'.$viewAllLink.'">View all events &gt;</a></li>'."\n";
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
+		{
+			echo '<li><a href="'.$viewAllLink.'">Complete schedule &gt;</a></li>'."\n";
+		}
+		else
+		{
+			//echo '<li><a href="/programming/calendar">View all events &gt;</a></li>'."\n";
+			echo '<li><a href="'.$viewAllLink.'">View all events &gt;</a></li>'."\n";
+		}
 		echo '</ul>'."\n";
 		echo '</nav>'."\n";
 	}

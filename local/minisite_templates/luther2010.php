@@ -1037,7 +1037,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if ($this->has_content( 'main_post' ))
 		{
 			echo '<div class="contentPost">'."\n";
-			echo '<header class="red-stripe"><h1><span>News</span></h1></header>'."\n";
+			echo '<header class="red-stripe"><h1><span>Headlines</span></h1></header>'."\n";
 			$this->run_section( 'main_post' );
 			echo '</div>'."\n";
 		}
