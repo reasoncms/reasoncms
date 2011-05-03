@@ -40,12 +40,12 @@ class ApplicationPageTwo extends FormStep
 		),
                 'middle_name' => array(
                         'type' => 'text',
-                        'size' => 15,
+                        'size' => 10,
                 ),
 		'last_name' => array(
 			'type' => 'text',
 			'display_name' => 'Last Name or Family Name',
-			'size'=>20,
+			'size'=>15,
 		),
 		'preferred_first_name' => array(
 			'type' => 'text',
@@ -57,7 +57,29 @@ class ApplicationPageTwo extends FormStep
 		),
 		'date_of_birth' => array(
 			'type' => 'textdate',
+                    'use_picker' => false
 		),
+                'ssn_1' => array(
+                        'type' => 'text',
+                        'size' => 3,
+                        //'comments' => '<br><a href="#ssn">Why is this important?</a>'
+                ),
+                'ssn_dash_1' => array(
+                        'type' => 'comment',
+                        'text' => '-'
+                ),
+                'ssn_2' => array(
+                        'type' => 'text',
+                        'size' => 2,
+                ),
+                'ssn_dash_2' => array(
+                        'type' => 'comment',
+                        'text' => '-'
+                ),
+                'ssn_3' => array(
+                        'type' => 'text',
+                        'size' => 4,
+                ),
 		'email' => array(
 			'type' => 'text',
 			'size'=>35,
@@ -134,13 +156,14 @@ class ApplicationPageTwo extends FormStep
                         'type' => 'comment',
                         'text' => '<h3>Additional Information</h3>'
 		),
-                'citizenship_status' => array(
-                    'type' => 'radio_no_sort',
-                    'options' => array(
-                        'citizen' => 'U.S. Citizen',
-                        'resident' => 'Permanent Resident',
-                        'not a citizen' => 'Not a U.S, citizen or permanent resident')
-                ),
+//                'citizenship_status' => array(
+//                    'type' => 'radio_no_sort',
+//                    'options' => array(
+//                        'citizen' => 'U.S. Citizen',
+//                        'dual' => 'U.S./Dual Citizen',
+//                        'resident' => 'Permanent Resident',
+//                        'not a citizen' => 'Not a U.S, citizen or permanent resident')
+//                ),
                 'heritage_comment' => array(
                     'text' => 'If you wish to be identified with a particular ethnic group,
                         please select the choice that most accurately describes your heritge.',
@@ -156,14 +179,16 @@ class ApplicationPageTwo extends FormStep
                     'text' => 'In addition, select one or more of the following racial categories to describe yourself.'
                 ),
                 'race' => array(
-                    'type' => 'radio_no_sort',
+                    'type' => 'checkboxgroup_no_sort',
                     'display_name' => '&nbsp;',
                     'options' => array(
                         'AN' => 'American Indian or Alaska Native',
                         'AS' => 'Asian',
                         'BL' => 'Black or African American',
+                        'HI' => 'Hispanic',
                         'HP' => 'Native Hawaiian or Other Pacific Islander',
-                        'WH' => 'White'
+                        'WH' => 'White',
+                        'UN' => 'Unknown'
                     ),
                 ),
                 'your_faith_header' => array(
@@ -179,7 +204,7 @@ class ApplicationPageTwo extends FormStep
                     'type' => 'text',
                     'size' => 15,
                 ),
-                'church_state' => 'state_province',
+                'church_state' => 'state',
                 'religion' => array(
                     'type' => 'select',
                     'add_null_value_to_top' => true,
@@ -203,7 +228,13 @@ class ApplicationPageTwo extends FormStep
                         'PK' => 'Christian Unknown',
                         'PL' => 'Latter Day Saints/Mormon',
                         'PM' => 'Methodist',
-                        'PO' => 'Christian Other'
+                        'PO' => 'Christian Other',
+                        'PP' => 'Presbyterian',
+                        'PQ' => 'Quaker (Friends)',
+                        'PU' => 'United Church of Christ',
+                        'RN' => 'None',
+                        'RU' => 'Unreported',
+                        'UN' => 'Unitarian'
                     )
                 )
 	);
@@ -223,7 +254,15 @@ class ApplicationPageTwo extends FormStep
                 'type' => 'inline',
                 'elements' => array('church_city', 'church_state'),
                 'args' => array('use_element_labels' => false, 'display_name' => 'City/State')
-            )
+            ),
+            'ssn_group' => array(
+                'type' => 'inline',
+                'elements' => array('ssn_1', 'ssn_dash_1', 'ssn_2', 'ssn_dash_2', 'ssn_3'),
+                'args' => array(
+                    'use_element_labels' => false,
+                    'display_name' => 'U.S. Social Security Number',
+                    'comments' => '<br><a href="#ssn">Why is this important?</a>')
+            ),
         );
 
 /*	var $required = array(
@@ -260,6 +299,7 @@ class ApplicationPageTwo extends FormStep
             }
             
             $this->move_element('name_group','before','preferred_first_name');
+            $this->move_element('ssn_group','after','date_of_birth');
             $this->pre_fill_form();
 	}
 	function pre_fill_form()
@@ -521,7 +561,7 @@ class ApplicationPageTwo extends FormStep
 	}
 	function pre_show_form()
 	{
-		echo '<div id="giftForm" class="pageTwo">'."\n";
+		echo '<div id="admissionsApp" class="pageTwo">'."\n";
 	}
 	function post_show_form()
 	{
@@ -529,19 +569,11 @@ class ApplicationPageTwo extends FormStep
 	}
 	function run_error_checks()
 	{
-		if($this->get_value('luther_affiliation') && in_array('Alumnus', $this->get_value('luther_affiliation')) && !$this->get_value('class_year') )
-		{
-			$this->set_error('class_year','Please enter your class year if you are an alumnus/a');
-		}
-		if($this->get_value('luther_affiliation') && in_array('Student', $this->get_value('luther_affiliation')) && !$this->get_value('class_year') )
-		{
-			$this->set_error('class_year','Please enter your class year if you are a current Luther student');
-		}
-		// Taken from http://us2.php.net/eregi
-		if( !eregi('^[A-Z0-9._%-]+@[A-Z0-9._%-]+\.[A-Z]{2,6}$',$this->get_value('email')))
-		{
-			$this->set_error('email','The email address you entered does not appear to be valid.  Please check to make sure you entered it correctly');
-		}
+//		// Taken from http://us2.php.net/eregi
+//		if( !eregi('^[A-Z0-9._%-]+@[A-Z0-9._%-]+\.[A-Z]{2,6}$',$this->get_value('email')))
+//		{
+//			$this->set_error('email','The email address you entered does not appear to be valid.  Please check to make sure you entered it correctly');
+//		}
 	}
 }
 function get_individual_ldap_info( $userid )

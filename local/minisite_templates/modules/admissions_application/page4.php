@@ -31,6 +31,10 @@ class ApplicationPageFour extends FormStep
                     'type' => 'comment',
                     'text' => '<h4>Current High School</h4>',
             ),
+            'current_high_school_header_2' => array(
+                    'type' => 'comment',
+                    'text' => '<h4>Final High School</h4>',
+            ),
             'current_hs_name' => array(
                     'type' => 'text',
                     'display_name' => 'Name',
@@ -64,36 +68,102 @@ class ApplicationPageFour extends FormStep
                     'type' => 'year',
                     'display_name' => 'Year of graduation',
             ),
-            'secondary_high_school_header' => array(
+            'college_1_header' => array(
                     'type' => 'comment',
-                    'text' => '<h4>Secondary/High School</h4>',
+                    'text' => '<h4>College/University</h4>',
             ),
-            'secondary_hs_name' => array(
+            'college_1_name' => array(
                     'type' => 'text',
                     'display_name' => 'Name',
                     'size'=>20,
             ),
-            'secondary_hs_address' => array(
+            'college_1_address' => array(
                     'type' => 'text',
                     'display_name' => 'Address',
                     'size'=>20,
                     'comments' => '¿¿¿¿If we are pulling from CEEB, is this needed????'
             ),
-            'secondary_hs_city' => array(
+            'college_1_city' => array(
                     'type' => 'text',
                     'display_name' => 'City',
                     'size'=>15,
             ),
-            'secondary_hs_state' => array(
+            'college_1_state' => array(
                     'type' => 'state_province',
                     'display_name' => 'State/Province',
             ),
-            'secondary_hs_zip' => array(
+            'college_1_zip' => array(
                     'type' => 'text',
                     'display_name' => 'Zip/Postal Code',
                     'size'=> 8,
             ),
-            'secondary_hs_country' => array(
+            'college_1_country' => array(
+                    'type' => 'Country',
+                    'display_name' => 'Country',
+            ),
+            'college_2_header' => array(
+                    'type' => 'comment',
+                    'text' => '<h4>College/University</h4>',
+            ),
+            'college_2_name' => array(
+                    'type' => 'text',
+                    'display_name' => 'Name',
+                    'size'=>20,
+            ),
+            'college_2_address' => array(
+                    'type' => 'text',
+                    'display_name' => 'Address',
+                    'size'=>20,
+                    'comments' => '¿¿¿¿If we are pulling from CEEB, is this needed????'
+            ),
+            'college_2_city' => array(
+                    'type' => 'text',
+                    'display_name' => 'City',
+                    'size'=>15,
+            ),
+            'college_2_state' => array(
+                    'type' => 'state_province',
+                    'display_name' => 'State/Province',
+            ),
+            'college_2_zip' => array(
+                    'type' => 'text',
+                    'display_name' => 'Zip/Postal Code',
+                    'size'=> 8,
+            ),
+            'college_2_country' => array(
+                    'type' => 'Country',
+                    'display_name' => 'Country',
+            ),
+            'college_3_header' => array(
+                    'type' => 'comment',
+                    'text' => '<h4>College/University</h4>',
+            ),
+            'college_3_name' => array(
+                    'type' => 'text',
+                    'display_name' => 'Name',
+                    'size'=>20,
+            ),
+            'college_3_address' => array(
+                    'type' => 'text',
+                    'display_name' => 'Address',
+                    'size'=>20,
+                    'comments' => '¿¿¿¿If we are pulling from CEEB, is this needed????'
+            ),
+            'college_3_city' => array(
+                    'type' => 'text',
+                    'display_name' => 'City',
+                    'size'=>15,
+            ),
+            'college_3_state' => array(
+                    'type' => 'state_province',
+                    'display_name' => 'State/Province',
+            ),
+            'college_3_zip' => array(
+                    'type' => 'text',
+                    'display_name' => 'Zip/Postal Code',
+                    'size'=> 8,
+            ),
+            'college_3_country' => array(
                     'type' => 'Country',
                     'display_name' => 'Country',
             ),
@@ -117,17 +187,20 @@ class ApplicationPageFour extends FormStep
             'sat_math' => array(
                 'type' => 'text',
                 'size' => 4,
-                'display_name' => 'Math'
+                'display_name' => '&nbsp;',
+                'comments' => 'Math'
             ),
             'sat_critical_reading' => array(
                 'type' => 'text',
                 'size' => 4,
-                'display_name' => 'Critical Reading'
+                'display_name' => '&nbsp;',
+                'comments' => 'Critical Reading'
             ),
             'sat_writing' => array(
                 'type' => 'text',
                 'size' => 4,
-                'display_name' => 'Writing'
+                'display_name' => '&nbsp;',
+                'comments' => 'Writing'
             ),
             'act_scores_comment' => array(
                 'type' => 'comment',
@@ -136,7 +209,8 @@ class ApplicationPageFour extends FormStep
             'act_composite' => array(
                 'type' => 'text',
                 'size' => 2,
-                'display_name' => 'Composite'
+                'display_name' => '&nbsp;',
+                'comments' => 'Composite'
             ),
 	);
 
@@ -151,12 +225,11 @@ class ApplicationPageFour extends FormStep
 
 	function pre_show_form()
 	{
-		echo '<div id="giftForm" class="pageOne">'."\n";
+		echo '<div id="admissionsApp" class="pageFour">'."\n";
 	}
 	function post_show_form()
 	{
 		echo '</div>'."\n";
 	}
 }
-
 ?>
