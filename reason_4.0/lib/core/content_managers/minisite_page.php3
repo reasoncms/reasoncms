@@ -223,7 +223,7 @@
 				{
 					if($note = $pt->meta('note'))
 					{
-						$this->add_element('page_type_note','commentWithLabel',array('text'=>$note));
+						$this->add_element('page_type_note','commentWithLabel',array('text'=>'<div class="note">'.$note.'</div>'));
 						$this->set_display_name('page_type_note', 'Note');
 					}
 				}
