@@ -9,3 +9,6 @@ tr#urlfragmentRow span.parent_path, tr#urlfragmentRow span.trailing_slash {
 	font-size:0.9em;
 	color:#777;
 }
+#pagetypenoteRow div.note>*:first-child, #pagetypenoteRow div.note div.callOut>*:first-child {
+	margin-top:0;
+}
