@@ -10,6 +10,7 @@
 	reason_include_once('classes/url_manager.php');
 	reason_include_once('classes/page_types.php');
 	reason_include_once('minisite_templates/page_types.php');
+	reason_require_once( 'minisite_templates/page_types.php' );
 	
 	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'MinisitePageManager';
 
@@ -191,11 +192,10 @@
 				}
 				
 				// for admin users
+				$rpts =& get_reason_page_types();
 				if(reason_user_has_privs( $this->admin_page->user_id, 'assign_any_page_type'))
 				{
-					reason_require_once( 'minisite_templates/page_types.php' );
 					$options = array();
-					$rpts =& get_reason_page_types();
 					$pts = $rpts->get_page_types();
 					$deprecated_mods = $this->_get_deprecated_modules();
 						
@@ -216,6 +216,16 @@
 				else
 				{
 					$this->alter_page_type_section();
+				}
+				
+				$page_type_for_note = $this->get_value('custom_page') ? $this->get_value('custom_page') : 'default';
+				if($pt = $rpts->get_page_type( $page_type_for_note ) )
+				{
+					if($note = $pt->meta('note'))
+					{
+						$this->add_element('page_type_note','commentWithLabel',array('text'=>$note));
+						$this->set_display_name('page_type_note', 'Note');
+					}
 				}
 				
 				$this->set_comments( 'name', form_comment('What should this page be called?') );
@@ -248,7 +258,7 @@
 				$this->set_comments( 'name', form_comment('The title of link displayed in your site\'s navigation.') );
 				$this->set_comments( 'parent_id', form_comment('Use this field to choose the link\'s parent page.') );
 			}
-			$this->set_order(array('name', 'link_name', 'unique_name', 'author', 'description', 'keywords', 'parent_id', 'url_fragment', 'extra_head_content', 'nav_display', 'custom_page', 'content') );
+			$this->set_order(array('name', 'link_name', 'unique_name', 'author', 'description', 'keywords', 'parent_id', 'parent_info', 'url_fragment', 'extra_head_content', 'nav_display', 'custom_page', 'page_type_note', 'content') );
 			
 		} // }}}
 		
