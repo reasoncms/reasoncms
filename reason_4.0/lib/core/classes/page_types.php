@@ -3,6 +3,8 @@
  * ReasonPageType provides a toolbox to get information about, modify, and export Reason page types.
  *
  * @todo implement region order setter (if needed)
+ * @todo add meta understanding for exports where necessary
+ * @todo add meta understanding for page type wizard
  * @author Nathan White
  * @author Andrew Bacon
  * @package reason
@@ -21,6 +23,16 @@ class ReasonPageType
 	* @access private
 	*/
 	var $_page_type;
+	
+	/**
+	 * @var array Array of key-value metadata information
+	 * 'note' => Administrative note about how page works and how to use it
+	 * @access private -- use the meta() method
+	 */
+	var $_meta = array(
+		'note' => null,
+	);
+	
 	/**
 	* @var array Available export formats.
 	* @access private
@@ -385,9 +397,16 @@ class ReasonPageType
 	 * @param string $module_name name of the module
 	 * @param string $module_filename relative to minisite_templates/modules/
 	 * @param string $module_params module parameters 
+	 *
+	 * @todo remove restriction on _meta region name once we move off the php array fprmat for page type definitions
 	 */
 	function set_region($region_name, $module_name, $module_filename, $module_params)
 	{
+		if('_meta' == $region_name)
+		{
+			trigger_error('The php export format will not accept the region name "_meta"; this region name is currently not reliable');
+			return false;
+		}
 		$this->_page_type[$region_name] = array(
 			'module_name' => $module_name,
 			'module_filename' => $module_filename,
@@ -490,11 +509,12 @@ class ReasonPageType
 	 * @param mixed $escape whether or not to escape special characters
 	 * @return void
 	 * @todo should this instead return a string?
+	 * @todo add meta information
 	 */	
 	function get_as_html($data=NULL, $escape=NULL) {
 		if (!isset($data))
 			$data = $this->_page_type;
-
+		
 		if (is_array($data)) 
 		{
 			if (count ($data))
@@ -559,6 +579,40 @@ class ReasonPageType
 			{
 				echo '(empty)'."\n";
 			}
+		}
+	}
+	
+	/**
+	 * Get and set page type meta information
+	 *
+	 * $pt->meta() returns all meta information as an array
+	 *
+	 * $pt->meta('key') returns the meta information for a given key=
+	 * (or null if a key has not been set)
+	 *
+	 * $pt->meta('key','value') sets a given key to a given value
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	function meta($key = null, $value = null)
+	{
+		if(null === $key && null === $value)
+		{
+			return $this->_meta;
+		}
+		elseif( null === $value )
+		{
+			if(isset($this->_meta[$key]))
+				return $this->_meta[$key];
+			else
+				return null;
+		}
+		else
+		{
+			$this->_meta[$key] = $value;
+			return true;
 		}
 	}
 }
@@ -722,7 +776,12 @@ class ReasonPageTypes
 			{
 				foreach ($page_type_array as $region_name => $module)
 				{
-					if (!is_array($module))
+					if('_meta' == $region_name)
+					{
+						foreach($module as $k=>$v)
+							$pt->meta($k, $v);
+					}
+					elseif (!is_array($module))
 					{
 						if (empty($module))
 						{
