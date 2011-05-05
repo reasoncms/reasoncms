@@ -881,8 +881,11 @@ class ReasonPageTypes
 				}
 				foreach( $type AS $section => $module_info )
 				{
-					$module = is_array( $module_info ) ? $module_info[ 'module' ] : $module_info;
-					if ($module) $modules_to_page_types[$module][] = $page_type;
+					if('_meta' != $section)
+					{
+						$module = is_array( $module_info ) ? $module_info[ 'module' ] : $module_info;
+						if ($module) $modules_to_page_types[$module][] = $page_type;
+					}
 				}
 			}
 		}
@@ -920,12 +923,7 @@ class ReasonPageTypes
 	function get_page_type_names()
 	{
 		reason_include_once('minisite_templates/page_types.php');
-		$page_type_names = array();
-		foreach ($GLOBALS['_reason_page_types'] as $page_type_name => $info)
-		{
-			$page_type_names[] = $page_type_name;
-		}
-		return $page_type_names;
+		return array_keys($GLOBALS['_reason_page_types']);
 	}
 	
 	/**
