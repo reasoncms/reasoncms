@@ -605,7 +605,9 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//	return '<body id="home" class="style-home-02" >'."\n";
 		//}
 		elseif ($this->cur_page->get_value( 'custom_page' ) == 'events'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'sports_roster')
+			|| $this->cur_page->get_value( 'custom_page' ) == 'sports_roster'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'directory_aaron'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'admissions_application')
 		{
 			return '<body class="style-one-column ' . $s . '">'."\n";
 		}
