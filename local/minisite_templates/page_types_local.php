@@ -128,7 +128,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
     		'directory_aaron' => array(
                     'main' => 'aaron_directory',
-                    'sidebar' => 'login_link',
+                    //'main_head' => 'login_link',
 		),
                 'discovery_camps' => array(
                     'main_post' => 'discovery_camps',
