@@ -172,9 +172,11 @@
 			// if both, the thumbnail values get overwritten by the image and the image values
 			// get put in the DB.  This is how we want it.
 			
+			$custom_thumbnail_uploaded = false;
 			// handle thumbnail image
 			if( !empty($thumbnail->tmp_full_path) AND file_exists( $thumbnail->tmp_full_path ) )
 			{
+				$custom_thumbnail_uploaded = true;
 				$this->handle_thumbnail($id, $thumbnail);
 			}
 			// handle main image
@@ -187,7 +189,7 @@
 				$this->get_value("image_type"));
 			$thumb_name = PHOTOSTOCK.reason_format_image_filename($id,
 				$this->get_value("image_type"), "thumbnail");
-			if (($this->auto_create_thumbnails && file_exists($full_name) && !file_exists($thumb_name)) || $this->get_value("replace_thumbnail"))
+			if (($this->auto_create_thumbnails && file_exists($full_name) && !file_exists($thumb_name)) || ($this->get_value("replace_thumbnail") && !$custom_thumbnail_uploaded))
 			{
 				$this->create_thumbnail($id, $image);
 			}
