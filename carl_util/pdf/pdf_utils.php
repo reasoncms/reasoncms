@@ -31,6 +31,58 @@
  */
 function carl_merge_pdfs($pdffiles, $titles = array(), $metadata = array(), $metadata_encoding = 'UTF-8')
 {
+	if ((!defined('PDF_LIBRARY')) || (defined('PDF_LIBRARY') && (constant('PDF_LIBRARY') == 'PDFlib')))
+		return carl_merge_pdfs_pdflib($pdffiles, $titles, $metadata, $metadata_encoding);
+	else
+		return carl_merge_pdfs_fpdi($pdffiles, $titles, $metadata, $metadata_encoding);
+}
+
+function carl_merge_pdfs_fpdi($pdffiles, $titles = array(), $metadata = array(), $metadata_encoding = 'UTF-8')
+{
+	// FPDI throws some notices that break the PDF
+	$old_error = error_reporting(E_ERROR | E_WARNING | E_PARSE);
+	include_once(INCLUDE_PATH.'pdf/tcpdf/tcpdf.php');
+	include_once(INCLUDE_PATH.'pdf/fpdi/fpdi.php');
+
+	if(gettype($pdffiles) != 'array')
+	{
+		trigger_error('$pdffiles must be an array');
+		return false;
+	}
+	
+	if(!(class_exists('TCPDF') && class_exists('FPDI')))
+	{
+		trigger_error('You must have TCPDF/FPDI installed in order to run carl_merge_pdfs()');
+		return false;
+	}
+	
+	if(empty($pdffiles))
+		return NULL;	
+	
+	$fpdi = new FPDI;
+		
+	foreach($pdffiles as $pdffile)
+	{
+		if (file_exists($pdffile))
+		{
+			$count = $fpdi->setSourceFile($pdffile);
+			for($i=1; $i<=$count; $i++)
+			{
+				$template = $fpdi->importPage($i);
+				$size = $fpdi->getTemplateSize($template);
+				
+				$fpdi->AddPage('P', array($size['w'], $size['h']));
+				$fpdi->useTemplate($template, null, null, null, null, true);
+			}
+		}
+	}
+	error_reporting($old_error);
+	return $fpdi->Output('ignored.pdf', 'S');
+}
+
+
+function carl_merge_pdfs_pdflib($pdffiles, $titles = array(), $metadata = array(), $metadata_encoding = 'UTF-8')
+{
 	if(gettype($pdffiles) != 'array')
 	{
 		trigger_error('$pdffiles must be an array');
@@ -198,6 +250,7 @@ function carl_merge_pdfs($pdffiles, $titles = array(), $metadata = array(), $met
 	
 	return $buffer;
 }
+
 /**
  * Send a PDF with proper headers, etc.
  *
