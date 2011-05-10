@@ -638,6 +638,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 			return true;
 		}
 		
+		if ($this->has_content( 'twitter_sub_nav' ))
+		{
+			return true;
+		}
+		
 		if ((($this->has_content('pre_sidebar') || $this->has_content('sidebar')) && $this->cur_page->get_value('custom_page') != 'standalone_login_page_stripped'))
 		{
 			//print_r($this->cur_page->_values);
