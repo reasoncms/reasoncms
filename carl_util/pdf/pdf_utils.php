@@ -73,6 +73,14 @@ function carl_merge_pdfs_fpdi($pdffiles, $titles = array(), $metadata = array(),
 				
 				$fpdi->AddPage('P', array($size['w'], $size['h']));
 				$fpdi->useTemplate($template, null, null, null, null, true);
+				if ($i == 1)
+				{
+					if (isset($titles[$pdffile]))
+						$bookmark = html_entity_decode($titles[$pdffile]);
+					else
+						$bookmark = $pdffile;
+				$fpdi->Bookmark($bookmark, 1, 0, '', '', array(0,0,0));
+				}
 			}
 		}
 	}
