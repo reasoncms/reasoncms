@@ -1,0 +1,47 @@
+The FPDI PDF-Parser is a replacement of the PDF parser that is shipped
+with FPDI by default. Just extract the content of this package to your
+existing FPDI directory to overwrite the file pdf_parser.php and
+extract additional files in the filters folder.
+
+
+FOR EVALUATION VERSIONS ONLY
+++++++++++++++++++++++++++++
+An evaluation package is encoded with Zend Safeguard or Ioncube.
+Both versions requires a kind of loader to be installed on your
+server.
+
+An evaluation version is seperated into two parts: The PHP files
+and a license file.
+
+Licensefiles are named .htFPDI_PDF-Parser.icl or .htFPDI_PDF-Parser.zl
+
+	NOTICE THE DOT AT THE BEGINNING OF THE FILENAME!
+	SOME SYSTEMS (MAC) AUTOMATICALLY HIDE SUCH FILES!
+
+Depending on the version you'd choosen read the
+following installation instructions:
+
+
+	Ioncube
+	++++++++++++++++++++++++++++
+	The needed loaders and install instruction for the Ioncube Loader
+	are available at: http://www.ioncube.com/loaders.php
+	
+	Place the license file into the same directory of the
+	pdf_parser.php file.
+	
+
+	Zend
+	++++++++++++++++++++++++++++
+	To run Zend Guard encoded files you'll need the Zend Optimizer
+	to be installed on your server. It is available for download at:
+	http://www.zend.com/products/guard/downloads
+	
+	To load the license file you have to do this in your php code:
+	
+		zend_loader_install_license([absolute_path_to_the_licensefile], true);
+	
+	OR in your php.ini:
+	
+		zend_optimizer.licence_path = [path_to_the_licensefile]
+		(make sure you restart your webserver)
