@@ -368,7 +368,7 @@ $(document).ready(function()
 		$('#nyroModalWrapper').css('height','700px');
 	}
 	
-	var box=$('div.featureImage > a, h3.featureTitle > a, div.featureText > a');
+	var box=$('.featureTypeVideo a.anchor');
 	if(box.length>0)
 	{
 		// lets find the reason_package_http_base path and thus, our cross icon by looking at the nyroModal location
