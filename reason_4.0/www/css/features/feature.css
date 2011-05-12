@@ -1,5 +1,5 @@
 /* This is the base feature css. Customizations can be done on the theme or page level. */
-.featureMovie{
+.featureVideo{
 	display:none;
 }
 
@@ -53,11 +53,14 @@
 .featuresModule .feature .featureInfo a.dest {
 	text-decoration:none;
 }
-.featuresModule .feature .featureTitle a.dest, .featuresModule .feature .featureTitle span.noLink, .featuresModule .feature .featureText a.dest, .featuresModule .feature .featureText span.noLink {
+.featuresModule .feature .featureInfo a.anchor {
+	text-decoration:none;
+}
+.featuresModule .feature .featureTitle a.dest, .featuresModule .feature .featureTitle a.anchor, .featuresModule .feature .featureTitle span.noLink, .featuresModule .feature .featureText a.dest, .featuresModule .feature .featureText a.anchor, .featuresModule .feature .featureText span.noLink {
 	display:block;
 	padding:8px 12px 0 12px;
 }
-.featuresModule .feature .featureText a.dest, .featuresModule .feature .featureText span.noLink {
+.featuresModule .feature .featureText a.dest, .featuresModule .feature .featureText a.anchor, .featuresModule .feature .featureText span.noLink {
 	padding-top:0;
 }
 /* .feature:hover .featureTitle a.dest {
