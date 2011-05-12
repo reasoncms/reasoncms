@@ -1,0 +1,34 @@
+.content-primary table {
+ background:#ffffff;
+ border:none;
+}
+.content-primary th,
+.content-primary td,
+.content-primary caption {
+ border:none;
+ padding: 0 5px 0 0;
+}
+.content-primary td,
+.content-primary tr {
+ vertical-align: top;
+
+}
+.content-primary tr.ultra-light {
+ background: #eeeeee;
+
+}
+.content-primary tr.light {
+ background: #dddddd;
+}
+
+.directory_header {
+    padding-bottom: 3px;
+}
+
+.content-primary td {
+    width: 34ex;
+}
+
+.content-primary td#pic_td {
+    width: 141px;
+}
