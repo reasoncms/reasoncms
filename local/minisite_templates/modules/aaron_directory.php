@@ -40,7 +40,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
              ),
             /*'last_name' => array('type' => 'text','size' => '15'),*/
             //'more_comment' => array('type' => 'comment','text' => '<h3>More options</h3>'),
-            'more_comment' => array('type' => 'comment','text' => '<a onclick="ShowHide(); return false;" href="#">More options</a>'),
+            'more_comment' => array('type' => 'comment','text' => '<a onclick="show_all(); return false;" href="#">Show more options</a>'),
             'search_for' => array(
                             'display_name' => 'Search for',
                             'type' => 'select_no_sort',
@@ -151,7 +151,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             'options' => array('book'=>'Sortable Table of Search Results',
                                                'list'=>'List of Individual Entries  (Not Recommended) ',),
                             ),
-            'hide_comment' => array('type' => 'comment','text' => '<a onclick="ShowHide(); return false;" href="#">Hide "More options"</a>'),
+            'hide_comment' => array('type' => 'comment','text' => '<a onclick="hide_all(); return false;" href="#">Hide more options</a>'),
     );
     // These are fields from the old directory form that people might try to pass in a URL,
     // mapped to the appropriate field in the new form.
@@ -181,8 +181,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         parent::init( $args );
         if($head_items =& $this->get_head_items()) {
             $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
+            $head_items->add_stylesheet('/reason/css/directory.css');
             $head_items->add_javascript('/reason/js/tableSorter.js');
-            $head_items->add_javascript('/reason/js/directory.js');
+            if (reason_check_authentication()) {
+                $head_items->add_javascript('/reason/js/directory.js');
+            } else {
+                $head_items->add_javascript('/reason/js/directory_logout.js');
+            }
             // iphone support; scales to screen and disables zooming
             $head_items->add_head_item('meta', array('name'=>'viewport','content'=>'width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'));
         }
@@ -217,30 +222,17 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
     function run()//{{{
     {
-        // Below ends the PHP for now, to add some javascript that allows a div to show and hide a section when clicked.
-        ?>
-        <script type="text/javascript">
-        //<![CDATA[
-        function ShowHide(){
-            $("#searchforRow").animate({"height": "toggle"}, { duration: 1000 });
-            $("#departRow").animate({"height": "toggle"}, { duration: 1000 });
-            $("#titleRow").animate({"height": "toggle"}, { duration: 1000 });
-            $("#displayasRow").animate({"height": "toggle"}, { duration: 1000 });
-            $("#hidecommentRow").animate({"height": "toggle"}, { duration: 1000 });
-            //table data shown only when logged in
-            $("#phonenumberRow").animate({"height": "toggle"}, { duration: 1000 });
-            $("#roomRow").animate({"height": "toggle"}, { duration: 1000 });
-            $("#studentcommentRow").animate({"height": "toggle"}, { duration: 1000 });
-            $("#majorRow").animate({"height": "toggle"}, { duration: 1000 });
-            $("#yearRow").animate({"height": "toggle"}, { duration: 1000 });
-            $("#facultycommentRow").animate({"height": "toggle"}, { duration: 1000 });
-	}
+        if (reason_check_authentication()) {
 
-        window.onload = ShowHide;
-
-	//]]>
-	</script>
-        <?php
+        echo "<p class='directory_head'>";
+        echo "Logged in as <b>".reason_check_authentication()."</b> | ";
+        echo "<a href='https://reasondev.luther.edu/x/directory/?netid[]=".reason_check_authentication()."'>Your Entry</a>";
+        echo " | ";
+        echo "<a href='https://www.luther.edu/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
+        echo " | ";
+        echo "<a href='logout.php'>Logout</a>";
+        echo "</p>";
+        }
         $this->get_menu_data();
         $this->display_form();
     } //}}}
@@ -354,7 +346,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         echo '<div id="campusDirForm">';
         // Prominent login link for off-campus mobile users
         if ($this->context == 'external' && !reason_check_authentication()) {
-            echo '<p id="mobileLogin"><a href="/login/">Log in for full access</a></p>';
+            echo '<p class="directory_head" id="mobileLogin"><a href="/login/">Login for full access</a></p>';
         }
         $this->form->run();
         echo '</div>';
@@ -592,23 +584,25 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 //echo '</div>';
             //}
 
-            //image testing burkaab
 
+            ///*****//echo '<td>';
+            echo '<div id="directory_person">';
+            echo '<table cellspacing="0" cellpadding="5" border="0" align="center">';
+            echo "<tr valign=top>";
             echo '<td>';
-            echo '<table cellspacing="0" cellpadding="3" border="0"><tbody>';
-            $logged_user = reason_check_authentication();
-            //if ($data['uid'][0] == "burkaa01") {
-            //if(!empty($search_for) && $search_for != 'anyone')
-            if ($logged_user != "" && $data['edupersonprimaryaffiliation'][0] != 'Alumni') {
-                echo "<tr valign=top><td><b>Photo: </b></td><td>";
+            echo '<table cellspacing="0" cellpadding="3" border="0">';
+            //old picture testing things burkaab
+            //$logged_user = reason_check_authentication();
+            //if ($logged_user != "" && $data['edupersonprimaryaffiliation'][0] != 'Alumni') {
+                //echo "<tr valign=top><td><b>Photo: </b></td><td>";
                 //readfile("/var/person_photos/burkaa01.jpg")
                 //header("Content-type: image/jpg");
                 ////////echo "<img src='".readfile("/var/person_photos/burkaa01.jpg")."' width=141>";
                 //readfile("/var/person_photos/burkaa01.jpg");
-                echo "<img src='/stock/dir_img.php?image=".$data['uid'][0]."'>";
+                //echo "<img src='/stock/dir_img.php?image=".$data['uid'][0]."'>";
                 ////echo "<img src='/stock/dir_img.php?image=burkaa01'>";
-                echo "</td></tr>";
-            }
+                //echo "</td></tr>";
+            //}
             if (isset($data['cn'])) {
                 echo "<tr valign=top><td><b>Name: </b></td><td>".$data['cn'][0]."</td></tr>";
             }
@@ -765,9 +759,25 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 echo "<tr valign=top><td><b>Cell Phone: </b></td><td>".$data['mobile'][0]."</td></tr>";
             }
 
-
-            echo '</tbody></table>';
+            echo '</table>';
             echo '</td>';
+
+
+            $logged_user = reason_check_authentication();
+            //if ($data['uid'][0] == "burkaa01") {
+            //if(!empty($search_for) && $search_for != 'anyone')
+            if ($logged_user != "" && $data['edupersonprimaryaffiliation'][0] != 'Student - Previously Enrolled' && $data['edupersonprimaryaffiliation'][0] != 'Alumni' && $data['edupersonprimaryaffiliation'][0] != 'Student - Planning to Enroll') {
+                echo "<td id='pic_td' align='right'>";
+                echo "<img width='141px' src='/stock/dir_img.php?image=".$data['uid'][0]."'>";
+
+                echo "</td>";
+            }
+
+
+            echo '</tr></table>';
+
+            echo '</div>'; //#directory_person
+            //*********echo '</td>';
             // test area END ---------------------------------------------
             //if (isset($data['mail'])) {
             //    echo '<li class="personEmail">'. $this->format_email($data['mail'][0]) .'</li>';
