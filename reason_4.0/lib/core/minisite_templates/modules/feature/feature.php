@@ -13,51 +13,19 @@ reason_include_once( 'classes/sized_image.php' );
 reason_include_once( 'classes/av_display.php' );
 reason_include_once( 'classes/feature_helper.php' );
 reason_include_once( 'minisite_templates/modules/feature/views/default_feature_view.php' );
-//reason_include_once( 'minisite_templates/modules/feature/views/av_view.php' );
-
 
 include_once(CARL_UTIL_INC . 'basic/image_funcs.php');
 include_once(CARL_UTIL_INC . 'basic/url_funcs.php');
 
 if (!defined("FEATURE_VIEW_PATH"))
 {
-	define("FEATURE_VIEW_PATH",REASON_INC."lib/core/minisite_templates/modules/feature/views/");
+	define("FEATURE_VIEW_PATH",dirname(__FILE__).'/views/');
 }
 
+$GLOBALS[ '_module_class_names' ][ module_basename( __FILE__) ] = 'FeatureModule';
 
-//$GLOBALS[ '_module_class_names' ][ basename( __FILE__."/feature/feature", '.php' ) ] = 'FeatureModule';
-$GLOBALS[ '_module_class_names' ][ 'feature/feature' ] = 'FeatureModule';
-//$GLOBALS[ '_module_class_names' ][ 'volunteer_roles/volunteer_roles' ] = 'VolunteerRolesModule';
-	
 /**
  * The feature module displays entities of the feature type.
- *
- * Here is sample markup for a page with two features attached that have the following characteristics:
- *
- * - The features each have bg_color set to #ff0000
- * - The first feature has crop set to fill, the second has crop set to fit.
- * - Each feature has several attached images - one should be chosen at random to display.
- *
- * 	<div class="featuresModule autoplay-5 noscript">
- *	<ul class="features">
- *	<li class="feature active" style="background-color:#ff0000;">
- *		<a href="http://destination_url"><img src="/reason_package/reason_4.0/www/displayers/feature_image.php?id=12345&amp;w=300&amp;h=200&amp;crop=fill" /></a>
- *		<div class="featureContent">
- *		<h3 class="featureTitle"><a href="http://destination_url">Feature 1 Title</a></h3>
- *		<div class="featureText"><a href="http://destination_url">Feature 1 Text</a></div>
- *		<div class="featureNav"><a href="?feature=12345" title="Feature 1 Title" class="current num1"></a><a href="?feature=23456" title="Feature 2 Title" class="nonCurrent num2"></a></div>
- *		</div>
- *	</li>
- *	<li class="feature inactive" style="background-color:#ff0000;">
- *		<a href="http://destination_url"><img src="/reason_package/reason_4.0/www/displayers/feature_image.php?id=23456&amp;w=300&amp;h=200&amp;crop=fit" /></a>
- *		<div class="featureContent">
- *		<h3 class="featureTitle"><a href="http://destination_url">Feature 2 Title</a></h3>
- *		<div class="featureText"><a href="http://destination_url">Feature 2 Text</a></div>
- *		<div class="featureNav"><a href="?feature=12345" title="Feature 1 Title" class="nonCurrent num1"></a><a href="?feature=23456" title="Feature 2 Title" class="current num2"></a></div>
- *		</div>
- *	</li>
- *	</ul>
- *	</div>
  *
  * Requirements for this module:
  *
@@ -65,7 +33,7 @@ $GLOBALS[ '_module_class_names' ][ 'feature/feature' ] = 'FeatureModule';
  * - Loads a CSS file that hides inactive blocks and satisfies other css requirements - see reason_package/reason_4.0/www/css/feature.css
  * - Loads a javascript file that animates the feature set and makes smooth transitions without page reloads - see reason_package/reason_4.0/www/js/feature.js
  *
- * Supports these parameters
+ * Supports these parameters:
  *
  * - shuffle - default false. If true, we sort features randomly rather than by sort order
  * - autoplay_timer - default 0 (off). If a positive integer, indicates the time delay between switches
@@ -73,83 +41,82 @@ $GLOBALS[ '_module_class_names' ][ 'feature/feature' ] = 'FeatureModule';
  * - width - default 400. We use this value as the image width for images set to "crop to fill" and also send it into the feature_image.php script.
  * - height - default 300.  We use this value as the image height for images set to "crop to fill" and also send it into the feature_image.php script.
  * 
+ * Beta parameters:
+ * - view - default DefaultFeatureView. Name of a view class to use.
+ *
+ * @todo update sample markup
+ * @todo make views extensible without a lot of fuss.
+ *
  * @author Nathan White and Frank McQuarry
  */
 class FeatureModule extends DefaultMinisiteModule
 {
-	var $_features;
-	var $acceptable_params = array ('shuffle' => false,
-									'autoplay_timer' => 0,
-									'max' => 0,
-									'width' => 400,
-									'height' => 300,
-									'view'=>'DefaultFeatureView'
-									);
-	var $cleanup_rules=array('feature'=>'turn_into_int');
+	var $acceptable_params = array(
+		'shuffle' => false,
+		'autoplay_timer' => 0,
+		'max' => 0,
+		'width' => 400,
+		'height' => 300,
+		'view' => 'DefaultFeatureView'
+	);
 	
-	var $_view_data=array();//an array to hold the data for the view layer.
+	var $cleanup_rules = array('feature'=>'turn_into_int');
 	var $features_view_params;
-	var $current_feature_id=0;
-	var $markup; //an object to generate the html markup
+	var $current_feature_id = 0;
 	
+	private $_view;
+	private $_view_data;
+	private $_features;
 				
 	function init( $args = array() )
 	{
-		$features =& $this->get_features();
-		if (!empty($features))
+		if ($features = $this->get_features())
 		{
-			$this->set_default_params();
 			$head_items =& $this->get_head_items();
 			$head_items->add_javascript(JQUERY_URL, true);
 
 			//create the view layer
-			$this->get_view();
-			$view_data =$this->_view_data;
-			$view_params=& $this->get_view_params();
-			$current_feature_id=$this->current_feature_id;
-			$this->markup->set($view_data,$view_params,$current_feature_id,$head_items);
+			$view = $this->get_view();
+			$view_data = $this->_view_data;
+			$view_params = $this->get_view_params();
+			$current_feature_id = $this->current_feature_id;
+			$view->set($view_data,$view_params,$current_feature_id,$head_items);
 		}
 	}
 	
-	function set_default_params()
-	{
-		$params=$this->params;
-		if(!isset($params['shuffle'])){$this->params['shuffle']=false;}
-		if(!isset($params['autoplay_timer'])){$this->params['autoplay_timer']=0;}
-		if(!isset($params['max'])){$this->params['max']=0;}
-		if(!isset($params['width'])){$this->params['width']=400;}
-		if(!isset($params['height'])){$this->params['height']=300;}
-		if(!isset($params['view'])){$this->params['view']="DefaultFeatureView";}
-	}
-	
+	/**
+	 * @todo make me work properly and figure out a scheme for including custom views.
+	 */
 	function get_view()
 	{
-		if($this->params['view']=="DefaultFeatureView")
+		if (!isset($this->_view))
 		{
-			$this->markup= new DefaultFeatureView();
-		}
-		else
-		{
-			$view=$this->params['view'];
-			$file=FEATURE_VIEW_PATH.$view.'.php';
-			if(is_file($file))
+			if ($this->params['view'] == "DefaultFeatureView")
 			{
-				include $file;
-				$this->markup= new $view();
+				$this->_view = new DefaultFeatureView();
 			}
 			else
 			{
-				$this->markup= new DefaultFeatureView();
+				$view = $this->params['view'];
+				$file = FEATURE_VIEW_PATH . $view . '.php';
+				if (file_exists($file))
+				{
+					require_once $file;
+					$this->_view = new $view();
+				}
+				else
+				{
+					$this->_view = new DefaultFeatureView();
+				}
 			}
-			//the price of using is_file
-			clearstatcache();
 		}
+		return $this->_view;
 	}
 	
 	/**
 	 * Return our feature set by reference - only build the feature set once.
 	 */
-	function &get_features()
+	function get_features()
 	{
 		if (!isset($this->_features))
 		{
@@ -161,7 +128,7 @@ class FeatureModule extends DefaultMinisiteModule
 	/**
 	* return the features view params
 	*/
-	function &get_view_params()
+	function get_view_params()
 	{
 		if(!isset($this->features_view_params))
 		{
@@ -169,23 +136,18 @@ class FeatureModule extends DefaultMinisiteModule
 		}
 		return $this->features_view_params; 
 	}
+	
 	/**
 	 * Build the feature set
 	 */
 	function _build_features()
 	{
-		$max=0;
-		if(isset($this->params['max']))
-		{
-			$max=$this->params['max'];
-		}
-		
 		$es1 = new entity_selector( $this->site_id );
 		$es1->add_type( id_of('feature_type') );
 		$es1->add_right_relationship( $this->page_id, relationship_id_of('page_to_feature'));
-		if($max !=0)
+		if($this->params['max'] != 0)
 		{
-			$es1->set_num($max);
+			$es1->set_num($this->params['max']);
 		}
 		$results_array1 = $es1->run_one();
 		
@@ -369,7 +331,6 @@ class FeatureModule extends DefaultMinisiteModule
 		$width=$this->params['width'];
 		$height=$this->params['height'];	
 		
-		
 		//build the data needed by the view layer
 		foreach($features as $feature)
 		{
@@ -490,10 +451,7 @@ class FeatureModule extends DefaultMinisiteModule
 			$data[$feature->get_value('id')]=$d;
 		}//end foreach loop through $features
 		$this->_view_data=$data;
-
-//		pray($this->_view_data);
-		
-	}//end _build_view_data function
+	}
 	
 	/**
 	* returns the url to the sized image
@@ -527,131 +485,15 @@ class FeatureModule extends DefaultMinisiteModule
 	
 	function has_content()
 	{
-		$features =& $this->get_features();
+		$features = $this->get_features();
 		return (!empty($features));
-	}
-	
-	/**
-	* this whole method is for testing the new image manipulation functions
-	* that were written for feature
-	* I haven't thrown it away yet because I'm not sure I won't need it again
-	* @author Frank McQuarry  the person to blame for its continued existence.
-	*/
-	function test_sized_image()
-	{
-		$orig=reason_get_image_url(657759);
-		
-		$dest="/reason_package/reason_4.0/www/tmp/657759/3c405c4880f20057c9497eb9f69249d5.jpg";
-		$ow=500;
-		$oh=277;
-		$nw=400;
-		$nh=300;
-		
-		$or=$ow/$oh;
-		$nr=$nw/$nh;
-		
-		$x=0;//($ow - $nw)*0.5;
-		$y=0;//($oh - $nh)*0.5;
-
-		$rsi = new reasonSizedImage();
-		$rsi->set_id(657759);
-		$rsi->set_width($nw);
-		$rsi->set_height($nh);
-		$rsi->set_crop_style("fill");
-//		$rsi->_make();
-	 	$url = $rsi->get_url();
-
-
-	
-		$source="/usr/local/webapps/branches/mcquarry-apps/reason_package/reason_4.0/data/images/657759.jpg";
-		$target="/usr/local/webapps/branches/mcquarry-apps/reason_package/reason_4.0/www/tmp/657759/3c405c4880f20057c9497eb9f69249d5.jpg";
-		//		_imagemagick_crop_image($nw,$nh,$source,$target,false);
-		//		_gd_crop_image($nw, $nh, $source,$target,false);
-		//		crop_image($nw, $nh, $source,$target,false);
-
-		
-		
-		$resize="";
-		if($nw<=$nh && $or>=$nr)
-		{
-
-			$resize=" -resize x".$nh." ";
-
-		}
-		elseif($nw<=$nh && $or<$nr)
-		{
-			$resize=" -resize ".$nw."x ";
-		}
-		elseif($nw>$nh && $or<$nr)
-		{
-			$resize=" -resize ".$nw."x ";
-		}
-		elseif($nw>$nh && $or>$nr)
-		{
-			$resize=" -resize x".$nh." ";;
-		}
-		else
-		{
-			$resize=" -resize ".$nw."x ";
-
-		}
-
-//		$exec="convert ".$resize."-gravity Center -crop ".$nw."x".$nh."+".$x."+".$y." ".$source." ".$target;
-
-
-		$output = array();
-		$exit_status = -1;
-//		exec($exec, $output, $exit_status);
-		if($exit_status != 0)
-		{
-		//	echo "ERROR!  ERROR!";
-		}
-		
-		//Begin testing for blit_image function
-		$insert="/usr/local/webapps/branches/mcquarry-apps/reason_package/reason_4.0/www/play_button_icons/launch.png";
-		$url="/reason_package/reason_4.0/www/tmp/657759/3c405c4880f20057c9497eb9f69249d5.jpg";
-		$options=array();
-		$options['horizontal']="center";
-		$options['horizontal_offset']=30;
-		$options['vertical']="bottom";
-		$options['vertical_offset']=-10;
-//		_gd_blit_image($source,$target,$insert,$options);
-		_imagemagick_blit_image($source,$target,$insert,$options);
-//		blit_image($source,$target,$insert,$options);
-		//End testing for blit_image function
-	//	phpinfo();
-		
-		$str ="<div ";
-		$str.="style=\"";
-		$str.="width:".$ow."px;height:".$oh."px";
-		$str.=";background-color:cccccc;border:solid";
-		$str.="\"";
-		$str.=">";
-		$str.="<img src=\"".$orig."\" />";
-		$str.="</div>";
-
-		$str.="<div ";
-		$str.="style=\"";
-		$str.="width:".$nw."px;height:".$nh."px";
-		$str.=";background-color:cccccc;border:solid";
-		$str.="\"";
-		$str.=">";
-		$str.="<img src=\"".$url."\" />";
-		$str.="</div>";
-
-		
-		echo $str;
 	}
 	
 	function run()
 	{
-		//turn  this on if you want to test image functions
-		//$this->test_sized_image();
-
-		$html_str=$this->markup->get_html();
+		$view = $this->get_view();
+		$html_str = $view->get_html();
 		echo $html_str;
-		//pray($this->params);
-
 	}
-}// end FeatureModule class
+}
 ?>

@@ -7,11 +7,13 @@
 reason_include_once( 'minisite_templates/modules/feature/views/default_view.php' );
 
 /**
-* This View object differs from the default_feature_view in only one respect.  It doesn't
-* open a modal window to play multimedia files, it embeds the file directly into the feature
-* div.
-*/
-class av_view extends DefaultView
+ * This View object differs from the default_feature_view in only one respect.  It doesn't
+ * open a modal window to play multimedia files, it embeds the file directly into the feature
+ * div.
+ *
+ * @todo verify I work and if not fix me
+ */
+class av_view extends FeatureView
 {
 
 	function set($view_data,$view_params,$current_feature_id,&$head_items)
@@ -305,7 +307,7 @@ class av_view extends DefaultView
 			$av_html=$view_data['feature_av_html'][$view_data['current_image_index']];
 			$img_url=$view_data['feature_av_img_url'][$view_data['current_image_index']];
 			$img_alt=$view_data['feature_av_img_alt'][$view_data['current_image_index']];
-			$img_id="featureMovie-".$view_data['id'];
+			$img_id="featureVideo-".$view_data['id'];
 			$image_anchor_start="<a href=\"#".$img_id."\" style=\"height:".$height."px;\" >\n";
 
 			$image_anchor_end="</a>";
@@ -315,7 +317,7 @@ class av_view extends DefaultView
 //				$media_str ="<div class=\"featureImage\" >\n";
 //				$media_str.=$image_anchor_start."<img alt=\"".$img_alt."\"  name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
 //				$media_str.="</div>";
-//				$media_str.="<div class=\"featureMovie\" id=\"".$img_id."\" style=\"\">";
+//				$media_str.="<div class=\"featureVideo\" id=\"".$img_id."\" style=\"\">";
 				$media_str.="<div class=\"featureImage\">";
 				$media_str.=$av_html;
 				$media_str.="<h3 class=\"featureTitle\">".$anchor_start.$view_data['title'].$anchor_end."</h3>\n";

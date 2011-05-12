@@ -8,12 +8,19 @@
 
 
 /**
-* This is the root class for all view layer views of the Feature Module.
-* To create a new view you should override the following methods
-* 	set($view_data,$view_params,$current_feature_id,&$head_items)
-*   get_html()
-*/
-class DefaultView
+ * NOTE - Features are a beta feature. This abstract class and any views distributed with Reason 4 are subject to change.
+ * 
+ * It is recommended that you DO NOT create custom feature views at this time.
+ * 
+ * This is the root class for all view layer views of the Feature Module.
+ * 
+ * To create a new view you should override the following methods
+ * 	set($view_data,$view_params,$current_feature_id,&$head_items)
+ *   get_html()
+ *
+ * @todo the set method is out of control - fix it.
+ */
+class FeatureView
 {
 	
 	var $_view_params;//parameters that control how the view layer behaves
@@ -79,8 +86,6 @@ class DefaultView
 		return $this->_view_data;
 	}
 
-
-	
 	/**
 	 * Create the markup
 	 * @return string containing html markup for features
@@ -91,8 +96,6 @@ class DefaultView
 		$str="";
 		return $str; 
 	}
-
-	
-}//end featureMarkupGenerator class
+}
 
 ?>
