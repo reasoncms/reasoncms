@@ -1,34 +1,39 @@
-.content-primary table {
+#directory_person table {
  background:#ffffff;
  border:none;
 }
-.content-primary th,
-.content-primary td,
-.content-primary caption {
+#directory_person th,
+#directory_person td,
+#directory_person caption {
  border:none;
  padding: 0 5px 0 0;
 }
-.content-primary td,
-.content-primary tr {
+#directory_person td,
+#directory_person tr {
  vertical-align: top;
 
 }
-.content-primary tr.ultra-light {
+#directory_person tr.ultra-light {
  background: #eeeeee;
 
 }
-.content-primary tr.light {
+#directory_person tr.light {
  background: #dddddd;
 }
 
-.directory_header {
+#directory_person {
     padding-bottom: 3px;
 }
 
-.content-primary td {
+#directory_person td {
     width: 34ex;
 }
 
-.content-primary td#pic_td {
+#directory_person td#pic_td {
     width: 141px;
+}
+
+#directory_person {
+    width: 640px;
+    margin: 0 auto;
 }
