@@ -226,11 +226,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
         echo "<p class='directory_head'>";
         echo "Logged in as <b>".reason_check_authentication()."</b> | ";
-        echo "<a href='https://reasondev.luther.edu/x/directory/?netid[]=".reason_check_authentication()."'>Your Entry</a>";
+        echo "<a href='/directory/?netid[]=".reason_check_authentication()."'>Your Entry</a>";
         echo " | ";
-        echo "<a href='https://www.luther.edu/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
+        echo "<a href='/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
         echo " | ";
-        echo "<a href='logout.php'>Logout</a>";
+        echo "<a href='/login/?logout=1'>Logout</a>";
         echo "</p>";
         }
         $this->get_menu_data();
@@ -603,6 +603,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 ////echo "<img src='/stock/dir_img.php?image=burkaa01'>";
                 //echo "</td></tr>";
             //}
+
             if (isset($data['cn'])) {
                 echo "<tr valign=top><td><b>Name: </b></td><td>".$data['cn'][0]."</td></tr>";
             }
@@ -1057,6 +1058,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
             // Hiding No Release students for Luther
             if (isset($data['privacyflag'])) {
+                foreach ($nr_suppress as $attr)
+                    unset($results[$key]);
+            }
+
+            // Hiding Alumni from results
+             if ($data['edupersonprimaryaffiliation'][0] == 'Alumni') {
                 foreach ($nr_suppress as $attr)
                     unset($results[$key]);
             }
@@ -1737,7 +1744,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $lookup_pass = $password; /// get login password
 
 
-        $dir = new directory_service('ldap_luther_directory');
+//        $dir = new directory_service('ldap_luther_directory');
+        $dir = new directory_service('ldap_luther');
+
         $dir->authenticate($logged_user,$password);
 
 //		$dir->serv_inst['ldap_luther']->set_conn_param('lookup_dn', $lookup_login);
