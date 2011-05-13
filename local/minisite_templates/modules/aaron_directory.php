@@ -228,7 +228,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         echo "Logged in as <b>".reason_check_authentication()."</b> | ";
         echo "<a href='/directory/?netid[]=".reason_check_authentication()."'>Your Entry</a>";
         echo " | ";
-        echo "<a href='/x/steveform/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
+        echo "<a href='/x/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
         echo " | ";
         echo "<a href='/login/?logout=1'>Logout</a>";
         echo "</p>";
