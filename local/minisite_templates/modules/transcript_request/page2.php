@@ -178,8 +178,9 @@ class TranscriptPageTwoForm extends FormStep
 		$txt .= '<li><strong>Daytime Phone:</strong> '.$this->controller->get('daytime_phone').'</li>'."\n";
 		$txt .= '<li><strong>Email:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
                 if($this->controller->get('unofficial')){
-			$txt .= '<li><strong>Unofficial transcripts requested:</strong> '.$this->controller->get('unofficial').'</li>'."\n";
-		}
+			$txt .= '<li><strong>Unofficial transcripts requested:</strong> Yes </li>'."\n";
+			$txt .= '<li><strong>Mail to:</strong> '.$this->controller->get('unofficial_address').'</li>'."\n";
+                }
 		//if ($this->controller->get('official_type') == 'paper'){
 		if ($this->controller->get('number_of_official')){
 			//$txt .= '<li><strong>Official paper transcripts requested:</strong> '.$this->controller->get('official_type').'</li>'."\n";
