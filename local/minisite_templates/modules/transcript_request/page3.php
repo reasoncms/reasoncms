@@ -51,7 +51,7 @@ class TranscriptRequestConfirmation extends FormStep {
         $txt .= '<li><strong>Daytime Phone:</strong> ' . $daytime_phone . '</li>' . "\n";
         $txt .= '<li><strong>Email:</strong> ' . $email . '</li>' . "\n";
         if ($unofficial) {
-            $txt .= '<li><strong>Unofficial transcripts requested:</strong> ' . $unofficial . '</li>' . "\n";
+            $txt .= '<li><strong>Unofficial transcripts requested:</strong> Yes </li>' . "\n";
             $txt .= '<li><strong>Mail to:</strong> ' . $unofficial_address . '</li>' . "\n";
         }
         //if ($official_type == 'paper') {
@@ -90,9 +90,6 @@ class TranscriptRequestConfirmation extends FormStep {
         $this->email_registrar($txt);
         $this->email_requestor($blurb . $txt);
 
-        echo 'A copy of this confirmation has been sent to your email address.' . "\n";
-        echo '<br><a href ="/registrar/transcript/">Request more transcripts</a>' . "\n";
-
         connectDB('transcript_connection');
 
         $qstring = "INSERT INTO `requestor` SET
@@ -123,6 +120,11 @@ class TranscriptRequestConfirmation extends FormStep {
 
         $qresult = db_query($qstring);
         connectDB(REASON_DB);
+
+
+        echo 'A copy of this confirmation has been sent to your email address.' . "\n";
+        echo '<br><a href ="/registrar/transcript/">Request more transcripts</a>' . "\n";
+        $this->controller->destroy_form_data();
     }
 
     function get_thank_you_blurb() {
