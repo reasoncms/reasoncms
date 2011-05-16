@@ -18,13 +18,9 @@ class DorianJHCampsThreeForm extends FormStep
 	var $_log_errors = true;
 	var $no_session = array( 'credit_card_number' );
 	var $error;
-	var $expense_budget_number = '10-202-60500-51111';
-        // $expense_budget_number stays the same, per Renee Lillibridge and Karen Dallenbach (1/27/11)
-	var $revenue_budget_number = '10-000-08520-22000';
-        // $revenue_budget_number  before June 1, 10-000-08520-22000	
-        // $revenue_budget_number on or after June 1, 10-000-08520-40221
-
-	var $transaction_comment = 'Dorian Camps';
+	var $expense_budget_number = '10-000-08520-12121';
+        var $revenue_budget_number = '10-000-08520-22000';
+        var $transaction_comment = 'Dorian Camp';
 	var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
 	
 	// the usual disco member data
@@ -124,21 +120,6 @@ class DorianJHCampsThreeForm extends FormStep
 	// style up the form and add comments et al
 	function on_every_time()
 	{
-                // determine which revenue_budget_number to use
-                // $revenue_budget_number  before June 1, 10-000-08520-22000
-                // $revenue_budget_number on or after June 1, 10-000-08520-40221
-
-                $june1 = 151; // June 1 == day 151 (152 on a leap year) on a 0 - 364 scale
-                if (date('L')) // if this year is a leap year
-                    $june1 = 152;
-                $date = getdate();
-                if ($date['yday'] >= $june1){
-                    $this->revenue_budget_number = '10-000-08520-40221';
-                }
-                else {
-                    $this->revenue_budget_number = '10-000-08520-22000';
-                }
-
                 // calculate the total_cost of the camp by adding lesson_cost (if present) to the camp_cost
                 $camp_cost = 433;
                 $per_lesson_cost = 35;
