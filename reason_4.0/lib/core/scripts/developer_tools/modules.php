@@ -28,7 +28,7 @@
  */
 include_once( 'reason_header.php' );
 reason_include_once( 'function_libraries/user_functions.php' );
-reason_include_once( 'minisite_templates/page_types.php' );
+reason_include_once( 'classes/page_types.php' );
 reason_include_once( 'classes/entity_selector.php');
 reason_include_once( 'classes/url/page.php' );
 
@@ -42,7 +42,6 @@ if (!reason_user_has_privs( get_user_id ( $current_user ), 'view_sensitive_data'
 	die('<h1>Sorry.</h1><p>You do not have permission to view modules.</p>');
 }
 
-$page_types = $GLOBALS['_reason_page_types'];
 $pages = array();
 $modules_by_page_type = array();
 
@@ -75,6 +74,8 @@ if (isset($_REQUEST['reset']))
 	exit();
 }
 
+// Make an array with first dimension of page type name, second dimension of every page
+// ID using the pt, third dimension 'true' for every page type returned by the query.
 foreach ($result as $k=>$mypage)
 {
 	$page_type_value = $mypage->get_value('custom_page');
@@ -82,25 +83,35 @@ foreach ($result as $k=>$mypage)
 	$reason_page_types[$page_type_value][$k] = 'true';
 }
 
-foreach( $page_types AS $page_type => $type )
+
+$rpts =& get_reason_page_types();
+$all_page_types = $rpts->get_page_types();
+foreach ($all_page_types as $page_type_name => $pt_obj)
 {
-	foreach( $type AS $section => $module_info )
+	$regions = $pt_obj->get_region_names();
+	foreach ($regions as $region)
 	{
-		$module = is_array( $module_info ) ? $module_info[ 'module' ] : $module_info;
-		if( !empty( $module ) )
+		$region_info = $pt_obj->get_region($region);
+		if (!empty($region_info['module_name']))
 		{
-			if ($detail_mode) $check = ($module == $detail_limiter) ? true : false;
-			else $check = (empty($module_limiter)) ? true : (strpos($module, $module_limiter) !== false);
-			if (isset($reason_page_types[$page_type]) && $check)
+			if ($detail_mode) 
+				$check = ($region_info['module_name'] == $detail_limiter) ? true : false;
+			else 
+				$check = (empty($module_limiter)) ? true : (stripos($region_info['module_name'], $module_limiter) !== false);
+			if (isset($reason_page_types[$page_type_name]) && $check)
 			{
-				if (empty($core_local_limiter) || module_location_is_acceptable($module, $core_local_limiter))
+				if (empty($core_local_limiter) || module_location_is_acceptable($region_info['module_name'], $core_local_limiter))
 				{
-					$modules_by_page_type[$module][$page_type] = $reason_page_types[$page_type];
+					
+					$modules_by_page_type[$region_info['module_name']][$page_type_name] = $reason_page_types[$page_type_name];
+					
 				}
 			}
 		}
 	}
 }
+
+
 
 $module_limiter = reason_htmlspecialchars($module_limiter); // in case of weird chars - parse the limiter since we are going to display it
 $detail_limiter = reason_htmlspecialchars($detail_limiter); // in case of weird chars - parse the limiter since we are going to display it
