@@ -81,7 +81,7 @@
  			else // present a somewhat friendly error message
  			{
  				echo '<div id="form">';
- 				echo '<p>This page should display a form, but is not setup correctly. Please try again later.</p>';
+ 				echo '<p>This page should display a form, but is not set up correctly. Please try again later.</p>';
  				echo '</div>';
  			}
 		}
