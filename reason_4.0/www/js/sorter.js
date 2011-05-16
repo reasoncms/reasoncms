@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(window).load(function () {
 	appendText = new String;
 	$("#discoTable>tbody>tr[id!='discoSubmitRow']").hide();
 	rows = $('#discoTable tr[id^="sortOrder"] td.words');
@@ -26,7 +26,6 @@ $(document).ready(function () {
 		appendText += '</table>';
 	}
 	$('.pageTitle').after(appendText);
-	
 	$("#jQueryChildrenSort").tableDnD(
 	{onDrop: function(table, row) {
 			count = 1;
