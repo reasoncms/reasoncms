@@ -655,7 +655,7 @@ class ThorFormModel extends DefaultFormModel
 	{
 		if (!isset($this->_form))
 		{
-			$es = new entity_selector($this->get_site_id());
+			$es = new entity_selector();
 			$es->description = 'Selecting form to display on a minisite page.';
 			$es->add_type( id_of('form') );
 			$es->add_right_relationship( $this->get_page_id(), relationship_id_of('page_to_form') );
