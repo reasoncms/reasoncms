@@ -128,6 +128,16 @@
 					$sorterForm->set_sorted_vals($this->sorter->values);
 					$sorterForm->run();
 //				var_dump(unhtmlentities( $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] ));
+					if (isset($_GET['savedTime']))
+					{
+						$savedString = "This sorting last saved at: ".date("H:i:s m-d-Y", $_GET['savedTime']);
+						
+					}
+					else
+					{
+						$savedString = "Not Saved.";
+					}
+					echo $savedString;
 				}
 			}
 			else
@@ -238,10 +248,13 @@
 		function where_to() 
 		{
 			if ($this->get_chosen_action() == '0')
-				return @carl_make_redirect();
+				{
+				return @carl_make_redirect(array("savedTime" => time()));
+				}
 			else 
+				{
 				return carl_make_redirect(array('cur_module'=>'Lister', 'state'=>'live'));
-		
+				}
 		}
 	}
 ?>
