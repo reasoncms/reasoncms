@@ -114,7 +114,7 @@ jQuery.tableDnD = {
 
         // Now we need to capture the mouse up and mouse move event
         // We can use bind so that we don't interfere with other event handlers
-        jQuery(window)
+        jQuery(document)
             .bind('mousemove', jQuery.tableDnD.mousemove)
             .bind('mouseup', jQuery.tableDnD.mouseup);
 
@@ -131,7 +131,7 @@ jQuery.tableDnD = {
 			cells.each(function() {
 				// The cell is bound to "this"
                 jQuery(this).mousedown(function(ev) {
-                    jQuery.tableDnD.mouseDownLoc = jQuery.tableDnD.mouseCoords(ev);
+                	jQuery.tableDnD.mouseDownLoc = jQuery.tableDnD.mouseCoords(ev);
 					if (jQuery.tableDnD.keepMe == true)
 						return false;
                     jQuery.tableDnD.dragObject = this.parentNode;
@@ -360,7 +360,7 @@ jQuery.tableDnD = {
                         return null;
                     }
                 }
-				//window.console.log(row);
+				//window.f.log(row);
                 return row;
             }
         }
@@ -370,7 +370,6 @@ jQuery.tableDnD = {
     mouseup: function(e) {
 		if (jQuery.tableDnD.currentTable && jQuery.tableDnD.dragObject) {
 			var droppedRow = jQuery.tableDnD.dragObject;
-
 			jQuery.tableDnD.mouseUpLoc = jQuery.tableDnD.mouseCoords(e);
             
             // If you've mousedowned and mouseupped on the same location
@@ -379,7 +378,6 @@ jQuery.tableDnD = {
 				// We have to know which row we're trying to drop onto while keepMe is still at its original state.
 				// What's the row that we're trying to drop onto?
 				targetRow = jQuery.tableDnD.findDropTargetRow(droppedRow, jQuery.tableDnD.mouseUpLoc.y);
-			
 				// Invert the value of keepMe. If you're picking up, this means keepMe is now true; if dropping, keepMe is now false.
 	        	jQuery.tableDnD.keepMe = !(jQuery.tableDnD.keepMe);
 		        ///////////////// PICKING UP ///////////////
