@@ -16,8 +16,8 @@ class DiscoveryCampsTwo extends FormStep
 	var $_log_errors = true;
 	var $no_session = array( 'credit_card_number' );
 	var $error;
-	var $expense_budget_number = '13-102-01808-51111';
-        var $revenue_budget_number = '13-000-01808-40220';
+	var $expense_budget_number = '13-000-01808-12121';
+        var $revenue_budget_number = '13-000-01808-22000';
         
 	var $transaction_comment = 'Discovery Camps';
 	var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
