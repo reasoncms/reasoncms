@@ -8,10 +8,51 @@ class SportsCampsThorForm extends CreditCardThorForm
 	function on_every_time()
 	{
 		parent::on_every_time();
-	
+
+                //pretty up somethings
 		$this->change_element_type($this->get_element_name_from_label('Gender'), 'radio_inline_no_sort');
 		$this->change_element_type($this->get_element_name_from_label('Birth date'), 'textDate');
 		$this->change_element_type($this->get_element_name_from_label('State'), 'state');
+
+                $form_name =& $this->get_model()->get_form_name();
+                $expense_element = $this->get_element_name_from_label('Expense Budget Number');
+                $revenue_element = $this->get_element_name_from_label('Revenue Budget Number');
+                
+                // changing expense numbers for ofs reporting
+                // 5/17/2011
+                if (stristr($form_name, 'running') !== false ){
+                    $this->set_value($expense_element, '13-000-08704-12121');
+                }
+                if (stristr($form_name, 'football') !== false ){
+                    $this->set_value($expense_element, '13-000-16400-12121');
+                }
+                if (stristr($form_name, 'soccer') !== false ){
+                    $this->set_value($expense_element, '13-000-08705-12121');
+                }
+                if (stristr($form_name, 'tennis') !== false ){
+                    $this->set_value($expense_element, '13-000-08709-12121');
+                }
+                if (stristr($form_name, 'swim') !== false ){
+                    $this->set_value($expense_element, '13-000-08712-12121');
+                }
+                if (stristr($form_name, 'frisbee') !== false ){
+                    $this->set_value($expense_element, '13-000-08716-12121');
+                }
+                if (stristr($form_name, 'volleyball') !== false ){
+                    $this->set_value($expense_element, '13-000-08710-12121');
+                }
+                if (stristr($form_name, 'basketball') !== false){
+                    $this->set_value($expense_element, '13-000-08702-12121');
+                }
+                if (stristr($form_name, 'wrestling') !== false){
+                    // there are two different nunbers for wrestling camps
+                    // one for the team camp all others are the individual camps
+                    if ($form_name == 'Wrestling Team Camps Registration Form' ){
+                        $this->set_value($expense_element, '13-000-08708-12121');
+                    } else {
+                        $this->set_value($expense_element, '13-000-08707-12121');
+                    }
+                }
 	}
 
         function email_form_data_to_submitter()
