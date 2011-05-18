@@ -182,7 +182,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         if($head_items =& $this->get_head_items()) {
             $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
             $head_items->add_stylesheet('/reason/css/directory.css');
-            $head_items->add_javascript('/reason/js/tableSorter.js');
+            //$head_items->add_javascript('/reason/js/tableSorter.js');
             if (reason_check_authentication()) {
                 $head_items->add_javascript('/reason/js/directory.js');
             } else {
@@ -226,10 +226,10 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
         echo "<p class='directory_head'>";
         echo "Logged in as <b>".reason_check_authentication()."</b> | ";
-        echo "<a href='/x/steveform/?netid[]=".reason_check_authentication()."'>Your Entry</a>";
+        echo "<a href='/x/directory/?netid[]=".reason_check_authentication()."'>Your Entry</a>";
         echo " | ";
-        echo "<a href='/x/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
-        echo " | ";
+//        echo "<a href='/x/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
+//        echo " | ";
         echo "<a href='/login/?logout=1'>Logout</a>";
         echo "</p>";
         }
@@ -879,21 +879,16 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $str .= '<table class="athleticsRoster"><tr>';
 
 
-        $str .= '<table id="test1" class="sortable-onload-3-reverse rowstyle-alt no-arrow" border="0" cellpadding="0" cellspacing="0">';
+        $str .= '<table id="test1" class="tablesorter" border="0" cellpadding="0" cellspacing="0">';
             $str .= '<thead>';
                 $str .= '<tr>';
-                    $str .= '<th style="-moz-user-select: none;" class="fd-column-0 sortable-text reverseSort"><a title="Sort by "Name" href="#">Name</a></th>';
-                    $str .= '<th style="-moz-user-select: none;" class="fd-column-1 sortable-text reverseSort"><a title="Sort by "Affiliation" href="#">Affiliation</a></th>';
-                    $str .= '<th style="-moz-user-select: none;" class="fd-column-2 sortable-text reverseSort"><a title="Sort by "E-mail" href="#">E-mail</a></th>';
-                    $str .= '<th style="-moz-user-select: none;" class="fd-column-3 sortable-numeric reverseSort"><a title="Sort by "Campus Phone" href="#">Campus Phone</a></th>';
+                        $str .= '<th>Name</th>';
+                        $str .= '<th>Affiliation</th>';
+                        $str .= '<th>E-mail</th>';
+                        $str .= '<th>Campus Phone</th>';
                     if (reason_check_authentication()) {
-                        $str .= '<th style="-moz-user-select: none;" class="fd-column-4 sortable-text reverseSort"><a title="Sort on "Year in School" href="#">Year in School</a></th>';
+                        $str .= '<th>Year in School</th>';
                     }
-//                    $str .= '<th style="-moz-user-select: none;" class="sortable-currency fd-column-4"><a title="Sort on "Weekly Gross" href="#">Weekly Gross</a></th>';
-//                    $str .= '<th style="-moz-user-select: none;" class="sortable-numeric fd-column-5"><a title="Sort on "Change" href="#">Change</a></th>';
-//                    $str .= '<th style="-moz-user-select: none;" class="sortable-numeric fd-column-6"><a title="Sort on "Theaters" href="#">Theaters</a></th>';
-//                    $str .= '<th style="-moz-user-select: none;" class="sortable-currency fd-column-7"><a title="Sort on "Per Theater" href="#">Per Theater</a></th>';
-//                    $str .= '<th style="-moz-user-select: none;" class="sortable-currency fd-column-8"><a title="Sort on "Gross" href="#">Gross</a></th>';
                 $str .= '</tr>';
             $str .= '</thead>';
         $str .= '<tbody>';
