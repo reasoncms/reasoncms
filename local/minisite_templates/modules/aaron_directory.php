@@ -876,10 +876,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $str = '';
         $str .= '<p class="personPager"></p>';
         $str .= '<div id="searchResults" class="photoBook">';
-        $str .= '<table class="athleticsRoster"><tr>';
-
-
-        $str .= '<table id="test1" class="tablesorter" border="0" cellpadding="0" cellspacing="0">';
+       
+        $str .= '<table id="directory" class="tablesorter" border="0" cellpadding="0" cellspacing="0">';
             $str .= '<thead>';
                 $str .= '<tr>';
                         $str .= '<th>Name</th>';
