@@ -8,7 +8,6 @@ class Race150ThorForm extends CreditCardThorForm {
     function on_every_time() {
         parent::on_every_time();
 
-        $form_name = & $this->get_model()->get_form_name();
         $expense_element = $this->get_element_name_from_label('Expense Budget Number');
         $revenue_element = $this->get_element_name_from_label('Revenue Budget Number');
 
@@ -16,8 +15,6 @@ class Race150ThorForm extends CreditCardThorForm {
         // 5/17/2011
         $this->set_value($expense_element, '13-000-50440-22000');
         $this->set_value($revenue_element, '13-000-50440-12121');
-        echo $this->get_value($expense_element);
-        echo $this->get_value($revenue_element);
     }
 }
 ?>
