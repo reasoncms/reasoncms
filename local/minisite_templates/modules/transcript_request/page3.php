@@ -136,7 +136,7 @@ class TranscriptRequestConfirmation extends FormStep {
     }
 
     function email_registrar($text) {
-        $mail = new Email('slylth@gmail.com', 'noreply@luther.edu', 'noreply@luther.edu', 'New Transcript Request ' . date('mdY H:i:s'), strip_tags($text), $text);
+        $mail = new Email('registrar@luther.edu', 'noreply@luther.edu', 'noreply@luther.edu', 'New Transcript Request ' . date('mdY H:i:s'), strip_tags($text), $text);
         $mail->send();
     }
 

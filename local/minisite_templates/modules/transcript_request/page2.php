@@ -339,10 +339,10 @@ class TranscriptPageTwoForm extends FormStep
 				
 				//}
 				$mail_text = str_replace(array_keys($replacements),$replacements,$confirm_text);
-				$mail = new Email($this->controller->get('e-mail'),'registrar@luther.edu','registrar@luther.edu','Luther College, Office of the Registrar',strip_tags($confirm_text_with_blurb),$confirm_text_with_blurb);
+				$mail = new Email($this->controller->get('e-mail'),'registrar@luther.edu','registrar@luther.edu','Luther College Transcript Request',strip_tags($confirm_text_with_blurb),$confirm_text_with_blurb);
 				$mail->send();
 				
-				$mail2 = new Email('steve.smith@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Transcript Request '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
+				$mail2 = new Email('registrar@luther.edu', 'noreply@luther.edu','noreply@luther.edu', 'New Transcript Request '.date('mdY H:i:s'),strip_tags($mail_text), $mail_text);
 				$mail2->send();
 			}
 		}
