@@ -24,6 +24,10 @@ class TranscriptPageOneForm extends FormStep {
             'type' => 'text',
             'size' => 35,
         ),
+         'date_of_birth' => array(
+            'type' => 'textdate',
+            'use_picker' => false
+        ),
         'daytime_phone' => array(
             'type' => 'text',
             'size' => 20,
@@ -128,7 +132,7 @@ class TranscriptPageOneForm extends FormStep {
         ),
         'submitter_ip' => 'hidden',
     );
-    var $required = array('daytime_phone', 'e-mail', 'deliver_to', 'delivery_time', 'student_status');
+    var $required = array('date_of_birth', 'daytime_phone', 'e-mail', 'deliver_to', 'delivery_time', 'student_status');
     var $display_name = 'Transcript Request Info';
     var $error_header_text = 'Please check your form.';
 
