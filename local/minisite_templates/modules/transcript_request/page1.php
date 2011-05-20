@@ -180,7 +180,7 @@ class TranscriptPageOneForm extends FormStep {
         $txt = '<h3>Access to this form is restricted</h3>';
         $txt .= '<p>You are not currently logged in. Luther College students and alumni have access to this form. The contents will be displayed after you login.' . "\n";
         $txt .= 'If you have forgotten your norsekey (username or password), please try our automated <a href="https://norsekey.luther.edu/prod1/forgot.php">
-                Forgot My Norsekey</a> system.</p>';
+                Forgot My Norsekey</a> system to reset your password.</p>';
         if (reason_unique_name_exists('transcript_request_form')) {
             $asset_url = '/registrar/assets/Transcript_Request_Form.pdf';
         }
