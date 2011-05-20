@@ -133,6 +133,7 @@ class TranscriptPageTwoForm extends FormStep
 		{
 			$this->is_in_testing_mode = false;
 		}
+                	$this->is_in_testing_mode = true;
 		
 		$this->change_element_type('credit_card_expiration_year','numrange',array('start'=>date('Y'),'end'=>(date('Y')+15),'display_name' => 'Expiration Year'));
 	}
