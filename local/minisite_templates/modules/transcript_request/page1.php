@@ -177,19 +177,26 @@ class TranscriptPageOneForm extends FormStep {
     }
 
     function no_show_form() {
+        $url = get_current_url();
+        $parts = parse_url($url);
+        $url = $parts['scheme'] . '://' . $parts['host'] . '/login/?dest_page=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
+
         $txt = '<h3>Access to this form is restricted</h3>';
-        $txt .= '<p>You are not currently logged in. Luther College students and alumni have access to this form. The contents will be displayed after you login.' . "\n";
-        $txt .= 'If you have forgotten your norsekey (username or password), please try our automated <a href="https://norsekey.luther.edu/prod1/forgot.php">
+        //$txt .= '<p>You are not currently logged in. Luther College students and alumni have access to this form. The contents will be displayed after you login.' . "\n";
+        $txt .= '<p>To request a transcript electronically (which requires your user name and password, ie: norsekey),
+            please <a href="' . $url . '">log in</a>.</p>';
+        $txt .= '<p>The request form will be displayed after you login. This method <strong>requires former students 
+            to pay</strong> for the transcripts via <strong>credit card</strong>.</p>';
+        $txt .= '<p>If you have forgotten your norsekey (username or password), please try our automated <a href="https://norsekey.luther.edu/prod1/forgot.php">
                 Forgot My Norsekey</a> system to reset your password.</p>';
         if (reason_unique_name_exists('transcript_request_form')) {
             $asset_url = '/registrar/assets/Transcript_Request_Form.pdf';
         }
-        $txt .= '<p>If you\'d prefer, you can mail in your request and payment by downloading and filling out this <a href="' . $asset_url . '">Tanscript Request Form PDF</a></p>';
+        $txt .= '<p>If you prefer, you can mail in your request and payment (cash or check) by downloading and filling out
+            a <a href="' . $asset_url . '">Tanscript Request Form (pdf)</a>.</p>';
         $txt .= '<div class = "loginlogout">';
 
-        $url = get_current_url();
-        $parts = parse_url($url);
-        $url = $parts['scheme'] . '://' . $parts['host'] . '/login/?dest_page=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
+        
         $txt .= '<a href="' . $url . '">Log In</a>';
         $txt .= '</div>';
         return $txt;
