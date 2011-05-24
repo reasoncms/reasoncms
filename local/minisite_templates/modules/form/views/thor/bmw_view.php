@@ -1,5 +1,6 @@
 <?
 include_once(WEB_PATH . 'stock/pfproclass.php');
+reason_include_once('minisite_templates/modules/form/views/thor/luther_default.php');
 $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'BMWViewThorForm';
 
 class BMWViewThorForm extends LutherDefaultThorForm {
