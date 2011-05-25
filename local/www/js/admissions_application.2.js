@@ -156,29 +156,8 @@ $(document).ready(function() {
 
     $('#current_hs_nameElement').focus();
     $("#current_hs_nameElement").autocomplete({
-        source: function( request, response ) {
-            $.ajax({
-                url: "http://reasondev.luther.edu/reason/autocomplete/ceeb.php"
-            // dataType: "json"
-            //                					data: {
-            //                						featureClass: "P",
-            //                						style: "full",
-            //                						maxRows: 12,
-            //                						name_startsWith: request.term
-            //                					}
-            //                success: function(data) {
-            //                    cache.term = request.term;
-            //                    cache.content = data;
-            //                    response(data);
-            //                    response( $.map( data.geonames, function( item ) {
-            //                        return {
-            //                            label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
-            //                            value: item.name
-            //                        }
-            //                    }));
-            //                }
-            });
-        }
+        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        minLength: 3
     });
 
     //    $("#current_hs_nameElement").autocomplete({
