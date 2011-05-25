@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Admissions Application Module
  *
@@ -7,270 +8,207 @@
  * @since 2011-02-11
  * @package MinisiteModule
  */
-
 /**
  * needs default module
  */
-reason_include_once( 'minisite_templates/modules/default.php' );
+reason_include_once('minisite_templates/modules/default.php');
 
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'AdmissionsApplicationModule';
+$GLOBALS['_module_class_names'][basename(__FILE__, '.php')] = 'AdmissionsApplicationModule';
 
 /**
  * Run the online gift.
  * @author Steve Smith
  * @package MinisiteModule
  */
-class AdmissionsApplicationModule extends DefaultMinisiteModule
-{
+class AdmissionsApplicationModule extends DefaultMinisiteModule {
 
-	var $acceptable_params = array(
-		'kiosk_mode' => false,
-		);
+    var $acceptable_params = array(
+        'kiosk_mode' => false,
+    );
 
+    /**
+     * Before we clean the request vars, we need to init the controller so we know what we're initing
+     */
+    function pre_request_cleanup_init() {
+        include_once( DISCO_INC . 'controller.php' );
+        reason_include_once('minisite_templates/modules/admissions_application/page1.php');
+        reason_include_once('minisite_templates/modules/admissions_application/page2.php');
+        reason_include_once('minisite_templates/modules/admissions_application/page3.php');
+        reason_include_once('minisite_templates/modules/admissions_application/page4.php');
+        reason_include_once('minisite_templates/modules/admissions_application/page5.php');
+        reason_include_once('minisite_templates/modules/admissions_application/page6.php');
 
-	/**
-	 * Before we clean the request vars, we need to init the controller so we know what we're initing
-	 */
-	function pre_request_cleanup_init()
-	{
-		include_once( DISCO_INC.'controller.php' );
-		reason_include_once( 'minisite_templates/modules/admissions_application/page1.php' );
-		reason_include_once( 'minisite_templates/modules/admissions_application/page2.php' );
-		reason_include_once( 'minisite_templates/modules/admissions_application/page3.php' );
-                reason_include_once( 'minisite_templates/modules/admissions_application/page4.php' );
-                reason_include_once( 'minisite_templates/modules/admissions_application/page5.php' );
-                reason_include_once( 'minisite_templates/modules/admissions_application/page6.php' );
+        $this->controller = new FormController;
+        $this->controller->set_session_class('Session_PHP');
+        $this->controller->set_session_name('REASON_SESSION');
+        $this->controller->set_data_context('admissions_application');
+        $this->controller->show_back_button = true;
+        $this->controller->clear_form_data_on_finish = true;
+        $this->controller->allow_arbitrary_start = true;
+        $this->controller->default_back_text = 'Yahoo';
+        $this->controller->default_next_text = 'Yahoo';
+        //*
+        $forms = array(
+            'ApplicationPageOne' => array(
+                'next_steps' => array(
+                    'ApplicationPageTwo' => array(
+                        'label' => 'Next',
+                    ),
+                ),
+                'step_decision' => array(
+                    'type' => 'user',
+                ),
+                'back_button_text' => 'Previous',
+            ),
+            'ApplicationPageTwo' => array(
+                'next_steps' => array(
+                    'ApplicationPageThree' => array(
+                        'label' => 'Next',
+                    ),
+                ),
+                'step_decision' => array(
+                    'type' => 'user',
+                ),
+                'back_button_text' => 'Previous',
+            ),
+            'ApplicationPageThree' => array(
+                'next_steps' => array(
+                    'ApplicationPageFour' => array(
+                        'label' => 'Next',
+                    ),
+                ),
+                'step_decision' => array(
+                    'type' => 'user',
+                ),
+                'back_button_text' => 'Previous',
+            ),
+            'ApplicationPageFour' => array(
+                'next_steps' => array(                    
+                    'ApplicationPageFive' => array(
+                        'label' => 'Next',
+                    ),
+                ),
+                'step_decision' => array(
+                    'type' => 'user',
+                ),
+                'back_button_text' => 'Previous',
+            ),
+            'ApplicationPageFive' => array(
+                'next_steps' => array(
+                    'ApplicationPageSix' => array(
+                        'label' => 'Next',
+                    ),
+                ),
+                'step_decision' => array(
+                    'type' => 'user',
+                ),
+                'back_button_text' => 'Previous',
+            ),
+            'ApplicationPageSix' => array(
+                'back_button_text' => 'Previous',
+                'final_step' => true,
+                'final_button_text' => 'Submit Your Application',
+            ),
+        );
+        $this->controller->add_forms($forms);
+        $this->controller->init();
+    }
 
-		$this->controller = new FormController;
-		$this->controller->set_session_class('Session_PHP');
-		$this->controller->set_session_name('REASON_SESSION');
-		$this->controller->set_data_context('admissions_application');
-		$this->controller->show_back_button = false;
-		$this->controller->clear_form_data_on_finish = true;
-		$this->controller->allow_arbitrary_start = true;
-		//*
-		$forms = array(
-			'ApplicationPageOne' => array(
-				'next_steps' => array(
-					'ApplicationPageTwo' => array(
-						'label' => 'Personal Information',
-					),
-                                        'ApplicationPageThree' => array(
-						'label' => 'Family',
-					),
-                                        'ApplicationPageFour' => array(
-						'label' => 'Education',
-					),
-                                        'ApplicationPageFive' => array(
-						'label' => 'Activities',
-					),
-                                        'ApplicationPageSix' => array(
-						'label' => 'Statements',
-					),
-				),
-				'step_decision' => array(
-					'type' => 'user',
-				),
-				'back_button_text' => 'Change Gift Setup',
-			),
-			'ApplicationPageTwo' => array(
-				'next_steps' => array(
-					'ApplicationPageOne' => array(
-						'label' => 'Enrollment Info',
-					),
-                                        'ApplicationPageThree' => array(
-						'label' => 'Family',
-					),
-                                        'ApplicationPageFour' => array(
-						'label' => 'Education',
-					),
-                                        'ApplicationPageFive' => array(
-						'label' => 'Activities',
-					),
-                                        'ApplicationPageSix' => array(
-						'label' => 'Statements',
-					),
-				),
-				'step_decision' => array(
-					'type' => 'user',
-				),
-				'back_button_text' => 'Change Personal Info',
-			),
-			'ApplicationPageThree' => array(
-				'next_steps' => array(
-					'ApplicationPageOne' => array(
-						'label' => 'Enrollment info',
-					),
-                                        'ApplicationPageTwo' => array(
-						'label' => 'Personal Information',
-					),
-                                        'ApplicationPageFour' => array(
-						'label' => 'Education',
-					),
-                                        'ApplicationPageFive' => array(
-						'label' => 'Activities',
-					),
-                                        'ApplicationPageSix' => array(
-						'label' => 'Statements',
-					),
-                                ),
-			),
-                        'ApplicationPageFour' => array(
-				'next_steps' => array(
-					'ApplicationPageOne' => array(
-						'label' => 'Enrollment info',
-					),
-                                        'ApplicationPageTwo' => array(
-						'label' => 'Personal Information',
-					),
-                                        'ApplicationPageThree' => array(
-						'label' => 'Family',
-					),
-                                        'ApplicationPageFive' => array(
-						'label' => 'Activities',
-					),
-                                        'ApplicationPageSix' => array(
-						'label' => 'Statements',
-					),
-                                ),
-			),
-                        'ApplicationPageFive' => array(
-				'next_steps' => array(
-					'ApplicationPageOne' => array(
-						'label' => 'Enrollment info',
-					),
-                                        'ApplicationPageTwo' => array(
-						'label' => 'Personal Information',
-					),
-                                        'ApplicationPageThree' => array(
-						'label' => 'Family',
-					),
-                                        'ApplicationPageFour' => array(
-						'label' => 'Education',
-					),
-                                        'ApplicationPageSix' => array(
-						'label' => 'Statements',
-					),
-                                ),
-			),
-                        'ApplicationPageSix' => array(
-                                    'final_step' => true,
-                                    'final_button_text' => 'Submit Your Application!',
-                        ),
-		);
-		$this->controller->add_forms( $forms );
-		// */
-		$this->controller->init();
-	}
-	/**
-	 * Add possible forms variables that may come through to the list of vetted request vars
-	 * @return void
-	 */
-	function get_cleanup_rules()
-	{
-		$rules = array();
-		// debug var - resets form and destroys session
-		$rules[ 'ds' ] = array( 'function' => 'turn_into_string' );
-		// vars for confirmation page to let through
-		$rules[ 'r' ] = array( 'function' => 'turn_into_string' );
-		$rules[ 'h' ] = array( 'function' => 'turn_into_string' );
-		// Allows form to be put into testing mode through a query string
-		$rules[ 'tm' ] = array( 'function' => 'turn_into_int' );
-		// add all cleanup rules from the form controller
-		$rules = array_merge( $rules, $this->controller->get_cleanup_rules() );
-		return $rules;
-	}
+    /**
+     * Add possible forms variables that may come through to the list of vetted request vars
+     * @return void
+     */
+    function get_cleanup_rules() {
+        $rules = array();
+        // debug var - resets form and destroys session
+        $rules['ds'] = array('function' => 'turn_into_string');
+        // vars for confirmation page to let through
+        $rules['r'] = array('function' => 'turn_into_string');
+        $rules['h'] = array('function' => 'turn_into_string');
+        // Allows form to be put into testing mode through a query string
+        $rules['tm'] = array('function' => 'turn_into_int');
+        // add all cleanup rules from the form controller
+        $rules = array_merge($rules, $this->controller->get_cleanup_rules());
+        return $rules;
+    }
+    /**
+     * For kiosk mode; set a timeout on the second and third pages.
+     * @return void
+     */
+    function init($args = array()) { // {{{
+        parent::init($args);
+        $url = get_current_url();
+        $parts = parse_url($url);
+        $url = $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
+        // Handle session reset
+        if (!empty($this->request['ds'])) {
 
-	/**
-	 * For kiosk mode; set a timeout on the second and third pages.
-	 * @return void
-	 */
-	function init($args = array()) // {{{
-	{
-		parent::init( $args );
-		$url = get_current_url();
-		$parts = parse_url( $url );
-		$url = $parts['scheme'].'://'.$parts['host'].$parts['path'];
-		// Handle session reset
-		if (!empty( $this->request[ 'ds' ]))
-		{
-			$this->controller->session->destroy();
-			header( "Location: " . $url );
-			return;
-		}
+            $this->controller->session->destroy();
+            header("Location: " . $url);
+            return;
+        }
 
-		if($head_items =& $this->get_head_items())
-		{
-                    $head_items->add_stylesheet('/reason/css/giftform.css');
-                    $head_items->add_stylesheet('/reason/css/admissions_app.css');
-                    $head_items->add_javascript('/reason/js/admissions_application.js');
-		}
-		// Insert refresh headers when in kiosk mode
-		if ($this->params['kiosk_mode'])
-		{
-			// There must be a better way to suppress the session expired notice when timing out
-			$this->controller->sess_timeout_msg = '';
+        if ($head_items = & $this->get_head_items()) {
+            $head_items->add_stylesheet('/reason/jquery-ui-1.8.12.custom/css/redmond/jquery-ui-1.8.12.custom.css');
+            $head_items->add_stylesheet('/reason/css/giftform.css');
+            //$head_items->add_stylesheet('/reason/css/admissions_app.css');
+            $head_items->add_javascript('/reason/jquery.watermark-3.1.3/jquery.watermark.min.js');
+            $head_items->add_javascript('/reason/js/admissions_application.2.js');
+            
+        }
+        // Insert refresh headers when in kiosk mode
+        if ($this->params['kiosk_mode']) {
+            // There must be a better way to suppress the session expired notice when timing out
+            $this->controller->sess_timeout_msg = '';
 
-			if (isset($this->request[ '_step' ]) && $this->request[ '_step' ] == 'ApplicationPageThree')
-				$seconds = 300;
-			elseif ( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
-				$seconds = 60;
-			else
-				return;
+            if (isset($this->request['_step']) && $this->request['_step'] == 'ApplicationPageThree')
+                $seconds = 300;
+            elseif (!empty($this->request['r']) AND !empty($this->request['h']))
+                $seconds = 60;
+            else
+                return;
 
-			$this->parent->add_head_item('meta', array('http-equiv' => 'refresh', 'content' => $seconds . ';URL='.$url.'?ds=1' ));
-		}
-	}
+            $this->parent->add_head_item('meta', array('http-equiv' => 'refresh', 'content' => $seconds . ';URL=' . $url . '?ds=1'));
+        }
+    }
+    /**
+     * Set up the request for the controller and run the sucker
+     * @return void
+     */
+    function run() { // {{{
+        if (!empty($this->request['r']) AND !empty($this->request['h'])) {
+            reason_include_once('minisite_templates/modules/admissions_application/application_confirmation.php');
+            $ac = new ApplicationConfirmation;
+            $ac->set_ref_number($this->request['r']);
+            $ac->set_hash($this->request['h']);
+            if ($ac->validates()) {
+                echo $ac->get_confirmation_text();
+            } else {
+                echo $ac->get_error_message();
+            }
+            // MUST reconnect to Reason database.  GiftConfirmation connects to reason_gifts for info.
+            connectDB(REASON_DB);
+        } else {
+            echo $this->generate_navigation();
 
-	/**
-	 * Set up the request for the controller and run the sucker
-	 * @return void
-	 */
-	function run() // {{{
-	{
-		if( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
-		{
-			reason_include_once( 'minisite_templates/modules/admissions_application/application_confirmation.php' );
-			$ac = new ApplicationConfirmation;
-			$ac->set_ref_number( $this->request[ 'r' ] );
-			$ac->set_hash( $this->request[ 'h' ] );
-			if( $ac->validates() )
-			{
-				echo $ac->get_confirmation_text();
-			}
-			else
-			{
-				echo $ac->get_error_message();
-			}
-			// MUST reconnect to Reason database.  GiftConfirmation connects to reason_gifts for info.
-			connectDB( REASON_DB );
-		}
-		else
-		{
-			echo $this->generate_navigation();
+            $this->controller->set_request($this->request);
+            $this->controller->run();
+        }
+    }
+    function generate_navigation() {
+        $output = '<div id="formNavigation">';
+        $output .= '<ul class="formSteps">';
+        foreach ($this->controller->forms as $name => $form) {
+            $class = 'formStep';
+            if (isset($form->display_name)) {
+                if ($this->controller->get_current_step() == $name)
+                    $class .= ' current';
 
-			$this->controller->set_request( $this->request );
-			$this->controller->run();
-		}
-	} // }}}
-
-	function generate_navigation()
-	{
-		$output = '<div id="formNavigation">';
-		$output .= '<ul class="formSteps">';
-		foreach ($this->controller->forms as $name => $form)
-		{
-			$class = 'formStep';
-			if (isset($form->display_name))
-			{
-				if ($this->controller->get_current_step() == $name)
-					$class .= ' current';
-
-				$output .= '<li class="'.$class.'"><a href="?_step='.$name.'">'.htmlspecialchars($form->display_name).'</a></li>';
-			}
-		}
-		$output .= '</ul></div>';
-		return $output;
-	}
+                $output .= '<li class="' . $class . '"><a href="?_step=' . $name . '">' . htmlspecialchars($form->display_name) . '</a></li>';
+            }
+        }
+        $output .= '</ul></div>';
+        return $output;
+    }
 }
 ?>
