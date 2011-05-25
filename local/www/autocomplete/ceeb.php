@@ -17,13 +17,15 @@ if ($conn)
 	/* Retrieve and store in array the results of the query.*/
 
 	while ($row = mysql_fetch_array($fetch, MYSQL_ASSOC)) {
-		$row_array['current_hs_ceeb'] = $row['ceeb'];
-		$row_array['current_hs_name'] = $row['name'];
-		$row_array['current_hs_address'] = $row['addr1'];
-		$row_array['addr2'] = $row['addr2'];
-		$row_array['current_hs_city'] = $row['city'];
-		$row_array['current_hs_state'] = $row['state'];
-                $row_array['current_hs_zip'] = $row['zip'];
+		//$row_array['current_hs_ceeb'] = $row['ceeb'];
+                $row_array['id'] = $row['ceeb'];
+		//$row_array['current_hs_name'] = $row['name'];
+                $row_array['value'] = $row['name'];
+		//$row_array['current_hs_address'] = $row['addr1'];
+		//$row_array['addr2'] = $row['addr2'];
+		//$row_array['current_hs_city'] = $row['city'];
+		//$row_array['current_hs_state'] = $row['state'];
+                //$row_array['current_hs_zip'] = $row['zip'];
 
         array_push($return_arr,$row_array);
     }
@@ -78,7 +80,7 @@ mysql_close($conn);
 //    "Scala",
 //    "Scheme"
 //);
-array_push($return_arr, $availableTags);
+//array_push($return_arr, $availableTags);
 
 /* Toss back results as json encoded array. */
 echo json_encode($return_arr);
