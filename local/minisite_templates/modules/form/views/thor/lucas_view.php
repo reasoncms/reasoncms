@@ -11,7 +11,11 @@ class LucasViewThorForm extends LutherDefaultThorForm {
 
         $herp_element = $this->get_element_name_from_label('herp');
 
-        $this->change_element_type($herp_element, 'commentWithLabelType');
+        $this->change_element_type($herp_element, 'commentWithLabel', array('text'=>'Herpedee'));
+
+        $this->add_element('blah', 'country');
+
+        $this->set_display_name($herp_element, 'blong');
         
     }
 }
