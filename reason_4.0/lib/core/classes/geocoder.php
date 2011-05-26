@@ -99,7 +99,7 @@ class geocoder
 					if (!empty($decoded['cityName'])) $address['city'] = ucwords(strtolower($decoded['cityName']));
 					if (!empty($decoded['regionName'])) $address['region'] = ucwords(strtolower($decoded['regionName']));
 					if (!empty($decoded['countryName'])) $address['country'] = ucwords(strtolower($decoded['countryName']));
-					if (!empty($decoded['zipCode'])) $address['zip'] = $decoded['zipCode'];
+					if (!empty($decoded['zipCode'])) $address['postal_code'] = $decoded['zipCode'];
 					if (!empty($decoded['latitude'])) $address['geocoord']['lat'] = $decoded['latitude'];
 					if (!empty($decoded['longitude'])) $address['geocoord']['lon'] = $decoded['longitude'];
 				}
@@ -146,7 +146,7 @@ class geocoder
 				$parts = array();
 				if (isset($address['city'])) $parts[] = $address['city'];
 				if (isset($address['region'])) $parts[] = $address['region'];
-				if (isset($address['zip'])) $parts[] = $address['zip'];
+				if (isset($address['postal_code'])) $parts[] = $address['postal_code'];
 				if (isset($address['country'])) $parts[] = $address['country'];
 
 				$this->set_address(join(', ', $parts));
@@ -286,8 +286,35 @@ class geocoder
 			$result = reset($this->query_results);
 		}
 		
+		$address_parts = array();
+		if (is_array($result->address_components))
+		{
+			foreach ($result->address_components as $comp)
+			{
+				if (in_array('locality', $comp->types))
+				{
+					if (isset($comp->long_name)) $address_parts['city'] = $comp->long_name;
+				}
+				if (in_array('administrative_area_level_1', $comp->types))
+				{
+					if (isset($comp->long_name)) $address_parts['state'] = $comp->long_name;
+					if (isset($comp->short_name)) $address_parts['state_code'] = $comp->short_name;
+				}
+				if (in_array('country', $comp->types))
+				{
+					if (isset($comp->long_name)) $address_parts['country'] = $comp->long_name;
+					if (isset($comp->short_name)) $address_parts['country_code'] = $comp->short_name;
+				}
+				if (in_array('postal_code', $comp->types))
+				{
+					if (isset($comp->long_name)) $address_parts['postal_code'] = $comp->long_name;
+				}
+			}
+		}
+		
 		$values = array(
 			'address' => $this->address,
+			'address_parts' => $address_parts,
 			'latitude' => $result->geometry->location->lat,
 			'longitude' => $result->geometry->location->lng,
 			'address_hash' => md5($this->address),
