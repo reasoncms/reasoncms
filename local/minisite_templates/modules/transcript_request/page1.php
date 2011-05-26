@@ -40,7 +40,7 @@ class TranscriptPageOneForm extends FormStep {
         'student_status' => array(
             'type' => 'radio_no_sort',
             'display_name' => 'What is your status?',
-            'options' => array('ST' => 'Current Student', 'AL' => 'Alumni'),
+            'options' => array('Student' => 'Current Student', 'Alumni' => 'Alumni'),
         ),
         'unofficial_header' => array(
             'type' => 'comment',
@@ -83,6 +83,10 @@ class TranscriptPageOneForm extends FormStep {
             'type' => 'comment',
             'text' => '<h3>Delivery Information</h3>',
         ),
+        'delivery_location_header' => array(
+            'type' => 'comment',
+            'text' => '<h4>Delivery Location</h4>',
+        ),
         'deliver_to' => array(
             'type' => 'radio_no_sort',
             'display_name' => 'Where should these transcripts be delivered?',
@@ -120,10 +124,16 @@ class TranscriptPageOneForm extends FormStep {
             'type' => 'country',
             'display_name' => 'Country',
         ),
+        'delivery_time_header' => array(
+            'type' => 'comment',
+            'text' => '<h4>Delivery Time</h4>',
+        ),
         'delivery_time' => array(
             'type' => 'radio',
             'display_name' => 'When to prepare transcripts',
             'options' => array(
+                'overnight' => 'Overnight via UPS. - $30<br>
+                    (must be placed before 2 p.m. CST)',
                 'now' => 'Send out as soon as possible<br>
 						(allow 48 hours processing time)',
                 'after current semester' => 'Wait until current semester grades are posted',
@@ -230,17 +240,17 @@ class TranscriptPageOneForm extends FormStep {
     function needs_payment() {
        $pay_amount = 0;
        $official_number = $this->get_value('number_of_official');
+       $deliver_time = $this->get_value('delivery_time');
 
-       if ($this->get_value('student_status') == 'ST') {
-            $this->is_student = true;
-        } else {
-            $this->is_student = false;
-        }
-
-        if (!$this->is_student) {
+       if ($this->get_value('student_status') == 'Alumni') {
             $pay_amount = $pay_amount + ($official_number * 4);
         }
         $this->set_value('amount', $pay_amount);
+
+        if ($this->get_value('delivery_time') == 'overnight') {
+            $pay_amount = $pay_amount + 30;
+            $this->set_value('amount', $pay_amount);
+        }
 
         if ($pay_amount == 0) {
             return 'TranscriptRequestConfirmation';

@@ -24,6 +24,7 @@ class TranscriptRequestConfirmation extends FormStep {
 
         $name = $this->controller->get('name');
         $date_of_birth = $this->controller->get('date_of_birth');
+        $student_status = $this->controller->get('student_status');
         $daytime_phone = $this->controller->get('daytime_phone');
         $email = $this->controller->get('e-mail');
         $address = $this->controller->get('address');
@@ -47,6 +48,7 @@ class TranscriptRequestConfirmation extends FormStep {
         $txt .= '<li><strong>Date:</strong> ' . date($this->date_format) . '</li>' . "\n";
         $txt .= '<li><strong>Name:</strong> ' . $name . '</li>' . "\n";
         $txt .= '<li><strong>Date of Birth:</strong> ' . $date_of_birth . '</li>' . "\n";
+        $txt .= '<li><strong>Status:</strong> '. $student_status . '</li>'."\n";
         $txt .= '<li><strong>Daytime Phone:</strong> ' . $daytime_phone . '</li>' . "\n";
         $txt .= '<li><strong>Email:</strong> ' . $email . '</li>' . "\n";
         if ($unofficial) {
@@ -95,6 +97,7 @@ class TranscriptRequestConfirmation extends FormStep {
                 submitter_ip='" . addslashes($submitter_ip) . "',
 		name='" . addslashes($name) . "',
 		date_of_birth ='" . addslashes($date_of_birth) . "',
+                student_status='".addslashes($student_status)."',
 		address='" . ((!empty($address)) ? addslashes($address) : 'NULL') . "',
                 unofficial_address='" . ((!empty($unofficial_address)) ? addslashes($address) : 'NULL') . "',
 		city='" . ((!empty($city)) ? addslashes($city) : 'NULL') . "',

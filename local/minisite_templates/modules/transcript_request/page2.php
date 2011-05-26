@@ -177,6 +177,7 @@ class TranscriptPageTwoForm extends FormStep
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
 		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('name').'</li>'."\n";
 		$txt .= '<li><strong>Date of Birth:</strong> '.$this->controller->get('date_of_birth').'</li>'."\n";
+		$txt .= '<li><strong>Status:</strong> '.$this->controller->get('student_status').'</li>'."\n";
 		$txt .= '<li><strong>Daytime Phone:</strong> '.$this->controller->get('daytime_phone').'</li>'."\n";
 		$txt .= '<li><strong>Email:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
                 if($this->controller->get('unofficial')){
@@ -215,7 +216,7 @@ class TranscriptPageTwoForm extends FormStep
 //                        $txt .= '<li><strong>Delivery Timeline:</strong>'.$this->controller->get('delivery_time').'</li>'."\n";
 //                        $txt .= '</ul>'."\n";
 //		}
-		$txt .= '</ul>'."\n";
+//		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n"; 
 
 		return $txt;
@@ -314,6 +315,11 @@ class TranscriptPageTwoForm extends FormStep
 				$this->set_value( 'result_authcode', $result['AUTHCODE'] );
 				
 				$confirm_text = $this->get_confirmation_text();
+                                $confirm_text .= '<div id="reviewTranscriptRequestRefnum">'."\n";
+                                $confirm_text .= '<ul>'."\n";
+                                $confirm_text .= '<li><strong>REFNUM: </strong>'.$result['REFNUM'].'</li>'."\n";
+                                $confirm_text .= '<li><strong>Amount Paid: </strong>$'.$this->controller->get('amount').'</li>'."\n";
+                                $confirm_text .= '</ul></div>';
 				
 				$this->set_value( 'confirmation_text', $confirm_text );
 				$pf->set_confirmation_text( $confirm_text );
