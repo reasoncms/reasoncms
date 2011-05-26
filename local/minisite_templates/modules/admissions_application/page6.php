@@ -103,20 +103,18 @@ class ApplicationPageSix extends FormStep {
             'WOMS' => 'Women\'s Studies',
         );
     var $elements = array(
-        'question' => array(
-            'type' => 'comment',
-            'text' => '¿¿¿¿Should this last page be divided into two pages????'
-        ),
         'college_plan_comment' => array(
             'type' => 'comment',
             'text' => '<h3>College Plan</h3>',
         ),
-        'first_choice' => array(
+        'college_plan_1' => array(
             'type' => 'select',
+            'display_name' => 'First Choice',
             'options' => array(),
         ),
-        'second_choice' => array(
+        'college_plan_2' => array(
             'type' => 'select',
+            'display_name' => 'Second Choice',
             'options' => array()
         ),
         'music_audition_comment' => array(
@@ -214,7 +212,7 @@ class ApplicationPageSix extends FormStep {
             'type' => 'comment',
             'text' => 'If yes, please describe',
         ),
-        'conviction_history_details' => array(
+        'conviction_details' => array(
             'type' => 'textarea_no_label',
             'display_name' => '&nbsp;',
         ),
@@ -257,6 +255,7 @@ class ApplicationPageSix extends FormStep {
     function pre_show_form() {
         echo '<div id="admissionsApp" class="pageSix">' . "\n";
     }
+
     function post_show_form() {
         echo '</div>' . "\n";
     }

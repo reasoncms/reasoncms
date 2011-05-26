@@ -39,254 +39,254 @@ class ApplicationPageFive extends FormStep {
             'text' => 'Please list your high school activities in order of their importance to you
                     (sports, service projects, clubs, special interests, etc.)'
         ),
-        'activities_1_header' => array(
+        'activities_01_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 1</h4>'
         ),
-        'activity_1' => array(
+        'activity_01' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_1_other' => array(
+        'activity_01_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_1_participation' => array(
+        'activity_01_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_1_honors_comment' => array(
+        'activity_01_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_1_honors' => array(
+        'activity_01_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr' => 'hr',
-        'activities_2_header' => array(
+        'activities_02_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 2</h4>'
         ),
-        'activity_2' => array(
+        'activity_02' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_2_other' => array(
+        'activity_02_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_2_participation' => array(
+        'activity_02_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_2_honors_comment' => array(
+        'activity_02_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_2_honors' => array(
+        'activity_02_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr2' => 'hr',
-        'activities_3_header' => array(
+        'activities_03_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 3</h4>'
         ),
-        'activity_3' => array(
+        'activity_03' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_3_other' => array(
+        'activity_03_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_3_participation' => array(
+        'activity_03_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_3_honors_comment' => array(
+        'activity_03_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_3_honors' => array(
+        'activity_03_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr3' => 'hr',
-        'activities_4_header' => array(
+        'activities_04_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 4</h4>'
         ),
-        'activity_4' => array(
+        'activity_04' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_4_other' => array(
+        'activity_04_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_4_participation' => array(
+        'activity_04_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_4_honors_comment' => array(
+        'activity_04_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_4_honors' => array(
+        'activity_04_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr4' => 'hr',
-        'activities_5_header' => array(
+        'activities_05_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 5</h4>'
         ),
-        'activity_5' => array(
+        'activity_05' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_5_other' => array(
+        'activity_05_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_5_participation' => array(
+        'activity_05_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_5_honors_comment' => array(
+        'activity_05_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_5_honors' => array(
+        'activity_05_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr5' => 'hr',
-        'activities_6_header' => array(
+        'activities_06_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 6</h4>'
         ),
-        'activity_6' => array(
+        'activity_06' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_6_other' => array(
+        'activity_06_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_6_participation' => array(
+        'activity_06_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_6_honors_comment' => array(
+        'activity_06_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_6_honors' => array(
+        'activity_06_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr6' => 'hr',
-        'activities_7_header' => array(
+        'activities_07_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 7</h4>'
         ),
-        'activity_7' => array(
+        'activity_07' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_7_other' => array(
+        'activity_07_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_7_participation' => array(
+        'activity_07_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_7_honors_comment' => array(
+        'activity_07_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_7_honors' => array(
+        'activity_07_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr7' => 'hr',
-        'activities_8_header' => array(
+        'activities_08_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 8</h4>'
         ),
-        'activity_8' => array(
+        'activity_08' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_8_other' => array(
+        'activity_08_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_8_participation' => array(
+        'activity_08_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_8_honors_comment' => array(
+        'activity_08_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_8_honors' => array(
+        'activity_08_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr8' => 'hr',
-        'activities_9_header' => array(
+        'activities_09_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 9</h4>'
         ),
-        'activity_9' => array(
+        'activity_09' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_9_other' => array(
+        'activity_09_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_9_participation' => array(
+        'activity_09_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_9_honors_comment' => array(
+        'activity_09_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_9_honors' => array(
+        'activity_09_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
@@ -325,24 +325,24 @@ class ApplicationPageFive extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
-        $this->change_element_type('activity_1', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_1_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_2', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_2_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_3', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_3_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_4', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_4_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_5', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_5_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_6', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_6_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_7', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_7_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_8', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_8_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_9', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_9_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_01', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_01_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_02', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_02_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_03', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_03_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_04', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_04_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_05', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_05_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_06', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_06_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_07', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_07_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_08', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_08_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_09', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_09_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
         $this->change_element_type('activity_10', 'select_no_sort', array('options' => $this->activities_array));
         $this->change_element_type('activity_10_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
     }

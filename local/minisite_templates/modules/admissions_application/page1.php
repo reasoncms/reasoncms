@@ -32,6 +32,11 @@ class ApplicationPageOne extends FormStep {
         'student_type' => array(
             'type' => 'radio_no_sort',
             'display_name' => '&nbsp;',
+            'comments' => '<div id="transfer_dialog" title="Transfer Students">
+                <strong>Note:</strong> If you are a transfer student and filled out an application last year, then we\'ve got you covered.
+                Contact the <a href="mailto:admissions@luther.edu?Subject=Previous%20Transfer%20Student%20Applicant">Admissions Office</a> (800-4-LUTHER) to
+                restart the process.</div>',
+
             'options' => array('FR' => 'First Year', 'TR' => 'Transfer'),
         ),
         'enrollment_term_comment' => array(
@@ -49,6 +54,9 @@ class ApplicationPageOne extends FormStep {
         'citizenship_status' => array(
             'type' => 'radio_no_sort',
             'display_name' => '&nbsp;',
+            'comments' => '<div id="citizenship_dialog" title="International Students">
+                <strong>Note:</strong> International Students should apply using
+                the <a href="http://www.commonapp.org" target=_blank>Common App</a>.</div>',
             'options' => array(
                 'citizen' => 'U.S. Citizen',
                 'dual' => 'U.S./Dual Citizen',
@@ -56,11 +64,17 @@ class ApplicationPageOne extends FormStep {
                 'not a citizen' => 'Not a U.S, citizen or permanent resident')
         ),
         'submitter_ip' => 'hidden',
+        'open_id' => 'hidden',
+        'creation_date' => 'hidden'
     );
     var $required = array('student_type', 'enrollment_term', 'citizenship_status');
     var $display_name = 'Enrollment Info';
     var $error_header_text = 'Please check your form.';
 
+    function on_first_time() {
+//        $this->add_element('transfer_note', 'comment', array('text' => '<noscript>Hey there!</noscript>'));
+//        $this->add_element('citizenship_note', 'comment', array('text' => '<noscript>Hey there!</noscript>'));
+    }
     // style up the form and add comments et al
     function on_every_time() {
         $this->set_value('submitter_ip', $_SERVER['REMOTE_ADDR']);
@@ -93,5 +107,31 @@ class ApplicationPageOne extends FormStep {
         echo '</div>' . "\n";
     }
 
+    function  process() {
+        parent::process();
+
+        connectDB('admissions_applications_connection');
+
+        $qstring = "INSERT INTO `applicants` SET
+                submitter_ip='" . addslashes($this->get_value('submitter_ip')) . "',
+                open_id='" . addslashes($this->get_value('open_id')) . "',
+                creation_date='" . addslashes($this->get_value('creation_date')) . "',
+		student_type='" . addslashes($this->get_value('student_type')) . "',
+		enrollment_term='" . addslashes($this->get_value('enrollment_term')) . "',
+		citizenship_status='" . addslashes($this->get_value('citizenship_status')) . "' ";
+
+        $qresult = db_query($qstring);
+
+        //connect back with the reason DB
+        connectDB(REASON_DB);
+    }
+
+    function  run_error_checks() {
+        parent::run_error_checks();
+
+        if ($this->get_value('citizenship_status') == 'not a citizen') {
+            $this->set_error('citizenship_status', 'International Students - Please apply using the <a href="http://www.commonapp.org" target=_blank>Common App</a>.');
+        }
+    }
 }
 ?>
