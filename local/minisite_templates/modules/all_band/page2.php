@@ -20,8 +20,8 @@ class AllBandTwo extends FormStep {
     var $_log_errors = true;
     var $no_session = array('credit_card_number');
     var $error;
-    var $expense_budget_number = '13-000-05055-12121';
-    var $revenue_budget_number = '13-000-05055-22000';
+    var $expense_budget_number = '10-000-60200-12100';
+    var $revenue_budget_number = '10-000-60200-20000';
     var $transaction_comment = 'All Band Alumni Reunion';
     var $is_in_testing_mode; // This gets set using the value of the THIS_IS_A_DEVELOPMENT_REASON_INSTANCE constant or if the 'tm' (testing mode) request variable evaluates to an integer
     // the usual disco member data
