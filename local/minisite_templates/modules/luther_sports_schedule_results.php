@@ -15,8 +15,7 @@
  */
 class miniEventsModule extends EventsModule
 {
-	//var $ideal_count = 6;
-	var $luther_counter = 3;
+	var $ideal_count = 3;
 	var $show_options = false;
 	var $show_navigation = false;
 	var $show_views = false;
@@ -156,8 +155,6 @@ class miniEventsModule extends EventsModule
 				foreach($this->events_by_date as $day => $val)
 				{
 					$this->show_daily_events($day);
-					if ($this->luther_counter <= 0)
-						break;
 				}		
 			}
 		}
@@ -174,53 +171,22 @@ class miniEventsModule extends EventsModule
 
 	function show_event_list_item_standard( $event_id, $day )
 	{
-
-		
-		$sd = substr($this->events[$event_id]->get_value('datetime'), 0, 10);
-		if (substr($day, 0, 10) == $sd
-			|| substr($day, 0, 10) == substr($this->today, 0, 10))
+		echo '<li class="vevent">'."\n";
+		if (!empty($this->events_page_url))
 		{
-			echo '<li class="vevent">'."\n";
-			if (!empty($this->events_page_url))
-			{
-				echo '<a href="'.$this->events_page_url.'?event_id='.$this->events[$event_id]->id().'&date='.$day.'">'."\n";
-			}
-			
-			echo '<div>'."\n";
-			$d = mktime(0, 0, 0, substr($day, 5, 2), substr($day, 8, 2), substr($day, 0, 4));
-			$lo = substr($this->events[$event_id]->get_value('last_occurence'), 0, 10);
-
-			echo '<time class="dtstart" datetime="'.$day.'"><span class="month">'.date('M', $d).'</span><span class="day">'.date('d', $d).'</span></time>'."\n";
-			
-			echo '<h1 class="summary">'.$this->events[$event_id]->get_value( 'name' );
-			if ($sd != $lo)
-			{
-				$s = mktime(0, 0, 0, substr($sd, 5, 2), substr($sd, 8, 2), substr($sd, 0, 4));
-				$e = mktime(0, 0, 0, substr($lo, 5, 2), substr($lo, 8, 2), substr($lo, 0, 4));
-				if (date('M', $d) == date('M', $e))
-				{
-					echo '<br />('.date('M', $s).' '.date('d', $s).'-'.date('d', $e).')';
-				}
-				else 
-				{
-					echo '<br />('.date('M', $s).' '.date('d', $s).'-'.date('M', $e).' '.date('d', $e).')';
-				}
-			}
-			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
-			{
-				echo '<br /><span class="location">'.$this->events[$event_id]->get_value( 'location' ).'</span>';
-			}
-			
-			echo '</h1>'."\n";
-			echo '</div>'."\n";
-			if (!empty($this->events_page_url))
-			{
-				echo '</a>'."\n";
-			}
-			echo '</li>'."\n";
-			$this->luther_counter--;
+			echo '<a href="'.$this->events_page_url.'?event_id='.$this->events[$event_id]->id().'&date='.$day.'">'."\n";
 		}
-
+			
+		echo '<div>'."\n";
+		$d = mktime(0, 0, 0, substr($day, 5, 2), substr($day, 8, 2), substr($day, 0, 4));
+		echo '<time class="dtstart" datetime="'.$day.'"><span class="month">'.date('M', $d).'</span><span class="day">'.date('d', $d).'</span></time>'."\n";
+		echo '<h1 class="summary">'.$this->events[$event_id]->get_value( 'name' ).'</h1>'."\n";
+		echo '</div>'."\n";
+		if (!empty($this->events_page_url))
+		{
+			echo '</a>'."\n";
+		}
+		echo '</li>'."\n";
 		
 		//print_r( $this->events[$event_id]->get_values())."\n";
 

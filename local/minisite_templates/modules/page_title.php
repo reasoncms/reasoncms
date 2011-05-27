@@ -21,10 +21,14 @@
 			return !empty( $this->parent->title );
 		}
 		function run()
-		{
+		{			
 			$theme = get_theme($this->site_id);
 			if ($theme->get_value( 'name' ) == 'luther2010')
 			{
+				if (preg_match("/[&?]event_id=\d+/", get_current_url()))
+				{
+					return;
+				}
 				echo '<h1 class="page-title">'.$this->parent->title.'</h1>'."\n";
 			}
 			else

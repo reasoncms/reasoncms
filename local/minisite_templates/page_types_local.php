@@ -147,6 +147,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                 ),
 		'events' => array(
                     'main_post' => 'luther_events',
+                	'sidebar' => 'luther_events_image_sidebar',
 		),
                 'event_with_form' => array(
                     'main' => 'events',
@@ -335,7 +336,8 @@ $GLOBALS['_reason_page_types_local'] = array(
                 ),
                 'luther2010_sports' => array(
                 	'sub_nav_2' => 'luther_events_mini',
-                    'main' => 'content',
+                    //'main' => 'content',
+                    'main' => 'luther_sports_results_mini',
                 	'main_post' => array(
                     	'module' => 'publication',
                 		'related_publication_unique_names' => array(luther_sports_get_publication_unique_name("headlines")),
@@ -542,6 +544,12 @@ $GLOBALS['_reason_page_types_local'] = array(
                 ),
                 'sports_roster' => array(
                     'main' => 'luther_sports_roster',
+					'pre_sidebar' => '',
+					'sidebar' => '',
+                	'post_sidebar' => '',
+                ),
+                'sports_results' => array(
+                    'main' => 'luther_sports_results_mini',
 					'pre_sidebar' => '',
 					'sidebar' => '',
                 	'post_sidebar' => '',

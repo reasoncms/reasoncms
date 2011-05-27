@@ -1,5 +1,6 @@
 <?php
 	reason_include_once( 'minisite_templates/modules/default.php' );
+	include_once INCLUDE_PATH.'../reason_package_local/disco/plasmature/types/athletics.php';
 	//reason_include_once( 'classes/error_handler.php');
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'lutherSportsRosterModule';
@@ -151,9 +152,14 @@
                     'number_sort_desc',
                     'year_sort_asc',
                     'year_sort_desc')));
+	
+	var $site_name;
 
 	function init( $args = array() )
-	{
+	{	
+		$site_id = new entity( $this->site_id );
+		$this->site_name = $site_id->get_value('unique_name');
+		
 		$es = new entity_selector($this->site_id);
 		$es->add_type(id_of('athlete_type'));
 		if (!empty($this->request['id']))   // individual
@@ -189,7 +195,17 @@
 		if (!empty($players) && !empty($this->request['id'])) // add crumb with player name and alter title - pv will have the values we need
 		{
 			$this->_add_crumb($pv['athlete_first_name'] . " " . $pv['athlete_last_name']);
-			$this->parent->title = $pv['athlete_first_name'] . " " . $pv['athlete_last_name'];
+			if ($this->site_name == 'sport_baseball_men' || $this->site_name == 'sport_basketball_men' ||
+				$this->site_name == 'sport_football_men' || $this->site_name == 'sport_soccer_men' ||
+				$this->site_name == 'sport_basketball_women' || $this->site_name == 'sport_soccer_women' || 
+				$this->site_name == 'sport_softball_women' || $this->site_name == 'sport_volleyball_women')
+			{
+				$this->parent->title = "#" . $pv['athlete_number'] . " " . $pv['athlete_first_name'] . " " . $pv['athlete_last_name'];
+			}
+			else
+			{
+				$this->parent->title = $pv['athlete_first_name'] . " " . $pv['athlete_last_name'];
+			}
 		}
 		//$this->init_player_order();
 	}
@@ -215,43 +231,68 @@
 		{
 			$player_class = 'playerInfo';
 			echo '<div id="athleticsPlayerInfo">';
+			echo '<p>';
 			$player = current($this->player_info); // get the player
 
 			if (!empty($player['image_id']))
 			{
-				echo '<div class="playerImage">';
-				show_image($player['image_id']);
-				echo '</div>';
-				$player_class = 'playerInfoWithImage'; // apply indentation to text since an image was shown
+				$image = get_entity_by_id($player['image_id']);
+				$url = WEB_PHOTOSTOCK . $player['image_id'] . '.' . $image['image_type'];
+				$thumb = WEB_PHOTOSTOCK . $player['image_id'] . '_tn.' . $image['image_type'];
+				$orig = WEB_PHOTOSTOCK . $player['image_id'] . '_orig.' . $image['image_type'];
+				$d = max($image['width'], $image['height']) / 125.0;
+				echo '<div class="figure" style="width:' . intval($image['width']/$d) .'px;">';
+				// show href to full size image with class and onclick for highslide
+				echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
+				echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" />';
+				echo '</a>';
+				echo '<div class="highslide-caption" >'."\n";
+				$caption = $image['name'];
+				echo $caption ."\n";
+				if (file_exists($_SERVER['DOCUMENT_ROOT'] . $orig))
+				{
+					echo '<a href="' . $orig . '" title="High res">&prop;</a>'."\n"; 
+				}
+				echo "</div>   <!--- class=\"highslide-caption\" -->\n";  
+
+				// show caption if flag is true
+				if ($caption != "") echo $caption;
+				echo "</div>   <!-- class=\"figure\" -->\n";
 			}
-			echo '<div class="'.$player_class.'">';
-			echo '<h3>'.$player['first_name'] ." ". $player['last_name'].'</h3>';
-			unset ($this->_columns['first_name']);
+			
 			echo '<ul>';
 			foreach ( array_keys($this->_columns) as $col)
 			{
-				$value = $player[$col];
-				if ($col == 'bats' || $col == 'throws') {
-					switch ($value) {
-						case 'L':
-							$value = 'Left';
-							break;
-						case 'R':
-							$value = 'Right';
-							break;
+				
+				if ($col != 'athlete_first_name' && $col != 'athlete_last_name' && $col != 'athlete_number' && $col != 'athlete_hometown_state')
+				{
+					$value = $player[$col];
+
+					if ($col == 'athlete_position_event')
+					{
+						
 					}
+					else if ($col == 'athlete_hometown_city')
+					{
+						$value .= ', '. $this->statesAP[$player['athlete_hometown_state']];
+					}
+					else if ($col == 'athlete_height')
+					{
+						$value = (string)((int)($player[$col] / 12) . '\' ' . $player[$col] % 12 . '"');
+					}
+
+				echo '<li><strong>'.$this->gen_custom_header($col).':</strong> '.$value.'</li>';
 				}
-				echo '<li><strong>'.prettify_string($col).':</strong> '.$value.'</li>';
 			}
 			echo '</ul>';
+			echo '</p>';
+			echo '<hr>';
 			if (!empty($player['content'])) {
-				echo '<h4>Additional Information</h4>'."\n";
 				echo '<div class="moreInfo">'."\n";
 				echo $player['content']."\n";
 				echo '</div>'."\n";
 			}
 			echo '</div>', "\n";
-			echo '<p class="returnLink"><a href="'.carl_make_link(array('id'=>'')).'">View full roster</a></p>';
 			echo '</div>';
 		}
 		else
@@ -281,7 +322,7 @@
 						foreach( array_keys($this->_columns) as $col )
 						{
 							$str .= '<td>';
-							if($col == 'athlete_first_name' || $col == 'athlete_last_name')
+							if ($col == 'athlete_first_name' || $col == 'athlete_last_name')
 							{
 								$name = $player[$col]; //.' '.$player['athlete_last_name'];
 								if ( $player['image_id'] OR $player['content'] )
@@ -332,6 +373,7 @@
 	}
 	function gen_custom_header($k)
 	{
+		
 		if ($k == 'athlete_position_event')
 		{
 			if ($this->site_id == id_of('sport_baseball_men') || $this->site_id == id_of('sport_football_men') ||
@@ -339,11 +381,19 @@
 				$this->site_id == id_of('sport_soccer_men') || $this->site_id == id_of('sport_soccer_women') ||
 				$this->site_id == id_of('sport_softball_women') || $this->site_id == id_of('sport_volleyball_women'))
 			{
-				return 'Pos.';
+				if (empty($this->request['id']))
+				{
+					return 'Pos.';
+				}
+				else 
+				{
+					return 'Position';
+				}
 			}
 			else if ($this->site_id == id_of('sport_swimmingdiving_men') || $this->site_id == id_of('sport_swimmingdiving_women') ||
 				$this->site_id == id_of('sport_track_men') || $this->site_id == id_of('sport_track_women'))
 			{
+				
 				return 'Event';
 			}
 			else
@@ -353,19 +403,47 @@
 		}
 		else if ($k == 'athlete_height')
 		{
-			return 'Ht.';
+			if (empty($this->request['id']))
+			{
+				return 'Ht.';
+			}
+			else 
+			{
+				return 'Height';
+			}
 		}
 		else if ($k == 'athlete_weight')
 		{
-			return 'Wt.';
+			if (empty($this->request['id']))
+			{
+				return 'Wt.';
+			}
+			else 
+			{
+				return 'Weight';
+			}
 		}
 		else if ($k == 'athlete_bat')
 		{
-			return 'B';
+			if (empty($this->request['id']))
+			{
+				return 'B';
+			}
+			else 
+			{
+				return 'Bat';
+			}
 		}
 		else if ($k == 'athlete_throw')
 		{
-			return 'T';
+			if (empty($this->request['id']))
+			{
+				return 'T';
+			}
+			else 
+			{
+				return 'Throw';
+			}
 		}
 		return $this->table_header[$k];
 

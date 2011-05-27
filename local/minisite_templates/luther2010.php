@@ -388,8 +388,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 		$b = $this->_get_breadcrumb_markup($this->_get_breadcrumbs(), $this->site_info->get_value('base_breadcrumbs'), '&nbsp;&#187;&nbsp;');
 		
 		$url = get_current_url();
-		if (preg_match("/story_id=\d+$/", $url))
-		// publication inserts link to story as well as the story itself so remove the link
+		if (preg_match("/story_id=\d+$/", $url) // publication inserts link to story as well as the story itself so remove the link
+			|| preg_match("/[&?]event_id=\d+/", $url)) // event does too	
 		{
 			$ba = explode('&nbsp;&#187;&nbsp;', $b);
 			array_splice($ba, -2, 1);
@@ -604,8 +604,9 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//{
 		//	return '<body id="home" class="style-home-02" >'."\n";
 		//}
-		elseif ($this->cur_page->get_value( 'custom_page' ) == 'events'
+		elseif (($this->cur_page->get_value( 'custom_page' ) == 'events' && !preg_match("/[&?]event_id=\d+/", $url))
 			|| $this->cur_page->get_value( 'custom_page' ) == 'sports_roster'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'sports_results'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'directory_aaron'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'admissions_application')
 		{
@@ -641,6 +642,12 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if ($this->has_content( 'twitter_sub_nav' ))
 		{
 			return true;
+		}
+		
+		if ($this->cur_page->get_value( 'custom_page' ) == 'events')
+		// no images allowed on events page, only for individual events
+		{
+			return false;
 		}
 		
 		if ((($this->has_content('pre_sidebar') || $this->has_content('sidebar')) && $this->cur_page->get_value('custom_page') != 'standalone_login_page_stripped'))
