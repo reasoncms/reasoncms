@@ -892,6 +892,18 @@
 	define('REASON_EVENT_GEOLOCATION_ENABLED', true);
 	
 	/**
+	 * REASON_MYSQL_SPATIAL_DATA_AVAILABLE
+	 *
+	 * If you are running MySQL 5, Reason can store location information as binary data in MySQL, and keep
+	 * this data up to date using triggers. This is off by default - you should only turn it on if you have
+	 * upgraded your database to support this functionality as described in the binary spatial data upgrade
+	 * script.
+	 *
+	 * If you enable this on a database that does not have this support Reason will crash.
+	 */
+	define('REASON_MYSQL_SPATIAL_DATA_AVAILABLE', false);
+	
+	/**
 	 * REASON_IPINFODB_API_KEY
 	 *
 	 * Optionally provide your api key for the api.ipinfodb.com ip address geolocation service.
