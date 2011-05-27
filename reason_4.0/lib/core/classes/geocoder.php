@@ -205,8 +205,8 @@ class geocoder
 			}
 			
 			// Limit requests to one per second
-			if (isset($this->last_query_time) && ( (time() - $this->last_query_time()) == 0) ) usleep(1000000);
-			$this->last_query_time = time();
+			if (isset($last_query_time) && ( (time() - $last_query_time) == 0) ) usleep(1000000);
+			$last_query_time = time();
 			
 			if (!($this->raw_query_results = @file_get_contents($url))) 
 			{
