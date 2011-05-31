@@ -626,7 +626,7 @@ class ApplicationPageThree extends FormStep {
 //                'type' => 'text',
 //                'size' => 4,
 //            ),
-        'hr_1' => 'hr',
+        'sibling_2_hr' => 'hr',
         'sibling_2_header' => array(
             'type' => 'comment',
             'text' => '<h4>Sibling 2</h4>',
@@ -687,7 +687,7 @@ class ApplicationPageThree extends FormStep {
 //                'type' => 'text',
 //                'size' => 4,
 //            ),
-        'hr_2' => 'hr',
+        'sibling_3_hr' => 'hr',
         'sibling_3_header' => array(
             'type' => 'comment',
             'text' => '<h4>Sibling 3</h4>',
@@ -748,7 +748,7 @@ class ApplicationPageThree extends FormStep {
 //                'type' => 'text',
 //                'size' => 4,
 //            ),
-        'hr_4' => 'hr',
+        'sibling_4_hr' => 'hr',
         'sibling_4_header' => array(
             'type' => 'comment',
             'text' => '<h4>Sibling 4</h4>',
@@ -809,7 +809,7 @@ class ApplicationPageThree extends FormStep {
 //                'type' => 'text',
 //                'size' => 4,
 //            ),
-        'hr_5' => 'hr',
+        'sibling_5_hr' => 'hr',
         'sibling_5_header' => array(
             'type' => 'comment',
             'text' => '<h4>Sibling 5</h4>',
@@ -883,7 +883,7 @@ class ApplicationPageThree extends FormStep {
         'add_sibling_button' => array(
             'type' => 'comment',
             'text' => '<div id="addSibling" title="Add Another Sibling">
-                <a class="addButton" href="#">Add Another Sibling</a>
+                <a class="addButton" >Add Another Sibling</a>
                 </div>'
         )
     );
