@@ -62,23 +62,19 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if (!preg_match("/^localhost$/", REASON_HOST, $matches))
 		{
 			echo '<script type="text/javascript">'."\n";
-			if ($this->site_id == id_of('registrar') || $this->site_id == id_of('publication_brian'))
-			{
-				echo 'hs.Expander.prototype.onAfterExpand = function(sender) {
-					if (this.a.name != "") {
-						_gaq.push([\'_trackEvent\', \'video\', \'click\', this.a.name]);
-					}
-				}'."\n";
-				
-			}
-			else
-			{
+			
 			echo 'hs.Expander.prototype.onAfterExpand = function(sender) {
-					if (this.a.name != "") {
-						pageTracker._trackPageview(this.a.name);
-					}
-				}'."\n";
-			}
+				if (this.a.name != "") {
+					_gaq.push([\'_trackEvent\', \'video\', \'click\', this.a.name]);
+				}
+			}'."\n";
+				
+			//echo 'hs.Expander.prototype.onAfterExpand = function(sender) {
+			//		if (this.a.name != "") {
+			//			pageTracker._trackPageview(this.a.name);
+			//		}
+			//	}'."\n";
+			
 			echo '</script>'."\n";
 		}
 
