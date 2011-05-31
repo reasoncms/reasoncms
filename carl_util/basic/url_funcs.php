@@ -251,14 +251,17 @@ function alter_protocol($url,$current_protocol,$new_protocol)
 }
 
 /**
- * Grab contents of a URL.
+ * Grab contents of a URL. We allow up to 30 seconds total per operation and 10 seconds to connect by default.
  *
  * @param string url fully qualified url to grab
  * @param boolean verify_ssl whether or not to require a valid certificate for an https connection default false
  * @param string http_auth_username Absolute URL
+ * @param string http_auth_password
+ * @param int timeout - timout time for entire request
+ * @param int connect_timeout - timeout time to establish connection to server
  * @return mixed a string or false on error
  */
-function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_username = '', $http_auth_password = '')
+function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_username = '', $http_auth_password = '', $timeout = 30, $connect_timeout = 10)
 {
 	require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
 	$ch = curl_init( $url );
@@ -276,6 +279,8 @@ function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_userna
 		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false);
 	}
+	curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $connect_timeout ); // number of seconds to try to connect
+	curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout ); // number of seconds allowed overall for execution
 	$page = curl_exec( $ch );
 	// check for errors
 	if( empty( $page ) )
