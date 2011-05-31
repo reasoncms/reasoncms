@@ -129,45 +129,20 @@ $(document).ready(function() {
 
     /**Page Four - Education**/
     /**************************/
-    //    var availableTags = [
-    //			"ActionScript",
-    //			"AppleScript",
-    //			"Asp",
-    //			"BASIC",
-    //			"C",
-    //			"C++",
-    //			"Clojure",
-    //			"COBOL",
-    //			"ColdFusion",
-    //			"Erlang",
-    //			"Fortran",
-    //			"Groovy",
-    //			"Haskell",
-    //			"Java",
-    //			"JavaScript",
-    //			"Lisp",
-    //			"Perl",
-    //			"PHP",
-    //			"Python",
-    //			"Ruby",
-    //			"Scala",
-    //			"Scheme"
-    //		];
 
     $('#current_hs_nameElement').focus();
     $("#current_hs_nameElement").autocomplete({
         source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
-        minLength: 3
+        minLength: 3,
+        select: function( event, ui )
+        {
+            $( '#current_hs_addressElement' ).val(ui.item.current_hs_address);
+            $( '#current_hs_cityElement' ).val(ui.item.current_hs_city);
+            $( '#current_hs_stateElement' ).val(ui.item.current_hs_state);
+            $( '#current_hs_zipElement' ).val(ui.item.current_hs_zip);
+            $( '#current_hs_countryElement' ).val(ui.item.current_hs_country);
+   	}
     });
-
-    //    $("#current_hs_nameElement").autocomplete({
-    //        source: "../autocomplete/ceeb.php",
-    //        minLength: 2,
-    //        select: function(event, ui) {
-    //            $('#current_hs_city').val(ui.item.city);
-    //            $('#current_hs_state').val(ui.item.state);
-    //        }
-    //    });
 
     //    $("#state_abbrev").autocomplete({
     //        source: "states_abbrev.php",
