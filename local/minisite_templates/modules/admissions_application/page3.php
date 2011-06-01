@@ -888,7 +888,7 @@ class ApplicationPageThree extends FormStep {
         ),
         'remove_sibling_button' => array(
             'type' => 'comment',
-            'text' => '<div id="removeSibling" title="Remove Sibling" class="addButton">
+            'text' => '<div id="removeSibling" title="Remove Sibling" class="removeButton">
                 Remove a Sibling
                 </div>'
         )
