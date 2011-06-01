@@ -130,6 +130,10 @@
 					echo '<p>This item may have errors, but you do not have editing rights to this item.</p>';
 					echo '<p><a href="'.$this->admin_page->make_link( array( 'id' => '','site_id' => $this->admin_page->site_id , 'type_id' => $this->admin_page->type_id , 'cur_module' => 'Lister', 'state' => 'pending' ) ).'">Exit this item without editing</a></p>';
 				}
+				elseif ($this->entity->get_value('state') == 'Deleted')
+				{
+					echo '<p>This item has been deleted and cannot be edited.</p>';
+				}
 				else
 				{
 					echo '<p>Sorry. You do not have the privileges to edit this item.</p>';
@@ -139,7 +143,11 @@
 		
 		function should_run_api()
 		{
-			return $this->disco_item->should_run_api();
+			if($this->_cm_ok_to_run())
+			{
+				return $this->disco_item->should_run_api();
+			}
+			return false;
 		}
 		
 		/**
