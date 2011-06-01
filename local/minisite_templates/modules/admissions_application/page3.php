@@ -909,6 +909,11 @@ class ApplicationPageThree extends FormStep {
             'elements' => array('parent_1_phone_type', 'parent_1_phone'),
             'args' => array('use_element_labels' => false, 'display_name' => 'Preferred Phone'),
         ),
+        'sibling_button_group' =>array(
+            'type' => 'inline',
+            'elements' => array('add_sibling_button', 'remove_sibling_button'),
+            'args' => array('use_element_labels' => false, 'display_name' => '&nbsp;'),
+        ),
 //            'parent_1_college_group' => array(
 //                'type' => 'inline',
 //                'elements' =>  array( 'parent_1_college_degree' , 'parent_1_college_year' ),
