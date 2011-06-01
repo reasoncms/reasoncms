@@ -111,10 +111,14 @@ $(document).ready(function() {
         toggle_parent_college();
     });
 
-    add_sibling();
-    $("input[name='sibling_1_relation']").change(function(){
-        add_sibling();
-    });
+    $('#removeSibling').css('display', 'none'); // did this instead of hide because hide was removing some other css from the button
+    $('[id^=sibling2]').hide();
+    $('[id^=sibling3]').hide();
+    $('[id^=sibling4]').hide();
+    $('[id^=sibling5]').hide();
+    //$("input[name='sibling_1_relation']").change(function(){
+    //    add_sibling();
+    //});
 
     $('.addButton').button({
         icons: {
@@ -123,8 +127,11 @@ $(document).ready(function() {
         }
     });
 
-    $('a#add_sibling_button').click(function(){
+    $('#addSibling').click(function(){
         add_sibling();
+    });
+    $('#removeSibling').click(function(){
+        remove_sibling();
     });
 
     /**Page Four - Education**/
@@ -202,34 +209,31 @@ $(document).ready(function() {
     });
 });
 
+var sibling_count = 1;
 function add_sibling() {
-    var count = 0;
-    if (count == 0) {
-        $('#hr1Row').hide();
-        $('#sibling2headerRow').hide();
-        $('#sibling2relationRow').hide();
-        $('#sibling2namegroupRow').hide();
-        $('#sibling2agegroupRow').hide();
-        $('#sibling2collegeRow').hide();
-        $('#hr2Row').hide();
-        $('#sibling3headerRow').hide();
-        $('#sibling3relationRow').hide();
-        $('#sibling3namegroupRow').hide();
-        $('#sibling3agegroupRow').hide();
-        $('#sibling3collegeRow').hide();
-        $('#hr3Row').hide();
-        $('#sibling4headerRow').hide();
-        $('#sibling4relationRow').hide();
-        $('#sibling4namegroupRow').hide();
-        $('#sibling4agegroupRow').hide();
-        $('#sibling4collegeRow').hide();
-        $('#hr4Row').hide();
-        $('#sibling5headerRow').hide();
-        $('#sibling5relationRow').hide();
-        $('#sibling5namegroupRow').hide();
-        $('#sibling5agegroupRow').hide();
-        $('#sibling5collegeRow').hide();
-        $('#hr5Row').hide();
+    sibling_count += 1;
+    $('[id^=sibling'+sibling_count+']').show();
+    if (sibling_count == 5) {
+        $('#addSibling').hide();
+    }
+    if (sibling_count == 2) {
+        $('#removeSibling').show();
+    }
+}
+function remove_sibling() {
+    $('[id^=sibling'+sibling_count+']').hide();
+    $('[id^=sibling'+sibling_count+']').find('input[type="text"]').each(function() {
+        $(this).val("");
+    });
+    $('[id^=sibling'+sibling_count+']').find('input[type="radio"]').each(function() {
+        $(this).attr('checked', false);
+    });
+    sibling_count -= 1;
+    if (sibling_count == 1) {
+        $('#removeSibling').hide();
+    }
+    if (sibling_count == 4) {
+        $('#addSibling').show();
     }
 }
 function toggle_conviction_history() {
