@@ -29,6 +29,22 @@ $(document).ready(function() {
         })
     });
 
+    /**All Pages **/
+    /**************/
+    $('.addButton').button({
+        icons: {
+            primary:'ui-icon-plusthick',
+            secondary:'ui-icon-plusthick'
+        }
+    });
+
+    $('.removeButton').button({
+        icons: {
+            primary:'ui-icon-minusthick',
+            secondary:'ui-icon-minusthick'
+        }
+    });
+
     /**Page One - Enrollment Info **/
     /*******************************/
     $("#transfer_dialog").dialog({
@@ -120,13 +136,6 @@ $(document).ready(function() {
     //    add_sibling();
     //});
 
-    $('.addButton').button({
-        icons: {
-            primary:'ui-icon-plusthick',
-            secondary:'ui-icon-plusthick'
-        }
-    });
-
     $('#addSibling').click(function(){
         add_sibling();
     });
@@ -149,6 +158,18 @@ $(document).ready(function() {
             $( '#current_hs_zipElement' ).val(ui.item.current_hs_zip);
             $( '#current_hs_countryElement' ).val(ui.item.current_hs_country);
    	}
+    });
+
+    $('#removeCollege').css('display', 'none'); // did this instead of hide because hide was removing some other css from the button
+    $('[id^=college2]').hide();
+    $('[id^=college3]').hide();
+
+    $('#addCollege').click(function(){
+        add_college();
+    });
+
+    $('#removeCollege').click(function(){
+        remove_college();
     });
 
     //    $("#state_abbrev").autocomplete({
@@ -234,6 +255,33 @@ function remove_sibling() {
     }
     if (sibling_count == 4) {
         $('#addSibling').show();
+    }
+}
+var college_count = 1;
+function add_college() {
+    college_count += 1;
+    $('[id^=college'+college_count+']').show();
+    if (college_count == 3) {
+        $('#addCollege').hide();
+    }
+    if (college_count == 2) {
+        $('#removeCollege').show();
+    }
+}
+function remove_college() {
+    $('[id^=college'+college_count+']').hide();
+    $('[id^=college'+college_count+']').find('input[type="text"]').each(function() {
+        $(this).val("");
+    });
+    $('[id^=college'+college_count+']').find('input[type="radio"]').each(function() {
+        $(this).attr('checked', false);
+    });
+    college_count -= 1;
+    if (college_count == 1) {
+        $('#removeCollege').hide();
+    }
+    if (college_count == 2) {
+        $('#addCollege').show();
     }
 }
 function toggle_conviction_history() {
