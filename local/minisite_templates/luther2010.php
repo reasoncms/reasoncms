@@ -726,6 +726,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 	function music_main_content()
 	// contains carousel, title, breadcrumbs, add-this, events, and spotlight on music site
 	{
+		$url = get_current_url();
+		
 		$this->run_section( 'imagetop' );
 		
 		echo '<div class="content content-primary">'."\n";
@@ -747,17 +749,26 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 
 		echo '<section class="events group with-calendar" role="group">'."\n";
-		echo '<header class="red-stripe"><h1><span>Upcoming Music Events</span></h1></header>'."\n";
+		if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/music\/?/", $url))
+		{
+			echo '<header class="red-stripe"><h1><span>Upcoming Music Events</span></h1></header>'."\n";
+		}
+		else 
+		{
+			echo '<header class="red-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
+		}
 		$this->run_section( 'main_post' );		
 		echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";
 		
-		echo '<section class="spotlight" role="group">'."\n";
-     	echo '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+		
 		if ($this->has_content( 'content_blurb' ))
 		{
+			echo '<section class="spotlight" role="group">'."\n";
+     		echo '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
 			$this->run_section( 'content_blurb' );
+			echo '</section> <!-- class="spotlight" role="group" -->'."\n";
 		}
-     	echo '</section> <!-- class="spotlight" role="group" -->'."\n";
+     	
      	
      	$this->luther_add_this();
      	
