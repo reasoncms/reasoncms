@@ -1,5 +1,6 @@
 <?php
-include_once '/usr/local/webapps/reason/reason_package_local/disco/plasmature/types/athletics.php';
+include_once INCLUDE_PATH.'../reason_package_local/disco/plasmature/types/athletics.php';
+
 /**
  * @package reason
  * @subpackage content_managers
