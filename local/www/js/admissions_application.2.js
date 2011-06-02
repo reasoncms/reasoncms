@@ -154,7 +154,7 @@ $(document).ready(function() {
         {
             $( '#hs_addressElement' ).val(ui.item.current_hs_address);
             $( '#hs_cityElement' ).val(ui.item.current_hs_city);
-            $( '#hs_stateElement' ).val(ui.item.current_hs_state);
+            $( '#hs_state_provinceElement' ).val(ui.item.current_hs_state);
             $( '#hs_zipElement' ).val(ui.item.current_hs_zip);
             $( '#hs_countryElement' ).val(ui.item.current_hs_country);
    	}
@@ -167,7 +167,7 @@ $(document).ready(function() {
         {
             $( '#college_1_addressElement' ).val(ui.item.current_hs_address);
             $( '#college_1_cityElement' ).val(ui.item.current_hs_city);
-            $( '#college_1_stateElement' ).val(ui.item.current_hs_state);
+            $( '#college_1_state_provinceElement' ).val(ui.item.current_hs_state);
             $( '#college_1_zipElement' ).val(ui.item.current_hs_zip);
             $( '#college_1_countryElement' ).val(ui.item.current_hs_country);
    	}
@@ -180,7 +180,7 @@ $(document).ready(function() {
         {
             $( '#college_2_addressElement' ).val(ui.item.current_hs_address);
             $( '#college_2_cityElement' ).val(ui.item.current_hs_city);
-            $( '#college_2_stateElement' ).val(ui.item.current_hs_state);
+            $( '#college_2_state_provinceElement' ).val(ui.item.current_hs_state);
             $( '#college_2_zipElement' ).val(ui.item.current_hs_zip);
             $( '#college_2_countryElement' ).val(ui.item.current_hs_country);
    	}
@@ -193,7 +193,7 @@ $(document).ready(function() {
         {
             $( '#college_3_addressElement' ).val(ui.item.current_hs_address);
             $( '#college_3_cityElement' ).val(ui.item.current_hs_city);
-            $( '#college_3_stateElement' ).val(ui.item.current_hs_state);
+            $( '#college_3_state_provinceElement' ).val(ui.item.current_hs_state);
             $( '#college_3_zipElement' ).val(ui.item.current_hs_zip);
             $( '#college_3_countryElement' ).val(ui.item.current_hs_country);
    	}
@@ -288,7 +288,7 @@ function remove_sibling() {
     $('[id^=sibling'+sibling_count+']').find('input[type="radio"]').each(function() {
         $(this).attr('checked', false);
     });
-    $('[id^=sibling_'+sibling_count+'_stateElement]').val('1');
+    $('[id^=sibling_'+sibling_count+'_state_provinceElement]').val('1');
     $('[id^=sibling_'+sibling_count+'_countryElement]').val('1');
     sibling_count -= 1;
     if (sibling_count == 1) {
@@ -317,7 +317,7 @@ function remove_college() {
     $('[id^=college'+college_count+']').find('input[type="radio"]').each(function() {
         $(this).attr('checked', false);
     });
-    $('[id^=college_'+college_count+'_stateElement]').val('1');
+    $('[id^=college_'+college_count+'_state_provinceElement]').val('1');
     $('[id^=college_'+college_count+'_countryElement]').val('1');
     college_count -= 1;
     if (college_count == 1) {
