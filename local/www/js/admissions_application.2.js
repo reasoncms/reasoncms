@@ -288,6 +288,8 @@ function remove_sibling() {
     $('[id^=sibling'+sibling_count+']').find('input[type="radio"]').each(function() {
         $(this).attr('checked', false);
     });
+    $('[id^=sibling_'+sibling_count+'_stateElement]').val('1');
+    $('[id^=sibling_'+sibling_count+'_countryElement]').val('1');
     sibling_count -= 1;
     if (sibling_count == 1) {
         $('#removeSibling').hide();
@@ -315,9 +317,8 @@ function remove_college() {
     $('[id^=college'+college_count+']').find('input[type="radio"]').each(function() {
         $(this).attr('checked', false);
     });
-    $('[id^=college'+college_count+']').find('select').each(function() {
-        $(this).attr('selected', '--');
-    });
+    $('[id^=college_'+college_count+'_stateElement]').val('1');
+    $('[id^=college_'+college_count+'_countryElement]').val('1');
     college_count -= 1;
     if (college_count == 1) {
         $('#removeCollege').hide();
