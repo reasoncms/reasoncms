@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 /**
  * Admissions Application Module
@@ -100,6 +100,7 @@ class ApplicationPageFour extends FormStep {
             'type' => 'Country',
             'display_name' => 'Country',
         ),
+        'college_2_hr' => 'hr',
         'college_2_header' => array(
             'type' => 'comment',
             'text' => '<h4>College/University</h4>',
@@ -133,6 +134,7 @@ class ApplicationPageFour extends FormStep {
             'type' => 'Country',
             'display_name' => 'Country',
         ),
+        'college_3_hr' => 'hr',
         'college_3_header' => array(
             'type' => 'comment',
             'text' => '<h4>College/University</h4>',
@@ -165,6 +167,18 @@ class ApplicationPageFour extends FormStep {
         'college_3_country' => array(
             'type' => 'Country',
             'display_name' => 'Country',
+        ),
+        'add_college_button' => array(
+            'type' => 'comment',
+            'text' => '<div id="addCollege" title="Add Another College" class="addButton">
+                Add Another College
+                </div>'
+        ),
+        'remove_college_button' => array(
+            'type' => 'comment',
+            'text' => '<div id="removeCollege" title="Remove College" class="removeButton">
+                Remove a College
+                </div>'
         ),
         'tests_header' => array(
             'type' => 'comment',
@@ -212,8 +226,23 @@ class ApplicationPageFour extends FormStep {
             'comments' => 'Composite'
         ),
     );
+    var $element_group_info = array(
+        'college_button_group' =>array(
+            'type' => 'inline',
+            'elements' => array('add_college_button', 'remove_college_button'),
+            'args' => array('use_element_labels' => false, 'display_name' => '&nbsp;'),
+        )
+    );
+
     var $display_name = 'Education';
     var $error_header_text = 'Please check your form.';
+
+     function on_every_time() {
+        foreach ($this->element_group_info as $name => $info) {
+            $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
+        }
+        $this->move_element('college_button_group', 'after', 'college_3_country');
+     }
 
     // style up the form and add comments et al
     function on_first_time() {
