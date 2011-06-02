@@ -1093,7 +1093,7 @@ class ApplicationPageThree extends FormStep {
 
         connectDB('admissions_applications_connection');
 
-        $parent_marital_status = $this->get_value('parent_marital_status');
+        $parental_marital_status = $this->get_value('parent_marital_status');
         $permanent_home_parent = $this->get_value('permanent_home_parent');
         $parent_1_type = $this->get_value('parent_1_type');
         $parent_1_living = $this->get_value('parent_1_living');
@@ -1191,7 +1191,7 @@ class ApplicationPageThree extends FormStep {
 
 
         $qstring = "INSERT INTO `applicants` SET
-                parent_marital_status='" . ((!empty ($parent_marital_status)) ? addslashes($parent_marital_status) : 'NULL') . "',
+                parental_marital_status='" . ((!empty ($parental_marital_status)) ? addslashes($parental_marital_status) : 'NULL') . "',
                 permanent_home_parent='" . ((!empty ($permanent_home_parent)) ? addslashes($permanent_home_parent) : 'NULL') . "',
                 parent_1_type='" . ((!empty ($parent_1_type)) ? addslashes($parent_1_type) : 'NULL') . "',
                 parent_1_living='" . ((!empty ($parent_1_living)) ? addslashes($parent_1_living) : 'NULL') . "',
