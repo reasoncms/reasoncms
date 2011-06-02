@@ -50,11 +50,11 @@ class ApplicationPageFour extends FormStep {
             'display_name' => 'City',
             'size' => 15,
         ),
-        'hs_state' => array(
+        'hs_state_province' => array(
             'type' => 'state_province',
             'display_name' => 'State/Province',
         ),
-        'hs_zip' => array(
+        'hs_zip_postal' => array(
             'type' => 'text',
             'display_name' => 'Zip/Postal Code',
             'size' => 8,
@@ -87,11 +87,11 @@ class ApplicationPageFour extends FormStep {
             'display_name' => 'City',
             'size' => 15,
         ),
-        'college_1_state' => array(
+        'college_1_state_province' => array(
             'type' => 'state_province',
             'display_name' => 'State/Province',
         ),
-        'college_1_zip' => array(
+        'college_1_zip_postal' => array(
             'type' => 'text',
             'display_name' => 'Zip/Postal Code',
             'size' => 8,
@@ -121,11 +121,11 @@ class ApplicationPageFour extends FormStep {
             'display_name' => 'City',
             'size' => 15,
         ),
-        'college_2_state' => array(
+        'college_2_state_province' => array(
             'type' => 'state_province',
             'display_name' => 'State/Province',
         ),
-        'college_2_zip' => array(
+        'college_2_zip_postal' => array(
             'type' => 'text',
             'display_name' => 'Zip/Postal Code',
             'size' => 8,
@@ -155,11 +155,11 @@ class ApplicationPageFour extends FormStep {
             'display_name' => 'City',
             'size' => 15,
         ),
-        'college_3_state' => array(
+        'college_3_state_province' => array(
             'type' => 'state_province',
             'display_name' => 'State/Province',
         ),
-        'college_3_zip' => array(
+        'college_3_zip_postal' => array(
             'type' => 'text',
             'display_name' => 'Zip/Postal Code',
             'size' => 8,
@@ -170,14 +170,14 @@ class ApplicationPageFour extends FormStep {
         ),
         'add_college_button' => array(
             'type' => 'comment',
-            'text' => '<div id="addCollege" title="Add Another College" class="addButton">
-                Add Another College
+            'text' => '<div id="addCollege" title="Add College" class="addButton">
+                Add College
                 </div>'
         ),
         'remove_college_button' => array(
             'type' => 'comment',
             'text' => '<div id="removeCollege" title="Remove College" class="removeButton">
-                Remove a College
+                Remove College
                 </div>'
         ),
         'tests_header' => array(
@@ -230,7 +230,8 @@ class ApplicationPageFour extends FormStep {
         'college_button_group' =>array(
             'type' => 'inline',
             'elements' => array('add_college_button', 'remove_college_button'),
-            'args' => array('use_element_labels' => false, 'display_name' => '&nbsp;'),
+//            'args' => array('use_element_labels' => false, 'display_name' => '&nbsp;'),
+            'args' => array('use_element_labels' => false, 'use_group_display_name' => false, 'span_columns' => true),
         )
     );
 
@@ -260,28 +261,80 @@ class ApplicationPageFour extends FormStep {
     function post_show_form() {
         echo '</div>' . "\n";
     }
-      function get_ceeb() {
-       $return_arr = array();
 
-       $availableTags = array(
-            'Groovy',
-            'Haskell',
-            'Java',
-            'JavaScript',
-            'Lisp',
-            'Perl',
-            'PHP',
-            'Python',
-            'Ruby',
-            'Scala',
-            'Scheme'
-        );
-        array_push($return_arr, $availableTags);
+    function  process() {
+        parent::process();
 
-        /* Toss back results as json encoded array. */
-        echo json_encode($return_arr);
+        connectDB('admissions_applications_connection');
+
+        $hs_name = $this->get_value('hs_name');
+        $hs_address = $this->get_value('hs_address');
+        $hs_city = $this->get_value('hs_city');
+        $hs_state_province = $this->get_value('hs_state_province');
+        $hs_zip_postal = $this->get_value('hs_zip_postal');
+        $hs_country = $this->get_value('hs_country');
+        $hs_grad_year = $this->get_value('hs_grad_year');
+        $college_1_name = $this->get_value('college_1_name');
+        $college_1_address = $this->get_value('college_1_address');
+        $college_1_city = $this->get_value('college_1_city');
+        $college_1_state_province = $this->get_value('college_1_state_province');
+        $college_1_zip_postal = $this->get_value('college_1_zip_postal');
+        $college_1_country = $this->get_value('college_1_country');
+        $college_2_name = $this->get_value('college_2_name');
+        $college_2_address = $this->get_value('college_2_address');
+        $college_2_city = $this->get_value('college_2_city');
+        $college_2_state_province = $this->get_value('college_2_state_province');
+        $college_2_zip_postal = $this->get_value('college_2_zip_postal');
+        $college_2_country = $this->get_value('college_2_country');
+        $college_3_name = $this->get_value('college_3_name');
+        $college_3_address = $this->get_value('college_3_address');
+        $college_3_city = $this->get_value('college_3_city');
+        $college_3_state_province = $this->get_value('college_3_state_province');
+        $college_3_zip_postal = $this->get_value('college_3_zip_postal');
+        $college_3_country = $this->get_value('college_3_country');
+        $taken_tests = $this->get_value('taken_tests');
+        $sat_math = $this->get_value('sat_math');
+        $sat_critical_reading = $this->get_value('sat_critical_reading');
+        $sat_writing = $this->get_value('sat_writing');
+        $act_composite = $this->get_value('act_composite');
+
+        $qstring = "INSERT INTO `applicants` SET
+                hs_name='" . ((!empty ($hs_name)) ? addslashes($hs_name) : 'NULL') . "',
+                hs_address='" . ((!empty ($hs_address)) ? addslashes($hs_address) : 'NULL') . "',
+                hs_city='" . ((!empty ($hs_city)) ? addslashes($hs_city) : 'NULL') . "',
+                hs_state_province='" . ((!empty ($hs_state_province)) ? addslashes($hs_state_province) : 'NULL') . "',
+		hs_zip_postal='" . ((!empty ($hs_zip_postal)) ? addslashes($hs_zip_postal) : 'NULL') . "',
+		hs_country='" . ((!empty ($hs_country)) ? addslashes($hs_country) : 'NULL') . "',
+                hs_grad_year='" . ((!empty ($hs_grad_year)) ? addslashes($hs_grad_year) : 'NULL') . "',
+                college_1_name='" . ((!empty ($college_1_name)) ? addslashes($college_1_name) : 'NULL') . "',
+                college_1_address='" . ((!empty ($college_1_address)) ? addslashes($college_1_address) : 'NULL') . "',
+                college_1_city='" . ((!empty ($college_1_city)) ? addslashes($college_1_city) : 'NULL') . "',
+                college_1_state_province='" . ((!empty ($college_1_state_province)) ? addslashes($college_1_state_province) : 'NULL')  . "',
+                college_1_zip_postal='" . ((!empty ($college_1_zip_postal)) ? addslashes($college_1_zip_postal) : 'NULL') . "',
+                college_1_country='" . ((!empty ($college_1_country)) ? addslashes($college_1_country) : 'NULL') . "',
+                college_2_name='" . ((!empty ($college_2_name)) ? addslashes($college_2_name) : 'NULL') . "',
+                college_2_address='" . ((!empty ($college_2_address)) ? addslashes($college_2_address) : 'NULL') . "',
+                college_2_city='" . ((!empty ($college_2_city)) ? addslashes($college_2_city) : 'NULL') . "',
+                college_2_state_province='" . ((!empty ($college_2_state_province)) ? addslashes($college_2_state_province) : 'NULL')  . "',
+                college_2_zip_postal='" . ((!empty ($college_2_zip_postal)) ? addslashes($college_2_zip_postal) : 'NULL') . "',
+                college_2_country='" . ((!empty ($college_2_country)) ? addslashes($college_2_country) : 'NULL') . "',
+                college_3_name='" . ((!empty ($college_3_name)) ? addslashes($college_3_name) : 'NULL') . "',
+                college_3_address='" . ((!empty ($college_3_address)) ? addslashes($college_3_address) : 'NULL') . "',
+                college_3_city='" . ((!empty ($college_3_city)) ? addslashes($college_3_city) : 'NULL') . "',
+                college_3_state_province='" . ((!empty ($college_3_state_province)) ? addslashes($college_3_state_province) : 'NULL')  . "',
+                college_3_zip_postal='" . ((!empty ($college_3_zip_postal)) ? addslashes($college_3_zip_postal) : 'NULL') . "',
+                college_3_country='" . ((!empty ($college_3_country)) ? addslashes($college_3_country) : 'NULL') . "',
+                taken_tests='" . ((!empty ($taken_tests)) ? addslashes($taken_tests) : 'NULL') . "',
+		sat_math='" . ((!empty ($sat_math)) ? addslashes($sat_math) : 'NULL') . "',
+		sat_critical_reading='" . ((!empty ($sat_critical_reading)) ? addslashes($sat_critical_reading) : 'NULL') . "',
+		sat_writing='" . ((!empty ($sat_writing)) ? addslashes($sat_writing) : 'NULL') . "',
+		act_composite='" . ((!empty ($act_composite)) ? addslashes($act_composite) : 'NULL') . "' ";
+
+        $qresult = db_query($qstring);
+
+        //connect back with the reason DB
+        connectDB(REASON_DB);
     }
-  
 }
 
 ?>
