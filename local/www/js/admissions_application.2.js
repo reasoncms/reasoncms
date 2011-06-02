@@ -146,17 +146,56 @@ $(document).ready(function() {
     /**Page Four - Education**/
     /**************************/
 
-    $('#current_hs_nameElement').focus();
-    $("#current_hs_nameElement").autocomplete({
+    $('#hs_nameElement').focus();
+    $("#hs_nameElement").autocomplete({
         source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
         minLength: 3,
         select: function( event, ui )
         {
-            $( '#current_hs_addressElement' ).val(ui.item.current_hs_address);
-            $( '#current_hs_cityElement' ).val(ui.item.current_hs_city);
-            $( '#current_hs_stateElement' ).val(ui.item.current_hs_state);
-            $( '#current_hs_zipElement' ).val(ui.item.current_hs_zip);
-            $( '#current_hs_countryElement' ).val(ui.item.current_hs_country);
+            $( '#hs_addressElement' ).val(ui.item.current_hs_address);
+            $( '#hs_cityElement' ).val(ui.item.current_hs_city);
+            $( '#hs_stateElement' ).val(ui.item.current_hs_state);
+            $( '#hs_zipElement' ).val(ui.item.current_hs_zip);
+            $( '#hs_countryElement' ).val(ui.item.current_hs_country);
+   	}
+    });
+
+    $('#college_1_nameElement').autocomplete({
+        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        minLength: 3,
+        select: function( event, ui )
+        {
+            $( '#college_1_addressElement' ).val(ui.item.current_hs_address);
+            $( '#college_1_cityElement' ).val(ui.item.current_hs_city);
+            $( '#college_1_stateElement' ).val(ui.item.current_hs_state);
+            $( '#college_1_zipElement' ).val(ui.item.current_hs_zip);
+            $( '#college_1_countryElement' ).val(ui.item.current_hs_country);
+   	}
+    });
+
+    $('#college_2_nameElement').autocomplete({
+        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        minLength: 3,
+        select: function( event, ui )
+        {
+            $( '#college_2_addressElement' ).val(ui.item.current_hs_address);
+            $( '#college_2_cityElement' ).val(ui.item.current_hs_city);
+            $( '#college_2_stateElement' ).val(ui.item.current_hs_state);
+            $( '#college_2_zipElement' ).val(ui.item.current_hs_zip);
+            $( '#college_2_countryElement' ).val(ui.item.current_hs_country);
+   	}
+    });
+
+    $('#college_3_nameElement').autocomplete({
+        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        minLength: 3,
+        select: function( event, ui )
+        {
+            $( '#college_3_addressElement' ).val(ui.item.current_hs_address);
+            $( '#college_3_cityElement' ).val(ui.item.current_hs_city);
+            $( '#college_3_stateElement' ).val(ui.item.current_hs_state);
+            $( '#college_3_zipElement' ).val(ui.item.current_hs_zip);
+            $( '#college_3_countryElement' ).val(ui.item.current_hs_country);
    	}
     });
 
@@ -275,6 +314,9 @@ function remove_college() {
     });
     $('[id^=college'+college_count+']').find('input[type="radio"]').each(function() {
         $(this).attr('checked', false);
+    });
+    $('[id^=college'+college_count+']').find('select').each(function() {
+        $(this).attr('selected', '--');
     });
     college_count -= 1;
     if (college_count == 1) {
