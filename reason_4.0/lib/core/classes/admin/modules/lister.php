@@ -189,7 +189,8 @@
 		function show_sorting() // {{{
 		{
 			$fields = get_fields_by_type( $this->admin_page->type_id );
-			if( is_array($fields) && in_array( 'sort_order' , $fields ) )
+			$type = new entity( $this->admin_page->type_id );
+			if( $type->get_value('custom_sorter') || ( is_array($fields) && in_array( 'sort_order' , $fields ) ) )
 			{
 				echo '<div class="viewInfo"><div class="roundedTop"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div><div class="roundedContent">';
 				$link = $this->admin_page->make_link( array( 'cur_module' => 'Sorting' , 'default_sort' => true ) );
