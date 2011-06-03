@@ -44,7 +44,23 @@
 		function update_es( $es ) 
 		{
 			return $es;
-		} 
+		}
+		/**
+		 * Get the name of the database field to use for sorting
+		 * @return string
+		 */
+		function get_field()
+		{
+			return 'sort_order';
+		}
+		/**
+		 * Get the name of the database table to use for sorting
+		 * @return string
+		 */
+		function get_table()
+		{
+			return 'sortable';
+		}
 		function show_extras() 
 		{
 			echo '&nbsp;';
@@ -53,7 +69,7 @@
 		{
 			$es = new entity_selector( $this->admin_page->site_id );
 			$es->add_type( $this->admin_page->type_id );
-			$es->set_order( 'sortable.sort_order ASC' );
+			$es->set_order( $this->get_table().'.'.$this->get_field().' ASC' );
 			$es->set_sharing( 'owns' );
 			$es = $this->update_es( $es );
 			return $es;
@@ -114,8 +130,9 @@
 				echo 'Sorry. You do not have privileges to edit live items on this site.';
 				return;
 			}
-			$fields = get_fields_by_type( $this->admin_page->type_id );
-			if( is_array($fields) && in_array( 'sort_order' , $fields ) )
+			$fields = get_fields_by_type( $this->admin_page->type_id );			
+			
+			if( is_array($fields) && in_array( $this->sorter->get_field() , $fields ) )
 			{
 				if( $this->sorter->is_new() )
 				{
@@ -125,7 +142,7 @@
 				{
 					// Disco stuff goes here!
 					$sorterForm = new SorterForm;
-					$sorterForm->set_sorted_vals($this->sorter->values);
+					$sorterForm->set_sorter($this->sorter);
 					$sorterForm->run();
 //				var_dump(unhtmlentities( $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] ));
 					if (isset($_GET['savedTime']))
@@ -143,23 +160,14 @@
 			else
 				echo 'This type is not sortable.';
 		} 
-
+		/**
+		 * @deprecated
+		 * @todo remove method
+		 */
 		function set_order() 
 		{
-
-
-
-			if (!empty($items))
-				foreach( $items AS $id => $order )
-				{
-						$q = 'UPDATE sortable set sort_order = ' . $order . ' WHERE id = ' . $id;
-						db_query( $q , 'Error setting sort_order IN SortingModule::set_order()' );
-				}
-			$this->admin_page->request['order'] = '';
-			
-			$redir = carl_make_redirect(array('order' => ''));
-			header('Location: ' . $redir);
-			exit();
+			trigger_error('set_order method on SortingModule no longer works.', HIGH);
+			return;
 		}
 	}
 	
@@ -168,11 +176,23 @@
 		var $elements = array();
 		var $required = array();
 		var $sorted_values = array();
+		var $sorter;
 		var $actions =  array('Save', 'Go Back');
 		
 		function set_sorted_vals($vals)
 		{
 			$this->sorted_values = $vals;
+		}
+		/**
+		 * Set the sorter object (of class "sorter") so the form can
+		 * grab the values to sort and know what field to sort on
+		 * @param object $sorter
+		 * @return void
+		 */
+		function set_sorter($sorter)
+		{
+			$this->sorter = $sorter;
+			$this->set_sorted_vals($this->sorter->values);
 		}
 		
 		function on_every_time()
@@ -238,7 +258,7 @@
 				if (!empty($items))
 					foreach( $items AS $id => $order )
 					{
-							$q = 'UPDATE sortable set sort_order = ' . $order . ' WHERE id = ' . $id;
+							$q = 'UPDATE '.$this->sorter->get_table().' set '.$this->sorter->get_field().' = ' . $order . ' WHERE id = ' . $id;
 							db_query( $q , 'Error setting sort_order IN SortingModule::set_order()' );
 					}
 			}
