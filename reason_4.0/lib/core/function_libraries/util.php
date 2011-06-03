@@ -31,7 +31,8 @@
 	 */
 	include_once( 'reason_header.php' );
 	include_once( CARL_UTIL_INC . 'db/db_selector.php' );
-	reason_include_once('function_libraries/url_utils.php');
+	reason_include_once( 'classes/entity_selector.php' );
+	reason_include_once( 'function_libraries/url_utils.php' );
 
 	/**
 	 * Get the id of an item with a given unique name
@@ -802,39 +803,39 @@
 		}
 		return $sites;
 	}
-
-	function get_user_id( $username ) // {{{
-	{
-		static $users = array();
-		
-		if(!empty($users[$username]))
-		{
-			return $users[$username];
-		}
-		else
-		{
-			$dbq = new DBSelector;
-		
-			// select user.name where user.type = user
-			$dbq->add_table( 'user','entity' );
-			$dbq->add_table( 'type','entity' );
-			$dbq->add_field( 'user','id' );
-			$dbq->add_relation( 'user.name = "'.addslashes($username).'"' );
-			$dbq->add_relation( 'type.unique_name = "user"' );
-			$dbq->add_relation( 'type.id = user.type' );
-			$dbq->add_relation( 'user.state = "Live"' );
-			$dbq->set_num(1);
 	
-			// get the result
-			$res = $dbq->run();
-			// get the first result
-			$res = current( $res );
-			
-			$users[$username] = $res[ 'id' ];
-			// return the id
-			return $res[ 'id' ];
+	/**
+	 * Get the reason id for a username or null if it does not exist (or no username is provided).
+	 *
+	 * - Uses a static cache to store reason username => id info that is successfully found.
+	 * - Note we return the id as a string since that is what the previous (and slow) version of this function did.
+	 *
+	 * @param $username string name of user entity
+	 * @return mixed string entity id of the reason user entity (or null if none found)
+	 * @author Nathan White
+	 */
+	function get_user_id( $username )
+	{
+		static $users;
+		if (empty($username)) return null;
+		if (!isset($users[$username]))
+		{
+			$es = new entity_selector();
+			$es->limit_tables();
+			$es->limit_fields();
+			$es->add_type(id_of('user'));
+			$es->add_relation('name = "'.addslashes($username).'"');
+			$es->set_num(1);
+			$result = $es->run_one();
+			if ($result)
+			{
+				$result_keys = array_keys($result);
+				$users[$username] = (string) reset($result_keys);
+			}
+			else $users[$username] = null;
 		}
-	} // }}}
+		return $users[$username];
+	}
 
 	/**
 	* Determines if a given reason user has a given role
