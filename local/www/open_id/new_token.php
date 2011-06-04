@@ -1,4 +1,5 @@
 <?php
+$luther_openid_url = "https://reasondev.luther.edu/openid/";
 
 ob_start();
 /*
@@ -42,9 +43,9 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
     curl_setopt($curl, CURLOPT_FAILONERROR, true);
     $result = curl_exec($curl);
     if ($result == false) {
-        echo "\n" . 'Curl error: ' . curl_error($curl);
-        echo "\n" . 'HTTP code: ' . curl_errno($curl);
-        echo "\n";
+        //echo "\n" . 'Curl error: ' . curl_error($curl);
+        //echo "\n" . 'HTTP code: ' . curl_errno($curl);
+        //echo "\n";
         var_dump($post_data);
     }
     curl_close($curl);
@@ -54,8 +55,8 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
     $auth_info = json_decode($result, true);
 
     if ($auth_info['stat'] == 'ok') {
-//    echo "\n auth_info:";
-//    echo "\n"; var_dump($auth_info);
+    //echo "\n auth_info:";
+    //echo "\n"; var_dump($auth_info);
 
         /* Pro API examples */
         /* Basic and Plus please skip down to Step 4 */
@@ -84,16 +85,16 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
                 curl_setopt($curl, CURLOPT_FAILONERROR, true);
                 $result = curl_exec($curl);
                 if ($result == false) {
-                    echo "\n" . 'URL:' . $url;
-                    echo "\n" . 'Curl error: ' . curl_error($curl);
-                    echo "\n" . 'HTTP code: ' . curl_errno($curl);
-                    echo "\n";
+                    //echo "\n" . 'URL:' . $url;
+                    //echo "\n" . 'Curl error: ' . curl_error($curl);
+                    //echo "\n" . 'HTTP code: ' . curl_errno($curl);
+                    //echo "\n";
                     var_dump($post_data);
                 }
                 $get_contacts = json_decode($result);
                 curl_close($curl);
-                echo "\n get_contacts:";
-                echo "\n";
+                //echo "\n get_contacts:";
+                //echo "\n";
                 var_dump($get_contacts);
             }
 
@@ -178,19 +179,19 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
                 curl_setopt($curl, CURLOPT_FAILONERROR, true);
                 $result = curl_exec($curl);
                 if ($result == false) {
-                    echo "\n" . 'URL:' . $url;
-                    echo "\n" . 'Curl error: ' . curl_error($curl);
-                    echo "\n" . 'HTTP code: ' . curl_errno($curl);
-                    echo "\n";
+                    //echo "\n" . 'URL:' . $url;
+                    //echo "\n" . 'Curl error: ' . curl_error($curl);
+                    //echo "\n" . 'HTTP code: ' . curl_errno($curl);
+                    //echo "\n";
                     var_dump($post_data);
                 }
                 $activity_reply = json_decode($result);
                 curl_close($curl);
-                echo "\n activity:";
-                echo "\n";
+                //echo "\n activity:";
+                //echo "\n";
                 var_dump($activity);
-                echo "\n activity_reply:";
-                echo "\n";
+                //echo "\n activity_reply:";
+                //echo "\n";
                 var_dump($activity_reply);
             }
 
@@ -218,16 +219,16 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
                 curl_setopt($curl, CURLOPT_FAILONERROR, true);
                 $result = curl_exec($curl);
                 if ($result == false) {
-                    echo "\n" . 'URL:' . $url;
-                    echo "\n" . 'Curl error: ' . curl_error($curl);
-                    echo "\n" . 'HTTP code: ' . curl_errno($curl);
-                    echo "\n";
+                    //echo "\n" . 'URL:' . $url;
+                    //echo "\n" . 'Curl error: ' . curl_error($curl);
+                    //echo "\n" . 'HTTP code: ' . curl_errno($curl);
+                    //echo "\n";
                     var_dump($post_data);
                 }
                 $graph_feed = json_decode($result);
                 curl_close($curl);
-                echo "\nGRAPH feed post result:";
-                echo "\n";
+                //echo "\nGRAPH feed post result:";
+                //echo "\n";
                 var_dump($graph_feed);
 
                 //Pull the "me" profile
@@ -240,37 +241,78 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
                 curl_setopt($curl, CURLOPT_FAILONERROR, true);
                 $result = curl_exec($curl);
                 if ($result == false) {
-                    echo "\n" . 'URL:' . $url;
-                    echo "\n" . 'Curl error: ' . curl_error($curl);
-                    echo "\n" . 'HTTP code: ' . curl_errno($curl);
-                    echo "\n";
+                    //echo "\n" . 'URL:' . $url;
+                    //echo "\n" . 'Curl error: ' . curl_error($curl);
+                    //echo "\n" . 'HTTP code: ' . curl_errno($curl);
+                    //echo "\n";
                     var_dump($post_data);
                 }
                 $graph_me = json_decode($result);
                 curl_close($curl);
-                echo "\nGRAPH 'me' profile:";
-                echo "\n";
+                //echo "\nGRAPH 'me' profile:";
+                //echo "\n";
                 var_dump($graph_me);
             }
         }
-//	echo 'got this far <br />';
-//    echo 'could not get any further';
-        include "hackproc3.html";
-        http_redirect('hackproc3.html', null, true, HTTP_REDIRECT_PERM);
+	//echo 'got this far <br />';
+    //echo 'could not get any further';
+        //include "hackproc3.html";
+        //http_redirect('hackproc3.html', null, true, HTTP_REDIRECT_PERM);
+
+        /* LLW */
+        $profile = $auth_info['profile'];
+        $identifier = $profile['identifier'];
+        $provider = $profile['providerName'];
+        try {
+            $next_url = $_GET['next'];
+        } catch (Exception $e) {
+            $next_url = '';
+        }
+        
+        //echo "<br />token: " . $token;
+        //exit();
+        session_name("REASON_SESSION");
+        session_start();
+        //print_r($auth_info);
+        //echo "<br /><br />";
+        $_SESSION['openid_id'] = $identifier;
+        $_SESSION['openid_provider'] = $provider;
+        $_SESSION['openid_name'] = $profile['name']['formatted'];
+//        echo "<br />auth_info:<br />";
+//        echo "<br /><br /><br />session name: " . session_name();
+//        echo "<br />session id: " . session_id();
+//        echo "<br />openid_id: " . $_SESSION['openid_id'];
+//        echo "<br />openid_provider: " . $_SESSION['openid_provider'];
+//        if($next_url) {
+//            echo "<br /><br /><br /><a href='" . $next_url . "'>continue</a>";
+//        }else{
+//            echo "<br /><br /><br /><a href='" . $luther_openid_url . "'>continue</a>";
+//        }
+
+//        exit();
+        
+        if ($next_url) {
+            header( 'Location: ' . $next_url ) ;
+        }else{
+            header( 'Location: ' . $luther_openid_url );
+        }
+        
+
+
         /* STEP 4: Use the identifier as the unique key to sign the user into your system.
           This will depend on your website implementation, and you should add your own
           code here. The user profile is in $auth_info.
          */
     } else {
         // Gracefully handle auth_info error.  Hook this into your native error handling system.
-        echo "\n" . 'An error occured: ' . $auth_info['err']['msg'] . "\n";
+        //echo "\n" . 'An error occured: ' . $auth_info['err']['msg'] . "\n";
         var_dump($auth_info);
-        echo "\n";
+        //echo "\n";
         var_dump($result);
     }
 } else {
     // Gracefully handle the missing or malformed token.  Hook this into your native error handling system.
-    echo 'Authentication canceled.';
+    //echo 'Authentication canceled.';
 }
 $debug_out = ob_get_contents();
 ob_end_clean();
