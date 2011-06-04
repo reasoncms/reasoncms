@@ -35,6 +35,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'main_post' => 'applicant_account',
 		),
                 'admissions_application' => array(
+                        'main' => 'open_id_status',
 			'main_post' => 'admissions_application',
 		),
                 'admissions_home' => array(
@@ -529,6 +530,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'main_post'=>'onecard_dashboard',
                     'sidebar'=>'',
                     'pre_sidebar' => '',
+                ),
+                'open_id' => array(
+                    'main_post'=>'open_id',
                 ),
 		'publication' => array(
                     'main_post'=>'publication',
