@@ -124,7 +124,11 @@ class miniEventsModule extends EventsModule
 	{
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
 		{
-			$viewAllLink = "/programming/events/";
+                        /**** Temp change - per Greg. Until Susan fills the programming calender
+                         * with events for the coming year.
+                         */
+			//$viewAllLink = "/programming/events/";
+			$viewAllLink = "/events/";
 		}
 		else
 		{
