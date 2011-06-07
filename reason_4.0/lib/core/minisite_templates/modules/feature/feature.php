@@ -145,58 +145,72 @@ class FeatureModule extends DefaultMinisiteModule
 		$es1 = new entity_selector( $this->site_id );
 		$es1->add_type( id_of('feature_type') );
 		$es1->add_right_relationship( $this->page_id, relationship_id_of('page_to_feature'));
+		$es1->add_rel_sort_field( $this->page_id, relationship_id_of('page_to_feature') );
+		$es1->set_order('rel_sort_order ASC');
 		if($this->params['max'] != 0)
 		{
 			$es1->set_num($this->params['max']);
 		}
-		$results_array1 = $es1->run_one();
+		$features = $es1->run_one();
 		
-		if(empty($results_array1))
+		if(empty($features))
 		{
 			return null;
 		}
 	
 		$es2 = new entity_selector( $this->site_id );
-		$es2->add_type( id_of('feature_type') );
-		$es2->add_left_relationship_field( 'feature_to_image','entity','id','image_id');
+		$es2->add_type( id_of('image') );
+		$es2->add_right_relationship_field( 'feature_to_image','entity','id','feature_id', array_keys($features) );
 		$es2->enable_multivalue_results();
-		$es2->add_relation('entity.id IN ('.implode(',',array_keys($results_array1)).')');
-		$results_array2 = $es2->run_one();
+		$images = $es2->run_one();
+		if ($images)
+		{
+			foreach ($images as $image_id => $image)
+			{
+				$features_with_image = $image->get_value('feature_id');
+				$features_with_image = (!is_array($features_with_image)) ? array($features_with_image) : $features_with_image; // force to array
+				foreach ($features_with_image as $feature_id)
+				{
+					$feature_extra[$feature_id]['image_id'][] = $image_id;
+				}
+			}
+		}
 
 		$es3 = new entity_selector( $this->site_id );
-		$es3->add_type( id_of('feature_type') );
-		$es3->add_left_relationship_field( 'feature_to_media_work','entity','id','av_id');
+		$es3->add_type( id_of('av') );
+		$es3->add_right_relationship_field( 'feature_to_media_work','entity','id','av_id', array_keys($features) );
 		$es3->enable_multivalue_results();
-		$es3->add_relation('entity.id IN ('.implode(',',array_keys($results_array1)).')');
-		$results_array3 = $es3->run_one();
-		
-		foreach($results_array1 as $res1)
+		$media_works = $es3->run_one();
+		if ($media_works)
 		{
-			$id=$res1->get_value('id');
-			if(array_key_exists($id,$results_array2))
+			foreach ($media_works as $media_work_id => $media_work)
 			{
-				$image_id=$results_array2[$id]->get_value('image_id');
-				$results_array1[$id]->set_value('image_id',$image_id);
+				$features_with_media_work = $media_work->get_value('av_id');
+				$features_with_media_work = (!is_array($features_with_media_work)) ? array($features_with_media_work) : $features_with_media_work; // force to array
+				foreach ($features_with_media_work as $feature_id)
+				{
+					$feature_extra[$feature_id]['av_id'][] = $media_work_id;
+				}
 			}
-			else
-			{
-				$results_array1[$id]->set_value('image_id',"none");
-			}
-			if(array_key_exists($id,$results_array3))
-			{
-				$av_id=$results_array3[$id]->get_value('av_id');
-				$results_array1[$id]->set_value('av_id',$av_id);
-			}
-			else
-			{
-				$results_array1[$id]->set_value('av_id',"none");
-			}
-
-
 		}
 		
-		
-		$results_array=$results_array1;
+		// augment our features with images and media works
+		foreach($features as $feature_id => $feature)
+		{
+			if (isset($feature_extra[$feature_id]['image_id']))
+			{
+				$value = (count($feature_extra[$feature_id]['image_id']) == 1) ? reset($feature_extra[$feature_id]['image_id']) : $feature_extra[$feature_id]['image_id'];
+				$features[$feature_id]->set_value('image_id',$value);
+			}
+			else $features[$feature_id]->set_value('image_id',"none");
+			
+			if (isset($feature_extra[$feature_id]['av_id']))
+			{
+				$value = (count($feature_extra[$feature_id]['av_id']) == 1) ? reset($feature_extra[$feature_id]['av_id']) : $feature_extra[$feature_id]['av_id'];
+				$features[$feature_id]->set_value('av_id',$value);
+			}
+			else $features[$feature_id]->set_value('av_id',"none");
+		}
 		
 		//shuffle the features if set to true
 		//note that keys are preserved in the new
@@ -205,24 +219,24 @@ class FeatureModule extends DefaultMinisiteModule
 		{
 			$shuffled_results=array();
 			$temps=array();
-			$temps=$results_array;
+			$temps=$features;
 			shuffle($temps);
 			foreach($temps as $temp)
 			{
 				$id=$temp->get_value('id');
 				$shuffled_results[$id]=$temp;
 			}
-			$results_array=$shuffled_results;
+			$features=$shuffled_results;
 		}
 		//pick a random media work or image from each features list of images.
-		foreach($results_array as $id=>$r)
+		foreach($features as $id=>$r)
 		{
 			$num_imgs=0;
 			$num_mdia=0;
 			$i=0;
-			if($results_array[$id]->has_value('image_id'))
+			if($features[$id]->has_value('image_id'))
 			{
-				$img_id=$results_array[$id]->get_value('image_id');
+				$img_id=$features[$id]->get_value('image_id');
 				if($img_id!="none")
 				{
 					$num_imgs=count($img_id);
@@ -230,11 +244,11 @@ class FeatureModule extends DefaultMinisiteModule
 			}
 			else
 			{
-				$results_array[$id]->set_value('image_id','none');
+				$features[$id]->set_value('image_id','none');
 			}
-			if($results_array[$id]->has_value('av_id'))
+			if($features[$id]->has_value('av_id'))
 			{
-				$av_id=$results_array[$id]->get_value('av_id');
+				$av_id=$features[$id]->get_value('av_id');
 				if($av_id !="none")
 				{
 					$num_mdia=count($av_id);
@@ -242,7 +256,7 @@ class FeatureModule extends DefaultMinisiteModule
 			}
 			else
 			{
-				$results_array[$id]->set_value('av_id','none');
+				$features[$id]->set_value('av_id','none');
 			}
 
 			$num_objects=$num_imgs+$num_mdia;
@@ -250,24 +264,24 @@ class FeatureModule extends DefaultMinisiteModule
 			$i=rand(0, $num_objects-1 );
 			if($i<$num_mdia)
 			{
-				$results_array[$id]->set_value('current_object_type','av');
-				$results_array[$id]->set_value('current_image_index',$i);
+				$features[$id]->set_value('current_object_type','av');
+				$features[$id]->set_value('current_image_index',$i);
 			}
 			else
 			{
-				$results_array[$id]->set_value('current_object_type','img');
-				$results_array[$id]->set_value('current_image_index',$i-$num_mdia);
+				$features[$id]->set_value('current_object_type','img');
+				$features[$id]->set_value('current_image_index',$i-$num_mdia);
 			}
 		}
 
 		//set default values for items that are not set
-		foreach($results_array as $id=>$r)
+		foreach($features as $id=>$r)
 		{
-			$cp=$results_array[$id]->get_value('crop_style');
-			if($cp==null){ $results_array[$id]->set_value('crop_style','fill');}
+			$cp=$features[$id]->get_value('crop_style');
+			if($cp==null){ $features[$id]->set_value('crop_style','fill');}
 			
 		}
-		$this->_features=$results_array;
+		$this->_features=$features;
 		
 		//if feature id is on this page then display it
 		//else redirect to same page but this feature not set
@@ -292,12 +306,7 @@ class FeatureModule extends DefaultMinisiteModule
 				$url=carl_make_redirect(array('feature'=>''),'');
 				header("Location: ".$url);
 			}
-			
-			
 		}
-		
-		$fh= new Feature_Helper();
-		
 		$this->_build_view_data();
 	}
 
