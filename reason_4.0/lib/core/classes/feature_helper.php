@@ -31,7 +31,7 @@ class Feature_Helper
 		$es->add_left_relationship_field( 'feature_to_media_work','entity','id','av_id');
 		$es->enable_multivalue_results();
 		$es->add_relation('entity.id='.$feature_id);
-		$results_array = $es->run_one("","All");
+		$results_array = $es->run_one();
 		return $results_array;
 	}
 	
@@ -242,12 +242,16 @@ class Feature_Helper
 		return $path;
 	}
 	
+	/**
+	 * If there is no image this is giving us a mess of an image with a huge icon.
+	 */
 	function get_av_img_url($image)
 	{
 		$width=$this->width;
 		$height=$this->height;
 		$crop_style=$this->crop_style;
 		$id=$image->get_value('id');
+		
 		$rsi = new reasonSizedImage();
 		$rsi->set_id($id);
 		$rsi->set_width($width);
@@ -285,7 +289,7 @@ class Feature_Helper
 		$es = new entity_selector();
 		$es->add_type( id_of('image') );
 		$es->add_right_relationship( $media_works_id, relationship_id_of('av_to_primary_image') );
-		$images = $es->run_one("","All");
+		$images = $es->run_one();
 		$this->img_results=$images;
 		
 		$taf=array();
@@ -311,10 +315,13 @@ class Feature_Helper
 		}
 		else
 		{
+			/**
+			 * This is not working
+			 */
 			//get a blank image with a play button blitted into it
 			// set the av_image_alt to "play"
 			$ret['av_img_url']=$this->get_watermark_relative_path($this->media_works_type);
-			$ret['av_img_alt']="";
+			$ret['av_img_alt']="play";
 			$ret['av_img_id']="none";
 		}
 
