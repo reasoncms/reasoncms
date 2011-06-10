@@ -132,6 +132,7 @@ $(document).ready(function() {
     {
         //alert(i);
         //$('[id^=sibling'+i+']').each(function() { alert($(this).val()) });
+        alert(has_data('[id^=sibling'+i+']'));
         if (has_data('[id^=sibling'+i+']')) {
             sibling_count += 1;
         } else {
