@@ -128,10 +128,16 @@ $(document).ready(function() {
     });
 
     $('#removeSibling').css('display', 'none'); // did this instead of hide because hide was removing some other css from the button
-    $('[id^=sibling2]').hide();
-    $('[id^=sibling3]').hide();
-    $('[id^=sibling4]').hide();
-    $('[id^=sibling5]').hide();
+    for (i=2; i<=5; i += 1)
+    {
+        //alert(i);
+        //$('[id^=sibling'+i+']').each(function() { alert($(this).val()) });
+        if (has_data('[id^=sibling'+i+']')) {
+            sibling_count += 1;
+        } else {
+            $('[id^=sibling'+i+']').hide();
+        }
+    }
     //$("input[name='sibling_1_relation']").change(function(){
     //    add_sibling();
     //});
@@ -287,7 +293,18 @@ $(document).ready(function() {
         toggle_hs_discipline();
     });
 });
-
+function has_data(selector) {
+    //alert(selector);
+    return_val = false;
+    $("'" + selector + "'").find(':text').each( function() {
+        //alert($(this).val());
+        if ($(this).val() != '') {
+            return_val = true;
+            return false;
+        }
+    });
+    return return_val;
+}
 var sibling_count = 1;
 function add_sibling() {
     sibling_count += 1;
