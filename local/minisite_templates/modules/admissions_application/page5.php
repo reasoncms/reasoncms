@@ -77,16 +77,16 @@ class ApplicationPageFive extends FormStep {
         'Luther' => 'Plan to participate at Luther College'
     );
     var $elements = array(
-        'activities_header' => array(
+        'activity_header' => array(
             'type' => 'comment',
             'text' => '<h3>Activities & Honors</h3>'
         ),
-        'activities_comment' => array(
+        'activity_comment' => array(
             'type' => 'comment',
             'text' => 'Please list your high school activities in order of their importance to you
                     (sports, service projects, clubs, special interests, etc.)'
         ),
-        'activities_1_header' => array(
+        'activity_1_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 1</h4>'
         ),
@@ -113,8 +113,8 @@ class ApplicationPageFive extends FormStep {
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
-        'hr' => 'hr',
-        'activities_2_header' => array(
+        'activity_2_hr' => 'hr',
+        'activity_2_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 2</h4>'
         ),
@@ -141,8 +141,8 @@ class ApplicationPageFive extends FormStep {
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
-        'hr2' => 'hr',
-        'activities_3_header' => array(
+        'activity_3_hr' => 'hr',
+        'activity_3_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 3</h4>'
         ),
@@ -169,8 +169,8 @@ class ApplicationPageFive extends FormStep {
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
-        'hr3' => 'hr',
-        'activities_4_header' => array(
+        'activity_4_hr' => 'hr',
+        'activity_4_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 4</h4>'
         ),
@@ -197,8 +197,8 @@ class ApplicationPageFive extends FormStep {
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
-        'hr4' => 'hr',
-        'activities_5_header' => array(
+        'activity_5_hr' => 'hr',
+        'activity_5_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 5</h4>'
         ),
@@ -225,8 +225,8 @@ class ApplicationPageFive extends FormStep {
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
-        'hr5' => 'hr',
-        'activities_6_header' => array(
+        'activity_6_hr' => 'hr',
+        'activity_6_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 6</h4>'
         ),
@@ -253,8 +253,8 @@ class ApplicationPageFive extends FormStep {
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
-        'hr6' => 'hr',
-        'activities_7_header' => array(
+        'activity_7_hr' => 'hr',
+        'activity_7_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 7</h4>'
         ),
@@ -281,8 +281,8 @@ class ApplicationPageFive extends FormStep {
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
-        'hr7' => 'hr',
-        'activities_8_header' => array(
+        'activity_8_hr' => 'hr',
+        'activity_8_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 8</h4>'
         ),
@@ -309,8 +309,8 @@ class ApplicationPageFive extends FormStep {
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
-        'hr8' => 'hr',
-        'activities_9_header' => array(
+        'activity_9_hr' => 'hr',
+        'activity_9_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 9</h4>'
         ),
@@ -337,8 +337,8 @@ class ApplicationPageFive extends FormStep {
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
-        'hr9' => 'hr',
-        'activities_10_header' => array(
+        'activity_10_hr' => 'hr',
+        'activity_10_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 10</h4>'
         ),
@@ -364,7 +364,19 @@ class ApplicationPageFive extends FormStep {
         'activity_10_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
+        ),        
+        'add_activity_button' => array(
+            'type' => 'comment',
+            'text' => '<div id="addActivity" title="Add an Activity" class="addButton">
+                Add an Activity
+                </div>'
         ),
+        'remove_activity_button' => array(
+            'type' => 'comment',
+            'text' => '<div id="removeActivity" title="Remove Activity" class="removeButton">
+                Remove an Activity
+                </div>'
+        )
             //'hr' => 'hr',
     );
     var $display_name = 'Activities';
