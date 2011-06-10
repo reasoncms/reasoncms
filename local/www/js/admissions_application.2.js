@@ -251,6 +251,25 @@ $(document).ready(function() {
     $("select[name='activity_10']").change(function(){
         toggle_other_activity_details();
     });
+    
+    $('#removeActivity').css('display', 'none'); // did this instead of hide because hide was removing some other css from the button
+    $('[id^=activity2]').hide();
+    $('[id^=activity3]').hide();
+    $('[id^=activity4]').hide();
+    $('[id^=activity5]').hide();
+    $('[id^=activity6]').hide();
+    $('[id^=activity7]').hide();
+    $('[id^=activity8]').hide();
+    $('[id^=activity9]').hide();
+    $('[id^=activity10]').hide();
+
+    $('#addActivity').click(function(){
+        add_activity();
+    });
+
+    $('#removeActivity').click(function(){
+        remove_activity();
+    });
 
     /**Page Six - **/
     /**********************************/
@@ -298,6 +317,36 @@ function remove_sibling() {
         $('#addSibling').show();
     }
 }
+
+var activity_count = 1;
+function add_activity() {
+    activity_count += 1;
+    $('[id^=activity'+activity_count+']:not([id*=other])').show();
+    if (activity_count == 10) {
+        $('#addActivity').hide();
+    }
+    if (activity_count == 2) {
+        $('#removeActivity').show();
+    }
+}
+function remove_activity() {
+    $('[id^=activity'+activity_count+']').hide();
+    $('[id^=activity'+activity_count+']').find('input[type="text"]').each(function() {
+        $(this).val("");
+    });
+    $('[id^=activity'+activity_count+']').find('input[type="radio"],input[type="checkbox"]').each(function() {
+        $(this).attr('checked', false);
+    });
+    $('[id^=activity_'+activity_count+'Element]').val('1');
+    activity_count -= 1;
+    if (activity_count == 1) {  
+        $('#removeActivity').hide();
+    }
+    if (activity_count == 9) {
+        $('#addActivity').show();
+    }
+}
+
 var college_count = 1;
 function add_college() {
     college_count += 1;
