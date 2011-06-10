@@ -50,7 +50,12 @@
 			
 			$q = 'UPDATE entity SET state = "Live", last_edited_by = "'.$this->admin_page->user_id.'" where id = ' . $this->admin_page->id;
 			db_query( $q , 'Error setting state as live in DeleteModule::init()' );
-
+			
+			//Updates the rewrites to prevent infinite redirection loop.
+			reason_include_once('classes/url_manager.php');
+			$urlm = new url_manager($this->admin_page->site_id);
+			$urlm->update_rewrites();
+			
 			if( get_class( $graph->nodes[ $graph->start ] ) == 'admin_lister_node' 
 				AND isset( $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] ) 
 			  )
