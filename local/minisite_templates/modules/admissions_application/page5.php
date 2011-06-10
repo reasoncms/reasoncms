@@ -86,254 +86,254 @@ class ApplicationPageFive extends FormStep {
             'text' => 'Please list your high school activities in order of their importance to you
                     (sports, service projects, clubs, special interests, etc.)'
         ),
-        'activities_01_header' => array(
+        'activities_1_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 1</h4>'
         ),
-        'activity_01' => array(
+        'activity_1' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_01_other' => array(
+        'activity_1_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_01_participation' => array(
+        'activity_1_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_01_honors_comment' => array(
+        'activity_1_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_01_honors' => array(
+        'activity_1_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr' => 'hr',
-        'activities_02_header' => array(
+        'activities_2_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 2</h4>'
         ),
-        'activity_02' => array(
+        'activity_2' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_02_other' => array(
+        'activity_2_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_02_participation' => array(
+        'activity_2_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_02_honors_comment' => array(
+        'activity_2_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_02_honors' => array(
+        'activity_2_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr2' => 'hr',
-        'activities_03_header' => array(
+        'activities_3_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 3</h4>'
         ),
-        'activity_03' => array(
+        'activity_3' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_03_other' => array(
+        'activity_3_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_03_participation' => array(
+        'activity_3_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_03_honors_comment' => array(
+        'activity_3_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_03_honors' => array(
+        'activity_3_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr3' => 'hr',
-        'activities_04_header' => array(
+        'activities_4_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 4</h4>'
         ),
-        'activity_04' => array(
+        'activity_4' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_04_other' => array(
+        'activity_4_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_04_participation' => array(
+        'activity_4_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_04_honors_comment' => array(
+        'activity_4_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_04_honors' => array(
+        'activity_4_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr4' => 'hr',
-        'activities_05_header' => array(
+        'activities_5_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 5</h4>'
         ),
-        'activity_05' => array(
+        'activity_5' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_05_other' => array(
+        'activity_5_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_05_participation' => array(
+        'activity_5_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_05_honors_comment' => array(
+        'activity_5_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_05_honors' => array(
+        'activity_5_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr5' => 'hr',
-        'activities_06_header' => array(
+        'activities_6_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 6</h4>'
         ),
-        'activity_06' => array(
+        'activity_6' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_06_other' => array(
+        'activity_6_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_06_participation' => array(
+        'activity_6_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_06_honors_comment' => array(
+        'activity_6_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_06_honors' => array(
+        'activity_6_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr6' => 'hr',
-        'activities_07_header' => array(
+        'activities_7_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 7</h4>'
         ),
-        'activity_07' => array(
+        'activity_7' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_07_other' => array(
+        'activity_7_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_07_participation' => array(
+        'activity_7_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_07_honors_comment' => array(
+        'activity_7_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_07_honors' => array(
+        'activity_7_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr7' => 'hr',
-        'activities_08_header' => array(
+        'activities_8_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 8</h4>'
         ),
-        'activity_08' => array(
+        'activity_8' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_08_other' => array(
+        'activity_8_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_08_participation' => array(
+        'activity_8_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_08_honors_comment' => array(
+        'activity_8_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_08_honors' => array(
+        'activity_8_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
         'hr8' => 'hr',
-        'activities_09_header' => array(
+        'activities_9_header' => array(
             'type' => 'comment',
             'text' => '<h4>Activity 9</h4>'
         ),
-        'activity_09' => array(
+        'activity_9' => array(
             'type' => 'select_no_sort',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
         ),
-        'activity_09_other' => array(
+        'activity_9_other' => array(
             'type' => 'text',
             'display_name' => 'Other details'
         ),
-        'activity_09_participation' => array(
+        'activity_9_participation' => array(
             'type' => 'checkboxgroup_no_sort',
             'display_name' => 'Participation',
             'options' => array()
         ),
-        'activity_09_honors_comment' => array(
+        'activity_9_honors_comment' => array(
             'type' => 'comment',
             'text' => 'Please describe any honors you earned that are associated with this activity',
         ),
-        'activity_09_honors' => array(
+        'activity_9_honors' => array(
             'type' => 'text',
             'display_name' => '&nbsp;'
         ),
@@ -372,27 +372,27 @@ class ApplicationPageFive extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
-        $this->change_element_type('activity_01', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_01_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_02', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_02_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_03', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_03_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_04', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_04_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_05', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_05_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_06', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_06_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_07', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_07_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_08', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_08_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_09', 'select_no_sort', array('options' => $this->activities_array));
-        $this->change_element_type('activity_09_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_1', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_1_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_2', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_2_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_3', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_3_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_4', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_4_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_5', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_5_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_6', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_6_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_7', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_7_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_8', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_8_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        $this->change_element_type('activity_9', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_9_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
         $this->change_element_type('activity_10', 'select_no_sort', array('options' => $this->activities_array));
         $this->change_element_type('activity_10_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->set_value('activity_01', 'foosball');
+        $this->set_value('activity_1', 'foosball');
     }
 
     function pre_show_form() {
@@ -427,61 +427,61 @@ class ApplicationPageFive extends FormStep {
 //            echo $qstring;
 //        }
 //          die('die ' . $qstring);
-        $activity_01 = $this->get_value('activity_01');
-        $activity_01_other = $this->get_value('activity_01_other');
-        $activity_01_participation = $this->get_value('activity_01_participation');
-        if ($this->get_value('activity_01_participation')){
-            $activity_01_participation_string = implode(',', $this->get_value('activity_01_participation'));
+        $activity_1 = $this->get_value('activity_1');
+        $activity_1_other = $this->get_value('activity_1_other');
+        $activity_1_participation = $this->get_value('activity_1_participation');
+        if ($this->get_value('activity_1_participation')){
+            $activity_1_participation_string = implode(',', $this->get_value('activity_1_participation'));
         }
-        $activity_01_honors = $this->get_value('activity_01_honors');
-        $activity_02 = $this->get_value('activity_02');
-        $activity_02_other = $this->get_value('activity_02_other');
-        if ($this->get_value('activity_02_participation')){
-            $activity_02_participation_string = implode(',', $this->get_value('activity_02_participation'));
+        $activity_1_honors = $this->get_value('activity_1_honors');
+        $activity_2 = $this->get_value('activity_2');
+        $activity_2_other = $this->get_value('activity_2_other');
+        if ($this->get_value('activity_2_participation')){
+            $activity_2_participation_string = implode(',', $this->get_value('activity_2_participation'));
         }
-        $activity_02_honors = $this->get_value('activity_02_honors');
-        $activity_03 = $this->get_value('activity_03');
-        $activity_03_other = $this->get_value('activity_03_other');
-        if ($this->get_value('activity_03_participation')){
-            $activity_03_participation_string = implode(',', $this->get_value('activity_03_participation'));
+        $activity_2_honors = $this->get_value('activity_2_honors');
+        $activity_3 = $this->get_value('activity_3');
+        $activity_3_other = $this->get_value('activity_3_other');
+        if ($this->get_value('activity_3_participation')){
+            $activity_3_participation_string = implode(',', $this->get_value('activity_3_participation'));
         }
-        $activity_03_honors = $this->get_value('activity_03_honors');
-        $activity_04 = $this->get_value('activity_04');
-        $activity_04_other = $this->get_value('activity_04_other');
-        if ($this->get_value('activity_04_participation')){
-            $activity_04_participation_string = implode(',', $this->get_value('activity_04_participation'));
+        $activity_3_honors = $this->get_value('activity_3_honors');
+        $activity_4 = $this->get_value('activity_4');
+        $activity_4_other = $this->get_value('activity_4_other');
+        if ($this->get_value('activity_4_participation')){
+            $activity_4_participation_string = implode(',', $this->get_value('activity_4_participation'));
         }
-        $activity_04_honors = $this->get_value('activity_04_honors');
-        $activity_05 = $this->get_value('activity_05');
-        $activity_05_other = $this->get_value('activity_05_other');
-        if ($this->get_value('activity_05_participation')){
-            $activity_05_participation_string = implode(',', $this->get_value('activity_05_participation'));
+        $activity_4_honors = $this->get_value('activity_4_honors');
+        $activity_5 = $this->get_value('activity_5');
+        $activity_5_other = $this->get_value('activity_5_other');
+        if ($this->get_value('activity_5_participation')){
+            $activity_5_participation_string = implode(',', $this->get_value('activity_5_participation'));
         }
-        $activity_05_honors = $this->get_value('activity_05_honors');
-        $activity_06 = $this->get_value('activity_06');
-        $activity_06_other = $this->get_value('activity_06_other');
-        if ($this->get_value('activity_06_participation')){
-            $activity_06_participation_string = implode(',', $this->get_value('activity_06_participation'));
+        $activity_5_honors = $this->get_value('activity_5_honors');
+        $activity_6 = $this->get_value('activity_6');
+        $activity_6_other = $this->get_value('activity_6_other');
+        if ($this->get_value('activity_6_participation')){
+            $activity_6_participation_string = implode(',', $this->get_value('activity_6_participation'));
         }
-        $activity_06_honors = $this->get_value('activity_06_honors');
-        $activity_07 = $this->get_value('activity_07');
-        $activity_07_other = $this->get_value('activity_07_other');
-        if ($this->get_value('activity_07_participation')){
-            $activity_07_participation_string = implode(',', $this->get_value('activity_07_participation'));
+        $activity_6_honors = $this->get_value('activity_6_honors');
+        $activity_7 = $this->get_value('activity_7');
+        $activity_7_other = $this->get_value('activity_7_other');
+        if ($this->get_value('activity_7_participation')){
+            $activity_7_participation_string = implode(',', $this->get_value('activity_7_participation'));
         }
-        $activity_07_honors = $this->get_value('activity_07_honors');
-        $activity_08 = $this->get_value('activity_08');
-        $activity_08_other = $this->get_value('activity_08_other');
-        if ($this->get_value('activity_08_participation')){
-            $activity_08_participation_string = implode(',', $this->get_value('activity_08_participation'));
+        $activity_7_honors = $this->get_value('activity_7_honors');
+        $activity_8 = $this->get_value('activity_8');
+        $activity_8_other = $this->get_value('activity_8_other');
+        if ($this->get_value('activity_8_participation')){
+            $activity_8_participation_string = implode(',', $this->get_value('activity_8_participation'));
         }
-        $activity_08_honors = $this->get_value('activity_08_honors');
-        $activity_09 = $this->get_value('activity_09');
-        $activity_09_other = $this->get_value('activity_09_other');
-        if ($this->get_value('activity_09_participation')){
-            $activity_09_participation_string = implode(',', $this->get_value('activity_09_participation'));
+        $activity_8_honors = $this->get_value('activity_8_honors');
+        $activity_9 = $this->get_value('activity_9');
+        $activity_9_other = $this->get_value('activity_9_other');
+        if ($this->get_value('activity_9_participation')){
+            $activity_9_participation_string = implode(',', $this->get_value('activity_9_participation'));
         }
-        $activity_09_honors = $this->get_value('activity_09_honors');
+        $activity_9_honors = $this->get_value('activity_9_honors');
         $activity_10 = $this->get_value('activity_10');
         $activity_10_other = $this->get_value('activity_10_other');
         if ($this->get_value('activity_10_participation')){
@@ -492,42 +492,42 @@ class ApplicationPageFive extends FormStep {
         connectDB('admissions_applications_connection');
         
         $qstring = "INSERT INTO `applicants` SET
-                activity_01='" . ((!empty ($activity_01)) ? addslashes($activity_01) : 'NULL') . "',
-                activity_01_other='" . ((!empty ($activity_01_other)) ? addslashes($activity_01_other) : 'NULL') . "',
-                activity_01_participation='" . ((!empty ($activity_01_participation_string)) ? addslashes($activity_01_participation_string) : 'NULL') . "',
-                activity_01_honors='" . ((!empty ($activity_01_honors)) ? addslashes($activity_01_honors) : 'NULL') . "',
-                activity_02='" . ((!empty ($activity_02)) ? addslashes($activity_02) : 'NULL') . "',
-                activity_02_other='" . ((!empty ($activity_02_other)) ? addslashes($activity_02_other) : 'NULL') . "',
-                activity_02_participation='" . ((!empty ($activity_02_participation_string)) ? addslashes($activity_02_participation_string) : 'NULL') . "',
-                activity_02_honors='" . ((!empty ($activity_02_honors)) ? addslashes($activity_02_honors) : 'NULL') . "',
-                activity_03='" . ((!empty ($activity_03)) ? addslashes($activity_03) : 'NULL') . "',
-                activity_03_other='" . ((!empty ($activity_03_other)) ? addslashes($activity_03_other) : 'NULL') . "',
-                activity_03_participation='" . ((!empty ($activity_03_participation_string)) ? addslashes($activity_03_participation_string) : 'NULL') . "',
-                activity_03_honors='" . ((!empty ($activity_03_honors)) ? addslashes($activity_03_honors) : 'NULL') . "',
-                activity_04='" . ((!empty ($activity_04)) ? addslashes($activity_04) : 'NULL') . "',
-                activity_04_other='" . ((!empty ($activity_04_other)) ? addslashes($activity_04_other) : 'NULL') . "',
-                activity_04_participation='" . ((!empty ($activity_04_participation_string)) ? addslashes($activity_04_participation_string) : 'NULL') . "',
-                activity_04_honors='" . ((!empty ($activity_04_honors)) ? addslashes($activity_04_honors) : 'NULL') . "',
-                activity_05='" . ((!empty ($activity_05)) ? addslashes($activity_05) : 'NULL') . "',
-                activity_05_other='" . ((!empty ($activity_05_other)) ? addslashes($activity_05_other) : 'NULL') . "',
-                activity_05_participation='" . ((!empty ($activity_05_participation_string)) ? addslashes($activity_05_participation_string) : 'NULL') . "',
-                activity_05_honors='" . ((!empty ($activity_05_honors)) ? addslashes($activity_05_honors) : 'NULL') . "',
-                activity_06='" . ((!empty ($activity_06)) ? addslashes($activity_06) : 'NULL') . "',
-                activity_06_other='" . ((!empty ($activity_06_other)) ? addslashes($activity_06_other) : 'NULL') . "',
-                activity_06_participation='" . ((!empty ($activity_06_participation_string)) ? addslashes($activity_06_participation_string) : 'NULL') . "',
-                activity_06_honors='" . ((!empty ($activity_06_honors)) ? addslashes($activity_06_honors) : 'NULL') . "',
-                activity_07='" . ((!empty ($activity_07)) ? addslashes($activity_07) : 'NULL') . "',
-                activity_07_other='" . ((!empty ($activity_07_other)) ? addslashes($activity_07_other) : 'NULL') . "',
-                activity_07_participation='" . ((!empty ($activity_07_participation_string)) ? addslashes($activity_07_participation_string) : 'NULL') . "',
-                activity_07_honors='" . ((!empty ($activity_07_honors)) ? addslashes($activity_07_honors) : 'NULL') . "',
-                activity_08='" . ((!empty ($activity_08)) ? addslashes($activity_08) : 'NULL') . "',
-                activity_08_other='" . ((!empty ($activity_08_other)) ? addslashes($activity_08_other) : 'NULL') . "',
-                activity_08_participation='" . ((!empty ($activity_08_participation_string)) ? addslashes($activity_08_participation_string) : 'NULL') . "',
-                activity_08_honors='" . ((!empty ($activity_08_honors)) ? addslashes($activity_08_honors) : 'NULL') . "',
-                activity_09='" . ((!empty ($activity_09)) ? addslashes($activity_09) : 'NULL') . "',
-                activity_09_other='" . ((!empty ($activity_09_other)) ? addslashes($activity_09_other) : 'NULL') . "',
-                activity_09_participation='" . ((!empty ($activity_09_participation_string)) ? addslashes($activity_09_participation_string) : 'NULL') . "',
-                activity_09_honors='" . ((!empty ($activity_09_honors)) ? addslashes($activity_09_honors) : 'NULL') . "',
+                activity_1='" . ((!empty ($activity_1)) ? addslashes($activity_1) : 'NULL') . "',
+                activity_1_other='" . ((!empty ($activity_1_other)) ? addslashes($activity_1_other) : 'NULL') . "',
+                activity_1_participation='" . ((!empty ($activity_1_participation_string)) ? addslashes($activity_1_participation_string) : 'NULL') . "',
+                activity_1_honors='" . ((!empty ($activity_1_honors)) ? addslashes($activity_1_honors) : 'NULL') . "',
+                activity_2='" . ((!empty ($activity_2)) ? addslashes($activity_2) : 'NULL') . "',
+                activity_2_other='" . ((!empty ($activity_2_other)) ? addslashes($activity_2_other) : 'NULL') . "',
+                activity_2_participation='" . ((!empty ($activity_2_participation_string)) ? addslashes($activity_2_participation_string) : 'NULL') . "',
+                activity_2_honors='" . ((!empty ($activity_2_honors)) ? addslashes($activity_2_honors) : 'NULL') . "',
+                activity_3='" . ((!empty ($activity_3)) ? addslashes($activity_3) : 'NULL') . "',
+                activity_3_other='" . ((!empty ($activity_3_other)) ? addslashes($activity_3_other) : 'NULL') . "',
+                activity_3_participation='" . ((!empty ($activity_3_participation_string)) ? addslashes($activity_3_participation_string) : 'NULL') . "',
+                activity_3_honors='" . ((!empty ($activity_3_honors)) ? addslashes($activity_3_honors) : 'NULL') . "',
+                activity_4='" . ((!empty ($activity_4)) ? addslashes($activity_4) : 'NULL') . "',
+                activity_4_other='" . ((!empty ($activity_4_other)) ? addslashes($activity_4_other) : 'NULL') . "',
+                activity_4_participation='" . ((!empty ($activity_4_participation_string)) ? addslashes($activity_4_participation_string) : 'NULL') . "',
+                activity_4_honors='" . ((!empty ($activity_4_honors)) ? addslashes($activity_4_honors) : 'NULL') . "',
+                activity_5='" . ((!empty ($activity_5)) ? addslashes($activity_5) : 'NULL') . "',
+                activity_5_other='" . ((!empty ($activity_5_other)) ? addslashes($activity_5_other) : 'NULL') . "',
+                activity_5_participation='" . ((!empty ($activity_5_participation_string)) ? addslashes($activity_5_participation_string) : 'NULL') . "',
+                activity_5_honors='" . ((!empty ($activity_5_honors)) ? addslashes($activity_5_honors) : 'NULL') . "',
+                activity_6='" . ((!empty ($activity_6)) ? addslashes($activity_6) : 'NULL') . "',
+                activity_6_other='" . ((!empty ($activity_6_other)) ? addslashes($activity_6_other) : 'NULL') . "',
+                activity_6_participation='" . ((!empty ($activity_6_participation_string)) ? addslashes($activity_6_participation_string) : 'NULL') . "',
+                activity_6_honors='" . ((!empty ($activity_6_honors)) ? addslashes($activity_6_honors) : 'NULL') . "',
+                activity_7='" . ((!empty ($activity_7)) ? addslashes($activity_7) : 'NULL') . "',
+                activity_7_other='" . ((!empty ($activity_7_other)) ? addslashes($activity_7_other) : 'NULL') . "',
+                activity_7_participation='" . ((!empty ($activity_7_participation_string)) ? addslashes($activity_7_participation_string) : 'NULL') . "',
+                activity_7_honors='" . ((!empty ($activity_7_honors)) ? addslashes($activity_7_honors) : 'NULL') . "',
+                activity_8='" . ((!empty ($activity_8)) ? addslashes($activity_8) : 'NULL') . "',
+                activity_8_other='" . ((!empty ($activity_8_other)) ? addslashes($activity_8_other) : 'NULL') . "',
+                activity_8_participation='" . ((!empty ($activity_8_participation_string)) ? addslashes($activity_8_participation_string) : 'NULL') . "',
+                activity_8_honors='" . ((!empty ($activity_8_honors)) ? addslashes($activity_8_honors) : 'NULL') . "',
+                activity_9='" . ((!empty ($activity_9)) ? addslashes($activity_9) : 'NULL') . "',
+                activity_9_other='" . ((!empty ($activity_9_other)) ? addslashes($activity_9_other) : 'NULL') . "',
+                activity_9_participation='" . ((!empty ($activity_9_participation_string)) ? addslashes($activity_9_participation_string) : 'NULL') . "',
+                activity_9_honors='" . ((!empty ($activity_9_honors)) ? addslashes($activity_9_honors) : 'NULL') . "',
                 activity_10='" . ((!empty ($activity_10)) ? addslashes($activity_10) : 'NULL') . "',
                 activity_10_other='" . ((!empty ($activity_10_other)) ? addslashes($activity_10_other) : 'NULL') . "',
                 activity_10_participation='" . ((!empty ($activity_10_participation_string)) ? addslashes($activity_10_participation_string) : 'NULL') . "',
