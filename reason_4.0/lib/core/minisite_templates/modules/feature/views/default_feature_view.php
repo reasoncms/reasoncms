@@ -324,7 +324,7 @@ class DefaultFeatureView extends FeatureView
 
 		if($has_anchor)
 		{
-			$image_anchor_start = "<a href=\"".$view_data['destination_url']."\" class=\"dest\" \">"; //style=\"height:".$height."px;\">";
+			$image_anchor_start = "<a href=\"".$view_data['destination_url']."\" class=\"dest\">"; //style=\"height:".$height."px;\">";
 			$image_anchor_end="</a>";
 			$anchor_start="<a href=\"".$view_data['destination_url']."\" class=\"dest\">";
 			$anchor_end="</a>";
