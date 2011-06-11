@@ -1,5 +1,5 @@
 <?php
-
+include_once 'application_utils.php';
 /**
  * Admissions Application Module
  *
@@ -293,48 +293,17 @@ class ApplicationPageTwo extends FormStep {
         $this->pre_fill_form();
     }
 
-    function pre_fill_form() {
+     function pre_fill_form() {
+        // check if the open_id has is set
+        $o_id = check_open_id($this);
+        if ($o_id) {
+            // get an existing users data from the db based on openid_id and the form
 
-        //use this to fill form pages for users returning to fill out the form
-        //
-//		if( $userid = reason_check_authentication() )
-//		{
-//			$person = get_individual_alum_info( $userid );
-//			//pray($person);
-//			foreach($this->form_to_person_key as $element_name=>$rules)
-//			{
-//				$value = '';
-//				if(!$this->get_value($element_name))
-//				{
-//					if(empty($rules['function']))
-//					{
-//						$src = $rules['src'];
-//						$field = $rules['field'];
-//						if(!empty($person[$src][$field]))
-//						{
-//							if (is_array($person[$src][$field]))
-//								$value = $person[$src][$field][0];
-//							else
-//								$value = $person[$src][$field];
-//						}
-//					}
-//					else
-//					{
-//						$function = $rules['function'];
-//						//echo $function.'<br />';
-//						$value = $this->$function( $person );
-//					}
-//					if(!empty($value))
-//					{
-//						$this->set_value($element_name, $value);
-//					}
-//				}
-//			}
-//			if(!$this->get_value('country'))
-//			{
-//				$this->set_value('country','United States');
-//			}
-//		}
+            get_applicant_data($o_id, $this);
+        } else {
+            // no show form, invite to login
+            $this->show_form = false;
+        }
     }
 
     function get_ldap_address_element($person, $element) {
@@ -509,83 +478,83 @@ class ApplicationPageTwo extends FormStep {
        function process() {
         parent::process();
 
-        connectDB('admissions_applications_connection');
-
-        $first_name = $this->get_value('first_name');
-        $middle_name = $this->get_value('middle_name');
-        $last_name = $this->get_value('last_name');
-        $preferred_first_name = $this->get_value('preferred_first_name');
-        $gender = $this->get_value('gender');
-        $date_of_birth = $this->get_value('date_of_birth');
-        $ssn = '';
-        if (!($this->get_value('ssn_1'))||($this->get_value('ssn_2'))||($this->get_value('ssn_3'))){
-            $ssn = addslashes($this->get_value('ssn_1'));
-            $ssn .= addslashes('-');
-            $ssn .= addslashes($this->get_value('ssn_2'));
-            $ssn .= addslashes('-');
-            $ssn .= addslashes($this->get_value('ssn_3'));
-        }
-        $email = $this->get_value('email');
-        $home_phone = $this->get_value('home_phone');
-        $cell_phone = $this->get_value('cell_phone');
-        $permanent_address = $this->get_value('permanent_address');
-        $permanent_apartment_number = $this->get_value('permanent_apartment_number');
-        $permanent_city = $this->get_value('permanent_city');
-        $permanent_state_province = $this->get_value('permanent_state_province');
-        $permanent_zip_postal = $this->get_value('permanent_zip_postal');
-        $permanent_country = $this->get_value('permanent_country');
-        $different_mailing_address = $this->get_value('different_mailing_address');
-        $mailing_address = $this->get_value('mailing_address');
-        $mailing_apartment_number = $this->get_value('mailing_apartment_number');
-        $mailing_city = $this->get_value('mailing_city');
-        $mailing_state_province = $this->get_value('mailing_state_province');
-        $mailing_zip_postal = $this->get_value('mailing_zip_postal');
-        $mailing_country = $this->get_value('mailing_country');
-        $heritage = $this->get_value('heritage');
-        if ($this->get_value('race')){
-            $race_string = implode(',', $this->get_value('race'));
-        }
-        $church_name = $this->get_value('church_name');
-        $church_city = $this->get_value('church_city');
-        $church_state = $this->get_value('church_state');
-        $religion = $this->get_value('religion');
-
-
-        $qstring = "INSERT INTO `applicants` SET
-                first_name='" . addslashes($first_name) . "',
-                middle_name='" . addslashes($middle_name) . "',
-                last_name='" . addslashes($last_name) . "',
-                preferred_first_name='" . ((!empty ($preferred_first_name)) ? addslashes($preferred_first_name) : 'NULL') . "',
-                gender='" . addslashes($gender) . "',
-                date_of_birth='" . addslashes($this->get_value('date_of_birth')) . "',
-                ssn='" . ((!empty ($ssn)) ? addslashes($ssn) : 'NULL') . "',
-		email='" . addslashes($this->get_value('email')) . "',
-		home_phone='" . addslashes($this->get_value('home_phone')) . "',
-		cell_phone='" . addslashes($this->get_value('cell_phone')) . "',
-		permanent_address='" . addslashes($permanent_address) . "',
-		permanent_apartment_number='" . addslashes($this->get_value('permanent_apartment_number')) . "',
-                permanent_city='" . addslashes($this->get_value('permanent_city')) . "',
-                permanent_state_province='" . addslashes($this->get_value('permanent_state_province')) . "',
-                permanent_zip_postal='" . addslashes($this->get_value('permanent_zip_postal')) . "',
-                permanent_country='" . addslashes($this->get_value('permanent_country')) . "',
-                different_mailing_address='" . addslashes($this->get_value('different_mailing_address')) . "',
-                mailing_address='" . ((!empty ($mailing_address)) ? addslashes($mailing_address) : 'NULL') . "',
-		mailing_apartment_number='" . ((!empty ($mailing_apartment_number)) ? addslashes($mailing_apartment_number) : 'NULL') . "',
-                mailing_city='" . ((!empty ($mailing_city)) ? addslashes($mailing_city) : 'NULL') . "',
-                mailing_state_province='" . ((!empty ($mailing_state_province)) ? addslashes($mailing_state_province) : 'NULL') . "',
-                mailing_zip_postal='" . ((!empty ($mailing_zip_postal)) ? addslashes($mailing_zip_postal) : 'NULL') . "',
-                mailing_country='" . ((!empty ($mailing_country)) ? addslashes($mailing_country) : 'NULL') . "',
-                heritage='" . ((!empty ($heritage)) ? addslashes($heritage) : 'NULL')  . "',
-                race='" . ((!empty ($race_string)) ? addslashes($race_string) : 'NULL') . "',
-                church_name='" . ((!empty ($church_name)) ? addslashes($church_name) : 'NULL') . "',
-		church_city='" . ((!empty ($church_city)) ? addslashes($church_city) : 'NULL') . "',
-		church_state='" . ((!empty ($church_state)) ? addslashes($church_state) : 'NULL') . "',
-		religion='" . ((!empty ($religion)) ? addslashes($religion) : 'NULL') . "' ";
-
-        $qresult = db_query($qstring);
-
-        //connect back with the reason DB
-        connectDB(REASON_DB);
+//        connectDB('admissions_applications_connection');
+//
+//        $first_name = $this->get_value('first_name');
+//        $middle_name = $this->get_value('middle_name');
+//        $last_name = $this->get_value('last_name');
+//        $preferred_first_name = $this->get_value('preferred_first_name');
+//        $gender = $this->get_value('gender');
+//        $date_of_birth = $this->get_value('date_of_birth');
+//        $ssn = '';
+//        if (!($this->get_value('ssn_1'))||($this->get_value('ssn_2'))||($this->get_value('ssn_3'))){
+//            $ssn = addslashes($this->get_value('ssn_1'));
+//            $ssn .= addslashes('-');
+//            $ssn .= addslashes($this->get_value('ssn_2'));
+//            $ssn .= addslashes('-');
+//            $ssn .= addslashes($this->get_value('ssn_3'));
+//        }
+//        $email = $this->get_value('email');
+//        $home_phone = $this->get_value('home_phone');
+//        $cell_phone = $this->get_value('cell_phone');
+//        $permanent_address = $this->get_value('permanent_address');
+//        $permanent_apartment_number = $this->get_value('permanent_apartment_number');
+//        $permanent_city = $this->get_value('permanent_city');
+//        $permanent_state_province = $this->get_value('permanent_state_province');
+//        $permanent_zip_postal = $this->get_value('permanent_zip_postal');
+//        $permanent_country = $this->get_value('permanent_country');
+//        $different_mailing_address = $this->get_value('different_mailing_address');
+//        $mailing_address = $this->get_value('mailing_address');
+//        $mailing_apartment_number = $this->get_value('mailing_apartment_number');
+//        $mailing_city = $this->get_value('mailing_city');
+//        $mailing_state_province = $this->get_value('mailing_state_province');
+//        $mailing_zip_postal = $this->get_value('mailing_zip_postal');
+//        $mailing_country = $this->get_value('mailing_country');
+//        $heritage = $this->get_value('heritage');
+//        if ($this->get_value('race')){
+//            $race_string = implode(',', $this->get_value('race'));
+//        }
+//        $church_name = $this->get_value('church_name');
+//        $church_city = $this->get_value('church_city');
+//        $church_state = $this->get_value('church_state');
+//        $religion = $this->get_value('religion');
+//
+//
+//        $qstring = "INSERT INTO `applicants` SET
+//                first_name='" . addslashes($first_name) . "',
+//                middle_name='" . addslashes($middle_name) . "',
+//                last_name='" . addslashes($last_name) . "',
+//                preferred_first_name='" . ((!empty ($preferred_first_name)) ? addslashes($preferred_first_name) : 'NULL') . "',
+//                gender='" . addslashes($gender) . "',
+//                date_of_birth='" . addslashes($this->get_value('date_of_birth')) . "',
+//                ssn='" . ((!empty ($ssn)) ? addslashes($ssn) : 'NULL') . "',
+//		email='" . addslashes($this->get_value('email')) . "',
+//		home_phone='" . addslashes($this->get_value('home_phone')) . "',
+//		cell_phone='" . addslashes($this->get_value('cell_phone')) . "',
+//		permanent_address='" . addslashes($permanent_address) . "',
+//		permanent_apartment_number='" . addslashes($this->get_value('permanent_apartment_number')) . "',
+//                permanent_city='" . addslashes($this->get_value('permanent_city')) . "',
+//                permanent_state_province='" . addslashes($this->get_value('permanent_state_province')) . "',
+//                permanent_zip_postal='" . addslashes($this->get_value('permanent_zip_postal')) . "',
+//                permanent_country='" . addslashes($this->get_value('permanent_country')) . "',
+//                different_mailing_address='" . addslashes($this->get_value('different_mailing_address')) . "',
+//                mailing_address='" . ((!empty ($mailing_address)) ? addslashes($mailing_address) : 'NULL') . "',
+//		mailing_apartment_number='" . ((!empty ($mailing_apartment_number)) ? addslashes($mailing_apartment_number) : 'NULL') . "',
+//                mailing_city='" . ((!empty ($mailing_city)) ? addslashes($mailing_city) : 'NULL') . "',
+//                mailing_state_province='" . ((!empty ($mailing_state_province)) ? addslashes($mailing_state_province) : 'NULL') . "',
+//                mailing_zip_postal='" . ((!empty ($mailing_zip_postal)) ? addslashes($mailing_zip_postal) : 'NULL') . "',
+//                mailing_country='" . ((!empty ($mailing_country)) ? addslashes($mailing_country) : 'NULL') . "',
+//                heritage='" . ((!empty ($heritage)) ? addslashes($heritage) : 'NULL')  . "',
+//                race='" . ((!empty ($race_string)) ? addslashes($race_string) : 'NULL') . "',
+//                church_name='" . ((!empty ($church_name)) ? addslashes($church_name) : 'NULL') . "',
+//		church_city='" . ((!empty ($church_city)) ? addslashes($church_city) : 'NULL') . "',
+//		church_state='" . ((!empty ($church_state)) ? addslashes($church_state) : 'NULL') . "',
+//		religion='" . ((!empty ($religion)) ? addslashes($religion) : 'NULL') . "' ";
+//
+//        $qresult = db_query($qstring);
+//
+//        //connect back with the reason DB
+//        connectDB(REASON_DB);
     }
 
     function run_error_checks() {
