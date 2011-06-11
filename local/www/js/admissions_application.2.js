@@ -130,9 +130,6 @@ $(document).ready(function() {
     $('#removeSibling').css('display', 'none'); // did this instead of hide because hide was removing some other css from the button
     for (i=2; i<=5; i += 1)
     {
-        //alert(i);
-        //$('[id^=sibling'+i+']').each(function() { alert($(this).val()) });
-        alert(has_data('[id^=sibling'+i+']'));
         if (has_data('[id^=sibling'+i+']')) {
             sibling_count += 1;
         } else {
