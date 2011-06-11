@@ -138,6 +138,12 @@ $(document).ready(function() {
         } else {
             $('[id^=sibling'+i+']').hide();
         }
+        if (sibling_count == 5) {
+            $('#addSibling').hide();
+        }
+        if (sibling_count == 2) {
+            $('#removeSibling').show();
+        }
     }
     //$("input[name='sibling_1_relation']").change(function(){
     //    add_sibling();
