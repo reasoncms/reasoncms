@@ -34,6 +34,13 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	var $ideal_count;
 	/**
+	 * Callback to a function which operates on the entity selector used by 
+	 * the reasonCalendar object to find events (passed by reference as the 
+	 * first argument).
+	 * @var string
+	 */
+	var $es_callback;
+	/**
 	 * The id of the wrapper class around the module
 	 * @var string
 	 * @access public
@@ -1982,6 +1989,10 @@ class EventsModule extends DefaultMinisiteModule
 		if(!empty($this->request['search']))
 		{
 			$init_array['simple_search'] = $this->request['search'];
+		}
+		if(!empty($this->es_callback))
+		{
+			$init_array['es_callback'] = $this->es_callback;
 		}
 		return $init_array;
 	}
