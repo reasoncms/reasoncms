@@ -37,7 +37,6 @@ class ApplicationPageFour extends FormStep {
         'hs_name' => array(
             'type' => 'text',
             'display_name' => 'Name',
-            'size' => 20,
         ),
         'hs_address' => array(
             'type' => 'text',
@@ -74,7 +73,6 @@ class ApplicationPageFour extends FormStep {
         'college_1_name' => array(
             'type' => 'text',
             'display_name' => 'Name',
-            'size' => 20,
         ),
         'college_1_address' => array(
             'type' => 'text',
@@ -108,7 +106,6 @@ class ApplicationPageFour extends FormStep {
         'college_2_name' => array(
             'type' => 'text',
             'display_name' => 'Name',
-            'size' => 20,
         ),
         'college_2_address' => array(
             'type' => 'text',
@@ -142,7 +139,6 @@ class ApplicationPageFour extends FormStep {
         'college_3_name' => array(
             'type' => 'text',
             'display_name' => 'Name',
-            'size' => 20,
         ),
         'college_3_address' => array(
             'type' => 'text',
