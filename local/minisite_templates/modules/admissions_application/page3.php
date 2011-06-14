@@ -1,5 +1,5 @@
 <?php
-
+include_once 'application_utils.php';
 /**
  * Admissions Application Module
  *
@@ -1043,6 +1043,18 @@ class ApplicationPageThree extends FormStep {
     var $display_name = 'Family';
     var $error_header_text = 'Please check your form.';
 
+    function pre_fill_form() {
+        // check if the open_id has is set
+        $o_id = check_open_id($this);
+        if ($o_id) {
+            // get an existing users data from the db based on openid_id and the form
+            get_applicant_data($o_id, $this);
+        } else {
+            // no show form, invite to login
+            $this->show_form = false;
+        }
+    }
+    
     // style up the form and add comments et al
     function on_every_time() {
         foreach ($this->element_group_info as $name => $info) {
@@ -1088,204 +1100,205 @@ class ApplicationPageThree extends FormStep {
         echo '</div>' . "\n";
     }
 
-    function  process() {
+    function process() {
         parent::process();
+        set_applicant_data($this->openid_id, $this);
 
-        connectDB('admissions_applications_connection');
-
-        $parental_marital_status = $this->get_value('parent_marital_status');
-        $permanent_home_parent = $this->get_value('permanent_home_parent');
-        $parent_1_type = $this->get_value('parent_1_type');
-        $parent_1_living = $this->get_value('parent_1_living');
-        $parent_1_title = $this->get_value('parent_1_title');
-        $parent_1_first_name = $this->get_value('parent_1_first_name');
-        $parent_1_middle_name = $this->get_value('parent_1_middle_name');
-        $parent_1_last_name = $this->get_value('parent_1_last_name');
-        $parent_1_address = $this->get_value('parent_1_address');
-        $parent_1_apartment_number = $this->get_value('parent_1_apartment_number');
-        $parent_1_city = $this->get_value('parent_1_city');
-        $parent_1_state_province = $this->get_value('parent_1_state_province');
-        $parent_1_zip_postal = $this->get_value('parent_1_zip_postal');
-        $parent_1_country = $this->get_value('parent_1_country');
-        $parent_1_phone_type = $this->get_value('parent_1_phone_type');
-        $parent_1_phone = $this->get_value('parent_1_phone');
-        $parent_1_email = $this->get_value('parent_1_email');
-        $parent_1_occupation = $this->get_value('parent_1_occupation');
-        $parent_1_employer = $this->get_value('parent_1_employer');
-        $parent_2_type = $this->get_value('parent_2_type');
-        $parent_2_living = $this->get_value('parent_2_living');
-        $parent_2_title = $this->get_value('parent_2_title');
-        $parent_2_first_name = $this->get_value('parent_2_first_name');
-        $parent_2_middle_name = $this->get_value('parent_2_middle_name');
-        $parent_2_last_name = $this->get_value('parent_2_last_name');
-        $parent_2_address = $this->get_value('parent_2_address');
-        $parent_2_apartment_number = $this->get_value('parent_2_apartment_number');
-        $parent_2_city = $this->get_value('parent_2_city');
-        $parent_2_state_province = $this->get_value('parent_2_state_province');
-        $parent_2_zip_postal = $this->get_value('parent_2_zip_postal');
-        $parent_2_country = $this->get_value('parent_2_country');
-        $parent_2_phone_type = $this->get_value('parent_2_phone_type');
-        $parent_2_phone = $this->get_value('parent_2_phone');
-        $parent_2_email = $this->get_value('parent_2_email');
-        $parent_2_occupation = $this->get_value('parent_2_occupation');
-        $parent_2_employer = $this->get_value('parent_2_employer');
-        $guardian_relation = $this->get_value('guardian_relation');
-        $guardian_title = $this->get_value('guardian_title');
-        $guardian_first_name = $this->get_value('guardian_first_name');
-        $guardian_middle_name = $this->get_value('guardian_middle_name');
-        $guardian_last_name = $this->get_value('guardian_last_name');
-        $guardian_address = $this->get_value('guardian_address');
-        $guardian_apartment_number = $this->get_value('guardian_apartment_number');
-        $guardian_city = $this->get_value('guardian_city');
-        $guardian_state_province = $this->get_value('guardian_state_province');
-        $guardian_zip_postal = $this->get_value('guardian_zip_postal');
-        $guardian_country = $this->get_value('guardian_country');
-        $guardian_phone_type = $this->get_value('guardian_phone_type');
-        $guardian_phone = $this->get_value('guardian_phone');
-        $guardian_email = $this->get_value('guardian_email');
-        $guardian_occupation = $this->get_value('guardian_occupation');
-        $guardian_employer = $this->get_value('guardian_employer');
-        $legacy = $this->get_value('legacy');
-        $parent_1_college = $this->get_value('parent_1_college');
-        $parent_1_college_city = $this->get_value('parent_1_college_city');
-        $parent_1_college_state_province = $this->get_value('parent_1_college_state_province');
-        $parent_1_college_country = $this->get_value('parent_1_college_country');
-        $parent_2_college = $this->get_value('parent_2_college');
-        $parent_2_college_city = $this->get_value('parent_2_college_city');
-        $parent_2_college_state_province = $this->get_value('parent_2_college_state_province');
-        $parent_2_college_country = $this->get_value('parent_2_college_country');
-        $guardian_college = $this->get_value('guardian_college');
-        $guardian_college_city = $this->get_value('guardian_college_city');
-        $guardian_college_state_province = $this->get_value('guardian_college_state_province');
-        $guardian_college_country = $this->get_value('guardian_college_country');
-        $sibling_1_relation = $this->get_value('sibling_1_relation');
-        $sibling_1_first_name = $this->get_value('sibling_1_first_name');
-        $sibling_1_last_name = $this->get_value('sibling_1_last_name');
-        $sibling_1_age = $this->get_value('sibling_1_age');
-        $sibling_1_grade = $this->get_value('sibling_1_grade');
-        $sibling_1_college = $this->get_value('sibling_1_college');
-        $sibling_2_relation = $this->get_value('sibling_2_relation');
-        $sibling_2_first_name = $this->get_value('sibling_2_first_name');
-        $sibling_2_last_name = $this->get_value('sibling_2_last_name');
-        $sibling_2_age = $this->get_value('sibling_2_age');
-        $sibling_2_grade = $this->get_value('sibling_2_grade');
-        $sibling_2_college = $this->get_value('sibling_2_college');
-        $sibling_3_relation = $this->get_value('sibling_3_relation');
-        $sibling_3_first_name = $this->get_value('sibling_3_first_name');
-        $sibling_3_last_name = $this->get_value('sibling_3_last_name');
-        $sibling_3_age = $this->get_value('sibling_3_age');
-        $sibling_3_grade = $this->get_value('sibling_3_grade');
-        $sibling_3_college = $this->get_value('sibling_3_college');
-        $sibling_4_relation = $this->get_value('sibling_4_relation');
-        $sibling_4_first_name = $this->get_value('sibling_4_first_name');
-        $sibling_4_last_name = $this->get_value('sibling_4_last_name');
-        $sibling_4_age = $this->get_value('sibling_4_age');
-        $sibling_4_grade = $this->get_value('sibling_4_grade');
-        $sibling_4_college = $this->get_value('sibling_4_college');
-        $sibling_5_relation = $this->get_value('sibling_5_relation');
-        $sibling_5_first_name = $this->get_value('sibling_5_first_name');
-        $sibling_5_last_name = $this->get_value('sibling_5_last_name');
-        $sibling_5_age = $this->get_value('sibling_5_age');
-        $sibling_5_grade = $this->get_value('sibling_5_grade');
-        $sibling_5_college = $this->get_value('sibling_5_college');
-
-
-        $qstring = "INSERT INTO `applicants` SET
-                parental_marital_status='" . ((!empty ($parental_marital_status)) ? addslashes($parental_marital_status) : 'NULL') . "',
-                permanent_home_parent='" . ((!empty ($permanent_home_parent)) ? addslashes($permanent_home_parent) : 'NULL') . "',
-                parent_1_type='" . ((!empty ($parent_1_type)) ? addslashes($parent_1_type) : 'NULL') . "',
-                parent_1_living='" . ((!empty ($parent_1_living)) ? addslashes($parent_1_living) : 'NULL') . "',
-		parent_1_title='" . ((!empty ($parent_1_title)) ? addslashes($parent_1_title) : 'NULL') . "',
-		parent_1_first_name='" . ((!empty ($parent_1_first_name)) ? addslashes($parent_1_first_name) : 'NULL') . "',
-                parent_1_middle_name='" . ((!empty ($parent_1_middle_name)) ? addslashes($parent_1_middle_name) : 'NULL') . "',
-                parent_1_last_name='" . ((!empty ($parent_1_last_name)) ? addslashes($parent_1_last_name) : 'NULL') . "',
-                parent_1_address='" . ((!empty ($parent_1_address)) ? addslashes($parent_1_address) : 'NULL') . "',
-                parent_1_apartment_number='" . ((!empty ($parent_1_apartment_number)) ? addslashes($parent_1_apartment_number) : 'NULL') . "',
-                parent_1_city='" . ((!empty ($parent_1_city)) ? addslashes($parent_1_city) : 'NULL')  . "',
-                parent_1_state_province='" . ((!empty ($parent_1_state_province)) ? addslashes($parent_1_state_province) : 'NULL') . "',
-                parent_1_zip_postal='" . ((!empty ($parent_1_zip_postal)) ? addslashes($parent_1_zip_postal) : 'NULL') . "',
-		parent_1_country='" . ((!empty ($parent_1_country)) ? addslashes($parent_1_country) : 'NULL') . "',
-		parent_1_phone_type='" . ((!empty ($parent_1_phone_type)) ? addslashes($parent_1_phone_type) : 'NULL') . "',
-		parent_1_phone='" . ((!empty ($parent_1_phone)) ? addslashes($parent_1_phone) : 'NULL') . "',
-		parent_1_email='" . ((!empty ($parent_1_email)) ? addslashes($parent_1_email) : 'NULL') . "',
-		parent_1_occupation='" . ((!empty ($parent_1_occupation)) ? addslashes($parent_1_occupation) : 'NULL') . "',
-		parent_1_employer='" . ((!empty ($parent_1_employer)) ? addslashes($parent_1_employer) : 'NULL') . "',
-                parent_2_type='" . ((!empty ($parent_2_type)) ? addslashes($parent_2_type) : 'NULL') . "',
-                parent_2_living='" . ((!empty ($parent_2_living)) ? addslashes($parent_2_living) : 'NULL') . "',
-		parent_2_title='" . ((!empty ($parent_2_title)) ? addslashes($parent_2_title) : 'NULL') . "',
-		parent_2_first_name='" . ((!empty ($parent_2_first_name)) ? addslashes($parent_2_first_name) : 'NULL') . "',
-                parent_2_middle_name='" . ((!empty ($parent_2_middle_name)) ? addslashes($parent_2_middle_name) : 'NULL') . "',
-                parent_2_last_name='" . ((!empty ($parent_2_last_name)) ? addslashes($parent_2_last_name) : 'NULL') . "',
-                parent_2_address='" . ((!empty ($parent_2_address)) ? addslashes($parent_2_address) : 'NULL') . "',
-                parent_2_apartment_number='" . ((!empty ($parent_2_apartment_number)) ? addslashes($parent_2_apartment_number) : 'NULL') . "',
-                parent_2_city='" . ((!empty ($parent_2_city)) ? addslashes($parent_2_city) : 'NULL')  . "',
-                parent_2_state_province='" . ((!empty ($parent_2_state_province)) ? addslashes($parent_2_state_province) : 'NULL') . "',
-                parent_2_zip_postal='" . ((!empty ($parent_2_zip_postal)) ? addslashes($parent_2_zip_postal) : 'NULL') . "',
-		parent_2_country='" . ((!empty ($parent_2_country)) ? addslashes($parent_2_country) : 'NULL') . "',
-		parent_2_phone_type='" . ((!empty ($parent_2_phone_type)) ? addslashes($parent_2_phone_type) : 'NULL') . "',
-		parent_2_phone='" . ((!empty ($parent_2_phone)) ? addslashes($parent_2_phone) : 'NULL') . "',
-		parent_2_email='" . ((!empty ($parent_2_email)) ? addslashes($parent_2_email) : 'NULL') . "',
-		parent_2_occupation='" . ((!empty ($parent_2_occupation)) ? addslashes($parent_2_occupation) : 'NULL') . "',
-		parent_2_employer='" . ((!empty ($parent_2_employer)) ? addslashes($parent_2_employer) : 'NULL') . "',
-                guardian_relation='" . ((!empty ($guardian_relation)) ? addslashes($guardian_relation) : 'NULL') . "',
-		guardian_title='" . ((!empty ($guardian_title)) ? addslashes($guardian_title) : 'NULL') . "',
-		guardian_first_name='" . ((!empty ($guardian_first_name)) ? addslashes($guardian_first_name) : 'NULL') . "',
-                guardian_middle_name='" . ((!empty ($guardian_middle_name)) ? addslashes($guardian_middle_name) : 'NULL') . "',
-                guardian_last_name='" . ((!empty ($guardian_last_name)) ? addslashes($guardian_last_name) : 'NULL') . "',
-                guardian_address='" . ((!empty ($guardian_address)) ? addslashes($guardian_address) : 'NULL') . "',
-                guardian_apartment_number='" . ((!empty ($guardian_apartment_number)) ? addslashes($guardian_apartment_number) : 'NULL') . "',
-                guardian_city='" . ((!empty ($guardian_city)) ? addslashes($guardian_city) : 'NULL')  . "',
-                guardian_state_province='" . ((!empty ($guardian_state_province)) ? addslashes($guardian_state_province) : 'NULL') . "',
-                guardian_zip_postal='" . ((!empty ($guardian_zip_postal)) ? addslashes($guardian_zip_postal) : 'NULL') . "',
-		guardian_country='" . ((!empty ($guardian_country)) ? addslashes($guardian_country) : 'NULL') . "',
-		guardian_phone_type='" . ((!empty ($guardian_phone_type)) ? addslashes($guardian_phone_type) : 'NULL') . "',
-		guardian_phone='" . ((!empty ($guardian_phone)) ? addslashes($guardian_phone) : 'NULL') . "',
-		guardian_email='" . ((!empty ($guardian_email)) ? addslashes($guardian_email) : 'NULL') . "',
-		guardian_occupation='" . ((!empty ($guardian_occupation)) ? addslashes($guardian_occupation) : 'NULL') . "',
-		guardian_employer='" . ((!empty ($guardian_employer)) ? addslashes($guardian_employer) : 'NULL') . "',
-		legacy='" . ((!empty ($legacy)) ? addslashes($legacy) : 'NULL') . "',
-		parent_1_college='" . ((!empty ($parent_1_college)) ? addslashes($parent_1_college) : 'NULL') . "',
-		parent_1_college_city='" . ((!empty ($parent_1_college_city)) ? addslashes($parent_1_college_city) : 'NULL') . "',
-		parent_1_college_state_province='" . ((!empty ($parent_1_college_state_province)) ? addslashes($parent_1_college_state_province) : 'NULL') . "',
-		parent_1_college_country='" . ((!empty ($parent_1_college_country)) ? addslashes($parent_1_college_country) : 'NULL') . "',
-                parent_2_college='" . ((!empty ($parent_2_college)) ? addslashes($parent_2_college) : 'NULL') . "',
-		parent_2_college_city='" . ((!empty ($parent_2_college_city)) ? addslashes($parent_2_college_city) : 'NULL') . "',
-		parent_2_college_state_province='" . ((!empty ($parent_2_college_state_province)) ? addslashes($parent_2_college_state_province) : 'NULL') . "',
-		parent_2_college_country='" . ((!empty ($parent_2_college_country)) ? addslashes($parent_2_college_country) : 'NULL') . "',
-                guardian_college='" . ((!empty ($guardian_college)) ? addslashes($guardian_college) : 'NULL') . "',
-		guardian_college_city='" . ((!empty ($guardian_college_city)) ? addslashes($guardian_college_city) : 'NULL') . "',
-		guardian_college_state_province='" . ((!empty ($guardian_college_state_province)) ? addslashes($guardian_college_state_province) : 'NULL') . "',
-		guardian_college_country='" . ((!empty ($guardian_college_country)) ? addslashes($guardian_college_country) : 'NULL') . "',
-		sibling_1_first_name='" . ((!empty ($sibling_1_first_name)) ? addslashes($sibling_1_first_name) : 'NULL') . "',
-		sibling_1_last_name='" . ((!empty ($sibling_1_last_name)) ? addslashes($sibling_1_last_name) : 'NULL') . "',
-		sibling_1_age='" . ((!empty ($sibling_1_age)) ? addslashes($sibling_1_age) : 'NULL') . "',
-		sibling_1_grade='" . ((!empty ($sibling_1_grade)) ? addslashes($sibling_1_grade) : 'NULL') . "',
-		sibling_1_college='" . ((!empty ($sibling_1_college)) ? addslashes($sibling_1_college) : 'NULL') . "',
-		sibling_2_first_name='" . ((!empty ($sibling_2_first_name)) ? addslashes($sibling_2_first_name) : 'NULL') . "',
-		sibling_2_last_name='" . ((!empty ($sibling_2_last_name)) ? addslashes($sibling_2_last_name) : 'NULL') . "',
-		sibling_2_age='" . ((!empty ($sibling_2_age)) ? addslashes($sibling_2_age) : 'NULL') . "',
-		sibling_2_grade='" . ((!empty ($sibling_2_grade)) ? addslashes($sibling_2_grade) : 'NULL') . "',
-		sibling_2_college='" . ((!empty ($sibling_2_college)) ? addslashes($sibling_2_college) : 'NULL') . "',
-                sibling_3_first_name='" . ((!empty ($sibling_3_first_name)) ? addslashes($sibling_3_first_name) : 'NULL') . "',
-		sibling_3_last_name='" . ((!empty ($sibling_3_last_name)) ? addslashes($sibling_3_last_name) : 'NULL') . "',
-		sibling_3_age='" . ((!empty ($sibling_3_age)) ? addslashes($sibling_3_age) : 'NULL') . "',
-		sibling_3_grade='" . ((!empty ($sibling_3_grade)) ? addslashes($sibling_3_grade) : 'NULL') . "',
-		sibling_3_college='" . ((!empty ($sibling_3_college)) ? addslashes($sibling_3_college) : 'NULL') . "',
-                sibling_4_first_name='" . ((!empty ($sibling_4_first_name)) ? addslashes($sibling_4_first_name) : 'NULL') . "',
-		sibling_4_last_name='" . ((!empty ($sibling_4_last_name)) ? addslashes($sibling_4_last_name) : 'NULL') . "',
-		sibling_4_age='" . ((!empty ($sibling_4_age)) ? addslashes($sibling_4_age) : 'NULL') . "',
-		sibling_4_grade='" . ((!empty ($sibling_4_grade)) ? addslashes($sibling_4_grade) : 'NULL') . "',
-		sibling_4_college='" . ((!empty ($sibling_4_college)) ? addslashes($sibling_4_college) : 'NULL') . "',
-                sibling_5_first_name='" . ((!empty ($sibling_5_first_name)) ? addslashes($sibling_5_first_name) : 'NULL') . "',
-		sibling_5_last_name='" . ((!empty ($sibling_5_last_name)) ? addslashes($sibling_5_last_name) : 'NULL') . "',
-		sibling_5_age='" . ((!empty ($sibling_5_age)) ? addslashes($sibling_5_age) : 'NULL') . "',
-		sibling_5_grade='" . ((!empty ($sibling_5_grade)) ? addslashes($sibling_5_grade) : 'NULL') . "',
-		sibling_5_college='" . ((!empty ($sibling_5_college)) ? addslashes($sibling_5_college) : 'NULL') . "' ";
-
-        $qresult = db_query($qstring);
-
-        //connect back with the reason DB
-        connectDB(REASON_DB);
+//        connectDB('admissions_applications_connection');
+//
+//        $parental_marital_status = $this->get_value('parent_marital_status');
+//        $permanent_home_parent = $this->get_value('permanent_home_parent');
+//        $parent_1_type = $this->get_value('parent_1_type');
+//        $parent_1_living = $this->get_value('parent_1_living');
+//        $parent_1_title = $this->get_value('parent_1_title');
+//        $parent_1_first_name = $this->get_value('parent_1_first_name');
+//        $parent_1_middle_name = $this->get_value('parent_1_middle_name');
+//        $parent_1_last_name = $this->get_value('parent_1_last_name');
+//        $parent_1_address = $this->get_value('parent_1_address');
+//        $parent_1_apartment_number = $this->get_value('parent_1_apartment_number');
+//        $parent_1_city = $this->get_value('parent_1_city');
+//        $parent_1_state_province = $this->get_value('parent_1_state_province');
+//        $parent_1_zip_postal = $this->get_value('parent_1_zip_postal');
+//        $parent_1_country = $this->get_value('parent_1_country');
+//        $parent_1_phone_type = $this->get_value('parent_1_phone_type');
+//        $parent_1_phone = $this->get_value('parent_1_phone');
+//        $parent_1_email = $this->get_value('parent_1_email');
+//        $parent_1_occupation = $this->get_value('parent_1_occupation');
+//        $parent_1_employer = $this->get_value('parent_1_employer');
+//        $parent_2_type = $this->get_value('parent_2_type');
+//        $parent_2_living = $this->get_value('parent_2_living');
+//        $parent_2_title = $this->get_value('parent_2_title');
+//        $parent_2_first_name = $this->get_value('parent_2_first_name');
+//        $parent_2_middle_name = $this->get_value('parent_2_middle_name');
+//        $parent_2_last_name = $this->get_value('parent_2_last_name');
+//        $parent_2_address = $this->get_value('parent_2_address');
+//        $parent_2_apartment_number = $this->get_value('parent_2_apartment_number');
+//        $parent_2_city = $this->get_value('parent_2_city');
+//        $parent_2_state_province = $this->get_value('parent_2_state_province');
+//        $parent_2_zip_postal = $this->get_value('parent_2_zip_postal');
+//        $parent_2_country = $this->get_value('parent_2_country');
+//        $parent_2_phone_type = $this->get_value('parent_2_phone_type');
+//        $parent_2_phone = $this->get_value('parent_2_phone');
+//        $parent_2_email = $this->get_value('parent_2_email');
+//        $parent_2_occupation = $this->get_value('parent_2_occupation');
+//        $parent_2_employer = $this->get_value('parent_2_employer');
+//        $guardian_relation = $this->get_value('guardian_relation');
+//        $guardian_title = $this->get_value('guardian_title');
+//        $guardian_first_name = $this->get_value('guardian_first_name');
+//        $guardian_middle_name = $this->get_value('guardian_middle_name');
+//        $guardian_last_name = $this->get_value('guardian_last_name');
+//        $guardian_address = $this->get_value('guardian_address');
+//        $guardian_apartment_number = $this->get_value('guardian_apartment_number');
+//        $guardian_city = $this->get_value('guardian_city');
+//        $guardian_state_province = $this->get_value('guardian_state_province');
+//        $guardian_zip_postal = $this->get_value('guardian_zip_postal');
+//        $guardian_country = $this->get_value('guardian_country');
+//        $guardian_phone_type = $this->get_value('guardian_phone_type');
+//        $guardian_phone = $this->get_value('guardian_phone');
+//        $guardian_email = $this->get_value('guardian_email');
+//        $guardian_occupation = $this->get_value('guardian_occupation');
+//        $guardian_employer = $this->get_value('guardian_employer');
+//        $legacy = $this->get_value('legacy');
+//        $parent_1_college = $this->get_value('parent_1_college');
+//        $parent_1_college_city = $this->get_value('parent_1_college_city');
+//        $parent_1_college_state_province = $this->get_value('parent_1_college_state_province');
+//        $parent_1_college_country = $this->get_value('parent_1_college_country');
+//        $parent_2_college = $this->get_value('parent_2_college');
+//        $parent_2_college_city = $this->get_value('parent_2_college_city');
+//        $parent_2_college_state_province = $this->get_value('parent_2_college_state_province');
+//        $parent_2_college_country = $this->get_value('parent_2_college_country');
+//        $guardian_college = $this->get_value('guardian_college');
+//        $guardian_college_city = $this->get_value('guardian_college_city');
+//        $guardian_college_state_province = $this->get_value('guardian_college_state_province');
+//        $guardian_college_country = $this->get_value('guardian_college_country');
+//        $sibling_1_relation = $this->get_value('sibling_1_relation');
+//        $sibling_1_first_name = $this->get_value('sibling_1_first_name');
+//        $sibling_1_last_name = $this->get_value('sibling_1_last_name');
+//        $sibling_1_age = $this->get_value('sibling_1_age');
+//        $sibling_1_grade = $this->get_value('sibling_1_grade');
+//        $sibling_1_college = $this->get_value('sibling_1_college');
+//        $sibling_2_relation = $this->get_value('sibling_2_relation');
+//        $sibling_2_first_name = $this->get_value('sibling_2_first_name');
+//        $sibling_2_last_name = $this->get_value('sibling_2_last_name');
+//        $sibling_2_age = $this->get_value('sibling_2_age');
+//        $sibling_2_grade = $this->get_value('sibling_2_grade');
+//        $sibling_2_college = $this->get_value('sibling_2_college');
+//        $sibling_3_relation = $this->get_value('sibling_3_relation');
+//        $sibling_3_first_name = $this->get_value('sibling_3_first_name');
+//        $sibling_3_last_name = $this->get_value('sibling_3_last_name');
+//        $sibling_3_age = $this->get_value('sibling_3_age');
+//        $sibling_3_grade = $this->get_value('sibling_3_grade');
+//        $sibling_3_college = $this->get_value('sibling_3_college');
+//        $sibling_4_relation = $this->get_value('sibling_4_relation');
+//        $sibling_4_first_name = $this->get_value('sibling_4_first_name');
+//        $sibling_4_last_name = $this->get_value('sibling_4_last_name');
+//        $sibling_4_age = $this->get_value('sibling_4_age');
+//        $sibling_4_grade = $this->get_value('sibling_4_grade');
+//        $sibling_4_college = $this->get_value('sibling_4_college');
+//        $sibling_5_relation = $this->get_value('sibling_5_relation');
+//        $sibling_5_first_name = $this->get_value('sibling_5_first_name');
+//        $sibling_5_last_name = $this->get_value('sibling_5_last_name');
+//        $sibling_5_age = $this->get_value('sibling_5_age');
+//        $sibling_5_grade = $this->get_value('sibling_5_grade');
+//        $sibling_5_college = $this->get_value('sibling_5_college');
+//
+//
+//        $qstring = "INSERT INTO `applicants` SET
+//                parental_marital_status='" . ((!empty ($parental_marital_status)) ? addslashes($parental_marital_status) : 'NULL') . "',
+//                permanent_home_parent='" . ((!empty ($permanent_home_parent)) ? addslashes($permanent_home_parent) : 'NULL') . "',
+//                parent_1_type='" . ((!empty ($parent_1_type)) ? addslashes($parent_1_type) : 'NULL') . "',
+//                parent_1_living='" . ((!empty ($parent_1_living)) ? addslashes($parent_1_living) : 'NULL') . "',
+//		parent_1_title='" . ((!empty ($parent_1_title)) ? addslashes($parent_1_title) : 'NULL') . "',
+//		parent_1_first_name='" . ((!empty ($parent_1_first_name)) ? addslashes($parent_1_first_name) : 'NULL') . "',
+//                parent_1_middle_name='" . ((!empty ($parent_1_middle_name)) ? addslashes($parent_1_middle_name) : 'NULL') . "',
+//                parent_1_last_name='" . ((!empty ($parent_1_last_name)) ? addslashes($parent_1_last_name) : 'NULL') . "',
+//                parent_1_address='" . ((!empty ($parent_1_address)) ? addslashes($parent_1_address) : 'NULL') . "',
+//                parent_1_apartment_number='" . ((!empty ($parent_1_apartment_number)) ? addslashes($parent_1_apartment_number) : 'NULL') . "',
+//                parent_1_city='" . ((!empty ($parent_1_city)) ? addslashes($parent_1_city) : 'NULL')  . "',
+//                parent_1_state_province='" . ((!empty ($parent_1_state_province)) ? addslashes($parent_1_state_province) : 'NULL') . "',
+//                parent_1_zip_postal='" . ((!empty ($parent_1_zip_postal)) ? addslashes($parent_1_zip_postal) : 'NULL') . "',
+//		parent_1_country='" . ((!empty ($parent_1_country)) ? addslashes($parent_1_country) : 'NULL') . "',
+//		parent_1_phone_type='" . ((!empty ($parent_1_phone_type)) ? addslashes($parent_1_phone_type) : 'NULL') . "',
+//		parent_1_phone='" . ((!empty ($parent_1_phone)) ? addslashes($parent_1_phone) : 'NULL') . "',
+//		parent_1_email='" . ((!empty ($parent_1_email)) ? addslashes($parent_1_email) : 'NULL') . "',
+//		parent_1_occupation='" . ((!empty ($parent_1_occupation)) ? addslashes($parent_1_occupation) : 'NULL') . "',
+//		parent_1_employer='" . ((!empty ($parent_1_employer)) ? addslashes($parent_1_employer) : 'NULL') . "',
+//                parent_2_type='" . ((!empty ($parent_2_type)) ? addslashes($parent_2_type) : 'NULL') . "',
+//                parent_2_living='" . ((!empty ($parent_2_living)) ? addslashes($parent_2_living) : 'NULL') . "',
+//		parent_2_title='" . ((!empty ($parent_2_title)) ? addslashes($parent_2_title) : 'NULL') . "',
+//		parent_2_first_name='" . ((!empty ($parent_2_first_name)) ? addslashes($parent_2_first_name) : 'NULL') . "',
+//                parent_2_middle_name='" . ((!empty ($parent_2_middle_name)) ? addslashes($parent_2_middle_name) : 'NULL') . "',
+//                parent_2_last_name='" . ((!empty ($parent_2_last_name)) ? addslashes($parent_2_last_name) : 'NULL') . "',
+//                parent_2_address='" . ((!empty ($parent_2_address)) ? addslashes($parent_2_address) : 'NULL') . "',
+//                parent_2_apartment_number='" . ((!empty ($parent_2_apartment_number)) ? addslashes($parent_2_apartment_number) : 'NULL') . "',
+//                parent_2_city='" . ((!empty ($parent_2_city)) ? addslashes($parent_2_city) : 'NULL')  . "',
+//                parent_2_state_province='" . ((!empty ($parent_2_state_province)) ? addslashes($parent_2_state_province) : 'NULL') . "',
+//                parent_2_zip_postal='" . ((!empty ($parent_2_zip_postal)) ? addslashes($parent_2_zip_postal) : 'NULL') . "',
+//		parent_2_country='" . ((!empty ($parent_2_country)) ? addslashes($parent_2_country) : 'NULL') . "',
+//		parent_2_phone_type='" . ((!empty ($parent_2_phone_type)) ? addslashes($parent_2_phone_type) : 'NULL') . "',
+//		parent_2_phone='" . ((!empty ($parent_2_phone)) ? addslashes($parent_2_phone) : 'NULL') . "',
+//		parent_2_email='" . ((!empty ($parent_2_email)) ? addslashes($parent_2_email) : 'NULL') . "',
+//		parent_2_occupation='" . ((!empty ($parent_2_occupation)) ? addslashes($parent_2_occupation) : 'NULL') . "',
+//		parent_2_employer='" . ((!empty ($parent_2_employer)) ? addslashes($parent_2_employer) : 'NULL') . "',
+//                guardian_relation='" . ((!empty ($guardian_relation)) ? addslashes($guardian_relation) : 'NULL') . "',
+//		guardian_title='" . ((!empty ($guardian_title)) ? addslashes($guardian_title) : 'NULL') . "',
+//		guardian_first_name='" . ((!empty ($guardian_first_name)) ? addslashes($guardian_first_name) : 'NULL') . "',
+//                guardian_middle_name='" . ((!empty ($guardian_middle_name)) ? addslashes($guardian_middle_name) : 'NULL') . "',
+//                guardian_last_name='" . ((!empty ($guardian_last_name)) ? addslashes($guardian_last_name) : 'NULL') . "',
+//                guardian_address='" . ((!empty ($guardian_address)) ? addslashes($guardian_address) : 'NULL') . "',
+//                guardian_apartment_number='" . ((!empty ($guardian_apartment_number)) ? addslashes($guardian_apartment_number) : 'NULL') . "',
+//                guardian_city='" . ((!empty ($guardian_city)) ? addslashes($guardian_city) : 'NULL')  . "',
+//                guardian_state_province='" . ((!empty ($guardian_state_province)) ? addslashes($guardian_state_province) : 'NULL') . "',
+//                guardian_zip_postal='" . ((!empty ($guardian_zip_postal)) ? addslashes($guardian_zip_postal) : 'NULL') . "',
+//		guardian_country='" . ((!empty ($guardian_country)) ? addslashes($guardian_country) : 'NULL') . "',
+//		guardian_phone_type='" . ((!empty ($guardian_phone_type)) ? addslashes($guardian_phone_type) : 'NULL') . "',
+//		guardian_phone='" . ((!empty ($guardian_phone)) ? addslashes($guardian_phone) : 'NULL') . "',
+//		guardian_email='" . ((!empty ($guardian_email)) ? addslashes($guardian_email) : 'NULL') . "',
+//		guardian_occupation='" . ((!empty ($guardian_occupation)) ? addslashes($guardian_occupation) : 'NULL') . "',
+//		guardian_employer='" . ((!empty ($guardian_employer)) ? addslashes($guardian_employer) : 'NULL') . "',
+//		legacy='" . ((!empty ($legacy)) ? addslashes($legacy) : 'NULL') . "',
+//		parent_1_college='" . ((!empty ($parent_1_college)) ? addslashes($parent_1_college) : 'NULL') . "',
+//		parent_1_college_city='" . ((!empty ($parent_1_college_city)) ? addslashes($parent_1_college_city) : 'NULL') . "',
+//		parent_1_college_state_province='" . ((!empty ($parent_1_college_state_province)) ? addslashes($parent_1_college_state_province) : 'NULL') . "',
+//		parent_1_college_country='" . ((!empty ($parent_1_college_country)) ? addslashes($parent_1_college_country) : 'NULL') . "',
+//                parent_2_college='" . ((!empty ($parent_2_college)) ? addslashes($parent_2_college) : 'NULL') . "',
+//		parent_2_college_city='" . ((!empty ($parent_2_college_city)) ? addslashes($parent_2_college_city) : 'NULL') . "',
+//		parent_2_college_state_province='" . ((!empty ($parent_2_college_state_province)) ? addslashes($parent_2_college_state_province) : 'NULL') . "',
+//		parent_2_college_country='" . ((!empty ($parent_2_college_country)) ? addslashes($parent_2_college_country) : 'NULL') . "',
+//                guardian_college='" . ((!empty ($guardian_college)) ? addslashes($guardian_college) : 'NULL') . "',
+//		guardian_college_city='" . ((!empty ($guardian_college_city)) ? addslashes($guardian_college_city) : 'NULL') . "',
+//		guardian_college_state_province='" . ((!empty ($guardian_college_state_province)) ? addslashes($guardian_college_state_province) : 'NULL') . "',
+//		guardian_college_country='" . ((!empty ($guardian_college_country)) ? addslashes($guardian_college_country) : 'NULL') . "',
+//		sibling_1_first_name='" . ((!empty ($sibling_1_first_name)) ? addslashes($sibling_1_first_name) : 'NULL') . "',
+//		sibling_1_last_name='" . ((!empty ($sibling_1_last_name)) ? addslashes($sibling_1_last_name) : 'NULL') . "',
+//		sibling_1_age='" . ((!empty ($sibling_1_age)) ? addslashes($sibling_1_age) : 'NULL') . "',
+//		sibling_1_grade='" . ((!empty ($sibling_1_grade)) ? addslashes($sibling_1_grade) : 'NULL') . "',
+//		sibling_1_college='" . ((!empty ($sibling_1_college)) ? addslashes($sibling_1_college) : 'NULL') . "',
+//		sibling_2_first_name='" . ((!empty ($sibling_2_first_name)) ? addslashes($sibling_2_first_name) : 'NULL') . "',
+//		sibling_2_last_name='" . ((!empty ($sibling_2_last_name)) ? addslashes($sibling_2_last_name) : 'NULL') . "',
+//		sibling_2_age='" . ((!empty ($sibling_2_age)) ? addslashes($sibling_2_age) : 'NULL') . "',
+//		sibling_2_grade='" . ((!empty ($sibling_2_grade)) ? addslashes($sibling_2_grade) : 'NULL') . "',
+//		sibling_2_college='" . ((!empty ($sibling_2_college)) ? addslashes($sibling_2_college) : 'NULL') . "',
+//                sibling_3_first_name='" . ((!empty ($sibling_3_first_name)) ? addslashes($sibling_3_first_name) : 'NULL') . "',
+//		sibling_3_last_name='" . ((!empty ($sibling_3_last_name)) ? addslashes($sibling_3_last_name) : 'NULL') . "',
+//		sibling_3_age='" . ((!empty ($sibling_3_age)) ? addslashes($sibling_3_age) : 'NULL') . "',
+//		sibling_3_grade='" . ((!empty ($sibling_3_grade)) ? addslashes($sibling_3_grade) : 'NULL') . "',
+//		sibling_3_college='" . ((!empty ($sibling_3_college)) ? addslashes($sibling_3_college) : 'NULL') . "',
+//                sibling_4_first_name='" . ((!empty ($sibling_4_first_name)) ? addslashes($sibling_4_first_name) : 'NULL') . "',
+//		sibling_4_last_name='" . ((!empty ($sibling_4_last_name)) ? addslashes($sibling_4_last_name) : 'NULL') . "',
+//		sibling_4_age='" . ((!empty ($sibling_4_age)) ? addslashes($sibling_4_age) : 'NULL') . "',
+//		sibling_4_grade='" . ((!empty ($sibling_4_grade)) ? addslashes($sibling_4_grade) : 'NULL') . "',
+//		sibling_4_college='" . ((!empty ($sibling_4_college)) ? addslashes($sibling_4_college) : 'NULL') . "',
+//                sibling_5_first_name='" . ((!empty ($sibling_5_first_name)) ? addslashes($sibling_5_first_name) : 'NULL') . "',
+//		sibling_5_last_name='" . ((!empty ($sibling_5_last_name)) ? addslashes($sibling_5_last_name) : 'NULL') . "',
+//		sibling_5_age='" . ((!empty ($sibling_5_age)) ? addslashes($sibling_5_age) : 'NULL') . "',
+//		sibling_5_grade='" . ((!empty ($sibling_5_grade)) ? addslashes($sibling_5_grade) : 'NULL') . "',
+//		sibling_5_college='" . ((!empty ($sibling_5_college)) ? addslashes($sibling_5_college) : 'NULL') . "' ";
+//
+//        $qresult = db_query($qstring);
+//
+//        //connect back with the reason DB
+//        connectDB(REASON_DB);
     }
 
 }
