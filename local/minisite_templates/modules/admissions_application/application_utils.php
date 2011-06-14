@@ -66,6 +66,7 @@ function set_applicant_data($openid, &$the_form) {
 //        die;
     }
     $qresult = db_query($qstring);
+    connectDB(REASON_DB);
 }
 
 ?>
