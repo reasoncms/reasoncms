@@ -59,7 +59,7 @@ class HeadItems
 	 * @param boolean $add_to_top if true, places element at start of array rather than end
 	 * 
 	 */
-	function add_head_item($element, $attributes, $content = '', $add_to_top = false)
+	function add_head_item($element, $attributes, $content = '', $add_to_top = false, $wrapper = array('before'=>'','after'=>''))
 	{
 		$element = strtolower($element);
 		if(in_array($element, $this->allowable_elements))
@@ -69,7 +69,7 @@ class HeadItems
 				trigger_error('The head item element ' . $element . ' had its content (' . $content . ') removed because it is not in the array of elements that may have content');
 				$content = '';
 			}
-			$item = array('element'=>$element,'attributes'=>$attributes,'content'=>$content);
+			$item = array('element'=>$element,'attributes'=>$attributes,'content'=>$content,'wrapper'=>$wrapper);
 			if($add_to_top)
 			{
 				array_unshift($this->_head_items, $item);
@@ -89,14 +89,14 @@ class HeadItems
 	 * @param string $media optional media attribute
 	 * @param boolean $add_to_top
 	 */
-	function add_stylesheet( $url, $media = '', $add_to_top = false )
+	function add_stylesheet( $url, $media = '', $add_to_top = false, $wrapper = array('before'=>'','after'=>'') )
 	{
 		$attrs = array('rel'=>'stylesheet','type'=>'text/css','href'=>$url);
 		if(!empty($media))
 		{
 			$attrs['media'] = $media;
 		}
-		$this->add_head_item('link', $attrs, '', $add_to_top);
+		$this->add_head_item('link', $attrs, '', $add_to_top, $wrapper);
 	}
 
 	/**
@@ -104,10 +104,10 @@ class HeadItems
 	 * @param string $url
 	 * @param boolean $add_to_top
 	 */	
-	function add_javascript( $url, $add_to_top = false )
+	function add_javascript( $url, $add_to_top = false, $wrapper = array('before'=>'','after'=>'') )
 	{
 		$attrs = array('type' => 'text/javascript', 'src' => $url);
-		$this->add_head_item('script', $attrs, '', $add_to_top);
+		$this->add_head_item('script', $attrs, '', $add_to_top, $wrapper);
 	}
 	
 	/**
@@ -187,7 +187,10 @@ class HeadItems
 		$html_items = array();
 		foreach($this->_head_items as $item)
 		{
-			$html_item = '<'.$item['element'];
+			$html_item = '';
+			if(!empty($item['wrapper']['before']))
+				$html_item .= $item['wrapper']['before'];
+			$html_item .= '<'.$item['element'];
 			foreach($item['attributes'] as $attr_key=>$attr_val)
 			{
 				$html_item .= ' '.reason_htmlspecialchars($attr_key).'="'.reason_htmlspecialchars($attr_val).'"';
@@ -204,6 +207,8 @@ class HeadItems
 			{
 				$html_item .= ' />';
 			}
+			if(!empty($item['wrapper']['after']))
+				$html_item .= $item['wrapper']['after'];
 			$html_items[] = $html_item;
 		}
 		$this->handle_duplicates($html_items);
