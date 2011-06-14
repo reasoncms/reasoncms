@@ -167,7 +167,7 @@ class reasonCalendar
 	 * if a key-value pair is passed to the object that is not in this array, it is ignored
 	 * @var array
 	 */
-	var $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','default_view_min_days', 'es_callback');
+	var $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','default_view_min_days','es_callback');
 	/**
 	 * site entity that we are looking at
 	 *
@@ -498,13 +498,17 @@ class reasonCalendar
 		{
 			$test_es = carl_clone($this->es);
 			$test_es->set_num(1);
-			$test_es->limit_tables(array('entity','show_hide'));
-			$test_es->limit_fields();
+			if (empty($this->es_callback)) // since we do not know what is contained in the callback - lets not limit if we have a callback.
+			{
+				$test_es->limit_tables(array('entity','show_hide'));
+				$test_es->limit_fields();
+			}
 			$test_events = $test_es->run_one();
 			if(empty($test_es))
 			{
 				$this->events_exist_in_calendar = false;
 			}
+			
 		}
 		
 		//$this->max_event = $this->es->get_max('last_occurence');
