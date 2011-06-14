@@ -19,6 +19,8 @@
 	 */
 	function mysql_to_rfc_date( $date )
 	{
+		if ($date == "0000-00-00 00:00:00")
+			return null;
 		return carl_date( 'r', get_unix_timestamp( $date ) );
 	}
 	
