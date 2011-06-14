@@ -281,98 +281,6 @@ class ApplicationPageSix extends FormStep {
     function process() {
         parent::process();
         set_applicant_data($this->openid_id, $this);
-//
-//        $document = $this->get_element('personal_statement');
-//
-//        // see if document was uploaded successfully
-//        if (($document->state == 'received' OR $document->state == 'pending') AND file_exists($document->tmp_full_path)) {
-//            $path_parts = pathinfo($document->tmp_full_path);
-//            $suffix = (!empty($path_parts['extension'])) ? $path_parts['extension'] : '';
-//
-//            // if there is no extension/suffix, try to guess based on the MIME type of the file
-//            if (empty($suffix)) {
-//                $type_to_suffix = array(
-//                    'application/msword' => 'doc',
-//                    'application/vnd.ms-excel' => 'xls',
-//                    'application/vns.ms-powerpoint' => 'ppt',
-//                    'text/plain' => 'txt',
-//                    'text/html' => 'html',
-//                );
-//
-//                $type = $document->get_mime_type();
-//                if ($type) {
-//                    $m = array();
-//                    if (preg_match('#^([\w-.]+/[\w-.]+)#', $type, $m)) {
-//                        // strip off any ;charset= crap
-//                        $type = $m[1];
-//                        if (!empty($type_to_suffix[$type]))
-//                            $suffix = $type_to_suffix[$type];
-//                    }
-//                }
-//            }
-//            if (empty($suffix)) {
-//                $suffix = 'unk';
-//                trigger_error('uploaded asset at ' . $document->tmp_full_path . ' had an indeterminate file extension ... assigned to .unk');
-//            }
-//
-//            // set up values for insertion into the DB
-//            // set file size
-//            $this->set_value('file_size', round(filesize($document->tmp_full_path) / 1024));
-//
-//            // set mime type
-//            $this->set_value('mime_type', get_mime_type($document->tmp_full_path, 'application/octet-stream'));
-//
-//            // set file type
-//            $this->set_value('file_type', $suffix);
-//
-//            // move the file
-//            rename($document->tmp_full_path, ASSET_PATH . $this->_id . '.' . $suffix);
-//        }
-//
-//        // make sure to ignore the 'asset' field
-//        $this->_process_ignore[] = 'asset';
-//
-//        // and, call the regular CM process method
-//        parent::process();
-//
-//        $college_plan_1 = $this->get_value('college_plan_1');
-//        $college_plan_2 = $this->get_value('college_plan_2');
-//        $music_audition = $this->get_value('music_audition');
-//        $music_audition_instrument = $this->get_value('music_audition_instrument');
-//        $financial_aid = $this->get_value('financial_aid');
-//        $influences = $this->get_value('influences');
-//        $other_colleges = $this->get_value('other_colleges');
-//
-//
-//        $conviction_history = $this->get_value('conviction_history');
-//        $conviction_history_details = $this->get_value('conviction_history_details');
-//
-//        $hs_discipline_history = $this->get_value('hs_discipline_history');
-//        $hs_discipline_details = $this->get_value('hs_discipline_details');
-//        $honesty_statement = $this->get_value('honesty_statement');
-//
-//        connectDB('admissions_applications_connection');
-//
-//        $qstring = "INSERT INTO `applicants` SET
-//                college_plan_1='" . ((!empty($college_plan_1)) ? addslashes($college_plan_1) : 'NULL') . "',
-//                college_plan_2='" . ((!empty($college_plan_2)) ? addslashes($college_plan_2) : 'NULL') . "',
-//                music_audition='" . ((!empty($music_audition)) ? addslashes($music_audition) : 'NULL') . "',
-//                music_audition_instrument='" . ((!empty($music_audition_instrument)) ? addslashes($music_audition_instrument) : 'NULL') . "',
-//                financial_aid='" . ((!empty($financial_aid)) ? addslashes($financial_aid) : 'NULL') . "',
-//                influences='" . ((!empty($influences)) ? addslashes($influences) : 'NULL') . "',
-//                other_colleges='" . ((!empty($other_colleges)) ? addslashes($other_colleges) : 'NULL') . "',
-//
-//                conviction_history='" . ((!empty($conviction_history)) ? addslashes($conviction_history) : 'NULL') . "',
-//                conviction_history_details='" . ((!empty($conviction_history_details)) ? addslashes($conviction_history_details) : 'NULL') . "',
-//                hs_discipline_history='" . ((!empty($hs_discipline_history)) ? addslashes($hs_discipline_history) : 'NULL') . "',
-//                hs_discipline_details='" . ((!empty($hs_discipline_details)) ? addslashes($hs_discipline_details) : 'NULL') . "',
-//                honesty_statement='" . ((!empty($honesty_statement)) ? addslashes($honesty_statement) : 'NULL') . "',
-//                last_update=CURRENT_TIMESTAMP()";
-//
-//        $qresult = db_query($qstring);
-//
-//        //connect back with the reason DB
-//        connectDB(REASON_DB);
     }
 
     function get_safer_filename($filename) {
@@ -413,33 +321,6 @@ class ApplicationPageSix extends FormStep {
         }
     }
 
-    /**
-     * Alter and/or hide the file name field depending upon the state of the asset
-     *
-     * - if just received, find a safe name, populate the field, and hide it - after the redirect
-     * - if state is "existing" - don't do anything - the field remains editable
-     * - if state is "pending" or "ready" (new) hide the field
-     *
-     */
-//    function pre_error_check_actions() { // {{{
-//        $asset = $this->get_element('personal_statement');
-//
-//        // on an upload, set the file_name field to a safe value
-//        $filename = ($asset->state == 'received') ? $asset->file["name"] : $this->get_value('file_name');
-//        if ($filename) {
-//            $filename = $this->get_safer_filename($filename);
-//            $filename = sanitize_filename_for_web_hosting($filename);
-//            $filename = reason_get_unique_asset_filename($filename, $this->get_value("site_id"), $this->_id);
-//            $this->set_value('file_name', $filename);
-//        }
-    // hide the file_name field unless it is an existing valid asset
-//        if ($asset->state != 'existing')
-//            $this->change_element_type('file_name', 'hidden');
-//        else
-//            $this->add_required('file_name');
-//    }
-// }}}
-
     function post_error_check_actions() { // {{{
         // display the URL of the document or a warning if no doc dir is set up.
         $asset = $this->get_element('personal_statement');
@@ -459,8 +340,6 @@ class ApplicationPageSix extends FormStep {
             $this->add_element('doc_url', 'comment', array('text' => $text));
         }
     }
-
-// }}}
 
     function where_to() {
 //        $refnum = $this->get_value('result_refnum');
