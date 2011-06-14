@@ -32,8 +32,8 @@
 		// force our element to the top immediately with a huge z-index value
 		if (top_element)
 		{
-			element_index = $($this).index(top_element)
-			if (element_index != -1) $($this[element_index]).css('z-index', 999999)
+			element_index = $($this).index(top_element);
+			if (element_index != -1) $($this[element_index]).css('z-index', 999999);
 		}
 		
 		// build zindex - reduce baseline if necessary
