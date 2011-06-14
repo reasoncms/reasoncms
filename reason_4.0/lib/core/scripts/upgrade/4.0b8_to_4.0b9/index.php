@@ -86,6 +86,21 @@ reason_settings.php used in your reason instance. You can copy and paste the fol
  */
 define('REASON_EVENT_GEOLOCATION_ENABLED', true);</textarea><br/><br/>
 </li>
+<li><strong>REASON_MYSQL_SPATIAL_DATA_AVAILABLE</strong><p>You should make sure the setting is defined in the 
+reason_settings.php used in your reason instance. You can copy and paste the following:</p>
+<textarea rows="11" cols="110">
+/**
+ * REASON_MYSQL_SPATIAL_DATA_AVAILABLE
+ *
+ * If you are running MySQL 5, Reason can store location information as binary data in MySQL, and keep
+ * this data up to date using triggers. This is off by default - you should only turn it on if you have
+ * upgraded your database to support this functionality as described in the binary spatial data upgrade
+ * script.
+ *	
+ * If you enable this on a database that does not have this support Reason will crash.
+ */
+define('REASON_MYSQL_SPATIAL_DATA_AVAILABLE', false);</textarea><br/><br/>
+</li>
 <li><strong>REASON_IPINFODB_API_KEY</strong><p>You should make sure the setting is defined in the
 reason_settings.php used in your Reason instance. You can copy and paste the following - if you have 
 (or make) an API key for the api.ipinfodb.com service make sure to add the appropriate key.</p>
@@ -112,14 +127,15 @@ package_settings.php file used in your Reason instance. You can copy and paste t
 define('JQUERY_UI_CSS_URL',JQUERY_HTTP_PATH.'css/smoothness/jquery-ui.css');</textarea>
 </li>
 </ol>
-
-
-
 <h3>Scripts to Run</h3>
 <ul>
 <li><a href="feature.php">Add the feature type to Reason, fix the policy content sorter</a></li>
 <li><a href="event_location.php">Adds location-related fields to event type</a></li>
 <li><a href="misc.php">Makes miscellaneous minor upgrades to Reason</a></li>
+</ul>
+<h3>Scripts to Optionally Run</h3>
+<ul>
+<li><a href="event_binary_data.php">Add binary spatial data field to events to store location data - requires MySQL 5+ and MyISAM tables</a></li>
 </ul>
 </body>
 </html>

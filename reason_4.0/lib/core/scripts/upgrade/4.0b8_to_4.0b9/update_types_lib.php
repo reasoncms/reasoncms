@@ -81,12 +81,17 @@ class updateTypes
 		'crop_style'=>'enum("fill","fit")',
 		'bg_color'=>'varchar(6)'
 		);
+		
 	var $new_event_fields = array(
 		'address'=>'tinytext',
 		'latitude'=>'double',
 		'longitude'=>'double',
 		);
 
+	var $geopoint_fields = array(
+		'geopoint'=>'point NOT NULL'
+		);
+		
 	var $feature_to_image_details = array (
 		'description'=>'Feature to Image',
 		'directionality'=>'bidirectional',
@@ -172,6 +177,144 @@ class updateTypes
 		foreach ($this->new_event_fields as $fname=>$ftype)
 		{
 			$this->add_field_to_entity_table($table, $fname, $ftype);
+		}
+	}
+	
+	function mysql_supports_triggers_and_spatial_data()
+	{
+		$qry = 'SELECT version()';
+		$result = db_query($qry);
+		while ($row = mysql_fetch_assoc($result))
+		{
+			// lets strip everything but numbers and . characters - ignore beta, alpha, etc
+			$version = preg_replace('/[^0-9.]/i','',reset($row));
+			return (version_compare($version, '5.0.2', '>='));
+		}
+		return false;
+	}
+	
+	function lat_and_lon_exist()
+	{
+		$fields = get_fields_by_content_table('event');
+		return (in_array('latitude', $fields) && in_array('longitude', $fields));
+	}
+	
+	function get_insert_trigger_sql()
+	{
+		$sql = "CREATE TRIGGER geopoint_trigger_insert BEFORE INSERT ON event \n";
+		$sql .= "FOR EACH ROW \n";
+		$sql .= "SET new.GEOPOINT = GEOMFROMTEXT( CONCAT(  'POINT(', COALESCE(NEW.LATITUDE,0),  ' ', COALESCE(NEW.LONGITUDE,0),  ')' ) )";
+		return $sql;
+	}
+
+	function get_update_trigger_sql()
+	{
+		$sql = "CREATE TRIGGER geopoint_trigger_update BEFORE UPDATE ON event \n";
+		$sql .= "FOR EACH ROW \n";
+		$sql .= "SET new.GEOPOINT = GEOMFROMTEXT( CONCAT(  'POINT(', COALESCE(NEW.LATITUDE,0),  ' ', COALESCE(NEW.LONGITUDE,0),  ')' ) )";
+		return $sql;	
+	}
+	
+	function has_create_trigger_privs()
+	{
+		return false;
+	}
+	
+	/**
+	 * There are a variety of requirements for this to work:
+	 *
+	 * - MySQL must support spatial data and triggers (version 5.0.2 and above)
+	 * - MySQL user must have privileges to create triggers
+	 * - The event table type must be MyISAM
+	 */
+	function add_event_binary_data($mode, $reason_user_id = NULL)
+	{
+		if($mode != 'run' && $mode != 'test')
+		{
+			trigger_error('$mode most be either "run" or "test"');
+			return;
+		}
+		
+		$this->mode = $mode;
+		
+		if ($this->mysql_supports_triggers_and_spatial_data() && $this->lat_and_lon_exist())
+		{
+			$table = 'event';
+			foreach ($this->geopoint_fields as $fname=>$ftype)
+			{
+				$this->add_field_to_entity_table($table, $fname, $ftype);
+			}
+			
+			$index_name = 'geopoint_index';
+			$exists = false;
+			$qry = 'SHOW INDEX from event';
+			$result = db_query($qry);
+			
+			while ($row = mysql_fetch_assoc($result))
+			{
+				if ($row['Key_name'] == $index_name)
+				{
+					$exists = true;
+					break;
+				}
+			}
+			if ($exists)
+			{
+				echo '<p>Index '.$index_name.' exists - script has probably been run. If you are getting errors on event entity creation, your triggers are probably not correctly setup. Run the following ';
+				echo 'SQL statements from an account that has privileges to create triggers.</p>';
+				$sql1 = $this->get_insert_trigger_sql();
+				$sql2 = $this->get_update_trigger_sql();
+				echo '<pre>';
+				echo $sql1;
+				echo "\n\n";
+				echo $sql2;
+				echo '</pre>';
+			}
+			elseif ($this->mode == 'test')
+			{
+				echo '<p>Would populate geopoint fields for all event entities, create a spatial index called '. $index_name . ', and create database triggers.</p>';
+			}
+			elseif ($this->mode == 'run')
+			{
+				$qry = "UPDATE event SET geopoint = GeomFromText(concat('POINT(',COALESCE(latitude,0),' ',COALESCE(longitude,0),')'))";
+				$result = db_query($qry);
+				echo '<p>Set geopoint values for all event entities</p>';
+				
+				$qry2 = 'CREATE SPATIAL INDEX '.$index_name.' ON event(geopoint)';
+				$result2 = db_query($qry2);
+				echo '<p>Created spatial index ' . $index_name . ' for geopoint column.</p>';
+				
+				// lets attempt to create the triggers - if it fails, spit out the appropriate SQL.
+				$qry3 = $this->get_insert_trigger_sql();
+				$result3 = db_query($qry3, 'could not create insert trigger', false);
+				if (!$result3)
+				{
+					echo '<p>Could not automatically create the insert trigger. Run this SQL as a MySQL user with SUPER or TRIGGER privileges:</p>';
+					echo '<pre>';
+					echo $this->get_insert_trigger_sql();
+					echo '</pre>';
+				}
+				else echo '<p>Created insert trigger</p>';
+				
+				$qry4 = $this->get_update_trigger_sql();
+				$result4 = db_query($qry4, 'could not create update trigger', false);
+				if (!$result4)
+				{
+					echo '<p>Could not automatically create the update trigger. Run this SQL as a MySQL user with SUPER or TRIGGER privileges:</p>';
+					echo '<pre>';
+					echo $this->get_update_trigger_sql();
+					echo '</pre>';
+				}
+				else echo '<p>Created update trigger</p>';
+			}
+		}
+		elseif (!$this->lat_and_lon_exist())
+		{
+			echo '<p>You need to run the event location upgrade script before your can run this script.</p>';
+		}
+		else
+		{
+			echo '<p>You need to upgrade to MySQL 5.0.2 or above before you can run this script.</p>';
 		}
 	}
 	
