@@ -1,5 +1,6 @@
 <?php
 include_once 'application_utils.php';
+
 /**
  * Admissions Application Module
  *
@@ -70,17 +71,11 @@ class ApplicationPageOne extends FormStep {
     var $display_name = 'Enrollment Info';
     var $error_header_text = 'Please check your form.';
 
-
-    function on_first_time() {
-//        $this->add_element('transfer_note', 'comment', array('text' => '<noscript>Hey there!</noscript>'));
-//        $this->add_element('citizenship_note', 'comment', array('text' => '<noscript>Hey there!</noscript>'));
-    }
-
     // style up the form and add comments et al
     function on_every_time() {
         pray($this->actions);
         $this->set_value('submitter_ip', $_SERVER['REMOTE_ADDR']);
-        
+
         $this->show_form = true;
 
         $date = getdate();
@@ -99,11 +94,7 @@ class ApplicationPageOne extends FormStep {
                 $year . 'FA' => 'Fall 2011',
                 $year . 'JT' => 'J-term 2012',
                 $year . 'SP' => 'Spring 2012')));
-        //'comments' => '<em>Show some year logic here</em>'));
-//        } else {
-//            $this->show_form = true;
-//            #######################
-//        }
+
         $this->pre_fill_form();
     }
 
@@ -114,15 +105,13 @@ class ApplicationPageOne extends FormStep {
 
         $url = get_current_url();
         $parts = parse_url($url);
-        $url = $parts['scheme'] . '://' . $parts['host'] . '/openid/?dest_page=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
+        $url = $parts['scheme'] . '://' . $parts['host'] . '/openid/?next=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
 
-//        $txt = '<h3>Hi There!</h3>';
-//        //$txt .= '<p>You are not currently logged in. Luther College students and alumni have access to this form. The contents will be displayed after you login.' . "\n";
-//        $txt .= '<p>To begin or resume your application, please <a href="' . $url . '">log in</a> using an Open ID.</p>';
-//        $txt .= '<div class = "loginlogout">';
-//        $txt .= '<a href="' . $url . '">Log In</a>';
-//        $txt .= '</div>';
-//        return $txt;
+        $txt = '<h3>Hi There!</h3>';
+        $txt .= '<p>To begin or resume your application, please sign in using an
+            <a href="http://openid.net/get-an-openid/what-is-openid/" target="_blank">Open ID</a>.</p>';
+        $txt .= '</div>';
+
         $url = get_current_url();
         try {
             $next_url = $_GET['next'];
@@ -134,12 +123,7 @@ class ApplicationPageOne extends FormStep {
         } else {
             $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php';
         }
-
-        //$parts = parse_url($url);
-        //$url = $parts['scheme'] . '://' . $parts['host'] . '/login/?dest_page=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
-        echo $url;
-
-        echo '<iframe src="https://luthertest2.rpxnow.com/openid/embed?token_url=' . $url . '"
+        return $txt . '<iframe src="https://luthertest2.rpxnow.com/openid/embed?token_url=' . $url . '"
     scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe>';
     }
 
@@ -166,21 +150,6 @@ class ApplicationPageOne extends FormStep {
     function process() {
         parent::process();
         set_applicant_data($this->openid_id, $this);
-
-//        connectDB('admissions_applications_connection');
-//
-//        $qstring = "INSERT INTO `applicants` SET
-//                submitter_ip='" . addslashes($this->get_value('submitter_ip')) . "',
-//                open_id='" . addslashes($this->get_value('open_id')) . "',
-//                creation_date='" . addslashes($this->get_value('creation_date')) . "',
-//		student_type='" . addslashes($this->get_value('student_type')) . "',
-//		enrollment_term='" . addslashes($this->get_value('enrollment_term')) . "',
-//		citizenship_status='" . addslashes($this->get_value('citizenship_status')) . "' ";
-//
-//        $qresult = db_query($qstring);
-//
-//        //connect back with the reason DB
-//        connectDB(REASON_DB);
     }
 
     function run_error_checks() {
@@ -190,7 +159,5 @@ class ApplicationPageOne extends FormStep {
             $this->set_error('citizenship_status', 'International Students - Please apply using the <a href="http://www.commonapp.org" target=_blank>Common App</a>.');
         }
     }
-
 }
-
 ?>
