@@ -475,8 +475,9 @@ class ApplicationPageTwo extends FormStep {
         echo '</div>' . "\n";
     }
 
-       function process() {
+    function process() {
         parent::process();
+        set_applicant_data($this->openid_id, $this);
 
 //        connectDB('admissions_applications_connection');
 //
