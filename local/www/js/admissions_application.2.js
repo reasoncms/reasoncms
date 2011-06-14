@@ -127,6 +127,8 @@ $(document).ready(function() {
         toggle_parent_college();
     });
 
+    perculate_siblings_up();
+
     $('#removeSibling').css('display', 'none'); // did this instead of hide because hide was removing some other css from the button
     for (i=2; i<=5; i += 1)
     {
@@ -297,6 +299,39 @@ $(document).ready(function() {
         toggle_hs_discipline();
     });
 });
+function perculate_siblings_up() {
+    // moves siblings up if the applicant has enterred blank siblings between
+    //  non blank siblings
+    blank_q = [];
+    for (i=2; i<=5; i += 1)
+    {
+        if (has_data('[id^=sibling'+i+']') && blank_q[0] != null) {
+            move_sibling_data(i, blank_q.shift());
+            blank_q.push(i);
+        } else if (! has_data('[id^=sibling'+i+']')) {
+            blank_q.push(i);
+        }
+    }
+}
+
+function move_sibling_data(from_sibling, to_sibling) {
+    // move sibling data from from_sibling to to_sibling and clear out the from_sibling
+    $('#sibling_'+to_sibling+'_first_nameElement').val($('#sibling_'+from_sibling+'_first_nameElement').val());
+    $('#sibling_'+from_sibling+'_first_nameElement').val('');
+    $('#sibling_'+to_sibling+'_last_nameElement').val($('#sibling_'+from_sibling+'_last_nameElement').val());
+    $('#sibling_'+from_sibling+'_last_nameElement').val('');
+    $('#sibling_'+to_sibling+'_ageElement').val($('#sibling_'+from_sibling+'_ageElement').val());
+    $('#sibling_'+from_sibling+'_ageElement').val('');
+    $('#sibling_'+to_sibling+'_gradeElement').val($('#sibling_'+from_sibling+'_gradeElement').val());
+    $('#sibling_'+from_sibling+'_gradeElement').val('');
+    $('#sibling_'+to_sibling+'_collegeElement').val($('#sibling_'+from_sibling+'_collegeElement').val());
+    $('#sibling_'+from_sibling+'_collegeElement').val('');
+    $('#radio_sibling_'+to_sibling+'_relation_0').attr('checked', $('#radio_sibling_'+from_sibling+'_relation_0').attr('checked'));
+    $('#radio_sibling_'+from_sibling+'_relation_0').attr('checked', false);
+    $('#radio_sibling_'+to_sibling+'_relation_1').attr('checked', $('#radio_sibling_'+from_sibling+'_relation_1').attr('checked'));
+    $('#radio_sibling_'+from_sibling+'_relation_1').attr('checked', false);
+}
+
 function has_data(selector) {
     //alert(selector);
     return_val = false;
