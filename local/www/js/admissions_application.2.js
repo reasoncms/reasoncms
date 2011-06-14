@@ -264,6 +264,8 @@ $(document).ready(function() {
         toggle_other_activity_details();
     });
     
+    perculate_activity_up();
+    
     $('#removeActivity').css('display', 'none'); // did this instead of hide because hide was removing some other css from the button
     $('[id^=activity2]').hide();
     $('[id^=activity3]').hide();
@@ -274,6 +276,7 @@ $(document).ready(function() {
     $('[id^=activity8]').hide();
     $('[id^=activity9]').hide();
     $('[id^=activity10]').hide();
+    
 
     $('#addActivity').click(function(){
         add_activity();
@@ -331,6 +334,42 @@ function move_sibling_data(from_sibling, to_sibling) {
     $('#radio_sibling_'+to_sibling+'_relation_1').attr('checked', $('#radio_sibling_'+from_sibling+'_relation_1').attr('checked'));
     $('#radio_sibling_'+from_sibling+'_relation_1').attr('checked', false);
 }
+
+function perculate_activity_up() {
+    // moves activity up if the applicant has enterred blank activity between
+    //  non blank activity
+    blank_q = [];
+    for (i=2; i<=10; i += 1)
+    {
+        if (has_data('[id^=activity'+i+']') && blank_q[0] != null) {
+            move_activity_data(i, blank_q.shift());
+            blank_q.push(i);
+        } else if (! has_data('[id^=activity'+i+']')) {
+            blank_q.push(i);
+        }
+    }
+}
+
+function move_activity_data(from_activity, to_activity) {
+    // move sibling data from from_activity to to_activity and clear out the from_activity
+    $('#activity_'+to_activity+'_Element').val($('#activity_'+from_activity+'_Element').val());
+    $('#activity_'+from_activity+'_Element').val('1');
+    $('#activity_'+to_activity+'_otherElement').val($('#activity_'+from_activity+'_otherElement').val());
+    $('#activity_'+from_activity+'_otherElement').val('');
+    $('#activity_'+to_activity+'_honorsElement').val($('#activity_'+from_activity+'_honorsElement').val());
+    $('#activity_'+from_activity+'_honorsElement').val('');
+    $('#checkbox_activity_'+to_activity+'_participation_0').attr('checked', $('#checkbox_activity_'+from_activity+'_participation_0').attr('checked'));
+    $('#checkbox_activity_'+from_activity+'_participation_0').attr('checked', false);
+    $('#checkbox_activity_'+to_activity+'_participation_1').attr('checked', $('#checkbox_activity_'+from_activity+'_participation_1').attr('checked'));
+    $('#checkbox_activity_'+from_activity+'_participation_1').attr('checked', false);
+    $('#checkbox_activity_'+to_activity+'_participation_2').attr('checked', $('#checkbox_activity_'+from_activity+'_participation_2').attr('checked'));
+    $('#checkbox_activity_'+from_activity+'_participation_2').attr('checked', false);
+    $('#checkbox_activity_'+to_activity+'_participation_3').attr('checked', $('#checkbox_activity_'+from_activity+'_participation_3').attr('checked'));
+    $('#checkbox_activity_'+from_activity+'_participation_3').attr('checked', false);
+    $('#checkbox_activity_'+to_activity+'_participation_4').attr('checked', $('#checkbox_activity_'+from_activity+'_participation_4').attr('checked'));
+    $('#checkbox_activity_'+from_activity+'_participation_4').attr('checked', false);
+}
+
 
 function has_data(selector) {
     //alert(selector);
