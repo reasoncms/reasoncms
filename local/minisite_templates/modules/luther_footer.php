@@ -38,12 +38,14 @@
 				//luther_social_media();
 				echo '</footer>'."\n";
 				
-				echo '<script src="/javascripts/jquery-1.4.2.min.js" type="text/javascript"></script>'."\n";
+				echo '<script src="/javascripts/jquery-1.6.1.min.js" type="text/javascript"></script>'."\n";
 				//echo '<script src="/javascripts/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>'."\n";
 				echo '<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>'."\n";
 				echo '<script src="/javascripts/jquery.tmpl.js" type="text/javascript"></script>'."\n";
 				echo '<script src="/javascripts/jquery.metadata.js" type="text/javascript"></script>'."\n";
 				echo '<script src="/javascripts/tablesorter.min.js" type="text/javascript"></script>'."\n";
+				echo '<script src="/javascripts/jquery.hoverIntent.min.js" type="text/javascript"></script>'."\n";
+				echo '<script src="/javascripts/cluetip/jquery.cluetip.js" type="text/javascript"></script>'."\n";
 				echo '<script src="/javascripts/jquery.init.js" type="text/javascript"></script>'."\n";
 				
 			}

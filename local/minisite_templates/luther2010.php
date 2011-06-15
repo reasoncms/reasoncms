@@ -542,6 +542,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '<meta http-equiv="X-UA-Compatible" content="IE=edge" />'."\n"; 
 		echo '<link rel="stylesheet" type="text/css" href="/reason/css/modules.css" />'."\n";
 		echo '<link href="/javascripts/highslide/highslide.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
+		echo '<link href="/javascripts/cluetip/jquery.cluetip.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
 		echo '<link href="/stylesheets/luther2010/master.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
 		echo '<link href="/stylesheets/luther2010/reason.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";  
   		echo '<script src="/javascripts/modernizr-1.1.min.js" type="text/javascript"></script>'."\n";

@@ -27,6 +27,60 @@
 		var $sync_vals = array();
 		var $registration_page_types = array('event_registration','event_signup',);
 		
+		var $statesAP = array(
+                       'AL' => 'Ala.',
+                       'AK' => 'Alaska',
+                       'AZ' => 'Ariz.',
+                       'AR' => 'Ark.',
+                       'CA' => 'Calif.',
+                       'CO' => 'Colo.',
+                       'CT' => 'Conn.',
+                       'DE' => 'Del.',
+                       'DC' => 'D.C.',
+                       'FL' => 'Fla.',
+                       'GA' => 'Ga.',
+                       'HI' => 'Hawaii',
+                       'ID' => 'Idaho',
+                       'IL' => 'Ill.',
+                       'IN' => 'Ind.',
+                       'IA' => 'Iowa',
+                       'KS' => 'Kan.',
+                       'KY' => 'Ky.',
+                       'LA' => 'La.',
+                       'ME' => 'Maine',
+                       'MD' => 'Md.',
+                       'MA' => 'Mass.',
+                       'MI' => 'Mich.',
+                       'MN' => 'Minn.',
+                       'MS' => 'Miss.',
+                       'MO' => 'Mo.',
+                       'MT' => 'Mont.',
+                       'NE' => 'Neb.',
+                       'NV' => 'Nev.',
+                       'NH' => 'N.H.',
+                       'NJ' => 'N.J.',
+                       'NM' => ' N.M.',
+                       'NY' => 'N.Y.',
+                       'NC' => 'N.C.',
+                       'ND' => ' N.D.',
+                       'OH' => 'Ohio',
+                       'OK' => ' Okla.',
+                       'OR' => 'Ore.',
+                       'PA' => 'Pa.',
+                       'RI' => 'R.I.',
+                       'SC' => 'S.C.',
+                       'SD' => 'S.D.',
+                       'TN' => 'Tenn.',
+                       'TX' => 'Texas',
+                       'UT' => 'Utah',
+                       'VT' => 'Vt.',
+                       'VA' => 'Va.',
+                       'WA' => 'Wash.',
+                       'WV' => 'W.Va.',
+                       'WI' => 'Wis.',
+                       'WY' => 'Wyo.',
+		);
+		
 		function init_head_items()
 		{
 			$this->head_items->add_javascript(JQUERY_URL, true); // uses jquery - jquery should be at top
@@ -239,7 +293,13 @@
 			$this->add_element('this_event_is','hidden');
 			$this->add_element('this_event_is_comment','hidden');
 			
-			
+			// strip out stored local clueTip information from content
+			if ($is_sport)
+			{
+				$c = $this->get_value('content');
+				$c = preg_replace("/<div id=\"athlete\d+\">(.|\s)*/", "", $c);
+				$this->set_value('content', $c);
+			}
 			//pray($this);
 			$this->set_event_field_order();
 		} // }}}
@@ -356,22 +416,43 @@
 			{
 				$url = $site_id->get_value('base_url') . "roster/";
 				$c = $this->get_value('content');
+				$ct = "";   // appended cluetip information
 				foreach ($players as $k=>$v)
 				{
 					$pv = $v->get_values();
-					print_r ($pv);
-					if (!preg_match("/<a href=.*?>".$pv['athlete_first_name']."\s+".$pv['athlete_last_name']."<\/a>/", $c))
-						
+					//print_r ($pv);
+					if (!preg_match("/<a href=.*?>".$pv['athlete_first_name']."\s+".$pv['athlete_last_name']."<\/a>/", $c))	
 					{
+						
 						//$image = get_entity_by_id($pv['image_id']);
 						//$url = WEB_PHOTOSTOCK . $pv['image_id'] . '.' . $image['image_type'];
 						//$c = preg_replace("|".$pv['athlete_first_name']."\s+".$pv['athlete_last_name']."|",
 						//"<a href=".$url.">".$pv['athlete_first_name']." ".$pv['athlete_last_name']."</a>", $c, 1);
 						$c = preg_replace("|".$pv['athlete_first_name']."\s+".$pv['athlete_last_name']."|",
-						"<a href=".$url."?id=".$pv['id'].">".$pv['athlete_first_name']." ".$pv['athlete_last_name']."</a>", $c, 1);
+						//"<a href=".$url."?id=".$pv['id'].">".$pv['athlete_first_name']." ".$pv['athlete_last_name']."</a>", $c, 1);
+						"<a href=\"".$url."?id=".$pv['id']. "\" class=\"cluetip_athlete\" title=\"". $pv['athlete_first_name']." ".$pv['athlete_last_name'] ."\" rel=\"#athlete".$pv['id']."\">".$pv['athlete_first_name']." ".$pv['athlete_last_name']."</a>", $c, 1);
+						
+
+					}
+					//if (preg_match("/<a href=\"".$url."\?id=".$pv['id']."\"/", $c))
+					if (preg_match("/id=".$pv['id']."/", $c))
+					{
+						$ct .= "<div id=\"athlete".$pv['id']."\">";
+						$ct .= "<p class=\"athlete_position_event\">". $pv['athlete_position_event'];
+						if (!empty($pv['image_id']))
+						{
+							$image = get_entity_by_id($pv['image_id']);
+							$thumb = WEB_PHOTOSTOCK . $pv['image_id'] . '_tn.' . $image['image_type'];
+							$ct .= "<img class=\"athlete_image\" src=\"" . $thumb . "\" />";
+						}
+						$ct .= "</p>";					
+						$ct .= "<p class=\"athlete_class_year\">". $pv['athlete_class_year']."</p>";
+						$ct .= "<p class=\"athlete_hometown\">". $pv['athlete_hometown_city'].", ". $this->statesAP[$pv['athlete_hometown_state']]."</p>";
+						$ct .= "<p class=\"athlete_high_school\">". $pv['athlete_high_school']."</p>";		
+						$ct .= "</div>";
 					}
 				}
-				$this->set_value('content', $c);
+				$this->set_value('content', $c . $ct);
 			}
 			
 		}

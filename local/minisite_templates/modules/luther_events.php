@@ -55,20 +55,14 @@ class LutherEventsModule extends EventsModule
 			echo '</p>'."\n";
 	
 			if ($e->get_value('content'))
-				echo '<div class="eventContent">'.$e->get_value( 'content' ).'</div>'."\n";
-			//$this->show_repetition_info($e);
-			//if(substr($e->get_value( 'datetime' ), 11) != '00:00:00')
-			//	echo '<p class="time"><strong>Time:</strong> '.prettify_mysql_datetime( $e->get_value( 'datetime' ), "g:i a" )."\n";
-			//$this->show_duration($e);
+			{
+				echo '<div class="eventContent">'."\n";
+				echo $e->get_value( 'content' );
+				echo '</div>'."\n";
+			}
 			
-			//if ($e->get_value('sponsor'))
-			//	echo '<p class="sponsor"><strong>Sponsored by:</strong> '.$e->get_value('sponsor').'</p>'."\n";
-			//$this->show_contact_info($e);
-			//if($this->show_icalendar_links)
-			//	$this->show_item_export_link($e);
-			//$this->show_dates($e);
 			if ($e->get_value('url'))
-				echo '<div class="eventUrl"><strong>For more information, visit:</strong> <a href="'.$e->get_value( 'url' ).'">'.$e->get_value( 'url' ).'</a>.</div>'."\n";
+				echo '<div class="eventUrl">For more information, visit: <a href="'.$e->get_value( 'url' ).'">'.$e->get_value( 'url' ).'</a>.</div>'."\n";
 			//$this->show_back_link();
 			//$this->show_event_categories($e);
 			//$this->show_event_audiences($e);
