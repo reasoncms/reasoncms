@@ -314,7 +314,6 @@ class ApplicationPageTwo extends FormStep {
     }
 
     function process() {
-        parent::process();
         set_applicant_data($this->openid_id, $this);
     }
 }
