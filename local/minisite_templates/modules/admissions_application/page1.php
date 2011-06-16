@@ -1,5 +1,4 @@
 <?php
-
 include_once 'application_utils.php';
 
 /**
@@ -75,29 +74,57 @@ class ApplicationPageOne extends FormStep {
         $this->show_form = true;
 
         $date = getdate();
-        $jt_year = $date['year'];
-        $sp_year = $date['year'];
-        $fa_year = $date['year'];
-
-//        $jt_deadline = date($date['year']"")
-
-        if ($date['mon'] <= 3) {
-            $year = $date['year'];
-        } else {
-            $year = $date['year'] + 1;
-        }
+        
+        
+        
+        $jt_deadline = date($date['year']."-12-15");
+        $sp_deadline1 = date($date['year']."-01-15");
+        $fa_deadline1 = date($date['year']."-08-01");
+        
+        if ($date > $jt_deadline) { $jt_year = $date['year']+1; } else { $jt_year = $date['year']; }
+        if ($date > $sp_deadline1) { $sp_year = $date['year']+1; } else { $sp_year = $date['year']; }
+        if ($date > $fa_deadline1) { $fa_year = $date['year']+1; } else { $fa_year = $date['year']; }
+       
+        
+       // if ($date['mon'] <= 3) {
+        //    $year = $date['year'];
+        //} else {
+        //    $year = $date['year'] + 1;
+       // }
 
         $this->change_element_type('enrollment_term', 'radio_no_sort', array(
             'options' => array(
-                $year . 'FA' => 'Fall ' . $year,
-                $year . 'JT' => 'J-term 2012',
-                $year . 'SP' => 'Spring 2012')));
+                $jt_year . 'FA' => 'Fall ' . $jt_year, 
+                $sp_year . 'JT' => 'J-term ' . $sp_year,
+                $fa_year . 'SP' => 'Spring '.$fa_year)));
 
         $this->pre_fill_form();
     }
 
     function no_show_form() {
-        echo(check_login());
+        echo(check_login(get_current_url(), $this));
+//        $url = get_current_url();
+//        $parts = parse_url($url);
+//        $url = $parts['scheme'] . '://' . $parts['host'] . '/openid/?next=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
+//
+//        $txt = '<h3>Hi There!</h3>';
+//        $txt .= '<p>To begin or resume your application, please sign in using an
+//            <a href="http://openid.net/get-an-openid/what-is-openid/" target="_blank">Open ID</a>.</p>';
+//        $txt .= '</div>';
+//
+//        $url = get_current_url();
+//        try {
+//            $next_url = $_GET['next'];
+//        } catch (Exception $e) {
+//            $next_url = '';
+//        }
+//        if ($url) {
+//            $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php?next=' . $url;
+//        } else {
+//            $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php';
+//        }
+//        return $txt . '<iframe src="https://luthertest2.rpxnow.com/openid/embed?token_url=' . $url . '"
+//    scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe>';
     }
 
     function pre_show_form() {
@@ -131,7 +158,5 @@ class ApplicationPageOne extends FormStep {
             $this->set_error('citizenship_status', 'International Students - Please apply using the <a href="http://www.commonapp.org" target=_blank>Common App</a>.');
         }
     }
-
 }
-
 ?>
