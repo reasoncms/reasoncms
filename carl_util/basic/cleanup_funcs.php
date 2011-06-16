@@ -238,6 +238,18 @@
 	{
 		return prettify_mysql_datetime($val.'-01', $format);
 	} // }}}
+	/**
+	 * Turn a value into a boolean
+	 * @param mixed $val The value to coerce
+	 * @param NULL $dummy a dummy second value so this can be used with
+	 *                    cleanup tools
+	 * @return boolean
+	 */
+	function turn_into_boolean($val, $dummy = NULL) //{{{
+	{
+		settype($val, 'boolean');
+		return $val;
+	} // }}}
 
 	// val = value to sanitize
 	// array (array('pattern' => $regexp, 'replace' => '_'))
