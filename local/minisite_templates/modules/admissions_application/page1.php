@@ -64,8 +64,6 @@ class ApplicationPageOne extends FormStep {
                 'resident' => 'Permanent Resident',
                 'not a citizen' => 'Not a U.S. citizen or permanent resident')
         ),
-        'submitter_ip' => 'hidden',
-        'creation_date' => 'hidden'
     );
     var $required = array('student_type', 'enrollment_term', 'citizenship_status');
     var $display_name = 'Enrollment Info';
@@ -73,9 +71,6 @@ class ApplicationPageOne extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
-        pray($this->actions);
-        $this->set_value('submitter_ip', $_SERVER['REMOTE_ADDR']);
-
         $this->show_form = true;
 
         $date = getdate();
@@ -91,7 +86,7 @@ class ApplicationPageOne extends FormStep {
 
         $this->change_element_type('enrollment_term', 'radio_no_sort', array(
             'options' => array(
-                $year . 'FA' => 'Fall 2011',
+                $year . 'FA' => 'Fall ' . $year,
                 $year . 'JT' => 'J-term 2012',
                 $year . 'SP' => 'Spring 2012')));
 
@@ -99,32 +94,7 @@ class ApplicationPageOne extends FormStep {
     }
 
     function no_show_form() {
-        echo '<br /> session name: ' . $this->sess->sess_name;
-        echo "<br /> session id: " . session_id();
-        echo '<br>' . $this->openid_id;
-
-        $url = get_current_url();
-        $parts = parse_url($url);
-        $url = $parts['scheme'] . '://' . $parts['host'] . '/openid/?next=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
-
-        $txt = '<h3>Hi There!</h3>';
-        $txt .= '<p>To begin or resume your application, please sign in using an
-            <a href="http://openid.net/get-an-openid/what-is-openid/" target="_blank">Open ID</a>.</p>';
-        $txt .= '</div>';
-
-        $url = get_current_url();
-        try {
-            $next_url = $_GET['next'];
-        } catch (Exception $e) {
-            $next_url = '';
-        }
-        if ($url) {
-            $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php?next=' . $url;
-        } else {
-            $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php';
-        }
-        return $txt . '<iframe src="https://luthertest2.rpxnow.com/openid/embed?token_url=' . $url . '"
-    scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe>';
+        echo(check_login(get_current_url(), $this));
     }
 
     function pre_show_form() {
@@ -148,7 +118,6 @@ class ApplicationPageOne extends FormStep {
     }
 
     function process() {
-        parent::process();
         set_applicant_data($this->openid_id, $this);
     }
 

@@ -407,6 +407,10 @@ class ApplicationPageFive extends FormStep {
         $this->set_value('activity_1', 'foosball');
     }
 
+    function no_show_form() {
+        echo(check_login(get_current_url(), $this));
+    }
+
     function pre_fill_form() {
         // check if the open_id has is set
         $o_id = check_open_id($this);

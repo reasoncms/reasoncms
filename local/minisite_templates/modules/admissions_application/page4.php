@@ -36,7 +36,7 @@ class ApplicationPageFour extends FormStep {
         ),
         'hs_name' => array(
             'type' => 'text',
-            'display_name' => 'Name',
+            'display_name' => 'Name, City, State (i.e. IA)',
         ),
 //        'hs_address' => array(
 //            'type' => 'text',

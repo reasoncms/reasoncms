@@ -292,6 +292,10 @@ class ApplicationPageTwo extends FormStep {
         $this->move_element('ssn_group', 'after', 'date_of_birth');
         $this->pre_fill_form();
     }
+    
+    function no_show_form() {
+        echo(check_login(get_current_url(), $this));
+    }
 
      function pre_fill_form() {
         // check if the open_id has is set

@@ -756,6 +756,10 @@ class ApplicationPageThree extends FormStep {
             $this->show_form = false;
         }
     }
+
+    function no_show_form() {
+        echo(check_login(get_current_url(), $this));
+    }
     
     // style up the form and add comments et al
     function on_every_time() {
