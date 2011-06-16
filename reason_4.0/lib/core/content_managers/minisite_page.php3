@@ -151,7 +151,8 @@
 			$roots = $this->root_node();
 			if( $this->_id == $this->get_value( 'parent_id' ) || ($this->allow_creation_of_root_node && empty($roots) ) )
 			{
-				$this->change_element_type( 'url_fragment', 'hidden' );
+				if($this->_id == $this->get_value( 'parent_id' ))
+					$this->change_element_type( 'url_fragment', 'hidden' );
 				if(!$this->allow_creation_of_root_node)
 				{
 					$this->change_element_type( 'parent_id', 'hidden' );
