@@ -42,12 +42,10 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
         $this->controller->set_session_class('Session_PHP');
         $this->controller->set_session_name('REASON_SESSION');
         $this->controller->set_data_context('admissions_application');
-        $this->controller->show_back_button = true;
+        $this->controller->show_back_button = false;
         $this->controller->clear_form_data_on_finish = true;
-        $this->controller->allow_arbitrary_start = true;
-        $this->controller->default_back_text = 'Yahoo';
-        $this->controller->default_next_text = 'Yahoo';
-        //*
+        $this->controller->allow_arbitrary_start = false;
+        
         $forms = array(
             'ApplicationPageOne' => array(
                 'next_steps' => array(
@@ -62,6 +60,9 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             ),
             'ApplicationPageTwo' => array(
                 'next_steps' => array(
+                    'ApplicationPageOne' => array(
+                        'label' => 'Previous',
+                    ),
                     'ApplicationPageThree' => array(
                         'label' => 'Next',
                     ),
@@ -69,10 +70,12 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
                 'step_decision' => array(
                     'type' => 'user',
                 ),
-                'back_button_text' => 'Previous',
             ),
             'ApplicationPageThree' => array(
                 'next_steps' => array(
+                    'ApplicationPageTwo' => array(
+                        'label' => 'Previous',
+                    ),
                     'ApplicationPageFour' => array(
                         'label' => 'Next',
                     ),
@@ -80,10 +83,12 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
                 'step_decision' => array(
                     'type' => 'user',
                 ),
-                'back_button_text' => 'Previous',
             ),
             'ApplicationPageFour' => array(
-                'next_steps' => array(                    
+                'next_steps' => array(
+                    'ApplicationPageThree' => array(
+                        'label' => 'Previous',
+                    ),
                     'ApplicationPageFive' => array(
                         'label' => 'Next',
                     ),
@@ -91,10 +96,12 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
                 'step_decision' => array(
                     'type' => 'user',
                 ),
-                'back_button_text' => 'Previous',
             ),
             'ApplicationPageFive' => array(
                 'next_steps' => array(
+                    'ApplicationPageFour' => array(
+                        'label' => 'Previous',
+                    ),
                     'ApplicationPageSix' => array(
                         'label' => 'Next',
                     ),
@@ -102,13 +109,16 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
                 'step_decision' => array(
                     'type' => 'user',
                 ),
-                'back_button_text' => 'Previous',
             ),
             'ApplicationPageSix' => array(
-                'back_button_text' => 'Previous',
+                'next_steps' => array(
+                'ApplicationPageFive' => array(
+                        'label' => 'Previous',
+                ),
                 'final_step' => true,
                 'final_button_text' => 'Submit Your Application',
-            ),
+                )
+            )
         );
         $this->controller->add_forms($forms);
         $this->controller->init();
@@ -137,6 +147,7 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
      */
     function init($args = array()) { // {{{
         parent::init($args);
+//        $this->actions = array_reverse($this->actions, true);
         $url = get_current_url();
         $parts = parse_url($url);
         $url = $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
@@ -147,7 +158,7 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             header("Location: " . $url);
             return;
         }
-
+        
         if ($head_items = & $this->get_head_items()) {
             $head_items->add_stylesheet('/reason/jquery-ui-1.8.12.custom/css/redmond/jquery-ui-1.8.12.custom.css');
             $head_items->add_stylesheet('/reason/css/giftform.css');
