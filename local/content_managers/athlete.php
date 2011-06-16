@@ -107,7 +107,8 @@ include_once INCLUDE_PATH.'../reason_package_local/disco/plasmature/types/athlet
 			}
 				
 			if ($site_name == 'sport_basketball_men' || $site_name == 'sport_football_men' ||
-				$site_name == 'sport_basketball_women' || $site_name == 'sport_volleyball_women')
+				$site_name == 'sport_basketball_women' || $site_name == 'sport_volleyball_women' ||
+				$site_name == 'sport_soccer_men' || $site_name == 'sport_soccer_women')
 			{
 				$this->change_element_type('athlete_height', 'hidden');
 				$h = $this->get_value('athlete_height');
@@ -124,7 +125,8 @@ include_once INCLUDE_PATH.'../reason_package_local/disco/plasmature/types/athlet
 				$this->change_element_type('athlete_height', 'hidden');
 			}
 
-			if ($site_name == 'sport_football_men' || $site_name == 'sport_wrestling_men')
+			if ($site_name == 'sport_football_men' || $site_name == 'sport_wrestling_men' ||
+				$site_name == 'sport_soccer_men')
 			{
 				$this->set_display_name('athlete_weight', 'Weight');
 			}
