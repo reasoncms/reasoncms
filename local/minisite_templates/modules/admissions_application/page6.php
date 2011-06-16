@@ -256,6 +256,8 @@ class ApplicationPageSix extends FormStep {
     function on_every_time() {
         $this->change_element_type('college_plan_1', 'select', array('options' => $this->majors_array));
         $this->change_element_type('college_plan_2', 'select', array('options' => $this->majors_array));
+
+        $this->pre_fill_form();
     }
 
     function no_show_form() {

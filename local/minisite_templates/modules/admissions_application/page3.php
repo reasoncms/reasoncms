@@ -783,6 +783,8 @@ class ApplicationPageThree extends FormStep {
         $this->move_element('sibling_4_age_group', 'before', 'sibling_4_college');
         $this->move_element('sibling_5_name_group', 'after', 'sibling_5_relation');
         $this->move_element('sibling_5_age_group', 'before', 'sibling_5_college');
+
+        $this->pre_fill_form();
     }
 
     function pre_show_form() {

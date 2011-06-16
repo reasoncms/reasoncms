@@ -239,6 +239,8 @@ class ApplicationPageFour extends FormStep {
             $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
         }
         $this->move_element('college_button_group', 'after', 'college_3_name');
+
+        $this->pre_fill_form();
      }
 
     // style up the form and add comments et al

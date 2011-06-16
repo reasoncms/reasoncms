@@ -404,7 +404,8 @@ class ApplicationPageFive extends FormStep {
         $this->change_element_type('activity_9_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
         $this->change_element_type('activity_10', 'select_no_sort', array('options' => $this->activities_array));
         $this->change_element_type('activity_10_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->set_value('activity_1', 'foosball');
+
+        $this->pre_fill_form();
     }
 
     function no_show_form() {
