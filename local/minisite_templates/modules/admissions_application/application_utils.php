@@ -15,6 +15,30 @@ function check_open_id(&$the_form) {
     }
 }
 
+function check_login($url, &$the_form) {
+    $parts = parse_url($url);
+    $url = $parts['scheme'] . '://' . $parts['host'] . '/openid/?next=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
+
+    $txt = '<h3>Hi There!</h3>';
+    $txt .= '<p>To begin or resume your application, please sign in using an
+            <a href="http://openid.net/get-an-openid/what-is-openid/" target="_blank">Open ID</a>.</p>';
+    $txt .= '</div>';
+
+    $url = get_current_url();
+    try {
+        $next_url = $_GET['next'];
+    } catch (Exception $e) {
+        $next_url = '';
+    }
+    if ($url) {
+        $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php?next=' . $url;
+    } else {
+        $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php';
+    }
+    return $txt . '<iframe src="https://luthertest2.rpxnow.com/openid/embed?token_url=' . $url . '"
+    scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe>';
+}
+
 function get_applicant_data($openid, &$the_form) {
     echo '<br />openid: ' . $openid . '<br />';
     connectDB('admissions_applications_connection');
@@ -24,7 +48,10 @@ function get_applicant_data($openid, &$the_form) {
     $results = db_query($qstring);
 
     if (mysql_num_rows($results) < 1) {
-        $qstring = "INSERT INTO `applicants` (`open_id`)  VALUES ('" . addslashes($openid) . "'); ";
+        //
+        //$qstring = "INSERT INTO `applicants` (`open_id`)  VALUES ('" . addslashes($openid) . "'); ";
+        $qstring = "INSERT INTO `applicants` (`open_id`, `creation_date`,  `submitter_ip`)
+            VALUES ('" . addslashes($openid) . "', 'NOW', '" . $_SERVER['REMOTE_ADDR'] . "'); ";
         $results = mysql_query($qstring) or die(mysql_error());
         $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
         $results = db_query($qstring);
@@ -48,7 +75,8 @@ function set_applicant_data($openid, &$the_form) {
     $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
     $results = db_query($qstring);
     if (mysql_num_rows($results) < 1) {
-        $qstring = "INSERT INTO `applicants` (`open_id`)  VALUES ('" . addslashes($openid) . "'); ";
+        $qstring = "INSERT INTO `applicants` (`open_id`, `creation_date`, `last_update`, `submitter_ip`)
+            VALUES ('" . addslashes($openid) . "', 'CURRENT_TIMESTAMP', 'CURRENT_TIMESTAMP', '" . $_SERVER['REMOTE_ADDR'] . "'); ";
         $results = mysql_query($qstring) or die(mysql_error());
         $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
         $results = db_query($qstring);
