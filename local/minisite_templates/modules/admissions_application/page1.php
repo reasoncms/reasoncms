@@ -1,4 +1,5 @@
 <?php
+
 include_once 'application_utils.php';
 
 /**
@@ -77,7 +78,7 @@ class ApplicationPageOne extends FormStep {
         $jt_year = $date['year'];
         $sp_year = $date['year'];
         $fa_year = $date['year'];
-        
+
 //        $jt_deadline = date($date['year']"")
 
         if ($date['mon'] <= 3) {
@@ -96,7 +97,7 @@ class ApplicationPageOne extends FormStep {
     }
 
     function no_show_form() {
-        echo(check_login(get_current_url(), $this));
+        echo(check_login());
     }
 
     function pre_show_form() {
@@ -130,5 +131,7 @@ class ApplicationPageOne extends FormStep {
             $this->set_error('citizenship_status', 'International Students - Please apply using the <a href="http://www.commonapp.org" target=_blank>Common App</a>.');
         }
     }
+
 }
+
 ?>

@@ -234,6 +234,10 @@ class ApplicationPageFour extends FormStep {
     var $display_name = 'Education';
     var $error_header_text = 'Please check your form.';
 
+    function no_show_form() {
+        echo(check_login());
+    }
+
      function on_every_time() {
         foreach ($this->element_group_info as $name => $info) {
             $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);

@@ -261,7 +261,7 @@ class ApplicationPageSix extends FormStep {
     }
 
     function no_show_form() {
-        echo(check_login(get_current_url(), $this));
+        echo(check_login());
     }
     
     function pre_fill_form() {
