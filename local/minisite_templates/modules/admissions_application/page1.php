@@ -97,28 +97,6 @@ class ApplicationPageOne extends FormStep {
 
     function no_show_form() {
         echo(check_login(get_current_url(), $this));
-//        $url = get_current_url();
-//        $parts = parse_url($url);
-//        $url = $parts['scheme'] . '://' . $parts['host'] . '/openid/?next=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
-//
-//        $txt = '<h3>Hi There!</h3>';
-//        $txt .= '<p>To begin or resume your application, please sign in using an
-//            <a href="http://openid.net/get-an-openid/what-is-openid/" target="_blank">Open ID</a>.</p>';
-//        $txt .= '</div>';
-//
-//        $url = get_current_url();
-//        try {
-//            $next_url = $_GET['next'];
-//        } catch (Exception $e) {
-//            $next_url = '';
-//        }
-//        if ($url) {
-//            $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php?next=' . $url;
-//        } else {
-//            $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php';
-//        }
-//        return $txt . '<iframe src="https://luthertest2.rpxnow.com/openid/embed?token_url=' . $url . '"
-//    scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe>';
     }
 
     function pre_show_form() {
