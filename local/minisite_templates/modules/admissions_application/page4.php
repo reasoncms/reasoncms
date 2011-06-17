@@ -244,19 +244,16 @@ class ApplicationPageFour extends FormStep {
         }
         $this->move_element('college_button_group', 'after', 'college_3_name');
 
-        $this->pre_fill_form();
-     }
-
-    // style up the form and add comments et al
-    function on_first_time() {
         if ($this->controller->get('student_type') == 'FR') {
             $this->change_element_type('final_high_school_header', 'hidden');
         } else {
             $this->change_element_type('current_high_school_header', 'hidden');
         }
-    }
 
-    function pre_fill_form() {
+        $this->pre_fill_form();
+     }
+
+     function pre_fill_form() {
         // check if the open_id has is set
         $o_id = check_open_id($this);
         if ($o_id) {
