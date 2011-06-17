@@ -1,4 +1,5 @@
 <?php
+
 $luther_openid_url = "https://reasondev.luther.edu/openid/";
 
 ob_start();
@@ -51,12 +52,20 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
     curl_close($curl);
 
 
+    //check for url to redirect to after login attempt
+    try {
+        $next_url = $_GET['next'];
+    } catch (Exception $e) {
+        $next_url = '';
+    }
+
+
     /* STEP 3: Parse the JSON auth_info response */
     $auth_info = json_decode($result, true);
 
     if ($auth_info['stat'] == 'ok') {
-    //echo "\n auth_info:";
-    //echo "\n"; var_dump($auth_info);
+        //echo "\n auth_info:";
+        //echo "\n"; var_dump($auth_info);
 
         /* Pro API examples */
         /* Basic and Plus please skip down to Step 4 */
@@ -254,8 +263,8 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
                 var_dump($graph_me);
             }
         }
-	//echo 'got this far <br />';
-    //echo 'could not get any further';
+        //echo 'got this far <br />';
+        //echo 'could not get any further';
         //include "hackproc3.html";
         //http_redirect('hackproc3.html', null, true, HTTP_REDIRECT_PERM);
 
@@ -263,12 +272,8 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
         $profile = $auth_info['profile'];
         $identifier = $profile['identifier'];
         $provider = $profile['providerName'];
-        try {
-            $next_url = $_GET['next'];
-        } catch (Exception $e) {
-            $next_url = '';
-        }
-        
+
+
         //echo "<br />token: " . $token;
         //exit();
         session_name("REASON_SESSION");
@@ -288,16 +293,13 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
 //        }else{
 //            echo "<br /><br /><br /><a href='" . $luther_openid_url . "'>continue</a>";
 //        }
-
 //        exit();
-        
-        if ($next_url) {
-            header( 'Location: ' . $next_url ) ;
-        }else{
-            header( 'Location: ' . $luther_openid_url );
-        }
-        
 
+        if ($next_url) {
+            header('Location: ' . $next_url);
+        } else {
+            header('Location: ' . $luther_openid_url);
+        }
 
         /* STEP 4: Use the identifier as the unique key to sign the user into your system.
           This will depend on your website implementation, and you should add your own
@@ -309,10 +311,20 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
         var_dump($auth_info);
         //echo "\n";
         var_dump($result);
+
+        if ($next_url) {
+            header('Location: ' . $next_url);
+        } else {
+            header('Location: ' . $luther_openid_url);
+        }
     }
 } else {
     // Gracefully handle the missing or malformed token.  Hook this into your native error handling system.
-    //echo 'Authentication canceled.';
+    if ($next_url) {
+        header('Location: ' . $next_url);
+    } else {
+        header('Location: ' . $luther_openid_url);
+    }
 }
 $debug_out = ob_get_contents();
 ob_end_clean();
