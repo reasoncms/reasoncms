@@ -32,12 +32,9 @@ function check_login() {
         $next_url = '';
     }
     if ($url) {
-        $url = $parts['scheme'] . '://' . $parts['host'] . '/openid/?next=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
-        echo $url;
-//        $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php?next=' . $url;
+        $url = $parts['scheme'] . '://' . $parts['host'] . '/reason/open_id/new_token.php?next=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . '?' .$parts['query'];
     } else {
-        $url = $parts['scheme'] . '://' . $parts['host'] . '/openid/new_token.php';
-//        $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php';
+        $url = $parts['scheme'] . '://' . $parts['host'] . '/reason/open_id/new_token.php';
     }
     return $txt . '<iframe src="https://luthertest2.rpxnow.com/openid/embed?token_url=' . $url . '"
     scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe>';
