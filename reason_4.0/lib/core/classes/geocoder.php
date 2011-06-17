@@ -32,12 +32,17 @@ include_once(CARL_UTIL_INC . 'cache/object_cache.php');
  * $geocode = $gc->get_geocode();
  * </code>
  *
+ * Example 3: Geocode a point
+ *
+ *
+ *
+ *
  * @author Mark Heiman
  * @author Nathan White
  */	
 class geocoder
 {
-	var $address;
+	var $location;
 	var $extra_params = array();
 	var $raw_query_results;
 	var $query_results;
@@ -50,9 +55,9 @@ class geocoder
 	 */
 	var $cache;
 	
-	function geocoder($address = '')
+	function geocoder($location = '')
 	{
-		if ($address) $this->set_address($address);
+		if ($location) $this->set_location($location);
 	}
 	
 	/**
@@ -65,7 +70,7 @@ class geocoder
 	
 	function set_address($address)
 	{
-		$this->address = $address;	
+		$this->set_location($address);	
 	}
 
 	/**
@@ -182,13 +187,13 @@ class geocoder
 	/** Request geocoding for an address, either passed or already present in the object.
 	 *  Will prefer cached results, but query the external service if none are available.
 	 **/
-	function get_geocode($address = '')
+	function get_geocode($location = '')
 	{
-		if ($address) $this->set_address($address);
+		if ($location) $this->set_location($location);
 
-		if (!isset($this->address))
+		if (!$this->get_location())
 		{
-			trigger_error('Address not set in geocoder->get_geocode');
+			trigger_error('Location (street address, ip, or geopoint) not set in geocoder->get_geocode');
 			return false;
 		}
 		
@@ -206,16 +211,57 @@ class geocoder
 		return false;
 	}
 	
-	/** Query the geocoding service, given the address and any extra request parameters 
+	/**
+	 *
+	 */
+	function set_location($location)
+	{
+		$this->location = $location;
+	}
+	
+	function get_location()
+	{
+		return (isset($this->location)) ? $this->location : false;
+	}
+	
+	function get_location_hash()
+	{
+		if ($this->get_location())
+		{
+			$location = ($this->location_is_lat_lon()) ? serialize($this->get_location()) : $this->get_location();
+			return md5($location);
+		}
+		else return false;
+	}
+	
+	function location_is_address()
+	{
+		return ($this->get_location() && !is_array($this->get_location()));
+	}
+	
+	function location_is_lat_lon()
+	{
+		return ($this->get_location() && is_array($this->get_location()));
+	}
+	
+	/** Query the geocoding service, given a location and any extra request parameters 
 	*
 	* @return array of result sets
 	**/
 	function get_results_from_service()
 	{
 		$url = 'https://maps.googleapis.com/maps/api/geocode/json?';
-		if (isset($this->address))
+		if ($this->location_is_address() || $this->location_is_lat_lon())
 		{
-			$url .= 'sensor=false&address='.urlencode($this->address);
+			if ($this->location_is_address())
+			{
+				$url .= 'sensor=false&address='.urlencode($this->get_location());
+			}
+			elseif ($this->location_is_lat_lon())
+			{
+				$latlng_str = implode(",", $this->get_location());
+				$url .= 'sensor=false&latlng='.urlencode($latlng_str);
+			}
 			foreach($this->extra_params as $key => $val)
 			{
 				$url .= '&'.urlencode($key).'='.urlencode($val);
@@ -230,9 +276,9 @@ class geocoder
 				trigger_error('Geocoding request failed in geocoder->get_results_from_service()');
 				return false;	
 			}
-		
-		} else {
-			trigger_error('Address not set in geocoder->get_results_from_service()');
+		}
+		else {
+			trigger_error('location (address, lat/lng, or ip) not set in geocoder->get_results_from_service()');
 			return false;
 		}
 
@@ -328,13 +374,15 @@ class geocoder
 				}
 			}
 		}
-		
+		$location = ($this->location_is_lat_lon()) ? serialize($this->get_location()) : $this->get_location();
+		$address = ($this->location_is_address()) ? $this->get_location() : $result->formatted_address;
 		$values = array(
-			'address' => $this->address,
+			'address' => $address,
 			'address_parts' => $address_parts,
 			'latitude' => $result->geometry->location->lat,
 			'longitude' => $result->geometry->location->lng,
-			'address_hash' => md5($this->address),
+			'address_hash' => md5($address), // i would like this to go away if possible
+			'location_hash' => md5($location),
 			'raw_response' => json_decode($this->raw_query_results));
 		
 		$this->save_result_to_cache($values);
@@ -374,34 +422,26 @@ class geocoder
  	 **/
 	function get_result_from_cache()
 	{
+		$location = ($this->location_is_lat_lon()) ? serialize($this->get_location()) : $this->get_location();
 		$cache = $this->get_cache();
-		$cache->init(md5($this->address));
+		$cache->init(md5($location));
 		$result = $cache->fetch();
 		if ($result !== FALSE)
 		{
-			foreach ($result as $current)
-			{
-				if ($current['address'] == $this->address) return $current;
-			}
+			$ret = reset($result);
+			return $ret;
 		}
 		return false;
 	}
 	
 	/**
-	 * Lets save the cache - we allow for the remote possibility of two values hashing to the same thing.
+	 * Lets save the cache.
 	 */
 	function save_result_to_cache($values)
 	{
+		$location = ($this->location_is_lat_lon()) ? serialize($this->get_location()) : $this->get_location();
 		$cache = $this->get_cache();
-		$cache->init(md5($values['address']), -1); // grab anything that exists, specify -1 so we get anything.
-		if ($existing = $cache->fetch()) // if something exists in the cache, lets update it.
-		{
-			foreach ($existing as $current)
-			{
-				if ($current['address'] != $values['address'])
-				$newvalues[] = $current;
-			}
-		}
+		$cache->init($values['location_hash'], -1); // grab anything that exists, specify -1 so we get anything.
 		$newvalues[] = $values;
 		$cache->set($newvalues);
 	}
