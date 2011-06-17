@@ -44,7 +44,7 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
         $this->controller->set_data_context('admissions_application');
         $this->controller->show_back_button = false;
         $this->controller->clear_form_data_on_finish = true;
-        $this->controller->allow_arbitrary_start = false;
+        $this->controller->allow_arbitrary_start = true;
         
         $forms = array(
             'ApplicationPageOne' => array(
