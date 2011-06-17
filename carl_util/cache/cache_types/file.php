@@ -12,6 +12,8 @@ include_once(CARL_UTIL_INC . 'cache/cache_types/default.php');
 
 class FileObjectCache extends DefaultObjectCache
 {	
+	private $_cache_dir;
+	
 	function &fetch()
 	{
 		$ret = false;
@@ -44,28 +46,53 @@ class FileObjectCache extends DefaultObjectCache
 		if(file_exists($cache_file)) return unlink( $cache_file );
 	}	
 	
+	function validate()
+	{
+		return $this->_check_directory();
+	}
+
+	/**
+	 * The file object cache will accept these params:
+	 *
+	 * @return boolean success or failure
+	 */
+	function setup_params($params)
+	{
+		if (isset($params['cache_dir'])) $this->_cache_dir = $params['cache_dir'];
+		return $this->_check_directory();
+	}
+
+	private function _check_directory()
+	{
+		$cache_dir = $this->_get_cache_dir();
+		$dir_exists = file_exists($cache_dir);
+		$is_readable = is_readable($cache_dir);
+		$is_writable = is_writable($cache_dir);
+		if (!$dir_exists) trigger_error('The cache directory ('.$cache_dir.') appears to not exist');
+		elseif (!$is_readable && !$is_writable) trigger_error('The cache directory ('.$cache_dir.') exists, but cannot be read from or written to.');
+		elseif (!$is_readable) trigger_error('The cache directory ('.$cache_dir.') exists, but cannot be read from.');
+		elseif (!$is_writable) trigger_error('The cache_directory ('.$cache_dir.') exists, but cannot be written to.');
+		return ($dir_exists && $is_writable && $is_readable);
+	}
+	
 	// SUPPORT METHODS
 	/**
 	 * @return string cache_file
 	 */	
-	function _get_cache_file()
+	private function _get_cache_file()
 	{
 		$cache_id = $this->get_cache_id();
-		$slash_if_needed = (substr(OBJECT_CACHE_DIR, -1, 1) == "/") ? "" : "/";
-		$cache_file = ($cache_id) ? OBJECT_CACHE_DIR .$slash_if_needed.$cache_id.'.obj.cache' : false;
+		$cache_dir = $this->_get_cache_dir();
+		$slash_if_needed = (substr($cache_dir, -1, 1) == "/") ? "" : "/";
+		$cache_file = ($cache_id) ? $cache_dir .$slash_if_needed.$cache_id.'.obj.cache' : false;
 		return $cache_file;
 	}
 	
-	function validate()
+	private function _get_cache_dir()
 	{
-		$dir_exists = file_exists(OBJECT_CACHE_DIR);
-		$is_readable = is_readable(OBJECT_CACHE_DIR);
-		$is_writable = is_writable(OBJECT_CACHE_DIR);
-		if (!$dir_exists) trigger_error('The OBJECT_CACHE_DIR constant ('.OBJECT_CACHE_DIR.') in object_cache_settings.php references a directory that appears to not exist');
-		elseif (!$is_readable && !$is_writable) trigger_error('The OBJECT_CACHE_DIR constant ('.OBJECT_CACHE_DIR.') in object_cache_settings.php exists, but cannot be read from or written to.');
-		elseif (!$is_readable) trigger_error('The OBJECT_CACHE_DIR constant ('.OBJECT_CACHE_DIR.') in object_cache_settings.php references a directory that exists, but cannot be read from.');
-		elseif (!$is_writable) trigger_error('The OBJECT_CACHE_DIR constant ('.OBJECT_CACHE_DIR.') in object_cache_settings.php references a directory that exists, but cannot be written to.');
-		return ($dir_exists && $is_writable && $is_readable);
+		if (isset($this->_cache_dir)) return $this->_cache_dir;
+		elseif (defined("OBJECT_CACHE_DIR")) return OBJECT_CACHE_DIR;
+		else return false;
 	}
 }
 ?>

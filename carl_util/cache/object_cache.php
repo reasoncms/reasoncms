@@ -81,8 +81,10 @@ class ObjectCache
 		{
 			$cache->set_cache_id(md5($id));
 			if ( !empty($lifespan) || ($lifespan = $this->get_default_lifespan())) $cache->set_cache_lifespan($lifespan);
-			if ($params = $this->get_cache_params()) $cache->setup_params($params);
-			if (!$cache->validate()) $this->_cache = false;
+			if ($params = $this->get_cache_params())
+			{
+				if ($cache->setup_params($params) === false) $this->_cache = false;
+			}
 		}
 		elseif (!$id) trigger_error('You must provide an id in order to init the cache');
 	}
