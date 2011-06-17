@@ -267,15 +267,20 @@ $(document).ready(function() {
     perculate_activity_up();
     
     $('#removeActivity').css('display', 'none'); // did this instead of hide because hide was removing some other css from the button
-    $('[id^=activity2]').hide();
-    $('[id^=activity3]').hide();
-    $('[id^=activity4]').hide();
-    $('[id^=activity5]').hide();
-    $('[id^=activity6]').hide();
-    $('[id^=activity7]').hide();
-    $('[id^=activity8]').hide();
-    $('[id^=activity9]').hide();
-    $('[id^=activity10]').hide();
+    for (i=2; i<=10; i += 1)
+    {
+        if (activity_has_data('#activity_'+i+'Element')) {
+            activity_count += 1;
+        } else {
+            $('[id^=activity'+i+']').hide();
+        }
+        if (activity_count == 10) {
+            $('#addActivity').hide();
+        }
+        if (activity_count == 2) {
+            $('#removeActivity').show();
+        }
+    }
     
 
     $('#addActivity').click(function(){
@@ -306,7 +311,7 @@ function perculate_siblings_up() {
     // moves siblings up if the applicant has enterred blank siblings between
     //  non blank siblings
     blank_q = [];
-    for (i=2; i<=5; i += 1)
+    for (i=1; i<=5; i += 1)
     {
         if (has_data('[id^=sibling'+i+']') && blank_q[0] != null) {
             move_sibling_data(i, blank_q.shift());
@@ -339,21 +344,23 @@ function perculate_activity_up() {
     // moves activity up if the applicant has enterred blank activity between
     //  non blank activity
     blank_q = [];
-    for (i=2; i<=10; i += 1)
+    for (i=1; i<=10; i += 1)
     {
-        if (has_data('[id^=activity'+i+']') && blank_q[0] != null) {
+//        alert(activity_has_data('#activity_'+i+'Element'));
+        if (activity_has_data('#activity_'+i+'Element') && blank_q[0] != null) {
             move_activity_data(i, blank_q.shift());
             blank_q.push(i);
-        } else if (! has_data('[id^=activity'+i+']')) {
+        } else if (! activity_has_data('#activity_'+i+'Element')) {
+//            alert('pushing');
             blank_q.push(i);
-        }
+        } 
     }
 }
 
 function move_activity_data(from_activity, to_activity) {
     // move sibling data from from_activity to to_activity and clear out the from_activity
-    $('#activity_'+to_activity+'_Element').val($('#activity_'+from_activity+'_Element').val());
-    $('#activity_'+from_activity+'_Element').val('1');
+    $('#activity_'+to_activity+'Element').val($('#activity_'+from_activity+'Element').val());
+    $('#activity_'+from_activity+'Element').val('1');
     $('#activity_'+to_activity+'_otherElement').val($('#activity_'+from_activity+'_otherElement').val());
     $('#activity_'+from_activity+'_otherElement').val('');
     $('#activity_'+to_activity+'_honorsElement').val($('#activity_'+from_activity+'_honorsElement').val());
@@ -372,9 +379,9 @@ function move_activity_data(from_activity, to_activity) {
 
 
 function has_data(selector) {
-    //alert(selector);
+//    alert(selector);
     return_val = false;
-    $("'" + selector + "'").find(':text').each( function() {
+    $(selector).find(':text').each( function() {
         //alert($(this).val());
         if ($(this).val() != '') {
             return_val = true;
@@ -383,6 +390,15 @@ function has_data(selector) {
     });
     return return_val;
 }
+
+function activity_has_data(selector) {
+    if ($(selector).val() != '') {
+        return true;
+    }
+    return false;
+}
+
+
 var sibling_count = 1;
 function add_sibling() {
     sibling_count += 1;
