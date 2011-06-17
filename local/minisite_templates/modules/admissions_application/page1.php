@@ -72,31 +72,46 @@ class ApplicationPageOne extends FormStep {
     // style up the form and add comments et al
     function on_every_time() {
         $this->show_form = true;
-
-        $date = getdate();
         
         
         
-        $jt_deadline = date($date['year']."-12-15");
-        $sp_deadline1 = date($date['year']."-01-15");
-        $fa_deadline1 = date($date['year']."-08-01");
-        
-        if ($date > $jt_deadline) { $jt_year = $date['year']+1; } else { $jt_year = $date['year']; }
-        if ($date > $sp_deadline1) { $sp_year = $date['year']+1; } else { $sp_year = $date['year']; }
-        if ($date > $fa_deadline1) { $fa_year = $date['year']+1; } else { $fa_year = $date['year']; }
        
         
-       // if ($date['mon'] <= 3) {
-        //    $year = $date['year'];
-        //} else {
-        //    $year = $date['year'] + 1;
-       // }
+        $date = getdate();
+        
+        $cur_date = date("Y-m-d");
+        
+        $fa_deadline1 = date($date['year']."-08-01");
+        $jt_deadline = date($date['year']."-12-15");
+        $sp_deadline1 = date($date['year']."-01-15");
+        
+        
+        if ($cur_date > $fa_deadline1) { 
+            
+            ($fa_year = date('Y')+1) ; 
+            
+            } else { 
+                
+                $fa_year = date('Y'); 
+            }
+
+        if ($cur_date > $jt_deadline && $cur_date <= (date('Y')."-12-31") ) {
+            
+            $jt_year = date('Y')+2;
+            
+        } else  {
+           
+            $jt_year = date('Y')+1;
+        }
+        
+        if ($cur_date > $sp_deadline1) { $sp_year = date('Y')+1; } else { $sp_year = date('Y'); }
+        
 
         $this->change_element_type('enrollment_term', 'radio_no_sort', array(
             'options' => array(
-                $jt_year . 'FA' => 'Fall ' . $jt_year, 
-                $sp_year . 'JT' => 'J-term ' . $sp_year,
-                $fa_year . 'SP' => 'Spring '.$fa_year)));
+                $fa_year . 'FA' => 'Fall ' .$fa_year, 
+                $jt_year . 'JT' => 'J-term ' . $jt_year,
+                $sp_year. 'SP' => 'Spring '. $sp_year)));
 
         $this->pre_fill_form();
     }
