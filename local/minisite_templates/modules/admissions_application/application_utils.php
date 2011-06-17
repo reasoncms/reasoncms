@@ -52,7 +52,7 @@ function get_applicant_data($openid, &$the_form) {
         //
         //$qstring = "INSERT INTO `applicants` (`open_id`)  VALUES ('" . addslashes($openid) . "'); ";
         $qstring = "INSERT INTO `applicants` (`open_id`, `creation_date`,  `submitter_ip`)
-            VALUES ('" . addslashes($openid) . "', 'NOW', '" . $_SERVER['REMOTE_ADDR'] . "'); ";
+            VALUES ('" . addslashes($openid) . "', NOW(), '" . $_SERVER['REMOTE_ADDR'] . "'); ";
         $results = mysql_query($qstring) or die(mysql_error());
         $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
         $results = db_query($qstring);
@@ -61,7 +61,14 @@ function get_applicant_data($openid, &$the_form) {
     while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
         foreach ($the_form->get_element_names() as $element) {
             if (array_key_exists($element, $row)) {
-                $the_value = $row[$element];
+                if($element == 'activity_1_participation'){
+                    $the_value = explode(',', $row[$element]);
+                    echo "wtf is going on????";
+                    echo "<br />";
+                    pray($the_value);
+                }else{
+                    $the_value = $row[$element];
+                }
                 $the_form->set_value($element, $the_value);
             }
         }
