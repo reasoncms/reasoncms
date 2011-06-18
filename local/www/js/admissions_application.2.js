@@ -213,20 +213,20 @@ $(document).ready(function() {
 
     perculate_college_up();
     $('#removeCollege').css('display', 'none'); // did this instead of hide because hide was removing some other css from the button$('#removeCollege').css('display', 'none'); // did this instead of hide because hide was removing some other css from the button
-//    for (i=2; i<=3; i += 1)
-//    {
-//        if (college_has_data('#college_'+i+'_nameElement')) {
-//            college_count += 1;
-//        } else {
-//            $('[id^=college'+i+']').hide();
-//        }
-//        if (college_count == 3) {
-//            $('#addCollege').hide();
-//        }
-//        if (college_count == 2) {
-//            $('#removeCollege').show();
-//        }
-//    }
+    for (i=2; i<=3; i += 1)
+    {
+        if (college_has_data('#college_'+i+'_nameElement')) {
+            college_count += 1;
+        } else {
+            $('[id^=college'+i+']').hide();
+        }
+        if (college_count == 3) {
+            $('#addCollege').hide();
+        }
+        if (college_count == 2) {
+            $('#removeCollege').show();
+        }
+    }
     
 
     $('#addCollege').click(function(){
@@ -417,6 +417,10 @@ function college_has_data(selector) {
         return true;
     }
     return false;
+}
+
+function has_data(selector) {
+    return true;
 }
 
 function activity_has_data(selector) {
