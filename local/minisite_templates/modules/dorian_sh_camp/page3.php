@@ -190,6 +190,7 @@ class DorianSHCampThreeForm extends FormStep
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
 		$txt .= '<h4>Your Information</h4>';
 		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('first_name').' '.$this->controller->get('last_name').'</li>'."\n";
+                $txt .= '<li><strong>Gender:</strong> '.$this->controller->get('gender').'</li>'."\n";
 		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address')."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip').'</li>'."\n";
 		$txt .= '<li><strong>Home Phone:</strong> '.$this->controller->get('home_phone').'</li>'."\n";
 		$txt .= '<li><strong>E-mail:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
@@ -245,7 +246,7 @@ class DorianSHCampThreeForm extends FormStep
                     $txt .= '</ul>';
                 $txt .= '<li><strong>Period 5:</strong> '.$this->controller->get('period_five').'</li>'."\n";
                 $txt .= '<li><strong>Period 6:</strong> '.$this->controller->get('period_six').'</li>'."\n";
-
+                $txt .= '<li><strong>Amt Paid:</strong> '.$this->controller->get('payment_amount').'</li>'."\n";
 		$txt .= '</ul>'."\n";
 		$txt .= '</div>'."\n";
 		return $txt;
