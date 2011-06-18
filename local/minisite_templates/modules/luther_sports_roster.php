@@ -154,6 +154,7 @@
                     'year_sort_desc')));
 	
 	var $site_name;
+	var $positions;
 
 	function init( $args = array() )
 	{	
@@ -227,6 +228,9 @@
 
 	function run()
 	{
+		$this->sort_columns($this->_columns);
+		$this->handle_abbreviated_position_events();
+		
 		if (!empty($this->request['id']))
 		{
 			$player_class = 'playerInfo';
@@ -270,7 +274,7 @@
 
 					if ($col == 'athlete_position_event')
 					{
-						
+						$value = $this->positions[$player['athlete_position_event']];
 					}
 					else if ($col == 'athlete_hometown_city')
 					{
@@ -301,7 +305,6 @@
 
 				// now display the roster
 				$str .= '<table class="tablesorter"><thead><tr>';
-
 				foreach ($this->_columns as $k => $v)
 				{
 					// allows custom table sorting parser to be used for a given column
@@ -314,6 +317,7 @@
 				$str .= '</tr></thead><tbody>';
 
 				$row = 1;
+				$ct = "";   // appended cluetip information
 
 				foreach( $this->player_info as $k => $player )
 				{
@@ -328,7 +332,8 @@
 								if ( $player['image_id'] OR $player['content'] )
 								{
 									$player_link = carl_make_link(array('id' => $k));
-									$str .= '<a href="'.$player_link.'">'.$name.'</a>';
+									//$str .= '<a href="'.$player_link.'">'.$name.'</a>';
+									$str .= "<a href=\"".$player_link. "\" class=\"cluetip_athlete\" title=\"". $player['athlete_first_name']." ".$player['athlete_last_name'] ."\" rel=\"#athlete".$player['id']."\">".$name."</a>";
 								}
 								else
 								{
@@ -363,12 +368,26 @@
 							$str .= '</td>';
 						}
 						$str .= '</tr>';
+						
+						$ct .= "<div id=\"athlete".$player['id']."\">";
+						$ct .= "<p class=\"athlete_position_event\">". $this->positions[$player['athlete_position_event']];
+						if (!empty($player['image_id']))
+						{
+							$image = get_entity_by_id($player['image_id']);
+							$thumb = WEB_PHOTOSTOCK . $player['image_id'] . '_tn.' . $image['image_type'];
+							$ct .= "<img class=\"athlete_image\" src=\"" . $thumb . "\" />";
+						}
+						$ct .= "</p>";					
+						$ct .= "<p class=\"athlete_class_year\">". $player['athlete_class_year']."</p>";
+						$ct .= "<p class=\"athlete_hometown\">". $player['athlete_hometown_city'].", ". $this->statesAP[$player['athlete_hometown_state']]."</p>";
+						$ct .= "<p class=\"athlete_high_school\">". $player['athlete_high_school']."</p>";		
+						$ct .= "</div>";
 
 				}
 
 				$str .= '</tbody></table>';
 
-			echo $str;
+			echo $str . $ct;
 		}
 	}
 	function gen_custom_header($k)
@@ -448,6 +467,121 @@
 		return $this->table_header[$k];
 
 	}
+	
+	function sort_columns(&$columns)
+	{
+		$sort_order = array('athlete_number' => 0, 'athlete_first_name' => 1,
+			'athlete_last_name' => 2, 'athlete_class_year' => 3, 'athlete_hometown_city' => 4,
+			'athlete_hometown_state' => 5, 'athlete_high_school' => 6, 'athlete_position_event' => 7,
+			'athlete_height' => 8, 'athlete_weight' => 9,
+			'athlete_bat' => 10, 'athlete_throw' => 11); // specify whatever you want sorted in this manner
+		$key_count = count($sort_order);
+		foreach ($columns as $k=>$v)
+		{
+			if (isset($sort_order[$k]))
+			{
+				$new_order[$sort_order[$k]] = $k;
+			}
+			else
+			{
+				$new_order[$key_count] = $k;
+				$key_count++;
+			}
+		}
+		ksort($new_order);
+		$new_order = array_flip($new_order);
+		foreach($columns as $k=>$v)
+		{
+			$new_order[$k] = $columns[$k];
+		}
+		$columns = $new_order;
+	}
+	
+	function handle_abbreviated_position_events()
+	// replaces abbreviated position or event with the full name
+	{
+		if ($this->site_name == 'sport_baseball_men' || $this->site_name == 'sport_softball_women')
+		{
+			$this->positions = array(
+				'P' => 'Pitcher',
+				'C' => 'Catcher',
+				'IF' => 'Infield',
+				'1B' => 'First Base',
+				'2B' => 'Second Base',
+				'3B' => 'Third Base',
+				'SS' => 'Shortstop',
+				'OF' => 'Outfield',
+			);
+		}
+		else if ($this->site_name == 'sport_basketball_men' || $this->site_name == 'sport_basketball_women')
+		{
+			$this->positions = array(
+				'C' => 'Center',
+				'F' => 'Forward',
+				'G' => 'Guard',
+			);
+		}
+		else if ($this->site_name == 'sport_football_men' )
+		{
+			$this->positions = array(
+				'DB' => 'Defensive Back',
+				'DL' => 'Defensive Line',
+				'FB' => 'Fullback',
+				'K' => 'Kicker',
+				'LB' => 'Linebacker',
+				'OL' => 'Offensive Line',
+				'QB' => 'Quarterback',
+				'RB' => 'Running Back',
+				'TE' => 'Tight End',
+				'WR' => 'Wide Receiver',
+			);
+		}
+		else if ($this->site_name == 'sport_soccer_men' || $this->site_name == 'sport_soccer_women')
+		{
+			$this->positions = array(
+				'GK' => 'Goalkeeper',
+				'D' => 'Defender',
+				'MF' => 'Midfielder',
+				'F' => 'Forward',
+			);
+		}
+		else if ($this->site_name == 'sport_volleyball_women' )
+		{
+			$this->positions = array(
+				'DS' => 'Defensive Specialist',
+				'L' => 'Libero',
+				'MB' => 'Middle Blocker',
+				'OH' => 'Outside Hitter',
+				'R' => 'Right Side Hitter',
+				'S' => 'Setter',
+			);
+		}
+		else if ($this->site_name == 'sport_swimmingdiving_men' || $this->site_name == 'sport_swimmingdiving_women')
+		{
+			$this->positions = array(
+				'BU' => 'Butterfly',
+				'BA' => 'Backstroke',
+				'BR' => 'Breaststroke',
+				'FR' => 'Freestyle',
+				'IM' => 'Individual Medley',
+				'D' => 'Diving',
+			);
+		}
+		else if ($this->site_name == 'sport_trackfield_men' || $this->site_name == 'sport_trackfield_women')
+		{
+			$this->positions = array(
+				'D' => 'Distance',
+				'H' => 'Hurdles',
+				'J' => 'Jumps',
+				'MD' => 'Mid-distance',
+				'ME' => 'Multi-events',
+				'PV' => 'Pole Vault',
+				'S' => 'Sprints',
+				'T' => 'Throws',
+			);
+		}
+	}
+	
 
 }
 ?>
