@@ -13,7 +13,7 @@ var _swfupload_uri;
 
 (function reason_background_uploads($) {
     var _setting_names = ['!receiver', '!user_session', '!transfer_session',
-        'maximum_size', '!remover'];
+        'maximum_size', '!remover', 'user_id'];
     function get_upload_settings(el) {
         var form = $(el).parents("form").eq(0);
         if (form.length <= 0)
@@ -105,8 +105,14 @@ var _swfupload_uri;
     function create_upload_link(uploader, target, input, upload_settings) {
         var upload_name = input.attr('name') || input.attr('id');
         
+        magical_upload_url = upload_settings.receiver;
+
+        if (upload_settings.user_id != null)
+        	magical_upload_url = upload_settings.receiver + "?user_id=" + upload_settings.user_id;
+        
         var swfupload_settings = {
-            upload_url: upload_settings.receiver,
+//            upload_url: upload_settings.receiver,
+            upload_url: magical_upload_url,
             flash_url: _swfupload_uri,
             file_post_name: upload_name,
             file_upload_limit: "0",
