@@ -13,6 +13,7 @@ reason_require_once('classes/head_items.php');
 reason_require_once('function_libraries/asset_functions.php');
 reason_require_once('function_libraries/image_tools.php');
 reason_require_once('function_libraries/upload.php');
+require_once CARL_UTIL_INC.'basic/cleanup_funcs.php';
 include_once( DISCO_INC.'plasmature/plasmature.php' );
 
 if (!defined('REASON_FLASH_UPLOAD_URI')) {
@@ -294,7 +295,7 @@ function _get_disco_async_upload_session($authenticator)
 function _get_disco_async_upload_internal_field_names()
 {
 	static $fields = array('user_session', 'transfer_session', 'receiver',
-		'remover');
+		'remover', 'user_id');
 	$decorated_fields = array();
 	foreach ($fields as $name)
 		$decorated_fields[] = "_reason_upload_$name";
@@ -315,7 +316,8 @@ function _get_disco_async_upload_hidden_fields($upload_sid)
 		'user_session' => $session->get_id(),
 		'transfer_session' => $upload_sid,
 		'receiver' => reason_get_async_upload_script_uri('receive'),
-		'remover' => reason_get_async_upload_script_uri('destroy')
+		'remover' => reason_get_async_upload_script_uri('destroy'),
+		'user_id' => turn_into_int($_REQUEST['user_id'])
 	);
 	
 	$html = array();
