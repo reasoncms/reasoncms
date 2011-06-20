@@ -420,7 +420,16 @@ function college_has_data(selector) {
 }
 
 function has_data(selector) {
-    return true;
+//    alert(selector);
+    return_val = false;
+    $(selector).find(':text').each( function() {
+        //alert($(this).val());
+        if ($(this).val() != '') {
+            return_val = true;
+            return false;
+        }
+    });
+    return return_val;
 }
 
 function activity_has_data(selector) {
