@@ -100,8 +100,21 @@ function can_upload($session) {
 	if ($session['authenticator']) {
 		$auth = $session['authenticator'];
 		$reason_session =& get_reason_session();
+
 		$username = $reason_session->get("username");
-		
+		if (isset($_REQUEST['user_id']))
+		{
+			$username = $reason_session->get('username');
+			$param_cleanup_rules = array('user_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => 'true')));
+			$cleanRequest = array_merge($_REQUEST, carl_clean_vars($request, $param_cleanup_rules));
+			$nametag = $cleanRequest['user_id'];
+			$id = get_user_id($username);
+			if (reason_user_has_privs($id, 'pose_as_other_user'))
+			{
+				$user = new Entity($nametag);
+				$username = $user->get_value("name");
+			}
+		}
 		if ($auth['file'])
 			require_once $auth['file'];
 		
@@ -112,3 +125,4 @@ function can_upload($session) {
 	
 	return true;
 }
+
