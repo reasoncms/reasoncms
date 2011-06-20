@@ -25,83 +25,83 @@ class ApplicationPageSix extends FormStep {
     var $_log_errors = true;
     var $error;
     var $majors_array = array(
-        'ACCTG' => 'Accounting',
-        'AFRS' => 'Africana Studies',
-        'ANTH' => 'Anthropology/Archaeology',
-        'ARCH' => 'Architecture',
-        'ART' => 'Art',
-        'ARTM' => 'Art Management',
-        'ATHT' => 'Athletic Training',
-        'BIBL' => 'Biblical Languages',
-        'BIOC' => 'Biochemistry',
-        'BIOC' => 'Biology',
-        'BIOE' => 'Biology (Environmental)',
-        'CHEM' => 'Chemistry',
-        'CLAST' => 'Classical Studies',
-        'COMM' => 'Communication',
-        'CS' => 'Computer Science',
-        'ECON' => 'Economics',
-        'EDUC' => 'Education',
-        'EDEL' => 'Education-Elemenatary',
-        'EDSE' => 'Education-Secondary',
-        'EDSP' => 'Education-Special',
-        'ENGL' => 'English',
-        'ENVS' => 'Environmental Studies',
-        'FINA' => 'Fine Arts',
-        'FREN' => 'French',
-        'GER' => 'German',
-        'GRDE' => 'Graphic Design',
-        'GRK' => 'Greek',
-        'HLTH' => 'Health',
-        'HIST' => 'History',
-        'INTS' => 'International Management',
-        'IS' => 'International Studies',
-        'JOUR' => 'Journalism',
-        'LAT' => 'Latin',
-        'MGT' => 'Management',
-        'MIS' => ' Management Info Systems',
-        'MATH' => '	Mathematics',
-        'MSTAT' => ' Mathematics/Statistics',
-        'MEDT' => ' Medical Technology',
-        'MLAN' => ' Modern Languages',
-        'MUST' => 'Museum Studies',
-        'MUS' => 'Music',
-        'MUSE' => 'Music Education',
-        'MUSM' => 'Music Management',
-        'MUSP' => 'Music Performance',
-        'NSCI' => 'Natural Science',
-        'NURS' => 'Nursing',
-        'PHIL' => 'Philosophy',
-        'PE' => 'Physical Education',
-        'PTOT' => 'Physical/Occ Therapy',
-        'PHYS' => 'Physics',
-        'POLS' => 'Political Science',
-        'PDEN' => 'Pre-dental',
-        'PENG' => 'Pre-engineering',
-        'PFOR' => 'Pre-forestry',
-        'PLAW' => 'Pre-law',
-        'PMED' => 'Pre-medicine',
-        'POPT' => 'Pre-optometry',
-        'PPHA' => 'Pre-pharmacy',
-        'PPT' => 'Pre-physical therapy',
-        'PSEM' => 'Pre-seminary',
-        'PVET' => 'Pre-veterinary',
-        'PSYB' => 'Psychobiology',
-        'PSYC' => 'Psychology',
-        'REL' => 'Religion',
-        'RUST' => 'Russian Studies',
-        'SCST' => 'Scandanavian Studies',
-        'SSCI' => 'Social Science',
-        'SW' => 'Social Work',
-        'SOC' => 'Sociology',
-        'SOPO' => 'Soc/Political Science',
-        'SPAN' => 'Spanish',
-        'SPMT' => 'Sports Management',
-        'THD' => 'Theatre/Dance',
-        'THDM' => 'Theatre/Dance Management',
-        'UND' => 'Deciding',
-        'WOMS' => 'Women\'s Studies',
-    );
+            'ACCTG' => 'Accounting',
+            'AFRS' => 'Africana Studies',
+            'ANTH' => 'Anthropology/Archaeology',
+            'ARCH' => 'Architecture',
+            'ART' => 'Art',
+            'ARTM' => 'Art Management',
+            'ATHT' => 'Athletic Training',
+            'BIBL' => 'Biblical Languages',
+            'BIOC' => 'Biochemistry',
+            'BIOC' => 'Biology',
+            'BIOE' => 'Biology (Environmental)',
+            'CHEM' => 'Chemistry',
+            'CLAST' => 'Classical Studies',
+            'COMM' => 'Communication',
+            'CS' => 'Computer Science',
+            'ECON' => 'Economics',
+            'EDUC' => 'Education',
+            'EDEL' => 'Education-Elemenatary',
+            'EDSE' => 'Education-Secondary',
+            'EDSP' => 'Education-Special',
+            'ENGL' => 'English',
+            'ENVS' => 'Environmental Studies',
+            'FINA' => 'Fine Arts',
+            'FREN' => 'French',
+            'GER' => 'German',
+            'GRDE' => 'Graphic Design',
+            'GRK' => 'Greek',
+            'HLTH' => 'Health',
+            'HIST' => 'History',
+            'INTS' => 'International Management',
+            'IS' => 'International Studies',
+            'JOUR' => 'Journalism',
+            'LAT' => 'Latin',
+            'MGT' => 'Management',
+            'MIS' => ' Management Info Systems',
+            'MATH' => '	Mathematics',
+            'MSTAT' => ' Mathematics/Statistics',
+            'MEDT' => ' Medical Technology',
+            'MLAN' => ' Modern Languages',
+            'MUST' => 'Museum Studies',
+            'MUS' => 'Music',
+            'MUSE' => 'Music Education',
+            'MUSM' => 'Music Management',
+            'MUSP' => 'Music Performance',
+            'NSCI' => 'Natural Science',
+            'NURS' => 'Nursing',
+            'PHIL' => 'Philosophy',
+            'PE' => 'Physical Education',
+            'PTOT' => 'Physical/Occ Therapy',
+            'PHYS' => 'Physics',
+            'POLS' => 'Political Science',
+            'PDEN' => 'Pre-dental',
+            'PENG' => 'Pre-engineering',
+            'PFOR' => 'Pre-forestry',
+            'PLAW' => 'Pre-law',
+            'PMED' => 'Pre-medicine',
+            'POPT' => 'Pre-optometry',
+            'PPHA' => 'Pre-pharmacy',
+            'PPT' => 'Pre-physical therapy',
+            'PSEM' => 'Pre-seminary',
+            'PVET' => 'Pre-veterinary',
+            'PSYB' => 'Psychobiology',
+            'PSYC' => 'Psychology',
+            'REL' => 'Religion',
+            'RUST' => 'Russian Studies',
+            'SCST' => 'Scandanavian Studies',
+            'SSCI' => 'Social Science',
+            'SW' => 'Social Work',
+            'SOC' => 'Sociology',
+            'SOPO' => 'Soc/Political Science',
+            'SPAN' => 'Spanish',
+            'SPMT' => 'Sports Management',
+            'THD' => 'Theatre/Dance',
+            'THDM' => 'Theatre/Dance Management',
+            'UND' => 'Deciding',
+            'WOMS' => 'Women\'s Studies',
+        );
     var $elements = array(
         'college_plan_comment' => array(
             'type' => 'comment',
@@ -188,17 +188,12 @@ class ApplicationPageSix extends FormStep {
             'type' => 'comment',
             'text' => 'In at least 250 words, please describe an activity, interest, experience or achievement in your life
                   that has been particularly meaningful to you. Please note that you may mail a graded paper to our Office of Admissions
-                  in leiu of submitting a personal statement'
+                  in lieu of submitting a personal statement'
         ),
-//        'personal_statement' => array(
-//            'type' => 'upload',
-//            'acceptable_types' => array('application/pdf', 'image/*'),
-//            'display_name' => 'Upload a file',
-//            'original_path' => '/tmp/',
-//            'allow_upload_on_edit'
-//        ),
         'personal_statement' => array(
-            'type' => 'textarea_no_label',
+            'type' => 'upload',
+            'acceptable_types' => array('application/pdf', 'image/*'),
+            'display_name' => 'Upload a file',
         ),
         'disciplinary_header' => array(
             'type' => 'comment',
@@ -217,7 +212,7 @@ class ApplicationPageSix extends FormStep {
             'type' => 'comment',
             'text' => 'If yes, please describe',
         ),
-        'conviction_history_details' => array(
+        'conviction_details' => array(
             'type' => 'textarea_no_label',
             'display_name' => '&nbsp;',
         ),
@@ -226,7 +221,7 @@ class ApplicationPageSix extends FormStep {
             'text' => 'Have you ever been found responsible for a discplinary violation while attending high school that resulted in probation,
                   suspension, dismissal, or expulsion?',
         ),
-        'hs_discipline' => array(
+        'hs_discipline_history' => array(
             'type' => 'radio_inline_no_sort',
             'display_name' => '&nbsp;',
             'options' => array('Yes' => 'Yes', 'No' => 'No'),
@@ -253,29 +248,10 @@ class ApplicationPageSix extends FormStep {
     var $display_name = 'Last Page';
     var $error_header_text = 'Please check your form.';
 
-    function on_every_time() {
-        $this->change_element_type('college_plan_1', 'select', array('options' => $this->majors_array));
-        $this->change_element_type('college_plan_2', 'select', array('options' => $this->majors_array));
-
-        $this->pre_fill_form();
+    function  on_every_time() {
+        $this->change_element_type('first_choice', 'select', array('options' => $this->majors_array));
+        $this->change_element_type('second_choice', 'select', array('options' => $this->majors_array));
     }
-
-    function no_show_form() {
-        echo(check_login());
-    }
-    
-    function pre_fill_form() {
-        // check if the open_id has is set
-        $o_id = check_open_id($this);
-        if ($o_id) {
-            // get an existing users data from the db based on openid_id and the form
-            get_applicant_data($o_id, $this);
-        } else {
-            // no show form, invite to login
-            $this->show_form = false;
-        }
-    }
-
     function pre_show_form() {
         echo '<div id="admissionsApp" class="pageSix">' . "\n";
     }
@@ -283,82 +259,5 @@ class ApplicationPageSix extends FormStep {
     function post_show_form() {
         echo '</div>' . "\n";
     }
-
-    function process() {
-        set_applicant_data($this->openid_id, $this);
-    }
-
-    function get_safer_filename($filename) {
-        // returns a "safe" filename with .txt added to unsafe extensions - nwhite 12/12/05
-        $unsafe_to_safer = array(
-            'py' => 'py.txt',
-            'php' => 'php.txt',
-            'asp' => 'asp.txt',
-            'aspx' => 'aspx.txt',
-            'pl' => 'pl.txt',
-            'shtml' => 'shtml.txt',
-            'cfm' => 'cfm.txt',
-            'woa' => 'woa.txt',
-            'php3' => 'php3.txt',
-            'jsp' => 'jsp.txt',
-            'js' => 'js.txt',
-            'exe' => 'exe.txt',
-            'cgi' => 'cgi.txt',
-            'vb' => 'vb.txt',
-            'bat' => 'bat.txt',
-        );
-        list($filename, $fext) = $this->_get_filename_parts($filename);
-        if (!empty($unsafe_to_safer[$fext]))
-            $fext = $unsafe_to_safer[$fext];
-        if (!empty($fext))
-            $filename .= '.' . $fext;
-        return $filename;
-    }
-
-    function _get_filename_parts($filename) {
-        $parts = explode('.', $filename);
-
-        if (count($parts) <= 1) {
-            return array(basename($filename), '');
-        } else {
-            $extension = array_pop($parts);
-            return array(basename($filename, ".$extension"), $extension);
-        }
-    }
-
-    function post_error_check_actions() { // {{{
-        // display the URL of the document or a warning if no doc dir is set up.
-        $asset = $this->get_element('personal_statement');
-        $site = new entity($this->get_value('site_id'));
-        if ($this->get_value('file_name')) {
-            if ($this->has_error('asset') OR $this->has_error('file_name'))
-                $text = 'Document URL: Cannot be determined until errors are resolved.';
-            $url = 'http://' . $_SERVER['HTTP_HOST'] . $site->get_value('base_url') . MINISITE_ASSETS_DIRECTORY_NAME . '/' . $this->get_value('file_name');
-            $text = 'Document URL: ';
-            if ($asset->state == 'existing' && $this->get_value('state') == 'Live' && !$this->_has_errors()) {
-                $text .= '<a href="' . $url . '" target="_new">' . $url . '</a>';
-            } elseif ($this->_has_errors()) {
-                $text .= $url . ' (link may not work until errors are resolved)';
-            } else {
-                $text .= $url . ' (will be live once saved)';
-            }
-            $this->add_element('doc_url', 'comment', array('text' => $text));
-        }
-    }
-
-    function where_to() {
-//        $refnum = $this->get_value('result_refnum');
-//        $text = $this->get_value('confirmation_text');
-//        reason_include_once('minisite_templates/modules/gift_form/gift_confirmation.php');
-//        $gc = new GiftConfirmation;
-//        $hash = $gc->make_hash($text);
-//        connectDB(REASON_DB);
-//        $url = get_current_url();
-//        $parts = parse_url($url);
-//        $url = $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . '?r=' . $refnum . '&h=' . $hash;
-        $url = 'http://www.luther.edu';
-        return $url;
-    }
 }
-
 ?>
