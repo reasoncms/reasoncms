@@ -23,6 +23,10 @@ class StudentTreatsThorForm extends CreditCardThorForm {
         $this->change_element_type($this->get_element_name_from_label('#4 Date For Delivery'), 'textDate');
         $this->change_element_type($this->get_element_name_from_label('#5 Date For Delivery'), 'textDate');
         $this->change_element_type($this->get_element_name_from_label('#6 Date For Delivery'), 'textDate');
+        $this->change_element_type($this->get_element_name_from_label('#7 Date For Delivery'), 'textDate');
+        $this->change_element_type($this->get_element_name_from_label('#8 Date For Delivery'), 'textDate');
+        $this->change_element_type($this->get_element_name_from_label('#9 Date For Delivery'), 'textDate');
+        $this->change_element_type($this->get_element_name_from_label('#10 Date For Delivery'), 'textDate');
     }
 
     function pre_error_check_actions() {
@@ -47,6 +51,22 @@ class StudentTreatsThorForm extends CreditCardThorForm {
         $date6 = $this->get_element_name_from_label('#6 Date For Delivery');
         $occassion6 = $this->get_element_name_from_label('#6 Occasion Type: birthday, holiday, etc.');
         $type6 = $this->get_element_name_from_label('#6 Treat Type');
+        
+        $date7 = $this->get_element_name_from_label('#7 Date For Delivery');
+        $occassion7 = $this->get_element_name_from_label('#7 Occasion Type: birthday, holiday, etc.');
+        $type7 = $this->get_element_name_from_label('#7 Treat Type');
+        
+        $date8 = $this->get_element_name_from_label('#8 Date For Delivery');
+        $occassion8 = $this->get_element_name_from_label('#8 Occasion Type: birthday, holiday, etc.');
+        $type8 = $this->get_element_name_from_label('#8 Treat Type');
+        
+        $date9 = $this->get_element_name_from_label('#9 Date For Delivery');
+        $occassion9 = $this->get_element_name_from_label('#9 Occasion Type: birthday, holiday, etc.');
+        $type9 = $this->get_element_name_from_label('#9 Treat Type');
+        
+        $date10 = $this->get_element_name_from_label('#10 Date For Delivery');
+        $occassion10 = $this->get_element_name_from_label('#10 Occasion Type: birthday, holiday, etc.');
+        $type10 = $this->get_element_name_from_label('#10 Treat Type');
 
 
         if ($this->get_value_from_label('Payment Amount') == '$20 - 1 treat') {
@@ -70,6 +90,22 @@ class StudentTreatsThorForm extends CreditCardThorForm {
             $this->remove_required($date6);
             $this->remove_required($occassion6);
             $this->remove_required($type6);
+            
+            $this->remove_required($date7);
+            $this->remove_required($occassion7);
+            $this->remove_required($type7);
+            
+            $this->remove_required($date8);
+            $this->remove_required($occassion8);
+            $this->remove_required($type8);
+            
+            $this->remove_required($date9);
+            $this->remove_required($occassion9);
+            $this->remove_required($type9);
+            
+            $this->remove_required($date10);
+            $this->remove_required($occassion10);
+            $this->remove_required($type10);
         }
 
         if ($this->get_value_from_label('Payment Amount') == '$40 - 2 treats') {
@@ -89,6 +125,22 @@ class StudentTreatsThorForm extends CreditCardThorForm {
             $this->remove_required($date6);
             $this->remove_required($occassion6);
             $this->remove_required($type6);
+            
+            $this->remove_required($date7);
+            $this->remove_required($occassion7);
+            $this->remove_required($type7);
+            
+            $this->remove_required($date8);
+            $this->remove_required($occassion8);
+            $this->remove_required($type8);
+            
+            $this->remove_required($date9);
+            $this->remove_required($occassion9);
+            $this->remove_required($type9);
+            
+            $this->remove_required($date10);
+            $this->remove_required($occassion10);
+            $this->remove_required($type10);
         }
 
         if ($this->get_value_from_label('Payment Amount') == '$60 - 3 treats') {
@@ -104,6 +156,22 @@ class StudentTreatsThorForm extends CreditCardThorForm {
             $this->remove_required($date6);
             $this->remove_required($occassion6);
             $this->remove_required($type6);
+            
+            $this->remove_required($date7);
+            $this->remove_required($occassion7);
+            $this->remove_required($type7);
+            
+            $this->remove_required($date8);
+            $this->remove_required($occassion8);
+            $this->remove_required($type8);
+            
+            $this->remove_required($date9);
+            $this->remove_required($occassion9);
+            $this->remove_required($type9);
+            
+            $this->remove_required($date10);
+            $this->remove_required($occassion10);
+            $this->remove_required($type10);
         }
 
         if ($this->get_value_from_label('Payment Amount') == '$80 - 4 treats') {
@@ -115,6 +183,22 @@ class StudentTreatsThorForm extends CreditCardThorForm {
             $this->remove_required($date6);
             $this->remove_required($occassion6);
             $this->remove_required($type6);
+            
+            $this->remove_required($date7);
+            $this->remove_required($occassion7);
+            $this->remove_required($type7);
+            
+            $this->remove_required($date8);
+            $this->remove_required($occassion8);
+            $this->remove_required($type8);
+            
+            $this->remove_required($date9);
+            $this->remove_required($occassion9);
+            $this->remove_required($type9);
+            
+            $this->remove_required($date10);
+            $this->remove_required($occassion10);
+            $this->remove_required($type10);
         }
 
         if ($this->get_value_from_label('Payment Amount') == '$100 - 5 treats') {
@@ -122,6 +206,74 @@ class StudentTreatsThorForm extends CreditCardThorForm {
             $this->remove_required($date6);
             $this->remove_required($occassion6);
             $this->remove_required($type6);
+            
+            $this->remove_required($date7);
+            $this->remove_required($occassion7);
+            $this->remove_required($type7);
+            
+            $this->remove_required($date8);
+            $this->remove_required($occassion8);
+            $this->remove_required($type8);
+            
+            $this->remove_required($date9);
+            $this->remove_required($occassion9);
+            $this->remove_required($type9);
+            
+            $this->remove_required($date10);
+            $this->remove_required($occassion10);
+            $this->remove_required($type10);
+        }
+        
+        if ($this->get_value_from_label('Payment Amount') == '$120 - 6 treats') {
+            
+            $this->remove_required($date7);
+            $this->remove_required($occassion7);
+            $this->remove_required($type7);
+            
+            $this->remove_required($date8);
+            $this->remove_required($occassion8);
+            $this->remove_required($type8);
+            
+            $this->remove_required($date9);
+            $this->remove_required($occassion9);
+            $this->remove_required($type9);
+            
+            $this->remove_required($date10);
+            $this->remove_required($occassion10);
+            $this->remove_required($type10);
+        }
+        
+        if ($this->get_value_from_label('Payment Amount') == '$140 - 7 treats') {
+            
+            $this->remove_required($date8);
+            $this->remove_required($occassion8);
+            $this->remove_required($type8);
+            
+            $this->remove_required($date9);
+            $this->remove_required($occassion9);
+            $this->remove_required($type9);
+            
+            $this->remove_required($date10);
+            $this->remove_required($occassion10);
+            $this->remove_required($type10);
+        }
+        
+        if ($this->get_value_from_label('Payment Amount') == '$160 - 8 treats') {
+         
+            $this->remove_required($date9);
+            $this->remove_required($occassion9);
+            $this->remove_required($type9);
+            
+            $this->remove_required($date10);
+            $this->remove_required($occassion10);
+            $this->remove_required($type10);
+        }
+        
+        if ($this->get_value_from_label('Payment Amount') == '$180 - 9 treats') {
+                     
+            $this->remove_required($date10);
+            $this->remove_required($occassion10);
+            $this->remove_required($type10);
         }
     }
 
