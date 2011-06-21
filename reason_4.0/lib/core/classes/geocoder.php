@@ -49,7 +49,14 @@ class geocoder
 	var $raw_query_results;
 	var $query_results;
 	var $last_request_time = 0;
-	var $permanent_cache_enabled = true;
+	
+	/** 
+	 * cache setup - these params are ignored if you pass a custom cache to the geocoder using set_cache.
+	 */
+	var $ip_cache_lifespan = 86400; // we cache the ip to address lookup for a day.
+	var $ip_cache_location; // if your normal cache directory gets trashed more often than your lifespan setting you may want to set a directory name here.
+	var $geo_cache_lifespan = -1; // -1 means permanent - the geocode results for physical addresses and lat / lon pairs get stored permanently.
+	var $geo_cache_location; // if you do not specify, this gets set to REASON_INC . 'data/geocodes/' in the constructor.
 	
 	/**
 	 * You may optionally provide a configured ObjectCache object to use for the cache.
@@ -60,6 +67,7 @@ class geocoder
 	
 	function geocoder($location = '')
 	{
+		if (!isset($this->geo_cache_location)) $this->geo_cache_location = REASON_INC . 'data/geocodes/';
 		if ($location) $this->set_location($location);
 	}
 	
@@ -69,6 +77,14 @@ class geocoder
 	function set_cache($object_cache)
 	{
 		$this->cache = $object_cache;
+	}
+	
+	/**
+	 * @param object ObjectCache
+	 */
+	function set_ip_cache($object_cache)
+	{
+		$this->ip_cache = $object_cache;
 	}
 	
 	/**
@@ -486,37 +502,49 @@ class geocoder
 	}
 	
 	/**
-	 * Attempt to return a "live forever" file system cache in REASON_INC.'data/geocodes/' - fall back on the tmp cache.
+	 * Return a file system cache object at $this->geo_cache_location using $this->geo_cache_lifespan
+	 * @return object ObjectCache
 	 */
 	function get_cache()
 	{
 		if (!isset($this->cache))
 		{
-			$permanent_cache = ($this->permanent_cache_enabled && (file_exists(REASON_INC.'data/geocodes/') && is_writable(REASON_INC.'data/geocodes/'))) ? REASON_INC.'data/geocodes/' : false;
-			if ($permanent_cache)
+			if (isset($this->geo_cache_location) && (file_exists($this->geo_cache_location) && is_writable($this->geo_cache_location)))
 			{
 				$this->cache = new ObjectCache();
 				$this->cache->set_cache_type('file');
-				$this->cache->set_cache_params(array('cache_dir' => REASON_INC.'data/geocodes/'));
-				$this->cache->set_default_lifespan(-1);
+				$this->cache->set_cache_params(array('cache_dir' => $this->geo_cache_location));
 			}
 			else
 			{
-				if ($this->permanent_cache_enabled) trigger_error('Please create a folder ' . REASON_INC . 'data/geocodes/ in order to permanently cache geocode lookups.');
+				if (isset($this->geo_cache_location)) trigger_error('Please create the geo cache folder (' . $this->geo_cache_location . ') ... using the default cache location instead.');
 				$this->cache = new ObjectCache();
 			}
+			if (isset($this->geo_cache_lifespan)) $this->cache->set_default_lifespan($this->geo_cache_lifespan);
 		}
 		return $this->cache;
 	}
 	
 	/**
-	 * Since ips are often dynamic, we do not want our IP cache to life forever like the main geolocation cache.
+	 * Return a file system cache object at $this->ip_cache_location using $this->ip_cache_lifespan
+	 * @return object ObjectCache
 	 */
 	function get_ip_cache()
 	{
 		if (!isset($this->ip_cache))
 		{
-			$this->ip_cache = new ObjectCache();
+			if (isset($this->ip_cache_location) && (file_exists($this->ip_cache_location) && is_writable($this->ip_cache_location)))
+			{
+				$this->ip_cache = new ObjectCache();
+				$this->ip_cache->set_cache_type('file');
+				$this->ip_cache->set_cache_params(array('cache_dir' => $this->ip_cache_location));
+			}
+			else
+			{
+				if (isset($this->ip_cache_location)) trigger_error('Please create the ip cache folder (' . $this->ip_cache_location . ') ... using the default cache location instead.');
+				$this->ip_cache = new ObjectCache();
+			}
+			if (isset($this->ip_cache_lifespan)) $this->ip_cache->set_default_lifespan($this->ip_cache_lifespan);
 		}
 		return $this->ip_cache;
 	}
