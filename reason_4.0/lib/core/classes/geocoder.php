@@ -10,32 +10,34 @@ include_once('reason_header.php');
 include_once(CARL_UTIL_INC . 'cache/object_cache.php');
 
 /**
- * A class for geocoding addresses (or IPs) with result caching.
+ * A class for geocoding with result caching.
  *
  * This class relies on the Google Geocoding API (http://code.google.com/apis/maps/documentation/geocoding/) 
  * but has been designed so that you can fairly easily adapt it to use another service without breaking
  * any code that relies on it.
  *
+ * Any code that uses this class should make sure that the use meets the terms of the google maps API.
+ *
  * Example 1: Geocode an address
  *
  * <code>
  * $gc = new geocoder();
- * $gc->set_address('123 Anystreet, Anycity, Anystate');
- * $geocode = $gc->get_geocode();
+ * $geocode = $gc->get_geocode('123 Anystreet, Anycity, Anystate');
  * </code>
  *
  * Example 2: Geocode an IP
  *
  * <code>
  * $gc = new geocoder();
- * $gc->set_address_from_ip('1.1.1.1');
- * $geocode = $gc->get_geocode();
+ * $geocode = $gc->get_geocode('1.1.1.1');
  * </code>
  *
  * Example 3: Geocode a point
  *
- *
- *
+ * <code>
+ * $gc = new geocoder();
+ * $geocode = $gc->get_geocode(array('lat'=>44.461386, 'lon'=>-93.1554632));
+ * </code>
  *
  * @author Mark Heiman
  * @author Nathan White
@@ -47,6 +49,7 @@ class geocoder
 	var $raw_query_results;
 	var $query_results;
 	var $last_request_time = 0;
+	var $permanent_cache_enabled = true;
 	
 	/**
 	 * You may optionally provide a configured ObjectCache object to use for the cache.
@@ -68,9 +71,12 @@ class geocoder
 		$this->cache = $object_cache;
 	}
 	
+	/**
+	 * @deprecated - use set_location
+	 */
 	function set_address($address)
 	{
-		$this->set_location($address);	
+		$this->set_location($address, true);	
 	}
 
 	/**
@@ -90,10 +96,8 @@ class geocoder
 		static $attempted_ips;
 		if (!empty($ip))
 		{
-			// do we have a cached address for this IP already?
-			$cache_key = md5('ip_to_address_cache_'.$ip);
-			$cache = $this->get_cache();
-			$cache->init($cache_key);
+			$cache = $this->get_ip_cache();
+			$cache->init('ip_to_address_cache_'.$ip);
 			$address = $cache->fetch();
 			if ($address === FALSE)
 			{
@@ -171,7 +175,7 @@ class geocoder
 				if (isset($address['region'])) $parts[] = $address['region'];
 				if (isset($address['postal_code'])) $parts[] = $address['postal_code'];
 				if (isset($address['country'])) $parts[] = $address['country'];
-				$this->set_address(join(', ', $parts));
+				$this->set_location(join(', ', $parts), true);
 			}
 			return ($address);
 		}
@@ -190,7 +194,6 @@ class geocoder
 	function get_geocode($location = '')
 	{
 		if ($location) $this->set_location($location);
-
 		if (!$this->get_location())
 		{
 			trigger_error('Location (street address, ip, or geopoint) not set in geocoder->get_geocode');
@@ -212,11 +215,48 @@ class geocoder
 	}
 	
 	/**
-	 *
+	 * - If location is an array make sure it has lat and lon set (and in that order)
+	 * - If location is an ip translate it and set the address 
+	 * - If location is an address, set item
+	 * - Otherwise set the location to NULL
 	 */
-	function set_location($location)
+	function set_location($location, $location_is_known_address = false)
 	{
-		$this->location = $location;
+		$this->location = NULL;
+		if ($location_is_known_address)
+		{
+			$this->location = $location;
+		}
+		elseif (is_array($location) && isset($location['lat']) && isset($location['lon']))
+		{
+			$this->location = array();
+			$this->location['lat'] = $location['lat'];
+			$this->location['lon'] = $location['lon'];
+		}
+		elseif ($this->is_ip_address($location))
+		{
+			$this->set_address_from_ip($location);
+		}
+		elseif (is_string($location))
+		{
+			$this->location = $location;
+		}
+	}
+	
+	/**
+	 * Check if a string is an ip address - prior to php 5.2 we are only checking ipv4
+	 */ 
+	function is_ip_address($str)
+	{
+		if (function_exists('filter_var'))
+		{
+			return (filter_var($str, FILTER_VALIDATE_IP) !== false);
+		}
+		else
+		{
+			// this only does ip4
+			return (preg_match("/^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])" . "(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/", '127.0.0.1') !== 0);
+		}
 	}
 	
 	function get_location()
@@ -381,11 +421,10 @@ class geocoder
 			'address_parts' => $address_parts,
 			'latitude' => $result->geometry->location->lat,
 			'longitude' => $result->geometry->location->lng,
-			'address_hash' => md5($address), // i would like this to go away if possible
-			'location_hash' => md5($location),
+			'hash' => md5($location),
 			'raw_response' => json_decode($this->raw_query_results));
 		
-		$this->save_result_to_cache($values);
+		$this->save_result_to_cache($values, $location);
 		
 		return $values;
 	}
@@ -412,7 +451,7 @@ class geocoder
 		return $best;
 	}
 	
-	/** Retrieve geocodes from the cache by comparing address hashes. 
+	/** Retrieve geocodes from the cache by comparing hashes. 
 	 *  Code using this method is expecting an array that minimally contains this:
 	 *  array(
 	 *     'address' => "The address the user entered",
@@ -422,9 +461,10 @@ class geocoder
  	 **/
 	function get_result_from_cache()
 	{
+		
 		$location = ($this->location_is_lat_lon()) ? serialize($this->get_location()) : $this->get_location();
 		$cache = $this->get_cache();
-		$cache->init(md5($location));
+		$cache->init($location);
 		$result = $cache->fetch();
 		if ($result !== FALSE)
 		{
@@ -437,25 +477,48 @@ class geocoder
 	/**
 	 * Lets save the cache.
 	 */
-	function save_result_to_cache($values)
+	function save_result_to_cache($values, $location_str)
 	{
-		$location = ($this->location_is_lat_lon()) ? serialize($this->get_location()) : $this->get_location();
 		$cache = $this->get_cache();
-		$cache->init($values['location_hash'], -1); // grab anything that exists, specify -1 so we get anything.
+		$cache->init($location_str, -1); // grab anything that exists, specify -1 so we get anything.
 		$newvalues[] = $values;
 		$cache->set($newvalues);
 	}
 	
 	/**
-	 * Return the default ObjectCache if an ObjectCache object has not been provided.
+	 * Attempt to return a "live forever" file system cache in REASON_INC.'data/geocodes/' - fall back on the tmp cache.
 	 */
 	function get_cache()
 	{
 		if (!isset($this->cache))
 		{
-			$this->cache = new ObjectCache();
+			$permanent_cache = ($this->permanent_cache_enabled && (file_exists(REASON_INC.'data/geocodes/') && is_writable(REASON_INC.'data/geocodes/'))) ? REASON_INC.'data/geocodes/' : false;
+			if ($permanent_cache)
+			{
+				$this->cache = new ObjectCache();
+				$this->cache->set_cache_type('file');
+				$this->cache->set_cache_params(array('cache_dir' => REASON_INC.'data/geocodes/'));
+				$this->cache->set_default_lifespan(-1);
+			}
+			else
+			{
+				if ($this->permanent_cache_enabled) trigger_error('Please create a folder ' . REASON_INC . 'data/geocodes/ in order to permanently cache geocode lookups.');
+				$this->cache = new ObjectCache();
+			}
 		}
 		return $this->cache;
+	}
+	
+	/**
+	 * Since ips are often dynamic, we do not want our IP cache to life forever like the main geolocation cache.
+	 */
+	function get_ip_cache()
+	{
+		if (!isset($this->ip_cache))
+		{
+			$this->ip_cache = new ObjectCache();
+		}
+		return $this->ip_cache;
 	}
 }
  
