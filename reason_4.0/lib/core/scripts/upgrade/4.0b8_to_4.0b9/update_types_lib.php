@@ -180,6 +180,54 @@ class updateTypes
 		}
 	}
 	
+	function create_geocode_data_directory($mode, $reason_user_id = NULL)
+	{
+		if($mode != 'run' && $mode != 'test')
+		{
+			trigger_error('$mode most be either "run" or "test"');
+			return;
+		}
+		
+		$this->mode = $mode;
+		$this->reason_id = $reason_user_id;
+		
+		// first check it it exists and is writable - if so, we are probably all good.
+		$path = REASON_INC . 'data/geocodes/';
+		if (file_exists($path) && is_writable($path)) echo '<p>The geocode data directory exists and is writable - this script has probably been run.</p>';
+		elseif ($this->mode == 'test')
+		{
+			if (!file_exists($path) && is_writable(REASON_INC.'data/'))
+			{
+				echo '<p>would run mkdir to make this directory - ' . REASON_INC.'data/geocodes/</p>'; 
+			}
+			elseif (!file_exists($path) && is_writable(REASON_INC.'data/'))
+			{
+				echo '<p>would require you to manually create the directory ' . REASON_INC.'data/geocodes/ because apache does not have write permissions to the data directory.</p>';
+			}
+			if (file_exists($path) && !is_writable(REASON_INC.'data/geocodes/'))
+			{
+				echo '<p>would inform you that you will need to modify the permissions of ' . REASON_INC.'data/geocodes/ so that apache can save geocode data</p>';
+			}
+		}
+		elseif ($this->mode == 'run')
+		{
+			if (!file_exists($path) && is_writable(REASON_INC.'data/'))
+			{
+				mkdir(REASON_INC.'data/geocodes');
+				echo 'Ran mkdir to make this directory - ' . REASON_INC.'data/geocodes/';
+				clearstatcache();
+			}
+			if (!file_exists($path) && !is_writable(REASON_INC.'data/'))
+			{
+				echo '<p>You need to manually create the geocode data directory ('.REASON_INC.'data/geocodes/) because apache does not have write permissions to the data directory.</p>';
+			}
+			if (file_exists($path) && !is_writable(REASON_INC.'data/geocodes/'))
+			{
+				echo '<p>The geocode directory exists but is not writable by apache - you will need to modify the permissions of the directory ('.REASON_INC.'data/geocodes/) so that apache can save geocode data</p>';
+			}
+		}
+	}
+	
 	function mysql_supports_triggers_and_spatial_data()
 	{
 		$qry = 'SELECT version()';

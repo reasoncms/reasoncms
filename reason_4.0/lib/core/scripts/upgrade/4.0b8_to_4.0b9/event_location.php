@@ -63,6 +63,7 @@ elseif (DISABLE_REASON_ADMINISTRATIVE_INTERFACE == true)
 <li>Adds the event.address field (tinytext)</li>
 <li>Adds the event.latitute field (double)</li>
 <li>Adds the event.longitude field (double)</li>
+<li>Create or prompts you to create the geocodes data directory</li>
 </ul>
 
 <form method="post">
@@ -87,6 +88,7 @@ if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 	{
 		$update = new updateTypes($mode, $reason_user_id);
 		$update->upgrade_event_type($mode, $reason_user_id);
+		$update->create_geocode_data_directory($mode, $reason_user_id);
 	}
 }
 
