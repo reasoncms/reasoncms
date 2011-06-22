@@ -102,7 +102,7 @@ function can_upload($session) {
 		$reason_session =& get_reason_session();
 
 		$username = $reason_session->get("username");
-		if (isset($_REQUEST['user_id']))
+		if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id']))
 		{
 			$username = $reason_session->get('username');
 			$param_cleanup_rules = array('user_id' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => 'true')));
