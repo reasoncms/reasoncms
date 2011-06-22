@@ -1,7 +1,7 @@
 <?
 reason_include_once('minisite_templates/modules/form/views/thor/credit_card_payment.php');
 include_once(WEB_PATH.'stock/pfproclass.php'); //<<<< Change this
-$GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCardTestThorForm';
+$GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'RoyalVisitPaymentForm';
 
 /**
  * Use only for running test payments on the live site. This is only for the form creator to see the process
@@ -12,7 +12,7 @@ $GLOBALS[ '_form_view_class_names' ][ basename( __FILE__, '.php') ] = 'CreditCar
  * * @author Steve Smith
  */
 
-class CreditCardTestThorForm extends CreditCardThorForm
+class RoyalVisitPaymentForm extends CreditCardThorForm
 {
    // style up the form and add comments et al
     function on_every_time() {
