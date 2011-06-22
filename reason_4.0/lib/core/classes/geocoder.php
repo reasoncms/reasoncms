@@ -8,6 +8,7 @@
  */
 include_once('reason_header.php');
 include_once(CARL_UTIL_INC . 'cache/object_cache.php');
+include_once(CARL_UTIL_INC . 'basic/json.php');
 
 /**
  * A class for geocoding with result caching.
