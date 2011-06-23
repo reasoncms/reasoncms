@@ -748,7 +748,7 @@ function admissions_main_navigation()
         	echo '<li><a href="/video/">Luther Videos</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeatluther/collegeministries/">College Ministries</a></li>'."\n";        	
         	echo '<li><a href="/admissions/lifeatluther/diversity/">Diversity Center</a></li>'."\n";
-        	echo '<li><a href="/admissions/lifeatluther/residencelife/">Residence Life</a></li>'."\n";
+        	echo '<li><a href="/reslife/">Residence Life</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeatluther/diningservices/">Dining Services</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeatluther/counseling/">Counseling</a></li>'."\n";
         	echo '<li><a href="/admissions/lifeatluther/recsports/">Recreational Sports</a></li>'."\n";
