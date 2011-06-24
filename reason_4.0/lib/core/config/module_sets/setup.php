@@ -48,6 +48,13 @@ $ms->add(
 	),
 	'media_display'
 );
+$ms->add(
+	array(
+		'av',
+		'av_with_filters'
+	),
+	'av_module_derivatives'
+);
 
 if(reason_file_exists('config/module_sets/setup_local.php'))
 	reason_include_once('config/module_sets/setup_local.php');
