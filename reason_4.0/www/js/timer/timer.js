@@ -392,7 +392,7 @@ $(window).load(function()
 		{
 			var popup_html = '<div id="popupOverlay"></div>';
 			popup_html += '<div id="divPopup"><div>';
-			popup_html += '<h3>You have been logged out due to inactivity!</h3>';
+			popup_html += '<h3>You have been logged out!</h3>';
 			popup_html += '<a href="'+logout_page+'" target="_blank" style="color: #000099">Renew Your Login</a>';
 			popup_html += '</div></div>';
 			var popup = $(popup_html);
