@@ -31,6 +31,13 @@ $(document).ready(function() {
 
     /**All Pages **/
     /**************/
+    $("input[name*='first_name']").watermark('First');
+    $("input[name*='middle_name']").watermark('Middle');
+    $("input[name*='last_name']").watermark('Last');
+    $("input[name*='preferred_first_name']").watermark('Nickname');
+    $("input[name*='age']").watermark('Age');
+    $("input[name*='grade']").watermark('Grade');
+    
     $('.addButton').button({
         icons: {
             primary:'ui-icon-plusthick',
@@ -105,12 +112,7 @@ $(document).ready(function() {
 
 
     /**Page Three - Family**/
-    /***********************/
-    //--!!!!wtf!!!!--//
-    //$('#parent_1_first_nameElement').wtf('First');
-	
-    // $('#parent_1_first_nameElement').watermark('First');
-    
+    /***********************/	
     $("#family_dialog").dialog({
         autoOpen: false,
         show: "blind",
@@ -672,9 +674,3 @@ function toggle_other_activity_details() {
         $("tr#activity10otherRow").hide();
     }
 }
-//$.fn.wtf = function(args){
-//    var text = args;
-//
-//    $("#parentmaritalstatuscommentRow").hide();
-//    alert(text);
-//}
