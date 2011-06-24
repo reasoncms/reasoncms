@@ -356,6 +356,70 @@
 				echo '</div>'."\n";
 			}
 		}
+		
+		/**
+		 * A nice handler for missing av things. Attempts to point the user to another
+		 * place to access the item, even if that place is on another site.
+		 * 
+		 * Takes the ID of a missing item and looks for it on pages that use a page 
+		 * type which uses a module defined in the module set 'av_module_derivatives'.
+		 * Requires reason_page_types and reason_module_sets.
+		 * 
+		 * @param $id int The entity ID of the missing item
+		 * @return null;
+		 * 
+		 */
+		function handle_missing_item($id)
+		{
+			
+			// Get the list of modules
+			$ms =& reason_get_module_sets();
+			$av_module_derivatives = $ms->get("av_module_derivatives");
+			
+			// Get the page types that use these modules.
+			$rpts =& get_reason_page_types();
+			$allowed_page_types = array();
+			foreach ($av_module_derivatives as $mod){
+				$allowed_page_types = array_merge($allowed_page_types, array_diff($rpts->get_page_type_names_that_use_module($mod), $allowed_page_types));
+			}
+			
+			// Turn this list into a string.
+			$serialized = "'" . implode("','", $allowed_page_types) . "'";
+			
+			// Build the ES
+			$es = new entity_selector();
+			$es->add_type(id_of('minisite_page'));
+			$es->add_left_relationship($id, relationship_id_of('minisite_page_to_av'));
+			$es->add_right_relationship_field('owns', 'entity', 'name', 'site_name');
+			$es->add_relation("page_node.custom_page IN ($serialized)");
+			$result = $es->run_one();
+
+			echo '<div class="notice itemNotAvailable"><h3>Sorry -- this item is not available</h3>';
+			// If there are suitable replacements found, display them...
+			if (!empty($result))
+			{
+				$url = parse_url(get_current_url());
+				
+				if (count($result) == 1)
+				{
+					$new_page_link = reason_get_page_url(current($result)->id()) . '?' . $url['query'];
+					header( 'Location: ' . $new_page_link, true, 301 );
+					exit;
+				}
+				echo "<p>However, you might be able to find it at the following location" . ((count($result)-1) ? "s" : "" ) . ":</p>\n<ul>\n";
+				foreach ($result as $key => $entity)
+				{
+					// Don't forget to pass a nice query string that includes the item of the av as well as the av_file_id if it's in the request.
+					echo '<li><a href="' . reason_get_page_url($key) . "?" . $url['query'] . "\">{$entity->get_value("site_name")}: {$entity->get_value("name")}</a></li>";
+				}
+				echo "</ul>";
+			} else {
+			// Else just echo the normal 404. 
+				echo '<p>This might be because...</p><ul><li>the page you are coming from has a bad link</li><li>there is a typo in the web address</li><li>the item you are requesting has been removed</li></ul>';
+			}
+			echo "</div>";
+		}
+		
 		function list_items()
 		{
 			parent::list_items();
