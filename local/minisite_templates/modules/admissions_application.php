@@ -162,8 +162,6 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
         if ($head_items = & $this->get_head_items()) {
             $head_items->add_stylesheet('/reason/jquery-ui-1.8.12.custom/css/redmond/jquery-ui-1.8.12.custom.css');
             $head_items->add_stylesheet('/reason/css/giftform.css');
-            //$head_items->add_stylesheet('/reason/css/admissions_app.css');
-            $head_items->add_javascript('/reason/jquery.watermark-3.1.3/jquery.watermark.min.js');
             $head_items->add_javascript('/reason/js/admissions_application.2.js');
             
         }
