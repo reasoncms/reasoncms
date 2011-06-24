@@ -187,7 +187,7 @@
 		var $current_item_id;
 		
 		//calls on parent::init, set_type(), alter_es(), apply_user_input_to_es(), do_filtering(), do_pagination() add_crumb(), refine_ids_and_positions_arrays()
-		function init( $args = array()) // {{{
+		function init($args = array()) // {{{
 		{
 			$error = 'Your class needs to have a type id.  Please overload the set_type() function and '.
 					 'include a line such as $this->type = id_of( "something" ) to run this module.';
@@ -483,14 +483,27 @@
 			}
 			else
 			{
-				echo '<div class="notice itemNotAvailable"><h3>Sorry -- this item is not available</h3><p>This might be because...</p><ul><li>the page you are coming from has a bad link</li><li>there is a typo in the web address</li><li>the item you are requesting has been removed</li></ul>';
-				if($this->show_list_with_details && !$this->stealth_mode)
-				{
-					echo '<p>If you think you might have made a mistake typing the web address, look at the items below to see if what you want is listed.</p>';
-				}
-				echo '<p>If you wish to report a bad link, please contact the site maintainer listed at the bottom of this page.</p></div>'."\n";
+				$this->handle_missing_item($id);
 			}
 		} // }}}
+		
+		/** 
+		 * Extend this to implement intelligent missing item redirection.
+		 *
+		 * Called upon by {@link Generic3Module::_show_item()}.
+		 * 
+		 * @param integer $id Reason Entity ID
+		 */
+		function handle_missing_item($id)
+		{
+			echo '<div class="notice itemNotAvailable"><h3>Sorry -- this item is not available</h3><p>This might be because...</p><ul><li>the page you are coming from has a bad link</li><li>there is a typo in the web address</li><li>the item you are requesting has been removed</li></ul>';
+			if($this->show_list_with_details && !$this->stealth_mode)
+			{
+				echo '<p>If you think you might have made a mistake typing the web address, look at the items below to see if what you want is listed.</p>';
+			}
+			echo '<p>If you wish to report a bad link, please contact the site maintainer listed at the bottom of this page.</p></div>'."\n";
+			echo "<p>Entity number: $id</p>";
+		}
 		
 		/**
 		 * Check a given id to see if it is OK to show
