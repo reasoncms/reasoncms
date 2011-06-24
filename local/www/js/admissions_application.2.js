@@ -82,6 +82,10 @@ $(document).ready(function() {
 
     /**Page Two - Personal Info **/
     /*****************************/
+    $("#date_of_birth-mm").watermark('mm');
+    $("#date_of_birth-dd").watermark('dd');
+    $("#date_of_birth").watermark('yyyy');
+
     $("#ssn_dialog").dialog({
         autoOpen: false,
         show: "blind",
