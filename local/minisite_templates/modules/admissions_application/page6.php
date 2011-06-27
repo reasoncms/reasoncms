@@ -10,7 +10,7 @@
  *
  */
 /*
- *  Sizth page of the application
+ *  Sixth page of the application
  *
  *  Misc Information
  *          College Plan
@@ -59,11 +59,11 @@ class ApplicationPageSix extends FormStep {
             'JOUR' => 'Journalism',
             'LAT' => 'Latin',
             'MGT' => 'Management',
-            'MIS' => ' Management Info Systems',
-            'MATH' => '	Mathematics',
-            'MSTAT' => ' Mathematics/Statistics',
-            'MEDT' => ' Medical Technology',
-            'MLAN' => ' Modern Languages',
+            //'MIS' => 'Management Info Systems',
+            'MATH' => 'Mathematics',
+            'MSTAT' => 'Mathematics/Statistics',
+            'MEDT' => 'Medical Technology',
+            'MLAN' => 'Modern Languages',
             'MUST' => 'Museum Studies',
             'MUS' => 'Music',
             'MUSE' => 'Music Education',
@@ -191,9 +191,7 @@ class ApplicationPageSix extends FormStep {
                   in lieu of submitting a personal statement'
         ),
         'personal_statement' => array(
-            'type' => 'upload',
-            'acceptable_types' => array('application/pdf', 'image/*'),
-            'display_name' => 'Upload a file',
+            'type' => 'textarea_no_label',
         ),
         'disciplinary_header' => array(
             'type' => 'comment',
@@ -249,8 +247,8 @@ class ApplicationPageSix extends FormStep {
     var $error_header_text = 'Please check your form.';
 
     function  on_every_time() {
-        $this->change_element_type('first_choice', 'select', array('options' => $this->majors_array));
-        $this->change_element_type('second_choice', 'select', array('options' => $this->majors_array));
+        $this->change_element_type('college_plan_1', 'select', array('options' => $this->majors_array));
+        $this->change_element_type('college_plan_2', 'select', array('options' => $this->majors_array));
     }
     function pre_show_form() {
         echo '<div id="admissionsApp" class="pageSix">' . "\n";
@@ -258,6 +256,11 @@ class ApplicationPageSix extends FormStep {
 
     function post_show_form() {
         echo '</div>' . "\n";
+    }
+
+    function  run_error_checks() {
+        
+        parent::run_error_checks();
     }
 }
 ?>
