@@ -223,13 +223,6 @@ class ApplicationPageFour extends FormStep {
             'comments' => 'Composite'
         ),
     );
-    var $element_group_info = array(
-        'college_button_group' =>array(
-            'type' => 'inline',
-            'elements' => array('add_college_button', 'remove_college_button'),
-            'args' => array('use_element_labels' => false, 'use_group_display_name' => false, 'span_columns' => true),
-        )
-    );
 
     var $display_name = 'Education';
     var $error_header_text = 'Please check your form.';
@@ -239,10 +232,10 @@ class ApplicationPageFour extends FormStep {
     }
 
      function on_every_time() {
-        foreach ($this->element_group_info as $name => $info) {
-            $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
-        }
-        $this->move_element('college_button_group', 'after', 'college_3_name');
+//        foreach ($this->element_group_info as $name => $info) {
+//            $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
+//        }
+//        $this->move_element('college_button_group', 'after', 'college_3_name');
 
         if ($this->controller->get('student_type') == 'FR') {
             $this->change_element_type('final_high_school_header', 'hidden');
