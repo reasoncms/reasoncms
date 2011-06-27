@@ -63,9 +63,6 @@ function get_applicant_data($openid, &$the_form) {
             if (array_key_exists($element, $row)) {
                 if($element == 'activity_1_participation'){
                     $the_value = explode(',', $row[$element]);
-                    echo "wtf is going on????";
-                    echo "<br />";
-                    pray($the_value);
                 }else{
                     $the_value = $row[$element];
                 }
@@ -83,8 +80,8 @@ function set_applicant_data($openid, &$the_form) {
     $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
     $results = db_query($qstring);
     if (mysql_num_rows($results) < 1) {
-        $qstring = "INSERT INTO `applicants` (`open_id`, `creation_date`, `last_update`, `submitter_ip`)
-            VALUES ('" . addslashes($openid) . "', 'CURRENT_TIMESTAMP', 'CURRENT_TIMESTAMP', '" . $_SERVER['REMOTE_ADDR'] . "'); ";
+        $qstring = "INSERT INTO `applicants` (`open_id`, `creation_date`, `submitter_ip`)
+            VALUES ('" . addslashes($openid) . "', NOW(), '" . $_SERVER['REMOTE_ADDR'] . "'); ";
         $results = mysql_query($qstring) or die(mysql_error());
         $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
         $results = db_query($qstring);
@@ -106,7 +103,8 @@ function set_applicant_data($openid, &$the_form) {
                 $qstring .= "', ";
             }
         }
-        $qstring = rtrim($qstring, ' ,');
+        $qstring .= "`last_update`=NOW();";
+//        $qstring = rtrim($qstring, ' ,');
         $qstring .= " WHERE `open_id`= '" . addslashes($openid) . "' ";
         //die($qstring);
     }
