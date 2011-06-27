@@ -112,12 +112,19 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             ),
             'ApplicationPageSix' => array(
                 'next_steps' => array(
-                'ApplicationPageFive' => array(
+                    'ApplicationPageFive' => array(
                         'label' => 'Previous',
+                    ),
+                    'ApplicationConfirmation' => array(
+                        'label' => 'Submit Your Application'
+                    ),
                 ),
+                'step_decision' => array(
+                    'type' => 'user'
+                ),
+            ),
+            'ApplicationConfirmation' => array(
                 'final_step' => true,
-                'final_button_text' => 'Submit Your Application',
-                )
             )
         );
         $this->controller->add_forms($forms);
