@@ -217,27 +217,26 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
         foreach ($this->controller->forms as $name => $form) {
             $i++;
             $class = 'formStep';
-            $style = '';
             if (isset($form->display_name)) {
 
                 switch($i){
                     case 1:
-                        if (!validate_page1()){ $style .= ' error'; }
+                        if (!validate_page1()){ $class .= ' error'; }
                         break;
                     case 2:
-                        if (!validate_page2()){ $style .= ' error'; }
+                        if (!validate_page2()){ $class .= ' error'; }
                         break;
                     case 3:
-                        if (!validate_page3()){ $style .= ' error'; }
+                        if (!validate_page3()){ $class .= ' error'; }
                         break;
                     case 4:
-                        if (!validate_page4()){ $style .= ' error'; }
+                        if (!validate_page4()){ $class .= ' error'; }
                         break;
                     case 5:
-                        if (!validate_page5()){ $style .= ' error'; }
+                        if (!validate_page5()){ $class .= ' error'; }
                         break;
                     case 6:
-                        if (!validate_page6()){ $style .= ' error'; }
+                        if (!validate_page6()){ $class .= ' error'; }
                         break;
                 }
                 
