@@ -56,7 +56,6 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
                 'step_decision' => array(
                     'type' => 'user',
                 ),
-                'back_button_text' => 'Previous',
             ),
             'ApplicationPageTwo' => array(
                 'next_steps' => array(
