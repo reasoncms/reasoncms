@@ -435,5 +435,40 @@ class ApplicationPageFive extends FormStep {
     function process() {
         set_applicant_data($this->openid_id, $this);
     }
+
+    function  run_error_checks() {
+        parent::run_error_checks();
+
+        if ($this->get_value('activity_1') == 'Other'){
+            $this->set_error('activity_1_other', 'Please describe the activity you listed as \'other\'.');
+        }
+        if ($this->get_value('activity_2') == 'Other'){
+            $this->set_error('activity_2_other', 'Please describe the activity you listed as \'other\'.');
+        }
+        if ($this->get_value('activity_3') == 'Other'){
+            $this->set_error('activity_3_other', 'Please describe the activity you listed as \'other\'.');
+        }
+        if ($this->get_value('activity_4') == 'Other'){
+            $this->set_error('activity_4_other', 'Please describe the activity you listed as \'other\'.');
+        }
+        if ($this->get_value('activity_5') == 'Other'){
+            $this->set_error('activity_5_other', 'Please describe the activity you listed as \'other\'.');
+        }
+        if ($this->get_value('activity_6') == 'Other'){
+            $this->set_error('activity_6_other', 'Please describe the activity you listed as \'other\'.');
+        }
+        if ($this->get_value('activity_7') == 'Other'){
+            $this->set_error('activity_7_other', 'Please describe the activity you listed as \'other\'.');
+        }
+        if ($this->get_value('activity_8') == 'Other'){
+            $this->set_error('activity_8_other', 'Please describe the activity you listed as \'other\'.');
+        }
+        if ($this->get_value('activity_9') == 'Other'){
+            $this->set_error('activity_9_other', 'Please describe the activity you listed as \'other\'.');
+        }
+        if ($this->get_value('activity_10') == 'Other'){
+            $this->set_error('activity_10_other', 'Please describe the activity you listed as \'other\'.');
+        }
+    }
 }
 ?>
