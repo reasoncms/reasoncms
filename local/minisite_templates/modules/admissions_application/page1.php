@@ -1,4 +1,5 @@
 <?php
+
 include_once 'application_utils.php';
 
 /**
@@ -69,77 +70,70 @@ class ApplicationPageOne extends FormStep {
     var $display_name = 'Enrollment Info';
     var $error_header_text = 'Please check your form.';
 
+    ///////////////
     // style up the form and add comments et al
     function on_every_time() {
         $this->show_form = true;
-        
-        
-        
-       
-        
-        $date = getdate();
-        
-        $cur_date = date("Y-m-d");
-        
-        $fa_deadline1 = date($date['year']."-08-01");
-        $jt_deadline = date($date['year']."-12-15");
-        $sp_deadline1 = date($date['year']."-01-15");
-        
-        
-        if ($cur_date > $fa_deadline1) { 
-            
-            ($fa_year = date('Y')+1) ; 
-            
-            } else { 
-                
-                $fa_year = date('Y'); 
-            }
 
-        if ($cur_date > $jt_deadline && $cur_date <= (date('Y')."-12-31") ) {
-            
-            $jt_year = date('Y')+2;
-            
-        } else  {
-           
-            $jt_year = date('Y')+1;
+        $date = getdate();
+
+        $cur_date = date("Y-m-d");
+
+        $fa_deadline = date($date['year'] . "-08-01");
+        $jt_deadline = date($date['year'] . "-12-15");
+        $sp_deadline = date($date['year'] . "-01-15");
+
+        if ($cur_date > $fa_deadline) {
+            ($fa_year = date('Y') + 1);
+        } else {
+            $fa_year = date('Y');
+        }
+
+        if ($cur_date > $jt_deadline && $cur_date <= (date('Y') . "-12-31")) {
+            $jt_year = date('Y') + 2;
+        } else {
+            $jt_year = date('Y') + 1;
+        }
+
+        if ($cur_date > $sp_deadline) {
+            $sp_year = date('Y') + 1;
+        } else {
+            $sp_year = date('Y');
+        }
+
+
+        // if passed fall deadline but not jterm one
+        if ($cur_date > $fa_deadline && $cur_date < $jt_deadline) {
+            $this->enroll_term = array(
+                $jt_year . 'JT' => 'J-term ' . $jt_year,
+                $sp_year . 'SP' => 'Spring ' . $sp_year,
+                $fa_year . 'FA' => 'Fall ' . $fa_year);
         }
         
-        if ($cur_date > $sp_deadline1) { $sp_year = date('Y')+1; } else { $sp_year = date('Y'); }
+        // if not passed fall deadline
+        if ($cur_date < $fa_deadline && $cur_date > $sp_deadline) {
+            $this->enroll_term = array(
+                $fa_year . 'FA' => 'Fall ' . $fa_year,
+                $jt_year . 'JT' => 'J-term ' . $jt_year,
+                $sp_year . 'SP' => 'Spring ' . $sp_year);
+        }
         
+        //if passed fall and jterm deadline
+        if ($cur_date < $sp_deadline && $cur_date > $jt_deadline) {
+            $this->enroll_term = array(
+                $sp_year . 'SP' => 'Spring ' . $sp_year,
+                $fa_year . 'FA' => 'Fall ' . $fa_year,
+                $jt_year . 'JT' => 'J-term ' . $jt_year);
+        }
 
         $this->change_element_type('enrollment_term', 'radio_no_sort', array(
-            'options' => array(
-                $fa_year . 'FA' => 'Fall ' .$fa_year, 
-                $jt_year . 'JT' => 'J-term ' . $jt_year,
-                $sp_year. 'SP' => 'Spring '. $sp_year)));
+            'options' => $this->enroll_term));
 
         $this->pre_fill_form();
     }
 
     function no_show_form() {
         echo(check_login(get_current_url(), $this));
-//        $url = get_current_url();
-//        $parts = parse_url($url);
-//        $url = $parts['scheme'] . '://' . $parts['host'] . '/openid/?next=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
-//
-//        $txt = '<h3>Hi There!</h3>';
-//        $txt .= '<p>To begin or resume your application, please sign in using an
-//            <a href="http://openid.net/get-an-openid/what-is-openid/" target="_blank">Open ID</a>.</p>';
-//        $txt .= '</div>';
-//
-//        $url = get_current_url();
-//        try {
-//            $next_url = $_GET['next'];
-//        } catch (Exception $e) {
-//            $next_url = '';
-//        }
-//        if ($url) {
-//            $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php?next=' . $url;
-//        } else {
-//            $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php';
-//        }
-//        return $txt . '<iframe src="https://luthertest2.rpxnow.com/openid/embed?token_url=' . $url . '"
-//    scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe>';
     }
 
     function pre_show_form() {
@@ -173,5 +167,7 @@ class ApplicationPageOne extends FormStep {
             $this->set_error('citizenship_status', 'International Students - Please apply using the <a href="http://www.commonapp.org" target=_blank>Common App</a>.');
         }
     }
+
 }
+
 ?>
