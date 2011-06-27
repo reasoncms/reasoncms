@@ -1,5 +1,5 @@
 <?php
-
+include_once 'application_utils.php';
 /**
  * Admissions Application Module
  *
