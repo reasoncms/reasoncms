@@ -103,13 +103,32 @@ function set_applicant_data($openid, &$the_form) {
                 $qstring .= "', ";
             }
         }
-        $qstring .= "`last_update`=NOW();";
+        $qstring .= "`last_update`=NOW()";
 //        $qstring = rtrim($qstring, ' ,');
         $qstring .= " WHERE `open_id`= '" . addslashes($openid) . "' ";
         //die($qstring);
     }
     $qresult = db_query($qstring);
     connectDB(REASON_DB);
+}
+
+function validate_page1(){
+    return True;
+}
+function validate_page2(){
+    return True;
+}
+function validate_page3(){
+    return True;
+}
+function validate_page4(){
+    return False;
+}
+function validate_page5(){
+    return True;
+}
+function validate_page6(){
+    return True;
 }
 
 ?>
