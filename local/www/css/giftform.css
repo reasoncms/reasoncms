@@ -28,6 +28,10 @@
 	background: url("formnav_current.gif") no-repeat scroll center bottom #95b3cd;
     padding-bottom:14px;
 }
+#formNavigation .formSteps li.error a {
+    /* background-color:#FF6666; */
+    color:red;
+}
 
 /* Placeholder text */
 input.unfocused_label {
