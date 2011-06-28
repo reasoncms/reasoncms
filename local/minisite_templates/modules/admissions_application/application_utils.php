@@ -113,7 +113,7 @@ function set_applicant_data($openid, &$the_form) {
 }
 
 function validate_page1(){
-    return True;
+    return False;
 }
 function validate_page2(){
     return True;
@@ -125,7 +125,7 @@ function validate_page4(){
     return False;
 }
 function validate_page5(){
-    return True;
+    return False;
 }
 function validate_page6(){
     return True;
