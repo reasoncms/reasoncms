@@ -1,5 +1,7 @@
 <?php
+
 include_once 'application_utils.php';
+
 /**
  * Admissions Application Module
  *
@@ -25,83 +27,83 @@ class ApplicationPageSix extends FormStep {
     var $_log_errors = true;
     var $error;
     var $majors_array = array(
-            'ACCTG' => 'Accounting',
-            'AFRS' => 'Africana Studies',
-            'ANTH' => 'Anthropology/Archaeology',
-            'ARCH' => 'Architecture',
-            'ART' => 'Art',
-            'ARTM' => 'Art Management',
-            'ATHT' => 'Athletic Training',
-            'BIBL' => 'Biblical Languages',
-            'BIOC' => 'Biochemistry',
-            'BIOC' => 'Biology',
-            'BIOE' => 'Biology (Environmental)',
-            'CHEM' => 'Chemistry',
-            'CLAST' => 'Classical Studies',
-            'COMM' => 'Communication',
-            'CS' => 'Computer Science',
-            'ECON' => 'Economics',
-            'EDUC' => 'Education',
-            'EDEL' => 'Education-Elemenatary',
-            'EDSE' => 'Education-Secondary',
-            'EDSP' => 'Education-Special',
-            'ENGL' => 'English',
-            'ENVS' => 'Environmental Studies',
-            'FINA' => 'Fine Arts',
-            'FREN' => 'French',
-            'GER' => 'German',
-            'GRDE' => 'Graphic Design',
-            'GRK' => 'Greek',
-            'HLTH' => 'Health',
-            'HIST' => 'History',
-            'INTS' => 'International Management',
-            'IS' => 'International Studies',
-            'JOUR' => 'Journalism',
-            'LAT' => 'Latin',
-            'MGT' => 'Management',
-            //'MIS' => 'Management Info Systems',
-            'MATH' => 'Mathematics',
-            'MSTAT' => 'Mathematics/Statistics',
-            'MEDT' => 'Medical Technology',
-            'MLAN' => 'Modern Languages',
-            'MUST' => 'Museum Studies',
-            'MUS' => 'Music',
-            'MUSE' => 'Music Education',
-            'MUSM' => 'Music Management',
-            'MUSP' => 'Music Performance',
-            'NSCI' => 'Natural Science',
-            'NURS' => 'Nursing',
-            'PHIL' => 'Philosophy',
-            'PE' => 'Physical Education',
-            'PTOT' => 'Physical/Occ Therapy',
-            'PHYS' => 'Physics',
-            'POLS' => 'Political Science',
-            'PDEN' => 'Pre-dental',
-            'PENG' => 'Pre-engineering',
-            'PFOR' => 'Pre-forestry',
-            'PLAW' => 'Pre-law',
-            'PMED' => 'Pre-medicine',
-            'POPT' => 'Pre-optometry',
-            'PPHA' => 'Pre-pharmacy',
-            'PPT' => 'Pre-physical therapy',
-            'PSEM' => 'Pre-seminary',
-            'PVET' => 'Pre-veterinary',
-            'PSYB' => 'Psychobiology',
-            'PSYC' => 'Psychology',
-            'REL' => 'Religion',
-            'RUST' => 'Russian Studies',
-            'SCST' => 'Scandanavian Studies',
-            'SSCI' => 'Social Science',
-            'SW' => 'Social Work',
-            'SOC' => 'Sociology',
-            'SOPO' => 'Soc/Political Science',
-            'SPAN' => 'Spanish',
-            'SPMT' => 'Sports Management',
-            'THD' => 'Theatre/Dance',
-            'THDM' => 'Theatre/Dance Management',
-            'UND' => 'Deciding',
-            'WOMS' => 'Women\'s Studies',
-        );
+        'ACCTG' => 'Accounting',
+        'AFRS' => 'Africana Studies',
+        'ANTH' => 'Anthropology/Archaeology',
+        'ARCH' => 'Architecture',
+        'ART' => 'Art',
+        'ARTM' => 'Art Management',
+        'ATHT' => 'Athletic Training',
+        'BIBL' => 'Biblical Languages',
+        'BIOC' => 'Biochemistry',
+        'BIOC' => 'Biology',
+        'BIOE' => 'Biology (Environmental)',
+        'CHEM' => 'Chemistry',
+        'CLAST' => 'Classical Studies',
+        'COMM' => 'Communication',
+        'CS' => 'Computer Science',
+        'ECON' => 'Economics',
+        'EDUC' => 'Education',
+        'EDEL' => 'Education-Elemenatary',
+        'EDSE' => 'Education-Secondary',
+        'EDSP' => 'Education-Special',
+        'ENGL' => 'English',
+        'ENVS' => 'Environmental Studies',
+        'FINA' => 'Fine Arts',
+        'FREN' => 'French',
+        'GER' => 'German',
+        'GRDE' => 'Graphic Design',
+        'GRK' => 'Greek',
+        'HLTH' => 'Health',
+        'HIST' => 'History',
+        'INTS' => 'International Management',
+        'IS' => 'International Studies',
+        'JOUR' => 'Journalism',
+        'LAT' => 'Latin',
+        'MGT' => 'Management',
+        //'MIS' => 'Management Info Systems',
+        'MATH' => 'Mathematics',
+        'MSTAT' => 'Mathematics/Statistics',
+        'MEDT' => 'Medical Technology',
+        'MLAN' => 'Modern Languages',
+        'MUST' => 'Museum Studies',
+        'MUS' => 'Music',
+        'MUSE' => 'Music Education',
+        'MUSM' => 'Music Management',
+        'MUSP' => 'Music Performance',
+        'NSCI' => 'Natural Science',
+        'NURS' => 'Nursing',
+        'PHIL' => 'Philosophy',
+        'PE' => 'Physical Education',
+        'PTOT' => 'Physical/Occ Therapy',
+        'PHYS' => 'Physics',
+        'POLS' => 'Political Science',
+        'PDEN' => 'Pre-dental',
+        'PENG' => 'Pre-engineering',
+        'PFOR' => 'Pre-forestry',
+        'PLAW' => 'Pre-law',
+        'PMED' => 'Pre-medicine',
+        'POPT' => 'Pre-optometry',
+        'PPHA' => 'Pre-pharmacy',
+        'PPT' => 'Pre-physical therapy',
+        'PSEM' => 'Pre-seminary',
+        'PVET' => 'Pre-veterinary',
+        'PSYB' => 'Psychobiology',
+        'PSYC' => 'Psychology',
+        'REL' => 'Religion',
+        'RUST' => 'Russian Studies',
+        'SCST' => 'Scandanavian Studies',
+        'SSCI' => 'Social Science',
+        'SW' => 'Social Work',
+        'SOC' => 'Sociology',
+        'SOPO' => 'Soc/Political Science',
+        'SPAN' => 'Spanish',
+        'SPMT' => 'Sports Management',
+        'THD' => 'Theatre/Dance',
+        'THDM' => 'Theatre/Dance Management',
+        'UND' => 'Deciding',
+        'WOMS' => 'Women\'s Studies',
+    );
     var $elements = array(
         'college_plan_comment' => array(
             'type' => 'comment',
@@ -246,10 +248,27 @@ class ApplicationPageSix extends FormStep {
     var $display_name = 'Last Page';
     var $error_header_text = 'Please check your form.';
 
-    function  on_every_time() {
+    function no_show_form() {
+        echo(check_login());
+    }
+
+    function pre_fill_form() {
+        // check if the open_id has is set
+        $o_id = check_open_id($this);
+        if ($o_id) {
+            // get an existing users data from the db based on openid_id and the form
+            get_applicant_data($o_id, $this);
+        } else {
+            // no show form, invite to login
+            $this->show_form = false;
+        }
+    }
+
+    function on_every_time() {
         $this->change_element_type('college_plan_1', 'select', array('options' => $this->majors_array));
         $this->change_element_type('college_plan_2', 'select', array('options' => $this->majors_array));
     }
+
     function pre_show_form() {
         echo '<div id="admissionsApp" class="pageSix">' . "\n";
     }
@@ -258,9 +277,19 @@ class ApplicationPageSix extends FormStep {
         echo '</div>' . "\n";
     }
 
-    function  run_error_checks() {
-        
-        parent::run_error_checks();
+    function process() {
+        set_applicant_data($this->openid_id, $this);
     }
+    
+//    function  where_to() {
+//        $url = get_current_url();
+//        $parts = parse_url($url);
+//
+//        $open_id = check_open_id($this);
+//	$url = $parts['scheme'].'://'.$parts['host'].$parts['path'].'?c='.$open_id;
+//	return $url;
+//    }
+
 }
+
 ?>
