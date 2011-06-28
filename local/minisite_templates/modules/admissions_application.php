@@ -219,6 +219,9 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             $class = 'formStep';
             if (isset($form->display_name)) {
 
+                $this->sess =& get_reason_session();
+                
+
                 switch($i){
                     case 1:
                         if (!validate_page1()){ $class .= ' error'; }
