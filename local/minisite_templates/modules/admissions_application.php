@@ -37,6 +37,7 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
         reason_include_once('minisite_templates/modules/admissions_application/page4.php');
         reason_include_once('minisite_templates/modules/admissions_application/page5.php');
         reason_include_once('minisite_templates/modules/admissions_application/page6.php');
+        reason_include_once('minisite_templates/modules/admissions_application/confirmation.php');
 
         $this->controller = new FormController;
         $this->controller->set_session_class('Session_PHP');
