@@ -23,18 +23,22 @@ class ApplicationConfirmation extends FormStep {
     var $openid_id;
     var $_log_errors = true;
     var $error;
-    
-    var $display_name = 'Confirmation';
 
-    ///////////////
+    function get_thank_you_blurb() {
+        if (reason_unique_name_exists('admissions_application_thank_you_blurb')) {
+            $blurb = get_text_blurb_content('admissions_application_thank_you_blurb');
+        } else {
+            $blurb = '<p><strong>Thank you!</strong></p>
+                <p>We\'re having trouble generating the confirmation message, but your application for admission to
+                Luther College <strong>has been received</strong>.</p>' . "\n";
+        }
+        return $blurb;
+    }
+
     // style up the form and add comments et al
     function on_every_time() {
         $this->show_form = false;
-    }
-
-    function no_show_form() {
-        echo(check_login(get_current_url(), $this));
-        echo 'This is where the confirmation message should go!';
+        $this->get_thank_you_blurb();
     }
 
     function pre_show_form() {
