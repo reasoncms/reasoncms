@@ -31,6 +31,10 @@ class StudentTreatsThorForm extends CreditCardThorForm {
 
     function pre_error_check_actions() {
         parent::pre_error_check_actions();
+        
+        $date1 = $this->get_element_name_from_label('#1  Date For Delivery');
+        $occassion1 = $this->get_element_name_from_label('#1 Occasion Type: birthday, holiday, etc.');
+        $type1 = $this->get_element_name_from_label('#1 Treat Type');
 
         $date2 = $this->get_element_name_from_label('#2  Date For Delivery');
         $occassion2 = $this->get_element_name_from_label('#2 Occasion Type: birthday, holiday, etc.');
@@ -70,7 +74,7 @@ class StudentTreatsThorForm extends CreditCardThorForm {
 
 
         if ($this->get_value_from_label('Payment Amount') == '$20 - 1 treat') {
-
+          
             $this->remove_required($date2);
             $this->remove_required($occassion2);
             $this->remove_required($type2);
@@ -109,7 +113,7 @@ class StudentTreatsThorForm extends CreditCardThorForm {
         }
 
         if ($this->get_value_from_label('Payment Amount') == '$40 - 2 treats') {
-
+            
             $this->remove_required($date3);
             $this->remove_required($occassion3);
             $this->remove_required($type3);
@@ -144,7 +148,7 @@ class StudentTreatsThorForm extends CreditCardThorForm {
         }
 
         if ($this->get_value_from_label('Payment Amount') == '$60 - 3 treats') {
-
+            
             $this->remove_required($date4);
             $this->remove_required($occassion4);
             $this->remove_required($type4);
@@ -175,7 +179,7 @@ class StudentTreatsThorForm extends CreditCardThorForm {
         }
 
         if ($this->get_value_from_label('Payment Amount') == '$80 - 4 treats') {
-
+            
             $this->remove_required($date5);
             $this->remove_required($occassion5);
             $this->remove_required($type5);
@@ -202,7 +206,7 @@ class StudentTreatsThorForm extends CreditCardThorForm {
         }
 
         if ($this->get_value_from_label('Payment Amount') == '$100 - 5 treats') {
-
+           
             $this->remove_required($date6);
             $this->remove_required($occassion6);
             $this->remove_required($type6);
@@ -259,7 +263,7 @@ class StudentTreatsThorForm extends CreditCardThorForm {
         }
         
         if ($this->get_value_from_label('Payment Amount') == '$160 - 8 treats') {
-         
+          
             $this->remove_required($date9);
             $this->remove_required($occassion9);
             $this->remove_required($type9);
@@ -270,11 +274,14 @@ class StudentTreatsThorForm extends CreditCardThorForm {
         }
         
         if ($this->get_value_from_label('Payment Amount') == '$180 - 9 treats') {
+            
                      
             $this->remove_required($date10);
             $this->remove_required($occassion10);
             $this->remove_required($type10);
         }
+        
+        
     }
 
 }
