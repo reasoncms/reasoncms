@@ -381,9 +381,19 @@ class ApplicationPageFive extends FormStep {
     );
     var $display_name = 'Activities';
     var $error_header_text = 'Please check your form.';
+    var $element_group_info = array(
+        'activity_button_group' =>array(
+            'type' => 'inline',
+            'elements' => array('add_activity_button', 'remove_activity_button'),
+            'args' => array('use_element_labels' => false, 'display_name' => '&nbsp;'),
+        ),
+    );
 
     // style up the form and add comments et al
     function on_every_time() {
+        foreach ($this->element_group_info as $name => $info) {
+            $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
+        }
         $this->change_element_type('activity_1', 'select_no_sort', array('options' => $this->activities_array));
         $this->change_element_type('activity_1_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
         $this->change_element_type('activity_2', 'select_no_sort', array('options' => $this->activities_array));
