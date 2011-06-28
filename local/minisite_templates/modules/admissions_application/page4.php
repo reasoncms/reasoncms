@@ -174,7 +174,7 @@ class ApplicationPageFour extends FormStep {
         'remove_college_button' => array(
             'type' => 'comment',
             'text' => '<div id="removeCollege" title="Remove College" class="removeButton">
-                Remove College
+                Remove a College
                 </div>'
         ),
         'tests_header' => array(
