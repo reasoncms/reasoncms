@@ -49,8 +49,6 @@ class ApplicationConfirmation extends FormStep {
         echo '</div>' . "\n";
     }
 
-    function pre_fill_form() {
-    }
 }
 
 ?>
