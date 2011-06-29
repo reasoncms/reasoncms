@@ -178,11 +178,11 @@ $(document).ready(function() {
     });
     $('#sibling_4_collegeElement').autocomplete({
         source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
-        minLength: 3,
+        minLength: 3
     });
     $('#sibling_5_collegeElement').autocomplete({
         source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
-        minLength: 3,
+        minLength: 3
     });
     //$("input[name='sibling_1_relation']").change(function(){
     //    add_sibling();
