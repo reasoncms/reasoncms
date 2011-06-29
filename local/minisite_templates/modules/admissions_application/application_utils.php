@@ -124,7 +124,9 @@ function set_applicant_data($openid, &$the_form) {
                 $qstring .= "', ";
             }
             if ($element == 'ssn_1'){
-            $qstring .= "`ssn` = '" . addslashes($the_form->get_value('ssn_1')) . "-" . addslashes($the_form->get_value('ssn_2')) . "-" . addslashes($the_form->get_value('ssn_3')) ."', ";
+                if($the_form->get_value('ssn_1') || $the_form->get_value('ssn_2') || $the_form->get_value('ssn_3')){
+                    $qstring .= "`ssn` = '" . addslashes($the_form->get_value('ssn_1')) . "-" . addslashes($the_form->get_value('ssn_2')) . "-" . addslashes($the_form->get_value('ssn_3')) ."', ";
+                }
             }
         }
         // ssn is 3 individual form elements, combine and write to db
@@ -138,9 +140,16 @@ function set_applicant_data($openid, &$the_form) {
 }
 
 function validate_page1(){
+    /*
+     * Required fields: student_type, enrollment_term, citizenship_status
+     */
     return True;
 }
 function validate_page2(){
+    /*
+     * Required fields: first_name, middle_name, last_name, gender, date_of_birth
+     *
+     */
     return True;
 }
 function validate_page3(){
