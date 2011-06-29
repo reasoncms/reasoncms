@@ -40,6 +40,9 @@ function check_login() {
     scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe>';
 }
 
+/*
+ *  Repopulate elements with info that has been saved to the database
+ */
 function get_applicant_data($openid, &$the_form) {
     echo '<br />openid: ' . $openid . '<br />';
     connectDB('admissions_applications_connection');
@@ -57,13 +60,21 @@ function get_applicant_data($openid, &$the_form) {
         $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
         $results = db_query($qstring);
     }
-
+    
+    /*
+     * array of elements that are a checkbox_group_type
+     * these are stored comma-separated in their database field
+     * to set the value of these they must be exploded then set
+     */
+    $checkbox_elements = array('activity_1_participation', 'activity_2_participation', 'activity_3_participation',
+        'activity_4_participation', 'activity_5_participation', 'activity_6_participation', 'activity_7_participation',
+        'activity_8_participation', 'activity_9_participation', 'activity_10_participation', 'race');
     while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
         foreach ($the_form->get_element_names() as $element) {
             if (array_key_exists($element, $row)) {
-                if($element == 'activity_1_participation'){
+                if (in_array($element, $checkbox_elements)) {
                     $the_value = explode(',', $row[$element]);
-                }else{
+                }else {
                     $the_value = $row[$element];
                 }
                 $the_form->set_value($element, $the_value);
@@ -73,8 +84,10 @@ function get_applicant_data($openid, &$the_form) {
     connectDB(REASON_DB);
 }
 
+/*
+ * Write application data to database
+ */
 function set_applicant_data($openid, &$the_form) {
-
     connectDB('admissions_applications_connection');
     echo '<br>' . addslashes($openid) . '<br>';
     $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
@@ -103,6 +116,8 @@ function set_applicant_data($openid, &$the_form) {
                 $qstring .= "', ";
             }
         }
+        // ssn is 3 individual form elements, combine and write to db
+        $qstring .= "`ssn` = '" . addslashes($the_form->get_value('ssn_1')) . "-" . addslashes($the_form->get_value('ssn_2')) . "-" . addslashes($the_form->get_value('ssn_3')) ."', ";
         $qstring .= "`last_update`=NOW()";
 //        $qstring = rtrim($qstring, ' ,');
         $qstring .= " WHERE `open_id`= '" . addslashes($openid) . "' ";
