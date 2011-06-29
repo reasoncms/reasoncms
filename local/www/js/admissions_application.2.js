@@ -357,7 +357,7 @@ $(document).ready(function() {
         toggle_conviction_history();
     });
     toggle_hs_discipline();
-    $("input[name='hs_discipline_history']").change(function(){
+    $("input[name='hs_discipline']").change(function(){
         toggle_hs_discipline();
     });
 });
@@ -571,14 +571,14 @@ function remove_college() {
 function toggle_conviction_history() {
     if ($("input[name='conviction_history']:checked").val() == 'Yes') {
         $("#convictiondetailscommentRow").show();
-        $("#convictiondetailsRow").show();
+        $("#convictionhistorydetailsRow").show();
     } else {
         $("#convictiondetailscommentRow").hide();
-        $("#convictiondetailsRow").hide();
+        $("#convictionhistorydetailsRow").hide();
     }
 }
 function toggle_hs_discipline() {
-    if ($("input[name='hs_discipline_history']:checked").val() == 'Yes') {
+    if ($("input[name='hs_discipline']:checked").val() == 'Yes') {
         $("#disciplinedetailscommentRow").show();
         $("#hsdisciplinedetailsRow").show();
     } else {
