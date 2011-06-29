@@ -101,6 +101,7 @@ class ApplicationPageTwo extends FormStep {
         'permanent_address' => array(
             'type' => 'text',
             'display_name' => 'Address'
+        ),
         'permanent_apartment_number' => array(
             'type' => 'text',
             'size' => 4,
