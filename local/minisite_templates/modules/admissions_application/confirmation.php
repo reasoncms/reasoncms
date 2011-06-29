@@ -38,7 +38,7 @@ class ApplicationConfirmation extends FormStep {
     // style up the form and add comments et al
     function on_every_time() {
         $this->show_form = false;
-        $this->get_thank_you_blurb();
+        echo $this->get_thank_you_blurb();
     }
 
     function pre_show_form() {
