@@ -605,6 +605,7 @@ function toggle_instrument_info() {
 }
 function toggle_mailing_address() {
     if ($("input[name='different_mailing_address']:checked").val() == 'Yes') {
+        $("#mailingaddressheaderRow").show();
         $("#mailingaddressRow").show();
         $("#mailingapartmentnumberRow").show();
         $("#mailingcityRow").show();
@@ -612,6 +613,7 @@ function toggle_mailing_address() {
         $("#mailingzippostalRow").show();
         $("#mailingcountryRow").show();
     } else {
+        $("#mailingaddressheaderRow").hide();
         $("#mailingaddressRow").hide();
         $("#mailingapartmentnumberRow").hide();
         $("#mailingcityRow").hide();
