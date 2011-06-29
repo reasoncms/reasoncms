@@ -111,17 +111,17 @@ function set_applicant_data($openid, &$the_form) {
         $qstring = "UPDATE `applicants` SET ";
         foreach ($the_form->get_element_names() as $element) {
             if (array_key_exists($element, $row)) {
-                $qstring .= $element . "='";
+                $qstring .= $element . "=";
                 if (is_null($the_form->get_value($element)) <> True) {
                     if (is_array($the_form->get_value($element))) {
-                        $qstring .= addslashes(implode(',', $the_form->get_value($element)));
+                        $qstring .= "'" . addslashes(implode(',', $the_form->get_value($element))) . "'";
                     } else {
-                        $qstring .= addslashes($the_form->get_value($element));
+                        $qstring .= "'" . addslashes($the_form->get_value($element)) . "'";
                     }
                 } else {
-                    $qstring .= NULL;
+                    $qstring .= 'NULL';
                 }
-                $qstring .= "', ";
+                $qstring .= ", ";
             }
             if ($element == 'ssn_1'){
                 if($the_form->get_value('ssn_1') || $the_form->get_value('ssn_2') || $the_form->get_value('ssn_3')){
@@ -148,7 +148,7 @@ function validate_page1(){
 function validate_page2(){
     /*
      * Required fields: first_name, middle_name, last_name, gender, date_of_birth
-     *
+     *                  email, home_phone,
      */
     return True;
 }
