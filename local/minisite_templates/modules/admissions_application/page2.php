@@ -255,7 +255,7 @@ class ApplicationPageTwo extends FormStep {
                 'display_name' => 'U.S. Social Security Number',
                 'comments' => '<div id="ssn"><a href="#ssn_dialog">Why is this important?</a></div>
                         <div id="ssn_dialog" title="Social Security Info">
-                        Your Social Security number allows us to .... blah, blah, blah</div>')
+                        Required for US Citizens and Permanent Residents applying for financial aid via FAFSA</div>')
         ),
     );
 
