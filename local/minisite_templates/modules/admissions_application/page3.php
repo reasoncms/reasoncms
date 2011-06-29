@@ -417,20 +417,20 @@ class ApplicationPageThree extends FormStep {
             'type' => 'text',
             'display_name' => 'Name'
         ),
-        'parent_1_college_city' => array(
-            'type' => 'text',
-            'size' => 35,
-            'display_name' => 'City'
-        ),
-        'parent_1_college_state_province' => array(
-            'type' => 'state_province',
-            'display_name' => 'State/Province',
-            'include_military_codes' => true,
-        ),
-        'parent_1_college_country' => array(
-            'type' => 'country',
-            'display_name' => 'Country'
-        ),
+//        'parent_1_college_city' => array(
+//            'type' => 'text',
+//            'size' => 35,
+//            'display_name' => 'City'
+//        ),
+//        'parent_1_college_state_province' => array(
+//            'type' => 'state_province',
+//            'display_name' => 'State/Province',
+//            'include_military_codes' => true,
+//        ),
+//        'parent_1_college_country' => array(
+//            'type' => 'country',
+//            'display_name' => 'Country'
+//        ),
         'parent_2_college_comment' => array(
             'type' => 'comment',
             'text' => 'Parent 2\'s College'
@@ -439,20 +439,20 @@ class ApplicationPageThree extends FormStep {
             'type' => 'text',
             'display_name' => 'Name'
         ),
-        'parent_2_college_city' => array(
-            'type' => 'text',
-            'size' => 35,
-            'display_name' => 'City'
-        ),
-        'parent_2_college_state_province' => array(
-            'type' => 'state_province',
-            'display_name' => 'State/Province',
-            'include_military_codes' => true,
-        ),
-        'parent_2_college_country' => array(
-            'type' => 'country',
-            'display_name' => 'Country'
-        ),
+//        'parent_2_college_city' => array(
+//            'type' => 'text',
+//            'size' => 35,
+//            'display_name' => 'City'
+//        ),
+//        'parent_2_college_state_province' => array(
+//            'type' => 'state_province',
+//            'display_name' => 'State/Province',
+//            'include_military_codes' => true,
+//        ),
+//        'parent_2_college_country' => array(
+//            'type' => 'country',
+//            'display_name' => 'Country'
+//        ),
         'guardian_college_comment' => array(
             'type' => 'comment',
             'text' => 'Guardian\'s College'
@@ -461,19 +461,19 @@ class ApplicationPageThree extends FormStep {
             'type' => 'text',
             'display_name' => 'Name'
         ),
-        'guardian_college_address' => array(
-            'type' => 'text',
-            'display_name' => 'Address'
-        ),
-        'guardian_college_state_province' => array(
-            'type' => 'state_province',
-            'display_name' => 'State/Province',
-            'include_military_codes' => true,
-        ),
-        'guardian_college_country' => array(
-            'type' => 'country',
-            'display_name' => 'Country'
-        ),
+//        'guardian_college_address' => array(
+//            'type' => 'text',
+//            'display_name' => 'Address'
+//        ),
+//        'guardian_college_state_province' => array(
+//            'type' => 'state_province',
+//            'display_name' => 'State/Province',
+//            'include_military_codes' => true,
+//        ),
+//        'guardian_college_country' => array(
+//            'type' => 'country',
+//            'display_name' => 'Country'
+//        ),
         'siblings_header' => array(
             'type' => 'comment',
             'text' => '<h3>Siblings</h3>',
