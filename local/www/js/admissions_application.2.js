@@ -135,15 +135,15 @@ $(document).ready(function() {
     //autocomplete Parent's College
     $('#parent_1_collegeElement').autocomplete({
         source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
-        minLength: 3,
+        minLength: 3
     });
     $('#parent_2_collegeElement').autocomplete({
         source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
-        minLength: 3,
+        minLength: 3
     });
     $('#guardian_collegeElement').autocomplete({
         source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
-        minLength: 3,
+        minLength: 3
     });
 
     perculate_siblings_up();
@@ -166,15 +166,15 @@ $(document).ready(function() {
     //autocomplete Sibling's College'
     $('#sibling_1_collegeElement').autocomplete({
         source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
-        minLength: 3,
+        minLength: 3
     });
     $('#sibling_2_collegeElement').autocomplete({
         source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
-        minLength: 3,
+        minLength: 3
     });
     $('#sibling_3_collegeElement').autocomplete({
         source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
-        minLength: 3,
+        minLength: 3
     });
     $('#sibling_4_collegeElement').autocomplete({
         source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
