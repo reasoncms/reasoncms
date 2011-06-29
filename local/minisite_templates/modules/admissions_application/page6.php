@@ -280,7 +280,41 @@ class ApplicationPageSix extends FormStep {
     }
     
     function process() {
+//        die($this->chosen_action);
         set_applicant_data($this->openid_id, $this);
+
+        $all_pages_valid = true;
+        if ($this->chosen_action == 'ApplicationConfirmation'){
+            if (validate_page1() == false) {
+                $all_pages_valid = false;
+                die('bad page 1');
+            }
+            if (validate_page2() == false) {
+                $all_pages_valid = false;
+                die('bad page 2');
+            }
+            if (validate_page3() == false) {
+                $all_pages_valid = false;
+                die('bad page 3');
+            }
+            if (validate_page4() == false) {
+                $all_pages_valid = false;
+                die('bad page 4');
+            }
+            if (validate_page5() == false) {
+                $all_pages_valid = false;
+                die('bad page 5');
+            }
+            if (validate_page6() == false) {
+                $all_pages_valid = false;
+                die('bad page 6');
+            }
+            if ($all_pages_valid == true){
+                connectDB('admissions_applications_connection');
+                db_query("UPDATE `applicants` SET `submit_date`=NOW() WHERE `open_id`= '" . addslashes(check_open_id($this)) . "'");
+                connectDB(REASON_DB);
+            }
+        }
     }
 
 }
