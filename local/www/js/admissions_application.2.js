@@ -132,6 +132,19 @@ $(document).ready(function() {
     $("input[name='legacy']").change(function(){
         toggle_parent_college();
     });
+    //autocomplete Parent's College
+    $('#parent_1_collegeElement').autocomplete({
+        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        minLength: 3,
+    });
+    $('#parent_2_collegeElement').autocomplete({
+        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        minLength: 3,
+    });
+    $('#guardian_collegeElement').autocomplete({
+        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        minLength: 3,
+    });
 
     perculate_siblings_up();
 
@@ -150,6 +163,27 @@ $(document).ready(function() {
             $('#removeSibling').show();
         }
     }
+    //autocomplete Sibling's College'
+    $('#sibling_1_collegeElement').autocomplete({
+        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        minLength: 3,
+    });
+    $('#sibling_2_collegeElement').autocomplete({
+        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        minLength: 3,
+    });
+    $('#sibling_3_collegeElement').autocomplete({
+        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        minLength: 3,
+    });
+    $('#sibling_4_collegeElement').autocomplete({
+        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        minLength: 3,
+    });
+    $('#sibling_5_collegeElement').autocomplete({
+        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        minLength: 3,
+    });
     //$("input[name='sibling_1_relation']").change(function(){
     //    add_sibling();
     //});
@@ -583,47 +617,47 @@ function toggle_parent_college() {
     if ($("input[name='legacy']:checked").val() == 'Yes') {
         $("#parent1collegecommentRow").show();
         $("#parent1collegeRow").show();
-        $("#parent1collegeaddressRow").show();
-        $("#parent1collegecityRow").show();
-        $("#parent1collegestateprovinceRow").show();
-        $("#parent1collegezippostalRow").show();
-        $("#parent1collegecountryRow").show();
+//        $("#parent1collegeaddressRow").show();
+//        $("#parent1collegecityRow").show();
+//        $("#parent1collegestateprovinceRow").show();
+//        $("#parent1collegezippostalRow").show();
+//        $("#parent1collegecountryRow").show();
         $("#parent2collegecommentRow").show();
         $("#parent2collegeRow").show();
-        $("#parent2collegeaddressRow").show();
-        $("#parent2collegecityRow").show();
-        $("#parent2collegestateprovinceRow").show();
-        $("#parent2collegezippostalRow").show();
-        $("#parent2collegecountryRow").show();
+//        $("#parent2collegeaddressRow").show();
+//        $("#parent2collegecityRow").show();
+//        $("#parent2collegestateprovinceRow").show();
+//        $("#parent2collegezippostalRow").show();
+//        $("#parent2collegecountryRow").show();
         $("#guardiancollegecommentRow").show();
         $("#guardiancollegeRow").show();
-        $("#guardiancollegeaddressRow").show();
-        $("#guardiancollegecityRow").show();
-        $("#guardiancollegestateprovinceRow").show();
-        $("#guardiancollegezippostalRow").show();
-        $("#guardiancollegecountryRow").show();
+//        $("#guardiancollegeaddressRow").show();
+//        $("#guardiancollegecityRow").show();
+//        $("#guardiancollegestateprovinceRow").show();
+//        $("#guardiancollegezippostalRow").show();
+//        $("#guardiancollegecountryRow").show();
     } else {
         $("#parent1collegecommentRow").hide();
         $("#parent1collegeRow").hide();
-        $("#parent1collegeaddressRow").hide();
-        $("#parent1collegecityRow").hide();
-        $("#parent1collegestateprovinceRow").hide();
-        $("#parent1collegezippostalRow").hide();
-        $("#parent1collegecountryRow").hide();
+//        $("#parent1collegeaddressRow").hide();
+//        $("#parent1collegecityRow").hide();
+//        $("#parent1collegestateprovinceRow").hide();
+//        $("#parent1collegezippostalRow").hide();
+//        $("#parent1collegecountryRow").hide();
         $("#parent2collegecommentRow").hide();
         $("#parent2collegeRow").hide();
-        $("#parent2collegeaddressRow").hide();
-        $("#parent2collegecityRow").hide();
-        $("#parent2collegestateprovinceRow").hide();
-        $("#parent2collegezippostalRow").hide();
-        $("#parent2collegecountryRow").hide();
+//        $("#parent2collegeaddressRow").hide();
+//        $("#parent2collegecityRow").hide();
+//        $("#parent2collegestateprovinceRow").hide();
+//        $("#parent2collegezippostalRow").hide();
+//        $("#parent2collegecountryRow").hide();
         $("#guardiancollegecommentRow").hide();
         $("#guardiancollegeRow").hide();
-        $("#guardiancollegeaddressRow").hide();
-        $("#guardiancollegecityRow").hide();
-        $("#guardiancollegestateprovinceRow").hide();
-        $("#guardiancollegezippostalRow").hide();
-        $("#guardiancollegecountryRow").hide();
+//        $("#guardiancollegeaddressRow").hide();
+//        $("#guardiancollegecityRow").hide();
+//        $("#guardiancollegestateprovinceRow").hide();
+//        $("#guardiancollegezippostalRow").hide();
+//        $("#guardiancollegecountryRow").hide();
     }
 }
 function toggle_other_activity_details() {
