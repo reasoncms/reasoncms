@@ -96,9 +96,11 @@ class ApplicationPageTwo extends FormStep {
         ),
         'address_header' => array(
             'type' => 'comment',
-            'text' => '<h3>Address Information</h3>',
+            'text' => '<h3>Permanent Address Information</h3>',
         ),
-        'permanent_address' => 'text',
+        'permanent_address' => array(
+            'type' => 'text',
+            'display_name' => 'Address'
         'permanent_apartment_number' => array(
             'type' => 'text',
             'size' => 4,
@@ -106,6 +108,7 @@ class ApplicationPageTwo extends FormStep {
         ),
         'permanent_city' => array(
             'type' => 'text',
+            'display_name' => 'City',
             'size' => 35,
         ),
         'permanent_state_province' => array(
@@ -120,6 +123,7 @@ class ApplicationPageTwo extends FormStep {
         ),
         'permanent_country' => array(
             'type' => 'country',
+            'display_name' => 'Country',
         ),
         'mailing_address_comment' => array(
             'type' => 'comment',
@@ -130,7 +134,14 @@ class ApplicationPageTwo extends FormStep {
             'display_name' => '&nbsp;',
             'options' => array('Yes' => 'Yes', 'No' => 'No'),
         ),
-        'mailing_address' => 'text',
+        'mailing_address_header' => array(
+            'type' => 'comment',
+            'text' => '<h3>Mailing Address Information</h3>',
+        ),
+        'mailing_address' => array(
+            'type' => 'text',
+            'display_name' => 'Address'
+        ),
         'mailing_apartment_number' => array(
             'type' => 'text',
             'size' => 4,
@@ -138,6 +149,7 @@ class ApplicationPageTwo extends FormStep {
         ),
         'mailing_city' => array(
             'type' => 'text',
+            'display_name' => 'City',
             'size' => 35,
         ),
         'mailing_state_province' => array(
@@ -152,6 +164,7 @@ class ApplicationPageTwo extends FormStep {
         ),
         'mailing_country' => array(
             'type' => 'country',
+            'display_name' => 'Country',
         ),
         'additional_information_header' => array(
             'type' => 'comment',
