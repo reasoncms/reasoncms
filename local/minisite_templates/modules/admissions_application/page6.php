@@ -212,7 +212,7 @@ class ApplicationPageSix extends FormStep {
             'type' => 'comment',
             'text' => 'If yes, please describe',
         ),
-        'conviction_details' => array(
+        'conviction_history_details' => array(
             'type' => 'textarea_no_label',
             'display_name' => '&nbsp;',
         ),
@@ -221,7 +221,7 @@ class ApplicationPageSix extends FormStep {
             'text' => 'Have you ever been found responsible for a discplinary violation while attending high school that resulted in probation,
                   suspension, dismissal, or expulsion?',
         ),
-        'hs_discipline_history' => array(
+        'hs_discipline' => array(
             'type' => 'radio_inline_no_sort',
             'display_name' => '&nbsp;',
             'options' => array('Yes' => 'Yes', 'No' => 'No'),
