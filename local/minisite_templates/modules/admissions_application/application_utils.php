@@ -78,6 +78,14 @@ function get_applicant_data($openid, &$the_form) {
                     $the_value = $row[$element];
                 }
                 $the_form->set_value($element, $the_value);
+            } else {
+                // handle ssn which is an element group of ssn_1, ssn_2, and ssn_3
+                // but stored in the db as ssn
+                $exploded_ssn = explode('-', $row['ssn']);
+//                die(pray($exploded_ssn));
+                $the_form->set_value('ssn_1', $exploded_ssn[0]);
+                $the_form->set_value('ssn_2', $exploded_ssn[1]);
+                $the_form->set_value('ssn_3', $exploded_ssn[2]);
             }
         }
     }
@@ -115,9 +123,11 @@ function set_applicant_data($openid, &$the_form) {
                 }
                 $qstring .= "', ";
             }
+            if ($element == 'ssn_1'){
+            $qstring .= "`ssn` = '" . addslashes($the_form->get_value('ssn_1')) . "-" . addslashes($the_form->get_value('ssn_2')) . "-" . addslashes($the_form->get_value('ssn_3')) ."', ";
+            }
         }
         // ssn is 3 individual form elements, combine and write to db
-        $qstring .= "`ssn` = '" . addslashes($the_form->get_value('ssn_1')) . "-" . addslashes($the_form->get_value('ssn_2')) . "-" . addslashes($the_form->get_value('ssn_3')) ."', ";
         $qstring .= "`last_update`=NOW()";
 //        $qstring = rtrim($qstring, ' ,');
         $qstring .= " WHERE `open_id`= '" . addslashes($openid) . "' ";
