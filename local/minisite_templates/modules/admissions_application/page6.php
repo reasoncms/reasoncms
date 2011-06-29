@@ -248,22 +248,6 @@ class ApplicationPageSix extends FormStep {
     var $display_name = 'Last Page';
     var $error_header_text = 'Please check your form.';
 
-    function no_show_form() {
-        echo(check_login());
-    }
-
-    function pre_fill_form() {
-        // check if the open_id has is set
-        $o_id = check_open_id($this);
-        if ($o_id) {
-            // get an existing users data from the db based on openid_id and the form
-            get_applicant_data($o_id, $this);
-        } else {
-            // no show form, invite to login
-            $this->show_form = false;
-        }
-    }
-
     function on_every_time() {
         $this->change_element_type('college_plan_1', 'select', array('options' => $this->majors_array));
         $this->change_element_type('college_plan_2', 'select', array('options' => $this->majors_array));
@@ -276,19 +260,6 @@ class ApplicationPageSix extends FormStep {
     function post_show_form() {
         echo '</div>' . "\n";
     }
-
-    function process() {
-        set_applicant_data($this->openid_id, $this);
-    }
-    
-//    function  where_to() {
-//        $url = get_current_url();
-//        $parts = parse_url($url);
-//
-//        $open_id = check_open_id($this);
-//	$url = $parts['scheme'].'://'.$parts['host'].$parts['path'].'?c='.$open_id;
-//	return $url;
-//    }
 
 }
 
