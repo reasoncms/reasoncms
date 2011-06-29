@@ -78,7 +78,7 @@ function get_applicant_data($openid, &$the_form) {
                     $the_value = $row[$element];
                 }
                 $the_form->set_value($element, $the_value);
-            } else {
+            } else if ($element == 'ssn_1'){
                 // handle ssn which is an element group of ssn_1, ssn_2, and ssn_3
                 // but stored in the db as ssn
                 $exploded_ssn = explode('-', $row['ssn']);
@@ -138,7 +138,7 @@ function set_applicant_data($openid, &$the_form) {
 }
 
 function validate_page1(){
-    return False;
+    return True;
 }
 function validate_page2(){
     return True;
@@ -147,10 +147,10 @@ function validate_page3(){
     return True;
 }
 function validate_page4(){
-    return False;
+    return TRUE;
 }
 function validate_page5(){
-    return False;
+    return TRUE;
 }
 function validate_page6(){
     return True;
