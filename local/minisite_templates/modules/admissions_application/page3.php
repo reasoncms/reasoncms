@@ -417,6 +417,7 @@ class ApplicationPageThree extends FormStep {
             'type' => 'text',
             'display_name' => 'Name'
         ),
+        'parent_1_college_ceeb' => 'hidden',
 //        'parent_1_college_city' => array(
 //            'type' => 'text',
 //            'size' => 35,
@@ -439,6 +440,7 @@ class ApplicationPageThree extends FormStep {
             'type' => 'text',
             'display_name' => 'Name'
         ),
+        'parent_2_college_ceeb' => 'hidden',
 //        'parent_2_college_city' => array(
 //            'type' => 'text',
 //            'size' => 35,
@@ -461,6 +463,7 @@ class ApplicationPageThree extends FormStep {
             'type' => 'text',
             'display_name' => 'Name'
         ),
+        'guardian_college_ceeb' => 'hidden',
 //        'guardian_college_address' => array(
 //            'type' => 'text',
 //            'display_name' => 'Address'
@@ -503,12 +506,13 @@ class ApplicationPageThree extends FormStep {
         'sibling_1_grade' => array(
             'display_name' => 'Grade',
             'type' => 'text',
-            'size' => 2
+            'size' => 3
         ),
         'sibling_1_college' => array(
             'type' => 'text',
             'display_name' => 'College (if applicable)'
         ),
+        'sibling_1_college_ceeb' => 'hidden',
         'sibling_2_hr' => 'hr',
         'sibling_2_header' => array(
             'type' => 'comment',
@@ -535,12 +539,13 @@ class ApplicationPageThree extends FormStep {
         'sibling_2_grade' => array(
             'display_name' => 'Grade',
             'type' => 'text',
-            'size' => 2
+            'size' => 3
         ),
         'sibling_2_college' => array(
             'type' => 'text',
             'display_name' => 'College (if applicable)'
         ),
+        'sibling_2_college_ceeb' => 'hidden',
         'sibling_3_hr' => 'hr',
         'sibling_3_header' => array(
             'type' => 'comment',
@@ -567,12 +572,13 @@ class ApplicationPageThree extends FormStep {
         'sibling_3_grade' => array(
             'display_name' => 'Grade',
             'type' => 'text',
-            'size' => 2
+            'size' => 3
         ),
         'sibling_3_college' => array(
             'type' => 'text',
             'display_name' => 'College (if applicable)'
         ),
+        'sibling_3_college_ceeb' => 'hidden',
         'sibling_4_hr' => 'hr',
         'sibling_4_header' => array(
             'type' => 'comment',
@@ -599,12 +605,13 @@ class ApplicationPageThree extends FormStep {
         'sibling_4_grade' => array(
             'display_name' => 'Grade',
             'type' => 'text',
-            'size' => 2
+            'size' => 3
         ),
         'sibling_4_college' => array(
             'type' => 'text',
             'display_name' => 'College (if applicable)'
         ),
+        'sibling_4_college_ceeb' => 'hidden',
         'sibling_5_hr' => 'hr',
         'sibling_5_header' => array(
             'type' => 'comment',
@@ -631,12 +638,13 @@ class ApplicationPageThree extends FormStep {
         'sibling_5_grade' => array(
             'display_name' => 'Grade',
             'type' => 'text',
-            'size' => 2
+            'size' => 3
         ),
         'sibling_5_college' => array(
             'type' => 'text',
             'display_name' => 'College (if applicable)'
         ),
+        'sibling_5_college_ceeb' => 'hidden',
         'add_sibling_button' => array(
             'type' => 'comment',
             'text' => '<div id="addSibling" title="Add a Sibling" class="addButton">
