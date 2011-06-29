@@ -38,6 +38,7 @@ class ApplicationPageFour extends FormStep {
             'type' => 'text',
             'display_name' => 'Name, City, State (i.e. IA)',
         ),
+        'hs_ceeb' => 'hidden',
 //        'hs_address' => array(
 //            'type' => 'text',
 //            'display_name' => 'Address',
@@ -75,6 +76,7 @@ class ApplicationPageFour extends FormStep {
             'type' => 'text',
             'display_name' => 'Name',
         ),
+        'college_1_ceeb' => 'hidden',
 //        'college_1_address' => array(
 //            'type' => 'text',
 //            'display_name' => 'Address',
@@ -108,6 +110,7 @@ class ApplicationPageFour extends FormStep {
             'type' => 'text',
             'display_name' => 'Name',
         ),
+        'college_2_ceeb' => 'hidden',
 //        'college_2_address' => array(
 //            'type' => 'text',
 //            'display_name' => 'Address',
@@ -141,6 +144,7 @@ class ApplicationPageFour extends FormStep {
             'type' => 'text',
             'display_name' => 'Name',
         ),
+        'college_3_ceeb' => 'hidden',
 //        'college_3_address' => array(
 //            'type' => 'text',
 //            'display_name' => 'Address',
