@@ -228,11 +228,7 @@ $(document).ready(function() {
         minLength: 3,
         select: function( event, ui )
         {
-            $( '#hs_addressElement' ).val(ui.item.current_hs_address);
-            $( '#hs_cityElement' ).val(ui.item.current_hs_city);
-            $( '#hs_state_provinceElement' ).val(ui.item.current_hs_state);
-            $( '#hs_zipElement' ).val(ui.item.current_hs_zip);
-            $( '#hs_countryElement' ).val(ui.item.current_hs_country);
+            $( '#hs_ceebElement' ).val(ui.item.id);
    	}
     });
 
@@ -241,11 +237,7 @@ $(document).ready(function() {
         minLength: 3,
         select: function( event, ui )
         {
-            $( '#college_1_addressElement' ).val(ui.item.current_hs_address);
-            $( '#college_1_cityElement' ).val(ui.item.current_hs_city);
-            $( '#college_1_state_provinceElement' ).val(ui.item.current_hs_state);
-            $( '#college_1_zipElement' ).val(ui.item.current_hs_zip);
-            $( '#college_1_countryElement' ).val(ui.item.current_hs_country);
+            $( '#college_1_ceebElement' ).val(ui.item.id);
    	}
     });
 
@@ -254,11 +246,7 @@ $(document).ready(function() {
         minLength: 3,
         select: function( event, ui )
         {
-            $( '#college_2_addressElement' ).val(ui.item.current_hs_address);
-            $( '#college_2_cityElement' ).val(ui.item.current_hs_city);
-            $( '#college_2_state_provinceElement' ).val(ui.item.current_hs_state);
-            $( '#college_2_zipElement' ).val(ui.item.current_hs_zip);
-            $( '#college_2_countryElement' ).val(ui.item.current_hs_country);
+            $( '#college_2_ceebElement' ).val(ui.item.id);
    	}
     });
 
@@ -267,11 +255,7 @@ $(document).ready(function() {
         minLength: 3,
         select: function( event, ui )
         {
-            $( '#college_3_addressElement' ).val(ui.item.current_hs_address);
-            $( '#college_3_cityElement' ).val(ui.item.current_hs_city);
-            $( '#college_3_state_provinceElement' ).val(ui.item.current_hs_state);
-            $( '#college_3_zipElement' ).val(ui.item.current_hs_zip);
-            $( '#college_3_countryElement' ).val(ui.item.current_hs_country);
+            $( '#college_3_ceebElement' ).val(ui.item.id);
    	}
     });
 
