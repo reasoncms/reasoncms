@@ -647,15 +647,15 @@ class ApplicationPageThree extends FormStep {
         'sibling_5_college_ceeb' => 'hidden',
         'add_sibling_button' => array(
             'type' => 'comment',
-            'text' => '<div id="addSibling" title="Add a Sibling" class="addButton">
+            'text' => '<span id="addSibling" title="Add a Sibling" class="addButton">
                 Add a Sibling
-                </div>'
+                </span>'
         ),
         'remove_sibling_button' => array(
             'type' => 'comment',
-            'text' => '<div id="removeSibling" title="Remove Sibling" class="removeButton">
+            'text' => '<span id="removeSibling" title="Remove Sibling" class="removeButton">
                 Remove a Sibling
-                </div>'
+                </span>'
         )
     );
     /**

@@ -367,15 +367,15 @@ class ApplicationPageFive extends FormStep {
         ),
         'add_activity_button' => array(
             'type' => 'comment',
-            'text' => '<div id="addActivity" title="Add an Activity" class="addButton">
+            'text' => '<span id="addActivity" title="Add an Activity" class="addButton">
                 Add an Activity
-                </div>'
+                </span>'
         ),
         'remove_activity_button' => array(
             'type' => 'comment',
-            'text' => '<div id="removeActivity" title="Remove Activity" class="removeButton">
+            'text' => '<span id="removeActivity" title="Remove Activity" class="removeButton">
                 Remove an Activity
-                </div>'
+                </span>'
         )
             //'hr' => 'hr',
     );

@@ -171,15 +171,15 @@ class ApplicationPageFour extends FormStep {
 //        ),
         'add_college_button' => array(
             'type' => 'comment',
-            'text' => '<div id="addCollege" title="Add College" class="addButton">
+            'text' => '<span id="addCollege" title="Add College" class="addButton">
                 Add a College
-                </div>'
+                </span>'
         ),
         'remove_college_button' => array(
             'type' => 'comment',
-            'text' => '<div id="removeCollege" title="Remove College" class="removeButton">
+            'text' => '<span id="removeCollege" title="Remove College" class="removeButton">
                 Remove a College
-                </div>'
+                </span>'
         ),
         'tests_header' => array(
             'type' => 'comment',
