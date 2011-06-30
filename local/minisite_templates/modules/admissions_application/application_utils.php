@@ -74,10 +74,13 @@ function get_applicant_data($openid, &$the_form) {
             if (array_key_exists($element, $row)) {
                 if (in_array($element, $checkbox_elements)) {
                     $the_value = explode(',', $row[$element]);
-                }else {
-                    $the_value = $row[$element];
+                    $the_form->set_value($element, $the_value);
+                } else {
+                    if (($element != 'date_of_birth') && ($row[$element] != '0000-00-00')) {
+                        $the_value = $row[$element];
+                        $the_form->set_value($element, $the_value);
+                    }
                 }
-                $the_form->set_value($element, $the_value);
             } else if ($element == 'ssn_1'){
                 // handle ssn which is an element group of ssn_1, ssn_2, and ssn_3
                 // but stored in the db as ssn
@@ -112,7 +115,7 @@ function set_applicant_data($openid, &$the_form) {
         foreach ($the_form->get_element_names() as $element) {
             if (array_key_exists($element, $row)) {
                 $qstring .= $element . "=";
-                if (is_null($the_form->get_value($element)) <> True) {
+                if ((! is_null($the_form->get_value($element))) && ($the_form->get_value($element) <> '')) {
                     if (is_array($the_form->get_value($element))) {
                         $qstring .= "'" . addslashes(implode(',', $the_form->get_value($element))) . "'";
                     } else {
