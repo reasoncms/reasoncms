@@ -22,6 +22,7 @@ class TranscriptPageOneForm extends FormStep {
         ),
         'name' => array(
             'type' => 'text',
+            'display_name' => 'Current Name',
             'size' => 35,
         ),
          'date_of_birth' => array(
