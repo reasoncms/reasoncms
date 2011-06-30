@@ -41,7 +41,7 @@ class TranscriptPageOneForm extends FormStep {
         'student_status' => array(
             'type' => 'radio_no_sort',
             'display_name' => 'What is your status?',
-            'options' => array('Student' => 'Current Student', 'Alumni' => 'Alumni'),
+            'options' => array('Student' => 'Current Student', 'Alumni' => 'Former student/Alumni'),
         ),
         'unofficial_header' => array(
             'type' => 'comment',
