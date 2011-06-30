@@ -15,6 +15,11 @@ function check_open_id(&$the_form) {
     }
 }
 
+function get_open_id() {
+    $the_sess = get_reason_session();
+    return $the_sess->get('openid_id');
+}
+
 function check_login() {
     $url = get_current_url();
     $parts = parse_url($url);
@@ -150,21 +155,50 @@ function validate_page1(){
 }
 function validate_page2(){
     /*
-     * Required fields: first_name, middle_name, last_name, gender, date_of_birth
-     *                  email, home_phone,
+     * Required fields: first_name, middle_name, last_name, gender, date_of_birth,
+     *                  email, home_phone, permanent_address, permanent_city,
+     *                  permanent_state_province, permanent_state_province, permanent_zip_postal,
+     *                  permanent_country, different_mailing_address (mailing_address, mailing_city,
+     *                  mailing_state_province, mailing_zip_postal, mailing_country)
      */
+    $qstring = "SELECT first_name, middle_name, last_name, gender, date_of_birth, " .
+        "email, home_phone, permanent_address, permanent_city, " .
+        "permanent_state_province, permanent_state_province, permanent_zip_postal, " .
+        "permanent_country, different_mailing_address, mailing_address, mailing_city, " .
+        "mailing_state_province, mailing_zip_postal, mailing_country " .
+        "FROM applicants " .
+        "WHERE open_id = '" . get_open_id() . "'";
+    echo "<div style='display:hidden'>" . $qstring . "</div>";
     return True;
 }
 function validate_page3(){
+    /*
+     * Required Fields: permanent_home_parent,
+     *                  based on permanent_home_parent:  parent_1_first_name, parent_1_middle_name,
+     *                  parent_1_last_name, parent_1_address, parent_1_city, parent_1_state_province,
+     *                  parent_1_zip_postal, parent_1_country, parent_1_phone, parent_1_email,
+     *                  parent_1_occupation (or replace "parent_1" with "parent_2" or "guardian"),
+     *                  legacy,
+     *                  based on legacy:  parent_1_college/parent_2_college/guardian_college
+     */
     return True;
 }
 function validate_page4(){
+    /*
+     * Required Fields: hs_name, hs_grad_year, based on student_type:  college_1_name
+     */
     return TRUE;
 }
 function validate_page5(){
+    /*
+     * Required Fields: based on activity_1, if 'other' require activity_1_other (same for all activities)
+     */
     return TRUE;
 }
 function validate_page6(){
+    /*
+     * Required Fields: college_plan_1, based on music_audition:  music_audition_instrument, financial_aid
+     */
     return True;
 }
 
