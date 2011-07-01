@@ -203,8 +203,9 @@ function validate_page6(){
 }
 
 function validate_all_pages(){
-    if (validate_page1 () && validate_page2() && validate_page3() && validate_page3()
+    if (validate_page1 () && validate_page2() && validate_page3()
         && validate_page4() && validate_page5() && validate_page6()
-    ) return true;
+    )
+        return true;
 }
 ?>
