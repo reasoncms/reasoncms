@@ -214,6 +214,7 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
     function generate_navigation() {
         $output = '<div id="formNavigation">';
         $output .= '<ul class="formSteps">';
+        $error_div = "";
         $i = 0;
         foreach ($this->controller->forms as $name => $form) {
             $i++;
@@ -225,26 +226,26 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
                 $app_submitted = $this->sess->get('submitted');
                 $app_submitted = True;
                 if ($app_submitted){
-                    $error_header = "<div style='width:655px;border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;'>Required fields:&nbsp;&nbsp;";
+                    $error_header = "<div style='width:655px;border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;'><span style='font-weight:bold;'>Required fields:</span>&nbsp;&nbsp;";
                     $error_footer = "</div>";
                     switch($i){
                         case 1:
-                            $validation = validate_page1();
+                            $validation = validate_page1($form);
                             break;
                         case 2:
                             $validation = validate_page2($form);
                             break;
                         case 3:
-                            $validation = validate_page3();
+                            $validation = validate_page3($form);
                             break;
                         case 4:
-                            $validation = validate_page4();
+                            $validation = validate_page4($form);
                             break;
                         case 5:
-                            $validation = validate_page5();
+                            $validation = validate_page5($form);
                             break;
                         case 6:
-                            $validation = validate_page6();
+                            $validation = validate_page6($form);
                             break;
                     }
                     if (!$validation['valid']){
@@ -252,9 +253,8 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
                         if ($this->controller->get_current_step() == $name){
                             $error_div = $error_header;
                             foreach($validation as $val_key => $val_value){
-                                $error_div .= " " . $val_value . ", ";
+                                $error_div .= " <a href='#" . $val_key . "_error'>" . $val_value . "</a>&nbsp;&nbsp; ";
                             }
-                            $error_div = rtrim($error_div, ', ');
                             $error_div .= $error_footer;
                         }
                     }
