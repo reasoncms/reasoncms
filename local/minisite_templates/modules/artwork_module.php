@@ -34,7 +34,7 @@ class artworkModule extends DefaultMinisiteModule {
 
             echo $post->get_value('medium');
 
-            echo $post->get_value('artwork_type');
+            echo $post->get_value('date_format');
         }
 
         echo 'Module says "Hello World"';
