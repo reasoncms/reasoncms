@@ -67,7 +67,7 @@ class TranscriptPageOneForm extends FormStep {
         ),
         'official_comment' => array(
             'type' => 'comment',
-            'text' => 'Official transcripts cost $4 per transcript for Alumni'
+            'text' => 'Official transcripts cost $5 per transcript for Alumni'
         ),
 //        'official_type' => array(
 //            'type' => 'radio_inline_no_sort',
@@ -244,7 +244,7 @@ class TranscriptPageOneForm extends FormStep {
        $deliver_time = $this->get_value('delivery_time');
 
        if ($this->get_value('student_status') == 'Alumni') {
-            $pay_amount = $pay_amount + ($official_number * 4);
+            $pay_amount = $pay_amount + ($official_number * 5);
         }
         $this->set_value('amount', $pay_amount);
 
