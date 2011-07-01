@@ -136,7 +136,7 @@ class reasonVersionCheck
 	function _fetch_response_from_remote_server($version)
 	{
 		$url = 'https://apps.carleton.edu/opensource/reason/version_check.php?version='.urlencode($this->get_current_version_id());
-		$response = carl_util_get_url_contents($url);
+		$response = carl_util_get_url_contents($url,false,'','',5); // 5 seconds max to try
 		if (!empty($response))
 		{
 			list($version_info['code'],$version_info['message'],$version_info['url']) = explode("\n",$response);
