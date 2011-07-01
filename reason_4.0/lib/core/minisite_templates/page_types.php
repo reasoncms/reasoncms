@@ -977,6 +977,36 @@
 			),
 			'sidebar' => '',
 		),
+		'gallery_640px' => array(
+			'main_post' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',//'meta.description ASC',
+				'width'=>640,
+				'height'=>640,
+				'crop' => 'fit',
+			),
+			'sidebar' => '',
+		),
+		'gallery_720px' => array(
+			'main_post' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',//'meta.description ASC',
+				'width'=>720,
+				'height'=>720,
+				'crop' => 'fit',
+			),
+			'sidebar' => '',
+		),
+		'gallery_800px' => array(
+			'main_post' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',//'meta.description ASC',
+				'width'=>800,
+				'height'=>800,
+				'crop' => 'fit',
+			),
+			'sidebar' => '',
+		),
 		'GoModule' => array( 
 			'sub_nav_2' => '',
 			'banner_xtra' => '',
