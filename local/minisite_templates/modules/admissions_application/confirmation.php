@@ -12,10 +12,7 @@ include_once 'application_utils.php';
  *
  */
 /*
- *  First page of the application
- *
- *  Enrollment Term
- *  Student Type
+ *  Show the confirmation message
  *
  */
 class ApplicationConfirmation extends FormStep {
@@ -38,7 +35,16 @@ class ApplicationConfirmation extends FormStep {
     // style up the form and add comments et al
     function on_every_time() {
         $this->show_form = false;
-        echo $this->get_thank_you_blurb();
+
+        //check if an open_id is set
+        // if not, send them back to the first page
+        if (check_open_id($this)) {
+            echo $this->get_thank_you_blurb();
+        } else {
+            echo 'How\'d you get here?';
+            header("Location:/admissions/apply/");
+        }
+        $this->controller->destroy_form_data();
     }
 
     function pre_show_form() {
