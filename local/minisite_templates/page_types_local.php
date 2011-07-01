@@ -523,8 +523,16 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'footer' => '',
                     'post_foot' => 'mobile_footer',
 		),
+    
                 'norge_conference' => array(
                     'main_post' => 'norge_form',
+                ),
+                'artwork_module' => array(
+                    'main_post' => 'artwork_module',
+
+                ),
+                'norse_form' => array(
+                        'main_post' => 'norse_form',
                 ),
                 'onecard' => array(
                     'main_post'=>'onecard_dashboard',
