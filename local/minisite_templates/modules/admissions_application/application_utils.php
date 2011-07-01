@@ -15,11 +15,6 @@ function check_open_id(&$the_form) {
     }
 }
 
-function get_open_id() {
-    $the_sess = get_reason_session();
-    return $the_sess->get('openid_id');
-}
-
 function check_login() {
     $url = get_current_url();
     $parts = parse_url($url);
@@ -147,11 +142,23 @@ function set_applicant_data($openid, &$the_form) {
     connectDB(REASON_DB);
 }
 
+function get_open_id() {
+    $the_sess = get_reason_session();
+    return $the_sess->get('openid_id');
+}
+
+function get_data($qstring){
+    connectDB('admissions_applications_connection');
+    $results = db_query($qstring);
+    connectDB(REASON_DB);
+    return $results;
+}
+
 function validate_page1(){
     /*
      * Required fields: student_type, enrollment_term, citizenship_status
      */
-    return True;
+    return array('valid'=>True);
 }
 function validate_page2(){
     /*
@@ -161,6 +168,7 @@ function validate_page2(){
      *                  permanent_country, different_mailing_address (mailing_address, mailing_city,
      *                  mailing_state_province, mailing_zip_postal, mailing_country)
      */
+    
     $qstring = "SELECT first_name, middle_name, last_name, gender, date_of_birth, " .
         "email, home_phone, permanent_address, permanent_city, " .
         "permanent_state_province, permanent_state_province, permanent_zip_postal, " .
@@ -168,8 +176,40 @@ function validate_page2(){
         "mailing_state_province, mailing_zip_postal, mailing_country " .
         "FROM applicants " .
         "WHERE open_id = '" . get_open_id() . "'";
-    echo "<div style='display:hidden'>" . $qstring . "</div>";
-    return True;
+    $results = get_data($qstring);
+    $valid = True;
+    $return = array();
+
+    //should only be one row to loop through
+    while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
+
+        //check always required fields
+        if( is_null($row['first_name'])){               $valid=False;  $return['first_name'] = 'first_name'; }
+        if( is_null($row['middle_name'])){              $valid=False;  $return['middle_name'] = 'middle_name'; }
+        if( is_null($row['last_name'])){                $valid=False;  $return['last_name'] = 'last_name'; }
+        if( is_null($row['gender'])){                   $valid=False;  $return['gender'] = 'gender'; }
+        if( is_null($row['date_of_birth'])){            $valid=False;  $return['date_of_birth'] = 'date_of_birth'; }
+        if( is_null($row['email'])){                    $valid=False;  $return['email'] = 'email'; }
+        if( is_null($row['home_phone'])){               $valid=False;  $return['home_phone'] = 'home_phone'; }
+        if( is_null($row['permanent_address'])){        $valid=False;  $return['permanent_address'] = 'permanent_address'; }
+        if( is_null($row['permanent_city'])){           $valid=False;  $return['permanent_city'] = 'permanent_city'; }
+        if( is_null($row['permanent_state_province'])){ $valid=False;  $return['permanent_state_province'] = 'permanent_state_province'; }
+        if( is_null($row['permanent_zip_postal'])){     $valid=False;  $return['permanent_zip_postal'] = 'permanent_zip_postal'; }
+        if( is_null($row['permanent_country'])){        $valid=False;  $return['permanent_country'] = 'permanent_country'; }
+
+        //if different_mailing_address is set, check associated fields
+        if(is_null($row['different_mailing_address']) == False){
+            if( is_null($row['mailing_address'])){          $valid=False;  $return['mailing_address'] = 'mailing_address'; }
+            if( is_null($row['mailing_city'])){             $valid=False;  $return['mailing_city'] = 'mailing_city'; }
+            if( is_null($row['mailing_state_province'])){   $valid=False;  $return['mailing_state_province'] = 'mailing_state_province'; }
+            if( is_null($row['mailing_zip_postal'])){       $valid=False;  $return['mailing_zip_postal'] = 'mailing_zip_postal'; }
+            if( is_null($row['mailing_country'])){          $valid=False;  $return['mailing_country'] = 'mailing_country'; }
+        }
+    }
+
+    $return['valid'] = $valid;
+    
+    return $return;
 }
 function validate_page3(){
     /*
@@ -181,26 +221,27 @@ function validate_page3(){
      *                  legacy,
      *                  based on legacy:  parent_1_college/parent_2_college/guardian_college
      */
-    return True;
+    return array('valid'=>True);
 }
 function validate_page4(){
     /*
      * Required Fields: hs_name, hs_grad_year, based on student_type:  college_1_name
      */
-    return TRUE;
+    return array('valid'=>True);
 }
 function validate_page5(){
     /*
      * Required Fields: based on activity_1, if 'other' require activity_1_other (same for all activities)
      */
-    return TRUE;
+    return array('valid'=>True);
 }
 function validate_page6(){
     /*
      * Required Fields: college_plan_1, based on music_audition:  music_audition_instrument, financial_aid
      */
-    return True;
+    return array('valid'=>True);
 }
+
 
 function validate_all_pages(){
     if (validate_page1 () && validate_page2() && validate_page3()
@@ -208,4 +249,5 @@ function validate_all_pages(){
     )
         return true;
 }
+
 ?>
