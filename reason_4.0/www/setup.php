@@ -431,7 +431,7 @@ function perform_checks()
 	else $check_failed++;
 	
 	echo '<h3>Performing Directory and File Checks</h3>';
-	
+	echo '<h4>Write checks</h4>';
 	if (data_dir_writable(WEB_PATH, 'WEB_PATH')) $check_passed++;
 	else $check_failed++;
 	
@@ -459,7 +459,11 @@ function perform_checks()
 	// thing could be done for assets.
 	if (data_dir_writable(rtrim($_SERVER[ 'DOCUMENT_ROOT' ], DIRECTORY_SEPARATOR).WEB_TEMP, 'WEB_TEMP')) $check_passed++;
 	else $check_failed++;
+
+	if (data_dir_writable(REASON_INC.'data/geocodes/', 'Geocode data directory')) $check_passed++;
+	else $check_failed++;
 	
+	echo '<h4>Read checks</h4>';
 	if (check_directory_readable(THOR_INC, 'THOR_INC')) $check_passed++;
 	else $check_failed++;
 	
@@ -888,7 +892,7 @@ function data_dir_writable($dir, $name)
 
 function check_directory_readable($dir, $name, $extra = '')
 {
-	if (is_readable($dir)) return msg('<span class="success">'.$name . ' dirctory is readable</span> - check passed', true);
+	if (is_readable($dir)) return msg('<span class="success">'.$name . ' directory is readable</span> - check passed', true);
 	else return msg ('<span class="error">'.$name . ' directory not readable - failed</span>. Make sure ' .$file. ' exists and apache user has read access to it. '.$extra, false);
 }
 
