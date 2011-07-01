@@ -246,6 +246,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 			return;
 		}
 		
+		$url = get_current_url();
+		
 		echo '<div class="content content-tertiary">'."\n";
 		
 		if ($this->has_content( 'twitter_sub_nav' ) && $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
