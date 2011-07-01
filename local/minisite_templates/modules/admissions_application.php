@@ -225,36 +225,38 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
                 $app_submitted = $this->sess->get('submitted');
                 $app_submitted = True;
                 if ($app_submitted){
+                    $error_header = "<div style='width:655px;border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;'>Required fields:&nbsp;&nbsp;";
+                    $error_footer = "</div>";
                     switch($i){
                         case 1:
-                            if (!validate_page1()){ $class .= ' error'; }
+                            $validation = validate_page1();
                             break;
                         case 2:
-                            $validation = validate_page2();
-                            if (!$validation[0]){
-                                $class .= ' error';
-                                if ($this->controller->get_current_step() == $name){
-                                    $error_div = "<div style='border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;'>";
-                                    foreach($validation as $validation_value){
-                                        $error_div .= " " . $validation_value . ", ";
-                                    }
-                                    $error_div = rtrim($error_div, ', ');
-                                    $error_div .= "</div>";
-                                }
-                            }
+                            $validation = validate_page2($form);
                             break;
                         case 3:
-                            if (!validate_page3()){ $class .= ' error'; }
+                            $validation = validate_page3();
                             break;
                         case 4:
-                            if (!validate_page4()){ $class .= ' error'; }
+                            $validation = validate_page4();
                             break;
                         case 5:
-                            if (!validate_page5()){ $class .= ' error'; }
+                            $validation = validate_page5();
                             break;
                         case 6:
-                            if (!validate_page6()){ $class .= ' error'; }
+                            $validation = validate_page6();
                             break;
+                    }
+                    if (!$validation['valid']){
+                        $class .= ' error';
+                        if ($this->controller->get_current_step() == $name){
+                            $error_div = $error_header;
+                            foreach($validation as $val_key => $val_value){
+                                $error_div .= " " . $val_value . ", ";
+                            }
+                            $error_div = rtrim($error_div, ', ');
+                            $error_div .= $error_footer;
+                        }
                     }
                 }
                 
