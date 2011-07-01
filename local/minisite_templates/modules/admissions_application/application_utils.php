@@ -160,7 +160,7 @@ function validate_page1(){
      */
     return array('valid'=>True);
 }
-function validate_page2(){
+function validate_page2(&$the_form){
     /*
      * Required fields: first_name, middle_name, last_name, gender, date_of_birth,
      *                  email, home_phone, permanent_address, permanent_city,
@@ -184,26 +184,26 @@ function validate_page2(){
     while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
 
         //check always required fields
-        if( is_null($row['first_name'])){               $valid=False;  $return['first_name'] = 'first_name'; }
-        if( is_null($row['middle_name'])){              $valid=False;  $return['middle_name'] = 'middle_name'; }
-        if( is_null($row['last_name'])){                $valid=False;  $return['last_name'] = 'last_name'; }
-        if( is_null($row['gender'])){                   $valid=False;  $return['gender'] = 'gender'; }
-        if( is_null($row['date_of_birth'])){            $valid=False;  $return['date_of_birth'] = 'date_of_birth'; }
-        if( is_null($row['email'])){                    $valid=False;  $return['email'] = 'email'; }
-        if( is_null($row['home_phone'])){               $valid=False;  $return['home_phone'] = 'home_phone'; }
-        if( is_null($row['permanent_address'])){        $valid=False;  $return['permanent_address'] = 'permanent_address'; }
-        if( is_null($row['permanent_city'])){           $valid=False;  $return['permanent_city'] = 'permanent_city'; }
-        if( is_null($row['permanent_state_province'])){ $valid=False;  $return['permanent_state_province'] = 'permanent_state_province'; }
-        if( is_null($row['permanent_zip_postal'])){     $valid=False;  $return['permanent_zip_postal'] = 'permanent_zip_postal'; }
-        if( is_null($row['permanent_country'])){        $valid=False;  $return['permanent_country'] = 'permanent_country'; }
+        if( is_null($row['first_name'])){               $valid=False;  $return['first_name'] = $the_form->get_display_name('first_name');  }
+        if( is_null($row['middle_name'])){              $valid=False;  $return['middle_name'] = $the_form->get_display_name('middle_name'); }
+        if( is_null($row['last_name'])){                $valid=False;  $return['last_name'] = $the_form->get_display_name('last_name'); }
+        if( is_null($row['gender'])){                   $valid=False;  $return['gender'] = $the_form->get_display_name('gender'); }
+        if( is_null($row['date_of_birth'])){            $valid=False;  $return['date_of_birth'] = $the_form->get_display_name('date_of_birth'); }
+        if( is_null($row['email'])){                    $valid=False;  $return['email'] = $the_form->get_display_name('email'); }
+        if( is_null($row['home_phone'])){               $valid=False;  $return['home_phone'] = $the_form->get_display_name('home_phone'); }
+        if( is_null($row['permanent_address'])){        $valid=False;  $return['permanent_address'] = $the_form->get_display_name('permanent_address'); }
+        if( is_null($row['permanent_city'])){           $valid=False;  $return['permanent_city'] = $the_form->get_display_name('permanent_city'); }
+        if( is_null($row['permanent_state_province'])){ $valid=False;  $return['permanent_state_province'] = $the_form->get_display_name('permanent_state_province'); }
+        if( is_null($row['permanent_zip_postal'])){     $valid=False;  $return['permanent_zip_postal'] = $the_form->get_display_name('permanent_zip_postal'); }
+        if( is_null($row['permanent_country'])){        $valid=False;  $return['permanent_country'] = $the_form->get_display_name('permanent_country'); }
 
         //if different_mailing_address is set, check associated fields
         if(is_null($row['different_mailing_address']) == False){
-            if( is_null($row['mailing_address'])){          $valid=False;  $return['mailing_address'] = 'mailing_address'; }
-            if( is_null($row['mailing_city'])){             $valid=False;  $return['mailing_city'] = 'mailing_city'; }
-            if( is_null($row['mailing_state_province'])){   $valid=False;  $return['mailing_state_province'] = 'mailing_state_province'; }
-            if( is_null($row['mailing_zip_postal'])){       $valid=False;  $return['mailing_zip_postal'] = 'mailing_zip_postal'; }
-            if( is_null($row['mailing_country'])){          $valid=False;  $return['mailing_country'] = 'mailing_country'; }
+            if( is_null($row['mailing_address'])){          $valid=False;  $return['mailing_address'] = $the_form->get_display_name('mailing_address'); }
+            if( is_null($row['mailing_city'])){             $valid=False;  $return['mailing_city'] = $the_form->get_display_name('mailing_city'); }
+            if( is_null($row['mailing_state_province'])){   $valid=False;  $return['mailing_state_province'] = $the_form->get_display_name('mailing_state_province'); }
+            if( is_null($row['mailing_zip_postal'])){       $valid=False;  $return['mailing_zip_postal'] = $the_form->get_display_name('mailing_zip_postal'); }
+            if( is_null($row['mailing_country'])){          $valid=False;  $return['mailing_country'] = $the_form->get_display_name('mailing_country'); }
         }
     }
 
