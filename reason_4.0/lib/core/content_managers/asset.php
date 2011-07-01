@@ -13,6 +13,7 @@
 	reason_include_once('content_managers/default.php3');
 	
 	require_once CARL_UTIL_INC.'basic/mime_types.php';
+	require_once CARL_UTIL_INC.'basic/misc.php';
 
  /**
   * Define the class name so that the admin page can use this content manager
@@ -251,8 +252,13 @@
 				// set file type
 				$this->set_value('file_type', $suffix );
 
-				// move the file
-				rename( $document->tmp_full_path, ASSET_PATH.$this->_id.'.'.$suffix );
+				$asset_dest = ASSET_PATH.$this->_id.'.'.$suffix;
+				// move the file - if windows and the destination exists, unlink it first.
+				if (server_is_windows() && file_exists($asset_dest))
+				{
+					unlink($asset_dest);
+				}
+				rename ($document->tmp_full_path, $asset_dest );
 			}
 
 			// make sure to ignore the 'asset' field
