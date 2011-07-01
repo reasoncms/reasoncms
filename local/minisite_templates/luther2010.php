@@ -357,7 +357,14 @@ class LutherTemplate2010 extends MinisiteTemplate
 		|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports'))
 		{
 			echo '<aside class="gallery group">'."\n";
-			echo '<header class="blue-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";			
+			if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/art.?\/?/", $url))
+			{
+				echo '<header class="blue-stripe"><h1><span>Exhibitions</span></h1></header>'."\n";
+			}
+			else
+			{
+				echo '<header class="blue-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";
+			}			
 			$this->run_section( 'flickr_slideshow' );
 			echo '</aside> <!-- class="gallery group" -->'."\n";
 		}
@@ -749,20 +756,23 @@ class LutherTemplate2010 extends MinisiteTemplate
 			echo '</div>'."\n";
 		}
 
-		echo '<section class="events group with-calendar" role="group">'."\n";
-		if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/music\/?/", $url))
+		if (!preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/art.?\/?/", $url))
 		{
-			echo '<header class="red-stripe"><h1><span>Upcoming Music Events</span></h1></header>'."\n";
+			echo '<section class="events group with-calendar" role="group">'."\n";
+			if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/music\/?/", $url))
+			{
+				echo '<header class="red-stripe"><h1><span>Upcoming Music Events</span></h1></header>'."\n";
+			}
+			else 
+			{
+				echo '<header class="red-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
+			}
+			$this->run_section( 'main_post' );		
+			echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";
 		}
-		else 
-		{
-			echo '<header class="red-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
-		}
-		$this->run_section( 'main_post' );		
-		echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";
 		
 		
-		if ($this->has_content( 'content_blurb' ))
+		if ($this->has_content( 'content_blurb' ) && !preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/art.?\/?/", $url))
 		{
 			echo '<section class="spotlight" role="group">'."\n";
      		echo '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
