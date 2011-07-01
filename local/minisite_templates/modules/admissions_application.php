@@ -220,28 +220,42 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             $class = 'formStep';
             if (isset($form->display_name)) {
 
+                /* Highlight incomplete tabs if app was submitted */
                 $this->sess =& get_reason_session();
-                
-
-                switch($i){
-                    case 1:
-                        if (!validate_page1()){ $class .= ' error'; }
-                        break;
-                    case 2:
-                        if (!validate_page2()){ $class .= ' error'; }
-                        break;
-                    case 3:
-                        if (!validate_page3()){ $class .= ' error'; }
-                        break;
-                    case 4:
-                        if (!validate_page4()){ $class .= ' error'; }
-                        break;
-                    case 5:
-                        if (!validate_page5()){ $class .= ' error'; }
-                        break;
-                    case 6:
-                        if (!validate_page6()){ $class .= ' error'; }
-                        break;
+                $app_submitted = $this->sess->get('submitted');
+                $app_submitted = True;
+                if ($app_submitted){
+                    switch($i){
+                        case 1:
+                            if (!validate_page1()){ $class .= ' error'; }
+                            break;
+                        case 2:
+                            $validation = validate_page2();
+                            if (!$validation[0]){
+                                $class .= ' error';
+                                if ($this->controller->get_current_step() == $name){
+                                    $error_div = "<div style='border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;'>";
+                                    foreach($validation as $validation_value){
+                                        $error_div .= " " . $validation_value . ", ";
+                                    }
+                                    $error_div = rtrim($error_div, ', ');
+                                    $error_div .= "</div>";
+                                }
+                            }
+                            break;
+                        case 3:
+                            if (!validate_page3()){ $class .= ' error'; }
+                            break;
+                        case 4:
+                            if (!validate_page4()){ $class .= ' error'; }
+                            break;
+                        case 5:
+                            if (!validate_page5()){ $class .= ' error'; }
+                            break;
+                        case 6:
+                            if (!validate_page6()){ $class .= ' error'; }
+                            break;
+                    }
                 }
                 
                 if ($this->controller->get_current_step() == $name)
@@ -251,7 +265,7 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             }
         }
         $output .= '</ul></div>';
-        return $output;
+        return $output . $error_div;
     }
 }
 ?>
