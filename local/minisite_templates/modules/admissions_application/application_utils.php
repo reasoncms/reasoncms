@@ -154,18 +154,41 @@ function get_data($qstring){
     return $results;
 }
 
-function validate_page1(){
-    /*
-     * Required fields: student_type, enrollment_term, citizenship_status
-     */
-    return array('valid'=>True);
+function validate_page1(&$the_form){
+    /* Required fields: student_type, enrollment_term, citizenship_status */
+    $elements = array('student_type', 'enrollment_term', 'citizenship_status');
+
+    $qstring = "SELECT ";
+    foreach($elements as $element){
+        $qstring .= $element . ", ";
+    }
+    $qstring = rtrim($qstring, ", ");
+    $qstring .= " FROM applicants " .
+        "WHERE open_id = '" . get_open_id() . "';";
+    
+    $results = get_data($qstring);
+    $valid = True;
+    $return = array();
+
+    while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
+        foreach($elements as $element){
+            if( is_null($row[$element])){
+                $valid=False;
+                $return[$element] = $the_form->get_display_name($element);
+            }
+        }
+    }
+
+    $return['valid'] = $valid;
+    return $return;
 }
 function validate_page2(&$the_form){
     /*
      * Required fields: first_name, middle_name, last_name, gender, date_of_birth,
      *                  email, home_phone, permanent_address, permanent_city,
      *                  permanent_state_province, permanent_state_province, permanent_zip_postal,
-     *                  permanent_country, different_mailing_address (mailing_address, mailing_city,
+     *                  permanent_country,
+     *                  different_mailing_address (mailing_address, mailing_city,
      *                  mailing_state_province, mailing_zip_postal, mailing_country)
      */
     
@@ -175,7 +198,7 @@ function validate_page2(&$the_form){
         "permanent_country, different_mailing_address, mailing_address, mailing_city, " .
         "mailing_state_province, mailing_zip_postal, mailing_country " .
         "FROM applicants " .
-        "WHERE open_id = '" . get_open_id() . "'";
+        "WHERE open_id = '" . get_open_id() . "';";
     $results = get_data($qstring);
     $valid = True;
     $return = array();
@@ -184,7 +207,7 @@ function validate_page2(&$the_form){
     while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
 
         //check always required fields
-        if( is_null($row['first_name'])){               $valid=False;  $return['first_name'] = $the_form->get_display_name('first_name');  }
+        if( is_null($row['first_name'])){               $valid=False;  $return['first_name'] = $the_form->get_display_name('first_name'); }
         if( is_null($row['middle_name'])){              $valid=False;  $return['middle_name'] = $the_form->get_display_name('middle_name'); }
         if( is_null($row['last_name'])){                $valid=False;  $return['last_name'] = $the_form->get_display_name('last_name'); }
         if( is_null($row['gender'])){                   $valid=False;  $return['gender'] = $the_form->get_display_name('gender'); }
@@ -211,7 +234,7 @@ function validate_page2(&$the_form){
     
     return $return;
 }
-function validate_page3(){
+function validate_page3(&$the_form){
     /*
      * Required Fields: permanent_home_parent,
      *                  based on permanent_home_parent:  parent_1_first_name, parent_1_middle_name,
@@ -221,21 +244,139 @@ function validate_page3(){
      *                  legacy,
      *                  based on legacy:  parent_1_college/parent_2_college/guardian_college
      */
-    return array('valid'=>True);
+
+    $qstring = "SELECT permanent_home_parent, " .
+        "parent_1_first_name, parent_1_middle_name, parent_1_last_name, " .
+            "parent_1_address, parent_1_city, parent_1_state_province, parent_1_zip_postal, parent_1_country, " .
+            "parent_1_phone, parent_1_email, parent_1_occupation, " .
+        "parent_2_first_name, parent_2_middle_name, parent_2_last_name, " .
+            "parent_2_address, parent_2_city, parent_2_state_province, parent_2_zip_postal, parent_2_country, " .
+            "parent_2_phone, parent_2_email, parent_2_occupation, " .
+        "guardian_first_name, guardian_middle_name, guardian_last_name, " .
+            "guardian_address, guardian_city, guardian_state_province, guardian_zip_postal, guardian_country, " .
+            "guardian_phone, guardian_email, guardian_occupation, " .
+        "legacy, " .
+            "parent_1_college, parent_2_college, guardian_college " .
+        "FROM applicants " .
+        "WHERE open_id = '" . get_open_id() . "';";
+
+    $results = get_data($qstring);
+    $valid = True;
+    $return = array();
+
+    //should only be one row to loop through
+    while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
+        switch($row['permanent_home_parent']){
+            case 'parent1':
+                if( is_null($row['parent_1_first_name'])){ $valid=False; $return['parent_1_first_name'] = $the_form->get_display_name('parent_1_first_name'); }
+                if( is_null($row['parent_1_middle_name'])){ $valid=False; $return['parent_1_middle_name'] = $the_form->get_display_name('parent_1_middle_name'); }
+                if( is_null($row['parent_1_last_name'])){ $valid=False; $return['parent_1_last_name'] = $the_form->get_display_name('parent_1_last_name'); }
+
+                if( is_null($row['parent_1_address'])){ $valid=False; $return['parent_1_address'] = $the_form->get_display_name('parent_1_address'); }
+                if( is_null($row['parent_1_city'])){ $valid=False; $return['parent_1_city'] = $the_form->get_display_name('parent_1_city'); }
+                if( is_null($row['parent_1_state_province'])){ $valid=False; $return['parent_1_state_province'] = $the_form->get_display_name('parent_1_state_province'); }
+                if( is_null($row['parent_1_zip_postal'])){ $valid=False; $return['parent_1_zip_postal'] = $the_form->get_display_name('parent_1_zip_postal'); }
+                if( is_null($row['parent_1_country'])){ $valid=False; $return['parent_1_country'] = $the_form->get_display_name('parent_1_country'); }
+
+                if( is_null($row['parent_1_phone'])){ $valid=False; $return['parent_1_phone'] = $the_form->get_display_name('parent_1_phone'); }
+                if( is_null($row['parent_1_email'])){ $valid=False; $return['parent_1_email'] = $the_form->get_display_name('parent_1_email'); }
+                if( is_null($row['parent_1_occupation'])){ $valid=False; $return['parent_1_occupation'] = $the_form->get_display_name('parent_1_occupation'); }
+                break;
+            case 'parent2':
+                if( is_null($row['parent_2_first_name'])){ $valid=False; $return['parent_2_first_name'] = $the_form->get_display_name('parent_2_first_name'); }
+                if( is_null($row['parent_2_middle_name'])){ $valid=False; $return['parent_2_middle_name'] = $the_form->get_display_name('parent_2_middle_name'); }
+                if( is_null($row['parent_2_last_name'])){ $valid=False; $return['parent_2_last_name'] = $the_form->get_display_name('parent_2_last_name'); }
+
+                if( is_null($row['parent_2_address'])){ $valid=False; $return['parent_2_address'] = $the_form->get_display_name('parent_2_address'); }
+                if( is_null($row['parent_2_city'])){ $valid=False; $return['parent_2_city'] = $the_form->get_display_name('parent_2_city'); }
+                if( is_null($row['parent_2_state_province'])){ $valid=False; $return['parent_2_state_province'] = $the_form->get_display_name('parent_2_state_province'); }
+                if( is_null($row['parent_2_zip_postal'])){ $valid=False; $return['parent_2_zip_postal'] = $the_form->get_display_name('parent_2_zip_postal'); }
+                if( is_null($row['parent_2_country'])){ $valid=False; $return['parent_2_country'] = $the_form->get_display_name('parent_2_country'); }
+
+                if( is_null($row['parent_2_phone'])){ $valid=False; $return['parent_2_phone'] = $the_form->get_display_name('parent_2_phone'); }
+                if( is_null($row['parent_2_email'])){ $valid=False; $return['parent_2_email'] = $the_form->get_display_name('parent_2_email'); }
+                if( is_null($row['parent_2_occupation'])){ $valid=False; $return['parent_2_occupation'] = $the_form->get_display_name('parent_2_occupation'); }
+                break;
+            case 'guardian':
+                if( is_null($row['guardian_first_name'])){ $valid=False; $return['guardian_first_name'] = $the_form->get_display_name('guardian_first_name'); }
+                if( is_null($row['guardian_middle_name'])){ $valid=False; $return['guardian_middle_name'] = $the_form->get_display_name('guardian_middle_name'); }
+                if( is_null($row['guardian_last_name'])){ $valid=False; $return['guardian_last_name'] = $the_form->get_display_name('guardian_last_name'); }
+
+                if( is_null($row['guardian_address'])){ $valid=False; $return['guardian_address'] = $the_form->get_display_name('guardian_address'); }
+                if( is_null($row['guardian_city'])){ $valid=False; $return['guardian_city'] = $the_form->get_display_name('guardian_city'); }
+                if( is_null($row['guardian_state_province'])){ $valid=False; $return['guardian_state_province'] = $the_form->get_display_name('guardian_state_province'); }
+                if( is_null($row['guardian_zip_postal'])){ $valid=False; $return['guardian_zip_postal'] = $the_form->get_display_name('guardian_zip_postal'); }
+                if( is_null($row['guardian_country'])){ $valid=False; $return['guardian_country'] = $the_form->get_display_name('guardian_country'); }
+
+                if( is_null($row['guardian_phone'])){ $valid=False; $return['guardian_phone'] = $the_form->get_display_name('guardian_phone'); }
+                if( is_null($row['guardian_email'])){ $valid=False; $return['guardian_email'] = $the_form->get_display_name('guardian_email'); }
+                if( is_null($row['guardian_occupation'])){ $valid=False; $return['guardian_occupation'] = $the_form->get_display_name('guardian_occupation'); }
+                break;
+            case 'both':
+                //parent 1 info
+                if( is_null($row['parent_1_first_name'])){ $valid=False; $return['parent_1_first_name'] = $the_form->get_display_name('parent_1_first_name'); }
+                if( is_null($row['parent_1_middle_name'])){ $valid=False; $return['parent_1_middle_name'] = $the_form->get_display_name('parent_1_middle_name'); }
+                if( is_null($row['parent_1_last_name'])){ $valid=False; $return['parent_1_last_name'] = $the_form->get_display_name('parent_1_last_name'); }
+
+                if( is_null($row['parent_1_address'])){ $valid=False; $return['parent_1_address'] = $the_form->get_display_name('parent_1_address'); }
+                if( is_null($row['parent_1_city'])){ $valid=False; $return['parent_1_city'] = $the_form->get_display_name('parent_1_city'); }
+                if( is_null($row['parent_1_state_province'])){ $valid=False; $return['parent_1_state_province'] = $the_form->get_display_name('parent_1_state_province'); }
+                if( is_null($row['parent_1_zip_postal'])){ $valid=False; $return['parent_1_zip_postal'] = $the_form->get_display_name('parent_1_zip_postal'); }
+                if( is_null($row['parent_1_country'])){ $valid=False; $return['parent_1_country'] = $the_form->get_display_name('parent_1_country'); }
+
+                if( is_null($row['parent_1_phone'])){ $valid=False; $return['parent_1_phone'] = $the_form->get_display_name('parent_1_phone'); }
+                if( is_null($row['parent_1_email'])){ $valid=False; $return['parent_1_email'] = $the_form->get_display_name('parent_1_email'); }
+                if( is_null($row['parent_1_occupation'])){ $valid=False; $return['parent_1_occupation'] = $the_form->get_display_name('parent_1_occupation'); }
+                
+                //parent 2 info
+                if( is_null($row['parent_2_first_name'])){ $valid=False; $return['parent_2_first_name'] = $the_form->get_display_name('parent_2_first_name'); }
+                if( is_null($row['parent_2_middle_name'])){ $valid=False; $return['parent_2_middle_name'] = $the_form->get_display_name('parent_2_middle_name'); }
+                if( is_null($row['parent_2_last_name'])){ $valid=False; $return['parent_2_last_name'] = $the_form->get_display_name('parent_2_last_name'); }
+
+                if( is_null($row['parent_2_address'])){ $valid=False; $return['parent_2_address'] = $the_form->get_display_name('parent_2_address'); }
+                if( is_null($row['parent_2_city'])){ $valid=False; $return['parent_2_city'] = $the_form->get_display_name('parent_2_city'); }
+                if( is_null($row['parent_2_state_province'])){ $valid=False; $return['parent_2_state_province'] = $the_form->get_display_name('parent_2_state_province'); }
+                if( is_null($row['parent_2_zip_postal'])){ $valid=False; $return['parent_2_zip_postal'] = $the_form->get_display_name('parent_2_zip_postal'); }
+                if( is_null($row['parent_2_country'])){ $valid=False; $return['parent_2_country'] = $the_form->get_display_name('parent_2_country'); }
+
+                if( is_null($row['parent_2_phone'])){ $valid=False; $return['parent_2_phone'] = $the_form->get_display_name('parent_2_phone'); }
+                if( is_null($row['parent_2_email'])){ $valid=False; $return['parent_2_email'] = $the_form->get_display_name('parent_2_email'); }
+                if( is_null($row['parent_2_occupation'])){ $valid=False; $return['parent_2_occupation'] = $the_form->get_display_name('parent_2_occupation'); }
+                break;
+            default:
+                break;
+        }
+
+        switch($row['legacy']){
+            case 'Yes':
+                if( is_null($row['parent_1_college']) && is_null($row['parent_2_college']) && is_null($row['guardian_college'])){
+                    $valid=False;
+                    $return['parent_1_college'] = $the_form->get_display_name('parent_1_college');
+                    $return['parent_2_college'] = $the_form->get_display_name('parent_2_college');
+                    $return['guardian_college'] = $the_form->get_display_name('guardian_college');
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    $return['valid'] = $valid;
+    return $return;
 }
-function validate_page4(){
+function validate_page4(&$the_form){
     /*
      * Required Fields: hs_name, hs_grad_year, based on student_type:  college_1_name
      */
     return array('valid'=>True);
 }
-function validate_page5(){
+function validate_page5(&$the_form){
     /*
      * Required Fields: based on activity_1, if 'other' require activity_1_other (same for all activities)
      */
     return array('valid'=>True);
 }
-function validate_page6(){
+function validate_page6(&$the_form){
     /*
      * Required Fields: college_plan_1, based on music_audition:  music_audition_instrument, financial_aid
      */
@@ -243,9 +384,9 @@ function validate_page6(){
 }
 
 
-function validate_all_pages(){
-    if (validate_page1 () && validate_page2() && validate_page3()
-        && validate_page4() && validate_page5() && validate_page6()
+function validate_all_pages(&$the_form){
+    if (validate_page1 ($the_form) && validate_page2($the_form) && validate_page3($the_form)
+        && validate_page4($the_form) && validate_page5($the_form) && validate_page6($the_form)
     )
         return true;
 }
