@@ -383,12 +383,4 @@ function validate_page6(&$the_form){
     return array('valid'=>True);
 }
 
-
-function validate_all_pages(&$the_form){
-    if (validate_page1 ($the_form) && validate_page2($the_form) && validate_page3($the_form)
-        && validate_page4($the_form) && validate_page5($the_form) && validate_page6($the_form)
-    )
-        return true;
-}
-
 ?>
