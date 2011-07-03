@@ -259,7 +259,7 @@ class ApplicationPageSix extends FormStep {
         $this->pre_fill_form();
     }
 
-     function pre_fill_form() {
+    function pre_fill_form() {
         // check if the open_id has is set
         $o_id = check_open_id($this);
         if ($o_id) {
@@ -278,45 +278,60 @@ class ApplicationPageSix extends FormStep {
     function post_show_form() {
         echo '</div>' . "\n";
     }
-    
-    function process() {
-//        die($this->chosen_action);
-        set_applicant_data($this->openid_id, $this);
 
-        $all_pages_valid = true;
-        if ($this->chosen_action == 'ApplicationConfirmation'){
-            if (validate_page1() == false) {
-                $all_pages_valid = false;
-                die('bad page 1');
+    function process() {
+        set_applicant_data($this->openid_id, $this);
+        $all_pages_valid = false;
+
+        if ($this->chosen_action == 'ApplicationConfirmation') {
+            $i = 0;
+            $error_div = "";
+            foreach ($this->controller->forms as $name => $form) {
+                $i++;
+                $error_header = "<div style='width:655px;border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;margin:5px;'>
+                <span style='font-weight:bold;'>Required fields: " . $form->display_name . "</span>&nbsp;&nbsp;";
+                $error_footer = "</div>";
+                switch ($i) {
+                    case 1:
+                        $validation = validate_page1($form);
+                        break;
+                    case 2:
+                        $validation = validate_page2($form);
+                        break;
+                    case 3:
+                        $validation = validate_page3($form);
+                        break;
+                    case 4:
+                        $validation = validate_page4($form);
+                        break;
+                    case 5:
+                        $validation = validate_page5($form);
+                        break;
+                    case 6:
+                        $validation = validate_page6($form);
+                        break;
+                }
+                if (!$validation['valid']) {
+                    $error_preamble = 'Please complete the following required fields to submit your application:';
+                    $error_div .= $error_header;
+                    foreach ($validation as $val_key => $val_value) {
+                        $error_div .= " <a href='/admissions/apply/?_step=" . $name . "#" . $val_key . "_error'>" . $val_value . "</a>&nbsp;&nbsp; ";
+                    }
+                }
+                $error_div .= $error_footer;
+                $error_div .= '<div class="spacer"></div>';
             }
-            if (validate_page2() == false) {
-                $all_pages_valid = false;
-                die('bad page 2');
-            }
-            if (validate_page3() == false) {
-                $all_pages_valid = false;
-                die('bad page 3');
-            }
-            if (validate_page4() == false) {
-                $all_pages_valid = false;
-                die('bad page 4');
-            }
-            if (validate_page5() == false) {
-                $all_pages_valid = false;
-                die('bad page 5');
-            }
-            if (validate_page6() == false) {
-                $all_pages_valid = false;
-                die('bad page 6');
-            }
-            if ($all_pages_valid == true){
-                connectDB('admissions_applications_connection');
-                db_query("UPDATE `applicants` SET `submit_date`=NOW() WHERE `open_id`= '" . addslashes(check_open_id($this)) . "'");
-                connectDB(REASON_DB);
-            }
+
+            echo $error_preamble . $error_div;
+            die;
+        } else {
+            die('OK, write to db');
+
+            connectDB('admissions_applications_connection');
+            db_query("UPDATE `applicants` SET `submit_date`=NOW() WHERE `open_id`= '" . addslashes(check_open_id($this)) . "'");
+            connectDB(REASON_DB);
         }
     }
-
 }
 
 ?>
