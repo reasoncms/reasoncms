@@ -30,11 +30,10 @@ class ApplicationPageOne extends FormStep {
         ),
         'student_type_comment' => array(
             'type' => 'comment',
-            'text' => 'What type of student will you be enrolling as?',
+            'text' => '<h4>What type of student will you be enrolling as?</h4>',
         ),
         'student_type' => array(
             'type' => 'radio_no_sort',
-            'display_name' => '&nbsp;',
             'comments' => '<div id="transfer_dialog" title="Transfer Students">
                 <strong>Note:</strong> If you are a transfer student and filled out an application last year, then we\'ve got you covered.
                 Contact the <a href="mailto:admissions@luther.edu?Subject=Previous%20Transfer%20Student%20Applicant">Admissions Office</a> (800-4-LUTHER) to
@@ -43,19 +42,17 @@ class ApplicationPageOne extends FormStep {
         ),
         'enrollment_term_comment' => array(
             'type' => 'comment',
-            'text' => 'When do you wish to enroll at Luther?',
+            'text' => '<h4>When do you wish to enroll at Luther?</h4>',
         ),
         'enrollment_term' => array(
             'type' => 'text',
-            'display_name' => '&nbsp;',
         ),
         'citizenship_status_comment' => array(
             'type' => 'comment',
-            'text' => 'What is your citizenship status?',
+            'text' => '<h4>What is your citizenship status?</h4>',
         ),
         'citizenship_status' => array(
             'type' => 'radio_no_sort',
-            'display_name' => '&nbsp;',
             'comments' => '<div id="citizenship_dialog" title="International Students">
                 <strong>Note:</strong> International Students should apply using
                 the <a href="http://www.commonapp.org" target=_blank>Common App</a>.</div>',
