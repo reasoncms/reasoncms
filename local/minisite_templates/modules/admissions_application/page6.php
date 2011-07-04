@@ -280,9 +280,16 @@ class ApplicationPageSix extends FormStep {
     }
 
     function process() {
+        // write the the data
         set_applicant_data($this->openid_id, $this);
-//        $all_pages_valid = false;
 
+        /*
+         * if the applicant chooses "Submit your application"
+         * check for to see that all required fields have been written to the db at one time or another
+         * if not, build the error markup and break the excution of the script
+         * else (all required data is present), write the submit_date to the db and continue on to the
+         * confirmation page
+         */
         if ($this->chosen_action == 'ApplicationConfirmation') {
             $i = 0;
             $error_div = "";
