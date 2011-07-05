@@ -45,7 +45,7 @@ function is_submitted($open_id){
         $qstring = "SELECT `submit_date` FROM `applicants` WHERE `open_id`='" .addslashes($open_id) . "' ";
         $results = db_query($qstring);
         $row = mysql_fetch_array($results, MYSQL_ASSOC);
-        if (empty($row['submit_date']) || ($row['submit_date'] == '0000-00-00 00:00:00') || (!$open_id)){
+        if (empty($row['submit_date']) || ($row['submit_date'] == '0000-00-00 00:00:00')){
             return false;
         } else {
             return true;
