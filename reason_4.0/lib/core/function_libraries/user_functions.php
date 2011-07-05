@@ -27,6 +27,11 @@ function make_sure_username_is_user($username, $creator_id)
 		trigger_error('Creator ID is needed by make_sure_username_is_user (second argument)');
 		$creator_id = $master_admin_id;
 	}
+	if(empty($username))
+	{
+		trigger_error('Username is needed by make_sure_username_is_user (first argument)', E_USER_ERROR);
+		die();
+	}
 	$es = new entity_selector($master_admin_id);
 	$es->add_type(id_of('user'));
 	$es->add_relation('entity.name = "'.$username.'"');
