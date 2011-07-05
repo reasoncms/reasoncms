@@ -233,8 +233,8 @@ function validate_page2(&$the_form){
         if( is_null($row['permanent_zip_postal'])){     $valid=False;  $return['permanent_zip_postal'] = $the_form->get_display_name('permanent_zip_postal'); }
         if( is_null($row['permanent_country'])){        $valid=False;  $return['permanent_country'] = $the_form->get_display_name('permanent_country'); }
 
-        //if different_mailing_address is set, check associated fields
-        if(is_null($row['different_mailing_address']) == False){
+        //if different_mailing_address is "Yes", check associated fields
+        if (($row['different_mailing_address']) == "Yes"){
             if( is_null($row['mailing_address'])){          $valid=False;  $return['mailing_address'] = $the_form->get_display_name('mailing_address'); }
             if( is_null($row['mailing_city'])){             $valid=False;  $return['mailing_city'] = $the_form->get_display_name('mailing_city'); }
             if( is_null($row['mailing_state_province'])){   $valid=False;  $return['mailing_state_province'] = $the_form->get_display_name('mailing_state_province'); }
@@ -279,6 +279,7 @@ function validate_page3(&$the_form){
 
     //should only be one row to loop through
     while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
+        if( is_null($row['permanent_home_parent'])){ $valid=False; $return['permanent_home_parent'] = 'Permanent Home Parent'; }
         switch($row['permanent_home_parent']){
             case 'parent1':
                 if( is_null($row['parent_1_first_name'])){ $valid=False; $return['parent_1_first_name'] = $the_form->get_display_name('parent_1_first_name'); }
@@ -381,19 +382,107 @@ function validate_page4(&$the_form){
     /*
      * Required Fields: hs_name, hs_grad_year, based on student_type:  college_1_name
      */
-    return array('valid'=>True);
+    $qstring = "SELECT student_type, hs_name, hs_grad_year, college_1_name " .
+        "FROM applicants " .
+        "WHERE open_id = '" . get_open_id() . "';";
+    $results = get_data($qstring);
+    $valid = True;
+    $return = array();
+
+    //should only be one row to loop through
+    while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
+        if( is_null($row['hs_name'])){ $valid=False; $return['hs_name'] = $the_form->get_display_name('hs_name'); }
+        if( is_null($row['hs_grad_year'])){ $valid=False; $return['hs_grad_year'] = $the_form->get_display_name('hs_grad_year'); }
+        if (($row['student_type']) == "TR"){
+            if( is_null($row['college_1_name'])){ $valid=False; $return['college_1_name'] = $the_form->get_display_name('college_1_name'); }
+        }
+    }
+
+    $return['valid'] = $valid;
+    return $return;
 }
 function validate_page5(&$the_form){
     /*
      * Required Fields: based on activity_1, if 'other' require activity_1_other (same for all activities)
      */
-    return array('valid'=>True);
+    $qstring = "SELECT activity_1, activity_2, activity_3, activity_4, activity_5, " .
+        "activity_6, activity_7, activity_8, activity_9, activity_10, " .
+        "activity_1_other, activity_2_other, activity_3_other, activity_4_other, activity_5_other, " .
+        "activity_6_other, activity_7_other, activity_8_other, activity_9_other, activity_10_other " .
+        "FROM applicants " .
+        "WHERE open_id = '" . get_open_id() . "';";
+    $results = get_data($qstring);
+    $valid = True;
+    $return = array();
+    //should only be one row to loop through
+    while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
+        if (($row['activity_1']) == "Other"){
+                if( is_null($row['activity_1_other'])){ $valid=False; $return['activity_1_other'] = 'Other details - activity 1'; }
+        }
+        if (($row['activity_2']) == "Other"){
+                if( is_null($row['activity_2_other'])){ $valid=False; $return['activity_2_other'] = 'Other details - activity 2'; }
+        }
+        if (($row['activity_3']) == "Other"){
+                if( is_null($row['activity_3_other'])){ $valid=False; $return['activity_3_other'] = 'Other details - activity 3'; }
+        }
+        if (($row['activity_4']) == "Other"){
+                if( is_null($row['activity_4_other'])){ $valid=False; $return['activity_4_other'] = 'Other details - activity 4'; }
+        }
+        if (($row['activity_5']) == "Other"){
+                if( is_null($row['activity_5_other'])){ $valid=False; $return['activity_5_other'] = 'Other details - activity 5'; }
+        }
+        if (($row['activity_6']) == "Other"){
+                if( is_null($row['activity_6_other'])){ $valid=False; $return['activity_6_other'] = 'Other details - activity 6'; }
+        }
+        if (($row['activity_7']) == "Other"){
+                if( is_null($row['activity_7_other'])){ $valid=False; $return['activity_7_other'] = 'Other details - activity 7'; }
+        }
+        if (($row['activity_8']) == "Other"){
+                if( is_null($row['activity_8_other'])){ $valid=False; $return['activity_8_other'] = 'Other details - activity 8'; }
+        }
+        if (($row['activity_9']) == "Other"){
+                if( is_null($row['activity_9_other'])){ $valid=False; $return['activity_9_other'] = 'Other details - activity 9'; }
+        }
+        if (($row['activity_10']) == "Other"){
+                if( is_null($row['activity_10_other'])){ $valid=False; $return['activity_10_other'] = 'Other details - activity 10'; }
+        }
+    }
+
+    $return['valid'] = $valid;
+    return $return;
 }
 function validate_page6(&$the_form){
     /*
      * Required Fields: college_plan_1, based on music_audition:  music_audition_instrument, financial_aid
+     * based on conviction_history: conviction_history_details, based on hs_discipline: hs_discipline_details
+     * honesty_statement
      */
-    return array('valid'=>True);
+    $qstring = "SELECT college_plan_1, music_audition, music_audition_instrument, financial_aid, conviction_history, " .
+        "conviction_history_details, hs_discipline, hs_discipline_details, honesty_statement " .
+        "FROM applicants " .
+        "WHERE open_id = '" . get_open_id() . "';";
+    $results = get_data($qstring);
+    $valid = True;
+    $return = array();
+    //should only be one row to loop through
+    while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
+        if( is_null($row['college_plan_1'])){ $valid=False; $return['college_plan_1'] = $the_form->get_display_name('college_plan_1'); }
+        if (($row['music_audition']) == "Yes"){
+            if( is_null($row['music_audition_instrument'])){ $valid=False; $return['music_audition_instrument'] = 'Music Audition Instrument'; }
+        }
+        if( is_null($row['financial_aid'])){ $valid=False; $return['financial_aid'] = 'Financial Aid'; }
+        if( is_null($row['conviction_history'])){ $valid=False; $return['conviction_history'] = 'Conviction History'; }
+        if (($row['conviction_history']) == "Yes"){
+            if( is_null($row['conviction_history_details'])){ $valid=False; $return['conviction_history_details'] = 'Conviction History Details'; }
+        }
+        if( is_null($row['hs_discipline'])){ $valid=False; $return['hs_discipline'] = 'High School Discipline'; }
+        if (($row['hs_discipline']) == "Yes"){
+            if( is_null($row['hs_discipline_details'])){ $valid=False; $return['hs_discipline_details'] = 'High School Discipline Details'; }
+        }
+        if( is_null($row['honesty_statement'])){ $valid=False; $return['honesty_statement'] = 'Honesty Statement'; }
+    }
+    $return['valid'] = $valid;
+    return $return;
 }
 
 ?>
