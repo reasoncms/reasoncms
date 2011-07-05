@@ -40,6 +40,18 @@ function check_login() {
     scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe>';
 }
 
+function is_submitted($open_id){
+        connectDB('admissions_applications_connection');
+        $qstring = "SELECT `submit_date` FROM `applicants` WHERE `open_id`='" .addslashes($open_id) . "' ";
+        $results = db_query($qstring);
+        $row = mysql_fetch_array($results, MYSQL_ASSOC);
+        if ($row['submit_date'] == '0000-00-00 00:00:00'){
+            return false;
+        } else {
+            return true;
+        }
+}
+
 /*
  *  Repopulate elements with info that has been saved to the database
  */
