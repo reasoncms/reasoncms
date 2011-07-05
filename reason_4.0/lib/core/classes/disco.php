@@ -373,7 +373,14 @@
 			}
 			if($direction == 'right' && $rel_info['required'] == 'yes')
 			{
-				$this->add_required($name);
+				if(!empty($entities))
+				{
+					$this->add_required($name); 
+				}
+				else
+				{
+					$this->add_comments($name, '<em>None available</em>');
+				}
 			}
 			if(!empty($untouchables))
 			{
