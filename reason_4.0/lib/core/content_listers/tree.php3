@@ -33,7 +33,7 @@
 			{
 				foreach( $this->values as $value )
 				{
-					if( $value->id() == $value->get_value( 'parent_id' ) )
+					if( !empty($value) && $value->id() == $value->get_value( 'parent_id' ) )
 					{
 						$this->root_id = $value->id();
 						return $this->root_id;
@@ -59,7 +59,7 @@
 				$root = $this->root_node();
 				foreach( $this->values as $item )
 				{
-					if($item->id() != $root )
+					if(!empty($item) && $item->id() != $root )
 					{
 						if(!isset($this->children[$item->get_value('parent_id')]))
 						{
@@ -161,6 +161,8 @@
 
 		function show_item_pre( $row , &$options) // {{{
 		{
+			if(empty($row))
+				return;
 			$classes = array();
 			if( !empty($options[ 'color' ]) ) 
 				$classes[] = 'highlightRow';
@@ -205,6 +207,8 @@
 		} // }}}
 		function show_item_main( $row , $options) // {{{
 		{
+			if(empty($row))
+				return;
 			foreach( $this->columns as $name => $val )
 			{
 				$display = '';
