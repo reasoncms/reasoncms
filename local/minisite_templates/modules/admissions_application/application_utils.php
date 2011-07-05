@@ -50,6 +50,7 @@ function is_submitted($open_id){
         } else {
             return true;
         }
+        connectDB(REASON_DB);
 }
 
 /*
