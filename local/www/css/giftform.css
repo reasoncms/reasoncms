@@ -208,3 +208,7 @@ div#reviewGiftDetails td.col1 {
     text-align: left;
     font-weight:bold;
 }
+.formComment{
+    font-size: smaller;
+    color: red;
+}
