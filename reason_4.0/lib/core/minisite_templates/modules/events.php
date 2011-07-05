@@ -2180,7 +2180,7 @@ class EventsModule extends DefaultMinisiteModule
 			echo '<div class="eventLocation">'."\n";
 			if ($this->params['map_location'] && !empty($lat) && !empty($lon))
 			{
-				$this->show_map(&$e);
+				$this->show_map($e);
 			}
 			echo '<strong>Location:</strong>';
 			if ($location)
