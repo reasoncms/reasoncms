@@ -299,6 +299,12 @@ class ApplicationPageTwo extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
+        if (is_submitted(check_open_id($this))){
+            die('It appears that you\'ve already submitted your application. If you\'d like to amend your application or have questions
+                regarding, please contact the Admissions Office at 800-4-LUTHER.');
+        }else{
+        $this->show_form = true;
+        }
         //add element groups
         foreach ($this->element_group_info as $name => $info) {
             $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
