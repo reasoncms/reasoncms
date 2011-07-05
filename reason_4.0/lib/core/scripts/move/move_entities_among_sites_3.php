@@ -14,6 +14,7 @@ include_once( DISCO_INC .'disco.php');
 reason_include_once( 'classes/entity_selector.php');
 
 reason_include_once( 'classes/entity_selector.php');
+reason_include_once( 'classes/url_manager.php');
 
 reason_include_once( 'function_libraries/user_functions.php' );
 force_secure_if_available();
@@ -31,8 +32,8 @@ if ( !empty($_REQUEST['new_site_ids']) && !empty($_REQUEST['old_site_id']) &&
 	!empty($_REQUEST['allowable_relationship_id']) )
 {
 	$new_site_ids = $_REQUEST['new_site_ids'];
-	$old_site_id = $_REQUEST['old_site_id'];
-	$allowable_relationship_id = $_REQUEST['allowable_relationship_id'];
+	$old_site_id = (integer) $_REQUEST['old_site_id'];
+	$allowable_relationship_id = (integer) $_REQUEST['allowable_relationship_id'];
 }
 else
 {
@@ -42,12 +43,28 @@ else
 
 foreach ( $new_site_ids as $entity_id => $new_site_id )
 {
+	$entity_id = (integer) $entity_id;
+	$new_site_id = (integer) $new_site_id;
 	$q = ( 'UPDATE relationship SET entity_a="' . addslashes($new_site_id) . '" ' .
 		   'WHERE entity_a="' . addslashes($old_site_id) . '" ' .
 		   'AND entity_b="' . addslashes($entity_id) . '" ' .
 		   'AND type="' . addslashes($allowable_relationship_id) . '"' );
 	$r = db_query($q, 'Unable to update relationships.');
 }
+
+$urlm = new url_manager($old_site_id);
+$urlm->update_rewrites();
+
+foreach($_REQUEST['new_site_ids'] as $new_site_id)
+{
+	$site_id = (integer) $new_site_id;
+	if($new_site_id != $old_site_id)
+	{
+		$urlm = new url_manager($new_site_id);
+		$urlm->update_rewrites();
+	}
+}
+
 
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
 echo '<html><head>';
