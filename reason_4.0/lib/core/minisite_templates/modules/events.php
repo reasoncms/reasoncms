@@ -330,8 +330,11 @@ class EventsModule extends DefaultMinisiteModule
 	 *
 	 * 'default_view_min_days' (integer) sets a smallest number of days the dynamically selected view can have.
 	 *
-	 * 'start_date' (string) forces the calendar to use as its default start date a date other than the current one
-	 * 
+	 * 'start_date' (string) forces the calendar to use as its default start date a date other than the current one 
+	 *
+	 * 'map_location' (boolean) show a google map in the event detail if latitude and longitude are set
+	 *
+	 * 'map_zoom_level' (int) set a zoom level for google maps - default 12
 	 *
 	 * @var array
 	 * @access private
@@ -347,6 +350,8 @@ class EventsModule extends DefaultMinisiteModule
 							'ideal_count'=>NULL,
 							'default_view_min_days'=>1,
 	 						'start_date'=>'',
+	 						'map_location' => true,
+	 						'map_zoom_level' => 12
 						);
 	/**
 	 * Views that should not be indexed by search engines
@@ -2142,8 +2147,7 @@ class EventsModule extends DefaultMinisiteModule
 		if(substr($e->get_value( 'datetime' ), 11) != '00:00:00')
 			echo '<p class="time"><strong>Time:</strong> '.prettify_mysql_datetime( $e->get_value( 'datetime' ), "g:i a" ).'</p>'."\n";
 		$this->show_duration($e);
-		if ($e->get_value('location'))
-			echo '<p class="location"><strong>Location:</strong> '.$e->get_value('location').'</p>'."\n";
+		$this->show_location($e);
 		if ($e->get_value('sponsor'))
 			echo '<p class="sponsor"><strong>Sponsored by:</strong> '.$e->get_value('sponsor').'</p>'."\n";
 		$this->show_contact_info($e);
@@ -2160,6 +2164,78 @@ class EventsModule extends DefaultMinisiteModule
 		$this->show_event_keywords($e);
 		echo '</div>'."\n";
 	} // }}}
+	
+	/**
+	 * Show the location section if we have content in the location OR address OR lat / lon fields.
+	 */
+	function show_location(&$e)
+	{
+		$lat = ($e->has_value('latitude')) ? $e->get_value('latitude') : false;
+		$lon = ($e->has_value('longitude')) ? $e->get_value('longitude') : false;
+		$address = ($e->has_value('address')) ? $e->get_value('address') : false;
+		$location = ($e->has_value('location')) ? $e->get_value('location') : false;
+		
+		if ( (!empty($lat) && !empty($lon)) || !empty($address) )
+		{
+			echo '<div class="eventLocation">'."\n";
+			if ($this->params['map_location'] && !empty($lat) && !empty($lon))
+			{
+				$this->show_map(&$e);
+			}
+			echo '<strong>Location:</strong>';
+			if ($location)
+			{
+				echo '<p class="location">'.$e->get_value('location').'</p>'."\n";
+			}	
+			if ($address)
+			{
+				echo '<p class="address">'.$e->get_value('address').'</p>'."\n";
+			}
+			echo '</div>'."\n";
+		}
+		elseif (!empty($location))
+		{
+			echo '<p class="location"><strong>Location:</strong> '.$e->get_value('location').'</p>'."\n"; // this is what we used to do.
+		}
+	}
+	
+	/**
+	 * Show a google static map at an appropriate zoom level for the event.
+	 *
+	 * @todo replace me with a dynamic map that allows zooming.
+	 */
+	function show_map(&$e)
+	{
+		$lat = ($e->has_value('latitude')) ? $e->get_value('latitude') : false;
+		$lon = ($e->has_value('longitude')) ? $e->get_value('longitude') : false;
+		$address = ($e->has_value('address')) ? $e->get_value('address') : false;
+		
+		if (!empty($lat) && !empty($lon)) // if we have a location, lets show it with a google static map.
+		{
+			echo '<div class="eventMap">';
+			$static_map_base_url = 'https://maps.googleapis.com/maps/api/staticmap';
+			$params['size'] = '100x100';
+			$params['markers'] = 'color:0xFF6357|'.$lat.','.$lon;
+			$params['sensor'] = 'false';
+			
+			// lets add zoom level if it is set
+			if (isset($this->params['map_zoom_level']) && !empty($this->params['map_zoom_level'])) 
+			{
+				$params['zoom'] = $this->params['map_zoom_level'];
+			}
+			$qs = carl_make_query_string($params);
+			$static_map_url = $static_map_base_url . $qs;
+			
+			$google_maps_base_url = 'https://maps.google.com/maps/';
+			if ($address) $google_maps_params['saddr'] = $e->get_value('address');
+			else $google_maps_params['q'] = $lat.','.$lon;
+			$google_maps_qs = carl_construct_query_string($google_maps_params);
+			$google_maps_link = $google_maps_base_url . $google_maps_qs;
+			echo '<a href="'.$google_maps_link.'"><img src="'.$static_map_url.'" alt="map of '.reason_htmlspecialchars($e->get_value('name')).'" /></a>';	
+			echo '</div>';
+		}
+	}
+	
 	function show_event_error() // {{{
 	{
 		echo '<p>We\'re sorry; the event requested does not exist or has been removed from this calendar. This may be due to incorrectly typing in the page address; if you believe this is a bug, please report it to the contact person listed at the bottom of the page.</p>';
