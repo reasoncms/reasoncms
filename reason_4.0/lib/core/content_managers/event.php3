@@ -62,8 +62,7 @@
 				}
 				else
 				{
-					// $this->_geolocation_enabled = (defined("REASON_EVENT_GEOLOCATION_ENABLED")) ? constant("REASON_EVENT_GEOLOCATION_ENABLED") : false;
-					$this->_geolocation_enabled = false; // geolocation is not yet enabled - waiting on core event module implementation
+					$this->_geolocation_enabled = (defined("REASON_EVENT_GEOLOCATION_ENABLED")) ? constant("REASON_EVENT_GEOLOCATION_ENABLED") : false;
 				}
 			}
 			return $this->_geolocation_enabled;
