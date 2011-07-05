@@ -151,13 +151,15 @@
 			$roots = $this->root_node();
 			if( $this->_id == $this->get_value( 'parent_id' ) || ($this->allow_creation_of_root_node && empty($roots) ) )
 			{
-				if($this->_id == $this->get_value( 'parent_id' ))
+				if ($this->_id == $this->get_value( 'parent_id' )) 
+				{
 					$this->change_element_type( 'url_fragment', 'hidden' );
+					$this->change_element_type( 'nav_display', 'hidden' ); //
+				}
 				if(!$this->allow_creation_of_root_node)
 				{
 					$this->change_element_type( 'parent_id', 'hidden' );
 				}
-				$this->change_element_type( 'nav_display', 'hidden' );
 				if(reason_user_has_privs( $this->admin_page->user_id, 'edit_home_page_nav_link'))
 				{
 					$site = new entity($this->admin_page->site_id);
@@ -168,8 +170,9 @@
 					$this->change_element_type( 'link_name', 'hidden' );
 				}
 			}
+			
 			// if we have a subpage, show the url fragment field
-			elseif( $this->has_url() )
+			elseif( $this->has_url() && !($this->get_value( 'id' ) == $this->get_value('parent_id')))
 			{
 			    $this->set_element_properties( 'url_fragment', array('size' => 12) );
 				$this->set_display_name( 'url_fragment', 'Page URL' );
@@ -403,7 +406,7 @@
 				db_query( $q , 'Error finishing' );
 				$this->set_value('state', $this->get_value('state_action'));
 			}
-
+				
 			if ($this->has_new_parent() || $this->has_new_url_fragment() || $this->state_has_changed())
 			{
 				// call parent finish function - this changes the parent if there is a new parent
@@ -443,6 +446,15 @@
 				$this->_state_has_changed = ( ($this->entity->get_value('state') != $this->get_value('state')) || $this->get_value('state_action') );
 			}
 			return $this->_state_has_changed;
+		}
+		
+		function process(){
+			//Avoid home pages having url fragments
+			if ($this->get_value( 'id' ) == $this->get_value('parent_id')){
+				$this->set_value('url_fragment', '');
+				$this->set_value('nav_display', 'Yes');
+			}
+			parent::process();
 		}
 		
 		/**
