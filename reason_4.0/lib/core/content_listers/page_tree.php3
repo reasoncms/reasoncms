@@ -21,6 +21,8 @@
 		} // }}}
 		function show_admin_live( $row , $options) // {{{
 		{
+			if(empty($row))
+				return;
 			echo '<td align="left"><strong>';
 			$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
 			$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
