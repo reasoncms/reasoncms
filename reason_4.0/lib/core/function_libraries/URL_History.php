@@ -148,7 +148,6 @@ function update_children( $page_id )
 function check_URL_history( $request_uri )
 {
 	$url_arr = parse_URL( $request_uri );
-	
 	// This catches links that might not have had a trailing slash
 	// pages always have a trailing slash in the db
 	$URL = '/'.trim_slashes($url_arr['path']).'/';
@@ -166,8 +165,17 @@ function check_URL_history( $request_uri )
 			$page = new entity($page_id);
 			if (reason_is_entity($page, 'minisite_page') && ($page->get_value('state') == 'Live') && ($redir = reason_get_page_url($page)))
 			{
-				header( 'Location: ' . $redir . $query_string, true, 301 );
-				exit();
+				if ($redir == $request_uri)
+				{
+					//Could potentially update rewrites here, solving most times this happens, perhaps.
+					trigger_error("A page should exist here, but apparently does not at the moment. A web administrator may need to run URL updating on this site.");
+				} 
+				else 
+				{
+					header( 'Location: ' . $redir . $query_string, true, 301 );
+					exit();
+				}
+				
 			}
 		}
 	}
