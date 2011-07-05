@@ -50,6 +50,7 @@ class ApplicationPageThree extends FormStep {
             'options' => array(
                 'never married' => 'Never Married',
                 'married' => 'Married',
+                'civil union' => 'Civil Union/Domestic Partners',
                 'widowed' => 'Widowed',
                 'separated' => 'Separated',
                 'divorced' => 'Divorced'
