@@ -37,6 +37,27 @@ $(document).ready(function() {
     $("input[name*='preferred_first_name']").watermark('Nickname');
     $("input[name*='age']").watermark('Age');
     $("input[name*='grade']").watermark('Grade');
+    $("input[name*='suffix']").watermark('Suffix');
+
+    var suffixes = [
+        "D.C.",
+        "D.D.S.",
+        "D.N.",
+        "D.O.",
+        "D.V.M.",
+        "II",
+        "III",
+        "IV",
+        "V",
+        "Jr.",
+        "M.D.",
+        "Ph.D.",
+        "Sr.",
+        "USAF (Ret.)"
+    ];
+    $("input[name*='suffix']").autocomplete({
+        source: suffixes,
+    });
     
     $('.addButton').button({
         icons: {
