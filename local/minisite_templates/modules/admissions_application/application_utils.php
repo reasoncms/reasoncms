@@ -20,6 +20,7 @@ function check_login() {
     $parts = parse_url($url);
 //    $url = $parts['scheme'] . '://' . $parts['host'] . '/openid/?next=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
 
+
     $txt = '<h3>Hi There!</h3>';
     $txt .= '<p>To begin or resume your application, please sign in using an
             <a href="http://openid.net/get-an-openid/what-is-openid/" target="_blank">Open ID</a>.</p>';
@@ -36,8 +37,21 @@ function check_login() {
     } else {
         $url = $parts['scheme'] . '://' . $parts['host'] . '/reason/open_id/new_token.php';
     }
-    return $txt . '<iframe src="https://luthertest2.rpxnow.com/openid/embed?token_url=' . $url . '"
+
+    $iframe = '<iframe src="https://luthertest2.rpxnow.com/openid/embed?token_url=' . $url . '"
     scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe>';
+
+    $open_id_text = '<div><p>The Luther College online application uses the services of OpenID, which allows you to sign into your
+        application account using one of the following host sites. By signing in through one of these sites, Luther
+        College has access only to information that applicants have identified as “public.” Please be assured that
+        Luther College will not seek to gain any additional information than what is necessary to complete the
+        application for admission.</p>
+
+        <p>Luther College will not sell, rent, or share your personal information with other individuals, private or
+        public organizations for any purpose outside official college business. We will not share your personal
+        information with any unauthorized third parties. Please see Luther’s <a href="/privacy" target="_blank">privacy
+        policy</a> for additional information.</p></div>';
+    return $txt . $iframe . $open_id_text;
 }
 
 function is_submitted($open_id) {
