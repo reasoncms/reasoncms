@@ -22,6 +22,7 @@ include ('reason_header.php');
 include_once(CARL_UTIL_INC.'db/db_selector.php');
 reason_include_once('scripts/upgrade/4.0b8_to_4.0b9/update_types_lib.php');
 reason_include_once('function_libraries/user_functions.php');
+reason_include_once('function_libraries/admin_actions.php');
 
 force_secure_if_available();
 $user_netID = reason_require_authentication();
@@ -60,6 +61,7 @@ elseif (DISABLE_REASON_ADMINISTRATIVE_INTERFACE == true)
 <ul>
 <li>Update the External CSS type to include media directives</li>
 <li>Add the entity_locks table</li>
+<li>Add a user called 'anonymous'</li>
 </ul>
 
 <form method="post">
@@ -105,8 +107,18 @@ if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 	}
 	else
 	{
-		echo '<p>Would have made sure the locks table exists</p>';
+		echo '<p>Would have made sure the locks table exists.</p>';
 	}
+	
+	if ($mode == 'run')
+	{
+		make_sure_username_is_user('anonymous', id_of('master_admin'));
+	}
+	else
+	{
+		echo '<p>Would have added a user called "anonymous".</p>';
+	}
+	
 }
 
 ?>
