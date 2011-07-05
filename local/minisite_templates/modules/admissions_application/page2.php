@@ -48,6 +48,10 @@ class ApplicationPageTwo extends FormStep {
             'display_name' => 'Last Name or Family Name',
             'size' => 15,
         ),
+        'suffix' => array(
+            'type' => 'text',
+            'size' => 4
+        ),
         'preferred_first_name' => array(
             'type' => 'text',
             'size' => 15,
@@ -313,7 +317,7 @@ class ApplicationPageTwo extends FormStep {
             $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
         }
 
-        $this->move_element('name_group', 'before', 'preferred_first_name');
+        $this->move_element('name_group', 'before', 'suffix');
         $this->move_element('ssn_group', 'after', 'date_of_birth');
         $this->pre_fill_form();
     }

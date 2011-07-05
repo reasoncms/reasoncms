@@ -134,6 +134,11 @@ class ApplicationPageThree extends FormStep {
             'type' => 'text',
             'size' => 20
         ),
+        'parent_1_suffix' => array(
+            'type' => 'text',
+            'display_name' => 'Suffix',
+            'size' => 5
+        ),
         'parent_1_address' => array(
             'type' => 'text',
             'display_name' => 'Address'
@@ -245,6 +250,11 @@ class ApplicationPageThree extends FormStep {
             'type' => 'text',
             'size' => 20
         ),
+        'parent_2_suffix' => array(
+            'type' => 'text',
+            'display_name' => 'Suffix',
+            'size' => 5
+        ),
         'parent_2_address' => array(
             'type' => 'text',
             'display_name' => 'Address'
@@ -350,6 +360,10 @@ class ApplicationPageThree extends FormStep {
         'guardian_last_name' => array(
             'type' => 'text',
             'size' => 20
+        ),
+        'guardian_suffix' => array(
+            'type' => 'text',
+            'size' => 5
         ),
         'guardian_address' => array(
             'type' => 'text',
@@ -728,9 +742,9 @@ class ApplicationPageThree extends FormStep {
             $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
         }
 
-        $this->move_element('parent_1_name_group', 'after', 'parent_1_type');
+        $this->move_element('parent_1_name_group', 'after', 'parent_1_living');
         $this->move_element('parent_1_phone_group', 'after', 'parent_1_country');
-        $this->move_element('parent_2_name_group', 'after', 'parent_2_type');
+        $this->move_element('parent_2_name_group', 'after', 'parent_2_living');
         $this->move_element('parent_2_phone_group', 'after', 'parent_2_country');
         $this->move_element('guardian_name_group', 'after', 'guardian_relation');
         $this->move_element('guardian_phone_group', 'after', 'guardian_country');
