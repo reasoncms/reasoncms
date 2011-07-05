@@ -56,7 +56,7 @@ $(document).ready(function() {
         "USAF (Ret.)"
     ];
     $("input[name*='suffix']").autocomplete({
-        source: suffixes,
+        source: suffixes
     });
     
     $('.addButton').button({
