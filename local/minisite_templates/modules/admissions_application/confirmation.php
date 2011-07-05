@@ -36,15 +36,12 @@ class ApplicationConfirmation extends FormStep {
     function on_every_time() {
         $this->show_form = false;
         /*
-         * check to see if applicants with a set open_id are landing here prematurely
+         * check if applicants with a set open_id are landing here prematurely
          * if so, display an error message with the required fields and break
          */
         $open_id = check_open_id($this);
-        connectDB('admissions_applications_connection');
-        $qstring = "SELECT `submit_date` FROM `applicants` WHERE `open_id`='" .addslashes($open_id) . "' ";
-        $results = db_query($qstring);
-        $row = mysql_fetch_array($results, MYSQL_ASSOC);
-        if ($row['submit_date'] == '0000-00-00 00:00:00'){
+        $submitted = is_submitted($open_id);
+        if (!$submitted){
             $i = 0;
             $error_div = "";
             foreach ($this->controller->forms as $name => $form) {
@@ -82,19 +79,24 @@ class ApplicationConfirmation extends FormStep {
             }
 
             if (!$p1_valid['valid'] || !$p2_valid['valid'] || !$p3_valid['valid'] || !$p4_valid['valid'] || !$p5_valid['valid'] || !$p6_valid['valid']) {
-                echo '<p>Looks like you\'ve landed here accidentally</p>';
+                echo '<p>Oops! Looks like you\'ve landed here accidentally.</p>';
                 echo 'Please complete the following required fields to submit your application:' . $error_div;
                 break;
             }
         }
         connectDB(REASON_DB);
         /*
-         * check if an open_id is set and that a submit_date is set
+         * check if an open_id is set and a submit_date is set
          * if so, display the thank you blurb
          * if not, send them back to the first page
          */
-        if (($open_id) && (strcasecmp($row['submit_date'], '0000-00-00 00:00:00') <> 0)) {
+        if (($open_id) && ($submitted)) {
             echo $this->get_thank_you_blurb();
+        } elseif (($open_id) && (!$submitted)) {
+            echo '<p>Oops! Looks like you\'ve landed here accidentally.</p>';
+            echo 'To complete your application, please return to <a href="/admissions/apply/?_step=ApplicationPageSix">page 6</a>
+                and click "Submit your application" at the bottom of the page.';
+            break;
         } else {
             echo 'How\'d you get here?';
             header("Location:/admissions/apply/");
