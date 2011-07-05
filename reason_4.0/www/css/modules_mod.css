@@ -454,6 +454,24 @@ div.eventDetails p.back {
 div#calendar div.eventDetails div.export {
 	margin:1em 0;
 }
+div.eventDetails div.eventLocation div.eventMap {
+	float:left;
+	margin-right:1em;
+}
+div.eventDetails div.eventLocation {
+	display:inline-block;
+}
+div.eventDetails div.eventLocation {
+	display:block;
+	margin:1em 0;
+}
+div.eventDetails div.eventLocation:after {
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
 div#calendar div.nav {
 	/* background-color: #C8D5EF;
 	border:1px solid #748FC2; */
