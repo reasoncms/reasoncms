@@ -203,8 +203,10 @@ class ApplicationPageTwo extends FormStep {
             'text' => '<h3>Your Faith</h3>
                          <div id="faith">
                         <a class="faith" href="#faith_dialog">Why is this important?</a></div>
-                        <div id="faith_dialog" title="Your Faith">We are able to offer
-                        <a href="/financialaid/prospective/scholarships/epic/" target=__blank>EPIC Scholarship</a>...blah, blah, blah.'
+                        <div id="faith_dialog" title="Your Faith">Luther College collects home congregation information solely for the purpose of awarding
+                                <a href="/financialaid/prospective/scholarships/epic/" target=__blank>Education Partners in Covenant (EPIC) Matching Grants</a>.
+                                EPIC grants represent a cooperative venture between Luther College and any church congregation that chooses to financially support
+                                student(s) at Luther.'
         ),
         'church_name' => 'text',
         'church_city' => array(
@@ -266,10 +268,11 @@ class ApplicationPageTwo extends FormStep {
             'elements' => array('ssn_1', 'ssn_dash_1', 'ssn_2', 'ssn_dash_2', 'ssn_3'),
             'args' => array(
                 'use_element_labels' => false,
-                'display_name' => 'U.S. Social Security Number',
-                'comments' => '<div id="ssn"><a href="#ssn_dialog">Why is this important?</a></div>
-                        <div id="ssn_dialog" title="Social Security Info">
-                        Required for US Citizens and Permanent Residents applying for financial aid via FAFSA</div>')
+                'display_name' => 'U.S.&nbsp;Social&nbsp;Security&nbsp;Number',
+//                'comments' => '<div id="ssn"><a href="#ssn_dialog">Why is this important?</a></div>
+//                        <div id="ssn_dialog" title="Social Security Info">
+//                        Required for US Citizens and Permanent Residents applying for financial aid via FAFSA</div>')
+                'comments' => '<div class="formComment">Required for US citizens and permanent residents applying for financial aid via FAFSA</div>')
         ),
     );
 

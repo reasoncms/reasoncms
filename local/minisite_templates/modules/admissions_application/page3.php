@@ -30,7 +30,10 @@ class ApplicationPageThree extends FormStep {
             'text' => '<h3>Family</h3>
                 <div id="family">
                 <a class="why" href="#family_dialog">Why is this information important?</a></div>
-                <div id="family_dialog" title="Family Information">Luther ... blah, vblah, vlalah</div>'
+                <div id="family_dialog" title="Family Information">Luther College collects this information for demographic purposes
+                even if you are an adult or emancipated minor. Please list both parents below, even if one or more is deceased or no
+                longer has legal responsibilities toward you. If you are a minor with a legal guardian (an individual or government entity),
+                then please list that information below as well.</div>'
         ),
         'household_header' => array(
             'type' => 'comment',
