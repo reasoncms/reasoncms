@@ -720,7 +720,7 @@ class ApplicationPageThree extends FormStep {
         // check if the open_id has is set
         if ($this->openid_id) {
             // get an existing users data from the db based on openid_id and the form
-            get_applicant_data($o_id, $this);
+            get_applicant_data($this->openid_id, $this);
         } else {
             // no show form, invite to login
             $this->show_form = false;

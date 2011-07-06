@@ -271,7 +271,7 @@ class ApplicationPageSix extends FormStep {
         // check if the open_id has is set
         if ($this->openid_id) {
             // get an existing users data from the db based on openid_id and the form
-            get_applicant_data($o_id, $this);
+            get_applicant_data($this->openid_id, $this);
         } else {
             // no show form, invite to login
             $this->show_form = false;
@@ -297,52 +297,52 @@ class ApplicationPageSix extends FormStep {
          * else (all required data is present), write the submit_date to the db and continue on to the
          * confirmation page
          */
-        if ($this->chosen_action == 'ApplicationConfirmation') {
-            $i = 0;
-            $error_div = "";
-            foreach ($this->controller->forms as $name => $form) {
-                $error_header = "<div style='width:655px;border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;margin:5px;'>
-                <span style='font-weight:bold;'>Required fields: " . $form->display_name . "</span>&nbsp;&nbsp;";
-                $error_footer = "</div>";
-                $i++;
-                switch ($i) {
-                    case 1:
-                        $validation = $p1_valid = validate_page1($form);
-                        break;
-                    case 2:
-                        $validation = $p2_valid = validate_page2($form);
-                        break;
-                    case 3:
-                        $validation = $p3_valid = validate_page3($form);
-                        break;
-                    case 4:
-                        $validation = $p4_valid = validate_page4($form);
-                        break;
-                    case 5:
-                        $validation = $p5_valid = validate_page5($form);
-                        break;
-                    case 6:
-                        $validation = $p6_valid = validate_page6($form);
-                        break;
-                }
-                if (!$validation['valid']) {
-                    $error_div .= $error_header;
-                    foreach ($validation as $val_key => $val_value) {
-                        $error_div .= " <a href='/admissions/apply/?_step=" . $name . "#" . $val_key . "_error'>" . $val_value . "</a>&nbsp;&nbsp; ";
-                    }
-                }
-                $error_div .= $error_footer;
-            }
-
-            if (!$p1_valid['valid'] || !$p2_valid['valid'] || !$p3_valid['valid'] || !$p4_valid['valid'] || !$p5_valid['valid'] || !$p6_valid['valid']) {
-                echo 'Please complete the following required fields to submit your application:' . $error_div;
-                break;
-            } else {
-                connectDB('admissions_applications_connection');
-                db_query("UPDATE `applicants` SET `submit_date`=NOW() WHERE `open_id`= '" . addslashes($this->openid_id) . "'");
-                connectDB(REASON_DB);
-            }
-        }
+//        if ($this->chosen_action == 'ApplicationConfirmation') {
+//            $i = 0;
+//            $error_div = "";
+//            foreach ($this->controller->forms as $name => $form) {
+//                $error_header = "<div style='width:655px;border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;margin:5px;'>
+//                <span style='font-weight:bold;'>Required fields: " . $form->display_name . "</span>&nbsp;&nbsp;";
+//                $error_footer = "</div>";
+//                $i++;
+//                switch ($i) {
+//                    case 1:
+//                        $validation = $p1_valid = validate_page1($form);
+//                        break;
+//                    case 2:
+//                        $validation = $p2_valid = validate_page2($form);
+//                        break;
+//                    case 3:
+//                        $validation = $p3_valid = validate_page3($form);
+//                        break;
+//                    case 4:
+//                        $validation = $p4_valid = validate_page4($form);
+//                        break;
+//                    case 5:
+//                        $validation = $p5_valid = validate_page5($form);
+//                        break;
+//                    case 6:
+//                        $validation = $p6_valid = validate_page6($form);
+//                        break;
+//                }
+//                if (!$validation['valid']) {
+//                    $error_div .= $error_header;
+//                    foreach ($validation as $val_key => $val_value) {
+//                        $error_div .= " <a href='/admissions/apply/?_step=" . $name . "#" . $val_key . "_error'>" . $val_value . "</a>&nbsp;&nbsp; ";
+//                    }
+//                }
+//                $error_div .= $error_footer;
+//            }
+//
+//            if (!$p1_valid['valid'] || !$p2_valid['valid'] || !$p3_valid['valid'] || !$p4_valid['valid'] || !$p5_valid['valid'] || !$p6_valid['valid']) {
+//                echo 'Please complete the following required fields to submit your application:' . $error_div;
+//                break;
+//            } else {
+//                connectDB('admissions_applications_connection');
+//                db_query("UPDATE `applicants` SET `submit_date`=NOW() WHERE `open_id`= '" . addslashes($this->openid_id) . "'");
+//                connectDB(REASON_DB);
+//            }
+//        }
     }
 
 }
