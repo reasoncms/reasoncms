@@ -5,6 +5,7 @@
  * @subpackage minisite_modules
  */
 reason_include_once( 'minisite_templates/modules/feature/views/default_view.php' );
+$GLOBALS[ '_feature_view_class_names' ][ basename( __FILE__, '.php') ] = 'inlineAVFeatureView';
 
 /**
  * This View object differs from the default_feature_view in only one respect.  It doesn't
@@ -13,7 +14,7 @@ reason_include_once( 'minisite_templates/modules/feature/views/default_view.php'
  *
  * @todo verify I work and if not fix me
  */
-class av_view extends FeatureView
+class inlineAVFeatureView extends FeatureView
 {
 
 	function set($view_data,$view_params,$current_feature_id,&$head_items)

@@ -19,7 +19,7 @@ include_once(CARL_UTIL_INC . 'basic/url_funcs.php');
 
 if (!defined("FEATURE_VIEW_PATH"))
 {
-	define("FEATURE_VIEW_PATH",dirname(__FILE__).'/views/');
+	define("FEATURE_VIEW_PATH",'minisite_templates/modules/feature/views/');
 }
 
 $GLOBALS[ '_module_class_names' ][ module_basename( __FILE__) ] = 'FeatureModule';
@@ -91,24 +91,29 @@ class FeatureModule extends DefaultMinisiteModule
 	{
 		if (!isset($this->_view))
 		{
-			if ($this->params['view'] == "DefaultFeatureView")
-			{
-				$this->_view = new DefaultFeatureView();
-			}
-			else
+			$view_class = 'DefaultFeatureView';
+			if ($view_class != $this->params['view'])
 			{
 				$view = $this->params['view'];
 				$file = FEATURE_VIEW_PATH . $view . '.php';
-				if (file_exists($file))
+				if (reason_file_exists($file))
 				{
-					require_once $file;
-					$this->_view = new $view();
+					reason_require_once($file);
+					if(isset($GLOBALS[ '_feature_view_class_names' ][$view]) && class_exists($GLOBALS[ '_feature_view_class_names' ][$view]))
+					{
+						$view_class = $GLOBALS[ '_feature_view_class_names' ][$view];
+					}
+					else
+					{
+						trigger_error('Feature view class not registered in $GLOBALS[ \'_feature_view_class_names\' ].');
+					}
 				}
 				else
 				{
-					$this->_view = new DefaultFeatureView();
+					trigger_error('Feature view file not found in '.FEATURE_VIEW_PATH);
 				}
 			}
+			$this->_view = new $view_class;
 		}
 		return $this->_view;
 	}
