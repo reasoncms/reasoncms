@@ -41,12 +41,17 @@ class ApplicationConfirmation extends FormStep {
          */
         $this->openid_id = check_open_id($this);
         $submitted = is_submitted($this->openid_id);
-        if (!$submitted){
-            $i = 0;
-            $error_div = "";
-            foreach ($this->controller->forms as $name => $form) {
+//        if (!$submitted){
+        if (!$this->openid_id) {
+            echo 'How\'d you get here?';
+            header("Location:/admissions/apply/");
+        }
+        $i = 0;
+        $error_div = "";
+        foreach ($this->controller->forms as $name => $form) {
+            if ($form->display_name) {
                 $error_header = "<div style='width:655px;border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;margin:5px;'>
-                <span style='font-weight:bold;'>Required fields: " . $form->display_name . "</span>&nbsp;&nbsp;";
+                <span style='font-weight:bold;'>Required fields: " . $form->display_name . "</span><br>";
                 $error_footer = "</div>";
                 $i++;
                 switch ($i) {
@@ -74,17 +79,20 @@ class ApplicationConfirmation extends FormStep {
                     foreach ($validation as $val_key => $val_value) {
                         $error_div .= " <a href='/admissions/apply/?_step=" . $name . "#" . $val_key . "_error'>" . $val_value . "</a>&nbsp;&nbsp; ";
                     }
+                    $error_div .= $error_footer;
                 }
-                $error_div .= $error_footer;
-            }
-
-            if (!$p1_valid['valid'] || !$p2_valid['valid'] || !$p3_valid['valid'] || !$p4_valid['valid'] || !$p5_valid['valid'] || !$p6_valid['valid']) {
-                echo '<p>Oops! Looks like you\'ve landed here accidentally.</p>';
-                echo 'Please complete the following required fields to submit your application:' . $error_div;
-                break;
             }
         }
-//        connectDB(REASON_DB);
+
+        if (!$p1_valid['valid'] || !$p2_valid['valid'] || !$p3_valid['valid'] || !$p4_valid['valid'] || !$p5_valid['valid'] || !$p6_valid['valid']) {
+            echo '<p>Oops! Looks like you\'ve landed here accidentally.</p>';
+            echo 'Please complete the following required fields to submit your application:' . $error_div;
+//                break;
+        } else {
+            connectDB('admissions_applications_connection');
+            db_query("UPDATE `applicants` SET `submit_date`=NOW() WHERE `open_id`= '" . addslashes($this->openid_id) . "'");
+            connectDB(REASON_DB);
+        }
         /*
          * check if an open_id is set and a submit_date is set
          * if so, display the thank you blurb
@@ -96,7 +104,7 @@ class ApplicationConfirmation extends FormStep {
             echo '<p>Oops! Looks like you\'ve landed here accidentally.</p>';
             echo 'To complete your application, please return to <a href="/admissions/apply/?_step=ApplicationPageSix">page 6</a>
                 and click "Submit your application" at the bottom of the page.';
-            break;
+//            break;
         } else {
             echo 'How\'d you get here?';
             header("Location:/admissions/apply/");
