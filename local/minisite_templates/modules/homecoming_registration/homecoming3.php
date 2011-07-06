@@ -41,6 +41,8 @@ class HomecomingRegistrationConfirmation extends FormStep
 		$attend_dinner_20_to_10 = $this->controller->get('attend_dinner_20_to_10');
 		$attend_dinner_5 = $this->controller->get('attend_dinner_5');
 		$ride_in_parade = $this->controller->get('ride_in_parade'); 
+                
+                $amount_paid = $this->controller->get('amount'); 
 		
 		$txt = '<div id="reviewHomecomingRegistration">'."\n";			
 		$txt .= '<ul>'."\n";
@@ -130,6 +132,7 @@ class HomecomingRegistrationConfirmation extends FormStep
 		attend_dinner_50_to_25=".((!empty($attend_dinner_50_to_25)) ? addslashes($attend_dinner_50_to_25) : 'NULL').",
 		attend_dinner_20_to_10=".((!empty($attend_dinner_20_to_10)) ? addslashes($attend_dinner_20_to_10) : 'NULL').",
 		attend_dinner_5=".((!empty($attend_dinner_5)) ? addslashes($attend_dinner_5) : 'NULL').",
+                amount_paid ='".((!empty($amount_paid)) ? addslashes($amount_paid) : 'NULL')."',
 		ride_in_parade='".((!empty($ride_in_parade)) ? addslashes($ride_in_parade) : 'NULL')."' ";
 		
 		
@@ -162,7 +165,7 @@ class HomecomingRegistrationConfirmation extends FormStep
 			'<th class="col1">Year</th>'=>'',
 			'<th>Amount</th>'=>'',
 			'</td><td>'=>': ',
-			'Ð'=>'-',
+			'ï¿½'=>'-',
 			'<h3>'=>'--------------------'."\n\n",
 			'</h3>'=>'',
 			'<br />'=>"\n",
