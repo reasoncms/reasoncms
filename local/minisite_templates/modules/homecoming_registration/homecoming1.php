@@ -85,16 +85,16 @@ class HomecomingRegistrationOneForm extends FormStep
 		),
 		'attend_program' => array(
 			'type' => 'select_no_sort',
-			'display_name' => 'Tickets for Friday\'s Alumni Dinner',
-			'comments' => '<br />$20/person',
+			'display_name' => 'Tickets for Founders Day Festival Dinner-Regents Center',
+			'comments' => '<br />$40/person',
 			'options' => array(
 				'--'=>'--', 
-				'1'=>'1 ticket, $20',
-				'2'=>'2 tickets, $40',
-				'3'=>'3 tickets, $60',
-				'4'=>'4 tickets, $80',
-				'5'=>'5 tickets, $100',
-				'6'=>'6 tickets, $120',
+				'1'=>'1 ticket, $40',
+				'2'=>'2 tickets, $80',
+				'3'=>'3 tickets, $120',
+				'4'=>'4 tickets, $160',
+				'5'=>'5 tickets, $200',
+				'6'=>'6 tickets, $240',
 			),
 		),
 		'luncheon_header' => array(
@@ -112,7 +112,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		'ride_in_parade' => array(
 			'type' => 'radio_inline_no_sort',
 			'display_name' => 'Will you ride in the parade?',
-			'comments' => 'class of 1960 only',
+			'comments' => 'class of 1961 only',
 			'options' => array(
 				'yes' => 'Yes',
 				'no' => 'No',
@@ -234,7 +234,7 @@ class HomecomingRegistrationOneForm extends FormStep
 
 		if (isset($program_tix))
 	  	{
-			$amount = $amount + ($program_tix * 20);
+			$amount = $amount + ($program_tix * 40);
 		}
 		
 		if (isset($dinner_tix_50_to_25))
