@@ -72,7 +72,6 @@ function is_submitted($open_id) {
  */
 
 function get_applicant_data($openid, &$the_form) {
-    echo '<br />openid: ' . $openid . '<br />';
     connectDB('admissions_applications_connection');
     $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
 //            $qstring = "SELECT * FROM `applicants` WHERE `open_id`='". $openid . "' ";
@@ -129,7 +128,6 @@ function get_applicant_data($openid, &$the_form) {
 
 function set_applicant_data($openid, &$the_form) {
     connectDB('admissions_applications_connection');
-    echo '<br>' . addslashes($openid) . '<br>';
     $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
     $results = db_query($qstring);
     if (mysql_num_rows($results) < 1) {
