@@ -28,7 +28,8 @@ class StudentTreatsThorForm extends CreditCardThorForm {
         $this->change_element_type($this->get_element_name_from_label('#9 Date For Delivery'), 'textDate');
         $this->change_element_type($this->get_element_name_from_label('#10 Date For Delivery'), 'textDate');
 
-        $this->is_in_testing_mode = true;
+
+        //$this->is_in_testing_mode = true;
     }
 
     function pre_error_check_actions() {
