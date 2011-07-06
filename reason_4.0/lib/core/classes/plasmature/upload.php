@@ -309,6 +309,8 @@ function _get_disco_async_upload_hidden_fields($upload_sid)
 		return '';
 		
 	$session =& get_reason_session();
+	
+	$user_id = isset($_REQUEST['user_id']) ? $_REQUEST['user_id'] : 0;
 		
 	// IMPORTANT NOTE: Keep this list of fields in sync with the list in
 	// _get_disco_async_upload_internal_field_names() above.
@@ -317,7 +319,7 @@ function _get_disco_async_upload_hidden_fields($upload_sid)
 		'transfer_session' => $upload_sid,
 		'receiver' => reason_get_async_upload_script_uri('receive'),
 		'remover' => reason_get_async_upload_script_uri('destroy'),
-		'user_id' => turn_into_int($_REQUEST['user_id'])
+		'user_id' => turn_into_int($user_id)
 	);
 	
 	$html = array();
