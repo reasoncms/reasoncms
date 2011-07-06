@@ -39,8 +39,8 @@ class ApplicationConfirmation extends FormStep {
          * check if applicants with a set open_id are landing here prematurely
          * if so, display an error message with the required fields and break
          */
-        $open_id = check_open_id($this);
-        $submitted = is_submitted($open_id);
+        $this->openid_id = check_open_id($this);
+        $submitted = is_submitted($this->openid_id);
         if (!$submitted){
             $i = 0;
             $error_div = "";
@@ -84,15 +84,15 @@ class ApplicationConfirmation extends FormStep {
                 break;
             }
         }
-        connectDB(REASON_DB);
+//        connectDB(REASON_DB);
         /*
          * check if an open_id is set and a submit_date is set
          * if so, display the thank you blurb
          * if not, send them back to the first page
          */
-        if (($open_id) && ($submitted)) {
+        if (($this->openid_id) && ($submitted)) {
             echo $this->get_thank_you_blurb();
-        } elseif (($open_id) && (!$submitted)) {
+        } elseif (($this->openid_id) && (!$submitted)) {
             echo '<p>Oops! Looks like you\'ve landed here accidentally.</p>';
             echo 'To complete your application, please return to <a href="/admissions/apply/?_step=ApplicationPageSix">page 6</a>
                 and click "Submit your application" at the bottom of the page.';

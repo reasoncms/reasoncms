@@ -70,11 +70,12 @@ class ApplicationPageOne extends FormStep {
     ///////////////
     // style up the form and add comments et al
     function on_every_time() {
-        if (is_submitted(check_open_id($this))){
+        $this->openid_id = check_open_id($this);
+        if (is_submitted($this->openid_id)) {
             die('It appears that you\'ve already submitted your application. If you\'d like to amend your application or have questions
                 regarding, please contact the Admissions Office at 800-4-LUTHER.');
-        }else{
-        $this->show_form = true;
+        } else {
+            $this->show_form = true;
         }
 
         $date = getdate();
@@ -111,7 +112,7 @@ class ApplicationPageOne extends FormStep {
                 $sp_year . 'SP' => 'Spring ' . $sp_year,
                 $fa_year . 'FA' => 'Fall ' . $fa_year);
         }
-        
+
         // if not passed fall deadline
         if ($cur_date < $fa_deadline && $cur_date > $sp_deadline) {
             $this->enroll_term = array(
@@ -119,7 +120,7 @@ class ApplicationPageOne extends FormStep {
                 $jt_year . 'JT' => 'J-term ' . $jt_year,
                 $sp_year . 'SP' => 'Spring ' . $sp_year);
         }
-        
+
         //if passed fall and jterm deadline
         if ($cur_date < $sp_deadline && $cur_date > $jt_deadline) {
             $this->enroll_term = array(
@@ -148,8 +149,9 @@ class ApplicationPageOne extends FormStep {
 
     function pre_fill_form() {
         // check if the open_id has is set
-        $o_id = check_open_id($this);
-        if ($o_id) {
+//        $o_id = check_open_id($this);
+//        if ($o_id) {
+        if ($this->openid_id){
             // get an existing users data from the db based on openid_id and the form
             get_applicant_data($o_id, $this);
         } else {

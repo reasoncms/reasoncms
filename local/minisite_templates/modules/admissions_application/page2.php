@@ -23,6 +23,7 @@ include_once 'application_utils.php';
 
 class ApplicationPageTwo extends FormStep {
 
+    var $openid_id;
     var $_log_errors = true;
     var $error;
     // the usual disco member data
@@ -306,7 +307,8 @@ class ApplicationPageTwo extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
-        if (is_submitted(check_open_id($this))){
+        $this->openid_id = check_open_id($this);
+        if (is_submitted($this->openid_id)){
             die('It appears that you\'ve already submitted your application. If you\'d like to amend your application or have questions
                 regarding, please contact the Admissions Office at 800-4-LUTHER.');
         }else{
@@ -328,8 +330,7 @@ class ApplicationPageTwo extends FormStep {
 
     function pre_fill_form() {
         // check if the open_id has is set
-        $o_id = check_open_id($this);
-        if ($o_id) {
+        if ($this->openid_id) {
             // get an existing users data from the db based on openid_id and the form
             get_applicant_data($o_id, $this);
         } else {
