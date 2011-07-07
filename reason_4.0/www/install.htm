@@ -14,7 +14,7 @@ div.callOut {
 <body>
 <div class="contentHead">
 <h1 class="pageTitle"><span>Reason Install Documentation</span></h1>
-<p><em>Current for Reason 4 Beta 8 - Updated April 8, 2010</em></p>
+<p><em>Current for Reason 4.0 - Updated July 6, 2011</em></p>
 </div>
 <div class="contentMain">
 <div id="pageContent">
@@ -111,16 +111,16 @@ are setting up a production instance of Reason.</p>
 <li>flush privileges;</li>
 </ul>
 </div>
-<p>Next we are going to populate the Reason database with some basic information needed for an empty Reason instance. We can leave the Thor database empty, as Reason will automatically create the necessary tables the first time a form is created. There are many ways you could import the reason4_b8.sql file using phpMyAdmin or from within MySQL.</p>
+<p>Next we are going to populate the Reason database with some basic information needed for an empty Reason instance. We can leave the Thor database empty, as Reason will automatically create the necessary tables the first time a form is created. There are many ways you could import the reason4.0.sql file using phpMyAdmin or from within MySQL.</p>
 <p>Here is one way to import the database from the command line:</p>
 <div class="callOut">
-<p><strong>Change into the directory that contains the file reason4_b8.sql. From within /reason_package:</strong></p>
+<p><strong>Change into the directory that contains the file reason4.0.sql. From within /reason_package:</strong></p>
 <ul>
 <li>cd ./reason_4.0/data/dbs</li>
 </ul>
-<strong>Import reason4_b8.sql into the database named reason - fill in your own credentials:</strong>
+<strong>Import reason4.0.sql into the database named reason - fill in your own credentials:</strong>
 <ul>
-<li>cat reason4_b8.sql | mysql -u reason_user --password=some_password -h your.mysql.hostname.or.ip.address reason</li>
+<li>cat reason4.0.sql | mysql -u reason_user --password=some_password -h your.mysql.hostname.or.ip.address reason</li>
 </ul>
 </div>
 <p>The database connection information to connect to the databases you just created must be defined in a simple XML file. By default, this file is called dbs.xml and resides in the Reason settings directory.</p>
