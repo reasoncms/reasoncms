@@ -14,13 +14,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Upgrade Reason from 4.0 Beta 8 to 4.0 Beta 9</title>
+<title>Upgrade Reason from 4.0 Beta 8 to 4.0 Beta 9 (otherwise known as 4.0)</title>
 </head>
 <body>
-<h2>Upgrade Reason from 4.0 Beta 8 to 4.0 Beta 9</h2>
-
+<h2>Upgrade Reason from 4.0 Beta 8 to 4.0 Beta 9 (otherwise known as 4.0)</h2>
 <h3>New Settings</h3>
-<p>Reason 4 Beta 9 introduces new settings - if you manually maintain your settings files you'll need to add them:</p>
+<p>This version of Reason introduces new settings - if you manually maintain your settings files you'll need to add them:</p>
 <ol>
 <li><strong>REASON_PACKAGE_HTTP_BASE_PATH</strong><p>This identifies an alias in the web root that links to the new
 reason_package/www/ folder. This folder should contain items associated with the reason_package
