@@ -85,7 +85,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		),
 		'attend_program' => array(
 			'type' => 'select_no_sort',
-			'display_name' => 'Tickets for Founders Day Festival Dinner-Regents Center',
+			'display_name' => 'Founders Day Festival Dinner',
 			'comments' => '<br />$40/person',
 			'options' => array(
 				'--'=>'--', 
@@ -97,7 +97,26 @@ class HomecomingRegistrationOneForm extends FormStep
 				'6'=>'6 tickets, $240',
 			),
 		),
-		'luncheon_header' => array(
+                'alumni_meal' => array(
+			'type' => 'radio_inline_no_sort',
+                        'display_name' => 'Do you require a Vegeterian meal ?',
+			'options' => array('yes' => 'Yes', 'no' => 'No'),
+		),
+                'guest_names' => array(
+			'type' => 'text',
+			'size' => 35,
+		),
+                'first_guest_meal' => array(
+			'type' => 'radio_inline_no_sort',
+                        'display_name' => 'Do your guests need a Vegeterian meal ?',
+			'options' => array('yes' => 'Yes', 'no' => 'No'),
+		),
+                'vegeterian_guests' => array(
+			'type' => 'text',
+			'display_name' => 'Please list the full names of your vegeterian guests',
+			'size' => 35,
+		),
+                'luncheon_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Class Reunion Luncheon</h3>'
 		),
