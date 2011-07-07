@@ -112,10 +112,11 @@ function get_applicant_data($openid, &$the_form) {
                 // handle ssn which is an element group of ssn_1, ssn_2, and ssn_3
                 // but stored in the db as ssn
                 $exploded_ssn = explode('-', $row['ssn']);
-//                die(pray($exploded_ssn));
-                $the_form->set_value('ssn_1', $exploded_ssn[0]);
-                $the_form->set_value('ssn_2', $exploded_ssn[1]);
-                $the_form->set_value('ssn_3', $exploded_ssn[2]);
+                list ($ssn1, $ssn2, $ssn3) = explode('-', $row['ssn']);
+//                echo(pray($exploded_ssn));
+                $the_form->set_value('ssn_1', $ssn1);
+                $the_form->set_value('ssn_2', $ssn2);
+                $the_form->set_value('ssn_3', $ssn3);
             }
         }
     }
@@ -288,23 +289,23 @@ function validate_page2(&$the_form) {
         if (($row['different_mailing_address']) == "Yes") {
             if (is_null($row['mailing_address'])) {
                 $valid = False;
-                $return['mailing_address'] = $the_form->get_display_name('mailing_address');
+                $return['mailing_address'] = 'Mailing Address';
             }
             if (is_null($row['mailing_city'])) {
                 $valid = False;
-                $return['mailing_city'] = $the_form->get_display_name('mailing_city');
+                $return['mailing_city'] = 'Mailing City';
             }
             if (is_null($row['mailing_state_province'])) {
                 $valid = False;
-                $return['mailing_state_province'] = $the_form->get_display_name('mailing_state_province');
+                $return['mailing_state_province'] = 'Mailing State/Province';
             }
             if (is_null($row['mailing_zip_postal'])) {
                 $valid = False;
-                $return['mailing_zip_postal'] = $the_form->get_display_name('mailing_zip_postal');
+                $return['mailing_zip_postal'] = 'Mailing Zip/Postal';
             }
             if (is_null($row['mailing_country'])) {
                 $valid = False;
-                $return['mailing_country'] = $the_form->get_display_name('mailing_country');
+                $return['mailing_country'] = 'Mailing Country';
             }
         }
     }
