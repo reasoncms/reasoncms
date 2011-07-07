@@ -63,7 +63,7 @@ class ApplicationPageOne extends FormStep {
                 'not a citizen' => 'Not a U.S. citizen or permanent resident')
         ),
     );
-    var $required = array('student_type', 'enrollment_term', 'citizenship_status');
+//    var $required = array('student_type', 'enrollment_term', 'citizenship_status');
     var $display_name = 'Enrollment Info';
     var $error_header_text = 'Please check your form.';
 
