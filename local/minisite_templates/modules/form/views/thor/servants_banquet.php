@@ -22,7 +22,7 @@ function pre_error_check_actions() {
         
 
 
-        if ($this->get_value_from_label('Are you bringing a guest?') == 'Yes' ) {
+        if ($this->get_value_from_label('Are you bringing a guest?*') == 'Yes' ) {
 
             $this->add_required($guest_first_name);
             $this->add_required($guest_last_name);
