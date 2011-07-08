@@ -1,11 +1,14 @@
 $(document).ready(function(){
 
-    // hide guest info
-    $("#id1e83H1WmM0Row").hide();
-    $("#id1kCS7B75P6Row").hide();
-    $("#idI191dyUD00Row").hide();
-            
+         
+    toggle_guest();     
     $("input[name='id_7a3toi91Ps']").change(function(){
+        toggle_guest();      
+        
+    })    
+          
+    function toggle_guest(){      
+    
     
         if ($("#radio_id_7a3toi91Ps_0:checked").val() == 'Yes'){
             
@@ -20,19 +23,8 @@ $(document).ready(function(){
             $("#idI191dyUD00Row").hide();
             
         }
+    }
        
     
-    })
-
-
-
-
-
-
-
-
-
-
-
-
+    
 })
