@@ -108,7 +108,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_1_honors_comment' => array(
             'type' => 'comment',
-            'text' => 'Please describe any honors you earned that are associated with this activity',
+            'text' => 'Please describe any honors you earned that are associated with this activity.',
         ),
         'activity_1_honors' => array(
             'type' => 'text',
@@ -136,7 +136,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_2_honors_comment' => array(
             'type' => 'comment',
-            'text' => 'Please describe any honors you earned that are associated with this activity',
+            'text' => 'Please describe any honors you earned that are associated with this activity.',
         ),
         'activity_2_honors' => array(
             'type' => 'text',
@@ -164,7 +164,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_3_honors_comment' => array(
             'type' => 'comment',
-            'text' => 'Please describe any honors you earned that are associated with this activity',
+            'text' => 'Please describe any honors you earned that are associated with this activity.',
         ),
         'activity_3_honors' => array(
             'type' => 'text',
@@ -192,7 +192,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_4_honors_comment' => array(
             'type' => 'comment',
-            'text' => 'Please describe any honors you earned that are associated with this activity',
+            'text' => 'Please describe any honors you earned that are associated with this activity.',
         ),
         'activity_4_honors' => array(
             'type' => 'text',
@@ -220,7 +220,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_5_honors_comment' => array(
             'type' => 'comment',
-            'text' => 'Please describe any honors you earned that are associated with this activity',
+            'text' => 'Please describe any honors you earned that are associated with this activity.',
         ),
         'activity_5_honors' => array(
             'type' => 'text',
@@ -248,7 +248,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_6_honors_comment' => array(
             'type' => 'comment',
-            'text' => 'Please describe any honors you earned that are associated with this activity',
+            'text' => 'Please describe any honors you earned that are associated with this activity.',
         ),
         'activity_6_honors' => array(
             'type' => 'text',
@@ -276,7 +276,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_7_honors_comment' => array(
             'type' => 'comment',
-            'text' => 'Please describe any honors you earned that are associated with this activity',
+            'text' => 'Please describe any honors you earned that are associated with this activity.',
         ),
         'activity_7_honors' => array(
             'type' => 'text',
@@ -304,7 +304,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_8_honors_comment' => array(
             'type' => 'comment',
-            'text' => 'Please describe any honors you earned that are associated with this activity',
+            'text' => 'Please describe any honors you earned that are associated with this activity.',
         ),
         'activity_8_honors' => array(
             'type' => 'text',
@@ -332,7 +332,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_9_honors_comment' => array(
             'type' => 'comment',
-            'text' => 'Please describe any honors you earned that are associated with this activity',
+            'text' => 'Please describe any honors you earned that are associated with this activity.',
         ),
         'activity_9_honors' => array(
             'type' => 'text',
@@ -360,7 +360,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_10_honors_comment' => array(
             'type' => 'comment',
-            'text' => 'Please describe any honors you earned that are associated with this activity',
+            'text' => 'Please describe any honors you earned that are associated with this activity.',
         ),
         'activity_10_honors' => array(
             'type' => 'text',

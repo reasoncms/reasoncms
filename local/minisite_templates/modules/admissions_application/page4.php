@@ -37,7 +37,7 @@ class ApplicationPageFour extends FormStep {
         ),
         'hs_name' => array(
             'type' => 'text',
-            'display_name' => 'Name, City, State (i.e. IA)',
+            'display_name' => 'Name, City, State (e.g. IA)',
         ),
         'hs_ceeb' => 'hidden',
 //        'hs_address' => array(
@@ -197,7 +197,7 @@ class ApplicationPageFour extends FormStep {
         ),
         'sat_scores_comment' => array(
             'type' => 'comment',
-            'text' => 'Please provide your best SAT scores'
+            'text' => 'Please provide your best SAT scores.'
         ),
         'sat_math' => array(
             'type' => 'text',
@@ -219,7 +219,7 @@ class ApplicationPageFour extends FormStep {
         ),
         'act_scores_comment' => array(
             'type' => 'comment',
-            'text' => 'Please provide your best ACT score'
+            'text' => 'Please provide your best ACT score.'
         ),
         'act_composite' => array(
             'type' => 'text',

@@ -418,7 +418,7 @@ class ApplicationPageThree extends FormStep {
         ),
         'legacy_comment' => array(
             'type' => 'comment',
-            'text' => 'Did either of your parents or guardian graduate from a four-year college or university?',
+            'text' => 'Did either of your parents or your guardian graduate from a four-year college or university?',
         ),
         'legacy' => array(
             'type' => 'radio_inline_no_sort',
@@ -670,7 +670,7 @@ class ApplicationPageThree extends FormStep {
         'sibling_1_age_group' => array(
             'type' => 'inline',
             'elements' => array('sibling_1_age', 'sibling_1_grade'),
-            'args' => array('use_element_labels' => false, 'display_name' => 'Age &  Grade'),
+            'args' => array('use_element_labels' => false, 'display_name' => 'Age and Grade'),
         ),
         'sibling_2_name_group' => array(
             'type' => 'inline',
@@ -680,7 +680,7 @@ class ApplicationPageThree extends FormStep {
         'sibling_2_age_group' => array(
             'type' => 'inline',
             'elements' => array('sibling_2_age', 'sibling_2_grade'),
-            'args' => array('use_element_labels' => false, 'display_name' => 'Age &  Grade'),
+            'args' => array('use_element_labels' => false, 'display_name' => 'Age and Grade'),
         ),
         'sibling_3_name_group' => array(
             'type' => 'inline',
@@ -690,7 +690,7 @@ class ApplicationPageThree extends FormStep {
         'sibling_3_age_group' => array(
             'type' => 'inline',
             'elements' => array('sibling_3_age', 'sibling_3_grade'),
-            'args' => array('use_element_labels' => false, 'display_name' => 'Age &  Grade'),
+            'args' => array('use_element_labels' => false, 'display_name' => 'Age and Grade'),
         ),
         'sibling_4_name_group' => array(
             'type' => 'inline',
@@ -700,7 +700,7 @@ class ApplicationPageThree extends FormStep {
         'sibling_4_age_group' => array(
             'type' => 'inline',
             'elements' => array('sibling_4_age', 'sibling_4_grade'),
-            'args' => array('use_element_labels' => false, 'display_name' => 'Age &  Grade'),
+            'args' => array('use_element_labels' => false, 'display_name' => 'Age and Grade'),
         ),
         'sibling_5_name_group' => array(
             'type' => 'inline',
@@ -710,7 +710,7 @@ class ApplicationPageThree extends FormStep {
         'sibling_5_age_group' => array(
             'type' => 'inline',
             'elements' => array('sibling_5_age', 'sibling_5_grade'),
-            'args' => array('use_element_labels' => false, 'display_name' => 'Age &  Grade'),
+            'args' => array('use_element_labels' => false, 'display_name' => 'Age and Grade'),
         ),
     );
     var $display_name = 'Family';
