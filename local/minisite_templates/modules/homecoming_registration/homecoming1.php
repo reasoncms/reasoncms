@@ -81,7 +81,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		'guest_class' => 'text',
 		'reservations_header' => array(
 			'type' => 'comment',
-			'text' => '<h3>Weekend Reservations</h3>',
+			'text' => '<h3>Festival Dinner Reservations</h3>',
 		),
 		'attend_program' => array(
 			'type' => 'select_no_sort',
@@ -113,12 +113,12 @@ class HomecomingRegistrationOneForm extends FormStep
 		),
                 'vegeterian_guests' => array(
 			'type' => 'text',
-			'display_name' => 'Please list the full names of your vegeterian guests',
+			'display_name' => 'Please list the vegeterian guests',
 			'size' => 35,
 		),
                 'luncheon_header' => array(
 			'type' => 'comment',
-			'text' => '<h3>Class Reunion Luncheon</h3>'
+			'text' => '<h3>Class Reunion Reservations</h3>'
 		),
 		'attend_luncheon' => 'text',
 		'dinner_header' => array(
@@ -149,9 +149,9 @@ class HomecomingRegistrationOneForm extends FormStep
 	{
 		$date = getdate();
 		$this->change_element_type( 
-			'class_year', 'year', array('start' => ($date['year'] - 75), 'end' => ($date['year']-1)));
+			'class_year', 'year', array('start' => ($date['year'] - 75), 'end' => ($date['year'])));
 		$this->change_element_type( 
-			'guest_class', 'year', array('start' => ($date['year'] - 75), 'end' => ($date['year']-1)));
+			'guest_class', 'year', array('start' => ($date['year'] - 75), 'end' => ($date['year'])));
 
 		
 		// Set years and cost for luncheon
