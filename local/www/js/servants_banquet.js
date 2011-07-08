@@ -5,7 +5,7 @@ $(document).ready(function(){
     $("#id1kCS7B75P6Row").hide();
     $("#idI191dyUD00Row").hide();
             
-    $("input[name='Are you bringing a guest?']").change(function(){
+    $("input[name='id_7a3toi91Ps']").change(function(){
     
         if ($("#radio_id_7a3toi91Ps_0:checked").val() == 'Yes'){
             
