@@ -112,7 +112,11 @@ if(!empty($_POST['go']) && ($_POST['go'] == 'run' || $_POST['go'] == 'test'))
 	
 	if ($mode == 'run')
 	{
-		make_sure_username_is_user('anonymous', id_of('master_admin'));
+		if (make_sure_username_is_user('anonymous', id_of('master_admin'))) {
+			echo '<p>anonymous user exists.</p>';
+		} else {
+			echo '<p>anonymous user not created.</p>';
+		}
 	}
 	else
 	{
