@@ -1,6 +1,8 @@
 <?php
 
 $luther_openid_url = "https://reasondev.luther.edu/openid/";
+$next_url = "";
+$token = "";
 
 ob_start();
 /*
@@ -16,6 +18,15 @@ $rpx_api_key = '2613497138f154e846d1294c411b5063c34b30e3';
   Set this to false if your application is Basic or Plus.
  */
 $engage_pro = false;
+
+
+//STEP 0: check for url to redirect to after login
+try {
+    $next_url = $_GET['next'];
+} catch (Exception $e) {
+    $next_url = "";
+}
+
 
 /* STEP 1: Extract token POST parameter */
 $token = $_POST['token'];
@@ -51,13 +62,6 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
     }
     curl_close($curl);
 
-
-    //check for url to redirect to after login attempt
-    try {
-        $next_url = $_GET['next'];
-    } catch (Exception $e) {
-        $next_url = '';
-    }
 
 
     /* STEP 3: Parse the JSON auth_info response */
@@ -298,6 +302,7 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
         if ($next_url) {
             header('Location: ' . $next_url);
         } else {
+            die('error 123');
             header('Location: ' . $luther_openid_url);
         }
 
@@ -315,6 +320,7 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
         if ($next_url) {
             header('Location: ' . $next_url);
         } else {
+            die('error 234: auth info stat not ok');
             header('Location: ' . $luther_openid_url);
         }
     }
@@ -323,6 +329,7 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
     if ($next_url) {
         header('Location: ' . $next_url);
     } else {
+        die('error 345: token is missing or malformed');
         header('Location: ' . $luther_openid_url);
     }
 }
