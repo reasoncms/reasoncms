@@ -32,7 +32,7 @@
 						'description' => 'Check to see if your version of Reason is up-to-date',
 						'safety_level' => 'safe',
 					),
-					'scripts/page_types/view_page_type_info.php' => array(
+					REASON_HTTP_BASE_PATH.'scripts/page_types/view_page_type_info.php' => array(
 						'title' => 'Page Types',
                                                 'description' => 'See all the page type definitions',
 						'safety_level' => 'safe',
@@ -42,22 +42,22 @@
                                                 'description' => 'See what has been added, deleted, and updated recently in Reason',
 						'safety_level' => 'safe',
                                         ),
-                                        'scripts/search/find_across_sites.php' => array(
+                                        REASON_HTTP_BASE_PATH.'scripts/search/find_across_sites.php' => array(
                                                 'title' => 'Search Across All Reason Sites',
                                                 'description' => 'Find a given string anywhere in Reason',
 						'safety_level' => 'safe',
                                         ),
-                                        'scripts/developer_tools/modules.php' => array(
+                                        REASON_HTTP_BASE_PATH.'scripts/developer_tools/modules.php' => array(
                                                 'title' => 'Sample Pages for Each Module',
                                                 'description' => 'Find pages that use particular modules (also: module usage stats)',
 						'safety_level' => 'safe',
                                         ),
-					'scripts/developer_tools/get_page_types.php' => array(
+					REASON_HTTP_BASE_PATH.'scripts/developer_tools/get_page_types.php' => array(
                                                 'title' => 'Sample Pages for Each Page Type',
                                                 'description' => 'Find pages that use particular page types (also: page type usage stats)',
 						'safety_level' => 'safe',
                                         ),
-					'scripts/developer_tools/get_type_listers.php' => array(
+					REASON_HTTP_BASE_PATH.'scripts/developer_tools/get_type_listers.php' => array(
                                                 'title' => 'Sample Listers & Content Managers for Each Type',
                                                 'description' => 'Easy access to the administrative interfaces for each Reason type',
 						'safety_level' => 'safe',
@@ -80,7 +80,7 @@
 									
 				),
 				'Content Actions' => array(
-					'scripts/urls/update_urls.php' => array(
+					REASON_HTTP_BASE_PATH.'scripts/urls/update_urls.php' => array(
 						'title' => 'Update URLs',
 						'description' => 'Run the .htaccess rewrites for a particular site or for all sites. (also: get the command for creating site directories that need creation)',
 						'safety_level' => 'safe',
@@ -91,18 +91,18 @@
 first edit an event entity, then change the cur_module part of the query to "cur_module=EventSplit")',
                                                 'safety_level' => 'safe',
                                         ),
-                                        'scripts/move/move_entities_among_sites.php' => array(
+                                        REASON_HTTP_BASE_PATH.'scripts/move/move_entities_among_sites.php' => array(
                                                 'title' => 'Move Entities',
                                                 'description' => 'Move entities from one site to another. Additional steps required if moving pages or 
 assets.',
                                                 'safety_level' => 'careful',
                                         ),
-					'scripts/search/find_and_replace.php' => array(
+					REASON_HTTP_BASE_PATH.'scripts/search/find_and_replace.php' => array(
 						'title' => 'Find and Replace',
 						'description' => 'Find and replace across multiple entities on multiple sites',
 						'safety_level' => 'careful',
 					),
-					'urls/replicate_url_history.php' => array(
+					REASON_HTTP_BASE_PATH.'urls/replicate_url_history.php' => array(
 						'title' => 'Replicate URL History',
 						'description' => 'Give one page the URL history of another page. '.
 								 'It is a good idea to run this script if you have replaced a page '.
@@ -134,31 +134,31 @@ assets.',
 					),
                                 ),
 				'Database Cleanup' => array(
-					'scripts/db_maintenance/delete_headless_chickens.php' => array(
+					REASON_HTTP_BASE_PATH.'scripts/db_maintenance/delete_headless_chickens.php' => array(
 						'title' => 'Delete Headless Chickens',
 						'description' => 'Silly name; important cleanup script. Headless chickens are '.
 								 'records in Reason tables that do not correspond to a record in the '.
 								 'master entity table. This script will delete all of the headless chickens.',
 						'safety_level' => 'safe',
 					),
-					'scripts/db_maintenance/delete_widowed_relationships.php' => array(
+					REASON_HTTP_BASE_PATH.'scripts/db_maintenance/delete_widowed_relationships.php' => array(
 						'title' => 'Delete Widowed Relationships',
 						'description' => 'Removes any relationships that point to a no-longer-existent entity',
                                                'safety_level' => 'safe',
 					),
-					'scripts/db_maintenance/amputees.php' => array(
+					REASON_HTTP_BASE_PATH.'scripts/db_maintenance/amputees.php' => array(
 						'title' => 'Fix Amputees',
 						'description' => 'Fully populates any Reason entities that are not set up with all '.
 								 'their proper tables.',
                                                'safety_level' => 'safe',
 					),
-                                        'scripts/db_maintenance/delete_duplicate_relationships.php' => array(
+                                        REASON_HTTP_BASE_PATH.'scripts/db_maintenance/delete_duplicate_relationships.php' => array(
                                                 'title' => 'Delete Duplicate Relationships',
                                                 'description' => 'Remove identical relationships from the database '.
                                                                  '(these, if they exist, are pure cruft)',
                                                 'safety_level' => 'careful',
                                         ),
-					'scripts/db_maintenance/remove_duplicate_entities.php' => array(
+					REASON_HTTP_BASE_PATH.'scripts/db_maintenance/remove_duplicate_entities.php' => array(
 						'title' => 'Collapse Duplicate Entities',
 						'description' => 'Identical entities may be cruft. This script finds them and deletes '.
 								 'one of each pair of identical entities.',
