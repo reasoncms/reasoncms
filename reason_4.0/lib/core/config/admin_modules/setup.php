@@ -69,7 +69,7 @@
 		'NoDelete'=>array('file'=>'no_delete.php','class'=>'NoDeleteModule'),
 		'ChooseTheme'=>array('file'=>'choose_theme.php','class'=>'ChooseThemeModule'),
 		'ViewUsers'=>array('file'=>'view_users.php','class'=>'ViewUsersModule'),
-		'clone'=>array('file'=>'cloner.php','class'=>'cloneModule'),
+		'clone'=>array('file'=>'cloner.php','class'=>'ClonerModule'),
 		'ThorData'=>array('file'=>'thor_data.php','class'=>'ThorDataModule'),
 		'GroupTester'=>array('file'=>'group_tester.php','class'=>'GroupTesterModule'),
 		'ListSites'=>array('file'=>'list_sites.php','class'=>'ListSitesModule'),
@@ -86,6 +86,9 @@
 		'SitePages'=>array('file'=>'site_pages.php','class'=>'ReasonSitePagesModule'),
 		
 		'ImageSizer'=>array('file'=>'image_sizer.php','class'=>'ImageSizerModule'),
+		
+		'ManageLocks'=>array('file'=>'manage_locks.php','class'=>'ManageLocksModule'),
+		'AdminTools'=>array('file'=>'admin_tools.php','class'=>'ReasonAdminToolsModule'),
 );
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))
