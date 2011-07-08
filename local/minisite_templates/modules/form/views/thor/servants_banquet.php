@@ -9,7 +9,7 @@ class ServantsBanquetForm extends LutherDefaultThorForm {
         parent::on_every_time();
 
         echo '<script type="text/javascript" src="/reason/js/servants_banquet.js"></script>';
-        
+        $this->is_in_testing_mode = true;
     }
 }
 
