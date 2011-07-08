@@ -105,8 +105,33 @@
 <body>
 <?php
   if ($success) {
+    $reason_user = htmlspecialchars($reason_user);
+    $reason_pass = htmlspecialchars($reason_pass);
+    $dbhost = htmlspecialchars($dbhost);
+    $dbstring = "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>
+<!-- WARNING *** ENSURE THIS FILE IS NOT WEB ACCESSIBLE *** -->
+<databases>
+<database>
+<connection_name>reason_connection</connection_name>
+<db>reason</db>
+<user>$reason_user</user>
+<password>$reason_pass</password>
+<host>$dbhost</host>
+</database>
+
+<database>
+<connection_name>thor_connection</connection_name>
+<db>thor</db>
+<user>$reason_user</user>
+<password>$reason_pass</password>
+<host>$dbhost</host>
+</database>
+</databases>";
     echo "<p>Congratulations, your reason database is configured!</p>";
-    echo "<p>Edit your dbs.xml file to reflect the settings you entered</p>"; // TODO: fix this
+    echo "<p>Copy and paste the following text into your dbs.xml file</p>";
+?>
+<textarea rows="20" cols="40"><?=htmlspecialchars($dbstring)?></textarea>
+<?php
     echo "<p>You may now return to the <a href=\"setup.php\">main setup page</a></p>";
     die;
   }
