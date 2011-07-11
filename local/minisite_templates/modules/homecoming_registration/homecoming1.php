@@ -97,25 +97,26 @@ class HomecomingRegistrationOneForm extends FormStep
 				'6'=>'6 tickets, $240',
 			),
 		),
-                'alumni_meal' => array(
+
+                'festival_vegetarian' => array(
 			'type' => 'radio_inline_no_sort',
-                        'display_name' => 'Do you require a Vegeterian meal ?',
+                        'display_name' => 'Do you require a vegetarian meal?',
 			'options' => array('yes' => 'Yes', 'no' => 'No'),
 		),
-                'guest_names' => array(
+                'festival_guests_names' => array(
 			'type' => 'text',
 			'size' => 35,
 		),
-                'first_guest_meal' => array(
+                'vegetarian_guests' => array(
 			'type' => 'radio_inline_no_sort',
-                        'display_name' => 'Do your guests need a Vegeterian meal ?',
+                        'display_name' => 'Do any of your guests require vegetarian meal?',
 			'options' => array('yes' => 'Yes', 'no' => 'No'),
 		),
-                'vegeterian_guests' => array(
+                'vegetarian_guests_names' => array(
 			'type' => 'text',
-			'display_name' => 'Please list the vegeterian guests',
+			'display_name' => 'Please list the vegetarian guests',
 			'size' => 35,
-		),
+                ),
                 'luncheon_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Class Reunion Reservations</h3>'
