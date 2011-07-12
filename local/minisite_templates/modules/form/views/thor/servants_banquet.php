@@ -18,10 +18,11 @@ function pre_error_check_actions() {
         $guest_first_name = $this->get_element_name_from_label('Guest First Name');
         $guest_last_name = $this->get_element_name_from_label('Guest Last Name');
         $guest_choice = $this->get_element_name_from_label('Guest Entree Choice');
+
         
 
 
-        if ($this->get_value_from_label('Are you bringing a guest?') == 'Yes' ) {
+        if ($this->get_value_from_label('Payment Amount') == '$60 with guest' ) {
 
             $this->add_required($guest_first_name);
             $this->add_required($guest_last_name);
