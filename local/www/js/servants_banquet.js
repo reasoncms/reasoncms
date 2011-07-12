@@ -18,9 +18,9 @@ $(document).ready(function(){
         }
         else{
             
-          //  $("#id1e83H1WmM0Row").hide();
-           // $("#id1kCS7B75P6Row").hide();
-           // $("#idI191dyUD00Row").hide();
+            $("#id1e83H1WmM0Row").hide();
+            $("#id1kCS7B75P6Row").hide();
+            $("#idI191dyUD00Row").hide();
             
         }
     }
