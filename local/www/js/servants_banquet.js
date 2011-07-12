@@ -10,7 +10,7 @@ $(document).ready(function(){
     function toggle_guest(){      
     
     
-        if ($("#radio_id_7a3toi91Ps_0:checked").val() == 'Yes'){
+        if ($("#radio_id_47984YA401_1:checked").val() == '$60 with guest'){
             
             $("#id1e83H1WmM0Row").show();
             $("#id1kCS7B75P6Row").show();
