@@ -157,6 +157,13 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'faculty' => array(
                     'main_post' => 'luther_faculty'
 		),
+                'form_sidebar_blurbs' => array(
+			'main' => 'form_content',
+			'main_post' => 'form',
+			'sidebar' => 'blurb',
+			'sub_nav' => 'assets',
+			'pre_sidebar' => 'luther_image_sidebar',
+		),
                 'gift_page_engine' => array(
                     'main_post' => 'gift_form',
                 ),
