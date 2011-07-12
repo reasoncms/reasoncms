@@ -1,8 +1,8 @@
 $(document).ready(function(){
 
     // Highlight Description Rows
-    $(".words h3").css("color", "#123074");
-
+//    $(".words h3").css("color", "#123074");
+    
     //Hide Guest Class row
     if (!$("#radio_attended_luther_0").is(":checked")){
         $("#guestclassRow").css("display", "none");
@@ -11,24 +11,25 @@ $(document).ready(function(){
     // Guests, Vegeterians
     // hide fields
  
-    $("#alumnimealRow").hide();
-    $("#guestnamesRow").hide();
-    $("#firstguestmealRow").hide();
-    $("#vegeterianguestsRow").hide();
+    $("#festivalvegetarianRow").hide();
+    $("#festivalguestsnamesRow").hide();
+    $("#vegetarianguestsRow").hide();
+    $("#vegetarianguestsnamesRow").hide();
+    
        
  
     $('#attend_programElement').change(function() {
         if ($("select[name='attend_program']").val() !== ""){
             
-            $("#alumnimealRow").show();
+            $("#festivalvegetarianRow").show();
         }
         
         else {
             
-            $("#alumnimealRow").hide();
-            $("#guestnamesRow").hide();
-            $("#firstguestmealRow").hide();
-            $("#vegeterianguestsRow").hide();
+            $("#festivalvegetarianRow").hide();
+            $("#festivalguestsnamesRow").hide();
+            $("#vegetarianguestsRow").hide();
+            $("#vegetarianguestsnamesRow").hide();
 
         }
     } )
@@ -37,17 +38,18 @@ $(document).ready(function(){
     $('#attend_programElement').change(function() {
         if ($("select[name='attend_program']").val() > 1){
             
-            $("#alumnimealRow").show();
-            $("#guestnamesRow").show();
-            $("#firstguestmealRow").show();
-            $("#vegeterianguestsRow").show(); 
+            $("#festivalvegetarianRow").show();
+            $("#festivalguestsnamesRow").show();
+            $("#vegetarianguestsRow").show();
+            $("#vegetarianguestsnamesRow").show();
         }
         else {  
-            $("#guestnamesRow").hide();
-            $("#firstguestmealRow").hide();
-            $("#vegeterianguestsRow").hide();
+            $("#festivalguestsnamesRow").hide();
+            $("#vegetarianguestsRow").hide();
+            $("#festivalguestsnamesRow").hide();
+            $("#vegetarianguestsnamesRow").hide();
             
-            }
+        }
     } )
         
         
@@ -55,12 +57,13 @@ $(document).ready(function(){
     //Luncheon Header Row
     if (!$("#attend_luncheonElement").val()){
         $("#luncheonheaderRow").hide();
-       // $("#luncheonheaderRow").css("display", "none");
+        // $("#luncheonheaderRow").css("display", "none");
         //Tickets for Luncheon Row
         $("#attendluncheonRow").css("display", "none");
+        $("#attendluncheonRow").hide();
     }
     //Dinner Header Row
-    $("#dinnerheaderRow").css("display", "none");
+    $("#dinnerheaderRow").hide();
 
     //Dinner Tickets
     if (!$("#attend_dinner_50_to_25Element").val()){
@@ -101,13 +104,8 @@ $(document).ready(function(){
         var class_year = $("select[name='class_year']").val();
 
         //if 75 - 50 show Luncheon header and tickets
-        if ((year - parseInt(class_year)) == 75||
-            (year - parseInt(class_year)) == 70||
-            (year - parseInt(class_year)) == 65||
-            (year - parseInt(class_year)) == 60||
-            (year - parseInt(class_year)) == 55||
-            (year - parseInt(class_year)) == 50)
-            {
+        if ((year - parseInt(class_year)) == 75 || (year - parseInt(class_year)) == 70 || (year - parseInt(class_year)) == 65
+            || (year - parseInt(class_year)) == 60 || (year - parseInt(class_year)) == 55 || (year - parseInt(class_year)) == 50){
             $("#luncheonheaderRow").show();
             $("#attendluncheonRow").show();
         }else{
@@ -116,32 +114,23 @@ $(document).ready(function(){
             $("#attend_luncheonElement").val('').attr('selected', 'selected');
         }
 
-        if ((year - parseInt(class_year)) == 55||
-            (year - parseInt(class_year)) == 50||
-            (year - parseInt(class_year)) == 45||
-            (year - parseInt(class_year)) == 40||
-            (year - parseInt(class_year)) == 35||
-            (year - parseInt(class_year)) == 30||
-            (year - parseInt(class_year)) == 25)
-        {
-            alert('yoaoaoo');
-            $("#luncheonheaderRow").show();
-            $("#dinnerheaderRow").show();
-            $("#attenddinner50to25Row").show();
-            
+        if ((year - parseInt(class_year)) == 55 || (year - parseInt(class_year)) == 50 || (year - parseInt(class_year)) == 45
+            || (year - parseInt(class_year)) == 40 || (year - parseInt(class_year)) == 35 || (year - parseInt(class_year)) == 30
+            || (year - parseInt(class_year)) == 25) {
+                alert('yoaoaoo');
+                $("#luncheonheaderRow").show();
+                $("#dinnerheaderRow").show();
+                $("#attenddinner50to25Row").show();
         }else{
             $("#luncheonheaderRow").hide();
             $("#dinnerheaderRow").hide();
             $("#attenddinner50to25Row").hide();
-            $("#attend_dinner_50_to_25Element").val('');
+            $("#attend_dinner_50_to_25Element").val('selected', 'selected');
         }
        
         // if 20 - 10  show Reception header and tickets
-        if ((year - parseInt(class_year)) == 20||
-            (year - parseInt(class_year)) == 15||
-            (year - parseInt(class_year)) == 10)
-        {
-            alert('1991');
+        if ((year - parseInt(class_year)) == 20 || (year - parseInt(class_year)) == 15 || (year - parseInt(class_year)) == 10) {
+//            alert('1991');
             $("#luncheonheaderRow").show(); ///
             $("#dinnerheaderRow").show();
             $("#attenddinner20to10Row").show();
@@ -153,9 +142,7 @@ $(document).ready(function(){
         }
 
         // if 5 year show 5 Year Reception header and tickets
-        if ((year - parseInt(class_year)) == 5)
-        {
-            
+        if ((year - parseInt(class_year)) == 5) {
             $("#dinnerheaderRow").show();
             $("#attenddinner5Row").show();
         }else{
@@ -163,6 +150,5 @@ $(document).ready(function(){
             $("#attenddinner5Row").hide();
             $("#attend_dinner_5Element").val('').attr('selected', 'selected');
         }
-
     });
 })
