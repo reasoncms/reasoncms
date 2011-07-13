@@ -38,7 +38,7 @@ $(document).ready(function() {
     $("input[name*='age']").watermark('Age');
     $("input[name*='grade']").watermark('Grade');
     $("input[name*='suffix']").watermark('Suffix');
-    $("#missing_info_tip").tooltip();
+    $("#missing_info_tip").tooltip({offset:[-60,-300]});
 
     var suffixes = [
         "D.C.",
