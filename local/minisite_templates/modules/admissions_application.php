@@ -225,7 +225,7 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
                 $app_submitted = $this->sess->get('submitted');
                 $app_submitted = True;
                 if ($app_submitted){
-                    $error_header = "<div style='width:655px;border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;'><span style='font-weight:bold;'>Required fields:</span>&nbsp;&nbsp;";
+                    $error_header = "<div style='width:655px;border:1px solid blue;border-radius:5px;background-color:#CCDEEB;padding:5px;'><span style='font-weight:bold;'>Required fields:</span>&nbsp;&nbsp;";
                     $error_footer = "</div>";
                     switch($i){
                         case 1:
