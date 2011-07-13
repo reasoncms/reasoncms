@@ -101,11 +101,6 @@ class ApplicationConfirmation extends FormStep {
             echo $this->get_thank_you_blurb();
             $this->controller->destroy_form_data();
         }
-        /*
-         * check if an open_id is set and a submit_date is set
-         * if so, display the thank you blurb
-         * if not, send them back to the first page
-         */
     }
 
     function pre_show_form() {
