@@ -285,7 +285,12 @@ function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_userna
 	// check for errors
 	if( empty( $page ) )
 	{
-		trigger_error( 'CURL: '.curl_error( $ch ) );
+		$err = curl_error( $ch );
+		if(empty($err))
+		{
+			$err = 'No error message available; URL was '.$url;
+		}
+		trigger_error( 'CURL: '.$err );
 	}
 	curl_close( $ch );
 	return $page;
