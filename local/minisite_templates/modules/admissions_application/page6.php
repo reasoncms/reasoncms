@@ -108,7 +108,7 @@ class ApplicationPageSix extends FormStep {
     var $elements = array(
         'college_plan_comment' => array(
             'type' => 'comment',
-            'text' => '<h3>College Plan</h3>',
+            'text' => '<h3>Academic Interests</h3>',
         ),
         'college_plan_1' => array(
             'type' => 'select',
@@ -171,14 +171,14 @@ class ApplicationPageSix extends FormStep {
         ),
         'influences_comment' => array(
             'type' => 'comment',
-            'text' => 'Please list the influences that led you to Luther College'
+            'text' => 'Please list the influences that led you to Luther College.'
         ),
         'influences' => array(
             'type' => 'textarea_no_label',
         ),
         'other_colleges_comment' => array(
             'type' => 'comment',
-            'text' => 'I have applied or intend to apply to the following colleges'
+            'text' => 'Please list the colleges in which you have applied or intend to apply.'
         ),
         'other_colleges' => array(
             'type' => 'textarea_no_label',
@@ -211,7 +211,7 @@ class ApplicationPageSix extends FormStep {
         ),
         'conviction_details_comment' => array(
             'type' => 'comment',
-            'text' => 'If yes, please describe',
+            'text' => 'If yes, please describe.',
         ),
         'conviction_history_details' => array(
             'type' => 'textarea_no_label',
@@ -229,17 +229,12 @@ class ApplicationPageSix extends FormStep {
         ),
         'discipline_details_comment' => array(
             'type' => 'comment',
-            'text' => 'If yes, please describe',
+            'text' => 'If yes, please describe.',
         ),
         'hs_discipline_details' => array(
             'type' => 'textarea_no_label',
             'display_name' => '&nbsp;',
         ),
-//        'permission_for_transcripts' => array(
-//            'type' => 'checkboxfirst',
-//            'display_name' => 'Checking this box indicates that I grant my high school permission to release my transcript and test scores,
-//                  if available, directly to Luther College.'
-//        ),
         'honesty_statement' => array(
             'type' => 'checkboxfirst',
             'display_name' => 'Checking this box indicates that all information in my application is complete, factually correct, and honestly
