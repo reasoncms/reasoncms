@@ -259,9 +259,10 @@ function alter_protocol($url,$current_protocol,$new_protocol)
  * @param string http_auth_password
  * @param int timeout - timout time for entire request
  * @param int connect_timeout - timeout time to establish connection to server
+ * @param boolean $return_null_on_error - If there is an error, return NULL even if there was a response from the server
  * @return mixed a string or false on error
  */
-function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_username = '', $http_auth_password = '', $timeout = 30, $connect_timeout = 10)
+function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_username = '', $http_auth_password = '', $timeout = 30, $connect_timeout = 10, $return_null_on_error = false)
 {
 	require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
 	$ch = curl_init( $url );
@@ -281,16 +282,18 @@ function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_userna
 	}
 	curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $connect_timeout ); // number of seconds to try to connect
 	curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout ); // number of seconds allowed overall for execution
+	curl_setopt( $ch, CURLOPT_FAILONERROR, true);
 	$page = curl_exec( $ch );
+	
 	// check for errors
-	if( empty( $page ) )
+	if( $err = curl_error( $ch ) )
 	{
-		$err = curl_error( $ch );
-		if(empty($err))
+		trigger_error( 'carl_util_get_url_contents() failed. Msg: '.$err.'; url: '.$url );
+		if( $return_null_on_error )
 		{
-			$err = 'No error message available; URL was '.$url;
+			curl_close( $ch );
+			return NULL;
 		}
-		trigger_error( 'CURL: '.$err );
 	}
 	curl_close( $ch );
 	return $page;
