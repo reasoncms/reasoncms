@@ -1,20 +1,21 @@
 $(document).ready(function(){
 
     // Highlight Description Rows
-//    $(".words h3").css("color", "#123074");
+    //    $(".words h3").css("color", "#123074");
     
     //Hide Guest Class row
     if (!$("#radio_attended_luther_0").is(":checked")){
         $("#guestclassRow").css("display", "none");
     }
-        
-    // Guests, Vegeterians
+    
+     // Guests, Vegeterians
     // hide fields
- 
+        
     $("#festivalvegetarianRow").hide();
     $("#festivalguestsnamesRow").hide();
     $("#vegetarianguestsRow").hide();
-    $("#vegetarianguestsnamesRow").hide();
+    $("#seatingpreferenceRow").hide();
+    
     
        
  
@@ -22,6 +23,7 @@ $(document).ready(function(){
         if ($("select[name='attend_program']").val() !== ""){
             
             $("#festivalvegetarianRow").show();
+            $("#seatingpreferenceRow").show();
         }
         
         else {
@@ -29,7 +31,7 @@ $(document).ready(function(){
             $("#festivalvegetarianRow").hide();
             $("#festivalguestsnamesRow").hide();
             $("#vegetarianguestsRow").hide();
-            $("#vegetarianguestsnamesRow").hide();
+            $("#seatingpreferenceRow").hide();
 
         }
     } )
@@ -38,16 +40,17 @@ $(document).ready(function(){
     $('#attend_programElement').change(function() {
         if ($("select[name='attend_program']").val() > 1){
             
+            
             $("#festivalvegetarianRow").show();
             $("#festivalguestsnamesRow").show();
             $("#vegetarianguestsRow").show();
-            $("#vegetarianguestsnamesRow").show();
+            $("#festivalvegetarianRow").show();
         }
         else {  
             $("#festivalguestsnamesRow").hide();
             $("#vegetarianguestsRow").hide();
             $("#festivalguestsnamesRow").hide();
-            $("#vegetarianguestsnamesRow").hide();
+            $("#seatingpreferenceRow").hide();
             
         }
     } )
@@ -94,6 +97,20 @@ $(document).ready(function(){
             $("#guest_classElement").val('').attr('selected', 'selected');
         }
     })
+   
+    $("#vegetarianguestsnamesRow").hide();
+    //veggie guests hide
+    $("input[name='vegetarian_guests']").change(function()
+    {
+        // If "Yes" is checked
+        if ($("#radio_vegetarian_guests_0").is(":checked")){
+            $("#vegetarianguestsnamesRow").show();
+        }else{
+            $("#vegetarianguestsnamesRow").hide();
+        }
+        
+        
+    })
 
 
     //Add select handler to Class Year select element
@@ -106,10 +123,10 @@ $(document).ready(function(){
         //if 75 - 50 show Luncheon header and tickets
         if ((year - parseInt(class_year)) == 75 || (year - parseInt(class_year)) == 70 || (year - parseInt(class_year)) == 65
             || (year - parseInt(class_year)) == 60 || (year - parseInt(class_year)) == 55 || (year - parseInt(class_year)) == 50){
-            $("#luncheonheaderRow").show();
+       
             $("#attendluncheonRow").show();
         }else{
-            $("#luncheonheaderRow").hide();
+     
             $("#attendluncheonRow").hide();
             $("#attend_luncheonElement").val('').attr('selected', 'selected');
         }
@@ -117,12 +134,12 @@ $(document).ready(function(){
         if ((year - parseInt(class_year)) == 55 || (year - parseInt(class_year)) == 50 || (year - parseInt(class_year)) == 45
             || (year - parseInt(class_year)) == 40 || (year - parseInt(class_year)) == 35 || (year - parseInt(class_year)) == 30
             || (year - parseInt(class_year)) == 25) {
-                alert('yoaoaoo');
-                $("#luncheonheaderRow").show();
-                $("#dinnerheaderRow").show();
-                $("#attenddinner50to25Row").show();
+                
+        
+            $("#dinnerheaderRow").show();
+            $("#attenddinner50to25Row").show();
         }else{
-            $("#luncheonheaderRow").hide();
+         
             $("#dinnerheaderRow").hide();
             $("#attenddinner50to25Row").hide();
             $("#attend_dinner_50_to_25Element").val('selected', 'selected');
@@ -130,12 +147,12 @@ $(document).ready(function(){
        
         // if 20 - 10  show Reception header and tickets
         if ((year - parseInt(class_year)) == 20 || (year - parseInt(class_year)) == 15 || (year - parseInt(class_year)) == 10) {
-//            alert('1991');
-            $("#luncheonheaderRow").show(); ///
+            //            alert('1991');
+ 
             $("#dinnerheaderRow").show();
             $("#attenddinner20to10Row").show();
         }else{
-            $("#luncheonheaderRow").hide(); ///
+      
             $("#dinnerheaderRow").hide();
             $("#attenddinner20to10Row").hide();
             $("#attend_dinner_20_to_10Element").val('').attr('selected', 'selected');
@@ -150,5 +167,21 @@ $(document).ready(function(){
             $("#attenddinner5Row").hide();
             $("#attend_dinner_5Element").val('').attr('selected', 'selected');
         }
+        
+        if (((year - parseInt(class_year))%5) == 0) {
+            $("#luncheonheaderRow").show();
+        }else{
+            $("#luncheonheaderRow").hide();
+        }
+         
+        if (class_year == 1961) {
+            $("#rideinparadeRow").show();
+             
+        }else{
+             
+            $("#rideinparadeRow").hide();
+        }
+       
     });
+   
 })
