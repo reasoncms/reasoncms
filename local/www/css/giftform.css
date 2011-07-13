@@ -30,7 +30,7 @@
 }
 #formNavigation .formSteps li.error a {
     /* background-color:#FF6666; */
-    color:red;
+    /* color:blue; */
 }
 
 /* Placeholder text */
@@ -211,4 +211,18 @@ div#reviewGiftDetails td.col1 {
 .formComment{
     font-size: smaller;
     color: red;
+}
+
+#missing_info_tip {
+    text-decoration: underline;
+}
+.tooltip_box {
+    display:none;
+    border:1px solid blue;
+    border-radius:10px;
+    padding:20px;
+    background-color:white;
+    width:240px;
+    height:4em;
+    text-align:center;
 }
