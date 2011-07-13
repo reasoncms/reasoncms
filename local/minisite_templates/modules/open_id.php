@@ -18,9 +18,14 @@ class OpenIDModule extends DefaultMinisiteModule {
         //$parts = parse_url($url);
         //$url = $parts['scheme'] . '://' . $parts['host'] . '/login/?dest_page=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
         //echo $url;
-        
+
+        //development janrani account (Bob's)
         echo '<iframe src="https://luthertest2.rpxnow.com/openid/embed?token_url=' . $url . '"
-    scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe>';
+          scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe>';
+
+        //production janrain account
+    //    echo '<iframe src="http://luthercollege.rpxnow.com/openid/embed?token_url=' . $url . '"
+    //        scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe> ';
 
         $this->sess =& get_reason_session();
         if( $this->sess->exists( ) ) {
