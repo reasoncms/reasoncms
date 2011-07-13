@@ -48,7 +48,7 @@
 				echo '<script src="/javascripts/cluetip/jquery.cluetip.js" type="text/javascript"></script>'."\n";
 				echo '<script src="/javascripts/jquery.init.js" type="text/javascript"></script>'."\n";
                                 echo '<script src="/reason/jquery.watermark-3.1.3/jquery.watermark.min.js" type="text/javascript"></script>'."\n";
-                                //echo '<script type="text/javascript" src="/reason/js/jquery.tools.min.js"></script> '."\n";
+                                echo '<script type="text/javascript" src="/reason/js/jquery.tools.min.js"></script> '."\n";
                                 echo '<script type="text/javascript" src="/reason/js/jquery.maskedinput-1.3.min.js"></script>'."\n";
 				
 			}
