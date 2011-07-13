@@ -120,7 +120,7 @@ class HomecomingRegistrationOneForm extends FormStep
                     ),
                 'seating_preference' => array(
 			'type' => 'textarea',
-			'display_name' => 'Please list up to 8 attendees with who you would prefer to be seated',
+			'display_name' => 'Please tell us with whom you wish to be seated',
 			'size' => 35,
                 ),
                 'luncheon_header' => array(
