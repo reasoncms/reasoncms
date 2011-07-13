@@ -416,6 +416,10 @@ class ApplicationPageThree extends FormStep {
             'type' => 'text',
             'display_name' => 'Employer',
         ),
+        'legacy_header' => array(
+            'type' => 'comment',
+            'text' => '<h3>Parent/Guardian College Information</h3>'
+        ),
         'legacy_comment' => array(
             'type' => 'comment',
             'text' => 'Did either of your parents or your guardian graduate from a four-year college or university?',
