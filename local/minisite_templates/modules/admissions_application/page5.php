@@ -92,7 +92,7 @@ class ApplicationPageFive extends FormStep {
             'text' => '<h4>Activity 1</h4>'
         ),
         'activity_1' => array(
-            'type' => 'select_no_sort',
+            'type' => 'select',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
@@ -120,7 +120,7 @@ class ApplicationPageFive extends FormStep {
             'text' => '<h4>Activity 2</h4>'
         ),
         'activity_2' => array(
-            'type' => 'select_no_sort',
+            'type' => 'select',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
@@ -148,7 +148,7 @@ class ApplicationPageFive extends FormStep {
             'text' => '<h4>Activity 3</h4>'
         ),
         'activity_3' => array(
-            'type' => 'select_no_sort',
+            'type' => 'select',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
@@ -176,7 +176,7 @@ class ApplicationPageFive extends FormStep {
             'text' => '<h4>Activity 4</h4>'
         ),
         'activity_4' => array(
-            'type' => 'select_no_sort',
+            'type' => 'select',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
@@ -204,7 +204,7 @@ class ApplicationPageFive extends FormStep {
             'text' => '<h4>Activity 5</h4>'
         ),
         'activity_5' => array(
-            'type' => 'select_no_sort',
+            'type' => 'select',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
@@ -232,7 +232,7 @@ class ApplicationPageFive extends FormStep {
             'text' => '<h4>Activity 6</h4>'
         ),
         'activity_6' => array(
-            'type' => 'select_no_sort',
+            'type' => 'select',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
@@ -260,7 +260,7 @@ class ApplicationPageFive extends FormStep {
             'text' => '<h4>Activity 7</h4>'
         ),
         'activity_7' => array(
-            'type' => 'select_no_sort',
+            'type' => 'select',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
@@ -288,7 +288,7 @@ class ApplicationPageFive extends FormStep {
             'text' => '<h4>Activity 8</h4>'
         ),
         'activity_8' => array(
-            'type' => 'select_no_sort',
+            'type' => 'select',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
@@ -316,7 +316,7 @@ class ApplicationPageFive extends FormStep {
             'text' => '<h4>Activity 9</h4>'
         ),
         'activity_9' => array(
-            'type' => 'select_no_sort',
+            'type' => 'select',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
@@ -344,7 +344,7 @@ class ApplicationPageFive extends FormStep {
             'text' => '<h4>Activity 10</h4>'
         ),
         'activity_10' => array(
-            'type' => 'select_no_sort',
+            'type' => 'select',
             'display_name' => '&nbsp;',
             'add_null_value_to_top' => true,
             'options' => array()
@@ -402,25 +402,25 @@ class ApplicationPageFive extends FormStep {
         foreach ($this->element_group_info as $name => $info) {
             $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
         }
-        $this->change_element_type('activity_1', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_1', 'select', array('options' => $this->activities_array));
         $this->change_element_type('activity_1_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_2', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_2', 'select', array('options' => $this->activities_array));
         $this->change_element_type('activity_2_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_3', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_3', 'select', array('options' => $this->activities_array));
         $this->change_element_type('activity_3_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_4', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_4', 'select', array('options' => $this->activities_array));
         $this->change_element_type('activity_4_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_5', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_5', 'select', array('options' => $this->activities_array));
         $this->change_element_type('activity_5_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_6', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_6', 'select', array('options' => $this->activities_array));
         $this->change_element_type('activity_6_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_7', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_7', 'select', array('options' => $this->activities_array));
         $this->change_element_type('activity_7_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_8', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_8', 'select', array('options' => $this->activities_array));
         $this->change_element_type('activity_8_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_9', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_9', 'select', array('options' => $this->activities_array));
         $this->change_element_type('activity_9_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_10', 'select_no_sort', array('options' => $this->activities_array));
+        $this->change_element_type('activity_10', 'select', array('options' => $this->activities_array));
         $this->change_element_type('activity_10_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
 
         $this->pre_fill_form();
