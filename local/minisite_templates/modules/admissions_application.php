@@ -50,8 +50,23 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
         $forms = array(
             'ApplicationPageOne' => array(
                 'next_steps' => array(
+                    'ApplicationPageOne' => array(
+                        'label' => 'One',
+                    ),
                     'ApplicationPageTwo' => array(
-                        'label' => 'Next',
+                        'label' => 'Two',
+                    ),
+                    'ApplicationPageThree' => array(
+                        'label' => 'Three',
+                    ),
+                    'ApplicationPageFour' => array(
+                        'label' => 'Four',
+                    ),
+                    'ApplicationPageFive' => array(
+                        'label' => 'Five',
+                    ),
+                    'ApplicationConfirmation' => array(
+                        'label' => 'Submit Your Application'
                     ),
                 ),
                 'step_decision' => array(
@@ -208,11 +223,18 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
 
             $this->controller->set_request($this->request);
             $this->controller->run();
+
+            echo $this->generate_navigation(2);
         }
     }
-    function generate_navigation() {
-        $output = '<div id="formNavigation">';
-        $output .= '<ul class="formSteps">';
+    function generate_navigation($nav_group=1) {
+        if($nav_group==1){
+            $output = '<div id="formNavigation">';
+        }else{
+            $output = '<div id="formNavigation' . $nav_group . '">';
+        }
+            $output .= '<ul class="formSteps">';
+        
         $error_div = "";
         $i = 0;
         foreach ($this->controller->forms as $name => $form) {
@@ -266,7 +288,10 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             }
         }
         $output .= '</ul></div>';
-        return $output . $error_div;
+        if($nav_group==1){
+            $output .= $error_div;
+        }
+        return $output;
     }
 }
 ?>
