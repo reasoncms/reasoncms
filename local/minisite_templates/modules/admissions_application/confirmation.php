@@ -41,7 +41,11 @@ class ApplicationConfirmation extends FormStep {
          */
         $this->openid_id = check_open_id($this);
         $submitted = is_submitted($this->openid_id);
-//        if (!$submitted){
+        if ($submitted) {
+            $this->controller->destroy_form_data();
+            die('It appears that you\'ve already submitted your application. If you\'d like to amend your application or have questions
+                regarding, please contact the Admissions Office at 800-4-LUTHER.');
+        }
         if (!$this->openid_id) {
             echo 'How\'d you get here?';
             header("Location:/admissions/apply/");
@@ -85,31 +89,23 @@ class ApplicationConfirmation extends FormStep {
         }
 
         if (!$p1_valid['valid'] || !$p2_valid['valid'] || !$p3_valid['valid'] || !$p4_valid['valid'] || !$p5_valid['valid'] || !$p6_valid['valid']) {
-            echo '<p>Oops! Looks like you\'ve landed here accidentally.</p>';
             echo 'Please complete the following required fields to submit your application:' . $error_div;
-//                break;
+        } elseif ($_SERVER['HTTP_REFERER'] != 'https://reasondev.luther.edu/admissions/apply/?_step=ApplicationPageSix') {
+            echo '<p>Oops! Looks like you\'ve landed here accidentally.</p>';
+            echo 'To complete your application, please return to <a href="/admissions/apply/?_step=ApplicationPageSix">page 6</a>
+                and click "Submit your application" at the bottom of the page.';
         } else {
             connectDB('admissions_applications_connection');
             db_query("UPDATE `applicants` SET `submit_date`=NOW() WHERE `open_id`= '" . addslashes($this->openid_id) . "'");
             connectDB(REASON_DB);
+            echo $this->get_thank_you_blurb();
+            $this->controller->destroy_form_data();
         }
         /*
          * check if an open_id is set and a submit_date is set
          * if so, display the thank you blurb
          * if not, send them back to the first page
          */
-        if (($this->openid_id) && ($submitted)) {
-            echo $this->get_thank_you_blurb();
-        } elseif (($this->openid_id) && (!$submitted)) {
-            echo '<p>Oops! Looks like you\'ve landed here accidentally.</p>';
-            echo 'To complete your application, please return to <a href="/admissions/apply/?_step=ApplicationPageSix">page 6</a>
-                and click "Submit your application" at the bottom of the page.';
-//            break;
-        } else {
-            echo 'How\'d you get here?';
-            header("Location:/admissions/apply/");
-        }
-        $this->controller->destroy_form_data();
     }
 
     function pre_show_form() {
