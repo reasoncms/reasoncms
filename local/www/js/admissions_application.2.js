@@ -38,7 +38,7 @@ $(document).ready(function() {
     $("input[name*='age']").watermark('Age');
     $("input[name*='grade']").watermark('Grade');
     $("input[name*='suffix']").watermark('Suffix');
-    $("#missing_info_tip").tooltip();
+    //$("#missing_info_tip").tooltip();
 
     var suffixes = [
         "D.C.",
@@ -118,6 +118,9 @@ $(document).ready(function() {
         $("#ssn_dialog").dialog("open");
         return false;
     });
+    $("#ssn_1Element").mask("999");
+    $("#ssn_2Element").mask("99");
+    $("#ssn_3Element").mask("9999");
     $("#faith_dialog").dialog({
         autoOpen: false,
         show: "blind",
