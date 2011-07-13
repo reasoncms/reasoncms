@@ -54,8 +54,9 @@ class ApplicationPageOne extends FormStep {
         'citizenship_status' => array(
             'type' => 'radio_no_sort',
             'comments' => '<div id="citizenship_dialog" title="International Students">
-                <strong>Note:</strong> International Students should apply using
-                the <a href="http://www.commonapp.org" target=_blank>Common App</a>.</div>',
+                <strong>Note:</strong> This online application is designed for US citizens and permanent residents applying to Luther. 
+                If you are an international student applicant, please apply using
+                the <a href="http://www.commonapp.org" target=_blank>Common Application</a>.</div>',
             'options' => array(
                 'citizen' => 'U.S. Citizen',
                 'dual' => 'U.S./Dual Citizen',
@@ -166,7 +167,9 @@ class ApplicationPageOne extends FormStep {
         parent::run_error_checks();
 
         if ($this->get_value('citizenship_status') == 'not a citizen') {
-            $this->set_error('citizenship_status', 'International Students - Please apply using the <a href="http://www.commonapp.org" target=_blank>Common App</a>.');
+            $this->set_error('citizenship_status', 'International Students - This online application is designed for US citizens and permanent
+                residents applying to Luther. If you are an international student applicant, please apply using
+                the <a href="http://www.commonapp.org" target=_blank>Common Application</a>.');
         }
     }
 
