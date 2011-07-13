@@ -104,7 +104,8 @@ class HomecomingRegistrationOneForm extends FormStep
 			'options' => array('yes' => 'Yes', 'no' => 'No'),
 		),
                 'festival_guests_names' => array(
-			'type' => 'text',
+			'type' => 'textarea',
+                        'display_name' => 'Festival Guest Names and Class Year (if applicable)',
 			'size' => 35,
 		),
                 'vegetarian_guests' => array(
@@ -115,6 +116,11 @@ class HomecomingRegistrationOneForm extends FormStep
                 'vegetarian_guests_names' => array(
 			'type' => 'text',
 			'display_name' => 'Please list the vegetarian guests',
+			'size' => 33,
+                    ),
+                'seating_preference' => array(
+			'type' => 'textarea',
+			'display_name' => 'Please list up to 8 attendees with who you would prefer to be seated',
 			'size' => 35,
                 ),
                 'luncheon_header' => array(
