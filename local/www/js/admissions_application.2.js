@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    var $formSteps = $("div[id='formNavigation'] > ul > li > a");
-    $.each($formSteps, function(index, value){
-        $formSteps[index].href = '#';
+    var $formStepLinks = $("div[id='formNavigation'] > ul > li > a");
+    $.each($formStepLinks, function(index, value){
+        $formStepLinks[index].href = '#';
         $(this).click(function(event){
             event.preventDefault();
             var $number;
@@ -28,6 +28,60 @@ $(document).ready(function() {
             $("input[name='__button_ApplicationPage" + $number + "']").click();
         })
     });
+    var url = document.URL;
+    if ( url.match( /(PageOne$)/) ){
+        $("input[name='__button_ApplicationPageOne']").hide();
+        $("input[name='__button_ApplicationPageTwo']").show().val('Next');
+        $("input[name='__button_ApplicationPageThree']").hide();
+        $("input[name='__button_ApplicationPageFour']").hide();
+        $("input[name='__button_ApplicationPageFive']").hide();
+        $("input[name='__button_ApplicationPageSix']").hide();
+        $("input[name='__button_ApplicationConfirmation']").hide();
+    } else if ( url.match( /(PageTwo$)/ ) ){
+        $("input[name='__button_ApplicationPageOne']").show().val('Previous');
+        $("input[name='__button_ApplicationPageTwo']").hide();
+        $("input[name='__button_ApplicationPageThree']").show().val('Next');
+        $("input[name='__button_ApplicationPageFour']").hide();
+        $("input[name='__button_ApplicationPageFive']").hide();
+        $("input[name='__button_ApplicationPageSix']").hide();
+        $("input[name='__button_ApplicationConfirmation']").hide();
+    } else if ( url.match( /(PageThree$)/ ) ){
+        $("input[name='__button_ApplicationPageOne']").hide();
+        $("input[name='__button_ApplicationPageTwo']").show().val('Previous');
+        $("input[name='__button_ApplicationPageThree']").hide();
+        $("input[name='__button_ApplicationPageFour']").show().val('Next');
+        $("input[name='__button_ApplicationPageFive']").hide();
+        $("input[name='__button_ApplicationPageSix']").hide();
+        $("input[name='__button_ApplicationConfirmation']").hide();
+    } else if ( url.match( /(PageFour$)/ ) ){
+        $("input[name='__button_ApplicationPageOne']").hide();
+        $("input[name='__button_ApplicationPageTwo']").hide();
+        $("input[name='__button_ApplicationPageThree']").show().val('Previous');
+        $("input[name='__button_ApplicationPageFour']").hide();
+        $("input[name='__button_ApplicationPageFive']").show().val('Next');
+        $("input[name='__button_ApplicationPageSix']").hide();
+        $("input[name='__button_ApplicationConfirmation']").hide();
+    } else if ( url.match( /(PageFive$)/ ) ){
+        $("input[name='__button_ApplicationPageOne']").hide();
+        $("input[name='__button_ApplicationPageTwo']").hide();
+        $("input[name='__button_ApplicationPageThree']").hide();
+        $("input[name='__button_ApplicationPageFour']").show().val('Previous');
+        $("input[name='__button_ApplicationPageFive']").hide();
+        $("input[name='__button_ApplicationPageSix']").show().val('Next');
+        $("input[name='__button_ApplicationConfirmation']").hide();
+    } else if ( url.match( /(PageSix$)/ ) ){
+        $("input[name='__button_ApplicationPageOne']").hide();
+        $("input[name='__button_ApplicationPageTwo']").hide();
+        $("input[name='__button_ApplicationPageThree']").hide();
+        $("input[name='__button_ApplicationPageFour']").hide();
+        $("input[name='__button_ApplicationPageFive']").show();
+        $("input[name='__button_ApplicationPageFive']").val('Previous');
+        $("input[name='__button_ApplicationPageSix']").hide();
+        $("input[name='__button_ApplicationConfirmation']").show();
+    }else{
+        $("#discoSubmitRow").hide();
+    }
+
 
     /**All Pages **/
     /**************/
