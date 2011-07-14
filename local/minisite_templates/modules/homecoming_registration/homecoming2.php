@@ -120,8 +120,6 @@ class HomecomingRegistrationTwoForm extends FormStep {
     // style up the form and add comments et al
     function on_every_time() {
         
-        $this->is_in_testing_mode = true;
-        
         
         if (!$this->controller->get('amount')) {
             echo '<div id="homecomingSetupError">Sorry. There was a problem setting up payment for your form.
@@ -140,7 +138,7 @@ class HomecomingRegistrationTwoForm extends FormStep {
 
         $this->change_element_type('credit_card_expiration_year', 'numrange', array('start' => date('Y'), 'end' => (date('Y') + 15), 'display_name' => 'Expiration Year'));
         $this->is_in_testing_mode = true;
-        
+    }
     function post_error_check_actions() {
         if ($this->show_form) {
             $text = $this->get_brief_review_text();
@@ -385,5 +383,6 @@ function obscure_credit_card_number($cc_num) {
 function trim_hours_from_datetime($datetime) {
     return substr($datetime, 0, 10);
 }
+
 
 ?>
