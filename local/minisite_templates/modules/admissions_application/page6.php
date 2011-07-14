@@ -240,7 +240,7 @@ class ApplicationPageSix extends FormStep {
             'display_name' => 'Checking this box indicates that all information in my application is complete, factually correct, and honestly
                   presented.'
         ),
-        'logout' => array(
+        'logout6' => array(
             'type' => 'hidden',
         ),
     );
