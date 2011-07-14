@@ -378,7 +378,7 @@ class ApplicationPageFive extends FormStep {
                 Remove an Activity
                 </span>'
         ),
-        'logout' => array(
+        'logout5' => array(
             'type' => 'hidden',
         ),
             //'hr' => 'hr',
