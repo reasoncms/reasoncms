@@ -623,7 +623,10 @@ class ApplicationPageThree extends FormStep {
             'text' => '<span id="removeSibling" title="Remove Sibling" class="removeButton">
                 Remove a Sibling
                 </span>'
-        )
+        ),
+        'logout' => array(
+            'type' => 'hidden',
+        ),
     );
     /**
      * Stores all the information necessary to instantiate each element group.
@@ -778,6 +781,7 @@ class ApplicationPageThree extends FormStep {
 
     function process() {
         set_applicant_data($this->openid_id, $this);
+        check_logout($this);
     }
 }
 ?>
