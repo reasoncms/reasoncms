@@ -227,7 +227,7 @@ class ApplicationPageFour extends FormStep {
             'display_name' => '&nbsp;',
             'comments' => 'Composite'
         ),
-        'logout' => array(
+        'logout4' => array(
             'type' => 'hidden',
         ),
     );
