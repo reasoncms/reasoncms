@@ -105,8 +105,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		),
                 'festival_guests_names' => array(
 			'type' => 'textarea',
-                        'display_name' => 'Festival Guest Names and Class Year (if applicable)',
-			
+                        'display_name' => 'Festival Guest Names and Class Year (if applicable)',	
 		),
                 'vegetarian_guests' => array(
 			'type' => 'radio_inline_no_sort',
