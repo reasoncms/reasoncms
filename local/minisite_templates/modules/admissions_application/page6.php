@@ -240,6 +240,9 @@ class ApplicationPageSix extends FormStep {
             'display_name' => 'Checking this box indicates that all information in my application is complete, factually correct, and honestly
                   presented.'
         ),
+        'logout' => array(
+            'type' => 'hidden',
+        ),
     );
     var $display_name = 'Last Page';
     var $error_header_text = 'Please check your form.';
@@ -284,6 +287,7 @@ class ApplicationPageSix extends FormStep {
     function process() {
         // write the the data
         set_applicant_data($this->openid_id, $this);
+        check_logout($this);
 
         /*
          * if the applicant chooses "Submit your application"
