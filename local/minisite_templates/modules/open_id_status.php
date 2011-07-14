@@ -7,6 +7,7 @@ class OpenIDStatusModule extends DefaultMinisiteModule {
     var $sess;
 
     function run() {
+
         $url = get_current_url();
         $openid_url = "http://reasondev.luther.edu/openid/?next=" . $url;
 
@@ -69,6 +70,7 @@ class OpenIDStatusModule extends DefaultMinisiteModule {
             echo "You may have started your application using a different login.";
             echo "<br /><a href='" . $openid_url . "'>Try logging in using a different account</a>";
             echo "</div><br />&nbsp;";
+
         } else {
             //error?
         }
