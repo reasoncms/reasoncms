@@ -42,6 +42,8 @@ class HomecomingRegistrationConfirmation extends FormStep
 		$attend_dinner_5 = $this->controller->get('attend_dinner_5');
 		$ride_in_parade = $this->controller->get('ride_in_parade'); 
                 
+                
+                
                 $amount_paid = $this->controller->get('amount'); 
 		
 		$txt = '<div id="reviewHomecomingRegistration">'."\n";			

@@ -106,7 +106,7 @@ class HomecomingRegistrationOneForm extends FormStep
                 'festival_guests_names' => array(
 			'type' => 'textarea',
                         'display_name' => 'Festival Guest Names and Class Year (if applicable)',
-			'size' => 35,
+			
 		),
                 'vegetarian_guests' => array(
 			'type' => 'radio_inline_no_sort',
@@ -135,15 +135,17 @@ class HomecomingRegistrationOneForm extends FormStep
 		'attend_dinner_50_to_25' => 'text',
 		'attend_dinner_20_to_10' => 'text',
 		'attend_dinner_5' => 'text',
+                'attend_1961_reception'=>'text',
 		'ride_in_parade' => array(
 			'type' => 'radio_inline_no_sort',
 			'display_name' => 'Will you ride in the parade?',
-			'comments' => 'class of 1961 only',
+			'comments' => 'Class of 1961 only',
 			'options' => array(
 				'yes' => 'Yes',
 				'no' => 'No',
 			),
 		),
+                
 	);
 	
 	var $required = array('current_first_name', 'current_last_name', 'graduation_name', 'e-mail');
@@ -172,6 +174,16 @@ class HomecomingRegistrationOneForm extends FormStep
 			'attend_luncheon', 'select', array(
 				'display_name' => 'Tickets for Luncheon',
 				'comments' => '<br />'.$classes_string_75_to_50.'<br />No Cost',
+				'options' => array( 
+					'1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 
+					'6' => '6', '7' => '7', '8' => '8', '9' => '9',	'10' => '10',),
+				)
+			);
+                // 1961 reception
+                $this->change_element_type(
+			'attend_1961_reception', 'select', array(
+				'display_name' => 'Reservation for Friday\'s reception',
+				'comments' => '<br /> Class of 1961 only<br />No Cost',
 				'options' => array( 
 					'1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 
 					'6' => '6', '7' => '7', '8' => '8', '9' => '9',	'10' => '10',),
