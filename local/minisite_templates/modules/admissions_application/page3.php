@@ -624,7 +624,7 @@ class ApplicationPageThree extends FormStep {
                 Remove a Sibling
                 </span>'
         ),
-        'logout' => array(
+        'logout3' => array(
             'type' => 'hidden',
         ),
     );
