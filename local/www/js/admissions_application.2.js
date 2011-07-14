@@ -95,7 +95,7 @@ $(document).ready(function() {
 
     $("#missing_info_tip").tooltip({offset:[-60,-300]});
 
-    var logout_button = $("<input type='button' value='Save & Logout' style='float:right;' />");
+    var logout_button = $("<input class='saveAndLogout' type='button' value='Save & Logout' style='float:right;' />");
     logout_button.click(function(event){
         event.preventDefault();
         $("#logoutElement").val('True');
@@ -121,6 +121,13 @@ $(document).ready(function() {
     ];
     $("input[name*='suffix']").autocomplete({
         source: suffixes
+    });
+
+    $('.saveAndLogout').button({
+        icons: {
+            primary:'ui-icon-plusthick',
+            secondary:'ui-icon-plusthick'
+        }
     });
     
     $('.addButton').button({
