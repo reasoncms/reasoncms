@@ -227,6 +227,9 @@ class ApplicationPageFour extends FormStep {
             'display_name' => '&nbsp;',
             'comments' => 'Composite'
         ),
+        'logout' => array(
+            'type' => 'hidden',
+        ),
     );
 
     var $display_name = 'Education';
@@ -286,6 +289,7 @@ class ApplicationPageFour extends FormStep {
 
     function process() {
         set_applicant_data($this->openid_id, $this);
+        check_logout($this);
     }
 }
 ?>
