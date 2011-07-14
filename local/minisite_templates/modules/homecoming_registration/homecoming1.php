@@ -116,11 +116,10 @@ class HomecomingRegistrationOneForm extends FormStep
 			'type' => 'text',
 			'display_name' => 'Please list the vegetarian guests',
 			'size' => 33,
-                    ),
+                 ),
                 'seating_preference' => array(
 			'type' => 'textarea',
 			'display_name' => 'Please tell us with whom you wish to be seated',
-			'size' => 35,
                 ),
                 'luncheon_header' => array(
 			'type' => 'comment',
