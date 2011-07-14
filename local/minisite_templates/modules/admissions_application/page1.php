@@ -63,6 +63,9 @@ class ApplicationPageOne extends FormStep {
                 'resident' => 'Permanent Resident',
                 'not a citizen' => 'Not a U.S. citizen or permanent resident')
         ),
+        'logout' => array(
+            'type' => 'hidden',
+        ),
     );
 //    var $required = array('student_type', 'enrollment_term', 'citizenship_status');
     var $display_name = 'Enrollment Info';
@@ -161,6 +164,7 @@ class ApplicationPageOne extends FormStep {
 
     function process() {
         set_applicant_data($this->openid_id, $this);
+        check_logout($this);
     }
 
     function run_error_checks() {
