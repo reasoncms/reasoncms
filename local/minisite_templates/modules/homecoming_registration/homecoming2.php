@@ -119,6 +119,10 @@ class HomecomingRegistrationTwoForm extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
+        
+        $this->is_in_testing_mode = true;
+        
+        
         if (!$this->controller->get('amount')) {
             echo '<div id="homecomingSetupError">Sorry. There was a problem setting up payment for your form.
                             Please return to <a href="?_step=HomecomingRegistrationOneForm">Homecoming Registration</a> and try again.</div>';
