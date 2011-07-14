@@ -251,7 +251,7 @@ class ApplicationPageTwo extends FormStep {
                 'UN' => 'Unitarian'
             )
         ),
-        'logout' => array(
+        'logout2' => array(
             'type' => 'hidden',
         ),
     );
