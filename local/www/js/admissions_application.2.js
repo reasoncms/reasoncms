@@ -92,7 +92,16 @@ $(document).ready(function() {
     $("input[name*='age']").watermark('Age');
     $("input[name*='grade']").watermark('Grade');
     $("input[name*='suffix']").watermark('Suffix');
+
     $("#missing_info_tip").tooltip({offset:[-60,-300]});
+
+    var logout_button = $("<input type='button' value='Save & Logout' style='float:right;' />");
+    logout_button.click(function(event){
+        event.preventDefault();
+        $("#logoutElement").val('True');
+        $("input[name='__button_ApplicationPageOne']").click();
+    });
+    $("div.contentMain").prepend(logout_button);
 
     var suffixes = [
         "D.C.",
