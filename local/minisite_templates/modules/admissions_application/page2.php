@@ -250,7 +250,10 @@ class ApplicationPageTwo extends FormStep {
                 'RU' => 'Unreported',
                 'UN' => 'Unitarian'
             )
-        )
+        ),
+        'logout' => array(
+            'type' => 'hidden',
+        ),
     );
     /**
      * Stores all the information necessary to instantiate each element group.
@@ -349,6 +352,7 @@ class ApplicationPageTwo extends FormStep {
 
     function process() {
         set_applicant_data($this->openid_id, $this);
+        check_logout($this);
     }
 
 }
