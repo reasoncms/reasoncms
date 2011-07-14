@@ -1,5 +1,12 @@
 <?php
 
+function check_logout(&$the_form) {
+    $the_form->sess = & get_reason_session();
+    if($the_form->get_value('logout')){
+        $the_form->sess->destroy();
+    }
+}
+
 function check_open_id(&$the_form) {
     $the_form->sess = & get_reason_session();
     if ($the_form->sess->exists()) {
