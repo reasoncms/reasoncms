@@ -63,7 +63,7 @@ class ApplicationPageOne extends FormStep {
                 'resident' => 'Permanent Resident',
                 'not a citizen' => 'Not a U.S. citizen or permanent resident')
         ),
-        'logout' => array(
+        'logout1' => array(
             'type' => 'hidden',
         ),
     );
