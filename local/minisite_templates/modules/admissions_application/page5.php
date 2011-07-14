@@ -377,7 +377,10 @@ class ApplicationPageFive extends FormStep {
             'text' => '<span id="removeActivity" title="Remove Activity" class="removeButton">
                 Remove an Activity
                 </span>'
-        )
+        ),
+        'logout' => array(
+            'type' => 'hidden',
+        ),
             //'hr' => 'hr',
     );
     var $display_name = 'Activities';
@@ -451,6 +454,7 @@ class ApplicationPageFive extends FormStep {
 
     function process() {
         set_applicant_data($this->openid_id, $this);
+        check_logout($this);
     }
 
 //    function  run_error_checks() {
