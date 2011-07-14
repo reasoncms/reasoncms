@@ -225,7 +225,7 @@ class HomecomingRegistrationTwoForm extends FormStep {
         }
         if ($this->controller->get('seating_preference')) {
             $txt .= '<li><strong>Please tell us with whom you wish to be seated</strong> ' . $this->controller->get('seating_preference') . '</li>' . "\n";
-        }
+        }///////////
         if ($this->controller->get('attend_luncheon')) {
             $txt .= '<li><strong>Attend 75-50 Year Reunion Luncheon :</strong> ' . $this->controller->get('attend_luncheon') . '</li>' . "\n";
         }
