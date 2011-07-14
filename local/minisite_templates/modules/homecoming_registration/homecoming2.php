@@ -208,7 +208,23 @@ class HomecomingRegistrationTwoForm extends FormStep {
             $txt .= '<li><strong>Guest Class Year:</strong> ' . $this->controller->get('attended_luther') . '</li>' . "\n";
         }
         if ($this->controller->get('attend_program')) {
-            $txt .= '<li><strong>Tickets for Alumni Program:</strong> ' . ($this->controller->get('attend_program')) . '</li>' . "\n";
+            $txt .= '<li><strong>Tickets for Festival Dinner:</strong> ' . ($this->controller->get('attend_program')) . '</li>' . "\n";
+        }
+        //new stuff////
+        if ($this->controller->get('festival_vegetarian')) {
+            $txt .= '<li><strong>Do you require a vegetarian meal?</strong> ' . $this->controller->get('festival_vegetarian') . '</li>' . "\n";
+        }
+        if ($this->controller->get('festival_guests_names')) {
+            $txt .= '<li><strong>Festival Guest Names and Class Year (if applicable)</strong> ' . $this->controller->get('festival_guests_names') . '</li>' . "\n";
+        }
+        if ($this->controller->get('vegetarian_guests')) {
+            $txt .= '<li><strong>Do any of your guests require vegetarian meal?</strong> ' . $this->controller->get('vegetarian_guests') . '</li>' . "\n";
+        }
+        if ($this->controller->get('vegetarian_guests_names')) {
+            $txt .= '<li><strong>Please list the vegetarian guests</strong> ' . $this->controller->get('vegetarian_guests_names') . '</li>' . "\n";
+        }
+        if ($this->controller->get('seating_preference')) {
+            $txt .= '<li><strong>Please tell us with whom you wish to be seated</strong> ' . $this->controller->get('seating_preference') . '</li>' . "\n";
         }
         if ($this->controller->get('attend_luncheon')) {
             $txt .= '<li><strong>Attend 75-50 Year Reunion Luncheon :</strong> ' . $this->controller->get('attend_luncheon') . '</li>' . "\n";
@@ -225,22 +241,7 @@ class HomecomingRegistrationTwoForm extends FormStep {
         if ($this->controller->get('ride_in_parade')) {
             $txt .= '<li><strong>Ride in the Parade:</strong> ' . $this->controller->get('ride_in_parade') . '</li>' . "\n";
         }
-        //new stuff
-        if ($this->controller->get('festival_vegetarian')) {
-            $txt .= '<li><strong>Do you require a vegetarian meal?</strong> ' . $this->controller->get('festival_vegetarian') . '</li>' . "\n";
-        }
-        if ($this->controller->get('festival_guests_names')) {
-            $txt .= '<li><strong>Festival Guest Names and Class Year (if applicable)</strong> ' . $this->controller->get('festival_guests_names') . '</li>' . "\n";
-        }
-        if ($this->controller->get('vegetarian_guests')) {
-            $txt .= '<li><strong>Do any of your guests require vegetarian meal?</strong> ' . $this->controller->get('vegetarian_guests') . '</li>' . "\n";
-        }
-        if ($this->controller->get('vegetarian_guests_names')) {
-            $txt .= '<li><strong>Please list the vegetarian guests</strong> ' . $this->controller->get('vegetarian_guests_names') . '</li>' . "\n";
-        }
-        if ($this->controller->get('seating_preference')) {
-            $txt .= '<li><strong>Please tell us with whom you wish to be seated</strong> ' . $this->controller->get('seating_preference') . '</li>' . "\n";
-        }
+        
         
         $txt .= '</ul>' . "\n";
         $txt .= '</div>' . "\n";
