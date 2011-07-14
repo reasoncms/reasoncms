@@ -93,7 +93,7 @@ $(document).ready(function() {
     $("input[name*='grade']").watermark('Grade');
     $("input[name*='suffix']").watermark('Suffix');
 
-    $("#missing_info_tip").tooltip({position:'top middle',ffset:[-60,-300]});
+    $("#missing_info_tip").tooltip({position: "top left"});
 
     var logout_button = $("<input class='saveAndLogout' type='button' value='Save & Logout' style='float:right;' />");
     logout_button.click(function(event){
@@ -101,7 +101,11 @@ $(document).ready(function() {
         $("#logoutElement").val('True');
         $("input[name='__button_ApplicationPageOne']").click();
     });
-    $("#logoutElement").each(function(){$("div.contentMain").prepend(logout_button);})
+    var logout_test = 0;
+    $("[name|=logout]").each(function(){logout_test = 1;})
+    if(logout_test){
+        $(".page-title").before(logout_button);
+    }
 
     var suffixes = [
         "D.C.",
