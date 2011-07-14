@@ -284,18 +284,13 @@ class ApplicationPageTwo extends FormStep {
         ),
     );
 
-    /* 	var $required = array(
-      'first_name',
-      'middle_name',
-      'last_name',
-      'permanent_address',
-      'permanent_city',
-      'permanent_state_province',
-      'permanent_zip_postal',
-      'permanent_country',
-      'home_phone',
-      'email',
-      ); */
+   var $no_session = array('ssn_1', 'ssn_2', 'ssn_3');
+   
+   var $required = array('first_name', 'middle_name', 'last_name', 'gender', 'date_of_birth',
+                       'email', 'home_phone', 'permanent_address', 'permanent_city',
+                       'permanent_state_province', 'permanent_state_province', 'permanent_zip_postal',
+                       'permanent_country', 'different_mailing_address', 'mailing_address', 'mailing_city',
+                       'mailing_state_province', 'mailing_zip_postal', 'mailing_country');
     var $error_checks = array(
         'phone' => array(
             'is_phone_number' => 'Invalid Phone Number',
@@ -353,6 +348,10 @@ class ApplicationPageTwo extends FormStep {
     function process() {
         set_applicant_data($this->openid_id, $this);
         check_logout($this);
+    }
+
+    function  run_error_checks() {
+        $this->_error_flag = false;
     }
 
 }

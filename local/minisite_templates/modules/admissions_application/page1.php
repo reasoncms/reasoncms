@@ -67,7 +67,7 @@ class ApplicationPageOne extends FormStep {
             'type' => 'hidden',
         ),
     );
-//    var $required = array('student_type', 'enrollment_term', 'citizenship_status');
+    var $required = array('student_type', 'enrollment_term', 'citizenship_status');
     var $display_name = 'Enrollment Info';
     var $error_header_text = 'Please check your form.';
 
@@ -168,13 +168,14 @@ class ApplicationPageOne extends FormStep {
     }
 
     function run_error_checks() {
-        parent::run_error_checks();
+//        parent::run_error_checks();
 
         if ($this->get_value('citizenship_status') == 'not a citizen') {
             $this->set_error('citizenship_status', 'International Students - This online application is designed for US citizens and permanent
                 residents applying to Luther. If you are an international student applicant, please apply using
                 the <a href="http://www.commonapp.org" target=_blank>Common Application</a>.');
         }
+        $this->_error_flag = false;
     }
 
 }

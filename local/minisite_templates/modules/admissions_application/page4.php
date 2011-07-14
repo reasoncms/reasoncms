@@ -40,30 +40,6 @@ class ApplicationPageFour extends FormStep {
             'display_name' => 'Name, City, State (e.g. IA)',
         ),
         'hs_ceeb' => 'hidden',
-//        'hs_address' => array(
-//            'type' => 'text',
-//            'display_name' => 'Address',
-//            'size' => 20,
-//            'comments' => '¿¿¿¿If we are pulling from CEEB, is this needed????'
-//        ),
-//        'hs_city' => array(
-//            'type' => 'text',
-//            'display_name' => 'City',
-//            'size' => 15,
-//        ),
-//        'hs_state_province' => array(
-//            'type' => 'state_province',
-//            'display_name' => 'State/Province',
-//        ),
-//        'hs_zip_postal' => array(
-//            'type' => 'text',
-//            'display_name' => 'Zip/Postal Code',
-//            'size' => 8,
-//        ),
-//        'hs_country' => array(
-//            'type' => 'Country',
-//            'display_name' => 'Country',
-//        ),
         'hs_grad_year' => array(
             'type' => 'text',
             'display_name' => 'Year of graduation',
@@ -78,30 +54,6 @@ class ApplicationPageFour extends FormStep {
             'display_name' => 'Name',
         ),
         'college_1_ceeb' => 'hidden',
-//        'college_1_address' => array(
-//            'type' => 'text',
-//            'display_name' => 'Address',
-//            'size' => 20,
-//            'comments' => '¿¿¿¿If we are pulling from CEEB, is this needed????'
-//        ),
-//        'college_1_city' => array(
-//            'type' => 'text',
-//            'display_name' => 'City',
-//            'size' => 15,
-//        ),
-//        'college_1_state_province' => array(
-//            'type' => 'state_province',
-//            'display_name' => 'State/Province',
-//        ),
-//        'college_1_zip_postal' => array(
-//            'type' => 'text',
-//            'display_name' => 'Zip/Postal Code',
-//            'size' => 8,
-//        ),
-//        'college_1_country' => array(
-//            'type' => 'Country',
-//            'display_name' => 'Country',
-//        ),
         'college_2_hr' => 'hr',
         'college_2_header' => array(
             'type' => 'comment',
@@ -112,30 +64,6 @@ class ApplicationPageFour extends FormStep {
             'display_name' => 'Name',
         ),
         'college_2_ceeb' => 'hidden',
-//        'college_2_address' => array(
-//            'type' => 'text',
-//            'display_name' => 'Address',
-//            'size' => 20,
-//            'comments' => '¿¿¿¿If we are pulling from CEEB, is this needed????'
-//        ),
-//        'college_2_city' => array(
-//            'type' => 'text',
-//            'display_name' => 'City',
-//            'size' => 15,
-//        ),
-//        'college_2_state_province' => array(
-//            'type' => 'state_province',
-//            'display_name' => 'State/Province',
-//        ),
-//        'college_2_zip_postal' => array(
-//            'type' => 'text',
-//            'display_name' => 'Zip/Postal Code',
-//            'size' => 8,
-//        ),
-//        'college_2_country' => array(
-//            'type' => 'Country',
-//            'display_name' => 'Country',
-//        ),
         'college_3_hr' => 'hr',
         'college_3_header' => array(
             'type' => 'comment',
@@ -146,30 +74,6 @@ class ApplicationPageFour extends FormStep {
             'display_name' => 'Name',
         ),
         'college_3_ceeb' => 'hidden',
-//        'college_3_address' => array(
-//            'type' => 'text',
-//            'display_name' => 'Address',
-//            'size' => 20,
-//            'comments' => '¿¿¿¿If we are pulling from CEEB, is this needed????'
-//        ),
-//        'college_3_city' => array(
-//            'type' => 'text',
-//            'display_name' => 'City',
-//            'size' => 15,
-//        ),
-//        'college_3_state_province' => array(
-//            'type' => 'state_province',
-//            'display_name' => 'State/Province',
-//        ),
-//        'college_3_zip_postal' => array(
-//            'type' => 'text',
-//            'display_name' => 'Zip/Postal Code',
-//            'size' => 8,
-//        ),
-//        'college_3_country' => array(
-//            'type' => 'Country',
-//            'display_name' => 'Country',
-//        ),
         'add_college_button' => array(
             'type' => 'comment',
             'text' => '<span id="addCollege" title="Add College" class="addButton">
@@ -232,6 +136,7 @@ class ApplicationPageFour extends FormStep {
         ),
     );
 
+    var $required = array('hs_name', 'hs_grad_year', 'college_1_name');
     var $display_name = 'Education';
     var $error_header_text = 'Please check your form.';
     var $element_group_info = array(
@@ -290,6 +195,10 @@ class ApplicationPageFour extends FormStep {
     function process() {
         set_applicant_data($this->openid_id, $this);
         check_logout($this);
+    }
+
+    function  run_error_checks() {
+        $this->_error_flag = false;
     }
 }
 ?>
