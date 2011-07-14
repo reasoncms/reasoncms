@@ -38,6 +38,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                         'main' => 'open_id_status',
 			'main_post' => 'admissions_application',
 		),
+                'admissions_application_export' => array(
+                        'main' => 'admissions_application_export',
+		),
                 'admissions_home' => array(
 			'banner_xtra' => '',
 			'post_banner' => '',
