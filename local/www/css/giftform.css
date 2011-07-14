@@ -25,10 +25,46 @@
 }
 #formNavigation .formSteps li.current a {
     color: #000;
-	background: url("formnav_current.gif") no-repeat scroll center bottom #95b3cd;
+    background: url("formnav_current.gif") no-repeat scroll center bottom #95b3cd;
     padding-bottom:14px;
 }
 #formNavigation .formSteps li.error a {
+    /* background-color:#FF6666; */
+    /* color:blue; */
+}
+/* From Navigation (Bottom) */
+#formNavigation2 .formSteps {
+    margin:0.75em 0 0 0;
+    padding:0;
+    list-style:none;
+    overflow:hidden;
+}
+#formNavigation2 .formSteps li {
+    margin-right: 5px;
+    float:left;
+}
+#formNavigation2 .formSteps li a {
+
+    background-repeat: no-repeat;
+    color: black;
+    letter-spacing: 3px;
+    text-shadow: 0px 0px;
+    font-style: normal;
+    font-weight: normal;
+    display:block;
+    background-color:#ccdeeb;
+    text-decoration:none;
+    padding:6px 9px 5px 9px;
+    border-top:8px;
+    margin-top:8px;
+}
+#formNavigation2 .formSteps li.current a {
+    color: #000;
+    background: url("formnav_current2.gif") no-repeat scroll center top #95b3cd;
+    padding-top:14px;
+    margin-top:0px;
+}
+#formNavigation2 .formSteps li.error a {
     /* background-color:#FF6666; */
     /* color:blue; */
 }
@@ -47,7 +83,7 @@ div#giftForm span.inlineElement {
 .matchingGiftsIframe {
     height:35em;
 }
-    
+
 .matchingGiftsIframeFloat {
     -moz-box-shadow:0px 2px 10px #000000;
     -webkit-box-shadow:0px 2px 10px #000000;
@@ -131,7 +167,7 @@ div#reviewGiftOverview p {
     margin-top:0;
 }
 div#reviewGiftOverview li {
-	margin-left: 15px;
+    margin-left: 15px;
 }
 div#reviewGiftDetails {
     background-color:#eaeff5;
@@ -141,7 +177,7 @@ div#reviewGiftDetails h3 {
     margin-top:0;
 }
 div#reviewGiftOverview a#showGiftDetails {
-	font-style:normal;
+    font-style:normal;
     font-weight:normal;
     font-size:normal;
     background-color:#004789;
@@ -154,8 +190,8 @@ div#reviewGiftOverview a#showGiftDetails {
     border-radius:4px;
 }
 div#reviewGiftOverview a#showGiftDetails:hover {
-	color: white;
-	background-color: #2561A8;
+    color: white;
+    background-color: #2561A8;
 }
 div#reviewGiftDetails a#hideGiftDetails {
     font-style:normal;
@@ -172,7 +208,7 @@ div#reviewGiftDetails a#hideGiftDetails {
     border-radius:4px;
 }
 div#reviewGiftDetails a#hideGiftDetails:hover {
-	color: white;
+    color: white;
     background-color: #d5242b;
 }
 div#reviewGiftDetails .givingTotalsDisclaimer {
