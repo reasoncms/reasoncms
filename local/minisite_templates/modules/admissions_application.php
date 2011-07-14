@@ -65,6 +65,9 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
                     'ApplicationPageFive' => array(
                         'label' => 'Five',
                     ),
+                    'ApplicationPageSix' => array(
+                        'label' => 'Six',
+                    ),
                     'ApplicationConfirmation' => array(
                         'label' => 'Submit Your Application'
                     ),
@@ -76,10 +79,25 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             'ApplicationPageTwo' => array(
                 'next_steps' => array(
                     'ApplicationPageOne' => array(
-                        'label' => 'Previous',
+                        'label' => 'One',
+                    ),
+                    'ApplicationPageTwo' => array(
+                        'label' => 'Two',
                     ),
                     'ApplicationPageThree' => array(
-                        'label' => 'Next',
+                        'label' => 'Three',
+                    ),
+                    'ApplicationPageFour' => array(
+                        'label' => 'Four',
+                    ),
+                    'ApplicationPageFive' => array(
+                        'label' => 'Five',
+                    ),
+                    'ApplicationPageSix' => array(
+                        'label' => 'Six',
+                    ),
+                    'ApplicationConfirmation' => array(
+                        'label' => 'Submit Your Application'
                     ),
                 ),
                 'step_decision' => array(
@@ -88,11 +106,26 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             ),
             'ApplicationPageThree' => array(
                 'next_steps' => array(
+                    'ApplicationPageOne' => array(
+                        'label' => 'One',
+                    ),
                     'ApplicationPageTwo' => array(
-                        'label' => 'Previous',
+                        'label' => 'Two',
+                    ),
+                    'ApplicationPageThree' => array(
+                        'label' => 'Three',
                     ),
                     'ApplicationPageFour' => array(
-                        'label' => 'Next',
+                        'label' => 'Four',
+                    ),
+                    'ApplicationPageFive' => array(
+                        'label' => 'Five',
+                    ),
+                    'ApplicationPageSix' => array(
+                        'label' => 'Six',
+                    ),
+                    'ApplicationConfirmation' => array(
+                        'label' => 'Submit Your Application'
                     ),
                 ),
                 'step_decision' => array(
@@ -101,11 +134,26 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             ),
             'ApplicationPageFour' => array(
                 'next_steps' => array(
+                    'ApplicationPageOne' => array(
+                        'label' => 'One',
+                    ),
+                    'ApplicationPageTwo' => array(
+                        'label' => 'Two',
+                    ),
                     'ApplicationPageThree' => array(
-                        'label' => 'Previous',
+                        'label' => 'Three',
+                    ),
+                    'ApplicationPageFour' => array(
+                        'label' => 'Four',
                     ),
                     'ApplicationPageFive' => array(
-                        'label' => 'Next',
+                        'label' => 'Five',
+                    ),
+                    'ApplicationPageSix' => array(
+                        'label' => 'Six',
+                    ),
+                    'ApplicationConfirmation' => array(
+                        'label' => 'Submit Your Application'
                     ),
                 ),
                 'step_decision' => array(
@@ -114,11 +162,26 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             ),
             'ApplicationPageFive' => array(
                 'next_steps' => array(
+                    'ApplicationPageOne' => array(
+                        'label' => 'One',
+                    ),
+                    'ApplicationPageTwo' => array(
+                        'label' => 'Two',
+                    ),
+                    'ApplicationPageThree' => array(
+                        'label' => 'Three',
+                    ),
                     'ApplicationPageFour' => array(
-                        'label' => 'Previous',
+                        'label' => 'Four',
+                    ),
+                    'ApplicationPageFive' => array(
+                        'label' => 'Five',
                     ),
                     'ApplicationPageSix' => array(
-                        'label' => 'Next',
+                        'label' => 'Six',
+                    ),
+                    'ApplicationConfirmation' => array(
+                        'label' => 'Submit Your Application'
                     ),
                 ),
                 'step_decision' => array(
@@ -127,8 +190,23 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             ),
             'ApplicationPageSix' => array(
                 'next_steps' => array(
+                    'ApplicationPageOne' => array(
+                        'label' => 'One',
+                    ),
+                    'ApplicationPageTwo' => array(
+                        'label' => 'Two',
+                    ),
+                    'ApplicationPageThree' => array(
+                        'label' => 'Three',
+                    ),
+                    'ApplicationPageFour' => array(
+                        'label' => 'Four',
+                    ),
                     'ApplicationPageFive' => array(
-                        'label' => 'Previous',
+                        'label' => 'Five',
+                    ),
+                    'ApplicationPageSix' => array(
+                        'label' => 'Six',
                     ),
                     'ApplicationConfirmation' => array(
                         'label' => 'Submit Your Application'
