@@ -225,6 +225,23 @@ class HomecomingRegistrationTwoForm extends FormStep {
         if ($this->controller->get('ride_in_parade')) {
             $txt .= '<li><strong>Ride in the Parade:</strong> ' . $this->controller->get('ride_in_parade') . '</li>' . "\n";
         }
+        //new stuff
+        if ($this->controller->get('festival_vegetarian')) {
+            $txt .= '<li><strong>Do you require a vegetarian meal?</strong> ' . $this->controller->get('festival_vegetarian') . '</li>' . "\n";
+        }
+        if ($this->controller->get('festival_guests_names')) {
+            $txt .= '<li><strong>Festival Guest Names and Class Year (if applicable)</strong> ' . $this->controller->get('festival_guests_names') . '</li>' . "\n";
+        }
+        if ($this->controller->get('vegetarian_guests')) {
+            $txt .= '<li><strong>Do any of your guests require vegetarian meal?</strong> ' . $this->controller->get('vegetarian_guests') . '</li>' . "\n";
+        }
+        if ($this->controller->get('vegetarian_guests_names')) {
+            $txt .= '<li><strong>Please list the vegetarian guests</strong> ' . $this->controller->get('vegetarian_guests_names') . '</li>' . "\n";
+        }
+        if ($this->controller->get('seating_preference')) {
+            $txt .= '<li><strong>Please tell us with whom you wish to be seated</strong> ' . $this->controller->get('seating_preference') . '</li>' . "\n";
+        }
+        
         $txt .= '</ul>' . "\n";
         $txt .= '</div>' . "\n";
         $this->set_value('confirmation_text', $txt);
