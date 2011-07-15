@@ -125,6 +125,7 @@ class HomecomingRegistrationOneForm extends FormStep
 			'type' => 'comment',
 			'text' => '<h3>Class Reunion Reservations</h3>'
 		),
+                'attend_1961_reception'=>'text',
 		'attend_luncheon' => 'text',
 		'dinner_header' => array(
 			'type' => 'comment',
@@ -133,7 +134,6 @@ class HomecomingRegistrationOneForm extends FormStep
 		'attend_dinner_50_to_25' => 'text',
 		'attend_dinner_20_to_10' => 'text',
 		'attend_dinner_5' => 'text',
-                'attend_1961_reception'=>'text',
 		'ride_in_parade' => array(
 			'type' => 'radio_inline_no_sort',
 			'display_name' => 'Will you ride in the parade?',
