@@ -493,6 +493,8 @@ class ApplicationPageFive extends FormStep {
         if (($this->get_value('activity_10') == 'Other') && (!$this->get_value('activity_10_other'))) {
             $this->set_error('activity_10_other', 'Please describe the activity you listed as \'other\'.');
         }
+
+        $this->_error_flag = false;
     }
 }
 ?>
