@@ -53,8 +53,8 @@ function check_login() {
     //    echo '<iframe src="http://luthercollege.rpxnow.com/openid/embed?token_url=' . $url . '"
     //        scrolling="no" frameBorder="no" allowtransparency="true" style="width:400px;height:240px"></iframe> ';
 
-    $open_id_text = '<div><p>The Luther College online application uses the services of OpenID, which allows you to sign into your
-        application account using one of the following host sites. By signing in through one of these sites, Luther
+    $open_id_text = '<div><p>The Luther College online application uses open authentication methods, which allow you to sign into your
+        application account using one of the above host sites. By signing in through one of these sites, Luther
         College has access only to information that applicants have identified as “public.” Please be assured that
         Luther College will not seek to gain any additional information than what is necessary to complete the
         application for admission.</p>
