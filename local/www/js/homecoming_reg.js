@@ -83,6 +83,10 @@ $(document).ready(function(){
     if (!$("radio[name='ride_in_parade']").val()){
         $("#rideinparadeRow").css("display", "none");
     }
+    // class 1961 reception
+    if (!$("radio[name='attend_1961_reception']").val()){
+       $("#attend1961receptionRow").css("display", "none");
+    }
 
     // Add onclick handler to radiobuttons with name 'attended_luther' from Guest Info
     $("input[name='attended_luther']").change(function()
@@ -176,10 +180,13 @@ $(document).ready(function(){
          
         if (class_year == 1961) {
             $("#rideinparadeRow").show();
-             
+            $("#attend1961receptionRow").show();
+
         }else{
              
             $("#rideinparadeRow").hide();
+            $("#attend1961receptionRow").hide();
+
         }
        
     });
