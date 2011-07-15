@@ -358,15 +358,15 @@ function validate_page3(&$the_form) {
      */
 
     $qstring = "SELECT permanent_home_parent, " .
-            "parent_1_first_name, parent_1_middle_name, parent_1_last_name, " .
+            "parent_1_first_name, parent_1_last_name, " .
             "parent_1_address, parent_1_city, parent_1_state_province, parent_1_zip_postal, parent_1_country, " .
-            "parent_1_phone, parent_1_email, parent_1_occupation, " .
-            "parent_2_first_name, parent_2_middle_name, parent_2_last_name, " .
+            "parent_1_phone, parent_1_occupation, " .
+            "parent_2_first_name, parent_2_last_name, " .
             "parent_2_address, parent_2_city, parent_2_state_province, parent_2_zip_postal, parent_2_country, " .
-            "parent_2_phone, parent_2_email, parent_2_occupation, " .
-            "guardian_first_name, guardian_middle_name, guardian_last_name, " .
+            "parent_2_phone, parent_2_occupation, " .
+            "guardian_first_name, guardian_last_name, " .
             "guardian_address, guardian_city, guardian_state_province, guardian_zip_postal, guardian_country, " .
-            "guardian_phone, guardian_email, guardian_occupation, " .
+            "guardian_phone, guardian_occupation, " .
             "legacy, " .
             "parent_1_college, parent_2_college, guardian_college, " .
             "parent_1_living, parent_2_living " .
@@ -388,10 +388,6 @@ function validate_page3(&$the_form) {
                 if (is_null($row['parent_1_first_name'])) {
                     $valid = False;
                     $return['parent_1_first_name'] = $the_form->get_display_name('parent_1_first_name');
-                }
-                if (is_null($row['parent_1_middle_name'])) {
-                    $valid = False;
-                    $return['parent_1_middle_name'] = $the_form->get_display_name('parent_1_middle_name');
                 }
                 if (is_null($row['parent_1_last_name'])) {
                     $valid = False;
@@ -423,10 +419,6 @@ function validate_page3(&$the_form) {
                         $valid = False;
                         $return['parent_1_phone'] = $the_form->get_display_name('parent_1_phone');
                     }
-                    if (is_null($row['parent_1_email'])) {
-                        $valid = False;
-                        $return['parent_1_email'] = $the_form->get_display_name('parent_1_email');
-                    }
                     if (is_null($row['parent_1_occupation'])) {
                         $valid = False;
                         $return['parent_1_occupation'] = $the_form->get_display_name('parent_1_occupation');
@@ -437,10 +429,6 @@ function validate_page3(&$the_form) {
                 if (is_null($row['parent_2_first_name'])) {
                     $valid = False;
                     $return['parent_2_first_name'] = $the_form->get_display_name('parent_2_first_name');
-                }
-                if (is_null($row['parent_2_middle_name'])) {
-                    $valid = False;
-                    $return['parent_2_middle_name'] = $the_form->get_display_name('parent_2_middle_name');
                 }
                 if (is_null($row['parent_2_last_name'])) {
                     $valid = False;
@@ -472,10 +460,6 @@ function validate_page3(&$the_form) {
                         $valid = False;
                         $return['parent_2_phone'] = $the_form->get_display_name('parent_2_phone');
                     }
-                    if (is_null($row['parent_2_email'])) {
-                        $valid = False;
-                        $return['parent_2_email'] = $the_form->get_display_name('parent_2_email');
-                    }
                     if (is_null($row['parent_2_occupation'])) {
                         $valid = False;
                         $return['parent_2_occupation'] = $the_form->get_display_name('parent_2_occupation');
@@ -486,10 +470,6 @@ function validate_page3(&$the_form) {
                 if (is_null($row['guardian_first_name'])) {
                     $valid = False;
                     $return['guardian_first_name'] = $the_form->get_display_name('guardian_first_name');
-                }
-                if (is_null($row['guardian_middle_name'])) {
-                    $valid = False;
-                    $return['guardian_middle_name'] = $the_form->get_display_name('guardian_middle_name');
                 }
                 if (is_null($row['guardian_last_name'])) {
                     $valid = False;
@@ -521,10 +501,6 @@ function validate_page3(&$the_form) {
                     $valid = False;
                     $return['guardian_phone'] = $the_form->get_display_name('guardian_phone');
                 }
-                if (is_null($row['guardian_email'])) {
-                    $valid = False;
-                    $return['guardian_email'] = $the_form->get_display_name('guardian_email');
-                }
                 if (is_null($row['guardian_occupation'])) {
                     $valid = False;
                     $return['guardian_occupation'] = $the_form->get_display_name('guardian_occupation');
@@ -536,15 +512,10 @@ function validate_page3(&$the_form) {
                     $valid = False;
                     $return['parent_1_first_name'] = $the_form->get_display_name('parent_1_first_name');
                 }
-                if (is_null($row['parent_1_middle_name'])) {
-                    $valid = False;
-                    $return['parent_1_middle_name'] = $the_form->get_display_name('parent_1_middle_name');
-                }
                 if (is_null($row['parent_1_last_name'])) {
                     $valid = False;
                     $return['parent_1_last_name'] = $the_form->get_display_name('parent_1_last_name');
                 }
-
                 if (is_null($row['parent_1_address'])) {
                     $valid = False;
                     $return['parent_1_address'] = $the_form->get_display_name('parent_1_address');
@@ -570,10 +541,6 @@ function validate_page3(&$the_form) {
                     $valid = False;
                     $return['parent_1_phone'] = $the_form->get_display_name('parent_1_phone');
                 }
-                if (is_null($row['parent_1_email'])) {
-                    $valid = False;
-                    $return['parent_1_email'] = $the_form->get_display_name('parent_1_email');
-                }
                 if (is_null($row['parent_1_occupation'])) {
                     $valid = False;
                     $return['parent_1_occupation'] = $the_form->get_display_name('parent_1_occupation');
@@ -583,10 +550,6 @@ function validate_page3(&$the_form) {
                 if (is_null($row['parent_2_first_name'])) {
                     $valid = False;
                     $return['parent_2_first_name'] = $the_form->get_display_name('parent_2_first_name');
-                }
-                if (is_null($row['parent_2_middle_name'])) {
-                    $valid = False;
-                    $return['parent_2_middle_name'] = $the_form->get_display_name('parent_2_middle_name');
                 }
                 if (is_null($row['parent_2_last_name'])) {
                     $valid = False;
@@ -617,10 +580,6 @@ function validate_page3(&$the_form) {
                 if (is_null($row['parent_2_phone'])) {
                     $valid = False;
                     $return['parent_2_phone'] = $the_form->get_display_name('parent_2_phone');
-                }
-                if (is_null($row['parent_2_email'])) {
-                    $valid = False;
-                    $return['parent_2_email'] = $the_form->get_display_name('parent_2_email');
                 }
                 if (is_null($row['parent_2_occupation'])) {
                     $valid = False;
