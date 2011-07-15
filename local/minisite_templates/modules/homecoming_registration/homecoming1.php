@@ -103,10 +103,10 @@ class HomecomingRegistrationOneForm extends FormStep
                         'display_name' => 'Do you require a vegetarian meal?',
 			'options' => array('yes' => 'Yes', 'no' => 'No'),
 		),
-                'festival_guests_names' => array(
-			'type' => 'textarea',
-                        'display_name' => 'Festival Guest Names and Class Year (if applicable) ',	
-		),
+                //'festival_guests_names' => array(
+		//	'type' => 'textarea',
+               //         'display_name' => 'Festival Guest Names and Class Year (if applicable) ',	
+		//),
                 'vegetarian_guests' => array(
 			'type' => 'radio_inline_no_sort',
                         'display_name' => 'Do any of your guests require vegetarian meal?',
