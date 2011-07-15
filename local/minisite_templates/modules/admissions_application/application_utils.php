@@ -2,7 +2,25 @@
 
 function check_logout(&$the_form) {
     $the_form->sess = & get_reason_session();
-    if($the_form->get_value('logout')){
+
+    $should_logout = false;
+    
+    try{ if($the_form->get_value('logout1')){ $should_logout=true; };
+    }catch(Exception $e){ /*not page 1*/ }
+    try{ if($the_form->get_value('logout2')){ $should_logout=true; };
+    }catch(Exception $e){ /*not page 2*/ }
+    try{ if($the_form->get_value('logout3')){ $should_logout=true; };
+    }catch(Exception $e){ /*not page 3*/ }
+    try{ if($the_form->get_value('logout4')){ $should_logout=true; };
+    }catch(Exception $e){ /*not page 4*/ }
+    try{ if($the_form->get_value('logout5')){ $should_logout=true; };
+    }catch(Exception $e){ /*not page 5*/ }
+    try{ if($the_form->get_value('logout6')){ $should_logout=true; };
+    }catch(Exception $e){ /*not page 6*/ }
+
+    //die($should_logout);
+    
+    if($should_logout == true || $should_logout == 'true'){
         $the_form->sess->destroy();
     }
 }
