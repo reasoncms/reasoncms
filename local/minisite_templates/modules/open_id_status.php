@@ -67,7 +67,7 @@ class OpenIDStatusModule extends DefaultMinisiteModule {
             echo "<div>Welcome, " . $provider_image . " " . $welcome_name . ".&nbsp;&nbsp;";
             echo "  <a name='missing_info' href='#'>Missing previously entered information?</a>";
             echo "</div>";
-            echo "<div id='openid_dialog' title='Missing Information?'>";
+            echo "<div id='openid_dialog' title='Missing Information?' style='display:none;'>";
             echo "  Be sure you are logged in with the same account you used to start your application.";
             echo "  <br /><br /><a href='" . $openid_url . "'>Try using a different account here.</a>";
             echo "</div>";
