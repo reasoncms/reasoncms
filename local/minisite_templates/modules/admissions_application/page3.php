@@ -81,7 +81,7 @@ class ApplicationPageThree extends FormStep {
         'parent_1_type' => array(
             'type' => 'radio_inline_no_sort',
             'display_name' => '&nbsp;',
-            'options' => array('mother' => 'Mother', 'father' => 'Father', 'unknown' => 'Unknown'),
+            'options' => array('mother' => 'Mother', 'father' => 'Father'),
         ),
         'parent_1_living' => array(
             'display_name' => 'Is Parent 1 living?',
@@ -197,7 +197,7 @@ class ApplicationPageThree extends FormStep {
         'parent_2_type' => array(
             'type' => 'radio_inline_no_sort',
             'display_name' => '&nbsp;',
-            'options' => array('mother' => 'Mother', 'father' => 'Father', 'unknown' => 'Unknown'),
+            'options' => array('mother' => 'Mother', 'father' => 'Father'),
         ),
         'parent_2_living' => array(
             'display_name' => 'Is Parent 2 living?',
