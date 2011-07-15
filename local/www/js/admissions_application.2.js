@@ -1,11 +1,11 @@
 $(document).ready(function() {
-    var $formStepLinks = $("div[id='formNavigation'] > ul > li > a");
+    var $formStepLinks = $("div[id*='formNavigation'] > ul > li > a");
     $.each($formStepLinks, function(index, value){
         $formStepLinks[index].href = '#';
         $(this).click(function(event){
             event.preventDefault();
             var $number;
-            switch(index){
+            switch(index % 6){
                 case 0:
                     $number = "One";
                     break;
