@@ -148,12 +148,9 @@
 						     'rel_id','cur_module','viewer_id',
 						     'entity_a','entity_b','debugging' );			 
 
-			// the array_diff is to get rid of the cookie vars that exists in REQUEST.  we don't want cookie values in our admin page request
-			
-			$request = array_diff( conditional_stripslashes($_REQUEST), conditional_stripslashes($_COOKIE) );
-			
+			$request = carl_get_request();
 			$this->request = array_merge($request, carl_clean_vars($request, $param_cleanup_rules));
-
+			
 			foreach ( $params_to_localize as $v )
 			{
 				if (isset($this->request[$v]))
