@@ -166,7 +166,6 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'sidebar' => 'blurb',
 			'sub_nav' => 'assets',
 			'pre_sidebar' => 'luther_image_sidebar',
-                        'content_blurb' => '',
 		),
                 'gift_page_engine' => array(
                     'main_post' => 'gift_form',
@@ -377,6 +376,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 						),
 					),
                     'post_sidebar' => '',
+                ),
+                'luther_gmap' => array(
+                    'main_post' => 'luther_gmap',
                 ),
 //		'luther_news_page' => array(
 //                    'main_post' => 'publication',
