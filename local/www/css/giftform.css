@@ -250,15 +250,9 @@ div#reviewGiftDetails td.col1 {
 }
 
 #missing_info_tip {
-    text-decoration: underline;
+    vertical-align:bottom;
+    margin-bottom:10px;
 }
-.tooltip_box {
-    display:none;
-    border:1px solid blue;
-    border-radius:10px;
-    padding:20px;
-    background-color:white;
-    width:240px;
-    height:4em;
-    text-align:center;
+#missing_info_tip > a {
+    text-decoration: underline;
 }
