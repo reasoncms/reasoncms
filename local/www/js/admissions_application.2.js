@@ -230,7 +230,10 @@ $(document).ready(function() {
 
 
     /**Page Three - Family**/
-    /***********************/	
+    /***********************/
+    $("#permanent_home_parentElement").change(function(){
+       $("input[name='__button_ApplicationPageThree']").click();
+    });
     $("#family_dialog").dialog({
         autoOpen: false,
         show: "blind",
