@@ -93,19 +93,34 @@ $(document).ready(function() {
     $("input[name*='grade']").watermark('Grade');
     $("input[name*='suffix']").watermark('Suffix');
 
-    $("#missing_info_tip").tooltip({position: "top left"});
-
+    /* logout & save button */
     var logout_button = $("<input class='saveAndLogout' type='button' value='Save & Logout' style='float:right;' />");
     logout_button.click(function(event){
         event.preventDefault();
-        $("#logoutElement").val('True');
+        $("input[name*='logout']").val(true);
         $("input[name='__button_ApplicationPageOne']").click();
     });
-    var logout_test = 0;
-    $("[name|=logout]").each(function(){logout_test = 1;})
-    if(logout_test){
+    var $logout_fields = $("input[name*='logout']");
+    var $logout_test = 0;
+    $.each($logout_fields, function(index, value) {
+        $logout_test = 1;
+    });
+    if($logout_test == 1){
         $(".page-title").before(logout_button);
     }
+
+    /* OpenId switch accounts dialog box */
+    $("#openid_dialog").dialog({
+        autoOpen: false,
+        show: "blind",
+        hide: "blind",
+        modal: true
+    });
+    $("a[name='missing_info']").click(function(){
+        $("#openid_dialog").dialog("open");
+        return false;
+    });
+
 
     var suffixes = [
         "D.C.",
