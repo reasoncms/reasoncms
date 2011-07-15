@@ -306,6 +306,11 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
         }
     }
     function generate_navigation($nav_group=1) {
+        $this->sess =& get_reason_session();
+        if(!$this->sess->get('openid_id')){
+                return;
+        }
+
         if($nav_group==1){
             $output = '<div id="formNavigation">';
         }else{
@@ -321,9 +326,10 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             if (isset($form->display_name)) {
 
                 /* Highlight incomplete tabs if app was submitted */
-                $this->sess =& get_reason_session();
+                
                 $app_submitted = $this->sess->get('submitted');
                 $app_submitted = True;
+                //changed to generate required field list on every page before being submitted
                 if ($app_submitted){
                     $error_header = "<div style='width:655px;border:1px solid blue;border-radius:5px;background-color:#CCDEEB;padding:5px;'><span style='font-weight:bold;'>Required fields:</span>&nbsp;&nbsp;";
                     $error_footer = "</div>";
