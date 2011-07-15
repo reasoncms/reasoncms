@@ -588,5 +588,22 @@ if(!function_exists('htmlspecialchars_decode'))
 				return false;
 		}
 	}
+	
+	/**
+	 * This is a replacement for referencing $_REQUEST directly, and gives us a consistent result that includes just $_GET and $_POST.
+	 *
+	 * It should be used instead of $_REQUEST, as the makeup of $_REQUEST depends upon the PHP version and settings.
+	 *
+	 * If $_POST and $_GET are set for a named item, $_POST is preferred.
+	 *
+	 * @param boolean run_conditional_stripslashes - defaults to true ... makes sure stripslashes gets run if magic_quotes is on.
+	 * @author Nathan White
+	 * @return array
+	 */
+	function carl_get_request( $run_conditional_stripslashes = true )
+	{
+		$merged = array_merge_recursive2( (array) $_GET, (array) $_POST);
+		return ($run_conditional_stripslashes) ? conditional_stripslashes($merged) : $merged;
+	}
 }
 ?>
