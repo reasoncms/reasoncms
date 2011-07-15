@@ -41,7 +41,7 @@ class ApplicationPageSix extends FormStep {
         'BIOE' => 'Biology (Environmental)',
         'CHEM' => 'Chemistry',
         'CLAST' => 'Classical Studies',
-        'COMM' => 'Communication',
+        'COMM' => 'Communication Studies',
         'CS' => 'Computer Science',
         'ECON' => 'Economics',
         'EDUC' => 'Education',
