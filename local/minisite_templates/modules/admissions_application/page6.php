@@ -190,8 +190,8 @@ class ApplicationPageSix extends FormStep {
         'personal_statement_instructions' => array(
             'type' => 'comment',
             'text' => 'In at least 250 words, please describe an activity, interest, experience or achievement in your life
-                  that has been particularly meaningful to you. Please note that you may mail a graded paper to our Office of Admissions
-                  in lieu of submitting a personal statement.'
+                  that has been particularly meaningful to you. Please note that you may mail a graded paper or a general 
+                  writing sample to our Office of Admissions in lieu of submitting a personal statement.'
         ),
         'personal_statement' => array(
             'type' => 'textarea_no_label',
