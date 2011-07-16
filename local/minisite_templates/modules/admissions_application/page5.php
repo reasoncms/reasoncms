@@ -99,7 +99,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_1_other' => array(
             'type' => 'text',
-            'display_name' => 'Other details'
+            'display_name' => 'Other/Volunteer Program details'
         ),
         'activity_1_participation' => array(
             'type' => 'checkboxgroup_no_sort',
@@ -127,7 +127,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_2_other' => array(
             'type' => 'text',
-            'display_name' => 'Other details'
+            'display_name' => 'Other/Volunteer Program details'
         ),
         'activity_2_participation' => array(
             'type' => 'checkboxgroup_no_sort',
@@ -155,7 +155,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_3_other' => array(
             'type' => 'text',
-            'display_name' => 'Other details'
+            'display_name' => 'Other/Volunteer Program details'
         ),
         'activity_3_participation' => array(
             'type' => 'checkboxgroup_no_sort',
@@ -183,7 +183,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_4_other' => array(
             'type' => 'text',
-            'display_name' => 'Other details'
+            'display_name' => 'Other/Volunteer Program details'
         ),
         'activity_4_participation' => array(
             'type' => 'checkboxgroup_no_sort',
@@ -211,7 +211,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_5_other' => array(
             'type' => 'text',
-            'display_name' => 'Other details'
+            'display_name' => 'Other/Volunteer Program details'
         ),
         'activity_5_participation' => array(
             'type' => 'checkboxgroup_no_sort',
@@ -239,7 +239,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_6_other' => array(
             'type' => 'text',
-            'display_name' => 'Other details'
+            'display_name' => 'Other/Volunteer Program details'
         ),
         'activity_6_participation' => array(
             'type' => 'checkboxgroup_no_sort',
@@ -267,7 +267,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_7_other' => array(
             'type' => 'text',
-            'display_name' => 'Other details'
+            'display_name' => 'Other/Volunteer Program details'
         ),
         'activity_7_participation' => array(
             'type' => 'checkboxgroup_no_sort',
@@ -295,7 +295,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_8_other' => array(
             'type' => 'text',
-            'display_name' => 'Other details'
+            'display_name' => 'Other/Volunteer Program details'
         ),
         'activity_8_participation' => array(
             'type' => 'checkboxgroup_no_sort',
@@ -323,7 +323,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_9_other' => array(
             'type' => 'text',
-            'display_name' => 'Other details'
+            'display_name' => 'Other/Volunteer Program details'
         ),
         'activity_9_participation' => array(
             'type' => 'checkboxgroup_no_sort',
@@ -351,7 +351,7 @@ class ApplicationPageFive extends FormStep {
         ),
         'activity_10_other' => array(
             'type' => 'text',
-            'display_name' => 'Other details'
+            'display_name' => 'Other/Volunteer Program details'
         ),
         'activity_10_participation' => array(
             'type' => 'checkboxgroup_no_sort',
@@ -463,7 +463,7 @@ class ApplicationPageFive extends FormStep {
     function  run_error_checks() {
         parent::run_error_checks();
 
-        if (($this->get_value('activity_1') == 'Other') && (!$this->get_value('activity_1_other'))) {
+        if (($this->get_value('activity_1') == 'Other' || "Volunteer Programs") && (!$this->get_value('activity_1_other'))) {
             $this->set_error('activity_1_other', 'Please describe the activity you listed as \'other\'.');
         }
         if (($this->get_value('activity_2') == 'Other') && (!$this->get_value('activity_2_other'))) {

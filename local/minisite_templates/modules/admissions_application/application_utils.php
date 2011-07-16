@@ -656,64 +656,64 @@ function validate_page5(&$the_form) {
     $return = array();
     //should only be one row to loop through
     while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
-        if (($row['activity_1']) == "Other") {
+        if ((($row['activity_1']) == "Other") || ($row['activity_1']) == "PROGV") {
             if (is_null($row['activity_1_other'])) {
                 $valid = False;
-                $return['activity_1_other'] = 'Other details - activity 1';
+                $return['activity_1_other'] = 'Other/Volunteer Program details - activity 1';
             }
         }
-        if (($row['activity_2']) == "Other") {
+        if ((($row['activity_2']) == "Other") || ($row['activity_2']) == "PROGV") {
             if (is_null($row['activity_2_other'])) {
                 $valid = False;
-                $return['activity_2_other'] = 'Other details - activity 2';
+                $return['activity_2_other'] = 'Other/Volunteer Program details - activity 2';
             }
         }
-        if (($row['activity_3']) == "Other") {
+        if ((($row['activity_3']) == "Other") || ($row['activity_3']) == "PROGV") {
             if (is_null($row['activity_3_other'])) {
                 $valid = False;
-                $return['activity_3_other'] = 'Other details - activity 3';
+                $return['activity_3_other'] = 'Other/Volunteer Program details - activity 3';
             }
         }
-        if (($row['activity_4']) == "Other") {
+        if ((($row['activity_4']) == "Other") || ($row['activity_4']) == "PROGV") {
             if (is_null($row['activity_4_other'])) {
                 $valid = False;
-                $return['activity_4_other'] = 'Other details - activity 4';
+                $return['activity_4_other'] = 'Other/Volunteer Program details - activity 4';
             }
         }
-        if (($row['activity_5']) == "Other") {
+        if ((($row['activity_5']) == "Other") || ($row['activity_5']) == "PROGV") {
             if (is_null($row['activity_5_other'])) {
                 $valid = False;
-                $return['activity_5_other'] = 'Other details - activity 5';
+                $return['activity_5_other'] = 'Other/Volunteer Program details - activity 5';
             }
         }
-        if (($row['activity_6']) == "Other") {
+        if ((($row['activity_6']) == "Other") || ($row['activity_6']) == "PROGV") {
             if (is_null($row['activity_6_other'])) {
                 $valid = False;
-                $return['activity_6_other'] = 'Other details - activity 6';
+                $return['activity_6_other'] = 'Other/Volunteer Program details - activity 6';
             }
         }
-        if (($row['activity_7']) == "Other") {
+        if ((($row['activity_7']) == "Other") || ($row['activity_7']) == "PROGV") {
             if (is_null($row['activity_7_other'])) {
                 $valid = False;
-                $return['activity_7_other'] = 'Other details - activity 7';
+                $return['activity_7_other'] = 'Other/Volunteer Program details - activity 7';
             }
         }
-        if (($row['activity_8']) == "Other") {
+        if ((($row['activity_8']) == "Other") || ($row['activity_8']) == "PROGV") {
             if (is_null($row['activity_8_other'])) {
                 $valid = False;
-                $return['activity_8_other'] = 'Other details - activity 8';
+                $return['activity_8_other'] = 'Other/Volunteer Program details - activity 8';
             }
         }
-        if (($row['activity_9']) == "Other") {
+        if ((($row['activity_9']) == "Other") || ($row['activity_9']) == "PROGV") {
             if (is_null($row['activity_9_other'])) {
                 $valid = False;
-                $return['activity_9_other'] = 'Other details - activity 9';
+                $return['activity_9_other'] = 'Other/Volunteer Program details - activity 9';
             }
         }
-        if (($row['activity_10']) == "Other") {
+        if ((($row['activity_10']) == "Other") || ($row['activity_10']) == "PROGV") {
             if (is_null($row['activity_10_other'])) {
                 $valid = False;
-                $return['activity_10_other'] = 'Other details - activity 10';
+                $return['activity_10_other'] = 'Other/Volunteer Program details - activity 10';
             }
         }
     }

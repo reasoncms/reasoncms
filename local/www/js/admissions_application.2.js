@@ -758,52 +758,52 @@ function toggle_parent_college() {
     }
 }
 function toggle_other_activity_details() {
-    if ($("select[name='activity_1']").val() == 'Other') {
+    if (($("select[name='activity_1']").val() == 'Other') || ($("select[name='activity_1']").val() == 'PROGV')) {
         $("tr#activity1otherRow").show();
     } else {
         $("tr#activity1otherRow").hide();
     }
-    if ($("select[name='activity_2']").val() == 'Other') {
+    if (($("select[name='activity_2']").val() == 'Other') || ($("select[name='activity_2']").val() == 'PROGV')) {
         $("tr#activity2otherRow").show();
     } else {
         $("tr#activity2otherRow").hide();
     }
-    if ($("select[name='activity_3']").val() == 'Other') {
+    if (($("select[name='activity_3']").val() == 'Other') || ($("select[name='activity_3']").val() == 'PROGV')) {
         $("tr#activity3otherRow").show();
     } else {
         $("tr#activity3otherRow").hide();
     }
-    if ($("select[name='activity_4']").val() == 'Other') {
+    if (($("select[name='activity_4']").val() == 'Other') || ($("select[name='activity_4']").val() == 'PROGV')) {
         $("tr#activity4otherRow").show();
     } else {
         $("tr#activity4otherRow").hide();
     }
-    if ($("select[name='activity_5']").val() == 'Other') {
+    if (($("select[name='activity_5']").val() == 'Other') || ($("select[name='activity_5']").val() == 'PROGV')) {
         $("tr#activity5otherRow").show();
     } else {
         $("tr#activity5otherRow").hide();
     }
-    if ($("select[name='activity_6']").val() == 'Other') {
+    if (($("select[name='activity_6']").val() == 'Other') || ($("select[name='activity_6']").val() == 'PROGV')) {
         $("tr#activity6otherRow").show();
     } else {
         $("tr#activity6otherRow").hide();
     }
-    if ($("select[name='activity_7']").val() == 'Other') {
+    if (($("select[name='activity_7']").val() == 'Other') || ($("select[name='activity_7']").val() == 'PROGV')) {
         $("tr#activity7otherRow").show();
     } else {
         $("tr#activity7otherRow").hide();
     }
-    if ($("select[name='activity_8']").val() == 'Other') {
+    if (($("select[name='activity_8']").val() == 'Other') || ($("select[name='activity_8']").val() == 'PROGV')) {
         $("tr#activity8otherRow").show();
     } else {
         $("tr#activity8otherRow").hide();
     }
-    if ($("select[name='activity_9']").val() == 'Other') {
+    if (($("select[name='activity_9']").val() == 'Other') || ($("select[name='activity_9']").val() == 'PROGV')) {
         $("tr#activity9otherRow").show();
     } else {
         $("tr#activity9otherRow").hide();
     }
-    if ($("select[name='activity_10']").val() == 'Other') {
+    if (($("select[name='activity_10']").val() == 'Other') || ($("select[name='activity_10']").val() == 'PROGV')) {
         $("tr#activity10otherRow").show();
     } else {
         $("tr#activity10otherRow").hide();
