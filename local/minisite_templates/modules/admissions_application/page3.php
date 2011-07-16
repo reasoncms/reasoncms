@@ -739,7 +739,7 @@ class ApplicationPageThree extends FormStep {
     );
     var $display_name = 'Family';
     var $error_header_text = 'Please check your form.';
-    var $required = array('permanent_home_parent', 'parent_1_first_name', 'parent_1_last_name', 'parent_1_address', 
+    var $required = array('permanent_home_parent', 'parent_1_first_name', 'parent_1_last_name', 'parent_1_name_group', 'parent_1_address',
                 'parent_1_city', 'parent_1_state_province', 'parent_1_zip_postal', 'parent_1_country', 'parent_1_phone',
                 'parent_1_occupation', 'legacy');
 
