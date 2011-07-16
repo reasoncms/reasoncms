@@ -331,7 +331,8 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
                 $app_submitted = True;
                 //changed to generate required field list on every page before being submitted
                 if ($app_submitted){
-                    $error_header = "<div style='width:655px;border:1px solid blue;border-radius:5px;background-color:#CCDEEB;padding:5px;'><span style='font-weight:bold;'>Required fields:</span>&nbsp;&nbsp;";
+//                    $error_header = "<div style='width:655px;border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;'><span style='font-weight:bold;'>Required fields:</span>&nbsp;&nbsp;";
+                    $error_header = "<div style='width:655px;border:1px solid black;border-radius:5px;back`ground-color:#afd0ef;padding:5px;'><span style='font-weight:bold;'>Required fields:</span>&nbsp;&nbsp;";
                     $error_footer = "</div>";
                     switch($i){
                         case 1:
@@ -372,9 +373,10 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             }
         }
         $output .= '</ul></div>';
-        if($nav_group==1){
-            $output .= $error_div;
-        }
+//        if($nav_group==1){
+//            $output .= $error_div;
+//        }
+        $output .= '<div id="required_note">* = required</div>';
         return $output;
     }
 }
