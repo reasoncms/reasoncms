@@ -245,6 +245,11 @@ $(document).ready(function() {
         return false;
     });
 
+    toggle_parent_2_address();
+    $("input[name='parent_2_address_same']").change(function(){
+        toggle_parent_2_address();
+    });
+
     toggle_parent_college();
     $("input[name='legacy']").change(function(){
         toggle_parent_college();
@@ -739,7 +744,27 @@ function toggle_mailing_address() {
         $("#mailingcountryRow").hide();
     }
 }
-
+function toggle_parent_2_address() {
+    if ($("input[name='parent_2_address_same']:checked").val() == 'no') {
+        $("#parent2addressRow").show();
+        $("#parent2address2Row").show();
+        $("#parent2apartmentnumberRow").show();
+        $("#parent2cityRow").show();
+        $("#parent2stateprovinceRow").show();
+        $("#parent2zippostalRow").show();
+        $("#parent2countryRow").show();
+        $("#parent2phonegroupRow").show();
+    } else {
+        $("#parent2addressRow").hide();
+        $("#parent2address2Row").hide();
+        $("#parent2apartmentnumberRow").hide();
+        $("#parent2cityRow").hide();
+        $("#parent2stateprovinceRow").hide();
+        $("#parent2zippostalRow").hide();
+        $("#parent2countryRow").hide();
+        $("#parent2phonegroupRow").hide();
+    }
+}
 function toggle_parent_college() {
     if ($("input[name='legacy']:checked").val() == 'Yes') {
         $("#parent1collegecommentRow").show();

@@ -257,6 +257,11 @@ class ApplicationPageThree extends FormStep {
             'display_name' => 'Suffix',
             'size' => 5
         ),
+        'parent_2_address_same' => array(
+            'type' => 'radio_inline_no_sort',
+            'display_name' => 'Is Parent 2\'s address is the same as the above parent?',
+            'options' => array('yes' => 'Yes', 'no' => 'No'),
+        ),
         'parent_2_address' => array(
             'type' => 'text',
             'display_name' => 'Address'
