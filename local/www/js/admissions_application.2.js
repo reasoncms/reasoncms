@@ -729,6 +729,7 @@ function toggle_mailing_address() {
     if ($("input[name='different_mailing_address']:checked").val() == 'Yes') {
         $("#mailingaddressheaderRow").show();
         $("#mailingaddressRow").show();
+        $("#mailingaddress2Row").show();
         $("#mailingapartmentnumberRow").show();
         $("#mailingcityRow").show();
         $("#mailingstateprovinceRow").show();
@@ -737,6 +738,7 @@ function toggle_mailing_address() {
     } else {
         $("#mailingaddressheaderRow").hide();
         $("#mailingaddressRow").hide();
+        $("#mailingaddress2Row").hide();
         $("#mailingapartmentnumberRow").hide();
         $("#mailingcityRow").hide();
         $("#mailingstateprovinceRow").hide();

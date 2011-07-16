@@ -145,6 +145,10 @@ class ApplicationPageThree extends FormStep {
             'type' => 'text',
             'display_name' => 'Address'
         ),
+        'parent_1_address_2' => array(
+            'type' => 'text',
+            'display_name' => 'Address Line 2'
+        ),
         'parent_1_apartment_number' => array(
             'type' => 'text',
             'size' => 4,
@@ -266,6 +270,10 @@ class ApplicationPageThree extends FormStep {
             'type' => 'text',
             'display_name' => 'Address'
         ),
+        'parent_2_address_2' => array(
+            'type' => 'text',
+            'display_name' => 'Address Line 2'
+        ),
         'parent_2_apartment_number' => array(
             'type' => 'text',
             'size' => 4,
@@ -375,6 +383,10 @@ class ApplicationPageThree extends FormStep {
         'guardian_address' => array(
             'type' => 'text',
             'display_name' => 'Address'
+        ),
+        'guardian_address_2' => array(
+            'type' => 'text',
+            'display_name' => 'Address Line 2'
         ),
         'guardian_apartment_number' => array(
             'type' => 'text',

@@ -107,6 +107,10 @@ class ApplicationPageTwo extends FormStep {
             'type' => 'text',
             'display_name' => 'Address'
         ),
+        'permanent_address_2' => array(
+            'type' => 'text',
+            'display_name' => 'Address Line 2'
+        ),
         'permanent_apartment_number' => array(
             'type' => 'text',
             'size' => 4,
@@ -147,6 +151,10 @@ class ApplicationPageTwo extends FormStep {
         'mailing_address' => array(
             'type' => 'text',
             'display_name' => 'Address'
+        ),
+        'mailing_address_2' => array(
+            'type' => 'text',
+            'display_name' => 'Address Line 2'
         ),
         'mailing_apartment_number' => array(
             'type' => 'text',
