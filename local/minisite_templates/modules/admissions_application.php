@@ -376,7 +376,7 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
 //        if($nav_group==1){
 //            $output .= $error_div;
 //        }
-        $output .= '<div id="required_note">* = required</div>';
+        $output .= '<div id="requiredNote" style="float:right">* = required</div>';
         return $output;
     }
 }
