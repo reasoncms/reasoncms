@@ -19,6 +19,7 @@ reason_include_once('scripts/developer_tools/publication_migrator/migrator_scree
 reason_include_once('scripts/developer_tools/publication_migrator/migrator_screen_5.php');
 reason_include_once('scripts/developer_tools/publication_migrator/migrator_screen_6.php');
 reason_include_once('scripts/developer_tools/publication_migrator/migrator_screen_7.php');
+include_once(CARL_UTIL_INC.'basic/misc.php');
 
 /**
  * The publication migrator helps transition sites using old style news to use
@@ -103,7 +104,7 @@ class PublicationMigratorHelper
 	 */
 	function init()
 	{
-		$this->request = carl_clean_vars($_REQUEST, $this->cleanup_rules);
+		$this->request = carl_clean_vars(carl_get_request(), $this->cleanup_rules);
 		if (!empty($this->custom_recommended_page_type_mapping))
 		{
 			$this->recommended_page_type_mapping = array_merge($this->recommended_page_type_mapping, $this->custom_recommended_page_type_mapping);
