@@ -31,6 +31,7 @@ reason_include_once( 'function_libraries/user_functions.php' );
 reason_include_once( 'classes/page_types.php' );
 reason_include_once( 'classes/entity_selector.php');
 reason_include_once( 'classes/url/page.php' );
+include_once( CARL_UTIL_INC . 'basic/misc.php' );
 
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'."\n";
 echo '<html><head><title>Reason: Modules</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body>';
@@ -59,16 +60,17 @@ $result = $es->run_one();
 $builder = new reasonPageURL();
 $builder->provide_page_entities($result);
 
-$detail_mode = (isset($_REQUEST['detail'])) ? ($_REQUEST['detail'] == 'true') : false;
-$module_limiter = (isset($_REQUEST['limit'])) ? conditional_stripslashes(turn_into_string($_REQUEST['limit'])) : '';
-$detail_limiter = (isset($_REQUEST['detail_limit'])) ? conditional_stripslashes(turn_into_string($_REQUEST['detail_limit'])) : '';
+$request = carl_get_request();
+$detail_mode = (isset($request['detail'])) ? ($request['detail'] == 'true') : false;
+$module_limiter = (isset($request['limit'])) ? conditional_stripslashes(turn_into_string($request['limit'])) : '';
+$detail_limiter = (isset($request['detail_limit'])) ? conditional_stripslashes(turn_into_string($request['detail_limit'])) : '';
 
-$core_local_limiter = (isset($_REQUEST['core_local_limit'])) 
-					  ? check_against_array($_REQUEST['core_local_limit'], array('core', 'local')) 
+$core_local_limiter = (isset($request['core_local_limit'])) 
+					  ? check_against_array($request['core_local_limit'], array('core', 'local')) 
 					  : '';					  
-$num = (isset($_REQUEST['num'])) ? turn_into_int($_REQUEST['num']) : 'All';
+$num = (isset($request['num'])) ? turn_into_int($request['num']) : 'All';
 
-if (isset($_REQUEST['reset']))
+if (isset($request['reset']))
 {
 	header("Location: " . carl_make_redirect(array('limit' => '', 'core_local_limit' => '')));
 	exit();
