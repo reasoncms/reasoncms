@@ -4,7 +4,7 @@ $return_arr = array();
 $dbhost = 'reason.luther.edu';
 $dbuser = 'ceeb_user';
 $dbpass = '!ceebdatabasesarethebest!';
-$dbname = 'hs_ceeb';
+$dbname = 'ceeb';
 
 $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die ('Error connecting to mysql');
 mysql_select_db($dbname);
@@ -18,7 +18,7 @@ if ($conn)
         $cleaned_term = str_replace($remove_chars, " ", $cleaned_term);
         $term_parts = split(" ", $cleaned_term, 10);
 
-        $qstring = "SELECT * FROM ceeb where";
+        $qstring = "SELECT * FROM hs_ceeb where";
         $num_parts = count($term_parts);
         $i = 0;
         foreach($term_parts as $part){
