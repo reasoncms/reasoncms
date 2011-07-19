@@ -8,9 +8,18 @@ class RoyalVisitThorForm extends LutherDefaultThorForm {
         parent::on_every_time();
         
         echo '<script type="text/javascript" src="/reason/js/royalvisit.js"></script>';
-
         
+        $special_seating = $this->get_element_name_from_label('Special seating?');
+        $extra_guest_ticket = $this->get_element_name_from_label('Do you want an extra guest ticket for $20?');
         
+        $this->change_element_type($special_seating, 'radio_inline_no_sort');
+        
+        $url = get_current_url();
+        if ($url = 'https://reasondev.luther.edu/150/events/royalvisit/stafflottery/'){
+            $this->change_element_type($extra_guest_ticket, 'radio_inline_no_sort',array('comments' => 'Additional ticket is $20, unless a faculty/staff person'));
+        }else{
+           $this->change_element_type($extra_guest_ticket, 'radio_inline_no_sort'); 
+        }
     }
     
     function pre_error_check_actions() {
