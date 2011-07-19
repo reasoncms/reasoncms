@@ -4,7 +4,7 @@ $return_arr = array();
 $dbhost = 'reason.luther.edu';
 $dbuser = 'ceeb_user';
 $dbpass = '!ceebdatabasesarethebest!';
-$dbname = 'ceeb';
+$dbname = 'hs_ceeb';
 
 $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die ('Error connecting to mysql');
 mysql_select_db($dbname);
