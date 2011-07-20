@@ -12,7 +12,7 @@ $(document).ready(function(){
     })  
     
     special_seating(); 
-    $(".words:contains('Special seating?')").parent().change(function(){
+    $(".words:contains('Accessibility Issues?')").parent().change(function(){
         special_seating();  
     })   
 
