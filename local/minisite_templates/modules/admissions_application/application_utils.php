@@ -576,12 +576,12 @@ function validate_page3(&$the_form) {
                         $valid = False;
                         $return['parent_2_country'] = $the_form->get_display_name('parent_2_country');
                     }
+                    if (is_null($row['parent_2_phone'])) {
+                        $valid = False;
+                        $return['parent_2_phone'] = $the_form->get_display_name('parent_2_phone');
+                    }
                 }
 
-                if (is_null($row['parent_2_phone'])) {
-                    $valid = False;
-                    $return['parent_2_phone'] = $the_form->get_display_name('parent_2_phone');
-                }
                 if (is_null($row['parent_2_occupation'])) {
                     $valid = False;
                     $return['parent_2_occupation'] = $the_form->get_display_name('parent_2_occupation');
