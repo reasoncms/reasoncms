@@ -24,7 +24,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 	var $show_months = false;
 	var $snap_to_nearest_view = false;
 	var $events_page;
-	var $events_page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','event_slot_registration','events_archive','events_archive_verbose');
+	var $events_page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','event_slot_registration','events_archive','events_archive_verbose', 'sports_results');
 	var $list_date_format = 'M d';
 	var $passables = array('start_date','textonly','view','category','audience','end_date','search','season');
 	var $season_switch_date = "07-01";
@@ -35,6 +35,68 @@ class lutherSportsResultsMiniModule extends EventsModule
 	{
 		parent::init( $args );
 		$this->find_events_page();
+		
+	}
+	
+	function event_ok_to_show($event)
+	{
+		return true;
+	}
+	
+	function show_event_details()
+	{
+		
+		$e =& $this->event;
+		
+			echo '<div class="eventDetails">'."\n";
+			//$this->show_images($e);
+			echo '<h1>'.$e->get_value('name').'</h1>'."\n";
+			//$this->show_ownership_info($e);
+			$st = substr($e->get_value('datetime'), 0, 10);
+			$lo = substr($e->get_value('last_occurence'), 0, 10);
+			$now = date('Y-m-d');
+			if (!empty($this->request['date']) && strstr($e->get_value('dates'), $this->request['date']))
+			{
+				if ($lo != $st)
+				{
+					echo '<p class="date">'.prettify_mysql_datetime($st, "F j, Y" ).' - '.prettify_mysql_datetime($lo, "F j, Y")."\n";
+				}
+				else 
+				{
+					echo '<p class="date">'.prettify_mysql_datetime( $this->request['date'], "F j, Y" )."\n";
+				}
+			}
+
+			if ($now <= $lo || !$e->get_value('content'))
+			{
+				if ($e->get_value('description'))
+				{
+					echo '&nbsp;('.$e->get_value( 'description' ).')'."\n";
+				}
+				else if (substr($e->get_value( 'datetime' ), 11) != '00:00:00')
+				{
+					echo '&nbsp;('.prettify_mysql_datetime( $e->get_value( 'datetime' ), "g:i a" ).')'."\n";
+				}
+				
+				if ($e->get_value('location'))
+					echo '<br>'.$e->get_value('location')."\n";
+			}	
+			echo '</p>'."\n";
+	
+			if ($e->get_value('content'))
+			{
+				echo '<div class="eventContent">'."\n";
+				echo $e->get_value( 'content' );
+				echo '</div>'."\n";
+			}
+			
+			if ($e->get_value('url'))
+				echo '<div class="eventUrl">For more information, visit: <a href="'.$e->get_value( 'url' ).'">'.$e->get_value( 'url' ).'</a>.</div>'."\n";
+			//$this->show_back_link();
+			//$this->show_event_categories($e);
+			//$this->show_event_audiences($e);
+			//$this->show_event_keywords($e);
+			echo '</div>'."\n";
 		
 	}
 	
@@ -57,22 +119,28 @@ class lutherSportsResultsMiniModule extends EventsModule
 	}
 	function run()
 	{
-
-		echo '<section class="events" role="group">'."\n";
-		if ($this->cur_page->get_value( 'custom_page' ) != 'sports_results')
-		{
-			echo '<header class="blue-stripe"><h1><span>Results</span></h1></header>'."\n";
-		}	
-		
-		echo '<table class="tablesorter">'."\n";
-		$this->list_events();		
-		echo '</table>'."\n";
-		
-		if ($this->cur_page->get_value( 'custom_page' ) != 'sports_results')
-		{
-			$this->show_feed_link();
+		if (empty($this->request['event_id']))
+		{					
+			echo '<section class="events" role="group">'."\n";
+			if ($this->cur_page->get_value( 'custom_page' ) != 'sports_results')
+			{
+				echo '<header class="blue-stripe"><h1><span>Results</span></h1></header>'."\n";
+			}	
+			
+			echo '<table class="tablesorter">'."\n";
+			$this->list_events();		
+			echo '</table>'."\n";
+			
+			if ($this->cur_page->get_value( 'custom_page' ) != 'sports_results')
+			{
+				$this->show_feed_link();
+			}
+			echo '</section> <!-- class="events" role="group" -->'."\n";
 		}
-		echo '</section> <!-- class="events" role="group" -->'."\n";
+		else
+		{
+			$this->show_event();
+		}
 	}
 	
 	function _get_start_date()
@@ -308,7 +376,18 @@ class lutherSportsResultsMiniModule extends EventsModule
 				echo '<td>'.$this->events[$event_id]->get_value( 'name' ).'</td>'."\n";
 			}
 			echo '<td>'.$this->events[$event_id]->get_value( 'location' ).'</td>'."\n";
-			echo '<td>'.$this->events[$event_id]->get_value( 'description' ).'</td>'."\n";
+			if ($this->events[$event_id]->get_value( 'description' ) != '')
+			{
+				echo '<td>'.$this->events[$event_id]->get_value( 'description' ).'</td>'."\n";
+			}
+			else if (substr($this->events[$event_id]->get_value('datetime'), 11) != '00:00:00')
+			{
+				echo '<td>'.prettify_mysql_datetime($this->events[$event_id]->get_value('datetime'), "g:i a" ).'</td>'."\n";
+			}
+			else 
+			{
+				echo '<td></td>'."\n";
+			}
 			//echo '<td>'.$this->events[$event_id]->get_value( 'recurrence' ).'</td>'."\n";
 			//echo '<td>'.$this->events[$event_id]->get_value( 'last_occurence' ).'</td>'."\n";
 			//echo '<td>'.$this->events[$event_id]->get_value( 'datetime' ).'</td>'."\n";

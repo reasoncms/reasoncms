@@ -24,7 +24,7 @@ class miniEventsModule extends EventsModule
 	var $show_months = false;
 	var $snap_to_nearest_view = false;
 	var $events_page;
-	var $events_page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','event_slot_registration','events_archive','events_archive_verbose');
+	var $events_page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','event_slot_registration','events_archive','events_archive_verbose', 'sports_results');
 	var $list_date_format = 'M d';
 		
 	function init( $args = array() )
@@ -36,7 +36,8 @@ class miniEventsModule extends EventsModule
 	
 	function has_content()
 	{
-		if(!empty($this->events_page_url) && !empty($this->calendar))
+		if(!empty($this->events_page_url) && !empty($this->calendar)
+		|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports' & !empty($this->calendar))
 		{
 			$events = $this->calendar->get_all_events();
 			if(empty($events))
@@ -130,6 +131,10 @@ class miniEventsModule extends EventsModule
 			//$viewAllLink = "/programming/events/";
 			$viewAllLink = "/events/";
 		}
+		//else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
+		//{ 
+		//	$viewAllLink = get_current_url() . "schedule";
+		//}
 		else
 		{
 			$viewAllLink = $this->events_page_url;
