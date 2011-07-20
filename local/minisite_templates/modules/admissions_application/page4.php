@@ -136,7 +136,7 @@ class ApplicationPageFour extends FormStep {
         ),
     );
 
-    var $required = array('hs_name', 'hs_grad_year', 'college_1_name');
+    var $required = array('hs_name', 'hs_grad_year');
     var $display_name = 'Education';
     var $error_header_text = 'Please check your form.';
     var $element_group_info = array(
@@ -168,6 +168,12 @@ class ApplicationPageFour extends FormStep {
             $this->change_element_type('final_high_school_header', 'hidden');
         } else {
             $this->change_element_type('current_high_school_header', 'hidden');
+        }
+
+        if ($this->controller->get('student_type') == 'TR') {
+            if (in_array('college_1_name', $this->required) == False){
+                $this->required[] = 'college_1_name';
+            }
         }
 
         $this->pre_fill_form();
