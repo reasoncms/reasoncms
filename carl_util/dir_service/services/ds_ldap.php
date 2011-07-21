@@ -55,7 +55,7 @@ class ds_ldap extends ds_default {
 		'ds_email' => array('mail'),
 		'ds_firstname' => array('givenname'),
 		'ds_lastname' => array('sn'),
-		'ds_fullname' => array('cn','givenname','sn','edupersonnickname'),
+		'ds_fullname' => array('displayname','givenname','sn','edupersonnickname'),
 		'ds_phone' => array('telephonenumber'),
 		'ds_affiliation' => array('edupersonaffiliation','edupersonprimaryaffiliation'),
 		'ds_groupid' => array('gidnumber'),
@@ -296,7 +296,7 @@ class ds_ldap extends ds_default {
 							if (!empty($record['edupersonnickname'])) {
 								$value = array(0 => $record['edupersonnickname'][0] . ' ' . $record['sn'][0]);
 							} else {
-								$value = $record['cn'];
+								$value = $record['displayname'];
 							}
 							break;
 						case 'ds_phone':
@@ -437,7 +437,7 @@ class ds_ldap extends ds_default {
 					$attr = 'sn';
 					break;
 				case 'ds_fullname':
-					$attr = 'cn';
+					$attr = 'displayname';
 					break;
 				case 'ds_affiliation':
 					$attr = 'edupersonaffiliation';
