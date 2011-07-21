@@ -43,63 +43,71 @@ class ApplicationConfirmation extends FormStep {
         $submitted = is_submitted($this->openid_id);
         if ($submitted) {
             $this->controller->destroy_form_data();
-            die('It appears that you\'ve already submitted your application. If you\'d like to amend your application or have questions
-                regarding, please contact the Admissions Office at 800-4-LUTHER.');
-        }
-        if (!$this->openid_id) {
-            echo 'How\'d you get here?';
-            header("Location:/admissions/apply/");
-        }
-        $i = 0;
-        $error_div = "";
-        foreach ($this->controller->forms as $name => $form) {
-            if ($form->display_name) {
-                $error_header = "<div style='width:655px;border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;margin:5px;'>
-                <span style='font-weight:bold;'>Required fields: " . $form->display_name . "</span><br>";
-                $error_footer = "</div>";
-                $i++;
-                switch ($i) {
-                    case 1:
-                        $validation = $p1_valid = validate_page1($form);
-                        break;
-                    case 2:
-                        $validation = $p2_valid = validate_page2($form);
-                        break;
-                    case 3:
-                        $validation = $p3_valid = validate_page3($form);
-                        break;
-                    case 4:
-                        $validation = $p4_valid = validate_page4($form);
-                        break;
-                    case 5:
-                        $validation = $p5_valid = validate_page5($form);
-                        break;
-                    case 6:
-                        $validation = $p6_valid = validate_page6($form);
-                        break;
-                }
-                if (!$validation['valid']) {
-                    $error_div .= $error_header;
-                    foreach ($validation as $val_key => $val_value) {
-                        $error_div .= " <a href='/admissions/apply/?_step=" . $name . "#" . $val_key . "_error'>" . $val_value . "</a>&nbsp;&nbsp; ";
+            echo '<div style="padding:30px">It appears that you\'ve already submitted your application. If you\'d like to amend your application or have questions
+                regarding, please contact the Admissions Office at 800-4-LUTHER.</div>';
+        }else{
+            if (!$this->openid_id) {
+                echo 'How\'d you get here?';
+                header("Location:/admissions/apply/");
+            }
+            $i = 0;
+            $error_div = "";
+            foreach ($this->controller->forms as $name => $form) {
+                if ($form->display_name) {
+                    $error_header = "<div style='width:655px;border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;margin:5px;'>
+                    <span style='font-weight:bold;'>Required fields: " . $form->display_name . "</span><br>";
+                    $error_footer = "</div>";
+                    $i++;
+                    switch ($i) {
+                        case 1:
+                            $validation = $p1_valid = validate_page1($form);
+                            break;
+                        case 2:
+                            $validation = $p2_valid = validate_page2($form);
+                            break;
+                        case 3:
+                            $validation = $p3_valid = validate_page3($form);
+                            break;
+                        case 4:
+                            $validation = $p4_valid = validate_page4($form);
+                            break;
+                        case 5:
+                            $validation = $p5_valid = validate_page5($form);
+                            break;
+                        case 6:
+                            $validation = $p6_valid = validate_page6($form);
+                            break;
                     }
-                    $error_div .= $error_footer;
+                    if (!$validation['valid']) {
+                        $error_div .= $error_header;
+                        foreach ($validation as $val_key => $val_value) {
+                            $error_div .= " <a href='/admissions/apply/?_step=" . $name . "#" . $val_key . "_error'>" . $val_value . "</a>&nbsp;&nbsp; ";
+                        }
+                        $error_div .= $error_footer;
+                    }
                 }
             }
-        }
 
-        if (!$p1_valid['valid'] || !$p2_valid['valid'] || !$p3_valid['valid'] || !$p4_valid['valid'] || !$p5_valid['valid'] || !$p6_valid['valid']) {
-            echo 'Please complete the following required fields to submit your application:' . $error_div;
-        } elseif ($_SERVER['HTTP_REFERER'] != 'https://reasondev.luther.edu/admissions/apply/?_step=ApplicationPageSix') {
-            echo '<p>Oops! Looks like you\'ve landed here accidentally.</p>';
-            echo 'To complete your application, please return to <a href="/admissions/apply/?_step=ApplicationPageSix">page 6</a>
-                and click "Submit your application" at the bottom of the page.';
-        } else {
-            connectDB('admissions_applications_connection');
-            db_query("UPDATE `applicants` SET `submit_date`=NOW() WHERE `open_id`= '" . addslashes($this->openid_id) . "'");
-            connectDB(REASON_DB);
-            echo $this->get_thank_you_blurb();
-            $this->controller->destroy_form_data();
+
+            $sess =& get_reason_session();
+            $sess->set('submitted', False);
+            if (!$p1_valid['valid'] || !$p2_valid['valid'] || !$p3_valid['valid'] || !$p4_valid['valid'] || !$p5_valid['valid'] || !$p6_valid['valid']) {
+                echo 'Please complete the following required fields to submit your application:' . $error_div;
+            } elseif ($_SERVER['HTTP_REFERER'] != 'https://reasondev.luther.edu/admissions/apply/?_step=ApplicationPageSix') {
+                echo '<p>Oops! Looks like you\'ve landed here accidentally.</p>';
+                echo 'To complete your application, please return to <a href="/admissions/apply/?_step=ApplicationPageSix">page 6</a>
+                    and click "Submit your application" at the bottom of the page.';
+            } else {
+                connectDB('admissions_applications_connection');
+                db_query("UPDATE `applicants` SET `submit_date`=NOW() WHERE `open_id`= '" . addslashes($this->openid_id) . "'");
+                connectDB(REASON_DB);
+                echo "<div style='padding:30px;'>";
+                echo $this->get_thank_you_blurb();
+                echo "</div>";
+                $this->controller->destroy_form_data();
+                $sess =& get_reason_session();
+                $sess->set('submitted', True);
+            }
         }
     }
 

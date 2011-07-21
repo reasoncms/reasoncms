@@ -91,7 +91,7 @@ function is_submitted($open_id) {
     $results = db_query($qstring);
     $row = mysql_fetch_array($results, MYSQL_ASSOC);
     connectDB(REASON_DB);
-    if (empty($row['submit_date']) || ($row['submit_date'] == '0000-00-00 00:00:00')) {
+    if (is_null($row['submit_date']) || ($row['submit_date'] == '0000-00-00 00:00:00')) {
         return false;
     } else {
         return true;
@@ -134,7 +134,7 @@ function get_applicant_data($openid, &$the_form) {
                     $the_value = explode(',', $row[$element]);
                     $the_form->set_value($element, $the_value);
                 } else {
-                    if (($element != 'date_of_birth') && ($row[$element] != '0000-00-00')) {
+                    if (($element != 'date_of_birth') || ($element == 'date_of_birth' && ($row[$element] != '0000-00-00'))) {
                         $the_value = $row[$element];
                         $the_form->set_value($element, $the_value);
                     }
@@ -779,6 +779,11 @@ function validate_page6(&$the_form) {
     }
     $return['valid'] = $valid;
     return $return;
+}
+
+function already_submitted_message(){
+    echo '<div style="padding:30px">It appears that you\'ve already submitted your application. If you\'d like to amend your application or have questions
+                regarding, please contact the Admissions Office at 800-4-LUTHER.</div>';
 }
 
 ?>

@@ -400,8 +400,7 @@ class ApplicationPageFive extends FormStep {
     function on_every_time() {
         $this->openid_id = check_open_id($this);
         if (is_submitted($this->openid_id)){
-            die('It appears that you\'ve already submitted your application. If you\'d like to amend your application or have questions
-                regarding, please contact the Admissions Office at 800-4-LUTHER.');
+            die(already_submitted_message());
         }else{
         $this->show_form = true;
         }
