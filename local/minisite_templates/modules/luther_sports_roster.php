@@ -350,7 +350,9 @@
 							}
 							else if ($col == 'athlete_class_year')
 							{
-								$str .= $this->class_year[$player[$col]];
+								$str .= preg_replace("|^Fy$|", "Fr", $this->class_year[$player[$col]]);
+								//$str .= $this->class_year[$player[$col]];
+								
 							}
 							else if ($col == 'athlete_height')
 							{
@@ -471,10 +473,10 @@
 	function sort_columns(&$columns)
 	{
 		$sort_order = array('athlete_number' => 0, 'athlete_first_name' => 1,
-			'athlete_last_name' => 2, 'athlete_class_year' => 3, 'athlete_hometown_city' => 4,
-			'athlete_hometown_state' => 5, 'athlete_high_school' => 6, 'athlete_position_event' => 7,
-			'athlete_height' => 8, 'athlete_weight' => 9,
-			'athlete_bat' => 10, 'athlete_throw' => 11); // specify whatever you want sorted in this manner
+			'athlete_last_name' => 2, 'athlete_position_event' => 3, 'athlete_bat' => 4,
+			'athlete_throw' => 5, 'athlete_height' => 6, 'athlete_weight' => 7,
+			'athlete_class_year' => 8, 'athlete_hometown_city' => 9,
+			'athlete_hometown_state' => 10, 'athlete_high_school' => 11); // specify whatever you want sorted in this manner
 		$key_count = count($sort_order);
 		foreach ($columns as $k=>$v)
 		{
