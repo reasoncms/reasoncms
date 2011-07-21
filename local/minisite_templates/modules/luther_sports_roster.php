@@ -282,7 +282,25 @@
 					}
 					else if ($col == 'athlete_height')
 					{
-						$value = (string)((int)($player[$col] / 12) . '\' ' . $player[$col] % 12 . '"');
+						if ($player[$col] > 0)
+						{
+							$value = (string)((int)($player[$col] / 12) . '\' ' . $player[$col] % 12 . '"');
+						}
+						else 
+						{
+							$value = "";
+						}
+					}
+					else if ($col == 'athlete_weight')
+					{
+						if ($player[$col] > 0)
+						{
+							$value = $player[$col];
+						}
+						else 
+						{
+							$value = "";
+						}
 					}
 
 				echo '<li><strong>'.$this->gen_custom_header($col).':</strong> '.$value.'</li>';
@@ -357,7 +375,17 @@
 							else if ($col == 'athlete_height')
 							{
 								//$str .= (string)((int)($player[$col] / 12) . '\' ' . str_pad($player[$col] % 12, 2, '0', STR_PAD_LEFT) . '"');
-								$str .= (string)((int)($player[$col] / 12) . '\' ' . $player[$col] % 12 . '"');
+								if ($player[$col] > 0)
+								{
+									$str .= (string)((int)($player[$col] / 12) . '\' ' . $player[$col] % 12 . '"');
+								}
+							}
+							else if ($col == 'athlete_weight')
+							{
+								if ($player[$col] > 0)
+								{
+									$str .= $player[$col];
+								}
 							}
 							else if ($col == 'athlete_hometown_state' && $this->statesAP[$player[$col]] != '')
 							{
