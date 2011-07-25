@@ -297,12 +297,21 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             // MUST reconnect to Reason database.  GiftConfirmation connects to reason_gifts for info.
             connectDB(REASON_DB);
         } else {
-            echo $this->generate_navigation();
+            $this->sess =& get_reason_session();
+            $openid_id = $this->sess->get('openid_id');
+
+            if(preg_match('/ApplicationConfirmation$/', get_current_url()) == 0){
+                //if on confirmation page, don't show navigation
+                echo $this->generate_navigation();
+            }
 
             $this->controller->set_request($this->request);
             $this->controller->run();
 
-            echo $this->generate_navigation(2);
+            if(preg_match('/ApplicationConfirmation$/', get_current_url()) == 0){
+                //if on confirmation page, don't show navigation
+                echo $this->generate_navigation(2);
+            }
         }
     }
     function generate_navigation($nav_group=1) {
@@ -326,9 +335,8 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
             if (isset($form->display_name)) {
 
                 /* Highlight incomplete tabs if app was submitted */
-                
                 $app_submitted = $this->sess->get('submitted');
-                $app_submitted = True;
+                //$app_submitted = True;
                 //changed to generate required field list on every page before being submitted
                 if ($app_submitted){
 //                    $error_header = "<div style='width:655px;border:1px solid red;border-radius:5px;background-color:#FFB2B2;padding:5px;'><span style='font-weight:bold;'>Required fields:</span>&nbsp;&nbsp;";
@@ -376,7 +384,11 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
 //        if($nav_group==1){
 //            $output .= $error_div;
 //        }
-        $output .= '<div id="requiredNote" style="float:right">* = required</div>';
+        $submitted = is_submitted($this->openid_id);
+        if(!$submitted){
+            $output .= '<div id="requiredNote" style="float:right">* = required</div>';
+        }
+                
         return $output;
     }
 }
