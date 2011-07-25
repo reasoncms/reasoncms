@@ -29,7 +29,7 @@ $(document).ready(function() {
         })
     });
     var url = document.URL;
-    if ( url.match( /(PageOne$)/) ){
+    if ( url.match( /(PageOne)/) ){
         $("input[name='__button_ApplicationPageOne']").hide();
         $("input[name='__button_ApplicationPageTwo']").show().val('Next');
         $("input[name='__button_ApplicationPageThree']").hide();
@@ -37,7 +37,7 @@ $(document).ready(function() {
         $("input[name='__button_ApplicationPageFive']").hide();
         $("input[name='__button_ApplicationPageSix']").hide();
         $("input[name='__button_ApplicationConfirmation']").hide();
-    } else if ( url.match( /(PageTwo$)/ ) ){
+    } else if ( url.match( /(PageTwo)/ ) ){
         $("input[name='__button_ApplicationPageOne']").show().val('Previous');
         $("input[name='__button_ApplicationPageTwo']").hide();
         $("input[name='__button_ApplicationPageThree']").show().val('Next');
@@ -45,7 +45,7 @@ $(document).ready(function() {
         $("input[name='__button_ApplicationPageFive']").hide();
         $("input[name='__button_ApplicationPageSix']").hide();
         $("input[name='__button_ApplicationConfirmation']").hide();
-    } else if ( url.match( /(PageThree$)/ ) ){
+    } else if ( url.match( /(PageThree)/ ) ){
         $("input[name='__button_ApplicationPageOne']").hide();
         $("input[name='__button_ApplicationPageTwo']").show().val('Previous');
         $("input[name='__button_ApplicationPageThree']").hide();
@@ -53,7 +53,7 @@ $(document).ready(function() {
         $("input[name='__button_ApplicationPageFive']").hide();
         $("input[name='__button_ApplicationPageSix']").hide();
         $("input[name='__button_ApplicationConfirmation']").hide();
-    } else if ( url.match( /(PageFour$)/ ) ){
+    } else if ( url.match( /(PageFour)/ ) ){
         $("input[name='__button_ApplicationPageOne']").hide();
         $("input[name='__button_ApplicationPageTwo']").hide();
         $("input[name='__button_ApplicationPageThree']").show().val('Previous');
@@ -61,7 +61,7 @@ $(document).ready(function() {
         $("input[name='__button_ApplicationPageFive']").show().val('Next');
         $("input[name='__button_ApplicationPageSix']").hide();
         $("input[name='__button_ApplicationConfirmation']").hide();
-    } else if ( url.match( /(PageFive$)/ ) ){
+    } else if ( url.match( /(PageFive)/ ) ){
         $("input[name='__button_ApplicationPageOne']").hide();
         $("input[name='__button_ApplicationPageTwo']").hide();
         $("input[name='__button_ApplicationPageThree']").hide();
@@ -69,7 +69,7 @@ $(document).ready(function() {
         $("input[name='__button_ApplicationPageFive']").hide();
         $("input[name='__button_ApplicationPageSix']").show().val('Next');
         $("input[name='__button_ApplicationConfirmation']").hide();
-    } else if ( url.match( /(PageSix$)/ ) ){
+    } else if ( url.match( /(PageSix)/ ) ){
         $("input[name='__button_ApplicationPageOne']").hide();
         $("input[name='__button_ApplicationPageTwo']").hide();
         $("input[name='__button_ApplicationPageThree']").hide();
