@@ -273,6 +273,7 @@
 					if($is_current && $av_file->get_value('url'))
 					{
 						$avd = new reasonAVDisplay();
+						// $avd->set_parameter( 'flv', 'controlbar', '0' );
 						$embed_markup = $avd->get_embedding_markup($av_file);
 						if(!empty($embed_markup))
 						{
@@ -357,6 +358,23 @@
 			}
 		}
 		
+		function further_checks_on_entity( $entity )
+		{
+			if($this->params['limit_to_current_page'])
+			{
+				$es = new entity_selector();
+				$es->add_type(id_of('av'));
+				$es->add_relation('`entity`.`id` = "'.addslashes($entity->id()).'"');
+				$es->add_right_relationship( $this->page_id, relationship_id_of('minisite_page_to_av') );
+				$es->set_num(1);
+				$es->limit_tables();
+				$es->limit_fields();
+				$results = $es->run_one();
+				return (!empty($results));
+			}
+			return true;
+		}
+		
 		/**
 		 * A nice handler for missing av things. Attempts to point the user to another
 		 * place to access the item, even if that place is on another site.
@@ -371,8 +389,8 @@
 		 */
 		function handle_missing_item($id)
 		{
-			
 			// Get the list of modules
+			reason_include_once('classes/module_sets.php');
 			$ms =& reason_get_module_sets();
 			$av_module_derivatives = $ms->get("av_module_derivatives");
 			
