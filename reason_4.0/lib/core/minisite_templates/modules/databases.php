@@ -120,7 +120,12 @@ class DatabasesModule extends Generic3Module
 		$urls = $es->run_one();
 		$url = current($urls);
 		$item->get_values();
-		$item->_values['primary_url'] = $url->get_value('url');
+		if (is_object($url))
+		{
+			$item->_values['primary_url'] = $url->get_value('url');
+		} else {
+			trigger_error('No external urls found for database');
+		}
 		$this->show_list_item( $item );
 	} // }}}
 	function list_items() // {{{
