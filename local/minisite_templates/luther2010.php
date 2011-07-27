@@ -671,10 +671,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 			return true;
 		}
 		
-		if ($this->has_content( 'twitter_sub_nav' ))
-		{
-			return true;
-		}
+		//if ($this->has_content( 'twitter_sub_nav' ))
+		//{
+		//	return true;
+		//}
 		
 		if ($this->cur_page->get_value( 'custom_page' ) == 'events')
 		// no images allowed on events page, only for individual events
@@ -689,11 +689,16 @@ class LutherTemplate2010 extends MinisiteTemplate
 	
 			// test if all sidebar images have keyword 'imagetop'
 			// bannerad, or video.
-			$module =& $this->_get_module( 'sidebar' );
-			if ($module != null)
+			//$module =& $this->_get_module( 'sidebar' );
+			$es = new entity_selector();
+			$es->add_type(id_of('image'));
+			$es->add_right_relationship($this->page_id, relationship_id_of('minisite_page_to_image'));
+			$result = $es->run_one();
+			if ($result != null)
 			{
-				foreach( $module->images AS $id => $image )
+				foreach( $result AS $id => $image )
 				{
+					//echo $image->get_value('keywords');
 					if (!preg_match("/imagetop|bannerad|video/", $image->get_value('keywords')))
 					{
 						return true;
@@ -709,6 +714,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			{
 				return true;
 			}
+			
 			// return true if media works has been attached to page.
 			$es = new entity_selector();
 			$es->add_type(id_of('av'));
