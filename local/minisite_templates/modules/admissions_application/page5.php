@@ -70,7 +70,9 @@ class ApplicationPageFive extends FormStep {
         'VWR' => 'Wrestling',
         'XASF' => 'Active School Flag',
         'YEAR' => 'Yearbook',
-        'Other' => 'Other'
+        'Other' => 'Other',
+        'LCREW' => 'Link Crew',
+        'PMENT' => 'Peer Mentoring'
     );
     var $participation_years_array = array(
         '9' => '9th', '10' => '10th',
