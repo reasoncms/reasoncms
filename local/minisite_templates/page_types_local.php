@@ -341,9 +341,12 @@ $GLOBALS['_reason_page_types_local'] = array(
                     //'content_blurb' => array(
                     //	'module' => 'luther_events_mini',
                     //	'additional_sites' => 'luther2010'),
-                    'pre_sidebar' => '',
+                    //'pre_sidebar' => '',
                     'sidebar' => '',
                     'post_sidebar' => 'main_blurb',
+                    'bannerad' => 'luther_events_mini',
+                    'sub_nav_2' => 'luther_bannerad',
+                    'sub_nav_3' => 'contact_blurb',
                 ),
                 'luther2010_sports' => array(
                 	'sub_nav_2' => 'luther_events_mini',

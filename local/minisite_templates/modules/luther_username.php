@@ -53,7 +53,7 @@ reason_include_once( 'function_libraries/user_functions.php' );
 
 				echo '<div id="username">'."\n";
 				echo '<a title="Edit this page" href="'.$this->edit_link.'">&bull;</a>'."\n";
-				echo $this->user_netid . '&nbsp &nbsp'."\n";
+				echo '&nbsp' . $this->user_netid . '&nbsp &nbsp'."\n";
 				echo ($this->user_netid) ? '<a title="logout" href="'.REASON_LOGIN_URL.'?logout=1">&times;</a>' : '';
 				//echo '<a href="' . $this->edit_link . '">' . $this->user_netid . '</a>'."\n";
 				echo '</div> <!-- id="username" -->'."\n";

@@ -415,7 +415,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 		echo '<div id="discoLinear">'."\n";
 		
 		echo "School Year:&nbsp;\n";
-		echo '<select name="season" title="hello" onchange="this.form.submit();">'."\n";
+		echo '<select name="season" title="choose season" onchange="this.form.submit();">'."\n";
 		// change date range as more results data becomes available over time
 		for ($i = $d; $i >= $d - 1; $i--)
 		{

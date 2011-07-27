@@ -205,7 +205,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 		echo '</nav> <!-- id="nav-section" role="navigation" -->'."\n";
 	
-		/*// Username
+		// Username
 		if ($this->has_content( 'sub_nav' ))
 		{
 			echo '<div id="subNav">'."\n";
@@ -214,22 +214,41 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 
 		
-		$this->run_section( 'sbvideo' );*/
-		
-		$this->run_section( 'bannerad' );
-		
-		// Contact Information
-		echo '<section class="contact-information">'."\n";		
-		if ($this->has_content( 'sub_nav_2' ))
-		{
-			$this->run_section( 'sub_nav_2' );
-		}
-		echo '</section> <!-- class="contact-information" -->'."\n";
+		//$this->run_section( 'sbvideo' );
 		
 
+		
+		$this->run_section( 'bannerad' );
+		echo '<hr>';
+		
+		if ($this->has_content( 'sub_nav_2' ))
+		{
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
+			{
+				$this->run_section( 'sub_nav_2');
+				echo'<hr>'."\n";
+			}
+			else
+			{				
+				echo '<section class="contact-information">'."\n";
+				$this->run_section( 'sub_nav_2' );
+				echo '</section> <!-- class="contact-information" -->'."\n";
+			}
+		}
+		
 		if ($this->has_content( 'sub_nav_3' ))
 		{
-			$this->run_section( 'sub_nav_3' );
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
+			{
+				echo '<section class="contact-information">'."\n";
+				$this->run_section( 'sub_nav_3' );
+				echo '</section> <!-- class="contact-information" -->'."\n";
+			}
+			else 
+			{
+				$this->run_section( 'sub_nav_3' );
+			}
 		}
 
 		echo '</div> <!-- class="content content-secondary" -->'."\n";
@@ -286,7 +305,6 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 		elseif ($this->has_content( 'pre_sidebar' ) && ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa'
-			/*|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'*/
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports'))
 		{
 			echo '<aside class="quote">'."\n";
@@ -329,6 +347,14 @@ class LutherTemplate2010 extends MinisiteTemplate
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports'))
 		{
 			$this->run_section( 'twitter_sub_nav' );
+		}
+		
+		if ($this->has_content( 'pre_sidebar' ) && $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
+		{
+			echo '<aside class="news group">'."\n";
+			echo '<header class="blue-stripe"><h1><span>Video of the Week</span></h1></header>'."\n";
+			$this->run_section( 'pre_sidebar');
+			echo '</aside> <!-- class="news group" -->'."\n";
 		}
 				
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni' && $this->has_content( 'post_sidebar' ))
@@ -373,11 +399,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 		
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information' && $this->has_content( 'post_sidebar' ))
 		{
-			echo '<aside class="quote">'."\n";
-			echo '<blockquote>'."\n";
+			echo '<aside class="news group">'."\n";
+			echo '<header class="blue-stripe"><h1><span>Alumni Corner</span></h1></header>'."\n";
 			$this->run_section( 'post_sidebar');
-			echo '</blockquote>'."\n";
-			echo '</aside>'."\n";
+			echo '</aside> <!-- class="news group" -->'."\n";
 		}
 		
 		echo '</div> <!-- class="content content-tertiary" -->'."\n";
@@ -400,6 +425,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			array_splice($ba, -2, 1);
 			$b = implode('&nbsp;&#187;&nbsp;', $ba);
 		}
+		$b = preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\1", $b);
 		echo $b;
 		echo '</nav>'."\n";
 
@@ -1096,6 +1122,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		
 		$bc = $this->_get_breadcrumbs();	
 		$sbtitle = $bc[0]["page_name"];
+		$sbtitle = preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $sbtitle);
 		$sblink = $bc[0]["link"];
 		echo '<a class="blue" href="' . $sblink . '" id="section-sign">'."\n";
 		echo '<div><header><h2>' . $sbtitle . '</h2></header></div></a>'."\n";
