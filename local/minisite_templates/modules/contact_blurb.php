@@ -24,6 +24,22 @@
 				}
 			}
 			// echo '</div>'."\n";
+		}
+
+		function has_content()
+		{
+			if(!empty($this->blurbs))
+			{
+				foreach($this->blurbs as $blurb)
+				{
+					if (preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name')))
+					{
+						return true;
+					}
+				}
+			
+			}
+			return false;
 		} 
 	}
 ?>

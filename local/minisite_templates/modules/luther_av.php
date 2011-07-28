@@ -246,6 +246,17 @@
 			$avf->set_order('av.media_format ASC, av.av_part_number ASC');
 			return $avf->run_one();
 		}
+		function  has_content()
+		{
+			if(empty($this->items))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
 		function display_av_files( $item, $av_files )
 		{
 			$av_file_count = count($av_files);

@@ -217,9 +217,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//$this->run_section( 'sbvideo' );
 		
 
-		
-		$this->run_section( 'bannerad' );
-		echo '<hr>';
+		if ($this->has_content( 'bannerad' ))
+		{
+			$this->run_section( 'bannerad' );
+			echo '<hr>';
+		}
 		
 		if ($this->has_content( 'sub_nav_2' ))
 		{
