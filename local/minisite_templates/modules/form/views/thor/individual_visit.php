@@ -58,6 +58,7 @@ $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'IndividualVisi
 
 class IndividualVisitForm extends DefaultThorForm {
 
+    // do not use date ranges (i.e. 20110801-20110805) the error checking is not setup to handle this.
     var $disabled_dates = array(
         '20101016',
         '20101119', '20101125', '20101126', '20101127',
@@ -65,11 +66,11 @@ class IndividualVisitForm extends DefaultThorForm {
         'xxxx1223', 'xxxx1224', 'xxxx1225', '20101227', '20101228', '20101229', '20101230', 'xxxx1231',
         'xxxx0101', '20110129',
         '20110212', '20110226',
-        '20110314', '20110319-20110326',
+        '20110314', '20110319', '20110320', '20110321', '20110322', '20110323', '20110324', '20110325', '20110326',
         '20110411', '20110422', '20110423',
         '20110514', '20110521', '20110523', '20110524', '20110526', '20110528', '20110530',
         '20110604', '20110621', '20110622',
-         '20110801-20110805',
+        '20110801', '20110802', '20110803', '20110804', '20110805',
     );
     var $elements = array(
         'high_school' => array(
