@@ -2,6 +2,26 @@
 /**
  * @package reason
  */
+
+include_once('reason_header.php');
+reason_include_once('classes/upgrade/upgrade_assistant.php');
+reason_include_once('function_libraries/user_functions.php');
+
+force_secure_if_available();
+$user_netID = reason_require_authentication();
+$reason_user_id = get_user_id( $user_netID );
+
+if(empty($reason_user_id))
+{
+        die('Valid Reason user required.');
+}
+
+if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
+{
+        die('You must have upgrade privileges to upgrade Reason.');
+}
+
+
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -9,7 +29,64 @@
 <title>Upgrade Reason</title>
 </head>
 <body>
-<h1>Upgrading Reason</h1>
+<h1>Upgrade Reason</h1>
+<?php
+$upgrade_steps = array(
+	'4.0_to_4.1' => 'Reason 4.0 to 4.1',
+);
+if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']]))
+{
+	$step = $_GET['upgrade_step'];
+	$rua = new reasonUpgradeAssistant;
+	$upgraders = $rua->get_upgraders($step);
+	echo '<h2>'.htmlspecialchars($upgrade_steps[$step]).'</h2>'."\n";
+	if(!empty($_GET['upgrader']) && ( isset($upgraders[$_GET['upgrader']]) || '_all_' == $_GET['upgrader'] ) )
+	{
+		if(isset($_POST['mode']) && 'run' == $_POST['mode'])
+			$run = true;
+		else
+			$run = false;
+		if(!$run)
+			echo '<p class="mode"><em>Testing Mode</em></p>'."\n";
+		$chosen_upgrader = $_GET['upgrader'];
+		foreach($upgraders as $upgrader_name=>$upgrader)
+		{
+			if($chosen_upgrader == $upgrader_name || '_all_' == $chosen_upgrader)
+			{
+				$upgrader->user_id($reason_user_id);
+				echo '<h3>'.$upgrader->title().'</h3>'."\n";
+				if($run)
+				{
+					echo $upgrader->run();
+				}
+				else
+				{
+					echo $upgrader->test();
+				}
+			}
+		}
+		if(!$run)
+		{
+			echo '<form id="runnerForm" action="'.get_current_url().'" method="post"><input type="hidden" name="mode" value="run" /><input type="submit" value="Run Module(s)" 
+/></form>'."\n";
+		}
+	}
+	else
+	{
+		echo '<h3><a href="?upgrade_step='.urlencode($step).'&amp;upgrader=_all_&amp;mode=test">Test All Upgrades</a></h3>'."\n";
+		echo '<h3>Test Individual Upgrades</h3>'."\n";
+		echo '<ul>'."\n";
+		foreach($upgraders as $name=>$upgrader)
+		{
+			echo '<li><a href="?upgrade_step='.urlencode($step).'&amp;upgrader='.urlencode($name).'&amp;mode=test">'.$upgrader->title().'</a></li>'."\n";
+		}
+		echo '</ul>'."\n";
+	}
+}
+else
+{
+
+?>
 <p>Each new version of Reason includes a set of scripts that you should 
 run to update your database to work with the latest version of the Reason code base. 
 The scripts are designed to be used from one release to the next; you cannot necessarily update 
@@ -19,6 +96,7 @@ the point release after the one you are currently using and upgrade incrementall
 <p><a href="http://apps.carleton.edu/opensource/reason/download/">Reason download page</a></p>
 <h2>Reason Upgrade Scripts</h2>
 <ul>
+<li><a href="?upgrade_step=4.0_to_4.1">Reason 4.0 to Reason 4.1</a></li>
 <li><a href="./scripts/upgrade/4.0b8_to_4.0b9/index.php">Reason 4.0 Beta 8 to Beta 9 (otherwise known as 4.0 release!)</a></li>
 <li><a href="./scripts/upgrade/4.0b7_to_4.0b8/index.php">Reason 4.0 Beta 7 to Beta 8</a></li>
 <li><a href="./scripts/upgrade/4.0b6_to_4.0b7/index.php">Reason 4.0 Beta 6 to Beta 7</a></li>
@@ -27,5 +105,9 @@ the point release after the one you are currently using and upgrade incrementall
 <li><a href="./scripts/upgrade/4.0b3_to_4.0b4/index.php">Reason 4.0 Beta 3 to Beta 4</a></li>
 <li><a href="./scripts/upgrade/4.0b1_and_b2_to_4.0b3/index.php">Reason 4.0 Beta 1 or 2 to Beta 3</a></li>
 </ul>
+<?php
+
+}
+?>
 </body>
 </html>
