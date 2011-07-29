@@ -404,7 +404,7 @@ class FindReplaceWizard5 extends FindReplaceWizard
 				$val = $this->option_info[$k]['values'];
 				$id = $this->option_info[$k]['id'];
 				$checkbox = '<input type="checkbox" id="'.$this->name.$i.'" name="'.$this->name.'[]" value="'.htmlspecialchars($k,ENT_QUOTES).'"';
-				if ( is_array($this->value) && (array_search($i, $this->value) !== false) ) $checkbox .= ' checked="checked"';
+				if ( in_array($k,$this->value) ) $checkbox .= ' checked="checked"';
 				//if ( $this->_is_current_value($k) ) $checkbox .= ' checked="checked"';
 				//if ( $this->_is_disabled_option($k) ) $checkbox .= ' disabled="disabled"';
 				$checkbox .= ' /> ' . $id;
