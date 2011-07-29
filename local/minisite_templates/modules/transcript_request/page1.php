@@ -192,7 +192,7 @@ class TranscriptPageOneForm extends FormStep {
         $parts = parse_url($url);
         $url = $parts['scheme'] . '://' . $parts['host'] . '/login/?dest_page=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
 
-        $txt .= '<h3>Access to this form is restricted</h3>';
+        $txt = '<h3>Access to this form is restricted</h3>';
         $txt .= '<h3>Electronic Request</h3>';
         //$txt .= '<p>You are not currently logged in. Luther College students and alumni have access to this form. The contents will be displayed after you login.' . "\n";
         $txt .= '<p>To request a transcript, official or unofficial, electronically (requires user name and
