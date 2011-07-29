@@ -35,9 +35,10 @@ class ApplicationPageOne extends FormStep {
         'student_type' => array(
             'type' => 'radio_no_sort',
             'comments' => '<div id="transfer_dialog" title="Transfer Students">
-                <strong>Note:</strong> If you are a transfer student and filled out an application last year, then we\'ve got you covered.
-                Contact the <a href="mailto:admissions@luther.edu?Subject=Previous%20Transfer%20Student%20Applicant">Admissions Office</a> (800-4-LUTHER) to
-                restart the process.</div>',
+                <strong>Note:</strong> If you are a transfer student and have filled out a Luther College Application for Admission
+                within the past two years, you do not need to complete this application. Please contact
+                the <a href="mailto:admissions@luther.edu?Subject=Previous%20Transfer%20Student%20Applicant">Admissions Office</a>
+                (800-4-LUTHER, ext. 1287) to reopen your admissions file.</div>',
             'options' => array('FR' => 'First Year', 'TR' => 'Transfer'),
         ),
         'enrollment_term_comment' => array(
@@ -85,7 +86,8 @@ class ApplicationPageOne extends FormStep {
 
         $cur_date = date("Y-m-d");
 
-        $fa_deadline = date($date['year'] . "-08-01");
+        $add_next_fall = date($date['year'] . "-06-01");
+        $fa_deadline = date($date['year'] . "-08-15");
         $jt_deadline = date($date['year'] . "-12-15");
         $sp_deadline = date($date['year'] . "-01-15");
 
@@ -121,7 +123,17 @@ class ApplicationPageOne extends FormStep {
             $this->enroll_term = array(
                 $fa_year . 'FA' => 'Fall ' . $fa_year,
                 $jt_year . 'JT' => 'J-term ' . $jt_year,
-                $sp_year . 'SP' => 'Spring ' . $sp_year);
+                $sp_year . 'SP' => 'Spring ' . $sp_year
+            );
+            if ($cur_date >
+                    $add_next_fall){
+                $this->enroll_term = array(
+                    $fa_year . 'FA' => 'Fall ' . $fa_year,
+                    $jt_year . 'JT' => 'J-term ' . $jt_year,
+                    $sp_year . 'SP' => 'Spring ' . $sp_year,
+                    ($fa_year + 1) . 'FA' => 'Fall ' . ($fa_year + 1)
+                );
+            }
         }
 
         //if passed fall and jterm deadline
