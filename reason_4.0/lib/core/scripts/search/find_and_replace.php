@@ -38,8 +38,9 @@ reason_include_once('function_libraries/user_functions.php');
  * @todo support for site limiting
  * @todo security enhancements - turn_into_string and turn_into_array are not sufficient cleanup rules for real user input filtering
  * @todo preview highlighting enhancements - currently mucks up HTML when the search term is found in an item attribute .. this is kind of major
+ * @todo add case-sensitive/case-insensitive toggler in UI and support both
  * 
- * @version .1 - August 5, 2008
+ * @version .1.1 - July 28, 2011
  * @author Nathan White
  */
 class FindReplaceWizard extends Disco
@@ -212,7 +213,7 @@ class FindReplaceWizard3 extends FindReplaceWizard
 		$this->add_element('replace', 'text', array('display_name' => 'Replacement Term'));
 		$this->add_required('replace');
 		$this->add_element('limit', 'select_no_sort', array('options' => array('10' => '10','50' => '50', '100' => '100', '500' => '500'),
-															'add_null_value_to_top' => true));
+															'add_empty_value_to_top' => true));
 		
 		if ($this->helper->get_search_term()) $this->set_value('find', $this->helper->get_search_term());
 		if ($this->helper->get_replace_term()) $this->set_value('replace', $this->helper->get_replace_term());
@@ -274,6 +275,7 @@ class FindReplaceWizard4 extends FindReplaceWizard
 			foreach ($matches as $id => $e)
 			{
 				$type_fields_keys = array_flip($this->helper->get_type_fields());
+				//pray(array_diff( array_keys($e->get_values()),array_keys( $type_fields_keys ) ) );
 				foreach($e->get_values() as $key=>$value)
 				{
 					if (isset($type_fields_keys[$key]))
@@ -282,16 +284,19 @@ class FindReplaceWizard4 extends FindReplaceWizard
 						{
 							$search_value = str_replace($search_term,'<span style="font-weight: bold; color: red;">'.$search_term.'</span>',$value);			
 							$replace_value = str_replace($search_term, '<span style="font-weight: bold; color: red;">'.$replace_term.'</span>',$value);
-							$options[] = array ('id' => $id, 'values' => array('Field' => $key, 'Search' => $search_value, 'Replace' => $replace_value));
+							$option_info[$id.'|'.$key] = array ('id' => $id, 'values' => array('Field' => $key, 'Search' => $search_value, 'Replace' => $replace_value));
+							$options[$id.'|'.$key] = $id.'|'.$key;
 						}
 					}
 				}	
 			}
-			$this->add_element('replace_list', 'confirmFindReplace', array('options' => $options));
+			if(empty($options))
+				pray($e->get_values());
+			$this->add_element('replace_list', 'confirmFindReplace', array('options' => $options,'option_info'=>$option_info));
 			$replace_list = $this->get_element('replace_list');
 		
 			$this->set_value('replace_list', array_keys($options)); // check all by default - should exclude ID!
-			foreach ($options as $k=>$v)
+			foreach ($option_info as $k=>$v)
 			{
 				$this->add_element('original_list['.$k.']', 'hidden');
 				$this->set_value('original_list['.$k.']', $v['id']);
@@ -376,6 +381,8 @@ class FindReplaceWizard5 extends FindReplaceWizard
 	{
 		var $type = 'checkboxgroup';
 		var $use_display_name = false;
+		var $type_valid_args = array('option_info',);
+		protected $option_info = array();
 		
 		function do_includes()
 		{
@@ -384,22 +391,38 @@ class FindReplaceWizard5 extends FindReplaceWizard
 		
 		function get_display() // {{{ // lets use table admin to display this guy
 		{
-			foreach ($this->options as $i => $value)
+			$i = 0;
+			foreach ($this->options as $k => $val)
 			{
+				if(!isset($this->option_info[$k]))
+				{
+					trigger_error('Please set option_info for each option!');
+					continue;
+				}
 				// build our checkbox
 				//$store_key[$key] = "ture";
-				$val = $value['values'];
-				$id = $value['id'];
-				$checkbox = '<input type="checkbox" id="'.$i.'" name="'.$this->name.'['.$i.']" value="'.$id.'|'.$val['Field'].'"';
-				if ( is_array($this->value) && (array_search($i, $this->value) !== false) ) $checkbox .= ' checked="checked"';
-				elseif ( $i == $this->value ) $checkbox .= ' checked="checked"';
+				$val = $this->option_info[$k]['values'];
+				$id = $this->option_info[$k]['id'];
+				$checkbox = '<input type="checkbox" id="'.$this->name.$i.'" name="'.$this->name.'[]" value="'.htmlspecialchars($k,ENT_QUOTES).'"';
+				if ( $this->_is_current_value($k) ) $checkbox .= ' checked="checked"';
+				if ( $this->_is_disabled_option($k) ) $checkbox .= ' disabled="disabled"';
 				$checkbox .= ' /> ' . $id;
+				$e = new entity($id);
+				$checkbox .= '<p class="name">Name: '.$e->get_value('name').'</p>';
+				$owner = get_owner_site_id($id);
+				if($owner)
+				{
+					$site = new entity($owner);
+					$checkbox .= '<p class="site">Site: '.$site->get_value('name').'</p>';
+				}
+				else
+					$checkbox .= '<p class="site">(No owner site)</p>';
 				$data[] = array('Find and Replace?' => $checkbox) + $val;
 				$i++;
 			}
 			
 			// data now contains the raw data needed for our table admin work;
-			$entity_convert_fields = array_keys(reset($this->options));
+			$entity_convert_fields = array_keys(reset($this->option_info));
 			
 			$ta = new TableAdmin();
 			$ta->init_from_array($data);
@@ -504,7 +527,9 @@ class FindReplaceWizardHelper
 		}
 		return $user_id;
 	}
-	
+	/**
+ 	 * @todo ensure that the collation works if you have your columns set up to use utf-8 character sets
+	 */
 	function &get_matches()
 	{
 		if (!isset($this->_matches))
@@ -525,7 +550,7 @@ class FindReplaceWizardHelper
 					$table_array[] = $table;
 					foreach($fields as $field)
 					{
-						$relation_pieces[] = $table.'.'.$field.' LIKE "%'.$this->get_search_term_for_query().'%"';
+						$relation_pieces[] = $table.'.'.$field.' LIKE "%'.$this->get_search_term_for_query().'%" COLLATE latin1_bin';
 					}
 				}
 			}
