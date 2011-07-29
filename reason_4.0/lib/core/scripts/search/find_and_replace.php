@@ -213,7 +213,7 @@ class FindReplaceWizard3 extends FindReplaceWizard
 		$this->add_element('replace', 'text', array('display_name' => 'Replacement Term'));
 		$this->add_required('replace');
 		$this->add_element('limit', 'select_no_sort', array('options' => array('10' => '10','50' => '50', '100' => '100', '500' => '500'),
-															'add_empty_value_to_top' => true));
+															'add_null_value_to_top' => true));
 		
 		if ($this->helper->get_search_term()) $this->set_value('find', $this->helper->get_search_term());
 		if ($this->helper->get_replace_term()) $this->set_value('replace', $this->helper->get_replace_term());
@@ -404,8 +404,9 @@ class FindReplaceWizard5 extends FindReplaceWizard
 				$val = $this->option_info[$k]['values'];
 				$id = $this->option_info[$k]['id'];
 				$checkbox = '<input type="checkbox" id="'.$this->name.$i.'" name="'.$this->name.'[]" value="'.htmlspecialchars($k,ENT_QUOTES).'"';
-				if ( $this->_is_current_value($k) ) $checkbox .= ' checked="checked"';
-				if ( $this->_is_disabled_option($k) ) $checkbox .= ' disabled="disabled"';
+				if ( is_array($this->value) && (array_search($i, $this->value) !== false) ) $checkbox .= ' checked="checked"';
+				//if ( $this->_is_current_value($k) ) $checkbox .= ' checked="checked"';
+				//if ( $this->_is_disabled_option($k) ) $checkbox .= ' disabled="disabled"';
 				$checkbox .= ' /> ' . $id;
 				$e = new entity($id);
 				$checkbox .= '<p class="name">Name: '.$e->get_value('name').'</p>';
