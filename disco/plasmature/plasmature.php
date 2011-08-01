@@ -68,8 +68,6 @@
  */
 /** path constants */
 include_once 'paths.php';
-/** get_http_vars() */
-include_once CARL_UTIL_INC.'basic/http_vars.php';
 /** tidy functions */
 include_once CARL_UTIL_INC.'tidy/tidy.php';
 /** trim_slashes(), prettify_string(), unhtmlentities() */
