@@ -197,14 +197,14 @@
 				echo '<a href="'.$link.'">Sort these items</a></div><div class="roundedBottom"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div></div><br />';
 			}
 		} // }}}
-		function set_session_vars() // {{{
+		
+		/**
+		 *@todo Remove before 4.1 release.
+		 */
+		function set_session_vars()
 		{
-			if( ( !isset( $this->admin_page->request[ 'state' ] ) OR (strtolower( $this->admin_page->request[ 'state' ] ) == 'live') ) )
-			{
-				$_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] = 
-					$this->admin_page->make_link( array_merge( $this->admin_page->request , array( 'cur_module' => 'Lister' , 'PHPSESSID' => '') ) ); 
-			}
-		} // }}}
+			trigger_error("This method is deprecated and will be removed by the 4.1 release.", E_USER_WARNING);
+		}
 	
 		function get_views( ) // {{{
 		{	
@@ -262,7 +262,6 @@
 			include_once( CARL_UTIL_INC . 'basic/misc.php' );
 			$this->admin_page->set_show( 'breadcrumbs' , false );
 
-			$this->set_session_vars();
 			$type = new entity( $this->admin_page->type_id );
 			$this->admin_page->title = ( $type->get_value( 'plural_name' ) ? $type->get_value( 'plural_name' ) : $type->get_value('name') );
 			if($icon_url = reason_get_type_icon_url($type,false))
