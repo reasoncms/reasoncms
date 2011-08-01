@@ -24,24 +24,13 @@
 			{
 				die('You do not have privileges to borrow or unborrow items');
 			}
-			$mysession = false;
 			$this->set_borrowship_first_level();
 			if( $this->admin_page->is_second_level() )
 			{
 				$this->add_relationship_second_level();
-				$session_check = isset ($_SESSION[ 'sharing' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ]);
-				if ($session_check) $mysession = $_SESSION[ 'sharing' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ];
-			}
-			else 
-			{
-				$session_check = isset ($_SESSION[ 'sharing_main' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ]);
-				if ($session_check) $mysession = $_SESSION[ 'sharing_main' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ];
 			}
 
-			if( $mysession )
-				$link = unhtmlentities( $mysession );
-			else
-				$link = unhtmlentities( $this->admin_page->make_link( array( 'cur_module' => 'Sharing' , 'id' => '' ) ) );
+			$link = unhtmlentities( $this->admin_page->make_link( array( 'cur_module' => 'Sharing' , 'id' => '' ) ) );
 			header( 'Location: ' . $link );
 			die();
 		} // }}}
