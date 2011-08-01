@@ -48,10 +48,6 @@
 						$old_vars[ $arg ] = '';
 				$link = $this->admin_page->make_link( $old_vars );
 			}
-			else if( isset($_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ]) )
-			{
-				$link = $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ];
-			}
 			else
 			{
 				$link = $this->admin_page->make_link( 
