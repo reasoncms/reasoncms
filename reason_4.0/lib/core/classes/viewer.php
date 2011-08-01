@@ -257,6 +257,21 @@
 			 * @author Nathan White
 			 */
 			 
+			 
+			function get_lister_id($id_vars, $request)
+			{
+				$id_string = '';
+				foreach ($id_vars as $key) 
+				{
+					if (isset($this->request[$key]))
+					{
+						$value = $this->request[$key];
+						$id_string .= $key . ':' . $value .';';
+					}
+				}
+				return $id_string;
+			}
+			 
 			function grab_request() // {{{
 			{
 				$request = array_diff( conditional_stripslashes($_REQUEST), conditional_stripslashes($_COOKIE) );
@@ -284,9 +299,11 @@
 									   'new_entity' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)));
 				
 				$this->append_filters($cleanup_rules);
-				
+								
 				// apply the cleanup rules
 				$this->request = carl_clean_vars($request, $cleanup_rules);
+				
+				$this->_consult_and_save_session_state();
 				
 				// special case a few that unfortunately need localization ... 
 				if (isset($this->request['state'])) $this->state = $this->request['state'] = strtolower($this->request['state']);
@@ -298,6 +315,78 @@
 				// setup some defaults
 				if (!$this->page) $this->page = 1;
 				if (!$this->state) $this->state = 'Live';
+			}
+			
+			/**
+			 * If no state info in request, check session to see if there is a saved state and redirect to it.
+			 * If there is state info in request, save that info to the session.
+			 *
+			 * @return void
+			 */
+			function _consult_and_save_session_state()
+			{
+				$id_vars = array('site_id', 'type_id', 'id', 'user_id', 'cur_module', 'rel_id', '__old_site_id', '__old_type_id', '__old_id', '__old_rel_id', '__old_cur_module', '__old_user_id', 'state');
+				$id_string = $this->get_lister_id($id_vars, $this->request);
+				if (!isset($_SESSION['reason_admin_lister_states']))
+				{
+					$_SESSION['reason_admin_lister_states'] = array();
+				}
+				$lister_states =& $_SESSION['reason_admin_lister_states'];
+				$empty = true;
+				
+				//Check to see if a new state is in the request
+				foreach ($this->request as $key => $value)
+				{
+					if (!in_array($key, $id_vars)) //If it is not an id variable
+					{
+						if (!($value === null || $value === '')) //and has an actual value
+						{
+							$empty = false;
+							break;
+						}
+					}
+				}
+				//There's no new state but there is an old one.
+				// Load old values into the request.
+				if (isset($this->request['refresh_lister_state']))
+				{
+					$ignore_old = $this->request['refresh_lister_state'];
+				}
+				else
+				{
+					$ignore_old = false;
+				}
+				if ($empty && isset($lister_states[$id_string]) && !$ignore_old)
+				{
+					$original_state = $lister_states[$id_string];
+					if (!empty($original_state))
+					{
+						foreach ($original_state as $state_key => $state_value)
+						{
+							$this->request[$state_key] = $state_value;
+						}
+					}
+					$new_link = carl_make_redirect($this->request);
+					header('Location: '.$new_link);
+					echo '<p> Attempted to redirect to <a href=' . $new_link . '>here</a>, but seem to have failed.</p>';
+					die();
+				}
+				// There are new state values, so save them as a new lister.
+				else if (!$empty)
+				{
+					$state = array();
+					$state_string = '';
+					$not_state_vars = array('refresh_lister_state');
+					foreach ($this->request as $state_var => $state_value)
+					{
+						//If it isn't an id variable, it belongs in state
+						if (!in_array($state_var, $id_vars) and !in_array($state_var, $not_state_vars))
+						{
+							$state[$state_var] = $this->request[$state_var];
+						}
+					}
+					$lister_states[$id_string] = $state;
+				}
 			}
 			
 			/**
