@@ -340,9 +340,6 @@
 		 */
 		function pre_show_form() // {{{
 		{
-			if( empty( $_SESSION[ 'listers' ][ $this->get_value( 'site_id' ) ][ $this->get_value( 'type_id' ) ] ) )
-				$_SESSION[ 'listers' ][ $this->get_value( 'site_id' ) ][ $this->get_value( 'type_id' ) ] =
-						'?site_id=' . $this->get_value( 'site_id' ) . '&amp;type_id=' . $this->get_value( 'type_id' );
 			if($this->get_value('entity_saved') && !$this->_has_errors())
 			{
 				$e = new entity($this->get_value('id'));
