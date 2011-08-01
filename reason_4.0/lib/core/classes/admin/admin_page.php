@@ -474,16 +474,14 @@
 				{
 					$ass_name = !empty( $rel[ 'display_name' ] ) ? $rel[ 'display_name' ] : $rel[ 'entity_name' ];
 					$index = $rel[ 'id' ];
-					if( empty( $_SESSION[ 'assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ] ) )
-						$_SESSION[ 'assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ] = $this->make_link( array( 
-									'site_id' => $this->site_id, 
-									'type_id' => $this->type_id,
-									'rel_id' => $rel[ 'id' ],
-									'id' => $this->id,
-									'user_id' => $this->user_id,
-									'cur_module' => 'Associator' ) );
 					$links[ $index ] = array( 'title' => $ass_name , 
-											  'link' => $_SESSION[ 'assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ], 
+											  'link' => $this->make_link( array( 
+												'site_id' => $this->site_id, 
+												'type_id' => $this->type_id,
+												'rel_id' => $rel[ 'id' ],
+												'id' => $this->id,
+												'user_id' => $this->user_id,
+												'cur_module' => 'Associator' ) ),
 											  'rel_info' => $rel );
 				}
 				if($second)
@@ -494,16 +492,15 @@
 				{
 					$ass_name = !empty( $rel[ 'display_name_reverse_direction' ] ) ? $rel[ 'display_name_reverse_direction' ] : $rel[ 'entity_name' ];
 					$index = $rel[ 'id' ];
-					if( empty( $_SESSION[ 'reverse_assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ] ) )
-						$_SESSION[ 'reverse_assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ] = $this->make_link( array( 
-									'site_id' => $this->site_id, 
-									'type_id' => $this->type_id,
-									'rel_id' => $rel[ 'id' ],
-									'id' => $this->id,
-									'user_id' => $this->user_id,
-									'cur_module' => 'ReverseAssociator' ) );
+					
 					$links[ $index ] = array( 'title' => $ass_name , 
-											  'link' => $_SESSION[ 'reverse_assoc' ][ $this->site_id ][ $this->type_id ][ $rel[ 'id' ] ][ $this->id ], 
+											  'link' => $this->make_link( array( 
+												'site_id' => $this->site_id, 
+												'type_id' => $this->type_id,
+												'rel_id' => $rel[ 'id' ],
+												'id' => $this->id,
+												'user_id' => $this->user_id,
+												'cur_module' => 'ReverseAssociator' ) ), 
 											  'rel_info' => $rel );
 				}
 			}
@@ -917,22 +914,18 @@
 		} // }}}
 		function get_borrowed_list_link($type_id)
 		{
-			if(empty($_SESSION[ 'sharing_main' ][ $this->site_id ][ $type_id ]))
-				$_SESSION[ 'sharing_main' ][ $this->site_id ][ $type_id ] = $this->make_link( array( 
+			return $this->make_link( array( 
 					'site_id' => $this->site_id, 
 					'type_id' => $type_id ,
 					'user_id' => $this->user_id,
 					'cur_module' => 'Sharing' ) );
-			return $_SESSION[ 'sharing_main' ][ $this->site_id ][ $type_id  ];
 		}
 		function get_owned_list_link($type_id)
 		{
-			if(empty($_SESSION[ 'listers' ][ $this->site_id ][ $type_id ]) )
-				$_SESSION[ 'listers' ][ $this->site_id ][ $type_id ] = $this->make_link( array( 
+			return $this->make_link( array( 
 					'site_id' => $this->site_id, 
 					'type_id' => $type_id ,
 					'cur_module' => 'Lister' ) );
-			return $_SESSION[ 'listers' ][ $this->site_id ][ $type_id  ];
 		}
 		// IN_MANAGER
 		function leftbar_other() // {{{
@@ -1041,21 +1034,19 @@
 					}
 					else
 						$cur_type = false;
-
-					if(empty($_SESSION[ 'sharing_main' ][ $this->site_id ][ $type->id() ]) )
-						$_SESSION[ 'sharing_main' ][ $this->site_id ][ $type->id() ] = $this->make_link( array( 
-									'site_id' => $this->site_id, 
-									'type_id' => $type->id() ,
-									'user_id' => $this->user_id,
-									'cur_module' => 'Sharing' ) );
 						
 					echo '<li class="navItem';
 					if( $cur_type )
 						echo ' navSelect';
 					echo '">';
 
-					echo '<a href="'. $_SESSION[ 'sharing_main' ][ $this->site_id ][ $type->id() ].
-						'" class="nav">'.($type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' )).'</a></li>' . "\n";
+					echo '<a href="' . 
+						$this->make_link( array( 
+									'site_id' => $this->site_id, 
+									'type_id' => $type->id() ,
+									'user_id' => $this->user_id,
+									'cur_module' => 'Sharing' ) )
+						. '" class="nav">'.($type->get_value('plural_name') ? $type->get_value( 'plural_name' ) : $type->get_value( 'name' )).'</a></li>' . "\n";
 				}
 				echo '</ul></div>';
 			}
