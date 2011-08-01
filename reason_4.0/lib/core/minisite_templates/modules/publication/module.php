@@ -1875,7 +1875,6 @@ class PublicationModule extends Generic3Module
 			}
 			else
 			{
-				trigger_error('No comment group assigned to publication id '.$this->publication->id().' - will return nobody group');
 				return new entity(id_of('nobody_group'));
 			}
 		}
@@ -1908,7 +1907,6 @@ class PublicationModule extends Generic3Module
 			}
 			else
 			{
-				trigger_error('No posting group assigned to publication id '.$this->publication->id().' - will return nobody group');
 				return new entity(id_of('nobody_group'));
 			}
 		}
