@@ -103,8 +103,6 @@
 			{
 				if( !empty($this->del_entity_state) && strtolower($this->del_entity_state) == 'deleted' )
 					$link = unhtmlentities($this->admin_page->make_link( array( 'cur_module' => 'Lister' , 'id' => '', 'state' => 'deleted') ) );
-				else if( isset( $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] ) )
-					$link = unhtmlentities( $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] );	
 				else
 					$link = unhtmlentities( $this->admin_page->make_link( array( 'cur_module' => 'Lister' , 'id' => '' ) ) );
 			}
@@ -263,11 +261,7 @@
 		} // }}}
 		function where_to() // {{{
 		{
-			if( !empty( $_SESSION[ 'assoc' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ][ $this->admin_page->rel_id ][ $this->admin_page->id ] ) )
-				$link = unhtmlentities(
-					$_SESSION[ 'assoc' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ][ $this->admin_page->rel_id ][ $this->admin_page->id ]
-				);
-			elseif($this->direction == 'b_to_a') // reverse associator
+			if($this->direction == 'b_to_a') // reverse associator
 				$link = unhtmlentities( $this->admin_page->make_link( array( 'entity_a' => '' , 'entity_b' => '' , 'cur_module' => 'ReverseAssociator' ) ) );
 			else
 				$link = unhtmlentities( $this->admin_page->make_link( array( 'entity_a' => '' , 'entity_b' => '' , 'cur_module' => 'Associator' ) ) );
