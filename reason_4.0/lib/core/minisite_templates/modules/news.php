@@ -16,6 +16,11 @@
 		var $section;
 		var $show_author_with_summary = false;
 		
+		function _consult_and_save_session_state()
+		{
+			// do nothing
+		}
+		
 		/**
 		* @param entity news section
 		*/
@@ -133,6 +138,11 @@
 		var $section;
 		var $show_author_with_summary = false;
 		
+		function _consult_and_save_session_state()
+		{
+			// do nothing
+		}
+		
 		/**
 		* @param entity news section
 		*/
@@ -248,6 +258,11 @@
 	 */
 	class related_news_viewer extends Viewer
 	{
+		
+		protected function _consult_and_save_session_state()
+		{
+			// do nothing
+		}
 		function alter_values() // {{{
 		{
 			$this->es->add_left_relationship( $this->request[ 'story_id' ] , relationship_id_of( 'news_to_news' ));
@@ -324,7 +339,7 @@
 			}
 			else
 			{
-				$es = new entity_selector( $this->parent->site_id );
+				$es = new entity_selector( $this->site_id );
 				$es->add_type( id_of( 'news_section_type' ) );
 				$es->set_order( 'sortable.sort_order ASC' );
 				$this->sections = $es->run_one();
@@ -358,7 +373,7 @@
 			{
 				$es = new entity_selector();
 				$es->add_type( id_of( 'type' ) );
-				$es->add_right_relationship( $this->parent->site_id , relationship_id_of( 'site_to_type' ) );
+				$es->add_right_relationship( $this->site_id , relationship_id_of( 'site_to_type' ) );
 				$es->add_relation( 'entity.id = ' . id_of( 'issue_type' ) );
 				//$es->add_relation( 'show_hide.show_hide = "show"' );
 
@@ -376,7 +391,10 @@
 		{
 			if( $this->get_feed_url() )
 			{
-				$this->parent->add_head_item( 'link', array('rel'=>'alternate','type'=>'application/rss+xml','title'=>'RSS 2.0 news feed for this site','href'=>$this->get_feed_url() ) );
+				if ($head_items = $this->get_head_items())
+				{
+					$head_items->add_head_item( 'link', array('rel'=>'alternate','type'=>'application/rss+xml','title'=>'RSS 2.0 news feed for this site','href'=>$this->get_feed_url() ) );
+				}
 			}
 		}
 		function run() // {{{
@@ -408,8 +426,8 @@
 				$v->current_issue =& $this->current_issue;
 				$v->num_per_page = 500000;
 				$v->request = $this->request;
-				$v->init( $this->parent->site_id , id_of( 'news' ) );
-				$v->textonly = $this->parent->textonly;
+				$v->init( $this->site_id , id_of( 'news' ) );
+				$v->textonly = $this->textonly;
 				$v->do_display();
 			}
 			else
@@ -421,8 +439,8 @@
 					$v->current_issue =& $this->current_issue;
 					$v->num_per_page = 500000;
 					$v->request = $this->request;
-					$v->init( $this->parent->site_id , id_of( 'news' ) );
-					$v->textonly = $this->parent->textonly;
+					$v->init( $this->site_id , id_of( 'news' ) );
+					$v->textonly = $this->textonly;
 					$count = $v->get_count();
 					if(!empty($count))
 					{
@@ -457,13 +475,14 @@
 			if(empty($this->feed_url))
 			{
 				$type = new entity(id_of('news'));
+				$site_info = new entity($this->site_id);
 				if($type->get_value('feed_url_string') == 'posts')
 				{
-					$this->feed_url = $this->parent->site_info->get_value('base_url').MINISITE_FEED_DIRECTORY_NAME.'/news';
+					$this->feed_url = $site_info->get_value('base_url').MINISITE_FEED_DIRECTORY_NAME.'/news';
 				}
 				elseif($type->get_value('feed_url_string'))
 				{
-					$this->feed_url = $this->parent->site_info->get_value('base_url').MINISITE_FEED_DIRECTORY_NAME.'/'.$type->get_value('feed_url_string');
+					$this->feed_url = $site_info->get_value('base_url').MINISITE_FEED_DIRECTORY_NAME.'/'.$type->get_value('feed_url_string');
 				}
 			}
 			if(!empty($this->feed_url))
@@ -482,8 +501,8 @@
 				$v = new no_issue_news_viewer;
 				$v->num_per_page = $this->num_per_page;
 				$v->request = $this->request;
-				$v->init( $this->parent->site_id , id_of( 'news' ) );;
-				$v->textonly = $this->parent->textonly;
+				$v->init( $this->site_id , id_of( 'news' ) );;
+				$v->textonly = $this->textonly;
 				$v->do_display();
 			}
 			else
@@ -494,8 +513,8 @@
 					$v->set_section( $section );
 					$v->num_per_page = $this->num_per_page;
 					$v->request = $this->request;
-					$v->init( $this->parent->site_id , id_of( 'news' ) );;
-					$v->textonly = $this->parent->textonly;
+					$v->init( $this->site_id , id_of( 'news' ) );;
+					$v->textonly = $this->textonly;
 					$count = $v->get_count();
 					if(!empty($count))
 					{
@@ -524,7 +543,7 @@
 			if (!empty($this->images))
 			{
 				echo '<div class="NewsImages">';
-				if (!empty($this->parent->textonly))
+				if (!empty($this->textonly))
 					echo '<h3>Images</h3>'."\n";
 				foreach( $this->images AS $id => $image )
 				{
@@ -532,7 +551,7 @@
 					if( !empty( $this->show_size ) )
 						$show_text .= '<br />('.$image->get_value( 'size' ).' kb)';
 					//echo "<div class=\"imageChunk\">";
-					show_image( $image, $die, $popup, $desc, $show_text, $this->parent->textonly );
+					show_image( $image, $die, $popup, $desc, $show_text, $this->textonly );
 					//echo "</div>\n";
 				}
 				echo "</div>";
@@ -552,7 +571,7 @@
 		function show_owner( $e ) // {{{
 		{
 			$owner = $e->get_owner();			
-			if ( $owner->get_value('id') != $this->parent->site_id )
+			if ( $owner->get_value('id') != $this->site_id )
 			{
 				echo '<p class="smallText newsProvider">This story is provided by ';
 				$base_url = $owner->get_value('base_url');
@@ -570,7 +589,7 @@
 		function show_related_stories( $e ) // {{{
 		{
 			// -- news_to_news does not exist and I think this is unused ... nwhite
-			//$rel = new entity_selector( $this->parent->site_id );
+			//$rel = new entity_selector( $this->site_id );
 			//$rel->add_right_relationship( $this->request[ 'story_id' ] , relationship_id_of( 'news_to_news' ) );
 			//$rel->add_relation( 'status.status = "published"' );
 			//$related = $rel->run_one( id_of( 'news' ) );
@@ -588,7 +607,7 @@
 					$rel_title = $item->get_value("release_title");
 					if (empty($rel_title)) $rel_title = $item->get_value("name");
 					$link = '?story_id=' . $item->get_value("id");
-					if (!empty($this->parent->textonly))
+					if (!empty($this->textonly))
 						$link .= '&amp;textonly=1';
 					$storylinks .= '<li class="relatedLi"><a href="' . $link . '">' . $rel_title . "</a></li>\n";
 				}
@@ -613,7 +632,7 @@
 			foreach( $issues AS $issue )
 			{
 				echo '<option value="?issue_id='.$issue->id();
-				if( !empty( $this->parent->textonly ) )
+				if( !empty( $this->textonly ) )
 					echo '&amp;textonly=1';
 				echo '"';
 				if( $issue->id() == $this->request[ 'issue_id' ] )
@@ -638,7 +657,7 @@
 		{
 			if(empty($this->issues))
 			{
-				$es = new entity_selector( $this->parent->site_id );
+				$es = new entity_selector( $this->site_id );
 				$es->add_type( id_of( 'issue_type' ) );
 				$es->add_relation( 'show_hide.show_hide = "show"' );
 				$es->set_order( 'dated.datetime DESC' );
@@ -650,7 +669,7 @@
 		{
 			if(!$this->queried_for_issues)
 			{
-				$es = new entity_selector( $this->parent->site_id );
+				$es = new entity_selector( $this->site_id );
 				$es->add_type( id_of( 'issue_type' ) );
 				$total_issue_count = $es->get_one_count();
 				if($total_issue_count > 0)
@@ -691,7 +710,7 @@
 				echo '&amp;';
 			if( !empty( $this->request[ 'page' ] ) )
 				echo 'page=' . $this->request[ 'page' ];
-			if( !empty( $this->parent->textonly ) )
+			if( !empty( $this->textonly ) )
 				echo '&amp;textonly=1';
 			if( !empty( $this->request[ 'issue_id' ] ) )
 				echo '">Back to Issue: '.$issue->get_value( 'name' ).'</a>';
