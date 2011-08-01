@@ -29,7 +29,6 @@
 			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'sharing.css');
 			reason_include_once( 'classes/sharing_filter.php' );
 			reason_include_once( 'content_listers/sharing.php' );
-			$this->set_session_vars();
 
 			$type = new entity( $this->admin_page->type_id );
 			// save the type entity in an object scope
@@ -101,13 +100,13 @@
 			// if(reason_user_has_privs($this->admin_page->user_id,'edit'))
 			return $ret;
 		}
-		function set_session_vars() // {{{
+		/**
+		 *@todo Remove before 4.1 release.
+		 */
+		function set_session_vars()
 		{
-			//if (isset($this->admin_page->request['__old_cur_module']) && $this->admin_page->request['__old_cur_module'] == 'Associator') 
-			if( $this->admin_page->is_second_level() )
-			$_SESSION[ 'sharing' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] = $this->admin_page->make_link( array( 'cur_module' => 'Sharing' , 'PHPSESSID' => '') , true );
-			else $_SESSION[ 'sharing_main' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] = $this->admin_page->make_link( array( 'cur_module' => 'Sharing' , 'PHPSESSID' => '') , true );
-		} // }}}
+			trigger_error("This method is deprecated and will be removed by the 4.1 release.", E_USER_WARNING);
+		}
 		function show_next_nodes() // {{{
 		{
 			$finish_link = $this->admin_page->make_link( array( 'cur_module' => 'Lister' ) );
