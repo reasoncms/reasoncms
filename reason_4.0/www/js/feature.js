@@ -1,16 +1,20 @@
 /**
-* This file is used to control the feature navigtion
+* This file is used to control the feature navigation
 * There are slide show controls as well as next and prev controls
-*
+* October, 2010
 * @author Frank McQuarry
 *
+* Largely rewritten to use the DOM itself to track state, removing lots of complexity and fixing bugs - 7/21/11
 * @author Nathan White
 *
 * - Added proper z-index handling and modified peekaboo to handle multiple clicks.
 * - Established relative positioning for the container ul to handle page resize better.
-* - Fixed first feature bug (no transition)
+* - Fixed transition bug when moving from first feature (no transition)
+* - Eliminated use of "curr" in favor of looking at the DOM.
+* - Eliminated building of an ids array - the complexity is not needed.
+* - Modified to theoretically support multiple instances of the module on the page - though problems remain.
 *
-* @todo the use of "curr" seems confusing and ids - why do we need a special mapping??
+* @todo fix multiple instance problems with video / layout / autoplay_interval.
 */
 
 /**
@@ -58,212 +62,219 @@
 	
 $(document).ready(function()
 {
-	var curr=0; //the current feature being played in the slide show
-	var ids= new Array(); //an array to hold the ids of features.
-	var timeInterval=-1; //-1 means that autoplay is not running.
-	var autoplay_timer; //how long in seconds to play each feature
-	var looping; //determines if slides loop or not
-	var arrows_toggle=false; //if it doesn't loop then show > on first slide
-		                     // < on last slide, and <> inbetween
+	var autoplay_interval; // we declare a variable to reference setInterval if autoplay is used.
 		                     
-	init_features();
-	
+	/**
+	* Setup everything for any instanc(es) of the features module on the page
+	*/
+	$("div.featuresModule").each(function()
+	{
+		var features_module = $(this);
+		
+		// setup initial z-index and opacity settings
+		$("ul.features", features_module).css("position: relative");
+		$("ul.features li.feature", features_module).normalize_z_index($("ul.features li.feature.active")).css('position', 'absolute');
+		$("ul.features li.feature.active", features_module).css('opacity', '1'); // set the initial opacity otherwise first transition is not smooth
+		$("ul.features li.feature.inactive", features_module).css('opacity', '0'); // set the initial opacity otherwise first transition is not smooth
+		
+		// click events for numbered items and arrows
+		$("div.featureNav > span.navBlock > a", features_module).click(function()
+		{
+			//get the feature id encoded in the url
+			var url = $(this).attr('href');
+			var id = _queryString("feature",url);
+			stop_autoplay(features_module);
+			peekaboo($('#feature-'+id+':first', features_module));
+			return false;
+		});
+		
+		// click event for play button
+		$("div.featureNav > span.play-pause > a.play", features_module).click(function()
+		{
+			start_autoplay(features_module);
+			return false;
+		});
+		
+		// click event for pause button
+		$("div.featureNav > span.play-pause > a.pause", features_module).click(function()
+		{
+			stop_autoplay(features_module);
+			return false;
+		});
+		
+		// setup start over button if it exists
+		$("div.featureNav > span.play-pause > a.startOver").each(function()
+		{
+			$(this).show();
+			$(this).click(function()
+			{
+				peekaboo($('ul.features li.feature:first', features_module));
+				return false;
+			});
+		});
+		
+		make_navigation_friendly(features_module);
+		setup_looping(features_module);
+		start_autoplay(features_module);
+	});
 	
 	/**
-	* grabs the links in the feature navigation and 
-	* implements showing the selected feature
-	*/
-	$("div.featureNav > span.navBlock > a").click(function(event)
+	 * A few alterations to make the navigation more friendly
+	 * - If the length of our navigation is too long - just show forward / back arrows.
+	 * - If there is only one feature and we aren't showing a title or text lets hide the nav div entirely.	
+	 */
+	function make_navigation_friendly(features_module)
 	{
-		event.preventDefault();
-		
-		//get the feature id encoded in the url
-		var url = $(this).attr('href');
-		var id = _queryString("feature",url);
-		var new_feature = true;
-		
- 		if (id != null)
+		if ($("ul.features li.feature", features_module).length > 1)
 		{
-			//turn off autoplay if its running
-			if(timeInterval!=-1)
-			{
-				toggle_play_pause("play");
-				clearInterval(timeInterval);
-				timeInterval=-1;
-			}
-			if(id == ids[curr])
-			{
-				if(!$(this).hasClass('prev') && !$(this).hasClass('next'))
-				{
-					new_feature = false;
-				}
-			}	
-
-			//find the current feature
-			n=ids.length;
-			for(i=0;i<n;i++)
-			{
-				if(ids[i]==id)
-				{
-					curr=i;
-					break;
-				}
-			}
+			// grab width of navBlock and featureInfo div
+			var nav_w=$('ul.features li.feature:first div.featureNav > span.navBlock', features_module).width();
+			var feat_w=$('ul.features li.feature:first .featureInfo', features_module).width();
 			
-			//show the selected feature	
-			if(new_feature)
+			// if the nav is taking up too much space lets just show the arrows:
+			if ( ((nav_w != 0) && (feat_w != 0)) && ((nav_w / feat_w) > 0.8) )
 			{
-				peekaboo(id);
-			}
-		}
-		else if (id == null)
-		{
-			if($(this).hasClass('play'))
-			{
-				toggle_play_pause("pause");
-				adjust_current(1);
-				timeInterval=setInterval(play_feature_slideshow,autoplay_timer*1000);
-			}
-			else if($(this).hasClass('pause'))
-			{
-				toggle_play_pause("play");
-				adjust_current(-1);
-				clearInterval(timeInterval);
-				timeInterval=-1;
+				$('ul.features li.feature div.featureNav > span.navBlock > a', features_module).hide();
+				$('ul.features li.feature div.featureNav > span.navBlock > a.button.prev', features_module).show();
+				$('ul.features li.feature div.featureNav > span.navBlock > a.button.next', features_module).show();
 			}			
 		}
-		if(arrows_toggle)
+		if ($("ul.features li.feature", features_module).length == 1)
 		{
-			toggle_arrows();
+			if ($('ul.features li.feature div.featureNav', features_module).siblings().length == 0)
+			{
+				$('ul.features li.feature div.featureNav', features_module).hide();
+			}
 		}
-
-	});
-	
-	$("div.featureNav > span.play-pause > a").click(function(event){
-		event.preventDefault();
-		if($(this).hasClass('play'))
-		{
-			toggle_play_pause("pause");
-			adjust_current(1);
-			timeInterval=setInterval(play_feature_slideshow,autoplay_timer*1000);
-		}
-		else if($(this).hasClass('pause'))
-		{
-			toggle_play_pause("play");
-			adjust_current(-1);
-			clearInterval(timeInterval);
-			timeInterval=-1;
-		}			
-	
-	});
+	}
 	
 	/**
-	 * display the feature with the given feature_id - fade out all others
+	 * If the features module disables looping, hide the navigation elements from the first and last feature.
 	 */
-	function peekaboo(feature_id)
+	function setup_looping(features_module)
 	{
-		$('#feature-'+feature_id+':first').each(function()
+		if (!looping_enabled(features_module))
 		{
-			$("ul.features li.feature").normalize_z_index($(this));
-			$(this).siblings().stop(true).fadeTo(600, 0, function()
+			// selectively hide arrows
+			$("ul.features li.feature:first .featureNav .navBlock a.prev", features_module).hide();
+			$("ul.features li.feature:last .featureNav .navBlock a.next", features_module).hide();
+		}
+	}
+	
+	/**
+	 * set an interval at which we call play feature slideshow and set the button to pause mode.
+	 */
+	function start_autoplay(features_module)
+	{
+		if (timer = get_autoplay_timer(features_module))
+		{
+			play_func = function()
+			{
+				play_feature_slideshow(features_module);
+			}
+			autoplay_interval = setInterval(play_func, timer);
+			$("div.featureNav > span.play-pause > a.play", features_module).hide();
+			$("div.featureNav > span.play-pause > a.pause", features_module).show();
+		}
+	}
+	
+	/**
+	 * clear the interval we use to call play feature slideshow and set the button to play mode.
+	 */
+	function stop_autoplay(features_module)
+	{
+		clearInterval(autoplay_interval);
+		$("div.featureNav > span.play-pause > a.play", features_module).show();
+		$("div.featureNav > span.play-pause > a.pause", features_module).hide();
+	}
+
+	/**
+	 * Does a quick regexp to see if there is an autoplay timer set - returns the timer value which represents the delay between slides
+	 */
+	function get_autoplay_timer(features_module)
+	{
+		var autoplay_regex = 'autoplay-[1-9][0-9]*';		
+		var features_module_class = features_module.attr('class');
+		var regex = new RegExp(autoplay_regex);
+		var match = regex.exec(features_module_class);
+		return (match) ? (match[0].match(/\d+/)*1000) : false;
+	}
+	
+	function looping_enabled(features_module)
+	{
+		looping_off = features_module.hasClass("looping-off");
+		return (looping_off) ? false : true;
+	}
+	
+	/**
+	 * if our feature is not already active, display the feature - fade out all others
+	 */
+	function peekaboo(feature)
+	{
+		if (!feature.hasClass("active"))
+		{
+			$("li.feature", $(feature).parent()).normalize_z_index(feature);
+			feature.siblings().stop(true).fadeTo(600, 0, function()
 			{
 				$(this).removeClass('active').addClass('inactive');
 			});
-			$(this).stop(true).fadeTo(600, 1, function()
+			feature.stop(true).fadeTo(600, 1, function()
 			{
 				$(this).removeClass('inactive').addClass('active');
 			});
-		});
+		}
 	}
 	
 	/**
-	* set offset the current feature index "curr" by num
-	* tie the beginning to the end
-	* NOTE: this function expects num to be less than ids.length
-	* unexpected behavior if you try to big a jump
-	* generally use +1 or -1 as num
-	*/
-	function adjust_current(num)
+	 * If the length of the combined active and first feature selector is equal to 1, we are on the first feature.
+	 */	
+	function is_first_feature(feature)
 	{
-		var n=ids.length;
-		curr=curr+num;
-		if(num>0)
-		{
-			if(curr>=n)
-			{
-				curr=0;
-			}
-		}
-		else if(num<0)
-		{
-			if(curr<0)
-			{
-				curr=(n-1);
-			}
-			
-		}	
+		return ($("li.active, li.feature:first", $(feature).parent()).length == 1);
 	}
 	
 	/**
-	* toggles the prev and next arrows
-	* for when looping is turned off
-	*/
-	function toggle_arrows()
+	 * If the length of the combined active and last feature selector is equal to 1, we are on the last feature.
+	 */
+	function is_last_feature(feature)
 	{
-		prev=$("a[class~=prev]");
-		next=$("a[class~=next]");
-
-		n=ids.length-1;
-		if(curr==0)
-		{
-			prev.hide();
-			next.show();
-		}
-		else if(curr==n)
-		{
-			prev.show();
-			next.hide();
-		}
-		else
-		{
-			prev.show();
-			next.show();
-		}
-
+		return ($("li.active, li.feature:last", $(feature).parent()).length == 1);
 	}
 	
 	/**
-	* only show the play or the pause controls
-	* never show them together.
-	*/
-	function toggle_play_pause(show)
+	 * If the length of the combined active and first feature selector is equal to 1, we are on the first feature.
+	 */	
+	function on_first_feature(features_module)
 	{
-		playbutton=$("a[class~=play]");
-		pausebutton=$("a[class~=pause]");
-
-		if(show=="play")
-		{
-			playbutton.show();
-			pausebutton.hide();
-		}
-		else if (show=="pause")
-		{
-			playbutton.hide();
-			pausebutton.show();
-		}
+		return ($("li.active, li.feature:first", features_module).length == 1);
+	}
+	
+	/**
+	 * If the length of the combined active and last feature selector is equal to 1, we are on the last feature.
+	 */
+	function on_last_feature(features_module)
+	{
+		return ($("li.active, li.feature:last", features_module).length == 1);
 	}
 	
 	/**
 	* controls features when in slide show mode
 	*/
-	function play_feature_slideshow()
+	function play_feature_slideshow(features_module)
 	{
-		var n=ids.length;
-		if(curr<n && curr>=0)
+		// if we are on the last feature, loop to first, otherwise peekaboo next feature
+		if (on_last_feature(features_module) && looping_enabled(features_module))
 		{
-			peekaboo(ids[curr])
+			peekaboo($("li.feature:first", features_module));
 		}
-		adjust_current(1);
+		else
+		{
+			peekaboo($("li.active", features_module).next());
+			if (on_last_feature(features_module) && !looping_enabled(features_module))
+			{
+				stop_autoplay(features_module);
+			}
+		}
 	}
 
 	/** 
@@ -274,93 +285,6 @@ $(document).ready(function()
 		if ( (url.search( RegExp( "[?&]" + key + "=([^&$]*)", "i" ) )) > -1 ) return RegExp.$1;
 		else return null;
 	}
-	
-	/**
-	* initializes features slide show
-	*/
-	function init_features()
-	{
-		$("ul.features").css("position: relative");
-		$("ul.features li.feature").normalize_z_index($("ul.features li.feature.active")).css('position', 'absolute');
-		$("ul.features li.feature.active").css('opacity', '1'); // set the initial opacity otherwise first transition is not smooth
-		$("ul.features li.feature.inactive").css('opacity', '0'); // set the initial opacity otherwise first transition is not smooth
-		features= $("ul.features li.feature");	
-		
-		//get the value of autoplay
-		//then  set the global ids array
-		//then set the callback to play
-		//the slide show--0 means no slideshow
-		if(features.length>=2)//no need to bother for only 1 feature
-		{
-			autoplay=$("div[class*=autoplay]");
-			//get the value of class out as a string
-			temp1=autoplay.attr('class');
-			//turn the string into an array
-			temp2=temp1.split(' ');
-			//get the autplay-x string
-			temp3=temp2[1].split('-');
-			//now get the value of autoplay
-			autoplay_timer= +temp3[1];
-			/* autoplay_timer is in seconds */
-			
-			//determine whether looping is turned on
-			temp3=temp2[2].split('-');
-			looping=temp3[1];
-			if(looping=="off")
-			{
-				arrows_toggle=true;
-			}
-			
-			features.each(function(index){
-				var tmp=$(this).attr('id');
-				tmp2=tmp.split('-');
-				id=tmp2[1];
-				ids[index]=id;
-			})
-			
-			if(arrows_toggle)
-			{
-				toggle_arrows();
-			}
-			
-			
-			if(autoplay_timer>0)
-			{
-				toggle_play_pause("pause");
-				curr=1;
-				timeInterval=setInterval(play_feature_slideshow,autoplay_timer*1000);
-			}
-			else if(autoplay_timer==0)
-			{
-				playbutton=$("a[class~=play]");
-				playbutton.hide();
-				pausebutton=$("a[class~=pause]");
-				pausebutton.hide();
-			}
-			
-			//now determine the navigation
-			//if the feature navigation is so long it is wrapping
-			//into two or more lines, there pull out all the links
-			//and only use the arrow keys.
-			var nav_block=$('.navBlock');
-			var features=$('.featureInfo');
-			var nav_w=nav_block.width();
-			var feat_w=features.width();
-			
-			if(nav_w!=0 && feat_w!=0)//only Anarchists divide by zero.
-			{
-				if( (nav_w/feat_w)>0.8 )
-				{
-					var prev=$('.button.prev');
-					var next=$('.button.next');
-					var nav_link =$('.featureNav > span.navBlock > a')
-					nav_link.hide();
-					prev.show();
-					next.show();
-				}
-			}			
-		}	
-	} //end init_features
 	
 	function size_modal_window(settings)
 	{
