@@ -91,11 +91,14 @@
 				echo $start . 'Associate with ' . $ass[ 'e_name' ] . $finish . '<br />';
 			}
 		} // }}}
-		function set_session_vars() // {{{
+		
+		/**
+		 *@todo Remove before 4.1 release.
+		 */
+		function set_session_vars()
 		{
-			$_SESSION[ 'assoc' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ][ $this->admin_page->rel_id ][ $this->admin_page->id ] = 
-				$this->admin_page->make_link( array( 'PHPSESSID' => '' ) , true ); 
-		} // }}}
+			trigger_error("This method is deprecated and will be removed by the 4.1 release.", E_USER_WARNING);
+		}
 		
 		function should_run()
 		{
@@ -118,7 +121,6 @@
 			$this->head_items->add_javascript(JQUERY_URL, true);
 			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'assoc.css');
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'table_update.js');
-			$this->set_session_vars();
 			$this->get_associations();
 			if(empty($this->associations[ $this->admin_page->rel_id ]))
 			{
