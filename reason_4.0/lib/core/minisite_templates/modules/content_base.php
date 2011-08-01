@@ -31,7 +31,7 @@
 		function run()
 		{
 			$this->process();
-			echo '<div id="pageContent">';
+			echo '<div id="pageContent" class="'.$this->get_api_class_string().'">';
 			echo $this->content;
 			echo '</div>';
 		}
