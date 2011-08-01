@@ -116,16 +116,11 @@
 			{
 				$link = $this->admin_page->make_link( array('cur_module'=>'Editor', 'id' => $this->admin_page->request['next_entity']) );
 			}
-			elseif( isset($_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ]) )
-			{
-				$link = $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ];
-			}
 			else
 			{
 				$dest_state = $user_can_publish ? 'live' : 'pending';
 				$link = $this->admin_page->make_link( array( 'id' => '',/*'new_entity' => '',*/'site_id' => $this->admin_page->site_id , 'type_id' => $this->admin_page->type_id , 'cur_module' => 'Lister', 'state' => $dest_state ) );
-			}
-
+			}			
 			// before redirecting, check to see if there are any custom finish actions associated with this type.
 			// the entity_type variable is declared earlier in the check_entity_values method.
 			
