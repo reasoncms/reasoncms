@@ -55,6 +55,8 @@
 			if( !$this->has_filters() ) unset($this->actions['clear']); // remove filter if we have no search fields
 			$this->add_element( 'search_exact_id' , 'hidden' );
 			$this->set_value( 'search_exact_id' , true );
+			$this->add_element( 'refresh_lister_state', 'hidden' );
+			$this->set_value( 'refresh_lister_state', true );
 			if( $viewer )
 			{
 				$this->get_db_fields( $viewer );
