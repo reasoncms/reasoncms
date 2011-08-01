@@ -54,6 +54,7 @@ class FeatureModule extends DefaultMinisiteModule
 	var $acceptable_params = array(
 		'shuffle' => false,
 		'autoplay_timer' => 0,
+		'looping' => 'on',
 		'max' => 0,
 		'width' => 400,
 		'height' => 300,
@@ -328,7 +329,7 @@ class FeatureModule extends DefaultMinisiteModule
 		$this->features_view_params['width']=$this->params['width'];
 		$this->features_view_params['height']=$this->params['height'];
 		$this->features_view_params['condensed_nav']=false;
-		$this->features_view_params['looping']='on';//or off
+		$this->features_view_params['looping']=$this->params['looping'];//or off
 	}
 
 	/**

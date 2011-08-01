@@ -101,8 +101,17 @@ class inlineAVFeatureView extends FeatureView
 		if($this->_view_params['autoplay_timer'] != 0)
 		{
 			$str .= '<span class="play-pause">';
-			$str .=$this->build_play_nav_str();
-			$str .=$this->build_pause_nav_str();
+			$end = end($data);
+			reset($data);
+			if ( ($end['id'] == $curr_id) && ($this->_view_params['looping'] == 'off') )
+			{
+				$str .=$this->build_start_over_str();
+			}
+			else
+			{
+				$str .=$this->build_play_nav_str();
+				$str .=$this->build_pause_nav_str();
+			}
 			$str .= '</span>';
 		}
 		$str .= '<span class="navBlock">';
@@ -238,6 +247,14 @@ class inlineAVFeatureView extends FeatureView
 		return $str;
 	}
 	
+	/**
+	* @return string containing a start over link for when features is in slide show mode and looping is off
+	*/
+	function build_start_over_str()
+	{
+		$str="<a style=\"display:none\" href=\"#\" title=\"Start Over\" class=\"button startOver \"> Start Over </a>";
+		return $str;
+	}
 	
 	/**
 	 * Create the markup
