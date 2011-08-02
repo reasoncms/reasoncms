@@ -617,6 +617,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'main' => 'login',
                     'sidebar' => 'blurb',
 		),
+                'study_skills_assessment'=> array(
+                    'main_post'=> 'study_skills_assessment', 
+                ),
 		'test_page' => array(
                     'main' => 'steve_module',
                     'main_post' => 'content',
