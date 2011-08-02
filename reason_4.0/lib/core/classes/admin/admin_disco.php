@@ -39,7 +39,7 @@
 		{
 			foreach( $this->admin_page->request AS $request => $value )
 			{
-				if( !$this->_is_element($request))
+				if( !$this->_is_element($request) && ($request != 'submitted'))
 #				if( !isset( $this->_elements[ $request ] ) )
 				{
 					$this->add_element( $request , 'hidden' );
@@ -187,7 +187,7 @@
 			foreach( $page->request AS $request => $value )
 			{
 #				if( !isset( $this->_elements[ $request ] ) )
-				if(!$this->_is_element($request))
+				if( !$this->_is_element($request) && ($request != 'submitted'))
 				{
 					$this->add_element( $request , 'hidden' );
 					$this->set_value( $request , $value );
