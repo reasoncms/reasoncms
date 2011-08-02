@@ -30,7 +30,7 @@
 				$this->show_item_default( 'File Preview' , $embed_markup );
 				if($embed_markup == strip_tags($embed_markup, REASON_DEFAULT_ALLOWED_TAGS) )
 				{
-					$this->show_item_default( 'Embed Code', '<textarea>'.htmlspecialchars($embed_markup).'</textarea>' );
+					$this->show_item_default( 'Embed Code', '<textarea rows="7">'.htmlspecialchars($embed_markup).'</textarea>' );
 				}
 				else
 				{
