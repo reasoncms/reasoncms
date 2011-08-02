@@ -184,7 +184,10 @@ class miniEventsModule extends EventsModule
 
 	function show_event_list_item_standard( $event_id, $day )
 	{
-
+		$site_id = get_site_id_from_url("/sports");
+		//echo $site_id."\n";
+		//echo $this->site_id."\n";
+		
 		
 		$sd = substr($this->events[$event_id]->get_value('datetime'), 0, 10);
 		if (substr($day, 0, 10) == $sd
@@ -202,7 +205,12 @@ class miniEventsModule extends EventsModule
 
 			echo '<time class="dtstart" datetime="'.$day.'"><span class="month">'.date('M', $d).'</span><span class="day">'.date('d', $d).'</span></time>'."\n";
 			
-			echo '<h1 class="summary">'.$this->events[$event_id]->get_value( 'name' );
+			echo '<h1 class="summary">';
+			if ($site_id == $this->site_id)
+			{
+				echo ucfirst(preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $this->events[$event_id]->get_value('sponsor')))."<br>";
+			}
+			echo $this->events[$event_id]->get_value( 'name' );
 			if ($sd != $lo)
 			{
 				$s = mktime(0, 0, 0, substr($sd, 5, 2), substr($sd, 8, 2), substr($sd, 0, 4));
@@ -218,7 +226,16 @@ class miniEventsModule extends EventsModule
 			}
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{
-				echo '<br /><span class="location">'.$this->events[$event_id]->get_value( 'location' ).'</span>';
+				echo '<br /><span class="location">'.$this->events[$event_id]->get_value( 'location' );
+				if ($this->events[$event_id]->get_value( 'description' ) != '')
+				{
+					echo ' ('.$this->events[$event_id]->get_value( 'description' ).')';
+				}
+				else if (substr($this->events[$event_id]->get_value('datetime'), 11) != '00:00:00')
+				{
+					echo ' ('.prettify_mysql_datetime($this->events[$event_id]->get_value('datetime'), "g:i a" ).')';
+				}
+				echo '</span>';
 			}
 			
 			echo '</h1>'."\n";

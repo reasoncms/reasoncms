@@ -47,10 +47,19 @@ class lutherSportsResultsMiniModule extends EventsModule
 	{
 		
 		$e =& $this->event;
+		$site_id = get_site_id_from_url("/sports");
 		
 			echo '<div class="eventDetails">'."\n";
 			//$this->show_images($e);
-			echo '<h1>'.$e->get_value('name').'</h1>'."\n";
+			if ($site_id == $this->site_id)
+			{
+				$event_name = ucfirst(preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $e->get_value('sponsor')))." - ".$e->get_value( 'name' );
+			}
+			else 
+			{
+				$event_name = $e->get_value( 'name' );
+			}
+			echo '<h1>'.$event_name.'</h1>'."\n";
 			//$this->show_ownership_info($e);
 			$st = substr($e->get_value('datetime'), 0, 10);
 			$lo = substr($e->get_value('last_occurence'), 0, 10);
@@ -345,6 +354,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 
 		if (substr($day, 0, 10) == substr($this->events[$event_id]->get_value('datetime'), 0, 10))
 		{
+			$site_id = get_site_id_from_url("/sports");
 			echo '<tr>'."\n";
 			$d = mktime(0, 0, 0, substr($day, 5, 2), substr($day, 8, 2), substr($day, 0, 4));
 			$lo = substr($this->events[$event_id]->get_value('last_occurence'), 0, 10);
@@ -367,13 +377,21 @@ class lutherSportsResultsMiniModule extends EventsModule
 			}
 			
 			//echo '<td>'.$this->events[$event_id]->get_value( 'id' ).'</td>'."\n";
+			if ($site_id == $this->site_id)
+			{
+				$event_name = ucfirst(preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $this->events[$event_id]->get_value('sponsor')))." - ".$this->events[$event_id]->get_value( 'name' );
+			}
+			else 
+			{
+				$event_name = $this->events[$event_id]->get_value( 'name' );
+			}
 			if (!empty($this->events_page_url))
 			{
-				echo '<td><a href="'.$this->events_page_url.'?event_id='.$this->events[$event_id]->id().'&date='.$day.'">'.$this->events[$event_id]->get_value( 'name' ).'</a></td>'."\n";
+				echo '<td><a href="'.$this->events_page_url.'?event_id='.$this->events[$event_id]->id().'&date='.$day.'">'.$event_name.'</a></td>'."\n";
 			}
 			else
 			{
-				echo '<td>'.$this->events[$event_id]->get_value( 'name' ).'</td>'."\n";
+				echo '<td>'.$event_name.'</td>'."\n";
 			}
 			echo '<td>'.$this->events[$event_id]->get_value( 'location' ).'</td>'."\n";
 			if ($this->events[$event_id]->get_value( 'description' ) != '')
