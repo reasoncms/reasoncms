@@ -27,7 +27,7 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 	}
 	
 	function run ()
-	{
+	{			
 		if (get_theme($this->passed_vars['site_id'])->get_value('name') == 'luther2010')
 		{
 			if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_home'
@@ -44,7 +44,7 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 				$this->markup_string .= '</nav>'."\n";
 				$this->markup_string .= '</article>'."\n";
 				$this->markup_string .= '<nav class="button view-all">'."\n";
-				$this->markup_string .= '<ul><li><a href="/spotlightarchives">View all spotlights &gt;</a></li></ul>'."\n";
+				$this->markup_string .= '<ul><li><a href="/sports/spotlightarchives">View all spotlights &gt;</a></li></ul>'."\n";
 				$this->markup_string .= '</nav>'."\n";
 			}
 			else 
@@ -58,6 +58,12 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 				$this->markup_string .= '<ul><li><a href="'.$full_link.'">Read more &gt;</a></li></ul>'."\n";
 				$this->markup_string .= '</nav>'."\n";
 				$this->markup_string .= '</article>'."\n";
+				if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_sports')
+				{
+					$this->markup_string .= '<nav class="button view-all">'."\n";
+					$this->markup_string .= '<ul><li><a href="/sports/spotlightarchives">View all spotlights &gt;</a></li></ul>'."\n";
+					$this->markup_string .= '</nav>'."\n";
+				}			
 			}		
 		}
 		else

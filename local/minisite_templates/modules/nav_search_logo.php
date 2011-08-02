@@ -84,7 +84,7 @@
 			$url = get_current_url();
 			if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url))
 			{
-				echo '<h1 id="luther-logo"><a href="http://www.luther.edu" title="Luther College Home"><img alt="luther College" height="54" src="/images/luther2010/Norse-w-Luther-Helmet-294r-transparent.png" width="122" /></a></h1>'."\n";
+				echo '<h1 id="luther-logo"><a href="http://www.luther.edu/sports" title="Luther College Athletics"><img alt="luther College" height="54" src="/images/luther2010/Norse-w-Luther-Helmet-294r-transparent.png" width="122" /></a></h1>'."\n";
 			}
 			else
 			{
@@ -92,6 +92,7 @@
 			}			
 			echo '<nav id="nav-search" role="navigation">'."\n";
 			echo '<ul>'."\n";
+			echo '<li class="home"><a href="/">Home</a></li>'."\n";
 			echo '<li class="directory"><a href="/directory/">Directory</a></li>'."\n";
 			echo '<li class="index"><a href="/azindex/">A-Z Index</a></li>'."\n";
 			echo '<li class="search">'."\n";

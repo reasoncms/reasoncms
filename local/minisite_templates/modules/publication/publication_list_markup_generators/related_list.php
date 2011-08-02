@@ -16,6 +16,7 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 									'date_format',
 									'featured_item_markup_strings',
 									'links_to_current_publications',
+									'cur_page',
 									); 	
 
 	function RelatedListMarkupGenerator ()
@@ -67,6 +68,23 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 					$markup_string .= '<li class="post">'.$this->passed_vars['list_item_markup_strings'][$item_id].'</li>'."\n";
 			}
 			$markup_string .= '</ul>'."\n";
+			if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_public_information')
+			{
+				$markup_string .= '<nav class="button view-all">'."\n";
+				$markup_string .= '<ul>'."\n";
+				$markup_string .= '<li><a href="/headlines">View all news &gt;</a></li>'."\n";
+				$markup_string .= '</ul>'."\n";
+				$markup_string .= '</nav>'."\n";
+			}
+			else if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_sports')
+			{
+				$url = get_current_url();
+				$markup_string .= '<nav class="button view-all">'."\n";
+				$markup_string .= '<ul>'."\n";
+				$markup_string .= '<li><a href="'.$url.'headlines">View all news &gt;</a></li>'."\n";
+				$markup_string .= '</ul>'."\n";
+				$markup_string .= '</nav>'."\n";
+			}
 		}
 		return $markup_string;
 	}
