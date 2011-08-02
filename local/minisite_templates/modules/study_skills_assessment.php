@@ -6,7 +6,7 @@
 
 //$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'StudySkillsAssessment';
 
-class StudySkillsAssessment extends Disco {
+class StudySkillsAssessmentForm extends Disco {
     
 	var $_log_errors = true;
 	var $error;
@@ -17,7 +17,20 @@ class StudySkillsAssessment extends Disco {
 			'text' => '<h3>TESTT1</h3>',
 		)
             );
-
-
+        
+        
+        
+ 
 }
+
+//class StudySkillsAssessmentModule extends DefaultMinisiteModule {
+ 
+//}
+    $my_form = new StudySkillsAssessmentForm();
+
+    $my_form->run();
+
+
+
+
 ?>
