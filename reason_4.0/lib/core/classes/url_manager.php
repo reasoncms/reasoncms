@@ -702,6 +702,9 @@
 			array_unique($page_types);
 			array_walk($page_types,'db_prep_walk');
 			
+			if(empty($page_types))
+				return; // there are no publication page types in this instance of Reason
+			
 			$es = new entity_selector( $this->site_id );
 			$es->add_type( id_of( 'minisite_page' ) );
 			$es->add_left_relationship_field('page_to_publication','entity','id','publication_id');
