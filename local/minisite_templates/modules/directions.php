@@ -16,6 +16,7 @@ class DirectionsModule extends DefaultMinisiteModule
 
   function run()
   {
+        echo '<p>To access directions using Google Maps, please enter your current location in the text box below. For full text directions to Luther from specific locations, please scroll down.</p>';
 	echo '<div class="googleMapsForm">'."\n";
 	echo '<form action="http://maps.google.com/maps" method="get"	target="_blank">';
 	echo '<div id="address">'.'Starting address:'.'</div>'."\n";
