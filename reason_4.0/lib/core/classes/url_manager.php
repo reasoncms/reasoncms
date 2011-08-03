@@ -10,6 +10,7 @@
 	include_once(CARL_UTIL_INC.'basic/filesystem.php');
 	reason_include_once( 'classes/entity_selector.php' );
 	reason_include_once( 'function_libraries/url_utils.php' );
+	reason_include_once( 'classes/module_sets.php' );
 
 	/**
 	 *	Tool to manage .htaccess files
@@ -688,14 +689,32 @@
 			fputs( $this->_fp, "\n# blog feed rewrites\n\n" ) OR trigger_error('Unable to write to htaccess', HIGH );
 
 			// get all assets for this site
+			
+			$ms =& reason_get_module_sets();
+			$modules = $ms->get('publication_item_display');
+			$page_types = array();
+			foreach($modules as $module)
+			{
+				$pts = page_types_that_use_module($module);
+				if(!empty($pts))
+					$page_types = array_merge($page_types, $pts);
+			}
+			array_unique($page_types);
+			array_walk($page_types,'db_prep_walk');
+			
 			$es = new entity_selector( $this->site_id );
-			$es->add_type( id_of( 'publication_type' ) );
-			$blogs = $es->run_one();
+			$es->add_type( id_of( 'minisite_page' ) );
+			$es->add_left_relationship_field('page_to_publication','entity','id','publication_id');
+			$es->add_relation('`entity`.`state` = "Live"');
+			$es->add_relation('`custom_page` IN ('.implode(',',$page_types).')');
+			$es->set_sharing('owns');
+			$blog_pages = $es->run_one();
 			
 			$blog_type_entity = new entity( id_of('publication_type') );
 			$news_type_entity = new entity( id_of('news') );
-			foreach( $blogs as $blog )
+			foreach( $blog_pages as $blog_page )
 			{
+				$blog = new entity($blog_page->get_value('publication_id'));
 				fputs( $this->_fp, 'RewriteRule ^'.MINISITE_FEED_DIRECTORY_NAME.'/'.$blog_type_entity->get_value('feed_url_string').'/'.$blog->get_value('blog_feed_string').'$ '.FEED_GENERATOR_STUB_PATH.'?type_id='.$news_type_entity->id().'&site_id='.$this->site->id().'&blog_id='.$blog->id().'&feed=blog_posts'."\n" ) OR trigger_error( 'Unable to write to htaccess file', HIGH );
 			}
 		}
