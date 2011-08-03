@@ -241,7 +241,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 		
 		if ($this->has_content( 'sub_nav_3' ))
 		{
-			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{
 				echo '<section class="contact-information">'."\n";
 				$this->run_section( 'sub_nav_3' );
@@ -334,7 +335,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 		{
 			echo '<section class="spotlight" role="group">'."\n";
-			echo '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+			echo '<header class="blue-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
 			$this->run_section( 'sidebar');
 			echo '</section> <!-- class="spotlight" role="group" -->'."\n";
 		}
@@ -1105,7 +1106,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if ($this->has_content( 'main_post' ))
 		{
 			echo '<div class="contentPost">'."\n";
-			echo '<header class="red-stripe"><h1><span>Headlines</span></h1></header>'."\n";
+			echo '<header class="blue-stripe"><h1><span>Headlines</span></h1></header>'."\n";
 			$this->run_section( 'main_post' );
 			echo '</div>'."\n";
 		}
