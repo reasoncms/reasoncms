@@ -193,7 +193,7 @@ class HeadItems
 			$html_item .= '<'.$item['element'];
 			foreach($item['attributes'] as $attr_key=>$attr_val)
 			{
-				$html_item .= ' '.reason_htmlspecialchars($attr_key).'="'.reason_htmlspecialchars($attr_val).'"';
+				$html_item .= ' '.$this->_htmlspecialchars_unknown_source($attr_key).'="'.$this->_htmlspecialchars_unknown_source($attr_val).'"';
 			}
 			if(!empty($item['content']) )
 			{
@@ -213,6 +213,17 @@ class HeadItems
 		}
 		$this->handle_duplicates($html_items);
 		return implode("\n",$html_items)."\n";
+	}
+	
+	/**
+	 * A clone of reason_htmlspecialchars for use outside Reason
+	 * @param string $string
+	 * @return string
+	 */
+	function _htmlspecialchars_unknown_source($string)
+	{
+		$string = str_replace(array('&amp;','&gt;','&lt;','&quot;','&#039;'),array('&','>','<','"',"'"),$string);
+		return htmlspecialchars($string, ENT_QUOTES, 'UTF-8' );
 	}
 	
 	/**
