@@ -17,13 +17,17 @@ class StudySkillsAssessmentForm extends Disco {
             'type' => 'comment',
             'text' => '<h3> Motivation and Responsibility </h3>',
         ),
+        'M&R1_question' => array(
+            'type' => 'comment',
+            'text' => 'I have high expecations of myself',
+        ),
         'M&R1' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I have high expecations of myself',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'M&R2' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I work hard at everything I do',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
@@ -586,17 +590,92 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         
     );
+    function on_every_time(){
+        //$this->set_value('MM_6', 2);
+    }
+    
+    
+     
 
 }
 
 class StudySkillsAssessmentModule extends DefaultMinisiteModule {
-
+    var $my_form;
     function run() {
 
-        $my_form = new StudySkillsAssessmentForm();
-        $my_form->run();
+        $this->my_form = new StudySkillsAssessmentForm();
+        $this->my_form->run();
+
+        
+        
+        //***
+        // $this->calculate_score();
     }
 
+    function calculate_score(){
+        //$values = $this->my_form->get_values();
+        //pray($values);
+        //$this->my_form->set_value('MM_6', 2);
+        //$value1 = $this->my_form->get_value('MM_6');
+        //$value1 = get_value($test1);
+        //pray($test1);
+       // pray($value1);
+        
+        //echo 'hi there' . $value1;
+        
+        // -- Motivation and Responsibility calc
+        $MR1_value = $this->my_form->get_value('M&R1');
+        $MR2_value = $this->my_form->get_value('M&R2');
+        $MR3_value = $this->my_form->get_value('M&R3');
+        $MR4_value = $this->my_form->get_value('M&R4');
+        $MR5_value = $this->my_form->get_value('M&R5');
+        $MR6_value = $this->my_form->get_value('M&R6');
+        $MR7_value = $this->my_form->get_value('M&R7');
+        $MR8_value = $this->my_form->get_value('M&R8');
+        $MR9_value = $this->my_form->get_value('M&R9');
+        $MR10_value = $this->my_form->get_value('M&R10');
+        $MR11_value = $this->my_form->get_value('M&R11');
+        
+        $MR_sum = $MR1_value + $MR2_value + $MR3_value + $MR4_value + $MR5_value + $MR6_value + $MR7_value + $MR8_value+ $MR9_value+ $MR10_value+ $MR11_value;
+        
+        $MR_txt = '<h3>Motivation and Reponsiblity</h3>';
+        
+        
+        if ($MR_sum < 22 ) {
+            
+            $MR_txt .= '<p>You could take greater ownership in your
+                        educational and personal success. Talk to your SSS Advisor about discovering your
+                        purpose and creating the outcomes you desire.</p>';
+            
+        }
+        
+        
+        
+
+    }
+
+}
+
+include_once('/usr/local/webapps/reason/reason_package/disco/plasmature/types/options.php');
+class radio_scaleType extends radio_inline_no_sortType
+{
+    var $type = 'radio_scale';
+
+    function get_display()
+    {
+        $i = 0;
+        $str = '<div id="'.$this->name.'_container" class="radioButtons scaleRadioButtons">'."\n";
+        foreach( $this->options as $key => $val )
+        {
+            $id = 'radio_scale_'.$this->name.'_'.$i++;
+            $str .= '<span class="radioItem"><span class="radioButton"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+            if ( $key == $this->value )
+                $str .= ' checked="checked"';
+            $str .= ' /></span> <label for="'.$id.'">'.$val.'</label></span> '."\n";
+        }
+        $str .= '</div>'."\n";
+        return $str;
+    }
 }
 
 ?>
