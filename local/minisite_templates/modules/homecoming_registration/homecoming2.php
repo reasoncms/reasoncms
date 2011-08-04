@@ -138,6 +138,7 @@ class HomecomingRegistrationTwoForm extends FormStep {
 
         $this->change_element_type('credit_card_expiration_year', 'numrange', array('start' => date('Y'), 'end' => (date('Y') + 15), 'display_name' => 'Expiration Year'));
     }
+    
     function post_error_check_actions() {
         if ($this->show_form) {
             $text = $this->get_brief_review_text();
