@@ -640,6 +640,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
         
         $MR_txt = '<h3>Motivation and Reponsiblity</h3>';
         
+        $MR_group = array($MR1_value,$MR2_value,$MR3_value,$MR4_value,$MR5_value,$MR6_value,$MR7_value,$MR8_value,$MR9_value,$MR10_value,$MR11_value,);
         
         if ($MR_sum < 22 ) {
             
@@ -647,7 +648,13 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
                         educational and personal success. Talk to your SSS Advisor about discovering your
                         purpose and creating the outcomes you desire.</p>';
             
+            foreach($MR_group as $value){
+                if($value<3){
+                    
+                }
+            }
         }
+        
         
         
         
