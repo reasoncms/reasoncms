@@ -783,7 +783,7 @@ function validate_page6(&$the_form) {
 
 function already_submitted_message(){
     echo '<div style="padding:30px">It appears that you\'ve already submitted your application. If you\'d like to amend your application or have questions
-                regarding, please contact the Admissions Office at 800-4-LUTHER.</div>';
+                regarding, please contact the Admissions Office at 800-4-LUTHER ext. 1287.</div>';
 }
 
 ?>
