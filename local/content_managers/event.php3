@@ -100,6 +100,10 @@
 			
 		function alter_data() // {{{
 		{
+			if ($this->is_element('geopoint'))
+			{
+				$this->remove_element('geopoint'); // never want to set this directly.
+			}
 			$this->check_for_recurrence_field_existence();
 			//test_reason_repeating_events($this->get_value('id'));
 			$site = new entity( $this->get_value( 'site_id' ) );
