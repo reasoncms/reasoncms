@@ -384,12 +384,12 @@ class AdmissionsApplicationModule extends DefaultMinisiteModule {
 //        if($nav_group==1){
 //            $output .= $error_div;
 //        }
-        $submitted = is_submitted($this->openid_id);
-        if(!$submitted){
-            if($nav_group==1){
-            $output .= '<div id="requiredNote" style="float:right">* = required</div>';
-            }
-        }
+//        $submitted = is_submitted($this->openid_id);
+//        if(!$submitted){
+//            if($nav_group==1){
+//            $output .= '<div id="requiredNote" style="float:right">* = required</div>';
+//            }
+//        }
                 
         return $output;
     }
