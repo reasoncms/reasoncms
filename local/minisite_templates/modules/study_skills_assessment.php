@@ -541,36 +541,60 @@ class StudySkillsAssessmentForm extends Disco {
         // Active Reading
         'AR_header' => array(
             'type' => 'comment',
-            'text' => '<h3>  Active Reading </h3>',
+            'text' => '<h3> Active Reading </h3>',
+        ),
+        'AR_1_question' => array(
+            'type' => 'comment',
+            'text' => 'I survey each chapter before I begin reading',
         ),
         'AR_1' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I survey each chapter before I begin reading',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'AR_2_question' => array(
+            'type' => 'comment',
+            'text' => 'I review reading materials more than once',
         ),
         'AR_2' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I review reading materials more than once',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'AR_3_question' => array(
+            'type' => 'comment',
+            'text' => 'When learning new material, I summarize it in my own words',
         ),
         'AR_3' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'When learning new material, I summarize it in my own words',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'AR_4_question' => array(
+            'type' => 'comment',
+            'text' => 'I am comfortable with my reading rate',
         ),
         'AR_4' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I am comfortable with my reading rate',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'AR_5_question' => array(
+            'type' => 'comment',
+            'text' => 'When reading, I can distinguish readily between important and unimportant points',
         ),
         'AR_5' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'When reading, I can distinguish readily between important and unimportant points',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
+        'AR_6_question' => array(
+            'type' => 'comment',
+            'text' => 'I take notes and/or highlight important parts while reading',
+        ),
         'AR_6' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I take notes and/or highlight important parts while reading',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         
