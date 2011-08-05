@@ -332,12 +332,12 @@ class LutherTemplate2010 extends MinisiteTemplate
 			echo '<hr>'."\n";
 			echo '</div>'."\n";
 		}
-		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
+		elseif ($this->has_content( 'sidebar' ) && $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 		{
-			echo '<section class="spotlight" role="group">'."\n";
-			echo '<header class="blue-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+			echo '<aside class="news group">'."\n";
+			echo '<header class="blue-stripe"><h1><span>Video of the Week</span></h1></header>'."\n";
 			$this->run_section( 'sidebar');
-			echo '</section> <!-- class="spotlight" role="group" -->'."\n";
+			echo '</aside> <!-- class="news group" -->'."\n";
 		}
 		
 		if ($this->has_content( 'twitter_sub_nav' ) && ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
@@ -366,6 +366,13 @@ class LutherTemplate2010 extends MinisiteTemplate
 			echo '<header class="blue-stripe"><h1><span>News</span></h1></header>'."\n";
 			$this->run_section( 'post_sidebar');
 			echo '</aside> <!-- class="news group" -->'."\n";
+		}
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports' && $this->has_content( 'post_sidebar' ))
+		{
+			echo '<section class="spotlight" role="group">'."\n";
+			echo '<header class="blue-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+			$this->run_section( 'post_sidebar');
+			echo '</section> <!-- class="spotlight" role="group" -->'."\n";
 		}
 		elseif ($this->has_content( 'post_sidebar' ) //&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'

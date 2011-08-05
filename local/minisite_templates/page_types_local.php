@@ -364,7 +364,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'pre_sidebar' => 'main_blurb',
 					'bannerad' => 'luther_events_mini',
 					'sub_nav_3' => 'contact_blurb',
-					'sidebar' => array( // Spotlights
+					'post_sidebar' => array( // Spotlights
                         'module' => 'publication',
 						'related_publication_unique_names' => array(luther_sports_get_publication_unique_name("spotlights")),
                         'related_mode' => 'true',
@@ -378,7 +378,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 							),
 						),
 					),
-                    'post_sidebar' => '',
+                    'sidebar' => 'luther_av',
                 ),
                 'luther_gmap' => array(
                     'main_post' => 'luther_gmap',
