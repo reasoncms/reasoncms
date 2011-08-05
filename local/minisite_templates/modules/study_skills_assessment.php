@@ -812,54 +812,94 @@ class StudySkillsAssessmentForm extends Disco {
             'type' => 'comment',
             'text' => '<h3>  Time Management </h3>',
         ),
+        'TM_1_question' => array(
+            'type' => 'comment',
+            'text' => 'I avoid putting things off that need to be done',
+        ),
         'TM_1' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I avoid putting things off that need to be done',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TM_2_question' => array(
+            'type' => 'comment',
+            'text' => 'When studying, I make a point to avoid distractions and interruptions',
         ),
         'TM_2' => array(
             'type' => 'radio_scale',
-            'display_name' => 'When studying, I make a point to avoid distractions and interruptions',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TM_3_question' => array(
+            'type' => 'comment',
+            'text' => 'I use prime time (when I am most alert) for studying',
         ),
         'TM_3' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I use prime time (when I am most alert) for studying',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TM_4_question' => array(
+            'type' => 'comment',
+            'text' => 'I devote sufficient study time to each of my courses',
         ),
         'TM_4' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I devote sufficient study time to each of my courses',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TM_5_question' => array(
+            'type' => 'comment',
+            'text' => 'I utilize monthly and weekly calendars',
         ),
         'TM_5' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I utilize monthly and weekly calendars',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TM_6_question' => array(
+            'type' => 'comment',
+            'text' => 'I avoid activities which tend to interfere with my planned schedule',
         ),
         'TM_6' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I avoid activities which tend to interfere with my planned schedule',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TM_7_question' => array(
+            'type' => 'comment',
+            'text' => 'I begin major course assignments well in advance',
         ),
         'TM_7' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I begin major course assignments well in advance',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TM_8_question' => array(
+            'type' => 'comment',
+            'text' => 'I break larger assignments into smaller tasks with specific deadlines',
         ),
         'TM_8' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I break larger assignments into smaller tasks with specific deadlines',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TM_9_question' => array(
+            'type' => 'comment',
+            'text' => 'I spend most of my time doing important things',
         ),
         'TM_9' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I spend most of my time doing important things',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TM_10_question' => array(
+            'type' => 'comment',
+            'text' => 'I have time to relax and have fun',
         ),
         'TM_10' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I have time to relax and have fun',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         
@@ -868,44 +908,76 @@ class StudySkillsAssessmentForm extends Disco {
             'type' => 'comment',
             'text' => '<h3> Money Management </h3>',
         ),
+        'MM_1_question' => array(
+            'type' => 'comment',
+            'text' => 'I pay my bills on time',
+        ),
         'MM_1' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I pay my bills on time',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'MM_2_question' => array(
+            'type' => 'comment',
+            'text' => 'I track my spending',
         ),
         'MM_2' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I track my spending',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'MM_3_question' => array(
+            'type' => 'comment',
+            'text' => 'I control my spending by distinguishing between wants and needs',
         ),
         'MM_3' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I control my spending by distinguishing between wants and needs',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'MM_4_question' => array(
+            'type' => 'comment',
+            'text' => 'I think about how my credit score is affected by my money management habits',
         ),
         'MM_4' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I think about how my credit score is affected by my money management habits',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'MM_5_question' => array(
+            'type' => 'comment',
+            'text' => 'I stick to a budget I have set for myself',
         ),
         'MM_5' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I stick to a budget I have set for myself',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'MM_6_question' => array(
+            'type' => 'comment',
+            'text' => 'I save/invest some of my money',
         ),
         'MM_6' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I save/invest some of my money',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'MM_7_question' => array(
+            'type' => 'comment',
+            'text' => 'I take the initiative to understand my financial aid package',
         ),
         'MM_7' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I take the initiative to understand my financial aid package',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'MM_8_question' => array(
+            'type' => 'comment',
+            'text' => 'I seek additional forms of financial assistance to minimize my debt',
         ),
         'MM_8' => array(
             'type' => 'radio_scale',
-            'display_name' => 'I seek additional forms of financial assistance to minimize my debt',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         
