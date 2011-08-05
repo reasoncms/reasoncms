@@ -272,7 +272,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'HL_1_question' => array(
             'type' => 'comment',
-            'text' => 'I get plenty of sleep at night and feel rested in the morning',
+            'text' => 'I get plenty of sleep at night and feel rested in the morning.',
         ),
         'HL_1' => array(
             'type' => 'radio_scale',
@@ -281,7 +281,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'HL_2_question' => array(
             'type' => 'comment',
-            'text' => 'I eat breakfast',
+            'text' => 'I eat breakfast.',
         ),
         'HL_2' => array(
             'type' => 'radio_scale',
@@ -290,7 +290,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'HL_3_question' => array(
             'type' => 'comment',
-            'text' => 'I engage in regular physical activity',
+            'text' => 'I engage in regular physical activity.',
         ),
         'HL_3' => array(
             'type' => 'radio_scale',
@@ -299,7 +299,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'HL_4_question' => array(
             'type' => 'comment',
-            'text' => 'I am conscientious about eating healthy food',
+            'text' => 'I am conscientious about eating healthy food.',
         ),
         'HL_4' => array(
             'type' => 'radio_scale',
@@ -308,7 +308,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'HL_5_question' => array(
             'type' => 'comment',
-            'text' => 'I avoid consumption of alcohol or other drugs',
+            'text' => 'I avoid consumption of alcohol or other drugs.',
         ),
         'HL_5' => array(
             'type' => 'radio_scale',
@@ -317,7 +317,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'HL_6_question' => array(
             'type' => 'comment',
-            'text' => 'I feel happy and fully alive',
+            'text' => 'I feel happy and fully alive.',
         ),
         'HL_6' => array(
             'type' => 'radio_scale',
@@ -327,7 +327,7 @@ class StudySkillsAssessmentForm extends Disco {
         'HL_7_question' => array(
             'type' => 'comment',
             'text' => 'When I’m angry, sad, or afraid, I know how to manage my emotions so I don’t do or say
-                               anything I’ll regret later',
+                               anything I’ll regret later.',
         ),
         'HL_7' => array(
             'type' => 'radio_scale',
@@ -336,7 +336,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'HL_8_question' => array(
             'type' => 'comment',
-            'text' => 'I handle stress well',
+            'text' => 'I handle stress well.',
         ),
         'HL_8' => array(
             'type' => 'radio_scale',
@@ -351,7 +351,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'GLS_1_question' => array(
             'type' => 'comment',
-            'text' => 'I make studying a top priority',
+            'text' => 'I make studying a top priority.',
          ),
         'GLS_1' => array(
             'type' => 'radio_scale',
@@ -360,7 +360,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'GLS_2_question' => array(
             'type' => 'comment',
-            'text' => 'I read and understand the syllabus for each class',
+            'text' => 'I read and understand the syllabus for each class.',
          ),
         'GLS_2' => array(
             'type' => 'radio_scale',
@@ -369,7 +369,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'GLS_3_question' => array(
             'type' => 'comment',
-            'text' => 'I communicate personally with my instructors/professors',
+            'text' => 'I communicate personally with my instructors/professors.',
          ),
         'GLS_3' => array(
             'type' => 'radio_scale',
@@ -378,7 +378,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'GLS_4_question' => array(
             'type' => 'comment',
-            'text' => 'I am prepared for my classes',
+            'text' => 'I am prepared for my classes.',
          ),
         'GLS_4' => array(
             'type' => 'radio_scale',
@@ -387,7 +387,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'GLS_5_question' => array(
             'type' => 'comment',
-            'text' => 'I study in a quiet place where I can concentrate',
+            'text' => 'I study in a quiet place where I can concentrate.',
          ),
         'GLS_5' => array(
             'type' => 'radio_scale',
@@ -396,7 +396,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'GLS_6_question' => array(
             'type' => 'comment',
-            'text' => 'When I study, I am able to concentrate for at least 30 minutes at a time',
+            'text' => 'When I study, I am able to concentrate for at least 30 minutes at a time.',
          ),
         'GLS_6' => array(
             'type' => 'radio_scale',
@@ -405,7 +405,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'GLS_7_question' => array(
             'type' => 'comment',
-            'text' => 'I study as I go, putting in time to understand how the pieces fit together',
+            'text' => 'I study as I go, putting in time to understand how the pieces fit together.',
          ),
         'GLS_7' => array(
             'type' => 'radio_scale',
@@ -414,7 +414,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'GLS_8_question' => array(
             'type' => 'comment',
-            'text' => 'I learn with the intention of remembering and applying the information learned',
+            'text' => 'I learn with the intention of remembering and applying the information learned.',
          ),
         'GLS_8' => array(
             'type' => 'radio_scale',
@@ -423,7 +423,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'GLS_9_question' => array(
             'type' => 'comment',
-            'text' => 'I read all assigned materials, including supplemental materials not discussed in class',
+            'text' => 'I read all assigned materials, including supplemental materials not discussed in .',
          ),
         'GLS_9' => array(
             'type' => 'radio_scale',
@@ -432,7 +432,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'GLS_10_question' => array(
             'type' => 'comment',
-            'text' => 'I readily recall those things which I have studied',
+            'text' => 'I readily recall those things which I have studied.',
          ),
         'GLS_10' => array(
             'type' => 'radio_scale',
@@ -442,7 +442,7 @@ class StudySkillsAssessmentForm extends Disco {
         'GLS_11_question' => array(
             'type' => 'comment',
             'text' => 'I use sensory inputs to reinforce my learning (visual aids, mnemonic devices, flash cards, audio
-                               recordings, etc.)',
+                               recordings, etc.).',
          ),
         'GLS_11' => array(
             'type' => 'radio_scale',
@@ -451,7 +451,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'GLS_12_question' => array(
             'type' => 'comment',
-            'text' => 'When I take a difficult class, I find a study partner or join a study group',
+            'text' => 'When I take a difficult class, I find a study partner or join a study group.',
          ),
         'GLS_12' => array(
             'type' => 'radio_scale',
@@ -460,7 +460,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'GLS_13_question' => array(
             'type' => 'comment',
-            'text' => 'I know how to think critically and analytically about complex topics',
+            'text' => 'I know how to think critically and analytically about complex topics.',
          ),
         'GLS_13' => array(
             'type' => 'radio_scale',
@@ -545,7 +545,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'AR_1_question' => array(
             'type' => 'comment',
-            'text' => 'I survey each chapter before I begin reading',
+            'text' => 'I survey each chapter before I begin reading.',
         ),
         'AR_1' => array(
             'type' => 'radio_scale',
@@ -554,7 +554,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'AR_2_question' => array(
             'type' => 'comment',
-            'text' => 'I review reading materials more than once',
+            'text' => 'I review reading materials more than once.',
         ),
         'AR_2' => array(
             'type' => 'radio_scale',
@@ -563,7 +563,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'AR_3_question' => array(
             'type' => 'comment',
-            'text' => 'When learning new material, I summarize it in my own words',
+            'text' => 'When learning new material, I summarize it in my own words.',
         ),
         'AR_3' => array(
             'type' => 'radio_scale',
@@ -572,7 +572,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'AR_4_question' => array(
             'type' => 'comment',
-            'text' => 'I am comfortable with my reading rate',
+            'text' => 'I am comfortable with my reading rate.',
         ),
         'AR_4' => array(
             'type' => 'radio_scale',
@@ -581,7 +581,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'AR_5_question' => array(
             'type' => 'comment',
-            'text' => 'When reading, I can distinguish readily between important and unimportant points',
+            'text' => 'When reading, I can distinguish readily between important and unimportant points.',
         ),
         'AR_5' => array(
             'type' => 'radio_scale',
@@ -590,7 +590,7 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         'AR_6_question' => array(
             'type' => 'comment',
-            'text' => 'I take notes and/or highlight important parts while reading',
+            'text' => 'I take notes and/or highlight important parts while reading.',
         ),
         'AR_6' => array(
             'type' => 'radio_scale',
@@ -599,38 +599,62 @@ class StudySkillsAssessmentForm extends Disco {
         ),
         
         // Notetaking
-        'AR_header' => array(
+        'NT_header' => array(
             'type' => 'comment',
             'text' => '<h3>  Notetaking </h3>',
         ),
-        'AR_1' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'While I am taking notes, I think about how I will use them later.',
+        'NT_1_question' => array(
+            'type' => 'comment',
+            'text' => 'While I am taking notes, I think about how I will use them later.',
+        ),
+        'NT_1' => array(
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'AR_2' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I understand the lecture and classroom discussion while I am taking notes.',
+        'NT_2_question' => array(
+            'type' => 'comment',
+            'text' => 'I understand the lecture and classroom discussion while I am taking notes.',
+        ),
+        'NT_2' => array(
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'AR_3' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I write down the main points, rather than trying to record every word I hear.',
+        'NT_3_question' => array(
+            'type' => 'comment',
+            'text' => 'I write down the main points, rather than trying to record every word I hear.',
+        ),
+        'NT_3' => array(
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'AR_4' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I organize my notes in some meaningful manner (outline, concept map, etc.)',
+        'NT_4_question' => array(
+            'type' => 'comment',
+            'text' => 'I organize my notes in some meaningful manner (outline, concept map, etc.).',
+        ),
+        'NT_4' => array(
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'AR_5' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I review my class notes within a few hours of taking them.',
+        'NT_5_question' => array(
+            'type' => 'comment',
+            'text' => 'I review my class notes within a few hours of taking them.',
+        ),
+        'NT_5' => array(
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'AR_6' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I am able to understand and learn from my notes.',
+        'NT_6_question' => array(
+            'type' => 'comment',
+            'text' => 'I am able to understand and learn from my notes.',
+        ),
+        'NT_6' => array(
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         
@@ -639,44 +663,76 @@ class StudySkillsAssessmentForm extends Disco {
             'type' => 'comment',
             'text' => '<h3>  Testing </h3>',
         ),
+        'TST_1_question' => array(
+            'type' => 'comment',
+            'text' => 'I try to find out what an exam will cover and how it will be graded.',
+        ),
         'TST_1' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I try to find out what an exam will cover and how it will be graded.',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TST_2_question' => array(
+            'type' => 'comment',
+            'text' => 'I get a good night’s rest prior to a scheduled exam.',
         ),
         'TST_2' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I get a good night’s rest prior to a scheduled exam.',
+            'type' => 'radio_scale',
+            'display_name' =>'&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TST_3_question' => array(
+            'type' => 'comment',
+            'text' => 'I avoid cramming for an exam.',
         ),
         'TST_3' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I avoid cramming for an exam.',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TST_4_question' => array(
+            'type' => 'comment',
+            'text' => 'I am prepared for my exams.',
         ),
         'TST_4' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I am prepared for my exams.',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TST_5_question' => array(
+            'type' => 'comment',
+            'text' => 'I follow directions carefully when taking an exam.',
         ),
         'TST_5' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I follow directions carefully when taking an exam.',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TST_6_question' => array(
+            'type' => 'comment',
+            'text' => 'I take time to understand the exam questions before starting to answer.',
         ),
         'TST_6' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I take time to understand the exam questions before starting to answer.',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'TST_7_question' => array(
+            'type' => 'comment',
+            'text' => 'I am calmly able to recall what I know during an exam.',
         ),
         'TST_7' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I am calmly able to recall what I know during an exam.',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
+        'TST_8_question' => array(
+            'type' => 'comment',
+            'text' => 'I understand the structure of different types of tests and am able to prepare for each type.',
+        ),
         'TST_8' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I understand the structure of different types of tests and am able to prepare for each type.',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         
@@ -685,41 +741,69 @@ class StudySkillsAssessmentForm extends Disco {
             'type' => 'comment',
             'text' => '<h3>  Classroom Engagement </h3>',
         ),
+        'CE_1_question' => array(
+            'type' => 'comment',
+            'text' => 'I attend class regularly.',
+        ),
         'CE_1' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I attend class regularly.',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'CE_2_question' => array(
+            'type' => 'comment',
+            'text' => 'I sit near the front of the class whenever possible.',
         ),
         'CE_2' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I sit near the front of the class whenever possible.',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'CE_3_question' => array(
+            'type' => 'comment',
+            'text' => 'I give non-verbal signals in class that I am interested (eye contact, ready to take notes, book
+                               open, etc.).',
         ),
         'CE_3' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I give non-verbal signals in class that I am interested (eye contact, ready to take notes, book
-                               open, etc.).',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'CE_4_question' => array(
+            'type' => 'comment',
+            'text' => 'I volunteer answers to questions posed by my instructor during class.',
         ),
         'CE_4' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I volunteer answers to questions posed by my instructor during class.',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'CE_5_question' => array(
+            'type' => 'comment',
+            'text' => 'I participate in class discussions.',
         ),
         'CE_5' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I participate in class discussions.',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
+        ),
+        'CE_6_question' => array(
+            'type' => 'comment',
+            'text' => 'I take the initiative in group activities.',
         ),
         'CE_6' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'I take the initiative in group activities.',
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'CE_7' => array(
-            'type' => 'radio_inline_no_sort',
-            'display_name' => 'After each class, I can identify the major points and understand why they are important to the
+        'CE_7_question' => array(
+            'type' => 'comment',
+            'text' => 'After each class, I can identify the major points and understand why they are important to the
                                material being covered.',
+        ),
+        'CE_7' => array(
+            'type' => 'radio_scale',
+            'display_name' => '&nbsp;',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         
@@ -729,52 +813,52 @@ class StudySkillsAssessmentForm extends Disco {
             'text' => '<h3>  Time Management </h3>',
         ),
         'TM_1' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I avoid putting things off that need to be done',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'TM_2' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'When studying, I make a point to avoid distractions and interruptions',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'TM_3' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I use prime time (when I am most alert) for studying',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'TM_4' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I devote sufficient study time to each of my courses',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'TM_5' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I utilize monthly and weekly calendars',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'TM_6' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I avoid activities which tend to interfere with my planned schedule',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'TM_7' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I begin major course assignments well in advance',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'TM_8' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I break larger assignments into smaller tasks with specific deadlines',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'TM_9' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I spend most of my time doing important things',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'TM_10' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I have time to relax and have fun',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
@@ -785,42 +869,42 @@ class StudySkillsAssessmentForm extends Disco {
             'text' => '<h3> Money Management </h3>',
         ),
         'MM_1' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I pay my bills on time',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'MM_2' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I track my spending',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'MM_3' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I control my spending by distinguishing between wants and needs',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'MM_4' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I think about how my credit score is affected by my money management habits',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'MM_5' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I stick to a budget I have set for myself',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'MM_6' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I save/invest some of my money',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'MM_7' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I take the initiative to understand my financial aid package',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
         'MM_8' => array(
-            'type' => 'radio_inline_no_sort',
+            'type' => 'radio_scale',
             'display_name' => 'I seek additional forms of financial assistance to minimize my debt',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
