@@ -347,16 +347,10 @@
 							if ($col == 'athlete_first_name' || $col == 'athlete_last_name')
 							{
 								$name = $player[$col]; //.' '.$player['athlete_last_name'];
-								if ( $player['image_id'] OR $player['content'] )
-								{
-									$player_link = carl_make_link(array('id' => $k));
-									//$str .= '<a href="'.$player_link.'">'.$name.'</a>';
-									$str .= "<a href=\"".$player_link. "\" class=\"cluetip_athlete\" title=\"". $player['athlete_first_name']." ".$player['athlete_last_name'] ."\" rel=\"#athlete".$player['id']."\">".$name."</a>";
-								}
-								else
-								{
-									$str .= $name;
-								}
+								$player_link = carl_make_link(array('id' => $k));
+								//$str .= '<a href="'.$player_link.'">'.$name.'</a>';
+								$str .= "<a href=\"".$player_link. "\" class=\"cluetip_athlete\" title=\"". $player['athlete_first_name']." ".$player['athlete_last_name'] ."\" rel=\"#athlete".$player['id']."\">".$name."</a>";
+								
 								if ($col == 'athlete_last_name' && $player['athlete_letter'] == 'yes')
 								{
 									$str .= "&bull;";
