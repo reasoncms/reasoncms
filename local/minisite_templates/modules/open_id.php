@@ -8,13 +8,15 @@ class OpenIDModule extends DefaultMinisiteModule {
 
     function run() {
         $url = get_current_url();
+        $parsed_url = parse_url($url);
         $next_url = $_GET['next'];
         if ($next_url){
 //            $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php?next=' . $next_url;
-            $url = '/reason/open_id/new_token.php?next=' . $next_url;
+
+            $url = $parsed_url['scheme'] . $parsed_url['host'] . '/reason/open_id/new_token.php?next=' . $next_url;
         }else{
 //            $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php';
-            $url = '/reason/open_id/new_token.php';
+            $url = $parsed_url['scheme'] . $parsed_url['host'] . '/reason/open_id/new_token.php';
         }
         
         //$parts = parse_url($url);
