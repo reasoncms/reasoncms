@@ -20,6 +20,9 @@ class OpenIDStatusModule extends DefaultMinisiteModule {
 
         if ($this->sess->get('openid_id')){
 
+            //
+            // yo Steve... you see this???
+            //
             if ($_SESSION['openid_profile']['name']['formatted']){
                 $welcome_name = $_SESSION['openid_profile']['name']['formatted'];
             }else{
