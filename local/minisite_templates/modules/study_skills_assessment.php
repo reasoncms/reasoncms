@@ -1001,64 +1001,38 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
         
         
         //***
-        // $this->calculate_score();
+         $this->calculate_score();
     }
 
     function calculate_score(){
-        //$values = $this->my_form->get_values();
-        //pray($values);
-        //$this->my_form->set_value('MM_6', 2);
-        //$value1 = $this->my_form->get_value('MM_6');
-        //$value1 = get_value($test1);
-        //pray($test1);
-       // pray($value1);
         
-        //echo 'hi there' . $value1;
-        /*
-        // -- Motivation and Responsibility calc
-        $MR1_value = $this->my_form->get_value('M&R1');
-        $MR2_value = $this->my_form->get_value('M&R2');
-        $MR3_value = $this->my_form->get_value('M&R3');
-        $MR4_value = $this->my_form->get_value('M&R4');
-        $MR5_value = $this->my_form->get_value('M&R5');
-        $MR6_value = $this->my_form->get_value('M&R6');
-        $MR7_value = $this->my_form->get_value('M&R7');
-        $MR8_value = $this->my_form->get_value('M&R8');
-        $MR9_value = $this->my_form->get_value('M&R9');
-        $MR10_value = $this->my_form->get_value('M&R10');
-        $MR11_value = $this->my_form->get_value('M&R11');
         
-        $MR_sum = $MR1_value + $MR2_value + $MR3_value + $MR4_value + $MR5_value + $MR6_value + $MR7_value + $MR8_value+ $MR9_value+ $MR10_value+ $MR11_value;
+        //array filter function ?
+        // search array contains
+        // 
+        // search regex
         
-        $MR_txt = '<h3>Motivation and Reponsiblity</h3>';
+        $myelements = $this->my_form->elements;
         
-        $MR_group = array($MR1_value,$MR2_value,$MR3_value,$MR4_value,$MR5_value,$MR6_value,$MR7_value,$MR8_value,$MR9_value,$MR10_value,$MR11_value,);
-        
-        if ($MR_sum < 22 ) {
+      
+      $MR1_value = $this->my_form->get_name('M&R1');
+      
+      print(array_keys($myelements));
+      
+      
+      foreach($myelements as $value){
             
-            $MR_txt .= '<p>You could take greater ownership in your
-                        educational and personal success. Talk to your SSS Advisor about discovering your
-                        purpose and creating the outcomes you desire.</p>';
-            
-            foreach($MR_group as $value){
-                if($value<3){
-                    
-                }
-            }
+            //if(preg_match('/M&R/',$value)) {
+               
+               //echo 'Yeap';
+              
+           //}
         }
-        
-        $MR_group = array_slice($this->my_form->elements, 2, 11);
-        foreach($MR_group as $value){
-            
-            pray($value);
-        }
-        pray($MR_group);
-        */
-        
-        
-        
-
+       
+     
     }
+    
+    
 
 }
 
