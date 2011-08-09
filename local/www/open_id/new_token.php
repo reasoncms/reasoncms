@@ -1,6 +1,6 @@
 <?php
 
-$luther_openid_url = "https://reasondev.luther.edu/openid/";
+$luther_openid_url = "/openid/";
 $next_url = "";
 $token = "";
 
@@ -11,7 +11,10 @@ ob_start();
  */
 
 //For a production script it would be better to include the apiKey in from a file outside the web root to enhance security.
+//development API key (Bob's)
 $rpx_api_key = '2613497138f154e846d1294c411b5063c34b30e3';
+//production API key
+//$rpx_api_key = '2335f7c511b0e5dd374aa63c42776f2e5e4acf5a';
 
 /*
   Set this to true if your application is Pro or Enterprise.
@@ -47,6 +50,7 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
 
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    //development janrain URL (same for production account)
     curl_setopt($curl, CURLOPT_URL, 'https://rpxnow.com/api/v2/auth_info');
     curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
@@ -284,6 +288,7 @@ if (strlen($token) == 40) {//test the length of the token; it should be 40 chara
         session_start();
         //print_r($auth_info);
         //echo "<br /><br />";
+        $_SESSION['openid_profile'] = $profile;
         $_SESSION['openid_id'] = $identifier;
         $_SESSION['openid_provider'] = $provider;
         $_SESSION['openid_name'] = $profile['name']['formatted'];
