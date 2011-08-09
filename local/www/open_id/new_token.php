@@ -12,9 +12,9 @@ ob_start();
 
 //For a production script it would be better to include the apiKey in from a file outside the web root to enhance security.
 //development API key (Bob's)
-$rpx_api_key = '2613497138f154e846d1294c411b5063c34b30e3';
+$rpx_api_key = trim(file_get_contents('/usr/local/webapps/reason/reason_package/settings/janrain_dev_api_key.txt'));
 //production API key
-//$rpx_api_key = '2335f7c511b0e5dd374aa63c42776f2e5e4acf5a';
+//$rpx_api_key = trim(file_get_contents('/usr/local/webapps/reason/reason_package/settings/janrain_prod_api_key.txt'));
 
 /*
   Set this to true if your application is Pro or Enterprise.
