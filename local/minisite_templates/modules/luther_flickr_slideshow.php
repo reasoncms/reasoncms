@@ -20,7 +20,7 @@
 			"luthertkd" => array("2e80ed6a3ce811d45607da933862c0e5", "140daaf7539dd293"),
 			"lutherbookshop" => array("72d5d704e16ae8cefcfab73e046d9129", "30fd8bc6d7fb815c"),
 			"luthercollegemusic" => array("0aefd0bebcb26cce81f0bd459787a244", "2de87b03bcbd7249"),
-			"lcnorsesports" => array("2bb970a9274d898fd71b221853b6329a", "f872cd98ea82f335"),
+			"lcnorsesports" => array("ff52469fa499b0af7e9e05dbb0c94c36", "844acf6234151a1c"),
 			"lutherfinearts" => array("e0b84ec8f5c4cdee13dbe0c6eab3c516", "5aba74ac9fb733c1"),
 			"Luther_College_Alumni_Office" => array("d97a9bcb0bef39692eb8b0ac97c8887f", "b0d82d76b43bc6d6"),
 			"luthercollegechemistry" => array("4fe2ce650080400958007a505b980522", "cef37676c4424ae1"),
