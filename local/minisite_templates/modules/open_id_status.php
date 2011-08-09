@@ -17,7 +17,7 @@ class OpenIDStatusModule extends DefaultMinisiteModule {
                         $this->sess->start();
                         //echo "<br />>>>>> STARTED SESSION <<<<<";
         }
-
+pray($_SESSION);
         if ($this->sess->get('openid_id')){
 
             //
