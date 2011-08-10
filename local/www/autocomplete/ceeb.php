@@ -12,11 +12,11 @@ mysql_select_db($dbname);
 /* If connection to database, run sql statement. */
 if ($conn)
 {
-        //split input term into base parts:  'decorah high' into 'decorah' and 'high'
+        //explode input term into base parts:  'decorah high' into 'decorah' and 'high'
         $cleaned_term = mysql_real_escape_string($_GET['term']);
         $remove_chars = array(",", "(", ")", "-");
         $cleaned_term = str_replace($remove_chars, " ", $cleaned_term);
-        $term_parts = split(" ", $cleaned_term, 10);
+        $term_parts = explode(" ", $cleaned_term, 10);
 
         $qstring = "SELECT * FROM hs_ceeb where";
         $num_parts = count($term_parts);
