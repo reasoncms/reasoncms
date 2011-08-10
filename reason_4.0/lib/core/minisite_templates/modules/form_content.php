@@ -21,18 +21,17 @@
 	 * When used in conjunction with a form module, this hides the page's content on form submission
 	 * so that the form's thank you message is not buried onder the page content
 	 *
-	 * @todo use cleanup rules instead of directly looking at $_REQUEST
 	 * @todo report has_content state
 	 */
 	class FormContentModule extends EditableContentModule
 	{
 		var $cleanup_rules = array('submission_key' => 'turn_into_string',
-									    'form_id' => 'turn_into_int',
-									    'form_admin_view' => array('function' => 'check_against_array', 'extra_args' => array('true')));
+								   'form_id' => 'turn_into_int',
+								   'form_admin_view' => array('function' => 'check_against_array', 'extra_args' => array('true')));
 									    
 		var $acceptable_params = array('hide_after_submission' => true,
-								            'hide_in_admin_view' => true,
-								            'hide_on_edit' => false);
+								       'hide_in_admin_view' => true,
+								       'hide_on_edit' => false);
 								            
 		function run()
 		{
@@ -40,12 +39,6 @@
 			{
 				parent::run();
 			}
-			// Don't display the content if the form has already been
-			// submitted, because we'll already be displaying a
-			// thank-you message in main_post, and it would look silly
-			// to have the content there too
-			//if ( !array_key_exists('submission_key', $_REQUEST) )
-			//	parent::run();
 		}
 		
 		function hide_after_submission()
