@@ -989,9 +989,13 @@ class StudySkillsAssessmentForm extends Disco {
         
     );
     function on_every_time(){
-        $this->set_value('MM_6', 2);
-        $this->set_value('GLS_1', 1);
-        $this->set_value('M&R1', 3);
+        
+        $this->set_value('AR_1', 2);
+        $this->set_value('AR_2', 3);
+        $this->set_value('AR_3', 2);
+        $this->set_value('AR_4', 3);
+        $this->set_value('AR_5', 2);
+        $this->set_value('AR_6', 3);
 
         }
     
@@ -1037,7 +1041,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       //Motivation and Responsibilty
      
       $MR_sum = 0;
-      $MR_improve = 'Area(s) with room for improvement:';
+      $MR_improve = '</br> </br> Area(s) with room for improvement:';
       
       foreach($MR_group as $key=>$value ){
           
@@ -1066,7 +1070,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       // Organization
      
       $ORG_sum = 0;
-      $ORG_improve = 'Area(s) with room for improvement:';
+      $ORG_improve = '</br> </br> Area(s) with room for improvement:';
       
       foreach($ORG_group as $key=>$value ){
           
@@ -1080,7 +1084,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       }
       
       echo '<h3> Organization </h3>';
-      if($ORG_sum<22){
+      if($ORG_sum<14){
           echo 'You could take greater ownership in your educational and personal success. Talk to your SSS Advisor about discovering your
                purpose and creating the outcomes you desire.';
           
@@ -1095,7 +1099,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       // Self Confidence and Social Interaction
      
       $SC_SI_sum = 0;
-      $SC_SI_improve = 'Area(s) with room for improvement:';
+      $SC_SI_improve = '</br> </br> Area(s) with room for improvement:';
       
       foreach($SC_SI_group as $key=>$value ){
           
@@ -1107,8 +1111,8 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
              }   
       }
       }
-      echo 'Self Confidence and Social Interaction </h3>';
-      if($SC_SI_sum<22){
+      echo '<h3>Self Confidence and Social Interaction </h3>';
+      if($SC_SI_sum<16){
           echo 'You could take greater ownership in your educational and personal success. Talk to your SSS Advisor about discovering your
                purpose and creating the outcomes you desire.';
           
@@ -1121,7 +1125,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       // Healthy living
       
       $HL_sum = 0;
-      $HL_improve = 'Area(s) with room for improvement:';
+      $HL_improve = '</br> </br> Area(s) with room for improvement:';
       
       foreach( $HL_group as $key=>$value ){
           
@@ -1134,7 +1138,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       }
       }
       echo '<h3> Healthy living </h3>';
-      if( $HL_sum<22){
+      if( $HL_sum<16    ){
           echo 'You could take greater ownership in your educational and personal success. Talk to your SSS Advisor about discovering your
                purpose and creating the outcomes you desire.';
           
@@ -1147,7 +1151,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       // General learning strategies
       
       $GLS_sum = 0;
-      $GLS_improve = 'Area(s) with room for improvement:';
+      $GLS_improve = '</br> </br> Area(s) with room for improvement:';
       
       foreach( $GLS_group as $key=>$value ){
           
@@ -1155,12 +1159,12 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
               $GLS_sum .= $this->my_form->get_value($key);
              
              if($this->my_form->get_value($key) < 3){
-             $GLS_sum .= '</br>' . $this->my_form->get_display_name($key);
+             $GLS_improve .= '</br>' . $this->my_form->get_display_name($key);
              }   
       }
       }
       echo '<h3> General learning strategies </h3>';
-      if( $GLS_sum <22){
+      if( $GLS_sum <26){
           echo 'You could take greater ownership in your educational and personal success. Talk to your SSS Advisor about discovering your
                purpose and creating the outcomes you desire.';
           
@@ -1173,7 +1177,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       // Writing
       
       $WR_sum = 0;
-      $WR_improve = 'Area(s) with room for improvement:';
+      $WR_improve = '</br> </br> Area(s) with room for improvement:';
       
       foreach( $WR_group as $key=>$value ){
           
@@ -1181,12 +1185,12 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
               $WR_sum .= $this->my_form->get_value($key);
              
              if($this->my_form->get_value($key) < 3){
-             $WR_sum .= '</br>' . $this->my_form->get_display_name($key);
+             $WR_improve .= '</br>' . $this->my_form->get_display_name($key);
              }   
       }
       }
       echo '<h3> Writing </h3>';
-      if( $WR_sum <22){
+      if( $WR_sum <14){
           echo 'You could take greater ownership in your educational and personal success. Talk to your SSS Advisor about discovering your
                purpose and creating the outcomes you desire.';
           
@@ -1199,7 +1203,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       // Active Reading
       
       $AR_sum = 0;
-      $AR_improve = 'Area(s) with room for improvement:';
+      $AR_improve = '</br> </br> Area(s) with room for improvement:';
       
       foreach( $AR_group as $key=>$value ){
           
@@ -1207,12 +1211,15 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
               $AR_sum .= $this->my_form->get_value($key);
              
              if($this->my_form->get_value($key) < 3){
-             $AR_sum .= '</br>' . $this->my_form->get_display_name($key);
+             $AR_improve .= '</br>' . $this->my_form->get_display_name($key);
              }   
       }
       }
+      
+      
       echo '<h3> Active Reading </h3>';
-      if( $AR_sum <22){
+      
+      if( $AR_sum <12){
           echo 'You could take greater ownership in your educational and personal success. Talk to your SSS Advisor about discovering your
                purpose and creating the outcomes you desire.';
           
@@ -1225,7 +1232,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       // Notetaking
       
       $NT_sum = 0;
-      $NT_improve = 'Area(s) with room for improvement:';
+      $NT_improve = '</br> </br> Area(s) with room for improvement:';
       
       foreach( $NT_group as $key=>$value ){
           
@@ -1233,12 +1240,12 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
               $NT_sum .= $this->my_form->get_value($key);
              
              if($this->my_form->get_value($key) < 3){
-             $NT_sum .= '</br>' . $this->my_form->get_display_name($key);
+             $NT_improve .= '</br>' . $this->my_form->get_display_name($key);
              }   
       }
       }
       echo '<h3> Notetaking </h3>';
-      if( $NT_sum <22){
+      if( $NT_sum <12){
           echo 'You could take greater ownership in your educational and personal success. Talk to your SSS Advisor about discovering your
                purpose and creating the outcomes you desire.';
           
@@ -1251,7 +1258,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       // Testing
       
       $TST_sum = 0;
-      $TST_improve = 'Area(s) with room for improvement:';
+      $TST_improve = '</br> </br> Area(s) with room for improvement:';
       
       foreach( $TST_group as $key=>$value ){
           
@@ -1259,12 +1266,12 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
               $TST_sum .= $this->my_form->get_value($key);
              
              if($this->my_form->get_value($key) < 3){
-             $TST_sum .= '</br>' . $this->my_form->get_display_name($key);
+             $TST_improve .= '</br>' . $this->my_form->get_display_name($key);
              }   
       }
       }
       echo '<h3> Testing </h3>';
-      if( $TST_sum <22){
+      if( $TST_sum <16){
           echo 'You could take greater ownership in your educational and personal success. Talk to your SSS Advisor about discovering your
                purpose and creating the outcomes you desire.';
           
@@ -1277,7 +1284,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       // Classroom Engagement
       
       $CE_sum = 0;
-      $CE_improve = 'Area(s) with room for improvement:';
+      $CE_improve = '</br> </br> Area(s) with room for improvement:';
       
       foreach( $CE_group as $key=>$value ){
           
@@ -1285,12 +1292,12 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
               $CE_sum .= $this->my_form->get_value($key);
              
              if($this->my_form->get_value($key) < 3){
-             $CE_sum .= '</br>' . $this->my_form->get_display_name($key);
+             $CE_improve .= '</br>' . $this->my_form->get_display_name($key);
              }   
       }
       }
       echo '<h3> Classroom Engagement </h3>';
-      if( $CE_sum <22){
+      if( $CE_sum <14){
           echo 'You could take greater ownership in your educational and personal success. Talk to your SSS Advisor about discovering your
                purpose and creating the outcomes you desire.';
           
@@ -1303,7 +1310,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       // Time Management
       
       $TM_sum = 0;
-      $TM_improve = 'Area(s) with room for improvement:';
+      $TM_improve = '</br> </br> Area(s) with room for improvement:';
       
       foreach( $TM_group as $key=>$value ){
           
@@ -1311,12 +1318,12 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
               $TM_sum .= $this->my_form->get_value($key);
              
              if($this->my_form->get_value($key) < 3){
-              $TM_sum .= '</br>' . $this->my_form->get_display_name($key);
+              $TM_improve .= '</br>' . $this->my_form->get_display_name($key);
              }   
       }
       }
       echo '<h3> Time Management </h3>';
-      if( $TM_sum <22){
+      if( $TM_sum <20){
           echo 'You could take greater ownership in your educational and personal success. Talk to your SSS Advisor about discovering your
                purpose and creating the outcomes you desire.';
           
@@ -1329,7 +1336,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
       // Money  Management
       
       $MM_sum = 0;
-      $MM_improve = 'Area(s) with room for improvement:';
+      $MM_improve = '</br> </br> Area(s) with room for improvement:';
       
       foreach( $MM_group as $key=>$value ){
           
@@ -1337,12 +1344,13 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
               $MM_sum .= $this->my_form->get_value($key);
              
              if($this->my_form->get_value($key) < 3){
-              $MM_sum .= '</br>' . $this->my_form->get_display_name($key);
+              $MM_improve .= '</br>' . $this->my_form->get_display_name($key);
              }   
       }
       }
-      echo '<h3> Time Management </h3>';
-      if( $MM_sum <22){
+      
+      echo '<h3> Money  Management </h3>';
+      if( $MM_sum <16){
           echo 'You could take greater ownership in your educational and personal success. Talk to your SSS Advisor about discovering your
                purpose and creating the outcomes you desire.';
           
