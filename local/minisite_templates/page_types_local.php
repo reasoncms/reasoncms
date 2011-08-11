@@ -751,7 +751,7 @@ function admissions_main_navigation()
         	echo '<li><a href="/admissions/fastfacts/profile/">Student Body Profile</a></li>'."\n";
         	echo '<li><a href="/admissions/fastfacts/directions/">Driving Directions</a></li>'."\n";
         	echo '<li><a href="http://www.luther.edu/about/campus/map/">Campus Map</a></li>'."\n";
-        	echo '<li><a href="/admissions/fastfacts/decorah/">Decorah Area</a></li>'."\n";
+        	echo '<li><a href="http://www.luther.edu/decorah/>Decorah Area</a></li>'."\n";
         	echo '<li><a href="/admissions/fastfacts/counselors/">Meet Your Counselor</a></li>'."\n";
         	echo '</ul></li>'."\n";
         	echo '<li class="academics"><a href="/admissions/academics/">Academics</a>'."\n";
