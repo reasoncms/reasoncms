@@ -346,7 +346,7 @@ $(document).ready(function() {
 
     $('#hs_nameElement').focus();
     $("#hs_nameElement").autocomplete({
-        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb.php",
+        source: "https://www.luther.edu/reason/autocomplete/ceeb.php",
         minLength: 3,
         select: function( event, ui )
         {
@@ -355,7 +355,7 @@ $(document).ready(function() {
     });
 
     $('#college_1_nameElement').autocomplete({
-        source: "https://reasondev.luther.edu/reason/autocomplete/ceeb_college.php",
+        source: "https://reason.luther.edu/reason/autocomplete/ceeb_college.php",
         minLength: 3,
         select: function( event, ui )
         {
