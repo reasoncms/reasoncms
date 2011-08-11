@@ -16,6 +16,7 @@ if ($conn)
         $cleaned_term = mysql_real_escape_string($_GET['term']);
         $remove_chars = array(",", "(", ")", "-");
         $cleaned_term = str_replace($remove_chars, " ", $cleaned_term);
+        //$term_parts = split(" ", $cleaned_term, 10);
         $term_parts = explode(" ", $cleaned_term, 10);
 
         $qstring = "SELECT * FROM hs_ceeb where";
@@ -58,54 +59,6 @@ if ($conn)
 
 /* Free connection resources. */
 mysql_close($conn);
-
-//$availableTags = array(
-//    'ActionScript' => 'ActionScript' ,
-//    'AppleScript' => 'AppleScript',
-//    'Asp' => 'Asp',
-//    'BASIC' => 'BASIC',
-//    'C' => 'C',
-//    'C++' => 'C++',
-//    'Clojure' => 'Clojure',
-//    'COBOL' => 'COBOL',
-//    'ColdFusion' => 'ColdFusion',
-//    'Erlang' => 'Erlang',
-//    'Fortran' => 'Fortran',
-//    'Groovy' => 'Groovy',
-//    'Haskell' => 'Haskell',
-//    'Java' => 'Java',
-//    'JavaScript' => 'JavaScript',
-//    'Lisp' => 'Lisp',
-//    'Perl' => 'Perl',
-//    'PHP' => 'PHP',
-//    'Python' => 'Python',
-//    'Ruby' => 'Ruby',
-//    'Scala' => 'Scala',
-//    'Scheme' => 'Scheme'
-//    "ActionScript",
-//    "AppleScript",
-//    "Asp",
-//    "BASIC",
-//    "C",
-//    "C++",
-//    "Clojure",
-//    "COBOL",
-//    "ColdFusion",
-//    "Erlang",
-//    "Fortran",
-//    "Groovy",
-//    "Haskell",
-//    "Java",
-//    "JavaScript",
-//    "Lisp",
-//    "Perl",
-//    "PHP",
-//    "Python",
-//    "Ruby",
-//    "Scala",
-//    "Scheme"
-//);
-//array_push($return_arr, $availableTags);
 
 /* Toss back results as json encoded array. */
 echo json_encode($return_arr);
