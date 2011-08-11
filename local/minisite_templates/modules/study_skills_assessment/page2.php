@@ -11,14 +11,26 @@ class StudySkillsAssessmentTwoForm extends FormStep {
     var $my_form;
     function run() {
 
+        
+    }
+    
+    function on_every_time()
+	{
+        
         $this->my_form = new StudySkillsAssessmentOneForm();
-        $this->my_form->run();
-
+        //$this->my_form->run();
+        
+        
         
         
         
         $this->calculate_score();
+        
+        
+        echo '</br>AGAGAGA';
     }
+    
+    
 
     function calculate_score(){
         
@@ -37,7 +49,8 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       $CE_group = array_slice($myelements,158,14);
       $TM_group = array_slice($myelements,173,20);
       $MM_group = array_slice($myelements,194,12);
-
+      
+      //echo $this->my_form->elements->get_value('M&R3');
       
       
       
@@ -48,14 +61,24 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       
       foreach($MR_group as $key=>$value ){
           
-          if($this->my_form->get_value($key) !== NULL){
-             $MR_sum = $MR_sum + $this->my_form->get_value($key);
-             
-             if($this->my_form->get_value($key) < 3){
-             $MR_improve .= '</br>' . $this->my_form->get_display_name($key);
-             }   
+          //pray($value);
+          
+          //echo $this->controller->get($key);
+          //echo $value['text'];
+          
+          if($this->controller->get($key) !== NULL){
+            
+             $MR_sum = $MR_sum + $this->controller->get($key);  
+          
+          
+             if ($this->controller->get($key) <3 ){
+  
+             $MR_improve .=  '</br>'  . $value['text'] . $this->controller->get($key);
+            
+             }
       }
       }
+      
       
       echo '<h3> Motivation and Responsibility </h3>';
       if($MR_sum<22){
@@ -366,5 +389,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
   
      
     }
+    
+    
 }
 ?>
