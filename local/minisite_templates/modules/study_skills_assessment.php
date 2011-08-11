@@ -44,7 +44,9 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule
                         'step_decision' => array('type'=>'user'),
                     ),
                     'StudySkillsAssessmentTwoForm' => array(
+                     
                         'final_step' => true,
+                        'final_button_text' => 'Done'
                     )
                 );
 		$this->controller->add_forms( $forms );
