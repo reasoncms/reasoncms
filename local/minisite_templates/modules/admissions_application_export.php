@@ -1,54 +1,49 @@
 <?php
-	reason_include_once( 'minisite_templates/modules/default.php' );
-	reason_include_once( 'classes/error_handler.php');
-	
-	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'admissionsApplicationExportModule';
-	
-	class admissionsApplicationExportModule extends DefaultMinisiteModule
-	{
-		
-		function init( $args = array() )
-		{
-		}
-		
-		function has_content()
-		{
-			return true;
-		}
-		
-		function run()
-		{
-                    connectDB('admissions_applications_connection');
-                    $qstring = "SELECT student_type, enrollment_term, citizenship_status, first_name, last_name FROM `applicants` WHERE first_name IS NOT NULL";
-                    $results = db_query($qstring);
-                    connectDB(REASON_DB);
-                    echo 'Please highlight the applicant(s) you wish to import to Datatel.  Copy and paste the data into a word document.  Then one by one copy each piece of data into the correct field in Datatel.';
-                        
-                    while ($row = mysql_fetch_array($results, MYSQL_ASSOC))
-                    {
-                        switch(rand(1,4) % 4) {
-                            case 0:
-                                $color = "red";
-                                $color2 = "purple";
-                                break;
-                            case 1:
-                                $color = "blue";
-                                $color2 = "green";
-                                break;
-                            case 2:
-                                $color = "brown";
-                                $color2 = "pink";
-                                break;
-                            case 3:
-                                $color = "purple";
-                                $color2 = "yellow";
-                                break;
-                        }
-                        echo '<FONT SIZE="4" FACE="courier" COLOR='.$color.'><MARQUEE WIDTH=100% BEHAVIOR=SCROLL BGColor='.$color2.' LOOP=3 scrollamount='.rand(3,7).'>';
-                        echo $row['first_name']." ".$row['last_name']." ".$row['student_type']." ".$row['enrollment_term']." ".$row['citizenship_status'];
-                        echo "</br>";
-                        echo '</MARQUEE></FONT>';
-                    }
+
+reason_include_once('minisite_templates/modules/default.php');
+reason_include_once('classes/error_handler.php');
+
+$GLOBALS['_module_class_names'][basename(__FILE__, '.php')] = 'admissionsApplicationExportModule';
+
+class admissionsApplicationExportModule extends DefaultMinisiteModule {
+
+    function run() {
+        $base_path = '/var/reason_admissions_app_exports/application_exports/';
+        if ($application_directory = opendir($base_path)) {
+            while (false !== ($entryName = readdir($application_directory))) {
+                if ($entryName != "." && $entryName != "..") {
+                    $dirArray[] = $entryName;
                 }
+            }
+            closedir($application_directory);
+
+            $indexCount = count($dirArray);
+            echo ("$indexCount files<br>\n");
+
+            // sort 'em
+            sort($dirArray);
+
+            // echo 'em
+            echo('<TABLE border="0" cellpadding="0" cellspacing="0" class=tablesorter>'. "\n");
+            echo("<thead><TR><TH>Filename</TH><th>Filetype</th><th>Filesize</th></TR></thead>\n");
+            // loop through the array of files and echo them all
+            for ($index = 0; $index < $indexCount; $index++) {
+                if (substr("$dirArray[$index]", 0, 1) != ".") { // don't list hidden files
+                    echo("<TR><TD><a href=/reason/scripts/admissions_retrieve_app_export_file.php?file_name=" . $dirArray[$index] . ">" . $dirArray[$index] . "</a></td>");
+                    echo("<td>");
+                    echo(filetype($base_path . $dirArray[$index]));
+                    echo("</td>");
+                    echo("<td>");
+                    echo(format_bytes_as_human_readable(filesize($base_path . $dirArray[$index])));
+
+                    echo("</td>");
+                    echo("</TR>\n");
+                }
+            }
+            echo("</TABLE>\n");
         }
+    }
+
+}
+
 ?>
