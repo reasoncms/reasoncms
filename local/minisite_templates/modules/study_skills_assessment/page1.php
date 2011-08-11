@@ -17,103 +17,103 @@ class StudySkillsAssessmentOneForm extends FormStep {
             'type' => 'comment',
             'text' => '<h3> Motivation and Responsibility </h3>',
         ),
-        'M&R1_question' => array(
+        'M&R_1_question' => array(
             'type' => 'comment',
             'text' => 'I have high expecations of myself.',
         ),
-        'M&R1' => array(
+        'M&R_1' => array(
             'type' => 'radio_scale',
             'display_name' => 'I have high expecations of myself.',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'M&R2_question' => array(
+        'M&R_2_question' => array(
             'type' => 'comment',
             'text' => 'I work hard at everything I do.',
         ),
-        'M&R2' => array(
+        'M&R_2' => array(
             'type' => 'radio_scale',
             'display_name' => 'I work hard at everything I do.',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'M&R3_question' => array(
+        'M&R_3_question' => array(
             'type' => 'comment',
             'text' => 'I set goals for myself which are ambitious and attainable.',
         ),
-        'M&R3' => array(
+        'M&R_3' => array(
             'type' => 'radio_scale',
             'display_name' => 'I set goals for myself which are ambitious and attainable.',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'M&R4_question' => array(
+        'M&R_4_question' => array(
             'type' => 'comment',
             'text' => 'I take purposeful actions to achieve my goals and dreams.',
         ),
-        'M&R4' => array(
+        'M&R_4' => array(
             'type' => 'radio_scale',
             'display_name' => 'I take purposeful actions to achieve my goals and dreams.',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'M&R5_question' => array(
+        'M&R_5_question' => array(
             'type' => 'comment',
             'text' => 'I am persistent.',
         ),
-        'M&R5' => array(
+        'M&R_5' => array(
             'type' => 'radio_scale',
             'display_name' => 'I am persistent.',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'M&R6_question' => array(
+        'M&R_6_question' => array(
             'type' => 'comment',
             'text' => 'I seek help when I need it.',
         ),
-        'M&R6' => array(
+        'M&R_6' => array(
             'type' => 'radio_scale',
             'display_name' => 'I seek help when I need it.',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'M&R7_question' => array(
+        'M&R_7_question' => array(
             'type' => 'comment',
             'text' => 'I place great value on earning my college degree.',
         ),
-        'M&R7' => array(
+        'M&R_7' => array(
             'type' => 'radio_scale',
             'display_name' => 'I place great value on earning my college degree.',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'M&R8_question' => array(
+        'M&R_8_question' => array(
             'type' => 'comment',
             'text' => 'I take responsibility for my actions (or inaction), rather than making excuses or putting the blame
                                elsewhere.',
         ),
-        'M&R8' => array(
+        'M&R_8' => array(
             'type' => 'radio_scale',
             'display_name' => 'I take responsibility for my actions (or inaction), rather than making excuses or putting the blame
                                elsewhere.',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'M&R9_question' => array(
+        'M&R_9_question' => array(
             'type' => 'comment',
             'text' => 'I know how to change habits of mine that hinder my success.',
         ),
-        'M&R9' => array(
+        'M&R_9' => array(
             'type' => 'radio_scale',
             'display_name' => 'I know how to change habits of mine that hinder my success.',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'M&R10_question' => array(
+        'M&R_10_question' => array(
             'type' => 'comment',
             'text' => 'I keep promises that I make to myself or to others.',
         ),
-        'M&R10' => array(
+        'M&R_10' => array(
             'type' => 'radio_scale',
             'display_name' => 'I keep promises that I make to myself or to others.',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
         ),
-        'M&R11_question' => array(
+        'M&R_11_question' => array(
             'type' => 'comment',
             'text' => 'When I get off track, I realize it right away.',
         ),
-        'M&R11' => array(
+        'M&R_11' => array(
             'type' => 'radio_scale',
             'display_name' => 'When I get off track, I realize it right away.',
             'options' => array('0' => 'Never', '1' => 'Sometimes', '2' => 'Usually', '3' => 'Always'),
