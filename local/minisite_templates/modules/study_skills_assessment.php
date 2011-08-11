@@ -38,33 +38,36 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule
 		$this->controller->allow_arbitrary_start = false;
 		//*
 		$forms = array(
-                    'StudySkillsAssessmentOne' => array(
-                        'next_steps' => array('StudySkillsAssessmentTwo' => array('label' => 'Submit'),
+                    'StudySkillsAssessmentOneForm' => array(
+                        'next_steps' => array('StudySkillsAssessmentTwoForm' => array('label' => 'Submit'),
                         ),
                         'step_decision' => array('type'=>'user'),
                     ),
+                    'StudySkillsAssessmentTwoForm' => array(
+                        'final_step' => true,
+                    )
                 );
 		$this->controller->add_forms( $forms );
 		// */
 		$this->controller->init();
 	}
 
-	/**
-	 * Add possible forms variables that may come through to the list of vetted request vars
-	 * @return void
-	 */
-	function get_cleanup_rules()
-	{
-		$rules = array();
-		// debug var - resets form and destroys session
-		$rules[ 'ds' ] = array( 'function' => 'turn_into_string' );
-		// vars for confirmation page to let through
-		$rules[ 'r' ] = array( 'function' => 'turn_into_string' );
-		$rules[ 'h' ] = array( 'function' => 'turn_into_string' );
-		// Allows form to be put into testing mode through a query string
-		$rules = array_merge( $rules, $this->controller->get_cleanup_rules() );
-		return $rules;
-	}
+//	/**
+//	 * Add possible forms variables that may come through to the list of vetted request vars
+//	 * @return void
+//	 */
+//	function get_cleanup_rules()
+//	{
+//		$rules = array();
+//		// debug var - resets form and destroys session
+//		$rules[ 'ds' ] = array( 'function' => 'turn_into_string' );
+//		// vars for confirmation page to let through
+//		$rules[ 'r' ] = array( 'function' => 'turn_into_string' );
+//		$rules[ 'h' ] = array( 'function' => 'turn_into_string' );
+//		// Allows form to be put into testing mode through a query string
+//		$rules = array_merge( $rules, $this->controller->get_cleanup_rules() );
+//		return $rules;
+//	}
 
 
 	function init( $args = array() ) //{{{
@@ -79,30 +82,30 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule
 	 */
 	function run()
 	{
-		if( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
-		{
-			reason_include_once( 'minisite_templates/modules/discovery_camps/confirmation.php' );
-			$dc = new DiscoveryCampsConfirmation;
-			$dc->set_ref_number( $this->request[ 'r' ] );
-			$dc->set_hash( $this->request[ 'h' ] );
-
-			if( $dc->validates() )
-			{
-				echo $dc->get_confirmation_text();
-			}
-			else
-			{
-				echo $dc->get_error_message();
-			}
-			// MUST reconnect to Reason database.
-                        // DiscoveryCampsConfirmation connects to discovery_camps for info.
-			connectDB( REASON_DB );
-		}
-		else
-		{
-			$this->controller->set_request( $this->request );
+//		if( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
+//		{
+//			reason_include_once( 'minisite_templates/modules/discovery_camps/confirmation.php' );
+//			$dc = new DiscoveryCampsConfirmation;
+//			$dc->set_ref_number( $this->request[ 'r' ] );
+//			$dc->set_hash( $this->request[ 'h' ] );
+//
+//			if( $dc->validates() )
+//			{
+//				echo $dc->get_confirmation_text();
+//			}
+//			else
+//			{
+//				echo $dc->get_error_message();
+//			}
+//			// MUST reconnect to Reason database.
+//                        // DiscoveryCampsConfirmation connects to discovery_camps for info.
+//			connectDB( REASON_DB );
+//		}
+//		else
+//		{
+//			$this->controller->set_request( $this->request );
 			$this->controller->run();
-		}
+//		}
 	}        
 }
 ?>
