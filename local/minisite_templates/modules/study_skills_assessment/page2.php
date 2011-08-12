@@ -56,10 +56,10 @@ class StudySkillsAssessmentTwoForm extends FormStep {
           
           if($this->controller->get($key) !== NULL){
             
-             $MR_sum = $MR_sum + $this->controller->get($key);  
+             $MR_sum = $MR_sum + $this->controller->get($key) -1;  
           
           
-             if ($this->controller->get($key) <3 ){
+             if ($this->controller->get($key) < 4 ){
   
              $MR_improve .=  '</br>'  . $value['display_name'];
             
@@ -89,9 +89,9 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       foreach($ORG_group as $key=>$value ){
           
           if($this->controller->get($key) !== NULL){
-             $ORG_sum = $ORG_sum + $this->controller->get($key);
+             $ORG_sum = $ORG_sum + $this->controller->get($key)-1;  
              
-             if($this->controller->get($key) < 3){
+             if($this->controller->get($key) < 4){
              $ORG_improve .= '</br>'  . $value['display_name'];
              }   
       }
@@ -117,9 +117,9 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       foreach($SC_SI_group as $key=>$value ){
           
           if($this->controller->get($key) !== NULL){
-             $SC_SI_sum = $SC_SI_sum + $this->controller->get($key);
+             $SC_SI_sum = $SC_SI_sum + $this->controller->get($key)-1;  
              
-             if($this->controller->get($key) < 3){
+             if($this->controller->get($key) < 4){
              $SC_SI_improve .= '</br>'  . $value['display_name'];
              }   
       }
@@ -143,9 +143,9 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       foreach( $HL_group as $key=>$value ){
           
           if($this->controller->get($key) !== NULL){
-              $HL_sum = $HL_sum + $this->controller->get($key);
+              $HL_sum = $HL_sum + $this->controller->get($key)-1;  
              
-             if($this->controller->get($key) < 3){
+             if($this->controller->get($key) < 4){
              $HL_improve .= '</br>'  . $value['display_name'];
              }   
       }
@@ -169,9 +169,9 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       foreach( $GLS_group as $key=>$value ){
           
           if($this->controller->get($key) !== NULL){
-              $GLS_sum = $GLS_sum + $this->controller->get($key);
+              $GLS_sum = $GLS_sum + $this->controller->get($key)-1;  
              
-             if($this->controller->get($key) < 3){
+             if($this->controller->get($key) < 4){
              $GLS_improve .= '</br>'  . $value['display_name'];
              }   
       }
@@ -195,9 +195,9 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       foreach( $WR_group as $key=>$value ){
           
           if($this->controller->get($key) !== NULL){
-              $WR_sum = $WR_sum + $this->controller->get($key);
+              $WR_sum = $WR_sum + $this->controller->get($key)-1;  
              
-             if($this->controller->get($key) < 3){
+             if($this->controller->get($key) < 4){
              $WR_improve .= '</br>'  . $value['display_name'];
              }   
       }
@@ -220,9 +220,9 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       foreach( $AR_group as $key=>$value ){
           
           if($this->controller->get($key) !== NULL){
-              $AR_sum = $AR_sum + $this->controller->get($key);
+              $AR_sum = $AR_sum + $this->controller->get($key)-1;  
              
-             if($this->controller->get($key) < 3){
+             if($this->controller->get($key) < 4){
              $AR_improve .= '</br>'  . $value['display_name'];
              }   
       }
@@ -250,9 +250,9 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       foreach( $NT_group as $key=>$value ){
           
           if($this->controller->get($key) !== NULL){
-              $NT_sum = $NT_sum + $this->controller->get($key);
+              $NT_sum = $NT_sum + $this->controller->get($key)-1;  
              
-             if($this->controller->get($key) < 3){
+             if($this->controller->get($key) < 4){
              $NT_improve .= '</br>'  . $value['display_name'];
              }   
       }
@@ -277,9 +277,9 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       foreach( $TST_group as $key=>$value ){
           
           if($this->controller->get($key) !== NULL){
-              $TST_sum = $TST_sum + $this->controller->get($key);
+              $TST_sum = $TST_sum + $this->controller->get($key)-1;  
              
-             if($this->controller->get($key) < 3){
+             if($this->controller->get($key) < 4){
              $TST_improve .= '</br>'  . $value['display_name'];
              }   
       }
@@ -304,9 +304,9 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       foreach( $CE_group as $key=>$value ){
           
           if($this->controller->get($key) !== NULL){
-              $CE_sum = $CE_sum + $this->controller->get($key);
+              $CE_sum = $CE_sum + $this->controller->get($key)-1;  
              
-             if($this->controller->get($key) < 3){
+             if($this->controller->get($key) < 4){
              $CE_improve .= '</br>'  . $value['display_name'];
              }   
       }
@@ -330,9 +330,9 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       foreach( $TM_group as $key=>$value ){
           
           if($this->controller->get($key) !== NULL){
-              $TM_sum =  $TM_sum +$this->controller->get($key);
+              $TM_sum =  $TM_sum +$this->controller->get($key)-1;  
              
-             if($this->controller->get($key) < 3){
+             if($this->controller->get($key) < 4){
               $TM_improve .= '</br>' . $value['display_name'];
              }   
       }
@@ -358,9 +358,9 @@ class StudySkillsAssessmentTwoForm extends FormStep {
           if($this->controller->get($key) !== NULL){
 //          if($this->controller->forms->get_form('StudySkillsAssessmentOneForm')->get_display_name($key) !== NULL){
               
-              $MM_sum = $MM_sum + $this->controller->get($key);
+              $MM_sum = $MM_sum + $this->controller->get($key)-1;  
              
-             if($this->controller->get($key) < 3){
+             if($this->controller->get($key) < 4){
               $MM_improve .= '</br>'  . $value['display_name'];
              }   
       }
