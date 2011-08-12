@@ -1,7 +1,7 @@
 <?php
-
+include('/var/reason_admissions_app_exports/export_admissions_apps.php');
+connectDB(REASON_DB);
 reason_include_once('minisite_templates/modules/default.php');
-reason_include_once('classes/error_handler.php');
 
 $GLOBALS['_module_class_names'][basename(__FILE__, '.php')] = 'admissionsApplicationExportModule';
 
