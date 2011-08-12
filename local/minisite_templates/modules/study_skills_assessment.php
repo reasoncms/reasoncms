@@ -35,7 +35,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule
 		$this->controller->set_data_context('study_skills_assessment');
 		$this->controller->show_back_button = false;
 		$this->controller->clear_form_data_on_finish = true;
-		$this->controller->allow_arbitrary_start = false;
+		$this->controller->allow_arbitrary_start = true;
 		//*
 		$forms = array(
                     'StudySkillsAssessmentOneForm' => array(
@@ -54,7 +54,8 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule
 		$this->controller->init();
 	}
 
-//	/**
+//
+//		/**
 //	 * Add possible forms variables that may come through to the list of vetted request vars
 //	 * @return void
 //	 */
