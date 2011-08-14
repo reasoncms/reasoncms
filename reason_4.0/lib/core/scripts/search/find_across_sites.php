@@ -49,6 +49,11 @@ echo '<style type="text/css">
 echo '</head><body>';
 echo '<a name="top" id="top"></a><h1>Find Something in Reason</h1><p>This tool will find the entities in Reason that contain the search string in any field. This tool is not case sensitive.</p>';
 
+if (reason_check_privs('db_maintenance'))
+{
+	echo '<p>See also: <a href="find_and_replace.php">Find and replace</a></p>'."\n";
+}
+
 $es = new entity_selector();
 $es->add_type(id_of('type'));
 $es->set_order('entity.name ASC');
@@ -170,11 +175,16 @@ if(!empty($_REQUEST['search_string']))
 				{
 					if(stristr($value,$_REQUEST['search_string']))
 					{
-						
+						$search_str = $_REQUEST['search_string'];
+						if($type->get_value('unique_name') == 'form' && 'thor_content' == $key)
+                                                {
+						        $value = htmlspecialchars($value);
+							$search_str = htmlspecialchars($search_str);						
+						}
 						if(function_exists('str_ireplace'))
-							$value = str_ireplace($_REQUEST['search_string'],'<span class="hit">'.$_REQUEST['search_string'].'</span>',$value);
+							$value = str_ireplace($search_str,'<span class="hit">'.$search_str.'</span>',$value);
 						else
-							$value = preg_replace('/('.preg_quote($_REQUEST['search_string']).')/i','<span class="hit">\\0</span>',$value);
+							$value = preg_replace('/('.preg_quote($search_str).')/i','<span class="hit">\\0</span>',$value);
 						$txt .= '<li><strong>'.$key.':</strong> '.$value.'</li>';
 					}
 				}
