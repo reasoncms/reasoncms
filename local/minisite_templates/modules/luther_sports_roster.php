@@ -138,6 +138,7 @@
                        'WV' => 'W.Va.',
                        'WI' => 'Wis.',
                        'WY' => 'Wyo.',
+						'XX' => '&nbsp;',
                );
 
 	var $_columns = array();
