@@ -300,32 +300,22 @@
 	}
 
 	/**
-	 * Supporting php 4 is getting kind of hacky, and HTML purifier is no longer being developed for php 4
-	 * @todo remove conditional logic when we stop supporting php 4
+	 * Return a safer string using HTML Purifier to do sanitization.
 	 */
 	function get_safer_html_html_purifier($string)
 	{
 		require_once( HTML_PURIFIER_INC . 'htmlpurifier.php' );
 		$config = HTMLPurifier_Config::createDefault();
 
-		if (carl_is_php5())
+		$config->set('HTML.DefinitionID', 'allow_anchors_transform_em_and_strong');
+		$config->set('HTML.DefinitionRev', 1);
+		$config->set('Attr.EnableID', true);
+		if ($def = $config->maybeGetRawHTMLDefinition())
 		{
-			$config->set('HTML.DefinitionID', 'allow_anchors_transform_em_and_strong');
-			$config->set('HTML.DefinitionRev', 1);
-			$config->set('Attr.EnableID', true);
-			$def = $config->getHTMLDefinition(true);
+			// lets transform b to strong and i to em
+			$def->info_tag_transform['b'] = new HTMLPurifier_TagTransform_Simple('strong');
+			$def->info_tag_transform['i'] = new HTMLPurifier_TagTransform_Simple('em');
 		}
-		else
-		{
-			$config->set('HTML', 'DefinitionID', 'allow_anchors_transform_em_and_strong');
-			$config->set('HTML', 'DefinitionRev', 1);
-			$config->set('Attr', 'EnableID', true);
-			$def =& $config->getDefinition('HTML');
-		}
-
-		// lets transform b to strong and i to em
-		$def->info_tag_transform['b'] = new HTMLPurifier_TagTransform_Simple('strong');
-		$def->info_tag_transform['i'] = new HTMLPurifier_TagTransform_Simple('em');
 		$purifier = new HTMLPurifier($config);
 		return $purifier->purify( $string );
 	}
