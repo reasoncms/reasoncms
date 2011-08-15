@@ -138,7 +138,6 @@
                        'WV' => 'W.Va.',
                        'WI' => 'Wis.',
                        'WY' => 'Wyo.',
-						'XX' => '&nbsp;',
                );
 
 	var $_columns = array();
@@ -382,9 +381,12 @@
 									$str .= $player[$col];
 								}
 							}
-							else if ($col == 'athlete_hometown_state' && $this->statesAP[$player[$col]] != '')
+							else if ($col == 'athlete_hometown_state')
 							{
-								$str .= $this->statesAP[$player[$col]];
+								if (array_key_exists($player[$col], $this->statesAP))
+								{
+									$str .= $this->statesAP[$player[$col]];
+								}
 							}
 							else
 							{
@@ -404,7 +406,12 @@
 						}
 						$ct .= "</p>";					
 						$ct .= "<p class=\"athlete_class_year\">". $player['athlete_class_year']."</p>";
-						$ct .= "<p class=\"athlete_hometown\">". $player['athlete_hometown_city'].", ". $this->statesAP[$player['athlete_hometown_state']]."</p>";
+						$ct .= "<p class=\"athlete_hometown\">". $player['athlete_hometown_city'];
+						if (array_key_exists($player['athlete_hometown_state'], $this->statesAP))
+						{
+							$ct .= ", ". $this->statesAP[$player['athlete_hometown_state']];
+						}
+						$ct .= "</p>";
 						$ct .= "<p class=\"athlete_high_school\">". $player['athlete_high_school']."</p>";		
 						$ct .= "</div>";
 
