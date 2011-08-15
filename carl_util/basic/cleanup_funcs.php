@@ -306,10 +306,10 @@
 	{
 		require_once( HTML_PURIFIER_INC . 'htmlpurifier.php' );
 		$config = HTMLPurifier_Config::createDefault();
-
 		$config->set('HTML.DefinitionID', 'allow_anchors_transform_em_and_strong');
 		$config->set('HTML.DefinitionRev', 1);
 		$config->set('Attr.EnableID', true);
+		$config->set('Cache.SerializerPath', HTMLPURIFIER_CACHE);
 		if ($def = $config->maybeGetRawHTMLDefinition())
 		{
 			// lets transform b to strong and i to em
