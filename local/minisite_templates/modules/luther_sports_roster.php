@@ -353,11 +353,11 @@
 								
 								if ($col == 'athlete_last_name' && $player['athlete_letter'] == 'yes')
 								{
-									$str .= "&bull;";
+									$str .= "&nbsp;&#x25b5;";
 								}
 								if ($col == 'athlete_last_name' && $player['athlete_captain'] == 'yes')
 								{
-									$str .= "&diams;";
+									$str .= "&nbsp;&#x25a1;";
 								}
 							}
 							else if ($col == 'athlete_class_year')
@@ -418,6 +418,8 @@
 				}
 
 				$str .= '</tbody></table>';
+				$str .= '<p>&#x25b5;&nbspletter<br/>';
+				$str .= '&#x25a1;&nbspcaptain</p>';
 
 			echo $str . $ct;
 		}
