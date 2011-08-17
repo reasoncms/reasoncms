@@ -351,11 +351,16 @@
 								//$str .= '<a href="'.$player_link.'">'.$name.'</a>';
 								$str .= "<a href=\"".$player_link. "\" class=\"cluetip_athlete\" title=\"". $player['athlete_first_name']." ".$player['athlete_last_name'] ."\" rel=\"#athlete".$player['id']."\">".$name."</a>";
 								
-								if ($col == 'athlete_last_name' && $player['athlete_letter'] == 'yes')
+								if ($col == 'athlete_last_name' && $player['athlete_letter'] == 'yes'
+									&& $col == 'athlete_last_name' && $player['athlete_captain'] == 'yes')
+								{
+									$str .= "&nbsp;&#x25b5;&#x25a1;";
+								}
+								else if ($col == 'athlete_last_name' && $player['athlete_letter'] == 'yes')
 								{
 									$str .= "&nbsp;&#x25b5;";
 								}
-								if ($col == 'athlete_last_name' && $player['athlete_captain'] == 'yes')
+								else if ($col == 'athlete_last_name' && $player['athlete_captain'] == 'yes')
 								{
 									$str .= "&nbsp;&#x25a1;";
 								}
@@ -418,7 +423,7 @@
 				}
 
 				$str .= '</tbody></table>';
-				$str .= '<p>&#x25b5;&nbspletter<br/>';
+				$str .= '<p>&#x25b5;&nbspletter winner<br/>';
 				$str .= '&#x25a1;&nbspcaptain</p>';
 
 			echo $str . $ct;
