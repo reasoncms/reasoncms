@@ -321,6 +321,8 @@
 		else
 		{
 			$str = '';
+			$show_captain = false;
+			$show_letter = false;
 
 				// now display the roster
 				$str .= '<table class="tablesorter"><thead><tr>';
@@ -363,14 +365,18 @@
 									&& $col == 'athlete_last_name' && $player['athlete_captain'] == 'yes')
 								{
 									$str .= "&nbsp;&#x25b5;&#x25a1;";
+									$show_letter = true;
+									$show_captain = true;
 								}
 								else if ($col == 'athlete_last_name' && $player['athlete_letter'] == 'yes')
 								{
 									$str .= "&nbsp;&#x25b5;";
+									$show_letter = true;
 								}
 								else if ($col == 'athlete_last_name' && $player['athlete_captain'] == 'yes')
 								{
 									$str .= "&nbsp;&#x25a1;";
+									$show_captain = true;
 								}
 							}
 							else if ($col == 'athlete_class_year')
@@ -431,8 +437,19 @@
 				}
 
 				$str .= '</tbody></table>';
-				$str .= '<p>&#x25b5;&nbspletter winner<br/>';
-				$str .= '&#x25a1;&nbspcaptain</p>';
+				if ($show_letter && $show_captain)
+				{
+					$str .= '<p>&#x25b5;&nbspletter winner<br/>';
+					$str .= '&#x25a1;&nbspcaptain</p>';
+				}
+				else if ($show_letter)
+				{
+					$str .= '<p>&#x25b5;&nbspletter winner</p>';
+				}
+				else if ($show_captain)
+				{
+					$str .= '<p>&#x25a1;&nbspcaptain</p>';
+				}
 
 			echo $str . $ct;
 		}
