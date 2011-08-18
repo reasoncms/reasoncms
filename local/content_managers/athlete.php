@@ -31,6 +31,10 @@ include_once INCLUDE_PATH.'../reason_package_local/disco/plasmature/types/athlet
 				$site_name == 'sport_softball_women' || $site_name == 'sport_volleyball_women')
 			{
 				$this->set_display_name('athlete_number', 'Number');
+				if ($this->get_value('athlete_number') >= 9999)
+				{
+					$this->set_value('athlete_number', null);
+				}
 			}
 			else
 			{
@@ -181,6 +185,9 @@ include_once INCLUDE_PATH.'../reason_package_local/disco/plasmature/types/athlet
 
 		function process()
 		{
+			$site_id = new entity( $this->get_value( 'site_id' ) );
+			$site_name = $site_id->get_value('unique_name');
+			
 			// convert text field for height in feet and inches to an integer value in inches
 			if (preg_match("/(\d+)[\s\"',\-fet\.]*(\d*)/", $this->get_value('athlete_height_text'), $matches))
 			{
@@ -192,6 +199,14 @@ include_once INCLUDE_PATH.'../reason_package_local/disco/plasmature/types/athlet
 				{
 					$this->set_value('athlete_height', (int)$matches[1] * 12 + (int)$matches[2]);
 				}
+			}
+			if (($site_name == 'sport_baseball_men' || $site_name == 'sport_basketball_men' ||
+				$site_name == 'sport_football_men' || $site_name == 'sport_soccer_men' ||
+				$site_name == 'sport_basketball_women' || $site_name == 'sport_soccer_women' || 
+				$site_name == 'sport_softball_women' || $site_name == 'sport_volleyball_women') &&
+				$this->get_value('athlete_number') == null)
+			{
+				$this->set_value('athlete_number', 9999);
 			}
 			parent::process();
 		}

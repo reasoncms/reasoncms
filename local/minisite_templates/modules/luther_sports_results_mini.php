@@ -394,18 +394,17 @@ class lutherSportsResultsMiniModule extends EventsModule
 				echo '<td>'.$event_name.'</td>'."\n";
 			}
 			echo '<td>'.$this->events[$event_id]->get_value( 'location' ).'</td>'."\n";
+			echo '<td>';
 			if ($this->events[$event_id]->get_value( 'description' ) != '')
 			{
-				echo '<td>'.$this->events[$event_id]->get_value( 'description' ).'</td>'."\n";
+				echo $this->events[$event_id]->get_value( 'description' );
 			}
 			else if (substr($this->events[$event_id]->get_value('datetime'), 11) != '00:00:00')
 			{
-				echo '<td>'.prettify_mysql_datetime($this->events[$event_id]->get_value('datetime'), "g:i a" ).'</td>'."\n";
-			}
-			else 
-			{
-				echo '<td></td>'."\n";
-			}
+				echo prettify_mysql_datetime($this->events[$event_id]->get_value('datetime'), "g:i a" );
+			}					
+			echo '</td>'."\n";
+
 			//echo '<td>'.$this->events[$event_id]->get_value( 'recurrence' ).'</td>'."\n";
 			//echo '<td>'.$this->events[$event_id]->get_value( 'last_occurence' ).'</td>'."\n";
 			//echo '<td>'.$this->events[$event_id]->get_value( 'datetime' ).'</td>'."\n";

@@ -196,10 +196,11 @@
 		if (!empty($players) && !empty($this->request['id'])) // add crumb with player name and alter title - pv will have the values we need
 		{
 			$this->_add_crumb($pv['athlete_first_name'] . " " . $pv['athlete_last_name']);
-			if ($this->site_name == 'sport_baseball_men' || $this->site_name == 'sport_basketball_men' ||
+			if (($this->site_name == 'sport_baseball_men' || $this->site_name == 'sport_basketball_men' ||
 				$this->site_name == 'sport_football_men' || $this->site_name == 'sport_soccer_men' ||
 				$this->site_name == 'sport_basketball_women' || $this->site_name == 'sport_soccer_women' || 
-				$this->site_name == 'sport_softball_women' || $this->site_name == 'sport_volleyball_women')
+				$this->site_name == 'sport_softball_women' || $this->site_name == 'sport_volleyball_women') &&
+				$pv['athlete_number'] < 9999)
 			{
 				$this->parent->title = "#" . $pv['athlete_number'] . " " . $pv['athlete_first_name'] . " " . $pv['athlete_last_name'];
 			}
@@ -344,7 +345,14 @@
 						foreach( array_keys($this->_columns) as $col )
 						{
 							$str .= '<td>';
-							if ($col == 'athlete_first_name' || $col == 'athlete_last_name')
+							if ($col == 'athlete_number')
+							{
+								if ($player[$col] < 9999)
+								{
+									$str .= $player[$col];
+								}
+							}
+							else if ($col == 'athlete_first_name' || $col == 'athlete_last_name')
 							{
 								$name = $player[$col]; //.' '.$player['athlete_last_name'];
 								$player_link = carl_make_link(array('id' => $k));
