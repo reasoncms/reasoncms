@@ -37,6 +37,9 @@
 					$this->show_item_default( 'Embed Code', 'Not available<div class="smallText">(The code used to embed '.$this->_entity->get_value('media_format').' files may not be accepted in a Reason content area.)</div>' );
 				}
 			}
+			$link_url = REASON_HTTP_BASE_PATH.'displayers/av_display.php?id='.htmlspecialchars($this->_entity->id());
+			
+			$this->show_item_default( 'Link','<a href="'.$link_url.'" target="_blank">Link to video</a>');
 			
 			// Everything Else
 			$this->show_all_values( $this->_entity->get_values() );
