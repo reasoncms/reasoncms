@@ -44,7 +44,7 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 				$this->markup_string .= '</nav>'."\n";
 				$this->markup_string .= '</article>'."\n";
 				$this->markup_string .= '<nav class="button view-all">'."\n";
-				$this->markup_string .= '<ul><li><a href="/sports/spotlightarchives">View all spotlights &gt;</a></li></ul>'."\n";
+				$this->markup_string .= '<ul><li><a href="/spotlightarchives">View all spotlights &gt;</a></li></ul>'."\n";
 				$this->markup_string .= '</nav>'."\n";
 			}
 			else 
