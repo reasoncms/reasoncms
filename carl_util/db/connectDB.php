@@ -46,6 +46,7 @@ function connectDB($dbName, $dbuser = '', $dbpasswd = '', $dbhost='')
 		// wait for one second if this is not the first try
 		if( $tries > 0 )
 		{
+			trigger_error('Unable to connect to database, sleeping and trying again (Reconnect attempt #'.$tries.'; Error #'.mysql_errno().':'.mysql_error().')', WARNING);
 			sleep( 1 );
 		}
 		$db = @mysql_connect($db_info['host'], $db_info['user'], $db_info['password']);
