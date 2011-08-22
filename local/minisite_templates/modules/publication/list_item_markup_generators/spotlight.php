@@ -136,7 +136,14 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$id = reset($image)->get_value('id');
 			$imgtype = reset($image)->get_value('image_type');
-			$thumbnail_image_name = WEB_PHOTOSTOCK.$id.'_tn.'.$imgtype;
+			if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_sports')
+			{
+				$thumbnail_image_name = WEB_PHOTOSTOCK.$id.'.'.$imgtype;
+			}
+			else
+			{
+				$thumbnail_image_name = WEB_PHOTOSTOCK.$id.'_tn.'.$imgtype;
+			}
 			//$markup_string .= '<div class="teaserImage">';
 			ob_start();
 			if (get_theme($this->passed_vars['site_id'])->get_value('name') == 'luther2010')
