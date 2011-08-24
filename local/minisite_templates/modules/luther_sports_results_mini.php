@@ -119,10 +119,21 @@ class lutherSportsResultsMiniModule extends EventsModule
 		if(!empty($this->events_page_url) && !empty($this->calendar))
 		{
 			$events = $this->calendar->get_all_events();
+			
 			if(empty($events))
+			{
 				return false;
+			}
 			else
-				return true;
+			{
+				foreach($events as $key => $value)
+				{
+					if (preg_match("/post_to_results/", $value->get_value( 'contact_organization' )))
+					{
+						return true;
+					}
+				}
+			}
 		}
 		return false;
 	}
@@ -352,7 +363,10 @@ class lutherSportsResultsMiniModule extends EventsModule
 		//	echo '<a href="'.$this->events_page_url.'?event_id='.$this->events[$event_id]->id().'&date='.$day.'">'."\n";
 		//}
 
-		if (substr($day, 0, 10) == substr($this->events[$event_id]->get_value('datetime'), 0, 10))
+		if (substr($day, 0, 10) == substr($this->events[$event_id]->get_value('datetime'), 0, 10)
+			&& ($this->cur_page->get_value( 'custom_page' ) == 'sports_results'
+			|| ($this->cur_page->get_value( 'custom_page' ) != 'sports_results'
+			&& preg_match("/post_to_results/", $this->events[$event_id]->get_value( 'contact_organization' )))))
 		{
 			$site_id = get_site_id_from_url("/sports");
 			echo '<tr>'."\n";

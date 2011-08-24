@@ -115,6 +115,14 @@
 			$this->add_element('hr3', 'hr');
 			$this->add_element('hr4', 'hr');
 			
+			if ($is_sport)
+			{
+				$this->change_element_type( 'contact_organization', 'hidden' );
+				$this->add_element( 'post_to_results', 'checkbox', array('description' => 'Check when event has concluded.'));
+				$this->set_display_name( 'post_to_results', 'Post to results' );
+				$this->set_value('post_to_results', preg_match("/post_to_results/", $this->get_value('contact_organization')));
+			}
+			
 			if(REASON_USES_DISTRIBUTED_AUDIENCE_MODEL)
 				$es = new entity_selector($site->id());
 			else
@@ -310,7 +318,7 @@
 		
 		function set_event_field_order()
 		{
-			$this->set_order (array ('this_event_is_comment','this_event_is', 'date_and_time', 'datetime', 'hours', 'minutes', 'recurrence', 'frequency', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'monthly_repeat', 'week_of_month', 'month_day_of_week', 'end_date', 'term_only', 'dates', 'hr1', 'info_head', 'name', 'description', 'location', 'sponsor', 'contact_username', 'contact_organization', 'url', 'content', 'keywords', 'categories', 'hr2', 'audiences_heading','audiences',  'show_hide', 'no_share', 'hr3', 'registration',  ));
+			$this->set_order (array ('this_event_is_comment','this_event_is', 'date_and_time', 'datetime', 'hours', 'minutes', 'recurrence', 'frequency', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'monthly_repeat', 'week_of_month', 'month_day_of_week', 'end_date', 'term_only', 'dates', 'hr1', 'info_head', 'name', 'description', 'post_to_results', 'location', 'sponsor', 'contact_username', 'contact_organization', 'url', 'content', 'keywords', 'categories', 'hr2', 'audiences_heading','audiences',  'show_hide', 'no_share', 'hr3', 'registration',  ));
 		}
 		
 		function _should_offer_split()
@@ -389,6 +397,20 @@
 			$dates = $rev->find_occurrence_dates($this->get_values());
 			$this->set_value( 'dates', implode( ', ',$dates ) );
 			$this->set_value( 'last_occurence', end($dates) );
+			
+			// add post to results to hidden contact organization field
+			$site = new entity( $this->get_value( 'site_id' ) );
+			if (preg_match("/^sport.*?/", $site->get_value('unique_name')))
+			{
+				if ($this->get_value('post_to_results'))
+				{				
+					$this->set_value('contact_organization', 'post_to_results');
+				}
+				else 
+				{
+					$this->set_value('contact_organization', '');
+				}
+			}
 		}
 		
 		function process()
@@ -406,8 +428,8 @@
 			if (!preg_match("/sport_\w+_w?o?men/", $site_name))
 			{
 				return;
-			}
-			
+			}			
+						
 			// get a list of athletes
 			$es = new entity_selector($this->get_value('site_id'));
 			$es->add_type(id_of('athlete_type'));
