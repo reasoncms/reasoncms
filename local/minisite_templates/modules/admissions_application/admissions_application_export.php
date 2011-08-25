@@ -12,6 +12,10 @@ $gh = new group_helper();
 $gh->set_group_by_id($group);
 $has_access = $gh->has_authorization($username);
 
+$date = date("Ymd:his");
+$yesterday = date("Y-m-d", strtotime("-1 day"));
+//$yesterday = date("2011-07-29");
+
 if ($has_access) {
     connectDB('admissions_applications_connection');
 
@@ -67,18 +71,29 @@ activity_10, activity_10_other, activity_10_participation, activity_10_honors,
 college_plan_1, college_plan_2, music_audition, music_audition_instrument, financial_aid, influences,
 other_colleges, personal_statement, conviction_history, conviction_history_details, hs_discipline,
 hs_discipline_details, honesty_statement, submitter_ip, creation_date, submit_date, do_not_contact,
-last_update
-    FROM `applicants` WHERE CAST(submit_date AS DATE) = '$yesterday'";
+last_update ";
+    $q_string_no_export_date = "FROM `applicants` WHERE `export_date` IS NULL ";
+    $q_string_cummulative = "FROM `applicants`";
+//    FROM `applicants` WHERE CAST(submit_date AS DATE) = '$yesterday'";
 
-    $results = mysql_query($query_string, $connection);
-    $num_rows = mysql_num_rows($results);
-    //echo $query_string;
+    /**
+     * Run the query to get new (unexported) applications
+     * If successful, set `export_date` and `export_by` fields in the database
+     */
+    $no_export_date_results = db_query($query_string . $q_string_no_export_date);
+    $num_rows = mysql_num_rows($no_export_date_results);
     // output settings
-    if ($results) {
-        $fname = "/var/reason_admissions_app_exports/application_exports/{$yesterday}_app_export.csv";
+    
+    if ($no_export_date_results) {
+        $fname = "/var/reason_admissions_app_exports/application_exports/{$date}_app_export.csv";
         $fp = fopen($fname, 'w');
         $first_time = true;
-        while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
+        $i = 0;
+        while ($row = mysql_fetch_array($no_export_date_results, MYSQL_ASSOC)) {
+//            echo $row['open_id'] . "\n";
+            // store the open_ids for use later
+            $open_id_array[$i] = $row['open_id'];
+            $i++;
             if ($first_time) {
                 $keys = array_keys($row);
                 $line = '"'.implode('","',$keys).'"';
@@ -87,10 +102,62 @@ last_update
             }
             $values = array_values($row);
             $line = '"'.implode('","',$values).'"';
-            fwrite($fp, $line."\n");
+            $fwrite = fwrite($fp, $line."\n");
         }
         // close file
-        fclose($fp);
+        $fclose = fclose($fp);
+
+        // Do some small error checking
+        // If ok, update database fields
+        if ($fclose === false || $fwrite === false) {
+            die('There was a problem writing the latest applicants file. Please contact LIS for help');
+        } else {
+            $qstring = "UPDATE `applicants` SET `export_date`=NOW(), `export_by`='" . $username . "' WHERE `open_id` IN ('";
+            foreach($open_id_array as $o_id){
+                $qstring .= $o_id . ', ';
+            }                
+            $qstring = rtrim($qstring);
+            $qstring .= ")' ";
+
+            echo $qstring;
+            
+//            foreach ($keys as $key){
+//                if ($key == 'open_id'){
+//
+//                }
+//            }
+//            $qresult = db_query($qstring);
+        }
+        die('wtf');
+    }
+
+    $cummulative_results = db_query($query_string . $q_string_cummulative);
+    $num_rows = mysql_num_rows($cummulative_results);
+    //echo $query_string;
+    // output settings
+
+    if ($cummulative_results) {
+        $fname = "/var/reason_admissions_app_exports/application_exports/cummulative_app_export.csv";
+        $fp = fopen($fname, 'w');
+        $first_time = true;
+        while ($row = mysql_fetch_array($cummulative_results, MYSQL_ASSOC)) {
+            if ($first_time) {
+                $keys = array_keys($row);
+                $line = '"'.implode('","',$keys).'"';
+                fwrite($fp, $line."\n");
+                $first_time = false;
+            }
+            $values = array_values($row);
+            $line = '"'.implode('","',$values).'"';
+            $fwrite = fwrite($fp, $line."\n");
+        }
+        // close file
+        $fclose = fclose($fp);
+
+        // Do some small error checking
+        if ($fclose === false || $fwrite === false) {
+            die('There was a problem writing the latest applicants file. Please contact LIS for help');
+        }
     }
     connectDB(REASON_DB);
 }
