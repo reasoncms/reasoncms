@@ -89,7 +89,8 @@ class lutherSportsResultsMiniModule extends EventsModule
 				
 				if ($e->get_value('location'))
 					echo '<br>'.$e->get_value('location')."\n";
-			}	
+			}
+			echo $this->video_audio_streaming($e->get_value('id'));	
 			echo '</p>'."\n";
 	
 			if ($e->get_value('content'))
@@ -407,7 +408,9 @@ class lutherSportsResultsMiniModule extends EventsModule
 			{
 				echo '<td>'.$event_name.'</td>'."\n";
 			}
+			
 			echo '<td>'.$this->events[$event_id]->get_value( 'location' ).'</td>'."\n";
+        
 			echo '<td>';
 			if ($this->events[$event_id]->get_value( 'description' ) != '')
 			{
@@ -416,7 +419,8 @@ class lutherSportsResultsMiniModule extends EventsModule
 			else if (substr($this->events[$event_id]->get_value('datetime'), 11) != '00:00:00')
 			{
 				echo prettify_mysql_datetime($this->events[$event_id]->get_value('datetime'), "g:i a" );
-			}					
+			}
+			echo $this->video_audio_streaming($event_id);				
 			echo '</td>'."\n";
 
 			//echo '<td>'.$this->events[$event_id]->get_value( 'recurrence' ).'</td>'."\n";
@@ -464,9 +468,31 @@ class lutherSportsResultsMiniModule extends EventsModule
 		echo '</div>'."\n";
 		
 		echo '</form>'."\n";
-		
-		
 
+	}
+	
+	function video_audio_streaming($event_id)
+	// check if video/audio streaming categories are present for an event
+	{	
+		$es = new entity_selector();
+		$es->description = 'Selecting categories for event';
+		$es->add_type( id_of('category_type'));
+		$es->add_right_relationship( $event_id, relationship_id_of('event_to_event_category') );
+		$cats = $es->run_one();
+		$vstream = '';
+		$astream = '';
+		foreach( $cats AS $cat )
+		{
+			if ($cat->get_value('name') == 'Video Streaming')
+			{
+				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><img class="video_streaming" src="/images/luther2010/television_gray_256.png" alt="Video Streaming"></a>';
+			}
+			if ($cat->get_value('name') == 'Audio Streaming')
+			{
+				$astream = '<a title="Video Streaming" href="http://www.luther.edu/kwlc/"><img class="audio_streaming" src="/images/luther2010/headphones_gray_256.png" alt="Audio Streaming" title="Audio Streaming"></a>';
+			}
+		}
+		return $astream . $vstream;
 	}
 
 }

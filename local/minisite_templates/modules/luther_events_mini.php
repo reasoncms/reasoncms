@@ -217,6 +217,11 @@ class miniEventsModule extends EventsModule
 					echo '<br />('.date('M', $s).' '.date('d', $s).'-'.date('M', $e).' '.date('d', $e).')';
 				}
 			}
+			if (!empty($this->events_page_url))
+			{
+				echo '</a>'."\n";
+			}
+			echo $this->video_audio_streaming($this->events[$event_id]->get_value('id'))."\n";
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{
 				echo '<br /><span class="location">'.$this->events[$event_id]->get_value( 'location' );
@@ -233,10 +238,7 @@ class miniEventsModule extends EventsModule
 			
 			echo '</h1>'."\n";
 			echo '</div>'."\n";
-			if (!empty($this->events_page_url))
-			{
-				echo '</a>'."\n";
-			}
+			
 			echo '</li>'."\n";
 			$this->luther_counter--;
 		}
@@ -246,6 +248,30 @@ class miniEventsModule extends EventsModule
 
 		
 
+	}
+	
+	function video_audio_streaming($event_id)
+	// check if video/audio streaming categories are present for an event
+	{	
+		$es = new entity_selector();
+		$es->description = 'Selecting categories for event';
+		$es->add_type( id_of('category_type'));
+		$es->add_right_relationship( $event_id, relationship_id_of('event_to_event_category') );
+		$cats = $es->run_one();
+		$vstream = '';
+		$astream = '';
+		foreach( $cats AS $cat )
+		{
+			if ($cat->get_value('name') == 'Video Streaming')
+			{
+				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><img class="video_streaming" src="/images/luther2010/television_white_256.png" alt="Video Streaming"></a>';
+			}
+			if ($cat->get_value('name') == 'Audio Streaming')
+			{
+				$astream = '<a title="Video Streaming" href="http://www.luther.edu/kwlc/"><img class="audio_streaming" src="/images/luther2010/headphones_white_256.png" alt="Audio Streaming" title="Audio Streaming"></a>';
+			}
+		}
+		return $astream . $vstream;
 	}
 
 }
