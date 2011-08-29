@@ -17,8 +17,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
     function on_every_time()
 	{
         $this->show_form = false;
-        $this->my_form = new StudySkillsAssessmentOneForm();
-        //$this->my_form->run();
+//        $this->my_form = new StudySkillsAssessmentOneForm();
         
         $this->calculate_score();
         
@@ -49,7 +48,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       //Motivation and Responsibilty
      
       $MR_sum = 0;
-      $MR_improve = '</br> </br> Area(s) with room for improvement:';
+      $MR_improve = '</br> </br><strong><strong> Area(s) with room for improvement:</strong></strong>';
       
       foreach($MR_group as $key=>$value ){
           
@@ -61,7 +60,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
           
              if ($this->controller->get($key) < 4 ){
   
-             $MR_improve .=  '</br>'  . $value['display_name'];
+             $MR_improve .=  '</br>'  . $value['display_name'] . '.';
             
              }
       }
@@ -84,7 +83,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       // Organization
      
       $ORG_sum = 0;
-      $ORG_improve = '</br> </br> Area(s) with room for improvement:';
+      $ORG_improve = '</br> </br><strong> Area(s) with room for improvement:</strong>';
       
       foreach($ORG_group as $key=>$value ){
           
@@ -92,7 +91,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
              $ORG_sum = $ORG_sum + $this->controller->get($key)-1;  
              
              if($this->controller->get($key) < 4){
-             $ORG_improve .= '</br>'  . $value['display_name'];
+             $ORG_improve .= '</br>'  . $value['display_name'] . '.';
              }   
       }
       }
@@ -112,7 +111,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       // Self Confidence and Social Interaction
      
       $SC_SI_sum = 0;
-      $SC_SI_improve = '</br> </br> Area(s) with room for improvement:';
+      $SC_SI_improve = '</br> </br><strong> Area(s) with room for improvement:</strong>';
       
       foreach($SC_SI_group as $key=>$value ){
           
@@ -120,7 +119,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
              $SC_SI_sum = $SC_SI_sum + $this->controller->get($key)-1;  
              
              if($this->controller->get($key) < 4){
-             $SC_SI_improve .= '</br>'  . $value['display_name'];
+             $SC_SI_improve .= '</br>'  . $value['display_name'] . '.';
              }   
       }
       }
@@ -138,7 +137,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       // Healthy living
       
       $HL_sum = 0;
-      $HL_improve = '</br> </br> Area(s) with room for improvement:';
+      $HL_improve = '</br> </br><strong> Area(s) with room for improvement:</strong>';
       
       foreach( $HL_group as $key=>$value ){
           
@@ -146,7 +145,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
               $HL_sum = $HL_sum + $this->controller->get($key)-1;  
              
              if($this->controller->get($key) < 4){
-             $HL_improve .= '</br>'  . $value['display_name'];
+             $HL_improve .= '</br>'  . $value['display_name'] . '.';
              }   
       }
       }
@@ -164,7 +163,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       // General learning strategies
       
       $GLS_sum = 0;
-      $GLS_improve = '</br> </br> Area(s) with room for improvement:';
+      $GLS_improve = '</br> </br><strong> Area(s) with room for improvement:</strong>';
       
       foreach( $GLS_group as $key=>$value ){
           
@@ -172,7 +171,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
               $GLS_sum = $GLS_sum + $this->controller->get($key)-1;  
              
              if($this->controller->get($key) < 4){
-             $GLS_improve .= '</br>'  . $value['display_name'];
+             $GLS_improve .= '</br>'  . $value['display_name'] . '.';
              }   
       }
       }
@@ -190,7 +189,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       // Writing
       
       $WR_sum = 0;
-      $WR_improve = '</br> </br> Area(s) with room for improvement:';
+      $WR_improve = '</br> </br><strong> Area(s) with room for improvement:</strong>';
       
       foreach( $WR_group as $key=>$value ){
           
@@ -198,7 +197,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
               $WR_sum = $WR_sum + $this->controller->get($key)-1;  
              
              if($this->controller->get($key) < 4){
-             $WR_improve .= '</br>'  . $value['display_name'];
+             $WR_improve .= '</br>'  . $value['display_name'] . '.';
              }   
       }
       }
@@ -215,7 +214,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       // Active Reading
       
       $AR_sum = 0;
-      $AR_improve = '</br> </br> Area(s) with room for improvement:';
+      $AR_improve = '</br> </br><strong> Area(s) with room for improvement:</strong>';
       
       foreach( $AR_group as $key=>$value ){
           
@@ -223,7 +222,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
               $AR_sum = $AR_sum + $this->controller->get($key)-1;  
              
              if($this->controller->get($key) < 4){
-             $AR_improve .= '</br>'  . $value['display_name'];
+             $AR_improve .= '</br>'  . $value['display_name'] . '.';
              }   
       }
       }
@@ -245,7 +244,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       // Notetaking
       
       $NT_sum = 0;
-      $NT_improve = '</br> </br> Area(s) with room for improvement:';
+      $NT_improve = '</br> </br><strong> Area(s) with room for improvement:</strong>';
       
       foreach( $NT_group as $key=>$value ){
           
@@ -253,7 +252,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
               $NT_sum = $NT_sum + $this->controller->get($key)-1;  
              
              if($this->controller->get($key) < 4){
-             $NT_improve .= '</br>'  . $value['display_name'];
+             $NT_improve .= '</br>'  . $value['display_name'] . '.';
              }   
       }
       }
@@ -272,7 +271,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       // Testing
       
       $TST_sum = 0;
-      $TST_improve = '</br> </br> Area(s) with room for improvement:';
+      $TST_improve = '</br> </br><strong> Area(s) with room for improvement:</strong>';
       
       foreach( $TST_group as $key=>$value ){
           
@@ -280,7 +279,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
               $TST_sum = $TST_sum + $this->controller->get($key)-1;  
              
              if($this->controller->get($key) < 4){
-             $TST_improve .= '</br>'  . $value['display_name'];
+             $TST_improve .= '</br>'  . $value['display_name'] . '.';
              }   
       }
       }
@@ -299,7 +298,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       // Classroom Engagement
       
       $CE_sum = 0;
-      $CE_improve = '</br> </br> Area(s) with room for improvement:';
+      $CE_improve = '</br> </br><strong> Area(s) with room for improvement:</strong>';
       
       foreach( $CE_group as $key=>$value ){
           
@@ -307,7 +306,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
               $CE_sum = $CE_sum + $this->controller->get($key)-1;  
              
              if($this->controller->get($key) < 4){
-             $CE_improve .= '</br>'  . $value['display_name'];
+             $CE_improve .= '</br>'  . $value['display_name'] . '.';
              }   
       }
       }
@@ -325,7 +324,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       // Time Management
       
       $TM_sum = 0;
-      $TM_improve = '</br> </br> Area(s) with room for improvement:';
+      $TM_improve = '</br> </br><strong> Area(s) with room for improvement:</strong>';
       
       foreach( $TM_group as $key=>$value ){
           
@@ -351,7 +350,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
       // Money  Management
       
       $MM_sum = 0;
-      $MM_improve = '</br> </br> Area(s) with room for improvement:';
+      $MM_improve = '</br> </br><strong> Area(s) with room for improvement:</strong>';
 //      die('<h4>SOOOOOO' . $this->controller->forms->get_form('StudySkillsAssessmentOneForm')->get_display_name($key).'</h4>');
       foreach( $MM_group as $key=>$value ){
           
@@ -361,7 +360,7 @@ class StudySkillsAssessmentTwoForm extends FormStep {
               $MM_sum = $MM_sum + $this->controller->get($key)-1;  
              
              if($this->controller->get($key) < 4){
-              $MM_improve .= '</br>'  . $value['display_name'];
+              $MM_improve .= '</br>'  . $value['display_name'] . '.';
              }   
       }
       }
