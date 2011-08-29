@@ -83,8 +83,8 @@ last_update ";
     $no_export_date_results = db_query($query_string . $q_string_no_export_date);
     $num_rows = mysql_num_rows($no_export_date_results);
     // output settings
-    
-    if ($no_export_date_results) {
+//    die($num_rows."asdfasdfasdfasdfasdfasdfasdfasdfasdfasdf");
+    if ($num_rows) {
         $fname = "/var/reason_admissions_app_exports/application_exports/{$date}_app_export.csv";
         $fp = fopen($fname, 'w');
         $first_time = true;
@@ -112,23 +112,22 @@ last_update ";
         if ($fclose === false || $fwrite === false) {
             die('There was a problem writing the latest applicants file. Please contact LIS for help');
         } else {
-            $qstring = "UPDATE `applicants` SET `export_date`=NOW(), `export_by`='" . $username . "' WHERE `open_id` IN ('";
+            $qstring = "UPDATE `applicants` SET `export_date`=NOW(), `export_by`='" . $username . "' WHERE `open_id` IN (";
             foreach($open_id_array as $o_id){
-                $qstring .= $o_id . ', ';
+                $qstring .= '\'' . $o_id . '\', ';
             }                
-            $qstring = rtrim($qstring);
-            $qstring .= ")' ";
+            $qstring = rtrim($qstring,", ");
+            $qstring .= ") ";
 
-            echo $qstring;
+//            echo $qstring;
             
 //            foreach ($keys as $key){
 //                if ($key == 'open_id'){
-//
 //                }
 //            }
-//            $qresult = db_query($qstring);
+            $qresult = db_query($qstring);
         }
-        die('wtf');
+//        die('wtf');
     }
 
     $cummulative_results = db_query($query_string . $q_string_cummulative);
