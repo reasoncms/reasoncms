@@ -202,7 +202,19 @@
 				$this->site_name == 'sport_softball_women' || $this->site_name == 'sport_volleyball_women') &&
 				$pv['athlete_number'] < 9999)
 			{
-				$this->parent->title = "#" . $pv['athlete_number'] . " " . $pv['athlete_first_name'] . " " . $pv['athlete_last_name'];
+				if ($pv['athlete_number'] == -2)
+				{
+					$anum = "01";
+				}
+				else if ($pv['athlete_number'] == -1)
+				{
+					$anum = "00";
+				}
+				else
+				{
+					$anum = $pv['athlete_number'];
+				}
+				$this->parent->title = "#" . $anum . " " . $pv['athlete_first_name'] . " " . $pv['athlete_last_name'];
 			}
 			else
 			{
@@ -349,7 +361,15 @@
 							$str .= '<td>';
 							if ($col == 'athlete_number')
 							{
-								if ($player[$col] < 9999)
+								if ($player[$col] == -2)
+								{
+									$str .= "01";
+								}
+								else if ($player[$col] == -1)
+								{
+									$str .= "00";
+								}
+								else if ($player[$col] < 9999)
 								{
 									$str .= $player[$col];
 								}
