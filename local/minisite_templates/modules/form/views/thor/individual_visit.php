@@ -60,18 +60,16 @@ class IndividualVisitForm extends DefaultThorForm {
 
     // do not use date ranges (i.e. 20110801-20110805) the error checking is not setup to handle this.
     var $disabled_dates = array(
-        '20101016',
-        '20101119', '20101125', '20101126', '20101127',
-        '20101211', '20101218',
+        '20111010', '20111020', '20111021',
+        '20111124', '20111125',
         'xxxx1223', 'xxxx1224', 'xxxx1225', '20101227', '20101228', '20101229', '20101230', 'xxxx1231',
-        'xxxx0101', '20110129',
-        '20110212', '20110226',
-        '20110314', '20110319', '20110320', '20110321', '20110322', '20110323', '20110324', '20110325', '20110326',
-        '20110411', '20110422', '20110423',
-        '20110514', '20110521', '20110523', '20110524', '20110526', '20110528', '20110530',
-        '20110604', '20110621', '20110622',
-        '20110801', '20110802', '20110803', '20110804', '20110805', 20110810,
-    );
+        'xxxx0101',
+        '20120218', '20120225',
+        '20120309', '20120330',
+        '20120406',
+        '20120806', '20120807', '20120808', '20120809', '20120810',
+     );
+
     var $elements = array(
         'high_school' => array(
             'type' => 'text',
@@ -539,7 +537,7 @@ class IndividualVisitForm extends DefaultThorForm {
         $visitdate_properties = array(
             'datepicker_class_arg' => 'split-date fill-grid-no-select disable-days-67
                             statusformat-l-cc-sp-d-sp-F-sp-Y opacity-99 range-low-today
-                            range-high-20110912 ' . $disabled_dates_string . '',);
+                            range-high-20120912 ' . $disabled_dates_string . '',);
 
         $visitdate_field = $this->get_element_name_from_label('Visit Date');
         $this->change_element_type($visitdate_field, 'textdatepublic');
