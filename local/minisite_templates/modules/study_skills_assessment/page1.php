@@ -580,12 +580,8 @@ class StudySkillsAssessmentOneForm extends FormStep {
         ),
         
     );
-    function on_every_time(){
-        
-        //$this->set_value('MM_8',0);
-        echo'<p>Please read the following statements and schoose the appropriate response. To get an accurate picture of where you stand, answer honestly at this particular point in time, not what you believe is ideal. Remember, there are no right or wrong answers.<br />
-          <br/> Response choices: Never, Sometimes, Usually, Always.</p>';
-        }
+
+    
 }
 
 ?>
