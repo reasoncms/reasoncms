@@ -66,12 +66,21 @@ class EventsHybridModule extends EventsModule
 				}
 				if(!empty($upcoming))
 				{
+					
 					echo '<div class="upcoming">'."\n";
 					if(!empty($archive))
 						echo '<h3 class="upcoming">Upcoming</h3>'."\n";
+					if($this->params['ongoing_display'] == 'above')
+					{
+						$this->show_ongoing_events( $this->get_ongoing_event_ids('above') );
+					}
 					foreach($upcoming as $day => $val)
 					{
 						$this->show_daily_events( $day );
+					}
+					if($this->params['ongoing_display'] == 'below')
+					{
+						$this->show_ongoing_events( $this->get_ongoing_event_ids('below') );
 					}
 					echo '</div>'."\n";
 				}
@@ -103,8 +112,74 @@ class EventsHybridModule extends EventsModule
 		$this->show_feed_link();
 		echo '</div>'."\n";
 	}
+	function get_ongoing_event_ids($ongoing_display = '')
+	{
+		if(empty($ongoing_display))
+			$ongoing_display = $this->params['ongoing_display'];
+		
+		$ongoing_ids = array();
+		foreach($this->events_by_date as $day => $val)
+		{
+			if( $day < $this->today )
+				continue;
+			elseif( $this->calendar->get_end_date() && $day > $this->calendar->get_end_date() )
+				break;
+			$ongoing_ids = array_merge($ongoing_ids,$val);
+		}
+		$ongoing_ids = array_unique($ongoing_ids);
+		if('above' == $ongoing_display)
+		{
+			foreach($ongoing_ids as $k => $id)
+			{
+				if(!$this->event_is_ongoing($this->events[$id]) || $this->events[$id]->get_value('datetime') >= $this->today)
+					unset($ongoing_ids[$k]);
+			}
+		}
+		elseif('below' == $ongoing_display)
+		{
+			foreach($ongoing_ids as $k => $id)
+			{
+				if(!$this->event_is_ongoing($this->events[$id]) || $this->events[$id]->get_value('datetime') >= $this->today || $this->events[$id]->get_value('last_occurence') <= $this->today)
+					unset($ongoing_ids[$k]);
+			}
+		}
+		else
+		{
+			trigger_error('Unrecognized string passed to get_ongoing_event_ids(): '.$ongoing_display.'. Should be "above" or "below".');
+		}
+		return $ongoing_ids;
+	}
+	
+	function show_ongoing_events($ids)
+	{
+		if(!empty($ids))
+		{
+			echo '<h4>Ongoing</h4>'."\n";
+			echo '<ul>'."\n";
+			foreach($ids as $id)
+			{
+				echo '<li>'.$this->show_event_list_item( $id, '', 'through' ).'</li>'."\n";
+			}
+			echo '</ul>'."\n";
+		}
+	}
 	function show_daily_events( $day ) // {{{
 	{
+		ob_start();
+		foreach ($this->events_by_date[$day] as $event_id)
+		{
+			$ongoing_type = $this->get_event_ongoing_type_for_day($event_id,$day);
+			if( 'middle' == $ongoing_type )
+				continue;
+			echo '<li class="event">';
+			$this->show_event_list_item( $event_id, $day, $ongoing_type );
+			echo '</li>'."\n";
+		}
+		$list_items = ob_get_clean();
+		
+		if(empty($list_items))
+			return;
+		
 		if($this->show_months == true && ($this->prev_month != substr($day,5,2) || $this->prev_year != substr($day,0,4) ) )
 		{
 			echo '<h4 class="month">'.prettify_mysql_datetime( $day, 'F Y' ).'</h4>'."\n";
@@ -118,12 +193,7 @@ class EventsHybridModule extends EventsModule
 			$today = '';
 		echo '<h5 class="day">'.prettify_mysql_datetime( $day, $this->list_date_format ).$today.'</h5>'."\n";
 		echo '<ul>';
-		foreach ($this->events_by_date[$day] as $event_id)
-		{
-			echo '<li class="event">';
-			$this->show_event_list_item( $event_id, $day );
-			echo '</li>'."\n";
-		}
+		echo $list_items;
 		echo '</ul>'."\n";
 	} // }}}
 	function get_today_link()
