@@ -159,6 +159,19 @@ class miniEventsModule extends EventsModule
 		if(!empty($ret))
 			$this->events_page_url = $ret;
 	} // }}}
+	function show_ongoing_events($ids)
+	{
+		if(!empty($ids))
+		{
+			echo '<h4>Ongoing</h4>'."\n";
+			echo '<ul>'."\n";
+			foreach($ids as $id)
+			{
+				echo '<li>'.$this->show_event_list_item( $id, '', 'through' ).'</li>'."\n";
+			}
+			echo '</ul>'."\n";
+		}
+	}
 	function show_feed_link()
 	{
 		echo '<p class="more"><a href="'.$this->events_page_url.'">More events</a></p>'."\n";
