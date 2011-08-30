@@ -572,6 +572,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 		{
 			$this->run_section( 'norse_calendar' );
 		}
+
+                if ($this->has_content( 'norse_form' ))
+		{
+			$this->run_section( 'norse_form' );
+		}
 		
 		echo '</div> <!-- class="content content-primary" -->'."\n";        
                 // rough-in right column if there is no content
@@ -650,7 +655,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 			|| $this->cur_page->get_value( 'custom_page' ) == 'sports_roster'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'sports_results'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'directory_aaron'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'admissions_application')
+			|| $this->cur_page->get_value( 'custom_page' ) == 'admissions_application'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'study_skills_assessment')
 		{
 			return '<body class="style-one-column ' . $s . '">'."\n";
 		}
