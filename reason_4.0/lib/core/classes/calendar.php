@@ -167,7 +167,7 @@ class reasonCalendar
 	 * if a key-value pair is passed to the object that is not in this array, it is ignored
 	 * @var array
 	 */
-	var $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','default_view_min_days','es_callback');
+	protected $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','default_view_min_days', 'es_callback','ongoing_count_all_occurrences','ongoing_count_pre_start_dates','ongoing_count_ends');
 	/**
 	 * site entity that we are looking at
 	 *
@@ -178,49 +178,49 @@ class reasonCalendar
 	 *
 	 * @var mixed either an array of sites or a site entity object
 	 */
-	var $site;
+	protected $site;
 	/**
 	 * the number of items that the calendar class tries to 
 	 * optimize for when determining the default view
 	 * @var integer
 	 */
-	var $ideal_count = 22;
+	protected $ideal_count = 22;
 	/**
 	 * the first date of the current calendar view
 	 * @var string mysql-formatted date (e.g. yyyy-mm-dd)
 	 */
-	var $start_date;
+	protected $start_date;
 	/**
 	 * the last date of the current calendar view
 	 * @var string mysql-formatted date (e.g. yyyy-mm-dd)
 	 */
-	var $end_date;
+	protected $end_date;
 	/**
 	 * the current defined view
 	 * @var mixed view name (one of: daily, weekly, monthly, yearly, all, or NULL)
 	 */
-	var $view = NULL;
+	protected $view = NULL;
 	/**
 	 * category entities joined by AND
 	 * Only events that are related to *all* the entities in this array will 
 	 * be included in the calendar
 	 * @var array category entities
 	 */
-	var $categories = array();
+	protected $categories = array();
 	/**
 	 * audiences
 	 * Only events that have *all* the audiences in this array will 
 	 * be included in the calendar
 	 * @var array audience entities
 	 */
-	var $audiences = array();
+	protected $audiences = array();
 	/**
 	 * category entities joined by OR
 	 * Events that are related to *any* of the entities in this array will 
 	 * be included in the calendar
 	 * @var array category entities
 	 */
-	var $or_categories = array();
+	protected $or_categories = array();
 	/**
 	 * relationships to be applied to calendar
 	 *
@@ -229,23 +229,23 @@ class reasonCalendar
 	 * dir: right,left (left used if not specified)
 	 * @var array
 	 */
-	var $rels = array();
-	var $simple_search = '';
+	protected $rels = array();
+	protected $simple_search = '';
 	/**
 	 * the main entity selector used to select the calendar's event entities
 	 * @var object entity_selector
 	 */
-	var $es;
+	protected $es;
 	/**
 	 * the event that occurs last in the calendar
 	 * @var object entity
 	 */
-	var $max_event;
+	protected $max_event;
 	/**
 	 * the event that occurs first in the calendar
 	 * @var object entity
 	 */
-	var $min_event;
+	protected $min_event;
 	/**
 	 * the actual event array returned by the entity selector
 	 * @var array of entities
@@ -264,7 +264,7 @@ class reasonCalendar
 	 * false: end date was determined by calendar class
 	 * @var boolean
 	 */
-	var $end_date_supplied = false;
+	protected $end_date_supplied = false;
 	/**
 	 * Allows automagic timeframe window to be toggled on and off
 	 *
@@ -274,7 +274,7 @@ class reasonCalendar
 	 * false: if end date and/or view are not supplied, calendar will default to "all" view
 	 * @var boolean
 	 */
-	var $choose_window_automagically = true;
+	protected $choose_window_automagically = true;
 	/**
 	 * Toggle for automagic timeframe window's "snap to nearest defined view" feature
 	 *
@@ -284,7 +284,7 @@ class reasonCalendar
 	 * false: default window will end on the day that the ideal_count is surpassed
 	 * @var boolean
 	 */
-	var $automagic_window_snap_to_nearest_view = true;
+	protected $automagic_window_snap_to_nearest_view = true;
 	
 	/**
 	 * A lower bound on the number of days that the calendar will default to
@@ -300,13 +300,13 @@ class reasonCalendar
 	 *
 	 * @var integer
 	 */
-	var $default_view_min_days = 1;
+	protected $default_view_min_days = 1;
 	
 	/**
 	 * The site that this calendar is being displayed within, if applicable
 	 * @var object Reason entity
 	 */
-	var $context_site;
+	protected $context_site;
 	
 	/**
 	 * Should the calendar include all items, or just those that are shared?
@@ -324,7 +324,7 @@ class reasonCalendar
 	 * @var string 'all', 'shared_only', 'hybrid'
 	 * @access private
 	 */
-	var $sharing_mode; // Possible values: 'all', 'shared_only', 'hybrid'
+	protected $sharing_mode; // Possible values: 'all', 'shared_only', 'hybrid'
 	
 	/**
 	 * A php callback that can be set to modify the entity selector of the calendar
@@ -339,10 +339,36 @@ class reasonCalendar
 	protected $es_callback;
 	
 	/**
+	 * Should the automagic window determination algorithm count
+	 * every occurrence of ongoing events, or just start/end dates?
+	 *
+	 * @var boolean
+	 */
+	protected $ongoing_count_all_occurrences = true;
+	
+	/**
+	 * If $ongoing_count_all_occurrences is false, should the
+	 * automagic window algorithm count the first occurrence of
+	 * an event that falls before the start date?
+	 *
+	 * @var boolean
+	 */
+	protected $ongoing_count_pre_start_dates = true;
+	
+	/**
+	 * If $ongoing_count_all_occurrences is false, should the
+	 * automagic window algorithm count the last occurrences of events
+	 * that fall during potential windows?
+	 *
+	 * @var boolean
+	 */
+	protected $ongoing_count_ends = true;
+	
+	/**
 	 * The entity selector used by the calendar to select the events
 	 * @var object entity_selector
 	 */
-	var $base_es;
+	protected $base_es;
 	
 	/**
 	 * Place to record if any events are in calendar at all.
@@ -355,15 +381,15 @@ class reasonCalendar
 	 * @var boolean
 	 * @access private
 	 */
-	var $events_exist_in_calendar = true;
+	protected $events_exist_in_calendar = true;
 	
-	var $known_upper_limit;
+	protected $known_upper_limit;
 	
-	var $known_closest_date_beyond;
+	protected $known_closest_date_beyond;
 	
-	var $known_lower_limit;
+	protected $known_lower_limit;
 	
-	var $known_closest_date_before;
+	protected $known_closest_date_before;
 	
 	/**
 	 * constructor method
@@ -372,9 +398,9 @@ class reasonCalendar
 	 *
 	 * @param array $init_array array keyed using $init_array_keys class var; values as described in eqivalent class vars
 	 */
-	function reasonCalendar( $init_array = array() )
+	public function reasonCalendar( $init_array = array() )
 	{
- 		$this->init( $init_array );
+ 		$this->init( $init_array, true );
 	}
 	/**
 	 * initialize the calendar
@@ -384,9 +410,14 @@ class reasonCalendar
 	 * Then runs build_es() to assemble initial state of entity selector
 	 *
 	 * @param array $init_array array keyed using $init_array_keys class var; values as described in eqivalent class vars
+	 * @todo find all examples of external calls, squash, then mark as protected
 	 */
-	function init( $init_array = array() )
+	function init( $init_array = array(), $internal_call = false )
 	{
+		if(!$internal_call)
+		{
+			trigger_error('reasonCalendar->init() called publically. This is deprecated and will crash Reason in future releases. Parameters should be set in the constructor instead.');
+		}
 		foreach($this->init_array_keys as $key)
 		{
 			if(isset($init_array[$key]))
@@ -404,7 +435,7 @@ class reasonCalendar
 		$this->_add_rels(relationship_id_of('event_to_audience'), $this->audiences);
 		$this->build_es();
 	}
-	function _standardize_sharing_mode()
+	protected function _standardize_sharing_mode()
 	{
 		if(!empty($this->sharing_mode) && !in_array($this->sharing_mode,array('all','shared_only','hybrid')))
 		{
@@ -431,7 +462,7 @@ class reasonCalendar
 	 * Assembles main entity selector
 	 * @todo remove check of location field location for Reason 4 RC 1
 	 */
-	function build_es()
+	protected function build_es()
 	{
 		if(!empty($this->site))
 		{
@@ -591,7 +622,7 @@ class reasonCalendar
 	 * @return array site entities keyed on Reason id
 	 * @access private
 	 */
-	function _get_sharing_sites()
+	protected function _get_sharing_sites()
 	{
 		static $sharing_sites = array();
 		if(empty($sharing_sites))
@@ -616,7 +647,7 @@ class reasonCalendar
 	 * @param array $entities
 	 * @access private
 	 */
-	function _add_rels($relationship_id, $entities)
+	protected function _add_rels($relationship_id, $entities)
 	{
 		if(!empty($entities))
 		{
@@ -637,7 +668,7 @@ class reasonCalendar
 	 * @param array $entities
 	 * @access private
 	 */
-	function _add_or_rels($relationship_id, $entities)
+	protected function _add_or_rels($relationship_id, $entities)
 	{
 		if(!empty($entities))
 		{
@@ -655,7 +686,7 @@ class reasonCalendar
 	 *
 	 * Runs grab_events() and build_events_array()
 	 */
-	function run()
+	public function run()
 	{
 		$this->grab_events();
 		if(!empty($this->events))
@@ -673,7 +704,7 @@ class reasonCalendar
 	 *
 	 * This method calls, in order: set_bounds(), alter_es(), and complete_es() before running the entity selector
 	 */
-	function grab_events()
+	protected function grab_events()
 	{
 		if($this->events_exist_in_calendar)
 		{
@@ -695,7 +726,7 @@ class reasonCalendar
 	 * a) determined from the view given, or
 	 * b) determined by the determine_default_view() method
 	 */
-	function set_bounds()
+	protected function set_bounds()
 	{
 		if(empty($this->start_date))
 			$this->start_date = date('Y-m-d');
@@ -720,7 +751,7 @@ class reasonCalendar
 	 * @param mixed $view name of current view or NULL if not provided
 	 * @return string $end_date mysql-formatted last date in calendar
 	 */
-	function get_end_date( $view = NULL )
+	public function get_end_date( $view = NULL )
 	{
 		if(!empty($this->end_date)) // end date either given or already determined
 			return $this->end_date;
@@ -776,7 +807,7 @@ class reasonCalendar
 	 * Calls on process_event()
 	 * @return void
 	 */
-	function build_events_array() // {{{
+	protected function build_events_array() // {{{
 	{
 		while(list($event_id) = each($this->events) )
 		{
@@ -798,7 +829,7 @@ class reasonCalendar
 			}
 		} */
 	} // }}}
-	function sort_event_ids_by_time_of_day($event_ids)
+	public function sort_event_ids_by_time_of_day($event_ids)
 	{
 		$events = array();
 		foreach($event_ids as $id)
@@ -819,7 +850,7 @@ class reasonCalendar
 	 * @param integer $event_id
 	 * @return void
 	 */
-	function process_event($event_id) // {{{
+	protected function process_event($event_id) // {{{
 	{
 		$dates = explode(', ', $this->events[$event_id]->get_value('dates') );
 		foreach($dates as $date)
@@ -837,9 +868,10 @@ class reasonCalendar
 	/**
 	 * Overloadable method -- called during grab_events before the entity selector is run
 	 *
+	 * @deprecated Use the es_callback instead
 	 * @return void
 	 */
-	function alter_es()
+	protected function alter_es()
 	{
 	}
 	/**
@@ -848,7 +880,7 @@ class reasonCalendar
 	 *
 	 * @return void
 	 */
-	function complete_es()
+	protected function complete_es()
 	{
 		/*$this->es->add_table( 'event_date_extract' );
 		$this->es->add_relation('event_date_extract.date >= "'.$this->start_date.'"' );
@@ -869,7 +901,7 @@ class reasonCalendar
 	 * 
 	 * @return array $days => $ids
 	 */
-	function get_all_days( $limit_to_window = true, $choose_view_automagically = true )
+	public function get_all_days( $limit_to_window = true, $choose_view_automagically = true )
 	{
 		if( $limit_to_window )
 		{
@@ -898,7 +930,7 @@ class reasonCalendar
 	 * @param string $last mysql-formatted date (yyyy-mm-dd)
 	 * @return array $days => $ids
 	 */
-	function get_events_by_date( $first, $last )
+	public function get_events_by_date( $first, $last )
 	{
 		$ret = array();
 		foreach( $this->events_by_date as $date=>$ids )
@@ -915,7 +947,7 @@ class reasonCalendar
 	 * Gets all the events pertinent to the calendar
 	 * @return array $events
 	 */
-	function get_all_events()
+	public function get_all_events()
 	{
 		return $this->events;
 	}
@@ -923,7 +955,7 @@ class reasonCalendar
 	 * Gets the start date of the current window on the calendar
 	 * @return string $start_date mysql-formatted date (yyyy-mm-dd)
 	 */
-	function get_start_date()
+	public function get_start_date()
 	{
 		return $this->start_date;
 	}
@@ -934,7 +966,7 @@ class reasonCalendar
 	 *
 	 * @return mixed $view
 	 */
-	function get_view()
+	public function get_view()
 	{
 		return $this->view;
 	}
@@ -943,7 +975,7 @@ class reasonCalendar
 	 *
 	 * @return string $min_date mysql-formatted date (yyyy-mm-dd)
 	 */
-	function get_min_date()
+	public function get_min_date()
 	{
 		//trigger_error('get_min_date() called');
 		if(empty($this->min_event))
@@ -963,7 +995,7 @@ class reasonCalendar
 	 *
 	 * @return string $max_date mysql-formatted date (yyyy-mm-dd)
 	 */
-	function get_max_date()
+	public function get_max_date()
 	{
 		//trigger_error('get_max_date() called');
 		if(empty($this->max_event))
@@ -985,7 +1017,7 @@ class reasonCalendar
 	 *
 	 * @return array $views
 	 */
-	function get_views()
+	public function get_views()
 	{
 		static $views = array('day'=>'daily','week'=>'weekly','month'=>'monthly','year'=>'yearly','all'=>'all');
 		return $views;
@@ -995,7 +1027,7 @@ class reasonCalendar
 	 *
 	 * @return array $categories
 	 */
-	function get_categories()
+	public function get_categories()
 	{
 		return $this->categories;
 	}
@@ -1004,7 +1036,7 @@ class reasonCalendar
 	 *
 	 * @return array $categories
 	 */
-	function get_or_categories()
+	public function get_or_categories()
 	{
 		return $this->or_categories;
 	}
@@ -1013,7 +1045,7 @@ class reasonCalendar
 	 *
 	 * @return array $audiences
 	 */
-	function get_audiences()
+	public function get_audiences()
 	{
 		return $this->audiences;
 	}
@@ -1025,7 +1057,7 @@ class reasonCalendar
 	 *
 	 * @return void
 	 */
-	function determine_default_view() // {{{
+	protected function determine_default_view() // {{{
 	{
 		if(!empty($this->view) )
 		{
@@ -1046,7 +1078,16 @@ class reasonCalendar
 		   stop if a view is done being filled and has enough events in it */
 		foreach( $this->events_by_date as $day => $ids )
 		{
+			foreach($ids as $k=>$id)
+			{
+				if(!$this->include_event_in_automagic_calculation($id,$day))
+					unset($ids[$k]);
+			}
 			$current_count = count($ids);
+			if(!$current_count)
+			{
+				continue;
+			}
 			$total_count += $current_count;
 			if( !$this->automagic_window_snap_to_nearest_view && $total_count >= $this->ideal_count )
 			{
@@ -1055,7 +1096,9 @@ class reasonCalendar
 			}
 			/* we don't need to look more than a year out */
 			if( $day > $out['year'] )
+			{
 				break;
+			}
 			if( $day == $this->start_date )
 				$event_count['daily'] += $current_count;
 			if( $day == $this->start_date AND $event_count['daily'] >= $this->ideal_count )
@@ -1217,22 +1260,111 @@ class reasonCalendar
 		$this->end_date = $this->default_end_date;
 	} // }}}
 	
+	protected function include_event_in_automagic_calculation($event_id,$day)
+	{
+		if($this->ongoing_count_all_occurrences)
+			return true;
+		
+		if($this->event_is_ongoing($this->events[$event_id]))
+		{
+			$first_day = substr($this->events[$event_id]->get_value('datetime'),0,10);
+			
+			if( $day == $first_day ||
+				( $this->ongoing_count_ends && $day == $this->events[$event_id]->get_value('last_occurence') ) ||
+				( $this->ongoing_count_pre_start_dates && $this->get_start_date() == $day && $first_day < $this->get_start_date() )
+			)
+				return true;
+			else
+				return false;
+		}
+		return true;
+	}
+	/**
+	 * Is an event an all-day/non-time-specific event?
+	 *
+	 * Events are currently considered all-day events if no time was
+	 * entered (i.e. the time portion of datetime is 00:00:00).
+	 *
+	 * This is not really ideal as it means that Reason has no
+	 * way to distinguish between an all-day event and an event
+	 * that occurrs precisely at midnight. In the future it may be
+	 * desirable to add an additional field to the event type
+	 * that positively identifies all-day/non-time-specific events.
+	 *
+	 * @param object $event entity
+	 * @return boolean
+	 */
+	function event_is_all_day_event($event)
+	{
+		return (substr($event->get_value( 'datetime' ), 11) == '00:00:00');
+	}
+	
+	/**
+	 * Is an event an ongoing event?
+	 *
+	 * An ongoing event is one which is considered to be happening
+	 * all or most of the time for its duration.
+	 *
+	 * Ongoing events recur regularly and are (at the moment) all-day events.
+	 * If future improvements are made to event display code, the definition
+	 * of an ongoing event may be broadened to include events with times
+	 * or long-term recurring events that happen less regularly.
+	 *
+	 * @param object $event entity
+	 * @return boolean
+	 */
+	public function event_is_ongoing($event)
+	{
+		if($event->get_value('recurrence') == 'none' || $event->get_value('recurrence') == '')
+			return false;
+		
+		if(!$this->event_is_all_day_event($event))
+			return false;
+		
+		if(count(explode(',',$event->get_value('dates'))) < 3)
+			return false;
+		
+		if($event->get_value('recurrence') == 'daily' && $event->get_value('frequency') == 1)
+			return true;
+		
+		if($event->get_value('recurrence') == 'weekly')
+		{
+			$num_days = 0;
+			foreach(array('sunday','monday','tuesday','wednesday','thursday','friday','saturday') as $day)
+			{
+				if($event->get_value($day) == 'true')
+					$num_days++;
+			}
+			return ($num_days > 4);
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Get the dates corresponding to one week, month and year from the start date
 	 *
 	 * @return array ('week'=>$week,'month'=>$month,'year'=>$year)
+	 *
+	 * @todo When support is dropped for php 5.1, switch to simpler code
 	 */
-	function calculate_dates_out() // {{{
+	public function calculate_dates_out() // {{{
 	{
-		$date_array = explode('-',$this->start_date);
+		list($year,$month,$day) = explode('-',$this->start_date);
 		
-		$year = $date_array[0];
-		$month = $date_array[1];
-		$day = $date_array[2];
+		$year_out = carl_mktime(0,0,0,$month,$day,$year + 1);
+		$month_out = carl_mktime(0,0,0,$month+1,$day,$year);
+		$week_out = carl_mktime(0,0,0,$month,$day+7,$year);
 		
-		$year_out = carl_mktime('','','',$month,$day,$year+1);
-		$month_out = carl_mktime('','','',$month+1,$day,$year);
-		$week_out = carl_mktime('','','',$month,$day+7,$year);
+		/* 
+		// Note: this is simpler code, but it won't support dates outside
+		// the Unix era until support for 5.1- is dropped.
+		
+		$u_start = prettify_mysql_datetime($this->start_date,'U');
+		
+		$year_out = strtotime('+1 year',$u_start);
+		$month_out = strtotime('+1 month',$u_start);
+		$week_out = strtotime('+1 week',$u_start); */
 		
 		$week = carl_date('Y-m-d',$week_out);
 		$month = carl_date('Y-m-d',$month_out);
@@ -1241,27 +1373,27 @@ class reasonCalendar
 		return array('week'=>$week,'month'=>$month,'year'=>$year);
 	} // }}}
 	
-	function turn_automagic_on()
+	public function turn_automagic_on()
 	{
 		$this->choose_window_automagically = true;
 	}
-	function turn_automagic_off()
+	public function turn_automagic_off()
 	{
 		$this->choose_window_automagically = false;
 	}
-	function snap_automagic_to_nearest_view()
+	public function snap_automagic_to_nearest_view()
 	{
 		$this->automagic_window_snap_to_nearest_view = true;
 	}
-	function dont_snap_automagic_to_nearest_view()
+	public function dont_snap_automagic_to_nearest_view()
 	{
 		$this->automagic_window_snap_to_nearest_view = false;
 	}
-	function contains_any_events()
+	public function contains_any_events()
 	{
 		return $this->events_exist_in_calendar;
 	}
-	function contains_any_events_before($date)
+	public function contains_any_events_before($date)
 	{
 		if(!$this->contains_any_events())
 			return false;
@@ -1296,7 +1428,7 @@ class reasonCalendar
 			return false;
 		}
 	}
-	function contains_any_events_after($date)
+	public function contains_any_events_after($date)
 	{
 		if(!$this->contains_any_events())
 			return false;
