@@ -336,6 +336,15 @@ class EventsModule extends DefaultMinisiteModule
 	 *
 	 * 'map_zoom_level' (int) set a zoom level for google maps - default 12
 	 *
+	 * 'ongoing_display' (string) Treat ongoing events in different ways.
+	 * 	'inline' treats them like other events;
+	 * 	'above' shows only starts/ends, with ongoing events that start before the start of the current view listed above the main list of events;
+	 * 	'below' shows only starts/ends, with ongoing events that start before the current view and end after it listed below the main list of events.
+	 *
+	 * 'ongoing_show_ends' (boolean) Show the ending dates for events? Note that in combination with 
+	 * 'ongoing_display'=>'below', events that start before the current view will not be visible, so 
+	 * this should likely only be used in conjunction with 'ongoing_display'=>'above'.
+	 *
 	 * @var array
 	 * @access private
 	 * @todo review current default default_view_min_days value for sanity
@@ -345,13 +354,15 @@ class EventsModule extends DefaultMinisiteModule
 							'limit_to_page_categories'=>false,
 							'list_type'=>'standard',
 							'additional_sites'=>'',
-							'sharing_mode'=>'all',
+							'sharing_mode'=>'',
 							'show_images'=>false,
 							'ideal_count'=>NULL,
 							'default_view_min_days'=>1,
 	 						'start_date'=>'',
 	 						'map_location' => true,
-	 						'map_zoom_level' => 12
+	 						'map_zoom_level' => 12,
+	 						'ongoing_display' => 'above', // or below or inline
+	 						'ongoing_show_ends' => true,
 						);
 	/**
 	 * Views that should not be indexed by search engines
@@ -815,11 +826,20 @@ class EventsModule extends DefaultMinisiteModule
 					echo '<p>Viewing archive. <a href="'.$this->construct_link(array('start_date'=>'')).'">Reset calendar to today</a></p>';
 				} */
 				echo '<div id="events">'."\n";
+				if($this->params['ongoing_display'] == 'above')
+				{
+					$this->show_ongoing_events( $this->get_ongoing_event_ids('above') );
+				}
 				foreach($this->events_by_date as $day => $val)
 				{
 					if ( $this->calendar->get_end_date() && $day > $this->calendar->get_end_date() )
 						break;
 					$this->show_daily_events( $day );
+				}
+				
+				if($this->params['ongoing_display'] == 'below')
+				{
+					$this->show_ongoing_events( $this->get_ongoing_event_ids('below') );
 				}
 				echo '</div>'."\n";
 			}
@@ -839,6 +859,49 @@ class EventsModule extends DefaultMinisiteModule
 			$this->show_list_export_links();
 		$this->show_feed_link();
 		echo '</div>'."\n";
+	}
+	
+	/**
+	 * Get the ids of all ongoing events in the calendar
+	 *
+	 * @param string $ongoing_display 'inline', 'above', or 'below' -- to determine which events
+	 *               should be considered ongoing
+	 * @return array event ids
+	 */
+	function get_ongoing_event_ids($ongoing_display = '')
+	{
+		if(empty($ongoing_display))
+			$ongoing_display = $this->params['ongoing_display'];
+		
+		$ongoing_ids = array();
+		foreach($this->events_by_date as $day => $val)
+		{
+			if ( $this->calendar->get_end_date() && $day > $this->calendar->get_end_date() )
+				break;
+			$ongoing_ids = array_merge($ongoing_ids,$val);
+		}
+		$ongoing_ids = array_unique($ongoing_ids);
+		if('above' == $ongoing_display)
+		{
+			foreach($ongoing_ids as $k => $id)
+			{
+				if(!$this->event_is_ongoing($this->events[$id]) || $this->events[$id]->get_value('datetime') >= $this->calendar->get_start_date())
+					unset($ongoing_ids[$k]);
+			}
+		}
+		elseif('below' == $ongoing_display)
+		{
+			foreach($ongoing_ids as $k => $id)
+			{
+				if(!$this->event_is_ongoing($this->events[$id]) || $this->events[$id]->get_value('datetime') >= $this->calendar->get_start_date() || $this->events[$id]->get_value('last_occurence') <= $this->calendar->get_end_date())
+					unset($ongoing_ids[$k]);
+			}
+		}
+		else
+		{
+			trigger_error('Unrecognized string passed to get_ongoing_event_ids(): '.$ongoing_display.'. Should be "above" or "below".');
+		}
+		return $ongoing_ids;
 	}
 	
 	function show_focus()
@@ -1064,22 +1127,12 @@ class EventsModule extends DefaultMinisiteModule
 	
 	function show_daily_events( $day ) // {{{
 	{
-		if($this->show_months == true && ($this->prev_month != substr($day,5,2) || $this->prev_year != substr($day,0,4) ) )
-		{
-			echo '<h3 class="day">'.prettify_mysql_datetime( $day, 'F Y' ).'</h3>'."\n";
-			$this->prev_month = substr($day,5,2);
-			$this->prev_year = substr($day,0,4);
-		}
-		
-		if($day == $this->today)
-			$today = ' (Today)';
-		else
-			$today = '';
-		echo '<div class="dayblock" id="dayblock_'.$day.'">'."\n";
-		echo '<h4 class="day"><a name="'.$day.'"></a>'.prettify_mysql_datetime( $day, $this->list_date_format ).$today.'</h4>'."\n";
-		echo '<ul class="dayEvents">';
+		ob_start();
 		foreach ($this->events_by_date[$day] as $event_id)
 		{
+			$ongoing_type = $this->get_event_ongoing_type_for_day($event_id,$day);
+			if( 'middle' == $ongoing_type )
+				continue;
 			if ($this->params['list_type'] == 'schedule')
 			{
 				if (!isset($last_time) || $this->events[$event_id]->get_value( 'datetime' ) != $last_time)
@@ -1097,26 +1150,106 @@ class EventsModule extends DefaultMinisiteModule
 				$last_time = $this->events[$event_id]->get_value( 'datetime' );
 			}	
 			echo '<li class="event">';
-			$this->show_event_list_item( $event_id, $day );
+			$this->show_event_list_item( $event_id, $day, $ongoing_type );
 			echo '</li>'."\n";
 			
 		}
+		$list_items = ob_get_clean();
+		
+		if(empty($list_items))
+			return;
+		
+		if($this->show_months == true && ($this->prev_month != substr($day,5,2) || $this->prev_year != substr($day,0,4) ) )
+		{
+			echo '<h3 class="day">'.prettify_mysql_datetime( $day, 'F Y' ).'</h3>'."\n";
+			$this->prev_month = substr($day,5,2);
+			$this->prev_year = substr($day,0,4);
+		}
+		
+		if($day == $this->today)
+			$today = ' (Today)';
+		else
+			$today = '';
+		echo '<div class="dayblock" id="dayblock_'.$day.'">'."\n";
+		echo '<h4 class="day"><a name="'.$day.'"></a>'.prettify_mysql_datetime( $day, $this->list_date_format ).$today.'</h4>'."\n";
+		echo '<ul class="dayEvents">';
+		echo $list_items;
 		if ($this->params['list_type'] == 'schedule') echo '</ul></li>'."\n";
 		echo '</ul>'."\n";
 		echo '</div>'."\n";
 	} // }}}
-	
-	function show_event_list_item( $event_id, $day )
+	/**
+	 * For a given event and a given day, should
+	 * the event be displayed as starting, ending, "ongoing", or not at all?
+	 *
+	 * @param integer $event_id
+	 * @param string $day YYY-MM-DD
+	 * @return string Values: 'starts', 'ends', 'middle', or ''
+	 */
+	function get_event_ongoing_type_for_day($event_id,$day)
+	{
+		if($this->params['ongoing_display'] != 'inline' && $this->event_is_ongoing($this->events[$event_id]))
+		{
+			if(substr($this->events[$event_id]->get_value( 'datetime' ), 0,10) == $day)
+			{
+				return 'starts';
+			}
+			elseif($this->params['ongoing_show_ends'] && $this->events[$event_id]->get_value( 'last_occurence' ) == $day)
+			{
+				return 'ends';
+			}
+			else
+			{
+				return 'middle';
+			}
+		}
+		return '';
+	}
+	/**
+	 * Output HTML list of ongoing events
+	 * @param array $ids integers
+	 * @return void
+	 */
+	function show_ongoing_events($ids)
+	{
+		if(!empty($ids))
+		{
+			echo '<h3>Ongoing</h3>'."\n";
+			echo '<ul>'."\n";
+			foreach($ids as $id)
+			{
+				echo '<li>'.$this->show_event_list_item( $id, '', 'through' ).'</li>'."\n";
+			}
+			echo '</ul>'."\n";
+		}
+	}
+	/**
+	 * Output HTML for an event in the list
+	 *
+	 * @param integer $event_id
+	 * @param string $day YYY-MM-DD
+	 * @param string $ongoing_type What method of display are we using for ongoing events? Values: '','starts','ends'
+	 * @return void
+	 */
+	function show_event_list_item( $event_id, $day, $ongoing_type = '' )
 	{
 		if($this->params['list_type'] == 'verbose')
-			$this->show_event_list_item_verbose( $event_id, $day );
+			$this->show_event_list_item_verbose( $event_id, $day, $ongoing_type );
 		else if($this->params['list_type'] == 'schedule')
-			$this->show_event_list_item_schedule( $event_id, $day );
+			$this->show_event_list_item_schedule( $event_id, $day, $ongoing_type );
 		else
-			$this->show_event_list_item_standard( $event_id, $day );
+			$this->show_event_list_item_standard( $event_id, $day, $ongoing_type );
 	}
 	
-	function show_event_list_item_standard( $event_id, $day ) // {{{
+	/**
+	 * Output standard HTML for an event in the list
+	 *
+	 * @param integer $event_id
+	 * @param string $day YYY-MM-DD
+	 * @param string $ongoing_type What method of display are we using for ongoing events? Values: '','starts','ends'
+	 * @return void
+	 */
+	function show_event_list_item_standard( $event_id, $day, $ongoing_type = '' ) // {{{
 	{
 		$link = $this->events_page_url.$this->construct_link(array('event_id'=>$this->events[$event_id]->id(),'date'=>$day));
 		if($this->params['show_images'])
@@ -1126,9 +1259,30 @@ class EventsModule extends DefaultMinisiteModule
 		echo '<a href="'.$link.'">';
 		echo $this->events[$event_id]->get_value( 'name' );
 		echo '</a>';
+		switch($ongoing_type)
+		{
+			case 'starts':
+				echo ' <span class="begins">begins</span>';
+			case 'through':
+				echo ' <em class="through">(through '.$this->_get_formatted_end_date($this->events[$event_id]).')</em> ';
+				break;
+			case 'ends':
+				echo ' <span class="ends">ends</span>';
+				break;
+		}
 	} // }}}
 	
-	function show_event_list_item_verbose( $event_id, $day ) // {{{
+	/**
+	 * Output "wordy" HTML for an event in the list
+	 *
+	 * Includes description, location, etc.
+	 *
+	 * @param integer $event_id
+	 * @param string $day YYY-MM-DD
+	 * @param string $ongoing_type What method of display are we using for ongoing events? Values: '','starts','ends'
+	 * @return void
+	 */
+	function show_event_list_item_verbose( $event_id, $day, $ongoing_type = '' ) // {{{
 	{
 		$link = $this->events_page_url.$this->construct_link(array('event_id'=>$this->events[$event_id]->id(),'date'=>$day));
 		if($this->params['show_images'])
@@ -1136,6 +1290,17 @@ class EventsModule extends DefaultMinisiteModule
 		echo '<a href="'.$link.'">';
 		echo $this->events[$event_id]->get_value( 'name' );
 		echo '</a>';
+		switch($ongoing_type)
+		{
+			case 'starts':
+				echo ' <span class="begins">begins</span>';
+			case 'through':
+				echo ' <em class="through">(through '.$this->_get_formatted_end_date($this->events[$event_id]).')</em> ';
+				break;
+			case 'ends':
+				echo ' <span class="ends">ends</span>';
+				break;
+		}
 		echo '<ul>'."\n";
 		if($this->events[$event_id]->get_value( 'description' ))
 		{
@@ -1157,7 +1322,18 @@ class EventsModule extends DefaultMinisiteModule
 		echo '</ul>'."\n";
 	} // }}}
 	
-	function show_event_list_item_schedule( $event_id, $day ) // {{{
+	/**
+	 * Output schedule-like HTML for an event in the list
+	 *
+	 * Group events that start at the same time together, showing the time
+	 * only once, and list dates separately
+	 *
+	 * @param integer $event_id
+	 * @param string $day YYY-MM-DD
+	 * @param string $ongoing_type What method of display are we using for ongoing events? Values: '','starts','ends'
+	 * @return void
+	 */
+	function show_event_list_item_schedule( $event_id, $day, $ongoing_type = '' ) // {{{
 	{
 		$link = $this->events_page_url.$this->construct_link(array('event_id'=>$this->events[$event_id]->id(),'date'=>$day));
 		if($this->params['show_images'])
@@ -1165,6 +1341,17 @@ class EventsModule extends DefaultMinisiteModule
 		echo '<a href="'.$link.'" class="name">';
 		echo $this->events[$event_id]->get_value( 'name' );
 		echo '</a>';
+		switch($ongoing_type)
+		{
+			case 'starts':
+				echo ' <span class="begins">begins</span>';
+			case 'through':
+				echo ' <em class="through">(through '.$this->_get_formatted_end_date($this->events[$event_id]).')</em> ';
+				break;
+			case 'ends':
+				echo ' <span class="ends">ends</span>';
+				break;
+		}
 		if ($duration = $this->prettify_duration($this->events[$event_id]))
 			echo ' <span class="duration">('.$duration.')</span>';
 		if($this->events[$event_id]->get_value( 'description' ) || $this->events[$event_id]->get_value( 'location' ) )
@@ -1183,6 +1370,31 @@ class EventsModule extends DefaultMinisiteModule
 			echo '</ul>'."\n";
 		}
 	} // }}}
+	
+	/**
+	 * Format a date to be shown in a "through [formatted date]" phrase
+	 *
+	 * @param object $event entity
+	 * @return string formatted date
+	 */
+	function _get_formatted_end_date($event)
+	{
+		$full_month = prettify_mysql_datetime($event->get_value('last_occurence'),'F');
+		$month = prettify_mysql_datetime($event->get_value('last_occurence'),'M');
+		
+		$ret = $month;
+		if($full_month != $month)
+			$ret .= '.';
+		$ret .= ' ';
+		$ret .= prettify_mysql_datetime($event->get_value('last_occurence'),'j');
+		
+		$start_year = max(substr($event->get_value('datetime'),0,4), substr($this->calendar->get_start_date(),0,4));
+		
+		if($start_year != substr($event->get_value('last_occurence'),0,4))
+			$ret .= ', '.substr($event->get_value('last_occurence'),0,4);
+		
+		return $ret;
+	}
 
 	function _show_teaser_image($event_id, $link)
 	{
@@ -1990,6 +2202,23 @@ class EventsModule extends DefaultMinisiteModule
 			$init_array['default_view_min_days'] = $this->params['default_view_min_days'];
 		
 		$init_array['automagic_window_snap_to_nearest_view'] = $this->snap_to_nearest_view;
+		if($this->snap_to_nearest_view)
+		{
+			if('inline' == $this->params['ongoing_display'])
+				$init_array['ongoing_count_all_occurrences'] = true;
+			elseif('above' == $this->params['ongoing_display'])
+			{
+				$init_array['ongoing_count_all_occurrences'] = false;
+				$init_array['ongoing_count_pre_start_dates'] = true;
+				$init_array['ongoing_count_ends'] = $this->params['ongoing_show_ends'];
+			}
+			elseif('below' == $this->params['ongoing_display'])
+			{
+				$init_array['ongoing_count_all_occurrences'] = false;
+				$init_array['ongoing_count_pre_start_dates'] = false;
+				$init_array['ongoing_count_ends'] = $this->params['ongoing_show_ends'];
+			}
+		}
 		
 		if(!empty($this->request['search']))
 		{
@@ -2044,6 +2273,12 @@ class EventsModule extends DefaultMinisiteModule
 	// Showing a Specific Event
 	///////////////////////////////////////////
 	
+	
+	/**
+	 * Initialiation function for event detail mode
+	 *
+	 * @return void
+	 */
 	function init_event() // {{{
 	{
 		$this->event = new entity($this->request['event_id']);
@@ -2070,6 +2305,14 @@ class EventsModule extends DefaultMinisiteModule
 			}
 		}
 	} // }}}
+	/**
+	 * Given set of events, generate ical representation, send as ical, and die
+	 *
+	 * Note that this method will never return, as it calls die().
+	 *
+	 * @param array $events entities
+	 * @return void
+	 */
 	function export_ical($events)
 	{
 		while(ob_get_level() > 0)
@@ -2086,6 +2329,11 @@ class EventsModule extends DefaultMinisiteModule
 		echo $ical;
 		die();
 	}
+	/**
+	 * Get an ical representation of a set of events
+	 * @param array $events entities
+	 * @return string iCal
+	 */
 	function get_ical($events)
 	{
 		if(!is_array($events))
@@ -2104,6 +2352,10 @@ class EventsModule extends DefaultMinisiteModule
 		}
   		return $calendar -> get_icalendar_events();
 	}
+	/**
+	 * Output HTML for the detail view of an event
+	 * @return void
+	 */
 	function show_event() // {{{
 	{
 		if ($this->event_ok_to_show($this->event))
@@ -2111,6 +2363,11 @@ class EventsModule extends DefaultMinisiteModule
 		else
 			$this->show_event_error();
 	} // }}}
+	/**
+	 * Is a given event acceptable to show in the calendar?
+	 * @param object $event entity
+	 * @return boolean
+	 */
 	function event_ok_to_show($event)
 	{
 		$sites = $this->_get_sites();
@@ -2131,6 +2388,11 @@ class EventsModule extends DefaultMinisiteModule
 		else
 			return false;
 	}
+	/**
+	 * Show the detail view of the current event
+	 *
+	 * @return void
+	 */
 	function show_event_details() // {{{
 	{
 		$e =& $this->event;
@@ -2236,12 +2498,25 @@ class EventsModule extends DefaultMinisiteModule
 		}
 	}
 	
+	/**
+	 * If a requested event is not found, what should we output?
+	 *
+	 * By default, this method outputs an error message and lists
+	 * other events
+	 *
+	 * @return void
+	 */
 	function show_event_error() // {{{
 	{
 		echo '<p>We\'re sorry; the event requested does not exist or has been removed from this calendar. This may be due to incorrectly typing in the page address; if you believe this is a bug, please report it to the contact person listed at the bottom of the page.</p>';
 		$this->init_list();
 		$this->list_events();
 	} // }}}
+	/**
+	 * Output HTML that explains the length of an event
+	 * @param object $e event
+	 * @return void
+	 */
 	function show_duration(&$e) // {{{
 	{
 		if ($e->get_value( 'hours' ) || $e->get_value( 'minutes' ))
@@ -2252,6 +2527,11 @@ class EventsModule extends DefaultMinisiteModule
 		}
 	} // }}}
 	
+	/**
+	 * Get a nicely formatted duration of an event for humans
+	 * @param object $e event
+	 * @return void
+	 */
 	function prettify_duration(&$e)
 	{
 		$duration = '';
@@ -2271,7 +2551,11 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		return $duration;
 	}
-	
+	/**
+	 * Output HTML that explains which site an event is from
+	 * @param object $e event
+	 * @return void
+	 */
 	function show_ownership_info(&$e)
 	{
 		$owner_site = $e->get_owner();
@@ -2290,6 +2574,11 @@ class EventsModule extends DefaultMinisiteModule
 			}
 		}
 	}
+	/**
+	 * Output HTML for contact information for a given event
+	 * @param object $e event
+	 * @return void
+	 */
 	function show_contact_info(&$e) // {{{
 	{
 		$contact = $e->get_value('contact_username');
@@ -2317,6 +2606,11 @@ class EventsModule extends DefaultMinisiteModule
 			echo '</p>'."\n";
 		}
 	} // }}}
+	/**
+	 * Output HTML that explains how a repeating event recurs
+	 * @param object $e event
+	 * @return void
+	 */
 	function show_repetition_info(&$e) // {{{
 	{
 		$rpt = $e->get_value('recurrence');
@@ -2383,6 +2677,11 @@ class EventsModule extends DefaultMinisiteModule
 		}
 			
 	} // }}}
+	/**
+	 * Output HTML that shows the dates a given event occurs on
+	 * @param object $e event
+	 * @return void
+	 */
 	function show_dates(&$e)
 	{
 		$dates = explode(', ', $e->get_value('dates'));
@@ -2398,6 +2697,11 @@ class EventsModule extends DefaultMinisiteModule
 			echo '</div>'."\n";
 		}
 	}
+	/**
+	 * Output HTML link to export an ical representation of this event
+	 * @param object $e event
+	 * @return void
+	 */
 	function show_item_export_link($e) {
 		echo '<div class="export">'."\n";
 		if($e->get_value('recurrence') == 'none' || empty($this->request['date']))
@@ -2410,16 +2714,30 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		echo '</div>'."\n";
 	}
+	/**
+	 * Output HTML link to add event to personal calendar
+	 * @param object $e event
+	 * @return void
+	 */
 	function show_item_add_to_personal_calendar_interface($e)
 	{
 		echo '<div class="addToPersonalCalendar">';
 		echo '<a href="'.$this->construct_link(array('event_id'=>$e->id(),'add'=>'true')).'">Add to my personal calendar</a>';
 		echo '</div>'."\n";
 	}
-	function show_back_link() // {{{
+	/**
+	 * Output HTML of a link back to the events listing from the view of an individual event
+	 * @return void
+	 */
+	function show_back_link()
 	{
 		echo '<p class="back"><a href="'.$this->construct_link().'">Back to event listing</a></p>'."\n";
-	} // }}}
+	}
+	/**
+	 * Output HTML that shows the images attached to a given event
+	 * @param object $e event
+	 * @return void
+	 */
 	function show_images(&$e)
 	{
 		$es = new entity_selector();
@@ -2439,7 +2757,11 @@ class EventsModule extends DefaultMinisiteModule
             echo "</div>";
         }
 	}
-	
+	/**
+	 * Output HTML that lists the categories for a given event
+	 * @param object $e event
+	 * @return void
+	 */
 	function show_event_categories(&$e)
 	{
 		$es = new entity_selector();
@@ -2462,6 +2784,11 @@ class EventsModule extends DefaultMinisiteModule
             echo "</div>";
         }
 	}
+	/**
+	 * Output HTML that lists the audiences for a given event
+	 * @param object $e event
+	 * @return void
+	 */
 	function show_event_audiences(&$e)
 	{
 		$es = new entity_selector();
@@ -2485,6 +2812,11 @@ class EventsModule extends DefaultMinisiteModule
             echo "</div>";
         }
 	}
+	/**
+	 * Output HTML that lists the keywords for a given event
+	 * @param object $e event
+	 * @return void
+	 */
 	function show_event_keywords(&$e)
 	{
 		if($e->get_value('keywords'))
@@ -2545,6 +2877,14 @@ class EventsModule extends DefaultMinisiteModule
 	// Utilities
 	//////////////////////////////////////
 	
+	/**
+	 * Make a query-string-based link within the events module
+	 *
+	 * @param array $vars The query string variables for the link
+	 * @param boolean $pass_passables should the items in $this->pass_vars
+	 *                be passed if they are present in the current query?
+	 * @return string
+	 */
 	function construct_link( $vars = array(), $pass_passables = true ) // {{{
 	{
 		if($pass_passables)
@@ -2565,5 +2905,23 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		return '?'.implode_with_keys('&amp;',$link_vars);
 	} // }}}
+	/**
+	 * Is a given event an all-day event?
+	 * @param object $event entity
+	 * @return boolean
+	 */
+	protected function event_is_all_day_event($event)
+	{
+		return $this->calendar->event_is_all_day_event($event);
+	}
+	/**
+	 * Is a given event an "ongoing" event?
+	 * @param object $event entity
+	 * @return boolean
+	 */
+	protected function event_is_ongoing($event)
+	{
+		return $this->calendar->event_is_ongoing($event);
+	}
 }
 ?>
