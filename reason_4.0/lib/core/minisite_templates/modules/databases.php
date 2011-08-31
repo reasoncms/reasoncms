@@ -47,6 +47,27 @@ class DatabasesModule extends Generic3Module
 	);
 	var $top_link = '<div class="top"><a href="#top">Top</a></div>';
 	
+	/**
+	 * The string used to denote the item in the query string
+	 * '_id' added to this string to build actual query key
+	 * @var string
+	 */	
+	var $query_string_frag = 'db';
+	
+	function init($args = array())
+	{
+		parent::init($args);
+		
+		if(!empty($this->current_item_id) && !empty($this->items[$this->current_item_id]))
+		{
+			$url = $this->items[$this->current_item_id]->get_value('primary_url');
+			header('Location: '.str_replace('&amp;','&',$url));
+			echo '<a href="'.reason_htmlspecialchars($url).'">Attempted redirect to '.reason_htmlspecialchars($url).'</a>';
+			// pray($this->items[$this->current_item_id]->get_values());
+			die();
+		}
+	}
+	
 	function set_type()
 	{
 		$this->type = id_of('database_type');
@@ -178,7 +199,7 @@ class DatabasesModule extends Generic3Module
 		}
 		
 		echo '<li><strong>';
-		echo '<a href="' . $item->get_value('primary_url') . '">' . $item->get_value( 'name' ).'</a>';
+		echo '<a href="' . $this->_get_url_of_item($item) . '">' . $item->get_value( 'name' ).'</a>';
 		echo '</strong>';
 		if($item->get_value('date_string') || !empty($processed_types))
 		{
@@ -198,6 +219,10 @@ class DatabasesModule extends Generic3Module
 		$this->show_list_item_desc( $item );
 		echo '</li>'."\n";
 	} // }}}
+	function _get_url_of_item($item)
+	{
+		return $item->get_value('primary_url');
+	}
 	function show_list_item_desc( $item )
 	{
 		$es = new entity_selector();
