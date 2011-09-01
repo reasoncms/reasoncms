@@ -72,9 +72,8 @@ college_plan_1, college_plan_2, music_audition, music_audition_instrument, finan
 other_colleges, personal_statement, conviction_history, conviction_history_details, hs_discipline,
 hs_discipline_details, honesty_statement, submitter_ip, creation_date, submit_date, do_not_contact,
 last_update ";
-    $q_string_no_export_date = "FROM `applicants` WHERE `export_date` IS NULL ";
+    $q_string_no_export_date = "FROM `applicants` WHERE `export_date` IS NULL AND CAST(submit_date AS DATE) != '0000-00-00 00:00:00' ";
     $q_string_cummulative = "FROM `applicants`";
-//    FROM `applicants` WHERE CAST(submit_date AS DATE) = '$yesterday'";
 
     /**
      * Run the query to get new (unexported) applications
