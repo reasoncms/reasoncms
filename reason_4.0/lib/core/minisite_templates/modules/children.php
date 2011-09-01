@@ -155,8 +155,13 @@
 							if (!empty($this->textonly))
 								$link .= '?textonly=1';
 						}
+						$uname = '';
+						if($child->get_value( 'unique_name' ))
+						{
+							$uname = ' uname-'.reason_htmlspecialchars($child->get_value( 'unique_name' ));
+						}
 							
-						echo '<li class="number'.$counter.' '.$even_odd.'">';
+						echo '<li class="number'.$counter.' '.$even_odd.$uname.'">';
 						
 						if($this->params['provide_az_links'] && array_key_exists($child->id(),$this->az))
 						{
