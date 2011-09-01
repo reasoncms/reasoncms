@@ -48,7 +48,7 @@ class ApplicationConfirmation extends FormStep {
         }else{
             if (!$this->openid_id) {
                 echo 'How\'d you get here?';
-                header("Location:/admissions/apply/");
+                header("Location:/apply/");
             }
             $i = 0;
             $error_div = "";
@@ -81,21 +81,22 @@ class ApplicationConfirmation extends FormStep {
                     if (!$validation['valid']) {
                         $error_div .= $error_header;
                         foreach ($validation as $val_key => $val_value) {
-                            $error_div .= " <a href='/admissions/apply/?_step=" . $name . "#" . $val_key . "_error'>" . $val_value . "</a>&nbsp;&nbsp; ";
+                            $error_div .= " <a href='/apply/?_step=" . $name . "#" . $val_key . "_error'>" . $val_value . "</a>&nbsp;&nbsp; ";
                         }
                         $error_div .= $error_footer;
                     }
                 }
             }
 
+            
 
             $sess =& get_reason_session();
             $sess->set('submitted', False);
             if (!$p1_valid['valid'] || !$p2_valid['valid'] || !$p3_valid['valid'] || !$p4_valid['valid'] || !$p5_valid['valid'] || !$p6_valid['valid']) {
                 echo 'Please complete the following required fields to submit your application:' . $error_div;
-            } elseif ($_SERVER['HTTP_REFERER'] != 'https://reasondev.luther.edu/admissions/apply/?_step=ApplicationPageSix') {
+            } elseif (parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY) != '_step=ApplicationPageSix') {
                 echo '<p>Oops! Looks like you\'ve landed here accidentally.</p>';
-                echo 'To complete your application, please return to <a href="/admissions/apply/?_step=ApplicationPageSix">page 6</a>
+                echo 'To complete your application, please return to <a href="/apply/?_step=ApplicationPageSix">page 6</a>
                     and click "Submit your application" at the bottom of the page.';
             } else {
                 connectDB('admissions_applications_connection');
