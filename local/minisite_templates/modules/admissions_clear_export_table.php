@@ -8,15 +8,13 @@
  *
  */
 include_once('reason_header.php');
-require_once( '/usr/local/webapps/reason/reason_package/carl_util/db/db.php' );
 reason_include_once('function_libraries/user_functions.php');
 reason_include_once('minisite_templates/modules/default.php');
-reason_include_once('minisite_templates/page_types_local.php');
 
-$GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'ClearExportTable';
+$GLOBALS['_module_class_names'][basename(__FILE__, '.php')] = 'AdmissionsClearExportTableModule';
 
 
-class ClearExportTable extends DefaultMinisiteModule {
+class AdmissionsClearExportTableModule extends DefaultMinisiteModule {
 
     function run() {
         force_secure_if_available();
@@ -37,14 +35,15 @@ class ClearExportTable extends DefaultMinisiteModule {
                 } else {
                     continue;
                 }
-                if ($unlinked) {
-                    echo 'Removed: ' . $cur . "\n";
+                if ($unlinked === true) {
+                    echo 'Removed: ' . $cur . "<br>";
+                } else {
+                    echo 'No files to remove.' ."\n";
                 }
-                echo '<br>';
             }
-            echo 'Thank you. All files removed.';
+            echo '<br>';
+            echo 'Thank you.';
         }
     }
-
 }
 ?>
