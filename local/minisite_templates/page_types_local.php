@@ -40,7 +40,12 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
                 'admissions_application_export' => array(
                         'main' => 'admissions_application_export',
+                        'main_post' => 'children',
 		),
+                'admissions_clear_export_table' => array(
+                    'main' => 'content',
+                    'main_post' => 'admissions_clear_export_table'
+                ),
                 'admissions_home' => array(
 			'banner_xtra' => '',
 			'post_banner' => '',
