@@ -456,6 +456,26 @@ class ReasonPageType
 	}
 	
 	/**
+	 * What region(s) (if any) use a given module or modules?
+	 * Takes either a single module as a string, or 1-dimensional array of (string) module names. 
+	 * 
+	 * @param mixed string or array of strings $module_name
+	 * @return array region names
+	 */
+	function module_regions($module_name)
+	{
+		$region_names = array();
+		foreach ($this->get_region_names() as $region)
+		{
+			$region_info = $this->get_region($region);
+			$has_module = (is_array($module_name)) ? (in_array($region_info['module_name'], $module_name)) :  ($region_info['module_name'] == $module_name);
+			if ($has_module)
+				$region_names[] = $region;
+		}
+		return $region_names;
+	}
+	
+	/**
 	 * Orders the named regions of a page type from top to bottom.
 	 *
 	 * If only a subset of all region names is included in ordered_region_names, those regions will be ordered from top to bottom
