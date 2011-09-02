@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 reason_include_once('minisite_templates/modules/default.php');
 
@@ -36,16 +36,15 @@ class admissionsApplicationExportModule extends DefaultMinisiteModule {
             echo "<thead>" .
                 "<TR>" .
                     "<TH>Filename</TH>" .
+                    "<th>Records</th>" .
                     "<th>Filesize</th>" .
                 "</TR></thead>\n";
             // loop through the array of files and echo them all
             for ($index = 0; $index < $indexCount; $index++) {
                 if (substr("$dirArray[$index]", 0, 1) != ".") { // don't list hidden files
                     echo("<TR><TD><a href=/reason/scripts/admissions_retrieve_app_export_file.php?file_name=" . $dirArray[$index] . ">" . $dirArray[$index] . "</a></td>");
-                    echo("<td>");
-                    echo(format_bytes_as_human_readable(filesize($base_path . $dirArray[$index])));
-
-                    echo("</td>");
+                    echo("<td>" .  (count(file($base_path . $dirArray[$index])) -1) . "</td>");
+                    echo("<td>" . format_bytes_as_human_readable(filesize($base_path . $dirArray[$index])). "</td>");
                     echo("</TR>\n");
                 }
             }

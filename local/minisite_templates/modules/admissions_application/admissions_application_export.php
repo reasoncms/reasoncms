@@ -73,7 +73,8 @@ other_colleges, personal_statement, conviction_history, conviction_history_detai
 hs_discipline_details, honesty_statement, submitter_ip, creation_date, submit_date, do_not_contact,
 last_update ";
     $q_string_no_export_date = "FROM `applicants` WHERE `export_date` IS NULL AND CAST(submit_date AS DATE) != '0000-00-00 00:00:00' ";
-    $q_string_cummulative = "FROM `applicants`";
+    $q_string_cumulative = "export_date, export_by FROM `applicants`";
+    $q_string_unfinished = "export_date, export_by FROM `applicants` WHERE CAST(submit_date AS DATE) = '0000-00-00 00:00:00' ";
 
     /**
      * Run the query to get new (unexported) applications
@@ -81,8 +82,7 @@ last_update ";
      */
     $no_export_date_results = db_query($query_string . $q_string_no_export_date);
     $num_rows = mysql_num_rows($no_export_date_results);
-    // output settings
-//    die($num_rows."asdfasdfasdfasdfasdfasdfasdfasdfasdfasdf");
+    
     if ($num_rows) {
         $fname = "/var/reason_admissions_app_exports/application_exports/{$date}_app_export.csv";
         $fp = fopen($fname, 'w');
@@ -129,16 +129,43 @@ last_update ";
 //        die('wtf');
     }
 
-    $cummulative_results = db_query($query_string . $q_string_cummulative);
-    $num_rows = mysql_num_rows($cummulative_results);
+    $cumulative_results = db_query($query_string . $q_string_cumulative);
+    $num_rows = mysql_num_rows($cumulative_results);
     //echo $query_string;
     // output settings
 
-    if ($cummulative_results) {
-        $fname = "/var/reason_admissions_app_exports/application_exports/cummulative_app_export.csv";
+    if ($cumulative_results) {
+        $fname = "/var/reason_admissions_app_exports/application_exports/cumulative.csv";
         $fp = fopen($fname, 'w');
         $first_time = true;
-        while ($row = mysql_fetch_array($cummulative_results, MYSQL_ASSOC)) {
+        while ($row = mysql_fetch_array($cumulative_results, MYSQL_ASSOC)) {
+            if ($first_time) {
+                $keys = array_keys($row);
+                $line = '"'.implode('","',$keys).'"';
+                fwrite($fp, $line."\n");
+                $first_time = false;
+            }
+            $values = array_values($row);
+            $line = '"'.implode('","',$values).'"';
+            $fwrite = fwrite($fp, $line."\n");
+        }
+        // close file
+        $fclose = fclose($fp);
+
+        // Do some small error checking
+        if ($fclose === false || $fwrite === false) {
+            die('There was a problem writing the latest applicants file. Please contact LIS for help');
+        }
+    }
+    
+    $unfinished_results = db_query($query_string . $q_string_unfinished);
+    $num_rows = mysql_num_rows($unfinished_results);
+
+    if ($unfinished_results) {
+        $fname = "/var/reason_admissions_app_exports/application_exports/unfinished.csv";
+        $fp = fopen($fname, 'w');
+        $first_time = true;
+        while ($row = mysql_fetch_array($unfinished_results, MYSQL_ASSOC)) {
             if ($first_time) {
                 $keys = array_keys($row);
                 $line = '"'.implode('","',$keys).'"';
