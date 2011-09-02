@@ -13,10 +13,10 @@ class OpenIDModule extends DefaultMinisiteModule {
         if ($next_url){
 //            $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php?next=' . $next_url;
 
-            $url = $parsed_url['scheme'] . $parsed_url['host'] . '/reason/open_id/new_token.php?next=' . $next_url;
+            $url = $parsed_url['scheme'] . "://" . $parsed_url['host'] . '/reason/open_id/new_token.php?next=' . $next_url;
         }else{
 //            $url = 'https://reasondev.luther.edu/reason/open_id/new_token.php';
-            $url = $parsed_url['scheme'] . $parsed_url['host'] . '/reason/open_id/new_token.php';
+            $url = $parsed_url['scheme'] . "://" . $parsed_url['host'] . '/reason/open_id/new_token.php';
         }
         
         //$parts = parse_url($url);

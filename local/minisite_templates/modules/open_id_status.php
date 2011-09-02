@@ -9,7 +9,8 @@ class OpenIDStatusModule extends DefaultMinisiteModule {
     function run() {
 
         $url = get_current_url();
-        $openid_url = "http://reasondev.luther.edu/openid/?next=" . $url;
+//        $openid_url = "http://reasondev.luther.edu/openid/?next=" . $url;
+        $openid_url = "/openid/?next=" . $url;
 
         $this->sess =& get_reason_session();
         if( $this->sess->exists( ) ) {
