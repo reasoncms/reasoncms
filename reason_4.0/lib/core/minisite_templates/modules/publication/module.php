@@ -140,8 +140,8 @@ class PublicationModule extends Generic3Module
 												'list' => array ('classname' => 'RelatedListMarkupGenerator', 
 										                 'filename' => 'minisite_templates/modules/publication/publication_list_markup_generators/related_list.php',
 										                 ),
-										        'featured_item' => array ('classname' => 'PublicationListItemMarkupGenerator', 
-										                          'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/default.php',
+										        'featured_item' => array ('classname' => 'RelatedListItemMarkupGenerator', 
+										                          'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/related_item.php',
 										                          ),
 								   	   			);								   
 
