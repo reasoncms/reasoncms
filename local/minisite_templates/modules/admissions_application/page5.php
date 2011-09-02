@@ -1,5 +1,7 @@
 <?php
+
 include_once 'application_utils.php';
+
 /**
  * Admissions Application Module
  *
@@ -385,13 +387,12 @@ class ApplicationPageFive extends FormStep {
         ),
             //'hr' => 'hr',
     );
-
     var $required = array('activity_1_other', 'activity_2_other', 'activity_3_other', 'activity_4_other', 'activity_5_other',
-            'activity_6_other', 'activity_7_other', 'activity_8_other', 'activity_9_other', 'activity_10_other');
+        'activity_6_other', 'activity_7_other', 'activity_8_other', 'activity_9_other', 'activity_10_other');
     var $display_name = 'Activities';
     var $error_header_text = 'Please check your form.';
     var $element_group_info = array(
-        'activity_button_group' =>array(
+        'activity_button_group' => array(
             'type' => 'inline',
             'elements' => array('add_activity_button', 'remove_activity_button'),
             'args' => array('use_element_labels' => false, 'display_name' => '&nbsp;'),
@@ -401,36 +402,38 @@ class ApplicationPageFive extends FormStep {
     // style up the form and add comments et al
     function on_every_time() {
         $this->openid_id = check_open_id($this);
-        if (is_submitted($this->openid_id)){
-            die(already_submitted_message());
-        }else{
-        $this->show_form = true;
-        }
-        foreach ($this->element_group_info as $name => $info) {
-            $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
-        }
-        $this->change_element_type('activity_1', 'select', array('options' => $this->activities_array));
-        $this->change_element_type('activity_1_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_2', 'select', array('options' => $this->activities_array));
-        $this->change_element_type('activity_2_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_3', 'select', array('options' => $this->activities_array));
-        $this->change_element_type('activity_3_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_4', 'select', array('options' => $this->activities_array));
-        $this->change_element_type('activity_4_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_5', 'select', array('options' => $this->activities_array));
-        $this->change_element_type('activity_5_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_6', 'select', array('options' => $this->activities_array));
-        $this->change_element_type('activity_6_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_7', 'select', array('options' => $this->activities_array));
-        $this->change_element_type('activity_7_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_8', 'select', array('options' => $this->activities_array));
-        $this->change_element_type('activity_8_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_9', 'select', array('options' => $this->activities_array));
-        $this->change_element_type('activity_9_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
-        $this->change_element_type('activity_10', 'select', array('options' => $this->activities_array));
-        $this->change_element_type('activity_10_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+        if (is_submitted($this->openid_id)) {
+            echo(already_submitted_message());
+            $this->show_form = false;
+        } else {
+            $this->show_form = true;
 
-        $this->pre_fill_form();
+            foreach ($this->element_group_info as $name => $info) {
+                $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
+            }
+            $this->change_element_type('activity_1', 'select', array('options' => $this->activities_array));
+            $this->change_element_type('activity_1_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+            $this->change_element_type('activity_2', 'select', array('options' => $this->activities_array));
+            $this->change_element_type('activity_2_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+            $this->change_element_type('activity_3', 'select', array('options' => $this->activities_array));
+            $this->change_element_type('activity_3_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+            $this->change_element_type('activity_4', 'select', array('options' => $this->activities_array));
+            $this->change_element_type('activity_4_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+            $this->change_element_type('activity_5', 'select', array('options' => $this->activities_array));
+            $this->change_element_type('activity_5_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+            $this->change_element_type('activity_6', 'select', array('options' => $this->activities_array));
+            $this->change_element_type('activity_6_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+            $this->change_element_type('activity_7', 'select', array('options' => $this->activities_array));
+            $this->change_element_type('activity_7_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+            $this->change_element_type('activity_8', 'select', array('options' => $this->activities_array));
+            $this->change_element_type('activity_8_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+            $this->change_element_type('activity_9', 'select', array('options' => $this->activities_array));
+            $this->change_element_type('activity_9_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+            $this->change_element_type('activity_10', 'select', array('options' => $this->activities_array));
+            $this->change_element_type('activity_10_participation', 'checkboxgroup_no_sort', array('options' => $this->participation_years_array));
+
+            $this->pre_fill_form();
+        }
     }
 
     function no_show_form() {
@@ -461,7 +464,7 @@ class ApplicationPageFive extends FormStep {
         check_logout($this);
     }
 
-    function  run_error_checks() {
+    function run_error_checks() {
         parent::run_error_checks();
 
         if (($this->get_value('activity_1') == 'Other' || "Volunteer Programs") && (!$this->get_value('activity_1_other'))) {
@@ -497,5 +500,7 @@ class ApplicationPageFive extends FormStep {
 
         $this->_error_flag = false;
     }
+
 }
+
 ?>

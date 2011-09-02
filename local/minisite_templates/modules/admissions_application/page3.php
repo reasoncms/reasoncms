@@ -1,5 +1,7 @@
 <?php
+
 include_once 'application_utils.php';
+
 /**
  * Admissions Application Module
  *
@@ -661,7 +663,7 @@ class ApplicationPageThree extends FormStep {
             'elements' => array('parent_1_phone_type', 'parent_1_phone'),
             'args' => array('use_element_labels' => false, 'display_name' => 'Preferred Phone'),
         ),
-        'sibling_button_group' =>array(
+        'sibling_button_group' => array(
             'type' => 'inline',
             'elements' => array('add_sibling_button', 'remove_sibling_button'),
             'args' => array('use_element_labels' => false, 'display_name' => '&nbsp;'),
@@ -740,8 +742,8 @@ class ApplicationPageThree extends FormStep {
     var $display_name = 'Family';
     var $error_header_text = 'Please check your form.';
     var $required = array('permanent_home_parent', 'parent_1_first_name', 'parent_1_last_name', 'parent_1_name_group', 'parent_1_address',
-                'parent_1_city', 'parent_1_state_province', 'parent_1_zip_postal', 'parent_1_country', 'parent_1_phone_group',
-                'parent_1_occupation', 'legacy');
+        'parent_1_city', 'parent_1_state_province', 'parent_1_zip_postal', 'parent_1_country', 'parent_1_phone_group',
+        'parent_1_occupation', 'legacy');
 
     function pre_fill_form() {
         // check if the open_id has is set
@@ -757,37 +759,39 @@ class ApplicationPageThree extends FormStep {
     function no_show_form() {
         echo(check_login());
     }
-    
+
     // style up the form and add comments et al
     function on_every_time() {
         $this->openid_id = check_open_id($this);
-        if (is_submitted($this->openid_id)){
-            die(already_submitted_message());
-        }else{
-        $this->show_form = true;
-        }
-        foreach ($this->element_group_info as $name => $info) {
-            $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
-        }
+        if (is_submitted($this->openid_id)) {
+            echo(already_submitted_message());
+            $this->show_form = false;
+        } else {
+            $this->show_form = true;
 
-        $this->move_element('parent_1_name_group', 'after', 'parent_1_living');
-        $this->move_element('parent_1_phone_group', 'after', 'parent_1_country');
-        $this->move_element('parent_2_name_group', 'after', 'parent_2_living');
-        $this->move_element('parent_2_phone_group', 'after', 'parent_2_country');
-        $this->move_element('guardian_name_group', 'after', 'guardian_relation');
-        $this->move_element('guardian_phone_group', 'after', 'guardian_country');
-        $this->move_element('sibling_1_name_group', 'after', 'sibling_1_relation');
-        $this->move_element('sibling_1_age_group', 'before', 'sibling_1_college');
-        $this->move_element('sibling_2_name_group', 'after', 'sibling_2_relation');
-        $this->move_element('sibling_2_age_group', 'before', 'sibling_2_college');
-        $this->move_element('sibling_3_name_group', 'after', 'sibling_3_relation');
-        $this->move_element('sibling_3_age_group', 'before', 'sibling_3_college');
-        $this->move_element('sibling_4_name_group', 'after', 'sibling_4_relation');
-        $this->move_element('sibling_4_age_group', 'before', 'sibling_4_college');
-        $this->move_element('sibling_5_name_group', 'after', 'sibling_5_relation');
-        $this->move_element('sibling_5_age_group', 'before', 'sibling_5_college');
+            foreach ($this->element_group_info as $name => $info) {
+                $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
+            }
 
-        $this->pre_fill_form();
+            $this->move_element('parent_1_name_group', 'after', 'parent_1_living');
+            $this->move_element('parent_1_phone_group', 'after', 'parent_1_country');
+            $this->move_element('parent_2_name_group', 'after', 'parent_2_living');
+            $this->move_element('parent_2_phone_group', 'after', 'parent_2_country');
+            $this->move_element('guardian_name_group', 'after', 'guardian_relation');
+            $this->move_element('guardian_phone_group', 'after', 'guardian_country');
+            $this->move_element('sibling_1_name_group', 'after', 'sibling_1_relation');
+            $this->move_element('sibling_1_age_group', 'before', 'sibling_1_college');
+            $this->move_element('sibling_2_name_group', 'after', 'sibling_2_relation');
+            $this->move_element('sibling_2_age_group', 'before', 'sibling_2_college');
+            $this->move_element('sibling_3_name_group', 'after', 'sibling_3_relation');
+            $this->move_element('sibling_3_age_group', 'before', 'sibling_3_college');
+            $this->move_element('sibling_4_name_group', 'after', 'sibling_4_relation');
+            $this->move_element('sibling_4_age_group', 'before', 'sibling_4_college');
+            $this->move_element('sibling_5_name_group', 'after', 'sibling_5_relation');
+            $this->move_element('sibling_5_age_group', 'before', 'sibling_5_college');
+
+            $this->pre_fill_form();
+        }
     }
 
     function pre_show_form() {
@@ -803,8 +807,10 @@ class ApplicationPageThree extends FormStep {
         check_logout($this);
     }
 
-    function  run_error_checks() {
+    function run_error_checks() {
         $this->_error_flag = false;
     }
+
 }
+
 ?>

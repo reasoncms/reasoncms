@@ -4,23 +4,47 @@ function check_logout(&$the_form) {
     $the_form->sess = & get_reason_session();
 
     $should_logout = false;
-    
-    try{ if($the_form->get_value('logout1')){ $should_logout=true; };
-    }catch(Exception $e){ /*not page 1*/ }
-    try{ if($the_form->get_value('logout2')){ $should_logout=true; };
-    }catch(Exception $e){ /*not page 2*/ }
-    try{ if($the_form->get_value('logout3')){ $should_logout=true; };
-    }catch(Exception $e){ /*not page 3*/ }
-    try{ if($the_form->get_value('logout4')){ $should_logout=true; };
-    }catch(Exception $e){ /*not page 4*/ }
-    try{ if($the_form->get_value('logout5')){ $should_logout=true; };
-    }catch(Exception $e){ /*not page 5*/ }
-    try{ if($the_form->get_value('logout6')){ $should_logout=true; };
-    }catch(Exception $e){ /*not page 6*/ }
+
+    try {
+        if ($the_form->get_value('logout1')) {
+            $should_logout = true;
+        };
+    } catch (Exception $e) { /* not page 1 */
+    }
+    try {
+        if ($the_form->get_value('logout2')) {
+            $should_logout = true;
+        };
+    } catch (Exception $e) { /* not page 2 */
+    }
+    try {
+        if ($the_form->get_value('logout3')) {
+            $should_logout = true;
+        };
+    } catch (Exception $e) { /* not page 3 */
+    }
+    try {
+        if ($the_form->get_value('logout4')) {
+            $should_logout = true;
+        };
+    } catch (Exception $e) { /* not page 4 */
+    }
+    try {
+        if ($the_form->get_value('logout5')) {
+            $should_logout = true;
+        };
+    } catch (Exception $e) { /* not page 5 */
+    }
+    try {
+        if ($the_form->get_value('logout6')) {
+            $should_logout = true;
+        };
+    } catch (Exception $e) { /* not page 6 */
+    }
 
     //die($should_logout);
-    
-    if($should_logout == true || $should_logout == 'true'){
+
+    if ($should_logout == true || $should_logout == 'true') {
         $the_form->sess->destroy();
     }
 }
@@ -41,6 +65,9 @@ function check_open_id(&$the_form) {
 }
 
 function check_login() {
+    if (is_submitted($_SESSION['openid_id'])){
+        return;
+    } else {
     $url = get_current_url();
     $parts = parse_url($url);
 //    $url = $parts['scheme'] . '://' . $parts['host'] . '/openid/?next=' . $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
@@ -81,8 +108,9 @@ function check_login() {
         public organizations for any purpose outside official college business. We will not share your personal
         information with any unauthorized third parties. Please see Luther’s <a href="/privacy" target="_blank">privacy
         policy</a> for additional information.</p></div>';
-    
+
     return $txt . $iframe . $open_id_text;
+    }
 }
 
 function is_submitted($open_id) {
@@ -781,7 +809,7 @@ function validate_page6(&$the_form) {
     return $return;
 }
 
-function already_submitted_message(){
+function already_submitted_message() {
     echo '<div style="padding:30px">It appears that you\'ve already submitted your application. If you\'d like to amend your application or have questions
                 regarding, please contact the Admissions Office at 800-4-LUTHER ext. 1287.</div>';
 }

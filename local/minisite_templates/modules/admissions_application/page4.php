@@ -1,5 +1,7 @@
- <?php
+<?php
+
 include_once 'application_utils.php';
+
 /**
  * Admissions Application Module
  *
@@ -135,12 +137,11 @@ class ApplicationPageFour extends FormStep {
             'type' => 'hidden',
         ),
     );
-
     var $required = array('hs_name', 'hs_grad_year');
     var $display_name = 'Education';
     var $error_header_text = 'Please check your form.';
     var $element_group_info = array(
-        'college_button_group' =>array(
+        'college_button_group' => array(
             'type' => 'inline',
             'elements' => array('add_college_button', 'remove_college_button'),
             'args' => array('use_element_labels' => false, 'display_name' => '&nbsp;'),
@@ -151,34 +152,36 @@ class ApplicationPageFour extends FormStep {
         echo(check_login());
     }
 
-     function on_every_time() {
-         $this->openid_id = check_open_id($this);
-         if (is_submitted($this->openid_id)){
-            die(already_submitted_message());
-        }else{
-        $this->show_form = true;
-        }
-        foreach ($this->element_group_info as $name => $info) {
-            $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
-        }
-        $this->move_element('college_button_group', 'after', 'college_3_name');
-
-        if ($this->controller->get('student_type') == 'FR') {
-            $this->change_element_type('final_high_school_header', 'hidden');
+    function on_every_time() {
+        $this->openid_id = check_open_id($this);
+        if (is_submitted($this->openid_id)) {
+            echo(already_submitted_message());
+            $this->show_form = false;
         } else {
-            $this->change_element_type('current_high_school_header', 'hidden');
-        }
+            $this->show_form = true;
 
-        if ($this->controller->get('student_type') == 'TR') {
-            if (in_array('college_1_name', $this->required) == False){
-                $this->required[] = 'college_1_name';
+            foreach ($this->element_group_info as $name => $info) {
+                $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
             }
+            $this->move_element('college_button_group', 'after', 'college_3_name');
+
+            if ($this->controller->get('student_type') == 'FR') {
+                $this->change_element_type('final_high_school_header', 'hidden');
+            } else {
+                $this->change_element_type('current_high_school_header', 'hidden');
+            }
+
+            if ($this->controller->get('student_type') == 'TR') {
+                if (in_array('college_1_name', $this->required) == False) {
+                    $this->required[] = 'college_1_name';
+                }
+            }
+
+            $this->pre_fill_form();
         }
+    }
 
-        $this->pre_fill_form();
-     }
-
-     function pre_fill_form() {
+    function pre_fill_form() {
         // check if the open_id has is set
         if ($this->openid_id) {
             // get an existing users data from the db based on openid_id and the form
@@ -202,8 +205,10 @@ class ApplicationPageFour extends FormStep {
         check_logout($this);
     }
 
-    function  run_error_checks() {
+    function run_error_checks() {
         $this->_error_flag = false;
     }
+
 }
+
 ?>

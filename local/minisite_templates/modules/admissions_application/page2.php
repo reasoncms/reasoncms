@@ -291,14 +291,12 @@ class ApplicationPageTwo extends FormStep {
                 'comments' => '<div class="formComment">Required for US citizens and permanent residents applying for financial aid via FAFSA</div>')
         ),
     );
-
-   var $no_session = array('ssn_1', 'ssn_2', 'ssn_3');
-   
-   var $required = array('first_name', 'middle_name', 'last_name', 'gender', 'date_of_birth',
-                       'email', 'home_phone', 'permanent_address', 'permanent_city',
-                       'permanent_state_province', 'permanent_state_province', 'permanent_zip_postal',
-                       'permanent_country', 'different_mailing_address', 'mailing_address', 'mailing_city',
-                       'mailing_state_province', 'mailing_zip_postal', 'mailing_country');
+    var $no_session = array('ssn_1', 'ssn_2', 'ssn_3');
+    var $required = array('first_name', 'middle_name', 'last_name', 'gender', 'date_of_birth',
+        'email', 'home_phone', 'permanent_address', 'permanent_city',
+        'permanent_state_province', 'permanent_state_province', 'permanent_zip_postal',
+        'permanent_country', 'different_mailing_address', 'mailing_address', 'mailing_city',
+        'mailing_state_province', 'mailing_zip_postal', 'mailing_country');
     var $error_checks = array(
         'phone' => array(
             'is_phone_number' => 'Invalid Phone Number',
@@ -314,19 +312,21 @@ class ApplicationPageTwo extends FormStep {
     // style up the form and add comments et al
     function on_every_time() {
         $this->openid_id = check_open_id($this);
-        if (is_submitted($this->openid_id)){
-            die(already_submitted_message());
-        }else{
-        $this->show_form = true;
-        }
-        //add element groups
-        foreach ($this->element_group_info as $name => $info) {
-            $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
-        }
+        if (is_submitted($this->openid_id)) {
+            echo(already_submitted_message());
+            $this->show_form = false;
+        } else {
+            $this->show_form = true;
 
-        $this->move_element('name_group', 'before', 'suffix');
-        $this->move_element('ssn_group', 'after', 'date_of_birth');
-        $this->pre_fill_form();
+            //add element groups
+            foreach ($this->element_group_info as $name => $info) {
+                $this->add_element_group($info['type'], $name, $info['elements'], $info['args']);
+            }
+
+            $this->move_element('name_group', 'before', 'suffix');
+            $this->move_element('ssn_group', 'after', 'date_of_birth');
+            $this->pre_fill_form();
+        }
     }
 
     function no_show_form() {
@@ -357,7 +357,7 @@ class ApplicationPageTwo extends FormStep {
         check_logout($this);
     }
 
-    function  run_error_checks() {
+    function run_error_checks() {
         $this->_error_flag = false;
     }
 

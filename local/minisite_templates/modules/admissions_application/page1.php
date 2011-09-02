@@ -77,10 +77,10 @@ class ApplicationPageOne extends FormStep {
     function on_every_time() {
         $this->openid_id = check_open_id($this);
         if (is_submitted($this->openid_id)) {
-            die(already_submitted_message());
+            echo(already_submitted_message());
+            $this->show_form = false;
         } else {
             $this->show_form = true;
-        }
 
         $date = getdate();
 
@@ -148,6 +148,7 @@ class ApplicationPageOne extends FormStep {
             'options' => $this->enroll_term));
 
         $this->pre_fill_form();
+        }
     }
 
     function no_show_form() {

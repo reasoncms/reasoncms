@@ -244,8 +244,8 @@ class ApplicationPageSix extends FormStep {
             'type' => 'hidden',
         ),
     );
-    var $required = array('college_plan_1', 'music_audition_instrument', 'financial_aid', 'conviction_history', 
-            'conviction_history_details', 'hs_discipline', 'hs_discipline_details', 'honesty_statement');
+    var $required = array('college_plan_1', 'music_audition_instrument', 'financial_aid', 'conviction_history',
+        'conviction_history_details', 'hs_discipline', 'hs_discipline_details', 'honesty_statement');
     var $display_name = 'Last Page';
     var $error_header_text = 'Please check your form.';
 
@@ -255,15 +255,17 @@ class ApplicationPageSix extends FormStep {
 
     function on_every_time() {
         $this->openid_id = check_open_id($this);
-        if (is_submitted($this->openid_id)){
-            die(already_submitted_message());
-        }else{
-        $this->show_form = true;
-        }
-        $this->change_element_type('college_plan_1', 'select', array('options' => $this->majors_array));
-        $this->change_element_type('college_plan_2', 'select', array('options' => $this->majors_array));
+        if (is_submitted($this->openid_id)) {
+            echo(already_submitted_message());
+            $this->show_form = false;
+        } else {
+            $this->show_form = true;
 
-        $this->pre_fill_form();
+            $this->change_element_type('college_plan_1', 'select', array('options' => $this->majors_array));
+            $this->change_element_type('college_plan_2', 'select', array('options' => $this->majors_array));
+
+            $this->pre_fill_form();
+        }
     }
 
     function pre_fill_form() {
@@ -291,7 +293,7 @@ class ApplicationPageSix extends FormStep {
         check_logout($this);
     }
 
-    function  run_error_checks() {
+    function run_error_checks() {
         $this->_error_flag = false;
     }
 
