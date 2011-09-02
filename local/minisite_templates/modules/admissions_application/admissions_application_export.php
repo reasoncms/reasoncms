@@ -130,11 +130,11 @@ last_update ";
     }
 
     $cumulative_results = db_query($query_string . $q_string_cumulative);
-    $num_rows = mysql_num_rows($cumulative_results);
+    $cumulative_num_rows = mysql_num_rows($cumulative_results);
     //echo $query_string;
     // output settings
 
-    if ($cumulative_results) {
+    if ($cumulative_num_rows) {
         $fname = "/var/reason_admissions_app_exports/application_exports/cumulative.csv";
         $fp = fopen($fname, 'w');
         $first_time = true;
