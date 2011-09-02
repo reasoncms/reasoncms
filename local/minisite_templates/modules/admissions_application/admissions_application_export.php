@@ -159,9 +159,9 @@ last_update ";
     }
     
     $unfinished_results = db_query($query_string . $q_string_unfinished);
-    $num_rows = mysql_num_rows($unfinished_results);
+    $unfinished_num_rows = mysql_num_rows($unfinished_results);
 
-    if ($unfinished_results) {
+    if ($unfinished_num_rows) {
         $fname = "/var/reason_admissions_app_exports/application_exports/unfinished.csv";
         $fp = fopen($fname, 'w');
         $first_time = true;
