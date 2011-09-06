@@ -228,6 +228,70 @@ class DefaultForm extends Disco
 	}
 	
 	/**
+	 * Takes thor XML format as given by transform_thor_values_for_display and spits out a basic table view of it.
+	 *
+	 * This is basically a copy of Tyr make_html_table - put here for convenience.
+	 */
+	function get_html_table($values, $hide_empty_values = false)
+	{
+		$message = "<table border='0' cellspacing='0' cellpadding='7'>\n";
+
+		foreach ( $values as $key => $value )
+		{
+			// Replace key with value[label], and value with value[value]
+			//   N.B.: We do this here, rather than earlier, because $value['label']
+			//   doesn't have to be unique, but the key of an associative array
+			//   such as $this->_fields would have to be unique.
+			if ( is_array($value) && array_key_exists('label', $value) )
+			{
+				$key = $value['label'];
+				$value = ( array_key_exists('value', $value) ) ? $value['value'] : '';
+			}
+
+			// Write out arrays
+			if ( is_array($value) )
+			{
+				$new_value = '';
+				foreach ( $value as $sub_key => $sub_value )
+				{
+					if ( is_int($sub_key) )
+						$new_value .= $sub_value . "\n";
+					else
+						$new_value .= $sub_key . ": " . $sub_value . "\n";
+				}
+				$value = $new_value;
+			}
+			
+			$value = htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' );
+				
+			$show_item = true;
+			
+			if (trim($value == ''))
+			{
+				if($hide_empty_values)
+				{
+					$show_item = false;
+				}
+				else
+				{
+					$value = '(no value)';
+				}
+			}
+			if($show_item)
+			{
+				$value = str_replace( "\n", "<br />\n", $value );
+				$value = str_replace( "\'", "'", $value );
+				$key = str_replace( '_', " ", $key );
+				$key = $key . ( (substr($key, -1) != ':' && substr($key, -1) != '?') ? ':' : '' );
+				$message .= "<tr><td align='right' valign='top'><strong>" . htmlspecialchars( $key, ENT_COMPAT, 'UTF-8' ) . " </strong></td><td valign='top'>" . $value . "<br /></td></tr>\n";
+			}
+			
+		}
+		$message .= "</table>\n";
+		return $message;
+	}
+	
+	/**
 	 * DefaultForm must be provided with a model
 	 */
 	function set_model(&$model)
