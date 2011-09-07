@@ -529,7 +529,11 @@
 	 */
 	function get_entities_by_type_object( $type, $site_id = '' , $sharing = 'owns', $table_mod = array(), $table_action = '' ) // {{{
 	{
-		$type = (integer) $type;
+		if(!($type = (integer) $type))
+		{
+			trigger_error('get_entities_by_type_object() requires an integer type id as its first parameter.');
+			return '';
+		}
 		$dbq = new DBSelector;
 		if ($table_action == 'include') $tables = $table_mod;
 		else $tables = get_entity_tables_by_type( $type );
@@ -541,19 +545,24 @@
 			$dbq->add_table( $table );
 			// don't match entity table against itself
 			if( $table != 'entity' )
-				$dbq->add_relation( 'entity.id = '.$table.'.id' );
+				$dbq->add_relation( '`entity`.`id` = `'.$table.'`.`id`' );
 		}
 		
-		$dbq->add_relation( 'entity.type = '.$type );
+		$dbq->add_relation( '`entity`.`type` = "'.$type.'"' );
 
 		if( $site_id && $sharing )
 		{
 			$dbq->add_table( 'r','relationship' );
 			$dbq->add_table( 'ar','allowable_relationship' );
 			if(is_array($site_id))
-				$dbq->add_relation( 'r.entity_a IN ("'.implode('","',$site_id).'")');
+			{
+				array_walk($site_id,'db_prep_walk');
+				$dbq->add_relation( 'r.entity_a IN ('.implode(',',$site_id).')');
+			}
 			else
-				$dbq->add_relation( 'r.entity_a = "'.$site_id.'"');
+			{
+				$dbq->add_relation( 'r.entity_a = "'.addslashes($site_id).'"');
+			}
 			$dbq->add_relation( 'r.entity_b = entity.id');
 			$dbq->add_relation( 'r.type = ar.id' );
 			if( preg_match( '/owns/' , $sharing ) && preg_match( '/borrows/' , $sharing ) )
@@ -1592,5 +1601,56 @@
 			return false;
 		}
 		return $cache[$site_id][$type_id];
+	}
+	
+	/**
+	 * Gets all the relationship info about an allowable relationship
+	 * @param int $r_id id in ar table
+	 * @return mixed
+	 */
+	function reason_get_allowable_relationship_info( $alrel_id )
+	{
+		$cache = array();
+		if(!isset($cache[$alrel_id]))
+		{
+			$q = 'SELECT * FROM `allowable_relationship` WHERE `id` = "' . addslashes($alrel_id) . '"';
+			$r = db_query( $q , 'error getting relationship info' );
+			$cache[$alrel_id] = mysql_fetch_array( $r , MYSQL_ASSOC );
+		}
+		return $cache[$alrel_id];
+	}
+	
+	/**
+	 * Get the sites a given user has administrative access to
+	 *
+	 * @param mixed $user entity or user id
+	 * @return array of site entities
+	 */
+	function reason_user_sites($user)
+	{
+		if(is_object($user))
+			$user_id = $user->id();
+		else
+			$user_id = (integer) $user;
+		
+		if(empty($user_id))
+		{
+			trigger_error('reason_user_sites() requires a user entity or integer ID as its first parameter. Returning empty array.');
+			return array();
+		}
+		
+		static $cache = array();
+		
+		if(!isset($cache[$user_id]))
+		{
+			$es = new entity_selector();
+			$es->add_type(id_of('site'));
+			$es->add_left_relationship($user_id, relationship_id_of('site_to_user'));
+			$es->limit_tables();
+			$es->limit_fields();
+			$cache[$user_id] = $es->run_one();
+		}
+		
+		return $cache[$user_id];
 	}
 ?>
