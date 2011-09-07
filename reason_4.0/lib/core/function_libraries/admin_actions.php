@@ -1,16 +1,32 @@
 <?php
 	/**
 	  *	Admin Actions
+	  *
 	  *	These are actions that modify the database.
+	  *
 	  *	@author Dave Hendler, Matt Ryan, Nate White
 	  * @package reason
+	  * @subpackage function_libraries
 	  */
 	
-	// get the SQLER object for simple queries
+	/**
+	 * get the SQLER object for simple queries
+	 */
 	include_once( 'reason_header.php' );
 	include_once( CARL_UTIL_INC . 'db/sqler.php' );
 	reason_include_once( 'classes/entity.php' );
 
+	/**
+	 * Take a simple array of keys and values, and, given table names,
+	 * build an array keyed on table name.
+	 *
+	 * @param array $tables Simple array; format: array('table1','table2',...)
+	 * @param array $flat_values Associative array; format: array('field1'=>'value1','field2'=>'value2','field3'=>'value3',...)
+	 * @return array Multidimensional associative array; format: array('table1'=>array('field1'=>'value1','field2'=>'value2'),'table2'=>array('field3'=>'value3',...),...)
+	 *
+	 * @todo add caching so that db structure does not need to be looked up each time
+	 * @todo make query more robust or use standard library to look up field names
+	 */
 	function values_to_tables( $tables, $flat_values, $ignore = array() ) // {{{
 	{
 		// build field to table association
@@ -209,48 +225,6 @@
 
 		// convert values of entity to tabled-array structure, make sure to ignore proper fields
 		$values = values_to_tables( $tables, array_merge( $e->get_values(), $overrides ), $ignored_fields );
-
-		//! end of new version code
-
-		/*
-
-		******* old code to transform a flat list of entity values into a list first keyed by table, then keyed by field
-		*******	has been replaced by the above code.  most of this code was put into the values_to_tables() function
-		******* replaced on Jan 28, 2003.  Feel free to delete this code once the above code proves to work.
-		
-		// get the field to table associations
-		$fields = array();
-		foreach( $tables AS $table )
-		{
-			$q = "DESC $table";
-			$r = db_query( $q, 'Unable to get table description.' );
-			while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
-				// name, type, last_edited_by(user_id) and id are handled elsewhere
-				if( $row['Field'] != 'id' AND $row['Field'] != 'name' AND $row['Field'] != 'type' AND $row['Field'] != 'last_edited_by' )
-					// determine whether to explicitly set dates or to let create_entity set them itself
-					// so, if maintain_dates is true, this expression is true
-					// if maintain_dates is false, then the next part is looked at.  If the field is one of the date fields, then the expression
-					//	will be false and the dates will not be passed on.
-					if( $maintain_dates OR ($row['Field'] != 'last_modified' AND $row['Field'] != 'creation_date') )
-						$fields[ $row['Field'] ] = $table;
-			mysql_free_result( $r );
-		}
-		
-		// determine which values to use for each field
-		$values = array();
-		foreach( $e->get_values() AS $key => $val )
-		{
-			if( !empty( $fields[ $key ] ) )
-			{
-				if( !empty( $overrides[ $key ] ) )
-					$the_sweet_sweet_value = $overrides[ $key ];
-				else
-					$the_sweet_sweet_value = $val;
-
-				$values[ $fields[ $key ] ][ $key ] = $the_sweet_sweet_value;
-			}
-		}
-		*/
 		
 		// create new entity record
 		$new_entity_id = create_entity(
@@ -421,6 +395,8 @@
 	 *	reason_update_entity() provides an easier-to-use interface 
 	 *	where the updates do not need to be organized by table.
 	 *
+	 * @todo figure out how to refresh the entity data cache on update
+	 *
 	 *	@param	integer	$id	ID of entity to update
 	 *	@param 	integer	$user_id	Reason ID of user making changes
 	 *	@param	array	$updates	array of tables with values being array of key-val pairs
@@ -534,7 +510,7 @@
 	 *	@param	int $relationship_type	ID of the allowable relationship for this relationship
 	 *	@param  array $more array of other attributes to set (optional)	 
 	 *  @param  boolean $check_for_dup whether or not to check if the relationship already exists on the site
-	 *	@return	boolean true if sql statement to create relationship was executed, false indicated duplicate found
+	 *	@return	boolean true if sql statement to create relationship was executed, false indicates no relationship created
 	 */
 	function create_relationship( $entity_a, $entity_b, $relationship_type ,$more=false, $check_for_dup=true)
 	{
@@ -555,10 +531,10 @@
 			$my_result = db_query($q, 'Error checking for duplication relationships on creation');
 			if (mysql_num_rows($my_result) > 0)
 			{
-				$existant_site = (isset($rel['site'])) ? $rel['site'] : '0';
+				$existent_site = (isset($rel['site'])) ? $rel['site'] : '0';
 				while ($rel = mysql_fetch_assoc($my_result))
 				{
-					if ($existant_site == $rel['site']) 
+					if ($existent_site == $rel['site']) 
 					{
 						return false;
 					}
@@ -884,6 +860,26 @@
 			return false;
 		}
 		
+	}
+	
+	/**
+	 * Change a property of an allowable relationship
+	 *
+	 * Note that changing type ids or name is not supported by this function
+	 *
+	 * @param integer $rel_id
+	 * @param array $values
+	 * @return success
+	 */
+	function update_allowable_relationship($rel_id,$values = array())
+	{
+		if(isset($values['relationship_a']) || isset($values['relationship_b']) || isset($values['name']))
+		{
+			trigger_error('update_allowable_relationship does not allow for the change of left-side type, right-side type, or name. Rejecting update.');
+			return false;
+		}
+		$sqler = new SQLER();
+		return $sqler->update_one('allowable_relationship',$values,$rel_id);
 	}
 	
 	/**
