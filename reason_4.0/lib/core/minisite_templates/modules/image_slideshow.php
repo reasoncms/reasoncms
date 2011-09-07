@@ -105,8 +105,8 @@
 					}
 					elseif($objects[$id]->get_crop_style() == 'fit')
 					{
-						if($objects[$id]->get_image_width() > $max_image_width) $max_image_width = $$new_object_name->get_image_width();
-						if($objects[$id]->get_image_height() > $max_image_height) $max_image_height = $$new_object_name->get_image_height();
+						if($objects[$id]->get_image_width() > $max_image_width) $max_image_width = $objects[$id]->get_image_width();
+						if($objects[$id]->get_image_height() > $max_image_height) $max_image_height = $objects[$id]->get_image_height();
 					}
 				}
 				$max_dimensions = array('height'=>$max_image_height,'width'=>$max_image_width);
