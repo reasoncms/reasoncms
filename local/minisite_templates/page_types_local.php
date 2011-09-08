@@ -626,9 +626,13 @@ $GLOBALS['_reason_page_types_local'] = array(
                 'study_skills_assessment'=> array(
                     'main_post'=> 'study_skills_assessment', 
                 ),
+                'stream'=>array(
+                    'main' => 'content',
+                    'main_post' => 'stream',
+		),
 		'test_page' => array(
-                    'main' => 'steve_module',
-                    'main_post' => 'content',
+                    'main' => 'content',
+                    'main_post' => 'test_module',
                     'sub_nav_3'=> 'twitter',
 		),
 		'transcript_request' => array(
