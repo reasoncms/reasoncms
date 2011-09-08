@@ -87,7 +87,7 @@ class HomecomingConfirmation
 	* Available to scripts that use this class by calling get_error_message()
 	* @var string
 	*/
-	var $error_message = 'We\'re sorry.  Your homecoming registration was successfully processed, but there appears to have been an error generating your confirmation information.  Please contact the Alumni Office for assistance.';
+	var $error_message = 'Your homecoming registration was <strong>successfully</strong> processed, but there appears to have been an error generating your confirmation information.  Please contact the Alumni Office for assistance.';
 	
 	/**
 		* Setter for PayFlowPro transaction reference number
