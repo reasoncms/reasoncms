@@ -653,7 +653,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//}
 		elseif (($this->cur_page->get_value( 'custom_page' ) == 'events' && !preg_match("/[&?]event_id=\d+/", $url))
 			|| $this->cur_page->get_value( 'custom_page' ) == 'sports_roster'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'sports_results'
+			|| ($this->cur_page->get_value( 'custom_page' ) == 'sports_results' && !preg_match("/[&?]event_id=\d+/", $url))
 			|| $this->cur_page->get_value( 'custom_page' ) == 'directory_aaron'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'admissions_application'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'study_skills_assessment')

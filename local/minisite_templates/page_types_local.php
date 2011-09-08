@@ -585,7 +585,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                 'sports_results' => array(
                     'main' => 'luther_sports_results_mini',
 					'pre_sidebar' => '',
-					'sidebar' => '',
+					'sidebar' => 'luther_events_image_sidebar',
                 	'post_sidebar' => '',
                 ),
                 'spotlight_archive' => array(
