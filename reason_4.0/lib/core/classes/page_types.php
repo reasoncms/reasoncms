@@ -684,7 +684,7 @@ class ReasonPageTypes
 	 * @param string $module_name The name of the module whose filename will be determined.
 	 * @return mixed the filename of $module_name or false if it cannot be found.
 	 */
-	function resolve_filename($module_name)
+	static function resolve_filename($module_name)
 	{
 		static $cachedModules;
 		if (!empty($module_name))
