@@ -356,6 +356,10 @@ class EventsModule extends DefaultMinisiteModule
 							'additional_sites'=>'',
 							'sharing_mode'=>'',
 							'show_images'=>false,
+							'list_thumbnail_height' => 0,
+							'list_thumbnail_width' => 0,
+							'list_thumbnail_crop' => '',
+							'list_thumbnail_default_image' => '', // a unique name
 							'ideal_count'=>NULL,
 							'default_view_min_days'=>1,
 	 						'start_date'=>'',
@@ -387,6 +391,12 @@ class EventsModule extends DefaultMinisiteModule
 	 * @var boolean
 	 */
 	var $show_icalendar_links = true;
+	/**
+	 * A place to store the default image so it does not have to be
+	 * re-identified for each imageless event
+	 * @var mixed NULL, false, or image entity object
+	 */
+	protected $_list_thumbnail_default_image;
 	
 	//////////////////////////////////////
 	// General Functions
@@ -412,6 +422,7 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		else
 			$this->init_event();
+		
 	} // }}}
 
 	/**
@@ -1218,7 +1229,9 @@ class EventsModule extends DefaultMinisiteModule
 			echo '<ul>'."\n";
 			foreach($ids as $id)
 			{
-				echo '<li>'.$this->show_event_list_item( $id, '', 'through' ).'</li>'."\n";
+				echo '<li>';
+				$this->show_event_list_item( $id, '', 'through' );
+				echo '</li>'."\n";
 			}
 			echo '</ul>'."\n";
 		}
@@ -1405,11 +1418,17 @@ class EventsModule extends DefaultMinisiteModule
         	$es->description = 'Selecting images for event';
         	$es->add_type( id_of('image') );
         	$es->add_right_relationship( $event_id, relationship_id_of('event_to_image') );
+        	$es->add_rel_sort_field($event_id, relationship_id_of('event_to_image'));
+        	$es->set_order('rel_sort_order ASC');
         	$es->set_num(1);
         	$images = $es->run_one();
         	if(!empty($images))
         	{
         		$image_cache[$event_id] = current($images);
+        	}
+        	elseif($image = $this->_get_list_thumbnail_default_image())
+        	{
+        		$image_cache[$event_id] = $image;
         	}
         	else
         	{
@@ -1419,8 +1438,45 @@ class EventsModule extends DefaultMinisiteModule
 
         if(!empty($image_cache[$event_id]))
         {
-        	show_image( $image_cache[$event_id], true, false, false, '', $this->textonly, false, $link );
+        	if($this->params['list_thumbnail_width'] || $this->params['list_thumbnail_height'])
+        	{
+        		$rsi = new reasonSizedImage;
+        		$rsi->set_id($image_cache[$event_id]->id());
+        		if(0 != $this->params['list_thumbnail_height']) $rsi->set_height($this->params['list_thumbnail_height']);
+				if(0 != $this->params['list_thumbnail_width']) $rsi->set_width($this->params['list_thumbnail_width']);
+				if('' != $this->params['list_thumbnail_crop']) $rsi->set_crop_style($this->params['list_thumbnail_crop']);
+				show_image( $rsi, true, false, false, '', $this->textonly, false, $link );
+        	}
+        	else
+        	{
+        		show_image( $image_cache[$event_id], true, false, false, '', $this->textonly, false, $link );
+        	}
         }
+	}
+	/**
+	 * Get the default thumbnail image
+	 * @return mixed image entity object or boolean false
+	 */
+	protected function _get_list_thumbnail_default_image()
+	{
+		if(!isset($this->_list_thumbnail_default_image))
+		{
+			if(!empty($this->params['list_thumbnail_default_image']))
+			{
+				$image_id = id_of($this->params['list_thumbnail_default_image']);
+				if(!empty($image_id))
+				{
+					$this->_list_thumbnail_default_image = new entity($image_id);
+				}
+				else
+				{
+					trigger_error('list_thumbnail_default_image must be a unique name');
+				}
+			}
+			if(empty($this->_list_thumbnail_default_image))
+				$this->_list_thumbnail_default_image = false;
+		}
+		return $this->_list_thumbnail_default_image;
 	}
 	
 	function show_navigation() // {{{
@@ -2202,22 +2258,22 @@ class EventsModule extends DefaultMinisiteModule
 			$init_array['default_view_min_days'] = $this->params['default_view_min_days'];
 		
 		$init_array['automagic_window_snap_to_nearest_view'] = $this->snap_to_nearest_view;
-		if($this->snap_to_nearest_view)
+		
+		if('inline' == $this->params['ongoing_display'])
 		{
-			if('inline' == $this->params['ongoing_display'])
-				$init_array['ongoing_count_all_occurrences'] = true;
-			elseif('above' == $this->params['ongoing_display'])
-			{
-				$init_array['ongoing_count_all_occurrences'] = false;
-				$init_array['ongoing_count_pre_start_dates'] = true;
-				$init_array['ongoing_count_ends'] = $this->params['ongoing_show_ends'];
-			}
-			elseif('below' == $this->params['ongoing_display'])
-			{
-				$init_array['ongoing_count_all_occurrences'] = false;
-				$init_array['ongoing_count_pre_start_dates'] = false;
-				$init_array['ongoing_count_ends'] = $this->params['ongoing_show_ends'];
-			}
+			$init_array['ongoing_count_all_occurrences'] = true;
+		}
+		elseif('above' == $this->params['ongoing_display'])
+		{
+			$init_array['ongoing_count_all_occurrences'] = false;
+			$init_array['ongoing_count_pre_start_dates'] = true;
+			$init_array['ongoing_count_ends'] = $this->params['ongoing_show_ends'];
+		}
+		elseif('below' == $this->params['ongoing_display'])
+		{
+			$init_array['ongoing_count_all_occurrences'] = false;
+			$init_array['ongoing_count_pre_start_dates'] = false;
+			$init_array['ongoing_count_ends'] = $this->params['ongoing_show_ends'];
 		}
 		
 		if(!empty($this->request['search']))
@@ -2740,25 +2796,27 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function show_images(&$e)
 	{
-		// If this instance has the event_to_poster_image relationship, use those images first
-		if ($rel_id = relationship_id_of('event_to_poster_image'))
+		$images = array();
+		if ($rel_id = relationship_id_of('event_to_poster_image', true, false))
 		{
 			$es = new entity_selector();
 			$es->description = 'Selecting poster images for event';
 			$es->add_type( id_of('image') );
 			$es->add_right_relationship( $e->id(), $rel_id );
+			$es->add_rel_sort_field($e->id(), $rel_id);
+        	$es->set_order('rel_sort_order ASC');
 			$images = $es->run_one();
 		}
-		
-		if (!$rel_id || empty($images))
-		{
-			$es = new entity_selector();
-			$es->description = 'Selecting images for event';
-			$es->add_type( id_of('image') );
-			$es->add_right_relationship( $e->id(), relationship_id_of('event_to_image') );
-			$images = $es->run_one();
-		}
-		
+		$es = new entity_selector();
+        $es->description = 'Selecting images for event';
+        $es->add_type( id_of('image') );
+        $es->add_right_relationship( $e->id(), relationship_id_of('event_to_image') );
+        if(!empty($images))
+        	$es->add_relation('`entity`.`id` NOT IN ("'.implode('","',array_keys($images)).'")');
+        $es->add_rel_sort_field($e->id(), relationship_id_of('event_to_image'));
+        $es->set_order('rel_sort_order ASC');
+        $images += $es->run_one();
+
 		if (!empty($images))
 		{
 		    echo '<div class="images">';
