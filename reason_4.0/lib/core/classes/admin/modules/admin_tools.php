@@ -165,6 +165,13 @@ assets.',
 						'safety_level' => 'experimental',
 					),
 				),
+				'Upgrading' => array(
+					REASON_HTTP_BASE_PATH.'upgrade.php' => array(
+						'title' => 'Run Upgrade Scripts',
+						'description' => 'After updating your Reason codebase, you should always make sure to run the upgrade scripts from your old version to your new version. In some cases, Reason will be broken until you run the upgrade scripts, so it is best to run them immediately after updating your code.',
+						'safety_level' => 'careful',
+					),
+				),
 			);
 		}
 		function run() // {{{
