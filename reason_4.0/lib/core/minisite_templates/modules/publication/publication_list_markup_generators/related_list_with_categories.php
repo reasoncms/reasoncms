@@ -83,7 +83,8 @@ class RelatedListWithCategoriesMarkupGenerator extends PublicationMarkupGenerato
 			// For each news post returned
 			foreach ($es->run_one() as $result) {
 				// If it has multiple categories attached
-				if (is_array($result->get_value('category_ids'))) {
+				if (is_array($result->get_value('category_ids')))
+				{
 					// For each one
 					foreach($result->get_value('category_ids') as $cat_id) {
 						// If this category hasn't been seen in this publication yet
@@ -103,7 +104,8 @@ class RelatedListWithCategoriesMarkupGenerator extends PublicationMarkupGenerato
 						}
 					}
 				// If there's only one category attached to the post, and we haven't seen it before in this publication
-				} elseif (!in_array($result->get_value('category_ids'), array_keys($category_list[$pub]))) {
+				} 
+				elseif (!in_array($result->get_value('category_ids'), array_keys($category_list[$pub]))) {
 					// Add it to the list!
 					$cat_ent = new entity($result->get_value('category_ids'));
 					if ($cat_ent->get_value('state') == 'Live') {
@@ -111,10 +113,10 @@ class RelatedListWithCategoriesMarkupGenerator extends PublicationMarkupGenerato
 						// If we've seen this category name before at all
 						if (in_array($cat_ent->get_value('name'), $flat_cat_list))
 							// Add it to the duplicate cat list. 
-							$duplicate_cat_list[$cat_id] = $cat_ent->get_value('name');
+							$duplicate_cat_list[$cat_end->id()] = $cat_ent->get_value('name');
 						else 
 							// Just go ahead and add it to the flat_cat_list.
-							$flat_cat_list[$cat_id] = $cat_ent->get_value('name');
+							$flat_cat_list[$cat_ent->id()] = $cat_ent->get_value('name');
 					}
 				}
 			}
