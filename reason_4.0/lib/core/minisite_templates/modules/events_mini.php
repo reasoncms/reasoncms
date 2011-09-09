@@ -62,6 +62,9 @@ class miniEventsModule extends EventsModule
 		if(!isset($this->acceptable_params['title']))
 			$this->acceptable_params['title'] = '';
 		
+		if(!isset($this->acceptable_params['calendar_link_text']))
+			$this->acceptable_params['calendar_link_text'] = 'More events';
+		
 		parent::handle_params( $params );
 	}
 	function init( $args = array() ) // {{{
@@ -167,14 +170,16 @@ class miniEventsModule extends EventsModule
 			echo '<ul>'."\n";
 			foreach($ids as $id)
 			{
-				echo '<li>'.$this->show_event_list_item( $id, '', 'through' ).'</li>'."\n";
+				echo '<li>';
+				$this->show_event_list_item( $id, '', 'through' );
+				echo '</li>'."\n";
 			}
 			echo '</ul>'."\n";
 		}
 	}
 	function show_feed_link()
 	{
-		echo '<p class="more"><a href="'.$this->events_page_url.'">More events</a></p>'."\n";
+		echo '<p class="more"><a href="'.$this->events_page_url.'">'.$this->params['calendar_link_text'].'</a></p>'."\n";
 	}
 	function show_list_export_links()
 	{
