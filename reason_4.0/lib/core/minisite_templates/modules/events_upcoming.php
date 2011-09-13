@@ -129,6 +129,8 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 		
 		foreach($this->events as $event_date=>$events)
 		{
+			$count = 0;
+			ob_start();
 			$first = reset($events);
 			if ($first->get_value('date') == $date)
 			{
@@ -147,8 +149,10 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 				echo '<li>'."\n";
 				$this->show_event_list_item($event);
 				echo '</li>'."\n";
+				$count++;
 			}
 			echo '</ul>'."\n";
+			if ($count) ob_end_flush();
 		}
 
 		if($this->params['ongoing_display'] == 'below')
