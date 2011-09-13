@@ -69,7 +69,7 @@ reason_include_once('classes/page_types.php');
  	function init()
  	{
  		$this->init_from_cache();
-		if (empty($this->events)) $this->init_from_database(); // there is no cache
+		if (empty($this->events) || empty($this->calendar)) $this->init_from_database(); // there is no cache
  	}
  	
  	function init_from_cache()
@@ -79,6 +79,8 @@ reason_include_once('classes/page_types.php');
 		{
 			$cache = new ReasonObjectCache($this->get_cache_id(), $this->get_cache_lifespan());
 			$this->events =& $cache->fetch();
+			$cache = new ReasonObjectCache($this->get_cache_id().'_cal', $this->get_cache_lifespan());
+			$this->calendar =& $cache->fetch();
 		}
 	}
 	
@@ -334,6 +336,8 @@ reason_include_once('classes/page_types.php');
 		{
 			$cache = new ReasonObjectCache($this->get_cache_id());
 			$cache->set($this->events);
+			$cache = new ReasonObjectCache($this->get_cache_id().'_cal');
+			$cache->set($this->calendar);
 		}
 	}
 	
@@ -356,6 +360,8 @@ reason_include_once('classes/page_types.php');
 	function clear_cache()
 	{
 		$cache = new ReasonObjectCache($this->get_cache_id());
+		$cache->clear();
+		$cache = new ReasonObjectCache($this->get_cache_id().'_cal');
 		$cache->clear();
 	}
  }
