@@ -100,7 +100,7 @@ class ApplicationConfirmation extends FormStep {
                     and click "Submit your application" at the bottom of the page.';
             } else {
                 connectDB('admissions_applications_connection');
-                db_query("UPDATE `applicants` SET `submit_date`=NOW() WHERE `open_id`= '" . addslashes($this->openid_id) . "'");
+                db_query("UPDATE `applicants` SET `submit_date`=NOW() WHERE `open_id`= '" . mysql_real_escape_string($this->openid_id) . "'");
                 connectDB(REASON_DB);
                 echo "<div style='padding:30px;'>";
                 echo $this->get_thank_you_blurb();
