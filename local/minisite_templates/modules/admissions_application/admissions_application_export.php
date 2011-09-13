@@ -140,14 +140,15 @@ IFNULL(do_not_contact, '') AS do_not_contact, IFNULL(last_update, '') AS last_up
 
     $no_export_date_results = db_query($query_string . $q_string_no_export_date);
     $num_rows = mysql_num_rows($no_export_date_results);
-
-    if ($num_rows) {
+    if ($num_rows != 0) {
         $fname = "/var/reason_admissions_app_exports/application_exports/{$date}_app_export.csv";
         $fp = fopen($fname, 'w');
         $first_time = true;
         $i = 0;
-        
-        while ($row = mysql_fetch_array($cumulative_results, MYSQL_ASSOC)) {
+        while ($row = mysql_fetch_array($no_export_date_results, MYSQL_ASSOC)) {
+            // store the open_ids for use later
+            $open_id_array[$i] = $row['open_id'];
+            $i++;
             if ($first_time) {
                 $keys = array_keys($row);
                 $line = '"'.implode('","',$keys).'"';
@@ -183,9 +184,10 @@ IFNULL(do_not_contact, '') AS do_not_contact, IFNULL(last_update, '') AS last_up
             }
             $qstring = rtrim($qstring,", ");
             $qstring .= ") ";
-
             $qresult = db_query($qstring);
         }
+    } else {
+        echo "<script type='text/javascript'>alert('There are no newly submitted apps since the last export. Click OK to continue.') ;</script>";
     }
 
     $cumulative_results = db_query($query_string . $q_string_cumulative);
