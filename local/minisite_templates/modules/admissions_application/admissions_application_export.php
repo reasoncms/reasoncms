@@ -142,7 +142,7 @@ IFNULL(do_not_contact, '') AS do_not_contact, IFNULL(last_update, '') AS last_up
     $num_rows = mysql_num_rows($no_export_date_results);
 
     if ($num_rows) {
-        $fname = "/var/reason_admissions_app_exports/application_exports2/{$date}_app_export.csv";
+        $fname = "/var/reason_admissions_app_exports/application_exports/{$date}_app_export.csv";
         $fp = fopen($fname, 'w');
         $first_time = true;
         $i = 0;
@@ -194,7 +194,7 @@ IFNULL(do_not_contact, '') AS do_not_contact, IFNULL(last_update, '') AS last_up
     // output settings
 
     if ($cumulative_num_rows) {
-        $fname = "/var/reason_admissions_app_exports/application_exports2/cumulative_exported.csv";
+        $fname = "/var/reason_admissions_app_exports/application_exports/cumulative_exported.csv";
         $fp = fopen($fname, 'w');
         $first_time = true;
 
@@ -233,7 +233,7 @@ IFNULL(do_not_contact, '') AS do_not_contact, IFNULL(last_update, '') AS last_up
     $unfinished_num_rows = mysql_num_rows($unfinished_results);
 
     if ($unfinished_num_rows) {
-        $fname = "/var/reason_admissions_app_exports/application_exports2/unfinished.csv";
+        $fname = "/var/reason_admissions_app_exports/application_exports/unfinished.csv";
         $fp = fopen($fname, 'w');
         $first_time = true;
         while ($row = mysql_fetch_array($unfinished_results, MYSQL_ASSOC)) {
