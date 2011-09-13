@@ -462,7 +462,7 @@ function validate_page3(&$the_form) {
                     $valid = False;
                     $return['parent_2_last_name'] = $the_form->get_display_name('parent_2_last_name');
                 }
-                if (($row['parent_2_living'] != 'no') || ($row['parent_2_address_same'] == 'no')) {
+                if (($row['parent_2_living'] != 'no') && ($row['parent_2_address_same'] == 'no')) {
                     if (empty($row['parent_2_address'])) {
                         $valid = False;
                         $return['parent_2_address'] = $the_form->get_display_name('parent_2_address');
