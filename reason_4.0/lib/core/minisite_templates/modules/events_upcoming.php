@@ -152,7 +152,10 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 				$count++;
 			}
 			echo '</ul>'."\n";
-			if ($count) ob_end_flush();
+			if ($count) 
+				ob_end_flush();
+			else
+				ob_end_clean();
 		}
 
 		if($this->params['ongoing_display'] == 'below')
