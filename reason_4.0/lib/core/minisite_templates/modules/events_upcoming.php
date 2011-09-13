@@ -271,7 +271,7 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 	 */
 	function get_event_ongoing_type_for_day($event,$day)
 	{
-		if($this->params['ongoing_display'] != 'inline' && $this->event_is_ongoing($event))
+		if($this->params['ongoing_display'] != 'inline' && $this->eh->calendar->event_is_ongoing($event))
 		{
 			if(substr($event->get_value( 'datetime' ), 0,10) == $day)
 			{
@@ -335,7 +335,7 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 			{
 				foreach($this->events as $date => $events)
 				{
-					if(!isset($events[$id]) || !$this->event_is_ongoing($events[$id]) || $events[$id]->get_value('datetime') >= $this->eh->calendar->get_start_date())
+					if(!isset($events[$id]) || !$this->eh->calendar->event_is_ongoing($events[$id]) || $events[$id]->get_value('datetime') >= $this->eh->calendar->get_start_date())
 						unset($ongoing_ids[$k]);
 				}
 			}
@@ -346,7 +346,7 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 			{
 				foreach($this->events as $date => $events)
 				{
-					if(!isset($events[$id]) || !$this->event_is_ongoing($events[$id]) || $events[$id]->get_value('datetime') >= $this->eh->calendar->get_start_date() || $events[$id]->get_value('last_occurence') <= $this->eh->calendar->get_end_date())
+					if(!isset($events[$id]) || !$this->eh->calendar->event_is_ongoing($events[$id]) || $events[$id]->get_value('datetime') >= $this->eh->calendar->get_start_date() || $events[$id]->get_value('last_occurence') <= $this->eh->calendar->get_end_date())
 						unset($ongoing_ids[$k]);
 				}
 			}
@@ -356,26 +356,6 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 			trigger_error('Unrecognized string passed to get_ongoing_event_ids(): '.$ongoing_display.'. Should be "above" or "below".');
 		}
 		return $ongoing_ids;
-	}
-
-	/**
-	 * Is a given event an all-day event?
-	 * @param object $event entity
-	 * @return boolean
-	 */
-	protected function event_is_all_day_event($event)
-	{
-		return $this->eh->calendar->event_is_all_day_event($event);
-	}
-
-	/**
-	 * Is a given event an "ongoing" event?
-	 * @param object $event entity
-	 * @return boolean
-	 */
-	protected function event_is_ongoing($event)
-	{
-		return $this->eh->calendar->event_is_ongoing($event);
 	}
 
 	/**
