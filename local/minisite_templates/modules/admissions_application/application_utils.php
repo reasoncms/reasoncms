@@ -115,11 +115,11 @@ function check_login() {
 
 function is_submitted($open_id) {
     connectDB('admissions_applications_connection');
-    $qstring = "SELECT `submit_date` FROM `applicants` WHERE `open_id`='" . addslashes($open_id) . "' ";
+    $qstring = "SELECT `submit_date` FROM `applicants` WHERE `open_id`='" . mysql_real_escape_string($open_id) . "' ";
     $results = db_query($qstring);
     $row = mysql_fetch_array($results, MYSQL_ASSOC);
     connectDB(REASON_DB);
-    if (is_null($row['submit_date']) || ($row['submit_date'] == '0000-00-00 00:00:00')) {
+    if (is_null($row['submit_date'])) {
         return false;
     } else {
         return true;
@@ -132,18 +132,18 @@ function is_submitted($open_id) {
 
 function get_applicant_data($openid, &$the_form) {
     connectDB('admissions_applications_connection');
-    $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
+    $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . mysql_real_escape_string($openid) . "' ";
 //            $qstring = "SELECT * FROM `applicants` WHERE `open_id`='". $openid . "' ";
 
     $results = db_query($qstring);
 
     if (mysql_num_rows($results) < 1) {
         //
-        //$qstring = "INSERT INTO `applicants` (`open_id`)  VALUES ('" . addslashes($openid) . "'); ";
+        //$qstring = "INSERT INTO `applicants` (`open_id`)  VALUES ('" . mysql_real_escape_string($openid) . "'); ";
         $qstring = "INSERT INTO `applicants` (`open_id`, `creation_date`,  `submitter_ip`)
-            VALUES ('" . addslashes($openid) . "', NOW(), '" . $_SERVER['REMOTE_ADDR'] . "'); ";
+            VALUES ('" . mysql_real_escape_string($openid) . "', NOW(), '" . $_SERVER['REMOTE_ADDR'] . "'); ";
         $results = mysql_query($qstring) or die(mysql_error());
-        $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
+        $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . mysql_real_escape_string($openid) . "' ";
         $results = db_query($qstring);
     }
 
@@ -188,13 +188,13 @@ function get_applicant_data($openid, &$the_form) {
 
 function set_applicant_data($openid, &$the_form) {
     connectDB('admissions_applications_connection');
-    $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
+    $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . mysql_real_escape_string($openid) . "' ";
     $results = db_query($qstring);
     if (mysql_num_rows($results) < 1) {
         $qstring = "INSERT INTO `applicants` (`open_id`, `creation_date`, `submitter_ip`)
-            VALUES ('" . addslashes($openid) . "', NOW(), '" . $_SERVER['REMOTE_ADDR'] . "'); ";
+            VALUES ('" . mysql_real_escape_string($openid) . "', NOW(), '" . $_SERVER['REMOTE_ADDR'] . "'); ";
         $results = mysql_query($qstring) or die(mysql_error());
-        $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . addslashes($openid) . "' ";
+        $qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . mysql_real_escape_string($openid) . "' ";
         $results = db_query($qstring);
     }
     while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
@@ -204,9 +204,9 @@ function set_applicant_data($openid, &$the_form) {
                 $qstring .= $element . "=";
                 if ((!is_null($the_form->get_value($element))) && ($the_form->get_value($element) <> '')) {
                     if (is_array($the_form->get_value($element))) {
-                        $qstring .= "'" . addslashes(implode(',', $the_form->get_value($element))) . "'";
+                        $qstring .= "'" . mysql_real_escape_string(implode(',', $the_form->get_value($element))) . "'";
                     } else {
-                        $qstring .= "'" . addslashes($the_form->get_value($element)) . "'";
+                        $qstring .= "'" . mysql_real_escape_string($the_form->get_value($element)) . "'";
                     }
                 } else {
                     $qstring .= 'NULL';
@@ -215,14 +215,14 @@ function set_applicant_data($openid, &$the_form) {
             }
             if ($element == 'ssn_1') {
                 if ($the_form->get_value('ssn_1') || $the_form->get_value('ssn_2') || $the_form->get_value('ssn_3')) {
-                    $qstring .= "`ssn` = '" . addslashes($the_form->get_value('ssn_1')) . "-" . addslashes($the_form->get_value('ssn_2')) . "-" . addslashes($the_form->get_value('ssn_3')) . "', ";
+                    $qstring .= "`ssn` = '" . mysql_real_escape_string($the_form->get_value('ssn_1')) . "-" . mysql_real_escape_string($the_form->get_value('ssn_2')) . "-" . mysql_real_escape_string($the_form->get_value('ssn_3')) . "', ";
                 }
             }
         }
         // ssn is 3 individual form elements, combine and write to db
         $qstring .= "`last_update`=NOW()";
 //        $qstring = rtrim($qstring, ' ,');
-        $qstring .= " WHERE `open_id`= '" . addslashes($openid) . "' ";
+        $qstring .= " WHERE `open_id`= '" . mysql_real_escape_string($openid) . "' ";
         //die($qstring);
     }
     $qresult = db_query($qstring);
