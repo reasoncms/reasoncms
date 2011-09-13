@@ -46,6 +46,7 @@ reason_include_once('classes/page_types.php');
 	var $lookahead_minutes = 60;
 	var $startdate;
 	var $starttime;
+	var $init_array = array();
 	
 	var $calendar;
 	var $events;
@@ -83,10 +84,10 @@ reason_include_once('classes/page_types.php');
 	
 	function init_from_database()
 	{
-		$init_array = array(
+		$init_array = array_merge($this->init_array, array(
 			'ideal_count'=>$this->optimal_event_count*3, 
 			'start_date'=> $this->startdate,
-			);
+			));
 		if (count($this->audience_limit)) 
 		{
 			$aud_array = array();
@@ -320,6 +321,11 @@ reason_include_once('classes/page_types.php');
 	function set_starttime($start)
  	{
  		$this->starttime = $start;
+ 	}
+
+	function set_init_array($init)
+ 	{
+ 		$this->init_array = $init;
  	}
 
 	function set_cache()
