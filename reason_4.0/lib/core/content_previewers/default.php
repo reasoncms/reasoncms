@@ -383,12 +383,12 @@
 					$name = 'User ID '.$value;
 				}
 				$new_value =  $name . ' on ' . 
-					prettify_mysql_timestamp( $this->_entity->get_value( 'last_modified' ) );
+					prettify_mysql_timestamp( $this->_entity->get_value( 'last_modified' ), 'M j, Y \a\t g:i a' );
 				$this->show_item_default( 'Last Edited By' , $new_value );
 			}
 			else
 			{
-				$new_value = prettify_mysql_timestamp( $this->_entity->get_value( 'last_modified' ) );
+				$new_value = prettify_mysql_timestamp( $this->_entity->get_value( 'last_modified' ), 'M j, Y \a\t g:i a' );
 				
 				$this->show_item_default( 'Last Edited On' , $new_value  );
 			}
@@ -410,12 +410,12 @@
 					$name = 'User ID '.$value;
 				}
 				$new_value =  $name . ' on ' . 
-						  prettify_mysql_timestamp( $this->_entity->get_value( 'creation_date' ) );
+						  prettify_mysql_timestamp( $this->_entity->get_value( 'creation_date' ), 'M j, Y \a\t g:i a' );
 				$this->show_item_default( 'Created By' , $new_value );
 			}
 			else
 			{
-				$new_value = prettify_mysql_timestamp( $this->_entity->get_value( 'creation_date' ) );
+				$new_value = prettify_mysql_timestamp( $this->_entity->get_value( 'creation_date' ), 'M j, Y \a\t g:i a' );
 				
 				$this->show_item_default( 'Created On' , $new_value  );
 			}
