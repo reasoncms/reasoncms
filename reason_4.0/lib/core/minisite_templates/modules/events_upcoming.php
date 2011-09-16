@@ -26,6 +26,7 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 					'show_today_header' => true,
 					'ongoing_display' => 'below', // or below or inline
 					'ongoing_show_ends' => true,
+					'all_day_display' => 'top', // or below
 					'demote_all_day_events' => false,
 					'title' => '',
 					'foot' => '',
@@ -167,7 +168,10 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 				$all_day_events = array();
 			}
 			
-			$events = $all_day_events + $regular_events;
+			if ($this->params['all_day_display'] == 'top')
+				$events = $all_day_events + $regular_events;
+			else
+				$events = $regular_events + $all_day_events;
 			
 			foreach($events as $event)
 			{
