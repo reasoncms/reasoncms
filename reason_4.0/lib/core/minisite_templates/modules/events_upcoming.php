@@ -26,6 +26,7 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 					'show_today_header' => true,
 					'ongoing_display' => 'below', // or below or inline
 					'ongoing_show_ends' => true,
+					'demote_all_day_events' => false,
 					'title' => '',
 					'foot' => '',
 					);
@@ -140,12 +141,37 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 				echo '<h4>'.$first->get_value('display_date').'</h4>'."\n";
 			}
 			echo '<ul>'."\n";
+			
+			$all_day_events = $regular_events = array();
+			
 			foreach($events as $event)
 			{
 				$ongoing_type = $this->get_event_ongoing_type_for_day($event,$event_date);
 				if( 'middle' == $ongoing_type )
 					continue;
 
+				if ($this->eh->calendar->event_is_all_day_event($event))
+					$all_day_events[] = $event;
+				else
+					$regular_events[] = $event;
+			}
+			
+			// If we have an event count limit, and we've chosen to demote all day events, fill the count
+			// with regular events, and then select randomly from all day events while we have space.
+			if ($this->params['demote_all_day_events'] && $this->params['num_to_display'] 
+				&& (count($all_day_events) + count($regular_events) > $this->params['num_to_display']))
+			{
+				shuffle($all_day_events);
+				while (count($regular_events) <= $this->params['num_to_display'])
+					array_unshift($regular_events, array_shift($all_day_events));
+				$all_day_events = array();
+			}
+			
+			$events = $all_day_events + $regular_events;
+			
+			foreach($events as $event)
+			{
+				
 				echo '<li>'."\n";
 				$this->show_event_list_item($event);
 				echo '</li>'."\n";
