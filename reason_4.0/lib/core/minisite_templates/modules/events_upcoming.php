@@ -50,7 +50,13 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 		$this->eh = new EventHelper($this->site_id, $this->page_id);
 		if ($this->params['cache_lifespan'] > 0) $this->eh->set_cache_lifespan($this->params['cache_lifespan']);
 		if ($this->params['set_or_categories']) $this->eh->set_or_categories($this->params['set_or_categories']);
-		if ($this->params['num_to_display']) $this->eh->set_optimal_event_count($this->params['num_to_display']);
+		if ($this->params['num_to_display']) 
+		{
+			if ($this->params['demote_all_day_events']) 
+				$this->eh->set_optimal_event_count($this->params['num_to_display']*2);
+			else
+				$this->eh->set_optimal_event_count($this->params['num_to_display']);
+		}
 		if ($this->params['lookahead_minutes']) $this->eh->set_lookahead_minutes($this->params['lookahead_minutes']);
 		if ($this->params['limit_to_audience']) 
 		{
@@ -163,6 +169,10 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 				&& (count($all_day_events) + count($regular_events) > $this->params['num_to_display']))
 			{
 				shuffle($all_day_events);
+				
+				// Put at least one on...
+				array_unshift($regular_events, array_shift($all_day_events));
+				
 				while (count($regular_events) <= $this->params['num_to_display'])
 					array_unshift($regular_events, array_shift($all_day_events));
 				$all_day_events = array();
