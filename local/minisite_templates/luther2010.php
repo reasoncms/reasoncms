@@ -677,6 +677,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 	function has_related_section()
 	{
         if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home' || $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
+        	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_carousel'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_live_at_luther'
