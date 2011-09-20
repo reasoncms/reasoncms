@@ -91,13 +91,14 @@ class RoyalVisitPaymentForm extends CreditCardThorForm {
                     //// Two Tickets ////
                     if (($row['Guest First Name'] != 'NULL') && ($row['Do you want an extra guest ticket for $20?'] == 'Yes')) {
                         $this->set_value($payment_amount, '$40');
+                        parent::set_value('payment_amount', '$40');
 //                        $this->remove_element($payment_amount);
-                        parent::remove_element('payment_amount');
+//                        parent::remove_element('payment_amount');
 
-                        $this->set_value($this->payment_element, '$40');
+//                        $this->set_value($this->payment_element, '$40');
 //                        $this->change_element_type($this->payment_element, 'solidtext');
 //                        $this->remove_element($this->payment_element);
-//                        $this->change_element_type($this->payment_element, 'hidden');
+                        $this->change_element_type($payment_amount, 'hidden');
                         
                     }
                     //// One Tickets ////
