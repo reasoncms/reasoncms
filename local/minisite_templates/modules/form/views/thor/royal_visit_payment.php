@@ -27,7 +27,7 @@ class RoyalVisitPaymentForm extends CreditCardThorForm {
             $payment_amount = $this->get_element_name_from_label('Payment Amount');
 //            $this->change_element_type($payment_amount, 'text');
             $this->set_display_name($payment_amount, 'text');
-            $this->set_value($payment_amount, '$40');
+            
 
             $dir = new directory_service();
             $dir->serv_inst['mysql_royal_visit'];
@@ -39,6 +39,7 @@ class RoyalVisitPaymentForm extends CreditCardThorForm {
             $query = "SELECT * FROM `faculty_staff_lottery` WHERE `email`='" . $username . "'";
             $result = db_query($query);
             $num_rows = mysql_num_rows($result);
+            $this->set_value($payment_amount, '$20');
             if ($num_rows > 0) {
                 for ($num_rows; $num_rows > 0; $num_rows--) {
                     $row = mysql_fetch_assoc($result);
@@ -89,6 +90,7 @@ class RoyalVisitPaymentForm extends CreditCardThorForm {
                     }
                     //// One Tickets ////
                     if (($row['Guest First Name'] = 'NULL') && ($row['Do you want an extra guest ticket for $20?'] == 'No')) {
+                        $this->set_value($payment_amount, '$20');
                         $this->change_element_type($this->get_element_name_from_label('Guest Name'), 'hidden');
                     }
                 }
