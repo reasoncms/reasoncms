@@ -26,7 +26,8 @@ class RoyalVisitPaymentForm extends CreditCardThorForm {
 
             $payment_amount = $this->get_element_name_from_label('Payment Amount');
 //            $this->change_element_type($payment_amount, 'text');
-            $this->set_display_name($payment_amount, 'text');
+//            $this->set_display_name($payment_amount, 'text');
+            
             
 
             $dir = new directory_service();
@@ -57,6 +58,9 @@ class RoyalVisitPaymentForm extends CreditCardThorForm {
                         echo '<hr>';
                         echo 'Tickets will be sent via intercampus mail for Faculty and Staff.<br>';
                         echo 'Emeriti will recieve tickets via USPS.' . "\n";
+                        $this->set_value($this->payment_element, '$20');
+                        $this->change_element_type($this->payment_element, 'solidtext');
+
                         $this->change_element_type($this->get_element_name_from_label('Address'), 'hidden');
                     }
                 }
@@ -86,11 +90,16 @@ class RoyalVisitPaymentForm extends CreditCardThorForm {
                     $this->set_value($address, $row['Your Address'] . ', ' . $row['Your City'] . ', ' . $row['Your State'] . ' ' . $row['Your Zip code']);
                     //// Two Tickets ////
                     if (($row['Guest First Name'] != 'NULL') && ($row['Do you want an extra guest ticket for $20?'] == 'Yes')) {
-                        $this->set_value('payment_amount', '$40');
+//                        $this->set_value($payment_amount, '$40');
+                        $this->set_value($this->payment_element, '$40');
+                        $this->change_element_type($this->payment_element, 'solidtext');
+//                        $this->change_element_type($payment_amount, 'solidtext');
+                        
                     }
                     //// One Tickets ////
                     if (($row['Guest First Name'] = 'NULL') && ($row['Do you want an extra guest ticket for $20?'] == 'No')) {
-                        $this->set_value($payment_amount, '$20');
+                        $this->set_value($this->payment_element, '$20');
+                        $this->change_element_type($this->payment_element, 'solidtext');
                         $this->change_element_type($this->get_element_name_from_label('Guest Name'), 'hidden');
                     }
                 }
