@@ -164,25 +164,27 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 			}
 			
 			// If we have an event count limit, and we've chosen to demote all day events, fill the count
-			// with regular events, and then select randomly from all day events while we have space.
+			// with regular events, and then remove all day events until we have enough to fill in (with
+			// a minimum of one)
 			if ($this->params['demote_all_day_events'] && $this->params['num_to_display'] 
 				&& (count($all_day_events) + count($regular_events) > $this->params['num_to_display']))
 			{
 				shuffle($all_day_events);
 				
-				// Put at least one on...
-				array_unshift($regular_events, array_shift($all_day_events));
-				
-				while (count($regular_events) <= $this->params['num_to_display'])
-					array_unshift($regular_events, array_shift($all_day_events));
-				$all_day_events = array();
+				while (count($regular_events) + count($all_day_events) > $this->params['num_to_display'] && count($all_day_events) > 1)
+					array_shift($all_day_events);
 			}
 			
-			if ($this->params['all_day_display'] == 'top')
-				$events = $all_day_events + $regular_events;
-			else
-				$events = $regular_events + $all_day_events;
-			
+			if (count($all_day_events))
+			{
+				if ($this->params['all_day_display'] == 'top')
+					$events = $all_day_events + $regular_events;
+				else
+					$events = $regular_events + $all_day_events;
+			} else {
+				$events = $regular_events;
+			}
+
 			foreach($events as $event)
 			{
 				
