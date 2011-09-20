@@ -25,7 +25,7 @@ class RoyalVisitPaymentForm extends CreditCardThorForm {
 //            echo '<hr>';
 
             $payment_amount = $this->get_element_name_from_label('Payment Amount');
-//            $this->change_element_type($payment_amount, 'text');
+            $this->change_element_type($payment_amount, 'text');
 //            $this->set_display_name($payment_amount, 'text');
             
             
