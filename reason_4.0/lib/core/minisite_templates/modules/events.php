@@ -1225,15 +1225,17 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		if(!empty($ids))
 		{
+			echo '<div class="ongoingblock">'."\n";
 			echo '<h3>Ongoing</h3>'."\n";
-			echo '<ul>'."\n";
+			echo '<ul class="ongoingEvents">'."\n";
 			foreach($ids as $id)
 			{
-				echo '<li>';
+				echo '<li class="event">';
 				$this->show_event_list_item( $id, '', 'through' );
 				echo '</li>'."\n";
 			}
 			echo '</ul>'."\n";
+			echo '</div>'."\n";
 		}
 	}
 	/**
