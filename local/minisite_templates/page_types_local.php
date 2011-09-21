@@ -766,7 +766,7 @@ function admissions_main_navigation()
         	echo '<li class="academics"><a href="/admissions/academics/">Academics</a>'."\n";
         	echo '<ul>'."\n";
         	echo '<li><a href="/academics/majors/">Majors & Minors</a></li>'."\n";
-        	echo '<li><a href="/academics/calendars/">Academic Calendars</a></li>'."\n";
+        	echo '<li><a href="/registrar/calendars/">Academic Calendars</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/requirements/">Admissions Requirements</a></li>'."\n";        	
         	echo '<li><a href="http://www.luther.edu/catalog/">Curriculum & Graduation Requirements</a></li>'."\n";
         	echo '<li><a href="https://www.luther.edu/academics/dean/honors/">Honors Program</a></li>'."\n";
@@ -806,7 +806,7 @@ function admissions_main_navigation()
         echo '<li class="financialAid"><a href="/financialaid/">Financial Aid</a>'."\n";
 			echo '<ul>'."\n";
         	echo '<li><a href="/financialaid/applying/">How to Apply for Aid</a></li>'."\n";
-        	echo '<li><a href="/financialaid/current/scholarships/">Scholarship & Awards</a></li>'."\n";
+        	echo '<li><a href="/financialaid/prospective/scholarships/">Scholarship & Awards</a></li>'."\n";
         	echo '<li><a href="/financialaid/prospective/need/">Need-Based Assistance</a></li>'."\n";
         	echo '<li><a href="/financialaid/current/workstudy/">Work-Study Opportunities</a></li>'."\n";
         	echo '<li><a href="/financialaid/tuition/">Tuition & Fees</a></li>'."\n";
