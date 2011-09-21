@@ -166,15 +166,17 @@ class miniEventsModule extends EventsModule
 	{
 		if(!empty($ids))
 		{
+			echo '<div class="ongoingblock">'."\n";
 			echo '<h4>Ongoing</h4>'."\n";
-			echo '<ul>'."\n";
+			echo '<ul class="ongoingEvents">'."\n";
 			foreach($ids as $id)
 			{
-				echo '<li>';
+				echo '<li class="event">';
 				$this->show_event_list_item( $id, '', 'through' );
 				echo '</li>'."\n";
 			}
 			echo '</ul>'."\n";
+			echo '</div>'."\n";
 		}
 	}
 	function show_feed_link()
