@@ -766,7 +766,7 @@ function admissions_main_navigation()
         	echo '<li class="academics"><a href="/admissions/academics/">Academics</a>'."\n";
         	echo '<ul>'."\n";
         	echo '<li><a href="/academics/majors/">Majors & Minors</a></li>'."\n";
-        	echo '<li><a href="/registrar/calendars/">Academic Calendars</a></li>'."\n";
+        	echo '<li><a href="/registrar/calendar/">Academic Calendars</a></li>'."\n";
         	echo '<li><a href="/admissions/academics/requirements/">Admissions Requirements</a></li>'."\n";        	
         	echo '<li><a href="http://www.luther.edu/catalog/">Curriculum & Graduation Requirements</a></li>'."\n";
         	echo '<li><a href="https://www.luther.edu/academics/dean/honors/">Honors Program</a></li>'."\n";
