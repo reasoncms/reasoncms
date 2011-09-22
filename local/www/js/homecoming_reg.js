@@ -16,88 +16,16 @@ $(document).ready(function(){
     $("#vegetarianguestsRow").hide();
     $("#seatingpreferenceRow").hide();
     
-    
-//    var trigger = $("select[name='attend_program']").val();
-//    switch(trigger){
-//        case 1:
-//            $("#festivalvegetarianRow").show();
-//            $("#seatingpreferenceRow").show();
-//            break;
-//        case 2:
-//            $("#festivalvegetarianRow").show();
-//            $("#festivalguestsnamesRow").show();
-//            $("#vegetarianguestsRow").show();
-//            $("#festivalvegetarianRow").show();
-//            break;
-//        case 3:
-//            $("#festivalvegetarianRow").show();
-//            $("#festivalguestsnamesRow").show();
-//            $("#vegetarianguestsRow").show();
-//            $("#festivalvegetarianRow").show();
-//            break;
-//        case 4:
-//            $("#festivalvegetarianRow").show();
-//            $("#festivalguestsnamesRow").show();
-//            $("#vegetarianguestsRow").show();
-//            $("#festivalvegetarianRow").show();
-//            break;
-//        case 5:
-//            $("#festivalvegetarianRow").show();
-//            $("#festivalguestsnamesRow").show();
-//            $("#vegetarianguestsRow").show();
-//            $("#festivalvegetarianRow").show();
-//            break;
-//        case 6:
-//            $("#festivalvegetarianRow").show();
-//            $("#festivalguestsnamesRow").show();
-//            $("#vegetarianguestsRow").show();
-//            $("#festivalvegetarianRow").show();
-//            break;
-//        default:
-//            $("#festivalvegetarianRow").hide();
-//            $("#festivalguestsnamesRow").hide();
-//            $("#vegetarianguestsRow").hide();
-//            $("#seatingpreferenceRow").hide();
-//
-//
-//    }
-//    $('#attend_programElement').change(function() {
-//        if ($("select[name='attend_program']").val() !== ""){
-//
-//            $("#festivalvegetarianRow").show();
-//            $("#seatingpreferenceRow").show();
-//            alert('yo');
-//        }
-//
-//        else {
-//
-//            $("#festivalvegetarianRow").hide();
-//            $("#festivalguestsnamesRow").hide();
-//            $("#vegetarianguestsRow").hide();
-//            $("#seatingpreferenceRow").hide();
-//
-//        }
-//    } )
-
 
     $('#attend_programElement').change(function() {
         if ($("select[name='attend_program']").val() >= 1){
-
-
             $("#festivalvegetarianRow").show();
             $("#seatingpreferenceRow").show();
             if ($("select[name='attend_program']").val() > 1){
                 $("#festivalguestsnamesRow").show();
                 $("#vegetarianguestsRow").show();
-            }
-            
+            }  
         }
-//        if ($("select[name='attend_program']").val() == 1){
-//
-//            $("#festivalvegetarianRow").show();
-//            $("#seatingpreferenceRow").show();
-////            alert('yo');
-//        }
         else {
             $("#festivalguestsnamesRow").hide();
             $("#vegetarianguestsRow").hide();
