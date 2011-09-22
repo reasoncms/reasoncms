@@ -485,7 +485,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 		{
 			if ($cat->get_value('name') == 'Video Streaming')
 			{
-				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><img class="video_streaming" src="/images/luther2010/television_gray_256.png" alt="Video Streaming"></a>';
+				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><img class="video_streaming" src="/images/luther2010/video_camera_gray_128.png" alt="Video Streaming"></a>';
 			}
 			if ($cat->get_value('name') == 'Audio Streaming')
 			{
