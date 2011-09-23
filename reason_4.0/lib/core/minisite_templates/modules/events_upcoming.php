@@ -153,14 +153,20 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 			
 			foreach($events as $event)
 			{
-				$ongoing_type = $this->get_event_ongoing_type_for_day($event,$event_date);
-				if( 'middle' == $ongoing_type )
-					continue;
-
-				if ($this->eh->calendar->event_is_all_day_event($event))
+				if ($this->eh->calendar->event_is_ongoing($event))
+				{
+					$ongoing_type = $this->get_event_ongoing_type_for_day($event,$event_date);
+					if ( 'middle' != $ongoing_type )
+						$regular_events[] = $event;
+				}
+				else if ($this->eh->calendar->event_is_all_day_event($event))
+				{
 					$all_day_events[] = $event;
+				}
 				else
+				{
 					$regular_events[] = $event;
+				}
 			}
 			
 			// If we have an event count limit, and we've chosen to demote all day events, fill the count
@@ -178,9 +184,9 @@ class EventsUpcomingModule extends DefaultMinisiteModule
 			if (count($all_day_events))
 			{
 				if ($this->params['all_day_display'] == 'top')
-					$events = $all_day_events + $regular_events;
+					$events = array_merge($all_day_events,$regular_events);
 				else
-					$events = $regular_events + $all_day_events;
+					$events = array_merge($regular_events,$all_day_events);
 			} else {
 				$events = $regular_events;
 			}
