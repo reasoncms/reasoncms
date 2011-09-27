@@ -22,7 +22,7 @@ class TranscriptPageOneForm extends FormStep {
         ),
         'name' => array(
             'type' => 'text',
-            'display_name' => 'Current Name',
+            'display_name' => 'Name',
             'size' => 35,
         ),
          'date_of_birth' => array(
@@ -156,24 +156,31 @@ class TranscriptPageOneForm extends FormStep {
         $has_access = (reason_user_is_in_group($username, $group));
 
         if ($has_access) {
-            $qlist = array('cn', 'sn');
+            $qlist = array('alumcn', 'sn');
+            $qlist = array('cn', 'alumcn', 'displayname', 'edupersonaffiliation', 'alumaffiliation');
             $dir = new directory_service();
 
             $lookup_login = 'uid=' . $username . ',dc=luther,dc=edu'; /// username is get login norsekey
             $dir->serv_inst['ldap_luther']->set_conn_param('cn=webauth,dc=luther,dc=edu', $lookup_login);
 
             $dir->search_by_attribute('uid', $username, $qlist);
-
-            //if (($dir->get_first_value('edupersonprimaryaffiliation') == 'Student') || ($dir->get_first_value('edupersonprimaryaffiliation') == 'Student - Not Enrolled this Term')) {
            
             $name = $dir->get_first_value('cn');
-            //$last_name  = $dir->get_first_value('sn');
+            $display_name = $dir->get_first_value('displayname');
+            $alum_name = $dir->get_first_value('alumcn');
+            $first_name = $dir->get_first_value('givenname');
+            $last_name  = $dir->get_first_value('sn');
             $email = $dir->get_first_value('mail');
 
             $this->show_form = true;
 
             $this->change_element_type('name', 'solidtext');
-            $this->set_value('name', $name);
+            
+            if ($dir->get_first_value('edupersonaffiliation') == 'Alumni' || $dir->get_first_value('alumaffiliation') == 'Alumni' ){
+                $this->set_value('name', $alum_name);
+            } else {
+                $this->set_value('name', $display_name);
+            }
             $this->change_element_type('e-mail', 'text');
             $this->set_value('e-mail', $email);
         } else {
