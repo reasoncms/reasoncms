@@ -92,6 +92,10 @@
 			}			
 			echo '<nav id="nav-search" role="navigation">'."\n";
 			echo '<ul>'."\n";
+			if (luther_is_mobile_device())
+			{
+				echo '<li class="mobile"><a href="/mobile/">Mobile</a></li>'."\n";
+			}
 			echo '<li class="home"><a href="/">Home</a></li>'."\n";
 			echo '<li class="directory"><a href="/directory/">Directory</a></li>'."\n";
 			echo '<li class="index"><a href="/azindex/">A-Z Index</a></li>'."\n";
