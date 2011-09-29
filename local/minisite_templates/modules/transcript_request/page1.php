@@ -175,12 +175,22 @@ class TranscriptPageOneForm extends FormStep {
             $this->show_form = true;
 
             $this->change_element_type('name', 'solidtext');
-            
-            if ($dir->get_first_value('edupersonaffiliation') == 'Alumni' || $dir->get_first_value('alumaffiliation') == 'Alumni' ){
+
+            /*
+             * if alumcn is set (e.g. the user is an alumni
+             * use it as the name
+             * else use displayname
+             */
+            if ($alum_name) {
                 $this->set_value('name', $alum_name);
             } else {
                 $this->set_value('name', $display_name);
             }
+//            if ($dir->get_first_value('edupersonaffiliation') == 'Alumni' || $dir->get_first_value('alumaffiliation') == 'Alumni' ){
+//                $this->set_value('name', $alum_name);
+//            } else {
+//                $this->set_value('name', $display_name);
+//            }
             $this->change_element_type('e-mail', 'text');
             $this->set_value('e-mail', $email);
         } else {
