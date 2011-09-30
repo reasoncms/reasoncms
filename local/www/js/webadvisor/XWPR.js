@@ -10,7 +10,6 @@
 
 //document ready
 $(function(){
-    $("#PU_OC_END_DATE").datepicker();
     $("#PU_P1_ZIP").mask("99999?-9999");
     $("#PU_P2_ZIP").mask("99999?-9999");
     $("#PU_OC_ZIP").mask("99999?-9999");
