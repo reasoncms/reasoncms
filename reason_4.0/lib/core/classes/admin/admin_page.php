@@ -943,8 +943,28 @@
 				foreach( $links AS $link )
 				{	
 					$url = ($link->get_value('relative_to_reason_http_base') == 'true') ?
-						REASON_HTTP_BASE_PATH . $link->get_value('url') :
-						$link->get_value('url');
+						   REASON_HTTP_BASE_PATH . $link->get_value('url') : 
+						   $link->get_value('url');
+					
+					// lets add the current site_id if add_dynamic_site_id is set to true ... we do this in a very naive way.
+					if ($link->has_value('add_dynamic_site_id') && ($link->get_value('add_dynamic_site_id') == 'true')) // if the script has been run and add_dynamic_site_id is true
+					{
+						$pos = carl_strpos($url, '?');
+						if ($pos !== false) // we have an existing query string
+						{
+							$base = ($pos > 0) ? carl_substr($url, 0, $pos) : '';
+							$qs = carl_substr($url, ($pos+1));
+							$qs = str_replace('&amp;','&',$qs);
+							parse_str($qs, $items);
+						}
+						else
+						{
+							$base = $url;
+						}
+						$items['site_id'] = $this->site_id;
+						$qs = http_build_query($items);
+						$url = $base . '?' . $qs;
+					}					
 					echo '<li class="navItem"><a href="'.$url.'" class="nav">'.$link->get_value('name').'</a></li>' . "\n";
 				}
 				echo '</ul></div>'."\n";
