@@ -102,7 +102,7 @@ assets.',
 						'description' => 'Find and replace across multiple entities on multiple sites',
 						'safety_level' => 'careful',
 					),
-					REASON_HTTP_BASE_PATH.'urls/replicate_url_history.php' => array(
+					REASON_HTTP_BASE_PATH.'scripts/urls/replicate_url_history.php' => array(
 						'title' => 'Replicate URL History',
 						'description' => 'Give one page the URL history of another page. '.
 								 'It is a good idea to run this script if you have replaced a page '.
