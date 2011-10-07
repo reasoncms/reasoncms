@@ -1,19 +1,24 @@
 /* 
  * 
  * Dorian Vocal Festival registration js
- * https://reasondev.luther.edu/music/dorian/vocal/nominate
+ * https://www.luther.edu/music/dorian/vocal/nominate
  * shows or hides info based on answers
+ * 
+ * Steve Smith
  * 
  */
 
 $(document).ready(function() {
-   
-   
+    toggle_cc_eligibilty(0);
+    $("input#checkbox_desired_participation_2").change(function(){
+        toggle_cc_eligibilty(500);
+        });
 });
 
-function toggle_cc_eligibilty(){
-    if ($("#checkbox_desired_participation_2:checked").val() == '$20 - 1 treat'){
-        alert('Yo');
+function toggle_cc_eligibilty(time){
+    if ($('input#checkbox_desired_participation_2').is(':checked')){
+        $('#cceligibilityRow').show(time);
+    } else {
+        $('#cceligibilityRow').hide(time);
     }
-    
 }
