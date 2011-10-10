@@ -50,6 +50,22 @@ function hide_all()
     $("#facultycommentRow").hide();
 }
 
+function toggle_all()
+{
+    $("#searchforRow").toggle();
+    $("#departRow").toggle();
+    $("#titleRow").toggle();
+    $("#displayasRow").toggle();
+    $("#hidecommentRow").toggle();
+    //table data hiden only when logged in
+    $("#phonenumberRow").toggle();
+    $("#roomRow").toggle();
+    $("#studentcommentRow").toggle();
+    $("#majorRow").toggle();
+    $("#yearRow").toggle();
+    $("#facultycommentRow").toggle();
+}
+
 function hide_field(element)
 {
     element = "tr#"+element;

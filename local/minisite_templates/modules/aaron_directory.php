@@ -228,8 +228,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         echo "Logged in as <b>".reason_check_authentication()."</b> | ";
         echo "<a href='/x/directory/?netid[]=".reason_check_authentication()."'>Your Entry</a>";
         echo " | ";
-//        echo "<a href='/x/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
-//        echo " | ";
+        // edit entry link
+        echo "<a href='/x/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
+        echo " | ";
         echo "<a href='/login/?logout=1'>Logout</a>";
         echo "</p>";
         }
@@ -804,6 +805,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
         } /* endforeach */
         echo '</div>'; // searchResults
+        
+        if ($logged_user == $data['uid'][0]) {
+                echo '<p id="editEntryTest">';
+                echo "<a href='/x/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
+                echo '</p>';
+                
+            }
 
         echo '<p class="personPager"></p>';
         echo '<p class="searchFoot"><a class="newSearch" href="'.$this->search_url.'">Search Again</a></p>';
