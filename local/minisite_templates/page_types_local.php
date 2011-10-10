@@ -217,7 +217,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'imagetop' => 'luther_carousel',
                     'pre_sidebar' => array( // Spotlights
                         'module' => 'publication',
-                        'related_publication_unique_names' => array( 'spotlights_alumni' ),
+                        'related_publication_unique_names' => array(luther_get_publication_unique_name("spotlights")),
                         'related_mode' => 'true',
                         'related_title' => '',
                         'related_order' => 'random',
@@ -247,7 +247,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'pre_sidebar' => array( // Spotlights
                         'module' => 'publication',
                         //'related_publication_unique_names' => array( 'spotlight_archives' ),
-                        'related_publication_unique_names' => array( 'spotlights_giving' ),
+                        'related_publication_unique_names' => array(luther_get_publication_unique_name("spotlights")),
                         'related_mode' => 'true',
                         'related_title' => '',
                         'related_order' => 'random',
@@ -301,7 +301,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'main_post' => 'luther_events_mini',
                     'content_blurb' => array( // Spotlights
                         'module' => 'publication',
-						'related_publication_unique_names' => array( 'spotlights_music' ),
+                		'related_publication_unique_names' => array(luther_get_publication_unique_name("spotlights")),
                         'related_mode' => 'true',
                         'related_title' => '',
                         'related_order' => 'random',
@@ -1017,6 +1017,22 @@ function luther_shorten_string($text, $length, $append)
 		$text = substr($text, 0, $i) . $append;
 	}
 	return $text;
+}
+
+function luther_get_publication_unique_name($s)
+// allows another minisite to use a popular template like music, alumni, or giving
+// by filling in an appropriate headline or spotlight unique publication name
+// given the url for a particular minisite landing page (e.g. /music, /kwlc).
+// The landing page must be at the root level of the luther site.
+// $s is either "headlines" or "spotlights"
+// e.g. /reslife becomes "headlines_reslife" or "spotlights_reslife"
+{
+	$url = get_current_url();
+	if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/([A-Za-z0-9_]+)\/?/", $url, $matches))
+	{
+		return $s . "_" . $matches[1];
+	}
+	return '';
 }
 
 function luther_sports_get_publication_unique_name($s)
