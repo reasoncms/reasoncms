@@ -95,6 +95,10 @@ class ConfirmationForm extends FormStep
                         $part1 = (in_array('ml', $_SESSION[$currentStudent]['desired_participation']) ? 'ml' : '');
                         $part2 = (in_array('cc', $_SESSION[$currentStudent]['desired_participation']) ? 'cc' : '');
                         $accompanist = in_array('ac', $_SESSION[$currentStudent]['desired_participation']) ? 'Y' : 'N';
+						//
+						$all_state = in_array('all_state', $_SESSION[$currentStudent]['cc_eligibility']) ? 'Y' : '';
+						$superior_ratings = in_array('superior_ratings', $_SESSION[$currentStudent]['cc_eligibility']) ? 'Y' : '';
+						$audition_tape = in_array('audition_tape', $_SESSION[$currentStudent]['cc_eligibility']) ? 'Y' : '';
 
                         $qstring = "INSERT INTO `students` SET ";
                         $qstring .= "director_id=".$this->directorId.", ";
@@ -113,6 +117,9 @@ class ConfirmationForm extends FormStep
                         $qstring .= "year_in_school='".addslashes($_SESSION[$currentStudent]['year_in_school'])."', ";
                         $qstring .= "years_singing_exp='".addslashes($_SESSION[$currentStudent]['years_of_singing_experience'])."', ";
                         $qstring .= "desired_part='".addslashes(($part1 ? $part1 : '') . ($part1 && $part2 ? ',' : '') . ($part2 ? $part2 : ''))."', ";
+						$qstring .= "all_state='".addslashes($all_state)."', ";
+						$qstring .= "superior_ratings='".addslashes($superior_ratings)."', ";
+						$qstring .= "audition_tape='".addslashes($audition_tape)."', ";
                         $qstring .= "accompanist='".addslashes($accompanist)."', ";
                         $qstring .= "overnight_housing='".addslashes($_SESSION[$currentStudent]['housing_needed'])."', ";
                         $qstring .= "comment='".addslashes($_SESSION[$currentStudent]['director_comments'])."' ";
