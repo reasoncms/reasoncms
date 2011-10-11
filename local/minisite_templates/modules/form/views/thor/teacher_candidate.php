@@ -108,8 +108,8 @@ class TeacherCandidateForm extends DefaultThorForm {
 		$this->add_element('hr2', 'hr');
 		$this->add_element('hr3', 'hr');
 		$this->move_element('hr1', 'before', $this->get_element_name_from_label('License (K-6)'));
-		$this->move_element('hr2', 'after', $this->get_element_name_from_label('License (5-12)'));
-		$this->move_element('hr1', 'after', $this->get_element_name_from_label('License (K-12)'));
+		$this->move_element('hr2', 'before', $this->get_element_name_from_label('License (5-12)'));
+		$this->move_element('hr1', 'before', $this->get_element_name_from_label('License (K-12)'));
 		
 	//Experience types
 		$this->change_element_type($this->get_element_name_from_label('Experience Type #1'), 'select_no_sort', 
