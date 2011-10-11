@@ -86,9 +86,26 @@ class StudentInfoForm extends FormStep
                     'display_name' => ' ',
                     'options' => array('ml' => 'Mini-lesson', 'ac' => 'If you are signing up for a mini-lesson, do you need to hire a Luther student accompanist?   The fee is $15.00<br />(Accompaniment is not required, even for a scholarship audition.)' , 'cc' => 'Chamber Choir'),
                 ),
-                'desired_participation_note' => array(
-                    'type' => 'comment',
-                    'text' => '<b>PLEASE NOTE:</b> To be considered for the Chamber Choir, a student must <b>either</b>:<br />1) be a member of their respective All-State Choir<br />2) have earned “ Superior” ratings on a contest solo for two years in a row at the highest level of contest in which the school participates<br />3) submit a recorded audition of one contest-level piece.<br /><b>The student must also be able to be at Luther on Saturday, January 8 for rehearsals</b>… a day earlier than the rest of the Festival students.<br />&nbsp;',
+		'cc_eligibility_comment' => array(
+			'type' => 'comment',
+			'text' => 'Chamber Choir Eligibilty - please check any that apply',
+		),
+		'cc_eligibility' => array (
+		    'type' => 'checkboxgroup_no_sort',
+		    'display_name' => '&nbsp;',
+		    'options' => array(
+			'all_state' => 'All-State Choir Membership (explain in Comments area, if desired)',
+			'superior_ratings' => 'Superior ratings on solos in consecutive state contests',
+			'audition_tape' => 'Audition tape to be submitted to Luther College',
+			'available' => '*The student must at Luther on Saturday, January 8 for rehearsals'
+		    ),
+		),
+//                'desired_participation_note' => array(
+//                    'type' => 'comment',
+//                    'text' => '<b>PLEASE NOTE:</b> To be considered for the Chamber Choir, a student must <b>either</b>:<br />1) be a member of their respective All-State Choir<br />2) have earned “ Superior” ratings on a contest solo for two years in a row at the highest level of contest in which the school participates<br />3) submit a recorded audition of one contest-level piece.<br /><b>The student must also be able to be at Luther on Saturday, January 8 for rehearsals</b>… a day earlier than the rest of the Festival students.<br />&nbsp;',
+//                ),
+		'director_comments' => array(
+                    'type' => 'textarea',
                 ),
                 'housing_header' => array(
                     'type' => 'comment',
@@ -98,9 +115,6 @@ class StudentInfoForm extends FormStep
                     'type' => 'radio_inline_no_sort',
                     'options' => array('Y' => 'Yes', 'N' => 'No'),
                     'display_name' => 'Is on-campus overnight housing needed?'
-                ),
-                'director_comments' => array(
-                    'type' => 'textarea',
                 ),
                 'submit_note' => array(
                     'type' => 'comment',
@@ -138,6 +152,14 @@ class StudentInfoForm extends FormStep
                 $this->set_error('desired_participation', 'Accompanist should only be checked if requesting a Mini-lesson.');
             }
         }
+	
+	$eligibilty = $this->get_value('cc_eligibility');
+	if(in_array('cc', $temp)){
+		if(in_array('available', $eligibilty) == false){
+			$this->set_error('cc_eligibility', 'To be eligible for the chamber choir the student
+				must be able to be at Luther on Saturday, January 8. A day earlier than the rest of the Festival students.');
+		}
+	}
 
         if($this->has_errors() <> true){
 

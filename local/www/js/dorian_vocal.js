@@ -17,8 +17,10 @@ $(document).ready(function() {
 
 function toggle_cc_eligibilty(time){
     if ($('input#checkbox_desired_participation_2').is(':checked')){
+        $('#cceligibilitycommentRow').show(time);
         $('#cceligibilityRow').show(time);
     } else {
+        $('#cceligibilitycommentRow').hide(time);
         $('#cceligibilityRow').hide(time);
     }
 }
