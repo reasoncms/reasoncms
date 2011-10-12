@@ -21,9 +21,9 @@ class streamModule extends DefaultMinisiteModule {
             echo '<param name="HREF" value = "rtsp://video-3.luther.edu/worship.sdp" />';
             echo '<param name="AUTOPLAY" value = "true" />';
             echo '<param name="CONTROLLER" value = "false" />';
-            echo '<param name="TYPE" value = "video/quicktime" />';
+            echo '<param name="TYPE" value = "video/quicktime" />'; 
             echo '<param name="TARGET" value = "myself" />';
-            echo '<embed src = "/reason/images/352571.png" qtsrc = "/reason/images/352571.png" href =';
+            echo '<embed src = "/reason/images/359381.png" qtsrc = "/reason/images/359381.png" href =';
 //                        echo '<embed href =';
             echo '"rtsp://video-3.luther.edu/worship.sdp" target ="myself" controller =';
             echo '"false" width = "699" height = "598" loop = "False" autoplay = "true"';
