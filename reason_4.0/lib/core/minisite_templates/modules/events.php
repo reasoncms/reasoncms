@@ -16,6 +16,8 @@ reason_include_once('classes/page_types.php');
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsModule';
 
+
+
 /**
  * A minisite module that presents a calendar of events
  *
@@ -344,6 +346,9 @@ class EventsModule extends DefaultMinisiteModule
 	 * 'ongoing_show_ends' (boolean) Show the ending dates for events? Note that in combination with 
 	 * 'ongoing_display'=>'below', events that start before the current view will not be visible, so 
 	 * this should likely only be used in conjunction with 'ongoing_display'=>'above'.
+	 * 
+	 * 'limit_to_audiences' (string, comma spaced for multiple) limit to these audiences
+	 * 'exlude_audiences' (string, comma spaced for multiple) excludes specified audiences
 	 *
 	 * @var array
 	 * @access private
@@ -367,6 +372,8 @@ class EventsModule extends DefaultMinisiteModule
 	 						'map_zoom_level' => 12,
 	 						'ongoing_display' => 'above', // or below or inline
 	 						'ongoing_show_ends' => true,
+	 						'limit_to_audiences' => '',	 // as comma spaced strings
+	 						'exclude_audiences' => ''
 						);
 	/**
 	 * Views that should not be indexed by search engines
@@ -593,6 +600,78 @@ class EventsModule extends DefaultMinisiteModule
 			$this->init_html_calendar();
 		}
 		
+	}
+	/**
+	 * Returns an array of id => reason audience entities to limit to based on the limit_to_audiences parameter
+	 * 
+	 * If given a faulty audience unique name, ignore it -- still limit to other audiences.
+	 * Error triggered if not passed in a string, or if the audiences passed in aren't Reason unique
+	 * names.
+	 * @return array of id => audience entities, or an empty array
+	 */
+	function _get_audiences_to_limit_to()
+	{
+		$all_audiences = array();
+		if(!empty($this->params['limit_to_audiences']))
+		{
+			if(gettype($this->params['limit_to_audiences']) != 'string')
+			{
+				trigger_error('The limit_to_audiences parameter must be a comma-seperated string of reason unique names.
+ 					Please check your syntax. Example: \'public_audience, students_audience\'. ');
+				return $all_audiences;
+			}
+			$audiences_to_limit_to = explode(',', $this->params['limit_to_audiences']);
+			foreach($audiences_to_limit_to as $audience)
+			{
+				$audience = trim($audience);
+				if(reason_unique_name_exists($audience))
+				{
+					$audience_id = id_of($audience);
+					$all_audiences[$audience_id] = new entity($audience_id);
+				}
+				else
+					trigger_error('Strings passed in must be Reason unique names. \'' . $audience . '\' is 
+									not a Reason unique name. Use: \'public_audience\' for example');
+			}
+		}
+		return $all_audiences;
+	}
+	/**
+	 * Returns an array of id => reason audience entities to exclude based on the exclude_audiences parameter.
+	 *
+	 * If given a faulty audience unique name, ignore it -- still exclude others
+	 * Error triggered if not passed in a string, or if the audiences passed in aren't Reason unique
+	 * names.
+	 * @return array of id => audience entities, or an empty array
+	 */
+	function _get_audiences_to_exclude()
+	{
+		$excluded_audiences = array();
+		if(!empty($this->params['exclude_audiences']))
+		{
+			if(gettype($this->params['exclude_audiences']) != "string")
+			{
+				trigger_error('The exluded_audiences parameter must be a comma-seperated string of reason unique names. Please 
+								check your syntax. Example: \'public_audience, students_audience\'. ');
+				return $excluded_audiences;
+			}
+			$audiences_to_exclude = explode(',', $this->params['exclude_audiences']);
+			foreach($audiences_to_exclude as $audience)
+			{
+				$audience = trim($audience);
+				if(reason_unique_name_exists($audience))
+				{
+					$audience_id = id_of($audience);
+					$excluded_audiences[$audience_id] = new entity($audience_id);
+				}
+				else
+				{
+					trigger_error('Strings passed in must be Reason unique names. \'' . $audience . '\' is 
+									not a Reason unique name. Use: \'public_audience\' for example');
+				}
+			}
+		}	
+		return $excluded_audiences;
 	}
 	function _get_sites()
 	{
@@ -2282,13 +2361,44 @@ class EventsModule extends DefaultMinisiteModule
 		{
 			$init_array['simple_search'] = $this->request['search'];
 		}
-		if(!empty($this->es_callback))
-		{
-			$init_array['es_callback'] = $this->es_callback;
-		}
+		$init_array['es_callback'] = array($this, 'reason_calendar_master_callback');
+		
 		return $init_array;
 	}
 	
+	/**
+	 * @param entity_selector $es the entity selector from reason's calendar class used to select events.
+	 * 
+	 * Modifies the entity selector in reason's calendar to take into account inclduing audiences
+	 * or excluding audiences. Also calls any other callback function that might be included in the
+	 * calendar class.
+	 */
+	
+	function reason_calendar_master_callback($es)
+	{
+		/* 
+			In case there is another callback function, make sure to call it in addition to limiting
+			and excluding audiences
+		*/
+		if(!empty($this->es_callback))
+		{
+			$callback_array = array();
+			$callback_array[] =& $this->es;
+			call_user_func_array($this->es_callback, $callback_array);
+		}
+		if($audiences_to_limit_to = $this->_get_audiences_to_limit_to())
+		{
+			$es->add_left_relationship(array_keys($audiences_to_limit_to), relationship_id_of('event_to_audience'));
+		}
+		if($audiences_to_exclude = $this->_get_audiences_to_exclude())
+		{
+			// get all events -- exclude those who have an audience in the excluded audience list
+			$audience_table_info = $es->add_left_relationship_field('event_to_audience', 'entity', 'id', 'audience_id');
+			$audience_ids = array_keys($audiences_to_exclude);
+			array_walk($audience_ids,'db_prep_walk');
+			$es->add_relation($audience_table_info['audience_id']['table'].'.'.$audience_table_info['audience_id']['field'].' NOT IN ('.implode(',',$audience_ids).')');
+		}
+	}
 	
 	function show_feed_link()
 	{
