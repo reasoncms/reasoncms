@@ -4,6 +4,13 @@ body{
 	margin: 20px;
 	background-color: #FFFFFF;
 	background-image: none;
+	color: #000;
+}
+#wrapper {
+	background: #FFFFFF;
+}
+a:link, a:hover, a:visited {
+	color: #203F7A;
 }
 div#footer {
 	background-color: #FFFFFF;
