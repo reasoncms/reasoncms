@@ -1083,12 +1083,13 @@
 	 * 
 	 * @param string full_path - absolute path
 	 * @param string suffix - extension to strip
+	 * @param string dir - we retain this for backwards compatibility - carl_basename should be used instead if this is specified
 	 *
 	 * @return string
 	 */
-	function module_basename( $full_path, $suffix = '.php' )
+	function module_basename( $full_path, $suffix = '.php', $dir = '/minisite_templates/modules/' )
 	{
-		return carl_basename( $full_path, $suffix, '/minisite_templates/modules/' );
+		return carl_basename( $full_path, $suffix, $dir );
 	}
 	
 	/**
