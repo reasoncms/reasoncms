@@ -605,5 +605,34 @@ if(!function_exists('htmlspecialchars_decode'))
 		$merged = array_merge_recursive2( (array) $_GET, (array) $_POST);
 		return ($run_conditional_stripslashes) ? conditional_stripslashes($merged) : $merged;
 	}
+	
+	/**
+	 * Returns the path components after some directory in the path.
+	 *
+	 * @author Nathan White
+	 *
+	 * @param string full_path - absolute path
+	 * @param string suffix - extension to strip
+	 * @param string dir - some directory
+	 *
+	 * @return string
+	 */
+	function carl_basename( $full_path, $suffix, $dir )
+	{
+		$strlength = carl_strlen($dir);
+		$strpos = carl_strpos($full_path, $dir);
+		if (is_numeric($strpos)) // found the string
+		{
+			$partial_path = carl_substr($full_path, $strpos + $strlength);
+			$filebasename = basename($partial_path, $suffix);
+			$dirname = dirname($partial_path);
+			return $dirname . '/' . $filebasename;			
+		}
+		else
+		{
+			trigger_error('The directory ' . $dir . ' was not found in the full path string ' . $full_path . ' - returning just the file basename');
+			return basename($full_path, $suffix);
+		}
+	}
 }
 ?>
