@@ -31,6 +31,7 @@
 	 */
 	include_once( 'reason_header.php' );
 	include_once( CARL_UTIL_INC . 'db/db_selector.php' );
+	include_once( CARL_UTIL_INC . 'basic/misc.php' );
 	reason_include_once( 'classes/entity_selector.php' );
 	reason_include_once( 'function_libraries/url_utils.php' );
 
@@ -1077,26 +1078,30 @@
 		return;
 	} // }}}
 
-	// Like php basename, but returns partial path from the modules directory
-	// When used in place of basename at the top of a module, prevents breakage of 
-	// modules when a name change occurs for a directory of modules
-	// nwhite 10-04-2006
-	function module_basename( $full_path, $suffix = '.php', $module_dir = '/modules/' )
+	/**
+	 * Returns the path components after /minisite_templates/modules/
+	 * 
+	 * @param string full_path - absolute path
+	 * @param string suffix - extension to strip
+	 *
+	 * @return string
+	 */
+	function module_basename( $full_path, $suffix = '.php' )
 	{
-		$module_strlength = strlen($module_dir);
-		$module_strpos = strpos($full_path, $module_dir);
-		if (is_numeric($module_strpos)) // found the string
-		{
-			$partial_path = substr($full_path, $module_strpos + $module_strlength);
-			$filebasename = basename($partial_path, $suffix);
-			$dirname = dirname($partial_path);
-			return $dirname . '/' . $filebasename;			
-		}
-		else
-		{
-			trigger_error('The module directory ' . $module_dir . ' was not found in the full path string ' . $full_path . ' - returning just the file basename');
-			return basename($full_path, $suffix);
-		}
+		return carl_basename( $full_path, $suffix, '/minisite_templates/modules/' );
+	}
+	
+	/**
+	 * Returns the path components after /reason_package/
+	 * 
+	 * @param string full_path - absolute path
+	 * @param string suffix - extension to strip
+	 *
+	 * @return string
+	 */
+	function reason_basename( $full_path, $suffix = '.php' )
+	{
+		return carl_basename( $full_path, $suffix, '/reason_package/' );
 	}
 
 	function clean_vars( &$vars, $rules )
