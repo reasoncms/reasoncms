@@ -61,6 +61,24 @@ div.facStaffName span.degrees {
 	color: #BBBBBB;
 }
 
+/* Self-clearing */
+
+.facStaff:after {
+	content:".";
+	display:block;
+	visibility:hidden;
+	clear:both;
+	height:0;
+}
+
+.facStaff {
+	display: inline-block;
+}
+
+.facStaff {
+	display: block;
+}
+
 /* Search Module */
 
 .seachForm {
