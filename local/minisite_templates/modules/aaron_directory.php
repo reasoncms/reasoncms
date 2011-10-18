@@ -40,7 +40,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
              ),
             /*'last_name' => array('type' => 'text','size' => '15'),*/
             //'more_comment' => array('type' => 'comment','text' => '<h3>More options</h3>'),
-            'more_comment' => array('type' => 'comment','text' => '<a onclick="show_all(); return false;" href="#">Show more options</a>'),
+            'more_comment' => array('type' => 'comment','text' => '<a onclick="show_all(); return false;" href="#">Show/Hide more options</a>'),
             'search_for' => array(
                             'display_name' => 'Search for',
                             'type' => 'select_no_sort',
@@ -183,11 +183,15 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
             $head_items->add_stylesheet('/reason/css/directory.css');
             //$head_items->add_javascript('/reason/js/tableSorter.js');
-            if (reason_check_authentication()) {
-                $head_items->add_javascript('/reason/js/directory.js');
-            } else {
-                $head_items->add_javascript('/reason/js/directory_logout.js');
-            }
+            
+            $head_items->add_javascript('/reason/js/directory.js');
+            //if (reason_check_authentication()) {
+            //    $head_items->add_javascript('/reason/js/directory.js');
+            //} else {
+                //$head_items->add_javascript('/reason/js/directory_logout.js');
+            //    $head_items->add_javascript('/reason/js/directory.js');
+            //}
+            
             // iphone support; scales to screen and disables zooming
             $head_items->add_head_item('meta', array('name'=>'viewport','content'=>'width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'));
         }
@@ -229,7 +233,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         echo "<a href='/x/directory/?netid[]=".reason_check_authentication()."'>Your Entry</a>";
         echo " | ";
         // edit entry link
-        echo "<a href='/x/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
+        echo "<a href='/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
         echo " | ";
         echo "<a href='/login/?logout=1'>Logout</a>";
         echo "</p>";
@@ -809,6 +813,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         if ($logged_user == $data['uid'][0]) {
                 echo '<p id="editEntryTest">';
                 echo "<a href='/x/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
+                // this might have to change to: '/directory/user.php?mode=edit&name=".reason_check_authentication()."' so that it links to the working directory one?
+
                 echo '</p>';
                 
             }
