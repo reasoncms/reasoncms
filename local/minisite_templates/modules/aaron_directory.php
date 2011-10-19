@@ -40,7 +40,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
              ),
             /*'last_name' => array('type' => 'text','size' => '15'),*/
             //'more_comment' => array('type' => 'comment','text' => '<h3>More options</h3>'),
-            'more_comment' => array('type' => 'comment','text' => '<a onclick="show_all(); return false;" href="#">Show/Hide more options</a>'),
+            'more_comment' => array('type' => 'comment','text' => '<a onclick="toggle_all(); return false;" href="#">Show/Hide more options</a>'),
             'search_for' => array(
                             'display_name' => 'Search for',
                             'type' => 'select_no_sort',
@@ -150,8 +150,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             //                'book'=>'Photo Book',
                             'options' => array('book'=>'Sortable Table of Search Results',
                                                'list'=>'List of Individual Entries  (Not Recommended) ',),
-                            ),
-            'hide_comment' => array('type' => 'comment','text' => '<a onclick="hide_all(); return false;" href="#">Hide more options</a>'),
+                            )
+            //                ),
+            //'hide_comment' => array('type' => 'comment','text' => '<a onclick="hide_all(); return false;" href="#">Hide more options</a>'),
     );
     // These are fields from the old directory form that people might try to pass in a URL,
     // mapped to the appropriate field in the new form.
@@ -183,14 +184,14 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
             $head_items->add_stylesheet('/reason/css/directory.css');
             //$head_items->add_javascript('/reason/js/tableSorter.js');
+            $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
             
-            $head_items->add_javascript('/reason/js/directory.js');
-            //if (reason_check_authentication()) {
-            //    $head_items->add_javascript('/reason/js/directory.js');
-            //} else {
-                //$head_items->add_javascript('/reason/js/directory_logout.js');
-            //    $head_items->add_javascript('/reason/js/directory.js');
-            //}
+            //$head_items->add_javascript('/reason/js/directory.js');
+            if (reason_check_authentication()) {
+                $head_items->add_javascript('/reason/js/directory.js');
+            } else {
+                $head_items->add_javascript('/reason/js/directory_logout.js');
+            }
             
             // iphone support; scales to screen and disables zooming
             $head_items->add_head_item('meta', array('name'=>'viewport','content'=>'width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'));
