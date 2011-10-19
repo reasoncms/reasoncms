@@ -64,7 +64,7 @@ class ReasonMVCModule extends DefaultMinisiteModule
 	protected $content;
 	
 	// set everything up and get the model data.
-	function init()
+	function init( $args = array() )
 	{
 		$controller = $this->get_controller();
 		$this->content = $controller->run();
