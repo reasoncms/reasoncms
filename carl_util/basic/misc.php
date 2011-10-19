@@ -561,6 +561,34 @@ if(!function_exists('htmlspecialchars_decode'))
 		if(!$encoding) $encoding = function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8';
 		return function_exists('mb_strpos') ? mb_strpos($haystack, $needle, $offset, $encoding) : strpos($haystack, $needle, $offset);
 	}
+
+	/**
+	 * strrpos replacement that uses mb_strrpos where possible
+	 *
+	 * @param string haystack to search
+	 * @param string needle to find
+	 * @param string offset the search offset
+	 * @param encoding the encoding of the strings; pass a null value to use the current mb_internal_encoding
+	 */	
+	function carl_strrpos($haystack, $needle, $offset = NULL, $encoding = 'UTF-8')
+	{
+		if(!$encoding) $encoding = function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8';
+		return function_exists('mb_strrpos') ? mb_strrpos($haystack, $needle, $offset, $encoding) : strrpos($haystack, $needle, $offset);
+	}
+	
+	/**
+	 * strripos replacement that uses mb_strripos where possible
+	 *
+	 * @param string haystack to search
+	 * @param string needle to find
+	 * @param string offset the search offset
+	 * @param encoding the encoding of the strings; pass a null value to use the current mb_internal_encoding
+	 */	
+	function carl_strripos($haystack, $needle, $offset = NULL, $encoding = 'UTF-8')
+	{
+		if(!$encoding) $encoding = function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8';
+		return function_exists('mb_strripos') ? mb_strripos($haystack, $needle, $offset, $encoding) : strripos($haystack, $needle, $offset);
+	}
 	
 	/**
 	 * Return unicode char by its code
