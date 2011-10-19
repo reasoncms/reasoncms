@@ -2,12 +2,12 @@ $(document).ready(function() {
     hide_all();
     input_error_check("#departElement");
     input_error_check("#titleElement");
+    input_error_check("#phone_numberElement");
+    input_error_check("#roomElement");
     if ($("#search_forElement").val() != "anyone")
     {
         show_all();
     }
-    input_error_check("#phone_numberElement");
-    input_error_check("#roomElement");
     if ($("#majorElement").val() != "any")
     {
         show_all();
@@ -16,9 +16,7 @@ $(document).ready(function() {
     {
         show_all();
     }
-
 });
-
 function show_all(){
     $("#searchforRow").show();
     $("#departRow").show();
@@ -32,7 +30,7 @@ function show_all(){
     $("#majorRow").show();
     $("#yearRow").show();
     $("#facultycommentRow").show();
-//$("#facultycommentRow").animate({"height": "toggle"}, { duration: 1000 });
+    //$("#facultycommentRow").animate({"height": "toggle"}, { duration: 1000 });
 }
 function hide_all()
 {
@@ -49,7 +47,6 @@ function hide_all()
     $("#yearRow").hide();
     $("#facultycommentRow").hide();
 }
-
 function toggle_all()
 {
     $("#searchforRow").toggle();
@@ -65,7 +62,6 @@ function toggle_all()
     $("#yearRow").toggle();
     $("#facultycommentRow").toggle();
 }
-
 function hide_field(element)
 {
     element = "tr#"+element;
@@ -85,7 +81,6 @@ function animate_field(element)
         duration: 0
     });
 }
-
 function input_error_check(html_id) {
 
     if ($(html_id).val() != "")
