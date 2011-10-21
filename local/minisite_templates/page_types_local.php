@@ -165,17 +165,20 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'faculty' => array(
                     'main_post' => 'luther_faculty'
 		),
-                'form_sidebar_blurbs' => array(
+		'flickr_slideshow_sidebar' => array(
+			// slideshow rendered in sidebar using template code			
+		),
+		'form_sidebar_blurbs' => array(
 			'main' => 'form_content',
 			'main_post' => 'form',
 			'sidebar' => 'blurb',
 			'sub_nav' => 'assets',
 			'pre_sidebar' => 'luther_image_sidebar',
 		),
-                'gift_page_engine' => array(
+		'gift_page_engine' => array(
                     'main_post' => 'gift_form',
                 ),
-                'homecoming_registration' => array(
+		'homecoming_registration' => array(
                     'main_post' => 'homecoming_registration',
                 ),
 		 //-----------------------Steve's Homepage Begin---------------

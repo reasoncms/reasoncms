@@ -398,7 +398,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//	$this->run_section( 'post_sidebar');
 		//	echo '</section> <!-- class="events" role="group" -->'."\n";
 		//}
-		elseif ($this->has_content( 'flickr_slideshow' ) && ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
+		elseif ($this->has_content( 'flickr_slideshow' ) && ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
+		|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 		|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa'
 		|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 		|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports'))
@@ -408,7 +409,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			{
 				echo '<header class="blue-stripe"><h1><span>Exhibitions</span></h1></header>'."\n";
 			}
-			else
+			else if ($this->cur_page->get_value( 'custom_page' ) != 'flickr_slideshow_sidebar')
 			{
 				echo '<header class="blue-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";
 			}			
@@ -572,7 +573,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$this->run_section( 'content_blurb' );
 		}
 
-		if ($this->has_content( 'flickr_slideshow' ))
+		if ($this->has_content( 'flickr_slideshow' ) && $this->cur_page->get_value( 'custom_page' ) != 'flickr_slideshow_sidebar')
 		{
 			$this->run_section( 'flickr_slideshow' );
 		}
