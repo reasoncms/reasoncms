@@ -547,7 +547,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'footer' => '',
                     'post_foot' => 'mobile_footer',
 		),
-    
+                'net_price_calculator' => array(
+                    'main_post' => 'net_price_calculator',
+                ),
                 'norge_conference' => array(
                     'main_post' => 'norge_form',
                 ),
