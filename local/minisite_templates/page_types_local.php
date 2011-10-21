@@ -573,7 +573,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'pre_banner' => '',
                     'post_banner' => '',
                     'sidebar'=>'luther_publication_image_sidebar',
-                    'pre_sidebar' => '',
+                    'pre_sidebar' => 'luther_image_sidebar',
                 ),
                 'sports_roster' => array(
                     'main' => 'luther_sports_roster',

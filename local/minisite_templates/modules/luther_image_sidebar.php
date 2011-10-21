@@ -79,7 +79,10 @@
 				
 				else
 				{
-					if (!preg_match("/imagetop|bannerad|video|map/", $image->get_value('keywords')))
+					if (!preg_match("/imagetop|bannerad|video|map/", $image->get_value('keywords'))
+						&& !($this->cur_page->get_value( 'custom_page' ) == 'publication'   // not a news story
+						&& preg_match("/story_id\=\d+/", get_current_url())))
+
 					{
 						$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
 						$thumb = WEB_PHOTOSTOCK . $id . '_tn.' . $image->get_value('image_type');
