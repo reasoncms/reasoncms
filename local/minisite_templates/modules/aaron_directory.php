@@ -227,18 +227,29 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
     function run()//{{{
     {
-        if (reason_check_authentication()) {
-
-        echo "<p class='directory_head'>";
-        echo "Logged in as <b>".reason_check_authentication()."</b> | ";
-        echo "<a href='/x/directory/?netid[]=".reason_check_authentication()."'>Your Entry</a>";
-        echo " | ";
-        // edit entry link
-        echo "<a href='/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
-        echo " | ";
-        echo "<a href='/login/?logout=1'>Logout</a>";
-        echo "</p>";
-        }
+		
+	if ($logged_user = reason_check_authentication()) {
+		$ds = @ldap_connect('ldap.luther.edu', '389');
+		$attr = array("member");
+		$result = @ldap_search($ds, 'cn=ldapadmins,dc=luther,dc=edu', "member=uid=$logged_user,ou=People,dc=luther,dc=edu", $attr);
+		$ldap_admin = @ldap_get_entries($ds, $result);
+			
+		echo "<p class='directory_head'>";
+		echo "Logged in as <b>" . reason_check_authentication() . "</b> | ";
+		if ($ldap_admin){
+			echo "<a href='./admin.php?mode=pending&name=".$logged_user."'>Admin</a>";
+			echo " | ";
+		}
+		echo "<a href='/x/directory/?netid[]=" . $logged_user . "'>Your Entry</a>";
+		echo " | ";
+		// edit entry link
+//        echo "<a href='/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
+		echo "<a href='./user.php?mode=edit&name=" . $logged_user . "'>Edit Entry</a>";
+//        echo "<a href='/newdirectory/login.php/?userdir=".reason_check_authentication()."'>Edit Entry</a>";
+		echo " | ";
+		echo "<a href='/login/?logout=1'>Logout</a>";
+		echo "</p>";
+		}
         $this->get_menu_data();
         $this->display_form();
     } //}}}
