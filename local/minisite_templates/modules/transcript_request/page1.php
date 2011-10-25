@@ -231,7 +231,7 @@ former students to pay</u> for the transcript via credit card.</p>';
         $txt .= '<h3>Mail or Fax Transcript Request form (pdf)</h3>';
         
         $txt .= '<p>If you prefer, you can mail in your request and payment (cash, check or money order) by downloading and filling out
-            a <a href="' . $asset_url . '">Tanscript Request Form (pdf)</a>.</p>';
+            a <a href="' . $asset_url . '">Transcript Request Form (pdf)</a>.</p>';
         
         $txt .= '<p><b>Questions:</b> Contact the Registrar’s Office at 563-387-1234 or <a href="mailto:registrar@luther.edu">registrar@luther.edu</a> if
             you have questions regarding your transcript request.</p>';
