@@ -7,23 +7,61 @@ $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'CreditCardNoPa
 /**
  *
  * 	For forms that would like to offer registration but with an option for people to pay by check or when they
- * 	arrive (i.e. they don't have to pay when filling out the form). If they do pay at the time of registration, 
- * 	their expense budget number, revenue budget number and payment amount will be forwarded to this form. 
+ * 	arrive (i.e. they don't have to pay when filling out the form). 
  * 
+ *  The form requires the form builder add a hidden field called "No Payment Option" which has the same value ("No Payment Option").
+ *  This is used by the javascript to hide credit card info fields.
  *
  * @package reason_package_local
  * @subpackage thor_view
  * @author Steve Smith
- *
- * @todo get form title from the forwarding form.
+ * 
  */
 class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 
+		function on_every_time() {
+				echo '<script type="text/javascript" src="/reason/js/credit_card.js"></script>';
+				  
+				parent::on_every_time();
+
+				/**
+				 * Make sure the form creator has included a hidden field - 'No Payment Option'
+				 * The value of this hidden field is arbitrary.
+				 */
+				$no_payment_option = $this->get_element_name_from_label('No Payment Option');
+
+				if (!$no_payment_option) {
+						$this->set_error('credit_card_type', 'Form Setup Error: Hidden "No Payment Option" field is required in Reason form.');
+				}
+		}
+
+		function pre_error_check_actions() {
+				parent::pre_error_check_actions();
+
+				// Make sure we have a payment amount; look for a dollar sign first, then any number
+				if (preg_match('/\$([\d,]+\.?\d{0,2})/', $this->get_value($this->payment_element), $match) ||
+						preg_match('/([\d,]+\.?\d{0,2})/', $this->get_value($this->payment_element), $match)) {
+						// remove any extra characters from amount
+						$payment_amount = preg_replace('/[^\d\.]/', '', $match[1]);
+				// payment amount is not a number (i.e. there is an option to not pay at this time), then remove the required credit card fields
+				} else {
+						$this->remove_required('payment_amount');
+						$this->remove_required('credit_card_type');
+						$this->remove_required('credit_card_number');
+						$this->remove_required('credit_card_expiration_month');
+						$this->remove_required('credit_card_expiration_year');
+						$this->remove_required('credit_card_name');
+						$this->remove_required('billing_street_address');
+						$this->remove_required('billing_city');
+						$this->remove_required('billing_zip');
+						$this->remove_required('billing_state_province');
+				}
+		}
+
 		function run_error_checks() {
-				
-				
+
 				$no_payment = false;
-				
+
 				// Validate the e-mail address field if used
 				if (($email_name = $this->get_element_name_from_label('Your Email')) && $this->get_value($email_name))
 						if (!check_against_regexp($this->get_value($email_name), array('email')))
@@ -34,12 +72,12 @@ class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 						preg_match('/([\d,]+\.?\d{0,2})/', $this->get_value($this->payment_element), $match)) {
 						// remove any extra characters from amount
 						$payment_amount = preg_replace('/[^\d\.]/', '', $match[1]);
-				
-				// If there is a hidden field called 'No Payment Option' then allow the user to go to the thank you page
+
+						// If there is a hidden field called 'No Payment Option' then allow the user to go to the thank you page
 				} elseif ($this->get_element_name_from_label('No Payment Option')) {
 						$no_payment = true;
 				} else {
-						
+
 						$this->set_error($this->payment_element, 'Could not work out payment amount. Please contact the form maintainer.');
 				}
 
@@ -83,10 +121,10 @@ class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 								connectDB('reason_transactions');
 
 								$billing_address = $this->get_value('billing_street_address') . "\n" .
-								$this->get_value('billing_city') . ", " .
-								$this->get_value('billing_state_province') . "  " .
-								$this->get_value('billing_zip') . "\n" .
-								$this->get_value('billing_country') . "\n";
+										$this->get_value('billing_city') . ", " .
+										$this->get_value('billing_state_province') . "  " .
+										$this->get_value('billing_zip') . "\n" .
+										$this->get_value('billing_country') . "\n";
 
 								$query = 'INSERT INTO transactions SET
 								REFNUM = "' . $pfresult['PNREF'] . '",
@@ -101,7 +139,7 @@ class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 								Your credit card has been charged, but you should contact the owner of this form
 								to verify that your payment was received.', false);
 
-						connectDB(REASON_DB);
+								connectDB(REASON_DB);
 						}
 				}
 		}
