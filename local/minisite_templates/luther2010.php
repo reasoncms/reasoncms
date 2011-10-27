@@ -476,7 +476,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '<a class="addthis_button_email"></a>'."\n";
 		echo '<a class="addthis_button_print"></a>'."\n";
 		echo '</div>'."\n";
-		echo '<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pub=lutheraddthis"></script>'."\n";
+		echo '<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pub=lutheraddthis">'."\n";
+		echo 'var addthis_share = {'."\n";
+		echo 'url : ' . get_current_url() . ','."\n";
+		echo '}'."\n";
+		echo '</script>'."\n";
 		echo '<!-- AddThis Button END -->'."\n";
 		$this->luther_add_this_complete = true;
 	}
