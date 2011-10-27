@@ -20,19 +20,10 @@ $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'CreditCardNoPa
 class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 
 		function on_every_time() {
-				echo '<script type="text/javascript" src="/reason/js/credit_card.js"></script>';
 				  
+				// add this element for the credit_card.js
+				$this->add_element('No Payment Option', 'hidden');
 				parent::on_every_time();
-
-				/**
-				 * Make sure the form creator has included a hidden field - 'No Payment Option'
-				 * The value of this hidden field is arbitrary.
-				 */
-				$no_payment_option = $this->get_element_name_from_label('No Payment Option');
-
-				if (!$no_payment_option) {
-						$this->set_error('credit_card_type', 'Form Setup Error: Hidden "No Payment Option" field is required in Reason form.');
-				}
 		}
 
 		function pre_error_check_actions() {
