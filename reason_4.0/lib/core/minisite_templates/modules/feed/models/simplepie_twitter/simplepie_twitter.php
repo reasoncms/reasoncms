@@ -27,15 +27,20 @@ $GLOBALS[ '_reason_mvc_model_class_names' ][ reason_basename( __FILE__) ] = 'Rea
  *
  * - screen_name
  * - cache_duration
- * 
- * @todo cache location? /tmp/ should be a fallback not hard coded.
+ * - cache_directory
  *
  * @author Nathan White
  */
 class ReasonSimplepieTwitterFeedModel extends ReasonMVCModel // implements ReasonFeedInterface
 {
-	var $config = array('cache_duration' => 6000); // defaults to 10 minutes - can be set with config.
-	
+	/**
+	 * Sets a few configuration defaults
+	 *
+	 * - cache_duration - 600 seconds (10 minutes)
+	 * - cache_directory - defaults to REASON_CACHE_DIR defined in reason_settings.php
+	 */
+	var $config = array('cache_duration' => 600, 'cache_directory' => REASON_CACHE_DIR);
+		
 	/**
 	 * Make sure that the model is configured with a valid URL.
 	 *
@@ -47,7 +52,7 @@ class ReasonSimplepieTwitterFeedModel extends ReasonMVCModel // implements Reaso
 		{
 			$simplepie = new SimplePie_Twitter;
 			$simplepie->set_feed_url('http://twitter.com/statuses/user_timeline.atom?screen_name='.$this->config('screen_name'));
-			$simplepie->set_cache_location('/tmp/');
+			$simplepie->set_cache_location($this->config('cache_directory'));
 			$simplepie->set_cache_duration($this->config('cache_duration'));
 			$simplepie->set_item_class('SimplePie_Twitter_Item');
 			$simplepie->set_requested_screen_name($this->config('screen_name'));
