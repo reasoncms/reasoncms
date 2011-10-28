@@ -19,7 +19,7 @@ $(document).ready(function() {
     var payment_name = payment_row_id.replace(/row/i, "");
     
     // if the form creator has included a hidden field with the value 'No Payment Option' hide the credit_card_info until needed
-    if ($("input[value='No Payment Option']")) {
+    if ($("input[name='No Payment Option']")) {
         toggle_credit_card_info('true');
     }
     
