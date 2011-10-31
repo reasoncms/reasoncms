@@ -1102,6 +1102,27 @@
 	 */
 	function reason_basename( $full_path, $suffix = '.php' )
 	{
+		// if the pathname does not appear to be in the reason include we do some symlink hocus pocus.
+		if (carl_strpos($full_path, REASON_INC) === FALSE) // something going on with symbolic links possibly.
+		{
+			// first try local
+			$local_path = reason_get_local_path("");
+			$real_local_path = realpath($local_path);
+			if (carl_substr( $real_local_path, -1 ) != '/') $real_local_path = $real_local_path . "/"; // add trailing slash.
+			if (carl_strpos( $full_path, $real_local_path ) !== FALSE)
+			{
+				return carl_basename( $local_path . carl_substr($full_path, carl_strlen($real_local_path)), $suffix, '/reason_package/' );
+			}
+			
+			// now try core
+			$core_path = reason_get_core_path("");
+			$real_core_path = realpath($core_path);
+			if (carl_substr( $real_core_path, -1 ) != '/') $real_core_path = $real_core_path . "/"; // add trailing slash.
+			if (carl_strpos( $full_path, $real_core_path ) !== FALSE)
+			{
+				return carl_basename( $local_path . carl_substr($full_path, carl_strlen($real_core_path)), $suffix, '/reason_package/' );
+			}
+		}
 		return carl_basename( $full_path, $suffix, '/reason_package/' );
 	}
 
