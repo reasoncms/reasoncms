@@ -325,9 +325,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'main' => 'content',
                     'main_post' => array(
                         'module' => 'publication',
-         		'related_publication_unique_names' => array('naa_news'),
+         		'related_publication_unique_names' => array(luther_get_publication_unique_name("headlines")),
          		'related_mode' => 'true',
-         		'max_num_items' => 2,
+         		'max_num_items' => 3,
                     ),
                     'imagetop' => 'luther_carousel',
                     'content_blurb' => '',
