@@ -321,8 +321,10 @@
 				$this->open .= ',' . $key . ',';
 			
 			$root = $this->root_node();
-			while( $key != $root )
+			$lastkey = '';
+			while( ($key != $root) && ($key != $lastkey) )
 			{
+				$lastkey = $key;
 				$key = $this->parent($key);
 				if( !$this->is_open( $key ) )
 					$this->open .= ',' . $key . ',';
