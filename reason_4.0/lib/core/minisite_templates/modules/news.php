@@ -259,7 +259,7 @@
 	class related_news_viewer extends Viewer
 	{
 		
-		protected function _consult_and_save_session_state()
+		public function _consult_and_save_session_state()
 		{
 			// do nothing
 		}
