@@ -88,7 +88,7 @@ function outputCalendar($client, $startDate='2010-04-22', $endDate='2010-04-23')
 }
 
 // log in 
-$client = getClientLoginHttpClient('google_api_user@luther.edu', "bTI1'+'9scGSkeORU";
+$client = getClientLoginHttpClient('google_api_user@luther.edu', "bTI1'+'9scGSkeORU");
 
 outputCalendar($client);
 ?>

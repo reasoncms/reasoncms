@@ -613,6 +613,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '<!--[if lt IE 9]><link href="/stylesheets/luther2010/ie8.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";  
   		echo '<!--[if lt IE 8]><link href="/stylesheets/luther2010/ie7.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
   		echo '<!--[if lt IE 7]><link href="/stylesheets/luther2010/ie6.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
+  		echo '<link href="http://print.faustgertz.com/print.css" media="print" rel="stylesheet" type="text/css" />'."\n";
   		
 		echo '<meta property="og:title" content="Luther College" />'."\n";
 		echo '<meta property="og:type" content="university" />'."\n";

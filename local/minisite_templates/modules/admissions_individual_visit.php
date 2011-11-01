@@ -15,11 +15,13 @@
 		}
 		function run()
 		{
+?>
 		<form id="myForm" action="comment.php" method="post"> 
     		Name: <input type="text" name="name" /> 
 		    Comment: <textarea name="comment"></textarea> 
     		<input type="submit" value="Submit Comment" /> 
 		</form>
+<?php
 		}
 	}
 ?>
