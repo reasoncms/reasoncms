@@ -682,7 +682,7 @@ function check_datepicker_accessible_over_http()
 	if ($accessible) return msg('<span class="success">date picker'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
-		$path = carl_construct_link(array(''), array(''), DATE_PICKER_HTTP_PATH . 'index.hml');
+		$path = carl_construct_link(array(''), array(''), DATE_PICKER_HTTP_PATH . 'index.html');
 		$fix_mode_str = ($fix_mode_enabled) 
 				? ' Fix mode may have failed because PHP was unable to create symlinks.'
 				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
