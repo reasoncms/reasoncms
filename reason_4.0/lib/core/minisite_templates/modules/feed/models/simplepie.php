@@ -1,7 +1,7 @@
 <?php
 /**
  * @package reason
- * @subpackage reason_feed_models
+ * @subpackage classes
  */
  
 /**

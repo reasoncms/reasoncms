@@ -1,7 +1,7 @@
 <?php
 /**
  * @package reason
- * @subpackage reason_feed_views
+ * @subpackage classes
  */
  
 /**
@@ -20,7 +20,7 @@ $GLOBALS[ '_reason_mvc_view_class_names' ][ reason_basename(__FILE__) ] = 'Reaso
  *
  * We support these params
  *
- * - max_num_items
+ * - num_to_show (int default 4)
  * - randomize (boolean default false)
  *
  * @author Nathan White
