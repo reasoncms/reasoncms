@@ -632,8 +632,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'main_post'=> 'study_skills_assessment', 
                 ),
                 'stream'=>array(
-                    'main' => 'content',
-                    'main_post' => 'stream',
+                    'main' => 'stream',
+                    'main_post' => 'content',
+					'sidebar' => 'blurb',
 		),
 		'test_page' => array(
                     'main' => 'content',
