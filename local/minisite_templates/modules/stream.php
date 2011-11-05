@@ -12,7 +12,7 @@ class streamModule extends DefaultMinisiteModule {
         $minutes = idate('i');
         
         if (($day_of_week == 'Monday' || $day_of_week == 'Wednesday' || $day_of_week == 'Friday')
-                && ($hour == 10) && ($minutes > 25) && ($minutes < 55)) {
+                && ($hour == 10) && ($minutes > 15) && ($minutes < 59)) {
             echo '<object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"';
             echo 'width="699" height="598"';
             echo 'codebase="http://www.apple.com/qtactivex/qtplugin.cab">';
@@ -32,11 +32,12 @@ class streamModule extends DefaultMinisiteModule {
             echo '</embed>';
             echo '</object>';
         } else {
-            echo '<p>The stream is available during Chapel 10:30 - 10:50 a.m. cst on Mondays, Wednesdays and Fridays.
-                Please come back at those times. Thank you.</p>';
-            echo '<p></p>';
+			echo '<img src="https://reasondev.luther.edu/reason/images/363666.jpg">';
+//            echo '<p>The stream is available during Chapel 10:30 - 10:50 a.m. cst on Mondays, Wednesdays and Fridays.
+//                Please come back at those times. Thank you.</p>';
+//            echo '<p></p>';
         }
-        echo '<p><a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=467424979" target="_blank">Chapel Archives</a> on iTunes U.</p>';
+//        echo '<p><a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=467424979" target="_blank">Chapel Archives</a> on iTunes U.</p>';
     }
 
 }
