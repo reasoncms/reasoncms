@@ -32,7 +32,7 @@ class streamModule extends DefaultMinisiteModule {
             echo '</embed>';
             echo '</object>';
         } else {
-			echo '<img src="https://reasondev.luther.edu/reason/images/363666.jpg">';
+			echo '<img src="/reason/images/363666.jpg">';
 //            echo '<p>The stream is available during Chapel 10:30 - 10:50 a.m. cst on Mondays, Wednesdays and Fridays.
 //                Please come back at those times. Thank you.</p>';
 //            echo '<p></p>';
