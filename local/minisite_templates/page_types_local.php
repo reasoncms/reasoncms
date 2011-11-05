@@ -634,7 +634,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                 'stream'=>array(
                     'main' => 'stream',
                     'main_post' => 'content',
-					'sidebar' => 'blurb',
+					'sidebar' => 'main_blurb',
 					'content_blurb' => '',
 		),
 		'test_page' => array(
