@@ -50,7 +50,6 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ReasonMVCMo
  * $controller = new ReasonMVCController($model, $view);
  * echo $controller->run();
  *
- * @todo I believe right now this requires a model and view to work correctly - we should change that.
  * @version .9b
  *
  * @author Nathan White
@@ -161,18 +160,19 @@ class ReasonMVCModule extends DefaultMinisiteModule
 		}
 		else
 		{
-			if ($type == 'controller') $class_name = 'ReasonMVCController';
-			if ($type == 'model') $class_name = 'ReasonMVCModel';
-			if ($type == 'view') $class_name = 'ReasonMVCView';
+			if ($type == 'controller') $class_name = 'ReasonMVCController'; // setup the default controller
 		}
 		
 		// instantiate and return it.
-		$obj = new $class_name;
-		if (!empty($params)) foreach($params as $k=>$v)
+		if (isset($class_name))
 		{
-			$obj->config($k, $v);
+			$obj = new $class_name;
+			if (!empty($params)) foreach($params as $k=>$v)
+			{
+				$obj->config($k, $v);
+			}
+			return $obj;
 		}
-		return $obj;
 	}
 }
 ?>
