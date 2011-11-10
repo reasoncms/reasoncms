@@ -139,6 +139,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'main' => 'aaron_directory',
                     //'main_head' => 'login_link',
 		),
+		'django_form' => array(
+			'main_post' => 'django_form',
+		),
                 'discovery_camps' => array(
                     'main_post' => 'discovery_camps',
                 ),
