@@ -2,9 +2,9 @@
 
 reason_include_once('minisite_templates/modules/default.php');
 
-$GLOBALS['_module_class_names'][basename(__FILE__, '.php')] = 'DorianBand2Module';
+$GLOBALS['_module_class_names'][basename(__FILE__, '.php')] = 'DjangoFormModule';
 
-class DorianBand2Module extends DefaultMinisiteModule {
+class DjangoFormModule extends DefaultMinisiteModule {
 
 		function run() {
 				echo 
