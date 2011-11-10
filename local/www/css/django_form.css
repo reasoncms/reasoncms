@@ -1,0 +1,108 @@
+/* 
+    Document   : django_form
+    Created on : Nov 10, 2011, 10:25:33 AM
+    Author     : Steve Smith and Lucas Welper
+    Description:
+        Styling for forms built in django and pulled into
+        reason django_form page type via ajax
+ */
+	#django_form{
+		width:700px;
+		margin:5px;
+	}
+	
+	.errorField{ 
+		margin: 2%;
+		border-color: red;
+		border-style: solid;
+		border-width: 2px;
+		background:pink;
+	}
+	
+	div {
+		padding:5px;
+	}
+	
+	label{
+		padding-right:5px;
+		width:150px;
+	}
+	
+	.fieldWrapper > label{
+		display:block;
+		text-align:right;
+	}
+	
+	div.fieldWrapper{
+		display:block;
+	}
+	
+	div.fieldWrapper label{
+		float:left;
+	}
+	
+	.inlineRadioBlock{
+		list-style-type:none;
+		display:block;
+		border:1px green dashed;
+	}
+	
+	.inlineRadioBlock > label {
+		display:inline-block;
+		padding-right:5px;
+		text-align:right;
+		width:150px;
+	}
+	
+	.inlineRadioBlock ul{
+		border:1px blue dashed;
+		list-style-type:none;
+		display:inline;
+		padding:0px;
+	}
+	
+	.inlineRadioBlock  li{
+		display:inline;
+	}
+	
+	div.inlineRadioWrapper li{
+		list-style-type:none;
+		display:inline;
+		padding-left:5px;
+	}
+
+	div.textareaWrapper{
+		height:150px;
+	}
+	
+	.textareaWrapper > label {
+		display:inline;
+		float:left;
+		padding-top:40px;
+		vertical-align:middle;
+		text-align:right;
+	}
+	
+	.textareaWrapper > textarea{
+		display:inline;
+		width:75%;
+	}
+	
+	.textareaWrapper > .helper{
+		padding-right:15px;
+		text-align:right;
+	}
+	.required:after { content: '*'}
+	.errorlist { 
+		color:red;
+		font-size:small;
+	}
+	.helper {
+		font-size:small;
+		display:block;
+	}
+	
+	.buttons{
+		width:250px;
+		margin:0px auto;
+	}
