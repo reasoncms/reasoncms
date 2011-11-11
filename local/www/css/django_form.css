@@ -3,6 +3,16 @@
 		margin:5px;
 	}
 
+        .content-primary {
+            width:100%;
+        }
+
+        .fieldWrapper > ul > li {
+            list-style:none;
+            display:inline;
+            width:auto;
+        }
+
 	.errorField{ 
 		margin: 2%;
 		border-color: red;
@@ -16,14 +26,15 @@
 	}
 
 	label{
-		padding-right:5px;
-		width:150px;
 	}
 
 	.fieldWrapper > label{
 		display:block;
 		text-align:right;
+		padding-right:5px;
+		width:150px;
 	}
+        
 
 	div.fieldWrapper{
 		display:block;
@@ -63,6 +74,7 @@
 
 	div.textareaWrapper{
 		height:150px;
+                margin-bottom:40px;
 	}
 
 	.textareaWrapper > label {
@@ -93,6 +105,6 @@
 	}
 
 	.buttons{
-		width:250px;
+		width:257px;
 		margin:0px auto;
 	}
