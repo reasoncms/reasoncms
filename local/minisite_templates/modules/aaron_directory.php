@@ -150,7 +150,11 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                             //                'book'=>'Photo Book',
                             'options' => array('book'=>'Sortable Table of Search Results',
                                                'list'=>'List of Individual Entries  (Not Recommended) ',),
-                            )
+                            ),
+            'emergency_link' => array('type' => 'comment','text' => '<hr></hr><a href="https://www.luther.edu/directory/phone-book-emergencynumbers.pdf">Emergency Numbers</a>'),
+            'phone_fax_link' => array('type' => 'comment','text' => '<a href="https://www.luther.edu/directory/phone-book-fax.pdf">Phone and Fax Numbers</a>'),
+            'faculty_list_link' => array('type' => 'comment','text' => '<a href="https://www.luther.edu/directory/phone-book-faculty.pdf">Faculty Listing</a>'),
+            'staff_list_link' => array('type' => 'comment','text' => '<a href="https://www.luther.edu/directory/phone-book-staff.pdf">Staff Listing</a>')
             //                ),
             //'hide_comment' => array('type' => 'comment','text' => '<a onclick="hide_all(); return false;" href="#">Hide more options</a>'),
     );
@@ -236,11 +240,16 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 			
 		echo "<p class='directory_head'>";
 		echo "Logged in as <b>" . reason_check_authentication() . "</b> | ";
-		if ($ldap_admin){
+                //below is test code to see if $ldap_admin is indeed an emptry array if not admin
+                //array_push($ldap_admin, "testEntry");
+                //print_r($ldap_admin);
+                //it is empty, but it still exists so check must be for empty not if it exists
+		//if ($ldap_admin){
+                if ($ldap_admin[0]!=null){
 			echo "<a href='./admin.php?mode=pending&name=".$logged_user."'>Admin</a>";
 			echo " | ";
 		}
-		echo "<a href='/x/directory/?netid[]=" . $logged_user . "'>Your Entry</a>";
+		echo "<a href='/newdirectory/?netid[]=" . $logged_user . "'>Your Entry</a>";
 		echo " | ";
 		// edit entry link
 //        echo "<a href='/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
