@@ -172,6 +172,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
     function init( $args = array() ) //{{{
     {
+			force_secure();
         // If the IP address isn't local and there's no user, then we get the
         // restricted off-campus view.
         // changed carleton 137.22. to luther 192.203. - burkaa
@@ -830,15 +831,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
         } /* endforeach */
         echo '</div>'; // searchResults
-        
-        if ($logged_user == $data['uid'][0]) {
-                echo '<p id="editEntryTest">';
-                echo "<a href='/x/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
-                // this might have to change to: '/directory/user.php?mode=edit&name=".reason_check_authentication()."' so that it links to the working directory one?
-
-                echo '</p>';
-                
-            }
 
         echo '<p class="personPager"></p>';
         echo '<p class="searchFoot"><a class="newSearch" href="'.$this->search_url.'">Search Again</a></p>';
