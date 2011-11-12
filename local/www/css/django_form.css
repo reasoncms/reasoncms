@@ -1,3 +1,9 @@
+#content_primary{
+		width:900px;
+		margin:5px;
+	}
+
+
 #django_form{
 		width:650px;
 		margin:5px;
