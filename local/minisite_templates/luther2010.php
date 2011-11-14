@@ -615,16 +615,15 @@ class LutherTemplate2010 extends MinisiteTemplate
   		echo '<!--[if lt IE 7]><link href="/stylesheets/luther2010/ie6.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
   		echo '<link href="http://print.faustgertz.com/print.css" media="print" rel="stylesheet" type="text/css" />'."\n";
   		
-		echo '<meta property="og:title" content="Luther College" />'."\n";
+		echo '<meta property="og:title" content="' . $this->title . '" />'."\n";
 		echo '<meta property="og:type" content="university" />'."\n";
-		echo '<meta property="og:url" content="http://www.luther.edu/" />'."\n";
+		echo '<meta property="og:url" content="' . get_current_url() . '" />'."\n";
 		echo '<meta property="og:site_name" content="Luther College" />'."\n";
 		echo '<meta property="og:image" content="" />'."\n";
 		echo '<meta property="og:street-address" content="700 College Drive"/>'."\n";
 		echo '<meta property="og:locality" content="Decorah" />'."\n";
 		echo '<meta property="og:region" content="Iowa" />'."\n";
 		echo '<meta property="og:country" content="USA" />'."\n";
-
 		echo '<meta property="og:email" content="www@luther.edu"/>'."\n";
 		echo '<meta property="og:phone_number" content="563-387-2000"/>'."\n";
 
