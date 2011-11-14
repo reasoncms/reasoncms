@@ -1,33 +1,35 @@
 $(document).ready(function() {
 
     // Director Form //
-    toggle_banquet_attendees('N', 0);
-    $("input[name$='banquet']").click(function(){
-        toggle_banquet_attendees($(this).val(), 500);
+    toggle_banquet_attendees(0);
+    $("input[name$='banquet']").change(function(){
+        toggle_banquet_attendees(500);
     });
         
     // Student Form //
-    toggle_allstate_details('N', 0);
-    $("input[name$='all_state']").click(function(){
-        toggle_allstate_details($(this).val(), 500);
+    toggle_allstate_details(0);
+    $("input[name$='all_state']").change(function(){
+        toggle_allstate_details(500);
     });
     
-    toggle_honor_band_details('N', 0);
-    $("input[name$='honor_band']").click(function(){
-        toggle_honor_band_details($(this).val(), 500);
+    toggle_honor_band_details(0);
+    $("input[name$='honor_band']").change(function(){
+        toggle_honor_band_details(500);
     });
 });
 
-function toggle_banquet_attendees(value, time){
-    if (value == 'Y'){
+function toggle_banquet_attendees(time){
+//    if (value == 'Y'){
+    if ($("input#id_banquet_0").is(':checked')){ 
         $('#banquet_attendees').show(time);
     } else {
         $('#banquet_attendees').hide(time);
     }
 }
 
-function toggle_allstate_details(value, time){
-    if (value == 'Y'){
+function toggle_allstate_details(time){
+//    if (value == 'Y'){
+    if ($('input#id_all_state_0').is(':checked')){
         $('#allStateYears').show(time);
         $('#allStatePart').show(time);
         $('#allStateChair').show(time);
@@ -38,8 +40,9 @@ function toggle_allstate_details(value, time){
     }
 }
 
-function toggle_honor_band_details(value, time){
-    if (value == 'Y'){
+function toggle_honor_band_details(time){
+//    if (value == 'Y'){
+    if ($('input#id_honor_band_0').is(':checked')){
         $('#honorBandYears').show(time);
         $('#honorBandPart').show(time);
         $('#honorBandChair').show(time);
