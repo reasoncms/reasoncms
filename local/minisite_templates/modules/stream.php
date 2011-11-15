@@ -4,6 +4,12 @@ reason_include_once('minisite_templates/modules/default.php');
 
 $GLOBALS['_module_class_names'][basename(__FILE__, '.php')] = 'streamModule';
 
+/**
+ * Currently only handles streaming of the worship/chapel page
+ * @author Steve Smith
+ * @todo generalize to handle other streams or kill in favor of streaming via the Reason av module
+ */
+
 class streamModule extends DefaultMinisiteModule {
 
     function run() {
@@ -31,13 +37,8 @@ class streamModule extends DefaultMinisiteModule {
             echo 'pluginspage= "http://www.apple.com/quicktime/download/" >';
             echo '</embed>';
             echo '</object>';
-        } else {
-			echo '<img src="/reason/images/363666.jpg">';
-//            echo '<p>The stream is available during Chapel 10:30 - 10:50 a.m. cst on Mondays, Wednesdays and Fridays.
-//                Please come back at those times. Thank you.</p>';
-//            echo '<p></p>';
         }
-//        echo '<p><a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=467424979" target="_blank">Chapel Archives</a> on iTunes U.</p>';
+		echo '<p><a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=467424979" target="_blank">Chapel Archives</a> on iTunes U.</p>';
     }
 
 }
