@@ -9,8 +9,9 @@
 /**
  * Include the Reason libraries
  */
-  include_once('reason_header.php');
-  include_once(CARL_UTIL_INC.'basic/cleanup_funcs.php');
+include_once('reason_header.php');
+include_once(CARL_UTIL_INC.'basic/cleanup_funcs.php');
+include_once(CARL_UTIL_INC.'basic/date_funcs.php');
   
 /**
  * A class for creating iCalendar-formatted data from Reason event entities
@@ -31,6 +32,8 @@
  * echo $calendar -> get_icalendar_events();
  * </code>
  *
+ * @todo real timezone handling - right now we use floating date / times. we cannot really implement UTC until reason events implement UTC.
+ * @todo include a URL to the appropriate reason event page if the url field for the event is not populated.
  * @author Henry Gross
  */
 class reason_iCalendar
@@ -122,15 +125,15 @@ class reason_iCalendar
 			$icalendar_event .= 'URL:' . $this->_fold_text($event -> get_value('url')) . "\r\n";
 		//LAST-MODIFIED
 		if (strlen($event -> get_value('last_modified')) != 0)
-			$icalendar_event .= 'LAST-MODIFIED:' . $this -> _create_datetime(gmdate("Y-m-d H:i:s", strtotime($event -> get_value('last_modified'))), true) . "\r\n";
+			$icalendar_event .= 'LAST-MODIFIED:' . $this -> _create_datetime(carl_date("Y-m-d H:i:s", strtotime($event -> get_value('last_modified'))), false) . "\r\n";
 		//CREATED
 		if (strlen($event -> get_value('creation_date')) != 0)
-			$icalendar_event .= 'CREATED:' . $this -> _create_datetime(gmdate("Y-m-d H:i:s", strtotime($event -> get_value('creation_date'))), true) . "\r\n";
+			$icalendar_event .= 'CREATED:' . $this -> _create_datetime(carl_date("Y-m-d H:i:s", strtotime($event -> get_value('creation_date'))), false) . "\r\n";
 	
 		//DTSTART
 		if (strlen($event -> get_value('datetime')) != 0)
 		{
-			$timestamp = $this -> _create_datetime(gmdate("Y-m-d H:i:s", strtotime($event -> get_value('datetime'))), true);
+			$timestamp = $this -> _create_datetime(carl_date("Y-m-d H:i:s", strtotime($event -> get_value('datetime'))), false);
 			if (strstr($event -> get_value('datetime'), '00:00:00'))
 			{
 				preg_match("/[\d]*/", $timestamp, $matches);
@@ -194,7 +197,7 @@ class reason_iCalendar
 		return $duration;
 	}
 	
-	//convert a SQL datetime into an iCalendar date-time with the UTC flag
+	//convert a SQL datetime into an iCalendar date-time
 	function _create_datetime($datetime, $utc)
 	{
 		$stamp = explode(' ', $datetime);
