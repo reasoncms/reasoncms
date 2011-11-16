@@ -313,6 +313,11 @@
         	'sidebar'=>'',
         	'pre_sidebar' => '',
         ),
+		'publication_with_image_sidebar' => array(
+			'main_post'=>'publication',
+			'main_head' => 'publication/title',
+			'main'=>'publication/description',
+		),
         'events_and_publication_sidebar' => array(
 			'pre_sidebar' => array(
 				'module' => 'events_mini',
