@@ -85,18 +85,21 @@
 						'description' => 'Run the .htaccess rewrites for a particular site or for all sites. (also: get the command for creating site directories that need creation)',
 						'safety_level' => 'safe',
 					),
-                                        '?cur_module=EventSplit' => array(  
-                                                'title' => 'Split Repeating Event',
-                                                'description' => 'Chop a repeating event into multiple separate events (note: to use this module,
-first edit an event entity, then change the cur_module part of the query to "cur_module=EventSplit")',
-                                                'safety_level' => 'safe',
-                                        ),
-                                        REASON_HTTP_BASE_PATH.'scripts/move/move_entities_among_sites.php' => array(
-                                                'title' => 'Move Entities',
-                                                'description' => 'Move entities from one site to another. Additional steps required if moving pages or 
-assets.',
-                                                'safety_level' => 'careful',
-                                        ),
+					'?cur_module=EventSplit' => array(  
+						'title' => 'Split Repeating Event',
+						'description' => 'Chop a repeating event into multiple separate events (note: to use this module, first edit an event entity, then change the cur_module part of the query to "cur_module=EventSplit")',
+						'safety_level' => 'safe',
+					),
+					REASON_HTTP_BASE_PATH.'scripts/developer_tools/publication_migrator.php' => array(
+						'title' => 'Publication Migrator',
+						'description' => 'Migrate a publication from old-style news (e.g. no publication entity, single news page per site) to the modern blog/publication format.',
+						'safety_level' => 'safe',
+					),
+					REASON_HTTP_BASE_PATH.'scripts/move/move_entities_among_sites.php' => array(
+						'title' => 'Move Entities',
+						'description' => 'Move entities from one site to another. Additional steps required if moving pages or assets.',
+						'safety_level' => 'careful',
+					),
 					REASON_HTTP_BASE_PATH.'scripts/search/find_and_replace.php' => array(
 						'title' => 'Find and Replace',
 						'description' => 'Find and replace across multiple entities on multiple sites',
