@@ -36,6 +36,8 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 								  'comment_form_markup',
 								  'commenting_status',
 								  'permalink',
+								  //'next_post',
+								  //'previous_post',
 								);
 
 
@@ -46,8 +48,12 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 
 	function run()
 	{
+		$show_related_section = ($this->should_show_related_events_section() || $this->should_show_images_section() || $this->should_show_assets_section() || $this->should_show_categories_section());
+		
 		$this->markup_string = '';
-		$this->markup_string .= '<div class="fullPost">';
+		$this->markup_string .= '<div class="fullPost';
+		$this->markup_string .= $show_related_section ? ' hasRelated' : ' noRelated';
+		$this->markup_string .= '">';
 		$this->markup_string .= '<div class="primaryContent">'."\n";
 		if($this->should_show_comment_added_section())
 		{
@@ -78,8 +84,14 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$this->markup_string .= '<div class="addCommentForm">'.$this->get_comment_adder_section().'</div>'."\n";
 		}
+		// Not quite ready to add this to the default markup generator
+		// Main question: should this go above or below the comments?
+		/* if($this->should_show_next_prev_section())
+		{
+			$this->markup_string .= '<div class="nextPrev">'.$this->get_next_prev_section().'</div>'."\n";
+		} */
 		$this->markup_string .= '</div>'."\n";
-		if($this->should_show_related_events_section() || $this->should_show_images_section() || $this->should_show_assets_section() || $this->should_show_categories_section())
+		if($show_related_section)
 		{
 			$this->markup_string .= '<div class="relatedItems">'."\n";
 			if($this->should_show_related_events_section())
@@ -290,6 +302,35 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 			$ret .= '<li><a href="'.$category->get_value('category_url').'">'.$category->get_value('name').'</a></li>';
 		}
 		$ret .= '</ul>';
+		return $ret;
+	}
+	
+	// Next/Prev section
+	function should_show_next_prev_section()
+	{
+		if(!empty($this->passed_vars['next_post']) || !empty($this->passed_vars['previous_post']))
+			return true;
+		else
+			return false;
+	}
+	
+	function get_next_prev_section()
+	{
+		$ret = '';
+		if(!empty($this->passed_vars['previous_post']))
+		{
+			$ret .= '<div class="prev">'."\n";
+			$ret .= '<h4>Previous Post</h4> '."\n";
+			$ret .= '<p><a href="'.$this->passed_vars['previous_post']->get_value('link_url').'">'.$this->passed_vars['previous_post']->get_value('release_title').'</a></p>'."\n";
+			$ret .= '</div>'."\n";
+		}
+		if(!empty($this->passed_vars['next_post']))
+		{
+			$ret .= '<div class="next">'."\n";
+			$ret .= '<h4>Next Post</h4> '."\n";
+			$ret .= '<p><a href="'.$this->passed_vars['next_post']->get_value('link_url').'">'.$this->passed_vars['next_post']->get_value('release_title').'</a></p>'."\n";
+			$ret .= '</div>'."\n";
+		}
 		return $ret;
 	}
 	
