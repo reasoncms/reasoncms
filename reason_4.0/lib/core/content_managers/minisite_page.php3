@@ -394,7 +394,7 @@
 			
 			$roots = $this->root_node();
 			if( $this->is_new_entity() && $this->has_url() && !empty($roots))
-				echo '&raquo; <a href="'.$this->admin_page->make_link( array( 'is_link' => 1 ) ).'">Create an external link instead of a page.</a><br /><br />';
+				echo '&raquo; <a href="'.$this->admin_page->make_link( array( 'is_link' => 1, 'parent_id' => $this->get_value('parent_id') ) ).'">Create an external link instead of a page.</a><br /><br />';
 		} // }}}
 		function finish() // {{{
 		{
