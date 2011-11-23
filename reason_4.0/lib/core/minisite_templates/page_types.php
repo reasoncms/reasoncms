@@ -409,6 +409,20 @@
 			'main_post'=>'blurb',
 			'sub_nav'=>'',
 		),
+		'blurbs_with_events_and_publication_sidebar_by_page_categories' => array(
+			'pre_sidebar'=> array(
+				'module'=>'events_mini',
+				'limit_to_page_categories'=>true,
+			),
+			'sidebar'=>array(
+				'module'=>'publication',
+				'related_mode'=>'true',
+				'limit_by_page_categories'=>'true',
+				'max_num_items' => 3,
+			),
+			'main_post'=>'blurb',
+			'sub_nav'=>'',
+		),
 		'child_sites' => array(
 			'main_post' => 'child_sites',
 		),
