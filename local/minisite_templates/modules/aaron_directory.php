@@ -48,7 +48,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                                             'student'=>'Students only',
                                             'faculty'=>'Faculty only',
                                             'staff'=>'Staff only',
-                                            'alumni'=>'Alumni only',
+                                            //'alumni'=>'Alumni only',
                             ),
             ),
             'phone_number' => array('type' => 'text','size' => '15',
@@ -647,9 +647,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if (isset($data['alumClassYear'])) {
                 echo "<tr valign=top><td><b>Class Year: </b></td><td>".$data['alumClassYear'][0]."</td></tr>";
             }
-            if (isset($data['alumOccupation'])) {
-                echo "<tr valign=top><td><b>Class Year: </b></td><td>".$data['alumOccupation'][0]."</td></tr>";
-            }
+//            if (isset($data['alumOccupation'])) {
+//                echo "<tr valign=top><td><b>Class Year: </b></td><td>".$data['alumOccupation'][0]."</td></tr>";
+//            }
 
             if (isset($data['edupersonaffiliation'])) {
                 echo "<tr valign=top><td><b>All Affiliations: </b></td><td>";
