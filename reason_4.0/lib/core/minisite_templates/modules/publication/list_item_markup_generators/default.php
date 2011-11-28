@@ -96,7 +96,12 @@ class PublicationListItemMarkupGenerator extends PublicationMarkupGenerator
 		$item = $this->passed_vars['item'];
 		$link_to_full_item = isset($this->passed_vars['link_to_full_item']) ? $this->passed_vars['link_to_full_item'] : '';
 				
-		$markup_string .=  '<h4 class="title">';
+		$markup_string .=  '<h4 class="title';
+		if($item->get_value('content'))
+			$markup_string .= ' postHasContent';
+		else
+			$markup_string .= ' postHasNoContent';
+		$markup_string .= '">';
 		if(isset($link_to_full_item) &&  !empty($link_to_full_item))
 			$markup_string .=  '<a href="' .$link_to_full_item. '">'.$item->get_value('release_title').'</a>';
 		else
