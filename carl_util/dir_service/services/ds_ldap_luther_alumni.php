@@ -42,7 +42,7 @@ class ds_ldap_luther_alumni extends ds_ldap {
 		'subtree_search' => true,
 		'base_dn' => 'ou=Alumni,dc=luther,dc=edu',
 		);
-		
+
 	/**
 	* array Dependencies for generic attributes 
 	* @access private
@@ -53,7 +53,7 @@ class ds_ldap_luther_alumni extends ds_ldap {
 		'ds_email' => array('mail'),
 		'ds_firstname' => array('givenname'),
 		'ds_lastname' => array('sn'),
-		'ds_fullname' => array('displayname','cn'),
+		'ds_fullname' => array('displayname','alumcn'),
 		/*  'ds_phone' => array('telephonenumber'),  this returns home phone*/
 		'ds_title' => array('title'),
 		'ds_phone' => array('officephone'),
@@ -246,7 +246,6 @@ class ds_ldap_luther_alumni extends ds_ldap {
 	* @param string $password Password
 	*/
 	function authenticate($username, $password) {
-		echo "Luther authentication function";
 		$bind_dn = sprintf('uid=%s, %s',$this->escape_input($username), $this->_search_params['base_dn']);
 		turn_carl_util_error_logging_off();
 		turn_carl_util_error_output_off();
