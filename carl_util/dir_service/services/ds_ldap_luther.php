@@ -248,7 +248,7 @@ class ds_ldap_luther extends ds_ldap {
 	* @param string $password Password
 	*/
 	function authenticate($username, $password) {
-		echo "Luther authentication function";
+//		echo "Luther authentication function";
 		$bind_dn = sprintf('uid=%s, %s',$this->escape_input($username), $this->_search_params['base_dn']);
 		turn_carl_util_error_logging_off();
 		turn_carl_util_error_output_off();
