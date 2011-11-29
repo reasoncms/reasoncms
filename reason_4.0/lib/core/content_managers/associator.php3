@@ -29,7 +29,6 @@
 		function prep_for_run( $site_id, $type_id, $id, $user_id ) // {{{
 		{
 			ContentManager::prep_for_run( $site_id , $type_id , $id , $user_id );
-			unset( $this->actions[ 'assoc' ] );
 			$this->get_relationships();
 		} // }}}
 		function alter_data() // {{{

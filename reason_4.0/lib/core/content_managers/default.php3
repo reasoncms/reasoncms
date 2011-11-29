@@ -48,7 +48,7 @@
 		var $right_assoc_omit_relationship = array();
 		var $right_assoc_omit_link = array();
 		
-		var $actions = array( 'stay_here' => 'Save and Continue Editing' , 'assoc' => 'Save and Associate' , 'finish' => 'Save and Finish' );
+		var $actions = array( 'stay_here' => 'Save and Continue Editing', 'finish' => 'Save and Finish' );
 
 		function init( $externally_set_up = false)
 		{
@@ -206,11 +206,6 @@
 			 */
 			if( !empty( $this->admin_page->request ) ) $this->grab_all_page_requests();
 			
-			// if no relationships, don't show the relationship button
-			$rels = $this->admin_page->get_rels();
-			if( empty( $rels ) )
-				unset( $this->actions[ 'assoc' ] );
-
 			// if the state of the entity is pending, show the queue review actions
 			// instead of the regular actions
 			if( !$this->is_new_entity() AND $this->entity->get_value( 'state' ) == 'Pending' AND $this->admin_page->type_id == id_of( 'image' ) )
@@ -441,33 +436,24 @@
 			$page =& $this->admin_page;
 			$link = null;
 			
-			if ($this->chosen_action == 'finish') {
-				$link = $page->make_link(array('cur_module' => 'Finish'),
-					false, false);
-			} else if ($this->chosen_action == 'assoc') {
-				foreach ($page->get_main_links() as $ass) {
-					if (isset($ass['rel_info'])) {
-						$link = unhtmlentities($ass['link']);
-						break;
-					}
-				}
-			} else if ($this->chosen_action == 'publish_and_next') {
+			if ($this->chosen_action == 'finish') 
+			{
+				$link = $page->make_link(array('cur_module' => 'Finish'), false, false);
+			}
+			else if ($this->chosen_action == 'publish_and_next')
+			{
 				// in pending queue, publish chosen:
 				// transition to finish and make sure finish knows we're in
 				// queue mode so that it can hand off the control to the next
 				// editor
-				$link = $page->make_link(array('cur_module' => 'Finish',
-					'next_entity' => $this->next_entity->id()), false, false);
-			} else {
-				$params = array('id' => $this->_id,
-					'cur_module' => 'Editor', 'submitted' => false,
-					'entity_saved' => true);
-				$params = array_merge($params,
-					$this->get_continuation_state_parameters());
-				
+				$link = $page->make_link(array('cur_module' => 'Finish', 'next_entity' => $this->next_entity->id()), false, false);
+			} 
+			else 
+			{
+				$params = array('id' => $this->_id, 'cur_module' => 'Editor', 'submitted' => false, 'entity_saved' => true);
+				$params = array_merge($params, $this->get_continuation_state_parameters());
 				$link = $page->make_link($params, false, false);
 			}
-			
 			return $link; 
 		} // }}}		
 		
