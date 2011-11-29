@@ -2383,7 +2383,7 @@ class EventsModule extends DefaultMinisiteModule
 		if(!empty($this->es_callback))
 		{
 			$callback_array = array();
-			$callback_array[] =& $this->es;
+			$callback_array[] =& $es;
 			call_user_func_array($this->es_callback, $callback_array);
 		}
 		if($audiences_to_limit_to = $this->_get_audiences_to_limit_to())
