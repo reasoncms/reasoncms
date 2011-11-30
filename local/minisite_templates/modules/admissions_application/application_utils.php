@@ -114,15 +114,19 @@ function check_login() {
 }
 
 function is_submitted($open_id) {
-    connectDB('admissions_applications_connection');
-    $qstring = "SELECT `submit_date` FROM `applicants` WHERE `open_id`='" . mysql_real_escape_string($open_id) . "' ";
-    $results = db_query($qstring);
-    $row = mysql_fetch_array($results, MYSQL_ASSOC);
-    connectDB(REASON_DB);
-    if (is_null($row['submit_date'])) {
-        return false;
+    if($open_id){
+        connectDB('admissions_applications_connection');
+        $qstring = "SELECT `submit_date` FROM `applicants` WHERE `open_id`='" . mysql_real_escape_string($open_id) . "' ";
+        $results = db_query($qstring);
+        $row = mysql_fetch_array($results, MYSQL_ASSOC);
+        connectDB(REASON_DB);
+        if (is_null($row['submit_date'])) {
+            return false;
+        } else {
+            return true;
+        }
     } else {
-        return true;
+        return false;
     }
 }
 
