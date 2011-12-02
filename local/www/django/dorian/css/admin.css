@@ -6,7 +6,7 @@
 }
 
 .inline-group > h2:first-child {
-    background: #AAA;
+    background: #555;
     color: white;
     font-size:24px;
     padding:20px;
@@ -14,11 +14,11 @@
 
 .inline-related > h3 {
     font-size:18px;
-    background: #7777FF;
+    background: white;
 }
 
 .inline-related > h3 > span.delete > label {
-    color: #FFFFFF;
+    color: white;
 }
 
 .inline-related > h2 {
