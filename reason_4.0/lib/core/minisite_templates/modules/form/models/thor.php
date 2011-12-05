@@ -727,6 +727,9 @@ class ThorFormModel extends DefaultFormModel
 		return $this->_disco_field_name[$label];
 	}
 	
+	/**
+	 * This method appears to be incomplete
+	 */
 	function get_field_name_from_normalized_label($normalized_label)
 	{
 		if (!isset($this->_field_name_from_normalized_label[$label]))
@@ -734,6 +737,24 @@ class ThorFormModel extends DefaultFormModel
 			$thor_core =& $this->get_thor_core_object();
 		}
 	}
+	
+	/**
+	 * Find the label based on the internal field id.
+	 * Uses the same _disco_field_name array as get_disco_field_name()
+	 */
+	function get_field_label($field)
+	{
+		if (!in_array($field, $this->_disco_field_name))
+		{
+			$thor_core =& $this->get_thor_core_object();
+			if ($label = $thor_core->get_column_label($field))
+			{
+				$this->_disco_field_name[$label] = $field;	
+			}
+		}
+		return array_search($field, $this->_disco_field_name);
+	}
+	
 	
 	function set_sort_field($field)
 	{
