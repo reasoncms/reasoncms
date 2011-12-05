@@ -59,6 +59,7 @@ class DefaultFormModel extends AbstractFormModel
 	var $_head_items;
 	var $_params;
 	var $_form_submission_key;
+	var $_disco_field_name = array();
 	
 	function DefaultFormModel()
 	{
