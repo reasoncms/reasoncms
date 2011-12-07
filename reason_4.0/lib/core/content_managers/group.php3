@@ -20,6 +20,11 @@
 					'arbitrary_ldap_query',
 					'ldap_group_filter',
 				);
+		function init_head_items()
+		{
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'content_managers/group.js');
+		}
+
 		function pre_show_form()
 		{
 			parent::pre_show_form();
