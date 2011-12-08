@@ -1501,17 +1501,17 @@ class MinisiteTemplate
 	 * This function allows modules to add head items. They must add any head items during their init process.
 	 * @deprecated method should be called on the head_items object
 	 */
-	function add_head_item( $element, $attributes, $content = '', $add_to_top = false )
+	function add_head_item( $element, $attributes, $content = '', $add_to_top = false, $wrapper = array('before'=>'','after'=>'') )
 	{
-		$this->head_items->add_head_item( $element, $attributes, $content, $add_to_top);
+		$this->head_items->add_head_item( $element, $attributes, $content, $add_to_top, $wrapper);
 	}
 	
 	/** 
 	 * @deprecated method should be called on the head_items object
 	 */
-	function add_stylesheet( $url, $media = '', $add_to_top = false )
+	function add_stylesheet( $url, $media = '', $add_to_top = false, $wrapper = array('before'=>'','after'=>'') )
 	{
-		$this->head_items->add_stylesheet( $url, $media, $add_to_top );
+		$this->head_items->add_stylesheet( $url, $media, $add_to_top, $wrapper );
 	}
 	
 	/**
