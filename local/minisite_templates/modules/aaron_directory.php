@@ -1760,14 +1760,16 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         //$password = $user->get_value('user_password_hash');
         
 
-        $lookup_login = 'uid='.$logged_user.',ou=People,dc=luther,dc=edu'; /// username is get login norsekey
-        $lookup_pass = $password; /// get login password
+        //$lookup_login = 'uid='.$logged_user.',ou=People,dc=luther,dc=edu'; /// username is get login norsekey
+        //$lookup_pass = $password; /// get login password
 
 
-//        $dir = new directory_service('ldap_luther_directory');
-        $dir = new directory_service('ldap_luther');
+        $dir = new directory_service('ldap_luther_directory');
+        //$dir = new directory_service('ldap_luther');
 
         $dir->authenticate($logged_user,$password);
+        //$dir->bind_test($logged_user, $password);
+        //$dir->authenticate_two();
 
 //		$dir->serv_inst['ldap_luther']->set_conn_param('lookup_dn', $lookup_login);
 //        $dir->serv_inst['ldap_luther']->set_conn_param('lookup_password',$lookup_pass);
