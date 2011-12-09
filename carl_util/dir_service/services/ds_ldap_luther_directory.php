@@ -72,20 +72,22 @@ class ds_ldap_luther_directory extends ds_ldap_luther {
 	* @param string $password Password
 	*/
 	function authenticate($username, $password) {
-		$bind_dn = sprintf('uid=%s, %s',$this->escape_input($username), $this->_search_params['base_dn']);
-		turn_carl_util_error_logging_off();
-		turn_carl_util_error_output_off();
-		$bind_result = @ldap_bind($this->_conn, $bind_dn, $password);
-		turn_carl_util_error_output_on();
-		turn_carl_util_error_logging_on();
-		if (!$bind_result) $this->_error = ldap_error( $this->_conn );
-		// Rebind for future searches
-//		if( !ldap_bind( $this->_conn, $this->_conn_params['lookup_dn'], $this->_conn_params['lookup_password'] ) ) {
-		if( !ldap_bind( $this->_conn, 'uid='.$username.',ou=People,dc=luther,dc=edu', $password ) ) {
+		$this->_conn_params = array(
+//	  	'host' => 'replica-1.luther.edu',
+	  	'host' => 'ldap.luther.edu',
+        	'port' => 389,
+		'ldap_version' => 3,
+		'use_tls' => false,
+		'lookup_dn' => 'uid='.$username.',ou=People,dc=luther,dc=edu',
+        	'lookup_password' => $password,
+		);
+                $this->authenticate_helper();
+	}
+        function authenticate_helper() {
+		if( !ldap_bind( $this->_conn, $this->_conn_params['lookup_dn'], $this->_conn_params['lookup_password'] ) ) {
 			$this->_error = sprintf( 'LDAP bind failed for %s, %s' , $this->_conn_params['lookup_dn'], ldap_error( $this->_conn ));
 		}
 		return $bind_result;
 	}
-
 }
 ?>
