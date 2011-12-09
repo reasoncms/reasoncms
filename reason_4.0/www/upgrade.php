@@ -49,15 +49,35 @@ if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']])
 		if(!$run)
 			echo '<p class="mode"><em>Testing Mode</em></p>'."\n";
 		$chosen_upgrader = $_GET['upgrader'];
+		$standalones = array();
+		$standalone = false;
 		foreach($upgraders as $upgrader_name=>$upgrader)
 		{
-			if($chosen_upgrader == $upgrader_name || '_all_' == $chosen_upgrader)
+			if(method_exists($upgrader,'standalone'))
+			{
+				$standalone = $upgrader->standalone();
+				if( '_all_' == $chosen_upgrader && $standalone )
+					$standalones[] = $upgrader_name;
+			}
+			if($chosen_upgrader == $upgrader_name || ( '_all_' == $chosen_upgrader && !$standalone ) )
 			{
 				$upgrader->user_id($reason_user_id);
 				echo '<h3>'.$upgrader->title().'</h3>'."\n";
 				if($run)
 				{
 					echo $upgrader->run();
+					if(method_exists($upgrader,'run_again'))
+					{
+						if($upgrader->run_again())
+						{
+							echo '<b>This upgrade is not yet complete</b>' . "\n";
+							echo'<form id="runnerForm" action="'.get_current_url().'" method="post"><input type="hidden" name="mode" value="run" /><input type="submit" value="Continue Upgrade" /></form>'."\n";
+						}
+						else
+						{
+							echo '<b>The upgrade is finished -- no need to run again </b>';
+						}
+					}
 				}
 				else
 				{
@@ -65,10 +85,33 @@ if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']])
 				}
 			}
 		}
-		if(!$run)
+		if($run)
+		{
+			if(!empty($standalones))
+			{
+				echo '<h3>There are upgrades that must be run by themselves. Please test and run these separately.</h3>'."\n";
+				echo '<ul>'."\n";
+				foreach($standalones as $name)
+				{
+					echo '<li><a href="?upgrade_step='.urlencode($step).'&amp;upgrader='.urlencode($name).'&amp;mode=test">'.$upgraders[$name]->title().'</a></li>'."\n";
+				}
+				echo '</ul>'."\n";
+			}
+		}
+		else
 		{
 			echo '<form id="runnerForm" action="'.get_current_url().'" method="post"><input type="hidden" name="mode" value="run" /><input type="submit" value="Run Module(s)" 
 /></form>'."\n";
+			if(!empty($standalones))
+			{
+				echo '<h4>Note: There are upgrades that must be run by themselves. Please test and run these separately.</h4>'."\n";
+				echo '<ul>'."\n";
+				foreach($standalones as $name)
+				{
+					echo '<li><a href="?upgrade_step='.urlencode($step).'&amp;upgrader='.urlencode($name).'&amp;mode=test">'.$upgraders[$name]->title().'</a></li>'."\n";
+				}
+				echo '</ul>'."\n";
+			}
 		}
 	}
 	else
