@@ -7,6 +7,8 @@
 	 * Include image library
 	 */
 	require_once CARL_UTIL_INC.'basic/image_funcs.php';
+	require_once CARL_UTIL_INC . 'basic/misc.php';
+	require_once INCLUDE_PATH . 'www/disco/plugins/input_limiter/input_limiter.php';
 	reason_include_once('classes/plasmature/upload.php');
 	reason_include_once('function_libraries/images.php');
 	reason_include_once('function_libraries/image_tools.php');
@@ -50,17 +52,22 @@
 			$this->add_element( 'thumbnail', 'ReasonImageUpload', array('authenticator' => $this->_get_authenticator()) );
 			$image = $this->get_element('image');
 			$image->get_head_items($this->head_items);
+			$this->add_element('default_thumbnail', 'checkbox', 
+					array('description' => 'Generate thumbnail from full-size image'));
 		
 			$this->change_element_type( 'width','hidden' );
 			$this->change_element_type( 'height','hidden' );
 			$this->change_element_type( 'size','hidden' );
 			$this->change_element_type( 'image_type','hidden' );
 			$this->change_element_type( 'author_description','hidden' );
+			
 
 			$this->set_display_name( 'description', 'Short Caption' );
 			$this->set_display_name( 'content', 'Long Caption' );
 			$this->set_display_name( 'datetime', 'Photo Taken' );
 			$this->set_display_name( 'author', 'Photographer' );
+			$this->set_display_name( 'default_thumbnail', '&nbsp;');
+
 
 			$this->set_comments( 'name', form_comment("A name for internal reference") );
 			$this->set_comments( 'content', form_comment("The long caption will appear with the full-sized image.") );
@@ -82,11 +89,33 @@
 			if( $full_sizer )
 			{
 				$this->add_element( 'do_not_resize', 'checkbox', array('description' => 'Upload this image at full resolution &amp; size. (Use with caution &ndash; it is easy to accidentally upload an overly-large image.)'));
+				$this->set_display_name( 'do_not_resize', '&nbsp;');
+
 			}
 
+			// Required fields
 			$this->add_required( 'description' );
-
+			$this->add_required( 'image' );
+			// Make the content (long caption) WYSIWYG; description (short caption) only 3 rows
+			$this->change_element_type( 'content' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
+			$this->set_element_properties( 'description' , array('rows' => 3));
+			$this->set_element_properties( 'content' , array('rows' => 8));
+			
+			// Test character-limiting
+			$limiter = new DiscoInputLimiter($this);
+		    $limiter->limit_field('description', 100);
+		    $limiter->limit_field('content', 250);   
+			
+			
+			/* 
+			    Include javascript that handles hiding/showing various fields when appropriate,
+			    i.e. hide the thumbnail option before a main image has been uploaded etc. 
+			*/
+			$this->head_items->add_javascript(JQUERY_URL, true);
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'content_managers/image_manager.js');
+			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH .'css/reason_admin/content_managers/image.css');
 		} // }}}
+		
 		function on_every_time() // {{{
 		{
 			// munge image and thumbnail elements to use ReasonImageUpload correctly
@@ -104,25 +133,24 @@
 			if (file_exists($full_tn_path))
 			{
 				$this->change_element_type( 'thumbnail','ReasonImageUpload',array('authenticator' => $this->_get_authenticator(), 'existing_file' => $full_tn_path, 'existing_file_web' => $web_tn_path, 'allow_upload_on_edit' => true ) );
-				$this->add_element( 'replace_thumbnail', 'checkbox', array('description' => 'Regenerate the thumbnail from the full-size image.'));
 			}
-			
 			$this->set_order(
 				array(
 					'name',
-					'author',
+					'image',
+					'do_not_resize',
+					'thumbnail',
+					'default_thumbnail',
 					'author_description',
 					'description',
 					'content',
+					'author',
 					'keywords',
 					'datetime',
 					'original_image_format',
-					'image',
-					'do_not_resize',
-					'replace_thumbnail',
-					'thumbnail'
 				)
 			);
+			
 		} // }}}
 		
 		// This method is useful for debugging uploads; it maintains the same
@@ -149,11 +177,9 @@
 		function run_error_checks() // {{{
 		{
 			$image = $this->get_element('image');
-			$thumb = $this->get_element('thumbnail');
-			if( empty($image->tmp_full_path) AND empty( $image->existing_file ) AND empty( $thumb->tmp_full_path ) AND empty( $thumb->existing_file ) )
+			if( empty($image->tmp_full_path) AND empty( $image->existing_file ) )
 			{
-				$this->set_error( 'image', 'You must upload either a thumbnail or an image.' );
-				$this->set_error( 'thumbnail' );
+				$this->set_error( 'image', 'Please upload an image' );
 			}
 		} // }}}
 		function process() // {{{
@@ -189,7 +215,7 @@
 				$this->get_value("image_type"));
 			$thumb_name = PHOTOSTOCK.reason_format_image_filename($id,
 				$this->get_value("image_type"), "thumbnail");
-			if (($this->auto_create_thumbnails && file_exists($full_name) && !file_exists($thumb_name)) || ($this->get_value("replace_thumbnail") && !$custom_thumbnail_uploaded))
+			if (($this->auto_create_thumbnails && file_exists($full_name) && !file_exists($thumb_name)) || ($this->get_value("default_thumbnail") && !$custom_thumbnail_uploaded))
 			{
 				$this->create_thumbnail($id, $image);
 			}
@@ -275,6 +301,7 @@
 				touch($thumb_filename);
 			}
 		}
+		
 	}
 
 ?>
