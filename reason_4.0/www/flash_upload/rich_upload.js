@@ -212,6 +212,7 @@ var _swfupload_uri;
             
         var form = input.parents("form").eq(0);
         
+        
         var actions = $('<div class="actions">' +
             '<a class="upload" href="#choose">Choose a file&hellip;</a> ' +
             '<a class="reset" href="#reset"></a></div>');
@@ -379,18 +380,4 @@ jQuery(function process_file_uploads() {
         return;
     
     $('.file_upload').richFileUpload();
-    
-    $("#imageRow .file_upload").bind('uploadSuccess', function() {
-        // Automatically say "yes" to regenerating the thumbnail when we pick
-        // a new file.
-        $('input[name=replace_thumbnail]').attr('checked', 'checked');
-    });
-    
-    $("#assetRow .file_upload").bind('uploadSuccess', function() {
-        // Hide the filename changing row when we pick a new file; it won't
-        // have any effect if changed when received along with a new file.
-        $('#filenameRow').fadeOut('normal', function() {
-            $("#assetRow a.upload").repositionUploadButton();
-        });
-    });
 });
