@@ -182,8 +182,12 @@ class AppDevOnCallForm extends DefaultThorForm
                      }
 
 		     $developer_info = $this->get_developer_info($next_available);
-		     $this->notify_developer($developer_info, 'email');			
-		}    
+		     $this->notify_developer($developer_info, 'email');
+		}
+		// send an email to helpdesk for auto ticket creation
+		// kbox@helpdesk.luther.edu
+		$hd_mail = new Email('kbox@helpdesk.luther.edu', $this->get_value_from_label('Username'), $this->get_value_from_label('Username'), $this->get_value_from_label('Emergency'), $this->get_value_from_label('Emergency'), $this->get_value_from_label('Emergency'));
+		$hd_mail->send();
 	}
 	
 	
