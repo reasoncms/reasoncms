@@ -420,7 +420,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information' && $this->has_content( 'post_sidebar' ))
 		{
 			echo '<aside class="news group">'."\n";
-			echo '<header class="blue-stripe"><h1><span>Alumni Corner</span></h1></header>'."\n";
+			echo '<header class="blue-stripe"><h1><span>Luther Connections</span></h1></header>'."\n";
 			$this->run_section( 'post_sidebar');
 			echo '</aside> <!-- class="news group" -->'."\n";
 		}
