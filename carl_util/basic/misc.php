@@ -15,6 +15,7 @@ if( !defined( '__INC_DAVE_MISC' ) )
 	include_once('url_funcs.php');
 	include_once('cleanup_funcs.php');
 	include_once('html_funcs.php');
+	include_once('carl_util/tidy/tidy.php');
 	
 	/**
 	 * Use both keys and values to produce imploded string
@@ -635,6 +636,23 @@ if(!function_exists('htmlspecialchars_decode'))
 	}
 	
 	/**
+	 * A standardized function for counting the number of characters in a string that might 
+	 * contain HTML that we don't want to include in our count.
+	 * 
+	 * Will be updated shortly to implement a more sophisticated method of counting...
+	 *
+	 * @author Nick Jones
+	 * @param string $text - the text whose characters we want to count
+	 * @return int the number of characters in the string
+	 */
+	
+	function carl_util_count_html_text_characters($text)
+	{
+	    $tidied_text = tidy($text);
+	    return mb_strlen(html_entity_decode(strip_tags($tidied_text),ENT_QUOTES,'UTF-8'),'UTF-8');;
+	}
+	
+	/**
 	 * Returns the path components after some directory in the path.
 	 *
 	 * @author Nathan White
@@ -662,5 +680,6 @@ if(!function_exists('htmlspecialchars_decode'))
 			return basename($full_path, $suffix);
 		}
 	}
+
 }
 ?>
