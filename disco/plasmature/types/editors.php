@@ -94,7 +94,12 @@ class loki2Type extends defaultType
 	 */
 	var $user_is_admin;
 	var $crash_report_uri;
-	var $type_valid_args = array('widgets', 'site_id', 'paths', 'allowable_tags', 'user_is_admin', 'crash_report_uri');
+	/**
+	 * Allow for a custom sized text entry box
+	 */
+	var $rows = 20;
+	var $cols = 80;
+	var $type_valid_args = array('widgets', 'site_id', 'paths', 'allowable_tags', 'user_is_admin', 'crash_report_uri', 'rows', 'cols');
 	function do_includes()
 	{
 		if (file_exists( LOKI_2_INC.'loki.php' ))
@@ -171,7 +176,7 @@ class loki2Type extends defaultType
 		{
 			$loki->set_crash_report_uri($this->crash_report_uri);
 		}
-		$loki->print_form_children();
+		$loki->print_form_children($this->rows, $this->cols);
 	}
 	function _resolve_widgets($widgets)
 	{
