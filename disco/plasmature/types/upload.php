@@ -273,6 +273,16 @@ class uploadType extends defaultType
 		if (isset($admin_warnings[$error]))
 			trigger_warning($admin_warnings[$error], 2);
 	}
+	/**
+	 * Overrides defaultType's implementation of get
+	 * 
+	 * Returns an array (as opposed to stdobject) because Disco requires string/array values
+	 * @return array storing path, name, size, and uri of image
+	 */
+	function get()
+	{
+		return get_object_vars($this->_get_current_file_info());		
+	}
 	
 	/**
 	 * Populates the {@link $value} field of the upload type.
@@ -492,7 +502,7 @@ class uploadType extends defaultType
 		else
 			$info->name = basename($info->path);
 		$info->name = $this->_clean_filename($info->name);
-		$info->size = filesize($info->path);
+		$info->size = @filesize($info->path);
 		return $info;
 	}
 	
