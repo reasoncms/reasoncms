@@ -281,7 +281,11 @@ class uploadType extends defaultType
 	 */
 	function get()
 	{
-		return get_object_vars($this->_get_current_file_info());		
+		$current_file_info = $this->_get_current_file_info();
+		if(is_object($current_file_info))
+			return get_object_vars($current_file_info);
+		else
+			return null;
 	}
 	
 	/**
