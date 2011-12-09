@@ -73,11 +73,11 @@ class ReasonUpgrader_41_ThumbnailStandardize implements reasonUpgraderInterface
 			$php_max_time = ini_get('max_execution_time');
 			if($php_max_time == 0)
 			{
-				$time_limit = 45;
+				$time_limit = 30;
 			}
 			else
 			{
-				$time_limit = min($php_max_time/2, 45);
+				$time_limit = min($php_max_time/2, 30);
 			}
 			$es = new entity_selector();
 			$es->add_type(id_of('image'));
