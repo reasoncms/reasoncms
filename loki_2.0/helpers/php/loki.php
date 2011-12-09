@@ -180,8 +180,11 @@ class Loki2
 
 	/**
 	 * Prints the html which needs to be placed within a form.
+	 *
+	 * @param $rows number of rows 
+	 * @parm $cols number of columns
 	 */
-	function print_form_children()
+	function print_form_children($rows = 20, $cols = 80)
 	{
 		$id = $this->_editor_id;
 		$onload = $this->_editor_id.'_do_onload';
@@ -230,7 +233,8 @@ class Loki2
 		}
 		</script>
 		<?php /* we htmlspecialchars because Mozilla converts all greater and less than signs in the textarea to entities, but doesn't convert amperstands to entities. When the value of the textarea is copied into the iframe, these entities are resolved, so as to create tags ... but then so are greater and less than signs that were originally entity'd. This is not desirable, and in particular allows people to add their own HTML tags, which is bad bad bad. */ ?>
-		<textarea name="<?php echo $this->_field_name; ?>" rows="20" cols="80" id="loki__<?php echo $this->_field_name; ?>__textarea"><?php echo htmlentities($this->_field_value, ENT_QUOTES, 'UTF-8'); ?></textarea>
+		<textarea name="<?php echo $this->_field_name; ?>" rows="<?php echo htmlspecialchars($rows); ?>" cols="<?php echo htmlspecialchars($cols); ?>" 
+			id="loki__<?php echo $this->_field_name; ?>__textarea"><?php echo htmlentities($this->_field_value, ENT_QUOTES, 'UTF-8'); ?></textarea>
 		<?php
 
 	}
