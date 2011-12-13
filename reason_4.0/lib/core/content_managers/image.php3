@@ -8,7 +8,7 @@
 	 */
 	require_once CARL_UTIL_INC.'basic/image_funcs.php';
 	require_once CARL_UTIL_INC . 'basic/misc.php';
-	require_once INCLUDE_PATH . 'www/disco/plugins/input_limiter/input_limiter.php';
+	require_once DISCO_INC . 'plugins/input_limiter/input_limiter.php';
 	reason_include_once('classes/plasmature/upload.php');
 	reason_include_once('function_libraries/images.php');
 	reason_include_once('function_libraries/image_tools.php');
