@@ -710,6 +710,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if (isset($data['telephonenumber'])) {
                 echo "<tr valign=top><td><b>Home Phone: </b></td><td>".$data['telephonenumber'][0]."</td></tr>";
             }
+			if (isset($data['mobile'])) {
+                echo "<tr valign=top><td><b>Mobile Phone: </b></td><td>".$data['mobile'][0]."</td></tr>";
+            }
             if (isset($data['spousename'])) {
                 echo "<tr valign=top><td><b>Spouse: </b></td><td>".$data['spousename'][0]."</td></tr>";
             }
@@ -778,13 +781,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
             if (isset($data['lastupdate'])) {
                 echo "<tr valign=top><td><b>Refreshed Date: </b></td><td>".$data['lastupdate'][0]."</td></tr>";
-            }
-            if (isset($data['mobile'])) {
-                //echo "<tr valign=top><td><b>Cell Phone: </b></td><td>";
-                //$cells = $this->format_cell($data);
-                //format_misc($cells);
-                //echo "</td></tr>";
-                echo "<tr valign=top><td><b>Cell Phone: </b></td><td>".$data['mobile'][0]."</td></tr>";
             }
 
             echo '</table>';
