@@ -293,6 +293,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $q[$name] = $this->request[$name];
         }
         $query_parts = $this->build_query($q);
+		pray($query_parts);
         if (!$query_parts) {
             $form->set_error('first_name', 'You do not appear to be searching for anything.  Please try again.');
             return;
@@ -387,7 +388,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $status =  '<p class="matchCount">Your search ';
         $status .= ($desc) ? 'for '. $desc .' found ' : 'found ';
         if (count($people) > MAX_RESULTS)
-            $status .= 'more than '. MAX_RESULTS .' matches. Showing the first '. MAX_RESULTS .'.';
+//            $status .= 'more than '. MAX_RESULTS .' matches. Showing the first '. MAX_RESULTS .'.';
+            $status .= count($people) . ' matches. Showing the first '. MAX_RESULTS .'.';
+		
         elseif (count($people) > 1)
             $status .= count($people).' matches.';
         else
@@ -1405,8 +1408,18 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         }
         // If you add something here, be sure to update the check at the bottom that's
         // discarding filters with only 3 elements
-        $filter[] = '(!(ou=Null temporary OU))'; // exclude temporary accounts
-        $filter[] = '(!(description=Left feed*))'; // exclude expired accounts
+/*
+ * Removing the next two lines
+ * They were creating a query string, thereby killing the check to see if the query string
+ * was null.
+ * Also, they remove some good results from our ldap
+ * 
+ * Steve Smith
+ * 
+ *      $filter[] = '(!(ou=Null temporary OU))'; // exclude temporary accounts
+ *      $filter[] = '(!(description=Left feed*))'; // exclude expired accounts 
+ * 
+ */
         // Where it reads 'luther.edu' it used to read 'carleton.edu' but removing this
         // in general fixes things because I am not sure we set up anything like this (whitepages?) - burkaa
         //$filter[] = '(edupersonentitlement=urn:mace:luther.edu:entl:whitepages)';
