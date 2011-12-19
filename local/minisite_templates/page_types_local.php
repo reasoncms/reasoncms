@@ -366,7 +366,8 @@ $GLOBALS['_reason_page_types_local'] = array(
                 	'main_post' => array(
                     	'module' => 'publication',
                 		'related_publication_unique_names' => array(luther_sports_get_publication_unique_name("headlines")),
-						'related_mode' => 'true',
+               			'show_featured_items' => true,
+						'related_mode' => 'false',
 						'related_title' => '',
                         'max_num_items' => 5,
 					),
