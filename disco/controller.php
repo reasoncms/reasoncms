@@ -596,6 +596,7 @@ class FormController
 		{
 			// Dave -- I changed this so that the form is not left in a bizarre place.  -- matt
 			trigger_error( 'Strange behavior: requested multipage form step not the same as the actual step being displayed. Probably due to session timeout. Client browser headered to start of form.',E_USER_NOTICE );
+			//pray($this);
 			header('Location: '.$this->_base_url.'?'.$this->_step_var_name.'='.$this->_get_start_step() );
 			exit;
 		}
@@ -925,6 +926,12 @@ class FormController
 			$this->_form_data = $this->session->get($this->_data_key);
 		}
 		return $this->_form_data;
+	}
+	
+	function set_all_form_data($data)
+	{
+		$this->_form_data = $data;
+		$this->session->set($this->_data_key, $this->_form_data);
 	}
 	
 	function destroy_form_data()
