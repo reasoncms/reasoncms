@@ -43,6 +43,8 @@ class ds_ldap_luther_directory extends ds_ldap_luther {
 		'base_attrs' => array('uid','mail','edupersonprimaryaffiliation','edupersonaffiliation','ds_username'),
 		'subtree_search' => false,
 		'base_dn' => 'ou=People,dc=luther,dc=edu',
+		// To add Alumni use the line below //
+		//'base_dn' => 'dc=luther,dc=edu',
 		);
 		
 	/**
