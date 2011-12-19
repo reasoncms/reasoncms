@@ -77,16 +77,18 @@ class ds_ldap_luther_directory extends ds_ldap_luther {
 		$this->_conn_params = array(
 //	  	'host' => 'replica-1.luther.edu',
 	  	'host' => 'ldap.luther.edu',
-        	'port' => 389,
+        'port' => 389,
 		'ldap_version' => 3,
 		'use_tls' => false,
 		'lookup_dn' => 'uid='.$username.',ou=People,dc=luther,dc=edu',
-        	'lookup_password' => $password,
+        'lookup_password' => $password,
 		);
-                $this->authenticate_helper();
+        
+		$this->authenticate_helper();
 	}
-        function authenticate_helper() {
-		if( !ldap_bind( $this->_conn, $this->_conn_params['lookup_dn'], $this->_conn_params['lookup_password'] ) ) {
+	function authenticate_helper() {
+		$bind_result = ldap_bind( $this->_conn, $this->_conn_params['lookup_dn'], $this->_conn_params['lookup_password'] );
+		if( !$bind_result ){
 			$this->_error = sprintf( 'LDAP bind failed for %s, %s' , $this->_conn_params['lookup_dn'], ldap_error( $this->_conn ));
 		}
 		return $bind_result;
