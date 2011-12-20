@@ -580,11 +580,6 @@ class uploadType extends defaultType
 			$this->_get_upload_display($current);
 	}
 	
-	function get_cleanup_rule()
-	{
-		return array( 'function' => 'turn_into_array' );
-	}
-	
 	/**
 	 * Gets any hidden input fields to accompany the upload field.
 	 * Subclasses that override this method should call the parent
