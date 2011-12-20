@@ -282,10 +282,38 @@ class uploadType extends defaultType
 	function get()
 	{
 		$current_file_info = $this->_get_current_file_info();
+
 		if(is_object($current_file_info))
 			return get_object_vars($current_file_info);
 		else
 			return null;
+	}
+	
+	/**
+	 * Overrides defaultType's implementation of set
+	 * 
+	 * This plasmature type is a little screwy, in that get() returns an array, even
+	 * though the internal value of the element is a string (the full path of the
+	 * file). That makes it difficult to reassign the value you previous got from the element
+	 * (as when using the multistep form controller). This method tries to address that
+	 * by allowing you to pass either the array you got from get() or the string path
+	 * value, and doing the right thing in either case.
+	 *
+	 * @param array or string
+	 */
+	function set($value)
+	{
+		if (is_array($value))
+		{
+			$this->file = $value;
+			if (isset($value['name'])) $this->file_display_name = $value['name'];
+			if (isset($value['path'])) $this->existing_file = $value['path'];
+			if (isset($value['uri'])) $this->existing_file_web = $value['uri'];
+		}
+		else
+		{
+			$this->existing_file = $value;
+		}
 	}
 	
 	/**
@@ -550,6 +578,11 @@ class uploadType extends defaultType
 		return $this->_get_hidden_display($current).
 			$this->_get_current_file_display($current).
 			$this->_get_upload_display($current);
+	}
+	
+	function get_cleanup_rule()
+	{
+		return array( 'function' => 'turn_into_array' );
 	}
 	
 	/**
