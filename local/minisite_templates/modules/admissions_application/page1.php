@@ -45,8 +45,12 @@ class ApplicationPageOne extends FormStep {
             'type' => 'comment',
             'text' => '<h4>When do you wish to enroll at Luther?</h4>',
         ),
+		// hard coding terms since the logic isn't working
         'enrollment_term' => array(
-            'type' => 'text',
+            'type' => 'radio_no_sort',
+			'options' => array('2012JT' => 'J-term 2012',
+								'2012SP' => 'Spring 2012',
+								'2012FA' => 'Fall 2012')
         ),
         'citizenship_status_comment' => array(
             'type' => 'comment',
@@ -81,71 +85,71 @@ class ApplicationPageOne extends FormStep {
             $this->show_form = false;
         } else {
             $this->show_form = true;
-
-        $date = getdate();
-
-        $cur_date = date("Y-m-d");
-
-        $add_next_fall = date($date['year'] . "-06-01");
-        $fa_deadline = date($date['year'] . "-08-15");
-        $jt_deadline = date($date['year'] . "-12-15");
-        $sp_deadline = date($date['year'] . "-01-15");
-
-        if ($cur_date > $fa_deadline) {
-            ($fa_year = date('Y') + 1);
-        } else {
-            $fa_year = date('Y');
-        }
-
-        if ($cur_date > $jt_deadline && $cur_date <= (date('Y') . "-12-31")) {
-            $jt_year = date('Y') + 2;
-        } else {
-            $jt_year = date('Y') + 1;
-        }
-
-        if ($cur_date > $sp_deadline) {
-            $sp_year = date('Y') + 1;
-        } else {
-            $sp_year = date('Y');
-        }
-
-
-        // if passed fall deadline but not jterm one
-        if ($cur_date > $fa_deadline && $cur_date < $jt_deadline) {
-            $this->enroll_term = array(
-                $jt_year . 'JT' => 'J-term ' . $jt_year,
-                $sp_year . 'SP' => 'Spring ' . $sp_year,
-                $fa_year . 'FA' => 'Fall ' . $fa_year);
-        }
-
-        // if not passed fall deadline
-        if ($cur_date < $fa_deadline && $cur_date > $sp_deadline) {
-            $this->enroll_term = array(
-                $fa_year . 'FA' => 'Fall ' . $fa_year,
-                $jt_year . 'JT' => 'J-term ' . $jt_year,
-                $sp_year . 'SP' => 'Spring ' . $sp_year
-            );
-            if ($cur_date >
-                    $add_next_fall){
-                $this->enroll_term = array(
-                    $fa_year . 'FA' => 'Fall ' . $fa_year,
-                    $jt_year . 'JT' => 'J-term ' . $jt_year,
-                    $sp_year . 'SP' => 'Spring ' . $sp_year,
-                    ($fa_year + 1) . 'FA' => 'Fall ' . ($fa_year + 1)
-                );
-            }
-        }
-
-        //if passed fall and jterm deadline
-        if ($cur_date < $sp_deadline && $cur_date > $jt_deadline) {
-            $this->enroll_term = array(
-                $sp_year . 'SP' => 'Spring ' . $sp_year,
-                $fa_year . 'FA' => 'Fall ' . $fa_year,
-                $jt_year . 'JT' => 'J-term ' . $jt_year);
-        }
-
-        $this->change_element_type('enrollment_term', 'radio_no_sort', array(
-            'options' => $this->enroll_term));
+// Commenting out enrollment term logic as it wasn't working
+//        $date = getdate();
+//
+//        $cur_date = date("Y-m-d");
+//
+//        $add_next_fall = date($date['year'] . "-06-01");
+//        $fa_deadline = date($date['year'] . "-08-15");
+//        $jt_deadline = date($date['year'] . "-12-15");
+//        $sp_deadline = date($date['year'] . "-01-15");
+//
+//        if ($cur_date > $fa_deadline) {
+//            ($fa_year = date('Y') + 1);
+//        } else {
+//            $fa_year = date('Y');
+//        }
+//
+//        if ($cur_date > $jt_deadline && $cur_date <= (date('Y') . "-12-31")) {
+//            $jt_year = date('Y') + 2;
+//        } else {
+//            $jt_year = date('Y') + 1;
+//        }
+//
+//        if ($cur_date > $sp_deadline) {
+//            $sp_year = date('Y') + 1;
+//        } else {
+//            $sp_year = date('Y');
+//        }
+//
+//
+//        // if passed fall deadline but not jterm one
+//        if ($cur_date > $fa_deadline && $cur_date < $jt_deadline) {
+//            $this->enroll_term = array(
+//                $jt_year . 'JT' => 'J-term ' . $jt_year,
+//                $sp_year . 'SP' => 'Spring ' . $sp_year,
+//                $fa_year . 'FA' => 'Fall ' . $fa_year);
+//        }
+//
+//        // if not passed fall deadline
+//        if ($cur_date < $fa_deadline && $cur_date > $sp_deadline) {
+//            $this->enroll_term = array(
+//                $fa_year . 'FA' => 'Fall ' . $fa_year,
+//                $jt_year . 'JT' => 'J-term ' . $jt_year,
+//                $sp_year . 'SP' => 'Spring ' . $sp_year
+//            );
+//            if ($cur_date >
+//                    $add_next_fall){
+//                $this->enroll_term = array(
+//                    $fa_year . 'FA' => 'Fall ' . $fa_year,
+//                    $jt_year . 'JT' => 'J-term ' . $jt_year,
+//                    $sp_year . 'SP' => 'Spring ' . $sp_year,
+//                    ($fa_year + 1) . 'FA' => 'Fall ' . ($fa_year + 1)
+//                );
+//            }
+//        }
+//
+//        //if passed fall and jterm deadline
+//        if ($cur_date < $sp_deadline && $cur_date > $jt_deadline) {
+//            $this->enroll_term = array(
+//                $sp_year . 'SP' => 'Spring ' . $sp_year,
+//                $fa_year . 'FA' => 'Fall ' . $fa_year,
+//                $jt_year . 'JT' => 'J-term ' . $jt_year);
+//        }
+//
+//        $this->change_element_type('enrollment_term', 'radio_no_sort', array(
+//            'options' => $this->enroll_term));
 
         $this->pre_fill_form();
         }
