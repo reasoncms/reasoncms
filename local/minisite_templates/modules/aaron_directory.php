@@ -293,7 +293,6 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $q[$name] = $this->request[$name];
         }
         $query_parts = $this->build_query($q);
-		pray($query_parts);
         if (!$query_parts) {
             $form->set_error('first_name', 'You do not appear to be searching for anything.  Please try again.');
             return;
@@ -681,7 +680,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 echo "<tr valign=top><td><b>Year In School: </b></td><td>".$data['studentyearinschool'][0]."</td></tr>";
             }
             if (isset($data['studentadvisor'])) {
-                echo "<tr valign=top><td><b>Advisor: </b></td><td>".$data['studentadvisor'][0]."</td></tr>";
+				$advisor = $this->get_search_results('(&(|(uid='.$data['studentadvisor'][0].')))');
+				$advisor_displayname = $advisor[$data['studentadvisor'][0]]['displayname'][0];
+                echo "<tr valign=top><td><b>Advisor: </b></td><td><a href=\"?netid[]=".$data['studentadvisor'][0]."\">".$advisor_displayname."</a></td></tr>";
             }
             if (isset($data['studentpostoffice'])) {
                 //echo '<li class="personMajor">'. $this->format_majors($data) .'</li>';
@@ -922,6 +923,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $str .= '</tr>';
             $str .= '</thead>';
         $str .= '<tbody>';
+		
+		// splicing the array to only show the first MAX_RESULTS results
+		array_splice($people, MAX_RESULTS);
         foreach($people as $data) {
           $str .= '<tr class="">';
           if (isset ($data['uid'][0])) {
