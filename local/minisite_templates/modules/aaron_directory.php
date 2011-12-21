@@ -753,15 +753,17 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if (isset($data['ocpostaladdress'])) {
                 echo "<tr valign=top><td><b>Off Campus Address: </b></td><td>"
                 .$data['ocpostaladdress'][0].
-              "<br>"
-              .$data['ocl'][0].
-              ", "
-              .$data['ocst'][0].
-              "<br>"
-              .$data['ocpostalcode'][0].
-              "<br>"
-              .$data['occ'][0].
-              "</td></tr>";
+				"<br>"
+				.$data['ocl'][0].
+				", "
+				.$data['ocst'][0].
+				"<br>"
+				.$data['ocpostalcode'][0];
+				if (isset($data['occ'])){
+					echo "<br>"
+					.$data['occ'][0];
+				}
+				echo "</td></tr>";
             }
             if (isset($data['ocphone'])) {
                 echo "<tr valign=top><td><b>Off Campus Phone: </b></td><td>".$data['ocphone'][0]."</td></tr>";
@@ -1778,7 +1780,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
         $logged_user = reason_check_authentication();
 		
-        $password = isset($_SESSION['password']);
+		$password = (isset($_SESSION)) ? $_SESSION['password'] : '';
         //$password = $user->get_value('user_password_hash');
         
 
