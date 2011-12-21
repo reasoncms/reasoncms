@@ -246,7 +246,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 //print_r($ldap_admin);
                 //it is empty, but it still exists so check must be for empty not if it exists
 		//if ($ldap_admin){
-                if ($ldap_admin[0]!=null){
+                if (isset($ldap_admin[0])){
+//                if ($ldap_admin[0]!=null){
 			echo "<a href='./admin.php?mode=pending&name=".$logged_user."'>Admin</a>";
 			echo " | ";
 		}
@@ -976,7 +977,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         foreach ($people as $data) {
             $row = array();
             $row[] = $data['sn'][0];
-            $row[] = $data['givenname'][0];
+            $row[] = (isset($data['givenname'][0]));
             $row[] = (isset($data['edupersonnickname']) && $data['edupersonnickname'][0] != $data['givenname'][0]) ? $data['edupersonnickname'][0] : '';
             $row[] = (isset($data['mail'])) ? $data['mail'][0] : '';
             $row[] = $this->format_phone($data);
@@ -1092,7 +1093,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
 
             // Hiding Alumni from results
-             if ($data['edupersonprimaryaffiliation'][0] == 'Alumni') {
+             if (isset($data['edupersonprimaryaffiliation'][0]) && ($data['edupersonprimaryaffiliation'][0] == 'Alumni')) {
                 foreach ($nr_suppress as $attr)
                     unset($results[$key]);
             }
@@ -1775,10 +1776,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
                 'programstartdate','programenddate','lastupdate', 'alumClassYear', 'alumOccupation');
 
-        $logged_user = reason_check_authentication();        
-        
-        //pray($logged_user);
-        $password = $_SESSION['password'];
+        $logged_user = reason_check_authentication();
+		
+        $password = isset($_SESSION['password']);
         //$password = $user->get_value('user_password_hash');
         
 
@@ -1815,9 +1815,9 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         //just by a sinlge attribute
         //$dir->search_by_attribute('sn', 'burk', $attributes);
 
-        $dir->sort_records(array('sn','givenname'));
+		
+        $dir->sort_records(array('sn', 'cn'));
         $entries = $dir->get_records();
-		echo count($entries) . '=entries';
         return $entries;
     }
 
