@@ -28,13 +28,13 @@
 	$report = '';
 	$report_head = "Synchronizing with directory...\n\n";
 
+	$dir = new directory_service;
 	foreach( $sites AS $site )
 	{
 		$did_something = false;
 		$report_section = '';
 		$report_section .= "- ".$site->get_value('name')."\n";
 		// hit directory - get all faculty and staff, add them to the faculty staff type
-		$dir = new directory_service;
 		$dept = $site->get_value('department');	// use the department from the site entity
 		$filter = '(&(ou='.$dept.')(|(eduPersonPrimaryAffiliation=staff)(eduPersonPrimaryAffiliation=faculty)))';	// this is the filter
 		if ($dir->search_by_filter($filter, array('ds_username')))
