@@ -186,7 +186,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
         parent::init( $args );
         if($head_items =& $this->get_head_items()) {
-            $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
+//            $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
             $head_items->add_stylesheet('/reason/css/directory.css');
             //$head_items->add_javascript('/reason/js/tableSorter.js');
             $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
@@ -318,7 +318,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         // Preformed scrub_entries before the count returned is taken so that flagged
         // students do not appear on count of results
         $this->scrub_results($entries);
-
+		
         // If we have some results, call the appropriate display method
         if (count($entries) ) {
             //$this->scrub_results($entries);
@@ -350,12 +350,12 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
     function display_form() //{{{
     {
-        $this->form->change_element_type( 'building', 'select', array('options' => $this->menu_data['buildings']) );
+//        $this->form->change_element_type( 'building', 'select', array('options' => $this->menu_data['buildings']) );
         //$this->form->change_element_type( 'major', 'select', array('options' => $this->menu_data['majors']) );
         //$this->form->change_element_type( 'department', 'select', array('options' => $this->menu_data['acad']) );
         //$this->form->change_element_type( 'office', 'select', array('options' => $this->menu_data['admin']) );
-        $this->form->set_value('pictures', true);
-        $this->form->set_value('exact', true);
+//        $this->form->set_value('pictures', true);
+//        $this->form->set_value('exact', true);
 
         //$this->form->set_value('display_as', 'book');
         if ($this->context == 'external') {
@@ -701,13 +701,19 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 echo "<tr valign=top><td><b>Home Address: </b></td><td>"
                 .$data['postaladdress'][0].
                 "<br>"
-                .$data['l'][0].
-                ", "
-                .$data['st'][0].
-                "<br>"
-                .$data['postalcode'][0].
-                "<br>"
-                .$data['c'][0].
+                .$data['l'][0];
+				if (isset($data['st'])){
+                echo ", "
+                .$data['st'][0];
+				}
+				if (isset($data['postalcode'])){
+                echo "<br>"
+                .$data['postalcode'][0];
+				}
+                if (isset($data['lutherc'])){
+				echo "<br>"
+                . $data['lutherc'][0];
+				}
                 "</td></tr>";
             }
             if (isset($data['telephonenumber'])) {
@@ -1357,18 +1363,21 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
     function display_form_help() //{{{
     {
-        if ($blurb = get_text_blurb_content('campus_directory_help_blurb')) {
-            echo '<div id="campusDirHelp">';
-            if ($this->context == 'external')
-                echo '<p><strong>Off-campus users:</strong> If you have a Luther account, you can <a href="/login/">log in for full directory access.</a></p>';
-            echo get_text_blurb_content('campus_directory_corrections_blurb');
-            echo $blurb;
-            echo '</div>';
-        } else {
-            echo '<div id="campusDirCorrections">';
-            echo get_text_blurb_content('campus_directory_corrections_blurb');
-            echo '</div>';
-        }
+			/** 
+			 * Removed until we decide to add these features (Steve)
+			 */
+//        if ($blurb = get_text_blurb_content('campus_directory_help_blurb')) {
+//            echo '<div id="campusDirHelp">';
+//            if ($this->context == 'external')
+//                echo '<p><strong>Off-campus users:</strong> If you have a Luther account, you can <a href="/login/">log in for full directory access.</a></p>';
+//            echo get_text_blurb_content('campus_directory_corrections_blurb');
+//            echo $blurb;
+//            echo '</div>';
+//        } else {
+//            echo '<div id="campusDirCorrections">';
+//            echo get_text_blurb_content('campus_directory_corrections_blurb');
+//            echo '</div>';
+//        }
     }
 
     function clean_input(&$q) //{{{
@@ -1757,7 +1766,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName',
                 'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
                 'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization','studentyearinschool','studentadvisor',
-                'eduPersonAffiliation','studentStatus','alumClassYear','postaladdress','l','st','postalcode','c',
+                'eduPersonAffiliation','studentStatus','alumClassYear','postaladdress','l','st','postalcode','lutherc',
                 'eduPersonEntitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
                 'programstartdate','programenddate','lastupdate', 'alumClassYear', 'alumOccupation');
@@ -1804,6 +1813,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
         $dir->sort_records(array('sn','givenname'));
         $entries = $dir->get_records();
+		echo count($entries) . '=entries';
         return $entries;
     }
 
