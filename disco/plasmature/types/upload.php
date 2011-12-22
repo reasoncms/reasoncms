@@ -301,6 +301,7 @@ class uploadType extends defaultType
 	 *
 	 * @param array or string
 	 */
+	 /*
 	function set($value)
 	{
 		if (is_array($value))
@@ -315,6 +316,7 @@ class uploadType extends defaultType
 			$this->existing_file = $value;
 		}
 	}
+	*/
 	
 	/**
 	 * Populates the {@link $value} field of the upload type.
