@@ -202,13 +202,13 @@ class AppDevOnCallForm extends DefaultThorForm
 		
 		$recipient = $developer_info[$type];
 		$sender = 'AppDevOnCall@luther.edu';
-		$subject = $problem;
+		$txt_body = $problem;
 		$html_body = '';
 		
 
-		$txt_body = $this->get_value_from_label('Username')."\n";
-		$txt_body .= $info['officephone'][0]."\n";
-		if (isset($info['officephone'][1])) $txt_body .= $info['officephone'][1];
+		$subject = $this->get_value_from_label('Username')."\n";
+		$subject .= $info['officephone'][0]."\n";
+		if (isset($info['officephone'][1])) $subject .= $info['officephone'][1];
 		
 		$mailer = new Email($recipient, $sender, $sender, $subject, $txt_body, $html_body);
 		$mailer->send();
