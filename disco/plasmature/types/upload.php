@@ -282,7 +282,6 @@ class uploadType extends defaultType
 	function get()
 	{
 		$current_file_info = $this->_get_current_file_info();
-
 		if(is_object($current_file_info))
 			return get_object_vars($current_file_info);
 		else
@@ -296,14 +295,17 @@ class uploadType extends defaultType
 	 * though the internal value of the element is a string (the full path of the
 	 * file). That makes it difficult to reassign the value you previous got from the element
 	 * (as when using the multistep form controller). This method tries to address that
-	 * by allowing you to pass either the array you got from get() or the string path
-	 * value, and doing the right thing in either case.
+	 * by allowing you to pass the array you got from get() and put the element back into
+	 * the state it was in during the get().
 	 *
 	 * @param array or string
 	 */
-	 /*
 	function set($value)
 	{
+		// Implement the default behavior, in case anything is relying on that
+		$this->value = $value;
+		
+		// Provide extra handling for passed arrays
 		if (is_array($value))
 		{
 			$this->file = $value;
@@ -311,12 +313,7 @@ class uploadType extends defaultType
 			if (isset($value['path'])) $this->existing_file = $value['path'];
 			if (isset($value['uri'])) $this->existing_file_web = $value['uri'];
 		}
-		else
-		{
-			$this->existing_file = $value;
-		}
 	}
-	*/
 	
 	/**
 	 * Populates the {@link $value} field of the upload type.
