@@ -189,7 +189,7 @@ class AppDevOnCallForm extends DefaultThorForm
 		$txt = "Software Development Emergency Auto-Generate";
 		$txt .= "\n";
 		$txt .= $this->get_value_from_label('Emergency');
-		$hd_mail = new Email('kbox@helpdesk.luther.edu', $this->get_value_from_label('Username'), $this->get_value_from_label('Username'), $this->get_value_from_label('Emergency'), $txt, $txt);
+		$hd_mail = new Email('kbox@help.luther.edu', $this->get_value_from_label('Username'), $this->get_value_from_label('Username'), $this->get_value_from_label('Emergency'), $txt, $txt);
 		$hd_mail->send();
 	}
 	
