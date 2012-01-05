@@ -641,7 +641,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 echo "<tr valign=top><td><b>Username: </b></td><td>".$data['uid'][0]."</td></tr>";
             }
             if (isset($data['mail'])) {
-                echo "<tr valign=top><td><b>E-mail: </b></td><td>".$data['mail'][0]."</td></tr>";
+                echo "<tr valign=top><td><b>E-mail: </b></td><td><a href=\"mailto:" .$data['mail'][0]. "\">" . $data['mail'][0] . "</a></td></tr>";
+						
             }
             if (isset($data['edupersonprimaryaffiliation'])) {
                 echo "<tr valign=top><td><b>Affiliation: </b></td><td>".$data['edupersonprimaryaffiliation'][0]."</td></tr>";
