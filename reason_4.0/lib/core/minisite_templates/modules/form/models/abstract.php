@@ -37,7 +37,7 @@ class AbstractFormModel
 	}
 
 	/**
-	 * When a view is instantiated - the model is given an opportunity to transform it
+	 * When an admin view is instantiated - the model is given an opportunity to transform it
 	 */
 	function transform_admin_form()
 	{
