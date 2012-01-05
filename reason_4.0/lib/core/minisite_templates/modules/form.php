@@ -130,13 +130,20 @@
 		}
 
 		/**
-		 *  Get the form controller - this must be specified as a page type parameter, otherwise the thor controller is used.
+		 *  Get the form controller - if a thor model is being used we use our REASON_FORMS_THOR_DEFAULT_CONTROLLER by default.
 		 */
 		function &get_form_controller()
 		{
 			if (!isset($this->form_controller))
 			{
-				$default_controller_filename = (defined('REASON_FORMS_THOR_DEFAULT_CONTROLLER')) ? REASON_FORMS_THOR_DEFAULT_CONTROLLER : 'thor.php';
+				// lets check if the model is (or is based on) thor.
+				$model =& $this->get_form_model();
+				if ((get_class($model) == 'ThorFormModel') || (is_subclass_of($model, 'ThorFormModel')))
+				{
+					$default_controller_filename = (defined('REASON_FORMS_THOR_DEFAULT_CONTROLLER')) ? REASON_FORMS_THOR_DEFAULT_CONTROLLER : 'thor.php';
+				}
+				else $default_controller_filename = 'default.php';
+				
 				$controller_filename = (!empty($this->params['form_controller'])) ? $this->params['form_controller'] : $default_controller_filename;
 				if (reason_file_exists('minisite_templates/modules/form/controllers/'.$controller_filename))
 				{
