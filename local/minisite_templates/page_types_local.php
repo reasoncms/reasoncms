@@ -326,17 +326,24 @@ $GLOBALS['_reason_page_types_local'] = array(
                 ),
                 'luther2010_naa' => array(
                     'main' => 'content',
-                    'main_post' => array(
-                        'module' => 'publication',
-         		'related_publication_unique_names' => array(luther_get_publication_unique_name("headlines")),
-         		'related_mode' => 'true',
-         		'max_num_items' => 3,
-                    ),
                     'imagetop' => 'luther_carousel',
                     'content_blurb' => '',
                     'pre_sidebar' => 'main_blurb',
                     'sidebar' => 'luther_events_mini',
-                    'post_sidebar' => '',
+                    'post_sidebar' => array( // Spotlights
+                        'module' => 'publication',
+                        'related_publication_unique_names' => array(luther_get_publication_unique_name("spotlights")),
+                        'related_mode' => 'true',
+                        'related_title' => '',
+                        'related_order' => 'random',
+                        'max_num_items' => 1,
+                        'markup_generator_info' =>array(
+                             'list_item' =>array (
+                                  'classname' => 'SpotlightListItemMarkupGenerator',
+                                  'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+                              ),
+                         ),
+                    ),
                 ),
                 'luther2010_public_information' => array(
                     'main' => 'content',
