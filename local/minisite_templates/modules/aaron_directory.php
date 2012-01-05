@@ -169,7 +169,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             'target'=>'search_for',
             'display'=>'display_as',
     );
-
+	
     function init( $args = array() ) //{{{
     {
 			force_secure();
@@ -222,7 +222,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $this->form->error_header_text = 'Search error';
         $this->form->add_callback(array(&$this, 'show_results'),'process');
         $this->form->add_callback(array(&$this, 'display_form_help'),'post_show_form');
-        $this->form->add_callback(array(&$this, 'run_error_checks'),'run_error_checks');
+		$this->form->add_callback(array(&$this, 'run_error_checks'),'run_error_checks');
         $this->form->init();
         $this->get_menu_data();
         $url_parts = parse_url( get_current_url() );
@@ -1361,7 +1361,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 $affils[$stat[$affil]] = ucfirst($affil);
         }
         ksort($affils);
-        return join(' / ', $affils);
+        return join('<br>', $affils);
     }
 
     function format_search_key($key) {
