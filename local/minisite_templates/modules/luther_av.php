@@ -163,7 +163,12 @@
 			if (current($avfilelist)->get_value('media_format') == 'Flash')
 			{
 			//	if (preg_match("/(^http:\/\/www\.youtube\.com\/)(\w+)(\/(.*?)$)/", $vurl, $m ))
-				if (preg_match("/(^http:\/\/www\.youtube\.com\/)(watch\?v\=)((.*?)$)/", current($avfilelist)->get_value('url'), $m ))
+				$url = current($avfilelist)->get_value('url');
+				if (preg_match("/(^http:\/\/youtu\.be\/)((.*?)$)/", $url, $m))
+				{
+					$url = "http://www.youtube.com/watch?v=" . $m[2];
+				}
+				if (preg_match("/(^http:\/\/www\.youtube\.com\/)(watch\?v\=)((.*?)$)/", $url, $m ))
 				{
 					if (!$this->params['full_size'])
 					{
