@@ -172,7 +172,7 @@ class DefaultFeatureView extends FeatureView
 				}
 				
 				$title=$d['title'];
-				$str.="<a  href=\"?feature=".$id."\" title=\"".$title."\" class=\"".$anchor_class." navItem\">"."<span>".$feature_num."</span></a>";
+				$str.="<a  href=\"?feature=".$id."\" title=\"".reason_htmlspecialchars($title)."\" class=\"".$anchor_class." navItem\">"."<span>".$feature_num."</span></a>";
 				$feature_num++;
 			}
 		}
@@ -261,7 +261,7 @@ class DefaultFeatureView extends FeatureView
 				$title=$titles[$curr_index+1];
 			}
 		}
-		$str="<a href=\"?feature=".$id."\" title=\"".$title."\" class=\"".$class." \">"."<span>".$arrow."</span></a>";
+		$str="<a href=\"?feature=".$id."\" title=\"".reason_htmlspecialchars($title)."\" class=\"".$class." \">"."<span>".$arrow."</span></a>";
 		return $str;
 
 
@@ -357,7 +357,7 @@ class DefaultFeatureView extends FeatureView
 			if($img_url!="none")
 			{
 					$media_str ="<div class=\"featureImage\" >\n";
-					$media_str.=$image_anchor_start."<img alt=\"".$img_alt."\" name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
+					$media_str.=$image_anchor_start."<img alt=\"".reason_htmlspecialchars($img_alt)."\" name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
 					$media_str.="</div>";
 			}
 			$type_str = ' featureTypeImage';
@@ -377,7 +377,7 @@ class DefaultFeatureView extends FeatureView
 			{
 				$link = ($has_anchor) ? ' (' .$anchor_start . 'more' . $anchor_end . ')' : '';
 				$media_str ="<div class=\"featureImage\" >\n";
-				$media_str.=$image_anchor_start."<img alt=\"".$img_alt."\"  name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
+				$media_str.=$image_anchor_start."<img alt=\"".reason_htmlspecialchars($img_alt)."\"  name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
 				$media_str.="</div>";
 				$media_str.="<div class=\"featureVideo\" id=\"".$img_id."\" style=\"\">";
 				$media_str .= $av_html;
