@@ -132,7 +132,7 @@ class inlineAVFeatureView extends FeatureView
 				}
 				
 				$title=$d['title'];
-				$str.="<a  href=\"?feature=".$id."\" title=\"".$title."\" class=\"".$anchor_class." navItem\">".$feature_num."</a>";
+				$str.="<a  href=\"?feature=".$id."\" title=\"".reason_htmlspecialchars($title)."\" class=\"".$anchor_class." navItem\">".$feature_num."</a>";
 				$feature_num++;
 			}
 		}
@@ -221,7 +221,7 @@ class inlineAVFeatureView extends FeatureView
 				$title=$titles[$curr_index+1];
 			}
 		}
-		$str="<a href=\"?feature=".$id."\" title=\"".$title."\" class=\"".$class." \">".$arrow."</a>";
+		$str="<a href=\"?feature=".$id."\" title=\"".reason_htmlspecialchars($title)."\" class=\"".$class." \">".$arrow."</a>";
 		return $str;
 
 
@@ -315,7 +315,7 @@ class inlineAVFeatureView extends FeatureView
 			if($img_url!="none")
 			{
 			//				$media_str ="<div class=\"featureImage\" >\n";
-					$media_str.=$image_anchor_start."<img alt=\"".$img_alt."\" name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
+					$media_str.=$image_anchor_start."<img alt=\"".reason_htmlspecialchars($img_alt)."\" name=\"big_pic\" src=\"".$img_url."\" />".$image_anchor_end."\n";
 			//				$media_str.="</div>";
 			}
 
