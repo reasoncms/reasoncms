@@ -287,6 +287,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_live_at_luther'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_naa'
+			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_paideia'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_sports')
 		{
@@ -298,6 +299,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			//&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_live_at_luther'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_naa'
+			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_paideia'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_sports')
 		{
@@ -317,6 +319,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 		elseif ($this->has_content( 'pre_sidebar' ) && ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_paideia'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports'))
 		{
 			echo '<aside class="quote">'."\n";
@@ -334,12 +337,12 @@ class LutherTemplate2010 extends MinisiteTemplate
 			echo '</aside> <!-- class="gallery group" -->'."\n";
 		}
 		
-		if ($this->has_content( 'sidebar' ) && $this->cur_page->get_value( 'custom_page' ) != 'luther2010_sports')
+		if ($this->has_content( 'sidebar' ) && $this->cur_page->get_value( 'custom_page' ) == 'luther2010_paideia')
 		{
-			echo '<div id="sidebar">'."\n";
-			$this->run_section( 'sidebar' );
-			echo '<hr>'."\n";
-			echo '</div>'."\n";
+			echo '<section class="spotlight" role="group">'."\n";
+			echo '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+			$this->run_section('sidebar');
+			echo '</section> <!-- class="spotlight" role="group" -->'."\n";
 		}
 		elseif ($this->has_content( 'sidebar' ) && $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 		{
@@ -348,6 +351,13 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$this->run_section( 'sidebar');
 			echo '</aside> <!-- class="news group" -->'."\n";
 		}
+		elseif ($this->has_content( 'sidebar' ))
+		{
+			echo '<div id="sidebar">'."\n";
+			$this->run_section( 'sidebar' );
+			echo '<hr>'."\n";
+			echo '</div>'."\n";
+		}		
 		
 		if ($this->has_content( 'twitter_sub_nav' ) && ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_carousel'
@@ -355,6 +365,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_live_at_luther'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_paideia'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports'))
 		{
@@ -375,6 +386,13 @@ class LutherTemplate2010 extends MinisiteTemplate
 			echo '<header class="blue-stripe"><h1><span>News</span></h1></header>'."\n";
 			$this->run_section( 'post_sidebar');
 			echo '</aside> <!-- class="news group" -->'."\n";
+		}
+		elseif ($this->has_content( 'post_sidebar' ) && ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_paideia'))
+		{
+			echo '<section class="spotlight" role="group">'."\n";
+			echo '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+			$this->run_section( 'post_sidebar');
+			echo '</section> <!-- class="spotlight" role="group" -->'."\n";
 		}
 		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports' && $this->has_content( 'post_sidebar' ))
 		{
@@ -401,6 +419,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		elseif ($this->has_content( 'flickr_slideshow' ) && ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
 		|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 		|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa'
+		|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_paideia'
 		|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 		|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports'))
 		{
@@ -462,6 +481,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_live_at_luther'
 			&& $this->cur_page->get_value('custom_page') != 'luther2010_music'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_naa'
+			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_paideia'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information'
 			&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_sports')
 		{
@@ -519,6 +539,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa')
 		{
 			$this->naa_main_content();
+			return;
+		}
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_paideia')
+		{
+			$this->paideia_main_content();
 			return;
 		}
 		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
@@ -656,6 +681,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_live_at_luther'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_paideia'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 		{
@@ -696,6 +722,7 @@ class LutherTemplate2010 extends MinisiteTemplate
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_live_at_luther'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa'
+        	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_paideia'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 		{
@@ -1055,6 +1082,41 @@ class LutherTemplate2010 extends MinisiteTemplate
 		{
 			echo '<div class="contentPost">'."\n";
 			echo '<header class="red-stripe"><h1><span>News</span></h1></header>'."\n";
+			$this->run_section( 'main_post' );
+			echo '</div>'."\n";
+		}
+
+     	$this->luther_add_this();
+     	
+     	echo '</div> <!-- class="content content-primary" -->'."\n";
+	}
+	
+	function paideia_main_content()
+	// contains carousel, title, breadcrumbs, add-this, and main content on the norse athletic association site
+	{
+		$this->run_section( 'imagetop' );
+		
+		echo '<div class="content content-primary">'."\n";
+		
+		$this->luther_breadcrumbs();
+		
+		// page title
+		if ($this->has_content( 'main_head' ))
+		{			
+			$this->run_section( 'main_head' );			
+		}
+		
+		if ($this->has_content( 'main' ))
+		{
+			echo '<div class="contentMain">'."\n";
+			
+			$this->run_section( 'main' );
+			echo '</div>'."\n";
+		}
+		
+		if ($this->has_content( 'main_post' ))
+		{
+			echo '<div class="contentPost">'."\n";
 			$this->run_section( 'main_post' );
 			echo '</div>'."\n";
 		}
