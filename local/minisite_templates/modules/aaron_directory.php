@@ -192,7 +192,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
             
             //$head_items->add_javascript('/reason/js/directory.js');
-            if (reason_check_authentication()) {
+//            if (reason_check_authentication()) {
+            if ($this->user_netid) {
                 $head_items->add_javascript('/reason/js/directory.js');
             } else {
                 $head_items->add_javascript('/reason/js/directory_logout.js');
@@ -233,14 +234,16 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
     function run()//{{{
     {
 		
-	if ($logged_user = reason_check_authentication()) {
+//	if ($logged_user = reason_check_authentication()) {
+	if ($logged_user = $this->user_netid) {
 		$ds = @ldap_connect('ldap.luther.edu', '389');
 		$attr = array("member");
 		$result = @ldap_search($ds, 'cn=ldapadmins,dc=luther,dc=edu', "member=uid=$logged_user,ou=People,dc=luther,dc=edu", $attr);
 		$ldap_admin = @ldap_get_entries($ds, $result);
 			
 		echo "<p class='directory_head'>";
-		echo "Logged in as <b>" . reason_check_authentication() . "</b> | ";
+//		echo "Logged in as <b>" . $logged_user . "</b> ::  ";
+		echo "Logged in as <b>" . $this->user_netid . "</b> ::  ";
                 //below is test code to see if $ldap_admin is indeed an emptry array if not admin
                 //array_push($ldap_admin, "testEntry");
                 //print_r($ldap_admin);
@@ -373,7 +376,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
         echo '<div id="campusDirForm">';
         // Prominent login link for off-campus mobile users
-        if ($this->context == 'external' && !reason_check_authentication()) {
+//        if ($this->context == 'external' && !reason_check_authentication()) {
+        if ($this->context == 'external' && !$this->user_netid) {
             echo '<p class="directory_head" id="mobileLogin"><a href="/login/">Login for full access</a></p>';
         }
         $this->form->run();
@@ -727,7 +731,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             }
             if (isset($data['spousename'])) {
                 echo "<tr valign=top><td><b>Spouse: </b></td><td>".$data['spousename'][0]."</td></tr>";
-            }
+            } 
             if (isset($data['childname'])) {
                 echo "<tr valign=top><td><b>Children: </b></td><td>";
                 echo $this->format_misc($data['childname'])."</td></tr>";
@@ -796,12 +800,13 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
             if (isset($data['lastupdate'])) {
                 echo "<tr valign=top><td><b>Refreshed Date: </b></td><td>".$data['lastupdate'][0]."</td></tr>";
             }
-
+			
             echo '</table>';
             echo '</td>';
 
 
-            $logged_user = reason_check_authentication();
+//            $logged_user = reason_check_authentication();
+            $logged_user = $this->user_netid;
             //if ($data['uid'][0] == "burkaa01") {
             //if(!empty($search_for) && $search_for != 'anyone')
             if ($logged_user != "" && $data['edupersonprimaryaffiliation'][0] != 'Student - Previously Enrolled' && $data['edupersonprimaryaffiliation'][0] != 'Alumni' && $data['edupersonprimaryaffiliation'][0] != 'Student - Planning to Enroll') {
@@ -921,7 +926,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                         $str .= '<th>Affiliation</th>';
                         $str .= '<th>E-mail</th>';
                         $str .= '<th>Campus Phone</th>';
-                    if (reason_check_authentication()) {
+                    if ($this->user_netid) {
                         $str .= '<th>Year in School</th>';
                     }
                 $str .= '</tr>';
@@ -955,7 +960,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
           } else {
               $str .= '<td>&nbsp;</td>';
           }
-          if (reason_check_authentication()) {
+//          if (reason_check_authentication()) {
+          if ($this->user_netid) {
           if (isset ($data['studentyearinschool'][0])) {
               $str .= '<td>'.$data['studentyearinschool'][0] . '</td>';
           } else {
@@ -1771,7 +1777,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 			'eduPersonAffiliation','studentStatus','alumClassYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
 			'eduPersonEntitlement','mobile');*/
         $attributes = array('dn','uid','ou','count','employeenumber','prno','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
-                'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName',
+                'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName', 'childName',
                 'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
                 'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization','studentyearinschool','studentadvisor',
                 'eduPersonAffiliation','studentStatus','alumClassYear','postaladdress','l','st','postalcode','lutherc',
@@ -1779,7 +1785,8 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
                 'programstartdate','programenddate','lastupdate', 'alumClassYear', 'alumOccupation');
 
-        $logged_user = reason_check_authentication();
+//        $logged_user = reason_check_authentication();
+        $logged_user = $this->user_netid;
 		
 		$password = (isset($_SESSION)) ? $_SESSION['password'] : '';
         //$password = $user->get_value('user_password_hash');
@@ -1799,7 +1806,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 //		$dir->serv_inst['ldap_luther']->set_conn_param('lookup_dn', $lookup_login);
 //        $dir->serv_inst['ldap_luther']->set_conn_param('lookup_password',$lookup_pass);
 
-
+ 
 /*
         $dir = new directory_service('ldap_luther_directory');
         echo 'Here';
@@ -1807,10 +1814,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
 
         $dir->serv_inst['ldap_luther_directory']->set_conn_param('lookup_dn',$lookup_login);
         $dir->serv_inst['ldap_luther_directory']->set_conn_param('lookup_password',$lookup_pass);
-*/
-
-
-        
+*/        
         //$dir->serv_inst['ldap_luther']->set_conn_param('lookup_dn','cn=webauth,dc=luther,dc=edu');
         //$dir->serv_inst['ldap_luther']->set_conn_param('lookup_password','daewoo$friendly$$cow');
 
@@ -1823,7 +1827,7 @@ class AaronDirectoryModule extends DefaultMinisiteModule {
         $entries = $dir->get_records();
         return $entries;
     }
-
+	
     /** Query the Telecommunications database for data relevant to the requested office or dept
      */
     function get_telecomm_data($q) {
