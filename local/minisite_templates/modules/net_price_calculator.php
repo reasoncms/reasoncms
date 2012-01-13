@@ -7,10 +7,21 @@ $GLOBALS['_module_class_names'][basename(__FILE__, '.php')] = 'netPriceCalculato
 class netPriceCalculatorModule extends DefaultMinisiteModule {
 
     function run() {
-
-        echo '<a style="display:none" id="npclink" href="https://npc.collegeboard.org/student/app/luther?iframe=true" target="npcframe"></a>';
-        echo '<iframe style="display:none" src = "https://npc.collegeboard.org/student/app/luther?iframe=true" id="npcframe" name="npcframe" width="695px" height="1540px" scrolling="auto"></iframe>';
-        echo '<script type="text/javascript" src="https://npc.collegeboard.org/student/static/js/iframe_display.js"></script>';
+        echo '<script type="text/javascript">
+				var
+				NPC_CLIENT_DOMAIN		= "luther",
+				NPC_CLIENT_HEIGHT		= 1200,
+				NPC_CLIENT_WIDTH		= 700,
+				NPC_CONTAINER_PROTOCOL	= "http:",
+				
+				/*Do NOT edit the following code */
+				NPC_EMBEDDED_PROTOCOL	= "https:",
+				NPC_IGNITION_LOCATION	= "birch";
+				(function() {var
+				d=document,s=d.createElement("script");s.type="text/javascript";
+				s.src=NPC_EMBEDDED_PROTOCOL+"//"+NPC_IGNITION_LOCATION+".aidcalculator.com/ignition/key.js";
+				d.getElementsByTagName("head")[0].appendChild(s);})();</script><noscript>Please enable Javascript to use this tool.</noscript>
+				<div id="npc_container"></div>';
     }
 
 }
