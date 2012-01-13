@@ -120,7 +120,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                     ),
                     'pre_sidebar' => '',
 		),
-                'caf_cam' => array(
+        'caf_cam' => array(
 			'main' => 'content',
                         'main_post' => 'caf_cam',
 		),
@@ -135,9 +135,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                     'main' => 'directory_search_alumni',
                     'sidebar' => 'login_link',
 		),
-    		'directory_aaron' => array(
-                    'main' => 'aaron_directory',
-                    //'main_head' => 'login_link',
+		'directory_aaron' => array(
+			'main' => 'directory',
+			//'main_head' => 'login_link',
 		),
 		'django_form' => array(
 			'main_post' => 'django_form',

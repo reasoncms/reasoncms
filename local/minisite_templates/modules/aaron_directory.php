@@ -1,5 +1,5 @@
 <?php
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'AaronDirectoryModule';
+$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'DirectoryModule';
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'classes/object_cache.php' );
 
@@ -8,7 +8,7 @@ include_once(DISCO_INC.'disco.php');
 
 define ('MAX_RESULTS', 100);
 
-class AaronDirectoryModule extends DefaultMinisiteModule {
+class DirectoryModule extends DefaultMinisiteModule {
     // Allowed addresses for Post Office non-FERPA-restricted view:
     var $po = array('10.10.190.34','10.22.2.234'/*'192.203.196.2','192.203.196.3','192.203.196.4'*/);
 
