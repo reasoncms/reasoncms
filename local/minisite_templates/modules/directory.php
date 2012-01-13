@@ -811,7 +811,7 @@ class DirectoryModule extends DefaultMinisiteModule {
             //if(!empty($search_for) && $search_for != 'anyone')
             if ($logged_user != "" && $data['edupersonprimaryaffiliation'][0] != 'Student - Previously Enrolled' && $data['edupersonprimaryaffiliation'][0] != 'Alumni' && $data['edupersonprimaryaffiliation'][0] != 'Student - Planning to Enroll') {
                 echo "<td id='pic_td' align='right'>";
-                echo "<img width='141px' src='/stock/dir_img.php?image=".$data['uid'][0]."'>";
+                echo "<img width='141px' src='/reason/scripts/dir_image.php?image=".$data['uid'][0]."'>";
 
                 echo "</td>";
             }
