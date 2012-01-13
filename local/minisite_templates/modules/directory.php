@@ -254,7 +254,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 			echo "<a href='./admin.php?mode=pending&name=".$logged_user."'>Admin</a>";
 			echo " | ";
 		}
-		echo "<a href='/newdirectory/?netid[]=" . $logged_user . "'>Your Entry</a>";
+		echo "<a href='./?netid[]=" . $logged_user . "'>Your Entry</a>";
 		echo " | ";
 		// edit entry link
 //        echo "<a href='/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
