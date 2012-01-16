@@ -251,14 +251,14 @@ class DirectoryModule extends DefaultMinisiteModule {
 		//if ($ldap_admin){
                 if (isset($ldap_admin[0])){
 //                if ($ldap_admin[0]!=null){
-			echo "<a href='/reason/scripts/directory/admin.php?mode=pending&name=".$logged_user."'>Admin</a>";
+			echo "<a href='./admin.php?mode=pending&name=".$logged_user."'>Admin</a>";
 			echo " | ";
 		}
 		echo "<a href='./?netid[]=" . $logged_user . "'>Your Entry</a>";
 		echo " | ";
 		// edit entry link
 //        echo "<a href='/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
-		echo "<a href='/reason/scripts/directory/user.php?mode=edit&name=" . $logged_user . "'>Edit Entry</a>";
+		echo "<a href='./user.php?mode=edit&name=" . $logged_user . "'>Edit Entry</a>";
 //        echo "<a href='/newdirectory/login.php/?userdir=".reason_check_authentication()."'>Edit Entry</a>";
 		echo " | ";
 		echo "<a href='/login/?logout=1'>Logout</a>";
@@ -811,7 +811,7 @@ class DirectoryModule extends DefaultMinisiteModule {
             //if(!empty($search_for) && $search_for != 'anyone')
             if ($logged_user != "" && $data['edupersonprimaryaffiliation'][0] != 'Student - Previously Enrolled' && $data['edupersonprimaryaffiliation'][0] != 'Alumni' && $data['edupersonprimaryaffiliation'][0] != 'Student - Planning to Enroll') {
                 echo "<td id='pic_td' align='right'>";
-                echo "<img width='141px' src='/reason/scripts/directory/dir_img.php?image=".$data['uid'][0]."'>";
+                echo "<img width='141px' src='/reason/scripts/dir_image.php?image=".$data['uid'][0]."'>";
 
                 echo "</td>";
             }
