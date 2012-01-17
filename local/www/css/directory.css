@@ -1,3 +1,7 @@
+#affilTitle{
+    width: 30%;
+}
+
 #directory_person table {
  background:#ffffff;
  border:none;
@@ -38,9 +42,6 @@
     margin: 0 auto;
 }
 
-#displayName{
-white-space: nowrap;
-}
-#phone{
+.nowrap{
 white-space: nowrap;
 }
