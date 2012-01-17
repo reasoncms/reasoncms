@@ -935,11 +935,11 @@ class DirectoryModule extends DefaultMinisiteModule {
             $str .= '<thead>';
                 $str .= '<tr>';
                         $str .= '<th>Name</th>';
-                        $str .= '<th>Affiliation</th>';
+                        $str .= '<th>Affiliation/Title</th>';
                         $str .= '<th>E-mail</th>';
-                        $str .= '<th>Campus Phone</th>';
+                        $str .= '<th class="nowrap">Campus Phone</th>';
                     if ($this->user_netid) {
-                        $str .= '<th>Year in School</th>';
+                        $str .= '<th>Year</th>';
                     }
                 $str .= '</tr>';
             $str .= '</thead>';
@@ -950,12 +950,17 @@ class DirectoryModule extends DefaultMinisiteModule {
         foreach($people as $data) {
           $str .= '<tr class="">';
           if (isset ($data['uid'][0])) {
-              $str .= '<td>' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]) .'</td>';
+              $str .= '<td class="nowrap">' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]) .'</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
           }
           if (isset ($data['edupersonprimaryaffiliation'][0])) {
-              $str .= '<td>' .$data['edupersonprimaryaffiliation'][0] . '</td>';
+              $str .= '<td id="affilTitle">' .$data['edupersonprimaryaffiliation'][0];
+			  if (isset($data['title'][0])){
+					$str .= '<br>' . $data['title'][0] . '</td>';  
+			  } else {
+					$str .= '</td>';
+			  }
           } else {
               $str .= '<td>&nbsp;</td>';
           }
@@ -966,9 +971,9 @@ class DirectoryModule extends DefaultMinisiteModule {
           }
 
           if (isset ($data['officephone'][0])) {
-              $str .= '<td>'.$data['officephone'][0].'</td>';
+              $str .= '<td class="nowrap">'.$data['officephone'][0].'</td>';
           } elseif (isset ($data['studentresidencehallphone'][0])) {
-              $str .= '<td>'.$data['studentresidencehallphone'][0].'</td>';
+              $str .= '<td id="phone">'.$data['studentresidencehallphone'][0].'</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
           }
