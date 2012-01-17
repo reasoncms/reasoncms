@@ -704,6 +704,18 @@ class DirectoryModule extends DefaultMinisiteModule {
             if (isset($data['officephone'])) {
                 echo "<tr valign=top><td><b>Office Phone: </b></td><td>".$data['officephone'][0]."</td></tr>";
             }
+			if (isset ($data['edupersonprimaryaffiliation']) && ($data['edupersonprimaryaffiliation'][0] == 'Faculty' || $data['edupersonprimaryaffiliation'][0] == 'Staff')){
+					$advisees = $this->get_search_results('(&(|(studentAdvisor='.$data['uid'][0].')))');
+					if (isset($advisees)){
+							echo "<tr valign=top><td><b>Advisees: </b></td><td>";
+							foreach ($advisees as $advisee){
+									$advisee_uid = $advisee['uid'][0];
+									$advisee_displayname = $advisee['displayname'][0];
+									echo "<a href=\"?netid[]=".$advisee_uid."\">".$advisee_displayname."</a><br>";
+							}
+							echo "</td></tr>";
+					}
+			}
             if (isset($data['postaladdress'])) {
                 echo "<tr valign=top><td><b>Home Address: </b></td><td>"
                 .$data['postaladdress'][0].
