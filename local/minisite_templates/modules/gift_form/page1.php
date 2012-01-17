@@ -63,7 +63,7 @@ class GiftPageOneForm extends FormStep
         ),
         'aquatic_center' => array(
         		'type' => 'checkboxfirst',
-        		'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=284434" target="_blank">The Aquatic Center</a>',
+        		'display_name' => '<a href="/giving/sesquicentennialfund/millerchallenge" target="_blank">Aquatic Center</a> - helping to meet the Miller Challenge',
         ),
         'sesq_scholarship_fund' => array(
                 'type' => 'checkboxfirst',
