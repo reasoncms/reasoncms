@@ -230,7 +230,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         $this->search_url = $url_parts['path'];
 
     }//}}}
-
+	
     function run()//{{{
     {
 		
@@ -244,6 +244,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 		echo "<p class='directory_head'>";
 //		echo "Logged in as <b>" . $logged_user . "</b> ::  ";
 		echo "Logged in as <b>" . $this->user_netid . "</b> ::  ";
+		echo '<a href="./help/">Help</a> | ';
                 //below is test code to see if $ldap_admin is indeed an emptry array if not admin
                 //array_push($ldap_admin, "testEntry");
                 //print_r($ldap_admin);
@@ -378,7 +379,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         // Prominent login link for off-campus mobile users
 //        if ($this->context == 'external' && !reason_check_authentication()) {
         if ($this->context == 'external' && !$this->user_netid) {
-            echo '<p class="directory_head" id="mobileLogin"><a href="/login/">Login for full access</a></p>';
+            echo '<p class="directory_head" id="mobileLogin"><a href="./help/">Help</a>&nbsp;|&nbsp;<a href="/login/">Login for full access</a></p>';
         }
         $this->form->run();
         echo '</div>';
