@@ -224,12 +224,21 @@ class DirectoryModule extends DefaultMinisiteModule {
         $this->form->add_callback(array(&$this, 'show_results'),'process');
         $this->form->add_callback(array(&$this, 'display_form_help'),'post_show_form');
 		$this->form->add_callback(array(&$this, 'run_error_checks'),'run_error_checks');
+		$this->form->add_callback(array(&$this, 'on_every_time'),'on_every_time');
         $this->form->init();
         $this->get_menu_data();
         $url_parts = parse_url( get_current_url() );
         $this->search_url = $url_parts['path'];
 
     }//}}}
+	
+	function on_every_time(){
+			if ($this->user_netid == ""){
+				$form = $this->form;
+				$form->set_display_name('depart','Faculty/Staff Department');
+				$form->set_display_name('title','Faculty/Staff Title');
+			}
+	}
 	
     function run()//{{{
     {
@@ -277,6 +286,9 @@ class DirectoryModule extends DefaultMinisiteModule {
         $elements = $form->get_element_names();
         foreach ($elements as $element) {
             if (in_array($element,$not_sufficient)) continue;
+			if ($element == 'first_name' && strlen($form->get_value($element)) < 2 ){
+					$form->set_error('first_name', 'The search string must be at least 2 characters long.');					
+			}
             if ($form->get_value($element)) return true;
         }
         foreach ($this->cleanup_rules as $name => $rule) {
