@@ -61,6 +61,7 @@ $allowable_relationship_id = relationship_finder('site',$type_id);
 $es = new entity_selector();
 $es->add_type($type_id);
 $es->add_right_relationship($site_id, $allowable_relationship_id);
+$es->set_order('entity.id DESC');
 $entity_bs = $es->run_one();
 
 if ( count($entity_bs) < 1 )
