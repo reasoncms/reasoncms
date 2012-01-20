@@ -86,6 +86,21 @@ class ds_ldap_luther_directory extends ds_ldap_luther {
         
 		$this->authenticate_helper();
 	}
+//	function authenticate($username, $password) {
+//     $filter = 'uid=' . $this->escape_input($username);
+//     if ($result = @ldap_search($this->_conn, $this->_search_params['base_dn'], $filter)){
+//		$bind_dn = ldap_get_dn($this->_conn, ldap_first_entry($this->_conn, $result));
+//		turn_carl_util_error_logging_off();
+//        $bind_result = @ldap_bind($this->_conn, $bind_dn, $password);
+//        turn_carl_util_error_logging_on();
+//        if (!$bind_result) $this->_error = ldap_error( $this->_conn );
+//        // Rebind for future searches
+//        if( !ldap_bind( $this->_conn, $this->_conn_params['lookup_dn'], $this->_conn_params['lookup_password'] ) ) {
+//           $this->_error = sprintf( 'LDAP bind failed for %s, %s' , $this->_conn_params['lookup_dn'], ldap_error( $this->_conn ));
+//        }
+//        return $bind_result;
+//     }
+//  }
 	function authenticate_helper() {
 		$bind_result = @ldap_bind( $this->_conn, $this->_conn_params['lookup_dn'], $this->_conn_params['lookup_password'] );
 		if( !$bind_result ){
