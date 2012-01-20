@@ -145,19 +145,13 @@ class DirectoryModule extends DefaultMinisiteModule {
             //),
 
             'display_as' => array(
-                            'display_name' => 'Display as',
-                            'type' => 'select_no_sort',
-                            //'options' => array('list'=>'Directory Listing',
-                            //                'book'=>'Photo Book',
-                            'options' => array('book'=>'Sortable Table of Search Results',
-                                               'list'=>'List of Individual Entries  (Not Recommended) ',),
-                            ),
-            'emergency_link' => array('type' => 'comment','text' => '<hr></hr><a href="https://www.luther.edu/directory/phone-book-emergencynumbers.pdf">Emergency Numbers</a>'),
-            'phone_fax_link' => array('type' => 'comment','text' => '<a href="https://www.luther.edu/directory/phone-book-fax.pdf">Phone and Fax Numbers</a>'),
-            'faculty_list_link' => array('type' => 'comment','text' => '<a href="https://www.luther.edu/directory/phone-book-faculty.pdf">Faculty Listing</a>'),
-            'staff_list_link' => array('type' => 'comment','text' => '<a href="https://www.luther.edu/directory/phone-book-staff.pdf">Staff Listing</a>')
-            //                ),
-            //'hide_comment' => array('type' => 'comment','text' => '<a onclick="hide_all(); return false;" href="#">Hide more options</a>'),
+					'display_name' => 'Display as',
+					'type' => 'select_no_sort',
+					//'options' => array('list'=>'Directory Listing',
+					//                'book'=>'Photo Book',
+					'options' => array('book'=>'Sortable Table of Search Results',
+									   'list'=>'List of Individual Entries  (Not Recommended) ',),
+			),
     );
     // These are fields from the old directory form that people might try to pass in a URL,
     // mapped to the appropriate field in the new form.
