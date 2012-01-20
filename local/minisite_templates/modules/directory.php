@@ -768,9 +768,6 @@ class DirectoryModule extends DefaultMinisiteModule {
             if (isset($data['employeenumber'])) {
                 echo "<tr valign=top><td><b>Luther ID: </b></td><td>".$data['employeenumber'][0]."</td></tr>";
             }
-            if (isset($data['prno'])) {
-                echo "<tr valign=top><td><b>PRNO: </b></td><td>".$data['prno'][0]."</td></tr>";
-            }
             if (isset($data['studentstatus'])) {
                 echo "<tr valign=top><td><b>Student Status: </b></td><td>".$data['studentstatus'][0]."</td></tr>";
             }
@@ -943,6 +940,8 @@ class DirectoryModule extends DefaultMinisiteModule {
 //        echo '<p class="personPager"></p>';
         //echo $this->build_printable_link();
 
+			$this->display_form();
+
         echo $this->get_search_status($people, $desc);
         $str = '';
         $str .= '<p class="personPager"></p>';
@@ -1098,7 +1097,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                 'carlhomeemail','spouseName','alumClassYear','carlcohortyear','mobile',
                 'studentStatus');*/
 
-        $ext_suppress = array('dn','ou','count','employeenumber','prno','sn','givenname','edupersonnickname','displayname',
+        $ext_suppress = array('dn','ou','count','employeenumber','sn','givenname','edupersonnickname','displayname',
                 'studentpostoffice','telephoneNumber','spousename',
                 'homepostaladdress', 'address', 'telephonenumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
                 'studentresidencehallroom','studentspecialization','studentyearinschool','studentadvisor',
@@ -1107,7 +1106,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
                 'programstartdate','programenddate', 'lastupdate', 'childname');
 
-        $nr_suppress = array('dn','uid','ou','count','employeenumber','prno','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+        $nr_suppress = array('dn','uid','ou','count','employeenumber','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
                 'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName',
                 'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
                 'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization','studentyearinschool','studentadvisor',
@@ -1815,7 +1814,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 			'homePostalAddress', 'carlStudentPermanentAddress', 'telephoneNumber', 'studentmajor', 'carlConcentration', 'eduPersonPrimaryAffiliation',
 			'eduPersonAffiliation','studentStatus','alumClassYear','carlCohortYear','carlHomeEmail','carlFacultyLeaveTerm','carlHidePersonalInfo',
 			'eduPersonEntitlement','mobile');*/
-        $attributes = array('dn','uid','ou','count','employeenumber','prno','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
+        $attributes = array('dn','uid','ou','count','employeenumber','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
                 'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName', 'childName',
                 'homePostalAddress', 'address', 'telephoneNumber', 'studentmajor', 'studentminor','studentresidencehallbldg','studentresidencehallphone',
                 'studentresidencehallroom','eduPersonPrimaryAffiliation','studentspecialization','studentyearinschool','studentadvisor',
