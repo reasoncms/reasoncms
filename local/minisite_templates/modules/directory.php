@@ -9,7 +9,8 @@ include_once(DISCO_INC.'disco.php');
 define ('MAX_RESULTS', 100);
 
 class DirectoryModule extends DefaultMinisiteModule {
-    // Allowed addresses for Post Office non-FERPA-restricted view:
+	var $ldap_admin = false;
+	// Allowed addresses for Post Office non-FERPA-restricted view:
     var $po = array('10.10.190.34','10.22.2.234'/*'192.203.196.2','192.203.196.3','192.203.196.4'*/);
 
     var $cleanup_rules = array(
@@ -245,10 +246,15 @@ class DirectoryModule extends DefaultMinisiteModule {
 		
 //	if ($logged_user = reason_check_authentication()) {
 	if ($logged_user = $this->user_netid) {
-		$ds = @ldap_connect('ldap.luther.edu', '389');
-		$attr = array("member");
-		$result = @ldap_search($ds, 'cn=ldapadmins,dc=luther,dc=edu', "member=uid=$logged_user,ou=People,dc=luther,dc=edu", $attr);
-		$ldap_admin = @ldap_get_entries($ds, $result);
+		if (!$this->ldap_admin){
+			$ds = @ldap_connect('ldap.luther.edu', '389');
+			$attr = array("member");
+			$result = @ldap_search($ds, 'cn=ldapadmins,dc=luther,dc=edu', "member=uid=$logged_user,ou=People,dc=luther,dc=edu", $attr);
+			$admin = @ldap_get_entries($ds, $result);
+			if (isset($admin[0])){
+				$this->ldap_admin = true;
+			}
+		}
 			
 		echo "<p class='directory_head'>";
 //		echo "Logged in as <b>" . $logged_user . "</b> ::  ";
@@ -259,7 +265,8 @@ class DirectoryModule extends DefaultMinisiteModule {
                 //print_r($ldap_admin);
                 //it is empty, but it still exists so check must be for empty not if it exists
 		//if ($ldap_admin){
-                if (isset($ldap_admin[0])){
+//                if (isset($ldap_admin[0])){
+                if ($this->ldap_admin){
 //                if ($ldap_admin[0]!=null){
 			echo "<a href='./admin.php?mode=pending&name=".$logged_user."'>Admin</a>";
 			echo " | ";
@@ -285,8 +292,9 @@ class DirectoryModule extends DefaultMinisiteModule {
         $not_sufficient = array('room','exact','pictures','display_as','view','context');
         $elements = $form->get_element_names();
         foreach ($elements as $element) {
-            if (in_array($element,$not_sufficient)) continue;
-			if ($element == 'first_name' && strlen($form->get_value($element)) < 2 ){
+			$value = $form->get_value($element);
+			if (in_array($element,$not_sufficient)) continue;
+			if ($element == 'first_name' && $value != "" && strlen($value) < 2 ){
 					$form->set_error('first_name', 'The search string must be at least 2 characters long.');					
 			}
             if ($form->get_value($element)) return true;
@@ -658,7 +666,9 @@ class DirectoryModule extends DefaultMinisiteModule {
                 echo "<tr valign=top><td><b>Username: </b></td><td>".$data['uid'][0]."</td></tr>";
             }
             if (isset($data['mail'])) {
-                echo "<tr valign=top><td><b>E-mail: </b></td><td><a href=\"mailto:" .$data['mail'][0]. "\">" . $data['mail'][0] . "</a></td></tr>";
+					$email = $this->format_email($data['mail'][0]);
+//                echo "<tr valign=top><td><b>E-mail: </b></td><td><a href=\"mailto:" .$data['mail'][0]. "\">" . $data['mail'][0] . "</a></td></tr>";
+                echo "<tr valign=top><td><b>E-mail: </b></td><td>" . $email . "</td></tr>";
 						
             }
             if (isset($data['edupersonprimaryaffiliation'])) {
@@ -717,9 +727,9 @@ class DirectoryModule extends DefaultMinisiteModule {
             if (isset($data['officephone'])) {
                 echo "<tr valign=top><td><b>Office Phone: </b></td><td>".$data['officephone'][0]."</td></tr>";
             }
-			if (isset ($data['edupersonprimaryaffiliation']) && ($data['edupersonprimaryaffiliation'][0] == 'Faculty' || $data['edupersonprimaryaffiliation'][0] == 'Staff')){
+			if (isset ($data['edupersonprimaryaffiliation']) && $this->user_netid && ($data['edupersonprimaryaffiliation'][0] == 'Faculty' || $data['edupersonprimaryaffiliation'][0] == 'Staff')){
 					$advisees = $this->get_search_results('(&(|(studentAdvisor='.$data['uid'][0].')))');
-					if (isset($advisees)){
+					if (!empty($advisees)){
 							echo "<tr valign=top><td><b>Advisees: </b></td><td>";
 							foreach ($advisees as $advisee){
 									$advisee_uid = $advisee['uid'][0];
@@ -978,13 +988,18 @@ class DirectoryModule extends DefaultMinisiteModule {
               $str .= '<td>&nbsp;</td>';
           }
           if (isset ($data['mail'][0])) {
-              $str .= '<td>'.$data['mail'][0] . '</td>';
+              $str .= '<td>'.$this->format_email($data['mail'][0]) . '</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
           }
 
           if (isset ($data['officephone'][0])) {
-              $str .= '<td class="nowrap">'.$data['officephone'][0].'</td>';
+			  if (!strpos($data['officephone'][0], ',')){
+				$str .= '<td class="nowrap">'.$data['officephone'][0].'</td>';
+			  } else { 
+				$cleaned = str_replace(',', '<br>', $data['officephone'][0]);
+				$str .= '<td>' . $cleaned . '</td>';	  
+			  }
           } elseif (isset ($data['studentresidencehallphone'][0])) {
               $str .= '<td id="phone">'.$data['studentresidencehallphone'][0].'</td>';
           } else {
@@ -1096,7 +1111,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                 'studentstatus','alumclassyear','postaladdress','l','st','postalcode','c',
                 'edupersonentitlement','mobile', 'termenrolled', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
-                'programstartdate','programenddate', 'lastupdate');
+                'programstartdate','programenddate', 'lastupdate', 'childname');
 
         $nr_suppress = array('dn','uid','ou','count','employeenumber','prno','cn','sn','givenName','eduPersonNickname','displayName','mail','title',
                 'eduPersonPrimaryAffiliation','officebldg','officephone','studentPostOffice','telephoneNumber','spouseName',
@@ -1105,7 +1120,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                 'eduPersonAffiliation','studentStatus','alumClassYear','postaladdress','l','st','postalcode','c',
                 'eduPersonEntitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
-                'programstartdate','programenddate','lastupdate');
+                'programstartdate','programenddate','lastupdate', 'childname');
 
         foreach ($results as $key => $data) {
             // Remove the people who should be gone completely.
@@ -1352,9 +1367,9 @@ class DirectoryModule extends DefaultMinisiteModule {
     }
 
     function format_email($address) {
-        if ($this->context == 'external')
-            return str_replace('.', '&nbsp;&#046;&nbsp;', str_replace('@', '&nbsp;&lt;&#065;&#084;&gt;&nbsp;', $address));
-        else
+//        if ($this->context == 'external')
+//            return str_replace('.', '&nbsp;&#046;&nbsp;', str_replace('@', '&nbsp;&lt;&#065;&#084;&gt;&nbsp;', $address));
+//        else
             return '<a href="mailto:'.$address.'">'.$address.'</a>';
     }
 
