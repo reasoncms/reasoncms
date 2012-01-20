@@ -317,6 +317,22 @@
 			'main_post'=>'publication',
 			'main_head' => 'publication/title',
 			'main'=>'publication/description',
+		),	
+        'publication_and_events_sidebar' => array(
+			'pre_sidebar' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' =>
+				array('list_item' => array(
+									'classname' => 'MinimalListItemMarkupGenerator', 
+									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+									)
+					 ),
+				'max_num_items' => 4,
+			),
+			'sidebar' => array(
+				'module' => 'events_mini',
+			),
 		),
         'events_and_publication_sidebar' => array(
 			'pre_sidebar' => array(
