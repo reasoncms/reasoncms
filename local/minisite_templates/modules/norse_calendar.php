@@ -28,14 +28,17 @@ class norseCalendarModule extends DefaultMinisiteModule {
 	$calendar_color = array('23711616','230D7813','237A367A','238C500B','23AB8B00','234E5D6C','23865A5A','232952A3','23B1365F','23BE6D00');
 
 	$i = sizeof($name_array);
+	$ncal = sizeof($calendar_color);
 	$source_string = '';
-	while ($i >= 1){ 
-
+	while ($i >= 1)
+	{ 
 		$source_string .= 'src='. $name_array[$i-1];
-		$source_string .= '%40luther.edu&amp;color=%';
-		$source_string .= $calendar_color[$i-1];
+		if (!preg_match("/@/", $name_array[$i-1]))
+		{
+			$source_string .= '%40luther.edu';
+		}
+		$source_string .= '&amp;color=%' . $calendar_color[($i-1) % $ncal];
 		$source_string .= '&amp;';
-	
 		
 		$i--;
 	}
