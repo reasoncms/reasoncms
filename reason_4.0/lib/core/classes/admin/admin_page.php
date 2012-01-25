@@ -76,6 +76,15 @@
 		
 		// logged in user
 		var $authenticated_user_id = false;
+		
+		/**
+		 * Sites the current user has access to
+		 *
+		 * Use method get_sites() for this information 
+		 *
+		 * @var array
+		 */
+		protected $user_access_sites;
   
 		//default args will be always passed on admin pages
 		var $default_args = array('site_id',
@@ -716,13 +725,17 @@
 		function get_sites() // {{{
 		//gets a list of sites.  used for sites() and sitebar()
 		{
-			$es = new entity_selector();
-			$es->add_type( id_of('site') );
-			$es->add_left_relationship( $this->user_id, relationship_id_of('site_to_user') );
-			$es->set_order('entity.name ASC');
-			$es->limit_tables();
-			$es->limit_fields('entity.name');
-			return $es->run_one();
+			if(!isset($this->user_access_sites))
+			{
+				$es = new entity_selector();
+				$es->add_type( id_of('site') );
+				$es->add_left_relationship( $this->user_id, relationship_id_of('site_to_user') );
+				$es->set_order('entity.name ASC');
+				$es->limit_tables();
+				$es->limit_fields('entity.name');
+				$this->user_access_sites = $es->run_one();
+			}
+			return $this->user_access_sites; 
 		} // }}}
 		// IN_MODULE
 		function sites() // {{{
@@ -1190,7 +1203,17 @@
 			echo '<table class="banner">' . "\n";
 			echo '<tr>' . "\n";
 			echo '<td class="crumbs"> '.REASON_ADMIN_LOGO_MARKUP;
-			echo '<span><strong> :: <a href="'.$this->make_link(array('cur_module'=>'about_reason')).'" class="bannerLink">Reason '.REASON_VERSION.'</a> :: </strong>'.REASON_TAGLINE.'</span></td>' . "\n";
+			echo '<span>';
+			echo '<strong> :: <a href="'.$this->make_link(array('cur_module'=>'about_reason')).'" class="bannerLink">Reason '.REASON_VERSION.'</a></strong>';
+			if($this->site_id != id_of('master_admin'))
+			{
+				$sites = $this->get_sites();
+				if(isset($sites[id_of('master_admin')]))
+				{
+					echo ' :: <a href="'.$this->make_link(array('site_id'=>id_of('master_admin'))).'">Master Admin</a>';
+				}
+			}
+			echo '</span></td>' . "\n";
 			echo '<td class="id">';
 			$this->show_user();
 			echo '</td>' . "\n";
@@ -1229,6 +1252,14 @@
 				echo '</select>';
 				$this->echo_hidden_fields('user_id');
 				echo '<input type="submit" class="jumpNavigationGo" value="go" />'."\n";
+				if($this->user_id != $this->authenticated_user_id)
+				{
+					if(isset($users[$this->authenticated_user_id]))
+						$username = $users[$this->authenticated_user_id]->get_value('name');
+					else
+						$username = 'me';
+					echo '<a class="stopPosing" href="'.$this->make_link(array('user_id'=>$this->authenticated_user_id)).'" title="Stop posing as another user">'.htmlspecialchars($username).'</a>'."\n";
+				}
 				if ($show_logout) echo ' <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 				echo '</form>';
 			}
