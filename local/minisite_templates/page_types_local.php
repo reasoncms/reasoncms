@@ -357,7 +357,7 @@ $GLOBALS['_reason_page_types_local'] = array(
                               ),
                          ),
                     ),
-                    'post_sidebar' => '',
+                    'post_sidebar' => 'luther_av',
                 ),
                 'luther2010_public_information' => array(
                     'main' => 'content',
