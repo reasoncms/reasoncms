@@ -1347,6 +1347,15 @@
 		'policy' => array(
 			'main_post' => 'policy',
 		),
+		'poll' => array(
+			'main' => array('module' => 'form', 'form_view' => 'minisite_templates/modules/poll/poll_form_view.php'),
+			'main_post' => array('module' => 'poll/polling_graph', 'custom_colors' => array('#cb4b4b', '#edc240', '#2f90dc', '#9440ed', '#4da74d')),
+		),
+		'poll_sidebar' => array(
+			'pre_sidebar' => array('module' => 'form', 'form_view' => 'minisite_templates/modules/poll/poll_form_view.php'),
+			'sidebar' => array('module' => 'poll/polling_graph_sidebar', 'custom_colors' => array('#cb4b4b', '#edc240', '#2f90dc', '#9440ed', '#4da74d')),
+		),
+		
 		'projects' => array(
 			'main_post' => 'projects',
 		),
