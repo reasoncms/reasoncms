@@ -1,0 +1,50 @@
+@charset "UTF-8";
+/* CSS Document */
+
+
+div.layout{
+	/*padding-right: 150px;*/
+}
+
+div.preSidebar {
+	width: 160px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+div.sidebar {
+	width: 160px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+div#form {
+	width: 160px;
+}
+
+div.words{
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+div.submitSection{
+	margin: 15px 0 10px 0;
+}
+
+p.required_indicator{
+	display: none;
+}
+
+div#interactive.graph{
+	 width:160px;
+	 min-height:360px;
+	 display:block;
+}
+
+div#responses{
+	font-weight: bold;
+	width:160px;
+	height:20px;
+	display:block;
+	margin-top:5px;
+}
