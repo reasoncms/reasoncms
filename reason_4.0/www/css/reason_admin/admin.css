@@ -11,6 +11,9 @@
 .banner {
 	background-color: #748FC2;
 }
+.banner a {
+	color:#fff;
+}
 
 .hidden {
 	display: none;
@@ -28,6 +31,16 @@ table.banner td {
 
 table.banner td.crumbs span {
 	white-space: nowrap;
+}
+
+a.stopPosing {
+	font-size:0.9em;
+	padding:5px 5px 3px 5px;
+	background:#607db2;
+	border-top:1px solid #8097c1;
+	border-bottom:1px solid #586d94;
+	text-decoration:none;
+	margin-right:1em;
 }
 
 .id {
