@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package reason
+ * @subpackage scripts
+ */
+
 class EditForm extends FormStep
 {	
 	var $display_name = 'Page Type Wizard &#8211; Edit a page type';
