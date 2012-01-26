@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package carl_util
+ * @subpackage event_invite
+*/
+
     require_once("EventInvite.php");
 
     $recipient = "mbockol@carleton.edu"; 

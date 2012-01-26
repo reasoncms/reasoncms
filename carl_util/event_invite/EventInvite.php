@@ -2,7 +2,9 @@
 /* Event Invite email class
  *
  * @author Matthew Bockol
- * @package None
+ * @package carl_util
+ * @subpackage event_invite
+
  * @version .001
  * @date 10.3.2007
  * 
