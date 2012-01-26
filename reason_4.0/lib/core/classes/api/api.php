@@ -18,6 +18,8 @@ include_once(CARL_UTIL_INC . 'api/api.php');
  *
  * @version .1 
  * @author Nathan White
+ * @package classes
+ * @subpackage api
  */
 final class ReasonAPI extends CarlUtilAPI
 {
