@@ -150,7 +150,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 					//'options' => array('list'=>'Directory Listing',
 					//                'book'=>'Photo Book',
 					'options' => array('book'=>'Sortable Table of Search Results',
-									   'list'=>'List of Individual Entries  (Not Recommended) ',),
+									   'list'=>'List of Individual Entries',),
 			),
     );
     // These are fields from the old directory form that people might try to pass in a URL,
@@ -184,7 +184,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 //            $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
             $head_items->add_stylesheet('/reason/css/directory.css');
             //$head_items->add_javascript('/reason/js/tableSorter.js');
-            $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
+//            $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
             
             //$head_items->add_javascript('/reason/js/directory.js');
 //            if (reason_check_authentication()) {
@@ -355,7 +355,7 @@ class DirectoryModule extends DefaultMinisiteModule {
                     $this->export_xml_results($entries);
                     break;
                 default:
-                    if ($form->get_value('display_as') == 'book')
+                    if ($form->get_value('display_as') == 'book' && count($entries) > 1)
                         $this->display_results_photobook($entries, $query_desc);
                     else
                         $this->display_results($entries, $query_desc, $telecomm);
@@ -415,7 +415,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         else
             $status .= 'one match.';
         $status .= $this->result_comment;
-        $status .= ' <a class="newSearch" href="'.$this->search_url.'">Search Again</a></p>';
+        $status .= ' <a class="newSearch" href="'.$this->search_url.'">New Search</a></p>';
         return $status;
     }
     /*
@@ -566,6 +566,9 @@ class DirectoryModule extends DefaultMinisiteModule {
 
     function display_results($people, $desc, $telecomm) //{{{
     {
+		if (count($people) > 1){
+			echo $this->form->show_form();
+		}
         echo $this->get_search_status($people, $desc);
         $image_class = ($this->form->get_value('pictures')) ? '' : 'noImage';
         echo '<p class="personPager"></p>';
@@ -704,7 +707,7 @@ class DirectoryModule extends DefaultMinisiteModule {
             }
             if (isset($data['studentadvisor'])) {
 				$advisor = $this->get_search_results('(&(|(uid='.$data['studentadvisor'][0].')))');
-				$advisor_displayname = $advisor[$data['studentadvisor'][0]]['displayname'][0];
+				$advisor_displayname = $advisor[0]['displayname'][0];
                 echo "<tr valign=top><td><b>Advisor: </b></td><td><a href=\"?netid[]=".$data['studentadvisor'][0]."\">".$advisor_displayname."</a></td></tr>";
             }
             if (isset($data['studentpostoffice'])) {
@@ -828,6 +831,7 @@ class DirectoryModule extends DefaultMinisiteModule {
             }
 			
             echo '</table>';
+			echo '<hr>';
             echo '</td>';
 
 
@@ -838,7 +842,6 @@ class DirectoryModule extends DefaultMinisiteModule {
             if ($logged_user != "" && $data['edupersonprimaryaffiliation'][0] != 'Student - Previously Enrolled' && $data['edupersonprimaryaffiliation'][0] != 'Alumni' && $data['edupersonprimaryaffiliation'][0] != 'Student - Planning to Enroll') {
                 echo "<td id='pic_td' align='right'>";
                 echo "<img width='141px' src='/reason/scripts/dir_image.php?image=".$data['uid'][0]."'>";
-
                 echo "</td>";
             }
 
@@ -874,7 +877,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         echo '</div>'; // searchResults
 
         echo '<p class="personPager"></p>';
-        echo '<p class="searchFoot"><a class="newSearch" href="'.$this->search_url.'">Search Again</a></p>';
+        echo '<p class="searchFoot"><a class="newSearch" href="'.$this->search_url.'">New Search</a></p>';
     }//}}}
 
     function display_results_photobook($people, $desc) //{{{
@@ -940,8 +943,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 //        echo '<p class="personPager"></p>';
         //echo $this->build_printable_link();
 
-			$this->display_form();
-
+		echo $this->form->show_form();
         echo $this->get_search_status($people, $desc);
         $str = '';
         $str .= '<p class="personPager"></p>';
@@ -966,7 +968,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         foreach($people as $data) {
           $str .= '<tr class="">';
           if (isset ($data['uid'][0])) {
-              $str .= '<td class="nowrap">' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]) .'</td>';
+              $str .= '<td>' . $this->make_search_link($this->format_name($data),'netid[]',$data['uid'][0]) .'</td>';
           } else {
               $str .= '<td>&nbsp;</td>';
           }
@@ -1393,10 +1395,16 @@ class DirectoryModule extends DefaultMinisiteModule {
         $stat['Student'] = 7;
         $stat['Student - Not Enrolled this Term'] = 8;
         $stat['Student - Not Planning to Enroll'] = 9;
-        $stat['trustee'] = 10;
-        $stat['affiliate'] = 11;
-        $stat['Employee Child'] = 12;
-        $stat['Former Employee Child'] = 13;
+        $stat['Student - Previously Enrolled'] = 10;
+        $stat['trustee'] = 11;
+        $stat['affiliate'] = 12;
+        $stat['Employee Child'] = 13;
+        $stat['Former Staff'] = 14;
+        $stat['Former Employee Child'] = 15;
+        $stat['Emeritus'] = 16;
+        $stat['Temp Help'] = 17;
+        $stat['Contracted Services'] = 18;
+        
 
         $affils = array();
         foreach ($data['edupersonaffiliation'] as $affil) {
