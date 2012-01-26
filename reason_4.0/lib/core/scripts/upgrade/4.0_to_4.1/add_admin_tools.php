@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package reason
+ * @subpackage scripts
+ */
 include_once('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('classes/upgrade/upgrader_interface.php');
