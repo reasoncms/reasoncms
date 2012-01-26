@@ -20,6 +20,8 @@ include_once('paths.php');
  *
  * @version .1
  * @author Nathan White
+ * @package carl_util
+ * @subpackage api
  */
 class CarlUtilAPI
 {
