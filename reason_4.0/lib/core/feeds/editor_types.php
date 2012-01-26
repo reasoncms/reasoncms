@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package reason
+ * @subpackage feeds
+ */
 
 /* This is the feed of types for Loki */
 

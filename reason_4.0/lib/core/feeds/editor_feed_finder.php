@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package reason
+ * @subpackage feeds
+ */
 include_once( 'reason_header.php' );
 reason_include_once( 'feeds/default.php' );
 reason_include_once( 'function_libraries/url_utils.php' );

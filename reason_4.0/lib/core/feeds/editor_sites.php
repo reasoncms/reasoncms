@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package reason
+ * @subpackage feeds
+ */
 
 /* This is the site feed for Loki */
 
@@ -32,5 +36,4 @@ class editorSiteRSS extends ReasonRSS
 		return securest_available_protocol() . '://'.REASON_HOST.FEED_GENERATOR_STUB_PATH.'?type_id='.id_of('type').'&site_id='.$id.'&feed=editor_types';
 	}
 }
-
 ?>
