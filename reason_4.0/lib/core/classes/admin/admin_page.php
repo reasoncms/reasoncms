@@ -1007,6 +1007,15 @@
 				if( $this->cur_module == 'ViewUsers' )
 					echo ' navSelect';
 				echo '"><a href="'.$this->make_link( array( 'cur_module' => 'ViewUsers', 'type_id' => '' ) ).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'ui_images/types/user.png" alt="" />Users</a></li>'."\n";
+				$master_admin_id = id_of('master_admin');
+				if($this->site_id != $master_admin_id)
+				{
+					$sites = $this->get_sites();
+					if(isset($sites[$master_admin_id]))
+					{
+						echo '<li><a href="'.$this->make_link(array('site_id'=>id_of('master_admin'),'type_id'=>id_of('site'),'id'=>$this->site_id,'cur_module'=>'Editor')).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/pencil.png" alt="" /> Site Setup</a></li>'."\n";
+					}
+				}
 				echo '</ul></div>'."\n";
 			//}
 		} // }}}
@@ -1210,7 +1219,7 @@
 				$sites = $this->get_sites();
 				if(isset($sites[id_of('master_admin')]))
 				{
-					echo ' :: <a href="'.$this->make_link(array('site_id'=>id_of('master_admin'))).'">Master Admin</a>';
+					echo ' :: <a href="'.carl_construct_link(array('site_id'=>id_of('master_admin')), array('user_id')).'">Master Admin</a>';
 				}
 			}
 			echo '</span></td>' . "\n";
