@@ -11,6 +11,9 @@
  * Next, populate $GLOBALS['_reason_admin_modules_local'] with local admin module definitions.
  *
  * The definition are automatically merged into $GLOBALS['_reason_admin_modules'].
+ *
+ * @package reason 
+ * @subpackage admin_modules
  */
 $GLOBALS['_reason_admin_modules_local'] = array();
 ?>
