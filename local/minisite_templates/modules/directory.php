@@ -707,7 +707,7 @@ class DirectoryModule extends DefaultMinisiteModule {
             }
             if (isset($data['studentadvisor'])) {
 				$advisor = $this->get_search_results('(&(|(uid='.$data['studentadvisor'][0].')))');
-				$advisor_displayname = $advisor[0]['displayname'][0];
+				$advisor_displayname = $advisor[$data['studentadvisor'][0]]['displayname'][0];
                 echo "<tr valign=top><td><b>Advisor: </b></td><td><a href=\"?netid[]=".$data['studentadvisor'][0]."\">".$advisor_displayname."</a></td></tr>";
             }
             if (isset($data['studentpostoffice'])) {
