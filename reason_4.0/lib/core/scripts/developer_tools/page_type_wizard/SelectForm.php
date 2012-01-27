@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package reason
+ * @subpackage scripts
+ */
 class SelectForm extends FormStep
 {	
 	// the usual disco member data
