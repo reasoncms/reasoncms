@@ -275,3 +275,20 @@ class wysiwyg_disabledType extends textareaType
 		</script>';
 	}
 }
+
+/**
+ * Prints out value of wysiwyg item without allowing you to edit it.
+ * @package disco
+ * @subpackage plasmature
+ */
+class wysiwyg_solidtextType extends solidtextType
+{
+	var $type = 'wysiwyg_solidtext';
+		
+	function get_display()
+	{
+		$str  = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->get(),ENT_QUOTES).'"/>';
+		$str .= "\n".'<div class="wysiwyg_solidText">' . $this->get(). '</div>';
+		return $str;
+	}
+}
