@@ -332,7 +332,12 @@
 		{
 			if (empty($this->admin_page->site_id) && ($this->admin_page->cur_module == 'Lister') )
 			{
-				header('Location: ' . carl_make_redirect(array('cur_module' => '')));
+				header('Location: ' . carl_make_redirect(array('cur_module' => '', 'site_id' => '')));
+				exit;
+			}
+			if (empty($this->admin_page->type_id) && ($this->admin_page->cur_module == 'Lister') )
+			{
+				header('Location: ' . carl_make_redirect(array('cur_module' => '', 'type_id' => '')));
 				exit;
 			}
 		}
