@@ -16,6 +16,7 @@
  * @package reason
  * @subpackage scripts
  */
+include_once('reason_header.php');
 
 /**
  * Begin the page
@@ -33,7 +34,6 @@ if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '')
 </head>
 <body>
 
-
 <h3>Reason Stats</h3>
 <?php
 
@@ -43,6 +43,15 @@ if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '')
 	if (!reason_user_has_privs( get_user_id ( $current_user ), 'view_sensitive_data' ) )
 	{
 		die('<p>You do not have permission to view Reason stats.</p><p>Only Reason users who have sensitive data viewing privileges may do that.</p></body></html>');
+	}
+	
+	if (!THIS_IS_A_DEVELOPMENT_REASON_INSTANCE && (!isset($_REQUEST['run_anyway']) || ($_REQUEST['run_anyway'] != 1)))
+	{
+		echo '<h4>Before we do this...</h4><p>This script is really intensive, and should really only be run on a development instance so that it doesn\'t disrupt a production instance of Reason.</p>';
+		echo '<p>If your Reason database is large, you should import your database to a development instance of Reason and run the script there. If your instance of Reason ';
+		echo 'is small, it is probably safe to ignore this warning.</p>';
+		echo '<a href="?run_anyway=1">Run this script despite the warning.</a></p>';
+		die;
 	}
 	
 	connectDB( REASON_DB );
