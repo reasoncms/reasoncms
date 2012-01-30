@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This script contains a class that updates the rewrite rules for the current site
  * @package reason
  * @subpackage finish_actions
