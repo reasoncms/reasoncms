@@ -1,4 +1,14 @@
 <?php
+/**
+ * Reason API Class
+ *
+ * @package classes
+ * @subpackage api
+ */
+
+/**
+ * Include dependencies
+ */
 include_once('reason_header.php');
 include_once(CARL_UTIL_INC . 'api/api.php');
 
@@ -18,8 +28,6 @@ include_once(CARL_UTIL_INC . 'api/api.php');
  *
  * @version .1 
  * @author Nathan White
- * @package classes
- * @subpackage api
  */
 final class ReasonAPI extends CarlUtilAPI
 {

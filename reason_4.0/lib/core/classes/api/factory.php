@@ -1,4 +1,14 @@
 <?php
+/**
+ * Reason API Factory Class
+ *
+ * @package classes
+ * @subpackage api
+ */
+ 
+/**
+ * Include dependencies
+ */
 include_once('reason_header.php');
 reason_include_once('classes/api/api.php');
 reason_include_once('classes/page_types.php');
@@ -7,7 +17,9 @@ reason_include_once('classes/page_types.php');
  * Provides methods to get ReasonAPI objects, and several convenience methods.
  *
  * - Determines which region to run based upon a request for an API and (optional) module identifier.
- * - Provides a static method to get a unique identifier for a module on its params.  
+ * - Provides a static method to get a unique identifier for a module on its params.
+ *
+ * @author Nathan White
  */
 class ReasonAPIFactory
 {
