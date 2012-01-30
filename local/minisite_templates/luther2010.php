@@ -492,14 +492,14 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 		echo '<!-- AddThis Button BEGIN -->'."\n";
 		echo '<div class="addthis_toolbox addthis_default_style">'."\n";
-		echo '<a href="http://www.addthis.com/bookmark.php?v=250&amp;pub=lutheraddthis" class="addthis_button_compact"></a>'."\n";
+		echo '<a href="www.addthis.com/bookmark.php?v=250&amp;pub=lutheraddthis" class="addthis_button_compact"></a>'."\n";
 		echo '<span class="addthis_separator">|</span>'."\n";
 		echo '<a class="addthis_button_facebook"></a>'."\n";
 		echo '<a class="addthis_button_twitter"></a>'."\n";
 		echo '<a class="addthis_button_email"></a>'."\n";
 		echo '<a class="addthis_button_print"></a>'."\n";
 		echo '</div>'."\n";
-		echo '<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pub=lutheraddthis">'."\n";
+		echo '<script type="text/javascript" src="s7.addthis.com/js/250/addthis_widget.js#pub=lutheraddthis">'."\n";
 		echo 'var addthis_share = {'."\n";
 		echo 'url : ' . get_current_url() . ','."\n";
 		echo '}'."\n";
@@ -643,7 +643,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '<!--[if lt IE 9]><link href="/stylesheets/luther2010/ie8.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";  
   		echo '<!--[if lt IE 8]><link href="/stylesheets/luther2010/ie7.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
   		echo '<!--[if lt IE 7]><link href="/stylesheets/luther2010/ie6.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
-  		echo '<link href="http://print.faustgertz.com/print.css" media="print" rel="stylesheet" type="text/css" />'."\n";
+  		echo '<link href="/stylesheets/luther2010/print.css" media="print" rel="stylesheet" type="text/css" />'."\n";
   		
 		echo '<meta property="og:title" content="' . $this->title . '" />'."\n";
 		echo '<meta property="og:type" content="university" />'."\n";
