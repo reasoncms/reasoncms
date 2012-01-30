@@ -1,6 +1,6 @@
 <?php
 /**
- * Domain settings are experimental in Reason 4 Beta 8
+ * Domain settings are experimental.
  * 
  * If you configure this file, you will be given an additional option in the Master Admin site content manager
  * that allows you to choose a domain on a per site basis.
@@ -18,6 +18,7 @@
  * - UNIVERSAL_CSS_PATH
  *
  * NOTE: Any settings that you setup here, to be applied, must be setup using domain_define in the applicable settings file
+ * @package reason
  */
 
 /**
