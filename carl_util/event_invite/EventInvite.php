@@ -1,12 +1,11 @@
 <?php
-/* Event Invite email class
+/** Event Invite email class
  *
- * @author Matthew Bockol
  * @package carl_util
  * @subpackage event_invite
- * @version .001
- * @date 10.3.2007
- * 
+ */
+ 
+/** 
  * Allows you to send email to Zimbra (or elsewhere) with an attached ical event in such a way that the event will be offered
  * to the recipient for inclusion in their personal calendar.
  *
@@ -54,8 +53,10 @@
  *   setBoundary ( )
  *   boundaryKey ($length=10)
  *
+ * @author Matt Bockol
+ * @version .001
+ * @date 10.3.2007
  */
-
 class EventInvite
 {
     var $recipient  = null ; 
