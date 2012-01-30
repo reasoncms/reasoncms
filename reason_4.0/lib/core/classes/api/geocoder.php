@@ -1,11 +1,18 @@
 <?php
+/**
+ * Reason Geocoder API
+ *
+ * @package classes
+ * @subpackage api
+ */
+ 
 include_once('reason_header.php');
 include_once(CARL_UTIL_INC . 'api/api.php');
 include_once(CARL_UTIL_INC . 'basic/url_funcs.php');
 reason_include_once('classes/geocoder.php');
 
 /**
- * ReasonLocationAPI defines a simple JSON api for geocoding and geolocation info.
+ * ReasonGeocoderAPI defines a simple JSON api for geocoding and geolocation info.
  *
  * It does all its own request handling and sets its own content - and should be used like this.
  *
