@@ -145,7 +145,7 @@ class ClassifiedModel
 	function get_category_names_for_classified_as_string($entity_id)
 	{
 		$category_names =& $this->get_category_names_for_classified($entity_id);
-		return implode(", ", $category_names);
+		return (!empty($category_names)) ? implode(", ", $category_names) : '';
 	}
 	
 	function get_header_text_as_string()
