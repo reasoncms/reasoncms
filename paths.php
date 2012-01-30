@@ -13,6 +13,8 @@
  * SETTINGS_INC - the location of the settings directory that contains the reason_package settings
  *
  * paths.php additionally defines a method domain_define
+ *
+ * @package carl_util
  */
 
 /**
