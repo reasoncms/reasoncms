@@ -1,6 +1,9 @@
 <?php
 /**
  * A class for geocoding addresses with result caching.
+ *
+ * @package reason
+ * @subpackage classes
  */
 
 /**
