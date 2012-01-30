@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package reason
+ * @subpackage scripts
+ */
 class FormatForm extends FormStep
 {	
 	var $display_name = "Page Type Wizard &#8211; Choose an export format";
