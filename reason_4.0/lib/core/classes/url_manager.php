@@ -141,10 +141,25 @@
 		{
 			return trim($str);
 		}
+		
+		/**
+		 * We make this static to avoid various requests for the same resource on pages that might use multiple instances of this class.
+		 */
+		function get_server_ip()
+		{
+			static $server_ip;
+			if (!isset($server_ip))
+			{
+				$get_ip_url = carl_construct_link(array(''), array(''), REASON_HTTP_BASE_PATH . 'displayers/ip.php');
+				$result_ip = carl_util_get_url_contents($get_ip_url);
+				$server_ip = (!empty($result_ip)) ? $result_ip : false;
+			}
+			return $server_ip;
+		}
+		
 		function refresh_localhost_limiter_rule()
 		{
-			$get_ip_url = carl_construct_link(array(''), array(''), REASON_HTTP_BASE_PATH . 'displayers/ip.php');
-			$ip = carl_util_get_url_contents($get_ip_url);
+			$ip = $this->get_server_ip();
 			if(!empty($ip))
 			{
 				$hta = 'Order deny,allow'."\n";
