@@ -143,11 +143,13 @@
 		}
 		function refresh_localhost_limiter_rule()
 		{
-			if(!empty($_SERVER['SERVER_ADDR']))
+			$get_ip_url = carl_construct_link(array(''), array(''), REASON_HTTP_BASE_PATH . 'displayers/ip.php');
+			$ip = carl_util_get_url_contents($get_ip_url);
+			if(!empty($ip))
 			{
 				$hta = 'Order deny,allow'."\n";
 				$hta .= 'deny from all'."\n";
-				$hta .= 'allow from '.$_SERVER['SERVER_ADDR']."\n";
+				$hta .= 'allow from '.$ip."\n";
 				// sometimes the server_addr will be present, but when the hostname is localhost CURL requests are still forbidden.
 				// we address this by conditionally adding allow from localhost.
 				if (strpos(strtolower(HTTP_HOST_NAME), 'localhost') !== false)
