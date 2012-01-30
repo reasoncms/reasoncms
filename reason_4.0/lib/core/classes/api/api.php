@@ -2,8 +2,8 @@
 /**
  * Reason API Class
  *
- * @package classes
- * @subpackage api
+ * @package reason
+ * @subpackage classes
  */
 
 /**

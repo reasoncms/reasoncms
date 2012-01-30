@@ -2,8 +2,8 @@
 /**
  * Reason Geocoder API
  *
- * @package classes
- * @subpackage api
+ * @package reason
+ * @subpackage classes
  */
  
 include_once('reason_header.php');
