@@ -14,6 +14,8 @@
  *
  * @require INCLUDE_PATH must have been defined in paths.php
  * @require SETTINGS_INC must have been defined in paths.php
+ *
+ * @package carl_util
  */
  
 /////////////////////////////////////////////////////////////////////////////////////////////////////
