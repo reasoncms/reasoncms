@@ -1,13 +1,26 @@
 <?php
+/**
+ * This is code that supports the live preview feature of the features content manager, and shouldn't be out loose in
+ * the scripts directly like this. Instead, the feature content manager should define an API within the feature.php
+ * content manager file. For now, this is in use but we should deprecate this soon.
+ *
+ * @package reason
+ * @subpackage content_managers
+ * @todo deprecate me and move functionality into the feature.php content manager.
+ */
 include_once("reason_header.php");
 include_once(CARL_UTIL_INC.'basic/cleanup_funcs.php');
 
 
-//include that contains the featureMarkupGenerator class
+/**
+ * Include dependencies.
+ */
 reason_include_once( 'minisite_templates/modules/feature/views/default_feature_view.php' );
 reason_include_once( 'classes/feature_helper.php' );
 
-
+/**
+ * @author Frank McQuarry
+ */
 //collect the data that's been sent to the script
 $d['id']=clean_up_data($_GET['id']);
 $show=clean_up_data($_GET['show_text']);
