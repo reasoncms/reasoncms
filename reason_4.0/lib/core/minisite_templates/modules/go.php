@@ -1,10 +1,17 @@
 <?php
-
-//include_once( '/usr/local/webapps/go/newshorturl.php' );
+/**
+ * @package reason
+ * @subpackage minisite_modules
+ */
 include_once( CARL_UTIL_INC . 'go/shorturl.php' );
 reason_include_once( 'minisite_templates/modules/default.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'GoModule';
 
+/**
+ * The Go Module - shorturl handling.
+ *
+ * @todo generalize this module and the code it depends on for easy use outside of Carleton.
+ */
 class GoModule extends DefaultMinisiteModule
 {
 	var $cleanup_rules = array(
