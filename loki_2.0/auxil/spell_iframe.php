@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @package loki_2.0
- * @subpackage auxil
- */
-
 //--//include_once('reason_header.php');
 
 $sc = new spell_check;
