@@ -1,6 +1,9 @@
 <?php
 /**
  * Class that encapsulates entity locks
+ *
+ * @package reason
+ * @subpackage classes
  */
 
 /**
