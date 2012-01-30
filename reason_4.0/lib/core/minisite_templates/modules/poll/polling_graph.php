@@ -167,9 +167,10 @@ class PollingGraphModule extends DefaultMinisiteModule
 		
 		for($i = 0; $i <= (count($datas) - 1); $i++)
 		{
-			echo 'color['.$i.'] = "'.addslashes($this->params['custom_colors'][$i]).'" ;'."\n";
-			echo 'data['.$i.'] ='.addslashes($datas[$i]).';'."\n";
-			echo 'lbl['.$i.'] = "'.addslashes($lbls[$i]).'" ;'."\n";
+			$color = (isset($this->params['custom_colors'][$i])) ? $this->params['custom_colors'][$i] : "#" . dechex(rand(0,10000000));
+			echo 'color['.$i.'] = "'.addslashes(htmlspecialchars($color)).'" ;'."\n";
+			echo 'data['.$i.'] ='.addslashes(htmlspecialchars($datas[$i])).';'."\n";
+			echo 'lbl['.$i.'] = "'.addslashes(htmlspecialchars($lbls[$i])).'" ;'."\n";
 		}
 		echo '</script>'."\n";
 	}
