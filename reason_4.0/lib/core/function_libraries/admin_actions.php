@@ -219,10 +219,14 @@
 
 		if( !$maintain_dates )
 		{
-			$ignore_fields[] = 'last_modified';
-			$ignore_fields[] = 'creation_date';
+			$ignored_fields[] = 'last_modified';
+			$ignored_fields[] = 'creation_date';
 		}
 
+		// Don't ignore values set as overrides
+		foreach ($ignored_fields as $key => $val)
+			if (isset($overrides[$val])) unset ($ignored_fields[$key]);
+		
 		// convert values of entity to tabled-array structure, make sure to ignore proper fields
 		$values = values_to_tables( $tables, array_merge( $e->get_values(), $overrides ), $ignored_fields );
 		
