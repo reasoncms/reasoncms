@@ -13,7 +13,7 @@
 	 * REASON_VERSION
 	 * This setting identifies the current version of Reason
 	 */
-	define( 'REASON_VERSION','4.0' );
+	define( 'REASON_VERSION','4.1' );
  
 	////////////////////////////////////////////////////////////
 	//

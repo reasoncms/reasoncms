@@ -123,7 +123,7 @@ if (isset($_POST['do_it_pass']) == false)
 				if (empty($db))
 				{
 					$msg = '<div class="error">';
-					$msg .= '<p>mysql connection ' . $db_conn_name . ' check failed</span> - count not connect to server - could be one of the following</p>';
+					$msg .= '<p>mysql connection ' . REASON_DB . ' check failed</span> - count not connect to server - could be one of the following</p>';
 					$msg .= '<ul>';
 					$msg .= '<li>Improper username and/or password in the db credentials file in '.SETTINGS_INC.'dbs.xml</li>';
 					$msg .= '<li>Improper mysql hostname - currently set to ' .$db_info['host'].'</li>';
