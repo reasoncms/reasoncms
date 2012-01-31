@@ -182,7 +182,7 @@
 			$row = 0;
 			$columns = count( $this->columns ) + 1;
 			echo '<table id="disassociatedItems" class="'.relationship_name_of($this->admin_page->rel_id).'" cellspacing="0" cellpadding="8">';
-			echo '<tr><td colspan="'.$columns.'">';
+			echo '<tr><td colspan="'.$columns.'" class="disassocHead">';
 			$this->show_paging();
 			echo '</td></tr>';
 			foreach( $this->values AS $id => $item )
@@ -196,7 +196,7 @@
 				}
 			}
 			$columns = count( $this->columns ) + 1;
-			echo '<tr><td colspan="'.$columns.'">';
+			echo '<tr><td colspan="'.$columns.'" class="disassocPaging">';
 			$this->show_paging();
 			echo '</td></tr>';
 			echo '</table>';
@@ -414,7 +414,7 @@
 		{
 			if(!$this->_cur_user_has_edit_privs())
 			{
-				echo '<td>&nbsp;</td>';
+				echo '<td class="viewerCol_admin">&nbsp;</td>';
 				return;
 			}
 			$e_rel = $this->admin_page->rel_id;
@@ -465,7 +465,7 @@
 				$name = 'Select';
 			}
 			//echo '<td class="'.$options[ 'class' ].'"><strong>';
-			echo '<td><strong>';
+			echo '<td class="viewerCol_admin"><strong>';
 			if( !$this->select AND $one_to_many )
 				echo 'Selected';
 			else
