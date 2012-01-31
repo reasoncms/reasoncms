@@ -56,7 +56,7 @@ class ReasonUpgrader_41_AdminTools implements reasonUpgraderInterface
 			return 'This script has already run';
                 else
 		{
-			if($id = reason_create_entity( id_of('master_admin'), id_of('admin_link'), $this->user_id(), 'Admin Tools', array('url'=>'?cur_module=AdminTools') ))
+			if($id = reason_create_entity( id_of('master_admin'), id_of('admin_link'), $this->user_id(), 'Admin Tools', array('url'=>'?cur_module=AdminTools','new' => 0) ))
 			{
 				if(create_relationship( id_of('master_admin'), $id, relationship_id_of('site_to_admin_link')))
 					return 'Created the admin tools link and placed on Master Admin sidebar';
