@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteCond local/$0 -F
+RewriteRule ^(.*)$ ./local/$0
