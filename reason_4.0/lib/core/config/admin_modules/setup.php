@@ -69,6 +69,7 @@
 		'NoDelete'=>array('file'=>'no_delete.php','class'=>'NoDeleteModule'),
 		'ChooseTheme'=>array('file'=>'choose_theme.php','class'=>'ChooseThemeModule'),
 		'ViewUsers'=>array('file'=>'view_users.php','class'=>'ViewUsersModule'),
+		'Duplicate'=>array('file'=>'duplicate.php','class'=>'DuplicateModule'),
 		'clone'=>array('file'=>'cloner.php','class'=>'ClonerModule'),
 		'ThorData'=>array('file'=>'thor_data.php','class'=>'ThorDataModule'),
 		'GroupTester'=>array('file'=>'group_tester.php','class'=>'GroupTesterModule'),
