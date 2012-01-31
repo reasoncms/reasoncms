@@ -12,7 +12,7 @@ Install
 
 Example: ln -s /absolute/path/to/reason_package/reason_4.0/www/ /absolute/path/to/document_root/reason
 
-3. Create a symbolic link called reason_package your document root directory to /reason_package/www/
+3. Create a symbolic link called reason_package your document root directory to ./www/
 
 Example: ln -s /absolute/path/to/reason_package/www/ /absolute/path/to/document_root/reason_package
 
