@@ -263,7 +263,7 @@
 				}
 				else $display = $this->get_display_no_handler($row, $name);
 				if (is_array($display)) $display = '<ul><li>'.implode('</li><li>', $display).'</li></ul>';
-				echo '<td>'.$display.'</td>' ."\n";				
+				echo '<td class="viewerCol_'.$col.'">'.$display.'</td>' ."\n";				
 			}
 		} // }}}
 		
@@ -303,7 +303,7 @@
 
 		function show_admin_live( $row , $options) // {{{
 		{
-			echo '<td>';
+			echo '<td class="viewerCol_admin">';
 			if(reason_user_has_privs($this->admin_page->user_id,'edit'))
 			{
 				echo '<strong>';
@@ -324,7 +324,7 @@
 		} // }}}
 		function show_admin_pending( $row , $options ) //{{{
 		{
-			echo '<td>';
+			echo '<td class="viewerCol_admin">';
 			if(reason_user_has_privs($this->admin_page->user_id,'edit_pending'))
 			{
 				echo '<strong>';
@@ -345,7 +345,7 @@
 		} // }}}
 		function show_admin_delete( $row  , $options ) // {{{
 		{
-			echo '<td>';
+			echo '<td class="viewerCol_admin">';
 			$links = array();
 			if(reason_user_has_privs($this->admin_page->user_id,'publish'))
 			{
