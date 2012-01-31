@@ -1,37 +1,33 @@
-Welcome to Reason!
-http://apps.carleton.edu/opensource/reason/
+Welcome to Reason CMS!
+
+Home Page:    http://reason.carleton.edu/
+Source Code:  http://github.com/carleton/reason_package
+Requirements: http://apps.carleton.edu/opensource/reason/reqs/
 
 Install
--------
-The reason_package directory should be placed outside the web tree.
+-----------------
+1. Move reason_package outside your web root.
 
-If it is in the web tree, please move it to a location outside the web tree before proceeding.
+2. Create a symbolic link called reason from your document root directory to ./reason_4.0/www/
 
-Next, make a symbolic link within the base directory of your web tree called reason that
-links to the reason_package/reason_4.0/www/ directory.
+Example: ln -s /absolute/path/to/reason_package/reason_4.0/www/ /absolute/path/to/document_root/reason
 
-The syntax on unix / linux / mac os x should look like this:
+3. Create a symbolic link called reason_package your document root directory to /reason_package/www/
 
-ln -s /path/to/reason_package/reason_4.0/www/ /path/to/web/root/reason
+Example: ln -s /absolute/path/to/reason_package/www/ /absolute/path/to/document_root/reason_package
 
-You also should make a symbolic link within the base directory of your web tree called 
-reason_package that links to the reason_package/www/ directory
+4. Visit /reason/setup.php in your web browser.
 
-ln -s /path/to/reason_package/www/ /path/to/web/root/reason_package
-
-Full instructions which explain how to manually setup reason are located here:
-http://your.web.server/reason/install.htm
-
-If you are feeling brave or have experience with Reason, you may want to just try the setup script:
-http://your.web.server/reason/setup.php
+For manual installation instructions, see ./reason_4.0/www/install.htm
 
 Upgrade
 -------
-If you are upgrading, visit the following page and run the appropriate upgrade scripts:
-http://your.web.server/reason/upgrade.php
+Visit /reason/upgrade.php on your web server.
 
+About Reason
+------------
+Reason is designed to make it simple for content creators to create content.
 
+Reason is more capable than Wordpress, and simpler than Drupal.
 
-
-
-
+Reason is free software created at Carleton College in 2003 and released under the GNU General Public License Version 2 in October, 2006.

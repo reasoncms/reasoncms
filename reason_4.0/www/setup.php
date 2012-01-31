@@ -34,16 +34,16 @@ if (isset($_GET['curl_test']))
 }
 else echo $head_content;
 
-$fix_mode_enabled = (isset($_GET['fixmode']) && ($_GET['fixmode'] == "true"));
+$fix_mode_enabled = 1;
 $fix_mode_link = ($fix_mode_enabled) ? ' Enabled (<a href="?fixmode=false">disable</a>)' : ' Disabled (<a href="?fixmode=true">enable</a>)';
 ?>
 
 <p>This script should be run after you have configured your server. It will verify the Reason environment, perform a variety of checks for Reason utilities, confirm file paths and permissions, 
 and then setup the first site and user for your instance. While the script may provide enough help to get you going, you may also consult 
 the <a href="./install.htm">Reason Install Documentation</a>.</p>
-<h3>"Fix" Mode is <?php echo $fix_mode_link ?></h3>
+<h3>"Auto" Mode is <?php echo $fix_mode_link ?></h3>
 <hr />
-<p>Fix mode will try to resolve easy to fix installation problems. Specifically, it will do the following:
+<p>Formerly know as fix mode, auto mode will try to resolve easy to fix installation problems. Specifically, it will do the following:
 <ul>
 <li>Create symbolic links for thor, loki, flvplayer, date picker, and jquery, from the web tree to the proper locations in reason_package</li>
 <li>Create data directories in the locations specified in settings files if those directories do not exist</li>
@@ -125,7 +125,7 @@ if (isset($_POST['do_it_pass']) == false)
 					$msg = '<div class="error">';
 					$msg .= '<p>mysql connection ' . $db_conn_name . ' check failed</span> - count not connect to server - could be one of the following</p>';
 					$msg .= '<ul>';
-					$msg .= '<li>Improper username and/or password in the db credentials file</li>';
+					$msg .= '<li>Improper username and/or password in the db credentials file in '.SETTINGS_INC.'dbs.xml</li>';
 					$msg .= '<li>Improper mysql hostname - currently set to ' .$db_info['host'].'</li>';
 					$msg .= '<li>The user ' . $db_info['user'] . ' needs to have been granted permission to connect to ' . $db_info['host'] . ' from the web server</li>';
 					$msg .= '</ul>';
@@ -238,18 +238,18 @@ function setup_www_local_support()
 		// lets make sure that have the correct privileges
 		if (!file_exists($www_local_dir))
 		{
-			 if (!is_writable($www_local_dir))
-			 {
-			 	echo '<p>The folder "local" does not exists at ' . $www_local_dir . ' and cannot be created by apache.</p>';
-			 	echo '<p>You should manually create the folder and rerun this script</p>';
-			 	$alarm = true;
-			 }
-			 else
-			 {
-			 	mkdir($www_local_dir, 0775);
+			if (!is_writable(dirname($www_local_dir)))
+			{
+				echo '<p>The folder "local" does not exists at ' . $www_local_dir . ' and cannot be created by apache.</p>';
+				echo '<p>You should manually create the folder and rerun this script</p>';
+				$alarm = true;
+			}
+			else
+			{
+				mkdir($www_local_dir, 0775);
 				chmod($www_local_dir, 0775);
 				echo '<p>Created www/local directory at ' . $www_local_dir . ' </p>';
-			 }
+			}
 		}
 		if (!file_exists($www_local_htaccess))
 		{
@@ -286,8 +286,6 @@ function setup_www_local_support()
 
 if (admin_user_exists() == false)
 {
-	if (isset($_POST['do_it_pass']))
-	{
 		$password = create_pass();
 		$password_hash = sha1($password);
 		$user_id = create_admin_user($password);
@@ -314,11 +312,6 @@ if (admin_user_exists() == false)
 		{
 			die_with_message('<p class="error">Sorry to be the bearer of bad news, but the admin user does not exist and could not be created.</p>');
 		}
-	}	
-	else
-	{
-		admin_user_HTML();
-	}
 }
 else
 {
@@ -379,16 +372,18 @@ function check_php_include_path()
 	$include_path = ini_get('include_path');
 	if ($failure)
 	{
+		$path_to_reason_package = realpath(dirname(__FILE__) . '/../../') . '/';
+		
 		die_with_message('<p class="error">The files paths.php and reason_header.php, inside the reason_package, must be accessible through the php include path.</p>
 						  <p>Your current include path is:</p>
 						  <p><pre>'.$include_path.'</pre></p>
-						  <p>Please modify the include path line in your php.ini file so that it reads as follows - substitute your path for /path/to/root/of/reason_package/</p>
-						  <p><pre>include_path = "'.$include_path.PATH_SEPARATOR.'/path/to/root/of/reason_package/"</pre></p>
+						  <p>Please modify the include path line in your php.ini file so that it reads as follows:</p>
+						  <p><pre>include_path = "'.$include_path.PATH_SEPARATOR.$path_to_reason_package.'"</pre></p>
 						  <p>Alternatively, you can create aliases within the include path that reference the paths.php and reason_header.php files in the reason_package folder (experimental)</p>
 						  <p>If you do not have access to modify php.ini and cannot create aliases within the include path, you may be able to create an .htaccess 
-						  file that dynamically sets the include path. For this to work, AllowOverride Option must be enabled in your httpd.conf file. The .htaccess rule
-						  should read as follows - substitute your path for /path/to/root/of/reason_package/:</p>
-						  <p><pre>php_value include_path ".'.$include_path.PATH_SEPARATOR.'/path/to/root/of/reason_package/"</pre></p>
+						  file that dynamically sets the include path. For this to work, AllowOverride Options must be enabled in your httpd.conf file. The .htaccess rule
+						  should be placed at ' . rtrim($_SERVER[ 'DOCUMENT_ROOT' ], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ' and read as follows:</p>
+						  <p><pre>php_value include_path ".'.$include_path.PATH_SEPARATOR.$path_to_reason_package.'"</pre></p>
 						  <p>Please run the script again after your include path has been properly setup.</p>');
 	}
 	else
