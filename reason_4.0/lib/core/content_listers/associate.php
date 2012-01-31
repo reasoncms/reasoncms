@@ -158,7 +158,7 @@
 			$this->select = false;
 			if( $this->ass_vals )
 			{
-				echo '<table id="associatedItems" cellspacing="0" cellpadding="8">';
+				echo '<table id="associatedItems" class="'.relationship_name_of($this->admin_page->rel_id).'" cellspacing="0" cellpadding="8">';
 				$c = count( $this->ass_vals );
 				$columns = count( $this->columns ) + 1;
 				echo '<tr><td colspan="'.$columns.'" class="assocHead">';
@@ -181,7 +181,7 @@
 			$this->select = true;
 			$row = 0;
 			$columns = count( $this->columns ) + 1;
-			echo '<table cellspacing="0" cellpadding="8">';
+			echo '<table id="disassociatedItems" class="'.relationship_name_of($this->admin_page->rel_id).'" cellspacing="0" cellpadding="8">';
 			echo '<tr><td colspan="'.$columns.'">';
 			$this->show_paging();
 			echo '</td></tr>';
