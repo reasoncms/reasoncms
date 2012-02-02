@@ -121,6 +121,7 @@
 			$this->head_items->add_javascript(JQUERY_URL, true);
 			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'assoc.css');
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'table_update.js');
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'associator.js');
 			$this->get_associations();
 			if(empty($this->associations[ $this->admin_page->rel_id ]))
 			{
