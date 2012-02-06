@@ -26,32 +26,40 @@ class SportsCampsThorForm extends CreditCardThorForm
                 }
                 if (stristr($form_name, 'football') !== false ){
                     $this->set_value($expense_element, '13-000-16400-12121');
+					$this->set_value($revenue_element, '13-000-16400-22000');
                 }
                 if (stristr($form_name, 'soccer') !== false ){
                     $this->set_value($expense_element, '13-000-08705-12121');
+					$this->set_value($revenue_element, '13-000-08705-22000');
                 }
                 if (stristr($form_name, 'tennis') !== false ){
                     $this->set_value($expense_element, '13-000-08709-12121');
                 }
                 if (stristr($form_name, 'swim') !== false ){
                     $this->set_value($expense_element, '13-000-08712-12121');
+					$this->set_value($revenue_element, '13-000-08712-22000');
                 }
                 if (stristr($form_name, 'frisbee') !== false ){
                     $this->set_value($expense_element, '13-000-08716-12121');
+					$this->set_value($revenue_element, '13-000-08716-22000');
                 }
                 if (stristr($form_name, 'volleyball') !== false ){
                     $this->set_value($expense_element, '13-000-08710-12121');
+					$this->set_value($revenue_element, '13-000-08710-22000');
                 }
                 if (stristr($form_name, 'basketball') !== false){
                     $this->set_value($expense_element, '13-000-08702-12121');
+					$this->set_value($revenue_element, '13-000-08702-22000');
                 }
                 if (stristr($form_name, 'wrestling') !== false){
                     // there are two different nunbers for wrestling camps
                     // one for the team camp all others are the individual camps
                     if ($form_name == 'Wrestling Team Camps Registration Form' ){
                         $this->set_value($expense_element, '13-000-08708-12121');
+						$this->set_value($revenue_element, '13-000-08708-22000');
                     } else {
                         $this->set_value($expense_element, '13-000-08707-12121');
+                        $this->set_value($revenue_element, '13-000-08707-22000');
                     }
                 }
 	}
