@@ -34,6 +34,7 @@ class SportsCampsThorForm extends CreditCardThorForm
                 }
                 if (stristr($form_name, 'tennis') !== false ){
                     $this->set_value($expense_element, '13-000-08709-12121');
+					$this->set_value($revenue_element, '13-000-08709-22000');
                 }
                 if (stristr($form_name, 'swim') !== false ){
                     $this->set_value($expense_element, '13-000-08712-12121');
