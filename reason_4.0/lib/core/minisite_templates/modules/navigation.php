@@ -22,7 +22,7 @@
 		}
 		function run()
 		{
-			echo '<div id="minisiteNavigation">';
+			echo '<div id="minisiteNavigation" class="'.$this->get_api_class_string().'">';
 			$this->parent->pages->do_display();
 			echo '</div>';
 		}
