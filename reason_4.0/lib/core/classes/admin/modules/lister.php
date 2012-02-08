@@ -117,7 +117,7 @@
 					echo '<form name="form2"><select name="menu2" onChange="MM_jumpMenu(\'parent\',this,0)" class="viewMenu">';
 					foreach( $this->views AS $view )
 					{
-						echo '<option value="' . $this->admin_page->make_link( array( 'lister' => $view->id() ) ) . '"';
+						echo '<option value="' . $this->admin_page->make_link( array( 'lister' => $view->id(), 'state' => $this->admin_page->request['state'] ) ) . '"';
 						if( $view->id() == $this->admin_page->request[ 'lister' ] )
 							echo ' selected="selected"';
 						echo '>View: ' . $view->get_value( 'display_name' ) . "</option>\n";
