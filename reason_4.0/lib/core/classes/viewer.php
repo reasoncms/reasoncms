@@ -296,7 +296,9 @@
 									   'page' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
 									   'cur_module' => array('function' => 'turn_into_string'),
 									   'textonly' => array('function' => 'turn_into_int'),
-									   'new_entity' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)));
+									   'new_entity' => array('function' => 'turn_into_int', 'extra_args' => array('zero_to_null' => true)),
+									   'refresh_lister_state' => array('function' => 'check_against_array', 'extra_args' => array('0','1'))
+							);
 				
 				$this->append_filters($cleanup_rules);
 								
@@ -325,68 +327,69 @@
 			 */
 			function _consult_and_save_session_state()
 			{
-				$id_vars = array('site_id', 'type_id', 'id', 'user_id', 'cur_module', 'rel_id', '__old_site_id', '__old_type_id', '__old_id', '__old_rel_id', '__old_cur_module', '__old_user_id', 'state');
-				$id_string = $this->get_lister_id($id_vars, $this->request);
-				if (!isset($_SESSION['reason_admin_lister_states']))
-				{
-					$_SESSION['reason_admin_lister_states'] = array();
-				}
-				$lister_states =& $_SESSION['reason_admin_lister_states'];
-				$empty = true;
+				$context_vars = array('site_id', 'type_id', 'id', 'user_id', 'cur_module', 'rel_id', '__old_site_id', '__old_type_id', '__old_id', '__old_rel_id', '__old_cur_module', '__old_user_id');
+				$ignore_vars = array('open','new_entity','refresh_lister_state');
+
+				$context_string = $this->get_lister_id($context_vars, $this->request);
+				$view = !empty($this->request['state']) ? $this->request['state'] : false;
+				// Strip the context, ignore vars, & entity state var from the request to produce our viewer state array
+				$state = array_diff_key($this->request, array_flip( array_merge( $context_vars, $ignore_vars, array('state') ) ) );
+				$refresh_lister_state = !empty($this->request['refresh_lister_state']) ? $this->request['refresh_lister_state'] : false;
 				
-				//Check to see if a new state is in the request
-				foreach ($this->request as $key => $value)
+				if ( !isset($_SESSION['reason_admin_lister_states'])){ $_SESSION['reason_admin_lister_states'] = array(); }
+				$stored_states =& $_SESSION['reason_admin_lister_states'];
+				if ( $view && $state )
 				{
-					if (!in_array($key, $id_vars)) //If it is not an id variable
+					$stored_states[$context_string][$view]['state'] = $state;
+					$stored_states[$context_string][$view]['time'] = microtime(true);
+				}
+				else if ( $view && $refresh_lister_state)
+				{
+					unset($stored_states[$context_string][$view]);
+				}
+				else if ( $view )
+				{
+					if ( !empty($stored_states[$context_string][$view]['state']) )
 					{
-						if (!($value === null || $value === '')) //and has an actual value
+						$this->request = array_merge($this->request,$stored_states[$context_string][$view]['state']);
+						$new_link = carl_make_redirect($this->request);
+						header('Location: '.$new_link);
+						echo '<p>Attempted to redirect to <a href="' . htmlspecialchars($new_link,ENT_QUOTES) . '">here</a>, but seem to have failed.</p>';
+						die();
+					}
+					$stored_states[$context_string][$view]['time'] = microtime(true);
+
+				}
+				else if (!empty($stored_states[$context_string]))
+				{
+					$max_time = 0;
+					foreach ( $stored_states[$context_string] as $view => $state)
+					{
+						if ( $state['time'] > $max_time )
 						{
-							$empty = false;
-							break;
+							$max_time = $state['time'];
+							$latest_view = $view;
 						}
 					}
-				}
-				//There's no new state but there is an old one.
-				// Load old values into the request.
-				if (isset($this->request['refresh_lister_state']))
-				{
-					$ignore_old = $this->request['refresh_lister_state'];
+					
+					$this->request['state'] = $latest_view;
+					
+					if ( !empty($stored_states[$context_string][$latest_view]['state']) )
+					{
+						$this->request = array_merge($this->request,$stored_states[$context_string][$latest_view]['state'] );
+					}
+					
+					$new_link = carl_make_redirect($this->request);
+					header('Location: '.$new_link);
+					echo '<p>Attempted to redirect to <a href=' . htmlspecialchars($new_link,ENT_QUOTES) . '>here</a>, but seem to have failed.</p>';
+					die();
+
 				}
 				else
 				{
-					$ignore_old = false;
+					$this->request['state'] = 'live';
 				}
-				if ($empty && isset($lister_states[$id_string]) && !$ignore_old)
-				{
-					$original_state = $lister_states[$id_string];
-					if (!empty($original_state))
-					{
-						foreach ($original_state as $state_key => $state_value)
-						{
-							$this->request[$state_key] = $state_value;
-						}
-					}
-					$new_link = carl_make_redirect($this->request);
-					header('Location: '.$new_link);
-					echo '<p> Attempted to redirect to <a href=' . $new_link . '>here</a>, but seem to have failed.</p>';
-					die();
-				}
-				// There are new state values, so save them as a new lister.
-				else if (!$empty)
-				{
-					$state = array();
-					$state_string = '';
-					$not_state_vars = array('refresh_lister_state');
-					foreach ($this->request as $state_var => $state_value)
-					{
-						//If it isn't an id variable, it belongs in state
-						if (!in_array($state_var, $id_vars) and !in_array($state_var, $not_state_vars))
-						{
-							$state[$state_var] = $this->request[$state_var];
-						}
-					}
-					$lister_states[$id_string] = $state;
-				}
+				
 			}
 			
 			/**
