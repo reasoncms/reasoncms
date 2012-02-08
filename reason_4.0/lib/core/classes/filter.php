@@ -52,6 +52,7 @@
 		 */
 		function grab_fields( $viewer )
 		{
+			$this->set_form_method('get');
 			if( !$this->has_filters() ) unset($this->actions['clear']); // remove filter if we have no search fields
 			$this->add_element( 'search_exact_id' , 'hidden' );
 			$this->set_value( 'search_exact_id' , true );
@@ -74,6 +75,14 @@
 					if( isset( $this->page->request[ $key ] ) AND $this->page->request[ $key ] )
 						$this->set_value( $key , $this->page->request[ $key ] );
 					$this->set_display_name( $key , $field );
+				}
+			}
+			foreach( $this->page->module->viewer->request as $key => $value )
+			{
+				if(!$this->is_element($key))
+				{
+					$this->add_element( $key, 'hidden');
+					$this->set_value( $key, $value );
 				}
 			}
 		}
@@ -190,13 +199,15 @@
 		{
 			if( preg_match( '/clear/' , $this->get_chosen_action() ) )
 			{
-				$array = array('page' => false , 'submitted' => '', 'submit' => '', 'clear' => '');
+				$array = array('page' => false , 'submitted' => '', 'submit' => '', 'clear' => '',  'refresh_lister_state' => '1');
 				if( !empty( $this->page->request[ 'order_by' ] ) )
 					$array[ 'order_by' ] = $this->page->request[ 'order_by' ];
 				if( !empty( $this->page->request[ 'dir' ] ) )
 					$array[ 'dir' ] = $this->page->request[ 'dir' ];
 				if( !empty( $this->page->request[ 'lister' ] ) )
 					$array[ 'lister' ] = $this->page->request[ 'lister' ];
+				if( !empty( $this->page->request[ 'state' ] ) )
+					$array[ 'state' ] = $this->page->request[ 'state' ];
 
 		    	$link =  unhtmlentities( $this->page->make_link( $array ) );
 			}
