@@ -931,14 +931,16 @@
 					'site_id' => $this->site_id, 
 					'type_id' => $type_id ,
 					'user_id' => $this->user_id,
-					'cur_module' => 'Sharing' ) );
+					'cur_module' => 'Sharing' ,
+					'state' => 'live') );
 		}
 		function get_owned_list_link($type_id)
 		{
 			return $this->make_link( array( 
 					'site_id' => $this->site_id, 
 					'type_id' => $type_id ,
-					'cur_module' => 'Lister' ) );
+					'cur_module' => 'Lister' ,
+					'state' => 'live') );
 		}
 		// IN_MANAGER
 		function leftbar_other() // {{{
