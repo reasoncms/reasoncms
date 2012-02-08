@@ -107,7 +107,8 @@ class ds_ldap_luther extends ds_ldap {
 							break;
 						*/
 						case 'ds_phone':
-							$value = $record['officephone'];
+							if (!empty($record['officephone'])) 
+								$value = $record['officephone'];
 							break;
 						case 'ds_affiliation':
 							// Create a list of affiliations; the primary affiliation is the first entry
