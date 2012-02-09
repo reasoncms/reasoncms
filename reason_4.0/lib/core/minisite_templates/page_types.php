@@ -526,6 +526,15 @@
 			'sub_nav' => 'news2_mini_random',
 			'main_head' => '',
 		),
+		'children_and_grandchildren_sidebar_blurbs' => array(
+			'main_post' => array(
+				'module' => 'children_and_grandchildren',
+				'max_depth' => 2
+			),
+			'pre_sidebar' => 'image_sidebar',
+			'sidebar' => 'blurb',
+			'sub_nav' => 'assets',
+		),
 		'children_and_siblings' => array(
 			'main_post' => 'children',
 			'sidebar'=>'siblings',
