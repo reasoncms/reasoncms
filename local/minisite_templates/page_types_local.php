@@ -168,6 +168,15 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'faculty' => array(
                     'main_post' => 'luther_faculty'
 		),
+		'feature_autoplay' => array(
+			'sidebar' => array(
+				'module' => 'feature/feature',
+				'shuffle' => false,
+				'autoplay_timer' => 12,
+				'width'=>222,
+				'height'=>148
+			),
+		),
 		'flickr_slideshow_sidebar' => array(
 			// slideshow rendered in sidebar using template code			
 		),
