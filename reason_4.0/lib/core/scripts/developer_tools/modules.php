@@ -18,6 +18,8 @@
  *
  * updated 5/6/2009 modified to use reasonPageURL class and filter out more invalid pages (ie those with url.url populated)
  *
+ * updated 2/14/2012 changed to not use array_merge which is super slow - yielding a huge performance improvement.
+ *
  * @author Nathan White
  * @package reason
  * @subpackage scripts
@@ -209,9 +211,14 @@ else
 		foreach( $my_page_types AS $page_type => $module_pages )
 		{
 			$page_total += count( $module_pages );
-			$tmp_pages = array_merge( array_keys( $module_pages ), $tmp_pages );
-			//pray ($tmp_pages);
-			//die;
+			$keys = array_keys($module_pages);
+			foreach ($keys as $id)
+			{
+				if (!isset($tmp_pages[$id]))
+				{
+					$tmp_pages[$id] = $id;
+				}
+			}
 		}
 		echo "<td>$page_total</td>\n";
 		shuffle($tmp_pages);
