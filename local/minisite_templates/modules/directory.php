@@ -184,7 +184,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 //            $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
             $head_items->add_stylesheet('/reason/css/directory.css');
             //$head_items->add_javascript('/reason/js/tableSorter.js');
-//            $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
+            $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
             
             //$head_items->add_javascript('/reason/js/directory.js');
 //            if (reason_check_authentication()) {
@@ -1116,6 +1116,8 @@ class DirectoryModule extends DefaultMinisiteModule {
                 'eduPersonEntitlement','mobile', 'termenrolled', 'departmentname', 'gender', 'ocpostaladdress', 'ocl', 'ocst', 'ocpostalcode',
                 'occ', 'ocphone','privacyflag','creationdate','deleteafterdate','birthdate','lasttermattended',
                 'programstartdate','programenddate','lastupdate', 'childname');
+		
+//		$temp_suppress = array('childname', 'spouse', 'mobile', 'telephoneNumber', 'homePostalAddress', 'st')
 
         foreach ($results as $key => $data) {
             // Remove the people who should be gone completely.
@@ -1123,12 +1125,6 @@ class DirectoryModule extends DefaultMinisiteModule {
                 unset($results[$key]);
                 continue;
             }
-
-//            if (isset($data['carlhidepersonalinfo'])) {
-//                unset($results[$key]['homepostaladdress']);
-//                unset($results[$key]['telephoneNumber']);
-//                unset($results[$key]['spouseName']);
-//            }
 
             if ($this->context == 'external') {
                 foreach ($ext_suppress as $attr)
@@ -1146,6 +1142,10 @@ class DirectoryModule extends DefaultMinisiteModule {
                 foreach ($nr_suppress as $attr)
                     unset($results[$key]);
             }
+			
+//			// Hiding certain results about faculty/staff until we can fix/rewrite the linux box code which controls the display in user.php
+//			foreach ($temp_suppress as $attr)
+//					unset ($results[$key]);
         }
     }
 
