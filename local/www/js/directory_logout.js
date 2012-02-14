@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    $("#first_nameElement").focus();
     hide_all();
     input_error_check("#departElement");
     input_error_check("#titleElement");
