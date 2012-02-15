@@ -13,6 +13,8 @@
   * Include dependencies
   */
 	include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
+	require_once CARL_UTIL_INC . 'basic/misc.php';
+	require_once INCLUDE_PATH . '/disco/plugins/input_limiter/input_limiter.php';
 	reason_include_once('classes/event.php');
 	reason_include_once('classes/api/geocoder.php');
 	
@@ -295,6 +297,12 @@
 			
 			//pray($this);
 			$this->set_event_field_order();
+			
+			// limit characters for title and description 
+			$limiter = new DiscoInputLimiter($this);
+			$limiter->limit_field('name', 70);
+			$limiter->limit_field('description', 140);
+			
 		} // }}}
 
 		/**
