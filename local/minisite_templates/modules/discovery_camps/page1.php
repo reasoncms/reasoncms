@@ -100,50 +100,46 @@ class DiscoveryCampsOne extends FormStep
                 'text' => 'The following weeks are available as indicated for each grade level. Campers may register
                     for more than one week, as our programming will be different each week.'
             ),
-            'camp_1' => array(
+			'adventure_hunt' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => 'June 6-7   Grade 1     $85',
-            ),
-           'camp_2' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => 'June 8-10  Grade 2   $95'
-            ),
-            'camp_3' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => 'June 6-10  Grades 7-9     $170',
+                'display_name' => 'June 11-15  Grades 6-9     $175',
                 'comments' => '<br><em>Adventure Hunt</em>'
             ),
-            'camp_4' => array(
+            'grade_1' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => 'June 13-17 Grades 3-6  $145'
+                'display_name' => 'June 11-12   Grade 1     $90',
             ),
-            'camp_5' => array(
+           'grade_2' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => 'June 20-24 Grades 5-8  $170',
+                'display_name' => 'June 13-15  Grade 2   $100'
+            ),
+            'grade_3-6' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => 'June 18-22 Grades 3-6  $150'
+            ),
+            'survival_camp' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => 'June 25-29 Grades 5-8  $175',
                 'comments' => '<br><em>Survival Camp</em>'
             ),
-            'camp_6' => array(
+            'energy_expedition' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => 'June 27-July 1 Grades 9-12 $150',
-                'comments' => '<br><em>Local Food Warriors</em>'
+                'display_name' => 'July 9-13 Grades 4-6 $150',
+				'comments' => '<br><em>Energy Expedition Camp</em>'
             ),
-            'camp_7' => array(
+			'edible_earth' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => 'July 11-15 Grades 3-6 $145',
-            ),
-            'camp_8' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => 'July 18-22** Grades 6-9 $170',
-                'comments' => '<br><em>Expeditioners</em>'
-            ),
-            'camp_9' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => 'July 18-22** Grades 2-5 $150',
+                'display_name' => 'July 16-20** Grades 2-5 $160',
                 'comments' => '<br><em>The Edible Earth</em>'
+            ),
+            'expeditioners' => array(
+                'type' => 'checkboxfirst',
+                'display_name' => 'July 16-20** Grades 7-9 $170',
+                'comments' => '<br><em>Expeditioners</em>'
             ),
             'shuttle_comment' => array(
                 'type' => 'comment',
-                'text' => '**Shuttle service to be offered from Monona to Decorah for camps during the week of July 18-22.
+                'text' => '**Shuttle service to be offered from Monona to Decorah for camps during the week of July 16-20.
                     Register early as spots are limited! Other transportation options may be available&mdash;contact <a href="mailto:
                     nealem01@luther.edu">Emily Neal</a> for information.'
             ),
@@ -163,20 +159,19 @@ class DiscoveryCampsOne extends FormStep
             $date = getdate();
             $this->add_comments('grade', 'Fall '.$date['year'], 'after');
 
-             $april15 = 104; // April 15 == day 104 (105 on a leap year) on a 0 - 364 scale
+             $april20 = 110; // April 15 == day 110 (111 on a leap year) on a 0 - 364 scale
                 if (date('L')) // if this year is a leap year
-                    $june1 = 105;
+                    $june1 = 111;
                                 
                 if ($date['yday'] > $april15){
-                    $this->set_display_name('camp_1', "June 6-7   Grade 1     $100");
-                    $this->set_display_name('camp_2', "June 8-10  Grade 2   $110");
-                    $this->set_display_name('camp_3', "June 6-10  Grades 7-9     $185");
-                    $this->set_display_name('camp_4', "June 13-17 Grades 3-6  $160");
-                    $this->set_display_name('camp_5', "June 20-24 Grades 5-8  $185");
-                    $this->set_display_name('camp_6', "June 27-July 1 Grades 9-12 $165");
-                    $this->set_display_name('camp_7', "July 11-15 Grades 3-6 $160");
-                    $this->set_display_name('camp_8', "July 18-22 Grades 6-9 $185");
-                    $this->set_display_name('camp_9', "July 18-22 Grades 6-9 $165");
+                    $this->set_display_name('adventure_hunt', "June 11-15  Grades 6-9     $190");
+                    $this->set_display_name('grade_1', "June 11-12   Grade 1     $105");
+                    $this->set_display_name('grade_2', "June 13-15  Grade 2   $115");
+                    $this->set_display_name('grade_3-6', "June 18-22 Grades 3-6  $165");
+                    $this->set_display_name('survival_camp', "June 25-29 Grades 5-8  $190");
+                    $this->set_display_name('energy_expedition', "July 9-13 Grades 4-6 $165");
+					$this->set_display_name('edible_earth', "July 16-20** Grades 2-5 $175");
+                    $this->set_display_name('expeditioners', "July 16-20** Grades 7-9 $185");
                 }
         }
 	// style up the form and add comments et al
