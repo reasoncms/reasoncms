@@ -99,21 +99,31 @@ function chooseWorkshops()
     switch(id){
         case 'radio_workshops_0':
             chooseMusicTheatre();
+            clearActingCompany();
             clearKeyboardWorkshop();
             clearHarpWorkshop();
             break;
         case 'radio_workshops_1':
-            chooseKeyboardWorkshop();
+            chooseActingCompany();
+            clearKeyboardWorkshop();
             clearMusicTheatre();
             clearHarpWorkshop();
             break;
         case 'radio_workshops_2':
+            chooseKeyboardWorkshop();
+            clearActingCompany();
+            clearMusicTheatre();
+            clearHarpWorkshop();
+            break;
+        case 'radio_workshops_3':
             chooseHarpWorkshop();
+            clearActingCompany();
             clearMusicTheatre();
             clearKeyboardWorkshop();
             break;
-        case 'radio_workshops_3':
+        case 'radio_workshops_4':
             clearHarpWorkshop();
+            clearActingCompany();
             clearMusicTheatre();
             clearKeyboardWorkshop();
             break;
@@ -128,6 +138,7 @@ function checkRequirements(element)
                     selected = $("select#period_oneElement").val();
                     chooseNone('period_one');
                     switch(selected){
+                        case 'acting_company': chooseActingCompany(); break;
                         case 'orchestra': chooseOrchestra(); break;
                         case 'concert_band': chooseBand(); break;
                         case 'music_theatre': chooseMusicTheatre(); break;
@@ -147,6 +158,7 @@ function checkRequirements(element)
                     selected = $("select#period_three_firstElement").val();
                     chooseNone('period_three');
                     switch(selected){
+                        case 'acting_company': chooseActingCompany(); break;
                         case 'guitar_workshop': chooseGuitarWorkshop(); break;
                         case 'harp_workshop': chooseHarpWorkshop(); break;
                     }
@@ -154,6 +166,7 @@ function checkRequirements(element)
                     selected = $("select#period_four_firstElement").val();
                     chooseNone('period_four');
                     switch(selected){
+                        case 'acting_company': chooseActingCompany(); break;
                         case 'music_theatre': chooseMusicTheatre(); break;
                         case 'keyboard_workshop': chooseKeyboardWorkshop(); break;
                         case 'orchestra': chooseOrchestra(); break;
@@ -164,6 +177,7 @@ function checkRequirements(element)
                     selected = $("select#period_fiveElement").val();
                     chooseNone('period_five');
                     switch(selected){
+                        case 'acting_company': chooseActingCompany(); break;
                         case 'music_theatre': chooseMusicTheatre(); break;
                         case 'keyboard_workshop': chooseKeyboardWorkshop(); break;
                         case 'orchestra': chooseOrchestra(); break;
@@ -368,6 +382,28 @@ function clearWoodwindChoir()
 //                $("#period_four_firstElement").get(0).selectedIndex = 0;
 //            }
 //    }
+function chooseActingCompany()
+{
+        $("#period_oneElement").val('acting_company').attr('selected',true);
+        $("#period_three_firstElement").val('acting_company').attr('selected',true);
+        $("#period_four_firstElement").val('acting_company').attr('selected',true);
+        $("#period_fiveElement").val('acting_company').attr('selected',true);
+}
+function clearActingCompany()
+{
+        if($("#period_oneElement option[value='acting_company']").attr('selected')){
+            $("#period_oneElement").get(0).selectedIndex = 0;
+        }
+        if($("#period_three_firstElement option[value='acting_company']").attr('selected')){
+            $("#period_three_firstElement").get(0).selectedIndex = 0;
+        }
+        if($("#period_four_firstElement option[value='acting_company']").attr('selected')){
+            $("#period_four_firstElement").get(0).selectedIndex = 0;
+        }
+        if($("#period_fiveElement option[value='acting_company']").attr('selected')){
+            $("#period_fiveElement").get(0).selectedIndex = 0;
+        }
+}
 function chooseMusicTheatre()
 {
         $("#period_oneElement").val('music_theatre').attr('selected',true);
