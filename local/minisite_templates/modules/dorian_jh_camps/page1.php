@@ -56,18 +56,18 @@ class DorianJHCampsOneForm extends FormStep
 			'type' => 'text',
 			'size' => 35,
 		),
-                'school' => 'text',
-                'grade' => array(
-                    'type' => 'text',
-                    'size' => 2,
-                    'display_name' => 'Grade completed by June 2011',
-                ),
-                'roomate_requested' => array(
-                    'type' => 'text',
-                    'comments' => 'Males, one name <br>Females, one or two names',
-                   'display_name' => 'Requested&nbsp;Roomate',
-                ),
-                'submitter_ip' => 'hidden',
+		'school' => 'text',
+		'grade' => array(
+			'type' => 'text',
+			'size' => 2,
+			'display_name' => 'Grade completed by June YEAR',
+		),
+		'roomate_requested' => array(
+			'type' => 'text',
+			'comments' => 'Males, one name <br>Females, one or two names',
+		   'display_name' => 'Requested&nbsp;Roomate',
+		),
+		'submitter_ip' => 'hidden',
 	);
 
 	var $required = array('first_name', 'last_name', 'gender', 'home_phone', 'e-mail', 'address', 'city', 'state_province', 'zip', 'school', 'grade');
@@ -77,6 +77,10 @@ class DorianJHCampsOneForm extends FormStep
         function on_every_time()
         {
             $this->set_value('submitter_ip', $_SERVER[ 'REMOTE_ADDR' ]);
+			
+			$year = date('Y');
+			$this->change_element_type('grade', 'text', array('size'=>2, 'display_name'=>'Grade completed by June ' . $year));
+			
         }
 	// style up the form and add comments et al
 	function pre_show_form()
