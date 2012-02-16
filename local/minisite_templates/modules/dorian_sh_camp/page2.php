@@ -181,6 +181,7 @@ class DorianSHCampTwoForm extends FormStep
                     'display_name' => '&nbsp;',
                     'options' => array(
                         'music_theatre' => 'Music Theatre Workshop**',
+                        'acting_company' => 'Acting Company Workshop**',
                         'keyboard_workshop' => 'Keyboard Workshop**',
                         'harp_workshop' => 'Harp Workshop',
                         'none' => 'none',
@@ -234,7 +235,7 @@ class DorianSHCampTwoForm extends FormStep
                     'add_null_value_to_top' => true,
                     'options' => array(
 							'music_theatre' => 'Music Theatre Workshop (requires periods 1, 2, 4, 5, & 6)',
-							'acting_company' => 'Acting Company (requires periods 1, 3, 4, & 5)',
+							'acting_company' => 'Acting Company Workshop (requires periods 1, 3, 4, & 5)',
 							'keyboard_workshop' => 'Keyboard Workshop (with periods 4 & 5)',
 							'orchestra'=>'Orchestra (Strings - periods 4 & 5 also)',
 							'concert_band'=>'Concert Band (with period 5)',
@@ -263,7 +264,7 @@ class DorianSHCampTwoForm extends FormStep
                     'type' => 'select_no_sort',
                     'add_null_value_to_top' => true,
                     'options' => array(
-							'acting_company' => 'Acting Company (requires periods 1, 3, 4, & 5)',
+							'acting_company' => 'Acting Company Workshop (requires periods 1, 3, 4, & 5)',
                             'chamber_choir' => 'Chamber Choir',
                             'woodwind_choir'=>'Woodwind Choir',
                             'jazz_band'=>'Jazz Band',
@@ -288,7 +289,7 @@ class DorianSHCampTwoForm extends FormStep
                     'type' => 'select_no_sort',
                     'add_null_value_to_top' => true,
                     'options' => array(
-							'acting_company' => 'Acting Company (requires periods 1, 3, 4, & 5)',
+							'acting_company' => 'Acting Company Workshop (requires periods 1, 3, 4, & 5)',
                             'chamber_choir' => 'Chamber Choir',
                             'woodwind_choir'=>'Woodwind Choir',
                             'jazz_band'=>'Jazz Band',
@@ -319,7 +320,7 @@ class DorianSHCampTwoForm extends FormStep
                     'display_name' => '(first&nbsp;choice)',
                     'options' => array(
                             'music_theatre' => 'Music Theatre Workshop (requires periods 1, 2, 4, 5, & 6)',
-							'acting_company' => 'Acting Company (requires periods 1, 3, 4, & 5)',
+							'acting_company' => 'Acting Company Workshop (requires periods 1, 3, 4, & 5)',
                             'keyboard_workshop' => 'Keyboard Workshop (with periods 1 & 5)',
                             'intermediate_jazz_improv' => 'Intermediate Jazz Improvisation',
                             'orchestra'=>'Orchestra (Winds & Percussion with period 1; Strings with periods 1 & 5)',
@@ -341,7 +342,7 @@ class DorianSHCampTwoForm extends FormStep
                     'display_name' => '(second&nbsp;choice)',
                     'options' => array(
                             'music_theatre' => 'Music Theatre Workshop (requires periods 1, 2, 4, 5, & 6)',
-							'acting_company' => 'Acting Company (requires periods 1, 3, 4, & 5)',
+							'acting_company' => 'Acting Company Workshop (requires periods 1, 3, 4, & 5)',
                             'keyboard_workshop' => 'Keyboard Workshop (with periods 1 & 5)',
                             'intermediate_jazz_improv' => 'Intermediate Jazz Improvisation',
                             'orchestra'=>'Orchestra (Winds & Percussion with period 1; Strings with periods 1 & 5)',
@@ -367,7 +368,7 @@ class DorianSHCampTwoForm extends FormStep
                     'display_name' => '&nbsp;',
                     'options' => array(
                             'music_theatre' => 'Music Theatre Workshop (requires periods 1, 2, 4, 5, & 6)',
-							'acting_company' => 'Acting Company (requires periods 1, 3, 4, & 5)',
+							'acting_company' => 'Acting Company Workshop (requires periods 1, 3, 4, & 5)',
                             'keyboard_workshop' => 'Keyboard Workshop (with periods 1 & 4)',
                             'orchestra'=>'Orchestra String Sectionals (with periods 1 & 4)',
                             'concert_band'=>'Concert Band (with period 1)',
