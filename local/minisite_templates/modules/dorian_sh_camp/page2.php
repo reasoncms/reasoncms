@@ -181,7 +181,7 @@ class DorianSHCampTwoForm extends FormStep
                     'display_name' => '&nbsp;',
                     'options' => array(
                         'music_theatre' => 'Music Theatre Workshop**',
-                        'acting_company' => 'Acting Company Workshop**',
+                        'acting_company' => 'Acting Company Workshop',
                         'keyboard_workshop' => 'Keyboard Workshop**',
                         'harp_workshop' => 'Harp Workshop',
                         'none' => 'none',
