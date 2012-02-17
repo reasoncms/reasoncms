@@ -272,8 +272,9 @@ class MinisiteTemplate
 	 * This can help speed things up (reducing queries and php processing) for sites that are 
 	 * large and have high traffic.
 	 *
-	 * The downside to navigation caching is that page changes -- title changes, new pages,
-	 * deletions, moves -- may not appear on the site for up to 15 minutes.
+	 * This defaults to true as of Reason 4.2 to improve performance. The minisite_page content
+	 * manager has code which clears the navigation_cache when pages are modified, so there isn't a great
+	 * reason to not use this by default.
 	 *
 	 * @var boolean
 	 * @access private
@@ -361,7 +362,7 @@ class MinisiteTemplate
 		
 		if ($this->use_navigation_cache)
 		{
-			$cache = new ReasonObjectCache($this->site_id . $this->nav_class, 300); // lifetime of 15 minutes
+			$cache = new ReasonObjectCache($this->site_id . '_navigation_cache', 3600); // lifetime of 1 hour
 			$this->pages =& $cache->fetch();
 		}
 		// lets check the persistent cache
