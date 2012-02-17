@@ -98,7 +98,7 @@ div#wrapper.fullGraphicsView div#content div.contentHead h2
 }
 
 div#wrapper.fullGraphicsView div#content div.contentMain div#pageContent hr { border:none; border-top:1px solid #bbb; }
-div#wrapper.fullGraphicsView div#content div.contentMain, div#wrapper.fullGraphicsView div#content div.contentHead { padding: 0px 20px; }
+div#wrapper.fullGraphicsView div#content div.contentMain, div#wrapper.fullGraphicsView div#content div.contentHead, div#wrapper.fullGraphicsView div#content div.contentPost { padding: 0px 20px; }
 
 /* ================= related rules ================= */
 
