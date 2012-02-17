@@ -427,8 +427,26 @@
 					trigger_error('It appears you still need to run the remove_rewrites_finish_actions.php upgrade script located at ' . $script_url);
 				}
 			}
+			
+			if ($this->has_new_parent() || $this->has_new_url_fragment() || $this->state_has_changed() || $this->has_new_link_name() || $this->has_new_name())
+			{
+				reason_include_once('classes/object_cache.php');
+				$cache = new ReasonObjectCache($this->admin_page->site_id . '_navigation_cache');
+				$cache->clear();
+			}
+			
 			return true;
 		} // }}}
+		
+		function has_new_link_name()
+		{
+			return ($this->entity->get_value('link_name') != $this->get_value('link_name'));
+		}
+		
+		function has_new_name()
+		{
+			return ($this->entity->get_value('name') != $this->get_value('name'));
+		}
 		
 		function has_new_url_fragment()
 		{
