@@ -33,6 +33,7 @@ reason_include_once( 'classes/head_items.php' );
 reason_include_once( 'classes/page_access.php' );
 reason_include_once( 'classes/crumbs.php' );
 reason_include_once( 'classes/api/factory.php' );
+reason_include_once( 'classes/object_cache.php' );
 include_once( CARL_UTIL_INC . 'dev/timer.php' );
 
 /**
@@ -277,7 +278,7 @@ class MinisiteTemplate
 	 * @var boolean
 	 * @access private
 	 */
-	var $use_navigation_cache = false;
+	var $use_navigation_cache = true;
 	/**
 	 * EXPERIMENTAL: page mode
 	 *
@@ -360,7 +361,7 @@ class MinisiteTemplate
 		
 		if ($this->use_navigation_cache)
 		{
-			$cache = new ReasonObjectCache($this->site_id . $this->nav_class, 900); // lifetime of 15 minutes
+			$cache = new ReasonObjectCache($this->site_id . $this->nav_class, 300); // lifetime of 15 minutes
 			$this->pages =& $cache->fetch();
 		}
 		// lets check the persistent cache
