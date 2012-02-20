@@ -82,7 +82,7 @@
 			$nes->limit_tables();
 			$nes->limit_fields();
 			$ns = $nes->run_one();
-			$show_edit = (reason_user_has_privs($this->admin_page->user_id,'edit') && empty($ns));
+			$show_edit = reason_user_has_privs($this->admin_page->user_id,'edit') && !$this->admin_page->is_second_level() && empty($ns) ? true : false;
 			
 			/* $type = new entity($this->admin_page->type_id);
 			$name = $type->get_value('plural_name') ? $type->get_value('plural_name') : $type->get_value('name');
