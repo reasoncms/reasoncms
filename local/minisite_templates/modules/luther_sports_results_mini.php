@@ -17,6 +17,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 {
 	var $ideal_count = 3;
 	var $luther_counter = 3;
+	var $luther_counter_sports_home = 7;   // show more results on sports home page
 	var $show_options = false;
 	var $show_navigation = false;
 	var $show_views = false;
@@ -35,7 +36,10 @@ class lutherSportsResultsMiniModule extends EventsModule
 	{
 		parent::init( $args );
 		$this->find_events_page();
-		
+		if ($this->site_id == get_site_id_from_url("/sports"))
+		{
+			$this->luther_counter = $this->luther_counter_sports_home;
+		}
 	}
 	
 	function event_ok_to_show($event)
