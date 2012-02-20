@@ -25,7 +25,7 @@
 		{
 			$this->admin_page =& $page;
 		} // }}}
-		
+			
 		function list_header( ) // {{{
 		{
 			echo $this->_produce_borrowing_nav();
@@ -114,14 +114,20 @@
 				echo '<div class="viewInfo"><div class="roundedTop"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div><div class="roundedContent">';
 				if( !empty( $this->views ) )
 				{
-					echo '<form name="form2"><select name="menu2" onChange="MM_jumpMenu(\'parent\',this,0)" class="viewMenu">';
+					echo '<form name="form2" method="get"><select name="lister" class="viewMenu">';
 					foreach( $this->views AS $view )
 					{
-						echo '<option value="' . $this->admin_page->make_link( array( 'lister' => $view->id(), 'state' => $this->admin_page->request['state'] ) ) . '"';
+						echo '<option value="' . $view->id() . '"';
 						if( $view->id() == $this->admin_page->request[ 'lister' ] )
 							echo ' selected="selected"';
-						echo '>View: ' . $view->get_value( 'display_name' ) . "</option>\n";
+						echo '>View: ' . strip_tags($view->get_value( 'display_name' )) . "</option>\n";
 					}
+					$args = array_merge($this->admin_page->get_default_args(),array('state' => $this->admin_page->request['state']));
+					foreach ( $args as $key => $value)
+					{
+						echo '<input type="hidden" name="'.htmlspecialchars($key, ENT_QUOTES).'" value="'.htmlspecialchars($value, ENT_QUOTES).'" />';
+					}
+					echo ' <input type="submit" value="Go" class="viewMenuSubmit" name="__button_submit">';
 					echo '</select></form>';
 				}
 				echo '</div><div class="roundedBottom"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div></div><br />';
@@ -137,14 +143,14 @@
 			$this->deleted_item_count = $c;
 			if( !empty( $this->admin_page->request[ 'state' ] ) && $this->admin_page->request[ 'state' ] == 'deleted' )
 			{
-				echo '<strong>Deleted Items(' . $c . ')</strong><br />';
+				echo '<strong>Deleted Items <span class="count">(' . $c . ')</span></strong><br />';
 			}
 			else
 			{
 				if( $c > 0 )
-					echo '<a href="'.$this->admin_page->make_link( array( 'state' => 'deleted' ) ). '">Deleted Items(' . $c . ')</a><br />';
+					echo '<a href="'.$this->admin_page->make_link( array( 'state' => 'deleted' ) ). '">Deleted Items <span class="count">(' . $c . ')</span></a><br />';
 				else
-					echo 'Deleted Items(' . $c . ')<br />';
+					echo 'Deleted Items <span class="count">(' . $c . ')</span><br />';
 			}
 		} // }}}
 		function show_pending() // {{{
@@ -157,14 +163,14 @@
 			$this->pending_item_count = $c;
 			if( !empty( $this->admin_page->request[ 'state' ] ) && $this->admin_page->request[ 'state' ] == 'pending' )
 			{
-				echo '<strong>Pending Items(' . $c . ')</strong><br />';
+				echo '<strong>Pending Items <span class="count">(' . $c . ')</span></strong><br />';
 			}
 			else
 			{
 				if( $c > 0 )
-					echo '<a href="'.$this->admin_page->make_link( array( 'state' => 'pending' ) ). '">Pending Items(' . $c . ')</a><br />';
+					echo '<a href="'.$this->admin_page->make_link( array( 'state' => 'pending' ) ). '">Pending Items <span class="count">(' . $c . ')</span></a><br />';
 				else
-					echo 'Pending Items(' . $c . ')<br />';
+					echo 'Pending Items <span class="count">(' . $c . ')</span><br />';
 			}
 		} // }}}
 		function show_live() // {{{
@@ -181,16 +187,17 @@
 			$this->live_item_count = $c;
 			if( empty( $this->admin_page->request[ 'state' ] ) || $this->admin_page->request[ 'state' ] == 'live' )
 			{
-				echo '<strong>Current Items(' . $c . ')</strong><br />';
+				echo '<strong>Current Items <span class="count">(' . $c . ')</span></strong><br />';
 			}
 			else
-				echo '<a href="'.$this->admin_page->make_link( array( 'state' => 'live' ) ). '">Current Items(' . $c . ')</a><br />';
+				echo '<a href="'.$this->admin_page->make_link( array( 'state' => 'live' ) ). '">Current Items <span class="count">(' . $c . ')</span></a><br />';
 		} // }}}
 		function show_sorting() // {{{
 		{
 			$fields = get_fields_by_type( $this->admin_page->type_id );
 			$type = new entity( $this->admin_page->type_id );
-			if( $type->get_value('custom_sorter') || ( is_array($fields) && in_array( 'sort_order' , $fields ) ) )
+			$state = !empty($this->admin_page->request['state']) ? $this->admin_page->request['state'] : false;
+			if( ( $type->get_value('custom_sorter') || ( is_array($fields) && in_array( 'sort_order' , $fields ) ) ) && ($state == 'live' || !$state))
 			{
 				echo '<div class="viewInfo"><div class="roundedTop"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div><div class="roundedContent">';
 				$link = $this->admin_page->make_link( array( 'cur_module' => 'Sorting' , 'default_sort' => true ) );
@@ -259,6 +266,7 @@
 			reason_include_once ( 'classes/viewer.php' );
 			reason_include_once ( 'classes/entity_selector.php' );
 			reason_include_once ( 'content_listers/default.php3' );
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'lister_dropdown.js');
 			include_once( CARL_UTIL_INC . 'basic/misc.php' );
 			$this->admin_page->set_show( 'breadcrumbs' , false );
 
