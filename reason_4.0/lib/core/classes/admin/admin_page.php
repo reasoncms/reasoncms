@@ -1318,14 +1318,6 @@
 				echo ': '.strip_tags($this->title);
 			echo '</title>'."\n";
 			echo $this->head_items->get_head_item_markup();
-			echo '<script language="JavaScript" type="text/JavaScript">' . "\n";
-			echo '<!--' . "\n";
-			echo 'function MM_jumpMenu(targ,selObj,restore){ //v3.0' . "\n";
-		  	echo 'eval(targ+".location=\'"+selObj.options[selObj.selectedIndex].value+"\'");' . "\n";
-		 	echo 'if (restore) selObj.selectedIndex=0;' . "\n";
-			echo '}' . "\n";
-			echo '//-->' . "\n";
-			echo '</script>' . "\n";
 			echo '</head>' . "\n";
 			echo '<body>' . "\n";
 			echo '<div id="wrapper">'."\n";
@@ -1401,7 +1393,13 @@
 			$separator = ($html) ? "&amp;" : "&";
 			return $_SERVER['PHP_SELF']."?".implode($separator, $parts);
 		}
-		
+			
+		function get_default_args() // {{{
+		{
+			$args = array_intersect_key($this->request,array_flip($this->default_args));
+			return !empty($args) ? $args : false;
+		} // }}}
+
 		/**
 		 * Initializes the admin page.
 		 * 
