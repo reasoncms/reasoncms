@@ -24,7 +24,7 @@ class ds_ldap extends ds_default {
 	* @access private
 	* @var array
 	*/
-	var $_conn_params = array(
+	public $_conn_params = array(
 	  	'host' => 'ldap.yourhost.edu',
         	'port' => 389,
 		'ldap_version' => 3,
@@ -38,7 +38,7 @@ class ds_ldap extends ds_default {
 	* @access private
 	* @var array
 	*/
-	var $_search_params = array(
+	public $_search_params = array(
 		'base_attrs' => array('ds_username'),
 		'subtree_search' => false,
 		'base_dn' => 'ou=People,dc=yourhost,dc=edu',
@@ -50,7 +50,7 @@ class ds_ldap extends ds_default {
 	* @var array
 	* Sample dependencies for Eduperson schemas
 	*/
-	var $_gen_attr_depend = array(
+	public $_gen_attr_depend = array(
 		'ds_username' => array('carlnetid'),
 		'ds_email' => array('mail'),
 		'ds_firstname' => array('givenname'),
@@ -120,10 +120,14 @@ class ds_ldap extends ds_default {
 	function search() {
 		// ldap_list is faster for single level searches; if you need to descend a directory hierarchy, 
 		// use ldap_search instead.
+		$start = time();
 		if ($this->_search_params['subtree_search'])
 			$result = @ldap_search($this->_conn, $this->_search_params['base_dn'], $this->_search_params['filter'], $this->_search_params['attrs']);
 		else
 			$result = @ldap_list($this->_conn, $this->_search_params['base_dn'], $this->_search_params['filter'], $this->_search_params['attrs']);
+		$end = time();
+		if (($end - $start) > 5) 
+			error_log('LDAP_SLOW: Query took '.($end-$start).' seconds: '.$this->_search_params['filter']);
 		
 		if ($result) {
 			return ($this->format_results($result));
