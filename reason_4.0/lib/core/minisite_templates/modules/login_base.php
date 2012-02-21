@@ -165,11 +165,6 @@ class LoginBaseModule extends DefaultMinisiteModule
 			echo '</div>'."\n";
 			return false;
 		}
-		if ($this->close_window)
-		{
-			echo '<script language="JavaScript" type="text/javascript">window.close();</script>';
-			return false;
-		}
 		if( !$this->logged_in )
 		{
 			// If secure login is available and they're not using it, either
@@ -198,6 +193,11 @@ class LoginBaseModule extends DefaultMinisiteModule
 		}
 		else
 		{
+			if (isset($this->request['popup']))
+			{
+				echo '<script language="JavaScript" type="text/javascript">window.close();</script>';
+				return false;
+			}
 			if ($this->headline) echo '<h2>'.$this->headline.'</h2>'."\n";
 			if ($this->status_msg)	echo '<p class="statusInfo">'.$this->status_msg.'</p>'."\n";
 			$this->display_close_window_link();
