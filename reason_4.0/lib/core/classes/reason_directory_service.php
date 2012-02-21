@@ -161,10 +161,18 @@ class ds_reason extends ds_default {
 	*/
 	function attr_search($attr, $qlist, $return = array()) {
 		if (is_array($qlist)) {
-			// build a search filter for matching against multiple values.
-			foreach ($qlist as $val)
-				$filter_parts[] = $this->construct_filter('equality',$attr,$this->escape_input($val));
-			$filter = '('.join(' OR ', $filter_parts).')';
+			if(!empty($qlist))
+			{
+				// build a search filter for matching against multiple values.
+				foreach ($qlist as $val)
+					$filter_parts[] = $this->construct_filter('equality',$attr,$this->escape_input($val));
+				$filter = '('.join(' OR ', $filter_parts).')';
+			}
+			else
+			{
+				// no results should be returned if empty array given as second argument
+				return false;
+			}
 		} else {
 			// build a search filter for matching against a single value.
 			$filter = $this->construct_filter('equality',$attr,$this->escape_input($qlist));
