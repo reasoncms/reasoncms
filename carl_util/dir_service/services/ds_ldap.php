@@ -127,7 +127,10 @@ class ds_ldap extends ds_default {
 			$result = @ldap_list($this->_conn, $this->_search_params['base_dn'], $this->_search_params['filter'], $this->_search_params['attrs']);
 		$end = time();
 		if (($end - $start) > 5) 
-			error_log('LDAP_SLOW: Query took '.($end-$start).' seconds: '.$this->_search_params['filter']);
+		{
+			$filter = (strlen($this->_search_params['filter']) < 1000) ? $this->_search_params['filter'] : substr($this->_search_params['filter'], 0, 1000).'...';
+			error_log('LDAP_SLOW: Query took '.($end-$start).' seconds: '.$filter);
+		}
 		
 		if ($result) {
 			return ($this->format_results($result));
