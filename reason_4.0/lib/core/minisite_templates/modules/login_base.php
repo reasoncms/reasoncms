@@ -156,6 +156,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 	
 	public function run()
 	{
+		if ($this->verbose_logging) error_log('LOGIN: Run phase');
 		if (DISABLE_REASON_LOGIN)
 		{
 			echo '<div id="login">'."\n";
@@ -373,8 +374,9 @@ class LoginBaseModule extends DefaultMinisiteModule
 		{
 			if( $this->dest_page != get_current_url() )
 			{
-				if (isset($this->request['force_redirect'])) 
+				if (!empty($this->request['force_redirect']) || empty($this->request['noredirect']) ) 
 				{
+					if ($this->verbose_logging) error_log('LOGIN: Redirecting to '.$this->get_dest_page_link(true));
 					header( 'Location: '.$this->get_dest_page_link(true));
 					exit;	
 				} else {				
@@ -468,6 +470,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 			$link = alter_protocol($this->dest_page, 'https', 'http').$fragment;
 		else
 			$link = $this->dest_page;
+		return $link;
 	}
 	
 	public static function truncate_link_text($text, $max_chars = 50)
