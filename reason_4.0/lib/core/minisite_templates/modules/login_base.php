@@ -69,7 +69,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 		$head_items->add_javascript(JQUERY_URL, true); // do we need to do this?
 		$head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'login/focus.js');
 		// Search engines should not be indexing versions of the index page with specific destinations
-		if( !empty( $this->request[ 'dest_page' ] ) )
+		if( isset( $this->request[ 'dest_page' ] ) )
 		{
 			$head_items->add_head_item('meta', array('name'=>'robots','content'=>'none'));
 		}
@@ -78,7 +78,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 		$this->on_secure_page_if_available = (!HTTPS_AVAILABLE || on_secure_page());
 		$this->set_dest_page();
 		
-		if ( !empty($this->request ['redir_link_text']))
+		if ( isset($this->request ['redir_link_text']))
 		{
 			$this->redir_link_text = $this->request ['redir_link_text'];
 		}
@@ -96,10 +96,10 @@ class LoginBaseModule extends DefaultMinisiteModule
 			}
 			
 			// user is logging out
-			if( !empty( $this->request[ 'logout' ] ) )
+			if( isset( $this->request[ 'logout' ] ) )
 			{
 				if ($this->verbose_logging) error_log('LOGIN: do_logout');
-				// Set the text cookie here, so they can log back in again
+				// Set the test cookie here, so they can log back in again
 				$this->set_test_cookie();
 				$this->do_logout();
 			}
@@ -142,13 +142,13 @@ class LoginBaseModule extends DefaultMinisiteModule
 			{
 				if ($this->verbose_logging) error_log('LOGIN: No login in progress');
 				$this->set_test_cookie();
-				if( !empty( $this->request[ 'code' ] ) )
+				if( isset( $this->request[ 'code' ] ) )
 				{
 					$s =& get_reason_session();
 					$this->msg = $s->get_error_msg( $this->request[ 'code' ] );
 				}
 				
-				if( !empty( $this->request[ 'msg_uname' ] ) )
+				if( isset( $this->request[ 'msg_uname' ] ) )
 					$this->set_message_from_unique_name($this->request[ 'msg_uname' ]);
 			}
 		}
@@ -188,9 +188,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 			}
 			else
 			{
-				//$this->set_test_cookie();
-				
-				if(!empty($this->request['username']))
+				if(isset($this->request['username']))
 					$uname = $this->request['username'];
 				else
 					$uname = '';
@@ -220,7 +218,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 	
 	protected function test_cookie_exists()
 	{
-		$cookie_exists = !empty( $_COOKIE['cookie_test'] );
+		$cookie_exists = isset( $_COOKIE['cookie_test'] );
 		if( $cookie_exists )
 		{
 			return true;
@@ -321,7 +319,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 	
 	protected function display_close_window_link()
 	{
-		if (!empty($this->request['popup']))
+		if (isset($this->request['popup']))
 		{
 			$this->close_window = true;
 			echo '<p class="closeLink"><a href="#" onclick="window.close();">Close this window.</a></p>';
@@ -330,7 +328,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 	
 	protected function login_in_progress()
 	{
-		return (!empty( $this->request[ 'username' ] ) AND !empty( $this->request[ 'password' ] ));
+		return (isset( $this->request[ 'username' ] ) AND isset( $this->request[ 'password' ] ));
 	}
 	
 	protected function do_login()
@@ -374,7 +372,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 		{
 			if( $this->dest_page != get_current_url() )
 			{
-				if (!empty($this->request['force_redirect']) || empty($this->request['noredirect']) ) 
+				if (isset($this->request['force_redirect']) || !isset($this->request['noredirect']) ) 
 				{
 					if ($this->verbose_logging) error_log('LOGIN: Redirecting to '.$this->get_dest_page_link(true));
 					header( 'Location: '.$this->get_dest_page_link(true));
@@ -395,7 +393,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 		$this->logged_in = false;
 		$this->status_msg = 'You are now logged out.';
 		$this->log_authentication_event('logout succeeded', $username);
-		if( empty( $this->request[ 'noredirect' ] ) && $this->dest_page )
+		if( !isset( $this->request[ 'noredirect' ] ) && $this->dest_page )
 		{
 			$this->clear_test_cookie();
 			header( 'Location: '.$this->get_dest_page_link(false));
@@ -417,7 +415,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 		// they came from if there was one.  Otherwise, they will see a successful login message
 		if( $this->params['login_mode'] == 'standalone' )
 		{
-			if (empty($this->request['popup']) && !$this->login_in_progress() && empty($this->request['logout']))
+			if (!isset($this->request['popup']) && !$this->login_in_progress())
 			{
 				if( !empty( $_SERVER['HTTP_REFERER'] ) )
 				{
