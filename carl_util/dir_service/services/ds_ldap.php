@@ -147,10 +147,18 @@ class ds_ldap extends ds_default {
 	*/
 	function attr_search($attr, $qlist, $return = array()) {
 		if (is_array($qlist)) {
-			// build a search filter for matching against multiple values.
-			foreach ($qlist as $val)
-				$filter_parts[] = $this->construct_filter('equality',$attr,$this->escape_input($val));
-			$this->set_search_param('filter', sprintf('(|%s)',join('',$filter_parts)));
+			if(!empty($qlist))
+			{
+				// build a search filter for matching against multiple values.
+				foreach ($qlist as $val)
+					$filter_parts[] = $this->construct_filter('equality',$attr,$this->escape_input($val));
+				$this->set_search_param('filter', sprintf('(|%s)',join('',$filter_parts)));
+			}
+			else
+			{
+				// if no values are given to match, there will be no results
+				return false;
+			}
 		} else {
 			// build a search filter for matching against a single value.
 			$this->set_search_param('filter', $this->construct_filter('equality',$attr,$this->escape_input($qlist)));
