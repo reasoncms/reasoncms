@@ -150,7 +150,7 @@
 			$this->pages->order_by = 'sortable.sort_order ASC';
 			$this->pages->init( $this->parent->site_id, id_of('policy_type') );
 
-			if( !empty( $this->request[ 'policy_id' ] ) )
+			if( !empty( $this->request[ 'policy_id' ] ) && $this->pages->cur_page_root() )
 			{
 				if(array_key_exists($this->request[ 'policy_id' ], $this->values))
 				{
