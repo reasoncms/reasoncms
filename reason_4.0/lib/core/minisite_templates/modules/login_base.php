@@ -61,7 +61,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 	protected $on_secure_page_if_available = false;
 	protected $current_url = '';
 	protected $msg_extra = '';
-	protected $verbose_logging = false; // Useful for debugging login issues
+	protected $verbose_logging = true; // Useful for debugging login issues
 	
 	public function init( $args = array() )
 	{
@@ -99,6 +99,8 @@ class LoginBaseModule extends DefaultMinisiteModule
 			if( !empty( $this->request[ 'logout' ] ) )
 			{
 				if ($this->verbose_logging) error_log('LOGIN: do_logout');
+				// Set the text cookie here, so they can log back in again
+				$this->set_test_cookie();
 				$this->do_logout();
 			}
 			// session exists, but no identity is set; bad state, start over
