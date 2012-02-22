@@ -44,7 +44,7 @@ class ClassifiedView extends Disco
 	// Customizable details of the summary view
 	var $show_list_with_details = false;
 	var $jump_to_item_if_only_one_result = false;
-	var $default_sort_field = 'datetime';
+	var $default_sort_field = 'dated.datetime';
 	var $default_sort_order = 'desc';
 	var $use_filters = true;
 	
