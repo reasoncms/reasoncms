@@ -159,7 +159,8 @@
 			'filter_displayer'=>'default.php',
 			'pagination_displayer'=>'window.php',
 			'wrapper_id_string'=>'',
-			'straight_join_filter_threshold' => 3,
+			'straight_join_filter_threshold' => 4,
+			'max_filters' => 3
 		);
 		var $jump_to_item_if_only_one_result = true;
 		var $has_feed = false;
@@ -240,6 +241,7 @@
 				if (!$this->show_list_with_details && !empty($this->current_item_id))
 				{
 					$this->es->limit_fields('entity.id');
+					$this->es->exclude_tables_dynamically();
 					$this->ids = $this->es->run_one();
 					
 					// make sure the currently selected item has all fields needed (e.g. relationship fields, etc.)
@@ -258,9 +260,10 @@
 				}
 				else
 				{
-					// when filters are being used and active, the default way mysql 5 chooses to optimize the query can result
-					// in some extremely long load times. Forcing a straight join appears to address this issue.
-					if ($this->use_filters && !empty($this->request['filters']))
+					// when we are using a bunch of relationship filters AND searching across a big table like the chunk table, mysql can take a really
+					// long time figuring out how to optimize the query. Forcing a straight join appears to address this issue. Note that this will only
+					// ever be run if you configure max_filters is equal to or greater than the straight_join_filter_threshold.
+					if ($this->use_filters && !empty($this->request['filters']) && !empty($this->request['search']))
 					{
 						if (isset($this->params['straight_join_filter_threshold']) && is_numeric($this->params['straight_join_filter_threshold']))
 						{
@@ -277,7 +280,8 @@
 					if ($this->use_pagination)
 					{
 						$all_ids_es = carl_clone($this->es);
-						$all_ids_es->limit_fields('entity.id');
+						$all_ids_es->limit_fields(array('entity.id'));
+						$all_ids_es->exclude_tables_dynamically();
 						$this->ids = $all_ids_es->run_one(); 
 						
 						$this->refine_ids_and_positions_arrays();
@@ -296,6 +300,7 @@
 					// about all items for the array of ids and the items array.
 					else
 					{
+						$this->es->exclude_tables_dynamically();
 						$this->items = $this->ids = $this->es->run_one();
 						$this->refine_ids_and_positions_arrays();
 						$this->alter_items($this->items);
@@ -804,6 +809,12 @@
 			if(!empty($this->request['filters']))
 			{
 				$this->filters = $this->request['filters'];
+				if (count($this->filters) > $this->params['max_filters'])
+				{
+					$redirect_link = carl_make_redirect(array('filters' => ''));
+					header('Location: ' . $redirect_link);
+					exit;
+				}
 				foreach($this->filters as $key=>$filter)
 				{
 					if (!empty($filter['type']) && !empty($filter['id']))
@@ -969,7 +980,6 @@
 					$r_id = relationship_id_of($filter_type['relationship']);
 					if (!$r_id) trigger_error($filter_type['relationship'] . ' is not a valid allowable relationship');
 				}
-					
 				$es = new entity_selector($this->parent->site_id);
 				$es->add_type(id_of($filter_type['type']));
 				$es->set_order('entity.name ASC');
@@ -1007,6 +1017,7 @@
 				}
 			}
 			ksort($this->filters);
+			
 			foreach($this->filters as $key=>$values)
 			{
 				$this->build_default_links($key);
@@ -1022,6 +1033,7 @@
 				$fd->set_filters($this->filters);
 				$fd->set_textonly($this->parent->textonly);
 				$fd->set_search_field_size($this->search_field_size);
+				$fd->set_max_filters($this->params['max_filters']);
 				if(!empty($this->request['search']))
 				{
 					$fd->set_search_value($this->request['search']);
