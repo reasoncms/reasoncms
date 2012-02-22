@@ -88,6 +88,11 @@ class defaultFilterDisplay
 	var $module_ref;
 	
 	/**
+	 * If set, we enforce a max number
+	 */
+	var $max_filters;
+	
+	/**
 	 * Provide a type so the filtering can know what its working on
 	 * @param entity $type
 	 * @access public
@@ -118,6 +123,18 @@ class defaultFilterDisplay
 	{
 		$this->filters = $filters;
 	}
+	
+	/**
+	 * Set a max number of filters allowed
+	 * @param int $num
+	 * @access public
+	 * @return void
+	 */
+	function set_max_filters($num)
+	{
+		$this->max_filters = $num;
+	}
+	
 	/**
 	 * Indicate whether current page is text only or not
 	 * @param bool $textonly
@@ -293,7 +310,8 @@ class defaultFilterDisplay
 			else
 				$top_filter_key = 0;
 			$next_filter_key = $top_filter_key + 1;
-			if (isset($this->module_ref->items) && !empty($this->module_ref->items)) $ret .= $this->_build_filter_set($next_filter_key);
+			$at_max = (isset($this->max_filters)) ? (count($this->filters) >= $this->max_filters) : false;
+			if (isset($this->module_ref->items) && !empty($this->module_ref->items) && !$at_max ) $ret .= $this->_build_filter_set($next_filter_key);
 			$ret .= '</form>'."\n";
 		}
 		return $ret;
