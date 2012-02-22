@@ -54,7 +54,6 @@
 	 */
 	function table_of( $name , $type) // {{{
 	{
-		
 		$tables = get_entity_tables_by_type( $type );
 		foreach( $tables AS $t )
 		{
@@ -216,7 +215,17 @@
 		 * @var boolean
 		 */
 		var $_enable_multivalue_results = false;
-		
+
+		/**
+		 * Should I try to dynamically exclude tables that aren't used in the select.
+		 *
+		 * This can increase performance significantly in cases where you might not know which tables
+		 * should be used in advance, but you want to only include the tables that you need. It relies on 
+		 * parsing anything added to add_relation before building the query, and will not work well if you
+		 * have statements in add_relation that don't use fully qualified entity_table.field_name pairs.
+		 */
+		var $_exclude_tables_dynamically = false;
+				
 		/**
  		 * Constructor 
 		 * @param int $site_id optional site id, if set will only select entities belonging to the given site
@@ -847,10 +856,53 @@
 				$new_e->add_relation( 'entity.state = "'.$status.'"' );
 			else
 				$new_e->add_relation( 'entity.state != "Archived"' );
+			
+			if (is_array($this->limit_fields) && empty($this->table_mod) && $this->_exclude_tables_dynamically)
+			{
+				$to_exclude = false;
+				$tables = get_entity_tables_by_type( $type );
+				foreach ($tables as $table)
+				{
+					$exclude = true;
+					if ($table == 'entity') $exclude = false;
+					if (($exclude == true) && (strpos($this->orderby, $table . '.') !== FALSE)) $exclude = false;
+					if ($exclude == true)
+					{
+						$limit_fields = $this->limit_fields;
+						while ($cur_element = array_pop($limit_fields))
+						{
+							if (strpos($cur_element, $table . '.') !== FALSE)
+ 		 					{
+ 		 						$exclude = false;
+ 		 						continue;
+ 		 					}
+						}
+					}
+					if ($exclude == true)
+					{
+						$relation_array = $this->relations;
+ 		 				while ($cur_element = array_pop($relation_array))
+ 		 				{
+ 		 					if (strpos($cur_element, $table . '.') !== FALSE)
+ 		 					{
+ 		 						$exclude = false;
+ 		 						continue;
+ 		 					}
+ 		 				}
+					}
+					if ($exclude) $to_exclude[] = $table;
+ 		 		}
+ 		 		if ($to_exclude)
+ 		 		{
+ 		 			$this->exclude_tables($to_exclude);
+ 		 		}
+			}
+			
 			$new_e->swallow( get_entities_by_type_object( $type , $this->site_id, $sharing, $this->table_mod, $this->table_mod_action ));
 				
 			if (is_array($this->limit_fields)) $new_e->fields = array_unique(array_merge(array('entity.id'), $this->limit_fields));
 			$new_e->swallow( $this );
+			
 			
 			if ($this->union)
 			{
@@ -1054,6 +1106,7 @@
 		{
 			$this->_enable_multivalue_results = true;
 		}
+		
 		/**
 		 * Turns off multivalue results
 		 * 
@@ -1067,6 +1120,23 @@
 		{
 			$this->_enable_multivalue_results = false;
 		}
+		
+		/**
+		 * Sets exclude tables dynamically
+		 * 
+		 * When on, we exclude tables from the query that meet this criteria:
+		 * 
+		 * 1. Are not part of a field name that we are selecting.
+		 * 2. Are not the table in a table.field_name string in a relation statement.
+		 *
+		 * @param boolean true or false
+		 * @return void
+		 */
+		function exclude_tables_dynamically( $boolean = true )
+		{
+			$this->_exclude_tables_dynamically = $boolean;
+		}
+		
 		/**
 		 * Runs all queries for the ES.
 		 * @param string $status Either Live, Pending, Archived... (optional)
@@ -1413,7 +1483,14 @@
 			{
 				foreach ($field_array as $field)
 				{
-					$this->limit_fields[] = $field;
+					if (isset($this->type[0]) && (strpos($field, ".") === FALSE) && ($tablewithfield = table_of($field, $this->type[0])))
+					{
+						$this->limit_fields[] = $tablewithfield;
+					}
+					else
+					{
+						$this->limit_fields[] = $field;
+					}
 				}
 			}
 			else $this->limit_fields = array();
