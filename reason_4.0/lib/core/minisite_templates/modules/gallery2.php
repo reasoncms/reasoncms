@@ -135,6 +135,7 @@ class Gallery2Module extends Generic3Module
 		'height' => 0,
 		'width' => 0,
 		'crop' => 0,
+		'max_filters' => 3
 	);
 	
 	/**
