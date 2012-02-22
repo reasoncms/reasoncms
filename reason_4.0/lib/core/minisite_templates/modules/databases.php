@@ -74,11 +74,10 @@ class DatabasesModule extends Generic3Module
 	}
 	function alter_es() // {{{
 	{
+		$this->es->limit_fields('entity.id');
 		$this->es->set_order( 'entity.name ASC' );
 		$this->es->add_left_relationship_field( 'db_to_primary_external_url', 'external_url' , 'url' , 'primary_url' );
-		$this->es->optimize('STRAIGHT_JOIN');
 		$this->db_alter_es($this->es);
-		
 	} // }}}
 	function db_alter_es(&$es)
 	{
