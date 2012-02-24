@@ -551,12 +551,13 @@
 			{
 				$this->not_ok_ids[] = $id;
 				header('HTTP/1.0 404 Not Found');
-				if(!empty($_SERVER['HTTP_REFERER']))
-				{
-					$parts = parse_url($_SERVER['HTTP_REFERER']);
-					if($parts['host'] == HTTP_HOST_NAME) // probably can't do anything about it if the link is offsite...
-						trigger_error('ID given does not correspond to an appropriate entity. Referer: '.$_SERVER['HTTP_REFERER']);
-				}
+				// 404s, even internal ones, don't need to go into the error log ... commenting this out to reduce error log spam.
+				//if(!empty($_SERVER['HTTP_REFERER']))
+				//{
+				//	$parts = parse_url($_SERVER['HTTP_REFERER']);
+				//	if($parts['host'] == HTTP_HOST_NAME) // probably can't do anything about it if the link is offsite...
+				//		trigger_error('ID given does not correspond to an appropriate entity. Referer: '.$_SERVER['HTTP_REFERER']);
+				//}
 				return false;
 			}
 		}
