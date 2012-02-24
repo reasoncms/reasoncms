@@ -48,6 +48,9 @@
 									'display_name'=>'Avoid',
 									'comments'=>'<div class="tarbabyComment">(This is here to trap robots. Don\'t put any text here.)</div>',
 								),
+			'comment_posted_id' => array(
+									'type'=>'hidden',
+								),
 							  ); 
 		
 		var $required = array(
@@ -89,6 +92,7 @@
 				$this->actions['Submit'] = 'Submit Comment (Moderated)';
 			}
 				$this->do_wysiwygs();
+				$this->set_value('comment_posted_id', '');
 		}
 		
 		function do_wysiwygs()
@@ -140,6 +144,11 @@
 					$this->set_error($field,'This field must be left empty for your comment to work');
 				}
 			}
+			$content = $this->get_value('comment_content');
+			$content = str_replace('&nbsp;', ' ', $content);
+			if (carl_empty_html(trim(tidy($content))))
+				$this->set_error('comment_content', 'You must write a comment in order to post a comment!');
+					
 			$fields_to_tidy = array('comment_content');
 			foreach($fields_to_tidy as $field)
 			{
@@ -157,9 +166,7 @@
 							$display_name = prettify_string($field);
 						}
 						$this->set_error($field,'Please fill in the '.$display_name.' field');
-					}
-					else
-					{
+					} else 	{
 						$tidy_errors = tidy_err($this->get_value($field));
 						if(!empty($tidy_errors))
 						{
@@ -173,6 +180,11 @@
 						}
 					}
 				}
+			}
+		}
+		function post_show_form() {
+			if ($this->has_errors()) {
+				echo '<script type="text/javascript">$(document).ready(function () {window.location.hash = "#discoErrorNotice"})</script>';
 			}
 		}
 		function process(){

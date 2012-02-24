@@ -107,7 +107,8 @@ class PublicationModule extends Generic3Module
 	var $_unauthorized_message = NULL;
 	var $_items_by_section = array(); // a place to cache items organized by section
 	var $_blurbs_by_issue; // a place to cache blurbs organized by issue
-	var $_comment_group_helper; // The helper for the publication's comment group
+	var $_comment_group_helper; // The helper for the publication's comment group	
+	var $_comment_has_errors;
 		
 	/** 
 	* Stores the default class names and file names of the markup generator classes used by the module.  
@@ -197,6 +198,7 @@ class PublicationModule extends Generic3Module
 													 'item_categories' => 'get_item_categories',
 													 'item_comments' => 'get_item_comments',
 													 'comment_form_markup'=>'get_comment_form_markup',
+													 'comment_has_errors' => 'get_comment_has_errors',
 													 'commenting_status' => 'commentability_status',
 													 'previous_post' => 'get_next_post',
 													 'next_post' => 'get_previous_post',
@@ -2426,6 +2428,10 @@ class PublicationModule extends Generic3Module
 			$es->set_order( 'dated.datetime ASC' );
 			return $es->run_one();
 		}
+		function get_comment_has_errors($item)
+		{
+			return $this->_comment_has_errors;
+		}
 		function get_comment_form_markup($item)
 		{
 			if($this->comment_form_ok_to_run($item))
@@ -2444,6 +2450,10 @@ class PublicationModule extends Generic3Module
 				$form = new $form_class($this->site_id, $item, $this->get_comment_moderation_state(), $this->publication);
 				$form->set_username($this->get_user_netid());
 				$form->run();
+				if ($form->has_errors())
+					$this->_comment_has_errors = 'yes';
+				else 
+					$this->_comment_has_errors = 'no';
 				$content = ob_get_contents();
 				ob_end_clean();
 				

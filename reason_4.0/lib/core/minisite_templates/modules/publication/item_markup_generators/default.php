@@ -36,6 +36,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 								  'comment_form_markup',
 								  'commenting_status',
 								  'permalink',
+								  'comment_has_errors',
 								  //'next_post',
 								  //'previous_post',
 								);
@@ -59,6 +60,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$this->markup_string .= '<div class="commentAdded">'.$this->get_comment_added_section().'</div>'."\n";
 		}
+		
 		$this->markup_string .= $this->get_title_section();
 		if($this->should_show_date_section())
 		{
@@ -116,33 +118,46 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 	}
 	
 	/**
-	 * Answers question: should the "Comment Added" section be displayed?
+	 * Answers question: should the "Comment Added" or form error sections be displayed?
 	 *
 	 * Basically this should answer true if a comment was just posted (e.g. the request has a value for comment_posted_id)
+	 * OR if the form had errors. 
 	 *
 	 * @return boolean
 	 */
 	function should_show_comment_added_section()
 	{
+		$has_errors = (!empty($this->passed_vars['comment_has_errors']) && ($this->passed_vars['comment_has_errors'] == 'yes')) ? true : false;
 		if(!empty($this->passed_vars['request']['comment_posted_id']))
+			return true;
+		elseif ($has_errors)
 			return true;
 		else
 			return false;
 	}
+
 	
 	/**
-	 * Build the markup for the "Comment Added" section
+	 * Build the markup for the "Comment Info" section.
 	 *
-	 * This section exists to inform the user that their comment was a) added, or b) held for review
+	 * This section exists to inform the user that their comment was a) added, or b) held for review.
+	 * It also informs the user of any errors with their form.
+	 *
+	 * Perhaps the type-of-info-to-show checking should be moved into the should_show method?
 	 *
 	 * @return string 
 	 */
 	function get_comment_added_section()
 	{
 		$ret = '';
-		if($this->passed_vars['publication']->get_value('hold_comments_for_review') == 'yes')
+		$has_errors = (!empty($this->passed_vars['comment_has_errors']) && ($this->passed_vars['comment_has_errors'] == 'yes')) ? true : false;
+		if ($has_errors)
 		{
-			$ret .= '<h4>Comments are being held for review on this publication.  Please check back later to see if your comment has been posted.</h4>';
+			$ret .= '<h4>Your comment submission has errors and could not be saved. Please <a href="#discoErrorNotice">fix the errors</a> and resubmit.</h4>';
+		}
+		elseif($this->passed_vars['publication']->get_value('hold_comments_for_review') == 'yes')
+		{
+			$ret .= '<h4>Comments are being held for review on this publication. Please check back later to see if your comment has been posted.</h4>';
 		}
 		else
 		{
@@ -151,6 +166,8 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		}
 		return $ret;
 	}
+	
+	
 	function get_title_section()
 	{
 		$ret = '';
