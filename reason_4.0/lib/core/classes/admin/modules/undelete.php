@@ -51,6 +51,14 @@
 			$q = 'UPDATE entity SET state = "Live", last_edited_by = "'.$this->admin_page->user_id.'" where id = ' . $this->admin_page->id;
 			db_query( $q , 'Error setting state as live in DeleteModule::init()' );
 			
+			if ($this->admin_page->type_id == id_of('minisite_page'))
+			{
+				// zap nav cache so it reappears.
+				reason_include_once('classes/object_cache.php');
+				$cache = new ReasonObjectCache($this->admin_page->site_id . '_navigation_cache');
+				$cache->clear();
+			}
+			
 			//Updates the rewrites to prevent infinite redirection loop.
 			reason_include_once('classes/url_manager.php');
 			$urlm = new url_manager($this->admin_page->site_id);
