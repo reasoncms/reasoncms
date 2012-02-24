@@ -268,10 +268,8 @@ class DirectoryModule extends DefaultMinisiteModule {
 		echo "<a href='./?netid[]=" . $logged_user . "'>Your Entry</a>";
 		echo " | ";
 		// edit entry link
-//        echo "<a href='/directory/user.php?mode=edit&name=".reason_check_authentication()."'>Edit Entry</a>";
-		echo "<a href='./user.php?mode=edit&name=" . $logged_user . "'>Edit Entry</a>";
-//        echo "<a href='/newdirectory/login.php/?userdir=".reason_check_authentication()."'>Edit Entry</a>";
-		echo " | ";
+//		echo "<a href='./user.php?mode=edit&name=" . $logged_user . "'>Edit Entry</a>";
+//		echo " | ";
 		echo "<a href='/login/?logout=1'>Logout</a>";
 		echo "</p>";
 		}
