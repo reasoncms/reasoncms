@@ -2430,7 +2430,7 @@ class PublicationModule extends Generic3Module
 		}
 		function get_comment_has_errors($item)
 		{
-			return $this->_comment_has_errors;
+			return (isset($this->_comment_has_errors)) ? $this->_comment_has_errors : '';
 		}
 		function get_comment_form_markup($item)
 		{
