@@ -428,7 +428,7 @@
 				}
 			}
 			
-			if ($this->has_new_parent() || $this->has_new_url_fragment() || $this->state_has_changed() || $this->has_new_link_name() || $this->has_new_name())
+			if ($this->has_new_parent() || $this->has_new_url_fragment() || $this->state_has_changed() || $this->has_new_link_name() || $this->has_new_name() || $this->nav_display_changed())
 			{
 				reason_include_once('classes/object_cache.php');
 				$cache = new ReasonObjectCache($this->admin_page->site_id . '_navigation_cache');
@@ -464,6 +464,15 @@
 				$this->_state_has_changed = ( ($this->entity->get_value('state') != $this->get_value('state')) || $this->get_value('state_action') );
 			}
 			return $this->_state_has_changed;
+		}
+		
+		function nav_display_changed()
+		{
+			if (!isset($this->_nav_display_changed))
+			{
+				$this->_nav_display_changed = ($this->entity->get_value('nav_display') != $this->get_value('nav_display'));
+			}
+			return $this->_nav_display_changed;
 		}
 		
 		function process(){
