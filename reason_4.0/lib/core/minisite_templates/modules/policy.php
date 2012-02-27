@@ -134,6 +134,9 @@
 		{
 			parent::init( $args );
 
+			$head =& $this->get_head_items();
+			$head->add_javascript('/reason_package/reason_4.0/www/js/policy_selector.js');
+
 			$es = new entity_selector( $this->parent->site_id );
 			$es->add_type( id_of( 'policy_type' ) );
 			//$es->set_order( 'sortable.sort_order ASC' );
@@ -208,30 +211,22 @@
 		} // }}}
 		function show_root_option_menu() // {{{
 		{
-		?>
-			<script language="JavaScript">
-			<!--
-			function MM_jumpMenu(targ,selObj,restore){ //v3.0
-				eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
-				if (restore) selObj.selectedIndex=0;
-			}
-			//-->
-			</script>
-		<?php
+		
 			$main_link = '?';
 			if (!empty($this->parent->textonly))
 				$main_link .= '&amp;textonly=1';
 
-			echo '<form name="policy_form" class="policyForm">' .
-					'<select name="policy_select" onChange="MM_jumpMenu(\'parent\',this,0)" class="rootMenu">'.
+			echo '<form name="policy_form" method="get" class="policyForm">' .
+					'<select name="policy_id" class="rootMenu">'.
 					'<option value="'.$main_link.'">' . $this->parent->title . "</option>\n";
 			foreach( $this->roots AS $root )
 			{
-				echo '<option value="'.$this->page_link( $root ).'"';
+				echo '<option value="'.$root->id().'"';
 				if ( $root->id() == $this->request[ 'policy_id' ] ) echo " selected='selected' ";
 				echo '>'.prettify_string( $root->get_value( 'name' ) ).'</option>'."\n";
 			}
-			echo '</select><noscript><input type="submit" value="submit"></noscript></form>';
+			echo '';
+			echo '</select> <input type="submit" class="rootMenuSubmit" value="Go"></form>';
 
 		} // }}}
 		function display_navigation() // {{{
