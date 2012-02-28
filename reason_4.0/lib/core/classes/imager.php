@@ -7,6 +7,13 @@
 	 *	@subpackage classes
 	 */
 	 
+	 /**
+	  * Include dependencies
+	  */
+	  
+	reason_include_once('function_libraries/image_tools.php');
+
+	 
 	/**
 	 *	Imager Class
 	 *	
@@ -114,7 +121,7 @@
 			// get image width and height
 			if ( empty( $image['width'] ) OR empty( $image['height'] ) )
 			{
-				$info = getImageSize( $this->image_dir.$id.'.'.$image['image_type'] );
+				$info = getImageSize( $this->image_dir. reason_get_image_filename($id) );
 				$this->images[$id]['width'] = $info[0];
 				$this->images[$id]['height'] = $info[1];
 			}
@@ -138,7 +145,7 @@
 					if ($window_width < 326)
 						$window_width = 375;
 					?>
-						<a onmouseover="window.status = 'view larger image'; return true;" onmouseout="window.status = ''; return true;" 							href="javascript:void(window.open('<?php echo $this->image_script ?>?id=<?php echo $image['id']; ?>',							'<?php echo $this->popup_name; ?>','menubar,scrollbars,resizeable,width=<?php echo $window_width;?>,							height=<?php echo $window_height; ?>'))"><img src="<?php echo $this->web_image_dir.'/'.$image['id'].'_tn.'.$image['image_type']; ?>" 
+						<a onmouseover="window.status = 'view larger image'; return true;" onmouseout="window.status = ''; return true;" 							href="javascript:void(window.open('<?php echo $this->image_script ?>?id=<?php echo $image['id']; ?>',							'<?php echo $this->popup_name; ?>','menubar,scrollbars,resizeable,width=<?php echo $window_width;?>,							height=<?php echo $window_height; ?>'))"><img src="<?php echo $this->web_image_dir.'/'.reason_get_image_filename($id, 'tn'); ?>" 
 							alt="<?php echo strip_tags(str_replace('"','',$image['description'])); ?>" border="0" /><br /><?php
 					echo '<span class="smallText">';
 					$this->show_description( $id );
@@ -151,7 +158,7 @@
 			$this->fix_image_info( $id );
 			$image = $this->images[ $id ];
 			
-			$img = '<img src="'.$this->web_image_dir.'/'.$id.'.'.$image['image_type'].'" ';
+			$img = '<img src="'.$this->web_image_dir.'/'. reason_get_image_filename($id) .'" ';
 			if ( $image['width'] AND $image['height'] )
 				$img .= 'width="'.$image[ 'width' ].'" height="'.$image[ 'height' ].'" ';
 			$img .= 'alt="'.strip_tags(str_replace( '"',"'",$image[ 'description' ])).'" border="0" />';
