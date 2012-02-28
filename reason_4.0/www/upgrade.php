@@ -32,6 +32,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 <h1>Upgrade Reason</h1>
 <?php
 $upgrade_steps = array(
+	'4.1_to_4.2' => 'Reason 4.1 to 4.2',
 	'4.0_to_4.1' => 'Reason 4.0 to 4.1',
 );
 if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']]))
@@ -139,7 +140,10 @@ the point release after the one you are currently using and upgrade incrementall
 <p><a href="http://apps.carleton.edu/opensource/reason/download/">Reason download page</a></p>
 <h2>Reason Upgrade Scripts</h2>
 <ul>
-<li><a href="?upgrade_step=4.0_to_4.1">Reason 4.0 to Reason 4.1</a></li>
+<?php
+foreach($upgrade_steps as $k => $v)
+	echo '<li><a href="?upgrade_step='.urlencode($k).'">'.htmlspecialchars($v).'</a></li>';
+?>
 <li><a href="./scripts/upgrade/4.0b8_to_4.0b9/index.php">Reason 4.0 Beta 8 to Beta 9 (otherwise known as 4.0 release!)</a></li>
 <li><a href="./scripts/upgrade/4.0b7_to_4.0b8/index.php">Reason 4.0 Beta 7 to Beta 8</a></li>
 <li><a href="./scripts/upgrade/4.0b6_to_4.0b7/index.php">Reason 4.0 Beta 6 to Beta 7</a></li>
