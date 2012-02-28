@@ -24,6 +24,8 @@
 		function alter_data()
 		{
 			$this->change_element_type( 'keywords','hidden' );
+			// use WYSISWG editor for description 
+			$this->change_element_type( 'description' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id) );
 
 			$this->add_element('allow_comments', 'checkbox');
 			$this->add_element('allow_front_end_posting', 'checkbox');
