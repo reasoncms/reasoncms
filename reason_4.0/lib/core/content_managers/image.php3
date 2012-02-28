@@ -60,6 +60,8 @@
 			$this->change_element_type( 'size','hidden' );
 			$this->change_element_type( 'image_type','hidden' );
 			$this->change_element_type( 'author_description','hidden' );
+			$this->change_element_type( 'thumbnail_image_type', 'hidden' );
+			$this->change_element_type( 'original_image_type', 'hidden' );
 			
 
 			$this->set_display_name( 'description', 'Short Caption' );
@@ -101,7 +103,7 @@
 			$this->set_element_properties( 'description' , array('rows' => 3));
 			$this->set_element_properties( 'content' , array('rows' => 8));
 			
-			// Test character-limiting
+			// Limit number of characters that can be entered for short/long caption
 			$limiter = new DiscoInputLimiter($this);
 		    $limiter->limit_field('description', 100);
 		    $limiter->limit_field('content', 250);   
@@ -124,10 +126,10 @@
 			$web_image_path = WEB_PHOTOSTOCK.$image_name;
 			$full_image_path = PHOTOSTOCK.$image_name;
 			if (file_exists($full_image_path))
-				$this->change_element_type( 'image','ReasonImageUpload',array('obey_no_resize_flag' => true, 'authenticator' => $this->_get_authenticator(), 'existing_file' => $full_image_path, 'existing_file_web' => $web_image_path, 'allow_upload_on_edit' => true ) );
+				$this->change_element_type( 'image','ReasonImageUpload', array('obey_no_resize_flag' => true, 'authenticator' => $this->_get_authenticator(), 'existing_file' => $full_image_path, 'existing_file_web' => $web_image_path, 'allow_upload_on_edit' => true ) );
 
 			$tn_name = reason_format_image_filename($this->_id,
-				$this->get_value('image_type'), "thumbnail");
+				$this->get_value('thumbnail_image_type'), "thumbnail");
 			$web_tn_path = WEB_PHOTOSTOCK.$tn_name;
 			$full_tn_path = PHOTOSTOCK.$tn_name;
 			if (file_exists($full_tn_path))
@@ -182,50 +184,150 @@
 				$this->set_error( 'image', 'Please upload an image' );
 			}
 		} // }}}
+		
+		/**
+		 * Handles the logic of processing newly uploaded images. Calls helper functions to handle 
+		 * cases when:
+		 * - new main image is uploaded
+		 * - custom thumbnail is uploaded
+		 * - a default thumbnail should be created from the main image
+		 * Also calls parent process() method
+		 */
 		function process() // {{{
 		{
 			$id = $this->_id;
-			
-			// handle image stuff
 			$image = $this->get_element( 'image' );
 			$thumbnail = $this->get_element( 'thumbnail' );
-
-			// IMPORTANT NOTE ABOUT THE FOLLOWING CODE
-			// since either an image or a thumbnail or both will be present, the code has a sneaky structure
-			// i handle the thumbnail first and get all the information for the thumbnail
-			// if there is a thumbnail but no image, this information falls through and gets inserted into the db
-			// if there is an image, nothing changes.  thumbnail code doesn't get executed.
-			// if both, the thumbnail values get overwritten by the image and the image values
-			// get put in the DB.  This is how we want it.
 			
-			$custom_thumbnail_uploaded = false;
-			// handle thumbnail image
-			if( !empty($thumbnail->tmp_full_path) AND file_exists( $thumbnail->tmp_full_path ) )
-			{
-				$custom_thumbnail_uploaded = true;
-				$this->handle_thumbnail($id, $thumbnail);
-			}
-			// handle main image
+			// note that order matters here -- the original image depends on fields of full size image
 			if( !empty($image->tmp_full_path) AND file_exists( $image->tmp_full_path ) )
 			{
-				$this->handle_full_size_image($id, $image);
+				$this->handle_standard_image($id, $image);
+				$this->handle_original_image($id, $image);
 			}
-			// make thumbnail if no thumbnail exists
-			$full_name = PHOTOSTOCK.reason_format_image_filename($id,
-				$this->get_value("image_type"));
-			$thumb_name = PHOTOSTOCK.reason_format_image_filename($id,
-				$this->get_value("image_type"), "thumbnail");
-			if (($this->auto_create_thumbnails && file_exists($full_name) && !file_exists($thumb_name)) || ($this->get_value("default_thumbnail") && !$custom_thumbnail_uploaded))
+            
+            // handle custom thumbnail if one was uploaded
+			$custom_thumbnail_uploaded = file_exists( $thumbnail->tmp_full_path ) && ( !$this->get_value("default_thumbnail") );
+			if($custom_thumbnail_uploaded)
 			{
-				$this->create_thumbnail($id, $image);
+				$this->handle_custom_thumbnail($id, $thumbnail);
+			}
+			
+			// if default thumbnail is checked, or no thumbnail exists in database,
+			// create a thumbnail from main image
+			$thumb_name = PHOTOSTOCK.reason_format_image_filename($id,
+				$this->get_value("thumbnail_image_type"), "thumbnail");
+			if( $this->get_value('default_thumbnail') || (!file_exists($thumb_name) && $this->auto_create_thumbnails) )
+			{
+			    $this->create_default_thumbnail($id);
 			}
 			
 			parent::process();
-		} // }}}
-		function handle_thumbnail($id, $thumbnail)
+	    } // }}}
+	    
+	    /**
+	     * Handles saving newly uploaded main image to directory, updating database with relevant information about
+	     * the image (i.e. dimensions, image type, date etc.)
+	     *
+	     *
+	     * In addition, deletes the previous main image. For example, if the previous main image was 1234.jpg and we
+	     * 1234.png is uploaded, 1234.jpg is deleted. In the case they are of the same type, the previous image
+	     * is simply overwritten. 
+	     * 
+	     * @param $id the Reason ID of the image entity
+	     * @param $image ReasonImageUploadType the image that was just uploaded 
+	     */
+	    
+	    function handle_standard_image($id, $image)
+	    {
+	        $image_info = array();
+	        list($image_info['width'], $image_info['height'], $image_info['image_type']) = getimagesize($image->tmp_full_path);
+	        		
+			// why does this if statement need to be so complicated?
+			if(array_key_exists($image_info['image_type'],$this->image_types) && in_array($this->image_types[ $image_info['image_type'] ], $this->image_types_with_exif_data) && function_exists('read_exif_data') )
+			{
+				$exif_data = @read_exif_data( $image->tmp_full_path );
+				if( !empty( $exif_data[ 'DateTime' ] ) )
+				{
+					$this->set_value('datetime',$exif_data['DateTime'] );
+				}
+			}
+			$this->set_value('width', $image_info['width'] );
+			$this->set_value('height', $image_info['height'] );
+			
+			// store old filename before possibly changing image_type
+			// in case we're changing an extension -- we'll delete the old file
+			$old_filename = PHOTOSTOCK . reason_get_image_filename($id);
+			
+			if(array_key_exists($image_info['image_type'],$this->image_types))
+			{
+				$this->set_value('image_type', $this->image_types[ $image_info['image_type'] ] );
+			}
+			$this->set_value('size', round(filesize( $image->tmp_full_path ) / 1024) );
+			
+			$dest_filename = PHOTOSTOCK . reason_format_image_filename($id,
+				$this->get_value('image_type'));
+			rename($image->tmp_full_path, $dest_filename);
+			touch($dest_filename);
+			if( $old_filename != $dest_filename && file_exists($old_filename) )
+			{
+				unlink($old_filename);
+			}
+	    }
+	    
+	    /**
+	     * Begins by deleting any full-size, original image that may have been uploaded in the past.
+	     * If there is a new orig image, then we want this new one to be the only orig stored in the file system.
+	     * Similarly, if there isn't a new orig image, we don't want an old (and potentially different from
+	     * the new image) orig image still in the file system.
+	     * 
+	     * Then creates a new original, full-sized image if the uploaded image is large enough. 
+	     *
+	     * Updates original_image_type to match the orig image, or null if there is no orig image.
+	     * 
+	     * @param id the entity id of the image
+	     * @param image ReasonImageUploadType the image that was just uploaded
+	     */
+	    
+	    function handle_original_image($id, $image)
+	    {
+	    	$old_filename = PHOTOSTOCK . reason_get_image_filename($id, 'full');
+	    	if( file_exists($old_filename) )
+			{
+				unlink($old_filename);
+			}
+			if ($image->original_path && file_exists($image->original_path)) 
+			{
+				// Move the original image into the photostock directory, update entity's original_image_type
+				list($width, $height, $type) = getimagesize($image->original_path);
+				$orig_dest = PHOTOSTOCK . reason_format_image_filename($id,
+					$this->image_types[ $type ], "full");
+				rename($image->original_path, $orig_dest);
+				touch($orig_dest);
+				$this->set_value('original_image_type', $this->image_types[ $type ]);
+			}
+			else
+			{
+				$this->set_value('original_image_type', null);
+			}
+	    }
+	    /**
+	     * Handles saving uploaded thumbnail to directory, updating database with relevant information about
+	     * the thumbnail (i.e. dimensions, image type, date etc.)
+	     *
+	     * In addition, deletes any old thumbnail file that was in use previously (i.e. if our new thumbnail
+	     * is 1234_tn.jpg and the old was 1234_tn.png, the .png is deleted.
+	     *
+	     * @param $id the Reason ID of the image entity
+	     * @param $thumbnail_image ReasonImageUploadType the custom thumbnail that was just uploaded 
+	     */
+	    
+	    function handle_custom_thumbnail($id, $thumbnail_image)
 		{
-			$info = getimagesize( $thumbnail->tmp_full_path );
-			if(array_key_exists($info[2],$this->image_types) && in_array($this->image_types[ $info[2] ], $this->image_types_with_exif_data) && function_exists('read_exif_data') )
+			$image_info = array();
+	        list($image_info['width'], $image_info['height'], $image_info['image_type']) = getimagesize($thumbnail_image->tmp_full_path);
+	        
+			if(array_key_exists($image_info['image_type'],$this->image_types) && in_array($this->image_types[ $image_info['image_type'] ], $this->image_types_with_exif_data) && function_exists('read_exif_data') )
 			{
 				$exif_data = @read_exif_data( $thumbnail->tmp_full_path );
 				if( !empty( $exif_data[ 'DateTime' ] ) )
@@ -237,68 +339,67 @@
 			// width and height are not already set up
 			if( !$this->get_value( 'width' ) AND !$this->get_value( 'height' ) )
 			{
-				$this->set_value('width',$info[0]);
-				$this->set_value('height', $info[1] );
+				$this->set_value('width', $image_info['width']);
+				$this->set_value('height', $image_info['height'] );
 			}
-			if(array_key_exists($info[2],$this->image_types))
+			// if thumbnail was previously stored, we'll want to delete that old file
+			$old_filename = PHOTOSTOCK . reason_get_image_filename($id, 'thumbnail');
+			if(array_key_exists($image_info['image_type'], $this->image_types))
 			{
-				$this->set_value('image_type', $this->image_types[ $info[2] ] );
+				$this->set_value('thumbnail_image_type', $this->image_types[ $image_info['image_type'] ] );
 			}
-			$this->set_value('size', round(filesize( $thumbnail->tmp_full_path ) / 1024) );
+			$this->set_value('size', round(filesize( $thumbnail_image->tmp_full_path ) / 1024) );
 			
-			$dest_name = reason_format_image_filename($id,
-				$this->get_value('image_type'), "thumbnail");
-			rename($thumbnail->tmp_full_path, PHOTOSTOCK.$dest_name);
-		}
-		function handle_full_size_image($id, $image)
-		{
-			$info = getimagesize( $image->tmp_full_path );
-			if(array_key_exists($info[2],$this->image_types) && in_array($this->image_types[ $info[2] ], $this->image_types_with_exif_data) && function_exists('read_exif_data') )
+			$dest_name = PHOTOSTOCK . reason_format_image_filename($id,
+				$this->get_value('thumbnail_image_type'), "thumbnail");
+			rename($thumbnail_image->tmp_full_path, $dest_name);
+			if( $old_filename != $dest_name && file_exists($old_filename) )
 			{
-				$exif_data = @read_exif_data( $image->tmp_full_path );
-				if( !empty( $exif_data[ 'DateTime' ] ) )
-				{
-					$this->set_value('datetime',$exif_data['DateTime'] );
-				}
-			}
-			$this->set_value('width', $info[0] );
-			$this->set_value('height', $info[1] );
-			if(array_key_exists($info[2],$this->image_types))
-			{
-				$this->set_value('image_type', $this->image_types[ $info[2] ] );
-			}
-			$this->set_value('size', round(filesize( $image->tmp_full_path ) / 1024) );
-			
-			$dest_filename = reason_format_image_filename($id,
-				$this->get_value('image_type'));
-			rename($image->tmp_full_path, PHOTOSTOCK.$dest_filename);
-			touch(PHOTOSTOCK.$dest_filename);
-			
-			$orig_dest = PHOTOSTOCK.reason_format_image_filename($id,
-				$this->get_value("image_type"), "full");
-			if ($image->original_path && file_exists($image->original_path)) {
-				// Move the original image into the photostock directory.
-				rename($image->original_path, $orig_dest);
-				touch($orig_dest);
-			} else if (file_exists($orig_dest)) {
-				// Clear out an old high-res file.
-				@unlink($orig_dest);
+				unlink($old_filename);
 			}
 		}
-		function create_thumbnail($id)
+		/**
+		 * Creates a default thumbnail based on the main image only if main image is too large to
+		 * be considered a thumbnail. Otherwise, no new file is actually created -- the main image
+		 * will serve as the thumbnail, as well.
+		 * 
+		 * If a new thumbnail image is actually created, the image's thumbnail_image_type is updated
+		 * to reflect this change. Similarly, if the main image is small enough to be considered the
+		 * thumbnail as well, the thumbnail_image_type is set to null.
+		 * 
+		 * In addition, any previous thumbnail in the file system is deleted. 
+		 *
+		 * @param id of the image entity
+		 */
+		
+		function create_default_thumbnail($id)
 		{
-			$filename = PHOTOSTOCK.reason_format_image_filename($id,
-				$this->get_value('image_type'));
-			$thumb_filename = PHOTOSTOCK.reason_format_image_filename($id,
-				$this->get_value('image_type'), "thumbnail");
-
+			// if creating thumbnail based on main image, thumbnail should have same type
+			$image_type = $this->get_value('image_type');
+			
+			$old_thumbnail = PHOTOSTOCK . reason_get_image_filename($id, 'thumbnail');
+			if( file_exists($old_thumbnail) )
+			{
+				unlink($old_thumbnail);
+			}
+			
+			$filename = PHOTOSTOCK . reason_format_image_filename($id,
+				$image_type);
+			$thumb_filename = PHOTOSTOCK . reason_format_image_filename($id,
+				$image_type, "thumbnail");
 			list($width, $height) = getimagesize($filename);
 
-			if ($width > $this->thumbnail_width || $height > $this->thumbnail_height) {
+			if ($width > $this->thumbnail_width || $height > $this->thumbnail_height) 
+			{
 				copy($filename, $thumb_filename);
 				resize_image($thumb_filename, $this->thumbnail_width,
 					$this->thumbnail_height);
 				touch($thumb_filename);
+				$this->set_value('thumbnail_image_type', $image_type);
+			}
+			else
+			{
+				$this->set_value('thumbnail_image_type', null);
 			}
 		}
 		
