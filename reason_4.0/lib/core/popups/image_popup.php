@@ -16,6 +16,7 @@
 	$reason_session = false;
 	include_once( 'reason_header.php' );
 	reason_include_once( 'function_libraries/images.php' );
+	reason_include_once('function_libraries/image_tools.php');
 	reason_include_once( 'function_libraries/file_finders.php' );
 	reason_include_once( 'classes/entity.php' );
 	
@@ -58,7 +59,7 @@
 		$GLOBALS['_reason_image_popup_data']['id'] = $id;
 		$GLOBALS['_reason_image_popup_data']['title'] = $image->get_value( 'description' ) ? $image->get_value( 'description' ) : 'Image';
 		$GLOBALS['_reason_image_popup_data']['image_exists'] = true;
-		$GLOBALS['_reason_image_popup_data']['image_tag'] = '<img src="'.WEB_PHOTOSTOCK.$id.'.'.$image->get_value('image_type').'" width="'.$image->get_value('width').'" height="'.$image->get_value('height').'" border="0" alt="'.htmlentities(strip_tags($image->get_value('description'))).'" />';
+		$GLOBALS['_reason_image_popup_data']['image_tag'] = '<img src="'.WEB_PHOTOSTOCK. reason_get_image_filename($id) .'" width="'.$image->get_value('width').'" height="'.$image->get_value('height').'" border="0" alt="'.htmlentities(strip_tags($image->get_value('description'))).'" />';
 		
 		$GLOBALS['_reason_image_popup_data']['image_caption'] = ($image->get_value('content') ? $image->get_value('content') : $image->get_value('description'));
 		
