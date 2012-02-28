@@ -7,6 +7,7 @@
  	 * Include parent class and register module with Reason
  	 */
 	reason_include_once( 'minisite_templates/modules/news2.php' );
+	reason_include_once('function_libraries/image_tools.php');
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'newsOneAtATimeModule';
 
 /**
@@ -36,7 +37,7 @@ class newsOneAtATimeModule extends News2Module
 		{
 			$image = current($result);
 			echo '<div class="primaryImage">';
-			echo '<img src="'.WEB_PHOTOSTOCK.$image->id().'.'.$image->get_value( 'image_type' ).'" width="'.$image->get_value( 'width' ).'" height="'.$image->get_value( 'height' ).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
+			echo '<img src="'.WEB_PHOTOSTOCK.reason_get_image_filename( $image->id() ).'" width="'.$image->get_value( 'width' ).'" height="'.$image->get_value( 'height' ).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
 			echo '</div>';
 		}
 	}
