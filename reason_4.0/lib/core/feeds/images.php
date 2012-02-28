@@ -8,6 +8,7 @@
  * Include dependencies & register feed with Reason
  */
 include_once( 'reason_header.php' );
+reason_include_once('function_libraries/image_tools.php');
 reason_include_once( 'feeds/page_tree.php' );
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'imagesFeed';
 
@@ -44,10 +45,11 @@ class imagesFeed extends defaultFeed
 
 class imagesRSS extends ReasonRSS
 {
+	// Revised to use Reason's image_tools as opposed to manually creating URLs for images
 	function make_link($id)
 	{
-		return 'http://'.REASON_HOST.WEB_PHOTOSTOCK.$id.'.'.
-			$this->items[$id]->get_value('image_type');
+		$file_name = reason_get_image_filename($id);
+		return 'http://'.REASON_HOST.WEB_PHOTOSTOCK.$file_name;
 	}
 	
 	// Thumbnail
@@ -75,8 +77,7 @@ class imagesRSS extends ReasonRSS
 			'tiff' => 'image/tiff'
 		);
 		
-		$extension = $this->items[$value]->get_value('image_type');
-		$filename = $value.'_tn.'.$extension;
+		$filename = reason_get_image_filename($value, 'thumbnail');
 		$url = 'http://'.REASON_HOST.WEB_PHOTOSTOCK.$filename;
 		$type = 'image/x-unknown';
 		if(!empty($extension) && array_key_exists($extension, $mime_map))
