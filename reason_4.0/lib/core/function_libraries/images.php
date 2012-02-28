@@ -124,8 +124,9 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 		}
 		else
 		{ 
-			$tn_name = $id.'_tn'.'.'.$image['image_type'];
-			$fs_name = $id.'.'.$image['image_type'];
+			$tn_name = reason_get_image_filename($id, 'tn');
+			$fs_name = reason_get_image_filename($id);
+			
 			if( file_exists( PHOTOSTOCK.$tn_name ) )
 			{
 				$tn = true;
@@ -152,8 +153,7 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 	
 		if( file_exists($image_path) )
 		{
-			
-			$full_image_exists = file_exists(PHOTOSTOCK.$id.'.'.$image['image_type']);
+			$full_image_exists = file_exists(PHOTOSTOCK . reason_get_image_filename($id));
 
 			if( !$image['description'] )
 				if( $image['keywords'] )
@@ -167,9 +167,9 @@ if( !defined( 'INC_REASON_MODULES_IMAGES' ) )
 			if (empty($link_with_url))
 			{
 				if (empty($textonly))
-					$pre_link = "<a onmouseover=\"window.status = 'view larger image'; return true;\" onmouseout=\"window.status = ''; return true;\" onclick=\"this.href='javascript:void(window.open(\'".REASON_IMAGE_VIEWER."?id=".$image['id']."\', \'PopupImage\', \'menubar,scrollbars,resizable,width=".$window_width.",height=".$window_height."\'))'\" href=\"".WEB_PHOTOSTOCK.$id.'.'.$image['image_type']."?cb=".filemtime($image_path)."\">";
+					$pre_link = "<a onmouseover=\"window.status = 'view larger image'; return true;\" onmouseout=\"window.status = ''; return true;\" onclick=\"this.href='javascript:void(window.open(\'".REASON_IMAGE_VIEWER."?id=".$image['id']."\', \'PopupImage\', \'menubar,scrollbars,resizable,width=".$window_width.",height=".$window_height."\'))'\" href=\"".WEB_PHOTOSTOCK. reason_get_image_filename($id) ."?cb=".filemtime($image_path)."\">";
 					else
-						$pre_link = '<a href="'.WEB_PHOTOSTOCK.$id.'.'.$image['image_type'].'?cb='.filemtime(PHOTOSTOCK.$image_name).'">';
+						$pre_link = '<a href="'.WEB_PHOTOSTOCK. reason_get_image_filename($id) .'?cb='.filemtime(PHOTOSTOCK.$image_name).'">';
 			}
 			else
 			{
