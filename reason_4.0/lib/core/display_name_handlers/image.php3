@@ -15,6 +15,7 @@ if( !defined( 'DISPLAY_HANDLER_IMAGE_PHP3' ) )
 	define( 'DISPLAY_HANDLER_IMAGE_PHP3',true );
 
 	reason_include_once( 'classes/entity.php' );
+	reason_include_once('function_libraries/image_tools.php');
 
 	/**
 	 * A display name handler for images
@@ -30,8 +31,8 @@ if( !defined( 'DISPLAY_HANDLER_IMAGE_PHP3' ) )
 			$e = new entity( $id );
 		else $e = $id;
 		
-		$tn_name = $e->id().'_tn.'.$e->get_value( 'image_type' );
-		$full_name = $e->id().'.'.$e->get_value( 'image_type' );
+		$tn_name = reason_get_image_filename( $e->id(), 'thumbnail' );
+		$full_name = reason_get_image_filename( $e->id() );
 		if( file_exists( PHOTOSTOCK.$tn_name ) && (filesize(PHOTOSTOCK.$tn_name) > 0) )
 			$image_name = $tn_name;
 		elseif( file_exists( PHOTOSTOCK.$full_name ) && (filesize(PHOTOSTOCK.$full_name) > 0) )
