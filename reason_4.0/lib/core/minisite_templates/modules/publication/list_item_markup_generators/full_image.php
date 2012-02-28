@@ -8,6 +8,7 @@
  * Include base class
  */
 reason_include_once( 'minisite_templates/modules/publication/list_item_markup_generators/default.php' );
+reason_include_once('function_libraries/image_tools.php');
 
 
 /**
@@ -45,7 +46,7 @@ class FullImageListItemMarkupGenerator extends PublicationListItemMarkupGenerato
 		if (!empty($image))
 		{
 			$markup_string .= '<div class="primaryImage">';
-			$markup_string .= '<img src="'.WEB_PHOTOSTOCK.$image->id().'.'.$image->get_value( 'image_type' ).'" width="'.$image->get_value( 'width' ).'" height="'.$image->get_value( 'height' ).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
+			$markup_string .= '<img src="'.WEB_PHOTOSTOCK.reason_get_image_filename( $image->id() ).'" width="'.$image->get_value( 'width' ).'" height="'.$image->get_value( 'height' ).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
 			$markup_string .= '</div>';
 		} 
 		return $markup_string;
