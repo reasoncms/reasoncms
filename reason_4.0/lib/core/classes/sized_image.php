@@ -72,6 +72,11 @@ class reasonSizedImage
 	 * @var int height in pixels
 	 */
 	var $height;
+	
+	/**
+	 * @var boolean if the image has a full-sized original associated with it
+	 */
+	var $orig_exists;
 
 	/**
 	 * @var string
@@ -222,7 +227,11 @@ class reasonSizedImage
 		{
 			$entity = $this->get_entity();
 			$filename = $this->_get_filename();
-			$this->_url = $this->get_image_dir_web_path() . $entity->id() . '/' . $filename . '.' . $entity->get_value('image_type');	
+			if( $this->_orig_exists() )
+				$image_type = $entity->get_value('original_image_type');
+			else
+				$image_type = $entity->get_value('image_type');
+			$this->_url = $this->get_image_dir_web_path() . $entity->id() . '/' . $filename . '.' . $image_type;	
 		}
 		return $this->_url;
 	}
@@ -236,7 +245,11 @@ class reasonSizedImage
 		{
 			$entity = $this->get_entity();
 			$filename = $this->_get_filename();
-			$this->_path = $this->get_image_dir() . $entity->id() . '/' . $filename . '.' . $entity->get_value('image_type');
+			if( $this->_orig_exists() )
+				$image_type = $entity->get_value('original_image_type');
+			else
+				$image_type = $entity->get_value('image_type');
+			$this->_path = $this->get_image_dir() . $entity->id() . '/' . $filename . '.' . $image_type;
 		}
 		return $this->_path;
 	}
@@ -335,8 +348,10 @@ class reasonSizedImage
 		{
 			if ($this->_make_sure_entity_directory_exists($entity->id()) && is_writable($this->get_image_dir() . $entity->id() . '/'))
 			{
-				$path = reason_get_image_path($entity, 'original'); // we want to copy our original image to our destination and resize in place
-				if (!file_exists($path)) $path = reason_get_image_path($entity); // we get the standard size
+				if( $this->_orig_exists() )
+					$path = reason_get_image_path($entity, 'original'); // we want to copy our original image to our destination and resize in place
+				else
+					$path = reason_get_image_path($entity);
 				$newpath = $this->_get_path();
 				$width = $this->_get_width();
 				$height = $this->_get_height();
@@ -427,6 +442,22 @@ class reasonSizedImage
 		if (!isset($this->height) && $lookup_from_aspect_ratio) $this->_set_height_from_width();
 		return $this->height;
 	}
+	
+	function _orig_exists()
+	{
+		if(!isset($this->orig_exists))
+		{
+			$entity = $this->get_entity();
+			if( $entity->has_value('original_image_type') )
+			{
+				$this->orig_exists = true;
+			}
+			else
+				$this->orig_exists = false;
+		}
+		return $this->orig_exists;
+	}
+	
 	function get_image_dimensions()
 	{
 		if(!isset($this->image_dimensions))
@@ -460,7 +491,10 @@ class reasonSizedImage
 	function get_file_system_path_and_file_of_dest(){ return ($this->_get_path());}
 	function get_image_type(){
 		$entity=$this->get_entity();
-		return $entity->get_value('image_type');
+		if( $this->_orig_exists() )
+			return $entity->get_value('original_image_type');
+		else
+			return $entity->get_value('image_type');
 	}
 	
 	/** Setters **/
