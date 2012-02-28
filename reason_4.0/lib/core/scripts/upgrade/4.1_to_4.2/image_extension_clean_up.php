@@ -173,7 +173,7 @@ class ReasonUpgrader_42_ImageExtensionCleanUp implements reasonUpgraderInterface
 			
 			}
 			echo 'Started at index ' . $start_index . ' out of ' . $total_num_image_ids . '<br />';
-			echo 'Ended at index ' . $index . '<br />';
+			echo 'Ended at index ' . $index . ' (' . round( ( $index / $total_num_image_ids ) * 100, 2) . '%)<br />';
 			echo 'Processed ' . ($index - $start_index) . ' total images<br />';
 			echo 'There were a total of ' . count($ids_with_tn) . ' ids with a main image and thumbnail <br />';
 			echo 'There were a total of ' . count($ids_with_tn_full) . ' ids with a main image, thumbnail, and full <br />';
