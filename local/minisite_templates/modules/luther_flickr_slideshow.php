@@ -11,7 +11,7 @@
 		
 		function run()
 		{
-       			require("phpFlickr/phpFlickr.php");
+			require("phpFlickr/phpFlickr.php");
 
 			// flickr username, api key, and secret must be included in array below:
 			$flickr_account = array("luthercollegemedia" => array("5b298e650817ac77f14054abfc722b01", "f8a94f21e063f110"),
@@ -27,7 +27,7 @@
 			// environmental outreach
 			"nealem01" => array("d76f4769f09cc708389538ffe0d82733", "27e40ea372ece10c"),
 			"LutherMinistry" => array("524ba8e86f00754ce5216cf02345125e", "48a2c6cb8df8ca1f"),
-                        "luthersustainability" => array("32deae8d61a176ea73d561995d903426", "d5805fcf8d221869"));
+			"luthersustainability" => array("32deae8d61a176ea73d561995d903426", "d5805fcf8d221869"));
 
 			$site_id = $this->site_id;
 			$es = new entity_selector( $site_id );
@@ -36,15 +36,37 @@
 			$es->add_rel_sort_field($this->cur_page->id(), relationship_id_of('page_to_flickr_slideshow'));
 			$es->set_order('rel_sort_order'); 
 			$posts = $es->run_one();
+			$url = get_current_url();
+			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
+			{
+				echo '<aside class="gallery group">'."\n";
+				if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/art.?\/?/", $url))
+				{
+					echo '<header class="blue-stripe"><h1><span>Exhibitions</span></h1></header>'."\n";
+				}
+				else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+				{
+					echo '<header class="red-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";
+				}
+				else 
+				{
+					echo '<header class="blue-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";
+				}
+			}
 			echo "<div id=\"gallery\">\n";
 			echo "<div class=\"gallery-info\">\n";
 			echo "<div id=\"gallerycontainer\">\n";
-			if ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
-					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
-					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_naa'
-					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_paideia'
-					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information'
-					&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_sports')
+			if ($this->cur_page->get_value( 'custom_page' ) != 'flickr_slideshow_sidebar'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_sports')
 			{
 				echo "<hr>\n";
 			}
@@ -85,7 +107,8 @@
 					foreach ((array)$photos['photoset']['photo'] as $photo)
 					{
 						// see /javascripts/highslide/highslide-overrides.js for gallery declaration
-						$pinfo = $f->photos_getInfo($photo['id']);
+						$getInfo = $f->photos_getInfo($photo['id']);
+						$pinfo = $getInfo['photo'];
 						// free accounts don't fill in $pinfo['originalformat']
 						if ($pinfo['originalformat'] == null)
 						{
@@ -157,7 +180,15 @@
 			echo "</div id=\"gallerycontainer\">\n";
 			echo "</div class=\"gallery-info\">\n";
 			echo "</div id=\"gallery\">\n";
-
+			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
+			{
+				echo '</aside> <!-- class="gallery group" -->'."\n";
+			}
 		}
 		
 		function has_content()
