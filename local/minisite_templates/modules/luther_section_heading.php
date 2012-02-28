@@ -8,7 +8,7 @@
 	{
 		function run()
 		{
-			$bc = $this->_get_crumbs()->get_crumbs();
+			$bc = $this->parent->_get_breadcrumbs();
 
 			$sbtitle = $bc[0]["page_name"];
 			$sbtitle = preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $sbtitle);

@@ -33,6 +33,11 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 			if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_home'
 				|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_music')
 			{
+				if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_music')
+				{
+					$this->markup_string .= '<section class="spotlight" role="group">'."\n";					
+					$this->markup_string .= '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+				}
 				$this->markup_string .= '<article class="highlight">'."\n";
 				//$this->markup_string .= $this->get_title_markup();
 				$this->markup_string .= $this->get_description_markup();
@@ -46,9 +51,22 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 				$this->markup_string .= '<nav class="button view-all">'."\n";
 				$this->markup_string .= '<ul><li><a href="/spotlightarchives">View all spotlights &gt;</a></li></ul>'."\n";
 				$this->markup_string .= '</nav>'."\n";
+				if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_music')
+				{
+					$this->markup_string .= '</section> <!-- class="spotlight" role="group" -->'."\n";	
+				}
 			}
 			else 
 			{
+				$this->markup_string .= '<section class="spotlight" role="group">'."\n";
+				if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_sports')
+				{	
+					$this->markup_string .= '<header class="blue-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+				}
+				else 
+				{
+					$this->markup_string .= '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+				}
 				$this->markup_string .= '<article class="highlight">'."\n";
 				$this->markup_string .= $this->get_description_markup();
 				$this->markup_string .= $this->get_teaser_image_markup();
@@ -63,7 +81,8 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 					$this->markup_string .= '<nav class="button view-all">'."\n";
 					$this->markup_string .= '<ul><li><a href="/sports/spotlightarchives">View all spotlights &gt;</a></li></ul>'."\n";
 					$this->markup_string .= '</nav>'."\n";
-				}			
+				}
+				$this->markup_string .= '</section> <!-- class="spotlight" role="group" -->'."\n";			
 			}		
 		}
 		else

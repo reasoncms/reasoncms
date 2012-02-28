@@ -13,14 +13,17 @@
 			{
 				$i++;
 	
-				if (preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name'))){
-					echo '<div class="contact-info">'."\n";
-				if ($theme->get_value( 'name' ) != 'admissions')
+				if (preg_match("/[Cc]ontact [Ii]nformation/", $blurb->get_value('name')))
 				{
-					echo '<h2>Contact Information</h2>'."\n";
-				}
+					echo '<section class="contact-information">'."\n";
+					echo '<div class="contact-info">'."\n";
+					if ($theme->get_value( 'name' ) != 'admissions')
+					{
+						echo '<h2>Contact Information</h2>'."\n";
+					}
 					echo $blurb->get_value('content');
 					echo '</div>'."\n";
+					echo '</section> <!-- class="contact-information" -->'."\n";
 				}
 			}
 			// echo '</div>'."\n";

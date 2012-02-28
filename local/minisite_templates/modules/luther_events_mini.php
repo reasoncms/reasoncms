@@ -8,12 +8,12 @@
   * include the base class and register the module with Reason
   */
 	reason_include_once( 'minisite_templates/modules/events.php' );
-	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'miniEventsModule';
+	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LutherEventsMiniModule';
 
 /**
  * A minisite module that creates a minimal "sidebar" style event listing, linking to the main events page on the site
  */
-class miniEventsModule extends EventsModule
+class LutherEventsMiniModule extends EventsModule
 {
 	//var $ideal_count = 6;
 	var $luther_counter = 3;
@@ -49,9 +49,11 @@ class miniEventsModule extends EventsModule
 	}
 	function run()
 	{
+		$bc = $this->parent->_get_breadcrumbs();
+		$page_name = $bc[0]["page_name"];
+			
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_live_at_luther'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 		{
@@ -70,7 +72,13 @@ class miniEventsModule extends EventsModule
 				echo '<header class="blue-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
 			}
 		}
-		
+		else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
+		{
+			echo '<section class="events group with-calendar" role="group">'."\n";
+			echo '<header class="red-stripe"><h1><span>Upcoming ' . $page_name .' Events</span></h1></header>'."\n";	
+		}
+				
 		echo '<ol class="hfeed">'."\n";
 	
 		//echo '<div id="'.$this->div_id.'">'."\n";
@@ -91,12 +99,16 @@ class miniEventsModule extends EventsModule
 		$this->show_feed_link();
 		
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_live_at_luther'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 		{
 			echo '</section> <!-- class="events" role="group" -->'."\n";
+		}
+		else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
+		{
+			echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";
 		}
 	}
 
@@ -175,7 +187,7 @@ class miniEventsModule extends EventsModule
 		}		
 	}
 
-	function show_event_list_item_standard( $event_id, $day )
+	function show_event_list_item_standard( $event_id, $day, $ongoing_type = '' )
 	{
 		$site_id = get_site_id_from_url("/sports");
 		//echo $site_id."\n";

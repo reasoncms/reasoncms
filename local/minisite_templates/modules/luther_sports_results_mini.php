@@ -360,7 +360,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 		}		
 	}
 
-	function show_event_list_item_standard( $event_id, $day )
+	function show_event_list_item_standard( $event_id, $day, $ongoing_type = ''  )
 	{
 		
 		//if (!empty($this->events_page_url))

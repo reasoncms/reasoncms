@@ -7,6 +7,12 @@
 	{
 		function run() // {{{
 		{
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
+			{
+				echo '<aside class="news group">'."\n";
+				echo '<header class="blue-stripe"><h1><span>Luther Connections</span></h1></header>'."\n";
+			}
+						
 			echo '<div class="main-blurb">'."\n"; 
 			$i = 0;
 			foreach( $this->blurbs as $blurb )
@@ -17,6 +23,11 @@
 					echo $blurb->get_value('content');
 			}
 			echo '</div>'."\n";
+			
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
+			{
+				echo '</aside> <!-- class="news group" -->'."\n";
+			}				
 		} 
 		
 		function has_content()
