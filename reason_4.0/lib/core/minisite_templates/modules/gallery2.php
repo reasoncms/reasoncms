@@ -565,8 +565,8 @@ class Gallery2Module extends Generic3Module
 		$id = $image->id();
 		$image = $values;
 		
-		$tn_name = $id.'_tn'.'.'.$image['image_type'];
-		$full_name = $id.'.'.$image['image_type'];
+		$tn_name = reason_get_image_filename($id, 'tn');
+		$full_name = reason_get_image_filename($id);
 		
 		if( file_exists( PHOTOSTOCK . $tn_name ) )
 		{
@@ -615,10 +615,13 @@ class Gallery2Module extends Generic3Module
 			else
 			{
 				$image_path = reason_get_image_path($image,'tn');
+				$image_url = reason_get_image_url($image, 'tn');
 				if(!file_exists($image_path))
+				{
 					$image_path = reason_get_image_path($image);
+					$image_url = reason_get_image_url($image);
+				}
 				list($width,$height) = getimagesize($image_path);
-				$image_url = reason_get_image_url($image);
 			}
 			$class = 'thumbnail';
 			
