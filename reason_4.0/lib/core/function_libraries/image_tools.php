@@ -46,9 +46,30 @@ function reason_get_image_filename($image, $size='standard')
 			var_export($image->get_value('type'), true), WARNING);
 		return null;
 	}
+	/*
+		Determine what size image was requested; look up the corresponding image type in DB.
+		
+		Default is to return the standard-sized image type ( i.e. $image->get_value('image_type') )
+		in the case that new entity fields don't exist yet (thumbnail_image_type and original_image_type),
+		or that these fields are null
+	*/
 	
+	$normalized_size = _normalize_image_size_name($size);
+	$image_type = null;
+	if( $normalized_size == 'tn' )
+	{
+		$image_type = $image->get_value('thumbnail_image_type');
+	}
+	elseif( $normalized_size == 'orig' )
+	{
+		$image_type = $image->get_value('original_image_type');
+	}
+	if( $image_type == null || $image_type == false)
+	{
+		$image_type = $image->get_value( 'image_type' );
+	}
 	return reason_format_image_filename($image->id(),
-		$image->get_value('image_type'), $size);
+		$image_type, $size);
 }
 
 /**
