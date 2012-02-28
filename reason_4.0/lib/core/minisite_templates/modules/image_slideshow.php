@@ -7,6 +7,7 @@
  	 * Include parent class and register module with Reason
  	 */
 	reason_include_once( 'minisite_templates/modules/image_sidebar.php' );
+	reason_include_once('function_libraries/image_tools.php');
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ImageSlideshowModule';
 	
@@ -65,7 +66,7 @@
 			foreach( $this->images AS $id => $image )
 			{
 				echo '<li>';
-				echo '<a href="'.WEB_PHOTOSTOCK.$id.'.'.$image->get_value('image_type').'">Image: '.$image->get_value('description').'</a>';
+				echo '<a href="'.WEB_PHOTOSTOCK. reason_get_image_filename($id) .'">Image: '.$image->get_value('description').'</a>';
 				echo '</li>'."\n";
 			}
 			echo '</ul>'."\n";
@@ -132,7 +133,7 @@
  				}
  				else
  				{
-					$image_url = WEB_PHOTOSTOCK.$id.'.'.$image->get_value('image_type');
+					$image_url = WEB_PHOTOSTOCK . reason_get_image_filename($id);
 				}
 				
 				if( !empty( $this->show_size ) )
@@ -172,7 +173,7 @@ addLoadEvent(startSlideshow);
  				}
  				else
  				{
-					$image_url = WEB_PHOTOSTOCK.$id.'.'.$image->get_value('image_type');
+					$image_url = WEB_PHOTOSTOCK . reason_get_image_filename($id);
 				}
 				echo '<li><img src="'.$image_url.'" alt="'.htmlspecialchars(strip_tags($image->get_value('description'))).'" /><div class="description">'.$image->get_value('description').'</div></li>';
 			}
