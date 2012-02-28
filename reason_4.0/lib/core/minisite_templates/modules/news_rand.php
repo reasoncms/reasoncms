@@ -8,6 +8,7 @@
  	 */
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'RandNewsMinisiteModule';
 	reason_include_once( 'minisite_templates/modules/news.php' );
+	reason_include_once('function_libraries/image_tools.php');
 
 	/**
 	 * A minisite module that on any given request lists a single random news item on the site
@@ -75,7 +76,7 @@
 					echo '<div class="NewsListImg">';
 					foreach( $item->images AS $id => $image )
 					{
-						echo '<img src="'.WEB_PHOTOSTOCK.$image->id().'.'.$image->get_value( 'image_type' ).'" width="'.$image->get_value( 'width' ).'" height="'.$image->get_value( 'height' ).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
+						echo '<img src="'.WEB_PHOTOSTOCK. reason_get_image_filename( $image->id() ) .'" width="'.$image->get_value( 'width' ).'" height="'.$image->get_value( 'height' ).'" alt="'.str_replace('"', "'", $image->get_value( 'description' )).'"/>';
 						break;
 					}
 					echo "</div>\n";
