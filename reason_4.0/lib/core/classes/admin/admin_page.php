@@ -181,6 +181,16 @@
 			if( isset( $this->request[ 'PHPSESSID' ] ) )
 				unset( $this->request[ 'PHPSESSID' ] );			
 			
+			$old_id = !empty( $this->request[ CM_VAR_PREFIX . 'id' ])  ? $this->request[ CM_VAR_PREFIX . 'id' ] : false;
+			$id = !empty($this->request['id']) ? $this->request['id'] : false;
+			if( $old_id && $id && $id == $old_id )
+			{
+				$new_link = carl_construct_redirect($this->get_default_args());
+				header('Location: '.$new_link);
+				echo '<p>Attempted to redirect to <a href=' . htmlspecialchars($new_link,ENT_QUOTES) . '>here</a>, but seem to have failed.</p>';
+				die();
+			}
+			
 			$this->select_user();
 		} // }}}
 
