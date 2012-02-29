@@ -297,6 +297,10 @@ former students to pay</u> for the transcript via credit card.</p>';
     }
     function run_error_checks() {
         parent::run_error_checks();
+		
+		if (!$this->get_value('unofficial') && !$this->get_value('number_of_official')){
+			$this->set_error('unofficial', 'Please indicate whether you\'d like to recieve an official or unofficial transcript.');
+		}
 
         if ($this->get_value('unofficial') && !$this->get_value('unofficial_address') ) {
             $this->set_error('unofficial_address', 'Since you\'d like an unofficial transcript, please include an address.');
@@ -308,6 +312,9 @@ former students to pay</u> for the transcript via credit card.</p>';
 //        if (!$this->get_value('number_of_official'))  {
 //            $this->set_error('number_of_official', 'Since you chose to send paper transcripts, please tell us how many to send.');
 //        }
+		if ($this->get_value('deliver_to') && !$this->get_value('number_of_official')){
+			$this->set_error('number_of_official', 'Please indicate the number of official transcripts we should send?');
+		}
         if ($this->get_value('number_of_official') && $this->get_value('deliver_to') == 'Your address'
             && (!$this->get_value('address') || !$this->get_value('city') || !$this->get_value('state_province')
                 || !$this->get_value('zip') || !$this->get_value('country') ) ) {
