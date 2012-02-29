@@ -54,6 +54,184 @@ function resize_image($path, $width, $height, $sharpen=true)
 }
 
 /**
+ * Convert some file to an image - places the file in the same place. 
+ * Right now just png is supported - other formats could be.
+ * 
+ * @param string $orig the path to the file that will be converted
+ * @param string $format the format of the resulting image file
+ *
+ * @return string path of converted file if successful, false if conversion fails
+ */
+function convert_to_image($orig, $format = 'png')
+{
+	trigger_error('Invalid format specificed for convert to image - conversion not performed.', WARNING);
+	if ($format == 'png') 
+	{
+		return convert_to_png($orig);
+	}
+	else trigger_error('Invalid format specificed for convert to image - conversion not performed.');
+	return false;
+}
+
+/**
+ * @param $orig the file to be converted
+ *
+ * @return the path of the new file (now a .png) upon successful conversion, false if fails
+ */
+function convert_to_png($orig)
+{
+	$new_format = 'png';
+	$old_file_type = strtolower(get_extension($orig));
+	
+	if($old_file_type == 'pdf')
+	{
+		$new_path = rasterize_pdf($orig, $new_format);
+	}
+	else
+	{
+		$new_path = convert_to_web_image($orig, $new_format);
+	}
+	return $new_path;
+
+}
+
+/** Rasterize a PDF at 288dpi and then reduce to 72dpi; this is the closest we can
+ * get to actually antialiasing text.
+ * 
+ * @param $path path to non-web-image file
+ * @param $format the format to convert to
+ *
+ * @return the path of the converted file, or false if rasterization fails
+ */
+function rasterize_pdf($path, $format)
+{	
+	$new_path = change_extension($path, $format);
+	$args = array(
+		'convert',
+		'-density 288',
+		'-resize 25%',
+		escapeshellarg($path.'[0]'),
+		escapeshellarg($new_path),
+		);
+	$exit_status = -1;
+	exec(implode(' ', $args), $output, $exit_status);
+	if ($exit_status != 0) {
+		trigger_error('image convert from pdf failed: '.implode('; ', $output), WARNING);
+		return false;
+	} else {
+		return $new_path;
+	}	
+}
+
+/**
+ * @param $path path to non-web-image file
+ * @param $format the format to convert to
+ *
+ * @return the path of the converted file, or false if conversion fails
+ */
+function convert_to_web_image($path, $format)
+{			
+	$exec = 'convert';
+	$sharpen = true;
+	$new_path = change_extension($path, $format);
+	
+	// Don't convert image to be larger than original 
+	if( $orig_dimensions = get_dimensions_image_magick($path) )
+	{
+		$max_width = min($orig_dimensions['width'], 500);
+		$max_height = min($orig_dimensions['height'], 500);
+	}
+	else
+	{
+		$max_width = 500;
+		$max_height = 500;
+	}
+	
+	$args = array(
+		$exec,
+		'-flatten', // required for photoshop and other layered files
+		'-geometry',
+		"{$max_width}x{$max_height}",
+	);
+	if ($sharpen)
+		$args = array_merge($args, array('-sharpen', '1'));
+	
+		$args[] = escapeshellarg($path);
+		$args[] = escapeshellarg($new_path);
+	
+	$output = array();
+	$exit_status = -1;
+	exec(implode(' ', $args), $output, $exit_status);
+	if ($exit_status != 0) {
+		trigger_error('image convert failed: '. $exit_status .' ' . implode('; ', $output), WARNING);
+		return false;
+	} else {
+		return $new_path;
+	}	
+}
+/**
+ * Uses command line ImageMagick to determine height and width of given image
+ *
+ * @param $path to image file
+ * 
+ * @return an array with keys 'height' and 'width' storing corresponding values of image specified
+ * by $path, or false if unable to determine dimensions 
+ */
+
+function get_dimensions_image_magick($path)
+{
+	$get_info_args = array('identify', 
+							'-format',
+							"'%w\n %h\n'"
+							);
+	$get_info_args[] = escapeshellarg($path);
+	$result = array();
+	exec(implode(' ', $get_info_args), $result, $exit_stat);
+	$width = trim($result[0]);
+	$height = trim($result[1]);
+
+	if($exit_stat == 0)
+	{
+		return array('height' => $height, 'width' => $width);
+	}
+	else
+		return false;
+}
+/**
+ * @param $path of the file
+ * 
+ * @return string extension from $path (no leading '.' included)
+ */
+function get_extension($path)
+{
+	$path_parts = pathinfo($path);
+	if (isset($path_parts['extension']))
+		return $path_parts['extension'];
+	else
+		return false;
+}
+/**
+ * @param string $path of the file
+ * @param string $new_ext the extension we want to change to
+ *
+ * @return path with new extension 
+ */
+function change_extension($path, $new_ext)
+{
+	if ($ext = get_extension($path))
+	{
+		$ext_pattern = "/".preg_quote($ext, '/')."$/";
+		$new_path = preg_replace($ext_pattern, $new_ext,
+			$path);
+		if ($new_path == $path) // in case the replace doesn't work
+			$new_path .= '.'.$new_ext;
+	} else {
+		$new_path .= '.'.$new_ext;
+	}
+	return $new_path;
+}
+
+/**
 * crop an image while preserving aspect ratio
 *
 * @param int $nw the new width of the image
