@@ -108,7 +108,7 @@ class ReasonImageUploadType extends image_uploadType
 {
 	var $type = "ReasonImageUpload";
 	var $type_valid_args = array('authenticator', 'existing_entity',
-		'head_items', 'obey_no_resize_flag');
+		'head_items', 'obey_no_resize_flag', 'convert_to_image');
 	
 	/**
 	 * Set this flag to true if this upload type should obey the
@@ -116,6 +116,11 @@ class ReasonImageUploadType extends image_uploadType
 	 * @var boolean
 	 */
 	var $obey_no_resize_flag = false;
+	
+	/**
+	 * Set this flag to false if you want to prevent conversion of files (like .pdf and .tiff) to .png
+	 */
+	var $convert_to_image = true;
 	
 	/** @access private */
 	var $upload_sid = null;
@@ -137,9 +142,14 @@ class ReasonImageUploadType extends image_uploadType
 			$constraints['max_dimensions'] = array($this->max_width,
 				$this->max_height);
 		}
+		
+		if ($this->convert_to_image) {
+			$constraints['convert_to_image'] = true;
+		}
+		
 		reason_add_async_upload_constraints($this->upload_sid, $this->name,
 			$constraints);
-		
+			
 		if (isset($args["head_items"]))
 			$this->get_head_items($args["head_items"]);
 		
