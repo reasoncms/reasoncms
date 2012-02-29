@@ -823,8 +823,7 @@
 				'height'=>200,
 				'view'=>'av_view'
 			),
-		),
-		
+		),		
 		'feature_autoplay' => array(
 			'main_post' => array(
 				'module' => 'feature/feature',
@@ -833,6 +832,33 @@
 				'width'=>500,
 				'height'=>300
 			),
+		),
+		'feature_before_content_sidebar_news_events' => array(
+			'sub_nav' => array(
+				'module' => 'blurb',
+				'num_to_display' => 1,
+			),
+			'main' => array(
+				'module' => 'feature/feature',
+				'shuffle' => false,
+				'autoplay_timer' => 3,
+				'width'=>500,
+				'height'=>300
+			),
+			'main_post' => 'content',
+			'pre_sidebar'=>'events_mini',
+			'sidebar' => array(
+				'module' => 'publication',
+				'related_mode' => 'true',
+				'markup_generator_info' =>
+				array('list_item' => array(
+									'classname' => 'MinimalListItemMarkupGenerator', 
+									'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+									)
+					 ),
+				'max_num_items' => 4,
+			),
+			'post_sidebar' => 'blurb',
 		),
 		'feedback' => array(
 			'main_post' => 'feedback',
