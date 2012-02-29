@@ -63,6 +63,7 @@ foreach (array_keys($_FILES) as $name) {
 	$constraints = (!empty($session['constraints'][$name]))
 		? $session['constraints'][$name]
 		: null;
+	
 	if ($constraints) {
 		check_constraints($constraints, $file);
 	}
@@ -85,6 +86,31 @@ foreach (array_keys($_FILES) as $name) {
 	}
 	
 	$img_info = @getimagesize($temp_path);
+	$file_type = $img_info[2];
+	
+	/*
+		If uploading an image, but provide a non-web-friendly type (i.e. pdf), convert it and
+		update all of its corresponding paths. Note 1=>'gif',2=>'jpg',3=>'png' 
+	*/
+	$web_acceptable_types = array(1,2,3);
+	if( (!$img_info || !in_array($file_type, $web_acceptable_types) ) 
+		&& (!empty($constraints['convert_to_image'])) && $constraints['convert_to_image'] )
+	{
+		// from image_funcs
+		$convert_to = 'png';
+		if( $temp_path = convert_to_image($temp_path, $convert_to) )
+		{
+			$img_info = @getimagesize($temp_path);
+			$temp_uri = change_extension( $temp_uri, $convert_to );
+			$filename = change_extension( $filename, $convert_to );
+			$filesize = filesize($temp_path);
+		}
+		else
+		{
+			final_response(420, 'Unable to convert the uploaded file to a web-friendly image');
+		}
+	}
+	
 	if ($img_info)
 	{
 		// fix a permission idiosyncrasy so the permissions are consistent
@@ -134,15 +160,16 @@ foreach (array_keys($_FILES) as $name) {
 		);
 	}
 }
+
 $reason_session->set(_async_upload_session_key($upload_sid), $session);
 final_response(200, $response);
+
 
 function check_constraints($constraints, $file) {
 	$path = $file->get_temporary_path();
 	
 	if (!empty($constraints['mime_types'])) {
 		if (!$file->mime_type_matches($constraints['mime_types'])) {
-			error_log('Upload reject for file "'.$file->get_filename().'" of MIME type "'. $file->get_mime_type() .'"');
 			final_response(415, "File is not of an allowed type.");
 		}
 	}
