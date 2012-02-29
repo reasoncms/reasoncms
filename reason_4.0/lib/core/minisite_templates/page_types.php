@@ -833,7 +833,7 @@
 				'height'=>300
 			),
 		),
-		'feature_before_content_sidebar_news_events' => array(
+		'feature_before_content_sidebar_events_news' => array(
 			'sub_nav' => array(
 				'module' => 'blurb',
 				'num_to_display' => 1,
