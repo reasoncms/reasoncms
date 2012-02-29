@@ -40,6 +40,7 @@ class reason_iCalendar
 {
 	var $_events = array();
 	var $_title;
+	var $use_x_wr_timezone = true;
 		
 	function set_events($events)
 	{
@@ -93,6 +94,10 @@ class reason_iCalendar
 		$icalendar_header .= 'VERSION:2.0' . "\r\n";
 		$icalendar_header .= 'PRODID:-//Reason 4.0//EN' . "\r\n";
 		if (!empty($title)) $icalendar_header .= 'X-WR-CALNAME;VALUE=TEXT:'. $this->_fold_text($title) . "\r\n";
+		if (defined("REASON_DEFAULT_TIMEZONE") && ( (boolean) REASON_DEFAULT_TIMEZONE ) && $this->use_x_wr_timezone)
+		{
+			$icalendar_header .= 'X-WR-TIMEZONE:'. REASON_DEFAULT_TIMEZONE . "\r\n";
+		}
 		return $icalendar_header;
 	}
 	
