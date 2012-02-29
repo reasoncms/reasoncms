@@ -148,6 +148,13 @@ function reason_async_upload_session_exists($session_id)
  *                             message string or <code>false</code> if it is
  *                             not acceptable
  *                         </dd>
+ *						   <dt>convert_to_image</dt>
+ *					       <dd>
+ *								jonesn update --
+ *								specifies whether or not a file uploaded via an 
+ *								image uploader should be converted to web-friendly
+ *								image type (png)
+ *						   </dd>
  *                       </dl>
  * @return void
  */
@@ -208,6 +215,9 @@ function reason_add_async_upload_constraints($session_id, $field, $options)
 				"in Reason's core or local lib directories");
 		}
 		$constraints['validator'] = $validator;
+	}
+	if (!empty($options['convert_to_image'])) {
+		$constraints['convert_to_image'] = $options['convert_to_image'];
 	}
 	
 	$existing = (array) @$async_session['constraints'][$field];
