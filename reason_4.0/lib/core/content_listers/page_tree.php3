@@ -19,11 +19,21 @@
 		{
 			return true;
 		} // }}}
+		
+		function show_item_pre($row , &$options)
+		{
+			if($row->get_value('nav_display') == 'No')
+			{
+				$options['class'] = 'notInNav';
+			}
+			return parent::show_item_pre($row, $options);
+		}
+		
 		function show_admin_live( $row , $options) // {{{
 		{
 			if(empty($row))
 				return;
-			echo '<td align="left"><strong>';
+			echo '<td align="left" class="viewerCol_admin"><strong>';
 			$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
 			$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
 			$add_child_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'parent_id' => $row->id() , 'id' => ''/*, 'new_entity' => 1*/ ),true );
