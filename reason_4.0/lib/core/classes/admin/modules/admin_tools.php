@@ -175,6 +175,13 @@
 						'safety_level' => 'careful',
 					),
 				),
+				'Developer Tools' => array(
+					'?cur_module=ErrorVisibility' => array(
+						'title' => 'Toggle Error Visibility',
+						'description' => 'Choose whether you want to get reports of PHP errors on pages you are viewing.',
+						'safety_level' => 'safe',
+					),
+				),
 			);
 		}
 		function run() // {{{
