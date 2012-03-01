@@ -48,8 +48,7 @@
 				return false;
 			}
 			
-			$q = 'UPDATE entity SET state = "Live", last_edited_by = "'.$this->admin_page->user_id.'" where id = ' . $this->admin_page->id;
-			db_query( $q , 'Error setting state as live in DeleteModule::init()' );
+			reason_update_entity( $this->admin_page->id, $this->admin_page->user_id, array('state' => 'Live'), false );
 			
 			if ($this->admin_page->type_id == id_of('minisite_page'))
 			{
@@ -64,13 +63,7 @@
 			$urlm = new url_manager($this->admin_page->site_id);
 			$urlm->update_rewrites();
 			
-			if( get_class( $graph->nodes[ $graph->start ] ) == 'admin_lister_node' 
-				AND isset( $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] ) 
-			  )
-				$link = unhtmlentities( $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] ).
-					'&unique_id=' . $this->admin_page->unique_id;
-			else 	
-				$link = unhtmlentities( $this->admin_page->make_link( array( 'cur_module' => 'Lister' , 'id' => '' , 'state' => 'deleted' ) ) );
+			$link = unhtmlentities( $this->admin_page->make_link( array( 'cur_module' => 'Lister' , 'id' => '' , 'state' => 'deleted' ) ) );
 			header( 'Location: ' . $link );
 			die();
 		} // }}}
