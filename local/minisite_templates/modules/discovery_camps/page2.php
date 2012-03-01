@@ -130,13 +130,13 @@ class DiscoveryCampsTwo extends FormStep
             $expeditioners = 170;
             $late_fee = 15; // after April 20, charge a late fee
 
-            $april15 = 110; // April 15 == day 104 (105 on a leap year) on a 0 - 364 scale
+            $april20 = 110; // April 20 == day 110 (111 on a leap year) on a 0 - 364 scale
             if (date('L')) {// if this year is a leap year
                 $june1 = 111;
             }
 
             $date = getdate();
-            if ($date['yday'] > $april15){
+            if ($date['yday'] > $april20){
                 $adventure_hunt = $adventure_hunt + $late_fee;
                 $grade_1 = $grade_1 + $late_fee;
                 $grade_2 = $grade_2 + $late_fee;

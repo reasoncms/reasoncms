@@ -98,7 +98,7 @@ class DiscoveryCampsOne extends FormStep
             'camp_comment' => array(
                 'type' => 'comment',
                 'text' => 'The following weeks are available as indicated for each grade level. Campers may register
-                    for more than one week, as our programming will be different each week.'
+                    for more than one week, as our programming will be different each week. Priority registration due by Friday, April 20.'
             ),
 			'adventure_hunt' => array(
                 'type' => 'checkboxfirst',
@@ -159,11 +159,11 @@ class DiscoveryCampsOne extends FormStep
             $date = getdate();
             $this->add_comments('grade', 'Fall '.$date['year'], 'after');
 
-             $april20 = 110; // April 15 == day 110 (111 on a leap year) on a 0 - 364 scale
+             $april20 = 110; // April 20 == day 110 (111 on a leap year) on a 0 - 364 scale
                 if (date('L')) // if this year is a leap year
                     $june1 = 111;
                                 
-                if ($date['yday'] > $april15){
+                if ($date['yday'] > $april20){
                     $this->set_display_name('adventure_hunt', "June 11-15  Grades 6-9     $190");
                     $this->set_display_name('grade_1', "June 11-12   Grade 1     $105");
                     $this->set_display_name('grade_2', "June 13-15  Grade 2   $115");
