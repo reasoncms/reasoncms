@@ -448,7 +448,7 @@ class reasonSizedImage
 		if(!isset($this->orig_exists))
 		{
 			$entity = $this->get_entity();
-			if( $entity->has_value('original_image_type') )
+			if( $entity->get_value('original_image_type') )
 			{
 				$this->orig_exists = true;
 			}
