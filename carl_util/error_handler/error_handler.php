@@ -169,13 +169,28 @@ function turn_carl_util_error_context_off()
 }
 
 /**
- * Performs an IP-based check to see if the remote user of the current HTTP
- * request is a developer or not.
+ * Should the current request be treated as a developer for the purposes of
+ * error display?
  *
  * @return boolean true if the remote user is a known developer, false if not
- * @uses $GLOBALS['_DEVELOPER_INFO']
  */
 function is_developer()
+{
+	if(isset($_SESSION['carl_util_error_handler_override']))
+		return $_SESSION['carl_util_error_handler_override'];
+	
+	if(!empty($_SERVER['REMOTE_ADDR']))
+		return is_developer_ip_address($_SERVER['REMOTE_ADDR']);
+	
+	return false;
+}
+
+/**
+ * Is a given IP address registered as belonging to a developer?
+ * @return boolean
+ * @uses $GLOBALS['_DEVELOPER_INFO']
+ */
+function is_developer_ip_address($ip)
 {
 	static $ip_list = null;
 	
@@ -188,10 +203,47 @@ function is_developer()
 			}
 		}
 	}
-	
-	return (!empty($_SERVER['REMOTE_ADDR']))
-		? isset($ip_list[$_SERVER['REMOTE_ADDR']])
-		: true; // user is almost certainly a dev. if running from the CLI
+
+	return (!empty($ip))
+		? isset($ip_list[$ip])
+		: true;
+}
+
+/**
+ * Set a session variable that overrides the ip-based developer logic
+ * for inline error reporting
+ *
+ * @param boolean $is_developer true for dev error reporting, false for non-dev error hiding
+ * @return void
+ */
+function override_developer_status($is_developer)
+{
+	if($is_developer)
+		$_SESSION['carl_util_error_handler_override'] = true;
+	else
+		$_SESSION['carl_util_error_handler_override'] = false;
+}
+
+/**
+ * Clear any overrides that might be in place for developer status
+ * @return void
+ */
+function clear_developer_status_override()
+{
+	if(isset($_SESSION['carl_util_error_handler_override']))
+		unset($_SESSION['carl_util_error_handler_override']);
+}
+
+/**
+ * Is there an override currently in place?
+ * @return true if in place & set to true, false if in place & set to false, or NULL if not in place
+ */
+function get_developer_status_override()
+{
+	if(isset($_SESSION['carl_util_error_handler_override']))
+		return $_SESSION['carl_util_error_handler_override'];
+	else
+		return NULL;
 }
 
 /**
