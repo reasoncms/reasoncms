@@ -34,6 +34,7 @@
 	include_once( CARL_UTIL_INC . 'basic/misc.php' );
 	reason_include_once( 'classes/entity_selector.php' );
 	reason_include_once( 'function_libraries/url_utils.php' );
+	reason_include_once( 'classes/object_cache.php' );
 
 	/**
 	 * Get the id of an item with a given unique name
@@ -54,23 +55,16 @@
 	 * }
 	 *
 	 * @param string $unique_name The unique name that you want the id of
-	 * @param boolean $cache Use a cache (specific to the script)? Set to false if you think the current process may have updated this unique name
+	 * @param boolean $cache Use a static cache - (entity unique name changes / updates flush the static cache so manually setting this to false is rarely/never necessary)
 	 * @param boolean $report_not_found_error Trigger a warning if the unique name is not in the database. Set to false if the value is coming from userland or if it is a test that you will be doing separate reporting on.
 	 * @return integer The Reason ID of the corresponding entity or 0 if not found
 	 */
-	function id_of( $unique_name, $cache = true, $report_not_found_error = true )// {{{
+	function id_of( $unique_name, $static_cache = true, $report_not_found_error = true )// {{{
 	{
 		static $retrieved = array();
-
-		if( !$cache || empty( $retrieved ) )
+		if( !$static_cache || empty( $retrieved ) )
 		{
-			$retrieved = array();
-			$q = "SELECT id, unique_name FROM entity WHERE unique_name IS NOT NULL AND unique_name != '' AND (state = 'Live' OR state = 'Pending')";
-			$r = db_query( $q , "Error getting unique_names" );
-			while( $row = mysql_fetch_array( $r ))
-				$retrieved[ $row[ 'unique_name' ] ] = $row[ 'id' ];
-			mysql_free_result( $r );
-
+			$retrieved = reason_get_unique_names();
 		}
 		if( isset( $retrieved[ $unique_name ] ) )
 			return $retrieved[ $unique_name ];
@@ -81,11 +75,56 @@
 			return 0;
 		}
 	} // }}}
+	
+	/**
+	 * We always use the cache for this super common query. We update the cache in admin_actions.php whenever unique names are added or changed.
+	 */
+	function reason_get_unique_names()
+	{
+		$cache = new ReasonObjectCache('reason_unique_names', -1);
+		if ($unique_names =& $cache->fetch())
+		{
+			return $unique_names;
+		}
+		else
+		{
+			return reason_refresh_unique_names();
+		}
+	}
+	
+	/**
+	 * Create/refresh the unique name cache from the database.
+	 * 
+	 * @return array unique names
+	 */
+	function reason_refresh_unique_names()
+	{
+		$q = "SELECT id, unique_name FROM entity WHERE unique_name IS NOT NULL AND unique_name != '' AND (state = 'Live' OR state = 'Pending')";
+		$r = db_query( $q , "Error getting unique_names" );
+		while( $row = mysql_fetch_array( $r ))
+		{
+			$retrieved[ $row[ 'unique_name' ] ] = $row[ 'id' ];
+		}
+		mysql_free_result( $r );
+		if (!empty($retrieved))
+		{
+			$cache = new ReasonObjectCache('reason_unique_names');
+			$cache->set($retrieved);
+			id_of('site', false); // refresh the id_of static cache
+			return $retrieved;
+		}
+		else
+		{
+			trigger_error('reason_refresh_unique_names did not update the cache because no unique names were retrieved');
+		}
+		return array();
+	}
+	
 	/**
 	 * Check to see if a given unique name exists in the Reason database
 	 *
 	 * @param string $unique_name The unique name to check
-	 * @param boolean $cache Set to false if you don't want Reason to use the process-level cache (this option will take somewhat longer to complete)
+	 * @param boolean $cache Set to false to bypass the static cache (this should now always be unnecessary as the cache is invalidated when unique names are added/modified.)
 	 * @return boolean true if the unique name exists, false if it does not
 	 */
 	function reason_unique_name_exists($unique_name, $cache = true)
