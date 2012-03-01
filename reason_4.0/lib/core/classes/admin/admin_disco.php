@@ -65,9 +65,7 @@
 					$e = new entity( $id );
 					if( $e->get_value( 'state' ) == 'Live'  )
 					{
-						$q = 'UPDATE entity SET state = "Deleted", last_edited_by = "'.$this->admin_page->user_id.'" where id = ' . $id;
-						db_query( $q , 'Error setting state as deleted in deleteDisco::finish()' );
-
+						reason_update_entity( $id, $this->admin_page->user_id, array('state' => 'Deleted'), false );
 						$type = new entity( $this->admin_page->type_id );
 						$post_deleter_filename = $type->get_value( 'custom_post_deleter' );
 						if(!(empty($post_deleter_filename)))
