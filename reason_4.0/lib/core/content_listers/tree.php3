@@ -159,11 +159,16 @@
 				echo '<th class="listHead">Admin Functions</th>';
 		} // }}}
 
-		function show_item_pre( $row , &$options, $classes = array()) // {{{
+		function show_item_pre( $row , &$options) // {{{
 		{
 			if(empty($row))
 				return;
+			$classes = array();
 			
+			if( !empty($options[ 'class' ]) ) 
+			{
+				$classes[] = $options[ 'class' ];
+			}
 			if( !empty($options[ 'color' ]) ) 
 				$classes[] = 'highlightRow';
 			else 
