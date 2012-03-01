@@ -159,11 +159,11 @@
 				echo '<th class="listHead">Admin Functions</th>';
 		} // }}}
 
-		function show_item_pre( $row , &$options) // {{{
+		function show_item_pre( $row , &$options, $classes = array()) // {{{
 		{
 			if(empty($row))
 				return;
-			$classes = array();
+			
 			if( !empty($options[ 'color' ]) ) 
 				$classes[] = 'highlightRow';
 			else 
@@ -176,10 +176,10 @@
 			{
 				$classes[] = 'parentOf'.$child_id;
 			}
-			echo '<tr class="'.implode(' ',$classes).'" id="'.$row->id().'row"><td>' . $row->id() . '</td>';
+			echo '<tr class="'.implode(' ',$classes).'" id="'.$row->id().'row"><td class="id">' . $row->id() . '</td>';
 			
 			$open_link = $this->open;
-			echo '<td>';
+			echo '<td class="item_pre">';
 
 			echo '&nbsp;';
 			if( $row->id() == $this->root_node() )
@@ -263,13 +263,13 @@
 					else
 						$display = $row->get_value( $name );	
 				}
-				echo '<td';
+				echo '<td class="'.$col.'"';
 				echo '>'.$display.'</td>';
 			}
 		} // }}} 
 		function show_admin_live( $row , $options) // {{{
 		{
-			echo '<td align="left" class="'.$options[ 'class' ].'"><strong>';
+			echo '<td align="left" class="admin_functions '.$options[ 'class' ].'"><strong>';
 			$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
 			$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
 			$add_child_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'parent_id' => $row->id() , 'id' => '', 'new_entity' => 1 ) );
