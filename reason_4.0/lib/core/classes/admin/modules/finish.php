@@ -40,26 +40,22 @@
 			else
 				$this->new_entity = false;
 			
-			// Set the entity live if the user has rights to publish
-			$user_can_publish = reason_user_has_privs( $this->admin_page->user_id, 'publish' );
-			if($temp->get_value('state') == 'Pending' && $user_can_publish )
+			// when finishing an entity, we want to ensure that it is live and not new (unless it is a page)
+			if ( ($this->admin_page->type_id != id_of('minisite_page')) && ($temp->get_value('state') == 'Pending') && reason_user_has_privs($this->admin_page->user_id, 'publish') )
 			{
-				// Leave the state of pages alone so that people can hide them if they want to, but otherwise set the object live
-				if( $this->admin_page->type_id != id_of( 'minisite_page' ) )
-				{
-					$q = 'UPDATE entity set state = "Live" where id = ' . $this->admin_page->id;
-					db_query( $q , 'Error finishing' );
-					if(!empty($this->disco_item)) $this->disco_item->set_value('state', "Live");
-				}
+				$update_values['state'] = 'Live';
+				if(!empty($this->disco_item)) $this->disco_item->set_value('state', "Live");
 			}
-			// regardless, set the entity to no longer be "new"
-			if($temp->get_value('new') != '0')
+			if ($temp->get_value('new') != '0')
 			{
-				$q = 'UPDATE entity set new = 0 where id = ' . $this->admin_page->id;
-				db_query( $q , 'Error finishing' );
+				$update_values['new'] = 0;
 				if(!empty($this->disco_item)) $this->disco_item->set_value('new_entity', 0);
 			}
-
+			if (!empty($update_values))
+			{
+				reason_update_entity($this->admin_page->id, $this->admin_page->user_id, $update_values, false); // archive, yes?
+			}
+			
 			$original = new entity( $this->admin_page->id,false );
 			$original->get_values();
 
@@ -118,7 +114,6 @@
 			}
 			else
 			{
-				$dest_state = $user_can_publish ? 'live' : 'pending';
 				$link = $this->admin_page->make_link( array( 'id' => '',/*'new_entity' => '',*/'site_id' => $this->admin_page->site_id , 'type_id' => $this->admin_page->type_id , 'cur_module' => 'Lister' ) );
 			}			
 			// before redirecting, check to see if there are any custom finish actions associated with this type.
