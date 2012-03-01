@@ -245,7 +245,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
 		{	
 			$this->home_events_news_spotlight();
-			$this->run_section( 'bannerad');
+			$this->run_section( 'post_sidebar_2');  // banner at bottom
 			return;
 		}
 		
@@ -625,7 +625,6 @@ class LutherTemplate2010 extends MinisiteTemplate
 		
 		echo '<section class="events" role="group">'."\n";
 		echo '<header class="red-stripe"><h1><span>Events</span></h1></header>'."\n";
-		//echo ''."\n";
 			$this->run_section( 'pre_sidebar');
 		echo '</section> <!-- class="events" role="group" -->'."\n";
 
