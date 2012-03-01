@@ -140,14 +140,10 @@
 			}
 		}
 		
-		// If the newly-created entity has a unique_name and is live or pending,
-		// let's refresh the cache on the id_of function by calling it for
-		// 'site' with caching off.
-		// Note: If you ever expunge the 'site' entity. This will cause an
-		// error. Everywhere.
-		if (isset($values['entity']) && isset($values['entity']['unique_name']) && (!isset($value['entity']['state']) || $values['entity']['state'] == 'Live' || $values['entity']['state'] == 'Pending'))
+		// If the newly-created entity has a unique_name and is not an archive entity, lets update the unique name cache.
+		if (isset($values['entity']['unique_name']) && !empty($values['entity']['unique_name']) && (!isset($values['entity']['state']) || (isset($values['entity']['state']) && ($values['entity']['state'] != 'Archived'))))
 		{
-			id_of('site',false);
+			reason_refresh_unique_names();
 		}
 		
 		// return the id of the new entity
@@ -380,14 +376,10 @@
 		foreach( $archives AS $archive )
 			reason_expunge_entity( $archive, $user_id );
 
-		// If the recently-expunged entity had a unique_name, let's
-		// refresh the cache on the id_of function by calling it for 'site'
-		// with caching off.
-		// Note: If you ever expunge the 'site' entity. This will cause an
-		// error. Everywhere.
-		if (!empty($entity['unique_name']))
+		// If the recently-expunged entity is live or pending and has a unique_name, let's refresh_reason_unique_names
+		if (!empty($entity['unique_name']) && ( !empty($entity['state']) && (($entity['state'] == 'Pending') || ($entity['state'] == 'Live'))))
 		{
-			id_of('site',false);
+			reason_refresh_unique_names();
 		}
 
 		return $entity;
@@ -450,18 +442,13 @@
 				create_relationship( $id, $archived_id, $rel_id );
 			}
 			
-			// If the unique_name changes on the updated entity, let's
-			// refresh the cache on the id_of function by calling it for 'site'
-			// with caching off.
-			// Note: If you ever expunge the 'site' entity. This will cause an
-			// error. Everywhere.
+			// If the unique_name changes on the updated entity, or a uniquely named entity is deleted or undeleted, lets update the cache
 			if ($updated_entity->get_value('unique_name') != $original->get_value('unique_name') ||
 				($original->get_value('state') != 'Deleted' && $updated_entity->get_value('state') == 'Deleted' && $original->get_value('unique_name')) ||
 				($original->get_value('state') == 'Deleted' && $updated_entity->get_value('state') != 'Deleted' && $updated_entity->get_value('unique_name')))
 			{
-				id_of('site',false);
+				reason_refresh_unique_names();
 			}
-
 			return true;
 		}
 		else
