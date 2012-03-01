@@ -143,6 +143,9 @@
 					// Disco stuff goes here!
 					$sorterForm = new SorterForm;
 					$sorterForm->set_sorter($this->sorter);
+					$sorterForm->user_id = $this->admin_page->user_id;
+					$sorterForm->type_id = $this->admin_page->type_id;
+					$sorterForm->site_id = $this->admin_page->site_id;
 					$sorterForm->run();
 //				var_dump(unhtmlentities( $_SESSION[ 'listers' ][ $this->admin_page->site_id ][ $this->admin_page->type_id ] ));
 					if (isset($_GET['savedTime']))
@@ -178,6 +181,9 @@
 		var $sorted_values = array();
 		var $sorter;
 		var $actions =  array('Save', 'Go Back');
+		var $user_id;
+		var $type_id;
+		var $site_id;
 		
 		function set_sorted_vals($vals)
 		{
@@ -255,12 +261,23 @@
 					$sort_order++;
 				}
 				
+				$changed_something = false;
 				if (!empty($items))
+				{
 					foreach( $items AS $id => $order )
 					{
-							$q = 'UPDATE '.$this->sorter->get_table().' set '.$this->sorter->get_field().' = ' . $order . ' WHERE id = ' . $id;
-							db_query( $q , 'Error setting sort_order IN SortingModule::set_order()' );
+						$result = reason_update_entity($id, $this->user_id, array($this->sorter->get_field() => $order), false);
+						if ($result) $changed_something = true;
 					}
+				}
+				
+				// if we have changed sort order of pages, lets try to drop the nav cache for the active site.
+				if ($changed_something && ($this->type_id == id_of('minisite_page')))
+				{
+					reason_include_once('classes/object_cache.php');
+					$cache = new ReasonObjectCache($this->site_id . '_navigation_cache');
+					$cache->clear();
+				}
 			}
 
 		}
