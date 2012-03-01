@@ -150,15 +150,43 @@
 		function show_reinstate() // {{{
 		{
 			$id = $this->admin_page->request[ 'archive_id' ];
-
 			$e = new entity( $id );
 			$values = $e->get_values();
+			$old_id = $this->admin_page->id;
+			$old = new entity($old_id);
+			$old_values = $old->get_values();
+			
 			if (isset($values['id'])) unset($values['id']);
 			if (isset($values['last_modified'])) unset($values['last_modified']);
 			$values[ 'state' ] = 'Live';
 
 			reason_update_entity( $this->admin_page->id, $this->admin_page->user_id, $values );
-
+			
+			// if this is a page, lets check a few things - we may have to run rewrites or clear the nav cache
+			if ($this->admin_page->type_id == id_of('minisite_page'))
+			{
+				// do we need to clear the nav cache?
+				if ( ($values['url_fragment'] != $old_values['url_fragment']) ||
+					 ($values['name'] != $old_values['name']) ||
+					 ($values['link_name'] != $old_values['link_name']) ||
+					 ($values['nav_display'] != $old_values['nav_display']) ||
+					 ($values['sort_order'] != $old_values['sort_order']) ||
+					 ($old_values['state'] != 'Live') )
+				{
+					reason_include_once('classes/object_cache.php');
+					$cache = new ReasonObjectCache($this->admin_page->site_id . '_navigation_cache');
+					$cache->clear();
+				}
+				
+				// if the page was formerly pending or the url_fragment has changed, run rewrites.
+				if ( ($old_values['state'] == 'Pending') ||
+				     ($values['url_fragment'] != $old_values['url_fragment']) )
+				{
+					reason_include_once('classes/url_manager.php');
+					$urlm = new url_manager($this->admin_page->site_id);
+					$urlm->update_rewrites();
+				}
+			}
 			header( 'Location: '.unhtmlentities($this->admin_page->make_link( array( 'id' => $this->admin_page->id ) ) ) );
 			die();
 		} // }}}
