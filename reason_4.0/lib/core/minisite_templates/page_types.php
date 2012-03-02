@@ -122,6 +122,13 @@
 				'organize_by_page_categories' => true,
 				),
 		),
+		'assets_by_author' => array(
+			'pre_sidebar' => '',
+			'main_post' => array(
+				'module'=>'assets',
+				'order' => 'chunk.author ASC',
+				),
+		),
 		'audio_video' => array(
 			'main_post' => 'av',
 		),
