@@ -363,6 +363,85 @@ class checkboxgroup_no_sortType extends checkboxgroupType
 }
 
 /**
+ * Like {@link checkboxgroupType}, with an additional "Other" fill-in option added.
+ * @package disco
+ * @subpackage plasmature
+ */
+class checkboxgroup_with_otherType extends checkboxgroupType
+{
+	var $type = 'checkboxgroup_with_other';
+	var $other_label = 'Other: ';
+	var $type_valid_args = array( 'other_label' );
+
+	function get_display()
+	{
+		$str = '<div class="checkBoxGroup">'."\n";
+		$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
+		$i = 0;
+		foreach( $this->options as $key => $val )
+		{
+			$id = 'checkbox_'.$this->name.'_'.$i;
+			$str .= '<tr><td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$i.']" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+			if ( is_array($this->value) ) {
+				if ( array_search($key, $this->value) !== false )
+					$str .= ' checked="checked"';
+			}
+			else {
+				if ( $key == $this->value )
+					$str .= ' checked="checked"';
+			}
+			$str .= ' /></td><td valign="top"><label for="'.$id.'">'.$val."</label></td></tr>\n";
+			$i++;
+		}
+		$id = 'checkbox_'.$this->name.'_'.$i++;
+		$str .= '<tr>'."\n".'<td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$i.']" value="other"';
+		if ($this->value)
+		{
+			$other_value = $this->value;
+			$str .= ' checked="checked"';
+		} else {
+			$other_value = '';
+		}
+		$str .= '></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$this->other_label.'</label>';
+		$str .= '<input type="text" name="'.$this->name.'_other" value="'.str_replace('"', '&quot;', $other_value).'"  /></td>'."\n".'</tr>'."\n";
+		$str .= '</table>'."\n";
+		$str .= '</div>'."\n";
+		return $str;
+	}
+	
+	/**
+	 * Inject other values back into the return array
+	 **/
+	function grab()
+	{
+		$request = $this->get_request();
+		if ( !isset($request[ $this->name ]) )
+			$this->set( array() );
+		else
+		{
+			$key = array_search('other',$request[ $this->name ]);
+			if ($key !== false)
+			{
+				if (isset($request[ $this->name.'_other']))
+					$request[ $this->name ][$key] = trim($request[ $this->name.'_other']);
+			}
+			$this->set( $request[ $this->name ] );
+		}
+	}
+}
+
+/**
+ * Like {@link checkboxgroup_with_otherType}, but doesn't sort options.
+ * @package disco
+ * @subpackage plasmature
+ */
+class checkboxgroup_with_other_no_sortType extends checkboxgroup_with_otherType
+{
+	var $type = 'checkboxgroup_with_other_no_sort';
+	var $sort_options = false;
+}
+
+/**
  * @package disco
  * @subpackage plasmature
  * @todo do better data checking to make sure that value is one of the available options (or empty/null)
