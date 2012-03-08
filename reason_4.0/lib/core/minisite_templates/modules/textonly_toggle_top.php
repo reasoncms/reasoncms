@@ -19,14 +19,14 @@
 	{
 		function generate_class()
 		{
-			if (!empty($this->parent->textonly))
+			if (!empty($this->textonly))
 				return 'fullGraphicsLink';
 			else
 				return 'hide';
 		}
 		function get_documentation()
 		{
-			if (!empty($this->parent->textonly))
+			if (!empty($this->textonly))
 				return parent::get_documentation();
 			return false;
 		}
