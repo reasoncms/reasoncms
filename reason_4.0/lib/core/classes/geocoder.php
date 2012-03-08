@@ -12,6 +12,7 @@
 include_once('reason_header.php');
 include_once(CARL_UTIL_INC . 'cache/object_cache.php');
 include_once(CARL_UTIL_INC . 'basic/json.php');
+include_once(CARL_UTIL_INC . 'basic/url_funcs.php');
 
 /**
  * A class for geocoding with result caching.
@@ -331,7 +332,7 @@ class geocoder
 			if (isset($last_query_time) && ( (time() - $last_query_time) == 0) ) usleep(1000000);
 			$last_query_time = time();
 			
-			if (!($this->raw_query_results = @file_get_contents($url))) 
+			if (!($this->raw_query_results = @carl_util_get_url_contents($url, false, '', '', 10, 5))) 
 			{
 				trigger_error('Geocoding request failed in geocoder->get_results_from_service()');
 				return false;	
