@@ -36,10 +36,10 @@
 				
 			if($show)
 			{
-				$es = new entity_selector( $this->parent->site_id );
+				$es = new entity_selector( $this->site_id );
 				$es->description = 'Selecting publications for this page';
 				$es->add_type( id_of('publication_type') );
-				$es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('page_to_publication') );
+				$es->add_right_relationship( $this->page_id, relationship_id_of('page_to_publication') );
 				$es->set_num( 1 );
 				$publications = $es->run_one();
 				if(!empty($publications))
