@@ -35,13 +35,13 @@ class RelatedPolicyModule extends PolicyModule
 		// stuff.  This one 
 		DefaultMinisiteModule::init( $args );
 
-		$es = new entity_selector( $this->parent->site_id );
+		$es = new entity_selector( $this->site_id );
 		$es->add_type( id_of( 'policy_type' ) );
 		//$es->set_order( 'sortable.sort_order ASC' );
 		$es->set_order( 'entity.name ASC' );
 		$es->add_relation( 'show_hide.show_hide != "hide"' );
 		$es->add_left_relationship_field( 'parent' , 'entity' , 'id' , 'parent_id' );
-		$es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('page_to_policy') );
+		$es->add_right_relationship( $this->page_id, relationship_id_of('page_to_policy') );
 
 		$this->values = $es->run_one();
 		$this->pages = new PolicyNavigation;
@@ -50,7 +50,7 @@ class RelatedPolicyModule extends PolicyModule
 		if ( !empty ( $this->site_info ) )
 			$this->pages->site_info = $this->site_info;
 		$this->pages->order_by = 'sortable.sort_order ASC';
-		$this->pages->init( $this->parent->site_id, id_of('policy_type') );
+		$this->pages->init( $this->site_id, id_of('policy_type') );
 		if( !empty( $this->request[ 'policy_id' ] ) )
 		{
 			if(array_key_exists($this->request[ 'policy_id' ], $this->values))
