@@ -65,9 +65,11 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 							  '&cache_lifespan='.$cache_lifespan.
 							  '&prefer_short_quotes='.$prefer_short_quotes;
 				
-				$head_items =& $this->parent->head_items;
-				$head_items->add_javascript($this->get_head_item_base_path() . JQUERY_URL);
-				$head_items->add_javascript($this->get_head_item_base_path() . REASON_HTTP_BASE_PATH . 'js/quote/quote_retrieve.js'.$qry_string); // pass params in qry string
+				if ($head_items =& $this->get_head_items())
+				{
+					$head_items->add_javascript($this->get_head_item_base_path() . JQUERY_URL);
+					$head_items->add_javascript($this->get_head_item_base_path() . REASON_HTTP_BASE_PATH . 'js/quote/quote_retrieve.js'.$qry_string); // pass params in qry string
+				}
 			}
 		}
 		
