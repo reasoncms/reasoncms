@@ -27,7 +27,7 @@
 		{
 			parent::init( $args );
 			
-			$site = new entity( $this->parent->site_id );
+			$site = new entity( $this->site_id );
 
 			if(!empty($this->params['sites']))
 			{
@@ -50,7 +50,7 @@
 				$es = new entity_selector();
 				$es->description = 'Getting child sites of this site';
 				$es->add_type( id_of( 'site' ) );
-				$es->add_left_relationship( $this->parent->site_id, relationship_id_of( 'parent_site' ) );
+				$es->add_left_relationship( $this->site_id, relationship_id_of( 'parent_site' ) );
 				$es->set_order( 'entity.name' );
 				if($site->get_value('site_state') == 'Live')
 				{
