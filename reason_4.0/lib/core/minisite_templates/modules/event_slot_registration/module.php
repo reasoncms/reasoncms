@@ -34,7 +34,10 @@ class EventSlotRegistrationModule extends VerboseEventsModule
 	function init( $args = array() )
 	{
  		parent::init($args);
-  		$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.'css/events/event_slot.css');
+  		if ($head_items = $this->get_head_items())
+		{
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/events/event_slot.css');
+		}
   		$this->verify_slot_if_provided();
 		reason_include_once($this->params['form_include']);
 	}
