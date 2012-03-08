@@ -53,8 +53,8 @@
 		} // }}}
 		function refine_es( $es )
 		{
-			$es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_image') );
-			$es->add_rel_sort_field( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_image'), 'rel_sort_order');
+			$es->add_right_relationship( $this->page_id, relationship_id_of('minisite_page_to_image') );
+			$es->add_rel_sort_field( $this->page_id, relationship_id_of('minisite_page_to_image'), 'rel_sort_order');
 			
 			// order first by rel_sort_order if that is not defined second criteria is dated.datetime ASC - this keeps pages that change to gallery pages reasonably predictable
 			$es->set_order( 'rel_sort_order ASC, dated.datetime ASC' ); 
@@ -67,13 +67,13 @@
 				<form action="">
 					<strong>Search Images</strong>&nbsp;&nbsp;<input type="text" name="search_image" value="<?php echo $value;?>"/>
 					<input type="hidden" name="page" value="1"/>&nbsp;&nbsp;
-					<?php if ( !empty( $this->parent->textonly ) )
+					<?php if ( !empty( $this->textonly ) )
 							echo '<input type="hidden" name="textonly" value="1"/>';
 					?>
 					<input type="submit" value="Search!"/>
 					<?php
 						if( !empty($value) )
-							echo '<span class="smallText"><a href="?textonly='.$this->parent->textonly.'">Clear Search</a></span>';
+							echo '<span class="smallText"><a href="?textonly='.$this->textonly.'">Clear Search</a></span>';
 					?>
 				</form>
 			<?php
@@ -108,7 +108,7 @@
 				echo 'No images found.';
 				$this->show_search_function();
 			}
-			elseif( !empty($this->parent->textonly) )
+			elseif( !empty($this->textonly) )
 			{
 				echo '<h3>Images</h3>'."\n";
 				foreach( $this->images AS $id => $image )
@@ -162,7 +162,7 @@
 							echo '&amp;search_date=' . $this->request[ 'search_date' ];
 						if( !empty( $this->request[ 'search_image' ] ) )
 							echo '&amp;search_image=' . $this->request[ 'search_image' ];
-						if ( !empty( $this->parent->textonly ) )
+						if ( !empty( $this->textonly ) )
 							echo '&amp;textonly=1';
 						
 						echo '">' . $i . '</a> ';
