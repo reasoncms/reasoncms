@@ -26,7 +26,7 @@
 		function refine_es( $es )
 		{
 			$es->set_order( 'dated.datetime ASC' );
-			$es->set_site( $this->parent->site_id );
+			$es->set_site( $this->site_id );
 			return $es;
 		}
 	}
