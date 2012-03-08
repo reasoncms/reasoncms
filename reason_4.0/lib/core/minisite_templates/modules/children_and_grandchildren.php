@@ -42,7 +42,7 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 			echo '<ul class="childrenList">'."\n";
 			foreach( $this->offspring AS $child )
 			{
-				if ( $this->parent->cur_page->id() != $child->id()
+				if ( $this->page_id != $child->id()
 					&&
 					( empty($this->params['show_only_this_branch']) || $this->params['show_only_this_branch'] == $child->get_value('unique_name') )
 				 )
@@ -75,7 +75,7 @@ class ChildrenAndGrandchildrenModule extends ChildrenModule
 			if( !empty($prepend_url) )
 				$link .= $prepend_url;
 			$link .= $child->get_value( 'url_fragment' ).'/';
-			if (!empty($this->parent->textonly))
+			if (!empty($this->textonly))
 				$link .= '?textonly=1';
 		}
 		if ( array_key_exists( $depth, $this->params['depth_to_tag_map'] ) )
