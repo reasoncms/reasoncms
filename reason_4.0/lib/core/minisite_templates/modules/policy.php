@@ -137,7 +137,7 @@
 			$head =& $this->get_head_items();
 			$head->add_javascript('/reason_package/reason_4.0/www/js/policy_selector.js');
 
-			$es = new entity_selector( $this->parent->site_id );
+			$es = new entity_selector( $this->site_id );
 			$es->add_type( id_of( 'policy_type' ) );
 			//$es->set_order( 'sortable.sort_order ASC' );
 			$es->set_order( 'entity.name ASC' );
@@ -151,7 +151,7 @@
 			if ( !empty ( $this->site_info ) )
 				$this->pages->site_info = $this->site_info;
 			$this->pages->order_by = 'sortable.sort_order ASC';
-			$this->pages->init( $this->parent->site_id, id_of('policy_type') );
+			$this->pages->init( $this->site_id, id_of('policy_type') );
 
 			if( !empty( $this->request[ 'policy_id' ] ) && $this->pages->cur_page_root() )
 			{
@@ -211,14 +211,12 @@
 		} // }}}
 		function show_root_option_menu() // {{{
 		{
-		
-			$main_link = '?';
-			if (!empty($this->parent->textonly))
-				$main_link .= '&amp;textonly=1';
-
+			$e = new entity($this->page_id);
+			$title = $e->get_value('name');
+			
 			echo '<form name="policy_form" method="get" class="policyForm">' .
 					'<select name="policy_id" class="rootMenu">'.
-					'<option value="'.$main_link.'">' . $this->parent->title . "</option>\n";
+					'<option value="">' . $title . "</option>\n";
 			foreach( $this->roots AS $root )
 			{
 				echo '<option value="'.$root->id().'"';
@@ -226,7 +224,8 @@
 				echo '>'.prettify_string( $root->get_value( 'name' ) ).'</option>'."\n";
 			}
 			echo '';
-			echo '</select> <input type="submit" class="rootMenuSubmit" value="Go"></form>';
+			if ($this->textonly) echo '<input type="hidden" name="textonly" value="1"/>';
+			echo '</select><input type="submit" class="rootMenuSubmit" value="Go"></form>';
 
 		} // }}}
 		function display_navigation() // {{{
@@ -252,7 +251,7 @@
 				$page = new entity( $page );
 
 			$link = '?policy_id=' . $page->id();
-			if (!empty($this->parent->textonly))
+			if (!empty($this->textonly))
 				$link .= '&amp;textonly=1';
 
 			return $link;
@@ -269,7 +268,7 @@
 		function display_back_link() // {{{
 		{
 			$list_link = '?';
-			if (!empty($this->parent->textonly))
+			if (!empty($this->textonly))
 				$list_link .= '&amp;textonly=1';
 			echo "<p><a href='".$list_link."' class='rootPolicyListLink'>List of policies</a></p>\n";
 		} // }}}
