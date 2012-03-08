@@ -31,7 +31,7 @@
 
 				foreach( $this->offspring AS $child )
 				{
-					if ( $this->parent->cur_page->id() != $child->id() )
+					if ( $this->page_id != $child->id() )
 					{
 						
 						/* Check for a url (that is, the page is an external link); otherwise, use its relative address */
@@ -40,7 +40,7 @@
 						else
 						{
 							$link = $child->get_value( 'url_fragment' ).'/';
-							if (!empty($this->parent->textonly))
+							if (!empty($this->textonly))
 								$link .= '?textonly=1';
 						}
 							
