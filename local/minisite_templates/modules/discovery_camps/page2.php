@@ -123,7 +123,7 @@ class DiscoveryCampsTwo extends FormStep
             $adventure_hunt = 175;
             $grade_1 = 90;
             $grade_2 = 100;
-            $grade_3_6 = 150;
+            $adventurers = 150;
             $survival_camp = 175;
             $energy_expedition = 150;
             $edible_earth = 160;
@@ -140,7 +140,7 @@ class DiscoveryCampsTwo extends FormStep
                 $adventure_hunt = $adventure_hunt + $late_fee;
                 $grade_1 = $grade_1 + $late_fee;
                 $grade_2 = $grade_2 + $late_fee;
-                $grade_3_6 = $grade_3_6 + $late_fee;
+                $adventurers = $adventurers + $late_fee;
                 $survival_camp = $survival_camp + $late_fee;
                 $energy_expedition = $camp_6 + $late_fee;
                 $edible_earth = $edible_earth + $late_fee;
@@ -154,8 +154,8 @@ class DiscoveryCampsTwo extends FormStep
                     $total_cost = $total_cost + $grade_1;
             if ($this->controller->get('grade_2'))
                     $total_cost = $total_cost + $grade_2;
-            if ($this->controller->get('grade_3-6'))
-                    $total_cost = $total_cost + $grade_3_6;
+            if ($this->controller->get('adventurers'))
+                    $total_cost = $total_cost + $adventurers;
             if ($this->controller->get('survival_camp'))
                     $total_cost = $total_cost + $survival_camp;
             if ($this->controller->get('energy_expedition'))
@@ -234,7 +234,7 @@ class DiscoveryCampsTwo extends FormStep
 		if ($this->controller->get('grade_2')) {
 			$txt .= '<li>June 13-15  Grade 2</li>'."\n";
 		}
-                if ($this->controller->get('grade_3-6')) {
+                if ($this->controller->get('adventurers')) {
 			$txt .= '<li>June 18-22 Grades 3-6</li>'."\n";
 		}
                 if ($this->controller->get('survival_camp')) {
