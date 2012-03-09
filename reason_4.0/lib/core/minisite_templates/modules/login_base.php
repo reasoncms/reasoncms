@@ -521,11 +521,10 @@ class LoginBaseModule extends DefaultMinisiteModule
 			$current_parts = parse_url( get_current_url() );
 			$parts = parse_url( $this->dest_page );
 			
-			if (!in_array($parts['host'], $this->params['allowable_domains']))
-				$host = $current_parts['host'];
-			else
-				$host = $parts['host'];
-			
+			if ($parts['host'] != $current_parts['host'] && !in_array($parts['host'], $this->params['allowable_domains']))
+				return '';
+				
+			$host = $parts['host'];
 			$port = (isset($parts['port']) && !empty($parts['port'])) ? ":".$parts['port'] : '';
 			$query = (isset($parts['query']) && !empty($parts['query'])) ? '?'.$parts['query'] : '';
 			$fragment = (isset($parts['fragment']) ? '#' . $parts['fragment'] : '');
