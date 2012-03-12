@@ -555,12 +555,8 @@ class FormController
 			if( !in_array( $var, $no_session ) )
 			{
 				$this->set_form_data($var,  $this->forms[ $this->_current_step ]->get_value( $var ));
-				/* echo '<br>'.$var.' = ';
-				var_dump($this->forms[ $this->_current_step ]->get_value( $var ));*/
 			}
 		}
-		/* pray($this->get_all_form_data());
-		exit; */
 	} // }}}
 
 
