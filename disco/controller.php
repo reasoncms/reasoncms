@@ -555,8 +555,12 @@ class FormController
 			if( !in_array( $var, $no_session ) )
 			{
 				$this->set_form_data($var,  $this->forms[ $this->_current_step ]->get_value( $var ));
+				/* echo '<br>'.$var.' = ';
+				var_dump($this->forms[ $this->_current_step ]->get_value( $var ));*/
 			}
 		}
+		/* pray($this->get_all_form_data());
+		exit; */
 	} // }}}
 
 
@@ -594,9 +598,8 @@ class FormController
 		}
 		elseif ($this->_request[ $this->_step_var_name ] != $this->_current_step )
 		{
-			// Dave -- I changed this so that the form is not left in a bizarre place.  -- matt
-			trigger_error( 'Strange behavior: requested multipage form step not the same as the actual step being displayed. Probably due to session timeout. Client browser headered to start of form.',E_USER_NOTICE );
-			//pray($this);
+			// This error is no longer being triggered because it's not really an error.
+			//trigger_error( 'Strange behavior: requested multipage form step not the same as the actual step being displayed. Probably due to session timeout. Client browser headered to start of form.',E_USER_NOTICE );
 			header('Location: '.$this->_base_url.'?'.$this->_step_var_name.'='.$this->_get_start_step() );
 			exit;
 		}
