@@ -71,6 +71,25 @@
 		var $user_id;
 		var $categories;
 		var $max_upload_number = 25;
+		/**
+		 * Converting from type to extension
+		 */
+		var $image_types = array(1=>'gif',2=>'jpg',3=>'png');
+		
+		/**
+		 * If max_upload_number exceeds php's setting, lets reduce it dynamically.
+		 */
+		function __construct()
+		{
+			$max_file_uploads = ini_get('max_file_uploads');
+			if (!empty($max_file_uploads) && is_numeric($max_file_uploads))
+			{
+				if ($max_file_uploads < $this->max_upload_number)
+				{
+					$this->max_upload_number = $max_file_uploads;
+				}
+			}
+		}
 		
 		function get_available_categories($site_id)
 		{
@@ -382,6 +401,12 @@
 						$new_name = PHOTOSTOCK.$id.'.'.$type;
 						$orig_name = PHOTOSTOCK.$id.'_orig.'.$type;
 						$tn_name = PHOTOSTOCK.$id.'_tn.'.$type;
+						
+						// Support for new fields; they should be set null by default, but will be
+						// changed below if a thumbnail/original image is created. This is very messy... 
+						$thumbnail_image_type = null;
+						$original_image_type = null;
+						
 						// atomic move the file if possible, copy if necessary
 						if( is_writable( $cur_name ) )
 						{
@@ -407,6 +432,7 @@
 						{
 							copy( $new_name, $tn_name );
 							resize_image($tn_name, $thumb_dimensions['width'], $thumb_dimensions['height']);
+							$thumbnail_image_type = $this->image_types[$type];
 						}
 						
 						// real original
@@ -422,6 +448,7 @@
 							{
 								copy( $my_orig_name, $orig_name);
 							}
+							$original_image_type = $this->image_types[$type];
 						}
 						
 						$info = getimagesize( $new_name );
@@ -432,6 +459,8 @@
 							'width' => $info[0],
 							'height' => $info[1],
 							'size' => $size,
+							'thumbnail_image_type' => $thumbnail_image_type,
+							'original_image_type' => $original_image_type
 						);
 						
 						// update with new info - don't archive since this is really just an extension of the creation of the item
