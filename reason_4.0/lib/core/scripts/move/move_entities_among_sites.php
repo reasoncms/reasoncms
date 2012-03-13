@@ -21,7 +21,7 @@ class DiscoMoveEntities extends Disco
 {
 	function where_to()
 	{
-		$pass = array('site_id','type_id','creation_date_start','creation_date_end');
+		$pass = array('site_id','type_id','creation_date_start','creation_date_end','name_contains');
 		$params = array();
 		foreach ($pass as $element)
 		{
@@ -88,6 +88,7 @@ $d->add_element('type_id', 'select', array('options' => $type_options));
 $d->add_element('options_comment', 'comment', array('text'=>'<h4>Optional entity filters:</h4>'));
 $d->add_element('creation_date_start', 'textDateTime_js');
 $d->add_element('creation_date_end', 'textDateTime_js');
+$d->add_element('name_contains', 'text');
 $d->add_required('site_id');
 $d->add_required('type_id');
 $d->actions = array('Continue');
