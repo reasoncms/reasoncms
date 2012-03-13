@@ -74,6 +74,7 @@ if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '')
 {
 	echo '<link rel="stylesheet" type="text/css" href="'.UNIVERSAL_CSS_PATH.'" />'."\n";
 }
+echo '<link rel="stylesheet" type="text/css" href="'.REASON_HTTP_BASE_PATH.'css/reason_admin/move_entities.css" />'."\n";
 echo '</head><body>';
 
 echo '<h1>Move Entities Among Sites</h1>';
