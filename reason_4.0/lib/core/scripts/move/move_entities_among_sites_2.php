@@ -29,6 +29,9 @@ if ( !empty($_REQUEST['site_id']) && !empty($_REQUEST['type_id'])  )
 {
 	$site_id = $_REQUEST['site_id'];
 	$type_id = $_REQUEST['type_id'];
+	$start_date = (!empty($_REQUEST['creation_date_start'])) ? $_REQUEST['creation_date_start'] : '';
+	$end_date = (!empty($_REQUEST['creation_date_end'])) ? $_REQUEST['creation_date_end'] : '';
+	$sort = (!empty($_REQUEST['sort'])) ? $_REQUEST['sort'] : 'entity.id';	
 }
 else
 {
@@ -43,6 +46,9 @@ if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '')
 {
 	echo '<link rel="stylesheet" type="text/css" href="'.UNIVERSAL_CSS_PATH.'" />'."\n";
 }
+echo '<link rel="stylesheet" type="text/css" href="'.REASON_HTTP_BASE_PATH.'css/reason_admin/move_entities.css" />'."\n";
+echo '<script type="text/javascript" src="'.JQUERY_URL.'"></script>'."\n";
+echo '<script type="text/javascript" src="'.REASON_HTTP_BASE_PATH.'js/move_entities.js"></script>'."\n";
 echo '</head><body>'."\n";
 
 echo '<h1>Move Entities Among Sites</h1>'."\n";
@@ -61,7 +67,9 @@ $allowable_relationship_id = relationship_finder('site',$type_id);
 $es = new entity_selector();
 $es->add_type($type_id);
 $es->add_right_relationship($site_id, $allowable_relationship_id);
-$es->set_order('entity.id DESC');
+if ($start_date) $es->add_relation('creation_date >= "'.mysql_real_escape_string($start_date).'"');
+if ($end_date) $es->add_relation('creation_date <= "'.mysql_real_escape_string($end_date).'"');
+$es->set_order(mysql_real_escape_string($sort).' ASC');
 $entity_bs = $es->run_one();
 
 if ( count($entity_bs) < 1 )
@@ -83,31 +91,6 @@ $es->add_left_relationship($user_id, relationship_id_of('site_to_user'));
 $es->add_left_relationship($type_id, relationship_id_of('site_to_type'));
 $es->set_order('entity.name ASC');
 $sites = $es->run_one();
-
-echo <<<TELOS
-<style type="text/css">
-table {
-	border-style:none;
-	border-collapse:collapse;
-}
-th {
-	background-color:grey;
-	color:white;
-	padding:.5ex;
-}
-td {
-	padding:.5ex;
-}
-tr {
-	border:1px solid grey;
-}
-.small {
-	font-size:75%;
-}
-</style>
-TELOS;
-echo '<table width="100%">'."\n";
-echo '<tr><th align="left">Id</th><th align="left">Name</th><th align="left">Belongs to<sup><span class="small">1</span></sup></th></tr>'."\n";
 $options_chunk = '';
 foreach ( $sites as $site )
 {
@@ -117,6 +100,13 @@ foreach ( $sites as $site )
 				  reason_htmlspecialchars(strip_tags($site->get_value('name')), ENT_QUOTES) .
 				  '</option>' );
 }
+
+
+echo '<table id="entity_mover" width="100%">'."\n";
+echo '<tr><th><a href="'.carl_make_link(array('sort'=>'entity.id'), '', '', false).'">Id</a></th>';
+echo '<th><a href="'.carl_make_link(array('sort'=>'entity.name'), '', '', false).'">Name</a></th>';
+echo '<th><a href="'.carl_make_link(array('sort'=>'entity.creation_date'), '', '', false).'">Created</a></th>';
+echo '<th>Belongs to<sup><span class="small">1</span></sup> <select name="set_all">'.$options_chunk.'</select></th></tr>'."\n";
 foreach ( $entity_bs as $entity_b )
 {
 	$select = '<select name="new_site_ids[' . $entity_b->id() . ']">';
@@ -125,9 +115,10 @@ foreach ( $entity_bs as $entity_b )
 
 
 	echo '<tr>';
-	echo '<td>' . $entity_b->id() . '</td>';
-	echo '<td>' . $entity_b->get_display_name() . '</td>';
-	echo '<td>' . $select . '</td>';
+	echo '<td class="id">' . $entity_b->id() . '</td>';
+	echo '<td class="name">' . $entity_b->get_display_name() . '</td>';
+	echo '<td class="created">' . $entity_b->get_value('creation_date') . '</td>';
+	echo '<td class="site">' . $select . '</td>';
 	echo '</tr>'."\n";
 }
 echo '</table>'."\n";
