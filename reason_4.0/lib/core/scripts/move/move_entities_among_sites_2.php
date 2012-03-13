@@ -31,6 +31,7 @@ if ( !empty($_REQUEST['site_id']) && !empty($_REQUEST['type_id'])  )
 	$type_id = $_REQUEST['type_id'];
 	$start_date = (!empty($_REQUEST['creation_date_start'])) ? $_REQUEST['creation_date_start'] : '';
 	$end_date = (!empty($_REQUEST['creation_date_end'])) ? $_REQUEST['creation_date_end'] : '';
+	$name = (!empty($_REQUEST['name_contains'])) ? $_REQUEST['name_contains'] : '';
 	$sort = (!empty($_REQUEST['sort'])) ? $_REQUEST['sort'] : 'entity.id';	
 }
 else
@@ -69,6 +70,7 @@ $es->add_type($type_id);
 $es->add_right_relationship($site_id, $allowable_relationship_id);
 if ($start_date) $es->add_relation('creation_date >= "'.mysql_real_escape_string($start_date).'"');
 if ($end_date) $es->add_relation('creation_date <= "'.mysql_real_escape_string($end_date).'"');
+if ($name) $es->add_relation('entity.name LIKE "%'.mysql_real_escape_string($name).'%"');
 $es->set_order(mysql_real_escape_string($sort).' ASC');
 $entity_bs = $es->run_one();
 
