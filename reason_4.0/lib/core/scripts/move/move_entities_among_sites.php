@@ -21,9 +21,16 @@ class DiscoMoveEntities extends Disco
 {
 	function where_to()
 	{
+		$pass = array('site_id','type_id','creation_date_start','creation_date_end');
+		$params = array();
+		foreach ($pass as $element)
+		{
+			if ($val = $this->get_value($element))
+				$params[] = $element .'='.urlencode($val);
+		}
+		
 		return ( securest_available_protocol() .'://' . REASON_HOST . REASON_HTTP_BASE_PATH. 'scripts/move/move_entities_among_sites_2.php' .
-				 '?site_id=' . urlencode($this->get_value('site_id')) .
-				 '&type_id=' . urlencode($this->get_value('type_id')) );
+				 '?'.join('&', $params) );
 	}
 }
 
@@ -35,6 +42,9 @@ if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '')
 {
 	echo '<link rel="stylesheet" type="text/css" href="'.UNIVERSAL_CSS_PATH.'" />'."\n";
 }
+echo '<link rel="stylesheet" type="text/css" href="'.REASON_HTTP_BASE_PATH.'css/reason_admin/move_entities.css" />'."\n";
+echo '<script type="text/javascript" src="'.JQUERY_URL.'"></script>'."\n";
+echo '<script type="text/javascript" src="'.REASON_HTTP_BASE_PATH.'js/move_entities.js"></script>'."\n";
 echo '</head><body>';
 
 reason_include_once( 'function_libraries/user_functions.php' );
@@ -75,6 +85,9 @@ foreach( $types AS $type )
 $d = new DiscoMoveEntities;
 $d->add_element('site_id', 'select', array('options' => $site_options));
 $d->add_element('type_id', 'select', array('options' => $type_options));
+$d->add_element('options_comment', 'comment', array('text'=>'<h4>Optional entity filters:</h4>'));
+$d->add_element('creation_date_start', 'textDateTime_js');
+$d->add_element('creation_date_end', 'textDateTime_js');
 $d->add_required('site_id');
 $d->add_required('type_id');
 $d->actions = array('Continue');
