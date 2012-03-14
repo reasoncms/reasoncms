@@ -53,7 +53,10 @@ class LutherEventsMiniModule extends EventsModule
 		$page_name = $bc[0]["page_name"];
 			
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+			//|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'   // TODO: add
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_live_at_luther'  // TODO: remove
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa'   // TODO: remove
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_paideia'   //TODO: remove
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 		{
@@ -69,7 +72,14 @@ class LutherEventsMiniModule extends EventsModule
 					echo '<header class="blue-stripe"><h1><span>Browse Events</span></h1></header>'."\n";
 					$this->show_calendar_grid();
 				}
-				echo '<header class="blue-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
+				else if (preg_match("/[Gg]lobal [Ll]earning/", $page_name))
+				{
+					echo '<header class="blue-stripe"><h1><span>Dates and Deadlines</span></h1></header>'."\n";
+				}
+				else 
+				{
+					echo '<header class="blue-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
+				}
 			}
 		}
 		else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
@@ -99,7 +109,10 @@ class LutherEventsMiniModule extends EventsModule
 		$this->show_feed_link();
 		
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+			//|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'   // TODO: add
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_live_at_luther'  // TODO: remove
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_naa'   // TODO: remove
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_paideia'   //TODO: remove
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 		{
