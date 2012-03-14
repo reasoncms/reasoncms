@@ -300,10 +300,9 @@
 			{
 				return false;
 			}
-			$q = 'DELETE FROM relationship where entity_a = ' . $entity_a->id() . 
-				 ' AND entity_b = ' . $entity_b->id() .
-				 ' AND type = ' . $rel_info[ 'id' ];
-			db_query( $q , 'Error removing existing relationship' );
-		} // }}}
-	} // }}}
+			delete_relationships(array('entity_a' => $entity_a->id(),
+									   'entity_b' => $entity_b->id(),
+									   'type' => $rel_info['id']));
+		}
+	}
 ?>
