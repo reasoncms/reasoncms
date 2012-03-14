@@ -274,6 +274,9 @@ $GLOBALS['_reason_page_types_local'] = array(
                 	'main_post_2' => 'luther_image_slideshow',
                     'sidebar_2' => '',
                 ),
+				'jenson_medal' => array(
+					'main_post' => 'jenson_medal_voting',
+				),
                 'lfw_registration' => array(
                     'main_post' => 'lfw_form',
                 ),
