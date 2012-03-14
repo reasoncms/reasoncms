@@ -85,8 +85,8 @@ class LutherEventsMiniModule extends EventsModule
 		else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 		{
-			echo '<section class="events group with-calendar" role="group">'."\n";
-			echo '<header class="red-stripe"><h1><span>Upcoming ' . $page_name .' Events</span></h1></header>'."\n";	
+			//echo '<section class="events group with-calendar" role="group">'."\n";   // TODO: add
+			//echo '<header class="red-stripe"><h1><span>Upcoming ' . $page_name .' Events</span></h1></header>'."\n";	 // TODO: add
 		}
 				
 		echo '<ol class="hfeed">'."\n";
@@ -121,7 +121,7 @@ class LutherEventsMiniModule extends EventsModule
 		else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 		{
-			echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";
+			//echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";   // TODO: add
 		}
 	}
 
