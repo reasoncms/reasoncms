@@ -218,8 +218,7 @@ class RelationshipSort
 	 */
 	function relationship_sort_order_update($rel_id, $rel_sort_value)
 	{
-		$q = "UPDATE relationship SET rel_sort_order = $rel_sort_value WHERE id = $rel_id";
-		return db_query( $q, 'Unable to update the relationship sort order.' );
+		update_relationship($rel_id, array('rel_sort_order' => $rel_sort_value));
 	}
 	
 	/**
