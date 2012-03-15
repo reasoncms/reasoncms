@@ -61,7 +61,7 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
           $result = $es->run_one();
           //pray($result);
           return ($result) ? array_keys($result) : array();
-        }
+        }     
 	
 	function run()
 	{
