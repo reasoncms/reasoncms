@@ -33,10 +33,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 				'module' => 'feature/feature',
 				'shuffle' => false,
 				'autoplay_timer' => 12,
-				'width'=>716,
-				'height'=>288
-				//'width'=>222,
-				//'height'=>148
+				'width'=>222,
+				'height'=>148
 			),
 			'sidebar' => 'luther_av',
 			'sidebar_2' => 'luther_image_sidebar',
@@ -216,8 +214,20 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'faculty' => array(
                     'main_post' => 'luther_faculty'
 		),
+		'feature' => array(
+			'main_head' => array(
+				'module' => 'feature/feature',
+				'shuffle' => false,
+				'width'=>716,
+				'height'=>288
+				//'width'=>222,
+				//'height'=>148
+			),
+			'main_head_5' => '',
+			'pre_sidebar_3' => '',
+		),
 		'feature_autoplay' => array(
-			'sidebar' => array(
+			'main_head' => array(
 				'module' => 'feature/feature',
 				'shuffle' => false,
 				'autoplay_timer' => 12,
@@ -226,6 +236,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 				//'width'=>222,
 				//'height'=>148
 			),
+			'main_head_5' => '',
+			'pre_sidebar_3' => '',
 		),
 		'flickr_slideshow_sidebar' => array(
 			// slideshow rendered in sidebar using template code			
@@ -312,16 +324,6 @@ $GLOBALS['_reason_page_types_local'] = array(
                 'luther2010_carousel' => array (
                 	'main_head' => 'luther_carousel',
                 	'main_head_5' => '',
-                ),
-                'luther2010_carousel_feature' => array (
-                	'main_head' => array(
-						'module' => 'feature/feature',
-						'shuffle' => false,
-						'autoplay_timer' => 12,
-						'width'=>716,
-						'height'=>288
-					),
-					'main_head_5' => '',
                 ),
 				'luther2010_giving' => array(
                 	'main_head' => 'luther_carousel',

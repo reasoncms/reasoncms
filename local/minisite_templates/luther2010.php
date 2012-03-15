@@ -481,7 +481,8 @@ class LutherTemplate2010 extends MinisiteTemplate
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
-        	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
+        	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports'
+        	|| preg_match("/^feature/", $this->cur_page->get_value( 'custom_page' )))
 		{
 			return '<body id="home" class="style-home-01 ' . $s . '">'."\n";
 		}
