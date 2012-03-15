@@ -1,7 +1,7 @@
 <?php
 $return_arr = array();
 
-$dbhost = 'database.luther.edu';
+$dbhost = 'reason.luther.edu';
 $dbuser = 'jenson_user';
 $dbpass = '!jensonmedalisthebest!';
 $dbname = 'jenson_medal';
