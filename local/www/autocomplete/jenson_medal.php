@@ -6,6 +6,13 @@ $dbuser = 'jenson_user';
 $dbpass = '!jensonmedalisthebest!';
 $dbname = 'jenson_medal';
 
+/* for testin on reasondev
+$dbhost = 'database.luther.edu';
+$dbuser = 'jenson_user';
+$dbpass = '!jensonmedalisthebest!';
+$dbname = 'jenson_medal';
+*/
+
 $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die ('Error connecting to mysql');
 mysql_select_db($dbname);
 
