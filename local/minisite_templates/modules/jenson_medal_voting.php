@@ -102,8 +102,6 @@ class JensonMedalModule extends DefaultMinisiteModule {
 		var $required = array('your_name', 'first_choice', 'second_choice', 'third_choice');
 		
 		function init( $args = array() ){
-//				force_secure();
-
 				parent::init( $args );
 				if ($head_items =& $this->get_head_items()) {
 						$head_items->add_stylesheet('/reason/jquery-ui-1.8.12.custom/css/redmond/jquery-ui-1.8.12.custom.css');
@@ -136,9 +134,6 @@ class JensonMedalModule extends DefaultMinisiteModule {
 								$this->form->set_error('first_choice', 'Please choose 3 different classmates.');
 						}
 						$choice1_ex = explode(', ', $choice1);
-//						echo $choice1_ex[1].'<br>';
-//						echo in_array($choice1_ex[1], $this->usernames).'-';
-
 
 						if (in_array($choice1_ex[1], $this->usernames) === false){
 								$this->form->set_error('first_choice', '<strong>' . $choice1 .'</strong> is not an elligible nominee. Please use the autocomplete list to populate your choice.');
@@ -156,9 +151,7 @@ class JensonMedalModule extends DefaultMinisiteModule {
 		
 		function on_every_time(){
 				$this->logged_user = reason_check_authentication();
-//				$this->logged_user = 'adamem03';
-				$this->logged_user = 'andesa04';
-				
+
 				/*
 				 * get data from db
 				 */
@@ -190,16 +183,9 @@ class JensonMedalModule extends DefaultMinisiteModule {
 						$this->form->set_value('your_name', $formatted_name);
 				}
 				echo "<a href='/login/?logout=1'>Logout</a>";
-				
-				
-				
-				
-								
-				
 		}
 		
 		function run(){
-//				$this->display_form();
 				$this->form->run();
 		}
 		
@@ -208,13 +194,6 @@ class JensonMedalModule extends DefaultMinisiteModule {
 				$qstring = "SELECT * FROM `nominees` WHERE `username`='" . mysql_real_escape_string($this->logged_user) . "' ";
 				
 				$results = db_query($qstring);
-//				 	if (mysql_num_rows($results) < 1) {
-//						$qstring = "INSERT INTO `applicants` (`open_id`, `creation_date`, `submitter_ip`)
-//							VALUES ('" . mysql_real_escape_string($openid) . "', NOW(), '" . $_SERVER['REMOTE_ADDR'] . "'); ";
-//						$results = mysql_query($qstring) or die(mysql_error());
-//						$qstring = "SELECT * FROM `applicants` WHERE `open_id`='" . mysql_real_escape_string($openid) . "' ";
-//						$results = db_query($qstring);
-//					}
 					while ($row = mysql_fetch_array($results, MYSQL_ASSOC)) {
 						$qstring = "UPDATE `nominees` SET ";
 						foreach ($this->form->get_element_names() as $element) {
@@ -231,15 +210,8 @@ class JensonMedalModule extends DefaultMinisiteModule {
 								}
 								$qstring .= ", ";
 							}
-//							if ($element == 'ssn_1') {
-//								if ($the_form->get_value('ssn_1') || $the_form->get_value('ssn_2') || $the_form->get_value('ssn_3')) {
-//									$qstring .= "`ssn` = '" . mysql_real_escape_string($the_form->get_value('ssn_1')) . "-" . mysql_real_escape_string($the_form->get_value('ssn_2')) . "-" . mysql_real_escape_string($the_form->get_value('ssn_3')) . "', ";
-//								}
-//							}
 						}
-						// ssn is 3 individual form elements, combine and write to db
 						$qstring .= "`submitted_date`=NOW(), `has_voted`='Y'";
-				//        $qstring = rtrim($qstring, ' ,');
 						$qstring .= " WHERE `username`= '" . mysql_real_escape_string($this->logged_user) . "' ";
 						//die($qstring);
 					}
