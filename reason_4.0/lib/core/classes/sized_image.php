@@ -348,7 +348,7 @@ class reasonSizedImage
 		{
 			if ($this->_make_sure_entity_directory_exists($entity->id()) && is_writable($this->get_image_dir() . $entity->id() . '/'))
 			{
-				if( $this->_orig_exists() )
+				if( $this->_orig_exists() && file_exists(reason_get_image_path($entity, 'original')))
 					$path = reason_get_image_path($entity, 'original'); // we want to copy our original image to our destination and resize in place
 				else
 					$path = reason_get_image_path($entity);
