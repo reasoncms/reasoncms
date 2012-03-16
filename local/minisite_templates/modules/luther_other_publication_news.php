@@ -21,30 +21,58 @@ reason_include_once( 'minisite_templates/modules/other_publication_news.php' );
  */
 
 class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
-{
-	
-	
+{	
 	/**
 	 * Returns a reference to an array with data about ordered news items
 	 */
 	
 	function &set_order_and_limits(&$news_items)
 	{
-		$sorted_and_limited_news_items = array();
 		$index = 0;
-		$ids = array_keys($news_items);
-		$source_name = 'news';
-		$featured_ids = $this->get_featured_ids();
-		shuffle($ids);
-		$ids = array_unique(array_merge($featured_ids, $ids));
-		foreach ($ids as $k)
+		$sorted_and_limited_news_items = array();
+		
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
+		// special treatment on home page. Need to put featured posts at top
+		// then shuffle remaining entries
 		{
-			$index++;
-			//$source_name = $news_items[$k]->get_value('source_name');
-			$sorted_and_limited_news_items[$source_name][$k] =& $news_items[$k];
-			if ($index == $this->params['max_num_to_show']) break;
-			
+			$ids = array_keys($news_items);
+			$source_name = 'news';
+			$featured_ids = $this->get_featured_ids();
+			shuffle($ids);
+			$ids = array_unique(array_merge($featured_ids, $ids));
+			foreach ($ids as $k)
+			{
+				$index++;
+				//$source_name = $news_items[$k]->get_value('source_name');
+				$sorted_and_limited_news_items[$source_name][$k] =& $news_items[$k];
+				if ($index == $this->params['max_num_to_show']) break;	
+			}
 		}
+		else
+		{
+			$featured_ids = $this->_get_featured_news_item_ids($this->get_publication_id());
+			foreach( $featured_ids as $featured_id)
+			{
+				if(isset($news_items[$featured_id]))
+				{
+					$source_name = $news_items[$featured_id]->get_value('source_name');
+					$sorted_and_limited_news_items[$source_name][$featured_id] =& $news_items[$featured_id];
+					$index++;
+				}
+			}
+			
+			$ids = array_keys($news_items);
+			foreach ($ids as $k)
+			{
+				if ($this->params['max_num_to_show'] != 0 && $index > $this->params['max_num_to_show']) break;
+				if(in_array($k,$featured_ids))
+					continue;
+				$index++;
+				$source_name = $news_items[$k]->get_value('source_name');
+				$sorted_and_limited_news_items[$source_name][$k] =& $news_items[$k];
+			}
+		}
+		
 		return $sorted_and_limited_news_items;
 	}
 
@@ -61,7 +89,7 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
           $result = $es->run_one();
           //pray($result);
           return ($result) ? array_keys($result) : array();
-        }     
+        }   
 	
 	function run()
 	{

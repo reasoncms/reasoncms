@@ -404,12 +404,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_2' => '',
 		'main_3' => '',
 		'main_4' => '',
-		'main_post' => array(
-			'module' => 'publication',
-			'related_publication_unique_names' => array(luther_get_publication_unique_name("headlines")),
-			'related_mode' => 'true',
-			'max_num_items' => 3,
-		),
+		'main_post' => get_luther_headlines(3),
 		'main_post_2' => '',
 		'pre_sidebar' => 'main_blurb',
 		'pre_sidebar_2' => get_luther_spotlight(),
@@ -1099,6 +1094,25 @@ function luther_shorten_string($text, $length, $append)
 		$text = substr($text, 0, $i) . $append;
 	}
 	return $text;
+}
+
+function get_luther_headlines($max_num_items)
+// return array containing headlines information or '' if headlines don't exist on this minisite
+{
+	$headlines = luther_get_publication_unique_name("headlines");
+	if (id_of($headlines, true, false))
+	{
+		return array(
+			'module' => 'publication',
+			'related_publication_unique_names' => $headlines,
+			'related_mode' => 'true',
+			'max_num_items' => $max_num_items
+		);
+	}
+	else 
+	{
+		return '';
+	}
 }
 
 function get_luther_spotlight()
