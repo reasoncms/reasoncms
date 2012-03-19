@@ -239,6 +239,11 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post_2' => '',
 		'post_sidebar' => 'luther_flickr_slideshow',		
 	),
+	'form' => array(
+		'main' => 'form_content',
+		'main_3' => '',
+		'main_post' => 'form'
+	),
 	'form_sidebar_blurbs' => array(
 		'main' => 'form_content',
 		'main_3' => '',

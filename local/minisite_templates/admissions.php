@@ -403,20 +403,20 @@ class AdmissionsTemplate extends MinisiteTemplate
 	}
 
 	function show_main_content_sections()
-        {
+	{
 
                 //$this->run_section( 'imagetop' );
 		echo '<div class="content clearfix">'."\n";
 
-                if ($this->cur_page->get_value( 'custom_page' ) != 'admissions_home' && $this->has_content( 'main_head_4' ))
-                {
+		if ($this->cur_page->get_value( 'custom_page' ) != 'admissions_home' && $this->has_content( 'main_head_4' ))
+		{
 			echo '<div class="content-inner clearfix">'."\n";
 			$this->luther_breadcrumbs();
 			echo '<div class="contentHead">'."\n";
 			$this->run_section( 'main_head_4' );
 			$this->run_section( 'main_head_5' );
 			echo '</div>'."\n";
-                }
+		}
 
 		if ($this->cur_page->get_value( 'custom_page' ) == 'admissions_home')
 		{
@@ -436,25 +436,6 @@ class AdmissionsTemplate extends MinisiteTemplate
 			//echo '</div>'."\n";
                 }
 
-/*		if ($this->cur_page->get_value( 'custom_page' ) != 'admissions_home') 
-		{
-			if ($this->has_content( 'main_head_2' ))
-			{			
-				$this->run_section( 'main_head_2' );
-			}
-			if ($this->has_content( 'main_head_3' ))
-			{			
-				$this->run_section( 'main_head_3' );
-			}
-			if ($this->has_content( 'main_head_4' ))
-			{			
-				$this->run_section( 'main_head_4' );
-			}
-			if ($this->has_content( 'main_head_5' ))
-			{			
-				$this->run_section( 'main_head_5' );
-			}
-		}*/
                 if ($this->has_content( 'main' ))
                 {
                         echo '<div class="contentMain">'."\n";
