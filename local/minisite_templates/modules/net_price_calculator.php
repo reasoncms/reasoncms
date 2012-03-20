@@ -10,9 +10,9 @@ class netPriceCalculatorModule extends DefaultMinisiteModule {
         echo '<script type="text/javascript">
 				var
 				NPC_CLIENT_DOMAIN		= "luther",
-				NPC_CLIENT_HEIGHT		= 1200,
+				NPC_CLIENT_HEIGHT		= 1400,
 				NPC_CLIENT_WIDTH		= 700,
-				NPC_CONTAINER_PROTOCOL	= "http:",
+				NPC_CONTAINER_PROTOCOL	= "https:",
 				
 				/*Do NOT edit the following code */
 				NPC_EMBEDDED_PROTOCOL	= "https:",
