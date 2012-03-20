@@ -1126,7 +1126,7 @@ function get_luther_publication()
 				'hide_on_item' => true
 			),
 			'main_post'=>'publication',		
-			'sidebar'=>'luther_image_sidebar',
+			'sidebar_2'=>'luther_image_sidebar',
 		);
 	}
 
