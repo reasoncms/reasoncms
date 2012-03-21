@@ -177,6 +177,10 @@ class JensonMedalModule extends DefaultMinisiteModule {
 				
 				$query = "SELECT * FROM nominees";
 				$results = db_query($query);
+				$names = array();
+				while ($row = mysql_fetch_array($results)) {
+						$names[$row['username']] = $row['first_name'] . ' ' . $row['last_name'];
+				}
 				$total =  mysql_num_rows($results);
 				$percent = $voters / $total * 100;
 				echo '<p>' . round($percent) . '% have voted (' . $voters . '/' . $total . ')</p>';
@@ -227,7 +231,7 @@ class JensonMedalModule extends DefaultMinisiteModule {
 				$str .= '<tbody>';
 				foreach ($tallied_votes as $k => $v) {
 						$str .= '<tr class="">';
-						$str .= '<td id="username">' . $k . '</td>';
+						$str .= '<td id="username">' . $names[$k] . '</td>';
 						$str .= '<td id="tallied">' . $v['tallied'] . '</td>';
 						$str .= '<td id="first_place">' . (isset($v['first']) ? $v['first'] : '') . '</td>';
 						$str .= '<td id="second_place">' . (isset($v['second']) ? $v['second'] : '') . '</td>';
