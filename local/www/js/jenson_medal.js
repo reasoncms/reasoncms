@@ -25,5 +25,5 @@ $(document).ready(function() {
             $('#third_choice_usernameElement').val(ui.item.id);
         }
     });
-
+    
 });
