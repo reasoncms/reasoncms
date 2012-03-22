@@ -46,5 +46,10 @@
 			
 			$this->end_table();
 		} // }}}
+		function show_item_url( $field , $value ) // {{{
+		{
+			$value = '<a href="'.reason_htmlspecialchars($value).'">'.$value.'</a>';
+			$this->show_item_default( $field , $value );
+		} // }}}
 	}
 ?>
