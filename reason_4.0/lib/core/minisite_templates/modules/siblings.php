@@ -18,6 +18,17 @@
 	class SiblingModule extends DefaultMinisiteModule
 	{
 		var $siblings = array();
+		var $acceptable_params = array(
+										'use_parent_title_as_header' => false,
+										'provide_images' => false,
+										'randomize_images' => false,
+										'show_only_pages_in_nav' => false,
+										'show_external_links' => true,
+										'thumbnail_width' => 0,
+										'thumbnail_height' => 0,
+										'thumbnail_crop' => '',
+									);
+		protected $parent_page;
 		function init ( $args = array() )	 // {{{
 		{
 			parent::init( $args );
@@ -37,10 +48,22 @@
 						{
 							if($sibling_id != $root_id)
 							{
-								$this->siblings[$sibling_id] = new entity($sibling_id);
+								$page = new entity($sibling_id);
+								
+								if($this->params['show_only_pages_in_nav'] && $page->get_value('nav_display') != 'Yes')
+								{
+									continue;
+								}
+								if(isset($this->params['show_external_links']) && !$this->params['show_external_links'] && $page->get_value('url'))
+								{
+									continue;
+								}
+								
+								$this->siblings[$sibling_id] = $page;
 							}
 						}
 					}
+					$this->parent_page = new entity($parent_id);
 				}
 			}
 			
@@ -56,15 +79,40 @@
 		} // }}}
 		function run() // {{{
 		{
-			echo '<ul class="siblingList">'."\n";
+			$class = 'siblingList';
+			if($this->params['provide_images'])
+				$class .= ' siblingListWithImages';
+			
+			echo '<div class="siblingsModule">'."\n";
+
+			if($this->params['use_parent_title_as_header'])
+			{
+				echo '<h3>'.$this->parent_page->get_value('name').'</h3>'."\n";
+			}
+			echo '<ul class="'.$class.'">'."\n";
+			$counter = 1;
+			$even_odd = 'odd';
 
 			foreach ( $this->siblings AS $sibling )
 			{
-
+				
+				$uname = '';
+				if($sibling->get_value( 'unique_name' ))
+				{
+					$uname = ' uname-'.reason_htmlspecialchars($sibling->get_value( 'unique_name' ));
+				}
 				/* If the page has a link name, use that; otherwise, use its name */
 				$page_name = $sibling->get_value( 'link_name' ) ? $sibling->get_value( 'link_name' ) : $sibling->get_value('name');
 				
-				if ( $this->parent->cur_page->id() != $sibling->id() )
+				$image_html = '';
+				
+				$is_current_page = false;
+				if ( $this->parent->cur_page->id() == $sibling->id() )
+					$is_current_page = true;
+				
+				$link = '';
+				
+				if(!$is_current_page)
 				{
 					/* Check for a url (that is, the page is an external link); otherwise, use its relative address */
 					if( $sibling->get_value( 'url' ) )
@@ -78,16 +126,94 @@
 						//$base_url = $this->parent->site_info[ 'base_url' ];
 						//$link = '/'.$base_url.$this->get_nice_url( $child->id() ).'/';
 					}
-						
-					echo '<li><a href="'.$link.'">'.$page_name.'</a>';
+				}
+				
+				if($this->params['provide_images'])
+				{
+					$image = $this->get_page_image($sibling->id());
+					
+					if(!empty($image))
+					{
+						if($this->params['thumbnail_width'] != 0 or $this->params['thumbnail_height'] != 0)
+						{
+							$rsi = new reasonSizedImage();
+							if(!empty($rsi))
+							{
+								$rsi->set_id($image->id());
+								if($this->params['thumbnail_width'] != 0)
+								{
+									$rsi->set_width($this->params['thumbnail_width']);
+								}
+								if($this->params['thumbnail_height'] != 0)
+								{
+									$rsi->set_height($this->params['thumbnail_height']);
+								}
+								if($this->params['thumbnail_crop'] != '')
+								{
+									$rsi->set_crop_style($this->params['thumbnail_crop']);
+								}
+								$image_html = get_show_image_html($rsi, true, false, false, '' , '', false, $link);
+							}
+						}
+						else
+						{
+							$image_html = get_show_image_html( $image->id(), true, false, false, '' , '', false, $link );
+						}
+					}
+				}
+				
+				if ( !$is_current_page )
+				{
+					echo '<li class="number'.$counter.' '.$even_odd.$uname.'">';
+					echo $image_html;
+					echo '<a href="'.$link.'">'.$page_name.'</a>';
 					/* if ( $sibling->get_value( 'description' ))
 						echo "\n".'<div class="smallText">'.$sibling->get_value( 'description' ).'</div>'; */
 					echo "</li>\n";
 				}
-				else echo '<li><strong>'.$page_name.'</strong></li>'."\n";
+				else
+				{
+					echo '<li class="number'.$counter.' '.$even_odd.$uname.' currentPage">';
+					echo $image_html;
+					echo '<strong>'.$page_name.'</strong>';
+					echo '</li>'."\n";
+				}
+				
+				$counter++;
+				
+				if($even_odd == 'even')
+					$even_odd = 'odd';
+				else
+					$even_odd = 'even';
 			}
 			echo '</ul>'."\n";
+			
+			echo '</div>'."\n";
 		} // }}}
+		/**
+		 * Get the image for a given page
+		 */
+		function get_page_image($page_id)
+		{
+			$es = new entity_selector();
+			$es->set_env( 'site' , $this->site_id );
+			$es->add_type(id_of('image'));
+			$es->add_right_relationship($page_id, relationship_id_of('minisite_page_to_image'));
+			$es->set_num(1);
+			$es->limit_tables();
+			$es->limit_fields();
+			if($this->params['randomize_images'])
+				$es->set_order('rand()');
+			else
+				$es->set_order('relationship.rel_sort_order ASC');
+			$images = $es->run_one();
+			//echo $es->get_one_query();
+			if(!empty($images))
+			{
+				return current($images);
+			}
+			return false;
+		}
 	}
 
 ?>
