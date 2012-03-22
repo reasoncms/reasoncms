@@ -1581,6 +1581,88 @@
 		'show_siblings' => array(
 			'main_post' => 'siblings',
 		),
+		'show_siblings_hide_non_nav' => array(
+			'main_post' => array(
+				'module'=>'siblings',
+				'show_only_pages_in_nav' => true,
+			),
+		),
+		'show_siblings_hide_external_links' => array(
+			'main_post' => array(
+				'module'=>'siblings',
+				'show_external_links' => false,
+			),
+		),
+		'show_siblings_with_parent_title' => array(
+			'main_post' => array(
+				'module' => 'siblings',
+				'use_parent_title_as_header' => true,
+			),
+		),
+		'show_siblings_with_first_images' => array(
+			'main_post' => array(
+				'module'=>'siblings',
+				'provide_images' => true,
+			),
+		),
+		'show_siblings_with_first_images_100x100' => array(
+			'main_post' => array(
+				'module'=>'siblings',
+				'provide_images' => true,
+				'thumbnail_height' => 100,
+				'thumbnail_width' => 100,
+			),
+		),
+		'show_siblings_with_first_images_150x150' => array(
+			'main_post' => array(
+				'module'=>'siblings',
+				'provide_images' => true,
+				'thumbnail_height' => 150,
+				'thumbnail_width' => 150,
+			),
+		),
+		'show_siblings_with_first_images_200x200' => array(
+			'main_post' => array(
+				'module'=>'siblings',
+				'provide_images' => true,
+				'thumbnail_height' => 200,
+				'thumbnail_width' => 200,
+			),
+		),
+		'show_siblings_with_random_images' => array(
+			'main_post' => array(
+				'module'=>'siblings',
+				'provide_images' => true,
+				'randomize_images' => true,
+			),
+		),
+		'show_siblings_with_random_images_100x100' => array(
+			'main_post' => array(
+				'module'=>'siblings',
+				'provide_images' => true,
+				'randomize_images' => true,
+				'thumbnail_height' => 100,
+				'thumbnail_width' => 100,
+			),
+		),
+		'show_siblings_with_random_images_150x150' => array(
+			'main_post' => array(
+				'module'=>'siblings',
+				'provide_images' => true,
+				'randomize_images' => true,
+				'thumbnail_height' => 150,
+				'thumbnail_width' => 150,
+			),
+		),
+		'show_siblings_with_random_images_200x200' => array(
+			'main_post' => array(
+				'module'=>'siblings',
+				'provide_images' => true,
+				'randomize_images' => true,
+				'thumbnail_height' => 200,
+				'thumbnail_width' => 200,
+			),
+		),
 		'siblings_no_nav' => array(
 			'navigation' => '',
 			'sub_nav_2' => '',
