@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    $("#directory").tablesorter();
+    
     $("#first_nameElement").focus();
     hide_all();
     input_error_check("#departElement");
