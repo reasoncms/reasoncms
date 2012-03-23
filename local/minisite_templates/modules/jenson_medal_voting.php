@@ -31,8 +31,8 @@ class JensonMedalModule extends DefaultMinisiteModule {
 				parent::init( $args );
 				if ($head_items =& $this->get_head_items()) {
 						$head_items->add_stylesheet('/reason/jquery-ui-1.8.12.custom/css/redmond/jquery-ui-1.8.12.custom.css');
+						$head_items->add_javascript('/jquery/jquery_ui_latest.js');
 						$head_items->add_javascript('/reason/js/jenson_medal.js');
-//						$head_items->add_javascript('/reason/highcharts/js/highcharts.js');
 				}
 
 				$this->form = new disco();
@@ -121,7 +121,7 @@ class JensonMedalModule extends DefaultMinisiteModule {
 				}
 				echo "<a href='/login/?logout=1'>Logout</a>";
 				
-				if ($this->logged_user == 'smitst01' || $this->logged_user == 'einckmic'){
+				if ($this->logged_user == 'smitst01' || $this->logged_user == 'einckmic' || $this->logged_user == 'jonebr01'){
 						self::display_results();
 				}
 		}
@@ -221,7 +221,6 @@ class JensonMedalModule extends DefaultMinisiteModule {
 				$str .= '<thead>';
                 $str .= '<tr>';
 				$str .= '<th>Username</th>';
-//				$str .= '<th class="{sorter: \'Username\'}">';   
 				$str .= '<th>Tallied Votes</th>';
 				$str .= '<th>1st Place Votes</th>';
 				$str .= '<th>2nd Place Votes</th>';
@@ -231,11 +230,11 @@ class JensonMedalModule extends DefaultMinisiteModule {
 				$str .= '<tbody>';
 				foreach ($tallied_votes as $k => $v) {
 						$str .= '<tr class="">';
-						$str .= '<td id="username">' . $names[$k] . '</td>';
-						$str .= '<td id="tallied">' . $v['tallied'] . '</td>';
-						$str .= '<td id="first_place">' . (isset($v['first']) ? $v['first'] : '') . '</td>';
-						$str .= '<td id="second_place">' . (isset($v['second']) ? $v['second'] : '') . '</td>';
-						$str .= '<td id="third_place">' . (isset($v['third']) ? $v['third'] : '') . '</td>';
+						$str .= '<td class="username">' . $names[$k] . '</td>';
+						$str .= '<td class="tallied">' . $v['tallied'] . '</td>';
+						$str .= '<td class="first_place">' . (isset($v['first']) ? $v['first'] : '') . '</td>';
+						$str .= '<td class="second_place">' . (isset($v['second']) ? $v['second'] : '') . '</td>';
+						$str .= '<td class="third_place">' . (isset($v['third']) ? $v['third'] : '') . '</td>';
 				}
 				$str .= '</tbody>';
 				$str .= '</table>';
