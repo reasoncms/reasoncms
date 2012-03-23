@@ -1,6 +1,8 @@
 $(document).ready(function() {
 
-    $.noConflict();
+//    $.noConflict();
+    $("#votes").tablesorter();
+    
     //autocomplete first choice name
     $('#first_choiceElement').autocomplete({
         source: "/reason/autocomplete/jenson_medal.php",
