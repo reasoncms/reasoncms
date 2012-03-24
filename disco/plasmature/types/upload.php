@@ -859,6 +859,23 @@ class image_uploadType extends uploadType
 			$replace_text = "Upload a different image:";
 		return parent::_get_upload_display($current, $add_text, $replace_text);
 	}
+	
+	/**
+	 * Gets information on the current file.
+	 * The "current file" can be an existing file or the file uploaded in the
+	 * current form session.
+	 * @access protected
+	 * @return object path, name, size of the current file, and the path of the original file if the file is downsized
+	 */
+	function _get_current_file_info()
+	{
+		$info = parent::_get_current_file_info();
+		
+		if(isset($this->original_path))
+			$info->original_path = $this->original_path;
+		
+		return $info;
+	}
 }
 
 /**
