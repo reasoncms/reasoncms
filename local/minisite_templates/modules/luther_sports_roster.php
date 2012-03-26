@@ -459,16 +459,16 @@
 				$str .= '</tbody></table>';
 				if ($show_letter && $show_captain)
 				{
-					$str .= '<p>&#x25b5;&nbspletter winner<br/>';
-					$str .= '&#x25a1;&nbspcaptain</p>';
+					$str .= '<p>&#x25b5;&nbsp;letter winner<br/>';
+					$str .= '&#x25a1;&nbsp;captain</p>';
 				}
 				else if ($show_letter)
 				{
-					$str .= '<p>&#x25b5;&nbspletter winner</p>';
+					$str .= '<p>&#x25b5;&nbsp;letter winner</p>';
 				}
 				else if ($show_captain)
 				{
-					$str .= '<p>&#x25a1;&nbspcaptain</p>';
+					$str .= '<p>&#x25a1;&nbsp;captain</p>';
 				}
 
 			echo $str . $ct;
