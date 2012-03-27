@@ -313,17 +313,17 @@
 		}
 		function send_internal_error()
 		{
-			header('HTTP/1.0 500 Internal Server Error');
+			http_response_code(500);
 			echo $this->get_error_rss('Internal Server Error');
 		}
 		function send_not_found()
 		{
-			header('HTTP/1.0 404 Not Found');
+			http_response_code(404);
 			echo $this->get_error_rss('Not Found');
 		}
 		function send_gone()
 		{
-			header('HTTP/1.1 410 Gone');
+			http_response_code(410);
 			echo $this->get_error_rss('Gone');
 		}
 		function get_error_rss($text)
