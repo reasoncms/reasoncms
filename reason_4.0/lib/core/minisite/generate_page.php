@@ -31,7 +31,7 @@ $request_uri = get_current_url();
 $parts = parse_url($request_uri);
 if( substr($parts['path'],-4) == ".php" )
 {
-	header('HTTP/1.0 403 Forbidden');
+	http_response_code(403);
 	if(file_exists(WEB_PATH.ERROR_403_PATH) && is_readable(WEB_PATH.ERROR_403_PATH))
 	{
 		include(WEB_PATH.ERROR_403_PATH);
@@ -121,6 +121,11 @@ function get_validated_site($site_id, $page_id)
 	if ($site->get_value('type') != id_of('site'))
 	{
 		trigger_error('generate_page called with a page whose owner with id ' . $actual_site_id . ' is not an entity of type site', FATAL);
+		die;
+	}
+	if (($site->get_value('state') != 'Live'))
+	{
+		trigger_error('generate_page called with site_id ' . $site_id . ', which has the state "'.$site->get_value('state').'".', FATAL);
 		die;
 	}
 	$validated[$site_id][$page_id] = $site;
