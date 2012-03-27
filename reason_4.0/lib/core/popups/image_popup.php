@@ -32,7 +32,7 @@
 	}
 	if( empty($id ) OR !$image->get_values() OR ($image->get_value( 'type' ) != id_of( 'image' )) OR ($image->get_value('state') != 'Live' ) )
 	{
-		header('HTTP/1.0 404 Not Found');
+		http_response_code(404);
 		$title = 'No image found';
 		if(!empty($_SERVER['HTTP_REFERER']) && !empty($id) ) // only trigger an error if there is a referer (e.g. we can do something about it)
 		{
