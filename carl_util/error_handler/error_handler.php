@@ -357,13 +357,18 @@ if (defined('MAINTENANCE_MODE_ON') && MAINTENANCE_MODE_ON === true) {
 }
 
 /** @access private */
-function _carl_util_send_error_status($status="500 Internal Server Error")
+function _carl_util_send_error_status($status=500)
 {
 	if (!headers_sent()) {
-		$proto = (!empty($_SERVER['SERVER_PROTOCOL']))
-			? $_SERVER['SERVER_PROTOCOL']
-			: 'HTTP/1.0';
-		header("$proto $status");
+		if(function_exists('http_response_code'))
+			http_response_code($status);
+		else
+		{
+			$proto = (!empty($_SERVER['SERVER_PROTOCOL']))
+				? $_SERVER['SERVER_PROTOCOL']
+				: 'HTTP/1.0';
+			header("$proto $status");
+		}
 	}
 }
 
