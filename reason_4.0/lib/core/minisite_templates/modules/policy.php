@@ -59,17 +59,20 @@
 		} // }}}
 		function show_item( &$item , $options = false) // {{{
 		{
-			$policy_name = $item->get_value('name');
-			echo '<a name="'.$item->id().'" id="'.$item->id().'"></a>';
-			if ( !in_array( $item->id(), $this->root_node() ) )
+			if(!empty($item))
 			{
-				echo '<li class="'.$this->li_class.'">'."\n";
-				$header_type = "h4";
+				$policy_name = $item->get_value('name');
+				echo '<a name="'.$item->id().'" id="'.$item->id().'"></a>';
+				if ( !in_array( $item->id(), $this->root_node() ) )
+				{
+					echo '<li class="'.$this->li_class.'">'."\n";
+					$header_type = "h4";
+				}
+				else $header_type = "h3";
+				echo "<" . $header_type . " class='policyName'>" . 	$policy_name . "</" . $header_type . ">\n";
+				echo '<div class="policyContent">'.$item->get_value( 'content' ) . '</div>';
+				if ( !in_array( $item->id(), $this->root_node() ) ) echo '</li>';
 			}
-			else $header_type = "h3";
-			echo "<" . $header_type . " class='policyName'>" . $policy_name . "</" . $header_type . ">\n";
-			echo '<div class="policyContent">'.$item->get_value( 'content' ) . '</div>';
-			if ( !in_array( $item->id(), $this->root_node() ) ) echo '</li>';
 		} //  }}}
 		function make_tree( &$item , &$root , $depth, $counter = 0 ) // {{{
 		{
@@ -165,6 +168,11 @@
 					$this->policy = NULL;
 				}
 			}
+			
+			if( !empty( $this->request[ 'policy_id' ] ) && empty($this->policy))
+			{
+				http_response_code(404);
+			}
 		} // }}}
 		function run() // {{{
 		{
@@ -238,7 +246,6 @@
 				}
 				else
 				{
-					header('HTTP/1.0 404 Not Found');
 					echo '<h3>Policy not found</h3>'."\n";
 					echo '<p>This policy is not available.  It is possible that it has been removed from the site.</p>'."\n";
 					echo '<p>Please contact the maintainer of this site if you have any questions.</p>'."\n";
