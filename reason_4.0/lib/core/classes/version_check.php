@@ -33,7 +33,7 @@ include_once(CARL_UTIL_INC.'basic/url_funcs.php');
  * $version = isset($_GET['version']) ? $_GET['version'] : '';
  * $vc = new reasonVersionCheck;
  * $resp = $vc->get_version_response($version);
- * header($resp['header']);
+ * http_response_code($resp['status']);
  * echo $resp['content'];
  * </code>
  *
@@ -159,12 +159,12 @@ class reasonVersionCheck
 	
 		if(empty($version))
 		{
-			return array('code'=>'no_version_provided','message'=>'No version provided','url'=>'','status'=>'HTTP/1.0 404 Not Found');
+			return array('code'=>'no_version_provided','message'=>'No version provided','url'=>'','status'=>404);
 		}
 		
 		if(!isset($versions[$version]))
 		{
-			return array('code'=>'version_not_recognized','message'=>'The version "'.$version.'" is not recognized','url'=>'','status'=>'HTTP/1.0 404 Not Found');
+			return array('code'=>'version_not_recognized','message'=>'The version "'.$version.'" is not recognized','url'=>'','status'=>404);
 		}
 		
 		$current = array_search('current',$versions);
@@ -175,17 +175,17 @@ class reasonVersionCheck
 		switch($versions[$version])
 		{
 			case 'old':
-				return array('code'=>'version_out_of_date','message'=>'You are running an out-of-date version of Reason ('.$version.'). Please update it to the latest stable version ('.$current.').','url'=>'http://apps.carleton.edu/opensource/reason/download/','status'=>'HTTP/1.0 200 OK');
+				return array('code'=>'version_out_of_date','message'=>'You are running an out-of-date version of Reason ('.$version.'). Please update it to the latest stable version ('.$current.').','url'=>'http://apps.carleton.edu/opensource/reason/download/','status'=>200);
 				break;
 			case 'current':
-				return array('code'=>'version_up_to_date','message'=>'Your version of Reason is up to date.','url'=>'','status'=>'HTTP/1.0 200 OK');
+				return array('code'=>'version_up_to_date','message'=>'Your version of Reason is up to date.','url'=>'','status'=>200);
 				break;
 			case 'bleeding':
-				return array('code'=>'version_up_to_date','message'=>'Your version of Reason is up to date. Note that you are running a bleeding-edge version ('.$version.'), which may not be as stable as the latest release ('.$current.').','url'=>'','status'=>'HTTP/1.0 200 OK');
+				return array('code'=>'version_up_to_date','message'=>'Your version of Reason is up to date. Note that you are running a bleeding-edge version ('.$version.'), which may not be as stable as the latest release ('.$current.').','url'=>'','status'=>200);
 				break;
 			default:
 				trigger_error('An unexpected version state was encountered: '.$versions[$version]);
-				return array('code'=>'internal_error','message'=>'Sorry, we encountered an internal error in the Reason version checker. (Version given: '.$version.')','url'=>'','status'=>'HTTP/1.0 500 Internal Server Error');
+				return array('code'=>'internal_error','message'=>'Sorry, we encountered an internal error in the Reason version checker. (Version given: '.$version.')','url'=>'','status'=>500);
 		}
 		
 	}
@@ -193,13 +193,13 @@ class reasonVersionCheck
 	/**
 	 * Build the response for a given version
 	 * @param string $version
-	 * @return array Format: array('content'=>'HTTP content','header'=>'HTTP/1.0 123 Some Status')
+	 * @return array Format: array('content'=>'HTTP content','status'=>200)
 	 */
 	function get_version_response($version)
 	{
 		$resp = $this->_get_version_response_array($version);
 
-		return array('content'=>$resp['code']."\n".$resp['message']."\n".$resp['url'], 'header'=>$resp['status']);
+		return array('content'=>$resp['code']."\n".$resp['message']."\n".$resp['url'], 'status'=>$resp['status']);
 	}
 }
 
