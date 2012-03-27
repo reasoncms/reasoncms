@@ -21,27 +21,11 @@ reason_require_once('function_libraries/user_functions.php');
 reason_require_once('function_libraries/upload.php');
 reason_require_once('function_libraries/reason_session.php');
 
-function response_code($code, $description) {
-	$proto = (!empty($_SERVER['SERVER_PROTOCOL']))
-		? $_SERVER['SERVER_PROTOCOL']
-		: 'HTTP/1.0';
-	header("$proto $code $description");
+function response_code($code) {
+	http_response_code($code);
 }
 
 function final_response($code, $message) {
-	static $code_descriptions = array(
-		200 => "OK",
-		202 => "Accepted",
-		400 => "Bad Request",
-		403 => "Forbidden",
-		404 => "Not Found",
-		405 => "Method Not Allowed",
-		406 => "Validation Failed", // XXX
-		413 => "Request Entity Too Large",
-		415 => "Unsupported Media Type",
-		500 => "Internal Server Error",
-		503 => "Service Unavailable"
-	);
 	
 	if (is_array($message) || is_object($message)) {
 		header('Content-Type: application/json');
@@ -50,7 +34,7 @@ function final_response($code, $message) {
 		header('Content-Type: text/plain');
 	}
 	
-	response_code($code, $code_descriptions[$code]);
+	response_code($code);
 	echo trim($message)."\n";
 	exit;
 }
