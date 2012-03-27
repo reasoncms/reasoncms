@@ -181,6 +181,6 @@ function check_URL_history( $request_uri )
 	}
 	
 	// if we have gotten this far and not found a URL lets send a 404
-	header( 'http/1.1 404 Not Found' ); // basic 404
+	http_response_code(404);
 }
 ?>
