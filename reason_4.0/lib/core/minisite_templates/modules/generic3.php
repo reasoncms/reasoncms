@@ -210,16 +210,7 @@
 					
 			if(empty($this->request['add_item']));
 			{
-				if($this->params['limit_to_current_site'])
-				{
-					$this->es = new entity_selector( $this->site_id );
-				}
-				else
-				{
-					$this->es = new entity_selector();
-				}
-				$this->es->add_type( $this->type );
-				$this->es->set_env('site_id',$this->site_id);
+				$this->es = $this->_create_primary_entity_selector();
 				$this->alter_es();
 				
 				// We want to "archive" a version of the entity selector
@@ -333,9 +324,28 @@
 						$this->module_title = $this->link_target_page->get_value('name');
 					}
 				}
+				if(!empty( $this->current_item_id ))
+				{
+					$this->check_id( $this->current_item_id );
+				}
 				$this->post_es_additional_init_actions();
 			}
 		} // }}}
+		
+		function _create_primary_entity_selector()
+		{
+			if($this->params['limit_to_current_site'])
+			{
+				$es = new entity_selector( $this->site_id );
+			}
+			else
+			{
+				$es = new entity_selector();
+			}
+			$es->add_type( $this->type );
+			$es->set_env('site_id',$this->site_id);
+			return $es;
+		}
 
 		function alter_items(&$items)
 		{
@@ -522,6 +532,10 @@
 		 */
 		function check_id( $id )
 		{
+			// assume that if it's in the list it's OK
+			if(!empty($this->items[$id]))
+				return $this->items[$id];
+			
 			$e = new entity ( $id );
 			if(in_array($id,$this->ok_ids))
 			{
@@ -550,7 +564,7 @@
 			else
 			{
 				$this->not_ok_ids[] = $id;
-				header('HTTP/1.0 404 Not Found');
+				http_response_code(404);
 				// 404s, even internal ones, don't need to go into the error log ... commenting this out to reduce error log spam.
 				//if(!empty($_SERVER['HTTP_REFERER']))
 				//{
@@ -807,6 +821,11 @@
 		//Called on by init()
 		function do_filtering()
 		{
+			$this->do_filters_rels();
+			$this->do_filters_search();
+		}
+		function do_filters_rels()
+		{
 			if(!empty($this->request['filters']))
 			{
 				$this->filters = $this->request['filters'];
@@ -832,7 +851,7 @@
 						}
 						if($r_id)
 						{
-							$this->es->add_left_relationship( $filter['id'] , relationship_id_of($this->filter_types[$filter['type']]['relationship']) );
+							$this->_add_filter_rel_to_es($filter['id'],$r_id,$this->es);
 						}
 						else
 						{
@@ -849,6 +868,14 @@
 					}
 				}
 			}
+		}
+		
+		function _add_filter_rel_to_es($item_id,$relationship_id,$es)
+		{
+			$es->add_left_relationship( $item_id,  $relationship_id);
+		}
+		function do_filters_search()
+		{
 			if(!empty($this->request['search']))
 			{
 				$search_term = $this->request['search'];
@@ -1254,6 +1281,19 @@
 			else
 				return false;
 		}
+		
+		/**
+		 * Get the next item as an entity
+		 */
+		function get_next_item($item_id)
+		{
+			$ret = false;
+			if ($next_id = $this->get_next_item_id($item_id))
+			{
+				$ret = (isset($this->items[$next_id])) ? $this->items[$next_id] : new entity($next_id);
+			}
+			return $ret;
+		}
 
 		/**
 		*  Gets the id of the previous item after the given id
@@ -1265,6 +1305,20 @@
 			else
 				return false;
 		}
+		
+		/**
+		 * Get the previous item as an entity
+		 */
+		function get_previous_item($item_id)
+		{
+			$ret = false;
+			if ($prev_id = $this->get_previous_item_id($item_id))
+			{
+				$ret = (isset($this->items[$prev_id])) ? $this->items[$prev_id] : new entity($prev_id);
+			}
+			return $ret;
+		}
+		
 		
 		/**
 		*  Takes an id and returns what page it would appear on
