@@ -31,7 +31,8 @@ class JobsModule extends DefaultMinisiteModule
 		$this->job_type = new entity( id_of( 'job' ) );
 		$this->job_type_id = $this->job_type->id();
 		$this->init_list();
-			
+		if(!empty($this->request['job_id']) && empty($this->jobs[ $this->request['job_id'] ]))
+			http_response_code(404);
 	} // }}}
 	function run()
 	{
@@ -114,7 +115,6 @@ class JobsModule extends DefaultMinisiteModule
 	}
 	function show_job_error() // {{{
 	{
-		header('HTTP/1.0 404 Not Found');
 		echo '<p>We\'re sorry, the job requested is not currently available. This may be due to incorrectly typing in the URL; if you believe this is a bug, please report it to the contact person listed at the bottom of the page.</p>'."\n";
 	} // }}}
 	function show_feed_link()
