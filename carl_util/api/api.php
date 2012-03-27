@@ -1,5 +1,6 @@
 <?php
 include_once('paths.php');
+include_once(CARL_UTIL_INC.'basic/misc.php');
 
 /**
  * Base class for API functionality
@@ -216,7 +217,7 @@ class CarlUtilAPI
 		}
 		elseif (!$content && $content_type && $content_type_header && $content_type_supported) // we have a header and supported type but no content - 404
 		{
-			header('HTTP/1.0 404 Not Found');
+			http_response_code(404);
 			header('Content-type: ' . $content_type_header);
 			switch ($this->get_content_type())
 			{
@@ -234,15 +235,15 @@ class CarlUtilAPI
 		}
 		elseif ($content_type && !$content_type_supported) // this request is invalid - no content type set
 		{
-			header('HTTP/1.0 501 Not Implemented');
+			http_response_code(400);
 			header('Content-type: text/html');
-			echo '<html><body><h1>501</h1><p>The Content Type Requested is Not Supported</p></body></html>';
+			echo '<html><body><h1>400</h1><p>The Content Type Requested is Not Supported</p></body></html>';
 		}
 		elseif (!$content_type) // this request is invalid - no content type set
 		{
-			header('HTTP/1.0 500 Internal Server Error');
+			http_response_code(400);
 			header('Content-type: text/html');
-			echo '<html><body><h1>500</h1><p>No Content Type</p></body></html>';
+			echo '<html><body><h1>400</h1><p>No Content Type</p></body></html>';
 		}
 	}
 }
