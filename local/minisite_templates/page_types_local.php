@@ -895,7 +895,7 @@ function admissions_main_navigation()
 	echo '<li><a href="/admissions/lifeafterluther/major/">Choosing a Major</a></li>'."\n";
 	echo '<li><a href="/admissions/lifeafterluther/internships/">Internships</a></li>'."\n";
 	echo '<li><a href="/admissions/lifeafterluther/jobs/">Jobs, Graduate School, & Volunteering</a></li>'."\n";
-	echo '<li><a href="/admissions/lifeafterluther/outcomes/">Outcomes&mdash;Class of 2010</a></li>'."\n";
+	echo '<li><a href="/admissions/lifeafterluther/outcomes/">Outcomes&mdash;Class of 2011</a></li>'."\n";
 	echo '<li><a href="/admissions/lifeafterluther/reports/">Reports by Class</a></li>'."\n";
 	echo '</ul></li>'."\n";
 	echo '<li class="financialAid"><a href="/financialaid/">Financial Aid</a>'."\n";
