@@ -29,7 +29,7 @@ $request_uri = get_current_url();
 $parts = parse_url($request_uri);
 if( substr($parts['path'],-4) == '.php' )
 {
-	header('HTTP/1.1 403 Permission denied');
+	http_response_code(403);
 	echo '<html>'."\n";
 	echo '<head><title>Permission Denied</title></head>'."\n";
 	echo '<body>'."\n";
@@ -58,11 +58,12 @@ if (is_object($e))
 }
 if (isset($url))
 {
-	header('HTTP/1.1 301 Moved Permanently');
+	http_response_code(301);
 	header('Location: http://' . $url);
 }
 else
 {
+	http_response_code(403);
 	include(ERROR_403_PAGE);
 	die();
 }
