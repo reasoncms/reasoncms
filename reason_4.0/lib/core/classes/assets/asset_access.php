@@ -100,7 +100,7 @@ class ReasonAssetAccess
 		}
 		elseif ($this->asset->get_value('state') == 'Deleted')
 		{
-			//header('HTTP/1.0 404 Not Found');
+			http_response_code(404);
 			if(defined('ERROR_404_PATH') && file_exists(WEB_PATH.ERROR_404_PATH) && is_readable(WEB_PATH.ERROR_404_PATH))
 			{
 				include(WEB_PATH.ERROR_404_PATH);
@@ -120,7 +120,7 @@ class ReasonAssetAccess
 		}
 		else
 		{
-			header('HTTP/1.0 403 Forbidden');
+			http_response_code(403);
 			if(defined('ERROR_403_PATH') && file_exists(WEB_PATH.ERROR_403_PATH) && is_readable(WEB_PATH.ERROR_403_PATH))
 			{
 				include(WEB_PATH.ERROR_403_PATH);
@@ -158,6 +158,7 @@ class ReasonAssetAccess
 			return true;
 		}
 		
+		
 		$group = current($groups);
 		$gh = new group_helper();
 		$gh->set_group_by_entity($group);
@@ -165,6 +166,8 @@ class ReasonAssetAccess
 		$access = ($gh->is_username_member_of_group("")) // test if anonymous access is allowed
 		          ? true // if so return true
 		          : $gh->is_username_member_of_group( $this->get_username()); // else discover and check username
+		
+		
 		
 		if($access === NULL) // unknown due to non-logged-in-user
 		{
