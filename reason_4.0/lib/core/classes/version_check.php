@@ -151,7 +151,7 @@ class reasonVersionCheck
 	/**
 	 * Determine what data should be used in the response for a given version
 	 * @param string $version
-	 * @return array Format: array('code'=>'response_code','message'=>'Response message','url'=>'http://linktomoreinformation.com/','status'=>'HTTP/1.0 123 Some Status')
+	 * @return array Format: array('code'=>'response_code','message'=>'Response message','url'=>'http://linktomoreinformation.com/','status'=>200)
 	 */
 	function _get_version_response_array($version)
 	{
