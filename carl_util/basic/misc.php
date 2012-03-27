@@ -196,6 +196,64 @@ if(!function_exists('htmlspecialchars_decode'))
 		return $size;
 	}
 	
+	/**
+	 * Provides a nice, human-readable version of a duration given in seconds
+	 *
+	 * takes duration as 67.67s and returns 1 minute 18 seconds
+	 * this is apparently the standard(?) format for the exif duration field
+	 *
+	 * Note that this does not work for negative time; convert inputs to positive values before using this function.
+	 *
+	 * @param $duration seconds
+	 */
+	function format_seconds_as_human_readable($duration, $format = 'words')
+	{
+		// allow trailing "s" as this is a common format in exif
+		$duration = trim($duration);
+		$duration = str_replace('s','',$duration);
+		$seconds = round($duration);
+		
+		$days = floor($seconds/60/60/24);
+		$hours = $seconds/60/60%24;
+		$mins = $seconds/60%60;
+		$secs = $seconds%60;
+		
+		$ret_array = array();
+		
+		$letter_format = 'letters' == $format ? true : false;
+		
+		if(!empty($days))
+		{
+			if($letter_format) $word = 'd';
+			elseif($days == 1) $word = ' day';
+			else $word = ' days';
+			$ret_array[] = $days.$word;
+		}
+		if(!empty($hours))
+		{
+			if($letter_format) $word = 'h';
+			elseif($hours == 1) $word = ' hour';
+			else $word = ' hours';
+			$ret_array[] = $hours.$word;
+		}
+		if(!empty($mins))
+		{
+			if($letter_format) $word = 'm';
+			elseif($mins == 1) $word = ' minute';
+			else $word = ' minutes';
+			$ret_array[] = $mins.$word;
+		}
+		if(!empty($secs) || $duration < 1)
+		{
+			if(!empty($duration) && $duration < 1) $ret_array[] = $letter_format ? '&lt;1s' : 'less than 1 second';
+			elseif($letter_format) $ret_array[] = $secs.'s';
+			elseif($secs == 1) $ret_array[] = $secs.' second';
+			else $ret_array[] = $secs.' seconds';
+		}
+		
+		return implode(' ',$ret_array);
+	}
+	
 	function array_diff_assoc_recursive($array1, $array2)
 	{
 		foreach($array1 as $key => $value)
@@ -680,6 +738,104 @@ if(!function_exists('htmlspecialchars_decode'))
 			return basename($full_path, $suffix);
 		}
 	}
-
+	
+	if(!function_exists('http_response_code'))
+	{
+		function http_response_code()
+		{
+			static $code_cache;
+			if(!isset($code_cache))
+			{
+				if(isset($_SERVER['REDIRECT_STATUS']))
+					$code_cache = (integer) $_SERVER['REDIRECT_STATUS'];
+				else
+					$code_cache = 200;
+			}
+			$passed_code = (integer) @func_get_arg(0);
+			if(!empty($passed_code))
+			{
+				$message = get_message_for_http_status($passed_code);
+				if(empty($message))
+				{
+					trigger_error('Unrecognized http response code.');
+					return $code_cache;
+				}
+				header('HTTP/1.1 '.$passed_code.' '.$message);
+				$code_cache = $passed_code;
+			}
+			return $code_cache;
+		}
+	}
+	
+	function get_message_for_http_status($status_code)
+	{
+		$codes = array(
+			100 => 'Continue',
+			101 => 'Switching Protocols',
+			102 => 'Processing',
+			103 => 'Checkpoint',
+			200 => 'OK',
+			201 => 'Created',
+			202 => 'Accepted',
+			203 => 'Non-Authoritative Information',
+			204 => 'No Content',
+			205 => 'Reset Content',
+			206 => 'Partial Content',
+			207 => 'Multi-Status',
+			208 => 'Already Reported',
+			226 => 'IM Used',
+			300 => 'Multiple Choices',
+			301 => 'Moved Permanently',
+			302 => 'Found',
+			303 => 'See Other',
+			304 => 'Not Modified',
+			305 => 'Use Proxy',
+			307 => 'Temporary Redirect',
+			308 => 'Resume Incomplete',
+			400 => 'Bad Request',
+			401 => 'Unauthorized',
+			402 => 'Payment Required',
+			403 => 'Forbidden',
+			404 => 'Not Found',
+			405 => 'Method Not Allowed',
+			406 => 'Not Acceptable',
+			407 => 'Proxy Authentication Required',
+			408 => 'Request Timeout',
+			409 => 'Conflict',
+			410 => 'Gone',
+			411 => 'Length Required',
+			412 => 'Precondition Failed',
+			413 => 'Request Entity Too Large',
+			414 => 'Request URI Too Long',
+			415 => 'Unsupported Media Type',
+			416 => 'Requested Range Not Satisfiable',
+			417 => 'Expectation Failed',
+			418 => 'I\'m a teapot',
+			422 => 'Unprocessable Entity',
+			423 => 'Locked',
+			424 => 'Failed Dependency',
+			425 => 'Unordered Collection',
+			426 => 'Upgrade Required',
+			428 => 'Precondition Required',
+			429 => 'Too Many Requests',
+			431 => 'Request Header Fields Too Large',
+			500 => 'Internal Server Error',
+			501 => 'Not Implemented',
+			502 => 'Bad Gateway',
+			503 => 'Service Unavailable',
+			504 => 'Gateway Timeout',
+			505 => 'HTTP Version Not Supported',
+			506 => 'Variant Also Negotiates',
+			507 => 'Insufficient Storage',
+			508 => 'Loop Detected',
+			509 => 'Bandwidth Limit Exceeded',
+			510 => 'Not Extended',
+			511 => 'Network Authentication Required',
+		);
+		if(isset($codes[$status_code]))
+			return $codes[$status_code];
+		trigger_error('Unrecognized http response code.');
+		return false;
+	}
 }
 ?>
