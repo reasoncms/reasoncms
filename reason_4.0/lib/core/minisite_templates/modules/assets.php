@@ -204,7 +204,7 @@
 		 */
 		function _display_403_page()
 		{
-			header('HTTP/1.0 403 Forbidden');
+			http_response_code(403);
 			if(file_exists(WEB_PATH.ERROR_403_PATH) && is_readable(WEB_PATH.ERROR_403_PATH))
 			{
 				include(WEB_PATH.ERROR_403_PATH);
