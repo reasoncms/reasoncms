@@ -97,7 +97,7 @@ if(!empty($type_id))
 }
 else
 {
-	header('HTTP/1.1 400 Bad Request');
+	http_response_code(400);
 	echo '<html><head><title>Feed did not work</title><meta name="robots" content="none" /></head><body><h1>Feed did not work</h1><p>Use the form "?type_id=xx [ &site_id=yy ]"</p></body></html>';
 }
 
