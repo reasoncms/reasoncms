@@ -863,7 +863,7 @@ class TableAdmin
 				while($row = mysql_fetch_assoc($res))
 				{
 					if ($transforms) $af->transform_data($row);
-					$my_data[$row[$pk]] = $row;
+					if ($row) $my_data[$row[$pk]] = $row;
 				}
 				$this->_row = current($my_data);
 				$this->_total_rows = count($my_data);
@@ -1655,7 +1655,7 @@ class TableAdmin
 		}
 		
 		/**
-		 * Transforms the data passed into the function
+		 * Transforms the data passed into the function - set data_row to false to eliminate it from the presented set.
 		 */
 		function transform_data(&$data_row)
 		{
