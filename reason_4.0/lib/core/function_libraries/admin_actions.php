@@ -510,10 +510,22 @@
 			'entity_b' => turn_into_int($entity_b),
 			'type' => turn_into_int($relationship_type)
 		);
-		if (in_array(0, $rel) || in_array('', $rel)) 
-			trigger_error('relationship with zero value(s) created! create_relationship( '.$rel['entity_a'].', '.$rel['entity_b'].', '.$rel['type'].')');
-		if($more)
+		foreach($rel as $key=>$value)
+		{
+			if(empty($value) || $value < 0)
+			{
+				trigger_error('create_relationship(): $'.$key.' must be a positive integer. No relationship created');
+				return false;
+			}
+		}
+		if(is_array($more))
+		{
 			$rel = array_merge($rel,$more);
+		}
+		elseif($more !== false)
+		{
+			trigger_error('create_relationship(): $more must be an array to be used (is instead a(n) '.gettype($more).') Relationship will be created, but without additional attributes.');
+		}
 		
 		$duplicate = false;
 		if ($check_for_dup)
@@ -1041,5 +1053,199 @@
 			}
 		}
 		return (isset($orphan_ids)) ? $orphan_ids : array();
+	}
+	
+	/**
+	 * Move all the fields of one table into another table for a specific type
+	 *
+	 * This method is for denormalizing Reason tables. For example, a type may use a common table
+	 * like meta, datetime, or chunk. For performance reasons, it can be desirable to collapse
+	 * these tables into a single table just for that type. This method will do that.
+	 * 
+	 * @param integer $type The ID of the type whose fields we are moving
+	 * @param string $source_table The name of the table we are moving fields FROM
+	 * @param string $destination_table The name of the table we are moving fields TO
+	 * @param integer $user_id The Reason ID of the user who is doing this move
+	 * @return boolean Success
+	 *
+	 * @todo Add limit to ensure fields are only created that don't already exist
+	 * @todo Add limit to ensure the destination table is only used by that single type (Perhaps overridable?)
+	 */
+	function reason_move_table_fields($type, $source_table, $destination_table, $user_id)
+	{
+		if(empty($type))
+		{
+			trigger_error('No type provided in reason_move_table_fields()');
+			return false;
+		}
+		
+		if(empty($source_table))
+		{
+			trigger_error('No source table provided in reason_move_table_fields()');
+			return false;
+		}
+		
+		if(!is_string($source_table))
+		{
+			trigger_error('Source table provided not a string in reason_move_table_fields()');
+			return false;
+		}
+		
+		if(empty($destination_table))
+		{
+			trigger_error('No destination table provided in reason_move_table_fields()');
+			return false;
+		}
+		
+		if(!is_string($destination_table))
+		{
+			trigger_error('Destination table provided not a string in reason_move_table_fields()');
+			return false;
+		}
+		
+		if('entity' == $source_table || 'entity' == $destination_table)
+		{
+			trigger_error('reason_move_table_fields() cannot move fields into or out of the entity table.');
+			return false;
+		}
+		
+		if(is_object($type))
+		{
+			$type_id = $type->id();
+		}
+		elseif(is_numeric($type))
+		{
+			$type_id = (integer) $type;
+		}
+		else
+		{
+			$type_id = id_of($type);
+		}
+		
+		if(empty($type_id))
+		{
+			trigger_error('Invalid type specified in reason_move_table_fields().');
+			return false;
+		}
+		
+		if(empty($user_id))
+		{
+			trigger_error('No user id specified in reason_move_table_fields().');
+			return false;
+		}
+		$user = new entity($user_id);
+		if(!$user->get_values() || $user->get_value('type') != id_of('user'))
+		{
+			trigger_error('Invalid user ID specified in reason_move_table_fields().');
+			return false;
+		}
+		
+		// check for table existence
+		$es = new entity_selector();
+		$es->add_type(id_of('content_table'));
+		$es->add_relation('`name` = "'.addslashes($source_table).'"');
+		$source_table_result = $es->run_one();
+		if(empty($source_table_result))
+		{
+			trigger_error('Source table "'.$source_table.'" does not exist in reason_move_table_fields()');
+			return false;
+		}
+		
+		$es = new entity_selector();
+		$es->add_type(id_of('content_table'));
+		$es->add_relation('`name` = "'.addslashes($destination_table).'"');
+		$destination_table_result = $es->run_one();
+		if(empty($destination_table_result))
+		{
+			trigger_error('Destination table "'.$destination_table.'" does not exist in reason_move_table_fields()');
+			return false;
+		}
+		
+		$source_table_entity = current($source_table_result);
+		$destination_table_entity = current($destination_table_result);
+		
+		// ensure type uses both tables
+		
+		$type_tables = get_entity_tables_by_type( $type_id );
+		
+		if(!in_array($source_table, $type_tables))
+		{
+			trigger_error('Source table "'.$source_table.'" not part of the type in reason_move_table_fields()');
+			return false;
+		}
+		
+		if(!in_array($destination_table, $type_tables))
+		{
+			trigger_error('Destination table "'.$destination_table.'" not part of the type in reason_move_table_fields()');
+			return false;
+		}
+		
+		// get the fields in the old table
+		$es = new entity_selector();
+		$es->add_type(id_of('field'));
+		$es->add_left_relationship($source_table_entity->id(), relationship_id_of('field_to_entity_table'));
+		$source_table_fields = $es->run_one();
+		
+		if(empty($source_table_fields))
+		{
+			trigger_error('Source table '.$source_table.' does not appear to have any fields associated with it in Reason. Unable to move its content in reason_move_table_fields()');
+		}
+		
+		// map old to temp field names & create new fields
+		$query_parts = array();
+		foreach($source_table_fields as $k=>$field)
+		{
+			$source_table_fields[$k]->set_value('_field_move_temp_name',$field->get_value('name').'_move_tmp');
+			$q = 'ALTER TABLE `'.addslashes($destination_table).'` ADD '.addslashes( $field->get_value('_field_move_temp_name') ).' '.addslashes( $field->get_value('db_type') );
+			db_query( $q, 'Unable to create new field '.$field->get_value('_field_move_temp_name').' in reason_move_table_fields()' );
+			$values = array();
+			foreach($field->get_values() as $f=>$v)
+			{
+				if($f != 'name' && $f != 'id' && strpos($f,'_') !== 0)
+				{
+					$values[$f] = $v;
+				}
+			}
+			$id = reason_create_entity( id_of('master_admin'), id_of('field'), $user_id, $field->get_value('_field_move_temp_name'), $values);
+			$source_table_fields[$k]->set_value('_new_field_id',$id);
+			$query_parts[] = '`'.addslashes($destination_table).'`.`'.addslashes($field->get_value('_field_move_temp_name')).'` = `'.addslashes($source_table).'`.`'.addslashes($field->get_value('name')).'`';
+		}
+		
+		// copy content of old fields to new fields
+		
+		
+		$q = 'UPDATE `'.addslashes($destination_table).'`, `'.addslashes($source_table).'`, `entity` SET '.implode(' , ',$query_parts).' WHERE `'.addslashes($destination_table).'`.`id` = `'.addslashes($source_table).'`.`id` AND `'.addslashes($destination_table).'`.`id` = `entity`.`id` AND `entity`.`type` = "'.addslashes($type_id).'";';
+		
+		db_query($q,'Attempt to move data between fields');
+		
+		
+		// zap source table's type-to-table relationship for this type
+		
+		$conditions = array(
+			'entity_a' => $type_id,
+			'entity_b' => $source_table_entity->id(),
+			'type' => relationship_id_of('type_to_table'),
+		);
+		
+		delete_relationships( $conditions );
+		
+		// create new field-to-table relationship for new fields and update field names in new table -- remove temp flag
+		
+		foreach($source_table_fields as $field)
+		{
+			create_relationship( $field->get_value('_new_field_id'), $destination_table_entity->id(), relationship_id_of(	'field_to_entity_table' ) );
+			$q = 'ALTER TABLE `'.addslashes($destination_table).'` CHANGE '.addslashes($field->get_value('_field_move_temp_name')).' '.addslashes( $field->get_value('name') ).' '.addslashes($field->get_value('db_type')) ;
+			db_query( $q, 'Unable to change field name of '.$field->get_value('_field_move_temp_name').' in reason_move_table_fields()' );
+			reason_update_entity( $field->get_value('_new_field_id'), $user_id, array('name' => $field->get_value('name') ) );
+		}
+		
+		// delete the rows from the source table
+		
+		$q = 'DELETE `'.addslashes($source_table).'` FROM `'.addslashes($source_table).'`, `entity` WHERE `'.addslashes($source_table).'`.`id` = `entity`.`id` AND `entity`.`type` = "'.addslashes($type_id).'"';
+		
+		db_query($q,'Attempt to delete rows from '.$source_table.' in reason_move_table_fields()');
+		
+		return true;
+			
 	}
 ?>
