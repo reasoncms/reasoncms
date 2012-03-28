@@ -426,19 +426,28 @@ class LutherTemplate2010 extends MinisiteTemplate
 	function do_org_head_items()
 	{
 		// Just here as a hook for branding head items (js/css/etc.)
-		echo '<meta http-equiv="X-UA-Compatible" content="IE=edge" />'."\n"; 
-		echo '<link rel="stylesheet" type="text/css" href="/reason/css/modules.css" />'."\n";
-		echo '<link href="/javascripts/highslide/highslide.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
-		echo '<link href="/javascripts/cluetip/jquery.cluetip.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
-		echo '<link href="/stylesheets/luther2010/master.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
-		echo '<link href="/stylesheets/luther2010/reason.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";  
-  		echo '<script src="/javascripts/modernizr-1.1.min.js" type="text/javascript"></script>'."\n";
-  		echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>'."\n";
-		echo '<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>'."\n";
+		echo '<meta http-equiv="X-UA-Compatible" content="IE=edge" />'."\n";
+		$this->head_items->add_stylesheet('/reason/css/modules.css');
+		$this->head_items->add_stylesheet('/javascripts/highslide/highslide.css');
+		$this->head_items->add_stylesheet('/javascripts/cluetip/jquery.cluetip.css');
+		$this->head_items->add_stylesheet('/stylesheets/luther2010/master.css');
+		$this->head_items->add_stylesheet('/stylesheets/luther2010/reason.css');
+		$this->head_items->add_stylesheet('/stylesheets/luther2010/print.css', 'print');	
+		//echo '<link rel="stylesheet" type="text/css" href="/reason/css/modules.css" />'."\n";
+		//echo '<link href="/javascripts/highslide/highslide.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
+		//echo '<link href="/javascripts/cluetip/jquery.cluetip.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
+		//echo '<link href="/stylesheets/luther2010/master.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
+		//echo '<link href="/stylesheets/luther2010/reason.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";  
+  		//echo '<link href="/stylesheets/luther2010/print.css" media="print" rel="stylesheet" type="text/css" />'."\n";
+		$this->head_items->add_javascript( '/javascripts/modernizr-1.1.min.js' );
+  		$this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js' );
+  		$this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' );
+  		//echo '<script src="/javascripts/modernizr-1.1.min.js" type="text/javascript"></script>'."\n";
+  		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>'."\n";
+		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>'."\n";
 		echo '<!--[if lt IE 9]><link href="/stylesheets/luther2010/ie8.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";  
   		echo '<!--[if lt IE 8]><link href="/stylesheets/luther2010/ie7.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
-  		echo '<!--[if lt IE 7]><link href="/stylesheets/luther2010/ie6.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";
-  		echo '<link href="/stylesheets/luther2010/print.css" media="print" rel="stylesheet" type="text/css" />'."\n";
+  		echo '<!--[if lt IE 7]><link href="/stylesheets/luther2010/ie6.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";  		
   		
 		echo '<meta property="og:title" content="' . $this->title . '" />'."\n";
 		echo '<meta property="og:type" content="university" />'."\n";
@@ -454,11 +463,19 @@ class LutherTemplate2010 extends MinisiteTemplate
 
 		echo '<link rel="icon" href="/favicon.ico" type="image/x-icon">'."\n";
 		echo '<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">'."\n"; 
-		$this->head_items->add_javascript( '/javascripts/highslide/highslide-full.js' );
-		$this->head_items->add_javascript( '/javascripts/highslide/highslide-overrides.js' );
-
-		$this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js');
-		//$this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js' );
+		$this->head_items->add_javascript('/javascripts/highslide/highslide-full.js' );
+		$this->head_items->add_javascript('/javascripts/highslide/highslide-overrides.js' );
+		$this->head_items->add_javascript('//ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js');
+		
+		$this->head_items->add_javascript('/javascripts/jquery.tmpl.js');
+		$this->head_items->add_javascript('/javascripts/jquery.metadata.js');
+		$this->head_items->add_javascript('/javascripts/tablesorter.min.js');
+		$this->head_items->add_javascript('/javascripts/jquery.hoverIntent.min.js');
+		$this->head_items->add_javascript('/javascripts/cluetip/jquery.cluetip.js');
+		//$this->head_items->add_javascript('/javascripts/jquery.init.js');
+		$this->head_items->add_javascript('/reason/jquery.watermark-3.1.3/jquery.watermark.min.js');
+		$this->head_items->add_javascript('/reason/js/jquery.tools.min.js');
+		$this->head_items->add_javascript('/reason/js/jquery.maskedinput-1.3.min.js');
 	}
 
 	function create_body_tag()
