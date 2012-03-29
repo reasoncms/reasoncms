@@ -35,7 +35,7 @@ class DatabasesModule extends Generic3Module
 												'relationship'=>'db_provided_by_organization',
 												),
 							);
-	var $search_fields = array('entity.name','meta.description','meta.keywords','date_string.date_string','db.output_parser');
+	var $search_fields = array('name','description','keywords','date_string','output_parser');
 	var $use_filters = true;
 	var $acceptable_params = array(
 								'content_types'=>array(), //array of content type unique names to limit dbs to 
@@ -46,6 +46,7 @@ class DatabasesModule extends Generic3Module
 								'vendor_matching'=>'and', // 'and' = grab dbs related to ALL; 'or' = grab dbs related to ANY
 	);
 	var $top_link = '<div class="top"><a href="#top">Top</a></div>';
+	var $jump_to_item_if_only_one_result = false;
 	
 	/**
 	 * The string used to denote the item in the query string
