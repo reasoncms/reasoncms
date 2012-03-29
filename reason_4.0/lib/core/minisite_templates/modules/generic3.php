@@ -899,7 +899,12 @@
 					$sub_search_array = array();
 					foreach($this->search_fields as $field)
 					{
-						$sub_search_array[] = $field . ' LIKE "%'.strtr(addslashes($chunk),array('*'=>'%')).'%"';
+						$table_field = '';
+						if(false === strpos($field,'.'))
+							$table_field = table_of($field,$this->type);
+						if(empty($table_field))
+							$table_field = $field;
+						$sub_search_array[] = $table_field . ' LIKE "%'.strtr(addslashes($chunk),array('*'=>'%')).'%"';
 					}
 					$search_array[] = '('.implode(' OR ',$sub_search_array).')';
 				}
