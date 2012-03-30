@@ -29,15 +29,18 @@ class FileObjectCache extends DefaultObjectCache
 		return $ret;
 	}
 
+	/**
+	 * @return boolean true if data was written to filesystem, otherwise false.
+	 */
 	function set(&$object)
 	{
 		$cache_file = $this->_get_cache_file();
 		$fh = fopen($cache_file,"w");
 		flock($fh, LOCK_EX);
-		fwrite($fh, serialize($object));
+		$result = fwrite($fh, serialize($object));
 		flock($fh, LOCK_UN);
 		fclose($fh);
-		return true;
+		return ($result !== FALSE);
 	}
 
 	function clear()
