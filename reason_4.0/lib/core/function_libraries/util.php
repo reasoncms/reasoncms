@@ -1014,7 +1014,7 @@
 			$es = new entity_selector();
 			$es->add_type(id_of('user_role'));
 			$es->limit_tables();
-			$es->limit_fields(array('unique_name'));
+			$es->limit_fields(array('entity.unique_name'));
 			$es->add_right_relationship($user_id, relationship_id_of( 'user_to_user_role' ));
 			$roles = $es->run_one();
 			
