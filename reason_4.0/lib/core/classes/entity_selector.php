@@ -742,16 +742,12 @@
 			$this->add_relation( $relationship_name . '.entity_a = entity.id' );
 			if(is_array($entity_id))
 			{
-				$in = "";
-				foreach( $entity_id AS $e_id )
-				{
-					$in .= $e_id . ',';
-				}
-				$in = substr($in, 0,-1);
-				$this->add_relation( $relationship_name . '.entity_b IN (' . $in . ')' );
+				$prepped_entity_ids = $entity_id;
+				array_walk($prepped_entity_ids, 'db_prep_walk');
+				$this->add_relation( $relationship_name . '.entity_b IN (' . implode(',',$prepped_entity_ids) . ')' );
 			}
 			else
-				$this->add_relation( $relationship_name . '.entity_b = ' . $entity_id );
+				$this->add_relation( $relationship_name . '.entity_b = "' . addslashes($entity_id) . '"');
 			if($relationship_type)
 			{
 				$this->add_relation( $allowable_relationship_name . '.id = ' . $relationship_name . '.type' );
@@ -777,9 +773,11 @@
 		{
 			if (!$relationship_type)
 			{
-				$call_info = array_shift( debug_backtrace() );
+				$backtrace = debug_backtrace();
+				$call_info = array_shift( $backtrace );
         		$code_line = $call_info['line'];
-        		$file = array_pop( explode('/', $call_info['file']));
+        		$line_parts = explode('/', $call_info['file']);
+        		$file = array_pop( $line_parts );
         		$msg = 'entity selector method add_right_relationship called by ' . $file . ' on line ' . $code_line . ' without parameter 2 (relationship_type).';
 				trigger_error($msg, WARNING);
 			}
@@ -1317,7 +1315,7 @@
 			$this->add_relation( $e . '.id = ' . $r . '.entity_b' );
 			$this->add_relation( 'entity.id = ' . $r . '.entity_a' );
 			$this->add_relation( $r . '.type = ' . $ar . '.id' );
-			$this->add_relation( $ar . '.name LIKE "%' . $rel_name . '%"' );
+			$this->add_relation( $ar . '.name LIKE "%' . addslashes($rel_name) . '%"' );
 
 			$this->add_field( $t , $field , $alias );
 			if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
@@ -1334,6 +1332,7 @@
 			elseif (is_string($limit_results) || is_array($limit_results))
 			{
 				$limit_values = (is_string($limit_results)) ? array($limit_results) : $limit_results;
+				array_walk($limit_values,'db_prep_walk');
 				$this->add_relation($t . '.' . $field . ' IN ('.implode(',', $limit_values).')');
 			}
 			return array( $alias => array( 'table_orig' => $table, 'table' => $t , 'field' => $field ) );
@@ -1402,12 +1401,12 @@
 			$this->add_relation( $e . '.id = ' . $r . '.entity_a' );
 			$this->add_relation( 'entity.id = ' . $r . '.entity_b' );
 			$this->add_relation( $r . '.type = ' . $ar . '.id' );
-			$this->add_relation( $ar . '.name LIKE "%' . $rel_name . '%"' );
+			$this->add_relation( $ar . '.name LIKE "%' . addslashes($rel_name) . '%"' );
 
 			$this->add_field( $t , $field , $alias );
 			if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 			{
-				$this->add_relation( '(' . $r . '.site=0 OR ' . $r . '.site=' . $this->_env['site'] . ')' );
+				$this->add_relation( '(' . $r . '.site=0 OR ' . $r . '.site=' . addslashes($this->_env['site']) . ')' );
 			}
 			if ($limit_results === false)
 			{	
@@ -1418,8 +1417,16 @@
 			}
 			elseif (is_string($limit_results) || is_array($limit_results))
 			{
-				$limit_values = (is_string($limit_results)) ? array($limit_results) : $limit_results;
-				$this->add_relation($t . '.' . $field . ' IN ('.implode(',', $limit_values).')');
+				if(is_array($limit_results) && empty($limit_results))
+				{
+					$this->add_relation('0 = 1');
+				}
+				else
+				{
+					$limit_values = (is_string($limit_results)) ? array($limit_results) : $limit_results;
+					array_walk($limit_values,'db_prep_walk');
+					$this->add_relation($t . '.' . $field . ' IN ('.implode(',', $limit_values).')');
+				}
 			}
 			return array( $alias => array( 'table_orig' => $table, 'table' => $t , 'field' => $field ) );
 		} // }}}
