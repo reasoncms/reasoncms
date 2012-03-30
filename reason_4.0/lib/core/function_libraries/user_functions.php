@@ -76,15 +76,13 @@ function user_has_access_to_site($site_id, $force_refresh = false)
  */
 function reason_username_has_access_to_site($username, $site_id, $force_refresh = false)
 {
-	static $user;
 	static $has_access_to_site;
 	
 	if (empty($username)) return false;
  	if (!isset($has_access_to_site[$username][$site_id]) || $force_refresh)
  	{
- 		reason_include_once('classes/user.php');
-		if (!isset($user)) $user = new user(); // single instance even if force refresh is called
-		$has_access_to_site[$username][$site_id] = $user->is_site_user($username, $site_id, $force_refresh);
+ 		$id = get_user_id($username);
+ 		$has_access_to_site[$username][$site_id] = (!empty($id)) ? user_can_edit_site($id, $site_id, $force_refresh) : false;
 	}
 	return $has_access_to_site[$username][$site_id];
 }
