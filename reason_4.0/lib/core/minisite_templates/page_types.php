@@ -1663,6 +1663,12 @@
 				'thumbnail_width' => 200,
 			),
 		),
+		'show_siblings_previous_next' => array(
+			'main_post' => array(
+				'module' => 'siblings',
+				'previous_next' => true,
+			),
+		),
 		'siblings_no_nav' => array(
 			'navigation' => '',
 			'sub_nav_2' => '',
