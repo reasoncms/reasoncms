@@ -27,6 +27,7 @@
 										'thumbnail_width' => 0,
 										'thumbnail_height' => 0,
 										'thumbnail_crop' => '',
+										'previous_next' => false,
 									);
 		protected $parent_page;
 		function init ( $args = array() )	 // {{{
@@ -48,6 +49,7 @@
 						{
 							if($sibling_id != $root_id)
 							{
+								
 								$page = new entity($sibling_id);
 								
 								if($this->params['show_only_pages_in_nav'] && $page->get_value('nav_display') != 'Yes')
@@ -68,6 +70,17 @@
 			}
 			
 		} // }}}
+		protected function _get_previous_next($siblings)
+		{
+			$ids = array_keys($siblings);
+			$positions = array_flip($ids);
+			$ret = array();
+			if(isset($ids[ $positions[$this->page_id] - 1 ]))
+				$ret['previous'] = $siblings[$ids[ $positions[$this->page_id] - 1 ]];
+			if(isset($ids[ $positions[$this->page_id] + 1 ]))
+				$ret['next'] = $siblings[$ids[ $positions[$this->page_id] + 1 ]];
+			return $ret;
+		}
 		function has_content() // {{{
 		{
 			if( empty($this->siblings) )
@@ -79,6 +92,10 @@
 		} // }}}
 		function run() // {{{
 		{
+			if($this->params['previous_next'])
+				$siblings = $this->_get_previous_next($this->siblings);
+			else
+				$siblings = $this->siblings;
 			$class = 'siblingList';
 			if($this->params['provide_images'])
 				$class .= ' siblingListWithImages';
@@ -93,7 +110,7 @@
 			$counter = 1;
 			$even_odd = 'odd';
 
-			foreach ( $this->siblings AS $sibling )
+			foreach ( $siblings AS $key=>$sibling )
 			{
 				
 				$uname = '';
@@ -164,7 +181,12 @@
 				
 				if ( !$is_current_page )
 				{
-					echo '<li class="number'.$counter.' '.$even_odd.$uname.'">';
+					$prevnext = '';
+					if('previous' == $key || 'next' == $key)
+						$prevnext = ' '.$key;
+					echo '<li class="number'.$counter.' '.$even_odd.$uname.$prevnext.'">';
+					if(!empty($prevnext))
+						echo '<strong>'.ucfirst($key).':</strong> ';
 					echo $image_html;
 					echo '<a href="'.$link.'">'.$page_name.'</a>';
 					/* if ( $sibling->get_value( 'description' ))
