@@ -22,6 +22,7 @@
 			"luthercollegemusic" => array("0aefd0bebcb26cce81f0bd459787a244", "2de87b03bcbd7249"),
 			"lcnorsesports" => array("ff52469fa499b0af7e9e05dbb0c94c36", "844acf6234151a1c"),
 			"lutherfinearts" => array("e0b84ec8f5c4cdee13dbe0c6eab3c516", "5aba74ac9fb733c1"),
+			"lutherfac" => array("fc556345d663f358322fa1ded6d72542", "468b278ffdddbbb7"),
 			"Luther_College_Alumni_Office" => array("d97a9bcb0bef39692eb8b0ac97c8887f", "b0d82d76b43bc6d6"),
 			"luthercollegechemistry" => array("4fe2ce650080400958007a505b980522", "cef37676c4424ae1"),
 			// environmental outreach
