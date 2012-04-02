@@ -17235,8 +17235,8 @@ UI.Menu = function()
 			menu_chunk.style.visibility = 'hidden';
 
 			// Position menu
-			menu_chunk.style.left = (x - 1) + 'px';
-			menu_chunk.style.top = (y - 1) + 'px';
+			menu_chunk.style.left = (x - 3) + 'px';
+			menu_chunk.style.top = (y - 3) + 'px';
 
 			// Watch the "click" event for all windows to close the menu
 			function close_menu() {
@@ -17263,7 +17263,7 @@ UI.Menu = function()
 				}
 			}
 			
-			add_close_listeners.defer();
+			add_close_listeners.delay(0.1);
 	
 			// Show menu
 			menu_chunk.style.visibility	= '';
