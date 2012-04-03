@@ -29,11 +29,14 @@
 			//grab site name as well
 			$this->alias = $ass_es->add_right_relationship_field('owns', 'entity', 'name', 'site');
 			$ass_es->add_right_relationship_field('owns', 'entity', 'id', 'site_id');
-			if ($this->site_is_live()) $ass_es->add_right_relationship_field('owns', 'entity', 'state', 'site_state', '"Live"');
+			if ($this->site_is_live()) $ass_es->add_right_relationship_field('owns', 'entity', 'state', 'site_state', 'Live');
 			$this->apply_order_and_limits($ass_es);
 			$this->ass_vals = $ass_es->run_one();
 			
-			if( $this->ass_vals ) $this->es->add_relation('entity.id NOT IN('.implode(",", array_keys($this->ass_vals)).')');
+			if( $this->ass_vals )
+			{
+				$this->es->add_relation('entity.id NOT IN ("'.implode('","', array_keys($this->ass_vals)).'")');
+			}
 			
 			if (!(empty($this->admin_page->request['__old_rel_id'])))
 			{
@@ -43,7 +46,7 @@
 					$ass_related_es = carl_clone($this->es);
 					$ass_related_es->add_right_relationship_field(relationship_name_of($this->admin_page->request['__old_rel_id']), 'entity', 'id', 'related_id');
 					$this->related_vals = $ass_related_es->run_one();
-					if( $this->related_vals ) $this->es->add_relation('entity.id NOT IN('.implode(",", array_keys($this->related_vals)).')');
+					if( $this->related_vals ) $this->es->add_relation('entity.id NOT IN ("'.implode('","', array_keys($this->related_vals)).'")');
 				}
 			}
 		} // }}}
