@@ -22,11 +22,19 @@
 	 * A content manager for images
 	 */
 	class ImageManager extends ContentManager
-	{
+	{			
 		var $form_enctype = 'multipart/form-data';
 		var $auto_create_thumbnails = true;
 		var $thumbnail_width = REASON_STANDARD_MAX_THUMBNAIL_WIDTH;
 		var $thumbnail_height = REASON_STANDARD_MAX_THUMBNAIL_HEIGHT;
+
+		var $min_width = 0;
+		var $min_height = 0;
+		
+		// for image conversion
+		var $max_width = REASON_STANDARD_MAX_IMAGE_WIDTH;
+		var $max_height = REASON_STANDARD_MAX_IMAGE_HEIGHT;
+		var $convert_non_web_to = 'png';
 		var $image_types = array(1=>'gif',2=>'jpg',3=>'png');
 		var $image_types_with_exif_data = array('jpg');
 
@@ -47,9 +55,24 @@
 			$thumb_dimensions = get_reason_thumbnail_dimensions($this->get_value('site_id'));
 			$this->thumbnail_height = $thumb_dimensions['height'];
 			$this->thumbnail_width = $thumb_dimensions['width'];
-
-			$this->add_element( 'image', 'ReasonImageUpload', array('obey_no_resize_flag' => true, 'authenticator' => $this->_get_authenticator(), 'max_width' => REASON_STANDARD_MAX_IMAGE_WIDTH, 'max_height' => REASON_STANDARD_MAX_IMAGE_HEIGHT));
-			$this->add_element( 'thumbnail', 'ReasonImageUpload', array('authenticator' => $this->_get_authenticator()) );
+	
+			// Web-friendly, and those whose conversion we support
+			$acceptable_types = array('image/jpeg',
+						'image/pjpeg',
+						'application/pdf',
+						'image/gif',
+						'image/png',
+						'image/tiff',
+						'image/x-tiff',
+						'image/photoshop',
+						'image/x-photoshop',
+						'image/psd');
+			$this->add_element( 'image', 'ReasonImageUpload', array('obey_no_resize_flag' => true, 'authenticator' => $this->_get_authenticator(), 'max_width' => $this->max_width, 'max_height' => $this->max_height,
+			'acceptable_types' => $acceptable_types) );
+			
+			$this->add_element( 'thumbnail', 'ReasonImageUpload', array('authenticator' => $this->_get_authenticator(),
+			'acceptable_types' => $acceptable_types) );
+			
 			$image = $this->get_element('image');
 			$image->get_head_items($this->head_items);
 			$this->add_element('default_thumbnail', 'checkbox', 
@@ -134,7 +157,7 @@
 			$full_tn_path = PHOTOSTOCK.$tn_name;
 			if (file_exists($full_tn_path))
 			{
-				$this->change_element_type( 'thumbnail','ReasonImageUpload',array('authenticator' => $this->_get_authenticator(), 'existing_file' => $full_tn_path, 'existing_file_web' => $web_tn_path, 'allow_upload_on_edit' => true ) );
+				$this->change_element_type( 'thumbnail','ReasonImageUpload', array('authenticator' => $this->_get_authenticator(), 'existing_file' => $full_tn_path, 'existing_file_web' => $web_tn_path, 'allow_upload_on_edit' => true ) );
 			}
 			$this->set_order(
 				array(
@@ -176,14 +199,160 @@
 			if( empty( $thumbnail->tmp_full_path ) AND empty( $thumbnail->existing_file ) )
 				$this->set_comments( 'thumbnail', form_comment( 'A thumbnail will automatically be generated if one does not already exist or one is not uploaded.' ) );
 		} // }}}
+		
+		/**
+		 * Checks for the upload of an image. Non-web-friendly images should be converted 
+		 * when received (in receive.php), however we attempt to convert them here if for some
+		 * reason they have not yet been converted. Sets appropriate error upon failure to convert 
+		 * image. 
+		 */
 		function run_error_checks() // {{{
 		{
 			$image = $this->get_element('image');
-			if( empty($image->tmp_full_path) AND empty( $image->existing_file ) )
+			$thumbnail = $this->get_element('thumbnail');
+
+            // nothing uploaded 
+            if( empty($image->tmp_full_path) && empty($thumbnail->tmp_full_path) )
+            {
+                return;
+            }
+            // If the form is good, make sure the image is suitable.
+            // 1. If the image isn't in a web-friendly format try to convert it
+            // 2. Check that the image size meets minimum requirements
+            if( !$this->_has_errors() )
+            {
+                // Image should have already been converted (in receive.php) -- if not,
+                // convert them here
+                if ($extension = get_extension( $image->tmp_full_path ))
+                {
+                    if (!in_array($extension, $this->image_types))
+                    {
+                        $this->convert_and_resize_image($image);
+                    }
+                }
+                
+                if ($tn_extension = get_extension( $thumbnail->tmp_full_path ))
+                {
+                    if (!in_array($tn_extension, $this->image_types))
+                    {
+                        $this->convert_and_resize_image($thumbnail);
+                    }
+                }
+                
+                if ($info = $this->get_image_specs($image->tmp_full_path))
+                {
+                    if ($info['width'] < $this->min_width && $info['height'] < $this->min_height)
+                        $this->set_error('image','Your image is not large enough; it needs to be at least 
+                            '.$this->min_width.'x'.$this->min_height.' pixels in size.');
+                }
+		    }
+		    
+		    if( empty($image->tmp_full_path) AND empty( $image->existing_file ) )
 			{
 				$this->set_error( 'image', 'Please upload an image' );
 			}
 		} // }}}
+		
+		/**
+		 * Converts and resizes non web-friendly image (both original and standard) using image_funcs. 
+		 * Conversion generally happens in the receive.php script (though it does not when JS is turned off). 
+		 * 
+		 * If an original image has been saved, it is converted in place; the standard image is 
+		 * created by resizing the original 
+		 *
+		 * @param $image ReasonImageUploadType -- either the main image or the thumbnail
+		 *
+		 * @return true upon successful conversion, false otherwise
+		 */
+		function convert_and_resize_image($image)
+		{
+			// 'image' or 'thumbnail'
+			$image_name = $image->name;
+			$orig_exists = false;
+			
+			// If an original is already stored, convert it and create a resized standard image
+			if ($image->original_path && file_exists($image->original_path))
+			{
+				$orig_exists = true;
+				if (!($image->original_path = convert_to_image($image->original_path, $this->convert_non_web_to)))
+				{
+					$this->set_error($image_name,'Sorry, we weren\'t able to convert 
+						your file to a web-compatible image. Try saving your file as a JPEG, GIF or PNG.');
+					return false;						
+				}
+				// Resize for the standard image
+				else
+				{
+					$image->tmp_full_path = change_extension($image->tmp_full_path, $this->convert_non_web_to);
+					if(copy($image->original_path, $image->tmp_full_path))
+						return resize_image($image->tmp_full_path, $this->max_width, $this->max_height);
+					else
+						return false;
+				}
+			}
+			
+			// If no original exists, convert the standard size
+			elseif (!($image->tmp_full_path = convert_to_image($image->tmp_full_path, $this->convert_non_web_to)))
+			{
+				$this->set_error($image_name,'Sorry, we weren\'t able to convert 
+					your file to a web-compatible image. Try saving your file as a JPEG, GIF or PNG.');
+				return false;						
+			}
+			else
+			{
+				// If converted image is too large, store it as an original and resize the standard.
+				// This may occur when a non-web compatible image is uploaded as a thumbnail, with JS off
+				// If an original already existed, don't overwrite it 
+				if( $image_info = $this->get_image_specs($image->tmp_full_path)	)
+				{
+					if( $image_info['width'] > $this->max_width || $image_info['height'] > $this->max_height )
+					{
+						if(!$orig_exists)
+						{
+							$image->original_path = add_name_suffix($image->tmp_full_path, '-unscaled');
+							@copy($image->tmp_full_path, $image->original_path);
+						}
+						return resize_image($image->tmp_full_path, $this->max_width, $this->max_height);
+					}
+				}
+			}
+			
+		}
+		
+        /**
+         * Gets data about a given image and returns it in an array with meaningful keys
+         *
+         * @param string $image_path the path to the image
+         *
+         * @return array of information about image, with keys: 'width', 'height', 'size', 'image_type', 
+         * and possibly the 'datetime' it was taken; or false if not an image. 
+         */
+        function get_image_specs($image_path)
+        {
+            $image_types_with_exif_data = array('jpg');
+    
+            if ($info = @getimagesize( $image_path ))
+            {
+                if(array_key_exists($info[2],$this->image_types) && in_array($this->image_types[ $info[2] ], $image_types_with_exif_data) )
+                {
+                    turn_carl_util_error_logging_off();
+                    $exif_data = @read_exif_data( $image_path );
+                    turn_carl_util_error_logging_on();
+                    if( !empty( $exif_data[ 'DateTime' ] ) )
+                    {
+                        $values['datetime'] =  $exif_data['DateTime'];
+                    }
+                }
+                $values['width'] = $info[0];
+                $values['height'] = $info[1];
+                if(array_key_exists($info[2],$this->image_types)) 
+                	$values['image_type'] = $this->image_types[ $info[2] ];
+                $values['size'] = round(filesize( $image_path ) / 1024);
+                return $values;
+            }
+            return false;
+        }
+		
 		
 		/**
 		 * Handles the logic of processing newly uploaded images. Calls helper functions to handle 
@@ -320,6 +489,7 @@
 	     *
 	     * @param $id the Reason ID of the image entity
 	     * @param $thumbnail_image ReasonImageUploadType the custom thumbnail that was just uploaded 
+	     * 
 	     */
 	    
 	    function handle_custom_thumbnail($id, $thumbnail_image)
@@ -402,7 +572,5 @@
 				$this->set_value('thumbnail_image_type', null);
 			}
 		}
-		
 	}
-
 ?>
