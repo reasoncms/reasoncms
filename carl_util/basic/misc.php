@@ -697,7 +697,7 @@ if(!function_exists('htmlspecialchars_decode'))
 	 * A standardized function for counting the number of characters in a string that might 
 	 * contain HTML that we don't want to include in our count.
 	 * 
-	 * Will be updated shortly to implement a more sophisticated method of counting...
+	 * 
 	 *
 	 * @author Nick Jones
 	 * @param string $text - the text whose characters we want to count
