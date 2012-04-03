@@ -117,6 +117,8 @@ foreach (array_keys($_FILES) as $name) {
 		@copy($temp_path, $temp_path.".tmp");
 		@rename($temp_path.".tmp", $temp_path);
 		list($width, $height) = $img_info;
+		
+		// If exceeds width or height limit, store an original and resize the standard image
 		if ($constraints && !empty($constraints['max_dimensions'])) {
 			list($max_width, $max_height) = $constraints['max_dimensions'];
 			
@@ -185,15 +187,6 @@ function check_constraints($constraints, $file) {
 			final_response(406, "Invalid or unacceptable file uploaded.");
 		}
 	}
-}
-
-function add_name_suffix($path, $suffix) {
-	$parts = explode('.', $path);
-	$length = count($parts);
-	$target = ($length > 1) ? ($length - 2) : 0;
-	
-	$parts[$target] .= $suffix;
-	return implode('.', $parts);
 }
 
 function get_next_index($file) {
