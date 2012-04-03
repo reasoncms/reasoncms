@@ -2140,7 +2140,12 @@
 				$err[] = get_class( $this );
 				$err[] = $el;
 				if( empty( $this->no_session ) OR !in_array( $el, $this->no_session ) )
-					$err[] = $value;
+				{
+					if(is_array($value) || is_object($value))
+						$err[] = serialize($value);
+					else
+						$err[] = $value;
+				}
 				else
 					$err[] = '*** VALUE HIDDEN *** ('.strlen($value).' characters)';
 				$err[] = $msg;
