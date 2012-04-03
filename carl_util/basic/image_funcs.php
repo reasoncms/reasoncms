@@ -64,12 +64,12 @@ function resize_image($path, $width, $height, $sharpen=true)
  */
 function convert_to_image($orig, $format = 'png')
 {
-	trigger_error('Invalid format specificed for convert to image - conversion not performed.', WARNING);
 	if ($format == 'png') 
 	{
 		return convert_to_png($orig);
 	}
-	else trigger_error('Invalid format specificed for convert to image - conversion not performed.');
+	else 
+		trigger_error('Invalid format specificed for convert to image - conversion not performed.');
 	return false;
 }
 
@@ -95,8 +95,7 @@ function convert_to_png($orig)
 
 }
 
-/** Rasterize a PDF at 288dpi and then reduce to 72dpi; this is the closest we can
- * get to actually antialiasing text.
+/** Rasterize a PDF at 800dpi and then reduce to 200dpi
  * 
  * @param $path path to non-web-image file
  * @param $format the format to convert to
@@ -108,15 +107,17 @@ function rasterize_pdf($path, $format)
 	$new_path = change_extension($path, $format);
 	$args = array(
 		'convert',
-		'-density 288',
+		'-density 800',
 		'-resize 25%',
 		escapeshellarg($path.'[0]'),
 		escapeshellarg($new_path),
 		);
 	$exit_status = -1;
-	exec(implode(' ', $args), $output, $exit_status);
+	$command = implode(' ', $args);
+	exec($command, $output, $exit_status);
 	if ($exit_status != 0) {
-		trigger_error('image convert from pdf failed: '.implode('; ', $output), WARNING);
+		// not always error!
+		 trigger_error('Image convert from pdf failed. Attempted this: "'.$command.'". Error output: "'.implode('; ', $output).'". Error status code: "'.$exit_status.'"', WARNING);
 		return false;
 	} else {
 		return $new_path;
@@ -131,39 +132,26 @@ function rasterize_pdf($path, $format)
  */
 function convert_to_web_image($path, $format)
 {			
-	$exec = 'convert';
 	$sharpen = true;
 	$new_path = change_extension($path, $format);
 	
-	// Don't convert image to be larger than original 
-	if( $orig_dimensions = get_dimensions_image_magick($path) )
-	{
-		$max_width = min($orig_dimensions['width'], 500);
-		$max_height = min($orig_dimensions['height'], 500);
-	}
-	else
-	{
-		$max_width = 500;
-		$max_height = 500;
-	}
-	
 	$args = array(
-		$exec,
+		'convert',
 		'-flatten', // required for photoshop and other layered files
-		'-geometry',
-		"{$max_width}x{$max_height}",
 	);
 	if ($sharpen)
 		$args = array_merge($args, array('-sharpen', '1'));
 	
-		$args[] = escapeshellarg($path);
-		$args[] = escapeshellarg($new_path);
+	$args[] = escapeshellarg($path);
+	$args[] = escapeshellarg($new_path);
 	
 	$output = array();
 	$exit_status = -1;
 	exec(implode(' ', $args), $output, $exit_status);
 	if ($exit_status != 0) {
-		trigger_error('image convert failed: '. $exit_status .' ' . implode('; ', $output), WARNING);
+		// We know some psds don't work -- don't actually report these errors
+		if(get_extension($path) != 'psd')
+			trigger_error('Image convert failed: '. $exit_status .' ' .  implode('; ', $output), WARNING);
 		return false;
 	} else {
 		return $new_path;
@@ -187,11 +175,11 @@ function get_dimensions_image_magick($path)
 	$get_info_args[] = escapeshellarg($path);
 	$result = array();
 	exec(implode(' ', $get_info_args), $result, $exit_stat);
-	$width = trim($result[0]);
-	$height = trim($result[1]);
-
+	
 	if($exit_stat == 0)
 	{
+		$width = trim($result[0]);
+		$height = trim($result[1]);
 		return array('height' => $height, 'width' => $width);
 	}
 	else
@@ -229,6 +217,24 @@ function change_extension($path, $new_ext)
 		$new_path .= '.'.$new_ext;
 	}
 	return $new_path;
+}
+
+/**
+ * Adds suffix to path, returns new path
+ *
+ * @param $path string of original path
+ * @param $suffix string the suffix to append
+ *
+ * @return string modified path with suffix appended
+*/
+function add_name_suffix($path, $suffix) 
+{
+	$parts = explode('.', $path);
+	$length = count($parts);
+	$target = ($length > 1) ? ($length - 2) : 0;
+	
+	$parts[$target] .= $suffix;
+	return implode('.', $parts);
 }
 
 /**
