@@ -53,9 +53,9 @@ h2,h3 {
 <h1>Minimize this Reason Instance: Step 3</h1>
 <?php
 
-$protected_tables = array('e'=>'entity','r'=>'relationship','ar'=>'allowable_relationship','uh'=>'URL_history','ss'=>'system_status','pcl'=>'page_cache_log','pcla'=>'page_cache_log_archive',);
+$protected_tables = array('e'=>'entity','r'=>'relationship','ar'=>'allowable_relationship','uh'=>'URL_history','ss'=>'system_status','pcl'=>'page_cache_log');
 $protected_fields = array('id');
-$tables_to_empty = array('URL_history','page_cache_log','page_cache_log_archive','system_status');
+$tables_to_empty = array('URL_history','page_cache_log','system_status');
 
 if(empty($_POST['do_it']) && empty($_POST['test_it']))
 {
