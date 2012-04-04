@@ -866,7 +866,7 @@ function _imagemagick_resize($path, $width, $height, $sharpen)
 	exec(implode(' ', $args), $output, $exit_status);
 	if ($exit_status != 0) {
 		trigger_error('image resize failed: '.implode('; ', $output), WARNING);
-		error_log($args);
+		error_log(implode(' ', $args));
 		return false;
 	}
 	
