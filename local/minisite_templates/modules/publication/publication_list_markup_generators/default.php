@@ -135,6 +135,14 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			if($do_section_headings)
 				$markup_string .= '</ul>'."\n"; 
 		}
+		
+		$markup_string = $this->luther_remove_permalink($markup_string);
+
+		return $markup_string;
+	}
+	
+	function luther_remove_permalink($markup_string)
+	{
 		// put Read more... at end of teaser
 		//$markup_string = preg_replace("|\<\/p\>\s?\<\/div\>\s?.*?\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?<\/ul\>\s?|", "&nbsp;&nbsp;\\1 Read more...</a></p></div>", $markup_string);
 		//$markup_string = preg_replace("|(\<\/p\>)?\s?\<\/div\>\s?\<ul class\=\"links\"\>\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?(\<li class\=\"comments\"\>\s?\<a href\=\".*?View comments \(\d+\).*?\<\/a\>\<\/li\>\s?)?<\/ul\>\s?|", "&nbsp;&nbsp;\\2Read more...</a></p></div>", $markup_string);
@@ -142,10 +150,9 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		// remove permalink on pages with no posts
 		$markup_string = preg_replace("|\<ul class\=\"links\"\>\s?\<li class\=\"permalink\"\>\s?\<a href\=\".*?Permalink\<\/a\>\<\/li\>\s?\<\/ul\>\s?|", "", $markup_string);
 		// remove permalink on news posts with no description
-		$markup_string = preg_replace("|\<ul class\=\"links\"\>\s?\<li class\=\"more\"\>\s?\<a href\=\".*?Read.*?\<\/a\>\<\/li\>\s?\<li class\=\"permalink\"\>\s?\<a href\=\".*?Permalink\<\/a\>\<\/li\>\s?(\<li class\=\"comments\"\>\s?\<a href\=\".*?View comments \(\d+\)\<\/a\>\<\/li\>\s?)?\<\/ul\>\s?|", "", $markup_string);
+		$markup_string = preg_replace("|\<ul class\=\"links\"\>\s?\<li class\=\"more\"\>\s?\<a href\=\".*?Read.*?\<\/a\>\<\/li\>\s?\<li class\=\"permalink\"\>\s?\<a href\=\".*?Permalink\<\/a\>\<\/li\>\s?(\<li class\=\"comments.*?\"\>\s?\<a href\=\".*?View comments \(\d+\)\<\/a\>\<\/li\>\s?)?\<\/ul\>\s?|", "", $markup_string);
 		return $markup_string;
 	}
-	
 	
 	/**
 	* Given a array of item ids, returns the markup for those items in the form of an unordered list.
@@ -215,7 +222,8 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string .= '</div>'."\n";
 		}
 		// put Read more... at end of teaser
-		$markup_string = preg_replace("|\<\/p\>\s?\<\/div\>\s?.*?\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?<\/ul\>\s?|", "&nbsp;&nbsp;\\1Read more...</a></p></div>", $markup_string);
+		$markup_string = $this->luther_remove_permalink($markup_string);
+		//$markup_string = preg_replace("|\<\/p\>\s?\<\/div\>\s?.*?\s?.*?\s?\<li class\=\"permalink\"\>\s?(\<a href\=\".*?)Permalink\<\/a\>\<\/li\>\s?<\/ul\>\s?|", "&nbsp;&nbsp;\\1Read more...</a></p></div>", $markup_string);
 		return $markup_string;
 	}
 	
