@@ -1471,7 +1471,7 @@
 	 */
 	function reason_get_protected_tables()
 	{
-		return array('allowable_relationship','entity','page_cache_log','page_cache_log_archive','relationship','URL_history',);
+		return array('allowable_relationship','entity','page_cache_log','relationship','URL_history',);
 	}
 	
 	/**
