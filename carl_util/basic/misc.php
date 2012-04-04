@@ -757,7 +757,7 @@ if(!function_exists('htmlspecialchars_decode'))
 				$message = get_message_for_http_status($passed_code);
 				if(empty($message))
 				{
-					trigger_error('Unrecognized http response code.');
+					trigger_error('Unrecognized http response code '.$passed_code);
 					return $code_cache;
 				}
 				header('HTTP/1.1 '.$passed_code.' '.$message);
@@ -834,7 +834,7 @@ if(!function_exists('htmlspecialchars_decode'))
 		);
 		if(isset($codes[$status_code]))
 			return $codes[$status_code];
-		trigger_error('Unrecognized http response code.');
+		trigger_error('Unrecognized http response code '.$status_code);
 		return false;
 	}
 }
