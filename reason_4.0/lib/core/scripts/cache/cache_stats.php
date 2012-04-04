@@ -5,9 +5,9 @@
  * @package reason
  * @subpackage scripts
  */
+  
 	include_once( 'reason_header.php' );
 	connectDB( REASON_DB );
-	
 	reason_include_once( 'function_libraries/user_functions.php' );
 	force_secure_if_available();
 	$current_user = check_authentication();
@@ -15,7 +15,12 @@
 	{
 		die('<html><head><title>Cache Stats</title></head><body><h1>Sorry.</h1><p>You do not have permission to view cache stats.</p><p>Only Reason users who have sensitive data viewing privileges may do that.</p></body></html>');
 	}
-	
+	else
+	{
+		echo '<h1>Not Implemented for Your Version of Reason</h1>';
+		echo '<p>The current version of Reason does not have the page_cache_log_archive table, and is not setup by default to populate the table page_cache_log with page cache hit / miss information.</p>';
+		die;
+	}
 	$request = array(
 		'clear' => '',
 		'col' => 'total',

@@ -29,6 +29,12 @@
 	{
 		die('<html><head><title>Current Cache Stats</title></head><body><h1>Sorry.</h1><p>You do not have permission to view cache graphs.</p><p>Only Reason users who have sensitive data viewing privileges may do that.</p></body></html>');
 	}
+	else
+	{
+		echo '<h1>Not Implemented for Your Version of Reason</h1>';
+		echo '<p>The current version of Reason does not have the page_cache_log_archive table, and is not setup by default to populate the table page_cache_log with page cache hit / miss information.</p>';
+		die;
+	}
 	
 	$chart = array(
 		'table' => 'page_cache_log_archive',
