@@ -585,20 +585,6 @@
 			'post_foot' => 'textonly_toggle',
 			'main_post'=>'children',
 		),
-		'databases' => array(
-			'main' => '',
-			'main_post' => 'databases',
-			'pre_sidebar' => 'content',
-			'sidebar' => 'databases_recently_added',
-			'banner_xtra' => '',
-		),
-		'databases_by_category' => array(
-			'main' => '',
-			'main_post' => 'databases_by_category',
-			'pre_sidebar' => 'content',
-			'sidebar' => 'databases_recently_added',
-			'banner_xtra' => '',
-		),
 		'department_listing' => array(
 			'banner_xtra' => '',
 			'navigation' => '',
