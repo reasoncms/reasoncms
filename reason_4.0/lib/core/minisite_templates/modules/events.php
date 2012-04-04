@@ -2538,23 +2538,22 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function event_ok_to_show($event)
 	{
-		$sites = $this->_get_sites();
-		if(is_array($sites))
-			$es = new entity_selector(array_keys($sites));
-		else
-			$es = new entity_selector($sites->id());
-		$es->add_type(id_of('event_type'));
-		$es->add_relation('entity.id = "'.$event->id().'"');
-		$es->add_relation('show_hide.show_hide = "show"');
-		$es->set_num(1);
-		$es->limit_tables(array('show_hide'));
-		$es->limit_fields();
-		if($this->_get_sharing_mode() == 'shared_only')
-			$es->add_relation('entity.no_share != 1');
-		if($es->run_one())
-			return true;
-		else
-			return false;
+		$id = $event->id();
+		if (!isset($this->_ok_to_show[$id]))
+		{
+			$sites = $this->_get_sites();
+			if(is_array($sites)) $es = new entity_selector(array_keys($sites));
+			else $es = new entity_selector($sites->id());
+			$es->add_type(id_of('event_type'));
+			$es->add_relation('entity.id = "'.$id.'"');
+			$es->add_relation('show_hide.show_hide = "show"');
+			$es->set_num(1);
+			$es->limit_tables(array('show_hide'));
+			$es->limit_fields();
+			if($this->_get_sharing_mode() == 'shared_only') $es->add_relation('entity.no_share != 1');
+			$this->_ok_to_show[$id] = ($es->run_one());
+		}
+		return $this->_ok_to_show[$id];
 	}
 	/**
 	 * Show the detail view of the current event
