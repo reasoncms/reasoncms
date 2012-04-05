@@ -29,19 +29,6 @@ $master_admin_id = id_of('master_admin');
 $site_to_user_id = relationship_id_of('site_to_user');
 $site_to_type_id = relationship_id_of('site_to_type');
 
-//echo $type_id . '<br />';
-//echo $site_id . '<br />';
-//echo $user_id . '<br />';
-//echo $site_to_user_id . '<br />';
-//echo $site_to_type_id . '<br />';
-
-/**
- AND r3.type = allowable_relationship.id
-		AND allowable_relationship.relationship_a = '.$site_id.'  
-		AND allowable_relationship.relationship_b = r2.entity_b 
-		AND allowable_relationship.name = "owns"
-		*/
-
 // This query returns one of every type that is associated with a site and a user_id that has access to that site
 //$q = 'SELECT r1.entity_b as user, r3.entity_b as user2, r1.entity_a as site, r2.entity_b as type FROM relationship as r1, relationship as r2, relationship as r3, entity 
 
