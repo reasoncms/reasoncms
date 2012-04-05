@@ -109,7 +109,8 @@
 				}
 				else
 				{
-					$to_run = array_merge( $to_run, $um->make_site_valid() );
+					if(!$um->make_site_valid(false))
+						$to_run = array_merge( $to_run, $um->make_site_valid() );
 					echo '<a href="?mode=update&amp;id='.$id.'">update URLs for this site</a><br/>';
 				}
 				echo '<br />';
