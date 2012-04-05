@@ -51,7 +51,8 @@ class AmputeeFixer
 				$tables = get_entity_tables_by_type( $type['id'], false ); // lets not cache - this could be used right after a type is setup
 				foreach( $tables as $table )
 				{
-					$q = "SELECT e.*,type.name as type_name FROM entity AS e LEFT JOIN $table AS t ON e.id = t.id, entity AS type WHERE e.type = ".$type['id']." AND t.id IS NULL AND e.type = type.id";
+					// changed from e.* to e.id ... test for speed improvements.
+					$q = "SELECT e.id,type.name as type_name FROM entity AS e LEFT JOIN $table AS t ON e.id = t.id, entity AS type WHERE e.type = ".$type['id']." AND t.id IS NULL AND e.type = type.id";
 					$r = db_query( $q, 'Unable to grab amputees.' );
 					while( $row = mysql_fetch_array( $r, MYSQL_ASSOC )) 
 					{
