@@ -260,6 +260,10 @@
 				$this->debug( 'SKIPPED - CUSTOM URL HANDLER DEFINED: '.$this->site->get_value('custom_url_handler') );
 				return;
 			}
+			if(!$this->_is_base_valid( 0 ))
+			{
+				$this->make_site_valid(false);
+			}
 			if( $this->_is_base_valid( HIGH ) )
 			{
 				$this->debug( 'base is valid' );
@@ -375,36 +379,65 @@
 		{
 			return $this->_is_base_valid( WARNING );
 		} // }}}
-		function make_site_valid() // {{{
+		function make_site_valid($report = true) // {{{
 		// function to either make a site's directory structure valid or at least report the steps necessary to do so
 		{
-			$ret = array();
-			if( !$this->_is_base_valid( 0 ) AND (empty($this->site) || !$this->site->get_value('custom_url_handler') ) )
+			if($report)
 			{
-				$this->debug( '<strong>site not set up correctly, gathering needed changes.</strong>' );
-				if( !$this->_base_url_exists() )
+				$ret = array();
+				if( !$this->_is_base_valid( 0 ) AND (empty($this->site) || 	!$this->site->get_value('custom_url_handler') ) )
 				{
-					$path = trim_slashes( $this->web_base_url );
-					$path_parts = split( '/', $path );
-					$working_dir = $this->web_root;
-					foreach( $path_parts AS $part )
+					$this->debug( '<strong>site not set up correctly, gathering needed changes.</strong>' );
+					if( !$this->_base_url_exists() )
 					{
-						$working_dir .= $part.'/';
-						if( !file_exists( $working_dir ) )
-							$ret[] = 'mkdir '.$working_dir;
+						$path = trim_slashes( $this->web_base_url );
+						$path_parts = split( '/', $path );
+						$working_dir = $this->web_root;
+						foreach( $path_parts AS $part )
+						{
+							$working_dir .= $part.'/';
+							if( !file_exists( $working_dir ) )
+								$ret[] = 'mkdir '.$working_dir;
+						}
+						$ret[] = 'sudo chown '.REASON_SITE_DIRECTORY_OWNER.'.'.REASON_SITE_DIRECTORY_OWNER.' '.$working_dir;
+						$ret[] = 'sudo chmod 775 '.$working_dir;
 					}
-					$ret[] = 'sudo chown '.REASON_SITE_DIRECTORY_OWNER.'.'.REASON_SITE_DIRECTORY_OWNER.' '.$working_dir;
-					$ret[] = 'sudo chmod 775 '.$working_dir;
+					else if( !$this->_base_url_writable() )
+					{
+						$ret[] = 'sudo chown '.REASON_SITE_DIRECTORY_OWNER.'.'.REASON_SITE_DIRECTORY_OWNER.' '.$this->full_base_url;
+						$ret[] = 'sudo chmod 775 '.$this->full_base_url;
+					}
 				}
-				else if( !$this->_base_url_writable() )
-				{
-					$ret[] = 'sudo chown '.REASON_SITE_DIRECTORY_OWNER.'.'.REASON_SITE_DIRECTORY_OWNER.' '.$this->full_base_url;
-					$ret[] = 'sudo chmod 775 '.$this->full_base_url;
-				}
+				else
+					$this->debug( '<strong>Site is set up properly.</strong>' );
+				return $ret;
 			}
 			else
-				$this->debug( '<strong>Site is set up properly.</strong>' );
-			return $ret;
+			{
+				if( !$this->_is_base_valid( 0 ) AND (empty($this->site) || 	!$this->site->get_value('custom_url_handler') ) )
+				{
+					$this->debug( '<strong>site not set up correctly, attempting to fix.</strong>' );
+					if( !$this->_base_url_exists() )
+					{
+						mkdir_recursive($this->full_base_url, 0775);
+					}
+					elseif( !$this->_base_url_writable() )
+					{
+						$ret = '<strong>Base URL is not writable; please run these commands:</strong> ';
+						$ret .= '<code>';
+						$ret .= 'sudo chown '.REASON_SITE_DIRECTORY_OWNER.'.'.REASON_SITE_DIRECTORY_OWNER.' '.$this->full_base_url.'; ';
+						$ret .= 'sudo chmod 775 '.$this->full_base_url.';</code>';
+						$this->debug( $ret );
+					}
+					
+					if($this->_base_url_exists() && $this->_base_url_writable())
+					{
+						$this->debug( '<strong>Site directory successfully fixed.</strong>' );
+						return true;
+					}
+					return false;
+				}
+			}
 		} // }}}
 		function _test_and_copy() // {{{
 		{
