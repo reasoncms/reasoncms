@@ -107,7 +107,7 @@ foreach (array_keys($_FILES) as $name) {
 		}
 		else
 		{
-			final_response(420, 'Unable to convert the uploaded file to a web-friendly image');
+			final_response(501, 'Unable to convert the uploaded file to a web-friendly image');
 		}
 	}
 	
