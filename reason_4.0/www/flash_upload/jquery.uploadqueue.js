@@ -49,8 +49,8 @@
             403: "Permission denied to upload this file.",
             413: "File is unacceptably large; upload rejected.",
             415: "File is not a permitted type; upload rejected.",
-            420: "Unable to convert the uploaded file to a web-friendly image. Please try saving in a different format.",
             500: "An internal server error occurred. Please try again later.",
+            501: "Unable to convert the uploaded file to a web-friendly image. Please try saving in a different format.",
             503: "The upload service is temporarily unavailable. Please try " +
                 "again later."
         };
