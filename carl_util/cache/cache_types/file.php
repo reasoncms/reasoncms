@@ -1,5 +1,6 @@
 <?php
 include_once(CARL_UTIL_INC . 'cache/cache_types/default.php');
+include_once(CARL_UTIL_INC . 'basic/filesystem.php');
 
 /**
  *	Cache type that uses file system
@@ -35,6 +36,7 @@ class FileObjectCache extends DefaultObjectCache
 	function set(&$object)
 	{
 		$cache_file = $this->_get_cache_file();
+		if (!is_dir(dirname($cache_file))) mkdir_recursive(dirname($cache_file));
 		$fh = fopen($cache_file,"w");
 		flock($fh, LOCK_EX);
 		$result = fwrite($fh, serialize($object));
@@ -87,7 +89,8 @@ class FileObjectCache extends DefaultObjectCache
 		$cache_id = $this->get_cache_id();
 		$cache_dir = $this->_get_cache_dir();
 		$slash_if_needed = (substr($cache_dir, -1, 1) == "/") ? "" : "/";
-		$cache_file = ($cache_id) ? $cache_dir .$slash_if_needed.$cache_id.'.obj.cache' : false;
+		$cache_sub_dir = substr($cache_id, 0, 2);
+		$cache_file = ($cache_id) ? $cache_dir .$slash_if_needed.$cache_sub_dir.'/'.$cache_id.'.obj.cache' : false;
 		return $cache_file;
 	}
 	
