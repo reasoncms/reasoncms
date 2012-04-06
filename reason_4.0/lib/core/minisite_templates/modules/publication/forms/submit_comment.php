@@ -7,7 +7,9 @@
 	/**
 	 * Include Disco
 	 */
+	include_once('reason_header.php');
 	include_once( DISCO_INC . 'disco.php');
+	reason_include_once( 'function_libraries/user_functions.php' );
 	
 	/**
 	 * Register the form with Reason
@@ -85,8 +87,18 @@
 		{
 			$this->username = $username;
 		}
+		function disabled_for_maintenance()
+		{
+			return (reason_maintenance_mode() && !reason_check_privs('db_maintenance'));
+		}
 		function on_every_time()
 		{
+			if ($this->disabled_for_maintenance())
+			{
+				echo '<p>Commenting is temporarily disabled because the website is in maintenance mode. Please try again later.</p>';
+				$this->show_form = false;
+				return false;
+			}
 			if($this->hold_comments_for_review)
 			{
 				$this->actions['Submit'] = 'Submit Comment (Moderated)';

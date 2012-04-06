@@ -63,9 +63,19 @@
 			$this->site_info = new entity($site_id);
 			$this->user_netID = $user_netID;
 		}
-		
+		function disabled_for_maintenance()
+		{
+			return (reason_maintenance_mode() && !reason_check_privs('db_maintenance'));
+		}
 		function on_every_time()
 		{
+			if ($this->disabled_for_maintenance())
+			{
+				echo '<p>Posting is temporarily disabled because the website is in maintenance mode. Please try again later.</p>';
+				$this->show_form = false;
+				return false;
+			}
+			
 			// nwhite make a nice link that only clears add item and return text that identifies publication type
 			$pub_type = ($pt = $this->publication->get_value('publication_type')) ? strtolower($pt) : 'publication';
 			$link = carl_make_link(array('add_item' => ''));
