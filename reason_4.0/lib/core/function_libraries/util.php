@@ -905,6 +905,20 @@
 	} // }}}
 	
 	/**
+	 * Returns the value of REASON_MAINTENANCE_MODE
+	 * @return REASON_MAINTENANCE_MODE
+	 */
+	function reason_maintenance_mode()
+	{
+		if (defined("REASON_MAINTENANCE_MODE"))
+		{
+			return REASON_MAINTENANCE_MODE;
+		}
+		else trigger_error('Please define REASON_MAINTENANCE_MODE in reason_settings.php. It should default to false.');
+		return false;
+	}
+	
+	/**
 	 * Determines if a given reason user has a given privilege
 	 *
 	 * Note: This function is *fast*. There's no need to carefully store and pass around its results -- just call it again.
