@@ -26,7 +26,7 @@
 														'relationship'=>'faq_to_category',
 													),
 								);
-		var $search_fields = array('entity.name','meta.description','meta.keywords','chunk.content','chunk.author');
+		var $search_fields = array('name','description','keywords','content','author');
 		var $acceptable_params = array(
 			'audiences'=>array(),
 			'limit_to_current_site'=>true,
