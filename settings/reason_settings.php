@@ -87,6 +87,16 @@
 	////////////////////////////////////////////////////////////
 
 	/**
+	 * REASON_MAINTENANCE_MODE
+	 * Set this to true during database maintenance or upgrades.
+	 *
+	 * When REASON_MAINTENANCE_MODE is true, users without the db_maintenance privilege
+	 * will be unable to access the administrative interface, and modules should restrict
+	 * database writes / updates.
+	 */
+	define( 'REASON_MAINTENANCE_MODE', false ); 
+	
+	/**
 	 * REASON_DEFAULT_TIMEZONE
 	 * PHP 5 will send warnings in E_STRICT mode if a default timezone is not set
 	 *
