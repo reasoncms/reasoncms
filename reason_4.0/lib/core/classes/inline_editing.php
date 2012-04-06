@@ -8,6 +8,7 @@
  * Include dependencies
  */
 include_once( 'reason_header.php' );
+reason_include_once( 'function_libraries/user_functions.php' );
 
 /**
  * Allows the getting and setting of information related to inline editing.
@@ -194,7 +195,11 @@ class ReasonInlineEditing
 	{
 		if (!isset($this->_reason_allows_inline_editing))
 		{
-			if (defined('REASON_ALLOWS_INLINE_EDITING'))
+			if (reason_maintenance_mode() && !reason_check_privs('db_maintenance'))
+			{
+				$this->_reason_allows_inline_editing = false;
+			}
+			elseif (defined('REASON_ALLOWS_INLINE_EDITING'))
 			{
 				$this->_reason_allows_inline_editing = REASON_ALLOWS_INLINE_EDITING;	
 			}
