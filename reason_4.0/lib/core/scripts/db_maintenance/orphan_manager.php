@@ -8,7 +8,7 @@
  */
 	include_once( 'reason_header.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
-	reason_include_once( 'function_libraries/relationship_finder.php' );
+	reason_include_once( 'function_libraries/util.php' );
 	
 	class reason_orphan_manager
 	{
@@ -97,11 +97,10 @@
 			}
 			if(!get_owner_site_id( $orphan_id ))
 			{
-				$owns_rel_id = relationship_finder('site',$type_id);
+				$owns_rel_id = get_owns_relationship_id($type_id);
 				
 				// If there is an existing entry in the relationship table, delete it
-				$q = 'DELETE FROM `relationship` WHERE `entity_b` = "'.addslashes($orphan_id).'" AND `type` = "'.addslashes($owns_rel_id).'"';
-				$r = db_query($q, 'Unable to delete old owns relationship');
+				delete_relationships(array('entity_b' => addslashes($orphan_id), 'type' => addslashes($owns_rel_id)));
 				
 				// create new ownership entry
 				create_relationship( $owner_site_id, $orphan_id, $owns_rel_id );

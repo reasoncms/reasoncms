@@ -13,6 +13,7 @@ include_once( 'reason_header.php' );
  * @param string $entity_a The unique name of the type on the "A" side of the relationship
  * @param string $entity_b The unique name of the type on the "B" side of the relationship
  * @return mixed false if not found or if multiple rels available; else space delimited string data (a_to_b the_rel_name or b_to_a the_rel_name)
+ * @deprecated since Reason 4.2
  */
 function find_relationship_name( $entity_a, $entity_b )
 {
@@ -68,6 +69,7 @@ function find_relationship_name( $entity_a, $entity_b )
  * @param mixed $entity_b The unique name, id, or entity of the type on the "B" side of the relationship
  * @param string $name the name of the relationship
  * @return mixed The ID of the allowable relationship or NULL if not found
+ * @deprecated since Reason 4.2 just use relationship_id_of with the name
  */
 function relationship_finder( $entity_a, $entity_b, $name = 'owns' )
 {
@@ -86,6 +88,17 @@ function relationship_finder( $entity_a, $entity_b, $name = 'owns' )
 		$b_id = id_of($entity_b);
 		
 	$name = (string) $name;
+	
+	// if the name string passed in is simply "owns" or "borrows" and relationship uses unique relationship names, update the name we look for and trigger an error
+	if ( ($name == 'owns' || $name == 'borrows') && reason_relationship_names_are_unique())
+	{
+		$a = new entity($a_id);
+		$b = new entity($b_id);
+		$name = $a->get_value('unique_name') . '_' . $name . '_' . $b->get_value('unique_name'); // this assumes unique names not cool
+		trigger_error('The function relationship_finder was called to discover an owns or borrows relationship. The strings "owns" and "borrows"
+			           are no longer used as relationship names. Calling this method is no longer necessary to find the relationship_id of owns
+			           or borrows relationships. Use get_owns_relationship_id or get_borrows_relationship_id instead.');
+	}
 	
     if( empty($a_id))
     {
@@ -130,6 +143,4 @@ function relationship_finder( $entity_a, $entity_b, $name = 'owns' )
 	$results = mysql_fetch_array( $results );
 	return (integer) $results['id'];
 }
-        
-
 ?>

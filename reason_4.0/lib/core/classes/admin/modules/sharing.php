@@ -100,13 +100,7 @@
 			// if(reason_user_has_privs($this->admin_page->user_id,'edit'))
 			return $ret;
 		}
-		/**
-		 *@todo Remove before 4.1 release.
-		 */
-		function set_session_vars()
-		{
-			trigger_error("This method is deprecated and will be removed by the 4.1 release.", E_USER_WARNING);
-		}
+
 		function show_next_nodes() // {{{
 		{
 			$finish_link = $this->admin_page->make_link( array( 'cur_module' => 'Lister' ) );

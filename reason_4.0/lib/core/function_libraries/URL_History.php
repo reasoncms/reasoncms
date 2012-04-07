@@ -34,7 +34,6 @@
 include_once( 'reason_header.php' );
 include_once( CARL_UTIL_INC . 'db/sqler.php' );
 reason_include_once( 'classes/entity_selector.php' );
-reason_include_once( 'function_libraries/relationship_finder.php' );
 reason_include_once( 'function_libraries/url_utils.php' );
 
 /**

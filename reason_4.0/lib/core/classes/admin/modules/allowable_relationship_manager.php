@@ -9,6 +9,7 @@
   */
 	reason_include_once('classes/admin/modules/default.php');
 	reason_include_once('classes/user.php');
+	reason_include_once('function_libraries/util.php');
 	include_once (CARL_UTIL_INC .'db/table_admin.php');
 
 	/**
@@ -114,7 +115,7 @@
 										 'directionality' => 'Directionality');
 										 
 		var $form_transforms_data = true;
-			
+		
 		function pre_show_form_edit()
 		{
 			echo '<h3>Editing Allowable Relationship</h3>';
@@ -151,6 +152,14 @@
 			$this->set_comments('description_reverse_direction',form_comment('The text that is used as a heading above the list of A items when previewing a B item.'));
 			$this->add_required( 'is_sortable' );
 			$this->set_comments('is_sortable',form_comment('Answering "yes" will enable relationship-based sorting across relationships of this type. You will still need to alter the appropriate code to pay attention to the relationship sort order field before this has any effect on the front end.'));
+			
+			if (reason_relationship_names_are_unique())
+			{
+				$this->add_required( 'type' );
+				$this->change_element_type('type', 'protected');
+				$this->set_value('type', 'association');
+			}
+			
 			// get types
 			$es = new entity_selector();
 			$es->add_type( id_of( 'type' ) );
@@ -160,7 +169,7 @@
 				$types[ $ent->id() ] = $ent->get_value( 'name' );
 			$this->change_element_type( 'relationship_a','select',array('options'=>$types) );
 			$this->change_element_type( 'relationship_b','select',array('options'=>$types) );
-			$this->set_order(array('name','description','relationship_a','relationship_b','connections','directionality','required','is_sortable','display_name','display_name_reverse_direction','description_reverse_direction','custom_associator'));
+			$this->set_order(array('name','description','relationship_a','relationship_b','connections','directionality','required','is_sortable','display_name','display_name_reverse_direction','description_reverse_direction','type','custom_associator'));
 			parent::on_every_time_default();
 		}
 		
@@ -193,6 +202,14 @@
 			}
 			$data_row['relationship_a'] = isset($types[$data_row['relationship_a']]) ? $types[$data_row['relationship_a']] : 'No Type';
 			$data_row['relationship_b'] = isset($types[$data_row['relationship_b']]) ? $types[$data_row['relationship_b']] : 'No Type';
+			
+			if (reason_relationship_names_are_unique())
+			{
+				if ($data_row['type'] != "association")
+				{
+					$data_row = false;
+				}
+			}
 		}
 		
 		function run_error_checks_new()
@@ -211,11 +228,13 @@
 		{
 			if (!$this->dir_validation()) $this->set_error('directionality', 'One To Many and Many to One relationships cannot be bidirectional');
 			if (!$this->name_validation()) $this->set_error('name', 'Names must contain only letters, numbers, and/or underscores.  Please make sure the name doesn\'t contain any other characters.');
-			if (!$this->name_uniqueness_check()) $this->set_error('name', 'The name of the allowable relationship must be unique.');
+			if (reason_relationship_names_are_unique() && !$this->reserved_names_validation()) $this->set_error('name', 'You cannot use "owns", "borrows", "archive", or "association" as an allowable relationship name.');
+			if (reason_relationship_names_are_unique() && !$this->name_uniqueness_check()) $this->set_error('name', 'The name of the allowable relationship must be unique.');
 		}
 		
 		function where_to()
 		{
+			reason_refresh_relationship_names(); // lets make sure this reflects changes.
 			return carl_make_redirect(array('table_row_action' => '', 'table_action_id' => ''));
 		}
 		
@@ -239,24 +258,17 @@
 			return true;
 		}
 		
+		function reserved_names_validation()
+		{
+			$name = $this->get_value('name');
+			if (in_array($name, array('owns','borrows','archive','association'))) return false;
+			return true;
+		}
+		
 		function name_uniqueness_check()
 		{
-			$ok_to_duplicate = array('owns','borrows');
-			if(in_array($this->get_value('name'),$ok_to_duplicate))
-			{
-				return true;
-			}
-			$dbs = new DBSelector();
-			$dbs->add_table('allowable_relationship');
-			$dbs->add_field('allowable_relationship','name','name');
-			$dbs->add_relation('`name` = "'.addslashes($this->get_value('name')).'"');
-			$dbs->add_relation('`id` != "'.$this->_id.'"');
-			$results = $dbs->run('Error getting other names');
-			if(!empty($results))
-			{
-				return false;
-			}
-			return true;
+			if (reason_relationship_name_exists($this->get_value('name'))) return false;
+			else return true;
 		}
 	}
 ?>

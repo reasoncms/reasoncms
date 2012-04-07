@@ -714,6 +714,8 @@ class reasonCalendar
 			// we only need to run the events if it will produce results
 			if($this->start_date <= $this->end_date)
 			{
+				//$this->es->limit_fields();
+				//$this->es->exclude_tables_dynamically();
 				$this->events = $this->es->run_one();
 			}
 		}
@@ -1410,8 +1412,8 @@ class reasonCalendar
 		$test_es = carl_clone($this->base_es);
 		$test_es->set_num(1);
 		$test_es->add_relation('dated.datetime < "'.addslashes($date).'"');
-		//$test_es->optimize('');
-		//echo $test_es->get_one_query().'<br />';
+		$test_es->limit_fields();
+		$test_es->exclude_tables_dynamically();
 		$test_results = $test_es->run_one();
 		if(!empty($test_results))
 		{
@@ -1445,7 +1447,10 @@ class reasonCalendar
 		$test_es = carl_clone($this->base_es);
 		$test_es->set_num(1);
 		$test_es->add_relation('event.last_occurence > "'.addslashes($date).'"');
-		$test_es->optimize('');
+		$test_es->limit_fields();
+		$test_es->exclude_tables_dynamically();
+		
+		//$test_es->optimize('');
 		//echo $test_es->get_one_query().'<br />';
 		$test_results = $test_es->run_one();
 		if(!empty($test_results))

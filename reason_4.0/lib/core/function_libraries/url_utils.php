@@ -11,6 +11,7 @@ include_once( 'reason_header.php' );
 include_once( CARL_UTIL_INC . 'basic/url_funcs.php' );
 reason_include_once( 'classes/entity_selector.php' );
 reason_include_once( 'classes/url/page.php' );
+reason_include_once( 'function_libraries/url_utils.php' );
 	
 /**
  * Grab contents of a URL.
@@ -501,12 +502,11 @@ function get_site_URL( $page_id )
 	if (isset($cache[$page_id])) $results = $cache[$page_id];
 	else
 	{
-		reason_include_once( 'function_libraries/relationship_finder.php' );
 		$es = new entity_selector();
 		$es->add_type( id_of( 'site') );
 		$es->limit_tables('site');
 		$es->limit_fields('site.base_url');
-		$es->add_left_relationship( $page_id, relationship_finder( 'site', 'minisite_page', 'owns' ) ); //relationship_id_of('owns') 
+		$es->add_left_relationship( $page_id, get_owns_relationship_id(id_of('minisite_page')));
 		$es->set_num(1);
 		$results = $es->run_one();
 		$cache[$page_id] = $results;

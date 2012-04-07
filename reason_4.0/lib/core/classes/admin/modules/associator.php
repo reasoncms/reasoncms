@@ -4,326 +4,323 @@
  * @subpackage admin
  */
  
- /**
-  * Include the default module and other needed utilities
-  */
-	reason_include_once('classes/admin/modules/default.php');
-	reason_include_once( 'classes/admin/modules/lister.php' );
+/**
+ * Include the default module and other needed utilities
+ */
+reason_include_once('classes/admin/modules/default.php');
+reason_include_once('classes/admin/modules/lister.php' );
+reason_include_once('function_libraries/util.php');
+
 	
-	/**
-	 * An administrative module that provides an interface to associate Reason entities
-	 */
-	class AssociatorModule extends DefaultModule // {{{
+/**
+ * An administrative module that provides an interface to associate Reason entities
+ */
+class AssociatorModule extends DefaultModule // {{{
+{
+	var $viewer;
+	var $filter;
+	var $associations;
+
+	function AssociatorModule( &$page ) // {{{
 	{
-		var $viewer;
-		var $filter;
-		var $associations;
-
-		function AssociatorModule( &$page ) // {{{
-		{
-			$this->admin_page =& $page;
-		} // }}}
-		
-		function show_live() // {{{
-		{
-			$s = '<a href="'.$this->admin_page->make_link( $this->admin_page->request +  array( 'state' => 'live' ) ) . '">Back to main list</a><br /><br />';
-			return $s;
-		} // }}}
-		function show_next_nodes() // {{{
-		{
-			$finish_link = $this->admin_page->make_link( array( 'cur_module' => 'Finish' ) );
-			$edit = $this->admin_page->make_link( array( 'cur_module' => 'Editor' ) );
-			
-			echo '<a href="'.$edit.'">Back to Edit</a><br />';
-			echo '<a href="'.$finish_link.'">Finish</a><br />';
-		} // }}}
-		function get_associations() // {{{
-		{
-			$d = new DBSelector;
-
-			$d->add_table('ar','allowable_relationship' );
-		
-			$d->add_table( 'allowable_relationship' );
-			$d->add_table( 'relationship' );
-			$d->add_table( 'entity' );
-			
-			$d->add_relation( 'allowable_relationship.name = "site_to_type"' );
-			$d->add_relation( 'allowable_relationship.id = relationship.type' );
-			$d->add_relation( 'relationship.entity_a = '.$this->admin_page->site_id );
-			$d->add_relation( 'relationship.entity_b = ar.relationship_b' );
-			$d->add_relation( 'entity.id = ar.relationship_b' );
-			
-			$d->add_field( 'entity' , 'id' , 'e_id' );
-			$d->add_field( 'entity' , 'name' , 'e_name' );
-			$d->add_field('ar','*');
-
-			$d->add_relation( 'ar.relationship_a = ' . $this->admin_page->type_id );
-			$d->add_relation('ar.name != "owns"');
-			$d->add_relation('(ar.custom_associator IS NULL OR ar.custom_associator = "")');
-			$r = db_query( $d->get_query() , 'Error selecting relationships' );
-			$return_me = array();
-			while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
-				$return_me[ $row[ 'id' ] ] = $row;
-			$this->associations = $return_me;
-			if( empty( $this->admin_page->rel_id ) )
-			{
-				reset( $this->associations );
-				list( $key , ) = each( $this->associations );
-
-				$this->admin_page->rel_id = $key;
-				echo $key;
-			}
-		} // }}}
-		function list_associations() // {{{
-		{
-			foreach( $this->associations AS $id => $ass )
-			{
-				if( $id == $this->admin_page->rel_id )
-				{
-					$start = '<strong>';
-					$finish = '</strong>';
-				}
-				else
-				{
-					$start = '<a href="' . $this->admin_page->make_link( array( 'rel_id' => $id ) ) . '">';
-					$finish = '</a>';
-				}
-				echo $start . 'Associate with ' . $ass[ 'e_name' ] . $finish . '<br />';
-			}
-		} // }}}
-		
-		/**
-		 *@todo Remove before 4.1 release.
-		 */
-		function set_session_vars()
-		{
-			trigger_error("This method is deprecated and will be removed by the 4.1 release.", E_USER_WARNING);
-		}
-		
-		function should_run()
-		{
-			if(empty($this->admin_page->id))
-				return false;
-			else
-				return true;
-		}
+		$this->admin_page =& $page;
+	} // }}}
 	
-		function init() // {{{
+	function show_live() // {{{
+	{
+		$s = '<a href="'.$this->admin_page->make_link( $this->admin_page->request +  array( 'state' => 'live' ) ) . '">Back to main list</a><br /><br />';
+		return $s;
+	} // }}}
+	function show_next_nodes() // {{{
+	{
+		$finish_link = $this->admin_page->make_link( array( 'cur_module' => 'Finish' ) );
+		$edit = $this->admin_page->make_link( array( 'cur_module' => 'Editor' ) );
+		
+		echo '<a href="'.$edit.'">Back to Edit</a><br />';
+		echo '<a href="'.$finish_link.'">Finish</a><br />';
+	} // }}}
+	function get_associations() // {{{
+	{
+		$d = new DBSelector;
+
+		$d->add_table('ar','allowable_relationship' );
+	
+		$d->add_table( 'allowable_relationship' );
+		$d->add_table( 'relationship' );
+		$d->add_table( 'entity' );
+		
+		$d->add_relation( 'allowable_relationship.name = "site_to_type"' );
+		$d->add_relation( 'allowable_relationship.id = relationship.type' );
+		$d->add_relation( 'relationship.entity_a = '.$this->admin_page->site_id );
+		$d->add_relation( 'relationship.entity_b = ar.relationship_b' );
+		$d->add_relation( 'entity.id = ar.relationship_b' );
+		
+		$d->add_field( 'entity' , 'id' , 'e_id' );
+		$d->add_field( 'entity' , 'name' , 'e_name' );
+		$d->add_field('ar','*');
+
+		$d->add_relation( 'ar.relationship_a = ' . $this->admin_page->type_id );
+		if (reason_relationship_names_are_unique())
 		{
-			if(!$this->should_run())
+			$d->add_relation('ar.type = "association"');
+		}
+		else
+		{
+			$d->add_relation('ar.name != "owns"');
+		}
+		$d->add_relation('(ar.custom_associator IS NULL OR ar.custom_associator = "")');
+		$r = db_query( $d->get_query() , 'Error selecting relationships' );
+		$return_me = array();
+		while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
+			$return_me[ $row[ 'id' ] ] = $row;
+		$this->associations = $return_me;
+		if( empty( $this->admin_page->rel_id ) )
+		{
+			reset( $this->associations );
+			list( $key , ) = each( $this->associations );
+
+			$this->admin_page->rel_id = $key;
+			echo $key;
+		}
+	} // }}}
+	function list_associations() // {{{
+	{
+		foreach( $this->associations AS $id => $ass )
+		{
+			if( $id == $this->admin_page->rel_id )
 			{
-				trigger_error('Associator module needs an ID to run; none provided.');
-				return;
+				$start = '<strong>';
+				$finish = '</strong>';
 			}
-			reason_include_once( 'classes/filter.php' );
-			reason_include_once( 'content_listers/associate.php' );
-			include_once( CARL_UTIL_INC . 'basic/misc.php' );
-			$this->head_items->add_javascript(JQUERY_URL, true);
-			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'assoc.css');
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'table_update.js');
-			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'associator.js');
-			$this->get_associations();
-			if(empty($this->associations[ $this->admin_page->rel_id ]))
-			{
-				trigger_error( $this->admin_page->rel_id.' is not a valid relationship type id');
-				die();
-			}
-			$current_assoc = $this->associations[ $this->admin_page->rel_id ];
-			$type = new entity( $current_assoc[ 'e_id' ] );
-			// save the type entity in an object scope
-			$this->rel_type = carl_clone($type);
-			$this->admin_page->title = 'Selecting ' . $type->get_value('name');
-			
-			$this->get_views( $type->id() );
-			if( empty( $this->views ) )//add generic lister if not already present
-				$this->views = array();
 			else
 			{
-				reset( $this->views );
-				$c = current( $this->views );
-				if( $c )
-				{
-					$lister = $c->id();
-					$this->admin_page->request[ 'lister' ] = $lister;
-				}
-				else
-					$lister = '';
+				$start = '<a href="' . $this->admin_page->make_link( array( 'rel_id' => $id ) ) . '">';
+				$finish = '</a>';
 			}
-			$lister = ( isset($lister) ? $lister : '');
-			$this->get_viewer( $this->admin_page->site_id, $type->id(), $lister );
-			
-			$this->filter = new filter;
-			$this->filter->set_page( $this->admin_page );
-			$this->filter->grab_fields( $this->viewer->filters );
-		} // }}}
-		function get_views( $type_id ) // {{{
-		{
-			$s = get_microtime();
-			$ds = new entity_selector();
-			$ds->add_type( id_of('view'));
-			$ds->limit_tables('sortable');
-			$ds->limit_fields();
-			$ds->set_order( 'sortable.sort_order' );
-			$ds->add_right_relationship( $type_id , relationship_id_of( 'type_to_default_view' ) );
-			$default_views = $ds->run_one();
-			
-			$ssvs = new entity_selector();
-			$ssvs->add_type( id_of( 'view' ) );
-			$ds->limit_tables('sortable');
-			$ds->limit_fields();
-			$ssvs->add_left_relationship( $type_id , relationship_id_of( 'view_to_type' ) );
-			$ssvs->add_left_relationship( $this->admin_page->site_id , relationship_id_of( 'view_to_site' ) );
-			$ssvs->set_order( 'sortable.sort_order' );
-			$site_specific_views = $ssvs->run_one();
-			
-			$this->views = $site_specific_views;
-			foreach($default_views as $id=>$view)
-			{
-				if(!array_key_exists($id, $site_specific_views))
-				{
-					$this->views[$id] = $view;
-				}
-			}
+			echo $start . 'Associate with ' . $ass[ 'e_name' ] . $finish . '<br />';
+		}
+	} // }}}
+	
+	function should_run()
+	{
+		if(empty($this->admin_page->id))
+			return false;
+		else
+			return true;
+	}
 
-			if( !empty( $this->admin_page->request[ 'lister' ] ) && array_key_exists($this->admin_page->request[ 'lister' ], $this->views) )
+	function init() // {{{
+	{
+		if(!$this->should_run())
+		{
+			trigger_error('Associator module needs an ID to run; none provided.');
+			return;
+		}
+		reason_include_once( 'classes/filter.php' );
+		reason_include_once( 'content_listers/associate.php' );
+		include_once( CARL_UTIL_INC . 'basic/misc.php' );
+		$this->head_items->add_javascript(JQUERY_URL, true);
+		$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'assoc.css');
+		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'table_update.js');
+		$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'associator.js');
+		$this->get_associations();
+		if(empty($this->associations[ $this->admin_page->rel_id ]))
+		{
+			trigger_error( $this->admin_page->rel_id.' is not a valid relationship type id');
+			die();
+		}
+		$current_assoc = $this->associations[ $this->admin_page->rel_id ];
+		$type = new entity( $current_assoc[ 'e_id' ] );
+		// save the type entity in an object scope
+		$this->rel_type = carl_clone($type);
+		$this->admin_page->title = 'Selecting ' . $type->get_value('name');
+		
+		$this->get_views( $type->id() );
+		if( empty( $this->views ) )//add generic lister if not already present
+			$this->views = array();
+		else
+		{
+			reset( $this->views );
+			$c = current( $this->views );
+			if( $c )
 			{
-				$view = $this->views[ $this->admin_page->request[ 'lister' ] ];
-				if( $view->id() == $this->admin_page->request[ 'lister' ] )
-				{
-					$viewer_type = $view->get_left_relationship( 'view_to_view_type' );
-				}
+				$lister = $c->id();
+				$this->admin_page->request[ 'lister' ] = $lister;
 			}
-			elseif( !empty($this->views) )
+			else
+				$lister = '';
+		}
+		$lister = ( isset($lister) ? $lister : '');
+		$this->get_viewer( $this->admin_page->site_id, $type->id(), $lister );
+		
+		$this->filter = new filter;
+		$this->filter->set_page( $this->admin_page );
+		$this->filter->grab_fields( $this->viewer->filters );
+	} // }}}
+	function get_views( $type_id ) // {{{
+	{
+		$ds = new entity_selector();
+		$ds->add_type( id_of('view'));
+		$ds->limit_tables('sortable');
+		$ds->limit_fields();
+		$ds->set_order( 'sortable.sort_order' );
+		$ds->add_right_relationship( $type_id , relationship_id_of( 'type_to_default_view' ) );
+		$default_views = $ds->run_one();
+		
+		$ssvs = new entity_selector();
+		$ssvs->add_type( id_of( 'view' ) );
+		$ds->limit_tables('sortable');
+		$ds->limit_fields();
+		$ssvs->add_left_relationship( $type_id , relationship_id_of( 'view_to_type' ) );
+		$ssvs->add_left_relationship( $this->admin_page->site_id , relationship_id_of( 'view_to_site' ) );
+		$ssvs->set_order( 'sortable.sort_order' );
+		$site_specific_views = $ssvs->run_one();
+		
+		$this->views = $site_specific_views;
+		foreach($default_views as $id=>$view)
+		{
+			if(!array_key_exists($id, $site_specific_views))
 			{
-				reset( $this->views );
-				$view = current( $this->views );
+				$this->views[$id] = $view;
+			}
+		}
+
+		if( !empty( $this->admin_page->request[ 'lister' ] ) && array_key_exists($this->admin_page->request[ 'lister' ], $this->views) )
+		{
+			$view = $this->views[ $this->admin_page->request[ 'lister' ] ];
+			if( $view->id() == $this->admin_page->request[ 'lister' ] )
+			{
 				$viewer_type = $view->get_left_relationship( 'view_to_view_type' );
 			}
-			if(!empty($viewer_type))
-			{
-				reset($viewer_type);
-				$this->viewer_entity = current($viewer_type);
-			}
-			//echo 'get_views took ' . (get_microtime() - $s) . ' seconds<br/>';
-		} // }}}
-		function get_viewer($site_id , $type_id , $lister) //{{{
+		}
+		elseif( !empty($this->views) )
 		{
-			$this->viewer = new assoc_viewer;
-			$this->viewer->set_page( $this->admin_page );
-			$this->viewer->init( $site_id, $type_id , $lister ); 
-		} // }}}
-
-		
-		function some_site_shares_type() // {{{
+			reset( $this->views );
+			$view = current( $this->views );
+			$viewer_type = $view->get_left_relationship( 'view_to_view_type' );
+		}
+		if(!empty($viewer_type))
 		{
-			$sharables = $this->admin_page->get_sharable_relationships();
-			return(isset($sharables[$this->rel_type->id()]));
-		} // }}}
-		function get_second_level_vars() // {{{
-		{
-			$new_vars = array(
-				'site_id' => $this->admin_page->site_id,
-				'type_id' => $this->rel_type->id(),
-				'id' => '',
-				'cur_module' => 'Editor',
-				'rel_id' => '',
-				'lister' => '',
-				'new_entity' => 1,
-			);
-			foreach( $this->admin_page->request AS $key => $val )
-				$new_vars[ CM_VAR_PREFIX.$key ] = $val;
-			return $new_vars;	
-		} // }}}
-		function do_add_link() // {{{
-		{
-			$site = new entity($this->admin_page->site_id);
-			if(!$this->rel_type->has_right_relation_with_entity($site, relationship_id_of( 'site_cannot_edit_type' )))
-			{
-			?>
-			<table border="0" cellpadding="0" cellspacing="0"><tr><td>
-  			<div class="addLink">
-			  <div class="roundedTop">
-						<img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>nw.gif" alt="" class="roundedCorner" />
-					</div>
-					
-                <div class="roundedContent"> 
-				<?php
-						$type_name = $this->rel_type->get_value( 'name' );
-						$new_vars = $this->get_second_level_vars();
-						echo '<a href="'.$this->admin_page->make_link( $new_vars ).'">Add '.$type_name.'</a>';
-                  ?>
-				  </div>
-					<div class="roundedBottom">
-						<img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>sw.gif" alt="" class="roundedCorner" />
-					</div>
-                </div>
-			</td></tr></table>
-			<?php
-			
-			}
-		} // }}}
-		function do_sharing_link() // {{{
-		{
-			echo '<table border="0" cellpadding="0" cellspacing="0">'."\n\t".'<tr>'."\n\t\t".'<td>'."\n".'<div class="viewFilter">'."\n\t\t\t".'<div class="roundedTop">'."\n\t".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent">';
-			$type_name = $this->rel_type->get_value( 'name' );
-			if( $this->admin_page->cur_module == 'Associator' )
-			{
-				$new_vars = $this->get_second_level_vars();
-				$new_vars[ 'cur_module' ] = 'Sharing';
-				$new_vars[ 'new_entity' ] = '';
-				echo '<a href="'.$this->admin_page->make_link( $new_vars ).'">Borrow '.$type_name.' from another site.</a><br />';
-			}
-			if( $this->admin_page->cur_module == 'Sharing' )
-			{
-				echo '<a href="'.$this->admin_page->make_link( array( 'cur_module' => 'Cancel' ) ).'">Back to Selecting '.$type_name.'.</a><br />';
-			}
-			echo '</div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n".'</td>'."\n".'</tr>'."\n".'</table>'."\n";
-		} // }}}
-		function run() // {{{
-		{
-			if(!$this->should_run())
-			{
-				echo '<p>There is a problem with the link to this page. Please try to get to this page in another way.</p>';
-				return;
-			}
-			if( !empty ($this->admin_page->request[ 'error_message' ]) )
-			{
-				$e_mess = array( 1 => 'This is a required relationship, You must first choose an item of this type to go with your entity',
-							   );
-
-				echo '<span class="words_error">' . $e_mess[ $this->admin_page->request[ 'error_message' ] ] . '</span><br />';
-			}
-			$colspan = count( $this->viewer->columns ) + 1;
-			echo '<table border="0"><tr><td>';
-			$this->viewer->show_associated_items();
-			echo '</td></tr><tr><td>&nbsp;';
-			echo '</td></tr><tr><td class="assocHead" colspan="'. $colspan .'">';
-			echo '&nbsp;&nbsp;Not Selected<br /><br /></td></tr><tr><td colspan="'.$colspan.'"><table><tr>';
-			$list_mod = new ListerModule($this->admin_page);
-			$list_mod->filter =& $this->filter;
-			$list_mod->show_filters();
-			echo '</tr></table></td></tr>';
-			if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) && $this->admin_page->cur_module == 'Associator' && reason_user_has_privs($this->admin_page->user_id, 'add') )
-			{
-				echo '<tr><td>';
-				$this->do_add_link();
-				echo '</td></tr>';
-			}
-			
-			$assoc_ok = !$this->admin_page->is_second_level() && $this->admin_page->cur_module == 'Associator' && $this->some_site_shares_type();
-			$sharing_ok = $this->admin_page->is_second_level() && $this->admin_page->cur_module == 'Sharing';
-			
-			if( reason_user_has_privs($this->admin_page->user_id, 'borrow') && ( $assoc_ok || $sharing_ok ) )
-			{
-			echo '<tr><td>';
-			$this->do_sharing_link();
-			echo '</td></tr>';
-			}
-			echo '<tr><td>';
-			$this->viewer->do_display();
-			echo '</td></tr></table>';
-		} // }}}
+			reset($viewer_type);
+			$this->viewer_entity = current($viewer_type);
+		}
+	} // }}}
+	function get_viewer($site_id , $type_id , $lister) //{{{
+	{
+		$this->viewer = new assoc_viewer;
+		$this->viewer->set_page( $this->admin_page );
+		$this->viewer->init( $site_id, $type_id , $lister ); 
 	} // }}}
 
 	
+	function some_site_shares_type() // {{{
+	{
+		$sharables = $this->admin_page->get_sharable_relationships();
+		return(isset($sharables[$this->rel_type->id()]));
+	} // }}}
+	function get_second_level_vars() // {{{
+	{
+		$new_vars = array(
+			'site_id' => $this->admin_page->site_id,
+			'type_id' => $this->rel_type->id(),
+			'id' => '',
+			'cur_module' => 'Editor',
+			'rel_id' => '',
+			'lister' => '',
+			'new_entity' => 1,
+		);
+		foreach( $this->admin_page->request AS $key => $val )
+			$new_vars[ CM_VAR_PREFIX.$key ] = $val;
+		return $new_vars;	
+	} // }}}
+	function do_add_link() // {{{
+	{
+		$site = new entity($this->admin_page->site_id);
+		if(!$this->rel_type->has_right_relation_with_entity($site, relationship_id_of( 'site_cannot_edit_type' )))
+		{
+		?>
+		<table border="0" cellpadding="0" cellspacing="0"><tr><td>
+		<div class="addLink">
+		  <div class="roundedTop">
+					<img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>nw.gif" alt="" class="roundedCorner" />
+				</div>
+				
+			<div class="roundedContent"> 
+			<?php
+					$type_name = $this->rel_type->get_value( 'name' );
+					$new_vars = $this->get_second_level_vars();
+					echo '<a href="'.$this->admin_page->make_link( $new_vars ).'">Add '.$type_name.'</a>';
+			  ?>
+			  </div>
+				<div class="roundedBottom">
+					<img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>sw.gif" alt="" class="roundedCorner" />
+				</div>
+			</div>
+		</td></tr></table>
+		<?php
+		
+		}
+	} // }}}
+	function do_sharing_link() // {{{
+	{
+		echo '<table border="0" cellpadding="0" cellspacing="0">'."\n\t".'<tr>'."\n\t\t".'<td>'."\n".'<div class="viewFilter">'."\n\t\t\t".'<div class="roundedTop">'."\n\t".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent">';
+		$type_name = $this->rel_type->get_value( 'name' );
+		if( $this->admin_page->cur_module == 'Associator' )
+		{
+			$new_vars = $this->get_second_level_vars();
+			$new_vars[ 'cur_module' ] = 'Sharing';
+			$new_vars[ 'new_entity' ] = '';
+			echo '<a href="'.$this->admin_page->make_link( $new_vars ).'">Borrow '.$type_name.' from another site.</a><br />';
+		}
+		if( $this->admin_page->cur_module == 'Sharing' )
+		{
+			echo '<a href="'.$this->admin_page->make_link( array( 'cur_module' => 'Cancel' ) ).'">Back to Selecting '.$type_name.'.</a><br />';
+		}
+		echo '</div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n".'</td>'."\n".'</tr>'."\n".'</table>'."\n";
+	} // }}}
+	function run() // {{{
+	{
+		if(!$this->should_run())
+		{
+			echo '<p>There is a problem with the link to this page. Please try to get to this page in another way.</p>';
+			return;
+		}
+		if( !empty ($this->admin_page->request[ 'error_message' ]) )
+		{
+			$e_mess = array( 1 => 'This is a required relationship, You must first choose an item of this type to go with your entity',
+						   );
+
+			echo '<span class="words_error">' . $e_mess[ $this->admin_page->request[ 'error_message' ] ] . '</span><br />';
+		}
+		$colspan = count( $this->viewer->columns ) + 1;
+		echo '<table border="0"><tr><td>';
+		$this->viewer->show_associated_items();
+		echo '</td></tr><tr><td>&nbsp;';
+		echo '</td></tr><tr><td class="assocHead" colspan="'. $colspan .'">';
+		echo '&nbsp;&nbsp;Not Selected<br /><br /></td></tr><tr><td colspan="'.$colspan.'"><table><tr>';
+		$list_mod = new ListerModule($this->admin_page);
+		$list_mod->filter =& $this->filter;
+		$list_mod->show_filters();
+		echo '</tr></table></td></tr>';
+		if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) && $this->admin_page->cur_module == 'Associator' && reason_user_has_privs($this->admin_page->user_id, 'add') )
+		{
+			echo '<tr><td>';
+			$this->do_add_link();
+			echo '</td></tr>';
+		}
+		
+		$assoc_ok = !$this->admin_page->is_second_level() && $this->admin_page->cur_module == 'Associator' && $this->some_site_shares_type();
+		$sharing_ok = $this->admin_page->is_second_level() && $this->admin_page->cur_module == 'Sharing';
+		
+		if( reason_user_has_privs($this->admin_page->user_id, 'borrow') && ( $assoc_ok || $sharing_ok ) )
+		{
+		echo '<tr><td>';
+		$this->do_sharing_link();
+		echo '</td></tr>';
+		}
+		echo '<tr><td>';
+		$this->viewer->do_display();
+		echo '</td></tr></table>';
+	} // }}}
+} // }}}	
 ?>

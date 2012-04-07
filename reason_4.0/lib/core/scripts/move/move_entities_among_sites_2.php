@@ -60,8 +60,7 @@ echo '<form method="post" action="' . REASON_HTTP_BASE_PATH . 'scripts/move/move
 // 1. Get $allowable_relationship_id where relationship_a =
 // id_of('site') and relationship_b = $type_id (if there's not one,
 // die)
-reason_include_once('function_libraries/relationship_finder.php');
-$allowable_relationship_id = relationship_finder('site',$type_id);
+$allowable_relationship_id = get_owns_relationship_id($type_id);
 
 // 2. Get list of entity_bs of relationships whose entity_a = $site_id
 // and whose type = $allowable_relationship_id;

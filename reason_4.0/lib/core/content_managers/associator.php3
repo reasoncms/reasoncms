@@ -40,8 +40,16 @@
 	} // }}}
 	function get_relationships() // {{{
 		{
-			$q = "SELECT id, relationship_b, name, connections from allowable_relationship where relationship_a = " 
+			if (reason_relationship_names_are_unique())
+			{
+				$q = "SELECT id, relationship_b, name, connections from allowable_relationship where relationship_a = " 
+				. $this->get_value( 'type_id' ) . " AND type != 'owns' AND type != 'archive'";
+			}
+			else
+			{
+				$q = "SELECT id, relationship_b, name, connections from allowable_relationship where relationship_a = " 
 				. $this->get_value( 'type_id' ) . " AND name != 'owns' AND name NOT LIKE  '%archive%'";
+			}
 			$r = db_query( $q , "Error selecting relationships" );
 			
 			while( $row = mysql_fetch_array( $r ))
@@ -88,7 +96,14 @@
 		//if given a value, the elements of omit should contain the id's of omitted associations
 		//this allows given elements to retains their values
 		{
-			$q = 'SELECT id from allowable_relationship where name = "owns"';
+			if (reason_relationship_names_are_unique())
+			{
+				$q = 'SELECT id from allowable_relationship where type = "owns"';
+			}
+			else
+			{
+				$q = 'SELECT id from allowable_relationship where name = "owns"';
+			}
 			$r = db_query( $q , 'Error selecting "owns" relationships' );
 			$where = "";
 			while( $row = mysql_fetch_array( $r , MYSQL_ASSOC ))
@@ -117,8 +132,16 @@
 					$where .= " AND id != " . $value;
 			}
 			
-			$q = "SELECT id, name, connections from allowable_relationship where relationship_a = " . $this->get_value( 'type_id' ). 
-				' AND name != "owns" ' . $where;
+			if (reason_relationship_names_are_unique())
+			{
+				$q = "SELECT id, name, connections from allowable_relationship where relationship_a = " . $this->get_value( 'type_id' ). 
+					' AND type != "owns" ' . $where;
+			}
+			else
+			{
+				$q = "SELECT id, name, connections from allowable_relationship where relationship_a = " . $this->get_value( 'type_id' ). 
+					' AND name != "owns" ' . $where;
+			}
 			$r = db_query( $q , "Error selecting relationships" );
 			while( $row = mysql_fetch_array( $r ) )
 			{

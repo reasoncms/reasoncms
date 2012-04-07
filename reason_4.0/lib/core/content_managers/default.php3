@@ -154,37 +154,25 @@
 				} 
 				$new_order[] = $k; */
 				$this->set_order( $new_order );
-				$d = new DBSelector;
-				$d->add_table( 'ar' , 'allowable_relationship' );
-				$d->add_table( 'r' , 'relationship' );
-				$d->add_table( 'entity' , 'entity' );
-
-				$d->add_field( 'entity' , '*' );
-
-				$d->add_relation( 'ar.name = "borrows"' );
-				$d->add_relation( 'ar.id = r.type' );
-				$d->add_relation( 'r.entity_b = ' . $this->admin_page->id );
-				$d->add_relation( 'r.entity_a = entity.id' );
-
-				$x = $d->run();
 				
+				$sites_borrowing = get_sites_that_are_borrowing_entity($this->admin_page->id);
 				$comments = 'Your site is currently sharing this type.  Select private to prevent other sites from borrowing this item. ';
 
-				if( $x )
+				if( $sites_borrowing )
 				{
 					$comments .= 'This item is currently being borrowed by the following site';
-					if( count( $x > 1 ) )
+					if( count( $sites_borrowing > 1 ) )
 						$comments .= 's';
 					$comments .= ': ';
 					$first = true;
-					foreach( $x AS $ent )
+					foreach( $sites_borrowing AS $ent )
 					{
 						if( !$first )
 							$comments .= ', ';
 						else
 							$first = false;
 
-						$comments .=  $ent[ 'name' ];
+						$comments .=  $ent->get_value('name');
 					}
 					$comments .= '.';
 				}
@@ -467,73 +455,5 @@
 		{
 			return array();
 		}
-	
-		/**	
-		 * returns true if entity has associtation
-		 * @return boolean
-		 */
-		function has_associations() // {{{
-		{
-			$d = new DBSelector;
-
-			$d->add_table('ar','allowable_relationship' );
-			$d->add_table('type','entity');
-		
-			$d->add_table('allowable_relationship');
-			$d->add_table('relationship');
-			
-			$d->add_relation( 'allowable_relationship.name = "site_to_type"' );
-			$d->add_relation( 'allowable_relationship.id = relationship.type' );
-			$d->add_relation( 'relationship.entity_a = '.$this->get_value( 'site_id' ));
-			$d->add_relation( 'relationship.entity_b = type.id' );
-		
-			$d->add_field('type','id');
-			$d->add_field('type','name');
-			
-			$d->add_field('ar','name','rel_name');
-			$d->add_field('ar','display_name');
-			$d->add_field('ar','id','rel_id');
-	
-			$d->add_relation('ar.relationship_a = '.$this->get_value('type_id') );
-			$d->add_relation('ar.relationship_b = type.id');
-			$d->add_relation('ar.name != "owns"');
-
-			return ($d->run() ? true : false);
-		} // }}}
-		/**
-		 * Does some stuff and returns an array of info about the 
-		 * entity's ARs
-		 * @return array
-		 */
-		function allowable_relationship_object() // {{{
-		{
-			$d = new DBSelector;
-
-			$d->add_table('ar','allowable_relationship' );
-			$d->add_table('type','entity');
-		
-			$d->add_table('allowable_relationship');
-			$d->add_table('relationship');
-			
-			$d->add_relation( 'allowable_relationship.name = "site_to_type"' );
-			$d->add_relation( 'allowable_relationship.id = relationship.type' );
-			$d->add_relation( 'relationship.entity_a = '.$this->get_value( 'site_id' ));
-			$d->add_relation( 'relationship.entity_b = type.id' );
-		
-			$d->add_field('type','id');
-			$d->add_field('type','name');
-			
-			$d->add_field('ar','name','rel_name');
-			$d->add_field('ar','display_name');
-			$d->add_field('ar','id','rel_id');
-	
-			$d->add_relation('ar.relationship_a = '.$this->get_value('type_id') );
-			$d->add_relation('ar.relationship_b = type.id');
-			$d->add_relation('ar.name != "owns"');
-			$d->add_relation('ar.name not like "%archive%"');
-
-			return $d;
-		} // }}}
-
 	}
 ?>

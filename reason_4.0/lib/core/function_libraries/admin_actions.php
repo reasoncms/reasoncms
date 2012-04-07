@@ -87,7 +87,14 @@
 		$q->add_relation( 'ar.relationship_a = site.id' );
 		$q->add_field( 'ar','id' );
 		$q->add_relation( 'ar.relationship_b = "'.$type_id.'"' );
-		$q->add_relation( 'ar.name = "owns"' );
+		if (reason_relationship_names_are_unique())
+		{
+			$q->add_relation( 'ar.type = "owns"' );
+		}
+		else
+		{
+			$q->add_relation( 'ar.name = "owns"' );
+		}
 		$tmp = $q->run();
 		if( $tmp )
 		{
@@ -203,9 +210,8 @@
 			$e = new entity( $id );
 
 		// get the site that owns this entity
-		$tmp = $e->get_right_relationship( 'owns' );
-		list( , $site) = each( $tmp );
-
+		$site = $e->get_owner();
+		
 		// get the tables used by this type/entity
 		$tables = get_entity_tables_by_id( $e->id() );
 
@@ -442,7 +448,7 @@
 				create_relationship( $id, $archived_id, $rel_id );
 			}
 			
-			// If the unique_name changes on the updated entity, or a uniquely named entity is deleted or undeleted, lets update the cache
+			// If the unique_name changes on the updated entity, or a uniquely named entity is deleted or undeleted, lets update the unique name cache
 			if ($updated_entity->get_value('unique_name') != $original->get_value('unique_name') ||
 				($original->get_value('state') != 'Deleted' && $updated_entity->get_value('state') == 'Deleted' && $original->get_value('unique_name')) ||
 				($original->get_value('state') == 'Deleted' && $updated_entity->get_value('state') != 'Deleted' && $updated_entity->get_value('unique_name')))
@@ -642,12 +648,15 @@
 		return db_query( $q, 'Unable to delete relationships.' );
 	} // }}} // }}}
 
+	/**
+	 * @todo make allowable_relationship unique_name friendly
+	 */
 	function delete_borrowed_relationship( $site_id , $id , $rel_id ) // {{{ //{{{
 	{
 		 //delete associations from that site
 		 $dbq = new DBSelector;
 
-				//actual relationships that we are selecting
+		 //actual relationships that we are selecting
 		 $dbq->add_table( 'r' , 'relationship' );
 		 $dbq->add_table( 'ar' , 'allowable_relationship' );
 
@@ -656,17 +665,23 @@
 		 $dbq->add_relation( 'r.type = ar.id' );
 		 $dbq->add_relation( 'r.entity_b = ' . $id );
 
-		 		//owns relationship table
+		 //owns relationship table
 		 $dbq->add_table( 'r2' , 'relationship' );
 		 $dbq->add_table( 'ar2' , 'allowable_relationship' );
 		 
-		 $dbq->add_relation( 'ar2.name = "owns"' );	
+		 if (!reason_relationship_names_are_unique())
+		 {
+		 	$dbq->add_relation( 'ar2.name = "owns"' );
+		 }
+		 else
+		 {
+		 	$dbq->add_relation( 'ar2.type = "owns"' );
+		 }
 		 $dbq->add_relation( 'r2.type = ar2.id' );
 		 $dbq->add_relation( 'r2.entity_a = ' . $site_id );
 		 $dbq->add_relation( 'r2.entity_b = r.entity_a' );
 
-
-		 		//current borrowship
+		 //current borrowship
 		 $dbq->add_table( 'r3' , 'relationship' );
 		 $dbq->add_table( 'ar3' , 'allowable_relationship' );
 		 
@@ -697,7 +712,7 @@
 			  ' AND type = ' . $rel_id;
 		 db_query( $q , 'Error removing borrowship' );
 	} // }}} // }}}
-	
+
 	function create_reason_table($table_name, $type_unique_name, $username)
 	{
 		if(str_replace(' ','_',addslashes($table_name)) != $table_name)
@@ -760,6 +775,8 @@
 	 * @param string $name The unique name of the allowable relationship (or "owns" or "borrows")
 	 * @param array $other_data Additional data to be stored in the allowable_relationship table, keyed by field name
 	 * @return mixed id of newly created relationship if successful; false if failure
+	 *
+	 * @todo update to do verification and handling of new "type" field
 	 */
 	function create_allowable_relationship($a_side_type_id,$b_side_type_id,$name,$other_data = array())
 	{
@@ -817,26 +834,72 @@
 			trigger_error('$name must only contain numbers, letters, and underscores');
 			return false;
 		}
-		$repeatable_names = array('borrows','owns');
-		if( !in_array($name,$repeatable_names) && reason_relationship_name_exists($name, false) )
+		
+		if (!reason_relationship_names_are_unique())
 		{
-			trigger_error('Unable to create allowable relationship named '.$name.' because there is already an allowable relationship with that name in Reason');
-			return false;
-		}
-		if(in_array($name,$repeatable_names))
-		{
-			if($a_side_type_id != id_of('site'))
+			$repeatable_names = array('borrows','owns');
+			if( !in_array($name,$repeatable_names) && reason_relationship_name_exists($name, false) )
 			{
-				trigger_error('The a_side_type_id of borrows and owns relationships must be the id of the site type');
+				trigger_error('Unable to create allowable relationship named '.$name.' because there is already an allowable relationship with that name in Reason');
 				return false;
 			}
-			// check to see if an owns/borrows relationship already exists for this type
-			reason_include_once('function_libraries/relationship_finder.php');
-			$existing_rel_id = relationship_finder($a_ent->get_value('unique_name'), $b_ent->get_value('unique_name'), $name );
-			if(!empty($existing_rel_id))
+			if(in_array($name,$repeatable_names))
 			{
-				trigger_error($name.' relationship already exists between '.$a_side_type_id.' and '.$b_side_type_id.'.');
+				if($a_side_type_id != id_of('site'))
+				{
+					trigger_error('The a_side_type_id of borrows and owns relationships must be the id of the site type');
+					return false;
+				}
+				// check to see if an owns/borrows relationship already exists for this type
+				if ( (($name == 'owns') && get_owns_relationship_id($b_side_type_id)) ||
+					 (($name == 'borrows') && get_borrows_relationship_id($b_side_type_id)) )
+				{
+					trigger_error($name.' relationship already exists between '.$a_side_type_id.' and '.$b_side_type_id.'.');
+					return false;
+				}
+			}
+		}
+		else
+		{
+			if (reason_relationship_name_exists($name, false))
+			{
+				trigger_error('Unable to create allowable relationship named '.$name.' because there is already an allowable relationship with that name in Reason');
 				return false;
+			}
+			if (isset($other_data['type']) && ( ($other_data['type'] == 'owns') || ($other_data['type'] == 'borrows') ) )
+			{
+				if ($a_side_type_id != id_of('site'))
+				{
+					trigger_error('The a_side_type_id of borrows and owns relationships must be the id of the site type');
+					return false;
+				}
+				// enforce our naming convention
+				$owns_name_should_be = $a_ent->get_value('unique_name') . '_owns_' . $b_ent->get_value('unique_name');
+				$borrows_name_should_be = $a_ent->get_value('unique_name') . '_borrows_' . $b_ent->get_value('unique_name');
+				if ( ($other_data['type'] == 'owns') && ($name != $owns_name_should_be) )
+				{
+					trigger_error('A new allowable relationship of type owns must follow the naming convention a_side_unique_name_owns_b_side_entity_unique_name');
+					return false;
+				}
+				elseif ( ($other_data['type'] == 'borrows') && ($name != $borrows_name_should_be) )
+				{
+					trigger_error('A new allowable relationship of type borrows must follow the naming convention a_side_unique_name_borrows_b_side_entity_unique_name');
+					return false;
+				}
+			}
+			if (isset($other_data['type']) && ($other_data['type'] == 'archive'))
+			{
+				if ($a_side_type_id != $b_side_type_id)
+				{
+					trigger_error('The a_side_type_id and b_side_type_id of archive relationships must be the same.');
+					return false;
+				}
+				$archive_name_should_be = $a_ent->get_value('unique_name') . '_archive';
+				if ($name != $archive_name_should_be)
+				{
+					trigger_error('A new allowable relationship of type archive must follow the naming convention type_unique_name_archive');
+					return false;
+				}
 			}
 		}
 		
@@ -848,6 +911,7 @@
 								'connections'=>'many_to_many',
 								'required'=>'no',
 		);
+		if (reason_relationship_names_are_unique($default_values['type'] = 'association'));
 		$values = array_merge($default_values,$other_data);
 		$values['relationship_a'] = $a_side_type_id;
 		$values['relationship_b'] = $b_side_type_id;
@@ -856,19 +920,20 @@
 		$sqler = new SQLER();
 		if($sqler->insert('allowable_relationship',$values))
 		{
-			return mysql_insert_id();
+			$insert_id = mysql_insert_id();
+			reason_refresh_relationship_names();
+			return $insert_id;
 		}
 		else
 		{
 			return false;
 		}
-		
 	}
 	
 	/**
 	 * Change a property of an allowable relationship
 	 *
-	 * Note that changing type ids or name is not supported by this function
+	 * Note that changing relationship_a, relationship_b, name, or type is not permitted by this function.
 	 *
 	 * @param integer $rel_id
 	 * @param array $values
@@ -876,9 +941,9 @@
 	 */
 	function update_allowable_relationship($rel_id,$values = array())
 	{
-		if(isset($values['relationship_a']) || isset($values['relationship_b']) || isset($values['name']))
+		if( isset($values['relationship_a']) || isset($values['relationship_b']) || isset($values['name']) || isset($values['type']) )
 		{
-			trigger_error('update_allowable_relationship does not allow for the change of left-side type, right-side type, or name. Rejecting update.');
+			trigger_error('update_allowable_relationship does not allow for the change of left-side type, right-side type, name, or relationship type. Rejecting update.');
 			return false;
 		}
 		$sqler = new SQLER();
@@ -889,24 +954,39 @@
 	 * Creates the ownership, borrowing, and archive relationships that are necessary for each Reason type
 	 *
 	 * @param integer $type_id
-	 * @param string $unique_name
 	 * @return boolean (success)
 	 */
-	function create_default_rels_for_new_type($type_id,$unique_name)
+	function create_default_rels_for_new_type($type_id)
 	{
 		if(empty($type_id))
 		{
 			trigger_error('Unable to create default relationships for type id '.$type_id.'; no type_id provided', HIGH);
 			return false;
 		}
-		if(empty($unique_name))
+		else $type = new entity($type_id);
+		$values = $type->get_values();
+		if (!reason_is_entity($type, 'type'))
 		{
-			trigger_error('Unable to create default relationships for type id '.$type_id.'; no unique_name provided', HIGH);
+			trigger_error('Unable to create default relationships for type id '.$type_id.'; id does not correspond to a reason type entity.', HIGH);
 			return false;
 		}
-		$owns_id = create_allowable_relationship(id_of('site'),$type_id,'owns',array('connections'=>'many_to_one','directionality'=>'unidirectional','required'=>'yes','is_sortable'=>'no'));
-		$borrows_id = create_allowable_relationship(id_of('site'),$type_id,'borrows',array('connections'=>'many_to_many','directionality'=>'bidirectional','required'=>'no','is_sortable'=>'no'));
-		$archive_id = create_allowable_relationship($type_id,$type_id,$unique_name.'_archive',array('connections'=>'many_to_one','directionality'=>'unidirectional','required'=>'no','is_sortable'=>'no'));
+		else $type_unique_name = $type->get_value('unique_name');
+		if (func_num_args() > 1)
+		{
+			trigger_error('The unique name parameter of create_default_rels_for_new_type is deprecated - the type unique name is determined from the type entity itself');
+		}
+		if (reason_relationship_names_are_unique())
+		{
+			$owns_id = create_allowable_relationship(id_of('site'),$type_id,'site_owns_'.$type_unique_name,array('connections'=>'many_to_one','directionality'=>'unidirectional','required'=>'yes','is_sortable'=>'no','type'=>'owns'));
+			$borrows_id = create_allowable_relationship(id_of('site'),$type_id,'site_borrows_'.$type_unique_name,array('connections'=>'many_to_many','directionality'=>'bidirectional','required'=>'no','is_sortable'=>'no','type'=>'borrows'));
+			$archive_id = create_allowable_relationship($type_id,$type_id,$type_unique_name.'_archive',array('connections'=>'many_to_one','directionality'=>'unidirectional','required'=>'no','is_sortable'=>'no','type'=>'archive'));
+		}
+		else
+		{
+			$owns_id = create_allowable_relationship(id_of('site'),$type_id,'owns',array('connections'=>'many_to_one','directionality'=>'unidirectional','required'=>'yes','is_sortable'=>'no'));
+			$borrows_id = create_allowable_relationship(id_of('site'),$type_id,'borrows',array('connections'=>'many_to_many','directionality'=>'bidirectional','required'=>'no','is_sortable'=>'no'));
+			$archive_id = create_allowable_relationship($type_id,$type_id,$type_unique_name.'_archive',array('connections'=>'many_to_one','directionality'=>'unidirectional','required'=>'no','is_sortable'=>'no'));
+		}
 		if($owns_id && $borrows_id && $archive_id)
 			return true;
 		else
@@ -990,6 +1070,7 @@
 			$ids_to_delete = implode(',', $ids);
 			$q = 'DELETE from allowable_relationship WHERE id IN ('.$ids_to_delete.')';
 			db_query($q);
+			reason_refresh_relationship_names();
 			return count($ids);
 		}
 		return 0;

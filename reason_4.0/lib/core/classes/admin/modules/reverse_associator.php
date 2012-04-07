@@ -8,6 +8,7 @@
   * Include the module this extends
   */
 reason_include_once('classes/admin/modules/associator.php');
+reason_include_once('function_libraries/util.php');
 
 /**
  * An administrative module that provides an interface for making b-to-a relationships between entities
@@ -43,8 +44,16 @@ class ReverseAssociatorModule extends AssociatorModule // {{{
 			$d->add_field('ar','*');
 
 			$d->add_relation( 'ar.relationship_b = ' . $this->admin_page->type_id );
-			$d->add_relation('ar.name != "owns"');
+			if (reason_relationship_names_are_unique())
+			{
+				$d->add_relation('ar.type = "association"');
+			}
+			else
+			{
+				$d->add_relation('ar.name != "owns"');
+			}
 			$d->add_relation('(ar.custom_associator IS NULL OR ar.custom_associator = "")');
+			
 			$r = db_query( $d->get_query() , 'Error selecting relationships' );
 
 			$return_me = array();

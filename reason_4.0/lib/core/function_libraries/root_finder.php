@@ -9,7 +9,7 @@
  */
 include_once( 'reason_header.php' );
 reason_include_once( 'classes/entity_selector.php' );
-reason_include_once( 'function_libraries/relationship_finder.php' );
+reason_include_once( 'function_libraries/util.php' );
 
 /**
  * Root finder:
@@ -22,7 +22,7 @@ function root_finder( $site_id )
     $es = new entity_selector( );
     $es->add_type( id_of( 'minisite_page') );
     $es->add_relation( 'entity.state = "Live"' );
-    $es->add_right_relationship( $site_id, relationship_finder( 'site', 'minisite_page', 'owns' ) );
+    $es->add_right_relationship( $site_id, get_owns_relationship_id(id_of('minisite_page')) );
     $results = $es->run_one();
     foreach( $results as $page )
     {

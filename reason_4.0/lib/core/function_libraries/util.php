@@ -13,7 +13,8 @@
 	 *
 	 *	Functions that write to the database -- Create, Update, Delete -- are *not* in this file; they are in admin_actions.php
 	 *
-	 *	@todo Rethink the global namespace aspect of many of these functions -- can they be put in a static class so as to fimplify the API and clean up the global namespace?
+	 *	@todo Rethink the global namespace aspect of many of these functions -- can they be put in a static class so as to simplify the API and clean up the global namespace?
+	 * 	@todo Replace all direct SQL building with use of DBSelector.
 	 *
 	 *	@author Dave Hendler
 	 *	@author Nate White
@@ -59,7 +60,7 @@
 	 * @param boolean $report_not_found_error Trigger a warning if the unique name is not in the database. Set to false if the value is coming from userland or if it is a test that you will be doing separate reporting on.
 	 * @return integer The Reason ID of the corresponding entity or 0 if not found
 	 */
-	function id_of( $unique_name, $static_cache = true, $report_not_found_error = true )// {{{
+	function id_of( $unique_name, $static_cache = true, $report_not_found_error = true )
 	{
 		static $retrieved = array();
 		if( !$static_cache || empty( $retrieved ) )
@@ -74,14 +75,41 @@
 				trigger_error('Unique name requested ('.$unique_name.') not in database');
 			return 0;
 		}
-	} // }}}
+	}
+
+	/**
+	 * Get the unique name of an entity that you have the id of - this avoids any query because we just use our cache.
+	 *
+	 * @param int $id The id of the entity from which you want a unique name
+	 * @param boolean $static_cache (entity unique name changes / updates flush the static cache so manually setting this to false is rarely/never necessary)
+	 * @param boolean $report_not_found_error Trigger a warning if the unique name is not in the database. Set to false if the value is coming from userland or if it is a test that you will be doing separate reporting on.
+	 * @return mixed The unique_name of the corresponding entity or false if not found.
+	 */	
+	function unique_name_of( $id, $static_cache = true, $report_not_found_error = true )
+	{
+		static $retrieved;
+		if( !isset( $retrieved ) OR empty( $retrieved ) )
+			$retrieved = array();
+
+		if( !$static_cache OR empty( $retrieved) )
+		{
+			$unique_names = reason_get_unique_names();
+			$retrieved = array_flip($unique_names);
+		}
+		if (isset( $retrieved[ $id ] ) ) return $retrieved[ $id ];
+		else
+		{
+			if($report_not_found_error) trigger_error('Entity id provided ('.id.') does not have a unique name');
+			return false;
+		}
+	}
 	
 	/**
-	 * We always use the cache for this super common query. We update the cache in admin_actions.php whenever unique names are added or changed.
+	 * We use a 10 minutes cache for this super common query. We update the cache in admin_actions.php whenever unique names are added or changed.
 	 */
 	function reason_get_unique_names()
 	{
-		$cache = new ReasonObjectCache('reason_unique_names', -1);
+		$cache = new ReasonObjectCache('reason_unique_names', 600);
 		if ($unique_names =& $cache->fetch())
 		{
 			return $unique_names;
@@ -99,8 +127,14 @@
 	 */
 	function reason_refresh_unique_names()
 	{
-		$q = "SELECT id, unique_name FROM entity WHERE unique_name IS NOT NULL AND unique_name != '' AND (state = 'Live' OR state = 'Pending')";
-		$r = db_query( $q , "Error getting unique_names" );
+		$dbq = new DBSelector();
+		$dbq->add_table('entity');
+		$dbq->add_field('entity', 'id');
+		$dbq->add_field('entity', 'unique_name');
+		$dbq->add_relation('unique_name IS NOT NULL');
+		$dbq->add_relation('unique_name != ""');
+		$dbq->add_relation('(state = "Live" OR state = "Pending")');
+		$r = db_query( $dbq->get_query(),'Error getting unique names in reason_refresh_unique_names' );
 		while( $row = mysql_fetch_array( $r ))
 		{
 			$retrieved[ $row[ 'unique_name' ] ] = $row[ 'id' ];
@@ -109,8 +143,10 @@
 		if (!empty($retrieved))
 		{
 			$cache = new ReasonObjectCache('reason_unique_names');
-			$cache->set($retrieved);
-			id_of('site', false); // refresh the id_of static cache
+			if ($result = $cache->set($retrieved))
+			{
+				id_of('site', false); // refresh the id_of static cache
+			}
 			return $retrieved;
 		}
 		else
@@ -133,6 +169,7 @@
 			return true;
 		return false;
 	}
+	
 	/**
 	 * Identifies whether a given string could be used as a unique name
 	 *
@@ -161,6 +198,7 @@
 			return $string;
 		return '';
 	}
+	
 	/**
 	 * Get the id of a relationship in the allowable_relationships table
 	 *
@@ -173,54 +211,114 @@
 	 * $images = $es->run_one();
 	 *
 	 * @param string $relationship_name The name of the relationship we want to get the ID of
-	 * @param boolean $cache Set to false if you don't want Reason to consult its process-level cache (for example, if you have added the relationship earlier in the same process)
-	 * @param boolean $report_not_found_error Set to false if you don't want Reason to emit a warning if the relationship name can't be found
+	 * @param boolean $static_cache (allowable relationship changes / update flush the static cache so manually setting this to false is rarely/never necessary)
+	 * @param boolean $report_not_found_error Set to false if you don't want Reason to emit a warning if the relationship id can't be found
 	 * @return mixed The relationship's ID if found; otherwise boolean false
 	 */
-	function relationship_id_of( $relationship_name, $cache = true, $report_not_found_error = true ) // {{{
+	function relationship_id_of( $relationship_name, $static_cache = true, $report_not_found_error = true ) // {{{
 	{
-		static $retrieved;
+		static $retrieved = array();
 		if( !isset( $retrieved ) OR empty( $retrieved ) )
 			$retrieved = array();
 
-		if( !$cache OR !isset( $retrieved[ $relationship_name ] ) OR !$retrieved[ $relationship_name ] )
+		if( !$static_cache OR empty( $retrieved ) )
 		{
-			$q = "SELECT id FROM allowable_relationship WHERE name = '" . addslashes($relationship_name) . "'";
-			$r = db_query( $q , "Error getting relationship id" );
+			$retrieved = reason_get_relationship_names();
+		}
+		if (isset( $retrieved[ $relationship_name ] ) ) return $retrieved[ $relationship_name ];
+		else
+		{
+			if($report_not_found_error) trigger_error('Relationship name requested ('.$relationship_name.') not in database');
+			return false;
+		}
+	}
+
+	/**
+	 * Find the name of a relationship from its ID
+	 *
+	 * @param integer $relationship_id The ID of the relationship to test
+	 * @param boolean $static_cache (allowable relationship changes / update flush the static cache so manually setting this to false is rarely/never necessary)
+	 * @param boolean $report_not_found_error Set to false if you don't want Reason to emit a warning if the relationship name can't be found
+	 * @todo why are we querying?
+	 * @return mixed The (string) relationship name if found, otherwise boolean false
+	 */
+	function relationship_name_of( $relationship_id, $static_cache = true, $report_not_found_error = true )
+	{
+		static $retrieved;
+		if( !isset( $retrieved ) OR empty( $retrieved ) ) $retrieved = array();
+		if (!reason_relationship_names_are_unique() && ( !$static_cache OR !isset( $retrieved[ $relationship_id ] ) OR !$retrieved[ $relationship_id ] ))
+		{
+			$q = "SELECT name FROM allowable_relationship WHERE id = '" . $relationship_id . "'";
+			$r = db_query( $q , "Error getting relationship name" );
 			if( $row = mysql_fetch_array( $r ))
 			{
-				$id = $row['id'];
-				mysql_free_result( $r );
-				$retrieved[ $relationship_name ] = $id;
-				return $id;
+				$name = $row['name'];
+				$retrieved[ $relationship_id ] = $name;
 			}
-			else
-			{
-				if($report_not_found_error)
-					trigger_error('Relationship unique name requested ('.$relationship_name.') not in database');
-				mysql_free_result( $r );
-				return false;
-			}
+			mysql_free_result( $r );
 		}
+		elseif( !$static_cache OR empty( $retrieved) )
+		{
+			$relationship_names = reason_get_relationship_names();
+			$retrieved = array_flip($relationship_names);
+		}
+		if (isset( $retrieved[ $relationship_id ] ) ) return $retrieved[ $relationship_id ];
 		else
-			return $retrieved[ $relationship_name ];
-	} // }}}
-	
-	/**
-	 * Find out if a given table name exists in reason
-	 *
-	 * @param string $table_name The table you want to test
-	 * @return boolean true if found, otherwise false
-	 */
-	function reason_table_exists($table_name)
-	{
-		$es = new entity_selector();
-		$es->add_type(id_of('content_table'));
-		$es->add_relation('entity.name = "'.$table_name.'"');
-		$results = $es->run_one();
-		return (!empty($results));
+		{
+			if($report_not_found_error) trigger_error('Relationship id requested ('.$relationship_id.') not in database');
+			return false;
+		}
 	}
 	
+	/**
+	 * We use a 10 minutes cache for this super common query. We update the cache in admin_actions.php whenever allowable relationships are added or changed.
+	 */
+	function reason_get_relationship_names()
+	{
+		$cache = new ReasonObjectCache('reason_relationship_names', 600);
+		if ($relationship_names =& $cache->fetch())
+		{
+			return $relationship_names;
+		}
+		else
+		{
+			return reason_refresh_relationship_names();
+		}
+	}
+	
+	/**
+	 * Create/refresh the relationship name cache from the database.
+	 * 
+	 * @return array unique names
+	 */
+	function reason_refresh_relationship_names()
+	{
+		$dbq = new DBSelector();
+		$dbq->add_table('allowable_relationship');
+		$dbq->add_field('allowable_relationship', 'id');
+		$dbq->add_field('allowable_relationship', 'name');
+		$r = db_query( $dbq->get_query(),'Error getting relationship anmes in reason_refresh_relationship_names' );
+		while( $row = mysql_fetch_array( $r ))
+		{
+			$retrieved[ $row[ 'name' ] ] = $row[ 'id' ];
+		}
+		mysql_free_result( $r );
+		if (!empty($retrieved))
+		{
+			$cache = new ReasonObjectCache('reason_relationship_names');
+			if ($result = $cache->set($retrieved))
+			{
+				relationship_id_of('site_to_type', false); // refresh the relationship_id_of static cache
+			}
+			return $retrieved;
+		}
+		else
+		{
+			trigger_error('reason_refresh_relationship_names did not update the cache because no relationship names were retrieved');
+		}
+		return array();
+	}
+
 	/**
 	 * Find out if a given relationship name exists in the allowable relationships table
 	 *
@@ -233,6 +331,23 @@
 		if(relationship_id_of($relationship_name, $cache, false))
 			return true;
 		return false;
+	}
+	
+	/**
+	 * Find out if a given table name exists in reason
+	 *
+	 * @param string $table_name The table you want to test
+	 * @return boolean true if found, otherwise false
+	 */
+	function reason_table_exists($table_name)
+	{
+		$es = new entity_selector();
+		$es->add_type(id_of('content_table'));
+		$es->limit_fields('entity.name');
+		$es->limit_tables();
+		$es->add_relation('entity.name = "'.$table_name.'"');
+		$results = $es->run_one();
+		return (!empty($results));
 	}
 	
 	/**
@@ -253,61 +368,78 @@
 		mysql_free_result( $r );
 		return $ret;
 	}
-	
-	/**
-	 * Find the name of a relationship from its ID
-	 *
-	 * @param integer $relationship_id The ID of the relationship to test
-	 * @param boolean $cache Set to false if you don't want Reason to consult its process-level cache (for example, if you have added the relationship earlier in the same process)
-	 * @return mixed The (string) relationship name if found, otherwise boolean false
-	 */
-	function relationship_name_of( $relationship_id, $cache = true ) // {{{
-	{
-		static $retrieved;
-		if( !isset( $retrieved ) OR empty( $retrieved ) )
-			$retrieved = array();
 
-		if( !$cache OR !isset( $retrieved[ $relationship_id ] ) OR !$retrieved[ $relationship_id ] )
-		{
-			$q = "SELECT name FROM allowable_relationship WHERE id = '" . $relationship_id . "'";
-			$r = db_query( $q , "Error getting relationship name" );
-			if( $row = mysql_fetch_array( $r ))
-			{
-				$name = $row['name'];
-				mysql_free_result( $r );
-				$retrieved[ $relationship_id ] = $name;
-				return $name;
-			}
-			else
-			{
-				mysql_free_result( $r );
-				return false;
-			}
-		}
-		else
-			return $retrieved[ $relationship_id ];
-	} // }}}
-	
 	/**
-	* Finds the id of the allowable relationship of the "site borrows ..." relationship for a given type.  
-	* @param int $type_id The id of the type that the site borrows
-	* @return mixed $alrel_id The id of the allowable relationship or false if none found
-	*/
+	 * @deprecated use get_borrows_relationship_id
+	 */
 	function get_borrow_relationship_id($type_id)
+	{
+		trigger_error('get_borrow_relationship_id is deprecated - use get_borrows_relationship_id instead');
+		return get_borrows_relationship_id($type_id);
+	}
+
+   /**
+	* Finds the id of the allowable relationship of the "site borrows ..." relationship for a given type.  
+	* @param int $type_id The id of the type whose borrows relationship we seek
+	* @return mixed $alrel_id The id of the allowable relationship or false if none found
+	*/	
+	function get_borrows_relationship_id($type_id)
 	{
 		static $cache = array();
 		if(!isset($cache[$type_id]))
 		{
-			$q = 'SELECT `id` FROM allowable_relationship WHERE name = "borrows" AND relationship_a = '. id_of( 'site' ) . ' AND relationship_b = ' . $type_id.' LIMIT 0,1';
-			$r = db_query( $q , 'Error selecting allowable relationship in get_borrow_relationship_id()' );
-			$row = mysql_fetch_array( $r , MYSQL_ASSOC );
-			if(!empty($row[ 'id']))
+			if (reason_relationship_names_are_unique())
 			{
-				$cache[$type_id] = $row[ 'id'];
+				$rel_id = relationship_id_of('site_borrows_'.unique_name_of($type_id));
+				if (!empty($rel_id)) $cache[$type_id] = $rel_id;
 			}
-			else
+			else // legacy
+			{
+				$q = 'SELECT `id` FROM allowable_relationship WHERE name = "borrows" AND relationship_a = '. id_of( 'site' ) . ' AND relationship_b = ' . $type_id.' LIMIT 1';
+				$r = db_query( $q , 'Error selecting allowable relationship in get_borrows_relationship_id()' );
+				$row = mysql_fetch_array( $r , MYSQL_ASSOC );
+				if(!empty($row[ 'id']))
+				{
+					$cache[$type_id] = $row[ 'id'];
+				}
+			}
+			if (!isset($cache[$type_id]))
 			{
 				trigger_error('No allowable relationship found for site borrows type id '.$type_id);
+				$cache[$type_id] = false;
+			}
+		}
+		return $cache[$type_id];
+	}
+	
+	/**
+	* Finds the id of the allowable relationship of the "site owns ..." relationship for a given type.  
+	* @param int $type_id The id of the type whose owns relationship we seek
+	* @return mixed $alrel_id The id of the allowable relationship or false if none found
+	*/
+	function get_owns_relationship_id($type_id)
+	{
+		static $cache = array();
+		if(!isset($cache[$type_id]))
+		{
+			if (reason_relationship_names_are_unique())
+			{
+				$rel_id = relationship_id_of('site_owns_'.unique_name_of($type_id));
+				if (!empty($rel_id)) $cache[$type_id] = $rel_id;
+			}
+			else // legacy
+			{
+				$q = 'SELECT `id` FROM allowable_relationship WHERE name = "owns" AND relationship_a = '. id_of( 'site' ) . ' AND relationship_b = ' . $type_id.' LIMIT 1';
+				$r = db_query( $q , 'Error selecting allowable relationship in get_owns_relationship_id()' );
+				$row = mysql_fetch_array( $r , MYSQL_ASSOC );
+				if(!empty($row[ 'id']))
+				{
+					$cache[$type_id] = $row[ 'id'];
+				}
+			}
+			if (!isset($cache[$type_id]))
+			{
+				trigger_error('No allowable relationship found for site owns type id '.$type_id);
 				$cache[$type_id] = false;
 			}
 		}
@@ -318,6 +450,8 @@
 	 * Finds the id of the parent allowable relationship for a given type
 	 *
 	 * Note that this function caches results, so it can be called multiple times with little performance impact
+	 *
+	 * As of Reason 4.2, when possible it is preferable to use relationship_id_of with the relationship unique name instead of this method.
 	 *
 	 * @param integer $type_id the id of the type
 	 * @return mixed The alrel id if a parent relationship exists; otherwise false
@@ -360,26 +494,15 @@
 		return $dbq;
 
 	} // }}}
-	// the easy API function adds the 'entity' table.  So it's cool.
-	function get_entity_tables_by_type( $type, $cache = true ) // {{{
+
+	/**
+ 	 * @param type id of a type entity.
+ 	 * @param whether or not to use the static cache
+ 	 * @return array of entity tables for type
+ 	 */
+ 	function get_entity_tables_by_type( $type, $cache = true )
 	{
 		static $retrieved;
-		if( !isset( $retrieved ) OR empty( $retrieved ) )
-		{
-			$dbq = new DBSelector;
-
-			$dbq->add_field( 'e','name' );
-			$dbq->add_field( 'r','entity_a' );
-			$dbq->add_table( 'e','entity' );
-			$dbq->add_table( 'e2','entity' );
-			$dbq->add_table( 'r','relationship' );
-			$dbq->add_relation( 'e.type = e2.id' );
-			$dbq->add_relation( 'e2.unique_name = "content_table"' );
-			$dbq->add_relation( 'r.entity_b = e.id' );
-			
-			$retrieved = array();
-		}
-
 		if( !$cache OR !isset( $retrieved[ $type ] ) OR !$retrieved[ $type ] )
 		{
 			$dbq = get_entity_tables_by_type_object( $type );
@@ -395,8 +518,52 @@
 		}
 		else
 			return $retrieved[ $type ];
-	} // }}}
-
+	}
+	
+// 	/**
+// 	 * @param type id of a type entity.
+// 	 * @param whether or not to use the static cache
+// 	 * @return array of entity tables for type
+// 	 */
+// 	function get_entity_tables_by_type( $type, $cache = true )
+// 	{
+// 		static $retrieved;
+// 		if( !$cache OR !isset( $retrieved[ $type ] ) OR !$retrieved[ $type ] )
+// 		{
+// 			$object_cache = new ReasonObjectCache('entity_tables_for_type_'.$type, -1);
+// 			if ($tables =& $object_cache->fetch())
+// 			{
+// 				$retrieved[ $type ] = $tables;
+// 			}
+// 			else $retrieved[ $type ] = reason_refresh_entity_tables_by_type($type);
+// 		}
+// 		return $retrieved[ $type ];
+// 	}
+// 	
+// 	/**
+// 	 * Find entity tables for a given type and store them in a ReasonObjectCache.
+// 	 *
+// 	 * @param type type_id
+// 	 * @return array tables for the type
+// 	 */
+// 	function reason_refresh_entity_tables_by_type( $type )
+// 	{
+// 		$cache = new ReasonObjectCache('entity_tables_for_type_'.$type);
+// 		$dbq = get_entity_tables_by_type_object( $type );
+// 		$tables[] = 'entity';
+// 		$r = db_query( $dbq->get_query(),'Unable to load entity tables by type.' );
+// 		while( $row = mysql_fetch_assoc($r) )
+// 		{
+// 			$tables[] = $row['name'];
+// 		}
+// 		mysql_free_result( $r );
+// 		if ($result = $cache->set($tables))
+// 		{
+// 			get_entity_tables_by_type( $type, false ); // refresh the static cache
+// 		}
+// 		return $tables;
+// 	}
+	
 	function get_entity_tables_by_id_object( $id ) // {{{
 	{
 		$dbq = new DBSelector;
@@ -407,20 +574,29 @@
 		$dbq->add_table( 'type','entity' );
 		$dbq->add_table( 'item','entity' );
 		$dbq->add_table( 'r','relationship' );
-		$dbq->add_table( 'ar','allowable_relationship' );
+		if (!reason_relationship_names_are_unique())
+		{
+			$dbq->add_table( 'ar','allowable_relationship' );
+		}
 
 		$dbq->add_relation( 't.type = type.id' );
 		$dbq->add_relation( 'type.unique_name = "content_table"' );
 		$dbq->add_relation( 'item.id = '.$id );
 		$dbq->add_relation( 'r.entity_a = item.type' );
 		$dbq->add_relation( 'r.entity_b = t.id' );
-		$dbq->add_relation( 'ar.name = "type_to_table"' );
-
+		if (reason_relationship_names_are_unique())
+		{
+			$dbq->add_relation( 'r.type = '.relationship_id_of('type_to_table') );
+		}
+		else
+		{
+			$dbq->add_relation( 'ar.name = "type_to_table"' );
+		}
 		return $dbq;
 	} // }}}
 	/**
-	 * Given a type id, find the tables that make up the type
-	 * @param integer $id the id of a Reason type entity
+	 * Given an entity id, find the tables that make up its type
+	 * @param integer $id the id of a Reason entity
 	 * @param boolean $cache false will force this function to do a new query (normally does only one query per type and subsequently refers to an internal cache)
 	 * @return array of table names
 	 */
@@ -439,10 +615,9 @@
 		// originally: if( !$cache OR !isset( $retrieved[ $id ] ) OR !$retrieved[ $id ] )
 		if( !$cache OR empty( $retrieved[ $id ] ) )
 		{
-			$q = get_entity_tables_by_id_object( $id );
-		
+			$dbq = get_entity_tables_by_id_object( $id );
 			$tables[] = 'entity';
-			$r = db_query( $q->get_query(),'Unable to load entity tables by id.' );
+			$r = db_query( $dbq->get_query(),'Unable to load entity tables by id.' );
 			while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
 				$tables[] = $row['name'];
 			mysql_free_result( $r );
@@ -490,7 +665,6 @@
 	function get_type_id_from_name( $type_name ) // {{{
 	{
 		$q = get_type_id_from_name_object( $type_name );
-
 		$r = db_query( $q->get_query(), 'Unable to grab type id' );
 		$row = mysql_fetch_array( $r, MYSQL_ASSOC );
 		mysql_free_result( $r );
@@ -520,7 +694,6 @@
 	function get_entity_by_id_object( $id ) // {{{
 	{
 		$dbq = new DBSelector;
-
 		$tables = get_entity_tables_by_id( $id );
 		if ( $tables )
 		{
@@ -531,11 +704,16 @@
 				$dbq->add_relation( 'entity.id = '.$table.'.id' );
 			}
 		}
-
 		$dbq->add_relation( 'entity.id = '.$id );
-
 		return $dbq;
 	} // }}}
+	
+	/**
+	 * Return fully populated values for an entity.
+	 *
+	 * @param id int primary key of entity
+	 * @param cache boolean when or not to use static cache
+	 */
 	function get_entity_by_id( $id, $cache = true ) // {{{
 	{
 		static $retrieved;
@@ -543,9 +721,9 @@
 			$retrieved = array();
 		if( !$cache OR !isset( $retrieved[ $id ] ) OR !$retrieved[ $id ] )
 		{
-			$q = get_entity_by_id_object( $id );
-
-			$r = db_query( $q->get_query(), 'Unable to grab entity' );
+			$dbq = get_entity_by_id_object( $id );
+			$dbq->set_num(1);
+			$r = db_query( $dbq->get_query(), 'Unable to grab entity' );
 			$result = array();
 			while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
 				$result = $row;
@@ -593,7 +771,10 @@
 		if( $site_id && $sharing )
 		{
 			$dbq->add_table( 'r','relationship' );
-			$dbq->add_table( 'ar','allowable_relationship' );
+			if (!reason_relationship_names_are_unique())
+			{
+				$dbq->add_table( 'ar','allowable_relationship' );
+			}
 			if(is_array($site_id))
 			{
 				array_walk($site_id,'db_prep_walk');
@@ -604,12 +785,38 @@
 				$dbq->add_relation( 'r.entity_a = "'.addslashes($site_id).'"');
 			}
 			$dbq->add_relation( 'r.entity_b = entity.id');
-			$dbq->add_relation( 'r.type = ar.id' );
+			if (!reason_relationship_names_are_unique())
+			{
+				$dbq->add_relation( 'r.type = ar.id' );
+			}
 			if( preg_match( '/owns/' , $sharing ) && preg_match( '/borrows/' , $sharing ) )
-				$dbq->add_relation( '(ar.name = "owns" OR ar.name = "borrows")' );
+			{
+				if (reason_relationship_names_are_unique())
+				{
+					$owns_rel_id = get_owns_relationship_id($type);
+					$borrows_rel_id = get_borrows_relationship_id($type);
+					$dbq->add_relation( '(r.type = '.$owns_rel_id.' OR r.type = '.$borrows_rel_id.')' );
+				}
+				else $dbq->add_relation( '(ar.name = "owns" OR ar.name = "borrows")' );
+			}
 			elseif( preg_match( '/borrows/' , $sharing ) )
-				$dbq->add_relation( 'ar.name = "borrows"' );
-			else $dbq->add_relation( 'ar.name = "owns"' );
+			{
+				if (reason_relationship_names_are_unique())
+				{
+					$borrows_rel_id = get_borrows_relationship_id($type);
+					$dbq->add_relation( '(r.type = '.$borrows_rel_id.')' );
+				}
+				else $dbq->add_relation( 'ar.name = "borrows"' );
+			}
+			else
+			{
+				if (reason_relationship_names_are_unique())
+				{
+					$owns_rel_id = get_owns_relationship_id($type);
+					$dbq->add_relation( '(r.type = '.$owns_rel_id.')' );
+				}
+				else $dbq->add_relation( 'ar.name = "owns"' );
+			}
 		}
 
 		return $dbq;
@@ -728,42 +935,41 @@
 		return $res;
 	} // }}}
 
+	/**
+	 * @deprecated - joining across the allowable relationship table based on name is typically unneeded now that relationship ids are unique.
+	 */
 	function get_entity_associations_by_type_name_object( $relation_type ) // {{{
 	{
 		$dbq = new DBSelector;
-
 		$dbq->add_table( 'r','relationship' );
 		$dbq->add_table( 'ar','allowable_relationship' );
 		$dbq->add_field( 'r','entity_a' );
 		$dbq->add_field( 'r','entity_b' );
 		$dbq->add_relation( 'r.type = ar.id' );
-		$dbq->add_relation( 'ar.name = "'.$relation_type.'"' );
-
+		// backwards compatibility 
+		if (reason_relationship_names_are_unique() && in_array($relation_type, array('owns', 'borrows', 'archive')))
+		{
+			$dbq->add_relation( 'ar.type = "'.$relation_type.'"' );
+		}
+		else
+		{
+			$dbq->add_relation( 'ar.name = "'.$relation_type.'"' );
+		}
 		return $dbq;
 	} // }}}
-	function get_entity_associations_by_type_name( $relation_type ) // {{{
-	{
-		$dbq = get_entity_associations_by_type_name_object( $relation_type );
-		
-		$res = array();
-		$r = db_query( $dbq->get_query(), 'Unable to retrieve associations for this type.' );
-		while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
-			$res[ $row['entity_a'] ] = $row['entity_b'];
-		mysql_free_result( $r );
-		return $res;
-	} // }}}
 
+	/**
+	 * Am I a low-level deprecated method? maybe.
+	 */
 	function get_entity_associations_by_type_object( $relation_id ) // {{{
 	{
 		$dbq = new DBSelector;
-
 		$dbq->add_table( 'r','relationship' );
 		$dbq->add_table( 'ar','allowable_relationship' );
 		$dbq->add_field( 'r','entity_a' );
 		$dbq->add_field( 'r','entity_b' );
 		$dbq->add_relation( 'r.type = ar.id' );
 		$dbq->add_relation( 'ar.id = "'.$relation_id.'"' );
-
 		return $dbq;
 	} // }}}
 
@@ -771,6 +977,9 @@
 	//	more specific functions
 	//------------------------------------------------
 
+	/**
+	 * should we just use the entity selector here?
+	 */
 	function auth_site_to_user( $site_id, $user_id ) // {{{
 	{
 		$d = get_entity_associations_by_type_name_object( 'site_to_user' );
@@ -783,6 +992,9 @@
 			die( 'You are not authorized to use this page' );
 	} // }}}
 
+	/**
+	 * should we just use the entity selector here?
+	 */
 	function auth_site_to_type( $site_id, $type_id ) // {{{
 	{
 		$d = get_entity_associations_by_type_name_object( 'site_to_type' );
@@ -793,6 +1005,10 @@
 			die( 'This site does not have access to that content type' );
 	} // }}}
 
+	/**
+	 * does this have some performance reason it is better than just doing $e->get_owner()?
+	 * @todo consider deprecation
+	 */
 	function site_owns_entity( $site_id, $entity_id ) // {{{
 	{
 		$d = get_entity_by_id_object( $entity_id );
@@ -800,7 +1016,11 @@
 		$d->add_table( 'r' , 'relationship' );
 
 		$d->add_relation( 'ar.id = r.type' );
-		$d->add_relation( 'ar.name = "owns"' );
+		if (reason_relationship_names_are_unique())
+		{
+			$d->add_relation( 'ar.type = "owns"' );
+		}
+		else $d->add_relation( 'ar.name = "owns"' );
 		$d->add_relation( 'r.entity_a = ' . $site_id );
 		$d->add_relation( 'r.entity_b = ' . $entity_id );
 		$r = db_query( $d->get_query() , 'Error checking ownership' );
@@ -823,7 +1043,11 @@
 		$d->add_table( 'r' , 'relationship' );
 
 		$d->add_relation( 'ar.id = r.type' );
-		$d->add_relation( 'ar.name = "borrows"' );
+		if (reason_relationship_names_are_unique())
+		{
+			$d->add_relation( 'ar.type = "borrows"' );
+		}
+		else $d->add_relation( 'ar.name = "borrows"' );
 		$d->add_relation( 'r.entity_a = ' . $site_id );
 		$d->add_relation( 'r.entity_b = ' . $entity_id );
 		$r = db_query( $d->get_query() , 'Error checking ownership' );
@@ -839,10 +1063,13 @@
 		}
 	} // }}}
 	
+	/**
+	 * @return array of site entities that borrow an entity.
+	 * @todo consider just using entity selector
+	 */
 	function get_sites_that_are_borrowing_entity($entity_id)
 	{
 		$d = get_entity_associations_by_type_name_object( 'borrows' );
-		//$d->add_relation( 'r.entity_a = '.$site_id );
 		$d->add_relation( 'r.entity_b = '.$entity_id );
 		$r = db_query( $d->get_query() , 'Error checking borrowing' );
 		$sites = array();
@@ -861,6 +1088,7 @@
 	 *
 	 * @param $username string name of user entity
 	 * @return mixed string entity id of the reason user entity (or null if none found)
+	 * @todo we might consider only searching on master admin site to speed this up.
 	 * @author Nathan White
 	 */
 	function get_user_id( $username )
@@ -870,10 +1098,10 @@
 		if (!isset($users[$username]))
 		{
 			$es = new entity_selector();
-			$es->limit_tables();
+			$es->limit_tables('entity');
 			$es->limit_fields();
 			$es->add_type(id_of('user'));
-			$es->add_relation('name = "'.addslashes($username).'"');
+			$es->add_relation('entity.name = "'.addslashes($username).'"');
 			$es->set_num(1);
 			$result = $es->run_one();
 			if ($result)
@@ -1086,14 +1314,24 @@
 
 	function get_owner_site_id( $entity_id ) //{{{
 	{
-		$d = get_entity_by_id_object( $entity_id );
+		// do we really need the whole object? 
+		//$d = get_entity_by_id_object( $entity_id );
+		
+		$d = new DBSelector;
+
+		$d->add_table( 'entity' );
+		$d->add_relation( 'entity.id = '.$entity_id );
 		$d->add_field( 'r', 'entity_a', 'site_id' );
 		$d->add_table( 'ar' , 'allowable_relationship' );
 		$d->add_table( 'r' , 'relationship' );
-
 		$d->add_relation( 'ar.id = r.type' );
-		$d->add_relation( 'ar.name = "owns"' );
+		if (reason_relationship_names_are_unique())
+		{
+			$d->add_relation( 'ar.type = "owns"' );
+		}
+		else $d->add_relation( 'ar.name = "owns"' );
 		$d->add_relation( 'r.entity_b = ' . $entity_id );
+		$d->set_num(1);
 		$r = db_query( $d->get_query() , 'Error getting owning site ID.' );
 		if( $row = mysql_fetch_array( $r , MYSQL_ASSOC ) )
 		{
@@ -1102,6 +1340,23 @@
 		else
 			return false;
 	} // }}}
+	
+	/**
+	 * @return boolean whether or not relationship unique names have been implemented in this reason database - call me only once
+	 */
+	function reason_relationship_names_are_unique( $force_refresh = NULL )
+	{
+		static $rel_names_are_unique;
+		if ($force_refresh || !isset($rel_names_are_unique))
+		{
+			$rel_names_are_unique = reason_relationship_name_exists('site_owns_minisite_page', false); // lets force a fresh draw
+			if ($rel_names_are_unique == false)
+			{
+				trigger_error('Reason relationship names not yet unique - please run the 4.1 to 4.2 upgrade script "allowable_relationship_unique_names"');
+			}
+		}
+		return $rel_names_are_unique;
+	}
 	
 	/**
 	 * A simple helper function for getting the content of a uniquely named text blurb
@@ -1502,6 +1757,7 @@
 	 * 
 	 * @param object
 	 * @param mixed of_type - if "true" makes sure the entity has some value for type, if given a unique name, makes sure the entity is of that type.
+	 * @todo the has_value statements will crash when run on an entity that has been initialized with a string instead of a numeric id - consider fixing this
 	 * @return boolean
 	 */
 	function reason_is_entity($obj, $of_type = false)
@@ -1622,17 +1878,22 @@
 			trigger_error('Type ID must be an integer in reason_archive_relationship_id()');
 			return false;
 		}
-		
 		if(!isset($cache[$type_id]))
 		{
-			$q = 'SELECT id FROM allowable_relationship WHERE name LIKE "%archive%" AND relationship_a = '.$type_id.' AND relationship_b = '.$type_id.' LIMIT 0,1';
-			$r = db_query( $q, 'Unable to get archive relationship.' );
-			$row = mysql_fetch_array( $r, MYSQL_ASSOC );
-			mysql_free_result( $r );
-			if(!empty($row))
-				$cache[$type_id] = $row['id'];
+			$cache[$type_id] = false;
+			if (reason_relationship_names_are_unique())
+			{
+				$rel_id = relationship_id_of(unique_name_of($type_id) . '_archive');
+				if (!empty($rel_id)) $cache[$type_id] = $rel_id;
+			}
 			else
-				$cache[$type_id] = false;
+			{
+				$q = 'SELECT id FROM allowable_relationship WHERE name LIKE "%archive%" AND relationship_a = '.$type_id.' AND relationship_b = '.$type_id.' LIMIT 0,1';
+				$r = db_query( $q, 'Unable to get archive relationship.' );
+				$row = mysql_fetch_array( $r, MYSQL_ASSOC );
+				mysql_free_result( $r );
+				if(!empty($row)) $cache[$type_id] = $row['id'];
+			}
 		}
 		return $cache[$type_id];
 	}

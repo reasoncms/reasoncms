@@ -71,9 +71,7 @@
 			// when adding a new type, add the site to type ownership relationship for entities of this type that will be created
 			if ( $this->is_new_entity() )
 			{
-				create_allowable_relationship(id_of('site'),$this->_id,'owns');
-				create_allowable_relationship(id_of('site'),$this->_id,'borrows');
-				create_allowable_relationship($this->_id,$this->_id,$this->get_value('unique_name').'_archive');
+				create_default_rels_for_new_type($this->_id);
 			}
 			
 			reason_include_once('classes/url_manager.php');

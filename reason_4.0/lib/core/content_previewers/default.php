@@ -192,9 +192,7 @@
 					$es->set_env( 'restrict_site' , false );
 					$es->add_right_relationship_field( 'owns', 'entity' , 'name' , 'owner_name' );
 					$es->add_right_relationship_field( 'owns', 'entity' , 'id' , 'owner_id' );
-					//$es->add_right_relationship_field( 'owns', 'site' , 'base_url' , 'owner_base_url' );
 					$ass_items = $es->run_one();
-					//pray($ass_items);
 					
 					if(!empty($ass_items))
 					{
@@ -209,7 +207,8 @@
 					{
 						if(!empty($associated_items[$key]))
 						{
-							if( $v['name'] == 'borrows')
+							$is_borrows_rel = (!reason_relationship_names_are_unique()) ? $v['name'] == 'borrows' : $v['type'] == 'borrows';
+							if( $is_borrows_rel )
 							{
 								$type = new entity($this->_entity->get_value( 'type' ));
 								$title = 'Sites That Are Borrowing This '.$type->get_value('name');
@@ -274,15 +273,30 @@
 			{
 				$q->add_relation( 'ar.relationship_a = '.$this->admin_page->type_id );
 				$q->add_relation( 'ar.relationship_b = e.id' );
-				$q->add_relation( 'ar.name != "borrows"' );
+				if (!reason_relationship_names_are_unique())
+				{
+					$q->add_relation( 'ar.name != "borrows"' );
+				}
+				else
+				{
+					$q->add_relation( 'ar.type != "borrows"' );
+				}
 			}
 			elseif($dir == 'right')
 			{
 				$q->add_relation( 'ar.relationship_a = e.id' );
 				$q->add_relation( 'ar.relationship_b = '.$this->admin_page->type_id );
 			}
-			$q->add_relation( 'ar.name != "owns"' );
-			$q->add_relation( 'ar.name NOT LIKE "%archive%"' );
+			if (!reason_relationship_names_are_unique())
+			{
+				$q->add_relation( 'ar.name != "owns"' );
+				$q->add_relation( 'ar.name NOT LIKE "%archive%"' );
+			}
+			else
+			{
+				$q->add_relation( 'ar.type != "owns"' );
+				$q->add_relation( 'ar.type != "archive"' );
+			}
 			// make sure this site has access to the related type
 			// we don't want to be able to associate with types that a site does not have access to
 			/*

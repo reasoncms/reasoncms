@@ -71,9 +71,11 @@ class user
 	 */
 	function get_user($user_netID)
 	{	
-		if (!empty($this->users['user_netID'])) return $this->users[$user_netID];
+		if (!empty($this->users[$user_netID])) return $this->users[$user_netID];
 		$es = new entity_selector();
 		$es->add_type(id_of('user'));
+		$es->limit_tables();
+		$es->limit_fields();
 		$es->add_relation('entity.name = "'.$user_netID.'"');
 		$es->set_num(1);
 		$result = $es->run_one();
@@ -139,6 +141,8 @@ class user
 			{
 				$es = new entity_selector();
 				$es->add_type(id_of('site'));
+				$es->limit_tables();
+				$es->limit_fields();
 				$es->add_left_relationship($e->id(), relationship_id_of('site_to_user'));
 				$result = $es->run_one();
 				$this->sites[$user_netID] = $result;				

@@ -383,12 +383,6 @@ class entity
 		$dbq->add_relation( 'entity.state = "Live"' );
 		$dbq->add_relation( 'entity.id = r.entity_a' );
 		$dbq->add_relation( 'r.entity_b = '.$this->id() );
-		//$dbq->add_relation( 'r.type != 0' ); // There are some bad rels out there with type=0
-		/*
-		$dbq->add_table( 'ar', 'allowable_relationship' );
-		$dbq->add_relation( 'ar.id = r.type' );
-		$dbq->add_relation( 'ar.name != "owns"' );
-		*/
 		if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 		{
 			$dbq->add_relation( '(r.site=0 OR r.site=' . $this->_env['site'] . ')' );
@@ -625,7 +619,7 @@ class entity
 	 */
 	function get_owner() // {{{
 	{
-		$right_rels = $this->get_right_relationship( 'owns' );
+		$right_rels = $this->get_right_relationship( get_owns_relationship_id( $this->get_value('type') ) );
 		if( !empty( $right_rels[ 0 ] ) )
 			return $right_rels[ 0 ];
 		else
@@ -640,7 +634,7 @@ class entity
 	{
 		$site = new entity($site_id);
 		$owner = $this->get_owner();
-		if( $owner->id() == $site->id() || $this->has_right_relation_with_entity( $site, 'borrows') )
+		if( $owner->id() == $site->id() || $this->has_right_relation_with_entity( $site, get_borrows_relationship_id( $this->get_value('type') ) ) )
 		{
 			return true;
 		}

@@ -25,7 +25,13 @@
 			
 			// show items the site owns or borrows - add sharing field
 			$this->es->set_sharing( 'owns,borrows' );
-			$this->es->add_field( 'ar' , 'name' , 'sharing' );
+			if (reason_relationship_names_are_unique())
+			{
+				$this->es->add_table( 'ar', 'allowable_relationship' );
+				$this->es->add_field( 'ar' , 'type' , 'sharing' );
+				$this->es->add_relation( 'r.type = ar.id' );
+			}
+			else $this->es->add_field( 'ar' , 'name' , 'sharing' );
 			
 			// modify entity selector to exclude items that are already associated
 			if( $this->ass_vals )
@@ -57,7 +63,6 @@
 			
 			if ($this->rel_direction == 'a_to_b') $ass_es->add_right_relationship($this->admin_page->id, $this->admin_page->rel_id );
 			else $ass_es->add_left_relationship($this->admin_page->id, $this->admin_page->rel_id );
-			
 			$ass_es->add_right_relationship_field('owns', 'entity', 'id', 'site_owner_id');
 			
 			if ( ($this->rel_direction == 'a_to_b') && $this->check_is_rel_sortable() ) 
@@ -158,7 +163,8 @@
 			$this->select = false;
 			if( $this->ass_vals )
 			{
-				echo '<table id="associatedItems" class="'.relationship_name_of($this->admin_page->rel_id).'" cellspacing="0" cellpadding="8">';
+				$class = (!empty($this->admin_page->rel_id)) ? ' class="'.relationship_name_of($this->admin_page->rel_id).'" ' : ' ';
+				echo '<table id="associatedItems"'. $class . 'cellspacing="0" cellpadding="8">';
 				$c = count( $this->ass_vals );
 				$columns = count( $this->columns ) + 1;
 				echo '<tr><td colspan="'.$columns.'" class="assocHead">';
@@ -181,7 +187,8 @@
 			$this->select = true;
 			$row = 0;
 			$columns = count( $this->columns ) + 1;
-			echo '<table id="disassociatedItems" class="'.relationship_name_of($this->admin_page->rel_id).'" cellspacing="0" cellpadding="8">';
+			$class = (!empty($this->admin_page->rel_id)) ? ' class="'.relationship_name_of($this->admin_page->rel_id).'" ' : ' ';
+			echo '<table id="disassociatedItems"'. $class . 'cellspacing="0" cellpadding="8">';
 			echo '<tr><td colspan="'.$columns.'" class="disassocHead">';
 			$this->show_paging();
 			echo '</td></tr>';

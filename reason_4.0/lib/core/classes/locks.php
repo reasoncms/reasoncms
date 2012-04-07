@@ -740,12 +740,13 @@ class ReasonEntityLocks
 	public function get_lockable_relationships()
 	{
 		$rels = get_allowable_relationships_for_type($this->_entity->get_value('type'));
+		$rel_unique_names = (reason_relationship_names_are_unique());
 		foreach($rels as $rel_id=>$rel)
 		{
-			if(strpos($rel['name'],'archive') !== false || strpos($rel['name'],'borrows') !== false)
-			{
-				unset($rels[$rel_id]);
-			}
+			$not_lockable = ($rel_unique_names) 
+						  ? ( ($rel['type'] == 'archive') || ($rel['type'] == 'borrows') ) 
+						  : ( (strpos($rel['name'],'archive') !== false) || (strpos($rel['name'],'borrows') !== false) );
+			if($not_lockable) unset($rels[$rel_id]);
 		}
 		return $rels;
 	}

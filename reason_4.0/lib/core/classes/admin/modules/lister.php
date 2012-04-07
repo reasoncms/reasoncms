@@ -204,14 +204,6 @@
 				echo '<a href="'.$link.'">Sort these items</a></div><div class="roundedBottom"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div></div><br />';
 			}
 		} // }}}
-		
-		/**
-		 *@todo Remove before 4.1 release.
-		 */
-		function set_session_vars()
-		{
-			trigger_error("This method is deprecated and will be removed by the 4.1 release.", E_USER_WARNING);
-		}
 	
 		function get_views( ) // {{{
 		{	

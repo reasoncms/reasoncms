@@ -36,31 +36,24 @@
 		} // }}}
 		function set_borrowship_first_level() // {{{
 		{
-			 //get relationship
-			 $q = 'Select * from allowable_relationship where name = "borrows" AND relationship_a ='
-				  . id_of( 'site' ) . ' AND relationship_b = ' . $this->admin_page->type_id;
-			 $r = db_query( $q , 'Error selecting allowable relationship in borrow_form::finish()' );
-			 $row = mysql_fetch_array( $r , MYSQL_ASSOC );
+			 $borrows_rel_id = get_borrows_relationship_id( $this->admin_page->type_id );
+			 
 			 if( !empty( $this->admin_page->request[ 'unborrow' ] ) )
 			 {
 				 //do query removing borrowship
-				 delete_borrowed_relationship( $this->admin_page->site_id , $this->admin_page->id , $row[ 'id' ] );
+				 delete_borrowed_relationship( $this->admin_page->site_id , $this->admin_page->id , $borrows_rel_id );
 			 }
 			 else
 			 {
 				 //do query creating borrowship
-				create_relationship( $this->admin_page->site_id ,
-							$this->admin_page->id,
- 							$row[ 'id' ] );
+				create_relationship( $this->admin_page->site_id, $this->admin_page->id, $borrows_rel_id );
 			 }
 		} // }}}
 		function add_relationship_second_level() //{{{
 		{
 			if(empty( $this->admin_page->request[ 'unborrow' ] ) )
 			{
-				create_relationship( $this->admin_page->request[ CM_VAR_PREFIX . 'id' ],
-							$this->admin_page->id,
- 							$this->admin_page->request[ CM_VAR_PREFIX . 'rel_id' ] );
+				create_relationship( $this->admin_page->request[ CM_VAR_PREFIX . 'id' ], $this->admin_page->id, $this->admin_page->request[ CM_VAR_PREFIX . 'rel_id' ] );
 			}
 		} // }}}
 		function run() // {{{

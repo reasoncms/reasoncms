@@ -1,13 +1,18 @@
 <?php
 	/**
-	 * entity_selector
-	 * A core piece of Reason; grabs entities out of the database
+	 * The entity_selector is a core piece of Reason; it grabs sets of entities out of the database
+	 *
 	 * @author Brendon Stanton
+	 * @author Nathan White
 	 * @package reason
 	 * @subpackage classes
+	 *
+	 * 
+	 * As of Reason 4.2 this has been modified to not select across the allowable relationship table. This change
+	 * depends on using unique relationship names (also in Reason 4.2).
 	 */
 	 
-	/**
+	 /**
 	 * Include the necessary files
 	 */
 	include_once( 'reason_header.php' );
@@ -263,11 +268,11 @@
  		 	{
  		 		if (!empty($allowable_rel_id))
  		 		{
- 		 			$test_rel_id_start = substr($cur_element, 0, 10) == 'allowable_' ? 10 : '';
- 		 			$test_rel_id_end = strpos($cur_element, '.id = '. $allowable_rel_id);
- 		 			if ($test_rel_id_start == 10 && $test_rel_id_end != false)
+ 		 			$test_rel_id_start = strpos($cur_element, 'relationship');
+ 		 			$test_rel_id_end = strpos($cur_element, '.type = '. $allowable_rel_id);
+ 		 			if ($test_rel_id_start !== false && $test_rel_id_end !== false)
  		 			{
- 		 				$rel_name_from_rel_type = substr($cur_element, 10, ($test_rel_id_end - 10));
+ 		 				$rel_name_from_rel_type = substr($cur_element, 0, $test_rel_id_end);
  		 				continue;
  		 			}
  		 		}
@@ -722,22 +727,12 @@
 			}
 			$es = new entity_selector( $this->site_id );
 			$es->add_table('relationship' , 'relationship');
-			if($relationship_type)
-				$es->add_table('allowable_relationship' , 'allowable_relationship' );
 			$tables = $this->merge_tables( $es );
 			if(isset( $tables['relationship'] ) AND $tables['relationship']) 
 			{
 				$relationship_name = $tables['relationship'];
 			}
-			else
-				$relationship_name = 'relationship';
-
-			if(isset( $tables[ 'allowable_relationship' ] ) AND $tables['allowable_relationship']) 
-			{
-				$allowable_relationship_name = $tables['allowable_relationship'];
-			}
-			else
-				$allowable_relationship_name = 'allowable_relationship';
+			else $relationship_name = 'relationship';
 			
 			$this->add_relation( $relationship_name . '.entity_a = entity.id' );
 			if(is_array($entity_id))
@@ -750,8 +745,7 @@
 				$this->add_relation( $relationship_name . '.entity_b = "' . addslashes($entity_id) . '"');
 			if($relationship_type)
 			{
-				$this->add_relation( $allowable_relationship_name . '.id = ' . $relationship_name . '.type' );
-				$this->add_relation( $allowable_relationship_name . '.id = ' . $relationship_type );
+				$this->add_relation( $relationship_name . '.type = ' . $relationship_type );
 			}
 			if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 			{
@@ -783,8 +777,6 @@
 			}
 			$es = new entity_selector( $this->site_id );
 			$es->add_table('relationship' , 'relationship');
-			if($relationship_type)
-				$es->add_table('allowable_relationship' , 'allowable_relationship' );
 			$tables = $this->merge_tables( $es );
 			if(isset( $tables['relationship'] ) AND $tables['relationship']) 
 			{
@@ -792,13 +784,6 @@
 			}
 			else
 				$relationship_name = 'relationship';
-
-			if(isset($tables['allowable_relationship']) AND $tables['allowable_relationship']) 
-			{
-				$allowable_relationship_name = $tables['allowable_relationship'];
-			}
-			else
-				$allowable_relationship_name = 'allowable_relationship';
 			
 			$this->add_relation( $relationship_name . '.entity_b = entity.id' );
 			if(is_array($entity_id))
@@ -815,8 +800,7 @@
 				$this->add_relation( $relationship_name . '.entity_a = ' . $entity_id );
 			if($relationship_type)
 			{
-				$this->add_relation( $allowable_relationship_name . '.id = ' . $relationship_name . '.type' );
-				$this->add_relation( $allowable_relationship_name . '.id = ' . $relationship_type );
+				$this->add_relation( $relationship_name . '.type = ' . $relationship_type );
 			}
 			if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 			{
@@ -828,7 +812,7 @@
 		 * relationship, swallowing a db_selector object, then swallowing the current object.
 		 * sort of a funny want to do things, but it assures us that we'll get all the right ones
 		 * @param int $type the type id to be selected
-		 * @param string $status either Live, Archived, Pending, or something else that I'm forgetting
+		 * @param string $status either Live, Archived, Pending, or All
 		 * @return string MYSQL query string to select the objects from the DB.
 		 * @todo $status should really be the first variable here, not the second.  I don't think this is called outside of the class anywhere on the site, but it would be disasterous if it did and we switched it.
 		 */
@@ -1028,7 +1012,7 @@
 		 * $results = $es->run_one();
 		 * </code>
 		 * @param int $type type_id (or blank for default)
-		 * @param string $status Either Live, Pending, Archived... (optional)
+		 * @param string $status Either Live, Pending, Archived, or All ... (optional)
 		 * @param string $error optional error message
 		 * @return array
 		 */
@@ -1269,6 +1253,26 @@
 		 */
 		function add_left_relationship_field( $rel_name , $table , $field , $alias, $limit_results = true ) // {{{
 		{
+			if ( ($rel_name != "owns") && ($rel_name != "borrows") && !empty($rel_name)) $rel_type_id = relationship_id_of($rel_name);
+			elseif ( $rel_name == 'owns' || $rel_name == 'borrows')
+			{
+				if (empty($this->type))
+				{
+					$call_info = array_shift( debug_backtrace() );
+        			$code_line = $call_info['line'];
+        			$file = array_pop( explode('/', $call_info['file']));
+        			$msg = 'entity selector method add_left_relationship_field called by ' . $file . ' on line ' . $code_line . ' on a generic "owns" or "borrows" relationship when the type has not been set on the entity selector.';
+					trigger_error($msg, WARNING);
+					return false;
+				}
+				elseif ($rel_name == "owns") $rel_type_id = get_owns_relationship_id(reset($this->type));
+				elseif ($rel_name == "borrows") $rel_type_id = get_borrows_relationship_id(reset($this->type));
+			}
+			if (empty($rel_type_id))
+			{
+				trigger_error('add_left_relationship_field failed - an id could not be determined from the relationship name provided');
+				return false;
+			}
 			if ($limit_results === false)
 			{
 				$cur_es = carl_clone($this);
@@ -1279,15 +1283,11 @@
 			
 			$es->add_table( 'relationship' , 'relationship' );
 			$es->add_table( '__entity__' , 'entity' );
-			$es->add_table( 'allowable_relationship' , 'allowable_relationship' );
+			
 			if($table != 'entity' )
 				$es->add_table( $table );
 			$tables = $this->merge_tables($es);
-			if( isset( $tables[ 'allowable_relationship' ] ) AND $tables[ 'allowable_relationship' ] )
-				$ar = $tables[ 'allowable_relationship' ];
-			else
-				$ar = 'allowable_relationship';
-
+			
 			if( isset( $tables[ 'relationship' ] ) AND $tables[ 'relationship' ] )
 				$r = $tables[ 'relationship' ];
 			else 
@@ -1314,9 +1314,8 @@
 			
 			$this->add_relation( $e . '.id = ' . $r . '.entity_b' );
 			$this->add_relation( 'entity.id = ' . $r . '.entity_a' );
-			$this->add_relation( $r . '.type = ' . $ar . '.id' );
-			$this->add_relation( $ar . '.name LIKE "%' . addslashes($rel_name) . '%"' );
-
+			$this->add_relation( $r . '.type = ' . $rel_type_id );
+			
 			$this->add_field( $t , $field , $alias );
 			if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
 			{
@@ -1355,6 +1354,26 @@
 		function add_right_relationship_field( $rel_name , $table , $field , $alias, $limit_results = true ) // {{{
 		//works if entity has one left relationship of give type, otherwise gives multiples
 		{
+			if ( ($rel_name != "owns") && ($rel_name != "borrows") && !empty($rel_name)) $rel_type_id = relationship_id_of($rel_name);
+			elseif ( $rel_name == 'owns' || $rel_name == 'borrows')
+			{
+				if (empty($this->type))
+				{
+					$call_info = array_shift( debug_backtrace() );
+        			$code_line = $call_info['line'];
+        			$file = array_pop( explode('/', $call_info['file']));
+        			$msg = 'entity selector method add_right_relationship_field called by ' . $file . ' on line ' . $code_line . ' on a generic "owns" or "borrows" relationship when the type has not been set on the entity selector.';
+					trigger_error($msg, WARNING);
+					return false;
+				}
+				elseif ($rel_name == "owns") $rel_type_id = get_owns_relationship_id(reset($this->type));
+				elseif ($rel_name == "borrows") $rel_type_id = get_borrows_relationship_id(reset($this->type));
+			}
+			if (empty($rel_type_id))
+			{
+				trigger_error('add_right_relationship_field failed - an id could not be determined from the relationship name provided');
+				return false;
+			}
 			if ($limit_results === false)
 			{
 				$cur_es = carl_clone($this);
@@ -1365,15 +1384,11 @@
 			
 			$es->add_table( 'relationship' , 'relationship' );
 			$es->add_table( '__entity__' , 'entity' );
-			$es->add_table( 'allowable_relationship' , 'allowable_relationship' );
+			
 			if($table != 'entity' )
 				$es->add_table( $table );
 			$tables = $this->merge_tables($es);
-			if( !empty( $tables[ 'allowable_relationship' ] ) )
-				$ar = $tables[ 'allowable_relationship' ];
-			else
-				$ar = 'allowable_relationship';
-
+			
 			if( !empty( $tables[ 'relationship' ] ) )
 				$r = $tables[ 'relationship' ];
 			else 
@@ -1400,8 +1415,7 @@
 			
 			$this->add_relation( $e . '.id = ' . $r . '.entity_a' );
 			$this->add_relation( 'entity.id = ' . $r . '.entity_b' );
-			$this->add_relation( $r . '.type = ' . $ar . '.id' );
-			$this->add_relation( $ar . '.name LIKE "%' . addslashes($rel_name) . '%"' );
+			$this->add_relation( $r . '.type = ' . $rel_type_id );
 
 			$this->add_field( $t , $field , $alias );
 			if( $this->_env['restrict_site'] AND !empty($this->_env['site']) )
