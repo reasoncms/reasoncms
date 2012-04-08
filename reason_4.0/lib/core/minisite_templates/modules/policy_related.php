@@ -40,7 +40,7 @@ class RelatedPolicyModule extends PolicyModule
 		//$es->set_order( 'sortable.sort_order ASC' );
 		$es->set_order( 'entity.name ASC' );
 		$es->add_relation( 'show_hide.show_hide != "hide"' );
-		$es->add_left_relationship_field( 'parent' , 'entity' , 'id' , 'parent_id' );
+		$es->add_left_relationship_field( 'policy_parent' , 'entity' , 'id' , 'parent_id' );
 		$es->add_right_relationship( $this->page_id, relationship_id_of('page_to_policy') );
 
 		$this->values = $es->run_one();

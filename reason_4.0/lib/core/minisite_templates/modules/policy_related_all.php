@@ -37,7 +37,7 @@
 			$this->pages = new AllPolicyNavigation;
 			$this->pages->init( $this->parent->site_id, id_of('policy_type') );
 			$this->pages->es->set_order( 'sortable.sort_order ASC' );
-			$this->pages->es->add_left_relationship_field( 'parent' , 'entity' , 'id' , 'parent_id' );
+			$this->pages->es->add_left_relationship_field( 'policy_parent' , 'entity' , 'id' , 'parent_id' );
 			$this->pages->es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('page_to_policy') );
                         $this->pages->values = $this->pages->es->run_one();
                         
