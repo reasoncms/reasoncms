@@ -263,8 +263,7 @@ class Feature_Helper
 		$options['horizontal']="center";
 		$options['vertical']="center";
 		$rsi->set_blit($watermark,$options);
-		$rsi->_make();
-	 	$url = $rsi->get_url();
+		$url = $rsi->get_url();
 		return $url;		
 	}
 	
