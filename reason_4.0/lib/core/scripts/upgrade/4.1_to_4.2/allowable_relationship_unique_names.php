@@ -80,6 +80,11 @@ class ReasonUpgrader_41_AllowableRelationshipUniqueNames implements reasonUpgrad
 			return $str;
 		}
 	}
+	
+	public function standalone()
+	{
+		return true;
+	}
 }
 
 class updateAllowableRelStructure
