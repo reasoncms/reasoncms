@@ -198,7 +198,7 @@
 				if(!(site_borrows_entity( $this->get_value('site_id'), id_of('nobody_group')) || site_owns_entity( $this->get_value('site_id'), id_of('nobody_group'))))
 				{
 					//if not, borrow it.
-					create_relationship($this->get_value('site_id'), id_of('nobody_group'), get_borrow_relationship_id(id_of('group_type')));
+					create_relationship($this->get_value('site_id'), id_of('nobody_group'), get_borrows_relationship_id(id_of('group_type')));
 				}			
 				
 				//check to see if we've got the appropriate relationship(s) with the nobody group.	If we don't, create the relationship. 

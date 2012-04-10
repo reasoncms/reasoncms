@@ -692,7 +692,7 @@ class PublicationMigratorHelper
 			if(!(site_borrows_entity( $site_id, id_of('nobody_group')) || site_owns_entity( $site_id, id_of('nobody_group'))))
 			{
 				// borrow it
-				create_relationship( $site_id, id_of('nobody_group'), get_borrow_relationship_id(id_of('group_type')));
+				create_relationship( $site_id, id_of('nobody_group'), get_borrows_relationship_id(id_of('group_type')));
 			}
 			return true;
 		}
