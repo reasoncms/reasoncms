@@ -363,7 +363,18 @@ class MinisiteTemplate
 		if ($this->use_navigation_cache)
 		{
 			$cache = new ReasonObjectCache($this->site_id . '_navigation_cache', 3600); // lifetime of 1 hour
-			$this->pages =& $cache->fetch();
+			$page_object_cache =& $cache->fetch();
+			if ($page_object_cache && is_array($page_object_cache) && isset($page_object_cache[$this->nav_class]))
+			{
+				$this->pages = $page_object_cache[$this->nav_class];
+			}
+			elseif ($page_object_cache && is_object($page_object_cache)) // old format
+			{
+				// lets use our cache and also update it
+				$this->pages = $page_object_cache;
+				$new_page_object_cache[$this->nav_class] = $this->pages;
+				$cache->set($new_page_object_cache); // replace with our array keyed cache
+			}
 		}
 		// lets check the persistent cache
 		
@@ -377,7 +388,8 @@ class MinisiteTemplate
 			$this->pages->init( $this->site_id, id_of('minisite_page') );
 			if ($this->use_navigation_cache) 
 			{
-				$cache->set($this->pages);
+				$page_object_cache[$this->nav_class] = $this->pages;
+				$cache->set($page_object_cache);
 			}
 		}
 		else // if pages came from cache refresh the request variables and set site_info and order_by
