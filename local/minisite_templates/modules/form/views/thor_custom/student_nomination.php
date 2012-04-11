@@ -26,23 +26,29 @@ class IndividualVisitForm extends DefaultThorForm
 		$this->change_element_type('id_9765x1CI8m', 'state');
 		
 		$date = getdate();
+		
 		$grad_year = $this->get_element_name_from_label('High School Graduation Year');
 		
-		// If the date is before February 2, let submitters choose the current year.
-		// Otherwise, just the next two years
-		$feb2 = 32;  // the numeric representation (yday) of February 2nd
-		if ($date['yday'] < $feb2) {
+		// If the date is before August 2, let submitters choose the current year+1.
+		// If the date is before August 2, let submitters choose the current year+1.
+		$aug1 = 212; // the numeric representation (yday) of August 1st
+		
+		if ($date['L']){ // if leap year increment August 1
+			$aug1 = 213;
+		}
+		if ($date['yday'] < $aug1) {
 			$this->change_element_type($grad_year, 'radio_inline', array(
 				'options' => array(
-					$date['year'] => $date['year'], 
-					$date['year']+1 => $date['year']+1, 
-					($date['year']+2) => ($date['year']+2)
+					($date['year']+1) => ($date['year']+1), 
+					($date['year']+2) => ($date['year']+2), 
+					($date['year']+3) => ($date['year']+3)
 					)));
-		}else{
+		} else {
 			$this->change_element_type($grad_year, 'radio_inline', array(
 				'options' => array( 
-					$date['year']+1 => $date['year']+1, 
-					($date['year']+2) => ($date['year']+2)
+					($date['year']+2) => ($date['year']+2), 
+					($date['year']+3) => ($date['year']+3),
+					($date['year']+4) => ($date['year']+4)
 					)));
 		
 		}
