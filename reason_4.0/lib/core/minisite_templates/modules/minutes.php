@@ -30,8 +30,8 @@
 		
 		function alter_es() // {{{
 		{
-			$this->es->set_order( 'dated.datetime DESC' );
-			$this->es->add_relation( 'minutes.minutes_status = "published"' );
+			$this->es->set_order( 'datetime DESC' );
+			$this->es->add_relation( table_of('minutes_status',id_of($this->type_unique_name)).' = "published"' );
 		} // }}}
 		function list_items() // {{{
 		{
