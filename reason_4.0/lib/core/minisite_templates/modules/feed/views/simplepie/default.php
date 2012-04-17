@@ -29,13 +29,17 @@ $GLOBALS[ '_reason_mvc_view_class_names' ][ reason_basename(__FILE__) ] = 'Reaso
 class ReasonSimplepieDefaultFeedView extends ReasonMVCView
 {
 	var $config = array('num_to_show' => 4,
-						'randomize' => false);
+						'randomize' => false,
+						'title' => NULL,
+						'description' => NULL);
 	
 	function get()
 	{
 		$feed = $this->data();
-		$str = '<h3>'.$feed->get_title().'</h3>';
-		$str = '<p>'.$feed->get_description().'</p>';
+		$title = (!is_null($this->config('title'))) ? $this->config('title') : $feed->get_title();
+		$description = (!is_null($this->config('description'))) ? $this->config('description') : $feed->get_description();
+		$str = '<h3>'.$title.'</h3>';
+		$str .= '<p>'.$description.'</p>';
 		if ($items = $feed->get_items())
 		{
 			if ($this->config('randomize')) shuffle($items);
