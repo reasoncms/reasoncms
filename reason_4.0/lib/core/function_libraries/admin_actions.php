@@ -1150,10 +1150,11 @@
 	 * @return boolean Success
 	 *
 	 * @todo Add limit to ensure fields are only created that don't already exist
-	 * @todo Add limit to ensure the destination table is only used by that single type (Perhaps overridable?)
 	 */
 	function reason_move_table_fields($type, $source_table, $destination_table, $user_id)
 	{
+		// Sanity checks
+		
 		if(empty($type))
 		{
 			trigger_error('No type provided in reason_move_table_fields()');
@@ -1209,6 +1210,28 @@
 			return false;
 		}
 		
+		if(is_object($type))
+			$type_entity = $type;
+		else
+			$type_entity = new entity($type_id);
+		
+		$type_vals = $type_entity->get_values();
+		if(empty($type_vals))
+		{
+			trigger_error('Type specified (id '.$type_id.') is not a Reason entity in reason_move_table_fields().');
+			return false;
+		}
+		if($type_entity->get_value('type') != id_of('type'))
+		{
+			trigger_error('Type specified (id '.$type_id.') is not a Type entity in reason_move_table_fields().');
+			return false;
+		}
+		if($type_entity->get_value('state') != 'Live')
+		{
+			trigger_error('Type specified (id '.$type_id.') is not a live entity in reason_move_table_fields().');
+			return false;
+		}
+		
 		if(empty($user_id))
 		{
 			trigger_error('No user id specified in reason_move_table_fields().');
@@ -1261,6 +1284,18 @@
 			return false;
 		}
 		
+		$es = new entity_selector();
+		$es->add_type(id_of('type'));
+		$es->add_left_relationship($destination_table_entity->id(),relationship_id_of('type_to_table'));
+		$es->add_relation('`entity`.`id` != "'.addslashes($type_id).'"');
+		$other_types = $es->run_one();
+		
+		if(!empty($other_types))
+		{
+			trigger_error(count($other_types).' other type(s) share the destination table with the type specified in reason_move_table_fields(). reason_move_table_fields() can only move fields into single-type tables.');
+			return false;
+		}
+		
 		// get the fields in the old table
 		$es = new entity_selector();
 		$es->add_type(id_of('field'));
@@ -1272,12 +1307,40 @@
 			trigger_error('Source table '.$source_table.' does not appear to have any fields associated with it in Reason. Unable to move its content in reason_move_table_fields()');
 		}
 		
+		$q = 'DESCRIBE `'.addslashes($destination_table).'`';
+		$handle = db_query( $q, 'Unable to describe destination table in reason_move_table_fields()' );
+		$raw_dest_cols = array();
+		while($row = mysql_fetch_assoc($handle))
+		{
+			$raw_dest_cols[] = $row['Field'];
+		}
+		
+		
+		foreach($source_table_fields as $k=>$field)
+		{
+			if(in_array($field->get_value('name'),$raw_dest_cols))
+			{
+				trigger_error($field->get_value('name').' field is already in destination table. Unable to accomplish reason_move_table_fields().');
+				return false;
+			}
+			$tmp_field_name = $field->get_value('name').'_move_tmp';
+			if(in_array($tmp_field_name,$raw_dest_cols))
+			{
+				trigger_error($tmp_field_name.' field already in destination table. There appears to have been an error in a previous attempt to run reason_move_table_fields(). Please drop this column in MySQL and try again.');
+				return false;
+			}
+			$source_table_fields[$k]->set_value('_field_move_temp_name',$field->get_value('name').'_move_tmp');
+		}
+		
+		// Done with sanity checks
+		
+		
 		// map old to temp field names & create new fields
 		$query_parts = array();
 		foreach($source_table_fields as $k=>$field)
 		{
 			$source_table_fields[$k]->set_value('_field_move_temp_name',$field->get_value('name').'_move_tmp');
-			$q = 'ALTER TABLE `'.addslashes($destination_table).'` ADD '.addslashes( $field->get_value('_field_move_temp_name') ).' '.addslashes( $field->get_value('db_type') );
+			$q = 'ALTER TABLE `'.addslashes($destination_table).'` ADD '.addslashes( $field->get_value('_field_move_temp_name') ).' '. $field->get_value('db_type');
 			db_query( $q, 'Unable to create new field '.$field->get_value('_field_move_temp_name').' in reason_move_table_fields()' );
 			$values = array();
 			foreach($field->get_values() as $f=>$v)
@@ -1315,7 +1378,7 @@
 		foreach($source_table_fields as $field)
 		{
 			create_relationship( $field->get_value('_new_field_id'), $destination_table_entity->id(), relationship_id_of(	'field_to_entity_table' ) );
-			$q = 'ALTER TABLE `'.addslashes($destination_table).'` CHANGE '.addslashes($field->get_value('_field_move_temp_name')).' '.addslashes( $field->get_value('name') ).' '.addslashes($field->get_value('db_type')) ;
+			$q = 'ALTER TABLE `'.addslashes($destination_table).'` CHANGE '.addslashes($field->get_value('_field_move_temp_name')).' '.addslashes( $field->get_value('name') ).' '.$field->get_value('db_type') ;
 			db_query( $q, 'Unable to change field name of '.$field->get_value('_field_move_temp_name').' in reason_move_table_fields()' );
 			reason_update_entity( $field->get_value('_new_field_id'), $user_id, array('name' => $field->get_value('name') ) );
 		}
