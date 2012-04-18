@@ -9,7 +9,28 @@ reason_include_once('function_libraries/file_finders.php');
 
 class reasonUpgradeAssistant
 {
+	protected $upgraders;
+	protected $upgrade_info;
+	
 	function get_upgraders($upgrade_string, $name = NULL)
+	{
+		if (!isset($this->upgraders))
+		{
+			$this->_build_upgrader_info($upgrade_string, $name);
+		}
+		return $this->upgraders;
+	}
+	
+	function get_upgrade_info($upgrade_string, $name = NULL)
+	{
+		if (!isset($this->upgrade_info))
+		{
+			$this->_build_upgrader_info($upgrade_string, $name);
+		}
+		return $this->upgrade_info;
+	}
+	
+	function _build_upgrader_info($upgrade_string, $name = NULL)
 	{
 		$dir_path = 'scripts/upgrade/'.$upgrade_string.'/';
 		$files = reason_get_merged_fileset($dir_path);
@@ -27,9 +48,15 @@ class reasonUpgradeAssistant
 					{
 						$obj = new $classname;
 						if($obj instanceof reasonUpgraderInterface)
-							$upgraders[$name] = new $classname;
+							$upgraders['upgraders'][$name] = new $classname;
+						elseif ($obj instanceof reasonUpgraderInfoInterface)
+						{
+							$upgraders['upgrade_info'][$name] = new $classname;
+						}
 						else
-							trigger_error('Upgraders must implement the reasonUpgraderInterface; '.$classname.' appears not to.');
+						{
+							trigger_error('Upgraders must implement the reasonUpgraderInterface or the reasonUpgraderInfoInterface; '.$classname.' appears not to.');
+						}
 					}
 					else
 						trigger_error('Unable to instantiate upgrader class '.$classname.' -- it does not appear to exist');
@@ -41,8 +68,10 @@ class reasonUpgradeAssistant
 				}
 			}
 		}
-		ksort($upgraders);
-		return $upgraders;
+		if (!empty($upgraders['upgraders'])) ksort($upgraders['upgraders']);
+		if (!empty($upgraders['upgrader_info'])) ksort($upgraders['upgrader_info']);
+		$this->upgraders = $upgraders['upgraders'];
+		$this->upgrade_info = $upgraders['upgrade_info'];
 	}
 }
 

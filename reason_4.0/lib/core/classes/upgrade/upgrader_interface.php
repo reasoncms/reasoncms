@@ -37,4 +37,20 @@ interface reasonUpgraderInterface
 	public function run();
 }
 
+/**
+ * @package reason
+ * @subpackage classes
+ */
+
+/**
+ * Interface for upgrader information classes
+ */
+interface reasonUpgraderInfoInterface
+{
+	/**
+	 * Output information.
+	 * @return string HTML report
+	 */
+	public function run();
+}
 ?>
