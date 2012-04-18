@@ -51,9 +51,9 @@ if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']])
 			echo '<p class="mode"><em>Testing Mode</em></p>'."\n";
 		$chosen_upgrader = $_GET['upgrader'];
 		$standalones = array();
-		$standalone = false;
 		foreach($upgraders as $upgrader_name=>$upgrader)
 		{
+			$standalone = false;
 			if(method_exists($upgrader,'standalone'))
 			{
 				$standalone = $upgrader->standalone();
@@ -117,6 +117,11 @@ if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']])
 	}
 	else
 	{
+		$upgrade_info = $rua->get_upgrade_info($step);
+		foreach ($upgrade_info as $upgrade_info_item)
+		{
+			echo $upgrade_info_item->run();
+		}
 		echo '<h3><a href="?upgrade_step='.urlencode($step).'&amp;upgrader=_all_&amp;mode=test">Test All Upgrades</a></h3>'."\n";
 		echo '<h3>Test Individual Upgrades</h3>'."\n";
 		echo '<ul>'."\n";
