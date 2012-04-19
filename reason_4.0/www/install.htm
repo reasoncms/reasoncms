@@ -204,7 +204,7 @@ are setting up a production instance of Reason.</p>
 <p>To keep the server happy, it is a good idea to setup nightly garbage collection of old objects. To schedule this job create a script in your /etc/cron.daily folder like the following:</p>
 <div class="callOut">
 <p>#!/bin/sh</p>
-<p>/path/to/bin/php -d include_path=/include/path/to/reason_package/ /path/to/reason_package/reason_4.0/lib/core/scripts/db_maintenance/scripts/garbage_collector.php3 &gt; /tmp/reason_garbage/web_garbage_dump.`date +\%Y\%m\%d`.txt</p>
+<p>/path/to/bin/php -d include_path=/include/path/to/reason_package/ /path/to/reason_package/reason_4.0/lib/core/scripts/db_maintenance/garbage_collector.php &gt; /tmp/reason_garbage/web_garbage_dump.`date +\%Y\%m\%d`.txt</p>
 </div>
 <p>Note that you must create the folder /tmp/reason_garbage. In addition, make sure to substitute values specific to your site for the /path/to/ values.</p>
 <h3><a name="final_setup" id="final_setup"></a>Final setup</h3>
