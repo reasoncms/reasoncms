@@ -1,0 +1,7 @@
+table.orphans td, table.orphans th { padding:0.3em; }
+table.orphans td { border-bottom: 1px solid #999; }
+table.orphans th { border-bottom: 2px solid #444; text-align:left; }
+table.orphans tbody th { border-bottom:1px solid #999; color:#666; font-size:0.85em; }
+table.orphans th span.select_all { color:blue; cursor: pointer; font-size: 0.8em; text-decoration: underline;}
+h3.orphan_group span.toggle { color:blue; cursor: pointer; font-size: 0.8em; text-decoration: underline;}
+tr#typesRow a#select_all { display: none; }
