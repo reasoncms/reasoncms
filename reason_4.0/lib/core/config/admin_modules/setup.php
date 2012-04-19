@@ -87,7 +87,7 @@
 		'SitePages'=>array('file'=>'site_pages.php','class'=>'ReasonSitePagesModule'),
 		
 		'ImageSizer'=>array('file'=>'image_sizer.php','class'=>'ImageSizerModule'),
-		
+		'OrphanManager'=>array('file'=>'orphan_manager.php','class'=>'OrphanManagerModule'),		
 		'ManageLocks'=>array('file'=>'manage_locks.php','class'=>'ManageLocksModule'),
 		'AdminTools'=>array('file'=>'admin_tools.php','class'=>'ReasonAdminToolsModule'),
 		'ErrorVisibility'=>array('file'=>'error_visibility.php','class'=>'ErrorVisibilityModule'),
