@@ -167,6 +167,11 @@
 								 'one of each pair of identical entities.',
 						'safety_level' => 'experimental',
 					),
+					'?cur_module=OrphanManager' => array(
+						'title' => 'Orphaned Entities Manager',
+						'description' => 'Finds entities not owned by a site and lets you move or delete them.',
+						'safety_level' => 'careful',
+					),
 				),
 				'Upgrading' => array(
 					REASON_HTTP_BASE_PATH.'upgrade.php' => array(
