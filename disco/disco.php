@@ -2102,7 +2102,7 @@
 		/**
 		* Returns if the form has any errors at all
 		* @return bool true if the form has errors.
-		* @access private
+		* @access public
 		*/
 		function has_errors() // {{{
 		{
@@ -2110,9 +2110,9 @@
 		} // }}}
 		
 		/**
-		* Returns if the form has any errors at all
-		* @return bool true if the form has errors.
-		* @access private
+		* Do we have a successful submission?
+		* @return bool false if not submitted or if the form has errors.
+		* @access public
 		*/
 		function successfully_submitted() // {{{
 		{
