@@ -455,22 +455,57 @@ class AdminPage
 		else
 			$this->show_owns_links_second_level();
 	} // }}}
-	function show_owns_links_no_second_level( $links = false ) // {{{
-	//main links for id.  Although the name says no_second_level, these links are actually used to display the furthest 
-	//inside links.  In other words, we don't have to worry about there being a second level outside of this.
+	
+	/**
+	 * Show main links for the current ID. Although the name says no_second_level, these links are actually used to 
+	 * display the furthest inside links.
+	 * 
+	 * In other words, we don't have to worry about there being a second level outside of this. 
+	 */
+	function show_owns_links_no_second_level( $links = false )
 	{
 		if( $links == false )
-			$links = $this->get_main_links();
-		foreach( $links AS $key => $value )
 		{
-			if( $this->is_selected( $key ) )
-				echo '<li class="navItem navSelect"><strong>' . $value[ 'title' ] . '</strong></li>' . "\n";
-			else
-				echo '<li class="navItem"><a href="' . $value[ 'link' ] . '" class="nav">'.$value[ 'title' ].'</a></li>' . "\n";
+			$links = $this->get_main_links();
 		}
-	} // }}}
-	function show_owns_links_second_level() // {{{
-	//the outside links for second level
+		foreach( $links AS $key => $value )
+		{ 
+			if( $this->is_selected( $key ) )
+			{
+				$output = '<li class="navItem navSelect">';
+				if (isset($value['icon']))
+				{
+					$output .= $value['icon'];
+			    }
+			    $output .= '<strong> ' . $value[ 'title' ] . '</strong>';
+			    //if (isset($value['type_count']))
+			    //{
+			    //	$output .= ' ('. $value['type_count'] . ')';
+			    //}
+			    $output .= '</li>' . "\n";
+		    }
+		    else
+		    {
+		    	$output = '<li class="navItem"><a href="'. $value[ 'link' ] . '" class="nav">';
+		    	if (isset($value['icon']))
+		    	{
+			        $output .= $value['icon'];
+			    }
+			    $output .= $value[ 'title' ];
+			    //if (isset($value['type_count']))
+			    //{
+			    //	$output .= ' ('. $value['type_count'] . ')';
+			    //}
+			    $output .= '</a></li>' . "\n";
+			}
+			echo $output;   
+		}
+	}
+	
+	/**
+	 * Display outside links for the second level
+	 */
+	function show_owns_links_second_level()
 	{
 		$outside = $this->get_second_level_links();
 		$inside = $this->get_main_links();
@@ -479,15 +514,40 @@ class AdminPage
 			if( $this->request[ CM_VAR_PREFIX . 'rel_id' ] == $key )
 			{
 				$e = new entity( $this->id );
-				echo '<li class="navItem"><strong>' . $value[ 'title' ] . '(' .$e->get_value( 'name' ) . ')</strong></li>' . "\n";
-				echo '<ul>';
-				$this->show_owns_links_no_second_level( $inside );
-				echo '</ul>';
+				$output = '<li class="navItem">';
+				if (isset($value['icon']))
+				{
+					$output .= $value['icon'];
+				}
+    			$output .= '<strong> ' . $value[ 'title' ] . '(' .$e->get_value( 'name' ) . ')</strong>';
+    			if (isset($value['type_count']))
+    			{
+    				$output .= ' ('. $value['type_count'] . ')';
+    			}
+    			$output .= '</li>' . "\n";
+    			$output .= '<ul>';
+    			echo $output;
+    			$this->show_owns_links_no_second_level( $inside );
+    			echo '</ul>';
 			}
 			else
-				echo '<li class="navItem">' . $value[ 'title' ] . '</li>' . "\n";
+			{
+				$output = '<li class="navItem">';
+				if (isset($value['icon']))
+				{
+					$output .= $value['icon'];
+    			}
+    			$output .= ' ' . $value[ 'title' ];
+    			//if (isset($value['type_count']))
+    			//{
+    			//	$output .= ' ('. $value['type_count'] . ')';
+    			//}
+    			$output .= '</li>' . "\n";
+    			echo $output;
+			}
 		}
-	} // }}}
+	}
+	
 	function get_main_links( $second = false ) // {{{
 	//returns an array of the main links
 	{
@@ -507,6 +567,7 @@ class AdminPage
 				$ass_name = !empty( $rel[ 'display_name' ] ) ? $rel[ 'display_name' ] : $rel[ 'entity_name' ];
 				$index = $rel[ 'id' ];
 				$links[ $index ] = array( 'title' => $ass_name , 
+										  'icon' => '<img src="' .reason_get_type_icon_url($rel['relationship_b']). '" alt="" />',
 										  'link' => $this->make_link( array( 
 											'site_id' => $this->site_id, 
 											'type_id' => $this->type_id,
@@ -526,6 +587,7 @@ class AdminPage
 				$index = $rel[ 'id' ];
 				
 				$links[ $index ] = array( 'title' => $ass_name , 
+										  'icon' => '<img src="' .reason_get_type_icon_url($rel['relationship_a']). '" alt="" />',
 										  'link' => $this->make_link( array( 
 											'site_id' => $this->site_id, 
 											'type_id' => $this->type_id,
