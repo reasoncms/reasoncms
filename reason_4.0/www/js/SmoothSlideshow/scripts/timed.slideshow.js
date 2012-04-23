@@ -4,7 +4,7 @@ var maxIter = 0;
 var slideShowElement = "";
 var slideShowData = new Array();
 var slideShowInit = 1;
-var slideShowDelay = 9000;
+var slideShowDelay = 6000;
 var articleLink = "";
 
 function initSlideShow(element, data) {
