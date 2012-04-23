@@ -124,7 +124,7 @@ class reason_orphan_manager_interactive
 		}
 		if(!get_owner_site_id( $orphan_id ))
 		{
-			$owns_rel_id = relationship_finder('site',$types);
+			$owns_rel_id = get_owns_relationship_id($types);
 			
 			// If there is an existing entry in the relationship table, delete it
 			$q = 'DELETE FROM `relationship` WHERE `entity_b` = "'.addslashes($orphan_id).'" AND `type` = "'.addslashes($owns_rel_id).'"';
