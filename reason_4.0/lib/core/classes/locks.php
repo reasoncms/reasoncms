@@ -137,6 +137,8 @@ class ReasonEntityLocks
 	 */
 	protected $_current_user;
 	
+	protected $_context_site;
+	
 	/**
 	 * Constructor for the class
 	 *
@@ -313,7 +315,6 @@ class ReasonEntityLocks
 			trigger_error('Relationship "'.$relationship.'" not found in get_relationship_lock');
 			return false;
 		}
-		
 		foreach($this->get_relationship_locks($direction) as $lock)
 		{
 			if( ( '-1' == $lock['allowable_relationship_id'] || $relationship_id == $lock['allowable_relationship_id']) )
@@ -384,9 +385,13 @@ class ReasonEntityLocks
 	public function relationship_has_lock($relationship, $direction)
 	{
 		if($this->get_relationship_lock($relationship, $direction))
+		{
 			return true;
+		}
 		else
+		{
 			return false;
+		}
 	}
 	
 	/**
@@ -625,7 +630,7 @@ class ReasonEntityLocks
 	 * @todo check to make sure the requested relationship a) exists, and b) is available on this
 	 * type
 	 */
-	public function user_can_edit_relationship($relationship, $user = null, $direction)
+	public function user_can_edit_relationship($relationship, $user = null, $direction, $entity_on_other_side =  null, $context_site = null)
 	{
 		if(empty($direction) || ($direction != 'left' && $direction != 'right') )
 		{
@@ -641,20 +646,139 @@ class ReasonEntityLocks
 		
 		if(null === $user)
 			$user = $this->_get_current_user();
+			
+		if(empty($context_site))
+			$context_site = $this->get_context_site();
 		
-		if(!$this->user_can_edit($user))
+		
+		if($entity_on_other_side && !$this->_relationship_check($relationship, $user, $direction, $entity_on_other_side, $context_site))
 			return false;
 		
 		if(reason_user_has_privs( $user->id(), 'bypass_locks'))
 			return true;
-
-		if($this->get_all_relationships_lock($direction))
+		$other_direction = 'right' == $direction ? 'left' : 'right';
+		if(
+			$this->relationship_has_lock($relationship, $direction)
+			|| ($entity_on_other_side && $entity_on_other_side->relationship_has_lock($relationship, $other_direction) )
+		)
+		{
 			return false;
-		
-		if($this->relationship_has_lock($relationship, $direction))
-			return false;
+		}
 		else
 			return true;
+	}
+	
+	function _relationship_check($relationship, $user = null, $direction, $entity_on_other_side = null, $context_site = null)
+	{
+		if(null === $user)
+		{
+			$user = $this->_get_current_user();
+		}
+		
+		if(empty($user))
+		{
+			return false;
+		}
+		
+		$this_entity_state = $this->_entity->get_value('state');
+		$other_entity_state = $entity_on_other_side ? $entity_on_other_side>get_value('state') : null;
+			
+		// If one of the entities is deleted or archived, return false
+		if('Deleted' == $this_entity_state || 'Deleted' == $other_entity_state || 'Archived' == $this_entity_state || 'Archived' == $other_entity_state)
+		{
+			// relationships not changeable on archived or deleted entities
+			return false;
+		}
+		// If both entities are live and the user does not have live entity editing privs, return false
+		elseif('Live' == $this_entity_state && ( empty($other_entity_state) || 'Live' == $other_entity_state ) )
+		{
+			if(!reason_user_has_privs( $user->id(), 'edit_live'))
+				return false;
+		}
+		// If either entity is pending and the user does not have pending entity editing privs, return false
+		elseif( 'Pending' == $this_entity_state || 'Pending' == $other_entity_state )
+		{
+			if(!reason_user_has_privs( $user->id(), 'edit_pending'))
+				return false;
+		}
+		// This should never run, but in case there are any additions to the set of entity states this will catch it
+		else
+		{
+			trigger_error('Uncaught state combination: '.$this_entity_state.' and '.$other_entity_state.'. Check logic.' );
+			return false;
+		}
+		
+		if(!$context_site)
+		{
+			$context_site_given = false;
+			$context_site = $this->_find_context_site($entity_a,$entity_b,$user);
+			$context_site_valid = !empty($context_site);
+		}
+		else
+		{
+			$context_site_given = true;
+			$context_site_valid = ( $entity_a->is_owned_or_borrowed_by($context_site->id()) && $entity_b->is_owned_or_borrowed_by($context_site->id()) );
+		}
+		
+		// if context site that the user has admin rights to that contains both entities
+		if($context_site_valid)
+		{
+			// if rel is bidirectional or user is admin of A side owner site return true
+			
+			$alrel = reason_get_allowable_relationship_info( $alrel_id );
+			if('bidirectional' == $alrel['directionality'])
+			{
+				return true;
+			}
+			else
+			{
+				if('right' == $direction)
+					$a_side_owner_site = $this->_entity->get_owner();
+				elseif($entity_on_other_side)
+					$a_side_owner_site = $entity_on_other_side->get_owner();
+				else
+					return false;
+				return user_can_edit_site($user->id(), $a_side_owner_site->id());
+			}
+		}
+		else
+		{
+			if($context_site_given)
+				$context_sites = array($context_site->id() => $context_site);
+			else
+				$context_sites = reason_user_sites($user);
+			
+			$rels = $this->_get_rels_between_entities($entity_a,$entity_b,$allowable_relationship_id,$context_sites);
+			if(!empty($rels))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	function _find_context_site($entity_a,$entity_b,$user)
+	{
+		$a_borrow_id = get_borrow_relationship_id( $entity_a->get_value('type') );
+		
+		$b_borrow_id = get_borrow_relationship_id( $entity_a->get_value('type') );
+	}
+	
+	function _verify_context_site($context_site, $entity_a, $entity_b)
+	{
+		return ($entity_a->is_owned_or_borrowed_by($context_site->id()) && $entity_b->is_owned_or_borrowed_by($context_site->id()));
+	}
+	function _get_rels_between_entities($entity_a,$entity_b,$allowable_relationship_id,$sites)
+	{
+		$site_ids = array(0) + array_keys($sites);
+		array_walk($site_ids,'db_prep_walk');
+		$q = 'SELECT * from `relationship` WHERE `entity_a` = "'.addslashes($entity_a->id()).'" AND `entity_b` = "'.addslashes($entity_b->id()).'" AND `type` = "'.addslashes($allowable_relationship_id).'" AND `site` IN ('.implode(',',$site_ids).')';
+		$r = db_query( $q , 'error getting relationship info' );
+		if($r)
+			return mysql_fetch_array( $r , MYSQL_ASSOC );
+		else
+			return false;
 	}
 	
 	/**
@@ -1056,6 +1180,15 @@ class ReasonEntityLocks
 			}
 		}
 		return false;
+	}
+	
+	public function set_context_site($site)
+	{
+		$this->_context_site = $site;
+	}
+	public function get_context_site()
+	{
+		return $this->_context_site;
 	}
 }
 ?>
