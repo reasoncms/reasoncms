@@ -526,8 +526,8 @@ $GLOBALS['_reason_page_types_local'] = array(
 			),
 		),
 	),
-	'luther_gmap' => array(
-		'main_post' => 'luther_gmap',
+	'luther_google_map' => array(
+		'main_post' => 'luther_google_map',
 	),
 	'mobile_admissions' => array(
 		'banner_xtra' => '',
