@@ -14,6 +14,7 @@ $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'editorEventsF
 class editorEventsFeed extends pageTreeFeed
 {
 	var $page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','events_verbose_nonav');
+	var $module_sets = array('event_display');
 	var $query_string = 'event_id';
 	
 	function alter_feed()
