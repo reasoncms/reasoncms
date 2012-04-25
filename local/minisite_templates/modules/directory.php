@@ -571,7 +571,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         $image_class = ($this->form->get_value('pictures')) ? '' : 'noImage';
         echo '<p class="personPager"></p>';
         echo '<div id="searchResults">';
-        // Display any non-person results from the Telecomm database
+        // Display any non-person results from the Telecomm database	
         if (count($telecomm)) {
             foreach ($telecomm as $name => $data) {
                 echo '<div class="person">';
@@ -722,17 +722,19 @@ class DirectoryModule extends DefaultMinisiteModule {
             if (isset($data['officephone'])) {
                 echo "<tr valign=top><td><b>Office Phone: </b></td><td>".$data['officephone'][0]."</td></tr>";
             }
-			if (isset ($data['edupersonprimaryaffiliation']) && $this->user_netid && ($data['edupersonprimaryaffiliation'][0] == 'Faculty' || $data['edupersonprimaryaffiliation'][0] == 'Staff')){
-					$advisees = $this->get_search_results('(&(|(studentAdvisor='.$data['uid'][0].')))');
-					if (!empty($advisees)){
-							echo "<tr valign=top><td><b>Advisees: </b></td><td>";
-							foreach ($advisees as $advisee){
-									$advisee_uid = $advisee['uid'][0];
-									$advisee_displayname = $advisee['displayname'][0];
-									echo "<a href=\"?netid[]=".$advisee_uid."\">".$advisee_displayname."</a><br>";
-							}
-							echo "</td></tr>";
-					}
+			if ($data['uid'][0] == $this->user_netid){
+				if (isset ($data['edupersonprimaryaffiliation']) && $this->user_netid && ($data['edupersonprimaryaffiliation'][0] == 'Faculty' || $data['edupersonprimaryaffiliation'][0] == 'Staff')){
+						$advisees = $this->get_search_results('(&(|(studentAdvisor='.$data['uid'][0].')))');
+						if (!empty($advisees)){
+								echo "<tr valign=top><td><b>Advisees: </b></td><td>";
+								foreach ($advisees as $advisee){
+										$advisee_uid = $advisee['uid'][0];
+										$advisee_displayname = $advisee['displayname'][0];
+										echo "<a href=\"?netid[]=".$advisee_uid."\">".$advisee_displayname."</a><br>";
+								}
+								echo "</td></tr>";
+						}
+				}
 			}
             if (isset($data['postaladdress'])) {
                 echo "<tr valign=top><td><b>Home Address: </b></td><td>"
