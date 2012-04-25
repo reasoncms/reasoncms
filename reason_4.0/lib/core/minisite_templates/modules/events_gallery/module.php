@@ -34,6 +34,7 @@
 				{
 					$es->add_relation('(`last_occurence` < "'.addslashes(date('Y-m-d')).'" OR `datetime` >= "'.addslashes(date('Y-m-d',time() + (60*60*24))).'")');
 				}
+				$es->add_relation('`show_hide` = "show"');
 				$es->set_order($this->params['order']);
 				$this->_modify_events_es($es);
 				$events = $es->run_one();
