@@ -610,7 +610,15 @@
 		'events' => array(
 			'main_post' => 'events',
 			'sidebar' => '',
-		),	
+		),
+		'events_gallery_archive' => array(
+			'main_post' => array(
+				'module' => 'events_gallery',
+				'template' => 'big_list_no_temporal',
+				'show' => array('archived'),
+				'order' => '`datetime` DESC',
+			),
+		),
 		'events_and_images_sidebar_show_children' => array(
 			'sidebar' => 'events_mini',
 			'main_post' => 'children',
