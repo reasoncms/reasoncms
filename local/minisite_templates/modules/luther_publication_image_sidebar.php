@@ -100,17 +100,40 @@
 			$full_image_name = WEB_PHOTOSTOCK.$id.'.'.$imgtype;
 			
 			if ($this->cur_page->get_value( 'custom_page' ) != 'spotlight_archive')
-			{
-				$thumbnail_image_name = WEB_PHOTOSTOCK.$id.'_tn.'.$imgtype;
+			{			
+				$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
+				$thumb = WEB_PHOTOSTOCK . $id . '_tn.' . $image->get_value('image_type');
+				$orig = WEB_PHOTOSTOCK . $id . '_orig.' . $image->get_value('image_type');
 				$d = max($image->get_value('width'), $image->get_value('height')) / 125.0;
+				if (preg_match("/hide_caption/", $image->get_value('keywords')))
+				{
+					$caption = "";
+				}
+				elseif (preg_match("/[A-Za-z0-9]+/", $image->get_value('content')))
+				{
+					$caption = $image->get_value('content');
+				}
+				else
+				{
+					$caption = $image->get_value('description');
+				}
 				ob_start();
 				echo '<div class="figure" style="width:' . intval($image->get_value('width')/$d) .'px;">';
-				echo '<a href="'. $full_image_name . '" class="highslide" onclick="return hs.expand(this)">';
-				echo '<img src="' . $thumbnail_image_name . '" border="0" alt="' . $image->get_value('description') . '" title="Click to enlarge" />';
+				// show href to full size image with class and onclick for highslide
+				echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
+				echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" />';
 				echo '</a>';
+				echo '<div class="highslide-caption" >'."\n";
+				echo $caption ."\n";
+				if (file_exists($_SERVER['DOCUMENT_ROOT'] . $orig))
+				{
+					echo '<a href="' . $orig . '" title="High res">&prop;</a>'."\n"; 
+				}
+				echo "</div>   <!--- class=\"highslide-caption\" -->\n";  
+
 				// show caption if flag is true
-				echo $image->get_value('description');
-				echo "</div>\n";
+				if ($this->params['caption_flag'] && $caption != "") echo $image->get_value('description') ;
+				echo "</div>   <!-- class=\"figure\" -->\n";
 				$markup_string .= ob_get_contents();
 				ob_end_clean();
 			}
