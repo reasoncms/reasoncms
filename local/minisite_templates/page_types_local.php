@@ -349,7 +349,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 				),
 			),
 		),
-		'pre_sidebar_3' => '',
+		'pre_sidebar_3' => 'luther_events_mini',
 		'sidebar_2' => '',
 		'sidebar_5'=> array( // News
 			'module' => 'luther_other_publication_news',
