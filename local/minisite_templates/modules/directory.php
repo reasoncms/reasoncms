@@ -564,9 +564,9 @@ class DirectoryModule extends DefaultMinisiteModule {
 
     function display_results($people, $desc, $telecomm) //{{{
     {
-//		if (count($people) > 1){
+		if (count($people) > 1){
 			echo $this->form->show_form();
-//		}
+		}
         echo $this->get_search_status($people, $desc);
         $image_class = ($this->form->get_value('pictures')) ? '' : 'noImage';
         echo '<p class="personPager"></p>';
