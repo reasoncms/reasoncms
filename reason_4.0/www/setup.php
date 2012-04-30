@@ -802,6 +802,12 @@ function curl_check()
 	}
 }
 
+/**
+ * Check to see if imagemagick is installed and working
+ *
+ * @todo Check for a particular version of imagemagick (e.g. 6+?)
+ * http://www.nutt.net/2006/07/16/get-imagemagick-version-with-php/
+ */
 function imagemagick_check()
 {
 	$mogrify_filename = (server_is_windows()) ? 'mogrify.exe' : 'mogrify';
