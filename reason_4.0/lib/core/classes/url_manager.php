@@ -99,6 +99,11 @@
 		 */
 		var $_ok_to_run = false;
 		
+		/**
+		 * @var boolean
+		 */
+		protected $_htaccess_changed = false;
+		
 		function url_manager( $site_id, $debug = false, $do_global_rewrites = false ) // {{{
 		{
 			$this->debug = $debug;
@@ -358,6 +363,7 @@
 				{
 					$this->debug( 'test file diff from current, testing and copying' );
 					$this->_test_and_copy();
+					$this->_htaccess_changed = true;
 				}
 				else
 				{
@@ -439,6 +445,10 @@
 				}
 			}
 		} // }}}
+		function htaccess_changed()
+		{
+			return $this->_htaccess_changed;
+		}
 		function _test_and_copy() // {{{
 		{
 			if( filesize( $this->test_file ) > 0 )
