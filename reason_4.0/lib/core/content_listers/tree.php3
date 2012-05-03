@@ -345,6 +345,8 @@
 		{
 			if( $this->order_by )
 				$this->es->set_order( $this->order_by );
+			$this->es->limit_fields();
+			$this->es->exclude_tables_dynamically();
 			$this->values = $this->es->run_one();
 			if( $this->has_filters() )
 			{
