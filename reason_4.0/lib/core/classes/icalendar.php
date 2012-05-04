@@ -167,7 +167,7 @@ class reason_iCalendar
 		//Recurrence Rule
 		if ($event -> get_value('recurrence') != 'none')
 		{
-			$icalendar_event .= $this -> _create_rrule($event -> get_value('recurrence'), $event -> get_value('frequency'), $event -> get_value('week_of_month'), $event -> get_value('month_day_of_week'), $event -> get_value('monthly_repeat'), $event -> get_value('sunday'), $event -> get_value('monday'), $event -> get_value('tuesday'), $event -> get_value('wednesday'), $event -> get_value('thursday'), $event -> get_value('friday'), $event -> get_value('saturday'), $event -> get_value('end_date'), false);
+			$icalendar_event .= $this -> _create_rrule($event -> get_value('recurrence'), $event -> get_value('frequency'), $event -> get_value('week_of_month'), $event -> get_value('month_day_of_week'), $event -> get_value('monthly_repeat'), $event -> get_value('sunday'), $event -> get_value('monday'), $event -> get_value('tuesday'), $event -> get_value('wednesday'), $event -> get_value('thursday'), $event -> get_value('friday'), $event -> get_value('saturday'), $event -> get_value('end_date'), $event -> get_value('datetime'), false);
 		}
 		$icalendar_event .= 'END:VEVENT' . "\r\n";
 		return $icalendar_event;
@@ -231,12 +231,13 @@ class reason_iCalendar
 	}
 	
 	//create the recurrence rules
-	function _create_rrule($repeat, $frequency, $week_of_month, $month_day_of_week, $monthly_repeat, $sunday, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $end_date, $utc)
+	function _create_rrule($repeat, $frequency, $week_of_month, $month_day_of_week, $monthly_repeat, $sunday, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $end_date, $datetime, $utc)
 	{
 		$rrule = 'RRULE:';
 		$rrule .= 'FREQ=' . strtoupper($repeat) . ';';	
 		$end_date = substr($end_date,0,10);
-		if ($end_date != '0000-00-00') $end_date = $end_date.' 23:59:59';
+		// set UNTIL to 23:59:59 unless this is an all day event (in reason these are currently events that start at midnight)
+		if (($end_date != '0000-00-00') && (substr($datetime, 11) != '00:00:00')) $end_date = $end_date.' 23:59:59';
 		else $end_date = $end_date.' 00:00:00';
 		$end = $this -> _create_datetime($end_date, $utc);
 		if ($end != '00000000T000000') $rrule .= 'UNTIL=' . $end . ';';
