@@ -92,7 +92,13 @@
 				'thumbnail_width' => 200,
 				'thumbnail_height' => 200,
 				)
-		),	
+		),
+		'image_sidebar_skip_first' => array(
+			'sidebar' => array(
+				'module' => 'image_sidebar',
+				'num_to_skip' => 1,
+				)
+		),
 		'all_related_policies' => array(
 			'main_post' => 'policy_related_all',
 		),
