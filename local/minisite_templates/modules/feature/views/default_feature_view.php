@@ -172,7 +172,7 @@ class DefaultFeatureView extends FeatureView
 				}
 				
 				$title=$d['title'];
-				$str.="<a  href=\"?feature=".$id."\" title=\"".$title."\" class=\"".$anchor_class." navItem\">"."<span>".$feature_num."</span></a>";
+				$str.="<a  href=\"?feature=".$id."\" title=\"".$title."\" class=\"".$anchor_class." navItem\">"."<span>"."&#x25cf;"."</span></a>";
 				$feature_num++;
 			}
 		}
@@ -274,7 +274,7 @@ class DefaultFeatureView extends FeatureView
 	*/
 	function build_play_nav_str()
 	{
-		$str="<a style=\"display:none\" href=\"#\" title=\"Play Slide Show\" class=\"button play \">►</a>";
+		$str="<a style=\"display:none\" href=\"#\" title=\"Play Slide Show\" class=\"button play \">&#x25BA;</a>";
 		return $str;
 	}
 	
@@ -283,7 +283,7 @@ class DefaultFeatureView extends FeatureView
 	*/
 	function build_pause_nav_str()
 	{
-		$str="<a style=\"display:none\" href=\"#\" title=\"Pause Slide Show\" class=\"button pause \">❙ ❙&nbsp;</a>";
+		$str="<a style=\"display:none\" href=\"#\" title=\"Pause Slide Show\" class=\"button pause \">&#x2759; &#x2759;&nbsp;</a>";
 		return $str;
 	}
 	
