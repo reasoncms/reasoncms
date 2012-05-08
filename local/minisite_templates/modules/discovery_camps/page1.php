@@ -118,11 +118,11 @@ class DiscoveryCampsOne extends FormStep
                 'display_name' => 'June 18-22 Grades 3-6  $150',
 				'comments' => '<br><em>Adventurers</em>',
             ),
-            'survival_camp' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => 'June 25-29 Grades 5-8  $175',
-                'comments' => '<br><em>Survival Camp</em>'
-            ),
+//            'survival_camp' => array(
+//                'type' => 'checkboxfirst',
+//                'display_name' => 'June 25-29 Grades 5-8  $175',
+//                'comments' => '<br><em>Survival Camp</em>'
+//            ),
             'energy_expedition' => array(
                 'type' => 'checkboxfirst',
                 'display_name' => 'July 9-13 Grades 4-6 $150',
@@ -169,7 +169,7 @@ class DiscoveryCampsOne extends FormStep
                     $this->set_display_name('grade_1', "June 11-12   Grade 1     $105");
                     $this->set_display_name('grade_2', "June 13-15  Grade 2   $115");
                     $this->set_display_name('adventurers', "June 18-22 Grades 3-6  $165");
-                    $this->set_display_name('survival_camp', "June 25-29 Grades 5-8  $190");
+//                    $this->set_display_name('survival_camp', "June 25-29 Grades 5-8  $190");
                     $this->set_display_name('energy_expedition', "July 9-13 Grades 4-6 $165");
 					$this->set_display_name('edible_earth', "July 16-20** Grades 2-5 $175");
                     $this->set_display_name('expeditioners', "July 16-20** Grades 7-9 $185");

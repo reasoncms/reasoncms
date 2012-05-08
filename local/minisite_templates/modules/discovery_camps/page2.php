@@ -124,7 +124,7 @@ class DiscoveryCampsTwo extends FormStep
             $grade_1 = 90;
             $grade_2 = 100;
             $adventurers = 150;
-            $survival_camp = 175;
+//            $survival_camp = 175;
             $energy_expedition = 150;
             $edible_earth = 160;
             $expeditioners = 170;
@@ -141,8 +141,8 @@ class DiscoveryCampsTwo extends FormStep
                 $grade_1 = $grade_1 + $late_fee;
                 $grade_2 = $grade_2 + $late_fee;
                 $adventurers = $adventurers + $late_fee;
-                $survival_camp = $survival_camp + $late_fee;
-                $energy_expedition = $camp_6 + $late_fee;
+//                $survival_camp = $survival_camp + $late_fee;
+                $energy_expedition = $energy_expedition + $late_fee;
                 $edible_earth = $edible_earth + $late_fee;
                 $expeditioners = $expeditioners + $late_fee;
             }
@@ -156,8 +156,8 @@ class DiscoveryCampsTwo extends FormStep
                     $total_cost = $total_cost + $grade_2;
             if ($this->controller->get('adventurers'))
                     $total_cost = $total_cost + $adventurers;
-            if ($this->controller->get('survival_camp'))
-                    $total_cost = $total_cost + $survival_camp;
+//            if ($this->controller->get('survival_camp'))
+//                    $total_cost = $total_cost + $survival_camp;
             if ($this->controller->get('energy_expedition'))
                     $total_cost = $total_cost + $energy_expedition;
             if ($this->controller->get('edible_earth'))
@@ -237,9 +237,9 @@ class DiscoveryCampsTwo extends FormStep
                 if ($this->controller->get('adventurers')) {
 			$txt .= '<li>June 18-22 Grades 3-6</li>'."\n";
 		}
-                if ($this->controller->get('survival_camp')) {
-			$txt .= '<li>June 25-29 Grades 5-8</li>'."\n";
-		}
+//                if ($this->controller->get('survival_camp')) {
+//			$txt .= '<li>June 25-29 Grades 5-8</li>'."\n";
+//		}
 		if ($this->controller->get('energy_expedition')) {
 			$txt .= '<li>July 9-13 Grades 4-6</li>'."\n";
 		}
