@@ -95,20 +95,45 @@ function convert_to_png($orig)
 
 }
 
-/** Rasterize a PDF at 800dpi and then reduce to 200dpi
+/** Convert a PDF to a raster image by rasterizing and reducing to achieve antialiasing
  * 
  * @param $path path to non-web-image file
  * @param $format the format to convert to
+ * @param $max_size maximum size (in megapixels) for the resulting image
  *
  * @return the path of the converted file, or false if rasterization fails
  */
-function rasterize_pdf($path, $format)
+function rasterize_pdf($path, $format, $max_size = 4)
 {	
 	$new_path = change_extension($path, $format);
+
+	// By default, set the density (ppi) to 800ppi so that the final image will have a density 
+	// of 200ppi after being shrunk to 25% -- this provides good antialiasing for smaller images.
+	$density = 800;
+	$resize = 25;
+
+	// Handle cases where the image is too big for rasterizing at 800ppi
+	if ($max_size && ($dim = get_dimensions_image_magick($path)))
+	{
+		$max_pixels = $max_size*1024000;
+		$img_inches = $dim['height']/72 * $dim['width']/72;
+					
+		// If the temp image created by rasterization at 800ppi would be more than four times 
+		// our maximum image size, set the density (ppi) to a value such that the final 
+		// image will have the max resolution after being shrunk to 50% -- this provides adequate 
+		// antialiasing at larger pixel sizes.
+
+		if ($img_inches * 800^2 > $max_pixels * 4) 
+		{	
+			$density = (int) sqrt(($max_pixels*2)/$img_inches);
+			$resize = 50;
+		} 
+	}
+	
 	$args = array(
 		'convert',
-		'-density 800',
-		'-resize 25%',
+		'-density '.$density,
+		'-resize '.$resize.'%',
 		escapeshellarg($path.'[0]'),
 		escapeshellarg($new_path),
 		);
