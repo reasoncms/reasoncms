@@ -150,21 +150,21 @@
 						}
 						elseif ($number_slideshows > 1 && $photo['isprimary']) 
 						{
-							echo "</div class=\"flickr-set\">\n";
+							echo "</div>   <!-- class=\"flickr-set\"-->\n";
 						}
 						else
 						{
-							echo "</div class=\"hidden-container\">\n";
+							echo "</div>   <!-- class=\"hidden-container\"-->\n";
 						}
 					}
 					if ($number_slideshows == 1)
 					{
-						echo "</ul id=\"galleryimages\">\n";
+						echo "</ul>   <!-- id=\"galleryimages\"-->\n";
 					}
 					elseif ($number_slideshows > 1)
 					{
 						echo "<h4>" . $post->get_value('name') . "</h4>" . "\n";
-						echo "</div class=\"flickr-set-container\">\n";
+						echo "</div>   <!-- class=\"flickr-set-container\"-->\n";
 					}
 					$slideshowGroup++;
 					if ($slideshowGroup % 3 == 0)
@@ -178,9 +178,9 @@
 					}
 				}
 			}
-			echo "</div id=\"gallerycontainer\">\n";
-			echo "</div class=\"gallery-info\">\n";
-			echo "</div id=\"gallery\">\n";
+			echo "</div>   <!-- id=\"gallerycontainer\"-->\n";
+			echo "</div>   <!-- class=\"gallery-info\"-->\n";
+			echo "</div>   <!-- id=\"gallery\"-->\n";
 			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
