@@ -888,6 +888,18 @@
 	define('REASON_SIZED_IMAGE_DIR_WEB_PATH', REASON_HTTP_BASE_PATH.'sized_images/');
 	
 	/**
+	 * REASON_ENTITY_LOCKS_ENABLED
+	 *
+	 * This setting turns entity locking on and off.
+	 *
+	 * If it is set to true, entities & their relationships can be locked by users with appropriate privs.
+	 * 
+	 * If it is set to false, Reason will ignore all locking information and will not present interfaces
+	 * for setting up locks.
+	 */
+	define('REASON_ENTITY_LOCKS_ENABLED', false);
+	
+	/**
 	 * REASON_EVENT_GEOLOCATION_ENABLED
 	 *
 	 * Reason event geolocation adds mapping features to the event content manager and to Reason event modules.
