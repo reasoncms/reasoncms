@@ -670,7 +670,8 @@ class PublicationModule extends Generic3Module
 			if ($teaser = $this->get_teaser_image($item))
 			{
 				$teaser = reset($teaser);
-				$image_url = reason_get_image_url($teaser, 'thumbnail');
+				$protocol = (on_secure_page()) ? 'https' : ' http';
+				$image_url = $protocol . '://'.$_SERVER['HTTP_HOST'].reason_get_image_url($teaser, 'thumbnail');
 			}
 			$site = $this->get_site_entity();
 			if ($site) $site_name = $site->get_value('name');
