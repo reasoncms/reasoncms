@@ -489,7 +489,7 @@ class PublicationModule extends Generic3Module
 		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'minimum_date_strtotime_format', 'show_login_link', 
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
 		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css',
-		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization','comment_form_file_location','post_form_file_location',);
+		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization','comment_form_file_location','post_form_file_location');
 		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info, 
 							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
 							      'variables_to_pass' => $this->variables_to_pass);
@@ -591,7 +591,6 @@ class PublicationModule extends Generic3Module
 			}
 			
 			$this->_handle_authorization();
-			$this->_add_facebook_friendly_meta_tags();
 		}
 	}
 	
@@ -608,7 +607,7 @@ class PublicationModule extends Generic3Module
 			else
 			{
 				$netid = $this->get_user_netid();
-				$item_id = !empty($this->request['story_id']) ? $this->request['story_id'] : NULL;
+				$item_id = !empty($this->request[ $this->query_string_frag.'_id' ]) ? $this->request[ $this->query_string_frag.'_id' ] : NULL;
 				
 				$auth = new $GLOBALS[ '_reason_publication_auth_classes' ][$this->params['authorization']]();
 				$auth->set_username($netid);
@@ -637,22 +636,50 @@ class PublicationModule extends Generic3Module
 		}
 	}
 
-	function _add_facebook_friendly_meta_tags()
+	/**
+	 * Init and add needed head items for social media integration.
+	 *
+	 * This is triggered in post_es_additional_init_actions.
+	 *
+	 * @todo add parameters for further integration that this method pays attention to.
+	 */
+	function _init_social_media_integration()
 	{
-		if (!empty($this->current_item_id)) // we have an item lets add our meta tags if this is a request from facebook
+		// for now, lets just add sensible open graph tags for the item if we have a current item
+		if (!empty($this->current_item_id))
 		{
-			if (isset($_SERVER['HTTP_USER_AGENT']) && strrpos($_SERVER['HTTP_USER_AGENT'], "facebookexternalhit") !== false)
+			$this->_add_open_graph_tags_for_item();
+		}
+	}
+	
+	/**
+	 * Add basic metadata using the open graph protocol (http://ogp.me/).
+	 *
+	 * This should improve how shared items appear on facebook and possibly other social networks.
+	 *
+	 * @todo add integration with propietary tags for specific social networks.
+	 */
+	function _add_open_graph_tags_for_item()
+	{
+		$item = new entity($this->current_item_id);
+		if (reason_is_entity($item, 'news'))
+		{	
+			$title = $item->get_value('release_title');
+			$description = $item->get_value('description');
+			$url = $this->construct_permalink($item);
+			if ($teaser = $this->get_teaser_image($item))
 			{
-				$item = new entity($this->current_item_id);
-				if (reason_is_entity($item, 'news'))
-				{	
-					$title = $item->get_value('release_title');
-					$description = $item->get_value('description');
-					$head_items =& $this->get_head_items();
-					$head_items->add_head_item('meta',array( 'name' => 'title', 'content' => htmlspecialchars(strip_tags($title),ENT_QUOTES,'UTF-8')));
-					$head_items->add_head_item('meta',array( 'name' => 'description', 'content' => htmlspecialchars(strip_tags($description),ENT_QUOTES,'UTF-8')));
-				}
+				$teaser = reset($teaser);
+				$image_url = reason_get_image_url($teaser, 'thumbnail');
 			}
+			$site = $this->get_site_entity();
+			if ($site) $site_name = $site->get_value('name');
+			$head_items =& $this->get_head_items();
+			$head_items->add_head_item('meta',array( 'property' => 'og:title', 'content' => htmlspecialchars(strip_tags($title),ENT_QUOTES,'UTF-8')));
+			$head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => htmlspecialchars(strip_tags($description),ENT_QUOTES,'UTF-8')));
+			$head_items->add_head_item('meta',array( 'property' => 'og:url', 'content' => htmlspecialchars(strip_tags($url),ENT_QUOTES,'UTF-8')));
+			if (!empty($image_url)) $head_items->add_head_item('meta',array( 'property' => 'og:image', 'content' => htmlspecialchars(strip_tags($image_url),ENT_QUOTES,'UTF-8')));
+			if (!empty($site_name)) $head_items->add_head_item('meta',array( 'property' => 'og:site_name', 'content' => htmlspecialchars(strip_tags($site_name),ENT_QUOTES,'UTF-8')));
 		}
 	}
 	
@@ -1025,6 +1052,7 @@ class PublicationModule extends Generic3Module
 	function post_es_additional_init_actions()
 	{
 		if ($this->related_mode) $this->related_post_es_additional_init_actions();
+		$this->_init_social_media_integration();
 	}
 	
 	/**
@@ -2257,14 +2285,17 @@ class PublicationModule extends Generic3Module
 	
 		function get_teaser_image($item)
 		{
-			$es = new entity_selector();
-			$es->description = 'Finding teaser image for news item';
-			$es->set_env( 'site' , $this->site_id );
-			$es->add_type( id_of('image') );
-			$es->add_right_relationship( $item->id(), relationship_id_of('news_to_teaser_image') );
-			$es->set_num (1);
-			$result = $es->run_one();
-			return $result;
+			if (!isset($this->_teasers[$item->id()]))
+			{
+				$es = new entity_selector();
+				$es->description = 'Finding teaser image for news item';
+				$es->set_env( 'site' , $this->site_id );
+				$es->add_type( id_of('image') );
+				$es->add_right_relationship( $item->id(), relationship_id_of('news_to_teaser_image') );
+				$es->set_num (1);
+				$this->_teasers[$item->id()] = $es->run_one();
+			}
+			return $this->_teasers[$item->id()];
 		}
 		
 		function get_item_number($item)
@@ -2378,14 +2409,18 @@ class PublicationModule extends Generic3Module
 		}
 		function get_item_images($item)
 		{
-			$es = new entity_selector();
-			$es->set_env( 'site' , $this->site_id );
-			$es->description = 'Selecting images for news item';
-			$es->add_type( id_of('image') );
-			$es->add_right_relationship( $item->id(), relationship_id_of('news_to_image') );
-			$es->add_rel_sort_field( $item->id(), relationship_id_of('news_to_image') );
-			$es->set_order('rel_sort_order');
-			return $es->run_one();
+			if (!isset($this->_item_images[$item->id()]))
+			{
+				$es = new entity_selector();
+				$es->set_env( 'site' , $this->site_id );
+				$es->description = 'Selecting images for news item';
+				$es->add_type( id_of('image') );
+				$es->add_right_relationship( $item->id(), relationship_id_of('news_to_image') );
+				$es->add_rel_sort_field( $item->id(), relationship_id_of('news_to_image') );
+				$es->set_order('rel_sort_order');
+				$this->_item_images[$item->id()] = $es->run_one();
+			}
+			return $this->_item_images[$item->id()];
 		}
 		function get_item_assets($item)
 		{
