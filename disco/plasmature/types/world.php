@@ -16,19 +16,16 @@ require_once PLASMATURE_TYPES_INC."options.php";
 class languageType extends select_no_sortType
 {
  	var $type = 'language';
-	var $type_valid_args = array( 'exclude_these_languages' );
+	var $type_valid_args = array( 'exclude_these_languages','top_languages', );
 	/**
 	 * Array of languages that should not be included in the {@link options}.
 	 * @var array
 	 */
 	var $exclude_these_languages = array();
-	/**
-	 *  Adds the default languages to the {@link options} array.
-	 */
-	function load_options( $args = array() )
+	protected $top_languages = array('eng',);
+	function get_all_languages()
 	{
-		$languages = array(
-							'eng' => 'English',
+		return array(
 							'alb' => 'Albanian',
 							'ara' => 'Arabic',
 							'arm' => 'Armenian',
@@ -43,6 +40,7 @@ class languageType extends select_no_sortType
 							'cze' => 'Czech',
 							'dan' => 'Danish',
 							'dut' => 'Dutch/Flemish',
+							'eng' => 'English',
 							'est' => 'Estonian',
 							'fin' => 'Finnish',
 							'fre' => 'French',
@@ -87,11 +85,28 @@ class languageType extends select_no_sortType
 							'vie' => 'Vietnamese',
 							'xxx' => 'Other',
 		);
-		foreach( $languages as $key => $val )
+	}
+	/**
+	 *  Adds the default languages to the {@link options} array.
+	 */
+	function load_options( $args = array() )
+	{
+		$languages = $this->get_all_languages();
+		$top_language_options = array();
+		foreach( $this->top_languages as $lang_key )
 		{
-			if(!in_array($val, $this->exclude_these_languages))
-				$this->options[ $key ] = $val;
+			if(isset($languages[$lang_key]))
+				$top_language_options[$lang_key] = $languages[$lang_key];
+			else
+				trigger_error('top_language not recognized in '.$this->name.': '.$lang_key);
 		}
+		$languages = $top_language_options + $languages;
+		foreach( $this->exclude_these_languages as $lang_key )
+		{
+			if(isset($languages[$lang_key]))
+				unset($languages[$lang_key]);
+		}
+		$this->options += $languages;
 	}
 }
 /**
@@ -132,13 +147,13 @@ class stateType extends selectType
 		if($this->use_not_in_usa_option === 'top')
 		{
 			$temp = array('XX' => 'Not in USA');
-			$temp[] = '--';
+			$this->_add_divider_option_to_array($temp);
 			$this->options = array_merge($temp, $this->options);
 		}
 		//for any other true value, stick it at the bottom of the select
 		elseif($this->use_not_in_usa_option)
 		{
-			$this->options[] = '--';
+			$this->_add_divider_option_to_array($this->options);
 			$this->options['XX'] = 'Not in USA';
 		}
 	}
@@ -204,13 +219,21 @@ class stateType extends selectType
 		);
 		if($this->include_military_codes)
 		{
-			$states[] = '--';
+			$this->_add_divider_option_to_array($states);
 			$states['AA'] = 'AA (Military APO/FPO)';
 			$states['AE'] = 'AE (Military APO/FPO)';
 			$states['AP'] = 'AP (Military APO/FPO)';
 		}
 		foreach( $states as $key => $val )
 			$this->options[ $key ] = $val;
+	}
+	
+	protected function _add_divider_option_to_array(&$array)
+	{
+		$this->_divider_count++;
+		$key = '_divider_'.$this->_divider_count;
+		$array[$key] = '--';
+		$this->disabled_options[] = $key;
 	}
 }
 /**
@@ -224,20 +247,23 @@ class state_provinceType extends stateType
  	var $type = 'state_province';
 	var $use_not_in_usa_option = true;
 	var $sort_options = false;
+	var $add_empty_value_to_top = true;
+	protected $_divider_count = 0;
 	function load_options( $args = array())
 	{
 		$this->load_states();
-		$this->options[] = '--';
+		if(!$this->add_empty_value_to_top)
+			$this->options[] = '--';
 		$this->load_provinces();
 		if($this->use_not_in_usa_option === 'top')
 		{
 			$temp = array('XX' => 'Not in USA/Canada');
-			$temp[] = '--';
+			$this->_add_divider_option_to_array($temp);
 			$this->options = array_merge($temp, $this->options);
 		}
 		elseif($this->use_not_in_usa_option)
 		{
-			$this->options[] = '--';
+			$this->_add_divider_option_to_array($this->options);
 			$this->options['XX'] = 'Not in USA/Canada';
 		}
 	}
@@ -262,6 +288,8 @@ class state_provinceType extends stateType
 			'SK' => 'Saskatchewan',
 			'YT' => 'Yukon',
 		);
+		
+		$this->_add_divider_option_to_array($this->options);
 		foreach( $provinces as $key => $val )
 			$this->options[ $key ] = $val;
 	}
@@ -277,13 +305,12 @@ class countryType extends selectType
 {
  	var $type = 'country';
 	var $sort_options = false;	//false so that we can have USA at the top.
-	/**
-	 * Populates the {@link options} array with a default list of countries.
-	 */
-	function load_options( $args = array() )
+	var $type_valid_args = array( 'top_countries', );
+	protected $top_countries = array('USA',);
+	
+	function get_all_countries()
 	{
-		$countries = array(
-			'USA' => 'United States of America',
+		return array(
 			'AFG' => 'Afghanistan',
 			'ALB' => 'Albania',
 			'DZA' => 'Algeria',
@@ -510,6 +537,7 @@ class countryType extends selectType
 			'UKR' => 'Ukraine',
 			'ARE' => 'United Arab Emirates',
 			'GBR' => 'United Kingdom & N. Ireland',
+			'USA' => 'United States of America',
 			'UMI' => 'US Minor Outlying Islands',
 			'VIR' => 'US Virgin Islands',
 			'URY' => 'Uruguay',
@@ -523,7 +551,22 @@ class countryType extends selectType
 			'ZMB' => 'Zambia',
 			'ZWE' => 'Zimbabwe',
 		);
-		foreach( $countries as $key => $val )
-			$this->options[ $key ] = $val;
+	}
+	/**
+	 * Populates the {@link options} array with a default list of countries.
+	 */
+	function load_options( $args = array() )
+	{
+		$countries = $this->get_all_countries();
+		$top_country_options = array();
+		foreach( $this->top_countries as $country_key )
+		{
+			if(isset($countries[$country_key]))
+				$top_country_options[$country_key] = $countries[$country_key];
+			else
+				trigger_error('top_country not recognized in '.$this->name.': '.$country_key);
+		}
+		$countries = $top_country_options + $countries;
+		$this->options += $countries;
 	}
 }
