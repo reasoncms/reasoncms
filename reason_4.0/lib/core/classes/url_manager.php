@@ -89,6 +89,11 @@
 		 * @var string
 		 */
 		var $test_full_base_url;
+
+		/**
+		 * @var string
+		 */
+		var $cli;
 		
 		/**
 		 * Is the URL manager OK to run?
@@ -104,8 +109,14 @@
 		 */
 		protected $_htaccess_changed = false;
 		
-		function url_manager( $site_id, $debug = false, $do_global_rewrites = false ) // {{{
+		function url_manager( $site_id, $debug = false, $do_global_rewrites = false, $cli = false) // {{{
 		{
+			
+			if(php_sapi_name() == 'cli' || $cli)
+			{
+				$this->cli = true;
+			}
+
 			$this->debug = $debug;
 			$this->debug( 'debugging is on' );
 
@@ -250,7 +261,7 @@
 		function debug( $str ) // {{{
 		{
 			if( $this->debug )
-				echo 'URL Manager: '.$str.(php_sapi_name() == 'cli' ? '' : '<br />')."\n";
+				echo 'URL Manager: '.$str.($this->cli ? '' : '<br />')."\n";
 		} // }}}
 		function update_rewrites() // {{{
 		// this is the method that does all the work.
