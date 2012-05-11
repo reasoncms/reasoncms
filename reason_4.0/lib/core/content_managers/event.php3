@@ -171,7 +171,7 @@
 											'weekly'=>'Weekly', 
 											'monthly'=>'Monthly', 
 											'yearly'=>'Yearly'), 
-											'add_null_value_to_top' => false,
+											'add_empty_value_to_top' => false,
 					) );
 			$this->change_element_type( 'minutes', 'select_no_sort', array('options'=>$minutes) );
 			$this->change_element_type( 'hours', 'select_no_sort', array('options'=>$hours) );
@@ -183,7 +183,7 @@
 			$this->change_element_type( 'end_date', 'textDate' );
 			$this->change_element_type( 'last_occurence', 'hidden' );
 			if(!$this->element_is_hidden('no_share'))
-				$this->change_element_type( 'no_share', 'select', array( 'options' => array( 'Shared', 'Private' ), 'add_null_value_to_top' => false, ) );
+				$this->change_element_type( 'no_share', 'select', array( 'options' => array( 'Shared', 'Private' ), 'add_empty_value_to_top' => false, ) );
 			$this->change_element_type( 'dates', $this->get_value( 'dates' ) ? 'solidtext' : 'hidden' );
 
 			// format the elements
