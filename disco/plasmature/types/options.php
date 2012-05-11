@@ -22,7 +22,7 @@ require_once PLASMATURE_TYPES_INC."default.php";
 class optionType extends defaultType
 {
 	var $type = 'option';
-	var $type_valid_args = array('options', 'sort_options');
+	var $type_valid_args = array('options', 'sort_options','disabled_options','add_empty_value_to_top');
 	/**
 	 * The possible values of this element.
 	 * Format: value as it should be stored => value as it should be displayed.
@@ -30,10 +30,30 @@ class optionType extends defaultType
 	 */
 	var $options = array();
 	/**
+	 * The options that should be disabled
+	 *
+	 * Format: disabled option keys are the values of this array. Simple numeric indexing.
+	 *
+	 * @todo Still need to work out compariston rules!!!
+	 * 
+	 * @var array
+	 */
+	var $disabled_options = array();
+	/**
 	 * True if the {@link options} array should be sorted into ascending order.
 	 * Otherwise, options will be displayed in the order that they were added to the {@link options} array.
 	 */
 	var $sort_options = true;
+	var $add_empty_value_to_top = false;
+	
+	protected function _array_val_ok()
+	{
+		return true;
+	}
+	protected function _string_val_ok()
+	{
+		return true;
+	}
 	/**
 	 *  Loads default options defined using {@link load_options()} and sorts the {@link options} array if {@link sort_options} is true.
 	 */
@@ -44,9 +64,16 @@ class optionType extends defaultType
 		{
 			$this->set_options( $this->options );
 		}
+		//pray($this->options);
+		/* if($this->add_empty_value_to_top)
+			$this->options = array(''=>'--') + $this->options; */
 		$this->load_options();
 		if($this->sort_options)
+		{
+			//echo $this->type.' '.$this->name.' sorting<br />';
 			asort( $this->options );
+		}
+		//pray($this->options);
 	}
 	/**
 	 *  Hook for child classes that have a default set of options (e.g. {@link stateType}, {@link languageType}).
@@ -108,6 +135,153 @@ class optionType extends defaultType
 		else
 			return false;
 	}
+	
+	
+	// MAJOR CHANGE
+	/**
+	 * Finds the value of this element from userland (in {@link _request}) and returns it
+	 * @return mixed array, integer, or string if available, otherwise NULL if no value from userland
+	 */
+	function grab_value()
+	{
+		$value = parent::grab_value();
+		
+		if($this->_array_val_ok() && !empty($this->disabled_options) )
+		{
+			$val_array = is_array($this->value) ? $this->value : array($this->value);
+
+			if($disabled_selected = array_intersect($this->disabled_options,$val_array,array_keys($this->options)))
+			{
+				if(is_array($value))
+				{
+					$value = array_merge($value,$disabled_selected);
+				}
+				elseif(!is_null($value))
+				{
+					$value = array_merge(array($value),$disabled_selected);
+				}
+				else
+				{
+					$value = $disabled_selected;
+				}
+			}
+		}
+		
+		if($this->_array_val_ok() && is_array($value))
+		{
+			foreach($value as $k=>$v)
+			{
+				if(!$this->_validate_submitted_value($v))
+					unset($value[$k]);
+			}
+			return $value;
+		}
+		elseif($this->_string_val_ok() && $this->_validate_submitted_value($value) )
+		{
+			return $value;
+		}
+		return NULL;
+	}
+	protected function _validate_submitted_value($value)
+	{
+		// NULL is always OK?
+		if(is_null($value))
+			return true;
+		
+		if($this->add_empty_value_to_top && '' === $value)
+			return true;
+		
+		if(!isset($this->options[$value]))
+		{
+			trigger_error('Unrecognized value -- ('.gettype($value).') "'.$value.'" -- submitted for '.$this->name.'. This may be an attempt to probe for vulnerabilities. Future changes to plasmature will likely block unrecognized values like this.' );
+			// return false;
+		}
+		
+		if(!$this->_is_disabled_option($value) || $this->_is_current_value($value))
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	/*
+	Problem: Recognize that (str) "5" = (int) 5 and (str) "0" = (int) 0 but that 
+	(str) "foobar" != (int) 0, both ways. Fast.
+	*/
+	protected function _is_disabled_option($value)
+	{
+		if( !isset($this->_flipped_disabled_options) || $this->disabled_options !== $this->_options_change_detection_copy )
+		{
+			$disabled_options_to_be_flipped = $this->_options_change_detection_copy = $this->disabled_options;
+			$changed = false;
+			foreach($disabled_options_to_be_flipped as $k=>$v)
+			{
+				if(!is_string($v) && !is_integer($v))
+				{
+					unset($disabled_options_to_be_flipped[$k]);
+					$changed = true;
+				}
+			}
+			if($changed)
+				trigger_error('The disabled_options array may only contain strings or integers. Non-string/non-integer disabled_options set on '.$this->name.' will be ignored.');
+			$this->_flipped_disabled_options = array_flip($disabled_options_to_be_flipped);
+		}
+		return isset($this->_flipped_disabled_options[(string) $value]);
+		// Broken solution
+		//return in_array( (string) $value, $this->disabled_options );
+		// possibly slow solution
+		/* foreach($this->disabled_options as $disabled_option)
+		{
+			if((string) $value == (string) $disabled_option)
+				return true;
+		}
+		return false; */
+	}
+	
+	protected function _is_current_value($value, $report = false)
+	{
+		if($report) echo $value.' :: '.$this->value.' :: ';
+		if(!isset($this->value) && NULL !== $value )
+			return false;
+		if(is_array($this->value))
+		{
+			if($report) echo in_array( (string) $value, $this->value ).'<br />';
+			return in_array( (string) $value, $this->value );
+		}
+		else
+		{
+			if($report) echo ( (string) $value == (string) $this->value ).'<br />';
+			return ( (string) $value == (string) $this->value );
+		}
+	}
+	
+	protected function _is_option($value)
+	{
+		if($this->add_empty_value_to_top && '' == (string) $value)
+			return true;
+		
+		return isset($this->options[$value]);
+	}
+	
+	/* function set( $value )
+	{
+		if(is_array( $value ))
+		{
+			foreach( $value as $v)
+			{
+				if(!$this->_is_option($v))
+				{
+					trigger_error('Value set on '.$this->name.' element ('.$v.') is not a recognized option.');
+				}
+			}
+		}
+		elseif( !$this->_is_option($value) )
+		{
+			trigger_error('Value set on '.$this->name.' element ('.$value.') is not a recognized option.');
+		}
+		parent::set( $value );
+	} */
+
 }
 
 /**
@@ -131,21 +305,37 @@ class option_no_sortType extends optionType
 class radioType extends optionType
 {
 	var $type = 'radio';
+	protected function _array_val_ok()
+	{
+		return false;
+	}
 	function get_display()
 	{
 		$i = 0;
 		$str = '<div id="'.$this->name.'_container" class="radioButtons">'."\n";
 		$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
+		if($this->add_empty_value_to_top)
+		{
+			$str .= $this->_get_radio_row('','--',$i++);
+		}
 		foreach( $this->options as $key => $val )
 		{
-			$id = 'radio_'.$this->name.'_'.$i++;
-			$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-			if ( $key == $this->value )
-				$str .= ' checked="checked"';
-			$str .= ' /></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
+			$str .= $this->_get_radio_row($key,$val,$i++);
 		}
 		$str .= '</table>'."\n";
 		$str .= '</div>'."\n";
+		return $str;
+	}
+	protected function _get_radio_row($key,$val,$count)
+	{
+		$str = '';
+		$id = 'radio_'.$this->name.'_'.$count;
+		$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+		if ( $this->_is_current_value($key) )
+			$str .= ' checked="checked"';
+		if ( $this->_is_disabled_option($key) )
+			$str .= ' disabled="disabled"';
+		$str .= ' /></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
 		return $str;
 	}
 }
@@ -159,19 +349,36 @@ class radio_inlineType extends optionType
 {
 	var $type = 'radio_inline';
 
+	protected function _array_val_ok()
+	{
+		return false;
+	}
 	function get_display()
 	{
 		$i = 0;
 		$str = '<div id="'.$this->name.'_container" class="radioButtons inlineRadioButtons">'."\n";
+		if($this->add_empty_value_to_top)
+		{
+			$str .= $this->_get_radio_span('','--',$i++);
+		}
 		foreach( $this->options as $key => $val )
 		{
-			$id = 'radio_'.$this->name.'_'.$i++;
-			$str .= '<span class="radioItem"><span class="radioButton"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-			if ( $key == $this->value )
-				$str .= ' checked="checked"';
-			$str .= ' /></span> <label for="'.$id.'">'.$val.'</label></span> '."\n";
+			$str .= $this->_get_radio_span($key,$val,$i++);
 		}
 		$str .= '</div>'."\n";
+		return $str;
+	}
+	
+	protected function _get_radio_span($key,$val,$count)
+	{
+		$str = '';
+		$id = 'radio_'.$this->name.'_'.$count;
+		$str .= '<span class="radioItem"><span class="radioButton"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+		if ( $this->_is_current_value($key) )
+			$str .= ' checked="checked"';
+		if ( $this->_is_disabled_option($key) )
+			$str .= ' disabled="disabled"';
+		$str .= ' /></span> <label for="'.$id.'">'.$val.'</label></span> '."\n";
 		return $str;
 	}
 }
@@ -209,24 +416,30 @@ class radio_with_otherType extends optionType
 	var $type = 'radio_with_other';
 	var $other_label = 'Other: ';
 	var $type_valid_args = array( 'other_label' );
+	protected function _array_val_ok()
+	{
+		return false;
+	}
 	function get_display()
 	{
 		$i = 0;
 		$str = '<div id="'.$this->name.'_container" class="radioButtons">'."\n";
 		$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
 		$checked = false;
+		if($this->add_empty_value_to_top)
+		{
+			$str .= $this->_get_radio_row('','--',$i++);
+			if ( '' === $this->value )
+				$checked = true;
+		}
 		foreach( $this->options as $key => $val )
 		{
-			$id = 'radio_'.$this->name.'_'.$i++;
-			$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-			if ( $key == $this->value ) {
-				$str .= ' checked="checked"';
+			$str .= $this->_get_radio_row($key,$val,$i++);
+			if ( $this->_is_current_value($key) )
 				$checked = true;
-			}
-			$str .= ' /></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
 		}
 		$id = 'radio_'.$this->name.'_'.$i++;
-		$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="other"';
+		$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="__other__"';
 		if ( !$checked && $this->value)
 		{
 			$other_value = $this->value;
@@ -240,22 +453,49 @@ class radio_with_otherType extends optionType
 		$str .= '</div>'."\n";
 		return $str;
 	}
+	protected function _get_radio_row($key,$val,$count)
+	{
+		$str = '';
+		$id = 'radio_'.$this->name.'_'.$count;
+		$str .= '<tr>'."\n".'<td valign="top"><input type="radio" id="'.$id.'" name="'.$this->name.'" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+		if ( $this->_is_current_value($key) )
+			$str .= ' checked="checked"';
+		if ( $this->_is_disabled_option($key) )
+			$str .= ' disabled="disabled"';
+		$str .= ' /></td>'."\n".'<td valign="top"><label for="'.$id.'">'.$val.'</label></td>'."\n".'</tr>'."\n";
+		return $str;
+	}
 	function grab_value()
 	{
-		$return = NULL;
-		$http_vars = $this->get_request();
-		if ( isset( $http_vars[ $this->name ] ) )
+		$return = parent::grab_value();
+		
+		if ($return == '__other__')
 		{
-			$return = trim($http_vars[ $this->name ]);
-			if ($return == 'other')
+			$http_vars = $this->get_request();
+			if ( isset( $http_vars[ $this->name .'_other' ] ) )
 			{
-				if ( isset( $http_vars[ $this->name .'_other' ] ) )
-					$return = trim($http_vars[ $this->name .'_other' ]);
-				else
-					$return = '';
+				$return = trim($http_vars[ $this->name .'_other' ]);
+				if($this->_is_disabled_option($return) && !$this->_is_current_value($return))
+					$this->set_error(strip_tags($this->display_name).': Please choose a value other than "'.htmlspecialchars($return,ENT_QUOTES).'".');
 			}
+			else
+				$return = NULL;
 		}
+		
 		return $return;
+	}
+	
+	protected function _validate_submitted_value($value)
+	{
+		if('__other__' == $value)
+		{
+			return true;
+		}
+		return parent::_validate_submitted_value($value);
+	}
+	function set( $value )
+	{
+		$this->value = $value;
 	}
 }
 
@@ -279,31 +519,46 @@ class radio_with_other_no_sortType extends radio_with_otherType
 class checkboxgroupType extends optionType
 {
 	var $type = 'checkboxgroup';
+	protected function _string_val_ok()
+	{
+		return false;
+	}
 	function get_display()
 	{
 		$str = '<div class="checkBoxGroup">'."\n";
 		$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
 		$i = 0;
+		
+		if($this->add_empty_value_to_top)
+		{
+			$str .= $this->_get_checkbox_row('','--',$i++);
+		}
 		foreach( $this->options as $key => $val )
 		{
-			$id = 'checkbox_'.$this->name.'_'.$i;
-			$str .= '<tr><td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$i.']" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-			if ( is_array($this->value) ) {
-				if ( array_search($key, $this->value) !== false )
-					$str .= ' checked="checked"';
-			}
-			else {
-				if ( $key == $this->value )
-					$str .= ' checked="checked"';
-			}
-			$str .= ' /></td><td valign="top"><label for="'.$id.'">'.$val."</label></td></tr>\n";
-			$i++;
+			$str .= $this->_get_checkbox_row($key,$val,$i++);
 		}
 		$str .= '</table>'."\n";
 		$str .= '</div>'."\n";
 		return $str;
 	}
-	function grab()
+	
+	protected function _get_checkbox_row($key,$val,$count)
+	{
+		$id = 'checkbox_'.$this->name.'_'.$count;
+		$str = '';
+		$str .= '<tr><td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$count.']" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+		if ( $this->_is_current_value($key) )
+			$str .= ' checked="checked"';
+		if ( $this->_is_disabled_option($key) )
+			$str .= ' disabled="disabled"';
+		$str .= ' /></td><td valign="top"><label for="'.$id.'">'.$val."</label></td></tr>\n";
+		return $str;
+	}
+	/**
+	 * Finds the value of this element from userland (in {@link _request}) and returns it
+	 * @return mixed array, integer, or string if available, otherwise NULL if no value from userland
+	 */
+	function grab_value()
 	{
 		// Without this condition, if the user unchecks all the
 		// boxes, the default value will be used. The reason is
@@ -321,11 +576,8 @@ class checkboxgroupType extends optionType
 		// checkboxes, this is a false assumption, because (as I
 		// said above) if no box is checked, no request variable
 		// is sent. --NF 23/Feb/2004
-		$request = $this->get_request();
-		if ( isset($request[ $this->name ]) )
-			$this->set( $request[ $this->name ] );
-		else
-			$this->set( array() );
+		$val = parent::grab_value();
+		return (NULL === $val) ? array() : $val;
 	}
 	function get()
 	{
@@ -445,6 +697,7 @@ class checkboxgroup_with_other_no_sortType extends checkboxgroup_with_otherType
  * @package disco
  * @subpackage plasmature
  * @todo do better data checking to make sure that value is one of the available options (or empty/null)
+ * @todo deprecate add_null_value_to_top argument
  */
 class selectType extends optionType
 {
@@ -458,62 +711,69 @@ class selectType extends optionType
 	 * @var boolean
 	 */
 	var $multiple = false;
+	var $add_null_value_to_top;
 	/**
-	 * If true, adds a null value to the top of the select.
+	 * If true, adds a empty value to the top of the select.
 	 */
-	var $add_null_value_to_top = true;
-	/* function grab()
+	var $add_empty_value_to_top = true;
+	protected function _array_val_ok()
 	{
-		parent::grab();
-		$value = $this->get();
-		if(is_array($value))
+		return $this->multiple;
+	}
+	protected function _string_val_ok()
+	{
+		return !$this->multiple;
+	}
+	function additional_init_actions($args = array())
+	{
+		if(isset($this->add_null_value_to_top))
 		{
-			foreach($value as $key => $val)
-			{
-				if(!isset($this->options[$key]))
-				{
-					$this->set_error(htmlspecialchars($key,ENT_QUOTES).' is not an acceptable value');
-				}
-			}
+			//trigger_error('add_null_value_to_top is deprecated. Please use add_empty_value_to_top instead.');
+			$this->add_empty_value_to_top = $this->add_null_value_to_top;
 		}
-		elseif(is_string($value))
-		{
-			if(!isset($this->options[$value]))
-			{
-				$this->set_error(htmlspecialchars($value,ENT_QUOTES).' is not an acceptable value');
-			}
-		}
-		else
-		{
-			$this->set_error('Strange problem');
-		}
-	} */
+		parent::additional_init_actions($args);
+	}
 	function get_display()
 	{
-		$str = '<select id="'.$this->name.'Element" name="'.$this->name.'" size="'.$this->n.'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
-		if($this->add_null_value_to_top)
-			$str .= '<option value="" '.(empty($this->value)?'selected="selected"':'').'>--</option>'."\n";
+		//pray($this->value);
+		$str = '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
+		$select_count = 0;
+		if($this->add_empty_value_to_top)
+		{
+			$str .= $this->_get_option_html('','--',$select_count);
+		}
 		foreach( $this->options as $key => $val )
 		{
-			if( $val === '--' )
+			if( !$this->add_empty_value_to_top && $val === '--' )
 			{
-				$str .= '<option value="">--</option>' . "\n";
+				$str .= $this->_get_option_html('',$val,$select_count);
 			}
 			else
 			{
-				$str .= '<option value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-				if ( is_array($this->value) ) {
-					if ( array_search($key, $this->value) !== false )
-						$str .= ' selected="selected"';
-				}
-				else {
-					if ( $key == $this->value )
-						$str .= ' selected="selected"';
-				}
-				$str .= '>'.$val.'</option>'."\n";
+				$str .= $this->_get_option_html($key,$val,$select_count);
 			}
 		}
 		$str .= '</select>'."\n";
+		return $str;
+	}
+	
+	protected function _get_option_html($key,$val,&$select_count)
+	{
+		$str = '';
+		$str .= '<option value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+		$selected = ( ( $this->multiple || !$select_count ) && $this->_is_current_value($key) );
+		if( $selected )
+		{
+			$str .= ' selected="selected"';
+			$select_count++;
+		}
+		if ( $this->_is_disabled_option($key) )
+		{
+			$str .= ' disabled="disabled"';
+			if($selected && $this->multiple)
+				$str .= ' style="color:#666;background-color:#ddd;" class="disabledSelected"';
+		}
+		$str .= '>'.$val.'</option>'."\n";
 		return $str;
 	}
 }
@@ -526,9 +786,9 @@ class selectType extends optionType
 class select_no_sortType extends selectType
 {
 	var $type = 'select_no_sort';
-	var $add_null_value_to_top = false;
+	var $add_empty_value_to_top = false;
 	var $sort_options = false;
-}	
+}
 	 
 /**
  * @package disco
@@ -549,31 +809,44 @@ class file_listerType extends selectType
 	var $type_valid_args = array( 'extension',
 								  'strip_extension',
 								  'prettify_file_name',
-								  'directory');
+								  'directory',
+								  'hide_files_with_initial_period',
+							);
+	var $extension;
+	var $strip_extension = false;
+	var $prettify_file_name = false;
+	var $directory;
+	var $hide_files_with_initial_period = true;
 	function load_options( $args = array())
 	{
 		$files = array();
 		if ( isset( $this->directory ) )
 		{
-			$handle = opendir( $args['directory'] );
-			while( $entry = readdir( $handle ) )
+			if($handle = opendir( $this->directory ))
 			{
-				if( is_file( $this->directory.$entry ) )
+				while( $entry = readdir( $handle ) )
 				{
-					$show_entry = true;
-					$entry_display = $entry_value = $entry;
-					if( !empty( $this->strip_extension ) )
-						$entry_display = $entry_value = substr( $entry, 0, strrpos( $entry, '.' ));
-					if( !empty( $this->prettify_file_name ) )
-						$entry_display = prettify_string( substr( $entry, 0, strrpos( $entry, '.' ) ) );
-					if( !empty( $this->extension ) )
-						if ( !preg_match( '/'.$this->extension.'$/',$entry ) )
-							$show_entry = false;
-					if( $show_entry )
-						$files[ $entry_value ] = $entry_display;
+					if( is_file( $this->directory.$entry ) && ( !$this->hide_files_with_initial_period || 0 !== strpos($entry,'.') ) )
+					{
+						$show_entry = true;
+						$entry_display = $entry_value = $entry;
+						if( !empty( $this->strip_extension ) )
+							$entry_display = $entry_value = substr( $entry, 0, strrpos( $entry, '.' ));
+						if( !empty( $this->prettify_file_name ) )
+							$entry_display = prettify_string( substr( $entry, 0, strrpos( $entry, '.' ) 	) );
+						if( !empty( $this->extension ) )
+							if ( !preg_match( '/'.$this->extension.'$/',$entry ) )
+								$show_entry = false;
+						if( $show_entry )
+							$files[ $entry_value ] = $entry_display;
+					}
 				}
+				ksort( $files );
 			}
-			ksort( $files );
+			else
+			{
+				trigger_error('Directory does not appear to be readable ('.$this->directory.').');
+			}
 		}
 		$this->options += $files;
 	}
@@ -581,6 +854,8 @@ class file_listerType extends selectType
 
 /**
  * Presents options in a select element after loading them from a table.
+ *
+ * @deprecated
  * @package disco
  * @subpackage plasmature
  */
@@ -591,26 +866,11 @@ class tablelinkerType extends selectType
 	var $type_valid_args = array('table');
 	function load_options( $args = array() )
 	{
-		// see if table is set
-		if ( !isset( $this->table ) OR empty( $this->table ) )
-			// if not, check the name of the element
-			if ( preg_match( '/^(.*)_id$/', $this->name, $matches ) )
-				// if it is tablename_id, we are good
-				$this->table = $matches[ 1 ];
-			// bad stuff.  we need a valid table name
-			else
-			{
-				trigger_error( 'dblinkerType::init - no valid tablename found' );
-				return;
-			}
-		// load options from DB
-		$q = "SELECT id, name FROM ".$this->table;
-		$r = mysql_query( $q ) OR die( 'Plasmature Error :: tablelinkerType :: "'.$q.'" :: '.mysql_error() );
-		while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
-			$options[ $row['id'] ] = $row['name'];
-		// sort options by value maintaining key association
-		asort( $options );
-		$this->set_options( $options );
+		trigger_error('The tablelinker type is in the process of being removed from Plasmature, and no longer works. Please use another method to accomplish this goal.');
+	}
+	function get_display()
+	{
+		echo '(This field needs to be upgraded.)';
 	}
 }
 
@@ -626,11 +886,10 @@ class numrangeType extends selectType
 	var $start = 0;
 	var $end = 10;
 	var $step = 1;
-	var $empty_option = false;
+	var $sort_options = false;
 	var $type_valid_args = array ( 'start',
 								   'end',
 								   'step',
-								   'empty_option',
 								  );
 	function load_options( $args = array() )
 	{
@@ -639,8 +898,16 @@ class numrangeType extends selectType
 	}
 	function add_numrange_to_options()
 	{
-		for( $i = $this->start; $i <= $this->end; $i += $this->step )
-			$this->options[ $i ] = $i;
+		if($this->start <= $this->end)
+		{
+			for( $i = $this->start; $i <= $this->end; $i += $this->step )
+				$this->options[ $i ] = $i;
+		}
+		else
+		{
+			for( $i = $this->start; $i >= $this->end; $i -= $this->step )
+				$this->options[ $i ] = $i;
+		}
 	}
 }
 /**
@@ -679,59 +946,74 @@ class select_multipleType extends selectType
 	var $multiple_display_type = 'select';
 	/** if using multiple select box, how many rows to show at once? */
 	var $select_size = 8;
-	/*function init( $args = '' )
+	var $add_empty_value_to_top = false;
+	
+	protected function _string_val_ok()
 	{
-		if ( !empty( $args ) )
-		{
-			if ( isset( $args['multiple_display_type'] ) )
-				$this->multiple = $args['multiple_display_type'];
-		}
-		parent::init( $args );
-	} */
-	function array_contains( $array, $value )
-	{
-		if(!is_array( $array ) )
-			return false;
-		foreach( $array as $item )
-			if($item == $value)
-				return true;
 		return false;
 	}
-	function nOptions()
+	protected function _array_val_ok()
 	{
-		$i = 0;
-		foreach( $this->options as $key =>$val )
-			$i++;
-		return $i;
+		return true;
 	}
 	function get_display()
 	{
 		$str = '';
 		if( $this->multiple_display_type == 'checkbox' )
 		{
+			if($this->add_empty_value_to_top)
+			{
+				$str .= $this->_get_checkbox_html('','--');
+			}
 			foreach( $this->options as $key => $val )
 			{
-				$str .= "\n".'<input type="checkbox" id="'.$this->name.'-'.htmlspecialchars($key, ENT_QUOTES).'" name="'.$this->name.'[]" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-				if( $this->array_contains( $this->value,$key ) )
-					$str .= ' checked="checked"';
-				$str .= ' />'."\n".'<label for="'.$this->name.'-'.htmlspecialchars($key, ENT_QUOTES).'">'.$val.'</label><br />';
+				$str .= $this->_get_checkbox_html($key,$val);
 			}
 			$str .= "\n";
 		}
 		else
 		{
 			$str = '<select name="'.$this->name.'[]" multiple="multiple" size="'.$this->select_size.'">'."\n";
-			//$str .= '<option value="">*none*</option>'."\n";
+			$select_count = 0;
+			if($this->add_empty_value_to_top)
+			{
+				$str .= $this->_get_option_html('','--',$select_count);
+			}
 			foreach( $this->options as $key => $val )
 			{
-				$str .= '<option value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-				if ( $this->array_contains( $this->value, $key) )
-					$str .= ' selected="selected"';
-				$str .= '>'.$val.'</option>'."\n";
+				$str .= $this->_get_option_html($key,$val,$select_count);
 			}
 			$str .= '</select>'."\n";
 		}
-		$str .= "\n";
+		return $str;
+	}
+	
+	protected function _get_checkbox_html($key,$val)
+	{
+		$str = '';
+		$str .= "\n".'<input type="checkbox" id="'.$this->name.'-'.htmlspecialchars($key, ENT_QUOTES).'" name="'.$this->name.'[]" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+		if( $this->_is_current_value($key) )
+			$str .= ' checked="checked"';
+		if ( $this->_is_disabled_option($key) )
+			$str .= ' disabled="disabled"';
+		$str .= ' />'."\n".'<label for="'.$this->name.'-'.htmlspecialchars($key, ENT_QUOTES).'">'.$val.'</label><br />'."\n";
+		return $str;
+	}
+	
+	protected function _get_option_html($key,$val,&$select_count)
+	{
+		$str = '';
+		$str .= '<option value="'.htmlspecialchars($key, ENT_QUOTES).'"';
+		$is_cur_val = $this->_is_current_value($key);
+		if ( $is_cur_val )
+			$str .= ' selected="selected"';
+		if ( $this->_is_disabled_option($key) )
+		{
+			$str .= ' disabled="disabled"';
+			if($is_cur_val)
+				$str .= ' style="color:#666;background-color:#ddd;" class="disabledSelected"';
+		}
+		$str .= '>'.$val.'</option>'."\n";
 		return $str;
 	}
 }
@@ -772,29 +1054,4 @@ class select_no_sort_jsType extends select_jsType
 {
 	var $type = 'select_no_sort_js';
 	var $sort_options = false;
-}
-
-/**
- * @package disco
- * @subpackage plasmature
- */
-class sidebar_selectType extends selectType
-{
-	var $type = 'sidebar_select';
-	var $page = 'print_sidebar.php3?id=';
-	var $frame = 'oIframe';
-	function get_display()
-	{
-		$str = '<select name="'.$this->name.'" onChange="document.all.'.$this->frame.'.src=\''.$this->page.'\'
-			+ this.form.'.$this->name.'.options[this.form.'.$this->name.'.selectedIndex].value">'."\n";
-		foreach( $this->options as $key => $val )
-		{
-			$str .= '<option value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-			if ( $key == $this->value )
-				$str .= ' selected="selected"';
-			$str .= '>'.$val.'</option>'."\n";
-		}
-		$str .= '</select>'."\n";
-		return $str;
-	}
 }
