@@ -41,7 +41,7 @@
 					$this->set_value('user_popup_alert_pref', 'no');
 				}
 			}
-			$this->change_element_type('user_popup_alert_pref', 'select', array('options'=>array('yes'=>'Javascript alert (more accessible)','no'=>'In-page (less obtrusive)'),'add_null_value_to_top' => false));
+			$this->change_element_type('user_popup_alert_pref', 'select', array('options'=>array('yes'=>'Javascript alert (more accessible)','no'=>'In-page (less obtrusive)'),'add_empty_value_to_top' => false));
 			
 			$this->add_element('password', 'password');	
 			$this->add_element('confirm_password', 'password');
@@ -79,7 +79,8 @@
 			$auth_source_options = array();
 			if(($reason_is_available_dir_service && $other_dir_service_available) || ($this->get_value('user_authoritative_source') == 'reason' && !$reason_is_available_dir_service) || ($this->get_value('user_authoritative_source') == 'external' && !$other_dir_service_available))
 			{
-				$this->change_element_type('user_authoritative_source','select_no_sort',array('options'=>array('reason'=>'Reason','external'=>'External'),'add_null_value_to_top'=>false));
+				$this->change_element_type('user_authoritative_source','select_no_sort',array('options'=>array('reason'=>'Reason','external'=>'External'),'add_empty_value_to_top'=>false));
+				
 				if($this->get_value('user_authoritative_source') == 'reason' && !$reason_is_available_dir_service)
 				{
 					trigger_error('User '.$this->get_value('name').' is set to use Reason as their authoritative source, but Reason is not an available directory service.');
