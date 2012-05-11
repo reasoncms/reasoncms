@@ -27,6 +27,7 @@
 			'code_include',
 			'force_secure',
 		);
+		var $db_conn;
 		
 		function init( $args=array() ) // {{{
 		{
@@ -35,6 +36,9 @@
                         	header('Location: '.get_current_url( securest_available_protocol() ) );
                         	exit(0);
                 	}
+                	
+                	// Check for an existing database connection so we can restore it when we're done
+                	$this->db_conn = get_current_db_connection_name();
 		}
 
 		function run() // {{{
@@ -43,6 +47,8 @@
 				include_once($this->params['code_include']);
 			else
 				echo "Could not include ". $this->params['code_include']; 
+				
+			if ($this->db_conn) connectDB($this->db_conn);
 		} // }}}
 	}
 ?>
