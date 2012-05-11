@@ -53,7 +53,7 @@ class MigratorScreen4 extends MigratorScreen
 				
 				$this->add_element($cpt_name, 'solidtext');
 				$this->set_value($cpt_name, $page->get_value('custom_page'));
-				$this->add_element($npt_name, 'select_no_sort', array('options' => $this->publication_module_page_types, 'add_null_value_to_top' => true));
+				$this->add_element($npt_name, 'select_no_sort', array('options' => $this->publication_module_page_types, 'add_empty_value_to_top' => true));
 				$this->add_element_group('table', $grp_name, array($cpt_name, $npt_name), array('use_element_labels' => false, 
 																								'rows' => array('Current Page Type: ', 'New Page Type: ')) );
 				$pt_comments =& $this->helper->get_page_type_comments();
