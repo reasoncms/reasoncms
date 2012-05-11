@@ -48,9 +48,10 @@ class ApplicationPageOne extends FormStep {
 		// hard coding terms since the logic isn't working
         'enrollment_term' => array(
             'type' => 'radio_no_sort',
-			'options' => array('2012JT' => 'J-term 2012',
-								'2012SP' => 'Spring 2012',
-								'2012FA' => 'Fall 2012')
+			'options' => array(	'2012FA' => 'Fall 2012',
+								'2013JT' => 'J-term 2013',
+								'2013SP' => 'Spring 2013',
+						)
         ),
         'citizenship_status_comment' => array(
             'type' => 'comment',
