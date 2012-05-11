@@ -18,6 +18,7 @@ class ReverseAssociatorModule extends AssociatorModule // {{{
 		var $viewer;
 		var $filter;
 		var $associations;
+		protected $_rel_direction = 'left';
 
 		function ReverseAssociatorModule( &$page ) // {{{
 		{
