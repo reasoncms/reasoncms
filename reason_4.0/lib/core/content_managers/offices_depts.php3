@@ -28,13 +28,8 @@
 			if(!$this->get_value( 'show_hide' ))
 				$this->set_value('show_hide','show');
 			
-			$this->add_required( 'sync_name' );
-			$this->set_display_name('sync_name', 'Synchronization Name');
-			$this->set_comments('sync_name', form_comment('This should be the same as the LDAP department name.  It is sometimes different from the public name'));
-			
-			$this->add_required( 'office_department_code' );
-			$this->set_display_name('office_department_code', 'Colleague/Registrar Code(s)');
-			$this->set_comments('office_department_code', form_comment('This is a comma-delimited list of Registrar codes used by the department'));
+			$this->change_element_type('sync_name', 'hidden');
+			$this->change_element_type('office_department_code', 'hidden');
 			
 			$this->add_required( 'office_department_type' );
 			$this->set_display_name('office_department_type', 'Type');
