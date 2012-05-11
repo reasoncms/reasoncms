@@ -89,6 +89,12 @@ function reason_username_has_access_to_site($username, $site_id, $force_refresh 
 
 /**
  * Combines reason_check_authentication with reason_username_has_access_to_site
+ *
+ * Checks if current user has admin access to given site
+ *
+ * @param integer $site_id
+ * @param boolean $force_refresh
+ * @return boolean
  */
 function reason_check_access_to_site($site_id, $force_refresh = false)
 {
@@ -136,7 +142,39 @@ function reason_user_is_in_group($username, $group)
 }
 
 /**
+ * Get the Reason entity that represents the current user, if one exists
+ *
+ * @return mixed Reason entity or false (if no user logged in or if logged-in user does not have Reason entity)
+ */
+function reason_get_current_user_entity()
+{
+	static $user;
+	if(!isset($user))
+	{
+		if($username = reason_check_authentication())
+		{
+			$es = new entity_selector();
+			$es->add_type(id_of('user'));
+			$es->add_relation('entity.name = "'.addslashes($username).'"');
+			$es->set_num(1);
+			$result = $es->run_one();
+			if(!empty($result))
+			{
+				$user = current($result);
+			}
+		}
+		if(empty($user))
+		{
+			$user = false;
+		}
+	}
+	return $user;
+}
+
+/**
  * Combines reason_check_authentication with reason_user_has_privs
+ * @param string $privilege
+ * @return boolean true if current user have privs; false if no logged-in user or if logged-in user does not have privs
  */
 function reason_check_privs($privilege)
 {
