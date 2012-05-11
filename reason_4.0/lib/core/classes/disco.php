@@ -248,7 +248,7 @@
 									),
 					'select'=>array(
 									'plasmature_type'=>'select_no_sort',
-									'args'=>array('add_null_value_to_top' => true,),
+									'args'=>array('add_empty_value_to_top' => true,),
 									),
 					'multiple_select'=>array(
 									'plasmature_type'=>'select_no_sort',
