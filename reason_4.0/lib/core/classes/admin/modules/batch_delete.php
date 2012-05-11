@@ -62,7 +62,7 @@
 				$es->add_type($this->admin_page->type_id);
 				$es->set_sharing( 'owns' );
 				$es->set_order('entity.last_modified DESC');
-				pray($this->admin_page->request);
+				// pray($this->admin_page->request);
 				if(isset($this->admin_page->request['state']) && $this->admin_page->request['state'] == 'pending')
 					$status = 'Pending';
 				else
