@@ -54,8 +54,9 @@
 	
 	echo 'This script will either update all URLs in this domain or test every site to see if it is properly configured. ' .
 		 'If a site is not properly configured, this script will dump a list of commands that will bring the site to the ' .
-		 'proper state.  Someone with shell access needs to run these commands and watch to see if they all work.<br /><br />';
-
+		 'proper state.  Someone with shell access needs to run these commands and watch to see if they all work.<br /><br />'.
+		 "You can also update all URLS from the server's command line by typing into the shell:<br />".
+		 'curl -k -f https://'.htmlspecialchars($_SERVER['SERVER_NAME']).'/reason_package/reason_4.0/www/scripts/urls/update_urls_cli.php';
 	echo '<strong>';
 	if( $mode == 'check' )
 	{
