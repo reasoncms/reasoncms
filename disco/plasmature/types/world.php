@@ -122,7 +122,7 @@ class languageType extends select_no_sortType
 class stateType extends selectType
 {
  	var $type = 'state';
-	var $type_valid_args = array('use_not_in_usa_option','include_military_codes');
+	var $type_valid_args = array('use_not_in_usa_option','include_military_codes','include_territories');
 	var $sort_options = false;
 	/**
 	 * Adds a "Not in the US" option to the state type.
@@ -137,6 +137,12 @@ class stateType extends selectType
 	 * @var boolean
 	 */
 	var $include_military_codes = false;
+	/**
+	 * Adds the US territory codes to the list of options
+	 * The default value is false. A true value will add the territory codes at the end of the list.
+	 * @var boolean
+	 */
+	var $include_territories = false;
 	/**
 	 *  Populates the {@link options} array.
 	 */
@@ -223,6 +229,16 @@ class stateType extends selectType
 			$states['AA'] = 'AA (Military APO/FPO)';
 			$states['AE'] = 'AE (Military APO/FPO)';
 			$states['AP'] = 'AP (Military APO/FPO)';
+		}
+		if($this->include_territories)
+		{
+			$this->_add_divider_option_to_array($states);
+			$states['AS'] = 'American Samoa';
+			$states['GU'] = 'Guam';
+			$states['MH'] = 'Marshall Islands';
+			$states['MP'] = 'Northern Mariana Islands';
+			$states['PR'] = 'Puerto Rico';
+			$states['VI'] = 'Virgin Islands';
 		}
 		foreach( $states as $key => $val )
 			$this->options[ $key ] = $val;
