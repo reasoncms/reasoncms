@@ -12,6 +12,11 @@
  */
 
 /**
+ * Include dependencies
+ */
+reason_include_once('classes/sized_image.php');
+
+/**
  * Gets the filename of an image relative to the photostock directory.
  * @param mixed $image the ID of an image entity or an image entity object
  * @param string $size the desired scaling of the image: thumbnail/thumb/tn,
@@ -202,4 +207,64 @@ function image_tiered_id_filename($id, $size, $type)
 		"{$expanded_id}{$size}.{$type}"
 	);
 	return implode("/", $parts);
+}
+
+/**
+ * Get information about the placard image to use for a given media file
+ * @param object $media_file
+ * @param mixed $media_work entity object or null. If null, media work will be found
+ * @return array('image'=>entity,'url'=>sized url,'width' =>width,'height'=>height)
+ */
+function reason_get_media_placard_image_info($media_file,$media_work = null)
+{
+	if(empty($media_file))
+	{
+		trigger_error('reason_get_media_placard_image_info(0 requires a media file as the first argument');
+		return null;
+	}
+	
+	if($media_file->get_value('av_type') == 'Audio')
+		return null;
+	
+	if(empty($media_work))
+	{
+		$es = new entity_selector();
+		$es->add_type(id_of('av'));
+		$es->add_left_relationship($media_file->id(),relationship_id_of('av_to_av_file'));
+		$es->set_num(1);
+		$works = $es->run_one();
+		if(!empty($works))
+			$media_work = current($works);
+		else
+			return null;
+	}
+	$es = new entity_selector();
+	$es->add_type(id_of('image'));
+	$es->add_right_relationship($media_work->id(),relationship_id_of('av_to_primary_image'));
+	$es->set_num(1);
+	$images = $es->run_one();
+	if(!empty($images))
+	{
+		$image = current($images);
+		$rsi = new reasonSizedImage();
+		$rsi->set_id($image->id());
+		$width = 480;
+		$height = 320;
+		if($media_file->get_value('width') && $media_file->get_value('height'))
+		{
+			$width = $media_file->get_value('width');
+			$height = $media_file->get_value('height');
+		}
+		$rsi->set_width($width);
+		$rsi->set_height($height);
+		$rsi->set_crop_style('fill');
+		$image_url = $rsi->get_url();
+		return array(
+			'image' => $image,
+			'url' => $image_url,
+			'width' => $rsi->get_image_width(),
+			'height' => $rsi->get_image_height()
+		);
+	}
+	return null;
 }
