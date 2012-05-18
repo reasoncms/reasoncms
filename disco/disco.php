@@ -2400,6 +2400,29 @@
 		}
 		
 		/**
+		* Move a collection of elements or element groups to a new location.
+		* Use set_order if you need to do wholesale rearranging.
+		* @param array $elements Names of the elements you're moving, in the order you'd like them to appear
+		* @param string $where position relative to element2 ('before' or 'after')
+		* @param string $element2 Name of element to move elements with regard to
+		*/
+		function move_elements($elements, $where, $element2)
+		{
+			if (!is_array($elements) || empty($elements))
+			{
+				if ($this->full_error_triggers) trigger_error('move_elements called with empty or non-array value.');
+				return false;
+			}
+			if ($where == 'before') $elements = array_reverse($elements);
+			$last_element = $element2;
+			foreach($elements as $element1)
+			{
+				$this->move_element($element1, $where, $last_element);
+				$last_element = $element1;
+			}
+		}
+		
+		/**
 		* Set the internal copy of the request.
 		* This allows Disco to work with a filtered copy of any request vars.  Generally, this is simply set to
 		* $_REQUEST or $_POST, but this can also be used to automatically test or provide a fake environment for Disco
