@@ -185,6 +185,22 @@ class reasonAVDisplay
 		if(!$this->_displayer_is_set_up()) return;
 		return $this->_displayer->set_placard_image($entity);
 	}
+	
+	/**
+	 * Set the dimensions of the placard image
+	 * @param string $width Width of the placard image in pixels
+	 * @param string $height Height of the placard image in pixels
+	 */
+	function set_placard_image_dimensions($width, $height)
+	{
+		if(!$this->_displayer_is_set_up()) return;
+		
+		if(!method_exists($this->_displayer,'set_placard_image_dimensions'))
+			return false;
+		
+		return $this->_displayer->set_placard_image_dimensions($width, $height);
+	}
+	
 	/**
 	 * Clear a preview image, if any
 	 */
