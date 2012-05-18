@@ -105,6 +105,15 @@ class xhtmlStrictReasonAVDisplay
 	var $placard_image_url;
 	
 	/**
+	 * Image dimensions for the placard image
+	 *
+	 * Via set_placard_image_dimensions()
+	 *
+	 * @var array 'width'=>$width_in_pixels,'height'=>$height_in_pixels
+	 */
+	var $placard_image_dimensions;
+	
+	/**
 	 * Maps the format specified in the entity's media_format field to a string used to display browser requirements and (where needed) tech credits
 	* Do not access directly; use the get_tech_note() function
 	 * @var array keys are the entity values in media_format; values are the strings returned
@@ -250,6 +259,23 @@ class xhtmlStrictReasonAVDisplay
 	function clear_placard_image()
 	{
 		$this->placard_image_url = null;
+	}
+	
+	/**
+	 * Set the dimensions of the placard image
+	 * @param string $width Width of the placard image in pixels
+	 * @param string $height Height of the placard image in pixels
+	 */
+	function set_placard_image_dimensions($width, $height)
+	{
+		if(!empty($width))
+		{
+			$this->placard_image_dimensions['width'] = $width;
+		}
+		if(!empty($height))
+		{
+			$this->placard_image_dimensions['height'] = $height;
+		}
 	}
 	
 	/**
@@ -439,6 +465,7 @@ class xhtmlStrictReasonAVDisplay
 		$ret = array();
 		$dimensions_attrs = '';
 		$dimensions = $this->get_dimensions($entity);
+		$orig_dimensions = $dimensions;
 		if(isset($this->parameters['flv']['controlbar']))
 		{
 			if(is_numeric($this->parameters['flv']['controlbar']))
@@ -461,7 +488,24 @@ class xhtmlStrictReasonAVDisplay
 		{
 			$ret[] = '<param name="allowfullscreen" value="true" />';
 		}
-		// $ret[] = '<param name="wmode" value="transparent" />';
+		$extension = $this->get_extension($entity->get_value('url'));
+		if('flv' != $extension)
+		{
+			$link_text = 'Audio' == $entity->get_value('av_type') ? 'Listen' : 'Watch Video (.'.htmlspecialchars($extension).')';
+			$link = '<a href="'.$entity->get_value('url').'">';
+			if(!empty($this->placard_image_url))
+			{
+				$placard_width = !empty($this->placard_image_dimensions['width']) ? $this->placard_image_dimensions['width'] : $orig_dimensions['width'];
+				$placard_height = !empty($this->placard_image_dimensions['height']) ? $this->placard_image_dimensions['height'] : $orig_dimensions['height'];
+				$link .= '<img src="'.htmlspecialchars($this->placard_image_url).'" alt="'.$link_text.'" width="'.$placard_width.'" height="'.$placard_height.'" />';
+			}
+			else
+			{
+				$link .= $link_text;
+			}
+			$link .= '</a>';
+			$ret [] = $link;
+		}
 		$ret [] = '</object>';
 		
 		return implode("\n",$ret);
