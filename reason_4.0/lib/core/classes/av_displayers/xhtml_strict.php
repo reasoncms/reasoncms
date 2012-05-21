@@ -491,7 +491,7 @@ class xhtmlStrictReasonAVDisplay
 		$extension = $this->get_extension($entity->get_value('url'));
 		if('flv' != $extension)
 		{
-			$link_text = 'Audio' == $entity->get_value('av_type') ? 'Listen' : 'Watch Video (.'.htmlspecialchars($extension).')';
+			$link_text = 'Audio' == $entity->get_value('av_type') ? 'Play Audio (.'.htmlspecialchars($extension).')' : 'Play Video (.'.htmlspecialchars($extension).')';
 			$link = '<a href="'.$entity->get_value('url').'">';
 			if(!empty($this->placard_image_url))
 			{
