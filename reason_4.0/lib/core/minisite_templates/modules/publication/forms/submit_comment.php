@@ -9,6 +9,7 @@
 	 */
 	include_once('reason_header.php');
 	include_once( DISCO_INC . 'disco.php');
+	include_once( DISCO_INC . 'plasmature/types/recaptcha.php' );
 	reason_include_once( 'function_libraries/user_functions.php' );
 	
 	/**
@@ -103,8 +104,24 @@
 			{
 				$this->actions['Submit'] = 'Submit Comment (Moderated)';
 			}
-				$this->do_wysiwygs();
-				$this->set_value('comment_posted_id', '');
+			$this->do_wysiwygs();
+			$this->set_value('comment_posted_id', '');
+			$this->do_captcha();
+		}
+		
+		/**
+		 * If recaptcha is setup for this instance of Reason and the user is not logged in, lets add the captcha.
+		 */
+		function do_captcha()
+		{
+			$rk_public = constant("RECAPTCHA_PUBLIC_KEY");
+			$rk_private = constant("RECAPTCHA_PRIVATE_KEY");
+			if (!reason_check_authentication() && !empty($rk_public) && !empty($rk_private))
+			{
+				$this->add_element('recaptcha', 'recaptcha');
+				$this->add_required('recaptcha');
+				$this->set_display_name('recaptcha', 'Challenge Question');
+			}
 		}
 		
 		function do_wysiwygs()
