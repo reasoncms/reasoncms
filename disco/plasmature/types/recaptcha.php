@@ -46,33 +46,45 @@ class recaptchaType extends defaultType
 		return (!$this->keys_available());
 	}
 	
-	function grab()
+	function grab_value()
 	{
 		if ($this->keys_available())
 		{
 			$request = $this->get_request();
-			$resp = recaptcha_check_answer(
-				$this->get_private_key(),
-				$_SERVER["REMOTE_ADDR"],
-				$request["recaptcha_challenge_field"],
-				$request["recaptcha_response_field"]
-			);
-			if (!$resp->is_valid)
+			if (!empty($request["recaptcha_challenge_field"]) && !empty($request["recaptcha_response_field"]))
 			{
-				if ($resp->error == 'invalid-site-private-key')
+				$resp = recaptcha_check_answer(
+					$this->get_private_key(),
+					$_SERVER["REMOTE_ADDR"],
+					$request["recaptcha_challenge_field"],
+					$request["recaptcha_response_field"]
+				);
+				if ($resp->is_valid)
 				{
-					trigger_error ("The reCAPTCHA challenge was ignored - reCAPTCHA reports that your site private key is invalid.");
+					return 1;
 				}
-				elseif ($resp->error == 'invalid-request-cookie')
+				else
 				{
-					trigger_error ("Recaptcha challenge parameter was not correctly passed - make sure reCAPTCHA is properly configured.");
-					$this->set_error("The reCAPTCHA could not be verified. Please try again again later.");
-				}
-				elseif ($resp->error == 'incorrect-captcha-sol')
-				{
-					$this->set_error("The reCAPTCHA wasn't entered correctly. Please try again.");
+					if ($resp->error == 'invalid-site-private-key')
+					{
+						trigger_error ("The reCAPTCHA challenge was ignored - reCAPTCHA reports that your site private key is invalid.");
+					}
+					elseif ($resp->error == 'invalid-request-cookie')
+					{
+						trigger_error ("Recaptcha challenge parameter was not correctly passed - make sure reCAPTCHA is properly configured.");
+						$this->set_error("The reCAPTCHA could not be verified. Please try again again later.");
+					}
+					elseif ($resp->error == 'incorrect-captcha-sol')
+					{
+						$this->set_error("The reCAPTCHA wasn't entered correctly. Please try again.");
+					}
 				}
 			}
+		 	else
+		 	{
+		 		$this->set_error("You must respond to the reCAPTCHA challenge question to complete the form");
+		 	}
+		 	return 0;
 		}
 	}
 
