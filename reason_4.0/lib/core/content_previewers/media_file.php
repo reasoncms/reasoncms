@@ -7,6 +7,7 @@
 	 * Include dependencies & register previewer with Reason
 	 */
 	reason_include_once( 'classes/av_display.php' );
+	reason_include_once( 'function_libraries/image_tools.php' );
 
 	$GLOBALS[ '_content_previewer_class_names' ][ basename( __FILE__) ] = 'av_file_previewer';
 
@@ -24,6 +25,11 @@
 			// Embedded preview
 			$avd = new reasonAVDisplay();
 			$avd->disable_automatic_play_start();
+			if($image_info = reason_get_media_placard_image_info($this->_entity))
+			{
+				$avd->set_placard_image($image_info['url']);
+				$avd->set_placard_image_dimensions($image_info['width'], $image_info['height']);
+			}
 			$embed_markup = $avd->get_embedding_markup($this->_entity);
 			if(!empty($embed_markup))
 			{
