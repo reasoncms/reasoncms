@@ -19,6 +19,7 @@ reason_include_once('classes/url_manager.php');
 reason_include_once('classes/plasmature/upload.php');
 reason_include_once('content_managers/default.php3');
 reason_include_once('function_libraries/url_utils.php');
+reason_include_once( 'function_libraries/image_tools.php' );
 include_once(CARL_UTIL_INC . 'basic/mime_types.php');
 
 /**
@@ -234,6 +235,12 @@ class avFileManager extends ContentManager
 			reason_include_once( 'classes/av_display.php' );
 			$avd = new reasonAVDisplay();
 			$avd->disable_automatic_play_start();
+			$entity = new entity($this->get_value('id'));
+			if($image_info = reason_get_media_placard_image_info($entity))
+			{
+				$avd->set_placard_image($image_info['url']);
+				$avd->set_placard_image_dimensions($image_info['width'], $image_info['height']);
+			}
 			$embed_markup = $avd->get_embedding_markup($this->get_value('id'));
 			$problem_note = form_comment('If this preview is not working, please make sure you have selected the appropriate delivery method(s) and format for this file.');
 			if(!empty($embed_markup))
