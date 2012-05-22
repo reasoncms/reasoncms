@@ -502,17 +502,24 @@
 				$preview_link[ 'cur_module' ] = 'Preview';
 				$edit_link[ 'id' ] = $row->id();
 				$edit_link[ 'cur_module' ] = 'Edit';
+				
+				$sharing = $row->get_value('sharing');
+				$owned = (is_array($sharing)) ? in_array('owns', $sharing) : ($row->get_value('sharing') == 'owns');
+				$borrowed = (is_array($sharing)) ? in_array('borrows', $sharing) : ($row->get_value('sharing') == 'borrows');
 				echo ' | <a href="'.$this->admin_page->make_link( $preview_link ).'">Preview</a>';
-				if( ($row->get_value( 'sharing' ) == 'owns') && reason_site_can_edit_type($this->site_id, $this->rel_type) )
+				if( $owned && reason_site_can_edit_type($this->site_id, $this->rel_type) )
 					echo ' | <a href="'.$this->admin_page->make_link( $edit_link ).'">Edit</a>';
-				elseif ($row->get_value( 'sharing' ) == 'borrows')
+				if ($borrowed)
 					echo ' | Borrowed';
-				elseif ( ($row->get_value( 'sharing' ) != 'owns') && ($row->get_value( 'sharing' ) != 'borrows') )
+				if ( $owned && $borrowed )
+				{
+					echo '<p><strong>Note: </strong><em>Item is owned AND borrowed by the site.</em></p>';
+				}
+				if ( !$owned && !$borrowed )
 				{
 					echo '<p><strong>Note: </strong><em>Item is not currently owned or borrowed by the site.</em></p>';
 				}
 			}
-				
 			echo '</strong></td>';	
 		} // }}}
 	}
