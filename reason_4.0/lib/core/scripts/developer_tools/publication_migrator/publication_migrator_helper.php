@@ -81,6 +81,7 @@ class PublicationMigratorHelper
 											   'children_and_grandchildren_full_names_sidebar_blurbs_no_title_random_news_subnav' => 'international_students_information_front_page',
 											   'news_proofing' => 'publication',
 											   'news_proofing_multipage' => 'publication', // news_proofing pages should be deleted
+											   'news_and_events_sidebar_show_children' => 'publication_related_and_events_sidebar_show_children',
 											   'news_and_events_sidebar_show_children_no_title' => 'publication_related_and_events_sidebar_show_children_no_title'); 
 	
 	/**
