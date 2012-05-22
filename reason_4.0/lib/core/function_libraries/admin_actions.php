@@ -649,69 +649,68 @@
 	} // }}} // }}}
 
 	/**
-	 * @todo make allowable_relationship unique_name friendly
+	 * As well as removing the borrowing relationship, this removes relationships on the site where the
+	 * entity being unborrowed is on the "b" side of the relationship. If the site also owns the entity 
+	 * being unborrowed (not a good state) but it can happen, we skip this relationship deletion phase.
 	 */
 	function delete_borrowed_relationship( $site_id , $id , $rel_id ) // {{{ //{{{
 	{
-		 //delete associations from that site
-		 $dbq = new DBSelector;
-
-		 //actual relationships that we are selecting
-		 $dbq->add_table( 'r' , 'relationship' );
-		 $dbq->add_table( 'ar' , 'allowable_relationship' );
-
-		 $dbq->add_field( 'r' , '*' );
-
-		 $dbq->add_relation( 'r.type = ar.id' );
-		 $dbq->add_relation( 'r.entity_b = ' . $id );
-
-		 //owns relationship table
-		 $dbq->add_table( 'r2' , 'relationship' );
-		 $dbq->add_table( 'ar2' , 'allowable_relationship' );
-		 
-		 if (!reason_relationship_names_are_unique())
-		 {
-		 	$dbq->add_relation( 'ar2.name = "owns"' );
-		 }
-		 else
-		 {
-		 	$dbq->add_relation( 'ar2.type = "owns"' );
-		 }
-		 $dbq->add_relation( 'r2.type = ar2.id' );
-		 $dbq->add_relation( 'r2.entity_a = ' . $site_id );
-		 $dbq->add_relation( 'r2.entity_b = r.entity_a' );
-
-		 //current borrowship
-		 $dbq->add_table( 'r3' , 'relationship' );
-		 $dbq->add_table( 'ar3' , 'allowable_relationship' );
-		 
-		 $dbq->add_relation( 'ar3.id = ' . $rel_id );	
-		 $dbq->add_relation( 'r3.type = ar3.id' );
-		 $dbq->add_relation( 'r3.entity_a = ' . $site_id );
-		 $dbq->add_relation( 'r3.entity_b = ' . $id );
-
-		 $x = $dbq->run();
-		 if( $x )
-		 {
-			 $first = true;
-			 $in = '';
-			 foreach( $x AS $rel )
-			 {
-				if( !$first )
-					$in .= ',';
-				else
-					$first = false;
-
-				$in .= $rel[ 'id' ];
-			 }
-			 $q = 'DELETE FROM relationship WHERE id IN(' . $in . ')';
-			 db_query( $q , 'Error removing associations of borrowed item before deleting' );
-		 }
-		 $q = 'DELETE FROM relationship WHERE entity_a = ' . $site_id .
-			  ' AND entity_b = ' . $id .
-			  ' AND type = ' . $rel_id;
-		 db_query( $q , 'Error removing borrowship' );
-	} // }}} // }}}
+		// if we don't also own the entity, delete associations from the site where our entity is on the b side.
+		if (!site_owns_entity( $site_id, $id ))
+		{
+			$dbq = new DBSelector;
+			
+			//actual relationships that we are selecting
+			$dbq->add_table( 'r' , 'relationship' );
+			$dbq->add_table( 'ar' , 'allowable_relationship' );
+			$dbq->add_field( 'r' , '*' );
+			$dbq->add_relation( 'r.type = ar.id' );
+			$dbq->add_relation( 'r.entity_b = ' . $id );
+			
+			//owns relationship table
+			$dbq->add_table( 'r2' , 'relationship' );
+			$dbq->add_table( 'ar2' , 'allowable_relationship' );
+			
+			if (!reason_relationship_names_are_unique())
+			{
+				$dbq->add_relation( 'ar2.name = "owns"' );
+			}
+			else
+			{
+				$dbq->add_relation( 'ar2.type = "owns"' );
+			}
+			$dbq->add_relation( 'r2.type = ar2.id' );
+			$dbq->add_relation( 'r2.entity_a = ' . $site_id );
+			$dbq->add_relation( 'r2.entity_b = r.entity_a' );
+			
+			//current borrowship
+			$dbq->add_table( 'r3' , 'relationship' );
+			$dbq->add_table( 'ar3' , 'allowable_relationship' );
+			
+			$dbq->add_relation( 'ar3.id = ' . $rel_id );	
+			$dbq->add_relation( 'r3.type = ar3.id' );
+			$dbq->add_relation( 'r3.entity_a = ' . $site_id );
+			$dbq->add_relation( 'r3.entity_b = ' . $id );
+			$x = $dbq->run();
+			
+			if( $x )
+			{
+				$first = true;
+				$in = '';
+				foreach( $x AS $rel )
+				{
+					if (!$first) $in .= ',';
+					else $first = false;
+					$in .= $rel[ 'id' ];
+				}
+				$q = 'DELETE FROM relationship WHERE id IN(' . $in . ')';
+				db_query( $q , 'Error removing associations of borrowed item before deleting' );
+			}
+		}
+		
+		$q = 'DELETE FROM relationship WHERE entity_a = ' . $site_id . ' AND entity_b = ' . $id . ' AND type = ' . $rel_id;
+		db_query( $q , 'Error removing borrowship' );
+	}
 
 	function create_reason_table($table_name, $type_unique_name, $username)
 	{
