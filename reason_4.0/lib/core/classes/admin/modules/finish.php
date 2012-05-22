@@ -84,17 +84,22 @@ class FinishModule extends DefaultModule // {{{
 
 		if( !empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) )
 		{
-			// associate this new entity with the original entity if this is new
-			/* changed new_entity stuff
-			if( !empty( $this->admin_page->request[ 'new_entity' ] ) ) */
-			if( $this->new_entity )
+			// this code block is intended to associate a new entity with the context entity upon finish - it once created backwards relationships IF we reached an 
+			// entity with get_value('new') = 1 from the reverse associator. This needs fixin. We do so by running this section of code only in the case where
+			// the "old" module was the associator (the only module that allows the creation of new entities than need a relationship back to the a side entity
+			// whose context is relevant.
+			if( $this->new_entity && ($this->admin_page->request[ CM_VAR_PREFIX.'cur_module' ] == 'Associator') )
 			{
-				$q = 'SELECT * from allowable_relationship where id = '.$this->admin_page->request[ CM_VAR_PREFIX.'rel_id' ];
-				$r = db_query( $q,'Error selecting relationship info in FinishModule::init()' );
-				$row = mysql_fetch_array( $r , MYSQL_ASSOC );
-				if( $row[ 'connections' ] == 'one_to_many' )
-					$this->delete_existing_relationships();
-				create_relationship( $this->admin_page->request[ CM_VAR_PREFIX.'id' ], $this->admin_page->request[ 'id' ], $this->admin_page->request[ CM_VAR_PREFIX.'rel_id' ] );
+				$rel_info = reason_get_allowable_relationship_info( $this->admin_page->request[ CM_VAR_PREFIX.'rel_id' ] );
+				$entity_a = new entity($this->admin_page->request[ CM_VAR_PREFIX.'id' ]);
+				$entity_b = new entity($this->admin_page->request[ 'id' ]);
+				
+				// lets do a bit of additional sanity checking.
+				if ( ($rel_info[ 'relationship_a'] == $entity_a->get_value('type')) && ($rel_info[ 'relationship_b'] == $entity_b->get_value('type')) )
+				{
+					if( $rel_info[ 'connections' ] == 'one_to_many' ) $this->delete_existing_relationships();
+					create_relationship( $entity_a->id(), $entity_b->id(), $rel_info['id'] );
+				}
 			}
 			$old_vars = array();	
 			foreach( $this->admin_page->request AS $key => $val )
