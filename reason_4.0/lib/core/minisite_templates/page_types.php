@@ -429,15 +429,6 @@
 			'sidebar' => 'siblings',
 			'sub_nav' => '',
 		),
-		'blurbs_with_events_and_news_sidebar_by_page_categories' => array(
-			'pre_sidebar'=> array(
-				'module'=>'events_mini',
-				'limit_to_page_categories'=>true,
-			),
-			'sidebar'=>'news_via_categories',
-			'main_post'=>'blurb',
-			'sub_nav'=>'',
-		),
 		'blurbs_with_events_and_publication_sidebar_by_page_categories' => array(
 			'pre_sidebar'=> array(
 				'module'=>'events_mini',
@@ -525,18 +516,6 @@
 			'pre_sidebar' => 'image_sidebar',
 			'sidebar' => 'blurb',
 			'sub_nav' => 'assets',
-			'main_head' => '',
-		),
-		'children_and_grandchildren_full_names_sidebar_blurbs_no_title_random_news_subnav' => array(
-			'main_post' => array(
-				'module' => 'children_and_grandchildren',
-				'max_depth' => 2,
-				'use_link_name' => false,
-				'depth_to_tag_map' => array(1=>'h3',2=>'h4',),
-			),
-			'pre_sidebar' => 'image_sidebar',
-			'sidebar' => 'blurb',
-			'sub_nav' => 'news2_mini_random',
 			'main_head' => '',
 		),
 		'children_and_grandchildren_sidebar_blurbs' => array(
@@ -630,23 +609,6 @@
 			'main_post' => 'children',
 			'pre_sidebar' => 'image_sidebar',
 		),
-		'events_and_news_sidebar_by_page_categories' => array(
-			'pre_sidebar'=> array(
-				'module'=>'events_mini',
-				'limit_to_page_categories'=>true,
-			),
-			'sidebar'=>'news_via_categories',
-		),
-		'events_and_news_sidebar_show_children' => array(
-			'pre_sidebar' => 'events_mini',
-			'sidebar' => 'news_mini',
-			'main_post' => 'children',
-		),
-		'news_and_events_sidebar_show_children' => array(
-			'sidebar' => 'events_mini',
-			'pre_sidebar' => 'news_mini',
-			'main_post' => 'children',
-		),
 		'publication_related_and_events_sidebar_show_children' => array(
 			'sidebar' => 'events_mini',
 			'pre_sidebar' => array(
@@ -661,12 +623,6 @@
 				'max_num_items' => 4,
 			),
 			'main_post' => 'children',
-		),
-		'news_and_events_sidebar_show_children_no_title' => array(
-			'sidebar' => 'events_mini',
-			'pre_sidebar' => 'news_mini',
-			'main_post' => 'children',
-			'main_head' => '',
 		),
 		'publication_related_and_events_sidebar_show_children_no_title' => array(
 			'sidebar' => 'events_mini',
@@ -683,20 +639,6 @@
 			),
 			'main_post' => 'children',
 			'main_head' => '',
-		),
-		'events_and_news_sidebar' => array(
-			'pre_sidebar' => array(
-				'module' => 'events_mini',
-				'view' => 'monthly',
-			),
-			'sidebar' => 'news_mini',
-		),
-		'events_and_news_sidebar_weekly' => array(
-			'pre_sidebar' => array(
-				'module' => 'events_mini',
-				'view' => 'weekly',
-			),
-			'sidebar' => 'news_mini',
 		),
 		'events_archive' => array(
 			'main_post' => 'events_archive',
@@ -1281,35 +1223,6 @@
 			'main_post'=>'navigation',
 			'post_foot' => 'textonly_toggle',
 		),
-		'news' => array(
-			'main_post' => 'news',
-		),
-		'news_all' => array(
-			'main_post' => 'news_all',
-		),
-		'news_by_category' => array(
-			'main_post' => 'news_by_category',
-		),
-		'news_mini' => array(
-			'main_post' => 'news_mini',
-		),
-		'news_NoNav_sidebarBlurb' => array(
-			'main_post' => 'news',
-			'navigation' => '',
-			'sub_nav_2' => '',
-			'sub_nav' => '',
-			'sidebar' => 'blurb',
-			'post_foot' => 'textonly_toggle',
-		),
-		'news_one_at_a_time' => array(
-			'main_post'=>'news_one_at_a_time',
-		),
-		'news_proofing_multipage' => array(
-			'main_post'=>'news_proofing_multipage',
-		),
-		'news_sidebar' => array(
-			'sidebar' => 'news_mini',
-		),
 		'publication_sidebar' => array(
 			'sidebar' => array(
 				'module' => 'publication',
@@ -1365,43 +1278,6 @@
 			'sidebar' => 'blurb',
 			'sub_nav' => '',
 		),
-		'news_random' => array(
-			'main_post' => 'news_rand',
-		),
-		'news_proofing' => array(
-			'main_post' => 'news_proofing',
-		),
-		'news_via_categories' => array(
-			'sidebar' => 'news_via_categories',
-		),
-		'news_via_categories_with_children' => array(
-			'sidebar' => 'news_via_categories',
-			'main_post'=>'children',
-		),
-		'news_via_categories_with_siblings' => array(
-			'sidebar' => 'news_via_categories',
-			'main_post'=>'siblings',
-		),
-		'news_with_sidebar_blurbs' => array(
-			'main_post' => 'news',
-			'sidebar' => 'blurb',
-			'sub_nav' => '',
-		 ),
-		'newsNoNavigation' => array(
-			'main_post' => 'news',
-			'navigation' => '',
-			'sub_nav_2' => '',
-			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
-		),
-		'newsNoNavigation_footer_blurb' => array(
-			'main_post' => 'news',
-			'navigation' => '',
-			'sub_nav_2' => '',
-			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
-			'edit_link' => 'blurb',
-		),
 		'no_sub_nav' => array(
 			'sub_nav_2' => '',
 			'sub_nav' => '',
@@ -1423,15 +1299,6 @@
 			'sub_nav' => '',
 			'post_foot' => 'textonly_toggle',
 		),
-		'noNavNoSearch_news_sidebar' => array(
-			'banner_xtra' => '',
-			'navigation' => '',
-			'sub_nav_2' => '',
-			'sub_nav' => '',
-			'post_foot' => 'textonly_toggle',
-			'pre_sidebar' => 'news_mini',
-			'sidebar' => 'assets',
-		),
 		'policy' => array(
 			'main_post' => 'policy',
 		),
@@ -1450,9 +1317,6 @@
 		'random_blurb_and_sidebar_image' => array(
 			'sub_nav' => array('module' => 'blurb', 'num_to_display' => 1, 'rand_flag' => true),
 			'sidebar' => array('module' => 'image_sidebar', 'num_to_display' => 3, 'caption_flag' => false, 'rand_flag' => true)
-		),
-		'random_news_sub_nav' => array(
-			'sub_nav'=>'news2_mini_random',
 		),
 		'random_sidebar_images' => array(
 			'sidebar' => array('module' => 'image_sidebar', 'num_to_display' => 3, 'caption_flag' => false, 'rand_flag' => true)
@@ -1473,10 +1337,6 @@
 		),
 		'show_children' => array(
 			'main_post' => 'children',
-		),
-		'show_children_and_news_sidebar' => array(
-			'main_post' => 'children',
-			'sidebar' => 'news_mini',
 		),
 		'show_children_and_publication_sidebar' => array(
 			'main_post' => 'children',
@@ -1904,21 +1764,6 @@
 	);
 	
 	$GLOBALS['_reason_deprecated_modules'] = array(
-				'news_via_categories',
-				'news2_mini_random',
-				'news_mini',
-				'news',
-				'news_all',
-				'news_one_at_a_time',
-				'news_proofing_multipage',
-				'news_rand',
-				'news_proofing',
-				'news_by_category',
-				'news_image_sidebar',
-				'news_parent',
-				'news_top',
-				'news2_mini',
-				'news2',
 				'form_custom/form_custom',
 				'gallery_single_page',
 				'gallery_entire_site',
