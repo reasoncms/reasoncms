@@ -60,10 +60,9 @@
         if (container.css('overflow') != 'hidden')
             container.css('overflow', 'hidden'); 
         
-        var target_pos = target.position();
+        var target_pos = target.offset();
+        container.offset({ top: target_pos.top, left: target_pos.left });
         container.css({
-            left: target_pos.left,
-            top: target_pos.top,
             width: target.outerWidth(),
             height: target.outerHeight()
         });
