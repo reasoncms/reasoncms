@@ -114,6 +114,8 @@ if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']])
 				echo '</ul>'."\n";
 			}
 		}
+		$ret_link = carl_construct_link(array('upgrade_step' => $step));
+		echo '<hr/><p><a href="'.$ret_link.'">&lt; All ' . htmlspecialchars($upgrade_steps[$step]) .' Upgrades</a></p>';
 	}
 	else
 	{
@@ -127,7 +129,14 @@ if(!empty($_GET['upgrade_step']) && isset($upgrade_steps[$_GET['upgrade_step']])
 		echo '<ul>'."\n";
 		foreach($upgraders as $name=>$upgrader)
 		{
-			echo '<li><a href="?upgrade_step='.urlencode($step).'&amp;upgrader='.urlencode($name).'&amp;mode=test">'.$upgrader->title().'</a></li>'."\n";
+			echo '<li><a href="?upgrade_step='.urlencode($step).'&amp;upgrader='.urlencode($name).'&amp;mode=test">'.$upgrader->title().'</a>';
+			// if we have a description lets show it.
+			$desc = $upgrader->description();
+			if (!empty($desc))
+			{
+				echo '<ul><li>'.$desc.'</li></ul>';
+			}
+			echo '</li>'."\n";
 		}
 		echo '</ul>'."\n";
 	}
