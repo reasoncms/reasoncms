@@ -70,8 +70,8 @@ class reasonUpgradeAssistant
 		}
 		if (!empty($upgraders['upgraders'])) ksort($upgraders['upgraders']);
 		if (!empty($upgraders['upgrader_info'])) ksort($upgraders['upgrader_info']);
-		$this->upgraders = $upgraders['upgraders'];
-		$this->upgrade_info = $upgraders['upgrade_info'];
+		$this->upgraders = (!empty($upgraders['upgraders'])) ? $upgraders['upgraders'] : array();
+		$this->upgrade_info = (!empty($upgraders['upgrader_info'])) ? $upgraders['upgrade_info'] : array();
 	}
 }
 
