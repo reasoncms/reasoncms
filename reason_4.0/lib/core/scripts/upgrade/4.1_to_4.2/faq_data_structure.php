@@ -33,7 +33,7 @@ class ReasonUpgrader_42_FAQDataStructure implements reasonUpgraderInterface
 	 */
 	public function description()
 	{
-		return 'This script creates an FAQ table and moves the FAQ contents of the meta, dated, and chunk tables into the it for better database performance.';
+		return '<p>This script creates an FAQ table and moves the FAQ contents of the meta, dated, and chunk tables into the it for better database performance.</p>';
 	}
 	
 	protected function _destination_table()

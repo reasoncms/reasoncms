@@ -35,7 +35,7 @@ class ReasonUpgrader_41_RemoveDatabaseCruft implements reasonUpgraderInterface
          */
 	public function description()
 	{
-		$str = "This upgrade drops the page_cache_log_archive table, which has not been used in Reason for many versions.";
+		$str = "<p>This upgrade drops the page_cache_log_archive table, which has not been used in Reason for many versions.</p>";
 		return $str;
 	}
         /**
@@ -46,11 +46,11 @@ class ReasonUpgrader_41_RemoveDatabaseCruft implements reasonUpgraderInterface
 	{
 		if(!$this->table_exists())
 		{
-			return 'This script has already run';
+			return '<p>This script has already run.</p>';
 		}
 		else
 		{
-			return 'Would drop the table page_cache_log_archive';
+			return '<p>Would drop the table page_cache_log_archive.</p>';
 		}
 	}
 	
@@ -62,7 +62,7 @@ class ReasonUpgrader_41_RemoveDatabaseCruft implements reasonUpgraderInterface
 	{
 		if(!$this->table_exists())
 		{
-			return 'This script has already run';
+			return '<p>This script has already run.</p>';
 		}
 		else
 		{
@@ -72,11 +72,11 @@ class ReasonUpgrader_41_RemoveDatabaseCruft implements reasonUpgraderInterface
   			
   			if (!$this->table_exists())
   			{
-  				return 'Successfully dropped page_cache_log_archive';
+  				return '<p>Successfully dropped page_cache_log_archive.</p>';
   			}
   			else
   			{
-  				return 'Dropping the table did not appear to work - you may have to manually run the query: DROP TABLE IF EXISTS `page_cache_log_archive`';
+  				return '<p>Dropping the table did not appear to work - you may have to manually run the query: DROP TABLE IF EXISTS `page_cache_log_archive`.</p>';
   			}
 		}
 	}

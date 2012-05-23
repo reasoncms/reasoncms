@@ -33,7 +33,7 @@ class ReasonUpgrader_42_FacstaffDataStructure implements reasonUpgraderInterface
 	 */
 	public function description()
 	{
-		return 'This script moves the Faculty/Staff contents of the chunk table into the faculty_staff table for better database performance.';
+		return '<p>This script moves the Faculty/Staff contents of the chunk table into the faculty_staff table for better database performance.</p>';
 	}
     /**
      * Do a test run of the upgrader

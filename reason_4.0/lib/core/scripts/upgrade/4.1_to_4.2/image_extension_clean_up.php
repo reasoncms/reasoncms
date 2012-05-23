@@ -50,11 +50,11 @@ class ReasonUpgrader_42_ImageExtensionCleanUp implements reasonUpgraderInterface
 	 */
 	public function description()
 	{
-		return 'This script creates new fields in the image entity table for thumbnail type and main image type.
+		return '<p>This script creates new fields in the image entity table for thumbnail type and main image type.
 		As a result, users can upload thumbnails that are of a different image type than the main image.
 		This upgrade may take several minutes to run and require a person to monitor it. However, it is important
 		to run it as soon as possible once you have upgraded to this Reason version so that image filename generation
-		will work properly.';
+		will work properly.</p>';
 	}
         /**
          * Do a test run of the upgrader
@@ -64,11 +64,11 @@ class ReasonUpgrader_42_ImageExtensionCleanUp implements reasonUpgraderInterface
 	{
 		$all_have_main_images = false;
 		if($all_have_main_images)
-			return 'This script has already run (says test)';
+			return '<p>This script has already run (says test).</p>';
 		else
-            return 'This script creates new fields in the image entity table for thumbnail type 
+            return '<p>This script creates new fields in the image entity table for thumbnail type 
             (\'thumbnail_image_type\') and original image type (\'original_image_type\')
-			As a result, users can upload thumbnails that are of a different image type than the main image';
+			As a result, users can upload thumbnails that are of a different image type than the main image.</p>';
 	}
 	/**
 	 * Run the upgrader
@@ -98,7 +98,7 @@ class ReasonUpgrader_42_ImageExtensionCleanUp implements reasonUpgraderInterface
 		}
 		if($start_index == -1)
 		{
-			echo 'This script has already processed all images during this session!' . '<br />';
+			echo '<p>This script has already processed all images during this session!' . '</p>';
 		}
 		else
         {
@@ -172,11 +172,11 @@ class ReasonUpgrader_42_ImageExtensionCleanUp implements reasonUpgraderInterface
 				$_SESSION['reason_image_type_script']['run_again'] = true;
 			
 			}
-			echo 'Started at index ' . $start_index . ' out of ' . $total_num_image_ids . '<br />';
+			echo '<p>Started at index ' . $start_index . ' out of ' . $total_num_image_ids . '<br />';
 			echo 'Ended at index ' . $index . ' (' . round( ( $index / $total_num_image_ids ) * 100, 2) . '%)<br />';
 			echo 'Processed ' . ($index - $start_index) . ' total images<br />';
 			echo 'There were a total of ' . count($ids_with_tn) . ' ids with a main image and thumbnail <br />';
-			echo 'There were a total of ' . count($ids_with_tn_full) . ' ids with a main image, thumbnail, and full <br />';
+			echo 'There were a total of ' . count($ids_with_tn_full) . ' ids with a main image, thumbnail, and full</p>';
 	    }
 	}
 	

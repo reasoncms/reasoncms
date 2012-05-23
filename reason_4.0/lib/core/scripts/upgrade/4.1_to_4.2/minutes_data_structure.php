@@ -34,7 +34,7 @@ class ReasonUpgrader_42_MinutesDataStructure implements reasonUpgraderInterface
 	 */
 	public function description()
 	{
-		return 'This script moves the Minutes contents of the bigger_chunk, meta, and dated tables into the minutes table for better database performance.';
+		return '<p>This script moves the Minutes contents of the bigger_chunk, meta, and dated tables into the minutes table for better database performance.</p>';
 	}
 	
 	protected function _destination_table()

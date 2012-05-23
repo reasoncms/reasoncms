@@ -29,26 +29,28 @@ class ReasonUpgrader_41_AllowableRelationshipUniqueNames implements reasonUpgrad
 	{
 		return 'Upgrade allowable relationship table';
 	}
-        /**
-         * Get a description of what this upgrade script will do
-         * @return string HTML description
-         */
+	
+	/**
+     * Get a description of what this upgrade script will do
+     * @return string HTML description
+     */
 	public function description()
 	{
 		$str = "This upgrade adds a type column to allowable_relationship with enumerated values ('owns', 'borrows', 'archive', 'association'). It changes all archive relationships ";
 		$str .= 'that are "many_to_many" to be "many_to_one". It populates missing column values in order to normalize types. It removes any allowable relationships that reference missing ';
 		$str .= 'types. Finally, it changes the allowable relationship names that are currently "owns" or "borrows" so that they are unique.';
-		return $str;
+		return '<p>'.$str.'</p>';
 	}
-        /**
-         * Do a test run of the upgrader
-         * @return string HTML report
-         */
+	
+	/**
+     * Do a test run of the upgrader
+     * @return string HTML report
+     */
 	public function test()
 	{
 		if(reason_relationship_names_are_unique())
 		{
-			return 'This script has already run';
+			return '<p>This script has already run.</p>';
 		}
 		else
 		{
@@ -68,7 +70,7 @@ class ReasonUpgrader_41_AllowableRelationshipUniqueNames implements reasonUpgrad
 	{
 		if(reason_relationship_names_are_unique())
 		{
-			return 'This script has already run';
+			return '<p>This script has already run.</p>';
 		}
 		else
 		{

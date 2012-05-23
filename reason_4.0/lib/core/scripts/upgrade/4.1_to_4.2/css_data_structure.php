@@ -33,7 +33,7 @@ class ReasonUpgrader_42_CSSDataStructure implements reasonUpgraderInterface
 	 */
 	public function description()
 	{
-		return 'This script moves the External CSS contents of the meta and url tables into the external_css table for better database performance. It also assigns a content manager to the CSS type if the type does not have one.';
+		return '<p>This script moves the External CSS contents of the meta and url tables into the external_css table for better database performance. It also assigns a content manager to the CSS type if the type does not have one.</p>';
 	}
     /**
      * Do a test run of the upgrader
