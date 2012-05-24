@@ -79,7 +79,11 @@
 					$insert_string = '';
 					foreach( $sites as $base_url=>$name )
 					{
-						echo $insert_string.' <a href="'.$base_url.'">';
+						$title_attr = '';
+						$title = $this->get_title($word, $name);
+						if(!empty($title))
+							$title_attr = ' title="'.$title.'"';
+						echo $insert_string.' <a href="'.$base_url.'"'.$title_attr.'>';
 						echo $name;
 						echo '</a>';
 						$insert_string = ',';
@@ -91,6 +95,13 @@
 			echo '</ul>'."\n";
 			echo '</div>'."\n";
 		} // }}}
+		function get_title($word, $name)
+		{
+			if(false !== stripos($name, $word))
+				return '';
+			else
+				return reason_htmlspecialchars($word) . ' &#8211; ' . reason_htmlspecialchars($name);
+		}
 		function add_to_alpha($site)
 		{
 			if( $site->get_value( 'keywords' ) )
