@@ -100,6 +100,7 @@
 			if(!empty($sites_by_type))
 			{
 				$site_merge = array();
+				$titles = array();
 				foreach($sites_by_type as $type_id => $sites)
 				{
 					if(!empty($sites))
@@ -110,6 +111,11 @@
 								$site_merge[$site->get_value('name')] = $site->get_value('base_url');
 							else
 								$site_merge[$site->get_value('name')] = $site->get_value('url');
+							
+							if($site->get_value('keywords'))
+							{
+								$titles[$site->get_value('name')] = $site->get_value('keywords');
+							}
 						}
 					}
 				}
@@ -119,7 +125,12 @@
 					echo '<h3>'.$name.'</h3>'."\n";
 					echo '<ul>'."\n";
 					foreach($site_merge as $name=>$url)
-						echo '<li><a href="'.$url.'">'.$name.'</a></li>'."\n";
+					{
+						$title_attr = '';
+						if(!empty($titles[$name]) && strtolower($titles[$name]) != strtolower($name))
+							$title_attr = ' title="'.reason_htmlspecialchars($titles[$name]).'"';
+						echo '<li><a href="'.$url.'"'.$title_attr.'>'.$name.'</a></li>'."\n";
+					}
 					echo '</ul>'."\n";
 				}
 			}
