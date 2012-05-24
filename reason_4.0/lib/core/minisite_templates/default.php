@@ -356,7 +356,7 @@ class MinisiteTemplate
 		if( !$this->page_info->get_values() OR $this->page_info->get_value( 'state' ) != 'Live' )
 		{
 			//trigger_error( 'page does not exist', WARNING );
-			header( 'Location: '.ERROR_404_PAGE );
+			$this->display_404_page();
 			die();
 		}
 		
@@ -489,6 +489,20 @@ class MinisiteTemplate
 		}
 	}
 	
+	function _display_404_page()
+	{
+		http_response_code(404);
+		if(file_exists(WEB_PATH.ERROR_404_PATH) && is_readable(WEB_PATH.ERROR_404_PATH))
+		{
+			include(WEB_PATH.ERROR_404_PATH);
+		}
+		else
+		{
+			trigger_error('The file at ERROR_404_PATH ('.ERROR_404_PATH.') is not able to be included');
+			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>404: Forbidden</title></head><body><h1>404: Not Found</h1><p>This page was not found.</p></body></html>';
+		}
+	}
+	
 	// hook
 	function pre_load_modules()
 	{
@@ -560,15 +574,24 @@ class MinisiteTemplate
 		);
 
 		// load meta elements from current page
-
+		
+		$tags_added = array();
 		foreach( $meta_tags as $entity_field => $meta_name )
 		{
 			if( $this->cur_page->get_value( $entity_field ) )
 			{
 				$content = reason_htmlspecialchars( $this->cur_page->get_value( $entity_field ) );
 				$this->head_items->add_head_item('meta',array('name'=>$meta_name,'content'=>$content) );
+				$tags_added[] = $meta_name;
 			}
 		}
+		
+		if(!in_array('keywords',$tags_added) && $this->pages->root_node() == $this->page_id)
+		{
+			$content = reason_htmlspecialchars( $this->site_info->get_value( 'keywords' ) );
+			$this->head_items->add_head_item('meta',array('name'=>'keywords','content'=>$content) );
+		}
+		
 		if (!empty ($this->textonly) || !empty( $_REQUEST['no_search'] ) || $this->site_info->get_value('site_state') != 'Live' || ( defined('THIS_IS_A_DEVELOPMENT_REASON_INSTANCE') && THIS_IS_A_DEVELOPMENT_REASON_INSTANCE ) )
 		{
 			$this->head_items->add_head_item('meta',array('name'=>'robots','content'=>'none' ) );
