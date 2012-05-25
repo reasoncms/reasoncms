@@ -860,14 +860,13 @@
 				'module' => 'blurb',
 				'num_to_display' => 1,
 			),
-			'main' => array(
+			'main_post' => array(
 				'module' => 'feature/feature',
 				'shuffle' => false,
 				'autoplay_timer' => 4,
 				'width'=>500,
 				'height'=>300
 			),
-			'main_post' => 'content',
 			'pre_sidebar' => 'blurb'
 		),
 		'feedback' => array(
