@@ -128,6 +128,14 @@
 				'organize_by_page_categories' => true,
 				),
 		),
+		'assets_by_category_sorted_by_date' => array(
+			'pre_sidebar' => '',
+			'main_post' => array(
+				'module'=>'assets',
+				'organize_by_page_categories' => true,
+				'order' => 'dated.datetime DESC, entity.name ASC',
+				),
+		),
 		'assets_by_author' => array(
 			'pre_sidebar' => '',
 			'main_post' => array(
