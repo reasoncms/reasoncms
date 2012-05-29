@@ -71,8 +71,9 @@ class recaptchaType extends defaultType
 					}
 					elseif ($resp->error == 'invalid-request-cookie')
 					{
-						trigger_error ("Recaptcha challenge parameter was not correctly passed - make sure reCAPTCHA is properly configured.");
-						$this->set_error("The reCAPTCHA could not be verified. Please try again again later.");
+						// lets remove this trigger since this can happens often with the non-javascript version.
+						//trigger_error ("Recaptcha challenge parameter was not correctly passed - make sure reCAPTCHA is properly configured.");
+						$this->set_error("The reCAPTCHA wasn't entered correctly. Please try again.");
 					}
 					elseif ($resp->error == 'incorrect-captcha-sol')
 					{
