@@ -10,6 +10,7 @@
 include_once('reason_header.php');
 include_once( DISCO_INC . 'disco.php');
 include_once( DISCO_INC . 'plasmature/types/recaptcha.php' );
+include_once( SETTINGS_INC . 'akismet_settings.php' );
 reason_include_once( 'function_libraries/user_functions.php' );
 
 /**
@@ -220,6 +221,31 @@ class commentForm extends Disco
 				}
 			}
 		}
+		if (!reason_check_authentication())
+		{
+			if ($this->is_comment_spam())
+			{
+				$this->set_error('comment_content', 'Your comment was rejected because it appears to be spam.');
+			}
+		}
+	}
+	
+	/**
+	 * If we are integrated with askimet lets check this comment to make sure it isn't spam.
+	 */
+	function is_comment_spam()
+	{
+		$akismet_api_key = constant("AKISMET_API_KEY");
+		if (!empty($akismet_api_key))
+		{	
+			include_once( AKISMET_INC . 'Akismet.class.php' );
+			$url = carl_construct_link();
+			$akismet = new Akismet($url, $akismet_api_key);
+			$akismet->setCommentAuthor($this->get_value('author'));
+			$akismet->setCommentContent($this->get_value('comment_content'));
+			return ($akismet->isCommentSpam());
+		}
+		return false;
 	}
 	
 	function post_show_form()
