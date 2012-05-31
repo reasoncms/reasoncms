@@ -1402,7 +1402,9 @@ class PublicationModule extends Generic3Module
 			
 			$form_class = $GLOBALS[ '_publication_post_forms' ][ $identifier ];
 
-			$form = new $form_class($this->site_id, $this->publication, $net_id);
+			$hold_posts_for_review = ($this->publication->get_value('hold_posts_for_review') == 'yes') ? true : false;
+
+			$form = new $form_class($this->site_id, $this->publication, $net_id, $hold_posts_for_review);
 			if(!empty($this->issue_id))
 				$form->set_issue_id($this->issue_id);
 			if(!empty($this->request['section_id']))

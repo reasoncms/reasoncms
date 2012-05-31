@@ -19,7 +19,6 @@ $GLOBALS[ '_publication_post_forms' ][ basename( __FILE__, '.php' ) ] = 'BlogPos
 /**
  * Post submission form
  *
- * @todo actually implement moderation
  */
 class BlogPostSubmissionForm extends Disco
 {
@@ -61,11 +60,12 @@ class BlogPostSubmissionForm extends Disco
 	var $section_id;
 	var $issue_id;
 	
-	function BlogPostSubmissionForm($site_id, $publication, $user_netID)
+	function BlogPostSubmissionForm($site_id, $publication, $user_netID, $hold_posts_for_review)
 	{
 		$this->publication = $publication;
 		$this->site_info = new entity($site_id);
 		$this->user_netID = $user_netID;
+		$this->hold_posts_for_review = $hold_posts_for_review;
 	}
 	
 	function disabled_for_maintenance()
@@ -80,6 +80,11 @@ class BlogPostSubmissionForm extends Disco
 			echo '<p>Posting is temporarily disabled because the website is in maintenance mode. Please try again later.</p>';
 			$this->show_form = false;
 			return false;
+		}
+
+		if($this->hold_posts_for_review)
+		{
+			$this->actions['Submit'] = 'Submit Post (Moderated)';
 		}
 		
 		// nwhite make a nice link that only clears add item and return text that identifies publication type
@@ -243,9 +248,18 @@ class BlogPostSubmissionForm extends Disco
 		{
 			$user_id = $this->site_info->id();
 		}
-				
+		
+		if($this->hold_posts_for_review)
+		{
+			$status = 'pending';
+		}
+		else
+		{
+			$status = 'published';
+		}
+
 		$values = array (
-			'status' => 'Published',
+			'status' => $status,
 			'release_title' => trim(strip_tags($this->get_value('title'))),
 			'author' => trim(strip_tags($this->get_value('author'))),
 			'content' => $content,
@@ -269,6 +283,22 @@ class BlogPostSubmissionForm extends Disco
 			$this->publication->id(),
 			relationship_id_of('news_to_publication')
 		);
+
+		if ($this->successfully_submitted())
+		{
+			
+			if($this->hold_posts_for_review)
+			{
+				echo '<p>Posts are being held for review on this publication. Please check back later to see if your post has been published.</p>';
+				echo '<a href="?">Back to main page</a>';
+			
+			}
+			else
+			{
+				echo '<p>Your post has been published.</p>';
+				echo '<a href="'.carl_construct_redirect(array('story_id'=>$this->new_post_id)).'">View it.</a>';
+			}
+		}
 		
 		if($this->get_value('issue'))
 		{
@@ -297,6 +327,7 @@ class BlogPostSubmissionForm extends Disco
 		}
 		
 		$this->show_form = false;
+
 		$this->do_notifications();
 	}
 	
@@ -308,18 +339,22 @@ class BlogPostSubmissionForm extends Disco
 			$message = 'A post has beeen added to '.strip_tags($this->publication->get_value('name'));
 			$message .= ' on the site '.strip_tags($this->site_info->get_value('name')).'.';
 			$message .= "\n\n";
-			$message .= 'View post:'."\n";
-			$message .= carl_construct_redirect(array('story_id'=>$this->new_post_id));
-			
+
+			if($this->hold_posts_for_review)
+			{
+				$message .= 'This post is currently held for review. Review this post:'."\n\n";
+				$message .= securest_available_protocol().'://'.REASON_WEB_ADMIN_PATH.'?site_id='.$this->site_info->id().'&type_id='.id_of('news').'&id='.$this->new_post_id."\n\n";
+			}
+			else
+			{
+				$message .= 'View post:'."\n\n";
+				$message .= carl_construct_link(array('story_id'=>$this->new_post_id));
+			}
+
 			include_once(TYR_INC.'email.php');
 			$e = new Email($this->publication->get_value('notify_upon_post'), WEBMASTER_EMAIL_ADDRESS, WEBMASTER_EMAIL_ADDRESS, $subject, $message);
 			$e->send();
 		}
-	}
-	
-	function where_to()
-	{
-		return carl_make_redirect(array('add_item' => ''));
 	}
 	
 	function get_issues()
