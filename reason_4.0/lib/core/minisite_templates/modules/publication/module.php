@@ -663,9 +663,19 @@ class PublicationModule extends Generic3Module
 	{
 		$item = new entity($this->current_item_id);
 		if (reason_is_entity($item, 'news'))
-		{	
-			$title = $item->get_value('release_title');
-			$description = $item->get_value('description');
+		{
+			$title = htmlspecialchars(trim(strip_tags($item->get_value('release_title'))),ENT_QUOTES,'UTF-8');
+			$description = htmlspecialchars(trim(str_replace('&nbsp;', '', strip_tags($item->get_value('description')))),ENT_QUOTES,'UTF-8');
+			if (empty($description)) // lets look to the content field if description is missing.
+			{
+				$content = htmlspecialchars(trim(str_replace('&nbsp;', '', strip_tags($item->get_value('content')))),ENT_QUOTES,'UTF-8');
+				if (!empty($content))
+				{
+					$words = explode(' ', $content, 31);
+					unset($words[count($words)-1]);
+					$description = implode(' ', $words).'…';
+				}
+			}
 			$url = $this->construct_permalink($item);
 			if ($teaser = $this->get_teaser_image($item))
 			{
@@ -674,13 +684,13 @@ class PublicationModule extends Generic3Module
 				$image_url = $protocol . '://'.$_SERVER['HTTP_HOST'].reason_get_image_url($teaser, 'thumbnail');
 			}
 			$site = $this->get_site_entity();
-			if ($site) $site_name = $site->get_value('name');
+			if ($site) $site_name = htmlspecialchars(trim(strip_tags($site->get_value('name'))),ENT_QUOTES,'UTF-8');
 			$head_items =& $this->get_head_items();
-			$head_items->add_head_item('meta',array( 'property' => 'og:title', 'content' => htmlspecialchars(strip_tags($title),ENT_QUOTES,'UTF-8')));
-			$head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => htmlspecialchars(strip_tags($description),ENT_QUOTES,'UTF-8')));
-			$head_items->add_head_item('meta',array( 'property' => 'og:url', 'content' => htmlspecialchars(strip_tags($url),ENT_QUOTES,'UTF-8')));
-			if (!empty($image_url)) $head_items->add_head_item('meta',array( 'property' => 'og:image', 'content' => htmlspecialchars(strip_tags($image_url),ENT_QUOTES,'UTF-8')));
-			if (!empty($site_name)) $head_items->add_head_item('meta',array( 'property' => 'og:site_name', 'content' => htmlspecialchars(strip_tags($site_name),ENT_QUOTES,'UTF-8')));
+			$head_items->add_head_item('meta',array( 'property' => 'og:title', 'content' => $title));
+			$head_items->add_head_item('meta',array( 'property' => 'og:url', 'content' => $url));
+			if (!empty($description)) $head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => $description));
+			if (!empty($image_url)) $head_items->add_head_item('meta',array( 'property' => 'og:image', 'content' => $image_url));
+			if (!empty($site_name)) $head_items->add_head_item('meta',array( 'property' => 'og:site_name', 'content' => $site_name));
 		}
 	}
 	
