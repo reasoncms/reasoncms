@@ -676,16 +676,17 @@ class PublicationModule extends Generic3Module
 					$description = implode(' ', $words).'…';
 				}
 			}
-			$url = $this->construct_permalink($item);
+			$url = carl_construct_link(array(''), array('story_id', 'issue_id', 'section_id'));
 			if ($teaser = $this->get_teaser_image($item))
 			{
-				$teaser = reset($teaser);
 				$protocol = (on_secure_page()) ? 'https' : ' http';
-				$image_url = $protocol . '://'.$_SERVER['HTTP_HOST'].reason_get_image_url($teaser, 'thumbnail');
+				$teaser = reset($teaser);
+				$image_url = $protocol . '://'.$_SERVER['HTTP_HOST'].reason_get_image_url($teaser);
 			}
 			$site = $this->get_site_entity();
 			if ($site) $site_name = htmlspecialchars(trim(strip_tags($site->get_value('name'))),ENT_QUOTES,'UTF-8');
 			$head_items =& $this->get_head_items();
+			$head_items->add_head_item('meta',array( 'property' => 'og:type', 'content' => 'article'));
 			$head_items->add_head_item('meta',array( 'property' => 'og:title', 'content' => $title));
 			$head_items->add_head_item('meta',array( 'property' => 'og:url', 'content' => $url));
 			if (!empty($description)) $head_items->add_head_item('meta',array( 'property' => 'og:description', 'content' => $description));
