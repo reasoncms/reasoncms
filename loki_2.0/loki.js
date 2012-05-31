@@ -17263,7 +17263,7 @@ UI.Menu = function()
 				}
 			}
 			
-			add_close_listeners.delay(0.1);
+			add_close_listeners.delay(0.2);
 	
 			// Show menu
 			menu_chunk.style.visibility	= '';
