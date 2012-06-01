@@ -28,7 +28,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 	var $events_page_types = array('events','events_verbose','events_nonav','events_academic_calendar','event_registration','event_slot_registration','events_archive','events_archive_verbose', 'sports_results');
 	var $list_date_format = 'M d';
 	var $passables = array('start_date','textonly','view','category','audience','end_date','search','season');
-	var $season_switch_date = "07-01";
+	var $season_switch_date = "06-01";
 	var $start_date;
 	
 		
