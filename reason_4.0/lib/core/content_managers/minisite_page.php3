@@ -479,7 +479,7 @@ class MinisitePageManager extends parent_childManager
 		return $this->_nav_display_changed;
 	}
 	
-	function process(
+	function process()
 	{
 		//Avoid home pages having url fragments
 		if ($this->get_value( 'id' ) == $this->get_value('parent_id')){
