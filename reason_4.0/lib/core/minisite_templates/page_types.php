@@ -400,6 +400,13 @@
 			),
 			'main_post' => 'blurb',
 		),
+		'blurb_first_sidebar_others_under_navigation' => array(
+			'pre_sidebar' => array(
+				'module' => 'blurb',
+				'num_to_display' => 1,
+			),
+			'sub_nav' => 'blurb',
+		),	
 		'blurb_no_demotion_of_headings' => array(
 			'main_post' => array(
 				'module' => 'blurb',
