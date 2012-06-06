@@ -24,14 +24,24 @@ class ImageSidebarModule extends DefaultMinisiteModule
 	var $images;
 
 	var $acceptable_params = array(
+		// Maximum number of images to display (undefined = all)
 		'num_to_display' => '',
+		// Skip this number of images in the pool before choosing the display set
 		'num_to_skip' => 0,
+		// Show captions with images
 		'caption_flag' => true,
+		// Display images in random order
 		'rand_flag' => false,
+		// SQL order by string to define custom sort
 		'order_by' => '',
+		// Scale images to these proportions (0 = default size)
 		'thumbnail_width' => 0,
 		'thumbnail_height' => 0,
+		// How to crop the image to fit the size requirements; 'fill' or 'fit'
 		'thumbnail_crop' => '',
+		// Set this to display images associated with a page other than the one
+		// the module is running on.
+		'alternate_source_page_id' => '',
 	);
 
 	function init( $args = array() )
@@ -100,16 +110,26 @@ class ImageSidebarModule extends DefaultMinisiteModule
 	
 	function select_images()
 	{
+		if ($this->params['alternate_source_page_id'])
+		{
+			$page_id = $this->params['alternate_source_page_id'];
+			if (!($site_id = get_owner_site_id($page_id)))
+				$site_id = $this->site_id;
+		} else {
+			$page_id = $this->cur_page->id();
+			$site_id = $this->site_id;	
+		}
+		
 		$this->es = new entity_selector();
 		$this->es->description = 'Selecting images for sidebar';
 		$this->es->add_type( id_of('image') );
-		$this->es->set_env( 'site' , $this->site_id );
-		$this->es->add_right_relationship( $this->cur_page->id(), relationship_id_of('minisite_page_to_image') );
+		$this->es->set_env( 'site' , $site_id );
+		$this->es->add_right_relationship( $page_id, relationship_id_of('minisite_page_to_image') );
 		if ($this->params['rand_flag']) $this->es->set_order('rand()');
 		elseif (!empty($this->params['order_by'])) $this->es->set_order($this->params['order_by']);
 		else
 		{
-			$this->es->add_rel_sort_field( $this->cur_page->id(), relationship_id_of('minisite_page_to_image') );
+			$this->es->add_rel_sort_field( $page_id, relationship_id_of('minisite_page_to_image') );
 			$this->es->set_order('rel_sort_order');
 		}
 		if (!empty($this->params['num_to_display'])) $this->es->set_num( (!empty($this->params['num_to_skip'])) ? ($this->params['num_to_display'] + $this->params['num_to_skip']) : $this->params['num_to_display'] );
