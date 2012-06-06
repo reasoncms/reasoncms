@@ -28,13 +28,19 @@
 			$gmaps = $es->run_one();
 			
 			foreach( $gmaps AS $gmap )
-			{			
-				echo '<link href="http://code.google.com/apis/maps/documentation/javascript/examples/default.css" rel="stylesheet" type="text/css">'."\n";
+			{
 
+				//echo '<link href="http://code.google.com/apis/maps/documentation/javascript/examples/default.css" rel="stylesheet" type="text/css">'."\n";
+
+				echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>';
+				if ($gmap->get_value('google_map_show_campus_template') == "yes")
+				{
+					echo '<script type="text/javascript" src="http://knuth.luther.edu/~bantch01/lutherMaps/markers.js"> </script>';
+					echo '<script type="text/javascript" src="http://knuth.luther.edu/~bantch01/lutherMaps/polygons.js"> </script>';
+				}
 				echo '
-				<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 				<script type="text/javascript">
-				
+			
 				function initialize() {
 					var latLng = new google.maps.LatLng('.$gmap->get_value('google_map_latitude').','.$gmap->get_value('google_map_longitude').');
 			        var myOptions = {
@@ -44,11 +50,15 @@
 						mapTypeControl: false,
 						streetViewControl: false
 			        };
-			        var map = new google.maps.Map(document.getElementById(\'map_canvas\'), myOptions);
-			        
+			        var map = new google.maps.Map(document.getElementById(\'map_canvas\'), myOptions);';			        
+			        if ($gmap->get_value('google_map_show_campus_template') == "yes")
+					{
+						echo 'drawCampusTemplate(map);';
+					}
+					echo '
 			        var arrayOfMsids = ["'. preg_replace("|\s|", '","', $gmap->get_value('google_map_msid')) . '"];
 			        var nyLayer = [];
-			        setLayers(arrayOfMsids, nyLayer, map)
+			        setLayers(arrayOfMsids, nyLayer, map);
 				}
 			
 				function setLayers(arrayOfMsids, nyLayer, map) {
@@ -61,6 +71,48 @@
 		        		});
 						nyLayer[i].setMap(map);
 					} 
+				}
+				
+				function drawCampusTemplate(map) {
+					var gmarkers = [];
+					var gpolygons = [];
+	
+					var aColor = "red";
+					var recColor = "blue";
+					var resColor = "yellow";
+					var susColor = "green";
+					var parkColor = "grey";
+					var tempColor = "black";
+	
+					var lutherPolygon;
+					// Creating a POLYGON and positioning it on the map
+					for (polygon in polygonCoords) {
+						var name = polygonCoords[polygon][0];
+						var coords = polygonCoords[polygon][1];
+						var desc = polygonCoords[polygon][2];
+						var cat = polygonCoords[polygon][3];
+						if (cat == "academic") tempColor = aColor;
+						if (cat == "recreational") tempColor = recColor;
+						if (cat == "residential") tempColor = resColor;
+						if (cat == "sustainability") tempColor = susColor;
+						if (cat == "parking") tempColor = parkColor;
+						
+						lutherPolygon = new google.maps.Polygon({
+							paths: coords,
+							map: map,
+							strokeColor: tempColor,
+							strokeOpacity: 0.45,
+							strokeWeight: 0,
+							fillColor: tempColor,
+							fillOpacity: 0.25,
+							polyName: name,
+							polyDesc: desc,
+							category: cat,
+							id: polygon	
+						});
+	
+	  					lutherPolygon.setMap(map);
+					}
 				}
 		
 				google.maps.event.addDomListener(window, \'load\', initialize);			

@@ -25,6 +25,7 @@
 			$this->set_display_name('google_map_latitude', 'Latitude');
 			$this->set_display_name('google_map_longitude', 'Longitude');
 			$this->set_display_name('google_map_msid', 'Map ID');
+			$this->set_display_name('google_map_show_campus_template', 'Show Campus Template');
 			
 			//$this->change_element_type('google_map_latitude', 'hidden');
 			//$this->change_element_type('google_map_longitude', 'hidden');
