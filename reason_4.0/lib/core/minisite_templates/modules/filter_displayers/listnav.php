@@ -16,6 +16,14 @@ $GLOBALS['_reason_filter_displayers'][basename(__FILE__)] = 'listNavFilterDispla
 class listNavFilterDisplay extends defaultFilterDisplay
 {
 	/**
+	 * Avoid adding unnecessary javascript
+	 * @access public
+	 */
+	function set_head_items()
+	{
+		// intentionally left blank
+	}
+	/**
 	 * Assemble the markup for the relationship filtering interface
 	 * @return string
 	 * @access private
@@ -83,7 +91,7 @@ class listNavFilterDisplay extends defaultFilterDisplay
 							$link .= $combined_other_filter_links.'&amp;';
 						if(!empty($this->search_value))
 							$link .= 'search='.urlencode($this->search_value).'&amp;';
-						$link .= 'filters['.$key.'][type]='.$filter_name.'&amp;filters['.$key.'][id]='.$entity->id();
+						$link .= 'filter'.$key.'='.$filter_name.'-'.$entity->id();
 						if (!empty($this->textonly))
 							$link .= '&amp;textonly=1';
 						$ret .= '<a href="'.$link.'">'.$entity->get_value('name').'</a>'."\n";
