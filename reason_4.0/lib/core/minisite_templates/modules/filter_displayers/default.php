@@ -209,6 +209,28 @@ class defaultFilterDisplay
 		$this->filter_entities = $filter_entities;
 	}
 	/**
+	 * Sets appropriate head items in the filter displayer's parent module
+	 * @access public
+	 */
+	function set_head_items()
+	{
+		if($head_items =& $this->module_ref->get_head_items())
+		{
+		  $head_items->add_javascript(WEB_JAVASCRIPT_PATH.'modules/filter_displayer.js');
+		  $head_items->add_javascript(JQUERY_URL, true);
+		  $this->set_additional_head_items($head_items);
+		}
+		
+	}
+	/**
+	 * To be extended if child filter displayers need to add other head items of their own.
+	 * @access public
+	 */
+	function set_additional_head_items($head_items)
+	{
+		
+	}
+	/**
 	 * Get the markup for the freetext search interface
 	 * @return string
 	 * @access public
@@ -245,13 +267,12 @@ class defaultFilterDisplay
 		$ret .= '<form method="get" action="?" class="searchForm" >'."\n";
 		foreach($this->filters as $key=>$vals)
 		{
-			$ret .= '<input type="hidden" name="filters['.htmlspecialchars($key,ENT_QUOTES, 'UTF-8').'][type]" value="'.htmlspecialchars($vals['type'],ENT_QUOTES, 'UTF-8').'">';
-			$ret .= '<input type="hidden" name="filters['.htmlspecialchars($key,ENT_QUOTES, 'UTF-8').'][id]" value="'.htmlspecialchars($vals['id'],ENT_QUOTES, 'UTF-8').'">';
+			$ret .= '<input type="hidden" name= "filter'.htmlspecialchars($key,ENT_QUOTES,"UTF-8").'" value="'.htmlspecialchars($vals['type'],ENT_QUOTES,"UTF-8").'-'.htmlspecialchars($vals['id'],ENT_QUOTES,"UTF-8").'">';
 		}
 		if (!empty($this->textonly))
 			$ret .= '<input type="hidden" name="textonly" value="1">';
 		$id = 'filterSearch'.$this->counter();
-		$ret .= '<label for="'.$id.'">Search:</label> <input name="search" value="'.$v.'" size="'.$this->search_field_size.'" class="search" id="'.$id.'" />'."\n";
+		$ret .= '<label for="'.$id.'">Search:</label> <input name="search" value="'.$v.'" size="'.htmlspecialchars($this->search_field_size,ENT_QUOTES,"UTF-8").'" class="search" id="'.$id.'" />'."\n";
 		$ret .= ' <input class="submit" name="go" type="submit" value="Go" />'."\n";
 		if(!empty($this->search_value))
 		{
@@ -285,15 +306,11 @@ class defaultFilterDisplay
 		if(!empty($this->filter_types) && !empty($this->filter_entities))
 		{
 			
-			$ret .= '<script language="JavaScript" type="text/javascript">
-			<!--
-				function MM_jumpMenu(targ,selObj,restore){ //v3.0
-				  eval(targ+".location=\'"+selObj.options[selObj.selectedIndex].value+"\'");
-				  if (restore) selObj.selectedIndex=0;
-				}
-			//-->
-			</script>';
 			$ret .= '<form method="get" action="?" class="relFilters">'."\n";
+			if(!empty($this->search_value))
+			{
+				$ret .= '<input type="hidden" name="search" value="'.htmlspecialchars($this->search_value,ENT_QUOTES,"UTF-8").'">';
+			}
 			if(count($this->filter_types) != 1)
 				$ret .= 'Browse by '.implode('/',array_keys($this->filter_types)).':'."\n";
 			foreach($this->filters as $key=>$values)
@@ -328,8 +345,8 @@ class defaultFilterDisplay
 		unset($other_filter_links[$key]);
 		$combined_other_filter_links = implode('&amp;',$other_filter_links);
 	
-		$ret .= '<div class="filterSet"">';
-		$ret .= '<select name="filter_'.$key.'" onChange="MM_jumpMenu(\'parent\',this,0)">'."\n";
+		$ret .= '<div class="filterSet">';
+		$ret .= '<select class="filterSelect" name="filter'.htmlspecialchars($key,ENT_QUOTES,"UTF-8").'">'."\n";
 		if(empty($this->filters[$key]))
 		{
 			if(empty($this->filters))
@@ -351,14 +368,17 @@ class defaultFilterDisplay
 					$ret .= '<option value="" class="type">'.prettify_string($filter_name).'</option>'."\n";
 				foreach($this->filter_entities[$filter_name] as $entity)
 				{
-					$link = '?';
+					/** To move to hidden variables:					
+
+					
 					if(!empty($other_filter_links))
 						$link .= $combined_other_filter_links.'&amp;';
 					if(!empty($this->search_value))
 						$link .= 'search='.urlencode($this->search_value).'&amp;';
-					$link .= 'filters['.htmlspecialchars($key,ENT_QUOTES,'UTF-8').'][type]='.htmlspecialchars($filter_name,ENT_QUOTES,'UTF-8').'&amp;filters['.htmlspecialchars($key,ENT_QUOTES,'UTF-8').'][id]='.htmlspecialchars($entity->id(),ENT_QUOTES,'UTF-8');
 					if (!empty($this->textonly))
 						$link .= '&amp;textonly=1';
+					**/
+					$link = urlencode($filter_name)."-".urlencode($entity->id());
 					if(!empty($this->filters[$key]) && $this->filters[$key]['type'] == $filter_name && $this->filters[$key]['id'] == $entity->id())
 						$add = ' selected="selected"';
 					else
@@ -378,6 +398,7 @@ class defaultFilterDisplay
 				$link .= $combined_other_filter_links;
 			$ret .= ' <a href="'.$link.'" title="Remove this filter">Remove</a>'."\n";
 		}
+		$ret .= '<input type="submit" class="FilterSubmit" value="Go">';
 		$ret .= '</div>'."\n";
 		return $ret;
 	}
