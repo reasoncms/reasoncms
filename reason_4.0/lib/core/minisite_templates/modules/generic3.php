@@ -120,6 +120,9 @@
 			'page' => array('function' => 'turn_into_int'),
 			'textonly' => array('function' => 'turn_into_string'),
 			'add_item' => array('function' => 'turn_into_string'),
+			'filter1' => array('function' => 'turn_into_string'),
+			'filter2' => array('function' => 'turn_into_string'),
+			'filter3' => array('function' => 'turn_into_string')
 		);
 		// Empty result settings
 		var $no_items_text = 'There are no items available.';
@@ -749,8 +752,7 @@
 					// only add if both type and id are present
 					if (!empty($vals['type']) && !empty($vals['id']))
 					{
-						$link_frags[ 'filters['.$key.'][type]' ] = $vals['type'];
-						$link_frags[ 'filters['.$key.'][id]' ] = $vals['id'];
+						$link_frags[ 'filter'.$key ] = $vals['type'].'-'.$vals['id'];
 					}
 				}
 				if(!empty($this->request['search']))
@@ -821,14 +823,159 @@
 		//Called on by init()
 		function do_filtering()
 		{
+			$this->get_filters_from_url();
 			$this->do_filters_rels();
 			$this->do_filters_search();
+			$this->get_filter_displayer();
 		}
+		function get_filter_displayer()
+		{
+			if(empty($this->_fd))
+			{
+				reason_include_once('minisite_templates/modules/filter_displayers/'.$this->params['filter_displayer']);
+				$class = $GLOBALS['_reason_filter_displayers'][$this->params['filter_displayer']];
+				
+				if(empty($class) && !class_exists($class))
+					trigger_error('The filter displayer specified ('.$this->params['filter_displayer'].') is not properly registered in $GLOBALS[\'_reason_filter_displayers\']['.$this->params['filter_displayer'].']. Please set this to the filter class name.', HIGH);
+				
+				$this->_fd = new $class();
+				$this->_fd->set_module_ref($this);
+				$this->_fd->set_head_items();
+			}
+			else
+			{
+				return $this->_fd;
+			}
+		}
+
+		function get_filter_entities()
+		{
+			if(empty($this->filter_entities))
+			{
+				foreach($this->filter_types as $filter_name=>$filter_type)
+				{
+					$r_id = false;
+					if(empty($filter_type['relationship'])) trigger_error($filter_type['type'].' does not have a relationship name specified');
+					else
+					{
+						$r_id = relationship_id_of($filter_type['relationship']);
+						if (!$r_id) trigger_error($filter_type['relationship'] . ' is not a valid allowable relationship');
+					}
+					$es = new entity_selector($this->parent->site_id);
+					$es->add_type(id_of($filter_type['type']));
+					$es->set_order('entity.name ASC');
+					$filter_entities = $es->run_one();
+					
+					if(!empty($filter_entities))
+					{
+						// check to make sure the relationship filtering makes sense for each item
+						if($this->params['limit_to_current_site'])
+						{
+							$setup_es = new entity_selector($this->parent->site_id);
+						}
+						else
+						{
+							$setup_es = new entity_selector();
+						}
+						$setup_es->add_type( $this->type );
+						$setup_es->set_env('site_id',$this->parent->site_id);
+						$setup_es = $this->alter_relationship_checker_es($setup_es);
+						$setup_es->set_num(1);
+						foreach($filter_entities as $key=>$filter)
+						{
+							$es = carl_clone($setup_es);
+							$es->add_left_relationship( $filter->id(), $r_id );
+							$results = $es->run_one();
+							if(empty($results))
+							{
+								unset($filter_entities[$key]);
+							}
+							$results = array();
+						}
+						if(!empty($filter_entities))
+						{
+							$this->filter_entities[$filter_name] = $filter_entities;
+						}
+					}
+				}
+				ksort($this->filter_entities[$filter_name]);
+				return $this->filter_entities;
+			}
+			else
+			{
+				return $this->filter_entities;
+			}
+			
+		}
+		function get_filters_from_url()
+		{
+			if(isset($this->request['filters']))
+			{
+				$this->_redirect_from_old_url($this->request);
+			}
+			else
+			{
+				$this->filters = $this->_convert_url_to_filter_array($this->request);
+			}
+		}
+
+		function _redirect_from_old_url($request)
+		{
+			foreach( $this->request as $key => $vals)
+			{
+				
+				if( $key == 'filters')
+				{
+					foreach($vals as $filter_key => $filter)
+					$redirect_params['filter'.$filter_key] = $filter['type'].'-'.$filter['id'];
+				} 
+				else
+				{
+					$redirect_params[$key] = $vals;
+				}
+				
+			}
+			$redirect_link = carl_construct_redirect($redirect_params);
+			header('Location: ' . $redirect_link);
+			exit;
+		}
+
+		function _convert_url_to_filter_array($request)
+		{
+			$filters = array();
+			$i = 1;
+			foreach ($request as $key => $value) 
+			{
+				if (!empty($value) & substr($key, 0, 6) == "filter")
+				{
+					$key = explode("-",$value);
+					$id = array_pop($key);
+					$key = implode("-",$key);
+					$filter = array('type'=>$key,'id'=>$id);
+					$filters[$i] = $filter;
+					$i = $i + 1;
+				}
+			}
+			return $filters;
+
+		}
+
 		function do_filters_rels()
 		{
-			if(!empty($this->request['filters']))
+			
+			$filter_entities = $this->get_filter_entities();
+
+			foreach($this->filters as $key => $values)
 			{
-				$this->filters = $this->request['filters'];
+				 if(!isset($filter_entities[$values['type']][$values['id']]))
+				 {
+					header('HTTP/1.0 404 Not Found');
+					unset($this->filters[$key]);
+				 }
+			}
+
+			if($this->filters)
+			{
 				if (count($this->filters) > $this->params['max_filters'])
 				{
 					$redirect_link = carl_make_redirect(array('filters' => ''));
@@ -844,6 +991,8 @@
 						if(empty($this->filter_types[$filter['type']]['relationship']))
 						{
 							trigger_error($filter['type'].' does not have a relationship name specified');
+							unset($this->filters[$key]);
+							header('HTTP/1.0 404 Not Found');
 						}
 						else
 						{
@@ -856,14 +1005,15 @@
 						else
 						{
 							trigger_error($filter['type'].' is not a valid allowable relationship');
-							//$this->es->add_left_relationship( $filter['id'] );
+							unset($this->filters[$key]);
+							header('HTTP/1.0 404 Not Found');
 						}
 					}
 					else
 					{
 						// filter request is malformed - googlebot may have lots of these - we will send a redirect with no filters
-						$redirect_link = carl_make_redirect(array('filters' => ''));
-						header('Location: ' . $redirect_link);
+						unset($this->filters[$key]);
+						header('HTTP/1.0 404 Not Found');
 						exit;
 					}
 				}
@@ -1004,63 +1154,16 @@
 		}
 		function get_filter_markup()
 		{
-			foreach($this->filter_types as $filter_name=>$filter_type)
-			{
-				$r_id = false;
-				if(empty($filter_type['relationship'])) trigger_error($filter_type['type'].' does not have a relationship name specified');
-				else
-				{
-					$r_id = relationship_id_of($filter_type['relationship']);
-					if (!$r_id) trigger_error($filter_type['relationship'] . ' is not a valid allowable relationship');
-				}
-				$es = new entity_selector($this->parent->site_id);
-				$es->add_type(id_of($filter_type['type']));
-				$es->set_order('entity.name ASC');
-				$filter_entities = $es->run_one();
-				if(!empty($filter_entities))
-				{
-					// check to make sure the relationship filtering makes sense for each item
-					if($this->params['limit_to_current_site'])
-					{
-						$setup_es = new entity_selector($this->parent->site_id);
-					}
-					else
-					{
-						$setup_es = new entity_selector();
-					}
-					$setup_es->add_type( $this->type );
-					$setup_es->set_env('site_id',$this->parent->site_id);
-					$setup_es = $this->alter_relationship_checker_es($setup_es);
-					$setup_es->set_num(1);
-					foreach($filter_entities as $key=>$filter)
-					{
-						$es = carl_clone($setup_es);
-						$es->add_left_relationship( $filter->id(), $r_id );
-						$results = $es->run_one();
-						if(empty($results))
-						{
-							unset($filter_entities[$key]);
-						}
-						$results = array();
-					}
-					if(!empty($filter_entities))
-					{
-						$this->filter_entities[$filter_name] = $filter_entities;
-					}
-				}
-			}
-			ksort($this->filters);
+			
 			
 			foreach($this->filters as $key=>$values)
 			{
 				$this->build_default_links($key);
 			}
 			
-			reason_include_once('minisite_templates/modules/filter_displayers/'.$this->params['filter_displayer']);
 			if(!empty($GLOBALS['_reason_filter_displayers'][$this->params['filter_displayer']]))
 			{
-				$class = $GLOBALS['_reason_filter_displayers'][$this->params['filter_displayer']];
-				$fd = new $class();
+				$fd = $this->get_filter_displayer();
 				$fd->set_type($this->type);
 				$fd->set_filter_types($this->filter_types);
 				$fd->set_filters($this->filters);
@@ -1080,7 +1183,6 @@
 				}
 				$fd->set_default_links($this->default_links);
 				$fd->set_filter_entities($this->filter_entities);
-				$fd->set_module_ref($this);
 				$ret = array();
 				$ret['search'] = $fd->get_search_interface();
 				$ret['filter'] = $fd->get_filter_interface();
@@ -1100,7 +1202,7 @@
 		function build_default_links($key)
 		{
 			$keyquot = htmlspecialchars($key,ENT_QUOTES,'UTF-8');
-			$this->default_links[$key] = 'filters['.$keyquot.'][type]='.htmlspecialchars($this->filters[$key]['type'],ENT_QUOTES,'UTF-8').'&amp;filters['.$keyquot.'][id]='.htmlspecialchars($this->filters[$key]['id'],ENT_QUOTES,'UTF-8');
+			$this->default_links[$key] = 'filter'.$keyquot.'='.htmlspecialchars($this->filters[$key]['type'],ENT_QUOTES,'UTF-8').'-'.htmlspecialchars($this->filters[$key]['id'],ENT_QUOTES,'UTF-8');
 		}
 		
 		function show_feed_link()
