@@ -130,7 +130,7 @@
 		var $use_filters = false;
 		var $filter_types = array();
 		var $filters = array();
-		var $filter_entities = array();
+		var $filter_entities;
 		var $search_fields = array('entity.name');
 		var $default_links = array();
 		var $search_field_size = 20;
@@ -850,8 +850,9 @@
 
 		function get_filter_entities()
 		{
-			if(empty($this->filter_entities))
+			if(is_null($this->filter_entities))
 			{
+				$this->filter_entities = array();
 				foreach($this->filter_types as $filter_name=>$filter_type)
 				{
 					$r_id = false;
@@ -898,13 +899,10 @@
 						}
 					}
 				}
-				ksort($this->filter_entities[$filter_name]);
-				return $this->filter_entities;
+				ksort($this->filter_entities);
 			}
-			else
-			{
-				return $this->filter_entities;
-			}
+			
+			return $this->filter_entities;
 			
 		}
 		function get_filters_from_url()
