@@ -128,7 +128,7 @@
 		
 		function on_every_time_default()
 		{	
-			$this->remove_element('id');
+			$this->change_element_type('id','cloaked');
 			$connection_description = '<h4>Connection Definitions</h4><dl>';
 			$connection_description .= '<dt>Many to Many</dt><dd>Both entities A and B may have more than one relationship of this type</dd>';
 			$connection_description .= '<dt>Many to One</dt><dd>Entity B may not have more than one relationship of this type, but entity A may be related to multiple entities B.</dd>';
@@ -267,7 +267,7 @@
 		
 		function name_uniqueness_check()
 		{
-			if (reason_relationship_name_exists($this->get_value('name'))) return false;
+			if (reason_relationship_name_exists($this->get_value('name')) && relationship_id_of($this->get_value('name')) != $this->get_value('id') ) return false;
 			else return true;
 		}
 	}
