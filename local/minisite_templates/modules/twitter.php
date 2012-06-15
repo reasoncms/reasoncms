@@ -45,7 +45,7 @@
 			{
 				if ($theme->get_value( 'name' ) == 'luther2010')
 				{
-					echo '<script src="http://widgets.twimg.com/j/2/widget.js"></script>'."\n";
+					echo '<script src="//widgets.twimg.com/j/2/widget.js"></script>'."\n";
 					echo '<section class="twitter-feed group" role="group">'."\n";
 					echo '<header class="blue-stripe"><h1><span>Recent Tweets</span></h1></header>'."\n";
 					echo '<script>'."\n";
@@ -83,7 +83,7 @@
 				else
 				{
 					echo '<div id="twtr-profile-widget">'."\n";
-					echo '<script src="http://widgets.twimg.com/j/2/widget.js"></script>'."\n";
+					echo '<script src="//widgets.twimg.com/j/2/widget.js"></script>'."\n";
 					echo '<script>'."\n";
 					echo 'new TWTR.Widget({
 		  				version: 2,
