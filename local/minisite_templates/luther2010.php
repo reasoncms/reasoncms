@@ -487,12 +487,17 @@ class LutherTemplate2010 extends MinisiteTemplate
 		{
 			$s = 'sports';
 		}
+		elseif (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/admissions\/?/", $url))
+		{
+			$s = 'admissions';
+		}
 		
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
 		{
 			return '<body id="home" class="style-home-00">'."\n";
 		}
-		else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+		else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_carousel'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
@@ -554,7 +559,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 
 	function has_related_section()
 	{
-        if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+        if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+        	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_carousel'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home'
