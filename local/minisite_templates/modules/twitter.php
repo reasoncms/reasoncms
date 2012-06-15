@@ -11,7 +11,6 @@
 		}
 		function has_content()
 		{
-			//return true;
 			$site_id = $this->site_id;
 			$es = new entity_selector( $site_id );
 			$es->add_type( id_of( 'twitter_feed_type' ) );
