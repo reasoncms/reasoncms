@@ -127,9 +127,7 @@
 			$this->set_element_properties( 'content' , array('rows' => 8));
 			
 			// Limit number of characters that can be entered for short/long caption
-			$limiter = new DiscoInputLimiter($this);
-		    $limiter->limit_field('description', 100);
-		    $limiter->limit_field('content', 250);   
+			$this->limit_input_lengths();
 			
 			
 			/* 
@@ -140,6 +138,13 @@
 			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH .'content_managers/image_manager.js');
 			$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH .'css/reason_admin/content_managers/image.css');
 		} // }}}
+		
+		function limit_input_lengths()
+		{
+			$limiter = new DiscoInputLimiter($this);
+		    $limiter->limit_field('description', 100);
+		    $limiter->limit_field('content', 500);
+		}
 		
 		function on_every_time() // {{{
 		{
