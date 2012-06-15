@@ -29,10 +29,6 @@
 			$site_id = $this->site_id;
 			$theme = get_theme($this->site_id);
 			
-			//$es = new entity_selector( $site_id );
-			//$es->add_type( id_of( 'twitter_feed_type' ) );
-			//$twitter_info = $es->run_one();
-			
 			$site_id = $this->site_id;
 			$es = new entity_selector( $site_id );
 			$es->add_type( id_of( 'twitter_feed_type' ) );
