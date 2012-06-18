@@ -40,6 +40,7 @@
 			$url = get_current_url();
 			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
@@ -50,7 +51,8 @@
 				{
 					echo '<header class="blue-stripe"><h1><span>Exhibitions</span></h1></header>'."\n";
 				}
-				else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+				else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+					|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
 				{
 					echo '<header class="red-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";
 				}
@@ -64,6 +66,7 @@
 			echo "<div id=\"gallerycontainer\">\n";
 			if ($this->cur_page->get_value( 'custom_page' ) != 'flickr_slideshow_sidebar'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_admissions'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information'
@@ -183,6 +186,7 @@
 			echo "</div>   <!-- id=\"gallery\"-->\n";
 			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
