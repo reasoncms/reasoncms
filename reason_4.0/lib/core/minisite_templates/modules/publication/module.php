@@ -679,7 +679,7 @@ class PublicationModule extends Generic3Module
 			$url = carl_construct_link(array(''), array('story_id', 'issue_id', 'section_id'));
 			if ($teaser = $this->get_teaser_image($item))
 			{
-				$protocol = (on_secure_page()) ? 'https' : ' http';
+				$protocol = (on_secure_page()) ? 'https' : 'http';
 				$teaser = reset($teaser);
 				$image_url = $protocol . '://'.$_SERVER['HTTP_HOST'].reason_get_image_url($teaser);
 			}
