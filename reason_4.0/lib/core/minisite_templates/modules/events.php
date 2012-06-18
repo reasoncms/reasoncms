@@ -2877,7 +2877,7 @@ class EventsModule extends DefaultMinisiteModule
 		}
 		else
 		{
-			echo 'Add to your calendar: <a href="'.$this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>$this->request['date'])).'">This occurence</a> | <a href="'.$this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>'')).'">All occurrences</a>';
+			echo 'Add to your calendar: <a href="'.$this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>$this->request['date'])).'">This occurrence</a> | <a href="'.$this->construct_link(array('event_id'=>$e->id(),'format'=>'ical','date'=>'')).'">All occurrences</a>';
 		}
 		echo '</div>'."\n";
 	}
