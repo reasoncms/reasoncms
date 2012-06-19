@@ -2238,6 +2238,8 @@ class PublicationModule extends Generic3Module
 		function show_style_string()
 		{
 			$class_string = ($this->related_mode) ? 'relatedPub' : 'publication';
+			if(!empty( $this->current_item_id ) )
+				$class_string .= ' fullPostDisplay';
 			echo '<div id="'.$this->style_string.'" class="'.$class_string.'">'."\n";
 		}
 		
