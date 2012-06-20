@@ -13,6 +13,7 @@ $head_content = "
 <html>
 <head>
 <title>Reason Setup</title>
+<link rel='stylesheet' href='css/reason_setupgrade/reason_setupgrade.css' type='text/css'>
 <style>
 .error
 {
@@ -25,7 +26,7 @@ color: green;
 </style>
 </head>
 <body>
-<h2>Reason Setup</h2>";
+<h1>Reason Setup</h1>";
 $curl_test_content = $head_content . '</body></html>';
 if (isset($_GET['curl_test']))
 {
@@ -34,16 +35,16 @@ if (isset($_GET['curl_test']))
 }
 else echo $head_content;
 
-$fix_mode_enabled = 1;
-$fix_mode_link = ($fix_mode_enabled) ? ' Enabled (<a href="?fixmode=false">disable</a>)' : ' Disabled (<a href="?fixmode=true">enable</a>)';
+$auto_mode_enabled = (!empty($_REQUEST['automode']) && ($_REQUEST['automode'] == 'false')) ? false : true;
+$auto_mode_link = ($auto_mode_enabled) ? ' Enabled (<a href="?automode=false">disable</a>)' : ' Disabled (<a href="?automode=true">enable</a>)';
 ?>
 
 <p>This script should be run after you have configured your server. It will verify the Reason environment, perform a variety of checks for Reason utilities, confirm file paths and permissions, 
 and then setup the first site and user for your instance. While the script may provide enough help to get you going, you may also consult 
 the <a href="./install.htm">Reason Install Documentation</a>.</p>
-<h3>"Auto" Mode is <?php echo $fix_mode_link ?></h3>
+<h3>"Auto" Mode is <?php echo $auto_mode_link ?></h3>
 <hr />
-<p>Formerly know as fix mode, auto mode will try to resolve easy to fix installation problems. Specifically, it will do the following:
+<p>Auto mode will try to resolve easy to fix installation problems. Specifically, it will do the following:
 <ul>
 <li>Create symbolic links for thor, loki, flvplayer, date picker, and jquery, from the web tree to the proper locations in reason_package</li>
 <li>Create data directories in the locations specified in settings files if those directories do not exist</li>
@@ -510,10 +511,10 @@ function perform_checks()
 
 function check_reason_package_http_base_path()
 {
-	global $fix_mode_enabled;
+	global $auto_mode_enabled;
 	$fixed_str = '';
 	$accessible = check_accessible_over_http(REASON_PACKAGE_HTTP_BASE_PATH . 'colorpicker/README.html', 'Farbtastic');
-	if (!$accessible && $fix_mode_enabled) // lets try to repair this
+	if (!$accessible && $auto_mode_enabled) // lets try to repair this
 	{
 		// if INCLUDE_PATH/www is readable
 		if (is_readable(INCLUDE_PATH.'www/') && function_exists('symlink'))
@@ -522,27 +523,27 @@ function check_reason_package_http_base_path()
 			if (is_writable(dirname($symlink_loc))) symlink(INCLUDE_PATH.'www/', $symlink_loc);
 		}
 		$accessible = check_accessible_over_http(REASON_PACKAGE_HTTP_BASE_PATH . 'colorpicker/README.html', 'Farbtastic');
-		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
+		$fixed_str = ($accessible) ? ' was fixed using auto mode and' : ' could not be fixed using auto mode and';
 	}
 	if ($accessible) return msg('<span class="success">the reason_package_http_base_path '.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
-		$fix_mode_str = ($fix_mode_enabled) 
-				? ' Fix mode may have failed because PHP was unable to create symlinks.'
-				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
+		$auto_mode_str = ($auto_mode_enabled) 
+				? ' Auto mode may have failed because PHP was unable to create symlinks.'
+				: ' <strong><a href="?automode=true">Try auto mode</a> - it will try to create symlinks for you.</strong>';
 		$path = carl_construct_link(array(''), array(''), REASON_PACKAGE_HTTP_BASE_PATH . 'colorpicker/README.html');
 		return msg('<span class="error">the reason_package_http_base_path '.$fixed_str.' is not accessible over http</span>.<p>The URL attempted was ' . $path . '. It should return
 					a page that contains the string "Farbtastic." You may need to set REASON_PACKAGE_HTTP_BASE_PATH equal to "/reason_package/", and create a symlink at ' . WEB_PATH . 
-					'reason_package/ to ' . INCLUDE_PATH.'www/.' . $fix_mode_str . ' Consult the install documentation for more details.</p>', false);
+					'reason_package/ to ' . INCLUDE_PATH.'www/.' . $auto_mode_str . ' Consult the install documentation for more details.</p>', false);
 	}
 }
 
 function check_thor_accessible_over_http()
 {
-	global $fix_mode_enabled;
+	global $auto_mode_enabled;
 	$fixed_str = '';
 	$accessible = check_accessible_over_http(THOR_HTTP_PATH . 'getXML.php', 'tmp_id');
-	if (!$accessible && $fix_mode_enabled) // lets try to repair this
+	if (!$accessible && $auto_mode_enabled) // lets try to repair this
 	{
 		// if THOR_INC is readable
 		if (is_readable(THOR_INC) && function_exists('symlink'))
@@ -551,29 +552,29 @@ function check_thor_accessible_over_http()
 			if (is_writable(dirname($symlink_loc))) symlink(THOR_INC, $symlink_loc);
 		}
 		$accessible = check_accessible_over_http(THOR_HTTP_PATH . 'getXML.php', 'tmp_id');
-		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
+		$fixed_str = ($accessible) ? ' was fixed using auto mode and' : ' could not be fixed using auto mode and';
 	}
 	if ($accessible) return msg('<span class="success">thor'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
-		$fix_mode_str = ($fix_mode_enabled) 
-				? ' Fix mode may have failed because PHP was unable to create symlinks.'
-				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
+		$auto_mode_str = ($auto_mode_enabled) 
+				? ' Auto mode may have failed because PHP was unable to create symlinks.'
+				: ' <strong><a href="?automode=true">Try auto mode</a> - it will try to create symlinks for you.</strong>';
 		$path = carl_construct_link(array(''), array(''), THOR_HTTP_PATH . 'getXML.xml');
 		return msg('<span class="error">thor'.$fixed_str.' is not accessible over http</span>.<p>The URL attempted was ' . $path . '. It should return
 					a page that contains the string "tmp_id." You may need to set THOR_HTTP_PATH equal to "/thor/", and create a symlink at ' . WEB_PATH . 
 					'thor/ to ' . THOR_INC.'. Future revisions to thor should make this more flexible, but for the moment you need the symlink in your web 
-					root to the thor directory.' . $fix_mode_str . ' Consult the install documentation for more details.</p>', false);
+					root to the thor directory.' . $auto_mode_str . ' Consult the install documentation for more details.</p>', false);
 	}
 }
 
 function check_loki_accessible_over_http()
 {
-	global $fix_mode_enabled;
+	global $auto_mode_enabled;
 	$fixed_str = '';
 	$path = carl_construct_link(array(''), array(''), LOKI_2_HTTP_PATH . 'loki.js');
 	$accessible = check_accessible_over_http($path, 'loki-editor');
-	if (!$accessible && $fix_mode_enabled) // lets try to repair this
+	if (!$accessible && $auto_mode_enabled) // lets try to repair this
 	{
 		// if LOKI_2_INC - strip off the helpers/php part
 		if (is_readable(LOKI_2_INC) && (strpos(LOKI_2_INC, 'helpers/php') !== FALSE) && function_exists('symlink'))
@@ -584,27 +585,27 @@ function check_loki_accessible_over_http()
 			if (is_writable(dirname($symlink_loc))) symlink($my_loki_path, $symlink_loc);
 		}
 		$accessible = check_accessible_over_http($path, 'loki-editor');
-		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
+		$fixed_str = ($accessible) ? ' was fixed using auto mode and' : ' could not be fixed using auto mode and';
 	}
 	if ($accessible) return msg('<span class="success">loki 2'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
-		$fix_mode_str = ($fix_mode_enabled) 
-				? ' Fix mode may have failed because PHP was unable to create symlinks.'
-				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
+		$auto_mode_str = ($auto_mode_enabled) 
+				? ' Auto mode may have failed because PHP was unable to create symlinks.'
+				: ' <strong><a href="?automode=true">Try auto mode</a> - it will try to create symlinks for you.</strong>';
 		return msg('<span class="error">loki 2'.$fixed_str.' is not accessible over http</span>.
 					<p>The URL attempted to verify loki was ' . $path . '. Check the constant LOKI_2_HTTP_PATH, 
 					which currently is set to ' . LOKI_2_HTTP_PATH . ' and make sure it correctly references the 
-					Loki 2 directory.' . $fix_mode_str . ' Consult the install documentation for more details.</p>', false);
+					Loki 2 directory.' . $auto_mode_str . ' Consult the install documentation for more details.</p>', false);
 	}
 }
 
 function check_jquery_accessible_over_http()
 {
-	global $fix_mode_enabled;
+	global $auto_mode_enabled;
 	$fixed_str = '';
 	$accessible = check_accessible_over_http(JQUERY_URL, 'John Resig');
-	if (!$accessible && $fix_mode_enabled) // lets try to repair this
+	if (!$accessible && $auto_mode_enabled) // lets try to repair this
 	{
 		// if JQUERY_INC is readable
 		if (is_readable(JQUERY_INC) && function_exists('symlink'))
@@ -613,27 +614,27 @@ function check_jquery_accessible_over_http()
 			if (is_writable(dirname($symlink_loc))) symlink(JQUERY_INC, $symlink_loc);
 		}
 		$accessible = check_accessible_over_http(JQUERY_URL, 'John Resig');
-		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
+		$fixed_str = ($accessible) ? ' was fixed using auto mode and' : ' could not be fixed using auto mode and';
 	}
 	if ($accessible) return msg('<span class="success">jQuery'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
-		$fix_mode_str = ($fix_mode_enabled) 
-				? ' Fix mode may have failed because PHP was unable to create symlinks.'
-				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
+		$auto_mode_str = ($auto_mode_enabled) 
+				? ' Auto mode may have failed because PHP was unable to create symlinks.'
+				: ' <strong><a href="?automode=true">Try auto mode</a> - it will try to create symlinks for you.</strong>';
 		return msg('<span class="error">jQuery'.$fixed_str.' is not accessible over http</span>.
 				   <p>The URL attempted was ' . JQUERY_URL . ' Check the URL and make sure it exists and is
 				   web accessible. If there is a problem, please modify the JQUERY_URL constant to reference
-				   the correct path for jquery.'.$fix_mode_str.' Consult the install documentation for more details.</p>', false);
+				   the correct path for jquery.'.$auto_mode_str.' Consult the install documentation for more details.</p>', false);
 	}
 }
 
 function check_flvplayer_accessible_over_http()
 {
-	global $fix_mode_enabled;
+	global $auto_mode_enabled;
 	$fixed_str = '';
 	$accessible = check_accessible_over_http(FLVPLAYER_HTTP_PATH . 'playlist.xml', 'Jeroen Wijering');
-	if (!$accessible && $fix_mode_enabled) // lets try to repair this
+	if (!$accessible && $auto_mode_enabled) // lets try to repair this
 	{
 		// if FLVPLAYER_INC is readable
 		if (is_readable(FLVPLAYER_INC) && function_exists('symlink'))
@@ -642,28 +643,28 @@ function check_flvplayer_accessible_over_http()
 			if (is_writable(dirname($symlink_loc))) symlink(FLVPLAYER_INC, $symlink_loc);
 		}
 		$accessible = check_accessible_over_http(FLVPLAYER_HTTP_PATH . 'playlist.xml', 'Jeroen Wijering');
-		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
+		$fixed_str = ($accessible) ? ' was fixed using auto mode and' : ' could not be fixed using auto mode and';
 	}
 	if ($accessible) return msg('<span class="success">flvplayer'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
 		$path = carl_construct_link(array(''), array(''), FLVPLAYER_HTTP_PATH . 'playlist.xml');
-		$fix_mode_str = ($fix_mode_enabled) 
-				? ' Fix mode may have failed because PHP was unable to create symlinks.'
-				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
+		$auto_mode_str = ($auto_mode_enabled) 
+				? ' Auto mode may have failed because PHP was unable to create symlinks.'
+				: ' <strong><a href="?automode=true">Try auto mode</a> - it will try to create symlinks for you.</strong>';
 		return msg('<span class="error">flvplayer'.$fixed_str.' is not accessible over http</span>.
 					<p>The URL attempted was ' . $path . '. Check the URL and made sure it exists and is
 					web accessible. Also check the constant FLVPLAYER_HTTP_PATH, which currently is set to '
-					. FLVPLAYER_HTTP_PATH . ' and make sure it correctly references the location of flvplayer.'.$fix_mode_str.' Consult the install documentation for more details.</p>', false);
+					. FLVPLAYER_HTTP_PATH . ' and make sure it correctly references the location of flvplayer.'.$auto_mode_str.' Consult the install documentation for more details.</p>', false);
 	}
 }
 
 function check_datepicker_accessible_over_http()
 {
-	global $fix_mode_enabled;
+	global $auto_mode_enabled;
 	$fixed_str = '';
 	$accessible = check_accessible_over_http(DATE_PICKER_HTTP_PATH . 'index.html', 'frequency decoder');
-	if (!$accessible && $fix_mode_enabled) // lets try to repair this
+	if (!$accessible && $auto_mode_enabled) // lets try to repair this
 	{
 		// if FLVPLAYER_INC is readable
 		if (is_readable(DATE_PICKER_INC) && function_exists('symlink'))
@@ -672,19 +673,19 @@ function check_datepicker_accessible_over_http()
 			if (is_writable(dirname($symlink_loc))) symlink(DATE_PICKER_INC, $symlink_loc);
 		}
 		$accessible = check_accessible_over_http(DATE_PICKER_HTTP_PATH . 'index.html', 'frequency decoder');
-		$fixed_str = ($accessible) ? ' was fixed using fix mode and' : ' could not be fixed using fix mode and';
+		$fixed_str = ($accessible) ? ' was fixed using auto mode and' : ' could not be fixed using auto mode and';
 	}
 	if ($accessible) return msg('<span class="success">date picker'.$fixed_str.' is accessible over http</span> - check passed', true);
 	else
 	{
 		$path = carl_construct_link(array(''), array(''), DATE_PICKER_HTTP_PATH . 'index.html');
-		$fix_mode_str = ($fix_mode_enabled) 
-				? ' Fix mode may have failed because PHP was unable to create symlinks.'
-				: ' <strong><a href="?fixmode=true">Try fix mode</a> - it will try to create symlinks for you.</strong>';
+		$auto_mode_str = ($auto_mode_enabled) 
+				? ' Auto mode may have failed because PHP was unable to create symlinks.'
+				: ' <strong><a href="?automode=true">Try auto mode</a> - it will try to create symlinks for you.</strong>';
 		return msg('<span class="error">date picker'.$fixed_str.' is not accessible over http</span>.
 					<p>The URL attempted was ' . $path . '. Check the URL and made sure it exists and is
 					web accessible. Also check the constant DATE_PICKER_HTTP_PATH, which currently is set to '
-					. DATE_PICKER_HTTP_PATH . ' and make sure it correctly references the location of date picker.'.$fix_mode_str.' Consult the install documentation for more details.</p>', false);
+					. DATE_PICKER_HTTP_PATH . ' and make sure it correctly references the location of date picker.'.$auto_mode_str.' Consult the install documentation for more details.</p>', false);
 	}
 }
 
@@ -845,8 +846,8 @@ function mod_rewrite_check()
 	$htaccess_path = $dir_path . '.htaccess';
 	$htaccess_content = 'RewriteEngine ON' . "\n" . 'RewriteRule ^$ ' . WEB_TEMP.$dir_name.$file_name.'?zzz=1';
 	
-	mkdir($dir_path, 0777);
-	chmod($dir_path, 0777);
+	mkdir($dir_path, 0775);
+	chmod($dir_path, 0775);
 	$h = fopen($file_path,"x+");
 	fwrite($h,$file_content);
 	fclose($h);
@@ -878,14 +879,14 @@ function mod_rewrite_check()
 
 function data_dir_writable($dir, $name)
 {
-	global $fix_mode_enabled;
-	if (!file_exists($dir) && $fix_mode_enabled)
+	global $auto_mode_enabled;
+	if (!file_exists($dir) && $auto_mode_enabled)
 	{
 		mkdir($dir, 0775);
 		chmod($dir, 0755);
-		if (file_exists($dir) && is_writable($dir)) return msg('<span class="success">missing data directory ('.$dir.') created using fix mode - '.$name . ' directory is writable</span> - check passed', true);
-		elseif (!file_exists($dir)) return msg('<span class="error">missing data directory ('.$dir.') could not be created using fix mode - '.$name. ' directory does not exist - failed</span>', false);
-		elseif (file_exists($dir) && !is_writable($dir)) return msg('<span class="error">created directory ('.$dir.') with fix mode but ' . $name . ' directory not writable - failed</span>.', false); 
+		if (file_exists($dir) && is_writable($dir)) return msg('<span class="success">missing data directory ('.$dir.') created using auto mode - '.$name . ' directory is writable</span> - check passed', true);
+		elseif (!file_exists($dir)) return msg('<span class="error">missing data directory ('.$dir.') could not be created using auto mode - '.$name. ' directory does not exist - failed</span>', false);
+		elseif (file_exists($dir) && !is_writable($dir)) return msg('<span class="error">created directory ('.$dir.') with auto mode but ' . $name . ' directory not writable - failed</span>.', false); 
 	}
 	elseif (is_writable($dir)) return msg('<span class="success">'.$name . ' directory is writable</span> - check passed', true);
 	else return msg ('<span class="error">'.$name . ' directory not writable - failed</span>. Make sure apache user has write access to ' . $dir, false);
