@@ -27,6 +27,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Upgrade Reason</title>
+<link rel='stylesheet' href='css/reason_setupgrade/reason_setupgrade.css' type='text/css'>
 </head>
 <body>
 <h1>Upgrade Reason</h1>
