@@ -1,0 +1,21 @@
+body {
+	max-width: 1200px;
+	font-family: Verdana, Helvetica, Arial, Sans-Serif;
+	font-size: 14px;
+	padding: 18px;
+	margin: 0;
+}
+
+h1 {
+	background: url('../../ui_images/banner_corners_right.png') right bottom no-repeat #7991B5;
+	padding: 18px 64px 18px 16px;
+	border-radius: 12px;
+	color: #FFF;
+	font-size: 32px;
+	border: 1px solid #FFF;
+	margin-top: 0;
+}
+
+p {
+	padding: 0 16px;
+}
