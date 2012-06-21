@@ -470,6 +470,11 @@ class textDateType extends textDateTimeType {
 	var $type = 'textDate';
 	var $date_format = 'Y-m-d';
 	var $use_fields = array( 'month', 'day', 'year');
+	function set( $value )
+	{
+		$value = $value.' 00:00:00';
+		parent::set($value);
+	}
 }
 
 /**
