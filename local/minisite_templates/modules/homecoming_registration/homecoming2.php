@@ -9,7 +9,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-include_once(WEB_PATH . 'stock/homecomingPFclass.php');
+//include_once(WEB_PATH . 'stock/homecomingPFclass.php');
+include_once('/usr/local/webapps/reason/reason_package_local/local/minisite_templates/modules/paypal/homecomingPFclass.php');
 
 class HomecomingRegistrationTwoForm extends FormStep {
 
@@ -85,7 +86,7 @@ class HomecomingRegistrationTwoForm extends FormStep {
         ),
         'billing_country' => array(
             'type' => 'country',
-//			'size'=>35,
+//          'size'=>35,
             'display_name' => 'Country',
         ),
         'confirmation_text' => array(
@@ -190,7 +191,8 @@ class HomecomingRegistrationTwoForm extends FormStep {
         $txt .= '<ul>' . "\n";
         $txt .= '<li><strong>Date:</strong> ' . date($this->date_format) . '</li>' . "\n";
         $txt .= '<li><strong>Name:</strong> ' . $this->controller->get('current_first_name') . ' ' . $this->controller->get('current_last_name') . '</li>' . "\n";
-        $txt .= '<li><strong>Class Year:</strong> ' . $this->controller->get('class_year') . '</li>' . "\n";
+        $class_year = $this->controller->get('class_year');
+        $txt .= '<li><strong>Class Year:</strong> ' . $class_year . '</li>' . "\n";
         $txt .= '<li><strong>Graduation Name:</strong> ' . $this->controller->get('graduation_name') . '</li>' . "\n";
         if ($this->controller->get('preferred_first_name')) {
             $txt .= '<li><strong>Preferred First Name:</strong> ' . $this->controller->get('preferred_first_name') . '</li>' . "\n";
@@ -210,14 +212,14 @@ class HomecomingRegistrationTwoForm extends FormStep {
             $txt .= '<li><strong>Guest Class Year:</strong> ' . $this->controller->get('attended_luther') . '</li>' . "\n";
         }
         if ($this->controller->get('attend_program')) {
-            $txt .= '<li><strong>Tickets for Festival Dinner:</strong> ' . ($this->controller->get('attend_program')) . '</li>' . "\n";
+            $txt .= '<li><strong>Tickets for Alumni Dinner:</strong> ' . ($this->controller->get('attend_program')) . '</li>' . "\n";
         }
         //new stuff////
-        if ($this->controller->get('festival_vegetarian')) {
-            $txt .= '<li><strong>Do you require a vegetarian meal?</strong> ' . $this->controller->get('festival_vegetarian') . '</li>' . "\n";
+        if ($this->controller->get('dinner_vegetarian')) {
+            $txt .= '<li><strong>Do you require a vegetarian meal?</strong> ' . $this->controller->get('dinner_vegetarian') . '</li>' . "\n";
         }
-        if ($this->controller->get('festival_guests_names')) {
-            $txt .= '<li><strong>Festival Guest Names and Class Year (if applicable)</strong> ' . $this->controller->get('festival_guests_names') . '</li>' . "\n";
+        if ($this->controller->get('dinner_guests_names')) {
+            $txt .= '<li><strong>Alumni Dinner Guest Names and Class Year (if applicable)</strong> ' . $this->controller->get('dinner_guests_names') . '</li>' . "\n";
         }
         if ($this->controller->get('vegetarian_guests')) {
             $txt .= '<li><strong>Do any of your guests require vegetarian meal?</strong> ' . $this->controller->get('vegetarian_guests') . '</li>' . "\n";
@@ -229,16 +231,16 @@ class HomecomingRegistrationTwoForm extends FormStep {
             $txt .= '<li><strong>Please tell us with whom you wish to be seated</strong> ' . $this->controller->get('seating_preference') . '</li>' . "\n";
         }///////////
         if ($this->controller->get('attend_luncheon')) {
-            $txt .= '<li><strong>Attend 75-50 Year Reunion Luncheon :</strong> ' . $this->controller->get('attend_luncheon') . '</li>' . "\n";
+            $txt .= '<li><strong>Attend ' . $class_year . ' Reunion Luncheon :</strong> ' . $this->controller->get('attend_luncheon') . '</li>' . "\n";
         }
         if ($this->controller->get('attend_dinner_50_to_25')) {
-            $txt .= '<li><strong>Attend 50-25 Year Reunion Dinner:</strong> ' . $this->controller->get('attend_dinner_50_to_25') . '</li>' . "\n";
+            $txt .= '<li><strong>Attend ' . $class_year . ' Reunion Dinner:</strong> ' . $this->controller->get('attend_dinner_50_to_25') . '</li>' . "\n";
         }
         if ($this->controller->get('attend_dinner_20_to_10')) {
-            $txt .= '<li><strong>Attend 20-10 Year Reunion Reception:</strong> ' . $this->controller->get('attend_dinner_20_to_10') . '</li>' . "\n";
+            $txt .= '<li><strong>Attend ' . $class_year . ' Reunion Reception:</strong> ' . $this->controller->get('attend_dinner_20_to_10') . '</li>' . "\n";
         }
         if ($this->controller->get('attend_dinner_5')) {
-            $txt .= '<li><strong>Attend 5 Year Reunion Reception:</strong> ' . $this->controller->get('attend_dinner_5') . '</li>' . "\n";
+            $txt .= '<li><strong>Attend ' . $class_year . ' Reunion Reception:</strong> ' . $this->controller->get('attend_dinner_5') . '</li>' . "\n";
         }
         if ($this->controller->get('attend_1961_reception')) {
             $txt .= '<li><strong>Reservation for Friday\'s reception:</strong> ' . $this->controller->get('attend_1961_reception') . '</li>' . "\n";
@@ -333,7 +335,7 @@ class HomecomingRegistrationTwoForm extends FormStep {
                     '<th class="col1">Year</th>' => '',
                     '<th>Amount</th>' => '',
                     '</td><td>' => ': ',
-                    '�' => '-',
+                    '?' => '-',
                     '<h3>' => '--------------------' . "\n\n",
                     '</h3>' => '',
                     '<br />' => "\n",

@@ -81,51 +81,51 @@ class HomecomingRegistrationOneForm extends FormStep
 		'guest_class' => 'text',
 		'reservations_header' => array(
 			'type' => 'comment',
-			'text' => '<h3>Festival Dinner Reservations</h3>',
+			'text' => '<h3>Alumni Dinner Reservations</h3>',
 		),
 		'attend_program' => array(
 			'type' => 'select_no_sort',
-			'display_name' => 'Founders Day Festival Dinner',
-			'comments' => '<br />$40/person',
+			'display_name' => 'Alumni Dinner',
+			'comments' => '<br />$20/person',
 			'options' => array(
 				'--'=>'--', 
-				'1'=>'1 ticket, $40',
-				'2'=>'2 tickets, $80',
-				'3'=>'3 tickets, $120',
-				'4'=>'4 tickets, $160',
-				'5'=>'5 tickets, $200',
-				'6'=>'6 tickets, $240',
+				'1'=>'1 ticket, $20',
+				'2'=>'2 tickets, $40',
+				'3'=>'3 tickets, $60',
+				'4'=>'4 tickets, $80',
+				'5'=>'5 tickets, $100',
+				'6'=>'6 tickets, $120',
 			),
 		),
 
-                'festival_vegetarian' => array(
+        'dinner_vegetarian' => array(
 			'type' => 'radio_inline_no_sort',
-                        'display_name' => 'Do you require a vegetarian meal?',
+            'display_name' => 'Do you require a vegetarian meal?',
 			'options' => array('yes' => 'Yes', 'no' => 'No'),
 		),
-                'festival_guests_names' => array(
-			'type' => 'textarea',
-                        'display_name' => 'Festival Guest Names and Class Year (if applicable) ',	
-		),
-                'vegetarian_guests' => array(
+//        'dinner_guests_names' => array(
+//			'type' => 'textarea',
+//            'display_name' => 'Alumni Dinner Guest Names and Class Year (if applicable) ',	
+//		),
+        'vegetarian_guests' => array(
 			'type' => 'radio_inline_no_sort',
-                        'display_name' => 'Do any of your guests require vegetarian meal?',
+			'display_name' => 'Do any of your guests require vegetarian meal?',
 			'options' => array('yes' => 'Yes', 'no' => 'No'),
 		),
-                'vegetarian_guests_names' => array(
+        'vegetarian_guests_names' => array(
 			'type' => 'text',
-			'display_name' => 'Please list the vegetarian guests',
-			'size' => 33,
-                 ),
-                'seating_preference' => array(
-			'type' => 'textarea',
-			'display_name' => 'Please tell us with whom you wish to be seated',
-                ),
-                'luncheon_header' => array(
+			'display_name' => 'Number of guests requiring vegetarian meals',
+			'size' => 2,
+		),
+//		'seating_preference' => array(
+//			'type' => 'textarea',
+//			'display_name' => 'Please tell us with whom you wish to be seated',
+//		),
+		'luncheon_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Class Reunion Reservations</h3>'
 		),
-                'attend_1961_reception'=>'text',
+        'attend_1961_reception'=>'text',
 		'attend_luncheon' => 'text',
 		'dinner_header' => array(
 			'type' => 'comment',
@@ -137,7 +137,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		'ride_in_parade' => array(
 			'type' => 'radio_inline_no_sort',
 			'display_name' => 'Will you ride in the parade?',
-			'comments' => 'Class of 1961 only',
+			'comments' => 'Class of 1962 only',
 			'options' => array(
 				'yes' => 'Yes',
 				'no' => 'No',
@@ -177,11 +177,11 @@ class HomecomingRegistrationOneForm extends FormStep
 					'6' => '6', '7' => '7', '8' => '8', '9' => '9',	'10' => '10',),
 				)
 			);
-                // 1961 reception
+                // 50th reception
                 $this->change_element_type(
-			'attend_1961_reception', 'select', array(
+			'attend_50th_reception', 'select', array(
 				'display_name' => 'Reservation for Friday\'s reception',
-				'comments' => '<br /> Class of 1961 only<br />No Cost',
+				'comments' => '<br /> Class of 1962 only<br />No Cost',
 				'options' => array( 
 					'1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 
 					'6' => '6', '7' => '7', '8' => '8', '9' => '9',	'10' => '10',),
