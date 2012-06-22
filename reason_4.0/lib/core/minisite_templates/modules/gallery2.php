@@ -11,6 +11,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'Gallery2Mod
 reason_include_once( 'minisite_templates/modules/generic3.php' );
 reason_include_once( 'classes/sized_image.php' );
 reason_include_once( 'function_libraries/image_tools.php' );
+reason_include_once( 'classes/group_helper.php' );
 
 
 
@@ -135,7 +136,8 @@ class Gallery2Module extends Generic3Module
 		'height' => 0,
 		'width' => 0,
 		'crop' => 0,
-		'max_filters' => 3
+		'max_filters' => 3,
+		'original_size_access_group' => '',
 	);
 	
 	/**
@@ -161,6 +163,16 @@ class Gallery2Module extends Generic3Module
 	
 	var $back_link_text = 'Thumbnails';
 	var $make_current_page_link_in_nav_when_on_item = true;
+	
+	/**
+	 * Add cleanup rules specific to the gallery module
+	 * @return array
+	 */
+	function get_cleanup_rules()
+	{
+		$this->cleanup_rules['original_access'] = array('function'=>'turn_into_int');
+		return parent::get_cleanup_rules();
+	}
 	
 	/**
 	 * Does the interacting with parameters, setting of defaults,
@@ -448,6 +460,7 @@ class Gallery2Module extends Generic3Module
 		
 		$this->show_item_owner_site_info ( $item ); 
 		$this->show_item_categories( $item );
+		$this->show_item_original_size_link( $item );
 		echo '</div>'."\n";
 	} // }}}
 	
@@ -473,6 +486,39 @@ class Gallery2Module extends Generic3Module
 	}
 	
 	/**
+	 * Get the markup for the link to the original size item
+	 *
+	 * @param object $item
+	 * @return string
+	 */
+	function show_item_original_size_link( $item )
+	{
+		if(empty($this->params['original_size_access_group']))
+			return '';
+		
+		$msg = '';
+		if($url = $this->get_original_size_url($item))
+		{
+			switch($this->current_user_original_size_access( $item ))
+			{
+				case 'authentication_required':
+					$msg = '<a href="'.REASON_LOGIN_URL.'?dest_page='.urlencode(carl_make_redirect(array('original_access'=>1))).'">Log in to see this image at higher resolution</a>';
+					break;
+				case 'not_authorized':
+					if(!empty($this->request['original_access']))
+						$msg = 'Sorry. You do not have permission to view the higher resolution version of this image.';
+					break;
+				case 'ok':
+					$msg = '<a href="'.htmlspecialchars($url).'">View image at higher resolution</a>';
+					break;
+			}
+		}
+		
+		if(!empty($msg))
+			echo '<div class="originalSizeLink">'.$msg.'</div>'."\n";
+	}
+	
+	/**
 	 * Gets the categories associated with a given image
 	 */
 	function get_categories_for_image($image_id)
@@ -489,6 +535,52 @@ class Gallery2Module extends Generic3Module
 			return $category_array;
 		else
 			return false;
+	}
+	
+	/**
+	 * Get the url of the original image if it exists
+	 *
+	 * If it does not exist, this function will return an empty string.
+	 *
+	 * @param object $item
+	 * @return string
+	 */
+	function get_original_size_url($item)
+	{
+		$path = reason_get_image_path($item, 'original');
+		if(file_exists($path))
+			return reason_get_image_url($item, 'original');
+		return '';
+	}
+	
+	/**
+	 * Get access information about whether the current user can access a given image at its original size
+	 * @return string 'no_group', 'authentication_required', 'ok', or 'not_authorized'
+	 */
+	function current_user_original_size_access( $item )
+	{
+		if(empty($this->params['original_size_access_group']))
+			return 'no_group';
+		if(!$group_id = id_of($this->params['original_size_access_group']))
+		{
+			trigger_error('Access group unique name parameter given in page type not a Reason entity.');
+			return 'no_group';
+		}
+		$group = new entity($group_id);
+		if($group->get_value('type') != id_of('group_type'))
+		{
+			trigger_error('Access group unique name does not belong to a valid Reason group.');
+			return 'no_group';
+		}
+		$helper = new group_helper();
+		$helper->set_group_by_entity($group);
+		$result = $helper->is_username_member_of_group(reason_check_authentication());
+		if(null === $result)
+			return 'authentication_required';
+		elseif(true === $result)
+			return 'ok';
+		else
+			return 'not_authorized';
 	}
 	
 	/**
