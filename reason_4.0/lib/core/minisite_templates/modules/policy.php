@@ -22,51 +22,61 @@
 		var $cleanup_rules = array(
 			'policy_id' => array('function' => 'turn_into_int'),
 			'audience' => array('function' => 'turn_into_string'),
+			'show_all' => array( 'function' => 'check_against_array', 
+								 'extra_args' => array( 'true', 'false' ) ),
 		);
-		protected $_acccess_result_fetched = false;
-		protected $_access_result = true;
+		protected $_access_results = array();
+		protected $values;
+		protected $roots;
+		protected $policy;
 		function init( $args = array() ) // {{{
 		{
 			parent::init( $args );
 
 			$head =& $this->get_head_items();
 			$head->add_javascript('/reason_package/reason_4.0/www/js/policy_selector.js');
-
-			$es = $this->_get_es();
-
-			$this->values = $es->run_one();
 			
-			/*
-			
-			$this->pages = new PolicyNavigation;
-			$this->pages->request =& $this->request;
-			// small kludge - just give the tree view access to the site info.  used in the show_item function to show the root node of the navigation
-			if ( !empty ( $this->site_info ) )
-				$this->pages->site_info = $this->site_info;
-			$this->pages->order_by = 'sortable.sort_order ASC';
-			$this->pages->init( $this->site_id, id_of('policy_type') );
-			
-			*/
-
-			if( !empty( $this->request[ 'policy_id' ] ) )
+			if(!$this->_in_show_all_mode())
 			{
-				if(isset($this->values[$this->request[ 'policy_id' ]]))
+
+				if( !empty( $this->request[ 'policy_id' ] ) )
 				{
-					$this->policy = $this->values[$this->request[ 'policy_id' ]];
-					$this->_add_crumb( $this->values[$this->request[ 'policy_id' ]]->get_value('name'), get_current_url() );
-					if($pages =& $this->get_page_nav())
-						$pages->make_current_page_a_link();
+					$roots = $this->get_root_nodes();
+					if(array_key_exists($this->request[ 'policy_id' ], $roots))
+					{
+						$this->policy = $roots[$this->request[ 'policy_id' ]];
+						$this->_add_crumb( $this->policy->get_value('name'), get_current_url() );
+						if($pages =& $this->get_page_nav())
+							$pages->make_current_page_a_link();
+						$access = $this->_get_access_result($this->policy);
+						if(false === $access)
+							http_response_code(403);
+						elseif(null === $access)
+							http_response_code(401);
+					}
+					else
+					{
+						http_response_code(404);
+					}
 				}
-				else
-				{
-					http_response_code(404);
-				}
+				
 			}
-			if(false === $this->_get_access_result())
-				http_response_code(403);
-			elseif(null === $this->_get_access_result())
-				http_response_code(401);
 		} // }}}
+		protected function _in_show_all_mode()
+		{
+			if(!empty($this->request['show_all']) && 'true' == $this->request['show_all'])
+				return true;
+			return false;
+		}
+		protected function _get_all_policies()
+		{
+			if(is_null($this->values))
+			{
+				$es = $this->_get_es();
+				$this->values = $es->run_one();
+			}
+			return $this->values;
+		}
 		protected function _get_es()
 		{
 			$es = new entity_selector( $this->site_id );
@@ -79,39 +89,48 @@
 			
 			return $es;
 		}
-		protected function _get_access_result()
+		protected function _get_access_result($policy)
 		{
-			if(!$this->_acccess_result_fetched)
+			if(!isset($this->access_results[$policy->id()]))
 			{
-				if(!empty($this->policy))
+				$helper = $this->_get_access_group_helper($policy);
+				if(!empty($helper))
 				{
-					$helper = $this->_get_access_group_helper($this->policy);
-					if(!empty($helper))
-					{
-						$this->_access_result = $helper->is_username_member_of_group(reason_check_authentication());
-					}
+					$this->access_results[$policy->id()] = $helper->is_username_member_of_group(reason_check_authentication());
 				}
-				$this->_acccess_result_fetched = true;
+				else
+				{
+					$this->access_results[$policy->id()] = true;
+				}
 			}
-			return $this->_access_result;
+			return $this->access_results[$policy->id()];
 		}
 		function run() // {{{
 		{
-			$this->get_root_nodes();
-			//pray ($this->roots);
-			if ( empty( $this->request[ 'policy_id' ] ) && count( $this->roots ) == 1)
+			$roots = $this->get_root_nodes();
+			
+			if($this->_in_show_all_mode())
 			{
-				foreach ( $this->roots as $k=>$v )
+				foreach($roots as $root)
+				{
+					$this->display_policy($root);
+				}
+				return;
+			}
+			
+			if ( empty( $this->request[ 'policy_id' ] ) && count( $roots ) == 1)
+			{
+				foreach ( $roots as $k=>$v )
 				{
 					$this->request[ 'policy_id' ] = $v->get_value( 'id' );
 				}
 			}
 			if ( !empty( $this->request[ 'policy_id' ] ) )
 			{
-				if ( count( $this->roots ) != 1 )
+				if ( count( $roots ) != 1 )
 					$this->show_root_option_menu();
 				$this->display_navigation();
-				if ( count( $this->roots ) != 1 )
+				if ( count( $roots ) != 1 )
 					$this->display_back_link();
 			}
 			else
@@ -121,18 +140,21 @@
 		} // }}}
 		function get_root_nodes() // {{{
 		{
-			$r = array();
-			foreach( $this->values AS $v )
+			if(is_null($this->roots))
 			{
-				if( $v->id() == $v->get_value( 'parent_id' ) )
-					$r[] = $v;
+				$this->roots = array();
+				foreach( $this->_get_all_policies() AS $policy )
+				{
+					if( $policy->id() == $policy->get_value( 'parent_id' ) )
+						$this->roots[$policy->id()] = $policy;
+				}
 			}
-			$this->roots = $r;
+			return $this->roots;
 		} // }}}
 		function show_root_list() // {{{
 		{
 			echo "<ul class='rootPolicyList'>\n";
-			foreach( $this->roots AS $root )
+			foreach( $this->get_root_nodes() AS $root )
 			{
 				echo '<li class="rootPolicyItem"><a href="'.$this->page_link( $root ).'" class="rootPolicyLink">'.strip_tags( $root->get_value( 'name' ), "em,i" ).'</a> '.$root->get_value( 'description' ).'</li>';
 			}
@@ -146,7 +168,7 @@
 			echo '<form name="policy_form" method="get" class="policyForm">' .
 					'<select name="policy_id" class="rootMenu">'.
 					'<option value="">' . $title . "</option>\n";
-			foreach( $this->roots AS $root )
+			foreach( $this->get_root_nodes() AS $root )
 			{
 				echo '<option value="'.$root->id().'"';
 				if ( $root->id() == $this->request[ 'policy_id' ] ) echo " selected='selected' ";
@@ -163,20 +185,7 @@
 			{
 				if(!empty($this->policy))
 				{
-					if(false === $this->_get_access_result())
-					{
-						echo '<h3>Access Denied</h3>'."\n";
-						echo '<p>Sorry. You do not have permission to view this restricted-access policy.</p>'."\n";
-					}
-					elseif(null === $this->_get_access_result())
-					{
-						echo '<h3>Authentication Required</h3>'."\n";
-						echo '<p>This policy requires login. Please <a href="/'.REASON_LOGIN_PATH.'">sign in</a> to see if you have access to view this policy.</p>'."\n";
-					}
-					else
-					{
-						$this->display_policy($this->policy);
-					}
+					$this->display_policy($this->policy);
 				}
 				else
 				{
@@ -242,6 +251,20 @@
 		} // }}}
 		function display_policy($policy) // {{{
 		{
+			$access = $this->_get_access_result($policy);
+			if(false === $access)
+			{
+				echo '<h3>'.$policy->get_value('name').': Access Denied</h3>'."\n";
+				echo '<p>Sorry. You do not have permission to view '.$policy->get_value('name').', which is restricted-access.</p>'."\n";
+				return;
+			}
+			elseif(null === $access)
+			{
+				echo '<h3>'.$policy->get_value('name').': Authentication Required</h3>'."\n";
+				echo '<p>'.$policy->get_value('name').' requires login. Please <a href="/'.REASON_LOGIN_PATH.'">sign in</a> to see if you have access.</p>'."\n";
+				return;
+			}
+			
 			echo '<div class="policy">'."\n";
 			echo '<a id="'.$policy->id().'"></a>';
 			/*	if ( !in_array( $item->id(), $this->root_node() ) )
@@ -273,7 +296,7 @@
 			if ($policy->get_value( 'last_revised_date' ) > '0000-00-00' )
 			{
 				echo '<div class="revised">';
-				echo 'Last revised '.prettify_mysql_datetime($policy>get_value('last_revised_date'),'F j, Y');
+				echo 'Last revised '.prettify_mysql_datetime($policy->get_value('last_revised_date'),'F j, Y');
 				echo "</div>\n";
 			}
 			$audiences = $this->get_audiences($policy);
@@ -318,9 +341,9 @@
 		}
 		function display_back_link() // {{{
 		{
-			$list_link = '?';
+			$list_link = './';
 			if (!empty($this->textonly))
-				$list_link .= '&amp;textonly=1';
+				$list_link .= '?textonly=1';
 			echo "<p><a href='".$list_link."' class='rootPolicyListLink'>List of policies</a></p>\n";
 		} // }}}
 		function get_class_for_children($policy)
