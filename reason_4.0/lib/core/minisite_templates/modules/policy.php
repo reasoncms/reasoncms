@@ -8,7 +8,7 @@
 	 * Register module with Reason and include dependencies
 	 */
 	reason_include_once( 'minisite_templates/modules/default.php' );
-	reason_include_once( 'content_listers/multiple_root_tree.php' );
+	reason_include_once( 'classes/group_helper.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'PolicyModule';
 
 	/**
@@ -17,122 +17,14 @@
 	 * Note: Policies in this context refers to Reason entities of the type Policy, e.g. a nice way to manage the organization's
 	 * rules and regulations. This does not refer to any internal-to-reason rules enforced by machine code.
 	 */
-	class PolicyNavigation extends multiple_root_tree_viewer
-	{
-		var $ns_to_class = array(
-							'Uppercase Roman' => 'upperRoman',
-							'Lowercase Roman' => 'lowerRoman',
-							'Uppercase Alpha' => 'upperAlpha',
-							'Lowercase Alpha' => 'lowerAlpha',
-							'Decimal' => 'decimal',
-						   );
-		var $default_ns_to_class = 'decimal';
-		var $li_class = 'stuff';
-
-		function grab_request()
-		{
-
-		}
-
-		function show_all_items() // {{{
-		{
-			$root = $this->cur_page_root();
-			echo '<div class="policy">'."\n";
-			$this->make_tree( $root , $root , 0);
-			$item = new entity( $root );
-			$policy_author = $item->get_value( 'author' );
-			$policy_date = prettify_mysql_datetime($item->get_value( 'datetime' ), "F j, Y");
-			if (!empty($policy_author) || (!empty($policy_date)))
-			{
-				echo '<p class="policyAdopted">Adopted ';
-				if (!empty($policy_author))
-				{
-					echo " by " . $policy_author;
-				}
-				if (!empty($policy_date))
-				{
-					echo " on " . $policy_date;
-				}
-				echo ".</p>\n";
-			}
-			echo '</div>'."\n";
-		} // }}}
-		function show_item( &$item , $options = false) // {{{
-		{
-			if(!empty($item))
-			{
-				$policy_name = $item->get_value('name');
-				echo '<a name="'.$item->id().'" id="'.$item->id().'"></a>';
-				if ( !in_array( $item->id(), $this->root_node() ) )
-				{
-					echo '<li class="'.$this->li_class.'">'."\n";
-					$header_type = "h4";
-				}
-				else $header_type = "h3";
-				echo "<" . $header_type . " class='policyName'>" . 	$policy_name . "</" . $header_type . ">\n";
-				echo '<div class="policyContent">'.$item->get_value( 'content' ) . '</div>';
-				if ( !in_array( $item->id(), $this->root_node() ) ) echo '</li>';
-			}
-		} //  }}}
-		function make_tree( &$item , &$root , $depth, $counter = 0 ) // {{{
-		{
-			if($this->has_filters() AND !empty( $this->filter_values[ $item ] ) )
-			{
-				$this->options = array( 'color' => true , 'depth' => $depth );
-				$this->show_item( $this->values[ $item  ] );
-			}
-			else
-			{
-				$this->options = array( 'depth' => $depth );
-				$this->show_item( $this->values[ $item  ] );
-			}
-			$children = $this->children( $item );
-			foreach($children as $key=>$child_id)
-			{
-				if($this->values[ $child_id ]->get_value('show_hide') == 'hide')
-				{
-					unset($children[$key]);
-				}
-			}
-			if( !empty($children) )
-			{
-				$style = isset( $this->ns_to_class[ $this->values[ $item ]->get_value( 'numbering_scheme' ) ] ) ?
-				$this->ns_to_class[ $this->values[ $item ]->get_value( 'numbering_scheme' ) ] :
-				$this->default_ns_to_class;
-				echo '<ol class="'.$style.'">';
-				foreach( $children AS $child )
-				{
-					$ent = $this->values[ $item ];
-					$this->make_tree( $child , $root, $depth +1);
-				}
-				echo '</ol>';
-			}
-		} // }}}
-		function cur_page_root( $page = '' ) // {{{
-		{
-			if( !$page )
-				$page = isset( $this->request[ 'policy_id' ] ) ? $this->request[ 'policy_id' ] : '';
-			if( $page )
-			{
-				foreach( $this->values AS $v )
-				{
-					if( $v->id() == $page )
-					{
-						if( $v->get_value( 'parent_id' ) == $v->id() )
-							return $v->id();
-						else
-							return $this->cur_page_root( $v->get_value( 'parent_id' ) );
-					}
-				}
-			}
-		} // }}}
-	}
-
 	class PolicyModule extends DefaultMinisiteModule
 	{
 		var $cleanup_rules = array(
-			'policy_id' => array('function' => 'turn_into_int')
+			'policy_id' => array('function' => 'turn_into_int'),
+			'audience' => array('function' => 'turn_into_string'),
 		);
+		protected $_acccess_result_fetched = false;
+		protected $_access_result = true;
 		function init( $args = array() ) // {{{
 		{
 			parent::init( $args );
@@ -140,14 +32,12 @@
 			$head =& $this->get_head_items();
 			$head->add_javascript('/reason_package/reason_4.0/www/js/policy_selector.js');
 
-			$es = new entity_selector( $this->site_id );
-			$es->add_type( id_of( 'policy_type' ) );
-			//$es->set_order( 'sortable.sort_order ASC' );
-			$es->set_order( 'entity.name ASC' );
-			$es->add_relation( 'show_hide.show_hide != "hide"' );
-			$es->add_left_relationship_field( 'policy_parent' , 'entity' , 'id' , 'parent_id' );
+			$es = $this->_get_es();
 
 			$this->values = $es->run_one();
+			
+			/*
+			
 			$this->pages = new PolicyNavigation;
 			$this->pages->request =& $this->request;
 			// small kludge - just give the tree view access to the site info.  used in the show_item function to show the root node of the navigation
@@ -155,25 +45,56 @@
 				$this->pages->site_info = $this->site_info;
 			$this->pages->order_by = 'sortable.sort_order ASC';
 			$this->pages->init( $this->site_id, id_of('policy_type') );
+			
+			*/
 
-			if( !empty( $this->request[ 'policy_id' ] ) && $this->pages->cur_page_root() )
+			if( !empty( $this->request[ 'policy_id' ] ) )
 			{
-				if(array_key_exists($this->request[ 'policy_id' ], $this->values))
+				if(isset($this->values[$this->request[ 'policy_id' ]]))
 				{
 					$this->policy = new entity( $this->request[ 'policy_id' ] );
-					$this->_add_crumb( $this->policy->get_value( 'name' ), '?policy_id=' . $this->request[ 'policy_id' ] );
+					$this->_add_crumb( get_current_url() );
+					if($pages =& $this->get_page_nav())
+						$pages->make_current_page_a_link();
 				}
 				else
 				{
-					$this->policy = NULL;
+					http_response_code(404);
 				}
 			}
-			
-			if( !empty( $this->request[ 'policy_id' ] ) && empty($this->policy))
-			{
-				http_response_code(404);
-			}
+			if(false === $this->_get_access_result())
+				http_response_code(403);
+			elseif(null === $this->_get_access_result())
+				http_response_code(401);
 		} // }}}
+		protected function _get_es()
+		{
+			$es = new entity_selector( $this->site_id );
+			$es->add_type( id_of( 'policy_type' ) );
+			//$es->set_order( 'sortable.sort_order ASC' );
+			$es->set_order( 'entity.name ASC' );
+			
+			$es->add_relation( table_of('show_hide', id_of( 'policy_type' )) .' != "hide"' );
+			$es->add_left_relationship_field( 'policy_parent' , 'entity' , 'id' , 'parent_id' );
+			
+			return $es;
+		}
+		protected function _get_access_result()
+		{
+			if(!$this->_acccess_result_fetched)
+			{
+				if(!empty($this->policy))
+				{
+					$helper = $this->_get_access_group_helper($this->policy);
+					if(!empty($helper))
+					{
+						$this->_access_result = $helper->is_username_member_of_group(reason_check_authentication());
+					}
+				}
+				$this->_acccess_result_fetched = true;
+			}
+			return $this->_access_result;
+		}
 		function run() // {{{
 		{
 			$this->get_root_nodes();
@@ -242,16 +163,72 @@
 			{
 				if(!empty($this->policy))
 				{
-					$this->pages->do_display();
+					if(false === $this->_get_access_result())
+					{
+						echo '<h3>Access Denied</h3>'."\n";
+						echo '<p>Sorry. You do not have permission to view this restricted-access policy.</p>'."\n";
+					}
+					elseif(null === $this->_get_access_result())
+					{
+						echo '<h3>Authentication Required</h3>'."\n";
+						echo '<p>This policy requires login. Please <a href="/'.REASON_LOGIN_PATH.'">sign in</a> to see if you have access to view this policy.</p>'."\n";
+					}
+					else
+					{
+						$this->display_policy($this->policy);
+					}
 				}
 				else
 				{
 					echo '<h3>Policy not found</h3>'."\n";
-					echo '<p>This policy is not available.  It is possible that it has been removed from the site.</p>'."\n";
+					echo '<p>This policy is not available. It is possible that it has been removed from the site.</p>'."\n";
 					echo '<p>Please contact the maintainer of this site if you have any questions.</p>'."\n";
 				}
 			}
 		} // }}}
+		protected function _get_access_group_helper($policy)
+		{
+			$rel = relationship_id_of('policy_to_access_group');
+			if(!$rel)
+				return null;
+			$es = new entity_selector();
+			$es->add_type(id_of('group_type'));
+			$es->add_right_relationship($policy->id(), relationship_id_of('policy_to_access_group'));
+			$es->set_num(1);
+			$groups = $es->run_one();
+			if(empty($groups))
+				return null;
+			$group = current($groups);
+			$gh = new group_helper();
+			$gh->set_group_by_entity($group);
+			return $gh;
+		}
+		function get_policy_children($policy)
+		{
+			$es = new entity_selector();
+			$es->add_type(id_of('policy_type'));
+			$es->add_relation('entity.id != "'.$policy->id().'"');
+			$es->add_relation( table_of('show_hide', id_of( 'policy_type' )) .' != "hide"' );
+			$es->add_left_relationship($policy->id(),relationship_id_of('policy_parent'));
+			$es->set_order('sortable.sort_order ASC');
+			return $es->run_one();
+		}
+		function get_audiences($policy)
+		{
+			$es = new entity_selector();
+			$es->add_type(id_of('audience_type'));
+			$es->add_left_relationship($policy->id(),relationship_id_of('policy_to_relevant_audience'));
+			$es->set_order('entity.name ASC');
+			return $es->run_one();
+		}
+		function get_departments($policy)
+		{
+			$es = new entity_selector();
+			$es->add_type(id_of('office_department_type'));
+			$es->add_left_relationship($policy->id(),relationship_id_of('policy_to_responsible_department'));
+			$es->set_order('entity.name ASC');
+			return $es->run_one();
+		}
 		function page_link( $page ) // {{{
 		{
 			if( !is_object( $page ) )
@@ -263,15 +240,82 @@
 
 			return $link;
 		} // }}}
-		function display_content() // {{{
+		function display_policy($policy) // {{{
 		{
-			if( $this->policy )
+			echo '<div class="policy">'."\n";
+			echo '<a id="'.$policy->id().'"></a>';
+			/*	if ( !in_array( $item->id(), $this->root_node() ) )
+				{
+					echo '<li class="'.$this->li_class.'">'."\n";
+					$header_type = "h4";
+				} */
+			echo "<h3 class='policyName'>" . 	$policy->get_value('name') . "</h3>\n";
+			echo '<div class="policyContent">'.$policy->get_value( 'content' ) . '</div>';
+			$sub_policies = $this->get_policy_children($policy);
+			if(!empty($sub_policies))
 			{
-				echo '<div class="policyContent">';
-				echo $this->policy->get_value( 'content' );
-				echo '</div>';
+				echo '<ol class="'.$this->get_class_for_children($policy).'">'."\n";
+				foreach($sub_policies as $p)
+				{
+					echo '<li>'."\n";
+					$this->display_sub_policy($p);
+					echo '</li>'."\n";
+				}
+				echo '</ol>'."\n";
 			}
+			/*	if ( !in_array( $item->id(), $this->root_node() ) ) echo '</li>'; */
+			if ($policy->get_value( 'approvals' ))
+			{
+				echo '<div class="approvals">';
+				echo $policy->get_value( 'approvals' );
+				echo "</div>\n";
+			}
+			if ($policy->get_value( 'last_revised_date' ) > '0000-00-00' )
+			{
+				echo '<div class="revised">';
+				echo 'Last revised '.prettify_mysql_datetime($policy>get_value('last_revised_date'),'F j, Y');
+				echo "</div>\n";
+			}
+			$audiences = $this->get_audiences($policy);
+			if(!empty($audiences))
+			{
+				$audience_names = array();
+				foreach($audiences as $audience)
+					$audience_names[] = $audience->get_value('name');
+				echo '<div class="audiences">';
+				echo 'For '.implode(', ',$audience_names);
+				echo "</div>\n";
+			}
+			$depts = $this->get_departments($policy);
+			if(!empty($depts))
+			{
+				$dept_names = array();
+				foreach($departments as $dept)
+					$dept_names[] = $dept->get_value('name');
+				echo '<div class="departments">';
+				echo 'Maintained by '.implode(', ',$dept_names);
+				echo "</div>\n";
+			}
+			echo '</div>'."\n";
 		} // }}}
+		function display_sub_policy($policy)
+		{
+			echo '<a id="'.$policy->id().'"></a>';
+			echo "<h4 class='policyName'>" . 	$policy->get_value('name') . "</h4>\n";
+			echo '<div class="policyContent">'.$policy->get_value( 'content' ) . '</div>';
+			$sub_policies = $this->get_policy_children($policy);
+			if(!empty($sub_policies))
+			{
+				echo '<ol class="'.$this->get_class_for_children($policy).'">'."\n";
+				foreach($sub_policies as $p)
+				{
+					echo '<li>'."\n";
+					$this->display_sub_policy($p);
+					echo '</li>'."\n";
+				}
+				echo '</ol>'."\n";
+			}
+		}
 		function display_back_link() // {{{
 		{
 			$list_link = '?';
@@ -279,5 +323,22 @@
 				$list_link .= '&amp;textonly=1';
 			echo "<p><a href='".$list_link."' class='rootPolicyListLink'>List of policies</a></p>\n";
 		} // }}}
+		function get_class_for_children($policy)
+		{
+			switch($policy->get_value( 'numbering_scheme' ))
+			{
+				case 'Uppercase Roman':
+					return 'upperRoman';
+				case 'Lowercase Roman':
+					return 'lowerRoman';
+				case 'Uppercase Alpha':
+					return 'upperAlpha';
+				case 'Lowercase Alpha':
+					return 'lowerAlpha';
+				case 'Decimal':
+				default:
+					return 'decimal';
+			}
+		}
 	}
 ?>
