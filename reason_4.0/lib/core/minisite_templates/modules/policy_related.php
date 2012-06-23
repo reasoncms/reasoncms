@@ -28,43 +28,15 @@ class RelatedPolicyModule extends PolicyModule
 		return $cr;
 	}
 	
-	function init( $args = array() ) // {{{
+	protected function _get_es()
 	{
-		// this is dumb.  but there's no better way to do it.  this runs the
-		// entire init() method of the PolicyModule which a bunch of the same
-		// stuff.  This one 
-		DefaultMinisiteModule::init( $args );
-
-		$es = new entity_selector( $this->site_id );
-		$es->add_type( id_of( 'policy_type' ) );
-		//$es->set_order( 'sortable.sort_order ASC' );
-		$es->set_order( 'entity.name ASC' );
-		$es->add_relation( 'show_hide.show_hide != "hide"' );
-		$es->add_left_relationship_field( 'policy_parent' , 'entity' , 'id' , 'parent_id' );
+		$es = parent::_get_es();
 		$es->add_right_relationship( $this->page_id, relationship_id_of('page_to_policy') );
-
-		$this->values = $es->run_one();
-		$this->pages = new PolicyNavigation;
-		$this->pages->request =& $this->request;
-		// small kludge - just give the tree view access to the site info.  used in the show_item function to show the root node of the navigation
-		if ( !empty ( $this->site_info ) )
-			$this->pages->site_info = $this->site_info;
-		$this->pages->order_by = 'sortable.sort_order ASC';
-		$this->pages->init( $this->site_id, id_of('policy_type') );
-		if( !empty( $this->request[ 'policy_id' ] ) )
-		{
-			if(array_key_exists($this->request[ 'policy_id' ], $this->values))
-			{
-				$this->policy = new entity( $this->request[ 'policy_id' ] );
-				$this->_add_crumb( $this->policy->get_value( 'name' ) , '?policy_id=' . $this->request[ 'policy_id' ] );
-			}
-			else
-			{
-				$this->policy = NULL;
-			}
-		}
-	} // }}}
-	function run() // {{{
+		return $es;
+	}
+	
+	// Temporarily disabled until we can figure about a better way to support show_all
+	/* function run() // {{{
 	{
 		if( !empty($this->request[ 'show_all' ]) )
 		{
@@ -89,7 +61,7 @@ class RelatedPolicyModule extends PolicyModule
 		{
 			parent::run();
 		}
-	} // }}}
+	} // }}} */
 }
 	
 ?>
