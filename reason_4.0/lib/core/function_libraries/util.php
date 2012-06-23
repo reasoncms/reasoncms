@@ -345,7 +345,7 @@
 		$es->add_type(id_of('content_table'));
 		$es->limit_fields('entity.name');
 		$es->limit_tables();
-		$es->add_relation('entity.name = "'.$table_name.'"');
+		$es->add_relation('entity.name = "'.addslashes($table_name).'"');
 		$results = $es->run_one();
 		return (!empty($results));
 	}
@@ -671,12 +671,12 @@
 		return $row['id'];
 	} // }}}
 
-	function get_fields_by_content_table( $table ) // {{{
+	function get_fields_by_content_table( $table, $cache = true ) // {{{
 	{
 		static $results = '';
 		if( empty( $results ) )
 			$results = array();
-		if( empty( $results[ $table ] ) )
+		if( !$cache || empty( $results[ $table ] ) )
 		{
 			$results[ $table ] = array();
 			$q = 'desc ' . $table;
@@ -1605,15 +1605,27 @@
 	/**
 	 * Find out what page types use the a given module
 	 *
-	 * @param string $module_name
+	 * @param mixed $module_name string or array of module names
 	 * @return array $page_types
 	 */
 	function page_types_that_use_module($module_name)
 	{
-		reason_include_once('classes/page_types.php');
-		$rpts =& get_reason_page_types();
-		$pt_using_module = $rpts->get_page_type_names_that_use_module($module_name);
-		return $pt_using_module;
+		if(is_array($module_name))
+		{
+			$ret = array();
+			foreach($module_name as $name)
+			{
+				$ret = array_merge($ret, page_types_that_use_module($name));
+			}
+			return $ret;
+		}
+		else
+		{
+			reason_include_once('classes/page_types.php');
+			$rpts =& get_reason_page_types();
+			$pt_using_module = $rpts->get_page_type_names_that_use_module($module_name);
+			return $pt_using_module;
+		}
 	}
 
 	/**
