@@ -52,8 +52,8 @@
 			{
 				if(isset($this->values[$this->request[ 'policy_id' ]]))
 				{
-					$this->policy = new entity( $this->request[ 'policy_id' ] );
-					$this->_add_crumb( get_current_url() );
+					$this->policy = $this->values[$this->request[ 'policy_id' ]];
+					$this->_add_crumb( $this->values[$this->request[ 'policy_id' ]]->get_value('name'), get_current_url() );
 					if($pages =& $this->get_page_nav())
 						$pages->make_current_page_a_link();
 				}
