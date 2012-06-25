@@ -210,7 +210,7 @@ class ReasonUpgrader_42_PolicyDataStructure implements reasonUpgraderInterface
 			$str = $this->_get_approvals_string($policy);
 			if(!empty($str))
 			{
-				reason_update_entity($policy->id(), $this->user_id, array('approvals'=>$str,'datetime'=>'','author'=>'',), false);
+				reason_update_entity($policy->id(), $policy->get_value('last_edited_by'), array('approvals'=>$str,'datetime'=>'','author'=>'','last_modified'=>$policy->get_value('last_modified')), false);
 				$msg = '<p>Moved all datetime/author data into new approvals field</p>'."\n";
 			}
 		}
