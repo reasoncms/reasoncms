@@ -839,7 +839,7 @@ class PublicationModule extends Generic3Module
 	
 	function _should_restrict_to_current_issue()
 	{
-		if(empty($this->current_item_id) && empty($this->request['section_id'])&& empty($this->request['issue_id']) && empty($this->request['search']) && empty($this->request['filters']))
+		if(empty($this->current_item_id) && empty($this->request['section_id'])&& empty($this->request['issue_id']) && empty($this->request['search']) && empty($this->request['filter1']) && empty($this->request['filter2']) && empty($this->request['filter3']))
 			return true;
 		else
 			return false;
