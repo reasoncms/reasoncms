@@ -93,6 +93,12 @@
 				'thumbnail_height' => 200,
 				)
 		),
+		'image_sidebar_200x' => array(
+			'sidebar' => array(
+				'module' => 'image_sidebar',
+				'thumbnail_width' => 200,
+				)
+		),
 		'image_sidebar_skip_first' => array(
 			'sidebar' => array(
 				'module' => 'image_sidebar',
