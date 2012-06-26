@@ -472,7 +472,8 @@ class textDateType extends textDateTimeType {
 	var $use_fields = array( 'month', 'day', 'year');
 	function set( $value )
 	{
-		$value = $value.' 00:00:00';
+		if(strlen($value) == 10)
+			$value = $value.' 00:00:00';
 		parent::set($value);
 	}
 }
