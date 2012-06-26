@@ -53,7 +53,7 @@ else
 		$es->add_type(id_of('minisite_page'));
 		$es->limit_tables();
 		$es->limit_fields();
-		$meta = $es->add_right_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
+		$meta = $es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
 		$str = $meta['parent_id']['table'] . "." . $meta['parent_id']['field'];
 		$es->add_relation('entity.id = ' . $str);
 		$result = $es->run_one();
@@ -68,7 +68,7 @@ else
 				$last_mod = $page->get_value('last_modified');
 				$page_name = $page->get_value('name');
 				$page_name = (!empty($page_name)) ? $page_name : '<em>Untitled</em>';
-				$report .= '<li>'. $page_name . ' (last modified ' . prettify_mysql_datetime($last_mod) . ')</li>';
+				$report .= '<li>'. $page_name . ' (id is ' . $page->id() . ', last modified ' . prettify_mysql_datetime($last_mod) . ')</li>';
 			}
 			$report .= '</ul>';
 		}
@@ -79,6 +79,11 @@ else
 		echo '<h2>Found sites with multiple root pages</h2>';
 		echo $report;
 		echo '<p><strong>You should go into the site editing interface, edit pages, choose "list view", and delete the rogue root page(s).</strong></p>';
+	}
+	else
+	{
+		echo '<h2>Congratulations!</h2>';
+		echo '<p>Your instance of Reason does not have any sites that contain multiple root pages.</p>';
 	}
 }
 ?>
