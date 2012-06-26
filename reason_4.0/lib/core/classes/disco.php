@@ -132,6 +132,7 @@
 			// phew.
 			$this->_process_ignore[] = 'id';
 			$this->_process_ignore[] = 'last_edited_by';
+			$this->_process_ignore[] = 'last_modified';
 
 			// collect values of entity
 			$values = array();
