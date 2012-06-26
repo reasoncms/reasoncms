@@ -428,7 +428,11 @@
 		if( !empty($changed) )
 		{
 			// entity has changed.  update last_mod and who last edited
-			$q = 'UPDATE entity SET last_modified = NOW(), last_edited_by = '.$user_id.' where id = ' . $id;
+			if(!empty($updates['entity']['last_modified']))
+				$lastmod = '"'.addslashes($updates['entity']['last_modified']).'"';
+			else
+				$lastmod = 'NOW()';
+			$q = 'UPDATE entity SET `last_modified` = '.$lastmod.', `last_edited_by` = "'.addslashes($user_id).'" where `id` = "'.addslashes($id).'"';
 			db_query( $q , 'Error updating last_modified' );
 
 			if( !empty($archive) )
