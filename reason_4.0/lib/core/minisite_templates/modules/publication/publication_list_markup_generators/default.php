@@ -41,6 +41,8 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 									'date_format',
 									'search_string',
 									'text_only',
+									//'issue_blurbs',
+									'current_filters',
 									);
 
 	function PublicationListMarkupGenerator ()
@@ -66,6 +68,9 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			
 		if(!empty($this->passed_vars['search_string']))
 			$this->markup_string .= $this->get_search_header_markup();
+		
+		/* if(!empty($this->passed_vars['issue_blurbs']))
+			$this->markup_string .= $this->get_issue_blurbs_markup(); */
 			
 		//if we're just listing items from one section ....
 		if(!empty($this->passed_vars['current_section']))
@@ -76,6 +81,12 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			//if we're just looking at the items in this section from one issue, provide a link to see items in this section from all issues
 			if(!empty($this->passed_vars['view_all_items_in_section_link']) && !empty($this->passed_vars['current_issue']) )
 				$this->markup_string .= $this->get_all_items_in_section_link_markup();
+		}
+			
+		//if we're listing filtered items ....
+		if(!empty($this->passed_vars['current_filters']))
+		{
+			$this->markup_string .= $this->get_filter_message_markup();
 		}
 		
 		//show any featured items
@@ -181,6 +192,21 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		return '';
 	}
 	
+	function get_issue_blurbs_markup()
+	{
+		if(!empty($this->passed_vars['issue_blurbs']))
+		{
+			$ret = '<div class="issueBlurbs">';
+			foreach($this->passed_vars['issue_blurbs'] as $blurb)
+			{
+				$ret.= '<div class="issueBlurb">'.demote_headings($blurb->get_value('content'), 1).'</div>'."\n";
+			}
+			$ret .= '</div>'."\n";
+			return $ret;
+		}
+		return '';
+	}
+	
 //////
 // Featured item methods
 //////
@@ -252,7 +278,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 	function get_current_issue_markup($issue)
 	{
 		$markup_string = '';
-		$markup_string .= '<div class="issueName"><h3>'.$this->_get_issue_label($issue).'</span></h3></div>'."\n";
+		$markup_string .= '<div class="issueName"><h3>'.$this->_get_issue_label($issue).'</h3></div>'."\n";
 		return $markup_string;
 	}
 	
@@ -415,6 +441,46 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			}
 		}
 		return $markup_string;		
+	}
+	
+	function get_filter_message_markup()
+	{
+		$markup_string = '';
+		if($msg = $this->_get_filter_message())
+		{
+			$markup_string .= '<div class="filterMessage">'."\n";
+			$markup_string .= '<h3>'.$msg.' <span class="clear">(<a href="./">All posts</a>)</span></h3>'."\n";
+			$markup_string .= '</div>'."\n";
+		}
+		return $markup_string;	
+	}
+	function _get_filter_message()
+	{
+		$msg = '';
+		if(!empty($this->passed_vars['current_filters']))
+		{
+			$parts = array();
+			foreach($this->passed_vars['current_filters'] as $filterkey => $entities)
+			{
+				foreach($entities as $e)
+				{
+					$parts[] = '"'.$e->get_value('name').'"';
+				}
+			}
+			$glue = ' ';
+			$num_parts = count($parts);
+			if($num_parts > 1)
+			{
+				$last_part = 'and '.array_pop($parts);
+				$parts[] = $last_part;
+				if($num_parts > 2)
+				{
+					$glue = ', ';
+				}
+			}
+			$msg = 'Posts tagged with '.implode($glue, $parts);
+		}
+		return $msg;
 	}
 }
 ?>
