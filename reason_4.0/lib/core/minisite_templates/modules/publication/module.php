@@ -177,6 +177,7 @@ class PublicationModule extends Generic3Module
 									   'publication'=>'get_publication_entity',
 									   'search_string' => 'get_sanitized_search_string',
 									   'text_only' => 'get_text_only_state',
+									   'current_filters' => 'get_current_filter_entities',
 									);
 	
 	/**
