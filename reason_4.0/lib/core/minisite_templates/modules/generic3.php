@@ -130,6 +130,7 @@
 		var $use_filters = false;
 		var $filter_types = array();
 		var $filters = array();
+		var $filters_parsed = false;
 		var $filter_entities;
 		var $search_fields = array('entity.name');
 		var $default_links = array();
@@ -747,7 +748,7 @@
 				$link_frags[ 'textonly' ] = 1;
 			if($this->use_filters)
 			{
-				foreach($this->filters as $key=>$vals)
+				foreach($this->get_current_filters() as $key=>$vals)
 				{
 					// only add if both type and id are present
 					if (!empty($vals['type']) && !empty($vals['id']))
@@ -905,6 +906,14 @@
 			return $this->filter_entities;
 			
 		}
+		function get_current_filters()
+		{
+			if(!$this->filters_parsed)
+			{
+				$this->get_filters_from_url();
+			}
+			return $this->filters;
+		}
 		function get_filters_from_url()
 		{
 			if(isset($this->request['filters']))
@@ -914,7 +923,24 @@
 			else
 			{
 				$this->filters = $this->_convert_url_to_filter_array($this->request);
+				$this->filters_parsed = true;
 			}
+		}
+		function get_current_filter_entities()
+		{
+			$filter_entities = $this->get_filter_entities();
+			$current_filters = $this->get_current_filters();
+			$ret = array();
+			foreach($current_filters as $key => $values)
+			{
+				 if(isset($filter_entities[$values['type']][$values['id']]))
+				 {
+					if(!isset($ret[$values['type']]))
+						$ret[$values['type']] = array();
+					$ret[$values['type']][$values['id']] = $filter_entities[$values['type']][$values['id']];
+				 }
+			}
+			return $ret;
 		}
 
 		function _redirect_from_old_url($request)
@@ -1153,8 +1179,7 @@
 		function get_filter_markup()
 		{
 			
-			
-			foreach($this->filters as $key=>$values)
+			foreach($this->get_current_filters() as $key=>$values)
 			{
 				$this->build_default_links($key);
 			}
@@ -1164,7 +1189,7 @@
 				$fd = $this->get_filter_displayer();
 				$fd->set_type($this->type);
 				$fd->set_filter_types($this->filter_types);
-				$fd->set_filters($this->filters);
+				$fd->set_filters($this->get_current_filters());
 				$fd->set_textonly($this->parent->textonly);
 				$fd->set_search_field_size($this->search_field_size);
 				$fd->set_max_filters($this->params['max_filters']);
@@ -1200,7 +1225,8 @@
 		function build_default_links($key)
 		{
 			$keyquot = htmlspecialchars($key,ENT_QUOTES,'UTF-8');
-			$this->default_links[$key] = 'filter'.$keyquot.'='.htmlspecialchars($this->filters[$key]['type'],ENT_QUOTES,'UTF-8').'-'.htmlspecialchars($this->filters[$key]['id'],ENT_QUOTES,'UTF-8');
+			$filters = $this->get_current_filters();
+			$this->default_links[$key] = 'filter'.$keyquot.'='.htmlspecialchars($filters[$key]['type'],ENT_QUOTES,'UTF-8').'-'.htmlspecialchars($filters[$key]['id'],ENT_QUOTES,'UTF-8');
 		}
 		
 		function show_feed_link()
