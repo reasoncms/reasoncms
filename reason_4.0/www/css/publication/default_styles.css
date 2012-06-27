@@ -27,6 +27,11 @@ div.publication div.moduleNav ul ul.links li {
 	border-top:none;
 	margin:0px;
 }
+div.publication div.moduleNav div.filterMessage span.clear {
+	font-size:0.84em;
+	font-weight:normal;
+	opacity:0.7;
+}
 div.publication div.fullPost div.comments ul li {
 	padding:1em;
 	margin:.5em 0px .5em 0px;
@@ -41,6 +46,12 @@ div.publication div.fullPost div.commentAdded h4 {
 div.publication div.fullPost div.commentAdded {
 	padding:.33em;
 	border:1px solid #C33C06;
+}
+div.publication div.fullPost div.addCommentForm table#discoTable {
+	width:100%;
+}
+div.publication div.fullPost div.addCommentForm table#discoTable #commentcontentRow textarea {
+	height:10em;
 }
 div.publication div.fullPost div.primaryContent {
 	width:70%;
@@ -63,6 +74,45 @@ div.publication div.fullPost div.images ul {
 	list-style:none;
 	text-align:center;
 }
+div.publication .primaryContent div.nextPrev h4, div.publication .primaryContent .nextPrev p {
+	margin:0;
+	font-size:1em;
+}
+div.publication .primaryContent .nextPrev {
+	display:inline-block;
+}
+div.publication .primaryContent .nextPrev, div#content div.publication .primaryContent .nextPrev {
+	display:block;
+	margin:2em 0;
+}
+div.publication .primaryContent .nextPrev:after {
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:both;
+    height:0;
+}
+div.publication .primaryContent .nextPrev .next {
+	width:47%;
+	float:right;
+}
+div.publication .primaryContent .nextPrev .prev {
+	width:47%;
+	padding-right:3%;
+	border-right:1px solid #ddd;
+	float:left;
+	text-align:right;
+}
+div.publication .primaryContent .nextPrev .next.only, div.publication .primaryContent .nextPrev .prev.only {
+	width:auto;
+	float:none;
+	padding:0;
+	border:none;
+	text-align:left;
+}
+div.publication .primaryContent .nextPrev .next.only {
+	text-align:right;
+}
 div.publication div.persistent {
 	float:right;
 	width:28%;
@@ -76,6 +126,11 @@ div.publication div.addItemLink {
 }
 div.publication div.back {
 	clear:left;
+	margin:2em 0;
+}
+div.publication .primaryContent div.back {
+	text-align:right;
+	margin:1.5em 0;
 }
 
 /* lets hide the "List All Issues" link */
