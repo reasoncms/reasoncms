@@ -1112,9 +1112,14 @@ div#login h4 {
 .editable table#discoTable {
 	width:100%;
 }
+
+.editable .words{
+	width: 20%;
+}
+
 .editable div.editRegion {
 	border:1px dotted #aaa;
-	padding:0 .65em;
+	padding:0 .65em
 }
 .editable div.editRegion a.editThis {
 	padding:.3em;
@@ -1122,6 +1127,17 @@ div#login h4 {
 	background-color:#F0F5FF;
 	font-size:90%;
 	text-decoration:none;
+}
+.editable .policy #discoTable textarea {
+	width: 100%;
+}
+div#content .editing #discoTable textarea {
+    width: 100%;
+}
+
+/* this makes publications play nicely with filtering. */
+.publication .editable #disco_form{
+	float: left;
 }
 
 /* Images */
