@@ -178,6 +178,7 @@ class PublicationModule extends Generic3Module
 									   'search_string' => 'get_sanitized_search_string',
 									   'text_only' => 'get_text_only_state',
 									   'current_filters' => 'get_current_filter_entities',
+									   'inline_editing_info' => 'get_inline_editing_info',
 									);
 	
 	/**
@@ -247,6 +248,18 @@ class PublicationModule extends Generic3Module
 		if(!empty($this->css))
 		{
 			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.$this->css,'',true);
+		}
+		
+		// Register this module for inline editing
+		$inline_edit =& get_reason_inline_editing($this->page_id);
+		$inline_edit->register_module($this, $this->user_can_inline_edit());
+		
+		// Only load inline_editing javascript if inline editing is available for the module and active for the module
+		if ($inline_edit->available_for_module($this) && $inline_edit->active_for_module($this))
+		{
+			$head_items =& $this->get_head_items();
+			$head_items->add_javascript(JQUERY_URL, true);
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/publications/inline_editing.js');
 		}
 	}
 	
@@ -1124,8 +1137,8 @@ class PublicationModule extends Generic3Module
 	*	Displays the full view of a news item.
 	*   @param $item the news item entity
 	*/
-	function show_item_content( $item ) // {{{
-	{
+	function show_item_content( $item )
+	{	
 		if( !$this->_ok_to_view )
 		{
 			echo $this->_unauthorized_message;
@@ -1140,11 +1153,20 @@ class PublicationModule extends Generic3Module
 			$list_markup_generator = $this->set_up_generator_of_type('list');
 			echo $list_markup_generator->get_current_issue_markup($current_issue);
 		}
-		
-		$item_markup_generator = $this->set_up_generator_of_type('item', $item);
-		echo $item_markup_generator->get_markup();	
-	} // }}}
-
+			
+		// Show a disco inline editing form if it is available and active, otherwise show the page normally
+		$inline_edit =& get_reason_inline_editing($this->page_id);
+		if ($inline_edit->available_for_module($this) && $inline_edit->active_for_module($this))
+		{
+			$this->show_inline_editing_form();
+		}
+		else
+		{
+			$item_markup_generator = $this->set_up_generator_of_type('item', $item);
+			echo $item_markup_generator->get_markup();
+		}
+	}
+	
 	//this is the function used to generate the variable needed by the list_markup_generator
 	function get_site_entity()
 	{
@@ -2271,6 +2293,17 @@ class PublicationModule extends Generic3Module
 			//emptied out so that item markup generator can handle it
 		} // }}}
 		
+		function get_inline_editing_info()
+		{
+			$inline_edit =& get_reason_inline_editing($this->page_id);
+			
+			$url = carl_make_link($inline_edit->get_activation_params($this));
+			$available = $inline_edit->available_for_module($this);
+			$active = $inline_edit->active_for_module($this);
+			
+			return array('url' => $url, 'available' => $available, 'active' => $active);
+		}
+		
 		function construct_back_link()
 		{
 			//need to go back to page 1, since we could have a page value wherever we are now
@@ -2622,6 +2655,109 @@ class PublicationModule extends Generic3Module
 			if(!empty($p))
 				$p->set_value('link_url',$this->get_link_to_full_item($p));
 			return $p;
+		}
+		
+		//////////////////////////////////////////
+		// Inline Editing Functions
+		//////////////////////////////////////////
+		
+		/**
+		 * Determines whether or not the user can inline edit.
+		 *
+		 * Returns true in two cases:
+		 *
+		 * 1. User is a site administrator of the page.
+		 * 2. User is the author of the post.
+		 *
+		 * @return boolean;
+		 */
+		function user_can_inline_edit()
+		{
+			if (!isset($this->_user_can_inline_edit))
+			{
+				$this->_user_can_inline_edit = (reason_check_authentication() && (reason_check_access_to_site($this->site_id) || $this->user_is_author()));
+			}
+			return $this->_user_can_inline_edit;
+		}
+		
+		/**
+		* Checks to see if the user's id matches the auther of the current item.
+		*/ 
+		function user_is_author()
+		{
+			if (isset($this->current_item_id) && ($netid = reason_check_authentication()))
+			{
+				$item = new entity($this->current_item_id);
+				if ($item->get_value('created_by') == get_user_id($netid))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		function show_inline_editing_form()
+		{
+			echo '<div class="editable editing">';
+			$item = new entity($this->current_item_id);
+			$item_title = $item->get_value('release_title');
+			$item_content = $item->get_value('content');
+			$item_description = $item->get_value('description');
+			$form = new Disco();
+			$form->strip_tags_from_user_input = true;
+			$form->allowable_HTML_tags = REASON_DEFAULT_ALLOWED_TAGS;
+			$form->actions = array('save' => 'Save', 'save_and_finish' => 'Save and Finish Editing');
+			$form->add_element('title_of_story', 'text');
+			$form->set_display_name('title_of_story', 'Title');
+			$form->set_value('title_of_story', $item_title);
+			$form->add_element('editable_content', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
+			$form->set_display_name('editable_content','Content');
+			$form->set_value('editable_content', $item_content);
+			$form->add_element('description_of_story', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
+			$form->set_display_name('description_of_story', 'Excerpt/Teaser (displayed on post listings; not required):');
+			$form->set_value('description_of_story', $item_description);
+			$form->add_required('editable_content');
+			$form->add_callback(array(&$this, 'process_editable'),'process');
+			$form->add_callback(array(&$this, 'where_to_editable'), 'where_to');
+			$form->add_callback(array(&$this, 'run_error_checks_editable'), 'run_error_checks');
+			$form->run();
+			echo '</div>';
+		}
+		
+		/**
+		* Update the Reason entity that the user edited.
+		*/
+		function process_editable(&$disco)
+		{
+			$values = array();
+			$values['release_title'] = trim(tidy($disco->get_value('title_of_story')));
+			$values['content'] = trim(tidy($disco->get_value( 'editable_content' )));
+			$values['description'] = trim(tidy($disco->get_value('description_of_story')));
+			$archive = ($disco->get_chosen_action() == 'save_and_finish') ? true : false;
+			reason_update_entity($this->current_item_id, get_user_id($this->get_user_netid()), $values, $archive );
+		}
+		
+		// Callback for disco edit form
+		function where_to_editable(&$disco)
+		{
+			if( $disco->get_chosen_action() == 'save' )
+			{
+				$url = get_current_url();
+			}
+			else
+			{
+				$inline_edit =& get_reason_inline_editing($this->page_id);
+				$url = carl_make_redirect($inline_edit->get_deactivation_params($this));
+			}
+			return $url;
+		}		
+		
+		function run_error_checks_editable(&$disco)
+		{
+			if (carl_empty_html($disco->get_value('editable_content')) == true)
+			{
+				$disco->set_error('editable_content', 'The post must contain content.');
+			}
 		}
 	}
 ?>

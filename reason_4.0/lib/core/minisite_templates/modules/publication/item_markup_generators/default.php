@@ -37,6 +37,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 								  'commenting_status',
 								  'permalink',
 								  'comment_has_errors',
+								  'inline_editing_info',
 								  //'next_post',
 								  //'previous_post',
 								);
@@ -60,7 +61,10 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$this->markup_string .= '<div class="commentAdded">'.$this->get_comment_added_section().'</div>'."\n";
 		}
-		
+		if($this->should_show_inline_editing_link())
+		{
+			$this->markup_string .= $this->get_open_inline_editing_section();
+		} 
 		$this->markup_string .= $this->get_title_section();
 		if($this->should_show_date_section())
 		{
@@ -73,6 +77,10 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		if($this->should_show_content_section())
 		{
 			$this->markup_string .= '<div class="text">'.$this->get_content_section().'</div>'."\n";
+		}
+		if($this->should_show_inline_editing_link())
+		{
+			$this->markup_string .= $this->get_close_inline_editing_section();
 		}
 		if($this->should_show_comments_section() || $this->should_show_comment_adder_section())
 		{
@@ -463,6 +471,35 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 		}
 		else
 			return false;
+	}
+	
+	// returns true if inline editing is enabled, but NOT active; false otherwise
+	// This tells the markup generator if it should show the "edit" link and the dotted gray border
+	// around the corresponding content
+	function should_show_inline_editing_link()
+	{
+		$available = (isset($this->passed_vars['inline_editing_info']['available'])) ? $this->passed_vars['inline_editing_info']['available'] : false;
+		$active = (isset($this->passed_vars['inline_editing_info']['active'])) ? $this->passed_vars['inline_editing_info']['active'] : false;
+		if ($available && !$active) return true;
+		else return false;
+	}
+	
+	// returns the markup for the opening div's of the inline-editing box and link
+	function get_open_inline_editing_section()
+	{
+		return '<div class="editable"><div class="editRegion">';
+	}
+	
+	// return the markup for the "edit" link and the closing div's for the inline-editing box
+	// and link
+	function get_close_inline_editing_section()
+	{
+		$markup_string = '';
+		$url = $this->passed_vars['inline_editing_info']['url'];
+		$link = '<p><a href="'.$url.'" class="editThis">Edit Post</a></p>';	
+		$markup_string .= $link .'</div>';
+		$markup_string .= '</div>';
+		return $markup_string;
 	}
 
 }
