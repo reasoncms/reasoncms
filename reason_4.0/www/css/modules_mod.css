@@ -1119,7 +1119,7 @@ div#login h4 {
 
 .editable div.editRegion {
 	border:1px dotted #aaa;
-	padding:0 .65em
+	padding:0 .65em;
 }
 .editable div.editRegion a.editThis {
 	padding:.3em;
