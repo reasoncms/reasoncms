@@ -56,8 +56,10 @@ class EditableContentModule extends ContentModule
 	function run_editable()
 	{
 		$inline_edit =& get_reason_inline_editing($this->page_id);
-		echo '<div id="pageContent" class="editable">'."\n";
-		if( $inline_edit->active_for_module($this) )
+		$active = $inline_edit->active_for_module($this);
+		$class = ($active) ? 'editable editing' : 'editable';
+		echo '<div id="pageContent" class="'.$class.'">'."\n";
+		if( $active )
 		{
 			$form = new Disco();
 			$form->strip_tags_from_user_input = true;
