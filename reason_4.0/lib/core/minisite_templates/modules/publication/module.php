@@ -2742,7 +2742,7 @@ class PublicationModule extends Generic3Module
 		function process_editable(&$disco)
 		{
 			$values = array();
-			$values['release_title'] = trim(tidy($disco->get_value('title_of_story')));
+			$values['release_title'] = trim(strip_tags($disco->get_value('title_of_story')));
 			$values['content'] = trim(tidy($disco->get_value( 'editable_content' )));
 			$values['description'] = trim(tidy($disco->get_value('description_of_story')));
 			$archive = ($disco->get_chosen_action() == 'save_and_finish') ? true : false;
