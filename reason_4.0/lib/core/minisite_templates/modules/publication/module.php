@@ -250,16 +250,19 @@ class PublicationModule extends Generic3Module
 			$this->parent->add_stylesheet(REASON_HTTP_BASE_PATH.$this->css,'',true);
 		}
 		
-		// Register this module for inline editing
-		$inline_edit =& get_reason_inline_editing($this->page_id);
-		$inline_edit->register_module($this, $this->user_can_inline_edit());
-		
-		// Only load inline_editing javascript if inline editing is available for the module and active for the module
-		if ($inline_edit->available_for_module($this) && $inline_edit->active_for_module($this))
+		if (!$this->related_mode)
 		{
-			$head_items =& $this->get_head_items();
-			$head_items->add_javascript(JQUERY_URL, true);
-			$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/publications/inline_editing.js');
+			// Register this module for inline editing
+			$inline_edit =& get_reason_inline_editing($this->page_id);
+			$inline_edit->register_module($this, $this->user_can_inline_edit());
+			
+			// Only load inline_editing javascript if inline editing is available for the module and active for the module
+			if ($inline_edit->available_for_module($this) && $inline_edit->active_for_module($this))
+			{
+				$head_items =& $this->get_head_items();
+				$head_items->add_javascript(JQUERY_URL, true);
+				$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/publications/inline_editing.js');
+			}
 		}
 	}
 	
@@ -2666,7 +2669,7 @@ class PublicationModule extends Generic3Module
 		 *
 		 * Returns true in two cases:
 		 *
-		 * 1. User is a site administrator of the page.
+		 * 1. User is a site administrator of the page the story belongs to.
 		 * 2. User is the author of the post.
 		 *
 		 * @return boolean;
@@ -2675,7 +2678,16 @@ class PublicationModule extends Generic3Module
 		{
 			if (!isset($this->_user_can_inline_edit))
 			{
-				$this->_user_can_inline_edit = (reason_check_authentication() && (reason_check_access_to_site($this->site_id) || $this->user_is_author()));
+				if (!empty($this->current_item_id))
+				{
+					$story_id = $this->current_item_id;
+					$owner =  get_owner_site_id($story_id);
+					$this->_user_can_inline_edit = (reason_check_authentication() && ((reason_check_access_to_site($owner) || $this->user_is_author())));
+				}
+				else
+				{
+					$this->_user_can_inline_edit = false;
+				}
 			}
 			return $this->_user_can_inline_edit;
 		}
