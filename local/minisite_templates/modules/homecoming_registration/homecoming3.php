@@ -36,7 +36,9 @@ class HomecomingRegistrationConfirmation extends FormStep
 		$attended_luther = $this->controller->get('attended_luther');
 		$guest_class = $this->controller->get('guest_class');
 		$attend_program = $this->controller->get('attend_program');
+		$dinner_dietary_restrictions = $this->controller->get('dinner_dietary_restrictions');
 		$attend_luncheon = $this->controller->get('attend_luncheon');
+		$attend_50th_reception = $this->controller->get('attend_50th_reception');
 		$attend_dinner_50_to_25 = $this->controller->get('attend_dinner_50_to_25');
 		$attend_dinner_20_to_10 = $this->controller->get('attend_dinner_20_to_10');
 		$attend_dinner_5 = $this->controller->get('attend_dinner_5');
@@ -78,21 +80,28 @@ class HomecomingRegistrationConfirmation extends FormStep
 		{
 			$txt .= '<li><strong>Tickets for Alumni Program:</strong> '.$attend_program.'</li>'."\n";
 		}
+		if($dinner_dietary_restrictions)
+		{
+			$txt .= '<li><strong>Dietary Restrictions:</strong> '.$dinner_dietary_restrictions.'</li>'."\n";
+		}
+		if ($attend_50th_reception){
+			$txt .= '<li><strong>Attend 50th Year Reunion Reception:</strong> '.$attend_luncheon.'</li>'."\n";	
+		}
 		if($attend_luncheon)
 		{
-			$txt .= '<li><strong>Attend 75-50 Year Reunion Luncheon :</strong> '.$attend_luncheon.'</li>'."\n";
+			$txt .= '<li><strong>Attend ' . $class_year . ' Year Reunion Luncheon:</strong> '.$attend_luncheon.'</li>'."\n";
 		}
 		if($attend_dinner_50_to_25)
 		{
-			$txt .= '<li><strong>Attend 50-25 Year Reunion Dinner:</strong> '.$attend_dinner_50_to_25.'</li>'."\n";
+			$txt .= '<li><strong>Attend ' . $class_year . ' Year Reunion Dinner:</strong> '.$attend_dinner_50_to_25.'</li>'."\n";
 		}
 		if($attend_dinner_20_to_10)
 		{
-			$txt .= '<li><strong>Attend 20-10 Year Reunion Reception:</strong> '.$attend_dinner_20_to_10.'</li>'."\n";
+			$txt .= '<li><strong>Attend ' . $class_year . ' Year Reunion Reception:</strong> '.$attend_dinner_20_to_10.'</li>'."\n";
 		}
 		if($attend_dinner_5)
 		{
-			$txt .= '<li><strong>Attend 5 Year Reunion Reception:</strong> '.$attend_dinner_5.'</li>'."\n";
+			$txt .= '<li><strong>Attend ' . $class_year . ' Year Reunion Reception:</strong> '.$attend_dinner_5.'</li>'."\n";
 		}
 		if ($this->controller->get('ride_in_parade'))
 		{
@@ -130,6 +139,8 @@ class HomecomingRegistrationConfirmation extends FormStep
 		attended_luther='".((!empty($attended_luther)) ? addslashes($attended_luther) : 'NULL')."',
 		guest_class=".((!empty($guest_class)) ? addslashes($guest_class) : 'NULL').",
 		attend_program=".((!empty($attend_program)) ? addslashes($attend_program) : 'NULL').",
+		dinner_dietary_restrictions=".((!empty($dinner_dietary_restrictions)) ? addslashes($dinner_dietary_restrictions) : 'NULL').",
+		attend_50th_reception=".((!empty($attend_50th_reception)) ? addslashes($attend_50th_reception) : 'NULL').",
 		attend_luncheon=".((!empty($attend_luncheon)) ? addslashes($attend_luncheon) : 'NULL').",
 		attend_dinner_50_to_25=".((!empty($attend_dinner_50_to_25)) ? addslashes($attend_dinner_50_to_25) : 'NULL').",
 		attend_dinner_20_to_10=".((!empty($attend_dinner_20_to_10)) ? addslashes($attend_dinner_20_to_10) : 'NULL').",

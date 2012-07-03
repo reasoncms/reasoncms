@@ -98,52 +98,43 @@ class HomecomingRegistrationOneForm extends FormStep
 			),
 		),
 
-        'dinner_vegetarian' => array(
-			'type' => 'radio_inline_no_sort',
-            'display_name' => 'Do you require a vegetarian meal?',
-			'options' => array('yes' => 'Yes', 'no' => 'No'),
+        'dinner_dietary_restrictions' => array(
+			'type' => 'textarea',
+            'display_name' => 'Do you or any of your guests require a vegetarian or gluten-free meal?',
+			'comments' => 'Please describe',
 		),
 //        'dinner_guests_names' => array(
 //			'type' => 'textarea',
 //            'display_name' => 'Alumni Dinner Guest Names and Class Year (if applicable) ',	
 //		),
-        'vegetarian_guests' => array(
-			'type' => 'radio_inline_no_sort',
-			'display_name' => 'Do any of your guests require vegetarian meal?',
-			'options' => array('yes' => 'Yes', 'no' => 'No'),
-		),
-        'vegetarian_guests_names' => array(
-			'type' => 'text',
-			'display_name' => 'Number of guests requiring vegetarian meals',
-			'size' => 2,
-		),
+  //       'vegetarian_guests' => array(
+		// 	'type' => 'radio_inline_no_sort',
+		// 	'display_name' => 'Do any of your guests require vegetarian meal?',
+		// 	'options' => array('yes' => 'Yes', 'no' => 'No'),
+		// ),
+  //       'vegetarian_guests_names' => array(
+		// 	'type' => 'text',
+		// 	'display_name' => 'Number of guests requiring vegetarian meals',
+		// 	'size' => 2,
+		// ),
 //		'seating_preference' => array(
 //			'type' => 'textarea',
 //			'display_name' => 'Please tell us with whom you wish to be seated',
 //		),
-		'luncheon_header' => array(
+		'reunion_reservations_header' => array(
 			'type' => 'comment',
 			'text' => '<h3>Class Reunion Reservations</h3>'
 		),
-        'attend_1961_reception'=>'text',
+        'attend_50th_reception'=>'text',
 		'attend_luncheon' => 'text',
-		'dinner_header' => array(
-			'type' => 'comment',
-			'text' => '<h3>Class Reunion Dinners/Receptions</h3>',
-		),
+		// 'dinner_header' => array(
+		// 	'type' => 'comment',	
+		// 	'text' => '<h3>Class Reunion Dinners/Receptions</h3>',
+		// ),
 		'attend_dinner_50_to_25' => 'text',
 		'attend_dinner_20_to_10' => 'text',
 		'attend_dinner_5' => 'text',
-		'ride_in_parade' => array(
-			'type' => 'radio_inline_no_sort',
-			'display_name' => 'Will you ride in the parade?',
-			'comments' => 'Class of 1962 only',
-			'options' => array(
-				'yes' => 'Yes',
-				'no' => 'No',
-			),
-		),
-                
+		'ride_in_parade' => 'text',
 	);
 	
 	var $required = array('current_first_name', 'current_last_name', 'graduation_name', 'e-mail');
@@ -175,19 +166,30 @@ class HomecomingRegistrationOneForm extends FormStep
 				'options' => array( 
 					'1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 
 					'6' => '6', '7' => '7', '8' => '8', '9' => '9',	'10' => '10',),
-				)
-			);
-                // 50th reception
-                $this->change_element_type(
+			)
+		);
+        // 50th reception
+        $this->change_element_type(
 			'attend_50th_reception', 'select', array(
-				'display_name' => 'Reservation for Friday\'s reception',
-				'comments' => '<br /> Class of 1962 only<br />No Cost',
+				'display_name' => 'Reservation for Friday\'s 50th reunion reception',
+				'comments' => '<br /> Class of ' . ($date['year'] - 50) . ' only<br />No Cost',
 				'options' => array( 
 					'1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 
 					'6' => '6', '7' => '7', '8' => '8', '9' => '9',	'10' => '10',),
-				)
-			);
-			
+			)
+		);
+		
+		// ride in parade
+        $this->change_element_type(
+			'ride_in_parade', 'radio_inline_no_sort', array(
+				'display_name' => 'Will you ride in the parade?',
+				'comments' => 'Class of ' . ($date['year'] - 50) . ' only',
+				'options' => array(
+					'yes' => 'Yes',
+					'no' => 'No',
+				),
+			)
+		);	
 
 		// Set years and ticket cost for 55 to 25 year reunions
 		$classes_string_55_to_25 = 'for Classes ';
@@ -198,7 +200,7 @@ class HomecomingRegistrationOneForm extends FormStep
 		$classes_string_55_to_25 .= $date['year'] - 25;
 		$this->change_element_type(
 			'attend_dinner_50_to_25', 'select_no_sort', array(
-				'display_name' => 'Tickets for Saturday\'s Reunion Dinner', 
+				'display_name' => 'Tickets for Saturday\'s Reunion Dinner',  
 				'comments' => '<br />'.$classes_string_55_to_25.'<br />$20/person',
 				'options' => array(
 					'--'=>'--', 
@@ -270,7 +272,7 @@ class HomecomingRegistrationOneForm extends FormStep
 
 		if (isset($program_tix))
 	  	{
-			$amount = $amount + ($program_tix * 40);
+			$amount = $amount + ($program_tix * 20);
 		}
 		
 		if (isset($dinner_tix_50_to_25))
