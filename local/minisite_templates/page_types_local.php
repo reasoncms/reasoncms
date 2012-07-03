@@ -291,6 +291,28 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'lfw_registration' => array(
 		'main_post' => 'lfw_form',
 	),
+	'luther2010_admissions' => array(
+		'main_head' => array(
+			'module' => 'feature/feature',
+			'shuffle' => false,
+			'autoplay_timer' => 12,
+			'width'=>716,
+			'height'=>288
+		),
+		'main_head_5' => '',
+		'main_2' => '',
+		'main_3' => '',
+		'main_4' => '',
+		'main_post' => 'luther_events_mini',
+		'pre_sidebar' => 'main_blurb',
+		'pre_sidebar_2' => '',
+		'pre_sidebar_3' => '',
+		'sidebar_2' => '',
+		'sidebar_5'=> array( // News
+			'module' => 'luther_other_publication_news',
+			'max_num_to_show' => 3,
+		),
+	),
 	'luther2010_alumni' => array(
 		'main_head' => 'luther_carousel',
 		'main_head_5' => '',

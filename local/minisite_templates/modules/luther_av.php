@@ -35,7 +35,8 @@
 				echo '<aside class="news group">'."\n";
 				echo '<header class="blue-stripe"><h1><span>Video of the Week</span></h1></header>'."\n";
 			}
-			elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+			elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
@@ -46,7 +47,8 @@
 						
 			Generic3Module::run();
 			
-			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'

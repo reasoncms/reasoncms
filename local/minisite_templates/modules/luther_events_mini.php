@@ -79,7 +79,8 @@ class LutherEventsMiniModule extends EventsModule
 				}
 			}
 		}
-		else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+		else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 		{
 			echo '<section class="events group with-calendar" role="group">'."\n";
@@ -96,8 +97,9 @@ class LutherEventsMiniModule extends EventsModule
 		//echo '</div>'."\n";
 		echo '</ol>'."\n";
 		
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 		{
 			//echo '<nav id="calendar">'."\n";
 			$this->show_calendar_grid();
@@ -112,7 +114,8 @@ class LutherEventsMiniModule extends EventsModule
 		{
 			echo '</section> <!-- class="events" role="group" -->'."\n";
 		}
-		else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 		{
 			echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";
