@@ -120,11 +120,7 @@ class HomecomingRegistrationTwoForm extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
-        if (reason_check_authentication() == 'smitst01'){
-            echo 'You are Steve. Test away.';
-            $this->is_in_testing_mode = true;
-        }
-        
+                
         if (!$this->controller->get('amount')) {
             echo '<div id="homecomingSetupError">Sorry. There was a problem setting up payment for your form.
                             Please return to <a href="?_step=HomecomingRegistrationOneForm">Homecoming Registration</a> and try again.</div>';
@@ -140,6 +136,11 @@ class HomecomingRegistrationTwoForm extends FormStep {
             $this->is_in_testing_mode = false;
         }
 
+        if (reason_check_authentication() == 'smitst01'){
+            echo 'You are Steve. Test away.';
+            $this->is_in_testing_mode = true;
+        }
+        
         $this->change_element_type('credit_card_expiration_year', 'numrange', array('start' => date('Y'), 'end' => (date('Y') + 15), 'display_name' => 'Expiration Year'));
     }
     
