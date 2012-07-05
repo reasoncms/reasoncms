@@ -122,7 +122,7 @@ class HomecomingRegistrationTwoForm extends FormStep {
     function on_every_time() {
         if (reason_check_authentication() == 'smitst01'){
             echo 'You are Steve. Test away.';
-            $is_in_testing_mode = true;
+            $this->is_in_testing_mode = true;
         }
         
         if (!$this->controller->get('amount')) {
