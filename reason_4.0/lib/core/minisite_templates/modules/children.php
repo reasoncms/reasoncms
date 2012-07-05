@@ -146,15 +146,7 @@
 							$title_attr = ' title="'.reason_htmlspecialchars(strip_tags($child->get_value('name')),ENT_QUOTES).'"';
 						}
 						$page_name = strip_tags($page_name,'<span><strong><em>');
-						/* Check for a url (that is, the page is an external link); otherwise, use its relative address */
-						if( $child->get_value( 'url' ) )
-							$link = $child->get_value( 'url' );
-						else
-						{
-							$link = $child->get_value( 'url_fragment' ).'/';
-							if (!empty($this->textonly))
-								$link .= '?textonly=1';
-						}
+						$link = $this->get_page_link($child);
 						$uname = '';
 						if($child->get_value( 'unique_name' ))
 						{
@@ -250,6 +242,19 @@
 				return current($images);
 			}
 			return false;
+		}
+		function get_page_link($page)
+		{
+			/* Check for a url (that is, the page is an external link); otherwise, use its relative address */
+			if( $page->get_value( 'url' ) )
+				$link = $page->get_value( 'url' );
+			else
+			{
+				$link = $page->get_value( 'url_fragment' ).'/';
+				if (!empty($this->textonly))
+					$link .= '?textonly=1';
+			}
+			return $link;
 		}
 		function last_modified() // {{{
 		{
