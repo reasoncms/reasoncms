@@ -301,6 +301,22 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			$markup_string .= '<div class="issueMenu">'."\n";
 			$markup_string .= '<form action="'.htmlspecialchars(get_current_url(),ENT_QUOTES,'UTF-8').'">'."\n";
 			$markup_string .= '<label for="pubIssueMenuElement" class="issueLabel">Issue:</label>'."\n";
+
+			$markup_string .= '<script type="text/javascript">'."\n";
+			$markup_string .= '/* <![CDATA[ */'."\n";
+			$markup_string .= '
+			if (jQuery)
+			{
+				$(document).ready(function(){
+					$(".issueMenu input[type=\'submit\']").hide();
+					$(".issueMenu select[name=\'issue_id\']").change(function(){
+						$(this).parent("form").submit();
+					});
+				});
+			}';
+			$markup_string .= '/* ]]> */'."\n";
+			$markup_string .= '</script>';
+			
 			$markup_string .= '<select name="issue_id" id="pubIssueMenuElement">'."\n";
 			if (!$cur_issue_id)
 			{
@@ -313,7 +329,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 			}
 			$markup_string .= '</select>'."\n";
 			$markup_string .= ($this->passed_vars['text_only'] == 1) ? '<input type="hidden" name="textonly" value="1">' : '';
-			$markup_string .= '<input type="submit" name="go" value="Go" />'."\n";
+			$markup_string .= '<input type="submit" value="Go" />'."\n";
 			$markup_string .= '</form>'."\n";
 			$link = carl_make_link(array('issue_id' => 0));
 			$markup_string .= '<div class="allIssuesLink"><a href="'.$link.'">List all issues</a></div>';
