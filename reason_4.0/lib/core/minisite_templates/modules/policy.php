@@ -21,14 +21,25 @@
 	{
 		var $cleanup_rules = array(
 			'policy_id' => array('function' => 'turn_into_int'),
-			'audience' => array('function' => 'turn_into_string'),
+			'audience_id' => array('function' => 'turn_into_int'),
+			'a' => array('function' => 'turn_into_string'),
 			'show_all' => array( 'function' => 'check_against_array', 
 								 'extra_args' => array( 'true', 'false' ) ),
+		);
+		/**
+		 * Parameters this module can take in its page type definition
+		 *
+		 * audience_aliases allows you to have nicer URLs. Provide key-value pairs where the key is
+		 * the slug and the value is the unique name of the audience.
+		 */
+		var $acceptable_params = array(
+			'audience_aliases' => array(),
 		);
 		protected $_access_results = array();
 		protected $values;
 		protected $roots;
 		protected $policy;
+		protected $current_audience;
 		function init( $args = array() ) // {{{
 		{
 			parent::init( $args );
@@ -62,6 +73,31 @@
 				
 			}
 		} // }}}
+		protected function _get_current_audience()
+		{
+			if(!isset($this->current_audience))
+			{
+				if(!empty($this->request[ 'a' ]) && !empty($this->params['audience_aliases']) && isset($this->params['audience_aliases'][ $this->request[ 'a' ] ]) )
+				{
+					if($id = id_of($this->params['audience_aliases'][ $this->request[ 'a' ] ]))
+					{
+						$a = new entity($id);
+						if($a->get_values() && $a->get_value('type') == id_of('audience_type'))
+							$this->current_audience = $a;
+					}
+				}
+				
+				if(!isset($this->current_audience) && !empty($this->request[ 'audience_id' ]))
+				{
+					$a = new entity($this->request[ 'audience_id' ]);
+					if($a->get_values() && $a->get_value('type') == id_of('audience_type'))
+						$this->current_audience = $a;
+				}
+			}
+			if(!isset($this->current_audience))
+				$this->current_audience = false;
+			return $this->current_audience;
+		}
 		protected function _in_show_all_mode()
 		{
 			if(!empty($this->request['show_all']) && 'true' == $this->request['show_all'])
@@ -83,9 +119,15 @@
 			$es->add_type( id_of( 'policy_type' ) );
 			//$es->set_order( 'sortable.sort_order ASC' );
 			$es->set_order( 'entity.name ASC' );
+			//$es->set_env();
 			
 			$es->add_relation( table_of('show_hide', id_of( 'policy_type' )) .' != "hide"' );
 			$es->add_left_relationship_field( 'policy_parent' , 'entity' , 'id' , 'parent_id' );
+			
+			if($audience = $this->_get_current_audience())
+			{
+				$es->add_left_relationship($audience->id(),relationship_id_of('policy_to_relevant_audience'));
+			}
 			
 			return $es;
 		}
@@ -118,7 +160,7 @@
 				return;
 			}
 			
-			if ( empty( $this->request[ 'policy_id' ] ) && count( $roots ) == 1)
+			if ( empty( $this->request[ 'policy_id' ] ) && count( $roots ) == 1 && !$this->_get_current_audience())
 			{
 				foreach ( $roots as $k=>$v )
 				{
@@ -153,13 +195,32 @@
 		} // }}}
 		function show_root_list() // {{{
 		{
-			echo "<ul class='rootPolicyList'>\n";
-			foreach( $this->get_root_nodes() AS $root )
+			$roots = $this->get_root_nodes();
+			if(!empty($roots))
 			{
-				echo '<li class="rootPolicyItem"><a href="'.$this->page_link( $root ).'" class="rootPolicyLink">'.strip_tags( $root->get_value( 'name' ), "em,i" ).'</a> '.$root->get_value( 'description' ).'</li>';
+				if($audience = $this->_get_current_audience())
+					echo '<h3 class="audienceNote">Items for '.$audience->get_value('name').'</h3>'."\n";
+				echo "<ul class='rootPolicyList'>\n";
+				foreach( $roots AS $root )
+				{
+					echo '<li class="rootPolicyItem"><a href="'.$this->page_link( $root ).'" class="rootPolicyLink">'.strip_tags( $root->get_value( 'name' ), "em,i" ).'</a> '.$root->get_value( 'description' ).'</li>';
+				}
+				echo "</ul>\n";
 			}
-			echo "</ul>\n";
+			elseif($audience = $this->_get_current_audience())
+			{
+				echo '<h3 class="audienceEmptyNote">Sorry - this page contains no items for '.$audience->get_value('name').'.</h3>'."\n";
+				echo '<p><a href="'.$this->get_no_audience_link().'">Show all items</a></p>'."\n";
+			}
+			else
+			{
+				echo '<h3 class="noItemsNote">Sorry - this page contains no items.</h3>'."\n";
+			}
 		} // }}}
+		function get_no_audience_link()
+		{
+			return carl_make_link(array('audience_id'=>''));
+		}
 		function show_root_option_menu() // {{{
 		{
 			$e = new entity($this->page_id);
@@ -175,7 +236,12 @@
 				echo '>'.prettify_string( $root->get_value( 'name' ) ).'</option>'."\n";
 			}
 			echo '';
-			if ($this->textonly) echo '<input type="hidden" name="textonly" value="1"/>';
+			if ($this->textonly)
+				echo '<input type="hidden" name="textonly" value="1"/>';
+			if(!empty($this->request['a']))
+				echo '<input type="hidden" name="a" value="'.htmlspecialchars($this->request['a']).'" />';
+			if(!empty($this->request['audience_id']))
+				echo '<input type="hidden" name="audience_id" value="'.htmlspecialchars($this->request['audience_id']).'" />';
 			echo '</select><input type="submit" class="rootMenuSubmit" value="Go"></form>';
 
 		} // }}}
@@ -226,7 +292,7 @@
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('audience_type'));
-			$es->add_left_relationship($policy->id(),relationship_id_of('policy_to_relevant_audience'));
+			$es->add_right_relationship($policy->id(),relationship_id_of('policy_to_relevant_audience'));
 			$es->set_order('entity.name ASC');
 			return $es->run_one();
 		}
@@ -238,14 +304,12 @@
 			$es->set_order('entity.name ASC');
 			return $es->run_one();
 		}
-		function page_link( $page ) // {{{
+		function page_link( $policy ) // {{{
 		{
-			if( !is_object( $page ) )
-				$page = new entity( $page );
-
-			$link = '?policy_id=' . $page->id();
-			if (!empty($this->textonly))
-				$link .= '&amp;textonly=1';
+			if( !is_object( $policy ) )
+				$policy = new entity( $policy );
+			
+			$link = carl_make_link(array('policy_id'=>$policy->id()));
 
 			return $link;
 		} // }}}
@@ -304,7 +368,7 @@
 			{
 				$audience_names = array();
 				foreach($audiences as $audience)
-					$audience_names[] = $audience->get_value('name');
+					$audience_names[] = '<a href="'.$this->get_audience_link($audience).'">'.$audience->get_value('name').'</a>';
 				echo '<div class="audiences">';
 				echo 'For '.implode(', ',$audience_names);
 				echo "</div>\n";
@@ -321,6 +385,17 @@
 			}
 			echo '</div>'."\n";
 		} // }}}
+		protected function get_audience_link($audience)
+		{
+			if(!empty($this->params['audience_aliases']) && $audience->get_value('unique_name'))
+			{
+				if($alias = array_search($audience->get_value('unique_name'),$this->params['audience_aliases']))
+				{
+					return carl_make_link(array('policy_id'=>'','a'=>$alias,'audience_id'=>''));
+				}
+			}
+			return carl_make_link(array('policy_id'=>'','audience_id'=>$audience->id(),'a'=>''));
+		}
 		function display_sub_policy($policy)
 		{
 			echo '<a id="'.$policy->id().'"></a>';
