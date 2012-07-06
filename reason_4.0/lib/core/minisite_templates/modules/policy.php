@@ -219,7 +219,7 @@
 		} // }}}
 		function get_no_audience_link()
 		{
-			return carl_make_link(array('audience_id'=>''));
+			return carl_make_link(array('audience_id'=>'','a'=>'',));
 		}
 		function show_root_option_menu() // {{{
 		{
