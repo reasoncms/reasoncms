@@ -52,7 +52,7 @@
 						0 => 'Off',
 						1 => 'On' 
 					),
-					'add_null_value_to_top' => false,
+					'add_empty_value_to_top' => false,
 				)
 			);
 			$this->add_required( 'unique_name' );
@@ -67,7 +67,7 @@
 			$this->set_comments( 'department',form_comment('(If integrated) The office or department code or ID in central information system (e.g. LDAP, etc.)') );
 			//$this->set_comments( 'custom_url_handler', form_comment('Give a descriptive value if this site will NOT use Reason\'s default URL management code.') );
 			$this->change_element_type( 'custom_url_handler','hidden');
-			$this->change_element_type( 'use_custom_footer','select_no_sort',array('display_name'=>'Footer Type','options'=>array('no'=>'Standard','yes'=>'Custom'),'add_null_value_to_top' => false,));
+			$this->change_element_type( 'use_custom_footer','select_no_sort',array('display_name'=>'Footer Type','options'=>array('no'=>'Standard','yes'=>'Custom'),'add_empty_value_to_top' => false,));
 			if(!$this->get_value('use_custom_footer'))
 			{
 				$this->set_value('use_custom_footer','no');
@@ -274,12 +274,6 @@
 		
 		function create_base_dir()
 		{
-			$path = WEB_PATH.trim_slashes($this->get_value('base_url'));
-			if(!is_dir($path))
-			{
-				include_once(CARL_UTIL_INC.'basic/filesystem.php');
-				mkdir_recursive($path, 0775);
-			}
 			$um = new url_manager( $this->get_value( 'id'));
 			$um->update_rewrites();
 		}
