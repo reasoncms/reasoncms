@@ -129,7 +129,16 @@ class EditableContentModule extends ContentModule
 	{
 		if (!isset($this->_user_can_inline_edit))
 		{
-			$this->_user_can_inline_edit = (reason_check_access_to_site($this->site_id) || $this->get_site_user());
+			$user = reason_get_current_user_entity();
+			$this->_user_can_inline_edit = false;
+			if( !empty($user) && $this->cur_page->user_can_edit_field('content',$user) )
+			{
+				$this->_user_can_inline_edit = true;
+			}
+			elseif( $this->get_site_user() && $this->cur_page->role_could_edit_field('content', 'editor_user_role') )
+			{
+				$this->_user_can_inline_edit = true;
+			}
 		}
 		return $this->_user_can_inline_edit;
 	}
@@ -145,7 +154,7 @@ class EditableContentModule extends ContentModule
 			{
 				$es = new entity_selector( $this->site_id );
 				$es->add_type( id_of( 'site_user_type' ) );
-				$es->add_relation( 'entity.name = "'.$net_id.'"' );
+				$es->add_relation( 'entity.name = "'.addslashes($net_id).'"' );
 				$es->add_right_relationship( $this->page_id, relationship_id_of( 'page_to_site_user' ) );
 				$es->set_num(1);
 				$result = $es->run_one();
