@@ -808,10 +808,10 @@ class entity
 	 * @param string $direction 'left' or 'right' -- 'left' if this entity is on the right side of the relationship, 'right' if it is on the left (e.g. on which side of the entity is the relationship on?)
 	 * @return boolean
 	 */
-	function user_can_edit_relationship($relationship, $user = null, $direction)
+	function user_can_edit_relationship($relationship, $user = null, $direction, $entity_on_other_side =  null, $context_site = null)
 	{
 		$locks = $this->get_locks();
-		return $locks->user_can_edit_relationship($relationship, $user, $direction);
+		return $locks->user_can_edit_relationship($relationship, $user, $direction, $entity_on_other_side, $context_site);
 	}
 }
 
