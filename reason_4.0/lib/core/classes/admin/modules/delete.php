@@ -78,6 +78,12 @@
 					$this->_not_deletable_reason = 'insufficient_privileges';
 					return false;
 				}
+				$user = new entity($this->admin_page->user_id);
+				if(!$item->user_can_edit_field('state', $user))
+				{
+					$this->_not_deletable_reason = 'state_field_locked';
+					return false;
+				}
 			}
 			if( $this->admin_page->is_deletable() )
 			{
@@ -127,6 +133,9 @@
 						return false;
 					case 'reason_site_cannot_edit_type':
 						echo '<p>Unable to delete item. The site is restricted from adding / editing / or deleting items of this type. If this is unexpected, contact the administrator.</p>';
+						return false;
+					case 'state_field_locked':
+						echo '<p>This item has been locked, preventing it from being deleted. Please contact an administrator if it is important to delete this item.</p>';
 						return false;
 					case 'insufficient_privileges':
 						echo '<p>You do not have the privileges to delete this item.</p>';
