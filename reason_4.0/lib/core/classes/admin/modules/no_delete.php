@@ -26,12 +26,12 @@
 			
 			$this->borrowed_by = get_sites_that_are_borrowing_entity($this->admin_page->id);
 			
-			if( empty( $this->values ) && empty($this->borrowed_by ) )
+			/* if( empty( $this->values ) && empty($this->borrowed_by ) )
 			{
 				$link = unhtmlentities( $this->admin_page->make_link( array( 'cur_module' => 'Delete' ) ) );
 				header( 'Location: ' . $link );
 				die();
-			}
+			} */
 			$this->admin_page->title = 'Why can\'t I delete this item?';
 		} // }}}
 		function is_root_node() // {{{
@@ -53,6 +53,8 @@
 		function run() // {{{
 		{
 			$type = new entity( $this->admin_page->type_id );
+			$entity = new entity($this->admin_page->id);
+			$user = new entity( $this->admin_page->user_id );
 			$text = 
 			array
 			( 
@@ -66,6 +68,7 @@
 										<li>Select a different parent page for its children</li>
 										</ul>If you wish to delete this item, please select a different parent for the pages listed below.<br /><br />',
 							'borrowed' => '<p>This item is currently borrowed by one or more sites.  Deleting it might break their sites.  If you still want to delete it, contact the sites\' maintainers to ask if they can stop borrowing the item.</p>',
+							'locks' => 'This '.$type->get_value( 'name' ).' has had a lock applied to it that keeps it from being deleted. A reason administrator may have applied this lock in order to ensure that a site was not inadventently broken. Please contact a Reason administrator if you have any questions about the rationale for placing this lock on this '.$type->get_value( 'name' ).'.',
 			);
 			if(!empty($this->borrowed_by))
 			{
@@ -82,6 +85,10 @@
 			elseif( $this->is_root_node() )
 			{
 				echo $text[ 'root_node' ];
+			}
+			elseif(!$entity->user_can_edit_field('state',$user))
+			{
+				echo $text[ 'locks' ];
 			}
 			else
 			{
