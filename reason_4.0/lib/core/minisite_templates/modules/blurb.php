@@ -10,6 +10,7 @@ reason_include_once( 'minisite_templates/modules/default.php' );
 include_once( DISCO_INC . 'disco.php' );
 reason_include_once( 'function_libraries/admin_actions.php' );
 reason_include_once( 'classes/inline_editing.php' );
+reason_include_once( 'function_libraries/user_functions.php' );
 
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'BlurbModule';
 
@@ -179,7 +180,8 @@ class BlurbModule extends DefaultMinisiteModule
 	
 	function _blurb_is_editable($blurb)
 	{
-		if( get_owner_site_id( $blurb->id() ) == $this->site_id)
+		$user = reason_get_current_user_entity();
+		if( !empty($user) && get_owner_site_id( $blurb->id() ) == $this->site_id && $blurb->user_can_edit_field('content',$user) )
 			return true;
 		return false;
 	}
