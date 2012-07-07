@@ -52,6 +52,7 @@
 		 */
 		var $_id;
 		var $_entity = array();
+		var $_user;
 		var $_fields = array();
 		/**#@-*/
 
@@ -66,6 +67,7 @@
 			$this->_id = $id;
 			$this->admin_page =& $page;
 			$this->_entity = new entity( $id );
+			$this->_user = new entity( $this->admin_page->user_id );
 			$this->_fields = get_fields_by_type( $this->_entity->get_value( 'type' ) , true );
 		} // }}}
 		/**
@@ -143,6 +145,14 @@
 						{
 							$row = $this->get_rel_info( $v[ 'name' ] );
 							echo '<li><h4>';
+							if( !$this->_entity->user_can_edit_relationship($v['id'], $this->_user, 'right') )
+							{
+								echo '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="Locked" width="12" height="12" />';
+							}
+							elseif($this->_entity->relationship_has_lock($v['id'], 'right') && reason_user_has_privs($this->_user->id(), 'manage_locks'))
+							{
+								echo '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="Locked for some users" title="Locked for some users" width="12" height="12" />';
+							}
 							if( $row )
 							{
 								echo !empty( $row['display_name'] ) ? $row['display_name' ] : $row[ 'entity_name' ];
@@ -227,7 +237,17 @@
 									$title = !empty( $v[ 'description_reverse_direction' ]) ? $v['description_reverse_direction'] : $v['name'];
 								}
 							}
-							echo '<li><h4>'.$title.':</h4>'."\n";
+							echo '<li><h4>';
+							
+							if( !$this->_entity->user_can_edit_relationship($v['id'], $this->_user, 'left') )
+							{
+								echo '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="Locked" width="12" height="12" />';
+							}
+							elseif($this->_entity->relationship_has_lock($v['id'], 'left') && reason_user_has_privs($this->_user->id(), 'manage_locks'))
+							{
+								echo '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="Locked for some users" title="Locked for some users" width="12" height="12" />';
+							}
+							echo $title.':</h4>'."\n";
 							echo '<ul>'."\n";
 							foreach($associated_items[$key] AS $ent )
 							{
@@ -356,13 +376,33 @@
 			$this->_row = $this->_row%2;
 			$this->_row++;
 
-			echo '<td class="listRow' . $this->_row . ' col1">' . prettify_string( $field );
+			echo '<td class="listRow' . $this->_row . ' col1">';
+			if($lock_str = $this->_get_lock_indication_string($field))
+				echo $lock_str . '&nbsp;';
+			echo prettify_string( $field );
 			if( $field != '&nbsp;' ) echo ':';
 			echo '</td>';
 			echo '<td class="listRow' . $this->_row . ' col2">' . ( ($value OR (strlen($value) > 0)) ? $value : '<em>(No value)</em>' ). '</td>';
 
 			echo '</tr>';
 		} // }}}
+		
+		function _get_lock_indication_string($field)
+		{
+			if( $this->_entity->has_value($field) && $this->_entity->field_has_lock($field) )
+			{
+				if(!$this->_entity->user_can_edit_field($field, $this->_user))
+				{
+					return '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="Locked" width="12" height="12" />';
+				}
+				elseif(reason_user_has_privs( $this->_user->id(), 'manage_locks' ) )
+				{
+					return '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="Locked for some users" title="Locked for some users" width="12" height="12" />';
+				}
+			}
+			return '';
+		}
+		
 		/**#@+
 		 * Overloaded function for a default type
 		 * @param string $field the name of the field, will show up in the left column
