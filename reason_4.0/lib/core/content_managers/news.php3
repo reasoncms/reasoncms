@@ -344,7 +344,7 @@
 			{
 				$this -> add_required ('commenting_state');
 				$this -> set_display_name ('commenting_state', 'Allow comments');
-				$this->change_element_type('commenting_state', 'select_no_sort', array('options'=>array('on'=>'Yes', 'off'=>'No'), 'add_null_value_to_top' => false));
+				$this->change_element_type('commenting_state', 'select_no_sort', array('options'=>array('on'=>'Yes', 'off'=>'No'), 'add_empty_value_to_top' => false));
 				$this->add_comments('commenting_state', form_comment('This setting will only apply if this news/post item is used on a publication that supports comments, such as a blog.'));
 			}
 			if ( !$this -> get_value('commenting_state') )
