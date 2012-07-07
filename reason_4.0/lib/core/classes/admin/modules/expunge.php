@@ -47,6 +47,12 @@
 				return false;
 			}
 			$item = new entity($this->admin_page->id);
+			$user = new entity($this->admin_page->user_id);
+			if(!$item->user_can_edit_field('state', $user))
+			{
+				$this->_not_expungable_reason = 'state_field_locked';
+				return false;
+			}
 			if($item->get_value('state') != 'Deleted')
 			{
 				$this->_not_expungable_reason = 'not_deleted_yet';
@@ -96,6 +102,9 @@
 				{
 					case 'no_id_provided':
 						echo '<p>Unable to expunge item. Item may already have been expunged (sometimes this happens if you click twice on the expunge button)</p>';
+						return false;
+					case 'state_field_locked':
+						echo '<p>This item has been locked, preventing it from being expunged. Please contact an administrator if it is important to expunge this item.</p>';
 						return false;
 					case 'insufficient_privileges':
 						echo '<p>You do not have the privileges to expunge this item.</p>';
