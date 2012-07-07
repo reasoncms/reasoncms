@@ -42,6 +42,12 @@
 				return false;
 			}
 			$item = new entity($this->admin_page->id);
+			$user = new entity($this->admin_page->user_id);
+			if(!$item->user_can_edit_field('state', $user))
+			{
+				$this->_not_undeletable_reason = 'state_field_locked';
+				return false;
+			}
 			if($item->get_value('state') != 'Deleted')
 			{
 				$this->_not_undeletable_reason = 'not_deleted_yet';
@@ -76,6 +82,9 @@
 					return false;
 				case 'insufficient_privileges':
 					echo '<p>You do not have the privileges to undelete (e.g. publish) this item.</p>';
+					return false;
+				case 'state_field_locked':
+					echo '<p>This item has been locked, preventing it from being undeleted. Please contact an administrator if it is important to undelete this item.</p>';
 					return false;
 				case 'not_deleted_yet':
 					echo '<p>This item cannot be undeleted because it has not been deleted yet</p>';
