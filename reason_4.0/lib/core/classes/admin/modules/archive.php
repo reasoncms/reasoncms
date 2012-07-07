@@ -18,6 +18,9 @@
 			'form'=>array('thor_content'=>'specialchars'),
 			'minisite_page'=>array('extra_head_content'=>'specialchars'),
 		);
+		var $current;
+		var $_current_user;
+		var $_locks = array();
 		// basic node functionality
 		function ArchiveModule( &$page ) // {{{
 		{
@@ -27,6 +30,8 @@
 		{
 			$this->head_items->add_stylesheet(REASON_ADMIN_CSS_DIRECTORY.'archive.css');
 			$this->current = new entity( $this->admin_page->id );
+			
+			$this->_current_user = new entity( $this->admin_page->user_id );
 
 			$this->admin_page->title = 'History of "'.$this->current->get_value('name').'"';
 
@@ -40,12 +45,39 @@
 			$es->add_right_relationship( $this->admin_page->id, $this->rel_id );
 			$es->set_order( 'last_modified DESC, entity.id DESC' );
 			$archived = $es->run_one(false,'Archived');
+			
+			$this->_locks[$this->current->id()] = array(); // No problem replacing current entity with itself!
+			foreach($archived as $archive_id => $archive_entity)
+			{
+				$this->_locks[$archive_id] = $this->_get_archive_lock_info($archive_entity);
+			}
 
 			$history_top = array( $this->current->id() => $this->current );
 
 			$this->history = $history_top + $archived;
 			
 		} // }}}
+		/**
+		 * @param object $archive_entity
+		 * @return array fields that are locked and different (e.g. should not be changed)
+		 */
+		function _get_archive_lock_info($archive_entity)
+		{
+			$locked_fields = array();
+			foreach($archive_entity->get_values() as $field_name=>$field_value)
+			{
+				if(
+					$field_value != $this->current->get_value($field_name)
+					&&
+					!$this->current->user_can_edit_field($field_name, $this->_current_user)
+					
+				)
+				{
+					$locked_fields[] = $field_name;
+				}
+			}
+			return $locked_fields;
+		}
 		function run() // {{{
 		{
 		/*
@@ -57,7 +89,13 @@
 			echo '| <a href="'.$this->admin_page->make_link( array( 'wfn' => 'archive', 'id' => $this->admin_page->id, 'archive_page' => 'compare_all' ) ).'">Compare All</a>';
 			echo '<br /><br />';
 */
-			$archive_page = 'show_'. ( !empty( $this->admin_page->request['archive_page'] ) ? $this->admin_page->request['archive_page'] : 'compare' );
+			$archive_page = 'show_compare';
+			if(!empty( $this->admin_page->request['archive_page'] ))
+			{
+				$func_name = 'show_'. (string) $this->admin_page->request['archive_page'];
+				if(method_exists($this,$func_name))
+					$archive_page = $func_name;
+			}
 
 			$this->$archive_page();
 
@@ -141,15 +179,33 @@
 		} // }}}
 		function show_confirm_reinstate() // {{{
 		{
+			if(!isset($this->history[$this->admin_page->request[ 'archive_id' ]]))
+			{
+				echo '<p>This version was not found. <a href="'.$this->admin_page->make_link( array() ).'">Return</a></p>'."\n";
+			}
+			elseif(empty($this->_locks[$this->admin_page->request[ 'archive_id' ]]))
+			{
 			?>
 				Reinstating this version (<?php echo $this->get_archive_name( $this->admin_page->request['archive_id'] ); ?>) will change the current item.  Changes made to the most current will be archived and accessible through this very Archive Manager.  So don't worry.<br />
 				<br />
 				<a href="<?php echo $this->admin_page->make_link( array( 'id' => $this->admin_page->id, 'archive_page' => 'reinstate', 'archive_id' => $this->admin_page->request[ 'archive_id' ]) ) ?>">Confirm</a> | <a href="<?php echo $this->admin_page->make_link( array() ); ?>">Cancel</a><br />
 			<?php
+			}
+			else
+			{
+				echo '<p>This version cannot be reinstated becase doing so would change a locked field. <a href="'.$this->admin_page->make_link( array() ).'">Return</a></p>'."\n";
+			}
 		} // }}}
 		function show_reinstate() // {{{
 		{
-			$id = $this->admin_page->request[ 'archive_id' ];
+			if(!isset($this->history[$this->admin_page->request[ 'archive_id' ]]))
+			{
+				echo '<p>This version was not found. <a href="'.$this->admin_page->make_link( array() ).'">Return</a></p>'."\n";
+			}
+			elseif(empty($this->_locks[$this->admin_page->request[ 'archive_id' ]]))
+			{
+				$id = $this->admin_page->request[ 'archive_id' ];
+
 			$e = new entity( $id );
 			$values = $e->get_values();
 			$old_id = $this->admin_page->id;
@@ -160,7 +216,7 @@
 			if (isset($values['last_modified'])) unset($values['last_modified']);
 			$values[ 'state' ] = 'Live';
 
-			reason_update_entity( $this->admin_page->id, $this->admin_page->user_id, $values );
+				reason_update_entity( $this->admin_page->id, $this->admin_page->user_id, $values );
 			
 			// if this is a page, lets check a few things - we may have to run rewrites or clear the nav cache
 			if ($this->admin_page->type_id == id_of('minisite_page'))
@@ -187,8 +243,13 @@
 					$urlm->update_rewrites();
 				}
 			}
-			header( 'Location: '.unhtmlentities($this->admin_page->make_link( array( 'id' => $this->admin_page->id ) ) ) );
-			die();
+				header( 'Location: '.unhtmlentities($this->admin_page->make_link( array( 'id' => $this->admin_page->id ) ) ) );
+				die();
+			}
+			else
+			{
+				echo '<p>This version cannot be reinstated becase doing so would change a locked field. <a href="'.$this->admin_page->make_link( array() ).'">Return</a></p>'."\n";
+			}
 		} // }}}
 		function show_compare() // {{{
 		{
@@ -263,12 +324,18 @@
 			{
 				$select_form_a .= '<option value="'.$h->id();
 				if( $a->id() == $h->id() ) $select_form_a .= '" selected="selected';
-				$select_form_a .= '">'. $this->get_archive_name( $h->id() ) . "</option>\n";
+				$select_form_a .= '">'. $this->get_archive_name( $h->id() );
+				if(!empty($this->_locks[$h->id()]))
+					$select_form_a .= ' (locked)';
+				$select_form_a .= "</option>\n";
 				
 				
 				$select_form_b .= '<option value="'.$h->id();
 				if( !empty( $b_id ) AND $b->id() == $h->id() ) $select_form_b .= '" selected="selected';
-				$select_form_b .= '">'. $this->get_archive_name( $h->id() ) . "</option>\n";
+				$select_form_b .= '">'. $this->get_archive_name( $h->id() );
+				if(!empty($this->_locks[$h->id()]))
+					$select_form_b .= ' (locked)';
+				$select_form_a .= "</option>\n";
 				
 			}
 			
@@ -311,8 +378,22 @@
 				else
 					$class = 'listRow1';
 				
+				if(
+					( !empty($a) && in_array( $key, $this->_locks[$a->id()] ) )
+					||
+					( !empty($b) && in_array( $key, $this->_locks[$b->id()] ) )
+				)
+				{
+					$class .= ' lockedRow';
+					$lock_img = '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />';
+				}
+				else
+				{
+					$lock_img = '';
+				}
+				
 				echo '<tr>';
-				echo '<td class="'.$class.'" valign="top"><strong>'.prettify_string($key).':</strong></td>';
+				echo '<td class="'.$class.'" valign="top"><strong>'.$lock_img.prettify_string($key).':</strong></td>';
 				if(!empty($transformers[$key]))
 				{
 					$method = $transformers[$key];
@@ -339,7 +420,14 @@
 				if( $a_id != $this->admin_page->id )
 				{
 					echo '<td class="listRow1"'.(empty($b_id) ? ' colspan="2"' : '').'>';
-					echo '<a href="'.$this->admin_page->make_link( array( 'archive_page' => 'confirm_reinstate', 'archive_id' => $a_id) ).'">Make this version current</a>';
+					if(empty($this->_locks[$a->id()]))
+					{
+						echo '<a href="'.$this->admin_page->make_link( array( 'archive_page' => 'confirm_reinstate', 'archive_id' => $a_id) ).'">Make this version current</a>';
+					}
+					else
+					{
+						echo '<div class="lockNotice">This version cannot be made current because it would change a value that has been locked.</div>'."\n";
+					}
 					echo '</td>';
 				}
 				else
@@ -349,7 +437,14 @@
 					if( $b_id != $this->admin_page->id )
 					{
 						echo '<td class="listRow1">';
-						echo '<a href="'.$this->admin_page->make_link( array( 'archive_page' => 'confirm_reinstate', 'archive_id' => $b_id) ).'">Make this version current</a>';
+						if(empty($this->_locks[$b->id()]))
+						{
+							echo '<a href="'.$this->admin_page->make_link( array( 'archive_page' => 'confirm_reinstate', 	'archive_id' => $b_id) ).'">Make this version current</a>';
+						}
+						else
+						{
+							echo '<div class="lockNotice">This version cannot be made current because it would change a value that has been locked.</div>'."\n";
+						}
 						echo '</td>';
 					}
 					else
