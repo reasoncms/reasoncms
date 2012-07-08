@@ -470,14 +470,16 @@ class AdminPage
 		}
 		foreach( $links AS $key => $value )
 		{ 
+			$locked_class = !empty($value['locked']) ? 'locked' : 'notLocked';
+			$locked_img = !empty($value['locked']) ? '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />' : '';
 			if( $this->is_selected( $key ) )
 			{
-				$output = '<li class="navItem navSelect">';
+				$output = '<li class="navItem navSelect '.$locked_class.'">';
 				if (isset($value['icon']))
 				{
 					$output .= $value['icon'];
 			    }
-			    $output .= '<strong> ' . $value[ 'title' ] . '</strong>';
+			    $output .= '<strong> ' . $locked_img.$value[ 'title' ] . '</strong>';
 			    //if (isset($value['type_count']))
 			    //{
 			    //	$output .= ' ('. $value['type_count'] . ')';
@@ -486,19 +488,19 @@ class AdminPage
 		    }
 		    else
 		    {
-		    	$output = '<li class="navItem"><a href="'. $value[ 'link' ] . '" class="nav">';
+		    	$output = '<li class="navItem '.$locked_class.'"><a href="'. $value[ 'link' ] . '" class="nav">';
 		    	if (isset($value['icon']))
 		    	{
 			        $output .= $value['icon'];
 			    }
-			    $output .= $value[ 'title' ];
+			    $output .= $locked_img.$value[ 'title' ];
 			    //if (isset($value['type_count']))
 			    //{
 			    //	$output .= ' ('. $value['type_count'] . ')';
 			    //}
 			    $output .= '</a></li>' . "\n";
 			}
-			echo $output;   
+			echo $output;
 		}
 	}
 	
@@ -511,15 +513,17 @@ class AdminPage
 		$inside = $this->get_main_links();
 		foreach( $outside AS $key => $value )
 		{
+			$locked_class = !empty($value['locked']) ? 'locked' : '';
+			$locked_img = !empty($value['locked']) ? '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />' : '';
 			if( $this->request[ CM_VAR_PREFIX . 'rel_id' ] == $key )
 			{
 				$e = new entity( $this->id );
-				$output = '<li class="navItem">';
+				$output = '<li class="navItem '.$locked_class.'">';
 				if (isset($value['icon']))
 				{
 					$output .= $value['icon'];
 				}
-    			$output .= '<strong> ' . $value[ 'title' ] . '(' .$e->get_value( 'name' ) . ')</strong>';
+    			$output .= '<strong> ' . $locked_img . $value[ 'title' ] . '(' .$e->get_value( 'name' ) . ')</strong>';
     			if (isset($value['type_count']))
     			{
     				$output .= ' ('. $value['type_count'] . ')';
@@ -529,15 +533,16 @@ class AdminPage
     			echo $output;
     			$this->show_owns_links_no_second_level( $inside );
     			echo '</ul>';
+				echo '</li>';
 			}
 			else
 			{
-				$output = '<li class="navItem">';
+				$output = '<li class="navItem '.$locked_class.'">';
 				if (isset($value['icon']))
 				{
 					$output .= $value['icon'];
     			}
-    			$output .= ' ' . $value[ 'title' ];
+    			$output .= ' ' . $locked_img . $value[ 'title' ];
     			//if (isset($value['type_count']))
     			//{
     			//	$output .= ' ('. $value['type_count'] . ')';
@@ -553,11 +558,16 @@ class AdminPage
 	{
 		$links = array();
 		$entity = new entity($this->id);
+		$user = new entity($this->user_id);
 		$links[ 'Preview' ] = array( 'title' => 'Preview' , 'link' => $this->make_link( array( 'cur_module' => 'Preview' ) ) );
 		$can_edit = ($entity->get_value('state') == 'Pending') ? reason_user_has_privs($this->user_id, 'edit_pending') : reason_user_has_privs($this->user_id, 'edit');
 		if($can_edit && reason_site_can_edit_type($this->site_id, $this->type_id))
 		{
-			$links[ 'Edit' ] = array( 'title' => 'Edit' , 'link' => $this->make_link( array( 'cur_module' => 'Editor' ) ) );
+			$links[ 'Edit' ] = array(
+				'title' => 'Edit' ,
+				'link' => $this->make_link( array( 'cur_module' => 'Editor' ) ),
+				'locked' => !$entity->user_can_edit($user, 'fields'),
+			);
 			if( $second )
 				$rels = $second;
 			else
@@ -575,7 +585,9 @@ class AdminPage
 											'id' => $this->id,
 											'user_id' => $this->user_id,
 											'cur_module' => 'Associator' ) ),
-										  'rel_info' => $rel );
+											'rel_info' => $rel,
+											'locked' => !$entity->user_can_edit_relationship($index, $user, 'right'),
+								);
 			}
 			if($second)
 				$rels = $this->get_backward_rels( 'I AM A GOLDEN GOD!!!' );
@@ -595,7 +607,9 @@ class AdminPage
 											'id' => $this->id,
 											'user_id' => $this->user_id,
 											'cur_module' => 'ReverseAssociator' ) ), 
-										  'rel_info' => $rel );
+											'rel_info' => $rel,
+											'locked' => !$entity->user_can_edit_relationship($index, $user, 'left'),
+								);
 			}
 		}
 		$links[ 'Finish' ] = array( 'title' => '<strong>Finish</strong>' , 'link' => $this->make_link( array( 'cur_module' => 'Finish' ) ) );
@@ -670,6 +684,7 @@ class AdminPage
 		$show_history = false;
 		
 		$item = new entity($this->id);
+		$user = new entity($this->user_id);
 		if($item->get_value('state') == 'Pending')
 		{
 			$show_delete = reason_user_has_privs($this->user_id, 'delete_pending');
@@ -680,7 +695,8 @@ class AdminPage
 			$show_delete = reason_user_has_privs($this->user_id, 'delete');
 			$show_history = reason_user_has_privs($this->user_id, 'edit');
 		}
-		if(!$show_delete && !$show_history)
+		$show_locks = ( defined('REASON_ENTITY_LOCKS_ENABLED') && REASON_ENTITY_LOCKS_ENABLED && reason_user_has_privs($this->user_id, 'manage_locks') );
+		if(!$show_delete && !$show_history && !$show_locks)
 		{
 			return;
 		}
@@ -690,19 +706,24 @@ class AdminPage
 		
 		if($show_delete)
 		{
+			$state_locked = !$item->user_can_edit_field('state', $user);
+			
+			$locked_class = !empty($state_locked) ? 'locked' : 'notLocked';
+			$locked_img = !empty($state_locked) ? '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />' : '';
+			
 			if( $this->is_deletable() )
 			{
 				echo '<li class="navItem';
 				if( $this->cur_module == 'Delete' )
 					echo ' navSelect';
-				echo '">';
+				echo ' '.$locked_class.'">';
 				$page_name = 'Delete';
 				if( $this->cur_module == 'Delete' )
-					echo '<strong>'.$page_name.'</strong>';
+					echo '<strong>'.$locked_img.$page_name.'</strong>';
 				elseif($item->get_value('state') == 'Deleted')
-					echo '<a href="' . $this->make_link( array( 'cur_module' => 'Undelete' ) ) . '" class="nav">Undelete</a>';
+					echo '<a href="' . $this->make_link( array( 'cur_module' => 'Undelete' ) ) . '" class="nav">'.$locked_img.'Undelete</a>';
 				else
-					echo '<a href="' . $this->make_link( array( 'cur_module' => 'Delete' ) ) . '" class="nav">'.$page_name.'</a>';
+					echo '<a href="' . $this->make_link( array( 'cur_module' => 'Delete' ) ) . '" class="nav">'.$locked_img.$page_name.'</a>';
 				echo '</li>' . "\n";
 			}
 			else
@@ -719,6 +740,18 @@ class AdminPage
 			}
 		}
 		
+		if($show_locks)
+		{
+			$class = $this->cur_module == 'ManageLocks' ? 'navSelect' : 'nav';
+			$text = $item->has_lock() ? 'Modify Locks' : 'Lock';
+			echo '<li class="navItem '.$class.'">';
+			if($this->cur_module == 'ManageLocks')
+				echo '<strong>'.$text.'</strong>';
+			else
+				echo '<a href="'.$this->make_link( array( 'cur_module' => 'ManageLocks' ) ).' "class="nav">'.$text.'</a>';
+			echo '</li>' . "\n";
+		}
+		
 		if($show_history)
 		{
 			// get archive relationship id
@@ -727,14 +760,18 @@ class AdminPage
 			{
 				$selected = $this->cur_module == 'Archive' ? true : false;
 				$page_name = 'History ('.$num_arch.' edit'.($num_arch == 1 ? '' : 's' ).')';
+				if(!$item->user_can_edit($user, 'fields'))
+					$lock_img = '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />';
+				else
+					$lock_img = '';
 				echo '<li class="navItem';
 				if( $selected )
 					echo ' navSelect';
 				echo '">';
 				if( $selected )
-					echo '<strong>'.$page_name.'</strong>';
+					echo '<strong>'.$lock_img.$page_name.'</strong>';
 				else
-					echo '<a href="'.$this->make_link( array( 'cur_module' => 'Archive' ) ).'" class="nav">'.$page_name.'</a>';
+					echo '<a href="'.$this->make_link( array( 'cur_module' => 'Archive' ) ).'" class="nav">'.$lock_img.$page_name.'</a>';
 				echo '</li>'."\n";
 			}
 			else
@@ -765,12 +802,14 @@ class AdminPage
 		if(empty($id))
 			return false;
 		//get all one-to-many required relationships that the current item is a part of
+		$entity = new entity($id);
+		$user = new entity($this->user_id);
 		$subject_of_required_rels = array();
 		$dbq = $this->get_required_ar_dbq($id);
 		if(!empty($dbq))
 			$subject_of_required_rels = $dbq->run();
 		$sites = get_sites_that_are_borrowing_entity($id);
-		if( $subject_of_required_rels || !empty($sites) )
+		if( $subject_of_required_rels || !empty($sites) || !$entity->user_can_edit_field('state', $user) )
 			return false;
 		else
 			return true;
