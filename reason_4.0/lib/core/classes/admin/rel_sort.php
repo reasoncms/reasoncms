@@ -255,7 +255,11 @@ class RelationshipSort
 					$priv = 'edit_pending';
 				else
 					$priv = 'edit';
-				return reason_user_has_privs($user_id,$priv);
+				if(reason_user_has_privs($user_id,$priv))
+				{
+					$user = new entity($user_id);
+					return $e2->user_can_edit_relationship($this->al_relationship_id, $user, 'right');
+				}
 			}
 		}
 		return false;
