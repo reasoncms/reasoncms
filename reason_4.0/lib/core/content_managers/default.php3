@@ -49,6 +49,9 @@
 		var $right_assoc_omit_link = array();
 		
 		var $actions = array( 'stay_here' => 'Save and Continue Editing', 'finish' => 'Save and Finish' );
+		
+		var $_locked_fields = array();
+		var $_lock_indicated_fields = array();
 
 		function init( $externally_set_up = false)
 		{
@@ -233,7 +236,90 @@
 					}
 				}
 			}
+			
+			$this->_apply_locks();
 		} // }}}
+		
+		/**
+		 * Check to see if any fields are locked; if so, either lock them or indicate the presence of a lock (depending on the privs of the current user)
+		 */
+		function _apply_locks()
+		{
+			$user = new entity($this->admin_page->user_id);
+			foreach(array_keys($this->entity->get_values()) as $field_name)
+			{
+				if(!$this->entity->user_can_edit_field($field_name, $user))
+				{
+					$this->lock_field($field_name);
+				}
+				elseif($this->entity->field_has_lock($field_name))
+				{
+					$this->add_lock_indicator($field_name);
+				}
+			}
+			foreach($this->_relationship_elements as $name=>$info)
+			{
+				if(!$this->entity->user_can_edit_relationship($info['rel_id'], $user,$info['direction']))
+				{
+					$this->lock_field($name);
+				}
+				elseif($this->entity->relationship_has_lock($info['rel_id'],$info['direction']))
+				{
+					$this->add_lock_indicator($name);
+				}
+			}
+		}
+		/**
+		 * Keep a given field from being edited due to a lock that has been placed on it
+		 * @param string $field_name
+		 * @return void
+		 */
+		function lock_field($field_name)
+		{
+			if($this->is_element($field_name) && !$this->element_is_hidden($field_name))
+			{
+				if(
+					$this->is_required($field_name)
+					&& 
+					(
+						'' === $this->get_value($field_name)
+						||
+						null === $this->get_value($field_name)
+						||
+						false === $this->get_value($field_name)
+					)
+				)
+				{
+					$this->add_comments($field_name, form_comment('This field will be locked once you have saved this form.') );
+				}
+				else
+				{
+					//echo $this->get_element_property($field_name, 'type');
+					if(html_editor_name($this->admin_page->site_id) == $this->get_element_property($field_name, 'type'))
+						$this->change_element_type($field_name,'wysiwyg_disabled');
+					else
+						$this->change_element_type($field_name,'solidtext');
+					$this->set_comments($field_name, '');
+					$this->set_comments($field_name, '<img 	class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />', 'before' );
+					$this->_locked_fields[] = $field_name;
+				}
+			}
+		}
+		/**
+		 * Add an indication that a given field is locked for other users
+		 * @param string $field_name
+		 * @return void
+		 */
+		function add_lock_indicator($field_name)
+		{
+			if($this->is_element($field_name) && !$this->element_is_hidden($field_name))
+			{
+				//$this->set_comments($field_name, '', 'before' );
+				$this->add_comments($field_name, form_comment('<img 	class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="locked" width="12" height="12" />'), 'before' );
+				$this->_lock_indicated_fields[] = $field_name;
+			}
+		}
+		
 		
 		/**
 		 * Accept a reference to the head items so that content managers can interact with head items directly
@@ -328,6 +414,12 @@
 				$e = new entity($this->get_value('id'));
 				echo '<h4 class="saved">Saved at ' . prettify_mysql_timestamp( $e->get_value( 'last_modified' ), 'g:i A' ) . '</h4>';
 			}
+			
+			if(!empty($this->_locked_fields))
+				echo '<p><img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" /> = Locked fields (info)</p>';
+			
+			if(!empty($this->_lock_indicated_fields))
+				echo '<p><img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="locked" width="12" height="12" /> = Fields locked for some users</p>';
 		
 		} // }}}
 	
