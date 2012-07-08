@@ -31,7 +31,7 @@ elseif (!reason_user_has_privs( $current_user_id, 'edit' ) )
 if ( !empty($_REQUEST['new_site_ids']) && !empty($_REQUEST['old_site_id']) &&
 	!empty($_REQUEST['allowable_relationship_id']) )
 {
-	$new_site_ids = $_REQUEST['new_site_ids'];
+	$new_site_ids = (array) $_REQUEST['new_site_ids'];
 	$old_site_id = (integer) $_REQUEST['old_site_id'];
 	$allowable_relationship_id = (integer) $_REQUEST['allowable_relationship_id'];
 }
@@ -40,16 +40,21 @@ else
 	header('Location: ' . securest_available_protocol() . '://' . REASON_HOST . REASON_HTTP_BASE_PATH  . 'scripts/move/move_entities_among_sites.php');
 	die();
 }
+$user = new entity($current_user_id);
 
 foreach ( $new_site_ids as $entity_id => $new_site_id )
 {
 	$entity_id = (integer) $entity_id;
 	$new_site_id = (integer) $new_site_id;
-	$q = ( 'UPDATE relationship SET entity_a="' . addslashes($new_site_id) . '" ' .
+	$entity = new entity($entity_id);
+	if($entity_id && $new_site_id && $entity->user_can_edit_relationship($allowable_relationship_id,$user,'left'))
+	{
+		$q = ( 'UPDATE relationship SET entity_a="' . addslashes($new_site_id) . '" ' .
 		   'WHERE entity_a="' . addslashes($old_site_id) . '" ' .
 		   'AND entity_b="' . addslashes($entity_id) . '" ' .
 		   'AND type="' . addslashes($allowable_relationship_id) . '"' );
-	$r = db_query($q, 'Unable to update relationships.');
+		$r = db_query($q, 'Unable to update relationships.');
+	}
 }
 
 $urlm = new url_manager($old_site_id);

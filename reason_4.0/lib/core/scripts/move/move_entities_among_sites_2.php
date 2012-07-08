@@ -27,8 +27,9 @@ elseif (!reason_user_has_privs( $user_id, 'edit' ) )
 }
 if ( !empty($_REQUEST['site_id']) && !empty($_REQUEST['type_id'])  )
 {
-	$site_id = $_REQUEST['site_id'];
-	$type_id = $_REQUEST['type_id'];
+	$site_id = (integer) $_REQUEST['site_id'];
+	$type_id = (integer) $_REQUEST['type_id'];
+	
 	$start_date = (!empty($_REQUEST['creation_date_start'])) ? $_REQUEST['creation_date_start'] : '';
 	$end_date = (!empty($_REQUEST['creation_date_end'])) ? $_REQUEST['creation_date_end'] : '';
 	$name = (!empty($_REQUEST['name_contains'])) ? $_REQUEST['name_contains'] : '';
@@ -37,7 +38,10 @@ if ( !empty($_REQUEST['site_id']) && !empty($_REQUEST['type_id'])  )
 else
 {
 	header('Location: ' . securest_available_protocol() . '://' . REASON_HOST . REASON_HTTP_BASE_PATH  . 'scripts/move/move_entities_among_sites.php');
+	die();
 }
+
+$user = new entity($user_id);
 
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'."\n";
 echo '<html><head>'."\n";
@@ -119,7 +123,8 @@ foreach ( $entity_bs as $entity_b )
 	echo '<td class="id">' . $entity_b->id() . '</td>';
 	echo '<td class="name">' . $entity_b->get_display_name() . '</td>';
 	echo '<td class="created">' . $entity_b->get_value('creation_date') . '</td>';
-	echo '<td class="site">' . $select . '</td>';
+	echo '<td class="site">' . ( $entity_b->user_can_edit_relationship($allowable_relationship_id,$user,'left') ? $select : 'Locked' ) . '</td>';
+
 	echo '</tr>'."\n";
 }
 echo '</table>'."\n";
