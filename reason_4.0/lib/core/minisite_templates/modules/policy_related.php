@@ -21,6 +21,7 @@ class RelatedPolicyModule extends PolicyModule
 	protected function _get_es()
 	{
 		$es = parent::_get_es();
+		$es->set_site( null );
 		$es->add_right_relationship( $this->page_id, relationship_id_of('page_to_policy') );
 		return $es;
 	}
