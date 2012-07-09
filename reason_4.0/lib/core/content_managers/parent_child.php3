@@ -153,19 +153,21 @@
 			$r_id = $this->get_parent_relationship();
 			if( $r_id )
 			{
+				$entity = new entity($this->_id);
+				$user = new entity($this->admin_page->user_id);
 				$parent = new entity_selector( $this->get_value( 'site_id' ) );
 				$parent->add_type( $this->get_value( 'type_id' ) );
-					$parent->add_field( 'entity2' , 'id' , 'parent_id' );
-					$parent->add_table( 'relationship2' , 'relationship' );
-					$parent->add_table( 'entity2' , 'entity' );
+				$parent->add_field( 'entity2' , 'id' , 'parent_id' );
+				$parent->add_table( 'relationship2' , 'relationship' );
+				$parent->add_table( 'entity2' , 'entity' );
 
-					$parent->add_relation( 'entity2.id =  relationship2.entity_b' );
-					$parent->add_relation( 'entity.id = relationship2.entity_a' );
-					$parent->add_relation( 'relationship2.type = "'.$r_id.'"' );
-					if(!empty($this->parent_sort_order))
-					{
-						$parent->set_order($this->parent_sort_order);
-					}
+				$parent->add_relation( 'entity2.id =  relationship2.entity_b' );
+				$parent->add_relation( 'entity.id = relationship2.entity_a' );
+				$parent->add_relation( 'relationship2.type = "'.$r_id.'"' );
+				if(!empty($this->parent_sort_order))
+				{
+					$parent->set_order($this->parent_sort_order);
+				}
 
 				$this->parent_option_items = $parent->run_one();
 
@@ -184,12 +186,32 @@
 				$this->_available_parents = $this->get_available_parents();
 				$list = $this->build_select_list($this->_available_parents);
 				$list = $this->alter_tree_list($list, $p_id);
-				$this->add_element( 'parent_id' , 'select_no_sort' , array( 'options' => $list ) );
+				
+				$disabled_options = array();
+				foreach($list as $k=>$v)
+				{
+					if(!empty($k))
+					{
+						$listpage = new entity($k);
+						if(!$listpage->user_can_edit_relationship($r_id,$user,'left'))
+						{
+							$disabled_options[] = $k;
+							$list[$k] = $v . ' (locked)';
+						}
+					}
+				}
+				
+				$this->add_element( 'parent_id' , 'select_no_sort' , array( 'options' => $list, 'disabled_options' => $disabled_options) );
 				$this->set_value( 'parent_id', $p_id );
 				$this->set_display_name( 'parent_id' , 'Parent Page' );
 				$this->add_required('parent_id');
 				$this->add_element( 'r_id' , 'hidden' );
 				$this->set_value( 'r_id' , $r_id );
+				
+				if(!empty($p_id))
+				{
+					$parent_entity = new entity($p_id);
+				}
 				
 				if( in_array($this->_id, $roots) )
 				{
@@ -201,6 +223,15 @@
 					{
 						$this->change_element_type( 'parent_id' , 'hidden' );
 					}
+				}
+				elseif(!$entity->user_can_edit_relationship($r_id,$user,'right') || ( isset($parent_entity) && !$parent_entity->user_can_edit_relationship($r_id,$user,'left') ) )
+				{
+					$this->change_element_type( 'parent_id' , 'hidden' );
+					$this->add_element( 'parent_info' , 'solidtext', array() );
+					$this->set_value( 'parent_info', $parent_entity->get_value('name'));
+					$this->set_display_name( 'parent_info' , 'Parent Page' );
+					$this->add_comments( 'parent_info' , '<img 	class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />', 'before' );
+					$this->move_element( 'parent_info', 'before', 'parent_id');
 				}
 			}
 			else
