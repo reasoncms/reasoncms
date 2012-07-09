@@ -19,11 +19,11 @@ $current_user = check_authentication();
 $user_id = get_user_id($current_user);
 if (empty( $user_id ) )
 {
-	die('<h1>Sorry.</h1><p>You do not have permission to move entities among sites.</p><p>Only Reason users may do that.</p></body></html>');
+	die('<h1>Sorry.</h1><p>You do not have permission to move entities among sites.</p><p>Only Reason admins may do that.</p></body></html>');
 }
-elseif (!reason_user_has_privs( $user_id, 'edit' ) )
+elseif (!reason_user_has_privs( $user_id, 'db_maintenance' ) )
 {
-	die('<h1>Sorry.</h1><p>You do not have permission to move entities among sites.</p><p>Only Reason users who have full editing privs may do that.</p></body></html>');
+	die('<h1>Sorry.</h1><p>You do not have permission to move entities among sites.</p><p>Only Reason admins who have database maintenance privs may do that.</p></body></html>');
 }
 if ( !empty($_REQUEST['site_id']) && !empty($_REQUEST['type_id'])  )
 {
@@ -129,6 +129,7 @@ foreach ( $entity_bs as $entity_b )
 }
 echo '</table>'."\n";
 
+echo '<input type="hidden" name="type_id" value="' . $type_id . '" />';
 echo '<input type="hidden" name="old_site_id" value="' . $site_id . '" />';
 echo '<input type="hidden" name="allowable_relationship_id" value="' . $allowable_relationship_id . '" />';
 
