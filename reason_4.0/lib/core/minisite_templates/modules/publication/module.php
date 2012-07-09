@@ -2728,7 +2728,6 @@ class PublicationModule extends Generic3Module
 			$form->add_element('description_of_story', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
 			$form->set_display_name('description_of_story', 'Excerpt/Teaser (displayed on post listings; not required):');
 			$form->set_value('description_of_story', $item_description);
-			$form->add_required('editable_content');
 			$form->add_callback(array(&$this, 'process_editable'),'process');
 			$form->add_callback(array(&$this, 'where_to_editable'), 'where_to');
 			$form->add_callback(array(&$this, 'run_error_checks_editable'), 'run_error_checks');
@@ -2766,10 +2765,6 @@ class PublicationModule extends Generic3Module
 		
 		function run_error_checks_editable(&$disco)
 		{
-			if (carl_empty_html($disco->get_value('editable_content')) == true)
-			{
-				$disco->set_error('editable_content', 'The post must contain content.');
-			}
 		}
 	}
 ?>
