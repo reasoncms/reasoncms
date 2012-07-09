@@ -764,6 +764,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main' => 'content',
 		'main_post' => 'webcams',
 	),
+	'steve_module' => array(
+		'main' => 'steve_module',
+	),
 );
 
 function luther_audience_navigation()
