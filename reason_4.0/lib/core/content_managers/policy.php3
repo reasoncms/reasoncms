@@ -21,6 +21,11 @@
 		var $allow_creation_of_root_node = true;
 		var $multiple_root_nodes_allowed = true;
 		var $root_node_description_text = '** Top-Level Policy (no parent) **';
+		function init_head_items()
+		{
+			parent::init_head_items();
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'content_managers/policy.js');
+		}
 		function alter_data() // {{{
 		{
 			parent::alter_data();
@@ -35,27 +40,16 @@
 			$this -> set_comments ("numbering_scheme", form_comment('This determines the way that the policy item\'s children items will be numbered.'));
 			$this -> set_display_name ("numbering_scheme", "How to number children?");
 			$this -> set_display_name ("parent_id", 'Parent Policy');
+			$this->change_element_type( 'description', 'text');
 			
-			if( $this->_id == $this->get_value( 'parent_id' ) )
-			{
-				$this->change_element_type( 'description', 'text');
-				$this->set_comments ("description", form_comment('Additional text that can be placed with the link to the policy'));
-				$this->change_element_type( 'approvals' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id));
-				$this->set_element_properties( 'approvals', array('rows'=>5));
-				if($rel_id = relationship_id_of('policy_to_access_group'))
-					$this->add_relationship_element( 'limit_access', id_of('group_type'), $rel_id, 'right', 'select');
-				if($rel_id = relationship_id_of('policy_to_relevant_audience'))
-					$this->add_relationship_element( 'audiences', id_of('audience_type'), $rel_id, 'right', 'checkbox', false);
-			}
-			else
-			{
-				$this->set_display_name ("parent_id", "Parent Policy Item");
-				$this->change_element_type( 'description', 'hidden');
-				$this->change_element_type( 'keywords', 'hidden');
-				$this->change_element_type( 'last_revised_date', 'hidden');
-				$this->change_element_type( 'last_reviewed_date', 'hidden');
-				$this->change_element_type( 'approvals', 'hidden');
-			}
+			$this->set_comments ("description", form_comment('Additional text that can be placed with the link to the policy'));
+			$this->change_element_type( 'approvals' , html_editor_name($this->admin_page->site_id) , html_editor_params($this->admin_page->site_id, $this->admin_page->user_id));
+			$this->set_element_properties( 'approvals', array('rows'=>5));
+			if($rel_id = relationship_id_of('policy_to_access_group'))
+				$this->add_relationship_element( 'limit_access', id_of('group_type'), $rel_id, 'right', 'select');
+			if($rel_id = relationship_id_of('policy_to_relevant_audience'))
+				$this->add_relationship_element( 'audiences', id_of('audience_type'), $rel_id, 'right', 'checkbox', false);
+			
 			$this->set_order (array ('parent_id', 'name', 'description', 'content', 'approvals', 'last_revised_date', 'last_reviewed_date', 'keywords', 'audiences', 'numbering_scheme', 'limit_access', 'show_hide', 'no_share'));
 		} // }}}
 		
