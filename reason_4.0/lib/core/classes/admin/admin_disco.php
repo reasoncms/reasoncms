@@ -25,15 +25,26 @@
 		{
 			$e = new entity($this->get_value('id'));
 			if ($e->get_value('state') == 'Deleted')
+			{
 				$action = 'expunge';
+				$noun = 'expungement';
+			}
 			else
+			{
 				$action = 'delete';
+				$noun = 'deletion';
+			}
 			
 			$name = $e->get_value("name");
 			if (!$name)
 				$name = "<i>(untitled)</i>";
 			
 			echo "<h3>Do you really want to $action $name?</h3>";
+			
+			if($e->field_has_lock('state') && reason_user_has_privs($this->admin_page->user_id,'manage_locks'))
+			{
+				echo '<div class="lockNotice"><img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="locked" width="12" height="12" /> Note: '.$noun.' is locked for some users.</div>';
+			}
 		} // }}}
 		function grab_all_page_requests() // {{{
 		{
@@ -201,7 +212,8 @@
 		{
 			list( $entity_a , $entity_b , $rel_info ) = $this->get_entities();
 			
-			if(!$this->_cur_user_has_privs($entity_a, $entity_b))
+			
+			if(!$this->_cur_user_has_privs($entity_a, $entity_b, $rel_info))
 			{
 				return false;
 			}
@@ -238,7 +250,7 @@
 			else create_relationship($entity_a->id(),$entity_b->id(),$rel_info['id'],array('site'=>$site_id), true);
 		} // }}}
 		
-		function _cur_user_has_privs($entity_a, $entity_b)
+		function _cur_user_has_privs($entity_a, $entity_b, $rel_info)
 		{
 			if($entity_a->get_value('state') == 'Pending' || $entity_b->get_value('state') == 'Pending')
 			{
@@ -248,8 +260,16 @@
 			{
 				$priv = 'edit';
 			}
-			return reason_user_has_privs($this->admin_page->user_id, $priv);
-			
+			if(!reason_user_has_privs($this->admin_page->user_id, $priv))
+				return false;
+			else
+			{
+				$user = new entity($this->admin_page->user_id);
+				if($entity_a->user_can_edit_relationship($rel_info['id'], $user, 'right') && $entity_b->user_can_edit_relationship($rel_info['id'], $user, 'left'))
+					return true;
+				else
+					return false;
+			}
 		}
 		
 		function remove_relationships( $entity_a , $rel_info ) // {{{
@@ -296,7 +316,7 @@
 		function do_unassociate() // {{{
 		{
 			list( $entity_a , $entity_b , $rel_info ) = $this->get_entities();
-			if(!$this->_cur_user_has_privs($entity_a, $entity_b))
+			if(!$this->_cur_user_has_privs($entity_a, $entity_b, $rel_info))
 			{
 				return false;
 			}
