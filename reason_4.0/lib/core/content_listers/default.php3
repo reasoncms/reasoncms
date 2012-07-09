@@ -307,13 +307,26 @@
 			if(reason_user_has_privs($this->admin_page->user_id,'edit'))
 			{
 				echo '<strong>';
-				$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
 				$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
+				echo '<a href="' . $preview_link . '">'. 'Preview</a>';
 				if (reason_site_can_edit_type($this->admin_page->site_id, $this->admin_page->type_id))
 				{
-					echo '<a href="' . $preview_link . '">'. 'Preview</a> | <a href="' . $edit_link . '">Edit</a>';
+					$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
+					$edit_block = '<a href="' . $edit_link . '">Edit</a>';
+					if($row->has_lock())
+					{
+						$user = new entity($this->admin_page->user_id);
+						if(reason_user_has_privs($this->admin_page->user_id,'bypass_locks'))
+						{
+							$edit_block .= ' <img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="Locks applied" width="12" height="12" />';
+						}
+						elseif( !$row->user_can_edit($user) )
+						{
+							$edit_block = ' <img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="Locked" width="12" height="12" />';
+						}
+					}
+					echo ' | '.$edit_block;
 				}
-				else echo '<a href="' . $preview_link . '">'. 'Preview</a>';
 				echo '</strong>';
 			}
 			else
@@ -328,13 +341,26 @@
 			if(reason_user_has_privs($this->admin_page->user_id,'edit_pending'))
 			{
 				echo '<strong>';
-				$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
 				$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
+				echo '<a href="' . $preview_link . '">'. 'Preview</a>';
 				if (reason_site_can_edit_type($this->admin_page->site_id, $this->admin_page->type_id))
 				{
-					echo '<a href="' . $preview_link . '">'. 'Preview</a> | <a href="' . $edit_link . '">Edit</a>';
+					$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
+					$edit_block = '<a href="' . $edit_link . '">Edit</a>';
+					if($row->has_lock())
+					{
+						$user = new entity($this->admin_page->user_id);
+						if(reason_user_has_privs($this->admin_page->user_id,'bypass_locks'))
+						{
+							$edit_block .= ' <img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="Locks applied" width="12" height="12" />';
+						}
+						elseif( !$row->user_can_edit($user) )
+						{
+							$edit_block = ' <img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="Locked" width="12" height="12" />';
+						}
+					}
+					echo ' | '.$edit_block;
 				}
-				else echo '<a href="' . $preview_link . '">'. 'Preview</a>';
 				echo '</strong>';
 			}
 			else
@@ -347,15 +373,27 @@
 		{
 			echo '<td class="viewerCol_admin">';
 			$links = array();
-			if(reason_user_has_privs($this->admin_page->user_id,'publish'))
+			$user = new entity($this->admin_page->user_id);
+			if(!$row->user_can_edit_field('state',$user))
 			{
-				$link =  $this->admin_page->make_link( array( 'id' => $row->id(), 'cur_module' => 'Undelete' ) );
-				$links[] = '<a href="'.$link.'">Undelete</a>';
+				$links = array('<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="Locked" width="12" height="12" /> Locked');
 			}
-			if(reason_user_has_privs($this->admin_page->user_id,'expunge'))
+			else
 			{
-				$link =  $this->admin_page->make_link( array( 'id' => $row->id(), 'cur_module' => 'Expunge' ) );
-				$links[] = '<a href="'.$link.'">Expunge</a>';
+				if(reason_user_has_privs($this->admin_page->user_id,'publish'))
+				{
+					$link =  $this->admin_page->make_link( array( 'id' => $row->id(), 'cur_module' => 'Undelete' ) );
+					$links[] = '<a href="'.$link.'">Undelete</a>';
+				}
+				if(reason_user_has_privs($this->admin_page->user_id,'expunge'))
+				{
+					$link =  $this->admin_page->make_link( array( 'id' => $row->id(), 'cur_module' => 'Expunge' ) );
+					$links[] = '<a href="'.$link.'">Expunge</a>';
+				}
+				if( $row->field_has_lock('state') && reason_user_has_privs($this->admin_page->user_id,'manage_locks') )
+				{
+					$links [] = '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="Locked for some users" title="Locked for some users" width="12" height="12" />';
+				}
 			}
 			if(!empty($links))
 			{
