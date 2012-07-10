@@ -165,6 +165,7 @@
 				foreach ( $roots as $k=>$v )
 				{
 					$this->request[ 'policy_id' ] = $v->get_value( 'id' );
+					$this->policy = $v;
 				}
 			}
 			if ( !empty( $this->request[ 'policy_id' ] ) )
