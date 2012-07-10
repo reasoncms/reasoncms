@@ -83,6 +83,7 @@ Complete lock administration interface (done)
 
 Complete documentation of class
 
+Add overall setting that turns locking on and off (done)
 
 */
 
@@ -160,6 +161,9 @@ class ReasonEntityLocks
 	 */
 	protected function _get_raw_locks()
 	{
+		if(!defined('REASON_ENTITY_LOCKS_ENABLED') || !REASON_ENTITY_LOCKS_ENABLED)
+			return array();
+
 		if(!isset(self::$_raw_locks[$this->_entity->id()]))
 		{
 			$this->_refresh_locks_cache();
@@ -621,9 +625,16 @@ class ReasonEntityLocks
 	/**
 	 * Can a given user edit a given relationship on this entity?
 	 *
+	 * If $entity_on_other_side provided, this will check to make sure that the entity on the other side does not have a lock
+	 * that would prevent this edit.
+	 *
+	 * If $context_site is provided, this will make sure that this relationship should be editable within the given site context.
+	 *
 	 * @param string $field_name
 	 * @param mixed $user A user entity or null for the currently-logged-in user
 	 * @param string $direction 'left' or 'right' -- 'left' if this entity is on the right side of the relationship, 'right' if it is on the left (e.g. on which side of the entity is the relationship on?)
+	 * @param entity $entity_on_other_side The entity on the other side of the relationship
+	 @ @param entity $context_site What site is this relationship being managed in?
 	 *
 	 * @return boolean
 	 *
@@ -681,7 +692,7 @@ class ReasonEntityLocks
 		}
 		
 		$this_entity_state = $this->_entity->get_value('state');
-		$other_entity_state = $entity_on_other_side ? $entity_on_other_side>get_value('state') : null;
+		$other_entity_state = $entity_on_other_side ? $entity_on_other_side->get_value('state') : null;
 			
 		// If one of the entities is deleted or archived, return false
 		if('Deleted' == $this_entity_state || 'Deleted' == $other_entity_state || 'Archived' == $this_entity_state || 'Archived' == $other_entity_state)
