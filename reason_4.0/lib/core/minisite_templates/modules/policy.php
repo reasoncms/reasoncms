@@ -119,7 +119,7 @@
 			$es->add_type( id_of( 'policy_type' ) );
 			//$es->set_order( 'sortable.sort_order ASC' );
 			$es->set_order( 'entity.name ASC' );
-			//$es->set_env();
+			$es->set_env( 'site' , $this->site_id );
 			
 			$es->add_relation( table_of('show_hide', id_of( 'policy_type' )) .' != "hide"' );
 			$es->add_left_relationship_field( 'policy_parent' , 'entity' , 'id' , 'parent_id' );
