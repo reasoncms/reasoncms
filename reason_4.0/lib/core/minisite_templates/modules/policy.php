@@ -149,6 +149,7 @@
 		}
 		function run() // {{{
 		{
+			echo '<div id="policyModule">'."\n";
 			$roots = $this->get_root_nodes();
 			
 			if($this->_in_show_all_mode())
@@ -157,29 +158,32 @@
 				{
 					$this->display_policy($root);
 				}
-				return;
-			}
-			
-			if ( empty( $this->request[ 'policy_id' ] ) && count( $roots ) == 1 && !$this->_get_current_audience())
-			{
-				foreach ( $roots as $k=>$v )
-				{
-					$this->request[ 'policy_id' ] = $v->get_value( 'id' );
-					$this->policy = $v;
-				}
-			}
-			if ( !empty( $this->request[ 'policy_id' ] ) )
-			{
-				if ( count( $roots ) != 1 )
-					$this->show_root_option_menu();
-				$this->display_navigation();
-				if ( count( $roots ) != 1 )
-					$this->display_back_link();
 			}
 			else
 			{
-				$this->show_root_list();
+			
+				if ( empty( $this->request[ 'policy_id' ] ) && count( $roots ) == 1 && !$this->_get_current_audience())
+				{
+					foreach ( $roots as $k=>$v )
+					{
+						$this->request[ 'policy_id' ] = $v->get_value( 'id' );
+						$this->policy = $v;
+					}
+				}
+				if ( !empty( $this->request[ 'policy_id' ] ) )
+				{
+					if ( count( $roots ) != 1 )
+						$this->show_root_option_menu();
+					$this->display_navigation();
+					if ( count( $roots ) != 1 )
+						$this->display_back_link();
+				}
+				else
+				{
+					$this->show_root_list();
+				}
 			}
+			echo '</div>'."\n";
 		} // }}}
 		function get_root_nodes() // {{{
 		{
@@ -221,6 +225,10 @@
 		function get_no_audience_link()
 		{
 			return carl_make_link(array('audience_id'=>'','a'=>'',));
+		}
+		function get_no_policy_link()
+		{
+			return carl_make_link(array('policy_id'=>'',));
 		}
 		function show_root_option_menu() // {{{
 		{
@@ -301,7 +309,7 @@
 		{
 			$es = new entity_selector();
 			$es->add_type(id_of('office_department_type'));
-			$es->add_left_relationship($policy->id(),relationship_id_of('policy_to_responsible_department'));
+			$es->add_right_relationship($policy->id(),relationship_id_of('policy_to_responsible_department'));
 			$es->set_order('entity.name ASC');
 			return $es->run_one();
 		}
@@ -361,8 +369,8 @@
 			if ($policy->get_value( 'last_revised_date' ) > '0000-00-00' )
 			{
 				echo '<div class="revised">';
-				echo 'Last revised '.prettify_mysql_datetime($policy->get_value('last_revised_date'),'F j, Y');
-				echo "</div>\n";
+				echo '<p>Last revised '.prettify_mysql_datetime($policy->get_value('last_revised_date'),'F j, Y').'</p>';
+				echo '</div>'."\n";
 			}
 			$audiences = $this->get_audiences($policy);
 			if(!empty($audiences))
@@ -371,17 +379,17 @@
 				foreach($audiences as $audience)
 					$audience_names[] = '<a href="'.$this->get_audience_link($audience).'">'.$audience->get_value('name').'</a>';
 				echo '<div class="audiences">';
-				echo 'For '.implode(', ',$audience_names);
+				echo '<p>For '.implode(', ',$audience_names).'</p>';
 				echo "</div>\n";
 			}
 			$depts = $this->get_departments($policy);
 			if(!empty($depts))
 			{
 				$dept_names = array();
-				foreach($departments as $dept)
+				foreach($depts as $dept)
 					$dept_names[] = $dept->get_value('name');
 				echo '<div class="departments">';
-				echo 'Maintained by '.implode(', ',$dept_names);
+				echo '<p>Maintained by '.implode(', ',$dept_names).'</p>';
 				echo "</div>\n";
 			}
 			echo '</div>'."\n";
@@ -417,10 +425,7 @@
 		}
 		function display_back_link() // {{{
 		{
-			$list_link = './';
-			if (!empty($this->textonly))
-				$list_link .= '?textonly=1';
-			echo "<p><a href='".$list_link."' class='rootPolicyListLink'>List of policies</a></p>\n";
+			echo '<div class="listLink"><p><a href="'.$this->get_no_policy_link().'" class="rootPolicyListLink">List of policies</a></p></div>'."\n";
 		} // }}}
 		function get_class_for_children($policy)
 		{
