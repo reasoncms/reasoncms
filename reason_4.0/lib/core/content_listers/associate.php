@@ -18,6 +18,7 @@
 		var $alter_order_enable = false;
 		var $is_relationship_sortable = false;
 		var $rel_direction = 'a_to_b';
+		var $_rel_locked = false;
 		
 		function alter_values() // {{{
 		{
@@ -71,7 +72,7 @@
 				$ass_es->add_field( 'relationship', 'id', 'rel_id' );
 				$ass_es->add_rel_sort_field($this->admin_page->id);
 				$ass_es->set_order('relationship.rel_sort_order ASC');
-				if($this->_cur_user_has_edit_privs())
+				if($this->_cur_user_has_edit_privs() && !$this->get_relationship_lock_state())
 				{
 					$this->alter_order_enable = true;
 				}
@@ -146,8 +147,11 @@
 				// if we found something, add the relation
 				if($table) 
 				{
-					$ass_es->set_order($table . ' ' . $this->admin_page->request[ 'dir' ] );
-					return true;
+					if('ASC' == $this->admin_page->request[ 'dir' ] || 'DESC' == $this->admin_page->request[ 'dir' ])
+					{ 
+						$ass_es->set_order($table . ' ' . $this->admin_page->request[ 'dir' ] );
+						return true;
+					}
 				}
 			}
 			return false;
@@ -163,13 +167,16 @@
 			$this->select = false;
 			if( $this->ass_vals )
 			{
-				$class = (!empty($this->admin_page->rel_id)) ? ' class="'.relationship_name_of($this->admin_page->rel_id).'" ' : ' ';
-				echo '<table id="associatedItems"'. $class . 'cellspacing="0" cellpadding="8">';
 				$c = count( $this->ass_vals );
+				echo '<div class="associatedItemsWrapper">'."\n";
+				echo '<h4>Selected ('. $c .')</h4>'."\n";
+				echo '<div class="associatedItems">'."\n";
+				$class = (!empty($this->admin_page->rel_id)) ? ' class="'.htmlspecialchars(relationship_name_of($this->admin_page->rel_id)).'" ' : ' ';
+				echo '<table id="associatedItems"'. $class . 'cellspacing="0" cellpadding="8">';
+				
 				$columns = count( $this->columns ) + 1;
-				echo '<tr><td colspan="'.$columns.'" class="assocHead">';
-				echo 'Selected&nbsp;('. $c .')</td></tr>';
 				$row = 0;
+				
 				foreach( $this->ass_vals AS $id => $item )
 				{
 					if( ($row % $this->rows_per_sorting) == 0 )
@@ -177,7 +184,9 @@
 					$this->show_item( $item );
 					$row++;
 				}
-				echo '</table>';
+				echo '</table>'."\n";
+				echo '</div>'."\n";
+				echo '</div>'."\n";
 			}
 		} // }}}
 		
@@ -187,11 +196,14 @@
 			$this->select = true;
 			$row = 0;
 			$columns = count( $this->columns ) + 1;
-			$class = (!empty($this->admin_page->rel_id)) ? ' class="'.relationship_name_of($this->admin_page->rel_id).'" ' : ' ';
+
+			echo '<div class="unassociatedItemsWrapper">'."\n";
+			$class = (!empty($this->admin_page->rel_id)) ? ' class="'.htmlspecialchars(relationship_name_of($this->admin_page->rel_id)).'" ' : ' ';
 			echo '<table id="disassociatedItems"'. $class . 'cellspacing="0" cellpadding="8">';
 			echo '<tr><td colspan="'.$columns.'" class="disassocHead">';
+
 			$this->show_paging();
-			echo '</td></tr>';
+			echo '</td></tr>'."\n";
 			foreach( $this->values AS $id => $item )
 			{
 				if (!array_key_exists($id, $this->related_vals)) // check for entities already related in a many_to_one relationship
@@ -205,8 +217,9 @@
 			$columns = count( $this->columns ) + 1;
 			echo '<tr><td colspan="'.$columns.'" class="disassocPaging">';
 			$this->show_paging();
-			echo '</td></tr>';
-			echo '</table>';
+			echo '</td></tr>'."\n";
+			echo '</table>'."\n";
+			echo '</div>'."\n";
 		} // }}}
 		
 		function show_sorting() // {{{
@@ -248,7 +261,7 @@
 			}
 			echo '<th class="listHead">';
 			$this->show_admin_paging();
-			echo '</th></tr>';
+			echo '</th></tr>'."\n";
 		}
 		
 		function _cur_user_has_edit_privs()
@@ -427,6 +440,7 @@
 			$e_rel = $this->admin_page->rel_id;
 			$e_id = $this->admin_page->id;
 			$e = new entity( $e_id );
+			$user = new entity( $this->admin_page->user_id );
 			$e_type = $e->get_value( 'type' );
 			static $one_to_many = false;
 			static $found_connections = false;
@@ -444,8 +458,15 @@
 			
 			$entity_a_or_b = ($this->rel_direction == 'b_to_a') ? 'entity_a' : 'entity_b';
 			
+			$lock_check_dir = ($this->rel_direction == 'b_to_a') ? 'right' : 'left';
+			
 			$link = array( 'rel_id' => $e_rel, $entity_a_or_b => $row->id() );
-			if( !$this->select )
+			if($this->get_relationship_lock_state() || !$row->user_can_edit_relationship($this->admin_page->rel_id, $user, $lock_check_dir) )
+			{
+				$link = '';
+				$name = 'Locked';
+			}
+			elseif( !$this->select )
 			{
 			
 				// B TO A BEHAVIOR
@@ -465,20 +486,36 @@
 					$link = array_merge( $link, array( 'cur_module' => 'DoDisassociate') );
 					$name = 'Deselect';
 				}
+				
+				
 			}
 			else
 			{
 				$link = array_merge( $link, array( 'cur_module' => 'DoAssociate') );
 				$name = 'Select';
 			}
+			
 			//echo '<td class="'.$options[ 'class' ].'"><strong>';
 			echo '<td class="viewerCol_admin"><strong>';
 			if( !$this->select AND $one_to_many )
 				echo 'Selected';
 			else
 			{
-				if (!empty($link)) echo '<a href="' .$this->admin_page->make_link( $link ).'">' . $name . '</a>';
-				else echo $name;
+				if (!empty($link))
+				{
+					echo '<a href="' .$this->admin_page->make_link( $link ).'">' . $name . '</a>';
+				}
+				else
+				{
+					echo $name;
+				}
+				
+			}
+			
+				
+			if(reason_user_has_privs($this->admin_page->user_id,'manage_locks') && $row->relationship_has_lock($this->admin_page->rel_id, $lock_check_dir) )
+			{
+					echo ' <img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="Locked for some users" title="Locked for some users" width="12" height="12" />';
 			}
 			if( empty( $this->admin_page->request[ CM_VAR_PREFIX.'type_id' ] ) )
 			{
@@ -522,6 +559,16 @@
 			}
 			echo '</strong></td>';	
 		} // }}}
+		
+		function set_relationship_lock_state( $state )
+		{
+			$this->_rel_locked = $state;
+		}
+		
+		function get_relationship_lock_state()
+		{
+			return $this->_rel_locked;
+		}
 	}
 
 	class reverse_assoc_viewer extends assoc_viewer
