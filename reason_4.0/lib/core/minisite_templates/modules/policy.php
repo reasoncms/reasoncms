@@ -340,13 +340,11 @@
 			
 			echo '<div class="policy">'."\n";
 			echo '<a id="'.$policy->id().'"></a>';
-			/*	if ( !in_array( $item->id(), $this->root_node() ) )
-				{
-					echo '<li class="'.$this->li_class.'">'."\n";
-					$header_type = "h4";
-				} */
 			echo "<h3 class='policyName'>" . 	$policy->get_value('name') . "</h3>\n";
-			echo '<div class="policyContent">'.$policy->get_value( 'content' ) . '</div>';
+			if($policy->get_value( 'content' ))
+			{
+				echo '<div class="policyContent">'.demote_headings($policy->get_value( 'content' ),1) . '</div>';
+			}
 			$sub_policies = $this->get_policy_children($policy);
 			if(!empty($sub_policies))
 			{
@@ -409,7 +407,10 @@
 		{
 			echo '<a id="'.$policy->id().'"></a>';
 			echo "<h4 class='policyName'>" . 	$policy->get_value('name') . "</h4>\n";
-			echo '<div class="policyContent">'.$policy->get_value( 'content' ) . '</div>';
+			if($policy->get_value( 'content' ))
+			{
+				echo '<div class="policyContent">'.demote_headings($policy->get_value( 'content' ),2) . '</div>';
+			}
 			$sub_policies = $this->get_policy_children($policy);
 			if(!empty($sub_policies))
 			{
