@@ -295,7 +295,7 @@
 				}
 				
 				$ret = '<div class="preview">'."\n";
-				$ret .= '<div class="image"><img src="'.htmlspecialchars($url).'" alt="Image sized to '.$sized_width.' by '.$sized_height.' pixels" /></div>'."\n";
+				$ret .= '<div class="image"><img src="'.htmlspecialchars($url).'" alt="Image sized to '.($sized_width ? $sized_width : 'auto').' by '.($sized_height ? $sized_height : 'auto').' pixels" /></div>'."\n";
 				if($showing_normal_size)
 				{
 					$ret .= '<div class="normalSizeNotice smallText">(This is the standard size of this image.)</div>'."\n";
