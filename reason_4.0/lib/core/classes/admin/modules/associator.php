@@ -20,6 +20,9 @@ class AssociatorModule extends DefaultModule // {{{
 	var $viewer;
 	var $filter;
 	var $associations;
+	protected $_locked = false;
+	protected $_show_lock_info = false;
+	protected $_rel_direction = 'right';
 
 	function AssociatorModule( &$page ) // {{{
 	{
@@ -135,6 +138,18 @@ class AssociatorModule extends DefaultModule // {{{
 		$this->rel_type = carl_clone($type);
 		$this->admin_page->title = 'Selecting ' . $type->get_value('name');
 		
+		$entity = new entity($this->admin_page->id);
+		$user = new entity($this->admin_page->user_id);
+		
+		if(!$entity->user_can_edit_relationship( $this->admin_page->rel_id, $user, $this->_rel_direction ) )
+		{
+			$this->_locked = true;
+		}
+		elseif($entity->relationship_has_lock( $this->admin_page->rel_id, $this->_rel_direction ) && reason_user_has_privs($this->admin_page->user_id,'manage_locks') )
+		{
+			$this->_show_lock_info = true;
+		}
+		
 		$this->get_views( $type->id() );
 		if( empty( $this->views ) )//add generic lister if not already present
 			$this->views = array();
@@ -209,6 +224,7 @@ class AssociatorModule extends DefaultModule // {{{
 	{
 		$this->viewer = new assoc_viewer;
 		$this->viewer->set_page( $this->admin_page );
+		$this->viewer->set_relationship_lock_state( $this->_locked );
 		$this->viewer->init( $site_id, $type_id , $lister ); 
 	} // }}}
 
@@ -292,9 +308,25 @@ class AssociatorModule extends DefaultModule // {{{
 
 			echo '<span class="words_error">' . $e_mess[ $this->admin_page->request[ 'error_message' ] ] . '</span><br />';
 		}
+		if($this->_locked)
+		{
+			echo '<div class="lockNotice"><img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" /> This relationship is locked. If you need to attach or detach items, please contact an administrator.</div>';
+		}
+		elseif($this->_show_lock_info)
+		{
+			echo '<div class="lockNotice"><img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="locked" width="12" height="12" /> Note: this relationship is locked for some users.</div>';
+		}
 		$colspan = count( $this->viewer->columns ) + 1;
 		echo '<table border="0"><tr><td>';
 		$this->viewer->show_associated_items();
+		echo '</td></tr>'."\n";
+		if($this->_locked)
+		{
+			echo '</table>'."\n";
+			return;
+		}
+		
+		echo '<tr><td>&nbsp;';
 		echo '</td></tr><tr><td>&nbsp;';
 		echo '</td></tr><tr><td class="assocHead" colspan="'. $colspan .'">';
 		echo '&nbsp;&nbsp;Not Selected<br /><br /></td></tr><tr><td colspan="'.$colspan.'"><table><tr>';
@@ -306,7 +338,7 @@ class AssociatorModule extends DefaultModule // {{{
 		{
 			echo '<tr><td>';
 			$this->do_add_link();
-			echo '</td></tr>';
+			echo '</td></tr>'."\n";
 		}
 		
 		$assoc_ok = !$this->admin_page->is_second_level() && $this->admin_page->cur_module == 'Associator' && $this->some_site_shares_type();
@@ -316,11 +348,12 @@ class AssociatorModule extends DefaultModule // {{{
 		{
 		echo '<tr><td>';
 		$this->do_sharing_link();
-		echo '</td></tr>';
+		echo '</td></tr>'."\n";
 		}
 		echo '<tr><td>';
 		$this->viewer->do_display();
-		echo '</td></tr></table>';
+		echo '</td></tr>'."\n";
+		echo '</table>'."\n";
 	} // }}}
 } // }}}	
 ?>
