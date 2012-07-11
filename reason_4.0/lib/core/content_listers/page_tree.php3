@@ -33,20 +33,42 @@
 		{
 			if(empty($row))
 				return;
+			$user = new entity($this->admin_page->user_id);
+			
 			echo '<td align="left" class="viewerCol_admin"><strong>';
-			$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
-			$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
-			$add_child_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'parent_id' => $row->id() , 'id' => ''/*, 'new_entity' => 1*/ ),true );
-			if( !$row->get_value('url') )
+			
+			$parts = array();
+			if( !$row->get_value('url') && $row->user_can_edit_relationship(get_parent_allowable_relationship_id($row->get_value( 'type' )), $user, 'left') )
 			{
-				echo '<a href="' . $add_child_link . '">Add Child</a> | ';
+				$add_child_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'parent_id' => $row->id() , 'id' => '' ),true );
+				$parts[] = '<a href="' . $add_child_link . '">Add Child</a>';
 			}
 			else
 			{
-				echo '<span class="disabled">Add Child</span> | ';
+				$parts[] = '<span class="disabled">Add Child</span>';
 			}
-			echo '<a href="' . $edit_link . '">'. 'Edit</a>';
-			echo ' | <a href="' . $preview_link . '">Preview</a>';
+			
+			if(reason_site_can_edit_type($this->admin_page->site_id, $this->admin_page->type_id))
+			{
+				$edit_link = $this->admin_page->make_link(  array( 'cur_module' => 'Editor' , 'id' => $row->id() ) );
+				$edit_block = '<a href="' . $edit_link . '">Edit</a>';
+				if($row->has_lock())
+				{
+					if(reason_user_has_privs($this->admin_page->user_id,'bypass_locks'))
+					{
+						$edit_block .= ' <img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="Locks applied" width="12" height="12" />';
+					}
+					elseif( !$row->user_can_edit($user) )
+					{
+						$edit_block = ' <img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="Locked" width="12" height="12" />';
+					}
+				}
+				$parts[] = $edit_block;
+			}
+			
+			$preview_link = $this->admin_page->make_link(  array( 'cur_module' => 'Preview' , 'id' => $row->id() ) );
+			$parts[] = '<a href="' . $preview_link . '">Preview</a>';
+			echo implode(' | ',$parts);
 			echo '</strong></td>';
 		} // }}}
 	}
