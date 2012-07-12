@@ -71,11 +71,6 @@ domain_define ('TIDY_EXE', '/usr/bin/tidy');
  */
 domain_define ('CURL_PATH', '/usr/bin/curl');
 
-/**
- * An optional path to a CSS file that may be used by various reason_package utilities
- */
-domain_define( 'UNIVERSAL_CSS_PATH', ''); // Define the path to a CSS file used by various reason_package utilities
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // You shouldn't have to alter any of the constants below in a default install for reason to function
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,6 +89,12 @@ domain_define( 'WEB_PATH', rtrim($_SERVER['DOCUMENT_ROOT'], "/") . '/' );
  * The location of the reason_package www folder is /reason_package/www/
  */
 domain_define( 'REASON_PACKAGE_HTTP_BASE_PATH','/reason_package/');
+
+/**
+ * An optional path to a CSS file that may be used by various reason_package utilities
+ */
+domain_define( 'UNIVERSAL_CSS_PATH', REASON_PACKAGE_HTTP_BASE_PATH.'css/universal.css'); // Define the path to a CSS file used by various reason_package utilities
+
 
 /**
  * The host name, (eg www.mysite.com)
