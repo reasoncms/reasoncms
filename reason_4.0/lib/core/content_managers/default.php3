@@ -518,7 +518,12 @@
 			$change_detection_redirect = ($this->is_element('change_detection_redirect')) 
 									   ? $this->get_value('change_detection_redirect') 
 									   : false;
-			if ($this->chosen_action == 'finish') 
+			
+			if ($change_detection_redirect)
+			{
+				$link = $change_detection_redirect;
+			} 
+			else if ($this->chosen_action == 'finish') 
 			{
 				$link = $page->make_link(array('cur_module' => 'Finish'), false, false);
 			}
@@ -530,10 +535,6 @@
 				// editor
 				$link = $page->make_link(array('cur_module' => 'Finish', 'next_entity' => $this->next_entity->id()), false, false);
 			}
-			else if ($change_detection_redirect)
-			{
-				$link = $change_detection_redirect;
-			} 
 			else 
 			{
 				$params = array('id' => $this->_id, 'cur_module' => 'Editor', 'submitted' => false, 'entity_saved' => true);
