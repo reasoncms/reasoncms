@@ -51,7 +51,10 @@
 				$this->_do_admin_page_prep();
 				$this->disco_item = $this->_build_content_manager();
 			}
-			
+			$this->head_items->add_javascript(JQUERY_UI_URL, true);
+                        $this->head_items->add_javascript(JQUERY_URL, true);
+                        $this->head_items->add_stylesheet(JQUERY_UI_CSS_URL);
+                        $this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'change_detection.js');
 			
 		} // }}}
 		
@@ -121,6 +124,7 @@
 				echo '<div class="editor">'."\n";
 				echo '<h3 class="pageTitle editor">'.$this->admin_page->title.'</h3>';
 				$this->disco_item->run();
+				echo '<div id="dialog_confirm" title="Unsaved Changes"><p>You have unsaved changes. How would you like to proceed?</p></div>';
 				echo '</div>'."\n";
 			}
 			else
