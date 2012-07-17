@@ -31,6 +31,7 @@
 		{
 			$count = count($this->images);
 			echo '<div class="test">Hello World my name is Steve</p><p>The page has ' . $count . ' images attached.</div>'."\n";
+			echo '<p>some .... that you want to echo</p>';
 		}
 	}
 ?>

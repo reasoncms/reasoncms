@@ -10,6 +10,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 include_once(WEB_PATH . 'stock/homecomingPFclass.php');
+// include_once('/usr/local/webapps/reason/reason_package_local/local/minisite_templates/modules/paypal/homecomingPFclass.php');
 
 class HomecomingRegistrationTwoForm extends FormStep {
 
@@ -85,7 +86,7 @@ class HomecomingRegistrationTwoForm extends FormStep {
         ),
         'billing_country' => array(
             'type' => 'country',
-//			'size'=>35,
+//          'size'=>35,
             'display_name' => 'Country',
         ),
         'confirmation_text' => array(
@@ -119,8 +120,7 @@ class HomecomingRegistrationTwoForm extends FormStep {
 
     // style up the form and add comments et al
     function on_every_time() {
-        
-        
+                
         if (!$this->controller->get('amount')) {
             echo '<div id="homecomingSetupError">Sorry. There was a problem setting up payment for your form.
                             Please return to <a href="?_step=HomecomingRegistrationOneForm">Homecoming Registration</a> and try again.</div>';
@@ -136,13 +136,17 @@ class HomecomingRegistrationTwoForm extends FormStep {
             $this->is_in_testing_mode = false;
         }
 
+        if (reason_check_authentication() == 'smitst01'){
+            echo 'You are Steve. Test away.';
+            $this->is_in_testing_mode = true;
+        }
+        
         $this->change_element_type('credit_card_expiration_year', 'numrange', array('start' => date('Y'), 'end' => (date('Y') + 15), 'display_name' => 'Expiration Year'));
     }
     
     function post_error_check_actions() {
         if ($this->show_form) {
-            $text = $this->get_brief_review_text();
-            $text .= '<p class="changeRegistrationButton"><a href="?_step=HomecomingRegistrationOneForm">Change Registration Information</a></p>' . "\n";
+            $text = '<p class="changeRegistrationButton"><a href="?_step=HomecomingRegistrationOneForm">Change Registration Information</a></p>' . "\n";
             $this->change_element_type('review_note', 'comment', array('text' => $text));
         }
     }
@@ -161,36 +165,14 @@ class HomecomingRegistrationTwoForm extends FormStep {
         echo '</div>' . "\n";
     }
 
-    function get_brief_review_text() {
-        $txt = '<div id="reviewOverview">' . "\n";
-        /* ##################
-          if ($this->controller->get('installment_type') == 'Onetime')
-          {
-          $txt .= '<p>You have indicated that you would like to make a one time gift of $'.number_format( $this->controller->get('gift_amount'), 2, '.', ',' ).'</p>'."\n";
-          }
-          else
-          {
-          $txt .= '<p>You have indicated that you would like to make a recurring gift of $'.number_format( $this->controller->get('gift_amount'), 2, '.', ',' ).' per '.$this->installment_type_to_word[$this->controller->get('installment_type')].', starting on '.prettify_mysql_datetime($this->controller->get('installment_start_date'), $this->date_format);
-          if($this->controller->get('installment_end_date') != 'indefinite' )
-          {
-          $txt .= ' and ending on '.date($this->date_format, $this->helper->get_last_repeat_timestamp());
-          } else {
-          $txt .= ' with no designated end date';
-          }
-          $txt .= '.</p>'."\n";
-          }
-         */
-        $txt .= '</div>' . "\n";
-        return $txt;
-    }
-
     function get_confirmation_text() {
         $txt = '<div id="reviewHomecomingRegistration">' . "\n";
         $txt .= '<p class="printConfirm">Print this confirmation for your records.</p>' . "\n";
         $txt .= '<ul>' . "\n";
         $txt .= '<li><strong>Date:</strong> ' . date($this->date_format) . '</li>' . "\n";
         $txt .= '<li><strong>Name:</strong> ' . $this->controller->get('current_first_name') . ' ' . $this->controller->get('current_last_name') . '</li>' . "\n";
-        $txt .= '<li><strong>Class Year:</strong> ' . $this->controller->get('class_year') . '</li>' . "\n";
+        $class_year = $this->controller->get('class_year');
+        $txt .= '<li><strong>Class Year:</strong> ' . $class_year . '</li>' . "\n";
         $txt .= '<li><strong>Graduation Name:</strong> ' . $this->controller->get('graduation_name') . '</li>' . "\n";
         if ($this->controller->get('preferred_first_name')) {
             $txt .= '<li><strong>Preferred First Name:</strong> ' . $this->controller->get('preferred_first_name') . '</li>' . "\n";
@@ -210,38 +192,38 @@ class HomecomingRegistrationTwoForm extends FormStep {
             $txt .= '<li><strong>Guest Class Year:</strong> ' . $this->controller->get('attended_luther') . '</li>' . "\n";
         }
         if ($this->controller->get('attend_program')) {
-            $txt .= '<li><strong>Tickets for Festival Dinner:</strong> ' . ($this->controller->get('attend_program')) . '</li>' . "\n";
+            $txt .= '<li><strong>Tickets for Alumni Dinner:</strong> ' . ($this->controller->get('attend_program')) . '</li>' . "\n";
         }
         //new stuff////
-        if ($this->controller->get('festival_vegetarian')) {
-            $txt .= '<li><strong>Do you require a vegetarian meal?</strong> ' . $this->controller->get('festival_vegetarian') . '</li>' . "\n";
+        if ($this->controller->get('dinner_dietary_restrictions')) {
+            $txt .= '<li><strong>Alumni Dinner dietary restrictions?</strong> ' . $this->controller->get('dinner_dietary_restrictions') . '</li>' . "\n";
         }
-        if ($this->controller->get('festival_guests_names')) {
-            $txt .= '<li><strong>Festival Guest Names and Class Year (if applicable)</strong> ' . $this->controller->get('festival_guests_names') . '</li>' . "\n";
+        // if ($this->controller->get('dinner_guests_names')) {
+        //     $txt .= '<li><strong>Alumni Dinner Guest Names and Class Year (if applicable)</strong> ' . $this->controller->get('dinner_guests_names') . '</li>' . "\n";
+        // }
+        // if ($this->controller->get('vegetarian_guests')) {
+        //     $txt .= '<li><strong>Do any of your guests require vegetarian meal?</strong> ' . $this->controller->get('vegetarian_guests') . '</li>' . "\n";
+        // }
+        // if ($this->controller->get('vegetarian_guests_names')) {
+        //     $txt .= '<li><strong>Please list the vegetarian guests</strong> ' . $this->controller->get('vegetarian_guests_names') . '</li>' . "\n";
+        // }
+        // if ($this->controller->get('seating_preference')) {
+        //     $txt .= '<li><strong>Please tell us with whom you wish to be seated</strong> ' . $this->controller->get('seating_preference') . '</li>' . "\n";
+        // }///////////
+        if ($this->controller->get('attend_50th_reception')) {
+            $txt .= '<li><strong>Reservation for Friday\'s reception:</strong> ' . $this->controller->get('attend_50th_reception') . '</li>' . "\n";
         }
-        if ($this->controller->get('vegetarian_guests')) {
-            $txt .= '<li><strong>Do any of your guests require vegetarian meal?</strong> ' . $this->controller->get('vegetarian_guests') . '</li>' . "\n";
-        }
-        if ($this->controller->get('vegetarian_guests_names')) {
-            $txt .= '<li><strong>Please list the vegetarian guests</strong> ' . $this->controller->get('vegetarian_guests_names') . '</li>' . "\n";
-        }
-        if ($this->controller->get('seating_preference')) {
-            $txt .= '<li><strong>Please tell us with whom you wish to be seated</strong> ' . $this->controller->get('seating_preference') . '</li>' . "\n";
-        }///////////
         if ($this->controller->get('attend_luncheon')) {
-            $txt .= '<li><strong>Attend 75-50 Year Reunion Luncheon :</strong> ' . $this->controller->get('attend_luncheon') . '</li>' . "\n";
+            $txt .= '<li><strong>Attend ' . $class_year . ' Reunion Luncheon :</strong> Class of ' . $class_year . '</li>' . "\n";
         }
         if ($this->controller->get('attend_dinner_50_to_25')) {
-            $txt .= '<li><strong>Attend 50-25 Year Reunion Dinner:</strong> ' . $this->controller->get('attend_dinner_50_to_25') . '</li>' . "\n";
+            $txt .= '<li><strong>Attend ' . $class_year . ' Reunion Dinner:</strong> Class of ' . $class_year . '</li>' . "\n";
         }
         if ($this->controller->get('attend_dinner_20_to_10')) {
-            $txt .= '<li><strong>Attend 20-10 Year Reunion Reception:</strong> ' . $this->controller->get('attend_dinner_20_to_10') . '</li>' . "\n";
+            $txt .= '<li><strong>Attend ' . $class_year . ' Reunion Reception:</strong> Class of ' . $class_year . '</li>' . "\n";
         }
         if ($this->controller->get('attend_dinner_5')) {
-            $txt .= '<li><strong>Attend 5 Year Reunion Reception:</strong> ' . $this->controller->get('attend_dinner_5') . '</li>' . "\n";
-        }
-        if ($this->controller->get('attend_1961_reception')) {
-            $txt .= '<li><strong>Reservation for Friday\'s reception:</strong> ' . $this->controller->get('attend_1961_reception') . '</li>' . "\n";
+            $txt .= '<li><strong>Attend ' . $class_year . ' Reunion Reception:</strong> Class of ' . $class_year . '</li>' . "\n";
         }
         if ($this->controller->get('ride_in_parade')) {
             $txt .= '<li><strong>Ride in the Parade:</strong> ' . $this->controller->get('ride_in_parade') . '</li>' . "\n";
@@ -333,7 +315,7 @@ class HomecomingRegistrationTwoForm extends FormStep {
                     '<th class="col1">Year</th>' => '',
                     '<th>Amount</th>' => '',
                     '</td><td>' => ': ',
-                    '�' => '-',
+                    '?' => '-',
                     '<h3>' => '--------------------' . "\n\n",
                     '</h3>' => '',
                     '<br />' => "\n",
