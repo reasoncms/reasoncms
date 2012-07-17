@@ -35,6 +35,7 @@ class SpotlightPublicationListMarkupGenerator extends PublicationMarkupGenerator
 									'date_format',
 									'search_string',
 									'text_only',
+	'item',
 									);
 
 	function PublicationListMarkupGenerator ()
@@ -163,6 +164,9 @@ class SpotlightPublicationListMarkupGenerator extends PublicationMarkupGenerator
 			{
 				$markup_string .= '<ul class="posts">'."\n";
 				$markup_string .= $list_body;
+				//print_r($this->passed_vars['list_item_markup_strings']);
+				//print_r($this->passed_vars['item']);
+				
 				$markup_string .= '</ul>'."\n";
 			}
 		}
@@ -385,7 +389,7 @@ class SpotlightPublicationListMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$markup_string .= '<div class="sectionInfo">';
 			$section_entity = $this->passed_vars['sections'][$section_id];
-			$url = $this->passed_vars['links_to_sections'][$section_id];
+			//$url = $this->passed_vars['links_to_sections'][$section_id];
 			
 			if(!empty($url))
 				$markup_string .= '<h3><a href="'.$url.'">'.$section_entity->get_value('name').'</a></h3>'."\n";
@@ -407,7 +411,7 @@ class SpotlightPublicationListMarkupGenerator extends PublicationMarkupGenerator
 		$markup_string = '';
 		if(empty($this->passed_vars['current_section']) && !empty($this->passed_vars['items_by_section'][$section_id]))
 		{
-			$url = $this->passed_vars['links_to_sections'][$section_id];
+			//$url = $this->passed_vars['links_to_sections'][$section_id];
 			if(!empty($url))
 			{
 				$section_name = $this->passed_vars['sections'][$section_id]->get_value('name');

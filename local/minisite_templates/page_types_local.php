@@ -307,7 +307,20 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar' => 'main_blurb',
 		'pre_sidebar_2' => '',
 		'pre_sidebar_3' => '',
-		'sidebar_2' => '',
+		'sidebar_2' => array( // Spotlights
+			'module' => 'publication',
+			'related_publication_unique_names' => array(luther_get_publication_unique_name("spotlights")),
+			'related_mode' => 'true',
+			'related_title' => '',
+			'related_order' => 'random',
+			'max_num_items' => 1,
+			'markup_generator_info' =>array(
+				'list_item' =>array (
+					'classname' => 'SpotlightListItemMarkupGenerator',
+					'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight.php'
+				),
+			),
+		),
 		'sidebar_5'=> array( // News
 			'module' => 'luther_other_publication_news',
 			'max_num_to_show' => 3,
@@ -700,6 +713,29 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar_3' => '',
 		'sidebar' => 'luther_events_image_sidebar',
 		'sidebar_2' => '',
+		'sidebar_4' => '',
+	),
+	'spotlight_detailed_list' => array(
+		'pre_banner' => '',
+		'post_banner' => '',
+		'main_head_4' => 'publication/luther_title',
+		'main_head_5' => '',
+		'main_post' => array( // Spotlights
+			'module' => 'publication',
+			'related_title' => '',
+			'markup_generator_info' =>array(
+				'list_item' =>array (
+					'filename' =>'minisite_templates/modules/publication/list_item_markup_generators/spotlight_detailed_list.php'
+				),
+			),
+		),
+		'main'=>'publication/description',
+		'main_2' => '',
+		'main_3' => '',
+		'main_4' => '',
+		'pre_sidebar_3' => '',		
+		'sidebar'=> '',
+		'sidebar_2' => 'luther_publication_image_sidebar',
 		'sidebar_4' => '',
 	),
 	'spotlight_archive' => array(

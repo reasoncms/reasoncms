@@ -526,6 +526,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 		{
 			return '<body class="style-two-columns spotlight-archive ' . $s . '">'."\n";
 		}
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'spotlight_detailed_list')
+		{
+			return '<body class="style-two-columns spotlight-detailed-list ' . $s . '">'."\n";
+		}
 		//elseif (count($bc) <= 2 /*&& $this->admissions_has_related_or_timeline()*/)  // section
 		//{
 		//	return '<body id="home" class="style-home-01">'."\n";
