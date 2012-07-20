@@ -20,8 +20,8 @@ class ChurchYouthFestPaymentForm extends CreditCardThorForm {
     function on_every_time() {
 
       parent :: on_every_time(); 
+      
       $this->change_element_type($this->get_element_name_from_label('State'), 'state');
-      //$this->change_element_type($this->get_element_name_from_label('Payment Amount'), 'solidtext');
       $this->set_element_properties($this->get_element_name_from_label('Zipcode'), array('size'=>5));
       $this->set_element_properties($this->get_element_name_from_label('# of Youth @ $25.00'), array('size'=>3));
       $this->set_element_properties($this->get_element_name_from_label('# of Sponsors @ $20.00'), array('size'=>3));
@@ -38,8 +38,6 @@ class ChurchYouthFestPaymentForm extends CreditCardThorForm {
         $ropes_total = $ropes * 5;
         $total = $youth_total + $sponsor_total + $ropes_total;
         return $total;
-
-        // $this->set_value($this->payment_element, $total);
     }
 
     function pre_error_check_actions(){
@@ -48,14 +46,9 @@ class ChurchYouthFestPaymentForm extends CreditCardThorForm {
 
     function run_error_checks(){
       if (intval($this->get_value('payment_amount')) != intval($this->get_amount())){
-        $this->set_error('payment_amount', 'Incorrect Payment Amount!');
+        $this->set_error('payment_amount', '<strong>Incorrect Payment Amount</strong>. The amount set in the payment amount field does not equal the cost for all chosen options. Please check your math or <a href="http://enable-javascript.com/" target="_blank">enable javascript</a> to have the form automatically fill in this field.');
       }
-
-
       parent :: run_error_checks();
     }
-
-
 }
-
 ?>
