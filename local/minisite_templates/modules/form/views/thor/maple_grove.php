@@ -32,7 +32,7 @@ class MapleGrovePaymentForm extends CreditCardThorForm {
 
     function get_amount(){
         $adults = $this->get_value_from_label('Number of Adults - $10.00 each');
-        $children = $this->get_value_from_label('Number of Children 6-17 - $5.00');
+        $children = $this->get_value_from_label('Number of Children 6-17 - $5.00 each');
 
         $adult_total = $adults * 10;
         $children_total = $children * 5;
