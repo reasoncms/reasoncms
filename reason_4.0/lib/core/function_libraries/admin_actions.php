@@ -914,7 +914,7 @@
 								'connections'=>'many_to_many',
 								'required'=>'no',
 		);
-		if (reason_relationship_names_are_unique($default_values['type'] = 'association'));
+		if (reason_relationship_names_are_unique()) $default_values['type'] = 'association';
 		$values = array_merge($default_values,$other_data);
 		$values['relationship_a'] = $a_side_type_id;
 		$values['relationship_b'] = $b_side_type_id;
