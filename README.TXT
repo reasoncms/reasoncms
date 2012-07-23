@@ -4,8 +4,16 @@ Home Page:    http://reason.carleton.edu/
 Source Code:  http://github.com/carleton/reason_package
 Requirements: http://apps.carleton.edu/opensource/reason/reqs/
 
-Install
------------------
+Automated Install (Using install.sh)
+------------------------------------
+1. Move reason_package outside your web root.
+
+2. Run the install.sh script in the reason_package folder and follow instructions.
+
+3. Run /reason/setup.php in your browser and follow instructions.
+
+Semi-Automated Install (Not using install.sh)
+---------------------------------------------
 1. Move reason_package outside your web root.
 
 2. Create a symbolic link called reason from your document root directory to ./reason_4.0/www/

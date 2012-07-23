@@ -3,6 +3,7 @@
 <head>
 <title>Reason Installation Documentation</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="css/reason_setupgrade/reason_setupgrade.css" type="text/css">
 <style type="text/css">
 div.callOut {
 	padding: 1em;
@@ -14,11 +15,10 @@ div.callOut {
 <body>
 <div class="contentHead">
 <h1 class="pageTitle"><span>Reason Install Documentation</span></h1>
-<p><em>Current for Reason 4.1 - Updated January 31, 2012</em></p>
+<p><em>Current for Reason 4.2 - Updated July 23, 2012</em></p>
 </div>
 <div class="contentMain">
 <div id="pageContent">
-
 <h3>Index</h3>
 <ul>
 	<li><a href="#installation">Installation</a>
@@ -39,7 +39,7 @@ div.callOut {
 <h2><a name="installation" href="#installation"></a>Installation</h2>
 <h3><a name="intro" id="intro"></a>Introduction</h3>
 <p>Reason is a web content management system designed for educational institutions. It was created by the Web Services Group at Carleton College.</p>
-<p>Reason's setup script diagnoses many common problems and provide suggestions. If you need assistance with installation, you are welcome to <a href="http://groups.google.com/group/reason-discussion">join our google discussion group</a>. Questions are often answered quickly by the Reason community.</p>
+<p>By using the install.sh shell script and the <a href="setup.php">Reason setup script</a>, you can likely get a working install running without using the instructions in this document. If you need assistance with installation, you are welcome to <a href="http://groups.google.com/group/reason-discussion">join our google discussion group</a>. Questions are often answered quickly by the Reason community.</p>
 <h3><a name="requirements" id="requirements"></a>Requirements</h3>
 <p>Reason requires the following packages:</p>
 <ul>
@@ -83,13 +83,13 @@ div.callOut {
 <p>Reason uses the error handler in carl_util and controls error reporting / display accordingly. The settings you specify in php.ini apply only to applications that do not use the error handler within carl_util. When setting up Reason, it can be useful to have "display_errors" turned on in case the error handler itself is not being properly loaded.</p>
 <p>To simplify installation, Reason is originally setup to operate in an insecure mode that does not require an SSL certificate. For a production instance of Reason, after configuring your server to support SSL, you should set the HTTPS_AVAILABLE constant in the package_settings.php file to true.</p>
 <p>Your web server must obey .htaccess files containing the directive types "Limit", "FileInfo", and "Options" are needed.  To permit this you'll need an "AllowOverride Limit FileInfo Options" line either in an appropriate &lt;VirtualHost&gt; or &lt;Directory&gt; block.</p>
-<p>Reason will work without modification to your httpd.conf file in many environments, but there are a number of customizations that a savvy administrator may want to make. For an example virtual host setup, consult <a href="./server_configuration.txt">server_configuation.txt</a> in the same directory as this file.</p>
+<p>Reason will work without modification to your httpd.conf file in many environments, but there are a number of customizations that a savvy administrator may want to make. For an example virtual host setup, consult <a href="server_configuration.txt">server_configuation.txt</a> in the same directory as this file.</p>
 <h3><a name="reason_config" id="reason_config"></a>Configuring Reason</h3>
-<p>It is recommended that you install Reason by running the <a href="./setup.php">setup script</a>, which will guide you through many of the steps outlined below. After
+<p>It is recommended that you install Reason by running install.sh at the command line, followed by the <a href="setup.php">setup script</a>, which will guide you through many of the steps outlined below. After
 you have Reason running, you may further <a href="#settings">configure settings files</a>, <a href="#custom_404">setup 404 handling</a> and <a href="#cron_jobs">generate cron-based cleanup jobs</a>. These steps are especially important if you
 are setting up a production instance of Reason.</p>
 <h3><a name="database_setup" id="database_setup"></a>Setting up Databases</h3>
-<p>You'll need to connect to MySQL to setup a database for Reason, and a database for Thor, Reason's form utility. These can be the same database if you'd like. You'll need to log into MySQL with a user who has privileges to create databases and grant privileges to other users. You can do these operations from the command line or using a tool such as phpMyAdmin.</p>
+<p>If you are unable to use install.sh to setup your databases automatically, you'll need to connect to MySQL to setup a database for Reason, and a database for Thor, Reason's form utility. These can be the same database if you'd like. You'll need to log into MySQL with a user who has privileges to create databases and grant privileges to other users. You can do these operations from the command line or using a tool such as phpMyAdmin.</p>
 <div class="callOut">
 <p><strong>Connect to your MySQL instance</strong></p>
 <p><strong>Create a database for Reason:</strong></p>
@@ -111,16 +111,16 @@ are setting up a production instance of Reason.</p>
 <li>flush privileges;</li>
 </ul>
 </div>
-<p>Next we are going to populate the Reason database with some basic information needed for an empty Reason instance. There are many ways you could import the reason4.0.sql file using phpMyAdmin or from within MySQL.</p>
+<p>Next we are going to populate the Reason database with some basic information needed for an empty Reason instance. There are many ways you could import the reason4.2.sql file using phpMyAdmin or from within MySQL.</p>
 <p>Here is one way to import the database from the command line:</p>
 <div class="callOut">
-<p><strong>Change into the directory that contains the file reason4.0.sql. From within /reason_package:</strong></p>
+<p><strong>Change into the directory that contains the file reason4.2.sql. From within /reason_package:</strong></p>
 <ul>
 <li>cd ./reason_4.0/data/dbs</li>
 </ul>
-<p><strong>Import reason4.1.sql into the database named reason - fill in your own credentials:</strong></p>
+<p><strong>Import reason4.2.sql into the database named reason - fill in your own credentials:</strong></p>
 <ul>
-<li>cat reason4.1.sql | mysql -u reason_user --password=some_password -h your.mysql.hostname.or.ip.address reason</li>
+<li>cat reason4.2.sql | mysql -u reason_user --password=some_password -h your.mysql.hostname.or.ip.address reason</li>
 </ul>
 </div>
 <p>The database connection information to connect to the databases you just created must be defined in a simple XML file. This file is in the reason_package/settings/ directory and is called dbs.xml. It should be configured with appropriate credentials. Leave the connection names as reason_connection and thor_connection.</p>
@@ -146,9 +146,7 @@ are setting up a production instance of Reason.</p>
 &lt;/database&gt;<br />
 &lt;/databases&gt;</p>
 </div>
-<h3><a name="settings" id="settings"></a>Configuring Reason Settings</h3>
-<p>We recommend copying the distributed settings to a backup folder so that you can revert and/or refer to them later.</p>
-<p>To initially setup Reason, you'll need to configure the error handler:</p>
+<h3><a name="settings" id="settings"></a>Configuring Reason Settings</h3><p>To initially setup Reason, you'll need to configure the error handler:</p>
 <h4>reason_package/settings/error_handler_settings.php</h4>
 <p>Near the top of the file, an array specifies Reason developer e-mail and IP addresses. Set this up with your own local information, so that developers see onscreen warning, and are properly notified via e-mail of more serious errors. You will not see useful error messages or be able to setup Reason until you setup $GLOBALS['DEVELOPER_INFO'] in this file with your own IP address.</p>
 
@@ -181,7 +179,7 @@ are setting up a production instance of Reason.</p>
 <li><strong>REASON_SITE_DIRECTORY_OWNER</strong> - Should be the user/group that Apache runs as</li>
 </ul>
 <h4>reason_package/settings/thor_settings.php</h4>
-<p>Defines the connection name in your specified in the XML credentials file for Thor connections. If you named the connection thor_connection in the XML credentials file you do not need to edit this file.</p>
+<p>Defines the connection name in your specified in the XML credentials file for Thor connections.</p>
 <h4>reason_package/settings/tyr_settings.php</h4>
 <p>This file configures how emails are addressed when generated by Reason forms. The reply to email address defaults to the WEBMASTER_EMAIL_ADDRESS. You can change that entry with the TYR_REPLY_TO_EMAIL_ADDRESS in this file.</p>
 <h4>reason_package/settings/dir_service_config.php</h4>
@@ -208,7 +206,7 @@ are setting up a production instance of Reason.</p>
 </div>
 <p>Note that you must create the folder /tmp/reason_garbage. In addition, make sure to substitute values specific to your site for the /path/to/ values.</p>
 <h3><a name="final_setup" id="final_setup"></a>Final setup</h3>
-<p>The <a href="./setup.php">setup script</a>, after it is able to verify Reason is setup properly, will create a login site, and an administrative user with username "admin" and a random password.</p>
+<p>The <a href="setup.php">setup script</a>, after it is able to verify Reason is setup properly, will create a login site, and an administrative user with username "admin" and a random password.</p>
 <p><strong>Write down the password!</strong></p>
 <p>The user created by the script has a unique name and will only be created once. For extra security, delete or move the script from the web tree after it has been run.</p>
 <p>Once everything is configured the setup script will provide you with a link to sign in to the Reason administrative interface. Enjoy.</p>
@@ -222,14 +220,14 @@ are setting up a production instance of Reason.</p>
 <div class="callOut">
  <p><strong>A reason install on Windows should have junctions that look similar to those below: </strong></p>
 	<ul>
-		<li>htdocs/reason -> reason_package/reason_4.0/www</li>
-		<li>htdocs/reason_package -> reason_package/www</li>
-		<li>htdocs/loki_2.0 -> reason_package/loki_2.0</li>
-		<li>htdocs/jquery -> reason_package/jquery</li>
-		<li>htdocs/flvplayer -> reason_package/flvplayer</li>
-		<li>htdocs/date_picker -> reason_package/date_picker</li>
-		<li>htdocs/thor -> reason_package/thor</li>
-		<li>htdocs/reason/images -> reason_package/reason_4.0/data/images</li>
+		<li>htdocs/reason -&gt; reason_package/reason_4.0/www</li>
+		<li>htdocs/reason_package -&gt; reason_package/www</li>
+		<li>htdocs/loki_2.0 -&gt; reason_package/loki_2.0</li>
+		<li>htdocs/jquery -&gt; reason_package/jquery</li>
+		<li>htdocs/flvplayer -&gt; reason_package/flvplayer</li>
+		<li>htdocs/date_picker -&gt; reason_package/date_picker</li>
+		<li>htdocs/thor -&gt; reason_package/thor</li>
+		<li>htdocs/reason/images -&gt; reason_package/reason_4.0/data/images</li>
 	</ul>
 </div>
 <h3><a name="help" id="help"></a>Need Help?</h3>
