@@ -129,6 +129,7 @@ if (isset($_POST['do_it_pass']) == false)
 					$msg .= '<li>Improper username and/or password in the db credentials file in '.SETTINGS_INC.'dbs.xml</li>';
 					$msg .= '<li>Improper mysql hostname - currently set to ' .$db_info['host'].'</li>';
 					$msg .= '<li>The user ' . $db_info['user'] . ' needs to have been granted permission to connect to ' . $db_info['host'] . ' from the web server</li>';
+					$msg .= '<li>Click <a href="dbsetup.php">here</a> to configure database support</li>';
 					$msg .= '</ul>';
 					die_with_message($msg);
 				}
