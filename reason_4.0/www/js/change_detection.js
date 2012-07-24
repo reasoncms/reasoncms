@@ -20,7 +20,12 @@ function change_detection_serialize_form() {
     var serialized_data = $('#disco_form').serialize();
     // for loki instance serialization
     $("div.loki").each(function(){
+        // loki
         serialized_data += $(this).find("iframe").contents().find("body.contentMain").html();
+    });
+    $("td.mceIframeContainer").each(function(){
+        // tincy mce
+        serialized_data += $(this).find("iframe").contents().find("#tinymce").html();
     });
     return serialized_data;
 }
@@ -46,28 +51,47 @@ function initialize_change_detection() {
     });
 }
 
+/**
+ * Lets find our wait image based on the path of this script.
+ */
+function get_spinner_path()
+{
+    base_path = $('script[src$="/js/change_detection.js"]:first').attr("src").replace("/js/change_detection.js","");
+    return base_path + "/ui_images/reason_admin/wait.gif";
+}
+
+function draw_dialog(buttons_list)
+{
+    $( "#dialog_confirm" ).dialog({
+            autoOpen: false,
+            resizable: false,
+            modal: true,
+            width: '50%',
+            buttons: buttons_list
+        }
+    );
+}
+
 $(document).ready(function(){
     $('#change_detection_redirectElement').remove();
-    $( "#dialog_confirm" ).dialog({
-        autoOpen: false,
-        resizable: false,
-        modal: true,
-        width: 'auto',
-        buttons: {
-            "Save": function() {
-                $( this ).dialog( "close" );
-                $("tr#discoSubmitRow input:first").trigger("click");
-            },
-            "Discard": function() {
-                $( this ).dialog( "close" );
-                window.location = next_page; 
-            },
-            "Continue Editing": function() {
-                $('#change_detection_redirectElement').remove();
-                $( this ).dialog( "close" );
-            }
+    var buttons = {
+        "Save": function() {
+            $( this ).dialog( "close" );
+            $("tr#discoSubmitRow input:first").trigger("click");
+            $("#dialog_confirm p").html('Please wait... <img src="' + get_spinner_path() + '"/>');
+            draw_dialog({});
+            $('#dialog_confirm').dialog('open');
+        },
+        "Discard": function() {
+            $( this ).dialog( "close" );
+            window.location = next_page; 
+        },
+        "Continue Editing": function() {
+            $('#change_detection_redirectElement').remove();
+            $( this ).dialog( "close" );
         }
-    });
+    };
+    draw_dialog(buttons);
     // wait 5 seconds to try insure other javascript files are finished
     // queue and dequeue to utilize jquery's delay
     $(this).delay(5000).queue(function() {
