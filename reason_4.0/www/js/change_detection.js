@@ -55,7 +55,8 @@ $(document).ready(function(){
         width: 'auto',
         buttons: {
             "Save": function() {
-                $("#disco_form").submit();
+                $( this ).dialog( "close" );
+                $("tr#discoSubmitRow input:first").trigger("click");
             },
             "Discard": function() {
                 $( this ).dialog( "close" );
