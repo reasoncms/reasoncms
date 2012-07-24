@@ -25,7 +25,7 @@ function change_detection_serialize_form() {
     });
     $("td.mceIframeContainer").each(function(){
         // tincy mce
-        serialized_data += $(this).find("iframe").contents().find("#tinymce").html();
+        serialized_data += $(this).find("iframe").contents().find("body").html();
     });
     return serialized_data;
 }
