@@ -17,11 +17,19 @@
 		{
 			//print_r($this);
 			$theme = get_theme($this->site_id);
+			$url = get_current_url();
 			if ($theme->get_value( 'name' ) == 'luther2010')
 			{	
 				echo '<footer class="site-info">'."\n";
+				if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url))
+				{
+					echo '<div class="luther-sports-logos">'."\n";
+					echo '<a href="http://ncaa.org" title="NCAA"><img src="/images/ncaa_60.png"/></a>'."\n";
+					echo '<a href="http://iowaconference.com" title="Iowa Conference"><img src="/images/iacc_60.png"/></a>'."\n";
+					echo '</div>'."\n";
+				}
+				echo '<div class="site-info-vcard">'."\n";
     			echo '<nav class="site-info"><ul><li class="about"><a href="/siteinfo/">About This Site</a></li><li class="about"><a href="http://emergency.luther.edu">Emergency Info</a></li><li class="about"><a href="/privacy/">Privacy Statement</a></li><li class="about"><a href="/contact/">Contact</a></li><li><a href="/siteinfo/report/">Report a Problem</a></li> </ul></nav>'."\n";
-
 				echo '<div class="vcard">'."\n";
 				echo '<span class="copyright">Copyright '.date("Y").' </span> &#8226;'."\n";
      			echo '<span class="fn org">Luther College</span> &#8226;'."\n";
@@ -34,6 +42,7 @@
 				echo '<span class="country-name">USA</span>'."\n";
 				echo '</span>'."\n";
 				echo '<div>Phone: 563-387-2000 or 800-4 LUTHER (<span class="tel">800-458-8437</span>)</div>'."\n";
+				echo '</div>'."\n";
 				echo '</div>'."\n";
 				//luther_social_media();
 				echo '</footer>'."\n";
