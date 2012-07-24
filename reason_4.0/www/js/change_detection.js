@@ -51,15 +51,6 @@ function initialize_change_detection() {
     });
 }
 
-/**
- * Lets find our wait image based on the path of this script.
- */
-function get_spinner_path()
-{
-    base_path = $('script[src$="/js/change_detection.js"]:first').attr("src").replace("/js/change_detection.js","");
-    return base_path + "/ui_images/reason_admin/wait.gif";
-}
-
 function draw_dialog(buttons_list)
 {
     $( "#dialog_confirm" ).dialog({
@@ -78,8 +69,9 @@ $(document).ready(function(){
         "Save": function() {
             $( this ).dialog( "close" );
             $("tr#discoSubmitRow input:first").trigger("click");
-            $("#dialog_confirm p").html('Please wait... <img src="' + get_spinner_path() + '"/>');
-            draw_dialog({});
+            $('#unsaved_changes').hide();
+            $('#changes_saving').show();
+            draw_dialog({}); // get rid of buttons
             $('#dialog_confirm').dialog('open');
         },
         "Discard": function() {
