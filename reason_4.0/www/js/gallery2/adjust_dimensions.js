@@ -21,7 +21,8 @@ $(document).ready(function()
 		
 		$('ul#imageGalleryItemList li').each(function() {
 			class_str = $(this).attr('class');
-			$(this).attr('class', class_str.replace( regex, '' ) );
+			if (class_str != undefined)
+				$(this).attr('class', class_str.replace( regex, '' ) );
         });
         
 		$("ul#imageGalleryItemList li").each(function(index)
@@ -33,12 +34,10 @@ $(document).ready(function()
 				row_number++;
 				row_max = 0;
 			}
-			
 			$(this).addClass('row' + row_number);
 			row_position = $(this).position().top;
-			
-			row_max = Math.max($(this).attr('scrollHeight'),row_max);
-		});
+			row_max = Math.max($(this).height(),row_max);
+		}); 
 		$('ul#imageGalleryItemList li.row' + row_number).height(row_max);
 	};
 	
