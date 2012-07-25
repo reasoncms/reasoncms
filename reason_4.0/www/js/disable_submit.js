@@ -28,7 +28,7 @@ jQuery(function($) {
 	
 	var selector_string = (selector.length > 0) ? selector.toString() : "form";
 	
-	$(selector_string).submit(function() // sets up a submit event for valid forms
+	$(selector_string).submit(function(e) // sets up a submit event for valid forms
 	{
 		var buttons = $("button[type=submit], input[type=submit], " +
 			"input[type=image]", this);
@@ -64,7 +64,7 @@ jQuery(function($) {
 			setTimeout(function reenable_buttons() {
 				buttons.each(function() {
 					var button = $(this);
-					button.attr("disabled", false);
+					button.prop("disabled", false);
 					var original_caption = button.data("original_caption");
 					if (original_caption) {
 						if (this.nodeName == "BUTTON")
@@ -83,7 +83,7 @@ jQuery(function($) {
 		// Disable the buttons right after the form submit action goes through.
 		setTimeout(function disable_buttons() {
 			var target;
-			buttons.attr("disabled", true);
+			buttons.each(function() {$(this).prop("disabled", "disabled");});
 			
 			if (message) {
 				target = $("td:last", submit_row);
