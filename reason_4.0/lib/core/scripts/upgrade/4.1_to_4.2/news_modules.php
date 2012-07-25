@@ -96,8 +96,9 @@ class ReasonUpgrader_41_NewsModules implements reasonUpgraderInterface
      */
 	public function description()
 	{
-		$str = "<p>The old news modules in Reason were deprecated while Reason was still in beta. As of Reason 4.2 the page types and modules have been removed from the core. ";
-		$str .= "This upgrade script assesses whether or not you have page types (and pages) referencing deprecated news modules so that you can more easily fix them if needed.</p>";
+		$str = "<p>The old news modules in Reason were deprecated while Reason was still in beta. As of Reason 4.2 the standard news page types have been removed from the core. ";
+		$str .= "This upgrade script assesses whether or not you have page types (and pages) referencing deprecated news modules so that you can more easily fix them if needed. ";
+		$str .= "All the old news modules themselves will be deleted by the Reason 4.3 release.</p>";
 		return $str;
 	}
 	
@@ -173,9 +174,9 @@ class ReasonUpgrader_41_NewsModules implements reasonUpgraderInterface
 	public function run()
 	{
 		$str = '';
+		$str .= '<h4>Page Types That Should Be Changed or Deleted</h4>';
 		if ($deprecated = $this->get_page_types_using_deprecated_news_modules())
 		{
-			$str .= '<h4>Page Types That Should Be Changed or Deleted</h4>';
 			$str .= '<p>The following pages types (and reason pages) look to be using deleted news modules and should be updated or removed.</p>';
 			$str .= '<ul>';
 			foreach ($deprecated as $page_type_name => $pages)
@@ -204,10 +205,11 @@ class ReasonUpgrader_41_NewsModules implements reasonUpgraderInterface
 			}
 			$str .= '</ul>';	
 		}
+		else $str .= '<p>None found.</p>';
 		
+		$str .= '<h4>Pages Using Deleted News Page Types</h4>';
 		if ($pages_using_missing_page_types = $this->get_pages_using_now_missing_page_types())
 		{
-			$str .= '<h3>Pages Using Deleted News Page Types</h3>';
 			$str .= '<ul>';
 			foreach ($pages_using_missing_page_types as $id => $page)
 			{
@@ -217,6 +219,7 @@ class ReasonUpgrader_41_NewsModules implements reasonUpgraderInterface
 			}
 			$str .= '</ul>';
 		}
+		else $str .= '<p>None found.</p>';
 		return $str;
 	}
 }
