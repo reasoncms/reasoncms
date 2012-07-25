@@ -50,7 +50,7 @@ $GLOBALS[ '_DEVELOPER_INFO' ] = array();
    Note that this may need to be changed based on where you unpacked Reason.
    It is best practice to copy oops.php to a web-available location
    outside the Reason package and to re-point this constant to that location. */
-define( 'OHSHI_SCRIPT', '/reason_package/carl_util/error_handler/oops.php');
+define( 'OHSHI_SCRIPT', REASON_PACKAGE_HTTP_BASE_PATH . 'oops.php');
 
 /*
 	
@@ -85,7 +85,7 @@ if( !defined( 'MAINTENANCE_MODE_ON' ) )
    Note that this may need to be changed based on where you unpacked Reason.
    It is best practice to copy maintenance.php to a web-available location
    outside the Reason package and to re-point this constant to that location. */
-define('MAINTENTANCE_MODE_URL', '/reason_package/carl_util/error_handler/maintenance.php');
+define('MAINTENTANCE_MODE_URL', REASON_PACKAGE_HTTP_BASE_PATH . 'maintenance.php');
 
 // Commented out unless needed.  see note above.
 // NOTE: pay attention to mktime's argument order:

@@ -4,10 +4,7 @@
  * 
  * This page is displayed when maintenance mode is on in the error handler settings.
  *
- * This page should be moved to a web-available position on your server, and the error
- * handler settings should be updated to relect the new path.
- *
- * You can then edit that page to reflect your design/branding. You probably want the page to
+ * You can then edit this page to reflect your design/branding. You probably want the page to
  * be self-contained, and not rely on any other scripts -- maintenance mode is often
  * used when databases are unavailable, or an update is underway, and you don't want the
  * maintenance page to fail!

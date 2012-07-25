@@ -6,10 +6,7 @@
  * that can be caught by PHP (e.g. not compliation errors, but other fatal-level 
  * errors reported to PHP's error handling system)
  *
- * This page should be moved to a web-available position on your server, and the error
- * handler settings should be updated to relect the new path.
- *
- * You can then edit that page to reflect your design/branding. You probably want the page to
+ * You can edit this to reflect your design/branding. You probably want the page to
  * be self-contained, and not rely on any other scripts -- fatal errors are likely to occur 
  * if you have misconfiguration problems, and you don't want this page to fail for the same reasons!
  *
