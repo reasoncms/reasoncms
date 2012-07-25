@@ -217,5 +217,25 @@ h2.pageTitle {
 	color:#777;
 }
 
+/* Entity Info Tables */
+div.EntityInfo span.edit_preview_links {
+	font-size: .7em;
+}
+div.EntityInfo table {
+	border-width: 1px;
+	border-style: solid;
+	border-collapse: collapse;
+}
+div.EntityInfo table td, div.EntityInfo table th {
+	border-width: 1px;
+	border-style: solid;
+	padding: 3px;
+	text-align: left;
+}
+div.EntityInfo .entityInfoTable a.locationBarLinks {
+	color: #000000;
+}
+
+
 /* Change review module */
 #reviewChangesModule div.owner { font-size:0.85em; color:#555; }
