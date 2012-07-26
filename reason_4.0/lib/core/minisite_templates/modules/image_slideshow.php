@@ -14,44 +14,338 @@
 	/**
 	 * A minisite module that displays a js-based slideshow of images attached to the page
 	 *
-	 * @todo  improve significantly and/or merge with gallery2
+	 * @todo get css and inline javascript into external files.
 	 */
-	class ImageSlideshowModule extends ImageSidebarModule
+	class ImageSlideshowModule extends DefaultMinisiteModule
 	{
-		function handle_params( $params )
+		/**
+		 * An array of the slideshow's image entities
+		 * @var array
+		 */
+		var $images;
+		
+		var $acceptable_params = array(
+			'slideshow_type' => 'auto', 
+			'width' => 0,
+			'height' => 0,
+			'crop' => 'fit',
+			'force_image_enlargement' => false,
+			'rand_flag' => false, 
+			'num_to_display' => '',
+			'caption_flag' => true,
+			'show_long_caption' => true,
+			'order_by' => '',
+			'alternate_source_page_id' => '', 
+			// The animation_type 'slide' is buggy in FlexSlider.  We're not going to support it right now.
+			//'animation_type' => 'slide',
+			//'slide_direction' => 'vertical',
+			'slide_timer' => 5,
+			'show_direction_nav' => true,
+			//'show_control_nav' => false,
+		);
+		
+		/**
+		 * The tallest the slideshow should ever be
+		 * @var int
+		 */
+		var $max_height;
+		/**
+		 * The widest the slideshow should ever be
+		 * @var int
+		 */
+		var $max_width;
+		/**
+		 * height/width (to avoid having to find the inverse of this ratio every time)
+		 * @var float
+		 */
+		var $aspect_ratio;
+		
+		
+		/**
+		 * This function returns a string of flexslider parameters that can be directly inserted into
+		 * the javascript flexslider initialization code.
+		 * @return string
+		 */
+		function get_flexslider_properties()
 		{
-			$this->acceptable_params['slideshow_type'] = 'auto';
-			$this->acceptable_params['height'] = 0;
-			$this->acceptable_params['width'] = 0;
-			$this->acceptable_params['crop'] = '';
-			parent::handle_params($params);
+			$properties = '';
+			foreach ($this->params as $param => $value)
+			{
+				if ($param == 'slideshow_type') {
+					$properties .= 'controlNav: false, ';
+					if ($value == 'manual'){
+						$properties .= 'slideshow: false, ';
+					} elseif ($value == 'auto') {
+						$properties .= 'directionNav: false, ';
+						$properties .= 'keyboardNav: false, ';
+						$properties .= 'mousewheel: false, ';
+					}
+				} elseif ($param == 'rand_flag') {
+					$flag = $value ? 'true' : 'false';
+					$properties .= 'randomize: '. $flag .', ';
+				} /*elseif ($param == 'animation_type') {
+					$properties .= 'animation: "'. addslashes($value) .'", ';
+				} elseif ($param == 'slide_direction') {
+					$properties .= 'slideDirection: "'. addslashes($value) .'", ';
+				} */elseif ($param == 'slide_timer') {
+					$properties .= 'slideshowSpeed: '. addslashes($value*1000) .', ';
+				} elseif ($param == 'show_direction_nav') {
+					$flag = $value ? 'true' : 'false';
+					$properties .= 'directionNav: '. $flag .', ';
+				} /*elseif ($param == 'show_control_nav') {
+					$flag = $value ? 'true' : 'false';
+					$properties .= 'controlNav: '. $flag .', ';
+				} */
+			}
+			return $properties;
 		}
+		
+		
 		function init( $args = array() )
 		{
 			parent::init( $args );
-			if($hi =& $this->get_head_items())
+			//Add necesary head items
+			$head_items = $this->get_head_items();
+			$head_items->add_javascript(JQUERY_URL, true);
+			$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'FlexSlider/jquery.flexslider.js');
+			$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'FlexSlider/flexslider.css');
+						
+			// Initialize the images with appropriate entity selector properties
+			$es = new entity_selector();
+			$es->add_type(id_of('image'));
+			
+			$source_id = $this->page_id;
+			if (!empty($this->params['alternate_source_page_id']))
 			{
-				$hi->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/prototype.lite.js','type'=>'text/javascript' ) );
-				$hi->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/moo.fx.js','type'=>'text/javascript' ) );
-				$hi->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/moo.fx.pack.js','type'=>'text/javascript' ) );
-				if($this->params['slideshow_type'] == 'auto')
-				{
-					$hi->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/timed.slideshow.js','type'=>'text/javascript' ) );
-				}
-				elseif($this->params['slideshow_type'] == 'manual')
-				{
-					$hi->add_head_item('script',array('src'=>REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/scripts/showcase.slideshow.js','type'=>'text/javascript' ) );
-				}
-				else
-				{
-					trigger_error($this->params['slideshow_type'].' is not a valid slideshow type. valid slideshow types are "auto" and "manual"');
-				}
-				$hi->add_stylesheet(REASON_HTTP_BASE_PATH.'js/SmoothSlideshow/css/jd.slideshow.css');
+				$source_id = $this->params['alternate_source_page_id'];
 			}
+			$es->add_right_relationship($source_id, relationship_id_of('minisite_page_to_image'));
+			
+			if (!empty($this->params['num_to_display']))
+			{
+				$es->set_num($this->params['num_to_display']);
+			}
+			
+			if (!empty($this->params['order_by']))
+			{
+				$es->set_order($this->params['order_by']);
+			}
+			
+			if ($this->params['rand_flag'] == true)
+			{
+				$es->set_order('RAND()');
+			}
+			
+			$es->set_env('site', $this->site_id);
+			$this->images = $es->run_one();
+			
+			if (empty($this->images))
+			{
+				//return here since there will not be a slide show with no images.
+				return;
+			}
+			
+			// Find the max height and width of the slide show considering picture sizes and given
+			// height and width parameters.
+			$this->max_height = $this->params['height'];
+			$this->max_width = $this->params['width'];
+			if( empty($this->params['height']) || empty($this->params['width']))
+			{
+				foreach($this->images as $img)
+				{
+					if (empty($this->params['height']) && $img->get_value('height') > $this->max_height)
+					{
+						$this->max_height = $img->get_value('height');
+					}
+					if (empty($this->params['width']) &&$img->get_value('width') > $this->max_width)
+					{
+						$this->max_width = $img->get_value('width');
+					}
+				}
+			}
+			$this->aspect_ratio = $this->max_height / $this->max_width;			
+			
+			//define the javascirpt functions needed for sizing the slideshow to preserve the aspect ratio and add them to the head.
+			$slider_hookup_js = '
+								var slider_width;
+			
+								$(window).load(function() {
+																			
+    								$(".flexslider").flexslider({ 
+    									'. $this->get_flexslider_properties() . '
+    								
+    									after: function(slider){
+    										handleResizing();
+    									}
+    								});
+    								
+    								handleResizing();
+								});
+								
+								function handleResizing() {
+									var width = $(".flexslider").width();
+									var height = width * '. $this->aspect_ratio .';
+									
+									$(".slide-img").each(function() {
+										var margin = getMarginTop($(this),height, width);
+										$(this).css("margin-top", margin);
+									});
+
+									$(".flexslider-img").css("height",height);
+									$(".listelement").css("height", height);
+									$(".flexslider").css("height",height);
+								}
+								
+								function getMarginTop(img, height_of_frame, width_of_frame){
+									if (height_of_frame < img.attr("init_height") || width_of_frame < img.attr("init_width")) {
+										if ('.$this->aspect_ratio.' > (img.attr("init_height")/img.attr("init_width"))) {
+											frame_height_when_shrink_began = '.$this->aspect_ratio.' * img.attr("init_width");
+										} else {
+											frame_height_when_shrink_began = img.attr("init_height");
+										}
+										cur_height_of_image = img.attr("init_height") * (height_of_frame / frame_height_when_shrink_began);
+									} else {
+										cur_height_of_image = img.attr("init_height");
+									}
+									return (height_of_frame - cur_height_of_image) / 2;
+								}
+									  
+								$(window).resize(handleResizing);
+								
+								$(document).ready(function() {
+									handleResizing();
+									$(".flexslider").removeClass("jsOff");
+								});';
+			
+			$head_items->add_head_item('script', array('type' => 'text/javascript', 'charset' => 'utf-8'), $slider_hookup_js);
+			
+			/* Add slideshow related css to the head */
+			$css = '.flexslider {
+						max-width:'. $this->max_width .'px;
+						background: rgba(0,0,0,.6);
+						background: #444 \9;
+						border: 0;
+						border-radius: 0;
+					}
+					div.flexslider li.listelement {
+						margin-top:0px !important;
+						margin-bottom: 0 !important;
+						margin-left: 0 !important;
+					}
+					img.slide-img {
+						position:static !important;
+						margin-left:auto !important;
+						max-width:100% !important; 
+						margin-right:auto !important; 
+						max-height:100% !important;
+						-ms-filter:inherit; This line needed to force IE8 to fade out slides
+						/* opacity:inherit; /*This line needed to force IE8 to fade out captions*/
+					}
+					ul.slides {
+						margin-left: 0 !important;
+						margin-right: 0 !important;
+						margin-top: 0 !important;
+						margin-bottom: 0 !important;
+					}
+					div.flexslider-img {
+						-ms-filter:inherit; /*This line needed to force IE8 to fade out slides*/
+					}
+					p.flex-caption {
+						margin: 0 !important;
+						background: rgba(0,0,0,.7);
+						font-size: 9pt;
+						/* opacity:inherit; /*This line needed to force IE8 to fade out captions*/
+						//-ms-filter:inherit;
+						//filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#4C000000,endColorstr=#4C000000); ZOOM: 1;
+					}
+					p.flex-caption strong.shortCaption, p.flex-caption span.longCaption {
+						display:block;
+					}
+					div.flexslider.jsOff li {
+						display: block !important;
+					}
+					td .flexslider {
+						width:'. $this->max_width .'px;
+					}
+					
+					/*arrow css for browsers that do not support opacity:*/
+				
+					.flex-direction-nav li a {
+						width: 32px; 
+						height: 54px;
+						margin: -27px 0 0;
+						background: url('.REASON_PACKAGE_HTTP_BASE_PATH . 'FlexSlider/theme/arrows_4up_8bit.png) no-repeat;
+						}
+					.flexslider:hover .flex-direction-nav li .next {
+						background-position: -32px -54px;
+					}
+					.flexslider:hover .flex-direction-nav li .prev {
+						background-position: 0 -54px;
+					}
+					.flex-direction-nav li .next {
+						background-position: -32px 0; right: 0px;
+					}
+					.flex-direction-nav li .prev {
+						left: 0px;
+					}
+							
+					/*arrow css for browsers that do support opacity:*/
+
+					.opacity .flex-direction-nav li a {
+						width: 32px; 
+						height: 54px;
+						margin: -27px 0 0;
+						background: url('.REASON_PACKAGE_HTTP_BASE_PATH . 'FlexSlider/theme/arrows_sprited_8bit.png) no-repeat;
+						opacity: .6;
+						transition: opacity .25s ease-in-out;
+						-moz-transition: opacity .25s ease-in-out;
+						-webkit-transition: opacity .25s ease-in-out;}
+					.opacity .flexslider:hover .flex-direction-nav li .next {
+						background-position: -32px 0; right: 0px;
+						opacity: 1;
+					}
+					.opacity .flexslider:hover .flex-direction-nav li .prev {
+						background-position: 0px 0px;
+						opacity: 1;
+					}
+					.opacity .flex-direction-nav li .next {
+						background-position: -32px 0; right: 0px;
+					}
+					.opacity .flex-direction-nav li .prev {
+						left: 0px;
+					}
+				
+					';
+			
+			$head_items->add_head_item('style', array('type' => 'text/css', 'charset' => 'utf-8'), $css);		
+			
+			$opacity_class_css = '/* Modernizr 2.5.3 (Custom Build) | MIT & BSD
+			 * Build: http://modernizr.com/download/#-opacity-cssclasses-prefixes
+			 */
+			;window.Modernizr=function(a,b,c){function v(a){j.cssText=a}function w(a,b){return v(m.join(a+";")+(b||""))}function x(a,b){return typeof a===b}function y(a,b){return!!~(""+a).indexOf(b)}function z(a,b,d){for(var e in a){var f=b[a[e]];if(f!==c)return d===!1?a[e]:x(f,"function")?f.bind(d||b):f}return!1}var d="2.5.3",e={},f=!0,g=b.documentElement,h="modernizr",i=b.createElement(h),j=i.style,k,l={}.toString,m=" -webkit- -moz- -o- -ms- ".split(" "),n={},o={},p={},q=[],r=q.slice,s,t={}.hasOwnProperty,u;!x(t,"undefined")&&!x(t.call,"undefined")?u=function(a,b){return t.call(a,b)}:u=function(a,b){return b in a&&x(a.constructor.prototype[b],"undefined")},Function.prototype.bind||(Function.prototype.bind=function(b){var c=this;if(typeof c!="function")throw new TypeError;var d=r.call(arguments,1),e=function(){if(this instanceof e){var a=function(){};a.prototype=c.prototype;var f=new a,g=c.apply(f,d.concat(r.call(arguments)));return Object(g)===g?g:f}return c.apply(b,d.concat(r.call(arguments)))};return e}),n.opacity=function(){return w("opacity:.55"),/^0.55$/.test(j.opacity)};for(var A in n)u(n,A)&&(s=A.toLowerCase(),e[s]=n[A](),q.push((e[s]?"":"no-")+s));return v(""),i=k=null,e._version=d,e._prefixes=m,g.className=g.className.replace(/(^|\s)no-js(\s|$)/,"$1$2")+(f?" js "+q.join(" "):""),e}(this,this.document);';
+			
+			$head_items->add_head_item('script', array('type' => 'text/javascript', 'charset' => 'utf-8'), $opacity_class_css);
+			
+			
+			// Provide border-box sizing for bropwsers that can handle it (i.e. not ie 7-)
+			$box_css = '#meat .flex-caption {box-sizing:border-box; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; width:100%}';
+			$head_items->add_head_item('style', array('type' => 'text/css', 'charset' => 'utf-8'), $box_css, $add_to_top = false, $wrapper = array('before' => '<!--[if !IE 7]> -->', 'after' => '<!-- <![endif]-->'));
+			
 		}
-		function run() // {{{
+		
+		function has_content()
 		{
-			if(!empty($this->textonly))
+			// Don't bother running the slideshow if no images exist
+			if (empty($this->images))
+			{
+				return false;
+			}
+			return true;
+		}
+		
+		function run()
+		{	
+			if (!empty($this->textonly))
 			{
 				$this->run_text_only();
 			}
@@ -60,154 +354,98 @@
 				$this->run_full_graphics();
 			}
 		}
+		
+		/**
+		 * Outputs the html for text only/printer friendly mode
+		 */
 		function run_text_only()
 		{
+			$images_info = $this->get_slideshow_images_info($this->images, $this->params['crop'], $this->max_height, $this->max_width);
 			echo '<ul>';
-			foreach( $this->images AS $id => $image )
+			foreach ($images_info as $info)
 			{
 				echo '<li>';
-				echo '<a href="'.WEB_PHOTOSTOCK. reason_get_image_filename($id) .'">Image: '.$image->get_value('description').'</a>';
-				echo '</li>'."\n";
-			}
-			echo '</ul>'."\n";
-		}
-		function run_full_graphics()
-		{
-			$die = isset( $this->die_without_thumbmail ) ? $this->die_without_thumbnail : false;
-			$popup = isset( $this->show_popup_link ) ? $this->show_popup_link : true;
-			$desc = isset( $this->description ) ? $this->description : true;
-			$text = isset( $this->additional_text ) ? $this->additional_text : "";
-			$objects = array();
-			
-			if(0 != $this->params['height'] or 0 != $this->params['width'])
-			{
-				$max_image_width = 0;
-				$max_image_height = 0;
-				foreach($this->images as $id => $image)
-				{
-					$objects[$id] = new reasonSizedImage();
-					$objects[$id]->set_id($image->id());
-					if($this->params['width'] != 0)
-					{
-						$objects[$id]->set_width($this->params['width']);
-					}
-					if($this->params['height'] != 0)
-					{
-						$objects[$id]->set_height($this->params['height']);
-					}
-					if($this->params['crop'] != '')
-					{
-						$objects[$id]->set_crop_style($this->params['crop']);
-					}
-					if($objects[$id]->get_crop_style() == 'fill')
-					{
-						$max_image_width = $objects[$id]->get_image_width();
-						$max_image_height = $objects[$id]->get_image_height();
-					}
-					elseif($objects[$id]->get_crop_style() == 'fit')
-					{
-						if($objects[$id]->get_image_width() > $max_image_width) $max_image_width = $objects[$id]->get_image_width();
-						if($objects[$id]->get_image_height() > $max_image_height) $max_image_height = $objects[$id]->get_image_height();
-					}
-				}
-				$max_dimensions = array('height'=>$max_image_height,'width'=>$max_image_width);
-			}
-			else
-			{
-				$max_dimensions = $this->get_max_dimensions();
-			}
-
-			echo '<div class="imageSlideshow">'."\n";
-			echo '<div class="timedSlideshow" id="mySlideshow" style="height:'.$max_dimensions['height'].'px;width:'.$max_dimensions['width'].'px;"></div>'."\n";
-			echo '<script type="text/javascript">'."\n";
-			echo 'countArticle = 0;'."\n";
-			echo 'var mySlideData = new Array();'."\n";
-			foreach( $this->images AS $id => $image )
-			{
-				$show_text = $text;
-				
-				if(isset($objects[$id]))
- 				{					
-					$image_url = $objects[$id]->get_url();
- 			
- 				}
- 				else
- 				{
-					$image_url = WEB_PHOTOSTOCK . reason_get_image_filename($id);
-				}
-				
-				if( !empty( $this->show_size ) )
-					$show_text .= '<br />('.$image->get_value( 'size' ).' kb)';
-				echo 'mySlideData[countArticle++] = new Array('."\n";
-				echo "'".$image_url."',\n";
-				echo "'#',\n";
-				echo "'".$this->sanitize_for_js($image->get_value('description'))."',\n";
-				echo "'".$this->sanitize_for_js($image->get_value('content'))."'\n";
-				echo ');'."\n";
-			}
-			?>function addLoadEvent(func) {
-var oldonload = window.onload;
-if (typeof window.onload != 'function') {
-window.onload = func;
-} else {
-window.onload = function() {
-oldonload();
-func();
-} } }
-
-function startSlideshow() {
-initSlideShow($Prototype('mySlideshow'), mySlideData);
-}
-
-addLoadEvent(startSlideshow);
-<?php
-			echo '</script>'."\n";
-			echo '<noscript>'."\n";
-			echo '<ul>';
-			foreach( $this->images AS $id => $image )
-			{
-				if(isset($objects[$id]))
- 				{					
-					$image_url = $objects[$id]->get_url();
- 			
- 				}
- 				else
- 				{
-					$image_url = WEB_PHOTOSTOCK . reason_get_image_filename($id);
-				}
-				echo '<li><img src="'.$image_url.'" alt="'.htmlspecialchars(strip_tags($image->get_value('description'))).'" /><div class="description">'.$image->get_value('description').'</div></li>';
+				echo '<a href="'. $info['url'] .'">Image: '. $info['description'] .'</a>';
+				echo '</li>';
 			}
 			echo '</ul>';
-			echo '</noscript>'."\n";
-			echo '</div>'."\n";
-		} // }}}
-		
-		function get_max_dimensions( $crop = 'none')
-		{
-			$width = 0;
-			$height = 0;
-			
-			foreach( $this->images AS $image )
-			{
-				if($image->get_value('height') > $height)
-					$height = $image->get_value('height');
-				if($image->get_value('width') > $width)
-					$width = $image->get_value('width');
-			}
-			
-			if($width == 0)
-				$width = 500;
-			if($height == 0)
-				$height = 500;
-			return array('height'=>$height,'width'=>$width);
 		}
 		
-		function sanitize_for_js($text)
+		/**
+		 * Outputs the flexslider html for full graphics mode
+		 */
+		function run_full_graphics()
 		{
-			$text = str_replace(array("\r", "\r\n", "\n"), '', $text);
-			$text = strip_tags($text);
-			$text = htmlspecialchars( $text,ENT_QUOTES,'UTF-8' );
-			return $text;
+			// Get the appropriate images and image descriptions
+			$images_info = $this->get_slideshow_images_info($this->images, $this->params['crop'], $this->max_height, $this->max_width);
+			
+  			echo '<div class="flexslider jsOff">
+  					<ul class="slides">';
+  			$i = 0;
+  			foreach($images_info as $info)
+  			{
+  				$init_height = $info['height'];
+  				$init_width = $info['width'];
+  				
+  				echo '<li class="listelement">'."\n";
+  				echo '<div class="flexslider-img" id="slide_img_'. $i .'">'."\n";
+  				echo '<img class="slide-img" init_height="'. $init_height .'" init_width="'. $init_width .'" src="' . $info['url'] . '"/>'."\n";
+  				echo '</div>'."\n";
+  				if ($this->params['caption_flag'])
+  				{
+  					$text = '<strong class="shortCaption">'.strip_tags($info['description']).'</strong>';
+  					if ($this->params['show_long_caption'])
+  					{
+  						$text .= '<span class="longCaption">'.strip_tags($info['content']).'</span>';
+  					}
+  					echo '<p class="flex-caption">'. $text .'</p>'."\n";
+  				}
+  					
+  				echo '</li>'."\n";
+  				$i++;
+  			}
+  			echo '</ul>
+  				</div>';
+		}
+		
+		/**
+		 * Returns an array of image info for the given images.
+		 * @param array $images array of image entities
+		 * @param string $crop Crop style for the reason sized image. May be either 'fill' or 'fit'
+		 * @param int $max_height The maximum height of the slideshow
+		 * @param int $max_width The maximum width of the slideshow
+		 * @return array Each element of the array is an associative array with the folowing keys: description, height, width, url
+		 */
+		function get_slideshow_images_info($images, $crop, $max_height, $max_width)
+		{
+			$images_info = array();
+			foreach ($images as $image) 
+			{
+				$img_description = $image->get_value('description');
+				$img_content = $image->get_value('content');
+				$img_height = $image->get_value('height');
+				$img_width = $image->get_value('width');
+				//Check if making a reason sized image is necessary.
+				if ($img_height <= $max_height && $img_width <= $max_width && !$this->params['force_image_enlargement'])
+				{
+					$img_url = reason_get_image_url($image);
+				}
+				else
+				{
+					$rsi = new reasonSizedImage();
+					$rsi->set_id($image->id());
+					$rsi->set_width($max_width);
+					$rsi->set_height($max_height);
+					$rsi->allow_enlarge($this->params['force_image_enlargement']);
+					$rsi->set_crop_style($crop);
+					$img_url = $rsi->get_url();
+					$img_height = $rsi->get_image_height();
+					$img_width = $rsi->get_image_width();
+				}
+				
+				$images_info[] = array('description' => $img_description, 'content' => $img_content, 'height' => $img_height, 'width' => $img_width, 'url' => $img_url);
+			}
+			return $images_info;
 		}
 	}
 ?>
