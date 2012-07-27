@@ -124,8 +124,6 @@
 				echo '<div class="editor">'."\n";
 				echo '<h3 class="pageTitle editor">'.$this->admin_page->title.'</h3>';
 				$this->disco_item->run();
-				echo '<div id="dialog_confirm" title="Unsaved Changes"><p id="unsaved_changes">You have unsaved changes. How would you like to proceed?</p>';
-				echo '<p class="ui-helper-hidden" id="changes_saving">Please wait... <img src="'. REASON_HTTP_BASE_PATH . 'ui_images/reason_admin/wait.gif"/></p></div>';
 				echo '</div>'."\n";
 			}
 			else
