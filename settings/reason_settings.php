@@ -149,7 +149,7 @@
 	 * In order for pages in your Reason instance to be visible to search engines, you *must*
 	 * change this setting to false.
 	 */
-	define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
+	define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
 	
 	/**
 	 * REASON_HOST_HAS_VALID_SSL_CERTIFICATE
@@ -162,14 +162,14 @@
 	 * If this is set to false, Reason will work in either case, but it is better practice
 	 * to set it to true when possible to eliminate the possiblity of man-in-the-middle attacks.
 	 */
-	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', false);
+	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
 	
 	/**
 	 * REASON_SESSION_TIMEOUT
 	 *
 	 * Determines how long a Reason session lasts, in minutes.
 	 */
-	define('REASON_SESSION_TIMEOUT', 60);
+	define('REASON_SESSION_TIMEOUT', 180);
 	
 	/**
 	 * REASON_SESSION_TIMEOUT_WARNING
@@ -264,7 +264,7 @@
 	 * Set this to false if you only want to set site themes in the Master Admin area
 	 * Boolean (e.g. true, false -- no quotes)
 	 */
-	define( 'ALLOW_REASON_SITES_TO_SWITCH_THEMES', true );
+	define( 'ALLOW_REASON_SITES_TO_SWITCH_THEMES', false );
 	
 	/**
 	 * REASON_PREVIOUS_HOSTS
@@ -425,7 +425,7 @@
 	 * Of course, the user_authoritative_source field can be edited on a user-by-user 
 	 * basis in a mixed environment; this constant simply sets the default value.
 	 */
-	define('REASON_USERS_DEFAULT_TO_AUTHORITATIVE', true);
+	define('REASON_USERS_DEFAULT_TO_AUTHORITATIVE', false);
 	
 	/**
 	 * REASON_ALLOWS_INLINE_EDITING
@@ -761,7 +761,7 @@
 	 *
 	 * This string should be in the same format as the second argument to php's built-in strip_tags() function, e.g.: '<a><abbr><acronym><address>'
 	 */
-	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbr><acronym><address><area><b><bdo><big><blockquote><br><button><caption><cite><code><col><colgroup><dd><del><dfn><div><dl><dt><em><fieldset><form><h1><h2><h3><h4><h5><h6><hr><i><img><input><ins><kbd><label><legend><li><map><noscript><object><ol><optgroup><option><p><param><pre><q><samp><select><span><small><strike><strong><sub><sup><table><tbody><td><textarea><tfoot><th><thead><tr><tt><u><ul><var>');
+	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbr><acronym><address><area><b><bdo><big><blockquote><br><button><caption><cite><code><col><colgroup><dd><del><dfn><div><dl><dt><em><embed><fieldset><form><h1><h2><h3><h4><h5><h6><hr><i><img><input><ins><kbd><label><legend><li><map><noscript><object><ol><optgroup><option><p><param><pre><q><samp><select><span><small><strike><strong><sub><sup><table><tbody><td><textarea><tfoot><th><thead><tr><tt><u><ul><var>');
 	
 	/**
 	 * REASON_DEFAULT_FOOTER_XHTML
@@ -787,7 +787,7 @@
 	 *
 	 * In future releases there will likely be a way to specify favicons for individual sites.
 	 */
-	define('REASON_DEFAULT_FAVICON_PATH','');
+	define('REASON_DEFAULT_FAVICON_PATH','/favicon.ico');
 	
 	/**
 	 * REASON_PERFORMANCE_PROFILE_LOG
@@ -811,8 +811,9 @@
 	 * 2. Pathname from the core/local split
 	 * 3. filename within minisite_templates/modules/form/views/thor/ directory
 	 */
-	define('REASON_FORMS_THOR_DEFAULT_VIEW', 'default.php');
-	
+	// define('REASON_FORMS_THOR_DEFAULT_VIEW', 'default.php');
+	define('REASON_FORMS_THOR_DEFAULT_VIEW', REASON_INC . 'minisite_templates/modules/form/views/thor/luther_default.php');
+
 	/**
 	 * REASON_FORMS_THOR_DEFAULT_MODEL
 	 *

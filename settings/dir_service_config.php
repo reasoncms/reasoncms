@@ -20,14 +20,17 @@
 
 include_once('paths.php');
 
-$available_services = array('reason');
+$available_services = array('ldap_luther','reason','ldap_luther_alumni'/*, 'ldap_luther_directory',*/ /*'mysql_royal_visit'*/);
 
 $service_names_to_paths = array(
-	'default'=>'services/ds_default.php',
-	'ldap'=>'services/ds_ldap.php',
-	'mysql'=>'services/ds_mysql.php',
-	'reason'=>REASON_INC.'hooks/dir_service.php',
-);
+    'default'=>'services/ds_default.php',
+    'ldap'=>'services/ds_ldap.php',
+    'mysql'=>'services/ds_mysql.php',
+    'reason'=>REASON_INC.'hooks/dir_service.php',
+    'ldap_luther'=>'/usr/local/webapps/reason_package/carl_util/dir_service/services/ds_ldap_luther.php',
+    'ldap_luther_alumni'=>'/usr/local/webapps/reason_package/carl_util/dir_service/services/ds_ldap_luther_alumni.php',
+    'ldap_luther_directory' => '/usr/local/webapps/reason_package/carl_util/dir_service/services/ds_ldap_luther_directory.php',
+    );
 
 
 ?>

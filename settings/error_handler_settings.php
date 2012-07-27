@@ -44,7 +44,13 @@ $GLOBALS[ '_DEVELOPER_INFO' ] = array(
 
 */
 
-$GLOBALS[ '_DEVELOPER_INFO' ] = array();
+$GLOBALS[ '_DEVELOPER_INFO' ] = array(
+	'steve' => array(
+		'email' => 'steve.smith@luther.edu', //error alerts are sent to these emails
+		'ip' => array('10.10.37.73', '10.10.254.242', '10.27.46.166', '10.254.2.2', '74.207.32.227', '10.10.28.78', '10.10.190.34', '10.10.254.158' ),
+		'pager' => 'steve.smith@luther.edu', '563-419-1556'  //emergency error alerts are sent to pagers, if specified
+	),
+);
 
 /* Where should the browser get sent if a fatal error occurs?
    Note that this may need to be changed based on where you unpacked Reason.

@@ -23,11 +23,11 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Basic information about the organization
-domain_define( 'FULL_ORGANIZATION_NAME','The Full Name of the Organization' );
-domain_define( 'SHORT_ORGANIZATION_NAME', 'Short Org Name' );
-domain_define( 'ORGANIZATION_HOME_PAGE_URI', 'http://www.domain_name.domain' );
-domain_define( 'WEBMASTER_EMAIL_ADDRESS', 'webmaster@domain_name.domain' );
-domain_define( 'WEBMASTER_NAME', 'Joanne Q. Webmaster' );
+domain_define( 'FULL_ORGANIZATION_NAME','Luther College' );
+domain_define( 'SHORT_ORGANIZATION_NAME', 'Luther College' );
+domain_define( 'ORGANIZATION_HOME_PAGE_URI', 'http://www.luther.edu' );
+domain_define( 'WEBMASTER_EMAIL_ADDRESS', 'webmaster@luther.edu' );
+domain_define( 'WEBMASTER_NAME', 'Steve Smith' );
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // The following constants can be left alone, provided reason_package is OUTSIDE the web tree
@@ -54,7 +54,7 @@ domain_define( 'HTTP_CREDENTIALS_FILEPATH', '' );
  * HTTPS_AVAILABLE
  * Boolean; lets the package know if the domain is configured to serve up pages under https or not
  */
-domain_define( 'HTTPS_AVAILABLE', false );
+domain_define( 'HTTPS_AVAILABLE', true );
 
 /**
  * The file system directory that contains imagemagick binaries (such as mogrify)
@@ -99,7 +99,14 @@ domain_define( 'UNIVERSAL_CSS_PATH', REASON_PACKAGE_HTTP_BASE_PATH.'css/universa
 /**
  * The host name, (eg www.mysite.com)
  */
-domain_define( 'HTTP_HOST_NAME', $_SERVER['HTTP_HOST'] );
+if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+{
+  domain_define( 'HTTP_HOST_NAME', $_SERVER['HTTP_X_FORWARDED_HOST'] );
+}
+else
+{
+  domain_define( 'HTTP_HOST_NAME', $_SERVER['HTTP_HOST']);
+}
 
 /**
  * Make sure that your locale settings use UTF-8.
@@ -168,6 +175,8 @@ define('LIBCURLEMU_INC',INCLUDE_PATH.'libcurlemu-1.0.4/');
 define('JQUERY_INC',INCLUDE_PATH.'jquery/');
 define('JQUERY_HTTP_PATH','/jquery/');
 define('JQUERY_URL',JQUERY_HTTP_PATH.'jquery_latest.js');
+//define('JQUERY_URL', '//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js');
 define('JQUERY_UI_URL',JQUERY_HTTP_PATH.'jquery_ui_latest.js');
+// define('JQUERY_UI_URL', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js');
 define('JQUERY_UI_CSS_URL',JQUERY_HTTP_PATH.'css/smoothness/jquery-ui.css');
 ?>
