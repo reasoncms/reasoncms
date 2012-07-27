@@ -1,0 +1,258 @@
+/* Form Navigation */
+#formNavigation .formSteps {
+    margin:0 0 0.75em 0;
+    padding:0;
+    list-style:none;
+    overflow:hidden;
+}
+#formNavigation .formSteps li {
+    margin-right: 5px;
+    float:left;
+}
+#formNavigation .formSteps li a {
+
+    background-repeat: no-repeat;
+    color: black;
+    letter-spacing: 3px;
+    text-shadow: 0px 0px;
+    font-style: normal;
+    font-weight: normal;
+    display:block;
+    background-color:#ccdeeb;
+    text-decoration:none;
+    padding:5px 9px 6px 9px;
+    border-bottom:8px;
+}
+#formNavigation .formSteps li.current a {
+    color: #000;
+    background: url("formnav_current.gif") no-repeat scroll center bottom #95b3cd;
+    padding-bottom:14px;
+}
+#formNavigation .formSteps li.error a {
+    /* background-color:#FF6666; */
+    /* color:blue; */
+}
+/* From Navigation (Bottom) */
+#formNavigation2 .formSteps {
+    margin:0.75em 0 0 0;
+    padding:0;
+    list-style:none;
+    overflow:hidden;
+}
+#formNavigation2 .formSteps li {
+    margin-right: 5px;
+    float:left;
+}
+#formNavigation2 .formSteps li a {
+
+    background-repeat: no-repeat;
+    color: black;
+    letter-spacing: 3px;
+    text-shadow: 0px 0px;
+    font-style: normal;
+    font-weight: normal;
+    display:block;
+    background-color:#ccdeeb;
+    text-decoration:none;
+    padding:6px 9px 5px 9px;
+    border-top:8px;
+    margin-top:8px;
+}
+#formNavigation2 .formSteps li.current a {
+    color: #000;
+    background: url("formnav_current2.gif") no-repeat scroll center top #95b3cd;
+    padding-top:14px;
+    margin-top:0px;
+}
+#formNavigation2 .formSteps li.error a {
+    /* background-color:#FF6666; */
+    /* color:blue; */
+}
+
+/* Placeholder text */
+input.unfocused_label {
+    color:#999;
+}
+
+/* Inline elements */
+div#giftForm span.inlineElement {
+    margin-right:0.33em;
+}
+
+/* Gift Info Step */
+.matchingGiftsIframe {
+    height:35em;
+}
+
+.matchingGiftsIframeFloat {
+    -moz-box-shadow:0px 2px 10px #000000;
+    -webkit-box-shadow:0px 2px 10px #000000;
+    box-shadow:0px 2px 10px #000000;
+    background-color:white;
+    padding:22px;
+    display:none;
+    font-size:0.9em;
+    height:35em;
+    left:20%;
+    /* overflow:auto; */
+    position:fixed;
+    top:15%;
+    width:60%;
+    z-index:1002;
+}
+
+div#matchingGiftsBackground {
+    display: none;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index:1001;
+    -moz-opacity: 0.6;
+    opacity:.60;
+    filter: alpha(opacity=60);
+}
+
+a#closeMatchingFrame {
+    position:absolute;
+    right:-1.5em;
+    text-decoration:none;
+    top:-1em;
+    padding:0.3em 0.5em 0.3em 22px;
+    color:#000;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius:4px;
+    -moz-box-shadow:0px 1px 3px #000000;
+    -webkit-box-shadow:0px 2px 10px #000000;
+    box-shadow:0px 1px 3px #000000;
+}
+a#closeMatchingFrame:hover, a#closeMatchingFrame:focus, a#closeMatchingFrame:active {
+    text-decoration:underline;
+    color:#000;
+}
+
+/* Personal Info Step */
+div#giftForm tr#streetaddressRow textarea {
+    height:3.25em;
+    vertical-align: top;
+}
+
+
+/* Gift Review Step */
+
+div#giftForm p.changeGiftButton {
+    margin:1.75em 0 1.25em 0;
+}
+div#giftForm p.changeGiftButton a {
+    background-color:#aa1111;
+    padding:0.3em 0.4em 0.4em 0.4em;
+    color:#fff;
+    display:normal;
+    text-decoration:none;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius:4px;
+}
+div#giftForm p.changeGiftButton a:hover {
+    color: white;
+    background-color: #d5242b;
+}
+div#giftForm #installmentnotificationnote2Row p, div#giftForm #installmentnotificationnote1Row p {
+    margin:0;
+}
+div#reviewGiftOverview p {
+    margin-top:0;
+}
+div#reviewGiftOverview li {
+    margin-left: 15px;
+}
+div#reviewGiftDetails {
+    background-color:#eaeff5;
+    padding:15px;
+}
+div#reviewGiftDetails h3 {
+    margin-top:0;
+}
+div#reviewGiftOverview a#showGiftDetails {
+    font-style:normal;
+    font-weight:normal;
+    font-size:normal;
+    background-color:#004789;
+    padding:0.3em 0.4em 0.4em 0.4em;
+    color:#fff;
+    display:inline;
+    text-decoration:none;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius:4px;
+}
+div#reviewGiftOverview a#showGiftDetails:hover {
+    color: white;
+    background-color: #2561A8;
+}
+div#reviewGiftDetails a#hideGiftDetails {
+    font-style:normal;
+    font-weight:normal;
+    font-size:0.8em;
+    float:right;
+    background-color:#AA1111;
+    padding:0.3em 0.4em 0.4em 0.4em;
+    color:#fff;
+    display:inline;
+    text-decoration:none;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius:4px;
+}
+div#reviewGiftDetails a#hideGiftDetails:hover {
+    color: white;
+    background-color: #d5242b;
+}
+div#reviewGiftDetails .givingTotalsDisclaimer {
+    font-size:0.9em;
+}
+div#reviewGiftDetails h4 {
+    margin:1.25em 0 0 0;
+    font-size:0.9em;
+    border-bottom:1px solid #afc0cf;
+}
+div#reviewGiftDetails table {
+
+    display: table;
+    margin:0 0 0.5em 2em;
+    border-style: none;
+    background: transparent;
+}
+div#reviewGiftDetails td, div#reviewGiftDetails th {
+    padding:.15em .5em .15em .5em;
+}
+div#reviewGiftDetails th {
+    font-size:85%;
+    color:#666;
+    font-weight:normal;
+}
+div#reviewGiftDetails th {
+    text-align:left;
+}
+div#reviewGiftDetails td.col1, div#reviewGiftDetails th.col1 {
+    text-align: left;
+}
+div#reviewGiftDetails td.col1 {
+    text-align: left;
+    font-weight:bold;
+}
+.formComment{
+    font-size: smaller;
+    color: red;
+}
+
+#missing_info_tip {
+    vertical-align:bottom;
+    margin-bottom:10px;
+}
+#missing_info_tip > a {
+    text-decoration: underline;
+}

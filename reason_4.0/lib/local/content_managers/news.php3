@@ -1,0 +1,630 @@
+<?php
+	$GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'news_handler';
+	
+	class news_handler extends ContentManager 
+	{
+		var $publications; //pub_id=>pub_entity
+		var $issues = array();	//[$publicationID][$issueID]=issue_entity;
+		var $news_sections = array();   //[$publicationID][$sectionID]=section_entity;
+
+				var $statesAP = array(
+                       'AL' => 'Ala.',
+                       'AK' => 'Alaska',
+                       'AZ' => 'Ariz.',
+                       'AR' => 'Ark.',
+                       'CA' => 'Calif.',
+                       'CO' => 'Colo.',
+                       'CT' => 'Conn.',
+                       'DE' => 'Del.',
+                       'DC' => 'D.C.',
+                       'FL' => 'Fla.',
+                       'GA' => 'Ga.',
+                       'HI' => 'Hawaii',
+                       'ID' => 'Idaho',
+                       'IL' => 'Ill.',
+                       'IN' => 'Ind.',
+                       'IA' => 'Iowa',
+                       'KS' => 'Kan.',
+                       'KY' => 'Ky.',
+                       'LA' => 'La.',
+                       'ME' => 'Maine',
+                       'MD' => 'Md.',
+                       'MA' => 'Mass.',
+                       'MI' => 'Mich.',
+                       'MN' => 'Minn.',
+                       'MS' => 'Miss.',
+                       'MO' => 'Mo.',
+                       'MT' => 'Mont.',
+                       'NE' => 'Neb.',
+                       'NV' => 'Nev.',
+                       'NH' => 'N.H.',
+                       'NJ' => 'N.J.',
+                       'NM' => ' N.M.',
+                       'NY' => 'N.Y.',
+                       'NC' => 'N.C.',
+                       'ND' => ' N.D.',
+                       'OH' => 'Ohio',
+                       'OK' => ' Okla.',
+                       'OR' => 'Ore.',
+                       'PA' => 'Pa.',
+                       'RI' => 'R.I.',
+                       'SC' => 'S.C.',
+                       'SD' => 'S.D.',
+                       'TN' => 'Tenn.',
+                       'TX' => 'Texas',
+                       'UT' => 'Utah',
+                       'VT' => 'Vt.',
+                       'VA' => 'Va.',
+                       'WA' => 'Wash.',
+                       'WV' => 'W.Va.',
+                       'WI' => 'Wis.',
+                       'WY' => 'Wyo.',
+		);
+/////
+// ALTER_DATA & HELPER METHODS
+////
+		function alter_data() { // {{{
+			$site = new entity( $this->get_value( 'site_id' ) );
+			$is_sport = preg_match("/^sport.*?/", $site->get_value('unique_name'));
+				
+			if ( $this->is_new_entity() ) 
+				$this -> add_required ('status');
+				
+			$this -> add_required ('datetime');
+			//$this -> add_required ('keywords');
+			$this -> add_required ('release_title');
+			$this -> add_required ('news_type');
+			$this -> add_required ('status');
+			$this -> add_required ('show_hide');
+			
+			$this -> set_display_name ('release_title', 'title');
+			$this -> set_display_name ('datetime', 'date');
+			$this -> set_display_name ('show_hide', 'Show or Hide?');
+			if($this->_is_element('enable_comment_notification')) $this -> set_display_name ('enable_comment_notification', 'Email me when new comments are added to this news item:');
+		
+			$this -> set_comments ('name', form_comment('A short name that describes the news item. This is for internal use.'));
+			$this -> set_comments ('release_title', form_comment('The actual title of the item -- this is the one that shows up on the public site.'));
+			$this -> set_comments ('description', form_comment('A brief summary of the news item; this is what appears on lists of news items'));
+			$this -> set_comments ('content', form_comment('The content of the news item.'));
+			$this -> set_comments ('show_hide', form_comment('Hidden items will not show up in the news listings.'));
+
+			if ( !$this -> get_value('datetime') )
+				$this -> set_value( 'datetime', time() );
+			if (!$this -> get_value('show_hide')) 
+				$this -> set_value('show_hide', 'show');
+			if (!$this -> get_value('status')) 
+				$this -> set_value('status', 'published');
+				
+			$this->change_element_type( 'show_hide', 'hidden');
+			$this->change_element_type('names', 'hidden');
+			$this->change_element_type('subtitle', 'hidden');
+			$this->change_element_type('author_description', 'hidden');	
+# Make this un-hidden again when we have actually IMPLEMENTED comment notification
+			if($this->_is_element('enable_comment_notification')) $this->change_element_type('enable_comment_notification', 'hidden');
+			
+			
+			//make more sophisticated changes to the content manager
+			$this->alter_commenting_state_field();
+			
+			$this->lokify();
+			
+			
+			$this->make_publication_related_fields();
+			$this->set_values_for_publication_related_fields();
+
+			//put the publication-related elements into a sensible order
+			foreach($this->publications as $pub_id=>$pub_entity)
+			{
+				if(array_key_exists($pub_id, $this->_elements))
+				{
+					$publication_elements[]=$pub_id.'-hr';
+					$publication_elements[]=$pub_id;
+				}
+				if(array_key_exists($pub_id.'-issues', $this->_elements))
+					$publication_elements[]=$pub_id.'-issues';
+				if(array_key_exists($pub_id.'more_than_one_issue_comment', $this->_elements))
+					$publication_elements[]=$pub_id.'more_than_one_issue_comment';
+				if(array_key_exists($pub_id.'-sections', $this->_elements))
+					$publication_elements[]=$pub_id.'-sections';
+				if(array_key_exists($pub_id.'more_than_one_section_comment', $this->_elements))
+					$publication_elements[]=$pub_id.'more_than_one_section_comment';
+			}		
+			$publication_elements[] = 'pubs_last_hr';
+			
+			// strip out stored local clueTip information from content
+			if ($is_sport)
+			{
+				$c = $this->get_value('content');
+				$c = preg_replace("/<div id=\"athlete\d+\">(.|\s)*/", "", $c);
+				$this->set_value('content', $c);
+			}
+	
+			$order = array ('name', 
+							'release_title', 
+							'subtitle', 
+							'news_type', 
+							'author', 
+							'author_description', 
+							'location', 
+							'datetime', 
+							'description', 
+							'content', 
+							'keywords', 
+							'names', 
+							'contact_name', 
+							'contact_email', 
+							'contact_title', 
+							'contact_phone', 
+							'release_number', 
+							'status', 
+							'show_on_front_page', 
+							'publish_start_date', 
+							'publish_end_date', 
+							'news_to_sport', // delete?
+							'news_to_image', // delete?
+							'unique_name', 
+							'commenting_state',
+							'enable_comment_notification',
+							'pubs_heading',);
+							
+			$this -> set_order (array_merge($order, $publication_elements));		
+			$this->make_site_specific_changes();			
+		} // }}}
+		
+		function make_site_specific_changes()
+		{
+			// the following stuff should be hidden on sites
+			if (!$this -> get_value('news_type')) $this -> set_value('news_type', 'Press Release');
+			$this -> change_element_type ('news_type', 'hidden');
+			$this->change_element_type( 'contact_name', 'hidden');
+			$this->change_element_type( 'contact_email', 'hidden');
+			$this->change_element_type( 'contact_title', 'hidden');
+			$this->change_element_type( 'contact_phone', 'hidden');
+			$this->change_element_type( 'show_on_front_page', 'hidden');
+			$this->change_element_type( 'publish_start_date', 'hidden');
+			$this->change_element_type( 'publish_end_date', 'hidden');
+			$this->change_element_type( 'release_number', 'hidden');
+			$this->change_element_type( 'release_number', 'hidden');
+			$this->change_element_type( 'location', 'hidden');
+			$this->change_element_type( 'show_hide', 'hidden');
+			$this -> set_comments ('status', form_comment('"Published" items will appear on your site; "pending" items will be hidden.'));
+		}
+		
+		function lokify()
+		{
+			$editor_name = html_editor_name($this->admin_page->site_id);
+			$wysiwyg_settings = html_editor_params($this->admin_page->site_id, $this->admin_page->user_id);
+			$wysiwyg_settings_desc = $wysiwyg_settings;
+			/* if(strpos($editor_name,'loki') === 0)
+			{
+				$wysiwyg_settings_desc['widgets'] = array('strong','em','lists','link','assets');
+			} */
+			
+			$this -> change_element_type ('description', $editor_name , $wysiwyg_settings_desc );
+			$this -> set_comments ('description', form_comment('A brief summary of the news item; this is what appears on lists of news items'));
+			$this->change_element_type( 'content' , $editor_name , $wysiwyg_settings );
+			$this -> set_comments ('content', form_comment('The content of the news item. Please do not include #### at the end of the content'));
+		}
+
+		function make_publication_related_fields()
+		{
+			//find all the publications associated with this site
+			$es = new entity_selector($this->get_value('site_id'));
+			$es->description = 'Finding the publications on this site';
+			$es->add_type(id_of('publication_type'));
+			$es->set_order('entity.name ASC');
+			$this->publications = current($es->run());
+			
+			if (empty($this->publications)) return false;
+			
+			$this->add_element('pubs_heading','comment',array('text'=>'<h3>Publications</h3>'));
+			$this->add_element('pubs_last_hr','hr');
+			
+			foreach($this->publications as $pub_id=>$pub)
+			{
+				$this->add_element($pub_id.'-hr', 'hr');
+				$this->add_element($pub_id, 'checkbox');
+				$this->set_display_name($pub_id, $pub->get_value('name'));
+				$this->init_issues($pub_id);
+				$this->init_news_sections($pub_id);
+				
+				if(!empty($this->issues[$pub_id]))
+				{
+					$issue_names = array();
+					foreach($this->issues[$pub_id] as $issue_id=>$issue)
+					{
+						$issue_names[$issue_id] = $issue->get_value('name');
+					}
+					$this->add_element($pub_id.'-issues', 'select_no_sort', array('options' => $issue_names, 'display_name'=>'Issue'));
+				}
+
+				if(!empty($this->sections[$pub_id] ))
+				{
+					$section_names = array();
+					foreach($this->sections[$pub_id] as $section_id=>$section)
+					{
+						$section_names[$section_id] = $section->get_value('name');
+					}
+					$this->add_element($pub_id.'-sections','select_no_sort',array( 'options' => $section_names, 'display_name'=>'Section'));
+				}
+			}
+		}
+		
+		function init_issues($pub_id)
+		{
+			if($this->publications[$pub_id]->get_value('has_issues') == 'yes')
+			{
+				$es = new entity_selector( $this->get_value('site_id') );
+				$es->description = 'Selecting issues for this publication';
+				$es->add_type( id_of('issue_type') );
+				$es->add_left_relationship( $pub_id, relationship_id_of('issue_to_publication') );
+				$es->set_order('dated.datetime DESC');
+				$this->issues[$pub_id] = $es->run_one();
+			}
+		}
+		
+		function init_news_sections($pub_id)
+		{
+			if($this->publications[$pub_id]->get_value('has_sections') == 'yes')
+			{
+				$es = new entity_selector( $this->get_value('site_id') );
+				$es->description = 'Selecting news sections for this publication';
+				$es->add_type( id_of('news_section_type'));
+				$es->add_left_relationship( $pub_id, relationship_id_of('news_section_to_publication') );
+				$es->set_order('entity.name ASC');
+				$this->sections[$pub_id] = current($es->run());
+			}
+		}
+		
+		
+		function set_values_for_publication_related_fields()
+		{
+			$left_relationships = $this->entity->get_left_relationships();
+			
+			#	What if there's not any publications for the site?
+			if(!empty($this->publications) && count($this->publications) == 1)
+			{
+				$this->set_value_for_only_publication();
+			}
+			else
+			{
+				if(!empty($left_relationships['news_to_publication']))
+				{
+					foreach($left_relationships['news_to_publication'] as $publication)
+					{
+						if(array_key_exists($publication->id(), $this->publications))
+						{
+							$this->set_value($publication->id(), 'true');
+						}
+					}
+				}
+			}
+#			we're doing this outside the publication loop in case we've somehow managed to set these vals without setting a publication val.  
+#			can that happen?  is this unnecessarily inefficient?
+			foreach($this->publications as $pub_id=>$pub_entity)
+			{
+				//set issue value, if it exists - don't need to worry about setting value if there's only one, since we're using a select
+				if(!empty($this->issues[$pub_id]) && !empty($left_relationships['news_to_issue']))
+				{
+					$issue_options = array();
+					foreach($left_relationships['news_to_issue'] as $related_issue)
+					{
+						if(array_key_exists($related_issue->id(), $this->issues[$pub_id]))
+						{
+							
+								$issue_options[] = $related_issue->id();
+						}
+					}
+					if(count($issue_options) > 1)
+					{
+						$issue_names = array();
+						foreach($issue_options as $issue_id)
+						{
+							$issue_names[] = $this->issues[$pub_id][$issue_id]->get_value('name');
+						}
+						$this->change_element_type($pub_id.'-issues', 'hidden');
+						$this->add_element($pub_id.'more_than_one_issue_comment', 'comment', array('text'=>'<strong>Issues:</strong> '.implode(', ',$issue_names).'<br />To change this post\'s issues, use the "Assign this story to an issue" link at the top of the page.'));			
+					}
+					else
+					{
+						$this->set_value($pub_id.'-issues', current($issue_options));
+					}
+				}
+				//if we've selected a publication that only has one section, select that section
+				if($this->get_value($pub_id) && !empty($this->sections[$pub_id]) && count($this->sections[$pub_id]) == 1)
+				{
+					$first_section = reset($this->sections[$pub_id]);
+					$this->set_value($pub_id.'-sections', $first_section->id()); 
+				} 
+				//otherewise set the section value if a relationship exists
+				elseif(!empty($this->sections[$pub_id]) && !empty($left_relationships['news_to_news_section']))
+				{
+					$section_options = array(); 
+					foreach($left_relationships['news_to_news_section'] as $related_section)
+					{
+						if(array_key_exists($related_section->id(), $this->sections[$pub_id]))
+						{
+							$section_options[] = $related_section->id();
+						}
+					}
+					if(count($section_options) > 1)
+					{
+						$section_names = array();
+						foreach($section_options as $section_id)
+						{
+							$section_names[] = $this->sections[$pub_id][$section_id]->get_value('name');
+						}
+						$this->change_element_type($pub_id.'-sections', 'hidden');
+						$this->add_element($pub_id.'more_than_one_section_comment', 'comment', array('text'=>'<strong>Sections:</strong> '.implode(', ',$section_names).'<br />To change this post\'s sections, use the "Assign to a News Section" link at the top of the page.'));
+					}
+					else
+					{
+						$this->set_value($pub_id.'-sections', current($section_options));
+					}
+				}
+			}
+		}
+	
+		function set_value_for_only_publication()
+		{
+			$first_pub = reset($this->publications);
+			$this->set_value($first_pub->id(), 'true');
+		}
+		
+		function alter_commenting_state_field()
+		{
+			$es = new entity_selector();
+			$es->add_type(id_of('type'));
+			$es->add_relation('entity.unique_name = "publication_type"');
+			$es->add_right_relationship($this -> get_value('site_id'), relationship_id_of('site_to_type'));
+			$es->set_num(1);
+			$types = $es->run_one();
+			if(empty($types))
+			{
+				$this->change_element_type('commenting_state','hidden');
+			}
+			else
+			{
+				$this -> add_required ('commenting_state');
+				$this -> set_display_name ('commenting_state', 'Allow comments');
+				$this->change_element_type('commenting_state', 'select_no_sort', array('options'=>array('on'=>'Yes', 'off'=>'No'), 'add_null_value_to_top' => false));
+				$this->add_comments('commenting_state', form_comment('This setting will only apply if this news/post item is used on a publication that supports comments, such as a blog.'));
+			}
+			if ( !$this -> get_value('commenting_state') )
+			{
+				$this -> set_value( 'commenting_state', 'on' );
+			}
+		}
+
+//////
+//  RUN_ERROR_CHECKS && HELPER METHODS
+//////
+
+		function run_error_checks()
+		{
+			parent::run_error_checks();
+			$this->run_publication_issue_and_section_checks();
+			$this->run_publication_association_error_check();
+		}
+		
+		/**
+		 * Makes sure the news item is associated with at least one publication
+		 *
+		 * @todo it seems this only works if there is exactly one publication on the site - is that desired???
+		 */
+		function run_publication_association_error_check() 
+		{
+			foreach($this->publications as $pub_id=>$pub_entity)
+			{
+				if($this->get_value($pub_id)) return true;
+			}
+			if(!empty($this->publications))
+			{
+				//this is a bit of a hack - couldn't figure out what to point to for "jump to error"
+				$first_pub= reset($this->publications);
+				// this causes error - site may not have a publication ...
+				$this->set_error($first_pub->id(), 'This news item needs to be associated with at least one publication.' );
+			}
+		}
+		
+		/**
+		 * Makes sure that if a publication is selected that has issues and/or sections, that proper associations are present
+		 */
+		function run_publication_issue_and_section_checks()
+		{
+			foreach($this->publications as $pub_id=>$pub_entity)
+			{
+				if($this->get_value($pub_id))
+				{
+					//make sure they have a relationship with at least one issue -- remember that if they have a relationship with more than one issue, the issue element will be hidden
+#					//we can't have an empty issue_val, can we?  since it's a select?  										
+					$issue_val = $this->get_value($pub_id.'-issues');
+					if(!empty($this->issues[$pub_id]) && $this->_elements[$pub_id.'-issues']->type != 'hidden' && empty($issue_val) )
+					{
+						$this->set_error($pub_id.'-issues', 'This news item needs to be associated with at least one issue of "'.$pub_entity->get_value('name').'".' );					
+					}
+					//make sure they have a relationship with at least one section -- remember that if they have a relationship with more than one section, the section element will be hidden
+					$section_val = $this->get_value($pub_id.'-sections');
+					if(!empty($this->sections[$pub_id]) && empty($section_val) && $this->_elements[$pub_id.'-sections']->type != 'hidden')
+					{
+						$this->set_error($pub_id.'-sections', 'This news item needs to be associated with at least one section of "'.$pub_entity->get_value('name').'".' );					
+					}
+				}
+			}
+		}
+
+
+	
+/////
+// PROCESS & HELPER METHODS
+////
+	
+		function process()
+		{
+			$this->handle_new_associations();
+			$this->handle_deletions();
+			$this->sports_athlete_links();
+			parent::process();
+		}
+		
+		function sports_athlete_links()
+		// finds name of athlete in main content and automatically inserts a link to the athlete's bio
+		{			
+			$site_id = new entity( $this->get_value( 'site_id' ) );
+			$site_name = $site_id->get_value('unique_name');			
+			if (!preg_match("/sport_\w+_w?o?men/", $site_name))
+			{
+				return;
+			}
+			
+			// get a list of athletes
+			$es = new entity_selector($this->get_value('site_id'));
+			$es->add_type(id_of('athlete_type'));
+			$es->add_relation('athlete_hide != "yes"');
+			$es->add_left_relationship_field( 'athlete_to_image', 'entity', 'id', 'image_id', false); // get images and those with no image - uses union query
+			$players = $es->run_one();
+
+			
+			if (!empty($players))
+			{
+				$url = $site_id->get_value('base_url') . "roster/";
+				$c = $this->get_value('content');
+				$ct = "";   // appended cluetip information
+				foreach ($players as $k=>$v)
+				{
+					$pv = $v->get_values();
+					//print_r ($pv);
+					if (!preg_match("/<a href=.*?>".$pv['athlete_first_name']."\s+".$pv['athlete_last_name']."<\/a>/", $c))	
+					{
+						
+						//$image = get_entity_by_id($pv['image_id']);
+						//$url = WEB_PHOTOSTOCK . $pv['image_id'] . '.' . $image['image_type'];
+						//$c = preg_replace("|".$pv['athlete_first_name']."\s+".$pv['athlete_last_name']."|",
+						//"<a href=".$url.">".$pv['athlete_first_name']." ".$pv['athlete_last_name']."</a>", $c, 1);
+						$c = preg_replace("|".$pv['athlete_first_name']."\s+".$pv['athlete_last_name']."|",
+						//"<a href=".$url."?id=".$pv['id'].">".$pv['athlete_first_name']." ".$pv['athlete_last_name']."</a>", $c, 1);
+						"<a href=\"".$url."?id=".$pv['id']. "\" class=\"cluetip_athlete\" title=\"". $pv['athlete_first_name']." ".$pv['athlete_last_name'] ."\" rel=\"#athlete".$pv['id']."\">".$pv['athlete_first_name']." ".$pv['athlete_last_name']."</a>", $c, 1);
+						
+
+					}
+					//if (preg_match("/<a href=\"".$url."\?id=".$pv['id']."\"/", $c))
+					if (preg_match("/id=".$pv['id']."/", $c))
+					{
+						$ct .= "<div id=\"athlete".$pv['id']."\">";
+						$ct .= "<p class=\"athlete_position_event\">". $pv['athlete_position_event'];
+						if (!empty($pv['image_id']))
+						{
+							$image = get_entity_by_id($pv['image_id']);
+							$thumb = WEB_PHOTOSTOCK . $pv['image_id'] . '_tn.' . $image['image_type'];
+							$ct .= "<img class=\"athlete_image\" src=\"" . $thumb . "\" />";
+						}
+						$ct .= "</p>";					
+						$ct .= "<p class=\"athlete_class_year\">". $pv['athlete_class_year']."</p>";
+						$ct .= "<p class=\"athlete_hometown\">". $pv['athlete_hometown_city'].", ". $this->statesAP[$pv['athlete_hometown_state']]."</p>";
+						$ct .= "<p class=\"athlete_high_school\">". $pv['athlete_high_school']."</p>";		
+						$ct .= "</div>";
+					}
+				}
+				$this->set_value('content', $c . $ct);
+			}
+			
+		}
+		
+		function handle_new_associations()
+		{
+			foreach($this->publications as $pub_id=>$pub_entity)
+			{
+				if($this->get_value($pub_id) && !$this->entity->has_left_relation_with_entity($pub_entity, 'news_to_publication'))
+				{
+					$this->make_new_association('news_to_publication', $pub_id);
+				}
+				//this should accomplish what we want, but what we more precisely want is something more to the effect of if(issue value != id of issue we have relationship with)
+				if($this->get_value($pub_id) && $this->get_value($pub_id.'-issues') && !$this->entity->has_left_relation_with_entity(new entity($this->get_value($pub_id.'-issues')), 'news_to_issue'))
+				{
+					//if we see the issue field at all, there should be 0 or 1 issues associated, and we know we are either making the first association or REPLACING the old one.
+					$this->delete_all_issue_associations_for_this_publication($pub_id);
+					$this->make_new_association('news_to_issue', $this->get_value($pub_id.'-issues'));
+				}
+				if($this->get_value($pub_id) && $this->get_value($pub_id.'-sections') && !$this->entity->has_left_relation_with_entity(new entity($this->get_value($pub_id.'-sections')), 'news_to_news_section'))
+				{
+					$this->delete_all_section_associations_for_this_publication($pub_id);
+					$this->make_new_association('news_to_news_section', $this->get_value($pub_id.'-sections'));
+				}
+				if($this->get_value($pub_id))
+				{
+					$this->extra_associations($pub_entity);
+				}
+			}
+		}
+		
+		function extra_associations(&$pub_entity)
+		{
+		}
+	
+		function handle_deletions()
+		{
+			foreach($this->publications as $pub_id=>$pub_entity)
+			{
+				//figure out if we're supposed to delete an association with a publication.  If we are, also delete associations with issues & sections.	
+#				if(!$this->get_value($pub_id) && $this->entity->has_left_relation_with_entity(new entity($pub_id), 'news_to_publication'))
+				if(!$this->get_value($pub_id))
+				{
+					//delete association with this publication, if it exists
+					if($this->entity->has_left_relation_with_entity($pub_entity, 'news_to_publication'))
+						$this->delete_instance_of_relationship($this->entity->id(), $pub_id, 'news_to_publication');
+					//delete all associations with this publication's issues
+					$this->delete_all_issue_associations_for_this_publication($pub_id);
+					//delete all associations with this publication's news sections
+					$this->delete_all_section_associations_for_this_publication($pub_id);
+					$this->extra_deletions($pub_entity);
+				}				
+				//issue & section associations for associated publications cannot be deleted, only replaced, so this is taken care of in handle_new_associations
+			}
+		}
+		
+		// hook for extra deletion actions for local extensions
+		function extra_deletions(&$pub_entity)
+		{
+		}
+
+		function delete_instance_of_relationship($entity_a_id, $entity_b_id, $reln_unique_name)
+		{
+			delete_relationships( array( 'entity_a' => $entity_a_id, 'entity_b' => $entity_b_id,'type' => relationship_id_of( $reln_unique_name )));
+		}
+		
+#		now that this function only contains the create_relationship command, it should probably be deleted ... but we'll leave it in for now, in case we want to change it.		
+		function make_new_association($reln_unique_name, $entity_b_id)
+		{		
+			//create a relationship with the new entity 
+			create_relationship($this->entity->id(), $entity_b_id, relationship_id_of($reln_unique_name));
+		}
+		
+		function delete_all_issue_associations_for_this_publication($publication_id)
+		{
+			if(!empty($this->issues[$publication_id]))
+			{
+				foreach($this->issues[$publication_id] as $issue_id=>$issue_entity)
+				{
+					if($this->entity->has_left_relation_with_entity($issue_entity, 'news_to_issue'))
+					{
+						$this->delete_instance_of_relationship($this->entity->id(), $issue_id, 'news_to_issue');
+					}
+				}
+			}
+		}
+		
+		function delete_all_section_associations_for_this_publication($publication_id)
+		{
+			if(!empty($this->sections[$publication_id]))
+			{
+				foreach($this->sections[$publication_id] as $section_id=>$section_entity)
+				{
+					if($this->entity->has_left_relation_with_entity($section_entity, 'news_to_news_section'))
+					{
+						$this->delete_instance_of_relationship($this->entity->id(), $section_id, 'news_to_news_section');
+					}
+				}
+			}
+		}
+	}
+?>
