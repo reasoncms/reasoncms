@@ -15,6 +15,9 @@
 	 * A minisite module that displays a js-based slideshow of images attached to the page
 	 *
 	 * @todo get css and inline javascript into external files.
+	 * @todo make me work properly if only one dimensions is set (height or width) - right now dynamic determination is not based on image aspect ratio.
+	 * @todo make flexsider width, height, aspect ratio stuff dynamic and determined in javascript.
+	 * @todo with changes, try to avoid using reason sized image in the init phase.
 	 */
 	class ImageSlideshowModule extends DefaultMinisiteModule
 	{
@@ -29,7 +32,7 @@
 			'width' => 0,
 			'height' => 0,
 			'crop' => 'fit',
-			'force_image_enlargement' => false,
+			//'force_image_enlargement' => false,
 			'rand_flag' => false, 
 			'num_to_display' => '',
 			'caption_flag' => true,
@@ -425,24 +428,28 @@
 				$img_content = $image->get_value('content');
 				$img_height = $image->get_value('height');
 				$img_width = $image->get_value('width');
+				
 				//Check if making a reason sized image is necessary.
-				if ($img_height <= $max_height && $img_width <= $max_width && !$this->params['force_image_enlargement'])
-				{
-					$img_url = reason_get_image_url($image);
-				}
-				else
+				//if ($img_height <= $max_height && $img_width <= $max_width && !$this->params['force_image_enlargement'])
+				//{
+				//	$img_url = reason_get_image_url($image);
+				//}
+				if (0 != $this->params['height'] or 0 != $this->params['width'])
 				{
 					$rsi = new reasonSizedImage();
 					$rsi->set_id($image->id());
 					$rsi->set_width($max_width);
 					$rsi->set_height($max_height);
-					$rsi->allow_enlarge($this->params['force_image_enlargement']);
+					//$rsi->allow_enlarge($this->params['force_image_enlargement']);
 					$rsi->set_crop_style($crop);
 					$img_url = $rsi->get_url();
 					$img_height = $rsi->get_image_height();
 					$img_width = $rsi->get_image_width();
 				}
-				
+				else
+				{
+					$img_url = reason_get_image_url($image);
+				}
 				$images_info[] = array('description' => $img_description, 'content' => $img_content, 'height' => $img_height, 'width' => $img_width, 'url' => $img_url);
 			}
 			return $images_info;
