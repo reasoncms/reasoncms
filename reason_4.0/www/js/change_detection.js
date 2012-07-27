@@ -7,7 +7,7 @@
  *    serialized data differs.
  *
  * @author Benjamin Wilbur
- * @author Lucas Welper 
+ * @author Lucas Welper
  *
  * @requires jQuery
 */
@@ -36,13 +36,13 @@ function initialize_change_detection() {
     $('ul.leftList > li.navItem > a.nav').click(function(e){
         var click_serialized = change_detection_serialize_form();
         if (click_serialized != initial_serialized_form) {
-            // create hidden input for clicked <a href... for the purpose of 
+            // create hidden input for clicked <a href... for the purpose of
             // where_to when form is saved
             $('<input>').attr({
                 type: 'hidden',
                 id: 'change_detection_redirectElement',
-                name: 'change_detection_redirect',
-            }).appendTo('#disco_form');
+                name: 'change_detection_redirect'
+                        }).appendTo('#disco_form');
             next_page = $(this).attr('href');
             $('#change_detection_redirectElement').val(next_page);
             $('#dialog_confirm').dialog('open');
@@ -62,9 +62,19 @@ function draw_dialog(buttons_list)
         }
     );
 }
+/**
+ *  Let's get the base path based of our address
+ */
+function get_base_path(){
+    pathArray = window.location.pathname.split( '/' );
+    return pathArray[1]; //reason's www folder
+}
 
 $(document).ready(function(){
-    $('#change_detection_redirectElement').remove();
+
+    $('#wrapper').append('<div id="dialog_confirm" title="Unsaved Changes"><p id="unsaved_changes">You have unsaved changes. How would you like to proceed?</p><p class="ui-helper-hidden" id="changes_saving">Please wait... <img src="/' + get_base_path() + '/ui_images/reason_admin/wait.gif"/></p></div>');
+
+        $('#change_detection_redirectElement').remove();
     var buttons = {
         "Save": function() {
             $( this ).dialog( "close" );
@@ -76,7 +86,7 @@ $(document).ready(function(){
         },
         "Discard": function() {
             $( this ).dialog( "close" );
-            window.location = next_page; 
+            window.location = next_page;
         },
         "Continue Editing": function() {
             $('#change_detection_redirectElement').remove();
@@ -88,6 +98,6 @@ $(document).ready(function(){
     // queue and dequeue to utilize jquery's delay
     $(this).delay(5000).queue(function() {
         initialize_change_detection();
-        $(this).dequeue(); 
-    })
+        $(this).dequeue();
+    });
 });
