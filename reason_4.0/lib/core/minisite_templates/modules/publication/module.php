@@ -259,6 +259,7 @@ class PublicationModule extends Generic3Module
 			// Only load inline_editing javascript if inline editing is available for the module and active for the module
 			if ($inline_edit->available_for_module($this) && $inline_edit->active_for_module($this))
 			{
+				
 				$head_items =& $this->get_head_items();
 				$head_items->add_javascript(JQUERY_URL, true);
 				$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/publications/inline_editing.js');
@@ -2681,8 +2682,13 @@ class PublicationModule extends Generic3Module
 				if (!empty($this->current_item_id))
 				{
 					$story_id = $this->current_item_id;
-					$owner =  get_owner_site_id($story_id);
-					$this->_user_can_inline_edit = (reason_check_authentication() && ((reason_check_access_to_site($owner) || $this->user_is_author())));
+					$story = new entity($story_id);
+					if (reason_is_entity($story, 'news'))
+					{
+						$owner = get_owner_site_id($story_id);
+						$this->_user_can_inline_edit = (!empty($owner) && reason_check_authentication() && ((reason_check_access_to_site($owner) || $this->user_is_author())));
+					}
+					else $this->_user_can_inline_edit = false;
 				}
 				else
 				{
@@ -2700,9 +2706,12 @@ class PublicationModule extends Generic3Module
 			if (isset($this->current_item_id) && ($netid = reason_check_authentication()))
 			{
 				$item = new entity($this->current_item_id);
-				if ($item->get_value('created_by') == get_user_id($netid))
+				if (reason_is_entity($item, 'news'))
 				{
-					return true;
+					if ($item->get_value('created_by') == get_user_id($netid))
+					{
+						return true;
+					}
 				}
 			}
 			return false;
