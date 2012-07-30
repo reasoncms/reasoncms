@@ -2719,15 +2719,22 @@ class PublicationModule extends Generic3Module
 			$form->strip_tags_from_user_input = true;
 			$form->allowable_HTML_tags = REASON_DEFAULT_ALLOWED_TAGS;
 			$form->actions = array('save' => 'Save', 'save_and_finish' => 'Save and Finish Editing');
-			$form->add_element('title_of_story', 'text');
-			$form->set_display_name('title_of_story', 'Title');
-			$form->set_value('title_of_story', $item_title);
-			$form->add_element('editable_content', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
-			$form->set_display_name('editable_content','Content');
-			$form->set_value('editable_content', $item_content);
-			$form->add_element('description_of_story', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
-			$form->set_display_name('description_of_story', 'Excerpt/Teaser (displayed on post listings; not required):');
-			$form->set_value('description_of_story', $item_description);
+			
+			$this->init_field($form, 'name', $item, 'text', 'solidtext');
+			//$form->add_element('title_of_story', 'text');
+			$form->set_display_name('name', 'Title');
+			$form->set_value('name', $item_title);
+			
+			$this->init_field($form, 'content', $item, html_editor_name($this->site_id), 'wysiwyg_disabled', html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
+			//$form->add_element('editable_content', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
+			$form->set_display_name('content','Content');
+			$form->set_value('content', $item_content);
+			
+			$this->init_field($form, 'description', $item, html_editor_name($this->site_id), 'wysiwyg_disabled', html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
+			//$form->add_element('description_of_story', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
+			$form->set_display_name('description', 'Excerpt/Teaser (displayed on post listings; not required):');
+			$form->set_value('description', $item_description);
+			
 			$form->add_callback(array(&$this, 'process_editable'),'process');
 			$form->add_callback(array(&$this, 'where_to_editable'), 'where_to');
 			$form->add_callback(array(&$this, 'run_error_checks_editable'), 'run_error_checks');
@@ -2735,15 +2742,34 @@ class PublicationModule extends Generic3Module
 			echo '</div>';
 		}
 		
+		
+		/**
+		* Inits a disco form element as a locked or unlocked field.
+		*/
+		function init_field($form, $field_name, $item, $type, $lock_type, $params = null)
+		{
+			if ($item->user_can_edit_field($field_name))
+			{
+				$form->add_element($field_name, $type, $params);
+			}
+			else
+			{
+				$form->add_element($field_name, $lock_type);
+				$form->set_comments($field_name, '');
+				$form->set_comments($field_name, '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />', 'before' );
+			}
+		}
+		
+		
 		/**
 		* Update the Reason entity that the user edited.
 		*/
 		function process_editable(&$disco)
 		{
 			$values = array();
-			$values['release_title'] = trim(strip_tags($disco->get_value('title_of_story')));
-			$values['content'] = trim(tidy($disco->get_value( 'editable_content' )));
-			$values['description'] = trim(tidy($disco->get_value('description_of_story')));
+			$values['release_title'] = trim(strip_tags($disco->get_value('name')));
+			$values['content'] = trim(tidy($disco->get_value( 'content' )));
+			$values['description'] = trim(tidy($disco->get_value('description')));
 			$archive = ($disco->get_chosen_action() == 'save_and_finish') ? true : false;
 			reason_update_entity($this->current_item_id, get_user_id($this->get_user_netid()), $values, $archive );
 		}
