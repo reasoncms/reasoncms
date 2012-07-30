@@ -8,20 +8,20 @@
  
 $(window).load(function() 
 {
-	var clone_row = $("tr#descriptionRow").clone().attr("id","showdescriptionRow").find("*").html("").end();
-	var link = $("<a href=\'\'>Show Excerpt/Teaser</a>");
+	var clone_row = $("tr#descriptionofstoryRow").clone().attr("id","showdescriptionRow").find("*").html("").end();
+	var link = $("<a href=\'\'>Show excerpt/teaser</a>");
 	
 	link.click(function()
 	{
-		if (link.text() == "Show Excerpt/Teaser")
+		if (link.text() == "Show excerpt/teaser")
 		{
 			set_heights_and_visibility();
-			link.text("Hide Excerpt/Teaser");
+			link.text("Hide excerpt/teaser");
 		}
 		else
 		{
 			set_heights_and_visibility();
-			link.text("Show Excerpt/Teaser");
+			link.text("Show excerpt/teaser");
 		}
 		//matchColumns();
 		return false;
@@ -30,21 +30,21 @@ $(window).load(function()
 	$("td.words", clone_row).html(link);
 
 	// Place the "show/hide description" link before the disco editor
-	$("#descriptionRow").before(clone_row);
+	$("#descriptionofstoryRow").before(clone_row);
 
 	set_heights_and_visibility();
 	
 	function set_heights_and_visibility()
 	{
-		var cur = $("#descriptionRow").css("display");
+		var cur = $("#descriptionofstoryRow").css("display");
 		if (cur == 'none')
 		{
-			$("#descriptionRow").css("display", "");
+			$("#descriptionofstoryRow").css("display", "");
 		}
 		else
 		{
-			$("tr#showdescriptionRow td.words").width($("#descriptionRow td.words").width());
-			$("#descriptionRow").css("display", "none");
+			$("tr#showdescriptionRow td.words").width($("#descriptionofstoryRow td.words").width());
+			$("#descriptionofstoryRow").css("display", "none");
 		}
 		
 		// attempt to fire a resize event
