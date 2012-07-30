@@ -210,7 +210,14 @@ class tiny_mceType extends textareaType
 	var $type = 'tiny_mce';
 	function display()
 	{
-		echo '<script language="javascript" type="text/javascript" src="'.TINYMCE_HTTP_PATH.'tiny_mce.js"></script>'."\n";
+		// we only want to load the main js file once.
+		static $loaded_an_instance;
+		if (!isset($loaded_an_instance))
+		{
+			echo '<script language="javascript" type="text/javascript" src="'.TINYMCE_HTTP_PATH.'tiny_mce.js"></script>'."\n";
+			$loaded_an_instance = true;
+		}
+		
 		echo '<script language="javascript" type="text/javascript">'."\n";
 		echo 'tinyMCE.init({'."\n";
 		echo 'mode : "exact",'."\n";
