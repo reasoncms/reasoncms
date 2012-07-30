@@ -84,6 +84,11 @@ class reasonSizedImage
 	var $crop_style = "fill"; // fill or fit
 	
 	/**
+	* @var boolean
+	*/
+	var $allow_enlarge = true;
+	
+	/**
 	 * $var array supported crop styles
 	 */
 	var $available_crop_styles = array('fill', 'fit');
@@ -128,7 +133,7 @@ class reasonSizedImage
 	
 	/**
 	* when true, setters return an error. set to true by the make() function.
-	* meant to avoid setting width, height, crop and path after resized image has already
+	* meant to avoid setting width, height, crop, allow enlarge after resized image has already
 	* been created and expecting a changed image.
 	* @var boolean
 	*/
@@ -376,12 +381,11 @@ class reasonSizedImage
 					
 					if($this->get_crop_style()=="fit")
 					{
-						$success=resize_image($newpath, $this->_get_width(), $this->_get_height(),$sharpen);
+						$success=resize_image($newpath, $width, $height, $sharpen);
 					}
 					elseif($this->get_crop_style()=="fill")
 					{
-				      	$success=crop_image($width,$height,$path,$newpath,$sharpen);
-						
+				      	$success=crop_image($width, $height, $path, $newpath, $sharpen);
 					}
 					
 					if($this->do_blit)
@@ -432,15 +436,55 @@ class reasonSizedImage
 	
 	/** Getters **/
 	function get_id() { return $this->id; }
+	
 	function _get_width( $lookup_from_aspect_ratio = true )
 	{
 		if (!isset($this->width) && $lookup_from_aspect_ratio) $this->_set_width_from_height();
+		if (!$this->allow_enlarge && !empty($this->width))
+		{
+			$this->width = min($this->width, $this->_get_entity_max_width());
+		}
 		return $this->width;
 	}
+	
 	function _get_height( $lookup_from_aspect_ratio = true )
 	{
 		if (!isset($this->height) && $lookup_from_aspect_ratio) $this->_set_height_from_width();
+		if (!$this->allow_enlarge && !empty($this->height))
+		{
+			$this->height = min($this->height, $this->_get_entity_max_height());
+		}
 		return $this->height;
+	}
+
+	function _get_entity_max_width()
+	{
+		$dimensions = $this->_get_entity_max_dimensions();
+		return $dimensions[0];
+	}
+
+	function _get_entity_max_height()
+	{
+		$dimensions = $this->_get_entity_max_dimensions();
+		return $dimensions[1];
+	}
+	
+	function _get_entity_max_dimensions()
+	{
+		if (!isset($this->entity_max_dimensions))
+		{
+			$entity = $this->get_entity();
+			if( $this->_orig_exists() && file_exists(reason_get_image_path($entity, 'original')))
+			{
+				$path = reason_get_image_path($entity, 'original');
+			}
+			else
+			{
+				$path = reason_get_image_path($entity);
+			}
+			$this->entity_max_dimensions = getimagesize($path);
+		}
+		return $this->entity_max_dimensions;
 	}
 	
 	function _orig_exists()
@@ -555,6 +599,19 @@ class reasonSizedImage
 			trigger_error('Crop style already defined. Create a new sized image object to use a different crop style.');
 		}
 		else $this->crop_style = $crop_style;
+	}
+	
+	function allow_enlarge($allow)
+	{
+		if (!is_bool($allow))
+		{
+			trigger_error('Allow enlarge parameter provided ('.$allow.') is invalid.  Must be true or false.');
+		}
+		elseif($this->locked)
+		{
+			trigger_error('Allow enlarge already defined. Create a new sized image object to use a different allow enlarge setting');
+		}
+		else $this->allow_enlarge = $allow;
 	}
 	
 	/**
