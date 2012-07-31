@@ -2757,19 +2757,25 @@ class PublicationModule extends Generic3Module
 		*/
 		function init_field($form, $field_name, $entity_field_name, $item, $type, $lock_type, $params = null)
 		{
-			if ($item->user_can_edit_field($entity_field_name))
+			if ($netid = $this->get_user_netid())
 			{
-				$form->add_element($field_name, $type, $params);
-			}
-			else
-			{
-				$form->add_element($field_name, $lock_type);
-				$form->set_comments($field_name, '');
-				$form->set_comments($field_name, '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />', 'before' );
+				if ($user_id = get_user_id($netid))
+				{
+					$user = new entity($user_id);
+					if ($item->user_can_edit_field($entity_field_name, $user))
+					{
+						$form->add_element($field_name, $type, $params);
+					}
+					else
+					{
+						$form->add_element($field_name, $lock_type);
+						$form->set_comments($field_name, '');
+						$form->set_comments($field_name, '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />', 'before' );
+					}
+				}
 			}
 		}
-		
-		
+
 		/**
 		* Update the Reason entity that the user edited.
 		*/
