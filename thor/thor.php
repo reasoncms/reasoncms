@@ -1166,7 +1166,7 @@ class Thor
 		$q .= '`submitted_by` tinytext NOT NULL , ';
 		$q .= '`submitter_ip` tinytext NOT NULL , ';
 		$q .= '`date_created` timestamp NOT NULL , ';
-		$q .= 'PRIMARY KEY(`id`)) TYPE = MYISAM;';
+		$q .= 'PRIMARY KEY(`id`)) ENGINE=MYISAM;';
 		$res = mysql_query( $q ) or trigger_error( 'Error: mysql error in Thor: '.mysql_error() );
 		connectDB(REASON_DB); // reconnect to default DB
 	}
