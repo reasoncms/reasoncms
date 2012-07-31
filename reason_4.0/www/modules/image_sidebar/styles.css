@@ -1,0 +1,8 @@
+#standalone_content {
+	width: 100%;
+	height: 100%;
+}
+
+.fancybox-positioning {
+	left: -1000px !important;
+}
