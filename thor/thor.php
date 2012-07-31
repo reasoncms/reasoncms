@@ -512,7 +512,7 @@ class ThorCore
 		$q .= '`submitter_ip` tinytext NOT NULL , ';
 		$q .= '`date_created` timestamp default 0 NOT NULL , ';
 		$q .= '`date_modified` timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP , ';
-		$q .= 'PRIMARY KEY(`id`)) TYPE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;';
+		$q .= 'PRIMARY KEY(`id`)) ENGINE=MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;';
 		return $q;
 	}
 	
