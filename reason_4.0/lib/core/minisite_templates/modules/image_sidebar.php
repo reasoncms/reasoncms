@@ -24,7 +24,7 @@ class ImageSidebarModule extends DefaultMinisiteModule
 {
 	var $es;
 	var $images;
-	var $standalone_head_items;
+	var $image_detail_head_items;
 
 	var $acceptable_params = array(
 		// Maximum number of images to display (undefined = all)
