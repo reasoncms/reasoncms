@@ -83,7 +83,6 @@ class AssociatorModule extends DefaultModule // {{{
 			list( $key , ) = each( $this->associations );
 
 			$this->admin_page->rel_id = $key;
-			echo $key;
 		}
 	} // }}}
 	function list_associations() // {{{
