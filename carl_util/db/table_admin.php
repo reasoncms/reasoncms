@@ -1505,7 +1505,7 @@ class TableAdmin
 										`date_created` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 										`num_rows` int(6) NOT NULL,
 										`csv_data` MEDIUMTEXT NOT NULL,
-										PRIMARY KEY(`id`)) TYPE = MYISAM;';
+										PRIMARY KEY(`id`)) ENGINE=MYISAM;';
 		connectDB($this->get_db_conn());
 		$res = mysql_query( $q ) or trigger_error( 'Error: mysql error in table: '.mysql_error() );
 		connectDB($this->get_orig_db_conn()); // reconnect to default DB

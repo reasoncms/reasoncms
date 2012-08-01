@@ -9,6 +9,8 @@
  */
 reason_include_once( 'minisite_templates/modules/default.php' );
 reason_include_once( 'classes/sized_image.php' );
+reason_include_once('function_libraries/image_tools.php');
+reason_include_once( 'classes/api/api.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ImageSidebarModule';
 
 /**
@@ -22,6 +24,7 @@ class ImageSidebarModule extends DefaultMinisiteModule
 {
 	var $es;
 	var $images;
+	var $image_detail_head_items;
 
 	var $acceptable_params = array(
 		// Maximum number of images to display (undefined = all)
@@ -43,11 +46,82 @@ class ImageSidebarModule extends DefaultMinisiteModule
 		// the module is running on.
 		'alternate_source_page_id' => '',
 	);
+	
+	var $cleanup_rules = array('image_id' => 'turn_into_int');
+	
+	static function setup_supported_apis()
+	{
+		$image_url_api = new ReasonAPI(array('html'));
+		self::add_api('image_detail', $image_url_api);
+	}
+
+	function image_may_be_shown($id)
+	{
+		if ($this->params['alternate_source_page_id'])
+		{
+			$page_id = $this->params['alternate_source_page_id'];
+			if (!($site_id = get_owner_site_id($page_id)))
+				$site_id = $this->site_id;
+		} else {
+			$page_id = $this->cur_page->id();
+			$site_id = $this->site_id;	
+		}
+		
+		$es = new entity_selector();
+		$es->add_type( id_of('image') );
+		$es->set_env( 'site' , $site_id );
+		$es->add_right_relationship( $page_id, relationship_id_of('minisite_page_to_image') );
+		$es->add_relation('entity.id = '. addslashes($id));
+		$result = $es->run_one();
+		
+		//echo 'given id='.$id;
+		
+		if(! empty($result))
+		{
+			//echo 'returning true';
+			return true;
+		}
+		else
+		{
+			//echo 'returning false';
+			return false;
+		}
+	}
 
 	function init( $args = array() )
 	{
 		parent::init( $args );
-		$this->select_images();
+		
+		$api = $this->get_api();
+		if (!empty($api) && $api->get_name() == 'image_detail')
+		{
+			//Do standalone mode initialization
+			$this->image_detail_head_items = new HeadItems();
+			$this->image_detail_head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'modules/image_sidebar/styles.css');
+			if (defined(UNIVERSAL_CSS_PATH))
+			{
+				$this->image_detail_head_items->add_stylesheet(UNIVERSAL_CSS_PATH);
+			}
+		}
+		else
+		{
+			//Do standard initialization
+			$head_items = $this->get_head_items();
+			$this->select_images();
+			if (count($this->images) > 0)
+			{
+				if (defined(UNIVERSAL_CSS_PATH))
+				{
+					$head_items->add_stylesheet(UNIVERSAL_CSS_PATH);
+				}
+				$head_items->add_javascript(JQUERY_URL, true);
+				$head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'jquery.reasonAjax.js');
+				$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/image_sidebar/image_sidebar.js');
+				$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'modules/image_sidebar/styles.css');
+				$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.js');
+				$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH.'FancyBox/source/jquery.fancybox.css');
+			}
+		}
 	}
 	
 	function has_content()
@@ -58,8 +132,19 @@ class ImageSidebarModule extends DefaultMinisiteModule
 			return false;
 	}
 	
-	function run()
+	function run_api() 
 	{
+		$api = $this->get_api();
+		if ($api->get_name() == 'image_detail')
+		{
+			if ($api->get_content_type() == 'html') $api->set_content($this->get_image_detail_content());
+			$api->run();
+		}
+		else parent::run_api(); // support other apis defined by parents
+	}
+	
+	function run()
+	{	
 		$die = isset( $this->die_without_thumbnail ) ? $this->die_without_thumbnail : false;
 		$popup = isset( $this->show_popup_link ) ? $this->show_popup_link : true;
 		$desc = isset( $this->description ) ? $this->description : true;
@@ -73,7 +158,7 @@ class ImageSidebarModule extends DefaultMinisiteModule
 			$show_text = $text;
 			if( !empty( $this->show_size ) )
 				$show_text .= '<br />('.$image->get_value( 'size' ).' kb)';
-			echo "<div class=\"imageChunk\">";
+			echo '<div class="imageChunk '.$this->get_api_class_string().'">';
 			
 			if($this->params['thumbnail_width'] != 0 or $this->params['thumbnail_height'] != 0)
 			{
@@ -97,16 +182,102 @@ class ImageSidebarModule extends DefaultMinisiteModule
 				}
 			}
 			
-			
 			if ($this->params['caption_flag'] == false)
-				show_image( $image, $die, $popup, false, $show_text, $this->textonly,false );
+				show_image( $image, $die, $popup, false, $show_text, $this->textonly, false, $this->get_image_url($image) );
 			else
-				show_image( $image, $die, $popup, $desc, $show_text, $this->textonly,false );
-				
+				show_image( $image, $die, $popup, $desc, $show_text, $this->textonly, false, $this->get_image_url($image) );
 				
 			echo "</div>\n";
 		}
+	
 	}
+	
+	function get_image_detail_content()
+	{	
+		$buf = '';
+		if (!empty($this->request['image_id']) && is_numeric($this->request['image_id']))
+		{
+			$image = new entity($this->request['image_id']);
+
+			if ($this->image_may_be_shown($this->request['image_id']))
+			{
+				$img_info = $this->get_image_detail_image_info($image);
+				
+				$buf.= '<!DOCTYPE html>'."\n";
+				$buf.= '<html>'."\n";
+				
+				$buf.= '<head>'."\n";
+				$buf.= '<title>'. strip_tags($img_info['title']) .'</title>'."\n";
+				$buf.= $this->image_detail_head_items->get_head_item_markup();
+				$buf.= '</head>'."\n";
+				
+				$buf.= '<body>'."\n";
+				$buf.= '<div id="standalone_content" style="min-width:'.$img_info['width'].'px ;min-height:'.$img_info['height'].'px ;">'."\n";
+				$buf.= '<img width="'.$img_info['width'].'" height="'.$img_info['height'].'" class="standalone_image" src="' . $img_info['url'] . '"/>'."\n";
+				
+				$buf.= '<div style="width: '.$img_info['width'].'px;" class="standalone_image_info">'."\n";
+				$buf.= '<div class="caption">'.$img_info['caption'].'</div>'."\n";
+				
+				if (!empty($img_info['author']) && $img_info['author'] != 'n/a')
+					$buf.= '<p class="author">(<em>Photo by: '.strip_tags($img_info['author']).'</em>)</p>'."\n";
+				
+				
+				$buf.= '</div>'."\n"; //standalone_image_info
+				$buf.= '</div>'."\n"; //standalone_content
+				$buf.= '</body>'."\n";
+				$buf.= '</html>'."\n";
+				return $buf;
+			}
+		}
+		//Error:
+		http_response_code(404);
+		$buf.= '<!DOCTYPE html>'."\n";
+		$buf.= '<html>'."\n";
+		$buf.= '<head>'."\n";
+		$buf.= '<title>404 Error</title>'."\n";
+		$buf.= '</head>'."\n";
+		$buf.= '<body>'."\n";
+		$buf.='<p>This image has been removed from this page. <a href ="./">Return</a> to page.</p>'."\n";
+		$buf.= '</body>'."\n";
+		$buf.= '</html>'."\n";
+		return $buf;
+	}
+	
+	function get_image_detail_image_info($image)
+	{
+		$image_info = array();
+		
+		if( is_array( $image ) )
+		{
+			$image_entity = new entity($image['id']);
+		}
+		elseif( is_object( $image ) )
+		{
+			if ('reasonSizedImage' == get_class($image) )
+			{
+				$image_entity = new entity($image->get_id());
+			}
+			else
+			{
+				$image_entity = $image;
+			}
+		}
+		
+		$img_description = $image_entity->get_value('description');
+		$img_width = $image_entity->get_value('width');
+		$img_height = $image_entity->get_value('height');
+		
+		$img_url = reason_get_image_url($image_entity->id());
+		
+		$img_author = $image_entity->get_value('author');
+		
+		$title = $image_entity->get_value('description') ? $image_entity->get_value('description') : 'Image';
+		$image_caption = $image_entity->get_value('content') ? $image_entity->get_value('content') : $image_entity->get_value('description');
+		
+		$image_info = array('title' => $title, 'caption' => $image_caption, 'url' => $img_url, 'author' => $img_author, 'width' => $img_width, 'height' => $img_height);
+		
+		return $image_info;
+	}	
 	
 	function select_images()
 	{
@@ -172,6 +343,39 @@ class ImageSidebarModule extends DefaultMinisiteModule
 			$ret .= ' (chosen at random)';
 		$ret .= '</p>';
 		return $ret;
+	}
+	
+	function get_image_url($image)
+	{
+		if( is_array( $image ) )
+		{
+			$id = $image['id'];
+		}
+		elseif( is_object( $image ) )
+		{
+			if ('reasonSizedImage' == get_class($image) )
+			{
+				$id = $image->get_id();
+			}
+			else
+			{
+				$id = $image->id();
+			}
+		}
+		
+		$params = array(
+			'module_api' => 'image_detail',
+			'module_identifier' => 'module_identifier-' . $this->identifier,
+			'image_id' => $id,
+		);
+		$link = carl_make_link($params);
+		
+		$info = $this->get_image_detail_image_info($image);
+		
+		// this would return just a link to the image with no metadata
+		//return $info['url'];
+		
+		return $link;
 	}
 }
 ?>

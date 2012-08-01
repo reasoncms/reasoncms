@@ -512,7 +512,7 @@ class ThorCore
 		$q .= '`submitter_ip` tinytext NOT NULL , ';
 		$q .= '`date_created` timestamp default 0 NOT NULL , ';
 		$q .= '`date_modified` timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP , ';
-		$q .= 'PRIMARY KEY(`id`)) TYPE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;';
+		$q .= 'PRIMARY KEY(`id`)) ENGINE=MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;';
 		return $q;
 	}
 	
@@ -1166,7 +1166,7 @@ class Thor
 		$q .= '`submitted_by` tinytext NOT NULL , ';
 		$q .= '`submitter_ip` tinytext NOT NULL , ';
 		$q .= '`date_created` timestamp NOT NULL , ';
-		$q .= 'PRIMARY KEY(`id`)) TYPE = MYISAM;';
+		$q .= 'PRIMARY KEY(`id`)) ENGINE=MYISAM;';
 		$res = mysql_query( $q ) or trigger_error( 'Error: mysql error in Thor: '.mysql_error() );
 		connectDB(REASON_DB); // reconnect to default DB
 	}

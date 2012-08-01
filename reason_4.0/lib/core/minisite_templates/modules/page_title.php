@@ -38,9 +38,16 @@
 			{
 				// Additionally, check to see if the user has editing privileges for the 'name' field
 				$page_entity = new entity($this->page_id);
-				$field_check = $page_entity->user_can_edit_field('name');	
-					
-				$this->_user_can_inline_edit = (reason_check_authentication() && reason_check_access_to_site($this->site_id) && $field_check);
+				
+				if($netid = reason_check_authentication())
+				{
+					if($user_id = get_user_id($netid))
+					{
+						$user = new entity($user_id);
+						$field_check = $page_entity->user_can_edit_field('name', $user);
+					}
+				}
+				$this->_user_can_inline_edit = ($netid && reason_check_access_to_site($this->site_id) && $field_check);
 			}
 			return $this->_user_can_inline_edit;
 		}

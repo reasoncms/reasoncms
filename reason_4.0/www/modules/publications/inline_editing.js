@@ -9,19 +9,19 @@
 $(window).load(function() 
 {
 	var clone_row = $("tr#descriptionofstoryRow").clone().attr("id","showdescriptionRow").find("*").html("").end();
-	var link = $("<a href=\'\'>Show description</a>");
+	var link = $("<a href=\'\'>Show excerpt/teaser</a>");
 	
 	link.click(function()
 	{
-		if (link.text() == "Show description")
+		if (link.text() == "Show excerpt/teaser")
 		{
 			set_heights_and_visibility();
-			link.text("Hide description");
+			link.text("Hide excerpt/teaser");
 		}
 		else
 		{
 			set_heights_and_visibility();
-			link.text("Show description");
+			link.text("Show excerpt/teaser");
 		}
 		//matchColumns();
 		return false;

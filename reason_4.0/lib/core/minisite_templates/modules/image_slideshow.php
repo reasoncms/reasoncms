@@ -332,7 +332,7 @@
 			
 			// Provide border-box sizing for bropwsers that can handle it (i.e. not ie 7-)
 			$box_css = '#meat .flex-caption {box-sizing:border-box; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; width:100%}';
-			$head_items->add_head_item('style', array('type' => 'text/css', 'charset' => 'utf-8'), $box_css, $add_to_top = false, $wrapper = array('before' => '<!--[if !IE 7]> -->', 'after' => '<!-- <![endif]-->'));
+			$head_items->add_head_item('style', array('type' => 'text/css', 'charset' => 'utf-8'), $box_css, $add_to_top = false, $wrapper = array('before' => '<!--[if !IE 7]><!-->', 'after' => '<!-- <![endif]-->'));
 			
 		}
 		

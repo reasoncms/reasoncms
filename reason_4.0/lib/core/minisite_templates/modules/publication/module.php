@@ -259,6 +259,7 @@ class PublicationModule extends Generic3Module
 			// Only load inline_editing javascript if inline editing is available for the module and active for the module
 			if ($inline_edit->available_for_module($this) && $inline_edit->active_for_module($this))
 			{
+				
 				$head_items =& $this->get_head_items();
 				$head_items->add_javascript(JQUERY_URL, true);
 				$head_items->add_javascript(REASON_HTTP_BASE_PATH . 'modules/publications/inline_editing.js');
@@ -2681,8 +2682,13 @@ class PublicationModule extends Generic3Module
 				if (!empty($this->current_item_id))
 				{
 					$story_id = $this->current_item_id;
-					$owner =  get_owner_site_id($story_id);
-					$this->_user_can_inline_edit = (reason_check_authentication() && ((reason_check_access_to_site($owner) || $this->user_is_author())));
+					$story = new entity($story_id);
+					if (reason_is_entity($story, 'news'))
+					{
+						$owner = get_owner_site_id($story_id);
+						$this->_user_can_inline_edit = (!empty($owner) && reason_check_authentication() && ((reason_check_access_to_site($owner) || $this->user_is_author())));
+					}
+					else $this->_user_can_inline_edit = false;
 				}
 				else
 				{
@@ -2700,9 +2706,12 @@ class PublicationModule extends Generic3Module
 			if (isset($this->current_item_id) && ($netid = reason_check_authentication()))
 			{
 				$item = new entity($this->current_item_id);
-				if ($item->get_value('created_by') == get_user_id($netid))
+				if (reason_is_entity($item, 'news'))
 				{
-					return true;
+					if ($item->get_value('created_by') == get_user_id($netid))
+					{
+						return true;
+					}
 				}
 			}
 			return false;
@@ -2719,15 +2728,22 @@ class PublicationModule extends Generic3Module
 			$form->strip_tags_from_user_input = true;
 			$form->allowable_HTML_tags = REASON_DEFAULT_ALLOWED_TAGS;
 			$form->actions = array('save' => 'Save', 'save_and_finish' => 'Save and Finish Editing');
-			$form->add_element('title_of_story', 'text');
+			
+			$this->init_field($form, 'title_of_story', 'name', $item, 'text', 'solidtext');
+			//$form->add_element('title_of_story', 'text');
 			$form->set_display_name('title_of_story', 'Title');
 			$form->set_value('title_of_story', $item_title);
-			$form->add_element('editable_content', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
+			
+			$this->init_field($form, 'editable_content', 'content', $item, html_editor_name($this->site_id), 'wysiwyg_disabled', html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
+			//$form->add_element('editable_content', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
 			$form->set_display_name('editable_content','Content');
 			$form->set_value('editable_content', $item_content);
-			$form->add_element('description_of_story', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
+			
+			$this->init_field($form, 'description_of_story', 'description', $item, html_editor_name($this->site_id), 'wysiwyg_disabled', html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
+			//$form->add_element('description_of_story', html_editor_name($this->site_id), html_editor_params($this->site_id, get_user_id($this->get_user_netid())));
 			$form->set_display_name('description_of_story', 'Excerpt/Teaser (displayed on post listings; not required):');
 			$form->set_value('description_of_story', $item_description);
+			
 			$form->add_callback(array(&$this, 'process_editable'),'process');
 			$form->add_callback(array(&$this, 'where_to_editable'), 'where_to');
 			$form->add_callback(array(&$this, 'run_error_checks_editable'), 'run_error_checks');
@@ -2735,6 +2751,31 @@ class PublicationModule extends Generic3Module
 			echo '</div>';
 		}
 		
+		
+		/**
+		* Inits a disco form element as a locked or unlocked field.
+		*/
+		function init_field($form, $field_name, $entity_field_name, $item, $type, $lock_type, $params = null)
+		{
+			if ($netid = $this->get_user_netid())
+			{
+				if ($user_id = get_user_id($netid))
+				{
+					$user = new entity($user_id);
+					if ($item->user_can_edit_field($entity_field_name, $user))
+					{
+						$form->add_element($field_name, $type, $params);
+					}
+					else
+					{
+						$form->add_element($field_name, $lock_type);
+						$form->set_comments($field_name, '');
+						$form->set_comments($field_name, '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />', 'before' );
+					}
+				}
+			}
+		}
+
 		/**
 		* Update the Reason entity that the user edited.
 		*/

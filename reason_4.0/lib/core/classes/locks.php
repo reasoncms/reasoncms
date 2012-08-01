@@ -194,7 +194,7 @@ class ReasonEntityLocks
  				`last_edited_by` int(10) unsigned NOT NULL,
  				PRIMARY KEY (`id`),
  				KEY `entity_id` (`entity_id`)
-			) TYPE=MyISAM;';
+			) ENGINE=MyISAM;';
 			if(db_query($q, 'Error creating entity_lock table'))
 				$locks_table_exists = true;
 		}
