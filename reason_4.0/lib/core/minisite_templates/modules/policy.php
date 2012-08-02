@@ -358,11 +358,14 @@
 				echo '</ol>'."\n";
 			}
 			/*	if ( !in_array( $item->id(), $this->root_node() ) ) echo '</li>'; */
-			if ($policy->get_value( 'approvals' ))
+			if ($approvals = $this->get_approvals($policy))
 			{
-				echo '<div class="approvals">';
-				echo $policy->get_value( 'approvals' );
-				echo "</div>\n";
+				foreach($approvals as $approval)
+				{
+					echo '<div class="approvals">';
+					echo $approval;
+					echo "</div>\n";
+				}
 			}
 			if ($policy->get_value( 'last_revised_date' ) > '0000-00-00' )
 			{
@@ -423,6 +426,22 @@
 				}
 				echo '</ol>'."\n";
 			}
+		}
+		function get_approvals($policy)
+		{
+			$ret = array();
+			if ($policy->get_value( 'approvals' ))
+				$ret[$policy->id()] = $policy->get_value('approvals');
+			
+			$sub_policies = $this->get_policy_children($policy);
+			if(!empty($sub_policies))
+			{
+				foreach($sub_policies as $p)
+				{
+					$ret = array_merge($ret,$this->get_approvals($p));
+				}
+			}
+			return $ret;
 		}
 		function display_back_link() // {{{
 		{
