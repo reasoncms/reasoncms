@@ -120,28 +120,44 @@
 			
 			if (!empty($affiliations))
 			{
-				// First, retrieve all users from LDAP that are affiliated with the given audiences.
+				// Construct a directory service ldap filter query to only include the possible users.
 				$dir = new directory_service();
-				$dir->search_by_attribute('ds_affiliation', $affiliations, array('ds_username'));
+				$filter = $this->_get_ldap_filter($affiliations, $users);
+				$dir->search_by_filter($filter);				
 				
 				$dir_results = $dir->get_records();				
-
-				// Merge the two arrays
-				$users = $this->_merge_users($users, array_keys($dir_results));
+				
+				$users = $this->_get_users($users, array_keys($dir_results));
 			}
 			
 			return $users;
 		}
 		
-		function _merge_users($reason_users, $ldap_users)
+		function _get_ldap_filter($affiliations, $users)
+		{
+			$affiliation_chunks = '';
+			foreach ($affiliations as $aff)
+			{
+				$affiliation_chunks .= '(ds_affiliation='.$aff.')';
+			}
+			$affiliation_clause = '(|'.$affiliation_chunks.')';
+			
+			$username_chunks = '';
+			foreach ($users as $user)
+			{
+				$username_chunks .= '(ds_username='.$user->get_value('name').')';
+			}
+			$username_clause = '(|'.$username_chunks.')';
+			
+			return '(&'.$affiliation_clause.$username_clause.')';
+		}
+		
+		function _get_users($reason_users, $ldap_users)
 		{
 			$merged = array();
-			foreach ($reason_users as $user)
+			foreach ($ldap_users as $username)
 			{
-				if (in_array($user->get_value('name'), $ldap_users))
-				{
-					$merged[] = $user;
-				}
+				$merged[] = new entity(get_user_id($username));
 			}
 			
 			function cmp($a, $b)
