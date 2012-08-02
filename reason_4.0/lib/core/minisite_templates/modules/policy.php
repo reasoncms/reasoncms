@@ -360,10 +360,10 @@
 			/*	if ( !in_array( $item->id(), $this->root_node() ) ) echo '</li>'; */
 			if ($approvals = $this->get_approvals($policy))
 			{
-				foreach($approvals as $approval)
+				foreach($approvals as $approval_id => $approval_policy)
 				{
 					echo '<div class="approvals">';
-					echo $approval;
+					echo $this->get_approval_text($approval_policy, ($approval_id != $policy->id()));
 					echo "</div>\n";
 				}
 			}
@@ -395,6 +395,18 @@
 			}
 			echo '</div>'."\n";
 		} // }}}
+		protected function get_approval_text($policy, $use_name_as_label = false)
+		{
+			$ret = $policy->get_value('approvals');
+			if($use_name_as_label)
+			{
+				if(strpos($ret,'<p>') === 0)
+					$ret = '<p><span class="policyName">'.$policy->get_value('name').':</span> '.substr($ret,3);
+				else
+					$ret = '<span class="policyName">'.$policy->get_value('name').':</span> '.$ret;
+			}
+			return $ret;
+		}
 		protected function get_audience_link($audience)
 		{
 			if(!empty($this->params['audience_aliases']) && $audience->get_value('unique_name'))
@@ -431,14 +443,17 @@
 		{
 			$ret = array();
 			if ($policy->get_value( 'approvals' ))
-				$ret[$policy->id()] = $policy->get_value('approvals');
+				$ret[$policy->id()] = $policy;
 			
 			$sub_policies = $this->get_policy_children($policy);
 			if(!empty($sub_policies))
 			{
 				foreach($sub_policies as $p)
 				{
-					$ret = array_merge($ret,$this->get_approvals($p));
+					foreach($this->get_approvals($p) as $id => $p)
+					{
+						$ret[$id] = $p;
+					}
 				}
 			}
 			return $ret;
