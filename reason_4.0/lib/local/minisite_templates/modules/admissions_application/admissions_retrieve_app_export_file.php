@@ -12,7 +12,7 @@
     @$gh->set_group_by_id($group);
     @$has_access = $gh->has_authorization($username);
     
-    $path = '/var/reason_admissions_app_exports/application_exports/';
+    $path = '/var/reason/admissions_app_exports/application_exports/';
     $cleaned_term = @mysql_real_escape_string($_GET['file_name']);
 
     $file = $path . $cleaned_term;
