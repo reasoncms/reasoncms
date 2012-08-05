@@ -14,8 +14,7 @@
 */
 
 include_once('paths.php');
-//include_once(CARL_UTIL_INC . '/dir_service/services/ds_ldap.php');
-include_once('/usr/local/webapps/reason/reason_package_local/carl_util/dir_service/services/ds_ldap_luther.php');
+include_once(REASON_INC . 'lib/local/carl_util/dir_service/services/ds_ldap_luther.php');
 
 class ds_ldap_luther_directory extends ds_ldap_luther {
 
