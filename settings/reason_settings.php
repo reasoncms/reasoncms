@@ -898,7 +898,7 @@
 	 * If it is set to false, Reason will ignore all locking information and will not present interfaces
 	 * for setting up locks.
 	 */
-	define('REASON_ENTITY_LOCKS_ENABLED', false);
+	define('REASON_ENTITY_LOCKS_ENABLED', true);
 	
 	/**
 	 * REASON_EVENT_GEOLOCATION_ENABLED
