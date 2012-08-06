@@ -691,6 +691,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'norse_form' => array(
 		'main_post' => 'norse_form',
 	),
+	'norsecard' => array(
+		'main_post' => 'norsecard',
+	),
 	'onecard' => array(
 		'main_post'=>'onecard_dashboard',
 		'sidebar'=>'',
