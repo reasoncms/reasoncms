@@ -261,6 +261,8 @@
 				if(!empty($this->policy))
 				{
 					$this->display_policy($this->policy);
+					$this->display_proximate($this->policy);
+					
 				}
 				else
 				{
@@ -270,6 +272,41 @@
 				}
 			}
 		} // }}}
+		protected function get_proximate_policies($policy)
+		{
+			$policies = $this->get_root_nodes();
+			$prev = false;
+			$next = false;
+			reset($policies);
+			while($p = current($policies))
+			{
+				if($p->id() == $policy->id())
+				{
+					$next = next($policies);
+					break;
+				}
+				$prev = $p;
+				next($policies);
+			}
+			return array($prev,$next);
+		}
+		protected function display_proximate($policy)
+		{
+			list($prev, $next) = $this->get_proximate_policies($policy);
+			if(!empty($prev) || !empty($next))
+			{
+				echo '<div class="proximatePolicies">'."\n";
+				if(!empty($next))
+				{
+					echo '<div class="next"><strong>Next:</strong> <a href="'.$this->page_link( $next ).'">'.$next->get_value('name').'</a></div>'."\n";
+				}
+				if(!empty($prev))
+				{
+					echo '<div class="previous"><strong>Previous:</strong> <a href="'.$this->page_link( $prev ).'">'.$prev->get_value('name').'</a></div>'."\n";
+				}
+				echo '</div>'."\n";
+			}
+		}
 		protected function _get_access_group_helper($policy)
 		{
 			$rel = relationship_id_of('policy_to_access_group');
