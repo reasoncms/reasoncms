@@ -52,10 +52,9 @@
 				$this->disco_item = $this->_build_content_manager();
 			}
 			$this->head_items->add_javascript(JQUERY_UI_URL, true);
-                        $this->head_items->add_javascript(JQUERY_URL, true);
-                        $this->head_items->add_stylesheet(JQUERY_UI_CSS_URL);
-                        $this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'change_detection.js');
-			
+			$this->head_items->add_javascript(JQUERY_URL, true);
+			$this->head_items->add_stylesheet(JQUERY_UI_CSS_URL);
+			$this->head_items->add_javascript(WEB_JAVASCRIPT_PATH . 'change_detection.js');
 		} // }}}
 		
 		function _cm_ok_to_run()

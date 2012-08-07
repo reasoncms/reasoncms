@@ -33,7 +33,7 @@ function change_detection_serialize_form() {
 function initialize_change_detection() {
     initial_serialized_form = change_detection_serialize_form();
 
-    $('ul.leftList > li.navItem > a.nav').click(function(e){
+    $('ul.leftList li.navItem a').click(function(e){
         var click_serialized = change_detection_serialize_form();
         if (click_serialized != initial_serialized_form) {
             // create hidden input for clicked <a href... for the purpose of
@@ -65,14 +65,15 @@ function draw_dialog(buttons_list)
 /**
  *  Let's get the base path based of our address
  */
-function get_base_path(){
-    pathArray = window.location.pathname.split( '/' );
-    return pathArray[1]; //reason's www folder
+function get_base_path()
+{
+	base_path = $('script[src$="change_detection.js"]:first').attr("src").replace("/js/change_detection.js","");
+	return base_path + "/ui_images/reason_admin/";
 }
 
 $(document).ready(function(){
 
-    $('#wrapper').append('<div id="dialog_confirm" title="Unsaved Changes"><p id="unsaved_changes">You have unsaved changes. How would you like to proceed?</p><p class="ui-helper-hidden" id="changes_saving">Please wait... <img src="/' + get_base_path() + '/ui_images/reason_admin/wait.gif"/></p></div>');
+    $('#wrapper').append('<div id="dialog_confirm" title="Unsaved Changes"><p id="unsaved_changes">You have unsaved changes. How would you like to proceed?</p><p class="ui-helper-hidden" id="changes_saving">Please wait... <img src="' + get_base_path() + 'wait.gif"/></p></div>');
 
         $('#change_detection_redirectElement').remove();
     var buttons = {
