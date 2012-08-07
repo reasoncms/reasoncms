@@ -33,7 +33,7 @@ function change_detection_serialize_form() {
 function initialize_change_detection() {
     initial_serialized_form = change_detection_serialize_form();
 
-    $('ul.leftList > li.navItem > a.nav').click(function(e){
+    $('ul.leftList li.navItem a').click(function(e){
         var click_serialized = change_detection_serialize_form();
         if (click_serialized != initial_serialized_form) {
             // create hidden input for clicked <a href... for the purpose of
