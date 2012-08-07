@@ -12,50 +12,6 @@ $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'IndividualVisi
  *
  * @author Steve Smith
  */
-/*
-  class textDateTimeIndividualVisitType extends textDateTimePublicType
-  {
-  public $type = 'textDateTimeIndividualVisit';
-
-
-  function get_time_display($hour_val = '')
-  {
-  $str = ' at ';
-  $str .= '<select id="'.$this->name.'hourElement" name="'.$this->name.'[hour]">';
-  $str .= '<option value="--"'.($hour_val == '--' ? ' selected="selected"': '').'>--</option>';
-  $str .= '<option value="8:30 a.m."'.($hour_val == '8:30 a.m.' ? ' selected="selected"': '').'>8:30 a.m.</option>';
-  $str .= '<option value="9:00 a.m."'.($hour_val == '9:00 a.m.' ? ' selected="selected"': '').'>9:00 a.m.</option>';
-  $str .= '<option value="9:30 a.m."'.($hour_val == '9:30 a.m.' ? ' selected="selected"': '').'>9:30 a.m.</option>';
-  $str .= '<option value="10:00 a.m."'.($hour_val == '10:00 a.m.' ? ' selected="selected"': '').'>10:00 a.m.</option>';
-  $str .= '<option value="10:30 a.m."'.($hour_val == '10:30 a.m.' ? ' selected="selected"': '').'>10:30 a.m.</option>';
-  $str .= '<option value="11:00 a.m."'.($hour_val == '11:00 a.m.' ? ' selected="selected"': '').'>11:00 a.m.</option>';
-  $str .= '<option value="11:30 a.m."'.($hour_val == '11:30 a.m.' ? ' selected="selected"': '').'>11:30 a.m.</option>';
-  $str .= '<option value="12:00 p.m."'.($hour_val == '12:00 p.m.' ? ' selected="selected"': '').'>12:00 p.m.</option>';
-  $str .= '<option value="12:30 p.m."'.($hour_val == '12:30 p.m.' ? ' selected="selected"': '').'>12:30 p.m.</option>';
-  $str .= '<option value="1:00 p.m."'.($hour_val == '1:00 p.m.' ? ' selected="selected"': '').'>1:00 p.m.</option>';
-  $str .= '<option value="1:30 p.m."'.($hour_val == '1:30 p.m.' ? ' selected="selected"': '').'>1:30 p.m.</option>';
-  $str .= '<option value="2:00 p.m."'.($hour_val == '2:00 p.m.' ? ' selected="selected"': '').'>2:00 p.m.</option>';
-  $str .= '<option value="2:30 p.m."'.($hour_val == '2:30 p.m.' ? ' selected="selected"': '').'>2:30 p.m.</option>';
-  $str .= '<option value="3:00 p.m."'.($hour_val == '3:00 p.m.' ? ' selected="selected"': '').'>3:00 p.m.</option>';
-  $str .= '<option value="3:30 p.m."'.($hour_val == '3:30 p.m.' ? ' selected="selected"': '').'>3:30 p.m.</option>';
-  $str .= '</select>';
-  return $str. ' : ';
-  }
-  function get_hour_display($hour_val = '')
-  {
-  return false;
-  }
-  function get_minute_display($minute_val = '')
-  {
-  return false;
-  }
-  function get_ampm_display($ampm_val)
-  {
-  return false;
-  }
-  }
- */
-
 class IndividualVisitForm extends DefaultThorForm {
 
     // do NOT use date ranges (i.e. 20110801-20110805) the error checking is not setup to handle this.
