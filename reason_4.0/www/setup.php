@@ -440,8 +440,8 @@ function perform_checks()
 	if (curl_check()) $check_passed++;
 	else $check_failed++;
 	
-	if (imagemagick_check()) $check_passed++;
-	else $check_failed++;
+	//if (imagemagick_check()) $check_passed++;
+	//else $check_failed++;
 	
 	echo '<h3>Performing Directory and File Checks</h3>';
 	echo '<h4>Write checks</h4>';
