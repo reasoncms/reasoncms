@@ -30,7 +30,8 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 										'rand_flag' => false,
 										'template' => '&#8220;[[quote]]&#8221; [[divider]][[author]]',
 										'quote_divider' => '',
-										'footer_html' => '');
+										'footer_html' => '',
+										'header_html' => '');
 		
 		function init( $args = array() )
 		{	
@@ -92,6 +93,12 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'QuoteModule
 		function run()
 		{
 			echo '<div id="quotes">';
+			if (!empty($this->params['header_html']))
+			{
+				echo '<div id="quotes_header">'."\n";
+				if (!empty($this->params['header_html'])) echo ($this->params['header_html']);
+				echo '</div>';
+			}
 			echo '<ul>'."\n";
 			foreach ($this->quotes as $quote)
 			{
