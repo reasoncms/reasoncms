@@ -31,7 +31,7 @@
 			'slideshow_type' => 'auto', 
 			'width' => 0,
 			'height' => 0,
-			'crop' => 'fit',
+			'crop' => '',
 			//'force_image_enlargement' => false,
 			'rand_flag' => false, 
 			'num_to_display' => '',
@@ -114,34 +114,36 @@
 			$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'FlexSlider/flexslider.css');
 						
 			// Initialize the images with appropriate entity selector properties
-			$es = new entity_selector();
-			$es->add_type(id_of('image'));
 			
-			$source_id = $this->page_id;
+			$page_id = $this->page_id;
 			if (!empty($this->params['alternate_source_page_id']))
 			{
-				$source_id = $this->params['alternate_source_page_id'];
+				$page_id = $this->params['alternate_source_page_id'];
+				if (!($site_id = get_owner_site_id($page_id))) $site_id = $this->site_id;
 			}
-			$es->add_right_relationship($source_id, relationship_id_of('minisite_page_to_image'));
+			else
+			{
+				$page_id = $this->cur_page->id();
+				$site_id = $this->site_id;
+			}
 			
+			$es = new entity_selector();
+			$es->add_type(id_of('image'));
+			$es->set_env('site', $site_id);
+			$es->add_right_relationship($page_id, relationship_id_of('minisite_page_to_image'));
+			if ($this->params['rand_flag']) $es->set_order('rand()');
+			elseif (!empty($this->params['order_by'])) $es->set_order($this->params['order_by']);
+			else
+			{
+				$es->add_rel_sort_field( $page_id, relationship_id_of('minisite_page_to_image') );
+				$es->set_order('rel_sort_order');
+			}
 			if (!empty($this->params['num_to_display']))
 			{
 				$es->set_num($this->params['num_to_display']);
 			}
-			
-			if (!empty($this->params['order_by']))
-			{
-				$es->set_order($this->params['order_by']);
-			}
-			
-			if ($this->params['rand_flag'] == true)
-			{
-				$es->set_order('RAND()');
-			}
-			
-			$es->set_env('site', $this->site_id);
 			$this->images = $es->run_one();
-			
+
 			if (empty($this->images))
 			{
 				//return here since there will not be a slide show with no images.
@@ -441,7 +443,7 @@
 					$rsi->set_width($max_width);
 					$rsi->set_height($max_height);
 					//$rsi->allow_enlarge($this->params['force_image_enlargement']);
-					$rsi->set_crop_style($crop);
+					if (!empty($crop)) $rsi->set_crop_style($crop);
 					$img_url = $rsi->get_url();
 					$img_height = $rsi->get_image_height();
 					$img_width = $rsi->get_image_width();
