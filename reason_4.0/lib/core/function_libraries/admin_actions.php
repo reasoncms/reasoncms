@@ -761,6 +761,84 @@
 			}
 		}
 	}
+	
+	/**
+	 * Change the definition of a field in a Reason entity table
+	 *
+	 * @param mixed $field integer id, entity object, or tablename.fieldname string
+	 * @param string $definition e.g. enum('foo','bar')
+	 * @param integer $user_id The Reason ID of the user making the change
+	 *
+	 * @return boolean success
+	 */
+	function reason_update_field_definition($field, $definition, $user_id)
+	{
+		if(is_numeric($field))
+			$field_entity = new entity($field);
+		elseif(is_object($field))
+			$field_entity = $field;
+		
+		if(!empty($field_entity))
+		{
+			if($field_entity->get_value('type') != id_of('field'))
+			{
+				trigger_error('reason_update_field_definition passed an entity that is not a field');
+				return false;
+			}
+			$fieldname = $field_entity->get_value('name');
+			$tables = $field_entity->get_left_relationship('field_to_entity_table');
+			if(empty($tables))
+			{
+				trigger_error('Unable to find table for given field.');
+				return false;
+			}
+			$table = current($tables);
+			$tablename = $table->get_value('name');
+		}
+		else
+		{
+			list($tablename,$fieldname) = explode('.',$field);
+			if(empty($tablename) || empty($fieldname))
+			{
+				trigger_error('Unable to update field definition -- must provide field entity, field id, or table.field string.');
+				return false;
+			}
+			$es = new entity_selector();
+			$es->add_type(id_of('content_table'));
+			$es->add_relation('entity.name = "'.addslashes($tablename).'"');
+			$es->set_num(1);
+			$tables = $es->run_one();
+			if(empty($tables))
+			{
+				trigger_error('Unable to find table for given field.');
+				return false;
+			}
+			$table = current($tables);
+			$fields = $table->get_right_relationship('field_to_entity_table');
+			foreach($fields as $f)
+			{
+				if($f->get_value('name') == $fieldname)
+				{
+					$field_entity = $f;
+					break;
+				}
+			}
+			if(empty($field_entity))
+			{
+				trigger_error('Unable for find field entity for given field');
+				return false;
+			}
+		}
+		
+		// Update database
+		$q = 'ALTER TABLE `'.addslashes($tablename).'` CHANGE `'.addslashes($fieldname).'` '.addslashes($fieldname).' '.$definition;
+		db_query( $q, 'Unable to change column.' );
+		
+		// Update reason
+		reason_update_entity($field_entity->id(), $user_id, array('db_type'=>$definition));
+		
+		return true;
+	}
 		
 	
 	/**
