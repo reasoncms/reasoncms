@@ -44,11 +44,11 @@ $compiled = file_get_contents(SP_PATH . '/build/header.txt');
 $compiled .= "\n";
 
 // Add the base class
-$contents = file_get_contents(SP_PATH . '/SimplePie.php');
+$contents = file_get_contents(SP_PATH . '/library/SimplePie.php');
 $compiled .= remove_header($contents) . "\n";
 
 // Add all the files in the SimplePie directory
-$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(SP_PATH . '/SimplePie'));
+$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(SP_PATH . '/library/SimplePie'));
 foreach($files as $file_path => $info)
 {
 	$contents = file_get_contents($file_path);
@@ -57,6 +57,13 @@ foreach($files as $file_path => $info)
 
 // Strip excess whitespace
 $compiled = preg_replace("#\n\n\n+#", "\n\n", $compiled);
+
+// Hardcode the build
+$compiled = str_replace(
+	"define('SIMPLEPIE_BUILD', gmdate('YmdHis', SimplePie_Misc::get_build()))",
+	"define('SIMPLEPIE_BUILD', '" . gmdate('YmdHis', time()) . "')",
+	$compiled
+);
 
 // Finally, save
 file_put_contents(COMPILED, $compiled);

@@ -7,7 +7,7 @@
  * A PHP-Based RSS and Atom Feed Framework.
  * Takes the hard work out of managing a complete RSS/Atom solution.
  *
- * Copyright (c) 2004-2010, Ryan Parman, Geoffrey Sneddon, Ryan McCue, and contributors
+ * Copyright (c) 2004-2012, Ryan Parman, Geoffrey Sneddon, Ryan McCue, and contributors
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
@@ -35,22 +35,63 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package SimplePie
- * @version 1.3-dev
+ * @version 1.3
  * @copyright 2004-2011 Ryan Parman, Geoffrey Sneddon, Ryan McCue
  * @author Ryan Parman
  * @author Geoffrey Sneddon
  * @author Ryan McCue
  * @link http://simplepie.org/ SimplePie
  * @license http://www.opensource.org/licenses/bsd-license.php BSD License
- * @todo phpDoc comments
  */
 
-require_once 'PHPUnit/Autoload.php';
-require_once '../SimplePieAutoloader.php';
-class_exists('SimplePie') or die("Couldn't load SimplePie");
+require_once dirname(__FILE__) . '/bootstrap.php';
 
 class LocatorTest extends PHPUnit_Framework_TestCase
 {
+	public static function feedmimetypes()
+	{
+		return array(
+			array('application/rss+xml'),
+			array('application/rdf+xml'),
+			array('text/rdf'),
+			array('application/atom+xml'),
+			array('text/xml'),
+			array('application/xml'),
+		);
+	}
+	/**
+	 * @dataProvider feedmimetypes
+	 */
+	public function testAutodiscoverOnFeed($mime)
+	{
+		$data = new MockSimplePie_File('http://example.com/feed.xml');
+		$data->headers['content-type'] = $mime;
+
+		$locator = new SimplePie_Locator($data, 0, null, false);
+
+		$registry = new SimplePie_Registry();
+		$registry->register('File', 'MockSimplePie_File');
+		$locator->set_registry($registry);
+
+		$feed = $locator->find(SIMPLEPIE_LOCATOR_ALL, $all);
+		$this->assertEquals($feed, $data);
+	}
+
+	public function testInvalidMIMEType()
+	{
+		$data = new MockSimplePie_File('http://example.com/feed.xml');
+		$data->headers['content-type'] = 'application/pdf';
+
+		$locator = new SimplePie_Locator($data, 0, null, false);
+
+		$registry = new SimplePie_Registry();
+		$registry->register('File', 'MockSimplePie_File');
+		$locator->set_registry($registry);
+
+		$feed = $locator->find(SIMPLEPIE_LOCATOR_ALL, $all);
+		$this->assertEquals($feed, null);
+	}
+
 	/**
 	 * Tests from Firefox
 	 *
@@ -60,7 +101,7 @@ class LocatorTest extends PHPUnit_Framework_TestCase
 	public static function firefoxtests()
 	{
 		$data = array(
-			array(new SimplePie_File(__DIR__ . '/data/fftests.html'))
+			array(new SimplePie_File(dirname(__FILE__) . '/data/fftests.html'))
 		);
 		foreach ($data as &$row)
 		{
@@ -77,14 +118,25 @@ class LocatorTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_from_file($data)
 	{
-		$locator = new SimplePie_Locator($data, 0, null, 'MockSimplePie_File', false);
+		$locator = new SimplePie_Locator($data, 0, null, false);
 
-		$expected = SimplePie_Misc::get_element('link', $data->body);
+		$registry = new SimplePie_Registry();
+		$registry->register('File', 'MockSimplePie_File');
+		$locator->set_registry($registry);
+
+		$expected = array();
+		$document = new DOMDocument();
+		$document->loadHTML($data->body);
+		$xpath = new DOMXPath($document);
+		foreach ($xpath->query('//link') as $element)
+		{
+			$expected[] = 'http://example.com' . $element->getAttribute('href');
+		}
+		//$expected = SimplePie_Misc::get_element('link', $data->body);
 
 		$feed = $locator->find(SIMPLEPIE_LOCATOR_ALL, $all);
 		$this->assertFalse($locator->is_feed($data), 'HTML document not be a feed itself');
 		$this->assertInstanceOf('MockSimplePie_File', $feed);
-		$expected = array_map(array(get_class(), 'map_url_attrib'), $expected);
 		$success = array_filter($expected, array(get_class(), 'filter_success'));
 
 		$found = array_map(array(get_class(), 'map_url_file'), $all);
@@ -94,11 +146,6 @@ class LocatorTest extends PHPUnit_Framework_TestCase
 	protected static function filter_success($url)
 	{
 		return (stripos($url, 'bogus') === false);
-	}
-
-	protected static function map_url_attrib($elem)
-	{
-		return 'http://example.com' . $elem['attribs']['href']['data'];
 	}
 
 	protected static function map_url_file($file)

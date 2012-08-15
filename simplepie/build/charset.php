@@ -1,9 +1,6 @@
 <?php
 
-require_once '../SimplePieAutoloader.php';
-
-// Ensure constants are loaded
-class_exists('SimplePie') or die("Couldn't load SimplePie");
+require_once '../autoloader.php';
 
 function normalize_character_set($charset)
 {
