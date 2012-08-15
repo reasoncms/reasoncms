@@ -143,7 +143,7 @@ class ds_ldap extends ds_default {
 			$filter = (strlen($this->_search_params['filter']) < 1000) ? $this->_search_params['filter'] : substr($this->_search_params['filter'], 0, 1000).'...';
 			error_log('LDAP_SLOW: Query took '.($end-$start).' seconds: '.$filter);
 		}
-		echo 'Opened connection '.$this->_conn.' for '.$this->_search_params['filter'];
+
 		if ($result) {
 			$return = $this->format_results($result);
 			$this->close_conn();
