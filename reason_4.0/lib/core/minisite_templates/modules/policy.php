@@ -489,8 +489,8 @@
 					$activation_params['edit_id'] = '-1';
 					$url = carl_make_link($activation_params);
 					echo '<p><a href="'.$url.'#metadataEdit" class="editThis">Edit Policy Approvals, Etc.</a></p>'."\n";
+					echo '</div>'."\n";
 				}
-				echo '</div>'."\n";
 			}
 			else
 			{
