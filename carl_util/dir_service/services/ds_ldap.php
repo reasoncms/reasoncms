@@ -69,7 +69,6 @@ class ds_ldap extends ds_default {
 	*/
 	function ds_ldap() {
 		$this->init();
-		$this->open_conn();
 		register_shutdown_function(array(&$this, "dispose")); 
 	}
 
@@ -81,12 +80,24 @@ class ds_ldap extends ds_default {
 	}
 	
 	/**
-	* Open connection to service
+	* Open connection to service and bind for lookup
 	* @access public
 	*/
 	function open_conn() {
 		if ($this->is_conn_open()) $this->close_conn();
-		//include($this->_conn_settings_file);
+		if (!$this->open_connection_prebind()) return false;
+		if( !ldap_bind( $this->_conn, $this->_conn_params['lookup_dn'], $this->_conn_params['lookup_password'] ) ) {
+			$this->_error = sprintf( 'LDAP bind failed for %s' , $this->_conn_params['lookup_dn']);
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	* Open initial connection without binding
+	* @access public
+	*/
+	function open_connection_prebind() {
 		if (!$this->_conn = ldap_connect( $this->_conn_params['host'], $this->_conn_params['port'] )) {
 			$this->_error = sprintf('Could not connect to LDAP server %s:%d', $this->_conn_params['host'], $this->_conn_params['port'] );
 			return false;
@@ -97,11 +108,7 @@ class ds_ldap extends ds_default {
 			ldap_set_option( $this->_conn, LDAP_OPT_REFERRALS, $this->_conn_params['opt_referrals'] );
 		if ($this->_conn_params['use_tls'])
 			ldap_start_tls( $this->_conn );
-		if( !ldap_bind( $this->_conn, $this->_conn_params['lookup_dn'], $this->_conn_params['lookup_password'] ) ) {
-			$this->_error = sprintf( 'LDAP bind failed for %s' , $this->_conn_params['lookup_dn']);
-			return false;
-		}
-		return true;
+		return true;	
 	}
 	
 	/**
@@ -109,7 +116,11 @@ class ds_ldap extends ds_default {
 	* @access public
 	*/
 	function close_conn() {
-		if ($this->is_conn_open()) ldap_close($this->_conn);
+		if ($this->is_conn_open()) 
+		{
+			ldap_close($this->_conn);
+			$this->_conn = null;
+		}
 	}
 
 		
@@ -120,6 +131,7 @@ class ds_ldap extends ds_default {
 	function search() {
 		// ldap_list is faster for single level searches; if you need to descend a directory hierarchy, 
 		// use ldap_search instead.
+		if (!$this->open_conn()) return false;
 		$start = time();
 		if ($this->_search_params['subtree_search'])
 			$result = @ldap_search($this->_conn, $this->_search_params['base_dn'], $this->_search_params['filter'], $this->_search_params['attrs']);
@@ -131,11 +143,14 @@ class ds_ldap extends ds_default {
 			$filter = (strlen($this->_search_params['filter']) < 1000) ? $this->_search_params['filter'] : substr($this->_search_params['filter'], 0, 1000).'...';
 			error_log('LDAP_SLOW: Query took '.($end-$start).' seconds: '.$filter);
 		}
-		
+		echo 'Opened connection '.$this->_conn.' for '.$this->_search_params['filter'];
 		if ($result) {
-			return ($this->format_results($result));
+			$return = $this->format_results($result);
+			$this->close_conn();
+			return $return;
 		} else {
 			$this->_error = sprintf( 'LDAP search failed for filter %s' , $this->_search_params['filter']);
+			$this->close_conn();
 			return false;
 		}
 	} 
@@ -487,6 +502,7 @@ class ds_ldap extends ds_default {
 	* @param string $password Password
 	*/
 	function authenticate($username, $password) {
+		if (!$this->open_connection_prebind()) return false;
 		// You'd need to construct an appropriate bind dn for your server here
 		$bind_dn = sprintf('bind_id=%s, %s',$this->escape_input($username), $this->_search_params['base_dn']);
 		turn_carl_util_error_logging_off();
@@ -497,6 +513,7 @@ class ds_ldap extends ds_default {
 		if( !ldap_bind( $this->_conn, $this->_conn_params['lookup_dn'], $this->_conn_params['lookup_password'] ) ) {
 			$this->_error = sprintf( 'LDAP bind failed for %s, %s' , $this->_conn_params['lookup_dn'], ldap_error( $this->_conn ));
 		}
+		$this->close_conn();
 		return $bind_result;
 	}
 	
