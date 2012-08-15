@@ -10,7 +10,7 @@
 include_once( 'reason_header.php' );
 include_once( CARL_UTIL_INC . 'basic/misc.php' );
 reason_include_once( 'classes/mvc.php' );
-include_once( 'simplepie/SimplePieAutoloader.php' );
+include_once('simplepie/autoloader.php');
 
 /**
  * Register MVC component with Reason
