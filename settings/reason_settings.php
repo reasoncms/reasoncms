@@ -744,24 +744,22 @@
 	
 	/**
 	 * REASON_DEFAULT_ALLOWED_TAGS
-	 * A whitelist of the XHTML tags Reason will allow to be saved to the database.
+	 * A whitelist of the (X)HTML(5) tags Reason will allow to be saved to the database.
 	 *
-	 * Note: The default value of this setting is the set of xhtml strict elements that can be placed in the body of a page
+	 * Note that the head items field on pages does not follow this whitelist.
 	 *
-	 * The two exceptions are the <script> tag, which is disabled 
-	 * (but which can be enabled by adding it to this setting),
-	 * and the <u> tag, which is enabled for legacy reasons.
+	 * Left out of this list for security reasons, or because they belong outside the document body:
+	 * <base><body><head><html><link><meta><script><title>
 	 *
-	 * Note that if your templates all use transitional doctypes, the following tags deprecated may be added:
-	 * <applet><center><dir><font><iframe><isindex><menu><s><strike><xmp>
+	 * Included in this list for legacy reasons:
+	 * <acronym><big><rb><rpc><rtc><strike><tt>
 	 *
-	 * If you plan on serving your content as XHTML 1.1, you may wish to add these tags for
-	 * ruby (pronunciation annotations for East Asian languages):
-	 * <ruby><rb><rbc><rp><rt><rtc>
+	 * Tags deprecated in HTML4 and not revived in HTML5, and therefore left out of this list:
+	 * <applet><center><dir><font><isindex><xmp>
 	 *
 	 * This string should be in the same format as the second argument to php's built-in strip_tags() function, e.g.: '<a><abbr><acronym><address>'
 	 */
-	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbr><acronym><address><area><b><bdo><big><blockquote><br><button><caption><cite><code><col><colgroup><dd><del><dfn><div><dl><dt><em><fieldset><form><h1><h2><h3><h4><h5><h6><hr><i><img><input><ins><kbd><label><legend><li><map><noscript><object><ol><optgroup><option><p><param><pre><q><samp><select><span><small><strike><strong><sub><sup><table><tbody><td><textarea><tfoot><th><thead><tr><tt><u><ul><var>');
+	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbr><acronym><address><area><article><aside><audio><b><bdi><bdo><big><blockquote><br><button><canvas><caption><cite><code><col><colgroup><command><datalist><dd><del><details><dfn><div><dl><dt><em><embed><fieldset><figcaption><figure><footer><form><h1><h2><h3><h4><h5><h6><header><hgroup><hr><i><iframe><img><input><ins><kbd><keygen><label><legend><li><map><mark><menu><meter><nav><noscript><object><ol><optgroup><option><output><p><param><pre><progress><q><ruby><rb><rp><rpc><rt><rtc><s><samp><section><select><small><source><span><strike><strong><sub><summary><sup><table><tbody><td><textarea><tfoot><th><thead><time><tr><track><tt><u><ul><var><video><wbr>');
 	
 	/**
 	 * REASON_DEFAULT_FOOTER_XHTML
