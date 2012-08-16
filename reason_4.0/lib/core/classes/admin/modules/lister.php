@@ -122,7 +122,11 @@
 							echo ' selected="selected"';
 						echo '>View: ' . strip_tags($view->get_value( 'display_name' )) . "</option>\n";
 					}
-					$args = array_merge($this->admin_page->get_default_args(),array('state' => $this->admin_page->request['state']));
+					if( !empty( $this->admin_page->request[ 'state' ] ))
+						$args = array_merge($this->admin_page->get_default_args(),array('state' => $this->admin_page->request['state']));
+					else
+						$args = $this->admin_page->get_default_args();
+						
 					foreach ( $args as $key => $value)
 					{
 						echo '<input type="hidden" name="'.htmlspecialchars($key, ENT_QUOTES).'" value="'.htmlspecialchars($value, ENT_QUOTES).'" />';
