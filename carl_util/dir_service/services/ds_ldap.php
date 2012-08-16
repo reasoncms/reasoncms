@@ -107,7 +107,9 @@ class ds_ldap extends ds_default {
 		if (isset($this->_conn_params['opt_referrals']))
 			ldap_set_option( $this->_conn, LDAP_OPT_REFERRALS, $this->_conn_params['opt_referrals'] );
 		if ($this->_conn_params['use_tls'])
-			ldap_start_tls( $this->_conn );
+		{
+			if (!ldap_start_tls( $this->_conn )) return false;
+		}
 		return true;	
 	}
 	
