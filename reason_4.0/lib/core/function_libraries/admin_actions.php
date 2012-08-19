@@ -715,7 +715,15 @@
 		$q = 'DELETE FROM relationship WHERE entity_a = ' . $site_id . ' AND entity_b = ' . $id . ' AND type = ' . $rel_id;
 		db_query( $q , 'Error removing borrowship' );
 	}
-
+	
+	/**
+	 * Create a new table in Reason as part of a type
+	 *
+	 * @param string $table_name
+	 * @param string $type_unique_name
+	 * @param mixed $username string or integer user id
+	 * @return mixed integer table id if successful or false if unsuccessful
+	 */
 	function create_reason_table($table_name, $type_unique_name, $username)
 	{
 		if(str_replace(' ','_',addslashes($table_name)) != $table_name)
@@ -754,6 +762,9 @@
 						$user_id = get_user_id($username);
 					$id = reason_create_entity(id_of('master_admin'), id_of('content_table'), $user_id, $table_name, array('new' => 0));
 					create_relationship( $type_id, $id, relationship_id_of('type_to_table'));
+					reason_include_once('classes/amputee_fixer.php');
+					$fixer = new AmputeeFixer();
+					$fixer->fix_amputees($type_id);
 					// Trigger error on normal behavior? No thanks.
 					//trigger_error( 'The table ' . $table_name . ' was created and added to the type ' . $type_unique_name);
 					return $id;
@@ -1469,6 +1480,8 @@
 		$q = 'DELETE `'.addslashes($source_table).'` FROM `'.addslashes($source_table).'`, `entity` WHERE `'.addslashes($source_table).'`.`id` = `entity`.`id` AND `entity`.`type` = "'.addslashes($type_id).'"';
 		
 		db_query($q,'Attempt to delete rows from '.$source_table.' in reason_move_table_fields()');
+		
+		get_entity_tables_by_id( $type_id, false );
 		
 		return true;
 			
