@@ -553,6 +553,14 @@ class MinisiteTemplate
 				$this->head_items->add_stylesheet( $url, $media );
 			}
 		}
+		if($this->theme->get_value('theme_customizer') && $this->site_info->get_value('theme_customization'))
+		{
+			$customizer = reason_get_theme_customizer($this->site_info, $this->theme);
+			if(!empty($customizer))
+				$customizer->modify_head_items($this->head_items);
+			else
+				trigger_error('Theme customizer "'.$this->theme->get_value('theme_customizer').'" not found or not registered properly. No customizations applied.');
+		}
 	}
 	function get_meta_information()
 	{
@@ -1252,6 +1260,7 @@ class MinisiteTemplate
 	{
 		$hasSections = array();
 		$blobclass = 'contains';
+		$classes = array();
 		foreach($this->sections as $section=>$show_function)
 		{
 			$has_function = 'has_'.$section.'_section';
