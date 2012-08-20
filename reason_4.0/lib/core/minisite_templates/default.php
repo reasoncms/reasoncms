@@ -943,7 +943,20 @@ class MinisiteTemplate
 	} // }}}
 	function create_body_tag()
 	{
+		$classes = $this->get_body_tag_classes();
+		if(!empty($classes))
+			return '<body class="'.implode(' ',$classes).'">'."\n";
 		return '<body>'."\n";
+	}
+	function get_body_tag_classes()
+	{
+		$classes = array();
+		$classes[] = $this->textonly ? 'textOnly' : 'fullGraphics';
+		if($this->pages->root_node() == $this->page_id)
+			$classes[] = 'siteHome';
+		if($this->page_info->get_value('unique_name'))
+			$classes[] = 'uname_'.$this->page_info->get_value('unique_name');
+		return $classes;
 	}
 	function get_doctype()
 	{
