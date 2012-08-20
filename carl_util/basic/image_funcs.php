@@ -1178,3 +1178,80 @@ function _bound($val, $min, $max)
 {
     return max($min, min($val, $max));
 }
+
+/**
+ * This tells you if the image at the given path is too large for gd to process (in the event that ImageMagick
+ * is unavailable).
+ * @return array An array with the index 'truth_value' which will be true if the image is too big and false otherwise, 
+ * the index 'image_size' which is the number of bytes of memory that we predict the uncompressed image will need, and
+ * the index 'size_limit' indicating the maximum number of bytes of memory that the given image may be. Note that the
+ * size_limit varries depending on image format.
+ */
+function image_is_too_big($path)
+{
+	$image_info = getimagesize($path);
+	$mem_usage = memory_get_usage();
+	$mem_limit = shorthand_to_bytes(ini_get('memory_limit'));
+	$too_big = false;
+	
+	if ($image_info[2] == IMAGETYPE_JPEG)
+	{
+		$image_size = ($image_info[0] * $image_info[1] * $image_info['channels'] * $image_info['bits'])/8;
+		$ratio = .500;
+	}
+	elseif ($image_info[2] == IMAGETYPE_GIF)
+	{
+		$bits = $image_info['bits'] < 6 ? 6 : $image_info['bits'];
+		$image_size = ($image_info[0] * $image_info[1] * $image_info['channels'] * $bits)/8;
+		$ratio = .950;
+	}
+	elseif ($image_info[2] == IMAGETYPE_PNG)
+	{
+		$image_size = ($image_info[0] * $image_info[1] * 4 * 16)/8;
+		$ratio = .790;
+	}
+		
+	if ($image_size/($mem_limit - $mem_usage) > $ratio)
+	{
+		$too_big = true;
+	}
+	return array('truth_value'=>$too_big, 'image_size'=>$image_size, 'size_limit'=>($mem_limit - $mem_usage)*$ratio);
+}
+
+/**
+ * This function returns aproximate maximum size for an image being uploaded if imageMagick is not available.
+ * This function is meant to be used by the single and batch image uploaders to get a warning message to display
+ * @return array An array containing the index 'res' holding a string representing dimensions (i.e. '1500px x 1500px')
+ * and the index 'mps' holding a float representing the number of megapixels that this size is.
+ */
+function get_approx_max_image_size()
+	{
+		$ret = array();
+		$x = round(sqrt(((.790 * (shorthand_to_bytes(ini_get('memory_limit')) - memory_get_usage())) * 8) / (4*16)));
+		$ret['res'] = $x.'px x '.$x.'px';
+		$ret['mps'] = round((($x * $x) /1000000), 1);
+		return $ret;
+		
+	}
+
+/**
+ * Helper function used by image_is_too_big() to convert the memory limit shorthand in
+ * the ini file to bytes.
+ */
+function shorthand_to_bytes($short)
+{
+	if (is_numeric($short[strlen($short)-1]))
+	{
+		return $short;
+	}
+	else
+	{
+		$nums = substr($short, 0, strlen($short) - 1);
+		$ltr = $short[strlen($short)-1];
+		$modifier = 1;
+		if($ltr == 'K') { $modifier = 1024;}
+		elseif ($ltr == 'M'){ $modifier = 1048576;}
+		elseif($ltr == 'G') { $modifier = 1073741824;}
+		return $modifier * $nums;
+	}
+}

@@ -55,9 +55,11 @@
 			$thumb_dimensions = get_reason_thumbnail_dimensions($this->get_value('site_id'));
 			$this->thumbnail_height = $thumb_dimensions['height'];
 			$this->thumbnail_width = $thumb_dimensions['width'];
-	
+		
 			// Web-friendly, and those whose conversion we support
-			$acceptable_types = array('image/jpeg',
+			if (imagemagick_available())
+			{
+				$acceptable_types = array('image/jpeg',
 						'image/pjpeg',
 						'application/pdf',
 						'image/gif',
@@ -67,8 +69,22 @@
 						'image/photoshop',
 						'image/x-photoshop',
 						'image/psd');
+			}
+			else
+			{
+				$acceptable_types = array('image/jpeg',
+						'image/pjpeg',
+						'image/gif',
+						'image/png',);
+			}
+			
 			$this->add_element( 'image', 'ReasonImageUpload', array('obey_no_resize_flag' => true, 'authenticator' => $this->_get_authenticator(), 'max_width' => $this->max_width, 'max_height' => $this->max_height,
 			'acceptable_types' => $acceptable_types) );
+			if (! imagemagick_available())
+				{
+					$size = get_approx_max_image_size();
+					$this->set_comments('image', 'Images with resolutions over '.$size['res'].' or '.$size['mps'].' MPs may cause errors');
+				}
 			
 			$this->add_element( 'thumbnail', 'ReasonImageUpload', array('authenticator' => $this->_get_authenticator(),
 			'acceptable_types' => $acceptable_types) );

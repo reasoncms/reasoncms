@@ -16,6 +16,11 @@ require_once PLASMATURE_TYPES_INC."default.php";
  */
 class hiddenType extends defaultType
 {
+	/** @access private */
+	var $type_valid_args = array(
+		'changeable',
+		);
+
 	var $type = 'hidden';
 	var $_hidden = true;
 	var $userland_changeable = false;

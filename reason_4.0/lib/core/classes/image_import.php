@@ -217,6 +217,29 @@
 		
 		function on_every_time_order()
 		{
+			
+			if (imagemagick_available())
+			{
+				$acceptable_types = array('image/jpeg',
+						'image/pjpeg',
+						//'application/pdf',
+						'image/gif',
+						'image/png',
+						//'image/tiff',
+						//'image/x-tiff',
+						//'image/photoshop',
+						//'image/x-photoshop',
+						//'image/psd',
+						);
+			}
+			else
+			{
+				$acceptable_types = array('image/jpeg',
+						'image/pjpeg',
+						'image/gif',
+						'image/png',);
+			}
+		
 			$order = array();
 			if($this->_is_element('cancel_text'))
 			{
@@ -227,8 +250,13 @@
 			for($i = 1; $i <= $this->max_upload_number; $i++)
 			{
 				$name = 'upload_'.$i;
-				$this->add_element( $name, 'image_upload', array('max_width'=>REASON_STANDARD_MAX_IMAGE_WIDTH,'max_height'=>REASON_STANDARD_MAX_IMAGE_HEIGHT) );
-				$this->add_element( $name . '_filename', 'hidden' );
+				$this->add_element( $name, 'image_upload', array('max_width'=>REASON_STANDARD_MAX_IMAGE_WIDTH,'max_height'=>REASON_STANDARD_MAX_IMAGE_HEIGHT,'acceptable_types'=>$acceptable_types, 'resize_image'=>true) );
+				$this->add_element( $name . '_filename', 'hidden', array('changeable'=>true) );
+				if (! imagemagick_available())
+				{
+					$size = get_approx_max_image_size();
+					$this->set_comments($name, 'Images with resolutions over '.$size['res'].' or '.$size['mps'].' MPs may cause errors');
+				}
 				
 				$order[] = $name;
 			}
@@ -248,6 +276,30 @@
 				trigger_error('Uploaded image at location ' . $img_pathname. ' returns false on getimagesize and will not be imported. The user has been notified.');
 			}
 			return ($size);
+		}
+		
+		function run_error_checks()
+		{
+			//$this->set_error('upload_1', 'foo');
+			/*
+			parent::run_error_checks();
+			for($i = 1; $i <= $this->max_upload_number; $i++)
+			{
+				
+				$element = $this->get_element( 'upload_'.$i );
+				if( !empty($element->tmp_full_path) AND file_exists( $element->tmp_full_path ) )
+				{
+					$filename = $this->get_value('upload_1_filename');
+					//must I verify the image here?
+					//$img_info = getimagesize($filename);
+					echo $element->tmp_full_path;
+					echo ' - ';
+					echo $filename;
+					$img_info = getimagesize($element->tmp_full_path);
+					$this->set_error('upload_1', $img_info[3]);
+				}
+			}
+			*/
 		}
 		
 		// we are going to store the filename separately so that it is always accessible at process time even if there was an error
@@ -419,7 +471,7 @@
 						
 						// create a thumbnail if need be
 						list($width, $height, $type, $attr) = getimagesize($new_name);
-						
+
 						if($width > REASON_STANDARD_MAX_IMAGE_WIDTH || $height > REASON_STANDARD_MAX_IMAGE_HEIGHT)
 						{
 							copy( $new_name, $orig_name );

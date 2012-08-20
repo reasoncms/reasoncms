@@ -80,6 +80,7 @@ foreach (array_keys($_FILES) as $name) {
 	$temp_path = $_SERVER['DOCUMENT_ROOT'].$temp_uri;
 	$unscaled_path = null;
 	$filesize = $file->get_size();
+	
 	if (!$file->move($temp_path)) {
 		final_response(500, "Failed to place the uploaded file in temporary ".
 			"storage.");
@@ -110,7 +111,6 @@ foreach (array_keys($_FILES) as $name) {
 			final_response(501, 'Unable to convert the uploaded file to a web-friendly image');
 		}
 	}
-	
 	if ($img_info)
 	{
 		// fix a permission idiosyncrasy so the permissions are consistent
@@ -126,6 +126,17 @@ foreach (array_keys($_FILES) as $name) {
 			if ($width > $max_width || $height > $max_height) {
 				$unscaled_path = add_name_suffix($temp_path, '-unscaled');
 				if (@copy($temp_path, $unscaled_path)) {
+				
+					//Make sure the image won't make php crash:
+					if (! imagemagick_available())
+					{
+						$inf = image_is_too_big($temp_path);
+						if($inf['truth_value'])
+						{
+							final_response(422, "The uploaded image's dimensions are too large for the server to process. Try a smaller image.");
+						}
+					}
+				
 					if (resize_image($temp_path, $max_width, $max_height)) {
 						list($width, $height) = getimagesize($temp_path);
 						clearstatcache();
