@@ -128,14 +128,12 @@ foreach (array_keys($_FILES) as $name) {
 				if (@copy($temp_path, $unscaled_path)) {
 				
 					//Make sure the image won't make php crash:
-					if (! imagemagick_available())
+					$res = image_is_too_big($temp_path);
+					if($res['truth_value'])
 					{
-						$inf = image_is_too_big($temp_path);
-						if($inf['truth_value'])
-						{
-							final_response(422, "The uploaded image's dimensions are too large for the server to process. Try a smaller image.");
-						}
+						final_response(422, "The uploaded image's dimensions are too large for the server to process. Try a smaller image.");
 					}
+
 				
 					if (resize_image($temp_path, $max_width, $max_height)) {
 						list($width, $height) = getimagesize($temp_path);

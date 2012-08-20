@@ -802,7 +802,7 @@ class image_uploadType extends uploadType
 		
 		if ($this->too_big)
 		{
-			$this->set_error('The chosen image is too large for gd to process. The uncompresed image is '.$res['image_size'].' bytes. Only '.$res['size_limit'].' bytes of memory may be used for processing images of this type.');
+			$this->set_error('The chosen image is too large for the server to process. The uncompresed image is '. format_bytes_as_human_readable($res['image_size']).' bytes. Only '. format_bytes_as_human_readable($res['size_limit']).' bytes of memory may be used for processing images of this type.');
 			
 		}
 		else
