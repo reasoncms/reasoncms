@@ -183,6 +183,10 @@
 					$ret .= '<div class="image">'.$image_markup.'</div>';
 				}
 				$ret .= '<div class="name"><strong>'.$current_theme->get_value( 'name' ) . '</strong></div>';
+				if($this->theme_can_be_customized($current_theme))
+				{
+					$ret .= '<a href="'.$this->admin_page->make_link( array( 'cur_module' => 'CustomizeTheme' ) ).'">Customize</a>'."\n";
+				}
 				$ret .= '</li></ul>'."\n";
 			}
 			if( !$this->self_change )
@@ -256,7 +260,7 @@
 		 * 
 		 * @return entity The current theme
 		 */
-		function get_current_theme() //{{{
+		function get_current_theme()
 		{
 			if( $this->_current_theme )
 				return $this->_current_theme;
@@ -271,6 +275,21 @@
 				return $this->_current_theme;
 			}
 			return false;
-		} // }}}
-	} // }}}
+		}
+		
+		function theme_can_be_customized($theme)
+		{
+			$customizer = reason_get_theme_customizer($this->admin_page->site_id, $theme);
+			if($customizer &&
+				(	reason_user_has_privs( $this->admin_page->user_id, 'customize_all_themes' )
+					||
+					$customizer->user_can_customize($this->admin_page->user_id)
+				)
+			)
+			{
+				return true;
+			}
+			return false;
+		}
+	}
 ?>
