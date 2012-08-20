@@ -31,6 +31,9 @@
 		
 		function alter_data() // {{{
 		{
+			$this->_no_tidy[] = 'theme_customization';
+			$this->remove_element( 'theme_customization' );
+			
 			// don't allow the user to see whether the site is new or not
 			if ($this->_is_element('is_incarnate')) $this->remove_element( 'is_incarnate' );
 			
@@ -87,7 +90,6 @@
 			// a temporary fix until we get assets settled
 			$this->set_value( 'asset_directory','asset' );
 			$this->change_element_type( 'asset_directory','hidden' );
-			$this->change_element_type( 'theme_customization','hidden');
 
 			// get rid of archaic fields
 			if ($this->_is_element('script_url')) $this->remove_element( 'script_url' );
