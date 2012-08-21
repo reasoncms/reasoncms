@@ -287,7 +287,7 @@ class IndividualVisitForm extends DefaultThorForm {
          'chapel' => array(
              'type' => 'checkboxfirst',
              'display_style' => 'normal',
-             'comments' => '<small>  (30 min) daily at 10:30</small>',
+             'comments' => '<small>  (30 min) MWF at 10:30</small>',
          ),
         'lunch' => array(
             'type' => 'checkboxfirst',
@@ -427,7 +427,7 @@ class IndividualVisitForm extends DefaultThorForm {
             /*             * * Remove for Summer ** */
          'housing_note' => array(
              'type' => 'comment',
-             'text' => '<h3>Overnight Housing</h3> (Seniors Only - Please provide two weeks notice)',
+             'text' => '<h3>Overnight Housing</h3> (Seniors Only - Please provide two weeks notice)<br>*Not available before October 1, 2012',
          ),
             /*             * * Remove for Summer ** */
          'overnight_housing' => array(
