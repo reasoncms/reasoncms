@@ -113,36 +113,7 @@
 			$head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'FlexSlider/jquery.flexslider.js');
 			$head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'FlexSlider/flexslider.css');
 						
-			// Initialize the images with appropriate entity selector properties
-			
-			$page_id = $this->page_id;
-			if (!empty($this->params['alternate_source_page_id']))
-			{
-				$page_id = $this->params['alternate_source_page_id'];
-				if (!($site_id = get_owner_site_id($page_id))) $site_id = $this->site_id;
-			}
-			else
-			{
-				$page_id = $this->cur_page->id();
-				$site_id = $this->site_id;
-			}
-			
-			$es = new entity_selector();
-			$es->add_type(id_of('image'));
-			$es->set_env('site', $site_id);
-			$es->add_right_relationship($page_id, relationship_id_of('minisite_page_to_image'));
-			if ($this->params['rand_flag']) $es->set_order('rand()');
-			elseif (!empty($this->params['order_by'])) $es->set_order($this->params['order_by']);
-			else
-			{
-				$es->add_rel_sort_field( $page_id, relationship_id_of('minisite_page_to_image') );
-				$es->set_order('rel_sort_order');
-			}
-			if (!empty($this->params['num_to_display']))
-			{
-				$es->set_num($this->params['num_to_display']);
-			}
-			$this->images = $es->run_one();
+			$this->select_images();
 
 			if (empty($this->images))
 			{
@@ -358,6 +329,43 @@
 			{
 				$this->run_full_graphics();
 			}
+		}
+		
+		/**
+		 * Identify the images that should be displayed
+		 */
+		function select_images()
+		{
+			// Initialize the images with appropriate entity selector properties
+			
+			$page_id = $this->page_id;
+			if (!empty($this->params['alternate_source_page_id']))
+			{
+				$page_id = $this->params['alternate_source_page_id'];
+				if (!($site_id = get_owner_site_id($page_id))) $site_id = $this->site_id;
+			}
+			else
+			{
+				$page_id = $this->cur_page->id();
+				$site_id = $this->site_id;
+			}
+			
+			$es = new entity_selector();
+			$es->add_type(id_of('image'));
+			$es->set_env('site', $site_id);
+			$es->add_right_relationship($page_id, relationship_id_of('minisite_page_to_image'));
+			if ($this->params['rand_flag']) $es->set_order('rand()');
+			elseif (!empty($this->params['order_by'])) $es->set_order($this->params['order_by']);
+			else
+			{
+				$es->add_rel_sort_field( $page_id, relationship_id_of('minisite_page_to_image') );
+				$es->set_order('rel_sort_order');
+			}
+			if (!empty($this->params['num_to_display']))
+			{
+				$es->set_num($this->params['num_to_display']);
+			}
+			$this->images = $es->run_one();			
 		}
 		
 		/**
