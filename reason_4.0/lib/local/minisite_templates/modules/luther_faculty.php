@@ -22,37 +22,46 @@ class LutherFacultyStaffModule extends FacultyStaffModule
                 var $other_affiliation_flag = false;
                 var $affiliations_to_use_other_aff_flag = array();
 */
-                var $required_attributes = array('ds_email','ds_fullname','ds_lastname','ds_affiliation','ds_phone', 'ds_title', 'ds_gecos', 'ds_cn');
+                var $required_attributes = array('ds_email','ds_fullname','ds_lastname','ds_affiliation','ds_phone', 'ds_office', 'ds_title', 'ds_gecos', 'ds_cn');
 
 function show_person( $person ) // {{{
 		{
-			
-			$this->show_image($person);
-			echo '<a name="'.$person['ds_username'][0].'"></a>'."\n";
-			echo '<div class="facStaffName">'.$person['full_name'];
-			echo '</div>'."\n";
-						
-			if( !empty( $person[ 'title' ])
-				|| !empty( $person[ 'ds_phone' ] )
-				|| !empty( $person[ 'mail' ] )
-				|| !empty( $person['content' ] ) )
-			{
-				echo '<div class="facStaffInfo">'."\n";
-				if ( !empty( $person['title']))
-					echo '<div class="facStaffTitle">'.$person['title'].'</div>'."\n";
-				if ( !empty ( $person['ds_phone'] ))
-					echo '<div class="facStaffPhone">'.$person['ds_phone'].'</div>'."\n";
-				if ( !empty ( $person['mail'] ))
-				{
-					echo '<div class="facStaffEmail"><a href="mailto:'.$person['mail'].'">'.$person['mail'].'</a></div>'."\n";
-				}
-				if (!empty( $person['content' ] ) )
-				{
-					echo '<div class="facStaffContent">' . $person[ 'content' ]  . '</div>'."\n";
-				}
-				echo '</div>'."\n";
-			}
-		}
+            
+            $this->show_image($person);
+            echo '<a name="'.$person['ds_username'][0].'"></a>'."\n";
+            echo '<div class="facStaffName"><h5>'.$person['full_name'];
+            echo '</h5></div>'."\n";
+                        
+            if( !empty( $person[ 'title' ])
+                || !empty( $person[ 'ds_phone' ] )
+                || !empty( $person[ 'mail' ] )
+                || !empty( $person['content' ] ) )
+            {
+                echo '<div class="facStaffInfo">'."\n";
+                if ( !empty( $person['title']))
+                    echo '<div class="facStaffTitle"><h6>'.$person['title'].'</h6></div>'."\n";
+                if ( !empty ( $person['ds_office'] )){
+                    echo '<div class="facStaffOffice">Office: ';
+                    foreach ($person['ds_office'] as $office) {
+                        echo preg_replace('/;/', ', ', $office);
+                    }
+                    echo '</div>' . "\n";
+
+                }
+                if ( !empty ( $person['ds_phone'] )){
+                    echo '<div class="facStaffPhone">Phone: ' . preg_replace('/,/', ', ', $person['ds_phone']) . '</div>' . "\n";
+                }
+                if ( !empty ( $person['mail'] ))
+                {
+                    echo '<div class="facStaffEmail">E-mail: <a href="mailto:' . $person['mail'] . '">' . $person['mail'] . '</a></div>' . "\n";
+                }
+                if (!empty( $person['content' ] ) )
+                {
+                    echo '<div class="facStaffContent">' . $person[ 'content' ]  . '</div>' . "\n";
+                }
+                echo '</div>'."\n";
+            }
+        }
 
 
                 function show_image( $person )

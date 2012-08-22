@@ -59,6 +59,7 @@ class ds_ldap_luther extends ds_ldap {
 		/*  'ds_phone' => array('telephonenumber'),  this returns home phone*/
 		'ds_title' => array('title'),
 		'ds_phone' => array('officephone'),
+		'ds_office' => array('officebldg'),
 		'ds_affiliation' => array('edupersonaffiliation','edupersonprimaryaffiliation'),
 		'ds_groupname' => array('cn'),
 		'ds_member' => array('memberuid'),
@@ -106,6 +107,10 @@ class ds_ldap_luther extends ds_ldap {
 							$value = $record['telephonenumber'];
 							break;
 						*/
+						case 'ds_office':
+							if (!empty($record['officebldg'])) 
+								$value = $record['officebldg'];
+							break;
 						case 'ds_phone':
 							if (!empty($record['officephone'])) 
 								$value = $record['officephone'];

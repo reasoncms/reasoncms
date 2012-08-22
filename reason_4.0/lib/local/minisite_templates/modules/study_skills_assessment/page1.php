@@ -570,7 +570,7 @@ class StudySkillsAssessmentOneForm extends FormStep {
         ),
         'MM_7' => array(
             'type' => 'radio_inline_no_sort',
-            'display_name' => 'I take the initiative to understand my financial aid package',
+            'display_name' => 'I take the initiative to understand my financial aid package, including meeting with my Financial Aid Counselor',
             'options' => array('1' => 'Never', '2' => 'Sometimes', '3' => 'Usually', '4' => 'Always'),
         ),
         'MM_8' => array(
