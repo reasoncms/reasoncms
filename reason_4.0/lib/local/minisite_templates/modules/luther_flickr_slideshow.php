@@ -88,7 +88,7 @@
 					if (HTTP_HOST_NAME != 'localhost')
 					{
 						// 30 day cache expiration
-						$f->enableCache("fs", "/var/www/phpFlickrCache", 2580000); 
+						$f->enableCache("fs", "/var/reason/phpFlickrCache", 2580000); 
 					}
 					$photos = $f->photosets_getPhotos($post->get_value('flickr_photoset_id'));
 					//foreach ((array)$photos['photoset']['photo'] as $photo)
