@@ -98,6 +98,7 @@
 			}
 			echo '<li class="home"><a href="/">Home</a></li>'."\n";
 			echo '<li class="directory"><a href="/directory/">Directory</a></li>'."\n";
+			echo '<li class="offices"><a href="/contact/administrative">Offices</a></li>'."\n";
 			echo '<li class="index"><a href="/azindex/">A-Z Index</a></li>'."\n";
 			echo '<li class="search">'."\n";
 			luther2010_google_search();			
