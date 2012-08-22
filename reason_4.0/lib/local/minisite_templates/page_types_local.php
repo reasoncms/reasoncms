@@ -210,6 +210,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'faculty' => array(
 		'main_post' => 'luther_faculty'
 	),
+	'faculty_first' => array(
+		'main' => 'luther_faculty',
+		'main_post' => 'content'
+	),
 	'feature' => array(
 		'main_head' => array(
 			'module' => 'feature/feature',
@@ -309,7 +313,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'pre_sidebar_3' => '',
 		'sidebar_2' => array( // Spotlights
 			'module' => 'publication',
-			'related_publication_unique_names' => array(luther_get_publication_unique_name("spotlights")),
+			'related_publication_unique_names' => array('spotlights_admissions'),
 			'related_mode' => 'true',
 			'related_title' => '',
 			'related_order' => 'random',
