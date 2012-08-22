@@ -23,7 +23,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 									'sections', 					//array section_id => section
 									'current_section',				
 									'items_by_section', 
-									'links_to_sections',
+									//'links_to_sections',    // BJ: commented out to disable link to sections
 									'no_section_key', 
 									'current_issue',
 									'issues_by_date',
@@ -401,7 +401,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$markup_string .= '<div class="sectionInfo">';
 			$section_entity = $this->passed_vars['sections'][$section_id];
-			$url = $this->passed_vars['links_to_sections'][$section_id];
+			//$url = $this->passed_vars['links_to_sections'][$section_id];
 			
 			if(!empty($url))
 				$markup_string .= '<h3><a href="'.$url.'">'.$section_entity->get_value('name').'</a></h3>'."\n";
@@ -423,7 +423,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		$markup_string = '';
 		if(empty($this->passed_vars['current_section']) && !empty($this->passed_vars['items_by_section'][$section_id]))
 		{
-			$url = $this->passed_vars['links_to_sections'][$section_id];
+			//$url = $this->passed_vars['links_to_sections'][$section_id];
 			if(!empty($url))
 			{
 				$section_name = $this->passed_vars['sections'][$section_id]->get_value('name');
