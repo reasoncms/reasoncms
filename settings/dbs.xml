@@ -3,7 +3,7 @@
 <databases>
     <database>
         <connection_name>reason_connection</connection_name>
-        <db>reason-shared</db>
+        <db>reason</db>
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
@@ -11,7 +11,7 @@
 
     <database>
         <connection_name>thor_connection</connection_name>
-        <db>thor-shared</db>
+        <db>thor</db>
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
@@ -19,7 +19,7 @@
 
     <database>
         <connection_name>reason_transactions</connection_name>
-        <db>reason_transactions-shared</db>
+        <db>reason_transactions</db>
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
@@ -27,7 +27,7 @@
 
     <database>
     <connection_name>admissions_applications_connection</connection_name>
-        <db>admissions_applications-shared</db>
+        <db>admissions_applications</db>
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
@@ -35,7 +35,7 @@
     
     <database>
         <connection_name>all_band_connection</connection_name>
-        <db>all_band-shared</db>
+        <db>all_band</db>
         <user>reason_user</user>
             <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
@@ -43,7 +43,7 @@
 
     <database>
         <connection_name>discovery_camps_connection</connection_name>
-        <db>discovery_camps-shared</db>
+        <db>discovery_camps</db>
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
@@ -51,7 +51,7 @@
 
     <database>
         <connection_name>homecoming_connection</connection_name>
-        <db>homecoming_registration-shared</db>
+        <db>homecoming_registration</db>
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
@@ -59,7 +59,7 @@
 
     <database>
         <connection_name>lfw_connection</connection_name>
-        <db>lfw_registration-shared</db>
+        <db>lfw_registration</db>
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
@@ -67,7 +67,7 @@
 
     <database>
                 <connection_name>jenson_medal_connection</connection_name>
-                <db>jenson_medal-shared</db>
+                <db>jenson_medal</db>
                 <user>reason_user</user>
                 <password>8shtKGFGw4.v7cMm</password>
                 <host>database-1.luther.edu</host>
@@ -75,7 +75,7 @@
     
     <database>
         <connection_name>reason_gifts_connection</connection_name>
-        <db>reason_gifts-shared</db>
+        <db>reason_gifts</db>
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
@@ -83,7 +83,7 @@
 
     <database>
         <connection_name>dorian_vocal_connection</connection_name>
-        <db>dorian_vocal-shared</db>
+        <db>dorian_vocal</db>
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
@@ -91,7 +91,7 @@
 
     <database>
         <connection_name>dorian_jh_camp_connection</connection_name>
-        <db>dorian_jh_camp-shared</db>
+        <db>dorian_jh_camp</db>
         <user>reason_user</user>
                 <password>8shtKGFGw4.v7cMm</password>
                 <host>database-1.luther.edu</host>
@@ -99,21 +99,21 @@
 
         <database>
                 <connection_name>dorian_sh_camp_connection</connection_name>
-                <db>dorian_sh_camp-shared</db>
+                <db>dorian_sh_camp</db>
                 <user>reason_user</user>
                 <password>8shtKGFGw4.v7cMm</password>
                 <host>database-1.luther.edu</host>
         </database>
     <database>
             <connection_name>transcript_connection</connection_name>
-            <db>transcript_requests-shared</db>
+            <db>transcript_requests</db>
             <user>reason_user</user>
             <password>8shtKGFGw4.v7cMm</password>
             <host>database-1.luther.edu</host>
     </database>
     <database>
         <connection_name>norge_connection</connection_name>
-        <db>norge_conference-shared</db>
+        <db>norge_conference</db>
         <user>reason_user</user>
             <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>
@@ -121,7 +121,7 @@
 
         <database>
                 <connection_name>royal_visit_connection</connection_name>
-                <db>royal_visit_payment-shared</db>
+                <db>royal_visit_payment</db>
                 <user>reason_user</user>
                 <password>8shtKGFGw4.v7cMm</password>
                 <host>database-1.luther.edu</host>
