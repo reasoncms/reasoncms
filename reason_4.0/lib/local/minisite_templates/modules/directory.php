@@ -167,7 +167,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 	
     function init( $args = array() ) //{{{
     {
-			force_secure();
+			// force_secure();
         // If the IP address isn't local and there's no user, then we get the
         // restricted off-campus view.
         // changed carleton 137.22. to luther 192.203. - burkaa
@@ -1833,9 +1833,26 @@ class DirectoryModule extends DefaultMinisiteModule {
 
 //        $logged_user = reason_check_authentication();
         $logged_user = $this->user_netid;
-		
-		$password = (isset($_SESSION)) ? $_SESSION['password'] : '';
-        //$password = $user->get_value('user_password_hash');
+        $logged_user_entity = new entity(get_user_id($logged_user));
+        pray($logged_user_entity);
+        $pass_hash = $logged_user_entity->get_value('user_password_hash');
+
+
+
+		if ($logged_user == 'smitst01'){
+            echo 'hi steve-' . $logged_user;
+            echo '<br>';
+            echo $pass_hash;
+            echo '<br>';
+            $hash = sha1($pass_hash);
+            echo $hash;
+            echo '<br>';
+
+           pray($_REQUEST);
+        }
+
+    		// $password = (isset($_SESSION)) ? $_SESSION['password'] : '';
+        // $password = $logged_user->get_value('user_password_hash');
         
 
         //$lookup_login = 'uid='.$logged_user.',ou=People,dc=luther,dc=edu'; /// username is get login norsekey
@@ -1845,7 +1862,7 @@ class DirectoryModule extends DefaultMinisiteModule {
         $dir = new directory_service('ldap_luther_directory');
         //$dir = new directory_service('ldap_luther');
 
-        $dir->authenticate($logged_user,$password);
+        $dir->authenticate($logged_user,$pass_hash);
         //$dir->bind_test($logged_user, $password);
         //$dir->authenticate_two();
 
