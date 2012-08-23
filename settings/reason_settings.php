@@ -149,7 +149,7 @@
 	 * In order for pages in your Reason instance to be visible to search engines, you *must*
 	 * change this setting to false.
 	 */
-	define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
+	define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
 	
 	/**
 	 * REASON_HOST_HAS_VALID_SSL_CERTIFICATE
@@ -162,7 +162,7 @@
 	 * If this is set to false, Reason will work in either case, but it is better practice
 	 * to set it to true when possible to eliminate the possiblity of man-in-the-middle attacks.
 	 */
-	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', false);
+	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
 	
 	/**
 	 * REASON_SESSION_TIMEOUT
@@ -225,7 +225,7 @@
 	 * It should not have an initial slash.
 	 * Example: errors/404.php
 	 */
-	define('ERROR_404_PATH', 'errors/404.php');
+	define('ERROR_404_PATH', 'reason/errors/404.php');
 	
 	/**
 	 * ERROR_404_PAGE
@@ -264,7 +264,7 @@
 	 * Set this to false if you only want to set site themes in the Master Admin area
 	 * Boolean (e.g. true, false -- no quotes)
 	 */
-	define( 'ALLOW_REASON_SITES_TO_SWITCH_THEMES', true );
+	define( 'ALLOW_REASON_SITES_TO_SWITCH_THEMES', false );
 	
 	/**
 	 * REASON_PREVIOUS_HOSTS
@@ -425,7 +425,7 @@
 	 * Of course, the user_authoritative_source field can be edited on a user-by-user 
 	 * basis in a mixed environment; this constant simply sets the default value.
 	 */
-	define('REASON_USERS_DEFAULT_TO_AUTHORITATIVE', true);
+	define('REASON_USERS_DEFAULT_TO_AUTHORITATIVE', false );
 	
 	/**
 	 * REASON_ALLOWS_INLINE_EDITING
@@ -785,7 +785,7 @@
 	 *
 	 * In future releases there will likely be a way to specify favicons for individual sites.
 	 */
-	define('REASON_DEFAULT_FAVICON_PATH','');
+	define('REASON_DEFAULT_FAVICON_PATH','/favicon.ico');
 	
 	/**
 	 * REASON_PERFORMANCE_PROFILE_LOG
@@ -809,7 +809,7 @@
 	 * 2. Pathname from the core/local split
 	 * 3. filename within minisite_templates/modules/form/views/thor/ directory
 	 */
-	define('REASON_FORMS_THOR_DEFAULT_VIEW', 'default.php');
+	define('REASON_FORMS_THOR_DEFAULT_VIEW', 'minisite_templates/modules/form/views/thor/luther_default.php');
 	
 	/**
 	 * REASON_FORMS_THOR_DEFAULT_MODEL
@@ -895,7 +895,7 @@
 	 * If it is set to false, Reason will ignore all locking information and will not present interfaces
 	 * for setting up locks.
 	 */
-	define('REASON_ENTITY_LOCKS_ENABLED', false);
+	define('REASON_ENTITY_LOCKS_ENABLED', true );
 	
 	/**
 	 * REASON_EVENT_GEOLOCATION_ENABLED
