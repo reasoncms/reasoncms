@@ -809,7 +809,7 @@
 	 * 2. Pathname from the core/local split
 	 * 3. filename within minisite_templates/modules/form/views/thor/ directory
 	 */
-	define('REASON_FORMS_THOR_DEFAULT_VIEW', 'minisite_templates/modules/form/views/thor/luther_default.php');
+	define('REASON_FORMS_THOR_DEFAULT_VIEW', 'luther_default.php');
 	
 	/**
 	 * REASON_FORMS_THOR_DEFAULT_MODEL
