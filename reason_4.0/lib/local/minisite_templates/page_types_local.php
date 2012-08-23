@@ -858,7 +858,7 @@ function luther2010_global_navigation()
 
 function luther_google_search()
 {
-	echo '<form id="search" action="http://find.luther.edu/search" method="get" name="gs">'."\n";
+	echo '<form id="search" action="//find.luther.edu/search" method="get" name="gs">'."\n";
 	echo '<input type="text" value="" maxlength="256" size="32" name="q" />'."\n";
 	echo '<input id="searchButton" class="button" type="submit" value="Search" name="btnG" />'."\n";
 	echo '<input type="hidden" value="0" name="entqr"/>'."\n";
@@ -875,7 +875,7 @@ function luther_google_search()
 }
 function luther2010_google_search()
 {
-	echo '<form id="search" action="http://find.luther.edu/search" method="get" name="gs">'."\n";
+	echo '<form id="search" action="//find.luther.edu/search" method="get" name="gs">'."\n";
 	echo '<fieldset>'."\n";
 	echo '<label for="search-input">Search</label>'."\n";
 	echo '<input id="search-input" type="text" maxlength="256" size="32" name="q" />'."\n";
@@ -896,7 +896,7 @@ function luther2010_google_search()
 
 function luther_mobile_google_search()
 {
-	echo '<form id="search" action="http://find.luther.edu/search" method="get" name="gs">'."\n";
+	echo '<form id="search" action="//find.luther.edu/search" method="get" name="gs">'."\n";
 	echo '<input type="text" value="" maxlength="256" size="10" name="q" />'."\n";
 	echo '<input id="searchButton" class="button" type="submit" value="Search" name="btnG" />'."\n";
 	echo '<input type="hidden" value="0" name="entqr"/>'."\n";
