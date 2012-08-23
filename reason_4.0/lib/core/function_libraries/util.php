@@ -1208,6 +1208,8 @@
 	 *   - The privilege edit any locked field or relationship
 	 * - manage_locks
 	 *   - The privilege edit any locked field or relationship
+	 * - customize_all_themes
+	 *   - The privilege to customize any site's theme
 	 *
 	 * @param integer $user_id The Reason entity id of the user
 	 * @param string $privilege
@@ -1308,7 +1310,7 @@
 				'contribute_only_role'=>array('add','edit_pending','delete_pending',),
 				'editor_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme',),
 				'power_user_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','switch_theme','edit_html','upload_full_size_image',),
-				'admin_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','duplicate','edit_html','switch_theme','pose_as_other_user','assign_any_page_type','edit_head_items','edit_unique_names','edit_fragile_slugs','edit_home_page_nav_link','edit_form_advanced_options','manage_allowable_relationships','view_sensitive_data','manage_integration_settings','edit_raw_ldap_filters','upload_full_size_image','upgrade','db_maintenance','update_urls','bypass_locks','manage_locks',),
+				'admin_role'=>array('add','edit_pending','delete_pending','edit','delete','publish','borrow','expunge','duplicate','edit_html','switch_theme','pose_as_other_user','assign_any_page_type','edit_head_items','edit_unique_names','edit_fragile_slugs','edit_home_page_nav_link','edit_form_advanced_options','manage_allowable_relationships','view_sensitive_data','manage_integration_settings','edit_raw_ldap_filters','upload_full_size_image','upgrade','db_maintenance','update_urls','bypass_locks','manage_locks','customize_all_themes',),
 		);
 	}
 
@@ -2005,5 +2007,69 @@
 		}
 		
 		return $cache[$user_id];
+	}
+	/**
+	 * Factory function for grabbing and setting up the theme customizer for a given site
+	 *
+	 * @param mixed $site site entity or ID
+	 * @param mixed $theme theme entity or ID; if not provided Reason will determine the current theme
+	 * @return mixed object or false if no customizer
+	 */
+	function reason_get_theme_customizer($site, $theme = NULL)
+	{
+		if(is_numeric($site))
+			$site = new entity($site);
+		
+		if(empty($theme))
+		{
+			$es = new entity_selector();
+			$es->add_type( id_of( 'theme_type' ) );
+			$es->add_right_relationship( $site->id() , relationship_id_of( 'site_to_theme' ) );
+			$es->set_num(1);
+			$tmp = $es->run_one();
+			if(!empty($tmp))
+				$theme = current( $tmp );
+			else
+				return false;
+		}
+		elseif(is_numeric($theme))
+		{
+			$theme = new entity($theme);
+		}
+		
+		if($theme->get_value('theme_customizer'))
+		{
+			reason_include_once('theme_customizers/'.$theme->get_value('theme_customizer').'.php');
+			if(!empty($GLOBALS[ 'reason_theme_customizers' ][ $theme->get_value('theme_customizer') ]))
+			{
+				if(class_exists($GLOBALS[ 'reason_theme_customizers' ][ $theme->get_value('theme_customizer') ]))
+				{
+					if($site->get_value('theme_customization'))
+					{
+						$all_customization_data = json_decode($site->get_value('theme_customization'));
+						$theme_id = $theme->id();
+						if(isset($all_customization_data->$theme_id))
+						{
+							$customization_data = $all_customization_data->$theme_id;
+						}
+					}
+					if(empty($customization_data))
+						$customization_data = new stdClass;
+					$customizer = new $GLOBALS[ 'reason_theme_customizers' ][ $theme->get_value('theme_customizer') ]();
+					$customizer->set_customization_data($customization_data);
+				}
+				else
+				{
+					trigger_error('Theme customizer "'.$theme->get_value('theme_customizer').'" not registered properly.');
+					$customizer = false;
+				}
+			}
+			else
+			{
+				trigger_error('Theme customizer "'.$theme->get_value('theme_customizer').'" not found or not registered properly.');
+				$customizer = false;
+			}
+		}
+		return $customizer;
 	}
 ?>

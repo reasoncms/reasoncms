@@ -149,7 +149,7 @@
 	 * In order for pages in your Reason instance to be visible to search engines, you *must*
 	 * change this setting to false.
 	 */
-	define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', false );
+	define( 'THIS_IS_A_DEVELOPMENT_REASON_INSTANCE', true );
 	
 	/**
 	 * REASON_HOST_HAS_VALID_SSL_CERTIFICATE
@@ -162,14 +162,14 @@
 	 * If this is set to false, Reason will work in either case, but it is better practice
 	 * to set it to true when possible to eliminate the possiblity of man-in-the-middle attacks.
 	 */
-	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', true);
+	define('REASON_HOST_HAS_VALID_SSL_CERTIFICATE', false);
 	
 	/**
 	 * REASON_SESSION_TIMEOUT
 	 *
 	 * Determines how long a Reason session lasts, in minutes.
 	 */
-	define('REASON_SESSION_TIMEOUT', 180);
+	define('REASON_SESSION_TIMEOUT', 60);
 	
 	/**
 	 * REASON_SESSION_TIMEOUT_WARNING
@@ -264,7 +264,7 @@
 	 * Set this to false if you only want to set site themes in the Master Admin area
 	 * Boolean (e.g. true, false -- no quotes)
 	 */
-	define( 'ALLOW_REASON_SITES_TO_SWITCH_THEMES', false );
+	define( 'ALLOW_REASON_SITES_TO_SWITCH_THEMES', true );
 	
 	/**
 	 * REASON_PREVIOUS_HOSTS
@@ -425,7 +425,7 @@
 	 * Of course, the user_authoritative_source field can be edited on a user-by-user 
 	 * basis in a mixed environment; this constant simply sets the default value.
 	 */
-	define('REASON_USERS_DEFAULT_TO_AUTHORITATIVE', false);
+	define('REASON_USERS_DEFAULT_TO_AUTHORITATIVE', true);
 	
 	/**
 	 * REASON_ALLOWS_INLINE_EDITING
@@ -744,24 +744,22 @@
 	
 	/**
 	 * REASON_DEFAULT_ALLOWED_TAGS
-	 * A whitelist of the XHTML tags Reason will allow to be saved to the database.
+	 * A whitelist of the (X)HTML(5) tags Reason will allow to be saved to the database.
 	 *
-	 * Note: The default value of this setting is the set of xhtml strict elements that can be placed in the body of a page
+	 * Note that the head items field on pages does not follow this whitelist.
 	 *
-	 * The two exceptions are the <script> tag, which is disabled 
-	 * (but which can be enabled by adding it to this setting),
-	 * and the <u> tag, which is enabled for legacy reasons.
+	 * Left out of this list for security reasons, or because they belong outside the document body:
+	 * <base><body><head><html><link><meta><script><title>
 	 *
-	 * Note that if your templates all use transitional doctypes, the following tags deprecated may be added:
-	 * <applet><center><dir><font><iframe><isindex><menu><s><strike><xmp>
+	 * Included in this list for legacy reasons:
+	 * <acronym><big><rb><rpc><rtc><strike><tt>
 	 *
-	 * If you plan on serving your content as XHTML 1.1, you may wish to add these tags for
-	 * ruby (pronunciation annotations for East Asian languages):
-	 * <ruby><rb><rbc><rp><rt><rtc>
+	 * Tags deprecated in HTML4 and not revived in HTML5, and therefore left out of this list:
+	 * <applet><center><dir><font><isindex><xmp>
 	 *
 	 * This string should be in the same format as the second argument to php's built-in strip_tags() function, e.g.: '<a><abbr><acronym><address>'
 	 */
-	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbr><acronym><address><area><b><bdo><big><blockquote><br><button><caption><cite><code><col><colgroup><dd><del><dfn><div><dl><dt><em><embed><fieldset><form><h1><h2><h3><h4><h5><h6><hr><i><img><input><ins><kbd><label><legend><li><map><noscript><object><ol><optgroup><option><p><param><pre><q><samp><select><span><small><strike><strong><sub><sup><table><tbody><td><textarea><tfoot><th><thead><tr><tt><u><ul><var>');
+	define('REASON_DEFAULT_ALLOWED_TAGS','<a><abbr><acronym><address><area><article><aside><audio><b><bdi><bdo><big><blockquote><br><button><canvas><caption><cite><code><col><colgroup><command><datalist><dd><del><details><dfn><div><dl><dt><em><embed><fieldset><figcaption><figure><footer><form><h1><h2><h3><h4><h5><h6><header><hgroup><hr><i><iframe><img><input><ins><kbd><keygen><label><legend><li><map><mark><menu><meter><nav><noscript><object><ol><optgroup><option><output><p><param><pre><progress><q><ruby><rb><rp><rpc><rt><rtc><s><samp><section><select><small><source><span><strike><strong><sub><summary><sup><table><tbody><td><textarea><tfoot><th><thead><time><tr><track><tt><u><ul><var><video><wbr>');
 	
 	/**
 	 * REASON_DEFAULT_FOOTER_XHTML
@@ -787,7 +785,7 @@
 	 *
 	 * In future releases there will likely be a way to specify favicons for individual sites.
 	 */
-	define('REASON_DEFAULT_FAVICON_PATH','/favicon.ico');
+	define('REASON_DEFAULT_FAVICON_PATH','');
 	
 	/**
 	 * REASON_PERFORMANCE_PROFILE_LOG
@@ -811,9 +809,8 @@
 	 * 2. Pathname from the core/local split
 	 * 3. filename within minisite_templates/modules/form/views/thor/ directory
 	 */
-	// define('REASON_FORMS_THOR_DEFAULT_VIEW', 'default.php');
-	define('REASON_FORMS_THOR_DEFAULT_VIEW', REASON_INC . 'minisite_templates/modules/form/views/thor/luther_default.php');
-
+	define('REASON_FORMS_THOR_DEFAULT_VIEW', 'default.php');
+	
 	/**
 	 * REASON_FORMS_THOR_DEFAULT_MODEL
 	 *
@@ -898,7 +895,7 @@
 	 * If it is set to false, Reason will ignore all locking information and will not present interfaces
 	 * for setting up locks.
 	 */
-	define('REASON_ENTITY_LOCKS_ENABLED', true);
+	define('REASON_ENTITY_LOCKS_ENABLED', false);
 	
 	/**
 	 * REASON_EVENT_GEOLOCATION_ENABLED

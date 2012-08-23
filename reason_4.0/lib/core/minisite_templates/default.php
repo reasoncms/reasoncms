@@ -553,6 +553,14 @@ class MinisiteTemplate
 				$this->head_items->add_stylesheet( $url, $media );
 			}
 		}
+		if($this->theme->get_value('theme_customizer') && $this->site_info->get_value('theme_customization'))
+		{
+			$customizer = reason_get_theme_customizer($this->site_info, $this->theme);
+			if(!empty($customizer))
+				$customizer->modify_head_items($this->head_items);
+			else
+				trigger_error('Theme customizer "'.$this->theme->get_value('theme_customizer').'" not found or not registered properly. No customizations applied.');
+		}
 	}
 	function get_meta_information()
 	{
@@ -935,7 +943,20 @@ class MinisiteTemplate
 	} // }}}
 	function create_body_tag()
 	{
+		$classes = $this->get_body_tag_classes();
+		if(!empty($classes))
+			return '<body class="'.implode(' ',$classes).'">'."\n";
 		return '<body>'."\n";
+	}
+	function get_body_tag_classes()
+	{
+		$classes = array();
+		$classes[] = $this->textonly ? 'textOnly' : 'fullGraphics';
+		if($this->pages->root_node() == $this->page_id)
+			$classes[] = 'siteHome';
+		if($this->page_info->get_value('unique_name'))
+			$classes[] = 'uname_'.$this->page_info->get_value('unique_name');
+		return $classes;
 	}
 	function get_doctype()
 	{
@@ -1252,6 +1273,7 @@ class MinisiteTemplate
 	{
 		$hasSections = array();
 		$blobclass = 'contains';
+		$classes = array();
 		foreach($this->sections as $section=>$show_function)
 		{
 			$has_function = 'has_'.$section.'_section';

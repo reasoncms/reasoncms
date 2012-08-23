@@ -101,6 +101,9 @@ div.policy ol.lowerRoman {
 div.policy ol.decimal {
 	list-style-type: decimal;
 }
+div#policyModule div.keywords {
+	display:none;
+}
 
 /* News */
 

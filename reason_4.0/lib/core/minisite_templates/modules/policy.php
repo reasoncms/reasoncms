@@ -25,6 +25,7 @@
 			'a' => array('function' => 'turn_into_string'),
 			'show_all' => array( 'function' => 'check_against_array', 
 								 'extra_args' => array( 'true', 'false' ) ),
+			'edit_id' => array('function' => 'turn_into_int'),
 		);
 		/**
 		 * Parameters this module can take in its page type definition
@@ -39,10 +40,29 @@
 		protected $values;
 		protected $roots;
 		protected $policy;
+		protected $is_root;
+		protected $related_audiences;
+		protected $all_audiences;
+		protected $edit_policy;
+		protected $audience_opts;
 		protected $current_audience;
+
+
 		function init( $args = array() ) // {{{
 		{
 			parent::init( $args );
+			
+			// REASON_USES_DISTRIBUTED_AUDIENCE_MODEL
+			if (REASON_USES_DISTRIBUTED_AUDIENCE_MODEL)
+			{
+				$es = new entity_selector($this->site_id);
+			}
+			else
+			{
+				$es = new entity_selector();
+			}
+			$es->add_type(id_of('audience_type'));
+			$this->all_audiences = $es->run_one();
 
 			$head =& $this->get_head_items();
 			$head->add_javascript('/reason_package/reason_4.0/www/js/policy_selector.js');
@@ -57,6 +77,11 @@
 					{
 						$this->policy = $roots[$this->request[ 'policy_id' ]];
 						$this->_add_crumb( $this->policy->get_value('name'), get_current_url() );
+						if($this->policy->get_value('keywords'))
+						{
+							$head_items = $this->get_head_items();
+							$head_items->add_head_item('meta', array('name'=>'keywords','value'=>reason_htmlspecialchars($this->policy->get_value('keywords'))));
+						}
 						if($pages =& $this->get_page_nav())
 							$pages->make_current_page_a_link();
 						$access = $this->_get_access_result($this->policy);
@@ -72,7 +97,18 @@
 				}
 				
 			}
-		} // }}}
+			
+			// register the module for inline editing
+			$inline_edit =& get_reason_inline_editing($this->page_id);
+			$inline_edit->register_module($this, $this->user_can_inline_edit($this->policy));
+			
+			if ($inline_edit->available_for_module($this))
+			{
+				$head->add_stylesheet(REASON_HTTP_BASE_PATH.'css/policy/policy_editable.css','',true);
+			}
+			
+		}
+		
 		protected function _get_current_audience()
 		{
 			if(!isset($this->current_audience))
@@ -104,6 +140,7 @@
 				return true;
 			return false;
 		}
+		
 		protected function _get_all_policies()
 		{
 			if(is_null($this->values))
@@ -113,6 +150,7 @@
 			}
 			return $this->values;
 		}
+		
 		protected function _get_es()
 		{
 			$es = new entity_selector( $this->site_id );
@@ -131,6 +169,7 @@
 			
 			return $es;
 		}
+		
 		protected function _get_access_result($policy)
 		{
 			if(!isset($this->access_results[$policy->id()]))
@@ -147,7 +186,8 @@
 			}
 			return $this->access_results[$policy->id()];
 		}
-		function run() // {{{
+		
+		function run()
 		{
 			echo '<div id="policyModule">'."\n";
 			$roots = $this->get_root_nodes();
@@ -184,8 +224,9 @@
 				}
 			}
 			echo '</div>'."\n";
-		} // }}}
-		function get_root_nodes() // {{{
+		}
+		
+		function get_root_nodes()
 		{
 			if(is_null($this->roots))
 			{
@@ -197,8 +238,8 @@
 				}
 			}
 			return $this->roots;
-		} // }}}
-		function show_root_list() // {{{
+		}
+		function show_root_list()
 		{
 			$roots = $this->get_root_nodes();
 			if(!empty($roots))
@@ -222,14 +263,17 @@
 				echo '<h3 class="noItemsNote">Sorry - this page contains no items.</h3>'."\n";
 			}
 		} // }}}
+		
 		function get_no_audience_link()
 		{
 			return carl_make_link(array('audience_id'=>'','a'=>'',));
 		}
+
 		function get_no_policy_link()
 		{
 			return carl_make_link(array('policy_id'=>'',));
 		}
+
 		function show_root_option_menu() // {{{
 		{
 			$e = new entity($this->page_id);
@@ -253,14 +297,16 @@
 				echo '<input type="hidden" name="audience_id" value="'.htmlspecialchars($this->request['audience_id']).'" />';
 			echo '</select><input type="submit" class="rootMenuSubmit" value="Go"></form>';
 
-		} // }}}
-		function display_navigation() // {{{
+		}
+		function display_navigation()
 		{
 			if( !empty( $this->request[ 'policy_id' ] ) )
 			{
 				if(!empty($this->policy))
 				{
 					$this->display_policy($this->policy);
+					$this->display_proximate($this->policy);
+					
 				}
 				else
 				{
@@ -269,7 +315,42 @@
 					echo '<p>Please contact the maintainer of this site if you have any questions.</p>'."\n";
 				}
 			}
-		} // }}}
+		}
+		protected function get_proximate_policies($policy)
+		{
+			$policies = $this->get_root_nodes();
+			$prev = false;
+			$next = false;
+			reset($policies);
+			while($p = current($policies))
+			{
+				if($p->id() == $policy->id())
+				{
+					$next = next($policies);
+					break;
+				}
+				$prev = $p;
+				next($policies);
+			}
+			return array($prev,$next);
+		}
+		protected function display_proximate($policy)
+		{
+			list($prev, $next) = $this->get_proximate_policies($policy);
+			if(!empty($prev) || !empty($next))
+			{
+				echo '<div class="proximatePolicies">'."\n";
+				if(!empty($next))
+				{
+					echo '<div class="next"><strong>Next:</strong> <a href="'.$this->page_link( $next ).'">'.$next->get_value('name').'</a></div>'."\n";
+				}
+				if(!empty($prev))
+				{
+					echo '<div class="previous"><strong>Previous:</strong> <a href="'.$this->page_link( $prev ).'">'.$prev->get_value('name').'</a></div>'."\n";
+				}
+				echo '</div>'."\n";
+			}
+		}
 		protected function _get_access_group_helper($policy)
 		{
 			$rel = relationship_id_of('policy_to_access_group');
@@ -313,6 +394,7 @@
 			$es->set_order('entity.name ASC');
 			return $es->run_one();
 		}
+
 		function page_link( $policy ) // {{{
 		{
 			if( !is_object( $policy ) )
@@ -321,8 +403,9 @@
 			$link = carl_make_link(array('policy_id'=>$policy->id()));
 
 			return $link;
-		} // }}}
-		function display_policy($policy) // {{{
+		}
+		
+		function display_policy($policy)
 		{
 			$access = $this->_get_access_result($policy);
 			if(false === $access)
@@ -338,13 +421,44 @@
 				return;
 			}
 			
-			echo '<div class="policy">'."\n";
-			echo '<a id="'.$policy->id().'"></a>';
-			echo "<h3 class='policyName'>" . 	$policy->get_value('name') . "</h3>\n";
-			if($policy->get_value( 'content' ))
+			$inline_edit =& get_reason_inline_editing($this->page_id);
+			$editable = $inline_edit->available_for_module($this);
+			$cur_policy_edit_id = !empty($this->request['edit_id']) ? $this->request['edit_id'] : false;
+			if ($editable)
 			{
-				echo '<div class="policyContent">'.demote_headings($policy->get_value( 'content' ),1) . '</div>';
+				$active = $inline_edit->active_for_module($this);
+				$class = ($active) ? 'editable editing' : 'editable';
+				echo '<div class="'.$class.'">'."\n";
+				
+				if ($inline_edit->active_for_module($this) && $cur_policy_edit_id == $policy->id())
+				{
+					echo '<div class="policy root_policy">'."\n";
+					$this->run_policy_data_form($policy, true);
+					echo '</div>';
+				}
+				else
+				{		
+					echo '<div class="policy root_policy editRegion">'."\n";
+					echo '<a id="'.$policy->id().'"></a>';
+					echo "<h3 class='policyName'>" . 	$policy->get_value('name') . "</h3>\n";
+					echo '<div class="policyContent">'.$policy->get_value( 'content' ) . '</div>';
+					
+					$activation_params = $inline_edit->get_activation_params($this);
+					$activation_params['edit_id'] = $policy->id();
+					$url = carl_make_link($activation_params);
+					echo '<p><a href="'.$url.'#'.$policy->id().'" class="editThis">Edit Policy</a></p>'."\n";
+					
+					echo '</div>'."\n";
+				}
 			}
+			else 
+			{
+				echo '<div class="policy root_policy">'."\n";
+				echo '<a id="'.$policy->id().'"></a>';
+				echo "<h3 class='policyName'>" . 	$policy->get_value('name') . "</h3>\n";
+				echo '<div class="policyContent">'.$policy->get_value( 'content' ) . '</div>';
+			}
+			
 			$sub_policies = $this->get_policy_children($policy);
 			if(!empty($sub_policies))
 			{
@@ -352,23 +466,66 @@
 				foreach($sub_policies as $p)
 				{
 					echo '<li>'."\n";
-					$this->display_sub_policy($p);
+					if ($editable)
+						$this->display_sub_policy_editable($p, $cur_policy_edit_id, $inline_edit);
+					else
+						$this->display_sub_policy($p);
 					echo '</li>'."\n";
 				}
 				echo '</ol>'."\n";
 			}
-			/*	if ( !in_array( $item->id(), $this->root_node() ) ) echo '</li>'; */
-			if ($policy->get_value( 'approvals' ))
+			
+			if ($editable)
 			{
-				echo '<div class="approvals">';
-				echo $policy->get_value( 'approvals' );
+				if ($inline_edit->active_for_module($this) && '-1' == $cur_policy_edit_id)
+				{
+					$this->run_policy_metadata_form($policy);
+				}
+				else
+				{
+					echo '<div class="editRegion">'."\n";
+					$this->display_metadata($policy);
+					$activation_params = $inline_edit->get_activation_params($this);
+					$activation_params['edit_id'] = '-1';
+					$url = carl_make_link($activation_params);
+					echo '<p><a href="'.$url.'#metadataEdit" class="editThis">Edit Policy Approvals, Etc.</a></p>'."\n";
+					echo '</div>'."\n";
+				}
+			}
+			else
+			{
+				$this->display_metadata($policy);
+			}
+			
+			$depts = $this->get_departments($policy);
+			if(!empty($depts))
+			{
+				$dept_names = array();
+				foreach($depts as $dept)
+					$dept_names[] = $dept->get_value('name');
+				echo '<div class="departments">';
+				echo 'Maintained by '.implode(', ',$dept_names);
 				echo "</div>\n";
+			}
+			echo '</div>'."\n";
+		}
+		
+		protected function display_metadata($policy)
+		{
+			if ($approvals = $this->get_approvals($policy))
+			{
+				foreach($approvals as $approval_id => $approval_policy)
+				{
+					echo '<div class="approvals">';
+					echo $this->get_approval_text($approval_policy, ($approval_id != $policy->id()));
+					echo "</div>\n";
+				}
 			}
 			if ($policy->get_value( 'last_revised_date' ) > '0000-00-00' )
 			{
 				echo '<div class="revised">';
-				echo '<p>Last revised '.prettify_mysql_datetime($policy->get_value('last_revised_date'),'F j, Y').'</p>';
-				echo '</div>'."\n";
+				echo 'Last revised '.prettify_mysql_datetime($policy->get_value('last_revised_date'),'F j, Y');
+				echo "</div>\n";
 			}
 			$audiences = $this->get_audiences($policy);
 			if(!empty($audiences))
@@ -377,21 +534,28 @@
 				foreach($audiences as $audience)
 					$audience_names[] = '<a href="'.$this->get_audience_link($audience).'">'.$audience->get_value('name').'</a>';
 				echo '<div class="audiences">';
-				echo '<p>For '.implode(', ',$audience_names).'</p>';
+				echo 'For '.implode(', ',$audience_names);
 				echo "</div>\n";
 			}
-			$depts = $this->get_departments($policy);
-			if(!empty($depts))
+			if($policy->get_value( 'keywords' ))
 			{
-				$dept_names = array();
-				foreach($depts as $dept)
-					$dept_names[] = $dept->get_value('name');
-				echo '<div class="departments">';
-				echo '<p>Maintained by '.implode(', ',$dept_names).'</p>';
-				echo "</div>\n";
+				echo '<div class="keywords">Keywords: '.$policy->get_value( 'keywords' ).'</div>'."\n";
 			}
-			echo '</div>'."\n";
-		} // }}}
+		}
+		
+		
+		protected function get_approval_text($policy, $use_name_as_label = false)
+		{
+			$ret = $policy->get_value('approvals');
+			if($use_name_as_label)
+			{
+				if(strpos($ret,'<p>') === 0)
+					$ret = '<p><span class="policyName">'.$policy->get_value('name').':</span> '.substr($ret,3);
+				else
+					$ret = '<span class="policyName">'.$policy->get_value('name').':</span> '.$ret;
+			}
+			return $ret;
+		}
 		protected function get_audience_link($audience)
 		{
 			if(!empty($this->params['audience_aliases']) && $audience->get_value('unique_name'))
@@ -405,12 +569,47 @@
 		}
 		function display_sub_policy($policy)
 		{
+			echo '<div class="policy sub_policy">'."\n";
 			echo '<a id="'.$policy->id().'"></a>';
 			echo "<h4 class='policyName'>" . 	$policy->get_value('name') . "</h4>\n";
 			if($policy->get_value( 'content' ))
 			{
 				echo '<div class="policyContent">'.demote_headings($policy->get_value( 'content' ),2) . '</div>';
 			}
+			$this->display_sub_policies($policy, false);
+		}
+		
+		function display_sub_policy_editable($policy, $cur_policy_edit_id, $inline_edit)
+		{
+			echo '<div class="editable">';
+			
+			// if this policy is the one currently being edited, we display a disco form.  Othewise,
+			// we display the policy normally with inline editing css elements.
+			if ($inline_edit->active_for_module($this) && $cur_policy_edit_id == $policy->id())
+			{
+				echo '<div class="policy sub_policy">'."\n";
+				$this->run_policy_data_form($policy, false);
+				echo '</div>'."\n";
+			}
+			else
+			{
+				echo '<div class="policy sub_policy editRegion">'."\n";
+				echo '<a id="'.$policy->id().'" name="'.$policy->id().'"></a>';
+				echo "<h4 class='policyName'>" . 	$policy->get_value('name') . "</h4>\n";
+				echo '<div class="policyContent">'.$policy->get_value('content') . '</div>';
+				
+				$activation_params = $inline_edit->get_activation_params($this);
+				$activation_params['edit_id'] = $policy->id();
+				$url = carl_make_link($activation_params);
+				echo '<p><a href="'.$url.'#'.$policy->id().'" class="editThis">Edit Section</a></p>'."\n";
+				echo '</div>'."\n";	
+			}
+			$this->display_sub_policies($policy, true, $cur_policy_edit_id, $inline_edit);
+			echo '</div>';
+		}
+		
+		function display_sub_policies($policy, $editable, $cur_policy_edit_id = null, $inline_edit = null)
+		{
 			$sub_policies = $this->get_policy_children($policy);
 			if(!empty($sub_policies))
 			{
@@ -418,16 +617,43 @@
 				foreach($sub_policies as $p)
 				{
 					echo '<li>'."\n";
-					$this->display_sub_policy($p);
+					if ($editable)
+					{
+						$this->display_sub_policy_editable($p, $cur_policy_edit_id, $inline_edit);
+					}
+					else
+					{
+						$this->display_sub_policy($p, false);
+					}
 					echo '</li>'."\n";
 				}
 				echo '</ol>'."\n";
 			}
 		}
+
+		function get_approvals($policy)
+		{
+			$ret = array();
+			if ($policy->get_value( 'approvals' ))
+				$ret[$policy->id()] = $policy;
+			
+			$sub_policies = $this->get_policy_children($policy);
+			if(!empty($sub_policies))
+			{
+				foreach($sub_policies as $p)
+				{
+					foreach($this->get_approvals($p) as $id => $p)
+					{
+						$ret[$id] = $p;
+					}
+				}
+			}
+			return $ret;
+		}
 		function display_back_link() // {{{
 		{
 			echo '<div class="listLink"><p><a href="'.$this->get_no_policy_link().'" class="rootPolicyListLink">List of policies</a></p></div>'."\n";
-		} // }}}
+		}
 		function get_class_for_children($policy)
 		{
 			switch($policy->get_value( 'numbering_scheme' ))
@@ -445,5 +671,299 @@
 					return 'decimal';
 			}
 		}
+		
+		function run_policy_data_form($policy, $is_root)
+		{
+			echo '<a name="'.$policy->id().'"></a>'."\n";
+			$this->is_root = $is_root;
+			$this->edit_policy = $policy;
+			
+			$form = new Disco();
+			$form->strip_tags_from_user_input = true;
+			$form->allowable_HTML_tags = REASON_DEFAULT_ALLOWED_TAGS;
+			$form->actions = array('save' => 'Save', 'save_and_finish' => 'Save and Finish Editing');
+				
+			$this->init_field($form, 'name', $policy, 'text', 'solidtext');
+			$form->set_value('name', $policy->get_value('name'));
+			$form->set_display_name('name', 'Title');
+			$form->add_required('name');
+			
+			if ($this->is_root)
+			{
+				$this->init_field($form, 'description', $policy, 'text', 'solidtext');
+				$form->set_value('description', $policy->get_value('description'));
+			}
+			
+			//$form->add_element('content', html_editor_name($this->site_id), html_editor_params($this->site_id, $this->get_html_editor_user_id()));
+			$this->init_field($form, 'content', $policy, html_editor_name($this->site_id), 'wysiwyg_disabled', html_editor_params($this->site_id, $this->get_html_editor_user_id()));
+			$form->set_value('content', $policy->get_value('content'));
+			$form->set_display_name('content', 'Section Content');
+			
+			$sub_policies = $this->get_policy_children($policy);
+			if (!empty($sub_policies))
+			{
+				// Populate the numbering_scheme elements
+				$es = new entity_selector();
+				$es->add_type(id_of('content_table'));
+				$es->add_relation('entity.name = "policies"');
+				$policy_table = current($es->run_one());
+				unset($es);
+				
+				$es = new entity_selector();
+				$es->add_type( id_of('field') );
+				$es->add_left_relationship($policy_table->id(), relationship_id_of('field_to_entity_table'));
+				$es->add_relation('entity.name = "numbering_scheme"');
+				$field = current($es->run_one());
+				
+				$args = array();
+				$type = '';
+				// set the plasmature type if specified by the field, otherwise look up the default for the database type
+				list( $type, $args ) = $form->plasmature_type_from_db_type( $field->get_value('name'), $field->get_value('db_type') );
+				if ( $field->get_value( 'plasmature_type' ) )
+					$type = $field->get_value( 'plasmature_type' );
+				// hook for plasmature arguments here
+				//$form->add_element('numbering_scheme', $type, $args, $field->get_value('db_type'));
+				$this->init_field($form, 'numbering_scheme', $policy, $type, 'solidtext', $args);
+				$form->set_value('numbering_scheme', $policy->get_value('numbering_scheme'));
+				$form->set_display_name('numbering_scheme', 'Sub-Policy Numbering Style');
+			}
+			
+			$form->add_callback(array(&$this, '_process_policy'),'process');
+			$form->add_callback(array(&$this, '_where_to_policy'), 'where_to');
+			$form->run();	
+		}	
+		
+		/**
+		* Inits a disco form element as a locked or unlocked field.
+		*/ 
+		function init_field($form, $field_name, $policy, $type, $lock_type, $params = null)
+		{
+			if (!$policy->field_has_lock($field_name))
+			{
+				$form->add_element($field_name, $type, $params);
+			}
+			else
+			{
+				$form->add_element($field_name, $lock_type);
+				$form->set_comments($field_name, '');
+				$form->set_comments($field_name, '<img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px.png" alt="locked" width="12" height="12" />', 'before' );
+			}
+		}
+		
+		function _process_policy(&$disco)
+		{
+			$values['name'] = tidy($disco->get_value('name'));
+			$values['description'] = tidy($disco->get_value('description'));
+			$values['content'] = tidy($disco->get_value('content'));
+			$values['numbering_scheme'] = tidy($disco->get_value('numbering_scheme'));
+			
+			$archive = ($disco->get_chosen_action() == 'save_and_finish') ? true : false;
+			reason_update_entity( $this->request['edit_id'], $this->get_update_entity_user_id(), $values, $archive );
+		}
+		
+		function _where_to_policy(&$disco)
+		{
+			if( $disco->get_chosen_action() == 'save' )
+			{
+				$url = get_current_url();
+				$url .= '#'.$this->edit_policy->id();
+			}
+			else
+			{
+				$inline_edit =& get_reason_inline_editing($this->page_id);
+				$deactivation_params = $inline_edit->get_deactivation_params($this);
+				$deactivation_params['edit_id'] = '';
+				$url = carl_make_redirect($deactivation_params);
+			}
+			return $url;
+		}		
+		
+		function run_policy_metadata_form($policy)
+		{
+			echo '<a name="metadataEdit"></a>'."\n";
+			$this->edit_policy = $policy;
+			
+			$form = new Disco();
+			$form->strip_tags_from_user_input = true;
+			$form->allowable_HTML_tags = REASON_DEFAULT_ALLOWED_TAGS;
+			$form->actions = array('save' => 'Save', 'save_and_finish' => 'Save and Finish Editing');
+			
+
+			$this->init_field($form, 'approvals', $policy, html_editor_name($this->site_id), 'wysiwyg_disabled', html_editor_params($this->site_id, $this->get_html_editor_user_id()));
+			$form->set_value('approvals', $policy->get_value('approvals'));
+			$form->set_element_properties( 'approvals', array('rows'=>5));	
+	
+			$this->init_field($form, 'last_revised_date', $policy, 'textDate', 'solidtext');
+			$form->set_value('last_revised_date', $policy->get_value('last_revised_date'));
+		
+			$this->init_field($form, 'last_reviewed_date', $policy, 'checkbox', 'solidtext');
+			$form->set_display_name('last_reviewed_date', 'I have reviewed this policy');				
+		
+			$this->init_field($form, 'keywords', $policy, 'text', 'solidtext');
+			$form->set_value('keywords', $policy->get_value('keywords'));
+		
+			/* This next chunk of code handles the logic for setting the initial values
+			 of the audience checkboxes. */
+			// First, build an array [audience name => index] for all possible audiences
+			$this->audience_opts = array();
+			$i = 0;
+			foreach ($this->all_audiences as $audience)
+			{
+				$this->audience_opts[$audience->get_value('name')] = $i++;
+			}
+			
+			// Now, retrieve the audiences that are currently associated with the policy we are currently editing
+			$es = new entity_selector();
+			$es->add_type(id_of('audience_type'));
+			$es->add_right_relationship($policy->id(), relationship_id_of('policy_to_relevant_audience'));
+			$this->related_audiences = $es->run_one();				
+			
+			// Lastly, build an array of the indexes of the audiences that are currently associated with this policy
+			$checked_audiences = array();
+			foreach ($this->related_audiences as $audience)
+			{
+				$checked_audiences[] = $this->audience_opts[$audience->get_value('name')];
+			}
+			// Then, add the names of the audiences to the checkboxgroup plasmature
+			if ($policy->user_can_edit_relationship('policy_to_relevant_audience', $user = null, 'right'))
+			{
+				$form->add_element('audiences', 'checkboxgroup', array('options' => array_keys($this->audience_opts)));
+				$form->set_value('audiences', $checked_audiences);
+			}
+			else
+			{
+				$form->add_element('audiences', 'solidtext');
+				$names = array();
+				foreach ($this->audience_opts as $name => $val)
+				{
+					if (in_array($val, $checked_audiences))
+						$names[] = $name;
+				}
+				sort($names);
+				$form->set_value('audiences', implode(' ', $names));
+			}
+			$form->add_required('audiences');
+			
+			$form->add_callback(array(&$this, '_process_policy_metadata'),'process');
+			$form->add_callback(array(&$this, '_where_to_policy_metadata'), 'where_to');
+			$form->run();	
+		}
+		
+		function _process_policy_metadata(&$disco)
+		{
+			$values['approvals'] = tidy($disco->get_value('approvals'));
+			$values['last_revised_date'] = tidy($disco->get_value('last_revised_date'));
+			$values['last_reviewed_date'] = carl_date('Y-m-d');
+			$values['keywords'] = tidy($disco->get_value('keywords'));
+
+			foreach ($this->all_audiences as $audience)
+			{	
+				// if the audience is checked
+				if (in_array($this->audience_opts[$audience->get_value('name')], $disco->get_value('audiences')))
+				{
+					if (!in_array($audience, $this->related_audiences))
+					{
+						create_relationship($this->edit_policy->id(), $audience->id(), relationship_id_of('policy_to_relevant_audience'));
+					}
+				}
+				// if the audience was unchecked by the user
+				elseif (in_array($audience, $this->related_audiences))
+				{
+					$conditions = array(
+						'entity_a'=> $this->edit_policy->id(),
+						'entity_b'=> $audience->id(),
+						'type'=> relationship_id_of('policy_to_relevant_audience'),
+					);
+					delete_relationships($conditions);
+				}
+			}
+			$archive = ($disco->get_chosen_action() == 'save_and_finish') ? true : false;
+			$succes = reason_update_entity( $this->request['policy_id'], $this->get_update_entity_user_id(), $values, $archive );
+		}
+
+		function _where_to_policy_metadata(&$disco)
+		{
+			if( $disco->get_chosen_action() == 'save' )
+			{
+				$url = get_current_url();
+				$url .= '#metadataEdit';
+			}
+			else
+			{
+				$inline_edit =& get_reason_inline_editing($this->page_id);
+				$deactivation_params = $inline_edit->get_deactivation_params($this);
+				$deactivation_params['edit_id'] = '';
+				$url = carl_make_redirect($deactivation_params);
+			}
+			return $url;
+		}		
+	
+		/**
+		 * Determines whether or not the user can inline edit. Only admin users and the 
+		 * policy maintaner may perform inline editing for policies.
+		 *
+		 * @return boolean;
+		 */
+		function user_can_inline_edit()
+		{
+			if (!isset($this->_user_can_inline_edit))
+			{
+				$this->_user_can_inline_edit = false;
+				if($cur_user = reason_check_authentication())
+				{
+					if (isset($this->policy))
+					{
+						$owner = $this->policy->get_owner();
+						if($owner && reason_check_access_to_site($owner->id()))
+						{
+							$this->_user_can_inline_edit = true;
+						}
+						else
+						{
+							$departments = $this->policy->get_left_relationship( 'policy_to_responsible_department' );
+							if(!empty($departments))
+							{
+								foreach($departments as $department)
+								{
+									if($department->get_value('policy_maintainer') == $cur_user)
+									{
+										$this->_user_can_inline_edit = true;
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			return $this->_user_can_inline_edit;
+		}		
+		
+		/**
+		 * @return int reason user entity that corresponds to logged in user or 0 if it does not exist
+		 */
+		function get_html_editor_user_id()
+		{
+			if ($net_id = reason_check_authentication())
+			{
+				$reason_id = get_user_id($net_id);
+				if (!empty($reason_id)) return $reason_id;
+			}
+			return 0;
+		}
+			
+		/**
+		 * @return int reason user entity or id of site_user entity that corresponds to logged in user
+		 */
+		function get_update_entity_user_id()
+		{
+			if ($net_id = reason_check_authentication())
+			{
+				$reason_id = get_user_id($net_id);
+				if (!empty($reason_id)) return $reason_id;
+				elseif ($site_user = $this->get_site_user()) return $site_user->id();
+			}
+			return false;
+		}	
 	}
 ?>

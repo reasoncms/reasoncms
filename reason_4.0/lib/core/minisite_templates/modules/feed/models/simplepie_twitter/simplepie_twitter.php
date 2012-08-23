@@ -10,7 +10,7 @@
 include_once( 'reason_header.php' );
 include_once( CARL_UTIL_INC . 'basic/misc.php' );
 reason_include_once( 'classes/mvc.php' );
-include_once( 'simplepie/SimplePieAutoloader.php' );
+include_once('simplepie/autoloader.php');
 
 /**
  * Register MVC component with Reason
@@ -22,6 +22,12 @@ $GLOBALS[ '_reason_mvc_model_class_names' ][ reason_basename( __FILE__) ] = 'Rea
  *
  * The SimplePie object provided is sourced from the ATOM version of the user's twitter feed, and uses a custom
  * SimpliePie_Item class to provide a twitterified version of key content fields.
+ *
+ * Note that Twitter, as of 8/13/2012 has a rate limit of 150 unauthenticated requests / per ip / per hour.
+ *
+ * The default cache duration of 10 minutes basically means that anywhere you use this model you will be making
+ * up to 6 requests per hour. If you are using twitter for many screen names, you might need to increase the
+ * cache duration to avoid hitting the rate limit.
  *
  * User Configurables
  *
@@ -64,6 +70,18 @@ class ReasonSimplepieTwitterFeedModel extends ReasonMVCModel // implements Reaso
 		{
 			trigger_error('The ReasonSimplepieTwitterFeedModel must be provided with the configuration parameter screen_name.', FATAL);
 		}
+	}
+	
+	/**
+	 * This is a convenience method that will return the id of the most_recent tweet.
+	 */
+	function get_most_recent_tweet_id()
+	{
+		$data = $this->get();
+		$item = $data->get_item();
+		$id = $item->get_id();
+		preg_match('/[0-9]+$/', $id, $match);
+		return (!empty($match)) ? $match[0] : false;
 	}
 }
 
@@ -120,7 +138,7 @@ class SimplePie_Twitter_Item extends SimplePie_Item
 	}
 	
 	/**
-	 * @return string twitterified title
+	 * @return string twitterified description
 	 */
 	function get_description($description_only = false)
 	{
@@ -129,7 +147,7 @@ class SimplePie_Twitter_Item extends SimplePie_Item
 	}
 	
 	/**
-	 * @return string twitterified title
+	 * @return string twitterified content
 	 */
 	function get_content($content_only = false)
 	{
@@ -137,6 +155,9 @@ class SimplePie_Twitter_Item extends SimplePie_Item
 		return $content;
 	}
 	
+	/**
+	 * Could we do a better job with this? Is there a twitter-text php library?
+	 */
 	function twitterify($str)
 	{
 		$str = preg_replace("#(^|[\n ])([\w]+?://[\w]+[^ \"\n\r\t< ]*)#", "\\1<a href=\"\\2\" target=\"_blank\">\\2</a>", $str);

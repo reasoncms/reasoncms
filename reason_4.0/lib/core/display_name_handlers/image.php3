@@ -41,7 +41,7 @@ if( !defined( 'DISPLAY_HANDLER_IMAGE_PHP3' ) )
 		{
 			list( $width, $height ) = getimagesize( PHOTOSTOCK.$image_name );
 			$mod_time = filemtime( PHOTOSTOCK.$image_name );
-			return $e->get_value('name').'<br /><img src="'.WEB_PHOTOSTOCK.$image_name.'?cb='.$mod_time.'" width="'.$width.'" height="'.$height.'" alt="'.$e->get_value( 'description' ).'" />';
+			return $e->get_value('name').'<br /><img src="'.WEB_PHOTOSTOCK.$image_name.'?cb='.$mod_time.'" width="'.$width.'" height="'.$height.'" alt="'.reason_htmlspecialchars(strip_tags($e->get_value( 'description' ))).'" />';
 		}
 		else
 			return $e->get_value('name');

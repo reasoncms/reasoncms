@@ -138,79 +138,7 @@
 				{
 					if ( $this->cur_page->id() != $child->id() )
 					{
-						/* If the page has a link name, use that; otherwise, use its name */
-						$page_name = $child->get_value( 'link_name' ) ? $child->get_value( 'link_name' ) : $child->get_value('name');
-						$title_attr = '';
-						if( $page_name != $child->get_value('name') )
-						{
-							$title_attr = ' title="'.reason_htmlspecialchars(strip_tags($child->get_value('name')),ENT_QUOTES).'"';
-						}
-						$page_name = strip_tags($page_name,'<span><strong><em>');
-						$link = $this->get_page_link($child);
-						$uname = '';
-						if($child->get_value( 'unique_name' ))
-						{
-							$uname = ' uname-'.reason_htmlspecialchars($child->get_value( 'unique_name' ));
-						}
-							
-						echo '<li class="number'.$counter.' '.$even_odd.$uname.'">';
-						
-						if($this->params['provide_az_links'] && array_key_exists($child->id(),$this->az))
-						{
-							echo '<a name="child_'.$this->az[$child->id()].'"></a>';
-						}
-						if($this->params['provide_images'])
-						{
-							$image = $this->get_page_image($child->id());
-							
-							if(!empty($image))
-							{
-								if($this->params['thumbnail_width'] != 0 or $this->params['thumbnail_height'] != 0)
-								{
-									$rsi = new reasonSizedImage();
-									if(!empty($rsi))
-									{
-										$rsi->set_id($image->id());
-										if($this->params['thumbnail_width'] != 0)
-										{
-											$rsi->set_width($this->params['thumbnail_width']);
-										}
-										if($this->params['thumbnail_height'] != 0)
-										{
-											$rsi->set_height($this->params['thumbnail_height']);
-										}
-										if($this->params['thumbnail_crop'] != '')
-										{
-											$rsi->set_crop_style($this->params['thumbnail_crop']);
-										}
-										show_image($rsi, true, false, false, '' , '', false, $link);
-									}
-								}
-								else
-								{
-								show_image( $image->id(), true, false, false, '' , '', false, $link );
-								}
-							}
-						}
-						if($this->params['description_part_of_link'])
-						{
-							// needs somewhat different html since inline elements cannot contain block elements
-							echo '<a href="'.$link.'"'.$title_attr.'><strong>'.$page_name.'</strong><br />';
-							if ( $child->get_value( 'description' ))
-							{
-								echo "\n".'<span class="childDesc">'.$child->get_value( 'description' ).'</span>';
-							}
-							echo '</a>';
-						}
-						else
-						{
-							echo '<h4><a href="'.$link.'"'.$title_attr.'>'.$page_name.'</a></h4>';
-							if ( $child->get_value( 'description' ))
-							{
-								echo "\n".'<div class="childDesc">'.$child->get_value( 'description' ).'</div>';
-							}
-						}
-						echo '</li>'."\n";
+						$this->show_child_page($child,$counter,$even_odd);
 						$counter++;
 						
 						if($even_odd == 'even')
@@ -222,6 +150,86 @@
 				echo "</ul>\n";
 			}
 		} // }}}
+		function show_child_page($child,$counter,$even_odd)
+		{
+			/* If the page has a link name, use that; otherwise, use its name */
+			$page_name = $this->get_page_name($child);
+			$title_attr = '';
+			if( $page_name != $child->get_value('name') )
+			{
+				$title_attr = ' title="'.reason_htmlspecialchars(strip_tags($child->get_value('name')),ENT_QUOTES).'"';
+			}
+			$page_name = strip_tags($page_name,'<span><strong><em>');
+			$link = $this->get_page_link($child);
+			$uname = '';
+			if($child->get_value( 'unique_name' ))
+			{
+				$uname = ' uname-'.reason_htmlspecialchars($child->get_value( 'unique_name' ));
+			}
+				
+			echo '<li class="number'.$counter.' '.$even_odd.$uname.'">';
+			
+			if($this->params['provide_az_links'] && array_key_exists($child->id(),$this->az))
+			{
+				echo '<a name="child_'.$this->az[$child->id()].'"></a>';
+			}
+			if($this->params['provide_images'])
+			{
+				$image = $this->get_page_image($child->id());
+				
+				if(!empty($image))
+				{
+					if($this->params['thumbnail_width'] != 0 or $this->params['thumbnail_height'] != 0)
+					{
+						$rsi = new reasonSizedImage();
+						if(!empty($rsi))
+						{
+							$rsi->set_id($image->id());
+							if($this->params['thumbnail_width'] != 0)
+							{
+								$rsi->set_width($this->params['thumbnail_width']);
+							}
+							if($this->params['thumbnail_height'] != 0)
+							{
+								$rsi->set_height($this->params['thumbnail_height']);
+							}
+							if($this->params['thumbnail_crop'] != '')
+							{
+								$rsi->set_crop_style($this->params['thumbnail_crop']);
+							}
+							show_image($rsi, true, false, false, '' , '', false, $link);
+						}
+					}
+					else
+					{
+					show_image( $image->id(), true, false, false, '' , '', false, $link );
+					}
+				}
+			}
+			if($this->params['description_part_of_link'])
+			{
+				// needs somewhat different html since inline elements cannot contain block elements
+				echo '<a href="'.$link.'"'.$title_attr.'><strong>'.$page_name.'</strong><br />';
+				if ( $child->get_value( 'description' ))
+				{
+					echo "\n".'<span class="childDesc">'.$child->get_value( 'description' ).'</span>';
+				}
+				echo '</a>';
+			}
+			else
+			{
+				echo '<h4><a href="'.$link.'"'.$title_attr.'>'.$page_name.'</a></h4>';
+				if ( $child->get_value( 'description' ))
+				{
+					echo "\n".'<div class="childDesc">'.$child->get_value( 'description' ).'</div>';
+				}
+			}
+			echo '</li>'."\n";
+		}
+		function get_page_name($page)
+		{
+			return $page->get_value( 'link_name' ) ? $page->get_value( 'link_name' ) : $page->get_value('name');
+		}
 		function get_page_image($page_id)
 		{
 			$es = new entity_selector();
