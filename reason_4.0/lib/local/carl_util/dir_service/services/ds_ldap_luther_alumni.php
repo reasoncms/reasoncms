@@ -246,17 +246,18 @@ class ds_ldap_luther_alumni extends ds_ldap {
 	* @param string $password Password
 	*/
 	function authenticate($username, $password) {
+		if (!$this->open_connection_prebind()) return false;
+		// You'd need to construct an appropriate bind dn for your server here
 		$bind_dn = sprintf('uid=%s, %s',$this->escape_input($username), $this->_search_params['base_dn']);
 		turn_carl_util_error_logging_off();
-		turn_carl_util_error_output_off();
 		$bind_result = @ldap_bind($this->_conn, $bind_dn, $password);
-		turn_carl_util_error_output_on();
 		turn_carl_util_error_logging_on();
 		if (!$bind_result) $this->_error = ldap_error( $this->_conn );
 		// Rebind for future searches
 		if( !ldap_bind( $this->_conn, $this->_conn_params['lookup_dn'], $this->_conn_params['lookup_password'] ) ) {
 			$this->_error = sprintf( 'LDAP bind failed for %s, %s' , $this->_conn_params['lookup_dn'], ldap_error( $this->_conn ));
 		}
+		$this->close_conn();
 		return $bind_result;
 	}
 		
