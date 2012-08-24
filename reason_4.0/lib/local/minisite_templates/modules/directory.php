@@ -167,7 +167,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 	
     function init( $args = array() ) //{{{
     {
-			force_secure();
+			// force_secure();
         // If the IP address isn't local and there's no user, then we get the
         // restricted off-campus view.
         // changed carleton 137.22. to luther 192.203. - burkaa
@@ -390,9 +390,10 @@ class DirectoryModule extends DefaultMinisiteModule {
         echo '<div id="campusDirForm">';
         // Prominent login link for off-campus mobile users
 //        if ($this->context == 'external' && !reason_check_authentication()) {
-        if ($this->context == 'external' && !$this->user_netid) {
-            echo '<p class="directory_head" id="mobileLogin"><a href="./help/">Help</a>&nbsp;|&nbsp;<a href="/login/">Login for full access</a></p>';
-        }
+        /* Removing login button for now */
+        // if ($this->context == 'external' && !$this->user_netid) {
+        //     echo '<p class="directory_head" id="mobileLogin"><a href="./help/">Help</a>&nbsp;|&nbsp;<a href="/login/">Login for full access</a></p>';
+        // }
         $this->form->run();
         echo '</div>';
     } //}}}
@@ -1833,19 +1834,28 @@ class DirectoryModule extends DefaultMinisiteModule {
 
 //        $logged_user = reason_check_authentication();
         $logged_user = $this->user_netid;
-		
-		$password = (isset($_SESSION)) ? $_SESSION['password'] : '';
-        //$password = $user->get_value('user_password_hash');
+        if ($logged_user){
+            if ($logged_user == 'studentnet'){
+                $pass_hash = 'alum4pwd';
+            } else {
+                $logged_user_entity = new entity(get_user_id($logged_user));
+                $pass_hash = $logged_user_entity->get_value('user_password_hash');
+            }
+        }
+
+
+    		// $password = (isset($_SESSION)) ? $_SESSION['password'] : '';
+        // $password = $logged_user->get_value('user_password_hash');
         
 
         //$lookup_login = 'uid='.$logged_user.',ou=People,dc=luther,dc=edu'; /// username is get login norsekey
         //$lookup_pass = $password; /// get login password
 
 
-        $dir = new directory_service('ldap_luther_directory');
-        //$dir = new directory_service('ldap_luther');
+        // $dir = new directory_service('ldap_luther_directory');
+        $dir = new directory_service('ldap_luther');
 
-        $dir->authenticate($logged_user,$password);
+        $dir->authenticate($logged_user,$pass_hash);
         //$dir->bind_test($logged_user, $password);
         //$dir->authenticate_two();
 
@@ -1871,6 +1881,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 		
         $dir->sort_records(array('sn', 'cn'));
         $entries = $dir->get_records();
+
         return $entries;
     }
 	
