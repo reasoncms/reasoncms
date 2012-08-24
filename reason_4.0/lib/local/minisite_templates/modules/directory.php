@@ -390,9 +390,10 @@ class DirectoryModule extends DefaultMinisiteModule {
         echo '<div id="campusDirForm">';
         // Prominent login link for off-campus mobile users
 //        if ($this->context == 'external' && !reason_check_authentication()) {
-        if ($this->context == 'external' && !$this->user_netid) {
-            echo '<p class="directory_head" id="mobileLogin"><a href="./help/">Help</a>&nbsp;|&nbsp;<a href="/login/">Login for full access</a></p>';
-        }
+        /* Removing login button for now */
+        // if ($this->context == 'external' && !$this->user_netid) {
+        //     echo '<p class="directory_head" id="mobileLogin"><a href="./help/">Help</a>&nbsp;|&nbsp;<a href="/login/">Login for full access</a></p>';
+        // }
         $this->form->run();
         echo '</div>';
     } //}}}
@@ -1833,23 +1834,15 @@ class DirectoryModule extends DefaultMinisiteModule {
 
 //        $logged_user = reason_check_authentication();
         $logged_user = $this->user_netid;
-        $logged_user_entity = new entity(get_user_id($logged_user));
-        pray($logged_user_entity);
-        $pass_hash = $logged_user_entity->get_value('user_password_hash');
-
-
-
-		if ($logged_user == 'smitst01'){
-            echo 'hi steve-' . $logged_user;
-            echo '<br>';
-            echo $pass_hash;
-            echo '<br>';
-            $hash = sha1($pass_hash);
-            echo $hash;
-            echo '<br>';
-
-           pray($_REQUEST);
+        if ($logged_user){
+            if ($logged_user == 'studentnet'){
+                $pass_hash = 'alum4pwd';
+            } else {
+                $logged_user_entity = new entity(get_user_id($logged_user));
+                $pass_hash = $logged_user_entity->get_value('user_password_hash');
+            }
         }
+
 
     		// $password = (isset($_SESSION)) ? $_SESSION['password'] : '';
         // $password = $logged_user->get_value('user_password_hash');
@@ -1859,8 +1852,8 @@ class DirectoryModule extends DefaultMinisiteModule {
         //$lookup_pass = $password; /// get login password
 
 
-        $dir = new directory_service('ldap_luther_directory');
-        //$dir = new directory_service('ldap_luther');
+        // $dir = new directory_service('ldap_luther_directory');
+        $dir = new directory_service('ldap_luther');
 
         $dir->authenticate($logged_user,$pass_hash);
         //$dir->bind_test($logged_user, $password);
@@ -1888,6 +1881,7 @@ class DirectoryModule extends DefaultMinisiteModule {
 		
         $dir->sort_records(array('sn', 'cn'));
         $entries = $dir->get_records();
+
         return $entries;
     }
 	
