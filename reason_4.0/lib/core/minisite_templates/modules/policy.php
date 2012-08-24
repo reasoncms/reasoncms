@@ -249,7 +249,10 @@
 				echo "<ul class='rootPolicyList'>\n";
 				foreach( $roots AS $root )
 				{
-					echo '<li class="rootPolicyItem"><a href="'.$this->page_link( $root ).'" class="rootPolicyLink">'.strip_tags( $root->get_value( 'name' ), "em,i" ).'</a> '.$root->get_value( 'description' ).'</li>';
+					echo '<li class="rootPolicyItem"><a href="'.$this->page_link( $root ).'" class="rootPolicyLink">'.strip_tags( $root->get_value( 'name' ), "em,i" ).'</a>';
+					if($root->get_value( 'description' ))
+					 echo ' <span class="description">'.$root->get_value( 'description' ).'</span>';
+					echo '</li>';
 				}
 				echo "</ul>\n";
 			}
