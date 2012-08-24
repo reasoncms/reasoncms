@@ -77,10 +77,14 @@
 					{
 						$this->policy = $roots[$this->request[ 'policy_id' ]];
 						$this->_add_crumb( $this->policy->get_value('name'), get_current_url() );
+						$head_items = $this->get_head_items();
 						if($this->policy->get_value('keywords'))
 						{
-							$head_items = $this->get_head_items();
 							$head_items->add_head_item('meta', array('name'=>'keywords','value'=>reason_htmlspecialchars($this->policy->get_value('keywords'))));
+						}
+						if($audience = $this->_get_current_audience())
+						{
+							$head_items->add_head_item('link', array('rel'=>'canonical','href'=>$this->get_no_audience_link()));
 						}
 						if($pages =& $this->get_page_nav())
 							$pages->make_current_page_a_link();
