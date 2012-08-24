@@ -1,5 +1,5 @@
 <?php
-include_once INCLUDE_PATH.'../reason_package_local/disco/plasmature/types/athletics.php';
+reason_include_once( 'disco/plasmature/types/athletics.php' );
 
 /**
  * @package reason

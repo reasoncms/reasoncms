@@ -1,6 +1,6 @@
 <?php
 	reason_include_once( 'minisite_templates/modules/default.php' );
-	include_once INCLUDE_PATH.'../reason_package_local/disco/plasmature/types/athletics.php';
+	reason_include_once( 'disco/plasmature/types/athletics.php' );
 	//reason_include_once( 'classes/error_handler.php');
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'lutherSportsRosterModule';
