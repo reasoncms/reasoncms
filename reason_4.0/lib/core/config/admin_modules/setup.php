@@ -92,7 +92,7 @@
 		'AdminTools'=>array('file'=>'admin_tools.php','class'=>'ReasonAdminToolsModule'),
 		'ErrorVisibility'=>array('file'=>'error_visibility.php','class'=>'ErrorVisibilityModule'),
 		'CustomizeTheme'=>array('file'=>'customize_theme.php','class'=>'CustomizeThemeModule'),
-		'Analytics'=>array('file'=>'view_users.php','class'=>'ViewUsersModule'),
+		'Analytics'=>array('file'=>'analytics.php','class'=>'AnalyticsModule'),
 
 );
 
