@@ -19,7 +19,7 @@
 		var $users = array();
 		var $site;
 		
-		function ViewUsersModule( &$page ) // {{{
+		function AnalyticsModule( &$page ) // {{{
 		{
 			$this->admin_page =& $page;
 		} // }}}
@@ -53,7 +53,7 @@
 			}
 			else
 			{
-				echo '<p>The following users have access to '.$this->site->get_value('name').':</p>'."\n";
+				echo '<p>The  users have access to '.$this->site->get_value('name').':</p>'."\n";
 				echo '<ul>'."\n";
 				foreach($this->users as $user)
 				{
