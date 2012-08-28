@@ -112,7 +112,7 @@ class StudySkillsAssessmentOneForm extends FormStep {
         // Self Confidence and Social Interaction
         'SC&SI_header' => array(
             'type' => 'comment',
-            'text' => '<h3> Self confidence and Social Interactions </h3>',
+            'text' => '<h3> Self-confidence and Social Interactions </h3>',
         ),
         'SC&SI_1' => array(
             'type' => 'radio_inline_no_sort',
@@ -249,7 +249,7 @@ class StudySkillsAssessmentOneForm extends FormStep {
         ),
         'GLS_9' => array(
             'type' => 'radio_inline_no_sort',
-            'display_name' => 'I read all assigned materials, including supplemental materials not discussed in ',
+            'display_name' => 'I read all assigned materials, including supplemental materials not discussed in class',
             'options' => array('1' => 'Never', '2' => 'Sometimes', '3' => 'Usually', '4' => 'Always'),
         ),
         'GLS_10' => array(
