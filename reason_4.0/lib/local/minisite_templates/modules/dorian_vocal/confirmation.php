@@ -10,7 +10,8 @@
 
 
 //require_once( CARL_UTIL_INC . 'db/db.php');
-require_once( '/usr/local/webapps/reason/reason_package/carl_util/db/db.php' );
+// require_once( '/usr/local/webapps/reason/reason_package/carl_util/db/db.php' );
+include_once( CARL_UTIL_INC . 'db/db.php');
 include_once(TYR_INC . 'tyr.php');
 include_once('paths.php');
 
