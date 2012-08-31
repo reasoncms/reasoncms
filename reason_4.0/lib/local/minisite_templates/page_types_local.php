@@ -166,6 +166,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'caf_cam' => array(
 		'main_post' => 'caf_cam',
 	),
+	'caf_menu_upload' => array(
+		'main_post' => 'caf_menu_upload',
+	),
 	'directions' => array(
 		'main' => 'directions',
 		'main_post' => 'content',
