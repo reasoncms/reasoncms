@@ -59,7 +59,7 @@
 	 * the user group which site directories should belong to so that Reason can write .htaccess rules
 	 * This should be the same as either the user or the group that Apache/php runs as
 	 */
-	define( 'REASON_SITE_DIRECTORY_OWNER', 'www_data' ); // replace this with the user/group that Apache runs as
+	define( 'REASON_SITE_DIRECTORY_OWNER', 'www-data' ); // replace this with the user/group that Apache runs as
 	
 	/*
 	 NOTE: while it is not necessary to get Reason up and running, please note that when you are
