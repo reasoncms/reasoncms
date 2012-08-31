@@ -1113,7 +1113,11 @@
 		function show_unlabeled_element( $key , $element , &$b) // {{{
 		{
 			$anchor = '<a name="'.$key.'_error"></a>';
-			$content = $anchor."\n".$element->get_comments('before').$element->get_display().$element->get_comments()."\n";
+			ob_start();
+			$element->display();
+			$display = ob_get_contents();
+			ob_end_clean();
+			$content = $anchor."\n".$element->get_comments('before').$display.$element->get_comments()."\n";
 			
 			$b->box_item_no_label( $content, $this->has_error($key), $key );
 		} // }}}
