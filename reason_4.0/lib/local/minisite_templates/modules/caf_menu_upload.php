@@ -31,7 +31,7 @@ class CafMenuUploadModule extends DefaultMinisiteModule {
     }//}}}
 
     function no_show_form(){
-        echo 'Please login.';
+        echo 'Please <a href="/login/">login</a> for full access.';
     }
 
     function on_every_time(){
@@ -40,6 +40,8 @@ class CafMenuUploadModule extends DefaultMinisiteModule {
             $this->form->show_form = true;
             echo "<p><a href='/login/?logout=1'>Logout</a></p>";
         } else {
+            echo '<p>You do not have permission to upload a new caf menu.<br>';
+            echo 'If you think this is an error, please <a href="http://help.luther.edu" target="_blank">open a ticket</a> with LIS</p>';
             $this->form->show_form = false;
         }
 
@@ -117,11 +119,10 @@ class CafMenuUploadModule extends DefaultMinisiteModule {
                 {
                     unlink($asset_dest);
                 }
-                echo $document->tmp_full_path;
-                echo '<hr>';
-                echo $asset_dest;
-                
                 rename ($document->tmp_full_path, $asset_dest );
+                chown($asset_dest, REASON_SITE_DIRECTORY_OWNER);
+                chgrp($asset_dest, REASON_SITE_DIRECTORY_OWNER);
+                chmod($asset_dest, 0640);
             }
 
             // make sure to ignore the 'asset' field
