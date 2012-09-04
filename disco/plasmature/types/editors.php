@@ -201,34 +201,78 @@ class loki2Type extends defaultType
 }
 
 /**
- * Edit HTML using a TinyMCE editor.
+ * Edit HTML using the TinyMCE editor advanced theme.
+ *
+ * The plasmature type allows you to optionally pass in an array of buttons to use.
+ *
+ * We the advanced themes.
+ *
+ * @todo all you to specify external config. css?
+ * @todo use head items??
+ *
  * @package disco
  * @subpackage plasmature
  */
 class tiny_mceType extends textareaType
 {
 	var $type = 'tiny_mce';
+	var $type_valid_args = array('buttons', 'buttons2', 'buttons3', 'status_bar_location', 'formatselect_options');
+
+	var $status_bar_location = 'none';
+	var $buttons = array('formatselect','bold','italic','hr','blockquote','numlist','bullist','indent','outdent','image','link','unlink','anchor','cleanup');
+	var $buttons2 = array();
+	var $buttons3 = array();
+	var $formatselect_options = array('p','h3','h4','pre');
+	
 	function display()
+	{
+		$display = $this->get_tiny_mce_javascript();
+		$display .= '<script language="javascript" type="text/javascript">'."\n";
+		$display .= 'tinyMCE.init({'."\n";
+		$display .= 'mode : "exact",'."\n";
+		$display .= 'plugins : "inlinepopups",'."\n";
+		$display .= 'dialog_type : "modal",'."\n";
+		$display .= 'theme : "advanced",'."\n";
+		$display .= 'theme_advanced_buttons1 : "'.implode(",",$this->buttons).'",'."\n";
+		$display .= 'theme_advanced_buttons2 : "'.implode(",",$this->buttons2).'",'."\n";
+		$display .= 'theme_advanced_buttons3 : "'.implode(",",$this->buttons3).'",'."\n";
+		
+		// make me conditional on formatselect being in the buttons array and formatselect_options being set.
+		$display .= 'theme_advanced_blockformats : "'.implode(",",$this->formatselect_options).'",'."\n";
+		
+		$display .= 'theme_advanced_statusbar_location : "'.$this->status_bar_location.'",'."\n";
+		$display .= 'elements : "'.$this->name.'"'."\n";
+		$display .= '});'."\n";
+		$display .= '</script>'."\n";
+		
+		// Why do we do this?
+		//$this->set_class_var('rows', $this->get_class_var('rows')+5 );
+		echo $display;
+		parent::display();
+	}
+	
+	/**
+	 * We return the main javascript for TinyMCE - we use a static variable to keep track such that we include it only once.
+	 */
+	function get_tiny_mce_javascript()
 	{
 		// we only want to load the main js file once.
 		static $loaded_an_instance;
 		if (!isset($loaded_an_instance))
 		{
-			echo '<script language="javascript" type="text/javascript" src="'.TINYMCE_HTTP_PATH.'tiny_mce.js"></script>'."\n";
+			$js = '<script language="javascript" type="text/javascript" src="'.TINYMCE_HTTP_PATH.'tiny_mce.js"></script>'."\n";
 			$loaded_an_instance = true;
 		}
-		
-		echo '<script language="javascript" type="text/javascript">'."\n";
-		echo 'tinyMCE.init({'."\n";
-		echo 'mode : "exact",'."\n";
-		echo 'theme : "advanced",'."\n";
-		echo 'theme_advanced_toolbar_location : "top",'."\n";
-		echo 'theme_advanced_path_location : "bottom",'."\n";
-		echo 'theme_advanced_resizing : true,'."\n";
-		echo 'elements : "'.$this->name.'"'."\n";
-		echo '});'."\n";
-		echo '</script>'."\n";
-		$this->set_class_var('rows', $this->get_class_var('rows')+12 );
-		parent::display();
+		return (!empty($js)) ? $js : '';
 	}
+}
+
+/**
+ * Edit HTML using an unlabeled TinyMCE editor.
+ * @package disco
+ * @subpackage plasmature
+ */
+class tiny_mce_no_labelType extends tiny_mceType // {{{
+{
+	var $_labeled = false;
 }
