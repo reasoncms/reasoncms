@@ -187,3 +187,37 @@ function reason_get_asset_filesystem_location($asset)
 {
 	return ASSET_PATH.$asset->id().'.'.$asset->get_value('file_type');
 }
+
+		
+function reason_get_asset_max_upload_size()
+{
+	static $max;
+	if(!empty($max))
+	return $max;
+			
+	$post_max_size = get_php_size_setting_as_bytes('post_max_size');
+	$upload_max_filesize = get_php_size_setting_as_bytes('upload_max_filesize');
+	
+	if(!defined('REASON_ASSET_MAX_UPLOAD_SIZE_MEGS'))
+		return $post_max_size < $upload_max_filesize ? $post_max_size : $upload_max_filesize;
+	
+	$reason_max_asset_upload = REASON_ASSET_MAX_UPLOAD_SIZE_MEGS*1024*1024;
+	
+	if($post_max_size < $reason_max_asset_upload || $upload_max_filesize < $reason_max_asset_upload)
+	{
+		if($post_max_size < $upload_max_filesize)
+		{
+			trigger_error('post_max_size in php.ini is less than Reason setting REASON_ASSET_MAX_UPLOAD_SIZE_MEGS; using post_max_size as max upload value');
+			return $max = $post_max_size;
+		}
+		else
+		{
+			trigger_error('upload_max_filesize in php.ini is less than Reason setting REASON_ASSET_MAX_UPLOAD_SIZE_MEGS; using upload_max_filesize as max upload value');
+			return $max = $upload_max_filesize;
+		}
+	}
+	else
+	{
+		return $max = $reason_max_asset_upload;
+	}
+}
