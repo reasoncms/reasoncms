@@ -11,6 +11,7 @@
 	reason_include_once('classes/url_manager.php');
 	reason_include_once('classes/plasmature/upload.php');
 	reason_include_once('content_managers/default.php3');
+	reason_include_once('function_libraries/asset_functions.php');
 	
 	require_once CARL_UTIL_INC.'basic/mime_types.php';
 	require_once CARL_UTIL_INC.'basic/misc.php';
@@ -270,37 +271,7 @@
 		
 		function get_actual_max_upload_size()
 		{
-			static $max;
-			
-			if(!empty($max))
-				return $max;
-			
-			$post_max_size = get_php_size_setting_as_bytes('post_max_size');
-			$upload_max_filesize = get_php_size_setting_as_bytes('upload_max_filesize');
-			
-			if(!defined('REASON_ASSET_MAX_UPLOAD_SIZE_MEGS'))
-				return $post_max_size < $upload_max_filesize ? $post_max_size : $upload_max_filesize;
-			
-			$reason_max_asset_upload = REASON_ASSET_MAX_UPLOAD_SIZE_MEGS*1024*1024;
-			
-			if($post_max_size < $reason_max_asset_upload || $upload_max_filesize < $reason_max_asset_upload)
-			{
-				if($post_max_size < $upload_max_filesize)
-				{
-					trigger_error('post_max_size in php.ini is less than Reason setting REASON_ASSET_MAX_UPLOAD_SIZE_MEGS; using post_max_size as max upload value');
-					return $max = $post_max_size;
-				}
-				else
-				{
-					trigger_error('upload_max_filesize in php.ini is less than Reason setting REASON_ASSET_MAX_UPLOAD_SIZE_MEGS; using upload_max_filesize as max upload value');
-					return $max = $upload_max_filesize;
-				}
-			}
-			else
-			{
-				return $max = $reason_max_asset_upload;
-			}
+			return reason_get_asset_max_upload_size();
 		}
 	}
-
 ?>
