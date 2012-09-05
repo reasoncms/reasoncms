@@ -1,0 +1,59 @@
+div#av div.item {
+	margin-bottom:2em;
+}
+/* div#av div.size_links:after {
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:both;
+    height:0;
+}
+div#av div.size_links {
+	display:inline-block;
+}
+div#av div.size_links {
+	display:block;
+} */
+div#av div.size_links {
+	margin-top:0.75em;
+}
+div#av div.size_links h4, div#av div.size_links ul, div#av div.size_links li {
+	display:inline;
+	margin:0 0.25em 0 0;
+	padding:0;
+	font-size:1em;
+	font-weight:normal;
+	list-style:none;
+}
+div#av div.size_links li a, div#av div.size_links li strong {
+	display:inline;
+	padding:3px 10px;
+	background-color:#ddd;
+	color:#000;
+	text-decoration:none;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+div#av div.size_links li strong {
+	background-color:#888;
+	color:#fff;
+	font-weight:normal;
+}
+div#av div.size_links li em {
+	font-style:normal;
+	font-size:0.82em;
+	opacity:0.67;
+}
+div#av h4.share_download_header {
+	font-size:1em;
+}
+div#av div.share_download_info h5 {
+	margin:0;
+}
+div#av div.share_download_info div.share h5, div#av div.share_download_info div.share ul, div#av div.share_download_info div.share li, div#av div.share_download_info div.download h5, div#av div.share_download_info div.download ul, div#av div.share_download_info div.download li {
+	margin:0 0.25em 0 0;
+	padding:0;
+	display:inline;
+	list-style:none;
+}
