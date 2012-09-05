@@ -14,6 +14,6 @@ $(function(){
     $("#PU_P2_ZIP").mask("99999?-9999");
     $("#PU_OC_ZIP").mask("99999?-9999");
     $("#LABELID_VAR8").parent().removeClass("label");
-    $("#PU_OC_END_DATE").datepicker({dateFormat: "dd/mm/yy"});
-    $("#PU_OC_START_DATE").datepicker({dateFormat: "dd/mm/yy"});
+    $("#PU_OC_END_DATE").datepicker({dateFormat: "mm/dd/yy"});
+    $("#PU_OC_START_DATE").datepicker({dateFormat: "mm/dd/yy"});
 })
