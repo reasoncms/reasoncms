@@ -15,8 +15,13 @@
 * "Settings->Integration Settings" tabs.
 *
 * @author Marcus Huderle
+* @package reason
+* @subpackage scripts
 */
 
+/**
+ * Include dependencies
+ */
 include_once('reason_header.php');
 reason_require_once('classes/entity_selector.php');
 reason_include_once('function_libraries/admin_actions.php');
@@ -29,10 +34,13 @@ reason_include_once('content_managers/image.php3');
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 include_once( CARL_UTIL_INC . 'basic/url_funcs.php' );
 
-
-// NOTE: You must change the notification url in the Kaltura Management Console to match this
-// script's url to receive server notifications from Kaltura!
-class Receiver
+/**
+ * Class that encapsulates kaltura notification receiver logic
+ *
+ * NOTE: You must change the notification url in the Kaltura Management Console to match this
+ * script's url to receive server notifications from Kaltura!
+ */
+class ReasonKalturaNotificationReceiver
 {
 	var $filename = 'kaltura_server_notifications.txt';
 	var $kaltura_shim;
@@ -42,7 +50,7 @@ class Receiver
 	{	
 		// This sleep is probably not needed, but it makes me feel safe.
 		sleep(1);
-		$receiver = new Receiver();
+		$receiver = new ReasonKalturaNotificationReceiver();
 		$receiver->kaltura_shim = new KalturaShim();
 		
 		$notification = $receiver->get_data($_POST);
@@ -540,6 +548,6 @@ class Receiver
 	}
 }
 
-Receiver::run();
+ReasonKalturaNotificationReceiver::run();
 
 ?>
