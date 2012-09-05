@@ -1055,3 +1055,25 @@ class select_no_sort_jsType extends select_jsType
 	var $type = 'select_no_sort_js';
 	var $sort_options = false;
 }
+
+
+class range_sliderType extends defaultType
+{
+	var $type = 'range_slider';
+	
+	/** @access private */
+	var $type_valid_args = array( 'min', 'max', 'step', 'value' );
+	var $min = 0;
+	var $max = 10;
+	var $step = 1;
+	var $value = 1;
+	
+	function get_display()
+	{
+		return '<input type="range" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'"   id="'.$this->name.'Element" min="'.$this->min.'" max="'.$this->max.'" step="'.$this->step.'" />';
+	}	
+	
+}
+
+
+
