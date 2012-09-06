@@ -175,6 +175,13 @@ function check_constraints($constraints, $file) {
 			final_response(415, "File is not of an allowed type.");
 		}
 	}
+	if (!empty($constraints['extensions'])) {
+		$filename_parts = explode('.', $file->get_filename());
+		$extension = strtolower(end($filename_parts));
+		if (!in_array($extension, $constraints['extensions'])) {
+			final_response(415, "File is not of an allowed type.");
+		}
+	}
 	if (!empty($constraints['max_size'])) {
 		if ($file->get_size() > (int) $constraints['max_size']) {
 			final_response(413, "File is unacceptably large.");
@@ -194,5 +201,5 @@ function get_next_index($file) {
 	foreach (array_keys($file) as $key) {
 		$max = max($max, $key);
 	}
-	return $max + 1;;
+	return $max + 1;
 }
