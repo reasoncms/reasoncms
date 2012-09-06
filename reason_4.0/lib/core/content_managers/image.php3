@@ -409,18 +409,21 @@
 	     * is simply overwritten. 
 	     * 
 	     * @param $id the Reason ID of the image entity
-	     * @param $image ReasonImageUploadType the image that was just uploaded 
+	     * @param $image ReasonImageUploadType or file path of the image that was just uploaded 
 	     */
 	    
-	    function handle_standard_image($id, $image)
+	    function handle_standard_image($id, $image_or_path)
 	    {
+	    	if (is_object($image_or_path))
+	    		$image_or_path = $image_or_path->tmp_full_path;
+	    		
 	        $image_info = array();
-	        list($image_info['width'], $image_info['height'], $image_info['image_type']) = getimagesize($image->tmp_full_path);
+	        list($image_info['width'], $image_info['height'], $image_info['image_type']) = getimagesize($image_or_path);
 	        		
 			// why does this if statement need to be so complicated?
 			if(array_key_exists($image_info['image_type'],$this->image_types) && in_array($this->image_types[ $image_info['image_type'] ], $this->image_types_with_exif_data) && function_exists('read_exif_data') )
 			{
-				$exif_data = @read_exif_data( $image->tmp_full_path );
+				$exif_data = @read_exif_data( $image_or_path );
 				if( !empty( $exif_data[ 'DateTime' ] ) )
 				{
 					$this->set_value('datetime',$exif_data['DateTime'] );
@@ -437,11 +440,11 @@
 			{
 				$this->set_value('image_type', $this->image_types[ $image_info['image_type'] ] );
 			}
-			$this->set_value('size', round(filesize( $image->tmp_full_path ) / 1024) );
+			$this->set_value('size', round(filesize( $image_or_path ) / 1024) );
 			
 			$dest_filename = PHOTOSTOCK . reason_format_image_filename($id,
 				$this->get_value('image_type'));
-			rename($image->tmp_full_path, $dest_filename);
+			rename($image_or_path, $dest_filename);
 			touch($dest_filename);
 			if( $old_filename != $dest_filename && file_exists($old_filename) )
 			{
