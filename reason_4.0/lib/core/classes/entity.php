@@ -125,6 +125,9 @@ class entity
 	 */
 	function entity( $id, $cache = true ) // {{{
 	{
+		$id = (integer) $id;
+		if(empty($id))
+			trigger_error('Entity instantiated without valid ID');
 		$this->_id = $id;
 		$this->_cache = $cache;
 	} // }}}
