@@ -74,7 +74,7 @@ $(document).ready(function()
 
 	$("tr#emailnotificationRow").hide();
 	
-	var vid_extensions = new Array("flv", "f4v", "mov", "wmv", "qt", "m4v", "avi", "3gp", "asf", "wvm", "mpg", "m1v", "m2v", "mkv", "webm");
+	var vid_extensions = new Array("flv", "f4v", "mov", "wmv", "qt", "m4v", "avi", "3gp", "asf", "wvm", "mpg", "m1v", "m2v", "mkv", "webm", "ogv");
 	var aud_extensions = new Array("mp3", "aiff", "wav", "m4a", "aac");
 	
 	var vid_radio = $("input#radio_av_type_1");
