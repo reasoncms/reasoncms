@@ -152,11 +152,31 @@
 		'audio_video' => array(
 			'main_post' => 'av',
 		),
+		'audio_video_unpaginated' => array(
+			'main_post' => array(
+				'module'=>'av',
+				'num_per_page'=>9999,
+			),
+		),
+		'audio_video_reverse_chronological' => array(
+			'main_post' => array(
+				'module'=>'av',
+				'relationship_sort'=>false,
+			),
+		),
 		'audio_video_100x100_thumbnails' => array(
 			'main_post' => array(
 				'module' =>'av',
 				'thumbnail_width' => 100,
 				'thumbnail_height' => 100,
+				),
+		),
+		'audio_video_100x100_thumbnails_reverse_chronological' => array(
+			'main_post' => array(
+				'module' =>'av',
+				'thumbnail_width' => 100,
+				'thumbnail_height' => 100,
+				'relationship_sort'=>false,
 				),
 		),
 		'audio_video_150x150_thumbnails' => array(
@@ -166,6 +186,14 @@
 				'thumbnail_height' => 150,
 				),
 		),
+		'audio_video_150x150_thumbnails_reverse_chronological' => array(
+			'main_post' => array(
+				'module' =>'av',
+				'thumbnail_width' => 150,
+				'thumbnail_height' => 150,
+				'relationship_sort'=>false,
+				),
+		),
 		'audio_video_200x200_thumbnails' => array(
 			'main_post' => array(
 				'module' =>'av',
@@ -173,8 +201,25 @@
 				'thumbnail_height' => 200,
 				),
 		),
+		'audio_video_200x200_thumbnails_reverse_chronological' => array(
+			'main_post' => array(
+				'module' =>'av',
+				'thumbnail_width' => 200,
+				'thumbnail_height' => 200,
+				'relationship_sort'=>false,
+				),
+		),
 		'audio_video_sidebar_blurbs' => array(
 			'main_post' => 'av',
+			'pre_sidebar' => 'image_sidebar',
+			'sidebar' => 'blurb',
+			'sub_nav' => 'assets',
+		),
+		'audio_video_sidebar_blurbs_reverse_chronological' => array(
+			'main_post' => array(
+				'module'=>'av',
+				'relationship_sort'=>false,
+				),
 			'pre_sidebar' => 'image_sidebar',
 			'sidebar' => 'blurb',
 			'sub_nav' => 'assets',
@@ -184,10 +229,17 @@
 				'module'=>'av_with_filters',
 			),
 		),
+		'audio_video_with_filters_reverse_chronological' => array(
+			'main_post' => array(
+				'module'=>'av_with_filters',
+				'relationship_sort'=>false,
+			),
+		),
 		'audio_video_chronological' => array(
 			'main_post' => array(
 				'module'=>'av',
-				'sort_direction'=>'ASC'
+				'sort_direction'=>'ASC',
+				'relationship_sort'=>false,
 			),
 		),
 		'audio_video_on_current_site' => array(
@@ -217,8 +269,23 @@
 			'pre_sidebar' => 'image_sidebar',
 			'sidebar' => 'av',
 		),
+		'audio_video_sidebar_reverse_chronological' => array(
+			'pre_sidebar' => 'image_sidebar',
+			'sidebar' => array(
+				'module'=>'av',
+				'relationship_sort'=>false,
+				),
+		),
 		'audio_video_sidebar_show_children' => array(
 			'pre_sidebar' => 'av',
+			'sidebar' => 'assets',
+			'main_post' => 'children',
+		),
+		'audio_video_sidebar_show_children_reverse_chronological' => array(
+			'pre_sidebar' => array(
+				'module'=>'av',
+				'relationship_sort'=>false,
+				),
 			'sidebar' => 'assets',
 			'main_post' => 'children',
 		),
