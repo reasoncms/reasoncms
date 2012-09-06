@@ -275,37 +275,17 @@ class Feature_Helper
 		$this->height=$height;
 		$this->crop_style=$crop_style;
 		
-		$avd = new reasonAVDisplay();
-
-		$es = new entity_selector();
-		$es->add_type( id_of('av_file' ) );
-		$es->add_right_relationship( $media_works_id, relationship_id_of('av_to_av_file') );
-		$es->set_order('av.media_format ASC, av.av_part_number ASC');
-		$results=$es->run_one();
-		$this->avf_results=$results;
-		$avf=null;
-
+		$media_work = new entity($this->media_works_id);
+		
 		$es = new entity_selector();
 		$es->add_type( id_of('image') );
 		$es->add_right_relationship( $media_works_id, relationship_id_of('av_to_primary_image') );
 		$images = $es->run_one();
 		$this->img_results=$images;
 		
-		$taf=array();
-		$taf=$this->get_type_and_format();
-		$avf=$this->get_avf($taf['type'],$taf['format']);
-		$ret['type']=$taf['type'];
-		$ret['format']=$taf['format'];
-		
-		$this->media_works_type=$taf['type'];
-		
-		$avd->set_video_dimensions($width,$height);
-		$avd->disable_automatic_play_start();
 		if(count($images)>0)
 		{
-			$image=current($images);
-			$avd->set_placard_image($image); // This could be an entity, an ID, or a URL string
-			//get the image with a play button blitted into it
+			$image = current($images);
 			$av_img_url=$this->get_av_img_url($image);
 			$ret['av_img_url']=$av_img_url;
 			//set the av_image_alt to the image description
@@ -323,13 +303,53 @@ class Feature_Helper
 			$ret['av_img_alt']="play";
 			$ret['av_img_id']="none";
 		}
-
-		$embed_markup="";
-		if($avf!=null)
+		
+		if($media_work->get_value('integration_library') == 'kaltura')
 		{
-			$embed_markup = $avd->get_embedding_markup($avf);
+			reason_include_once('classes/media_work_displayer.php');
+			$displayer = new MediaWorkDisplayer();
+			$displayer->set_media_work($media_work);
+			$displayer->set_height($height);
+			$displayer->set_width($width);
+			$ret['av_html'] = $displayer->get_iframe_markup();
+			$ret['type'] = $media_work->get_value('av_type');
+			$ret['format'] = 'HTML5';
 		}
-		$ret['av_html']=$embed_markup;
+		else
+		{
+			$avd = new reasonAVDisplay();
+
+			$es = new entity_selector();
+			$es->add_type( id_of('av_file' ) );
+			$es->add_right_relationship( $media_works_id, relationship_id_of('av_to_av_file') );
+			$es->set_order('av.media_format ASC, av.av_part_number ASC');
+			$results=$es->run_one();
+			$this->avf_results=$results;
+			$avf=null;
+			
+			$taf=array();
+			$taf=$this->get_type_and_format();
+			$avf=$this->get_avf($taf['type'],$taf['format']);
+			$ret['type']=$taf['type'];
+			$ret['format']=$taf['format'];
+			
+			$this->media_works_type=$taf['type'];
+			
+			$avd->set_video_dimensions($width,$height);
+			$avd->disable_automatic_play_start();
+			if(!empty($image))
+			{
+				$avd->set_placard_image($image); // This could be an entity, an ID, or a URL string
+				//get the image with a play button blitted into it
+			}
+	
+			$embed_markup="";
+			if($avf!=null)
+			{
+				$embed_markup = $avd->get_embedding_markup($avf);
+			}
+			$ret['av_html']=$embed_markup;
+		}
 		return $ret;
 	}
 }
