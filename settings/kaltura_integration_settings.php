@@ -51,4 +51,12 @@ if(!defined('MEDIA_WORK_SMALL_HEIGHT')) define('MEDIA_WORK_SMALL_HEIGHT', 240);
 if(!defined('MEDIA_WORK_MEDIUM_HEIGHT')) define('MEDIA_WORK_MEDIUM_HEIGHT', 360);
 if(!defined('MEDIA_WORK_LARGE_HEIGHT')) define('MEDIA_WORK_LARGE_HEIGHT', 480);
 
+/*
+* These bit rates are used to determine which transcoding flavors should be generated
+* by kaltura.
+*/
+if(!defined('KALTURA_MEDIUM_VIDEO_BITRATE')) define('KALTURA_MEDIUM_VIDEO_BITRATE', 600);
+if(!defined('KALTURA_LARGE_VIDEO_BITRATE')) define('KALTURA_LARGE_VIDEO_BITRATE', 1050);
+
+
 ?>
