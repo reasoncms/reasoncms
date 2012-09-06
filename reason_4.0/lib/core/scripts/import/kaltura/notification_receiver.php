@@ -134,14 +134,33 @@ class ReasonKalturaNotificationReceiver
 				// If there are less than 2 flavors, it must be the throwaway initial video upload
 				// Kaltura likes to give server notifications before things are ready sometimes, so the
 				// 'height' check is just to make sure this is a meaningful server notification
-				if (count($flavor_assets) < 2 && !empty($data['height']))
-				{
+				if (count($flavor_assets) == 1 && !empty($data['height']))
+				{					
+					// We use two pieces of logic to determine which profile to use.
+					// First, check the height of the video.  Then, make sure its bitrate
+					// is high enough for that transcoding profile.  We fall back to the
+					// Small profile.
+					$asset = current($flavor_assets);
 					if ($data['height'] <= MEDIA_WORK_SMALL_HEIGHT)
+					{
 						$transcoding_profile = KALTURA_VIDEO_SMALL_TRANSCODING_PROFILE;
+					}
 					else if ($data['height'] <= MEDIA_WORK_MEDIUM_HEIGHT)
-						$transcoding_profile = KALTURA_VIDEO_MEDIUM_TRANSCODING_PROFILE;
+					{
+						if ($asset->bitrate < KALTURA_MEDIUM_VIDEO_BITRATE)
+							$transcoding_profile = KALTURA_VIDEO_SMALL_TRANSCODING_PROFILE;
+						else
+							$transcoding_profile = KALTURA_VIDEO_MEDIUM_TRANSCODING_PROFILE;
+					}
 					else
-						$transcoding_profile = KALTURA_VIDEO_LARGE_TRANSCODING_PROFILE;
+					{
+						if ($asset->bitrate < KALTURA_MEDIUM_VIDEO_BITRATE)
+							$transcoding_profile = KALTURA_VIDEO_SMALL_TRANSCODING_PROFILE;
+						else if ($asset->bitrate < KALTURA_LARGE_VIDEO_BITRATE)
+							$transcoding_profile = KALTURA_VIDEO_MEDIUM_TRANSCODING_PROFILE;
+						else
+							$transcoding_profile = KALTURA_VIDEO_LARGE_TRANSCODING_PROFILE;
+					}
 					
 					$categories = $this->_get_categories($media_work);
 					
