@@ -376,10 +376,19 @@ class KalturaShim
 		$client = $this->_get_kaltura_client($netid, true);
 		if ($client == false) return false;
 		
+		$list = $client->flavorParams->listAction();
+		$objects = $list->objects;
+		foreach ($objects as $param)
+		{
+			if ($param->name == $params->name)
+				return false;
+		}
+		
 		$flavor_param = new KalturaFlavorParams();
 		foreach ($params as $key => $val) $flavor_param->$key = $val;
 		
 		$client->flavorParams->add($flavor_param);
+		return true;
 	}
 	
 	/**
