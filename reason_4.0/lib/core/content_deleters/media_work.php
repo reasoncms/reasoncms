@@ -25,10 +25,9 @@
 		{		
 			if (KALTURA_REASON_INTEGRATED == true)
 			{
+				$e = new entity( $this->get_value( 'id' ) );
 				if ($e->get_value('integration_library') == 'kaltura')
 				{
-					$e = new entity( $this->get_value( 'id' ) );
-					
 					$es = new entity_selector();
 					$es->add_type(id_of('av_file'));
 					$es->add_right_relationship($this->get_value('id'), relationship_id_of('av_to_av_file'));
@@ -38,11 +37,13 @@
 					{
 						reason_expunge_entity($file->id(), $this->admin_page->user_id);
 					}
-		
-					$shim = new KalturaShim();
-					$user = new entity($this->admin_page->user_id);
-					
-					$shim->delete_media($e->get_value('entry_id'), $user->get_value('name'));
+					if($e->get_value('entry_id'))
+					{
+						$shim = new KalturaShim();
+						$user = new entity($this->admin_page->user_id);
+						
+						$shim->delete_media($e->get_value('entry_id'), $user->get_value('name'));
+					}
 				}
 			}
 			parent::delete_entity();
