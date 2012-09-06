@@ -1250,6 +1250,11 @@
 	function reason_user_roles($user_id)
 	{
 		static $roles_cache = array();
+		if(empty($user_id))
+		{
+			trigger_error('Empty user id passed to reason_user_roles. Returning empty array.');
+			return array();
+		}
 		if(empty($roles_cache[$user_id]))
 		{
 			$roles_cache[$user_id] = array();
