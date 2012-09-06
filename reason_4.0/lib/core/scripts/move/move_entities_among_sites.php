@@ -34,7 +34,7 @@ class DiscoMoveEntities extends Disco
 	}
 }
 
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+echo '<!DOCTYPE html>';
 echo '<html><head>';
 echo '<title>Reason: Move Entities Among Sites: Step 1</title>';
 echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';

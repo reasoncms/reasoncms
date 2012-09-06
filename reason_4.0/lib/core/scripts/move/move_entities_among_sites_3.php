@@ -158,7 +158,7 @@ if ($type_name == 'minisite_page')
 
 $result = $job_stack->run();
 
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+echo '<!DOCTYPE html>';
 echo '<html><head>';
 echo '<title>Reason: Move Entities Among Sites: Done</title>';
 echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';

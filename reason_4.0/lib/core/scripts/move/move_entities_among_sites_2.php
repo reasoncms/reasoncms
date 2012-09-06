@@ -43,7 +43,7 @@ else
 
 $user = new entity($user_id);
 
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'."\n";
+echo '<!DOCTYPE html>'."\n";
 echo '<html><head>'."\n";
 echo '<title>Reason: Move Entities Among Sites: Step 2</title>'."\n";
 echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'."\n";
