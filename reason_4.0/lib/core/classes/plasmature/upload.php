@@ -53,6 +53,7 @@ class ReasonUploadType extends uploadType
 		
 		$constraints = array(
 			'mime_type' => $this->acceptable_types,
+			'extension' => $this->acceptable_extensions,
 			'max_size' => $this->max_file_size
 		);
 		reason_add_async_upload_constraints($this->upload_sid, $this->name,
