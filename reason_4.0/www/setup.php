@@ -9,7 +9,7 @@
  * @package reason
  *
  */
-$head_content = "
+$head_content = "<!DOCTYPE html>
 <html>
 <head>
 <title>Reason Setup</title>
