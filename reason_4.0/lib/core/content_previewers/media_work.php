@@ -17,7 +17,7 @@
 	{
 		function init( $id , &$page )
 		{
-			parent::init($id , &$page);
+			parent::init($id , $page);
 			
 			if ($this->_entity->get_value('integration_library') == 'kaltura')
 			{
