@@ -25,7 +25,7 @@ class ReasonUpgrader_42_UpdateMediaWorkFields implements reasonUpgraderInterface
 
 	var $media_work_fields = array(
 		'entry_id' => 'tinytext',
-		'av_type' => 'enum( "Audio","Video","Panorama","Interactive")',
+		'av_type' => 'enum( "Audio","Video")',
 		'media_duration' => 'tinytext',
 		'transcoding_status' => 'enum("ready", "converting", "error")',
 		'integration_library' => 'tinytext',
