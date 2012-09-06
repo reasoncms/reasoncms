@@ -35,7 +35,7 @@ reason_include_once( 'classes/entity_selector.php');
 reason_include_once( 'classes/url/page.php' );
 include_once( CARL_UTIL_INC . 'basic/misc.php' );
 
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'."\n";
+echo '<!DOCTYPE html>'."\n";
 echo '<html><head><title>Reason: Modules</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body>';
 
 //if (!carl_is_php5()) xdebug_start_profiling();
