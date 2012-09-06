@@ -70,6 +70,18 @@ class uploadType extends defaultType
 	 * @var array
 	 */
 	var $acceptable_types = array();
+
+	/**
+	 * An array of acceptable extensions.
+	 *
+	 * If empty, all extensions will be accepted.
+	 *
+	 * Use lowercase version of extensions -- extension-checking will be case-insensitive.
+	 * Examples of extensions: "pdf", "jpg".
+	 *
+	 * @var array
+	 */
+	var $acceptable_extensions = array();
 	
 	/**
 	 * Whether or not users may upload a new file when editing the entity.
@@ -90,6 +102,7 @@ class uploadType extends defaultType
 		'original_path',
 		'file_display_name',
 		'acceptable_types',
+		'acceptable_extensions',
 		'allow_upload_on_edit',
 		'max_file_size'
 	);
@@ -370,6 +383,18 @@ class uploadType extends defaultType
 					"in an acceptable format.");
 			}
 		}
+		
+		// check acceptable extensions if provided.
+		if (!$this->has_error && !empty($this->acceptable_extensions)) {
+			$filename_parts = explode('.', $this->file["name"]);
+			$extension = strtolower(end($filename_parts));
+			
+			if (!in_array($extension, $this->acceptable_extensions)) {
+				$this->set_error("The file you want to upload is not ".
+					"in an acceptable format.");
+			}
+		}
+		
 		$value = null;
 		if (!$this->has_error) {
 			$this->_state = "received";
