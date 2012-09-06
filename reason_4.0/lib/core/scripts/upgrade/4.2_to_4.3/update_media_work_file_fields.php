@@ -103,11 +103,6 @@ class ReasonUpgrader_42_UpdateMediaWorkFields implements reasonUpgraderInterface
 		else
 			$log .= "<p>Would update the Media Work type's custom previewer to media_work.php.</p>";
 		
-		if ($this->updated_module('av', 'custom_content_handler', 'media_work.php3'))
-			$log .=  "<p>The Media Work's content manager has already been updated.</p>";
-		else
-			$log .= "<p>Would update the Media Work type's content manager to media_work.php3.</p>";
-		
 		if ($this->updated_module('av', 'finish_actions', 'media_work_finish.php'))
 			$log .=  "<p>The Media Work's finish actions has already been updated.</p>";
 		else
@@ -192,15 +187,6 @@ class ReasonUpgrader_42_UpdateMediaWorkFields implements reasonUpgraderInterface
 			$log .= "<p>Updated the Media Work type's custom previewer to 'media_work.php'.</p>";
 		}
 		
-		if ($this->updated_module('av', 'custom_content_handler', 'media_work.php3'))
-		{
-			$log .= "<p>Already updated the Media Work type's content manager to 'media_work.php3'.</p>";
-		}
-		else
-		{
-			$this->add_module('av', 'custom_content_handler', 'media_work.php3');
-			$log .= "<p>Updated the Media Work type's content manager to 'media_work.php3'.</p>";
-		}
 		
 		if ($this->updated_module('av', 'finish_actions', 'media_work_finish.php'))
 		{
