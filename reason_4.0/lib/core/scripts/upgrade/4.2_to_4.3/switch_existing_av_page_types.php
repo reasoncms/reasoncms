@@ -1,5 +1,15 @@
 <?php
+/**
+ * Upgrader that modifies page types to keep current behavior through switch to default sorting
+ * method on page to media work
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * Include dependencies
+ */
 include_once('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('classes/upgrade/upgrader_interface.php');
@@ -8,8 +18,15 @@ reason_include_once('function_libraries/user_functions.php');
 reason_include_once('classes/field_to_entity_table_class.php');
 reason_include_once('function_libraries/admin_actions.php');
 
+/**
+ * Register upgrader
+ */
 $GLOBALS['_reason_upgraders']['4.2_to_4.3']['switch_existing_av_page_types'] = 'ReasonUpgrader_42_SwitchAVPageTypes';
 
+/**
+ * Upgrader that modifies page types to keep current behavior through switch to default sorting
+ * method on page to media work
+ */
 class ReasonUpgrader_42_SwitchAVPageTypes implements reasonUpgraderInterface
 {
 

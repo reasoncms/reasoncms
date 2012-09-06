@@ -1,5 +1,15 @@
 <?php
+/**
+ * Upgrader that adds kaltura-related fields to the media work type and maskes the page-to-media-
+ * work field sortable.
+ *
+ * @package reason
+ * @subpackage scripts
+ */
 
+/**
+ * Include dependencies
+ */
 include_once('reason_header.php');
 reason_include_once('classes/entity_selector.php');
 reason_include_once('classes/upgrade/upgrader_interface.php');
