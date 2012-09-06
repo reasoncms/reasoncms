@@ -173,6 +173,9 @@ function reason_add_async_upload_constraints($session_id, $field, $options)
 	if (!empty($options['mime_type'])) {
 		$constraints['mime_types'] = (array) $options['mime_type'];
 	}
+	if (!empty($options['extension'])) {
+		$constraints['extensions'] = (array) $options['extension'];
+	}	
 	if (!empty($options['max_size'])) {
 		$size = $options['max_size'];
 		$size = (is_numeric($size))
