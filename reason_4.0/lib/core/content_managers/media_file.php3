@@ -20,6 +20,8 @@ reason_include_once('classes/plasmature/upload.php');
 reason_include_once('content_managers/default.php3');
 reason_include_once('function_libraries/url_utils.php');
 reason_include_once( 'function_libraries/image_tools.php' );
+reason_include_once('classes/kaltura_shim.php');
+
 include_once(CARL_UTIL_INC . 'basic/mime_types.php');
 
 /**
@@ -110,6 +112,22 @@ class avFileManager extends ContentManager
 	{
 		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/media_file_content_manager.js');
 	}
+	
+	function show_form()
+	{
+		// Only allow the user to edit the form if it's a non-kaltura-integrated work.
+		$flav_id = $this->get_value('flavor_id');
+		$name = $this->get_value('name');
+		if ( !empty($flav_id) || empty($name) )
+		{
+			echo '<p>Use of the Media File Content Manager is deprecated.  Use Media Work instead.</p>'."\n";
+		}
+		else
+		{
+			parent::show_form();
+		}
+	}
+
 
 	/**
 	 * Most of the work in setting up the form happens here
@@ -146,6 +164,9 @@ class avFileManager extends ContentManager
 			trigger_error('The media file type is missing fields for captioning and audio description. Please run the Reason 4 Beta 8 upgrade types script ('.$script_link.').');
 		}
 		$this->set_order (array ( 'file_preview', 'name', 'link', 'replacement_header', 'upload_file','import_file_as_alternate','import_file', 'url', 'caption_url', 'audio_description_url', 'file_info_header', 'delivery_methods', 'default_media_delivery_method', 'media_format', 'av_type', 'media_duration', 'media_size','media_quality', 'width', 'height','parts_hr_1','parts','is_part','av_part_number', 'av_part_total', 'description','parts_hr_2', ));
+		
+		$this->change_element_type('flavor_id', 'hidden');
+		$this->change_element_type('mime_type', 'hidden');
 	}
 	
 	function modify_caption_url_field()
@@ -752,6 +773,7 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 		}
 	}
 	
+	
 	/**
 	 * This function is to be run if the user has selected a file
 	 * It grabs the file from wherever it is and moves it into Reason's file repository
@@ -813,6 +835,7 @@ array('options'=>array('yes'=>'Yes','no'=>'No'),'display_name'=>'&nbsp;'), 'no' 
 		}
 		$this->send_email_notification();
 	}
+	
 	// takes duration as 67.67s and returns 1 minute 18 seconds
 	// this is apparently the standard(?) format for the exif duration field
 	function get_human_readable_duration($duration)
