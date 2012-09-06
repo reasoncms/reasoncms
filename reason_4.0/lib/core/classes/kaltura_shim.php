@@ -263,7 +263,7 @@ class KalturaShim
 	* @param array	$tags
 	* @param array	$categories
 	* @param string $netid
-	* @params KalturaMediaType media_type
+	* @param KalturaMediaType media_type
 	* @return KalturaMediaEntry or false if unsuccessful
 	*/
 	private function _upload_media($filePath, $title, $description, $tags, $categories, $netid, $media_type, $transcoding_profile)
