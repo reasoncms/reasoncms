@@ -125,9 +125,9 @@ class entity
 	 */
 	function entity( $id, $cache = true ) // {{{
 	{
-		/* This attempt at input checking needs to prep, as there are instances of entities being
-		 instantiated with strings, etc. that are just kind of 'stand-in' objkects that don't
-		 correspond to items in the Reason DB. */
+		/* This attempt at input checking needs some additional thought, as there are in-the-wild 
+		   instances of entities being instantiated with strings, etc. as just kind of 'stand-in' 
+		   objects that don't correspond to items in the Reason DB. */
 		/* $id = (integer) $id;
 		if(empty($id))
 		{
