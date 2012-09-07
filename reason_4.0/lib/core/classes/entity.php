@@ -125,9 +125,17 @@ class entity
 	 */
 	function entity( $id, $cache = true ) // {{{
 	{
-		$id = (integer) $id;
+		/* This attempt at input checking needs to prep, as there are instances of entities being
+		 instantiated with strings, etc. that are just kind of 'stand-in' objkects that don't
+		 correspond to items in the Reason DB. */
+		/* $id = (integer) $id;
 		if(empty($id))
-			trigger_error('Entity instantiated without valid ID');
+		{
+			$bt = debug_backtrace(false);
+			$first = current($bt);
+			$msg = 'Entity instantiated without valid ID. Called by '.str_replace(array(INCLUDE_PATH,WEB_PATH), '...', $first['file']).' on line '.$first['line'].'.';
+			trigger_error($msg);
+		} */
 		$this->_id = $id;
 		$this->_cache = $cache;
 	} // }}}
