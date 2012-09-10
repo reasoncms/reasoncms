@@ -112,7 +112,11 @@ if ($media_work != false && $valid_hash)
 else
 	echo 'Media Not Found';
 echo '</title>'."\n";
-echo '<style type="text/css">body{margin:0;padding:0;}audio{width:100%;margin-top:8px;}</style>'."\n";
+echo '<style type="text/css">
+body{margin:0;padding:0;}
+.AudioWrapper{position:relative;height:46px;}
+audio{width:100%;position:absolute;bottom:0;}
+</style>'."\n";
 echo '</head>'."\n";
 echo '<body>'."\n";
 
@@ -122,7 +126,10 @@ if ($media_work != false && $valid_hash)
 	$markup = $displayer->_get_embed_markup();
 	if ($markup != false)
 	{
+		$class = $media_work->get_value('av_type').'Wrapper';
+		echo '<div class="'.$class.'">'."\n";
 		echo $markup;
+		echo '</div>'."\n";
 	}
 	
 	$media_files = $displayer->get_media_files();
