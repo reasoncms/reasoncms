@@ -5,7 +5,8 @@
  */
 
 require_once CARL_UTIL_INC."basic/filesystem.php";
- 
+reason_include_once('classes/url_manager.php');
+
  /**
   * Build standardized markup for a list of assets
   * @todo move away from this style of coding towards templates and models
@@ -220,4 +221,313 @@ function reason_get_asset_max_upload_size()
 	{
 		return $max = $reason_max_asset_upload;
 	}
+}
+
+/**
+ * Does basic aspects of making an asset.
+ *
+ * - Makes sure file exists.
+ * - Makes sure desired filename is unique on the site.
+ * - Verify / discover mime_type, extension, and file size.
+ * - Move the file to the correct storage location for the asset.
+ * - Create / update the entity.
+ *
+ * The content manager should use this. So should anything else that needs to make an asset.
+ *
+ * After the asset is created and moved to the right spot, reason_update_entity should be used to update anything that needs updating.
+ *
+ * @param int site_id owner site id
+ * @param int user_id id of creator
+ * @param file array with these keys: path, name (name is name of the file)
+ * @return mixed entity_id of existing asset or FALSE on failure
+ *
+ * @todo modify asset content manager to use this.
+ * @todo update rewrites
+ *
+ * @author Nathan White
+ */
+function reason_create_asset($site_id, $user_id, $file)
+{
+	// first lets do a number of sanity checks and trigger errors as appropriate.
+	if (empty($site_id) || (intval($site_id) != $site_id))
+	{
+		trigger_error('reason_create_asset was provided an invalid site_id parameter (' . $site_id .')');
+		return false;
+	}
+	else
+	{
+		$site = new entity( intval($site_id) );
+		if (!reason_is_entity($site, 'site'))
+		{
+			trigger_error('reason_create_asset was provided a site_id that is not a reason site entity id (' . $site_id .')');
+			return false;
+		}
+	}
+	
+	if (empty($user_id) || (intval($user_id) != $user_id))
+	{
+		trigger_error('reason_create_asset was provided an invalid user_id parameter (' . $user_id .')');
+		return false;
+	}
+	else
+	{
+		$user = new entity( intval($user_id) );
+		if (!reason_is_entity($user, 'user'))
+		{
+			trigger_error('reason_create_asset was provided a user_id that is not a reason user entity id (' . $user_id .')');
+			return false;
+		}
+	}
+	
+	if (empty($file) || (!is_array($file)))
+	{
+		trigger_error('reason_create_asset requires the file parameter to be an array with keys path, name');	
+		return false;
+	}
+	elseif (empty($file['path']) || !file_exists($file['path']))
+	{
+		if (empty($file['path'])) trigger_error('reason_create_asset requires a file parameter with a key "path" that contains the full path to a file');
+		else trigger_error('reason_create_asset was provided a file path (' . $file['path'] . ') that does not exist');
+		return false;
+	}
+	elseif (empty($file['name']))
+	{
+		trigger_error('reason_create_asset requires a file parameter with a key "name" that specifies what filename should be used for downloading the file');
+		return false;
+	}
+	
+	// setup our values array	
+	$values['mime_type'] = get_mime_type($file['path'], 'application/octet-stream');
+	$values['file_name'] = _reason_get_asset_filename($site_id, $file['name']);
+	$values['file_type'] = _reason_get_asset_extension($file['path'], $values['mime_type']);
+	$values['file_size'] = _reason_get_asset_size($file['path']);
+	$values['new'] = 0;
+	
+	$asset_id = reason_create_entity( $site_id, id_of('asset'), $user_id, $values['file_name'], $values );
+	if (!$asset_id)
+	{
+		trigger_error('reason_create_asset failed to create the asset entity');
+		return false;
+	}
+	
+	// move the asset into place
+	$asset_dest = ASSET_PATH.$asset_id.'.'.$values['file_type'];
+	if (server_is_windows() && file_exists($asset_dest))
+	{
+		unlink($asset_dest);
+	}
+	rename ($file['path'], $asset_dest);
+	
+	// update rewrites
+	$um = new url_manager($site_id);
+	$um->update_rewrites();
+
+	return $asset_id;
+}
+
+/**
+ * Used to update an asset that is already in the filesystem.
+ *
+ * @param int asset_id id of asset
+ * @param int user_id id of person modifying asset
+ * @param file array with keys: path, name
+ * @return mixed entity_id of existing asset or FALSE on failure
+ */
+function reason_update_asset($asset_id, $user_id, $file)
+{
+	if (!is_null($asset_id)) // an existing asset id was provided
+	{
+		if (empty($asset_id) || (intval($asset_id) != $asset_id))
+		{
+			trigger_error('reason_update_asset was provided an invalid asset_id parameter (' . $asset_id .')');
+			return false;
+		}
+		else
+		{
+			$asset = new entity( intval($asset_id) );
+			if (!reason_is_entity($asset, 'asset'))
+			{
+				trigger_error('reason_update_asset was provided a asset_id that is not a reason asset entity id (' . $asset_id .')');
+				return false;
+			}
+		}
+	}
+	
+	if (empty($user_id) || (intval($user_id) != $user_id))
+	{
+		trigger_error('reason_update_asset was provided an invalid user_id parameter (' . $user_id .')');
+		return false;
+	}
+	else
+	{
+		$user = new entity( intval($user_id) );
+		if (!reason_is_entity($user, 'user'))
+		{
+			trigger_error('reason_update_asset was provided a user_id that is not a reason user entity id (' . $user_id .')');
+			return false;
+		}
+	}
+	
+	if (empty($file) || (!is_array($file)))
+	{
+		trigger_error('reason_update_asset requires the file parameter to be an array with keys path, name');	
+		return false;
+	}
+	elseif (empty($file['path']) || !file_exists($file['path']))
+	{
+		if (empty($file['path'])) trigger_error('reason_update_asset requires a file parameter with a key "path" that contains the full path to a file');
+		else trigger_error('reason_update_asset was provided a file path (' . $file['path'] . ') that does not exist');
+		return false;
+	}
+	elseif (empty($file['name']))
+	{
+		trigger_error('reason_update_asset requires a file parameter with a key "name" that specifies what filename should be used for downloading the file');
+		return false;
+	}
+	
+	$cur_path = reason_get_asset_filesystem_location($asset);
+	$cur_name = $asset->get_value('file_name');
+	
+	// if our name or path has changed lets update the asset
+	if ( ($file['path'] != $cur_path) || ($file['name'] != $cur_name) ) // presumably a new file.
+	{
+		echo 'i am here';
+		$asset_owner = $asset->get_owner();
+		$values['mime_type'] = get_mime_type($file['path'], 'application/octet-stream');
+		$values['file_name'] = _reason_get_asset_filename($asset_owner->id(), $file['name'], $asset->id());
+		$values['file_type'] = _reason_get_asset_extension($file['path'], $values['mime_type']);
+		$values['file_size'] = _reason_get_asset_size($file['path']);
+	
+		// if the entity update changed the file name lets do rewrites.
+		if (reason_update_entity( $asset->id(), $user_id, $values, false))
+		{
+			if ($cur_name != $values['file_name']) // can we just do assets?
+			{
+				$um = new url_manager($asset_owner->id());
+				$um->update_rewrites();
+			}
+		}
+	
+		if ($file['path'] != $cur_path)
+		{
+			$asset_dest = ASSET_PATH.$asset_id.'.'.$values['file_type'];
+			if (server_is_windows() && file_exists($asset_dest))
+			{
+				unlink($asset_dest);
+			}
+			rename ($file['path'], $asset_dest);
+		}
+		return $asset_id;
+	}
+	return false;
+}
+
+/**
+ * This function gets rid of any non filename friendly characters and adds .txt to extensions thought to be dangerous.
+ *
+ * It is called safer because it doesn't stop necessarily stop someone from uploading a file that could be dangerous.
+ * 
+ * If your asset directory is web accessible and executable, there may well be other files one could upload and execute.
+ *
+ * @todo the crazy logic used in this function should be simplified
+ * @todo the notion of "safer" should be replaced with better security ... whitelist of uploadable extensions probably - add .txt to all others.
+ */
+function _reason_get_safer_asset_filename($filename)
+{
+	$unsafe_to_safer = array(
+		'py' => 'py.txt',
+		'php' => 'php.txt',
+		'asp' => 'asp.txt',
+		'aspx' => 'aspx.txt',
+		'pl' => 'pl.txt',
+		'shtml' => 'shtml.txt',
+		'cfm' => 'cfm.txt',
+		'woa' => 'woa.txt',
+		'php3' => 'php3.txt',
+		'jsp' => 'jsp.txt',
+		'js' => 'js.txt',
+		'exe' => 'exe.txt',
+		'cgi' => 'cgi.txt',
+		'vb' => 'vb.txt',
+		'bat' => 'bat.txt',
+	);
+	
+	$parts = explode('.', $filename);
+	if (count($parts) <= 1)
+	{
+		$parts_array = array(basename($filename), '');
+	} 
+	else
+	{
+		$extension = array_pop($parts);
+		$parts_array = array(basename($filename, ".$extension"), $extension);
+	}
+	
+	list($filename, $fext) = $parts_array;
+	if(!empty($unsafe_to_safer[$fext])) $fext = $unsafe_to_safer[$fext];
+	if (!empty($fext)) $filename .= '.' . $fext;
+	
+	$filename = sanitize_filename_for_web_hosting($filename);
+	return $filename;
+}
+
+/**
+ * Get a unique filename we'll use for an asset, considering the site_id, desired file_name, and existing asset_id (if any)
+ */
+function _reason_get_asset_filename($site_id, $desired_filename, $asset_id = null)
+{
+	// lets munge our filename for greater safety.
+	$file_name = _reason_get_safer_asset_filename($desired_filename);
+	
+	// lets sanitize the filename for uniqueness.
+	$file_name = reason_get_unique_asset_filename($file_name, $site_id, $asset_id);
+	
+	return $file_name;
+}
+
+/**
+ * Get the extension we'll use for an asset. This is stored on the entity as file_type.
+ *
+ * @return string extension
+ */
+function _reason_get_asset_extension($path, $mime_type = null)
+{
+	// next lets determine the file extension
+	$path_parts = pathinfo($path);
+	if (!empty($path_parts['extension']))
+	{
+		$extension = $path_parts['extension'];
+	}
+	elseif (!empty($mime_type)) // lets map from mime_type
+	{
+		$type_to_extension = array(
+			'application/msword' => 'doc',
+			'application/vnd.ms-excel' => 'xls',
+			'application/vns.ms-powerpoint' => 'ppt',
+			'text/plain' => 'txt',
+			'text/html' => 'html',
+		);
+		$m = array();
+		if (preg_match('#^([\w-.]+/[\w-.]+)#', $mime_type, $m))
+		{
+			// strip off any ;charset= crap
+			$my_mime_type = $m[1];
+			if (!empty($type_to_suffix[$my_mime_type]))
+			{
+				$extension = $type_to_suffix[$my_mime_type];
+			}
+		}
+	}
+	if (empty($extension)) $extension = 'unk';  // we use this as an extension when it is indeterminate
+	return $extension;
+}
+
+/**
+ * Get the size of an asset. This is stored on the entity as file_size.
+ *
+ * @return int file_size
+ */
+function _reason_get_asset_size($path)
+{
+	return round(filesize($path) / 1024);
 }
