@@ -2,7 +2,8 @@ $(document).ready(function() {
 
   var studentNumber = $('#id_3fb4o1j748Element'); //# of Youth @ $25.00
   var sponsorNumber = $('#id_15354l4d84Element'); //# of Sponsors @ $20.00
-  var ropesNumber = $('#id_1HJ33534J4Element'); //# for Ropes Course @ $5.00
+  // var ropesNumber = $('#id_1HJ33534J4Element'); //# for Ropes Course @ $5.00
+  var ropesNumber = $('#id_w15Hb4D3yMElement'); //# for Ropes Course @ $5.00
 
   $('#payment_amountElement').attr('readonly','readonly');
   setTotal();
