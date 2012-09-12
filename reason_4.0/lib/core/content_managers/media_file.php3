@@ -116,9 +116,9 @@ class avFileManager extends ContentManager
 	function show_form()
 	{
 		// Only allow the user to edit the form if it's a non-kaltura-integrated work.
-		$flav_id = $this->get_value('flavor_id');
+		// Show a deprecated warning if the user is trying to create a new Media File with Kaltura turned on.
 		$name = $this->get_value('name');
-		if ( !empty($flav_id) || empty($name) )
+		if ( empty($name) && KALTURA_REASON_INTEGRATED == true )
 		{
 			echo '<p>Use of the Media File Content Manager is deprecated.  Use Media Work instead.</p>'."\n";
 		}
