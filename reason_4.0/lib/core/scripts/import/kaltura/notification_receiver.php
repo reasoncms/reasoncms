@@ -47,7 +47,7 @@ class ReasonKalturaNotificationReceiver
 	var $all_flavors_complete = false;
 	
 	public static function run()
-	{	
+	{
 		// This sleep is probably not needed, but it makes me feel safe.
 		sleep(1);
 		$receiver = new ReasonKalturaNotificationReceiver();
@@ -371,12 +371,33 @@ class ReasonKalturaNotificationReceiver
 			$es = new entity_selector();
 			$es->add_type(id_of('image'));
 			$es->add_right_relationship($media_work->id(), relationship_id_of('av_to_primary_image'));
-			$image = $es->run_one();
+			$image = current($es->run_one());
 			
-			// Only create a default placard image for videos that don't already have a placard image
-			if ($media_work->get_value('av_type') == 'Video' && empty($image))
+			// Only create a default placard image for videos that don't have a user-specified image.
+			if ($media_work->get_value('av_type') == 'Video')
 			{
-				$this->associate_image($media_work, $data);
+				if (!empty($image)) 
+				{
+					if (strpos($image->get_value('name'), "(Generated Thumbnail)") != false) 
+					{
+						$this->associate_image($media_work, $data);
+					}
+				}
+				else
+				{
+					$this->associate_image($media_work, $data);
+				}
+			}
+			// If it's audio AND it has a previous kaltura-generated thumbnail attached, just get rid of it.
+			else if ($media_work->get_value('av_type') == 'Audio')
+			{
+				if (!empty($image))
+				{
+					if (strpos($image->get_value('name'), "(Generated Thumbnail)") != false) 
+					{
+						delete_relationships( array( 'entity_a' => $media_work->id(), 'entity_b' => $image->id(),'type' => relationship_id_of('av_to_primary_image')));
+					}
+				}
 			}
 		}
 		else
@@ -459,7 +480,7 @@ class ReasonKalturaNotificationReceiver
 	
 	function create_image_entity($media_work, $data)
 	{
-		$name = $media_work->get_value('name').' Placard Image';
+		$name = $media_work->get_value('name').' (Generated Thumbnail)';
 		$values = array();
 		$values['new'] = '0';
 		$values['description'] = 'A placard image for media work '.$media_work->get_value('name');
