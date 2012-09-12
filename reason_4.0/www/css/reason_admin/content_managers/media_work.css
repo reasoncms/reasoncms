@@ -43,3 +43,8 @@ div.file_upload a.upload {
 	font-size:1.25em;
 	border:1px solid #ccc;
 }
+tr.offScreen {
+	position:absolute;
+	left:-9999px;
+	visibility:hidden;
+}
