@@ -113,7 +113,7 @@ $(document).ready(function()
 	$("tr#rightsstatementRow").before(rights_row);
 	
 	hide_elements();
-	
+		
 	function hide_elements()
 	{
 		$("tr#embedsmallRow").hide();
@@ -121,20 +121,20 @@ $(document).ready(function()
 		$("tr#embedlargeRow").hide();
 		$("tr#showdownloadRow").hide();
 		$("tr#showembedRow").hide();
-		$("tr#contentRow").hide();
-		$("tr#transcriptstatusRow").hide();
-		$("tr#rightsstatementRow").hide();
+		$("#contentRow").addClass('offScreen');
+		$("#transcriptstatusRow").addClass('offScreen');
+		$("#rightsstatementRow").addClass('offScreen');
 	}
 
 	function show_transcript()
 	{
-		$("tr#contentRow").show();
-		$("tr#transcriptstatusRow").show();
+		$("#contentRow").removeClass('offScreen');
+		$("#transcriptstatusRow").removeClass('offScreen');
 	}
 	
 	function show_rights()
 	{
-		$("tr#rightsstatementRow").show();
+		$("tr#rightsstatementRow").removeClass('offScreen');
 	}
 	
 	show_embed.click(function()
