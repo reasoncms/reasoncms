@@ -93,10 +93,12 @@ reason_include_once('ssh/ssh.php');
 			$this->set_element_properties( 'description', array('rows'=>5));
 			
 			$this->change_element_type( 'content' , $editor_name , $wysiwyg_settings );
+			$this->set_element_properties('content', array('rows'=>12));
 			$this->add_comments ('content', form_comment('Full content, such as a transcript of the media work. You can leave this blank if you don\'t have time to transcribe the content of the work.'));
 			$this -> set_display_name ('content', 'Transcript');
 			
 			$this->change_element_type( 'rights_statement' , $editor_name , $min_wysiwyg_settings );
+			$this->set_element_properties('rights_statement', array('rows'=>3));
 			$this -> add_comments ('rights_statement', form_comment('e.g. "Some rights reserved. '.FULL_ORGANIZATION_NAME.' licenses this work under the <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>." or "Copyright Margaret Smith, 1983. All rights reserved. Used with permission." You may leave this field blank if you are not sure about what license applies to this work.'));
 			
 			$this -> set_display_name ('show_hide', 'Show or Hide?');
