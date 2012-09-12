@@ -204,7 +204,7 @@ class mediaWorkImagePickerModule extends DefaultModule
 	
 	function create_image_entity()
 	{
-		$name = $this->media_work->get_value('name').' Placard Image';
+		$name = $this->media_work->get_value('name').' (Generated Thumbnail)';
 		$values = array();
 		$values['new'] = '0';
 		$values['author'] = $this->user->get_value('name');
