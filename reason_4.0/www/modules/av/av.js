@@ -8,6 +8,10 @@
 
 $(document).ready(function() 
 {
+	var small_video_height = $("<div.size_links ul li.small_link").attr("data-size");
+	var medium_video_height = $("<div.size_links ul li.medium_link").attr("data-size");
+	var large_video_height = $("<div.size_links ul li.large_link").attr("data-size");
+
 	var show_link_p = $("<h4 class=\"share_download_header\"></h4>")
 	var show_link = $("<a href=\"\">Share/Download</a>");
 	
@@ -60,17 +64,17 @@ $(document).ready(function()
     
     function small_click() 
     {
-    	return perform_click(240, small_link);
+    	return perform_click(small_video_height, small_link);
     };    
   
     function medium_click() 
     {
-    	return perform_click(360, medium_link);
+    	return perform_click(medium_video_height, medium_link);
     };    
   
     function large_click() 
     {
-    	return perform_click(480, large_link);
+    	return perform_click(large_video_height, large_link);
     };  
     
     function perform_click(height, button)
@@ -100,7 +104,7 @@ $(document).ready(function()
     	if (button != null)
     	{
     		html = $("strong", button).html();
- 	   		$("strong", button).replaceWith('<a href="' + button.attr("link") + '">' + html + '</a>');
+ 	   		$("strong", button).replaceWith('<a href="' + button.attr("data-link") + '">' + html + '</a>');
  	   		
 			if (button  == small_link)
 				button.bind('click', small_click);
@@ -142,14 +146,30 @@ $(document).ready(function()
     		iframe.attr("height", iframe_height);
     		iframe.attr("width", iframe_width);
     		
-    		// Updates the download links
-    		ul = $("ul.media_file_list");
-    		ul.html("");
-    		iframe.contents().find("a.flavor_info").each(function ()
+    		size = null;
+    		if (iframe_height == small_video_height)
     		{
-    			new_li = $('<li><a href="'+ $(this).attr("url") +'">.'+ $(this).attr("mime_type").slice($(this).attr("mime_type").lastIndexOf("/") + 1) +'</a></li>');
-    			ul.append(new_li);
-    		});
+    			size = 'small';
+    		}
+    		else if (iframe_height == medium_video_height)
+    		{
+    			size = 'medium';
+    		}
+    		else if (iframe_height == large_video_height)
+    		{
+    			size = 'large';
+    		}
+    		else 
+    		{
+    			size = 'small';
+    		}
+    		
+    		// Updates the download links
+    		mp4_link = $("ul.media_file_list li.mp4_li a");
+    		webm_link = $("ul.media_file_list li.webm_li a");
+    		
+    		mp4_link.attr("href", mp4_link.attr("data-"+size+"-url"));
+    		webm_link.attr("href", webm_link.attr("data-"+size+"-url"));
     	}
     });
     
