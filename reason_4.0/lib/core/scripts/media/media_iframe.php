@@ -132,13 +132,6 @@ if ($media_work != false && $valid_hash)
 		echo '</div>'."\n";
 	}
 	
-	$media_files = $displayer->get_media_files();
-	$first = current($media_files);
-	$second = next($media_files);
-	
-	echo '<a class="flavor_info" mime_type="'.$first->get_value('mime_type').'" url="'.$first->get_value('url').'"></a>'."\n";
-	echo '<a class="flavor_info" mime_type="'.$second->get_value('mime_type').'" url="'.$second->get_value('url').'"></a>'."\n";
-	
 	/* Mobile safari has a rendering glitch displaying audio in an iframe; the only way we've found
 	   to fix this glitch is to embed a non-image as an image in the content. This causes mobile
 	   safari to change its rendering mode and properly render the audio player. */
