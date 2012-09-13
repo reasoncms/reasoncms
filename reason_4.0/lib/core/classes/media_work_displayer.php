@@ -142,6 +142,34 @@ class MediaWorkDisplayer
 	}	
 	
 	/**
+	* Returns the appropriate embedding width for the displayer. 
+	*
+	* @access private
+	* @return integer
+	*/
+	private function _get_embed_width() 
+	{
+		if ( !empty($this->width) )
+			return $this->width;
+		else 
+			return $this->_get_width_from_height();
+	}
+	
+	/**
+	* Returns the appropriate embedding height for the displayer. 
+	*
+	* @access private
+	* @return integer
+	*/	
+	private function _get_embed_height()
+	{
+		if ( !empty($this->height) )
+			return $this->_get_height();
+		else
+			return $this->_get_height_from_width();
+	}
+	
+	/**
 	* Returns one media file for both mp4 and webm that is closest to the width and height of the
 	* displayer.  If audio, it just returns all of the media files.
 	*
@@ -152,15 +180,8 @@ class MediaWorkDisplayer
 	{
 		if ($this->media_work->get_value('av_type') == 'Video')
 		{
-			if ( !empty($this->width) )
-				$embed_width = $this->width;
-			else 
-				$embed_width = $this->_get_width_from_height();
-				
-			if ( !empty($this->height) )
-				$embed_height = $this->_get_height();
-			else
-				$embed_height = $this->_get_height_from_width();
+			$embed_width = $this->_get_embed_width();
+			$embed_height = $this->_get_embed_height();
 				
 			$media_files = $this->_get_suitable_flavors($embed_width, $embed_height);;	
 			
@@ -415,15 +436,8 @@ class MediaWorkDisplayer
 		// specify width and height attributes explicitly in the video tag every time
 		// this is needed 1) so the browswer doesn't have to figure it out(?), 2) so the placard image
 		// works nicely, and 3) so the flash video player is properly scaled because it doesn't automatically scale itself.
-		if ( !empty($this->width) )
-			$embed_width = $this->width;
-		else 
-			$embed_width = $this->_get_width_from_height();
-			
-		if ( !empty($this->height) )
-			$embed_height = $this->_get_height();
-		else
-			$embed_height = $this->_get_height_from_width();
+		$embed_width = $this->_get_embed_width();
+		$embed_height = $this->_get_embed_height();
 			
 		$markup .= 'width="'.$embed_width.'" ';
 		$markup .= 'height="'.$embed_height.'" ';
@@ -498,12 +512,11 @@ class MediaWorkDisplayer
 	* Returns an array with the media files for each mime type that are the closest to the dimensions
 	* of this displayer.  The array should be sorted biggest to smallest and alternating between both formats.
 	*
-	* @access private
 	* @param int width
 	* @param int height
 	* @return array
 	*/
-	private function _get_suitable_flavors($width, $height)
+	function _get_suitable_flavors($width, $height)
 	{
 		$es = new entity_selector();
 		$es->add_type(id_of('av_file'));
