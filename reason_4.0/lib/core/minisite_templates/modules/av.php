@@ -237,7 +237,7 @@
 				$small_url_size = (MEDIA_WORK_SMALL_HEIGHT == $this->params['default_video_height']) ? '' : MEDIA_WORK_SMALL_HEIGHT;
 				$medium_url_size = (MEDIA_WORK_MEDIUM_HEIGHT == $this->params['default_video_height']) ? '' : MEDIA_WORK_MEDIUM_HEIGHT;
 				$large_url_size = (MEDIA_WORK_LARGE_HEIGHT == $this->params['default_video_height']) ? '' : MEDIA_WORK_LARGE_HEIGHT;
-				
+								
 				$small_url = carl_make_link(array('displayer_height'=>$small_url_size));
 				$medium_url = carl_make_link(array('displayer_height'=>$medium_url_size));
 				$large_url = carl_make_link(array('displayer_height'=>$large_url_size));
@@ -262,9 +262,9 @@
 					echo '<div class="size_links">'."\n";
 					echo '<h4>Video Size:</h4>'."\n";
 					echo '<ul>'."\n";
-					echo '<li link="'.$small_url.'" class="small_link">'.$small_link.'</li>'."\n";
-					echo '<li link="'.$medium_url.'" class="medium_link">'.$medium_link.'</li>'."\n";
-					echo '<li link="'.$large_url.'" class="large_link">'.$large_link.'</li>'."\n";
+					echo '<li data-size="'.MEDIA_WORK_SMALL_HEIGHT.'" data-link="'.$small_url.'" class="small_link">'.$small_link.'</li>'."\n";
+					echo '<li data-size="'.MEDIA_WORK_MEDIUM_HEIGHT.'" data-link="'.$medium_url.'" class="medium_link">'.$medium_link.'</li>'."\n";
+					echo '<li data-size="'.MEDIA_WORK_LARGE_HEIGHT.'" data-link="'.$large_url.'" class="large_link">'.$large_link.'</li>'."\n";
 					echo '</ul>'."\n";
 					echo '</div>'."\n";
 				}
@@ -296,15 +296,54 @@
 					echo '<div class="download">'."\n";
 					echo '<h5 class="download_label">Download:</h5>'."\n";
 					echo '<ul class="media_file_list">'."\n";
-					foreach ($displayer->get_media_files() as $media_file)
+					
+					if ($item->get_value('av_type') == 'Video')
 					{
-						$parts = explode('/', $media_file->get_value('mime_type'));
-						echo '<li><a href="'.$media_file->get_value('url').'">.'.end($parts).'</a></li>'."\n";
+						// We must provide the url for each size here so that the javascript has a hook for the download links.
+						$mp4_vals = array();
+						$webm_vals = array();
+						
+						$small_av_files = $displayer->_get_suitable_flavors(MEDIA_WORK_SMALL_HEIGHT, MEDIA_WORK_SMALL_HEIGHT);
+						$small_mp4 = $small_av_files[0];
+						$mp4_vals['small'] = $small_mp4->get_value('url');
+						$small_webm = $small_av_files[1];
+						$webm_vals['small'] = $small_webm->get_value('url');
+						
+						$medium_av_files = $displayer->_get_suitable_flavors(MEDIA_WORK_MEDIUM_HEIGHT, MEDIA_WORK_MEDIUM_HEIGHT);
+						$med_mp4 = $medium_av_files[0];
+						$mp4_vals['medium'] = $med_mp4->get_value('url');
+						$med_webm = $medium_av_files[1];
+						$webm_vals['medium'] = $med_webm->get_value('url');
+						
+						$large_av_files = $displayer->_get_suitable_flavors(MEDIA_WORK_LARGE_HEIGHT, MEDIA_WORK_LARGE_HEIGHT);
+						$large_mp4 = $large_av_files[0];
+						$mp4_vals['large'] = $large_mp4->get_value('url');
+						$large_webm = $large_av_files[1];
+						$webm_vals['large'] = $large_webm->get_value('url');
+						
+						$av_files = $displayer->get_media_files();
+						
+						echo '<li class="mp4_li"><a href="'.$av_files[0]->get_value('url').'" 
+											data-small-url="'.$mp4_vals['small'].'"
+											data-medium-url="'.$mp4_vals['medium'].'"
+											data-large-url="'.$mp4_vals['large'].'">.mp4</a></li>'."\n";
+						echo '<li class="webm_li"><a href="'.$av_files[1]->get_value('url').'" 
+											data-small-url="'.$webm_vals['small'].'"
+											data-medium-url="'.$webm_vals['medium'].'"
+											data-large-url="'.$webm_vals['large'].'">.webm</a></li>'."\n";
+					}
+					else if ($item->get_value('av_type') == 'Audio')
+					{
+						$av_files = $displayer->get_media_files();
+						foreach ($av_files as $file) 
+						{
+							$parts = explode('/', $file->get_value('mime_type'));
+							echo '<li><a href="'.$file->get_value('url').'">.'.end($parts).'</a></li>'."\n";
+						}
 					}
 					echo '</ul>'."\n";
 					echo '</div>'."\n";
 				}
-				
 				echo '</div>'."\n";
 			}
 			else
