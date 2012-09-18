@@ -25,7 +25,7 @@ class IndividualVisitForm extends DefaultThorForm
 		$state_province_field = $this->get_element_name_from_label('State');
 		$this->change_element_type('id_9765x1CI8m', 'state');
 		
-		$date = getdate();
+		$today = getdate();
 		
 		$grad_year = $this->get_element_name_from_label('High School Graduation Year');
 		
@@ -33,22 +33,23 @@ class IndividualVisitForm extends DefaultThorForm
 		// If the date is before August 2, let submitters choose the current year+1.
 		$aug1 = 212; // the numeric representation (yday) of August 1st
 		
-		if (date('L', $date['year'].'-01-01')){ // if leap year increment August 1
+
+		if (date('L')){ // if leap year increment August 1
 			$aug1 = 213;
 		}
-		if ($date['yday'] < $aug1) {
+		if ($today['yday'] < $aug1) {
 			$this->change_element_type($grad_year, 'radio_inline', array(
 				'options' => array(
-					($date['year']+1) => ($date['year']+1), 
-					($date['year']+2) => ($date['year']+2), 
-					($date['year']+3) => ($date['year']+3)
+					($today['year']+1) => ($today['year']+1), 
+					($today['year']+2) => ($today['year']+2), 
+					($today['year']+3) => ($today['year']+3)
 					)));
 		} else {
 			$this->change_element_type($grad_year, 'radio_inline', array(
 				'options' => array( 
-					($date['year']+2) => ($date['year']+2), 
-					($date['year']+3) => ($date['year']+3),
-					($date['year']+4) => ($date['year']+4)
+					($today['year']+2) => ($today['year']+2), 
+					($today['year']+3) => ($today['year']+3),
+					($today['year']+4) => ($today['year']+4)
 					)));
 		}
 	}
