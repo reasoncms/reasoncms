@@ -33,7 +33,7 @@ class IndividualVisitForm extends DefaultThorForm
 		// If the date is before August 2, let submitters choose the current year+1.
 		$aug1 = 212; // the numeric representation (yday) of August 1st
 		
-		if ($date['L']){ // if leap year increment August 1
+		if (date('L')){ // if leap year increment August 1
 			$aug1 = 213;
 		}
 		if ($date['yday'] < $aug1) {
@@ -50,7 +50,6 @@ class IndividualVisitForm extends DefaultThorForm
 					($date['year']+3) => ($date['year']+3),
 					($date['year']+4) => ($date['year']+4)
 					)));
-		
 		}
 	}
 }
