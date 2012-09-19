@@ -391,7 +391,6 @@ function reason_update_asset($asset_id, $user_id, $file)
 	// if our name or path has changed lets update the asset
 	if ( ($file['path'] != $cur_path) || ($file['name'] != $cur_name) ) // presumably a new file.
 	{
-		echo 'i am here';
 		$asset_owner = $asset->get_owner();
 		$values['mime_type'] = get_mime_type($file['path'], 'application/octet-stream');
 		$values['file_name'] = _reason_get_asset_filename($asset_owner->id(), $file['name'], $asset->id());
