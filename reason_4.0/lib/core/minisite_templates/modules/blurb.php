@@ -27,11 +27,13 @@ class BlurbModule extends DefaultMinisiteModule
 		'blurb_id' => array( 'function' => 'turn_into_int' ),
 	);
 	var $acceptable_params = array(
-	'blurb_unique_names_to_show' => '',
-	'num_to_display' => '',
-	'rand_flag' => false,
-	'exclude_shown_blurbs' => true,
-	'demote_headings' => 1, );
+		'blurb_unique_names_to_show' => '',
+		'num_to_display' => '',
+		'rand_flag' => false,
+		'exclude_shown_blurbs' => true,
+		'demote_headings' => 1,
+		'source_page' => '',
+	);
 	var $es;
 	var $blurbs = array();
 	
@@ -47,8 +49,9 @@ class BlurbModule extends DefaultMinisiteModule
 			$this->es = new entity_selector();
 			$this->es->description = 'Selcting blurbs for this page';
 			$this->es->add_type( id_of('text_blurb') );
-			$this->es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_text_blurb') );
-			$this->es->add_rel_sort_field( $this->parent->cur_page->id(), relationship_id_of('minisite_page_to_text_blurb'), 'rel_sort_order');
+			$page_id = $this->get_source_page_id();
+			$this->es->add_right_relationship( $page_id, relationship_id_of('minisite_page_to_text_blurb') );
+			$this->es->add_rel_sort_field( $page_id, relationship_id_of('minisite_page_to_text_blurb'), 'rel_sort_order');
 			if ($this->params['rand_flag']) $this->es->set_order('rand()');
 			else $this->es->set_order( 'rel_sort_order ASC' );
 			if ($this->params['exclude_shown_blurbs'])
@@ -71,6 +74,18 @@ class BlurbModule extends DefaultMinisiteModule
 			$inline_edit->register_module($this, $this->user_can_inline_edit());
 		}
 	} // }}}
+	
+	protected function get_source_page_id()
+	{
+		if(!empty($this->params['source_page']))
+		{
+			if($page_id = id_of($this->params['source_page']))
+				return $page_id;
+			else
+				trigger_error('source_page parameter to blurb module not a valid unique name');
+		}
+		return $this->cur_page->id();
+	}
 	
 	/**
 	 * Determines whether or not the user can inline edit.
