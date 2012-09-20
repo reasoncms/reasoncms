@@ -4,6 +4,7 @@
  *
  * @package reason
  * @subpackage classes
+ * @author Marcus Huderle
  */
 
 /**
