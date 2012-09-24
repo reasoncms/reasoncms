@@ -121,7 +121,7 @@ reason_include_once( 'classes/inline_editing.php' );
 				echo '</div>';
 			}
 			echo '<p id="footerLoginLink">';
-			echo ($this->get_user_netid()) ? $this->get_user_netid() . ': ' : '';
+			echo ($this->get_user_netid()) ? '<span class="username">' . $this->get_user_netid() . '</span>: ' : '';
 			echo ($this->get_user_netid()) ? '<a href="'. $this->get_login_url().'?logout=1">Logout</a>' : '<a href="'.$this->get_login_url().'">Login</a>';
 			echo '</p>';
 		}
