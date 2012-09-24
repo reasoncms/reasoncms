@@ -16,6 +16,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'Publication
 include_once( 'reason_header.php' );
 reason_include_once( 'minisite_templates/modules/generic3.php' );
 reason_include_once( 'classes/page_types.php' );
+reason_include_once( 'classes/inline_editing.php' );
 /**
 * A minisite module to handle publications, including blogs, issued newsletters, and newsletters.
 * 
