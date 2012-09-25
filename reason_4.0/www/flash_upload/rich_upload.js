@@ -305,7 +305,7 @@ var _swfupload_uri;
             
             function show_queue() {
                 upload_queue.show('fast', function() {
-                    upload_queue[0].scrollIntoView();
+                    //upload_queue[0].scrollIntoView();
                     container.swfupload('startUpload', file.id);
                 });
             }
