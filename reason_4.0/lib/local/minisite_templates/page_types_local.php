@@ -263,6 +263,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'homecoming_registration' => array(
 		'main_post' => 'homecoming_registration',
 	),
+	'homecoming_attendees' => array(
+		'main_post' => 'homecoming_attendees',
+	),
 	//-----------------------Steve's Homepage Begin---------------
 	'homepage' => array(
 		'main_post'=>'',
