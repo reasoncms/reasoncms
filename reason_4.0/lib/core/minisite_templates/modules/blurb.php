@@ -33,6 +33,7 @@ class BlurbModule extends DefaultMinisiteModule
 		'exclude_shown_blurbs' => true,
 		'demote_headings' => 1,
 		'source_page' => '',
+		'footer_html' => '',
 	);
 	var $es;
 	var $blurbs = array();
@@ -188,6 +189,12 @@ class BlurbModule extends DefaultMinisiteModule
 					echo '<div class="edit"><a href="'.carl_make_link($params).'">Edit Blurb</a></div>'."\n";
 				}
 			}
+			echo '</div>'."\n";
+		}
+		if(!empty($this->params['footer_html']))
+		{
+			echo '<div class="blurbsFooter">';
+			echo $this->params['footer_html'];
 			echo '</div>'."\n";
 		}
 		echo '</div>'."\n";
