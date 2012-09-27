@@ -89,6 +89,7 @@ var _swfupload_uri;
             return null;
         
         var dims = info.dimensions;
+        var orig_dims = info.orig_dimensions;
         
         $('.filename', display).text(info.filename);
         $('.filesize', display).text(format_size(info.size));
@@ -98,6 +99,10 @@ var _swfupload_uri;
             image.css(dims);
             $('.dimensions', display).html('{width}&times;{height}'.
                 interpolate(dims));
+        }
+        if (orig_dims) {
+        	$('input[name="_reason_upload_orig_h"]').val(orig_dims.height);
+                $('input[name="_reason_upload_orig_w"]').val(orig_dims.width);
         }
         display.show();
     }
