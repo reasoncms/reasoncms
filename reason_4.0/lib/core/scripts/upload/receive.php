@@ -116,6 +116,7 @@ foreach (array_keys($_FILES) as $name) {
 		// fix a permission idiosyncrasy so the permissions are consistent
 		@copy($temp_path, $temp_path.".tmp");
 		@rename($temp_path.".tmp", $temp_path);
+		list($orig_width, $orig_height) = $img_info;
 		list($width, $height) = $img_info;
 		
 		// If exceeds width or height limit, store an original and resize the standard image
@@ -159,6 +160,10 @@ foreach (array_keys($_FILES) as $name) {
 		$response[$name]['dimensions'] = array(
 			'width' => $width,
 			'height' => $height
+		);
+		$response[$name]['orig_dimensions'] = array(
+			'width' => $orig_width,
+			'height' => $orig_height
 		);
 	}
 }
