@@ -216,6 +216,190 @@ class ReasonImageUploadType extends image_uploadType
 	}
 }
 
+/**
+ * Reason image uploads with cropping.
+ */
+class ReasonImageUploadCroppableType extends ReasonImageUploadType
+{
+	var $type = "ReasonImageUpload";
+	var $type_valid_args = array('authenticator', 'existing_entity',
+		'head_items', 'obey_no_resize_flag', 'convert_to_image', 'require_crop', 'preselect_crop', 'crop_ratio');
+
+	/**
+	 * Set this flag to true to require images to be cropped before submitting; if Javascript is off, and 
+	 * $crop_ratio != 0, uploaded images will be auto-cropped to the required ratio.
+	 */
+	var $require_crop = false;
+	/**
+	 * Set this flag to true to preselect a cropping region when the preview image is displayed
+	 */
+	var $preselect_crop = true;
+	/**
+	 * This setting defines the aspect ratio of the crop region. 0 is unrestricted, 1 is square, 2/3, 4/6 etc are valid.
+	 */
+	var $crop_ratio = 0;
+	/**
+	 * Set this flag to true to preserve full-sized uncropped images as well as full-sized cropped images
+	 * (there's currently no interface for gaining access to these files)
+	 */
+	var $preserve_uncropped = false;
+	
+	function _upload_success($image_path, $image_url)
+	{
+		if (!empty($this->file) && !empty($this->file["original_path"])) {
+			$orig_path = $this->file["original_path"];
+		} else {
+			$orig_path = $image_path;
+		}
+
+		if ($params = $this->_get_crop_params($orig_path))
+		{
+			if ($this->_crop_image($orig_path, $params))
+			{
+				if ($orig_path != $image_path) copy($orig_path,$image_path);
+			}
+		}
+		parent::_upload_success($image_path, $image_url);
+	}
+
+	function get_head_items(&$head)
+	{
+		parent::get_head_items($head);
+		$head->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'Jcrop/css/jquery.Jcrop.css');
+		$head->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'Jcrop/js/jquery.Jcrop.min.js');
+		$head->add_javascript(WEB_JAVASCRIPT_PATH.'image_crop.js');
+	}
+
+	function _get_hidden_display($current)
+	{
+		$fields['_reason_upload_crop_required'] = $this->require_crop;
+		$fields['_reason_upload_crop_preselect'] = $this->preselect_crop;
+		$fields['_reason_upload_crop_ratio'] = $this->crop_ratio;
+		$fields['_reason_upload_crop_x'] = 0;
+		$fields['_reason_upload_crop_y'] = 0;
+		$fields['_reason_upload_crop_w'] = 0;
+		$fields['_reason_upload_crop_h'] = 0;
+		
+		foreach ($fields as $field => $val)
+			$html[] = '<input type="hidden" name="'.$field.'" value="'.$val.'" />';
+		
+		return parent::_get_hidden_display($current).join("\n",$html);
+	}
+
+	function _get_current_file_display($current)
+	{
+		// If we have an image in process, put its original dimensions out there for the cropper
+		$display = parent::_get_current_file_display($current);
+		$width = $height = 0;
+		if ($current)
+		{
+			$info = getimagesize($current->original_path);
+			if ($info)
+			{
+				list($width, $height) = $info;
+			}
+		}
+		$display .= '<input type="hidden" name="_reason_upload_orig_h" value="'.$height.'" />';
+		$display .= '<input type="hidden" name="_reason_upload_orig_w" value="'.$width.'" />';
+		return $display;
+	}
+
+	function register_fields()
+	{
+		return array_merge(parent::register_fields(), array(
+			'_reason_upload_orig_h',
+			'_reason_upload_orig_w',
+			'_reason_upload_crop_required',
+			'_reason_upload_crop_preselect',
+			'_reason_upload_crop_ratio',
+			'_reason_upload_crop_x',
+			'_reason_upload_crop_y',
+			'_reason_upload_crop_h',
+			'_reason_upload_crop_w'));
+	}
+
+	function _get_crop_params($image_path)
+	{
+		// Don't do anything without a valid image file
+		if ($image = getimagesize($image_path))
+		{
+			list($image_w,$image_h) = $image;
+
+			// First check the hidden fields on the form; if Javascript is active, those should be populated.
+			$vars = $this->get_request();
+			if ($vars['_reason_upload_crop_w'])
+			{
+				$w = round($vars['_reason_upload_crop_w']);
+				$h = round($vars['_reason_upload_crop_h']);
+				$x = round($vars['_reason_upload_crop_x']);
+				$y = round($vars['_reason_upload_crop_y']);
+			
+				// Check for sane values from userland
+				if ($w <= $image_w && $h <= $image_h && $x < $image_w && $y < $image_w)
+				{
+					return compact('w','h','x','y');
+				}
+			}
+			
+			// If we don't get cropping values from the form, we have to work out the appropriate values from the 
+			// size of the image and the provided cropping ratio, but only if cropping is required.
+			if ($this->crop_ratio && $this->require_crop)
+			{
+				if ($image_w/$image_h <= $this->crop_ratio)
+				{
+					$params = array(
+						'w' => $image_w,
+						'h' => round($image_w/$this->crop_ratio),
+						'x' => 0,
+						'y' => round($image_h/2 - ($image_w/$this->crop_ratio)/2)
+						);
+				} else {
+					$params = array(
+						'w' => round($image_h*$this->crop_ratio),
+						'h' => $image_h,
+						'x' => round($image_w/2 - ($image_h*$this->crop_ratio)/2),
+						'y' => 0
+						);
+				}
+				return $params;
+			}
+		}
+	}
+	
+	function _crop_image($image_path, $params)
+	{
+		if ($this->preserve_uncropped) {
+			// Preserve the unscaled image.
+			
+			$path_parts = pathinfo($image_path);
+			if (isset($path_parts['extension']))
+			{
+				$ext = ".{$path_parts['extension']}";
+				$ext_pattern = "/".preg_quote($ext, '/')."$/";
+				$orig_path = preg_replace($ext_pattern, "-uncropped{$ext}",
+					$image_path);
+				if ($orig_path == $image_path) // in case the replace doesn't work
+					$orig_path .= '.uncropped';
+			} else {
+				$orig_path = $image_path . '.uncropped';
+			}
+				
+			if (copy($image_path, $orig_path)) {
+				$this->original_path = $orig_path;
+			}
+		}
+		
+		if (!cut_image($params['w'], $params['h'], $params['x'], $params['y'], $image_path, $image_path)) return false;
+	
+		if ($this->file) {
+			// file size will have (hopefully) changed after the resize
+			$this->file["size"] = filesize($image_path);
+		}
+		return true;
+	}	
+}
+
+
 /** @access private */
 function _populate_flash_upload_head_items(&$head)
 {
@@ -340,7 +524,7 @@ function _get_disco_async_upload_hidden_fields($upload_sid)
 	}
 	
 	$GLOBALS['_disco_upload_session_sent'] = true;
-	return implode('', $html);
+	return implode("\n", $html);
 }
 
 /** @access private */
