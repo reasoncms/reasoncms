@@ -101,8 +101,8 @@ var _swfupload_uri;
                 interpolate(dims));
         }
         if (orig_dims) {
-        	$('input[name="_reason_upload_orig_h"]').val(orig_dims.height);
-                $('input[name="_reason_upload_orig_w"]').val(orig_dims.width);
+        	$('input[name="_reason_upload_orig_h"]', upload_container.parent()).val(orig_dims.height);
+                $('input[name="_reason_upload_orig_w"]', upload_container.parent()).val(orig_dims.width);
         }
         display.show();
     }
