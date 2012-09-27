@@ -46,14 +46,14 @@ $(document).ready(function()
 			// Preselect a cropped region if called for.
 			if ($('input[name="_reason_upload_crop_preselect"]').val()) {
 				
-				// If we have a non-zero ratio, fit the crop shape to the image shape
+				// If we have a non-zero ratio, fit the crop shape to the image shape.
 				if (ratio) {
 					if (true_w/true_h <= ratio) {
 						jcrop_api.setSelect([0,0,true_w,true_h/ratio]);				
 					} else {
 						jcrop_api.setSelect([0,0,true_w*ratio,true_h]);
 					}
-				// otherwise, crop the whole thing
+				// otherwise, crop the whole thing.
 				} else {
 					jcrop_api.setSelect([0,0,true_w,true_h]);
 				}
