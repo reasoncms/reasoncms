@@ -452,15 +452,17 @@ function _gd_crop_image($nw, $nh, $source,$dest,$sharpen)
 	    $dimg = sharpen_image($image_dest, 80, 0.5, 3);
 	}
 	
-	switch($stype)
+	switch(strtolower(get_extension($source)))
 	{
   		case 'gif':
   			$ret=imagegif($dimg,$dest,100);
   		break;
   		case 'jpg':
+  		case 'jpeg':
   			$ret=imagejpeg($dimg,$dest,100);
   		break;
   		case 'png':
+  		default:
   			$ret=imagepng($dimg,$dest,0);
   		break;
 		
@@ -472,6 +474,105 @@ function _gd_crop_image($nw, $nh, $source,$dest,$sharpen)
 	return $ret;
 }	
 
+/**
+* Extract a specified chunk out of an image (should have been called crop_image, but that was
+* already taken). Does not resize the extracted portion.
+*
+* @param int $cw pixel width of the section to extract
+* @param int $ch pixel height of the section to extract
+* @param int $x x position of the top left corner of the extracted region
+* @param int $y y position of the top left corner of the extracted region
+* @param string $source the path and file of the image to be cropped
+* @param string $dest the path and file of the cropped image
+* @return boolean true on success
+*
+*/
+function cut_image($cw, $ch, $x, $y, $source, $dest)
+{
+    if (!is_file($source) || !is_readable($source)) {
+        trigger_error('cannot resize image; no file exists at the given path '.
+            '('.var_export($source, true).')', WARNING);
+        return false;
+    }
+    $perms = substr(sprintf('%o', fileperms($source)), -4);
+   if (imagemagick_available()) {
+        $result = _imagemagick_cut_image($cw, $ch, $x, $y, $source, $dest);
+    } else if (function_exists('imagecreatetruecolor')) {
+        $result = _gd_cut_image($cw, $ch, $x, $y, $source, $dest);
+    } else {
+	trigger_error('neither ImageMagick nor GD are available; cannot '.
+            'crop image', WARNING);
+        return false;
+    }
+
+    // Prevent the transformation from changing the file permissions.
+    clearstatcache();
+    $newperms = substr(sprintf('%o', fileperms($dest)), -4);
+    if ($perms != $newperms) @chmod($dest, octdec($perms));
+    return $result;
+}
+
+/**
+* Cut an image using the Imagemagick library
+* See cut_image for an explanation of the parameters
+* and return value
+*/
+function _imagemagick_cut_image($cw, $ch, $x, $y, $source, $dest)
+{	
+	$exec="convert -crop ".$cw."x".$ch."+".$x."+".$y."! +repage ".$source."  ".$dest;
+
+	$output = array();
+	$exit_status = -1;
+	exec($exec, $output, $exit_status);
+	if ($exit_status != 0) {
+		trigger_error('image crop failed: '.implode('; ', $output), WARNING);
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+/**
+* Cut an image using the GD library
+* See crop_image for an explanation of the parameters
+* and return value
+*/
+function _gd_cut_image($cw, $ch, $x, $y, $source, $dest) 
+{
+	$details=_gd_get_image($source);
+	$w = $details['width'];
+	$h = $details['height'];
+	$simg = $details['image'];
+  	$dimg = imagecreatetruecolor($cw, $ch);
+
+  	$success = imagecopy($dimg, $simg, 0, 0, $x, $y, $w, $h);
+  	
+	if(!$success)
+	{
+		trigger_error("imagecopy failed");
+	}
+	
+	switch(strtolower(get_extension($source)))
+	{
+  		case 'gif':
+  			$ret=imagegif($dimg,$dest,100);
+  		break;
+  		case 'jpg':
+  		case 'jpeg':
+  			$ret=imagejpeg($dimg,$dest,100);
+  		break;
+  		case 'png':
+  		default:
+  			$ret=imagepng($dimg,$dest,0);
+  		break;
+	}
+
+	imagedestroy($dimg);
+	imagedestroy($simg);
+	return $ret;
+}	
 
 /*
 function _gd_crop_image($nw, $nh, $source,$dest,$sharpen) 
