@@ -553,14 +553,25 @@ class MinisiteTemplate
 				$this->head_items->add_stylesheet( $url, $media );
 			}
 		}
-		if($this->theme->get_value('theme_customizer') && $this->site_info->get_value('theme_customization'))
+		if($customizer = $this->get_theme_customizer())
 		{
-			$customizer = reason_get_theme_customizer($this->site_info, $this->theme);
-			if(!empty($customizer))
-				$customizer->modify_head_items($this->head_items);
-			else
-				trigger_error('Theme customizer "'.$this->theme->get_value('theme_customizer').'" not found or not registered properly. No customizations applied.');
+			$customizer->modify_head_items($this->head_items);
 		}
+	}
+	function get_theme_customizer()
+	{
+		if(!isset($this->theme_customizer))
+		{
+			if($this->theme->get_value('theme_customizer') && $this->site_info->get_value('theme_customization'))
+			{
+				$this->theme_customizer = reason_get_theme_customizer($this->site_info, $this->theme);
+				if(empty($this->theme_customizer))
+					trigger_error('Theme customizer "'.$this->theme->get_value('theme_customizer').'" not found or not registered properly. No customizations applied.');
+			}
+			else
+				$this->theme_customizer = false;
+		}
+		return $this->theme_customizer;
 	}
 	function get_meta_information()
 	{
