@@ -23,7 +23,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 									'sections', 					//array section_id => section
 									'current_section',				
 									'items_by_section', 
-									//'links_to_sections',    // BJ: commented out to disable link to sections
+									'links_to_sections',
 									'no_section_key', 
 									'current_issue',
 									'issues_by_date',
@@ -52,6 +52,11 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 
 	function get_pre_list_markup()
 	{
+		if ($this->passed_vars['publication']->get_value('unique_name') == 'luther_alumni_magazine')
+		{
+			$this->passed_vars['links_to_sections'] = null;
+		}
+		
 		//if this is an issued publication, show what issue we're looking at
 		if(!empty($this->passed_vars['current_issue']))
 			$this->markup_string .= $this->get_current_issue_markup($this->passed_vars['current_issue']);
@@ -86,8 +91,8 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$markup_string .= '<div class="postList">'."\n";
 			//provide links to other sections in the publication
-			if(!empty($this->passed_vars['links_to_sections']))
-				$this->markup_string .= $this->get_section_links_markup();
+			//if(!empty($this->passed_vars['links_to_sections']))
+			//	$this->markup_string .= $this->get_section_links_markup();
 			$markup_string .= '<div class="back">'."\n";
 			$main_list_name = $this->passed_vars['publication']->get_value('name');
 		 	if(!empty($this->passed_vars['current_issue']))
@@ -174,7 +179,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 					$list_body .= '<li class="post">'.$this->passed_vars['list_item_markup_strings'][$item_id].'</li>'."\n";
 			}
 			if(!empty($list_body))
-			{
+			{		
 				$markup_string .= '<ul class="posts">'."\n";
 				$markup_string .= $list_body;
 				$markup_string .= '</ul>'."\n";
@@ -330,7 +335,27 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 	{
 		$markup_string = '';
 		$name = $section->get_value('name');
-		$markup_string .= '<div class="curSection"><h3>'.$name.'</h3></div>'."\n";
+		
+		$es = new entity_selector();
+		$es->add_type(id_of('image'));
+		$es->add_right_relationship($section->get_value('id'), relationship_id_of('news_section_to_image'));
+		$result = $es->run_one();
+		foreach( $result AS $id => $image )
+		{
+			$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
+			if (!preg_match("/imagetop/", $image->get_value('keywords')))
+			{
+				$markup_string .= '<figure id="imagetopframe">'."\n";
+				$markup_string .= '<img src="' . $url . '" alt="' . $image->get_value('description') . '"/>';
+				$markup_string .= '</figure>'."\n";
+			}
+			else
+			{
+				$markup_string .= '<img src="' . $url . '" alt="' . $image->get_value('description') . '"/>';
+			}
+		}
+		
+		$markup_string .= '<div class="sectionInfo"><h3>'.$name.'</h3></div>'."\n";
 		return $markup_string;
 	}
 	
@@ -401,7 +426,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		{
 			$markup_string .= '<div class="sectionInfo">';
 			$section_entity = $this->passed_vars['sections'][$section_id];
-			//$url = $this->passed_vars['links_to_sections'][$section_id];
+			$url = $this->passed_vars['links_to_sections'][$section_id];
 			
 			if(!empty($url))
 				$markup_string .= '<h3><a href="'.$url.'">'.$section_entity->get_value('name').'</a></h3>'."\n";

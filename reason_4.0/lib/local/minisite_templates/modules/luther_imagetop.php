@@ -27,6 +27,12 @@
 			$desc = isset( $this->description ) ? $this->description : true;
 			$text = isset( $this->additional_text ) ? $this->additional_text : "";
 			
+			if ($this->cur_page->get_value( 'custom_page' ) == 'publication' && preg_match("/section_id\=\d+/", get_current_url()))
+			{
+				// Don't show publication top image in sections
+				return;
+			}
+			
 			if ( !empty($this->parent->textonly) )
 				echo '<h3>Images</h3>'."\n";
 			
