@@ -713,6 +713,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post'=>'open_id',
 	),
 	'publication' => get_luther_publication(),
+	'publication_section_nav' => get_luther_publication_section_nav(),
 	'sports_roster' => array(
 		'main' => 'luther_sports_roster',
 		'main_post' => 'content',
@@ -1217,6 +1218,49 @@ function get_luther_publication()
 
 }
 
+function get_luther_publication_section_nav()
+// return array containing publication directives
+{
+	if (preg_match("/story_id\=\d+/", get_current_url()))
+	{
+		return array(
+			'pre_banner' => '',
+			'post_banner' => '',
+			'main_head_4' => 'publication/luther_title',
+			'main_head_5' => '',
+			'main'=> array(
+				'module' => 'publication/description',
+				'hide_on_item' => true
+			),
+			'main_2' => '',
+			'main_3' => '',
+			'main_4' => '',
+			'main_post' => 'publication',
+			'main_post_2' => '', 
+			'navigation' => 'publication/sections',
+			'pre_sidebar_3' => '',		
+			'sidebar'=> '',
+			'sidebar_2' => 'luther_publication_image_sidebar',
+			'sidebar_4' => '',
+		);
+	}
+	else 
+	{
+		return array(
+			'pre_banner' => '',
+			'post_banner' => '',
+			'main_head_4' => 'publication/luther_title',
+			'main'=> array(
+				'module' => 'publication/description',
+				'hide_on_item' => true
+			),
+			'main_post'=>'publication',		
+			'navigation' => 'publication/sections',
+			'sidebar_2'=>'luther_image_sidebar',
+		);
+	}
+
+}
 
 function get_luther_headlines($max_num_items)
 // return array containing headlines information or '' if headlines don't exist on this minisite
