@@ -38,9 +38,7 @@ class streamModule extends DefaultMinisiteModule {
             echo '</embed>';
             echo '</object>';
         }
-		echo '<p><a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=467424979" target="_blank">Chapel Archives</a> on iTunes U.</p>';
     }
-
 }
 
 ?>
