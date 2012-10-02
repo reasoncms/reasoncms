@@ -71,7 +71,7 @@ reason_include_once( 'classes/inline_editing.php' );
 		 */
 		function has_admin_edit_privs()
 		{
-			return (reason_check_access_to_site($this->site_id) && reason_check_privs('edit'));
+			return ( reason_check_privs('pose_as_other_user') || (reason_check_privs('edit') && reason_check_access_to_site($this->site_id)) );
 		}
 		
 		function get_user_netid()
