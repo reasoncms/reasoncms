@@ -12,15 +12,18 @@ $(document).ready(function() {
     setTotal();
   }
     //# of Youth @ $25.00
+  // $( ".words:contains('Youth @ $25.00')").next().blur(function(){
   $('#id_3fb4o1j748Element').blur(function() {
       setTotal();
     });
   //# of Sponsors @ $20.00
+  // $( ".words:contains('Sponsors @ $20.00')").next().blur(function(){
   $('#id_15354l4d84Element').blur(function() {
     setTotal();
   });
   //# for Ropes Course @ $5.00
-  $('#id_1HJ33534J4Element').blur(function() {
+  // $( ".words:contains('Ropes Course @ $5.00')").next().blur(function(){
+  $('#id_w15Hb4D3yMElement').blur(function() {
     setTotal();
   });
 
