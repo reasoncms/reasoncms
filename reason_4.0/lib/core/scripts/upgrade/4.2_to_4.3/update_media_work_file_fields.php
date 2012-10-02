@@ -63,7 +63,7 @@ class ReasonUpgrader_42_UpdateMediaWorkFields implements reasonUpgraderInterface
 	 */
 	public function description()
 	{
-		$str = "<p>This upgrade adds fields 'entry_id', 'av_type', 'media_duration', 'transcoding_status', 'integration_library', 'tmp_file_name', 'email_notification', 'show_embed', and 'show_download' to Media Work.  It also adds 'html5' to the enumeration of 'media_format'.  This upgrade also adds the fields 'flavor_id' and 'mime_type' to Media File. It changes the 'required' field of the av_to_av_type allowable relationship to 'no'.  It assigns a content deleter to Media Work.  Lastly, it changes the content previewer of Media Work to the media_work_previewer.</p>";
+		$str = "<p>This upgrade adds fields 'entry_id', 'av_type', 'media_duration', 'transcoding_status', 'integration_library', 'tmp_file_name', 'email_notification', 'show_embed', and 'show_download' to Media Work.  It also adds 'html5' to the enumeration of 'media_format'.  This upgrade also adds the fields 'flavor_id' and 'mime_type' to Media File. It changes the 'required' field of the av_to_av_type allowable relationship to 'no'.  It assigns a content deleter to Media Work.  It changes the content previewer of Media Work to the media_work_previewer.  Lastly, it created an av_restricted_to_group allowable relationship for access control in Kaltura integrated works.</p>";
 		return $str;
 	}
 
@@ -72,7 +72,7 @@ class ReasonUpgrader_42_UpdateMediaWorkFields implements reasonUpgraderInterface
 	 * @return string HTML report
 	 */
 	public function test()
-	{			
+	{		
 		$log = $this->add_media_work_fields(true);
 		
 		$log .= $this->add_media_file_fields(true);
@@ -117,6 +117,11 @@ class ReasonUpgrader_42_UpdateMediaWorkFields implements reasonUpgraderInterface
 			$log .=  "<p>The Media Work's display_name_handler has already been updated.</p>";
 		else
 			$log .= "<p>Would update the Media Work type's display_name_handler to media_work.php.</p>";
+		
+		if ($this->created_restricted_group_relationship() == false)
+			$log .= '<p>Would create the av_restricted_to_group allowable relationship.</p>'."\n";
+		else
+			$log .= '<p>Already created the av_restricted_to_group allowable relationship.</p>'."\n";
 		
 		return $log;
 	}
@@ -218,6 +223,16 @@ class ReasonUpgrader_42_UpdateMediaWorkFields implements reasonUpgraderInterface
 			$log .= "<p>Updated the Media File type's custom previewer to 'media_file.php'.</p>";
 		}
 		
+		if ($this->created_restricted_group_relationship() == true)
+		{
+			$log .= "<p>Already created the 'av_restricted_to_group' allowable_relationship.</p>";
+		}
+		else
+		{
+			$this->create_restricted_group_relationship();
+			$log .= "<p>Created the 'av_restricted_to_group' allowable_relationship.</p>";
+		}
+		
 		return $log;
 	}
 	
@@ -308,6 +323,37 @@ class ReasonUpgrader_42_UpdateMediaWorkFields implements reasonUpgraderInterface
 		else
 			return false;
 	}
+	
+	protected function created_restricted_group_relationship()
+	{
+		$dbq = new DBSelector;
+		$dbq->add_table( 'ar','allowable_relationship' );
+		$dbq->add_relation( 'ar.name = "av_restricted_to_group"' );
+		$q = $dbq->run();
+		if (empty($q))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	protected function create_restricted_group_relationship()
+	{
+		$args = array(
+			'description'=>'Used for media access control.',
+			'connections'=>'one_to_many',
+			'display_name'=>'Restricted to Group',
+			'custom_associator'=>'Content Manager',
+		);
+		create_allowable_relationship(id_of('av'), id_of('group_type'), 'av_restricted_to_group', $args);	
+	}
+	
+	
+	
+	
 	
 }
 ?>
