@@ -896,7 +896,8 @@ class AdminPage
 
 		echo '<a href="'.$this->make_link( 
 			array( 
-					'site_id' => $site->id()
+					'site_id' => $site->id(),
+					'cur_module' => '',
 				 )
 			).'" class="nav">'.$site->get_value('name').'</a></li>' . "\n";
 	}
@@ -1393,7 +1394,7 @@ class AdminPage
 					$username = $users[$this->authenticated_user_id]->get_value('name');
 				else
 					$username = 'me';
-				echo '<a class="stopPosing" href="'.$this->make_link(array('user_id'=>$this->authenticated_user_id)).'" title="Stop posing as another user">'.htmlspecialchars($username).'</a>'."\n";
+				echo '<a class="stopPosing" href="'.$this->make_link(array('user_id'=>$this->authenticated_user_id), true).'" title="Stop posing as another user">'.htmlspecialchars($username).'</a>'."\n";
 			}
 			if ($show_logout) echo ' <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 			echo '</form>';
@@ -1614,8 +1615,10 @@ class AdminPage
 								'site_owns_id' => 'This site does not own this entity.',
 							   );
 		$message = '';
-		if( !$this->verify_user( $user ) )
+		if( !$this->verify_user( $user ) ){
 			$message = $error_messages[ 'site_to_user' ];
+			header('Location: ' . securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . '?cur_module=SiteAccessDenied&user_id='.$user->id().'&requested_url='.urlencode(get_current_url()));
+		}
 		elseif( !$this->site_to_type() )
 			$message = $error_messages[ 'site_to_type' ];
 		elseif( !$this->type_to_id() )
