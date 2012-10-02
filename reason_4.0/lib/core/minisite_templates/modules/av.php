@@ -337,7 +337,13 @@
 						$av_files = $displayer->get_media_files();
 						foreach ($av_files as $file) 
 						{
-							$parts = explode('/', $file->get_value('mime_type'));
+							$extension = $file->get_value('mime_type');
+							// people know what mp3 is, not mpeg, so we display mpegs as mp3s
+							if ($extension == 'audio/mpeg')
+							{	
+								$extension = 'audio/mp3';
+							}
+							$parts = explode('/', $extension);
 							echo '<li><a href="'.$file->get_value('url').'">.'.end($parts).'</a></li>'."\n";
 						}
 					}
