@@ -38,6 +38,7 @@ $(document).ready(function()
 			$('img.representation', container).Jcrop({
 				aspectRatio: ratio,
 				onSelect: updateCoords,
+				onRelease: clearCoords,
 				bgOpacity: .4,
 				trueSize: [true_w, true_h]
 			}, function(){
@@ -76,13 +77,35 @@ $(document).ready(function()
 		$('input[name="_reason_upload_crop_h"]', container).val(c.h);
 	};
 
-	function checkCoords()
+	/* Called when the crop region is canceled. Updates the hidden crop parameter elements
+	   to zero so we can tell that no crop is active. (You'd think we could just call
+	   updateCoords() instead of this, but that doesn't work.) */
+	function clearCoords()
 	{
-		if ($('input[name="_reason_upload_crop_required"]').val()) {
-			if (parseInt($('input[name="_reason_upload_crop_w"]').val())) return true;
+		// Find the containing element so we can update the correct set of
+		// crop elements
+		var container = this.ui.holder.parent().parent();
+		
+		$('input[name="_reason_upload_crop_x"]', container).val(0);
+		$('input[name="_reason_upload_crop_y"]', container).val(0);
+		$('input[name="_reason_upload_crop_w"]', container).val(0);
+		$('input[name="_reason_upload_crop_h"]', container).val(0);
+	}
+	
+	function checkCoords(form)
+	{		
+		if ($('div.jcrop-holder', form).length && $('input[name="_reason_upload_crop_required"]', form).val()) {
+			if (parseInt($('input[name="_reason_upload_crop_w"]', form).val())) return true;
 			alert('Please select a crop region before submitting your image.');
 			return false;
 		}
-	};	
+		return true;
+	};
+	
+	$('div.file_upload').each(function(){
+		$(this).closest('form').submit(function(){
+			return checkCoords(this);
+		});
+	});
 });
 
