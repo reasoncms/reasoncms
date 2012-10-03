@@ -46,6 +46,7 @@
 				$b = implode('&nbsp;&#187;&nbsp;', $ba);
 			}
 			$b = preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\1", $b);
+			$b = preg_replace("|Luther\s(\d+\s)?Home|", "Home", $b);
 			echo $b;
 			echo '</nav>'."\n";
 		}
