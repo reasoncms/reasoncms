@@ -44,7 +44,7 @@ class KalturaShim
 	*
 	* @return boolean
 	*/
-	public function kaltura_enabled()
+	public static function kaltura_enabled()
 	{
 		return defined('KALTURA_REASON_INTEGRATED') ? KALTURA_REASON_INTEGRATED : false;
 	}
