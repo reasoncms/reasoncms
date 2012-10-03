@@ -15,6 +15,9 @@ reason_include_once( 'content_listers/tree.php3' );
 reason_include_once( 'minisite_templates/nav_classes/default.php' );
 reason_include_once( 'classes/page_access.php' );
 reason_include_once( 'classes/group_helper.php' );
+reason_include_once('classes/media_work_displayer.php');
+
+
 $GLOBALS[ '_feed_class_names' ][ basename( __FILE__, '.php' ) ] = 'mediaFileFeed';
 
 class mediaFileFeed extends defaultFeed
@@ -370,6 +373,7 @@ class mediaFileRSS extends ReasonRSS
 				$media_file->set_value('work_description',$work->get_value('description'));
 				$media_file->set_value('author',$work->get_value('author'));
 				$media_file->set_value('integration_library',$work->get_value('integration_library'));
+				$media_file->set_value('work_id',$work->id());
 				$this->items[$media_file->id()] = $media_file;
 			}
 		}
@@ -400,12 +404,14 @@ class mediaFileRSS extends ReasonRSS
 	{
 		if($item->get_value('integration_library') == 'kaltura')
 		{
+			$work = new entity($item->get_value('work_id'));
+			
 			switch($item->get_value('mime_type'))
 			{
 				case 'video/mp4':
-					return $item->get_value('url').'/a.mp4?novar=0';
+					return 'http://'.HTTP_HOST_NAME.REASON_HTTP_BASE_PATH.'scripts/media/validate_requested_podcast.mp4?media_file_id='.$item->id().'&amp;media_work_id='.$item->get_value('work_id').'&amp;hash='.MediaWorkDisplayer::get_hash($work);
 				case 'audio/mpeg':
-					return $item->get_value('url').'/a.mp3?novar=0';
+					return 'http://'.HTTP_HOST_NAME.REASON_HTTP_BASE_PATH.'scripts/media/validate_requested_podcast.mp3?media_file_id='.$item->id().'&amp;media_work_id='.$item->get_value('work_id').'&amp;hash='.MediaWorkDisplayer::get_hash($work);
 			}
 			
 		}
