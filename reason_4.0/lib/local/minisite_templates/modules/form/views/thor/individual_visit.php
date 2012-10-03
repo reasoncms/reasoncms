@@ -1,7 +1,7 @@
 <?
 
 include_once('reason_header.php');
-include_once('/usr/local/webapps/reason/reason_package_local/disco/plasmature/types/datetime.php');
+reason_include_once('disco/plasmature/types/datetime.php');
 reason_include_once('minisite_templates/modules/form/views/thor/default.php');
 //include_once('disco/boxes/boxes.php');
 $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'IndividualVisitForm';
