@@ -58,7 +58,7 @@ reason_include_once('ssh/ssh.php');
 		{
 			// This media work is kaltura-integrated if it is a brand new media work with kaltura 
 			// integration turned on, or if it is an existing kaltura-integrated media work.
-			$this->kaltura_integrated_work = $this->get_value('integration_library') == 'kaltura' || (KALTURA_REASON_INTEGRATED == true && $this->get_value('datetime') == null);
+			$this->kaltura_integrated_work = $this->get_value('integration_library') == 'kaltura' || (KalturaShim::kaltura_enabled() == true && $this->get_value('datetime') == null);
 			
 			if ($this->kaltura_integrated_work)
 			{
@@ -147,6 +147,7 @@ reason_include_once('ssh/ssh.php');
 					$this->add_element( 'status_report' , 'commentWithLabel' , array('text'=>'<img src="'.REASON_HTTP_BASE_PATH.'silk_icons/error.png" width="16" height="16" alt="Error" /> There was an media-processing error. Please try again, or contact an administrator for assistance.'));
 				}
 				
+				$this->_add_restriction_selector();
 				$this->_add_file_upload_element();
 				$this->_add_file_preview();
 				
@@ -162,7 +163,7 @@ reason_include_once('ssh/ssh.php');
 					}
 				}
 				
-				$this->set_order (array ( 'status_report', 'file_preview', 'name', 'upload_file',  'email_notification', 'show_download', 'show_embed', 'embed_small', 'embed_medium', 'embed_large', 'link', 'replacement_header', 'file_info_header', 'av_type', 'description', 'keywords', 'datetime', 'author', 'media_duration',  ));
+				$this->set_order (array ( 'status_report', 'file_preview', 'name', 'upload_file',  'email_notification', 'show_download', 'show_embed', 'embed_small', 'embed_medium', 'embed_large', 'link', 'replacement_header', 'file_info_header', 'av_type', 'description', 'keywords', 'datetime', 'author', 'content', 'transcript_status', 'rights_statement', 'media_duration', 'media_publication_datetime', 'access_header', 'show_hide', 'restricted_group', 'no_share'  ));
 			}
 			else
 			{
@@ -199,6 +200,8 @@ reason_include_once('ssh/ssh.php');
 			$this -> add_comments ('description', form_comment('(e.g. "A Tour of Northfield")'));
 			
 			$this->add_element( 'file_info_header', 'comment', array('text'=>'<h4>Media Info</h4>'));
+			
+			$this->add_element( 'access_header', 'comment', array('text'=>'<h4>Access and Sharing</h4>'));
 			
 			$this->change_element_type('transcoding_status', 'hidden');
 			$this->change_element_type('entry_id', 'hidden');
@@ -294,7 +297,7 @@ reason_include_once('ssh/ssh.php');
 							$filePath = $file->tmp_full_path;
 							$filename_parts = explode('/', $filePath);
 							$filename = end($filename_parts);
-							$this->set_value('tmp_file_name', $filename); 
+							$this->set_value('tmp_file_name', $filename);
 							
 							$this->_process_work($filePath, $filePath);
 						}
@@ -307,7 +310,19 @@ reason_include_once('ssh/ssh.php');
 		* Uploads the media work to Kaltura.  $method
 		*/
 		function _process_work($tmp_path, $filePath)
-		{								
+		{
+			// Remove the old associated image if it was a thumbnail
+			$es = new entity_selector();
+			$es->add_type(id_of('image'));
+			$es->add_right_relationship($this->get_value('id'), relationship_id_of('av_to_primary_image'));
+			$cur_image = current($es->run_one());
+			
+			if ($cur_image && strpos($cur_image->get_value('name'), 'Thumbnail)') !== false)
+			{
+				delete_relationships(array('entity_a' => $this->get_value('id'), 'type' => relationship_id_of('av_to_primary_image')));
+			}
+			
+			
 			$user = new entity( $this->admin_page->authenticated_user_id );
 			if ($this->get_value('av_type') == 'Video')
 			{
@@ -556,6 +571,15 @@ reason_include_once('ssh/ssh.php');
 					}
 				}
 			}
+		}
+		
+		/**
+		* For Kaltura-integrated Media Works, adds a selector for restricting access.
+		*/
+		function _add_restriction_selector()
+		{
+			$this->add_relationship_element('restricted_group', id_of('group_type'), relationship_id_of('av_restricted_to_group'), 'right', 'select', true, $sort = 'entity.name ASC');
+			$this->set_display_name('restricted_group', 'Limit Access');
 		}
 		
 	}
