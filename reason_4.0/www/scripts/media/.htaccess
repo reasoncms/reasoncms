@@ -1,0 +1,4 @@
+RewriteEngine On
+
+RewriteRule ^validate_requested_podcast.mp4$ validate_requested_podcast.php
+RewriteRule ^validate_requested_podcast.mp3$ validate_requested_podcast.php
