@@ -340,7 +340,7 @@ class LoginBaseModule extends DefaultMinisiteModule
 		{
 			$this->sess->start();
 			$this->logged_in = true;
-			$this->sess->set( 'username', trim($this->request['username']) );
+			$this->sess->set( 'username', strtolower(trim($this->request['username'])) );
 			$this->log_authentication_event('login succeeded', $this->request['username']);
 			$this->clear_test_cookie();
 			
