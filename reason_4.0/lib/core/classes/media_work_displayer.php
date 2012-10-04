@@ -239,7 +239,47 @@ class MediaWorkDisplayer
 		$this->show_controls = $val;
 	}	
 	
+	/**
+	* Calculates the aspect ratio (width/height) of a media work.
+	*
+	* Stores ratios in static $ratios array so that only one query for media files will be attempted
+	* per media work.
+	*
+	* @param object $media_work
+	* @return mixed float $aspect_ratio or false if no files
+	*/
+	function get_video_aspect_ratio($media_work)
+	{
+		static $ratios = array();
+		if(isset($ratios[$media_work->id()]))
+			return $ratios[$media_work->id()];
 		
+		// Grab an associated media_file since they hold the dimension metadata
+		$es = new entity_selector();
+		$es->add_type(id_of('av_file'));
+		$es->add_right_relationship($media_work->id(), relationship_id_of('av_to_av_file'));
+		$es->set_order('height DESC');
+		$es->set_num(1);
+		$media_files = $es->run_one();
+		
+		if(!empty($media_files))
+		{
+			$media_file = current($media_files);
+		
+			$width = (float)$media_file->get_value('width');
+			$height = (float)$media_file->get_value('height');
+			
+			$ratios[$media_work->id()] = $width / $height;
+		}
+		else
+		{
+			$ratios[$media_work->id()] = false;
+		}
+			
+		return $ratios[$media_work->id()];
+	}
+	
+	
 	/**
 	* Returns a width generated from the aspect ratio of the original media work.  If no height is specified,
 	* it falls back to get_default_width().
@@ -250,7 +290,7 @@ class MediaWorkDisplayer
 	{
 		$shim = new KalturaShim();
 		
-		$aspect_ratio = $shim->get_video_aspect_ratio($this->media_work->get_value('entry_id'), 'reason_kaltura_shim');
+		$aspect_ratio = $this->get_video_aspect_ratio($this->media_work);
 		if ($aspect_ratio != false)
 		{
 			if ( !empty($this->height) )
@@ -303,7 +343,7 @@ class MediaWorkDisplayer
 		$shim = new KalturaShim();
 		if ( !empty($this->width) )
 		{
-			$aspect_ratio = $shim->get_video_aspect_ratio($this->media_work->get_value('entry_id'), 'reason_kaltura_shim');
+			$aspect_ratio = $this->get_video_aspect_ratio($this->media_work);
 			if ($aspect_ratio != false)
 				return $this->width / $aspect_ratio;
 		}
@@ -377,6 +417,8 @@ class MediaWorkDisplayer
 	
 	public static function get_hash($media_work)
 	{
+		if(empty($media_work))
+			return NULL;
 		return md5('media-work-hash-'.$media_work->id().'-'.$media_work->get_value('created_by').'-'.$media_work->get_value('creation_date'));
 	}
 	
