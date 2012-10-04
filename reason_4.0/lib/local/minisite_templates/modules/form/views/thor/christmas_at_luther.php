@@ -14,6 +14,24 @@ $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'ChristmasAtLut
  * * @author Steve Smith
  */
 class ChristmasAtLutherForm extends CreditCardThorForm {
+    var $thursday_tickets;
+    var $friday630_tickets;
+    var $friday915_tickets;
+    var $saturday_tickets;
+    var $sunday_tickets;
+
+    var $thursday_students;
+    var $friday630_students;
+    var $friday915_students;
+    var $saturday_students;
+    var $sunday_students;
+
+    var $thursday_names;
+    var $friday630_names;
+    var $friday915_names;
+    var $saturday_names;
+    var $sunday_names;
+
     var $thursday_count = 0;
     var $friday630_count = 0;
     var $friday915_count = 0;
@@ -24,153 +42,90 @@ class ChristmasAtLutherForm extends CreditCardThorForm {
     function on_every_time() {
         parent::on_every_time();
 
-        $thursday_tickets = $this->get_element_name_from_label('Thursday');
-        $friday630_tickets = $this->get_element_name_from_label('Friday630');
-        $friday915_tickets = $this->get_element_name_from_label('Friday915');
-        $saturday_tickets = $this->get_element_name_from_label('Saturday');
-        $sunday_tickets = $this->get_element_name_from_label('Sunday');
+        $this->thursday_tickets = $this->get_element_name_from_label('Thursday');
+        $this->friday630_tickets = $this->get_element_name_from_label('Friday630');
+        $this->friday915_tickets = $this->get_element_name_from_label('Friday915');
+        $this->saturday_tickets = $this->get_element_name_from_label('Saturday');
+        $this->sunday_tickets = $this->get_element_name_from_label('Sunday');
 
-        $thursday_students = $this->get_element_name_from_label('ThursdayStudents');
-        $friday630_students = $this->get_element_name_from_label('Friday630Students');
-        $friday915_students = $this->get_element_name_from_label('Friday915Students');
-        $saturday_students = $this->get_element_name_from_label('SaturdayStudents');
-        $sunday_students = $this->get_element_name_from_label('SundayStudents');
+        $this->thursday_students = $this->get_element_name_from_label('ThursdayStudents');
+        $this->friday630_students = $this->get_element_name_from_label('Friday630Students');
+        $this->friday915_students = $this->get_element_name_from_label('Friday915Students');
+        $this->saturday_students = $this->get_element_name_from_label('SaturdayStudents');
+        $this->sunday_students = $this->get_element_name_from_label('SundayStudents');
 
-        $thursday_names = $this->get_element_name_from_label('ThursdayNames');
-        $friday630_names = $this->get_element_name_from_label('Friday630Names');
-        $friday915_names = $this->get_element_name_from_label('Friday915Names');
-        $saturday_names = $this->get_element_name_from_label('SaturdayNames');
-        $sunday_names = $this->get_element_name_from_label('SundayNames');
+        $this->thursday_names = $this->get_element_name_from_label('ThursdayNames');
+        $this->friday630_names = $this->get_element_name_from_label('Friday630Names');
+        $this->friday915_names = $this->get_element_name_from_label('Friday915Names');
+        $this->saturday_names = $this->get_element_name_from_label('SaturdayNames');
+        $this->sunday_names = $this->get_element_name_from_label('SundayNames');
 
         //Style up form
+        $this->change_element_type($this->thursday_tickets, 'radio_inline', array(
+            'display_name' => 'Number of tickets for Thursday\'s performance', 'options' => array(1 => 1, 2 => 2, 3 => 3 , 4 => 4)));
+        $this->change_element_type($this->friday630_tickets, 'radio_inline', array(
+            'display_name' => 'Number of tickets for Friday\'s, 6:30 performance', 'options' => array('1','2','3','4')));
+        $this->change_element_type($this->friday915_tickets, 'radio_inline', array(
+            'display_name' => 'Number of tickets for Friday\'s, performance', 'options' => array('1','2','3','4')));
+        $this->change_element_type($this->saturday_tickets, 'radio_inline', array(
+            'display_name' => 'Number of tickets for Saturday\'s, performance', 'options' => array('1','2','3','4')));
+        $this->change_element_type($this->sunday_tickets, 'radio_inline', array(
+            'display_name' => 'Number of tickets for Sunday\'s, performance', 'options' => array('1','2','3','4')));
 
+        $this->change_element_type($this->thursday_students, 'text', array('display_name' => 'Number for non-participating Luther students', 'size' => '3', 'comments' => '<small>No Charge</small>'));
+        $this->change_element_type($this->friday630_students, 'text', array('display_name' => 'Number for non-participating Luther students', 'size' => '3', 'comments' => '<small>No Charge</small>'));
+        $this->change_element_type($this->friday915_students, 'text', array('display_name' => 'Number for non-participating Luther students', 'size' => '3', 'comments' => '<small>No Charge</small>'));
+        $this->change_element_type($this->saturday_students, 'text', array('display_name' => 'Number for non-participating Luther students', 'size' => '3', 'comments' => '<small>No Charge</small>'));
+        $this->change_element_type($this->sunday_students, 'text', array('display_name' => 'Number for non-participating Luther students', 'size' => '3', 'comments' => '<small>No Charge</small>'));
 
-        $this->change_element_type($thursday_tickets, 'text', array('display_name' => 'Number of tickets for Thursday\'s performance', 'size' => '3',));
-        $this->change_element_type($friday630_tickets, 'text', array('display_name' => 'Number of tickets for Friday\'s, 6:30 performance', 'size' => '3',));
-        $this->change_element_type($friday915_tickets, 'text', array('display_name' => 'Number of tickets for Friday\'s, 9:15 performance', 'size' => '3',));
-        $this->change_element_type($saturday_tickets, 'text', array('display_name' => 'Number of tickets for Saturday\'s, performance', 'size' => '3',));
-        $this->change_element_type($sunday_tickets, 'text', array('display_name' => 'Number of tickets for Sunday\'s, performance', 'size' => '3',));
+        $this->change_element_type($this->thursday_names, 'text', array('display_name' => 'Name(s) of non-participating Luther students'));
+        $this->change_element_type($this->friday630_names, 'text', array('display_name' => 'Name(s) of non-participating Luther students'));
+        $this->change_element_type($this->friday915_names, 'text', array('display_name' => 'Name(s) of non-participating Luther students'));
+        $this->change_element_type($this->saturday_names, 'text', array('display_name' => 'Name(s) of non-participating Luther students'));
+        $this->change_element_type($this->sunday_names, 'text', array('display_name' => 'Name(s) of non-participating Luther students'));
+    }
 
-        $this->change_element_type($thursday_students, 'text', array('display_name' => 'Number for non-participating Luther students', 'size' => '3', 'comments' => '<small>No Charge</small>'));
-        $this->change_element_type($friday630_students, 'text', array('display_name' => 'Number for non-participating Luther students', 'size' => '3', 'comments' => '<small>No Charge</small>'));
-        $this->change_element_type($friday915_students, 'text', array('display_name' => 'Number for non-participating Luther students', 'size' => '3', 'comments' => '<small>No Charge</small>'));
-        $this->change_element_type($saturday_students, 'text', array('display_name' => 'Number for non-participating Luther students', 'size' => '3', 'comments' => '<small>No Charge</small>'));
-        $this->change_element_type($sunday_students, 'text', array('display_name' => 'Number for non-participating Luther students', 'size' => '3', 'comments' => '<small>No Charge</small>'));
+    function run_error_checks(){
+        die(pray($this->get_model()));
+        // die(pray($this));
 
-        $this->change_element_type($thursday_names, 'text', array('display_name' => 'Name(s) of non-participating Luther students'));
-        $this->change_element_type($friday630_names, 'text', array('display_name' => 'Name(s) of non-participating Luther students'));
-        $this->change_element_type($friday915_names, 'text', array('display_name' => 'Name(s) of non-participating Luther students'));
-        $this->change_element_type($saturday_names, 'text', array('display_name' => 'Name(s) of non-participating Luther students'));
-        $this->change_element_type($sunday_names, 'text', array('display_name' => 'Name(s) of non-participating Luther students'));
+        $thur_ticks = intval($this->get_value($this->thursday_tickets));
+        $fri630_ticks = intval($this->get_value($this->friday630_tickets));
+        $fri915_ticks = intval($this->get_value($this->friday915_tickets));
+        $sat_ticks = intval($this->get_value($this->saturday_tickets));
+        $sun_ticks = intval($this->get_value($this->sunday_tickets));
+        
+        if (($thur_ticks + $fri630_ticks + $fri915_ticks + $sat_ticks + $sun_ticks) > 4 ){
+            $this->set_error($this->thursday_tickets, 'You can only order a total of 4 tickets.');
+        }
 
+        $thur_students = intval($this->get_value($this->thursday_students));
+        $fri630_students = intval($this->get_value($this->friday630_students));
+        $fri915_students = intval($this->get_value($this->friday915_students));
+        $sat_students = intval($this->get_value($this->saturday_students));
+        $sun_students = intval($this->get_value($this->sunday_students));
+        
+        // if (!is_int($thursday_students)) {
+        //     $this->set_error($this->thursday_students, 'NOOOOO');
+        // }
 
-//         $username = reason_check_authentication(); // this will force login
-//         if ($username) {
-//             $this->show_form = true;
-// //            echo '<hr>';
+        if ($thur_students && !$this->get_value($this->thursday_names)){
+            $this->set_error($this->thursday_names, 'Please provide the name(s) of the students');
+        }
+        if ($fri630_students && !$this->get_value($this->friday630_names)){
+            $this->set_error($this->friday630_names, 'Please provide the name(s) of the students');
+        }
+        if ($fri915_students && !$this->get_value($this->friday915_names)){
+            $this->set_error($this->friday915_names, 'Please provide the name(s) of the students');
+        }
+        if ($sat_students && !$this->get_value($this->saturday_names)){
+            $this->set_error($this->saturday_names, 'Please provide the name(s) of the students');
+        }
+        if ($sun_students && !$this->get_value($this->sunday_names)){
+            $this->set_error($this->sunday_names, 'Please provide the name(s) of the students');
+        }
 
-//             $payment_amount = $this->get_element_name_from_label('Payment Amount');
-//             $this->change_element_type($payment_amount, 'text');
-//            $this->set_display_name($payment_amount, 'text');
-            
-            
-
-//             $dir = new directory_service();
-//             $dir->serv_inst['mysql_royal_visit'];
-
-//             $auth = $dir->authenticate($username, $_SESSION['password']);
-//             connectDB('royal_visit_connection');
-
-//             ///////   Faculty/Staff/Emerti Query  ///////
-//             $query = "SELECT * FROM `faculty_staff_lottery` WHERE `email`='" . $username . "'";
-//             $result = db_query($query);
-//             $num_rows = mysql_num_rows($result);
-//             $this->set_value($payment_amount, '$20');
-//             if ($num_rows > 0) {
-//                 for ($num_rows; $num_rows > 0; $num_rows--) {
-//                     $row = mysql_fetch_assoc($result);
-//                     $values = array_values($row);
-
-//                     $name = $this->get_element_name_from_label('Your Name');
-//                     $this->change_element_type($name, 'solidtext');
-//                     $this->set_value($name, $row['Your First Name'] . ' ' . $row['Your Last Name']);
-
-//                     $guest_name = $this->get_element_name_from_label('Guest Name');
-//                     $this->change_element_type($guest_name, 'solidtext');
-//                     $this->set_value($guest_name, $row['Guest First Name'] . ' ' . $row['Guest Last Name']);
-
-//                     if (($row['Guest First Name'] != '') && ($row['Do you want an extra guest ticket for $20?'] == 'Yes')) {
-//                         echo '<hr>';
-//                         echo 'Tickets will be sent via intercampus mail for Faculty and Staff.<br>';
-//                         echo 'Emeriti will recieve tickets via USPS.' . "\n";
-//                         $this->set_value($this->payment_element, '$20');
-//                         $this->change_element_type($this->payment_element, 'hidden');
-
-//                         $this->change_element_type($this->get_element_name_from_label('Address'), 'hidden');
-//                     }
-//                 }
-//             }
-
-//             ///////   General Public Query  ///////
-//             $query = "SELECT * FROM `general_public_lottery` WHERE `email`='" . $username . "'";
-//             $result = db_query($query);
-//             $num_rows = mysql_num_rows($result);
-//             if ($num_rows > 0) {
-//                 echo '<hr>';
-//                 echo 'Tickets will be sent via USPS.' . "\n";
-//                 for ($num_rows; $num_rows > 0; $num_rows--) {
-//                     $row = mysql_fetch_assoc($result);
-//                     $values = array_values($row);
-
-//                     $name = $this->get_element_name_from_label('Your Name');
-//                     $this->change_element_type($name, 'solidtext');
-//                     $this->set_value($name, $row['Your First Name'] . ' ' . $row['Your Last Name']);
-
-//                     $guest_name = $this->get_element_name_from_label('Guest Name');
-//                     $this->change_element_type($guest_name, 'solidtext');
-//                     $this->set_value($guest_name, $row['Guest First Name'] . ' ' . $row['Guest Last Name']);
-
-//                     $address = $this->get_element_name_from_label('Address');
-//                     $this->change_element_type($address, 'solidtext');
-//                     $this->set_value($address, $row['Your Address'] . ', ' . $row['Your City'] . ', ' . $row['Your State'] . ' ' . $row['Your Zip code']);
-//                     //// Two Tickets ////
-//                     if (($row['Guest First Name'] != 'NULL') && ($row['Do you want an extra guest ticket for $20?'] == 'Yes')) {
-//                         $this->set_value($payment_amount, '$40');
-//                         parent::set_value('payment_amount', '$40');
-// //                        $this->remove_element($payment_amount);
-// //                        parent::remove_element('payment_amount');
-
-// //                        $this->set_value($this->payment_element, '$40');
-// //                        $this->change_element_type($this->payment_element, 'solidtext');
-// //                        $this->remove_element($this->payment_element);
-//                         $this->change_element_type($payment_amount, 'hidden');
-                        
-//                     }
-//                     //// One Tickets ////
-//                     if (($row['Guest First Name'] = 'NULL') && ($row['Do you want an extra guest ticket for $20?'] == 'No')) {
-//                         $this->set_value($this->payment_element, '$20');
-//                         $this->change_element_type($this->payment_element, 'hidden');
-//                         $this->change_element_type($this->get_element_name_from_label('Guest Name'), 'hidden');
-//                     }
-//                 }
-//             }
-//             connectDB(REASON_DB);
-
-//             $this->change_element_type($this->get_element_name_from_label('Comments'), 'hidden');
-
-
-
-// //                $this->change_element_type('e-mail', 'text');
-// //                $this->set_value('e-mail', $email);
-//         } else {
-// //                if (reason_check_authentication ()) {
-// //                    echo '<div class = "loginlogout">';
-// //                    echo '<p>You are logged in as ' . reason_check_authentication() . '. Unfortunately, you do not have access to fill out this form.
-// //                            Please contact the Office of the Registrar if you think this is an error.</p>';
-// //                    echo '</div>';
-// //                }
-//             $this->show_form = false;
-//         }
+        parent::run_error_checks();
     }
 
     function no_show_form() {
@@ -195,6 +150,20 @@ class ChristmasAtLutherForm extends CreditCardThorForm {
 //        $txt .= '<a href="' . $url . '">Log In</a>';
 //        $txt .= '</div>';
         return $txt;
+    }
+
+    function get_available_ticket_count($performance){
+        //Connect to Available tickets database
+        connectDB('christmas_available_ticket_connection');
+        
+        //
+
+
+        //reconnect to ReasonDB
+        connectDB(REASON_DB);
+
+        return $available;
+
     }
 
 //    function pre_show_form() {
