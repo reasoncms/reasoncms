@@ -186,16 +186,19 @@ class ReasonKalturaNotificationReceiver
 						else if ($data['height'] <= MEDIA_WORK_MEDIUM_HEIGHT)
 						{
 							if ($asset->bitrate < KALTURA_MEDIUM_VIDEO_BITRATE)
-								$transcoding_profile = KALTURA_VIDEO_SMALL_TRANSCODING_PROFILE;
+								$transcoding_profile = KALTURA_VIDEO_MEDIUM_LOW_BANDWIDTH_TRANSCODING_PROFILE;
 							else
 								$transcoding_profile = KALTURA_VIDEO_MEDIUM_TRANSCODING_PROFILE;
 						}
 						else
 						{
-							if ($asset->bitrate < KALTURA_MEDIUM_VIDEO_BITRATE)
-								$transcoding_profile = KALTURA_VIDEO_SMALL_TRANSCODING_PROFILE;
-							else if ($asset->bitrate < KALTURA_LARGE_VIDEO_BITRATE)
-								$transcoding_profile = KALTURA_VIDEO_MEDIUM_TRANSCODING_PROFILE;
+							if ($asset->bitrate < KALTURA_LARGE_VIDEO_BITRATE)
+							{	
+								if ($asset->bitrate < KALTURA_MEDIUM_VIDEO_BITRATE)
+									$transcoding_profile = KALTURA_VIDEO_LARGE_VERY_LOW_BANDWIDTH_TRANSCODING_PROFILE;
+								else
+									$transcoding_profile = KALTURA_VIDEO_LARGE_LOW_BANDWIDTH_TRANSCODING_PROFILE;
+							}
 							else
 								$transcoding_profile = KALTURA_VIDEO_LARGE_TRANSCODING_PROFILE;
 						}
@@ -330,7 +333,7 @@ class ReasonKalturaNotificationReceiver
 				$message .= 'Site:'."\n".html_entity_decode(strip_tags($owner->get_value('name')))."\n\n";
 				$message .= 'Uploaded by:'."\n".$user->get_value('name')."\n\n";
 				$message .= 'View it at this url: '.$link."\n\n";
-				$message .= 'Please contact the Web Services Group regarding this issue.'."\n\n";
+				$message .= 'If you continue to get this error after multiple attempts, please contact your Reason Administrator regarding this issue: '.WEBMASTER_EMAIL_ADDRESS."\n\n";
 			}
 			
 			mail($to, $subject, $message);
