@@ -86,7 +86,7 @@ class ChristmasAtLutherForm extends CreditCardThorForm {
     }
 
     function run_error_checks(){
-        die(pray($this->get_model()));
+        // die(pray($this->get_model()));
         // die(pray($this));
 
         $thur_ticks = intval($this->get_value($this->thursday_tickets));
