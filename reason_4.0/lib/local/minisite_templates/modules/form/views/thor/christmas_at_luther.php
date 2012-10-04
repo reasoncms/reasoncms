@@ -75,102 +75,102 @@ class ChristmasAtLutherForm extends CreditCardThorForm {
             
             
 
-            $dir = new directory_service();
-            $dir->serv_inst['mysql_royal_visit'];
+//             $dir = new directory_service();
+//             $dir->serv_inst['mysql_royal_visit'];
 
-            $auth = $dir->authenticate($username, $_SESSION['password']);
-            connectDB('royal_visit_connection');
+//             $auth = $dir->authenticate($username, $_SESSION['password']);
+//             connectDB('royal_visit_connection');
 
-            ///////   Faculty/Staff/Emerti Query  ///////
-            $query = "SELECT * FROM `faculty_staff_lottery` WHERE `email`='" . $username . "'";
-            $result = db_query($query);
-            $num_rows = mysql_num_rows($result);
-            $this->set_value($payment_amount, '$20');
-            if ($num_rows > 0) {
-                for ($num_rows; $num_rows > 0; $num_rows--) {
-                    $row = mysql_fetch_assoc($result);
-                    $values = array_values($row);
+//             ///////   Faculty/Staff/Emerti Query  ///////
+//             $query = "SELECT * FROM `faculty_staff_lottery` WHERE `email`='" . $username . "'";
+//             $result = db_query($query);
+//             $num_rows = mysql_num_rows($result);
+//             $this->set_value($payment_amount, '$20');
+//             if ($num_rows > 0) {
+//                 for ($num_rows; $num_rows > 0; $num_rows--) {
+//                     $row = mysql_fetch_assoc($result);
+//                     $values = array_values($row);
 
-                    $name = $this->get_element_name_from_label('Your Name');
-                    $this->change_element_type($name, 'solidtext');
-                    $this->set_value($name, $row['Your First Name'] . ' ' . $row['Your Last Name']);
+//                     $name = $this->get_element_name_from_label('Your Name');
+//                     $this->change_element_type($name, 'solidtext');
+//                     $this->set_value($name, $row['Your First Name'] . ' ' . $row['Your Last Name']);
 
-                    $guest_name = $this->get_element_name_from_label('Guest Name');
-                    $this->change_element_type($guest_name, 'solidtext');
-                    $this->set_value($guest_name, $row['Guest First Name'] . ' ' . $row['Guest Last Name']);
+//                     $guest_name = $this->get_element_name_from_label('Guest Name');
+//                     $this->change_element_type($guest_name, 'solidtext');
+//                     $this->set_value($guest_name, $row['Guest First Name'] . ' ' . $row['Guest Last Name']);
 
-                    if (($row['Guest First Name'] != '') && ($row['Do you want an extra guest ticket for $20?'] == 'Yes')) {
-                        echo '<hr>';
-                        echo 'Tickets will be sent via intercampus mail for Faculty and Staff.<br>';
-                        echo 'Emeriti will recieve tickets via USPS.' . "\n";
-                        $this->set_value($this->payment_element, '$20');
-                        $this->change_element_type($this->payment_element, 'hidden');
+//                     if (($row['Guest First Name'] != '') && ($row['Do you want an extra guest ticket for $20?'] == 'Yes')) {
+//                         echo '<hr>';
+//                         echo 'Tickets will be sent via intercampus mail for Faculty and Staff.<br>';
+//                         echo 'Emeriti will recieve tickets via USPS.' . "\n";
+//                         $this->set_value($this->payment_element, '$20');
+//                         $this->change_element_type($this->payment_element, 'hidden');
 
-                        $this->change_element_type($this->get_element_name_from_label('Address'), 'hidden');
-                    }
-                }
-            }
+//                         $this->change_element_type($this->get_element_name_from_label('Address'), 'hidden');
+//                     }
+//                 }
+//             }
 
-            ///////   General Public Query  ///////
-            $query = "SELECT * FROM `general_public_lottery` WHERE `email`='" . $username . "'";
-            $result = db_query($query);
-            $num_rows = mysql_num_rows($result);
-            if ($num_rows > 0) {
-                echo '<hr>';
-                echo 'Tickets will be sent via USPS.' . "\n";
-                for ($num_rows; $num_rows > 0; $num_rows--) {
-                    $row = mysql_fetch_assoc($result);
-                    $values = array_values($row);
+//             ///////   General Public Query  ///////
+//             $query = "SELECT * FROM `general_public_lottery` WHERE `email`='" . $username . "'";
+//             $result = db_query($query);
+//             $num_rows = mysql_num_rows($result);
+//             if ($num_rows > 0) {
+//                 echo '<hr>';
+//                 echo 'Tickets will be sent via USPS.' . "\n";
+//                 for ($num_rows; $num_rows > 0; $num_rows--) {
+//                     $row = mysql_fetch_assoc($result);
+//                     $values = array_values($row);
 
-                    $name = $this->get_element_name_from_label('Your Name');
-                    $this->change_element_type($name, 'solidtext');
-                    $this->set_value($name, $row['Your First Name'] . ' ' . $row['Your Last Name']);
+//                     $name = $this->get_element_name_from_label('Your Name');
+//                     $this->change_element_type($name, 'solidtext');
+//                     $this->set_value($name, $row['Your First Name'] . ' ' . $row['Your Last Name']);
 
-                    $guest_name = $this->get_element_name_from_label('Guest Name');
-                    $this->change_element_type($guest_name, 'solidtext');
-                    $this->set_value($guest_name, $row['Guest First Name'] . ' ' . $row['Guest Last Name']);
+//                     $guest_name = $this->get_element_name_from_label('Guest Name');
+//                     $this->change_element_type($guest_name, 'solidtext');
+//                     $this->set_value($guest_name, $row['Guest First Name'] . ' ' . $row['Guest Last Name']);
 
-                    $address = $this->get_element_name_from_label('Address');
-                    $this->change_element_type($address, 'solidtext');
-                    $this->set_value($address, $row['Your Address'] . ', ' . $row['Your City'] . ', ' . $row['Your State'] . ' ' . $row['Your Zip code']);
-                    //// Two Tickets ////
-                    if (($row['Guest First Name'] != 'NULL') && ($row['Do you want an extra guest ticket for $20?'] == 'Yes')) {
-                        $this->set_value($payment_amount, '$40');
-                        parent::set_value('payment_amount', '$40');
-//                        $this->remove_element($payment_amount);
-//                        parent::remove_element('payment_amount');
+//                     $address = $this->get_element_name_from_label('Address');
+//                     $this->change_element_type($address, 'solidtext');
+//                     $this->set_value($address, $row['Your Address'] . ', ' . $row['Your City'] . ', ' . $row['Your State'] . ' ' . $row['Your Zip code']);
+//                     //// Two Tickets ////
+//                     if (($row['Guest First Name'] != 'NULL') && ($row['Do you want an extra guest ticket for $20?'] == 'Yes')) {
+//                         $this->set_value($payment_amount, '$40');
+//                         parent::set_value('payment_amount', '$40');
+// //                        $this->remove_element($payment_amount);
+// //                        parent::remove_element('payment_amount');
 
-//                        $this->set_value($this->payment_element, '$40');
-//                        $this->change_element_type($this->payment_element, 'solidtext');
-//                        $this->remove_element($this->payment_element);
-                        $this->change_element_type($payment_amount, 'hidden');
+// //                        $this->set_value($this->payment_element, '$40');
+// //                        $this->change_element_type($this->payment_element, 'solidtext');
+// //                        $this->remove_element($this->payment_element);
+//                         $this->change_element_type($payment_amount, 'hidden');
                         
-                    }
-                    //// One Tickets ////
-                    if (($row['Guest First Name'] = 'NULL') && ($row['Do you want an extra guest ticket for $20?'] == 'No')) {
-                        $this->set_value($this->payment_element, '$20');
-                        $this->change_element_type($this->payment_element, 'hidden');
-                        $this->change_element_type($this->get_element_name_from_label('Guest Name'), 'hidden');
-                    }
-                }
-            }
-            connectDB(REASON_DB);
+//                     }
+//                     //// One Tickets ////
+//                     if (($row['Guest First Name'] = 'NULL') && ($row['Do you want an extra guest ticket for $20?'] == 'No')) {
+//                         $this->set_value($this->payment_element, '$20');
+//                         $this->change_element_type($this->payment_element, 'hidden');
+//                         $this->change_element_type($this->get_element_name_from_label('Guest Name'), 'hidden');
+//                     }
+//                 }
+//             }
+//             connectDB(REASON_DB);
 
-            $this->change_element_type($this->get_element_name_from_label('Comments'), 'hidden');
+//             $this->change_element_type($this->get_element_name_from_label('Comments'), 'hidden');
 
 
 
-//                $this->change_element_type('e-mail', 'text');
-//                $this->set_value('e-mail', $email);
-        } else {
-//                if (reason_check_authentication ()) {
-//                    echo '<div class = "loginlogout">';
-//                    echo '<p>You are logged in as ' . reason_check_authentication() . '. Unfortunately, you do not have access to fill out this form.
-//                            Please contact the Office of the Registrar if you think this is an error.</p>';
-//                    echo '</div>';
-//                }
-            $this->show_form = false;
-        }
+// //                $this->change_element_type('e-mail', 'text');
+// //                $this->set_value('e-mail', $email);
+//         } else {
+// //                if (reason_check_authentication ()) {
+// //                    echo '<div class = "loginlogout">';
+// //                    echo '<p>You are logged in as ' . reason_check_authentication() . '. Unfortunately, you do not have access to fill out this form.
+// //                            Please contact the Office of the Registrar if you think this is an error.</p>';
+// //                    echo '</div>';
+// //                }
+//             $this->show_form = false;
+//         }
     }
 
     function no_show_form() {
