@@ -47,13 +47,40 @@ echo '<p>This script examines the types in your reason instance, and discovers r
 echo ' file system split. The script allows you to easily change these references, or resolve references to missing files. By default, missing ';
 echo ' files and references to "local" files are displayed, and "core" files are shown as available options for new values.</p>';
 
+// we loop through POST and make sure it contains requested changes to type entities and that those are limited to changeable fields.
+// once we do this, we actually make the changes.
 if (!empty($_POST))
 {
 	unset($_POST['process']);
 	$count = 0;
-	foreach ($_POST as $k=>$v)
+	foreach ($_POST as $k => $v)
 	{
-		if (reason_update_entity( $k, $user_id, $v, $archive = true)) $count++;
+		$change_values = array();
+		// each $k should be an integer that corresponds to a type entity. If not, ignore it.
+		if (is_int($k))
+		{
+			$e = new entity($k);
+			if (reason_is_entity($e, 'type'))
+			{
+				foreach ($v as $field => $value)
+				{
+					if (isset($fields[$field]))
+					{
+						if (reason_file_exists($fields[$field].'/'.$value))
+						{
+							$change_values[$field] = $value;
+						}
+					}
+				}
+				if (!empty($change_values))
+				{
+					if ($update_attempt = reason_update_entity( $k, $user_id, $change_values ))
+					{
+						$count++;
+					}
+				}	
+			}
+		}
 	}
 	echo '<h3>'.$count.' entity updates were saved.</h3>';
 }
