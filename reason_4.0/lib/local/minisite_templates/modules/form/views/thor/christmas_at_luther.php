@@ -64,13 +64,13 @@ class ChristmasAtLutherForm extends CreditCardThorForm {
         $this->change_element_type($sunday_names, 'text', array('display_name' => 'Name(s) of non-participating Luther students'));
 
 
-        $username = reason_check_authentication(); // this will force login
-        if ($username) {
-            $this->show_form = true;
-//            echo '<hr>';
+//         $username = reason_check_authentication(); // this will force login
+//         if ($username) {
+//             $this->show_form = true;
+// //            echo '<hr>';
 
-            $payment_amount = $this->get_element_name_from_label('Payment Amount');
-            $this->change_element_type($payment_amount, 'text');
+//             $payment_amount = $this->get_element_name_from_label('Payment Amount');
+//             $this->change_element_type($payment_amount, 'text');
 //            $this->set_display_name($payment_amount, 'text');
             
             
