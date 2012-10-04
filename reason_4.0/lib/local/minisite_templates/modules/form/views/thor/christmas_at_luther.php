@@ -42,6 +42,10 @@ class ChristmasAtLutherForm extends CreditCardThorForm {
     function on_every_time() {
         parent::on_every_time();
 
+        if (reason_check_authentication() == 'smitst01'){
+            $this->is_in_testing_mode = true;
+        }
+
         $this->thursday_tickets = $this->get_element_name_from_label('Thursday');
         $this->friday630_tickets = $this->get_element_name_from_label('Friday630');
         $this->friday915_tickets = $this->get_element_name_from_label('Friday915');
