@@ -74,30 +74,6 @@ class KalturaShim
 		}	
 	}
 	
-	/**
-	* Returns a floating point number representing the aspect ratio of a video.  (Width / Height)
-	*
-	* @param string $kaltura_entry_id
-	* @param string $netid
-	* @return float
-	*/
-	public function get_video_aspect_ratio($kaltura_entry_id, $netid)
-	{
-		$client = $this->_get_kaltura_client($netid, true);
-		if ($client == false) return false;
-		
-		try {
-			$asset = current($this->get_flavor_assets_for_entry($kaltura_entry_id, $netid));
-			$width = (float)$asset->width;
-			$height = (float)$asset->height;
-			
-			return $width / $height;
-		}
-		catch (Exception $e)
-		{
-			return false;
-		}	
-	}
 	
 	/**
 	* Get a thumbnail URL from Kaltura
