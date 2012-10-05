@@ -33,6 +33,10 @@ class SiteAccessDeniedModule extends DefaultModule
 	function init()
 	{
 		$this->request = carl_get_request();
+		
+		// If obtained via post we need to manually decode the URL - all current uses of this pass it via get.
+		if (isset($_POST['requested_url'])) $this->request['requested_url'] = urldecode($this->request['requested_url']);
+		
 		$this->admin_page->title = 'Access Denied';
 				
 		if ($requested_site_id = $this->get_requested_site_id())
@@ -40,7 +44,7 @@ class SiteAccessDeniedModule extends DefaultModule
 			// lets double check whether the user has access
 			if (user_can_edit_site($this->admin_page->user_id, $requested_site_id))
 			{
-				header('Location: ' . urldecode($this->get_destination_url_with_user_id($this->admin_page->user_id)));
+				header('Location: ' . $this->get_destination_url_with_user_id($this->admin_page->user_id));
 				exit;
 			}
 			else
@@ -213,7 +217,7 @@ class SiteAccessDeniedModule extends DefaultModule
 	
 	function get_destination_url_with_user_id($user_id)
 	{
-		$base_url = urldecode($this->request['requested_url']);	
+		$base_url = $this->request['requested_url'];	
 		$base_url_parsed = parse_url($base_url);
 		$base_url_query = $base_url_parsed['query'];
 		$base_url_query_array = $this->convert_url_query($base_url_query);
@@ -222,12 +226,12 @@ class SiteAccessDeniedModule extends DefaultModule
 		$query_index = strpos($base_url, '?');
 		$new_url = substr($base_url, 0, $query_index);
 		$new_url .= $new_query_string;
-		return urlencode($new_url);
+		return $new_url;
 	}
 	
 	function where_to(&$disco)
 	{
-		return urldecode($this->request['requested_url']);
+		return $this->request['requested_url'];
 	}
 }
 ?>
