@@ -14,6 +14,7 @@
 			'template' => 'slideshow',
 			'order' => '`last_occurence` ASC',
 			'no_events_message' => '',
+			'model' => 'item',
 		);
 		function _get_events()
 		{
@@ -38,14 +39,34 @@
 				$es->set_order($this->params['order']);
 				$this->_modify_events_es($es);
 				$events = $es->run_one();
+				$class = $this->get_model_class($this->params['model']);
 				foreach($events as $id => $event)
 				{
-					$this->events[$id] = new eventGalleryItem($event);
+					$this->events[$id] = new $class($event);
 				}
 				if(empty($this->events))
 					$this->events = array();
 			}
 			return $this->events;
+		}
+		function get_model_class($model_name)
+		{
+			reason_include_once('minisite_templates/modules/events_gallery/'.$model_name.'.php');
+			if(!empty($GLOBALS['reason_event_gallery_models'][$model_name]))
+			{
+				if(class_exists($GLOBALS['reason_event_gallery_models'][$model_name]))
+				{
+					return $GLOBALS['reason_event_gallery_models'][$model_name];
+				}
+				else
+				{
+					trigger_error('Model of class '.$_GLOBALS['reason_event_gallery_models'][$model_name].' not found -- badly formatted model name or model not properly registered', HIGH);
+				}
+			}
+			else
+			{
+				trigger_error('No model found -- badly formatted model name or model not properly registered', HIGH);
+			}
 		}
 		function _modify_events_es($es)
 		{
