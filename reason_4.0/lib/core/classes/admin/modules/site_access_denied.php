@@ -104,7 +104,7 @@ class SiteAccessDeniedModule extends DefaultModule
 		{
 			$query_string .= $key.'='.$val.'&';
 		}
-		$query_string = substr($query_string ,"",-1);
+		$query_string = substr($query_string ,0,-1);
 		return $query_string;
 	}		
 	
