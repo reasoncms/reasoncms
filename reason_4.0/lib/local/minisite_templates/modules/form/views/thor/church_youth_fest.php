@@ -25,7 +25,7 @@ class ChurchYouthFestPaymentForm extends CreditCardThorForm {
       $this->set_element_properties($this->get_element_name_from_label('Zipcode'), array('size'=>5));
       $this->set_element_properties($this->get_element_name_from_label('# of Youth @ $25.00'), array('size'=>3));
       $this->set_element_properties($this->get_element_name_from_label('# of Sponsors @ $20.00'), array('size'=>3));
-      $this->set_element_properties($this->get_element_name_from_label('# for Ropes Course @ $5.00'), array('size'=>3));
+      $this->set_element_properties($this->get_element_name_from_label('# for Challenge Ropes Course @ $5.00'), array('size'=>3));
       $this->set_value($this->get_element_name_from_label('Revenue Budget Number'), '10-000-38101-45900');
       $this->set_value($this->get_element_name_from_label('Expense Budget Number'), '10-140-38101-51111');
     }
@@ -33,7 +33,7 @@ class ChurchYouthFestPaymentForm extends CreditCardThorForm {
     function get_amount(){
         $youth = $this->get_value_from_label('# of Youth @ $25.00');
         $sponsors = $this->get_value_from_label('# of Sponsors @ $20.00');
-        $ropes = $this->get_value_from_label('# for Ropes Course @ $5.00');
+        $ropes = $this->get_value_from_label('# for Challenge Ropes Course @ $5.00');
 
         $youth_total = $youth * 25;
         $sponsor_total = $sponsors * 20;
