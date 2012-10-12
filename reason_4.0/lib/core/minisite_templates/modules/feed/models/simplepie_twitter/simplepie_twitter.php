@@ -79,9 +79,13 @@ class ReasonSimplepieTwitterFeedModel extends ReasonMVCModel // implements Reaso
 	{
 		$data = $this->get();
 		$item = $data->get_item();
-		$id = $item->get_id();
-		preg_match('/[0-9]+$/', $id, $match);
-		return (!empty($match)) ? $match[0] : false;
+		if ($item)
+		{
+			$id = $item->get_id();
+			preg_match('/[0-9]+$/', $id, $match);
+			return (!empty($match)) ? $match[0] : false;
+		}
+		return false;
 	}
 }
 
