@@ -25,6 +25,9 @@ $GLOBALS[ '_reason_mvc_model_class_names' ][ reason_basename( __FILE__) ] = 'Rea
  *
  * Note that Twitter, as of 8/13/2012 has a rate limit of 150 unauthenticated requests / per ip / per hour.
  *
+ * Twitter silently killed atom feeds as of 10/12/2012 (or maybe earlier). I switched to using RSS but that too
+ * will be deprecated on March 5, 2013.
+ *
  * The default cache duration of 10 minutes basically means that anywhere you use this model you will be making
  * up to 6 requests per hour. If you are using twitter for many screen names, you might need to increase the
  * cache duration to avoid hitting the rate limit.
@@ -55,9 +58,9 @@ class ReasonSimplepieTwitterFeedModel extends ReasonMVCModel // implements Reaso
 	function build()
 	{
 		if ($url = $this->config('screen_name'))
-		{
+		{			
 			$simplepie = new SimplePie_Twitter;
-			$simplepie->set_feed_url('http://twitter.com/statuses/user_timeline.atom?screen_name='.$this->config('screen_name'));
+			$simplepie->set_feed_url('http://api.twitter.com/1/statuses/user_timeline.rss?screen_name='.$this->config('screen_name'));
 			$simplepie->set_cache_location($this->config('cache_directory'));
 			$simplepie->set_cache_duration($this->config('cache_duration'));
 			$simplepie->set_item_class('SimplePie_Twitter_Item');
