@@ -97,7 +97,7 @@ class StudentInfoForm extends FormStep
 			'all_state' => 'All-State Choir Membership (explain in Comments area, if desired)',
 			'superior_ratings' => 'Superior ratings on solos in consecutive state contests',
 			'audition_tape' => 'Audition tape to be submitted to Luther College',
-			'available' => '*The student must be at Luther on Saturday, January 8 for rehearsals'
+			'available' => '*The student must be at Luther on Saturday, January 12 for rehearsals'
 		    ),
 		),
 //                'desired_participation_note' => array(
