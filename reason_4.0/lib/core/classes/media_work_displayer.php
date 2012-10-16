@@ -118,7 +118,7 @@ class MediaWorkDisplayer
 	* @access private
 	* @return integer
 	*/
-	private function _get_default_width($kaltura_shim)
+	private function _get_default_width()
 	{
 		return $this->default_width;
 	}
@@ -136,7 +136,7 @@ class MediaWorkDisplayer
 	* @access private
 	* @return integer
 	*/
-	private function _get_default_height($kaltura_shim)
+	private function _get_default_height()
 	{
 		return $this->default_height;
 	}	
@@ -287,9 +287,7 @@ class MediaWorkDisplayer
 	* @return int
 	*/
 	function _get_width_from_height()
-	{
-		$shim = new KalturaShim();
-		
+	{		
 		$aspect_ratio = $this->get_video_aspect_ratio($this->media_work);
 		if ($aspect_ratio != false)
 		{
@@ -303,7 +301,7 @@ class MediaWorkDisplayer
 			}
 		}
 		else
-			return $this->_get_default_width($shim);
+			return $this->_get_default_width();
 	}
 	
 	/**
@@ -340,14 +338,13 @@ class MediaWorkDisplayer
 	*/
 	private function _get_height_from_width()
 	{
-		$shim = new KalturaShim();
 		if ( !empty($this->width) )
 		{
 			$aspect_ratio = $this->get_video_aspect_ratio($this->media_work);
 			if ($aspect_ratio != false)
 				return $this->width / $aspect_ratio;
 		}
-		return $this->_get_default_height($shim);
+		return $this->_get_default_height();
 	}	
 	
 	/**
