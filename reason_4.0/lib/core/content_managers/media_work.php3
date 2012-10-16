@@ -58,7 +58,7 @@ reason_include_once('ssh/ssh.php');
 		{
 			// This media work is kaltura-integrated if it is a brand new media work with kaltura 
 			// integration turned on, or if it is an existing kaltura-integrated media work.
-			$this->kaltura_integrated_work = $this->get_value('integration_library') == 'kaltura' || (KalturaShim::kaltura_enabled() && $this->get_value('datetime') == null);
+			$this->kaltura_integrated_work = $this->get_value('integration_library') == 'kaltura' || (KalturaShim::kaltura_enabled() && $this->is_new_entity() );
 			
 			if ($this->kaltura_integrated_work)
 			{
