@@ -35,7 +35,7 @@ class KalturaShim
 	* Trigger an error if a KalturaShim is created when Kaltura integration is disabled.
 	*/
 	function __construct() {
-		if ($this->kaltura_enabled() == false)
+		if (!$this->kaltura_enabled())
 			trigger_error('Kaltura integration is not enabled for Reason.  Use of the KalturaShim class is not allowed.');
 	}
 	
@@ -60,7 +60,7 @@ class KalturaShim
 	public function get_video_original_dimensions($kaltura_entry_id, $netid)
 	{
 		$client = $this->_get_kaltura_client($netid, true);
-		if ($client == false) return false;
+		if (!$client) return false;
 		
 		try {
 			$entry = $client->media->get($kaltura_entry_id);
@@ -92,7 +92,7 @@ class KalturaShim
 	*/
 	public function get_thumbnail($kaltura_entry_id, $seconds, $options = array())
 	{
-		if ($this->kaltura_enabled() == true)
+		if ($this->kaltura_enabled())
 		{
 			if (is_numeric($seconds))
 			{
@@ -121,13 +121,14 @@ class KalturaShim
 	public function get_media_length_in_milliseconds($kaltura_entry_id, $netid)
 	{
 		$client = $this->_get_kaltura_client($netid, true);
-		if ($client == false) return false;
+		if (!$client) return false;
 		
 		try {
 			return $client->media->get($kaltura_entry_id)->msDuration;
 		}
 		catch (Exception $e)
 		{
+			trigger_error('Media Work with entry_id '.$kaltura_entry_id.' does not exist in this Kaltura Publisher ('.KALTURA_PARTNER_ID.').');
 			return false;
 		}
 	}
@@ -143,13 +144,15 @@ class KalturaShim
 	public function delete_media($kaltura_entry_id, $netid)
 	{
 		$client = $this->_get_kaltura_client($netid, true);
-		if ($client == false) return false;
+		if (!$client) return false;
 		
-		try {
+		try 
+		{
 			$client->media->delete($kaltura_entry_id);
 		}
 		catch (Exception $e)
 		{
+			return false;
 		}
 	}
 	
@@ -163,7 +166,7 @@ class KalturaShim
 	public function delete_flavor_asset($kaltura_flavor_id, $netid)
 	{
 		$client = $this->_get_kaltura_client($netid, true);
-		if ($client == false) return false;
+		if (!$client) return false;
 		
 		try {
 			$client->flavorAsset->delete($kaltura_flavor_id);
@@ -185,13 +188,16 @@ class KalturaShim
 	public function convert_media($kaltura_entry_id, $transcoding_profile_id, $netid)
 	{
 		$client = $this->_get_kaltura_client($netid, true);
-		if ($client == false) return false;
+		if (!$client) return false;
 		
-		try {
+		try 
+		{
 			$client->media->convert($kaltura_entry_id, $transcoding_profile_id);
 		}
 		catch (Exception $e)
 		{
+			trigger_error('Could not convert Kaltura entry_id '.$entry_id.' because it does not exist in this Kaltura Publisher ('.KALTURA_PARTNER_ID.').');
+			return false;
 		}
 	}
 	
@@ -246,7 +252,7 @@ class KalturaShim
 	private function _upload_media($filePath, $title, $description, $tags, $categories, $netid, $media_type, $transcoding_profile)
 	{
 		$client = $this->_get_kaltura_client($netid, true);
-		if ($client == false) return false;
+		if (!$client) return false;
 		
 		$entry = new KalturaMediaEntry();
 		if (!empty($title)) $entry->name = $title;
@@ -291,6 +297,8 @@ class KalturaShim
 	public function update_media_entry_metadata($entry_id, $netid, $title = '', $description = '', $tags = '', $categories = '')
 	{
 		$client = $this->_get_kaltura_client($netid, true);
+		if (!$client) return false;
+		
 		try
 		{
 			$entry = $client->media->get($entry_id);
@@ -312,7 +320,15 @@ class KalturaShim
 				$entry->tags = implode(", ", $tags);
 			if (!empty($categories))
 				$entry->categories = implode(", ", $categories);
-			$client->media->update($entry_id, $entry);
+			try 
+			{
+				$client->media->update($entry_id, $entry);
+			} 
+			catch (Exception $e)
+			{
+				trigger_error('Could not update metadata for Media Work with entry_id '.$entry_id.' because it does not exist in this Kaltura Publisher ('.KALTURA_PARTNER_ID.').');
+				return false;
+			}
 		}
 	}
 	
@@ -327,6 +343,7 @@ class KalturaShim
 	public function get_flavor_assets_for_entry($entry_id, $netid)
 	{
 		$client = $this->_get_kaltura_client($netid, true);
+		if (!$client) return false;
 		
 		try
 		{
@@ -343,7 +360,7 @@ class KalturaShim
 	}
 	
 	/**
-	* Creates a new flavorParams in Kaltura.
+	* Creates a new flavorParams in Kaltura.  Returns true upon success, or false if the flavor already exists.
 	*
 	* @param array $params
 	* @param string $netid
@@ -351,7 +368,7 @@ class KalturaShim
 	public function add_flavor_param($params, $netid)
 	{
 		$client = $this->_get_kaltura_client($netid, true);
-		if ($client == false) return false;
+		if (!$client) return false;
 		
 		$list = $client->flavorParams->listAction();
 		$objects = $list->objects;
@@ -377,7 +394,7 @@ class KalturaShim
 	*/
 	private function _get_kaltura_client($netid, $isAdmin = true)
 	{
-		if ($this->kaltura_enabled() == true)
+		if ($this->kaltura_enabled())
 		{
 			if ($netid != $this->user_id)
 			{
