@@ -4,9 +4,53 @@
  * @author Marcus Huderle
  * @requires jQuery
  */
+function post_upload(val)
+{
+	// Hide the filename changing row when we pick a new file; it won't
+	// have any effect if changed when received along with a new file.
+	$("tr#emailnotificationRow").show();
+	
+	parts = val.split(".");
+	len = parts.length;
+	extension = parts[len-1].toLowerCase();
+	
+	if ($.inArray(extension, $.my_extension_data.vid_extensions) != -1)
+	{
+		$.my_extension_data.aud_radio.removeAttr("checked");
+		$.my_extension_data.vid_radio.attr("checked", "checked");
+		$.my_extension_data.media_type.hide();
+	}
+	else if ($.inArray(extension, $.my_extension_data.aud_extensions) != -1)
+	{
+		$.my_extension_data.vid_radio.removeAttr("checked");
+		$.my_extension_data.aud_radio.attr("checked", "checked");
+		
+		$.my_extension_data.media_type.hide();
+	}
+	else
+	{
+		$.my_extension_data.media_type.show();
+		if ($.my_extension_data.media_type_text.html().indexOf(":*") == -1)
+		{
+			newStr = $.my_extension_data.media_type_text.html().replace(":", ":*");
+			$.my_extension_data.media_type_text.html(newStr);
+		}
+	}
+}
 
 $(document).ready(function() 
 {	
+	$.my_extension_data = {
+		vid_extensions : new Array("flv", "f4v", "mov", "wmv", "qt", "m4v", "avi", "3gp", "asf", "wvm", "mpg", "m1v", "m2v", "mkv", "webm", "ogv"),
+		aud_extensions : new Array("mp3", "aiff", "wav", "m4a", "aac"),
+		media_type : $("tr#avtypeRow"),
+		vid_radio : $("input#radio_av_type_1"),
+		aud_radio : $("input#radio_av_type_0"),
+		media_type_text : $("tr#avtypeRow td.words")
+	
+	};
+
+
 	if ( $("tr#filepreviewRow").html() != null )
 	{
 		$("tr#uploadfileRow").hide();
@@ -24,7 +68,7 @@ $(document).ready(function()
 		
 		change_file_row.append(change_file_pre_col);
 		change_file_row.append(change_file_col.append(change_file_link));
-		$("tr#nameRow").after(change_file_row);
+		$("tr#uploadfileRow").after(change_file_row);
 		
 		var linkContainer = $('<div class="sizeLinks"></div>');
 		var smallLink = $('<a href="#" class="sizeLink small">Small</a>');
@@ -74,12 +118,6 @@ $(document).ready(function()
 
 	$("tr#emailnotificationRow").hide();
 	
-	var vid_extensions = new Array("flv", "f4v", "mov", "wmv", "qt", "m4v", "avi", "3gp", "asf", "wvm", "mpg", "m1v", "m2v", "mkv", "webm", "ogv");
-	var aud_extensions = new Array("mp3", "aiff", "wav", "m4a", "aac");
-	
-	var vid_radio = $("input#radio_av_type_1");
-	var aud_radio = $("input#radio_av_type_0");
-	
 	var transcript_row = $("<tr class=\"transcript_toggler\"></tr>");
 	var transcript_pre_column = $("<td class=\"words\" align=\"right\"></td>");
 	var transcript_column = $("<td class=\"element\" align=\"left\"></td>");
@@ -95,19 +133,24 @@ $(document).ready(function()
 	
 	rights_row.append(rights_pre_column);
 	rights_row.append(rights_column.append(rights_toggler));
-	
-	var media_type = $("tr#avtypeRow");
-	var media_type_text = $("tr#avtypeRow td.words");
-	
+		
 	if ($("li a.errorJump").attr("href") == "#av_type_error")
 	{
-		newStr = media_type_text.html().replace(":", ":*");
-    	media_type_text.html(newStr);
+		newStr = $.my_extension_data.media_type_text.html().replace(":", ":*");
+    	$.my_extension_data.media_type_text.html(newStr);
 	}
 	else
 	{
-		media_type.hide();
+		$.my_extension_data.media_type.hide();
 	}
+	
+	$("div#discoErrorNotice ul li a").each(function(index, value) {
+		if ($(this).attr("href") == "#av_type_error") 
+		{
+			$.my_extension_data.media_type.show();
+		}
+	});
+	
 	
 	$("tr#contentRow").before(transcript_row);
 	$("tr#rightsstatementRow").before(rights_row);
@@ -162,39 +205,6 @@ $(document).ready(function()
 		return false;
 	});	
 	
-	
-	function post_upload(val)
-	{
-		// Hide the filename changing row when we pick a new file; it won't
-        // have any effect if changed when received along with a new file.
-        $("tr#emailnotificationRow").show();
-        
-        parts = val.split(".");
-        len = parts.length;
-        extension = parts[len-1].toLowerCase();
-        
-        if ($.inArray(extension, vid_extensions) != -1)
-        {
-        	aud_radio.removeAttr("checked");
-        	vid_radio.attr("checked", "checked");
-        	media_type.hide();
-        }
-        else if ($.inArray(extension, aud_extensions) != -1)
-        {
-       		vid_radio.removeAttr("checked");
-        	aud_radio.attr("checked", "checked");
-        	media_type.hide();
-        }
-        else
-        {
-    		media_type.show();
-    		if (media_type_text.html().indexOf(":*") == -1)
-    		{
-       			newStr = media_type_text.html().replace(":", ":*");
-    			media_type_text.html(newStr);
-    		}
-    	}
-	}
 	
     $("#uploadfileRow .file_upload").bind('uploadSuccess', function() {
         post_upload($("span.filename", $(this)).html());
