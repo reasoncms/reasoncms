@@ -25,7 +25,7 @@ class updateMediaWorkOnFinish extends defaultFinishAction
 		$user = new entity($this->vars['user_id']);
 		$media_work = new entity($this->vars['id']);
 		
-		if ($media_work->get_value('integration_library') == 'kaltura')
+		if ($media_work->get_value('integration_library') == 'kaltura' && KalturaShim::kaltura_enabled())
 		{
 			$shim = new KalturaShim();
 			
