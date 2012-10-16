@@ -23,7 +23,7 @@
 	{
 		function delete_entity() // {{{
 		{		
-			if (KalturaShim::kaltura_enabled() == true)
+			if (KalturaShim::kaltura_enabled())
 			{
 				$e = new entity( $this->get_value( 'id' ) );
 				if ($e->get_value('integration_library') == 'kaltura')
