@@ -58,7 +58,7 @@ reason_include_once('ssh/ssh.php');
 		{
 			// This media work is kaltura-integrated if it is a brand new media work with kaltura 
 			// integration turned on, or if it is an existing kaltura-integrated media work.
-			$this->kaltura_integrated_work = $this->get_value('integration_library') == 'kaltura' || (KalturaShim::kaltura_enabled() == true && $this->get_value('datetime') == null);
+			$this->kaltura_integrated_work = $this->get_value('integration_library') == 'kaltura' || (KalturaShim::kaltura_enabled() && $this->get_value('datetime') == null);
 			
 			if ($this->kaltura_integrated_work)
 			{
@@ -129,13 +129,13 @@ reason_include_once('ssh/ssh.php');
 			
 			$this->change_element_type('tmp_file_name', 'hidden');
 			
-			if ($this->kaltura_integrated_work == true)
+			if ($this->kaltura_integrated_work)
 			{
 				// Add a status report field that displays a message if the media is currently transcoding in Kaltura
 				if ($this->get_value('transcoding_status') == 'converting')
 				{
 					$msg = 'Your media file is currently being processed.';
-					if ($this->get_value('email_notification') == true)
+					if ($this->get_value('email_notification'))
 					{
 						$msg .= ' An email will be sent when processing is complete.';
 					}
@@ -184,7 +184,9 @@ reason_include_once('ssh/ssh.php');
 		 */
 		function do_basic_kaltura_field_modification()
 		{
-			$this->kaltura_shim = new KalturaShim();
+			if (KalturaShim::kaltura_enabled()) {
+				$this->kaltura_shim = new KalturaShim();
+			}
 			$this->change_element_type('av_type', 'hidden');
 	
 			$this->add_required ('av_type');
@@ -228,14 +230,14 @@ reason_include_once('ssh/ssh.php');
 				$this->set_value('media_publication_datetime','');
 			}
 			
-			if ($this->kaltura_integrated_work == true)
+			if ($this->kaltura_integrated_work)
 			{
 				// The checkboxes aren't working without these lines...why?
-				if ($this->get_value('email_notification') == true)
+				if ($this->get_value('email_notification'))
 					$this->set_value('email_notification', true);
-				if ($this->get_value('show_embed') == true)
+				if ($this->get_value('show_embed'))
 					$this->set_value('show_embed', true);
-				if ($this->get_value('show_download') == true)
+				if ($this->get_value('show_download'))
 					$this->set_value('show_download', true);
 				
 				$entity = new entity($this->get_value('id'));
@@ -260,10 +262,9 @@ reason_include_once('ssh/ssh.php');
 						$changed = true;	
 					}
 					
-					if ($changed == true)
+					if ($changed && KalturaShim::kaltura_enabled())
 					{
 						$user = new entity( $this->admin_page->authenticated_user_id );
-						
 						$this->kaltura_shim->update_media_entry_metadata($this->get_value('entry_id'), $user->get_value('name'), $changed_fields['title'], $changed_fields['description'], $changed_fields['tags']);
 					}
 				}
@@ -280,7 +281,7 @@ reason_include_once('ssh/ssh.php');
 		{	
 			parent::run_error_checks();
 			
-			if ($this->kaltura_integrated_work == true)
+			if ($this->kaltura_integrated_work)
 			{
 				if ( !$this->has_error('upload_file') )
 				{
@@ -288,7 +289,7 @@ reason_include_once('ssh/ssh.php');
 					
 					$upload_element = $this->get_element('upload_file');
 					
-					if ( !empty($upload_element) )
+					if ( !empty($upload_element) && KalturaShim::kaltura_enabled())
 					{
 						$file = $this->get_element( 'upload_file' );
 						if( ($file->state == 'received' OR $file->state == 'pending') AND file_exists( $file->tmp_full_path ) )
@@ -348,7 +349,7 @@ reason_include_once('ssh/ssh.php');
 				return;
 			}
 			
-			if ($entry == false)
+			if (!$entry)
 			{
 				$this->set_error('upload_file', 'There was an error during the upload process.');
 				return;
@@ -429,7 +430,7 @@ reason_include_once('ssh/ssh.php');
 		*/
 		function _add_file_upload_element()
 		{
-			if($this->manages_media && $this->get_value('transcoding_status') != 'converting')
+			if(KalturaShim::kaltura_enabled() && $this->manages_media && $this->get_value('transcoding_status') != 'converting')
 			{
 				$authenticator = array("reason_username_has_access_to_site", $this->get_value("site_id"));
 				$params = array('authenticator' => $authenticator,
