@@ -182,11 +182,18 @@ class ReasonKalturaNotificationReceiver
 						if ($data['height'] <= MEDIA_WORK_SMALL_HEIGHT)
 						{
 							$transcoding_profile = KALTURA_VIDEO_SMALL_TRANSCODING_PROFILE;
+							/*if ($asset->bitrate < KALTURA_SMALL_VIDEO_BITRATE)
+								$transcoding_profile = KALTURA_VIDEO_SMALL_LOW_BANDWIDTH_TRANSCODING_PROFILE;
+							else
+								$transcoding_profile = KALTURA_VIDEO_SMALL_LOW_BANDWIDTH_TRANSCODING_PROFILE;*/
 						}
 						else if ($data['height'] <= MEDIA_WORK_MEDIUM_HEIGHT)
 						{
 							if ($asset->bitrate < KALTURA_MEDIUM_VIDEO_BITRATE)
+							{
 								$transcoding_profile = KALTURA_VIDEO_MEDIUM_LOW_BANDWIDTH_TRANSCODING_PROFILE;
+								//$transcoding_profile = KALTURA_VIDEO_SMALL_LOW_BANDWIDTH_TRANSCODING_PROFILE;
+							}
 							else
 								$transcoding_profile = KALTURA_VIDEO_MEDIUM_TRANSCODING_PROFILE;
 						}
@@ -346,21 +353,33 @@ class ReasonKalturaNotificationReceiver
 		
 		$valid_flavors = $this->get_valid_flavors($media_work, $flavor_assets, $data);
 		
+		$owner = $media_work->get_owner();
+				
+		// Determine what the av_type field should be.  Is it a Video or Audio file?
+		if ($data['media_type'] == KalturaMediaType::VIDEO)
+			$media_type = 'Video';
+		elseif ($data['media_type'] == KalturaMediaType::AUDIO)
+			$media_type = 'Audio';
+		else 
+			trigger_error('invalid media type from Kaltura Server notification: '.$data['media_type']);
+		
 		foreach ($valid_flavors as $asset)
 		{
 			$asset_id = $asset->id;
-			if ($asset->flavorParamsId != 0)
+			
+			$convert_asset_to_reason = true;
+			if ($media_type == 'Audio' && count($valid_flavors) > 2 && $asset->flavorParamsId == 0) 
 			{
-				$owner = $media_work->get_owner();
-				
-				// Determine what the av_type field should be.  Is it a Video or Audio file?
-				if ($data['media_type'] == KalturaMediaType::VIDEO)
-					$media_type = 'Video';
-				elseif ($data['media_type'] == KalturaMediaType::AUDIO)
-					$media_type = 'Audio';
-				else 
-					trigger_error('invalid media type from Kaltura Server notification: '.$data['media_type']);
-				
+				$convert_asset_to_reason = false;
+			}
+			else if ($media_type == 'Video' && $asset->flavorParamsId == 0)
+			{
+				$convert_asset_to_reason = false;
+			}
+			
+			// don't create a Reason Media File for the source flavor of videos or a source flavor for a non-mp4 or non-ogg audio file
+			if ($convert_asset_to_reason)
+			{	
 				$format = $this->kaltura_shim->CONTAINER_TO_MIME_MAP[$asset->containerFormat];
 				
 				$values = array(
