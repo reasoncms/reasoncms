@@ -96,7 +96,8 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 		if (get_theme($this->site_id)->get_value('name') == 'luther2010'
 			&& ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'))
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'))
 		{
 			echo '<aside class="news group">'."\n";
 			echo '<header class="blue-stripe"><h1><span>News</span></h1></header>'."\n";
@@ -108,7 +109,8 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 		if (get_theme($this->site_id)->get_value('name') == 'luther2010'
 			&& ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'))
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'))
 		{
 			echo '</aside> <!-- class="news group" -->'."\n";
 		}

@@ -43,6 +43,7 @@
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{
@@ -69,6 +70,7 @@
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_admissions'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing_feature'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_sports')
 			{
@@ -189,6 +191,7 @@
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{

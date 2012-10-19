@@ -501,6 +501,7 @@ class LutherTemplate2010 extends MinisiteTemplate
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_carousel'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports'
@@ -569,6 +570,7 @@ class LutherTemplate2010 extends MinisiteTemplate
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+        	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
