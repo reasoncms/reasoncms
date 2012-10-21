@@ -36,7 +36,7 @@ class ReasonSimplepieTwitterDefaultFeedView extends ReasonMVCView
 	function get()
 	{
 		$feed = $this->data();
-		$title = (!is_null($this->config('title'))) ? $this->config('title') : '<h3>'.$feed->get_title().'<h3>';
+		$title = (!is_null($this->config('title'))) ? $this->config('title') : '<h3>'.$feed->get_title().'</h3>';
 		$description = (!is_null($this->config('description'))) ? $this->config('description') : '<p>'.$feed->get_description().'</p>';
 		$str = (!empty($title)) ? $title : '';
 		$str .= (!empty($description)) ? $description : '';
