@@ -216,33 +216,26 @@ class loki2Type extends defaultType
 class tiny_mceType extends textareaType
 {
 	var $type = 'tiny_mce';
-	var $type_valid_args = array('buttons', 'buttons2', 'buttons3', 'status_bar_location', 'formatselect_options');
+	var $type_valid_args = array('buttons', 'buttons2', 'buttons3', 'status_bar_location', 'formatselect_options', 'init_options');
 
 	var $status_bar_location = 'none';
 	var $buttons = array('formatselect','bold','italic','hr','blockquote','numlist','bullist','indent','outdent','image','link','unlink','anchor','cleanup');
 	var $buttons2 = array();
 	var $buttons3 = array();
 	var $formatselect_options = array('p','h3','h4','pre');
+	var $init_options = array();
+	var $base_init_options = array(
+		'mode' => 'exact',
+		'plugins' => 'inlinepopups',
+		'dialog_type' => 'modal',
+		'theme' => 'advanced',
+		);
 	
 	function display()
 	{
 		$display = $this->get_tiny_mce_javascript();
 		$display .= '<script language="javascript" type="text/javascript">'."\n";
-		$display .= 'tinyMCE.init({'."\n";
-		$display .= 'mode : "exact",'."\n";
-		$display .= 'plugins : "inlinepopups",'."\n";
-		$display .= 'dialog_type : "modal",'."\n";
-		$display .= 'theme : "advanced",'."\n";
-		$display .= 'theme_advanced_buttons1 : "'.implode(",",$this->buttons).'",'."\n";
-		$display .= 'theme_advanced_buttons2 : "'.implode(",",$this->buttons2).'",'."\n";
-		$display .= 'theme_advanced_buttons3 : "'.implode(",",$this->buttons3).'",'."\n";
-		
-		// make me conditional on formatselect being in the buttons array and formatselect_options being set.
-		$display .= 'theme_advanced_blockformats : "'.implode(",",$this->formatselect_options).'",'."\n";
-		
-		$display .= 'theme_advanced_statusbar_location : "'.$this->status_bar_location.'",'."\n";
-		$display .= 'elements : "'.$this->name.'"'."\n";
-		$display .= '});'."\n";
+		$display .= $this->get_tiny_mce_init_string();
 		$display .= '</script>'."\n";
 		
 		// Why do we do this?
@@ -251,6 +244,26 @@ class tiny_mceType extends textareaType
 		parent::display();
 	}
 	
+	function get_tiny_mce_init_string()
+	{
+		// Add calculated/passed options to base options
+		$options = $this->base_init_options;
+		$options['theme_advanced_buttons1'] = implode(",",$this->buttons);
+		$options['theme_advanced_buttons2'] = implode(",",$this->buttons2);
+		$options['theme_advanced_buttons3'] = implode(",",$this->buttons3);
+		// make me conditional on formatselect being in the buttons array and formatselect_options being set.
+		$options['theme_advanced_blockformats'] = implode(",",$this->formatselect_options);
+		$options['theme_advanced_statusbar_location'] = $this->status_bar_location;
+		$options['elements'] = $this->name;
+		
+		// Merge in custom options
+		foreach($this->init_options as $option => $val) $options[$option] = $val;
+		
+		// Format the options
+		foreach ($options as $option => $val) $parts[] = sprintf('%s : "%s"', $option, $val);
+			
+		return 'tinyMCE.init({'."\n" . implode(",\n", $parts) . "\n});\n";
+	}
 	/**
 	 * We return the main javascript for TinyMCE - we use a static variable to keep track such that we include it only once.
 	 */
