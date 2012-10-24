@@ -155,7 +155,7 @@ class tiny_mceType extends textareaType
 	var $type = 'tiny_mce';
 	var $type_valid_args = array('buttons', 'buttons2', 'buttons3', 'status_bar_location', 'formatselect_options', 'content_css', 'init_options');
 	var $status_bar_location = 'none';
-	var $buttons = array('formatselect','bold','italic','hr','blockquote','numlist','bullist','indent','outdent','image','link','unlink','anchor','cleanup');
+	var $buttons = array('formatselect','bold','italic','hr','blockquote','numlist','bullist','indent','outdent','reasonimage','image','link','unlink','anchor','cleanup');
 	var $buttons2 = array();
 	var $buttons3 = array();
 	var $content_css;
@@ -163,7 +163,7 @@ class tiny_mceType extends textareaType
 	var $init_options = array();
 	var $base_init_options = array(
 		'mode' => 'exact',
-		'plugins' => 'inlinepopups',
+		'plugins' => 'inlinepopups,reasonimage',
 		'dialog_type' => 'modal',
 		'theme' => 'advanced',
 		'convert_urls' => false,
