@@ -928,6 +928,21 @@
 			'pre_sidebar'=>'events_mini',
 			'post_sidebar' => 'blurb',
 		),
+		'feature_after_content_sidebar_events' => array(
+			'sub_nav' => array(
+				'module' => 'blurb',
+				'num_to_display' => 1,
+			),
+			'main_post' => array(
+				'module' => 'feature/feature',
+				'shuffle' => false,
+				'autoplay_timer' => 3,
+				'width'=>500,
+				'height'=>300
+			),
+			'pre_sidebar'=>'events_mini',
+			'post_sidebar' => 'blurb',
+		),
 		'feature_before_content_sidebar_blurbs_first_under_subnav' => array(
 			'sub_nav' => array(
 				'module' => 'blurb',
