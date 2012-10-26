@@ -48,9 +48,15 @@ if( !defined( '__DB_SELECTOR' ) )
 		var $start;
 		// how many to get
 		var $num;
+		
+		var $cache_lifespan;
 		// }}}
 		
-		function DBSelector() // constructor  {{{
+		
+		/**
+		 * Constructor
+		 */
+		function DBSelector()
 		{
 			$this->query = '';
 			$this->fields = array();
@@ -60,20 +66,50 @@ if( !defined( '__DB_SELECTOR' ) )
 			$this->optimize = '';
 			$this->start = 0;
 			$this->num = -1;
-		} // }}}
-		function run( $error_message = '', $die_on_error = true ) // runs query and returns array of results {{{
+			$this->cache_lifespan = 0;
+		} 
+		
+		/**
+		 * Run query and return array of results
+		 *
+		 * @param string $error_message
+		 * @param boolean $die_on_error
+		 * @return array
+		 */
+		function run( $error_message = '', $die_on_error = true )
 		{
+			$q = $this->get_query();
+			if($this->cache_lifespan)
+			{
+				$cache = new ObjectCache('db_selector_cache_'.get_current_db_connection_name().'_'.$q, $this->cache_lifespan);
+				$results =& $cache->fetch();
+				if(false !== $results)
+				{
+					return $results;
+				}
+			}
 			$results = array();
-			$r = db_query( $this->get_query(),$error_message, $die_on_error );
+			$r = db_query( $q,$error_message, $die_on_error );
 			if($r)
 			{
 				while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
 					$results[] = $row;
 				mysql_free_result( $r );
 			}
+			if(!empty($cache))
+				$cache->set($results);
 			return $results;
-		} // }}}
-		function get_query($merged = false)  //  returns the query (will build query if not already built ){{{
+		}
+		
+		/**
+		 * Get the query
+		 *
+		 * Will build query if not already built.
+		 *
+		 * @param boolean $merged If true, will ignore ordering and limits
+		 * @return string
+		 */
+		function get_query($merged = false)
 		{
 			// FIELDS: convert array to string
 			if ( empty( $this->fields ) )
@@ -116,24 +152,55 @@ if( !defined( '__DB_SELECTOR' ) )
 				if ($this->num > 0) $this->query .= "LIMIT\n".$this->start.', '.$this->num;
 			}
 			return( $this->query );
-		} // }}}
+		}
 		
-		function get_count() // returns total number of results that match the query.  ignores the start and num variables {{{
+		/**
+		 * Get the total number of results that match the query
+		 *
+		 * Note: this function ignores the start and num variables.
+		 *
+		 * @return integer
+		 */
+		function get_count()
 		{
 			$this->get_query();
 			$r = db_query( $this->count_query, 'Unable to retrieve number of results' );
 			$r = mysql_fetch_array( $r, MYSQL_ASSOC );
 			return $r['count'];
-		} // }}}
-		function add_table( $alias, $table = '' ) // adds table to the query.  if both arguments, uses first argument as an alias {{{
+		}
+		/**
+		 * Add a table to the query
+		 *
+		 * If only alias given, table name is assumed to be the same as the alias.
+		 *
+		 * CAUTION: This function does not escape strings, so do not pass it untrusted data
+		 *
+		 * @param string $alias
+		 * @param string $table
+		 * @return void
+		 */
+		function add_table( $alias, $table = '' )
 		{
 			if ( isset( $this->tables[ $alias ] ) AND !empty( $this->tables[ $alias ] ) )
 				echo '<br /><strong>Warning:</strong> DBSelector::add_table - table "'.$alias.'" already added to selector - overwriting entry...<br />';
 			if ( empty( $table ) )
 				$table = $alias;
 			$this->tables[ $alias ] = $table;
-		} // }}}
-		function add_field( $table, $field, $alias = '',$function = '' ) // adds field.  must specify table.  can add an alias {{{
+		}
+		/**
+		 * Add a field to the query
+		 *
+		 * Must specify table; can add an alias and/or function
+		 *
+		 * CAUTION: This function does not escape strings, so do not pass it untrusted data
+		 *
+		 * @param string $table
+		 * @param string $field
+		 * @param string $alias
+		 * @param string $function
+		 * @return void
+		 */
+		function add_field( $table, $field, $alias = '',$function = '' )
 		{
 			$field = $table.'.'.$field;
 			if( $function )
@@ -141,23 +208,66 @@ if( !defined( '__DB_SELECTOR' ) )
 			if ( !empty( $alias ) )
 				$field .= ' AS '.$alias;
 			$this->fields[ ] = $field;
-		} // }}}
-		function add_relation( $relation ) // adds a clause to the WHERE part of the query {{{
+		}
+		/**
+		 * Add a clause to the WHERE part of the query
+		 *
+		 * Multiple relations are ANDed together.
+		 *
+		 * CAUTION: This function does not escape strings, so use an appropriate string escaping
+		 * routine if you are including arbitrary data in a where clause
+		 *
+		 * @param string $relation
+		 * @return void
+		 */
+		function add_relation( $relation )
 		{
 			$this->relations[] = $relation;
-		} // }}}
-		function set_start( $start ) // sets the query start {{{
+		}
+		/**
+		 * Set the index to start at
+		 *
+		 * @param integer $start
+		 * @return void
+		 */
+		function set_start( $start )
 		{
 			$this->start = $start;
-		} // }}}
-		function set_num( $num ) // sets number of records to pull {{{
+		}
+		/**
+		 * Set the number of records to pull
+		 *
+		 * @param integer $num
+		 * @return void
+		 */
+		function set_num( $num )
 		{
 			$this->num = $num;
-		} // }}}
-		function set_order( $order ) // sets fields to order results by {{{
+		}
+		/**
+		 * Set the order clause of the query
+		 *
+		 * Example: "date DESC"
+		 *
+		 * @param string $order
+		 * @return void
+		 */
+		function set_order( $order ) // 
 		{
 			$this->orderby = $order;
-		} // }}}
+		}
+		/**
+		 * Set a cache lifespan for the query
+		 *
+		 * Setting lifespan to 0 turns off results caching
+		 *
+		 * @param integer $lifespan time in seconds to cache
+		 * @return void
+		 */
+		function set_cache_lifespan($lifespan)
+		{
+			$this->cache_lifespan = $lifespan;
+		}
 	}
 }
 ?>
