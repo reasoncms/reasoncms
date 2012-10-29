@@ -50,11 +50,13 @@ class StackedBox extends Box // {{{
 				$markup .= '<span class="requiredIndicator">*</span>';
 		}
 		$markup .= '</div>'."\n";
+		$markup .= '<div class="element">'."\n";
 		echo $markup;	
 	}
 	
 	function box_item_close()
 	{
+		echo '</div>'."\n";
 		echo '</div>'."\n";
 	}
 	
