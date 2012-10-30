@@ -80,8 +80,17 @@ class LutherTemplate2010 extends MinisiteTemplate
 				
 			echo '</script>'."\n";
 		}
+		
+		echo '<script>' . "\n";
+		echo '  (function() {' . "\n";
+		echo '    var cx = \'005935510434836484605:yecpxhsqj6s\';' . "\n";
+		echo '    var gcse = document.createElement(\'script\'); gcse.type = \'text/javascript\'; gcse.async = true;' . "\n";
+		echo '    gcse.src = (document.location.protocol == \'https:\' ? \'https:\' : \'http:\') +' . "\n";
+		echo '        \'//www.google.com/cse/cse.js?cx=\' + cx;' . "\n";
+		echo '    var s = document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(gcse, s);' . "\n";
+		echo '  })();' . "\n";
+		echo '</script>' . "\n";
 
-		echo '</head>'."\n";
 
 		echo $this->create_body_tag();
 		echo '<div class="hide"><a href="#content" class="hide">Skip Navigation</a></div>'."\n";
@@ -492,7 +501,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$s = 'admissions';
 		}
 		
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home') 
 		{
 			return '<body id="home" class="style-home-00">'."\n";
 		}
@@ -521,6 +530,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 			|| $this->cur_page->get_value( 'custom_page' ) == 'net_price_calculator')
 		{
 			return '<body class="style-one-column ' . $s . '">'."\n";
+		}
+		elseif ($this->cur_page->get_value( 'custom_page' ) == 'search_results')
+		{
+			return '<body class="style-search-results ' . $s . '">' ."\n"; 
 		}
 		elseif ($this->cur_page->get_value( 'custom_page' ) == 'spotlight_archive')
 		{

@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 $GLOBALS['_reason_page_types_local'] = array(
 	'default' => array(
@@ -722,6 +722,14 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar_2' => '',
 		'sidebar_4' => '',
 	),
+	'search_results' => array(
+		'main' => 'luther_search',
+		'main_head_2' => '',
+		'main_head_3' => '',
+		'main_head_4' => '',
+		// 'navigation' => '',
+		// 'sub_nav' => '',	
+	),
 	'sports_results' => array(
 		'main' => 'luther_sports_results_mini',
 		'pre_sidebar_3' => '',
@@ -882,23 +890,7 @@ function luther_google_search()
 }
 function luther2010_google_search()
 {
-	echo '<form id="search" action="//find.luther.edu/search" method="get" name="gs">'."\n";
-	echo '<fieldset>'."\n";
-	echo '<label for="search-input">Search</label>'."\n";
-	echo '<input id="search-input" type="text" maxlength="256" size="32" name="q" />'."\n";
-	echo '<button type="submit" name="btnG">Search</button>'."\n";
-	echo '<input type="hidden" value="0" name="entqr"/>'."\n";
-	echo '<input type="hidden" value="xml_no_dtd" name="output"/>'."\n";
-	echo '<input type="hidden" value="date:D:L:d1" name="sort"/>'."\n";
-	echo '<input type="hidden" value="public_frontend" name="client"/>'."\n";
-	echo '<input type="hidden" value="1" name="ud"/>'."\n";
-	echo '<input type="hidden" value="UTF-8" name="oe"/>'."\n";
-	echo '<input type="hidden" value="UTF-8" name="ie"/>'."\n";
-	echo '<input type="hidden" value="public_frontend" name="proxystylesheet"/>'."\n";
-	echo '<input type="hidden" value="public_collection" name="site"/>'."\n";
-	echo '<input type="hidden" value="%3CHOME/%3E" name="proxycustom"/>'."\n";
-	echo '</fieldset>'."\n";
-	echo '</form>'."\n";
+	echo '<gcse:searchbox-only style="width:30%"></gcse:searchbox-only>';
 }
 
 function luther_mobile_google_search()
