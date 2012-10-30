@@ -311,9 +311,43 @@
 			$markup_string .= $element->get_comments();
 			return $markup_string;
 		}
-		
 	}
-	
+
+	/**
+	*  @package disco
+	*/
+	class ElementStacked extends ElementGroup
+	{
+		var $type = 'stacked';
+		
+		function get_display()
+		{
+			$markup_string = '';
+			
+			if(!empty($this->order))
+				$order = $this->order;
+			else
+				$order = $this->elements;
+			
+			foreach ($order as $element_name => $element)
+			{
+				$markup_string .= '<div class="stackedElement">'.$this->get_individual_element_display($element_name).'</div>';
+			}
+			return $markup_string;
+		}
+		
+		function get_individual_element_display($element_name)
+		{
+			$markup_string = '';
+			$element = $this->elements[$element_name];
+			$markup_string .= $this->additional_element_info[$element_name]['anchor'];
+			if($this->use_element_labels)
+				$markup_string .=  $this->get_element_name($element);
+			$markup_string .= $element->get_display();
+			$markup_string .= $element->get_comments();
+			return $markup_string;
+		}
+	}
 	/**
 	*  @package disco
 	*/
