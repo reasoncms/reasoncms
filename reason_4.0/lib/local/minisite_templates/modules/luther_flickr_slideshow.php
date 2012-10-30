@@ -43,6 +43,7 @@
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{
@@ -69,6 +70,7 @@
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_admissions'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing_feature'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_sports')
 			{
@@ -87,8 +89,8 @@
 					$f = new phpFlickr($flickr_account[$post->get_value('flickr_username')][0], $flickr_account[$post->get_value('flickr_username')][1]);
 					if (HTTP_HOST_NAME != 'localhost')
 					{
-						// 30 day cache expiration
-						$f->enableCache("fs", "/var/reason/phpFlickrCache", 2580000); 
+						// 365 day cache expiration
+						$f->enableCache("fs", "/var/reason/phpFlickrCache", 31536000); 
 					}
 					$photos = $f->photosets_getPhotos($post->get_value('flickr_photoset_id'));
 					//foreach ((array)$photos['photoset']['photo'] as $photo)
@@ -108,6 +110,7 @@
 					{
 						echo "<div class=\"flickr-set-container\">\n";
 					}
+					$photo_count = 1;
 					foreach ((array)$photos['photoset']['photo'] as $photo)
 					{
 						// see /javascripts/highslide/highslide-overrides.js for gallery declaration
@@ -130,7 +133,8 @@
 						{
 							echo "<li>\n";
 						}
-						elseif ($number_slideshows > 1 && $photo['isprimary']) 
+						//elseif ($number_slideshows > 1 && $photo['isprimary']) 
+						elseif ($number_slideshows > 1 && $photo_count == 1)
 						{
 							echo "<div class=\"flickr-set\">\n";
 						}
@@ -151,7 +155,8 @@
 						{
 							echo "</li>\n";
 						}
-						elseif ($number_slideshows > 1 && $photo['isprimary']) 
+						//elseif ($number_slideshows > 1 && $photo['isprimary'])
+						elseif ($number_slideshows > 1 && $photo_count == 1)
 						{
 							echo "</div>   <!-- class=\"flickr-set\"-->\n";
 						}
@@ -159,6 +164,7 @@
 						{
 							echo "</div>   <!-- class=\"hidden-container\"-->\n";
 						}
+						$photo_count++;
 					}
 					if ($number_slideshows == 1)
 					{
@@ -189,6 +195,7 @@
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{
