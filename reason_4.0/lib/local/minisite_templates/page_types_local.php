@@ -739,6 +739,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 	'publication' => get_luther_publication(),
 	'publication_section_nav' => get_luther_publication_section_nav(),
+	'slate_form' => array(
+		'main_2' => 'slate_form'
+	),
+
 	'sports_roster' => array(
 		'main' => 'luther_sports_roster',
 		'main_post' => 'content',
