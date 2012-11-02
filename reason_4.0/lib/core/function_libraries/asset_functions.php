@@ -39,9 +39,9 @@ function make_assets_list_markup( $assets, $site, $fields = array('name','file_s
 		}
 	}
 	$file_types = array(	'pdf'=>'PDF Document',
-							'doc'=>'Word Document',
-							'xls'=>'Excel Document',
-							'ppt'=>'Powerpoint Document',
+							'doc'=>'Word Document','docx'=>'Word Document',
+							'xls'=>'Excel Document','xlsx'=>'Excel Document',
+							'ppt'=>'Powerpoint Document','pptx'=>'Powerpoint Document',
 							'html'=>'HTML Document','htm'=>'HTML Document',
 							'txt'=>'Plain Text Document',
 							'rtf'=>'Rich Text Document',
