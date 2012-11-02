@@ -531,6 +531,14 @@
 			'main_post'=>'blurb',
 			'sub_nav'=>'',
 		),
+		'blurbs_with_events_sidebar_by_page_categories' => array(
+			'pre_sidebar'=> array(
+				'module'=>'events_mini',
+				'limit_to_page_categories'=>true,
+			),
+			'main_post'=>'blurb',
+			'sub_nav'=>'',
+		),
 		'child_sites' => array(
 			'main_post' => 'child_sites',
 		),
