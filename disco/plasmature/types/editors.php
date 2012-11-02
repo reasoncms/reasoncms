@@ -216,12 +216,12 @@ class loki2Type extends defaultType
 class tiny_mceType extends textareaType
 {
 	var $type = 'tiny_mce';
-	var $type_valid_args = array('buttons', 'buttons2', 'buttons3', 'status_bar_location', 'formatselect_options', 'init_options');
-
+	var $type_valid_args = array('buttons', 'buttons2', 'buttons3', 'status_bar_location', 'formatselect_options', 'content_css', 'init_options');
 	var $status_bar_location = 'none';
 	var $buttons = array('formatselect','bold','italic','hr','blockquote','numlist','bullist','indent','outdent','image','link','unlink','anchor','cleanup');
 	var $buttons2 = array();
 	var $buttons3 = array();
+	var $content_css;
 	var $formatselect_options = array('p','h3','h4','pre');
 	var $init_options = array();
 	var $base_init_options = array(
@@ -229,7 +229,7 @@ class tiny_mceType extends textareaType
 		'plugins' => 'inlinepopups',
 		'dialog_type' => 'modal',
 		'theme' => 'advanced',
-		);
+	);
 	
 	function display()
 	{
@@ -255,6 +255,7 @@ class tiny_mceType extends textareaType
 		$options['theme_advanced_blockformats'] = implode(",",$this->formatselect_options);
 		$options['theme_advanced_statusbar_location'] = $this->status_bar_location;
 		$options['elements'] = $this->name;
+		if ($this->get_class_var('content_css')) $options['content_css'] = $this->get_class_var('content_css');
 		
 		// Merge in custom options
 		foreach($this->init_options as $option => $val) $options[$option] = $val;
