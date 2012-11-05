@@ -167,7 +167,7 @@ class reasonCalendar
 	 * if a key-value pair is passed to the object that is not in this array, it is ignored
 	 * @var array
 	 */
-	protected $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','default_view_min_days', 'es_callback','ongoing_count_all_occurrences','ongoing_count_pre_start_dates','ongoing_count_ends');
+	protected $init_array_keys = array('site','ideal_count','start_date','view','categories','audiences','or_categories','end_date','automagic_window_snap_to_nearest_view','rels','simple_search','context_site','sharing_mode','default_view_min_days', 'es_callback','ongoing_count_all_occurrences','ongoing_count_pre_start_dates','ongoing_count_ends','cache_lifespan','cache_lifespan_meta');
 	/**
 	 * site entity that we are looking at
 	 *
@@ -365,6 +365,28 @@ class reasonCalendar
 	protected $ongoing_count_ends = true;
 	
 	/**
+	 * How long to cache calendar data?
+	 *
+	 * This should be accessed with _get_cache_lifespan()
+	 *
+	 * @var integer seconds
+	 */
+	protected $cache_lifespan = 0;
+	
+	/**
+	 * How long to cache calendar metadata?
+	 *
+	 * This includes the queries needed to determine automagic windows, etc.
+	 *
+	 * This should be accessed with _get_cache_lifespan_meta(), which handles a particular case
+	 * -- specifically, if this is zero and cache_lifespan is nonzero, the meta lifespan is set to
+	 * be the same as the cache_lifespan.
+	 *
+	 * @var integer seconds
+	 */
+	protected $cache_lifespan_meta = 0;
+	
+	/**
 	 * The entity selector used by the calendar to select the events
 	 * @var object entity_selector
 	 */
@@ -435,6 +457,17 @@ class reasonCalendar
 		$this->_add_rels(relationship_id_of('event_to_audience'), $this->audiences);
 		$this->build_es();
 	}
+	protected function _get_cache_lifespan()
+	{
+		return $this->cache_lifespan;
+	}
+	protected function _get_cache_lifespan_meta()
+	{
+		if($this->cache_lifespan_meta)
+			return $this->cache_lifespan_meta;
+		else
+			return $this->_get_cache_lifespan();
+	}
 	protected function _standardize_sharing_mode()
 	{
 		if(!empty($this->sharing_mode) && !in_array($this->sharing_mode,array('all','shared_only','hybrid')))
@@ -488,6 +521,7 @@ class reasonCalendar
 			$this->es = new entity_selector( array_keys( $this->_get_sharing_sites() ) );
 			$this->es->description = 'Selecting events on all sharing sites';
 		}
+		$this->es->set_cache_lifespan( $this->_get_cache_lifespan() );
 		if( $this->sharing_mode == 'shared_only' )
 		{
 			$this->es->add_relation( 'entity.no_share != 1');
@@ -501,6 +535,7 @@ class reasonCalendar
 				// $es->add_relation( 'show_hide.show_hide = "show"' );
 				$es->limit_tables();
 				$es->limit_fields();
+				$es->set_cache_lifespan( $this->_get_cache_lifespan() );
 				$tmp = $es->run_one();
 				$this->es->add_relation('(`entity`.`id` IN ("'.implode('","',array_keys($tmp)).'") OR entity.no_share != 1 )');
 			}
@@ -633,6 +668,7 @@ class reasonCalendar
 			$es->limit_tables('site');
 			$es->limit_fields('site_state');
 			$es->add_relation('site_state="Live"');
+			$es->set_cache_lifespan( $this->_get_cache_lifespan_meta() );
 			$sharing_sites = $es->run_one();
 		}
 		return $sharing_sites;
@@ -1414,6 +1450,7 @@ class reasonCalendar
 		$test_es->add_relation('dated.datetime < "'.addslashes($date).'"');
 		$test_es->limit_fields();
 		$test_es->exclude_tables_dynamically();
+		$test_es->set_cache_lifespan($this->_get_cache_lifespan_meta());
 		$test_results = $test_es->run_one();
 		if(!empty($test_results))
 		{
@@ -1449,7 +1486,7 @@ class reasonCalendar
 		$test_es->add_relation('event.last_occurence > "'.addslashes($date).'"');
 		$test_es->limit_fields();
 		$test_es->exclude_tables_dynamically();
-		
+		$test_es->set_cache_lifespan($this->_get_cache_lifespan_meta());
 		//$test_es->optimize('');
 		//echo $test_es->get_one_query().'<br />';
 		$test_results = $test_es->run_one();
