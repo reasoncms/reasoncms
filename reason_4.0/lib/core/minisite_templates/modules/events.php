@@ -13,6 +13,7 @@ reason_include_once( 'classes/calendar.php' );
 reason_include_once( 'classes/calendar_grid.php' );
 reason_include_once( 'classes/icalendar.php' );
 reason_include_once('classes/page_types.php');
+include_once(CARL_UTIL_INC . 'cache/object_cache.php');
 include_once( CARL_UTIL_INC . 'dir_service/directory.php' );
 $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'EventsModule';
 
@@ -350,6 +351,14 @@ class EventsModule extends DefaultMinisiteModule
 	 * 'limit_to_audiences' (string, comma spaced for multiple) limit to these audiences
 	 * 'exlude_audiences' (string, comma spaced for multiple) excludes specified audiences
 	 *
+	 * 'freetext_filters' An array of filters, each in the following format:
+	 * array('string to filter on','fields,to,search')
+	 * The string to filter on is interpreted as a LIKE statement.
+	 *
+	 * 'cache_lifespan' How long, in seconds, should the calendar cache the events?
+	 * 'cache_lifespan_meta' How long, in seconds, should the calendar cache calendar metadata,
+	 *  like window, category, and audience determination?
+	 *
 	 * @var array
 	 * @access private
 	 * @todo review current default default_view_min_days value for sanity
@@ -373,7 +382,10 @@ class EventsModule extends DefaultMinisiteModule
 	 						'ongoing_display' => 'above', // or below or inline
 	 						'ongoing_show_ends' => true,
 	 						'limit_to_audiences' => '',	 // as comma spaced strings
-	 						'exclude_audiences' => ''
+	 						'exclude_audiences' => '',
+	 						'freetext_filters' => array(),
+	 						'cache_lifespan' => 0,
+	 						'cache_lifespan_meta' => 0,
 						);
 	/**
 	 * Views that should not be indexed by search engines
@@ -581,6 +593,17 @@ class EventsModule extends DefaultMinisiteModule
 		
 	} // }}}
 	
+	protected function get_cache_lifespan()
+	{
+		return $this->params['cache_lifespan'];
+	}
+	protected function get_cache_lifespan_meta()
+	{
+		if($this->params['cache_lifespan_meta'])
+			return $this->params['cache_lifespan_meta'];
+		return $this->get_cache_lifespan();
+	}
+	
 	//////////////////////////////////////
 	// For The Events Listing
 	//////////////////////////////////////
@@ -670,7 +693,7 @@ class EventsModule extends DefaultMinisiteModule
 									not a Reason unique name. Use: \'public_audience\' for example');
 				}
 			}
-		}	
+		}
 		return $excluded_audiences;
 	}
 	function _get_sites()
@@ -733,7 +756,7 @@ class EventsModule extends DefaultMinisiteModule
 			$es->limit_tables();
 			$es->limit_fields();
 		}
-		
+		$es->set_cache_lifespan($this->get_cache_lifespan_meta());
 		return $es->run_one();
 	}
 	function _get_child_sites($site_id)
@@ -754,7 +777,7 @@ class EventsModule extends DefaultMinisiteModule
 			$es->limit_tables();
 			$es->limit_fields();
 		}
-		
+		$es->set_cache_lifespan($this->get_cache_lifespan_meta());
 		return $es->run_one();
 	}
 	/**
@@ -797,6 +820,7 @@ class EventsModule extends DefaultMinisiteModule
 						$es->limit_tables();
 						$es->limit_fields();
 					}
+					$es->set_cache_lifespan($this->get_cache_lifespan_meta());
 					$return = $es->run_one();
 					break;
 				default:
@@ -827,6 +851,7 @@ class EventsModule extends DefaultMinisiteModule
 			$es->limit_tables();
 			$es->limit_fields();
 		}
+		$es->set_cache_lifespan($this->get_cache_lifespan_meta());
 		
 		return $es->run_one();
 	}
@@ -844,9 +869,7 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		$init_array = $this->make_reason_calendar_init_array($this->_get_start_date(), '', 'all');
 		
-		$this->calendar = new reasonCalendar($init_array);
-		
-		$this->calendar->run();
+		$this->calendar = $this->_get_runned_calendar($init_array);
 		
 		$events = $this->calendar->get_all_events();
 		
@@ -873,9 +896,15 @@ class EventsModule extends DefaultMinisiteModule
 				$view = $this->params['view'];
 		}
 		$init_array = $this->make_reason_calendar_init_array($this->_get_start_date(), $end_date, $view);
-		$this->calendar = new reasonCalendar($init_array);
 		
-		$this->calendar->run();
+		$this->calendar = $this->_get_runned_calendar($init_array);
+	}
+	
+	function _get_runned_calendar($init_array)
+	{
+		$calendar = new reasonCalendar($init_array);
+		$calendar->run();
+		return $calendar;
 	}
 	
 	function list_events()
@@ -1091,8 +1120,7 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		//trigger_error('get_max_date called');
 		$init_array = $this->make_reason_calendar_init_array($this->calendar->get_max_date(),'','all' );
-		$this->calendar = new reasonCalendar($init_array);
-		$this->calendar->run();
+		$this->calendar = $this->_get_runned_calendar($init_array);
 	}
 	
 	
@@ -1671,6 +1699,7 @@ class EventsModule extends DefaultMinisiteModule
 		$cs->description = 'Selecting all categories on the site';
 		$cs->add_type(id_of('category_type'));
 		$cs->set_order('entity.name ASC');
+		$cs->set_cache_lifespan($this->get_cache_lifespan_meta());
 		$cats = $cs->run_one();
 		$cats = $this->check_categories($cats);
 		if(empty($cats))
@@ -1723,6 +1752,7 @@ class EventsModule extends DefaultMinisiteModule
 		$setup_es->set_env('site_id',$this->parent->site_id);
 		$setup_es = $this->alter_categories_checker_es($setup_es);
 		$setup_es->set_num(1);
+		$setup_es->set_cache_lifespan($this->get_cache_lifespan_meta());
 		$rel_id = relationship_id_of('event_to_event_category');
 		foreach($cats as $id=>$cat)
 		{
@@ -1758,7 +1788,9 @@ class EventsModule extends DefaultMinisiteModule
 			$es = new entity_selector();
 		}
 		$es->set_order('sortable.sort_order ASC');
+		$es->set_cache_lifespan($this->get_cache_lifespan_meta());
 		$audiences = $es->run_one(id_of('audience_type'));
+		
 		$event_type_id = id_of('event_type');
 		$rel_id = relationship_id_of('event_to_audience');
 		if($this->limit_to_current_site)
@@ -1767,6 +1799,7 @@ class EventsModule extends DefaultMinisiteModule
 			$setup_es = new entity_selector();
 		$setup_es->set_num(1);
 		$setup_es->add_type($event_type_id);
+		$setup_es->set_cache_lifespan($this->get_cache_lifespan_meta());
 		$setup_es = $this->alter_audiences_checker_es($setup_es);
 		foreach($audiences as $id=>$audience)
 		{
@@ -2068,8 +2101,7 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		$first_day_in_month = $year.'-'.$month.'-01';
 		$init_array = $this->make_reason_calendar_init_array($first_day_in_month, '', 'monthly');
-		$cal = new reasonCalendar($init_array);
-		$cal->run();
+		$cal = $this->_get_runned_calendar($init_array);
 		$days = $cal->get_all_days();
 		$counts = array();
 		foreach($days as $day=>$ids)
@@ -2324,6 +2356,7 @@ class EventsModule extends DefaultMinisiteModule
 			$es->add_type( id_of('category_type') );
 			$es->set_env('site',$this->parent->site_id);
 			$es->add_right_relationship( $this->parent->cur_page->id(), relationship_id_of('page_to_category') );
+			$es->set_cache_lifespan($this->get_cache_lifespan_meta());
 			$cats = $es->run_one();
 			if(!empty($cats))
 			{
@@ -2362,7 +2395,8 @@ class EventsModule extends DefaultMinisiteModule
 			$init_array['simple_search'] = $this->request['search'];
 		}
 		$init_array['es_callback'] = array($this, 'reason_calendar_master_callback');
-		
+		$init_array['cache_lifespan'] = $this->get_cache_lifespan();
+		$init_array['cache_lifespan_meta'] = $this->get_cache_lifespan_meta();
 		return $init_array;
 	}
 	
@@ -2397,6 +2431,24 @@ class EventsModule extends DefaultMinisiteModule
 			$audience_ids = array_keys($audiences_to_exclude);
 			array_walk($audience_ids,'db_prep_walk');
 			$es->add_relation($audience_table_info['audience_id']['table'].'.'.$audience_table_info['audience_id']['field'].' NOT IN ('.implode(',',$audience_ids).')');
+		}
+		
+		if(!empty($this->params['freetext_filters']))
+		{
+			foreach($this->params['freetext_filters'] as $filter)
+			{
+				$string = $filter[0];
+				$fields = explode(',',$filter[1]);
+				$parts = array();
+				foreach($fields as $field)
+				{
+					$field_parts = explode('.',trim($field));
+					
+					$parts[] = '`'.implode('`.`',$field_parts).'` LIKE "'.addslashes($string).'"';
+				}
+				$where = '('.implode(' OR ',$parts).')';
+				$es->add_relation($where);
+			}
 		}
 	}
 	
@@ -2935,7 +2987,7 @@ class EventsModule extends DefaultMinisiteModule
 			echo '<h4>Images</h4>'."\n";
 		    foreach( $images AS $image )
 		    {
-			show_image( $image, false, true, true, '', $this->parent->textonly );
+				show_image( $image, false, true, true, '', $this->parent->textonly );
 		    }
 		    echo "</div>";
 		}
