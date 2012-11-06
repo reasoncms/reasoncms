@@ -92,6 +92,8 @@ $(document).ready(function()
 		$('input[name="_reason_upload_crop_h"]', container).val(0);
 	}
 	
+	/* Called when the form is submitted. If image cropping is active, and cropping is 
+	   required by the form, it won't allow submit without a crop region defined. */
 	function checkCoords(form)
 	{		
 		if ($('div.jcrop-holder', form).length && $('input[name="_reason_upload_crop_required"]', form).val()) {
