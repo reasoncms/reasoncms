@@ -15,6 +15,7 @@ reason_include_once( 'classes/group_helper.php');
 reason_include_once( 'classes/entity_selector.php');
 reason_include_once( 'function_libraries/user_functions.php');
 reason_include_once( 'function_libraries/asset_functions.php');
+reason_include_once( 'function_libraries/util.php');
 
 /**
  * Asset Access Viewer
@@ -60,8 +61,7 @@ class ReasonAssetAccess
 	function set_asset_id($asset_id)
 	{
 		$e = new entity($asset_id);
-	    if ($e) $type = $e->get_value( 'type' );
-	    if ((id_of('asset')) == $type) $this->asset = $e;
+		if (reason_is_entity($e, 'asset')) $this->asset = $e;
 	}
 	
 	/**
