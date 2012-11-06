@@ -145,6 +145,16 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'app_dev_on_call' => array(
 		'main_post' => 'app_dev_on_call',
 	),
+	'a_to_z' => array(
+		'banner_xtra' => 'nav_search_logo',
+		'navigation' => 'navigation',
+		'sub_nav_2' => 'luther_bannerad',
+		'sub_nav' => 'luther_username',	
+		'main_head' => '',
+		'main_post' => 'atoz',
+		'post_foot' => 'luther_footer',
+		'sidebar' => 'luther_av',
+	),
 	'audio_video' => array(
 		'main_post' => 'luther_av',
 		'sidebar' => '',
