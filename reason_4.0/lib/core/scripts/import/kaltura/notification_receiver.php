@@ -181,21 +181,17 @@ class ReasonKalturaNotificationReceiver
 						// Determine the appropriate transcoding profile for the given source file
 						if ($data['height'] <= MEDIA_WORK_SMALL_HEIGHT)
 						{
-							$transcoding_profile = KALTURA_VIDEO_SMALL_TRANSCODING_PROFILE;
-							/*if ($asset->bitrate < KALTURA_SMALL_VIDEO_BITRATE)
+							if ($asset->bitrate < KALTURA_SMALL_VIDEO_BITRATE)
 								$transcoding_profile = KALTURA_VIDEO_SMALL_LOW_BANDWIDTH_TRANSCODING_PROFILE;
 							else
-								$transcoding_profile = KALTURA_VIDEO_SMALL_LOW_BANDWIDTH_TRANSCODING_PROFILE;*/
+								$transcoding_profile = KALTURA_VIDEO_SMALL_TRANSCODING_PROFILE;
 						}
 						else if ($data['height'] <= MEDIA_WORK_MEDIUM_HEIGHT)
 						{
 							if ($asset->bitrate < KALTURA_MEDIUM_VIDEO_BITRATE)
-							{
 								$transcoding_profile = KALTURA_VIDEO_MEDIUM_LOW_BANDWIDTH_TRANSCODING_PROFILE;
-								//$transcoding_profile = KALTURA_VIDEO_SMALL_LOW_BANDWIDTH_TRANSCODING_PROFILE;
-							}
 							else
-								$transcoding_profile = KALTURA_VIDEO_MEDIUM_TRANSCODING_PROFILE;
+								$transcoding_profile = KALTURA_VIDEO_MEDIUM_TRANSCODING_PROFILE;							
 						}
 						else
 						{
