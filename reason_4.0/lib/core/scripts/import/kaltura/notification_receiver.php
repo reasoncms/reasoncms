@@ -240,7 +240,6 @@ class ReasonKalturaNotificationReceiver
 						
 						if ($data['status'] == -1)
 						{
-							$this->kaltura_shim->delete_media($data['entry_id'], $data['puser_id']);
 							$this->send_email($media_work, $data, 'error');
 							trigger_error('Kaltura unsuccessfully transcoded media entry with id = '.$data['entry_id']);
 							return;
