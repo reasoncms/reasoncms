@@ -29,7 +29,7 @@ div#absolute_search {
     position: absolute;
     top: 13px;
     right: 2px;
-    width:20%;
+    width:50%;
 }
 
 /* these next two (searchButton and search) may not do anything */
