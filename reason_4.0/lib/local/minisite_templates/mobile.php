@@ -46,6 +46,15 @@ class MobileTemplate extends MinisiteTemplate
 		{
 			echo "\n".$this->cur_page->get_value('extra_head_content')."\n";
 		}
+		echo '<script>' . "\n";
+		echo '  (function() {' . "\n";
+		echo '    var cx = \'005935510434836484605:yecpxhsqj6s\';' . "\n";
+		echo '    var gcse = document.createElement(\'script\'); gcse.type = \'text/javascript\'; gcse.async = true;' . "\n";
+		echo '    gcse.src = (document.location.protocol == \'https:\' ? \'https:\' : \'http:\') +' . "\n";
+		echo '        \'//www.google.com/cse/cse.js?cx=\' + cx;' . "\n";
+		echo '    var s = document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(gcse, s);' . "\n";
+		echo '  })();' . "\n";
+		echo '</script>' . "\n";
 			
 		echo '</head>'."\n";
 

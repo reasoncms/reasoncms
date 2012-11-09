@@ -29,6 +29,7 @@ div#absolute_search {
     position: absolute;
     top: 13px;
     right: 2px;
+    width:20%;
 }
 
 /* these next two (searchButton and search) may not do anything */
@@ -218,6 +219,26 @@ td.chkdi {
 }
 td.chkla {
     display: none;
+}
+.gsc-search-box-tools .gsc-search-box .gsc-input {
+ padding-right: 2px !important;
+ font-size: 96% !important;
+}
+.gsc-input-box {
+ height: 22px !important;
+}
+.cse .gsc-search-button input.gsc-search-button-v2, input.gsc-search-button-v2 {
+ margin-top: 0 !important;
+ padding: 6px !important;
+ background-color: transparent !important;
+ border-color: transparent !important;
+}
+input.gsc-search-button-v2:hover, input.gsc-search-button-v2:focus {
+ background-color: transparent !important;
+ border-color: transparent !important;
+}
+.gscb_a {
+ font: 22px/13px arial, sans-serif !important;
 }
 
 /*
