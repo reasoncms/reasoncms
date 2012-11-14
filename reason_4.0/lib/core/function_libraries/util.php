@@ -2077,4 +2077,19 @@
 		}
 		return $customizer;
 	}
+	
+	/**
+	 * Returns the version number of this instance of Reason CMS.
+	 */
+	function reason_get_version()
+	{
+		static $version;
+		if (!isset($version))
+		{
+			reason_include_once('classes/version_check.php');
+			$rvc = new reasonVersionCheck();
+			$version = $rvc->get_current_version_id();
+		}
+		return $version;
+	}
 ?>
