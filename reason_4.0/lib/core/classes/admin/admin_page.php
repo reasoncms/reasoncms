@@ -1340,7 +1340,7 @@ class AdminPage
 		echo '<tr>' . "\n";
 		echo '<td class="crumbs"> '.REASON_ADMIN_LOGO_MARKUP;
 		echo '<span>';
-		echo '<strong> :: <a href="'.$this->make_link(array('cur_module'=>'about_reason')).'" class="bannerLink">Reason '.REASON_VERSION.'</a></strong>';
+		echo '<strong> :: <a href="'.$this->make_link(array('cur_module'=>'about_reason')).'" class="bannerLink">Reason '. reason_get_version() .'</a></strong>';
 		if($this->site_id != id_of('master_admin'))
 		{
 			$sites = $this->get_sites();
