@@ -930,7 +930,7 @@ class AssetUploadType extends uploadType
 	{
 		$error = "The 'AssetUpload' plasmature type is deprecated. Use the ".
 		    "new base 'upload' type ";
-		if (defined("REASON_VERSION")) {
+		if (defined("REASON_HTTP_BASE_PATH")) {
 			$error .= "or the 'ReasonUpload' type ";
 		}
 		$error .= "instead.";
