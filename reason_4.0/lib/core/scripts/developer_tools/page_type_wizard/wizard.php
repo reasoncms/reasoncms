@@ -25,7 +25,7 @@
 
 </head>
 <body>
-<?
+<?php
 /**
  * A wizard for reason page type creation and modification
  *
