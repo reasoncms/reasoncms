@@ -229,6 +229,7 @@ class tiny_mceType extends textareaType
 		'plugins' => 'inlinepopups',
 		'dialog_type' => 'modal',
 		'theme' => 'advanced',
+		'convert_urls' => false,
 	);
 	
 	function display()
