@@ -11,69 +11,6 @@ require_once PLASMATURE_TYPES_INC."default.php";
 require_once PLASMATURE_TYPES_INC."text.php";
 
 /**
- * Edit HTML using a Loki 1 editor.
- * @package disco
- * @subpackage plasmature
- */
-class lokiType extends defaultType
-{
-	var $type = 'loki';
-	var $widgets = 'default';
-	var $user_is_admin = false;
-	var $site_id = 0;
-	var $paths = array();
-	var $type_valid_args = array('widgets', 'user_is_admin', 'site_id', 'paths');
-	function do_includes()
-	{
-		include_once( LOKI_INC.'lokiOptions.php3' );	// for loki Options
-		include_once( LOKI_INC.'object.php' );
-	}
-	function grab()
-	{
-		$HTTP_VARS = $this->get_request();
-		if ( isset( $HTTP_VARS[ $this->name ] ) )
-		{
-			$this->loki_process = new Loki_Process( $HTTP_VARS[ $this->name ] );
-			$val = tidy( $this->loki_process->get_field_value() );
-			if( empty( $val ) )
-			{
-				$tidy_err = tidy_err( $this->loki_process->get_field_value() );
-				if( !empty($tidy_err) )
-				{
-					$tidy_err = nl2br( htmlentities( $tidy_err,ENT_QUOTES,'UTF-8' ) );
-					$this->set_error( 'Your HTML appears to be ill-formatted.  Here is what Tidy has to say about it: <br />'.$tidy_err );
-					$this->set( $this->loki_process->get_field_value() );
-				}
-				else
-					$this->set( $val );
-			}
-			else
-			{
-				$val = preg_replace("|</table>\n\n<br />\n<br />\n|i","</table>\n", $val);
-				$this->set( $val );
-			}
-		}
-		$length = strlen( $this->value );
-		if( ($this->db_type == 'tinytext' AND $length > 255) OR ($this->db_type == 'text' AND $length > 65535) OR ($this->db_type == 'mediumtext' AND $length > 16777215) )
-			$this->set_error( 'There is more text in '.$this->display_name.' than can be stored ' );
-	}
-	function display()
-	{
-		$http_vars = $this->get_request();
-		if( $this->has_error )
-		{
-			$this->loki = new Loki( $this->name, $this->loki_process->_field_value, $this->widgets, (!empty( $http_vars['site_id'] ) ? $http_vars['site_id'] : -1), $this->user_is_admin );
-		}
-		else
-		{
-			$this->loki = new Loki( $this->name, $this->value, $this->widgets, (!empty( $http_vars['site_id'] ) ? $http_vars['site_id'] : -1), $this->user_is_admin );
-		}
-		$this->loki->print_form_children();
-		//loki( $this->name, $this->value , $this->widgets);
-	}
-}
-
-/**
  * Edit HTML using a Loki 2 editor.
  * @package disco
  * @subpackage plasmature
