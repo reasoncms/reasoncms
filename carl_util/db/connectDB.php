@@ -101,11 +101,108 @@ function get_database_name()
  * @return array Array with all the db connection info defined for the specified named connection.
  */
 function get_db_credentials( $conn_name, $lack_of_creds_is_fatal = true )
+{	
+	if (class_exists("XMLReader"))
+	{
+		if (!empty($conn_name))
+		{
+			static $creds;
+			if (!isset($creds[$conn_name]))
+			{
+				$reader = new XMLReader();
+				if ($reader->open(DB_CREDENTIALS_FILEPATH))
+				{
+					while (!isset($database) && $reader->read())
+					{
+						if ( ($reader->nodeType == XMLReader::ELEMENT) && ($reader->name == 'database') )
+						{
+							while ($reader->read())
+							{
+								if ( ($reader->nodeType == XMLReader::ELEMENT) && ($reader->name == 'connection_name') )
+								{
+									$reader->read(); // lets read the text node value for the connection name node to make sure it is our connection
+									if ( ($reader->nodeType == XMLReader::TEXT) && ($reader->value == $conn_name) )
+									{
+										$database = array();
+										while ($reader->read())
+										{
+											if ($reader->nodeType == XMLReader::ELEMENT)
+											{
+												if ($reader->name == 'db')
+												{
+													$reader->read();
+													if ($reader->nodeType == XMLReader::TEXT) $database['db'] = $reader->value;
+												}
+												elseif ($reader->name == 'user')
+												{
+													$reader->read();
+													if ($reader->nodeType == XMLReader::TEXT) $database['user'] = $reader->value;
+												}
+												elseif ($reader->name == 'password')
+												{
+													$reader->read();
+													if ($reader->nodeType == XMLReader::TEXT) $database['password'] = $reader->value;
+												}
+												elseif ($reader->name == 'host')
+												{
+													$reader->read();
+													if ($reader->nodeType == XMLReader::TEXT) $database['host'] = $reader->value;
+												}
+											}
+											if ( ($reader->nodeType == XMLReader::END_ELEMENT) && ($reader->name == 'database') ) break;
+										}
+									}
+								}
+								if ( ($reader->nodeType == XMLReader::END_ELEMENT) && ($reader->name == 'database') ) break;
+							}
+						}
+					}
+					if (isset($database)) $creds[$conn_name] = $database;
+					else $creds[$conn_name] = FALSE;
+				}
+				else
+				{
+					trigger_fatal_error('The DB_CREDENTIALS_FILEPATH ('.DB_CREDENTIALS_FILEPATH.') refers to a file that is missing, empty, or malformed.');
+				}
+			}
+			if (empty($creds[$conn_name]))
+			{
+				turn_carl_util_error_context_off();
+				if ($lack_of_creds_is_fatal)
+				{
+					trigger_fatal_error('Unable to use database connection '.$conn_name.' - No credential information found for the connection named ' . $conn_name . ' in database credential file ('.DB_CREDENTIALS_FILEPATH.').', 2);
+				}
+				else
+				{
+					trigger_warning('Unable to use database connection '.$conn_name.' - No credential information found for the connection named ' . $conn_name . ' in database credential file ('.DB_CREDENTIALS_FILEPATH.').', 2);
+				}
+				turn_carl_util_error_context_on();
+				return false;
+			}
+			return $creds[$conn_name];
+		}
+		else
+		{
+			trigger_fatal_error('The method get_db_credentials must be provided with a conn_name parameter.');
+		}
+	}
+	else return _legacy_get_db_credentials( $conn_name, $lack_of_creds_is_fatal );
+}
+
+/**
+ * Return authentication credentials for the specified database connection.
+ *
+ * @param string $conn_name The name of the db connection you want to retrieve
+ * @param boolean $lack_of_creds_is_fatal defaults to true for historical purposes
+ * @return array Array with all the db connection info defined for the specified named connection.
+ */
+function _legacy_get_db_credentials( $conn_name, $lack_of_creds_is_fatal = true )
 {
 	static $db_info;
 	// if db_info has not been set, this is the first time this function has been run.
 	if( !isset($db_info) )
 	{
+		trigger_warning('Using _legacy_get_db_credentials - please upgrade to PHP 5.1 or later to use faster XML functions.');
 		if( !defined( 'DB_CREDENTIALS_FILEPATH' ) ) trigger_fatal_error('The DB_CREDENTIALS_FILEPATH constant is not defined.');
 		$db_info = array();
 		require_once( INCLUDE_PATH . 'xml/xmlparser.php' );
@@ -181,5 +278,4 @@ function get_db_credentials( $conn_name, $lack_of_creds_is_fatal = true )
 	}
 	return false;
 }
-
 ?>
