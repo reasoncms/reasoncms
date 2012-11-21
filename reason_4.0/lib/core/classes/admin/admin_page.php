@@ -1394,7 +1394,7 @@ class AdminPage
 					$username = $users[$this->authenticated_user_id]->get_value('name');
 				else
 					$username = 'me';
-				echo '<a class="stopPosing" href="'.$this->make_link(array('user_id'=>$this->authenticated_user_id), true).'" title="Stop posing as another user">'.htmlspecialchars($username).'</a>'."\n";
+				echo '<a class="stopPosing" href="'.carl_make_link(array('user_id'=>$this->authenticated_user_id)).'" title="Stop posing as another user">'.htmlspecialchars($username).'</a>'."\n";
 			}
 			if ($show_logout) echo ' <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 			echo '</form>';
