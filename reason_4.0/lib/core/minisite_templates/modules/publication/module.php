@@ -158,6 +158,7 @@ class PublicationModule extends Generic3Module
 									  //links
 	 								   'back_link' => 'construct_back_link',
 									   'back_to_section_link' => 'construct_back_to_section_link',
+									   'back_to_filters_link' => 'construct_back_to_filters_link',
 									   //comments
 									   'comment_group' => 'get_comment_group',
 									   'comment_group_helper' => 'get_comment_group_helper',
@@ -180,6 +181,8 @@ class PublicationModule extends Generic3Module
 									   'text_only' => 'get_text_only_state',
 									   'current_filters' => 'get_current_filter_entities',
 									   'inline_editing_info' => 'get_inline_editing_info',
+									   'filter_interface_markup'=>'get_filter_interface_markup',
+									   'search_interface_markup'=>'get_search_interface_markup',
 									);
 	
 	/**
@@ -508,7 +511,7 @@ class PublicationModule extends Generic3Module
 		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'minimum_date_strtotime_format', 'show_login_link', 
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
 		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css',
-		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization','comment_form_file_location','post_form_file_location');
+		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization','comment_form_file_location','post_form_file_location',);
 		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info, 
 							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
 							      'variables_to_pass' => $this->variables_to_pass);
@@ -521,6 +524,9 @@ class PublicationModule extends Generic3Module
 				$this->acceptable_params[$k] = $v;
 			}
 		}
+		$this->acceptable_params['module_displays_search_interface'] = true;
+		$this->acceptable_params['module_displays_filter_interface'] = true;
+		$this->acceptable_params['show_pagination_in_module'] = true;
 		parent::handle_params( $params );
 	}
 
@@ -2049,6 +2055,48 @@ class PublicationModule extends Generic3Module
 			}
 			else parent::get_login_logout_link();
 		}
+		
+		function show_filtering()
+		{
+			if($this->params['module_displays_search_interface'] || $this->params['module_displays_filter_interface'])
+			{
+				$markup = $this->get_filter_markup();
+				if($this->params['module_displays_search_interface'] && !empty($markup['search']))
+				{
+					echo $markup['search'];
+				}
+				if($this->params['module_displays_filter_interface'] && !empty($markup['filter']))
+				{
+					echo $markup['filter'];
+				}
+			}
+		}
+		
+		function get_pagination_markup()
+		{
+			if($this->use_pagination && ( $this->show_list_with_details || empty( $this->current_item_id ) ) )
+			{
+				if(empty($this->total_pages))
+					$this->total_pages = ceil( $this->total_count / $this->num_per_page );
+				if($this->total_pages > 1)
+				{
+					if(empty($this->pagination_output_string))
+					{
+						$this->pagination_output_string = $this->_get_pagination_markup();
+					}
+					if(!empty($class))
+					{
+						$class = ' '.$class;
+					}
+					return '<div class="pagination'.$class.'">'.$this->pagination_output_string.'</div>'."\n";
+				}
+			}
+		}
+		function show_pagination($class = '')
+		{
+			if($this->params['show_pagination_in_module'])
+				echo $this->get_pagination_markup();
+		}
 
 		/**
 		*  Uses a list item markup generator to get the markup for each item of the list.
@@ -2214,6 +2262,21 @@ class PublicationModule extends Generic3Module
 			return $pages;
 		}
 		
+		function get_search_interface_markup()
+		{
+			$markup = $this->get_filter_markup();
+			if(!empty($markup['search']))
+				return $markup['search'];
+			return '';
+		}
+		
+		function get_filter_interface_markup()
+		{
+			$markup = $this->get_filter_markup();
+			if(!empty($markup['filter']))
+				return $markup['filter'];
+			return '';
+		}
 		
 		/**	
 		* Returns the number of comments associated with a news item.
@@ -2280,14 +2343,20 @@ class PublicationModule extends Generic3Module
 			$current_issue = $this->get_current_issue();
 			if(!empty($current_issue))
 				$main_list_name .= ', '.$current_issue->get_value('name');
-			echo '<div><a href="'.$this->construct_back_link().'">Return to '.$main_list_name.'</a></div>';
+			echo '<div class="mainBackLink"><a href="'.$this->construct_back_link().'">Return to '.$main_list_name.'</a></div>';
 			
 			
 			$current_section = $this->get_current_section();
 			if(!empty($current_section))
 			{
 				$section_name = $current_section->get_value('name').' ('.$main_list_name.')';
-				echo '<div><a href="'.$this->construct_back_to_section_link().'">Return to '.$section_name.'</a></div>';
+				echo '<div class="sectionBackLink"><a href="'.$this->construct_back_to_section_link().'">Return to '.$section_name.'</a></div>';
+			}
+			
+			$back_to_filter_link = $this->construct_back_to_filters_link();
+			if(!empty($back_to_filter_link))
+			{
+				echo '<div class="filtersBackLink"><a href="'.$back_to_filter_link.'">Return to your search/category results</a></div>';
 			}
 			
 			echo '</div>';
@@ -2316,6 +2385,14 @@ class PublicationModule extends Generic3Module
 			if(!empty($this->issue_id))
 			{
 				$args[] = 'issue_id';
+				if(!empty($this->filters))
+				{
+					$args['filter1'] = $args['filter2'] = $args['filter3'] = '';
+				}
+				if(!empty($this->request['search']))
+				{
+					$args['search'] = '';
+				}
 			}
 			return $this->construct_link(NULL, $this->get_query_string_values($args));	
 		}
@@ -2331,6 +2408,18 @@ class PublicationModule extends Generic3Module
 				{
 					$args[] = 'issue_id';
 				}	
+				
+				return $this->construct_link(NULL, $this->get_query_string_values($args));
+			}
+			else 
+				return false;
+		}
+		
+		function construct_back_to_filters_link()
+		{
+			if((!empty($this->filters) || !empty($this->request['search'])) && !empty($this->issue_id) && !empty($this->request[$this->query_string_frag.'_id']) )
+			{
+				$args = array('filter1','filter2','filter3', 'search', 'issue_id' => '');
 				
 				return $this->construct_link(NULL, $this->get_query_string_values($args));
 			}
