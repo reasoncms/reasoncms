@@ -2072,7 +2072,7 @@ class PublicationModule extends Generic3Module
 			}
 		}
 		
-		function get_pagination_markup()
+		function get_pagination_markup($class = '')
 		{
 			if($this->use_pagination && ( $this->show_list_with_details || empty( $this->current_item_id ) ) )
 			{
@@ -2095,7 +2095,7 @@ class PublicationModule extends Generic3Module
 		function show_pagination($class = '')
 		{
 			if($this->params['show_pagination_in_module'])
-				echo $this->get_pagination_markup();
+				echo $this->get_pagination_markup($class);
 		}
 
 		/**
