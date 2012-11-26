@@ -307,7 +307,7 @@ if( !empty( $site_id ) && !empty( $page_id )) // need site_id and page_id to pro
 	}
 	if( is_developer() && !$requested_api )
 	{
-		$str = $page_gen_time.' ms | ';
+		$str = $page_gen_time. ' ms | ' . format_bytes_as_human_readable(memory_get_peak_usage(true)) . ' | ';
 		if( $use_cache )
 		{
 			$str .= 'caching is ON: ';
