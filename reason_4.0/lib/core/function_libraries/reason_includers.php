@@ -140,17 +140,17 @@ function _reason_include_file($behavior, $file)
 {
 	switch ($behavior)
 	{
-		case 'include':
-			include($file);
-			return true;
 		case 'include_once':
 			include_once($file);
 			return true;
-		case 'require':
-			require($file);
-			return true;
 		case 'require_once':
 			require_once($file);
+			return true;
+		case 'include':
+			include($file);
+			return true;
+		case 'require':
+			require($file);
 			return true;
 		default:
 			$behavior_repr = var_export($behavior, true);
