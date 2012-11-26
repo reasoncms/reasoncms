@@ -59,7 +59,7 @@
 		{
 			if (!empty($this->_timers))
 			{
-				echo '<table id="timerReportAll" width="500" border="1" cellspacing="0" cellpadding="4">';
+				echo '<table id="timerReportAll" border="1" cellspacing="0" cellpadding="4">';
 				echo '<tr>';
 				echo '<th>Timer Name</th>';
 				echo '<th>Elapsed Time</th>';
