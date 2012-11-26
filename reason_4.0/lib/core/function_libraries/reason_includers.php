@@ -67,14 +67,6 @@ function reason_includer($path, $section = 'lib', $function = 'include_once')
 	$prefix = REASON_INC.$section;
 	$local = $prefix."/local/".$path;
 	$core = $prefix."/core/".$path;
-	
-	if ($function == 'include_once' || $function == 'require_once')
-	{
-		$included = get_included_files();
-		if (in_array($core, $included) || in_array($local, $included))
-			return true;
-	}
-	
 	if (file_exists($local))
 	{
 		return _reason_include_file($function, $local);
