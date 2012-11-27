@@ -1194,6 +1194,85 @@ function luther_shorten_string($text, $length, $append)
 	return $text;
 }
 
+function luther_is_local_ip()
+// determine if ip address is luther college or Decorah area
+// used for ReachLocal remarketing pixel on admissions site
+{
+	if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1'   // localhost
+		// private
+		|| preg_match("/^(10\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(172\.(1[6-9]|2[0-9]|3[01])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(192\.168\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		// Luther Campus
+		|| preg_match("/^(192\.203\.196\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(198\.133\.77\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(209\.56\.59\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(74\.207\.(3[2-9]|4[0-9]|5[0-9]|6[0-3])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		// Decorah: Go to http://www.my-ip-address-is.com/city/Iowa/Decorah-IP-Addresses
+		|| preg_match("/^(65\.116\.8[89]\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(65\.166\.58\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(66\.43\.231\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(66\.43\.252\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(67\.54\.189\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(67\.128\.219\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(69\.66\.77\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(72\.166\.100\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(75\.175\.212\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(173\.17\.36\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(173\.19\.[49]6\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(173\.19\.232\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(66\.43\.252\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(199\.120\.71\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(204\.248\.125\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(205\.243\.127\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(205\.246\.174\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(207\.165\.178\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(207\.177\.54\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(209\.152\.65\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(216\.51\.150\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(216\.161\.207\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(216\.248\.94\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		// Calmar: Go to http://www.my-ip-address-is.com/city/Iowa/Calmar-IP-Addresses
+		|| preg_match("/^(4\.252\.133\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(199\.201\.208\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(205\.221\.68\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(207\.28\.22\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(207\.165\.228\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		// Cresco: Go to http://www.my-ip-address-is.com/city/Iowa/Cresco-IP-Addresses
+		|| preg_match("/^(4\.158\.16\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(4\.158\.28\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(63\.86\.22\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(67\.224\.57\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(69\.66\.22\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(71\.7\.44\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(173\.19\.105\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(173\.22\.137\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(204\.248\.127\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(208\.161\.56\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		// Ossian: Go to http://www.my-ip-address-is.com/city/Iowa/Ossian-IP-Addresses
+		|| preg_match("/^(207\.28\.13\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		// Waukon: Go to http://www.my-ip-address-is.com/city/Iowa/Waukon-IP-Addresses
+		|| preg_match("/^(75\.167\.203\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(216\.51\.201\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		// West Union: Go to http://www.my-ip-address-is.com/city/Iowa/West+Union-IP-Addresses
+		|| preg_match("/^(205\.221\.67\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		// Harmony: Go to http://www.my-ip-address-is.com/city/Minnesota/Harmony-IP-Addresses
+		|| preg_match("/^(12\.157\.197\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(204\.248\.121\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		// Mabel: Go to http://www.my-ip-address-is.com/city/Minnesota/Mabel-IP-Addresses
+		|| preg_match("/^(204\.248\.126\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(205\.243\.117\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		// Spring Grove: Go to http://www.my-ip-address-is.com/city/Minnesota/Spring+Grove-IP-Addresses
+		|| preg_match("/^(204\.248\.117\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(204\.248\.124\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(205\.243\.121\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR'])
+		|| preg_match("/^(208\.74\.240\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))$/", $_SERVER['REMOTE_ADDR']))
+	{
+		return true;
+	}
+	return false;
+}
+
 function get_luther_publication()
 // return array containing publication directives
 {

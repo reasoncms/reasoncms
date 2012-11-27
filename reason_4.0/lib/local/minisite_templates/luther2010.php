@@ -169,6 +169,22 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '</div> <!-- id="wrapper" class="'.$class.'" -->'."\n";
 		
 	}
+	function end_page()
+	{
+		// finish body and html
+		$this->do_org_foot();
+		//$this->_do_testing_form();
+		echo '</body>'."\n";
+		
+		$url = get_current_url();
+		if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/admissions\/?/", $url) && !luther_is_local_ip())
+		{
+			// reachlocal remarketing code for admissions site
+			echo '<script src="http://i.simpli.fi/dpx.js?cid=25&action=100&segment=2769357&m=1"></script>'."\n";
+		}
+		
+		echo '</html>'."\n";
+	}
 
 	function show_banner_tableless()
 	{
