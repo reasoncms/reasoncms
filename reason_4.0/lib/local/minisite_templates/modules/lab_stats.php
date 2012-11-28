@@ -639,6 +639,35 @@ class LabStatsModule extends DefaultMinisiteModule {
     <tr>
         <td>
             <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 49;
+                var lab_property = 'lab_name';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 49 ;
+                var lab_property = 'lab_inuse';
+                var t1 = lookup(lab_id,lab_property);
+                var lab_property = 'lab_total';
+                var t2 = lookup(lab_id,lab_property);
+                var text = t2 - t1;
+                document.write (text);
+            </SCRIPT>
+        </td>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
+                var lab_id = 49 ;
+                var lab_property = 'lab_total';
+                var text = lookup(lab_id,lab_property)
+                document.write (text);
+            </SCRIPT>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SCRIPT TYPE="TEXT/JAVASCRIPT">
                 var lab_id = 34;
                 var lab_property = 'lab_name';
                 var text = lookup(lab_id,lab_property)
