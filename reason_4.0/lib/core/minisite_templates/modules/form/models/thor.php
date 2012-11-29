@@ -690,7 +690,7 @@ class ThorFormModel extends DefaultFormModel
 		if (!isset($this->_values))
 		{
 			$thor_core =& $this->get_thor_core_object();
-			$this->_values = $thor_core->get_rows();
+			$this->_values = ($thor_core->table_exists() && $thor_core->get_rows());
 		}
 		return $this->_values;
 	}
