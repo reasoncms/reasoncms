@@ -293,6 +293,51 @@ class AssociatorModule extends DefaultModule // {{{
 		}
 		echo '</div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n".'</td>'."\n".'</tr>'."\n".'</table>'."\n";
 	} // }}}
+	
+	function get_selected_jump_link()
+	{
+		if ($this->show_jump_links())
+		{
+			/*return '<a id="itemsSelect" name="itemsSelect" /a><div class="jumpLinkTop"><div class="roundedTop"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div><div class="roundedContent"><p><span class="jumpToSelect"><a class="jump" href="#itemsSelected">Top</a></span></p></div><div class="roundedBottom"><img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'trans.gif" alt="" class="roundedCorner" /></div></div><br />';*/
+			return '<a id="itemsSelect" name="itemsSelect" /a><div class="jumpLinkTop">'."\n\t\t\t".'<div class="roundedTop">'."\n\t".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent"><span class="jumpToSelected"><a class="jump" href="#itemsSelected">Top</a></span></div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n";
+		}
+		return '';
+	}
+	
+	function get_select_jump_link()
+	{
+		if ($this->show_jump_links())
+		{
+			$verb = ($this->admin_page->cur_module == 'Sharing') ? 'Borrow' : 'Select';
+			$noun = $this->rel_type->get_value('plural_name');
+			/*return '<a id="itemsSelected" name="itemsSelected" /a><div class="jumpLinkFind"><div class="roundedTop"><img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>nw.gif" alt="" class="roundedCorner" /></div><div class="roundedContent"><p><span class="jumpToSelected"><a class="jump" href="#itemsSelect">Find and '.$verb.' '.$noun.'</a></span></p></div><div class="roundedBottom"><img src="<?php echo REASON_ADMIN_IMAGES_DIRECTORY; ?>sw.gif" alt="" class="roundedCorner" /></div></div>';*/
+			return '<a id="itemsSelected" name="itemsSelected" /a><div class="jumpLinkFind">'."\n\t\t\t".'<div class="roundedTop">'."\n\t".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'nw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'<div class="roundedContent"><span class="jumpToSelected"><a class="jump" href="#itemsSelect">Find and '.$verb.' '.$noun.'</a></span></div>'."\n".'<div class="roundedBottom">'."\n".'<img src="'.REASON_ADMIN_IMAGES_DIRECTORY.'sw.gif" alt="" class="roundedCorner" />'."\n".'</div>'."\n".'</div>'."\n";
+		}
+		return '';
+	}
+	
+	
+	
+
+	
+	
+	
+	/**
+	 * We want to show the jump links if we have more than 5 associated items.
+	 */
+	function show_jump_links()
+	{
+		if (!isset($this->_show_jump_links))
+		{
+			if (isset($this->viewer->ass_vals))
+			{
+				$this->_show_jump_links = (count($this->viewer->ass_vals) > 5);
+			}
+			else $this->show_jump_links = false;
+		}
+		return ($this->_show_jump_links);
+	}
+	
 	function run() // {{{
 	{
 		if(!$this->should_run())
@@ -316,7 +361,11 @@ class AssociatorModule extends DefaultModule // {{{
 			echo '<div class="lockNotice"><img class="lockIndicator" src="'.REASON_HTTP_BASE_PATH.'ui_images/lock_12px_grey_trans.png" alt="locked" width="12" height="12" /> Note: this relationship is locked for some users.</div>';
 		}
 		$colspan = count( $this->viewer->columns ) + 1;
+		
 		echo '<table border="0"><tr><td>';
+		
+		// use plural type name
+		echo $this->get_select_jump_link();
 		$this->viewer->show_associated_items();
 		echo '</td></tr>'."\n";
 		if($this->_locked)
@@ -326,7 +375,9 @@ class AssociatorModule extends DefaultModule // {{{
 		}
 		
 		echo '<tr><td>&nbsp;';
-		echo '</td></tr><tr><td>&nbsp;';
+		echo '</td></tr>';
+		echo '<tr><td>';
+		echo $this->get_selected_jump_link();
 		echo '</td></tr><tr><td class="assocHead" colspan="'. $colspan .'">';
 		echo '&nbsp;&nbsp;Not Selected<br /><br /></td></tr><tr><td colspan="'.$colspan.'"><table><tr>';
 		$list_mod = new ListerModule($this->admin_page);
