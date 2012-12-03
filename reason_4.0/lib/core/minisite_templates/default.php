@@ -752,6 +752,10 @@ class MinisiteTemplate
 		$page_type = $this->_legacy_alter_page_type($page_type, $requested_page_type_name);
 		$this->alter_reason_page_type($page_type);
 
+		if (extension_loaded('newrelic')) { 
+			newrelic_name_transaction($page_type->get_name()); 
+		}
+		
 		// if an api was requested lets identify the region to run
 		if ($requested_api = $this->get_requested_api())
 		{
