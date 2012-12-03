@@ -474,3 +474,32 @@ div.versionUpdateNotice {
 .borrowNav li.current strong {
 	background:#fff url(../../ui_images/subtle_tabs/curtab_bg.gif) repeat-x;
 }
+
+/*  Added for styling of associator jump links 12/3/12 - Amanda Frisbee */
+
+.jumpLinkFind, .jumpLinkTop {
+	background-color:#dbdbdb;
+	width: 200px;
+	float: right;
+}
+.jumpLinkFind .roundedContent a.jump {
+	display:block;
+	padding-left:18px;
+	background:transparent url(../../silk_icons/arrow_down.png) no-repeat left center;
+	max-height:16px;
+	color:#000099;
+}
+.jumpLinkTop .roundedContent a.jump {
+	display:block;
+	padding-left:18px;
+	background:transparent url(../../silk_icons/arrow_up.png) no-repeat left center;
+	min-height:16px;
+	color:#000099;
+}
+* html .jumpLink .roundedContent a {
+	height:16px;
+}
+.jumpLinkFind .roundedContent a:hover, .jumpLinkTop .roundedContent a:hover {
+	color:#fffdee;
+	/*color:#000099;*/
+}
