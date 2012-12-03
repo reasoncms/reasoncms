@@ -41,7 +41,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 									'date_format',
 									'search_string',
 									'text_only',
-									//'issue_blurbs',
+									'issue_blurbs',
 									'current_filters',
 									);
 
@@ -69,8 +69,8 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		if(!empty($this->passed_vars['search_string']))
 			$this->markup_string .= $this->get_search_header_markup();
 		
-		/* if(!empty($this->passed_vars['issue_blurbs']))
-			$this->markup_string .= $this->get_issue_blurbs_markup(); */
+		 if(!empty($this->passed_vars['issue_blurbs']))
+			$this->markup_string .= $this->get_issue_blurbs_markup();
 			
 		//if we're just listing items from one section ....
 		if(!empty($this->passed_vars['current_section']))
