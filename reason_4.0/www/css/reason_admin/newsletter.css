@@ -1,0 +1,143 @@
+.haveJS {
+	display: none !important;
+}
+.checkBoxGroup {
+	max-height: 300px;
+	overflow: auto;
+}
+#discoTable {
+	width: 90%;
+	margin: auto;
+}
+.events_wrapper {
+	max-height: 300px;
+	overflow: auto;
+}
+#eventsgroupRow>td>table>tbody {
+	max-height: 300px;
+	overflow: auto;
+	display:block;
+}
+#eventsgroupRow>td>table {
+	width: 95%;
+	margin: auto;
+	padding: auto;
+}
+#use_client_tab {
+	width: 90%;
+	margin: auto;
+}
+.previewDiv {
+	width: 90%;
+	border: 1px solid black;
+	margin: auto;
+	padding: 10px;
+}
+.newsletterTemplate {
+	border: 1px solid black;
+	width: 90%;
+	padding: 10px;
+	margin: auto;
+}
+.zebraStripe {
+	background-color: #E9EEF8;
+}
+.hover {
+	background-color: #D3DCED;
+	padding: 0;
+	margin: 0;
+}
+#html_overflow {
+	overflow: auto;
+	border: 1px solid black;
+	height: 500px;
+	padding: 10px;
+	margin: auto;
+	width: 100%;
+}
+/* TAB STYLING */
+#tabList, #tabList ul {
+	list-style:none;
+	padding:0;
+	margin:0;
+	display:inline-block;
+}
+#tabList, #tabList ul {
+	display:block;
+}
+#tabList:after, #tabList ul:after {
+    content:".";
+    display:block;
+    visibility:hidden;
+    clear:both;
+    height:0;
+}
+#tabList {
+	margin-bottom:0.85em;
+	background:transparent url(../../ui_images/subtle_tabs/tabset_bg.gif) repeat-x bottom;
+}
+#tabList li {
+	float:left;
+	margin-left:0.7em;
+	border:1px solid #d3dbef;
+	background-color:#fff;
+}
+#tabList li.current {
+	border-bottom-color:#fff;
+}
+#tabList strong, #tabList a {
+	color:#333;
+	display:block;
+	padding:0.3em 0.8em 0.3em 0.7em;
+	border:1px solid #fff;
+	text-decoration:none;
+}
+
+#tabList a {
+	background:#edf1f9 url(../../ui_images/subtle_tabs/tab_bg.gif) repeat-x bottom;
+	border-bottom-color:#e3e9f6;
+}
+
+#tabList a:hover {
+	text-decoration:underline;
+	background-color:#e4eaf8;
+	background-image:url(../../ui_images/subtle_tabs/tabhover_bg.gif);
+	color:#000;
+}
+#tabList li.current a {
+	background:#fff url(../../ui_images/subtle_tabs/curtab_bg.gif) repeat-x;
+	border:1px solid #fff;
+	text-decoration:none;
+	font-weight: bold;
+}
+.has_description p{
+	margin: 0;
+	padding: 0;
+}
+#tabList a:active
+{
+	outline: none;
+}
+#tabList a:focus
+{
+	outline: none;
+	-moz-outline-style: none;
+}
+.region {
+	margin-left: -1em;
+}
+
+/*
+#pubpostsgroupRow > .words, #pubpostsgroupRow > .element {
+	background-color: #CCD4DD;
+	border: 1px solid;
+	max-height: 250px;
+	overflow: auto;
+}
+#pubpostsgroupRow > .words {
+	border-right: none;
+}
+#pubpostsgroupRow > .element {
+	border-left: none;
+}
+*/
