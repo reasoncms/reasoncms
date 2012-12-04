@@ -780,6 +780,89 @@ class selectType extends optionType
 
 /**
  * Same as {@link selectType}  but doesn't sort the {@link options}.
+ * @require jQuery
+ * @package disco
+ * @subpackage plasmature
+ */
+class chosen_selectType extends selectType
+{
+	var $type = 'chosen_select';
+
+	function get_display()
+	{
+		$str = $this->get_chosen_select_js_css() . "\n";
+		$str .= '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" class="chzn-select" style="min-width:100px;" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
+		$select_count = 0;
+
+		foreach( $this->options as $key => $val )
+		{
+			if( !$this->add_empty_value_to_top && $val === '--' )
+			{
+				$str .= $this->_get_option_html('',$val,$select_count);
+			}
+			else
+			{
+				$str .= $this->_get_option_html($key,$val,$select_count);
+			}
+		}
+		$str .= '</select>'."\n";
+		$str .= '<script language="javascript" type="text/javascript">$(".chzn-select").chosen();</script>';
+		return $str;
+	}
+
+	/**
+	 * We return the main javascript for Chosen Select - we use a static variable to keep track such that we include it only once.
+	 */
+	function get_chosen_select_js_css()
+	{
+		// we only want to load the main js file once.
+		static $loaded_an_instance;
+		if (!isset($loaded_an_instance))
+		{
+			$js_css .= '<script language="javascript" type="text/javascript" src="'.CHOSEN_SELECT_HTTP_PATH.'chosen.jquery.js"></script>'."\n";
+			$js_css .= '<link href="'.CHOSEN_SELECT_HTTP_PATH.'chosen.css" rel="stylesheet">'."\n";
+			$js_css .= '<link href="'.CHOSEN_SELECT_HTTP_PATH.'reason_chosen.css" rel="stylesheet">'."\n";
+			$loaded_an_instance = true;
+		}
+		return (!empty($js_css)) ? $js_css : '';
+	}
+}
+
+/**
+ * Same as {@link selectType}  but doesn't sort the {@link options}.
+ * @require jQuery
+ * @package disco
+ * @subpackage plasmature
+ */
+class chosen_select_multipleType extends chosen_selectType
+{
+	var $type = 'chosen_select_multiple';
+	var $multiple = True;
+
+	function get_display()
+	{
+		$str = $this->get_chosen_select_js_css() . "\n";
+		$str .= '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" class="chzn-select" style="min-width:150px;" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
+		$select_count = 0;
+
+		foreach( $this->options as $key => $val )
+		{
+			if( !$this->add_empty_value_to_top && $val === '--' )
+			{
+				$str .= $this->_get_option_html('',$val,$select_count);
+			}
+			else
+			{
+				$str .= $this->_get_option_html($key,$val,$select_count);
+			}
+		}
+		$str .= '</select>'."\n";
+		$str .= '<script language="javascript" type="text/javascript">$(".chzn-select").chosen();</script>';
+		return $str;
+	}
+}
+/**
+ * Same as {@link selectType}  but doesn't sort the {@link options}.
  * @package disco
  * @subpackage plasmature
  */
