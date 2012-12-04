@@ -1,7 +1,7 @@
 <?
 /**
  * This file contains the SelectIncludes disco form step for use in the 
- * newsletter wizard admin module. 
+ * newsletter builder admin module. 
  * 
  * @see NewsletterModule
  * @author Andrew Bacon
@@ -152,7 +152,7 @@ class SelectIncludes extends FormStep
 			$this->set_display_name('events_end_date', 'To this date');
 		}
 		if (!$events && !$pub_helper_entities)
-			$this->add_element('sucks_to_be_you', 'comment', array('text'=>'<h3>There are no publications or calendars associated with this site. Press continue if you would like to use the wizard anyway.'));
+			$this->add_element('sucks_to_be_you', 'comment', array('text'=>'<h3>There are no publications or calendars associated with this site. Press continue if you would like to use the newsletter builder anyway.'));
 		
 	}
 	
@@ -165,7 +165,7 @@ class SelectIncludes extends FormStep
 
 	function pre_show_form()
 	{
-		echo "<h1>Step One &#8212; Select Publications and Calendar Dates</h1><p>This wizard will help you in the process of creating a newsletter. Content will be automatically generated from recent publication items and events. You will be able to hand-edit the content of the newsletter before it is sent. To begin, select start and end dates for the items you want to include.</p>";
+		echo "<h1>Step One &#8212; Select Publications and Calendar Dates</h1><p>This tool makes it easy to assemble an email newsletter.</p><p>To begin, specify the dates for the items you want to include in your newsletter.</p>";
 	}
 	
 	function process()

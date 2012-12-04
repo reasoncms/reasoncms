@@ -180,7 +180,7 @@ class SelectItems extends FormStep
 	function pre_show_form()
 	{
 		echo "<h1>Step Two &#8212; Newsletter Details & Items</h1>";
-		echo "<p>Fill out the title of your newsletter and a description or message to include with it below.</p>";
+		echo "<p>Fill out the title of your newsletter; add a longer message if you want; and specify which news and/or events you want in the email.</p>";
 	}
 	
 	function process()

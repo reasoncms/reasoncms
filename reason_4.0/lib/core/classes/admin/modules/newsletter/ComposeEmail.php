@@ -1,7 +1,7 @@
 <?php
 /**
  * This file contains the ComposeEmail disco form step for use in the 
- * newsletter wizard admin module. 
+ * newsletter builder admin module. 
  * 
  * @see NewsletterModule
  * @author Andrew Bacon

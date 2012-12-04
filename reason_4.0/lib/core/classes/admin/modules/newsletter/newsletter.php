@@ -77,16 +77,16 @@ class NewsletterModule extends DefaultModule
 
 		////////// THIS IS A HACK! /////////
 		$pageTitles = array(
-			'SelectIncludes' => 'Newsletter Wizard &mdash; Step One',
-			'SelectItems' => 'Newsletter Wizard &mdash; Step Two',
-			'SelectTemplate' => 'Newsletter Wizard &mdash; Step Three', 
-			'EditNewsletter' => 'Newsletter Wizard &mdash; Step Four',
-			'ComposeEmail' => 'Newsletter Wizard &mdash; Step Five',
+			'SelectIncludes' => 'Newsletter Builder &mdash; Step One',
+			'SelectItems' => 'Newsletter Builder &mdash; Step Two',
+			'SelectTemplate' => 'Newsletter Builder &mdash; Step Three', 
+			'EditNewsletter' => 'Newsletter Builder &mdash; Step Four',
+			'ComposeEmail' => 'Newsletter Builder &mdash; Step Five',
 		);
 		
 		if (!empty($_REQUEST['newsletterIsFinished']))
 		{
-			$this->admin_page->title = 'Newsletter Wizard &mdash; Complete';
+			$this->admin_page->title = 'Newsletter Builder &mdash; Complete';
 		}
 		elseif (isset($_REQUEST['_step']) && isset($pageTitles[$_REQUEST['_step']]))
 		{
@@ -420,7 +420,7 @@ function to_plaintext($html)
 
 
 /**
- * Logs emails sent with the newsletter wizard. 
+ * Logs emails sent with the newsletter builder. 
  * 
  * Uses the W3C Extended Log Format
  * 
@@ -430,7 +430,7 @@ function log_email($tos, $from, $subject, $face)
 {
 	$writeString = '';
 	$crlf = "\r\n";
-	if(!file_exists(REASON_LOG_DIR . 'newsletter_wizard.log'))
+	if(!file_exists(REASON_LOG_DIR . 'newsletter_builder.log'))
 	{
 		$writeString .= "#Version: 1.0" . $crlf . "#Fields: date time c-ip cs-username comment" . $crlf;
 	}
@@ -446,7 +446,7 @@ function log_email($tos, $from, $subject, $face)
 				 . $cs_username . ' '
 				 . '"Sent to: ' . addslashes($tos) . '; Subject: ' . addslashes($subject) . '"'
 				 . $crlf;
-	$logfile = fopen(REASON_LOG_DIR . 'newsletter_wizard.log', 'a');
+	$logfile = fopen(REASON_LOG_DIR . 'newsletter_builder.log', 'a');
 	fwrite($logfile, $writeString);
 }
 	
