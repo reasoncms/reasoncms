@@ -31,7 +31,7 @@ reason_include_once('classes/admin/modules/newsletter/Finished.php');
 reason_include_once('helpers/publication_helper.php');
 reason_include_once('classes/event_helper.php');
 include_once('carl_util/tidy/tidy.php');
-include_once('carl_util/basic/email_funcs.php');
+//include_once('carl_util/basic/email_funcs.php');
 include_once('tyr/email.php');
 
 
@@ -120,7 +120,7 @@ class NewsletterModule extends DefaultModule
 	    $controller = new FormController;
 	    $controller->set_session_class('Session_PHP');
 	    $controller->set_session_name('REASON_SESSION');
-	    $controller->set_data_context('newsletter_maker');
+	    $controller->set_data_context('newsletter_maker_'.$this->admin_page->site_id);
 	    $controller->show_back_button = true;
 	    $controller->clear_form_data_on_finish = true;
 	    $controller->allow_arbitrary_start = false;
