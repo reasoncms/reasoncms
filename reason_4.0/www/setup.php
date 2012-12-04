@@ -23,6 +23,10 @@ color: red;
 {
 color: green;
 }
+.warning
+{
+color: #EAC117;
+}
 </style>
 </head>
 <body>
@@ -853,7 +857,7 @@ function graphicslib_check()
 	{
 		if ($imagemagick) return msg('<span class="success">graphicslib check passed - imagemagick loaded</span>', true);
 		elseif ($gd && $mogrify_exists) return msg('<span class="success">graphicslib check passed - fell to GD ... imagemagick exists but does not appear to function properly when invoked via php...your php install should not be running in safe mode and needs to be able to use exec and shell_exec functions. Error is as follows:' . $output, true);
-		else return msg('<span class="success">graphicslib check passed - fell to GD ... imagemagick is preferred but could not be found.</span>', true);
+		else return msg('<span class="warning">graphicslib check passed - fell to GD ... imagemagick is preferred but could not be found.</span>', true);
 	}
 	else return msg('<span class="error">graphicslib check failed</span> - ' .IMAGEMAGICK_PATH.'mogrify not found - check the IMAGEMAGICK_PATH constant in package_settings.php, and php permissions. Alternatively, make sure GD is available.', false);
 }
