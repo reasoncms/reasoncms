@@ -92,7 +92,8 @@
 		'ErrorVisibility'=>array('file'=>'error_visibility.php','class'=>'ErrorVisibilityModule'),
 		'MediaImagePicker'=>array('file'=>'media_work_image_picker.php','class'=>'mediaWorkImagePickerModule'),
 		'CustomizeTheme'=>array('file'=>'customize_theme.php','class'=>'CustomizeThemeModule'),
-		'SiteAccessDenied'=>array('file'=>'site_access_denied.php', 'class'=>'SiteAccessDeniedModule'),		
+		'SiteAccessDenied'=>array('file'=>'site_access_denied.php', 'class'=>'SiteAccessDeniedModule'),
+		'Newsletter'=>array('file'=>'newsletter/newsletter.php', 'class'=>'NewsletterModule'),
 );
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))
