@@ -89,6 +89,7 @@ class ComposeEmail extends FormStep
 	
 	function run_error_checks()
 	{
+		/*
 		$reply_to = $this->get_value('reply_to');
 		if (!empty($reply_to))
 			$valid = is_valid_email($reply_to);
@@ -119,11 +120,12 @@ class ComposeEmail extends FormStep
 			$this->set_error('recipients', (count($invalids) == 1) ? 'The following email address or netid was invalid: ' . $list_of_invalids : 'The following email addresses were invalid: ' . $list_of_invalids);
 		
 		}
-
+		*/
 	}
 	
 	function process()
 	{
+		/*
 		$final_text =  expand_all_links_in_html(tidy(carl_get_safer_html($this->controller->get_form_data('newsletter_loki'))));
 		$tos = $this->get_value('recipients');
 		$split_list = split_email_list($tos);
@@ -140,11 +142,13 @@ class ComposeEmail extends FormStep
 		$face = $this->controller->authenticated_user_id;
 		if ($email->send())
 			log_email($tos, $from, $subject, $face);
+		*/
 	}
-	
+	/*
 	function where_to()
 	{
 		return carl_make_redirect(array('newsletterIsFinished' => 'true', '_step' => ''));
 	}
+	*/
 }
 ?>
