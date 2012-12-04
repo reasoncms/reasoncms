@@ -84,6 +84,8 @@ class AdminPage
 	 * @var array
 	 */
 	protected $user_access_sites;
+	
+	var $types;
 
 	//default args will be always passed on admin pages
 	var $default_args = array('site_id',
@@ -980,15 +982,24 @@ class AdminPage
 				'cur_module' => '', ) );
 		return '<h1 class="siteName"><a href="'.$link.'">'.$site->get_value( 'name' ).'</a></h1>'."\n";
 	}
+	function get_types_for_current_site()
+	{
+		if(!isset($this->types))
+		{
+			$es = new entity_selector( );
+			$es->add_type( id_of('type') );
+			$es->add_right_relationship( $this->site_id, relationship_id_of( 'site_to_type' ) );
+			$es->set_order( 'entity.name ASC' );
+			$this->types = $es->run_one();
+		}
+		return $this->types;
+	}
 	// IN_MODULE
 	function types() // {{{
 	//shows a list of types for a current site.  is called in leftbar_normal().
 	{
-		$es = new entity_selector( );
-		$es->add_type( id_of('type') );
-		$es->add_right_relationship( $this->site_id, relationship_id_of( 'site_to_type' ) );
-		$es->set_order( 'entity.name ASC' );
-		$types = $es->run_one();
+		
+		$types = $this->get_types_for_current_site();
 		
 		//remove the site_cannot_edit_type types
 		$nes = new entity_selector( );
@@ -1142,6 +1153,19 @@ class AdminPage
 				{
 					echo '<li><a href="'.$this->make_link(array('site_id'=>id_of('master_admin'),'type_id'=>id_of('site'),'id'=>$this->site_id,'cur_module'=>'Editor')).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/pencil.png" alt="" /> Site Setup</a></li>'."\n";
 				}
+			}
+			$types = $this->get_types_for_current_site();
+			if( isset($types[id_of('publication_type')]) || isset($types[id_of('event_type')]) )
+			{
+				$cur_mod = false;
+				if(!empty($this->request['cur_module']) && 'Newsletter' == $this->request['cur_module'])
+					$cur_mod = true;
+				echo '<li class="navItem;';
+				if( $this->cur_module == 'Newsletter' )
+					echo ' navSelect';
+				echo '">';
+				echo '<a href="'.$this->make_link(array('type_id'=>'','cur_module'=>'Newsletter')).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/email.png" alt="Email" /> Newsletter Builder</a>';
+				echo '</li>'."\n";
 			}
 			echo '</ul></div>'."\n";
 		//}
