@@ -210,6 +210,23 @@ if (isset($_POST['do_it_pass']) == false)
 		}
 	}
 	setup_www_local_support();
+	upgrade_script_reminder();
+}
+
+/**
+ * If this is a bleeding edge version of Reason, provide a reminder that upgrade scripts may need to be run (and a link)
+ */
+function upgrade_script_reminder()
+{
+	reason_include_once ('classes/version_check.php');
+	$vc = new reasonVersionCheck();
+	$cur_version = $vc->get_current_version_id();
+	$all_versions = $vc->get_all_versions();
+	if (isset($all_versions[$cur_version]) && ($all_versions[$cur_version] == 'bleeding'))
+	{
+		echo '<h3>Bleeding Edge Version Detected</h3>';
+		echo 'You are running a bleeding edge version of reason cms (' . $cur_version. '). Make sure you <a href="upgrade.php">run the latest upgrade scripts</a> to ensure your database is up to date.';
+	}
 }
 
 function setup_www_local_support()
