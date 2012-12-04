@@ -779,7 +779,7 @@ class selectType extends optionType
 }
 
 /**
- * Same as {@link selectType}  but doesn't sort the {@link options}.
+ * Single select with chosen js
  * @require jQuery
  * @package disco
  * @subpackage plasmature
@@ -829,7 +829,7 @@ class chosen_selectType extends selectType
 }
 
 /**
- * Same as {@link selectType}  but doesn't sort the {@link options}.
+ * Multiple select with chosen js
  * @require jQuery
  * @package disco
  * @subpackage plasmature
