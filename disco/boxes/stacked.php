@@ -37,9 +37,9 @@ class StackedBox extends Box // {{{
 		$markup = '<div class="formElement';
 		if($error) 
 			$markup .= ' error';
-		$markup .= '" ';
+		$markup .= '"';
 		 if(!empty($id)) 
-			$markup .= 'id="'.$id.'Item"';
+			$markup .= ' id="'.$id.'Item"';
 		$markup .= '>'."\n";
 		$markup .= '<div class="words">';
 		if($use_label)
@@ -80,7 +80,8 @@ class StackedBox extends Box // {{{
 		$markup .= '"';
 		
 		if(!empty($id)) 
-			$markup .= 'id="'.$id.'Row">'."\n";
+			$markup .= ' id="'.$id.'Item"';
+		$markup .= '>'."\n";
 		$markup .= $content."\n";
 		$markup .= '</div>'."\n"."\n";
 		echo $markup;
