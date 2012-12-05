@@ -72,8 +72,8 @@ class NewsletterModule extends DefaultModule
 	}
 	function init()
 	{
-		$this->head_items->add_javascript('/reason_package/reason_4.0/www/js/newsletter.js');
-		$this->head_items->add_stylesheet('/reason_package/reason_4.0/www/css/reason_admin/newsletter.css');
+		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH . 'js/newsletter.js');
+		$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'css/reason_admin/newsletter.css');
 
 		////////// THIS IS A HACK! /////////
 		$pageTitles = array(
