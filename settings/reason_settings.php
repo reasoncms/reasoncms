@@ -462,6 +462,13 @@
 	define( 'WEB_PHOTOSTOCK', REASON_HTTP_BASE_PATH.'images/' );
 	
 	/**
+	 * REASON_IMAGE_GRAVEYARD
+	 * This setting identifies the filesystem location for expunged images.
+	 * If it is empty, expounged images will be deleted.
+	 */
+	define( 'REASON_IMAGE_GRAVEYARD', '');
+	
+	/**
 	 * REASON_TEMP_DIR
 	 * This setting defines the location for Reason temporary data
 	 */
