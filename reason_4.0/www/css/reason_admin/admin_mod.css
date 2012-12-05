@@ -486,7 +486,7 @@ div.versionUpdateNotice {
 	display:block;
 	padding-left:18px;
 	background:transparent url(../../silk_icons/arrow_down.png) no-repeat left center;
-	max-height:16px;
+	min-height:16px;
 	color:#000099;
 }
 .jumpLinkTop .roundedContent a.jump {
