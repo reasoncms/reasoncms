@@ -183,6 +183,7 @@ class PublicationModule extends Generic3Module
 									   'inline_editing_info' => 'get_inline_editing_info',
 									   'filter_interface_markup'=>'get_filter_interface_markup',
 									   'search_interface_markup'=>'get_search_interface_markup',
+									   'pagination_markup' => 'get_pagination_markup',
 									);
 	
 	/**
@@ -2091,6 +2092,7 @@ class PublicationModule extends Generic3Module
 					return '<div class="pagination'.$class.'">'.$this->pagination_output_string.'</div>'."\n";
 				}
 			}
+			return '';
 		}
 		function show_pagination($class = '')
 		{
