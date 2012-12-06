@@ -94,6 +94,7 @@
 		'CustomizeTheme'=>array('file'=>'customize_theme.php','class'=>'CustomizeThemeModule'),
 		'SiteAccessDenied'=>array('file'=>'site_access_denied.php', 'class'=>'SiteAccessDeniedModule'),
 		'Newsletter'=>array('file'=>'newsletter/newsletter.php', 'class'=>'NewsletterModule'),
+		'DeleteRegistrationSlotData'=>array('file'=>'delete_slot_data.php', 'class'=>'DeleteRegistrationSlotDataModule'),
 );
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))
