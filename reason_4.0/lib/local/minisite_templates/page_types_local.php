@@ -1,4 +1,4 @@
- <?php
+<?php
 
 $GLOBALS['_reason_page_types_local'] = array(
 	'default' => array(
