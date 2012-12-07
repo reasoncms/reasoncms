@@ -819,9 +819,9 @@ class chosen_selectType extends selectType
 		static $loaded_an_instance;
 		if (!isset($loaded_an_instance))
 		{
-			$js_css .= '<script language="javascript" type="text/javascript" src="'.CHOSEN_SELECT_HTTP_PATH.'chosen.jquery.js"></script>'."\n";
-			$js_css .= '<link href="'.CHOSEN_SELECT_HTTP_PATH.'chosen.css" rel="stylesheet">'."\n";
-			$js_css .= '<link href="'.CHOSEN_SELECT_HTTP_PATH.'reason_chosen.css" rel="stylesheet">'."\n";
+			$js_css .= '<script language="javascript" type="text/javascript" src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'chosen_select/chosen.jquery.js"></script>'."\n";
+			$js_css .= '<link href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'chosen_select/chosen.css" rel="stylesheet">'."\n";
+			$js_css .= '<link href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'chosen_select/reason_chosen.css" rel="stylesheet">'."\n";
 			$loaded_an_instance = true;
 		}
 		return (!empty($js_css)) ? $js_css : '';
