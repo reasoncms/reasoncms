@@ -16,6 +16,9 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ChildrenAnd
  * current page.
  *
  * Use the parameter max_depth to control how deeply the module shows progeny
+ *
+ * @todo support parent_unique_name and thumbnail parameters in the original module.
+ * @todo possibly rework so this supports all params of ChildrenModule, extends less ... see children_full_titles.php for example
  */
 class ChildrenAndGrandchildrenModule extends ChildrenModule 
 {
