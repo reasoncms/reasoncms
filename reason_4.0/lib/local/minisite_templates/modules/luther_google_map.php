@@ -51,13 +51,17 @@
 						streetViewControl: false
 			        };
 			        var map = new google.maps.Map(document.getElementById(\'map_canvas\'), myOptions);';			        
-			        if ($gmap->get_value('google_map_show_campus_template') == "yes")
-					{
-						echo 'drawCampusTemplate(map);';
-					}
+			        //if ($gmap->get_value('google_map_show_campus_template') == "yes")
+					//{
+					//	echo 'drawCampusTemplate(map);';
+					//}
 					echo '
-			        var arrayOfMsids = ["'. preg_replace("|\s|", '","', $gmap->get_value('google_map_msid')) . '"];
-			        var nyLayer = [];
+			        var arrayOfMsids = ["'. preg_replace("|\s|", '","', $gmap->get_value('google_map_msid')) . '"];';
+			        if ($gmap->get_value('google_map_show_campus_template') == "yes")
+			        {
+			        	echo 'arrayOfMsids.splice(0, 0, "203908844213597815590.0004cfa54d955e6e86cbb");';
+			        }
+			        echo 'var nyLayer = [];
 			        setLayers(arrayOfMsids, nyLayer, map);
 				}
 			

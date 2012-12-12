@@ -78,6 +78,11 @@
 		        var map = new google.maps.Map(document.getElementById(\'map_canvas\'), myOptions);
 		        
 		        var arrayOfMsids = ["'. preg_replace("|\s|", '","', $this->get_value('google_map_msid')) . '"];
+		        if (document.disco_form.google_map_show_campus_template.options[document.disco_form.google_map_show_campus_template.options.selectedIndex].value == "yes")
+
+				{
+					arrayOfMsids.splice(0, 0, "203908844213597815590.0004cfa54d955e6e86cbb");
+				}
 		        var nyLayer = [];
 		        setLayers(arrayOfMsids, nyLayer, map)
 				
@@ -100,6 +105,20 @@
 					map.setCenter(cntr);
 					updateMarkerPosition(map.getCenter());
 				});
+				google.maps.event.addDomListener(document.disco_form.google_map_show_campus_template, \'change\', function(e) {
+					for (var i = 0; i < arrayOfMsids.length; i++) {
+						nyLayer[i].setMap(null);
+					}
+					arrayOfMsids.splice(0, arrayOfMsids.length);
+					nyLayer.length = 0;
+					
+					arrayOfMsids = document.disco_form.google_map_msid.value.split("\n");
+					if (document.disco_form.google_map_show_campus_template.options[document.disco_form.google_map_show_campus_template.options.selectedIndex].value == "yes")
+					{
+						arrayOfMsids.splice(0, 0, "203908844213597815590.0004cfa54d955e6e86cbb");
+					}
+					setLayers(arrayOfMsids, nyLayer, map)
+				});
 				google.maps.event.addDomListener(document.disco_form.google_map_msid, \'change\', function(e) {
 					for (var i = 0; i < arrayOfMsids.length; i++) {
 						nyLayer[i].setMap(null);
@@ -108,6 +127,10 @@
 					nyLayer.length = 0;
 					
 					arrayOfMsids = document.disco_form.google_map_msid.value.split("\n");
+					if (document.disco_form.google_map_show_campus_template.options[document.disco_form.google_map_show_campus_template.options.selectedIndex].value == "yes")
+					{
+						arrayOfMsids.splice(0, 0, "203908844213597815590.0004cfa54d955e6e86cbb");
+					}
 		        	setLayers(arrayOfMsids, nyLayer, map)
 				}); 
 			}
