@@ -12,6 +12,8 @@
  */
 include_once ( 'paths.php' );
 include_once ( CARL_UTIL_INC . 'db/table_admin.php' );
+include_once (XML_PARSER_INC . 'xmlparser.php');
+
 
 class ThorViewer extends TableAdmin
 {
