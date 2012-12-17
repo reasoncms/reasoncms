@@ -800,10 +800,14 @@ class PublicationModule extends Generic3Module
 		$user_issue_keys = $all_issue_keys = array();
 		$requested_issue = (!empty($this->request['issue_id'])) ? $this->request['issue_id'] : false;
 		$requested_section = (!empty($this->request['section_id'])) ? $this->request['section_id'] : false;
+		
+		// if we have an item
 		if ($this->current_item_id)
 		{
-			$issues =& $this->get_issues_for_item();
+			$issues =& $this->get_visible_issues_for_item();
 			$user_issue_keys = (!empty($issues)) ? array_keys($issues) : false;
+			$all_issues =& $this->get_all_issues();
+			$all_issue_keys = array_keys($all_issues);
 		}
 		else
 		{
@@ -827,27 +831,24 @@ class PublicationModule extends Generic3Module
 		}	
 		if ((!empty($user_issue_keys) || !empty($all_issue_keys))) // item is in an issue
 		{
-			if (in_array($requested_issue, $user_issue_keys))
+			if (!empty($user_issue_keys) && in_array($requested_issue, $user_issue_keys))
 			{
 				$this->issue_id = $requested_issue; // requested issue verified
 				$this->_add_css_urls_to_head($this->_get_issue_css($this->issue_id));
-				//if(empty($this->request[$this->query_string_frag.'_id']))
-				//{
-					$issue_link = $this->get_links_to_issues();
-					$issue = new entity($this->issue_id);
-					$this->_add_crumb( $issue->get_value( 'name' ), $this->get_link_to_issue($issue) );
-					if($requested_section)
+				$issue_link = $this->get_links_to_issues();
+				$issue = new entity($this->issue_id);
+				$this->_add_crumb( $issue->get_value( 'name' ), $this->get_link_to_issue($issue) );
+				if($requested_section)
+				{
+					$section = $this->get_current_section();
+					if ($section)
 					{
-						$section = $this->get_current_section();
-						if ($section)
-						{
-							$this->_add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
-						}
+						$this->_add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
 					}
-				//}
+				}
 				return true;
 			}
-			elseif (in_array($requested_issue, $all_issue_keys))
+			elseif (!empty($all_issue_keys) && in_array($requested_issue, $all_issue_keys))
 			{
 				if (!reason_check_authentication()) // person is not logged in, but could have access to a hidden issue - force login
 				{
@@ -1370,21 +1371,19 @@ class PublicationModule extends Generic3Module
 		 *
 		 * It also does some checks and may redirect to make URLs sane (IE link given with wrong section).
 		 *
-		 * @param entity $entity News item entity
+		 * @param entity $entity news_item_entity
 		 * @return boolean True if OK
 		 */
 		function further_checks_on_entity( $entity )
 		{
 			if(empty($this->items[$entity->id()]))
 			{
-				if($entity->get_value('status') == 'pending' && !user_has_access_to_site($this->site_id) )
-					return false;
+				if($entity->get_value('status') == 'pending' && !user_has_access_to_site($this->site_id)) return false;
 				$publication_check = ($entity->has_left_relation_with_entity($this->publication, 'news_to_publication'));
-				if ($this->has_issues())
+				// check that issue id is present and validated if the publication has issue
+				if ($this->publication->get_value('has_issues') == 'yes')
 				{
-					$issues_for_item =& $this->get_issues_for_item();
-					$issue_ids = array_keys($issues_for_item);
-					$issue_check = in_array($this->issue_id, $issue_ids);
+					$issue_check = (!empty($this->request['issue_id']) && ($this->request['issue_id'] == $this->issue_id));
 				}
 				else $issue_check = true;
 				if ($publication_check && $issue_check) return true;
@@ -1554,18 +1553,41 @@ class PublicationModule extends Generic3Module
 			static $issues;
 			if (!isset($issues[$this->current_item_id]))
 			{
-				$es = new entity_selector( $this->site_id );
-				$es->description = 'Selecting issues for this news item';
-				$es->limit_tables('dated');
-				$es->limit_fields('dated.datetime');
-				$es->add_type( id_of('issue_type') );
-				$es->add_right_relationship( $this->current_item_id, relationship_id_of('news_to_issue') );
-				$es->add_relation('entity.id IN ('.implode(", ", array_keys($this->get_issues())).')');
-				$es->set_order('dated.datetime DESC');
-				$issue_set = $es->run_one();
-				$issues[$this->current_item_id] = $issue_set;
+				if ($all_issues = $this->get_all_issues())
+				{
+					$es = new entity_selector( $this->site_id );
+					$es->description = 'Selecting issues for this news item';
+					$es->limit_tables('dated');
+					$es->limit_fields('dated.datetime');
+					$es->add_type( id_of('issue_type') );
+					$es->add_right_relationship( $this->current_item_id, relationship_id_of('news_to_issue') );
+					$es->add_relation('entity.id IN ('.implode(", ", array_keys($all_issues)).')');
+					$es->set_order('dated.datetime DESC');
+					$issue_set = $es->run_one();
+					$issues[$this->current_item_id] = $issue_set;
+				}
+				else $issues[$this->current_item_id] = FALSE;
 			}
 			return $issues[$this->current_item_id];
+		}
+		
+		/**
+		* Returns an array of the visible issues associated with the current item id.
+		* Format: $issue_id => $issue_entity
+		* @return array array of the issues for this publication
+		*/
+		function &get_visible_issues_for_item()
+		{
+			static $visible_issues;
+			if (!isset($visible_issues[$this->current_item_id]))
+			{
+				if ($issues_for_item = $this->get_issues_for_item())
+				{
+					$visible_issues[$this->current_item_id] = $this->filter_hidden_issues($issues_for_item);
+				}
+				else $visible_issues[$this->current_item_id] = FALSE;
+			}
+			return $visible_issues[$this->current_item_id];
 		}
 		
 //		/**
