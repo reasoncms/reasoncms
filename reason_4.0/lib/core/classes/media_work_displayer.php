@@ -382,7 +382,6 @@ class MediaWorkDisplayer
 				else
 					$iframe_width = 360;
 			}
-			
 			$markup = '';
 			$markup .= '<iframe class="media_work_iframe" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="'.$iframe_height.'" width="'.$iframe_width.'" ';
 			
@@ -477,7 +476,7 @@ class MediaWorkDisplayer
 		// works nicely, and 3) so the flash video player is properly scaled because it doesn't automatically scale itself.
 		$embed_width = $this->_get_embed_width();
 		$embed_height = $this->_get_embed_height();
-			
+		
 		$markup .= 'width="'.$embed_width.'" ';
 		$markup .= 'height="'.$embed_height.'" ';
 			
@@ -509,7 +508,7 @@ class MediaWorkDisplayer
 			
 			$avd_autoplay = $this->autostart ? 'true' : 'false';
 			$avd->set_parameter('flv', 'autostart', $avd_autoplay);
-			$avd->set_parameter('flv', 'controlbar', 'bottom');
+			$avd->set_parameter('flv', 'controlbar', 'over');
 			
 			if ($poster_url)
 				$avd->set_placard_image($poster_url);
