@@ -61,7 +61,7 @@ class geocoder
 	var $ip_cache_lifespan = 86400; // we cache the ip to address lookup for a day.
 	var $ip_cache_location; // if your normal cache directory gets trashed more often than your lifespan setting you may want to set a directory name here.
 	var $geo_cache_lifespan = -1; // -1 means permanent - the geocode results for physical addresses and lat / lon pairs get stored permanently.
-	var $geo_cache_location; // if you do not specify, this gets set to REASON_INC . 'data/geocodes/' in the constructor.
+	var $geo_cache_location; // if you do not specify, this gets set to REASON_DATA_DIR.'geocodes/' in the constructor.
 	
 	/**
 	 * You may optionally provide a configured ObjectCache object to use for the cache.
@@ -72,7 +72,7 @@ class geocoder
 	
 	function geocoder($location = '')
 	{
-		if (!isset($this->geo_cache_location)) $this->geo_cache_location = REASON_INC . 'data/geocodes/';
+		if (!isset($this->geo_cache_location)) $this->geo_cache_location = REASON_DATA_DIR.'geocodes/';
 		if ($location) $this->set_location($location);
 	}
 	
