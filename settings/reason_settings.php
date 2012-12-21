@@ -443,16 +443,23 @@
 	////////////////////////////////////////////////////////////
 	
 	/**
+	 * REASON_DATA_DIR
+	 * This setting identifies the filesystem location of the reason data directory
+	 * This needs to be readable / writable by Apache/php but should not be web accessible.
+	 */
+	define( 'REASON_DATA_DIR', REASON_INC.'data/' );
+ 
+	/**
 	 * REASON_CSV_DIR
 	 * This setting identifies the filesystem location of the reason-managed csv data.
 	 */
-	define( 'REASON_CSV_DIR', REASON_INC.'data/csv_data/' );
+	define( 'REASON_CSV_DIR', REASON_DATA_DIR.'csv_data/' );
 	
 	/**
 	 * PHOTOSTOCK
 	 * This setting identifies the filesystem location of the reason-managed images directory.
 	 */
-	define( 'PHOTOSTOCK', REASON_INC.'data/images/' );
+	define( 'PHOTOSTOCK', REASON_DATA_DIR.'images/' );
 	
 	/**
 	 * WEB_PHOTOSTOCK
@@ -472,14 +479,14 @@
 	 * REASON_TEMP_DIR
 	 * This setting defines the location for Reason temporary data
 	 */
-	define( 'REASON_TEMP_DIR', REASON_INC.'data/tmp/' );
+	define( 'REASON_TEMP_DIR', REASON_DATA_DIR.'tmp/' );
 	
 	/**
 	 * REASON_LOG_DIR
 	 * This setting defines the location for Reason to log information about its activity
 	 * This directory will have to have permissions that allow Apache/php to write to it
 	 */
-	define( 'REASON_LOG_DIR', REASON_INC.'data/tmp/' );
+	define( 'REASON_LOG_DIR', REASON_DATA_DIR.'logs/' );
 	
 	/**
 	 * PAGE_CACHE_LOG
@@ -517,7 +524,7 @@
 	 * This setting identifies the directory used to store cache files.
 	 * This directory will have to have permissions that allow Apache/php to write to it
 	 */
-	define( 'REASON_CACHE_DIR', REASON_INC.'data/cache/' );
+	define( 'REASON_CACHE_DIR', REASON_DATA_DIR.'cache/' );
 
 	/**
 	 * CM_VAR_PREFIX
@@ -529,7 +536,7 @@
 	 * ASSET_PATH
 	 * The filesystem path to the directory that contains reason-managed files
 	 */
-	define( 'ASSET_PATH', REASON_INC.'data/assets/' );
+	define( 'ASSET_PATH', REASON_DATA_DIR.'assets/' );
 	
 	/**
 	 * REASON_ASSET_MAX_UPLOAD_SIZE_MEGS
