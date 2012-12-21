@@ -81,7 +81,7 @@
 			{
 				foreach($this->offspring as $child)
 				{
-					$page_name = $this->get_page_name($page);
+					$page_name = $this->get_page_name($child);
 					$letter = carl_strtoupper(substr($page_name,0,1), 'UTF-8');
 					if(!in_array($letter, $this->az))
 					{
