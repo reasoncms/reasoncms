@@ -161,9 +161,13 @@
 						{
 							echo "<object width=\"444\" height=\"356\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0\" onclick=\"javascript:pageTracker._trackPageview('" . $vn ."');\"><param name=\"movie\" value=\"" . $m[1] . "v/" . $m[3] . "?fs=1&amp;hl=en_US&amp;rel=0\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\"" .$m[1] . "v/" . $m[3] . "?fs=1&amp;hl=en_US&amp;rel=0\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"444\" height=\"356\"></embed></object>"."\n";
 						}
+						else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home' || $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature')
+						{
+							echo "<iframe width=\"420\" height=\"265\" src=\"" .$m[1] . "embed/" . $m[3] ."?autoplay=0&amp;rel=0&amp;fs=1\" frameborder=\"0\" allowfullscreen></iframe>"."\n";
+						}
 						else 
 						{
-							echo "<iframe width=\"444\" height=\"280\" src=\"" .$m[1] . "embed/" . $m[3] ."?autoplay=0&amp;rel=0&amp;fs=1\" frameborder=\"0\" allowfullscreen</iframe>"."\n";
+							echo "<iframe width=\"444\" height=\"280\" src=\"" .$m[1] . "embed/" . $m[3] ."?autoplay=0&amp;rel=0&amp;fs=1\" frameborder=\"0\" allowfullscreen></iframe>"."\n";
 						}
 					}
 				//echo "<a href=\"" . $vurl . "&amp;hl=en&amp;rel=0&amp;fs=0&amp;autoplay=1\" onclick=\"return hs.htmlExpand(this, { objectType: 'swf', width: " . current($avfilelist)->get_value('width') . ", objectWidth: " . current($avfilelist)->get_value('width') . ", objectHeight: " . current($avfilelist)->get_value('height') . ", preserveContent: false, outlineType: 'rounded-white', wrapperClassName: 'draggable-header no-footer', maincontentText: 'You need to upgrade your Flash player', swfOptions: { version: '7' } } )\" class=\"highslide\"><img src=\"http://img.youtube.com/vi" . $m[3] . "/default.jpg\" /></a>";

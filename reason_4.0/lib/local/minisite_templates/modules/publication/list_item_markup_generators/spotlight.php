@@ -31,6 +31,7 @@ class SpotlightListItemMarkupGenerator extends PublicationMarkupGenerator
 		if (get_theme($this->passed_vars['site_id'])->get_value('name') == 'luther2010')
 		{
 			if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_home'
+				|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_home_feature'
 				|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_music')
 			{
 				if ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_music')

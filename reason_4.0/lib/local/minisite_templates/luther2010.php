@@ -207,7 +207,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 	function show_navbar_tableless()
 	// left column navigation
 	{
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature')
 		{
 			$this->home_topimage_quote();
 			return;
@@ -267,7 +268,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 	function show_sidebar_tableless()
 	// right column
 	{
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature')
 		{	
 			$this->home_events_news_spotlight();
 			$this->run_section( 'post_sidebar_2');  // banner at bottom
@@ -347,7 +349,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 
 	function show_main_content_sections()
 	{
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature')
 		{
 			return;
 		}
@@ -517,7 +520,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$s = 'admissions';
 		}
 		
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home') 
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature') 
 		{
 			return '<body id="home" class="style-home-00">'."\n";
 		}
@@ -598,6 +602,7 @@ class LutherTemplate2010 extends MinisiteTemplate
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_carousel'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home'
+        	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
@@ -670,8 +675,17 @@ class LutherTemplate2010 extends MinisiteTemplate
 	{
 
 		echo '<div class="container-carousel-and-attribute">'."\n";
-		$this->run_section( 'navigation');
-		$this->run_section( 'sub_nav');
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature')
+		{
+			$this->run_section( 'sub_nav');
+			$this->run_section( 'navigation');
+		}
+		else
+		{
+			$this->run_section( 'navigation');
+			$this->run_section( 'sub_nav');	
+		}
+		
 		echo '</div> <!-- class="container-carousel-and-attribute" -->'."\n";         
 
 		
@@ -693,8 +707,17 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '</section> <!-- class="news" role="group" -->'."\n";
 		
 		echo '<section class="spotlight" role="group">'."\n";
-		echo '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
+		if ($this->has_content('sidebar_4'))
+		{
+			echo '<header class="red-stripe"><h1><span>Video</span></h1></header>'."\n";
+			$this->run_section( 'sidebar_4');
+		}
+		else
+		{
+			echo '<header class="red-stripe"><h1><span>Spotlight</span></h1></header>'."\n";
 			$this->run_section( 'post_sidebar');
+		}
+			
 		echo '</section> <!-- class="spotlight" role="group" -->'."\n";
 			
 		echo '</div> <!-- class="container-events-news-and-spotlight" -->'."\n";
