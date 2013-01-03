@@ -533,6 +533,10 @@ div#calendar div.foot div.gridAndOptions {
 	display: none;
 	/* end hack */
 }
+div#calendar div.foot div.iCalExport img
+{
+	vertical-align: bottom;
+}
 div#calendar div.options ul {
 	margin: 0px;
 	margin-top: 7px;
