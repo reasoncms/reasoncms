@@ -2485,6 +2485,11 @@ class EventsModule extends DefaultMinisiteModule
 		echo '<a href="webcal://'.REASON_HOST.$this->parent->pages->get_full_url( $this->page_id ).$query_string.'">'.$subscribe_text.'</a>';
 		if(!empty($this->events))
 			echo ' | <a href="'.$query_string.'">'.$download_text.'</a>';
+		if (defined("REASON_URL_FOR_ICAL_FEED_HELP") && ( (bool) REASON_URL_FOR_ICAL_FEED_HELP != FALSE))
+		{
+			echo ' | <a href="'.REASON_URL_FOR_ICAL_FEED_HELP.'"><img src="'.REASON_HTTP_BASE_PATH . 'silk_icons/help.png" alt="Help" width="16px" height="16px" /></a>';
+			echo ' <a href="'.REASON_URL_FOR_ICAL_FEED_HELP.'">How to Use This</a>';
+		}
 		echo '</div>'."\n";
 	}
 	
