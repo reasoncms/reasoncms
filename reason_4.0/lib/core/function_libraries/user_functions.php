@@ -66,7 +66,7 @@ function user_has_access_to_site($site_id, $force_refresh = false)
 /**
  * Find out if a given username has access to edit a given site
  *
- * Note that an additional check against reason_user_has_privs() should be done before granting privilegesm, 
+ * Note that an additional check against reason_user_has_privs() should be done before granting privileges, 
  * as the user may not have the specific privileges needed despite having access.
  *
  * @param string $username
