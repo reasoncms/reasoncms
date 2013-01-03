@@ -197,6 +197,14 @@
 	 * (Developer note: surround any use of this constant in a if(defined()) block)
 	 */
 	//define( 'REASON_URL_FOR_PODCAST_HELP', 'http://www.domain_name.domain/your/path/here/' );
+
+	/**
+	 * REASON_URL_FOR_ICAL_FEED_HELP
+	 * Identifies a URI where users can get more information about using iCal feeds
+	 * Comment out this line if you don't want to provide a link for feed assistance
+	 * (Developer note: surround any use of this constant in a if(defined()) block)
+	 */
+	//define( 'REASON_URL_FOR_ICAL_FEED_HELP', 'http://www.domain_name.domain/your/path/here/' ); 
 	
 	/**
 	 * REASON_LOGIN_PATH
