@@ -27,6 +27,7 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 									'no_section_key', 
 									'current_issue',
 									'issues_by_date',
+									'issue_blurbs',
 									'links_to_issues',
 									'view_all_items_in_section_link',
 									'group_by_section',
@@ -61,12 +62,17 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		if(!empty($this->passed_vars['current_issue']))
 			$this->markup_string .= $this->get_current_issue_markup($this->passed_vars['current_issue']);
 				
+		if(!empty($this->passed_vars['issue_blurbs']))
+			$this->markup_string .= $this->get_issue_blurbs_markup();
+		
 		//if there are other issues, display a "jump to other issues" dropdown
 		if(!empty($this->passed_vars['issues_by_date']))
 			$this->markup_string .= $this->get_issue_links_markup();
 			
 		if(!empty($this->passed_vars['search_string']))
 			$this->markup_string .= $this->get_search_header_markup();
+		
+		
 			
 		//if we're just listing items from one section ....
 		if(!empty($this->passed_vars['current_section']))
@@ -193,6 +199,21 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 		if(!empty($this->passed_vars['search_string']))
 		{
 			return '<h3>Results for "'.$this->passed_vars['search_string'].'"</h3>'."\n";
+		}
+		return '';
+	}
+	
+	function get_issue_blurbs_markup()
+	{
+		if(!empty($this->passed_vars['issue_blurbs']))
+		{
+			$ret = '<div class="issueBlurbs">';
+			foreach($this->passed_vars['issue_blurbs'] as $blurb)
+			{
+				$ret.= '<div class="issueBlurb">'.demote_headings($blurb->get_value('content'), 1).'</div>'."\n";
+			}
+			$ret .= '</div>'."\n";
+			return $ret;
 		}
 		return '';
 	}
