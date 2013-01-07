@@ -10,6 +10,7 @@
 	reason_include_once( 'minisite_templates/modules/generic3.php' );
 	reason_include_once( 'classes/av_display.php' );
 	reason_include_once( 'function_libraries/url_utils.php' );
+	reason_include_once( 'classes/kaltura_shim.php' );
 	
 	/**
 	 * Register the class so the template can instantiate it
@@ -39,14 +40,19 @@
 			'thumbnail_crop'=>'',
 			'default_video_height' => 360,
 			'num_per_page' => 15,
+			'offer_original_download_link' => false, // if true, present the user with a download link for the original file, along with the compressed versions
 		);
 		var $make_current_page_link_in_nav_when_on_item = true;
 		var $no_items_text = 'There is no audio or video attached to this page yet.';
 		var $media_format_overrides = array('Flash Video'=>'Flash');
+		var $kaltura_shim;
 		
 		
 		function init($args = array())
 		{
+			if(KalturaShim::kaltura_enabled())
+				$this->kaltura_shim = new KalturaShim();
+			
 			if(isset($this->params['num_per_page']))
 				$this->num_per_page = $this->params['num_per_page'];
 			
@@ -296,6 +302,13 @@
 					echo '<div class="download">'."\n";
 					echo '<h5 class="download_label">Download:</h5>'."\n";
 					echo '<ul class="media_file_list">'."\n";
+					
+					// Offer an original file download link if this parameter is set
+					if ($this->params['offer_original_download_link'] && !empty($this->kaltura_shim))
+					{
+						if($orig_url = $this->kaltura_shim->get_original_data_url($item->get_value('entry_id')))
+							echo '<li class="orig_li"><a href="'.$orig_url.'"">original</a></li>'."\n";
+					}
 					
 					if ($item->get_value('av_type') == 'Video')
 					{
