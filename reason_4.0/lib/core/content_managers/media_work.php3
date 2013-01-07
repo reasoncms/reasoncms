@@ -30,7 +30,7 @@ reason_include_once('ssh/ssh.php');
 		* Extensions that are allowed to be imported and managed by Reason for Kaltura.
 		* @var array
 		*/
-		var $recognized_extensions = array('flv', 'f4v', 'mov', 'mp4', 'wmv', 'qt', 'm4v', 'avi', /*'asf',*/ 'wvm', 'mpg', /*'m1v', 'm2v', 'mkv',*/ 'ogg', 'rm', 'webm', 'mp3', 'aiff', 'mpeg', 'wav', 'm4a', 'aac', 'ogv');
+		var $recognized_extensions;
 		
 		var $fields_to_remove = array('rating', 'standalone');
 		var $field_order = array ('name', 'datetime', 'author', 'description', 'keywords', 'content','transcript_status', 'rights_statement', 'show_hide');
@@ -59,6 +59,8 @@ reason_include_once('ssh/ssh.php');
 			// This media work is kaltura-integrated if it is a brand new media work with kaltura 
 			// integration turned on, or if it is an existing kaltura-integrated media work.
 			$this->kaltura_integrated_work = $this->get_value('integration_library') == 'kaltura' || (KalturaShim::kaltura_enabled() && $this->is_new_entity() );
+			
+			 $this->recognized_extensions= KalturaShim::get_recognized_extensions();
 			
 			if ($this->kaltura_integrated_work)
 			{
@@ -330,18 +332,8 @@ reason_include_once('ssh/ssh.php');
 				$entry = $this->kaltura_shim->upload_video($filePath, $this->get_value('name'), $this->get_value('description'), explode(" ", $this->get_value('keywords')), $this->_get_categories(), $user->get_value('name'));
 			}
 			elseif ($this->get_value('av_type') == 'Audio')
-			{
-				$filename_parts = explode('.', $tmp_path);
-				$extension = end($filename_parts);
-				
-				if ($extension == 'mp3')
-					$transcoding_profile = KALTURA_AUDIO_MP3_SOURCE_TRANSCODING_PROFILE;
-				elseif ($extension == 'ogg')
-					$transcoding_profile = KALTURA_AUDIO_OGG_SOURCE_TRANSCODING_PROFILE;
-				else
-					$transcoding_profile = KALTURA_AUDIO_TRANSCODING_PROFILE;
-	
-				$entry = $this->kaltura_shim->upload_audio($filePath, $this->get_value('name'), $this->get_value('description'), explode(" ", $this->get_value('keywords')), $this->_get_categories(), $user->get_value('name'), $transcoding_profile);
+			{	
+				$entry = $this->kaltura_shim->upload_audio($filePath, $this->get_value('name'), $this->get_value('description'), explode(" ", $this->get_value('keywords')), $this->_get_categories(), $user->get_value('name'), $tmp_path);
 			}
 			else
 			{
