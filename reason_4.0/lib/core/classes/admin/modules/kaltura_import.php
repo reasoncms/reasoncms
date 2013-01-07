@@ -28,7 +28,7 @@
 		}
 		function get_recognized_extensions()
 		{
-			return array('flv', 'f4v', 'mov', 'mp4', 'wmv', 'qt', 'm4v', 'avi', 'wvm', 'mpg', 'ogg', 'rm', 'webm', 'mp3', 'aiff', 'mpeg', 'wav', 'm4a', 'aac', 'ogv');
+			return KalturaShim::get_recognized_extensions();
 		}
 		function get_default_values()
 		{
@@ -305,17 +305,8 @@
 				$entry = $shim->upload_video($info['tmp_file_path'], $info['name'], $info['description'], $this->comma_string_to_array($info['keywords']), $this->comma_string_to_array($info['categories']), $user->get_value('name'));
 			}
 			elseif($info['av_type'] == 'Audio')
-			{
-				$extension = $this->get_extension($info['tmp_file_name']);
-				
-				if ($extension == 'mp3')
-					$transcoding_profile = KALTURA_AUDIO_MP3_SOURCE_TRANSCODING_PROFILE;
-				elseif ($extension == 'ogg')
-					$transcoding_profile = KALTURA_AUDIO_OGG_SOURCE_TRANSCODING_PROFILE;
-				else
-					$transcoding_profile = KALTURA_AUDIO_TRANSCODING_PROFILE;
-				
-				$entry = $shim->upload_audio($info['tmp_file_path'], $info['name'], $info['description'], $this->comma_string_to_array($info['keywords']), $this->comma_string_to_array($info['categories']), $user->get_value('name'), $transcoding_profile);
+			{				
+				$entry = $shim->upload_audio($info['tmp_file_path'], $info['name'], $info['description'], $this->comma_string_to_array($info['keywords']), $this->comma_string_to_array($info['categories']), $user->get_value('name'), $info['tmp_file_name']);
 			}
 			return $entry;
 		}
