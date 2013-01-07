@@ -72,7 +72,8 @@
 			$d->form_enctype = 'multipart/form-data';
 			$d->add_callback(array($this,'get_instructions'),'pre_show_form');
 			$d->add_element('zip_file','ReasonUpload',array('acceptable_extensions'=>array('zip')));
-			$d->add_required('zip_file');
+			$d->add_element('url_comment','comment',array('text'=>'<strong>File larger than the maximum upload size?</strong> Put it in a web-available location and enter its web address below.'));
+			$d->add_element('zip_file_url');
 			$d->add_callback(array($this,'error_check'),'run_error_checks');
 			$d->add_callback(array($this,'process_form'),'process');
 			$d->run();
@@ -103,7 +104,12 @@
 		}
 		function error_check($d)
 		{
-			if ( !$d->has_error('zip_file') )
+			if( !$d->get_value('zip_file') && !$d->get_value('zip_file_url'))
+			{
+				$d->set_error('zip_file','Please either upload a zip file or enter a URL where the zip file may be found');
+				return;
+			}
+			if ( !$d->has_error('zip_file') && $d->get_value('zip_file') )
 			{
 				$file_uploaded = false;
 				
@@ -134,6 +140,38 @@
 							$d->set_error('zip_file','Unable to unzip uploaded zip file.');
 						}
 					}
+				}
+			}
+			elseif( !$d->has_error('zip_file_url') && $d->get_value('zip_file_url') )
+			{
+				$file_path = REASON_TEMP_DIR.uniqid().'.zip';
+				$ch = curl_init($d->get_value('zip_file_url'));
+				$fp = fopen($file_path, "w");
+				curl_setopt($ch, CURLOPT_FILE, $fp);
+				curl_setopt($ch, CURLOPT_HEADER, 0);
+
+				curl_exec($ch);
+				curl_close($ch);
+				
+				fclose($fp);
+				
+				$zip = new ZipArchive;
+				$res = $zip->open($file_path);
+				if ($res === TRUE)
+				{
+					$this->temp_location = REASON_TEMP_DIR.uniqid().'/';
+					mkdir($this->temp_location);
+					$zip->extractTo($this->temp_location);
+					$zip->close();
+					$errors = $this->sanity_check($this->temp_location);
+					foreach($errors as $error)
+					{
+						$d->set_error('zip_file',$error);
+					}
+				}
+				else
+				{
+					$d->set_error('zip_file','Unable to unzip zip file from URL.');
 				}
 			}
 		}
