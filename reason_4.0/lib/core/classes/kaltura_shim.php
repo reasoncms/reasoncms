@@ -40,6 +40,14 @@ class KalturaShim
 	}
 	
 	/**
+	* Returns an array of Kaltura's recognized file extensions.
+	*/
+	public static function get_recognized_extensions()
+	{
+		return array('flv', 'f4v', 'mov', 'mp4', 'wmv', 'qt', 'm4v', 'avi', 'wvm', 'mpg', 'ogg', 'rm', 'webm', 'mp3', 'aiff', 'mpeg', 'wav', 'm4a', 'aac', 'ogv');
+	}
+	
+	/**
 	* Returns true if kaltura integration is enabled for Reason.
 	*
 	* @return boolean
@@ -57,7 +65,7 @@ class KalturaShim
 	* @param string $netid
 	* @return array('width'=>123,'height'=>456)
 	*/
-	public function get_video_original_dimensions($kaltura_entry_id, $netid)
+	public function get_video_original_dimensions($kaltura_entry_id, $netid = 'Reason')
 	{
 		$client = $this->_get_kaltura_client($netid, true);
 		if (!$client) return false;
@@ -108,6 +116,27 @@ class KalturaShim
 		return false;
 	}
 	
+	/**
+	* Returns the url for the media's source data (useful for providing a download link to unmodified files)
+	*
+	* @param string $kaltura_entry_id
+	* @param string $netid
+	*/
+	public function get_original_data_url($kaltura_entry_id, $netid = 'Reason')
+	{
+		$client = $this->_get_kaltura_client($netid, true);
+		if (!$client) return false;
+		
+		try {
+			return $client->media->get($kaltura_entry_id)->dataUrl;
+		}
+		catch (Exception $e)
+		{
+			trigger_error('Media Work with entry_id '.$kaltura_entry_id.' does not exist in this Kaltura Publisher ('.KALTURA_PARTNER_ID.').');
+			return false;
+		}
+	}
+	
 	
 	/**
 	* Returns the length of the media entry in seconds.
@@ -118,7 +147,7 @@ class KalturaShim
 	* @param string $netid
 	* @return mixed integer or false
 	*/	
-	public function get_media_length_in_milliseconds($kaltura_entry_id, $netid)
+	public function get_media_length_in_milliseconds($kaltura_entry_id, $netid = 'Reason')
 	{
 		$client = $this->_get_kaltura_client($netid, true);
 		if (!$client) return false;
@@ -203,7 +232,7 @@ class KalturaShim
 	
 	
 	/**
-	* Uploads/Adds a video to Kaltura.
+	* Uploads/Adds a video to Kaltura.  The notification receiver handles everything after this initial upload.
 	* 
 	* @param string $filePath
 	* @param string $title
@@ -211,6 +240,7 @@ class KalturaShim
 	* @param array	$tags
 	* @param array	$categories
 	* @param string $netid
+	* @param int 	$transcoding_profile	Don't provide a transcoding profile for typical uploads.
 	* @return KalturaMediaEntry or False is unsuccessful
 	*/
 	public function upload_video($filePath, $title, $description, $tags, $categories, $netid, $transcoding_profile = KALTURA_DEFAULT_TRANSCODING_PROFILE)
@@ -228,10 +258,20 @@ class KalturaShim
 	* @param array	$tags
 	* @param array	$categories
 	* @param string $netid
+	* @param string $file_name
 	* @return KalturaMediaEntry or False is unsuccessful
 	*/
-	public function upload_audio($filePath, $title, $description, $tags, $categories, $netid, $transcoding_profile = KALTURA_AUDIO_TRANSCODING_PROFILE)
+	public function upload_audio($filePath, $title, $description, $tags, $categories, $netid, $file_name)
 	{
+		// Determine the correct transcoding profile from the given filename's extension
+		$extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+		if ($extension == 'mp3')
+			$transcoding_profile = KALTURA_AUDIO_MP3_SOURCE_TRANSCODING_PROFILE;
+		elseif ($extension == 'ogg')
+			$transcoding_profile = KALTURA_AUDIO_OGG_SOURCE_TRANSCODING_PROFILE;
+		else
+			$transcoding_profile = KALTURA_AUDIO_TRANSCODING_PROFILE;
+			
 		$new_entry = $this->_upload_media($filePath, $title, $description, $tags, $categories, $netid, KalturaMediaType::AUDIO, $transcoding_profile);
 		return $new_entry;
 	}	
