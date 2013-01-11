@@ -645,11 +645,11 @@ class checkboxgroup_with_otherType extends checkboxgroupType
 			$str .= ' /></td><td valign="top"><label for="'.$id.'">'.$val."</label></td></tr>\n";
 			$i++;
 		}
-		$id = 'checkbox_'.$this->name.'_'.$i++;
+		$id = 'checkbox_'.$this->name.'_'.$i;
 		$str .= '<tr>'."\n".'<td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$i.']" value="other"';
-		if ($this->value)
+		if (!empty($this->value[$i]))
 		{
-			$other_value = $this->value;
+			$other_value = $this->value[$i];
 			$str .= ' checked="checked"';
 		} else {
 			$other_value = '';
