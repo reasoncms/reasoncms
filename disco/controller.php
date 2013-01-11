@@ -695,6 +695,8 @@ class FormController
 			if( $f->processed )
 			{
 				$this->update_session_form_vars();
+				// Save a value in the session to indicate that we've processed this step
+				$this->set_form_data('controller_'.$this->_current_step.'_processed', true);
 				$this->_add_step_to_path( $this->_current_step );
 				$form_jump = $this->_determine_next_step();
 			}
@@ -791,7 +793,10 @@ class FormController
 	 */
 	function get( $var ) // {{{
 	{
-		return $this->forms[ $this->_vars[ $var ] ]->get_value( $var );
+		if (isset($this->_vars[ $var ]) && isset($this->forms[ $this->_vars[ $var ] ]))
+			return $this->forms[ $this->_vars[ $var ] ]->get_value( $var );
+		else
+			trigger_error('Unable to get value for "'.$var.'"');
 	} // }}}
 	/**
 	 * Gets the names of all the elements of which the controller is aware. An alias to get_request_vars().
@@ -974,8 +979,8 @@ class FormController
 	}
 
 	/**
-	 * Run the error check phase on a given step to determine if it has been
-	 * successfully submitted.
+	 * Look for the special value we saved to the session during the processing phase
+	 * to determine if it has been successfully submitted.
 	 * @access public
 	 * @return boolean
 	 */
@@ -983,8 +988,7 @@ class FormController
 	{
 		if (isset ($this->forms[ $step ]))
 		{
-			$this->forms[ $step ]->_run_all_error_checks();
-			return !$this->forms[ $step ]->_has_errors();
+			return $this->get_form_data('controller_'.$step.'_processed');
 		} else {
 			trigger_error( 'FormController Error: get_step_is_complete called on nonexistent step:' . $step);	
 			return false;
