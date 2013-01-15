@@ -2378,7 +2378,6 @@
 		*/
 		function move_element( $element1, $where, $element2)
 		{
-			echo "this->move_element($element1, $where, $element2);<br>";
 			$old_order = $this->get_order();
 			if (!$this->_is_element($element2) && !$this->_is_element_group($element2))
 			{
