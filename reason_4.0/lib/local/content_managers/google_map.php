@@ -26,11 +26,15 @@
 			$this->set_display_name('google_map_longitude', 'Longitude');
 			$this->set_display_name('google_map_msid', 'Map ID');
 			$this->set_display_name('google_map_show_campus_template', 'Show Campus Template');
+			$this->set_display_name('google_map_destination_latitude', 'Destination Latitude');
+			$this->set_display_name('google_map_destination_longitude', 'Destination Longitude');
+			$this->set_display_name('google_map_show_directions', 'Directions');
+			$this->change_element_type('google_map_show_directions', 'radio_no_sort', array('options'=>array('show'=>'Show <span class="smallText formComment">(Drag the "To" bubble to set destination)</span>','hide'=>'Hide <span id="destination_lat_long" class="smallText formComment">(Don\'t display the directions interface)</span>')));
 			
-			//$this->change_element_type('google_map_latitude', 'hidden');
-			//$this->change_element_type('google_map_longitude', 'hidden');
-			//$this->change_element_type('google_map_zoom_level', 'hidden');
-			
+			//$this->change_element_type('google_map_destination_latitude', 'hidden');
+			//$this->change_element_type('google_map_destination_longitude', 'hidden');
+			$this->change_element_type('no_share', 'hidden');
+						
 			if (!$this->get_value('google_map_zoom_level'))
 			{
 				$this->set_value('google_map_zoom_level', DEFAULT_ZOOM_LEVEL);
@@ -43,12 +47,36 @@
 			{
 				$this->set_value('google_map_longitude', DEFAULT_LONGITUDE);
 			}
+			if (!$this->get_value('google_map_destination_latitude') && !$this->get_value('google_map_destination_longitude'))
+			{
+				$this->set_value('google_map_destination_latitude', $this->get_value('google_map_latitude'));
+				$this->set_value('google_map_destination_longitude', $this->get_value('google_map_longitude'));
+			}
+			if (!$this->get_value('google_map_show_directions'))
+			{
+				$this->set_value('google_map_show_directions', 'show');
+			}
 			
 			$msid = $this->get_value('google_map_msid');
 			if ($msid != null)
 			{
 				$this->set_value('google_map_msid', preg_replace("|\s|", PHP_EOL, $msid));				
 			}
+			
+			$this->set_order(
+				array(
+					'name',
+					'unique_name',
+					'google_map_zoom_level',
+					'google_map_latitude',
+					'google_map_longitude',
+					'google_map_msid',
+					'google_map_show_campus_template',
+					'google_map_show_directions',
+					'google_map_destination_latitude',
+					'google_map_destination_longitude',
+				)
+			);
 			
 		}
 		
@@ -61,11 +89,15 @@
       				#map_canvas {
 					width: 600px;
 					height: 400px;
-					}</style>'."\n";
+					}
+					#googlemapdestinationlatitudeRow {display: none;}  /* hack to avoid changing hidden input field */
+					#googlemapdestinationlongitudeRow {display: none;}
+					</style>'."\n";
 			echo '
-			<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+			<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+			<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/styledmarker/src/StyledMarker.js"></script>
 			<script type="text/javascript">
-			
+						
 			function initialize() {
 				var latLng = new google.maps.LatLng('.$this->get_value('google_map_latitude').','.$this->get_value('google_map_longitude').');
 		        var myOptions = {
@@ -78,13 +110,18 @@
 		        var map = new google.maps.Map(document.getElementById(\'map_canvas\'), myOptions);
 		        
 		        var arrayOfMsids = ["'. preg_replace("|\s|", '","', $this->get_value('google_map_msid')) . '"];
-		        if (document.disco_form.google_map_show_campus_template.options[document.disco_form.google_map_show_campus_template.options.selectedIndex].value == "yes")
-
-				{
+		        if (document.disco_form.google_map_show_campus_template.options[document.disco_form.google_map_show_campus_template.options.selectedIndex].value == "yes") {
 					arrayOfMsids.splice(0, 0, "203908844213597815590.0004cfa54d955e6e86cbb");
 				}
 		        var nyLayer = [];
-		        setLayers(arrayOfMsids, nyLayer, map)
+		        setLayers(arrayOfMsids, nyLayer, map);
+		             
+		        var destMarker = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.BUBBLE,{color:"#cccccc",text:"To"}),position:new google.maps.LatLng('.$this->get_value('google_map_destination_latitude').', '.$this->get_value('google_map_destination_longitude').'),map:map,draggable:true});
+		        if (document.getElementById("radio_google_map_show_directions_0").checked) {
+		        	showDestination(destMarker, 0);
+		        } else {
+		        	showDestination(destMarker, 1);
+		        }
 				
 				google.maps.event.addListener(map, \'dragend\', function(e) {
 					updateMarkerPosition(map.getCenter());
@@ -105,6 +142,18 @@
 					map.setCenter(cntr);
 					updateMarkerPosition(map.getCenter());
 				});
+				google.maps.event.addDomListener(document.getElementById("radio_google_map_show_directions_0"), \'change\', function(e) {
+					showDestination(destMarker, 0);
+				});
+				google.maps.event.addDomListener(document.getElementById("radio_google_map_show_directions_1"), \'change\', function(e) {
+					showDestination(destMarker, 1);
+				});
+				google.maps.event.addDomListener(destMarker, \'dragend\', function(e) {
+					var dragEnd = e.latLng;
+					document.disco_form.google_map_destination_latitude.value = dragEnd.lat();
+					document.disco_form.google_map_destination_longitude.value = dragEnd.lng();
+				});
+				
 				google.maps.event.addDomListener(document.disco_form.google_map_show_campus_template, \'change\', function(e) {
 					for (var i = 0; i < arrayOfMsids.length; i++) {
 						nyLayer[i].setMap(null);
@@ -152,6 +201,14 @@
 				} 
 			}
 			
+			function showDestination(destMarker, show) {
+				if (show == 0) {
+					destMarker.setVisible(true);
+				}
+				else {
+					destMarker.setVisible(false);
+				}
+			}
 		
 			google.maps.event.addDomListener(window, \'load\', initialize);			
 			
