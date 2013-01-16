@@ -357,7 +357,7 @@
 								$extension = 'audio/mp3';
 							}
 							$parts = explode('/', $extension);
-							echo '<li><a href="'.$file->get_value('url').'">.'.end($parts).'</a></li>'."\n";
+							echo '<li class="'.reason_htmlspecialchars(str_replace(' ','-',end($parts))).'_li"><a href="'.$file->get_value('url').'">.'.end($parts).'</a></li>'."\n";
 						}
 					}
 					echo '</ul>'."\n";
