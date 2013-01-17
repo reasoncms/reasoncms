@@ -28,7 +28,8 @@
 			// environmental outreach
 			"nealem01" => array("d76f4769f09cc708389538ffe0d82733", "27e40ea372ece10c"),
 			"LutherMinistry" => array("524ba8e86f00754ce5216cf02345125e", "48a2c6cb8df8ca1f"),
-			"luthersustainability" => array("32deae8d61a176ea73d561995d903426", "d5805fcf8d221869"));
+			"luthersustainability" => array("32deae8d61a176ea73d561995d903426", "d5805fcf8d221869"),
+			"luther_cgl" => array("5b0b63d4c8d0a45c2b944a44baf98f56", "8e2244e3e8f07d71"));
 
 			$site_id = $this->site_id;
 			$es = new entity_selector( $site_id );
