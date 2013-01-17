@@ -120,7 +120,7 @@ class ReasonKalturaNotificationReceiver
 	function update_reason_media_work($notification)
 	{
 		foreach ($notification->data as $data)
-		{
+		{			
 			$es = new entity_selector();
 			$es->add_type(id_of('av'));
 			$es->add_relation('media_work.entry_id = "'.addslashes($data['entry_id']).'"');
@@ -129,6 +129,15 @@ class ReasonKalturaNotificationReceiver
 			if (!empty($results))
 			{	
 				$media_work = current($results);
+				// First, check to see if the status is abnormal
+				if ($data['status'] <= 0)
+				{
+					reason_update_entity($media_work->id(), $data['puser_id'], array('transcoding_status' => 'error'));
+					$this->send_email($media_work, $data, 'error');
+					trigger_error('Kaltura unsuccessfully transcoded media entry with id = '.$data['entry_id']);
+					return;
+				}
+				
 				if ($media_work->get_value('transcoding_status') != 'ready')
 				{
 	
@@ -238,7 +247,7 @@ class ReasonKalturaNotificationReceiver
 						catch (Exception $ex)
 						{}
 						
-						if ($data['status'] == -1)
+						if ($data['status'] == -1 || $data['status'] == -2)
 						{
 							$this->send_email($media_work, $data, 'error');
 							trigger_error('Kaltura unsuccessfully transcoded media entry with id = '.$data['entry_id']);
