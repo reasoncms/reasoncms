@@ -16,6 +16,8 @@ include_once( DISCO_INC . 'disco.php');
 reason_include_once('classes/kaltura_shim.php');
 reason_include_once( 'function_libraries/url_utils.php' );
 reason_include_once('content_managers/image.php3');
+reason_include_once('classes/media_work_helper.php');
+
 
 /**
 * This module allows for easy selection of still frames from a video to use as its placard image.  The
@@ -65,11 +67,17 @@ class mediaWorkImagePickerModule extends DefaultModule
 	function run()
 	{	
 		if ($this->media_work->get_value('integration_library') == 'kaltura')
-		{
+		{	
 			// Kill the module if the media work is somehow not a media work video
 			if ($this->media_work->get_value('av_type') != 'Video' || $this->admin_page->type_id != id_of('av'))
 			{
 				die('<p>This module only works with Media Works whose av_type is \'Video\'.</p>');
+			}
+			// Kill the module if the user doesn't have access to the video
+			$mwh = new media_work_helper($this->media_work);
+			if ( !$mwh->user_has_access_to_media() )
+			{
+				die('<p>You do not have permissions to change the still frame for this video.</p>');
 			}
 			
 			if ($this->cur_image)
