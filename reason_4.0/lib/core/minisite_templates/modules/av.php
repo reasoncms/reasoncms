@@ -11,6 +11,8 @@
 	reason_include_once( 'classes/av_display.php' );
 	reason_include_once( 'function_libraries/url_utils.php' );
 	reason_include_once( 'classes/kaltura_shim.php' );
+	reason_include_once('classes/media_work_helper.php');
+
 	
 	/**
 	 * Register the class so the template can instantiate it
@@ -240,130 +242,134 @@
 				echo $embed_markup;
 				echo '</div>'."\n";
 				
-				$small_url_size = (MEDIA_WORK_SMALL_HEIGHT == $this->params['default_video_height']) ? '' : MEDIA_WORK_SMALL_HEIGHT;
-				$medium_url_size = (MEDIA_WORK_MEDIUM_HEIGHT == $this->params['default_video_height']) ? '' : MEDIA_WORK_MEDIUM_HEIGHT;
-				$large_url_size = (MEDIA_WORK_LARGE_HEIGHT == $this->params['default_video_height']) ? '' : MEDIA_WORK_LARGE_HEIGHT;
-								
-				$small_url = carl_make_link(array('displayer_height'=>$small_url_size));
-				$medium_url = carl_make_link(array('displayer_height'=>$medium_url_size));
-				$large_url = carl_make_link(array('displayer_height'=>$large_url_size));
-				
-				if ($item->get_value('av_type') == 'Video')
+				$mwh = new media_work_helper($item);
+				if ($mwh->user_has_access_to_media())
 				{
-					if (MEDIA_WORK_SMALL_HEIGHT == $height)
-						$small_link = '<strong>Small <em>('.MEDIA_WORK_SMALL_HEIGHT.'p)</em></strong>'."\n";
-					else
-						$small_link = '<a href="'.$small_url.'" >Small <em>('.MEDIA_WORK_SMALL_HEIGHT.'p)</em></a>'."\n";
-				
-					if ( MEDIA_WORK_MEDIUM_HEIGHT == $height)
-						$medium_link = '<strong>Medium <em>('.MEDIA_WORK_MEDIUM_HEIGHT.'p)</em></strong>'."\n";
-					else
-						$medium_link = '<a href="'.$medium_url.'" >Medium <em>('.MEDIA_WORK_MEDIUM_HEIGHT.'p)</em></a>'."\n";
-						
-					if (MEDIA_WORK_LARGE_HEIGHT == $height)
-						$large_link = '<strong>Large <em>('.MEDIA_WORK_LARGE_HEIGHT.'p)</em></strong>'."\n";
-					else
-						$large_link = '<a href="'.$large_url.'" >Large <em>('.MEDIA_WORK_LARGE_HEIGHT.'p)</em></a>'."\n";
-					
-					echo '<div class="size_links">'."\n";
-					echo '<h4>Video Size:</h4>'."\n";
-					echo '<ul>'."\n";
-					echo '<li data-size="'.MEDIA_WORK_SMALL_HEIGHT.'" data-link="'.$small_url.'" class="small_link">'.$small_link.'</li>'."\n";
-					echo '<li data-size="'.MEDIA_WORK_MEDIUM_HEIGHT.'" data-link="'.$medium_url.'" class="medium_link">'.$medium_link.'</li>'."\n";
-					echo '<li data-size="'.MEDIA_WORK_LARGE_HEIGHT.'" data-link="'.$large_url.'" class="large_link">'.$large_link.'</li>'."\n";
-					echo '</ul>'."\n";
-					echo '</div>'."\n";
-				}
-				
-				echo '<div class="share_download_info">'."\n";
-				
-				echo '<div class="share">'."\n";
-				echo '<h5 class="share_label">Share:</h5>'."\n";
-				echo '<ul class="share_list">'."\n";
-				$facebook_url = 'http://www.facebook.com/sharer.php?u='.urlencode(get_current_url()).'&t='.urlencode($item->get_value('name'));
-				echo '<li><a href="'.$facebook_url.'">Facebook</a></li>'."\n";
-				$twitter_url = 'https://twitter.com/share?url='.urlencode(get_current_url()).'&text=.'.urlencode($item->get_value('name'));
-				echo '<li><a href="'.$twitter_url.'">Twitter</a></li>'."\n";
-				echo '</ul>'."\n";
-				echo '</div>'."\n";
-				
-				if ($item->get_value('show_embed'))
-				{
-					echo '<div class="embed">'."\n";
-					echo '<h5 class="embed_label">Embed:</h5>'."\n";
-					echo '<textarea class="embed_code" rows="7" cols="75" readonly="readonly">'."\n";
-					echo htmlspecialchars($embed_markup, ENT_QUOTES);
-					echo '</textarea>'."\n";
-					echo '</div>'."\n";
-				}
-				
-				if ($item->get_value('show_download'))
-				{
-					echo '<div class="download">'."\n";
-					echo '<h5 class="download_label">Download:</h5>'."\n";
-					echo '<ul class="media_file_list">'."\n";
-					
-					// Offer an original file download link if this parameter is set
-					if ($this->params['offer_original_download_link'] && !empty($this->kaltura_shim))
-					{
-						if($orig_url = $this->kaltura_shim->get_original_data_url($item->get_value('entry_id')))
-							echo '<li class="orig_li"><a href="'.$orig_url.'"">original</a></li>'."\n";
-					}
+					$small_url_size = (MEDIA_WORK_SMALL_HEIGHT == $this->params['default_video_height']) ? '' : MEDIA_WORK_SMALL_HEIGHT;
+					$medium_url_size = (MEDIA_WORK_MEDIUM_HEIGHT == $this->params['default_video_height']) ? '' : MEDIA_WORK_MEDIUM_HEIGHT;
+					$large_url_size = (MEDIA_WORK_LARGE_HEIGHT == $this->params['default_video_height']) ? '' : MEDIA_WORK_LARGE_HEIGHT;
+									
+					$small_url = carl_make_link(array('displayer_height'=>$small_url_size));
+					$medium_url = carl_make_link(array('displayer_height'=>$medium_url_size));
+					$large_url = carl_make_link(array('displayer_height'=>$large_url_size));
 					
 					if ($item->get_value('av_type') == 'Video')
 					{
-						// We must provide the url for each size here so that the javascript has a hook for the download links.
-						$mp4_vals = array();
-						$webm_vals = array();
+						if (MEDIA_WORK_SMALL_HEIGHT == $height)
+							$small_link = '<strong>Small <em>('.MEDIA_WORK_SMALL_HEIGHT.'p)</em></strong>'."\n";
+						else
+							$small_link = '<a href="'.$small_url.'" >Small <em>('.MEDIA_WORK_SMALL_HEIGHT.'p)</em></a>'."\n";
+					
+						if ( MEDIA_WORK_MEDIUM_HEIGHT == $height)
+							$medium_link = '<strong>Medium <em>('.MEDIA_WORK_MEDIUM_HEIGHT.'p)</em></strong>'."\n";
+						else
+							$medium_link = '<a href="'.$medium_url.'" >Medium <em>('.MEDIA_WORK_MEDIUM_HEIGHT.'p)</em></a>'."\n";
+							
+						if (MEDIA_WORK_LARGE_HEIGHT == $height)
+							$large_link = '<strong>Large <em>('.MEDIA_WORK_LARGE_HEIGHT.'p)</em></strong>'."\n";
+						else
+							$large_link = '<a href="'.$large_url.'" >Large <em>('.MEDIA_WORK_LARGE_HEIGHT.'p)</em></a>'."\n";
 						
-						$small_av_files = $displayer->_get_suitable_flavors(MEDIA_WORK_SMALL_HEIGHT, MEDIA_WORK_SMALL_HEIGHT);
-						$small_mp4 = $small_av_files[0];
-						$mp4_vals['small'] = $small_mp4->get_value('url');
-						$small_webm = $small_av_files[1];
-						$webm_vals['small'] = $small_webm->get_value('url');
-						
-						$medium_av_files = $displayer->_get_suitable_flavors(MEDIA_WORK_MEDIUM_HEIGHT, MEDIA_WORK_MEDIUM_HEIGHT);
-						$med_mp4 = $medium_av_files[0];
-						$mp4_vals['medium'] = $med_mp4->get_value('url');
-						$med_webm = $medium_av_files[1];
-						$webm_vals['medium'] = $med_webm->get_value('url');
-						
-						$large_av_files = $displayer->_get_suitable_flavors(MEDIA_WORK_LARGE_HEIGHT, MEDIA_WORK_LARGE_HEIGHT);
-						$large_mp4 = $large_av_files[0];
-						$mp4_vals['large'] = $large_mp4->get_value('url');
-						$large_webm = $large_av_files[1];
-						$webm_vals['large'] = $large_webm->get_value('url');
-						
-						$av_files = $displayer->get_media_files();
-						
-						echo '<li class="mp4_li"><a href="'.$av_files[0]->get_value('url').'" 
-											data-small-url="'.$mp4_vals['small'].'"
-											data-medium-url="'.$mp4_vals['medium'].'"
-											data-large-url="'.$mp4_vals['large'].'">.mp4</a></li>'."\n";
-						echo '<li class="webm_li"><a href="'.$av_files[1]->get_value('url').'" 
-											data-small-url="'.$webm_vals['small'].'"
-											data-medium-url="'.$webm_vals['medium'].'"
-											data-large-url="'.$webm_vals['large'].'">.webm</a></li>'."\n";
+						echo '<div class="size_links">'."\n";
+						echo '<h4>Video Size:</h4>'."\n";
+						echo '<ul>'."\n";
+						echo '<li data-size="'.MEDIA_WORK_SMALL_HEIGHT.'" data-link="'.$small_url.'" class="small_link">'.$small_link.'</li>'."\n";
+						echo '<li data-size="'.MEDIA_WORK_MEDIUM_HEIGHT.'" data-link="'.$medium_url.'" class="medium_link">'.$medium_link.'</li>'."\n";
+						echo '<li data-size="'.MEDIA_WORK_LARGE_HEIGHT.'" data-link="'.$large_url.'" class="large_link">'.$large_link.'</li>'."\n";
+						echo '</ul>'."\n";
+						echo '</div>'."\n";
 					}
-					else if ($item->get_value('av_type') == 'Audio')
-					{
-						$av_files = $displayer->get_media_files();
-						foreach ($av_files as $file) 
-						{
-							$extension = $file->get_value('mime_type');
-							// people know what mp3 is, not mpeg, so we display mpegs as mp3s
-							if ($extension == 'audio/mpeg')
-							{	
-								$extension = 'audio/mp3';
-							}
-							$parts = explode('/', $extension);
-							echo '<li class="'.reason_htmlspecialchars(str_replace(' ','-',end($parts))).'_li"><a href="'.$file->get_value('url').'">.'.end($parts).'</a></li>'."\n";
-						}
-					}
+					
+					echo '<div class="share_download_info">'."\n";
+					
+					echo '<div class="share">'."\n";
+					echo '<h5 class="share_label">Share:</h5>'."\n";
+					echo '<ul class="share_list">'."\n";
+					$facebook_url = 'http://www.facebook.com/sharer.php?u='.urlencode(get_current_url()).'&t='.urlencode($item->get_value('name'));
+					echo '<li><a href="'.$facebook_url.'">Facebook</a></li>'."\n";
+					$twitter_url = 'https://twitter.com/share?url='.urlencode(get_current_url()).'&text=.'.urlencode($item->get_value('name'));
+					echo '<li><a href="'.$twitter_url.'">Twitter</a></li>'."\n";
 					echo '</ul>'."\n";
 					echo '</div>'."\n";
+					
+					if ($item->get_value('show_embed'))
+					{
+						echo '<div class="embed">'."\n";
+						echo '<h5 class="embed_label">Embed:</h5>'."\n";
+						echo '<textarea class="embed_code" rows="7" cols="75" readonly="readonly">'."\n";
+						echo htmlspecialchars($embed_markup, ENT_QUOTES);
+						echo '</textarea>'."\n";
+						echo '</div>'."\n";
+					}
+					
+					if ($item->get_value('show_download'))
+					{
+						echo '<div class="download">'."\n";
+						echo '<h5 class="download_label">Download:</h5>'."\n";
+						echo '<ul class="media_file_list">'."\n";
+						
+						// Offer an original file download link if this parameter is set
+						if ($this->params['offer_original_download_link'] && !empty($this->kaltura_shim))
+						{
+							if($orig_url = $this->kaltura_shim->get_original_data_url($item->get_value('entry_id')))
+								echo '<li class="orig_li"><a href="'.$orig_url.'"">original</a></li>'."\n";
+						}
+						
+						if ($item->get_value('av_type') == 'Video')
+						{
+							// We must provide the url for each size here so that the javascript has a hook for the download links.
+							$mp4_vals = array();
+							$webm_vals = array();
+							
+							$small_av_files = $displayer->_get_suitable_flavors(MEDIA_WORK_SMALL_HEIGHT, MEDIA_WORK_SMALL_HEIGHT);
+							$small_mp4 = $small_av_files[0];
+							$mp4_vals['small'] = $small_mp4->get_value('url');
+							$small_webm = $small_av_files[1];
+							$webm_vals['small'] = $small_webm->get_value('url');
+							
+							$medium_av_files = $displayer->_get_suitable_flavors(MEDIA_WORK_MEDIUM_HEIGHT, MEDIA_WORK_MEDIUM_HEIGHT);
+							$med_mp4 = $medium_av_files[0];
+							$mp4_vals['medium'] = $med_mp4->get_value('url');
+							$med_webm = $medium_av_files[1];
+							$webm_vals['medium'] = $med_webm->get_value('url');
+							
+							$large_av_files = $displayer->_get_suitable_flavors(MEDIA_WORK_LARGE_HEIGHT, MEDIA_WORK_LARGE_HEIGHT);
+							$large_mp4 = $large_av_files[0];
+							$mp4_vals['large'] = $large_mp4->get_value('url');
+							$large_webm = $large_av_files[1];
+							$webm_vals['large'] = $large_webm->get_value('url');
+							
+							$av_files = $displayer->get_media_files();
+							
+							echo '<li class="mp4_li"><a href="'.$av_files[0]->get_value('url').'" 
+												data-small-url="'.$mp4_vals['small'].'"
+												data-medium-url="'.$mp4_vals['medium'].'"
+												data-large-url="'.$mp4_vals['large'].'">.mp4</a></li>'."\n";
+							echo '<li class="webm_li"><a href="'.$av_files[1]->get_value('url').'" 
+												data-small-url="'.$webm_vals['small'].'"
+												data-medium-url="'.$webm_vals['medium'].'"
+												data-large-url="'.$webm_vals['large'].'">.webm</a></li>'."\n";
+						}
+						else if ($item->get_value('av_type') == 'Audio')
+						{
+							$av_files = $displayer->get_media_files();
+							foreach ($av_files as $file) 
+							{
+								$extension = $file->get_value('mime_type');
+								// people know what mp3 is, not mpeg, so we display mpegs as mp3s
+								if ($extension == 'audio/mpeg')
+								{	
+									$extension = 'audio/mp3';
+								}
+								$parts = explode('/', $extension);
+								echo '<li class="'.reason_htmlspecialchars(str_replace(' ','-',end($parts))).'_li"><a href="'.$file->get_value('url').'">.'.end($parts).'</a></li>'."\n";
+							}
+						}
+						echo '</ul>'."\n";
+						echo '</div>'."\n";
+					}
+					echo '</div>'."\n";
 				}
-				echo '</div>'."\n";
 			}
 			else
 			{
