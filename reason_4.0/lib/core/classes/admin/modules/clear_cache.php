@@ -5,13 +5,14 @@
  * Deletes all page caches for a site
  *
  * @package reason_package
+ * @subpackage admin
  * @author Nathan White
  */
 reason_include_once('classes/admin/modules/default.php');
 reason_include_once('classes/page_cache.php');
 
 /**
- * This admin module allows users to clear the page cache for a site.
+ * This admin module allows users to clear all the page caches for a site.
  *
  * @todo implement a web service mode that returns status as json
  */
