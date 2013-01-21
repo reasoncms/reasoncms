@@ -1,0 +1,139 @@
+.jsenabled {
+}
+
+.jsdisabled {
+  display: none;
+}
+
+.noscript .jsenabled {
+  display: none;
+}
+
+.noscript .jsdisabled {
+  display: block;
+}
+
+#total-results {
+  margin: 20px;
+}
+#total-results .metric {
+  background: #fefefe; /* Old browsers */
+  background: -moz-linear-gradient(top, #fefefe 0%, #f2f3f2 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fefefe), color-stop(100%,#f2f3f2)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #fefefe 0%,#f2f3f2 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #fefefe 0%,#f2f3f2 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #fefefe 0%,#f2f3f2 100%); /* IE10+ */
+  background: linear-gradient(top, #fefefe 0%,#f2f3f2 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#f2f3f2',GradientType=0 ); /* IE6-9 */
+  border: 1px solid #ccc;
+  float: left;
+  font-size: 11px;
+  font-style: italic;
+  margin: -4px 0 1em -1px;
+  padding: 10px;
+  width: 110px;
+}
+#total-results .metric:hover {
+  background: #fff;
+  border-bottom-color: #b1b1b1;
+}
+#total-results .metric .legend {
+  background-color: #058dc7;
+  border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+  font-size: 0;
+  margin-right: 5px;
+  padding: 10px 5px 0;
+}
+#total-results .metric strong {
+  font-size: 16px;
+  font-weight: bold;
+}
+#daily-results {
+  font-size: 12px;
+  width: 785px;
+  text-align: center;
+  border-collapse: collapse;
+  margin: 20px;
+  background: #fefefe; /* Old browsers */
+  background: -moz-linear-gradient(bottom, #fefefe 0%, #f2f3f2 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0%,#fefefe), color-stop(100%,#f2f3f2)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(bottom, #fefefe 0%,#f2f3f2 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(bottom, #fefefe 0%,#f2f3f2 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(bottom, #fefefe 0%,#f2f3f2 100%); /* IE10+ */
+  background: linear-gradient(bottom, #fefefe 0%,#f2f3f2 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#f2f3f2',GradientType=0 ); /* IE6-9 */
+}
+#daily-results th{
+  font-size: 12px;
+  font-weight: bold;
+  background: #8AA3D0;
+  border-bottom: 1px solid white;color: #000;
+  padding: 8px;
+}
+#daily-results tr{
+}
+#daily-results td{
+  text-align: center;
+  border-bottom: 1px solid #fff; color: #669;
+  border-top: 1px solid transparent;
+  padding: 8px;
+}
+#daily-results tr:hover td{
+  background-color: #dce6fa;
+}
+#source-results {
+  font-size: 12px;
+  width: 785px;
+  text-align: center;
+  border-collapse: collapse;
+  margin: 20px;
+
+  background: #fefefe; /* Old browsers */
+  background: -moz-linear-gradient(bottom, #fefefe 0%, #f2f3f2 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0%,#fefefe), color-stop(100%,#f2f3f2)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(bottom, #fefefe 0%,#f2f3f2 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(bottom, #fefefe 0%,#f2f3f2 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(bottom, #fefefe 0%,#f2f3f2 100%); /* IE10+ */
+  background: linear-gradient(bottom, #fefefe 0%,#f2f3f2 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#f2f3f2',GradientType=0 ); /* IE6-9 */
+}
+#source-results th{
+  font-size: 12px;
+  font-weight: bold;
+  background: #8AA3D0;
+  border-bottom: 1px solid white;color: #000;
+  padding: 8px;
+}
+#source-results tr{
+}
+#source-results td{
+  text-align: left;
+  width:50%;
+  border-top: 1px solid transparent;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 20px;
+}
+#source-results tr:hover td{
+  background-color: #dce6fa;
+}
+#analytics-about {
+  margin: 20px;
+}
+#analytics-about p{
+  margin: 20px;
+}
+.analytics-footer{
+  margin-top: 2em;
+  margin-bottom: 1em;
+  color: #777;
+  font-style: italic;
+}
+.analytics-error{
+  background-color:#FFC;
+  font-weight:bold;
+  color:#900;
+  width:800px;
+}
