@@ -634,6 +634,20 @@ if(!function_exists('htmlspecialchars_decode'))
 	}
 
 	/**
+	 * stripos replacement that uses mb_stripos where possible
+	 *
+	 * @param string haystack to search
+	 * @param string needle to find
+	 * @param string offset the search offset
+	 * @param encoding the encoding of the strings; pass a null value to use the current mb_internal_encoding
+	 */	
+	function carl_stripos($haystack, $needle, $offset = NULL, $encoding = 'UTF-8')
+	{
+		if(!$encoding) $encoding = function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8';
+		return function_exists('mb_stripos') ? mb_stripos($haystack, $needle, $offset, $encoding) : stripos($haystack, $needle, $offset);
+	}
+	
+	/**
 	 * strrpos replacement that uses mb_strrpos where possible
 	 *
 	 * @param string haystack to search
