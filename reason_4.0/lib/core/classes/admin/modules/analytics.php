@@ -58,7 +58,7 @@ reason_include_once('function_libraries/root_finder.php');
             $this->head_items->add_javascript(JQUERY_URL, true);
             $this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/google_api/analytics/analytics.css');
             $this->head_items->add_javascript(FLOT_HTTP_PATH.'jquery.flot.js');
-            $this->head_items->add_javascript(WEB_JAVASCRIPT_PATH.'modules/poll/flot/jquery.flot.pie.js');
+            $this->head_items->add_javascript(FLOT_HTTP_PATH.'jquery.flot.pie.js');
             $this->head_items->add_javascript(FLOT_HTTP_PATH.'jquery.flot.selection.js');
 
             $this->site = new entity( $this->admin_page->site_id );
