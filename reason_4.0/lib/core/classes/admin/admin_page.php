@@ -1141,6 +1141,13 @@ class AdminPage
 			{
 				echo '<li class="navItem"><a href="'.$stats_link.'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_bar.png" alt="" />Statistics</a></li>'."\n";
 			}
+			if( USE_GOOGLE_ANALYTICS )
+			{
+				echo '<li class="navItem';
+				if( $this->cur_module == 'Analytics' || $this->cur_module == 'AnalyticsAbout' )
+					echo ' navSelect';
+				echo '"><a href="'.$this->make_link( array( 'cur_module' => 'Analytics', 'type_id' => '' ) ).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_curve.png" alt="" />Analytics</a></li>'."\n";
+			}
 			echo '<li class="navItem';
 			if( $this->cur_module == 'ViewUsers' )
 				echo ' navSelect';
