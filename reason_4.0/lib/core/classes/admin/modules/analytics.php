@@ -188,7 +188,7 @@ reason_include_once('function_libraries/root_finder.php');
                     $this->draw_pie_chart($this->source_results);
                     $this->draw_line_chart($this->daily_results);
                 } else {
-                    echo '<div class="analytics-error">There are no source results for this time frame.</div>';
+                    echo '<div class="analytics-error">There are no results for this time frame.</div>';
                 }
             }
 
