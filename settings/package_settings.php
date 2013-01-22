@@ -122,6 +122,10 @@ define('CARL_UTIL_INC',INCLUDE_PATH.'carl_util/');
 // Define the path to disco files
 define('DISCO_INC',INCLUDE_PATH.'disco/');
 
+//Define the path to flot files
+define('FLOT_INC',INCLUDE_PATH.'flot/');
+define('FLOT_HTTP_PATH','/flot/');
+
 // Define the path to flvplayer files
 define('FLVPLAYER_INC',INCLUDE_PATH.'flvplayer/');
 define('FLVPLAYER_HTTP_PATH','/flvplayer/');
