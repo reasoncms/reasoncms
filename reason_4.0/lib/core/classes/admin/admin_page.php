@@ -14,6 +14,7 @@
 include_once( 'reason_header.php' );
 reason_include_once( 'classes/viewer.php' );
 reason_include_once( 'classes/entity_selector.php' );
+include_once(SETTINGS_INC .'google_api_settings.php');
 
 /**
  * We check for the old style admin_module.php file and trigger an error if it is still being used
