@@ -57,9 +57,9 @@ reason_include_once('function_libraries/root_finder.php');
             parent::init();
             $this->head_items->add_javascript(JQUERY_URL, true);
             $this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH . 'modules/google_api/analytics/analytics.css');
-            $this->head_items->add_javascript(FLOT_HTTP_PATH.'jquery.flot.js');
-            $this->head_items->add_javascript(FLOT_HTTP_PATH.'jquery.flot.pie.js');
-            $this->head_items->add_javascript(FLOT_HTTP_PATH.'jquery.flot.selection.js');
+            $this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'flot/jquery.flot.js');
+            $this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'flot/jquery.flot.pie.js');
+            $this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'flot/jquery.flot.selection.js');
 
             $this->site = new entity( $this->admin_page->site_id );
             $this->admin_page->title = 'Analytics for '.$this->site->get_value('name');
