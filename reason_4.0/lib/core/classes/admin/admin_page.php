@@ -119,6 +119,7 @@ class AdminPage
 			'sharing' => true,
 			'site_tools' => true,
 			'themes' => ALLOW_REASON_SITES_TO_SWITCH_THEMES,
+			'analytics' => USE_GOOGLE_ANALYTICS,
 		);
 	} // }}}
 
@@ -1142,7 +1143,7 @@ class AdminPage
 			{
 				echo '<li class="navItem"><a href="'.$stats_link.'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/chart_bar.png" alt="" />Statistics</a></li>'."\n";
 			}
-			if( USE_GOOGLE_ANALYTICS )
+			if( $this->show[ 'analytics' ]  )
 			{
 				echo '<li class="navItem';
 				if( $this->cur_module == 'Analytics' || $this->cur_module == 'AnalyticsAbout' )
@@ -1182,39 +1183,42 @@ class AdminPage
 	function stats_link() // {{{
 	//generates link to stats page if there is one
 	{
-		if(defined('REASON_STATS_URI_BASE') && REASON_STATS_URI_BASE != '')
+		// if using google analytics return false
+		if (USE_GOOGLE_ANALYTICS)
 		{
-			$site = new entity ( $this->site_id );
-			if( $site->get_value( 'unique_name' ))
+			elseif(defined('REASON_STATS_URI_BASE') && REASON_STATS_URI_BASE != '')
 			{
-				$show = false;
-				if($site->get_value( 'site_state' ) == 'Live')
+				$site = new entity ( $this->site_id );
+				if( $site->get_value( 'unique_name' ))
 				{
-					$show = true;
-				}
-				else
-				{
-					$es = new entity_selector();
-					$es->add_right_relationship($site->id(),relationship_id_of('site_archive'));
-					$es->add_relation( 'site_state = "Live"' );
-					$es->set_num(1);
-					$sites = $es->run_one(id_of('site'), 'Archived');
-					if(!empty($sites))
+					$show = false;
+					if($site->get_value( 'site_state' ) == 'Live')
 					{
 						$show = true;
 					}
-				}
-				if($show)
-				{
-					$link = REASON_STATS_URI_BASE;
-					$uname = posix_uname();
-					$link .=  strtolower($uname['nodename']).'/';
-					$link .= $_SERVER['HTTP_HOST'].'/';
-					$link .= $site->get_value( 'unique_name' ).'/';
-					return $link;
+					else
+					{
+						$es = new entity_selector();
+						$es->add_right_relationship($site->id(),relationship_id_of('site_archive'));
+						$es->add_relation( 'site_state = "Live"' );
+						$es->set_num(1);
+						$sites = $es->run_one(id_of('site'), 'Archived');
+						if(!empty($sites))
+						{
+							$show = true;
+						}
+					}
+					if($show)
+					{
+						$link = REASON_STATS_URI_BASE;
+						$uname = posix_uname();
+						$link .=  strtolower($uname['nodename']).'/';
+						$link .= $_SERVER['HTTP_HOST'].'/';
+						$link .= $site->get_value( 'unique_name' ).'/';
+						return $link;
+					}
 				}
 			}
-		}
 		return false;
 	} // }}}
 	// IN_MANAGER
