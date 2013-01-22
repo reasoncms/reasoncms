@@ -1158,10 +1158,10 @@ class AdminPage
 	function stats_link() // {{{
 	//generates link to stats page if there is one
 	{
-		// if using google analytics return false
-		if (USE_GOOGLE_ANALYTICS)
+		// if using google analytics don't show Stats
+		if ( !$this->show[ 'analytics' ] )
 		{
-			elseif(defined('REASON_STATS_URI_BASE') && REASON_STATS_URI_BASE != '')
+			if(defined('REASON_STATS_URI_BASE') && REASON_STATS_URI_BASE != '')
 			{
 				$site = new entity ( $this->site_id );
 				if( $site->get_value( 'unique_name' ))
@@ -1194,6 +1194,7 @@ class AdminPage
 					}
 				}
 			}
+		}
 		return false;
 	} // }}}
 	// IN_MANAGER
