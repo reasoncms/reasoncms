@@ -33,8 +33,8 @@ class PollingGraphModule extends DefaultMinisiteModule
 		if($hi =& $this->get_head_items())
 		{
 			$hi->add_javascript(JQUERY_URL, true);
-			$hi->add_javascript(WEB_JAVASCRIPT_PATH.'modules/poll/flot/jquery.flot.js');
-			$hi->add_javascript(WEB_JAVASCRIPT_PATH.'modules/poll/flot/jquery.flot.pie.js');
+			$hi->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'flot/jquery.flot.js');
+			$hi->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH.'flot/jquery.flot.pie.js');
 			$hi->add_javascript(WEB_JAVASCRIPT_PATH.'modules/poll/polls.js');
 			if ($this->sidebar) $hi->add_stylesheet(WEB_JAVASCRIPT_PATH.'modules/poll/poll_sidebar.css');
 			else $hi->add_stylesheet(WEB_JAVASCRIPT_PATH.'modules/poll/poll.css');
