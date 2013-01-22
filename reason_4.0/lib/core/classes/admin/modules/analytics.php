@@ -26,7 +26,7 @@ reason_include_once('function_libraries/root_finder.php');
      * An administrative module that provides page view analytics of the current site using the Google Analytics API v.3
      */
 
-    class Analytics extends DefaultModule // {{{
+    class AnalyticsModule extends DefaultModule // {{{
     {
         var $site;
         var $site_pages = array();
@@ -40,7 +40,7 @@ reason_include_once('function_libraries/root_finder.php');
         var $enddate;
 
         
-        function Analytics( &$page ) // {{{
+        function AnalyticsModule( &$page ) // {{{
         {
             $this->admin_page =& $page;
         } // }}}
