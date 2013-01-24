@@ -226,8 +226,8 @@ function toggle_specific_designations()
 		{
 			$("tr#designationnoteRow").show();
 			$("tr#aquaticcenterRow").show();
-			$("tr#sesqscholarshipfundRow").show();
-			$("tr#sesqstudyabroadfundRow").show();
+			$("tr#scholarshipfundRow").show();
+			// $("tr#sesqstudyabroadfundRow").show();
 			$("tr#transformteachingfundRow").show();
 			$("tr#sustainablecommunitiesRow").show();
 			$("tr#norseathleticassociationRow").show();
@@ -238,8 +238,8 @@ function toggle_specific_designations()
 		{
 			$("tr#designationnoteRow").hide();
 			$("tr#aquaticcenterRow").hide();
-			$("tr#sesqscholarshipfundRow").hide();
-			$("tr#sesqstudyabroadfundRow").hide();
+			$("tr#scholarshipfundRow").hide();
+			// $("tr#sesqstudyabroadfundRow").hide();
 			$("tr#transformteachingfundRow").hide();
 			$("tr#sustainablecommunitiesRow").hide();
 			$("tr#norseathleticassociationRow").hide();
