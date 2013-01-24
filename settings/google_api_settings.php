@@ -74,19 +74,19 @@ if ( USE_GOOGLE_ANALYTICS )
     */
     /*  Name of your Google API Project
         See instruction 1 above         */
-    domain_define('GOOGLE_ANALYTICS_APP_NAME', 'ReasonGoogleAnalytics');
+    domain_define('GOOGLE_ANALYTICS_APP_NAME', 'ReasonAnalytics');
 
     /*  The Client ID of your Google API Project's Service Account
         See instruction 4 above          */
-    domain_define('GOOGLE_ANALYTICS_SERVICE_CLIENT_ID', '437862994053-4lecueqf6u1rhk9r99pavrnck66dp5n1.apps.googleusercontent.com' );
+    domain_define('GOOGLE_ANALYTICS_SERVICE_CLIENT_ID', '280367784887.apps.googleusercontent.com' );
 
     /*  The email address of your Google API Project's Service Account
         See instruction 5 above          */
-    domain_define('GOOGLE_ANALYTICS_SERVICE_EMAIL', '437862994053-4lecueqf6u1rhk9r99pavrnck66dp5n1@developer.gserviceaccount.com' );
+    domain_define('GOOGLE_ANALYTICS_SERVICE_EMAIL', '280367784887@developer.gserviceaccount.com' );
 
     /*  The path to your private key file from your Google API Project
         See instruction 6 above         */
-    domain_define('GOOGLE_ANALYTICS_PRIVATE_KEY_FILE', '/var/reason/htdoc/7bae3a25fc9ddbf6d572cd0ddc4b098bdb7c544e-privatekey.p12');
+    domain_define('GOOGLE_ANALYTICS_PRIVATE_KEY_FILE', '/var/reason/keys/google-analytics-privatekey.p12');
 
     
 
@@ -119,5 +119,5 @@ if ( USE_GOOGLE_ANALYTICS )
      * Change to your production server for testing in a development environment
      * e.g. wwww.yourdomain.edu
      */
-    domain_define('GA_HOST_NAME', 'www.luther.edu');
+    domain_define('GA_HOST_NAME', HTTP_HOST_NAME);
 }
