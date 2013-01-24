@@ -238,7 +238,7 @@ function toggle_specific_designations()
 		{
 			$("tr#designationnoteRow").hide();
 			$("tr#aquaticcenterRow").hide();
-			$("tr#sesqscholarshipfundRow").hide();
+			$("tr#scholarshipfundRow").hide();
 			// $("tr#sesqstudyabroadfundRow").hide();
 			$("tr#transformteachingfundRow").hide();
 			$("tr#sustainablecommunitiesRow").hide();
