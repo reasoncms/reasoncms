@@ -20,7 +20,7 @@ define('GOOGLE_API_INC', INCLUDE_PATH.'google-api-php-client/src/');
  * 
  * Daily courtesy limit is 50,000 request/day (1/21/2013)
  */
-domain_define('USE_GOOGLE_ANALYTICS', false);
+domain_define('USE_GOOGLE_ANALYTICS', true);
 
 
 /**
@@ -74,19 +74,19 @@ if ( USE_GOOGLE_ANALYTICS )
     */
     /*  Name of your Google API Project
         See instruction 1 above         */
-    domain_define('GOOGLE_ANALYTICS_APP_NAME', '');
+    domain_define('GOOGLE_ANALYTICS_APP_NAME', 'ReasonGoogleAnalytics');
 
     /*  The Client ID of your Google API Project's Service Account
         See instruction 4 above          */
-    domain_define('GOOGLE_ANALYTICS_SERVICE_CLIENT_ID', '' );
+    domain_define('GOOGLE_ANALYTICS_SERVICE_CLIENT_ID', '437862994053-4lecueqf6u1rhk9r99pavrnck66dp5n1.apps.googleusercontent.com' );
 
     /*  The email address of your Google API Project's Service Account
         See instruction 5 above          */
-    domain_define('GOOGLE_ANALYTICS_SERVICE_EMAIL', '' );
+    domain_define('GOOGLE_ANALYTICS_SERVICE_EMAIL', '437862994053-4lecueqf6u1rhk9r99pavrnck66dp5n1@developer.gserviceaccount.com' );
 
     /*  The path to your private key file from your Google API Project
         See instruction 6 above         */
-    domain_define('GOOGLE_ANALYTICS_PRIVATE_KEY_FILE', '');
+    domain_define('GOOGLE_ANALYTICS_PRIVATE_KEY_FILE', '/var/reason/htdoc/7bae3a25fc9ddbf6d572cd0ddc4b098bdb7c544e-privatekey.p12');
 
     
 
@@ -97,7 +97,7 @@ if ( USE_GOOGLE_ANALYTICS )
      */
     /*  Your Google Analytics Profile ID
         See instructions 9 above        */
-    domain_define( 'GOOGLE_ANALYTICS_PROFILE_ID', '');
+    domain_define( 'GOOGLE_ANALYTICS_PROFILE_ID', '6696281');
 
     ////////////////////////////////////////////////////////
     // Other Settings
@@ -105,19 +105,19 @@ if ( USE_GOOGLE_ANALYTICS )
     /**
      * Your Google Analytics administrator/expert
      */
-    domain_define('REASON_CONTACT_INFO_FOR_ANALYTICS', '<a href="mailto:ga_expert@yourdomain.edu">Your GA Expert</a>');
+    domain_define('REASON_CONTACT_INFO_FOR_ANALYTICS', '<a href="mailto:greeta01@luther.edu">Tabita Green</a>');
 
     /** 
      * The service provider name for your domain
      *      e.g carelton college
      * Used to filter on-campus traffic (dimension=ga:networkLocation!='carleton\ college')
      */
-    domain_define('GA_SERVICE_PROVIDER_NAME', '');
+    domain_define('GA_SERVICE_PROVIDER_NAME', 'luther college');
 
     /**
      * The hostname for your ReasonCMS server
      * Change to your production server for testing in a development environment
      * e.g. wwww.yourdomain.edu
      */
-    domain_define('GA_HOST_NAME', HTTP_HOST_NAME);
+    domain_define('GA_HOST_NAME', 'www.luther.edu');
 }
