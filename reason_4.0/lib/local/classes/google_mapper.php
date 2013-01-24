@@ -11,18 +11,7 @@
 	// $gmaps is a google maps object usually consisting of a single google map
 	{	
 		$protocol = ((HTTPS_AVAILABLE && on_secure_page()) ? 'https' : 'http');
-		
-		echo phpinfo();
-		if (HTTPS_AVAILABLE)
-			echo 'HTTPS_AVAILABLE = true';
-		else
-			echo 'HTTPS_AVAILABLE == false';
-		if ((!empty( $_SERVER['HTTPS'] ) AND strtolower( $_SERVER['HTTPS'] ) == 'on' ))
-		{
-			echo 'on_secure_page';
-			echo $_SERVER['HTTPS'];
-		}
-		
+
 		foreach( $gmaps AS $gmap )
 		{
 			echo '<script type="text/javascript" src="'.$protocol.'://maps.googleapis.com/maps/api/js?sensor=false"></script>';
