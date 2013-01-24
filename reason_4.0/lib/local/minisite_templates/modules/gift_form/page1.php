@@ -63,16 +63,16 @@ class GiftPageOneForm extends FormStep
         ),
         'aquatic_center' => array(
         		'type' => 'checkboxfirst',
-        		'display_name' => '<a href="/giving/sesquicentennialfund/millerchallenge" target="_blank">Aquatic Center</a> - helping to meet the Miller Challenge',
+        		'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=284434" target="_blank">Aquatic Center</a>',
         ),
-        'sesq_scholarship_fund' => array(
+        'scholarship_fund' => array(
                 'type' => 'checkboxfirst',
-                'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=268624" target="_blank">The Sesquicentennial Scholarship Fund</a>',
+                'display_name' => '<a href="/giving/choices/scholarship/" target="_blank">Scholarship Support</a>, general',
         ),
-        'sesq_study_abroad_fund' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=268624" target="_blank">The Sesquicentennial Study Abroad Scholarship Fund</a>',
-        ),
+        // 'sesq_study_abroad_fund' => array(
+        //         'type' => 'checkboxfirst',
+        //         'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=268624" target="_blank">Study Abroad Support</a>',
+        // ),
         'transform_teaching_fund' => array(
                 'type' => 'checkboxfirst',
                 'display_name' => '<a href="/giving/sesquicentennialfund/?story_id=268591" target="_blank">The Fund for Transformational Teaching and Learning</a>',
