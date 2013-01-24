@@ -24,9 +24,9 @@
 
 // Basic information about the organization
 domain_define( 'FULL_ORGANIZATION_NAME','Luther College' );
-domain_define( 'SHORT_ORGANIZATION_NAME', 'Luther College' );
+domain_define( 'SHORT_ORGANIZATION_NAME', 'Luther' );
 domain_define( 'ORGANIZATION_HOME_PAGE_URI', 'http://www.luther.edu' );
-domain_define( 'WEBMASTER_EMAIL_ADDRESS', 'webmaster@luther.edu' );
+domain_define( 'WEBMASTER_EMAIL_ADDRESS', 'www@luther.edu' );
 domain_define( 'WEBMASTER_NAME', 'Steve Smith' );
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -175,8 +175,6 @@ define('LIBCURLEMU_INC',INCLUDE_PATH.'libcurlemu-1.0.4/');
 define('JQUERY_INC',INCLUDE_PATH.'jquery/');
 define('JQUERY_HTTP_PATH','/jquery/');
 define('JQUERY_URL',JQUERY_HTTP_PATH.'jquery_latest.js');
-//define('JQUERY_URL', '//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js');
 define('JQUERY_UI_URL',JQUERY_HTTP_PATH.'jquery_ui_latest.js');
-// define('JQUERY_UI_URL', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js');
 define('JQUERY_UI_CSS_URL',JQUERY_HTTP_PATH.'css/smoothness/jquery-ui.css');
 ?>
