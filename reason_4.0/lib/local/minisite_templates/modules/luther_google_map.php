@@ -3,10 +3,6 @@
 	reason_include_once( 'classes/google_mapper.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LutherGoogleMapModule';
-
-	define("DEFAULT_ZOOM_LEVEL", 16);
-	define("DEFAULT_LATITUDE", 43.313625);
-	define("DEFAULT_LONGITUDE", -91.804547);
 	
 	class LutherGoogleMapModule extends DefaultMinisiteModule
 	{

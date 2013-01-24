@@ -82,9 +82,11 @@
 		
 		function on_every_time()
 		{
+			$protocol = (HTTPS_AVAILABLE && on_secure_page() ? 'https' : 'http');
+			
 			parent::on_every_time();
 
-			echo '<link href="http://code.google.com/apis/maps/documentation/javascript/examples/default.css" rel="stylesheet" type="text/css" />'."\n";
+			echo '<link href="'.$protocol.'://code.google.com/apis/maps/documentation/javascript/examples/default.css" rel="stylesheet" type="text/css" />'."\n";
 			echo '<style type="text/css">
       				#map_canvas {
 					width: 600px;
@@ -94,8 +96,8 @@
 					#googlemapdestinationlongitudeRow {display: none;}
 					</style>'."\n";
 			echo '
-			<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-			<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/styledmarker/src/StyledMarker.js"></script>
+			<script type="text/javascript" src="'.$protocol.'://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+			<script type="text/javascript" src="'.$protocol.'://google-maps-utility-library-v3.googlecode.com/svn/trunk/styledmarker/src/StyledMarker.js"></script>
 			<script type="text/javascript">
 						
 			function initialize() {
@@ -191,7 +193,7 @@
 			
 			function setLayers(arrayOfMsids, nyLayer, map) {
 				for (var i = 0; i < arrayOfMsids.length; i++) {
-		        	nyLayer[i] = new google.maps.KmlLayer(\'http://maps.google.com/maps/ms?msid=\' + arrayOfMsids[i] + \'&msa=0&output=kml\',
+		        	nyLayer[i] = new google.maps.KmlLayer(\''.$protocol.'://maps.google.com/maps/ms?msid=\' + arrayOfMsids[i] + \'&msa=0&output=kml\',
 					{
 	                	suppressInfoWindows: false,
 	                	map: map,

@@ -9,10 +9,12 @@
 	function draw_google_map($gmaps)
 	// renders html and javascript for google maps display for both page and event types
 	// $gmaps is a google maps object usually consisting of a single google map
-	{			
+	{	
+		$protocol = (HTTPS_AVAILABLE && on_secure_page() ? 'https' : 'http');
+		
 		foreach( $gmaps AS $gmap )
 		{		
-			echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>';
+			echo '<script type="text/javascript" src="'.$protocol.'://maps.googleapis.com/maps/api/js?sensor=false"></script>';
 			echo '
 			<script type="text/javascript">
 		
@@ -46,7 +48,7 @@
 				
 			function setLayers(arrayOfMsids, nyLayer) {
 				for (var i = 0; i < arrayOfMsids.length; i++) {
-					nyLayer[i] = new google.maps.KmlLayer(\'http://maps.google.com/maps/ms?msid=\' + arrayOfMsids[i] + \'&msa=0&output=kml\',
+					nyLayer[i] = new google.maps.KmlLayer(\''.$protocol.'://maps.google.com/maps/ms?msid=\' + arrayOfMsids[i] + \'&msa=0&output=kml\',
 					{
 						suppressInfoWindows: false,
 						map: map,
@@ -105,7 +107,7 @@
 			{
 				echo 'From:<br/><input type="text" name="map_from" id="map_from" style="width: 260px;">'."\n";
 				echo '<input type="submit" value="Get Directions" onClick="calculateRoute()">'."\n";
-				echo '<input type="button" value="Reset" style="float:right;" onClick="resetDirections()">'."\n";
+				echo '<input type="button" value="Reset" style="float:right; margin-top:2px;" onClick="resetDirections()">'."\n";
 				echo '<div id="directionsPanel"><p><span id="totalDistance"></span></p></div><br/>'."\n";
 			}
 		}
