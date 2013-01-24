@@ -105,7 +105,7 @@ if ( USE_GOOGLE_ANALYTICS )
     /**
      * Your Google Analytics administrator/expert
      */
-    domain_define('REASON_CONTACT_INFO_FOR_ANALYTICS', '<a href="mailto:greeta01@luther.edu">Tabita Green</a>');
+    domain_define('REASON_CONTACT_INFO_FOR_ANALYTICS', '<a href="mailto:greeta02@luther.edu">Tabita Green</a>');
 
     /** 
      * The service provider name for your domain
