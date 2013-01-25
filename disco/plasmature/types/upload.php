@@ -795,15 +795,10 @@ class image_uploadType extends uploadType
 	
 	function _upload_success($image_path, $image_url)
 	{
-		$this->too_big = false;
-		
-		$res = image_is_too_big($image_path);
-		$this->too_big = $res['truth_value'];
-		
-		if ($this->too_big)
+		if ($res = image_is_too_big($image_path))
 		{
-			$this->set_error('The chosen image is too large for the server to process. The uncompresed image is '. format_bytes_as_human_readable($res['image_size']).' bytes. Only '. format_bytes_as_human_readable($res['size_limit']).' bytes of memory may be used for processing images of this type.');
-			
+			$this->too_big = true;
+			$this->set_error('The chosen image is too large for the server to process. The uncompressed image is '. format_bytes_as_human_readable($res['image_size']).' bytes. Only '. format_bytes_as_human_readable($res['size_limit']).' bytes of memory may be used for processing images of this type.');	
 		}
 		else
 		{
@@ -812,75 +807,6 @@ class image_uploadType extends uploadType
 			}
 		}
 		parent::_upload_success($image_path, $image_url);
-		
-		/*
-		$image_info = getimagesize($image_path);
-		$current_usage = memory_get_usage();
-		$mem_limit = shorthand_to_bytes(ini_get('memory_limit'));
-		$this->too_big = false;
-		
-		if ($image_info[2] == IMAGETYPE_JPEG)
-		{
-			$image_size = ($image_info[0] * $image_info[1] * $image_info['channels'] * $image_info['bits'])/8;
-			$ratio = .500;
-			
-			//if ($image_size/($mem_limit - $current_usage) > .500)
-			//{
-			//	$this->too_big = true;
-			//}
-		}
-		elseif ($image_info[2] == IMAGETYPE_GIF)
-		{
-			$bits = $image_info['bits'] < 6 ? 6 : $image_info['bits'];
-			$image_size = ($image_info[0] * $image_info[1] * $image_info['channels'] * $bits)/8;
-			$ratio = .950;
-			//if ($image_size/($mem_limit - $current_usage) > .950)
-			//{
-			//	$this->too_big = true;
-			//}
-		
-		}
-		elseif ($image_info[2] == IMAGETYPE_PNG)
-		{
-			$image_size = ($image_info[0] * $image_info[1] * 4 * 16)/8;
-			$ratio = .790;
-			//if ($image_size/($mem_limit - $current_usage) > .790)
-			//{
-			//	$this->too_big = true;
-			//}
-			//echo 'Height='.$image_info[0].', width='.$image_info[1].', channels=4, bits='.$image_info['bits'].', size='.$image_size.', mem_left='.($mem_limit - $current_usage).' ';
-		}
-		
-		if ($image_size/($mem_limit - $current_usage) > $ratio)
-		{
-			$this->too_big = true;
-		}
-		
-		
-		if ($this->too_big)
-		{
-			$this->set_error('The chosen image is too large for gd to process. The uncompresed image is '.$image_size.' bytes. Only '.($mem_limit - $current_usage) * $ratio.' bytes of memory may be used for processing images of this type.');
-			
-		}
-		else
-		{
-			if ($this->_needs_resizing($image_path)) {
-				$this->_resize_image($image_path);
-			}
-		}
-		*/
-		/*
-		$channels = isset($image_info['channels']) ? $image_info['channels'] : 4;
-		$image_size = ($image_info[0] * $image_info[1] * $channels * $image_info['bits'])/8;
-		//$this->set_error('Image size='.$image_size .', Curent usage='. $current_usage .', Total limit='. $mem_limit);
-		//$this->set_error('channels = '.$channels.', bits = '.$image_info['bits']);
-		echo 'Height='.$image_info[0].', width='.$image_info[1].', channels='.$channels.', bits='.$image_info['bits'].', size='.$image_size.', mem_left='.($mem_limit - $current_usage).' ';
-		
-		if ($image_size > $mem_limit - $current_usage)
-		{
-			$this->set_error('The chosen image is too large for gd to process. The uncompresed image is '.$image_size.' bytes. Only '.($mem_limit - $current_usage).' bytes of memory are available for image processing.');
-		}
-		*/
 	}
 	
 	/**

@@ -1180,15 +1180,16 @@ function _bound($val, $min, $max)
 }
 
 /**
- * Lets you know if the image at the given path is too large for the server to process.
- * If ImageMagick is unavailable this function trys to predict if the image will be too large
- * for gd to process.
+ * Lets you know if the image at the given path is too large for the server to process. We run
+ * this to avoid crashing when GD tries to process large images.
+ *
+ * When this function returns an array, that array has two components:
+ *
+ * - image_size - number of btyes of memory that we predict the uncompressed image will need AND
+ * - size_limit - the maximum size in bytes of what we believe we can process with GD
+ *
  * @param string $path A file path
- * @return array An array with the index 'truth_value' which will be true if the image is too big and false otherwise, 
- * the index 'image_size' which is the number of bytes of memory that we predict the uncompressed image will need, and
- * the index 'size_limit' indicating the maximum number of bytes of memory that the given image may be. Note that the
- * size_limit varries depending on image format. Also note that image_size and size_limit may be set to null if
- * truth_value is false.
+ * @return mixed array describing image_size and size_limit of too big image or boolean FALSE
  */
 function image_is_too_big($path)
 {
@@ -1197,7 +1198,6 @@ function image_is_too_big($path)
 		$image_info = getimagesize($path);
 		$mem_usage = memory_get_usage();
 		$mem_limit = get_php_size_setting_as_bytes('memory_limit');
-		$too_big = false;
 		
 		if ($image_info[2] == IMAGETYPE_JPEG)
 		{
@@ -1218,11 +1218,10 @@ function image_is_too_big($path)
 			
 		if ($image_size/($mem_limit - $mem_usage) > $ratio)
 		{
-			$too_big = true;
+			return array('image_size'=>$image_size, 'size_limit'=>($mem_limit - $mem_usage)*$ratio);
 		}
-		return array('truth_value'=>$too_big, 'image_size'=>$image_size, 'size_limit'=>($mem_limit - $mem_usage)*$ratio);
 	}
-	return array('truth_value'=>false, 'image_size'=>null, 'size_limit'=>null);
+	return FALSE;
 }
 
 /**

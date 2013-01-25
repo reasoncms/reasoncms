@@ -128,8 +128,7 @@ foreach (array_keys($_FILES) as $name) {
 				if (@copy($temp_path, $unscaled_path)) {
 				
 					//Make sure the image won't make php crash:
-					$res = image_is_too_big($temp_path);
-					if($res['truth_value'])
+					if(image_is_too_big($temp_path))
 					{
 						final_response(422, "The uploaded image's dimensions are too large for the server to process. Try a smaller image.");
 					}
