@@ -10,7 +10,7 @@
 	// renders html and javascript for google maps display for both page and event types
 	// $gmaps is a google maps object usually consisting of a single google map
 	{	
-		$protocol = ((HTTPS_AVAILABLE && on_secure_page()) ? 'https' : 'http');
+		$protocol = (HTTPS_AVAILABLE && on_secure_page() ? 'https' : 'http');
 
 		foreach( $gmaps AS $gmap )
 		{
@@ -43,8 +43,12 @@
 					echo 'arrayOfMsids.splice(0, 0, "203908844213597815590.0004cfa54d955e6e86cbb");';
 				}
 				echo 'var nyLayer = [];
-				setLayers(arrayOfMsids, nyLayer);
-			}
+				setLayers(arrayOfMsids, nyLayer);';
+				if ($gmap->get_value('google_map_show_primary_pushpin') == "show")
+				{
+					echo 'var primaryPushpin = new google.maps.Marker({position: new google.maps.LatLng('.$gmap->get_value('google_map_primary_pushpin_latitude').', '.$gmap->get_value('google_map_primary_pushpin_longitude').'),map: map});';
+				}
+			echo '}
 				
 			function setLayers(arrayOfMsids, nyLayer) {
 				for (var i = 0; i < arrayOfMsids.length; i++) {

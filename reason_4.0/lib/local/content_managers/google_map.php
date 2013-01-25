@@ -26,6 +26,10 @@
 			$this->set_display_name('google_map_longitude', 'Longitude');
 			$this->set_display_name('google_map_msid', 'Map ID');
 			$this->set_display_name('google_map_show_campus_template', 'Show Campus Template');
+			$this->set_display_name('google_map_primary_pushpin_latitude', 'Primary Pushpin Latitude');
+			$this->set_display_name('google_map_primary_pushpin_longitude', 'Primary Pushpin Longitude');
+			$this->set_display_name('google_map_show_primary_pushpin', 'Primary Pushpin');
+			$this->change_element_type('google_map_show_primary_pushpin', 'radio_no_sort', array('options'=>array('show'=>'Show <span class="smallText formComment">(Drag the primary pushpin to set location)</span>','hide'=>'Hide <span id="destination_lat_long" class="smallText formComment">(Don\'t display primary pushpin)</span>')));
 			$this->set_display_name('google_map_destination_latitude', 'Destination Latitude');
 			$this->set_display_name('google_map_destination_longitude', 'Destination Longitude');
 			$this->set_display_name('google_map_show_directions', 'Directions');
@@ -46,6 +50,15 @@
 			if (!$this->get_value('google_map_longitude'))
 			{
 				$this->set_value('google_map_longitude', DEFAULT_LONGITUDE);
+			}
+			if (!$this->get_value('google_map_primary_pushpin_latitude') && !$this->get_value('google_map_primary_pushpin_longitude'))
+			{
+				$this->set_value('google_map_primary_pushpin_latitude', $this->get_value('google_map_latitude') + 0.0002);
+				$this->set_value('google_map_primary_pushpin_longitude', $this->get_value('google_map_longitude') - 0.0002);
+			}
+			if (!$this->get_value('google_map_show_primary_pushpin'))
+			{
+				$this->set_value('google_map_show_primary_pushpin', 'show');
 			}
 			if (!$this->get_value('google_map_destination_latitude') && !$this->get_value('google_map_destination_longitude'))
 			{
@@ -70,11 +83,14 @@
 					'google_map_zoom_level',
 					'google_map_latitude',
 					'google_map_longitude',
-					'google_map_msid',
 					'google_map_show_campus_template',
+					'google_map_show_primary_pushpin',
+					'google_map_primary_pushpin_latitude',
+					'google_map_primary_pushpin_longitude',
 					'google_map_show_directions',
 					'google_map_destination_latitude',
 					'google_map_destination_longitude',
+					'google_map_msid',
 				)
 			);
 			
@@ -92,6 +108,8 @@
 					width: 600px;
 					height: 400px;
 					}
+					#googlemapprimarypushpinlatitudeRow {display: none;}  /* hack to avoid changing hidden input field */
+					#googlemapprimarypushpinlongitudeRow {display: none;}
 					#googlemapdestinationlatitudeRow {display: none;}  /* hack to avoid changing hidden input field */
 					#googlemapdestinationlongitudeRow {display: none;}
 					</style>'."\n";
@@ -117,6 +135,14 @@
 				}
 		        var nyLayer = [];
 		        setLayers(arrayOfMsids, nyLayer, map);
+		        
+		        var primaryPushpin = new google.maps.Marker({position: new google.maps.LatLng('.$this->get_value('google_map_primary_pushpin_latitude').', '.$this->get_value('google_map_primary_pushpin_longitude').'),map: map,draggable:true});
+		        //var primaryPushpin = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.MARKER,{color:"B0C4DE"}),position:new google.maps.LatLng('.$this->get_value('google_map_primary_pushpin_latitude').', '.$this->get_value('google_map_primary_pushpin_longitude').'),map:map,draggable:true});
+		        if (document.getElementById("radio_google_map_show_primary_pushpin_0").checked) {
+		        	showDestination(primaryPushpin, 0);
+		        } else {
+		        	showDestination(primaryPushpin, 1);
+		        }
 		             
 		        var destMarker = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.BUBBLE,{color:"#cccccc",text:"To"}),position:new google.maps.LatLng('.$this->get_value('google_map_destination_latitude').', '.$this->get_value('google_map_destination_longitude').'),map:map,draggable:true});
 		        if (document.getElementById("radio_google_map_show_directions_0").checked) {
@@ -143,6 +169,17 @@
 					var cntr = new google.maps.LatLng(parseFloat(document.disco_form.google_map_latitude.value), parseFloat(document.disco_form.google_map_longitude.value));
 					map.setCenter(cntr);
 					updateMarkerPosition(map.getCenter());
+				});
+				google.maps.event.addDomListener(document.getElementById("radio_google_map_show_primary_pushpin_0"), \'change\', function(e) {
+					showPrimaryPushpin(primaryPushpin, 0);
+				});
+				google.maps.event.addDomListener(document.getElementById("radio_google_map_show_primary_pushpin_1"), \'change\', function(e) {
+					showPrimaryPushpin(primaryPushpin, 1);
+				});
+				google.maps.event.addDomListener(primaryPushpin, \'dragend\', function(e) {
+					var dragEnd = e.latLng;
+					document.disco_form.google_map_primary_pushpin_latitude.value = dragEnd.lat();
+					document.disco_form.google_map_primary_pushpin_longitude.value = dragEnd.lng();
 				});
 				google.maps.event.addDomListener(document.getElementById("radio_google_map_show_directions_0"), \'change\', function(e) {
 					showDestination(destMarker, 0);
@@ -201,6 +238,15 @@
 	        		});
 					nyLayer[i].setMap(map);
 				} 
+			}
+			
+			function showPrimaryPushpin(primaryPushpin, show) {
+				if (show == 0) {
+					primaryPushpin.setVisible(true);
+				}
+				else {
+					primaryPushpin.setVisible(false);
+				}
 			}
 			
 			function showDestination(destMarker, show) {
