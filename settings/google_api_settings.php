@@ -119,5 +119,5 @@ if ( USE_GOOGLE_ANALYTICS )
      * Change to your production server for testing in a development environment
      * e.g. wwww.yourdomain.edu
      */
-    domain_define('GA_HOST_NAME', HTTP_HOST_NAME);
+    domain_define('GA_HOST_NAME', 'www.luther.edu');
 }
