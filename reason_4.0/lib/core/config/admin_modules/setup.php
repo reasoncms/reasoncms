@@ -84,16 +84,19 @@
 		'EventSplit'=>array('file'=>'event_split.php','class'=>'ReasonEventSplitModule'),
 		'ActiveUsers'=>array('file'=>'active_users.php','class'=>'ReasonActiveUsersModule'),
 		'ReviewChanges'=>array('file'=>'review_changes.php','class'=>'ReasonReviewChangesModule'),
-		'SitePages'=>array('file'=>'site_pages.php','class'=>'ReasonSitePagesModule'),
-		
+		'SitePages'=>array('file'=>'site_pages.php','class'=>'ReasonSitePagesModule'),		
 		'ImageSizer'=>array('file'=>'image_sizer.php','class'=>'ImageSizerModule'),
 		'OrphanManager'=>array('file'=>'orphan_manager.php','class'=>'OrphanManagerModule'),		
 		'ManageLocks'=>array('file'=>'manage_locks.php','class'=>'ManageLocksModule'),
 		'AdminTools'=>array('file'=>'admin_tools.php','class'=>'ReasonAdminToolsModule'),
 		'ErrorVisibility'=>array('file'=>'error_visibility.php','class'=>'ErrorVisibilityModule'),
 		'CustomizeTheme'=>array('file'=>'customize_theme.php','class'=>'CustomizeThemeModule'),
-		'Analytics'=>array('file'=>'analytics.php','class'=>'AnalyticsModule'),
-
+		'SiteAccessDenied'=>array('file'=>'site_access_denied.php', 'class'=>'SiteAccessDeniedModule'),
+		'Newsletter'=>array('file'=>'newsletter/newsletter.php', 'class'=>'NewsletterModule'),
+		'DeleteRegistrationSlotData'=>array('file'=>'delete_slot_data.php', 'class'=>'DeleteRegistrationSlotDataModule'),
+		'ClearCache'=>array('file'=>'clear_cache.php', 'class'=>'ReasonClearCacheModule'),
+		'Analytics'=>array('file'=>'analytics.php', 'class'=>'AnalyticsModule'),
+		'AnalyticsAbout'=>array('file'=>'analytics.php', 'class'=>'AnalyticsAboutModule'),
 );
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))
