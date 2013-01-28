@@ -86,6 +86,7 @@ require_once PLASMATURE_TYPES_INC."checkbox.php";
 require_once PLASMATURE_TYPES_INC."presentational.php";
 require_once PLASMATURE_TYPES_INC."editors.php";
 require_once PLASMATURE_TYPES_INC."thor.php";
+require_once PLASMATURE_TYPES_INC."formbuilder.php";
 require_once PLASMATURE_TYPES_INC."options.php";
 require_once PLASMATURE_TYPES_INC."world.php";
 require_once PLASMATURE_TYPES_INC."datetime.php";

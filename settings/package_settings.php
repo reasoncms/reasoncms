@@ -144,6 +144,9 @@ define('MAGPIERSS_INC',INCLUDE_PATH.'magpierss/');
 define('THOR_INC',INCLUDE_PATH.'thor/');
 define('THOR_HTTP_PATH','/thor/');
 
+// Define the path to jQuery.formBuilder files
+define('FORMBUILDER_HTTP_PATH','/reason_package/formbuilder/');
+
 // Define the path to Tyr files
 define('TYR_INC',INCLUDE_PATH.'tyr/');
 
