@@ -495,7 +495,7 @@ class EventsModule extends DefaultMinisiteModule
 	
 				// Create a new editor with the admin page. This will pick the 
 				// appropriate editor class and set up the disco form.
-				$this->edit_handler = new EditorModule( &$admin_page );
+				$this->edit_handler = new EditorModule( $admin_page );
 				$this->edit_handler->head_items =& $this->get_head_items();
 				$this->edit_handler->init();
 				
