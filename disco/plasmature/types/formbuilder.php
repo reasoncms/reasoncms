@@ -17,7 +17,7 @@ require_once PLASMATURE_TYPES_INC."default.php";
 class formbuilderType extends textareaType
 {
 	var $type = 'formbuilder';
-	var $asset_directory = FORMBUILDER_HTTP_PATH;
+
 	function display()
 	{
 		echo '<textarea name="'.$this->name.'" rows="'.$this->rows.'" cols="'.$this->cols.'">'.htmlspecialchars($this->get(),ENT_QUOTES,'UTF-8').'</textarea>';

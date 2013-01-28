@@ -22,17 +22,22 @@
 		function init( $externally_set_up = false)
 		{
 			parent::init();
-			if (!USE_JS_THOR) {
+			if (!USE_JS_THOR)
+			{
 				$this->ensure_temp_db_table_exists();
 			}
 		}
 
-		function init_head_items() {
-            if (USE_JS_THOR) {
-                $this->head_items->add_javascript(JQUERY_UI_URL);
-                $this->head_items->add_javascript(FORMBUILDER_HTTP_PATH . 'js/formbuilder_translation.js');
-                $this->head_items->add_javascript(FORMBUILDER_HTTP_PATH . 'js/jquery.formbuilder.js');
-                $this->head_items->add_stylesheet(FORMBUILDER_HTTP_PATH . 'css/jquery.formbuilder.css');
+		function init_head_items()
+		{
+            if (USE_JS_THOR)
+            {
+                $this->head_items->add_javascript(JQUERY_UI_URL, true);
+                $this->head_items->add_javascript(JQUERY_URL, true);
+                $this->head_items->add_stylesheet(JQUERY_UI_CSS_URL);        
+                $this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/js/formbuilder_translation.js');
+                $this->head_items->add_javascript(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/js/jquery.formbuilder.js');
+                $this->head_items->add_stylesheet(REASON_PACKAGE_HTTP_BASE_PATH . 'formbuilder/css/jquery.formbuilder.css');
             }
 		}
 
