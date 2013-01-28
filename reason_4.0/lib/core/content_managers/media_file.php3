@@ -167,6 +167,7 @@ class avFileManager extends ContentManager
 		
 		$this->change_element_type('flavor_id', 'hidden');
 		$this->change_element_type('mime_type', 'hidden');
+		$this->change_element_type('download_url', 'hidden');
 	}
 	
 	function modify_caption_url_field()
