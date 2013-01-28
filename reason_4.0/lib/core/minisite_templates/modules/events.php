@@ -8,7 +8,6 @@
   * include the base class & dependencies, and register the module with Reason
   */
 reason_include_once( 'minisite_templates/modules/default.php' );
-//reason_include_once( 'classes/calendar_new.php' );
 reason_include_once( 'classes/calendar.php' );
 reason_include_once( 'classes/calendar_grid.php' );
 reason_include_once( 'classes/icalendar.php' );
@@ -416,6 +415,20 @@ class EventsModule extends DefaultMinisiteModule
 	 * @var mixed NULL, false, or image entity object
 	 */
 	protected $_list_thumbnail_default_image;
+	/**
+	 * Flag indicating whether the current user can inline edit on this site.
+	 *
+	 * @var boolean
+	 */	
+	protected $_user_can_inline_edit;
+	/**
+	 * List of site ids and whether the user can inline edit them; used to
+	 * efficiently keep track of editability of events that may be coming
+	 * from multiple sites.
+	 *
+	 * @var array
+	 */
+	protected $_user_can_inline_edit_sites = array();
 	
 	//////////////////////////////////////
 	// General Functions
@@ -442,8 +455,66 @@ class EventsModule extends DefaultMinisiteModule
 		else
 			$this->init_event();
 		
+		$inline_edit =& get_reason_inline_editing($this->page_id);
+		$inline_edit->register_module($this, $this->user_can_inline_edit());
+		if ($inline_edit->active_for_module($this))
+		{
+			$user = reason_get_current_user_entity();
+			$event_id = $this->request['event_id'];
+			/* Event adding is currently not functional
+			if( !($event_id = $this->request['event_id'] ) )
+			{
+				if(reason_user_has_privs($user->id(), 'add' ))
+				{
+					if ($event_id = create_entity( $this->site_id, id_of('event_type'), $user->id(), '', array( 'entity' => array( 'state' => 'Pending' ) ) ))
+					{					
+						// We have to do a few things to trick the module into
+						// recognizing a new event
+						$this->request['event_id'] = $event_id;
+						$this->init_event();
+						$this->_ok_to_show[$event_id] = true;
+					}
+				}
+			}*/
+			
+			if ($user && $event = new entity($event_id))
+			{
+				reason_include_once('classes/admin/admin_page.php');
+				reason_include_once('classes/admin/modules/editor.php');
+				$site = $event->get_owner();
+				
+				// Create a new admin page object and set some values to make it
+				// think it's running in the admin context.
+				$admin_page = new AdminPage();
+				$admin_page->id = $event->id();
+				$admin_page->site_id = $site->id();
+				$admin_page->type_id = id_of('event_type');
+				$admin_page->user_id = $user->id(); 
+				$admin_page->request = array();
+				$admin_page->head_items =& $this->get_head_items();
+	
+				// Create a new editor with the admin page. This will pick the 
+				// appropriate editor class and set up the disco form.
+				$this->edit_handler = new EditorModule( &$admin_page );
+				$this->edit_handler->head_items =& $this->get_head_items();
+				$this->edit_handler->init();
+				
+				$this->edit_handler->disco_item->actions = array('finish' => 'Save');
+				$this->edit_handler->disco_item->add_callback(array($this,'editor_where_to'),'where_to');
+			}
+		}
 	} // }}}
 
+	/**
+	 * Replace the default destination of the event editing form with our custom
+	 * destination.
+	 */
+	function editor_where_to()
+	{
+		return carl_make_redirect(array('inline_edit'=>''));	
+	}
+	
+	
 	/**
 	 * Get the set of cleanup rules for user input
 	 * @return array
@@ -463,10 +534,12 @@ class EventsModule extends DefaultMinisiteModule
 				'extra_args' => $views,
 			),
 			'start_date' => array(
-				'function' => 'turn_into_date'
+				'function' => 'turn_into_date',
+				'method'=>'get',
 			),
 			'date' => array(
-				'function' => 'turn_into_date'
+				'function' => 'turn_into_date',
+				'method'=>'get',
 			),
 			'category' => array(
 				'function' => 'turn_into_int'
@@ -475,7 +548,8 @@ class EventsModule extends DefaultMinisiteModule
 				'function' => 'turn_into_int'
 			),
 			'end_date' => array(
-				'function'=>'turn_into_date'
+				'function'=>'turn_into_date',
+				'method'=>'get',
 			),
 			'nav_date' => array(
 				'function'=>'turn_into_date'
@@ -586,7 +660,9 @@ class EventsModule extends DefaultMinisiteModule
 	{
 		echo '<div id="'.$this->div_id.'">'."\n";
 		if (empty($this->request['event_id']))
+		{
 			$this->list_events();
+		}
 		else
 			$this->show_event();
 		echo '</div>'."\n";
@@ -937,6 +1013,29 @@ class EventsModule extends DefaultMinisiteModule
 			$this->display_list_title();
 			if($this->calendar->get_view() == 'daily' || $this->calendar->get_view() == 'weekly')
 				$this->show_months = false;
+			
+			$inline_edit =& get_reason_inline_editing($this->page_id);
+			$editable = $inline_edit->available_for_module($this);
+			/* Event adding is current not functional
+			if ($editable)
+			{
+				$active = $inline_edit->active_for_module($this);
+				$class = ($active) ? 'editable editing' : 'editable';
+				echo '<div class="'.$class.'">'."\n";
+				
+				if ($active)
+				{
+					echo 'EDITING';
+				}
+				else
+				{
+					$activation_params = $inline_edit->get_activation_params($this);
+					$activation_params['event_id'] = 0;
+					$activation_params['edit_id'] = 0;
+					$url = carl_make_link($activation_params);
+					echo '<div class="editRegion"><p><a href="'.$url.'" class="editThis">Add Event</a></p></div>'."\n";
+				}
+			}*/
 			if(!empty($this->events_by_date))
 			{
 				echo $msg;
@@ -966,6 +1065,7 @@ class EventsModule extends DefaultMinisiteModule
 			{
 				$this->no_events_error();
 			}
+			if ($editable) echo '</div>';
 		}
 		else
 		{
@@ -1231,6 +1331,41 @@ class EventsModule extends DefaultMinisiteModule
 		return '';
 	}
 	
+	/**
+	 * Determines whether or not the user can inline edit on this site.
+	 *
+	 * @return boolean;
+	 */
+	function user_can_inline_edit()
+	{
+		if (!isset($this->_user_can_inline_edit))
+		{
+			$this->_user_can_inline_edit = reason_check_access_to_site($this->site_id);
+		}
+		return $this->_user_can_inline_edit;
+	}
+
+	/**
+	 * Determines whether or not the user can inline edit a particular event.
+	 *
+	 * @return boolean;
+	 */
+	function user_can_inline_edit_event($event_id)
+	{
+		if ($this->event && $event_id == $this->event->id())
+			$owner_site = $this->event->get_owner();
+		elseif (isset($this->events[$event_id]))
+			$owner_site = $this->events[$event_id]->get_owner();
+		else
+			return false;
+			
+		if (!isset($this->_user_can_inline_edit_sites[$owner_site->id()]))
+		{
+			$this->_user_can_inline_edit_sites[$owner_site->id()] = reason_check_access_to_site($owner_site->id());
+		}
+		return $this->_user_can_inline_edit_sites[$owner_site->id()];
+	}
+	
 	function show_view_options()
 	{
 		if($this->show_views)
@@ -1355,12 +1490,45 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function show_event_list_item( $event_id, $day, $ongoing_type = '' )
 	{
+		$inline_edit =& get_reason_inline_editing($this->page_id);
+		$editable = $inline_edit->available_for_module($this);
+		if ($editable && $this->user_can_inline_edit_event($event_id))
+		{
+			$active = $inline_edit->active_for_module($this);
+			$class = ($active) ? 'editable editing' : 'editable';
+			echo '<div class="'.$class.'">'."\n";
+			if (!$active) echo '<div class="editRegion">';
+		}
+		
 		if($this->params['list_type'] == 'verbose')
 			$this->show_event_list_item_verbose( $event_id, $day, $ongoing_type );
 		else if($this->params['list_type'] == 'schedule')
 			$this->show_event_list_item_schedule( $event_id, $day, $ongoing_type );
 		else
 			$this->show_event_list_item_standard( $event_id, $day, $ongoing_type );
+			
+		// We're currently only showing edit options if you're on a calendar page 
+		// (signified by the absence of $events_page_url). Inline editing events in 
+		// sidebars, etc., is a complicated issue.
+		if (!$this->events_page_url)
+		{
+			if ($editable && $this->user_can_inline_edit_event($event_id))
+			{			
+				if ($active)
+				{
+					echo 'EDITING';
+				}
+				else
+				{
+					$activation_params = $inline_edit->get_activation_params($this);
+					$activation_params['edit_id'] = $event_id;
+					$activation_params['event_id'] = $event_id;
+					$url = carl_make_link($activation_params);
+					echo ' <a href="'.$url.'" class="editThis">Edit Event</a></div>'."\n";
+				}
+				echo '</div>';
+			}
+		}
 	}
 	
 	/**
@@ -2620,37 +2788,69 @@ class EventsModule extends DefaultMinisiteModule
 	function show_event_details() // {{{
 	{
 		$e =& $this->event;
-		echo '<div class="eventDetails">'."\n";
+		$inline_edit =& get_reason_inline_editing($this->page_id);
+		$editable = $inline_edit->available_for_module($this);
+		$regionclass = $active = '';
+		if ($editable && $this->user_can_inline_edit_event($this->event->id()))
+		{
+			$active = $inline_edit->active_for_module($this);
+			$class = ($active) ? 'editable editing' : 'editable';
+			echo '<div class="'.$class.'">'."\n";
+			if ($active) 
+			{
+				$this->edit_handler->disco_item->run();
+			} else {
+				$regionclass = 'editRegion';
+			}
+		}
+		
+		echo '<div class="eventDetails '.$regionclass.'">'."\n";
+		if ($regionclass == 'editRegion')
+		{
+			$activation_params = $inline_edit->get_activation_params($this);
+			$activation_params['edit_id'] = $e->id();
+			$url = carl_make_link($activation_params);
+			echo ' <a href="'.$url.'" class="editThis">Edit Event</a>'."\n";
+			
+		}
 		$this->show_back_link();
-		$this->show_images($e);
-		echo '<h3>'.$e->get_value('name').'</h3>'."\n";
-		$this->show_ownership_info($e);
-		if ($e->get_value('description'))
-			echo '<p class="description">'.$e->get_value( 'description' ).'</p>'."\n";
-		$this->show_repetition_info($e);
-		if (!empty($this->request['date']) && strstr($e->get_value('dates'), $this->request['date']))
-			echo '<p class="date"><strong>Date:</strong> '.prettify_mysql_datetime( $this->request['date'], "l, F jS, Y" ).'</p>'."\n";
-		if(substr($e->get_value( 'datetime' ), 11) != '00:00:00')
-			echo '<p class="time"><strong>Time:</strong> '.prettify_mysql_datetime( $e->get_value( 'datetime' ), "g:i a" ).'</p>'."\n";
-		$this->show_duration($e);
-		$this->show_location($e);
-		if ($e->get_value('sponsor'))
-			echo '<p class="sponsor"><strong>Sponsored by:</strong> '.$e->get_value('sponsor').'</p>'."\n";
-		$this->show_contact_info($e);
-		if($this->show_icalendar_links)
-			$this->show_item_export_link($e);
-		if ($e->get_value('content'))
-			echo '<div class="eventContent">'.$e->get_value( 'content' ).'</div>'."\n";
-		$this->show_dates($e);
-		if ($e->get_value('url'))
-			echo '<div class="eventUrl"><strong>For more information, visit:</strong> <a href="'.$e->get_value( 'url' ).'">'.$e->get_value( 'url' ).'</a>.</div>'."\n";
-		//$this->show_back_link();
-		$this->show_event_categories($e);
-		$this->show_event_audiences($e);
-		$this->show_event_keywords($e);
+		
+		if (!$active)
+		{
+			$this->show_images($e);
+			echo '<h3>'.$e->get_value('name').'</h3>'."\n";
+			$this->show_ownership_info($e);
+			if ($e->get_value('description'))
+				echo '<p class="description">'.$e->get_value( 'description' ).'</p>'."\n";
+			$this->show_repetition_info($e);
+			if (!empty($this->request['date']) && strstr($e->get_value('dates'), $this->request['date']))
+				echo '<p class="date"><strong>Date:</strong> '.prettify_mysql_datetime( $this->request['date'], "l, F jS, Y" ).'</p>'."\n";
+			if(substr($e->get_value( 'datetime' ), 11) != '00:00:00')
+				echo '<p class="time"><strong>Time:</strong> '.prettify_mysql_datetime( $e->get_value( 'datetime' ), "g:i a" ).'</p>'."\n";
+			$this->show_duration($e);
+			$this->show_location($e);
+			if ($e->get_value('sponsor'))
+				echo '<p class="sponsor"><strong>Sponsored by:</strong> '.$e->get_value('sponsor').'</p>'."\n";
+			$this->show_contact_info($e);
+			if($this->show_icalendar_links)
+				$this->show_item_export_link($e);
+			if ($e->get_value('content'))
+				echo '<div class="eventContent">'.$e->get_value( 'content' ).'</div>'."\n";
+			$this->show_dates($e);
+			if ($e->get_value('url'))
+				echo '<div class="eventUrl"><strong>For more information, visit:</strong> <a href="'.$e->get_value( 'url' ).'">'.$e->get_value( 'url' ).'</a>.</div>'."\n";
+			//$this->show_back_link();
+			$this->show_event_categories($e);
+			$this->show_event_audiences($e);
+			$this->show_event_keywords($e);
+		}
 		echo '</div>'."\n";
+		
+		if ($editable && $this->user_can_inline_edit_event($this->event->id()))
+			echo '</div>'."\n";
+
 	} // }}}
-	
+		
 	/**
 	 * Show the location section if we have content in the location OR address OR lat / lon fields.
 	 */
@@ -3124,6 +3324,8 @@ class EventsModule extends DefaultMinisiteModule
 	 * @param boolean $pass_passables should the items in $this->pass_vars
 	 *                be passed if they are present in the current query?
 	 * @return string
+	 *
+	 * @todo replace this with carl_ functions
 	 */
 	function construct_link( $vars = array(), $pass_passables = true ) // {{{
 	{
