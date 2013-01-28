@@ -2216,6 +2216,9 @@ class PublicationModule extends Generic3Module
 		
 		/**
 		 * Grab featured items from related publications and populate $featured_items[$pub_id]
+		 *
+		 * - We optimize and sort differently depending on how many related publications we are picking from.
+		 * - If just one, we use relationship_sort_order, otherwise we do datetime DESC.
 		 */
 		function get_related_featured_items()
 		{
@@ -2223,22 +2226,48 @@ class PublicationModule extends Generic3Module
 			$related_pub_ids = implode(",", array_keys($this->related_publications));
 			if ($this->show_featured_items && !empty($related_pub_ids))
 			{
-				$es = new entity_selector( $this->site_id );
-				$es->description = 'Selecting featured news items from related publications';
-				$es->add_type( id_of('news') );
-				$es->set_env('site', $this->site_id);
-				$alias['rel_pub_id'] = current($es->add_right_relationship_field( 'publication_to_featured_post', 'entity', 'id', 'related_publication_id' ));
-				$alias['pub_id'] = current($es->add_left_relationship_field( 'news_to_publication', 'entity', 'id', 'publication_id' ));
-				$es->add_relation($alias['rel_pub_id']['table'] . '.id IN ('.$related_pub_ids.')');
-				$es->add_relation($alias['rel_pub_id']['table'] . '.id = '.$alias['pub_id']['table'] . '.id');
-				$es->add_relation('status.status = "published"');
-				$es->set_order('dated.datetime DESC');
-				$fi = $es->run_one();
-				if (!empty($fi))
+				if (count($this->related_publications) > 1) // we use dated.datetime DESC for sort order
 				{
-					foreach($fi as $k=>$v)
+					$es = new entity_selector( $this->site_id );
+					$es->description = 'Selecting featured news items from related publications';
+					$es->add_type( id_of('news') );
+					$es->set_env('site', $this->site_id);
+					$alias['rel_pub_id'] = current($es->add_right_relationship_field( 'publication_to_featured_post', 'entity', 'id', 'related_publication_id' ));
+					$alias['pub_id'] = current($es->add_left_relationship_field( 'news_to_publication', 'entity', 'id', 'publication_id' ));
+					$es->add_relation($alias['rel_pub_id']['table'] . '.id IN ('.$related_pub_ids.')');
+					$es->add_relation($alias['rel_pub_id']['table'] . '.id = '.$alias['pub_id']['table'] . '.id');
+					$es->add_relation('status.status = "published"');
+					$es->set_order('dated.datetime DESC');
+					$fi = $es->run_one();
+					if (!empty($fi))
 					{
-						$featured_items[$k] = $v;
+						foreach($fi as $k=>$v)
+						{
+							$featured_items[$k] = $v;
+						}
+					}
+				}
+				else // lets use relationship sort order since we have only 1 related publication.
+				{
+					$related_pub_id = $related_pub_ids;
+					$es = new entity_selector( $this->site_id );
+					$es->description = 'Selecting featured news items from a single related publication';
+					$es->add_type( id_of('news') );
+					$es->set_env('site', $this->site_id);
+					$es->add_right_relationship( $related_pub_id, relationship_id_of('publication_to_featured_post') );
+					$es->add_left_relationship( $related_pub_id, relationship_id_of('news_to_publication') );
+					$es->add_rel_sort_field($related_pub_id, relationship_id_of('publication_to_featured_post'), 'featured_sort_order');
+					$es->set_order('featured_sort_order ASC');
+					
+					$fi = $es->run_one();
+					if (!empty($fi))
+					{
+						foreach($fi as $k=>$v)
+						{
+							$featured_items[$k] = $v;
+							$featured_items[$k]->set_value('publication_id', $related_pub_id);
+							$featured_items[$k]->set_value('related_publication_id', $related_pub_id);
+						}
 					}
 				}
 			}
