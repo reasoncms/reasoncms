@@ -38,6 +38,7 @@ class ReasonUpgrader_42_UpdateMediaWorkFields implements reasonUpgraderInterface
 	var $media_file_fields = array(
 		'flavor_id' => 'tinytext',
 		'mime_type' => 'tinytext',
+		'download_url' => 'tinytext',
 	);
 	
 
@@ -63,7 +64,7 @@ class ReasonUpgrader_42_UpdateMediaWorkFields implements reasonUpgraderInterface
 	 */
 	public function description()
 	{
-		$str = "<p>This upgrade adds fields 'entry_id', 'av_type', 'media_duration', 'transcoding_status', 'integration_library', 'tmp_file_name', 'email_notification', 'show_embed', and 'show_download' to Media Work.  It also adds 'html5' to the enumeration of 'media_format'.  This upgrade also adds the fields 'flavor_id' and 'mime_type' to Media File. It changes the 'required' field of the av_to_av_type allowable relationship to 'no'.  It assigns a content deleter to Media Work.  It changes the content previewer of Media Work to the media_work_previewer.  Lastly, it created an av_restricted_to_group allowable relationship for access control in Kaltura integrated works.</p>";
+		$str = "<p>This upgrade adds fields 'entry_id', 'av_type', 'media_duration', 'transcoding_status', 'integration_library', 'tmp_file_name', 'email_notification', 'show_embed', and 'show_download' to Media Work.  It also adds 'html5' to the enumeration of 'media_format'.  This upgrade also adds the fields 'flavor_id', 'download_url', and 'mime_type' to Media File. It changes the 'required' field of the av_to_av_type allowable relationship to 'no'.  It assigns a content deleter to Media Work.  It changes the content previewer of Media Work to the media_work_previewer.  Lastly, it created an av_restricted_to_group allowable relationship for access control in Kaltura integrated works.</p>";
 		return $str;
 	}
 
