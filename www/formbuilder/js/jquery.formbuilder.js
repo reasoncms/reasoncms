@@ -748,7 +748,9 @@ function htmlEntities(str) {
 				getFormJSON: function() {
 					openRow = $("[id^='frm-'][id$='-item']");
 					if (openRow.length > 0) {
-						switchMode(openRow,'preview');
+						$(openRow).each(function() {
+							switchMode(this,'preview');
+						});
 					}
 					reSortJSON(ul_obj);
 					return json_data;
