@@ -630,26 +630,36 @@ class checkboxgroup_with_otherType extends checkboxgroupType
 		$str = '<div class="checkBoxGroup">'."\n";
 		$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
 		$i = 0;
+		$value = $this->value;
 		foreach( $this->options as $key => $val )
 		{
 			$id = 'checkbox_'.$this->name.'_'.$i;
 			$str .= '<tr><td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$i.']" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-			if ( is_array($this->value) ) {
-				if ( array_search($key, $this->value) !== false )
+			if ( is_array($value) ) {
+				$value_key = array_search($key, $value);
+				if ( $value_key !== false )
+				{
 					$str .= ' checked="checked"';
+					unset($value[$value_key]);
+				}
 			}
 			else {
-				if ( $key == $this->value )
+				if ( $key == $value )
+				{
 					$str .= ' checked="checked"';
+					unset($value);
+				}
 			}
 			$str .= ' /></td><td valign="top"><label for="'.$id.'">'.$val."</label></td></tr>\n";
 			$i++;
 		}
 		$id = 'checkbox_'.$this->name.'_'.$i;
 		$str .= '<tr>'."\n".'<td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$i.']" value="other"';
-		if (!empty($this->value[$i]))
+		
+		// We've been unsetting the values as we used them above, so if anything's left, it's for the other field.
+		if (!empty($value))
 		{
-			$other_value = $this->value[$i];
+			$other_value = (is_array($value)) ? reset($value) : $value;
 			$str .= ' checked="checked"';
 		} else {
 			$other_value = '';
