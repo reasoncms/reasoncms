@@ -97,6 +97,8 @@
 		'Newsletter'=>array('file'=>'newsletter/newsletter.php', 'class'=>'NewsletterModule'),
 		'DeleteRegistrationSlotData'=>array('file'=>'delete_slot_data.php', 'class'=>'DeleteRegistrationSlotDataModule'),
 		'ClearCache'=>array('file'=>'clear_cache.php', 'class'=>'ReasonClearCacheModule'),
+		'Analytics'=>array('file'=>'analytics.php', 'class'=>'AnalyticsModule'),
+		'AnalyticsAbout'=>array('file'=>'analytics.php', 'class'=>'AnalyticsAboutModule'),
 );
 
 if (reason_file_exists('config/admin_modules/setup_local.php'))
