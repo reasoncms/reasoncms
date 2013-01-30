@@ -276,7 +276,6 @@ function htmlEntities(str) {
 
 					// checkbox type
 					case 'checkbox':
-						console.log(filteredJson);
 						options = [this.title];
 						values = [];
 						$.each(this.values, function () {
@@ -645,13 +644,11 @@ function htmlEntities(str) {
 		$(target).children().each(function () {
 
             var current_element_id = $(this).attr("name");
-            //console.log("There is an element with this name: " + current_element_id);
 			if (current_element_id == 'submit_and_reset') {
             	newArray['options'] = json_data['options'];
             	return;
             }
              $.each(json_data, function(key, value) {
-             //	console.log("Checking " + current_element_id + " against " + this.id);
                 if (this.id == current_element_id) {
                     newArray[i] = this;
                     return false;
@@ -703,7 +700,7 @@ function htmlEntities(str) {
 						opacity: 'hide',
 						height: 'hide',
 						marginBottom: '0px'
-					}, 'slow', 'swing', function() {console.log("Removing!"); removeRow(this); $(this).remove();});
+					}, 'slow', 'swing', function() {removeRow(this); $(this).remove();});
 				}
 				return false;
 			});
