@@ -113,7 +113,8 @@ class AnalyticsModule extends DefaultModule
 		asort($site_urls_array);    
 		$site_urls_array = array('all_pages' => 'All ' . $this->site->get_value('name') . ' pages') + $site_urls_array;
 		$disco = new Disco();
-		$disco->add_element('url', 'select_no_sort', array('options' => $site_urls_array, 'add_empty_value_to_top' => false, 'default' => 'all_pages', 'display_name'=>'URL(s)'));
+		// $disco->add_element('url', 'select_no_sort', array('options' => $site_urls_array, 'add_empty_value_to_top' => false, 'default' => 'all_pages', 'display_name'=>'URL(s)'));
+		$disco->add_element('url', 'chosen_select', array('options' => $site_urls_array, 'default' => 'all_pages', 'display_name'=>'URL(s)', 'size'=>'60'));
 		$disco->add_element('location', 'radio_inline_no_sort', array('options' => array('anywhere'=>'Anywhere', 'off_campus'=>'Off-Campus', 'on_campus'=>'On-Campus'), 'default' => 'anywhere'));
 		$disco->add_element('start_date', 'textdate');
 		$disco->add_element('end_date', 'textdate');
