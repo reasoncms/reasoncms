@@ -95,6 +95,7 @@ $.fn.formbuilder = function (options) {
 	// Build the control box and search button content
 	box_content = '<select id="' + box_id + '" class="frmb-control">' + select + '</select>';
 	// Insert the control box into page
+	box_content += '<button id="closeAllFields" type="button" disabled>Stop editing all fields</button>'
 	if (!target) {
 		$(ul_obj).before(box_content);
 	} else {
@@ -275,7 +276,6 @@ function htmlEntities(str) {
 
 					// checkbox type
 					case 'checkbox':
-						console.log(filteredJson);
 						options = [this.title];
 						values = [];
 						$.each(this.values, function () {
@@ -327,6 +327,7 @@ function htmlEntities(str) {
 		if (typeof (values) === 'undefined') {
 			values = '';
 		}
+		$("#closeAllFields").removeAttr("disabled");
 		if (typeof (defaultValue) === 'undefined') defaultValue = '';
 		switch (type) {
 			case 'input_text':
@@ -610,10 +611,6 @@ function htmlEntities(str) {
 	var switchMode = function (rowToSwitch, mode)
 	{
 		if (mode == 'edit') {
-			openRow = $("[id^='frm-'][id$='-item']");
-			if (openRow.length > 0) {
-				switchMode(openRow,'preview');
-			}
 			item_id = $(rowToSwitch).attr('name');
 			$.each(json_data, function() {
 				if (this.id == item_id)
@@ -647,13 +644,11 @@ function htmlEntities(str) {
 		$(target).children().each(function () {
 
             var current_element_id = $(this).attr("name");
-            //console.log("There is an element with this name: " + current_element_id);
 			if (current_element_id == 'submit_and_reset') {
             	newArray['options'] = json_data['options'];
             	return;
             }
              $.each(json_data, function(key, value) {
-             //	console.log("Checking " + current_element_id + " against " + this.id);
                 if (this.id == current_element_id) {
                     newArray[i] = this;
                     return false;
@@ -705,7 +700,7 @@ function htmlEntities(str) {
 						opacity: 'hide',
 						height: 'hide',
 						marginBottom: '0px'
-					}, 'slow', 'swing', function() {console.log("Removing!"); removeRow(this); $(this).remove();});
+					}, 'slow', 'swing', function() {removeRow(this); $(this).remove();});
 				}
 				return false;
 			});
@@ -716,12 +711,16 @@ function htmlEntities(str) {
 			});
 
 			$('.frmb_preview_row').live('click', function() {
+				$("#closeAllFields").removeAttr("disabled");
 				switchMode(this, 'edit');
 				return false;
 			});
 
 			$('.frmb li .stopEditing').live('click', function() {
 				switchMode($(this).parent().parent(), 'preview');
+				var openRow = $("[id^='frm-'][id$='-item']");
+				if (openRow.length == 0)
+					$("#closeAllFields").attr("disabled", true);
 				return false;
 			});
 
@@ -735,6 +734,14 @@ function htmlEntities(str) {
 				$(this).parent().before(radioFieldHtml(false, $(this).parents('.frm-holder').attr('id')));
 				return false;
 			});
+			$('#closeAllFields').click(function() {
+					var openRow = $("[id^='frm-'][id$='-item']");
+					$(openRow).each(function() {
+						switchMode(this,'preview');
+					});
+					$("#closeAllFields").attr("disabled", "true");
+
+			})
 
 
 
@@ -746,7 +753,7 @@ function htmlEntities(str) {
 
 			return {
 				getFormJSON: function() {
-					openRow = $("[id^='frm-'][id$='-item']");
+					var openRow = $("[id^='frm-'][id$='-item']");
 					if (openRow.length > 0) {
 						$(openRow).each(function() {
 							switchMode(this,'preview');
