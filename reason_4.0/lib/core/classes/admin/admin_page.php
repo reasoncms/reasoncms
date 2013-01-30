@@ -1633,14 +1633,18 @@ class AdminPage
 	//checks to make sure user has access to current site, otherwise, sends him home.
 	{
 		$error_messages = array(
-								'site_to_user' => 'You do not have access to this site.',
+								'site_is_site' => 'You have requested an invalid site.',
 								'site_to_type' => 'This site does not have access to this type.',
 								'type_to_id' => 'The entity you have chosen does not match the type.',
 								'site_owns_id' => 'This site does not own this entity.',
 							   );
 		$message = '';
-		if( !$this->verify_user( $user ) ){
-			$message = $error_messages[ 'site_to_user' ];
+		$site = new entity($this->site_id);
+		if (!reason_is_entity($site, 'site'))
+		{
+			$message = $error_messages[ 'site_is_site' ];
+		}
+		elseif( !$this->verify_user( $user ) ){
 			header('Location: ' . securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . '?cur_module=SiteAccessDenied&user_id='.$user->id().'&requested_url='.urlencode(get_current_url()));
 		}
 		elseif( !$this->site_to_type() )

@@ -38,7 +38,6 @@ class SiteAccessDeniedModule extends DefaultModule
 		if (isset($_POST['requested_url'])) $this->request['requested_url'] = urldecode($this->request['requested_url']);
 		
 		$this->admin_page->title = 'Access Denied';
-				
 		if ($requested_site_id = $this->get_requested_site_id())
 		{
 			// lets double check whether the user has access
@@ -61,19 +60,34 @@ class SiteAccessDeniedModule extends DefaultModule
 		}
 	}
 	
+	/**
+	 * Returns requested and validated site id or FALSE if it cannot be found or is invalid
+	 * @return mixed int site id or FALSE
+	 */
 	function get_requested_site_id()
 	{
-		if (array_key_exists('requested_url', $this->request))
+		if (!isset($this->_requested_site_id))
 		{
-			$parsed_url = parse_url($this->request['requested_url']);
-			$query = $parsed_url['query'];
-			$query_array = $this->convert_url_query($query);
-			if (array_key_exists('site_id', $query_array))
+			if (array_key_exists('requested_url', $this->request))
 			{
-				return $query_array['site_id'];
+				$parsed_url = parse_url($this->request['requested_url']);
+				$query = $parsed_url['query'];
+				$query_array = $this->convert_url_query($query);
+				if (array_key_exists('site_id', $query_array))
+				{
+					if (is_numeric($query_array['site_id']))
+					{
+						$apparent_site = new entity($query_array['site_id']);	
+						if (reason_is_entity($apparent_site, 'site'))
+						{
+							$this->_requested_site_id = $apparent_site->id();
+						}
+					}
+				}
 			}
+			if (!isset($this->_requested_site_id)) $this->_requested_site_id = false;
 		}
-		return false;
+		return $this->_requested_site_id;
 	}
 	
 	/**
