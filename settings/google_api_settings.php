@@ -28,7 +28,7 @@ domain_define('USE_GOOGLE_ANALYTICS', false);
  * 
  * Login to the Google API Console  (code.google.com/apis/console/)
  *   1) Create a new project
- *       1.1) Set GOOGLE_ANALYTICS_APP_NAME below with the name of your project
+ *       1.1) Set GOOGLE_API_APP_NAME below with the name of your project
  *   2) In the Services tab, enable Google Analytics
  *   3) Click "API Access", then "Create a new OAuth 2.0 client ID..." 
  *      using the big blue button.
@@ -39,31 +39,34 @@ domain_define('USE_GOOGLE_ANALYTICS', false);
  *              and close the "Public-Private Key Pair Generated" message box
  *   4) In the Service account section, copy the Client ID 
  *          (#########.apps.googleusercontent.com)
- *       4.1) Set GOOGLE_ANALYTICS_SERVICE_CLIENT_ID below
+ *       4.1) Set GOOGLE_API_SERVICE_CLIENT_ID below
  *   5) In the Service account section, copy the Email address 
  *          (#########@developer.gserviceaccount.com)
- *       5.1) Set GOOGLE_ANALYTICS_SERVICE_EMAIL below
+ *       5.1) Set GOOGLE_API_SERVICE_EMAIL below
  *   6) Upload your private key file to your ReasonCMS server
- *       6.1) Set the GOOGLE_ANALYTICS_PRIVATE_KEY_FILE path below
+ *       6.1) Set the GOOGLE_API_PRIVATE_KEY_FILE path below
  * 
- * Login to Google Analytics (google.com/Analytics)
- *   7) Go to Profile for your account
- *   8) Click "Admin" -> 
- *          Choose the Account -> 
- *          Choose the property (e.g. your website) -> 
- *          Choose your Profile (choose your default profile)
- *   9) In the "Profile Settings" tab, copy the "Profile ID"
- *       9.2) set the GOOGLE_ANALYTICS_PROFILE_ID below
- *   10) In the "Users" tab
- *       10.1) Click a "+ New User"
- *           10.1.1) Select "Create a new user..."
- *           10.1.2) Set "Email Address" to match GOOGLE_ANALYTICS_SERVICE_EMAIL)
- *           10.1.3) Select role as "User"
- *       10.3)Click "Add User" to finish
- * 
- * 
+ * Login to Google Analytics (google.com/analytics)
+ *   7) Click "Admin"
+ *   8) Click the Account 
+ *        8.1) Copy the Account ID
+ *        8.2) Set GOOGLE_ANALYTICS_ACCOUNT_ID below
+ *   9) Click the property (e.g. your website)
+ *        9.1) Copy the Property ID
+ *        9.2) Set GOOGLE_ANALYTICS_PROPERTY_ID below
+ *   10) Choose your Profile (choose your default profile)
+ *       10.1) In the "Profile Settings" tab, copy the "Profile ID"
+ *       10.2) set the GOOGLE_ANALYTICS_PROFILE_ID below
+ *   11) In the "Users" tab
+ *       11.1) Click a "+ New User"
+ *           11.1.1) Select "Create a new user..."
+ *           11.1.2) Set "Email Address" to match GOOGLE_ANALYTICS_SERVICE_EMAIL)
+ *           11.1.3) Select role as "User"
+ *       11.2)Click "Add User" to finish
  * 
  */
+
+
 
 if ( USE_GOOGLE_ANALYTICS )
 {
@@ -74,29 +77,37 @@ if ( USE_GOOGLE_ANALYTICS )
     */
     /*  Name of your Google API Project
         See instruction 1 above         */
-    domain_define('GOOGLE_ANALYTICS_APP_NAME', '');
+    domain_define('GOOGLE_API_APP_NAME', '');
 
     /*  The Client ID of your Google API Project's Service Account
         See instruction 4 above          */
-    domain_define('GOOGLE_ANALYTICS_SERVICE_CLIENT_ID', '' );
+    domain_define('GOOGLE_API_SERVICE_CLIENT_ID', '' );
 
     /*  The email address of your Google API Project's Service Account
         See instruction 5 above          */
-    domain_define('GOOGLE_ANALYTICS_SERVICE_EMAIL', '' );
+    domain_define('GOOGLE_API_SERVICE_EMAIL', '' );
 
     /*  The path to your private key file from your Google API Project
         See instruction 6 above         */
-    domain_define('GOOGLE_ANALYTICS_PRIVATE_KEY_FILE', '');
+    domain_define('GOOGLE_API_PRIVATE_KEY_FILE', '');
 
     
 
     /**
-     * Google Analytics Profile 
+     * Google Analytics Info
      * google.com/analytics -> Admin -> Profile Settings -> Profile ID
-     * See instructions 7-10 above
+     * See instructions 7-11 above
      */
-    /*  Your Google Analytics Profile ID
+    /*  Your Google Analytics Account ID
+        See instructions 8 above        */
+    domain_define( 'GOOGLE_ANALYTICS_ACCOUNT_ID', '');
+
+/*  Your Google Analytics Property ID
         See instructions 9 above        */
+    domain_define( 'GOOGLE_ANALYTICS_PROPERTY_ID', '');
+
+    /*  Your Google Analytics Profile ID
+        See instructions 10 above        */
     domain_define( 'GOOGLE_ANALYTICS_PROFILE_ID', '');
 
     ////////////////////////////////////////////////////////
