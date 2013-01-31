@@ -102,7 +102,7 @@ if ( USE_GOOGLE_ANALYTICS )
         See instructions 8 above        */
     domain_define( 'GOOGLE_ANALYTICS_ACCOUNT_ID', '');
 
-/*  Your Google Analytics Property ID
+    /*  Your Google Analytics Property ID
         See instructions 9 above        */
     domain_define( 'GOOGLE_ANALYTICS_PROPERTY_ID', '');
 
