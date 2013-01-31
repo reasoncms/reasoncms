@@ -800,6 +800,8 @@ function tidy_check()
 
 function curl_check()
 {
+	if (!function_exists('curl_init'))
+		die_with_message('<span class="error">curl check failed. You need to install php5-libcurl. </span>');
 	global $curl_test_content;
 	$link = carl_construct_link(array('curl_test' => "true"), array(''));
 	$insecure_link = on_secure_page() ? alter_protocol($link,'https','http') : $link;

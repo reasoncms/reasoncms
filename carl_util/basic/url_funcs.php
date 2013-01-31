@@ -269,7 +269,6 @@ function alter_protocol($url,$current_protocol,$new_protocol)
  */
 function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_username = '', $http_auth_password = '', $timeout = 30, $connect_timeout = 10, $return_null_on_error = false)
 {
-	require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
 	$ch = curl_init( $url );
 	$useragent = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : false; // grab the current browser user agent is possible
 	if ($useragent) curl_setopt( $ch, CURLOPT_USERAGENT, $useragent); // we spoof the browsers user agent if possible - some servers reject the default

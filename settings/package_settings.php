@@ -157,9 +157,6 @@ define('XML_PARSER_INC',INCLUDE_PATH.'xml/');
 // Define the path to HTML Purifier
 define('HTML_PURIFIER_INC',INCLUDE_PATH.'htmlpurifier/');
 
-// Define the path to libcurlemu
-define('LIBCURLEMU_INC',INCLUDE_PATH.'libcurlemu-1.0.4/');
-
 // Define the path to jquery
 define('JQUERY_INC',INCLUDE_PATH.'jquery/');
 define('JQUERY_HTTP_PATH','/jquery/');
