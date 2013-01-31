@@ -808,6 +808,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 	'publication' => get_luther_publication(),
 	'publication_section_nav' => get_luther_publication_section_nav(),
+	'sidebar_blurb' => array(
+		'main_4' => '',
+		'pre_sidebar_2' => 'main_blurb',
+	),
 	'slate_form' => array(
 		'main_2' => 'slate_form'
 	),
