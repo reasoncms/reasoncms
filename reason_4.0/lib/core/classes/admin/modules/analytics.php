@@ -33,6 +33,7 @@ class AnalyticsModule extends DefaultModule
 	var $service;
 	var $daily_results;
 	var $source_results;
+	var $default_page;		//the Google Analytics Profile's defaultPage 
 	
 	var $startdate;
 	var $enddate;
@@ -70,23 +71,32 @@ class AnalyticsModule extends DefaultModule
 		// Initialise the Google Client object
 		$this->client = new Google_Client();
 		// Your 'Product name'
-		$this->client->setApplicationName(GOOGLE_ANALYTICS_APP_NAME);
+		$this->client->setApplicationName(GOOGLE_API_APP_NAME);
 		 
 		$this->client->setAssertionCredentials(
 			new Google_AssertionCredentials(
-				GOOGLE_ANALYTICS_SERVICE_EMAIL, // email you added to GA
+				GOOGLE_API_SERVICE_EMAIL, // email you added to GA
 			array('https://www.googleapis.com/auth/analytics.readonly'),
-			file_get_contents(GOOGLE_ANALYTICS_PRIVATE_KEY_FILE)  // keyfile you downloaded
+			file_get_contents(GOOGLE_API_PRIVATE_KEY_FILE)  // keyfile you downloaded
 			)
 		);
 		// other settings
-		$this->client->setClientId(GOOGLE_ANALYTICS_SERVICE_CLIENT_ID);
+		$this->client->setClientId(GOOGLE_API_SERVICE_CLIENT_ID);
 		// Return results as objects.
 		$this->client->setUseObjects(true);
 		$this->client->setAccessType('offline_access');  // this may be unnecessary?
 
 		// create analytics service
 		$this->service = new Google_AnalyticsService($this->client);
+
+		// get management profiles
+		$profiles = $this->service->management_profiles->listManagementProfiles(GOOGLE_ANALYTICS_ACCOUNT_ID, GOOGLE_ANALYTICS_PROPERTY_ID);
+		// get the items
+		$items = $profiles->getItems();
+		// set the $default_page
+		foreach ($items as $profile) {
+			$this->default_page = $profile->getDefaultPage();
+		}
 
 		//initialize start and end dates
 		$this->startdate = date('Y-m-d', strtotime('-1 month -1 day'));
@@ -232,7 +242,8 @@ class AnalyticsModule extends DefaultModule
 		if ($page_url == 'all_pages'){
 			$filter .= 'ga:pagePath=~' . GA_HOST_NAME . $this->site->get_value('base_url');
 		} else { 
-			$filter .= 'ga:pagePath==' . GA_HOST_NAME . $page_url . 'index.html';
+			$default = isset($this->default_page) ? $this->default_page : '';
+			$filter .= 'ga:pagePath==' . GA_HOST_NAME . $page_url . $default;
 		}
 
 		// get daily google analytics data ()
