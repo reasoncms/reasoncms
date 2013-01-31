@@ -44,8 +44,6 @@ function get_reason_url_contents( $url )
  */
 function get_remote_filesize($uri,$user='',$pw='')
 {
-   require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
-
    // start output buffering
    ob_start();
    // initialize curl with given uri
