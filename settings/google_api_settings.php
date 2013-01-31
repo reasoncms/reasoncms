@@ -6,6 +6,7 @@
  * 
  * Currently in use -- Google Analytics
  *
+ * Note that PHP 5.3 is required if you set USE_GOOGLE_ANALYTICS to true.
  */
 
 /**
@@ -120,15 +121,17 @@ if ( USE_GOOGLE_ANALYTICS )
 
     /** 
      * The service provider name for your domain
-     *      e.g carelton college
-     * Used to filter on-campus traffic (dimension=ga:networkLocation!='carleton\ college')
+     *      e.g some college
+     * Used to filter on-campus traffic (dimension=ga:networkLocation!='some\ college')
      */
     domain_define('GA_SERVICE_PROVIDER_NAME', '');
 
     /**
-     * The hostname for your ReasonCMS server
+     * The hostname for your Reason CMS server
      * Change to your production server for testing in a development environment
      * e.g. wwww.yourdomain.edu
+     *
+     * If you are not getting any results from google analytics, try setting this to an empty string.
      */
     domain_define('GA_HOST_NAME', HTTP_HOST_NAME);
 }

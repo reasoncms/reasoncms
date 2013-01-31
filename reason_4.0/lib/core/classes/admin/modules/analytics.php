@@ -18,8 +18,8 @@ include_once( SETTINGS_INC . 'google_api_settings.php' );
 require_once( GOOGLE_API_INC . 'Google_Client.php');
 require_once( GOOGLE_API_INC . 'contrib/Google_AnalyticsService.php');
 include_once( DISCO_INC . 'disco.php');
-reason_include_once('function_libraries/root_finder.php');
-
+reason_include_once('classes/object_cache.php');
+reason_include_once('classes/url/page.php');
 /**
  * An administrative module that provides page view analytics of the current site using the Google Analytics API v.3
  */
@@ -27,7 +27,6 @@ reason_include_once('function_libraries/root_finder.php');
 class AnalyticsModule extends DefaultModule
 {
 	var $site;
-	var $site_pages = array();
 
 	var $client;
 	var $service;
@@ -37,6 +36,11 @@ class AnalyticsModule extends DefaultModule
 	
 	var $startdate;
 	var $enddate;
+	
+	/**
+	 * Lifespan of URL cache for a site - default is 24 hours.
+	 */
+	var $url_cache_lifespan = 86400;
 
 	
 	function AnalyticsModule( &$page )
@@ -62,11 +66,6 @@ class AnalyticsModule extends DefaultModule
 
 		$this->site = new entity( $this->admin_page->site_id );
 		$this->admin_page->title = 'Analytics for '.$this->site->get_value('name');
-
-		$es = new entity_selector($this->admin_page->site_id);
-		$es->add_type(id_of('minisite_page'));
-		$es->add_relation('(entity.name != "") AND ((url.url = "") OR (url.url IS NULL))'); // only pages, not custom urls
-		$this->site_pages = $es->run_one();
 
 		// Initialise the Google Client object
 		$this->client = new Google_Client();
@@ -102,6 +101,36 @@ class AnalyticsModule extends DefaultModule
 		$this->startdate = date('Y-m-d', strtotime('-1 month -1 day'));
 		$this->enddate = date('Y-m-d', strtotime('-1 day'));
 	}
+
+	/**
+	 * We'll get our site URLs using the url_builder to save some time.
+	 *
+	 * We also will cache the urls for url_cache_lifespan so that only the first load has the overhead of URL building.
+	 */
+	function get_site_urls()
+	{
+		$roc = new ReasonObjectCache($this->admin_page->site_id . '_google_analytics_site_urls', $this->url_cache_lifespan);
+		$urls = $roc->fetch();
+		if (!$urls)
+		{
+			$es = new entity_selector($this->admin_page->site_id);
+			$es->limit_fields(array('url','url_fragment'));
+			$es->add_type(id_of('minisite_page'));
+			$es->add_left_relationship_field('minisite_page_parent', 'entity', 'id', 'parent_id');
+			$es->add_relation('(entity.name != "") AND ((url.url = "") OR (url.url IS NULL))'); // only pages, not custom urls
+			$pages = $es->run_one();
+			$url_builder = new reasonPageURL();
+			$url_builder->provide_page_entities($pages);
+			foreach ($pages as $id => $page)
+			{
+				$url_builder->set_id($id);
+				$url = $url_builder->get_relative_url();
+				$urls[$url] = $url;
+			}
+			$roc->set($urls);
+		}
+		return $urls;
+	}
 	
 	/**
 	 * Lists the top pages (views) and show analytics
@@ -113,13 +142,7 @@ class AnalyticsModule extends DefaultModule
 		/**
 		 * @todo change to chosen plasmature element
 		 */
-
-		$site_urls_array = array();
-		foreach ($this->site_pages as $page)
-		{
-			$u = build_URL($page->get_value('id'));
-			$site_urls_array[$u] = $u;
-		}
+		$site_urls_array = $this->get_site_urls();
 		asort($site_urls_array);    
 		$site_urls_array = array('all_pages' => 'All ' . $this->site->get_value('name') . ' pages') + $site_urls_array;
 		$disco = new Disco();
