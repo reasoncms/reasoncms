@@ -388,6 +388,7 @@ class ReasonKalturaNotificationReceiver
 				
 				$values = array(
 					'url' => $data['data_url'].'/flavor/'.$asset_id,
+					'download_url' => $this->kaltura_shim->get_flavor_download_url($asset_id),
 					'media_size_in_bytes' => $asset->size*1024,
 					'media_size' => format_bytes_as_human_readable($asset->size*1024),
 					'default_media_delivery_method' => 'progressive_download',

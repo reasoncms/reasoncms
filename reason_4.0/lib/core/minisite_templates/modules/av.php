@@ -323,29 +323,29 @@
 							
 							$small_av_files = $displayer->_get_suitable_flavors(MEDIA_WORK_SMALL_HEIGHT, MEDIA_WORK_SMALL_HEIGHT);
 							$small_mp4 = $small_av_files[0];
-							$mp4_vals['small'] = $small_mp4->get_value('url');
+							$mp4_vals['small'] = $small_mp4->get_value('download_url');
 							$small_webm = $small_av_files[1];
-							$webm_vals['small'] = $small_webm->get_value('url');
+							$webm_vals['small'] = $small_webm->get_value('download_url');
 							
 							$medium_av_files = $displayer->_get_suitable_flavors(MEDIA_WORK_MEDIUM_HEIGHT, MEDIA_WORK_MEDIUM_HEIGHT);
 							$med_mp4 = $medium_av_files[0];
-							$mp4_vals['medium'] = $med_mp4->get_value('url');
+							$mp4_vals['medium'] = $med_mp4->get_value('download_url');
 							$med_webm = $medium_av_files[1];
-							$webm_vals['medium'] = $med_webm->get_value('url');
+							$webm_vals['medium'] = $med_webm->get_value('download_url');
 							
 							$large_av_files = $displayer->_get_suitable_flavors(MEDIA_WORK_LARGE_HEIGHT, MEDIA_WORK_LARGE_HEIGHT);
 							$large_mp4 = $large_av_files[0];
-							$mp4_vals['large'] = $large_mp4->get_value('url');
+							$mp4_vals['large'] = $large_mp4->get_value('download_url');
 							$large_webm = $large_av_files[1];
-							$webm_vals['large'] = $large_webm->get_value('url');
+							$webm_vals['large'] = $large_webm->get_value('download_url');
 							
 							$av_files = $displayer->get_media_files();
 							
-							echo '<li class="mp4_li"><a href="'.$av_files[0]->get_value('url').'" 
+							echo '<li class="mp4_li"><a href="'.$av_files[0]->get_value('download_url').'" 
 												data-small-url="'.$mp4_vals['small'].'"
 												data-medium-url="'.$mp4_vals['medium'].'"
 												data-large-url="'.$mp4_vals['large'].'">.mp4</a></li>'."\n";
-							echo '<li class="webm_li"><a href="'.$av_files[1]->get_value('url').'" 
+							echo '<li class="webm_li"><a href="'.$av_files[1]->get_value('download_url').'" 
 												data-small-url="'.$webm_vals['small'].'"
 												data-medium-url="'.$webm_vals['medium'].'"
 												data-large-url="'.$webm_vals['large'].'">.webm</a></li>'."\n";
@@ -362,7 +362,7 @@
 									$extension = 'audio/mp3';
 								}
 								$parts = explode('/', $extension);
-								echo '<li class="'.reason_htmlspecialchars(str_replace(' ','-',end($parts))).'_li"><a href="'.$file->get_value('url').'">.'.end($parts).'</a></li>'."\n";
+								echo '<li class="'.reason_htmlspecialchars(str_replace(' ','-',end($parts))).'_li"><a href="'.$file->get_value('download_url').'">.'.end($parts).'</a></li>'."\n";
 							}
 						}
 						echo '</ul>'."\n";

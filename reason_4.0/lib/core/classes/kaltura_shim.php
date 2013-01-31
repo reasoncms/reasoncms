@@ -128,11 +128,33 @@ class KalturaShim
 		if (!$client) return false;
 		
 		try {
-			return $client->media->get($kaltura_entry_id)->dataUrl;
+			return $client->media->get($kaltura_entry_id)->downloadUrl;
 		}
 		catch (Exception $e)
 		{
 			trigger_error('Media Work with entry_id '.$kaltura_entry_id.' does not exist in this Kaltura Publisher ('.KALTURA_PARTNER_ID.').');
+			return false;
+		}
+	}
+	
+	/**
+	* Returns the download url for a specific flavor of an entry in Kaltura.
+	* 
+	* @param string $kaltura_flavor_id id of a specific flavor for an entry in kaltura
+	* @param string $netid
+	*/
+	public function get_flavor_download_url($kaltura_flavor_id, $netid = 'Reason')
+	{
+		$client = $this->_get_kaltura_client($netid, true);
+		if (!$client) return false;
+		
+		try {
+			$entry_id = $client->flavorAsset->get($kaltura_flavor_id)->entryId;
+			return KALTURA_SERVICE_URL.'/p/'.KALTURA_PARTNER_ID.'/download/entry_id/'.$entry_id.'/flavor/'.$kaltura_flavor_id;
+		}
+		catch (Exception $e)
+		{
+			trigger_error('Media File with flavor_id '.$kaltura_flavor_id.' does not exist in this Kaltura Publisher ('.KALTURA_PARTNER_ID.').');
 			return false;
 		}
 	}
@@ -292,12 +314,15 @@ class KalturaShim
 	private function _upload_media($filePath, $title, $description, $tags, $categories, $netid, $media_type, $transcoding_profile)
 	{
 		$client = $this->_get_kaltura_client($netid, true);
-		if (!$client) return false;
+		if (!$client) {
+			echo 'no client '.$netid;
+			return false;
+		}
 		
 		$entry = new KalturaMediaEntry();
 		if (!empty($title)) $entry->name = $title;
 		if (!empty($description)) $entry->description = html_entity_decode(strip_tags($description));
-		if (!empty($description)) $entry->tags = implode(", ", $tags);
+		if (!empty($tags)) $entry->tags = implode(", ", $tags);
 		if (!empty($categories)) $entry->categories = implode(", ", $categories);
 		if (!empty($media_type)) $entry->mediaType = $media_type;
 		$entry->conversionProfileId = $transcoding_profile;
@@ -308,7 +333,11 @@ class KalturaShim
 		}
 		else // file system
 		{
-			$token = $client->upload->upload($filePath);
+			try {
+				$token = $client->upload->upload($filePath);
+			} catch (KalturaClientException $e) {
+				return false;
+			}
 			if (empty($token))
 				return false;
 			
@@ -421,9 +450,53 @@ class KalturaShim
 		$flavor_param = new KalturaFlavorParams();
 		foreach ($params as $key => $val) $flavor_param->$key = $val;
 		
-		$client->flavorParams->add($flavor_param);
+		return $client->flavorParams->add($flavor_param);
+	}
+	
+	/**
+	* Creates a new transcoding profile in Kaltura.  Returns true upon succes, or false if the profile already exists.
+	*
+	* @param array $params
+	* @param string $netid
+	*/
+	public function add_transcoding_profile($conversionProfile, $netid)
+	{
+		$client = $this->_get_kaltura_client($netid, true);
+		if (!$client) return false;
+		
+		$list = $client->conversionProfile->listAction();
+		$objects = $list->objects;
+		foreach ($objects as $profile)
+		{
+			if ($profile->name == $conversionProfile->name)
+				return false;
+		}
+		
+		$client->conversionProfile->add($conversionProfile);
 		return true;
 	}
+	
+	/**
+	* Return an array {name: id} of a kaltura transcoding flavor if one exists by the given name.
+	*
+	* @param string name of conversion profile
+	* @param string $netid
+	*/
+	public function get_flavor_ids($name, $netid)
+	{
+		$client = $this->_get_kaltura_client($netid, true);
+		if (!$client) return false;
+		
+		$list = $client->flavorParams->listAction();
+		$objects = $list->objects;
+		foreach ($objects as $param)
+		{
+			if ($param->name == $name)
+				return $param->id;
+		}
+		return false;
+	}
+	
 	
 	/**
 	* Starts a new session with Kaltura and returns a client object.
@@ -434,6 +507,8 @@ class KalturaShim
 	*/
 	private function _get_kaltura_client($netid, $isAdmin = true)
 	{
+		if (empty($netid))
+			$netid = 'anonymous';
 		if ($this->kaltura_enabled())
 		{
 			if ($netid != $this->user_id)
