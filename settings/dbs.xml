@@ -11,7 +11,7 @@
 
 <database>
 <connection_name>thor_connection</connection_name>
-<db>thor</db>
+<db>reason</db>
 <user>reason_user</user>
 <password>some_password</password>
 <host>your.mysql.hostname.or.ip.address</host>
