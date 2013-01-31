@@ -165,7 +165,7 @@ reason_include_once('ssh/ssh.php');
 					}
 				}
 				
-				$this->set_order (array ( 'status_report', 'file_preview', 'name', 'upload_file',  'email_notification', 'show_download', 'show_embed', 'embed_small', 'embed_medium', 'embed_large', 'link', 'replacement_header', 'file_info_header', 'av_type', 'description', 'keywords', 'datetime', 'author', 'content', 'transcript_status', 'rights_statement', 'media_duration', 'media_publication_datetime', 'access_header', 'show_hide', 'restricted_group', 'no_share'  ));
+				$this->set_order (array ( 'status_report', 'file_preview', 'name', 'upload_file', 'email_notification', 'show_download', 'show_embed', 'embed_small', 'embed_medium', 'embed_large', 'download_links', 'link', 'replacement_header', 'file_info_header', 'av_type', 'description', 'keywords', 'datetime', 'author', 'content', 'transcript_status', 'rights_statement', 'media_duration', 'media_publication_datetime', 'access_header', 'show_hide', 'restricted_group', 'no_share'  ));
 			}
 			else
 			{
@@ -218,6 +218,14 @@ reason_include_once('ssh/ssh.php');
 			
 			$this->change_element_type('show_embed', 'checkbox');
 			$this->change_element_type('show_download', 'checkbox');
+			
+			if ($this->get_value('transcoding_status') == 'ready') 
+			{
+				$download_links_url = carl_make_link(array('cur_module' => 'MediaDownloadLinks'));
+				$download_links_link = '<a href="'.$download_links_url.'"><strong>View download links for this media</strong></a>';
+				$this->add_element( 'download_links' , 'commentWithLabel' , array('text'=>$download_links_link));
+				$this->set_display_name('download_links', '');
+			}
 		}	
 		
 		function process()

@@ -91,6 +91,7 @@
 		'AdminTools'=>array('file'=>'admin_tools.php','class'=>'ReasonAdminToolsModule'),
 		'ErrorVisibility'=>array('file'=>'error_visibility.php','class'=>'ErrorVisibilityModule'),	
 		'MediaImagePicker'=>array('file'=>'media_work_image_picker.php','class'=>'mediaWorkImagePickerModule'),
+		'MediaDownloadLinks'=>array('file'=>'media_work_download_links.php','class'=>'mediaWorkDownloadLinksModule'),
 		'KalturaImport'=>array('file'=>'kaltura_import.php','class'=>'KalturaImportModule'),
 		'CustomizeTheme'=>array('file'=>'customize_theme.php','class'=>'CustomizeThemeModule'),
 		'SiteAccessDenied'=>array('file'=>'site_access_denied.php', 'class'=>'SiteAccessDeniedModule'),

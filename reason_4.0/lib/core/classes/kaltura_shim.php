@@ -439,7 +439,9 @@ class KalturaShim
 		$client = $this->_get_kaltura_client($netid, true);
 		if (!$client) return false;
 		
-		$list = $client->flavorParams->listAction();
+		$pager = new KalturaFilterPager();
+		$pager->pageSize = -1;
+		$list = $client->flavorParams->listAction(null, $pager);
 		$objects = $list->objects;
 		foreach ($objects as $param)
 		{
@@ -450,13 +452,22 @@ class KalturaShim
 		$flavor_param = new KalturaFlavorParams();
 		foreach ($params as $key => $val) $flavor_param->$key = $val;
 		
-		return $client->flavorParams->add($flavor_param);
+		$client->flavorParams->add($flavor_param);
+		return true;
+	}
+	
+	public function delete_flavor_param($id, $netid)
+	{
+		$client = $this->_get_kaltura_client($netid, true);
+		if (!$client) return false;
+		
+		$client->flavorParams->delete($id);
 	}
 	
 	/**
 	* Creates a new transcoding profile in Kaltura.  Returns true upon succes, or false if the profile already exists.
 	*
-	* @param array $params
+	* @param conversionProfile
 	* @param string $netid
 	*/
 	public function add_transcoding_profile($conversionProfile, $netid)
@@ -464,37 +475,39 @@ class KalturaShim
 		$client = $this->_get_kaltura_client($netid, true);
 		if (!$client) return false;
 		
-		$list = $client->conversionProfile->listAction();
+		$pager = new KalturaFilterPager();
+		$pager->pageSize = -1;
+		$list = $client->conversionProfile->listAction(null, $pager);
 		$objects = $list->objects;
 		foreach ($objects as $profile)
 		{
 			if ($profile->name == $conversionProfile->name)
 				return false;
 		}
-		
 		$client->conversionProfile->add($conversionProfile);
 		return true;
 	}
 	
 	/**
-	* Return an array {name: id} of a kaltura transcoding flavor if one exists by the given name.
+	* Return an array of form {name: id} of existing flavors in Kaltura.
 	*
-	* @param string name of conversion profile
 	* @param string $netid
 	*/
-	public function get_flavor_ids($name, $netid)
+	public function get_flavor_ids($netid)
 	{
 		$client = $this->_get_kaltura_client($netid, true);
 		if (!$client) return false;
 		
-		$list = $client->flavorParams->listAction();
+		$result = array();
+		$pager = new KalturaFilterPager();
+		$pager->pageSize = -1;
+		$list = $client->flavorParams->listAction(null, $pager);
 		$objects = $list->objects;
 		foreach ($objects as $param)
 		{
-			if ($param->name == $name)
-				return $param->id;
+			$result[$param->name] = $param->id;
 		}
-		return false;
+		return $result;
 	}
 	
 	

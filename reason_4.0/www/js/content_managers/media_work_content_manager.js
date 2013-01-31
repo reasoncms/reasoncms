@@ -164,6 +164,7 @@ $(document).ready(function()
 		$("tr#embedlargeRow").hide();
 		$("tr#showdownloadRow").hide();
 		$("tr#showembedRow").hide();
+		$("tr#downloadlinksRow").hide();
 		$("#contentRow").addClass('offScreen');
 		$("#transcriptstatusRow").addClass('offScreen');
 		$("#rightsstatementRow").addClass('offScreen');
@@ -188,6 +189,7 @@ $(document).ready(function()
 		$("tr#embedlargeRow").show();
 		$("tr#showdownloadRow").show();
 		$("tr#showembedRow").show();
+		$("tr#downloadlinksRow").show();
 		return false;
 	});
 	
