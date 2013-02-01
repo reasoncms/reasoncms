@@ -64,41 +64,31 @@
 			{
 				$person =  $dir->get_first_record();
 				print_r($person);
-				//echo '<a name="'.$person['ds_username'][0].'"></a>'."\n";
-				echo '<div class="facStaffName"><h5>'.$person['ds_fullname'][0];
-				echo '</h5></div>'."\n";
-				
-				if( !empty( $person[ 'title' ])
-						|| !empty( $person[ 'ds_phone' ] )
-						|| !empty( $person[ 'mail' ] )
-						|| !empty( $person['content' ] ) )
+				echo '<p>'.$person['ds_fullname'][0];
+				if (!empty($person['ds_title']))
 				{
-					echo '<div class="facStaffInfo">'."\n";
-					if ( !empty( $person['title']))
-						echo '<div class="facStaffTitle"><h6>'.$person['title'].'</h6></div>'."\n";
-					if ( !empty ( $person['ds_office'] )){
-						echo '<div class="facStaffOffice">Office: ';
-						foreach ($person['ds_office'] as $office) {
-							echo preg_replace('/;/', ', ', $office);
-						}
-						echo '</div>' . "\n";
-				
-					}
-					if ( !empty ( $person['ds_phone'] )){
-						echo '<div class="facStaffPhone">Phone: ' . preg_replace('/,/', ', ', $person['ds_phone']) . '</div>' . "\n";
-					}
-					if ( !empty ( $person['mail'] ))
-					{
-						echo '<div class="facStaffEmail">E-mail: <a href="mailto:' . $person['mail'] . '">' . $person['mail'] . '</a></div>' . "\n";
-					}
-					if (!empty( $person['content' ] ) )
-					{
-						echo '<div class="facStaffContent">' . $person[ 'content' ]  . '</div>' . "\n";
-					}
-					echo '</div>'."\n";
+					echo '<br />'.$person['ds_title'][0];
 				}
-			}
-			
+				echo '</p>'."\n";
+				
+				if (!empty($person['ds_office']))
+				{
+					echo '<h3>Office:</h3>'."\n";
+					echo '<p>'.$person['ds_office'][0].'</p>'."\n";
+				}
+				
+				if (!empty($person['ds_phone']))
+				{
+					echo '<h3>Phone:</h3>'."\n";
+					echo '<p>'.$person['ds_phone'][0].'</p>'."\n";
+				}
+				
+				if (!empty($person['ds_email']))
+				{
+					echo '<h3>Email:</h3>'."\n";
+					echo '<p><a href="mailto:'.$person['ds_email'][0].'">'.$person['ds_email'][0].'</a></p>'."\n";
+				}
+			}	
 		}
 		
 	}
