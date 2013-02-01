@@ -25,7 +25,7 @@
 					$s = str_replace(array("\r", "\r\n", "\n"), '', $blurb->get_value('content'));						
 					if (preg_match("/(.*?)([Ll][Dd][Aa][Pp]:\s?)([a-z\d]+)(.*)/", $s, $m ))
 					{
-						echo $m[1] . $this->process_ldap($m[3]) . $m[4] . "******\n";
+						echo $m[1] . $this->process_ldap($m[3]) . $m[4] . "\n";
 					}
 					else
 					{
@@ -63,7 +63,6 @@
 			if ($dir->search_by_filter($filter, $required_attributes))
 			{
 				$person =  $dir->get_first_record();
-				print_r($person);
 				echo '<p>'.$person['ds_fullname'][0];
 				if (!empty($person['ds_title']))
 				{
