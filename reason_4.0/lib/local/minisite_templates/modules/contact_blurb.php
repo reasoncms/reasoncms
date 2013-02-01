@@ -63,8 +63,9 @@
 			if ($dir->search_by_filter($filter, $required_attributes))
 			{
 				$person =  $dir->get_first_record();
-				echo '<a name="'.$person['ds_username'][0].'"></a>'."\n";
-				echo '<div class="facStaffName"><h5>'.$person['full_name'];
+				print_r($person);
+				//echo '<a name="'.$person['ds_username'][0].'"></a>'."\n";
+				echo '<div class="facStaffName"><h5>'.$person['ds_fullname'][0];
 				echo '</h5></div>'."\n";
 				
 				if( !empty( $person[ 'title' ])
@@ -97,7 +98,6 @@
 					echo '</div>'."\n";
 				}
 			}
-			return 'not found';
 			
 		}
 		
