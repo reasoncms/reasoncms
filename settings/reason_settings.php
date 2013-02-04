@@ -180,7 +180,7 @@
 	 * Note that this is the same as the name of the file in lib/[core|local]/html_editors, 
 	 * but without the ".php"
 	 */
-	define('REASON_DEFAULT_HTML_EDITOR', 'loki_2');
+	define('REASON_DEFAULT_HTML_EDITOR', 'tiny_mce');
 	
 	/**
 	 * REASON_URL_FOR_GENERAL_FEED_HELP
