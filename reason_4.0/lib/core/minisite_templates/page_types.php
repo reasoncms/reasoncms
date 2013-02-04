@@ -777,11 +777,23 @@
 		),
 		'events_sidebar' => array(
 			'sidebar' => 'events_mini',
-		),	
+		),
 		'events_sidebar_by_page_categories' => array(
 			'sidebar'=> array(
 				'module'=>'events_mini',
 				'limit_to_page_categories'=>true,
+			),
+		),
+		'events_and_publication_sidebar_by_page_categories' => array(
+			'sidebar'=> array(
+				'module'=>'events_mini',
+				'limit_to_page_categories'=>true,
+			),
+			'post_sidebar'=>array(
+				'module'=>'publication',
+				'related_mode'=>'true',
+				'limit_by_page_categories'=>'true',
+				'max_num_items' => 3,
 			),
 		),
 		'events_sidebar_grouped_by_category' => array(
