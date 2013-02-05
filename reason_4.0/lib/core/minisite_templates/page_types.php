@@ -289,6 +289,21 @@
 			'sidebar' => 'assets',
 			'main_post' => 'children',
 		),
+		'audio_video_offer_original_download' => array(
+			'main_post' => array(
+				'module' => 'av',
+				'offer_original_download_link' => true,
+			),
+		),
+		'kaltura_import' => array(
+			'main_post' => 'kaltura_import',
+		),
+		'kaltura_import_default_hidden' => array(
+			'main_post' => array(
+				'module' => 'kaltura_import',
+				'default_values' => array('show_hide' => 'hide'),
+			),
+		),
 		'basic_tabs' => array(
 			'main_head' => 'basic_tabs',
 		),
