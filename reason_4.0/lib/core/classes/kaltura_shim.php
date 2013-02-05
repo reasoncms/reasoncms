@@ -117,6 +117,28 @@ class KalturaShim
 	}
 	
 	/**
+	* Returns the source file extension of the given kaltura media entry.
+	*
+	* @param $kaltura_entry_id
+	*/
+	public function get_source_file_extension($kaltura_entry_id, $netid = 'Reason')
+	{
+		$client = $this->_get_kaltura_client($netid, true);
+		if (!$client) return false;
+		
+		try {
+			$list = $client->flavorAsset->getFlavorAssetsWithParams($kaltura_entry_id);
+			return $list[0]->flavorAsset->fileExt;
+		}
+		catch (Exception $e)
+		{
+			trigger_error('Media Work with entry_id '.$kaltura_entry_id.' does not exist in this Kaltura Publisher ('.KALTURA_PARTNER_ID.').');
+			return false;
+		}
+	}
+	
+	
+	/**
 	* Returns the url for the media's source data (useful for providing a download link to unmodified files)
 	*
 	* @param string $kaltura_entry_id
