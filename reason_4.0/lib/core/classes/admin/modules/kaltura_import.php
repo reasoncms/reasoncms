@@ -41,6 +41,7 @@
 						'keywords' => '',
 						'categories' => '',
 						'show_hide' => 'show',
+						'transcript_status' => 'pending',
 					);
 		}
 		function get_acceptable_values()
@@ -51,6 +52,7 @@
 						'email_notification' => array('0','1'),
 						'show_embed' => array('0','1'),
 						'show_download' => array('0','1'),
+						'transcript_status' => array('pending','published'),
 					);
 		}
 		function run()
@@ -92,7 +94,7 @@
 				<li><strong>keywords</strong></li>
 				<li><strong>datetime</strong> (A date/time value indicating when the work was created)</li>
 				<li><strong>transcript</strong></li>
-				<li><strong>transcript_status</strong></li>
+				<li><strong>transcript_status</strong> (must be either "pending" or "published"; default "pending")</li>
 				<li><strong>rights_statement</strong></li>
 				<li><strong>email_notification</strong> (1 to send notification email when processing is complete; default 0)</li>
 				<li><strong>show_embed</strong> (1 to offer embedding in the front-end interface; default 1)</li>
@@ -144,12 +146,15 @@
 			}
 			elseif( !$d->has_error('zip_file_url') && $d->get_value('zip_file_url') )
 			{
+				set_time_limit(2700);
+				
 				$file_path = REASON_TEMP_DIR.uniqid().'.zip';
 				$ch = curl_init($d->get_value('zip_file_url'));
 				$fp = fopen($file_path, "w");
 				curl_setopt($ch, CURLOPT_FILE, $fp);
 				curl_setopt($ch, CURLOPT_HEADER, 0);
-
+				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,300);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 1800);
 				curl_exec($ch);
 				curl_close($ch);
 				
