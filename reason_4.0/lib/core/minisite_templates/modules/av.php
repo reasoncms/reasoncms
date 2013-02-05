@@ -311,8 +311,9 @@
 						// Offer an original file download link if this parameter is set
 						if ($this->params['offer_original_download_link'] && !empty($this->kaltura_shim))
 						{
+							$file_ext = $this->kaltura_shim->get_source_file_extension($item->get_value('entry_id'));
 							if($orig_url = $this->kaltura_shim->get_original_data_url($item->get_value('entry_id')))
-								echo '<li class="orig_li"><a href="'.$orig_url.'"">original</a></li>'."\n";
+								echo '<li class="orig_li"><a href="'.$orig_url.'"">original (.'.$file_ext.')</a></li>'."\n";
 						}
 						
 						if ($item->get_value('av_type') == 'Video')
