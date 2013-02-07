@@ -35,6 +35,8 @@
 			parent::init($args);
 			$master_admin_id = id_of('master_admin');
 			$es = new entity_selector($master_admin_id);
+			$es->limit_tables();
+			$es->limit_fields();
 			$es->add_type(id_of('text_blurb'));
 			$es->add_right_relationship($this->site_id, relationship_id_of('site_to_announcement_blurb'));
 			$es->set_env('site',$master_admin_id);
