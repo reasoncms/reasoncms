@@ -372,7 +372,7 @@ class ReasonKalturaNotificationReceiver
 			$asset_id = $asset->id;
 			
 			$convert_asset_to_reason = true;
-			if ($media_type == 'Audio' && count($valid_flavors) > 2 && $asset->flavorParamsId == 0) 
+			if ($media_type == 'Audio' && count($flavor_assets) > 2 && $asset->flavorParamsId == 0)
 			{
 				$convert_asset_to_reason = false;
 			}
