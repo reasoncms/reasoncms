@@ -406,7 +406,7 @@ class MinisitePageManager extends parent_childManager
 		
 		if( $this->get_value( 'state_action' ) )
 		{
-			$q = 'UPDATE entity set state = "'.$this->get_value( 'state_action' ).'" where id = ' . $this->admin_page->id;
+			$q = 'UPDATE entity set state = "'.$this->get_value( 'state_action' ).'", new=0 where id = ' . $this->admin_page->id;
 			db_query( $q , 'Error finishing' );
 			$this->set_value('state', $this->get_value('state_action'));
 		}
