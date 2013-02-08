@@ -555,11 +555,38 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar_2' => '',
 		'sidebar_3' => 'luther_events_mini',
 		'sidebar_5'=> array( // News
-				'module' => 'luther_other_publication_news',
-				'max_num_to_show' => 3,
+			'module' => 'luther_other_publication_news',
+			'max_num_to_show' => 3,
 		),
 		'post_sidebar' => 'luther_flickr_slideshow',
 	),
+	/* 'luther2010_landing_sidebar_news' => array(
+		'main_head' => 'luther_carousel',
+		'main_head_5' => '',
+		'main_2' => '',
+		'main_3' => '',
+		'main_4' => '',
+		'main_post' => '',
+		'main_post_2' => '',
+		'pre_sidebar' => 'main_blurb',
+		'pre_sidebar_2' => get_luther_spotlight(),
+		'sidebar_2' => '',
+		'sidebar_3' => 'luther_events_mini',
+		'sidebar_5' => array(
+			'module' => 'publication',
+			'markup_generator_info' => array(
+				'list_item' => array(
+					'classname' => 'MinimalListItemMarkupGenerator',
+					'filename' => 'minisite_templates/modules/publication/list_item_markup_generators/minimal.php',
+				)
+			),
+			'related_publication_unique_names' => luther_get_publication_unique_name("headlines"),
+			'related_mode' => true,
+			'related_title' => '',
+			'max_num_items' => 5,
+		),
+		'post_sidebar' => 'luther_flickr_slideshow',
+	),*/
 	'luther2010_music' => array(
 		'main_head' => 'luther_carousel',
 		'main_head_5' => '',
@@ -966,8 +993,8 @@ function luther2010_global_navigation()
 	echo '<li class="academics"><a href="/academics">Academics</a></li>'."\n";
 	echo '<li class="library-Technology"><a href="http://lis.luther.edu">Library & Technology</a></li>'."\n";
 	echo '<li class="student-life"><a href="/studentlife">Student Life</a></li>'."\n";
-	echo '<li class="athletics"><a href="http://sports.luther.edu">Athletics</a></li>'."\n";
-	echo '<li class="music"><a href="http://music.luther.edu">Music</a></li>'."\n";
+	echo '<li class="athletics"><a href="/sports">Athletics</a></li>'."\n";
+	echo '<li class="music"><a href="/music">Music</a></li>'."\n";
 	echo '<li class="giving"><a href="/giving">Giving</a></li>'."\n";
 	echo '<li class="decorah"><a href="/decorah">Decorah</a></li>'."\n";
 	echo '<li class="about-luther"><a href="/about">About Luther</a></li></ul>'."\n";
