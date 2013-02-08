@@ -24,7 +24,7 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 	}
 
 	function run()
-	{	
+	{
 		$this->markup_string .= $this->get_featured_items_markup();
 		$this->markup_string .= $this->get_list_markup();
 		$this->markup_string .= $this->get_post_list_markup();
@@ -47,7 +47,9 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 		}
 		
 		if ($is_headline && ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_public_information'
-		|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_sports'))
+		|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_sports'
+		|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_landing'
+		|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_landing_feature'))
 		{
 			$markup_string .= '<nav class="button view-all">'."\n";
 			$markup_string .= '<ul>'."\n";

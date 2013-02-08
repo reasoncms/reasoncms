@@ -322,7 +322,25 @@ class LutherTemplate2010 extends MinisiteTemplate
 		}
 		if ($this->has_content( 'sidebar_5' ))
 		{
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature')
+			{
+				echo '<aside class="news group">'."\n";
+				echo '<header class="blue-stripe"><h1><span>News</span></h1></header>'."\n";
+			}
+				
 			$this->run_section( 'sidebar_5' );
+			
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature')
+			{
+				echo '</aside> <!-- class="news group" -->'."\n";
+			}
+			
 			echo '<hr>'."\n";
 		}	
 		

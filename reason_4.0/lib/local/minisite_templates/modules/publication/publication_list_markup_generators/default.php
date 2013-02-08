@@ -36,6 +36,8 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 									'date_format',
 									'search_string',
 									'text_only',
+									'cur_page',
+									'site_id',
 									);
 
 	function PublicationListMarkupGenerator ()
@@ -43,12 +45,11 @@ class PublicationListMarkupGenerator extends PublicationMarkupGenerator
 	}
 
 	function run()
-	{	
+	{		
 		$this->markup_string .= $this->get_pre_list_markup();
 		$this->markup_string .= $this->get_list_markup();
 		$this->markup_string .= $this->get_post_list_markup();
 		//$this->markup_string .= '</div>'."\n";
-
 	}
 
 	function get_pre_list_markup()

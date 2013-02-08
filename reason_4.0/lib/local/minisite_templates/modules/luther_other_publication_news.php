@@ -93,27 +93,10 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 	
 	function run()
 	{
-		if (get_theme($this->site_id)->get_value('name') == 'luther2010'
-			&& ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'))
-		{
-			echo '<aside class="news group">'."\n";
-			echo '<header class="blue-stripe"><h1><span>News</span></h1></header>'."\n";
-		}
 		echo '<div class="newsItems">';
 		$this->show_module_title();
 		$this->show_news_listing();
 		echo '</div>';
-		if (get_theme($this->site_id)->get_value('name') == 'luther2010'
-			&& ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'))
-		{
-			echo '</aside> <!-- class="news group" -->'."\n";
-		}
 	}
 	
 	
