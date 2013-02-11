@@ -9,12 +9,6 @@
  */
  	include_once( 'paths.php');
 	
-	/**
-	 * REASON_VERSION
-	 * This setting identifies the current version of Reason
-	 */
-	define( 'REASON_VERSION','4.2' );
- 
 	////////////////////////////////////////////////////////////
 	//
 	// Begin items you may need to change to get Reason up and running
@@ -203,6 +197,14 @@
 	 * (Developer note: surround any use of this constant in a if(defined()) block)
 	 */
 	//define( 'REASON_URL_FOR_PODCAST_HELP', 'http://www.domain_name.domain/your/path/here/' );
+
+	/**
+	 * REASON_URL_FOR_ICAL_FEED_HELP
+	 * Identifies a URI where users can get more information about using iCal feeds
+	 * Comment out this line if you don't want to provide a link for feed assistance
+	 * (Developer note: surround any use of this constant in a if(defined()) block)
+	 */
+	//define( 'REASON_URL_FOR_ICAL_FEED_HELP', 'http://www.domain_name.domain/your/path/here/' ); 
 	
 	/**
 	 * REASON_LOGIN_PATH
@@ -449,16 +451,23 @@
 	////////////////////////////////////////////////////////////
 	
 	/**
+	 * REASON_DATA_DIR
+	 * This setting identifies the filesystem location of the reason data directory
+	 * This needs to be readable / writable by Apache/php but should not be web accessible.
+	 */
+	define( 'REASON_DATA_DIR', REASON_INC.'data/' );
+ 
+	/**
 	 * REASON_CSV_DIR
 	 * This setting identifies the filesystem location of the reason-managed csv data.
 	 */
-	define( 'REASON_CSV_DIR', REASON_INC.'data/csv_data/' );
+	define( 'REASON_CSV_DIR', REASON_DATA_DIR.'csv_data/' );
 	
 	/**
 	 * PHOTOSTOCK
 	 * This setting identifies the filesystem location of the reason-managed images directory.
 	 */
-	define( 'PHOTOSTOCK', REASON_INC.'data/images/' );
+	define( 'PHOTOSTOCK', REASON_DATA_DIR.'images/' );
 	
 	/**
 	 * WEB_PHOTOSTOCK
@@ -468,17 +477,24 @@
 	define( 'WEB_PHOTOSTOCK', REASON_HTTP_BASE_PATH.'images/' );
 	
 	/**
+	 * REASON_IMAGE_GRAVEYARD
+	 * This setting identifies the filesystem location for expunged images.
+	 * If it is empty, expounged images will be deleted.
+	 */
+	define( 'REASON_IMAGE_GRAVEYARD', '');
+	
+	/**
 	 * REASON_TEMP_DIR
 	 * This setting defines the location for Reason temporary data
 	 */
-	define( 'REASON_TEMP_DIR', REASON_INC.'data/tmp/' );
+	define( 'REASON_TEMP_DIR', REASON_DATA_DIR.'tmp/' );
 	
 	/**
 	 * REASON_LOG_DIR
 	 * This setting defines the location for Reason to log information about its activity
 	 * This directory will have to have permissions that allow Apache/php to write to it
 	 */
-	define( 'REASON_LOG_DIR', REASON_INC.'data/tmp/' );
+	define( 'REASON_LOG_DIR', REASON_DATA_DIR.'logs/' );
 	
 	/**
 	 * PAGE_CACHE_LOG
@@ -516,7 +532,7 @@
 	 * This setting identifies the directory used to store cache files.
 	 * This directory will have to have permissions that allow Apache/php to write to it
 	 */
-	define( 'REASON_CACHE_DIR', REASON_INC.'data/cache/' );
+	define( 'REASON_CACHE_DIR', REASON_DATA_DIR.'cache/' );
 
 	/**
 	 * CM_VAR_PREFIX
@@ -528,7 +544,7 @@
 	 * ASSET_PATH
 	 * The filesystem path to the directory that contains reason-managed files
 	 */
-	define( 'ASSET_PATH', REASON_INC.'data/assets/' );
+	define( 'ASSET_PATH', REASON_DATA_DIR.'assets/' );
 	
 	/**
 	 * REASON_ASSET_MAX_UPLOAD_SIZE_MEGS

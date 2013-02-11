@@ -34,7 +34,7 @@ if(defined('ERROR_404_PATH') && defined('WEB_PATH') && file_exists(WEB_PATH.ERRO
 else
 {
 	http_response_code(404);
-	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n";
+	echo '<!DOCTYPE html>'."\n";
 	echo '<html xmlns="http://www.w3.org/1999/xhtml">'."\n";
 	echo '<head><title>File Not Found (HTTP 404)</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head>'."\n";
 	echo '<body>'."\n";

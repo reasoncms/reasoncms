@@ -188,6 +188,13 @@
 		 */
 		var $form_method = 'post';
 		/**
+		 * The form action.
+		 * This is the URL the form posts to. Populated by default with the current URL, but you can 
+		 * set it manually if you have a special need.
+		 * @var string
+		 */
+		var $form_action;
+		/**
 		 * The encoding type.
 		 * Default handles most forms.  Use 'multipart/form-data' for forms that need to upload something.
 		 * @var string
@@ -196,7 +203,7 @@
 		/**
 		* The form id.
 		* Since there can only be one Disco form per page, the default should generally suffice.
-	    * @var string
+		* @var string
 		*/
 		var $form_id = 'disco_form';
 		/** 
@@ -447,6 +454,10 @@
 					if( preg_match( '/__button_/' , $key ) )
 						$this->chosen_action = preg_replace( '/__button_/' , '' , $key );
 				}
+				
+				if (empty($this->form_action))
+					$this->form_action = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES);
+				
 				// elements should not be empty
 				/* if ( !$externally_set_up )
 				{
@@ -967,7 +978,7 @@
 				$this->show_errors();
 				$this->_form_started = true;
 				$markup = '<form method="'.$this->form_method.'" ';
-				$markup .= 'action="'.htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES).'" ';
+				$markup .= 'action="'.$this->form_action.'" ';
 				$markup .= 'enctype="'.$this->form_enctype.'" ';
 				$markup .= 'id="'.$this->form_id.'" ';
 				$markup .= 'name="'.$this->form_name.'" ';
@@ -1113,7 +1124,11 @@
 		function show_unlabeled_element( $key , $element , &$b) // {{{
 		{
 			$anchor = '<a name="'.$key.'_error"></a>';
-			$content = $anchor."\n".$element->get_comments('before').$element->get_display().$element->get_comments()."\n";
+			ob_start();
+			$element->display();
+			$display = ob_get_contents();
+			ob_end_clean();
+			$content = $anchor."\n".$element->get_comments('before').$display.$element->get_comments()."\n";
 			
 			$b->box_item_no_label( $content, $this->has_error($key), $key );
 		} // }}}
@@ -2364,7 +2379,7 @@
 		function move_element( $element1, $where, $element2)
 		{
 			$old_order = $this->get_order();
-			if (!$this->_is_element($element2))
+			if (!$this->_is_element($element2) && !$this->_is_element_group($element2))
 			{
 				trigger_error($element2.' is a not an element that move_element() can locate', WARNING);				
 				return;

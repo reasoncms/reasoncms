@@ -1030,8 +1030,23 @@
 					return array();
 				}
 			}
+			$query = $this->get_one_query( $type , $status);
+			$factory =& $this->get_entity_factory();
+			if($this->cache_lifespan)
+			{
+				$factory_class = ($factory) ? get_class($factory) : '';
+				//echo '<p>caching '.$this->cache_lifespan.' secs</p>';
+				$cache = new ObjectCache('entity_selector_cache_'.get_current_db_connection_name().'_'.$this->_enable_multivalue_results.'_'.$factory_class.'_'.$query, $this->cache_lifespan);
+				$results =& $cache->fetch();
+				if(false !== $results)
+				{
+					//echo '<p>Cache hit</p>';
+					return $results;
+				}
+				//echo '<p>Cache miss</p>';
+			}
 			$results = array();
-			$r = db_query( $this->get_one_query( $type , $status) , $this->description.': '.$error );
+			$r = db_query( $query , $this->description.': '.$error );
 			
 			while( $row = mysql_fetch_array( $r, MYSQL_ASSOC ) )
 			{
@@ -1060,7 +1075,7 @@
 				}
 				else
 				{
-					if ($factory =& $this->get_entity_factory())
+					if ($factory)
 					{
 						$e = $factory->get_entity( $row );
 					}
@@ -1073,6 +1088,8 @@
 				$results[ $row[ 'id' ] ] = $e;
 			}
 			mysql_free_result( $r );
+			if(!empty($cache))
+				$cache->set($results);
 			return $results;
 		} // }}}
 		/**

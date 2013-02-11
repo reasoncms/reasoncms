@@ -21686,6 +21686,12 @@ UI.Loki = function Loki()
 	{
 		// Incompatible browser check.
 		if (!(Util.Browser.IE || Util.Browser.Gecko)) {
+			if(jQuery)
+			{
+				msg = $('<div><strong>Note:</strong> the rich text editor does not work with browsers other than Firefox and Internet Explorer. Please use one of these browsers for rich text editing.</div>');
+				area = $(textarea);
+				msg.insertBefore(area);
+			}
 			throw new Error('The Loki HTML editor does not currently support ' +
 				'your browser.');
 		} else if (!textarea) {

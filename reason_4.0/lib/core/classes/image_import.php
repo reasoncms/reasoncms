@@ -228,7 +228,12 @@
 			{
 				$name = 'upload_'.$i;
 				$this->add_element( $name, 'image_upload', array('max_width'=>REASON_STANDARD_MAX_IMAGE_WIDTH,'max_height'=>REASON_STANDARD_MAX_IMAGE_HEIGHT) );
-				$this->add_element( $name . '_filename', 'hidden' );
+				$this->add_element( $name . '_filename', 'hidden', array('userland_changeable' => true) );
+				if (! imagemagick_available())
+				{
+					$size = get_approx_max_image_size();
+					$this->set_comments($name, 'Images with resolutions over '.$size['res'].' or '.$size['mps'].' MPs may cause errors');
+				}
 				
 				$order[] = $name;
 			}
@@ -246,8 +251,14 @@
 			if (!$size)
 			{
 				trigger_error('Uploaded image at location ' . $img_pathname. ' returns false on getimagesize and will not be imported. The user has been notified.');
+				return false;
 			}
-			return ($size);
+			elseif (image_is_too_big($img_pathname))
+			{
+				trigger_error('Uploaded image at location ' . $img_pathname. ' is too big and will not be imported. The user has been notified.');
+				return false;	
+			}
+			return true;
 		}
 		
 		// we are going to store the filename separately so that it is always accessible at process time even if there was an error

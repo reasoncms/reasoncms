@@ -109,7 +109,7 @@ N|n)
 *) echo "Invalid command"
 esac
 
-$mysqlcmd -u$mysqluser -p$mysqlpassy -h$mysqlhost $mysqldb < $PWD/reason_4.0/data/dbs/reason4.2.sql
+$mysqlcmd -u$mysqluser -p$mysqlpassy -h$mysqlhost $mysqldb < $PWD/reason_4.0/data/dbs/reason4.3.sql
 
 sed -e "s/<db>reason/<db>$mysqldb/g" -e "s/<db>thor/<db>$mysqldb/g" -e "s/reason_user/$mysqluser/g" -e "s/some_password/$mysqlpassy/g" -e "s/your.mysql.hostname.or.ip.address/$mysqlhost/g" $PWD/settings/dbs.xml.sample > $PWD/settings/dbs.xml
 

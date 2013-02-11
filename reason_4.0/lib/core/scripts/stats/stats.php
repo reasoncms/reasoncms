@@ -21,7 +21,7 @@ include_once('reason_header.php');
 /**
  * Begin the page
  */
-?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+?><!DOCTYPE html>
 <html><head><title>Reason Stats</title>
 <?php
 if (defined('UNIVERSAL_CSS_PATH') && UNIVERSAL_CSS_PATH != '')

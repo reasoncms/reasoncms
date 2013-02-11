@@ -1,4 +1,19 @@
 <?php
+/**
+ * The default model for event gallery items
+ *
+ * @package reason
+ * @subpackage modules
+ */
+ 
+/**
+ * Register model
+ */
+$GLOBALS['reason_event_gallery_models'][basename(__FILE__, '.php')] = 'eventGalleryItem';
+
+/**
+ * The default model for event gallery items
+ */
 class eventGalleryItem
 {
 	protected $_event;

@@ -470,7 +470,7 @@ if(!function_exists('htmlspecialchars_decode'))
 	 */ 
 	function prettify_mysql_timestamp( $dt , $format = 'M jS, Y') // {{{
 	{
-		return (false !== $time = mysql_timestamp_to_unix($dt))
+		return (false !== ($time = mysql_timestamp_to_unix($dt)))
 			? carl_date($format, $time)
 			: '';
 	} // }}}
@@ -482,12 +482,12 @@ if(!function_exists('htmlspecialchars_decode'))
 	 */ 
 	function prettify_mysql_datetime( $dt , $format = 'M jS, Y' ) // {{{
 	{
-		return (false !== $time = mysql_datetime_to_unix($dt))
+		return (false !== ($time = mysql_datetime_to_unix($dt)))
 			? carl_date($format, $time)
 			: '';
 	} // }}}
 	
-/**
+	/**
 	 * Takes a typical field name or array key (e.g. all lower case, underscores) and makes it look better by replacing underscores with spaces and capitalizing the first letters of words.
 	 *
 	 * @param string $s
@@ -495,11 +495,23 @@ if(!function_exists('htmlspecialchars_decode'))
 	 */
 	function prettify_string( $s ) // {{{
 	{
+		// If the string contains HTML, only prettify the parts outside of tags.
+		if (preg_match('/(<[^>]+>)/', $s))
+		{
+			$parts = preg_split('/(<[^>]+>)/', $s, null, PREG_SPLIT_DELIM_CAPTURE);
+			foreach($parts as $key => $part)
+			{
+				if (!preg_match('/(<[^>]+>)/', $part))
+					$parts[$key] = prettify_string($part);
+			}
+			return implode('', $parts);			
+		}
 		$parts = explode( '_', $s );
 		foreach( $parts AS $part )
 			$new_parts[] = strtoupper( substr( $part, 0, 1 ) ).substr( $part, 1 );
 		return implode( ' ', $new_parts );
 	} // }}}
+
 	/**
 	 * Recursively prettify all values of an array using prettify_string
 	 * @author Matt Ryan
@@ -621,6 +633,20 @@ if(!function_exists('htmlspecialchars_decode'))
 		return function_exists('mb_strpos') ? mb_strpos($haystack, $needle, $offset, $encoding) : strpos($haystack, $needle, $offset);
 	}
 
+	/**
+	 * stripos replacement that uses mb_stripos where possible
+	 *
+	 * @param string haystack to search
+	 * @param string needle to find
+	 * @param string offset the search offset
+	 * @param encoding the encoding of the strings; pass a null value to use the current mb_internal_encoding
+	 */	
+	function carl_stripos($haystack, $needle, $offset = NULL, $encoding = 'UTF-8')
+	{
+		if(!$encoding) $encoding = function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8';
+		return function_exists('mb_stripos') ? mb_stripos($haystack, $needle, $offset, $encoding) : stripos($haystack, $needle, $offset);
+	}
+	
 	/**
 	 * strrpos replacement that uses mb_strrpos where possible
 	 *

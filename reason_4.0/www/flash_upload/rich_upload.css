@@ -2,6 +2,10 @@ div.actions {
   font-size: 85%;
 }
 
+div.swfupload-container {
+  z-index: 1000;	
+}
+
 .upload_queue div.empty {
   color: #4B4C47;
 }

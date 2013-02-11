@@ -14,7 +14,6 @@
 	/**
 	 * A content previewer for media files
 	 *
-	 * @todo display embedding code (not able to do it until the embed code conforms to web standards)
 	 */
 	class av_file_previewer extends default_previewer
 	{

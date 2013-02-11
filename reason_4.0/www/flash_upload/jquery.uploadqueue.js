@@ -52,7 +52,8 @@
             500: "An internal server error occurred. Please try again later.",
             501: "Unable to convert the uploaded file to a web-friendly image. Please try saving in a different format.",
             503: "The upload service is temporarily unavailable. Please try " +
-                "again later."
+                "again later.",
+            422: "The uploaded image's dimensions are too large for the server to process. Try a smaller image."
         };
         
         var event_handlers = {

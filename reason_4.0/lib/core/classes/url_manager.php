@@ -753,6 +753,7 @@
 			}
 			
 			$this->_update_blog_feeds();
+			$this->_update_podcast_feed($types);
 		}
 		function _update_blog_feeds()
 		{
@@ -790,6 +791,15 @@
 			{
 				$blog = new entity($blog_page->get_value('publication_id'));
 				fputs( $this->_fp, 'RewriteRule ^'.MINISITE_FEED_DIRECTORY_NAME.'/'.$blog_type_entity->get_value('feed_url_string').'/'.$blog->get_value('blog_feed_string').'$ '.FEED_GENERATOR_STUB_PATH.'?type_id='.$news_type_entity->id().'&site_id='.$this->site->id().'&blog_id='.$blog->id().'&feed=blog_posts'."\n" ) OR trigger_error( 'Unable to write to htaccess file', HIGH );
+			}
+		}
+		function _update_podcast_feed($types)
+		{
+			if(isset($types[id_of('av')]) && !isset($types[id_of('av_file')]))
+			{
+				$av_file_type = new entity(id_of('av_file'));
+				if($av_file_type->get_value('feed_url_string'))
+					fputs( $this->_fp, 'RewriteRule ^'.MINISITE_FEED_DIRECTORY_NAME.'/'.$av_file_type->get_value('feed_url_string').'$ '.FEED_GENERATOR_STUB_PATH.'?type_id='.$av_file_type->id().'&site_id='.$this->site->id()."\n" ) OR trigger_error( 'Unable to write to htaccess file', HIGH );
 			}
 		}
 		function _update_global_feeds()

@@ -79,6 +79,7 @@ class PublicationWithCategoriesMarkupGenerator extends PublicationMarkupGenerato
 	
 	function get_item_category_markup()
 	{
+		$link_markup = array();
 		$markup_string = '<ul class="post-cats">';
 		foreach ($this->passed_vars['item_categories'] as $cat)
 		{

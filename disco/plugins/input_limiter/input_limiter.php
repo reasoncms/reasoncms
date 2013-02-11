@@ -86,12 +86,12 @@
 	            $element_value = $this->disco_form->get_value($field);
 	            $chars_remaining = $char_limit - carl_util_count_html_text_characters($element_value);
 	            
-	            $formatted_char_limit = '<div class = "smallText inputLimitNote" style = "display: none; ">
-	                Characters remaining: <span class = "charsRemaining">'. $chars_remaining . '</span>
-                    <span class = "charLimit", style = "display: none;">'. $char_limit . '</span></div>';
+	            $formatted_char_limit = '<div class="smallText inputLimitNote" style="display: none; ">
+	                Characters remaining: <span class="charsRemaining">'. $chars_remaining . '</span>
+                    <span class="charLimit", style="display: none;">'. $char_limit . '</span></div>';
                 
-                $over_limit_note = '<div class = "smallText overLimitNote" style = "display: none; font-weight:bold; ">
-                <span class = "numCharsOver">0</span> characters over the limit! Please shorten text.</b></div>';
+                $over_limit_note = '<div class="smallText overLimitNote" style="display: none; font-weight:bold; ">
+                <span class="numCharsOver">0</span> characters over the limit! Please shorten text.</b></div>';
                 
                 $this->disco_form->add_comments($field, $formatted_char_limit);
                 $this->disco_form->add_comments($field, $over_limit_note);

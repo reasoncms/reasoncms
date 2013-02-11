@@ -71,7 +71,7 @@ reason_include_once( 'classes/inline_editing.php' );
 		 */
 		function has_admin_edit_privs()
 		{
-			return (reason_check_access_to_site($this->site_id) && reason_check_privs('edit'));
+			return ( reason_check_privs('pose_as_other_user') || (reason_check_privs('edit') && reason_check_access_to_site($this->site_id)) );
 		}
 		
 		function get_user_netid()
@@ -121,7 +121,7 @@ reason_include_once( 'classes/inline_editing.php' );
 				echo '</div>';
 			}
 			echo '<p id="footerLoginLink">';
-			echo ($this->get_user_netid()) ? $this->get_user_netid() . ': ' : '';
+			echo ($this->get_user_netid()) ? '<span class="username">' . $this->get_user_netid() . '</span>: ' : '';
 			echo ($this->get_user_netid()) ? '<a href="'. $this->get_login_url().'?logout=1">Logout</a>' : '<a href="'.$this->get_login_url().'">Login</a>';
 			echo '</p>';
 		}

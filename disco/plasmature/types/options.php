@@ -630,26 +630,36 @@ class checkboxgroup_with_otherType extends checkboxgroupType
 		$str = '<div class="checkBoxGroup">'."\n";
 		$str .= '<table border="0" cellpadding="1" cellspacing="0">'."\n";
 		$i = 0;
+		$value = $this->value;
 		foreach( $this->options as $key => $val )
 		{
 			$id = 'checkbox_'.$this->name.'_'.$i;
 			$str .= '<tr><td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$i.']" value="'.htmlspecialchars($key, ENT_QUOTES).'"';
-			if ( is_array($this->value) ) {
-				if ( array_search($key, $this->value) !== false )
+			if ( is_array($value) ) {
+				$value_key = array_search($key, $value);
+				if ( $value_key !== false )
+				{
 					$str .= ' checked="checked"';
+					unset($value[$value_key]);
+				}
 			}
 			else {
-				if ( $key == $this->value )
+				if ( $key == $value )
+				{
 					$str .= ' checked="checked"';
+					unset($value);
+				}
 			}
 			$str .= ' /></td><td valign="top"><label for="'.$id.'">'.$val."</label></td></tr>\n";
 			$i++;
 		}
-		$id = 'checkbox_'.$this->name.'_'.$i++;
+		$id = 'checkbox_'.$this->name.'_'.$i;
 		$str .= '<tr>'."\n".'<td valign="top"><input type="checkbox" id="'.$id.'" name="'.$this->name.'['.$i.']" value="other"';
-		if ($this->value)
+		
+		// We've been unsetting the values as we used them above, so if anything's left, it's for the other field.
+		if (!empty($value))
 		{
-			$other_value = $this->value;
+			$other_value = (is_array($value)) ? reset($value) : $value;
 			$str .= ' checked="checked"';
 		} else {
 			$other_value = '';
@@ -778,6 +788,90 @@ class selectType extends optionType
 	}
 }
 
+/**
+ * Single select with chosen js
+ * @require jQuery
+ * @package disco
+ * @subpackage plasmature
+ */
+class chosen_selectType extends selectType
+{
+	var $type = 'chosen_select';
+
+	function get_display()
+	{
+		$str = $this->get_chosen_select_js_css() . "\n";
+		$str .= '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" class="chzn-select" style="min-width:100px;" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
+		$select_count = 0;
+
+		foreach( $this->options as $key => $val )
+		{
+			if( !$this->add_empty_value_to_top && $val === '--' )
+			{
+				$str .= $this->_get_option_html('',$val,$select_count);
+			}
+			else
+			{
+				$str .= $this->_get_option_html($key,$val,$select_count);
+			}
+		}
+		$str .= '</select>'."\n";
+		$str .= '<script language="javascript" type="text/javascript">$(".chzn-select").chosen();</script>';
+		return $str;
+	}
+
+	/**
+	 * We return the main javascript for Chosen Select - we use a static variable to keep track such that we include it only once.
+	 */
+	function get_chosen_select_js_css()
+	{
+		// we only want to load the main js file once.
+		static $loaded_an_instance;
+		if (!isset($loaded_an_instance))
+		{
+			$js_css = '';
+			$js_css .= '<script language="javascript" type="text/javascript" src="' . REASON_PACKAGE_HTTP_BASE_PATH . 'chosen_select/chosen.jquery.js"></script>'."\n";
+			$js_css .= '<link href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'chosen_select/chosen.css" rel="stylesheet">'."\n";
+			$js_css .= '<link href="' . REASON_PACKAGE_HTTP_BASE_PATH . 'chosen_select/reason_chosen.css" rel="stylesheet">'."\n";
+			$loaded_an_instance = true;
+		}
+		return (!empty($js_css)) ? $js_css : '';
+	}
+}
+
+/**
+ * Multiple select with chosen js
+ * @require jQuery
+ * @package disco
+ * @subpackage plasmature
+ */
+class chosen_select_multipleType extends chosen_selectType
+{
+	var $type = 'chosen_select_multiple';
+	var $multiple = True;
+
+	function get_display()
+	{
+		$str = $this->get_chosen_select_js_css() . "\n";
+		$str .= '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" class="chzn-select" style="min-width:150px;" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
+		$select_count = 0;
+
+		foreach( $this->options as $key => $val )
+		{
+			if( !$this->add_empty_value_to_top && $val === '--' )
+			{
+				$str .= $this->_get_option_html('',$val,$select_count);
+			}
+			else
+			{
+				$str .= $this->_get_option_html($key,$val,$select_count);
+			}
+		}
+		$str .= '</select>'."\n";
+		$str .= '<script language="javascript" type="text/javascript">$(".chzn-select").chosen();</script>';
+		return $str;
+	}
+}
 /**
  * Same as {@link selectType}  but doesn't sort the {@link options}.
  * @package disco
@@ -1055,3 +1149,25 @@ class select_no_sort_jsType extends select_jsType
 	var $type = 'select_no_sort_js';
 	var $sort_options = false;
 }
+
+
+class range_sliderType extends defaultType
+{
+	var $type = 'range_slider';
+	
+	/** @access private */
+	var $type_valid_args = array( 'min', 'max', 'step', 'value' );
+	var $min = 0;
+	var $max = 10;
+	var $step = 1;
+	var $value = 1;
+	
+	function get_display()
+	{
+		return '<input type="range" name="'.$this->name.'" value="'.str_replace('"', '&quot;', $this->get()).'"   id="'.$this->name.'Element" min="'.$this->min.'" max="'.$this->max.'" step="'.$this->step.'" />';
+	}	
+	
+}
+
+
+

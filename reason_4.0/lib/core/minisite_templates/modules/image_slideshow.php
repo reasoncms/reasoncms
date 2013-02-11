@@ -36,7 +36,9 @@
 			'rand_flag' => false, 
 			'num_to_display' => '',
 			'caption_flag' => true,
+			'show_short_caption' => true,
 			'show_long_caption' => true,
+			'show_author' => false,
 			'order_by' => '',
 			'alternate_source_page_id' => '', 
 			// The animation_type 'slide' is buggy in FlexSlider.  We're not going to support it right now.
@@ -406,10 +408,19 @@
   				echo '</div>'."\n";
   				if ($this->params['caption_flag'])
   				{
-  					$text = '<strong class="shortCaption">'.strip_tags($info['description']).'</strong>';
+  					$text = '';
+  					if ($this->params['show_short_caption'])
+  					{
+  						$text .= '<strong class="shortCaption">'.strip_tags($info['description']).'</strong>';
+  					}
   					if ($this->params['show_long_caption'])
   					{
-  						$text .= '<span class="longCaption">'.strip_tags($info['content']).'</span>';
+  						$text .= '<span class="longCaption">'.
+  							strip_tags($info['content'], '<a><br><em><strong><sub><sup><u>').'</span>';
+  					}
+  					if ($this->params['show_author'])
+  					{
+  						$text .= '<span class="imageAuthor">'.$info['author'].'</span>';
   					}
   					echo '<p class="flex-caption">'. $text .'</p>'."\n";
   				}
@@ -436,6 +447,7 @@
 			{
 				$img_description = $image->get_value('description');
 				$img_content = $image->get_value('content');
+				$img_author = $image->get_value('author');
 				$img_height = $image->get_value('height');
 				$img_width = $image->get_value('width');
 				
@@ -460,7 +472,7 @@
 				{
 					$img_url = reason_get_image_url($image);
 				}
-				$images_info[] = array('description' => $img_description, 'content' => $img_content, 'height' => $img_height, 'width' => $img_width, 'url' => $img_url);
+				$images_info[] = array('description' => $img_description, 'content' => $img_content, 'author' => $img_author, 'height' => $img_height, 'width' => $img_width, 'url' => $img_url);
 			}
 			return $images_info;
 		}

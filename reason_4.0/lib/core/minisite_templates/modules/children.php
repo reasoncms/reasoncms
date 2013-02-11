@@ -11,12 +11,13 @@
 
 	reason_include_once( 'minisite_templates/modules/default.php' );
     reason_include_once( 'classes/sized_image.php' );
+    reason_include_once( 'function_libraries/url_utils.php' );
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'ChildrenModule';
 	
 	
 	/**
-	 * A minisite module whose output is all the child pages of the current page, in sort order
+	 * A minisite module whose output is all the child pages of the current page (or page specified in parent_unique_name param), in sort order.
 	 *
 	 * Various parameters are available for variant behavior.
 	 */
@@ -34,10 +35,13 @@
 										'limit_to' => array(),
 										'thumbnail_width' => 0,
 										'thumbnail_height' => 0,
-										'thumbnail_crop' => ''
+										'thumbnail_crop' => '',
+										'parent_unique_name' => '',
+										'force_full_page_title' => false,
 									);
 		var $offspring = array();
 		var $az = array();
+		
 		function init( $args = array() ) // {{{
 		{
 			parent::init( $args );
@@ -45,9 +49,9 @@
 			$this->es = new entity_selector();
 			$this->es->description = 'Selecting children of the page';
 
-			// find all the children of this page
+			// find all the children of the parent page
 			$this->es->add_type( id_of('minisite_page') );
-			$this->es->add_left_relationship( $this->cur_page->id(), relationship_id_of( 'minisite_page_parent' ) );
+			$this->es->add_left_relationship( $this->get_parent_page_id(), relationship_id_of( 'minisite_page_parent' ) );
 			if($this->params['show_only_pages_in_nav'])
 			{
 				$this->es->add_relation('nav_display = "Yes"');
@@ -68,16 +72,16 @@
 			$this->es->set_order('sortable.sort_order ASC');
 			$this->offspring = $this->es->run_one(); 
 			
-			if(array_key_exists($this->cur_page->id(), $this->offspring))
+			if(isset($this->offspring[$this->get_parent_page_id()]))
 			{
-				unset($this->offspring[$this->cur_page->id()]);
+				unset($this->offspring[$this->get_parent_page_id()]);
 			}
 			
 			if(!empty($this->params['provide_az_links']))
 			{
 				foreach($this->offspring as $child)
 				{
-					$page_name = $child->get_value( 'link_name' ) ? $child->get_value( 'link_name' ) : $child->get_value('name');
+					$page_name = $this->get_page_name($child);
 					$letter = carl_strtoupper(substr($page_name,0,1), 'UTF-8');
 					if(!in_array($letter, $this->az))
 					{
@@ -85,8 +89,65 @@
 					}
 				}
 			}
-
-		} // }}}
+		}
+		
+		/**
+		 * This is typically the page the module is running on unless parent_unique_name is set.
+		 *
+		 * @return object entity parent page
+		 */
+		function get_parent_page()
+		{
+			if (!isset($this->_parent_page))
+			{
+				if (!empty($this->params['parent_unique_name']))
+				{
+					if (reason_unique_name_exists($this->params['parent_unique_name']))
+					{
+						$page = new entity(id_of($this->params['parent_unique_name']));
+						if (reason_is_entity($page, 'minisite_page')) $this->_parent_page = $page;
+						else trigger_error('The unique name specified in parent_unique_name ('.$this->params['parent_unique_name'].') was ignored - it needs to refer to a minisite page entity.');
+					}
+					else trigger_error('The unique name specified in parent_unique_name ('.$this->params['parent_unique_name'].') was ignored - it does not exist.');
+				}
+				if (!isset($this->_parent_page)) $this->_parent_page = new entity($this->page_id);
+			}
+			return $this->_parent_page;
+		}
+		
+		/**
+		 * We determine whether the parent_page is on the current site using the page tree if available or a direct query.
+		 *
+		 * @return boolean
+		 */
+		function parent_page_is_on_current_site()
+		{
+			if (!isset($this->_parent_page_is_on_current_site))
+			{
+				$page = $this->get_parent_page();
+				if ( $pages = $this->get_page_nav() )
+				{
+					$this->_parent_page_is_on_current_site = isset($pages->values[$page->id()]);
+				}
+				else
+				{
+					$this->_parent_page_is_on_current_site = (get_owner_site_id($page->id()) == $this->site_id);
+				}
+			}
+			return $this->_parent_page_is_on_current_site;
+		}
+		
+		/**
+		 * Returns the id of the parent page.
+		 *
+		 * @return int id of the parent page
+		 */
+		function get_parent_page_id()
+		{
+			$page = $this->get_parent_page();
+			return $page->id();
+		}
+		
 		function _param_to_sql_set($param)
 		{
 			if(is_array($param))
@@ -99,7 +160,8 @@
 				return '"'.addslashes($param).'"';
 			}
 		}
-		function has_content() // {{{
+		
+		function has_content()
 		{
 			if( empty($this->offspring) )
 			{
@@ -107,8 +169,9 @@
 			}
 			else
 				return true;
-		} // }}}
-		function run() // {{{
+		}
+		
+		function run()
 		{
 			/* If the page has no entries, say so */
 			if( empty($this->offspring ) )
@@ -136,20 +199,14 @@
 				
 				foreach( $this->offspring AS $child )
 				{
-					if ( $this->cur_page->id() != $child->id() )
-					{
-						$this->show_child_page($child,$counter,$even_odd);
-						$counter++;
-						
-						if($even_odd == 'even')
-							$even_odd = 'odd';
-						else
-							$even_odd = 'even';
-					}
+					$this->show_child_page($child,$counter,$even_odd);
+					$counter++;
+					$even_odd = ($even_odd == 'even') ? 'odd' : 'even';
 				}
 				echo "</ul>\n";
 			}
-		} // }}}
+		}
+		
 		function show_child_page($child,$counter,$even_odd)
 		{
 			/* If the page has a link name, use that; otherwise, use its name */
@@ -226,10 +283,12 @@
 			}
 			echo '</li>'."\n";
 		}
+		
 		function get_page_name($page)
 		{
-			return $page->get_value( 'link_name' ) ? $page->get_value( 'link_name' ) : $page->get_value('name');
+			return ($page->get_value( 'link_name' ) && empty($this->params['force_full_page_titles'])) ? $page->get_value( 'link_name' ) : $page->get_value('name');
 		}
+		
 		function get_page_image($page_id)
 		{
 			$es = new entity_selector();
@@ -239,45 +298,86 @@
 			$es->set_num(1);
 			$es->limit_tables();
 			$es->limit_fields();
-			if($this->params['randomize_images'])
-				$es->set_order('rand()');
-			else
-				$es->set_order('relationship.rel_sort_order ASC');
+			if($this->params['randomize_images']) $es->set_order('rand()');
+			else $es->set_order('relationship.rel_sort_order ASC');
 			$images = $es->run_one();
-			//echo $es->get_one_query();
 			if(!empty($images))
 			{
 				return current($images);
 			}
 			return false;
 		}
+		
+		/**
+		 * Get the full page link for a page. We fork our linking logic based on whether we have specified a parent_unique_name or not.
+		 *
+		 * - If no, we get the relative URL just by looking at the url_fragment.
+		 * - If yes, we call get_page_link_other_parent($page)
+		 *
+		 * @return string href attribute
+		 */
 		function get_page_link($page)
 		{
 			/* Check for a url (that is, the page is an external link); otherwise, use its relative address */
 			if( $page->get_value( 'url' ) )
+			{
 				$link = $page->get_value( 'url' );
+			}
 			else
 			{
-				$link = $page->get_value( 'url_fragment' ).'/';
+				if ($this->page_id == $this->get_parent_page_id()) // current page is the parent - use a relative link for speed.
+				{
+					$link = $page->get_value( 'url_fragment' ).'/';
+				}
+				else // we use a link relative to the site or absolute to another page
+				{
+					$link = $this->get_page_link_other_parent($page);
+				}
 				if (!empty($this->textonly))
+				{
 					$link .= '?textonly=1';
+				}
 			}
 			return $link;
 		}
-		function last_modified() // {{{
+		
+		/**
+		 * A function to get the page link when the parent_unique_name param has been specified.
+		 *
+		 * - if the page is on the same site we use the page tree directly.
+		 * - If not, we just use reason_get_page_url() since it is faster than building the whole tree.
+		 *
+		 * @return string href attribute
+		 */
+		function get_page_link_other_parent($page)
+		{
+			if ($this->parent_page_is_on_current_site() && ($pages = $this->get_page_nav())) // we can use the page tree
+			{
+				return $pages->get_url_from_base($page->id()); // relative to our site
+			}
+			else
+			{
+				return reason_get_page_url($page->id()); // absolute to some other site or page tree is not available
+			}
+		}
+		
+		function last_modified()
 		{
 			if( $this->has_content() )
 			{
-				$temp = $this->es->get_max( 'last_modified' );
-				return $temp->get_value( 'last_modified' );
+				foreach ($this->offspring as $entity)
+				{
+					$last_modified = $entity->get_value( 'last_modified' );
+					$max = (!isset($max) || $last_modified > $max) ? $last_modified : $max;
+				}
+				return $max;
 			}
-			else
-				return false;
-		} // }}}
+			else return false;
+		}
+		
 		function get_documentation()
 		{
 			return '<p>Displays links to the current page\'s children. Each link includes the name of the page, along with that page\'s description</p>';
 		}
 	}
-
 ?>

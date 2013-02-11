@@ -222,6 +222,18 @@ function _sanity_check_mime_type($file_extension, $mime_type)
 		// We're just going to assume it's video/x-ms-wmv.
 		return "video/x-ms-wmv";
 	}
+	if ($file_extension == 'docx') {
+		// We're just going to assume it's an office 2007 doc.
+		return "application/vnd.openxmlformats";
+	}
+	if ($file_extension == 'pptx') {
+		// We're just going to assume it's an office 2007 doc.
+		return "application/vnd.openxmlformats";
+	}
+	if ($file_extension == 'xlsx') {
+		// We're just going to assume it's an office 2007 doc.
+		return "application/vnd.openxmlformats";
+	}
 	return $mime_type;
 }
 

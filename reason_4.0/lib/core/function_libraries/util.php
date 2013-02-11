@@ -1250,6 +1250,11 @@
 	function reason_user_roles($user_id)
 	{
 		static $roles_cache = array();
+		if(empty($user_id))
+		{
+			trigger_error('Empty user id passed to reason_user_roles. Returning empty array.');
+			return array();
+		}
 		if(empty($roles_cache[$user_id]))
 		{
 			$roles_cache[$user_id] = array();
@@ -2071,5 +2076,20 @@
 			}
 		}
 		return $customizer;
+	}
+	
+	/**
+	 * Returns the version number of this instance of Reason CMS.
+	 */
+	function reason_get_version()
+	{
+		static $version;
+		if (!isset($version))
+		{
+			reason_include_once('classes/version_check.php');
+			$rvc = new reasonVersionCheck();
+			$version = $rvc->get_current_version_id();
+		}
+		return $version;
 	}
 ?>

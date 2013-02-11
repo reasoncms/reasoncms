@@ -52,13 +52,18 @@ class RelatedListItemWithCategoriesMarkupGenerator extends PublicationMarkupGene
 		$pub_links = $this->passed_vars['links_to_current_publications'];
 		$owner_pub_id = $this->passed_vars['item_publication']->id();
 		$correct_pub_link = $pub_links[$owner_pub_id];
-		$markup_string = '<ul class="post-cats">';
+		$link_markup = array();
 		foreach ($this->passed_vars['item_categories'] as $cat)
 		{
 			$link_markup[] = '<li class="post-cat"><a href="' . $correct_pub_link . $cat->get_value('category_url') . '">' . $cat->get_value('name') . '</a></li>';
 		}
-		$markup_string .= implode("\n ", $link_markup);
-		$markup_string .= '</ul>';
+		$markup_string = '';
+		if(!empty($link_markup))
+		{
+			$markup_string .= '<ul class="post-cats">';
+			$markup_string .= implode("\n ", $link_markup);
+			$markup_string .= '</ul>';
+		}
 		return $markup_string;
 	}
 	

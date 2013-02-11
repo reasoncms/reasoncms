@@ -20,7 +20,16 @@
 	{
 		var $default_text;
 		var $header_text;
-		var $acceptable_params = array('header_text' => NULL, 'default_text' => NULL, 'site_unique_name'=> NULL);
+		var $acceptable_params = array(
+			'header_text' => NULL,
+			'default_text' => NULL,
+			'site_unique_name'=> NULL,
+			'search_form_method'=> NULL,
+			'search_engine_url'=> NULL,
+			'input_field_name'=> NULL,
+			'restriction_field_name'=> NULL,
+			'hidden_fields' => NULL,
+		);
 		var $_search_site;
 		
 		function init( $args = array() )
@@ -43,8 +52,7 @@
 		function has_content()
 		{
 			if( $this->_search_site->get_value('base_url') 
-				&& defined('REASON_SEARCH_ENGINE_URL') 
-				&& REASON_SEARCH_ENGINE_URL != '')
+				&& $this->get_seach_engine_url())
 				return true;
 			return false;
 		}
@@ -63,13 +71,53 @@
 			$this->run_form_hidden_fields();
 			$this->run_form_close();
 		}
+		function get_seach_form_method()
+		{
+			if(!empty($this->params['search_form_method']))
+				return $this->params['search_form_method'];
+			if(defined('REASON_SEARCH_FORM_METHOD'))
+				return REASON_SEARCH_FORM_METHOD;
+			return 'get';
+		}
+		function get_seach_engine_url()
+		{
+			if(!empty($this->params['search_engine_url']))
+				return $this->params['search_engine_url'];
+			if(defined('REASON_SEARCH_ENGINE_URL'))
+				return REASON_SEARCH_ENGINE_URL;
+			return 'http://www.google.com/search';
+		}
+		function get_seach_form_input_field_name()
+		{
+			if(!empty($this->params['input_field_name']))
+				return $this->params['input_field_name'];
+			if(defined('REASON_SEARCH_FORM_INPUT_FIELD_NAME'))
+				return REASON_SEARCH_FORM_INPUT_FIELD_NAME;
+			return 'q';
+		}
+		function get_seach_form_restriction_field_name()
+		{
+			if(!empty($this->params['restriction_field_name']))
+				return $this->params['restriction_field_name'];
+			if(defined('REASON_SEARCH_FORM_RESTRICTION_FIELD_NAME'))
+				return REASON_SEARCH_FORM_RESTRICTION_FIELD_NAME;
+			return 'as_sitesearch';
+		}
+		function get_seach_form_hidden_fields()
+		{
+			if(isset($this->params['hidden_fields']) && $this->params['hidden_fields'] !== NULL)
+				return $this->params['hidden_fields'];
+			if(defined('REASON_SEARCH_FORM_HIDDEN_FIELDS'))
+				return REASON_SEARCH_FORM_HIDDEN_FIELDS;
+			return '';
+		}
 		function run_form_open()
 		{
-			echo '<form method="'.REASON_SEARCH_FORM_METHOD.'" action="'.REASON_SEARCH_ENGINE_URL.'" name="search" class="searchForm">'."\n";
+			echo '<form method="'.$this->get_seach_form_method().'" action="'.$this->get_seach_engine_url().'" name="search" class="searchForm">'."\n";
 		}
 		function run_search_input_field()
 		{
-			echo '<input type="text" name="'.REASON_SEARCH_FORM_INPUT_FIELD_NAME.'" size="'.min(strlen($this->default_text), 40).'" value="'.$this->default_text.'" onfocus=\'if(this.value=="'.$this->default_text.'") {this.value="";}\' onblur=\'if(this.value=="") {this.value="'.$this->default_text.'";}\' class="searchInputBox" id="minisiteSearchInput" />'."\n";
+			echo '<input type="text" name="'.$this->get_seach_form_input_field_name().'" size="'.min(strlen($this->default_text), 40).'" value="'.$this->default_text.'" onfocus=\'if(this.value=="'.$this->default_text.'") {this.value="";}\' onblur=\'if(this.value=="") {this.value="'.$this->default_text.'";}\' class="searchInputBox" id="minisiteSearchInput" />'."\n";
 		}
 		function run_script_go()
 		{
@@ -82,11 +130,11 @@
 		
 		function run_restrict()
 		{
-			echo '<input type="hidden" name="'.REASON_SEARCH_FORM_RESTRICTION_FIELD_NAME.'" value="http://'.REASON_HOST . $this->_search_site->get_value('base_url').'" />'."\n";
+			echo '<input type="hidden" name="'.$this->get_seach_form_restriction_field_name().'" value="http://'.REASON_HOST . $this->_search_site->get_value('base_url').'" />'."\n";
 		}
 		function run_form_hidden_fields()
 		{
-			echo REASON_SEARCH_FORM_HIDDEN_FIELDS."\n";
+			echo $this->get_seach_form_hidden_fields()."\n";
 		}
 		function run_form_close()
 		{

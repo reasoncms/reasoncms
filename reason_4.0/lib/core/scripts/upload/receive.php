@@ -80,6 +80,7 @@ foreach (array_keys($_FILES) as $name) {
 	$temp_path = $_SERVER['DOCUMENT_ROOT'].$temp_uri;
 	$unscaled_path = null;
 	$filesize = $file->get_size();
+	
 	if (!$file->move($temp_path)) {
 		final_response(500, "Failed to place the uploaded file in temporary ".
 			"storage.");
@@ -110,12 +111,12 @@ foreach (array_keys($_FILES) as $name) {
 			final_response(501, 'Unable to convert the uploaded file to a web-friendly image');
 		}
 	}
-	
 	if ($img_info)
 	{
 		// fix a permission idiosyncrasy so the permissions are consistent
 		@copy($temp_path, $temp_path.".tmp");
 		@rename($temp_path.".tmp", $temp_path);
+		list($orig_width, $orig_height) = $img_info;
 		list($width, $height) = $img_info;
 		
 		// If exceeds width or height limit, store an original and resize the standard image
@@ -125,6 +126,14 @@ foreach (array_keys($_FILES) as $name) {
 			if ($width > $max_width || $height > $max_height) {
 				$unscaled_path = add_name_suffix($temp_path, '-unscaled');
 				if (@copy($temp_path, $unscaled_path)) {
+				
+					//Make sure the image won't make php crash:
+					if(image_is_too_big($temp_path))
+					{
+						final_response(422, "The uploaded image's dimensions are too large for the server to process. Try a smaller image.");
+					}
+
+				
 					if (resize_image($temp_path, $max_width, $max_height)) {
 						list($width, $height) = getimagesize($temp_path);
 						clearstatcache();
@@ -160,6 +169,10 @@ foreach (array_keys($_FILES) as $name) {
 			'width' => $width,
 			'height' => $height
 		);
+		$response[$name]['orig_dimensions'] = array(
+			'width' => $orig_width,
+			'height' => $orig_height
+		);
 	}
 }
 
@@ -172,6 +185,13 @@ function check_constraints($constraints, $file) {
 	
 	if (!empty($constraints['mime_types'])) {
 		if (!$file->mime_type_matches($constraints['mime_types'])) {
+			final_response(415, "File is not of an allowed type.");
+		}
+	}
+	if (!empty($constraints['extensions'])) {
+		$filename_parts = explode('.', $file->get_filename());
+		$extension = strtolower(end($filename_parts));
+		if (!in_array($extension, $constraints['extensions'])) {
 			final_response(415, "File is not of an allowed type.");
 		}
 	}
@@ -194,5 +214,5 @@ function get_next_index($file) {
 	foreach (array_keys($file) as $key) {
 		$max = max($max, $key);
 	}
-	return $max + 1;;
+	return $max + 1;
 }

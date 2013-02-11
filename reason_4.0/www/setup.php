@@ -9,7 +9,7 @@
  * @package reason
  *
  */
-$head_content = "
+$head_content = "<!DOCTYPE html>
 <html>
 <head>
 <title>Reason Setup</title>
@@ -22,6 +22,10 @@ color: red;
 .success
 {
 color: green;
+}
+.warning
+{
+color: #EAC117;
 }
 </style>
 </head>
@@ -210,6 +214,23 @@ if (isset($_POST['do_it_pass']) == false)
 		}
 	}
 	setup_www_local_support();
+	upgrade_script_reminder();
+}
+
+/**
+ * If this is a bleeding edge version of Reason, provide a reminder that upgrade scripts may need to be run (and a link)
+ */
+function upgrade_script_reminder()
+{
+	reason_include_once ('classes/version_check.php');
+	$vc = new reasonVersionCheck();
+	$cur_version = $vc->get_current_version_id();
+	$all_versions = $vc->get_all_versions();
+	if (isset($all_versions[$cur_version]) && ($all_versions[$cur_version] == 'bleeding'))
+	{
+		echo '<h3>Bleeding Edge Version Detected</h3>';
+		echo 'You are running a bleeding edge version of reason cms (' . $cur_version. '). Make sure you <a href="upgrade.php">run the latest upgrade scripts</a> to ensure your database is up to date.';
+	}
 }
 
 function setup_www_local_support()
@@ -423,7 +444,7 @@ function perform_checks()
 	if (curl_check()) $check_passed++;
 	else $check_failed++;
 	
-	if (imagemagick_check()) $check_passed++;
+	if (graphicslib_check()) $check_passed++;
 	else $check_failed++;
 	
 	echo '<h3>Performing Directory and File Checks</h3>';
@@ -804,23 +825,41 @@ function curl_check()
 }
 
 /**
- * Check to see if imagemagick is installed and working
- *
- * @todo Check for a particular version of imagemagick (e.g. 6+?)
- * http://www.nutt.net/2006/07/16/get-imagemagick-version-with-php/
+ * Check to see if a suitable graphicslib is installed and working
  */
-function imagemagick_check()
+function graphicslib_check()
 {
 	$mogrify_filename = (server_is_windows()) ? 'mogrify.exe' : 'mogrify';
-	if (file_exists(IMAGEMAGICK_PATH.$mogrify_filename))
+	$mogrify_exists = file_exists(IMAGEMAGICK_PATH.$mogrify_filename);
+	if ($mogrify_exists)
 	{
 		$cmd = "\"" . IMAGEMAGICK_PATH . "mogrify\" -version 2>&1";
 		$output = shell_exec($cmd);
 		// see if the string imagemagick exists in the output - if not it did not work properly
-		if (strpos(strtolower($output), 'imagemagick') === false) return msg('<span class="error">imagemagick check failed</span> - mogrify exists but does not appear to function properly when invoked via php...your php install should not be running in safe mode and needs to be able to use exec and shell_exec functions. Error is as follows:' . $output, false);
-		else return msg('<span class="success">imagemagick check passed</span>', true);
+		if (strpos(strtolower($output), 'imagemagick') === false)
+		{
+			$imagemagick = false;
+		}
+		else 
+		{
+			$imagemagick = true;
+		}
 	}
-	else return msg('<span class="error">imagemagick check failed</span> - ' .IMAGEMAGICK_PATH.'mogrify not found - check the IMAGEMAGICK_PATH constant in package_settings.php, and php permissions.', false);
+	else $imagemagick = false;
+	
+	// lets try GD
+	if (!$imagemagick)
+	{
+		$gd = (extension_loaded('gd') && function_exists('gd_info'));
+	}
+	
+	if ($imagemagick || $gd)
+	{
+		if ($imagemagick) return msg('<span class="success">graphicslib check passed - imagemagick loaded</span>', true);
+		elseif ($gd && $mogrify_exists) return msg('<span class="success">graphicslib check passed - fell to GD ... imagemagick exists but does not appear to function properly when invoked via php...your php install should not be running in safe mode and needs to be able to use exec and shell_exec functions. Error is as follows:' . $output, true);
+		else return msg('<span class="warning">graphicslib check passed - fell to GD ... imagemagick is preferred but could not be found.</span>', true);
+	}
+	else return msg('<span class="error">graphicslib check failed</span> - ' .IMAGEMAGICK_PATH.'mogrify not found - check the IMAGEMAGICK_PATH constant in package_settings.php, and php permissions. Alternatively, make sure GD is available.', false);
 }
 
 /**

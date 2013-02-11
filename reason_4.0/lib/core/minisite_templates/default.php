@@ -553,14 +553,25 @@ class MinisiteTemplate
 				$this->head_items->add_stylesheet( $url, $media );
 			}
 		}
-		if($this->theme->get_value('theme_customizer') && $this->site_info->get_value('theme_customization'))
+		if($customizer = $this->get_theme_customizer())
 		{
-			$customizer = reason_get_theme_customizer($this->site_info, $this->theme);
-			if(!empty($customizer))
-				$customizer->modify_head_items($this->head_items);
-			else
-				trigger_error('Theme customizer "'.$this->theme->get_value('theme_customizer').'" not found or not registered properly. No customizations applied.');
+			$customizer->modify_head_items($this->head_items);
 		}
+	}
+	function get_theme_customizer()
+	{
+		if(!isset($this->theme_customizer))
+		{
+			if($this->theme->get_value('theme_customizer') && $this->site_info->get_value('theme_customization'))
+			{
+				$this->theme_customizer = reason_get_theme_customizer($this->site_info, $this->theme);
+				if(empty($this->theme_customizer))
+					trigger_error('Theme customizer "'.$this->theme->get_value('theme_customizer').'" not found or not registered properly. No customizations applied.');
+			}
+			else
+				$this->theme_customizer = false;
+		}
+		return $this->theme_customizer;
 	}
 	function get_meta_information()
 	{
@@ -741,6 +752,10 @@ class MinisiteTemplate
 		$page_type = $this->_legacy_alter_page_type($page_type, $requested_page_type_name);
 		$this->alter_reason_page_type($page_type);
 
+		if (extension_loaded('newrelic')) { 
+			newrelic_name_transaction($page_type->get_name()); 
+		}
+		
 		// if an api was requested lets identify the region to run
 		if ($requested_api = $this->get_requested_api())
 		{
@@ -772,7 +787,6 @@ class MinisiteTemplate
 					if( !empty( $module_class ) )
 					{
 						$this->_modules[ $region ] = new $module_class;
-						$prepped_request = conditional_stripslashes($_REQUEST);
 						$args = array();
 						// set up a reference instead of a copy
 						// dh - I really want to get rid of this.  For now, it stays.  However, I'm adding a number
@@ -818,11 +832,8 @@ class MinisiteTemplate
 						// has been loaded.
 						$this->_modules[ $region ]->pre_request_cleanup_init();
 						
-						// it's a little ugly, but i'm setting the request variable directly here.  other method used to
-						// do this, but i wanted to have a few more hooks above that would allow a module to do some work
-						// before get_cleanup_rules was called.  obviously, the request variables are unavailable to those
-						// modules.
-						$this->_modules[ $region ]->request = $this->clean_vars( $prepped_request, $this->_modules[$region]->get_cleanup_rules() );
+						// Set the module request array based on the cleanup rules. 
+						$this->_modules[ $region ]->request = $this->clean_external_vars($this->_modules[$region]->get_cleanup_rules());
 						
 						// init takes $args as a backwards compatibility feature.  otherwise, everything should be handled
 						// in prep_args
@@ -856,6 +867,46 @@ class MinisiteTemplate
 		return carl_clean_vars( $vars, $rules );
 	} // }}}
 
+	function clean_external_vars($rules)
+	// Cleanup rules can include a 'method'
+	// parameter which indicates where the value should come from -- options are get, post, and 
+	// nothing/anything else, which means the $_REQUEST array.
+	{
+		$request = $cleanup_params = array();
+		$prepped_request = conditional_stripslashes($_REQUEST);
+		$prepped_post = conditional_stripslashes($_POST);
+		$prepped_get = conditional_stripslashes($_GET);
+		foreach ($rules as $param => $rule)
+		{
+			if (isset($rule['method']))
+			{
+				switch ($rule['method'])
+				{
+					case 'get':
+					case 'GET':
+						$cleanup_params['prepped_get'][$param] = $rule;
+						break;
+					case 'post':
+					case 'POST':
+						$cleanup_params['prepped_post'][$param] = $rule;
+						break;
+					default:
+						$cleanup_params['prepped_request'][$param] = $rule;
+						break;
+				}
+			} else {
+				$cleanup_params['prepped_request'][$param] = $rule;	
+			}	
+		}
+		foreach ($cleanup_params as $source => $rules)
+		{
+			$cleaned = $this->clean_vars( $$source, $rules );
+			$request = array_merge($request, $cleaned);
+		}
+		return $request;
+	} // }}}
+		
+	
 	function run_section( $sec ) // {{{
 	{
 		$module =& $this->_get_module( $sec );

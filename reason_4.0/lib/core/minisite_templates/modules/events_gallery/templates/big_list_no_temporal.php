@@ -25,10 +25,6 @@ class eventsGalleryBig_list_no_temporalTemplate
 				$url = $rsi->get_url();
 				$ret .= '<img src="'.htmlspecialchars($url).'" alt="'.reason_htmlspecialchars(strip_tags($image->get_value('description'))).'" width="280" height="200" class="primaryImage" />'."\n";
 			}
-			else
-			{
-				$ret .= '<img src="/global_stock/css/museum/images/default_event_background.jpg" class="primaryImage" width="295" height="200" alt="" />'."\n";
-			}
 			$ret .= '</span>'."\n";
 			$ret .= '<span class="info">'."\n";
 			$ret .= '<span class="meta">'."\n";

@@ -18,13 +18,17 @@ class hiddenType extends defaultType
 {
 	var $type = 'hidden';
 	var $_hidden = true;
+	var $userland_changeable = false;
 	
+	/** @access private */
+	var $type_valid_args = array( 'userland_changeable');
+
 	function grab()
 	{
 		$value = $this->grab_value();
-		if($value !== NULL && $value != $this->get() && preg_replace('/\s+/','',$value) != preg_replace('/\s+/','',$this->get()))
+		if(!$this->userland_changeable && $value !== NULL && $value != $this->get() && preg_replace('/\s+/','',$value) != preg_replace('/\s+/','',$this->get()))
 		{
-			trigger_error('hidden element ('.$this->name.') value changed in userland. This is deprecated (insecure) behavior and will not be allowed in future releases.');
+			trigger_error('hidden element ('.$this->name.') value changed in userland ('. $value .' != '. $this->get() .'). If you wish to permit userland changes to this field, set the userland_changeable param.');
 		}
 		parent::grab();
 	}

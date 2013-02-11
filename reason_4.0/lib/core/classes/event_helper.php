@@ -1,4 +1,4 @@
-<?
+<?php
 include_once('reason_header.php');
 reason_include_once( 'classes/entity_selector.php' );
 reason_include_once( 'classes/object_cache.php' );

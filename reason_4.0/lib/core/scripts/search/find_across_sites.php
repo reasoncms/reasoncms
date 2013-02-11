@@ -27,10 +27,10 @@ $current_user = check_authentication();
 $current_user_id = get_user_id ( $current_user );
 if (!reason_user_has_privs( $current_user_id, 'view_sensitive_data' ) )
 {
-	die('<html><head><title>Find Something in Reason</title></head><body><h1>Sorry.</h1><p>You do not have permission to search across sites.</p><p>Only Reason users who have sensitive data viewing privileges may do that.</p></body></html>');
+	die('<!DOCTYPE html><html><head><title>Find Something in Reason</title></head><body><h1>Sorry.</h1><p>You do not have permission to search across sites.</p><p>Only Reason users who have sensitive data viewing privileges may do that.</p></body></html>');
 }
 
-echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
+echo '<!DOCTYPE html>';
 echo '<html><head>';
 echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
 echo '<title>Find Something in Reason</title>';

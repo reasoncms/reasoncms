@@ -16,6 +16,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'Publication
 include_once( 'reason_header.php' );
 reason_include_once( 'minisite_templates/modules/generic3.php' );
 reason_include_once( 'classes/page_types.php' );
+reason_include_once( 'classes/inline_editing.php' );
 /**
 * A minisite module to handle publications, including blogs, issued newsletters, and newsletters.
 * 
@@ -157,6 +158,7 @@ class PublicationModule extends Generic3Module
 									  //links
 	 								   'back_link' => 'construct_back_link',
 									   'back_to_section_link' => 'construct_back_to_section_link',
+									   'back_to_filters_link' => 'construct_back_to_filters_link',
 									   //comments
 									   'comment_group' => 'get_comment_group',
 									   'comment_group_helper' => 'get_comment_group_helper',
@@ -179,6 +181,9 @@ class PublicationModule extends Generic3Module
 									   'text_only' => 'get_text_only_state',
 									   'current_filters' => 'get_current_filter_entities',
 									   'inline_editing_info' => 'get_inline_editing_info',
+									   'filter_interface_markup'=>'get_filter_interface_markup',
+									   'search_interface_markup'=>'get_search_interface_markup',
+									   'pagination_markup' => 'get_pagination_markup',
 									);
 	
 	/**
@@ -507,7 +512,7 @@ class PublicationModule extends Generic3Module
 		$potential_params = array('use_filters', 'use_pagination', 'num_per_page', 'max_num_items', 'minimum_date_strtotime_format', 'show_login_link', 
 		      					  'show_module_title', 'related_mode', 'related_order', 'date_format', 'related_title',
 		      					  'limit_by_page_categories', 'related_publication_unique_names', 'related_category_unique_names','css',
-		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization','comment_form_file_location','post_form_file_location');
+		      					  'show_featured_items','jump_to_item_if_only_one_result','authorization','comment_form_file_location','post_form_file_location',);
 		$markup_params = 	array('markup_generator_info' => $this->markup_generator_info, 
 							      'item_specific_variables_to_pass' => $this->item_specific_variables_to_pass,
 							      'variables_to_pass' => $this->variables_to_pass);
@@ -520,6 +525,9 @@ class PublicationModule extends Generic3Module
 				$this->acceptable_params[$k] = $v;
 			}
 		}
+		$this->acceptable_params['module_displays_search_interface'] = true;
+		$this->acceptable_params['module_displays_filter_interface'] = true;
+		$this->acceptable_params['show_pagination_in_module'] = true;
 		parent::handle_params( $params );
 	}
 
@@ -792,10 +800,14 @@ class PublicationModule extends Generic3Module
 		$user_issue_keys = $all_issue_keys = array();
 		$requested_issue = (!empty($this->request['issue_id'])) ? $this->request['issue_id'] : false;
 		$requested_section = (!empty($this->request['section_id'])) ? $this->request['section_id'] : false;
+		
+		// if we have an item
 		if ($this->current_item_id)
 		{
-			$issues =& $this->get_issues_for_item();
+			$issues =& $this->get_visible_issues_for_item();
 			$user_issue_keys = (!empty($issues)) ? array_keys($issues) : false;
+			$all_issues =& $this->get_all_issues();
+			$all_issue_keys = array_keys($all_issues);
 		}
 		else
 		{
@@ -819,27 +831,24 @@ class PublicationModule extends Generic3Module
 		}	
 		if ((!empty($user_issue_keys) || !empty($all_issue_keys))) // item is in an issue
 		{
-			if (in_array($requested_issue, $user_issue_keys))
+			if (!empty($user_issue_keys) && in_array($requested_issue, $user_issue_keys))
 			{
 				$this->issue_id = $requested_issue; // requested issue verified
 				$this->_add_css_urls_to_head($this->_get_issue_css($this->issue_id));
-				//if(empty($this->request[$this->query_string_frag.'_id']))
-				//{
-					$issue_link = $this->get_links_to_issues();
-					$issue = new entity($this->issue_id);
-					$this->_add_crumb( $issue->get_value( 'name' ), $this->get_link_to_issue($issue) );
-					if($requested_section)
+				$issue_link = $this->get_links_to_issues();
+				$issue = new entity($this->issue_id);
+				$this->_add_crumb( $issue->get_value( 'name' ), $this->get_link_to_issue($issue) );
+				if($requested_section)
+				{
+					$section = $this->get_current_section();
+					if ($section)
 					{
-						$section = $this->get_current_section();
-						if ($section)
-						{
-							$this->_add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
-						}
+						$this->_add_crumb( $section->get_value( 'name' ), $this->get_link_to_section($section) );
 					}
-				//}
+				}
 				return true;
 			}
-			elseif (in_array($requested_issue, $all_issue_keys))
+			elseif (!empty($all_issue_keys) && in_array($requested_issue, $all_issue_keys))
 			{
 				if (!reason_check_authentication()) // person is not logged in, but could have access to a hidden issue - force login
 				{
@@ -1362,21 +1371,19 @@ class PublicationModule extends Generic3Module
 		 *
 		 * It also does some checks and may redirect to make URLs sane (IE link given with wrong section).
 		 *
-		 * @param entity $entity News item entity
+		 * @param entity $entity news_item_entity
 		 * @return boolean True if OK
 		 */
 		function further_checks_on_entity( $entity )
 		{
 			if(empty($this->items[$entity->id()]))
 			{
-				if($entity->get_value('status') == 'pending' && !user_has_access_to_site($this->site_id) )
-					return false;
+				if($entity->get_value('status') == 'pending' && !user_has_access_to_site($this->site_id)) return false;
 				$publication_check = ($entity->has_left_relation_with_entity($this->publication, 'news_to_publication'));
-				if ($this->has_issues())
+				// check that issue id is present and validated if the publication has issue
+				if ($this->publication->get_value('has_issues') == 'yes')
 				{
-					$issues_for_item =& $this->get_issues_for_item();
-					$issue_ids = array_keys($issues_for_item);
-					$issue_check = in_array($this->issue_id, $issue_ids);
+					$issue_check = (!empty($this->request['issue_id']) && ($this->request['issue_id'] == $this->issue_id));
 				}
 				else $issue_check = true;
 				if ($publication_check && $issue_check) return true;
@@ -1546,18 +1553,41 @@ class PublicationModule extends Generic3Module
 			static $issues;
 			if (!isset($issues[$this->current_item_id]))
 			{
-				$es = new entity_selector( $this->site_id );
-				$es->description = 'Selecting issues for this news item';
-				$es->limit_tables('dated');
-				$es->limit_fields('dated.datetime');
-				$es->add_type( id_of('issue_type') );
-				$es->add_right_relationship( $this->current_item_id, relationship_id_of('news_to_issue') );
-				$es->add_relation('entity.id IN ('.implode(", ", array_keys($this->get_issues())).')');
-				$es->set_order('dated.datetime DESC');
-				$issue_set = $es->run_one();
-				$issues[$this->current_item_id] = $issue_set;
+				if ($all_issues = $this->get_all_issues())
+				{
+					$es = new entity_selector( $this->site_id );
+					$es->description = 'Selecting issues for this news item';
+					$es->limit_tables('dated');
+					$es->limit_fields('dated.datetime');
+					$es->add_type( id_of('issue_type') );
+					$es->add_right_relationship( $this->current_item_id, relationship_id_of('news_to_issue') );
+					$es->add_relation('entity.id IN ('.implode(", ", array_keys($all_issues)).')');
+					$es->set_order('dated.datetime DESC');
+					$issue_set = $es->run_one();
+					$issues[$this->current_item_id] = $issue_set;
+				}
+				else $issues[$this->current_item_id] = FALSE;
 			}
 			return $issues[$this->current_item_id];
+		}
+		
+		/**
+		* Returns an array of the visible issues associated with the current item id.
+		* Format: $issue_id => $issue_entity
+		* @return array array of the issues for this publication
+		*/
+		function &get_visible_issues_for_item()
+		{
+			static $visible_issues;
+			if (!isset($visible_issues[$this->current_item_id]))
+			{
+				if ($issues_for_item = $this->get_issues_for_item())
+				{
+					$visible_issues[$this->current_item_id] = $this->filter_hidden_issues($issues_for_item);
+				}
+				else $visible_issues[$this->current_item_id] = FALSE;
+			}
+			return $visible_issues[$this->current_item_id];
 		}
 		
 //		/**
@@ -2048,6 +2078,49 @@ class PublicationModule extends Generic3Module
 			}
 			else parent::get_login_logout_link();
 		}
+		
+		function show_filtering()
+		{
+			if($this->params['module_displays_search_interface'] || $this->params['module_displays_filter_interface'])
+			{
+				$markup = $this->get_filter_markup();
+				if($this->params['module_displays_search_interface'] && !empty($markup['search']))
+				{
+					echo $markup['search'];
+				}
+				if($this->params['module_displays_filter_interface'] && !empty($markup['filter']))
+				{
+					echo $markup['filter'];
+				}
+			}
+		}
+		
+		function get_pagination_markup($class = '')
+		{
+			if($this->use_pagination && ( $this->show_list_with_details || empty( $this->current_item_id ) ) )
+			{
+				if(empty($this->total_pages))
+					$this->total_pages = ceil( $this->total_count / $this->num_per_page );
+				if($this->total_pages > 1)
+				{
+					if(empty($this->pagination_output_string))
+					{
+						$this->pagination_output_string = $this->_get_pagination_markup();
+					}
+					if(!empty($class))
+					{
+						$class = ' '.$class;
+					}
+					return '<div class="pagination'.$class.'">'.$this->pagination_output_string.'</div>'."\n";
+				}
+			}
+			return '';
+		}
+		function show_pagination($class = '')
+		{
+			if($this->params['show_pagination_in_module'])
+				echo $this->get_pagination_markup($class);
+		}
 
 		/**
 		*  Uses a list item markup generator to get the markup for each item of the list.
@@ -2143,6 +2216,9 @@ class PublicationModule extends Generic3Module
 		
 		/**
 		 * Grab featured items from related publications and populate $featured_items[$pub_id]
+		 *
+		 * - We optimize and sort differently depending on how many related publications we are picking from.
+		 * - If just one, we use relationship_sort_order, otherwise we do datetime DESC.
 		 */
 		function get_related_featured_items()
 		{
@@ -2150,22 +2226,48 @@ class PublicationModule extends Generic3Module
 			$related_pub_ids = implode(",", array_keys($this->related_publications));
 			if ($this->show_featured_items && !empty($related_pub_ids))
 			{
-				$es = new entity_selector( $this->site_id );
-				$es->description = 'Selecting featured news items from related publications';
-				$es->add_type( id_of('news') );
-				$es->set_env('site', $this->site_id);
-				$alias['rel_pub_id'] = current($es->add_right_relationship_field( 'publication_to_featured_post', 'entity', 'id', 'related_publication_id' ));
-				$alias['pub_id'] = current($es->add_left_relationship_field( 'news_to_publication', 'entity', 'id', 'publication_id' ));
-				$es->add_relation($alias['rel_pub_id']['table'] . '.id IN ('.$related_pub_ids.')');
-				$es->add_relation($alias['rel_pub_id']['table'] . '.id = '.$alias['pub_id']['table'] . '.id');
-				$es->add_relation('status.status = "published"');
-				$es->set_order('dated.datetime DESC');
-				$fi = $es->run_one();
-				if (!empty($fi))
+				if (count($this->related_publications) > 1) // we use dated.datetime DESC for sort order
 				{
-					foreach($fi as $k=>$v)
+					$es = new entity_selector( $this->site_id );
+					$es->description = 'Selecting featured news items from related publications';
+					$es->add_type( id_of('news') );
+					$es->set_env('site', $this->site_id);
+					$alias['rel_pub_id'] = current($es->add_right_relationship_field( 'publication_to_featured_post', 'entity', 'id', 'related_publication_id' ));
+					$alias['pub_id'] = current($es->add_left_relationship_field( 'news_to_publication', 'entity', 'id', 'publication_id' ));
+					$es->add_relation($alias['rel_pub_id']['table'] . '.id IN ('.$related_pub_ids.')');
+					$es->add_relation($alias['rel_pub_id']['table'] . '.id = '.$alias['pub_id']['table'] . '.id');
+					$es->add_relation('status.status = "published"');
+					$es->set_order('dated.datetime DESC');
+					$fi = $es->run_one();
+					if (!empty($fi))
 					{
-						$featured_items[$k] = $v;
+						foreach($fi as $k=>$v)
+						{
+							$featured_items[$k] = $v;
+						}
+					}
+				}
+				else // lets use relationship sort order since we have only 1 related publication.
+				{
+					$related_pub_id = $related_pub_ids;
+					$es = new entity_selector( $this->site_id );
+					$es->description = 'Selecting featured news items from a single related publication';
+					$es->add_type( id_of('news') );
+					$es->set_env('site', $this->site_id);
+					$es->add_right_relationship( $related_pub_id, relationship_id_of('publication_to_featured_post') );
+					$es->add_left_relationship( $related_pub_id, relationship_id_of('news_to_publication') );
+					$es->add_rel_sort_field($related_pub_id, relationship_id_of('publication_to_featured_post'), 'featured_sort_order');
+					$es->set_order('featured_sort_order ASC');
+					
+					$fi = $es->run_one();
+					if (!empty($fi))
+					{
+						foreach($fi as $k=>$v)
+						{
+							$featured_items[$k] = $v;
+							$featured_items[$k]->set_value('publication_id', $related_pub_id);
+							$featured_items[$k]->set_value('related_publication_id', $related_pub_id);
+						}
 					}
 				}
 			}
@@ -2213,6 +2315,21 @@ class PublicationModule extends Generic3Module
 			return $pages;
 		}
 		
+		function get_search_interface_markup()
+		{
+			$markup = $this->get_filter_markup();
+			if(!empty($markup['search']))
+				return $markup['search'];
+			return '';
+		}
+		
+		function get_filter_interface_markup()
+		{
+			$markup = $this->get_filter_markup();
+			if(!empty($markup['filter']))
+				return $markup['filter'];
+			return '';
+		}
 		
 		/**	
 		* Returns the number of comments associated with a news item.
@@ -2279,14 +2396,20 @@ class PublicationModule extends Generic3Module
 			$current_issue = $this->get_current_issue();
 			if(!empty($current_issue))
 				$main_list_name .= ', '.$current_issue->get_value('name');
-			echo '<div><a href="'.$this->construct_back_link().'">Return to '.$main_list_name.'</a></div>';
+			echo '<div class="mainBackLink"><a href="'.$this->construct_back_link().'">Return to '.$main_list_name.'</a></div>';
 			
 			
 			$current_section = $this->get_current_section();
 			if(!empty($current_section))
 			{
 				$section_name = $current_section->get_value('name').' ('.$main_list_name.')';
-				echo '<div><a href="'.$this->construct_back_to_section_link().'">Return to '.$section_name.'</a></div>';
+				echo '<div class="sectionBackLink"><a href="'.$this->construct_back_to_section_link().'">Return to '.$section_name.'</a></div>';
+			}
+			
+			$back_to_filter_link = $this->construct_back_to_filters_link();
+			if(!empty($back_to_filter_link))
+			{
+				echo '<div class="filtersBackLink"><a href="'.$back_to_filter_link.'">Return to your search/category results</a></div>';
 			}
 			
 			echo '</div>';
@@ -2315,6 +2438,14 @@ class PublicationModule extends Generic3Module
 			if(!empty($this->issue_id))
 			{
 				$args[] = 'issue_id';
+				if(!empty($this->filters))
+				{
+					$args['filter1'] = $args['filter2'] = $args['filter3'] = '';
+				}
+				if(!empty($this->request['search']))
+				{
+					$args['search'] = '';
+				}
 			}
 			return $this->construct_link(NULL, $this->get_query_string_values($args));	
 		}
@@ -2330,6 +2461,18 @@ class PublicationModule extends Generic3Module
 				{
 					$args[] = 'issue_id';
 				}	
+				
+				return $this->construct_link(NULL, $this->get_query_string_values($args));
+			}
+			else 
+				return false;
+		}
+		
+		function construct_back_to_filters_link()
+		{
+			if((!empty($this->filters) || !empty($this->request['search'])) && !empty($this->issue_id) && !empty($this->request[$this->query_string_frag.'_id']) )
+			{
+				$args = array('filter1','filter2','filter3', 'search', 'issue_id' => '');
 				
 				return $this->construct_link(NULL, $this->get_query_string_values($args));
 			}

@@ -85,6 +85,8 @@ class AdminPage
 	 * @var array
 	 */
 	protected $user_access_sites;
+	
+	var $types;
 
 	//default args will be always passed on admin pages
 	var $default_args = array('site_id',
@@ -898,7 +900,8 @@ class AdminPage
 
 		echo '<a href="'.$this->make_link( 
 			array( 
-					'site_id' => $site->id()
+					'site_id' => $site->id(),
+					'cur_module' => '',
 				 )
 			).'" class="nav">'.$site->get_value('name').'</a></li>' . "\n";
 	}
@@ -981,15 +984,24 @@ class AdminPage
 				'cur_module' => '', ) );
 		return '<h1 class="siteName"><a href="'.$link.'">'.$site->get_value( 'name' ).'</a></h1>'."\n";
 	}
+	function get_types_for_current_site()
+	{
+		if(!isset($this->types))
+		{
+			$es = new entity_selector( );
+			$es->add_type( id_of('type') );
+			$es->add_right_relationship( $this->site_id, relationship_id_of( 'site_to_type' ) );
+			$es->set_order( 'entity.name ASC' );
+			$this->types = $es->run_one();
+		}
+		return $this->types;
+	}
 	// IN_MODULE
 	function types() // {{{
 	//shows a list of types for a current site.  is called in leftbar_normal().
 	{
-		$es = new entity_selector( );
-		$es->add_type( id_of('type') );
-		$es->add_right_relationship( $this->site_id, relationship_id_of( 'site_to_type' ) );
-		$es->set_order( 'entity.name ASC' );
-		$types = $es->run_one();
+		
+		$types = $this->get_types_for_current_site();
 		
 		//remove the site_cannot_edit_type types
 		$nes = new entity_selector( );
@@ -1150,6 +1162,19 @@ class AdminPage
 				{
 					echo '<li><a href="'.$this->make_link(array('site_id'=>id_of('master_admin'),'type_id'=>id_of('site'),'id'=>$this->site_id,'cur_module'=>'Editor')).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/pencil.png" alt="" /> Site Setup</a></li>'."\n";
 				}
+			}
+			$types = $this->get_types_for_current_site();
+			if( isset($types[id_of('publication_type')]) || isset($types[id_of('event_type')]) )
+			{
+				$cur_mod = false;
+				if(!empty($this->request['cur_module']) && 'Newsletter' == $this->request['cur_module'])
+					$cur_mod = true;
+				echo '<li class="navItem;';
+				if( $this->cur_module == 'Newsletter' )
+					echo ' navSelect';
+				echo '">';
+				echo '<a href="'.$this->make_link(array('type_id'=>'','cur_module'=>'Newsletter')).'" class="nav"><img src="'.REASON_HTTP_BASE_PATH.'silk_icons/email.png" alt="Email" /> Newsletter Builder</a>';
+				echo '</li>'."\n";
 			}
 			echo '</ul></div>'."\n";
 		//}
@@ -1352,7 +1377,7 @@ class AdminPage
 		echo '<tr>' . "\n";
 		echo '<td class="crumbs"> '.REASON_ADMIN_LOGO_MARKUP;
 		echo '<span>';
-		echo '<strong> :: <a href="'.$this->make_link(array('cur_module'=>'about_reason')).'" class="bannerLink">Reason '.REASON_VERSION.'</a></strong>';
+		echo '<strong> :: <a href="'.$this->make_link(array('cur_module'=>'about_reason')).'" class="bannerLink">Reason '. reason_get_version() .'</a></strong>';
 		if($this->site_id != id_of('master_admin'))
 		{
 			$sites = $this->get_sites();
@@ -1406,7 +1431,7 @@ class AdminPage
 					$username = $users[$this->authenticated_user_id]->get_value('name');
 				else
 					$username = 'me';
-				echo '<a class="stopPosing" href="'.$this->make_link(array('user_id'=>$this->authenticated_user_id)).'" title="Stop posing as another user">'.htmlspecialchars($username).'</a>'."\n";
+				echo '<a class="stopPosing" href="'.carl_make_link(array('user_id'=>$this->authenticated_user_id)).'" title="Stop posing as another user">'.htmlspecialchars($username).'</a>'."\n";
 			}
 			if ($show_logout) echo ' <strong><a href="'.REASON_LOGIN_URL.'?logout=true" class="bannerLink">Logout</a></strong>';
 			echo '</form>';
@@ -1621,14 +1646,20 @@ class AdminPage
 	//checks to make sure user has access to current site, otherwise, sends him home.
 	{
 		$error_messages = array(
-								'site_to_user' => 'You do not have access to this site.',
+								'site_is_site' => 'You have requested an invalid site.',
 								'site_to_type' => 'This site does not have access to this type.',
 								'type_to_id' => 'The entity you have chosen does not match the type.',
 								'site_owns_id' => 'This site does not own this entity.',
 							   );
 		$message = '';
-		if( !$this->verify_user( $user ) )
-			$message = $error_messages[ 'site_to_user' ];
+		$site = new entity($this->site_id);
+		if (!reason_is_entity($site, 'site'))
+		{
+			$message = $error_messages[ 'site_is_site' ];
+		}
+		elseif( !$this->verify_user( $user ) ){
+			header('Location: ' . securest_available_protocol() . '://' . REASON_WEB_ADMIN_PATH . '?cur_module=SiteAccessDenied&user_id='.$user->id().'&requested_url='.urlencode(get_current_url()));
+		}
 		elseif( !$this->site_to_type() )
 			$message = $error_messages[ 'site_to_type' ];
 		elseif( !$this->type_to_id() )

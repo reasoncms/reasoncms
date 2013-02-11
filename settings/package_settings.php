@@ -133,10 +133,6 @@ define('DISCO_INC',INCLUDE_PATH.'disco/');
 define('FLVPLAYER_INC',INCLUDE_PATH.'flvplayer/');
 define('FLVPLAYER_HTTP_PATH','/flvplayer/');
 
-// Define the path to loki 1 files
-define('LOKI_INC',INCLUDE_PATH.'loki_1.0/');
-define('LOKI_HTTP_PATH','/loki_1.0/');
-
 // Define the path to loki 2 files
 define('LOKI_2_INC',INCLUDE_PATH.'loki_2.0/helpers/php/');
 define('LOKI_2_HTTP_PATH','/loki_2.0/');

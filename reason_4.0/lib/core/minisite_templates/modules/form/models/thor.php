@@ -596,6 +596,12 @@ class ThorFormModel extends DefaultFormModel
 			$this->_disco_admin_obj = new DiscoThorAdmin();
 			$this->_disco_admin_obj->set_thor_core($thor_core);
 			$this->_disco_admin_obj->set_user_netid($netid);
+			
+			// if the user has editing access to the site lets give the same view that we give there.
+			if ($this->_user_has_site_editing_access())
+			{
+				$this->_disco_admin_obj->show_hidden_fields_in_edit_view = true;
+			}
 		}
 		return $this->_disco_admin_obj;
 	}
@@ -613,6 +619,15 @@ class ThorFormModel extends DefaultFormModel
 			$this->_admin_obj = new ThorAdmin();
 			$this->_admin_obj->set_thor_core($thor_core);
 			$this->_admin_obj->set_admin_form($disco_admin_obj);
+			
+			// if the user has editing access to the site lets give the same privileges that we give there.
+			if ($this->_user_has_site_editing_access())
+			{
+				$this->_admin_obj->set_allow_delete(true);
+				$this->_admin_obj->set_allow_edit(true);
+				$this->_admin_obj->set_allow_new(true);
+				$this->_admin_obj->set_allow_row_delete(true);
+			}
 		}
 		return $this->_admin_obj;
 	}
@@ -675,7 +690,7 @@ class ThorFormModel extends DefaultFormModel
 		if (!isset($this->_values))
 		{
 			$thor_core =& $this->get_thor_core_object();
-			$this->_values = $thor_core->get_rows();
+			$this->_values = ($thor_core->table_exists() && $thor_core->get_rows());
 		}
 		return $this->_values;
 	}
@@ -1031,7 +1046,7 @@ class ThorFormModel extends DefaultFormModel
 		{
 			$netid = $this->get_user_netid();
 			$user_id = ($netid) ? get_user_id($netid) : false;
-			if ( ($user_id) && reason_username_has_access_to_site($netid, $this->get_site_id()) && reason_user_has_privs($user_id, 'edit')) $access = true;
+			if ($this->_user_has_site_editing_access()) $access = true;
 			elseif ($this->_user_is_in_admin_access_group()) $access = true;
 			elseif ($this->_user_receives_email_results()) $access = true;
 			else $access = false;
@@ -1061,6 +1076,13 @@ class ThorFormModel extends DefaultFormModel
 			$this->_user_has_access_to_fill_out_form = $this->_user_is_in_viewing_group();
 		}
 		return $this->_user_has_access_to_fill_out_form;
+	}
+	
+	function _user_has_site_editing_access()
+	{
+		$netid = $this->get_user_netid();
+		$user_id = ($netid) ? get_user_id($netid) : false;
+		return ( ($user_id) && reason_username_has_access_to_site($netid, $this->get_site_id()) && reason_user_has_privs($user_id, 'edit'));
 	}
 	
 	function _user_is_in_admin_access_group()

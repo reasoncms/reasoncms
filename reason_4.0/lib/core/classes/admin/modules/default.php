@@ -38,7 +38,7 @@
 					die();
 				}
 			}
-			$this->admin_page->title = 'Welcome to Reason '.REASON_VERSION.'!';
+			$this->admin_page->title = 'Welcome to Reason '. reason_get_version() .'!';
 		} // }}}
 		
 		function set_head_items(&$head_items)

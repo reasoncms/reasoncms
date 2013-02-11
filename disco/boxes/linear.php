@@ -89,6 +89,20 @@
 			echo '</span>'."\n";
 		}
 		
+		function box_item_no_label($content, $error, $key)
+		{
+			if (!empty($key)) $id = str_replace("_", "", $key);
+			$markup = '<span ';
+			if($error) 
+				$markup .= 'class="error" '; 
+			if(!empty($id)) 
+				$markup .= 'id="'.$id.'Item"';
+			$markup .= '>'."\n";
+			$markup .= $content."\n";
+			$markup .= '</span>'."\n"."\n";
+			echo $markup;
+		}
+		
 		/**
 		* Displays the buttons for this form and closes the form table.
 		* @param array $buttons The names and values for the buttons of this table ($name => $value)

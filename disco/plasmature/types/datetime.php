@@ -47,15 +47,17 @@ class monthType extends selectType
 {
 	var $type = 'month';
 	var $date_format = 'm (F)';
-	var $type_valid_args = array('date_format');
+	var $type_valid_args = array('date_format', 'pad_keys');
 	var $sort_options = false;
+	var $pad_keys = false; // Use two digit zero-padding strings (e.g. 01) instead of integer keys
 	function load_options( $args = array() )
 	{
 		for($month = 1; $month <= 12; $month++)
 		{
+			$key = ($this->pad_keys) ? sprintf('%02s', $month) : $month;
 			/* Note the use of mktime instead of carl_mktime. This is to avoid a strict notice in php 5 regarding is_dst, and
 			should not cause any problems as we are fixing the year inside the Unix era */
-			$this->options[ $month ] = carl_date($this->date_format,mktime(0,0,0,$month,1,1970));
+			$this->options[ $key ] = carl_date($this->date_format,mktime(0,0,0,$month,1,1970));
 		}
 	}
 }

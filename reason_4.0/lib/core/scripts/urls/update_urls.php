@@ -15,7 +15,7 @@
 	force_secure_if_available();
 	$current_user = check_authentication();
 	
-	echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'."\n";
+	echo '<!DOCTYPE html>'."\n";
 	echo '<html>'."\n";
 	echo '<head>'."\n";
 	echo '<title>Update Reason URLs</title>'."\n";

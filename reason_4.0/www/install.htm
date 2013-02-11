@@ -15,7 +15,7 @@ div.callOut {
 <body>
 <div class="contentHead">
 <h1 class="pageTitle"><span>Reason Install Documentation</span></h1>
-<p><em>Current for Reason 4.2 - Updated July 23, 2012</em></p>
+<p><em>Current for Reason 4.3 - Updated January 31, 2012</em></p>
 </div>
 <div class="contentMain">
 <div id="pageContent">
@@ -44,10 +44,9 @@ div.callOut {
 <p>Reason requires the following packages:</p>
 <ul>
 <li><strong><a href="http://httpd.apache.org/">Apache HTTPD with mod_rewrite enabled</a></strong> - Works with the 1.3, 2.0, and 2.2 branches.</li>
-<li><strong><a href="http://www.php.net/">PHP 5</a> with</strong></li><ul><li><strong>libtidy OR Tidy at the command line</strong></li><li><strong>libcurl OR CURL at the command line<br /></strong></li></ul>
-<li><strong><a href="http://www.mysql.com/">MySQL</a></strong> - Works with 4.0 and 4.1, and 5</li>
-<li><strong><a href="http://www.imagemagick.org/script/index.php">ImageMagick</a></strong></li>
-<li><strong><a href="http://www.boutell.com/gd/">GDlib</a></strong></li>
+<li><strong><a href="http://www.php.net/">PHP 5.1</a> with</strong></li><ul><li><strong>libtidy OR Tidy at the command line</strong></li><li><strong>libcurl OR CURL at the command line<br /></strong></li></ul>
+<li><strong><a href="http://www.mysql.com/">MySQL</a></strong> - Works with 5 and probably 4.1+</li>
+<li><strong><a href="http://www.imagemagick.org/script/index.php">ImageMagick</a> (preferred) or <a href="http://www.boutell.com/gd/">GDlib</a></strong></li>
 </ul>
 <p>Reason has been installed under Linux, Mac OS X, and Windows. If you're attempting to install Reason under Windows, please read <a href="#windows">Windows-Specific Issues</a>.</p>
 <h3><a name="server_configuration" id="server_configuration"></a>Server Configuration</h3>
@@ -89,38 +88,29 @@ div.callOut {
 you have Reason running, you may further <a href="#settings">configure settings files</a>, <a href="#custom_404">setup 404 handling</a> and <a href="#cron_jobs">generate cron-based cleanup jobs</a>. These steps are especially important if you
 are setting up a production instance of Reason.</p>
 <h3><a name="database_setup" id="database_setup"></a>Setting up Databases</h3>
-<p>If you are unable to use install.sh to setup your databases automatically, you'll need to connect to MySQL to setup a database for Reason, and a database for Thor, Reason's form utility. These can be the same database if you'd like. You'll need to log into MySQL with a user who has privileges to create databases and grant privileges to other users. You can do these operations from the command line or using a tool such as phpMyAdmin.</p>
+<p>If you are unable to use install.sh to setup your databases automatically, you'll need to connect to MySQL to setup a database for Reason. We'll use the same database for Thor, Reason CMS's form utility. You'll need to log into MySQL with a user who has privileges to create databases and grant privileges to other users. You can do these operations from the command line or using a tool such as phpMyAdmin.</p>
 <div class="callOut">
 <p><strong>Connect to your MySQL instance</strong></p>
-<p><strong>Create a database for Reason:</strong></p>
+<p><strong>Create a database for Reason (and Thor):</strong></p>
 <ul>
 <li>create database reason;</li>
 </ul>
-<p><strong>Setup a username/password for Reason to connect to the database:</strong></p>
+<p><strong>Setup a username/password for Reason to connect:</strong></p>
 <ul>
 <li>grant all privileges on reason.* to reason_user@webhost identified by 'some_password';</li>
 <li>flush privileges;</li>
 </ul>
-<p><strong>Create a database for thor:</strong></p>
-<ul>
-<li>create database thor;</li>
-</ul>
-<p><strong>Setup a username/password for Reason to connect to the database:</strong></p>
-<ul>
-<li>grant all privileges on thor.* to reason_user@webhost identified by 'some_password';</li>
-<li>flush privileges;</li>
-</ul>
 </div>
-<p>Next we are going to populate the Reason database with some basic information needed for an empty Reason instance. There are many ways you could import the reason4.2.sql file using phpMyAdmin or from within MySQL.</p>
+<p>Next we are going to populate the Reason database with some basic information needed for an empty Reason instance. There are many ways you could import the reason4.3.sql file using phpMyAdmin or from within MySQL.</p>
 <p>Here is one way to import the database from the command line:</p>
 <div class="callOut">
-<p><strong>Change into the directory that contains the file reason4.2.sql. From within /reason_package:</strong></p>
+<p><strong>Change into the directory that contains the file reason4.3.sql. From within /reason_package:</strong></p>
 <ul>
 <li>cd ./reason_4.0/data/dbs</li>
 </ul>
-<p><strong>Import reason4.2.sql into the database named reason - fill in your own credentials:</strong></p>
+<p><strong>Import reason4.3.sql into the database named reason - fill in your own credentials:</strong></p>
 <ul>
-<li>cat reason4.2.sql | mysql -u reason_user --password=some_password -h your.mysql.hostname.or.ip.address reason</li>
+<li>cat reason4.3.sql | mysql -u reason_user --password=some_password -h your.mysql.hostname.or.ip.address reason</li>
 </ul>
 </div>
 <p>The database connection information to connect to the databases you just created must be defined in a simple XML file. This file is in the reason_package/settings/ directory and is called dbs.xml. It should be configured with appropriate credentials. Leave the connection names as reason_connection and thor_connection.</p>
@@ -138,7 +128,7 @@ are setting up a production instance of Reason.</p>
 &lt;/database&gt;</p>
 <p>&lt;database&gt;<br />
 &lt;connection_name&gt;thor_connection&lt;/connection_name&gt;<br />
-&lt;db&gt;thor&lt;/db&gt;<br />
+&lt;db&gt;reason&lt;/db&gt;<br />
 &lt;user&gt;reason_user&lt;/user&gt;<br />
 
 &lt;password&gt;some_password&lt;/password&gt;<br />
@@ -158,6 +148,8 @@ are setting up a production instance of Reason.</p>
 <li>reason_package/settings/tyr_settings.php</li>
 <li>reason_package/settings/akismet_settings.php</li>
 <li>reason_package/settings/recaptcha_settings.php</li>
+<li>reason_package/settings/google_api_settings.php</li>
+<li>reason_package/settings/kaltura_integration_settings.php</li>
 <li>reason_package/settings/dir_service_config.php</li>
 </ul>
 <h4>reason_package/settings/package_settings.php</h4>
@@ -181,13 +173,17 @@ are setting up a production instance of Reason.</p>
 <li><strong>REASON_SITE_DIRECTORY_OWNER</strong> - Should be the user/group that Apache runs as</li>
 </ul>
 <h4>reason_package/settings/thor_settings.php</h4>
-<p>Defines the connection name in your specified in the XML credentials file for Thor connections.</p>
+<p>Defines the connection name in your specified in the XML credentials file for Thor connections. Also allows you to enable the JavaScript powered form builder (currently in beta).</p>
 <h4>reason_package/settings/tyr_settings.php</h4>
 <p>This file configures how emails are addressed when generated by Reason forms. The reply to email address defaults to the WEBMASTER_EMAIL_ADDRESS. You can change that entry with the TYR_REPLY_TO_EMAIL_ADDRESS in this file.</p>
 <h4>reason_package/settings/akismet_settings.php</h4>
 <p>You can provide an akismet API key in this file - if you do so, anonymous comment forms in Reason will be protected by akismet. To get an API key, <a href="http://akismet.com">visit akismet.com</a>.</p>
 <h4>reason_package/settings/recaptcha_settings.php</h4>
 <p>You can provide a recaptcha API key in this file - if you do so, anonymous comment forms in Reason will be protected by recaptcha. To get an API key, <a href="http://www.google.com/recaptcha">visit google.com/recaptcha</a>.</p>
+<h4>reason_package/settings/google_api_settings.php</h4>
+<p>Configure this file to enable google analytics integration - instructions are found in the comments of the settings file.</p>
+<h4>reason_package/settings/kaltura_integration_settings.php</h4>
+<p>Configure this file to enable kaltura integration - instructions are found in the comments of the settings file.</p>
 <h4>reason_package/settings/dir_service_config.php</h4>
 <p>Reason has a built-in user system, but can also support authentication and directory lookups from external directory service systems. You can leave this file untouched to use the Reason user system for authentication and directory information. To implement your own system, see /reason_package/carl_util/dir_service/directory.php.</p>
 <h3><strong><a name="custom_404" id="custom_404"></a>Creating a Custom 404 Error Page</strong></h3>
@@ -217,6 +213,7 @@ are setting up a production instance of Reason.</p>
 <p>The user created by the script has a unique name and will only be created once. For extra security, delete or move the script from the web tree after it has been run.</p>
 <p>Once everything is configured the setup script will provide you with a link to sign in to the Reason administrative interface. Enjoy.</p>
 <h3><a name="windows" id="windows"></a>Windows-Specific Issues</h3>
+<p><strong>We recommend running Reason CMS under linux. While reported bugs are fixed, Reason isn't actively tested in a Windows environment during development.</strong></p>
 <p>Reason relies heavily on filesystem support for symbolic links, making a Windows implementation somewhat difficult. Several workarounds for this limitation do exist, however, depending on which operating system used. </p>
 <h4>Windows XP</h4>
 <p>Administrators wishing to install Reason in a Windows XP environment will need to be able to create NTFS junctions (similar to symlinks in linux). They will also need to run a version of PHP that correctly handles junctions. In our testing, PHP 4.2.8 through 4.3.0 have buggy support for junctions.</p>

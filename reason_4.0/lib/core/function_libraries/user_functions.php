@@ -66,7 +66,7 @@ function user_has_access_to_site($site_id, $force_refresh = false)
 /**
  * Find out if a given username has access to edit a given site
  *
- * Note that an additional check against reason_user_has_privs() should be done before granting privilegesm, 
+ * Note that an additional check against reason_user_has_privs() should be done before granting privileges, 
  * as the user may not have the specific privileges needed despite having access.
  *
  * @param string $username
@@ -235,6 +235,54 @@ function force_login($msg_uname = '')
 		header('Location: '.REASON_LOGIN_URL.'?dest_page='.$url);
 	}
 	exit();
+}
+/**
+ * Require authentication via http basic auth
+ *
+ * Note 1: If the user already has a session-based login, or the script is otherwise behind an
+ * apache-rule-based http auth, this function will return the username without forcing a second
+ * login.
+ *
+ * Note 2: This function currently only works properly when php is running as an Apache module. If
+ * Apache is running under CGI/Fast CGI, it currently simply denies access.
+ *
+ * @todo Add CGI/FastCGI support
+ *
+ * @param string $realm
+ * @param string $cancel_message
+ * @return string username
+ *
+ */
+function reason_require_http_authentication($realm = FULL_ORGANIZATION_NAME, $cancel_message = '')
+{
+	if($username = reason_check_authentication())
+		return $username;
+	
+	force_secure_if_available();
+	
+	if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW']))
+	{
+    	require_once(CARL_UTIL_INC.'dir_service/directory.php');
+    	$dir = new directory_service();
+    	if($dir->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']))
+    		return $_SERVER['PHP_AUTH_USER'];
+    }
+    $cgi_mode = (substr(php_sapi_name(), 0, 3) == 'cgi');
+    if(!$cgi_mode)
+    {
+		header('WWW-Authenticate: Basic realm="'.str_replace('"',"'",$realm).'"');
+	}
+	http_response_code(401);
+	if(empty($cancel_message))
+	{
+		$msg_str = 'This resource requires login.';
+		$cancel_message = '<!doctype HTML><html><title>'.$msg_str.'</title></head><body><h3>'.$msg_str.'</h3>';
+		if($cgi_mode && function_exists('is_developer') && is_developer())
+			$cancel_message .= '<p>HTTP authentication is not currently supported when PHP is running under CGI/Fast CGI.</p>';
+		$cancel_message .= '</body></html>';
+	}
+	echo $cancel_message;
+    exit;
 }
 
 /**

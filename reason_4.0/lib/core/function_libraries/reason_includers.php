@@ -67,14 +67,6 @@ function reason_includer($path, $section = 'lib', $function = 'include_once')
 	$prefix = REASON_INC.$section;
 	$local = $prefix."/local/".$path;
 	$core = $prefix."/core/".$path;
-	
-	if ($function == 'include_once' || $function == 'require_once')
-	{
-		$included = get_included_files();
-		if (in_array($core, $included) || in_array($local, $included))
-			return true;
-	}
-	
 	if (file_exists($local))
 	{
 		return _reason_include_file($function, $local);
@@ -148,17 +140,17 @@ function _reason_include_file($behavior, $file)
 {
 	switch ($behavior)
 	{
-		case 'include':
-			include($file);
-			return true;
 		case 'include_once':
 			include_once($file);
 			return true;
-		case 'require':
-			require($file);
-			return true;
 		case 'require_once':
 			require_once($file);
+			return true;
+		case 'include':
+			include($file);
+			return true;
+		case 'require':
+			require($file);
 			return true;
 		default:
 			$behavior_repr = var_export($behavior, true);
