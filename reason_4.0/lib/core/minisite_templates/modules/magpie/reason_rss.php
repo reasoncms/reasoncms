@@ -299,7 +299,7 @@ class reasonFeedDisplay
                     } 
                 }
             }
-        $content_block .= "</ul>\n";
+        if ($content_block) $content_block .= "</ul>\n";
         }
     else {
         $output .= "Unable to process the feed: " . $rss->ERROR;
@@ -308,7 +308,7 @@ class reasonFeedDisplay
 
 
     // the nav block is the list of available postings sans descriptions. The post links go to anchor tags in the main feed listing
-    if($mode == 'nav'){
+    if($mode == 'nav' && $nav_block){
     	$output .= '<div id="rss_nav">'."\n";
         $output .= "<h4 class=\"feedTitle\">".(!empty($this->_title) ? $this->_title : 'Current Items')."</h4>\n";
         $output .= "<ul>\n"; 
@@ -327,24 +327,26 @@ class reasonFeedDisplay
         if($displayed_items == 0 && $this->_search_string != ''){ echo '<h3>No items match your query.</h3><p><a href="?">Clear search</a></p>'; }
        
         // display the feed itself 
-        $output .= "<div id='rss_content'>\n"; 
-        if(!empty($this->_title))
+        if ($content_block)
         {
-        	$output .= '<h3 class="feedTitle">'.$this->_title.'</h3>'."\n";
-        }
-        $output .= $page_nav ; 
-        $output .= $content_block ; 
-
-        if($this->_page > $current_page){ 
-            $output .= '<h3>Requested page is not available</h3>';
-            $output .= '<p><a href="?">Go to first page</a></p>';
-            }
-
-
-        $output .= $page_nav ; 
-        $output .= "</div>\n"; 
-    
-        }
+		$output .= "<div id='rss_content'>\n"; 
+		if(!empty($this->_title))
+		{
+			$output .= '<h3 class="feedTitle">'.$this->_title.'</h3>'."\n";
+		}
+		$output .= $page_nav ; 
+		$output .= $content_block ; 
+	
+		if($this->_page > $current_page){ 
+		    $output .= '<h3>Requested page is not available</h3>';
+		    $output .= '<p><a href="?">Go to first page</a></p>';
+		    }
+	
+	
+		$output .= $page_nav ; 
+		$output .= "</div>\n"; 
+	}
+    }
 
     return $output ; 
 
