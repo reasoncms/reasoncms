@@ -19,7 +19,7 @@
  */
 include ('reason_header.php');
 reason_include_once('classes/media_work_displayer.php');
-reason_include_once('classes/group_helper.php');
+reason_include_once('classes/media_work_helper.php');
 reason_include_once('function_libraries/user_functions.php');
 
 
@@ -141,31 +141,19 @@ $page_state = 'invalid_request';
 if ($media_work != false && $valid_hash)
 {
 	$page_state = 'ok';
-	$es = new entity_selector();
-	$es->add_type(id_of('group_type'));
-	$es->add_right_relationship($media_work->id(), relationship_id_of('av_restricted_to_group'));
-	$group = current($es->run_one());
-
-	if (!empty($group))
+	$mwh = new media_work_helper($media_work);
+	$username = reason_check_authentication();
+	if ( !$mwh->user_has_access_to_media($username) )
 	{
-		$gh = new group_helper();
-		$gh->set_group_by_id($group->id());
-		if ( $gh->requires_login() ) 
+		if ($username)
 		{
-			$username = reason_check_authentication();
-			if ($username)
-			{
-				if (!$gh->is_username_member_of_group($username))
-				{
-					$page_state = 'unauthorized';
-					header('HTTP/1.1 403 Forbidden');
-				}
-			}
-			else
-			{
-				$page_state = 'authentication_required';
-				header('HTTP/1.1 403 Forbidden');
-			}
+			$page_state = 'unauthorized';
+			header('HTTP/1.1 403 Forbidden');
+		}
+		else
+		{
+			$page_state = 'authentication_required';
+			header('HTTP/1.1 403 Forbidden');
 		}
 	}
 }
