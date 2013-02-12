@@ -99,10 +99,25 @@
 				<li><strong>email_notification</strong> (1 to send notification email when processing is complete; default 0)</li>
 				<li><strong>show_embed</strong> (1 to offer embedding in the front-end interface; default 1)</li>
 				<li><strong>show_download</strong> (1 to offer download of the file in the front-end interface; default 1</li>
+				<li><strong>access_group</strong> (unique name or id of a Group)</li>
 			</ul>'."\n";
 			$ret .= '<p>If there are any required values not present, no processing of the entire import will occur. (This import will attempt to provide a helpful summary of the issues.)</p>'."\n";
 			$ret .= '<p>If any of the non-required columns are not present or contain no value, no value (or the default value indicated) will be used.</p>'."\n";
 			return $ret;
+		}
+		// rmdir only deletes empty directories... this code is slightly modified from http://stackoverflow.com/questions/3349753/delete-directory-with-files-in-it
+		function delete_dir($dirPath) { 
+			$it = new RecursiveDirectoryIterator($dirPath);
+			$files = new RecursiveIteratorIterator($it,
+						 RecursiveIteratorIterator::CHILD_FIRST);
+			foreach($files as $file){
+				if ($file->isDir()){
+					rmdir($file->getRealPath());
+				} else {
+					unlink($file->getRealPath());
+				}
+			}
+			rmdir($dirPath);
 		}
 		function error_check($d)
 		{
@@ -132,15 +147,21 @@
 							$zip->extractTo($this->temp_location);
 							$zip->close();
 							$errors = $this->sanity_check($this->temp_location);
-							foreach($errors as $error)
+							if ( !empty($errors) )
 							{
-								$d->set_error('zip_file',$error);
+								$this->delete_dir($this->temp_location);
+								foreach($errors as $error)
+								{
+									$d->set_error('zip_file',$error);
+								}
 							}
 						}
 						else
 						{
 							$d->set_error('zip_file','Unable to unzip uploaded zip file.');
 						}
+						// delete $file_path
+						unlink($file->tmp_full_path);
 					}
 				}
 			}
@@ -178,6 +199,8 @@
 				{
 					$d->set_error('zip_file','Unable to unzip zip file from URL.');
 				}
+				// delete $file_path
+				unlink($file->tmp_full_path);
 			}
 		}
 		function sanity_check($dir)
@@ -217,7 +240,7 @@
 							}
 							if(empty($item['name']))
 							{
-								$errors[] = 'At least one item does not have a filename value';
+								$errors[] = 'At least one item does not have a name value';
 							}
 							if(empty($item['av_type']))
 							{
@@ -248,6 +271,36 @@
 							{
 								$errors[] = 'At least one filename in the csv does not appear to have an extension ('.htmlspecialchars($item['filename']).')';
 							}
+							
+							// check to see if the access group is a valid unique id or id
+							if (!empty($item['access_group']))
+							{
+								$group = $item['access_group'];
+								if (is_numeric($group)) // id number
+								{
+									$group = new entity($group);
+									if ($group->get_value('type') != id_of('group_type'))
+									{
+										$errors[] = 'At least one access_group in the csv does not have a valid Group id.';
+									}
+								}
+								else
+								{
+									if($id = id_of($group, true, false))
+									{
+										$group = new entity($id);
+										if ($group->get_value('type') != id_of('group_type'))
+										{
+											$errors[] = 'At least one access_group\'s unique name in the csv does not correspond to a Group.';
+										}
+									}
+									else
+									{
+										$errors[] = 'At least one access_group in the csv does not have a valid access_group unique name.';
+									}
+								}
+							}
+							
 							if(!empty($errors))
 								break;
 						}
@@ -332,14 +385,48 @@
 		function process_form($d)
 		{
 			$user = new entity( $this->admin_page->user_id );
+			$fail_count = 0;
+			$success_count = 0;
+			echo '<ul>'."\n";
 			foreach($this->metadata as $info)
 			{
 				$prepped_info = $this->prep_item_info($info);
 				$shim = new KalturaShim();
 				$entry = $this->kaltura_import($prepped_info, $user, $shim);
-				$id = $this->reason_import($prepped_info, $entry, $user);
+				if (!empty($entry) && $entry->id)
+				{
+					$id = $this->reason_import($prepped_info, $entry, $user);
+					// attach access group if applicable
+					if (!empty($info['access_group']))
+					{
+						if (is_numeric($info['access_group']))
+						{
+							$group_id = $info['access_group'];
+						}
+						else
+						{
+							$group_id = id_of($info['access_group']);
+						}
+						create_relationship( $id, $group_id, relationship_id_of('av_restricted_to_group') );
+					}
+					echo '<li>Started processing: ' . reason_htmlspecialchars($info['name']) . '</li>'."\n";
+					$success_count++;
+				}
+				else
+				{
+					echo '<li><strong>Failed</strong to start processing (likely due to a communication problem with Kaltura): ' . reason_htmlspecialchars($info['name']) . '</li>'."\n";
+					$fail_count++;
+				}
 			}
-			echo 'Imported '.count($this->metadata).' item(s).';
+			echo '</ul>'."\n";
+			if($success_count)
+				echo '<h4>Successfully started processing ' . $success_count . ' item(s).</h4>'."\n";
+			if($fail_count)
+			{
+				echo '<h4>Failed to import ' . $fail_count . ' item(s).</h4>'."\n";
+				echo '<p>Please contact your Reason or Kaltura administrator for assistance.</p>'."\n";
+			}
+			echo '<hr />'."\n";
 		}
 		function kaltura_import($info, $user, $shim)
 		{
