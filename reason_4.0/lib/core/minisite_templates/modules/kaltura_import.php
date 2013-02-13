@@ -13,6 +13,7 @@
 	reason_include_once('classes/plasmature/upload.php');
 	reason_include_once('classes/kaltura_shim.php');
 	include_once(DISCO_INC . 'boxes/stacked.php');
+	reason_include_once('classes/default_access.php');
 
 
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'kalturaUploadModule';
@@ -22,7 +23,6 @@
 	 */
 	class kalturaUploadModule extends DefaultMinisiteModule
 	{
-		// todo: pay attention to default_group_uname parameter
 		// todo: javascript/jQuery to resemble content manager
 		var $acceptable_params = array(
 			//'max_per_person' => 0, //implement this later
@@ -397,9 +397,14 @@
 			create_relationship( $page_id, $id, relationship_id_of('minisite_page_to_av'));
 			
 			// access restriction
+			$da = reason_get_default_access();
 			if ($this->params['default_group_uname'] && reason_unique_name_exists($this->params['default_group_uname']))
 			{
 				$group_id = id_of($this->params['default_group_uname']);
+				create_relationship( $id, $group_id, relationship_id_of('av_restricted_to_group') );
+			}
+			elseif($group_id = $da->get($this->site_id, 'av', 'av_restricted_to_group'))
+			{
 				create_relationship( $id, $group_id, relationship_id_of('av_restricted_to_group') );
 			}
 			return $id;
