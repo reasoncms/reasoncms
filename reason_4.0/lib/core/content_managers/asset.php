@@ -39,7 +39,7 @@
 			$params = array('authenticator' => $authenticator,
 				'max_file_size' => $this->get_actual_max_upload_size(),
 				'head_items' => &$this->head_items,
-				'download_info_mbps' => 1,
+				//'download_info_mbps' => 1,
 				'file_display_name' => $this->get_value('file_name'));
 			if (!empty($existing_asset_type)) {
 				$params = array_merge($params, array(
