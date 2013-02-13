@@ -283,7 +283,7 @@
 		protected function add_restriction_selector()
 		{
 			$this->add_relationship_element('limit_access', id_of('group_type'), relationship_id_of('asset_access_permissions_to_group'), 'right', 'select', true, $sort = 'entity.name ASC');
-			if($this->is_new_entity() && !$this->get_value('limit_access') && ($group_id = $this->get_default_restricted_group_id()))
+			if($this->is_new_entity() && $this->_is_first_time() && !$this->get_value('name') && !$this->get_value('limit_access') && ($group_id = $this->get_default_restricted_group_id()))
 			{
 				$this->set_value('limit_access', $group_id);
 			}
