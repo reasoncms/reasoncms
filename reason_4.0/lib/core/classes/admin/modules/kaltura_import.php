@@ -12,12 +12,14 @@
 	reason_include_once('classes/plasmature/upload.php');
 	reason_include_once('classes/kaltura_shim.php');
 	reason_include_once('classes/csv.php');
+	reason_include_once('classes/default_access.php');
 	/**
 	 * 
 	 */
 	class KalturaImportModule extends DefaultModule
 	{
 		protected $metadata;
+		protected $default_access_group;
 		function KalturaImportModule( &$page )
 		{
 			$this->admin_page =& $page;
@@ -80,10 +82,27 @@
 			$d->add_callback(array($this,'process_form'),'process');
 			$d->run();
 		}
-		
+		protected function get_default_access_group()
+		{
+			if(!isset($this->default_access_group))
+			{
+				$da = reason_get_default_access();
+				$this->default_access_group = false;
+				if($group_id = $da->get($this->admin_page->site_id, 'av', 'av_restricted_to_group'))
+				{
+					$this->default_access_group = new entity($group_id);
+				}
+			}
+			return $this->default_access_group;
+		}
 		function get_instructions($d)
 		{
 			$ret = '<p>Package your media files in a flat zip archive, with a CSV spreadsheet in the archive named metadata.csv. The first row of the CSV file should contain the following column names (* = required for processing).</p>'."\n";
+			$group_info = '';
+			if($group = $this->get_default_access_group())
+			{
+				$group_info = '; default '.$group->id().' ['.$group->get_value('name').']';
+			}
 			$ret .= '<ul>
 				<li><strong>filename*</strong> (Must be one of the following file types: '.implode(', ',$this->get_recognized_extensions()).')</li>
 				<li><strong>name*</strong></li>
@@ -99,7 +118,7 @@
 				<li><strong>email_notification</strong> (1 to send notification email when processing is complete; default 0)</li>
 				<li><strong>show_embed</strong> (1 to offer embedding in the front-end interface; default 1)</li>
 				<li><strong>show_download</strong> (1 to offer download of the file in the front-end interface; default 1</li>
-				<li><strong>access_group</strong> (unique name or id of a Group)</li>
+				<li><strong>access_group</strong> (unique name or id of a Group'.$group_info.')</li>
 			</ul>'."\n";
 			$ret .= '<p>If there are any required values not present, no processing of the entire import will occur. (This import will attempt to provide a helpful summary of the issues.)</p>'."\n";
 			$ret .= '<p>If any of the non-required columns are not present or contain no value, no value (or the default value indicated) will be used.</p>'."\n";
@@ -408,6 +427,10 @@
 							$group_id = id_of($info['access_group']);
 						}
 						create_relationship( $id, $group_id, relationship_id_of('av_restricted_to_group') );
+					}
+					elseif($group = $this->get_default_access_group())
+					{
+						create_relationship( $id, $group->id(), relationship_id_of('av_restricted_to_group') );
 					}
 					echo '<li>Started processing: ' . reason_htmlspecialchars($info['name']) . '</li>'."\n";
 					$success_count++;
