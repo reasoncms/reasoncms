@@ -582,7 +582,7 @@ reason_include_once('ssh/ssh.php');
 		{
 			$this->add_relationship_element('restricted_group', id_of('group_type'), relationship_id_of('av_restricted_to_group'), 'right', 'select', true, $sort = 'entity.name ASC');
 			$this->set_display_name('restricted_group', 'Limit Access');
-			if($this->is_new_entity() && !$this->get_value('restricted_group') && ($group_id = $this->get_default_restricted_group_id()))
+			if($this->is_new_entity() && $this->_is_first_time() && !$this->get_value('name') && !$this->get_value('restricted_group') && ($group_id = $this->get_default_restricted_group_id()))
 			{
 				$this->set_value('restricted_group', $group_id);
 			}
