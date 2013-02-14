@@ -937,17 +937,22 @@ class PublicationModule extends Generic3Module
 		}
 	}
 	
-	//overloaded from generic3 so that pagination is turned off if we're grouping items by section
-	// also disables pagination if max_num_items is set, and is less than num_per_page
+	/**
+	 * Tweaks to do_pagination
+	 *
+	 * - turn off pagination if we're grouping items by section.
+	 * - turn off pagination if max_num_items is set, and is less than num_per_page
+	 * - if pagination is on, make a pre_pagination copy of the entity selector for featured item selection.
+	 */
 	function do_pagination()
 	{
-		//$this->total_count = $this->es->get_one_count();
 		if($this->use_group_by_section_view() || (!empty($this->max_num_items) && ($this->max_num_items) < $this->num_per_page))
 		{
 			$this->use_pagination = false;
 		}
 		else
 		{
+			$this->pre_pagination_es = carl_clone($this->es);
 			parent::do_pagination();
 		}
 	}
@@ -2202,7 +2207,7 @@ class PublicationModule extends Generic3Module
 				static $featured_items;
 				if (!isset($featured_items[$this->publication->id()]))
 				{
-					$es = carl_clone($this->es);
+					$es = (isset($this->pre_pagination_es)) ? carl_clone($this->pre_pagination_es) : carl_clone($this->es);
 					$es->description = 'Selecting featured news items for this publication';
 					$es->add_right_relationship( $this->publication->id(), relationship_id_of('publication_to_featured_post') );
 					$es->add_rel_sort_field($this->publication->id(), relationship_id_of('publication_to_featured_post'), 'featured_sort_order' );
