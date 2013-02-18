@@ -301,7 +301,36 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if ($this->has_content( 'sidebar' ))
 		{
 			echo '<div id="sidebar">'."\n";
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
+			{
+				echo '<aside class="news group">'."\n";
+				echo '<header class="blue-stripe"><h1><span>Video of the Week</span></h1></header>'."\n";
+			}
+			elseif ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
+			{
+				echo '<aside class="news group">'."\n";
+				echo '<header class="blue-stripe"><h1><span>Featured Video</span></h1></header>'."\n";
+			}
+			
 			$this->run_section( 'sidebar' );
+			
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
+			{
+				echo '</aside> <!-- class="news group" -->'."\n";
+			}
 			echo '<hr>'."\n";
 			echo '</div>'."\n";
 		}		
