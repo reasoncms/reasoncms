@@ -376,7 +376,48 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if ($this->has_content( 'post_sidebar' ))
 		{
 			echo '<div id="post_sidebar">'."\n";
+			$url = get_current_url();
+			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
+			{
+				echo '<aside class="gallery group">'."\n";
+				if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/art.?\/?/", $url))
+				{
+					echo '<header class="blue-stripe"><h1><span>Exhibitions</span></h1></header>'."\n";
+				}
+				else
+				{
+					echo '<header class="blue-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";
+				}
+				echo "<div id=\"gallery\">\n";
+				echo "<div class=\"gallery-info\">\n";
+				echo "<div id=\"gallerycontainer\">\n";
+			}		
+			if ($this->cur_page->get_value( 'custom_page' ) != 'flickr_slideshow_sidebar'	
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing_feature'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information')
+			{
+				echo "<hr>\n";
+			}
+			
 			$this->run_section( 'post_sidebar' );
+			
+			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
+			{
+				echo "</div>   <!-- id=\"gallerycontainer\"-->\n";
+				echo "</div>   <!-- class=\"gallery-info\"-->\n";
+				echo "</div>   <!-- id=\"gallery\"-->\n";
+				echo '</aside> <!-- class="gallery group" -->'."\n";
+			}
 			echo '<hr>'."\n";
 			echo '</div>'."\n";
 		}		
@@ -456,8 +497,51 @@ class LutherTemplate2010 extends MinisiteTemplate
 			echo '</div>'."\n";
 		}
 		if ($this->has_content( 'main_post_2' ))
-		{			
-			$this->run_section( 'main_post_2' );			
+		{
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
+			{
+				echo '<aside class="gallery group">'."\n";
+				if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+						|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
+				{
+					echo '<header class="red-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";
+				}
+				else
+				{
+					echo '<header class="blue-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";
+				}
+			}
+			if ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_music')
+			{
+				echo "<div id=\"gallery\">\n";
+				echo "<div class=\"gallery-info\">\n";
+				echo "<div id=\"gallerycontainer\">\n";
+			}
+			if ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_admissions'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_sports')
+			{
+				echo "<hr>\n";
+			}
+						
+			$this->run_section( 'main_post_2' );
+
+			if ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_music')
+			{
+				echo "</div>   <!-- id=\"gallerycontainer\"-->\n";
+				echo "</div>   <!-- class=\"gallery-info\"-->\n";
+				echo "</div>   <!-- id=\"gallery\"-->\n";
+			}
+			
+			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
+			{
+				echo '</aside> <!-- class="gallery group" -->'."\n";
+			}
 		}
 		if ($this->has_content( 'main_post_3' ))
 		{			

@@ -38,45 +38,7 @@
 			$es->add_rel_sort_field($this->cur_page->id(), relationship_id_of('page_to_flickr_slideshow'));
 			$es->set_order('rel_sort_order'); 
 			$posts = $es->run_one();
-			$url = get_current_url();
-			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
-			{
-				echo '<aside class="gallery group">'."\n";
-				if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/art.?\/?/", $url))
-				{
-					echo '<header class="blue-stripe"><h1><span>Exhibitions</span></h1></header>'."\n";
-				}
-				else if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
-					|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni')
-				{
-					echo '<header class="red-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";
-				}
-				else 
-				{
-					echo '<header class="blue-stripe"><h1><span>Featured Gallery</span></h1></header>'."\n";
-				}
-			}
-			echo "<div id=\"gallery\">\n";
-			echo "<div class=\"gallery-info\">\n";
-			echo "<div id=\"gallerycontainer\">\n";
-			if ($this->cur_page->get_value( 'custom_page' ) != 'flickr_slideshow_sidebar'
-				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
-				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_admissions'
-				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_alumni'
-				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing'
-				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing_feature'
-				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information'
-				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_sports')
-			{
-				echo "<hr>\n";
-			}
+
 			$slideshowGroup = 0;
 			$number_slideshows = count($posts);
 			foreach( $posts AS $post )
@@ -188,20 +150,7 @@
 					}
 				}
 			}
-			echo "</div>   <!-- id=\"gallerycontainer\"-->\n";
-			echo "</div>   <!-- class=\"gallery-info\"-->\n";
-			echo "</div>   <!-- id=\"gallery\"-->\n";
-			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_admissions'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_alumni'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
-				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
-			{
-				echo '</aside> <!-- class="gallery group" -->'."\n";
-			}
+			
 		}
 		
 		function has_content()
