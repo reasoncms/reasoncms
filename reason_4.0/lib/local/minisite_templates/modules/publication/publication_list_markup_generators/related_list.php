@@ -32,8 +32,10 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 	
 	function get_post_list_markup()
 	{
-		$is_headline = false;
 		$markup_string = '';
+		
+		// Create "View all news" link for related publications that are minisite headlines
+		$is_headline = false;
 		if(!empty($this->passed_vars['links_to_current_publications']))
 		{
 			foreach($this->passed_vars['links_to_current_publications'] as $id => $url)
@@ -45,11 +47,7 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 				}
 			}
 		}
-		
-		if ($is_headline && ($this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_public_information'
-		|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_sports'
-		|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_landing'
-		|| $this->passed_vars['cur_page']->get_value( 'custom_page' ) == 'luther2010_landing_feature'))
+		if ($is_headline)
 		{
 			$markup_string .= '<nav class="button view-all">'."\n";
 			$markup_string .= '<ul>'."\n";
@@ -70,7 +68,7 @@ class RelatedListMarkupGenerator extends PublicationMarkupGenerator
 		$markup_string = '';
 		$list = $this->passed_vars['items_by_section'][$this->passed_vars['no_section_key']];
 		$markup_string .= $this->get_list_markup_for_these_items(array_keys($list))."\n";
-		$markup_string .= $this->get_markup_for_pubs_links();
+		//$markup_string .= $this->get_markup_for_pubs_links();
 		return $markup_string;
 	}
 	

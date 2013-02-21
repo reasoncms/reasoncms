@@ -560,7 +560,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
 		'post_sidebar' => 'luther_flickr_slideshow',
 	),
-	/* 'luther2010_landing_sidebar_news' => array(
+	 'luther2010_landing_sidebar_news' => array(
 		'main_head' => 'luther_carousel',
 		'main_head_5' => '',
 		'main_2' => '',
@@ -586,7 +586,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'max_num_items' => 5,
 		),
 		'post_sidebar' => 'luther_flickr_slideshow',
-	),*/
+	),
 	'luther2010_music' => array(
 		'main_head' => 'luther_carousel',
 		'main_head_5' => '',
