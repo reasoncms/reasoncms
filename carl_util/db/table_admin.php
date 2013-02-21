@@ -964,7 +964,7 @@ class TableAdmin
 		}
 		foreach ($row as $k => $v)
 		{	
-			$type = $this->_display_values[$k]['type'];
+			$type = (!empty($this->_display_values[$k]['type'])) ? $this->_display_values[$k]['type'] : 'text';
 			$cur_value = (!empty($this->filters[$k])) ? htmlspecialchars($this->filters[$k]['value'],ENT_QUOTES,'UTF-8') : '';
 			$ret .= '<td'.$first.'>'.$form_open_string;
 			if (($type == 'radiogroup') || ($type == 'optiongroup') || ($type == 'enum'))
@@ -1751,16 +1751,16 @@ class TableAdmin
 		
 		function where_to()
 		{
-			if ($this->get_action() == 'new') $this->where_to_new();
-			elseif ($this->get_action() == 'view') $this->where_to_view();
-			elseif ($this->get_action() == 'edit') $this->where_to_edit();
-			elseif ($this->get_action() == 'delete') $this->where_to_delete();
+			if ($this->get_action() == 'new') return $this->where_to_new();
+			elseif ($this->get_action() == 'view') return $this->where_to_view();
+			elseif ($this->get_action() == 'edit') return $this->where_to_edit();
+			elseif ($this->get_action() == 'delete') return $this->where_to_delete();
 		}		
-		function where_to_default() { parent::where_to(); }
-		function where_to_new() { $this->where_to_default(); }
-		function where_to_view() { $this->where_to_default(); }
-		function where_to_edit() { $this->where_to_default(); }
-		function where_to_delete() { $this->where_to_default(); }
+		function where_to_default() { return carl_make_redirect(array('table_row_action'=>'', 'table_action_id'=>'')); }
+		function where_to_new() { return $this->where_to_default(); }
+		function where_to_view() { return $this->where_to_default(); }
+		function where_to_edit() { return $this->where_to_default(); }
+		function where_to_delete() { return $this->where_to_default(); }
 		
 		function is_allowable_action($action_string)
 		{
