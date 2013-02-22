@@ -18,6 +18,7 @@
 	 */
 	class KalturaImportModule extends DefaultModule
 	{
+		protected $temp_dir = 'kaltura-imports/';
 		protected $metadata;
 		protected $default_access_group;
 		function KalturaImportModule( &$page )
@@ -180,7 +181,7 @@
 							$d->set_error('zip_file','Unable to unzip uploaded zip file.');
 						}
 						// delete $file_path
-						unlink($file->tmp_full_path);
+						unlink($file_path);
 					}
 				}
 			}
@@ -209,9 +210,13 @@
 					$zip->extractTo($this->temp_location);
 					$zip->close();
 					$errors = $this->sanity_check($this->temp_location);
-					foreach($errors as $error)
+					if ( !empty($errors) )
 					{
-						$d->set_error('zip_file',$error);
+						$this->delete_dir($this->temp_location);
+						foreach($errors as $error)
+						{
+							$d->set_error('zip_file',$error);
+						}
 					}
 				}
 				else
@@ -219,7 +224,7 @@
 					$d->set_error('zip_file','Unable to unzip zip file from URL.');
 				}
 				// delete $file_path
-				unlink($file->tmp_full_path);
+				unlink($file_path);
 			}
 		}
 		function sanity_check($dir)
@@ -487,13 +492,25 @@
 			$info['transcoding_status'] = 'converting';
 			$info['integration_library'] = 'kaltura';
 			$info['new'] = '0';
+			$site = new entity($this->admin_page->site_id);
+			$info['categories'] = $site->get_value('name').','.$info['categories'];
 			if('show' == $info['show_hide'])
 				$info['media_publication_datetime'] = date('Y-m-d H:i:s');
-			$info['tmp_file_name'] = uniqid('imported-media-work-',true).'.'.$this->get_extension($info['file_location']);
+			$info['tmp_file_name'] = $this->temp_dir.uniqid('imported-media-work-',true).'.'.$this->get_extension($info['file_location']);
+			$this->create_kaltura_import_dir();
 			$info['tmp_file_path'] = substr_replace(WEB_PATH,"",-1).WEB_TEMP.$info['tmp_file_name'];
 			rename($info['file_location'], $info['tmp_file_path']);
+			$this->delete_dir($this->temp_location);
 			// todo: tidy, strip tags
 			return $info;
 		}
+		function create_kaltura_import_dir()
+		{
+			if (!is_dir(substr_replace(WEB_PATH,"",-1).WEB_TEMP.$this->temp_dir))
+			{
+				mkdir(substr_replace(WEB_PATH,"",-1).WEB_TEMP.$this->temp_dir);
+			}
+		}
+		
 	}
 ?>
