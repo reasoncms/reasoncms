@@ -1,13 +1,13 @@
 <?php
 $return_arr = array();
 
-$dbhost = 'reason.luther.edu';
+$dbhost = 'database-1.luther.edu';
 $dbuser = 'jenson_user';
 $dbpass = '!jensonmedalisthebest!';
-$dbname = 'jenson_medal';
+$dbname = 'reason_jenson_medal';
 
 /* for testin on reasondev
-$dbhost = 'database.luther.edu';
+$dbhost = 'localhost';
 $dbuser = 'jenson_user';
 $dbpass = '!jensonmedalisthebest!';
 $dbname = 'jenson_medal';
