@@ -239,6 +239,7 @@ class JensonMedalModule extends DefaultMinisiteModule {
 				$str .= '</tbody>';
 				$str .= '</table>';
 				echo $str;
+				echo '</div>';
 		
 				connectDB(REASON_DB);
 				
