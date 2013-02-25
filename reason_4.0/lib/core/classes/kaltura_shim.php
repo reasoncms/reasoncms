@@ -576,5 +576,19 @@ class KalturaShim
 			return false;
 		}
 	}
+	/**
+	 * Get the directory to use for temp storage for files
+	 *
+	 * @return string
+	 */
+	public static function get_temp_import_dir()
+	{
+		$dir = REASON_TEMP_DIR.'kaltura-imports/';
+		if (!is_dir($dir))
+		{
+			mkdir($dir);
+		}
+		return $dir;
+	}
 }
 ?>
