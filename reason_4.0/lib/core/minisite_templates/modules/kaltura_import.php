@@ -297,8 +297,8 @@
 			
 			// Begin the upload to Kaltura
 			$kaltura_shim = new KalturaShim();
-			if ($disco->get_element('upload_file'))
-			{
+			if ($disco->get_element('upload_file')->tmp_full_path)
+			{	
 				$this->_filepath = $disco->get_element('upload_file')->tmp_full_path;
 			}
 			else 
