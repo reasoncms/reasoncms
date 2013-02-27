@@ -218,10 +218,14 @@ class ReasonKalturaNotificationReceiver
 						$categories = $this->_get_categories($media_work);
 						
 						// Check to see if it was an imported file or uploaded file
-						if (strpos($media_work->get_value('tmp_file_name'), 'http') === 0)
-							$tmp_file_path = $media_work->get_value('tmp_file_name');
-						else
-							$tmp_file_path = substr_replace(WEB_PATH,"",-1).WEB_TEMP.$media_work->get_value('tmp_file_name');
+						$tmp_file_path = $this->_get_full_tmp_file_path($media_work);
+						if(empty($tmp_file_path))
+						{
+							trigger_error('Unable to find temp file for media work (id '.$media_work->id().'). Not able to proceed with processing.');
+							$this->send_email($media_work, $data, 'error');
+							reason_update_entity($media_work->id(), $data['puser_id'], array('transcoding_status' => 'error'));
+							return;
+						}
 						
 						$entry = $this->kaltura_shim->upload_video($tmp_file_path, html_entity_decode($media_work->get_value('name')), $media_work->get_value('description'), explode(" ", $media_work->get_value('keywords')), $categories, $data['puser_id'], $transcoding_profile);
 											
@@ -242,7 +246,10 @@ class ReasonKalturaNotificationReceiver
 						{
 							$tmp = $media_work->get_value('tmp_file_name');
 							if ( strpos($tmp, 'http') !== 0 )
-								unlink(WEB_PATH.WEB_TEMP.$tmp);
+							{
+								if($full_tmp = $this->_get_full_tmp_file_path($media_work))
+									unlink($full_tmp);
+							}
 						}
 						catch (Exception $ex)
 						{}
@@ -276,6 +283,17 @@ class ReasonKalturaNotificationReceiver
 				trigger_error('No media file found in Reason with entry_id '.$data['entry_id']);
 			}
 		}
+	}
+	
+	function _get_full_tmp_file_path($media_work)
+	{
+		if (strpos($media_work->get_value('tmp_file_name'), 'http') === 0)
+			return $media_work->get_value('tmp_file_name');
+		if(file_exists(KalturaShim::get_temp_import_dir().$media_work->get_value('tmp_file_name')))
+			return KalturaShim::get_temp_import_dir().$media_work->get_value('tmp_file_name');
+		if(file_exists(substr_replace(WEB_PATH,"",-1).WEB_TEMP.$media_work->get_value('tmp_file_name')))
+			return substr_replace(WEB_PATH,"",-1).WEB_TEMP.$media_work->get_value('tmp_file_name');
+		return NULL;
 	}
 	
 	function _get_categories($media_work)
@@ -436,7 +454,7 @@ class ReasonKalturaNotificationReceiver
 	
 	function associate_image($media_work, $data)
 	{		
-		$tmp_path = WEB_PATH . trim_slashes(WEB_TEMP).'/temp_media_image_'.$media_work->get_value('entry_id').'.jpg';
+		$tmp_path = KalturaShim::get_temp_import_dir().'temp_media_image_'.$media_work->get_value('entry_id').'.jpg';
 		$f = fopen($tmp_path, 'w');
 		
 		$thumb_opts = array(
