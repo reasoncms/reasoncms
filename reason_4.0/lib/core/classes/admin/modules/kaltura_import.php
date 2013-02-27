@@ -132,7 +132,7 @@
 						 RecursiveIteratorIterator::CHILD_FIRST);
 			foreach($files as $file){
 				if ($file->isDir()){
-					rmdir($file->getRealPath());
+					$this->delete_dir($file->getRealPath());
 				} else {
 					unlink($file->getRealPath());
 				}
@@ -162,7 +162,8 @@
 						$res = $zip->open($file_path);
 						if ($res === TRUE)
 						{
-							$this->temp_location = REASON_TEMP_DIR.uniqid().'/';
+							$temp_base = $this->get_kaltura_import_dir();
+							$this->temp_location = $temp_base.uniqid().'/';
 							mkdir($this->temp_location);
 							$zip->extractTo($this->temp_location);
 							$zip->close();
@@ -189,7 +190,7 @@
 			{
 				set_time_limit(2700);
 				
-				$file_path = REASON_TEMP_DIR.uniqid().'.zip';
+				$file_path = $this->get_kaltura_import_dir().uniqid().'.zip';
 				$ch = curl_init($d->get_value('zip_file_url'));
 				$fp = fopen($file_path, "w");
 				curl_setopt($ch, CURLOPT_FILE, $fp);
@@ -205,7 +206,7 @@
 				$res = $zip->open($file_path);
 				if ($res === TRUE)
 				{
-					$this->temp_location = REASON_TEMP_DIR.uniqid().'/';
+					$this->temp_location =  $this->get_kaltura_import_dir().uniqid().'/';
 					mkdir($this->temp_location);
 					$zip->extractTo($this->temp_location);
 					$zip->close();
@@ -496,20 +497,16 @@
 			$info['categories'] = $site->get_value('name').','.$info['categories'];
 			if('show' == $info['show_hide'])
 				$info['media_publication_datetime'] = date('Y-m-d H:i:s');
-			$info['tmp_file_name'] = $this->temp_dir.uniqid('imported-media-work-',true).'.'.$this->get_extension($info['file_location']);
-			$this->create_kaltura_import_dir();
-			$info['tmp_file_path'] = substr_replace(WEB_PATH,"",-1).WEB_TEMP.$info['tmp_file_name'];
+			$info['tmp_file_name'] = uniqid('imported-media-work-',true).'.'.$this->get_extension($info['file_location']);
+			$info['tmp_file_path'] = $this->get_kaltura_import_dir().$info['tmp_file_name'];
 			rename($info['file_location'], $info['tmp_file_path']);
 			$this->delete_dir($this->temp_location);
 			// todo: tidy, strip tags
 			return $info;
 		}
-		function create_kaltura_import_dir()
+		function get_kaltura_import_dir()
 		{
-			if (!is_dir(substr_replace(WEB_PATH,"",-1).WEB_TEMP.$this->temp_dir))
-			{
-				mkdir(substr_replace(WEB_PATH,"",-1).WEB_TEMP.$this->temp_dir);
-			}
+			return KalturaShim::get_temp_import_dir();
 		}
 		
 	}
