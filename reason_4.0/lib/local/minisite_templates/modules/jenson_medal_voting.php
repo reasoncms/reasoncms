@@ -112,7 +112,7 @@ class JensonMedalModule extends DefaultMinisiteModule {
 				 */
 				if (!is_null($row['has_voted'])) {
 						$this->form->show_form = false;
-						echo '<div>Logged in as: ' . $formatted_name . '</div>';
+						echo '<div>Logged in as: <strong>' . $formatted_name . '</strong></div>';
 						echo '<div style="padding:30px">It appears that you\'ve already submitted your votes. If you feel this is an error,
 								please contact <a href="mailto:einckmic@luther.edu">Michelle Einck</a> in the Development Office, x1862.</div>';
 				} else { /* else, let them vote */
@@ -239,6 +239,7 @@ class JensonMedalModule extends DefaultMinisiteModule {
 				$str .= '</tbody>';
 				$str .= '</table>';
 				echo $str;
+				echo '</div>';
 		
 				connectDB(REASON_DB);
 				

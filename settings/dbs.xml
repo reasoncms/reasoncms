@@ -66,12 +66,12 @@
     </database>
 
     <database>
-                <connection_name>jenson_medal_connection</connection_name>
-                <db>jenson_medal</db>
-                <user>reason_user</user>
-                <password>8shtKGFGw4.v7cMm</password>
-                <host>database-1.luther.edu</host>
-        </database>
+        <connection_name>jenson_medal_connection</connection_name>
+        <db>reason_jenson_medal</db>
+        <user>reason_user</user>
+        <password>8shtKGFGw4.v7cMm</password>
+        <host>database-1.luther.edu</host>
+    </database>         
     
     <database>
         <connection_name>reason_gifts_connection</connection_name>
