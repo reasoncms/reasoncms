@@ -781,7 +781,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 				}
 			}
 
-			if ($this->cur_page->get_value('custom_page') == 'audio_video')
+			if ($this->cur_page->get_value('custom_page') == 'audio_video'
+				|| $this->cur_page->get_value('custom_page') == 'audio_video_reverse_chronological')
 			{
 				return false;
 			}

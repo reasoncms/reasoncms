@@ -159,6 +159,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'luther_av',
 		'sidebar' => '',
 	),
+	'audio_video_reverse_chronological' => array(
+		'main_post' => 'luther_av',
+		'sidebar' => '',
+	),
 	'audio_video_on_current_site' => array(
 		'main_post' => 'luther_av',
 		'sidebar' => '',
