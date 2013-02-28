@@ -43,6 +43,7 @@
 		protected $_media_work_id;
 		protected $_entry;
 		protected $_filepath;
+		protected $_filename;
 		protected $_user_id;
 		
 		function init( $args = array() )
@@ -299,10 +300,14 @@
 			$kaltura_shim = new KalturaShim();
 			if ($disco->get_element('upload_file')->tmp_full_path)
 			{	
-				$this->_filepath = $disco->get_element('upload_file')->tmp_full_path;
+				$tmp_path_arr = explode("/", $disco->get_element('upload_file')->tmp_full_path);
+				$this->_filename = end($tmp_path_arr);
+				$this->_filepath = $this->get_kaltura_import_dir().end($tmp_path_arr);
+				rename($disco->get_element('upload_file')->tmp_full_path, $this->_filepath);
 			}
 			else 
 			{
+				$this->_filename = $disco->get_value('url');
 				$this->_filepath = $disco->get_value('url');
 			}
 			
@@ -324,7 +329,7 @@
 			}
 			else
 			{	
-				$this->_entry = $kaltura_shim->upload_audio($this->_filepath, $disco->get_value('media_title'), $disco->get_value('description'), ''/*explode(" ", $this->get_value('keywords'))*/, $categories, $username, $this->_filepath);
+				$this->_entry = $kaltura_shim->upload_audio($this->_filepath, $disco->get_value('media_title'), $disco->get_value('description'), ''/*explode(" ", $this->get_value('keywords'))*/, $categories, $username, $this->_filename);
 			}
 			
 			if (!$this->_entry)
@@ -372,15 +377,7 @@
 			$values['transcoding_status'] = 'converting';
 			$values['integration_library'] = 'kaltura';
 						
-			if ($disco->get_value('url'))
-			{
-				$values['tmp_file_name'] = $this->_filepath;
-			}
-			else
-			{
-				$filename_parts = explode('/', $this->_filepath);
-				$values['tmp_file_name'] = end($filename_parts);
-			}
+			$values['tmp_file_name'] = $this->_filename;
 			
 			// create the entity
 			$this->_media_work_id = $id = reason_create_entity( $this->site_id, id_of('av'), $this->_user_id, $name, $values);
@@ -487,6 +484,11 @@
 				'thanks' => 1,
 			);
 			return carl_make_redirect($parts);
+		}
+		
+		function get_kaltura_import_dir()
+		{
+			return KalturaShim::get_temp_import_dir();
 		}
 	}
 ?>
