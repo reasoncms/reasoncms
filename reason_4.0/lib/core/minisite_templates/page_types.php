@@ -532,6 +532,16 @@
 			'sidebar' => 'siblings',
 			'sub_nav' => '',
 		),
+		'blurb_2_columns' => array(
+			'main_post' => array(
+				'module' => 'blurb',
+				'demote_headings' => 0,
+			),
+			'sub_nav' => array(
+				'module' => 'head_items_include',
+				'css' => array(array(REASON_HTTP_BASE_PATH.'css/blurb_grids/blurb_2_columns.css')),
+			),
+		),
 		'blurbs_with_events_and_publication_sidebar_by_page_categories' => array(
 			'pre_sidebar'=> array(
 				'module'=>'events_mini',
