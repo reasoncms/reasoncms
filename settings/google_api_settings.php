@@ -21,7 +21,7 @@ define('GOOGLE_API_INC', INCLUDE_PATH.'google-api-php-client/src/');
  * 
  * Daily courtesy limit is 50,000 request/day (1/21/2013)
  */
-domain_define('USE_GOOGLE_ANALYTICS', false);
+domain_define('USE_GOOGLE_ANALYTICS', true);
 
 
 /**
@@ -29,7 +29,7 @@ domain_define('USE_GOOGLE_ANALYTICS', false);
  * 
  * Login to the Google API Console  (code.google.com/apis/console/)
  *   1) Create a new project
- *       1.1) Set GOOGLE_API_APP_NAME below with the name of your project
+ *       1.1) Set GOOGLE_ANALYTICS_APP_NAME below with the name of your project
  *   2) In the Services tab, enable Google Analytics
  *   3) Click "API Access", then "Create a new OAuth 2.0 client ID..." 
  *      using the big blue button.
@@ -78,38 +78,30 @@ if ( USE_GOOGLE_ANALYTICS )
     */
     /*  Name of your Google API Project
         See instruction 1 above         */
-    domain_define('GOOGLE_API_APP_NAME', '');
+    domain_define('GOOGLE_ANALYTICS_APP_NAME', 'ReasonAnalytics');
 
     /*  The Client ID of your Google API Project's Service Account
         See instruction 4 above          */
-    domain_define('GOOGLE_API_SERVICE_CLIENT_ID', '' );
+    domain_define('GOOGLE_ANALYTICS_SERVICE_CLIENT_ID', '280367784887.apps.googleusercontent.com' );
 
     /*  The email address of your Google API Project's Service Account
         See instruction 5 above          */
-    domain_define('GOOGLE_API_SERVICE_EMAIL', '' );
+    domain_define('GOOGLE_ANALYTICS_SERVICE_EMAIL', '280367784887@developer.gserviceaccount.com' );
 
     /*  The path to your private key file from your Google API Project
         See instruction 6 above         */
-    domain_define('GOOGLE_API_PRIVATE_KEY_FILE', '');
+    domain_define('GOOGLE_ANALYTICS_PRIVATE_KEY_FILE', '/var/reason/keys/google-analytics-privatekey.p12');
 
     
 
     /**
-     * Google Analytics Info
+     * Google Analytics Profile 
      * google.com/analytics -> Admin -> Profile Settings -> Profile ID
-     * See instructions 7-11 above
+     * See instructions 7-10 above
      */
-    /*  Your Google Analytics Account ID
-        See instructions 8 above        */
-    domain_define( 'GOOGLE_ANALYTICS_ACCOUNT_ID', '');
-
-    /*  Your Google Analytics Property ID
-        See instructions 9 above        */
-    domain_define( 'GOOGLE_ANALYTICS_PROPERTY_ID', '');
-
     /*  Your Google Analytics Profile ID
-        See instructions 10 above        */
-    domain_define( 'GOOGLE_ANALYTICS_PROFILE_ID', '');
+        See instructions 9 above        */
+    domain_define( 'GOOGLE_ANALYTICS_PROFILE_ID', '6696281');
 
     ////////////////////////////////////////////////////////
     // Other Settings
@@ -117,14 +109,14 @@ if ( USE_GOOGLE_ANALYTICS )
     /**
      * Your Google Analytics administrator/expert
      */
-    domain_define('REASON_CONTACT_INFO_FOR_ANALYTICS', '<a href="mailto:ga_expert@yourdomain.edu">Your GA Expert</a>');
+    domain_define('REASON_CONTACT_INFO_FOR_ANALYTICS', '<a href="mailto:greeta02@luther.edu">Tabita Green</a>');
 
     /** 
      * The service provider name for your domain
      *      e.g some college
      * Used to filter on-campus traffic (dimension=ga:networkLocation!='some\ college')
      */
-    domain_define('GA_SERVICE_PROVIDER_NAME', '');
+    domain_define('GA_SERVICE_PROVIDER_NAME', 'luther college');
 
     /**
      * The hostname for your Reason CMS server
@@ -133,5 +125,5 @@ if ( USE_GOOGLE_ANALYTICS )
      *
      * If you are not getting any results from google analytics, try setting this to an empty string.
      */
-    domain_define('GA_HOST_NAME', HTTP_HOST_NAME);
+    domain_define('GA_HOST_NAME', 'www.luther.edu');
 }
