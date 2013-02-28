@@ -157,6 +157,7 @@ class BlurbModule extends DefaultMinisiteModule
 		$editing_active = $inline_editing->active_for_module($this);
 		echo '<div class="blurbs">'."\n";
 		$i = 0;
+		$class = 'odd';
 		foreach( $this->blurbs as $blurb )
 		{
 			$editable = ( $editing_available && $this->_blurb_is_editable($blurb) );
@@ -169,6 +170,7 @@ class BlurbModule extends DefaultMinisiteModule
 				echo ' editable';
 			if( $editing_item )
 				echo ' editing';
+			echo ' '.$class;
 			echo '">';
 			
 			if($editing_item)
@@ -190,6 +192,7 @@ class BlurbModule extends DefaultMinisiteModule
 				}
 			}
 			echo '</div>'."\n";
+			$class = ('odd' == $class) ? 'even' : 'odd';
 		}
 		if(!empty($this->params['footer_html']))
 		{
