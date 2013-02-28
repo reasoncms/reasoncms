@@ -125,19 +125,30 @@
 			$ret .= '<p>If any of the non-required columns are not present or contain no value, no value (or the default value indicated) will be used.</p>'."\n";
 			return $ret;
 		}
-		// rmdir only deletes empty directories... this code is slightly modified from http://stackoverflow.com/questions/3349753/delete-directory-with-files-in-it
-		function delete_dir($dirPath) { 
-			$it = new RecursiveDirectoryIterator($dirPath);
-			$files = new RecursiveIteratorIterator($it,
-						 RecursiveIteratorIterator::CHILD_FIRST);
-			foreach($files as $file){
-				if ($file->isDir()){
-					$this->delete_dir($file->getRealPath());
-				} else {
-					unlink($file->getRealPath());
+		function delete_dir($dir) {
+			$dir = "/".trim_slashes($dir)."/";
+			if ( is_dir($dir) )
+			{			
+				$objects = scandir($dir);
+				foreach ($objects as $object)
+				{
+					if ( !empty($object) && $object != "." && $object != ".." ) // exclude the pointers!
+					{
+						$full_path_obj = $dir.$object;
+						if ( filetype($full_path_obj) == "dir" ) 
+						{
+							$this->delete_dir($full_path_obj.'/');
+						} 
+						else 
+						{
+							unlink($full_path_obj);
+						}
+					}
 				}
+				reset($objects);
+				return @rmdir($dir);
 			}
-			rmdir($dirPath);
+			return false;
 		}
 		function error_check($d)
 		{
