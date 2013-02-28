@@ -227,12 +227,20 @@ class ReasonKalturaNotificationReceiver
 							return;
 						}
 						
-						$entry = $this->kaltura_shim->upload_video($tmp_file_path, html_entity_decode($media_work->get_value('name')), $media_work->get_value('description'), explode(" ", $media_work->get_value('keywords')), $categories, $data['puser_id'], $transcoding_profile);
-											
 						// delete the temporary entry
 						$this->kaltura_shim->delete_media($data['entry_id'], $data['puser_id']);
-	
-						reason_update_entity($media_work->id(), $data['puser_id'], array('entry_id' => $entry->id));
+						
+						$entry = $this->kaltura_shim->upload_video($tmp_file_path, html_entity_decode($media_work->get_value('name')), $media_work->get_value('description'), explode(" ", $media_work->get_value('keywords')), $categories, $data['puser_id'], $transcoding_profile);
+						
+						if (!empty($entry) && $entry->id) 
+						{
+							reason_update_entity($media_work->id(), $data['puser_id'], array('entry_id' => $entry->id));
+						}
+						else
+						{	
+							reason_update_entity($media_work->id(), $data['puser_id'], array('transcoding_status' => 'error'));
+							$this->send_email($media_work, $data, 'error');
+						}
 					}
 					else if (count($flavor_assets) > 1)
 					{
