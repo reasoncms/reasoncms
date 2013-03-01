@@ -198,7 +198,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'django_form',
 	),
 	'discovery_camps' => array(
-		'main_post' => 'discovery_camps',
+		'main_post' => 'discovery_camps/discovery_camps',
 	),
 	'dorian_band_nomination' => array(
 		'main_post' => 'dorian_band',

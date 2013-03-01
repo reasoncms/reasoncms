@@ -120,50 +120,53 @@ class DiscoveryCampsTwo extends FormStep
 	function on_every_time()
 	{
             // calculate the total_cost of the camps
-            $adventure_hunt = 175;
-            $grade_1 = 90;
-            $grade_2 = 100;
+            $ww_grade_1 = 90;
+            $ww_grade_2 = 100;
             $adventurers = 150;
-//            $survival_camp = 175;
-            $energy_expedition = 150;
-            $edible_earth = 160;
-            $expeditioners = 170;
+            $kindernature_1 = 55;
+            $river_expeditioners = 170;
+            $energy_camp = 150;
+            $survival_camp = 175;
+            $kindernature_2 = 55;
             $late_fee = 15; // after April 20, charge a late fee
 
-            $april20 = 110; // April 20 == day 110 (111 on a leap year) on a 0 - 364 scale
+            $april19 = 109; // April 20 == day 110 (111 on a leap year) on a 0 - 364 scale
             if (date('L')) {// if this year is a leap year
-                $june1 = 111;
+                $april19 = 110;
             }
 
             $date = getdate();
-            if ($date['yday'] > $april20){
+            if ($date['yday'] > $april19){
                 $adventure_hunt = $adventure_hunt + $late_fee;
-                $grade_1 = $grade_1 + $late_fee;
-                $grade_2 = $grade_2 + $late_fee;
+                $ww_grade_1 = $ww_grade_1 + $late_fee;
+                $ww_grade_2 = $ww_grade_2 + $late_fee;
                 $adventurers = $adventurers + $late_fee;
-//                $survival_camp = $survival_camp + $late_fee;
-                $energy_expedition = $energy_expedition + $late_fee;
-                $edible_earth = $edible_earth + $late_fee;
-                $expeditioners = $expeditioners + $late_fee;
+                $kindernature_1 = $kindernature_1 + $late_fee;
+                $river_expeditioners = $river_expeditioners + $late_fee;
+                $energy_camp = $energy_camp + $late_fee;
+                $survival_camp = $survival_camp + $late_fee;
+                $kindernature_2 = $kindernature_2 + $late_fee;
             }
 
             $total_cost = 0;
-            if ($this->controller->get('adventure_hunt'))
-                    $total_cost = $total_cost + $adventure_hunt;
-            if ($this->controller->get('grade_1'))
-                    $total_cost = $total_cost + $grade_1;
-            if ($this->controller->get('grade_2'))
-                    $total_cost = $total_cost + $grade_2;
+            // if ($this->controller->get('adventure_hunt'))
+            //         $total_cost = $total_cost + $adventure_hunt;
+            if ($this->controller->get('ww_grade_1'))
+                    $total_cost = $total_cost + $ww_grade_1;
+            if ($this->controller->get('ww_grade_2'))
+                    $total_cost = $total_cost + $ww_grade_2;
             if ($this->controller->get('adventurers'))
                     $total_cost = $total_cost + $adventurers;
-//            if ($this->controller->get('survival_camp'))
-//                    $total_cost = $total_cost + $survival_camp;
-            if ($this->controller->get('energy_expedition'))
-                    $total_cost = $total_cost + $energy_expedition;
-            if ($this->controller->get('edible_earth'))
-                    $total_cost = $total_cost + $edible_earth;
-            if ($this->controller->get('expeditioners'))
-                    $total_cost = $total_cost + $expeditioners;
+            if ($this->controller->get('kindernature_1'))
+                    $total_cost = $total_cost + $kindernature_1;
+            if ($this->controller->get('river_expeditioners'))
+                    $total_cost = $total_cost + $river_expeditioners;
+            if ($this->controller->get('energy_camp'))
+                    $total_cost = $total_cost + $energy_camp;
+            if ($this->controller->get('survival_camp'))
+                   $total_cost = $total_cost + $survival_camp;
+            if ($this->controller->get('kindernature_2'))
+                    $total_cost = $total_cost + $kindernature_2;            
             
             $this->change_element_type('payment_amount', 'solidtext');
             $this->set_value('payment_amount', '$'.$total_cost);
@@ -214,41 +217,48 @@ class DiscoveryCampsTwo extends FormStep
 		$txt .= '<li><strong>Date:</strong> '.date($this->date_format).'</li>'."\n";
 		$txt .= '<h4>Camper Information</h4>';
 		$txt .= '<li><strong>Name:</strong> '.$this->controller->get('first_name').' '.$this->controller->get('last_name').'</li>'."\n";
-                $txt .= '<li><strong>Gender:</strong> '.$this->controller->get('gender').'</li>'."\n";
-                $txt .= '<li><strong>Grade:</strong> '.$this->controller->get('grade').'</li>'."\n";
-                $txt .= '<li><strong>Current Age:</strong> '.$this->controller->get('age').'</li>'."\n";
+        $txt .= '<li><strong>Gender:</strong> '.$this->controller->get('gender').'</li>'."\n";
+        $txt .= '<li><strong>Grade:</strong> '.$this->controller->get('grade').'</li>'."\n";
+        $txt .= '<li><strong>Current Age:</strong> '.$this->controller->get('age').'</li>'."\n";
 		$txt .= '<li><strong>Address:</strong>'."\n".$this->controller->get('address')."\n".$this->controller->get('city').' '.$this->controller->get('state_province').' '.$this->controller->get('zip').'</li>'."\n";
 		$txt .= '<li><strong>T-shirt Size:</strong> '.$this->controller->get('t-shirt_size').'</li>'."\n";
-                $txt .= '<h4>Parent/Guardian Information</h4>';
-                $txt .= '<li><strong>Name:</strong> '.$this->controller->get('parent_guardian_name').'</li>'."\n";
-                $txt .= '<li><strong>Home Phone:</strong> '.$this->controller->get('home_phone').'</li>'."\n";
-                $txt .= '<li><strong>Work Phone:</strong> '.$this->controller->get('work_phone').'</li>'."\n";
+        $txt .= '<h4>Parent/Guardian Information</h4>';
+        $txt .= '<li><strong>Name:</strong> '.$this->controller->get('parent_guardian_name').'</li>'."\n";
+        $txt .= '<li><strong>Home Phone:</strong> '.$this->controller->get('home_phone').'</li>'."\n";
+        $txt .= '<li><strong>Work Phone:</strong> '.$this->controller->get('work_phone').'</li>'."\n";
 		$txt .= '<li><strong>E-mail:</strong> '.$this->controller->get('e-mail').'</li>'."\n";
-                $txt .= '<h4>Camps</h4>';
-                if ($this->controller->get('adventure_hunt')) {
-                    $txt .= '<li>June 11-15  Grades 6-9</li>'."\n";
-                }
-		if ($this->controller->get('grade_1')) {
-			$txt .= '<li>June 11-12   Grade 1</li>'."\n";
+        $txt .= '<h4>Camps</h4>';
+        // if ($this->controller->get('adventure_hunt')) {
+        //     $txt .= '<li>June 11-15  Grades 6-9</li>'."\n";
+        // }
+		if ($this->controller->get('ww_grade_1')) {
+			$txt .= '<li>Wild Wonderers   June 10-11   Grade 1</li>'."\n";
 		}
-		if ($this->controller->get('grade_2')) {
-			$txt .= '<li>June 13-15  Grade 2</li>'."\n";
+		if ($this->controller->get('ww_grade_2')) {
+			$txt .= '<li>Wild Wonderers   June 12-14  Grade 2</li>'."\n";
 		}
-                if ($this->controller->get('adventurers')) {
-			$txt .= '<li>June 18-22 Grades 3-6</li>'."\n";
+        if ($this->controller->get('adventurers')) {
+            $txt .= '<li>Adventures   June 17-21   Grades 3-6</li>'."\n";
+        }
+        if ($this->controller->get('kindernature_1')) {
+			$txt .= '<li>Kindernature   June 24-28   pre-K</li>'."\n";
 		}
-//                if ($this->controller->get('survival_camp')) {
-//			$txt .= '<li>June 25-29 Grades 5-8</li>'."\n";
-//		}
-		if ($this->controller->get('energy_expedition')) {
-			$txt .= '<li>July 9-13 Grades 4-6</li>'."\n";
+        if ($this->controller->get('river_expeditioners')) {
+            $txt .= '<li>River Expeditioners   June 24-28   Grades 7-9</li>'."\n";
+        }
+		if ($this->controller->get('energy_camp')) {
+			$txt .= '<li>Energy Camp   July 8-12   Grades 4-7</li>'."\n";
 		}
-		if ($this->controller->get('edible_earth')) {
-			$txt .= '<li>July 16-20 Grades 2-5</li>'."\n";
-		}
-		if ($this->controller->get('expeditioners')) {
-			$txt .= '<li>July 16-20 Grades 7-9</li>'."\n";
-		}
+		// if ($this->controller->get('edible_earth')) {
+		// 	$txt .= '<li>July 16-20 Grades 2-5</li>'."\n";
+		// }
+        if ($this->controller->get('survival_camp')) {
+            $txt .= '<li>Survival Camp   July 8-12  Grades 5-8</li>'."\n";
+        }
+        if ($this->controller->get('kindernature_2')) {
+            $txt .= '<li>Kindernature   July 15-19  pre-K</li>'."\n";
+        }
+		
 
 
 		$txt .= '</ul>'."\n";
