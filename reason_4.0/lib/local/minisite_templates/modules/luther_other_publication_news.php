@@ -31,7 +31,8 @@ class LutherOtherPublicationNewsModule extends OtherPublicationNewsModule
 		$index = 0;
 		$sorted_and_limited_news_items = array();
 		
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home')
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature')
 		// special treatment on home page. Need to put featured posts at top
 		// then shuffle remaining entries
 		{

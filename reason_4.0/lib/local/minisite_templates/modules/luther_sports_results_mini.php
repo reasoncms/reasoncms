@@ -29,6 +29,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 	var $list_date_format = 'M d';
 	var $passables = array('start_date','textonly','view','category','audience','end_date','search','season');
 	var $season_switch_date = "06-01";
+	var $luther_start_year = 2011;   // first year there is events data
 	var $start_date;
 	
 		
@@ -455,8 +456,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 		
 		echo "School Year:&nbsp;\n";
 		echo '<select name="season" title="choose season" onchange="this.form.submit();">'."\n";
-		// change date range as more results data becomes available over time
-		for ($i = $d; $i >= $d - 1; $i--)
+		for ($i = $d; $i >= min($this->luther_start_year, $d - 1); $i--)
 		{
 			if ($i == intval(date('Y', strtotime($this->start_date))))
 			{

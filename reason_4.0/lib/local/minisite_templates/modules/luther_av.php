@@ -24,6 +24,7 @@
 			'limit_to_current_page'=>true,
 			'sort_direction'=>'DESC', // Normally this page shows items in reverse chronological order, but you can change this to ASC for formward chronological order
 			'sort_field'=>'dated.datetime',
+			'relationship_sort'=>true, // Says whether the module should pay attention to the 'sortable' nature of the minisite_page_to_av allowable relationship
 			'full_size'=>false,   // audio_video_full_size page type sets this to true
 		);
 		
@@ -51,7 +52,8 @@
 				$this->show_list_item_pre( $item );
 				echo '</div>'."\n";
 			}
-			else if ($this->cur_page->get_value('custom_page') != 'audio_video')
+			else if ($this->cur_page->get_value('custom_page') != 'audio_video'
+				&& $this->cur_page->get_value('custom_page') != 'audio_video_reverse_chronological')
 			{
 				echo '<div class="figure" style="width: 125px">'."\n";
 				$this->show_list_item_pre( $item );
@@ -68,6 +70,7 @@
 			}
 			echo '</li>'."\n";
 			if ($this->cur_page->get_value('custom_page') == 'audio_video'
+				|| $this->cur_page->get_value('custom_page') == 'audio_video_reverse_chronological'
 				|| $this->cur_page->get_value('custom_page') == 'audio_video_full_size')
 			{
 				echo '<hr>'."\n";
