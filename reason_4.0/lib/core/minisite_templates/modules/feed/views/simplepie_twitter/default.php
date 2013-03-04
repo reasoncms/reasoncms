@@ -23,6 +23,7 @@ $GLOBALS[ '_reason_mvc_view_class_names' ][ reason_basename(__FILE__) ] = 'Reaso
  * - num_to_show (int default 4)
  * - randomize (boolean default false)
  *
+ * @deprecated since Reason 4.4 - Twitter no longer provides RSS or ATOM feeds.
  * @author Nathan White
  */
  
@@ -35,6 +36,9 @@ class ReasonSimplepieTwitterDefaultFeedView extends ReasonMVCView
 
 	function get()
 	{
+		trigger_error('The ReasonSimplepieTwitterDefaultFeedView class is deprecated - use twitter/default.php instead of simplepie_twitter/default.php');
+		return '';
+		
 		$feed = $this->data();
 		$title = (!is_null($this->config('title'))) ? $this->config('title') : '<h3>'.$feed->get_title().'</h3>';
 		$description = (!is_null($this->config('description'))) ? $this->config('description') : '<p>'.$feed->get_description().'</p>';
