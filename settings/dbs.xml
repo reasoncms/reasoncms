@@ -43,7 +43,7 @@
 
     <database>
         <connection_name>discovery_camps_connection</connection_name>
-        <db>discovery_camps</db>
+        <db>reason_discovery_camps</db>
         <user>reason_user</user>
         <password>8shtKGFGw4.v7cMm</password>
         <host>database-1.luther.edu</host>

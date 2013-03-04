@@ -16,7 +16,7 @@ reason_include_once( 'minisite_templates/modules/default.php' );
  */
 include_once(DISCO_INC . 'disco.php');
 
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'DiscoveryCampsModule';
+$GLOBALS[ '_module_class_names' ][ 'discovery_camps/'.basename( __FILE__, '.php' ) ] = 'DiscoveryCampsModule';
 
 class DiscoveryCampsModule extends DefaultMinisiteModule
 {
