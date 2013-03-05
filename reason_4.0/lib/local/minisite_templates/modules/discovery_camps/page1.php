@@ -32,9 +32,10 @@ class DiscoveryCampsOne extends FormStep
                 'options' => array('F'=>'Female', 'M'=>'Male'),
             ),
             'grade' => array(
-                'type' => 'numrange',
-                'start' => 1,
-                'end' => 12,
+                'type' => 'select_no_sort',
+                'options' => array('pK'=>'pre-K','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5',
+                    '6'=>'6','7'=>'7','8'=>'8','9'=>'9'),
+                'add_null_value_to_top' => true,
             ),
             'age' => array(
                 'type' => 'text',
@@ -180,7 +181,7 @@ class DiscoveryCampsOne extends FormStep
             'kindernature_2' => array(
                 'type' => 'checkboxfirst',
                 'display_name' => '
-                    June 15-19
+                    July 15-19
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     pre-K
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
