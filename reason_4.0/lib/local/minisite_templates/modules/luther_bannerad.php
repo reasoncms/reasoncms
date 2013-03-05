@@ -75,5 +75,18 @@
 			}
 			//echo "</div>\n";
 		}
+		
+		function has_content()
+		{
+			foreach( $this->images AS $id => $image )
+			{
+				if (preg_match("/bannerad\s(.*?)$/", $image->get_value('keywords')))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
 	}
 ?>
