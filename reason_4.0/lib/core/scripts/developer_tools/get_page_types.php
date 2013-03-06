@@ -28,8 +28,25 @@ if (reason_require_authentication() && !reason_check_privs( 'view_sensitive_data
 	die('<h1>Sorry.</h1><p>You do not have permission to view page types.</p></body></html>');
 }
 
+$site_id = NULL;
+if(!empty($_REQUEST['site_id']))
+{
+	$site_id = (integer) $_REQUEST['site_id'];
+}
+elseif(!empty($_REQUEST['site_type_id']))
+{
+	$site_type_id = (integer) $_REQUEST['site_type_id'];
+	$es = new entity_selector();
+	$es->add_type(id_of('site'));
+	$es->add_left_relationship($site_type_id, relationship_id_of('site_to_site_type'));
+	$es->limit_tables();
+	$es->limit_fields();
+	$sites = $es->run_one();
+	$site_id = array_keys($sites);
+}
+
 // grab all the pages along with their page type
-$es = new entity_selector();
+$es = new entity_selector($site_id);
 $es->add_type(id_of('minisite_page'));
 $es->limit_tables(array('page_node', 'url'));
 $es->limit_fields('entity.name, page_node.custom_page, page_node.url_fragment, url.url');
@@ -93,6 +110,29 @@ echo '<h2>Page Type Information</h2>';
 echo '<p>This table shows information about each page type defined in the Reason instance. For each page type that is assigned to a live page,
          a random url is generated. This module can help you verify that page types are working properly, or to identify page types that are
          not being used and should perhaps be deleted.</p>';
+$es = new entity_selector();
+$es->add_type(id_of('site'));
+$sites = $es->run_one();
+$es = new entity_selector();
+$es->add_type(id_of('site_type_type'));
+$site_types = $es->run_one();
+echo '<form action="?" method="get">'."\n";
+echo '<p><label for="sitePicker">Site:</label> <select id="sitePicker" name="site_id">';
+echo '<option value="">All</option>';
+foreach($sites as $id => $site)
+{
+	echo '<option value="'.$id.'"'.($id == $_REQUEST['site_id'] ? ' selected="selected"' : '').'>'.strip_tags($site->get_value('name')).'</option>';
+}
+echo '</select></p>';
+echo '<p><label for="siteTypePicker">Site Type:</label> <select id="siteTypePicker" name="site_type_id">';
+echo '<option value="">All</option>';
+foreach($site_types as $id => $site_type)
+{
+	echo '<option value="'.$id.'"'.($id == $_REQUEST['site_type_id'] ? ' selected="selected"' : '').'>'.strip_tags($site_type->get_value('name')).'</option>';
+}
+echo '</select></p>';
+echo '<input type="submit" value="Submit">';
+echo '</form>'."\n";
 
 $table_admin = new TableAdmin();
 $table_admin->set_show_actions_first_cell(false);
