@@ -289,6 +289,21 @@
 			'sidebar' => 'assets',
 			'main_post' => 'children',
 		),
+		'audio_video_offer_original_download' => array(
+			'main_post' => array(
+				'module' => 'av',
+				'offer_original_download_link' => true,
+			),
+		),
+		'kaltura_import' => array(
+			'main_post' => 'kaltura_import',
+		),
+		'kaltura_import_default_hidden' => array(
+			'main_post' => array(
+				'module' => 'kaltura_import',
+				'default_values' => array('show_hide' => 'hide'),
+			),
+		),
 		'basic_tabs' => array(
 			'main_head' => 'basic_tabs',
 		),
@@ -516,6 +531,16 @@
 			'main_post' => 'blurb',
 			'sidebar' => 'siblings',
 			'sub_nav' => '',
+		),
+		'blurb_2_columns' => array(
+			'main_post' => array(
+				'module' => 'blurb',
+				'demote_headings' => 0,
+			),
+			'sub_nav' => array(
+				'module' => 'head_items_include',
+				'css' => array(array(REASON_HTTP_BASE_PATH.'css/blurb_grids/blurb_2_columns.css')),
+			),
 		),
 		'blurbs_with_events_and_publication_sidebar_by_page_categories' => array(
 			'pre_sidebar'=> array(
@@ -777,11 +802,23 @@
 		),
 		'events_sidebar' => array(
 			'sidebar' => 'events_mini',
-		),	
+		),
 		'events_sidebar_by_page_categories' => array(
 			'sidebar'=> array(
 				'module'=>'events_mini',
 				'limit_to_page_categories'=>true,
+			),
+		),
+		'events_and_publication_sidebar_by_page_categories' => array(
+			'sidebar'=> array(
+				'module'=>'events_mini',
+				'limit_to_page_categories'=>true,
+			),
+			'post_sidebar'=>array(
+				'module'=>'publication',
+				'related_mode'=>'true',
+				'limit_by_page_categories'=>'true',
+				'max_num_items' => 3,
 			),
 		),
 		'events_sidebar_grouped_by_category' => array(

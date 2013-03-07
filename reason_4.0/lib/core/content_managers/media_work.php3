@@ -10,6 +10,7 @@ reason_include_once('content_managers/default.php3');
 reason_include_once('function_libraries/url_utils.php');
 reason_include_once( 'function_libraries/image_tools.php' );
 reason_include_once('classes/kaltura_shim.php');
+reason_include_once('classes/default_access.php');
 include_once(INCLUDE_PATH.'kaltura/KalturaClient.php');
 reason_include_once( 'classes/media_work_displayer.php' );
 include_once(CARL_UTIL_INC . 'basic/mime_types.php');
@@ -581,7 +582,15 @@ reason_include_once('ssh/ssh.php');
 		{
 			$this->add_relationship_element('restricted_group', id_of('group_type'), relationship_id_of('av_restricted_to_group'), 'right', 'select', true, $sort = 'entity.name ASC');
 			$this->set_display_name('restricted_group', 'Limit Access');
+			if($this->is_new_entity() && $this->_is_first_time() && !$this->get_value('name') && !$this->get_value('restricted_group') && ($group_id = $this->get_default_restricted_group_id()))
+			{
+				$this->set_value('restricted_group', $group_id);
+			}
 		}
-		
+		function get_default_restricted_group_id()
+		{
+			$da = reason_get_default_access();
+			return $da->get($this->get_value( 'site_id' ), $this->get_value( 'type_id' ), 'av_restricted_to_group');
+		}
 	}
 ?>

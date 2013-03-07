@@ -2670,6 +2670,8 @@ class EventsModule extends DefaultMinisiteModule
 	/**
 	 * Initialiation function for event detail mode
 	 *
+	 * @todo should probably just grab audience and categories right here.
+	 *
 	 * @return void
 	 */
 	function init_event() // {{{
@@ -3231,20 +3233,29 @@ class EventsModule extends DefaultMinisiteModule
 	 */
 	function show_event_audiences(&$e)
 	{
+		// lets try a different approach for comparison
 		$es = new entity_selector();
 		$es->description = 'Selecting audiences for event';
-		$es->add_type( id_of('audience_type'));
-        $es->add_right_relationship( $e->id(), relationship_id_of('event_to_audience') );
-		//echo $es->get_one_query();
-        $auds = $es->run_one();
-		if (!empty($auds))
+		$es->limit_tables();
+		$es->limit_fields();
+		$es->enable_multivalue_results();
+		$es->add_type( id_of('event_type'));
+		$es->add_relation('entity.id = ' . $e->id());
+		$es->add_left_relationship_field('event_to_audience', 'entity', 'id', 'aud_ids');
+		$with_audiences = $es->run_one();
+		
+		if (!empty($with_audiences))
         {
+        	$event = reset($with_audiences);
+        	$aud_ids = $event->get_value('aud_ids');
+        	$aud_ids = is_array($aud_ids) ? $aud_ids : array($aud_ids);
             echo '<div class="audiences">';
             echo '<h4>Audiences:</h4>'."\n";
 			echo '<p>'."\n";
 			$links = array();
-            foreach( $auds AS $aud )
+            foreach( $aud_ids AS $aud_id )
             {
+            	$aud = new entity($aud_id);
                 $links[] = '<a href="'.$this->construct_link(array('audience'=>$aud->id(),'no_search'=>'1'), false).'">'.$aud->get_value('name').'</a>';
             }
 			echo implode(', ',$links);
