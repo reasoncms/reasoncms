@@ -721,19 +721,16 @@ if(!function_exists('htmlspecialchars_decode'))
 	
 	/**
 	 * A standardized function for counting the number of characters in a string that might 
-	 * contain HTML that we don't want to include in our count.
-	 * 
-	 * 
+	 * contain HTML that we don't want to include in our count. 
 	 *
 	 * @author Nick Jones
 	 * @param string $text - the text whose characters we want to count
 	 * @return int the number of characters in the string
 	 */
-	
 	function carl_util_count_html_text_characters($text)
 	{
 	    $tidied_text = tidy($text);
-	    return mb_strlen(html_entity_decode(strip_tags($tidied_text),ENT_QUOTES,'UTF-8'),'UTF-8');;
+	    return carl_strlen(html_entity_decode(strip_tags($tidied_text),ENT_QUOTES,'UTF-8'),'UTF-8');;
 	}
 	
 	/**
