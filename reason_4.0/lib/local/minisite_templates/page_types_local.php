@@ -177,6 +177,15 @@ $GLOBALS['_reason_page_types_local'] = array(
 		),
 		'sidebar' => '',
 	),
+	'audio_video_full_size_sidebar_blurb' => array(   // one large video in main content area with text blurb in right sidebar
+		'main_4' => '',
+		'main_post' => array(
+			'module' => 'luther_av',
+			'full_size' => true,
+		),
+		'pre_sidebar' => 'main_blurb',
+		'sidebar' => '',
+	),
 	'caf_cam' => array(
 		'main_post' => 'caf_cam',
 	),

@@ -71,7 +71,8 @@
 			echo '</li>'."\n";
 			if ($this->cur_page->get_value('custom_page') == 'audio_video'
 				|| $this->cur_page->get_value('custom_page') == 'audio_video_reverse_chronological'
-				|| $this->cur_page->get_value('custom_page') == 'audio_video_full_size')
+				|| $this->cur_page->get_value('custom_page') == 'audio_video_full_size'
+				|| $this->cur_page->get_value('custom_page') == 'audio_video_full_size_sidebar_blurb')
 			{
 				echo '<hr>'."\n";
 			}
