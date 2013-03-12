@@ -1,7 +1,5 @@
 <?php
 /**
- * HTTP parsing tests
- *
  * SimplePie
  *
  * A PHP-Based RSS and Atom Feed Framework.
@@ -35,7 +33,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package SimplePie
- * @version 1.3.1
+ * @version 1.4-dev
  * @copyright 2004-2011 Ryan Parman, Geoffrey Sneddon, Ryan McCue
  * @author Ryan Parman
  * @author Geoffrey Sneddon
@@ -44,41 +42,62 @@
  * @license http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
-require_once dirname(__FILE__) . '/bootstrap.php';
+/**
+ * This is a dirty, dirty hack
+ */
+class Exception_Success extends Exception {
 
-class HTTPParserTest extends PHPUnit_Framework_TestCase
+}
+
+class Mock_CacheLegacy extends SimplePie_Cache
 {
-	public static function chunkedProvider()
+	public static function get_handler($location, $filename, $extension)
 	{
-		return array(
-			array(
-				"25\r\nThis is the data in the first chunk\r\n\r\n1A\r\nand this is the second one\r\n0\r\n",
-				"This is the data in the first chunk\r\nand this is the second one"
-			),
-			array(
-				"02\r\nab\r\n04\r\nra\nc\r\n06\r\nadabra\r\n0\r\nnothing\n",
-				"abra\ncadabra"
-			),
-			array(
-				"02\r\nab\r\n04\r\nra\nc\r\n06\r\nadabra\r\n0c\r\n\nall we got\n",
-				"abra\ncadabra\nall we got\n"
-			),
-		);
+		trigger_error('Legacy cache class should not have get_handler() called');
+	}
+	public function create($location, $filename, $extension)
+	{
+		throw new Exception_Success('Correct function called');
+	}
+}
+
+class Mock_CacheNew extends SimplePie_Cache
+{
+	public static function get_handler($location, $filename, $extension)
+	{
+		throw new Exception_Success('Correct function called');
+	}
+	public function create($location, $filename, $extension)
+	{
+		trigger_error('New cache class should not have create() called');
+	}
+}
+
+class CacheTest extends PHPUnit_Framework_TestCase
+{
+	/**
+	 * @expectedException Exception_Success
+	 */
+	public function testDirectOverrideLegacy()
+	{
+		$feed = new SimplePie();
+		$feed->set_cache_class('Mock_CacheLegacy');
+		$feed->get_registry()->register('File', 'Mock_File');
+		$feed->set_feed_url('http://example.com/feed/');
+
+		$feed->init();
 	}
 
 	/**
-	 * @dataProvider chunkedProvider
+	 * @expectedException Exception_Success
 	 */
-	public function testChunkedNormal($data, $expected)
+	public function testDirectOverrideNew()
 	{
-		$data = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n" . $data;
-		$parser = new SimplePie_HTTP_Parser($data);
-		$this->assertTrue($parser->parse());
-		$this->assertEquals(1.1, $parser->http_version);
-		$this->assertEquals(200, $parser->status_code);
-		$this->assertEquals('OK', $parser->reason);
-		$this->assertEquals(array('content-type' => 'text/plain'), $parser->headers);
-		$this->assertEquals($expected, $parser->body);
+		$feed = new SimplePie();
+		$feed->get_registry()->register('Cache', 'Mock_CacheNew');
+		$feed->get_registry()->register('File', 'Mock_File');
+		$feed->set_feed_url('http://example.com/feed/');
 
+		$feed->init();
 	}
 }
