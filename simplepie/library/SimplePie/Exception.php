@@ -1,7 +1,5 @@
 <?php
 /**
- * HTTP parsing tests
- *
  * SimplePie
  *
  * A PHP-Based RSS and Atom Feed Framework.
@@ -35,8 +33,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package SimplePie
- * @version 1.3.1
- * @copyright 2004-2011 Ryan Parman, Geoffrey Sneddon, Ryan McCue
+ * @version 1.4-dev
+ * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
  * @author Ryan Parman
  * @author Geoffrey Sneddon
  * @author Ryan McCue
@@ -44,41 +42,11 @@
  * @license http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
-require_once dirname(__FILE__) . '/bootstrap.php';
-
-class HTTPParserTest extends PHPUnit_Framework_TestCase
+/**
+ * General SimplePie exception class
+ *
+ * @package SimplePie
+ */
+class SimplePie_Exception extends Exception
 {
-	public static function chunkedProvider()
-	{
-		return array(
-			array(
-				"25\r\nThis is the data in the first chunk\r\n\r\n1A\r\nand this is the second one\r\n0\r\n",
-				"This is the data in the first chunk\r\nand this is the second one"
-			),
-			array(
-				"02\r\nab\r\n04\r\nra\nc\r\n06\r\nadabra\r\n0\r\nnothing\n",
-				"abra\ncadabra"
-			),
-			array(
-				"02\r\nab\r\n04\r\nra\nc\r\n06\r\nadabra\r\n0c\r\n\nall we got\n",
-				"abra\ncadabra\nall we got\n"
-			),
-		);
-	}
-
-	/**
-	 * @dataProvider chunkedProvider
-	 */
-	public function testChunkedNormal($data, $expected)
-	{
-		$data = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n" . $data;
-		$parser = new SimplePie_HTTP_Parser($data);
-		$this->assertTrue($parser->parse());
-		$this->assertEquals(1.1, $parser->http_version);
-		$this->assertEquals(200, $parser->status_code);
-		$this->assertEquals('OK', $parser->reason);
-		$this->assertEquals(array('content-type' => 'text/plain'), $parser->headers);
-		$this->assertEquals($expected, $parser->body);
-
-	}
 }
