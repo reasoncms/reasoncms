@@ -2075,7 +2075,7 @@
 				$customizer = false;
 			}
 		}
-		return $customizer;
+		return (isset($customizer)) ? $customizer : false;
 	}
 	
 	/**
