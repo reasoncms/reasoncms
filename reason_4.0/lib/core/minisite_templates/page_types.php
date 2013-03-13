@@ -713,8 +713,24 @@
 			'main_post' => 'event_slot_registration',
 			'sidebar' => '',
 		),
+		'event_slot_registration_cache_1_hour' => array(
+			'main_post' => array(
+				'module' => 'event_slot_registration',
+				'cache_lifespan' => '3600',
+				'cache_lifespan_meta' => '7400',
+			),
+			'sidebar' => '',
+		),
 		'events' => array(
 			'main_post' => 'events',
+			'sidebar' => '',
+		),
+		'events_cache_1_hour' => array(
+			'main_post' => array(
+				'module' => 'events',
+				'cache_lifespan' => '3600',
+				'cache_lifespan_meta' => '7400',
+			),
 			'sidebar' => '',
 		),
 		'events_gallery_archive' => array(
