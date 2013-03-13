@@ -4,7 +4,7 @@
     reason_include_once('function_libraries/admin_actions.php');
     reason_include_once('function_libraries/user_functions.php');
 
-    if (!reason_user_has_privs( id_of( reason_check_authentication() ) ), 'db_maintenance' ) )
+    if (!reason_user_has_privs( id_of( reason_check_authentication() ), 'db_maintenance' ) )
     {
         die('<html><head><title>Reason: Delete Categories</title></head><body><h1>Sorry.</h1><p>You do not have permission to delete categories.</p><p>Only Reason users who have database maintenance privileges may do that.</p></body></html>');
     } else {
@@ -21,7 +21,7 @@
 
 
         foreach ($cats as $cat) {
-            reason_expunge_entity($cat, id_of(reason_check_authentication());
+            reason_expunge_entity($cat, id_of(reason_check_authentication()));
         }
     }   
 ?>
