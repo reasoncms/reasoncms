@@ -1235,7 +1235,7 @@ class PublicationModule extends Generic3Module
 			$list_markup_generator = $this->set_up_generator_of_type('list');
 			echo $list_markup_generator->get_markup();
 			if(empty($this->items))	//this should only appear if we have issues ... otherwise would be echoed list_items()
-				echo $this->no_items_text;
+				echo '<div class="noItemsText">'.$this->no_items_text.'</div>'."\n";
 		}
 	}
 
