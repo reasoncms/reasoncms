@@ -1265,7 +1265,7 @@ class EventsModule extends DefaultMinisiteModule
 					echo '<p>There are no events '.$this->get_scope_description().'.</p>'."\n";
 				if($start_date > '1970-01-01')
 				{
-					echo '<li><a href="'.$this->construct_link(array('start_date'=>'1970-01-01', 'view'=>'all')).'">View entire event archive</a></li>'."\n";
+					echo '<ul><li><a href="'.$this->construct_link(array('start_date'=>'1970-01-01', 'view'=>'all')).'">View entire event archive</a></li></ul>'."\n";
 				}
 				}
 				else
@@ -1296,14 +1296,14 @@ class EventsModule extends DefaultMinisiteModule
 				}
 				$clears .= '</ul>'."\n";
 				echo $clears;
-			}
-			if($this->calendar->get_start_date() > $this->today)
-			{
-				echo '<p><a href="'.$this->construct_link(array('start_date'=>'', 'view'=>'','category'=>'','audience'=>'', 'end_date'=>'','search'=>'')).'">Reset calendar to today</a></p>';
-			}
-			if($start_date > '1970-01-01')
-			{
-				echo '<p><a href="'.$this->construct_link(array('start_date'=>'1970-01-01', 'view'=>'all')).'">View entire event archive</a></p>'."\n";
+				if($this->calendar->get_start_date() > $this->today)
+				{
+					echo '<p><a href="'.$this->construct_link(array('start_date'=>'', 'view'=>'','category'=>'','audience'=>'', 'end_date'=>'','search'=>'')).'">Reset calendar to today</a></p>';
+				}
+				if($start_date > '1970-01-01')
+				{
+					echo '<p><a href="'.$this->construct_link(array('start_date'=>'1970-01-01', 'view'=>'all')).'">View entire event archive</a></p>'."\n";
+				}
 			}
 		}
 		echo '</div>'."\n";
