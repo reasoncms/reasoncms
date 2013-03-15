@@ -10,6 +10,7 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LutherEvent
 class LutherEventsModule extends EventsModule
 {
 	var $list_date_format = 'l, F j';
+	var $show_months = false;
 	
 	//////////////////////////////////////
 	// For The Events Listing
@@ -188,6 +189,117 @@ class LutherEventsModule extends EventsModule
 			echo '</ul>'."\n";
 			echo '</div>'."\n";
 		}
+	}
+	
+	function show_event_list_item_standard( $event_id, $day, $ongoing_type = '' )
+	{
+		$link = $this->events_page_url.$this->construct_link(array('event_id'=>$this->events[$event_id]->id(),'date'=>$day));
+		echo '<table><tr><td width="15%">';
+		if($this->show_times && substr($this->events[$event_id]->get_value( 'datetime' ), 11) != '00:00:00')
+		{
+			echo prettify_mysql_datetime( $this->events[$event_id]->get_value( 'datetime' ), $this->list_time_format );
+		}
+		else
+		{
+			echo '&nbsp';
+		}
+		echo '</td><td width="85%"><a href="'.$link.'">';
+		echo $this->events[$event_id]->get_value( 'name' );
+		echo '</a>';
+		switch($ongoing_type)
+		{
+			case 'starts':
+				echo ' <span class="begins">begins</span>';
+			case 'through':
+				echo ' <em class="through">(through '.$this->_get_formatted_end_date($this->events[$event_id]).')</em> ';
+				break;
+			case 'ends':
+				echo ' <span class="ends">ends</span>';
+				break;
+		}
+		echo '</td></tr></table>'."\n";
+	}
+	
+	function no_events_error()
+	{
+		echo '<div class="newEventsError">'."\n";
+		$start_date = $this->calendar->get_start_date();
+		$audiences = $this->calendar->get_audiences();
+		$categories = $this->calendar->get_categories();
+		$min_date = $this->calendar->get_min_date();
+		if($this->calendar->get_view() == 'all' && empty($categories) && empty( $audiences ) && empty($this->request['search']) )
+		{
+			//trigger_error('get_max_date called');
+			$max_date = $this->calendar->get_max_date();
+			if(empty($max_date))
+			{
+				echo '<p>This calendar does not have any events.</p>'."\n";
+			}
+			else
+			{
+				echo '<p>There are no future events in this calendar.</p>'."\n";
+				echo '<ul>'."\n";
+				echo '<li><a href="'.$this->construct_link(array('start_date'=>$max_date, 'view'=>'all','category'=>'','audience'=>'','search'=>'')).'">View most recent event</a></li>'."\n";
+				if($start_date > '1970-01-01')
+				{
+					echo '<li><a href="'.$this->construct_link(array('start_date'=>$min_date, 'view'=>'all','category'=>'','audience'=>'','search'=>'')).'">View entire event archive</a></li>'."\n";
+				}
+				echo '</ul>'."\n";
+			}
+		}
+		else
+		{
+			if(empty($categories) && empty($audiences) && empty($this->request['search']))
+			{
+				$desc = $this->get_scope_description();
+				if(!empty($desc))
+				{
+					echo '<p>There are no events '.$this->get_scope_description().'.</p>'."\n";
+					if($start_date > '1970-01-01')
+					{
+						echo '<ul><li><a href="'.$this->construct_link(array('start_date'=>'1970-01-01', 'view'=>'all')).'">View entire event archive</a></li></ul>'."\n";
+					}
+				}
+				else
+				{
+					echo '<p>There are no events available.</p>'."\n";
+				}
+			}
+			else
+			{
+				echo '<p>There are no events available';
+				$clears = '<ul>'."\n";
+				if(!empty($audiences))
+				{
+					$audience = current($audiences);
+					echo ' for '.strtolower($audience->get_value('name'));
+					$clears .= '<li><a href="'.$this->construct_link(array('audience'=>'')).'">Clear group/audience</a></li>'."\n";
+				}
+				if(!empty($categories))
+				{
+					$cat = current($categories);
+					echo ' in the '.$cat->get_value('name').' category';
+					$clears .= '<li><a href="'.$this->construct_link(array('category'=>'')).'">Clear category</a></li>'."\n";
+				}
+				if(!empty($this->request['search']))
+				{
+					echo ' that match your search for "'.htmlspecialchars($this->request['search']).'"';
+					$clears .= '<li><a href="'.$this->construct_link(array('search'=>'')).'">Clear search</a></li>'."\n";
+				}
+				$clears .= '</ul>'."\n";
+				echo $clears;
+			
+				if($this->calendar->get_start_date() > $this->today)
+				{
+					echo '<p><a href="'.$this->construct_link(array('start_date'=>'', 'view'=>'','category'=>'','audience'=>'', 'end_date'=>'','search'=>'')).'">Reset calendar to today</a></p>';
+				}
+				if($start_date > '1970-01-01')
+				{
+					echo '<p><a href="'.$this->construct_link(array('start_date'=>'1970-01-01', 'view'=>'all')).'">View entire event archive</a></p>'."\n";
+				}
+			}
+		}
+		echo '</div>'."\n";
 	}
 	
 	function show_google_map(&$e)
