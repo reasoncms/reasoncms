@@ -2773,9 +2773,9 @@ class EventsModule extends DefaultMinisiteModule
 			else $es = new entity_selector($sites->id());
 			$es->add_type(id_of('event_type'));
 			$es->add_relation('entity.id = "'.$id.'"');
-			$es->add_relation('show_hide.show_hide = "show"');
+			$es->add_relation(table_of('show_hide', id_of('event_type')). ' = "show"');
 			$es->set_num(1);
-			$es->limit_tables(array('show_hide'));
+			$es->limit_tables(get_table_from_field('show_hide', id_of('event_type')));
 			$es->limit_fields();
 			if($this->_get_sharing_mode() == 'shared_only') $es->add_relation('entity.no_share != 1');
 			$this->_ok_to_show[$id] = ($es->run_one());
