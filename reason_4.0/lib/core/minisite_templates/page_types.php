@@ -295,6 +295,12 @@
 				'offer_original_download_link' => true,
 			),
 		),
+		'audio_video_simple' => array(
+			'main_post' => 'av_simple',
+		),
+		'audio_video_simple_sidebar' => array(
+			'sidebar' => 'av_simple',
+		),
 		'kaltura_import' => array(
 			'main_post' => 'kaltura_import',
 		),
