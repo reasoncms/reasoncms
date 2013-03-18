@@ -27,7 +27,7 @@ class editorEventsFeed extends pageTreeFeed
 			$this->feed->set_item_field_map('title','id');
 			$this->feed->set_item_field_handler( 'title', 'make_event_title', false );
 			
-			$this->feed->es->add_relation( 'show_hide.show_hide = "show"' );
+			$this->feed->es->add_relation( 'show_hide = "show"' );
 			$this->feed->es->set_order( 'datetime DESC' );
 			$this->feed->es->set_num( 100000 );
 		}
