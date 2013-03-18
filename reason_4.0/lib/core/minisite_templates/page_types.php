@@ -301,7 +301,7 @@
 		'audio_video_simple_sidebar' => array(
 			'sidebar' => array(
 				'module' => 'av_simple',
-				'height' => 240,
+				'width' => 240,
 			),
 		),
 		'kaltura_import' => array(
