@@ -32,7 +32,7 @@ class avSimpleModule extends Generic3Module
 		'limit_to_current_page'=>true,
 		'max_num' => false, // false or integer
 		'num_per_page' => 0,
-		'width' => 0,
+		'width' => 640,
 		'height' => 0,
 		'sort_direction'=>'DESC', // Normally this page shows items in reverse chronological order, but you can change this to ASC for formward chronological order
 		'sort_field'=>'dated.datetime',
@@ -75,9 +75,9 @@ class avSimpleModule extends Generic3Module
 		{
 			$displayer = new MediaWorkDisplayer();
 			if($this->params['height'])
-				$displayer->set_height($height);
+				$displayer->set_height($this->params['height']);
 			if($this->params['width'])
-				$displayer->set_width($width);
+				$displayer->set_width($this->params['width']);
 			$displayer->set_media_work($item);
 			echo $displayer->get_iframe_markup();
 		}
