@@ -32,7 +32,7 @@ class avSimpleModule extends Generic3Module
 		'limit_to_current_page'=>true,
 		'max_num' => false, // false or integer
 		'num_per_page' => 0,
-		'width' => 640,
+		'width' => 480,
 		'height' => 0,
 		'sort_direction'=>'DESC', // Normally this page shows items in reverse chronological order, but you can change this to ASC for formward chronological order
 		'sort_field'=>'dated.datetime',
