@@ -298,6 +298,18 @@
 		'audio_video_simple' => array(
 			'main_post' => 'av_simple',
 		),
+		'audio_video_simple_360_wide' => array(
+			'main_post' => array(
+				'module' => 'av_simple',
+				'width' => 360,
+			),
+		),
+		'audio_video_simple_640_wide' => array(
+			'main_post' => array(
+				'module' => 'av_simple',
+				'width' => 640,
+			),
+		),
 		'audio_video_simple_sidebar' => array(
 			'sidebar' => array(
 				'module' => 'av_simple',
