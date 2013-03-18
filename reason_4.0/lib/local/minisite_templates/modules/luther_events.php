@@ -201,7 +201,7 @@ class LutherEventsModule extends EventsModule
 		}
 		else
 		{
-			echo '&nbsp';
+			echo 'Today';
 		}
 		echo '</td><td width="85%"><a href="'.$link.'">';
 		echo $this->events[$event_id]->get_value( 'name' );
