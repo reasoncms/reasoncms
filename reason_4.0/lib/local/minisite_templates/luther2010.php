@@ -260,7 +260,11 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$this->run_section( 'sub_nav_5');
 			echo'<hr>'."\n";
 		}
-
+		if ($this->has_content( 'edit_link' ))
+		{
+			$this->run_section( 'edit_link');
+			echo'<hr>'."\n";
+		}
 		echo '</div> <!-- class="content content-secondary" -->'."\n";
 
 	} 
