@@ -166,7 +166,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '</div> <!-- class="container group" -->'."\n";
 		echo '</div> <!-- id="bannerAndMeat" -->'."\n";
 		$this->show_footer();
-		if ($this->has_content( 'edit_link' )  && ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_home'))
+		if ($this->has_content( 'edit_link' )  && ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_home_feature'))
 		{
 			$this->run_section( 'edit_link');
 		}
