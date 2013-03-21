@@ -11,7 +11,7 @@
  * 
  * In future versions of Reason addition UI and testing work will be done and this setting will default to TRUE. 
  */
-define ('USE_JS_THOR', false);
+define ('USE_JS_THOR', true);
 
 if (!defined('THOR_FORM_DB_CONN'))
 {
