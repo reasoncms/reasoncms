@@ -166,6 +166,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '</div> <!-- class="container group" -->'."\n";
 		echo '</div> <!-- id="bannerAndMeat" -->'."\n";
 		$this->show_footer();
+		if ($this->has_content( 'edit_link' )  && ($this->cur_page->get_value( 'custom_page' ) != 'luther2010_home'))
+		{
+			$this->run_section( 'edit_link');
+		}
 		echo '</div> <!-- id="wrapper" class="'.$class.'" -->'."\n";
 		
 	}
@@ -258,11 +262,6 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if ($this->has_content( 'sub_nav_5' ))
 		{
 			$this->run_section( 'sub_nav_5');
-			echo'<hr>'."\n";
-		}
-		if ($this->has_content( 'edit_link' ))
-		{
-			$this->run_section( 'edit_link');
 			echo'<hr>'."\n";
 		}
 		echo '</div> <!-- class="content content-secondary" -->'."\n";
