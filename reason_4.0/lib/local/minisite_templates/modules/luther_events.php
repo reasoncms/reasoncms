@@ -11,12 +11,14 @@ class LutherEventsModule extends EventsModule
 {
 	var $list_date_format = 'l, F j';
 	var $show_months = false;
+	var $show_icalendar_links = false;
 	
 	//////////////////////////////////////
 	// For The Events Listing
 	//////////////////////////////////////
 	function show_event_details()
 	{
+		$sponsorContactUrl = false;
 		$url = get_current_url();
 		$e =& $this->event;
 		if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url))
@@ -75,37 +77,53 @@ class LutherEventsModule extends EventsModule
 		{		
 			echo '<div class="eventDetails">'."\n";
 			$this->show_back_link();
-			$this->show_images($e);
-			echo '<h3>'.$e->get_value('name').'</h3>'."\n";
-			$this->show_ownership_info($e);
-			if ($e->get_value('description'))
-				echo '<p class="description">'.$e->get_value( 'description' ).'</p>'."\n";
-	
-			if ($e->get_value('content'))
-				echo '<div class="eventContent">'.$e->get_value( 'content' ).'</div>'."\n";
+			//$this->show_images($e);
+			echo '<h1>'.$e->get_value('name').'</h1>'."\n";
+			//$this->show_ownership_info($e);
 			$this->show_repetition_info($e);
+			echo '<table>'."\n";
 			if (!empty($this->request['date']) && strstr($e->get_value('dates'), $this->request['date']))
-				echo '<p class="date"><strong>Date:</strong> '.prettify_mysql_datetime( $this->request['date'], "l, F j, Y" ).'</p>'."\n";
+				echo '<tr><td width="15%">Date:</td><td width="85%">'.prettify_mysql_datetime( $this->request['date'], "l, F j, Y" ).'</td></tr>'."\n";
 			if(substr($e->get_value( 'datetime' ), 11) != '00:00:00')
-				echo '<p class="time"><strong>Time:</strong> '.prettify_mysql_datetime( $e->get_value( 'datetime' ), "g:i a" ).'</p>'."\n";
+				echo '<tr><td width="15%">Time:</td><td width="85%">'.prettify_mysql_datetime( $e->get_value( 'datetime' ), "g:i a" ).'</td></tr>'."\n";
 			$this->show_duration($e);
 			if ($e->get_value('location'))
-				echo '<p class="location"><strong>Location:</strong> '.$e->get_value('location').'</p>'."\n";
+				echo '<tr><td width="15%">Location:</td><td width="85%">'.$e->get_value('location').'</td></tr>'."\n";
+			echo '</table>'."\n";
+			if ($e->get_value('description'))
+			{
+				echo '<p class="description">'.$e->get_value( 'description' ).'</p>'."\n";
+			}
+			if ($e->get_value('content'))
+			{
+				echo $e->get_value( 'content' )."\n";
+			}
 			if ($e->get_value('sponsor'))
-				echo '<p class="sponsor"><strong>Sponsored by:</strong> '.$e->get_value('sponsor').'</p>'."\n";
+			{
+				echo '<p class="sponsor">Sponsor: '.$e->get_value('sponsor').'</p>'."\n";
+				$sponsorContactUrl = true;
+			}		
 			$this->show_contact_info($e);
-			if($this->show_icalendar_links)
-				$this->show_item_export_link($e);
-			$this->show_dates($e);
+			if(!empty($contact))
+			{
+				$sponsorContactUrl = true;
+			}
 			if ($e->get_value('url'))
-				echo '<div class="eventUrl"><strong>For more information, visit:</strong> <a href="'.$e->get_value( 'url' ).'">'.$e->get_value( 'url' ).'</a>.</div>'."\n";
-			//$this->show_back_link();
-			$this->show_event_categories($e);
-			$this->show_event_audiences($e);
-			$this->show_event_keywords($e);
+			{
+				echo '<p class="eventUrl">For more information, visit: <a href="'.$e->get_value( 'url' ).'">'.$e->get_value( 'url' ).'</a>.</p>'."\n";
+			}
+			if ($sponsorContactUrl)
+			{
+				echo '<p class="eventUrl">&nbsp;</p>'."\n";
+			}
 			$this->show_google_map($e);
 			echo '</div>'."\n";
 		}
+	}
+	
+	function show_back_link()
+	{
+		echo '<p class="back"><a title="Back to event listing" href="'.$this->construct_link().'">&#x25c4;</a></p>'."\n";
 	}
 	
 	function show_repetition_info(&$e)
