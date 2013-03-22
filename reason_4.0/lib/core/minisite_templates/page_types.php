@@ -316,6 +316,12 @@
 				'width' => 240,
 			),
 		),
+		'audio_video_media_above_description' => array(
+			'main_post' => array(
+				'module'=>'av',
+				'show_media_first'=>true,
+			),
+		),
 		'kaltura_import' => array(
 			'main_post' => 'kaltura_import',
 		),
