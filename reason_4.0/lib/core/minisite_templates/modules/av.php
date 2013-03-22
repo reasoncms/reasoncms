@@ -43,6 +43,7 @@
 			'default_video_height' => 360,
 			'num_per_page' => 15,
 			'offer_original_download_link' => false, // if true, present the user with a download link for the original file, along with the compressed versions
+			'show_media_first' => false,
 		);
 		var $make_current_page_link_in_nav_when_on_item = true;
 		var $no_items_text = 'There is no audio or video attached to this page yet.';
@@ -96,6 +97,13 @@
 		function show_item_content( $item ) // {{{
 		{
 			//$this->get_primary_image( $item );
+			if($this->params['show_media_first'])
+			{
+				if ($item->get_value('integration_library') == 'kaltura')
+					$this->display_media_work($item);
+				else
+					$this->display_av_files($item, $this->get_av_files( $item ));
+			}
 			if($item->get_value('datetime') || $item->get_value('media_publication_datetime') )
 			{
 				echo '<p class="date">';
@@ -110,16 +118,17 @@
 			{
 				echo '<div class="desc">'.$item->get_value('description').'</div>'."\n";
 			}
+			if(!$this->params['show_media_first'])
+			{
+				if ($item->get_value('integration_library') == 'kaltura')
+					$this->display_media_work($item);
+				else
+					$this->display_av_files($item, $this->get_av_files( $item ));
+			}
 			if ($item->get_value('integration_library') == 'kaltura')
-			{
-				$this->display_media_work($item);
 				$this->display_transcript($item, 'item_id');
-			}
 			else
-			{
-				$this->display_av_files($item, $this->get_av_files( $item ));
 				$this->display_transcript($item, 'av_file_id');
-			}
 			$this->display_rights_statement($item);
 		} // }}}
 		function get_date_information($item)
