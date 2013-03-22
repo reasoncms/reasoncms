@@ -35,7 +35,7 @@ class NorseCardModule extends DefaultMinisiteModule {
         parent::init( $args );
         if($head_items =& $this->get_head_items()) {
             // add our own js and css
-            // $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
+            $head_items->add_javascript( '/reason/js/norsecard.js');
         }
 
         // Allow any of the form elements to be set from the URL or POST, and look like a submission
