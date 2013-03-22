@@ -30,5 +30,7 @@ if (!$connection) {
     //print_r($rows);
     echo implode(', ', $rows);
     echo ']}';
+} else {
+    echo 'Not Allowed';
 }
 sybase_close($connection);
