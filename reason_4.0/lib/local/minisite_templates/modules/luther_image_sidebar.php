@@ -106,8 +106,8 @@
 						// show href to full size image with class and onclick for highslide
 	                                        //showing site id: echo 'site id is this: '. $site_id . ' end';
 						echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
-						//echo '<img src="' . $thumb . '" border="0" alt="' . $caption . '" title="Click to enlarge" />';
-						echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" />';
+						echo '<img src="' . $thumb . '" border="0" alt="' . htmlspecialchars($caption, ENT_COMPAT) . '" title="Click to enlarge" />';
+						//echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" />';
 						echo '</a>';
 						echo '<div class="highslide-caption" >'."\n";
 						echo $caption ."\n";

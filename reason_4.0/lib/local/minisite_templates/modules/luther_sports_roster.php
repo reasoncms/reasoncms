@@ -258,13 +258,13 @@
 				$thumb = WEB_PHOTOSTOCK . $player['image_id'] . '_tn.' . $image['image_type'];
 				$orig = WEB_PHOTOSTOCK . $player['image_id'] . '_orig.' . $image['image_type'];
 				$d = max($image['width'], $image['height']) / 125.0;
+				$caption = $image['name'];
 				echo '<div class="figure" style="width:' . intval($image['width']/$d) .'px;">';
 				// show href to full size image with class and onclick for highslide
 				echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
-				echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" />';
+				echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" alt="' . htmlspecialchars($caption, ENT_COMPAT) . '" />';
 				echo '</a>';
 				echo '<div class="highslide-caption" >'."\n";
-				$caption = $image['name'];
 				echo $caption ."\n";
 				if (file_exists($_SERVER['DOCUMENT_ROOT'] . $orig))
 				{

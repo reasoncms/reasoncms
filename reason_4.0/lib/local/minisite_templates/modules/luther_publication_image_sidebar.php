@@ -121,7 +121,8 @@
 				echo '<div class="figure" style="width:' . intval($image->get_value('width')/$d) .'px;">';
 				// show href to full size image with class and onclick for highslide
 				echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
-				echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" />';
+				//echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" />';
+				echo '<img src="' . $thumb . '" border="0" alt="' . htmlspecialchars($caption, ENT_COMPAT) . '" title="Click to enlarge" />';
 				echo '</a>';
 				echo '<div class="highslide-caption" >'."\n";
 				echo $caption ."\n";

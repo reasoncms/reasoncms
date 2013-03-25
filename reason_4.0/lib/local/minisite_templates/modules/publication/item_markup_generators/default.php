@@ -252,7 +252,7 @@ class PublicationItemMarkupGenerator extends PublicationMarkupGenerator
 			ob_start();
 			echo '<div class="figure" style="width:' . intval($image->get_value('width')/$d) .'px;">';
 			echo '<a href="'. $full_image_name . '" class="highslide" onclick="return hs.expand(this)">';
-			echo '<img src="' . $thumbnail_image_name . '" border="0" alt="' . $image->get_value('description') . '" title="Click to enlarge" />';
+			echo '<img src="' . $thumbnail_image_name . '" border="0" alt="' . htmlspecialchars($image->get_value('description'), ENT_COMPAT) . '" title="Click to enlarge" />';
 			echo '</a>';
 			// show caption if flag is true
 			echo $image->get_value('description');
