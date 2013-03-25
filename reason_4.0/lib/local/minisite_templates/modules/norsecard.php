@@ -35,9 +35,7 @@ class NorseCardModule extends DefaultMinisiteModule {
         parent::init( $args );
         if($head_items =& $this->get_head_items()) {
             // add our own js and css
-            $head_items->add_javascript( '/reason/js/norsecard.js' );
-            $head_items->add_javascript( '/reason/jqgrid/js/jquery.jqGrid.min.js' );
-            $head_items->add_stylesheet( '/reason/jqgrid/css/ui.jqgrid.css' );
+            // $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
         }
 
         // Allow any of the form elements to be set from the URL or POST, and look like a submission
@@ -92,11 +90,7 @@ class NorseCardModule extends DefaultMinisiteModule {
             echo "<a href='/login/?logout=1'>Logout</a>";
             echo "</p>";
         
-            echo "<span>Select an account: </span><select id='account-select'><option>--</option></select>";
-            //$this->display_form();
-            echo "<div id='norsecard-data'></div>";
-            echo "<table id='tender'></table>";
-            echo "<table id='transactions' style='width: 300px;'></table>";
+            $this->display_form();
         } else {
             reason_require_authentication();
         }
