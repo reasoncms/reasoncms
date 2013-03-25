@@ -22128,11 +22128,14 @@ UI.Loki = function Loki()
 	 * This sets the height of both the possibly editable areas, whether
 	 * the textarea or iframe.
 	 */
-	var _set_height = function(new_height)
-	{
-		if ( new_height > 40 )
-			_iframe_wrapper.style.height = _textarea.style.height = new_height + 'px';
-	};
+	 /* Commenting out to fix a tiny loki editor
+	  * in the luther2010 template - SLS
+	  */
+	// var _set_height = function(new_height)
+	// {
+	// 	if ( new_height > 40 )
+	// 		_iframe_wrapper.style.height = _textarea.style.height = new_height + 'px';
+	// };
 
 	/**
 	 * This gets the height of the actually editable area, whether

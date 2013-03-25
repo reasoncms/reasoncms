@@ -10,25 +10,32 @@ if (!$connection) {
     echo "Couldn't make a connection!";
     exit;
 } else if ($user = reason_check_authentication()) {
-    // TODO: when checking for patron > 0 below we fail right now when patron doesn't exist in url parameters
-    //       we probably want to check if patron exists and is greater than 0 so it doesn't fail for no index
-    //       of patron on $_GET
-    if ($_GET['action'] == 'users'){
-        $q = sybase_query("Select top 400 Patron_SK,First_Name, Middle_Name, Last_Name, Alternate_ID_Number as DatatelID, Plan, Last_Date_Card_Used as LastUsed , Email from Av_user_pcs_Patron where email like '". $user ."%' order by Alternate_ID_Number ", $connection);
-    } else if ($_GET['action'] == 'tender' && $_GET['patron'] > 0) {
-        $q = sybase_query("Select Tender, Balance from Av_user_pcs_PatronAccount where Patron_SK_FK=".$_GET['patron'], $connection);
-    } else if ($_GET['action'] == 'transactions' && $_GET['patron'] > 0) {
-        // TODO: add date sql logic in to limit on dates
-        $q = sybase_query('Select top 2 ID_Number, Process_Date_Time as Transaction_Time, Terminal, Function, Previous_Balance, Transaction_Amount, Resulting_Balance, Tender from Av_user_pcs_TransactionLog where Patron_SK_FK='. $_GET['patron']  .' and Transaction_Amount <> 0 order by Tender, Process_Date_Time desc');
+    if (array_key_exists('action', $_GET)) {
+        $action = $_GET['action'];
     }
-    // TODO: make sure this fails gracefully if none of the above query logic happened ($q didn't get rows)
-    echo '{';
-    echo '"results": [';
-    while ($row = sybase_fetch_array($q)) {
-        $rows[] = json_encode($row);
+    if (array_key_exists('patron', $_GET)) {
+        if (is_numeric($_GET['patron'])) {
+            $patron = $_GET['patron'];
+        }
     }
-    //print_r($rows);
-    echo implode(', ', $rows);
-    echo ']}';
+    if ($action == 'users'){
+        $q = sybase_query("Select top 400 Patron_SK,First_Name, Middle_Name, Last_Name, Alternate_ID_Number as DatatelID, Plan, Last_Date_Card_Used as LastUsed , Email from Av_user_pcs_Patron where email like '%". $user ."@luther.edu%' order by Alternate_ID_Number ", $connection);
+    } else if ($action == 'tender' && $patron > 0) {
+        $q = sybase_query("Select Tender, Balance from Av_user_pcs_PatronAccount pa inner join Av_user_pcs_Patron p on p.Patron_SK = pa.Patron_SK_FK and p.email like '%". $user ."@luther.edu%' where Patron_SK_FK=".$patron, $connection);
+    } else if ($action == 'transactions' && $patron > 0) {
+        // TODO: add date sql logic in to limit on dates, 
+        $q = sybase_query("Select tl.ID_Number, tl.Process_Date_Time as Transaction_Time, tl.Terminal, tl.Function as [transaction_function], tl.Previous_Balance, tl.Transaction_Amount, tl.Resulting_Balance, tl.Tender from Av_user_pcs_TransactionLog tl inner join Av_user_pcs_Patron p on p.Patron_SK = tl.Patron_SK_FK and p.email like '%". $user ."@luther.edu%' where Patron_SK_FK=". $patron  ." and Transaction_Amount <> 0 order by Tender, Process_Date_Time desc");
+    }
+    if ($q) {
+        echo '{';
+        echo '"results": [';
+        while ($row = sybase_fetch_array($q)) {
+            $rows[] = json_encode($row);
+        }
+        echo implode(', ', $rows);
+        echo ']}';
+    }
+} else {
+    echo 'Permission Denied';
 }
 sybase_close($connection);
