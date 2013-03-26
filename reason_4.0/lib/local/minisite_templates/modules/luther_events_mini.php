@@ -250,7 +250,11 @@ class LutherEventsMiniModule extends EventsModule
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{
 				echo '<br /><span class="location">'.$this->events[$event_id]->get_value( 'location' );
-				if ($this->events[$event_id]->get_value( 'description' ) != '')
+				if (preg_match("/https?:\/\/[A-Za-z0-9_\-\.\/]+/", $this->events[$event_id]->get_value( 'description' ), $matches))
+				{
+					echo ' (<a title="Live stats" href="'. $matches[0] .'">Live</a>)';
+				}
+				else if ($this->events[$event_id]->get_value( 'description' ) != '')
 				{
 					echo ' ('.$this->events[$event_id]->get_value( 'description' ).')';
 				}

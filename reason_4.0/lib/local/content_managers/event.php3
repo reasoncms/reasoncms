@@ -196,7 +196,7 @@
 			{
 				$this->set_display_name( 'name', 'Opponent' );
 				$this->set_display_name( 'description', 'Time/Results' ); //get default loki type
-				$this->set_comments('description', form_comment( 'Override the time before the event (e.g. "All day" or "Noon and 5 PM"). Enter results after the event.' ) );
+				$this->set_comments('description', form_comment( 'Override the time before the event (e.g. "All day" or "Noon and 5 PM"). Enter results after the event. Enter live stats link during the event.' ) );
 			}
 			else
 			{

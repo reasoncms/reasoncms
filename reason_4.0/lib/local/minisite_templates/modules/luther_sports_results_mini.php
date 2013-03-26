@@ -417,7 +417,11 @@ class lutherSportsResultsMiniModule extends EventsModule
 			echo '<td>'.$this->events[$event_id]->get_value( 'location' ).'</td>'."\n";
         
 			echo '<td>';
-			if ($this->events[$event_id]->get_value( 'description' ) != '')
+			if (preg_match("/https?:\/\/[A-Za-z0-9_\-\.\/]+/", $this->events[$event_id]->get_value( 'description' ), $matches))
+			{
+				echo '<a title="Live stats" href="'. $matches[0] .'">Live</a>';
+			}
+			else if ($this->events[$event_id]->get_value( 'description' ) != '')
 			{
 				echo $this->events[$event_id]->get_value( 'description' );
 			}
