@@ -191,7 +191,7 @@ class DiscoveryCampsOne extends FormStep
             ),
             'shuttle_comment' => array(
                 'type' => 'comment',
-                'text' => '*Shuttle service to be offered from Monona to Decorah for camps during the week of July 17-21.
+                'text' => '*Shuttle service to be offered from Monona to Decorah for camps during the week of June 17-21.
                     Register early as spots are limited! Other transportation options may be available&mdash;contact <a href="mailto:
                     nealem01@luther.edu">Emily Neal</a> for information.'
             ),
