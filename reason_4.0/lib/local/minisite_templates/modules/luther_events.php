@@ -123,7 +123,7 @@ class LutherEventsModule extends EventsModule
 	
 	function show_back_link()
 	{
-		echo '<p class="back"><a title="Back to event listing" href="'.$this->construct_link().'">&#x25c4;</a></p>'."\n";
+		echo '<p class="back"><a title="Back to event listings" href="'.$this->construct_link().'">&#x25c4;</a></p>'."\n";
 	}
 	
 	function show_repetition_info(&$e)
