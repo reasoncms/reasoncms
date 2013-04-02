@@ -34,12 +34,33 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(json) {
                     $('#transactions').html('');
+                    $('#transactions').css({'width':''});
+                    $('#transactions').append('<tr><th>Transaction Time</th><th>Terminal</th><th>Function</th><th>Previous Balance</th><th>Transaction Amount</th><th>Resulting Balance</th><th>Tender</th></tr>');
                     for (var i = 0; i < json.results.length; i++) {
                         var t = json.results[i];
-                        $('#transactions').append('<tr><th>Transaction Time</th><th>Terminal</th><th>Function</th><th>Previous Balance</th><th>Transaction Amount</th><th>Resulting Balance</th><th>Tender</th></tr>');
                         $('#transactions').append('<tr><td>' + t.Transaction_Time + '</td><td>'+ t.Terminal + '</td><td>' + t.transaction_function + '</td><td>' + t.Previous_Balance + '</td><td>' + t.Transaction_Amount + '</td><td>' + t.Resulting_Balance + '</td><td>' + t.Tender + '</td></tr>');
                     }
-                    //tableToGrid("#transactions", {});
+                    $('#transactions').after('<div class="pagination"></div>');
+                    $('.pagination').append('<a href="#" class="first" data-action="first">&laquo;</a>');
+                    $('.pagination').append('<a href="#" class="previous" data-action="previous">&lsaquo;</a>');
+                    $('.pagination').append('<input type="text" readonly="readonly" data-max-page="40" />');
+                    $('.pagination').append('<a href="#" class="next" data-action="next">&rsaquo;</a>');
+                    $('.pagination').append('<a href="#" class="last" data-action="last">&raquo;</a>');
+                    
+                    // hide all but the first of our paragraphs
+                    $('#transactions tr').filter(':gt(25)').hide();
+
+                    $('.pagination').jqPagination({
+                        max_page    : Math.ceil(($('#transactions tr').length)/25.0),
+                        paged        : function(page) {
+                            // hide all paragraphs
+                            $('#transactions').fadeOut('slow');
+                            $('#transactions tr').hide();
+                            $('#transactions tr').filter(':first').show();
+                            $('#transactions tr').slice(((page-1)*25)+1, (page*25)+1).show();
+                            $('#transactions').fadeIn('slow');
+                        }
+                    });
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     alert('An error has occurred, please try again later.');

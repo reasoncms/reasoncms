@@ -24,7 +24,7 @@ if (!$connection) {
         $q = sybase_query("Select Tender, Balance from Av_user_pcs_PatronAccount pa inner join Av_user_pcs_Patron p on p.Patron_SK = pa.Patron_SK_FK and p.email like '%". $user ."@luther.edu%' where Patron_SK_FK=".$patron, $connection);
     } else if ($action == 'transactions' && $patron > 0) {
         // TODO: add date sql logic in to limit on dates, 
-        $q = sybase_query("Select tl.ID_Number, tl.Process_Date_Time as Transaction_Time, tl.Terminal, tl.Function as [transaction_function], tl.Previous_Balance, tl.Transaction_Amount, tl.Resulting_Balance, tl.Tender from Av_user_pcs_TransactionLog tl inner join Av_user_pcs_Patron p on p.Patron_SK = tl.Patron_SK_FK and p.email like '%". $user ."@luther.edu%' where Patron_SK_FK=". $patron  ." and Transaction_Amount <> 0 order by Tender, Process_Date_Time desc");
+        $q = sybase_query("Select tl.ID_Number, tl.Process_Date_Time as Transaction_Time, tl.Terminal, tl.Function as [transaction_function], tl.Previous_Balance, tl.Transaction_Amount, tl.Resulting_Balance, tl.Tender from Av_user_pcs_TransactionLog tl inner join Av_user_pcs_Patron p on p.Patron_SK = tl.Patron_SK_FK and p.email like '%". $user ."@luther.edu%' where Patron_SK_FK=". $patron  ." and Transaction_Amount <> 0 order by Process_Date_Time desc");
     }
     if ($q) {
         echo '{';
