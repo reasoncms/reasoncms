@@ -34,6 +34,7 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(json) {
                     $('#transactions').html('');
+                    $('.pagination').remove();
                     $('#transactions').css({'width':''});
                     $('#transactions').append('<tr><th>Transaction Time</th><th>Terminal</th><th>Function</th><th>Previous Balance</th><th>Transaction Amount</th><th>Resulting Balance</th><th>Tender</th></tr>');
                     for (var i = 0; i < json.results.length; i++) {
@@ -69,6 +70,7 @@ $(document).ready(function() {
         } else {
             $('#transactions').html('');
             $('#tender').html('');
+            $('.pagination').remove();
         }
     });
 });
