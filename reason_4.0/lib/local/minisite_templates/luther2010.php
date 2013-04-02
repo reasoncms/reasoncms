@@ -605,8 +605,8 @@ class LutherTemplate2010 extends MinisiteTemplate
   		//echo '<link href="/stylesheets/luther2010/print.css" media="print" rel="stylesheet" type="text/css" />'."\n";
 		$this->head_items->add_javascript( '/javascripts/modernizr-1.1.min.js' );
 		$this->head_items->add_javascript(JQUERY_URL);
-  		$this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' );
-  		//echo '<script src="/javascripts/modernizr-1.1.min.js" type="text/javascript"></script>'."\n";
+  		// $this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' );
+  		// echo '<script src="/javascripts/modernizr-1.1.min.js" type="text/javascript"></script>'."\n";
   		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>'."\n";
 		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>'."\n";
 		echo '<!--[if lt IE 9]><link href="/stylesheets/luther2010/ie8.css" media="all" rel="stylesheet" type="text/css" /><![endif]-->'."\n";  
@@ -633,9 +633,9 @@ class LutherTemplate2010 extends MinisiteTemplate
 		
 		$this->head_items->add_javascript('/javascripts/jquery.tmpl.js');
 		$this->head_items->add_javascript('/javascripts/jquery.metadata.js');
-		$this->head_items->add_javascript('/javascripts/tablesorter.min.js');
-		$this->head_items->add_javascript('/javascripts/jquery.hoverIntent.min.js');
-		$this->head_items->add_javascript('/javascripts/cluetip/jquery.cluetip.js');
+		// $this->head_items->add_javascript('/javascripts/tablesorter.min.js');
+		// $this->head_items->add_javascript('/javascripts/jquery.hoverIntent.min.js');
+		// $this->head_items->add_javascript('/javascripts/cluetip/jquery.cluetip.js');
 		//$this->head_items->add_javascript('/javascripts/jquery.init.js');
 		$this->head_items->add_javascript('/reason/jquery.watermark-3.1.3/jquery.watermark.min.js');
 		$this->head_items->add_javascript('/reason/js/jquery.tools.min.js');
