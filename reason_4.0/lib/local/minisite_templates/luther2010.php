@@ -104,27 +104,6 @@ class LutherTemplate2010 extends MinisiteTemplate
 		    echo 's.parentNode.insertBefore(gcse, s);' . "\n";
 		echo '})();' . "\n";
 		echo '</script>' . "\n";
-		/**
-		 * Fix for google cse error -  delete when google fixes
-		 * See ticket 22429
-		 */
-		echo '<script>' . "\n";
-		echo 'if (window.location.hash)' . "\n";
-		echo '        {' . "\n";
-		echo '        var url = window.location.hash;' . "\n";
-		echo '        } else {' . "\n";
-		echo '        var url = document.URL;' . "\n";
-		echo '        }' . "\n";
-		echo 'url = url.replace(/\#gsc\.tab\=0/g, \'\');' . "\n";
-		echo 'url = url.replace(/\?/, \'?#\');' . "\n";
-		echo 'if (navigator.userAgent.search("MSIE") >= 0)' . "\n";
-		echo '        {' . "\n";
-		echo '        window.location.href = url;' . "\n";
-		echo '        } else {' . "\n";
-		echo '        window.history.replaceState(null, \'\', url);' . "\n";
-		echo '        }' . "\n";
-		echo '</script>' . "\n";
-		// End google cse fix
 
 		echo '<div class="hide"><a href="#content" class="hide">Skip Navigation</a></div>'."\n";
 		if ($this->has_content( 'pre_bluebar' ))
