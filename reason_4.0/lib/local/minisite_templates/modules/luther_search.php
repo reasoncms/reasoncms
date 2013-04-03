@@ -13,6 +13,23 @@
 
     class LutherSearchModule extends DefaultMinisiteModule
     {
+        function init($args = array())
+        {
+            $head_items = $this->get_head_items();
+            $head_items->remove_head_item('script', array('src'=>'/reason/js/jquery.maskedinput-1.3.min.js'));
+            $head_items->remove_head_item('script', array('src'=>'/reason/js/jquery.tools.min.js'));
+            $head_items->remove_head_item('script', array('src'=>'/reason/js/timer/timer.js'));
+            $head_items->remove_head_item('script', array('src'=>'/reason/jquery.watermark-3.1.3/jquery.watermark.min.js'));
+            $head_items->remove_head_item('script', array('src'=>'/javascripts/jquery.init.js'));
+            $head_items->remove_head_item('script', array('src'=>'/javascripts/jquery.tmpl.js'));
+            $head_items->remove_head_item('script', array('src'=>'/javascripts/jquery.metadata.js'));
+            $head_items->remove_head_item('script', array('src'=>'/javascripts/modernizr-1.1.min.js'));
+            $head_items->remove_head_item('script', array('src'=>'/jquery/jquery_latest.js'));
+            $head_items->remove_head_item('script', array('src'=>'/javascripts/highslide/highslide-full.js'));
+            $head_items->remove_head_item('script', array('src'=>'/javascripts/highslide/highslide-overrides.js'));
+            $head_items->remove_head_item('script', array('src'=>'//ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js'));
+        }
+
         function run(){
             echo '<gcse:searchresults-only></gcse:searchresults-only>';   
         }
