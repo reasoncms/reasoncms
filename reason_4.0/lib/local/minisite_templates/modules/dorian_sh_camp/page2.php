@@ -187,12 +187,12 @@ class DorianSHCampTwoForm extends FormStep
                         'none' => 'none',
                     ),
                     'comments' => '**Music Theater and Keyboard workshops require audition recordings<br>
-                        postmarked by 5/17/11 or attach an mp3 to an e-mail to
+                        postmarked by 5/15/13 or attach an mp3 to an e-mail to
                         <a href="mailto:dorian@luther.edu?Subject=Dorian%20Audition">dorian@luther.edu</a>',
                 ),
                 'private_lessons_header' => array(
                      'type' => 'comment',
-                     'text' => '<h3>Sets of Private Lessons</h3>- Each lesson costs $36<br />- One set equals two half-hour lessons',
+                     'text' => '<h3>Sets of Private Lessons</h3>- Each pair of lessons costs $37<br />- One set equals two half-hour lessons',
                 ),
                  'private_lessons' => array(
                      'type' => 'radio_inline_no_sort',
@@ -281,7 +281,7 @@ class DorianSHCampTwoForm extends FormStep
                             'movie_making'=>'Making a Movie',
                             'harp_workshop' => 'Harp Workshop (with period 5)',
                             'multimedia_computing'=>'Multimedia Computing (Computer Graphics)',
-                            'writing_blues_jazz'=>'Writing the Blues and Jazz',
+                            'poetry_writing'=>'Words That Sing: Poetry Writing Workshop',
                     ),
                     'display_name' => '(first&nbsp;choice)',
                 ),
@@ -306,7 +306,7 @@ class DorianSHCampTwoForm extends FormStep
                             'movie_making'=>'Making a Movie',
                             'harp_workshop' => 'Harp Workshop (with period 5)',
                             'multimedia_computing'=>'Multimedia Computing (Computer Graphics)',
-                            'writing_blues_jazz'=>'Writing the Blues and Jazz',
+                            'poetry_writing'=>'Words That Sing: Poetry Writing Workshop',
                     ),
                     'display_name' => '(second&nbsp;choice)',
                 ),
