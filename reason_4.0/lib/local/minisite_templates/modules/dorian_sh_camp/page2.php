@@ -58,14 +58,15 @@ class DorianSHCampTwoForm extends FormStep
                 'Tenor Sax'     => 'Tenor Sax',
                 'Baritone Sax'  => 'Baritone Sax',
         );
-        var $brass_choir_instruments_array = array(
-                'Trumpet'               => 'Trumpet',
-                'Horn'                  => 'Horn',
-                'Trombone'              => 'Trombone',
-                'Euphonium/Baritone BC' => 'Euphonium/Baritone BC',
-                'Euphonium TC'          => 'Euphonium TC',
-                'Tuba'                  => 'Tuba',
-        );
+        // removed due to lack of participants, per jim buzza
+        // var $brass_choir_instruments_array = array(
+        //         'Trumpet'               => 'Trumpet',
+        //         'Horn'                  => 'Horn',
+        //         'Trombone'              => 'Trombone',
+        //         'Euphonium/Baritone BC' => 'Euphonium/Baritone BC',
+        //         'Euphonium TC'          => 'Euphonium TC',
+        //         'Tuba'                  => 'Tuba',
+        // );
         var $jazz_band_instruments_array = array(
                 'Alto Sax'      => 'Alto Sax',
                 'Tenor Sax'     => 'Tenor Sax',
@@ -405,7 +406,8 @@ class DorianSHCampTwoForm extends FormStep
                 $this->change_element_type('orchestra_instrument', 'select_no_sort', array('options' => $this->orchestra_instruments_array));
                 $this->change_element_type('jazz_instrument', 'select_no_sort', array('options' => $this->jazz_band_instruments_array));
                 $this->change_element_type('wind_choir_instrument', 'select_no_sort', array('options' => $this->woodwind_choir_instruments_array));
-                $this->change_element_type('brass_choir_instrument', 'select_no_sort', array('options' => $this->brass_choir_instruments_array));
+                // removed due to lack of participants, per jim buzza
+                // $this->change_element_type('brass_choir_instrument', 'select_no_sort', array('options' => $this->brass_choir_instruments_array));
                 $this->change_element_type('lesson_instrument_1', 'select_no_sort', array('options' => $this->lesson_instruments_array));
                 $this->change_element_type('lesson_instrument_2', 'select_no_sort', array('options' => $this->lesson_instruments_array));
 	}
