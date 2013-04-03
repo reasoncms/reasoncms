@@ -115,13 +115,13 @@ class LutherTemplate2010 extends MinisiteTemplate
 		echo '        } else {' . "\n";
 		echo '        var url = document.URL;' . "\n";
 		echo '        }' . "\n";
-		echo 'url = url.replace(/\#gsc\.tab\=0/g, '');' . "\n";
+		echo 'url = url.replace(/\#gsc\.tab\=0/g, \'\');' . "\n";
 		echo 'url = url.replace(/\?/, \'?#\');' . "\n";
 		echo 'if (navigator.userAgent.search("MSIE") >= 0)' . "\n";
 		echo '        {' . "\n";
 		echo '        window.location.href = url;' . "\n";
 		echo '        } else {' . "\n";
-		echo '        window.history.replaceState(null, '', url);' . "\n";
+		echo '        window.history.replaceState(null, \'\', url);' . "\n";
 		echo '        }' . "\n";
 		echo '</script>' . "\n";
 		// End google cse fix
