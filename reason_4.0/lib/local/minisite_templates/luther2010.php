@@ -81,18 +81,51 @@ class LutherTemplate2010 extends MinisiteTemplate
 			echo '</script>'."\n";
 		}
 		
-		echo '<script>' . "\n";
-		echo '  (function() {' . "\n";
-		echo '    var cx = \'005935510434836484605:yecpxhsqj6s\';' . "\n";
-		echo '    var gcse = document.createElement(\'script\'); gcse.type = \'text/javascript\'; gcse.async = true;' . "\n";
-		echo '    gcse.src = (document.location.protocol == \'https:\' ? \'https:\' : \'http:\') +' . "\n";
-		echo '        \'//www.google.com/cse/cse.js?cx=\' + cx;' . "\n";
-		echo '    var s = document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(gcse, s);' . "\n";
-		echo '  })();' . "\n";
-		echo '</script>' . "\n";
-
+		// echo '<script>' . "\n";
+		// echo '  (function() {' . "\n";
+		// echo '    var cx = \'005935510434836484605:yecpxhsqj6s\';' . "\n";
+		// echo '    var gcse = document.createElement(\'script\'); gcse.type = \'text/javascript\'; gcse.async = true;' . "\n";
+		// echo '    gcse.src = (document.location.protocol == \'https:\' ? \'https:\' : \'http:\') +' . "\n";
+		// echo '        \'//www.google.com/cse/cse.js?cx=\' + cx;' . "\n";
+		// echo '    var s = document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(gcse, s);' . "\n";
+		// echo '  })();' . "\n";
+		// echo '</script>' . "\n";
 
 		echo $this->create_body_tag();
+		echo '<script>' . "\n";
+ 		echo '(function() {' . "\n";
+	    	echo 'var cx = \'005935510434836484605:yecpxhsqj6s\';' . "\n";
+		    echo 'var gcse = document.createElement(\'script\');' . "\n";
+		    echo 'gcse.type = \'text/javascript\';' . "\n";
+		    echo 'gcse.async = true;' . "\n";
+		    echo 'gcse.src = (document.location.protocol == \'https:\' ? \'https:\' : \'http:\') +' . "\n";
+		    echo '\'//www.google.com/cse/cse.js?cx=\' + cx;' . "\n";
+		    echo 'var s = document.getElementsByTagName(\'script\')[0];' . "\n";
+		    echo 's.parentNode.insertBefore(gcse, s);' . "\n";
+		echo '})();' . "\n";
+		echo '</script>' . "\n";
+		/**
+		 * Fix for google cse error -  delete when google fixes
+		 * See ticket 22429
+		 */
+		echo '<script>' . "\n";
+		echo 'if (window.location.hash)' . "\n";
+		echo '        {' . "\n";
+		echo '        var url = window.location.hash;' . "\n";
+		echo '        } else {' . "\n";
+		echo '        var url = document.URL;' . "\n";
+		echo '        }' . "\n";
+		echo 'url = url.replace(/\#gsc\.tab\=0/g, '');' . "\n";
+		echo 'url = url.replace(/\?/, \'?#\');' . "\n";
+		echo 'if (navigator.userAgent.search("MSIE") >= 0)' . "\n";
+		echo '        {' . "\n";
+		echo '        window.location.href = url;' . "\n";
+		echo '        } else {' . "\n";
+		echo '        window.history.replaceState(null, '', url);' . "\n";
+		echo '        }' . "\n";
+		echo '</script>' . "\n";
+		// End google cse fix
+
 		echo '<div class="hide"><a href="#content" class="hide">Skip Navigation</a></div>'."\n";
 		if ($this->has_content( 'pre_bluebar' ))
 			$this->run_section( 'pre_bluebar' );
