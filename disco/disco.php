@@ -296,7 +296,12 @@
 		* @var boolean
 		*/
 		var $full_error_triggers = false;
-
+		
+		/**
+		 * Cross site request forgery protection is active for post requests by default, but can be disabled (not recommended)
+		 */
+		var $use_csrf_protection = true;
+		
 		/**#@-*/
 		
 		/**#@+
@@ -385,7 +390,7 @@
 		* Element names that may not be used because Disco needs them
 		* @var array
 		*/		
-		var $_reserved = array('submitted');
+		var $_reserved = array('submitted','csrf_token');
 		
 		/**
 		 * Stores the callbacks registered on a Disco object
@@ -533,7 +538,7 @@
 			$this->_run_callbacks('on_every_time');
 			
 			if ( !$this->_is_first_time() )
-			{
+			{	
 				$this->_grab_messages();
 			}
 			
@@ -618,7 +623,11 @@
 		{
 			if ( !$this->_is_first_time() )
 			{
-				$this->_run_all_error_checks();
+				// first check for csrf - if this isn't one, run normal error checks.
+				if (!$this->could_be_csrf())
+				{
+					$this->_run_all_error_checks();
+				}
 				
 				if ( !$this->_has_errors() )
 				{
@@ -1015,9 +1024,12 @@
 					}
 					echo '<li>'.($num_errors == 1 ? 'This field is' : 'These fields are' ).' required: '.join(', ',$err_fields).'</li>'."\n";
 				}
-				// display the messages for custom error checks - iterate through $_order so that error messages occur in a sort of logical order.
+				// display the messages for custom error checks - iterate through $_order, append general ones to the front so that error messages occur in a sort of logical order.
 				$order = $this->get_order();
-				foreach($order as $name)
+				$general_errors = array_diff_key($this->_errors, $order);
+				$errors = (!empty($general_errors)) ? array_keys($general_errors + $order) : array_keys($order);
+				
+				foreach($errors as $name)
 				{
 					echo $this->get_error_message_and_link($name);
 					if($this->_is_element_group($name))
@@ -1041,7 +1053,7 @@
 			{
 				$error_message = $this->_error_messages[$name];
 				$str .= '<li>'.$error_message.'  ';
-				if( $this->show_error_jumps )
+				if( $this->_is_element($name) && $this->show_error_jumps )
 					$str .= '<a href="#'.$name.'_error" class="errorJump">[ jump to error ]</a>';
 				$str .= '</li>'."\n";
 			}
@@ -1215,13 +1227,14 @@
 		} // }}}
 		
 		/**
-		* Closes the form and includes the necessary "submitted" input.
+		* Closes the form and includes submitted and csrf_token.
 		* Called by {@link show_form}.  Part of the display phase.
 		*/
-		function close_form() // {{{
+		function close_form()
 		{
+			if ($this->csrf_protection_active()) echo '<input type="hidden" name="csrf_token" value="'.$this->get_csrf_token().'" />'."\n";
 			echo '<input type="hidden" name="submitted" value="true" />'."\n".'</form>'."\n";
-		} // }}}
+		}
 		
 		/**
 		* Hook to add any HTML or text or anything you want after the form
@@ -1594,7 +1607,7 @@
 			//	trigger_error('An element named "'.$element_name.'" already exists on this form and will be overwritten.');
 			}
 
-			if (in_array($element_name, $this->_reserved))
+			if ($this->is_reserved($element_name))
 			{
 				trigger_error('The element name "'.$element_name.'" is reserved for internal Disco use.');
 			}
@@ -2188,13 +2201,24 @@
 		} // }}}
 		
 		/**
+		 * Is an element name reserved for internal disco use?
+		 *
+		 * @return boolean
+		 */
+		function is_reserved( $element_name )
+		{
+			return (in_array($element_name, $this->_reserved));
+		}
+		
+		/**
 		 * Add or set an error on an element or element group.
 		 * @param $element_name string Name of the element
 		 * @param $message string The message to display to the user
+		 * @param $element_must_exist boolean If set to false, element_name does not need to exist
 		 */
-		function set_error( $element_name, $message = '') // {{{
+		function set_error( $element_name, $message = '', $element_must_exist = true) // {{{
 		{
-			if($this->_is_element($element_name) || $this->_is_element_group($element_name))
+			if(!$element_must_exist || $this->_is_element($element_name) || $this->_is_element_group($element_name))
 			{
 				//set the error flag for the entire form to true
 				if ( empty( $this->_error_flag ) )
@@ -2231,7 +2255,9 @@
 				}
 			}
 			else
+			{
 				trigger_error('Cannot set error, as '.$element_name.' is not a recognized element or element group', WARNING);
+			}
 		} // }}}
 		
 	//////////////////////////////////////////////////
@@ -2685,6 +2711,54 @@
 				trigger_error('Form method must be "get" or "post". Note that this method is case-sensitive.');
 				return false;
 			}
+		}
+
+		/** METHODS FOR CSRF PROTECTION **/
+		
+		/**
+		 * Verify that CSRF token in our session matches the token posted by the form.
+		 */
+		protected function could_be_csrf()
+		{
+			if ($this->csrf_protection_active())
+			{
+				$post_csrf_token = (isset($_POST['csrf_token']) && !empty($_POST['csrf_token'])) ? $_POST['csrf_token'] : false;
+				if ($post_csrf_token && ($post_csrf_token === $this->get_csrf_token())) return false;
+				else
+				{
+					// Lets set an error. This could be a cross site request forgery attack.
+					$this->set_error('csrf_token', 'This form has expired. Please review what you entered and submit again.', false);
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		/**
+		 * Returns true if the following is true:
+		 *
+		 * - use_csrf_protection is set to true
+		 * - there is an active session
+		 * - the form method is post
+		 *
+		 * @return boolean
+		 */
+		protected function csrf_protection_active()
+		{
+			return ($this->use_csrf_protection && (strlen(session_id()) > 0) && ($this->form_method == 'post'));
+		}
+		
+		/**
+		 * Get (or generate) CSRF token.
+		 */
+		protected function get_csrf_token()
+		{
+			if (!isset($_SESSION['csrf_token']))
+			{
+				$token = md5(uniqid(mt_rand(), true));
+				$_SESSION['csrf_token'] = $token;
+			}
+			return $_SESSION['csrf_token'];
 		}
 	} // }}}
 
