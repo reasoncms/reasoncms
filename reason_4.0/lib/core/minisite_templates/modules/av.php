@@ -63,7 +63,7 @@
 			if ( !empty($this->request[ $this->query_string_frag.'_id' ]) )
 			{
 				$media_work = new entity($this->request[ $this->query_string_frag.'_id' ]);
-				if ($media_work->get_values() && $media_work->get_value('integration_library') == 'kaltura')
+				if ($media_work->get_values() && $media_work->get_value('type') == id_of('av') && $media_work->get_value('integration_library') == 'kaltura')
 				{
 					$head_items = $this->get_head_items();
 					$head_items->add_javascript(JQUERY_URL, true);
