@@ -13,6 +13,30 @@ $(document).ready(function() {
             alert('An error has occurred, please try again later.');
         }
     });
+    $(function() {
+        $( "#from" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          onClose: function( selectedDate ) {
+            $( "#to" ).datepicker( "option", "minDate", selectedDate );
+          }
+        });
+        $( "#to" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          onClose: function( selectedDate ) {
+            $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+          }
+        });
+    });
+    var dt = new Date();
+
+    dt.getFullYear() + "/" + dt.getMonth() + 1 + "/" + dt.getDate();
+
+    $("#to").val((dt.getMonth() + 1) +'/'+ dt.getDate() + '/' + dt.getFullYear());
+    $("#from").val(dt.getMonth() + '/' + dt.getDate() + '/' + dt.getFullYear());
     $('#account-select').change( function() {
         if (this.value != '--') {
             $.ajax({

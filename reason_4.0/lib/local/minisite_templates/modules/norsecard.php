@@ -37,6 +37,7 @@ class NorseCardModule extends DefaultMinisiteModule {
             $head_items->add_stylesheet( '/reason/css/norsecard.css' );
             $head_items->add_javascript( '/reason/jqPagination/js/jquery.jqpagination.min.js' );
             $head_items->add_stylesheet( '/reason/jqPagination/css/jqpagination.css' );
+            //$head_items->add_stylesheet( '/reason/jquery-ui-1.8.12.custom/css/redmond/jquery-ui-1.8.12.custom.css' );
         }
 
         // Allow any of the form elements to be set from the URL or POST, and look like a submission
