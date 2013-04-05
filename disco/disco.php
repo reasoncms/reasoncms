@@ -481,29 +481,7 @@
 				// make the internal variables match the elements from the overloaded class
 				if ( !empty( $this->elements ) )
 				{
-					foreach($this->elements as $key => $value)
-					{
-						// assume no extra arguments
-						$args = array();
-						if ( is_string( $key ) )
-						{
-							$element_name = $key;
-							if ( is_array( $value ) )
-							{
-								$type = $value['type'];
-								unset($value['type']);
-								$args = $value;
-							}
-							else
-								$type = $value;
-						}
-						else
-						{
-							$element_name = $value;
-							$type = '';
-						}
-						$this->add_element( $element_name, $type, $args );
-					}
+					$this->add_elements_from_array($this->elements);
 				}
 
 				// required should only contain elements in the elements array
@@ -1647,6 +1625,38 @@
 				return false;
 			}
 		 } // }}}	 
+		 
+		/**
+		 * Add elements from an array
+		 * Used to process the elements class variable (or your own array of elements)
+		 * @param array $elements
+		 */
+		 function add_elements_from_array($elements)
+		 {
+			foreach($elements as $key => $value)
+			{
+				// assume no extra arguments
+				$args = array();
+				if ( is_string( $key ) )
+				{
+					$element_name = $key;
+					if ( is_array( $value ) )
+					{
+						$type = $value['type'];
+						unset($value['type']);
+						$args = $value;
+					}
+					else
+						$type = $value;
+				}
+				else
+				{
+					$element_name = $value;
+					$type = '';
+				}
+				$this->add_element( $element_name, $type, $args );
+			}
+		 }
 		 
 		/**
 		* Completely removes an element from the form.
