@@ -58,11 +58,11 @@ class LutherEventsModule extends EventsModule
 			}
 			else if ($e->get_value( 'description' ) != '')
 			{
-				echo '<tr><td width="15%">' . $dateTime . '</td><td width="85%">' . $e->get_value( 'description' ) . '</td></tr>'."\n";;
+				echo '<tr><td width="15%">' . $dateTime . '</td><td width="85%">' . $e->get_value( 'description' ) . '</td></tr>'."\n";
 			}
 			else if (substr($e->get_value('datetime'), 11) != '00:00:00')
 			{
-				echo '<tr><td width="15%">' . $dateTime . '</td><td width="85%">' . prettify_mysql_datetime($this->events[$event_id]->get_value('datetime'), "g:i a" ) . '</td></tr>'."\n";;
+				echo '<tr><td width="15%">' . $dateTime . '</td><td width="85%">' . prettify_mysql_datetime($this->events[$event_id]->get_value('datetime'), "g:i a" ) . '</td></tr>'."\n";
 			}						
 			if ($e->get_value('location'))
 				echo '<tr><td width="15%">Location:</td><td width="85%">'.$e->get_value('location') . $this->video_audio_streaming($e->get_value('id')) . '</td></tr>'."\n";
