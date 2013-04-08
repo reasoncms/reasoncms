@@ -17,7 +17,7 @@ reason_include_once( 'minisite_templates/modules/default.php' );
  */
 include_once(DISCO_INC . 'disco.php');
 
-$GLOBALS[ '_module_class_names' ][ 'dorian_jh_camps'.basename( __FILE__, '.php' ) ] = 'DorianJHCampsModule';
+$GLOBALS[ '_module_class_names' ][ 'dorian_jh_camps/'.basename( __FILE__, '.php' ) ] = 'DorianJHCampsModule';
 
 class DorianJHCampsModule extends DefaultMinisiteModule
 {

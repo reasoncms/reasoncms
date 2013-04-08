@@ -123,8 +123,8 @@ class DorianSHCampThreeForm extends FormStep
 	function on_every_time()
 	{
                 // calculate the total_cost of the camp by adding lesson_cost (if present) to the camp_cost
-                $camp_cost = 442;
-                $per_lesson_cost = 36;
+                $camp_cost = 449;
+                $per_lesson_cost = 37;
                 $lesson_cost = 0;
                 $lesson_msg = '';
                 if ($this->controller->get('private_lessons'))

@@ -166,7 +166,7 @@ class DorianJHCampsTwoForm extends FormStep
                 ),
                 'private_lessons_header' => array(
                      'type' => 'comment',
-                     'text' => '<h3>Sets of Private Lessons</h3>- Each lesson costs $36<br />- One set equals two half-hour lessons',
+                     'text' => '<h3>Sets of Private Lessons</h3>- Each pair of lessons costs $37<br />- One set equals two half-hour lessons',
                 ),
                  'private_lessons' => array(
                      'type' => 'radio_inline_no_sort',
