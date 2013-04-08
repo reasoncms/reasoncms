@@ -19,59 +19,54 @@ class LutherEventsModule extends EventsModule
 	function show_event_details()
 	{
 		$sponsorContactUrl = false;
-		$url = get_current_url();
 		$e =& $this->event;
-		if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url))
+		if ($this->is_sports_event($e->get_value('sponsor')))
 		{
+			$postToResults = (preg_match("/post_to_results/", $e->get_value( 'contact_organization' ))) ? true : false;
 			echo '<div class="eventDetails">'."\n";
+			$this->show_back_link();
 			//$this->show_images($e);
-			echo '<h1>'.$e->get_value('name').'</h1>'."\n";
-			//$this->show_ownership_info($e);
+			echo '<h1>'.ucfirst(preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $e->get_value('sponsor')))." - ".$e->get_value( 'name' ).'</h1>'."\n";
+			if (!$postToResults)
+				$this->show_repetition_info($e);
+			//$this->show_ownership_info($e);			
 			$st = substr($e->get_value('datetime'), 0, 10);
 			$lo = substr($e->get_value('last_occurence'), 0, 10);
-			$now = date('Y-m-d');
+			echo '<table>'."\n";
 			if (!empty($this->request['date']) && strstr($e->get_value('dates'), $this->request['date']))
 			{
-				if ($lo != $st)
-				{
-					echo '<p class="date">'.prettify_mysql_datetime($st, "F j, Y" ).' - '.prettify_mysql_datetime($lo, "F j, Y")."\n";
+				if ($postToResults)
+				{		
+					if ($lo != $st)
+					{
+						echo '<tr><td width="15%">Date:</td><td width="85%">'.prettify_mysql_datetime($st, "F j, Y" ).' - '.prettify_mysql_datetime($lo, "F j, Y").'</td></tr>'."\n";
+					}
+					else
+					{
+						'<tr><td width="15%">Date:</td><td width="85%">'.prettify_mysql_datetime( $this->request['date'], "F j, Y" ).'</td></tr>'."\n";
+					}
 				}
 				else 
 				{
-					echo '<p class="date">'.prettify_mysql_datetime( $this->request['date'], "F j, Y" )."\n";
+					echo '<tr><td width="15%">Date:</td><td width="85%">'.prettify_mysql_datetime( $this->request['date'], "l, F j, Y" ).'</td></tr>'."\n";
 				}
-			}
-
-			if ($now <= $lo || !$e->get_value('content'))
+			}		
+			$dateTime = $postToResults ? "Results:" : "Time:";
+			if (preg_match("/https?:\/\/[A-Za-z0-9_\-\.\/]+/", $e->get_value( 'description' ), $matches))
 			{
-				if ($e->get_value('description'))
-				{
-					echo '&nbsp;('.$e->get_value( 'description' ).')'."\n";
-				}
-				else if (substr($e->get_value( 'datetime' ), 11) != '00:00:00')
-				{
-					echo '&nbsp;('.prettify_mysql_datetime( $e->get_value( 'datetime' ), "g:i a" ).')'."\n";
-				}
-				
-				if ($e->get_value('location'))
-					echo '<br>'.$e->get_value('location')."\n";
-			}	
-			echo '</p>'."\n";
-	
-			if ($e->get_value('content'))
-			{
-				echo '<div class="eventContent">'."\n";
-				echo $e->get_value( 'content' );
-				echo '</div>'."\n";
+				echo '<tr><td width="15%">' . $dateTime . '</td><td width="85%"><a title="Live stats" href="'. $matches[0] . '">Live stats</a></td></tr>'."\n";
 			}
-			
-			if ($e->get_value('url'))
-				echo '<div class="eventUrl">For more information, visit: <a href="'.$e->get_value( 'url' ).'">'.$e->get_value( 'url' ).'</a>.</div>'."\n";
-			//$this->show_back_link();
-			//$this->show_event_categories($e);
-			//$this->show_event_audiences($e);
-			//$this->show_event_keywords($e);
-			echo '</div>'."\n";
+			else if ($e->get_value( 'description' ) != '')
+			{
+				echo '<tr><td width="15%">' . $dateTime . '</td><td width="85%">' . $e->get_value( 'description' ) . '</td></tr>'."\n";;
+			}
+			else if (substr($e->get_value('datetime'), 11) != '00:00:00')
+			{
+				echo '<tr><td width="15%">' . $dateTime . '</td><td width="85%">' . prettify_mysql_datetime($this->events[$event_id]->get_value('datetime'), "g:i a" ) . '</td></tr>'."\n";;
+			}						
+			if ($e->get_value('location'))
+				echo '<tr><td width="15%">Location:</td><td width="85%">'.$e->get_value('location') . $this->video_audio_streaming($e->get_value('id')) . '</td></tr>'."\n";
+			echo '</table>'."\n";
 		}
 		else
 		{		
@@ -94,31 +89,32 @@ class LutherEventsModule extends EventsModule
 			{
 				echo '<p class="description">'.$e->get_value( 'description' ).'</p>'."\n";
 			}
-			if ($e->get_value('content'))
-			{
-				echo $e->get_value( 'content' )."\n";
-			}
-			if ($e->get_value('sponsor'))
-			{
-				echo '<p class="sponsor">Sponsor: '.$e->get_value('sponsor').'</p>'."\n";
-				$sponsorContactUrl = true;
-			}		
-			$this->show_contact_info($e);
-			if(!empty($contact))
-			{
-				$sponsorContactUrl = true;
-			}
-			if ($e->get_value('url'))
-			{
-				echo '<p class="eventUrl">For more information, visit: <a href="'.$e->get_value( 'url' ).'">'.$e->get_value( 'url' ).'</a>.</p>'."\n";
-			}
-			if ($sponsorContactUrl)
-			{
-				echo '<p class="eventUrl">&nbsp;</p>'."\n";
-			}
-			$this->show_google_map($e);
-			echo '</div>'."\n";
 		}
+		if ($e->get_value('content'))
+		{
+			echo $e->get_value( 'content' )."\n";
+		}
+		if ($e->get_value('sponsor'))
+		{
+			echo '<p class="sponsor">Sponsor: '.$e->get_value('sponsor').'</p>'."\n";
+			$sponsorContactUrl = true;
+		}		
+		$this->show_contact_info($e);
+		if(!empty($contact))
+		{
+			$sponsorContactUrl = true;
+		}
+		if ($e->get_value('url'))
+		{
+			echo '<p class="eventUrl">For more information, visit: <a href="'.$e->get_value( 'url' ).'">'.$e->get_value( 'url' ).'</a>.</p>'."\n";
+		}
+		if ($sponsorContactUrl)
+		{
+			echo '<p class="eventUrl">&nbsp;</p>'."\n";
+		}
+		$this->show_google_map($e);
+		echo '</div>'."\n";
+
 	}
 	
 	function show_back_link()
@@ -189,8 +185,33 @@ class LutherEventsModule extends EventsModule
 			echo ' from '.prettify_mysql_datetime($e->get_value('datetime'), 'F j, Y').' to '.prettify_mysql_datetime($e->get_value('last_occurence'), 'F j, Y').'.';
 			
 			echo '</p>'."\n";
+		}		
+	}
+	
+	function show_contact_info(&$e)
+	{
+		$contact = $e->get_value('contact_username');
+		if(!empty($contact) )
+		{
+			$dir = new directory_service();
+			$dir->search_by_attribute('ds_username', array(trim($contact)), array('ds_email','ds_fullname','ds_phone',));
+			$email = $dir->get_first_value('ds_email');
+			$fullname = $dir->get_first_value('ds_fullname');
+			$phone = $dir->get_first_value('ds_phone');
+				
+			echo '<p class="contact"><strong>Contact:</strong> ';
+			if(!empty($email))
+				echo '<a href="mailto:'.$email.'">';
+			if(!empty($fullname))
+				echo $fullname;
+			else
+				echo $contact;
+			if(!empty($email))
+				echo '</a>';
+			if (!empty($phone))
+				echo ', '.$phone;
+			echo '</p>'."\n";
 		}
-			
 	}
 	
 	function show_dates(&$e)
@@ -221,8 +242,16 @@ class LutherEventsModule extends EventsModule
 		{
 			echo 'Today';
 		}
+		if ($this->is_sports_event($this->events[$event_id]->get_value('sponsor')))
+		{
+			$event_name = ucfirst(preg_replace("|(^.*?)\s\((w?o?m?en)\)$|", "\\2's \\1", $this->events[$event_id]->get_value('sponsor')))." - ".$this->events[$event_id]->get_value( 'name' );
+		}
+		else 
+		{
+			$event_name = $this->events[$event_id]->get_value( 'name' );
+		}
 		echo '</td><td width="85%"><a href="'.$link.'">';
-		echo $this->events[$event_id]->get_value( 'name' );
+		echo $event_name;
 		echo '</a>';
 		switch($ongoing_type)
 		{
@@ -236,6 +265,49 @@ class LutherEventsModule extends EventsModule
 				break;
 		}
 		echo '</td></tr></table>'."\n";
+	}
+	
+	function get_all_categories() // {{{
+	{
+		$ret = '';
+		$cs = new entity_selector($this->parent->site_id);
+		$cs->description = 'Selecting all categories on the site';
+		$cs->add_type(id_of('category_type'));
+		$cs->set_order('entity.name ASC');
+		$cs->set_cache_lifespan($this->get_cache_lifespan_meta());
+		$cats = $cs->run_one();
+		$cats = $this->check_categories($cats);
+		if(empty($cats))
+			return '';
+		$ret .= '<div class="categories';
+		if ($this->calendar->get_view() == "all")
+			$ret .= ' divider';
+		$ret .= '">'."\n";
+		$ret .= '<h4>Event Categories</h4>'."\n";
+		$ret .= '<ul>'."\n";
+		$ret .= '<li>';
+		$used_cats = $this->calendar->get_categories();
+		if (empty( $used_cats ))
+			$ret .= '<strong>All</strong>';
+		else
+			$ret .= '<a href="'.$this->construct_link(array('category'=>'','view'=>'')).'" title="Events in all categories">All</a>';
+		$ret .= '</li>';
+		foreach($cats as $cat)
+		{
+			// don't show borrowed luther_home categories on the minisites
+			if (get_owner_site_id($cat->id()) != id_of('luther_home'))
+			{
+				$ret .= '<li>';
+				if (array_key_exists($cat->id(), $this->calendar->get_categories()))
+					$ret .= '<strong>'.$cat->get_value('name').'</strong>';
+				else
+					$ret .= '<a href="'.$this->construct_link(array('category'=>$cat->id(),'view'=>'','no_search'=>'1')).'" title="'.reason_htmlspecialchars(strip_tags($cat->get_value('name'))).' events">'.$cat->get_value('name').'</a>';
+				$ret .= '</li>';
+			}
+		}
+		$ret .= '</ul>'."\n";
+		$ret .= '</div>'."\n";
+		return $ret;
 	}
 	
 	function no_events_error()
@@ -320,6 +392,29 @@ class LutherEventsModule extends EventsModule
 		echo '</div>'."\n";
 	}
 	
+	function find_events_page()
+	// used to find the url of the page that contains the list of events
+	{
+		reason_include_once( 'minisite_templates/nav_classes/default.php' );
+		$ps = new entity_selector($this->parent->site_id);
+		$ps->add_type( id_of('minisite_page') );
+		$rels = array();
+		foreach($this->events_page_types as $page_type)
+		{
+			$rels[] = 'page_node.custom_page = "'.$page_type.'"';
+		}
+		$ps->add_relation('( '.implode(' OR ', $rels).' )');
+		$page_array = $ps->run_one();
+		reset($page_array);
+		$this->events_page = current($page_array);
+		if (!empty($this->events_page))
+		{
+			$ret = $this->parent->pages->get_full_url($this->events_page->id());
+		}
+		if(!empty($ret))
+			$this->events_page_url = $ret;
+	}
+	
 	function show_google_map(&$e)
 	{
 		$site_id = $this->site_id;
@@ -333,6 +428,42 @@ class LutherEventsModule extends EventsModule
 		draw_google_map($gmaps);
 		
 	}
+	
+	function video_audio_streaming($event_id, $imgVideo = "/images/luther2010/video_camera_gray_128.png", $imgAudio = "/images/luther2010/headphones_gray_256.png")
+	// check if video/audio streaming categories are present for an event
+	{
+		$es = new entity_selector();
+		$es->description = 'Selecting categories for event';
+		$es->add_type( id_of('category_type'));
+		$es->add_right_relationship( $event_id, relationship_id_of('event_to_event_category') );
+		$cats = $es->run_one();
+		$vstream = '';
+		$astream = '';
+		foreach( $cats AS $cat )
+		{
+			if ($cat->get_value('name') == 'Video Streaming')
+			{
+				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><img class="video_streaming" src="' . $imgVideo .'" alt="Video Streaming"></a>';
+			}
+			if ($cat->get_value('name') == 'Audio Streaming')
+			{
+				$astream = '<a title="Audio Streaming" href="http://www.luther.edu/kwlc/"><img class="audio_streaming" src="' . $imgAudio .'" alt="Audio Streaming" title="Audio Streaming"></a>';
+			}
+		}
+		return $astream . $vstream;
+	}
+	
+	function is_sports_event($sponsor)
+	{
+		$url = get_current_url();
+		if (preg_match("/^https?:\/\/[A-Za-z0-9_\.]+\/sports\/?/", $url)
+			|| preg_match("/([Bb]aseball|[Bb]asketball|[Cc]ross [Cc]ountry|[Ff]ootball|[Gg]olf|[Ss]occer|[Ss]oftball|[Ss]wimming|[Tt]ennis|[Tt]rack|[Vv]olleyball|[Ww]restling)/", $sponsor))
+		{
+			return true;
+		}
+		return false;
+	}
+	
 
 }
 ?>

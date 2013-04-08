@@ -7,13 +7,13 @@
  /**
   * include the base class and register the module with Reason
   */
-	reason_include_once( 'minisite_templates/modules/events.php' );
+	reason_include_once( 'minisite_templates/modules/luther_events.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'lutherSportsResultsMiniModule';
 
 /**
  * A minisite module that creates a minimal "sidebar" style event listing, linking to the main events page on the site
  */
-class lutherSportsResultsMiniModule extends EventsModule
+class lutherSportsResultsMiniModule extends LutherEventsModule
 {
 	var $ideal_count = 3;
 	var $luther_counter = 3;
@@ -48,7 +48,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 		return true;
 	}
 	
-	function show_event_details()
+	/*function show_event_details()
 	{
 		
 		$e =& $this->event;
@@ -113,7 +113,7 @@ class lutherSportsResultsMiniModule extends EventsModule
 			//$this->show_event_keywords($e);
 			echo '</div>'."\n";
 		
-	}
+	}*/
 	
 	function has_content()
 	{
@@ -276,28 +276,6 @@ class lutherSportsResultsMiniModule extends EventsModule
 				'function'=>'turn_into_int',
 			),
 		);
-	}
-
-	function find_events_page()
-	{
-		reason_include_once( 'minisite_templates/nav_classes/default.php' );
-		$ps = new entity_selector($this->parent->site_id);
-		$ps->add_type( id_of('minisite_page') );
-		$rels = array();
-		foreach($this->events_page_types as $page_type)
-		{
-			$rels[] = 'page_node.custom_page = "'.$page_type.'"';
-		}
-		$ps->add_relation('( '.implode(' OR ', $rels).' )');
-		$page_array = $ps->run_one();
-		reset($page_array);
-		$this->events_page = current($page_array);
-		if (!empty($this->events_page))
-		{
-			$ret = $this->parent->pages->get_full_url($this->events_page->id());
-		}
-		if(!empty($ret))
-			$this->events_page_url = $ret;
 	}
 	
 	function show_feed_link()
@@ -477,30 +455,6 @@ class lutherSportsResultsMiniModule extends EventsModule
 		
 		echo '</form>'."\n";
 
-	}
-	
-	function video_audio_streaming($event_id)
-	// check if video/audio streaming categories are present for an event
-	{	
-		$es = new entity_selector();
-		$es->description = 'Selecting categories for event';
-		$es->add_type( id_of('category_type'));
-		$es->add_right_relationship( $event_id, relationship_id_of('event_to_event_category') );
-		$cats = $es->run_one();
-		$vstream = '';
-		$astream = '';
-		foreach( $cats AS $cat )
-		{
-			if ($cat->get_value('name') == 'Video Streaming')
-			{
-				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><img class="video_streaming" src="/images/luther2010/video_camera_gray_128.png" alt="Video Streaming"></a>';
-			}
-			if ($cat->get_value('name') == 'Audio Streaming')
-			{
-				$astream = '<a title="Video Streaming" href="http://www.luther.edu/kwlc/"><img class="audio_streaming" src="/images/luther2010/headphones_gray_256.png" alt="Audio Streaming" title="Audio Streaming"></a>';
-			}
-		}
-		return $astream . $vstream;
 	}
 
 }

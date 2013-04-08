@@ -7,13 +7,13 @@
  /**
   * include the base class and register the module with Reason
   */
-	reason_include_once( 'minisite_templates/modules/events.php' );
+	reason_include_once( 'minisite_templates/modules/luther_events.php' );
 	$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LutherEventsMiniModule';
 
 /**
  * A minisite module that creates a minimal "sidebar" style event listing, linking to the main events page on the site
  */
-class LutherEventsMiniModule extends EventsModule
+class LutherEventsMiniModule extends LutherEventsModule
 {
 	//var $ideal_count = 6;
 	var $luther_counter = 3;
@@ -123,28 +123,6 @@ class LutherEventsMiniModule extends EventsModule
 			echo '</section> <!-- class="events group with-calendar" role="group" -->'."\n";
 		}
 	}
-
-	function find_events_page()
-	{
-		reason_include_once( 'minisite_templates/nav_classes/default.php' );
-		$ps = new entity_selector($this->parent->site_id);
-		$ps->add_type( id_of('minisite_page') );
-		$rels = array();
-		foreach($this->events_page_types as $page_type)
-		{
-			$rels[] = 'page_node.custom_page = "'.$page_type.'"';
-		}
-		$ps->add_relation('( '.implode(' OR ', $rels).' )');
-		$page_array = $ps->run_one();
-		reset($page_array);
-		$this->events_page = current($page_array);
-		if (!empty($this->events_page))
-		{
-			$ret = $this->parent->pages->get_full_url($this->events_page->id());
-		}
-		if(!empty($ret))
-			$this->events_page_url = $ret;
-	}
 	
 	function show_feed_link()
 	{
@@ -246,7 +224,7 @@ class LutherEventsMiniModule extends EventsModule
 			{
 				echo '</a>'."\n";
 			}
-			echo $this->video_audio_streaming($this->events[$event_id]->get_value('id'))."\n";
+			echo $this->video_audio_streaming($this->events[$event_id]->get_value('id'), "/images/luther2010/video_camera_white_128.png", "/images/luther2010/headphones_white_256.png")."\n";
 			if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
 			{
 				echo '<br /><span class="location">'.$this->events[$event_id]->get_value( 'location' );
@@ -279,29 +257,6 @@ class LutherEventsMiniModule extends EventsModule
 
 	}
 	
-	function video_audio_streaming($event_id)
-	// check if video/audio streaming categories are present for an event
-	{	
-		$es = new entity_selector();
-		$es->description = 'Selecting categories for event';
-		$es->add_type( id_of('category_type'));
-		$es->add_right_relationship( $event_id, relationship_id_of('event_to_event_category') );
-		$cats = $es->run_one();
-		$vstream = '';
-		$astream = '';
-		foreach( $cats AS $cat )
-		{
-			if ($cat->get_value('name') == 'Video Streaming')
-			{
-				$vstream = '<a title="Video Streaming" href="http://client.stretchinternet.com/client/luther.portal"><img class="video_streaming" src="/images/luther2010/video_camera_white_128.png" alt="Video Streaming"></a>';
-			}
-			if ($cat->get_value('name') == 'Audio Streaming')
-			{
-				$astream = '<a title="Video Streaming" href="http://www.luther.edu/kwlc/"><img class="audio_streaming" src="/images/luther2010/headphones_white_256.png" alt="Audio Streaming" title="Audio Streaming"></a>';
-			}
-		}
-		return $astream . $vstream;
-	}
-
+	
 }
 ?>
