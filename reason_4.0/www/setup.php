@@ -625,7 +625,7 @@ function check_jquery_accessible_over_http()
 {
 	global $auto_mode_enabled;
 	$fixed_str = '';
-	$accessible = check_accessible_over_http(JQUERY_URL, 'John Resig');
+	$accessible = check_accessible_over_http(JQUERY_URL, 'jQuery Foundation');
 	if (!$accessible && $auto_mode_enabled) // lets try to repair this
 	{
 		// if JQUERY_INC is readable
