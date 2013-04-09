@@ -743,6 +743,7 @@ class selectType extends optionType
 		}
 		parent::additional_init_actions($args);
 	}
+
 	function get_display()
 	{
 		//pray($this->value);
@@ -752,17 +753,36 @@ class selectType extends optionType
 		{
 			$str .= $this->_get_option_html('','--',$select_count);
 		}
-		foreach( $this->options as $key => $val )
-		{
-			if( !$this->add_empty_value_to_top && $val === '--' )
-			{
-				$str .= $this->_get_option_html('',$val,$select_count);
-			}
-			else
-			{
-				$str .= $this->_get_option_html($key,$val,$select_count);
-			}
-		}
+		// // loop through the array, if the val is an array, treat the key as an optgroup label
+		// foreach( $this->options as $key => $val )
+		// {
+		// 	if (is_array($val))
+		// 	{
+		// 		$str .= '<optgroup label="'.$key.'">'."\n";
+		// 		foreach( $val as $k => $v )
+		// 		{
+		// 			if( !$this->add_empty_value_to_top && $val === '--' )
+		// 			{
+		// 				$str .= $this->_get_option_html('',$v,$select_count);
+		// 			}
+		// 			else
+		// 			{
+		// 				$str .= $this->_get_option_html($k,$v,$select_count);
+		// 			}
+		// 		}
+		// 		$str .= '</optgroup>'."\n";
+		// 	} else {
+		// 		if( !$this->add_empty_value_to_top && $val === '--' )
+		// 		{
+		// 			$str .= $this->_get_option_html('',$val,$select_count);
+		// 		}
+		// 		else
+		// 		{
+		// 			$str .= $this->_get_option_html($key,$val,$select_count);
+		// 		}
+		// 	}
+		// }
+		$str .= $this->_get_optgroup_html($this->options);
 		$str .= '</select>'."\n";
 		return $str;
 	}
@@ -786,6 +806,49 @@ class selectType extends optionType
 		$str .= '>'.$val.'</option>'."\n";
 		return $str;
 	}
+
+	protected function _get_optgroup_html($opts)
+	{
+		$str = '';
+
+		// loop through the array, if the val is an array, treat the key as an optgroup label
+		foreach( $opts as $key => $val )
+		{
+			if (is_array($val))
+			{
+				$str .= '<optgroup label="'.$key.'">'."\n";
+				foreach( $val as $k => $v )
+				{
+					if( !$this->add_empty_value_to_top && $val === '--' )
+					{
+						$str .= $this->_get_option_html('',$v,$select_count);
+					}
+					else
+					{
+						$str .= $this->_get_option_html($k,$v,$select_count);
+					}
+				}
+				$str .= '</optgroup>'."\n";
+			} else {
+				if( !$this->add_empty_value_to_top && $val === '--' )
+				{
+					$str .= $this->_get_option_html('',$val,$select_count);
+				}
+				else
+				{
+					$str .= $this->_get_option_html($key,$val,$select_count);
+				}
+			}
+		}
+		return $str;
+	}
+
+	protected function _is_multi_array($array)
+	{
+		$rv = array_filter($array,'is_array');
+	    if(count($rv)>0) return true;
+	    return false;
+	}
 }
 
 /**
@@ -797,24 +860,18 @@ class selectType extends optionType
 class chosen_selectType extends selectType
 {
 	var $type = 'chosen_select';
+	var $min_width = 275;
+
+	var $type_valid_args = array('min_width');
 
 	function get_display()
 	{
 		$str = $this->get_chosen_select_js_css() . "\n";
-		$str .= '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" class="chzn-select" style="min-width:100px;" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
+		$str .= '<select id="'.$this->name.'Element" name="'.$this->name.($this->multiple ? '[]' : '').'" class="chzn-select" style="min-width:'.$this->min_width.'px;" size="'.htmlspecialchars($this->n, ENT_QUOTES).'" '.($this->multiple ? 'multiple="multiple"' : '').'>'."\n";
 		$select_count = 0;
 
-		foreach( $this->options as $key => $val )
-		{
-			if( !$this->add_empty_value_to_top && $val === '--' )
-			{
-				$str .= $this->_get_option_html('',$val,$select_count);
-			}
-			else
-			{
-				$str .= $this->_get_option_html($key,$val,$select_count);
-			}
-		}
+		$str .= $this->_get_optgroup_html($this->options);
+
 		$str .= '</select>'."\n";
 		$str .= '<script language="javascript" type="text/javascript">$(".chzn-select").chosen();</script>';
 		return $str;
@@ -872,6 +929,7 @@ class chosen_select_multipleType extends chosen_selectType
 		return $str;
 	}
 }
+
 /**
  * Same as {@link selectType}  but doesn't sort the {@link options}.
  * @package disco
