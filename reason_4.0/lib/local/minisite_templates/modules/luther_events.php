@@ -43,7 +43,7 @@ class LutherEventsModule extends EventsModule
 					}
 					else
 					{
-						'<tr><td width="15%">Date:</td><td width="85%">'.prettify_mysql_datetime( $this->request['date'], "F j, Y" ).'</td></tr>'."\n";
+						echo '<tr><td width="15%">Date:</td><td width="85%">'.prettify_mysql_datetime( $this->request['date'], "F j, Y" ).'</td></tr>'."\n";
 					}
 				}
 				else 
