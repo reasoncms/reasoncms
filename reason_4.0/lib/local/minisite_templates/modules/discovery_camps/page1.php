@@ -168,15 +168,18 @@ class DiscoveryCampsOne extends FormStep
                     Energy Camp</em>'
             ),
             'survival_camp' => array(
-               'type' => 'checkboxfirst',
-               'display_name' => '
-                    July 8-12
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    Grades 5-8
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    $175',
-               'comments' => '<br><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    Survival Camp</em>'
+                'type'=>'solidtext',
+                'display_name'=>'<strike>Survival Camp</strike>',
+                'comments'=>'<span style="color:red;">Full</span>'
+               // 'type' => 'checkboxfirst',
+               // 'display_name' => '
+               //      July 8-12
+               //      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               //      Grades 5-8
+               //      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               //      $175',
+               // 'comments' => '<br><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               //      Survival Camp</em>'
             ),
             'kindernature_2' => array(
                 'type' => 'checkboxfirst',
