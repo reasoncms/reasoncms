@@ -192,8 +192,9 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//$this->_do_testing_form();
 		if (($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home'  
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature')
-				&& !luther_is_local_ip())
+				&& !preg_match("/^localhost$/", REASON_HOST, $matches))
 		{
+		// crazy egg javascript heat map on home page
 		echo '
 			<script type="text/javascript">
 			setTimeout(function(){
