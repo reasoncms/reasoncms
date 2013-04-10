@@ -20,7 +20,7 @@
 	 *
 	 * Provides a custom interface for adding and editing events in Reason
 	 */
-	class event_handler extends ContentManager 
+	class event_handler2 extends ContentManager 
 	{
 	
 		var $years_out = 3;
