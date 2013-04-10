@@ -11,10 +11,10 @@
         // this code deletes all the categories from the Luther Home (2007) site
         $es = new entity_selector();
         $es->add_type(id_of('site'));
-        $es->add_relation('entity.id != ' . id_of('luther_home'));
+        $es->add_relation('entity.id != ' . id_of('home'));
         $sites = $es->run_one();
 
-        $cat_es = new entity_selector(id_of('luther_home'));
+        $cat_es = new entity_selector(id_of('home'));
         $cat_es->add_type(id_of('category_type'));
         $cat_result = $cat_es->run_one();
         $cats = array_keys($cat_result);
