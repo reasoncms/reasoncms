@@ -3,7 +3,6 @@ $(document).ready(function() {
         url: 'https://reasondev.luther.edu/reason/norsecard_connect.php?action=users',
         dataType: 'json',
         success: function(json){
-            //alert(json.results[0].Email);
             for (var i = 0; i< json.results.length; i++) {
                 var p = json.results[i];
                 $('#account-select').append('<option value="'+ p.Patron_SK +'">'+ p.First_Name + ' ' + p.Last_Name + ' (' + p.Plan + ')' +'</option>');
@@ -13,9 +12,9 @@ $(document).ready(function() {
             alert('An error has occurred, please try again later.');
         }
     });
+
     $(function() {
         $( "#from" ).datepicker({
-          defaultDate: "+1w",
           changeMonth: true,
           numberOfMonths: 1,
           onClose: function( selectedDate ) {
@@ -23,7 +22,6 @@ $(document).ready(function() {
           }
         });
         $( "#to" ).datepicker({
-          defaultDate: "+1w",
           changeMonth: true,
           numberOfMonths: 1,
           onClose: function( selectedDate ) {
@@ -31,12 +29,13 @@ $(document).ready(function() {
           }
         });
     });
+
     var dt = new Date();
 
     dt.getFullYear() + "/" + dt.getMonth() + 1 + "/" + dt.getDate();
 
-    $("#to").val((dt.getMonth() + 1) +'/'+ dt.getDate() + '/' + dt.getFullYear());
-    $("#from").val(dt.getMonth() + '/' + dt.getDate() + '/' + dt.getFullYear());
+    $("#to").val(('0'+(dt.getMonth() + 1)).slice(-2) +'/'+ ('0'+dt.getDate()).slice(-2) + '/' + dt.getFullYear());
+    $("#from").val(('0'+dt.getMonth()).slice(-2) + '/' + ('0'+dt.getDate()).slice(-2) + '/' + dt.getFullYear());
     $('#account-select').change( function() {
         if (this.value != '--') {
             $.ajax({
@@ -53,8 +52,12 @@ $(document).ready(function() {
                     alert('An error has occurred, please try again later.');
                 }
             });
+
+            var from = $.datepicker.formatDate('mm/dd/yy', $('#from').datepicker("getDate"));
+            var to = $.datepicker.formatDate('mm/dd/yy', $('#to').datepicker("getDate"));
+  
             $.ajax({
-                url: 'https://reasondev.luther.edu/reason/norsecard_connect.php?action=transactions&patron='+this.value,
+                url: 'https://reasondev.luther.edu/reason/norsecard_connect.php?action=transactions&patron='+this.value+'&startdate='+from+'&enddate='+to,
                 dataType: 'json',
                 success: function(json) {
                     $('#transactions').html('');
@@ -97,5 +100,8 @@ $(document).ready(function() {
             $('#tender').html('');
             $('.pagination').remove();
         }
+    });
+    $("#from,#to").change( function() {
+        $('#account-select').change();
     });
 });
