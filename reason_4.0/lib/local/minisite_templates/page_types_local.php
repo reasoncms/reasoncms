@@ -833,6 +833,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'net_price_calculator' => array(
 		'main_post' => 'net_price_calculator',
 	),
+	'net_price_calculator2' => array(
+		'main_post' => 'net_price_calculator2',
+	),
 	'norge_conference' => array(
 		'main_post' => 'norge_form',
 	),
