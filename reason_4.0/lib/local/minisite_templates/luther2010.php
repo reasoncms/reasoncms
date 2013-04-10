@@ -190,6 +190,19 @@ class LutherTemplate2010 extends MinisiteTemplate
 		// finish body and html
 		$this->do_org_foot();
 		//$this->_do_testing_form();
+		if (($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home'  
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature')
+				&& !luther_is_local_ip())
+		{
+		echo '
+			<script type="text/javascript">
+			setTimeout(function(){
+				var a=document.createElement("script");
+				var b=document.getElementsByTagName("script")[0];
+				a.src=document.location.protocol+"//dnn506yrbagrg.cloudfront.net/pages/scripts/0015/0241.js?"+Math.floor(new Date().getTime()/3600000);
+				a.async=true;a.type="text/javascript";b.parentNode.insertBefore(a,b)}, 1);
+			</script>'."\n";
+		}
 		echo '</body>'."\n";
 		
 		$url = get_current_url();
