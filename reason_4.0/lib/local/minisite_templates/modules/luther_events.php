@@ -240,7 +240,7 @@ class LutherEventsModule extends EventsModule
 		}
 		else
 		{
-			echo 'Today';
+			echo 'All day';
 		}
 		if ($this->is_sports_event($this->events[$event_id]->get_value('sponsor')))
 		{
