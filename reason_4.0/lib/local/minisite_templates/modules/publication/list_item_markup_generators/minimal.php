@@ -57,12 +57,12 @@ class MinimalListItemMarkupGenerator extends PublicationMarkupGenerator
 		$item = $this->passed_vars['item'];
 		$link_to_full_item = $this->passed_vars['link_to_full_item'];
 				
-		$markup_string .=  '<h4>';
+		$markup_string .=  '<h1>';
 		if(isset($link_to_full_item) &&  !empty($link_to_full_item))
 			$markup_string .=  '<a href="' .$link_to_full_item. '" title="Read more...">'.$item->get_value('release_title').'</a>';
 		else
 			$markup_string .= $item->get_value('release_title');
-		$markup_string .=  '</h4>'."\n";
+		$markup_string .=  '</h1>'."\n";
 		return $markup_string;
 	}
 
