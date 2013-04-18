@@ -1543,7 +1543,7 @@ jQuery(function($) {
 	}
 
 	function getCurCSS(elm, name) {
-		var ret = parseInt($.curCSS(elm, name, true));
+		var ret = parseInt($.css(elm, name, true));
 		if (isNaN(ret))
 			ret = 0;
 		return ret;

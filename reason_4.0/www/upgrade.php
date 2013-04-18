@@ -33,6 +33,7 @@ if(!reason_user_has_privs( $reason_user_id, 'upgrade' ) )
 <h1>Upgrade Reason</h1>
 <?php
 $upgrade_steps = array(
+	'4.3_to_4.4' => 'Reason 4.3 to 4.4',
 	'4.2_to_4.3' => 'Reason 4.2 to 4.3',
 	'4.1_to_4.2' => 'Reason 4.1 to 4.2',
 	'4.0_to_4.1' => 'Reason 4.0 to 4.1',

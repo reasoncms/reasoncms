@@ -532,7 +532,6 @@ class reasonCalendar
 			{
 				$es = new entity_selector($this->context_site->id());
 				$es->add_type( id_of('event_type') );
-				// $es->add_relation( 'show_hide.show_hide = "show"' );
 				$es->limit_tables();
 				$es->limit_fields();
 				$es->set_cache_lifespan( $this->_get_cache_lifespan() );
@@ -549,7 +548,7 @@ class reasonCalendar
 		{
 			$this->es->set_env('site',$this->context_site->id());
 		}
-		$this->es->add_relation( 'show_hide.show_hide = "show"' );
+		$this->es->add_relation( table_of('show_hide', id_of('event_type')) .' = "show"' );
 		
 		if(!empty($this->es_callback))
 		{
@@ -566,7 +565,7 @@ class reasonCalendar
 			$test_es->set_num(1);
 			if (empty($this->es_callback)) // since we do not know what is contained in the callback - lets not limit if we have a callback.
 			{
-				$test_es->limit_tables(array('entity','show_hide'));
+				$test_es->limit_tables(array('entity',get_table_from_field('show_hide', id_of('event_type'))));
 				$test_es->limit_fields();
 			}
 			$test_events = $test_es->run_one();
@@ -583,9 +582,8 @@ class reasonCalendar
 		//$this->es->set_order('dated.datetime ASC');
 		if(!empty($this->simple_search))
 		{
-			$location_field = (in_array('location', get_fields_by_content_table('event'))) ? 'event.location' : 'location.location';
-			$simple_search_text_fields = array('entity.name','meta.description','meta.keywords','chunk.content','chunk.author',$location_field,'event.sponsor','event.contact_organization');
-			$simple_search_date_fields = array('dated.datetime','event.dates');
+			$simple_search_text_fields = array('name','description','keywords','content','author','location','sponsor','contact_organization');
+			$simple_search_date_fields = array('datetime','dates');
 			$time = strtotime($this->simple_search);
 			$search_chunks = array();
 			if($time > 0)
@@ -593,13 +591,13 @@ class reasonCalendar
 				$date = carl_date('Y-m-d',$time);
 				foreach($simple_search_date_fields as $field)
 				{
-					$search_chunks[] = $field.' LIKE "%'.$date.'%"';
+					$search_chunks[] = table_of($field, id_of('event_type')) . '  LIKE "%'.$date.'%"';
 				}
 			}
 			$prepped = addslashes($this->simple_search);
 			foreach($simple_search_text_fields as $field)
 			{
-				$search_chunks[] = $field.' LIKE "%'.$prepped.'%"';
+				$search_chunks[] = table_of($field, id_of('event_type')) . ' LIKE "%'.$prepped.'%"';
 			}
 			
 			// Not sure how to do this... the idea is to select categories that match the search term and additionally select 
@@ -923,15 +921,15 @@ class reasonCalendar
 		/*$this->es->add_table( 'event_date_extract' );
 		$this->es->add_relation('event_date_extract.date >= "'.$this->start_date.'"' );
 		$this->es->add_relation('event_date_extract.entity_id = entity.id' ); */
-		$this->es->add_relation( 'event.last_occurence >= "'.$this->start_date.'"' );
+		$this->es->add_relation( table_of('last_occurence', id_of('event_type')). ' >= "'.$this->start_date.'"' );
 		if($this->get_view() != 'all')
 		{
-			$this->es->add_relation( 'dated.datetime <= "'.$this->end_date.' 23:59:59"' );
+			$this->es->add_relation( table_of('datetime', id_of('event_type')). ' <= "'.$this->end_date.' 23:59:59"' );
 			//$this->es->add_relation('event_date_extract.date >= "'.$this->end_date.'"' );
 		}
 		if( $this->view == 'daily' )
 		{
-			$this->es->add_relation('event.dates LIKE "%'.$this->start_date.'%"');
+			$this->es->add_relation( table_of('dates', id_of('event_type')). ' LIKE "%'.$this->start_date.'%"');
 		}
 	}
 	/**
@@ -1447,7 +1445,7 @@ class reasonCalendar
 		}
 		$test_es = carl_clone($this->base_es);
 		$test_es->set_num(1);
-		$test_es->add_relation('dated.datetime < "'.addslashes($date).'"');
+		$test_es->add_relation( table_of('datetime', id_of('event_type')). ' < "'.addslashes($date).'"');
 		$test_es->limit_fields();
 		$test_es->exclude_tables_dynamically();
 		$test_es->set_cache_lifespan($this->_get_cache_lifespan_meta());

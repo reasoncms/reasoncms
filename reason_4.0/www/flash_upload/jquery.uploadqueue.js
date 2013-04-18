@@ -42,9 +42,8 @@
             item.children('div.action').empty();
         }
         
-        var reload_verb = ($.browser.msie ? 'refresh' : 'reload');
         var http_errors = {
-            400: "Session error; please " + reload_verb + " this page and " +
+            400: "Session error; please reload this page and " +
                 "try again.",
             403: "Permission denied to upload this file.",
             413: "File is unacceptably large; upload rejected.",

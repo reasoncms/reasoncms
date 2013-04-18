@@ -44,7 +44,7 @@ class checkboxType extends defaultType
 		{
 			$str .= ' checked="checked"';
 		}
-		$str .= ' class="checkbox">';
+		$str .= ' class="checkbox" />';
 		if (!empty($this->description)) {
 			$str .= ' <label class="smallText" for="'.$this->checkbox_id.'">'.$this->description.'</label>';
 		}

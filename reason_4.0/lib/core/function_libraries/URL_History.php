@@ -162,7 +162,7 @@ function check_URL_history( $request_uri )
 		{
 			$page_id = $row['page_id'];
 			$page = new entity($page_id);
-			if (reason_is_entity($page, 'minisite_page') && ($page->get_value('state') == 'Live') && ($redir = reason_get_page_url($page)))
+			if (reason_is_entity($page, 'minisite_page') && ($page->get_value('state') == 'Live') && ($redir = @reason_get_page_url($page)))
 			{
 				if ($redir == $request_uri)
 				{
