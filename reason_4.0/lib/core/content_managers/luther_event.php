@@ -161,7 +161,7 @@
             // get all the category options and split them in to three arrays: Main Event Categories, This Site's Categories, Other Borrowed Categories
             $cats = $this->get_element('categories')->options;
             foreach ($cats as $cat_id => $value) {
-              if (get_owner_site_id($cat_id) == id_of('luther_home')){
+              if (get_owner_site_id($cat_id) == id_of('events')){
                 $luther_home_cats[$cat_id] = $value;
               } elseif (get_owner_site_id($cat_id) == $this->get_value('site_id')) {
                 $minisite_cats[$cat_id] = $value;

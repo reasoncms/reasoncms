@@ -276,14 +276,16 @@ class LutherEventsModule extends EventsModule
 		$cs->set_order('entity.name ASC');
 		$cs->set_cache_lifespan($this->get_cache_lifespan_meta());
 		$cats = $cs->run_one();
-		$cats = $this->check_categories($cats);
+		// don't show categories borrowed from the "events" minisite on the individual minisites
+		if ($this->parent->site_id != id_of('events'))
+			$cats = $this->check_categories($cats);
 		if(empty($cats))
 			return '';
 		$ret .= '<div class="categories';
 		if ($this->calendar->get_view() == "all")
 			$ret .= ' divider';
 		$ret .= '">'."\n";
-		$ret .= '<h4>Event Categories</h4>'."\n";
+		$ret .= '<h4>Event CategoriesBooms</h4>'."\n";
 		$ret .= '<ul>'."\n";
 		$ret .= '<li>';
 		$used_cats = $this->calendar->get_categories();
@@ -293,17 +295,17 @@ class LutherEventsModule extends EventsModule
 			$ret .= '<a href="'.$this->construct_link(array('category'=>'','view'=>'')).'" title="Events in all categories">All</a>';
 		$ret .= '</li>';
 		foreach($cats as $cat)
-		{
-			// don't show borrowed luther_home categories on the minisites
-			if (get_owner_site_id($cat->id()) != id_of('luther_home'))
-			{
+		{	
+			// don't show categories borrowed from the "events" minisite on the individual minisites
+			// if (get_owner_site_id($cat->id()) != id_of('events'))
+			// {
 				$ret .= '<li>';
 				if (array_key_exists($cat->id(), $this->calendar->get_categories()))
 					$ret .= '<strong>'.$cat->get_value('name').'</strong>';
 				else
 					$ret .= '<a href="'.$this->construct_link(array('category'=>$cat->id(),'view'=>'','no_search'=>'1')).'" title="'.reason_htmlspecialchars(strip_tags($cat->get_value('name'))).' events">'.$cat->get_value('name').'</a>';
 				$ret .= '</li>';
-			}
+			// }
 		}
 		$ret .= '</ul>'."\n";
 		$ret .= '</div>'."\n";
