@@ -1219,7 +1219,15 @@
 			),
 			'sidebar' => '',
 		),
-		
+		'gallery_24_per_page_sidebar_blurb' => array(
+			'main_post' => array(
+				'module'=>'gallery2',
+				'sort_order'=>'rel',//'meta.description ASC',
+				'number_per_page' => 24,
+			),
+			'sub_nav' => '',
+			'sidebar' => 'blurb',
+		),
 		'gallery_100x100_thumbnails' => array(
 			'main_post' => array(
 				'module'=>'gallery2',
