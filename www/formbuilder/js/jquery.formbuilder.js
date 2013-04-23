@@ -5,6 +5,9 @@
  * Originally designed for AspenMSM, a CMS product from Trellis Development
  * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * Copyright notice and license must remain intact for legal use
+ *
+ * Modified for ReasonCMS in 2013 by Andrew Bacon
+ *
 */ (function ($) {
 $.fn.formbuilder = function (options) {
 	// Extend the configuration options with user-provided
@@ -661,7 +664,7 @@ function htmlEntities(str) {
 
 
 			// handle field delete links
-			$('.remove').live('click', function () {
+			$(document).on('click', '.remove', function () {
 				$(this).parent('div').animate({
 					opacity: 'hide',
 					height: 'hide',
@@ -672,7 +675,7 @@ function htmlEntities(str) {
 				return false;
 			});
 			// handle field display/hide
-			$('.toggle-form').live('click', function () {
+			$(document).on('click', '.toggle-form', function () {
 				var target = $(this).attr("id");
 				if ($(this).html() === opts.messages.hide) {
 					$(this).removeClass('open').addClass('closed').html(opts.messages.show);
@@ -693,7 +696,7 @@ function htmlEntities(str) {
 				return false;
 			});
 			// handle delete confirmation
-			$('.delete-confirm').live('click', function () {
+			$(document).on('click', '.delete-confirm', function () {
 				var delete_id = $(this).attr("id").replace(/del_/, '');
 				if (confirm($(this).attr('title'))) {
 					$('#frm-' + delete_id + '-item').animate({
@@ -705,18 +708,18 @@ function htmlEntities(str) {
 				return false;
 			});
 			// Attach a callback to add new checkboxes
-			$('.add_ck').live('click', function () {
+			$(document).on('click', '.add_ck', function () {
 				$(this).parent().before(checkboxFieldHtml());
 				return false;
 			});
 
-			$('.frmb_preview_row').live('click', function() {
+			$(document).on('click', '.frmb_preview_row', function () {
 				$("#closeAllFields").removeAttr("disabled");
 				switchMode(this, 'edit');
 				return false;
 			});
 
-			$('.frmb li .stopEditing').live('click', function() {
+			$(document).on('click', '.frmb li .stopEditing', function () {
 				switchMode($(this).parent().parent(), 'preview');
 				var openRow = $("[id^='frm-'][id$='-item']");
 				if (openRow.length == 0)
@@ -725,12 +728,12 @@ function htmlEntities(str) {
 			});
 
 			// Attach a callback to add new options
-			$('.add_opt').live('click', function () {
+			$(document).on('click', '.add_opt', function () {
 				$(this).parent().before(selectFieldHtml('', false));
 				return false;
 			});
 			// Attach a callback to add new radio fields
-			$('.add_rd').live('click', function () {
+			$(document).on('click', '.add_rd', function () {
 				$(this).parent().before(radioFieldHtml(false, $(this).parents('.frm-holder').attr('id')));
 				return false;
 			});

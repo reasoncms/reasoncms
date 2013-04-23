@@ -385,6 +385,7 @@ class EventsModule extends DefaultMinisiteModule
 	 						'freetext_filters' => array(),
 	 						'cache_lifespan' => 0,
 	 						'cache_lifespan_meta' => 0,
+	 						'natural_sort_categories' => false,
 						);
 	/**
 	 * Views that should not be indexed by search engines
@@ -1872,6 +1873,14 @@ class EventsModule extends DefaultMinisiteModule
 		$cats = $this->check_categories($cats);
 		if(empty($cats))
 			return '';
+		
+		$cat_names = array();
+		foreach($cats as $cat)
+			$cat_names[$cat->id()] = $cat->get_value('name');
+		
+		if($this->params['natural_sort_categories'])
+			natcasesort($cat_names);
+		
 		$ret .= '<div class="categories';
 		if ($this->calendar->get_view() == "all")
 			$ret .= ' divider';
@@ -1885,8 +1894,9 @@ class EventsModule extends DefaultMinisiteModule
 			else
 				$ret .= '<a href="'.$this->construct_link(array('category'=>'','view'=>'')).'" title="Events in all categories">All</a>';
 		$ret .= '</li>';
-		foreach($cats as $cat)
+		foreach($cat_names as $cat_id=>$cat_name)
 		{
+			$cat = $cats[$cat_id];
 			$ret .= '<li>';
 			if (array_key_exists($cat->id(), $this->calendar->get_categories()))
 				$ret .= '<strong>'.$cat->get_value('name').'</strong>';
@@ -2773,9 +2783,9 @@ class EventsModule extends DefaultMinisiteModule
 			else $es = new entity_selector($sites->id());
 			$es->add_type(id_of('event_type'));
 			$es->add_relation('entity.id = "'.$id.'"');
-			$es->add_relation('show_hide.show_hide = "show"');
+			$es->add_relation(table_of('show_hide', id_of('event_type')). ' = "show"');
 			$es->set_num(1);
-			$es->limit_tables(array('show_hide'));
+			$es->limit_tables(get_table_from_field('show_hide', id_of('event_type')));
 			$es->limit_fields();
 			if($this->_get_sharing_mode() == 'shared_only') $es->add_relation('entity.no_share != 1');
 			$this->_ok_to_show[$id] = ($es->run_one());
