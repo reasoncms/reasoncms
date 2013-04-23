@@ -370,8 +370,7 @@
 		{
 			foreach( $this->admin_page->request AS $request => $value )
 			{
-#				if( !isset( $this->_elements[ $request ] ) AND !in_array( $request, $this->_ignored_fields ) )
-				if( !$this->_is_element($request) AND !in_array( $request, $this->_ignored_fields ) AND ($request != 'submitted') )
+				if( !$this->_is_element($request) AND !in_array( $request, $this->_ignored_fields ) AND !$this->is_reserved($request) )
 				{
 					$this->add_element( $request , 'hidden' );
 					$this->set_value( $request , $value );

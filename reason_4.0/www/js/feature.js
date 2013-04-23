@@ -306,7 +306,8 @@ $(document).ready(function()
 		{
 			bgColor:'#000000',
 			closeButton: '<a href="#" class="nyroModalClose" id="closeBut" title="close"><img src="'+silk_icon_src+'" alt="Close" width="16" height="16" class="closeImage" /><span class="closeText">Close</span></a>',
-			processHandler:size_modal_window
+			processHandler:size_modal_window,
+			zIndexStart:9999,
 		});
 	}
 });

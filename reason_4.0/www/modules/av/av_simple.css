@@ -1,0 +1,16 @@
+#avSimple ul, #avSimple li {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+#avSimple li {
+	margin-top:1.5em;
+}
+#avSimple li:first-child {
+	margin-top:0;
+}
+#avSimple h4 {
+	margin:0 0 0.25em 0;
+	font-weight:normal;
+	font-size:1em;
+}

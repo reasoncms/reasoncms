@@ -176,15 +176,15 @@
 			$this->change_element_type( 'minutes', 'select_no_sort', array('options'=>$minutes) );
 			$this->change_element_type( 'hours', 'select_no_sort', array('options'=>$hours) );
 			$this->change_element_type( 'frequency', 'text', array('size'=>3) );
-			$this->change_element_type( 'week_of_month','hidden' );
-			$this->change_element_type( 'month_day_of_week','hidden' );
-			$this->change_element_type( 'term_only','hidden' );
-			$this->change_element_type( 'author', 'hidden');
+			$this->change_element_type( 'week_of_month','protected' );
+			$this->change_element_type( 'month_day_of_week','protected' );
+			$this->change_element_type( 'term_only','protected' );
+			$this->change_element_type( 'author', 'protected');
 			$this->change_element_type( 'end_date', 'textDate' );
-			$this->change_element_type( 'last_occurence', 'hidden' );
+			$this->change_element_type( 'last_occurence', 'protected' );
 			if(!$this->element_is_hidden('no_share'))
 				$this->change_element_type( 'no_share', 'select', array( 'options' => array( 'Shared', 'Private' ), 'add_empty_value_to_top' => false, ) );
-			$this->change_element_type( 'dates', $this->get_value( 'dates' ) ? 'solidtext' : 'hidden' );
+			$this->change_element_type( 'dates', $this->get_value( 'dates' ) ? 'solidtext' : 'protected' );
 
 			// format the elements
 			$this->set_display_name( 'name', 'Event Title' );
@@ -256,7 +256,7 @@
 			$page_array = $ps->run_one();
 			if(empty($page_array))
 			{
-				$this->change_element_type( 'registration', 'hidden' );
+				$this->change_element_type( 'registration', 'protected' );
 			}
 			
 			// general default values
@@ -290,8 +290,8 @@
 			if( !$this->get_value('registration') )
 				$this->set_value('registration', 'none');
 				
-			$this->add_element('this_event_is','hidden');
-			$this->add_element('this_event_is_comment','hidden');
+			$this->add_element('this_event_is','protected');
+			$this->add_element('this_event_is_comment','protected');
 			
 			$this->setup_location_fields();
 			

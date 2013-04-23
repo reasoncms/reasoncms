@@ -152,20 +152,22 @@ class loki2Type extends defaultType
  */
 class tiny_mceType extends textareaType
 {
-	var $type = 'tiny_mce';
+	var $type = 'tinymce';
 	var $type_valid_args = array('buttons', 'buttons2', 'buttons3', 'status_bar_location', 'formatselect_options', 'content_css', 'init_options');
 	var $status_bar_location = 'none';
-	var $buttons = array('formatselect','bold','italic','hr','blockquote','numlist','bullist','indent','outdent','reasonimage','image','link','unlink','anchor','cleanup');
+	var $buttons = array('formatselect','bold','italic','hr','blockquote','numlist','bullist','indent','outdent','image','reasonimage','link','unlink','anchor');
 	var $buttons2 = array();
 	var $buttons3 = array();
 	var $content_css;
+  // TODO: This needs to affect the formats option on init(), no longer
+  // works as a theme option.
 	var $formatselect_options = array('p','h3','h4','pre');
 	var $init_options = array();
 	var $base_init_options = array(
 		'mode' => 'exact',
-		'plugins' => 'inlinepopups,reasonimage',
+		'plugins' => 'image,anchor,link,paste',
 		'dialog_type' => 'modal',
-		'theme' => 'advanced',
+		'theme' => 'modern',
 		'convert_urls' => false,
 	);
 	
@@ -186,13 +188,12 @@ class tiny_mceType extends textareaType
 	{
 		// Add calculated/passed options to base options
 		$options = $this->base_init_options;
-		$options['theme_advanced_buttons1'] = implode(",",$this->buttons);
-		$options['theme_advanced_buttons2'] = implode(",",$this->buttons2);
-		$options['theme_advanced_buttons3'] = implode(",",$this->buttons3);
+		$options['toolbar1'] = implode(" ",$this->buttons);
+		$options['toolbar2'] = implode(" ",$this->buttons2);
+		$options['toolbar3'] = implode(" ",$this->buttons3);
 		// make me conditional on formatselect being in the buttons array and formatselect_options being set.
-		$options['theme_advanced_blockformats'] = implode(",",$this->formatselect_options);
-		$options['theme_advanced_statusbar_location'] = $this->status_bar_location;
-		$options['elements'] = $this->name;
+		//$options['formats'] = "{'p', 'pre', 'h1'}"; //implode(",",$this->formatselect_options);
+    $options['elements'] = $this->name;
 		if ($this->get_class_var('content_css')) $options['content_css'] = $this->get_class_var('content_css');
 		
 		// Merge in custom options
@@ -201,7 +202,7 @@ class tiny_mceType extends textareaType
 		// Format the options
 		foreach ($options as $option => $val) $parts[] = sprintf('%s : "%s"', $option, $val);
 			
-		return 'tinyMCE.init({'."\n" . implode(",\n", $parts) . "\n});\n";
+		return 'tinymce.init({'."\n" . implode(",\n", $parts) . "\n});\n";
 	}
 	/**
 	 * We return the main javascript for TinyMCE - we use a static variable to keep track such that we include it only once.
@@ -212,7 +213,7 @@ class tiny_mceType extends textareaType
 		static $loaded_an_instance;
 		if (!isset($loaded_an_instance))
 		{
-			$js = '<script language="javascript" type="text/javascript" src="'.TINYMCE_HTTP_PATH.'tiny_mce.js"></script>'."\n";
+			$js = '<script language="javascript" type="text/javascript" src="'.TINYMCE_HTTP_PATH.'tinymce.min.js"></script>'."\n";
 			$loaded_an_instance = true;
 		}
 		return (!empty($js)) ? $js : '';

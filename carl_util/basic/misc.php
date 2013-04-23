@@ -60,57 +60,6 @@ if (!defined("ENT_COMPAT")) define("ENT_COMPAT", 2);
 if (!defined("ENT_NOQUOTES")) define("ENT_NOQUOTES", 0);
 if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 
-if (!function_exists('html_entity_decode')) {
-
-	/**
-	 * html_entity_decode replacement
-	 *
-	 * This function has a number of significant problems:
-	 *
-	 * 1. It does not translate into UTF-8, but into ISO-8859-1
-	 *
-	 * 2. It should only be defined prior to php 4.3. Since it is likely that 
-	 * no Reason installs are running a version this old, and since Reason is 
-	 * soon to be php5+, this function definition is therefore deprecated.
-	 *
-	 * @deprecated
-	 * @todo remove this function once php4 support goes away
-	 */
-	function html_entity_decode ($string, $opt = ENT_COMPAT)
-	{
-		trigger_error('Running reason on php older than 4.3 is deprecated. Newer versions of Reason will not work under <4.3; please upgrade your php version.');
-		$trans_tbl = get_html_translation_table (HTML_ENTITIES);
-		$trans_tbl = array_flip ($trans_tbl);
-		
-		// Translating single quotes
-		if ($opt & 1)
-		{
-			// Add single quote to translation table;
-			// doesn't appear to be there by default
-			$trans_tbl["&apos;"] = "'";
-		}
-
-		// Not translating double quotes
-		if (!($opt & 2))
-		{
-			// Remove double quote from translation table
-			unset( $trans_tbl["&quot;"] );
-		}
-
-		return strtr ($string, $trans_tbl);
-	}
-}
-
-if(!function_exists('htmlspecialchars_decode'))
-{
-	function htmlspecialchars_decode($string,$style=ENT_COMPAT)
-    {
-        $translation = array_flip(get_html_translation_table(HTML_SPECIALCHARS,$style));
-        if($style === ENT_QUOTES){ $translation['&#039;'] = '\''; }
-        return strtr($string,$translation);
-    }
-}
-
 	/**
 	 *	Log a line to a file
 	 *
@@ -721,19 +670,16 @@ if(!function_exists('htmlspecialchars_decode'))
 	
 	/**
 	 * A standardized function for counting the number of characters in a string that might 
-	 * contain HTML that we don't want to include in our count.
-	 * 
-	 * 
+	 * contain HTML that we don't want to include in our count. 
 	 *
 	 * @author Nick Jones
 	 * @param string $text - the text whose characters we want to count
 	 * @return int the number of characters in the string
 	 */
-	
 	function carl_util_count_html_text_characters($text)
 	{
 	    $tidied_text = tidy($text);
-	    return mb_strlen(html_entity_decode(strip_tags($tidied_text),ENT_QUOTES,'UTF-8'),'UTF-8');;
+	    return carl_strlen(html_entity_decode(strip_tags($tidied_text),ENT_QUOTES,'UTF-8'),'UTF-8');;
 	}
 	
 	/**
