@@ -341,6 +341,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 			{
 				echo '<aside class="news group">'."\n";
@@ -354,6 +355,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_giving'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
@@ -411,6 +413,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
 			{
@@ -430,6 +433,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			if ($this->cur_page->get_value( 'custom_page' ) != 'flickr_slideshow_sidebar'	
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing_feature'
+				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_landing_feature_sidebar_news'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_music'
 				&& $this->cur_page->get_value( 'custom_page' ) != 'luther2010_public_information')
 			{
@@ -441,6 +445,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			if ($this->cur_page->get_value( 'custom_page' ) == 'flickr_slideshow_sidebar'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
 				|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information')
 			{
@@ -630,8 +635,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//echo '<link href="/stylesheets/luther2010/reason.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";  
   		//echo '<link href="/stylesheets/luther2010/print.css" media="print" rel="stylesheet" type="text/css" />'."\n";
 		$this->head_items->add_javascript( '/javascripts/modernizr-1.1.min.js' );
-		$this->head_items->add_javascript(JQUERY_URL);
-  		$this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' );
+		//$this->head_items->add_javascript(JQUERY_URL);
+  		//$this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.min.js' );
+  		$this->head_items->add_javascript( '//code.jquery.com/jquery-1.9.1.js' );
+  		$this->head_items->add_javascript( '//code.jquery.com/ui/1.10.2/jquery-ui.js' );
   		// echo '<script src="/javascripts/modernizr-1.1.min.js" type="text/javascript"></script>'."\n";
   		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>'."\n";
 		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>'."\n";
@@ -666,6 +673,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 		$this->head_items->add_javascript('/reason/jquery.watermark-3.1.3/jquery.watermark.min.js');
 		$this->head_items->add_javascript('/reason/js/jquery.tools.min.js');
 		$this->head_items->add_javascript('/reason/js/jquery.maskedinput-1.3.min.js');
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_tab_widget')
+		{
+			$this->head_items->add_stylesheet('/stylesheets/luther2010/aristoJqueryUITheme.css');
+		}
 	}
 
 	function create_body_tag()
@@ -769,6 +780,7 @@ class LutherTemplate2010 extends MinisiteTemplate
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature'
+        	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature_sidebar_news'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_public_information'
         	|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_sports')
