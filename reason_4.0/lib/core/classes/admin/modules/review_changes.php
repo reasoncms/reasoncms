@@ -84,6 +84,7 @@
 			$d->add_element('user','select',array('options'=>$this->_prep_for_disco($users) ) );
 			if(!empty($this->admin_page->request['user']))
 				$d->set_value('user',$this->admin_page->request['user']);
+			$d->add_element('sort','select',array('options'=>array('DESC'=>'Descending', 'ASC'=>'Ascending')));
 			$d->set_actions( array('review'=>'Review') );
 			
 			$d->run();
@@ -94,7 +95,7 @@
 				if($end_date < $d->get_value('start_date'))
 					echo 'Please pick a end date on or after the start date.';
 				else
-					echo $this->_get_changes_markup($d->get_value('start_date'),$end_date,$d->get_value('type'),$d->get_value('site'),$d->get_value('user'));
+					echo $this->_get_changes_markup($d->get_value('start_date'),$end_date,$d->get_value('type'),$d->get_value('site'),$d->get_value('user'),$d->get_value('sort'));
 			}
 			echo '</div>'."\n";
 		} // }}}
@@ -251,7 +252,7 @@
 		 * @param integer $site_id
 		 * @return string markup
 		 */
-		function _get_changes_markup($start_date, $end_date, $type_id = '',$site_id = '',$mod_user = '')
+		function _get_changes_markup($start_date, $end_date, $type_id = '',$site_id = '',$mod_user = '',$sort='')
 		{
 			if($start_date == $end_date)
 				echo '<p>Items added or edited on '.prettify_mysql_datetime($start_date).'</p>'."\n";
@@ -275,6 +276,8 @@
 				$es->add_relation('entity.last_modified <= "'.$end_date.' 23:59:59"');
 				if($mod_user)
 					$es->add_relation('entity.last_edited_by = "'.addslashes($mod_user).'"');
+				if($sort && ('ASC' == $sort || 'DESC' == $sort))
+					$es->set_order('entity.last_modified '.$sort);
 				$es->set_sharing('owns');
 				
 				$changes = $es->run_one();
@@ -308,7 +311,7 @@
 							{
 							   $user = new entity($lastmod);
 							   if($user->get_values())
-									echo '<div class="lastmod">Last modified by: '.$user->get_value('name').'</div>';
+									echo '<div class="lastmod">Last modified by: '.$user->get_value('name').' on '.date("F j, Y - g:i a", strtotime($item->get_value('last_modified'))).'</div>';
 							}
 
 							echo '</li>'."\n";
