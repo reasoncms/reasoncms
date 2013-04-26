@@ -62,6 +62,12 @@
 				echo '<p>You must have editing access to at least one live Reason site for this module to work</p>'."\n";
 				return;
 			}
+			$users = $this->_get_users();
+			if(empty($users))
+			{
+				echo '<p>No users available.</p>'."\n";
+				return;
+			}
 			echo '<div id="reviewChangesModule">'."\n";
 			
 			$d = new disco();
@@ -75,6 +81,9 @@
 			$d->add_element('site','select',array('options'=>$this->_prep_for_disco($sites) ) );
 			if(!empty($this->admin_page->request['site_id']))
 				$d->set_value('site',$this->admin_page->request['site_id']);
+			$d->add_element('user','select',array('options'=>$this->_prep_for_disco($users) ) );
+			if(!empty($this->admin_page->request['user']))
+				$d->set_value('user',$this->admin_page->request['user']);
 			$d->set_actions( array('review'=>'Review') );
 			
 			$d->run();
@@ -85,7 +94,7 @@
 				if($end_date < $d->get_value('start_date'))
 					echo 'Please pick a end date on or after the start date.';
 				else
-					echo $this->_get_changes_markup($d->get_value('start_date'),$end_date,$d->get_value('type'),$d->get_value('site'));
+					echo $this->_get_changes_markup($d->get_value('start_date'),$end_date,$d->get_value('type'),$d->get_value('site'),$d->get_value('user'));
 			}
 			echo '</div>'."\n";
 		} // }}}
@@ -138,6 +147,17 @@
 				$this->_sites = $es->run_one();
 			}
 			return $this->_sites;
+		}
+		
+		function _get_users()
+		{
+			if(empty($this->_users))
+			{
+				$es = new entity_selector();
+				$es->add_type(id_of('user'));
+				$this->_users = $es->run_one();
+			}
+			return $this->_users;
 		}
 		
 		/**
@@ -231,7 +251,7 @@
 		 * @param integer $site_id
 		 * @return string markup
 		 */
-		function _get_changes_markup($start_date, $end_date, $type_id = '',$site_id = '')
+		function _get_changes_markup($start_date, $end_date, $type_id = '',$site_id = '',$mod_user = '')
 		{
 			if($start_date == $end_date)
 				echo '<p>Items added or edited on '.prettify_mysql_datetime($start_date).'</p>'."\n";
@@ -253,7 +273,10 @@
 				$es->add_type($type->id());
 				$es->add_relation('entity.last_modified >= "'.$start_date.'"');
 				$es->add_relation('entity.last_modified <= "'.$end_date.' 23:59:59"');
+				if($mod_user)
+					$es->add_relation('entity.last_edited_by = "'.addslashes($mod_user).'"');
 				$es->set_sharing('owns');
+				
 				$changes = $es->run_one();
 				$deletions = $es->run_one('','Deleted');
 				
@@ -279,6 +302,15 @@
 							
 							if(empty($site_id) && $owner = $item->get_owner())
 								echo '<div class="owner">'.$owner->get_value('name').'</div>'."\n";
+
+							$lastmod = $item->get_value('last_edited_by');
+							if($lastmod)
+							{
+							   $user = new entity($lastmod);
+							   if($user->get_values())
+									echo '<div class="lastmod">Last modified by: '.$user->get_value('name').'</div>';
+							}
+
 							echo '</li>'."\n";
 						}
 						echo '</ul>'."\n";
@@ -294,6 +326,13 @@
 							echo '<a href="'.$this->_get_preview_link($item).'">'.$item->get_display_name().'</a>';
 							if(empty($site_id) && $owner = $item->get_owner())
 								echo '<div class="owner">'.$owner->get_value('name').'</div>'."\n";
+							$lastmod = $item->get_value('last_edited_by');
+							if($lastmod)
+							{
+							   $user = new entity($lastmod);
+							   if($user->get_values())
+									echo '<div class="lastmod">Deleted by: '.$user->get_value('name').'</div>';
+							}
 							echo '</li>'."\n";
 						}
 						echo '</ul>'."\n";
