@@ -84,8 +84,6 @@
 	// of arrayTarget and adds a unique class to arrayTarget
 	function addButtons(arrayTarget)
 	{
-		
-		
 		arrayID = makeArrayID();
 		whatToAppend = '<div id="'+ arrayID + $.fn.arrayMaker.opts['class'] + '" class="' + $.fn.arrayMaker.opts['class'] + '">';
 		whatToAppend += '<a id="' + arrayID + '_showEditorButton" class="showEditorButton" style="display: none;">show array editor</a></div> <a id="' + arrayID + '_collapseButton" class="collapseButton" style="display: none;">hide array editor</a>';
@@ -183,60 +181,50 @@
 				objEvent.preventDefault();
 			}
 		);
-		$(".nest").live('click',
-			function(objEvent)
-			{
-				var containerID;
-				currentRow = $(this).parent();
-				nestArray(currentRow);
-				containerID = $(this).parent().attr("id").replace(new RegExp($.fn.arrayMaker.opts['class'] + ".*$", ""), "");
-				makeJSON(containerID);
-				objEvent.preventDefault();
-			}
-		);
-		$(".addRow").live('click',
-			function(objEvent)
-			{
-				var containerID;
-				addArrayRow(null, null, $(this).parent().parent());
-				containerID = $(this).parent().attr("id").replace(new RegExp($.fn.arrayMaker.opts['class'] + ".*$", ""), "");
-				makeJSON(containerID);
-				objEvent.preventDefault();
-			}
-		);
-		$(".removeRow").live('click',
-			function(objEvent)
-			{
-				var containerID;
-				removeArrayRow($(this).parent());
-				containerID = $(this).parent().attr("id").replace(new RegExp($.fn.arrayMaker.opts['class'] + ".*$", ""), "");
-				makeJSON(containerID);
-				objEvent.preventDefault();
-				return false;
-			}
-		);
-		$(".removeRowDisabled").live('click',
-			function(objEvent)
-			{
-				objEvent.preventDefault();
-				return false;
-			}
-		);
-		$("input.key, input.value, select").live('blur',
-			function() {
-				var containerID;
-				containerID = $(this).parent().attr("id").replace(new RegExp($.fn.arrayMaker.opts['class'] + ".*$", ""), "");
-				makeJSON(containerID);
-			}
-		);
-		$("input.value").live('keyup',
-			function() {
-				var containerID;
-				containerID = $(this).parent().attr("id").split($.fn.arrayMaker.opts['class']);
-				containerID =  containerID[0];
-				handleType(containerID);
-			}
-		);
+		$(document).on('click', '.nest', function(objEvent)
+		{
+			var containerID;
+			currentRow = $(this).parent();
+			nestArray(currentRow);
+			containerID = $(this).parent().attr("id").replace(new RegExp($.fn.arrayMaker.opts['class'] + ".*$", ""), "");
+			makeJSON(containerID);
+			objEvent.preventDefault();
+		});
+		$(document).on('click', '.addRow', function(objEvent)
+		{
+			var containerID;
+			addArrayRow(null, null, $(this).parent().parent());
+			containerID = $(this).parent().attr("id").replace(new RegExp($.fn.arrayMaker.opts['class'] + ".*$", ""), "");
+			makeJSON(containerID);
+			objEvent.preventDefault();
+		});
+		$(document).on('click', '.removeRow', function(objEvent)
+		{
+			var containerID;
+			removeArrayRow($(this).parent());
+			containerID = $(this).parent().attr("id").replace(new RegExp($.fn.arrayMaker.opts['class'] + ".*$", ""), "");
+			makeJSON(containerID);
+			objEvent.preventDefault();
+			return false;
+		});
+		$(document).on('click', '.removeRowDisabled', function(objEvent)
+		{
+			objEvent.preventDefault();
+			return false;
+		});
+		$(document).on('blur', 'input.key, input.value, select', function()
+		{
+			var containerID;
+			containerID = $(this).parent().attr("id").replace(new RegExp($.fn.arrayMaker.opts['class'] + ".*$", ""), "");
+			makeJSON(containerID);
+		});
+		$(document).on('keyup', 'input.value', function()
+		{
+			var containerID;
+			containerID = $(this).parent().attr("id").split($.fn.arrayMaker.opts['class']);
+			containerID =  containerID[0];
+			handleType(containerID);
+		});
 	}
 
 	// checkButtons() makes certain that only the appropriate buttons
@@ -660,11 +648,7 @@
 // !TODO: Isn't there something that I need to do with the default_json?
 
 	$.fn.arrayMaker.arrayIDCounter = 0;
-	$.fn.arrayMaker.arrayRowHTML = $('\
-			<div class="row">\
-				<input type="text" class="key" /> : <input type="text" class="value" /><a href="#" class="addRow">[add row]</a> <a href="#" class="nest">[nest]</a> <a href="#" class="removeRow">[remove]</a>\
-			</div>\
-');
+	$.fn.arrayMaker.arrayRowHTML = $('<div class="row"><input type="text" class="key" /> : <input type="text" class="value" /><a href="#" class="addRow">[add row]</a> <a href="#" class="nest">[nest]</a> <a href="#" class="removeRow">[remove]</a></div>');
 	$.fn.arrayMaker.defaults = {
 		"multiple_types"		: "true",
 		"visibility_toggle"		: "true",

@@ -671,6 +671,23 @@
 		return $row['id'];
 	} // }}}
 
+	/**
+	 * Give a field and type id, return the table name that contains the field.
+	 */
+	function get_table_from_field( $field, $type_id )
+	{
+		$tables = get_entity_tables_by_type( $type_id );
+		foreach( $tables AS $t )
+		{
+			$x = get_fields_by_content_table( $t );
+			if( in_array( $field , $x ) )
+			{
+				return $t;
+			}
+		}
+		return false;
+	}
+	
 	function get_fields_by_content_table( $table, $cache = true ) // {{{
 	{
 		static $results = '';
@@ -2075,7 +2092,7 @@
 				$customizer = false;
 			}
 		}
-		return $customizer;
+		return (isset($customizer)) ? $customizer : false;
 	}
 	
 	/**

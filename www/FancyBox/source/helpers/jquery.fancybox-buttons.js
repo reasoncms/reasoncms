@@ -1,6 +1,6 @@
  /*!
  * Buttons helper for fancyBox
- * version: 1.0.3
+ * version: 1.0.5 (Mon, 15 Oct 2012)
  * @requires fancyBox v2.0 or later
  *
  * Usage:
@@ -12,10 +12,6 @@
  *         }
  *     });
  *
- * Options:
- *     tpl - HTML template
- *     position - 'top' or 'bottom'
- *
  */
 (function ($) {
 	//Shortcut for fancyBox object
@@ -23,13 +19,19 @@
 
 	//Add helper object
 	F.helpers.buttons = {
-		tpl  : '<div id="fancybox-buttons"><ul><li><a class="btnPrev" title="Previous" href="javascript:;"></a></li><li><a class="btnPlay" title="Start slideshow" href="javascript:;"></a></li><li><a class="btnNext" title="Next" href="javascript:;"></a></li><li><a class="btnToggle" title="Toggle size" href="javascript:;"></a></li><li><a class="btnClose" title="Close" href="javascript:jQuery.fancybox.close();"></a></li></ul></div>',
+		defaults : {
+			skipSingle : false, // disables if gallery contains single image
+			position   : 'top', // 'top' or 'bottom'
+			tpl        : '<div id="fancybox-buttons"><ul><li><a class="btnPrev" title="Previous" href="javascript:;"></a></li><li><a class="btnPlay" title="Start slideshow" href="javascript:;"></a></li><li><a class="btnNext" title="Next" href="javascript:;"></a></li><li><a class="btnToggle" title="Toggle size" href="javascript:;"></a></li><li><a class="btnClose" title="Close" href="javascript:jQuery.fancybox.close();"></a></li></ul></div>'
+		},
+
 		list : null,
 		buttons: null,
 
 		beforeLoad: function (opts, obj) {
 			//Remove self if gallery do not have at least two items
-			if (obj.group.length < 2) {
+
+			if (opts.skipSingle && obj.group.length < 2) {
 				obj.helpers.buttons = false;
 				obj.closeBtn = true;
 
@@ -56,7 +58,7 @@
 			var buttons = this.buttons;
 
 			if (!buttons) {
-				this.list = $(opts.tpl || this.tpl).addClass(opts.position || 'top').appendTo('body');
+				this.list = $(opts.tpl).addClass(opts.position).appendTo('body');
 
 				buttons = {
 					prev   : this.list.find('.btnPrev').click( F.prev ),

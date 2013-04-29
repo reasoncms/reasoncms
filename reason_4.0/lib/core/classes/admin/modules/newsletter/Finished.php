@@ -36,6 +36,7 @@ class Finished extends FormStep
 		}
 		echo '<p><a href="">Send another newsletter</a></p>'."\n";
 		$this->controller->destroy_form_data();
+		$this->controller->reset_to_first_run();
 	}
 
 	function run() 

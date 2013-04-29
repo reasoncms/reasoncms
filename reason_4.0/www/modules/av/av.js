@@ -8,9 +8,9 @@
 
 $(document).ready(function() 
 {
-	var small_video_height = $("<div.size_links ul li.small_link").attr("data-size");
-	var medium_video_height = $("<div.size_links ul li.medium_link").attr("data-size");
-	var large_video_height = $("<div.size_links ul li.large_link").attr("data-size");
+	var small_video_height = $("div.size_links ul li.small_link").attr("data-size");
+	var medium_video_height = $("div.size_links ul li.medium_link").attr("data-size");
+	var large_video_height = $("div.size_links ul li.large_link").attr("data-size");
 
 	var show_link_p = $("<h4 class=\"share_download_header\"></h4>")
 	var show_link = $("<a href=\"\">Share/Download</a>");

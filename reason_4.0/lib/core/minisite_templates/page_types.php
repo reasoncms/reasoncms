@@ -295,6 +295,33 @@
 				'offer_original_download_link' => true,
 			),
 		),
+		'audio_video_simple' => array(
+			'main_post' => 'av_simple',
+		),
+		'audio_video_simple_360_wide' => array(
+			'main_post' => array(
+				'module' => 'av_simple',
+				'width' => 360,
+			),
+		),
+		'audio_video_simple_640_wide' => array(
+			'main_post' => array(
+				'module' => 'av_simple',
+				'width' => 640,
+			),
+		),
+		'audio_video_simple_sidebar' => array(
+			'sidebar' => array(
+				'module' => 'av_simple',
+				'width' => 240,
+			),
+		),
+		'audio_video_media_above_description' => array(
+			'main_post' => array(
+				'module'=>'av',
+				'show_media_first'=>true,
+			),
+		),
 		'kaltura_import' => array(
 			'main_post' => 'kaltura_import',
 		),
@@ -713,8 +740,24 @@
 			'main_post' => 'event_slot_registration',
 			'sidebar' => '',
 		),
+		'event_slot_registration_cache_1_hour' => array(
+			'main_post' => array(
+				'module' => 'event_slot_registration',
+				'cache_lifespan' => '3600',
+				'cache_lifespan_meta' => '7400',
+			),
+			'sidebar' => '',
+		),
 		'events' => array(
 			'main_post' => 'events',
+			'sidebar' => '',
+		),
+		'events_cache_1_hour' => array(
+			'main_post' => array(
+				'module' => 'events',
+				'cache_lifespan' => '3600',
+				'cache_lifespan_meta' => '7400',
+			),
 			'sidebar' => '',
 		),
 		'events_gallery_archive' => array(
@@ -1242,6 +1285,9 @@
 			'navigation' => '',
 			'main_post' => 'go',
 			'post_foot' => 'textonly_toggle',
+		),
+		'google_map' => array(
+			'main_post' => 'google_map',
 		),
 		'images_under_nav' => array(
 			'sidebar' => 'blurb',

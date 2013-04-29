@@ -191,7 +191,7 @@ if(!empty($_REQUEST['search_string']))
 				$txt .= '</ul>';
 				$txt .= '</td>';
 				$txt .= '<td>';
-				if(!empty($owner_site_id) && user_can_edit_site($current_user_id, $owner_site_id))
+				if(!empty($owner_site_id))
 				{
 					$txt .= '<a href="http://'.REASON_WEB_ADMIN_PATH.'?site_id='.$owner_site_id.'&amp;type_id='.$type->id().'&amp;id='.$e->id().'">Edit</a>';
 				}
