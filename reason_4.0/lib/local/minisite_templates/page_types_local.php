@@ -715,6 +715,9 @@ $GLOBALS['_reason_page_types_local'] = array(
 	'luther_google_map' => array(
 		'main_post' => 'luther_google_map',
 	),
+	'luther_tab_widget' => array(
+		'main_post' => 'luther_tab_widget',
+	),
 	'mobile_admissions' => array(
 		'banner_xtra' => '',
 		'post_banner' => '',

@@ -635,10 +635,17 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//echo '<link href="/stylesheets/luther2010/reason.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";  
   		//echo '<link href="/stylesheets/luther2010/print.css" media="print" rel="stylesheet" type="text/css" />'."\n";
 		$this->head_items->add_javascript( '/javascripts/modernizr-1.1.min.js' );
-		//$this->head_items->add_javascript(JQUERY_URL);
-  		//$this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.min.js' );
-  		$this->head_items->add_javascript( '//code.jquery.com/jquery-1.9.1.js' );
-  		$this->head_items->add_javascript( '//code.jquery.com/ui/1.10.2/jquery-ui.js' );
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_tab_widget')
+		// TODO: remove condition when jquery and jqueryUI version is updated
+		{
+	  		$this->head_items->add_javascript( '//code.jquery.com/jquery-1.9.1.js' );
+	  		$this->head_items->add_javascript( '//code.jquery.com/ui/1.10.2/jquery-ui.js' );
+		}
+		else
+		{
+	  		$this->head_items->add_javascript(JQUERY_URL);
+	  		$this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.min.js' );
+		}
   		// echo '<script src="/javascripts/modernizr-1.1.min.js" type="text/javascript"></script>'."\n";
   		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>'."\n";
 		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>'."\n";
