@@ -161,8 +161,9 @@
             // get all the category options and split them in to three arrays: Main Event Categories, This Site's Categories, Other Borrowed Categories
             $cats = $this->get_element('categories')->options;
             foreach ($cats as $cat_id => $value) {
-              if (get_owner_site_id($cat_id) == id_of('luther_home')){
-                $luther_home_cats[$cat_id] = $value;
+              if (get_owner_site_id($cat_id) == id_of('events')){
+                if ($value != 'Streamed Events') // hide the Streamed Events category, we will add it automatically if Audio Streaming or Video Streaming is selected
+                  $events_site_cats[$cat_id] = $value;
               } elseif (get_owner_site_id($cat_id) == $this->get_value('site_id')) {
                 $minisite_cats[$cat_id] = $value;
               } else { //
@@ -173,13 +174,15 @@
             // put the category options into a new multi-dimensional array - needed for the optgroups
             $site_id = new entity( $this->get_value( 'site_id' ) );
             $this_sites_label = '' . $site_id->get_value('name') .' site\'s categories';
-            if (isset($luther_home_cats))
-              $grouped_categories['Main events page categories'] = $luther_home_cats;
+            if (isset($events_site_cats))
+              $grouped_categories['Main events page categories'] = $events_site_cats;
             if (isset($minisite_cats))
               $grouped_categories[$this_sites_label] = $minisite_cats;
             if (isset($other_cats))
               $grouped_categories['Other borrowed categories'] = $other_cats;
             $this->change_element_type('categories', 'chosen_select', array('min_width'=>400,'multiple'=>true, 'options'=>$grouped_categories, 'sort_options'=>false));
+            $categories_comment =  'Please choose categories for both the main event pages (www.luther.edu/events) and for ' .$site_id->get_value('name'). '\'s event page.';
+            $this->set_comments('categories', form_comment($categories_comment));
             
             $this->change_element_type( 'recurrence', 'select_no_sort', 
                 array(  'options' => array( 'none'=>'Never (One-Time Event)', 
@@ -356,6 +359,7 @@
         
         function process()
         {
+            $this->add_streaming_category();
             $this->do_event_processing();
             $this->sports_athlete_links();
             parent::process();
@@ -422,6 +426,17 @@
                 $this->set_value('content', $c . $ct);
             }
             
+        }
+
+        // creates a relationship to the 'Streamed Events' category if 'Audio Streaming' or 'Video Streaming' is selected
+        function add_streaming_category()
+        {
+          $cats = $this->get_value('categories');
+          if (in_array(id_of('audio_streaming_category'), $cats) || in_array(id_of('video_streaming_category'), $cats))
+          {
+            array_push($cats,(id_of('streamed_events_category')));
+            $this->set_value('categories', $cats);
+          }
         }
     }
 ?>

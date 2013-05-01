@@ -270,7 +270,9 @@ class LutherEventsModule extends EventsModule
 	function get_all_categories() // {{{
 	{
 		$ret = '';
+		$cs = new entity_selector();
 		$cs = new entity_selector($this->parent->site_id);
+		$cs->set_site($this->parent->site_id);
 		$cs->description = 'Selecting all categories on the site';
 		$cs->add_type(id_of('category_type'));
 		$cs->set_order('entity.name ASC');
@@ -293,9 +295,9 @@ class LutherEventsModule extends EventsModule
 			$ret .= '<a href="'.$this->construct_link(array('category'=>'','view'=>'')).'" title="Events in all categories">All</a>';
 		$ret .= '</li>';
 		foreach($cats as $cat)
-		{
-			// don't show borrowed luther_home categories on the minisites
-			if (get_owner_site_id($cat->id()) != id_of('luther_home'))
+		{	
+			// don't show categories borrowed from the "events" minisite on the individual minisites
+			if (get_owner_site_id($cat->id()) != id_of('events'))
 			{
 				$ret .= '<li>';
 				if (array_key_exists($cat->id(), $this->calendar->get_categories()))
