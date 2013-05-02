@@ -638,12 +638,12 @@ class LutherTemplate2010 extends MinisiteTemplate
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_tab_widget')
 		// TODO: remove condition when jquery and jqueryUI version is updated
 		{
+			$this->head_items->remove_head_item('script', array('src' => JQUERY_URL));
 	  		$this->head_items->add_javascript( '//code.jquery.com/jquery-1.9.1.js' );
 	  		$this->head_items->add_javascript( '//code.jquery.com/ui/1.10.2/jquery-ui.js' );
 		}
 		else
 		{
-	  		$this->head_items->add_javascript(JQUERY_URL);
 	  		$this->head_items->add_javascript( '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.min.js' );
 		}
   		// echo '<script src="/javascripts/modernizr-1.1.min.js" type="text/javascript"></script>'."\n";
@@ -676,7 +676,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		$this->head_items->add_javascript('/javascripts/tablesorter.min.js');
 		$this->head_items->add_javascript('/javascripts/jquery.hoverIntent.min.js');
 		$this->head_items->add_javascript('/javascripts/cluetip/jquery.cluetip.js');
-		//$this->head_items->add_javascript('/javascripts/jquery.init.js');
+		$this->head_items->add_javascript('/javascripts/jquery.init.js');
 		$this->head_items->add_javascript('/reason/jquery.watermark-3.1.3/jquery.watermark.min.js');
 		$this->head_items->add_javascript('/reason/js/jquery.tools.min.js');
 		$this->head_items->add_javascript('/reason/js/jquery.maskedinput-1.3.min.js');
