@@ -11,10 +11,10 @@
 		// this code causes each site to borrow all categories from the Luther 2010 Home site
 		$es = new entity_selector();
 		$es->add_type(id_of('site'));
-		$es->add_relation('entity.id != ' . id_of('luther_home'));
+		$es->add_relation('entity.id != ' . id_of('events'));
 		$sites = $es->run_one();
 
-		$cat_es = new entity_selector(id_of('luther_home'));
+		$cat_es = new entity_selector(id_of('events'));
 		$cat_es->add_type(id_of('category_type'));
 		$cat_result = $cat_es->run_one();
 		$cats = array_keys($cat_result);
