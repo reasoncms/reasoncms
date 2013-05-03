@@ -17,10 +17,8 @@ class streamModule extends DefaultMinisiteModule {
         $hour = idate('H');
         $minutes = idate('i');
         
-        // if (($day_of_week == 'Monday' || $day_of_week == 'Wednesday' || $day_of_week == 'Friday')
-        //         && ($hour == 10) && ($minutes > 15) && ($minutes < 59)) {
         if (($day_of_week == 'Monday' || $day_of_week == 'Wednesday' || $day_of_week == 'Friday')
-                && ($hour >= 9) && ($hour <= 10)) {
+                && ($hour == 10) && ($minutes > 15) && ($minutes < 59)) {
             echo '<object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"';
             echo 'width="699" height="598"';
             echo 'codebase="http://www.apple.com/qtactivex/qtplugin.cab">';
