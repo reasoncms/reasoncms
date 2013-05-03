@@ -30,12 +30,20 @@ class IowaPrairieConferenceForm extends CreditCardThorForm {
         $reg_amount = substr($r[0], 1);
 
         $single_nights = $this->get_value_from_label('Single Room ($42.50/night) - single bed, with linens');
-        $single_count = count($single_nights);
-        $s_nights = 42.50 * $single_count;
+        if (is_array($single_nights)){
+          $single_count = count($single_nights);
+          $s_nights = 42.50 * $single_count;
+        } else {
+          $s_nights = 0;
+        }
 
         $double_nights = $this->get_value_from_label('Double Room ($79.00/night) - two single beds, with linens');
-        $double_count = count($double_nights);
-        $d_nights = 79 * $double_count;
+        if (is_array($double_nights)){
+          $double_count = count($double_nights);
+          $d_nights = 79 * $double_count;
+        } else {
+          $d_nights = 0;
+        }
 
         $total = $reg_amount + $s_nights + $d_nights;
         return $total;
@@ -49,9 +57,10 @@ class IowaPrairieConferenceForm extends CreditCardThorForm {
       $pa = $this->get_value_from_label('Payment Amount');
       $p = explode(' - ', $pa);
       $pay_amount = substr($p[0], 1);
-      echo $pay_amount;
-      if (intval($this->get_value($pay_amount)) != intval($this->get_amount())){
-        $this->set_error($pa, '<strong>Incorrect Payment Amount</strong>. The amount set in the payment amount field does not equal the cost for all chosen options. Please check your math or <a href="http://enable-javascript.com/" target="_blank">enable javascript</a> to have the form automatically fill in this field.');
+      
+      $pa_element = $this->get_element_name_from_label('Payment Amount');
+      if ($pay_amount != intval($this->get_amount())){
+        $this->set_error($pa_element, '<strong>Incorrect Payment Amount</strong>. The amount set in the payment amount field does not equal the cost for all chosen options. Please check your math or <a href="http://enable-javascript.com/" target="_blank">enable javascript</a> to have the form automatically fill in this field.');
       }
       parent :: run_error_checks();
     }
