@@ -37,8 +37,8 @@ $(document).ready(function() {
   function getRegistrationAmount(){
     // get the radio button amount
     var regint = 0;
-    if ($("input:radio[name='jnk94BO7ea_id']:checked").val()){
-      var str = $("input:radio[name='jnk94BO7ea_id']:checked").val();
+    if ($("input:radio[name='YJlZB5wJVO_id']:checked").val()){
+      var str = $("input:radio[name='YJlZB5wJVO_id']:checked").val();
       var sstr = str.split( ' - ' );
       var reg = sstr[0].split('$');
       
@@ -52,13 +52,13 @@ $(document).ready(function() {
   function getSingleNights(){
     // checkboxes * 42.50;
     var nights = 0;
-    if ($("input[name='djySskdo38_id[0]']").is(':checked')){
+    if ($("input[name='dMIYW0S6op_id[0]']").is(':checked')){
       nights ++;
     }
-    if ($("input[name='djySskdo38_id[1]']").is(':checked')){
+    if ($("input[name='dMIYW0S6op_id[1]']").is(':checked')){
       nights ++;
     }
-    if ($("input[name='djySskdo38_id[2]']").is(':checked')){
+    if ($("input[name='dMIYW0S6op_id[2]']").is(':checked')){
       nights ++;
     }
     return nights * 42.50;
@@ -67,10 +67,10 @@ $(document).ready(function() {
   function getDoubleNights(){
     // checkboxes * 79;
     var nights = 0;
-    if ($("input[name='N6yw6KE397_id[0]']").is(':checked')){
+    if ($("input[name='VFJtLFl9cZ_id[0]']").is(':checked')){
       nights ++;
     }
-    if ($("input[name='N6yw6KE397_id[1]']").is(':checked')){
+    if ($("input[name='VFJtLFl9cZ_id[1]']").is(':checked')){
       nights ++;
     }
     if ($("input[name='VFJtLFl9cZ_id[2]']").is(':checked')){
