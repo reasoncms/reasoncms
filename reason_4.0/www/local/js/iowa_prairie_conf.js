@@ -2,43 +2,43 @@ $(document).ready(function() {
   // var registration = $('radio_FhDfvRqA6y_id_0');
   // var singlenights = $('checkbox_1CQACscwtW_id_0');
   // var doublenights = $('checkbox_5RayWnEd4k_id_0');
-  var payment_amountElement = $('#0CYcHPiMAe_idElement');
+  var payment_amountElement = $('#jnk94BO7ea_idElement');
 
   $(payment_amountElement).attr('readonly', 'readonly');
   setTotal();
 
   // registration
-  $("input[name='ofrLrhwmHv_id']").change(function(){
+  $("input[name='YJlZB5wJVO_id']").change(function(){
     setTotal()
   });
 
   // single bed nights
-  $("input[name='djySskdo38_id[0]']").change(function(){
+  $("input[name='dMIYW0S6op_id[0]']").change(function(){
       setTotal()
     });
-  $("input[name='djySskdo38_id[1]']").change(function(){
+  $("input[name='dMIYW0S6op_id[1]']").change(function(){
       setTotal()
     });
-  $("input[name='djySskdo38_id[2]']").change(function(){
+  $("input[name='dMIYW0S6op_id[2]']").change(function(){
       setTotal()
     });
 
   // double bed nights
-  $("input[name='N6yw6KE397_id[0]']").change(function(){
+  $("input[name='VFJtLFl9cZ_id[0]']").change(function(){
       setTotal()
     });
-  $("input[name='N6yw6KE397_id[1]']").change(function(){
+  $("input[name='VFJtLFl9cZ_id[1]']").change(function(){
       setTotal()
     });
-  $("input[name='N6yw6KE397_id[2]']").change(function(){
+  $("input[name='VFJtLFl9cZ_id[2]']").change(function(){
       setTotal()
     });
 
   function getRegistrationAmount(){
     // get the radio button amount
     var regint = 0;
-    if ($("input:radio[name='ofrLrhwmHv_id']:checked").val()){
-      var str = $("input:radio[name='ofrLrhwmHv_id']:checked").val();
+    if ($("input:radio[name='jnk94BO7ea_id']:checked").val()){
+      var str = $("input:radio[name='jnk94BO7ea_id']:checked").val();
       var sstr = str.split( ' - ' );
       var reg = sstr[0].split('$');
       
@@ -73,7 +73,7 @@ $(document).ready(function() {
     if ($("input[name='N6yw6KE397_id[1]']").is(':checked')){
       nights ++;
     }
-    if ($("input[name='N6yw6KE397_id[2]']").is(':checked')){
+    if ($("input[name='VFJtLFl9cZ_id[2]']").is(':checked')){
       nights ++;
     }
     return nights * 79;
