@@ -532,7 +532,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 	),
 	'luther2010_landing' => array(
 		'main_head' => 'luther_carousel',
-		'main_head_5' => '',
+		'main_head_5' => 'luther_tab_widget',
 		'main_2' => '',
 		'main_3' => '',
 		'main_4' => '',
@@ -556,7 +556,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'width'=>716,
 			'height'=>288
 		),
-		'main_head_5' => '',
+		'main_head_5' => 'luther_tab_widget',
 		'main_2' => '',
 		'main_3' => '',
 		'main_4' => '',
@@ -581,7 +581,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 			'width'=>716,
 			'height'=>288
 		),
-		'main_head_5' => '',
+		'main_head_5' => 'luther_tab_widget',
 		'main_2' => '',
 		'main_3' => '',
 		'main_4' => '',
