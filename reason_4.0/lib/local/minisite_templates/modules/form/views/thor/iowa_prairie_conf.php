@@ -16,17 +16,13 @@ $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'IowaPrairieCon
 class IowaPrairieConferenceForm extends CreditCardThorForm {
 
     // style up the form and add comments et al
-    // function on_every_time() {
-    //   parent :: on_every_time(); 
-    //   // $this->change_element_type($this->get_element_name_from_label('State'), 'state');
-    //   // $this->set_element_properties($this->get_element_name_from_label('Class Year'), array('size'=>4));
-    //   // $this->change_element_type($this->get_element_name_from_label('Attended Luther?'), 'radio_no_sort');
-    //   // $this->set_element_properties($this->get_element_name_from_label('Class Year or Years Attended'), array('size'=>7));
-    //   // $this->set_element_properties($this->get_element_name_from_label('Zip'), array('size'=>5));
-    //   // $this->set_element_properties($this->get_element_name_from_label('Number of Adults - $10.00 each'), array('size'=>3));
-    //   // $this->set_element_properties($this->get_element_name_from_label('Number of Children 6-17 - $5.00'), array('size'=>3));
-    //   // $this->set_element_properties($this->get_element_name_from_label('Number of Children Under 5 - free'), array('size'=>3));
-    // }
+    function on_every_time() {
+      parent :: on_every_time(); 
+      $this->add_element('registration_fees_header', 'comment', array('text'=>'<h4>Registration Fees</h4>See <a href="/iowaprairieconference/RegistrationPrelim">registration information</a> page for more details.'));
+      $this->move_element('registration_fees_header', 'before', $this->get_element_name_from_label('Registration Type'));
+      $this->add_element('lodging_header', 'comment', array('text'=>'<h4>Luther College Dorm Lodging Reservations</h4>If reserving a double room for two registrants, only one registrant should fill out the dorm lodging section.'));
+      $this->move_element('lodging_header', 'after', $this->get_element_name_from_label('Registration Type'));
+    }
 
     function get_amount(){
         $reg = $this->get_value_from_label('Registration Type');
@@ -43,8 +39,6 @@ class IowaPrairieConferenceForm extends CreditCardThorForm {
 
         $total = $reg_amount + $s_nights + $d_nights;
         return $total;
-
-        // $this->set_value($this->payment_element, $total);
     }
 
     function pre_error_check_actions(){
