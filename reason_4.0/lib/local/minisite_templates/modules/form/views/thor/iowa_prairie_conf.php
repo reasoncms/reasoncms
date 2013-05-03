@@ -46,8 +46,11 @@ class IowaPrairieConferenceForm extends CreditCardThorForm {
     }
 
     function run_error_checks(){
-      $pa = $this->get_element_name_from_label('Payment Amount');
-      if (intval($this->get_value($pa)) != intval($this->get_amount())){
+      $pa = $this->get_value_from_label('Payment Amount');
+      $p = explode(' - ', $pa);
+      $pay_amount = substr($p[0], 1);
+      echo $pay_amount;
+      if (intval($this->get_value($pay_amount)) != intval($this->get_amount())){
         $this->set_error($pa, '<strong>Incorrect Payment Amount</strong>. The amount set in the payment amount field does not equal the cost for all chosen options. Please check your math or <a href="http://enable-javascript.com/" target="_blank">enable javascript</a> to have the form automatically fill in this field.');
       }
       parent :: run_error_checks();
