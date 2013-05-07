@@ -223,7 +223,7 @@ function urlencode_array_keys_and_values($array)
 }
 function flatten_array_for_url($key, $array)
 {
-	$ret = '';
+	$ret = array();
 	$flat = array_flatten_url($array);
 	foreach($flat as $subkey=>$v)
 	{
@@ -264,10 +264,11 @@ function alter_protocol($url,$current_protocol,$new_protocol)
  * @param string http_auth_password
  * @param int timeout - timout time for entire request
  * @param int connect_timeout - timeout time to establish connection to server
- * @param boolean $return_null_on_error - If there is an error, return NULL even if there was a response from the server
+ * @param boolean return_null_on_error - If there is an error, return NULL even if there was a response from the server
+ * @param boolean error_on_failure - Whether to trigger an error on failure (true) or to fail silently (false)
  * @return mixed a string or false on error
  */
-function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_username = '', $http_auth_password = '', $timeout = 30, $connect_timeout = 10, $return_null_on_error = false)
+function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_username = '', $http_auth_password = '', $timeout = 30, $connect_timeout = 10, $return_null_on_error = false, $error_on_failure = true)
 {
 	require_once(LIBCURLEMU_INC . 'libcurlemu.inc.php');
 	$ch = curl_init( $url );
@@ -293,7 +294,9 @@ function carl_util_get_url_contents($url, $verify_ssl = false, $http_auth_userna
 	// check for errors
 	if( $err = curl_error( $ch ) )
 	{
-		trigger_error( 'carl_util_get_url_contents() failed. Msg: '.$err.'; url: '.$url );
+		if ($error_on_failure)
+			trigger_error( 'carl_util_get_url_contents() failed. Msg: '.$err.'; url: '.$url );
+		
 		if( $return_null_on_error )
 		{
 			curl_close( $ch );
