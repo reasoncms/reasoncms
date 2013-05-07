@@ -7,7 +7,8 @@
 	{
 		function init( $args = array() )
 		{
-
+			// Can't display tab widget when jquery.tools is used
+			$this->get_head_items()->remove_head_item('script', array('src'=>'/reason/js/jquery.tools.min.js'));
 		}
 		function has_content()
 		{

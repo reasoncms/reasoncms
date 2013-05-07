@@ -16,7 +16,7 @@
         function init($args = array())
         {
             $head_items = $this->get_head_items();
-            $head_items->remove_head_item('script', array('src'=>'/reason/js/jquery.maskedinput-1.3.min.js'));
+            $head_items->remove_head_item('script', array('src'=>'/reason/js/jquery.maskedinput-1.3.1.min.js'));
             $head_items->remove_head_item('script', array('src'=>'/reason/js/jquery.tools.min.js'));
             $head_items->remove_head_item('script', array('src'=>'/reason/js/timer/timer.js'));
             $head_items->remove_head_item('script', array('src'=>'/reason/jquery.watermark-3.1.3/jquery.watermark.min.js'));
