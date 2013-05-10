@@ -259,18 +259,19 @@
 				$orig = WEB_PHOTOSTOCK . $player['image_id'] . '_orig.' . $image['image_type'];
 				$d = max($image['width'], $image['height']) / 125.0;
 				$caption = $image['name'];
+				if (file_exists($_SERVER['DOCUMENT_ROOT'] . $orig))   // link to high res original if it exists
+				{
+					$caption_hr = $caption . '<a href="' . $orig . '" title="High res">&prop;</a>';
+				}
+				else
+				{
+					$caption_hr = $caption;
+				}
 				echo '<div class="figure" style="width:' . intval($image['width']/$d) .'px;">';
 				// show href to full size image with class and onclick for highslide
 				echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
-				echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" alt="' . htmlspecialchars($caption, ENT_COMPAT) . '" />';
-				echo '</a>';
-				echo '<div class="highslide-caption" >'."\n";
-				echo $caption ."\n";
-				if (file_exists($_SERVER['DOCUMENT_ROOT'] . $orig))
-				{
-					echo '<a href="' . $orig . '" title="High res">&prop;</a>'."\n"; 
-				}
-				echo "</div>   <!--- class=\"highslide-caption\" -->\n";  
+				echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" alt="' . htmlspecialchars($caption_hr, ENT_COMPAT) . '" />';
+				echo '</a>';  
 
 				// show caption if flag is true
 				if ($caption != "") echo $caption;

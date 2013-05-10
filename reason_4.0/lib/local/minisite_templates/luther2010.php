@@ -640,13 +640,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//echo '<link href="/stylesheets/luther2010/reason.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";  
   		//echo '<link href="/stylesheets/luther2010/print.css" media="print" rel="stylesheet" type="text/css" />'."\n";
 		$this->head_items->add_javascript( '/javascripts/modernizr-1.1.min.js' );
-		
-		//$this->head_items->remove_head_item('script', array('src' => JQUERY_URL));
   		$this->head_items->add_javascript( JQUERY_URL );
-  		// TODO: remove jquery migrate when upgraded version of jquery tools becomes available
-  		//$this->head_items->add_javascript( '//code.jquery.com/jquery-migrate-1.2.0.js');
   		$this->head_items->add_javascript( JQUERY_UI_URL );
-		
   		// echo '<script src="/javascripts/modernizr-1.1.min.js" type="text/javascript"></script>'."\n";
   		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>'."\n";
 		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>'."\n";
@@ -677,7 +672,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		$this->head_items->add_javascript('/javascripts/tablesorter.min.js');
 		$this->head_items->add_javascript('/javascripts/jquery.hoverIntent.min.js');
 		$this->head_items->add_javascript('/javascripts/cluetip/jquery.cluetip.js');
-		//$this->head_items->add_javascript('/javascripts/jquery.init.js');
+		//$this->head_items->add_javascript('/javascripts/jquery.init.js');  // jquery.init.js moved to luther_footer.php
 		$this->head_items->add_javascript('/reason/jquery.watermark-3.1.3/jquery.watermark.min.js');
 		$this->head_items->add_javascript('/reason/js/jquery.tools.min.js');
 		$this->head_items->add_javascript('/reason/js/jquery.maskedinput-1.3.1.min.js');

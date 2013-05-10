@@ -82,12 +82,12 @@
 					if (!preg_match("/imagetop|bannerad|video|map/", $image->get_value('keywords'))
 						&& !($this->cur_page->get_value( 'custom_page' ) == 'publication'   // not a news story
 						&& preg_match("/story_id\=\d+/", get_current_url())))
-
 					{
 						$url = WEB_PHOTOSTOCK . $id . '.' . $image->get_value('image_type');
 						$thumb = WEB_PHOTOSTOCK . $id . '_tn.' . $image->get_value('image_type');
 						$orig = WEB_PHOTOSTOCK . $id . '_orig.' . $image->get_value('image_type');
 						$d = max($image->get_value('width'), $image->get_value('height')) / 125.0;
+						
 						if (preg_match("/hide_caption/", $image->get_value('keywords')))
 						{
 							$caption = "";
@@ -100,22 +100,17 @@
 						{
 							$caption = $image->get_value('description');
 						}
-						//echo "<div class=\"imageChunk\">";
-						//echo '<div class="imageChunk" style="width:' . $image->get_value('width')/4 .'px;">';
+						
 						echo '<div class="figure" style="width:' . intval($image->get_value('width')/$d) .'px;">';
 						// show href to full size image with class and onclick for highslide
-	                                        //showing site id: echo 'site id is this: '. $site_id . ' end';
 						echo '<a href="'. $url . '" class="highslide" onclick="return hs.expand(this, imageOptions)">';
-						echo '<img src="' . $thumb . '" border="0" alt="' . htmlspecialchars($caption, ENT_COMPAT) . '" title="Click to enlarge" />';
-						//echo '<img src="' . $thumb . '" border="0" title="Click to enlarge" />';
-						echo '</a>';
-						echo '<div class="highslide-caption" >'."\n";
-						echo $caption ."\n";
-						if (file_exists($_SERVER['DOCUMENT_ROOT'] . $orig))
+						if (file_exists($_SERVER['DOCUMENT_ROOT'] . $orig))   // link to high res original if it exists
 						{
-							echo '<a href="' . $orig . '" title="High res">&prop;</a>'."\n"; 
+							$caption .= '<a href="' . $orig . '" title="High res">&prop;</a>';
 						}
-						echo "</div>   <!--- class=\"highslide-caption\" -->\n";  
+						echo '<img src="' . $thumb . '" border="0" alt="' . htmlspecialchars($caption, ENT_COMPAT) . '" title="Click to enlarge" />';
+						
+						echo '</a>';
 	
 						// show caption if flag is true
 						if ($this->params['caption_flag'] && $caption != "") echo $image->get_value('description') ;

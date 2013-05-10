@@ -93,6 +93,7 @@
 						{
 							$description = $photo['title'];
 						}
+						$description .= "<a href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $pinfo['originalsecret'] . "_o." . $pinfo['originalformat'] . "\" title=\"High res\">&prop;</a>\n";
 						if ($number_slideshows == 1)
 						{
 							echo "<li>\n";
@@ -109,11 +110,6 @@
 						echo "<a class=\"highslide\" href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "." . $pinfo['originalformat']  . "\" onclick=\"return hs.expand(this, galleryOptions[" . $slideshowGroup . "])\">\n";
 						echo "<img src=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_s." . $pinfo['originalformat']  . "\" title=\"Click to open gallery\" alt=\"" . htmlspecialchars($description, ENT_COMPAT) ."\" />\n";
 						echo "</a>\n";
-						echo '<div class="highslide-caption" >'."\n";
-						echo $description ."\n";
-						// link to original image
-						echo "<a href=\"http://farm" . $pinfo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $pinfo['originalsecret'] . "_o." . $pinfo['originalformat'] . "\" title=\"High res\">&prop;</a>\n"; 
-						echo "</div>   <!--- class=\"highslide-caption\" -->\n"; 
 	
 						if ($number_slideshows == 1)
 						{
