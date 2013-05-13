@@ -48,7 +48,11 @@ $(document).ready(function() {
                     $('#tender').html('');
                     for (var i = 0; i < json.results.length; i++) {
                         var t = json.results[i];
-                        $('#tender').append('<tr><td>' + t.Tender + '</td><td>'+ t.Balance + '</td></tr>');
+                        if (t.Tender == 'Charge') {
+                            $('#tender').append('<tr><td>' + t.Tender + ' ('+from+' - '+to+')' + '</td><td>'+ t.Balance + '</td></tr>');
+                        } else {
+                            $('#tender').append('<tr><td>' + t.Tender + ' (Total remaining)' + '</td><td>'+ t.Balance + '</td></tr>');
+                        }
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
