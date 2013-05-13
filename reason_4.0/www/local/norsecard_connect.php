@@ -25,10 +25,12 @@ try {
       $statement->bindValue(':user', $user);
     }
     else if ($action == 'tender' && $patron > 0) {
-      $query = "Select Tender, Balance from Av_user_pcs_PatronAccount pa inner join Av_user_pcs_Patron p on p.Patron_SK = pa.Patron_SK_FK and p.email like '%'+:user+'@luther.edu%' where Patron_SK_FK=:patron";
+      $query = "Select Tender, Balance from Av_user_pcs_PatronAccount pa inner join Av_user_pcs_Patron p on p.Patron_SK = pa.Patron_SK_FK and p.email like '%'+:user+'@luther.edu%' where Patron_SK_FK=:patron and Tender <> 'Charge'  union Select 'Charge' as 'Tender', sum(tl.Transaction_Amount) from Av_user_pcs_TransactionLog tl inner join Av_user_pcs_Patron p on p.Patron_SK = tl.Patron_SK_FK and p.email like '%'+:user+'@luther.edu%' where Patron_SK_FK=:patron and Transaction_Amount <> 0 and tl.Process_Date_Time between :startDate and dateadd(dd, 1, :endDate) and tl.Tender='Charge' group by tl.ID_Number ";
       $statement=$dbh->prepare($query);
       $statement->bindValue(':user', $user);
       $statement->bindValue(':patron', $patron);
+      $statement->bindValue(':startDate', $startdate);
+      $statement->bindValue(':endDate', $enddate);
     } else if ($action == 'transactions' && $patron > 0) {
       $query = "Select tl.ID_Number, convert(varchar(25), tl.Process_Date_Time,100) as Transaction_Time, case when tl.Terminal = 'End of Day Console' then 'End of Week' when tl.Terminal like '%C-store%' then 'C-store' when tl.Terminal like '%Marty''s%' then 'Marty''s' when tl.Terminal like '%Oneota%' then 'Oneota' when tl.Terminal like '%Bookstore%' then 'Bookstore' when tl.Terminal like '%Cafeteria%' then 'Cafeteria' when tl.Terminal like '%Print Shop%' then 'Print Shop'  when tl.Terminal like '%Sunnyside%' then 'Sunnyside Cafe' when tl.Terminal like '%Catering%' then 'Catering' when tl.Terminal like '%CFL Box Office%' then 'CFL Box Office' when tl.Terminal like '%Post Office%' then 'Post Office' else tl.Terminal end as [Terminal], case tl.Function when 'Delete from Balance' then 'Total Balance' else tl.Function end as [transaction_function], tl.Previous_Balance, tl.Transaction_Amount, tl.Resulting_Balance, tl.Tender from Av_user_pcs_TransactionLog tl inner join Av_user_pcs_Patron p on p.Patron_SK = tl.Patron_SK_FK and p.email like '%'+:user+'@luther.edu%' where Patron_SK_FK=:patron and Transaction_Amount <> 0 and tl.Process_Date_Time between :startDate and dateadd(dd, 1, :endDate) order by Process_Date_Time desc";
       $statement=$dbh->prepare($query);

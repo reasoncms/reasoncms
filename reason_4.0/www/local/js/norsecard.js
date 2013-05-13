@@ -38,8 +38,11 @@ $(document).ready(function() {
     $("#from").val(('0'+dt.getMonth()).slice(-2) + '/' + ('0'+dt.getDate()).slice(-2) + '/' + dt.getFullYear());
     $('#account-select').change( function() {
         if (this.value != '--') {
+            var from = $.datepicker.formatDate('mm/dd/yy', $('#from').datepicker("getDate"));
+            var to = $.datepicker.formatDate('mm/dd/yy', $('#to').datepicker("getDate"));
+  
             $.ajax({
-                url: 'https://reasondev.luther.edu/reason/norsecard_connect.php?action=tender&patron='+this.value,
+                url: 'https://reasondev.luther.edu/reason/norsecard_connect.php?action=tender&patron='+this.value+'&startdate='+from+'&enddate='+to,
                 dataType: 'json',
                 success: function(json) {
                     $('#tender').html('');
@@ -50,12 +53,10 @@ $(document).ready(function() {
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     alert('An error has occurred, please try again later.');
+                    alert(thrownError);
                 }
             });
 
-            var from = $.datepicker.formatDate('mm/dd/yy', $('#from').datepicker("getDate"));
-            var to = $.datepicker.formatDate('mm/dd/yy', $('#to').datepicker("getDate"));
-  
             $.ajax({
                 url: 'https://reasondev.luther.edu/reason/norsecard_connect.php?action=transactions&patron='+this.value+'&startdate='+from+'&enddate='+to,
                 dataType: 'json',
