@@ -15,21 +15,24 @@ $(document).ready(function() {
     
     // get the reason_id of the row containing "Payment Amount"
     var payment_row_id = ($(".words:contains('Payment Amount')").parent().attr('id'));
-    var payment_row_id = payment_row_id.replace(/id/i, "id_");
+    var payment_row_id = payment_row_id.replace(/id/i, "_id");
     var payment_name = payment_row_id.replace(/row/i, "");
     
     // if the form creator has included a hidden field with the value 'No Payment Option' hide the credit_card_info until needed
-    if ($("input[name='No Payment Option']")) {
+    if ($("input[name='no_payment_option']")) {
+        alert(payment_row_id + ' ' + payment_name);
         toggle_credit_card_info('true');
     }
-    
+
     // if Payment Amount is already checked, send the checked button's first character to toggle_credit_card_info(). 
     if ($('input[name$="'+payment_name+'"]:checked').val()){
+        alert('is checked');
         toggle_credit_card_info($('input[name$="'+payment_name+'"]:checked').val().charAt(0));
     }
     
     // if Payment Amount is changed, send the checked button's first character to toggle_credit_card_info(). 
     $('input[name$="'+payment_name+'"]').change(function(){
+        alert('changed');
         toggle_credit_card_info($(this).val().charAt(0));
     });
 });
