@@ -9,7 +9,7 @@ $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'CreditCardNoPa
  * 	For forms that would like to offer registration but with an option for people to pay by check or when they
  * 	arrive (i.e. they don't have to pay when filling out the form). 
  * 
- *  The form requires the form builder add a hidden field called "No Payment Option" which has the same value ("No Payment Option").
+ *  The form requires the form builder add a hidden field called "no_payment_option" which has the same value ("no_payment_option").
  *  This is used by the javascript to hide credit card info fields.
  *
  * @package reason_package_local
@@ -22,7 +22,7 @@ class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 		function on_every_time() {
 				  
 				// add this element for the credit_card.js
-				$this->add_element('No Payment Option', 'hidden');
+				$this->add_element('no_payment_option', 'hidden');
 				parent::on_every_time();
 		}
 
@@ -64,8 +64,8 @@ class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 						// remove any extra characters from amount
 						$payment_amount = preg_replace('/[^\d\.]/', '', $match[1]);
 
-						// If there is a hidden field called 'No Payment Option' then allow the user to go to the thank you page
-				} elseif ($this->get_element_name_from_label('No Payment Option')) {
+						// If there is a hidden field called 'no_payment_option' then allow the user to go to the thank you page
+				} elseif ($this->get_element_name_from_label('no_payment_option')) {
 						$no_payment = true;
 				} else {
 
