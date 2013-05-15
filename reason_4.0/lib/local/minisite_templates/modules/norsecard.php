@@ -3,8 +3,6 @@ $GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'NorseCardMo
 reason_include_once( 'minisite_templates/modules/default.php' );
 include_once(DISCO_INC.'disco.php');
 
-// define ('MAX_RESULTS', 100);
-
 class NorseCardModule extends DefaultMinisiteModule {
     var $cleanup_rules = array(
             'username' => array('function' => 'turn_into_string'),
@@ -35,7 +33,8 @@ class NorseCardModule extends DefaultMinisiteModule {
         parent::init( $args );
         if($head_items =& $this->get_head_items()) {
             // add our own js and css
-            // $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
+            $head_items->add_javascript( '/reason/js/norsecard.js' );
+            $head_items->add_stylesheet( '/reason/css/norsecard.css' );
         }
 
         // Allow any of the form elements to be set from the URL or POST, and look like a submission
@@ -53,7 +52,6 @@ class NorseCardModule extends DefaultMinisiteModule {
         $this->form->actions = array('Submit');
         $this->form->error_header_text = 'Search error';
         $this->form->add_callback(array(&$this, 'show_results'),'process');
-        // $this->form->add_callback(array(&$this, 'display_form_help'),'post_show_form');
         $this->form->add_callback(array(&$this, 'run_error_checks'),'run_error_checks');
         $this->form->add_callback(array(&$this, 'on_first_time'),'on_first_time');
         $this->form->add_callback(array(&$this, 'on_every_time'),'on_every_time');
@@ -73,24 +71,20 @@ class NorseCardModule extends DefaultMinisiteModule {
     }
 
     function on_every_time(&$form){
-        // $accts = $this->get_accounts($this->reason_check_authentication());
-
-        // if (){
-        //     $form->change_element_type('account', 'solid_text', array('display_name' => ''));
-        // } else {
-        //     $form->change_element_type('account', 'radio_button', array('options', FILL WITH THE ACCOUNTS));
-        // }
     }
     
     function run(){
         if ($logged_user = reason_check_authentication()) {
             echo "<p class='norsecard_head'>";
-    //      echo "Logged in as <b>" . $logged_user . "</b> ::  ";
             echo "Logged in as <b>" . $logged_user . "</b> ::  ";
             echo "<a href='/login/?logout=1'>Logout</a>";
             echo "</p>";
-        
-            $this->display_form();
+            echo '<div><label for="from">From</label><input type="text" id="from" name="from" /><label for="to">to</label><input type="text" id="to" name="to" /></div>';
+            echo "<span>Select an account: </span><select id='account-select'><option>--</option></select>";
+            //$this->display_form();
+            echo "<div id='norsecard-data'></div>";
+            echo "<table id='tender'></table>";
+            echo "<table id='transactions' style='width: 300px;'></table>";
         } else {
             reason_require_authentication();
         }
@@ -131,9 +125,6 @@ class NorseCardModule extends DefaultMinisiteModule {
         // Build and execute an LDAP query
         list($query, $query_desc) = $query_parts;
         $entries = $this->get_search_results($query);
-        //echo "\n Start of entries: "; // - burkaa
-        //pray($entries);
-        //echo " End of entries \n"; // - burkaa
 
         // If there aren't any results, try again with similarity searching
         if (!count($entries)) {
@@ -144,8 +135,6 @@ class NorseCardModule extends DefaultMinisiteModule {
 
         // If we have some results, call the appropriate display method
         if (count($entries) ) {
-            //$this->scrub_results($entries);
-            //commenting out list to use only book
             switch ($this->view) {
                 case 'pdf':
                     if ($form->get_value('display_as') == 'book')
