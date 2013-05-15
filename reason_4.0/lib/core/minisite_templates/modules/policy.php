@@ -469,7 +469,10 @@
 			$sub_policies = $this->get_policy_children($policy);
 			if(!empty($sub_policies))
 			{
-				echo '<ol class="'.$this->get_class_for_children($policy).'">'."\n";
+				if ($this->get_class_for_children($policy) == 'bullet')
+					echo '<ul class="'.$this->get_class_for_children($policy).'">'."\n";	
+				else 
+					echo '<ol class="'.$this->get_class_for_children($policy).'">'."\n";
 				foreach($sub_policies as $p)
 				{
 					echo '<li>'."\n";
@@ -479,7 +482,10 @@
 						$this->display_sub_policy($p);
 					echo '</li>'."\n";
 				}
-				echo '</ol>'."\n";
+				if ($this->get_class_for_children($policy) == 'bullet')
+					echo '</ul>'."\n";
+				else
+					echo '</ol>'."\n";
 			}
 			
 			if ($editable)
@@ -620,7 +626,10 @@
 			$sub_policies = $this->get_policy_children($policy);
 			if(!empty($sub_policies))
 			{
-				echo '<ol class="'.$this->get_class_for_children($policy).'">'."\n";
+				if ($this->get_class_for_children($policy) == 'bullet')
+					echo '<ul class="'.$this->get_class_for_children($policy).'">'."\n";
+				else
+					echo '<ol class="'.$this->get_class_for_children($policy).'">'."\n";
 				foreach($sub_policies as $p)
 				{
 					echo '<li>'."\n";
@@ -634,7 +643,10 @@
 					}
 					echo '</li>'."\n";
 				}
-				echo '</ol>'."\n";
+				if ($this->get_class_for_children($policy) == 'bullet')
+					echo '</ul>'."\n";
+				else
+					echo '</ol>'."\n";
 			}
 		}
 
@@ -665,6 +677,8 @@
 		{
 			switch($policy->get_value( 'numbering_scheme' ))
 			{
+				case 'Bullet':
+					return 'bullet';
 				case 'Uppercase Roman':
 					return 'upperRoman';
 				case 'Lowercase Roman':
