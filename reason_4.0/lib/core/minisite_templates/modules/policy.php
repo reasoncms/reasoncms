@@ -65,7 +65,10 @@
 			$this->all_audiences = $es->run_one();
 
 			$head =& $this->get_head_items();
-			$head->add_javascript(REASON_HTTP_BASE_PATH .'/js/policy_selector.js');
+			$head->add_javascript(JQUERY_UI_URL);
+			$head->add_stylesheet(JQUERY_UI_CSS_URL);
+			$head->add_javascript(REASON_HTTP_BASE_PATH.'js/policy_selector.js');
+			$head->add_javascript(REASON_HTTP_BASE_PATH.'js/policy_accordian.js');
 			
 			if(!$this->_in_show_all_mode())
 			{
