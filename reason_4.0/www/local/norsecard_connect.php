@@ -17,8 +17,12 @@ try {
       }
     }
     // TODO: make sure this stuff really is a date?
-    $startdate = $_GET['startdate'];
-    $enddate = $_GET['enddate'];
+    if (array_key_exists('startdate', $_GET)){
+      $startdate = $_GET['startdate'];
+    }
+    if (array_key_exists('enddate', $_GET)){
+      $enddate = $_GET['enddate'];
+    }
     if ($action == 'users'){
       $query = "Select top 400 Patron_SK,First_Name, Middle_Name, Last_Name, Alternate_ID_Number as DatatelID, Plan, Last_Date_Card_Used as LastUsed , Email from Av_user_pcs_Patron where email like '%'+:user+'@luther.edu%' order by Alternate_ID_Number";
       $statement=$dbh->prepare($query);
