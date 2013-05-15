@@ -33,6 +33,8 @@ class NorseCardModule extends DefaultMinisiteModule {
         parent::init( $args );
         if($head_items =& $this->get_head_items()) {
             // add our own js and css
+            $head_items->add_javascript(JQUERY_UI_URL);
+            $head_items->add_stylesheet(JQUERY_UI_CSS_URL);
             $head_items->add_javascript( '/reason/js/norsecard.js' );
             $head_items->add_stylesheet( '/reason/css/norsecard.css' );
         }
