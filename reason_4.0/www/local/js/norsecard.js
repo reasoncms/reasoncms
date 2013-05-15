@@ -36,6 +36,18 @@ $(document).ready(function() {
 
     $("#to").val(('0'+(dt.getMonth() + 1)).slice(-2) +'/'+ ('0'+dt.getDate()).slice(-2) + '/' + dt.getFullYear());
     $("#from").val(('0'+dt.getMonth()).slice(-2) + '/' + ('0'+dt.getDate()).slice(-2) + '/' + dt.getFullYear());
+
+    Number.prototype.formatMoney = function(c, d, t){
+    var n = this, 
+        c = isNaN(c = Math.abs(c)) ? 2 : c, 
+        d = d == undefined ? ",." : d, 
+        t = t == undefined ? ".," : t, 
+        s = n < 0 ? "-" : "", 
+        i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+        j = (j = i.length) > 3 ? j % 3 : 0;
+       return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+    };
+
     $('#account-select').change( function() {
         if (this.value != '--') {
             var from = $.datepicker.formatDate('mm/dd/yy', $('#from').datepicker("getDate"));
@@ -51,7 +63,7 @@ $(document).ready(function() {
                         if (t.Tender == 'Charge') {
                             $('#tender').append('<tr><td>' + t.Tender + ' ('+from+' - '+to+')' + '</td><td>'+ t.Balance + '</td></tr>');
                         } else {
-                            $('#tender').append('<tr><td>' + t.Tender + ' (Total remaining)' + '</td><td>'+ t.Balance + '</td></tr>');
+                            $('#tender').append('<tr><td>' + t.Tender + ' (Total remaining)' + '</td><td>'+ parseFloat(t.Balance,10).formatMoney(2,'.',',') + '</td></tr>');
                         }
                     }
                 },
@@ -71,7 +83,7 @@ $(document).ready(function() {
                     $('#transactions').append('<tr><th>Transaction Time</th><th>Terminal</th><th>Function</th><th>Previous Balance</th><th>Transaction Amount</th><th>Resulting Balance</th><th>Tender</th></tr>');
                     for (var i = 0; i < json.results.length; i++) {
                         var t = json.results[i];
-                        $('#transactions').append('<tr><td>' + t.Transaction_Time + '</td><td>'+ t.Terminal + '</td><td>' + t.transaction_function + '</td><td>' + t.Previous_Balance + '</td><td>' + t.Transaction_Amount + '</td><td>' + t.Resulting_Balance + '</td><td>' + t.Tender + '</td></tr>');
+                        $('#transactions').append('<tr><td>' + t.Transaction_Time + '</td><td>'+ t.Terminal + '</td><td>' + t.transaction_function + '</td><td>' + parseFloat(t.Previous_Balance, 10).formatMoney(2,'.',',') + '</td><td>' + parseFloat(t.Transaction_Amount, 10).formatMoney(2,'.',',') + '</td><td>' + parseFloat(t.Resulting_Balance,10).formatMoney(2,'.',',') + '</td><td>' + t.Tender + '</td></tr>');
                     }
                     $('#transactions tr:odd').css('background-color', '#AFD0EF');
                     $('#transactions').after('<div class="pagination"></div>');
