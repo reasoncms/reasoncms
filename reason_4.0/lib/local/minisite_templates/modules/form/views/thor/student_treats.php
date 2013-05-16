@@ -11,7 +11,7 @@ class StudentTreatsThorForm extends CreditCardThorForm {
         parent::on_every_time();
 
         //import js
-        echo '<script type="text/javascript" src="/reason/js/student_treats.js"></script>';
+        echo '<script type="text/javascript" src="'.REASON_HTTP_BASE_PATH.'js/student_treats.js"></script>';
 
         // radio header
         $this->add_element('radio_header', 'comment', array('text' => '<h4> </br> How many treat orders would you like to place?  All treat orders are $20 each.</h4>'));

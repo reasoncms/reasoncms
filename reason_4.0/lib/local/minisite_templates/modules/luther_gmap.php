@@ -15,7 +15,7 @@
 		}
 		function run()
 		{
-                    echo '<script type="text/javascript" src="/reason/js/google_map.js"></script>';
+                    echo '<script type="text/javascript" src="'.REASON_HTTP_BASE_PATH.'js/google_map.js"></script>';
                     echo '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=ABQIAAAAz1k9MN50wbdsqa0Bg4eWaRSv_q0vVUSVmodOyRFLMdbe4MqtZxTMvBlgd_vgIFY6jEzQ7cbRv9ER6g" type="text/javascript"></script>';
                     echo '<div id="map_canvas" style="height: 400px; width: 450px;"></div>';
                    

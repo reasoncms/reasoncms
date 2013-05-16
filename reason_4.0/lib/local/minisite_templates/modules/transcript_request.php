@@ -117,8 +117,8 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 
 		if($head_items =& $this->get_head_items())
 		{
-			//$head_items->add_stylesheet('/reason/css/form.css');
-			$head_items->add_javascript('/reason/js/transcripts.js');
+			//$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/form.css');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/transcripts.js');
 		}
 	}//}}}
 	

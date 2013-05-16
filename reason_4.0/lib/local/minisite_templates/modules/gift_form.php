@@ -116,8 +116,8 @@ class OnlineGiftModule extends DefaultMinisiteModule
 		
 		if($head_items =& $this->get_head_items())
 		{
-			$head_items->add_stylesheet('/reason/css/giftform.css');
-			$head_items->add_javascript('/reason/js/giftform.js');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/giftform.css');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/giftform.js');
 		}
 		// Insert refresh headers when in kiosk mode
 		if ($this->params['kiosk_mode'])

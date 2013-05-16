@@ -80,7 +80,7 @@ class AllBandModule extends DefaultMinisiteModule
 
 		if($head_items =& $this->get_head_items())
 		{
-                    $head_items->add_javascript('/reason/js/norge_form.js');
+                    $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/norge_form.js');
 		}
 	}
 	/**

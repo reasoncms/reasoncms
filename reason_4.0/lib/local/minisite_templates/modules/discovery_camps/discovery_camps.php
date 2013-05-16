@@ -80,8 +80,9 @@ class DiscoveryCampsModule extends DefaultMinisiteModule
 
 		if($head_items =& $this->get_head_items())
 		{
-			$head_items->add_stylesheet('/reason/css/giftform.css');
-			$head_items->add_javascript('/reason/js/dorian_sh_camp.js');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/giftform.css');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/dorian_sh_camp.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
 		}
 	}//}}}
 

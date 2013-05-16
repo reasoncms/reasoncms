@@ -13,7 +13,7 @@ class NorseFormModule extends DefaultMinisiteModule {
     function on_every_time() {
         parent::on_every_time();
         
-        echo '<script type="text/javascript" src="/reason/js/google_map.js"></script>';
+        echo '<script type="text/javascript" src="'.REASON_HTTP_BASE_PATH.'js/google_map.js"></script>';
         
     }
 

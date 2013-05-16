@@ -99,8 +99,8 @@ class HomecomingRegistrationModule extends DefaultMinisiteModule
 		parent::init( $args );
 		if($head_items =& $this->get_head_items())
 		{
-			$head_items->add_stylesheet('/reason/css/form.css');
-			$head_items->add_javascript('/reason/js/homecoming_reg.js');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/form.css');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/homecoming_reg.js');
 		}
 	}//}}}
 	

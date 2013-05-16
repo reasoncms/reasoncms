@@ -93,8 +93,8 @@ class DorianSHCampModule extends DefaultMinisiteModule
 
 		if($head_items =& $this->get_head_items())
 		{
-			$head_items->add_stylesheet('/reason/css/form.css');
-			$head_items->add_javascript('/reason/js/dorian_sh_camp.js');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/form.css');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/dorian_sh_camp.js');
 		}
 
 		/** reload pages to save session variables after 50 minutes (3000 seconds)

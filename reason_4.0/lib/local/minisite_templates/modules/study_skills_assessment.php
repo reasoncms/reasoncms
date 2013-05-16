@@ -51,7 +51,7 @@ class StudySkillsAssessmentModule extends DefaultMinisiteModule {
     function init($args = array()) { //{{{
         parent::init($args);
         if ($head_items = & $this->get_head_items()) {
-            $head_items->add_stylesheet('/reason/css/studyskillsform.css');
+            $head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/studyskillsform.css');
         }
     }
 

@@ -7,7 +7,7 @@ class ServantsBanquetForm extends CreditCardThorForm {
     function on_every_time() {
         parent::on_every_time();
 
-        echo '<script type="text/javascript" src="/reason/js/servants_banquet.js"></script>';
+        echo '<script type="text/javascript" src="'.REASON_HTTP_BASE_PATH.'js/servants_banquet.js"></script>';
         //$this->is_in_testing_mode = true;
     }
 

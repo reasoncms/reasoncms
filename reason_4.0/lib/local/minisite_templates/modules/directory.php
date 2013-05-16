@@ -182,16 +182,16 @@ class DirectoryModule extends DefaultMinisiteModule {
         parent::init( $args );
         if($head_items =& $this->get_head_items()) {
 //            $head_items->add_stylesheet('/global_stock/css/campus_dir.css');
-            $head_items->add_stylesheet('/reason/css/directory.css');
-            //$head_items->add_javascript('/reason/js/tableSorter.js');
+            $head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/directory.css');
+            //$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/tableSorter.js');
             $head_items->add_javascript( '/javascripts/jquery-1.6.1.min.js');
             
-            //$head_items->add_javascript('/reason/js/directory.js');
+            //$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory.js');
 //            if (reason_check_authentication()) {
             if ($this->user_netid) {
-                $head_items->add_javascript('/reason/js/directory.js');
+                $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory.js');
             } else {
-                $head_items->add_javascript('/reason/js/directory_logout.js');
+                $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/directory_logout.js');
             }
             
             // iphone support; scales to screen and disables zooming

@@ -7,7 +7,7 @@ class RoyalVisitThorForm extends LutherDefaultThorForm {
     function on_every_time() {
         parent::on_every_time();
         
-        echo '<script type="text/javascript" src="/reason/js/royalvisit.js"></script>';
+        echo '<script type="text/javascript" src="'.REASON_HTTP_BASE_PATH.'js/royalvisit.js"></script>';
         
         $special_seating = $this->get_element_name_from_label('Accessibility Issues?');
         $extra_guest_ticket = $this->get_element_name_from_label('Do you want an extra guest ticket for $20?');

@@ -30,9 +30,9 @@ class JensonMedalModule extends DefaultMinisiteModule {
 		function init( $args = array() ){
 				parent::init( $args );
 				if ($head_items =& $this->get_head_items()) {
-						$head_items->add_stylesheet('/reason/jquery-ui-1.8.12.custom/css/redmond/jquery-ui-1.8.12.custom.css');
+						$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'jquery-ui-1.8.12.custom/css/redmond/jquery-ui-1.8.12.custom.css');
 						$head_items->add_javascript('/jquery/jquery_ui_latest.js');
-						$head_items->add_javascript('/reason/js/jenson_medal.js');
+						$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/jenson_medal.js');
 				}
 
 				$this->form = new disco();

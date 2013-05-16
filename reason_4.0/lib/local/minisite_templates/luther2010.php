@@ -622,7 +622,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 	{
 		// Just here as a hook for branding head items (js/css/etc.)
 		echo '<meta http-equiv="X-UA-Compatible" content="IE=edge" />'."\n";
-		$this->head_items->add_stylesheet('/reason/css/modules.css');
+		$this->head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/modules.css');
 		$this->head_items->add_stylesheet('/javascripts/highslide/highslide.css');
 		$this->head_items->add_stylesheet('/javascripts/cluetip/jquery.cluetip.css');
 		$this->head_items->add_stylesheet('/stylesheets/luther2010/master.css');
@@ -633,7 +633,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 			$this->head_items->add_stylesheet(JQUERY_UI_CSS_URL);
 			//$this->head_items->add_stylesheet('/stylesheets/luther2010/aristoJqueryUITheme.css');
 		}	
-		//echo '<link rel="stylesheet" type="text/css" href="/reason/css/modules.css" />'."\n";
+		//echo '<link rel="stylesheet" type="text/css" href="'.REASON_HTTP_BASE_PATH.'css/modules.css" />'."\n";
 		//echo '<link href="/javascripts/highslide/highslide.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
 		//echo '<link href="/javascripts/cluetip/jquery.cluetip.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
 		//echo '<link href="/stylesheets/luther2010/master.css" media="screen, projection" rel="stylesheet" type="text/css" />'."\n";
@@ -674,8 +674,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 		$this->head_items->add_javascript('/javascripts/cluetip/jquery.cluetip.js');
 		//$this->head_items->add_javascript('/javascripts/jquery.init.js');  // jquery.init.js moved to luther_footer.php
 		$this->head_items->add_javascript('/reason/jquery.watermark-3.1.3/jquery.watermark.min.js');
-		$this->head_items->add_javascript('/reason/js/jquery.tools.min.js');
-		$this->head_items->add_javascript('/reason/js/jquery.maskedinput-1.3.1.min.js');
+		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/jquery.tools.min.js');
+		$this->head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/jquery.maskedinput-1.3.1.min.js');
 	}
 
 	function create_body_tag()

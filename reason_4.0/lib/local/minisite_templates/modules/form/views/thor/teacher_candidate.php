@@ -100,8 +100,8 @@ class TeacherCandidateForm extends DefaultThorForm {
 	function on_every_time() {
 		parent::on_every_time();
 
-		echo '<script type="text/javascript" src="/reason/js/teacher_candidate.js"></script>';
-		echo '<link rel="stylesheet" type="text/css" href="/reason/jquery-ui-1.8.12.custom/css/redmond/jquery-ui-1.8.12.custom.css"></link>';
+		echo '<script type="text/javascript" src="'.REASON_HTTP_BASE_PATH.'js/teacher_candidate.js"></script>';
+		echo '<link rel="stylesheet" type="text/css" href="'.REASON_HTTP_BASE_PATH.'jquery-ui-1.8.12.custom/css/redmond/jquery-ui-1.8.12.custom.css"></link>';
 		
     // add and move <hr> elements
 		$this->add_element('hr1', 'hr');
