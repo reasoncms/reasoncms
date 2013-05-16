@@ -149,7 +149,7 @@ class CreditCardThorForm extends LutherDefaultThorForm
 	{
 	  $model =& $this->get_model();
 	  $head_items = $model->get_head_items();
-	  $head_items->add_stylesheet('/global_stock/css/onecard/mobile_form.css');
+	  $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
 	}
 			
 	
@@ -159,12 +159,12 @@ class CreditCardThorForm extends LutherDefaultThorForm
 		parent :: on_every_time();
 		
 		// Don't take credit cards on an unencrypted connection!+
-		// if( !on_secure_page() )
-		// {		
+		if( !on_secure_page() )
+		{		
 		
-		// 	header( 'Location: '.get_current_url( 'https' ) );
-		// 	exit;
-		// }
+			header( 'Location: '.get_current_url( 'https' ) );
+			exit;
+		}
 		
 
 
