@@ -136,6 +136,14 @@ class CreditCardThorForm extends DefaultThorForm
 
 
 	);
+
+
+	function custom_init()
+	{
+	  $model =& $this->get_model();
+	  $head_items = $model->get_head_items();
+	  $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
+	}
 			
 	
 	function on_every_time()
