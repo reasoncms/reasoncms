@@ -17,7 +17,7 @@ reason_include_once( 'minisite_templates/modules/default.php' );
  */
 include_once(DISCO_INC . 'disco.php');
 
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'NorgeFormModule';
+$GLOBALS[ '_module_class_names' ][ 'norge_form/'.basename( __FILE__, '.php' ) ] = 'NorgeFormModule';
 
 class NorgeFormModule extends DefaultMinisiteModule
 {
@@ -81,7 +81,9 @@ class NorgeFormModule extends DefaultMinisiteModule
 
 		if($head_items =& $this->get_head_items())
 		{
-                    $head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/norge_form.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/norge_form.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
+
 		}
 	}
 	/**

@@ -13,7 +13,7 @@
 reason_include_once('minisite_templates/modules/default.php');
 
 
-$GLOBALS['_module_class_names'][basename(__FILE__, '.php')] = 'StudySkillsAssessmentModule';
+$GLOBALS['_module_class_names'][ 'study_skills_assessment/'.basename(__FILE__, '.php')] = 'StudySkillsAssessmentModule';
 
 class StudySkillsAssessmentModule extends DefaultMinisiteModule {
 

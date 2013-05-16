@@ -95,6 +95,7 @@ class DorianJHCampsModule extends DefaultMinisiteModule
 		{
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/form.css');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/dorian_jh_camps.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
 		}
 		
 		/** reload pages to save session variables after 50 minutes (3000 seconds)

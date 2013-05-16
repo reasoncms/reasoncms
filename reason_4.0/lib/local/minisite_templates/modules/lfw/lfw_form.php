@@ -16,7 +16,7 @@ reason_include_once( 'minisite_templates/modules/default.php' );
  */
 include_once(DISCO_INC . 'disco.php');
 
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'LfwFormModule';
+$GLOBALS[ '_module_class_names' ][ 'lfw/'.basename( __FILE__, '.php' ) ] = 'LfwFormModule';
 
 /**
  * Run the homecoming registration.
@@ -101,6 +101,7 @@ class LfwFormModule extends DefaultMinisiteModule
 		{
 			$head_items->add_stylesheet('/javascripts/form/form.css');
 			$head_items->add_javascript('/javascripts/form/lfw.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
 		}
 	}//}}}
 	

@@ -1,9 +1,9 @@
 <?php
 /**
- * Dorian Orchestra Festival Director Nomination Registration Module
+ * Dorian Vocal Festival Director Nomination Registration Module
  *
- * @author Lucas Welper
- * @since 2010-11-03
+ * @author Steve Smith and Lucas Welper
+ * @since 2010-09-20
  * @package MinisiteModule
  */
 
@@ -16,14 +16,14 @@ reason_include_once( 'minisite_templates/modules/default.php' );
  */
 include_once(DISCO_INC . 'disco.php');
 
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'DorianOrchestraModule';
+$GLOBALS[ '_module_class_names' ][ 'dorian_vocal/'.basename( __FILE__, '.php' ) ] = 'DorianVocalModule';
 
 /**
  * Run the Dorian Vocal Registration
  * @author Steve Smith
  * @package MinisiteModule
  */
-class DorianOrchestraModule extends DefaultMinisiteModule
+class DorianVocalModule extends DefaultMinisiteModule
 {
 	/**
 	 * Before we clean the request vars, we need to init the controller so we know what we're initing
@@ -31,14 +31,14 @@ class DorianOrchestraModule extends DefaultMinisiteModule
 	function pre_request_cleanup_init()
 	{
 		include_once( DISCO_INC.'controller.php' );
-		reason_include_once( 'minisite_templates/modules/dorian_orchestra/director_info.php' );
-		reason_include_once( 'minisite_templates/modules/dorian_orchestra/student_info.php' );
-		reason_include_once( 'minisite_templates/modules/dorian_orchestra/confirmation.php' );
+		reason_include_once( 'minisite_templates/modules/dorian_vocal/director_info.php' );
+		reason_include_once( 'minisite_templates/modules/dorian_vocal/student_info.php' );
+		reason_include_once( 'minisite_templates/modules/dorian_vocal/confirmation.php' );
 		
 		$this->controller = new FormController;
 		$this->controller->set_session_class('Session_PHP');
 		$this->controller->set_session_name('REASON_SESSION');
-		$this->controller->set_data_context('dorian_orchestra');
+		$this->controller->set_data_context('dorian_vocal');
 		$this->controller->show_back_button = false;
 		$this->controller->clear_form_data_on_finish = true;
 		$this->controller->allow_arbitrary_start = false;
@@ -109,7 +109,8 @@ class DorianOrchestraModule extends DefaultMinisiteModule
 		if($head_items =& $this->get_head_items())
 		{
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/form.css');
-			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/dorian_orchestra.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/dorian_vocal.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
 		}
 	}//}}}
 
@@ -121,8 +122,8 @@ class DorianOrchestraModule extends DefaultMinisiteModule
 	{
 		if( !empty( $this->request[ 'r' ] ) AND !empty( $this->request[ 'h' ] ) )
 		{
-			reason_include_once( 'minisite_templates/modules/dorian_orchestra/dorian_orchestra_confirmation.php' );
-			$dvc = new DorianOrchestraConfirmation;
+			reason_include_once( 'minisite_templates/modules/dorian_vocal/dorian_vocal_confirmation.php' );
+			$dvc = new DorianVocalConfirmation;
 			$dvc->set_ref_number( $this->request[ 'r' ] );
 			$dvc->set_hash( $this->request[ 'h' ] );
 
@@ -134,7 +135,7 @@ class DorianOrchestraModule extends DefaultMinisiteModule
 			{
 				echo $dvc->get_error_message();
 			}
-			// MUST reconnect to Reason database.  DorianOrchestraConfirmation connects to dorian_orchestra_nomination for info.
+			// MUST reconnect to Reason database.  DorianVocalConfirmation connects to dorian_vocal_nomination for info.
 			connectDB( REASON_DB );
 		}
 		else

@@ -12,7 +12,7 @@
  */
 reason_include_once( 'minisite_templates/modules/default.php' );
 
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'OnlineGiftModule';
+$GLOBALS[ '_module_class_names' ][ 'gift_form/'.basename( __FILE__, '.php' ) ] = 'OnlineGiftModule';
 
 /**
  * Run the online gift.
@@ -118,6 +118,7 @@ class OnlineGiftModule extends DefaultMinisiteModule
 		{
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/giftform.css');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/giftform.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
 		}
 		// Insert refresh headers when in kiosk mode
 		if ($this->params['kiosk_mode'])

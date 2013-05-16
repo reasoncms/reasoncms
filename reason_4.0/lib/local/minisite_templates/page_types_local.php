@@ -137,7 +137,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'post_sidebar' => 'blurb',	
 	),
 	'all_band' => array(
-		'main_post' => 'all_band',
+		'main_post' => 'all_band/all_band',
 	),
 	'alumni_auction_registration' => array(
 		'main_post' => 'alumni_auction_pricing',
@@ -214,7 +214,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'discovery_camps/discovery_camps',
 	),
 	'dorian_band_nomination' => array(
-		'main_post' => 'dorian_band',
+		'main_post' => 'dorian_band/dorian_band',
 	),
 	'dorian_jh_camp' => array(
 		'main_post' => 'dorian_jh_camps/dorian_jh_camps',
@@ -223,7 +223,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'dorian_sh_camp/dorian_sh_camp',
 	),
 	'dorian_vocal_nomination' => array(
-		'main_post' => 'dorian_vocal',
+		'main_post' => 'dorian_vocal/dorian_vocal',
 	),
 	'events' => array(
 		'main_post' => 'luther_events',
@@ -281,10 +281,10 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar' => 'main_blurb',
 	),
 	'gift_page_engine' => array(
-		'main_post' => 'gift_form',
+		'main_post' => 'gift_form/gift_form',
 	),
 	'homecoming_registration' => array(
-		'main_post' => 'homecoming_registration',
+		'main_post' => 'homecoming_registration/homecoming_registration',
 	),
 	'homecoming_attendees' => array(
 		'main_post' => 'homecoming_attendees',
@@ -322,7 +322,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'jenson_medal_voting',
 	),
 	'lfw_registration' => array(
-		'main_post' => 'lfw_form',
+		'main_post' => 'lfw/lfw_form',
 	),
 	'luther2010_admissions' => array(
 		'main_head' => array(
@@ -837,7 +837,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'main_post' => 'net_price_calculator',
 	),
 	'norge_conference' => array(
-		'main_post' => 'norge_form',
+		'main_post' => 'norge_form/norge_form',
 	),
 	'artwork_module' => array(
 		'main_post' => 'artwork_module',
@@ -954,7 +954,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sidebar' => 'blurb',
 	),
 	'study_skills_assessment'=> array(
-		'main_post'=> 'study_skills_assessment', 
+		'main_post'=> 'study_skills_assessment/study_skills_assessment', 
 	),
 	'stream' => array(
 		'main' => 'stream',
@@ -968,7 +968,7 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'sub_nav_3'=> 'twitter',
 	),
 	'transcript_request' => array(
-		'main_post' => 'transcript_request',
+		'main_post' => 'transcript_request/transcript_request',
 	),
 	'webcams' => array(
 		'main' => 'content',

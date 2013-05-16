@@ -16,7 +16,7 @@ reason_include_once( 'minisite_templates/modules/default.php' );
  */
 include_once(DISCO_INC . 'disco.php');
 
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'TranscriptRequestModule';
+$GLOBALS[ '_module_class_names' ][ 'transcript_request/'.basename( __FILE__, '.php' ) ] = 'TranscriptRequestModule';
 
 /**
  * Run the transcript request form.
@@ -119,6 +119,7 @@ class TranscriptRequestModule extends DefaultMinisiteModule
 		{
 			//$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/form.css');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/transcripts.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
 		}
 	}//}}}
 	

@@ -16,7 +16,7 @@ reason_include_once( 'minisite_templates/modules/default.php' );
  */
 include_once(DISCO_INC . 'disco.php');
 
-$GLOBALS[ '_module_class_names' ][ basename( __FILE__, '.php' ) ] = 'HomecomingRegistrationModule';
+$GLOBALS[ '_module_class_names' ][ 'homecoming_registration/'.basename( __FILE__, '.php' ) ] = 'HomecomingRegistrationModule';
 
 /**
  * Run the homecoming registration.
@@ -101,6 +101,7 @@ class HomecomingRegistrationModule extends DefaultMinisiteModule
 		{
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/form.css');
 			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/homecoming_reg.js');
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'js/disable_submit.js');
 		}
 	}//}}}
 	
