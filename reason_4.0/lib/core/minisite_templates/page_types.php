@@ -1350,6 +1350,11 @@
 				'max_num_items' => 5,
 			),
 		),
+		'image_slideshow_before_content_events_sidebar' => array(
+			'main' => 'image_slideshow',
+			'main_post' => 'content',
+			'sidebar' => 'events_mini',
+		),
 		'image_slideshow_manual' => array(
 			'main_post' => array('module'=>'image_slideshow','slideshow_type'=>'manual'),
 			'sidebar' => '',
