@@ -1211,8 +1211,13 @@ class AdminPage
 					if($show)
 					{
 						$link = REASON_STATS_URI_BASE;
-						$uname = posix_uname();
-						$link .=  strtolower($uname['nodename']).'/';
+						if (function_exists('posix_uname'))
+						{
+							$uname = posix_uname();
+							$uname_host = $uname['nodename'];
+						}
+						else $uname_host = php_uname('n');
+						$link .=  strtolower($uname_host).'/';
 						$link .= $_SERVER['HTTP_HOST'].'/';
 						$link .= $site->get_value( 'unique_name' ).'/';
 						return $link;
