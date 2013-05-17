@@ -29,7 +29,7 @@ try {
       $statement->bindValue(':user', $user);
     }
     else if ($action == 'tender' && $patron > 0) {
-      $query = "Select Tender, Balance from Av_user_pcs_PatronAccount pa inner join Av_user_pcs_Patron p on p.Patron_SK = pa.Patron_SK_FK and p.email like '%'+:user+'@luther.edu%' where Patron_SK_FK=:patron and Tender <> 'Charge'  union Select 'Charge' as 'Tender', sum(tl.Transaction_Amount) from Av_user_pcs_TransactionLog tl inner join Av_user_pcs_Patron p on p.Patron_SK = tl.Patron_SK_FK and p.email like '%'+:user+'@luther.edu%' where Patron_SK_FK=:patron and Transaction_Amount <> 0 and tl.Process_Date_Time between :startDate and dateadd(dd, 1, :endDate) and tl.Tender='Charge' group by tl.ID_Number ";
+      $query = "Select Tender, Balance from Av_user_pcs_PatronAccount pa inner join Av_user_pcs_Patron p on p.Patron_SK = pa.Patron_SK_FK and p.email like '%'+:user+'@luther.edu%' where Patron_SK_FK=:patron and Tender <> 'Charge'  union Select 'Charge' as 'Tender', sum(tl.Transaction_Amount) from Av_user_pcs_TransactionLog tl inner join Av_user_pcs_Patron p on p.Patron_SK = tl.Patron_SK_FK and p.email like '%'+:user+'@luther.edu%' where Patron_SK_FK=:patron and Transaction_Amount <> 0 and tl.Process_Date_Time between :startDate and dateadd(dd, 1, :endDate) and tl.Tender='Charge' and tl.Function='Sale' group by tl.ID_Number ";
       $statement=$dbh->prepare($query);
       $statement->bindValue(':user', $user);
       $statement->bindValue(':patron', $patron);
