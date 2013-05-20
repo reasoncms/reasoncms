@@ -100,11 +100,12 @@ $(document).ready(function() {
                         max_page    : Math.ceil(($('#transactions tr').length)/20.0),
                         paged        : function(page) {
                             // hide all paragraphs
-                            $('#transactions').hide();
-                            $('#transactions tr').hide();
+                            //$('#transactions').hide();
+                            //$('#transactions tr').hide();
                             $('#transactions tr').filter(':first').show();
                             $('#transactions tr').slice(((page-1)*20)+1, (page*20)+1).show();
-                            $('#transactions').fadeIn('slow');
+                            $("#transactions").effect("highlight", {}, 1000);
+                            //$('#transactions').fadeIn('slow');
                         }
                     });
                 },
