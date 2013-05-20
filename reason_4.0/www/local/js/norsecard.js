@@ -101,7 +101,7 @@ $(document).ready(function() {
                         paged        : function(page) {
                             // hide all paragraphs
                             //$('#transactions').hide();
-                            //$('#transactions tr').hide();
+                            $('#transactions tr').hide();
                             $('#transactions tr').filter(':first').show();
                             $('#transactions tr').slice(((page-1)*20)+1, (page*20)+1).show();
                             $("#transactions").effect("highlight", {}, 1000);
