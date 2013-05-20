@@ -83,7 +83,7 @@ $(document).ready(function() {
                     $('#transactions').append('<tr><th>Transaction Time</th><th>Terminal</th><th>Function</th><th>Previous Balance</th><th>Transaction Amount</th><th>Resulting Balance</th><th>Tender</th></tr>');
                     for (var i = 0; i < json.results.length; i++) {
                         var t = json.results[i];
-                        $('#transactions').append('<tr><td>' + t.Transaction_Time + '</td><td>'+ t.Terminal + '</td><td>' + t.transaction_function + '</td><td>' + parseFloat(t.Previous_Balance, 10).formatMoney(2,'.',',') + '</td><td>' + parseFloat(t.Transaction_Amount, 10).formatMoney(2,'.',',') + '</td><td>' + parseFloat(t.Resulting_Balance,10).formatMoney(2,'.',',') + '</td><td>' + t.Tender + '</td></tr>');
+                        $('#transactions').append('<tr><td>' + t.Transaction_Time + '</td><td>'+ t.Terminal + '</td><td>' + t.transaction_function + '</td><td>' + parseFloat(t.Transaction_Amount, 10).formatMoney(2,'.',',') + '</td><td>' + t.Tender + '</td></tr>');
                     }
                     $('#transactions tr:odd').css('background-color', '#AFD0EF');
                     $('#transactions').after('<div class="pagination"></div>');
