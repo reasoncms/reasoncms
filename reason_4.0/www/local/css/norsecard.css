@@ -9,3 +9,7 @@ div.content.content-primary {
 table#tender {
     width:50%;
 }
+#from, #to {
+	padding: 5px;
+	margin: 10px;
+}
