@@ -118,7 +118,12 @@ $(document).ready(function() {
             $('.pagination').remove();
         }
     });
-    $("#from,#to").change( function() {
+    $("#from").change( function() {
+        $("#from").effect("highlight", {}, 1000);
+        $('#account-select').change();
+    });
+    $("#to").change( function() {
+        $("#to").effect("highlight", {}, 1000);
         $('#account-select').change();
     });
 });
