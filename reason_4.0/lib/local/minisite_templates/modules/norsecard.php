@@ -83,7 +83,7 @@ class NorseCardModule extends DefaultMinisiteModule {
             echo "Logged in as <b>" . $logged_user . "</b> ::  ";
             echo "<a href='/login/?logout=1'>Logout</a>";
             echo "</p>";
-            echo '<div><label for="from">From</label><input type="text" id="from" name="from" /><label for="to">to</label><input type="text" id="to" name="to" /></div>';
+            echo '<div><label for="from">From</label><input type="text" id="from" name="from" size="10"/><label for="to">to</label><input type="text" id="to" name="to" size="10" /></div>';
             echo "<span>Select an account: </span><select id='account-select'><option>--</option></select>";
             //$this->display_form();
             echo "<div id='norsecard-data'></div>";
