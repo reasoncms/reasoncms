@@ -51,7 +51,7 @@
 		
 		function process()
 		{
-
+			$this->strip_tags_from_user_input = false;
 			parent::process();
 		}
 	}
