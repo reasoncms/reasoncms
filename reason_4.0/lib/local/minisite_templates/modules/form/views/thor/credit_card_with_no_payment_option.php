@@ -19,6 +19,14 @@ $GLOBALS['_form_view_class_names'][basename(__FILE__, '.php')] = 'CreditCardNoPa
  */
 class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 
+		function custom_init()
+		{
+			parent::custom_init();
+			$model =& $this->get_model();
+			$head_items = $model->get_head_items();
+			$head_items->add_javascript(REASON_HTTP_BASE_PATH.'local/js/credit_card.js');
+		}
+
 		function on_every_time() {
 				  
 				// add this element for the credit_card.js
