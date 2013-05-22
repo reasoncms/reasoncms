@@ -307,10 +307,13 @@ class Tyr
 		if ( $add_disclaimer )
 		{
 			if (isset($_SERVER['SERVER_NAME']) && isset($_SERVER['REQUEST_URI']))
-				$where = "the <a href='http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."'>".FULL_ORGANIZATION_NAME." website</a>";
+			{
+				$html_url = 'http://'.htmlspecialchars($_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
+				$where = ' at <a href="'.$html_url.'">'.$html_url.'</a>';
+			}
 			else
-				$where = "the ".FULL_ORGANIZATION_NAME." website";
-			$message .= '<p>This message was automatically generated when someone submitted a form to you from '.$where.'. Please direct problems or questions about this service to <a href="mailto:'.$this->admin_email.'">'.$this->admin_email.'</a>.</p>'."\n";
+				$where = '';
+			$message .= '<p>This message was automatically generated when someone submitted a form to you from the '.FULL_ORGANIZATION_NAME.' website'.$where.'. Please direct problems or questions about this service to <a href="mailto:'.$this->admin_email.'">'.$this->admin_email.'</a>.</p>'."\n";
 		}
 		$message .= '</body></html>'."\n";
 	
