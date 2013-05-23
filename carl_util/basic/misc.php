@@ -809,5 +809,80 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 		trigger_error('Unrecognized http response code '.$status_code);
 		return false;
 	}
+	
+	/**
+	 * An exec replacement that supports an optional timeout parameter.
+	 *
+	 * - On Windows the timeout is ignored.
+	 * - Exit status appears to be unreliable. Don't use this if you depend on it.
+	 */
+	function exec_with_timeout($cmd, $timeout = NULL, &$output = NULL, &$exit_status = NULL)
+	{
+		if (!server_is_windows())
+		{
+			$exit_status = proc_with_timeout($cmd, null, $stdout, $stderr, $timeout);
+			if (is_array($output))
+			{
+				$output = array_merge($output, preg_split("/\r\n|\n|\r/", $stdout));
+			}
+		}
+		else exec($cmd, &$output, &$exit_status);
+	}
+
+	/**
+	 * A proc_open based function that appears to work and lets me set a timeout.
+	 *
+	 * In my testing it seems like the exitcode is not properly returned on some systems.
+	 *
+	 * Where possible, use stdout or a more definitive test (like file existence) to determine if things worked.
+	 *
+	 * from http://stackoverflow.com/questions/3407939/shell-exec-timeout-management-exec
+	 */
+	function proc_with_timeout($cmd, $stdin=null, &$stdout, &$stderr, $timeout=false)
+	{
+		$pipes = array();
+		$process = proc_open(
+			$cmd,
+			array(array('pipe','r'),array('pipe','w'),array('pipe','w')),
+			$pipes
+		);
+		$start = time();
+		$stdout = '';
+		$stderr = '';
+
+		if(is_resource($process))
+		{
+			stream_set_blocking($pipes[0], 0);
+			stream_set_blocking($pipes[1], 0);
+			stream_set_blocking($pipes[2], 0);
+			fwrite($pipes[0], $stdin);
+			fclose($pipes[0]);
+		}
+
+		while(is_resource($process))
+		{
+			//echo ".";
+			$stdout .= stream_get_contents($pipes[1]);
+			$stderr .= stream_get_contents($pipes[2]);
+
+			if($timeout !== false && time() - $start > $timeout)
+			{
+				proc_terminate($process, 9);
+				return 1;
+			}
+
+			$status = proc_get_status($process);
+			if(!$status['running'])
+			{
+				fclose($pipes[1]);
+				fclose($pipes[2]);
+				proc_close($process);
+				return $status['exitcode'];
+			}
+
+			usleep(100000);
+		}
+		return 1;
+	}
 }
 ?>

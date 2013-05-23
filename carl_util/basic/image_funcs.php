@@ -19,6 +19,7 @@ require_once 'misc.php';
  * Note that the image will maintain its aspect ratio and be fitted to a box of the given width and height.
  *
  * @todo check whether gd_image is working properly 
+ * @todo consider updating remaining imagemagick calls to use exec_with_timeout
  *
  * Raises a {@link WARNING} if no image resize method is available.
  * 
@@ -96,14 +97,19 @@ function convert_to_png($orig)
 }
 
 /** Convert a PDF to a raster image by rasterizing and reducing to achieve antialiasing
+ *
+ * Where possible, we enforce a time limit on getting the dimensions and on the conversion, as some PDF
+ * conversions seem to result in runaway processes that can slow the whole server down.
  * 
  * @param $path path to non-web-image file
  * @param $format the format to convert to
  * @param $max_size maximum size (in megapixels) for the resulting image
+ * @param $dimension_timeout seconds to wait to determine dimensions default 10
+ * @param $convert_timeout seconds to wait for conversion to complete default 10
  *
  * @return the path of the converted file, or false if rasterization fails
  */
-function rasterize_pdf($path, $format, $max_size = 4)
+function rasterize_pdf($path, $format, $max_size = 4, $dimension_timeout = 10, $convert_timeout = 10)
 {	
 	$new_path = change_extension($path, $format);
 
@@ -113,21 +119,29 @@ function rasterize_pdf($path, $format, $max_size = 4)
 	$resize = 25;
 
 	// Handle cases where the image is too big for rasterizing at 800ppi
-	if ($max_size && ($dim = get_dimensions_image_magick($path)))
+	if ($max_size)
 	{
-		$max_pixels = $max_size*1024000;
-		$img_inches = $dim['height']/72 * $dim['width']/72;
+		if ($dim = get_dimensions_image_magick($path, $dimension_timeout))
+		{
+			$max_pixels = $max_size*1024000;
+			$img_inches = $dim['height']/72 * $dim['width']/72;
 					
-		// If the temp image created by rasterization at 800ppi would be more than four times 
-		// our maximum image size, set the density (ppi) to a value such that the final 
-		// image will have the max resolution after being shrunk to 50% -- this provides adequate 
-		// antialiasing at larger pixel sizes.
-
-		if ($img_inches * 800^2 > $max_pixels * 4) 
-		{	
-			$density = (int) sqrt(($max_pixels*2)/$img_inches);
-			$resize = 50;
-		} 
+			// If the temp image created by rasterization at 800ppi would be more than four times 
+			// our maximum image size, set the density (ppi) to a value such that the final 
+			// image will have the max resolution after being shrunk to 50% -- this provides adequate 
+			// antialiasing at larger pixel sizes.
+	
+			if ($img_inches * 800^2 > $max_pixels * 4) 
+			{	
+				$density = (int) sqrt(($max_pixels*2)/$img_inches);
+				$resize = 50;
+			} 
+		}
+		else
+		{
+			trigger_error('rasterize_pdf failed because pdf dimensions could be be grabbed.');
+			return false;
+		}
 	}
 	
 	$args = array(
@@ -137,25 +151,27 @@ function rasterize_pdf($path, $format, $max_size = 4)
 		escapeshellarg($path.'[0]'),
 		escapeshellarg($new_path),
 		);
-	$exit_status = -1;
+	
 	$command = implode(' ', $args);
-	exec($command, $output, $exit_status);
-	if ($exit_status != 0) {
-		// not always error!
-		 trigger_error('Image convert from pdf failed. Attempted this: "'.$command.'". Error output: "'.implode('; ', $output).'". Error status code: "'.$exit_status.'"', WARNING);
-		return false;
-	} else {
+	exec_with_timeout($command, $convert_timeout, $output);
+	if (file_exists($new_path))
+	{
 		return $new_path;
-	}	
+	}
+	else
+	{
+		trigger_error('rasterize_pdf failed. Attempted this: "'.$command.'"');
+	}
 }
 
 /**
  * @param $path path to non-web-image file
  * @param $format the format to convert to
+ * @param $timeout seconds to wait to for conversion default 20
  *
  * @return the path of the converted file, or false if conversion fails
  */
-function convert_to_web_image($path, $format)
+function convert_to_web_image($path, $format, $timeout = 20)
 {			
 	$sharpen = true;
 	$new_path = change_extension($path, $format);
@@ -171,45 +187,57 @@ function convert_to_web_image($path, $format)
 	$args[] = escapeshellarg($new_path);
 	
 	$output = array();
+	$command = implode(' ', $args);
 	$exit_status = -1;
-	exec(implode(' ', $args), $output, $exit_status);
-	if ($exit_status != 0) {
-		// We know some psds don't work -- don't actually report these errors
-		if(get_extension($path) != 'psd')
-			trigger_error('Image convert failed: '. $exit_status .' ' .  implode('; ', $output), WARNING);
-		return false;
-	} else {
+	exec_with_timeout($command, $timeout, $output);
+	if (file_exists($new_path))
+	{
 		return $new_path;
-	}	
+	}
+	else
+	{
+		// We know some psds don't work -- don't actually report these errors
+		if (get_extension($path) != 'psd')
+		{
+			trigger_error('convert_to_web_image failed: Attempted this: "'.$command.'"');
+		}
+		return false;
+	}
 }
+
 /**
  * Uses command line ImageMagick to determine height and width of given image
  *
  * @param $path to image file
- * 
+ * @param $timeout int timeout in seconds default 30
+ *
  * @return an array with keys 'height' and 'width' storing corresponding values of image specified
  * by $path, or false if unable to determine dimensions 
  */
 
-function get_dimensions_image_magick($path)
+function get_dimensions_image_magick($path, $timeout = 30)
 {
 	$get_info_args = array('identify', 
 							'-format',
 							"'%w\n %h\n'"
 							);
 	$get_info_args[] = escapeshellarg($path);
+	$command = implode(' ', $get_info_args);
 	$result = array();
-	exec(implode(' ', $get_info_args), $result, $exit_stat);
 	
-	if($exit_stat == 0)
+	exec_with_timeout($command, $timeout, $result);
+	if (isset($result[0]) && isset($result[1]))
 	{
 		$width = trim($result[0]);
 		$height = trim($result[1]);
 		return array('height' => $height, 'width' => $width);
 	}
 	else
+	{
 		return false;
+	}
 }
+
 /**
  * @param $path of the file
  * 
@@ -313,8 +341,6 @@ function _imagemagick_crop_image($nw,$nh,$source,$target,$sharpen)
 	
 	$x=0;
 	$y=0;
-	
-//	pray($info);
 
 	$resize_str="";
 	if($nw<=$nh && $or>=$nr)
