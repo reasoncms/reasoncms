@@ -73,7 +73,7 @@ class CreditCardNoPaymentThorForm extends CreditCardThorForm {
 						$payment_amount = preg_replace('/[^\d\.]/', '', $match[1]);
 
 						// If there is a hidden field called 'no_payment_option' then allow the user to go to the thank you page
-				} elseif ($this->get_element_name_from_label('no_payment_option')) {
+				} elseif ($this->is_element('no_payment_option')) {
 						$no_payment = true;
 				} else {
 
