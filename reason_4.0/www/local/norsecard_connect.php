@@ -1,10 +1,11 @@
 <?php
 include_once('reason_header.php');
 reason_include_once('function_libraries/user_functions.php');
+include_once(CARL_UTIL_INC.'basic/url_funcs.php');
 
 try {
 
-  if( !on_secure_page() ) {   
+  if ( !on_secure_page() ) {   
     header( 'Location: '.get_current_url( 'https' ) );
     exit;
   }
