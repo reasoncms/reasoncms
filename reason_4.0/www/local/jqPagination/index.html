@@ -1,0 +1,126 @@
+<!doctype html>  
+<html dir="ltr" lang="en-US">
+	<head>
+
+		<title>jqPagination, a jQuery pagination plugin (obviously)</title>
+	
+		<!-- generic demo style -->
+		<link rel="stylesheet" href="./demo/css/reset.css" />
+		<link rel="stylesheet" href="./demo/css/demo.css" />
+	
+		<!-- jqPagination styles -->
+		<link rel="stylesheet" href="./css/jqpagination.css" />
+		
+		<!-- scripts -->
+		<script src="./js/jquery-1.7.2.min.js"></script>
+		<script src="./js/jquery.jqpagination.js"></script>
+		<script src="./js/scripts.js"></script>
+		
+		<!-- generic demo script -->
+		<script src="./demo/js/demo.js"></script>
+		
+		<!-- shiv me up baby! -->
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		
+	</head>
+	<body>
+
+		<a href="http://github.com/beneverard/jqPagination"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 123;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+		<div id="header">
+			<div id="header-wrapper">
+				<h1>jqPagination</h1>
+				<h2>A jQuery pagination plugin (obviously)</h2>
+				<p><a href="#introduction">Introduction</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> |  <a href="#customisation">Customisation</a> | <a href="#feedback">Feedback</a></p>
+			</div>
+			<div class="gradient">&nbsp;</div>
+		</div>
+		<div id="wrapper">
+			<h2 id="introduction">Introduction</h2>
+			<p>jqPagination is a jQuery plugin that provides a newer method of pagination for your web site or application. Instead of displaying a list of page numbers like traditional pagination methods jqPagination uses an interactive 'Page 1 of 5' input that, when selected, allows the user to enter their desired page number. The plugin will ensure that only valid pages can be selected, a valid request will result in the paged callback. First, previous, next and last buttons work out of the box, but are optional.</p>
+			<p><a href="https://github.com/beneverard/jqPagination/zipball/master" class="large blue button">Download</a> <a href="https://github.com/beneverard/jqPagination/" class="large blue button">Fork on GitHub</a></p>
+			<p>Here are a few key points:</p>
+			<ul>
+				<li>Design agnostic</li>
+				<li>Customisable</li>
+				<li>Degrades beautifully</li>
+				<li>Super simple to integrate with your app / site</li>
+				<li>Uses jQuery... who doesn't love jQuery?!</li>
+			</ul>
+			<h2 id="demo">Demo</h2>
+			<p>It's oversized too, so you can try it when you're drunk!</p>
+			<div class="gigantic pagination">
+			    <a href="#" class="first" data-action="first">&laquo;</a>
+			    <a href="#" class="previous" data-action="previous">&lsaquo;</a>
+			    <input type="text" readonly="readonly" />
+			    <a href="#" class="next" data-action="next">&rsaquo;</a>
+			    <a href="#" class="last" data-action="last">&raquo;</a>
+			</div>
+			<div class="clearfix"></div> <!-- should probably have a shower after that -->
+			<p><a href="#" class="show-log">Show / hide event log:</a></p>
+			<ul class="log"></ul>
+			<h2 id="installation">Installation</h2>
+			<p>Installation is super easy, for a basic setup you'll need the following HTML:</p>
+<pre>&lt;div class=&quot;pagination&quot;&gt;
+    &lt;a href=&quot;#&quot; class=&quot;first&quot; data-action=&quot;first&quot;&gt;&amp;laquo;&lt;/a&gt;
+    &lt;a href=&quot;#&quot; class=&quot;previous&quot; data-action=&quot;previous&quot;&gt;&amp;lsaquo;&lt;/a&gt;
+    &lt;input type=&quot;text&quot; readonly=&quot;readonly&quot; data-max-page=&quot;40&quot; /&gt;
+    &lt;a href=&quot;#&quot; class=&quot;next&quot; data-action=&quot;next&quot;&gt;&amp;rsaquo;&lt;/a&gt;
+    &lt;a href=&quot;#&quot; class=&quot;last&quot; data-action=&quot;last&quot;&gt;&amp;raquo;&lt;/a&gt;
+&lt;/div&gt;</pre>
+			<p>And now we'll need to initialise the plugin against our HTML:</p>
+<pre>$('.pagination').jqPagination({
+    paged: function(page) {
+        // do something with the page variable
+    }
+});</pre>
+			<h2 id="customisation">Customisation</h2>
+			<p>jqPagination is built to be basic, but it does have a couple options and callbacks for customisation.</p>
+			<h3>Options</h3>
+			<p><strong>current_page</strong> - option, default: 1
+			<br />Sets the current page, can also be set using the <code>current-page</code> data attribute on the input element.</p>
+			<p><strong>max_page</strong> - option, default: null
+			<br />Sets the maximum page, if this option is left null we'll use the <code>max-page</code> data attribute instead, if that doesn't exist we'll assume we only have one page.</p>
+			<p><strong>page_string</strong> - option, default: 'Page {current_page} of {max_page}'
+			<br />The string to base the input value on, no restrictions on the string, use <code>{current_page}</code> and <code>{max_page}</code> placeholders to allow the plugin to replace the respective numbers.</p>
+			<h3>Callbacks</h3>
+			<p><strong>paged</strong> - callback, params: page
+			<br />The paged callback is called when a valid page request has been made, the page variable simply contains the page requested.</p>
+			<h3>Methods</h3>
+			<p><strong>option</strong> - <code>.jqPagination('option', key [, value])</code></p>
+			<p>The option method allows to get / set (when supplied with a value) the following values</p>
+			<ul>
+				<li>current_page</li>
+				<li>max_page</li>
+			</ul>
+			<p>Setting these values will call their respetive internal functions, and thus will perform other actions such as updating the input text.</p>
+			<h2 id="feedback">Feedback and Support</h2>
+			<p>If you feel improvements can be made to jqPagination <a href="http://twitter.com/ilmv">tweet me</a> or <a href="http://github.com/beneverard/jqPagination/">fork the project</a> and put in a pull request. If you want to report a bug head on over to <a href="https://github.com/beneverard/jqPagination/issues">GitHub issues</a>. If you're having problems ask a question on Stack Overflow and tag the question with <code>jqpagination</code>.</p>
+		</div>
+		<div id="footer">
+			<div class="gradient">&nbsp;</div>
+			<div id="footer-wrapper">
+				<p>&copy; Ben Everard 2013</p>
+			</div>
+		</div>
+
+		<!-- analytics -->
+
+		<script type="text/javascript">
+
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-6229813-16']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-	analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+
+		</script>
+
+	</body>
+</html>
