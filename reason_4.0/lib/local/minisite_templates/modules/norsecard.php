@@ -78,6 +78,10 @@ class NorseCardModule extends DefaultMinisiteModule {
     }
     
     function run(){
+        if( !on_secure_page() ) {
+            header( 'Location: '.get_current_url( 'https' ) );
+            exit;
+        }
         if ($logged_user = reason_check_authentication()) {
             echo "<p class='norsecard_head'>";
             echo "Logged in as <b>" . $logged_user . "</b> ::  ";

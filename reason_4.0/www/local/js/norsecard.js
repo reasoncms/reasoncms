@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $.ajax({
-        url: 'https://reasondev.luther.edu/reason/norsecard_connect.php?action=users',
+        url: '/reason/norsecard_connect.php?action=users',
         dataType: 'json',
         success: function(json){
             for (var i = 0; i< json.results.length; i++) {
@@ -54,7 +54,7 @@ $(document).ready(function() {
             var to = $.datepicker.formatDate('mm/dd/yy', $('#to').datepicker("getDate"));
   
             $.ajax({
-                url: 'https://reasondev.luther.edu/reason/norsecard_connect.php?action=tender&patron='+this.value+'&startdate='+from+'&enddate='+to,
+                url: '/reason/norsecard_connect.php?action=tender&patron='+this.value+'&startdate='+from+'&enddate='+to,
                 dataType: 'json',
                 success: function(json) {
                     $('#tender').html('');
@@ -74,7 +74,7 @@ $(document).ready(function() {
             });
 
             $.ajax({
-                url: 'https://reasondev.luther.edu/reason/norsecard_connect.php?action=transactions&patron='+this.value+'&startdate='+from+'&enddate='+to,
+                url: '/reason/norsecard_connect.php?action=transactions&patron='+this.value+'&startdate='+from+'&enddate='+to,
                 dataType: 'json',
                 success: function(json) {
                     $('#transactions').html('');

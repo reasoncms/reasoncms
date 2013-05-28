@@ -3,6 +3,12 @@ include_once('reason_header.php');
 reason_include_once('function_libraries/user_functions.php');
 
 try {
+
+  if( !on_secure_page() ) {   
+    header( 'Location: '.get_current_url( 'https' ) );
+    exit;
+  }
+
   # MS SQL Server and Sybase with PDO_DBLIB
   $dbh = new PDO("dblib:host=odyssey.luther.edu:2638;dbname=odyssey", "pcsuser", "viewonly");
 
