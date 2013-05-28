@@ -135,26 +135,32 @@ class DiscoveryCampsOne extends FormStep
                     Adventurers</em>',
             ),
             'kindernature_1' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => '
-                    June 24-28
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    pre-K
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    $55',
-                'comments' => '<br><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    Kindernature</em>'
+                'type'=>'solidtext',
+                'display_name'=>'<strike>Kindernature</strike>',
+                'comments'=>'<span style="color:red;">Full</span>'
+                // 'type' => 'checkboxfirst',
+                // 'display_name' => '
+                //     June 24-28
+                //     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                //     pre-K
+                //     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                //     $55',
+                // 'comments' => '<br><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                //     Kindernature</em>'
             ),
             'river_expeditioners' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => '
-                    June 24-28
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    Grades 7-9
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    $170',
-				'comments' => '<br><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    River Expeditioners</em>'
+                'type'=>'solidtext',
+                'display_name'=>'River Expeditioners',
+                'comments'=>'<span style="color:red;">Full</span>'
+    //             'type' => 'checkboxfirst',
+    //             'display_name' => '
+    //                 June 24-28
+    //                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    //                 Grades 7-9
+    //                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    //                 $170',
+				// 'comments' => '<br><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    //                 River Expeditioners</em>'
             ),
             'energy_camp' => array(
                 'type' => 'checkboxfirst',
@@ -225,10 +231,13 @@ class DiscoveryCampsOne extends FormStep
                     $this->set_display_name('ww_grade_1', 'June 10-11'.$spaces.'Grade 1'.$spaces.'$105');
                     $this->set_display_name('ww_grade_2', 'June 12-14'.$spaces.'Grade 2'.$spaces.'$115');
                     $this->set_display_name('adventurers', 'June 17-21'.$spaces.'Grades 3-6'.$spaces.'$165');
-                    $this->set_display_name('kindernature_1', 'June 24-28'.$spaces.'pre-K'.$spaces.'$70');
-                    $this->set_display_name('river_expeditioners', 'June 24-28'.$spaces.'Grades 7-9'.$spaces.'$185');
+                    // $this->set_display_name('kindernature_1', 'June 24-28'.$spaces.'pre-K'.$spaces.'$70');
+                    $this->set_display_name('kindernature_1', '<strike>June 24-28 Kindernature</strike>');
+                    // $this->set_display_name('river_expeditioners', 'June 24-28'.$spaces.'Grades 7-9'.$spaces.'$185');
+                    $this->set_display_name('river_expeditioners', '<strike>June 24-28 River&nbsp;Expeditioners</strike>');
 					$this->set_display_name('energy_camp', 'July 8-12'.$spaces.'Grades 4-7'.$spaces.'$165');
-                    $this->set_display_name('survival_camp', 'July 8-12'.$spaces.'Grades 5-8'.$spaces.'$190');
+                    // $this->set_display_name('survival_camp', 'July 8-12'.$spaces.'Grades 5-8'.$spaces.'$190');
+                    $this->set_display_name('survival_camp', '<strike>July 8-12 Survival Camp</strike>');
                     $this->set_display_name('kindernature_2', 'July 15-19'.$spaces.'pre-K'.$spaces.'$70');
                 }
         }
