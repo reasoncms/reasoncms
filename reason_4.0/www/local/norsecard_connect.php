@@ -4,6 +4,10 @@ reason_include_once('function_libraries/user_functions.php');
 
 try {
 
+  if (empty( $_SERVER['HTTPS'] ) or strtolower( $_SERVER['HTTPS'] ) == 'off' ) {
+    exit;
+  }
+
   # MS SQL Server and Sybase with PDO_DBLIB
   $dbh = new PDO("dblib:host=odyssey.luther.edu:2638;dbname=odyssey", "pcsuser", "viewonly");
 
