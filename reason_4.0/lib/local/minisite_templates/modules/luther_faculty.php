@@ -32,7 +32,6 @@ class LutherFacultyStaffModule extends FacultyStaffModule
         echo '<div class="facStaffName"><h5>'.$person['full_name'];
         echo '</h5></div>'."\n";
 
-        pray($person);
                     
         if( !empty( $person[ 'title' ])
             || !empty( $person[ 'ds_phone' ] )
