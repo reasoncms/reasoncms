@@ -195,9 +195,12 @@ class LutherEventsModule extends EventsModule
 		{
 			$dir = new directory_service();
 			$dir->search_by_attribute('ds_username', array(trim($contact)), array('ds_email','ds_fullname','ds_phone',));
+			
 			$email = $dir->get_first_value('ds_email');
 			$fullname = $dir->get_first_value('ds_fullname');
-			$phone = $dir->get_first_value('ds_phone');
+			if (($dir->get_first_value('edupersonaffiliation') != 'Student') || ($dir->get_first_value('edupersonaffiliation') != 'Emeritus') ){
+				$phone = $dir->get_first_value('ds_phone');
+			}
 				
 			echo '<p class="contact"><strong>Contact:</strong> ';
 			if(!empty($email))

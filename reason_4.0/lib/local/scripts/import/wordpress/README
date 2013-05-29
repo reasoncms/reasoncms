@@ -1,0 +1,22 @@
+3/12/2011 - 
+
+To import a wordpress site, use the standard wordpress export functionality, which will create a
+Wordpress eXtended RSS (WXR) file. Then, run wordpress.php, which is probably located at this URL in 
+your Reason instance:
+
+http://your.host.name/reason/scripts/import/wordpress/wordpress.php
+
+This tool was designed for Wordpress 3 - if the format remains consistent, it should work without updates.
+
+If not, it won't.
+
+While coded with the ambition to be generally useful, this imported was designed for a particular 
+site, and that wordpress extended RSS (WXR) file probably does not represent the complexity of other
+wordpress extended RSS files.
+
+In short - I hope this works for your site but don't count your chickens.
+
+If you make improvements to the importer that are generally helpful, I'd be happy to add your
+changes to this tool. E-mail me - nate@natewhite.com.
+
+
