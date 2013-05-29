@@ -717,6 +717,7 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//}
 		elseif (($this->cur_page->get_value( 'custom_page' ) == 'events' && !preg_match("/[&?]event_id=\d+/", $url))
 			|| ($this->cur_page->get_value( 'custom_page' ) == 'events_instancewide' && !preg_match("/[&?]event_id=\d+/", $url))
+			|| ($this->cur_page->get_value( 'custom_page' ) == 'event_slot_registration' && !preg_match("/[&?]event_id=\d+/", $url))
 			|| $this->cur_page->get_value( 'custom_page' ) == 'sports_roster'
 			|| ($this->cur_page->get_value( 'custom_page' ) == 'sports_results' && !preg_match("/[&?]event_id=\d+/", $url))
 			|| $this->cur_page->get_value( 'custom_page' ) == 'directory'
@@ -793,7 +794,9 @@ class LutherTemplate2010 extends MinisiteTemplate
 		//}
 		
 		if ($this->cur_page->get_value( 'custom_page' ) == 'events'
-			|| $this->cur_page->get_value( 'custom_page' ) == 'events_instancewide')
+			|| $this->cur_page->get_value( 'custom_page' ) == 'events_instancewide'
+			|| $this->cur_page->get_value( 'custom_page' ) == 'event_slot_registration'
+				)
 		// no images allowed on events page, only for individual events
 		{
 			return false;

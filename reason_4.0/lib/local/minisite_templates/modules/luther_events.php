@@ -267,6 +267,11 @@ class LutherEventsModule extends EventsModule
 		echo '</td></tr></table>'."\n";
 	}
 	
+	function show_event_list_item_verbose( $event_id, $day, $ongoing_type = '' )
+	{
+		$this->show_event_list_item_standard( $event_id, $day, $ongoing_type);
+	}
+	
 	function get_all_categories() // {{{
 	{
 		$ret = '';
