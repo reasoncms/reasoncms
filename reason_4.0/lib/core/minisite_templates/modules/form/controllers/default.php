@@ -71,7 +71,7 @@
 		{
 			$model =& $this->get_model();
 			$head_items =& $model->get_head_items();
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/hide_nav.css');
 			if (method_exists($model, 'init_admin_object')) $model->init_admin_object();
 		}
@@ -80,7 +80,7 @@
 		{
 			$model =& $this->get_model();
 			$head_items =& $model->get_head_items();
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 		}
 		
 		/**
@@ -90,7 +90,7 @@
 		{
 			$model =& $this->get_model();
 			$head_items =& $model->get_head_items();
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 			if (method_exists($model, 'init_summary_object')) $model->init_summary_object();
 			//$summary =& $model->get_summary_object();
 			//$summary->init();
@@ -100,8 +100,7 @@
 		{
 			$model =& $this->get_model();
 			$head_items =& $model->get_head_items();
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_error.css');
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 			$head_items->add_javascript(JQUERY_URL, true);
 			$head_items->add_javascript(WEB_JAVASCRIPT_PATH .'disable_submit.js?id=disco_form&reset_time=60000');
 			$view =& $this->get_view();
@@ -119,7 +118,7 @@
 		{
 			$model =& $this->get_model();
 			$head_items =& $model->get_head_items();
-			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form_data.css');
+			$head_items->add_stylesheet(REASON_HTTP_BASE_PATH.'css/forms/form.css');
 		}
 		
 		function pre_run()

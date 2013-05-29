@@ -154,6 +154,13 @@
 		 * @var array
 		 */
 		var $required = array();
+		
+		/**
+		 * What indicator to use that a field is required
+		 * 
+		 * If not set, will use box class's default required indicator
+		 */
+		var $required_indicator;
 		/**
 		 * Array of error checks to run
 		 *
@@ -881,6 +888,8 @@
 		{
 			$this->start_form();
 			$box_object = new $this->box_class;
+			if(isset($this->required_indicator))
+				$box_object->set_required_indicator($this->required_indicator);
 
 			$order = $this->get_order();
 			$hidden_elements = array();
@@ -2589,6 +2598,16 @@
 					trigger_error('Order value given not one of "top","bottom", or "inline". Unable to set the hidden element ordering method.');
 					return false;
 			}
+		}
+		
+		function set_required_indicator($indicator_html)
+		{
+			$this->required_indicator = $indicator_html;
+		}
+		
+		function get_required_indicator()
+		{
+			return $this->required_indicator;
 		}
 		
 	//////////////////////////////////////////////////

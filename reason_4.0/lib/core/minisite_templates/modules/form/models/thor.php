@@ -9,7 +9,8 @@
  */
 reason_include_once( 'minisite_templates/modules/form/models/default.php' );
 reason_include_once( 'classes/object_cache.php' );
-include_once(TYR_INC.'tyr.php');
+require_once( THOR_INC.'boxes_thor.php' );
+include_once( TYR_INC.'tyr.php' );
 
 /**
  * Register model with Reason
@@ -354,6 +355,16 @@ class ThorFormModel extends DefaultFormModel
 			$gh = new group_helper();
 			$gh->set_group_by_entity($group);
 			return $gh->requires_login();
+		}
+		else return false;
+	}
+	
+	function form_is_tableless()
+	{
+		$form =& $this->get_form_entity();
+		if ($form->has_value('tableless'))
+		{
+			return ($form->get_value('tableless') == 1);
 		}
 		else return false;
 	}
@@ -976,7 +987,8 @@ class ThorFormModel extends DefaultFormModel
 	function transform_form()
 	{
 		$disco =& $this->get_view();
-		$disco->set_form_class('BoxThor2');
+		$box_class = ($this->form_is_tableless()) ? 'BoxThorTableless' : 'BoxThor';
+		$disco->set_form_class($box_class);
 		$thor_core =& $this->get_thor_core_object();
 		$thor_core->append_thor_elements_to_form($disco);		
 		// if it is editable, load data for the user (if it exists)

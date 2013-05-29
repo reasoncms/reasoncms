@@ -52,9 +52,21 @@
 	{
 		var $_has_required_fields = false;
 		
+		var $_required_indicator = '<span title="required">*</span>';
+		
 		function has_required_fields()
 		{
 			$this->_has_required_fields = true;
+		}
+		
+		function set_required_indicator($required_indicator)
+		{
+			$this->_required_indicator = $required_indicator;
+		}
+		
+		function get_required_indicator()
+		{
+			return $this->_required_indicator;
 		}
 		/**
 		* Begins the form table.
@@ -101,9 +113,9 @@
 			if($use_label)
 			{
 				if(!empty($stripped_label)) 
-					$markup  .= $label.$label_punct;
+					$markup  .= '<span class="labelText">'.$label.$label_punct.'</span>';
 				if($required) 
-					$markup .= '*';
+					$markup .= '<span class="requiredIndicator">'.$this->get_required_indicator().'</span>';
 			}
 			$markup .= '</td>'."\n";
 			$markup .= '<td align="left" class="element">'."\n";
