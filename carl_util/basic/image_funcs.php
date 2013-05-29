@@ -139,7 +139,7 @@ function rasterize_pdf($path, $format, $max_size = 4, $dimension_timeout = 10, $
 		}
 		else
 		{
-			trigger_error('rasterize_pdf failed because pdf dimensions could be be grabbed.');
+			trigger_error('rasterize_pdf failed because pdf dimensions could not be grabbed for ' . $path);
 			return false;
 		}
 	}
