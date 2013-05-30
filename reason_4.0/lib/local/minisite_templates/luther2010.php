@@ -628,7 +628,8 @@ class LutherTemplate2010 extends MinisiteTemplate
 		$this->head_items->add_stylesheet('/stylesheets/luther2010/master.css');
 		$this->head_items->add_stylesheet('/stylesheets/luther2010/reason.css');
 		$this->head_items->add_stylesheet('/stylesheets/luther2010/print.css', 'print');
-		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_tab_widget')
+		if ($this->cur_page->get_value( 'custom_page' ) == 'luther_tab_widget'
+			|| ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_landing_feature' && $this->has_content('main_head_5')))
 		{
 			$this->head_items->add_stylesheet(JQUERY_UI_CSS_URL);
 			//$this->head_items->add_stylesheet('/stylesheets/luther2010/aristoJqueryUITheme.css');
