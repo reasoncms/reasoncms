@@ -608,7 +608,13 @@ $GLOBALS['_reason_page_types_local'] = array(
 		'post_sidebar' => 'luther_flickr_slideshow',
 	),
 	'luther2010_music' => array(
-		'main_head' => 'luther_carousel',
+		'main_head' => array(
+			'module' => 'feature/feature',
+			'shuffle' => false,
+			'autoplay_timer' => 12,
+			'width'=>716,
+			'height'=>288
+		),
 		'main_head_5' => '',
 		'main_2' => '',
 		'main_3' => '',
