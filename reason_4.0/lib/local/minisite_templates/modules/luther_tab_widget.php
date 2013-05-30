@@ -44,7 +44,7 @@
 						echo '<div id="fragment-'.$i.'">'.$tw->get_value($content).'</div>'."\n";
 					}
 				}
-				echo '<script>$( "#tabs" ).tabs();</script>'."\n";
+				echo '</div><script>$( "#tabs" ).tabs();</script>'."\n";
 			}
 		}
 	}
