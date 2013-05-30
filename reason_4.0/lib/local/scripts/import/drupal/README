@@ -1,0 +1,22 @@
+5/29/2013 - 
+
+To import a drupal site, use the standard drupal export functionality, which will create a
+drupal eXtended RSS (WXR) file. Then, run drupal.php, which is probably located at this URL in 
+your Reason instance:
+
+http://your.host.name/reason/scripts/import/drupal/drupal.php
+
+This tool was designed for drupal 3 - if the format remains consistent, it should work without updates.
+
+If not, it won't.
+
+While coded with the ambition to be generally useful, this imported was designed for a particular 
+site, and that drupal extended RSS (WXR) file probably does not represent the complexity of other
+drupal extended RSS files.
+
+In short - I hope this works for your site but don't count your chickens.
+
+If you make improvements to the importer that are generally helpful, I'd be happy to add your
+changes to this tool. E-mail me - nate@natewhite.com.
+
+
