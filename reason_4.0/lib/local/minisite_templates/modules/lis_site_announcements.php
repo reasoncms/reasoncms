@@ -29,10 +29,10 @@
 
         function init( $args = array() )
         {
-            $this->lis_announcement = get_text_blurb_content('lis_site_announcement');
-            $this->library_announcement = get_text_blurb_content('library_site_announcement');
-            $this->helpdesk_announcement = get_text_blurb_content('helpdesk_site_announcement');
-            $this->archives_announcement = get_text_blurb_content('archives_site_announcement');
+            $this->lis_announcement = get_text_blurb_content('lis_site_announcement', false, false);
+            $this->library_announcement = get_text_blurb_content('library_site_announcement', false, false);
+            $this->helpdesk_announcement = get_text_blurb_content('helpdesk_site_announcement', false, false);
+            $this->archives_announcement = get_text_blurb_content('archives_site_announcement', false, false);
         }
         function has_content()
         {
