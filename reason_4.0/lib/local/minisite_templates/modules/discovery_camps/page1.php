@@ -188,15 +188,18 @@ class DiscoveryCampsOne extends FormStep
                //      Survival Camp</em>'
             ),
             'kindernature_2' => array(
-                'type' => 'checkboxfirst',
-                'display_name' => '
-                    July 15-19
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    pre-K
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    $55',
-                'comments' => '<br><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    Kindernature</em>'
+                'type'=>'solidtext',
+                'display_name'=>'<strike>Kindernature</strike>',
+                'comments'=>'<span style="color:red;">Full</span>'
+                // 'type' => 'checkboxfirst',
+                // 'display_name' => '
+                //     July 15-19
+                //     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                //     pre-K
+                //     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                //     $55',
+                // 'comments' => '<br><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                //     Kindernature</em>'
             ),
             'shuttle_comment' => array(
                 'type' => 'comment',
@@ -238,7 +241,8 @@ class DiscoveryCampsOne extends FormStep
 					$this->set_display_name('energy_camp', 'July 8-12'.$spaces.'Grades 4-7'.$spaces.'$165');
                     // $this->set_display_name('survival_camp', 'July 8-12'.$spaces.'Grades 5-8'.$spaces.'$190');
                     $this->set_display_name('survival_camp', '<strike>July 8-12 Survival Camp</strike>');
-                    $this->set_display_name('kindernature_2', 'July 15-19'.$spaces.'pre-K'.$spaces.'$70');
+                    // $this->set_display_name('kindernature_2', 'July 15-19'.$spaces.'pre-K'.$spaces.'$70');
+                    $this->set_display_name('kindernature_2', '<strike>July 15-19 Kindernature</strike>');
                 }
         }
 	// style up the form and add comments et al
