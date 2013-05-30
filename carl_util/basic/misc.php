@@ -826,7 +826,7 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 				$output = array_merge($output, preg_split("/\r\n|\n|\r/", $stdout));
 			}
 		}
-		else exec($cmd, &$output, &$exit_status);
+		else exec($cmd, $output, $exit_status);
 	}
 
 	/**
