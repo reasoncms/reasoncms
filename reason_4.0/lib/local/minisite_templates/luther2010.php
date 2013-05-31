@@ -222,6 +222,10 @@ class LutherTemplate2010 extends MinisiteTemplate
 		{      
 			$this->run_section( 'pre_banner' );
 		}
+		if ($this->has_content( 'lis_site_announcements' ))
+		{      
+			$this->run_section( 'lis_site_announcements' );
+		}
 		if ($this->should_show_parent_sites())
 		{
 			echo $this->get_parent_sites_markup();
