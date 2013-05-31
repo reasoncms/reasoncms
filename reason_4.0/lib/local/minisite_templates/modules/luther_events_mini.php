@@ -129,8 +129,7 @@ class LutherEventsMiniModule extends LutherEventsModule
 		if ($this->cur_page->get_value( 'custom_page' ) == 'luther2010_home'
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_home_feature')
 		{
-			$viewAllLink = "/programming/events/?view=all";
-			//$viewAllLink = "/events/";
+			$viewAllLink = "/events/";
 		}
 		else
 		{
