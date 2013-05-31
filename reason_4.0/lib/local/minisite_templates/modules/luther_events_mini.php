@@ -85,7 +85,14 @@ class LutherEventsMiniModule extends LutherEventsModule
 			|| $this->cur_page->get_value( 'custom_page' ) == 'luther2010_music')
 		{
 			echo '<section class="events group with-calendar" role="group">'."\n";
-			echo '<header class="red-stripe"><h1><span>Upcoming ' . $page_name .' Events</span></h1></header>'."\n";
+			if (strlen($page_name) < 19)   // need name to fit on one line
+			{
+				echo '<header class="red-stripe"><h1><span>Upcoming ' . $page_name .' Events</span></h1></header>'."\n";
+			}
+			else
+			{
+				echo '<header class="red-stripe"><h1><span>Upcoming Events</span></h1></header>'."\n";
+			}
 		}
 				
 		echo '<ol class="hfeed">'."\n";
