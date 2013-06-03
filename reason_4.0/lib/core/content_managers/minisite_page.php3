@@ -179,7 +179,7 @@ class MinisitePageManager extends parent_childManager
 			// Note that the contents of the url_comment_replace block are replaced by javascript to indicate
 			// a slight sematic difference in the behavior of the field when javascript is enabled.
 			// You may need to change the javascript to see any wording change here.
-			$this->set_comments( 'url_fragment', form_comment('<span class="url_comment_replace">The final part of the page\'s Web address.</span> <span class="rules">Only use letters and numbers; separate words with underscores (_). Please avoid upper-case letters.</span>') );
+			$this->set_comments( 'url_fragment', form_comment('<span class="url_comment_replace">The final part of the page\'s Web address.</span> <span class="rules">Only use letters and numbers; separate words with hyphens (-). Please avoid upper-case letters.</span>') );
 			$this->add_required( 'url_fragment' );
 			$this->add_required( 'nav_display' );
 			$this->_add_page_url_elements($this->_available_parents);
