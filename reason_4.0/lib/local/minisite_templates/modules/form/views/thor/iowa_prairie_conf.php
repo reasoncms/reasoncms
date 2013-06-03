@@ -18,6 +18,9 @@ class IowaPrairieConferenceForm extends CreditCardThorForm {
     // style up the form and add comments et al
     function on_every_time() {
       parent :: on_every_time(); 
+      $this->set_value($this->get_element_name_from_label('Revenue Budget Number'), '13-000-00619-22000');
+      $this->set_value($this->get_element_name_from_label('Expense Budget Number'), '13-000-00619-12121');
+
       $this->add_element('registration_fees_header', 'comment', array('text'=>'<h4>Registration Fees</h4>See <a href="/iowaprairieconference/RegistrationPrelim">registration information</a> page for more details.'));
       $this->move_element('registration_fees_header', 'before', $this->get_element_name_from_label('Registration Type'));
       $this->add_element('lodging_header', 'comment', array('text'=>'<h4>Luther College Dorm Lodging Reservations</h4>If reserving a double room for two registrants, only one registrant should fill out the dorm lodging section.'));
