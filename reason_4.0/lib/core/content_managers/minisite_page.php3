@@ -12,6 +12,7 @@ reason_include_once('classes/url_manager.php');
 reason_include_once('classes/page_types.php');
 reason_include_once('minisite_templates/page_types.php');
 reason_require_once( 'minisite_templates/page_types.php' );
+include_once( DISCO_INC . 'plugins/input_limiter/input_limiter.php' );
 
 $GLOBALS[ '_content_manager_class_names' ][ basename( __FILE__) ] = 'MinisitePageManager';
 
@@ -234,7 +235,7 @@ class MinisitePageManager extends parent_childManager
 			
 			$this->set_comments( 'name', form_comment('What should this page be called?') );
 			$this->set_comments( 'author', form_comment('Source or original author of this page') );
-			$this->set_comments( 'description', form_comment('A brief one or two sentence summary of the page') );
+			$this->set_comments( 'description', form_comment('A brief summary of the page. For best results when the page is indexed by search engines, try to not exceed 156 characters.') );
 			$this->set_comments( 'keywords', form_comment('Comma-separated keywords (for search engines) ie "Dave, Hendler, College, Relations"') );
 			$this->set_comments( 'nav_display', form_comment('If YES, the page shows up in the navigation box. If NO, the page does not.') );	
 			$this->set_comments( 'parent_id', form_comment(''));
@@ -262,6 +263,13 @@ class MinisitePageManager extends parent_childManager
 			$this->set_comments( 'name', form_comment('The title of link displayed in your site\'s navigation.') );
 			$this->set_comments( 'parent_id', form_comment('Use this field to choose the link\'s parent page.') );
 		}
+		
+		// Suggest a limit of 156 characters so that google will display the complete description.
+		$this->change_element_type('description', 'textarea', array('rows' => 4));
+		$limiter = new DiscoInputLimiter($this);
+		$limiter->suggest_limit('description', 156);
+		$limiter->auto_show_hide('description', false);
+		
 		$this->set_order(array('name', 'link_name', 'unique_name', 'author', 'description', 'keywords', 'parent_id', 'parent_info', 'url_fragment', 'extra_head_content', 'nav_display', 'custom_page', 'page_type_note', 'content') );
 	}
 	
