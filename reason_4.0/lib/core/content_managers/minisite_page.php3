@@ -347,8 +347,8 @@ class MinisitePageManager extends parent_childManager
 		if( $this->has_url() && !in_array( $this->get_value( 'id' ) , $this->root_node() ) )
 		{
 			if( !$this->has_error( 'url_fragment' ) )
-				if( !preg_match( "|^[0-9a-z_]*$|i" , $this->get_value('url_fragment') ) )
-					$this->set_error( 'url_fragment', 'URLs may only contain letters, numbers, and underscores' );
+				if( !preg_match( "|^[0-9a-z_\-]*$|i" , $this->get_value('url_fragment') ) )
+					$this->set_error( 'url_fragment', 'URLs may only contain letters, numbers, hyphens, and underscores' );
 			if( !$this->has_error( 'url_fragment' ) && !$this->has_error('parent_id') )
 			{
 				// get siblings.  make sure name is unique among siblings

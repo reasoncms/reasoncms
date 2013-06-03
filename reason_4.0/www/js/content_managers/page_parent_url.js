@@ -43,7 +43,7 @@ jQuery(function warp_page($) {
 	
 	function validate() {
 	    var value = slug_input.val();
-	    var invalid = (/\W/).test(value) || (/\.html?$/.test(value));
+	    var invalid = (!(/^[0-9a-z_\-]*$/i).test(value)) || (/\.html?$/.test(value));
 	    if (!unhappy && invalid) {
 	        unhappy = true;
 	        rules.addClass('inappropriate_url_warning');
