@@ -1887,12 +1887,14 @@
 			'main_head' => '',
 			'main_post' => array(
 				'module' => 'sitemap',
-				'site_types_unique_names' => array(
+				/* You can customize headings and page types with an array like this */
+				/* 'site_types_unique_names' => array(
 					'Gateways'=>array('gateway_site_type'),
 					'Departments and Concentrations'=>array('department_site_type',
 													'concentration_site_type'),
 					'Offices'=>array('office_site_type'),
-					'Other Sites'=>array('other_site_type'))),
+					'Other Sites'=>array('other_site_type'))), */
+			),
 			'post_foot' => 'textonly_toggle',
 			'sidebar' => 'blurb',
 		),
