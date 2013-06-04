@@ -35,6 +35,19 @@
 	 *  'page_type_2'=>array('page_location_1'=>'module_2','page_location_2'=>'module_1'),
 	 * );
 	 *
+	 * *Adding notes to a page type*
+	 *
+	 * Instead of a page location name, you can use the special keyword "_meta" to add an array of
+	 * extra information to a page type. Currently "note" is implemented, and any html you provide
+	 * will show up underneath the page type field in the page content manager.
+	 *
+	 * array(
+	 *	'page_type_1'=>array(
+	 *		'page_location_1'=>'module_1',
+	 *		'_meta'=>array('note' => '<p>A note about this page type presented to the user</p>'),
+	 *	),
+	 * );
+	 *
 	 * *Customizations*
 	 *
 	 * Do not customize this array. Instead, define $GLOBALS['_reason_page_types_local']
