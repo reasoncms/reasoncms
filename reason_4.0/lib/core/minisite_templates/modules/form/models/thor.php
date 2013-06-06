@@ -133,6 +133,11 @@ class ThorFormModel extends DefaultFormModel
 		return (!$this->user_has_access_to_fill_out_form());
 	}
 	
+	function is_closed()
+	{
+		return ($this->submission_limit_is_exceeded() || $this->before_open_date() || $this->after_close_date());
+	}
+	
 	function get_email_of_recipient()
 	{
 		$form =& $this->get_form_entity();
@@ -1076,6 +1081,52 @@ class ThorFormModel extends DefaultFormModel
 			$this->_user_has_access_to_fill_out_form = $this->_user_is_in_viewing_group();
 		}
 		return $this->_user_has_access_to_fill_out_form;
+	}
+	
+	function submission_limit_is_exceeded()
+	{
+		$form =& $this->get_form_entity();
+		// If we have a limit value...
+		if ($cap = $form->get_value('submission_limit'))
+		{
+			$thor_core =& $this->get_thor_core_object();
+
+			// and we have some rows in the database...
+			if ($rows = $thor_core->get_rows())
+			{
+				// if we've passed the cap limit
+				if (count($rows) >= $cap)
+				{
+					// and this isn't someone editing a preexisting entry
+					if (!($this->_is_editable() && $this->get_form_id()))
+					{
+						return true;
+					}
+				}
+			}
+		}
+		return false;				
+	}
+	
+	function before_open_date()
+	{
+		$form =& $this->get_form_entity();
+		if (($start = $form->get_value('open_date')) && $start != '0000-00-00 00:00:00')
+		{		
+			if (strtotime($start) > time()) return true;
+		}
+		return false;
+	}
+	
+	function after_close_date()
+	{
+		$form =& $this->get_form_entity();
+		
+		if (($end = $form->get_value('close_date')) && $end != '0000-00-00 00:00:00')
+		{		
+			if (strtotime($end) < time()) return true;
+		}
+		return false;
 	}
 	
 	function _user_has_site_editing_access()
